@@ -451,11 +451,15 @@ def sta_tcl(m, work, index):
                 (work / f'{n}_{c}.lib').write_bytes((ROOT / pat.format(c=c)).read_bytes())
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
+    if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
+        lib_lines += ['read_liberty -corner ss /work/hfd_rly_ss.lib', 'read_liberty -corner ff /work/hfd_rly_ff.lib']
+        for n in m['relay_masters']:
+            libs[n] = dict(relay=True)
     timed = [it for it in m['insts'] if it.master in libs]
     by_master = defaultdict(list)
     for it in timed:
         if it.master != 'hfd_sm':
-            by_master[it.master].append(it.name)
+            by_master['hfd_rly' if it.master.startswith('hfd_rly_') else it.master].append(it.name)
     clk_nets = {'stream': 'n_clk_stream', 'serial': 'n_clk_serial', 'hbm': 'n_clk_hbm', 'link': 'n_clk_link'}
     head = head.replace('read_verilog /work/die.v', 'define_corners ss ff\n' + '\n'.join(lib_lines) + '\nread_verilog /work/die.v')
     tcl = head + 'source /work/place.tcl\n' + f"""
@@ -628,6 +632,19 @@ def cmd_die(a):
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     gen_text = {}
+    relay_rec = None
+    if a.case in ('real', 'sta') and getattr(a, 'relays', False):
+        # coordinator phase 2: the planned die register hops (r22 pin relays + budget wire stages) as instances; pin
+        # positions from a provisional case (generated masters) and the real views' LEFs
+        import hbm_die_relays as RL
+        H.case_real(m, work)
+        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for p_ in views.values())
+        for nm_ in ('phy.lef', 'serdes.lef', 'ucie.lef'):
+            lt += '\n' + (work / nm_).read_text()
+        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False))
+        RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
+        (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
+        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF
@@ -1187,6 +1204,8 @@ def main(argv=None):
     p = sp.add_parser('die')
     p.add_argument('--work', required=True)
     p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
+    p.add_argument('--relays', action='store_true', help='instance the r22 pin relays + budget wire stages')
+    p.add_argument('--no-wire-stages', action='store_true', help='with --relays: pin relays only')
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)

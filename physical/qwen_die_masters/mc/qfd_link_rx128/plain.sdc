@@ -1,0 +1,20 @@
+# qfd_link_rx128: multi-clock kit (jobs/mk_mc_kit.py); route over-constrained at 770 ps
+create_clock -name wclk -period 770 [get_ports {wclk}]
+create_clock -name rclk -period 770 [get_ports {rclk}]
+set_clock_uncertainty -setup 60 [all_clocks]
+set_clock_uncertainty -hold 25 [all_clocks]
+# unrelated-clock crossings: one period minus the setup uncertainty, both directions; hold: non-negative
+set_max_delay -ignore_clock_latency 710.000 -from [get_clocks wclk] -to [get_clocks rclk]
+set_min_delay -ignore_clock_latency 0 -from [get_clocks wclk] -to [get_clocks rclk]
+set_max_delay -ignore_clock_latency 710.000 -from [get_clocks rclk] -to [get_clocks wclk]
+set_min_delay -ignore_clock_latency 0 -from [get_clocks rclk] -to [get_clocks wclk]
+set_input_delay 166.667 -clock wclk [get_ports {i_v i_d[*]}]
+set_output_delay 166.667 -clock wclk [get_ports {i_cr w_fault}]
+set_input_delay 166.667 -clock rclk [get_ports {o_cr}]
+set_output_delay 166.667 -clock rclk [get_ports {o_v o_d[*] r_fault}]
+set_false_path -from [get_ports {wrst_n rrst_n}]
+set_max_fanout 32 [current_design]
+# die-wire context (r21 die STA): one <= 430.56 um hop + receiver pin
+set_load 80 [all_outputs]
+set_input_transition 150 [all_inputs -no_clocks]
+set_max_transition 260 [current_design]

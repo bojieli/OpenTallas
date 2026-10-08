@@ -1,0 +1,10 @@
+S0 pf=64 mode=0 throttle=0 results=4 ref_first_issue->last=51 dut_first_issue->last=53 ref_last=69 dut_last=77 dut_ready_stalls=0
+S1 pf=384 mode=0 throttle=0 results=24 ref_first_issue->last=211 dut_first_issue->last=213 ref_last=303 dut_last=311 dut_ready_stalls=0
+S2 pf=384 mode=1 throttle=0 results=24 ref_first_issue->last=211 dut_first_issue->last=213 ref_last=537 dut_last=545 dut_ready_stalls=0
+S3 pf=384 mode=1 throttle=1 results=24 ref_first_issue->last=211 dut_first_issue->last=213 ref_last=771 dut_last=779 dut_ready_stalls=0
+PASS banked HA2 owner reducer: 4 scenarios bit-exact vs unchanged TU adapter (CUTS=0)
+NEGATIVE 1 PASS: dupe raised (reference dupe=1)
+NEGATIVE 2 PASS: dupe raised (reference dupe=1)
+NEGATIVE 3 PASS: dupe raised (reference dupe=1)
+[64999896000] %Fatal: tb_ha2_tu_owner_banked.sv:115: Assertion failed in tb_ha2_tu_owner_banked.unnamedblk8: FAIL scenario 0 (1 mismatches)
+[3537494340000] %Fatal: tb_ha2_tu_owner_banked.sv:102: Assertion failed in tb_ha2_tu_owner_banked: NEGATIVE 1: banked DUT accepted the illegal flit (dupe low)

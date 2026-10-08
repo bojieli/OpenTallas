@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.qwen-contract-decision.v1",
+ "gate": "protected_kv_transport",
+ "date": "2026-10-07",
+ "question": "Is the protected full-width KV transport needed for the shipped Qwen ROM composition?",
+ "decision": "NO for performance and exactness: the shipped path is the measured, exact STREAM4 landing (owner 2026-10-06); the protected full-width transport is explored, not adopted, and enters no composition (0 cycles, 0 credit). The missing transport PROTECTION stays a reliability GAP in no_ecc_inventory (AGENTS ROM policy keeps HBM/link protection required); it is not a performance gate.",
+ "owner_decision": "EXPLORED, NOT ADOPTED (owner 2026-10-06): not part of the shipped configuration",
+ "evidence": {
+  "shipped_stream4": {
+   "status": "PASS",
+   "total_cycles": 193955,
+   "layers": 36,
+   "current_KV_checks": 144,
+   "layer_FP32_checks": 144,
+   "next_token": 18,
+   "winning_logit_bits": "42282b99",
+   "L0_cycles": 6044,
+   "note": "full token at P8191, 36 layers + head, 4 ranks, all KV landed through STREAM4; this is the token every Qwen composition starts from"
+  },
+  "protected_fullwidth_L0": {
+   "status": "PASS_FULLSHAPE_L0_P8191",
+   "core_layer_cycles": 6188,
+   "full_token_pass": false,
+   "layers_executed": 1,
+   "note": "cold full-shape L0 exact on 4 dies after the SAME_CYCLE_GO fix; 6188 cycles vs the shipped STREAM4 cold L0 6044 (+144); no prefetch, no full token"
+  },
+  "protected_fullwidth_full36_r1": {
+   "status": "FAIL_RUNTIME",
+   "failure": "MEMORY FAULT stage=L0 cyc=14 dies=f kv_code=8000 (retained, not re-run)",
+   "full_token_pass": false
+  }
+ },
+ "consequence": {
+  "composition_cycles": 0,
+  "composition_credit": 0,
+  "no_ecc_inventory": "qwen_rom STREAM4 KV transport stays GAP (protection none); closing it is a reliability item (e.g. per-sector check bits through the HBM ECC pins at the landing CDC), priced separately if the owner reopens it",
+  "reopen_condition": "if the owner requires transport protection for publication, the protected path must first run a full token (it has only L0) and its exposed fill cost must be composed"
+ },
+ "ledger_note": "owner decision 2026-10-06: NOT shipped. The shipped composition is the measured exact STREAM4 token (193955 cycles, 144 current-KV checks, next token 18); the protected full-width path has only a cold L0 (exact, 6188 vs 6044 cycles) and full36_r1 FAIL_RUNTIME at L0 cycle 14 (retained). Not a performance gate: 0 cycles, 0 credit; the missing transport protection stays a GAP in no_ecc_inventory",
+ "source_sha256": {
+  "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
+  "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
+  "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json": "ecf917532456ba791837617a8013711a8786513fcd723fc376c7157a96662cb2",
+  "results/rtl/qwen_rom_fullwidth_20261006/full36_r2_samecyclego/layer_runtime_terminal.json": "b2a3c7a5a03ee9f823af0cafab6bb6c5fd1e4baa520db6587aa0fb047998aade",
+  "results/rtl/qwen_rom_fullwidth_20261006/full36_r1/runtime_terminal.json": "94883127c4e34dddd0a24c1e4bec8dea74c0fe08f3c7b877eadca7a194a154f8",
+  "results/rtl/qwen_rom_fullwidth_20261006/full36_r1/runtime.log": "e99ded0332b076dc329b60c9f35aac4fbc1bf27e1196c20ebcf4ebbd3345ebf3",
+  "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042"
+ }
+}

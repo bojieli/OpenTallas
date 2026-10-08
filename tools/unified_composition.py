@@ -54,6 +54,10 @@ Q_VM_ME = "results/uarch/qwen_rom_vm_me_service_20261007/model.json"
 Q_VM_SU = "results/uarch/qwen_rom_vm_su_service_20261007/model.json"
 Q_VM_REC = "results/uarch/qwen_rom_vm_recovery_20261007/disposition.json"
 Q_SPINE_P = "results/rtl/qwen_spine_lane_20261007/mutable_protection_blocker.json"
+Q_LINKFR = "results/rtl/qwen_contracts_20261007/link_credit_rtt/bench_gate/result.json"   # full-rate hub gate
+Q_LINKFR_P = "results/rtl/qwen_contracts_20261007/link_credit_rtt/pricing.json"            # area + cycle pricing
+Q_KV_DECISION = "results/rtl/qwen_contracts_20261007/protected_kv_transport/decision.json"
+Q_VM_CHK = "results/rtl/qwen_contracts_20261007/vm_contract_checks/summary.json"            # 9-package re-check
 Q_STATION = "results/uarch/qwen_station_fullwidth_r22_20261007/model_dual_fault_r1.json"
 DS_LEDGER = "results/rtl/dsrom_closure_cost_ledger_20261007/ledger.json"
 DS_LINKS = "results/rtl/dsrom_1m_allmeasured_20261004/links_full_fec.json"
@@ -72,29 +76,64 @@ H_SRAM = "results/rtl/hbm_collective_full_20261007/storage_model.json"
 H_CLKIN = "results/uarch/hbm_die_clock_inputs_20261007/model.json"
 H_CLKENT = "results/uarch/hbm_collective_clock_entry_20261007/model.json"
 FULLSYS = "results/rtl/fullsys_recheck_20261007/status.json"
-# Claude CDC design (on branch claude/hbm-collective-cdc-design-20261007 only, b49366616; verified absent from origin/main 41cf0a266): packet-SRAM receive queue and
-# candidate protected CDC drain at II=3 (1/3 line rate per port); 3-bank rotation (option B) restores II=1
+# Since the merge of origin/main 54ff3c0af into this branch, every record below is in the tree; values are READ from it
+# and commits come from git history (commit_of).  Branch-only items are named as such.
+_J = lambda rel: json.loads((Path(__file__).resolve().parents[1] / rel).read_text())
+# CDC design v1 (on main at 8b7f55b31; originally b49366616): packet-SRAM receive queue / protected CDC drain at II=3
 H_CDC = "results/rtl/hbm_collective_cdc_design_20261007/options.json"
-H_CDC_COMMIT = "b49366616 (on branch origin/claude/hbm-collective-cdc-design-20261007 only; absent from origin/main 41cf0a266)"
-H_CDC_V = dict(ii3_AR_us=30.78, ii3_MTP_us=171.99, ii3_AR_pct=6.48, ii3_MTP_pct=16.37, ser_AR=18470, ser_MTP=103196,
-               lat_us=1.017, lat_cycles=1220, rot_area_um2=12093.2)
+H_CDC_COMMIT = None
+# II1 refill (B prime): on main at 9ead91a15
+H_REFILL = "results/rtl/hbm_collective_cdc_20261007/refill_model.json"
+H_REFILL_PASS = "results/rtl/hbm_collective_cdc_20261007/final_pass/record.json"
+H_REFILL_COMMIT = None
+# CDC design v2 recommending the refill (on main at 092c84e1d; originally 2ae0d7d33)
+H_CDC2 = "results/rtl/hbm_collective_cdc_design_20261007/comparison_refill.json"
+H_CDC2_COMMIT = None
+# SM -> SU result-contract audit (on main at 10989fac4; originally 8c8bb2af2)
+H_SMSU = "results/rtl/hbm_sm_su_result_contract_20261007/contract.json"
+H_SMSU_COMMIT = None
+_s = _J(H_SMSU)["summary"]
+H_SMSU_V = dict(published=_s["published_cycles"], native=_s["native_cycles"], store_forward=_s["store_forward_floor_cycles"])
+_o = _J(H_CDC)
+_a = _o["options"]["A_credit_bound"]
+H_CDC_V = dict(ii3_AR_us=_a["cost_serialisation"]["AR_us"], ii3_MTP_us=_a["cost_serialisation"]["MTP_step_us"],
+               ii3_AR_pct=_a["cost_serialisation"]["AR_pct"], ii3_MTP_pct=_a["cost_serialisation"]["MTP_step_pct"],
+               ser_AR=int(_o["workload"]["matched_P1"]["serialisation_cycles"]), ser_MTP=int(_o["workload"]["matched_P6"]["serialisation_cycles"]),
+               lat_us=_a["cost_latency"]["AR_us"], lat_cycles=_a["cost_latency"]["AR_cycles"],
+               rot_area_um2=_o["options"]["B_rotated_II1"]["area_um2_added"])
 BF_BRANCH = "origin/claude/dsrom-bf-double-20261007"
-BF_BRANCH_COMMIT = "a30252b68"   # ledger.md bf_merge_ksplit row; released binding 332983233; both on the branch only
-# bf_merge_ksplit full-field same-frame measurement (coordinator correction 2026-10-07). The record is ON MAIN at ece40d827
-# (blob 2526ad8f, identical to codex/bf-evidence-only 4534a8e5f) but not in this branch's base 449ebc571, so its values
-# are pinned here as constants (reproducible from a git archive of this branch)
+BF_BRANCH_COMMIT = "a30252b68"   # ledger.md bf_merge_ksplit row; released binding 332983233; both on that branch only
+# BF option records (on main at ece40d827)
 BFA_FILE = "results/rtl/dsrom_bf_double_20261007/recovery_provenance.json"
-BFA_COMMIT = "ece40d827 (on origin/main; blob 2526ad8f; values pinned as constants because this branch's base 449ebc571 predates it)"
-BFA = dict(AR=1645.8, MTP=4841.9, base_AR=1608.4, base_MTP=4764.3, stages=96, regions=19056, base_regions=20928)
-# option B (mixed 2,304 pairs, 85 stages): numbers in the same main record ece40d827; the "DS ADOPT" label commit 505a9b484 is on
-# branch origin/codex/restore-bf-pairs-20261007 only (absent from origin/main 41cf0a266)
-BFB_COMMIT = "ece40d827 (numbers on origin/main); label commit 505a9b484 on branch origin/codex/restore-bf-pairs-20261007 only"
+BFA_COMMIT = None
+_bf = _J(BFA_FILE)
+BFA = dict(AR=_bf["options"]["A_f198_2048"]["AR"], MTP=_bf["options"]["A_f198_2048"]["MTP"],
+           base_AR=_bf["options"]["base_f198_2050"]["AR"], base_MTP=_bf["options"]["base_f198_2050"]["MTP"],
+           stages=_bf["options"]["A_f198_2048"]["stages"], regions=_bf["regions"]["A_f198_2048"]["region_runs"],
+           base_regions=_bf["regions"]["base_f198_2050"]["region_runs"])
+# option B: numbers in the same main record; its "DS ADOPT" label commit 505a9b484 is on branch
+# origin/codex/restore-bf-pairs-20261007 only (verified not an ancestor of origin/main 54ff3c0af)
+BFB_COMMIT = None
 GEO_B = None
-BFB = dict(AR=1754.3, MTP=5098.3, base_AR=1603.3, base_MTP=4717.7, stages=85, pairs=2304, layer_dies=340, regions=18288,
-           label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field",
-           physical="PENDING: mixed 2304-pair geometry not routed; uniform 2048-pair S81 v9d is different. Final PQ/BF footprints and die station cycles must be priced before physical adoption.",
-           wire="ESTIMATED f183.60 round trips for mixed slot option")
-
+BFB = dict(AR=_bf["options"]["B_mixed_2304"]["AR"], MTP=_bf["options"]["B_mixed_2304"]["MTP"], base_AR=1603.3, base_MTP=4717.7,
+           stages=_bf["options"]["B_mixed_2304"]["stages"], pairs=2304, layer_dies=340, regions=_bf["regions"]["B_mixed_2304"]["region_runs"],
+           label="DS ADOPT bf_merge_ksplit on the mixed-slot S81 die: AR 1,603.3 -> 1,754.3 (+9.42 %), MTP 4,717.7 -> 5,098.3 (+8.07 %), MEASURED full field (commit 505a9b484, branch origin/codex/restore-bf-pairs-20261007 only)",
+           physical=_bf["physical_status"], wire=_bf["wire_status"])
+# S81 full-shape PQ partition v2 (Claude design, branch claude/s81-pq-fullshape-design-v2-20261007 @ 9a8c86255 ONLY; main
+# carries the earlier version of the same record at 738ddfbc2 with +15 cycles / 0.47 %).  Branch values pinned here.
+PQ_FILE = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/comparison_current_main.json"
+PQ_ROOT = "results/uarch/dsrom_s81_pq_fullshape_design_20261007/current_main/root_contract/root_contract.json"
+PQ_COMMIT = "9a8c86255 (branch origin/claude/s81-pq-fullshape-design-v2-20261007 only; main 738ddfbc2 has the earlier +15 / 0.47 % version)"
+PQ = dict(cycles_per_phase=18, ar_loss_frac=0.00564, roots_mm2_per_die=3.0, core_mm2=0.32, rwb_mm2=0.40,
+          design_cam_cycles=4, design_station_cycles=2, root_row_um=164.16)
+# Native PQ root CAM (on main at 4251eb216): MEASURED latency deltas incl. publication; protection storage sizing
+PQ_CAM_REC = "results/rtl/s81_pq_root_cam_20261007/record.json"
+PQ_CAM_MODEL = "results/uarch/s81_pq_root_cam_20261007/model.json"
+_pc = _J(PQ_CAM_REC)
+PQ_CAM = dict(isolated=_pc["measured_delta_cycles"]["complete"], two_leaf=_pc["measured_delta_cycles"]["two_leaf"],
+              eight_leaf=_pc["measured_delta_cycles"]["eight_leaf"], exact_roots=_pc["exact_roots"],
+              bits_per_root=_J(PQ_CAM_MODEL)["incremental_state_bits"]["total_per_root"],
+              bits_total=_J(PQ_CAM_MODEL)["incremental_state_bits"]["total_128_roots"])
 
 def load(rel):
     return json.loads((ROOT / rel).read_text())
@@ -159,6 +198,38 @@ def tok_s_us(us, tau=1.0):
 
 
 # ===================================================================================================== Qwen ROM 8K
+def _link_credit_line(fwd):
+    """Gate link_credit_rtt.  Before the full-rate hub (claude/qwen-contracts-20261007) this was gated-unknown: 4 link
+    credits against the measured 117/119-cycle credit round trip.  The successor sizes credits to the round trip; the
+    exact gate measures the rate, and the pricing record carries the routed area (or the analytic flop estimate while
+    the routes are pending)."""
+    g, pr = load(Q_LINKFR), load(Q_LINKFR_P)
+    by = {(c["case"], c["sim"]): c for c in g["cases"]}
+    pos = [by[("pos_h54_cr128", "verilator")]["epochs"][0], by[("pos_h55_cr128", "verilator")]["epochs"][0]]
+    cr4 = by[("sweep_h54_cr4", "verilator")]["epochs"][0]
+    assert g["pass_all"]
+    return L("link_credit_rtt", "Link credit capacity vs the forwarded-path transport round trip", "priced-candidate",
+             dict(unit="cycles", AR=pr["token_cycles_added"]), [src(Q_LINKFR, "cases"), src(Q_LINKFR_P), src(Q_FWD, "paths[].transport_credit_roundtrip_cycles")],
+             "full-rate hub successor ot_qwen_die_hub_fr: CR=%d link credits >= the measured credit round trip %s cycles "
+             "(54/55 stations); exact gate (Verilator + Icarus): rate %.3f / %.3f words a cycle, 0 credit stalls, "
+             "%d checks a case, 4 negatives end in the named native fault; the predecessor's 4-credit window measures "
+             "%.3f (credit-starved). Token: +%d cycles (same registered stations; the %d-sector-a-layer posted KV-new "
+             "write-back serialises at 1 word a cycle, off the token path: measured STREAM4 stall_drain = stall_retire = 0). "
+             "Area: %s. Physical: %s"
+             % (pr["credits"], [p["credit_rtt_a"] for p in pos], pos[0]["rate_milli_a"] / 1000, pos[1]["rate_milli_a"] / 1000,
+                4 * by[("pos_h54_cr128", "verilator")]["params"]["N"], cr4["rate_milli_a"] / 1000, pr["token_cycles_added"],
+                pr["kv_new_sectors_per_layer"], pr["area"]["summary"], pr["physical"]["summary"]), "candidate")
+
+
+def _protected_kv_line():
+    """Gate protected_kv_transport: owner decision 2026-10-06 (not shipped), recorded with its evidence."""
+    d = load(Q_KV_DECISION)
+    return L("protected_kv_transport", "Protected KV transport (HBM->die landing)", "measured",
+             dict(unit="cycles", AR=0), [src(Q_KV_DECISION), src(Q_CLOSURE, "kv_path.protected_full_width_transport"),
+                                        src("results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json")],
+             d["ledger_note"], "info")
+
+
 def qwen():
     q = load(CMP)["qwen_rom"]
     lv = q["levers"]
@@ -166,6 +237,14 @@ def qwen():
     ctrl, ctrlq = load(Q_CTRL), load(Q_CTRL_Q)
     fwd, fwdv = load(Q_FWD), load(Q_FWD_VAL)
     me = load(Q_VM_ME)
+    vmc = load(Q_VM_CHK)
+    rq = vmc["service_requirement"]["me_operation"]
+    vm_chk_note = ("Contract re-check 2026-10-07 (qwen-contracts, %s): %d/%d component packages reproduce, incl. the known "
+                   "publication-storage coverage failures; demand per ME operation: %d seats on each of %d consecutive edges "
+                   "(%d unique scalars, fanout %d); no VM organisation serving it exists in RTL, so no token cost is composable. "
+                   "Protected bank element routed for measurement: qfd_vm_bank_checked (loop)"
+                   % (vmc["source_commit"][:9], sum(p["rc"] == 0 for p in vmc["packages"]), len(vmc["packages"]),
+                      rq["seats_per_read_edge"], rq["consecutive_read_cycles"], rq["unique_scalars_per_edge"], rq["fanout"]))
     lines = [
         L("stream4_token", "Measured STREAM4 full token at P8191 (36 layers + head, 4 ranks, all 576 MiB FP8 KV landed)",
           "measured", dict(unit="cycles", AR=q["token_cycles_measured"]),
@@ -189,36 +268,38 @@ def qwen():
           dict(unit="cycles", AR=ctrl["latency"]["composed_worst_case_token_cycles"]),
           [src(Q_CTRL, "latency.composed_worst_case_token_cycles"), src(Q_CTRL_Q, "status")],
           "%s: exact all 32 PCs; worst-case +%d cycles a token (3 request->PHY edges); predecessor SS %.2f / FF %.2f ps; "
-          "physical unmeasured; added mutable state unprotected (blocks production adoption)"
+          "physical unmeasured; added mutable state unprotected (blocks production adoption). Protected successor "
+          "(duplicated state, results/rtl/qwen_ctrl_protected_20261007/routed150, main 72bfeccb1): mapped-state retention PASS, "
+          "routed physical status not_met, so no cycle or closure credit"
           % (ctrlq["status"], ctrl["latency"]["composed_worst_case_token_cycles"],
              ctrlq["predecessor_measurement"]["ss_ps"], ctrlq["predecessor_measurement"]["ff_ps"]), "candidate"),
         L("forwarded_clocks", "Direction-owned forwarded link clocks (217 primitives, 442 directional clock nets)", "priced-candidate",
           dict(unit="cycles", AR=fwd["latency"]["replacement_added_single_user_token_cycles"]), src(Q_FWD, "latency"),
-          "same registered-hop count as r21 (0 added stage cycles); area proxy %.0f um2; active graph simulated=%s, adopted=%s"
+          "same registered-hop count as r21 (0 added stage cycles); area proxy %.0f um2; active graph simulated=%s, adopted=%s; "
+          "the protected-reset (TMR) successor graph r23 on main (8f68043a0) also adds 0 token cycles and is not adopted"
           % (fwd["area_proxy_um2"], fwdv["active_graph_simulated"], fwdv["adopted"]), "candidate"),
-        L("link_credit_rtt", "Link credit capacity vs the forwarded-path transport round trip", "gated-unknown", None,
-          src(Q_FWD, "paths[].transport_credit_roundtrip_cycles"),
-          "registered path %s stations, credit RTT %s cycles; the historical 8-credit abstract does not sustain it. "
-          "Per-traversal stall unknown until endpoint credit capacity/service is composed"
-          % (sorted({p["registered_stations"] for p in fwd["paths"]}), sorted({p["transport_credit_roundtrip_cycles"] for p in fwd["paths"]})), "gate"),
+        _link_credit_line(fwd),
         L("vm_me_service", "Native VM ME bank service (captured W1 source slots, protected bank)", "gated-unknown", None,
-          src(Q_VM_ME, "serialized_reference"),
+          [src(Q_VM_ME, "serialized_reference"), src(Q_VM_CHK, "service_requirement")],
           "full_token_extra=null; the only priced reference is the serialized four-bank walker: +%s engine edges for the "
-          "264 captured edges of ONE component (not a token cost, not composable); ready_for_new_bank_RTL=%s"
-          % (format(me["serialized_reference"]["conditional_extra_engine_edges"], ","), me["ready_for_new_bank_RTL"]), "gate"),
-        L("vm_su_service", "VM SU/reducer bank service obligations", "gated-unknown", None, src(Q_VM_SU, "scope"),
-          "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound", "gate"),
-        L("vm_recovery", "Qwen VM bank recovery / native schedule binding", "gated-unknown", None, src(Q_VM_REC, "status"),
-          load(Q_VM_REC)["status"] + "; one dynamic writer unresolved", "gate"),
+          "264 captured edges of ONE component (not a token cost, not composable; %.1fx the whole measured token); "
+          "ready_for_new_bank_RTL=%s. %s" % (format(me["serialized_reference"]["conditional_extra_engine_edges"], ","),
+                                             vmc["only_priced_service"]["ratio"], me["ready_for_new_bank_RTL"], vm_chk_note), "gate"),
+        L("vm_su_service", "VM SU/reducer bank service obligations", "gated-unknown", None, [src(Q_VM_SU, "scope"), src(Q_VM_CHK, "packages")],
+          "service quanta are not clock cycles; SRAM, protection, write completion, mux, fanout, capture unbound. " + vm_chk_note, "gate"),
+        L("vm_recovery", "Qwen VM bank recovery / native schedule binding", "gated-unknown", None, [src(Q_VM_REC, "status"), src(Q_VM_CHK, "verdict")],
+          load(Q_VM_REC)["status"] + "; one dynamic writer unresolved. " + vm_chk_note, "gate"),
         L("die_top_route", "Full-die detailed route, SS/FF, DRC and IR of the reopened Qwen die (directive 14)", "gated-unknown", None,
-          src(Q_CLOSURE, "physical"), "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed", "gate"),
+          src(Q_CLOSURE, "physical"), "die-top route not done; r18g bound (+13,305..16,268 cycles) is history, not composed. "
+          "Owner: stream qwen-dietop (branch claude/qwen-dietop-20261007; academic-validation method: full-die GRT overflow 0, "
+          "GRT-parasitic SS/FF STA, CTS clock plan, IR, representative-region DRT). The full-rate link (gate link_credit_rtt) "
+          "grows the qfd_hub frame and adds a 128-word receive buffer at each strip endpoint", "gate"),
         L("routed_masters", "Real routed views for previously assumed masters", "gated-unknown", None,
           src("docs/OWNER_DIRECTIVES_2026_10_07.md"), "interim views cannot establish closure; relay masters qfd_cst / qfd_chead "
-          "closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change", "gate"),
-        L("protected_kv_transport", "Protected KV transport (HBM->die landing)", "gated-unknown", None,
-          src(Q_CLOSURE, "kv_path.protected_full_width_transport"),
-          "shipped STREAM4 landing has no transport protection; protected full-width path has no full token (full36_r1 FAIL "
-          "retained); cost unknown", "gate"),
+          "closed at 833 ps (+57.00/+17.75, +37.93/+17.62) carry no cycle change. Owner: stream qwen-blocks (branch "
+          "claude/qwen-blocks-20261007); the full-rate hub qfd_hub_fr and the strip receive buffer qfd_link_rx128 are routed "
+          "by stream qwen-contracts (gate link_credit_rtt)", "gate"),
+        _protected_kv_line(),
     ]
     pub = q["token_cycles"]
     published_sum = sum(x["effect"]["AR"] for x in lines if x["role"] in ("base", "published"))
@@ -263,8 +344,9 @@ def qwen():
             vm_service=("gated: per-ME-op cost unknown.  Any per-ME-op addition y lowers the DSpark ratio, because a step "
                         "issues %d ME ops for %.4f tokens (%.0f a token) against %d a token for AR; the AR_MODE verdict is "
                         "robust to it" % (step_ops, tau, step_ops / tau, rel["me_ops_per_ar_token"])),
-            link_credit=dict(note=("gated: per-traversal credit stall x unknown.  AR crosses the link %d times a token, a step %d "
-                                   "times for %.4f tokens, so link stalls hurt AR more per token" % (ar_link, step_links, tau)),
+            link_credit=dict(note=("resolved (gate link_credit_rtt, full-rate hub CR=128): measured 0 credit stalls a traversal, "
+                                   "so x = 0 and the break-even below is not reached.  AR crosses the link %d times a token, a "
+                                   "step %d times for %.4f tokens, so a link stall would hurt AR more per token" % (ar_link, step_links, tau)),
                              break_even_stall_cycles_per_traversal_equal_payload=round(x_eq),
                              break_even_if_verify_stall_scales_with_np=(round((step / tau - pub) / den) if den > 0 else None),
                              reading=("DSpark reaches AR only if each link traversal stalls >= %d cycles and the verify "
@@ -274,8 +356,8 @@ def qwen():
             die_route_and_masters="gated: affects AR and the step through the same ME-op and link counts",
             tau="third-party 3.1445 (no Qwen DSpark acceptance measured on the target workload mix)"),
         verdict=("AR_MODE holds: the re-evaluation with the newer priced inputs gives %.1f tok/s (%.3fx); every gated "
-                 "per-ME-op cost moves the ratio down; only an unmeasured link-credit stall above ~%d cycles a traversal "
-                 "could move it up" % (new["variants"]["baseline_np4"]["tok_s_upper"],
+                 "per-ME-op cost moves the ratio down; a link-credit stall above ~%d cycles a traversal could have moved it "
+                 "up, but the full-rate hub measures 0 credit stalls" % (new["variants"]["baseline_np4"]["tok_s_upper"],
                                       new["variants"]["baseline_np4"]["speedup_vs_ar_upper"], round(x_eq))),
     )
     return dict(clock_hz=CLK, context="P8191, TP4, 4 dies, STREAM4 KV", lines=lines, compositions=comps, gates=gates,
@@ -365,13 +447,50 @@ def ds_rom():
           "(requested_fits=false, %s). Codex's branch label is quoted for history only, not promoted: '%s'"
           % (format(BFB["regions"], ","), format(BFB["regions"], ","), BFB["base_AR"], GEO_B["maximum_pairs_at_this_geometry"],
              DS_GEOM, BFB["label"]), "info"),
+        L("pq_fullshape_partition", "Full-shape PQ partition: %d non-CAM cycles a field phase (design v2) + the MEASURED native root "
+          "CAM delta (+%d isolated / +%d two-leaf / +%d eight-leaf) = +%d..+%d" % (
+              PQ["cycles_per_phase"] - PQ["design_cam_cycles"], PQ_CAM["isolated"], PQ_CAM["two_leaf"], PQ_CAM["eight_leaf"],
+              PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["isolated"], PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]),
+          "priced-candidate", dict(unit="us", AR=round(PQ["ar_loss_frac"] / PQ["cycles_per_phase"]
+                                                        * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]) * c["AR_us"], 3),
+                                   MTP_step=None),
+          [src(PQ_CAM_REC, "measured_delta_cycles"), src(PQ_CAM_MODEL, "latency, incremental_state_bits"),
+           src(PQ_FILE, "changes[item=added cycles per phase (vs the native production parent)].current", commit=PQ_COMMIT)],
+          "PARTIAL-PRICED CANDIDATE. The root CAM term uses the measured native CAM (main 4251eb216; %d exact roots; "
+          "isolated +%d, two-leaf +%d, eight-leaf +%d incl. publication; one real ROOTD128 component, no parity, full-parent "
+          "or physical qualification), not the design's +1/pass model; the effect shown is the eight-leaf case, about %.2f %% AR "
+          "(%.2f %% isolated), via the historical per-cycle sensitivity. The per-token critical phases on the 1,792 mapping "
+          "are not composed; MTP not priced. Geometry provisional: roots in the new %.2f um row, core %.2f mm2 in the "
+          "449 x 1,728 um slot, return write-back blocks %.2f mm2, roots about %.1f mm2 a die. Protection storage +%d bits a "
+          "root (%s for 128 roots, main model) -- sizing only; the protected root face is an unestablished contract with no "
+          "credit. Non-CAM cycles from the design v2 record %s; main's 738ddfbc2 (+15 / 0.47 %%) is superseded"
+          % (PQ_CAM["exact_roots"], PQ_CAM["isolated"], PQ_CAM["two_leaf"], PQ_CAM["eight_leaf"],
+             100 * PQ["ar_loss_frac"] / PQ["cycles_per_phase"] * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["eight_leaf"]),
+             100 * PQ["ar_loss_frac"] / PQ["cycles_per_phase"] * (PQ["cycles_per_phase"] - PQ["design_cam_cycles"] + PQ_CAM["isolated"]),
+             PQ["root_row_um"], PQ["core_mm2"], PQ["rwb_mm2"], PQ["roots_mm2_per_die"], PQ_CAM["bits_per_root"],
+             format(PQ_CAM["bits_total"], ","), PQ_COMMIT), "candidate"),
+        L("pq_root_protected_face", "PQ root protected 140/141-pin face (parity)", "gated-unknown", None,
+          [src(PQ_CAM_MODEL, "mutable_state_protection"), src(PQ_ROOT, "parity", commit=PQ_COMMIT)],
+          "OPEN: the native root interface lacks the proposed parity; no implicit parity or protection qualification", "gate"),
+        L("pq_stage_b_timing", "PQ CAM stage-B timing", "gated-unknown", None, src(PQ_CAM_MODEL, "physical_gate"),
+          "not measured. Stage-C fallback (OPC=1) RTL committed at 36b7a0452 (branch claude/s81-blocks-20261007), default-off; "
+          "s81-blocks.log reports it exact at +3 two-leaf / +7 eight-leaf vs native (stage B +2 / +4) but no result record is "
+          "committed; routes launched in the reserved 132 x 134 um slot. No credit until a stage closes", "gate"),
+        L("pq_half_serial_lane_exactness", "HALF serial-lane exactness for a beat shift of <= 2 cycles", "gated-unknown", None,
+          src(PQ_FILE, "changes", commit=PQ_COMMIT), "exactness of the HALF (BF-dedicated) serial lane under the <= 2-cycle beat shift not shown", "gate"),
+        L("selector_selt_c_cuts", "Selector selt_c structural cuts (MRG_PIPE + RQPIPE): +22 cycles a segment vs the ledger's +20",
+          "gated-unknown", None, src("rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv", "MRG_PIPE, RQPIPE", commit="b17a8dda2 (branch claude/s81-blocks-20261007 only)"),
+          "RTL committed; s81-blocks.log reports bench PASS (tail mean 129 vs 127) but no result record is committed. If it "
+          "closes it adds +2 cycles a selector segment over the ledger's selector item; not composed", "info"),
         L("field_phases_1792", "Field phase timings of the 1792 geometry (remapped regions, BF/q stage split)", "gated-unknown", None,
           src(f"{DS_MAP}/provenance.json", "variants.*.full_token_latency"), "'unpriced until matching field phase measurements and new geometry timing are composed'", "gate"),
         L("bf_half_physical", "BF half-rate clock root qualification (current exact BF closure path)", "gated-unknown", None,
           [src(DS_BFROOT, "physical_obligations"), src(DS_BFFAIL + "/record.json"), src(DS_BFFAIL + "/actual_calibration_failure.json")],
           "half-rate BF is the current exact BF closure path, not an immutable requirement: full rate may return if it meets "
           "the correctness and physical gates. The 449ebc571 root-phase failure was a script hierarchy failure (not an "
-          "arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown", "gate"),
+          "arithmetic rejection), fixed in 7990dfdbf and now calibrating; SS/FF >= +15 ps, DRC 0 still to be shown. HALF route limiter "
+          "(ph -> ICG enable, -474.7 ps): structural HALF_PHL fix exact PASS (456 partials, negatives FAIL) on branch "
+          "claude/s81-bf-20261007 6d26df595; routes running (s81-bf)", "gate"),
         L("s81_die_closure", "S81 die DRT / SS / FF / IR at the final mixed-BF/PQ geometry", "gated-unknown", None,
           src(DS_LEDGER, "items[s81_die].description"), "global-route feasibility only", "gate"),
         L("native_token", "Native end-to-end S81 token (connected RTL)", "gated-unknown", None,
@@ -441,11 +560,13 @@ def hbm_ds():
     r23 = load(H_R23)
     cm = load(CMP)["hbm_ds"]
     tau = m["tau"]
-    rows = []
+    rows, after_total = [], False   # rows below the first "TOTAL at r23:" line are not in the r23 headline
     for l in (ROOT / H_LEDGER).read_text().splitlines():
+        if l.startswith("TOTAL at r23:"):
+            after_total = True
         mm = re.match(r"\| (.+?) \| (\d+) \| ([\d.]+) \| ([\d.]+) \|$", l)
         if mm:
-            rows.append((mm.group(1), int(mm.group(2))))
+            rows.append((mm.group(1), int(mm.group(2)), after_total))
     pre = r23["pre_closure"]["AR_us"]
     lines = [
         L("matched_gate", "Matched reference gate (measured RTL nodes, light-FEC TU budget)", "measured",
@@ -454,11 +575,11 @@ def hbm_ds():
           dict(unit="us", AR=round(pre - m["AR_us"], 3), MTP_step=round(pre - m["AR_us"], 3)),
           src(H_R23, "pre_closure"), "same die traversals on the AR walk and the verify walk", "published"),
     ]
-    for i, (name, cyc) in enumerate(rows):
+    for i, (name, cyc, beyond) in enumerate(rows):
         us = round(cyc / CLK * 1e6, 3)
         lines.append(L("closure_%02d" % i, name[:170], "priced-candidate", dict(unit="us", AR=us, MTP_step=us),
                        src(H_LEDGER, "row %d" % i), "die closure cost (stations / faces / splits / SM m2+m3 / relays / 2x hub)",
-                       "published" if i < len(rows) - 1 else "candidate"))
+                       "candidate" if beyond else "published"))
     fec = cm["full_fec"]
     lines.append(L("full_fec", "Full RS(544,514) FEC on every switch crossing (owner 2026-10-06)", "priced-candidate",
                    dict(unit="us", AR=fec["AR_us"], MTP_step=fec["MTP_step_us"]), src(CMP, "hbm_ds.full_fec"),
@@ -483,20 +604,60 @@ def hbm_ds():
           "x %d collective terms (assumption); default-off candidate" % n_red, "candidate"),
         L("ha2_half_rate_credit", "HA2 half-rate own-partial credit (alternative if it is the variant that closes)", "priced-candidate",
           dict(unit="us", AR=10.16, MTP_step=10.16), src(H_LEDGER, "Conditional"), "+46 cycles x 265; not summed", "alternative"),
-        L("cdc_sram_ii3_rate_cap", "Packet-SRAM receive queue and candidate protected CDC drain at II=3 (1/3 line rate per port)",
-          "gated-unknown", None, src(H_CDC, "options.A_credit_bound.cost_serialisation", commit=H_CDC_COMMIT),
-          "II=3 rate cap: +%.2f us AR / +%.0f us MTP unless the 3-bank rotation (II=1) lands for both the CDC and the packet "
-          "SRAM; the rotation itself costs +2 cycles/pass (+%.2f us) and +%s um2. Basis: measured receive streaming %s "
-          "cycles a AR token, %s a MTP step, tripled at II=3 (+%.2f %% AR, +%.2f %% MTP step on the gate). Not summed in "
-          "unified_candidate; see compositions unified_candidate_ii3_cap / unified_candidate_ii1_rotation"
-          % (H_CDC_V["ii3_AR_us"], H_CDC_V["ii3_MTP_us"], H_CDC_V["lat_us"], format(H_CDC_V["rot_area_um2"], ",.0f"),
-             format(H_CDC_V["ser_AR"], ","), format(H_CDC_V["ser_MTP"], ","), H_CDC_V["ii3_AR_pct"], H_CDC_V["ii3_MTP_pct"]), "gate"),
-        L("cdc_sram_ii1_rotation", "3-bank rotation (II=1) for the CDC and the packet SRAM: +2 cycles a pass x 610 passes",
+        L("cdc_refill_ii1", "Protected CDC II=1 refill (B prime): full line rate, +2 empty-start cycles a pass x 610 passes",
           "priced-candidate", dict(unit="us", AR=H_CDC_V["lat_us"], MTP_step=H_CDC_V["lat_us"]),
-          src(H_CDC, "options.B_rotated_II1", commit=H_CDC_COMMIT),
-          "design-model recommendation, no RTL; +%s um2; replaces the +2 x 265 collective_sram_protected term in the "
-          "both-ways compositions (it covers every TX and RX CDC pass of the 305 crossings)" % format(H_CDC_V["rot_area_um2"], ",.1f"),
+          [src(H_REFILL, "status, normal_timing", commit=H_REFILL_COMMIT), src(H_REFILL_PASS, "passed", commit=H_REFILL_COMMIT),
+           src(H_CDC2, "comparison.Bprime_refill_II1", commit=H_CDC2_COMMIT)],
+          "RESOLVES the CDC rate cap: measured RTL on main (one full 545x64 protected CDC with the actual die reset entry, "
+          "final_pass passed; status II1_REFILL_CANDIDATE_NOT_ADOPTED); recommended by the v2 design over the 3-bank rotation "
+          "(0 added state bits, ~60-100 um2 of logic vs +12,093 um2). Latency +%.3f us a token. SS timing unmeasured (see "
+          "cdc_refill_ss_timing); replaces the +2 x 265 collective_sram_protected term in the CDC compositions" % H_CDC_V["lat_us"],
           "alternative"),
+        L("cdc_refill_ss_timing", "SS/FF timing of the CDC refill", "gated-unknown", None,
+          src(H_REFILL, "physical_risk", commit=H_REFILL_COMMIT),
+          "unmeasured; estimated risk on the 64:1 x 648-bit encoded read-mux / capture-address path; a function-preserving "
+          "fix (registered head-pointer address) has been proposed (v2 design %s)" % H_CDC2, "gate"),
+        L("cdc_frequency_lock", "PHY/core frequency lock for the II=1 CDC drain", "gated-unknown", None,
+          src(H_CDC2, "contracts.frequency"),
+          "hardware contract to be established, not an assumption: drain II=1 >= arrival only if Tw == Tr (same reference) "
+          "or a rate-matcher leaves >= 1 idle per M flits; a faster write clock overflows a gap-free stream", "gate"),
+        L("packet_sram_ii3_rate_cap", "Packet-SRAM receive queue still drains at II=3 (1/3 line rate per port)",
+          "gated-unknown", None, src(H_CDC, "options.A_credit_bound.cost_serialisation", commit=H_CDC_COMMIT),
+          "GATED until the same II=1 refill is applied to the packet SRAM: while it stays at II=3 the port is capped at a third "
+          "of line rate even with the CDC refilled, +%.2f us AR / +%.0f us MTP on the measured receive streaming (%s cycles a "
+          "AR token, %s a MTP step; +%.2f %% AR, +%.2f %% MTP step on the gate)"
+          % (H_CDC_V["ii3_AR_us"], H_CDC_V["ii3_MTP_us"], format(H_CDC_V["ser_AR"], ","), format(H_CDC_V["ser_MTP"], ","),
+             H_CDC_V["ii3_AR_pct"], H_CDC_V["ii3_MTP_pct"])
+          + ". Progress: the packet-SRAM II=1 refill queue RTL (opt-in ENABLE_SRAM=2) is committed at 8bd16b9e0 (branch "
+            "claude/hbm-contracts-20261007, not on main); its bench PASS is reported in hbm-contracts.log but no result "
+            "record is committed; physical closure and integration pending, so no credit", "gate"),
+        L("credit_producer_native", "Native credit producer for the full-rate credit contract", "gated-unknown", None,
+          src(H_REFILL, "actual_credit_producer", commit=H_REFILL_COMMIT),
+          "missing in the native RTL (today a testbench preload); full rate needs >= %d credits in flight against the "
+          "159-cycle credit round trip, with an acknowledged grant/retirement protocol. The full-rate contract is gated "
+          "on it" % 159, "gate"),
+        L("cdc_sram_ii1_rotation", "3-bank rotation (II=1), fallback only", "priced-candidate",
+          dict(unit="us", AR=H_CDC_V["lat_us"], MTP_step=H_CDC_V["lat_us"]), src(H_CDC, "options.B_rotated_II1", commit=H_CDC_COMMIT),
+          "v1 design (historical record kept); same latency, +%s um2; the v2 design keeps it only if the refill cannot close SS "
+          "after the registered-address fix" % format(H_CDC_V["rot_area_um2"], ",.1f"), "alternative"),
+        L("sm_su_result_edge_native", "SM -> SU result handoff as a native edge (published as 343 cycles a token: hidden wire + 'stations gather a2 +1')",
+          "gated-unknown", None, src(H_SMSU, "summary", commit=H_SMSU_COMMIT),
+          "NOT a native edge today: in the die view the result tree ends in hfd_su's XOR exercise envelope, and in RTL the path "
+          "runs through the GPU-comparator memory model. Every HBM DS row is a die-view-only result edge until this gate "
+          "closes. HBM service bf801c49a and the native collective 7a60962c0 are integrated on main, but the actual consumer "
+          "work is ongoing: no row takes native credit for the 343-cycle path. Alternatives: sm_su_native_edge_proposed / "
+          "sm_su_store_forward_floor", "gate"),
+        L("sm_su_native_edge_proposed", "Proposed native SM -> SU edge (SU ingress FIFOs + relay slices): %s cycles a token" % format(H_SMSU_V["native"], ","),
+          "priced-candidate", dict(unit="us", AR=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3),
+                                   MTP_step=round((H_SMSU_V["native"] - H_SMSU_V["published"]) / CLK * 1e6, 3)),
+          src(H_SMSU, "summary.native_cycles", commit=H_SMSU_COMMIT),
+          "increment over the published 343 cycles (+0.10 %% AR / +0.05 %% MTP step on the unified candidate); not summed (alternative)", "alternative"),
+        L("sm_su_store_forward_floor", "RTL-implemented store-and-forward floor through the GPU-comparator memory system: >= %s cycles a token" % format(H_SMSU_V["store_forward"], ","),
+          "priced-candidate", dict(unit="us", AR=round((H_SMSU_V["store_forward"] - H_SMSU_V["published"]) / CLK * 1e6, 3),
+                                   MTP_step=round((H_SMSU_V["store_forward"] - H_SMSU_V["published"]) / CLK * 1e6, 3)),
+          src(H_SMSU, "summary.store_forward_floor_cycles", commit=H_SMSU_COMMIT),
+          "ESTIMATE (floor) that applies if no native edge is built; effect = increment over the published 343 cycles (+19.63 %% AR / "
+          "+9.99 %% MTP step on the unified candidate; the full 132,520 cycles are 19.68 %% / 10.02 %%, contract.json impact); not summed (alternative)", "alternative"),
         L("su_reducer_safe", "SU reducer SAFE (+4 per reduction at 0.9 GHz)", "gated-unknown", None, src(H_LEDGER, "Pending"),
           "occurrences per token not bound", "gate"),
         L("su_c12_margin", "SU CP+c12 margin stage (+30 DS1M, measured exact) / RHALF (+176)", "gated-unknown", None,
@@ -535,16 +696,34 @@ def hbm_ds():
                                       note="as above + the exact HBM levers (minimum-component exactness, SS/FF not admitted)")
     sram = next(x for x in lines if x["id"] == "collective_sram_protected")["effect"]
     for cname, (dar, dmtp, label) in dict(
-            unified_candidate_ii3_cap=(H_CDC_V["lat_us"] + H_CDC_V["ii3_AR_us"], H_CDC_V["lat_us"] + H_CDC_V["ii3_MTP_us"],
-                                       "II=3 rate cap stands (no rotation)"),
-            unified_candidate_ii1_rotation=(H_CDC_V["lat_us"], H_CDC_V["lat_us"],
-                                            "3-bank rotation lands for both the CDC and the packet SRAM (II=1)")).items():
+            unified_candidate_refill_cdc_only=(H_CDC_V["lat_us"] + H_CDC_V["ii3_AR_us"], H_CDC_V["lat_us"] + H_CDC_V["ii3_MTP_us"],
+                                               "refill lands for the CDC only; the packet SRAM stays at II=3 and caps the port"),
+            unified_candidate_refill_both=(H_CDC_V["lat_us"], H_CDC_V["lat_us"],
+                                           "refill lands for both the CDC and the packet SRAM (full line rate)")).items():
         a_ = round(ar2 - sram["AR"] + dar, 3); m_ = round(mtp2 - sram["MTP_step"] + dmtp, 3)
         comps[cname] = dict(AR_us=a_, MTP_step_us=m_, AR_tok_s=tok_s_us(a_), MTP_tok_s=tok_s_us(m_, tau), tau=tau,
-                            status="priced-candidate", case=label, gated_by=[g for g in gates if g != "cdc_sram_ii3_rate_cap"],
-                            note="unified_candidate with the +2 x 265 SRAM term replaced by the CDC design's +2 cycles x 610 passes"
-                                 + (" plus the II=3 serialisation cost" if "ii3" in cname else ""),
-                            record=src(H_CDC, "options", commit=H_CDC_COMMIT))
+                            status="priced-candidate", case=label,
+                            gated_by=[g for g in gates if not (g == "packet_sram_ii3_rate_cap" and cname.endswith("both"))],
+                            conditional_on_unestablished_contracts=(["cdc_frequency_lock", "credit_producer_native", "packet_sram_refill", "sm_su_native_edge"]
+                                                                    if cname.endswith("both") else ["cdc_frequency_lock", "credit_producer_native", "sm_su_native_edge"]),
+                            note="CONDITIONAL sensitivity, zero credit until its contracts are established. unified_candidate with the +2 x 265 SRAM term replaced by the refill's +2 cycles x 610 passes"
+                                 + (" plus the packet-SRAM II=3 serialisation cost" if cname.endswith("cdc_only") else
+                                    "; full rate also requires the native credit producer (gated)"),
+                            record=[src(H_REFILL, "status", commit=H_REFILL_COMMIT), src(H_CDC2, "comparison", commit=H_CDC2_COMMIT)])
+    alt = {x["id"]: x["effect"] for x in lines if x["id"] in ("sm_su_native_edge_proposed", "sm_su_store_forward_floor")}
+    for cname, c_ in comps.items():
+        c_["result_edge"] = "die-view-only result edge until gate sm_su_result_edge_native closes"
+        gb = c_.setdefault("gated_by", [])
+        if "sm_su_result_edge_native" not in gb:
+            gb.append("sm_su_result_edge_native")
+    for cname in ("unified_candidate",):
+        c_ = comps[cname]
+        c_["sm_su_alternatives"] = {}
+        for k, e in alt.items():
+            a_, m_ = c_["AR_us"] + e["AR"], c_["MTP_step_us"] + e["MTP_step"]
+            c_["sm_su_alternatives"][k] = dict(AR_tok_s=tok_s_us(a_), MTP_tok_s=tok_s_us(m_, tau),
+                                              AR_pct=round(100 * e["AR"] / c_["AR_us"], 2),
+                                              MTP_step_pct=round(100 * e["MTP_step"] / c_["MTP_step_us"], 2))
     return dict(context="DeepSeek-V4.1 1M, HBM accelerator", tau=tau, lines=lines, compositions=comps, gates=gates,
                 physical_status="die views priced; no full-die closure")
 
@@ -557,13 +736,14 @@ def no_ecc():
         dict(target="ds_rom", item="Weight ROM (4096-row macros, 1792-pair mapping)", protection="none (ROM_ECC=false)", policy="compliant", source=s(f"{DS_MAP}/half_dedicated/inventory.json", "ROM_ECC")),
         dict(target="qwen_rom", item="STREAM4 KV transport, 128 pseudo-channel parallel landing (HBM -> die)", protection="none", policy="GAP: HBM/link protection is retained by policy; protected full-width transport not adopted", source=s(Q_CLOSURE, "kv_path.shipped")),
         dict(target="qwen_rom", item="Spine lane: 32x1536 payload FIFO, 32x32 tag FIFO, split/tag/valid pipeline, pointers/credits, fault/commit registers", protection="none (fault-free bench only)", policy="GAP: mutable state", source=s(Q_SPINE_P, "unprotected")),
-        dict(target="qwen_rom", item="Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)", protection="none", policy="GAP: blocks production adoption", source=s(Q_CTRL_P, "state_breakdown")),
+        dict(target="qwen_rom", item="Controller SHIFT added state (FIFO head 32, bank eligibility 32, write-queue one-hot 128 bits per PC; 128 PCs)", protection="none in SHIFT; protected successor (duplicated state) routed on main at 72bfeccb1: retention PASS, physical not_met", policy="GAP: blocks production adoption", source=s(Q_CTRL_P, "state_breakdown")),
         dict(target="qwen_rom", item="Finite VM banks (ME/SU service)", protection="excluded from the service models (owner tags, protection/checks not sized)", policy="GAP: protected bank not bound", source=s(Q_VM_SU, "source_frame_storage_lower_bound_bits.excluded")),
         dict(target="qwen_rom", item="Forwarded-link opaque 16 control bits per stream", protection="integrity binding missing", policy="GAP (adoption gate)", source=s(Q_FWD, "endpoint_adoption_gates")),
         dict(target="qwen_rom", item="Relay stations (1,536) and column heads (64), 508-bit payload", protection="dual-fault replicas, default off", policy="candidate", source=s(Q_STATION, "replicas")),
         dict(target="ds_rom", item="S81 VM raw macro backend", protection="none (64 empty protection slots reserved, not RTL)", policy="GAP: mutable SRAM", source=s(DS_HBMB, "S81_r8_superseding_physical_binding.VM")),
+        dict(target="ds_rom", item="S81 PQ root CAM state (+387 bits a root, 49,536 for 128 roots) and the root face", protection="none: native interface lacks the proposed parity; protected 140/141-pin face OPEN", policy="GAP: mutable state, unestablished contract", source=s(PQ_CAM_MODEL, "mutable_state_protection")),
         dict(target="hbm_ds", item="Collective packet SRAM", protection="protected full-depth candidate (default off, +2 queue cycles)", policy="candidate", source=s(H_SRAM, "queues")),
-        dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=dict(file="results/rtl/hbm_sm_command_20261007/protected_component.json", pointer="passed, selected", commit="65988656b (on origin/main; not in this branch's base 449ebc571)")),
+        dict(target="hbm_ds", item="SM serial command/record path", protection="protected successor (preserved duplicate state + fault gating) committed on origin/main at 65988656b; minimum-parent gate passed, selected=false", policy="GAP until selected and physically integrated", source=src("results/rtl/hbm_sm_command_20261007/protected_component.json", "passed, selected")),
         dict(target="all", item="Off-package links", protection="full RS(544,514) FEC", policy="compliant (owner 2026-10-06)", source=s(DS_LINKS, "decision")),
     ]
 
@@ -590,6 +770,127 @@ STALE = [
 ]
 
 
+UNESTABLISHED = [
+    ("pq_root_protected_face", "ds_rom", "Protected PQ root 140/141-pin face and parity", "pq_root_protected_face",
+     "native root interface lacks the proposed parity (main 4251eb216 model: mutable_state_protection)"),
+    ("cdc_frequency_lock", "hbm_ds", "PHY/core clock frequency lock for the II=1 CDC drain", "cdc_frequency_lock",
+     "a hardware contract to be established, not an assumption"),
+    ("credit_producer_native", "hbm_ds", "Native credit producer (full-rate credit contract)", "credit_producer_native",
+     "today a testbench preload"),
+    ("sm_su_native_edge", "hbm_ds", "SM -> SU native result edge", "sm_su_result_edge_native",
+     "die view ends in an XOR envelope; RTL path through the GPU-comparator memory model"),
+    ("packet_sram_refill", "hbm_ds", "II=1 refill applied to the packet-SRAM receive queue", "packet_sram_ii3_rate_cap",
+     "packet SRAM still drains at II=3"),
+    ("pq_stage_b_timing", "ds_rom", "PQ CAM stage-B timing", "pq_stage_b_timing", "not measured; stage-C fallback modelled, default-off"),
+    ("half_serial_lane_beat_shift", "ds_rom", "HALF serial-lane exactness for a <= 2-cycle beat shift", "pq_half_serial_lane_exactness",
+     "not shown"),
+    ("field_phases_1792", "ds_rom", "Field phase timings of the 1,792 mapping", "field_phases_1792", "not measured"),
+]
+
+
+# Die-level evidence (OWNER STEER 2026-10-07 ~19:00 PT: academic validation, not tape-out). Hierarchical sign-off:
+# blocks at full rigor; per die: GRT overflow 0, die SS/FF STA on GRT parasitics, CTS-validated clock plan, IR, and
+# detail route of REPRESENTATIVE REGIONS with the GRT-vs-DRT error bar. NO flat full-die DRT, by design.
+# status: done | in progress | missing.  "in progress" names live work from the stream logs (no credit until committed).
+DIE_ITEMS = ("grt_overflow", "die_sta_grt_parasitics", "cts_skew_plan", "ir", "region_drt_and_error_bar")
+
+
+def die_level_evidence():
+    Q = "results/rtl/qwen_rom_closed_20261006/closure.json"
+    QIR = "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json"
+    S = "results/rtl/dsrom_s81_fulldie_20261004"
+    B = "results/rtl/budgets_20261006/README.md"
+    H = "results/rtl/hbm_accel_die_views_20261006/die_r10.json"
+    HF = "results/rtl/hbm_accel_die_floorplan_20261005/feasibility.json"
+    q = _J(Q)["physical"]["die_r20c"]
+    s9 = {v: _J(f"{S}/{v}/feasibility.json")["cases"] for v in ("v9d", "v9e")}
+    ov = lambda c: sum(l.get("overflow_total", 0) for l in c["grt"]["layers"].values())
+    hir = _J(HF)["ir_summary"]
+    ir_last = max((k for k in hir if k.startswith("ir1")), key=lambda k: int("".join(ch for ch in k[2:] if ch.isdigit()) or 0))
+    E = dict(policy="no flat full-die detail route, by design (owner steer 2026-10-07); representative regions only",
+             qwen_rom=dict(
+                 grt_overflow=dict(status="in progress", evidence=src(Q, "physical.die_r20c.grt_i50"),
+                     note="last committed full-die GRT r20c i50 overflow %s (NOT CLOSED); r21 GRT overflow 71,398 traced to the "
+                          "PDN being counted twice (grt.tcl PG-proxy on a PDN odb); r22 floorplan (IO channel, branch "
+                          "claude/qwen-dietop-20261007 bfc2ac6c5) re-running (qwen-dietop)" % format(q["grt_i50"]["overflow"], ",")),
+                 die_sta_grt_parasitics=dict(status="missing", evidence=None,
+                     note="no die SS/FF STA on GRT parasitics; the r18g path bound is a wire bound, not die STA"),
+                 cts_skew_plan=dict(status="missing", evidence=None,
+                     note="the CTS-validated die clock plan (budgets_20261006) covers S81 and HBM only; Qwen forwarded-clock graph "
+                          "is a candidate without CTS validation"),
+                 ir=dict(status="done", evidence=src(QIR),
+                     note="r19 frame: worst interior %.2f mV vs 35 mV budget (window-edge maxima exceed 35 mV); frame predates r21/r22"
+                          % q["ir"]["worst_interior_mv"]),
+                 region_drt_and_error_bar=dict(status="missing", evidence=src(Q, "physical.die_r20c.die_top_route"),
+                     note="the r20c representative-region pilot (66.6 mm2) was killed in CUGR maze routing; no region DRT and no "
+                          "GRT-vs-DRT error bar")),
+             ds_rom=dict(
+                 grt_overflow=dict(status="done", evidence=[src(f"{S}/v9d/feasibility.json", "cases.*_k16_i50"), src(f"{S}/v9e/feasibility.json", "cases.hb_k16_i50")],
+                     note="bundled full-die GRT i50 overflow: scan %d, layer1 %d (v9d, 2,048 pairs), head %d (v9e); pin access + "
+                          "legality 0. On the previous geometry: the actual 1,792 mixed geometry has no full-die GRT yet"
+                          % (ov(s9["v9d"]["sb_k16_i50"]), ov(s9["v9d"]["l1b_k16_i50"]), ov(s9["v9e"]["hb_k16_i50"]))),
+                 die_sta_grt_parasitics=dict(status="missing", evidence=None,
+                     note="no die SS/FF STA on GRT parasitics (frame-block / macro-context vehicles only)"),
+                 cts_skew_plan=dict(status="done", evidence=src(B, "section 1 table"),
+                     note="clock-only CTS validates the plan for scan/layer, layer1 and head (trunk bound 45-50 ps, columns <= 37.9 ps, "
+                          "meso wander 384-386 ps < 417 ps, tight) on r9m215_v4, not on the 1,792 geometry"),
+                 ir=dict(status="done", evidence=src(f"{S}/STATUS.md", "PSM IR table"),
+                     note="PSM rail-to-rail interior 28.6-32.2 mV (r5/r7 frames, before the recovery levers) and 13.3 mV interior on "
+                          "r9m215 v3; not re-run on the 1,792 geometry"),
+                 region_drt_and_error_bar=dict(status="missing", evidence=None,
+                     note="no representative-region DRT or GRT-vs-DRT error bar; the v9b_r1 die-top DRT resume on EPYC3 (s81-die) "
+                          "is a flat run, outside the steer")),
+             hbm_ds=dict(
+                 grt_overflow=dict(status="in progress", evidence=src(H, "overflow"),
+                     note="last committed full-die GRT record r10 overflow 371 (i5) / 454 (i50); later rounds (r14b/r16g 'routes "
+                          "clean', r23c wire record) have no committed overflow record in the tree; hbm-die owns the r23 die"),
+                 die_sta_grt_parasitics=dict(status="in progress", evidence=None,
+                     note="relay-die STA r23_rly1 (1,056 relays, clock-plan entry per pin, placement RC) SS+FF running on EPYC2 "
+                          "(hbm-die); not yet GRT parasitics, not committed"),
+                 cts_skew_plan=dict(status="done", evidence=src(B, "section 1 table"),
+                     note="clock-only CTS validates the r16j plan: 34 regions, intra bound max 56.7 ps (budget 29-90), meso wander "
+                          "270 ps < 417 ps; the r23 die and the explicit clock inputs (148467f54) are not re-validated"),
+                 ir=dict(status="done", evidence=src(HF, "ir_summary"),
+                     note="latest committed IR set %s: all_pass=%s, worst interior %.2f mV; the attention-tile exception record "
+                          "(ir_attn_exception_ira1.json) shows 241.6 mV locally, handled by its option-A quad PG record"
+                          % (ir_last, hir[ir_last]["all_pass"], hir[ir_last]["worst_interior_rail_to_rail_mv"])),
+                 region_drt_and_error_bar=dict(status="missing", evidence=None,
+                     note="the r23c die-top DRT (flat) was killed after 11 h (25,785 violations, 10 % of iteration 0); no region "
+                          "DRT or error bar yet")))
+    geo = dict(qwen_rom=dict(grt_overflow="r20c", ir="r19 frame"),
+               ds_rom=dict(grt_overflow="v9d/v9e (2,048 pairs), not the 1,792 basis", cts_skew_plan="r9m215_v4, not the 1,792 basis",
+                           ir="r5/r7 and r9m215 v3, not the 1,792 basis"),
+               hbm_ds=dict(grt_overflow="r10", cts_skew_plan="r16j, not r23", ir="die floorplan 2026-10-05 rounds, not r23"))
+    for t_, items in geo.items():
+        for k, g in items.items():
+            E[t_][k]["geometry"] = g
+    return E
+
+
+def _pins(rec):
+    """sha256 of every cited source file present in this tree (immutable evidence pin)."""
+    files = set()
+
+    def walk(x):
+        if isinstance(x, dict):
+            if isinstance(x.get("file"), str):
+                files.add((x["file"], "branch" in str(x.get("commit", ""))))
+            for v in x.values():
+                walk(v)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v)
+    walk(rec)
+    out = {}
+    for f, branch_only in sorted(files):
+        path = ROOT / f
+        if branch_only:
+            out.setdefault(f, "branch-only citation: pinned by the commit cited at the line, not by this tree's copy")
+        else:
+            out[f] = hashlib.sha256(path.read_bytes()).hexdigest() if path.is_file() else "not in this tree (pinned by the commit cited at the line)"
+    return out
+
+
 def ledger():
     q, d, h = qwen(), ds_rom(), hbm_ds()
     hu = h["compositions"]["unified_candidate"]
@@ -607,8 +908,13 @@ def ledger():
                      "price of a committed design/candidate (or a measured component not admitted at SS/FF); gated-unknown = a "
                      "cost that is not bound and is never summed. A numerical component PASS is not physical adoption."),
                targets=dict(qwen_rom=q, ds_rom=d, hbm_ds=h), ratios=ratios, no_ecc_inventory=no_ecc(), stale_claims=STALE,
+               die_level_evidence=die_level_evidence(),
+               unestablished_contracts=[dict(id=i, target=tg, contract=nm, ledger_line=ln, state=st, performance_credit=0,
+                                             source=next(x for x in dict(qwen_rom=q, ds_rom=d, hbm_ds=h)[tg]["lines"] if x["id"] == ln)["source"])
+                                        for i, tg, nm, ln, st in UNESTABLISHED],
                tool=dict(file="tools/unified_composition.py",
                          sha256=hashlib.sha256((ROOT / "tools/unified_composition.py").read_bytes()).hexdigest()))
+    rec["source_sha256"] = _pins(rec)
     return rec
 
 

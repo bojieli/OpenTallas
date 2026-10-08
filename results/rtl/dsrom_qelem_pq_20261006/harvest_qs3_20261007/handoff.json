@@ -1,0 +1,25 @@
+{
+  "job": "dsrom-qelem-qs3-cb92bce64",
+  "source_commit": "cb92bce6480e6caf11d2ab7a8d6aa92dacad33e6",
+  "status": "RUNNING_GLOBAL_ROUTE",
+  "adopted": false,
+  "exact": {
+    "record": "results/rtl/dsrom_qelem_pq_20261006/qx10qs3.json",
+    "sha256": "17af34038f3440e302b91cf2b65d7032784a0f8038d7b632c7233615a6696a7b",
+    "source_hashes_match_current_tree": true,
+    "positive_runs": 5,
+    "negative_controls_caught": 5,
+    "compared_cycles": 12775002
+  },
+  "pending": [
+    "Final SS >=15 / FF >=15 at required constraints, DRC0, pin access",
+    "v13b R16/R128 closure and required die-context verification"
+  ],
+  "note": "Calibration is placement-estimated, not closure. route.a1.log contains a git-not-repository diagnostic, but the actual route process and GRT log are live; do not relaunch.",
+  "autonomous_merge_warning": "Existing job JSON merge_target=main retained unchanged. Coordinator should account for pre-existing loop integration behavior.",
+  "integration": "Coordinator only; no central main merge or push, no duplicate launch, no running job modified.",
+  "validation": {
+    "harvest_hashes": "PASS",
+    "files": 6
+  }
+}

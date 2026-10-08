@@ -104,6 +104,7 @@ foreach bt [$fc_blk getBTerms] {
   if {[$bt getIoType] ne "INPUT"} continue
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
+  if {[fc_np $bt] <= 0} continue   ;# depth 0 (stations: a forward / launch slice port): leave its cells alone
   set fc_n0 $fc_n; set fc_n [fc_np $bt]
   set chain {}; set cur $net; set thru ""
   while {1} {
@@ -172,6 +173,7 @@ foreach bt [$fc_blk getBTerms] {
   set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] in {POWER GROUND CLOCK}} continue
   set P [fc_pin $bt]
   set nn [fc_np $bt]
+  if {$nn <= 0} continue   ;# depth 0: not a face chain (stations: forwarded b slices keep their RC flop at the face)
   set k [expr {$nn - 1}]; set cur $net; set pend {}; set walked {}
   while {$k >= 0} {
     set d [fc_driver $cur]

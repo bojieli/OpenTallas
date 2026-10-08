@@ -1,0 +1,14 @@
+{
+  "pinreg0": {
+    "exit_code": 0,
+    "expected_outcome": true
+  },
+  "pinreg1": {
+    "exit_code": 0,
+    "expected_outcome": true
+  },
+  "lease_disabled": {
+    "exit_code": 1,
+    "expected_outcome": true
+  }
+}
