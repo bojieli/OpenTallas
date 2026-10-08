@@ -27,6 +27,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py validate <job.json>        # check a spec before dropping it
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
+    closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
     closure_loop.py cancel <name>              # stop this loop's own stage for <name>; status CANCELLED
 """
 from __future__ import annotations
@@ -1116,7 +1117,8 @@ def corner_sta_compat(j, host, run, full):
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
-           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py")
+           "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
+           "../../physical/common_flow/io_ref_routed.sdc")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -2243,6 +2245,91 @@ def measured_resta(j, m):
     return mr
 
 
+# FLOW-IOREF 2026-10-08: every finished route is SIGNED OFF against its OWN routed clock tree.  The IO SDCs carry a
+# virtual-clock latency from the calibrate run's CTS (or an assumed / sheet insertion); the routed tree differs (hbm_pkt
+# ii1r/ii1rb: FF vclk 363/402 from calibrate vs routed FF mean ~307/314 -> output-port-only hold -43/-45; pre-DRT repair
+# reached +50 against the same wrong reference).  The die clock plan aligns every block's NOMINAL insertion, so the
+# routed mean is the truth: meas_resta.py re-times the route (TT setup, FF hold; no re-route) with
+# physical/common_flow/io_ref_routed.sdc read LAST, which moves every insertion-reference virtual clock (vclk*, ot_lb_v_*,
+# nbr_clk) to the mean boundary-register clock arrival of THAT corner (H1 uncertainties unchanged).  Its numbers are the
+# verdict; the routed insertion goes to measured_insertion.json as the block's die-plan value; the post-route hold ECO
+# gets the same SDC as its last post-SDC.  Spec "routed_ioref": false opts out.
+IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
+
+
+def routed_ioref(j, m):
+    """re-STA of the finished route at its own routed insertion (cached per route attempt / installed ECO): None when
+    not applicable, else {available, tt, ff, ioref{tt, ff}, ...}"""
+    if j["spec"].get("routed_ioref") is False:
+        return None
+    orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+    if not orfs:
+        return None
+    key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}"
+    rr = j.get("routed_ioref")
+    if rr and rr.get("key") == key:
+        return rr
+    rr = dict(key=key, at=now_iso(), available=False)
+    out = f"{j['run']}/cl/routed_ioref.a{j['attempt']}.json"
+    with TT_STA_SLOTS:
+        ship_helpers(j["host"], j["run"])
+        ssh(j["host"], f"mkdir -p {j['run']}/src/physical/common_flow && cp {j['run']}/cl/io_ref_routed.sdc "
+                       f"{j['run']}/src/{IOREF_SDC}", timeout=60)
+        r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
+                           f"--out {out} --append {j['run']}/cl/io_ref_routed.sdc", timeout=12000)
+    try:
+        res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
+        tt, ff = res["setup_tt"].get("worst_slack_ps"), res["hold_ff"].get("worst_slack_ps")
+        errs = (res["setup_tt"].get("errors") or []) + (res["hold_ff"].get("errors") or []) + \
+            [res[k]["error"] for k in ("setup_tt", "hold_ff") if res[k].get("error")]
+        io = dict(tt=res["setup_tt"].get("ioref") or {}, ff=res["hold_ff"].get("ioref") or {})
+        rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
+                  tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
+                  ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
+                  ff_r2r=res["hold_ff"].get("worst_reg_to_reg_slack_ps"), json=out)
+        if not rr["available"]:
+            rr["why"] = f"re-STA incomplete (TT {tt} / FF {ff}; {errs[:2]})"
+    except (IndexError, ValueError, KeyError, TypeError) as ex:
+        rr["why"] = f"re-STA output unreadable ({ex}; rc={r.returncode})"
+    j["routed_ioref"] = rr
+    ref = lambda c: ", ".join(f"{v} {d['mean']:.0f}" for v, d in sorted(rr.get("ioref", {}).get(c, {}).items())) or "none"
+    event(j, "routed-insertion IO re-STA: " + (f"TT setup {rr['tt']:+.2f} / FF hold {rr['ff']:+.2f} (route SDC "
+             f"{m.get('ss_ps')} / {m.get('ff_ps')}); routed reference TT [{ref('tt')}] FF [{ref('ff')}]"
+             if rr["available"] else f"unavailable: {rr['why']}"))
+    if rr["available"]:
+        record_routed(j, rr)
+    return rr
+
+
+def record_routed(j, rr):
+    """the routed insertion (mean boundary-register clock arrival per corner, from the sign-off re-STA) replaces the
+    calibrate value in STATE/measured_insertion.json: the die clock plan's per-block nominal insertion"""
+    pick = {}
+    for c in ("tt", "ff"):
+        vs = list((rr.get("ioref") or {}).get(c, {}).values())
+        if vs:
+            v = max(vs, key=lambda d: d["n"])
+            pick[c] = dict(mean=round(v["mean"]), min=round(v["min"]), max=round(v["max"]), n=v["n"], kind=v["kind"],
+                           clock=v["clock"])
+    if "ff" not in pick:
+        return
+    p = STATE / "measured_insertion.json"
+    with open(STATE / "measured.lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
+                                                          "blocks": {}}
+        old = d["blocks"].get(j["spec"]["block"]) or {}
+        e = dict(old, job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"],
+                 parasitics="routed (6_final.spef)", grade="routed", measured_at=now_iso(), ff=pick["ff"],
+                 calibrate=old.get("calibrate") or ({k: old.get(k) for k in ("ss", "ff", "parasitics", "job")} if old else None))
+        if "tt" in pick:
+            e["tt"] = pick["tt"]
+        d["blocks"][j["spec"]["block"]] = e
+        d["updated"] = now_iso()
+        p.write_text(json.dumps(d, indent=1) + "\n")
+        (STATE / "measured.dirty").write_text(now_iso())
+
+
 def assumed_insertion(j):
     blk = j["spec"].get("block")
     try:
@@ -2643,7 +2730,20 @@ def do_verdict(j, fleet, stl):
     closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
     event(j, f"verdict SS {ss:+.2f} / FF {ff:+.2f} / DRC {drc} / checks failed {failed} -> "
              f"{'CLOSED' if closed else 'NOT CLOSED'}")
-    mr = measured_resta(j, m)
+    rr = routed_ioref(j, m)
+    if rr and rr.get("available"):
+        # FLOW-IOREF: the sign-off IS the routed-insertion re-STA (either direction); the route-SDC numbers are kept
+        m.update(ss_ps=rr["tt"], ff_ps=rr["ff"], routed_ioref=rr, route_sdc_clock=dict(ss_ps=ss, ff_ps=ff),
+                 post_sdc=list(m.get("post_sdc") or []) + ([IOREF_SDC] if IOREF_SDC not in (m.get("post_sdc") or []) else []))
+        if m.get("setup_post_sdc") and IOREF_SDC not in m["setup_post_sdc"]:
+            # setup-only post-SDCs (nbr_clk_measured: -source latency) are read after the post-SDCs: re-read it last
+            m["setup_post_sdc"] = list(m["setup_post_sdc"]) + [IOREF_SDC]
+        ss, ff = rr["tt"], rr["ff"]
+        closed = ss >= SS_MIN and ff >= FF_MIN and drc == 0 and not failed and benches_ok and not m.get("errors")
+        j["metrics"] = m
+        event(j, f"verdict at the ROUTED insertion: TT {ss:+.2f} / FF {ff:+.2f} -> {'CLOSED' if closed else 'NOT CLOSED'}")
+    # the calibrate-insertion re-STA / re-route is moot once the route is timed on its own tree
+    mr = None if (rr and rr.get("available")) else measured_resta(j, m)
     if mr and mr.get("available"):
         mclosed = mr["tt"] >= SS_MIN and mr["ff"] >= FF_MIN and drc == 0 and not failed and benches_ok
         if mclosed:
@@ -2651,7 +2751,7 @@ def do_verdict(j, fleet, stl):
             m.update(ss_ps=mr["tt"], ff_ps=mr["ff"], measured_resta=mr, assumed_clock=dict(ss_ps=ss, ff_ps=ff))
             j["metrics"], ss, ff, closed = m, mr["tt"], mr["ff"], True
             event(j, f"measured-clock re-STA CLOSES the route (TT {ss:+.2f} / FF {ff:+.2f}): no re-route")
-    if not (mr and mr.get("available") and closed) and cal_reroute(j, stl, closed):
+    if not (rr and rr.get("available")) and not (mr and mr.get("available") and closed) and cal_reroute(j, stl, closed):
         return
     if closed:
         j["stage_idx"] += 1
@@ -3389,6 +3489,42 @@ def cmd_retry(a):
 
 
 @locked_job_command
+def cmd_ioref_rejudge(a):
+    """human (FLOW-IOREF): re-judge a NEEDS_RTL job at its ROUTED insertion (routed_ioref re-STA, no re-route).  Closes
+    -> back to the verdict stage (READY; the cached re-STA is the verdict).  Hold-only at the routed reference with no
+    ECO tried yet -> verdict stage too (the post-route hold ECO then runs with io_ref_routed.sdc).  Prints one line."""
+    j = load_job(a.name)
+    m = dict(j.get("metrics") or {})
+    if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m.get("orfs_dir"):
+        print(f"SKIP {a.name}: {j['status']}, orfs_dir {m.get('orfs_dir')}")
+        return
+    if (j.get("eco") or {}).get("installed"):
+        print(f"SKIP {a.name}: an installed ECO replaced the route")
+        return
+    ss0, ff0 = m.get("route_sdc_clock", {}).get("ss_ps", m.get("ss_ps")), m.get("route_sdc_clock", {}).get("ff_ps", m.get("ff_ps"))
+    m["ss_ps"], m["ff_ps"] = ss0, ff0
+    rr = routed_ioref(j, m)
+    drc, failed = m.get("drc"), j.get("failed_checks") or []
+    if not rr or not rr.get("available"):
+        save_job(j)
+        print(f"NOREF {a.name}: {(rr or {}).get('why')}")
+        return
+    closes = rr["tt"] >= SS_MIN and rr["ff"] >= FF_MIN and drc == 0 and not failed
+    holdonly = rr["tt"] >= SS_MIN and rr["ff"] < FF_MIN and drc == 0 and not failed and not (j.get("eco") or {}).get("tried")
+    refs = {c: ", ".join(f"{v} {d['mean']:.0f}" for v, d in rr["ioref"].get(c, {}).items()) for c in ("tt", "ff")}
+    line = (f"{a.name}: route SDC TT {ss0} / FF {ff0} -> routed ref TT {rr['tt']:+.2f} / FF {rr['ff']:+.2f} DRC {drc} "
+            f"(FF ref {refs['ff']}; TT ref {refs['tt']})")
+    if closes or holdonly:
+        stl = stage_list(j["spec"])
+        vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
+        event(j, f"FLOW-IOREF re-judge: {line} -> {'CLOSES' if closes else 'hold-only: ECO at the routed reference'}")
+        ledger(j, f"RE-JUDGE at the routed insertion (no re-route): {line}")
+    save_job(j)
+    print(("FLIP " if closes else "HOLDONLY " if holdonly else "STILL ") + line)
+
+
+@locked_job_command
 def cmd_reverdict(a):
     """human: re-judge a NEEDS_RTL / NEEDS_HUMAN job on its recorded evidence after an acceptance-line change, no re-route.
     Route sign-off meets the line -> back to the verdict stage (READY).  Else an earlier hold ECO whose recorded result
@@ -3535,6 +3671,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
+    r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
@@ -3556,6 +3693,8 @@ def main():
         cmd_retry_eco(a)
     elif a.cmd == "reverdict":
         cmd_reverdict(a)
+    elif a.cmd == "ioref-rejudge":
+        cmd_ioref_rejudge(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
     elif a.cmd == "recover-eco-overlays":
