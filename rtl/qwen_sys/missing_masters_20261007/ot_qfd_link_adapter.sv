@@ -36,6 +36,8 @@ module ot_qfd_link_adapter #(
     parameter integer RXD = 32,          // link receive buffer (credits given to the far adapter): >= link RTT
     parameter integer SRAM = 0,          // 1: receive buffer in SRAM macros (RXD <= 512)
     parameter integer SKD = 4,           // die-RX skid entries (>= read pipeline depth 2 + 1 for full rate)
+    parameter integer PINREG = 0,        // 1: r_v / r_d leave through one more register placed at the die-RX pins (+1 cycle a word;
+                                         //    the die receiver gets one more credit, OCRED + 1, so the longer credit loop keeps full rate)
     parameter integer MUT = 0            // bench mutant: 1 = one extra link credit (overruns the far buffer)
 ) (
     input  wire          clk,
@@ -45,8 +47,8 @@ module ot_qfd_link_adapter #(
     input  wire [W-1:0]  c_d,
     output reg           c_cr,
     // die RX face
-    output reg           r_v,
-    output reg  [W-1:0]  r_d,
+    output wire          r_v,
+    output wire [W-1:0]  r_d,
     input  wire          r_cr,
     // PHY FDI (hard macro)
     input  wire          tx_up,
@@ -60,7 +62,10 @@ module ot_qfd_link_adapter #(
     localparam integer IA = (IBUF <= 2) ? 1 : $clog2(IBUF);
     localparam integer RA = $clog2(RXD);
     localparam integer CB = $clog2(RXD + 2) + 1;
-    localparam integer OB = $clog2(OCRED + 1) + 1;
+    localparam integer OCR = OCRED + ((PINREG != 0) ? 1 : 0);
+    localparam integer OB = $clog2(OCR + 1) + 1;
+    reg          rr_v;                   // die-RX word register (the pin register when PINREG = 0)
+    reg [W-1:0]  rr_d;
     // ---- reset copy ----
     reg rs0, rs;
     always @(posedge clk or negedge rst_n) if (!rst_n) begin rs0 <= 1'b0; rs <= 1'b0; end else begin rs0 <= 1'b1; rs <= rs0; end
@@ -114,13 +119,13 @@ module ot_qfd_link_adapter #(
         tx_flit[W+CRW+8] <= send;
         tx_flit[8 +: CRW] <= flit ? cr_owed : {CRW{1'b0}};
         tx_flit[7:0] <= tx_seq;
-        if (pop_rb) r_d <= sk[sk_rp];
+        if (pop_rb) rr_d <= sk[sk_rp];
     end
     always @(posedge clk or negedge rs) begin
         if (!rs) begin
             ib_n <= 0; ib_wp <= 0; ib_rp <= 0; c_cr <= 1'b0; tx_v <= 1'b0; tx_seq <= 0; rx_seq <= 0;
             tx_cred <= RXD + ((MUT != 0) ? 1 : 0); cr_owed <= 0;
-            rb_n <= 0; rb_wp <= 0; rb_rp <= 0; o_cred <= OCRED; r_v <= 1'b0;
+            rb_n <= 0; rb_wp <= 0; rb_rp <= 0; o_cred <= OCR; rr_v <= 1'b0;
             sk_res <= 0; sk_n <= 0; sk_wp <= 0; sk_rp <= 0; rd_v0 <= 1'b0; rd_v1 <= 1'b0;
             f_die_ovr <= 1'b0; f_link_ovr <= 1'b0; f_seq <= 1'b0; f_cred <= 1'b0; fault <= 1'b0;
         end else begin
@@ -153,9 +158,18 @@ module ot_qfd_link_adapter #(
             sk_n <= sk_n + (rd_v1 ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
             sk_res <= sk_res + (rd_go ? 1'b1 : 1'b0) - (pop_rb ? 1'b1 : 1'b0);
             // die RX face
-            r_v <= pop_rb;
+            rr_v <= pop_rb;
             o_cred <= o_cred - (pop_rb ? 1'b1 : 1'b0) + (r_cr ? 1'b1 : 1'b0);
             fault <= f_die_ovr | f_link_ovr | f_seq | f_cred;
         end
     end
+    generate if (PINREG != 0) begin : g_pin
+        reg          p_v;
+        reg [W-1:0]  p_d;
+        always @(posedge clk) p_d <= rr_d;
+        always @(posedge clk or negedge rs) if (!rs) p_v <= 1'b0; else p_v <= rr_v;
+        assign r_v = p_v; assign r_d = p_d;
+    end else begin : g_nopin
+        assign r_v = rr_v; assign r_d = rr_d;
+    end endgenerate
 endmodule

@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 193,
+  "closed": 194,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 113
+  "merged": 114
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -2560,6 +2560,22 @@
    "source_on_main": false,
    "record_on_main": false,
    "merged_sha": "(merge-cxstn: station files only from 1c3be936a/97d3a4233/13b4b9fb1; redesign-2 VM split8 + face-chain stagger NOT merged)",
+   "status": "merged"
+  },
+  {
+   "job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+   "closed": "2026-10-08 (closure loop, CLOSED)",
+   "closed_by": "closure loop (PINREG=1: r_v/r_d through a die-RX pin register, TC route; TT +6.61 / FF +16.92 / DRC 0 at 833.333; was RVT TT -37.11 at 351607d29tc on 7 r_d output ports). LVT alternatives b8fa70cd5-lvt-tc TT -74.93 and -lvt-hm25-tc TT -30.78 FAILED, so PINREG adopted",
+   "branch": "claude/drive-1143-serdes-pin-20261008",
+   "source_commit": "073694e6b",
+   "record_commit": "36f6cb9ff",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(drive-1413 merge of claude/drive-1143-serdes-pin-20261008)",
+   "adopted": "PINREG=1 for qfd_io_serdes_rxd512 (views/qfd_io_serdes_rxd512 from this route); RTL default stays PINREG=0",
+   "cycles_added": "+1 cycle a received word (die-RX pin register), OCRED+1; exact512 bench 3320 -> 3321 cycles (1,500 words), rate unchanged 498/1000",
    "status": "merged"
   }
  ]

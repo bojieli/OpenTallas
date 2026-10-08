@@ -16,7 +16,10 @@ import argparse, json, re, shlex, sys
 from collections import defaultdict
 from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / 'tools'))
+# --gen-root: import the die generator from another checkout (the source the die case / GRT SPEF was built from), so a
+# kit refreshed with newer views keeps the netlist of the routed case
+_g = next((sys.argv[i + 1] for i, x in enumerate(sys.argv[:-1]) if x == '--gen-root'), None)
+sys.path.insert(0, str(Path(_g) / 'tools' if _g else ROOT / 'tools'))
 import dsrom_s81_fulldie as S  # noqa: E402
 
 CLK_NAMES = ('ck', 'clk', 'cks', 'ckh', 'cw', 'wclk', 'fi0', 'fi', 'xf', 'ck_in')
@@ -25,12 +28,54 @@ K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0),
 # CTS-validated SS and FF insertions (the plan's CTS ran SS / FF libraries only): an estimate, marked in kit.json
 
 
-def closed_libs(corner):
+# S81-PH partitions (tools/budgets/tiles.py): a die slab master hardened as tiles.  The die STA still models the slab
+# as one interim master (no composite view); the index reports how many of its tile kinds are closed.
+PARTS = dict(dsfd_bk_selector=('dsfd_selt_q', 'dsfd_selt_c'), dsfd_bk_collector=('dsfd_colt_lane', 'dsfd_colt_mrg'),
+             dsfd_sp_capture=('dsfd_capt_x', 'dsfd_capt_g2', 'dsfd_capt_ctl'),
+             dsfd_sp_collective=('dsfd_coll_lane_w', 'dsfd_coll_lane_e', 'dsfd_coll_core', 'dsfd_coll_ck'),
+             dsfd_ctrl=('dsfd_ctrl_pc', 'dsfd_ctrl_ctr'),
+             dsfd_svc=('dsfd_svc_pc', 'dsfd_svc_stn', 'dsfd_svcio_ad', 'dsfd_svcio_od', 'dsfd_svcio_q', 'dsfd_svcio_x'),
+             dsfd_sp_vm=('dsfd_vm_bg',), dsfd_sp_gather=('ot_s81ph_root_tile', 'ot_s81ph_root_blk'))
+
+
+def _rank(p, root, label):
+    """lib preference when several files define one cell: this die variant's closed records, then S81-PH closed tiles,
+    then other S81 die view records, then anything else (newest first within a rank)"""
+    r = str(p.relative_to(root))
+    k = (0 if r.startswith(f'physical/s81_die_views/views/{label}/') else 1 if r.startswith('physical/s81_ph_views/closed/')
+         else 2 if r.startswith('physical/s81_die_views/views/') else 3)
+    return (k, -p.stat().st_mtime)
+
+
+def closed_libs(corner, root=ROOT, label='m221pq'):
+    """cell -> (lib path, kind): kind 'closed' when the lib sits in a closure-loop record dir (corner_sta.json beside it),
+    else 'macro' (memory / PHY / hard IP liberty)"""
     out = {}
-    for p in list((ROOT / 'physical').rglob(f'*_{corner}.lib')):
+    for p in sorted((root / 'physical').rglob(f'*_{corner}.lib'), key=lambda q: _rank(q, root, label)):
         t = p.read_text(errors='ignore')[:200000]
         for c in re.findall(r'^\s*cell\s*\(\s*"?([A-Za-z0-9_]+)"?\s*\)', t, re.M):
-            out.setdefault(c, p)
+            out.setdefault(c, (p, 'closed' if (p.parent / 'corner_sta.json').exists() else 'macro'))
+    return out
+
+
+def measured_insertion(path):
+    """block -> {ss, ff, tt} routed clock insertion (ps) from the closure loop's measured_insertion.json; a corner whose
+    routed measurement is on another clock than the block's falls back to the calibrate CTS-only value; tt missing ->
+    mean(ss, ff)"""
+    if not path or not Path(path).exists():
+        return {}
+    out = {}
+    for b, r in json.loads(Path(path).read_text())['blocks'].items():
+        v = {}
+        for c in ('ss', 'ff', 'tt'):
+            x = r.get(c)
+            if x and x.get('clock', r.get('clock')) == r.get('clock') and 'mean' in x:
+                v[c] = float(x['mean'])
+            elif (r.get('calibrate') or {}).get(c):
+                v[c] = float(r['calibrate'][c]['mean'])
+        if 'ss' in v and 'ff' in v:
+            v.setdefault('tt', (v['ss'] + v['ff']) / 2)
+            out[b] = v
     return out
 
 
@@ -78,6 +123,13 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--clock-plan', type=Path, help='results/rtl/budgets_20261006/clock_plan/<die>.json.gz: per-sink '
                     'planned SS / FF insertion (sinks not in the plan take the nearest planned sink of the same clock)')
+    ap.add_argument('--gen-root', type=Path, help='checkout whose tools/dsrom_s81_fulldie.py builds the die (default: this one)')
+    ap.add_argument('--views-root', type=Path, default=ROOT, help='checkout whose physical/ supplies the view libs')
+    ap.add_argument('--label', default='m221pq', help='die variant label of physical/s81_die_views/views/<label>/')
+    ap.add_argument('--measured', type=Path, default=ROOT / 'results/rtl/budgets_20261006/measured_insertion.json',
+                    help='closure-loop routed block clock insertion: added to the planned pin latency of every INTERIM '
+                         'master (or S81-PH slab via its tiles) that has one; closed views carry it in their arcs')
+    ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
     a = ap.parse_args()
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
     m = S.build()
@@ -89,13 +141,19 @@ def main():
     rp = S.real_ports_r8()
     S.write_netlist(m, 1, a.out / 'die.v')
     rec = dict(masters={}, clocks=[])
+    vroot = a.views_root.resolve()
+    cls_ = {c: closed_libs(c, vroot, a.label) for c in ('ss', 'tt', 'ff')}
     for corner in ('ss', 'tt', 'ff'):
-        cl = closed_libs(corner)
+        cl = cls_[corner]
         cells, libs = [], set()
         for mst, it in sorted(first.items()):
-            if mst in cl:
-                libs.add(str(cl[mst]))
-                rec['masters'][mst] = dict(view='closed', lib=str(cl[mst].relative_to(ROOT)))
+            src = cl.get(mst)
+            if not src and corner == 'tt' and mst in cls_['ss']:
+                src = cls_['ss'][mst]        # routed view without a TT extraction: its SS liberty (pessimistic, marked)
+            if src:
+                libs.add(str(src[0]))
+                r_ = rec['masters'].setdefault(mst, dict(view=src[1], libs={}))
+                r_['libs'][corner] = str(src[0].relative_to(vroot)) + (' (SS as TT)' if src is not cl.get(mst) else '')
                 continue
             if mst in rp:      # real macro without a lib: its die ports, bit names from the real port map
                 ports = {}
@@ -113,7 +171,11 @@ def main():
             else:
                 ports = dict(pdir.get(mst, {}))
             cells.append((mst, (it.w + S.SHAVE) * (it.h + S.SHAVE), ports))
-            rec['masters'][mst] = dict(view='interim', ports=len(ports))
+            r_ = dict(view='interim', ports=len(ports))
+            if mst in PARTS:
+                done = sorted(x for x in PARTS[mst] if x in cls_['ss'] and cls_['ss'][x][1] == 'closed')
+                r_.update(view='partitioned', tiles=list(PARTS[mst]), tiles_closed=done)
+            rec['masters'][mst] = r_
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
     # clocks: die domain sources (collective PLL pins) and the column roots (cfifo co)
@@ -155,6 +217,22 @@ def main():
                 lat[pk] = [nb[2], nb[3]]
         for k_ in list(lat):
             lat[k_] = [lat[k_][0], lat[k_][1], (lat[k_][0] + lat[k_][1]) / 2.0]
+        # routed insertion: an interim master has no clock tree in its arcs; add the block's measured routed insertion
+        #   (its own, else the mean over its closed S81-PH tiles) so its flops arrive where a hardened view's would
+        mi = measured_insertion(a.measured)
+        added = defaultdict(int)
+        for k_ in list(lat):
+            mst = by[k_.split('/')[0]].master
+            if rec['masters'][mst]['view'] not in ('interim', 'partitioned'):
+                continue
+            src = [mst] if mst in mi else [x for x in PARTS.get(mst, ()) if x in mi]
+            if src:
+                add = [sum(mi[x][c] for x in src) / len(src) for c in ('ss', 'ff', 'tt')]
+                lat[k_] = [lat[k_][i] + add[i] for i in range(3)]
+                rec['masters'][mst]['insertion_added_ps'] = [round(x, 1) for x in add]
+                rec['masters'][mst]['insertion_from'] = src
+                added[mst] += 1
+        rec['routed_insertion'] = dict(file=str(a.measured), interim_masters=len(added), pins=sum(added.values()))
         for ci, corner in ((0, 'ss'), (1, 'ff'), (2, 'tt')):
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
                 f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
@@ -189,10 +267,22 @@ def main():
               f'report_tns -{"min" if corner == "ff" else "max"} -digits 1',
               f'report_check_types -violators -max_slew -max_capacitance > /kit/drv_{corner}.rpt']
         (a.out / f'sta_{corner}.tcl').write_text('\n'.join(t for t in T if t) + '\n')
-    (a.out / 'kit.json').write_text(json.dumps(rec, indent=1) + '\n')
     n = defaultdict(int)
     for v in rec['masters'].values():
         n[v['view']] += 1
+    rec['counts'] = dict(n)
+    rec['views_root'] = str(vroot)
+    (a.out / 'kit.json').write_text(json.dumps(rec, indent=1) + '\n')
+    if a.index_out:
+        cnt = defaultdict(int)
+        for it in m['insts']:
+            cnt[it.master] += 1
+        idx = dict(schema='opentallas.s81.die_view_index.v1', die=a.die, label=a.label, s81_opts=a.s81_opts,
+                   counts=dict(n), instances={k: sum(cnt[m_] for m_, v in rec['masters'].items() if v['view'] == k) for k in n},
+                   masters={k: dict(v, instances=cnt[k]) for k, v in sorted(rec['masters'].items())},
+                   routed_insertion=rec.get('routed_insertion'))
+        a.index_out.parent.mkdir(parents=True, exist_ok=True)
+        a.index_out.write_text(json.dumps(idx, indent=1) + '\n')
     print(json.dumps(dict(n), indent=0), len(srcs), 'clock sources')
 
 

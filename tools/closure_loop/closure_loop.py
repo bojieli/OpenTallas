@@ -107,7 +107,7 @@ SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
-STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (2, 8), "export": (2, 8),
+STAGE_DEFAULTS = {"bench": (4, 16), "route": None, "signoff": (4, 16), "collect": (1, 1), "export": (1, 1),
                   "summary": (2, 16)}
 
 
@@ -610,6 +610,8 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
                 return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
+        if ram <= 2:          # 2026-10-08: collect/export copy files; host-local, so they cannot move -- a 16 GB headroom
+            head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
         if info["mem_gb"] - pr - res < ram + head:
             return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
                            + f" < {ram}+{head:.0f}")
@@ -1258,6 +1260,14 @@ def launch_stage(j, st, cmd):
                     continue
                 ff_sub.append(f)
             ff = ff_sub
+            # VM8-TIMING 2026-10-08: the FF hold scene also reads io_ref_routed.sdc LAST (the shipped helper copy in {CL}),
+            # so route-time FF hold repair targets the MEAN boundary insertion of the tree being built -- the reference
+            # the verdict's routed re-STA uses (routed_ioref).  Without it the scene timed vclk at the MIN insertion
+            # (vclk_corner_true.sdc) and every route passed FF at route time, then failed the verdict on output-pin
+            # flops by (mean - min) + 50 (hbm_vm8_nws_sp_hm10: 6,906 outputs at -45..-64).  Spec "route_ff_ioref": false
+            # opts out; a spec that already lists an io_ref_routed.sdc keeps its own.
+            if j["spec"].get("route_ff_ioref", True) and not any(f.rsplit("/", 1)[-1] == "io_ref_routed.sdc" for f in ff):
+                ff = ff + [f"{j['run']}/cl/io_ref_routed.sdc"]
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
@@ -2651,6 +2661,8 @@ def step(j, fleet):
             event(j, f"{st['key']} {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} (rc={rc}) "
                      f"{(j.get('bench_work') or {}).get(st['key'], '')}")
         else:
+            if st["kind"] in ("route", "calibrate"):
+                hm_auto_events(j)
             if rc != 0 and ok_extra and st["kind"] == "signoff" and st.get("ok"):
                 # a sign-off script that exits non-zero for "not closed" but wrote its evidence (the job's ok check
                 # passes) is a verdict, not a crash: w2-rb-safe-no2/no3 exited 1 on SS -18.9 and the retry then refused
@@ -2750,6 +2762,29 @@ def adoption_held(j):
         j["wait"] = note
         event(j, note)
     return True
+
+
+def hm_auto_lines(text):
+    """OT_HM_AUTO report lines (tools/orfs_hold_mm.tcl ot_hm_guard) -> event texts"""
+    return [ln.split("OT_HM_AUTO", 1)[1].strip() for ln in text.splitlines() if ln.startswith("OT_HM_AUTO")]
+
+
+def hm_auto_events(j):
+    """HM-GUARD (2026-10-08): a route-time hold repair that auto-reduced its margin (too many endpoints inside HM / too
+    much projected buffer area) leaves REPORTS_DIR/ot_hm_auto_<stage>.rpt: one job event per report and attempt"""
+    try:
+        r = ssh(j["host"], f"cat $(find {j['run']}/routes -name 'ot_hm_auto_*.rpt' 2>/dev/null | head -4) "
+                           f"</dev/null 2>/dev/null", timeout=60)
+    except Exception as ex:  # an event is informative only: never fail a stage on it
+        log(f"[{j['name']}] hm_auto_events: {ex}")
+        return
+    seen = j.setdefault("hm_auto_seen", [])
+    for ln in hm_auto_lines(r.stdout or ""):
+        key = f"{j.get('attempt')}|{ln}"
+        if key not in seen:
+            seen.append(key)
+            event(j, ln)
+    j["hm_auto_seen"] = seen[-20:]
 
 
 def do_verdict(j, fleet, stl):
@@ -2876,6 +2911,17 @@ def eco_paths(j, m):
     return rb, ob or rb
 
 
+def baked_post_sdcs(j, m, cands):
+    """spec verdict post-SDCs that the route's own in-run corner STA already read as {orfs}/w18_extra.sdc (byte-equal)"""
+    orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
+    if not cands or not orfs or not j.get("host") or not j.get("run"):
+        return []
+    r = ssh(j["host"], "; ".join(f"cmp -s {shlex.quote(orfs)}/w18_extra.sdc {shlex.quote(j['run'] + '/src/' + p)} && echo {shlex.quote(p)}"
+                                 for p in cands) + "; true", timeout=60)
+    hit = set((r.stdout or "").split())
+    return [p for p in cands if p in hit]
+
+
 def start_hold_eco(j, fleet, m):
     rb, ob = eco_paths(j, m)
     if not rb:
@@ -2894,6 +2940,14 @@ def start_hold_eco(j, fleet, m):
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
+    if baked:
+        # COREKV-ECO 2026-10-08: a route whose in-run corner STA read a spec verdict post-SDC as w18_extra.sdc (Qwen core
+        # signoff833_skew90.sdc) records post_sdc [] -> the routed-ioref step made it [io_ref_routed.sdc] and the ECO was
+        # timed at the 770 ps route SDC (core_kv_banked_fullwidth_h1hm80: FF +38.85 there -> 0 cells; TT -97 = route
+        # SDC). The verdict read it, so the ECO reads it too, before io_ref_routed (always last).
+        post_sdcs = baked + [p for p in post_sdcs if p != IOREF_SDC] + ([IOREF_SDC] if IOREF_SDC in post_sdcs else [])
+        event(j, f"hold ECO: verdict post-SDC(s) {baked} were applied in-run (w18_extra.sdc): passed to the ECO")
     post = " ".join(shlex.quote(p) for p in post_sdcs)
     # LOOP-GAPS 2026-10-08: the ECO is timed (TT setup, option B) and judged with the route's OWN sign-off SDC set: its
     # sign-off SDC (corner_sta sdc_name, e.g. 6_signoff.sdc) and its setup-only post-SDCs (setup_post_sdc, e.g. the
@@ -2901,6 +2955,11 @@ def start_hold_eco(j, fleet, m):
     env += f" SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')}"
     if m.get("setup_post_sdc"):
         env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    if j.get("eco_stack"):
+        # DRIVE-1243: stacked ECO (retry-eco --stack): the installed ECO's db lives in the route base as 6_final.*
+        # (5_2_route.odb there is the PRE-ECO route): ECO that db, sign off from the same base
+        rb = ob = j["eco_stack"]["base"]
+        env += " ECO_RB_DB=6_final.odb"
     recovery = j.get("eco_overlay_recovery") or {}
     hist = len(j.get("eco_history") or [])
     out = recovery.get("out", f"{j['run']}/cl/eco" + (f"-r{hist + 1}" if hist else ""))   # earlier ECOs stay as evidence
@@ -3627,7 +3686,13 @@ def cmd_retry_eco(a):
     earlier ECO missed; the earlier ECO is kept in eco_history and its output dir is preserved (new out: cl/eco-r<n>)."""
     j = load_job(a.name)
     e, m = j.get("eco") or {}, j.get("metrics") or {}
-    if j["status"] != "NEEDS_RTL" or not e.get("tried") or e.get("installed"):
+    if getattr(a, "stack", False):
+        # DRIVE-1243: an INSTALLED ECO judged at a stale IO reference (the routed-insertion re-STA, e.g. after the
+        # c4ffc4f9d vclk mapping, fails it on hold only): a second ECO on top of the installed db, at the routed reference
+        if j["status"] != "NEEDS_RTL" or not e.get("installed"):
+            sys.exit(f"{a.name}: --stack needs a NEEDS_RTL job with an installed ECO")
+        j["eco_stack"] = dict(base=e["rb"], prior_out=e.get("out"), at=now_iso())
+    elif j["status"] != "NEEDS_RTL" or not e.get("tried") or e.get("installed"):
         sys.exit(f"{a.name}: {j['status']}, eco tried={e.get('tried')} installed={e.get('installed')}: "
                  f"only a NEEDS_RTL job with an uninstalled, missed hold ECO can re-run it")
     if stage_list(j["spec"])[j["stage_idx"]]["kind"] != "verdict":
@@ -3735,6 +3800,7 @@ def main():
     v = sub.add_parser("validate"); v.add_argument("file")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
+    r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name")

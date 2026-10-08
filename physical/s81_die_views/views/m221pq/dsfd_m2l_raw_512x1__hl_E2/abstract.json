@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_m2l_raw_512x1__hl_E2",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_E2_a1f23fa0b_mm/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_E2_a1f23fa0b_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/routes/s81_hend_m221pq_hl_E2_a1f23fa0b_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hl-E2-a1f23fa0b-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_m2l_raw_512x1__hl_E2.lef": "15a17d47c23a193a17ef6eac0aaf85b6ff8d364ec00ad499bfafabe09545864b",
+    "dsfd_m2l_raw_512x1__hl_E2_ff.lib": "91390e50962eac014e4325f788ec50547acffd26478c807d6501a66f4bda7441",
+    "dsfd_m2l_raw_512x1__hl_E2_ss.lib": "74a999a937a4b07fa5d0ee60d57c3c404f79d31be5a6c95e009bab7e3119bf40"
+  },
+  "ok": true
+}

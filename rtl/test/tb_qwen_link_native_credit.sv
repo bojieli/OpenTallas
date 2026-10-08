@@ -102,7 +102,7 @@ module tb_qwen_link_native_credit;
     if(watchdog>30000)$fatal(1,"CONSERVATION_TIMEOUT sent=%0d/%0d received=%0d/%0d",asrc,bsrc,agot,bgot);
    end
    repeat(HOPS+8)@(negedge ca);
-   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || A.g_rx[0].u_rx.u_af.wr_bin!=A.g_rx[0].u_rx.u_af.rd_bin || B.g_rx[0].u_rx.u_af.wr_bin!=B.g_rx[0].u_rx.u_af.rd_bin || A.sv!=0 || B.sv!=0 || A.xv_q || B.xv_q || aov || bov)$fatal(1,"LIVE_STATE_AT_DRAIN");
+   if(!A.g_rx[0].u_rx.ib_empty || !B.g_rx[0].u_rx.ib_empty || A.g_rx[0].u_rx.g_af.u_af.wr_bin!=A.g_rx[0].u_rx.g_af.u_af.rd_bin || B.g_rx[0].u_rx.g_af.u_af.wr_bin!=B.g_rx[0].u_rx.g_af.u_af.rd_bin || A.sv!=0 || B.sv!=0 || A.xv_q || B.xv_q || aov || bov)$fatal(1,"LIVE_STATE_AT_DRAIN");
    if(asent!=N || bsent!=N || bpop!=N || apop!=N || awrap<5 || bwrap<5)$fatal(1,"DRAIN_OR_WRAP_INVARIANT");
    $display("EPOCH %0d hops=%0d delivered=%0d/%0d first_credit_rtt=%0d/%0d window_restart=%0d/%0d cycles=%0d stalls=%0d/%0d wraps=%0d/%0d",epoch,HOPS,agot,bgot,areturn-afirst,breturn-bfirst,a5-afirst,b5-bfirst,aticks,astalls,bstalls,awrap,bwrap);
   end
