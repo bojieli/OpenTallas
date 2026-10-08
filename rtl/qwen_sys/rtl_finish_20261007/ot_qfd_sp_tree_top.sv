@@ -194,7 +194,7 @@ module ot_qfd_sp_tree_top #(
         .i_mmode(q_mmode), .i_oen(q_oen), .i_amax(q_amax), .i_rmax(q_rmax), .i_mbase(q_mbase),
         .wrom_re(c_wrom_re), .wrom_addr(c_wrom_addr), .kv_re(c_kv_re),
         .scale_re(c_scale_re), .scale_gre(c_sgre), .scale_addr(c_saddr),
-        .x_re(), .x_addr(), .x_q('0), .xl0(),
+        .x_re(), .x_addr(), .x_q({((1<<SMAX)*32){1'b0}}), .xl0(),
         .x_dv(c_xdv), .x_dc(c_xdc), .x_dcs(c_xdcs), .x_dsp(c_xdsp),
         .t_sel_e(c_sel), .t_tv_e(c_tv), .tr_fault(trf_q | {{(W-1){1'b0}}, u_fault}),
         .p_v_e2(c_pv), .p_f_e2(c_pf), .p_am(pam_q), .p_fault(pf_q), .fab_fault(fab_q),

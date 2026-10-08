@@ -196,6 +196,9 @@ module ot_qfd_emb_bank_beh #(
             end
         end
     endfunction
+    // yosys cannot parse a part-select of a function return (word(...)[15:0]): name both words first (same expressions)
+    wire [511:0] w_scale = word(32'h8000_0000 | (((BANK - NCODE) << LSB) + ap1));
+    wire [511:0] w_code  = word((BANK << LWB) + ap1);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin wp <= 0; rp <= 0; seats <= OCRED; ph <= 1'b0; vp <= 0; i_cr <= 1'b0; o_v <= 1'b0; end
         else begin
@@ -211,8 +214,7 @@ module ot_qfd_emb_bank_beh #(
         if (i_v) q[wp[0]] <= i_addr;
         if (launch) ap0 <= q[rp[0]];
         ap1 <= ap0;
-        if (vp[1]) o_data <= (BANK >= NCODE) ? {496'd0, word(32'h8000_0000 | (((BANK - NCODE) << LSB) + ap1))[15:0]}
-                                             : word((BANK << LWB) + ap1);
+        if (vp[1]) o_data <= (BANK >= NCODE) ? {496'd0, w_scale[15:0]} : w_code;
     end
 endmodule
 
