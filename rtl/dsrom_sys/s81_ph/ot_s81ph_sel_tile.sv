@@ -67,6 +67,9 @@ endmodule
 
 module dsfd_selt_q #(
     parameter integer CMP_RETIME = 0,
+    parameter integer PIPE2 = 0,             // CLAUDE s81-blocks: slice PIPE2 (status +3 edges: pair with dsfd_selt_c SLAT)
+    parameter integer QIO = 0,               // CLAUDE s81-blocks: 1 = one more register on f_c / f_cr in and t_s / t_o out
+                                             // (selt_q flop->pin classes -212 ps; command + status round trip +2 = dsfd_selt_c XDX 1)
     parameter integer DM = 4,                // landing FIFO depth at the control = initial credits
     parameter integer SAFE = 0               // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
 ) (
@@ -95,15 +98,24 @@ module dsfd_selt_q #(
     always @(posedge ck[0]) begin x_last <= b_last; x_lv <= b_lv; x_val <= b_val; x_idx <= b_idx; end
     // command pin flops
     reg [`SELT_CB-1:0] cq; reg crq;
+    wire [`SELT_CB-1:0] f_cx; wire f_crx;
+    generate if (QIO != 0) begin : g_qi
+        reg [`SELT_CB-1:0] cq0; reg crq0;
+        always @(posedge ck[0] or negedge rst_n) if (!rst_n) begin cq0 <= {`SELT_CB{1'b0}}; crq0 <= 1'b0; end
+                                                else begin cq0 <= f_c; crq0 <= f_cr[0]; end
+        assign f_cx = cq0; assign f_crx = crq0;
+    end else begin : g_qi0
+        assign f_cx = f_c; assign f_crx = f_cr[0];
+    end endgenerate
     always @(posedge ck[0] or negedge rst_n) if (!rst_n) begin cq <= {`SELT_CB{1'b0}}; crq <= 1'b0; end
-                                            else begin cq <= f_c; crq <= f_cr[0]; end
+                                            else begin cq <= f_cx; crq <= f_crx; end
     // the slice (unchanged) and its line memory
     wire s_rdy, o_valid, o_last; reg o_ready;
     wire [W-1:0] o_lv, o_ninf; wire [W*16-1:0] o_val; wire [W*IW-1:0] o_idx;
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE)) u_s (
+    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
@@ -130,7 +142,13 @@ module dsfd_selt_q #(
         if (!rst_n) sq <= {`SELT_SB{1'b0}};
         else sq <= {flt, act_q, act, h_tag, h_k, h_v, x_v & s_rdy, s_rdy,
                     s_ovf, s_emitted, s_done2, s_stopped, s_hfin, s_last, s_bf, s_bc, s_gf, s_gc};
-    assign t_s = sq;
+    generate if (QIO != 0) begin : g_qs
+        reg [`SELT_SB-1:0] sq1;
+        always @(posedge ck[0] or negedge rst_n) if (!rst_n) sq1 <= {`SELT_SB{1'b0}}; else sq1 <= sq;
+        assign t_s = sq1;
+    end else begin : g_qs0
+        assign t_s = sq;
+    end endgenerate
     // selected beats under credits
     reg [CW-1:0] crd;
     always @(*) o_ready = crd != 0;
@@ -141,11 +159,17 @@ module dsfd_selt_q #(
             crd <= crd + (crq ? 1'b1 : 1'b0) - ((o_valid && o_ready) ? 1'b1 : 1'b0);
             oq <= {o_last, o_ninf, o_lv, o_idx, o_valid && o_ready};
         end
-    assign t_o = oq;
+    generate if (QIO != 0) begin : g_qo
+        reg [`SELT_OB-1:0] oq1;
+        always @(posedge ck[0] or negedge rst_n) if (!rst_n) oq1 <= {`SELT_OB{1'b0}}; else oq1 <= oq;
+        assign t_o = oq1;
+    end else begin : g_qo0
+        assign t_o = oq;
+    end endgenerate
 endmodule
 
 // SAFE quarter tile master (same ports as dsfd_selt_q)
-module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0) (
+module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0, parameter integer PIPE2 = 0, parameter integer QIO = 0) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,
     input  wire [514:0]          lane,
@@ -154,13 +178,22 @@ module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0
     output wire [`SELT_SB-1:0]   t_s,
     output wire [`SELT_OB-1:0]   t_o
 );
-    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(
     parameter integer SEARCH_PIPE = 1,   // adopted 10-07 (selt_c cd3337221-b SS -541; bench selector/pipeline_r1)
     parameter integer DM   = 4,
-    parameter integer PACE = 2
+    parameter integer PACE = 2,
+    // CLAUDE s81-blocks 2026-10-07 (selt_c b6fcd9853 SS -308.9: qs/cq -> cnt, qs -> c_rem, qs -> lq): MRG_PIPE 1 =
+    // the serving-tile select registered (ts_r, settles in the off-slot edge; needs PACE >= 2), each landing entry
+    // carries its lane popcount (computed at the pin flop), the DONE count accumulates one edge after the take;
+    // RQPIPE 1 = the control's tie quotas from registered prefix sums (+1 edge a segment); SLAT = extra slice status
+    // latency (dsfd_selt_q PIPE2 tiles) added to the control's waits / holds
+    parameter integer MRG_PIPE = 0,
+    parameter integer RQPIPE = 0,
+    parameter integer SLAT = 0,
+    parameter integer XDX = 0                // extra control <-> quarter edges each way (QIO quarter tiles: 1)
 ) (
     input  wire [0:0]                ck,
     input  wire [0:0]                rst,
@@ -217,7 +250,7 @@ module dsfd_selt_c #(
     wire c_fclr, c_ing, c_stop, c_p2, c_p3, c_rep, c_hclr, rep_req, ovf, busy;
     wire [Q*(KW+1)-1:0] c_rem;
     generate if (SEARCH_PIPE == 3) begin : g_pp   // ping-pong half-rate search units (ot_s81ph_sel_ctl_pp.sv)
-    ot_s81ph_sel_ctl_pp #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+    ot_s81ph_sel_ctl_pp #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2 + XDX), .PERM(1)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
@@ -226,7 +259,7 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end else if (SEARCH_PIPE == 2) begin : g_half   // SAFE backstop: half-rate search units (ot_s81ph_sel_ctl_half.sv)
-    ot_s81ph_sel_ctl_half #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+    ot_s81ph_sel_ctl_half #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2 + XDX), .PERM(1)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
@@ -235,7 +268,7 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end else if (SEARCH_PIPE != 0) begin : g_pipe
-    ot_s81ph_sel_ctl_pipe #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+    ot_s81ph_sel_ctl_pipe #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2 + XDX), .PERM(1), .RQPIPE(RQPIPE), .SLAT(SLAT)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
@@ -244,7 +277,7 @@ module dsfd_selt_c #(
         .c_p2(c_p2), .c_p3(c_p3), .c_rep(c_rep), .c_st(c_st), .c_rem(c_rem), .c_hclr(c_hclr),
         .rep_req(rep_req), .ovf(ovf), .busy(busy));
     end else begin : g_native
-    ot_s81ph_native_sel_ctl #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2), .PERM(1)) u_ctl (
+    ot_s81ph_native_sel_ctl #(.Q(Q), .K(K), .KW(KW), .CB(CB), .XD(2 + XDX), .PERM(1)) u_ctl (
         .clk(ck[0]), .rst_n(rst_n), .k_in(k_r), .k_ld(kld_r), .qs(qs),
         .s_gc(s_gc), .s_gf(s_gf), .s_bc(s_bc), .s_bf(s_bf),
         .s_last(s_last), .s_hfin(s_hfin), .s_stopped(s_stopped), .s_done2(s_done2), .s_emitted(s_emitted),
@@ -263,7 +296,11 @@ module dsfd_selt_c #(
         assign t_c[`SELT_CB * g +: `SELT_CB] = cmd[g];
     end endgenerate
     // ---- landing FIFOs (head at entry 0), credits
+    function automatic [4:0] pop16(input [15:0] x);
+        integer j; begin pop16 = 0; for (j = 0; j < 16; j = j + 1) pop16 = pop16 + x[j]; end
+    endfunction
     reg  [DW-1:0] lq [0:Q-1][0:DM-1];
+    reg  [4:0]    lqp [0:Q-1][0:DM-1];        // MRG_PIPE: popcount of the entry's lane-valid mask
     reg  [CW-1:0] lc [0:Q-1];
     reg  [Q-1:0]  lpop;
     wire [Q-1:0]  lv;
@@ -278,9 +315,9 @@ module dsfd_selt_c #(
         for (l = 0; l < Q; l = l + 1)
             for (e = 0; e < DM; e = e + 1) begin
                 if (lpop[l]) begin
-                    if (oq[OB * l] && e == lc[l] - 1) lq[l][e] <= oq[OB * l + 1 +: DW];
-                    else if (e + 1 < DM) lq[l][e] <= lq[l][(e + 1) % DM];
-                end else if (oq[OB * l] && e == lc[l]) lq[l][e] <= oq[OB * l + 1 +: DW];
+                    if (oq[OB * l] && e == lc[l] - 1) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
+                    else if (e + 1 < DM) begin lq[l][e] <= lq[l][(e + 1) % DM]; lqp[l][e] <= lqp[l][(e + 1) % DM]; end
+                end else if (oq[OB * l] && e == lc[l]) begin lq[l][e] <= oq[OB * l + 1 +: DW]; lqp[l][e] <= pop16(oq[OB * l + 1 + 320 +: 16]); end
             end
     reg [Q-1:0] crq;
     always @(posedge ck[0] or negedge rst_n) if (!rst_n) crq <= {Q{1'b0}}; else crq <= lpop;
@@ -292,6 +329,7 @@ module dsfd_selt_c #(
     reg  [1:0] cq;
     reg        done_pend;
     reg  [9:0] cnt;
+    reg  [4:0] cnt_add;                      // MRG_PIPE: the last take's lane count, added on the next edge
     reg  [4:0] flt_rep;
     reg  [$clog2(PACE+1)-1:0] pc;
     wire       slot = (pc == 0);
@@ -303,10 +341,13 @@ module dsfd_selt_c #(
         for (s = 0; s < Q; s = s + 1) if (qs[2*s +: 2] == cq) ts = s[1:0];
 `endif
     end
+    reg  [1:0] ts_r;
+    always @(posedge ck[0]) ts_r <= ts;
+    wire [1:0] ts_u = (MRG_PIPE != 0) ? ts_r : ts;
 `ifdef OT_S81PH_MUT3
-    wire [1:0] tsel = ts ^ 2'd1;
+    wire [1:0] tsel = ts_u ^ 2'd1;
 `else
-    wire [1:0] tsel = ts;
+    wire [1:0] tsel = ts_u;
 `endif
     wire [DW-1:0] hd = lq[tsel][0];
     wire take = slot && !(|flt_new) && rep_pend == 0 && !done_pend && lv[tsel];
@@ -315,16 +356,13 @@ module dsfd_selt_c #(
     wire [15:0] hd_ninf = hd[DW-2 -: 16];
     wire [15:0] hd_lv = hd[335:320];
     wire [319:0] hd_idx = hd[319:0];
-    function automatic [4:0] pop16(input [15:0] x);
-        integer j; begin pop16 = 0; for (j = 0; j < 16; j = j + 1) pop16 = pop16 + x[j]; end
-    endfunction
     reg        o_v;
     reg [511:0] o_d;
     always @(posedge ck[0] or negedge rst_n) begin
         if (!rst_n) begin
             seg_open <= 1'b0; seg_k <= {KW{1'b0}}; seg_tag <= 8'd0; flt <= 5'd0; e_coll <= 1'b0; e_kt <= 1'b0;
             k_r <= {KW{1'b0}}; kld_r <= 1'b0; qs <= {2'd3, 2'd2, 2'd1, 2'd0};
-            ovf_seen <= 1'b0; rep_pend <= 2'd0; rep_n <= 1'b0; cq <= 2'd0; done_pend <= 1'b1; cnt <= 10'd0;
+            ovf_seen <= 1'b0; rep_pend <= 2'd0; rep_n <= 1'b0; cq <= 2'd0; done_pend <= 1'b1; cnt <= 10'd0; cnt_add <= 5'd0;
             flt_rep <= 5'd0; pc <= 0; o_v <= 1'b0; o_d <= 512'd0;
         end else begin
             kld_r <= |s_acc;
@@ -349,6 +387,7 @@ module dsfd_selt_c #(
             if (ovf) ovf_seen <= 1'b1;
             pc <= (pc == PACE - 1) ? 0 : pc + 1'b1;
             o_v <= 1'b0;
+            if (MRG_PIPE != 0) begin cnt <= cnt + {5'd0, cnt_add}; cnt_add <= 5'd0; end
             if (rep_req) rep_pend <= rep_pend + 1'b1;
             if (slot) begin
                 if (|flt_new) begin
@@ -361,7 +400,8 @@ module dsfd_selt_c #(
                 end else if (take) begin
                     o_v <= 1'b1;
                     o_d <= {4'd3, seg_tag, 145'd0, hd_last, cq, hd_ninf, hd_lv, hd_idx};
-                    cnt <= cnt + pop16(hd_lv);
+                    if (MRG_PIPE != 0) cnt_add <= lqp[tsel][0];
+                    else cnt <= cnt + pop16(hd_lv);
                     if (hd_last) begin
                         cq <= cq + 1'b1;
                         if (cq == 2'd3) done_pend <= 1'b1;
@@ -373,6 +413,9 @@ module dsfd_selt_c #(
             end
         end
     end
+`ifndef SYNTHESIS
+    initial if (MRG_PIPE != 0 && PACE < 2) $fatal(1, "dsfd_selt_c: MRG_PIPE needs PACE >= 2");
+`endif
     reg [513:0] vd_q;
     always @(posedge ck[0]) vd_q <= {o_d, o_v & rst_n, rst_n};
     assign vd = vd_q;
@@ -386,7 +429,8 @@ module ot_s81ph_sel_t #(
     parameter integer SAFE = 0,              // 1: dsfd_selt_q2 quarter tiles
     parameter integer LSTG = 5,              // die stations on each lane from the slab face to its quarter tile
     parameter integer DM   = 4,
-    parameter integer PACE = 2
+    parameter integer PACE = 2,
+    parameter integer PIPE2 = 0, MRG_PIPE = 0, RQPIPE = 0, SLAT = 0, QIO = 0   // CLAUDE s81-blocks variants
 ) (
     input  wire          ck, rst,
     input  wire [4*515-1:0] lanes,           // {NE, NW, SE, SW}
@@ -401,9 +445,9 @@ module ot_s81ph_sel_t #(
         integer h;
         always @(*) st[0] = lanes[515 * g +: 515];
         always @(posedge ck) for (h = 1; h <= LSTG; h = h + 1) st[h] <= st[h-1];
-        dsfd_selt_q #(.DM(DM), .SAFE(SAFE), .CMP_RETIME(CMP_RETIME)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
+        dsfd_selt_q #(.DM(DM), .SAFE(SAFE), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO)) u_q (.ck(ck), .rst(rst), .lane(st[LSTG]), .f_c(tc[CB * g +: CB]), .f_cr(tcr[g]),
             .t_s(ts[SB * g +: SB]), .t_o(to[OB * g +: OB]));
     end endgenerate
-    dsfd_selt_c #(.SEARCH_PIPE(SEARCH_PIPE), .DM(DM), .PACE(PACE)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),
+    dsfd_selt_c #(.SEARCH_PIPE(SEARCH_PIPE), .DM(DM), .PACE(PACE), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .XDX(QIO)) u_c (.ck(ck), .rst(rst), .f_s(ts), .t_c(tc), .f_o(to), .t_cr(tcr), .vd(vd),
         .vf(vf));
 endmodule

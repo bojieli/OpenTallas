@@ -10,9 +10,26 @@ module root_cam_tb;
  ot_v41_ret_root #(.D(128),.QD(128)) native(
   .clk(clk),.rst_n(rst_n),.i_v(i_v),.i_t(i_t),.i_d(i_d),.i_e(i_e),
   .r_v(rv[0]),.r_row(row[0]),.r_pos(pos[0]),.r_fp32(fp[0]),.r_bf16(bf[0]),.r_e(re[0]),.fault(fault[0]));
+ wire i_p = ~^{i_e,i_d,i_t}
+`ifdef ROOT_PAR_FLIP
+   ^ (i_v && i_t[28:13]==16'd77)            // MUTANT: corrupt the face parity of row 77's words
+`endif
+   ;
+ wire r_p;
  ot_s81_pq_ret_root_cam #(.D(128),.QD(128)) dut(
-  .clk(clk),.rst_n(rst_n),.i_v(i_v),.i_t(i_t),.i_d(i_d),.i_e(i_e),
-  .r_v(rv[1]),.r_row(row[1]),.r_pos(pos[1]),.r_fp32(fp[1]),.r_bf16(bf[1]),.r_e(re[1]),.fault(fault[1]));
+  .clk(clk),.rst_n(rst_n),.i_v(i_v),.i_t(i_t),.i_d(i_d),.i_e(i_e),.i_p(i_p),.up_fault(1'b0),
+  .r_v(rv[1]),.r_row(row[1]),.r_pos(pos[1]),.r_fp32(fp[1]),.r_bf16(bf[1]),.r_e(re[1]),.r_p(r_p),.fault(fault[1]));
+`ifdef ROOT_BUF_FLIP
+ // MUTANT: one data bit of a waiting buffer entry upsets (entry 0, first time it is valid after cycle 300)
+ reg flipped=0;
+ always @(negedge clk) if (!flipped && cycle>300 && dut.bv[0]) begin dut.bd[0][3] = ~dut.bd[0][3]; flipped=1; end
+`endif
+`ifdef ROOT_BV_FLIP
+ reg bflipped=0;
+ always @(negedge clk) if (!bflipped && cycle>300) begin dut.bv[100] = ~dut.bv[100]; bflipped=1; end
+`endif
+ always @(posedge clk) if (rst_n && rv[1] && dut.PAR != 0 && !(^{row[1],pos[1],fp[1],bf[1],re[1],r_p}))
+  $fatal(1,"r_par wrong on row %0d", row[1]);
  reg [51:0] seen[0:1][0:1023];
  reg valid[0:1][0:1023];
  integer publication_cycle[0:1][0:1023]; integer cycle=0;
