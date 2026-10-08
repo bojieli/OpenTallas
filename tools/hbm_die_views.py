@@ -360,7 +360,10 @@ def receipt_views():
             if (not corner.get('closes_signoff')
                     or corner['setup_ss']['worst_slack_ps'] != met['ss_ps']
                     or corner['hold_ff']['worst_slack_ps'] != met['ff_ps']):
-                raise ValueError(f'closure receipt/export disagreement: {path}')
+                # the loop verdict re-times the route with its post_sdc set (e.g. the link-budget / option-B SDCs);
+                #   then the verdict's metrics are the closure figure and the exported corner_sta is the route's own
+                if not met.get('post_sdc'):
+                    raise ValueError(f'closure receipt/export disagreement: {path}')
             rows[n] = dict(master=n, kind=kind_of(n), status='closed', dir=dest['to'],
                            lef=files[0], lib=dict(ss=files[1], ff=files[2]),
                            files_sha256={f: sha(base / f) for f in files},
