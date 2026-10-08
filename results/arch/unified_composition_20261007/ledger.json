@@ -1130,7 +1130,7 @@
       {
        "file": "docs/PROGRAM_PLAN_2026_10_05.md",
        "pointer": null,
-       "commit": "c572f25e6"
+       "commit": "3d61f1050"
       }
      ],
      "note": "no native end-to-end S81 token yet"
@@ -3304,6 +3304,20 @@
    "lbpin": 2,
    "note": "24 <job>-lbc re-routes (source 387a4d2ac, link_budget_hook + cg_pushdown + clk_net_protect), 14 <job>-cgfix (class A/B CTS fixes) and 2 <job>-lbpin queued to re-close them; qfd_chead / qfd_cst re-sign-off jobs need a Qwen re-route; colt_mrg / svc_pc need their budget sheets adopted (s81-blocks)"
   },
+  "reclosed": [
+   {
+    "job": "qfd_lst_h-5a3bb1721-lbc",
+    "block": "qfd_lst_h",
+    "ss_ps": 244.84,
+    "ff_ps": 42.17,
+    "drc": 0,
+    "record": {
+     "file": "results/rtl/qwen_die_masters_20261006",
+     "pointer": "closure-loop verdict",
+     "commit": "a95df3ae1 (branch claude/setup-triage-20261007; routed at 387a4d2ac with the link-budget hook)"
+    }
+   }
+  ],
   "consequence": "a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified jobs carry no closure credit until their re-routes re-close under the consistent budget"
  },
  "established_contracts_rtl_bench": [
@@ -3444,7 +3458,7 @@
  ],
  "tool": {
   "file": "tools/unified_composition.py",
-  "sha256": "fe6f144195669ed69f5453676e96ddf7449fbb15796cce9fb29e006630ccc57b"
+  "sha256": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
  },
  "source_sha256": {
   "AGENTS.md": "d47e33869ed5fefa3be09cffa270ccb831227173fcf0295b5ebecc178b55a042",
@@ -3495,6 +3509,7 @@
   "results/rtl/qwen_ctrl_shift_20261007/model.json": "12ca47e170b26b082b3f51a28c6f01684bf943705d6468dd6578e6a08357d123",
   "results/rtl/qwen_ctrl_shift_20261007/qualification.json": "4df6d84d47b0f54ededa60df892d9ec2d6574d81e2e77b90002ccbab98c22249",
   "results/rtl/qwen_ctrl_shift_20261007/runtime_protection_gate.json": "828d5bad3648d34e23ef901927bb25b4bf50709df4170ee6f83610106faca5a7",
+  "results/rtl/qwen_die_masters_20261006": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json": "9c76d982e053c48cc45907594c485f0528492468438a7282a1ba3225287d30e5",
   "results/rtl/qwen_rom_closed_20261006/closure.json": "fb9a41ab4aac5501433bdc0fa641af64357a4d1ac23e24637edfcb0ee5c2c899",
   "results/rtl/qwen_rom_die_r17_20261005/ir/ir_record.json": "603e5469b3af4cee1ed18dab84ed4e6115522e611008f0682cee594eb9abdb9b",
@@ -3525,6 +3540,6 @@
   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "branch-only citation: pinned by the commit cited at the line, not by this tree's copy",
   "tools/chip_explorer_build.py": "4926d22a1e676416edf0b45c92e47d0c13d2ef92a0b50cadd723ba9108da168a",
   "tools/qwen_die_sta_classes.py": "5f69de4a422d2ff93437c472f335a06a9a458d9ecfb88eb9a534433b3f0d5907",
-  "tools/unified_composition.py": "fe6f144195669ed69f5453676e96ddf7449fbb15796cce9fb29e006630ccc57b"
+  "tools/unified_composition.py": "adddf631ed004d6c18c0559b0eccbf6611c37be5f50a58e556ca40cbd714a688"
  }
 }

@@ -62,8 +62,16 @@ def canon(blk):
         blk = b2
 
 
+RECLOSE = re.compile(r"; job (\S+?-(?:lbc|cgfix|lbpin))(?:,|\s|$)")
+
+
 def verdicts(ref):
+    """Latest committed verdict per block on `ref`; re-close jobs (-lbc / -cgfix / -lbpin, routed under the consistent
+    link budget) are also taken from any remote branch, since the loop commits them to the owner's branch first."""
     log = subprocess.check_output(["git", "log", ref, "--reverse", "--format=%h %cI %s"], cwd=ROOT, text=True)
+    extra = subprocess.check_output(["git", "log", "--remotes", "--reverse", "--format=%h %cI %s",
+                                     "--grep=^closure-loop: .* CLOSED"], cwd=ROOT, text=True)
+    log += "\n".join(l for l in extra.splitlines() if RECLOSE.search(l))
     latest = {}
     for line in log.splitlines():
         h, t, subj = line.split(" ", 2)
@@ -71,7 +79,10 @@ def verdicts(ref):
         if m:
             blk, ss, ff, drc, per = m.group(1), float(m.group(2)), float(m.group(3)), int(m.group(4)), float(m.group(5))
             blk = canon(blk)
-            latest[blk] = dict(commit=h, at=t, ss=ss, ff=ff, drc=drc, period=per,
+            rc = RECLOSE.search(subj)
+            if blk in latest and latest[blk].get("reclose") and not rc:
+                continue        # a re-close under the consistent budget is newer evidence than any pre-budget verdict
+            latest[blk] = dict(commit=h, at=t, ss=ss, ff=ff, drc=drc, period=per, reclose=rc.group(1) if rc else None,
                                accepted=abs(per - 833.333) < 0.01 and ss >= SS_LINE and ff >= FF_LINE and drc == 0)
     return latest
 
@@ -94,6 +105,10 @@ def apply_link_budget(v):
     lb = link_budget()
     for b, x in v.items():
         r = lb.get(b)
+        if x.get("reclose"):
+            x["lb"] = "HOLDS" if x["accepted"] else "REVOKED"
+            x["lb_ss"] = x["ss"]
+            continue
         if x["accepted"]:
             if r is None:
                 x["lb"] = "not re-checked"
@@ -187,7 +202,9 @@ def render(ref, rows, v):
     for t in ("qwen_rom", "ds_rom", "hbm_ds"):
         r = rows[t]
         o.append(f"## {t}")
-        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f})" for b in r["closed"]) or "none"))
+        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f}"
+                                          + (f"; re-closed under the link budget by {v[b]['reclose']}, branch commit" if v[b].get("reclose") else "")
+                                          + ")" for b in r["closed"]) or "none"))
         if r["revoked"]:
             o.append("Revoked: link budget (new SS under the consistent split): "
                      + ", ".join(f"{b} ({v[b]['lb_ss']:+.1f})" for b in r["revoked"]))

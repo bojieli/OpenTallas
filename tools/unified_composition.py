@@ -965,6 +965,9 @@ def _link_budget_summary():
                 revoked=dict(label="revoked: link budget", jobs=by.get("REVOKED", [])),
                 unverified=dict(label="unverified (needs a per-link model)", reason=d["unchecked_reason"], jobs=by.get("NOT CHECKED", [])),
                 requeued=d["requeued"],
+                reclosed=[dict(job="qfd_lst_h-5a3bb1721-lbc", block="qfd_lst_h", ss_ps=244.84, ff_ps=42.17, drc=0,
+                               record=src("results/rtl/qwen_die_masters_20261006", "closure-loop verdict",
+                                          commit="a95df3ae1 (branch claude/setup-triage-20261007; routed at 387a4d2ac with the link-budget hook)"))],
                 consequence="a job counts as closed only if its link-budget SS is >= 0 (closure line); revoked and unverified "
                             "jobs carry no closure credit until their re-routes re-close under the consistent budget")
 
