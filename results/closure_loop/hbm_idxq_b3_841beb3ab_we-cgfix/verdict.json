@@ -1,0 +1,197 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_idxq_b3_841beb3ab_we-cgfix",
+ "block": "hfd_index_q_b3",
+ "owner": "Claude:setup-triage (block owner claude/hbm-abstracts-svcidx-20261006 / Codex:hbm-views)",
+ "source_branch": "claude/setup-triage-20261007",
+ "source_commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we-cgfix",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 251.4,
+  "ff_ps": 19.0,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+   "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we-cgfix/routes/hbm_idxq_b3_841beb3ab_we_cgfix/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we-cgfix/routes/hbm_idxq_b3_841beb3ab_we_cgfix/work/orfs/logs/asap7/opentallas_hfd_index_q_b3_asap7_hv_hbm_idxq_b3_841beb3ab_we_cgfix/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_split": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "lint_b5 rc=0\nsim_seg rc=0 IDXQ_BENCH PASS\nneg rc=1 (must be nonzero) FATAL: /srv/opentallas-scratch/claude/closure-loop/hbm_idxq_b3_841beb3ab_we-cgfix/bench/tb_seg.sv:52: IDXQ_BENCH FAIL\noverall rc=0\n",
+   "track": "parallel"
+  },
+  "bench_neg_lane_swap": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "IDXQ_NEG_DETECTED\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 3142,
+    "mean": 1184.3,
+    "min": 1122.5,
+    "max": 1298.3
+   },
+   "all": {
+    "n": 6286,
+    "mean": 1159.9,
+    "min": 1113.5,
+    "max": 1298.3
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3142,
+    "mean": 790.8,
+    "min": 737.9,
+    "max": 892.2
+   },
+   "all": {
+    "n": 6286,
+    "mean": 769.3,
+    "min": 730.1,
+    "max": 892.2
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 1184,
+   "CK_SS_ALL_MEAN": 1160,
+   "CK_SS_MIN": 1122,
+   "CK_SS_ALL_MIN": 1114,
+   "CK_SS_MAX": 1298,
+   "CK_SS_ALL_MAX": 1298,
+   "CK_FF_MEAN": 791,
+   "CK_FF_ALL_MEAN": 769,
+   "CK_FF_MIN": 738,
+   "CK_FF_ALL_MIN": 730,
+   "CK_FF_MAX": 892,
+   "CK_FF_ALL_MAX": 892
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T09:21:50-07:00",
+ "job_spec": {
+  "name": "hbm_idxq_b3_841beb3ab_we-cgfix",
+  "block": "hfd_index_q_b3",
+  "owner": "Claude:setup-triage (block owner claude/hbm-abstracts-svcidx-20261006 / Codex:hbm-views)",
+  "purpose": "SETUP-TRIAGE requeue of hbm_idxq_b3_841beb3ab_we (SS -27.06 / FF -150.86): class A/B flow fixes only (clock-gate push-down with latch cloning, CTS-net dont_touch before repair, fixed SDC patterns) + flow-hold mm hold repair; source = origin/main + setup-triage fixes, no RTL change by this stream. ",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ],
+   "branch": "claude/setup-triage-20261007",
+   "commit": "df37bfa4eb58832ad1436fe1ba41d377cc84bee0"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_split",
+     "cmd": "bash physical/hbm_accel_die_views/index_q/run_bench_split.sh {RUN}/bench; rc=$?; tail -4 {RUN}/bench/summary.txt; exit $rc",
+     "expect": "pass",
+     "threads": 2,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "neg_lane_swap",
+     "cmd": "grep -q 'IDXQ_BENCH FAIL' {RUN}/bench/neg.log && echo IDXQ_NEG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "IDXQ_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b3 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b3.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_END=0.5 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" CTSA=\"-sink_clustering_enable -repair_clock_nets -apply_ndr none\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_index_q_b3 physical/hbm_accel_die_views/index_q/rtl/split/hfd_index_q_b3.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_WS_END=0.5 $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_index_q_b3.lef {RUN}/routes/{NAME}/view/hfd_index_q_b3_ss.lib {RUN}/routes/{NAME}/view/hfd_index_q_b3_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/budget_signoff.sdc",
+    "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/index_q/split/hfd_index_q_b3"
+   }
+  ],
+  "cycles_added": 2,
+  "merge_target": null,
+  "budget": {
+   "master": "hfd_index_q_b3",
+   "clock": "core_clk"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ }
+}
