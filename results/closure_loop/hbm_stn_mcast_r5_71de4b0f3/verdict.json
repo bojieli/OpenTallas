@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_stn_mcast_r5_71de4b0f3",
+ "block": "hfd_mcast_r5",
+ "owner": "Claude:hbm-views",
+ "source_branch": "claude/hbm-abstracts-stn-20261006",
+ "source_commit": "71de4b0f37f25dcf9694c2dbb9ad81a59d83bbd7",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r5_71de4b0f3",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 45.79,
+  "ff_ps": 19.76,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r5_71de4b0f3/routes/hbm_stn_mcast_r5_71de4b0f3/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_mcast_r5_71de4b0f3/routes/hbm_stn_mcast_r5_71de4b0f3/work/orfs/logs/asap7/opentallas_hfd_mcast_r5_asap7_hv_hbm_stn_mcast_r5_71de4b0f3/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_bench_mcast_exact_and_negatives": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "pos rc=0 plreg_mismatch=0\nneg rc=1 plreg_mismatch=0\nneg_pl rc=0 plreg_mismatch=1980\nneg_rs rc=1 plreg_mismatch=0\nb[2063]<-a[2063] 2 0\nb[2064]<-a[2064] 2 0\nb[2065]<-a[2065] 2 0\nb[2066]<-a[2066] 2 0\nb[2067]<-a[2067] 2 0\nck<-a[2063] 5 0\nck<-a[2064] 5 0\nck<-a[2065] 6 0\nck<-a[2066] 6 0\nck<-a[2067] 6 0\nMCAST_BENCH PASS\n",
+   "track": "parallel"
+  },
+  "bench_bench_neg_generator_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "NEG_DETECTED\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  },
+  "die_pin_access": {
+   "ok": true,
+   "out": "hfd_mcast_r5 OT_PA DONE DRT0073=0\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2063,
+    "mean": 591.1,
+    "min": 582.0,
+    "max": 601.8
+   },
+   "all": {
+    "n": 8586,
+    "mean": 594.1,
+    "min": 577.4,
+    "max": 636.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 2063,
+    "mean": 401.2,
+    "min": 393.4,
+    "max": 410.1
+   },
+   "all": {
+    "n": 8586,
+    "mean": 404.2,
+    "min": 388.8,
+    "max": 446.1
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 591,
+   "CK_SS_ALL_MEAN": 594,
+   "CK_SS_MIN": 582,
+   "CK_SS_ALL_MIN": 577,
+   "CK_SS_MAX": 602,
+   "CK_SS_ALL_MAX": 636,
+   "CK_FF_MEAN": 401,
+   "CK_FF_ALL_MEAN": 404,
+   "CK_FF_MIN": 393,
+   "CK_FF_ALL_MIN": 389,
+   "CK_FF_MAX": 410,
+   "CK_FF_ALL_MAX": 446
+  },
+  "db": "4_1_cts.odb",
+  "clock": "ck",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T10:47:57-07:00",
+ "job_spec": {
+  "name": "hbm_stn_mcast_r5_71de4b0f3",
+  "block": "hfd_mcast_r5",
+  "owner": "Claude:hbm-views",
+  "purpose": "hfd_mcast_r5 fix #3: 56a4bdb6c closed every IO class (tap pin register at the pin: t0 +65 / +83) but missed by -2.26 on meso rs -> r_on/r_align broadcast -> dsel di (14 levels, 8 buffers): ONREG (r_on / r_align from next-state flops, one per chunk), 0 cycles; same placement hook + N k25",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 6,
+  "peak_ram_gb": 20,
+  "source": {
+   "branch": "claude/hbm-abstracts-stn-20261006",
+   "commit": "71de4b0f37f25dcf9694c2dbb9ad81a59d83bbd7",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "bench_mcast_exact_and_negatives",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_mcast_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_mcast_r5 $PWD {RUN}/bench",
+     "expect": "pass",
+     "pass_regex": "MCAST_BENCH PASS",
+     "threads": 4,
+     "peak_ram_gb": 12
+    },
+    {
+     "name": "bench_neg_generator_mutant",
+     "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_mcast_r5/result.txt && echo NEG_DETECTED && exit 1",
+     "expect": "fail",
+     "fail_regex": "NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "MARGIN=1 CKINS=334 CKFF=\"167 183\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r5 0.45 --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=0 --orfs-var OT_FC_FILE=/src/physical/hbm_accel_die_views/stations/bench/fc_taps2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=N $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "ck",
+    "threads": 6,
+    "peak_ram_gb": 20
+   },
+   "route": {
+    "cmd": "MARGIN=1 CKINS=$CK_SS_MAX CKFF=\"$CK_FF_MIN $CK_FF_MAX\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r5 0.45 --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=0 --orfs-var OT_FC_FILE=/src/physical/hbm_accel_die_views/stations/bench/fc_taps2.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=N",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^signoff_corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_mcast_r5.lef {RUN}/routes/{NAME}/view/hfd_mcast_r5_ss.lib {RUN}/routes/{NAME}/view/hfd_mcast_r5_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    },
+    {
+     "name": "die_pin_access",
+     "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_mcast_r5.lef hfd_mcast_r5 {RUN}/pa"
+    }
+   ],
+   "post_sdc": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/stations/hfd_mcast_r5/route_cl"
+   }
+  ],
+  "cycles_added": 1,
+  "merge_target": "claude/hbm-abstracts-20261006",
+  "budget": {
+   "enabled": false,
+   "reason": "station margin SDC recipe (stn_margin_sdc.py: forwarded-clock arcs + meso crossing bounds); ck IO from this job's calibrate (CKINS = CK_SS_MAX, CKFF = CK_FF_MIN/MAX)"
+  },
+  "cycles_note": "0 added by this fix (placement + keepout); r5 carries +1 forwarded (RC=1) and the pre-existing pin-stages 2 tap cycle"
+ }
+}

@@ -1,0 +1,212 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_router_kneg_368f1f6d2_b",
+ "block": "hfd_router",
+ "owner": "Claude:hbm-router",
+ "source_branch": "claude/hbm-router-dieview-20261006",
+ "source_commit": "368f1f6d2bfa4cb4a544eb2a613443ae9ae64727",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_368f1f6d2_b",
+ "acceptance": {
+  "ss_min_ps": 15.0,
+  "ff_min_ps": 15.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-06 18:15: closed at SS >= +15 / FF >= +15 at 833.333 (60/25 corners), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 36.82,
+  "ff_ps": 24.2,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_368f1f6d2_b/routes/hbm_router_kneg_368f1f6d2_b/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_368f1f6d2_b/routes/hbm_router_kneg_368f1f6d2_b/work/orfs/logs/asap7/opentallas_hfd_router_asap7_hv_hbm_router_kneg_368f1f6d2_b/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_kneg_core": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "ROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=1 vectors ref=1500 dut=1500 bad=0 latency ref=23 dut=20..20\nROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=2 vectors ref=1500 dut=1500 bad=0 latency ref=23 dut=20..20\nROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=3 vectors ref=1500 dut=1500 bad=0 latency ref=23 dut=20..20\nROUTER_PS PIPESEL=1 RATE=1 NEG=0 SEED=4 vectors ref=1500 dut=1500 bad=0 latency ref=23 dut=20..20\nKNEG_BENCH PASS\n",
+   "track": "parallel"
+  },
+  "bench_wrapper_lockstep_kneg": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "TB_hfd_router checks=40000 mismatches=0\n",
+   "track": "parallel"
+  },
+  "bench_neg_kneg": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1091,
+    "mean": 817.9,
+    "min": 686.3,
+    "max": 1016.9
+   },
+   "all": {
+    "n": 14844,
+    "mean": 752.0,
+    "min": 648.9,
+    "max": 1016.9
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1091,
+    "mean": 553.7,
+    "min": 458.6,
+    "max": 667.6
+   },
+   "all": {
+    "n": 14844,
+    "mean": 508.9,
+    "min": 434.1,
+    "max": 667.6
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 818,
+   "CK_SS_ALL_MEAN": 752,
+   "CK_SS_MIN": 686,
+   "CK_SS_ALL_MIN": 649,
+   "CK_SS_MAX": 1017,
+   "CK_SS_ALL_MAX": 1017,
+   "CK_FF_MEAN": 554,
+   "CK_FF_ALL_MEAN": 509,
+   "CK_FF_MIN": 459,
+   "CK_FF_ALL_MIN": 434,
+   "CK_FF_MAX": 668,
+   "CK_FF_ALL_MAX": 668
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T09:26:33-07:00",
+ "job_spec": {
+  "name": "hbm_router_kneg_368f1f6d2_b",
+  "block": "hfd_router",
+  "owner": "Claude:hbm-router",
+  "purpose": "hfd_router r7 KNEG: dv12 recipe (r6b input delay pairs, HM 30, io_vclk_m_770 + post_cts_vclk) with the key3 -> key4 copy through a negative-edge register (dv12: SS +24.56 / FF -8.62 on 18 key3->key4 pins; hold ECO broke input setup). 0 cycles. Aggressive variant beside dv13_hm45.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/hbm-router-dieview-20261006",
+   "commit": "368f1f6d2bfa4cb4a544eb2a613443ae9ae64727",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_kneg_core",
+     "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench pos 1500",
+     "expect": "pass",
+     "pass_regex": "KNEG_BENCH PASS",
+     "threads": 4,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "wrapper_lockstep_kneg",
+     "cmd": "bash physical/hbm_accel_die_views/router/rtl/run_bench.sh {RUN}/bench_wrap -DOT_ROUTER_KNEG",
+     "expect": "pass",
+     "pass_regex": "mismatches=0",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "neg_kneg",
+     "cmd": "bash rtl/test/hbm_router_ps/run_kneg.sh {RUN}/bench neg 200",
+     "expect": "fail",
+     "fail_regex": "KNEG_BENCH FAIL",
+     "threads": 4,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "cmd": "HM=0.030 SRC={SRC} OUT={RUN}/routes PD=0.55 CORES=16 NEED=24 FCP=5 FCF=physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl SDCA=physical/hbm_accel_die_views/common/io_vclk_m_770.sdc POSTSDC=\"physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/gpu/ot_gpu_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk.sv rtl/common/ot_fwd_link_stage.sv\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" bash physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_router physical/hbm_accel_die_views/router/rtl/hfd_router.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_gpu_router_ps_lcopy\" --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 100 -allow_congestion\" --orfs-var OT_FC_REBUF=1 --orfs-var \"VERILOG_DEFINES=-DSYNTHESIS -DOT_ROUTER_KNEG\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "HM=0.030 SRC={SRC} OUT={RUN}/routes PD=0.55 CORES=16 NEED=24 FCP=5 FCF=physical/hbm_accel_die_views/router/rtl/hfd_router_face_stages.tcl SDCA=physical/hbm_accel_die_views/common/io_vclk_m_770.sdc POSTSDC=\"physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/gpu/ot_gpu_router_topk_ps.sv rtl/gpu/ot_gpu_router_topk.sv rtl/common/ot_fwd_link_stage.sv\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" bash physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_router physical/hbm_accel_die_views/router/rtl/hfd_router.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_gpu_router_ps_lcopy\" --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 100 -allow_congestion\" --orfs-var OT_FC_REBUF=1 --orfs-var \"VERILOG_DEFINES=-DSYNTHESIS -DOT_ROUTER_KNEG\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/hfd_router.lef {RUN}/routes/{LABEL}/view/hfd_router_ss.lib {RUN}/routes/{LABEL}/view/hfd_router_ff.lib {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/record/ && cp {RUN}/routes/{LABEL}/args {RUN}/record/route_args_{LABEL}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/router/rtl/fclk_ports_signoff.sdc",
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/router"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "claude/hbm-abstracts-20261006",
+  "budget": {
+   "enabled": false,
+   "reason": "single-variable variant of dv12_idly2 (SS +24.56, input hold +55.5 with the r6b input delay pairs tuned to io_vclk_m_770 + post_cts_vclk at the measured insertion); the sheet SDC re-balances the IO window the delay pairs were sized for. A sheet-based re-route follows once the hold class is closed."
+  }
+ }
+}
