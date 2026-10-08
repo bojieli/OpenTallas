@@ -2178,6 +2178,17 @@ def orfs_config_lines(
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
         config.append(f"export {key} = {value}")
+    if pnr["extra_config"].get("OT_MULTI_VT"):
+        # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
+        # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT
+        # baseline; floorplan..route load every listed VT, and repair_timing's VT swap (SKIP_VT_SWAP /
+        # SKIP_CRIT_VT_SWAP unset = on) moves only the cells it repairs to LVT/SLVT twins (same LEF footprint)
+        config.extend([
+            "ifneq ($(filter %/1_1_yosys_canonicalize.rtlil %/1_2_yosys.v do-yosys do-yosys-canonicalize,"
+            "$(MAKECMDGOALS)),)",
+            "export ASAP7_USE_VT = RVT",
+            "endif",
+        ])
     if constraints and constraints.get("slew_margin_percent") is not None:
         config.append(f"export SLEW_MARGIN = {constraints['slew_margin_percent']:g}")
     if constraints and constraints.get("hold_margin_ns") is not None:
@@ -3369,6 +3380,20 @@ def main(argv: list[str] | None = None, *,
             print(f"OT_ROUTE_HOLD_CORNERS={_ot_rhc}: place-and-route repair corners {args.hold_corners} -> {_ot_new} "
                   f"(FF hold: post-route hold ECO; sign-off unchanged)", file=sys.stderr)
             args.hold_corners = _ot_new
+    _ot_mvt = os.environ.get("OT_MULTI_VT", "").strip().lower()
+    if _ot_mvt:
+        # MULTI-VT (2026-10-07, opt-in): RVT netlist from synthesis, LVT (and SLVT) as repair_timing VT-swap targets
+        _ot_vts = {"lvt": "RVT LVT", "lvt+slvt": "RVT LVT SLVT"}.get(_ot_mvt)
+        if _ot_vts is None:
+            print(f"OT_MULTI_VT={_ot_mvt!r}: expected lvt or lvt+slvt", file=sys.stderr)
+            return 2
+        if args.vt is not None and args.vt.split() != _ot_vts.split():
+            print(f"OT_MULTI_VT={_ot_mvt} conflicts with --vt {args.vt!r}", file=sys.stderr)
+            return 2
+        args.vt = _ot_vts
+        args.orfs_var = list(args.orfs_var or []) + [f"OT_MULTI_VT={_ot_mvt}"]
+        print(f"OT_MULTI_VT={_ot_mvt}: ASAP7_USE_VT '{_ot_vts}' (synthesis RVT only; VT swap in repair_timing)",
+              file=sys.stderr)
     previous = {}
     try:
         for option, override, env, callback in (

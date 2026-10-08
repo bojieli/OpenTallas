@@ -15,6 +15,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -37,6 +38,34 @@ def sha(p):
     return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 
+# MULTI-VT (2026-10-07): a route made with OT_MULTI_VT carries LVT/SLVT cells (and their LEF libraries) in its odb.
+# Timing such a netlist with the RVT libraries alone leaves those instances without a liberty cell, so the verdict
+# would be wrong.  The flavours are read from the odb itself (ground truth for any re-STA copy); OT_STA_VT="LVT SLVT"
+# forces them.  An RVT-only odb matches nothing: the script and the record stay byte-identical.
+_VT_TAG = {"LVT": "L", "SLVT": "SL"}
+
+
+def extra_vts(odb: Path) -> list[str]:
+    forced = os.environ.get("OT_STA_VT", "").split()
+    if forced:
+        return [v for v in ("LVT", "SLVT") if v in forced]
+    found = set()
+    pat = re.compile(rb"_ASAP7_75t_(SL|L)(?![A-Za-z0-9_])")
+    with open(odb, "rb") as fh:
+        tail = b""
+        while len(found) < 2:
+            chunk = fh.read(1 << 26)
+            if not chunk:
+                break
+            found.update(m.group(1).decode() for m in pat.finditer(tail + chunk))
+            tail = chunk[-32:]
+    return [v for v in ("LVT", "SLVT") if _VT_TAG[v] in found]
+
+
+def corner_libs(corner: str, vts: list[str] = ()) -> list[str]:
+    return LIBS[corner] + [l.replace("_RVT_", f"_{v}_") for v in vts for l in LIBS[corner]]
+
+
 def sdc_basename(value: str) -> str:
     """Accept a single Tcl-safe file name within the routed result directory."""
     if value in (".", "..") or not re.fullmatch(r"[A-Za-z0-9_][A-Za-z0-9_.-]*", value):
@@ -45,16 +74,17 @@ def sdc_basename(value: str) -> str:
 
 
 def script(corner: str, base: str, macros: list[str], post_sdc: list[str] = (),
-           sdc_name: str = "6_final.sdc") -> str:
+           sdc_name: str = "6_final.sdc", vts: list[str] = ()) -> str:
     sdc_basename(sdc_name)
-    libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in LIBS[corner])
+    libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{l}" for l in corner_libs(corner, vts))
+    vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     mlibs = "\n".join(f"read_liberty /src/{m}/{Path(m).name}_{corner}.lib" for m in macros)
     mlefs = "\n".join(f"read_lef /src/{m}/{Path(m).name}.lef" for m in macros)
     check = "max" if corner in SETUP_CORNERS else "min"
     post = "\n".join(f"read_sdc /src/{p}" for p in post_sdc)
     return f"""
 read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
-read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef{vt_lefs}
 {mlefs}
 {libs}
 {mlibs}
@@ -115,10 +145,15 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
     # older (corner, base, macros[, post_sdc]) signature (corner_sta_ref, hbm_cp_*, hbm_su_cp_side, qwen tmr signoff);
     # passing sdc_name unconditionally made every one of them raise TypeError (corner_rc=1, "route crashed").
     args = [corner, rel, macros]
-    if post_sdc or sdc_name != "6_final.sdc":
+    vts = extra_vts(base / "6_final.odb")
+    if post_sdc or sdc_name != "6_final.sdc" or vts:
         args.append(post_sdc)
-    if sdc_name != "6_final.sdc":
+    if sdc_name != "6_final.sdc" or vts:
         args.append(sdc_name)
+    if vts:
+        # wrappers that replaced script() with the old signature cannot take vts: fail loudly, never time LVT cells
+        # without their liberty
+        args.append(vts)
     (orfs / f"w18_sta_{corner}.tcl").write_text(script(*args))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
@@ -135,7 +170,8 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
                 errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
                 odb_sha256=sha(base / "6_final.odb"), spef_sha256=sha(base / "6_final.spef"),
-                sdc_name=sdc_name, sdc_sha256=sha(selected_sdc))
+                sdc_name=sdc_name, sdc_sha256=sha(selected_sdc),
+                **({"vt_flavours_added": vts, "libraries": corner_libs(corner, vts)} if vts else {}))
 
 
 def main(argv=None):
