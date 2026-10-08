@@ -1,70 +1,52 @@
 {
  "schema": "opentallas.closure_loop.ck_insertion.v1",
- "base": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud/routes/hbm_svc_SE_s6_41d574827_bud_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud_cal/base",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s6_70a27c406/routes/hbm_svc_SE_s6_70a27c406_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_70a27c406_cal/base",
  "db": "4_1_cts.odb",
  "sdc": "4_cts.sdc",
  "clock": "core_clk",
  "parasitics": "placement-estimated",
  "ss": {
   "boundary": {
-   "n": 1538,
-   "mean": 557.7,
-   "min": 519.4,
-   "max": 611.1
+   "n": 1697,
+   "mean": 562.5,
+   "min": 543.1,
+   "max": 581.9
   },
   "all": {
    "n": 4201,
-   "mean": 549.0,
-   "min": 503.6,
-   "max": 635.1
+   "mean": 557.4,
+   "min": 539.0,
+   "max": 729.5
   },
   "errors": []
  },
  "ff": {
   "boundary": {
-   "n": 1538,
-   "mean": 364.1,
-   "min": 329.7,
-   "max": 407.6
+   "n": 1697,
+   "mean": 359.3,
+   "min": 338.0,
+   "max": 376.4
   },
   "all": {
    "n": 4201,
-   "mean": 354.8,
-   "min": 314.9,
-   "max": 415.7
+   "mean": 353.7,
+   "min": 337.9,
+   "max": 487.9
   },
   "errors": []
  },
  "env": {
-  "CK_SS_MEAN": 558,
-  "CK_SS_ALL_MEAN": 549,
-  "CK_SS_MIN": 519,
-  "CK_SS_ALL_MIN": 504,
-  "CK_SS_MAX": 611,
-  "CK_SS_ALL_MAX": 635,
-  "CK_FF_MEAN": 364,
-  "CK_FF_ALL_MEAN": 355,
-  "CK_FF_MIN": 330,
-  "CK_FF_ALL_MIN": 315,
-  "CK_FF_MAX": 408,
-  "CK_FF_ALL_MAX": 416
- },
- "budget_accepted": {
-  "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it",
-  "sheet_ss": 562,
-  "sheet_grade": "measured",
-  "target_ss": 814.9,
-  "measured": {
-   "ss": 558,
-   "ff": 364,
-   "ss_min": 519,
-   "ss_max": 611,
-   "ff_min": 330,
-   "ff_max": 408,
-   "grade": "measured",
-   "source": "closure-loop calibrate hbm_svc_SE_s6_41d574827_bud (ot-pve1:/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud)",
-   "over_target": false
-  },
-  "sheets_ref": "17ea88221a3ca68af2decfb925cd0520b1a36830"
+  "CK_SS_MEAN": 562,
+  "CK_SS_ALL_MEAN": 557,
+  "CK_SS_MIN": 543,
+  "CK_SS_ALL_MIN": 539,
+  "CK_SS_MAX": 582,
+  "CK_SS_ALL_MAX": 730,
+  "CK_FF_MEAN": 359,
+  "CK_FF_ALL_MEAN": 354,
+  "CK_FF_MIN": 338,
+  "CK_FF_ALL_MIN": 338,
+  "CK_FF_MAX": 376,
+  "CK_FF_ALL_MAX": 488
  }
 }

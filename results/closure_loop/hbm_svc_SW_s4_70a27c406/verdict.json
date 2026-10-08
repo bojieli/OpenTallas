@@ -1,0 +1,161 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_svc_SW_s4_70a27c406",
+ "block": "hfd_svc_SW_s4",
+ "owner": "Claude:hbm-views",
+ "source_branch": "claude/hbm-abstracts-svcidx-20261006",
+ "source_commit": "70a27c4061d068b4fe615832889915b660ed086a",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_70a27c406",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 38.63,
+  "ff_ps": 3.95,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_70a27c406/routes/hbm_svc_SW_s4_70a27c406/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s4_70a27c406/routes/hbm_svc_SW_s4_70a27c406/work/orfs/logs/asap7/opentallas_hfd_svc_SW_s4_asap7_hv_hbm_svc_SW_s4_70a27c406/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "RTL at 70a27c406 benched by the views agent (physical/hbm_accel_die_views/svc/run_bench_seg.sh on EPYC2: 16 lints PASS, sim_SW + sim_NE SVC_BENCH PASS, neg_beat + neg_cross FAIL); identical source for every segment job",
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2691,
+    "mean": 585.6,
+    "min": 560.5,
+    "max": 801.0
+   },
+   "all": {
+    "n": 7222,
+    "mean": 576.7,
+    "min": 548.2,
+    "max": 801.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 2691,
+    "mean": 378.2,
+    "min": 356.0,
+    "max": 531.8
+   },
+   "all": {
+    "n": 7222,
+    "mean": 370.1,
+    "min": 347.0,
+    "max": 531.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 586,
+   "CK_SS_ALL_MEAN": 577,
+   "CK_SS_MIN": 560,
+   "CK_SS_ALL_MIN": 548,
+   "CK_SS_MAX": 801,
+   "CK_SS_ALL_MAX": 801,
+   "CK_FF_MEAN": 378,
+   "CK_FF_ALL_MEAN": 370,
+   "CK_FF_MIN": 356,
+   "CK_FF_ALL_MIN": 347,
+   "CK_FF_MAX": 532,
+   "CK_FF_ALL_MAX": 532
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-07T20:45:15-07:00",
+ "job_spec": {
+  "name": "hbm_svc_SW_s4_70a27c406",
+  "block": "hfd_svc_SW_s4",
+  "owner": "Claude:hbm-views",
+  "purpose": "svc segment hfd_svc_SW_s4 (RTL unchanged by SLOT=1; v2 route had DRC ~1000 and FF < 15 under the uncalibrated IO) -> one calibrated route",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/hbm-abstracts-svcidx-20261006",
+   "commit": "70a27c4061d068b4fe615832889915b660ed086a",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} hfd_svc_SW_s4 physical/hbm_accel_die_views/svc/rtl/seg/hfd_svc_SW_s4.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/hbm_accel_die_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 8,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"8\" NEED=\"40\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" WSF=\"0.12\" WSFILE=\"physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4/ws.tcl\" SRCS=\"rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv\" physical/hbm_accel_die_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} hfd_svc_SW_s4 physical/hbm_accel_die_views/svc/rtl/seg/hfd_svc_SW_s4.sv --orfs-var GPL_ROUTABILITY_DRIVEN=0 $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_svc_SW_s4.lef {RUN}/routes/{NAME}/view/hfd_svc_SW_s4_ss.lib {RUN}/routes/{NAME}/view/hfd_svc_SW_s4_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/svc/split/hfd_svc_SW_s4"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": "claude/hbm-abstracts-20261006",
+  "no_bench_reason": "RTL at 70a27c406 benched by the views agent (physical/hbm_accel_die_views/svc/run_bench_seg.sh on EPYC2: 16 lints PASS, sim_SW + sim_NE SVC_BENCH PASS, neg_beat + neg_cross FAIL); identical source for every segment job"
+ }
+}
