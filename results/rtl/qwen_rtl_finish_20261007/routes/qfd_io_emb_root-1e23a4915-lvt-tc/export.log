@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_io_emb_root",
+ "orfs_dir": "/home/ubuntu/closure-loop-local/qfd_io_emb_root-1e23a4915-lvt-tc/routes/qfd_io_emb_root_1e23a4915_lvt_tc/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_io_emb_root.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-2.506082008579824e-10",
+  "ws_min": "8.260295225603898e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "5.214828568966823e-12",
+  "ws_min": "5.968847638371244e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "9.574641079979074e-11",
+  "ws_min": "2.925262809760909e-11"
+ },
+ "files": {
+  "qfd_io_emb_root.lef": "724f04785fc3adf36dd04213fef6e2d188a2262e06a34f912b9b236926d3ac4b",
+  "qfd_io_emb_root_ff.lib": "088ce8ab1b7e16d68ad0afe37a64b2cb9bfd2004a550f8c67a7441e406ce6a66",
+  "qfd_io_emb_root_ss.lib": "a6d6662bc1a717cee69ad6081c95508d7865d56f01e0c46cd984c73ec0bdefd3",
+  "qfd_io_emb_root_tt.lib": "96b13928609c42a1987a9291baf261d8918c4c0fcce5f9488fd7b6497d4cc12b"
+ }
+}
