@@ -34,6 +34,10 @@ CT = 'rtl/hbm_accel/contracts_20261007/'
 
 PKT_SRC = [PKG, M256, CF + 'ot_hbm_collective_packet_fifo.sv', CF + 'ot_hbm_collective_packet_fifo_refill.sv']
 PKT_REFILL = CF + 'ot_hbm_collective_packet_fifo_refill.sv'
+# pin-registered II=1 queue (drive-0532 2026-10-08): ready = registered level with a 2-slot reserve, credit-flow output
+PKTR = CF + 'ot_hbm_collective_packet_fifo_ii1r.sv'
+PKTR_SRC = [PKG, M256, PKTR]
+PKTR_TB = CF + 'tb_packet_fifo_ii1r.sv'
 CREDIT_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv',
               'rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv',
               'rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv',
@@ -71,6 +75,28 @@ SUITES = dict(
         case('NEG_pkt_fetch_overwrites_latch', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
              expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch|COUNT mismatch',
              mutate=(PKT_REFILL, 'wire fetch=c_unread!=0&&(!c_pending||xfer)&&!fault;', 'wire fetch=c_unread!=0&&!fault;')),
+    ],
+    pktr=[
+        case('pktr_depth256', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R '),
+        case('pktr_depth256_wreg', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ', params=dict(WREG=1)),
+        case('pktr_depth64', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ', params=dict(DEPTH=64)),
+        case('NEG_pktr_no_correction', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch',
+             mutate=(PKTR, 'correct64[j]=code[p-1]^(ovr&&syn==p[6:0]);', 'correct64[j]=code[p-1];')),
+        case('NEG_pktr_ready_reserve_1', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'unexpected fault|CAPACITY|COUNT mismatch',
+             mutate=(PKTR, 'RSV=DEPTH-2;', 'RSV=DEPTH-1;')),
+        case('NEG_pktr_fetch_ignores_credit', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'CONSUMER_OVERFLOW|PKT_CREDIT',
+             mutate=(PKTR, 'wire fetch=readable&&ocr_nz&&!fault_q;', 'wire fetch=readable&&!fault_q;')),
+        case('NEG_pktr_wreg_reads_unwritten', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64, WREG=1), fail_regex=r'DATA order mismatch|unexpected fault',
+             mutate=(PKTR, "wire readable=WREG?(c_unread>{8'b0,w_ce_q}):(c_unread!=9'd0);", "wire readable=c_unread!=9'd0;")),
+        case('NEG_pktr_ocr4_rate', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64, OCR=4, CB=4), fail_regex=r'II1 drain|STREAM'),
+        case('NEG_pktr_no_raw2_parity', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'raw2 upset',
+             mutate=(PKTR, 'wire f3=v3&&(ue_q||(par2!=ovr_q)||(|corr[575:545]));', 'wire f3=v3&&(ue_q||(|corr[575:545]));')),
     ],
     credit=[
         case('credit_positive', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT '),
