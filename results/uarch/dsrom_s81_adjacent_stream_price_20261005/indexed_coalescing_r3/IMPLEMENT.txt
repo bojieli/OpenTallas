@@ -1,0 +1,38 @@
+ONE indexed/coalescing model successor, no RTL/jobs. Original r2 unchanged.
+Exact Maxwell candidate/home/slot and existing W11 bank map retained.
+Before GO reserve actual source quotas/CAP36 and up to4 actual physical rows per
+bank (INCLUDING active); verify SRAMrow-first_reserved_row in0..3, expectedmask
+EXACT actual address-set intersection. Source arrays are original raw68; no
+head-only access assumption. Opt-in nondestructive root7/ordinal6 capture port
+REQUIRED: one record/fastedge,13 registered stages, finite13 pending seats.
+Per-root sent cursor advances only accepted actual TX; one pending perroot,
+source rdptr/count untouched until positive matched publication/count-return.
+Same original136 fields ->pad56->three72-bit stripes216, two records/flit.
+Header holds full route/session owner plus declared INIT/ordinary operation.
+COLLECT stores expected and received masks, duplicates fault, no forceff mask.
+Four owned rows/bank includes active and <=3queued. Slot is physical row offset,
+not circular evictable storage. This allows later root records to complete early
+row masks without freeing source heads. Lease persists RMW/postverify/return.
+Original INIT must verify all6 fullstripe before partialRMW. Actual source bytes,
+initialization and absence of old live lease required; no expected-image input.
+Price conservatively charges cold INIT before each screened phase; actual live
+versions must NEVER be overwritten merely to realize this screening allowance.
+Ready-controlled INIT chunks <=6144 words, same finite native input staging.
+Existing14slow+9fast+7slow schedule prices II28slow, queued max3*28=84slow.
+Existing W11 positive row receipt: fullcontext169+owner83+status3=255raw,
+pad1->four stripes288/one64Bflit. Actual counted status from W11, not newauthority.
+Owner83 identity57/group7/bank1/slot2/row8/mask8; identity57={id47,phase10}.
+Field checked declaration maps each published mask column to source root/ordinal;
+serial one checked completion update/fastedge, stored protected36bits/root.
+Out-of-order completed masks do NOT pop earlier heads; original vm_accept only
+for actual current completed head, then all_done nextfastedge. Destination
+published lease still belongs to future consumers, no cyclic consumer wait.
+Existing512 RX/replay credits and8flitgear FIFO, actual free/accept callbacks.
+SourceNOready capture wholephase -> indexed sends -> masks complete -> protected
+publication -> counted reverse -> completedbitmap/headpop -> phase drained.
+Actual input staging+published leases+native predecessors precede consumerGO.
+1.2GHz fast/.9GHz slow, same planned physical paths; no privateclock/returntree.
+Model totals are alignment-conservative NP0P1 ledger screening, not exact runtime
+schedule: archive lacks obase/phase/np. Actual addresses/slots/masks must be bound
+before GO; sparse/out-of-range row footprints refuse rather than flatten holes.
+Full composed native-token calendar UNKNOWN; adoption/SSFF remain false.

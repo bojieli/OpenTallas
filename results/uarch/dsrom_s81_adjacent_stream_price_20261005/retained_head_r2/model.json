@@ -1,0 +1,1659 @@
+{
+  "RTL_selected": true,
+  "adopted": false,
+  "area": {
+    "annex_each_end_mm2": 8.75,
+    "extra_cells50_mm2": 1.1463679548,
+    "extra_codec_decode_stripes": 896,
+    "extra_codec_encode_stripes": 896,
+    "extra_head_FF": 202752,
+    "field_budget_mm2": 16.319895680960144,
+    "field_overlay_mm2": 12.579921916544002,
+    "fit": true,
+    "hub_budget_mm2": 304.62771372656016,
+    "hub_overlay_mm2": 13.815441570944003,
+    "original_conservative_cells50_mm2": 6.444663672240001,
+    "policy": "no original state/codec/directory cost removed; added seal/decode/retainedhead FF feedback/clock priced separately",
+    "remaining_control_route_mm2": 1.1589683729599987,
+    "total_cells50_mm2": 7.591031627040001
+  },
+  "bank": {
+    "bank": "addr[10]",
+    "column": "addr[9:7]",
+    "group": "addr[6:0]",
+    "row": "addr[18:11]"
+  },
+  "calendar": "frozen branch screening only, no overlap; full native compute/consumer lifetime calendar UNKNOWN",
+  "candidate": "S81-L2-HUB40-NATIVE-ROOT-TP4",
+  "capture": {
+    "CAP": 36,
+    "VM_ALWAYS_ACCEPT": 0,
+    "burst": "128 raw68 records/fast edge; protect local storage with retained original encoder throughput price",
+    "coded_retained_record_bits": 144,
+    "in_flight": "one per root, head immutable until release; no independent sent/ACK ledger or indexed capture required",
+    "max_P1_rows": 4608,
+    "original_return_tree_unchanged": true,
+    "quotas": "2*(ops//256)+(ops%256>2*root)+(ops%256>2*root+1), NP0 P1 only; compare actual PHROM before GO",
+    "raw_record_bits": 68,
+    "release": "vm_accept ONLY actual destination checked all6 publication AND positive MATCHED existing W11 reverse/count-return for current record; enqueue/link ACK never pops; future destination consumers do NOT gate source pop",
+    "reserve": "entire actual phase before GO; CAP36 is capacity not default expected count",
+    "root_head_scan_stages": 7,
+    "roots": 128
+  },
+  "completion": {
+    "causal_edges": [
+      [
+        "actual_destination_all6_publication(record)",
+        "existing_W11_positive_matched_count_return(record)"
+      ],
+      [
+        "existing_W11_positive_matched_count_return(record)",
+        "source_vm_accept_pop(record)"
+      ],
+      [
+        "all_actual_source_pops(phase)",
+        "source_all_done_next_fast_edge(phase)"
+      ],
+      [
+        "source_all_done_next_fast_edge(phase)",
+        "actual_source_phase_drained(phase)"
+      ],
+      [
+        "all_required_actual_destination_publications(consumer)",
+        "native_consumer_ready(consumer)"
+      ],
+      [
+        "actual_input_staging_and_destination_leases(consumer)",
+        "native_consumer_ready(consumer)"
+      ],
+      [
+        "actual_native_predecessors_and_caller_gates(consumer)",
+        "native_consumer_ready(consumer)"
+      ],
+      [
+        "native_consumer_ready(consumer)",
+        "actual_native_consumer_acceptance(consumer)"
+      ],
+      [
+        "all_declared_future_consumers_terminal(version)",
+        "destination_version_lease_retirement(version)"
+      ]
+    ],
+    "conditional_source_gate": "if actual caller serializes next native GO on source phase drain, add actual_source_phase_drained -> native_consumer_ready; never reverse this dependency",
+    "destination_lease": "retain until ALL declared future consumers terminate and existing destination retirement conditions hold",
+    "drained_latency_fast_edges_after_final_pop": 1,
+    "forbidden_dependencies": [
+      "future_consumer_terminal -> source_pop",
+      "destination_version_lease_retirement -> source_phase_drained"
+    ],
+    "receipts": "actual checked publication, actual matched return, actual pop, actual drained and actual consumer acceptance edges, all bound to immutable source identity/phase/root/ordinal/address; planned durations or host timestamps never substitute",
+    "return_authority": "existing W11 matched count-return control; no new authority",
+    "source_drained": "after final pop, count=0 and received=expected=committed for every root; all_done observed on NEXT fast edge with no invalid/fault",
+    "source_record": "pop retires transferred SOURCE row only; destination published version/lease remains live"
+  },
+  "credits": {
+    "consumer": "checked input staging/leases BEFORE field GO; all required produced rows visible and leased BEFORE consumer GO",
+    "faults": "reset/timeout/fault cannot erase accepted owners or free source heads",
+    "gear_fifo_each_direction": 8,
+    "link_credit": "actual consumed FIFO seat only, separate from VM publication",
+    "receive": 512,
+    "replay": 512
+  },
+  "default_enabled": false,
+  "domains": {
+    "codec_edges_fast": 4,
+    "fast_GHz": 1.2,
+    "gear_edges_slow": 6,
+    "gear_fifo_each_direction": 8,
+    "link_first_edges": 281,
+    "physical": {
+      "SS_FF_measured_after_RTL": true,
+      "encode_decode_fast_edges": 4,
+      "estimated_horizontal_budget": 1477,
+      "estimated_margin": 241,
+      "fast_GHz": 1.2,
+      "field_wire_stages": 53,
+      "hub_wire_stages": 38,
+      "indexed_mux_levels": 13,
+      "link_first_arrival_edges": 281,
+      "link_forward_frame_bits": 555,
+      "max_segment_mm": 2.0625,
+      "meso_fast_edges": 4,
+      "old90wire_replaced_once": true,
+      "one_bit_per_track_cut_demand": 608,
+      "package_flight_fast_edges": 7,
+      "package_flight_mm_bound": 33,
+      "package_flight_ns_per_mm_planned": 0.16,
+      "physical_adoption": false,
+      "physical_reply": {
+        "authoritative_fields": {
+          "L20_hub_endpoint": 101,
+          "hub_rank_die_ids": [
+            404,
+            405,
+            406,
+            407
+          ],
+          "original_field37_38_unchanged": true,
+          "reticle_um": [
+            33000,
+            26000
+          ]
+        },
+        "candidate": "S81-L2-HUB40-NATIVE-ROOT-TP4",
+        "clock_qualified": false,
+        "field_island": {
+          "chosen_serializer_pin_estimate_um": [
+            15182.676,
+            12304.436
+          ],
+          "displacement": "prospective field-only class repurposes these three old nonfield homes, with their service functions on the new hub; native source/live instances unchanged. Do not imply spare occupied cells. Keep inherited charge and debit this entire island AGAIN conservatively until containment proves replacement.",
+          "gross_reservation_mm2": 2.8967310720000023,
+          "name": "field37_L2_ingress_capture_packetizer",
+          "pin_layer": "M8 data spine escape with M9 junction; endpoint pad names/pin locations proposed, not existing hardened capture pins",
+          "rect_um": [
+            15182.64,
+            10877.76,
+            16197.84,
+            13731.12
+          ],
+          "site": "same retained spine x15182.64..16197.84, union of sp_gather/sp_vm/sp_capture and intervening gaps; stop21.6um before retained sp_collective",
+          "source_tree": "existing128 root routes terminate locally; full8832bit root burst never sent across the long64B trunk"
+        },
+        "field_overlay": {
+          "doublecount_policy": "full island gross charged as additional even though original .10868capture/.89234VM/1.38823gather remain in inherited ledger; zero subtraction until source-owned replacement proven",
+          "limit_mm2": 16.31989568096,
+          "remaining_for_protected_logic_control_codec_CTS_PG_access_and_route_mm2": 12.489973764415998,
+          "selected_known_gross_mm2": 3.829921916544002
+        },
+        "field_phy_endpoints": [
+          {
+            "name": "L20_field37_l2_ucie0",
+            "orientation": "MY",
+            "origin_um": [
+              20.304,
+              4384.8
+            ]
+          },
+          {
+            "name": "L20_field37_l2_ucie1",
+            "orientation": "MY",
+            "origin_um": [
+              20.304,
+              6083.52
+            ]
+          }
+        ],
+        "hub_VM": {
+          "endpoint_group_assignment": "Nash authoritative address->group/bank API; physical group g column=g%8,row=g//8; no address arithmetic invented by Maxwell",
+          "four_clock_regions": "4columns x8rows each4803.84x2851.2um <5.25mm, per-region CTS, no mesh",
+          "gross_mm2": 54.786834432,
+          "group_grid": "8columns x16rows; actual source group1192.32x347.76, 8.64um separation each pitch",
+          "no_overlap": "ingress ends6544.8 vs grid starts6654.96 (110.16gap); grid ends32660.64 vs PHYstarts32718.384 (57.744gap)",
+          "over_already_charged_128_group_outlines_mm2": 1.7127604224000024,
+          "rect_um": [
+            23052.96,
+            6654.96,
+            32660.64,
+            12357.36
+          ],
+          "service_ingress_gross_mm2": 2.4302591999999996,
+          "service_ingress_rect_um": [
+            31535.52,
+            4384.8,
+            32660.64,
+            6544.8
+          ]
+        },
+        "hub_overlay": {
+          "group_body_and_local_codec_cuts_already_charged": true,
+          "limit_mm2": 304.62771372656,
+          "selected_known_gross_mm2": 5.065441570944002
+        },
+        "hub_phy_endpoints": [
+          {
+            "name": "L20_hub101_l2_ucie0",
+            "orientation": "R0",
+            "origin_um": [
+              32718.384,
+              4384.8
+            ]
+          },
+          {
+            "name": "L20_hub101_l2_ucie1",
+            "orientation": "R0",
+            "origin_um": [
+              32718.384,
+              6083.52
+            ]
+          }
+        ],
+        "no_RTL_or_PR_launched": true,
+        "phy": {
+          "body_um": [
+            260.808,
+            1652.424
+          ],
+          "clock_and_pin_mapping": "each catalog master tx[0..511],rx[0..511],clk; two masters carry1024 logical bits/direction. Assign frame555+reverse53=608bits/direction across512+96, unused416 pins tied LOCALLY. Preserve1flit/edge only as target, no fictitious555bit single512port.",
+          "field_M4_pin_x_um": 281.016,
+          "halo_each_side_um": 4.32,
+          "hub_M4_pin_x_um": 32718.48,
+          "interface_ready_valid_reset_CLK_control_extra_not_zero": true,
+          "local_pin_centres_um": {
+            "clk": [
+              0.096,
+              0.54
+            ],
+            "rx[0]": [
+              0.096,
+              827.004
+            ],
+            "rx[511]": [
+              0.096,
+              1650.3
+            ],
+            "tx[0]": [
+              0.096,
+              2.124
+            ],
+            "tx[511]": [
+              0.096,
+              825.42
+            ]
+          },
+          "master": "ot_pdie_ucie",
+          "selected_parameter_geometry": "64B/CRED512/REPLAY512/SEQW10; CW10, FFW555,RFW53; packet payload header stays INSIDE64B, not an unpriced parallel context bus",
+          "source_grade": "retained placeholder CLASS BLOCK abstract with actual catalog pin rectangles, NOT a hardened/qualified PHY",
+          "two_endpoint_halo_reservation_mm2_each_die": 0.8951407453439999
+        },
+        "physical_fit": false,
+        "route": {
+          "at_1p2GHz_one_way_ns_candidate": 79.16666666666667,
+          "field": "serializer westface -> retained horizontal tier channels at y9735.12 and12871.44 -> west-edge uppermetal spine -> two newwest PHY endpoint escapes; opposite direction separately reserved",
+          "field_max_manhattan_pin_envelope_um": 22819.14,
+          "field_wire_stage_estimate": 53,
+          "hub": "east-facing PHY -> service_ingress -> groupgrid. Count furthest group, not only nearest bank",
+          "hub_max_manhattan_ingress_to_group_envelope_um": 15937.68,
+          "hub_wire_stage_estimate": 38,
+          "new_domain_crossings_cycles_one_way_candidate": 4,
+          "one_way_wire_plus_two_meso_crossings_cycles_candidate": 95,
+          "physical_package_adjacency": "hub placed immediately west of field37, facing E/W edges; package shore spacing/flight not yet source-priced",
+          "stage_grade": "geometry-sized candidate estimate; no loaded SSFF proof. Keep source TX/RX/CRC/ACK plus PHY flight/fault/retry costs positive and separate. Replace prior overlapping90wirecycles ONCE; do not sum old909hop wholesale with this route.",
+          "stage_pitch_source_um": 430.56,
+          "wire_cycles_one_way": 91,
+          "wire_only_register_FF_floor_field_mm2": 0.03805009920000001,
+          "wire_only_register_FF_floor_hub_mm2": 0.0272812032
+        },
+        "scope": "ONE L20 adjacency footprint chosen now for Sagan/Nash; proposal coordinates, not placed/signoff",
+        "slot_selection": "these coordinates/station estimates are Maxwell chosen physical candidate now, not a request to wait for route. Sagan may price finite model and Nash may proceed defaultoff RTL after composition; adoption still requires later exact/SSFF/placement.",
+        "source_pins": {
+          "physical/asap7_v41x_pdie_macros_v2/ot_pdie_ucie/ot_pdie_ucie.lef": "da1804482bff5072298b1cae5499f629f5f8bc88df2077f1715e282260873eb4",
+          "results/rtl/dsrom_s81_fulldie_20261004/floorplan.def": "8bb134db3723f43ff35bbb7015c3b488c375be3bc203e01143c830c28f447e9b",
+          "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json": "d3e3dd86023e13dae213fd752b9de8e1fb4103f5ce93da1e5b81da9e064e8952",
+          "results/uarch/dsrom_noECC_enable_distribution_20261002/inputs/make_tracks.tcl": "4693c8fc81cf9095ed7fba61e778ec81c16c3cadc747f9ce388acf38f8331632",
+          "results/uarch/dsrom_s81_minimum_protected_group_20261004/model.json": "199b40e501c83d642121baa60da9ea08c3a675663361083a9bbba3c70c4d913d",
+          "rtl/dsrom_sys/ot_dsrom_link_rt.sv": "ae6bf7dc3dede1d540c83a7d57e2eac543fb7cd5d30c2c398f0a51aec8cb1712",
+          "tools/dsrom_s81_fulldie.py": "3d85b41af7f1049102fb5924ca3e565fb0031daa3faba2a281ceceb611f3e955"
+        },
+        "tracks": {
+          "M8_M9_pitch_um": 0.08,
+          "chosen_demand": "608 each direction =1216 data/CRC/ACK wires, plus two3-track shielded clocks and two reset wires =1224, native endpoint ready/valid packed/control routing to be added",
+          "conservative_estimated_signal_budget_after_PG_and_half_remaining_reserve_H": 1477,
+          "conservative_estimated_signal_budget_after_PG_and_half_remaining_reserve_V": 3448,
+          "estimated_H_margin_tracks": 253,
+          "known_source_PG_reservation": "field/channel per-net coverage .0439, VDD+VSS=.0878; 0.48um straps, actual via/contact occupied union not routed",
+          "pin_access": "real M4 PHY rectangles require via/jog to uppermetal; landing and local tie/access cost not zero, not signoff",
+          "raw_horizontal_tracks_per_259p2um_channel": 3240,
+          "raw_vertical_tracks_per_604p8um_channel": 7560,
+          "sharing": "exclusive replacement of former field-side nonfield service ingress traffic for selected field-only class; retain unrelated activation/config/return routes. No assumption that1477tracks are measured free. Claude overlay must check actual OBS/PDN/other net union."
+        }
+      },
+      "planned_bounded_annex_route_reserve_mm2": 1.5553363277599992,
+      "planned_tracks": 1236,
+      "positive_forward_reverse_CDC_ns": 6.666666666666666,
+      "reverse_frame_bits": 53,
+      "route_ns_already_in_W11_head": 17.77777777777778,
+      "service_netlength_mm_bound": 33.0,
+      "service_registered_stations": 16,
+      "signoff_pass": false,
+      "slow_GHz": 0.9,
+      "source_PHY_CRC_endpoint_nonwire_edges_retained": 179
+    },
+    "qualification": "planned only; SSFF after RTL, not free physical credit",
+    "serial_GHz": 0.9
+  },
+  "full_token_latency_ns": null,
+  "header": {
+    "header_flits": 7,
+    "phase_header_coded_bits": 3096,
+    "phase_header_raw_bits": 2694
+  },
+  "homes": [
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 0,
+      "canonical_field_stages": [
+        0,
+        1
+      ],
+      "hub_endpoint": 81,
+      "layer": 0,
+      "rank_die_ids": [
+        324,
+        325,
+        326,
+        327
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 1,
+      "canonical_field_stages": [
+        1,
+        2,
+        3
+      ],
+      "hub_endpoint": 82,
+      "layer": 1,
+      "rank_die_ids": [
+        328,
+        329,
+        330,
+        331
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 711296
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 3,
+      "canonical_field_stages": [
+        3,
+        4,
+        5
+      ],
+      "hub_endpoint": 83,
+      "layer": 2,
+      "rank_die_ids": [
+        332,
+        333,
+        334,
+        335
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 723200
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 5,
+      "canonical_field_stages": [
+        5,
+        6,
+        7
+      ],
+      "hub_endpoint": 84,
+      "layer": 3,
+      "rank_die_ids": [
+        336,
+        337,
+        338,
+        339
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 7,
+      "canonical_field_stages": [
+        7,
+        8,
+        9
+      ],
+      "hub_endpoint": 85,
+      "layer": 4,
+      "rank_die_ids": [
+        340,
+        341,
+        342,
+        343
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 9,
+      "canonical_field_stages": [
+        9,
+        10,
+        11
+      ],
+      "hub_endpoint": 86,
+      "layer": 5,
+      "rank_die_ids": [
+        344,
+        345,
+        346,
+        347
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 11,
+      "canonical_field_stages": [
+        11,
+        12
+      ],
+      "hub_endpoint": 87,
+      "layer": 6,
+      "rank_die_ids": [
+        348,
+        349,
+        350,
+        351
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 196352,
+      "adjacent_field_stage": 13,
+      "canonical_field_stages": [
+        12,
+        13,
+        14
+      ],
+      "hub_endpoint": 88,
+      "layer": 7,
+      "rank_die_ids": [
+        352,
+        353,
+        354,
+        355
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 14,
+      "canonical_field_stages": [
+        14,
+        15,
+        16
+      ],
+      "hub_endpoint": 89,
+      "layer": 8,
+      "rank_die_ids": [
+        356,
+        357,
+        358,
+        359
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 723200
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 16,
+      "canonical_field_stages": [
+        16,
+        17,
+        18
+      ],
+      "hub_endpoint": 90,
+      "layer": 9,
+      "rank_die_ids": [
+        360,
+        361,
+        362,
+        363
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 18,
+      "canonical_field_stages": [
+        18,
+        19,
+        20
+      ],
+      "hub_endpoint": 91,
+      "layer": 10,
+      "rank_die_ids": [
+        364,
+        365,
+        366,
+        367
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 20,
+      "canonical_field_stages": [
+        20,
+        21,
+        22
+      ],
+      "hub_endpoint": 92,
+      "layer": 11,
+      "rank_die_ids": [
+        368,
+        369,
+        370,
+        371
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 22,
+      "canonical_field_stages": [
+        22,
+        23,
+        24
+      ],
+      "hub_endpoint": 93,
+      "layer": 12,
+      "rank_die_ids": [
+        372,
+        373,
+        374,
+        375
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 24,
+      "canonical_field_stages": [
+        24,
+        25
+      ],
+      "hub_endpoint": 94,
+      "layer": 13,
+      "rank_die_ids": [
+        376,
+        377,
+        378,
+        379
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 363776,
+      "adjacent_field_stage": 26,
+      "canonical_field_stages": [
+        25,
+        26,
+        27
+      ],
+      "hub_endpoint": 95,
+      "layer": 14,
+      "rank_die_ids": [
+        380,
+        381,
+        382,
+        383
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 797952
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 27,
+      "canonical_field_stages": [
+        27,
+        28,
+        29
+      ],
+      "hub_endpoint": 96,
+      "layer": 15,
+      "rank_die_ids": [
+        384,
+        385,
+        386,
+        387
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 29,
+      "canonical_field_stages": [
+        29,
+        30,
+        31
+      ],
+      "hub_endpoint": 97,
+      "layer": 16,
+      "rank_die_ids": [
+        388,
+        389,
+        390,
+        391
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 31,
+      "canonical_field_stages": [
+        31,
+        32,
+        33
+      ],
+      "hub_endpoint": 98,
+      "layer": 17,
+      "rank_die_ids": [
+        392,
+        393,
+        394,
+        395
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 33,
+      "canonical_field_stages": [
+        33,
+        34,
+        35
+      ],
+      "hub_endpoint": 99,
+      "layer": 18,
+      "rank_die_ids": [
+        396,
+        397,
+        398,
+        399
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 35,
+      "canonical_field_stages": [
+        35,
+        36,
+        37
+      ],
+      "hub_endpoint": 100,
+      "layer": 19,
+      "rank_die_ids": [
+        400,
+        401,
+        402,
+        403
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 37,
+      "canonical_field_stages": [
+        37,
+        38
+      ],
+      "hub_endpoint": 101,
+      "layer": 20,
+      "rank_die_ids": [
+        404,
+        405,
+        406,
+        407
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 702208
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 38,
+      "canonical_field_stages": [
+        38,
+        39,
+        40
+      ],
+      "hub_endpoint": 102,
+      "layer": 21,
+      "rank_die_ids": [
+        408,
+        409,
+        410,
+        411
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 40,
+      "canonical_field_stages": [
+        40,
+        41,
+        42
+      ],
+      "hub_endpoint": 103,
+      "layer": 22,
+      "rank_die_ids": [
+        412,
+        413,
+        414,
+        415
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 42,
+      "canonical_field_stages": [
+        42,
+        43,
+        44
+      ],
+      "hub_endpoint": 104,
+      "layer": 23,
+      "rank_die_ids": [
+        416,
+        417,
+        418,
+        419
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 44,
+      "canonical_field_stages": [
+        44,
+        45,
+        46
+      ],
+      "hub_endpoint": 105,
+      "layer": 24,
+      "rank_die_ids": [
+        420,
+        421,
+        422,
+        423
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 678656
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 46,
+      "canonical_field_stages": [
+        46,
+        47,
+        48
+      ],
+      "hub_endpoint": 106,
+      "layer": 25,
+      "rank_die_ids": [
+        424,
+        425,
+        426,
+        427
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 48,
+      "canonical_field_stages": [
+        48,
+        49
+      ],
+      "hub_endpoint": 107,
+      "layer": 26,
+      "rank_die_ids": [
+        428,
+        429,
+        430,
+        431
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 196352,
+      "adjacent_field_stage": 50,
+      "canonical_field_stages": [
+        49,
+        50,
+        51
+      ],
+      "hub_endpoint": 108,
+      "layer": 27,
+      "rank_die_ids": [
+        432,
+        433,
+        434,
+        435
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 51,
+      "canonical_field_stages": [
+        51,
+        52,
+        53
+      ],
+      "hub_endpoint": 109,
+      "layer": 28,
+      "rank_die_ids": [
+        436,
+        437,
+        438,
+        439
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 678656
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 53,
+      "canonical_field_stages": [
+        53,
+        54,
+        55
+      ],
+      "hub_endpoint": 110,
+      "layer": 29,
+      "rank_die_ids": [
+        440,
+        441,
+        442,
+        443
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 55,
+      "canonical_field_stages": [
+        55,
+        56,
+        57
+      ],
+      "hub_endpoint": 111,
+      "layer": 30,
+      "rank_die_ids": [
+        444,
+        445,
+        446,
+        447
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 57,
+      "canonical_field_stages": [
+        57,
+        58,
+        59
+      ],
+      "hub_endpoint": 112,
+      "layer": 31,
+      "rank_die_ids": [
+        448,
+        449,
+        450,
+        451
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 59,
+      "canonical_field_stages": [
+        59,
+        60,
+        61
+      ],
+      "hub_endpoint": 113,
+      "layer": 32,
+      "rank_die_ids": [
+        452,
+        453,
+        454,
+        455
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 678656
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 61,
+      "canonical_field_stages": [
+        61,
+        62
+      ],
+      "hub_endpoint": 114,
+      "layer": 33,
+      "rank_die_ids": [
+        456,
+        457,
+        458,
+        459
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 62,
+      "canonical_field_stages": [
+        62,
+        63,
+        64
+      ],
+      "hub_endpoint": 115,
+      "layer": 34,
+      "rank_die_ids": [
+        460,
+        461,
+        462,
+        463
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 64,
+      "canonical_field_stages": [
+        64,
+        65,
+        66
+      ],
+      "hub_endpoint": 116,
+      "layer": 35,
+      "rank_die_ids": [
+        464,
+        465,
+        466,
+        467
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 66,
+      "canonical_field_stages": [
+        66,
+        67,
+        68
+      ],
+      "hub_endpoint": 117,
+      "layer": 36,
+      "rank_die_ids": [
+        468,
+        469,
+        470,
+        471
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 678656
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 68,
+      "canonical_field_stages": [
+        68,
+        69,
+        70
+      ],
+      "hub_endpoint": 118,
+      "layer": 37,
+      "rank_die_ids": [
+        472,
+        473,
+        474,
+        475
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 70,
+      "canonical_field_stages": [
+        70,
+        71,
+        72
+      ],
+      "hub_endpoint": 119,
+      "layer": 38,
+      "rank_die_ids": [
+        476,
+        477,
+        478,
+        479
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    },
+    {
+      "additional_chain_byte_hops_worst_rank": 0,
+      "adjacent_field_stage": 72,
+      "canonical_field_stages": [
+        72,
+        73
+      ],
+      "hub_endpoint": 120,
+      "layer": 39,
+      "rank_die_ids": [
+        480,
+        481,
+        482,
+        483
+      ],
+      "topology": "new service-only die adjacent to anchor; existing field chain unchanged",
+      "unavoidable_hub_branch_raw_payload_bytes_worst_rank": 636544
+    }
+  ],
+  "input_staging": {
+    "II_slow_edges": 12,
+    "beat_coded_bits": 1872,
+    "beat_flits": 4,
+    "beat_raw_bits": 1632,
+    "coded_FF": 179712,
+    "groups_per_request": 64,
+    "max_words": 6144,
+    "new_issuer_required": true,
+    "positive_bank_exclusion_and_actual_source_lease_before_GO": true,
+    "words_per_checked_request": 64
+  },
+  "layers": {
+    "0": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "1": {
+      "head_rounds": 315.0,
+      "heads": 39328.0,
+      "input_ns": 37211.66666666667,
+      "matched_head_return_ns": 109423.3333333334,
+      "output_link_ns": 94874.16666666666,
+      "phases": 34.0,
+      "protected_publication_ns": 262652.7777777779,
+      "source_phase_drained_ns": 28.33333333333332,
+      "source_pop_ns": 262.5,
+      "sum_ns": 504452.777777778
+    },
+    "10": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "11": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "12": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "13": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "14": {
+      "head_rounds": 351.0,
+      "heads": 43840.0,
+      "input_ns": 46463.33333333335,
+      "matched_head_return_ns": 183216.66666666654,
+      "output_link_ns": 157477.50000000003,
+      "phases": 39.0,
+      "protected_publication_ns": 283680.277777778,
+      "source_phase_drained_ns": 32.49999999999998,
+      "source_pop_ns": 292.4999999999999,
+      "sum_ns": 671162.777777778
+    },
+    "15": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "16": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "17": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "18": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "19": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "2": {
+      "head_rounds": 301.0,
+      "heads": 37440.0,
+      "input_ns": 38962.500000000015,
+      "matched_head_return_ns": 104443.33333333339,
+      "output_link_ns": 90599.16666666666,
+      "phases": 37.0,
+      "protected_publication_ns": 267703.05555555574,
+      "source_phase_drained_ns": 30.833333333333314,
+      "source_pop_ns": 250.83333333333331,
+      "sum_ns": 501989.7222222225
+    },
+    "20": {
+      "head_rounds": 300.0,
+      "heads": 37312.0,
+      "input_ns": 37650.00000000001,
+      "matched_head_return_ns": 104093.33333333339,
+      "output_link_ns": 90296.66666666666,
+      "phases": 36.0,
+      "protected_publication_ns": 263696.66666666686,
+      "source_phase_drained_ns": 29.999999999999982,
+      "source_pop_ns": 249.99999999999997,
+      "sum_ns": 496016.6666666669
+    },
+    "21": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "22": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "23": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "24": {
+      "head_rounds": 298.0,
+      "heads": 37056.0,
+      "input_ns": 35985.00000000001,
+      "matched_head_return_ns": 103393.33333333337,
+      "output_link_ns": 89691.66666666666,
+      "phases": 34.0,
+      "protected_publication_ns": 255683.88888888905,
+      "source_phase_drained_ns": 28.33333333333332,
+      "source_pop_ns": 248.33333333333331,
+      "sum_ns": 485030.5555555558
+    },
+    "25": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "26": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "27": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 36501.66666666667,
+      "matched_head_return_ns": 134030.0000000001,
+      "output_link_ns": 115269.16666666663,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 532723.8888888891
+    },
+    "28": {
+      "head_rounds": 298.0,
+      "heads": 37056.0,
+      "input_ns": 35985.00000000001,
+      "matched_head_return_ns": 103393.33333333337,
+      "output_link_ns": 89691.66666666666,
+      "phases": 34.0,
+      "protected_publication_ns": 255683.88888888905,
+      "source_phase_drained_ns": 28.33333333333332,
+      "source_pop_ns": 248.33333333333331,
+      "sum_ns": 485030.5555555558
+    },
+    "29": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "3": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "30": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "31": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "32": {
+      "head_rounds": 298.0,
+      "heads": 37056.0,
+      "input_ns": 35985.00000000001,
+      "matched_head_return_ns": 103393.33333333337,
+      "output_link_ns": 89691.66666666666,
+      "phases": 34.0,
+      "protected_publication_ns": 255683.88888888905,
+      "source_phase_drained_ns": 28.33333333333332,
+      "source_pop_ns": 248.33333333333331,
+      "sum_ns": 485030.5555555558
+    },
+    "33": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "34": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "35": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "36": {
+      "head_rounds": 298.0,
+      "heads": 37056.0,
+      "input_ns": 35985.00000000001,
+      "matched_head_return_ns": 103393.33333333337,
+      "output_link_ns": 89691.66666666666,
+      "phases": 34.0,
+      "protected_publication_ns": 255683.88888888905,
+      "source_phase_drained_ns": 28.33333333333332,
+      "source_pop_ns": 248.33333333333331,
+      "sum_ns": 485030.5555555558
+    },
+    "37": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "38": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "39": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "4": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "5": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "6": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    },
+    "7": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 36501.66666666667,
+      "matched_head_return_ns": 134030.0000000001,
+      "output_link_ns": 115269.16666666663,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 532723.8888888891
+    },
+    "8": {
+      "head_rounds": 301.0,
+      "heads": 37440.0,
+      "input_ns": 38962.500000000015,
+      "matched_head_return_ns": 104443.33333333339,
+      "output_link_ns": 90599.16666666666,
+      "phases": 37.0,
+      "protected_publication_ns": 267703.05555555574,
+      "source_phase_drained_ns": 30.833333333333314,
+      "source_pop_ns": 250.83333333333331,
+      "sum_ns": 501989.7222222225
+    },
+    "9": {
+      "head_rounds": 265.0,
+      "heads": 32928.0,
+      "input_ns": 34160.0,
+      "matched_head_return_ns": 91923.33333333334,
+      "output_link_ns": 79749.16666666669,
+      "phases": 32.0,
+      "protected_publication_ns": 246675.5555555557,
+      "source_phase_drained_ns": 26.666666666666657,
+      "source_pop_ns": 220.83333333333334,
+      "sum_ns": 452755.5555555558
+    }
+  },
+  "no_RTL_or_jobs": true,
+  "packet": {
+    "codec": "existing 72/64 stripe codec, zero pad136->192, no new code; encode2/decode2 fast edges charged",
+    "coded_bits": 216,
+    "fault": "capture fault/error freezes GO and retirement, retains current identity/head/debt; explicit fault terminal to caller, no valid suppression as success",
+    "fields": {
+      "address": 19,
+      "error": 1,
+      "identity": 47,
+      "phase": 10,
+      "pos": 3,
+      "raw_data": 32,
+      "root": 7,
+      "row": 16,
+      "valid": 1
+    },
+    "flit_pad_bits": 80,
+    "owner": "full169 header-associated physical rank/die/route/session/token/user held; native47/phase10 not globally sufficient",
+    "padding_raw_bits": 56,
+    "range": "compute address34 and pass actual range_error/VM_AW19 BEFORE address19 seal; vm_addr30 unchecked truncation forbidden",
+    "raw_bits": 136,
+    "records_per_flit": 2,
+    "stripes": 3,
+    "value": "existing fmt/rsplit/fp32_low/high selection; both BF16 and FP32 retained in original68"
+  },
+  "provider": {
+    "II_slow_edges": 28,
+    "K": 4,
+    "NB": 2,
+    "RC": 6,
+    "RDREG": 1,
+    "WQD": 4,
+    "active_capacity": 1,
+    "coalescing_gain": 0,
+    "groups": 128,
+    "local_release": "original positive LOCAL counted retirement; source head independently held through remote return; absent positive local retirement II28 invalid",
+    "rule": "only same-owner/same physical row and actual column masks; current one-head/root schedule claims no eight-column speedup"
+  },
+  "reverse": {
+    "coded_bits": 288,
+    "fields": {
+      "address": 30,
+      "context": 169,
+      "ordinal": 6,
+      "phase": 10,
+      "pos": 3,
+      "root": 7,
+      "row": 16,
+      "status": 3
+    },
+    "pad_bits": 224,
+    "records_per_flit": 1,
+    "rule": "exact held context/root/ordinal/address/row/pos match and authoritative six-copy/reverse status; mismatch holds head"
+  },
+  "schema": "opentallas.S81.adjacent_stream_retained_head.v2",
+  "selection": "SELECT_DEFAULT_OFF_RETAINED_HEAD_COMPONENT",
+  "source_pins": {
+    "results/uarch/dsrom_s81_adjacent_stream_price_20261005/model.json": "198fc9c19a0d6e273ceab6577dcc1468fc43438a2e57c624a5c0dfb8aae16559",
+    "results/uarch/dsrom_s81_adjacent_stream_price_20261005/physical_slot.json": "1692ae040973321bb187c2b707d49493cb2afeaa3e259b01aed44069830a40dd",
+    "results/uarch/dsrom_s81_minimum_protected_group_20261004/evidence/selected_held_landing/record.json": "0b1863d3e05869ae007fa238e1a9275426d94f6250aae32b2b3b59745fe607c2",
+    "results/uarch/dsrom_s81_minimum_protected_group_20261004/inputs/cell_prices.json": "54c13d4ede6ce1565af88b07ff20240751cf9375ff010658bd063cfa85124a1d",
+    "results/uarch/dsrom_s81_minimum_protected_group_20261004/model.json": "199b40e501c83d642121baa60da9ea08c3a675663361083a9bbba3c70c4d913d",
+    "results/uarch/dsrom_s81_service_capacity_split_20261004/r1/transport_movements.jsonl.gz": "f57b2db45e34fa8215fed30295e652c4bb5a8b5f5dc80543c2f215690c57dbd9",
+    "rtl/dsrom_sys/rd64_capture/ot_dsrom_rd64_vm_capture.sv": "a0921062ea08456a95f19da8c1ebd029d3e90ad9ee54ca9279082862c7473e5b",
+    "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv": "f982ac8faf83763458f310d2794795aaa7d4b4479b4f4151120b5a3060738cc7",
+    "tools/dsrom_s81_adjacent_stream_head_price.py": "d56426d56e4c55ae9916a1fef440a752a82bb3109149c06f0f8c5ce66619d992"
+  },
+  "totals": {
+    "head_rounds": 10975.0,
+    "heads": 1364352.0,
+    "input_ns": 1406833.3333333335,
+    "matched_head_return_ns": 3953030.0000000023,
+    "output_link_ns": 3425877.4999999986,
+    "phases": 1311.0,
+    "protected_publication_ns": 10015113.611111121,
+    "source_phase_drained_ns": 1092.4999999999993,
+    "source_pop_ns": 9145.833333333332,
+    "sum_ns": 18811092.77777779
+  }
+}
