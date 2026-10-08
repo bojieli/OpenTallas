@@ -6,15 +6,17 @@ import json
 from pathlib import Path
 
 
-def generate(outputs, internal):
+def generate(outputs, internal, output_stages=3):
+    if output_stages < 1:
+        raise ValueError("Output stages must be positive")
     plan=[]
     for item in outputs:
         top=item['topology']; paths=item['paths']
         if len(top['drivers']) != 1 or top['iterm_sinks'] or top['net_bterms'] != [item['port']]:
             raise ValueError('Output branch is not dedicated: '+item['port'])
-        if paths['ss_max']['slack_ps'] < 3*40+15:
-            raise ValueError('Insufficient SS output budget for staged 3-buffer candidate')
-        plan.append(dict(kind='output', target=item['port'], count=3,
+        if paths['ss_max']['slack_ps'] < output_stages*40+15:
+            raise ValueError('Insufficient SS output budget for staged buffer candidate')
+        plan.append(dict(kind='output', target=item['port'], count=output_stages,
                          driver=top['drivers'][0]['instance'], net=top['net'],
                          baseline_ff_ps=paths['ff_min']['slack_ps'],
                          baseline_ss_ps=paths['ss_max']['slack_ps']))
@@ -90,16 +92,35 @@ def main():
     ap.add_argument('--outputs',type=Path,required=True)
     ap.add_argument('--internal',type=Path,required=True)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--output-stages',type=int,default=3,
+                    help='Priced positive data buffers per selected output (default: 3)')
+    ap.add_argument('--source',default='f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48',
+                    help='Exact RTL source commit for the measured checkpoint')
+    ap.add_argument('--checkpoint-manifest',type=Path,
+                    help='Optional immutable checkpoint hash JSON bound into this plan')
     args=ap.parse_args()
+    if len(args.source)!=40 or any(c not in '0123456789abcdef' for c in args.source):
+        ap.error('--source must be a full lowercase commit hash')
+    checkpoint=None
+    if args.checkpoint_manifest:
+        checkpoint=json.loads(args.checkpoint_manifest.read_text())
     if args.out.exists():ap.error('--out must be new')
-    plan=generate(json.loads(args.outputs.read_text()),json.loads(args.internal.read_text()))
+    plan=generate(json.loads(args.outputs.read_text()),json.loads(args.internal.read_text()),args.output_stages)
+    for entry in plan:
+        entry['purpose']='required_hold_repair' if entry['baseline_ff_ps']<15 else 'optional_guard_margin'
     script=tcl(plan)
     args.out.mkdir(parents=True)
     (args.out/'insert_hold.tcl').write_text(script)
     count=sum(x['count'] for x in plan)
     (args.out/'plan.json').write_text(json.dumps(dict(
-        source='f7f1a0ee4bfd331c9d6bb873d9a772a5fa88cb48',adopted=False,
+        source=args.source,adopted=False,
+        checkpoint=checkpoint,
+        checkpoint_manifest_sha256=(hashlib.sha256(args.checkpoint_manifest.read_bytes()).hexdigest()
+                                    if args.checkpoint_manifest else None),
         input_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in [args.outputs,args.internal]},
+        output_stages=args.output_stages,
+        required_hold_repair_endpoints=sum(x['purpose']=='required_hold_repair' for x in plan),
+        optional_guard_margin_endpoints=sum(x['purpose']=='optional_guard_margin' for x in plan),
         cells=count,area_um2=count*.0729,added_cycles=0,added_clock_sinks=0,
         estimated_delay_is_not_measured=True,entries=plan),indent=2)+'\n')
 
