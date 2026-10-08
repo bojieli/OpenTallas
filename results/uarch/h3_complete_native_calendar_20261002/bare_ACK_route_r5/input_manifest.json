@@ -1,0 +1,26 @@
+{
+  "RF.sv": {
+    "path": "rtl/gpu/ot_gpu_rf_service.sv",
+    "sha256": "c50e24e4817a2ff81424e0d541c2032c2dffaddbff848ab426e5a1238db1dbc0"
+  },
+  "bridge_manifest.json": {
+    "path": "results/uarch/h4_hbm_baseline_bridge_20261003/manifest.json",
+    "sha256": "b36cb2cc32ae79ba3f075847dea608ade5b8e6a1875efc5c6c408f292c204615"
+  },
+  "bridge_model.json": {
+    "path": "results/uarch/h4_hbm_baseline_bridge_20261003/model.json",
+    "sha256": "d52cf907ac8f32e7113b23b5e97a5ba7c0ae7ba2b906a706201c7412769cbd3e"
+  },
+  "commands.json.gz": {
+    "path": "results/uarch/h4_hbm_selected_cache_rmw_20261002/selected_r4/commands.json.gz",
+    "sha256": "9f8c0fbf277c3405f09444efa7a592496b6c92761cc9c8c9fa22da9af41f5464"
+  },
+  "fence.sv": {
+    "path": "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+    "sha256": "d3e222c82e1232cb451a0a0b1739faf0ccaf1b80f18fb6af4e67ce44adb327d3"
+  },
+  "route.sv": {
+    "path": "results/uarch/h4_hbm_baseline_bridge_20261003/inputs/route.sv",
+    "sha256": "22370ae01ddb569dea16d2a8f4308fdd6fdf193140592362432f598dc050777c"
+  }
+}

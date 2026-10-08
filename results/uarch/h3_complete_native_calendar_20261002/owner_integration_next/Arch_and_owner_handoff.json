@@ -1,0 +1,43 @@
+{
+  "Arch": {
+    "averages_are_worst_bounds": false,
+    "crossing_model_path": "results/rtl/two_clock_crossing_20261003/crossing_model.json",
+    "crossing_model_sha256": "c212d98c9c803fb2aa71420d80f7b6ca98af60a2d7808d605c74a4c98f4d73db",
+    "mandatory_split_clock_integration_owner": "Arch",
+    "measured_average_edges": {
+      "fast_to_slow": 1.6,
+      "slow_to_fast": 1.7
+    },
+    "optional_adoption": false,
+    "optional_model_gain_percent": 0.65,
+    "parent_review": "82e69b235",
+    "pricing_job": "parent session 84856; do not duplicate/poll as owned job",
+    "reviewed_source": "27d86cfe4",
+    "worst_receiver_edges": {
+      "fast_to_slow": 2,
+      "slow_to_fast": 2
+    }
+  },
+  "jobs_started": [],
+  "primary_calendar_delta": {
+    "W2_separate_HBM_path": "selected protected II8 and clean8/8/9 costs; no charge on directRF; actual caller/provider binding still required",
+    "component_source": "8c3dfbf79",
+    "existing_mirrored_writes": 5,
+    "existing_read_pairs": 4,
+    "fence_reverse_owner": "owner46+RFslot9=55",
+    "lease_admission": "requires actual entering workspace17/18/19 lives and upstream retained gate/up placement",
+    "native_owner": "opaque owner46; retained original native tag64/generation64",
+    "next_action": "source-bound successor of R10 consumes connected R2 ordered phases and accepted EVENT trace when available; exact subtree replacement, no double charge; no RTL or whole-system duplicate",
+    "physical_RF_ACK_identity_bits": 0,
+    "retirement": "held consumer, matched child/parent/reverseCDC plus current all-copy witness; no early credit from capture alone",
+    "scope": "source-bound connected PC40 caller RF/FMAX/commonACK/W6/FMIN; no W2 on direct RF route"
+  },
+  "remaining_unqualified": [
+    "fullshape FIFO width and port/track/fanout cost",
+    "reset flush/global debt and all-copy quiescence producer",
+    "loaded parent SS/FF timing",
+    "actual installed HBM owner/debt integration across W2/W4/W6/W5/W10",
+    "production native entering leases and payload event receipts"
+  ],
+  "scope": "coordination handoff only; no new model adoption or runtime receipt"
+}

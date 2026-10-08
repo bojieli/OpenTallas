@@ -1,0 +1,80 @@
+{
+  "FMAX.bin": {
+    "bytes": 512,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/FMAX.bin",
+    "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e"
+  },
+  "RF_context.sv": {
+    "bytes": 3623,
+    "commit": "fb4b3d48068b865f46c038b6cb1bc0ebf973eb65",
+    "path": "rtl/gpu/ot_gpu_hbm_rf_shared_context.sv",
+    "sha256": "707d21ab9794482770af8ca2257dd793fb57516691d1be223a92af03f5707f90"
+  },
+  "W6.sv": {
+    "bytes": 8204,
+    "commit": "fb4b3d48068b865f46c038b6cb1bc0ebf973eb65",
+    "path": "rtl/gpu/w6/ot_gpu_rf_visibility_fence_w6.sv",
+    "sha256": "f86ac8c22c4ac33c7cee959ead1b04b59279bacef1d99c737e21c84ed8a8a396"
+  },
+  "W6_price.py": {
+    "bytes": 13996,
+    "commit": "fb4b3d48068b865f46c038b6cb1bc0ebf973eb65",
+    "path": "tools/hbm_w6_fullwidth_model.py",
+    "sha256": "d4509b638f860975768e157bf696bb9e9565e771b75b8dcfdfb90aa1621cac82"
+  },
+  "bridge.sv": {
+    "bytes": 11584,
+    "commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_c0_connected_bridge_r2.sv",
+    "sha256": "26fe690f9f6855959309c5a840ee927ab6930183f9c0acc271de7ac6cd6b43d7"
+  },
+  "caller.json": {
+    "bytes": 9301,
+    "commit": "6bba619eed2287bc61ff1e12a0b6570e9bda50de",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/caller_preparation_model_r2.json",
+    "sha256": "93a57327a894d2b2e9803ae736f065680a2ffc89f2709c37f73ef5b2acd339ed"
+  },
+  "capture.json": {
+    "bytes": 1969,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/native_capture.json",
+    "sha256": "2758204266ef3f9cb5471108b0d3e4a5fb93ea91f73bb41c2cf30ad95543ca83"
+  },
+  "connected_model.json": {
+    "bytes": 19372,
+    "commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+    "path": "results/uarch/h4_hbm_c0_connected_bridge_20261003/r2/model.json",
+    "sha256": "03369a02155132b278c138bbf967ca849f58cc392ddc329f01f04d87be8ae915"
+  },
+  "constant.bin": {
+    "bytes": 512,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/constant.bin",
+    "sha256": "cdd638cefd9b937f1a9f0db589f9fa21174d90e91defa7011cce26b644762a52"
+  },
+  "consumer.sv": {
+    "bytes": 3353,
+    "commit": "8c3dfbf7910cb74cbc74497c787c3fc3b790bc82",
+    "path": "rtl/experimental/hbm_c0_connected_20261003/r2/ot_gpu_pc40_fmin_consumer.sv",
+    "sha256": "132026114e0ca96ebe272769b1480915cff46c2768d8b88d8e9142b78bd55553"
+  },
+  "gate.bin": {
+    "bytes": 512,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/gate.bin",
+    "sha256": "46e599ee3d76c224d688966baecfeee2f55400b80398cd71c3b918217ad0b8e0"
+  },
+  "negative.bin": {
+    "bytes": 512,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/negative.bin",
+    "sha256": "bb21e0bf84e0d27d2d24f07e9a221421a510fbdd3e6155034d381686b6aafd6e"
+  },
+  "terminal.json": {
+    "bytes": 2376,
+    "commit": "93b75ccf9f50b6162fb5a52dff3c11065f20efe6",
+    "path": "results/uarch/c0_pc40_payload_lease_20261003/actual_payload_r1/payload/terminal.json",
+    "sha256": "e0a30f6c4f49032e02f124d3096abb92488be5d5402735d0dc32871c113c3c45"
+  }
+}

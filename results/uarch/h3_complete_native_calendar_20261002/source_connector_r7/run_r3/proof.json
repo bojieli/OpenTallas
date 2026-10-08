@@ -1,0 +1,75 @@
+{
+  "actual_caller_full16_quarantine_installed": false,
+  "artifact_sha256": "9f63ac6fcb38bb66a441a4d5018a863db963cb2aa2a8b0ad073cb0a8c27e8d30",
+  "runs": {
+    "elastic_proposal.bound256": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 47614,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    },
+    "elastic_proposal.bound64": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 17086,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    },
+    "elastic_proposal.bound8": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 8182,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    },
+    "held.bound256": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 47614,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    },
+    "held.bound64": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 17086,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    },
+    "held.bound8": {
+      "capacity_peaks": {
+        "R14_context_perPC": 8,
+        "W2_perPC_client": 2
+      },
+      "events": 1192,
+      "last_retire": 8182,
+      "parents": 4,
+      "resource_overlap": false,
+      "sector_children": 64
+    }
+  },
+  "schema": "INDEPENDENT_SOURCE_CONNECTOR_R7_PROOF",
+  "verdict": "PASS_PROSPECTIVE_CONTROLS_ONLY",
+  "whole_token_ns": null
+}

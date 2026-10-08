@@ -1,0 +1,5 @@
+{
+  "verdict": "FAIL",
+  "reason": "inherited aggregate W6 reservation placed retirement before FMIN source capture and incorrectly subtracted request/ACK from 19 post-ACK boundaries",
+  "resolution": "source-resolved W6 phases; actual FMIN result gates consumer then reverse/drain; retain all19 boundary terms with next-accept phase explicit"
+}

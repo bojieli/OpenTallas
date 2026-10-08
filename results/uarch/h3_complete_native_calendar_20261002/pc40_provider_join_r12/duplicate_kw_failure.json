@@ -1,0 +1,6 @@
+{
+  "verdict": "FAIL",
+  "source_sha256": "b7b6e623c9ef467649ad00da25284fbdecb7b29fd0a9c0fe5be3490f0981a648",
+  "reason": "TypeError duplicate accepted_receipt keyword while constructing reverse phases",
+  "resolution": "remove repeated keyword; default false remains"
+}

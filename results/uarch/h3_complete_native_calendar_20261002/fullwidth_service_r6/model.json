@@ -1,0 +1,123 @@
+{
+  "RF_capture": {
+    "SMs": 32,
+    "common_ACKs_per_both_copy_write": 1,
+    "independent_mirror_ACKs": false,
+    "raw_bits_per_SM": 55,
+    "total_raw_bits": 1760
+  },
+  "UNKNOWN": [
+    "actual C0/KV accepted caller/SM/physicalPC map",
+    "actual all-copy/reset quiescence implementation",
+    "installed endpoint bounds/clock pairs",
+    "complete whole-program movement interval join",
+    "Popper wholewidth slots/cuts/ports/area and context SSFF"
+  ],
+  "W2_minimum": {
+    "PCs": 128,
+    "protection_selector_CDC_not_in_minimum": true,
+    "raw_bits_per_row": 38,
+    "rows_per_PC": 96,
+    "total_raw_bits": 466944
+  },
+  "all_copies_drain_event_assumes_source_predicate_not_yet_implemented": true,
+  "baseline_costs_overwritten": false,
+  "canonical_contract_sha256": "22e2e3c718807d91e3ef4bfd8b8a3db704583f452592975fc651b538f2827212",
+  "downstream_service_bounds_are_scenario_assumptions": true,
+  "execution_scope": "prospective HBM-fed partial-vector RF owner chain, not source arithmetic execution",
+  "fields": {
+    "CTAGW": 32,
+    "KV_client": 5,
+    "NC": 6,
+    "PTAGW": 35,
+    "W4_W6_bits": 55,
+    "backend_echo_generation_bits": 4,
+    "compact_required": false,
+    "new_directory_client": false,
+    "owner46": [
+      [
+        "physical_PC",
+        7
+      ],
+      [
+        "client",
+        3
+      ],
+      [
+        "original_client_tag",
+        32
+      ],
+      [
+        "generation",
+        4
+      ]
+    ]
+  },
+  "packet_geometry": {
+    "RF_vector_bytes": 512,
+    "actual_RF_copies": 2,
+    "both_copy_write_bytes": 1024,
+    "old_RF_pair_capture_bytes": 1024,
+    "read_return_children_per_vector": 16,
+    "sector_bytes": 32
+  },
+  "policy": {
+    "SM_owner_capacity": 1,
+    "drain_each_reuse_positive": true,
+    "drain_source_export": null,
+    "finite_per_PC_per_client_slots": 16,
+    "generation_modulus": 16,
+    "no_same_edge_slot_reuse": true,
+    "original_tags_retained": true,
+    "source_order_reservation": true
+  },
+  "production_admitted": false,
+  "prospective_model_executable": true,
+  "scenarios": [
+    "held.endpoint8.drain8",
+    "elastic_proposal.endpoint8.drain8",
+    "held.endpoint64.drain64",
+    "elastic_proposal.endpoint64.drain64",
+    "held.endpoint256.drain256",
+    "elastic_proposal.endpoint256.drain256"
+  ],
+  "schema": "FULLWIDTH_FINITE_PAID_SERVICE_R6",
+  "selected_source_inventory": {
+    "RMW": 288,
+    "actual_caller_binding_supplied": false,
+    "actual_journal_composed": false,
+    "shared64": 9216,
+    "source_PC_counts": {
+      "DS": 2213,
+      "Qwen": 1737
+    }
+  },
+  "transport_identity_replacement": {
+    "directions": {
+      "request": {
+        "coded_bits": 432,
+        "cut_bits_per_SM": 1736,
+        "incremental_protected_bits": 700416,
+        "old_coded_bits": 360,
+        "old_raw_bits": 313,
+        "raw_bits": 343
+      },
+      "return": {
+        "coded_bits": 360,
+        "cut_bits_per_SM": 1448,
+        "incremental_protected_bits": 0,
+        "old_coded_bits": 360,
+        "old_raw_bits": 277,
+        "raw_bits": 307
+      }
+    },
+    "full_area_ports_tracks_fit_requires_Popper_join": true,
+    "gate_selector_clock_reset_area_not_in_FF_lower": true,
+    "incremental_FF_screen_mm2_ASSUMED": 0.40848261120000007,
+    "incremental_protected_bits": 700416,
+    "owner16_replaced_by_owner46_not_appended_twice": true,
+    "revised_pipeline_protected_bits": 7879680,
+    "source_pipeline_protected_bits": 7179264
+  },
+  "whole_token_ns": null
+}
