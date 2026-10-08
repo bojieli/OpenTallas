@@ -27,8 +27,11 @@ LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_2026
 # design target only. The consistent die-link budget and rule H1 still apply: a block counts only if its link-budget
 # SS is also >= 0 (forwarded-clock stations stay unverified until a per-link model exists).
 SS_LINE, FF_LINE = 0.0, 0.0
-LINE_TEXT = ("Closure line (owner decision 2026-10-07): SS >= 0 ps, FF >= 0 ps, DRC 0 at 833.333 ps sign-off, under the "
-             "consistent die-link budget (S + link + R + 150 ps skew <= T - 60) and rule H1; +15 ps is a design target only")
+LINE_TEXT = ("Closure line (OWNER OPTION B, 2026-10-07 20:45): TT setup >= 0 ps, FF hold >= 0 ps, DRC 0 at 833.333 ps "
+             "sign-off; SS setup is a sensitivity; +15 ps is a design target only. The consistent die-link budget "
+             "(S + link + R + 150 ps skew <= T - 60) and rule H1 still apply. Loop verdicts committed before option B carry "
+             "SS setup (SS >= 0 implies TT >= 0); verdicts after it carry TT setup in the same field. The link-budget "
+             "re-STA ran at SS, so its revocations are conservative under option B until the TT re-verdicts land")
 PAT = re.compile(r"^closure-loop: (\S+) CLOSED SS ([+-]?[\d.]+) / FF ([+-]?[\d.]+) ps DRC (\d+) at ([\d.]+)")
 
 
@@ -59,8 +62,16 @@ def canon(blk):
         blk = b2
 
 
+RECLOSE = re.compile(r"; job (\S+?-(?:lbc|cgfix|lbpin))(?:,|\s|$)")
+
+
 def verdicts(ref):
+    """Latest committed verdict per block on `ref`; re-close jobs (-lbc / -cgfix / -lbpin, routed under the consistent
+    link budget) are also taken from any remote branch, since the loop commits them to the owner's branch first."""
     log = subprocess.check_output(["git", "log", ref, "--reverse", "--format=%h %cI %s"], cwd=ROOT, text=True)
+    extra = subprocess.check_output(["git", "log", "--remotes", "--reverse", "--format=%h %cI %s",
+                                     "--grep=^closure-loop: .* CLOSED"], cwd=ROOT, text=True)
+    log += "\n".join(l for l in extra.splitlines() if RECLOSE.search(l))
     latest = {}
     for line in log.splitlines():
         h, t, subj = line.split(" ", 2)
@@ -68,7 +79,10 @@ def verdicts(ref):
         if m:
             blk, ss, ff, drc, per = m.group(1), float(m.group(2)), float(m.group(3)), int(m.group(4)), float(m.group(5))
             blk = canon(blk)
-            latest[blk] = dict(commit=h, at=t, ss=ss, ff=ff, drc=drc, period=per,
+            rc = RECLOSE.search(subj)
+            if blk in latest and latest[blk].get("reclose") and not rc:
+                continue        # a re-close under the consistent budget is newer evidence than any pre-budget verdict
+            latest[blk] = dict(commit=h, at=t, ss=ss, ff=ff, drc=drc, period=per, reclose=rc.group(1) if rc else None,
                                accepted=abs(per - 833.333) < 0.01 and ss >= SS_LINE and ff >= FF_LINE and drc == 0)
     return latest
 
@@ -91,6 +105,10 @@ def apply_link_budget(v):
     lb = link_budget()
     for b, x in v.items():
         r = lb.get(b)
+        if x.get("reclose"):
+            x["lb"] = "HOLDS" if x["accepted"] else "REVOKED"
+            x["lb_ss"] = x["ss"]
+            continue
         if x["accepted"]:
             if r is None:
                 x["lb"] = "not re-checked"
@@ -127,7 +145,12 @@ STREAM_INDEX = [
     "Stream die inventories (branch commits, not on main): HBM die views index r23 = 45 closed / 3 interim / 33 missing / "
     "2 reservation (claude/hbm-die-20261007 bc38f4908, physical/hbm_accel_die_views/index.json).",
     "Reported in stream logs, not yet committed (no credit): Qwen full-die GRT overflow 0 (adjfix_t4p8) and die STA on GRT "
-    "parasitics SS WNS -132 ps (relay/station hops) / FF -5.50 ps (qfd_tile assumed views) -- qwen-dietop.log 19:31-19:32.",
+    "parasitics SS WNS -90.23 ps (relay hops; SS is a sensitivity under option B) / FF -5.50 ps (qfd_tile assumed views) -- "
+    "qwen-dietop.log 19:32-20:08.",
+    "Committed block closures outside the closure loop (branch, not on main): WFC source die150 SS +31.5 / FF +22.7 DRC 0 "
+    "(claude/s81-die-20261007 dc8570b5d).",
+    "integrate re-verdicts: 24 NEEDS_RTL jobs requeued to the verdict / ECO completion at 20:31 (closure_loop.py reverdict); "
+    "they count once their closure-loop commits land on main.",
 ]
 DIE_STATE = dict(
     qwen_rom="REOPENED 2026-10-07; die-level items in the evidence table below (no flat full-die DRT by design)",
@@ -179,7 +202,9 @@ def render(ref, rows, v):
     for t in ("qwen_rom", "ds_rom", "hbm_ds"):
         r = rows[t]
         o.append(f"## {t}")
-        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f})" for b in r["closed"]) or "none"))
+        o.append("Closed: " + (", ".join(f"{b} ({v[b]['commit']} SS {v[b]['ss']:+.2f} / FF {v[b]['ff']:+.2f}"
+                                          + (f"; re-closed under the link budget by {v[b]['reclose']}, branch commit" if v[b].get("reclose") else "")
+                                          + ")" for b in r["closed"]) or "none"))
         if r["revoked"]:
             o.append("Revoked: link budget (new SS under the consistent split): "
                      + ", ".join(f"{b} ({v[b]['lb_ss']:+.1f})" for b in r["revoked"]))
