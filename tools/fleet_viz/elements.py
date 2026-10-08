@@ -8,14 +8,16 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   closed (earlier)           an earlier (SS-line) loop closure the restatus neither re-verified nor revoked
   first trial in flight      live jobs, no failure yet
   failed, re-running         failures and a live job
-  revoked, re-running        an earlier closure revoked by the link budget (option-B status), with a live job
+  revoked, re-running        every closure revoked (link budget via option-B status, or a per-job entry in
+                             revoked_closures.json, any era), with a live job
   revoked (no live job)      ... and nothing running
   needs redesign (no live job)  NEEDS_RTL / NEEDS_BUDGET and nothing running
   flow failure (no live job) NEEDS_HUMAN / INVALID / REFUSED only, nothing running
   cancelled only             every job was cancelled
 
 Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/closure_loop/option_b_status_*/status.json
-and tt_restatus_*.json (latest by name), descriptions from the repo (die-master .env headers, RTL module headers,
+and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
+~/claude-takeover-20261007/revoked_closures.json, {job: {reason, ff_ps, by, at}}; applies to any CLOSED job), descriptions from the repo (die-master .env headers, RTL module headers,
 abstract manifests) falling back to the cleaned job purpose, cached in <state>/element_descriptions.json (entries with
 "src": "manual" are never regenerated). Area comes from the best job's ORFS report (6_report.json, else the route
 metrics) fetched over ssh in the background and cached in <state>/element_area.json.
@@ -200,7 +202,9 @@ class Elements:
         self.state.mkdir(parents=True, exist_ok=True)
         self.ssh_of = ssh_of; self.ctl = ctl; self.md_path = pathlib.Path(md_path); self.log = log
         self.period = period; self.md_period = md_period
-        self.cache = {}; self.optb = (None, {}); self.rest = (None, {})
+        self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {})
+        self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
+            '~/claude-takeover-20261007/revoked_closures.json')))
         self.desc = Describer(repo, self.state / 'element_descriptions.json')
         self.area_path = self.state / 'element_area.json'
         try: self.area = json.loads(self.area_path.read_text())
@@ -273,9 +277,20 @@ class Elements:
             self.rest = (key, d)
         return self.optb[1], self.rest[1]
 
+    def revoked_jobs(self):
+        try: key = self.revoked_path.stat().st_mtime
+        except OSError: key = None
+        if key != self.revk[0]:
+            d = {}
+            if key is not None:
+                try: d = {k: v for k, v in json.loads(self.revoked_path.read_text()).items() if isinstance(v, dict)}
+                except Exception as e: self.log('elements: revoked closures: %s' % e)
+            self.revk = (key, d)
+        return self.revk[1]
+
     # ---- classification
     def compute(self):
-        js = self.jobs(); ob, rest = self.option_b()
+        js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs()
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {}))
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known)].append(j)
@@ -283,16 +298,18 @@ class Elements:
             groups.setdefault(master(b, known), [])
         rows = []
         for m, g in groups.items():
-            rows.append(self.element(m, g, ob, rest))
+            rows.append(self.element(m, g, ob, rest, rj))
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
         for r in rows: summ[r['target']][r['category']] += 1
         self.desc.save()
         return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
-                    sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js)))
+                    sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
+                                 revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj)))
 
-    def element(self, m, g, ob, rest):
+    def element(self, m, g, ob, rest, rj=None):
+        rj = rj or {}
         blocks = sorted({j['block'] for j in g} | ({m} if not g else set()))
         rev_blocks = ob.get('revoked', {}); okb = ob.get('closed', {})
         for j in g:   # option-B judgements on the job itself
@@ -301,8 +318,10 @@ class Elements:
                 j['tt'] = _f(r.get('setup_verdict_ws_ps') if r.get('setup_verdict_ws_ps') is not None else r.get('ttlb_ws_ps'))
         live = [j for j in g if j['status'] in LIVE]; failed = [j for j in g if j['status'] in FAIL]
         closed = [j for j in g if j['status'] == 'CLOSED']
-        tt_closed = [j for j in closed if j['tt_corner'] or (j['closed_t'] or 0) >= T0]
-        early = [j for j in closed if j not in tt_closed]
+        job_rev = [j for j in closed if j['name'] in rj]   # per-job revocations (any era)
+        closed_ok = [j for j in closed if j['name'] not in rj]
+        tt_closed = [j for j in closed_ok if j['tt_corner'] or (j['closed_t'] or 0) >= T0]
+        early = [j for j in closed_ok if j not in tt_closed]
         def revoked(j):
             r = rest.get(j['name'])
             return (j['block'] in rev_blocks and rev_blocks[j['block']].get('job') in (None, j['name'])) or \
@@ -310,7 +329,7 @@ class Elements:
         early_rev = [j for j in early if revoked(j)]
         early_ok = [j for j in early if j not in early_rev]
         reverified = [j for j in early_ok if j['block'] in okb or (rest.get(j['name']) or {}).get('verdict') == 'CLOSED_TT']
-        ob_only = [b for b in blocks if b in okb]
+        ob_only = [b for b in blocks if b in okb and okb[b].get('job') not in rj]
         best = None; closed_t = None; via = ''
         if tt_closed:
             cat = CATS[0]; best = max(tt_closed, key=lambda j: j['closed_t'] or 0); closed_t = best['closed_t']
@@ -320,13 +339,18 @@ class Elements:
             via = 'option-B restatus'
         elif early_ok:
             cat = CATS[2]; best = max(early_ok, key=lambda j: j['closed_t'] or 0); closed_t = best['closed_t']
-        elif early_rev or any(b in rev_blocks for b in blocks):
-            cat = CATS[5] if live else CATS[6]; via = 'link budget'
+        elif early_rev or job_rev or any(b in rev_blocks for b in blocks):
+            cat = CATS[5] if live else CATS[6]
+            via = ' + '.join(x for x in (('link budget' if early_rev or any(b in rev_blocks for b in blocks) else ''),
+                                         ('per-job revocation' if job_rev else '')) if x)
         elif live and not failed: cat = CATS[3]
         elif live: cat = CATS[4]
         elif failed:
             cat = CATS[7] if any(j['status'] in ('NEEDS_RTL', 'NEEDS_BUDGET') for j in failed) else CATS[8]
         else: cat = CATS[9]
+        jr = max(job_rev, key=lambda j: j['closed_t'] or 0) if job_rev else None
+        if best is None and jr and cat in CATS[5:7]:   # show the revoked closure with its re-timed FF
+            best = dict(jr, ff=_f(rj[jr['name']].get('ff_ps')))
         if best is None:
             cand = [j for j in g if j['has_m'] and (j['tt'] is not None or j['ss'] is not None or j['ff'] is not None)]
             def score(j):
@@ -344,13 +368,26 @@ class Elements:
         lj = max(g, key=lambda j: j['et']) if g else None
         a = self.area.get(tm['job'] or '') or {}
         rv = rev_blocks.get(m) or next((rev_blocks[b] for b in blocks if b in rev_blocks), None)
+        revd = None
+        if cat in CATS[5:7]:
+            if jr:
+                e = rj[jr['name']]
+                revd = dict(verdict='revoked', reason=e.get('reason'), ff=_f(e.get('ff_ps')), by=e.get('by'), at=e.get('at'),
+                            jobs={j['name']: _f(rj[j['name']].get('ff_ps')) for j in job_rev},
+                            tt_lb=rv.get('tt_link_budget_ps') if rv else None)
+            elif rv: revd = dict(verdict=rv.get('verdict'), tt_lb=rv.get('tt_link_budget_ps'))
+        latest = dict(t=lj['et'], job=lj['name'], status=lj['status'], text=lj['event']) if lj else None
+        if jr and cat in CATS[5:7]:
+            e = rj[jr['name']]
+            rt = 'REVOKED %s: %s (re-timed FF %s ps)' % (jr['name'], e.get('reason', ''), e.get('ff_ps'))
+            latest = dict(t=max(ts(e.get('at', '')), lj['et'] if lj else 0), job=lj['name'] if lj else jr['name'],
+                          status=lj['status'] if lj else 'REVOKED', text=(rt + (' | ' + lj['event'] if lj else ''))[:400])
         return dict(element=m, target=target(m, *(next(((j['owner'], j['branch']) for j in g), ('', '')))),
                     variants=[b for b in blocks if b != m], category=cat, via=via,
                     purpose=self.desc.get(m, blocks, [j['purpose'] for j in sorted(g, key=lambda j: j['created'])]),
                     jobs=len(g), live=len(live), failed=len(failed), closed_jobs=len(closed),
                     best=tm, area=dict(die=a.get('die'), core=a.get('core'), util=a.get('util')) if 'err' not in a and a else None,
-                    revoked=dict(verdict=rv.get('verdict'), tt_lb=rv.get('tt_link_budget_ps')) if rv and cat in CATS[5:7] else None,
-                    latest=dict(t=lj['et'], job=lj['name'], status=lj['status'], text=lj['event']) if lj else None,
+                    revoked=revd, latest=latest,
                     closed_t=closed_t, owner=next((j['owner'] for j in sorted(g, key=lambda j: -j['updated'])), ''),
                     _host=best['host'] if best else None, _base=area_base(best) if best else None)
 
