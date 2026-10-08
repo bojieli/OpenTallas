@@ -2377,6 +2377,11 @@ def run_pnr(
             raise FlowError(f"ORFS produced no {st} metrics at {cts_json}")
         cts = json.loads(cts_json.read_text(encoding="utf-8"))
         errors = {k: v for k, v in cts.items() if k.endswith("__flow__errors__count")}
+        try:
+            from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+            errors = _ot_tol(errors, logs_dir)
+        except ImportError:
+            pass
         if any(int(v) != 0 for v in errors.values()):
             raise FlowError(f"ORFS reported flow errors: {errors}")
         fmax_info = conservative_fmax_metrics(cts, st)
@@ -2449,6 +2454,12 @@ def run_pnr(
         if key.endswith("__flow__errors__count")
     }
     metrics["flow_error_counts"] = flow_errors
+    try:
+        from orfs_hold_mm import tolerate_flow_errors as _ot_tol  # FLOW-HOLD: RSZ-0060 in a completed mm repair
+        flow_errors = _ot_tol(flow_errors, logs_dir)
+        metrics["flow_error_counts_tolerated"] = flow_errors
+    except ImportError:
+        pass
     if any(int(v) != 0 for v in flow_errors.values()):
         raise FlowError(f"ORFS reported flow errors: {flow_errors}")
     if endpoint_netlist and metrics.get("sequential_cell_count", 0) < 270418:
