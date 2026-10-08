@@ -1,0 +1,167 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "dshead-ctl-oreg3-c91a967ac-tt",
+ "block": "ot_hdc_v41_fh_ctl",
+ "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+ "source_branch": "claude/takeover-ds-head-20261006",
+ "source_commit": "c91a967acd6976f7eaa5a87ad70a69705a76c50e",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 128.24,
+  "ff_ps": 4.6,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac-tt/routes/dshead_ctl_oreg3_c91a967ac_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/dshead-ctl-oreg3-c91a967ac-tt/routes/dshead_ctl_oreg3_c91a967ac_tt/work/orfs/logs/asap7/opentallas_ot_hdc_v41_fh_ctl_asap7_dshead_ctl_oreg3_c91a967ac_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "tools/test_fh_margin.py --only adec head_q_oreg2 (adec equivalence + 3 mutants; head_q lockstep + 3 OREG mutants) runs in parallel on EPYC1 and gates adoption",
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 696,
+    "mean": 419.7,
+    "min": 410.0,
+    "max": 448.0
+   },
+   "all": {
+    "n": 4697,
+    "mean": 422.0,
+    "min": 400.1,
+    "max": 452.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 696,
+    "mean": 271.3,
+    "min": 263.5,
+    "max": 293.8
+   },
+   "all": {
+    "n": 4697,
+    "mean": 272.7,
+    "min": 256.9,
+    "max": 297.5
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 420,
+   "CK_SS_ALL_MEAN": 422,
+   "CK_SS_MIN": 410,
+   "CK_SS_ALL_MIN": 400,
+   "CK_SS_MAX": 448,
+   "CK_SS_ALL_MAX": 453,
+   "CK_FF_MEAN": 271,
+   "CK_FF_ALL_MEAN": 273,
+   "CK_FF_MIN": 264,
+   "CK_FF_ALL_MIN": 257,
+   "CK_FF_MAX": 294,
+   "CK_FF_ALL_MAX": 298
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "0 (retimed: output registers computed from the retirement next-edge values; head_q_oreg lockstep == macro_ctx)",
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T00:13:05-07:00",
+ "job_spec": {
+  "name": "dshead-ctl-oreg3-c91a967ac-tt",
+  "block": "ot_hdc_v41_fh_ctl",
+  "owner": "Claude:tk-ds-head (fused-head owner, takeover 2026-10-07)",
+  "purpose": "TT-BATCH (owner option B, one large batch): dshead-ctl-oreg3-c91a967ac re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: ctl OREG=2: pin-registered o_we/commit_warm + exact subtract-free address decode (0 cycles); oreg r1 SS -15.67 on wr_addr decode, outputs FF -90 (IO model, flop-to-pin) | decode as module ot_hdc_v41_fh_adec (same logic as fcecef219) with RTL equivalence bench",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/takeover-ds-head-20261006",
+   "commit": "c91a967acd6976f7eaa5a87ad70a69705a76c50e"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 CTL_OREG=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; ROUTE_HOLD_IO=ss HM=0.010 CTL_SAFE=2 CTL_OREG=2 bash physical/dsrom_fh_safe/cl_route.sh ctl {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/dsrom_fh_safe/gen/signoff_ctl.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/dsrom_fh_safe/gen/signoff_ctl.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "reexport": "python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name ot_hdc_v41_fh_ctl --post-sdc physical/dsrom_fh_safe/gen/signoff_ctl.sdc  --out {RUN}/routes/{LABEL}/view",
+   "session": "ff",
+   "passes": 3,
+   "max_buffer_percent": 60
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/dsrom_fh_safe/closed/ctl_oreg3"
+   }
+  ],
+  "cycles_added": "0 (retimed: output registers computed from the retirement next-edge values; head_q_oreg lockstep == macro_ctx)",
+  "merge_target": null,
+  "no_bench_reason": "tools/test_fh_margin.py --only adec head_q_oreg2 (adec equivalence + 3 mutants; head_q lockstep + 3 OREG mutants) runs in parallel on EPYC1 and gates adoption",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+   "enabled": false,
+   "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  }
+ }
+}
