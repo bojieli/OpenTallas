@@ -26,7 +26,7 @@
 // block; WFC proto_fault 0.
 // ---------------------------------------------------------------------------
 module tb_mtp_rom_s0;
-    parameter integer MODE    = 0;
+    parameter integer READPIPE=0, MODE    = 0;
     parameter integer NUSR    = 2;          // users (MODE 0: each runs the same trace)
     parameter integer SEQ_MAXU = 8;         // users >= this pass the sequencer (autoregressive)
     parameter integer NGEN_H  = 40;         // MODE 1: tokens per user
@@ -78,7 +78,7 @@ module tb_mtp_rom_s0;
     wire [FLIT-1:0] w_in_data, w_out_data;
     wire core_start, core_done_w; wire [NW-1:0] core_token, core_pos, cnt_tok; wire [31:0] cnt_val;
     wire [USER_W-1:0] core_user; wire [29:0] kv_base;
-    wire vm_we, vm_re; wire [VWA-1:0] vm_waddr, vm_raddr; wire [FLIT-1:0] vm_wdata, vm_rq;
+    wire [6:0] vqi; wire vm_we, vm_re; wire [VWA-1:0] vm_waddr, vm_raddr; wire [FLIT-1:0] vm_wdata, vm_rq;
     wire pr_re; wire [USER_W-1:0] pr_user; wire [NW-1:0] pr_pos, pr_q; wire [3:0] pr_blk; wire pr_qk;
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
@@ -86,13 +86,13 @@ module tb_mtp_rom_s0;
     ot_rom_pkg_ctrl_wfc #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(1), .XWORDS(41), .RXWORDS(41), .REC_SRAM(1),
         .UPOS_LWR(1), .CONTROL_PIPE(1), .CFG_Q(1), .PRECOMP(1), .IN_DEC(1), .TXQ_SLICE(1), .RDY_LT(1), .FANOUT_COPY(1),
-        .MARGIN(1), .LINK_REG(1), .LINK_SEL(1), .VM_REG(1), .RD_PIPE(1), .SLEW_COPY(1)) u_wfc (
+        .MARGIN(1), .LINK_REG(1), .LINK_SEL(1), .VM_REG(1), .VM_RETURN_EXTRA(READPIPE), .TXQ(READPIPE?8:4), .RD_PIPE(1), .SLEW_COPY(1)) u_wfc (
         .clk(fclk), .rst_n(rst_n), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
         .in_valid(w_in_valid), .in_ready(w_in_ready), .in_data(w_in_data), .in_last(w_in_last),
         .out_valid(w_out_valid), .out_ready(w_out_ready), .out_data(w_out_data), .out_last(w_out_last),
         .core_start(core_start), .core_token(core_token), .core_pos(core_pos), .core_user(core_user),
         .core_done(core_done_w), .core_next_token(cnt_tok), .core_next_val(cnt_val), .kv_base(kv_base),
-        .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
+        .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rv(vqi[6]), .vm_ridx(vqi[5:0]),
         .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q), .pr_blk(pr_blk), .pr_qk(pr_qk),
         .core_busy(core_busy), .tok_valid(tok_valid), .tok_user(tok_user), .tok_pos(tok_pos), .tok_id(tok_id),
         .users_done(users_done), .proto_fault(proto_fault), .wf_issue(wf_issue), .wf_reject(wf_reject),
@@ -114,8 +114,8 @@ module tb_mtp_rom_s0;
     wire swv; wire [VWA+FLIT-1:0] swd; reg swr = 0, swa = 0;
     wire srv; wire [VWA-1:0] srd; reg srr = 0; reg [FLIT:0] srq = 0;
     wire [USER_W+2*NW:0] ks; reg [NW+32:0] kd = 0; wire vmx_ft;
-    dsfd_wfc_vmx #(.XWORDS(XW)) u_vmx (.ck(fclk), .ckv(sclk), .rst(rst_n), .rsv(rst_n),
-        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
+    dsfd_wfc_vmx #(.XWORDS(XW), .READPIPE(READPIPE)) u_vmx (.ck(fclk), .ckv(sclk), .rst(rst_n), .rsv(rst_n),
+        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_vqi(vqi),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(swv), .t_swd(swd), .f_swr(swr), .f_swa(swa), .t_srv(srv), .t_srd(srd), .f_srr(srr), .f_srq(srq),
         .t_ks(ks), .f_kd(kd), .t_ft(vmx_ft));

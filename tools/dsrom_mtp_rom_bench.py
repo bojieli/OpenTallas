@@ -76,6 +76,8 @@ def cases():
     stg = dict(tb="tb_mtp_rom_stg")
     c["stg_r1"] = dict(stg, params=dict(SEED=1, NJOB=60))
     rp=dict(stg, params=dict(SEED=4,NJOB=40,READPIPE=2,FULLSTALL=1,VMNAT=1))
+    c["stg_readpipe_baseline"]=dict(stg,params=dict(SEED=4,NJOB=40,READPIPE=0,FULLSTALL=1,VMNAT=1))
+    c["s0_readpipe2"]=dict(s0,trace="tr_forced",params=dict(MODE=0,NUSR=2,READPIPE=2))
     c["stg_readpipe2"]=rp
     c["stg_readpipe2_tokpipe"]=dict(rp,defines=["OT_VMX_TOKPIPE"])
     for mut in ("INDEX","LAST","EARLY_RESPONSE","NODEBT"):
