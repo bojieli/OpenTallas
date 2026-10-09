@@ -1,0 +1,11 @@
+# Admitted fmt3 front_c physical candidate
+
+Source commit `ec8174332` integrates the opt-in registered converter into the actual SM source inventory and physical generator. Default parameters remain off. The remote default-generation gate compared all ten emitted files against generator source at `f638941f6` and passed byte identity after normalizing the different work paths.
+
+A new inventory-bounded archive contains 62 paths. The admitted process on EPYC2 runs exact gates, CTS calibration, per-corner clock measurement, then a separate full route with the measured clock budget. It uses the existing 432 by 518.4 micrometre strip and real 12,372-pin map. Pin coordinates must be byte-identical between calibration and route. Existing SM jobs and previous failed front_c verdicts remain untouched.
+
+The unified model prices the additional stage at 253 dependent SM operations per token. Its physical sizing covers 1,602 converter state bits, 64 conversion lanes, replicated control fanout, the existing strip area, and the 120-micrometre central channel. The adapter's two boundary buses consume an estimated 2,176 of 2,500 tracks on one layer; other traffic shares the channel, so this is a routing proposal requiring measurement. Added estimated logic is 0.003125 square millimetres per strip, with the existing die footprint preserved. Density is 0.55.
+
+The route clock is 833 ps with 60 ps setup and 25 ps hold uncertainty. Abutting interfaces retain 300 ps external logic/wire cost plus 90 ps element-region skew, leaving 383 ps of local setup time. Calibration measures SS and FF insertion. The repair flow uses separate SS setup and FF hold scenes; the FF neighbour clock and sender minimum are explicitly corrected in its own scene. Final checks use actual routed insertion under the balanced element clock plan. The wrapper requires SS slack at least +15 ps, FF slack at least +15 ps and DRC zero; it ignores the older corner helper's TT adoption boolean.
+
+`launch.json` records the actual process and measured admission. It is launch evidence, not closure evidence. Preserve `run/state.json`, all calibration products, all route products, `budget.json` and terminal `verdict.json` from the remote root when this process finishes. A block result still requires hierarchical die integration qualification.
