@@ -8,12 +8,19 @@ VL=${VL:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 W=$(cd "$(dirname "$0")/../.." && pwd)
 P=$(cd "$W/.." && pwd)
 RR=8; RST=24
+# STACK=c: the re-cut stack (rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv, LFB / LBD via KVD_LFB / KVD_LBD)
+if [ "${STACK:-p}" = c ]; then
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_c.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_LBD=${LBD:-2}"
+else
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv"; DEFS=""
+fi
 for a in "$@"; do case $a in -GR=*) RR=${a#-GR=};; -GROM_ST=*) RST=${a#-GROM_ST=};; esac; done
 SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_fifo.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_cbridge.sv \
  $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv $W/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv $P/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
  $W/test/nearhbm/ot_qwen_nearhbm_attn_die_tb.sv \
- $W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv \
+ $STK \
  $W/test/nearhbm/ot_qwen_nearhbm_attn_hub_shim_p.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv \
  $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv \
  $W/hdc/ot_hdc_sfu.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_fpu.sv $W/hdc/ot_hdc_fp32_mul_pipe.sv \
@@ -22,6 +29,6 @@ SRC="$W/test/qwen_kv_die/ot_qkvd_layer_tb.sv $W/qwen_sys/kv_die_20261009/ot_qkvd
 CPP="$W/test/qwen_kv_die/tb_qkvd_layer.cpp $W/test/nearhbm/sim_nhb_fp_lat_dpi.cpp $W/test/sim_hdc_v41x_fastfp_dpi.cpp"
 mkdir -p $OUT
 $VL --cc --exe --build -j 16 -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN \
-  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 "$@" \
+  --x-assign fast --x-initial fast --top-module ot_qkvd_layer_tb -GHD=128 $DEFS "$@" \
   -CFLAGS "-O1 -DKVD_R=$RR -DKVD_ROM_ST=$RST" --Mdir $OUT -o Vtb $SRC $CPP > $OUT/build.log 2>&1
 echo built $OUT
