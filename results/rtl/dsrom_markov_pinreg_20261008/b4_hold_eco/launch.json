@@ -1,0 +1,38 @@
+{
+ "status": "ADMITTED_RUNNING",
+ "host": "ot-pve1",
+ "root": "/srv/opentallas-scratch/codex/markov-p1-b4-rejudge-20261009/b4_hold_eco_a1",
+ "runnerPID": 323629,
+ "initialTTcorner_OpenROADPID": 323696,
+ "RTL_source": "38f22c6d8",
+ "recipe_commit": "aa8b68b87",
+ "rejudge_commit": "b23e2116e",
+ "added_cycles": 0,
+ "added_FFbits": 0,
+ "LVT_used": false,
+ "guard_GiB": 17,
+ "guard_basis": "same-source detailedroute measured17070456KB=16.28GiB roundedup17; same-objectSTA16946080KB=16.16GiB",
+ "MemAvailable_MiB": 116248,
+ "disk_available": "1.4TB",
+ "old_failure_preserved": true,
+ "private_copy": true,
+ "original_job_state_modified": false,
+ "current_generic_budget_terms_ps": [
+  250,
+  50
+ ],
+ "actual_boundary_reference_ps": {
+  "TT": 561,
+  "FF": 462
+ },
+ "acceptance": {
+  "TT_setup_min_ps": 0,
+  "FF_hold_min_ps": 0,
+  "DRC": 0,
+  "period_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25
+ },
+ "route_strategy": "Incremental original guides only; no fresh GRT architecture reroute",
+ "pending": "Measured ECO cells/area/timing/DRC; original exact/mutant binding retained"
+}
