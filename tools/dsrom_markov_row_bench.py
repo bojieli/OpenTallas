@@ -19,7 +19,7 @@ def rows(name,ids):
 def write(p,arr):
  p.write_text(''.join(f'{int(v):0{arr.dtype.itemsize*2}x}\n' for v in arr))
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1],default=0);ap.add_argument('--vectors',type=Path);a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1],default=0);ap.add_argument('--vectors',type=Path);ap.add_argument('--source-commit');a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  if a.vectors:
   vr=json.loads((a.vectors/'record.json').read_text())
   wh,xh=vr['headers']['head'],vr['headers']['embed'];rowids,tokens=vr['rows'],vr['tokens']
@@ -58,6 +58,6 @@ def main():
  (a.out/'fault.log').write_text(fp.stdout+fp.stderr)
  assert fp.returncode==0 and 'PASS faultcases' in fp.stdout,fp.stdout
  results.append(dict(faultcases=3,exit=fp.returncode,pass_=True,log='fault.log'))
- rec=dict(pinreg=a.pinreg,vector_record_sha256=hashlib.sha256((a.vectors/'record.json').read_bytes()).hexdigest() if a.vectors else None,schema='opentallas.dsrom.markov-row-exact.v1',scope='48 independent256-term row transactions;40 released pairs plus8 stress; not ROM lookup or whole-vocab integration',checkpoint=SNAP.name,headers=dict(head=wh,embed=xh),rows=rowids,tokens=tokens,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in set(src+fsrc)},results=results,physical_qualified=False,adopted=False)
+ rec=dict(pinreg=a.pinreg,vector_record_sha256=hashlib.sha256((a.vectors/'record.json').read_bytes()).hexdigest() if a.vectors else None,schema='opentallas.dsrom.markov-row-exact.v1',scope='48 independent256-term row transactions;40 released pairs plus8 stress; not ROM lookup or whole-vocab integration',checkpoint=SNAP.name,headers=dict(head=wh,embed=xh),rows=rowids,tokens=tokens,source_commit=a.source_commit or subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in set(src+fsrc)},results=results,physical_qualified=False,adopted=False)
  (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n');print(json.dumps(results))
 if __name__=='__main__':main()
