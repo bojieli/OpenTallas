@@ -91,6 +91,16 @@ module ot_hgi_seq #(
     output reg  [3:0]    cpl_status,
     output reg  [31:0]   cpl_cycles
 );
+    // ---- registered boundary (submit rule X4): every data / status input lands in a pin flop (config words are
+    // quasi-static, retire / fault pulses and VM read data one cycle later: the drain mask only waits longer)
+    reg [159:0] md_d_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
+    reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; end
+        else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; end
+    always @(posedge clk) begin
+        md_d_r <= md_d; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data;
+    end
     localparam integer RB = $clog2(RW);
     localparam integer RS = RW / 2;                       // sectors
     localparam integer SB = RB - 1;
@@ -101,9 +111,9 @@ module ot_hgi_seq #(
                        M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
-                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11;
+                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12;
     reg [4:0]  st;
-    reg [17:0] token; reg [19:0] pos;
+    reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
     reg [39:0]  faddr;
@@ -189,7 +199,7 @@ module ot_hgi_seq #(
     endfunction
     wire [20:0] ns1 = mn(p1, DS_TOPK), ns2 = mn(n2, DS_TOPK), win = mn(p1, DS_WIN);
     wire [20:0] sc1 = cdv(p1, DS_TPL), sc2 = cdv(n2, DS_TPL), scr = cdv(mn(p1, DS_SCAN), DS_TPL);
-    wire [28:0] rsc = {21'd0, rank} * {8'd0, sc1};
+    wire [28:0] rsc = {21'd0, rank_r} * {8'd0, sc1};
     wire        own = ({8'd0, ps} >= rsc) && ({8'd0, ps} < rsc + {8'd0, sc1});
     wire [28:0] nbo = ({8'd0, ps} - rsc) >> 3;
     function automatic [31:0] dsv(input [5:0] c);
@@ -217,7 +227,7 @@ module ot_hgi_seq #(
             6'd2: dynv = {11'd0, {1'b0, pos} + 21'd1};
             6'd3: dynv = {14'd0, token};
             6'd4: dynv = {16'd0, Lc};
-            6'd5: dynv = {24'd0, rank};
+            6'd5: dynv = {24'd0, rank_r};
             6'd6: dynv = {29'd0, h_slot};
             6'd7: dynv = {11'd0, ps};
             6'd8: dynv = {16'd0, L1c};
@@ -259,10 +269,10 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ main FSM
     integer k;
     wire [15:0] u_acc = u_v & u_rdy;
-    assign db_rdy = (st == S_IDLE) && !hold;
+    assign db_rdy = (st == S_IDLE) && !hold_r;
     assign cpl_v = (st == S_CPL);
-    wire [39:0] entry_off = {4'd0, (db_entry == 2'd0) ? md_d[31:0] : (db_entry == 2'd1) ? md_d[63:32] : md_d[95:64], 4'd0};
-    wire [39:0] img = {md_d[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
+    wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
+    wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
     wire [4:0] fl_after = inflight + ((f_req_v && f_req_rdy) ? 5'd1 : 5'd0) - (f_rsp_v ? 5'd1 : 5'd0);
     wire       is_ctl = (h_unit == 4'd0);
     wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
@@ -312,7 +322,7 @@ module ot_hgi_seq #(
             cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
-            for (k = 0; k < 16; k = k + 1) outst[k] <= outst[k] + {7'd0, u_acc[k]} - {7'd0, u_done[k]};
+            for (k = 0; k < 16; k = k + 1) outst[k] <= outst[k] + {7'd0, u_acc[k]} - {7'd0, u_done_r[k]};
             if (st != S_IDLE && st != S_CPL) cpl_cycles <= cpl_cycles + 32'd1;
             inflight <= fl_after;
             // ---- fetch requests (valid held until ready)
@@ -325,13 +335,16 @@ module ot_hgi_seq #(
             end
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
             rpipe_v <= {rpipe_v[0], 1'b0}; rpipe_k1 <= rpipe_k0;
-            if (|(u_fault & ~16'd1) && st != S_IDLE && st != S_CPL) begin
+            if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
                 st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_v <= 0; vr_v <= 1'b0; fetching <= 1'b0; f_req_v <= 1'b0;
             end else case (st)
-                S_IDLE: if (db_v && !hold) begin
+                S_IDLE: if (db_v && !hold_r) begin
                     token <= db_token; pos <= db_pos; cpl_job <= db_job; cpl_gen <= db_gen; cpl_pos <= db_pos;
-                    cpl_cycles <= 0; depth <= 0; Lc <= 0; L1c <= 0; cpl_token <= 0; cpl_status <= 0;
-                    if (db_token >= cfg_vocab || {1'b0, db_pos} >= cfg_ctx_max) begin
+                    db_entry_q <= db_entry;
+                    cpl_cycles <= 0; depth <= 0; Lc <= 0; L1c <= 0; cpl_token <= 0; cpl_status <= 0; st <= S_DB;
+                end
+                S_DB: begin
+                    if (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
                         faddr <= {img[39:5], 5'd0}; fetching <= 1'b1; f_req_v <= 1'b0;
@@ -464,8 +477,8 @@ module ot_hgi_seq #(
                     end
                     3'd1: begin
                         if (vr_v && vr_rdy) vr_v <= 1'b0;
-                        if (vr_rsp_v) begin
-                            mcand <= {37'd0, dr[aj][M_DMUL +: 27]}; mplier <= vr_rsp_data; ash <= 6'd0; ix <= 3'd2;
+                        if (vr_rsp_v_r) begin
+                            mcand <= {37'd0, dr[aj][M_DMUL +: 27]}; mplier <= vr_rsp_data_r; ash <= 6'd0; ix <= 3'd2;
                         end
                     end
                     3'd2: if (!mdone) begin acc <= mstep; mplier <= mplier >> 4; ash <= ash + 6'd4; end
@@ -476,9 +489,9 @@ module ot_hgi_seq #(
                         end else ix <= 3'd5;
                     3'd4: begin
                         if (vr_v && vr_rdy) vr_v <= 1'b0;
-                        if (vr_rsp_v) begin
-                            if (vr_rsp_data[31:21] != 11'd0) fault3;
-                            else begin pn[aj] <= vr_rsp_data[20:0]; ix <= 3'd5; end
+                        if (vr_rsp_v_r) begin
+                            if (vr_rsp_data_r[31:21] != 11'd0) fault3;
+                            else begin pn[aj] <= vr_rsp_data_r[20:0]; ix <= 3'd5; end
                         end
                     end
                     default: begin                                     // finalize
@@ -491,13 +504,13 @@ module ot_hgi_seq #(
                     end
                     endcase
                 S_DISP: if (|u_acc) begin u_v <= 16'd0; advance(rlen); st <= S_DEC; end
-                S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet) begin advance(rlen); st <= S_DEC; end
+                S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin advance(rlen); st <= S_DEC; end
                 S_ENDRD: begin
                     if (vr_v && vr_rdy) vr_v <= 1'b0;
-                    if (vr_rsp_v) begin
+                    if (vr_rsp_v_r) begin
                         st <= S_CPL; fetching <= 1'b0; f_req_v <= 1'b0;
-                        cpl_token <= vr_rsp_data[17:0];
-                        cpl_status <= (vr_rsp_data[31:18] != 14'd0 || vr_rsp_data[17:0] >= cfg_vocab) ? 4'd3 : 4'd0;
+                        cpl_token <= vr_rsp_data_r[17:0];
+                        cpl_status <= (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) ? 4'd3 : 4'd0;
                     end
                 end
                 S_CPL: if (cpl_rdy) st <= S_IDLE;

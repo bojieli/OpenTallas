@@ -45,8 +45,8 @@ def seq_bench():
     b = (f"cd {G}/tb && iverilog -g2012 -DSEQ_MACRO -I. -o /tmp/seq_{{NAME}}_$$.vvp -s tb_hgi_seq tb_hgi_seq.sv ../ot_hgi_seq.sv "
          "../../../../physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v {D} && "
          "vvp -n /tmp/seq_{{NAME}}_$$.vvp | tail -3")
-    return [dict(name='seq_exact', cmd=b.format(D=''), expect='pass', pass_regex='HGI_SEQ PASS', threads=1, peak_ram_gb=4),
-            dict(name='seq_mut_wait', cmd=b.format(D='-DOT_HGI_SEQ_MUT_WAIT'), expect='fail', fail_regex='HGI_SEQ FAIL',
+    return [dict(name='seq_exact', cmd=b.replace('{D}', ''), expect='pass', pass_regex='HGI_SEQ PASS', threads=1, peak_ram_gb=4),
+            dict(name='seq_mut_wait', cmd=b.replace('{D}', '-DOT_HGI_SEQ_MUT_WAIT'), expect='fail', fail_regex='HGI_SEQ FAIL',
                  threads=1, peak_ram_gb=4)]
 
 
