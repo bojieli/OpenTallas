@@ -60,13 +60,13 @@ module ot_hbm_accel_dskv_wb_sram #(
     localparam [3:0] S_IDLE=0,S_MAP=1,S_EMIT=2,S_PRE_REQ=3,S_PRE_RSP=4,
       S_KEY_REQ=5,S_KEY_RSP=6,S_KEY_WRITE=7,S_KEY_WACK=8,S_KEY_EMIT=9;
     reg [3:0] st, st_n; reg ctl_fault;
-    wire state_bad=(st != ~st_n) || (st>S_KEY_EMIT);
+    wire state_bad=(st != ~st_n) || (st>S_KEY_EMIT) || (shadow_initialized != ~shadow_initialized_n);
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
-    reg [7:0] shadow_initialized;
+    reg [7:0] shadow_initialized,shadow_initialized_n;
     wire descriptor_bad=(die>=96)||(row_kind==3)||
       ((row_kind==0)&&(row_slot>=NLAYERS))||
       ((row_kind!=0)&&(row_slot>=8))||
-      ((row_kind==2)&&!shadow_initialized[row_slot[2:0]]);
+      ((row_kind==2)&&(own_in[6:0]==die)&&!shadow_initialized[row_slot[2:0]]);
     reg [2:0] preload_slot;
     reg [4:0] preload_sector;
     reg [255:0] merged;
@@ -134,7 +134,7 @@ module ot_hbm_accel_dskv_wb_sram #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
         st <= S_IDLE; st_n<=~S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; position<=0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; ctl_fault<=0; shadow_initialized<=0; preload_slot<=0; preload_sector<=0; merged<=0;
+        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; ctl_fault<=0; shadow_initialized<=0;shadow_initialized_n<=8'hff; preload_slot<=0; preload_sector<=0; merged<=0;
       end else begin
         if(state_bad)ctl_fault<=1;
         ack <= ack + 16'(ack_n);
@@ -170,7 +170,7 @@ module ot_hbm_accel_dskv_wb_sram #(
           S_PRE_REQ:if(mem_req_r)begin st<=S_PRE_RSP; st_n<=~S_PRE_RSP; end
           S_PRE_RSP:if(mem_rsp_v)begin
             if(preload_sector==16)begin
-              if(!mem_rsp_poison)shadow_initialized[preload_slot]<=1;
+              if(!mem_rsp_poison)begin shadow_initialized[preload_slot]<=1;shadow_initialized_n[preload_slot]<=0;end
               st<=S_IDLE; st_n<=~S_IDLE; end
             else begin preload_sector<=preload_sector+1;st<=S_PRE_REQ; st_n<=~S_PRE_REQ;end
           end
