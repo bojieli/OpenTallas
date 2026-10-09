@@ -53,6 +53,9 @@ module ot_s81_native_pc_mux_plain_core #(parameter integer ENABLE=0, parameter [
   wire launch=ready&&!busy&&credits!=0&&(PICK?pv:(chosen>=0));
   wire pop=launch&&head[34:31]!=0;
   wire pick=PICK&&ready&&!pv&&cho_v&&count[cho_q]!=0;
+  // phd is a pure data register outside the reset block: inside it, synthesis folds rst_n into the 340-bit enable
+  // (pcmux_pick_b: rst_n pin -> phd enable, -316 ps)
+  always @(posedge ck) if(pick) phd<=queue[cho_q][rp[cho_q]]^QUEUE_INJECT;
   assign pending=busy||rq[0]||count[0]!=0||count[1]!=0||count[2]!=0||count[3]!=0;
   reg next_busy,next_we;reg[1:0] next_owner,next_rr;reg[16:0] next_tag;reg[3:0] next_len,next_credit;reg[15:0] next_seen;
   reg[2:0] nw,nr;reg[3:0] nc;reg push;
@@ -66,7 +69,7 @@ module ot_s81_native_pc_mux_plain_core #(parameter integer ENABLE=0, parameter [
    end else begin
     if(PICK)begin
      cho_v<=(chosen>=0);cho_q<=chosen[1:0];
-     if(pick)begin pv<=1;pch<=cho_q;phd<=queue[cho_q][rp[cho_q]]^QUEUE_INJECT;end
+     if(pick)begin pv<=1;pch<=cho_q;end
      if(pop)pv<=0;
     end
     rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;ce<=0;
