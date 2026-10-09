@@ -1,0 +1,50 @@
+{
+  "schema": "hgi-sum96-parallel-model-v1",
+  "source": "uarch_model.UNIT fp32_add_um2 + physical128x256 macro LEF",
+  "first_stage": "existing112adders16lanes*7 form12contiguous8-rank partials, FP32,noBF16round",
+  "new_tree_levels": [
+    12,
+    6,
+    3,
+    2,
+    1
+  ],
+  "new_fp32_adders": 176,
+  "adder_latency_cycles": 7,
+  "new_latency_cycles": 28,
+  "first_stage_latency_cycles": 21,
+  "end_to_end_arithmetic_cycles": 49,
+  "tile_count": 16,
+  "fully_pipelined_issue_interval": 1,
+  "payload_read_bits_per_cycle": 6144,
+  "payload_write_bits_per_cycle": 512,
+  "output_bits_per_cycle": 512,
+  "macs_per_cycle": 0,
+  "additions_per_cycle_full_occupancy": 176,
+  "raw_partial_payload_bits": 98304,
+  "storage": "12 independently readable protected partial banks; each624bit word is16*(32+7)SECDED,3x128x256 macros/bank",
+  "macro_count_estimate": 36,
+  "macro_area_um2": 140096.77055999998,
+  "unit_adder_area_proxy_um2": 385.524,
+  "new_logic_area_proxy_um2": 67852.224,
+  "area_lower_bound_mm2": 0.20794899455999996,
+  "added_pipeline_register_cost": "LAT7 adder fullshape synthesis still mandatory; UNIT proxy different closedadder",
+  "mux_demux": "ingress1of12 bank write selection; no6144bit global datapath mux; fixed bank outputs\u2192fixedtree edges",
+  "traffic_per_command_bytes": 98304,
+  "boundary_track_demand": 6144,
+  "channel_capacity": null,
+  "slot_candidate_um": [
+    800,
+    800
+  ],
+  "slot_fit": "not proven until LAT7 inventory and true protected macro provider installed",
+  "route_ready": false,
+  "adoption": false,
+  "required": [
+    "hbm-sim carry-odd/zero normalization exact golden",
+    "PSG actualraw FP32tap andsubgroup-word metadata",
+    "SRAM actualprotectedbank provider",
+    "fulltree syntharea/slot/pinlint",
+    "256words96ranksbench pluswrongtree/dropmutants"
+  ]
+}

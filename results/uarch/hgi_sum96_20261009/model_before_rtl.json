@@ -39,5 +39,7 @@
     "exact remote bench and genuine mutants"
   ],
   "adoption": false,
-  "note": "No 96-way claim is based on twelve independent8-rank reductions; no full-die timing claim."
+  "note": "No 96-way claim is based on twelve independent8-rank reductions; no full-die timing claim.",
+  "status": "MODEL_REJECTED_SERIAL_SCHEDULER_HISTORY",
+  "reason": "~5us serialized arithmetic on256word collective contradicts single-token goal; do not route"
 }
