@@ -19,8 +19,9 @@ module ot_hbm_index_lines_sram #(
  reg can,control_bad;
  reg[63:0] need;reg[767:0] rj;
  wire[16383:0] decoded;wire[63:0] dec_v,dec_ue;
- reg[3:0] pipe_v;
- reg[10:0] group_tag[0:3];reg[63:0] read_need[0:3];reg[767:0] read_j[0:3];
+ reg[3:0] pipe_v,pipe_v_n;
+ reg[10:0] group_tag[0:3],group_tag_n[0:3];reg[63:0] read_need[0:3],read_need_n[0:3];reg[767:0] read_j[0:3],read_j_n[0:3];
+ wire[31:0] write_bad;
  integer p,l,b,g,pc,j,bank,k,slot,count,base_sector,delta;
  assign retained=active;
  initial begin
@@ -30,23 +31,27 @@ module ot_hbm_index_lines_sram #(
  always @*begin
   control_bad=(active_n!==~active)||(next_line_n!==~next_line)||(nlines_n!==~nlines);
   for(l=0;l<8;l=l+1)if(credits_n[l]!==~credits[l])control_bad=1;
-  for(p=0;p<32;p=p+1)if(valid_n[p]!==~valid[p])control_bad=1;
+  for(p=0;p<32;p=p+1)if(valid_n[p]!==~valid[p]||write_bad[p])control_bad=1;
+  if(pipe_v_n!==~pipe_v)control_bad=1;
+  for(k=0;k<4;k=k+1)if(pipe_v[k]&&((group_tag_n[k]!==~group_tag[k])||(read_need_n[k]!==~read_need[k])||(read_j_n[k]!==~read_j[k])))control_bad=1;
   can=ENABLE!=0&&active&&!fault&&!control_bad&&(next_line<nlines);
   need=0;rj=0;base_sector=(next_line*136)/32;
   for(l=0;l<8;l=l+1)if(credits[l]==0)can=0;
   for(k=0;k<34;k=k+1)begin
    g=base_sector+k;pc=g%32;j=g/32;bank=j%2;
+   if(g<((nlines*136+31)/32))begin
    need[pc*2+bank]=1;rj[(pc*2+bank)*12+:12]=12'(j);
-   if(!valid[pc][j%64])can=0;
+   if(!valid[pc][j%64])can=0;end
   end
  end
  genvar gp,gb;
  generate for(gp=0;gp<32;gp=gp+1)begin:pcs
-  wire[265:0] encoded;reg ev;reg[11:0] ej;
+  wire[265:0] encoded;reg ev,ev_n;reg[11:0] ej,ej_n;
+  assign write_bad[gp]=(ev_n!==~ev)||(ev&&(ej_n!==~ej));
   assign wv[gp]=ev;assign wj[gp*12+:12]=ej;
   ot_secded_enc #(.K(256),.R(10)) enc(.clk(clk),.d(sector_data[gp*256+:256]),.q(encoded));
-  always @(posedge clk or negedge rst_n)if(!rst_n)ev<=0;else ev<=sector_v[gp];
-  always @(posedge clk)ej<=sector_j[gp*12+:12];
+  always @(posedge clk or negedge rst_n)if(!rst_n)begin ev<=0;ev_n<=1;end else begin ev<=sector_v[gp];ev_n<=~sector_v[gp];end
+  always @(posedge clk)begin ej<=sector_j[gp*12+:12];ej_n<=~sector_j[gp*12+:12];end
   for(gb=0;gb<2;gb=gb+1)begin:banks
    localparam integer ID=gp*2+gb;
    wire[11:0] read_index=rj[ID*12+:12];
@@ -75,7 +80,7 @@ module ot_hbm_index_lines_sram #(
   for(k=0;k<64;k=k+1)if(read_need[3][k]&&(!dec_v[k]||dec_ue[k]))output_bad=1;
   for(l=0;l<8;l=l+1)begin
    assembled[l*1099]=1;assembled[l*1099+1+:10]=10'(group_tag[3]+l);
-   for(b=0;b<136;b=b+1)begin
+   if(group_tag[3]+l<nlines)for(b=0;b<136;b=b+1)begin
     g=(group_tag[3]+l)*136+b;pc=(g/32)%32;j=g/1024;bank=j%2;
     assembled[l*1099+11+b*8+:8]=decoded[(pc*2+bank)*256+(g%32)*8+:8];
    end
@@ -84,13 +89,13 @@ module ot_hbm_index_lines_sram #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    active<=0;active_n<=1;next_line<=0;next_line_n<=~11'd0;nlines<=0;nlines_n<=~11'd0;
-   lines<=0;pop<=0;done<=0;fault<=0;pipe_v<=0;
+   lines<=0;pop<=0;done<=0;fault<=0;pipe_v<=0;pipe_v_n<=~4'd0;
    for(p=0;p<32;p=p+1)begin valid[p]<=0;valid_n[p]<=~64'd0;end
    for(l=0;l<8;l=l+1)begin credits[l]<=CRED;credits_n[l]<=~7'(CRED);end
   end else if(ENABLE!=0)begin
-   lines<=0;pop<=0;done<=0;pipe_v<={pipe_v[2:0],can};
-   group_tag[0]<=next_line;read_need[0]<=need;read_j[0]<=rj;
-   for(k=1;k<4;k=k+1)begin group_tag[k]<=group_tag[k-1];read_need[k]<=read_need[k-1];read_j[k]<=read_j[k-1];end
+   lines<=0;pop<=0;done<=0;pipe_v<={pipe_v[2:0],can};pipe_v_n<=~{pipe_v[2:0],can};
+   group_tag[0]<=next_line;group_tag_n[0]<=~next_line;read_need[0]<=need;read_need_n[0]<=~need;read_j[0]<=rj;read_j_n[0]<=~rj;
+   for(k=1;k<4;k=k+1)begin group_tag[k]<=group_tag[k-1];group_tag_n[k]<=group_tag_n[k-1];read_need[k]<=read_need[k-1];read_need_n[k]<=read_need_n[k-1];read_j[k]<=read_j[k-1];read_j_n[k]<=read_j_n[k-1];end
    if(control_bad)fault<=1;
    for(l=0;l<8;l=l+1)begin
     if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
@@ -98,9 +103,9 @@ module ot_hbm_index_lines_sram #(
     credits_n[l]<=~(credits[l]+7'(credit[l])-7'(can));
    end
    if(start)begin
-    if(active||pipe_v!=0||blocks>342||blocks==0||blocks[0])fault<=1;
+    if(active||pipe_v!=0||blocks>342)fault<=1;
     else begin
-     active<=1;active_n<=0;next_line<=0;next_line_n<=~11'd0;nlines<=11'(blocks)*4;nlines_n<=~(11'(blocks)*4);
+     active<=blocks!=0;active_n<=blocks==0;done<=blocks==0;next_line<=0;next_line_n<=~11'd0;nlines<=11'(blocks)*4;nlines_n<=~(11'(blocks)*4);
      for(p=0;p<32;p=p+1)begin valid[p]<=0;valid_n[p]<=~64'd0;end
     end
    end

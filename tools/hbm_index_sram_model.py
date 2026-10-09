@@ -9,8 +9,8 @@ def model():
  name='ot_sram_1r1w_128x256_m1_r2c2'
  path=ROOT/'physical/asap7_memory_macros'/name/(name+'.json')
  macro=json.loads(path.read_text())
- bits={'checks':64*32*10,'duplicated_valid':32*64*2,'write_metadata':32*(12+1),
- 'macro_capture':64*266,'decoded_data':64*256,'read_metadata_pipeline':5*(11+64*12+64),
+ bits={'checks':64*32*10,'duplicated_valid':32*64*2,'write_metadata':2*32*(12+1),
+ 'macro_capture':64*266,'decoded_data':64*256,'read_metadata_pipeline':2*4*(11+64*12+64)+8,
  'credit_state':8*7*2,'group_state':2*(11+11+1)}
  # Read metadata/capture/decoder registers are explicit RTL, not free SRAM.
  return dict(schema='opentallas.hbm_index_sram_model.v1',status='PREBUILD_NOT_QUALIFIED',
