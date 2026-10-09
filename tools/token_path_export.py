@@ -290,7 +290,15 @@ Q_LINK = dict(rmsnorm1="VM -> SU", qkv="VM -> tile band broadcast (tree)", qknor
               down="VM -> tile band", allreduce2="hub -> SerDes TP4 ring", residual="link -> VM")
 
 
-def qwen():
+KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
+
+
+def qwen_kvdie():
+    """kv-die 2026-10-09 (owner option 1a): the TP4 token on the ROM die + KV die pair (attention on the KV die)."""
+    return qwen(kv=J(KVD))
+
+
+def qwen(kv=None):
     T = "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json"
     DS4 = "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json"
     OPT = "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verify_P8187/optrace/k_AR_op.trace.log"
@@ -328,16 +336,24 @@ def qwen():
     AR_ADD = [dict(item="die_relays_430um", cycles=d_link, grade="priced", record=REL + " delta_link_per_traversal"),
               dict(item="serdes_pinreg (re-price 10-08)", cycles=1, grade="priced", record=REPRICE + " qwen_rom serdes_pinreg")]
     TOKEN_KV = [(k, lines[k]) for k in ("kv_map_m", "kv_crossbar_model", "ctrl_shift")]
-    d = Design("qwen_rom", "Qwen3-8B ROM, 8K context, AR (TP4 dies)", "cycles")
+    kvc = kv["cases"]["typical"] if kv else None
+    d = Design("qwen_kvdie" if kv else "qwen_rom", "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)" if kv else
+               "Qwen3-8B ROM, 8K context, AR (TP4 dies)", "cycles")
     gdef = collections.OrderedDict()
     gdef["embed"] = dict(label="Embed", kind="embed")
-    d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
-          src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
-          instances=QCLS["embed"]["instances"])
+    if kv:
+        d.add("embed", "Embedding row fetch from HBM through the KV die (EMBQ / EMBD over the link)", "embed", "embed",
+              kvc["embed_cycles"], src("priced", KVD, "cases.typical.embed_cycles", note="r22k + KV-die relay chains, the "
+              "link (adapter + PHY), the EMB_HBM_FEASIBILITY DRAM / port / ingest constants"),
+              elements=["ot_qfd_emb_gw", "ot_qkvd_d2d"], instances=["embgw", "d2d_kv", "d2d_rom"])
+    else:
+        d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
+              src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
+              instances=QCLS["embed"]["instances"])
     # emb-hbm 2026-10-08: the measured HBM embedding path replaces this behavioural-ROM node at the next reprice run;
     # recorded here as a pending annotation only (the node's cycles are unchanged until then)
     emb = ROOT / "results/arch/emb_hbm_20261008/token_path_inputs.json"
-    if emb.exists():
+    if emb.exists() and not kv:
         d.nodes["embed"]["pending_next_reprice"] = J("results/arch/emb_hbm_20261008/token_path_inputs.json")["embed_node"]
     prev_group_last = "embed"
     for L in range(36):
@@ -366,7 +382,21 @@ def qwen():
             s_note = f"isolated AR L0 RT_OPTRACE op-fetch window [{lo}, {hi}) of the measured {L_iso}-cycle trace; {note}"
             if oid == "attn_tail":
                 s_note += f"; chained layer {chained} = isolated {L_iso} - {drain} drain cycles (all taken here)"
-            if L == 0 and oid == "attn_kv":
+            if kv and oid == "attn_kv":
+                cyc = kvc["layer_step"]
+                grade = "measured"
+                s_note = (f"ATTENTION LAYER STEP THROUGH THE LINK (kv-die): CTL / KVN / Q from the ROM faces -> r22k relays -> "
+                          f"ROM end -> UCIe pair -> KV end -> qkd_seq -> near-HBM attention (R 8, _p) with the KV merge -> RES "
+                          f"to the VM; bench {kvc['layer_step_measured']} + ROM relay correction {kvc['rom_stage_correction']} "
+                          f"({KVD} cases.typical); replaces the tile attention + softmax_norm windows")
+            if kv and oid == "softmax_norm":
+                cyc = 0
+                s_note = "inside the KV-die attention hub (x 1/Z) and the RES return: 0 on the ROM die"
+            if L == 0 and oid == "attn_kv" and kv:
+                for k, ln in TOKEN_KV:
+                    adders.append(dict(item=k, cycles=ln["effect"]["AR"], grade="measured" if ln["status"] == "measured" else "priced",
+                                       record=ln["source"][0]["file"], note="per-token KV-path constant, placed on layer 0"))
+            elif L == 0 and oid == "attn_kv":
                 cyc += L0_extra
                 s_note += f"; + {L0_extra} cold-layer cycles (L0 {stages['L0']['cycles']} vs chained {chained}: no earlier layer hides its KV prefetch)"
                 for k, ln in TOKEN_KV:
@@ -375,13 +405,13 @@ def qwen():
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
             deps = [prev_group_last] if i == 0 else None
             n = d.add(f"{g}.{oid}", lab, g, cls, cyc,
-                      src(grade, f"{T} stages[{g}] + {OPT}", note=s_note + f"; layer total measured {stages[g]['cycles']} cycles"),
+                      src(grade, (KVD if kv and oid in ("attn_kv", "softmax_norm") else f"{T} stages[{g}] + {OPT}"), note=s_note + f"; layer total measured {stages[g]['cycles']} cycles"),
                       op=oid, elements=QCLS[cls]["elements"], instances=QCLS[cls]["instances"], adders=adders, deps=deps,
                       bytes_in=Q_BYTES[oid] if i else 16384, link_in=li, edge_cycles=1 if (i == 0 and L > 0) else 0)
             n["layer"] = L
         prev_group_last = f"{g}.residual"
         # parallel KV prefetch for the next layer, inside this layer's MLP window
-        if L < 35:
+        if L < 35 and not kv:
             fill = 1362
             st = None  # placed after the chain is scheduled
             n = d.add(f"{g}.kv_prefetch", f"KV prefetch for layer {L + 1} (HBM -> landing, 4.19 MB a die)", g, "kv", fill,
@@ -400,13 +430,25 @@ def qwen():
                edge_cycles=1)
     total = d.chain_schedule()
     # place the prefetch nodes: start at this layer's rmsnorm2 (MLP window), feed the next layer's attn_kv
-    for L in range(35):
+    for L in (range(35) if not kv else ()):
         n = d.nodes[f"L{L}.kv_prefetch"]
         st = d.nodes[f"L{L}.rmsnorm2"]["start"]
         n["start"], n["end"] = r1(st), r1(st + n["cycles"])
         d.edges.append(dict(src=n["id"], dst=f"L{L + 1}.attn_kv", bytes=4194304, link="HBM3E x4 stacks -> PC landing FIFOs (CK/2 -> core)", cycles=0))
     measured_total = t["total_cycles"]
     adders_total = sum(c for n in d.nodes.values() if n["critical"] for _, c in n["adders"])
+    if kv:
+        drill = dict(group="L1", why="a chained layer: the attention step runs on the KV die (measured through the link RTL)")
+        headline = dict(tok_s=round(1.2e9 / total, 1), cycles=round(total, 1), mode="AR (DSpark off), position 8,191",
+                        basis=f"{KVD} (priced candidate: the TP4 basis with the attention step measured through the link; "
+                              f"reprice.json typical {kvc['token_cycles']:,} cycles)",
+                        source=KVD + " cases.typical", status="priced candidate (not a closed rate)",
+                        measured_cycles=None, priced_cycles=None)
+        notes = ["Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
+                 "new K / V and the attention output cross the UCIe link (results/arch/qwen_kv_die_20261009/CONTRACT.md).",
+                 "Every other operation keeps the measured TP4 windows and priced adders of the qwen_rom view."]
+        return finish(d, headline, gdef, QWEN_CLASSES, drill, notes,
+                      extra=dict(geometry=dict(source=GEO, key="qwen_kvdie", die="Qwen ROM die (r22k) + KV die")))
     assert abs(total - rp["after"]["cycles"]) < 0.5, (total, rp["after"]["cycles"])
     assert abs(total - adders_total - measured_total) < 0.5
     headline = dict(tok_s=rp["after"]["AR_tok_s"], cycles=rp["after"]["cycles"], mode="AR (DSpark off), position 8,191",
@@ -1485,7 +1527,7 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
-OPTIONAL_TARGETS = ("qwen_hbm",)
+OPTIONAL_TARGETS = ("qwen_hbm", "qwen_kvdie")
 
 
 def target_functions(namespace):

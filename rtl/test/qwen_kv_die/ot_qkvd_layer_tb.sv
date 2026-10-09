@@ -9,7 +9,7 @@
 // (tb_qkvd_layer.cpp) drives CTL / KVN / Q / EMBQ at the SU face under its credits, models HBM (t = T-1 rows POISONED:
 // the crossed K / V must be merged), the embedding gateway and the host, and checks every output bit-exactly against
 // the golden (tools/qwen_nearhbm_attn_ref.py vectors from tools/hdc_golden.py).
-// MUT: 0 base | 1 ROM adapter one extra link credit | 2 KV merge off | 3 one flit dropped in the PHY (ROM->KV)
+// MUT: 0 base | 1 KV end one extra RES link credit (TIGHT) | 2 KV merge off | 3 one flit dropped in the PHY (ROM->KV)
 //      | 4 ROM adapter early link credit | 5 Q beats 0/1 swapped on the KV die
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_layer_tb #(
@@ -21,7 +21,8 @@ module ot_qkvd_layer_tb #(
     parameter integer PHY_LAT = 5,
     parameter integer QX     = 0,      // KV die: extra stages seq -> stack aggregators beyond LINK (placement)
     parameter integer RX     = 0,      // KV die: stages attention hub -> seq (placement)
-    parameter integer KVL    = 0,      // KV die: stages seq -> KV landings (the posted KV rows; placement)
+    parameter integer KVL    = 0,
+    parameter integer TIGHT  = 0,      // credit-stress sizing: RES link buffer 4, VM credits 4 (exercises back-pressure)      // KV die: stages seq -> KV landings (the posted KV rows; placement)
     parameter integer MUT    = 0,
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
@@ -107,7 +108,8 @@ module ot_qkvd_layer_tb #(
     wire [FW-1:0] rom_txf, rom_rxf, rom_lf, kv_txf, kv_rxf, kv_lf;
     wire [4:0] kv_fc;
     wire [7:0] rom_fc;
-    ot_qkvd_rom_end #(.XS(2 * ROM_ST + 16), .RQD(32), .OCR_AR(2 * ROM_ST + 8), .MUT(MUT == 1 ? 1 : (MUT == 4 ? 2 : 0))) u_rom (
+    ot_qkvd_rom_end #(.XS(2 * ROM_ST + 16), .RQD(32), .OCR_AR(TIGHT ? 4 : 2 * ROM_ST + 8), .RB_RES(TIGHT ? 4 : 32),
+                     .MUT(MUT == 4 ? 2 : 0)) u_rom (
         .clk(clk), .rst_n(rst_n), .x3_v(x3_v_r), .x3_d(x3_r[511:0]), .x3_tag(x3_r[522:512]), .x3_cr(x3_cr_r),
         .ar_v(ar_v_r), .ar_d(ar_r), .ar_cr(ar_cr_r), .ea_v(ea_v_r), .ea_kind(ea_r[24]), .ea_addr(ea_r[23:0]),
         .ea_cr(ea_cr_r), .eq_v(eq_v_r), .eq_d(eq_r), .dc_v(dc_v_r), .dc_d(dc_r), .dc_cr(dc_cr_r), .dh_v(dh_v_r),
@@ -127,7 +129,7 @@ module ot_qkvd_layer_tb #(
     // ---------------- KV die ----------------
     wire [3:0]     kr_v;  wire [4*W-1:0] kr_d;  wire [3:0] kr_cr;
     wire [2:0]     kt_v;  wire [3*W-1:0] kt_d;  wire [2:0] kt_cr;
-    ot_qkvd_kv_end #(.QD(KB + 8), .UCX(KB + 8)) u_kv (
+    ot_qkvd_kv_end #(.QD(KB + 8), .UCX(TIGHT ? 64 : KB + 8), .FCR_RES(TIGHT ? 4 : 32), .MUT(MUT == 1 ? 1 : 0)) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
         .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .pll_fwd_i(clk),
         .rst_fwd_i(rst_n), .pll_fwd_pad(), .rst_fwd_pad(), .fault(faults[1]), .fault_cause(kv_fc));
@@ -148,7 +150,7 @@ module ot_qkvd_layer_tb #(
     wire [7:0]    seq_fc;
     wire [4:0]    af;
     wire [3:0]    mf;
-    ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(KB + 8), .UC1(KB + 8),
+    ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(TIGHT ? 64 : KB + 8), .UC1(KB + 8),
                      .UC2(4), .MUT(MUT == 5 ? 2 : 0)) u_seq (
         .clk(clk), .rst_n(rst_n), .c_v(sc_v), .c_d(sc_d), .c_cr(sc_cr), .u_v(su_tv), .u_d(su_td), .u_cr(su_tcr),
         .a_start(a_start), .a_T(a_T), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),

@@ -21,6 +21,7 @@ module ot_qkvd_rom_end #(
     parameter integer OCR_AR = 64,                 // RES credits toward the VM (>= the relay round trip)
     parameter integer DCD    = 4,                  // sequencer CTL buffer
     parameter integer OCR_DH = 4,
+    parameter integer RB_RES = 32,                 // RES receive buffer (= the KV end's RES link credits)
     parameter integer MUT    = 0,
     parameter integer W      = 528,
     parameter integer FW     = 548
@@ -101,7 +102,7 @@ module ot_qkvd_rom_end #(
     wire [4:0]     afc;
     wire           af;
     ot_qkvd_d2d #(.NT(4), .NR(3), .TXB(0), .RXB(4), .W(W), .IBD({8'd8, 8'd8, 8'd8, 8'd8}),
-                  .FCR({8'd32, 8'd8, 8'd32, 8'd4}), .RBD({8'd4, 8'd4, 8'd32, 8'd32}),
+                  .FCR({8'd32, 8'd8, 8'd32, 8'd4}), .RBD({8'd4, 8'd4, 8'd32, 8'(RB_RES)}),
                   .OCR({8'd4, 8'(OCR_DH), 8'd8, 8'(OCR_AR)}), .MUT(MUT)) u_d2d (
         .clk(clk), .rst_n(rst_n), .t_v(tv), .t_d(td), .t_cr(t_cr), .r_v(r_v), .r_d(r_d), .r_cr(r_cr),
         .tx_up(tx_up), .tx_v(tx_v), .tx_flit(tx_flit), .rx_v(rx_v), .rx_flit(rx_flit), .fault(af), .fault_cause(afc));
