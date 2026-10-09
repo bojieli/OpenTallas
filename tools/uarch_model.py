@@ -14242,3 +14242,37 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+def hbm_collective_vm_publication_model(words=4096,lanes=16,quarters=4):
+    """Actual req337/rsp273 VM lease, fully published before TU indexed reads.
+
+    Source compiler d5225192c graph all_reduce_o/down: FP32 4096 words,
+    q1024 disjoint word ranges. No native TU descriptor opcode exists yet.
+    Read tags have QID2/sequence14; no in-band fault, only separate abort.
+    """
+    if words!=4096 or lanes!=16 or quarters!=4:
+        raise ValueError('only authoritative full4096/fourquarter contract sized')
+    flits=words//lanes;sectors=words//8
+    # Two parity-sector masters for each of two native injector read lanes.
+    # Each word256+seq12+epoch24 occupies two266-bit codes in three macros.
+    macros=2*2*(flits//128)*3
+    return dict(candidate='HBM_FULL_QUARTER_VM_PUBLICATION',default_enabled=False,
+        adopted=False,MACs_per_cycle=0,FP32_words=words,FW=512,PFMAX=flits,
+        quarter_words=1024,rank_order=[0,1,2,3],VM_base_word=233472,
+        VM_read_requests=sectors,VM_request_bits=337,VM_response_bits=273,
+        max_outstanding_requests=1,request_tag='QID2 + sequence14',
+        response_fault_field=False,external_fault_requires_abort=True,
+        requested_bytes_per_sector=32,total_load_bytes=words*4,
+        publication_overlap_credit=0,minimum_load_cycles=2*sectors+2,
+        actual_load_cycles='sum measured request-ready and matched response latency for512 sectors +2write visibility edges',
+        injector_read_lanes=2,bytes_per_cycle_per_injector=64,
+        injector_request_to_response_edges=4,mutable_payload_protection='real SRAM SECDED on data+flitindex+24bit session',
+        protected_SRAM_masters=4,real_SRAM_macros=macros,
+        SRAM_macro_area_um2=macros*3891.57696,
+        SRAM_area_reservation_at_55_percent_um2=macros*3891.57696/.55,
+        forward_VM_boundary_bits=quarters*337,reverse_VM_boundary_bits=quarters*273,
+        producer_mux='one registered selected QID; held request, one outstanding, no same-cycle long ready chain',
+        fanout='write each sector to both read-lane replicas; no broadcast payload to fourquarters',
+        lease='allproducer writeACK and same-sector visibility under matching owner/op/PC/query precede publication start; stable readlease until TU release',
+        native_endpoint_successor='PFMAX256, indexed response fouredges after request; currentPFMAX64/samecycleinjdata cannot bind',
+        integration_open=['TU descriptor ISA/header and production SM publication grant','VM read arbiter and source fault transport','actual full shape native endpoint queue/relay inventory','descriptor/control-state protection and warm-abort drain','SS/FF15ps DRC0 with actual FF capture budgets'],physical_qualified=False)
