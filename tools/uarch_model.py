@@ -15087,3 +15087,29 @@ def hgi_token18_accept_seat_model():
         peak_floorplan_kib=322588, source='377249427', evidence='43b313543')
     d['reason']='rtl_boundary actual source377 input->register34 levels; inputseat required'
     return d
+
+
+def hgi_token18_fullcore_model():
+    """Reuse qualified hfd_mtp_core register/skid/read contract, not naked ctl."""
+    return dict(schema='opentallas.hgi_mtp_fullcore18.v1',default_off=True,
+        models=['DeepSeek-V4.1 HBM MTP'],replicas_per_die=1,
+        topology='qualified ot_hfd_mtp_core TW18 XSEL1',
+        MACs_per_cycle=0, fp32_bias_adds_per_cycle=8,
+        memory_ports_bytes_per_cycle=0, history_token_bits=16*18,
+        local_logit_input_bits_per_cycle=2*8*32+8+3,
+        command_operand_bits=8*18, token_port_bits=18,
+        source_selector_inputs=6*9, local_expert_selectors=0,
+        window_ring_slots=256, sliding_window_rows=128,
+        compressor_ring_slots=10, layers=40, model_maxpos=1048576,
+        added_cycles_vs_qualified_DS_core=0,
+        qualified_boundary_edges=4, qualified_prompt_read_wait=2,
+        added_token_cycles_vs_bare_controller=4,
+        slot_um=[466.56,200.88], area_slot_um2=466.56*200.88,
+        estimated_token_widening_ff=128,
+        estimated_width_area_um2=128*DFF_UM2,
+        routing_tracks_available=int(2*200.88/.064*.70),
+        routing_boundary_tracks_estimate=1200, macro_replicas=1,
+        replica_mux_demux=0, new_token_ff_fanout=1,
+        exact_state_binding='SPECF0 recipe039ca63d6; SPECF1 requires separate matched proof',
+        physical_fit_measured=False, routes_required=2,
+        exact_gate='matching fullcore TW18 XSEL1 traces + genuine rollback mutant')
