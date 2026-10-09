@@ -15,52 +15,6 @@
 "hfd_svc_NE_s0"
 ],
 "ports": {
-"ck": {
-"bits": 1,
-"layer": "M5",
-"pins": [
-[
-"ck[0]",
-"M5",
-0.624,
-258.984,
-0.648,
-259.176
-]
-],
-"face": "N",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
-},
-"rst": {
-"bits": 1,
-"layer": "M5",
-"pins": [
-[
-"rst[0]",
-"M5",
-1.008,
-258.984,
-1.032,
-259.176
-]
-],
-"face": "N",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
-},
 "l0": {
 "bits": 1102,
 "layer": "M5",
@@ -65367,6 +65321,52 @@
 ]
 ],
 "direction": "inout"
+},
+"ck": {
+"bits": 1,
+"layer": "M5",
+"pins": [
+[
+"ck[0]",
+"M5",
+447.504,
+258.984,
+447.528,
+259.176
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
+"rst": {
+"bits": 1,
+"layer": "M5",
+"pins": [
+[
+"rst[0]",
+"M5",
+447.888,
+258.984,
+447.912,
+259.176
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
 },
 "eo": {
 "bits": 607,

@@ -57,7 +57,7 @@ module hfd_svc_NE_seg (
   wire [57:0] xl6;
   wire [116:0] xr7;
   wire [279:0] xl7;
-  hfd_svc_SE_s0 u_s0 (.ck(ck), .rst(rst), .l0(lsm28), .q0(qsm28), .l1(lsm24), .q1(qsm24), .ks0(ks0), .ks1(ks1), .kq0(kq0), .kq1(kq1), .phy(phy[3625:0]), .eo(xr0), .ei(xl0));
+  hfd_svc_SE_s0 u_s0 (.l0(lsm28), .q0(qsm28), .l1(lsm24), .q1(qsm24), .ks0(ks0), .ks1(ks1), .kq0(kq0), .kq1(kq1), .phy(phy[3625:0]), .ck(ck), .rst(rst), .eo(xr0), .ei(xl0));
   hfd_svc_SE_s1 u_s1 (.l2(lsm29), .q2(qsm29), .ks2(ks2), .kq2(kq2), .phy(phy[7831:3626]), .ck(ck), .rst(rst), .wi(xr0), .wo(xl0), .eo(xr1), .ei(xl1));
   hfd_svc_SE_s2 u_s2 (.l3(lsm25), .q3(qsm25), .ks3(ks3), .kq3(kq3), .phy(phy[10319:7832]), .ck(ck), .rst(rst), .wi(xr1), .wo(xl1), .eo(xr2), .ei(xl2));
   hfd_svc_SE_s3 u_s3 (.kv(kv), .l4(lsm30), .q4(qsm30), .ik(ik), .e(e), .ks4(ks4), .kq4(kq4), .kd(kd), .phy(phy[13529:10320]), .ck(ck), .rst(rst), .wi(xr2), .wo(xl2), .eo(xr3), .ei(xl3));
