@@ -470,9 +470,9 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 37,
-   "merged": 37,
-   "record_only": 7
+   "closed": 39,
+   "merged": 39,
+   "record_only": 8
   },
   "notes": [
    "hgi_coll_decode_a/b: adoption_scope BLOCKED_ELECTRICAL (5 max_slew ~285 ps vs 260) - merged as evidence, not adopted",
@@ -999,6 +999,34 @@
     "source_merged_sha": "e551be6413df2810d8a672ff5a1237aadd512a18",
     "note": "merge 7c38e6508 (codex/hgi-collective-20261009 source tip; later endpoint/route commits not taken)",
     "adoption_scope": "BLOCKED_ELECTRICAL"
+   },
+   {
+    "job": "hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc",
+    "closed": "2026-10-09T07:36:17-07:00",
+    "branch": "claude/mtp-lead-20261009",
+    "source_commit": "f63ddf4155ee406cbf54c45e9e0640af02cf0aa7",
+    "record_commit": "0281ae8d6",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +227.68 / FF +21.94 ps DRC 0; SS sensitivity -17.50 ps",
+    "status": "merged",
+    "record_merged_sha": "0184803e85d9adf87e16c35f649efaa27f719fe0",
+    "source_merged_sha": null,
+    "note": "source already on main (claude/mtp-lead); record only (added by coordinator mid-stream)"
+   },
+   {
+    "job": "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+    "closed": "2026-10-09T07:34:28-07:00",
+    "branch": "codex/hgi-decoder-electrical-20261009",
+    "source_commit": "d261d43c709465a01516b903009e5765f611422b",
+    "record_commit": "107581861",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +81.08 / FF +1.88 ps DRC 0; SS sensitivity -150.07 ps",
+    "status": "merged",
+    "record_merged_sha": "83e2062837159a0353db98169df6248e9a303933",
+    "source_merged_sha": "c261fabad04894e4dd0b552ad6f942eba2418e77",
+    "note": "merge d261d43c7 (codex/hgi-decoder-electrical-20261009); hgi_coll_decode_b.env kept at its closed 7c38e6508 config (added by coordinator mid-stream)"
    }
   ]
  }
