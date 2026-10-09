@@ -116,7 +116,7 @@ module ot_hgi_seq #(
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
                      S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14;
     reg [4:0]  st;
-    reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q;
+    reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
     reg [39:0]  faddr;
@@ -234,7 +234,7 @@ module ot_hgi_seq #(
         case (c)
             6'd0: dynv = 32'd0;
             6'd1: dynv = {12'd0, pos};
-            6'd2: dynv = {11'd0, {1'b0, pos} + 21'd1};
+            6'd2: dynv = {11'd0, pos1_q};       // registered pos + 1 (drive-0849: pos -> d_n path)
             6'd3: dynv = {14'd0, token};
             6'd4: dynv = {16'd0, Lc};
             6'd5: dynv = {24'd0, rank_r};
@@ -379,6 +379,7 @@ module ot_hgi_seq #(
                     cpl_ntok <= 5'd0; cpl_toks <= 288'd0;
                 end
                 S_DB: begin
+                    pos1_q <= {1'b0, pos} + 21'd1;
                     if (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
@@ -510,7 +511,7 @@ module ot_hgi_seq #(
                                 vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; cpl_toks <= 288'd0; st <= S_TOKX;
                             end
                         end else begin
-                            d_hdr <= h; d_pos1 <= {1'b0, pos} + 21'd1; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
+                            d_hdr <= h; d_pos1 <= pos1_q; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
                             u_v <= 16'd1 << h_unit; st <= S_DISP;
                         end
                     end else case (ix)
