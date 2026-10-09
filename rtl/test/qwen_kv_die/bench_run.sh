@@ -13,9 +13,9 @@ for spec in 8192:normal 8192:peaky 8191:mixed 4097:flat 2048:wide 129:tiny 1:nor
   [ -f $OUT/v/${c}_$k/gold.hex ] || python3 tools/qwen_nearhbm_attn_ref.py vectors --ctx $c --seed $((c*7+${#k})) --kind $k --out $OUT/v/${c}_$k > $OUT/log/vec_${c}_$k.log 2>&1 &
 done
 # builds: base + mutants
-ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6"
+ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5 6 7 8"
 for m in $ML; do
-  bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) -GMUT=$( [ $m = 6 ] && echo 0 || echo $m ) > $OUT/log/build$m.log 2>&1 &
+  bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL $( [ $m = 1 -o $m = 4 -o $m = 6 ] && echo -GTIGHT=1 ) $( [ $m = 7 -o $m = 8 ] && echo -GKVL_STALL=400 ) -GMUT=$( [ $m = 6 -o $m = 8 ] && echo 0 || echo $m ) > $OUT/log/build$m.log 2>&1 &
 done
 wait
 echo "built $(date)" >> $OUT/STATUS
@@ -30,7 +30,7 @@ done
 V=$OUT/v/8192_normal
 for m in $ML; do
   [ $m = 0 ] && continue
-  st=0; [ $m = 1 -o $m = 4 -o $m = 6 ] && st=1      # 6 = the base RTL in the TIGHT (credit-stress) sizing
+  st=0; [ $m = 1 -o $m = 4 -o $m = 6 ] && st=1      # 6 = the base RTL in the TIGHT (credit-stress) sizing; 8 = the base RTL with the posted rows stalled 400 cycles (fence)
   r=$($OUT/b$m/Vtb $V $st 2>$OUT/log/mut${m}.err); rc=$?
   echo "{\"run\": \"mut$m\", \"vec\": \"8192_normal\", \"rc\": $rc, \"res\": ${r:-null}}" >> $res
 done

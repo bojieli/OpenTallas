@@ -9,7 +9,7 @@
 // (tb_qkvd_layer.cpp) drives CTL / KVN / Q / EMBQ at the SU face under its credits, models HBM (t = T-1 rows POISONED:
 // the crossed K / V must be merged), the embedding gateway and the host, and checks every output bit-exactly against
 // the golden (tools/qwen_nearhbm_attn_ref.py vectors from tools/hdc_golden.py).
-// MUT: 0 base | 1 KV end one extra RES link credit (TIGHT) | 2 KV merge off | 3 one flit dropped in the PHY (ROM->KV)
+// MUT: 0 base | 7 fence off (with KVL_STALL: the T-1 read hits HBM before the row) | 1 KV end one extra RES link credit (TIGHT) | 2 KV merge off | 3 one flit dropped in the PHY (ROM->KV)
 //      | 4 ROM adapter early link credit | 5 Q beats 0/1 swapped on the KV die
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_layer_tb #(
@@ -22,7 +22,8 @@ module ot_qkvd_layer_tb #(
     parameter integer QX     = 0,      // KV die: extra stages seq -> stack aggregators beyond LINK (placement)
     parameter integer RX     = 0,      // KV die: stages attention hub -> seq (placement)
     parameter integer KVL    = 0,
-    parameter integer TIGHT  = 0,      // credit-stress sizing: RES link buffer 4, VM credits 4 (exercises back-pressure)      // KV die: stages seq -> KV landings (the posted KV rows; placement)
+    parameter integer TIGHT  = 0,
+    parameter integer KVL_STALL = 0,   // fence test: extra delay of the posted rows (stalled kvn path)      // credit-stress sizing: RES link buffer 4, VM credits 4 (exercises back-pressure)      // KV die: stages seq -> KV landings (the posted KV rows; placement)
     parameter integer MUT    = 0,
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
@@ -153,7 +154,7 @@ module ot_qkvd_layer_tb #(
     ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(TIGHT ? 64 : KB + 8), .UC1(KB + 8),
                      .UC2(4), .MUT(MUT == 5 ? 2 : 0)) u_seq (
         .clk(clk), .rst_n(rst_n), .c_v(sc_v), .c_d(sc_d), .c_cr(sc_cr), .u_v(su_tv), .u_d(su_td), .u_cr(su_tcr),
-        .a_start(a_start), .a_T(a_T), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),
+        .a_start(a_start), .a_T(a_T), .a_layer(a_L), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),
         .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .a_hub_fault(af[4]), .a_stk_fault(af[3:0]),
         .m_fault(mf), .d2d_fault(faults[1]), .d2d_cause(kv_fc), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
         .kvw_cr(kvw_cr), .emb_req_v(emb_req_v), .emb_req_d(emb_req_d), .emb_req_cr(emb_req_cr), .emb_q_v(emb_q_v),
@@ -164,28 +165,36 @@ module ot_qkvd_layer_tb #(
     wire [1:0] kl_vg;
     wire [13:0] kl_t;
     wire [HD*8-1:0] kl_d;
-    ot_hdc_delay #(.W(1), .D(KVL), .RESET(1)) u_klv (.clk(clk), .rst_n(rst_n), .d(kvw_v), .q(kl_v));
-    ot_hdc_delay #(.W(2 + 14 + HD*8), .D(KVL)) u_kld (.clk(clk), .rst_n(rst_n), .d({kvw_vg, kvw_t, kvw_d}), .q({kl_vg, kl_t, kl_d}));
+    wire [5:0] kl_l;
+    // KVL_STALL (bench): the rows' path is held KVL_STALL extra cycles (a credit-stalled kvn path): the fence must hold
+    ot_hdc_delay #(.W(1), .D(KVL + KVL_STALL), .RESET(1)) u_klv (.clk(clk), .rst_n(rst_n), .d(kvw_v), .q(kl_v));
+    ot_hdc_delay #(.W(2 + 14 + 6 + HD*8), .D(KVL + KVL_STALL)) u_kld (.clk(clk), .rst_n(rst_n), .d({kvw_vg, kvw_t, kvw_layer, kvw_d}),
+                                                                   .q({kl_vg, kl_t, kl_l, kl_d}));
     genvar s;
     generate for (s = 0; s < 4; s = s + 1) begin : g_land
-        ot_qkvd_kv_merge #(.HD(HD), .E(R), .MUT(MUT == 2 ? 1 : 0)) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
-            .kvw_vg(kl_vg), .kvw_t(kl_t), .kvw_d(kl_d), .e_req_valid(req_valid[R*s +: R]), .e_req_v(req_v[R*s +: R]),
-            .e_req_g(req_g[R*s +: R]), .e_req_t(req_t[13*R*s +: 13*R]), .h_rsp_valid(rsp_valid[R*s +: R]),
+        ot_qkvd_kv_merge #(.HD(HD), .E(R), .MUT(MUT == 2 ? 1 : (MUT == 7 ? 2 : 0))) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
+            .kvw_vg(kl_vg), .kvw_t(kl_t), .kvw_layer(kl_l), .kvw_d(kl_d), .lay_start(x_start), .lay_T(x_T), .lay_idx(x_L),
+            .e_req_valid(m_rq_v[R*s +: R]), .e_req_v(m_rq_vv[R*s +: R]), .e_req_g(m_rq_g[R*s +: R]),
+            .e_req_t(m_rq_t[13*R*s +: 13*R]), .h_req_valid(req_valid[R*s +: R]), .h_req_v(req_v[R*s +: R]),
+            .h_req_g(req_g[R*s +: R]), .h_req_t(req_t[13*R*s +: 13*R]), .h_rsp_valid(rsp_valid[R*s +: R]),
             .h_rsp_data(rsp_data[HD*8*R*s +: HD*8*R]), .e_rsp_valid(e_rv[R*s +: R]), .e_rsp_data(e_rd[HD*8*R*s +: HD*8*R]),
             .fault(mf[s]));
     end endgenerate
     // KV-die wires seq -> aggregators (QX stages beyond the LINK the attention bench applies) and hub -> seq (RX)
     wire          x_start, x_qv, h_ov, h_og;
     wire [13:0]   x_T;
+    wire [5:0]    a_L, x_L;
+    wire [E-1:0]  m_rq_v, m_rq_vv, m_rq_g;
+    wire [13*E-1:0] m_rq_t;
     wire [5:0]    x_qb, h_ob;
     wire [511:0]  x_qd, h_od;
     ot_hdc_delay #(.W(2), .D(QX), .RESET(1)) u_qxv (.clk(clk), .rst_n(rst_n), .d({a_start, a_qv}), .q({x_start, x_qv}));
-    ot_hdc_delay #(.W(14 + 6 + 512), .D(QX)) u_qxd (.clk(clk), .rst_n(rst_n), .d({a_T, a_qb, a_qd}), .q({x_T, x_qb, x_qd}));
+    ot_hdc_delay #(.W(14 + 6 + 6 + 512), .D(QX)) u_qxd (.clk(clk), .rst_n(rst_n), .d({a_T, a_L, a_qb, a_qd}), .q({x_T, x_L, x_qb, x_qd}));
     ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_rxv (.clk(clk), .rst_n(rst_n), .d(h_ov), .q(a_ov));
     ot_hdc_delay #(.W(1 + 6 + 512), .D(RX)) u_rxd (.clk(clk), .rst_n(rst_n), .d({h_og, h_ob, h_od}), .q({a_og, a_ob, a_od}));
     ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE)) u_attn (
         .clk(clk), .rst_n(rst_n), .start(x_start), .T(x_T), .q_valid(x_qv), .q_beat(x_qb), .q_data(x_qd),
-        .req_valid(req_valid), .req_v(req_v), .req_g(req_g), .req_t(req_t), .rsp_valid(e_rv), .rsp_data(e_rd),
+        .req_valid(m_rq_v), .req_v(m_rq_vv), .req_g(m_rq_g), .req_t(m_rq_t), .rsp_valid(e_rv), .rsp_data(e_rd),
         .out_valid(h_ov), .out_g(h_og), .out_beat(h_ob), .out_data(h_od), .fault(af), .ev_stack(), .ev_hub());
     assign faults[3] = |af;
     assign a_start_o = a_start;

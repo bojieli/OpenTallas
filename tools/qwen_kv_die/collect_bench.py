@@ -15,6 +15,10 @@ MUTANTS = {
     'mut3': 'one flit dropped in the UCIe macro model (ROM -> KV) -> sequence fault',
     'mut4': 'ROM end: link credit owed at receive-buffer push instead of pop (TIGHT, stalled) -> overrun',
     'mut5': 'Q beats 0 / 1 swapped on the KV die -> wrong attention',
+    'mut7': 'fence OFF with the posted rows stalled 400 cycles (credit-stalled kvn path): the T-1 read reaches the poisoned '
+            'HBM row before the merge -> wrong attention',
+    'mut8': 'BASE RTL with the posted rows stalled 400 cycles: the write-then-read fence holds the T-1 read -> must stay '
+            'exact',
     'mut6': 'BASE RTL in the TIGHT credit-stress sizing (RES link buffer 4, VM credits 4, VM stalled 300 cycles) -> '
             'must stay exact',
 }
@@ -56,7 +60,7 @@ def main():
             c['mutants'] = {}
             for k, r in sorted(muts.items()):
                 res = r['res'] or {}
-                expect_pass = k == 'mut6'
+                expect_pass = k in ('mut6', 'mut8')
                 caught = (r['rc'] != 0) and not res.get('exact', False)
                 c['mutants'][k] = dict(what=MUTANTS.get(k, ''), rc=r['rc'], exact=res.get('exact'),
                                        mismatches=res.get('mismatches'), faults=res.get('faults'),
