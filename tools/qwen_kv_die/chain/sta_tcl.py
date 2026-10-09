@@ -28,9 +28,8 @@ step libs {{
 }}
 step load {{ read_db /work/ckpt_grt.odb }}
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
-step guides {{ read_guides /work/route.guide }}
-set_routing_layers -signal M4-M9 -clock M4-M9
-step est {{ estimate_parasitics -global_routing }}
+step spef {{ read_spef /work/die_grt.spef }}
+if {{![file exists /work/die_grt.spef]}} {{ puts "OT_STA_NO_SPEF"; exit 1 }}
 {clocks}
 {unc}
 step sta {{

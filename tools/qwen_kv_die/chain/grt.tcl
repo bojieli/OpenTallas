@@ -35,5 +35,9 @@ step special {
 step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
 step guides { write_guides /work/route.guide }
 step ckpt { write_db /work/ckpt_grt.odb }
+# die-evidence-2 2026-10-09: GRT parasitics are extracted HERE, in the routing session, and written as SPEF.  A later
+# session cannot get them from the guides: read_guides + estimate_parasitics -global_routing gives NO wire RC (GRT-0008).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+step spef { estimate_parasitics -global_routing; write_spef /work/die_grt.spef }
 step wl { report_wire_length -net * -global_route -file /work/wirelength.csv }
 puts OT_GRT_DONE
