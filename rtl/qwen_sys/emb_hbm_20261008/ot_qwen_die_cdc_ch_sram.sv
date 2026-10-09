@@ -56,7 +56,7 @@ module ot_qwen_die_cdc_ch_sram #(
     reg [W-1:0] id_q;
     wire         i_v_p;
     wire [W-1:0] i_d_p;
-    generate if (PIPE != 0) begin : g_ipr
+    if (PIPE != 0) begin : g_ipr
         (* keep *) reg         pv;
         (* keep *) reg [W-1:0] pd;
         always @(posedge wclk or negedge wr_n) if (!wr_n) pv <= 1'b0; else pv <= i_v;
@@ -64,7 +64,7 @@ module ot_qwen_die_cdc_ch_sram #(
         assign i_v_p = pv; assign i_d_p = pd;
     end else begin : g_ipw
         assign i_v_p = i_v; assign i_d_p = i_d;
-    end endgenerate
+    end
     always @(posedge wclk or negedge wr_n) if (!wr_n) iv_q <= 1'b0; else iv_q <= i_v_p;
     always @(posedge wclk) id_q <= i_d_p;
     reg [W-1:0] ib [0:IBUF-1];

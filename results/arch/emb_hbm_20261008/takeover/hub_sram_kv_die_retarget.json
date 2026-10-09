@@ -1,0 +1,56 @@
+{
+  "schema": "opentallas.embedding_hub_sram_kv_die_retarget.v1",
+  "target": "Qwen TP4 ROM dies plus separate KV die/package",
+  "source_component_model": "results/arch/emb_hbm_20261008/takeover/hub_sram_model.json",
+  "prior_geometry_scope": "Historical single-die only; no KV-die placement or outline inference",
+  "owner_instruction": "Embedding hub, fetch, HBM PHY, landing/merge skids, near-HBM attention and host/PLL move to KV die; KV payload never crosses to ROM dies",
+  "component_status": "Claude F5 model-to-RTL approved; minimum one-link exact128/credit/CEUE gates continuing, no physical route",
+  "retained_inventory": {
+    "links": 4,
+    "depth_per_link": 128,
+    "payload_bits": 523,
+    "original_payload_flop_bits": 267776,
+    "secded_64_72_words_per_payload": 9,
+    "padded_data_bits": 576,
+    "encoded_bits": 648,
+    "useful_payload_bits_per_die": 267776,
+    "encoded_bits_per_die": 331776,
+    "physical_capacity_bits": 393216,
+    "unused_bits_per_macro_triplet": 120,
+    "macro_name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macros_per_link": 3,
+    "macros_per_die": 12
+  },
+  "retained_latency": {
+    "domain": "fck0..3, actual833.333ps; source route770ps; uncertainties60/25ps unchanged",
+    "baseline_edges": {
+      "E0": "capture ingress",
+      "E1": "write ib",
+      "E2": "pop ib into async FIFO and return credit"
+    },
+    "proposed_edges": {
+      "E0": "capture ingress and reserve one of128 logical capacity slots",
+      "E1": "capture nine parallel SECDED encodings",
+      "E2": "write all three SRAM banks",
+      "E3": "earliest SRAM read issue, avoiding same-address read/write ambiguity",
+      "E4": "capture macro data and syndrome, reserving finite corrected-output capacity",
+      "E5": "correct/UE classify and actually accept into async FIFO; only then return upstream credit"
+    },
+    "added_wclk_edges": 3,
+    "added_first_word_ns": 2.499999,
+    "added_credit_return_edges": 3,
+    "existing_RTT_window_restart_edges": [
+      117,
+      119
+    ],
+    "proposed_no_extra_stall_window_restart_edges": [
+      120,
+      122
+    ],
+    "minimum_remaining_128_window_margin_edges": 6,
+    "system_composition": "Add3 fck edges to each traversed ingress. A response/fence traversing one ingress costs+2.5ns; do not multiply by four parallel links. Async phase/backpressure changes require measured gate.",
+    "BOOT_END": "Ordered behind all earlier ingress words; do not report drain/credit at SRAM read issue. Fence completes only after real downstream retirement and pre-existing gateway semantics."
+  },
+  "physical_contract": "Await results/arch/qwen_kv_die_20261009/CONTRACT.md; no guessed outline, wire lengths or macro seats",
+  "area_gate": "Measure true postmap SRAM/logic inventory and savings versus terminal baseline; inherited72.5kum2 savings test is component comparison, not KV-die area-fit assertion"
+}

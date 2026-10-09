@@ -53,7 +53,9 @@ module ot_qfd_hub_sram_ingress #(parameter integer MUT_EARLY_CREDIT=0)(
  assign fault=sticky;
  assign ce_count=corrected_count;
  generate for(n=0;n<3;n=n+1)begin:g_bank
-  wire [255:0] wd=n<2 ? enc_q[n*256+:256] : {120'b0,enc_q[512+:136]};
+  wire [255:0] wd;
+  if(n<2)begin:wfull assign wd=enc_q[n*256+:256];end
+  else begin:wlast assign wd={120'b0,enc_q[512+:136]};end
   wire [255:0] rd;
   ot_sram_1r1w_128x256_m1_r2c2 u_mem(
    .clk(clk),.r_ce_in(read_issue),.r_addr_in(issued[6:0]),.rd_out(rd),
@@ -119,6 +121,7 @@ def main():
  # Avoid duplicate declarations now outside conditional.
  original=original.replace('    wire        af_ready;\n','')
  original=original.replace('    wire        pop = !ib_empty && af_ready;','    assign pop = !ib_empty && af_ready;')
+ original=original.replace('generate if','if').replace('end endgenerate','end')
  cdc=cdc[:begin]+replacement+original+'    end endgenerate\n'+cdc[end:]
  cdc=cdc.replace('.wr_data(ib[ir[IA-1:0]])','.wr_data(ingress_data)')
  (DIR/'ot_qwen_die_cdc_ch_sram.sv').write_text(cdc)
