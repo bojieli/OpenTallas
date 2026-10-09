@@ -1,0 +1,48 @@
+{
+  "canonical": "hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+  "observed_at": "2026-10-09T12:46:20.167637+00:00",
+  "physical_source": "c4be41d70",
+  "existing_validated_guard_source": "bbe601a79:physical/hbm_collector_routine_20261009/lvt_job.template.json",
+  "guard_source_file_sha256": "2fb7a00d04e5bf54a53bab0e08acbf4fd49b1de6b7e960e8e863f73f93fc1c0c",
+  "before": {
+    "verdict_checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "hold_eco": {
+      "enabled": false
+    }
+  },
+  "after": {
+    "verdict_checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      },
+      {
+        "name": "independent_electrical_zero",
+        "cmd": "python3 -c \"import json; m=json.load(open('{RUN}/routes/{LABEL}/physical.json'))['place_and_route']['metrics']; k=('drc_errors','antenna_violating_nets','antenna_violating_pins','max_slew_violations','max_cap_violations','max_fanout_violations'); assert all(m.get(x)==0 for x in k), {x:m.get(x) for x in k}\""
+      }
+    ],
+    "hold_eco": {
+      "enabled": true,
+      "vtswap": false,
+      "reexport": true,
+      "authorization": "HoldECO ONLYTTsetup>=0DRC0andallindependentelectricalchecksPASS; anyfailedgateblocks; noVTswapTT-failECO",
+      "resource_note": "existingdaemon32GiBguard conservativeunknownfutureECOpeak, notmeasured32"
+    }
+  },
+  "acceptance_delta_only": true,
+  "physical_commands_and_source_unchanged": true,
+  "no_restart_or_new_launch": true,
+  "helper_source_sha256": {
+    "tools/closure_loop/closure_loop.py": "2653fe18f57c938f03cacbb74f2048497d31045e24a7723623dd323e0faf10ce",
+    "tools/closure_loop/tt_overlay.py": "31df0370dfd0cd1660a2b1bb19bee70a49575728b4fe23ba4b5380eab1318816",
+    "tools/closure_loop/hold_corners_patch.py": "9975008aa3ac491663f4fbb6c4328c88cce49b80ec2e209efec4863a04111ce3",
+    "tools/closure_loop/h1_patch.py": "09c35b5d4e359eb3c1e0dd57f933ab92739962c6ac4df09ed8fc2fecdbbc2df1"
+  },
+  "eligibility_proof": "110dd900f results/physical/hbm_collector_routine_20261009/lvt_runtime_schema_source_bbe601a79.json: TTmissBLOCK/electricalfailBLOCK/TTpass+electricalpass+holdfailALLOW",
+  "missing_electrical_metric": "failclosed because m.get(key)==0 false forNone"
+}
