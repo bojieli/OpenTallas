@@ -14490,3 +14490,8 @@ def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
 def hbm_indexer_r25i_physical_model():
     from hbm_indexer_r25i_model import hbm_indexer_r25i_physical_model as impl
     return impl()
+
+
+def qwen_q5_landing_model():
+    from uarch_qwen_q5_landing_model import model
+    return model()
