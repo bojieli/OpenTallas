@@ -4013,6 +4013,10 @@ def start_hold_eco(j, fleet, m):
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+    if he.get("repair_drv"):
+        # mtp-lead 2026-10-09: opt-in DRV repair inside the ECO (hold_eco.tcl OT_REPAIR_DRV); default off
+        env += f" REPAIR_DRV=1 DRV_SLEW_MARGIN={float(he.get('drv_slew_margin', 30)):g} " \
+               f"DRV_CAP_MARGIN={float(he.get('drv_cap_margin', 20)):g} DRV_MAX_WIRE={float(he.get('drv_max_wire_um', 0)):g}"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
     if baked:
@@ -4631,6 +4635,230 @@ def release_bulk(jobs):
             save_job(j)
 
 
+# DEEP RELEASE (disk-1210 2026-10-09): EPYC1 sat at 183 GB free with a 1.6 TB closure-loop tree although every terminal
+# job had been bulk-released: BULK_RELEASE_SH keeps 5_2_route.odb, every eco pass's 6_final.*, the src snapshot (~1.3 GB
+# per job) and bench builds (Verilator .gch/obj ~1 GB per bench), and it never touched CLOSED jobs or plain failures.
+# Owner rule: CLOSED + recorded on main keeps 6_final.{odb,def,v,sdc,spef} of the accepted ORFS dir (metrics.orfs_dir)
+# and of the route tree plus logs/reports; a terminal failure older than DEEP_RELEASE_AGE_H loses the ORFS 1_-5_
+# intermediates, objects/, the src snapshot and bench builds, keeping 6_final.* and logs/reports; a near miss on an
+# open element (near_miss()) keeps 5_2_route.odb, 6_final.*, objects/ and src (re-STA / ECO inputs) and loses only the
+# 1_-4_/fill/gds intermediates and bench builds.  Every path a committed receipt on origin/main names is kept whole
+# (files, source trees) or keeps its 6_final.* (generic ORFS dirs).  A src snapshot goes only when its SOURCE_COMMIT is
+# the job's commit and that commit is in REPO (re-creatable by git archive).
+DEEP_RELEASE_AGE_H = 6.0
+DEEP_RELEASE_PER_TICK = 4
+DEEP_RELEASE_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", "CANCELLED", "REFUSED", "INVALID",
+                     *EARLY_FAIL}
+DEEP_RELEASE_REFS_TTL_S = 3600
+_DEEP_CACHE = {}
+DEEP_RELEASE_PY = r'''
+import json, os, shutil, stat, sys
+a = json.loads(os.environ["OT_DR"])
+R, mode = a["run"].rstrip("/"), a["mode"]
+FINAL = {"6_final.odb", "6_final.def", "6_final.v", "6_final.sdc", "6_final.spef"}
+BULK = (".odb", ".def", ".spef", ".v", ".gds", ".guide", ".odb.gz", ".def.gz", ".gds.gz", ".pre_eco")
+GENERIC = {"orfs", "work", "base", "routes", "cl", "eco", "eco-r2", "eco-r3", "pass1", "pass2", "pass3", "route",
+           "results", "logs", "reports", "asap7"}
+KEEP_TEXT = (".log", ".json", ".txt", ".rpt", ".rc", ".pid", ".sdc", ".tcl", ".sh", ".env", ".csv", ".md", ".yaml",
+             ".yml", ".sv", ".v", ".svh", ".vh", ".f")
+if not os.path.isdir(R):
+    print("DEEP_FREED 0 (no run dir)"); sys.exit(0)
+for p in os.listdir("/proc"):
+    if not p.isdigit():
+        continue
+    try:
+        cwd = os.readlink("/proc/%s/cwd" % p)
+        argv = open("/proc/%s/cmdline" % p, "rb").read().decode(errors="replace")
+    except OSError:
+        continue
+    if cwd == R or cwd.startswith(R + "/") or (R + "/") in argv or argv.endswith(R) or (R + "\0") in argv:
+        print("LIVE pid", p); sys.exit(3)
+refs = [r.rstrip("/") for r in a.get("refs") or []]
+hard = [r for r in refs if os.path.basename(r) not in GENERIC and r != R]
+soft = [r for r in refs if r not in hard and r != R]
+finals = [x.rstrip("/") for x in a.get("final_dirs") or []]
+prot = lambda p: any(p == r or p.startswith(r + "/") for r in hard)
+anc = lambda p: any(r.startswith(p + "/") for r in hard)
+APPLY = not a.get("dry")
+freed = 0
+def blocks(p):
+    try:
+        st = os.lstat(p)
+        return st.st_blocks * 512 if stat.S_ISREG(st.st_mode) else 0
+    except OSError:
+        return 0
+def rm_tree(p):
+    b = sum(blocks(os.path.join(dp, f)) for dp, dn, fn in os.walk(p) for f in fn)
+    if APPLY:
+        shutil.rmtree(p, ignore_errors=True)
+    return b
+def rm_file(p):
+    b = blocks(p)
+    if APPLY:
+        try:
+            os.unlink(p)
+        except OSError:
+            return 0
+    return b
+src_ok = False
+try:
+    src_ok = bool(a.get("src_commit")) and open(os.path.join(R, "src", "SOURCE_COMMIT")).read().strip() == a["src_commit"]
+except OSError:
+    pass
+for top in sorted(os.listdir(R)):
+    tp = os.path.join(R, top)
+    if not os.path.isdir(tp) or os.path.islink(tp) or prot(tp) or anc(tp):
+        continue
+    if top == "src" and mode in ("closed", "fail") and src_ok:
+        freed += rm_tree(tp)
+    elif top.startswith("bench_src"):
+        freed += rm_tree(tp)
+for dp, dn, fn in os.walk(R):
+    if prot(dp) or dp == R + "/src" or dp.startswith(R + "/src/"):
+        dn[:] = []
+        continue
+    if "/orfs" in dp and mode != "nearmiss":
+        for x in [x for x in dn if x == "objects"]:
+            p = os.path.join(dp, x)
+            if not prot(p) and not anc(p):
+                freed += rm_tree(p)
+                dn.remove(x)
+    verilator = any(f.startswith("V") and f.endswith(".mk") for f in fn)
+    for f in fn:
+        p = os.path.join(dp, f)
+        if prot(p) or os.path.islink(p):
+            continue
+        if verilator:
+            if not f.endswith(KEEP_TEXT):
+                freed += rm_file(p)
+            continue
+        if f.endswith((".gch", ".o", ".a", ".so")) and "/orfs" not in dp:
+            freed += rm_file(p)
+            continue
+        if "/orfs" not in dp or not (f.endswith(BULK) or ".odb." in f):
+            continue
+        if f in FINAL and (mode != "closed" or "/routes/" in dp or any(dp.startswith(x + "/") for x in finals + soft)):
+            continue
+        if f == "5_2_route.odb" and mode == "nearmiss":
+            continue
+        freed += rm_file(p)
+print("DEEP_FREED %d" % (freed // 2 ** 20))
+'''
+
+
+def _terminal_age_h(j, now=None):
+    """hours since the job's last real event (release / retention bookkeeping does not count)"""
+    t = j.get("updated") or j.get("created")
+    for e in reversed(j.get("events") or []):
+        if not re.search(r"bulk release|route bulk released|near-miss|deep release|disk-1210", e[:160]):
+            t = e[:25]
+            break
+    try:
+        return ((now or time.time()) - dt.datetime.fromisoformat(t).timestamp()) / 3600
+    except Exception:  # noqa: BLE001
+        return 0.0
+
+
+def _main_evidence():
+    """(origin/main sha, tree file list, merged-closure records text, receipt-referenced scratch paths), cached by sha
+    (refs refreshed at most every DEEP_RELEASE_REFS_TTL_S: the git grep costs ~20 s)"""
+    g = lambda *a: subprocess.run(["git", "-C", str(REPO), *a], capture_output=True, text=True, timeout=600)
+    sha = g("rev-parse", "origin/main").stdout.strip()
+    if not sha:
+        return None
+    c = _DEEP_CACHE
+    if c.get("sha") != sha:
+        recs = "".join(g("show", f"{sha}:{p}").stdout for p in g("ls-tree", "--name-only", sha, "results/closure_loop/").stdout.split()
+                       if "merged_closures" in p)
+        c.update(sha=sha, files=g("ls-tree", "-r", "--name-only", sha).stdout, recs=recs)
+    if c.get("refs_sha") != sha and time.time() - c.get("refs_t", 0) > DEEP_RELEASE_REFS_TTL_S or "refs" not in c:
+        out = g("grep", "-h", "-o", "-I", "-E", r"/srv/[A-Za-z0-9_./+-]+", sha).stdout
+        c.update(refs=sorted({x.split(":", 1)[-1].rstrip("/.") for x in out.split()}), refs_sha=sha, refs_t=time.time())
+    return c
+
+
+def closure_on_main(j, ev):
+    """a CLOSED job whose record reached origin/main: its record commit is an ancestor, a merged_closures record or a
+    main tree path names it"""
+    for e in reversed(j.get("events") or []):
+        m = re.search(r"CLOSED:.*record (\S+) ([0-9a-f]{7,40})", e)
+        if m:
+            if subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", m.group(2), ev["sha"]],
+                              capture_output=True, timeout=120).returncode == 0:
+                return True
+            break
+    return j["name"] in ev["files"] or j["name"] in ev["recs"]
+
+
+def deep_release_mode(j, closed, ev, now=None):
+    """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
+    if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
+        return None
+    if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
+        return None
+    if j["status"] == "CLOSED":
+        if closure_counts(j):
+            return "closed" if closure_on_main(j, ev) else None
+        return "fail"                                   # revoked closure: a failure on its element
+    if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
+        return "nearmiss"
+    return "fail"
+
+
+def release_deep(jobs, now=None):
+    """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
+    closed = closed_blocks(jobs)
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    cand = [x for x in jobs if x.get("host") in hosts and not x.get("deep_released") and x["status"] in TERMINAL
+            and _terminal_age_h(x, now) >= DEEP_RELEASE_AGE_H]
+    if not cand:
+        return 0
+    ev = _main_evidence()
+    if not ev:
+        return 0
+    n = 0
+    for x in cand:
+        if n >= DEEP_RELEASE_PER_TICK:
+            break
+        mode = deep_release_mode(x, closed, ev, now)
+        if not mode:
+            continue
+        run = x["run"].rstrip("/")
+        if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
+               for y in shared.get((x["host"], run), [])):
+            continue                                    # a sibling job still uses the run dir
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if mode != deep_release_mode(j, closed, ev, now):
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                         capture_output=True, timeout=60).returncode != 0:
+                commit = ""
+            arg = dict(run=run, mode=mode, src_commit=commit, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       final_dirs=[(j.get("metrics") or {}).get("orfs_dir")] if mode == "closed" and (j.get("metrics") or {}).get("orfs_dir") else [])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            if r.returncode == 3:
+                event(j, f"deep release skipped: live process ({r.stdout.strip()[:120]})")
+                continue
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode != 0 or not m:
+                continue                                # host unreachable / error: retried next tick
+            j["deep_released"] = dict(at=now_iso(), mode=mode, freed_mb=int(m.group(1)))
+            kept = {"closed": "6_final.{odb,def,v,sdc,spef} of the accepted ORFS dir + route tree",
+                    "fail": "6_final.*", "nearmiss": "5_2_route.odb, 6_final.*, objects/, src"}[mode]
+            event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
+            save_job(j)
+    return n
+
+
 def tick(fleet):
     try:
         ingest()
@@ -4650,6 +4878,10 @@ def tick(fleet):
         release_bulk(all_jobs())
     except Exception:  # noqa: BLE001
         log("release_bulk error:\n" + traceback.format_exc())
+    try:
+        release_deep(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("release_deep error:\n" + traceback.format_exc())
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())
