@@ -122,6 +122,7 @@ always @(posedge clk)if(rst_n)begin
  for(integer q=0;q<4;q=q+1)begin
   if(mem_we[q])writes=writes+1;
   if(mem_re[q])reads=reads+1;
+  if(out_valid[q]&&out_ready[q]&&out_lv[q*2+:2]!==ref_out_lv[q*2+:2])$fatal(1,"consumed lane-valid mismatch");
   if(out_valid[q]&&out_ready[q])for(integer lane=0;lane<2;lane=lane+1)if(out_lv[q*2+lane])begin
    consumed=consumed+1;
    if(out_lv[q*2+lane]!==ref_out_lv[q*2+lane]||out_blk[(q*2+lane)*17+:17]!==ref_out_blk[(q*2+lane)*17+:17]||out_val[(q*2+lane)*16+:16]!==ref_out_val[(q*2+lane)*16+:16])$fatal(1,"CONSUMING_ID_VALUE_MUTANT cycle%0d q%0d lane%0d",cycle,q,lane);
@@ -130,10 +131,10 @@ always @(posedge clk)if(rst_n)begin
 end
 integer sent[0:3],counts[0:3],base[0:3];reg[3:0]finished;
 task automatic run_case(input integer k,input bit unbalanced);
- integer ticks,block_id;
+ integer ticks,block_id,initial_consumed;
  begin
  @(negedge clk);rst_n=0;held_valid=0;in_valid=0;in_last=0;
- repeat(4)@(negedge clk);rst_n=1;held_valid=1;in_k=k;finished=0;ticks=0;
+ repeat(4)@(negedge clk);rst_n=1;held_valid=1;in_k=k;finished=0;ticks=0;initial_consumed=consumed;
  for(integer q=0;q<4;q=q+1)begin sent[q]=0;counts[q]=unbalanced?(q==0?1366:0):(q==3?346:340);base[q]=unbalanced?0:q*340;end
  while(finished!=15)begin
   in_valid=0;in_last=0;in_lv=0;in_val=0;in_idx=0;
@@ -164,6 +165,7 @@ task automatic run_case(input integer k,input bit unbalanced);
   @(negedge clk);
  end
  in_valid=0;held_valid=0;
+ if(consumed-initial_consumed!=(k<1366?k:1366))$fatal(1,"native selected count mismatch");
  $display("PASS_NATIVE k=%0d unbalanced=%0d cycles=%0d consumed=%0d writes=%0d reads=%0d",k,unbalanced,ticks,consumed,writes,reads);
  end
 endtask

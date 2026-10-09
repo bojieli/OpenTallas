@@ -1,0 +1,6 @@
+PASS_NATIVE k=512 unbalanced=0 cycles=871 consumed=512 writes=1813 reads=1794
+PASS_NATIVE k=512 unbalanced=1 cycles=2637 consumed=1024 writes=3610 reads=3579
+PASS_NATIVE k=2048 unbalanced=1 cycles=3185 consumed=2390 writes=5834 reads=5791
+PASS_NATIVE k=1 unbalanced=0 cycles=667 consumed=2391 writes=7392 reads=7348
+PASS_HGI_NATIVE_INDEX512_LOCKSTEP
+rtl/test/hbm_generic_20261009/tb_hgi_idx_native_ds_dispatch.sv:175: $finish called at 73850000 (1ps)
