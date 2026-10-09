@@ -1,0 +1,98 @@
+{
+  "name": "hgi-att-record-g12-360-630558368-tc-cx",
+  "block": "hgi_att_record_g12_360",
+  "owner": "Codex:generic_attn_g12",
+  "purpose": "GH5 normative ATT record adapter, config-only balanced32 M4M6/M5M7 pins, unchanged RTL/outline/timing. Initial8GiB remaining-phase estimate: own measured placement max0.52GiB and measured sibling leaf DRT2.66GiB, threefold sibling DRT reserve until own routed peak; not hard cap or exact measured whole-run claim. Upstream normative counts and actual gather joins OPEN.",
+  "hosts": [
+    "ot-pve1",
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "source": {
+    "branch": "codex/hgi-attn-g12-20261009",
+    "commit": "630558368c2a02e3a16d96bd3e908f6ec80d55b6"
+  },
+  "registered_io": true,
+  "stages": {
+    "bench": [
+      {
+        "name": "fullshape_record_leaf_exact",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter  -o {RUN}/bench/exact rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "PASS G12_RECORD cases=18 rows=1059089",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "ring",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_RING=1 -o {RUN}/bench/ring rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/ring",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "count",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_COUNTS=1 -o {RUN}/bench/count rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/count",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "fields",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_FIELDS=1 -o {RUN}/bench/fields rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/fields",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "completion",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_EARLY_DONE=1 -o {RUN}/bench/completion rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/completion",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "fault",
+        "cmd": "mkdir -p {RUN}/bench; iverilog -g2012 -s tb_hgi_att_record_adapter -Ptb_hgi_att_record_adapter.MUT_FAULT_RELEASE=1 -o {RUN}/bench/fault rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv rtl/test/hgi/tb_hgi_att_record_adapter.sv && vvp {RUN}/bench/fault",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*(mutation|retired|sticky fault)",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Currentroute_master measuresownTT/FFboundaryreferenceinrun, no assumedclockinsertion"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt;python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/hgi_att_record_g12_360.sdc;HM=0.020 SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_att_record_g12_360 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 8
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_att_record_g12_360.sdc"
+    ],
+    "macros": []
+  },
+  "cycles_added": "Adapter3recordedges+existingleaf3commandedges=6firstrow;II1;retirementrequiresactualATTdone ANDrowfrontdone, faultonlyafterrealcancelACK.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.02
+}

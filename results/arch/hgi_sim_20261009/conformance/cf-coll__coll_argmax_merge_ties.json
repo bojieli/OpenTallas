@@ -1,0 +1,195 @@
+{
+ "id": "coll_argmax_merge_ties",
+ "row": "CF-COLL",
+ "mode": "QWEN",
+ "what": "ARGMAX_MERGE: equal values on all 4 ranks -> lowest global id (100) wins",
+ "cfg": {
+  "cp_vocab": 151936,
+  "cp_ctx_max": 40960,
+  "coll_group_size": 4
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "0000000000000000000000200200c060010000000000020010000000000000000000000000000000000000000000000015100000000001001000000000000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "0000000000000000000000200200c06001000000000002001000000000000000000000000000000000000000000000001510000000000100100000000000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "COLL",
+   "op": "ARGMAX_MERGE",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 2,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 16,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "merge",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "0000a04000000000"
+    ],
+    [
+     1,
+     "64000000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 1,
+   "vm_in": [
+    [
+     0,
+     "0000a04000000000"
+    ],
+    [
+     1,
+     "67940000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 2,
+   "vm_in": [
+    [
+     0,
+     "0000a04000000000"
+    ],
+    [
+     1,
+     "c3280100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 3,
+   "vm_in": [
+    [
+     0,
+     "0000a040"
+    ],
+    [
+     1,
+     "7f510200"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      16,
+      "64000000"
+     ]
+    ],
+    "hbm_out": []
+   },
+   {
+    "rank": 1,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 2,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 3,
+    "same_as_rank": 0
+   }
+  ],
+  "outputs_sha256": "a63e8e118ddc8045bbb0febbb396c1718ecae8d4e4b6c4978d2fbd923cca9e75"
+ },
+ "mutants": [
+  {
+   "name": "highest_id",
+   "defect": "ties resolved to the highest id",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "35bf19adda207723aebd50eb5b317bd19e93a9228418aacbeb63d98cc0e28f55"
+  }
+ ]
+}
