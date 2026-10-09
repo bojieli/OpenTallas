@@ -39,7 +39,7 @@ module tb_qfd_native_cmd_provider;
   // Return one actual credit per native pop; exercise full WR field range.
   cmd_credit_return=1;
   for(i=0;i<64;i=i+1)begin wr_bank=i;wr_col=31-i;read_release=i%8;step;end
-  wr_v=0;read_release=0;cmd_credit_return=0;repeat(3)step;
+  wr_v=0;read_release=0;repeat(5)step;cmd_credit_return=0;repeat(3)step;
   // Causal window fence: retirement alone cannot replace context.
   window_retired=1;step;window_retired=0;write_quiet=0;desc_v=1;desc_row=19'h7123;
   repeat(4)begin if(desc_take)$fatal(1,"descriptor crossed live writes");step;end
