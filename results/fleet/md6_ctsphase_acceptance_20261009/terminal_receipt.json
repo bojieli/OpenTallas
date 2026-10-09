@@ -1,0 +1,79 @@
+{
+  "name": "md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx",
+  "status": "NEEDS_RTL",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx",
+  "reason": "TT 36.94 / FF 0.56 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0); checks failed: TC_electrical_CTSleaf16_directlocal512captures_PG_actualrow",
+  "failed_checks": [
+    "TC_electrical_CTSleaf16_directlocal512captures_PG_actualrow"
+  ],
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/routes/md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/routes/md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/work/orfs/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/base/5_2_route.json"
+    ],
+    "ff_ps": 0.56,
+    "clock_periods_ps": {},
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/routes/md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/work/orfs",
+    "post_sdc": [
+      "physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -222.18,
+    "ss_sensitivity_tns_ps": -34001.2,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/routes/md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/corner_sta.json",
+    "ss_ps": 36.94,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/routes/md6_lookup_localcapture_ctsphase_9b387eb78_tc_cx/work/orfs|0|ae0410",
+      "at": "2026-10-09T05:59:00-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 519,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 519,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 36.94,
+      "ff": 0.56,
+      "errors": [],
+      "ioref": {
+        "tt": {},
+        "ff": {}
+      },
+      "tt_i2r": 279.85,
+      "tt_out": 36.94,
+      "ff_i2r": 41.1,
+      "ff_out": 0.56,
+      "ff_r2r": 35.14,
+      "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-ctsphase-9b387eb78-tc-cx/cl/routed_ioref.a1.json",
+      "tt_resta_raw": 36.94,
+      "ff_resta_raw": 0.56
+    },
+    "route_sdc_clock": {
+      "ss_ps": 36.94,
+      "ff_ps": 0.56
+    }
+  },
+  "collected_at": "2026-10-09T13:02:31.632992+00:00",
+  "disposition": "Preserve failed custom-check verdict; owner collecting exact electrical/clock/geometry subcheck. No unchanged requeue or timing-only CLOSED."
+}

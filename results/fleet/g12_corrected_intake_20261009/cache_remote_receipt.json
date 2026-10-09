@@ -1,0 +1,86 @@
+{
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "source_manifest": {
+    "commit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+    "files": {
+      "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv": "dbf07403ab5009f6e4f01c97ade3afcbc0523fd0cf9820744bfb1e137d11a96b",
+      "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv": "bc5b20517bc8ac2e59c571aef83ed0aa30cccf4fba996bce0abcf0dc1b202802",
+      "physical/qwen_die_masters/cfg/hgi_att_rows_g12_120.env": "ba45adbe2a3600474f7e6d799c2777cf3fba1627ed2b0a6210f21340f5b80ac0",
+      "physical/qwen_die_masters/cfg/hgi_att_rows_g12_140.env": "fe9a848cc403ba0fc9a346b51aa20bc94d2532d26044f3912f75d3836110e72e"
+    }
+  },
+  "items": [
+    {
+      "name": "hgi-att-g12-120-187a8471c-tc-cx",
+      "sourcecommit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+      "recipe": {
+        "top": "ot_hgi_att_row_sources_p",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv",
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "cache_key": "3c28e0d89d1b7968adc7e10a",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 10,
+        "reg_to_out_max": 16,
+        "reg_to_out_example": "c_id_r",
+        "cells": 6128,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "top": "ot_hgi_att_row_sources_p",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_row_sources_p: registered boundary (in->reg 10, reg->out 16 levels)"
+      }
+    },
+    {
+      "name": "hgi-att-g12-140-187a8471c-tc-cx",
+      "sourcecommit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+      "recipe": {
+        "top": "ot_hgi_att_row_sources_p",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources.sv",
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "cache_key": "3c28e0d89d1b7968adc7e10a",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 10,
+        "reg_to_out_max": 16,
+        "reg_to_out_example": "c_id_r",
+        "cells": 6128,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "cached": true,
+        "top": "ot_hgi_att_row_sources_p",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_row_sources_p: registered boundary (in->reg 10, reg->out 16 levels)"
+      }
+    }
+  ],
+  "host": "ot-pve1",
+  "admission_reservation_GiB": 1
+}
