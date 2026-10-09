@@ -14622,3 +14622,8 @@ def dsrom_mtp_p2_primary_shared_model():
 def dsrom_hc_seed_homes_model(owner_root):
     from dsrom_hc_seed_homes import model
     return model(owner_root)
+
+
+def dsrom_mtp_p2_prefix_arithmetic_model():
+    from dsrom_mtp_p2_prefix_arithmetic_model import model
+    return model()

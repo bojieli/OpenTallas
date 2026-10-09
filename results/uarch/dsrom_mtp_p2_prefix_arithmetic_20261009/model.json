@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.dsrom.mtp-p2-prefix-arithmetic.v1",
+  "adopted": false,
+  "shape": {
+    "rank_values": 1280,
+    "flits_per_expert": 80,
+    "experts": 3,
+    "lanes": 16,
+    "contexts": 1
+  },
+  "arithmetic": "RN(RN(RN(+0,E0),E1),E2), each E is BF16-rounded W2 widenedFP32",
+  "primitive": {
+    "master": "ot_v41_fadd",
+    "CUT": "1_0111_1011",
+    "SPLIT9": 0,
+    "latency_cycles": 8,
+    "primitive_II": 1,
+    "clock_domain": "stream",
+    "clock_GHz": 1.2,
+    "contextual_timing_qualified": false
+  },
+  "MACs_per_cycle": 0,
+  "FP32_adds_per_issue": 16,
+  "intensity": {
+    "adds_per_input_byte": 0.25,
+    "actual_consumer_II_upper": 17
+  },
+  "memory": {
+    "accumulator_SRAM": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macros": 3,
+    "word_bits": 768,
+    "protected_bits": 576,
+    "live_words": 80,
+    "port_read_bytes_per_active_cycle": 96,
+    "port_write_bytes_per_active_cycle": 96,
+    "arithmetic_read_payload_bytes_per_active_cycle": 64
+  },
+  "protection": {
+    "SECDed_slices": 8,
+    "code": "SECDED72",
+    "decode_cycles": 2,
+    "encode_cycles": 1,
+    "UE": "poison transaction; no subsequent output",
+    "control": "duplicated identity, expert index and word state; mismatch fault"
+  },
+  "boundary": {
+    "input_protected_bits": 576,
+    "output_protected_bits": 576,
+    "identity_bits": 74,
+    "word_bits": 7,
+    "expert_bits": 9,
+    "credit_depth": 1
+  },
+  "replicas": {
+    "prefix_engines": 20,
+    "adder_lanes_per_engine": 16
+  },
+  "mux_demux": {
+    "accumulator_first_input": "constant +0 only for E0; SRAM otherwise",
+    "within_word_order": "three expert-major stages, no pre-sum/copy-first shortcut"
+  },
+  "fanout": {
+    "clock_adders": 16,
+    "identity_sinks": 1
+  },
+  "routing": {
+    "input_tracks": 671,
+    "output_tracks": 671,
+    "channel_capacity": null
+  },
+  "area": {
+    "slot_um": [
+      500,
+      500
+    ],
+    "raw_SRAM_um2": 11674.73088,
+    "reference_other_adder_area_um2": 385.524,
+    "adder_planning_multiplier": 2,
+    "lane_adder_planning_um2": 12336.768,
+    "whole_logic_planning_upper_um2": 90000,
+    "planning_total_utilization": 0.407,
+    "measured_actual_area": null,
+    "physical_slot_fit_qualified": false
+  },
+  "latency": {
+    "one_flit_service_cycles_upper": 17,
+    "all_three_experts_cycles_upper": 4080,
+    "final_read_decode_output_cycles_upper": 480,
+    "unoverlapped_cycles_upper": 4560,
+    "unoverlapped_us_at1p2GHz": 3.8,
+    "transport_overlap_credit": 0,
+    "composition": "candidate upper bound replaces unpriced A-prefix consumer; add actual primary shared-last and board/CDC costs separately"
+  },
+  "integration": {
+    "default_enabled": false,
+    "predecessor_transport": "PRIMARY_SHARED=1 three-bank protected ordered rows",
+    "contribution_low16_zero_required": true,
+    "pending": [
+      "real released contribution gate and signedzero control",
+      "actual consumer decode/UE correction and state-injection gate",
+      "native prefix publisher and existing transaction namespace",
+      "contextual mapped master and clock/pin budgets"
+    ]
+  }
+}
