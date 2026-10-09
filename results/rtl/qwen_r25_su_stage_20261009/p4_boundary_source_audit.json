@@ -1,0 +1,61 @@
+{
+  "schema": "opentallas.qwen_r25_p4_source_boundary_audit.v1",
+  "source_commit": "6c101d9c698da55054021376a614ba9d933e685d",
+  "status": "INCOMPLETE_PRODUCTION_BINDING",
+  "scope": "Source review and derived capacity requirements only; no RTL p4, bandwidth, physical timing or rate qualification",
+  "verify_start_position": 8191,
+  "verify_positions": [8191, 8192, 8193, 8194],
+  "query_valid_kv_lengths": [8192, 8193, 8194, 8195],
+  "minimum_kv_rows": 8195,
+  "row_group_size": 32,
+  "row_group_capacity": 8224,
+  "last_row_group": {"first_row": 8192, "live_rows_longest_query": 3, "padding_rows": 29},
+  "last_group_live_rows_per_query": [0, 1, 2, 3],
+  "kv_capacity": {
+    "tp": 4, "local_kv_heads": 2, "head_dim_bytes": 128, "layers": 36,
+    "padded_kv_bytes_per_die": 151584768,
+    "ar8192_kv_bytes_per_die": 150994944,
+    "additional_kv_bytes_per_die": 589824
+  },
+  "buffer_requirements": {
+    "flat_padded_p4_scores_fp32_words": 263168,
+    "flat_exact_causal_p4_scores_fp32_words": 262192,
+    "existing_minimum_bench_vm_words": 262144,
+    "padded_score_overflow_words": 1024,
+    "exact_causal_score_overflow_words": 48,
+    "required_resolution": "A larger production allocation or explicitly scheduled slot reuse/streaming; the AR stage buffer is insufficient evidence"
+  },
+  "attention_tile": {
+    "source": "rtl/hdc/v41x/ot_hdc_v41x_attn_die_half_b.sv",
+    "issue_elements": 32,
+    "element_bits": 18,
+    "issue_packet_bits": 576,
+    "mask_obligation": "The broadcast operand pad is shared across query/head lanes. Overall tail padding cannot replace each query's causal valid length. QK-norm remains FP32 into RoPE; Q rounds BF16 after RoPE, K rounds FP8 at append.",
+    "production_p4_mask_gate": "MISSING"
+  },
+  "kvs": {
+    "source": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv",
+    "row0_bits": 15,
+    "per_pc_sector_count_bits": 12,
+    "pc_mask_bits": 32,
+    "tag_bits": 10,
+    "sector_bytes": 32,
+    "read_group_sectors": 4,
+    "padding_drop": "bj >= nsec is suppressed; nsec is a common per-PC sector limit, not a query-specific token-row bound",
+    "longest_query_live_kv_bytes_per_die": 4195840,
+    "uniform_sector_equivalent_per_pc_per_stack": 1024.375,
+    "tail_sector_obligation": "With simple continuous four-stack/32-PC sector striping, 12 PCs per stack need one extra sector. An actual bank-aware Qwen mapping and partial-sector/row masks must prove this; a padded uniform stream needs downstream validity and allocated padding.",
+    "qwen_pc_mapping_and_tail_gate": "MISSING",
+    "position_width_obligation": "Retain full query/cache position in address and owner metadata; the 10-bit transport tag is not a global row index"
+  },
+  "production_su": {
+    "quarter_source": "physical/hbm_accel_die_views/su/rtl/hfd_su.sv",
+    "generator_source": "tools/hbm_hub_quarter_gen.py",
+    "quarter_scope": "Physical envelope around 192 light lanes; lane input rotations and XOR output merge. Generator explicitly states controller and die-port protocol are not built.",
+    "parent_source": "rtl/hbm_accel/su/ot_hbm_accel_su_parent_exec.sv",
+    "parent_scope": "N1024/M256 source-bound minimum HCpost binder accepts only four exact ORIGINAL_0..3 program words; it does not accept these Qwen kernels",
+    "parent_vm_word_bound": 262144,
+    "qwen_functional_quarter_dispatch_gate": "MISSING"
+  },
+  "measured_stage_limit": "Committed N64/M16 c12 DPI stage passes cover isolated AR mathematical tensors. They do not establish p4 capacity, causal masking, rollback, production quarter dispatch, clock closure or rate."
+}
