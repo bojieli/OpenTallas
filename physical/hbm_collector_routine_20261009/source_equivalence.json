@@ -1,0 +1,31 @@
+{
+  "baseline_commit": "da3b6c691",
+  "RTL_byte_identical_to_baseline": true,
+  "RTL_sources_sha256": {
+    "rtl/hbm_accel/tu/ot_hcoll_port.sv": "663135f1e9942fe6458b5fd92eff87862b3f54761f94a6c945a375eb9ee15b18",
+    "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv": "1eea604e9bec0fa1a4ad539e7bd39111befc7ff3230f257511009223eb3e9b75",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3"
+  },
+  "recipe_change": "maxfanout32\u21928 physical buffering only",
+  "unchanged": {
+    "period_ps": 833,
+    "internal_uncertainty_ps": [
+      60,
+      25
+    ],
+    "H1_output_hold_uncertainty_ps": 50,
+    "outline_um": [
+      480,
+      540
+    ],
+    "PD": 0.45,
+    "halo_um": [
+      4,
+      10
+    ],
+    "macro_count": 18,
+    "RTL_cycles": 0
+  },
+  "adopted": false,
+  "route_launched": false
+}
