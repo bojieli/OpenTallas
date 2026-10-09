@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_prefetch #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64,MAXREAD=15,STREAM_PS=1024,KEYLEG=24,CODE_MUT=0);
+module tb_hbm_svc_iks_prefetch #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64,MAXREAD=15,STREAM_PS=1024,KEYLEG=24,CODE_MUT=0,PORTAL=0);
 reg clk=0,sclk=0,efck=0,rst_n=0;always #512 clk=~clk;
 always begin #416 efck=1;#417 efck=0;end
 integer score_phase_ps=0;
@@ -9,12 +9,30 @@ reg[127:0] ed=0;wire[31:0]kv,krdy,kwe,rv,rrdy;wire[959:0]addr;wire[127:0]len,bea
 wire[8191:0]data_;wire[8791:0]lines;wire done,fault;wire[7:0]credit;
 wire phy_clk,phy_rst_n;wire[8191:0]rawdata;wire[8191:0]wdata;wire[1023:0]wstrb;wire[31:0]wdone;
 assign data_=rawdata ^ ((mut==1 && rv[5]) ? (8192'd1 << (5*256)) : 8192'd0);
-ot_hbm_svc_core #(.IKS(1),.IK_DEPTH(KEY_DEPTH),.KNO(MAXREAD),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
+ot_hbm_svc_core #(.IKS(1),.IK_PREFETCH(PORTAL),.IK_DEPTH(KEY_DEPTH),.KNO(MAXREAD),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(phy_clk),.phy_rst_n(phy_rst_n),.k_v(kv),.k_rdy(krdy),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(wdata),.k_wstrb(wstrb),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
-.wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault));
+.wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault),.ip_v(portal_v),.ip_d(portal_d),.ip_fault(PORTAL?sink_fault:1'b0),.ip_take(portal_take));
 ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(REF_MODE),.PULLIN(PULL),.PULLIN_BATCH(BATCH),.MEM_MODE(1),.CLK_PS(STREAM_PS)) mem(
 .clk(phy_clk),.rst_n(phy_rst_n),.req_v(kv),.req_rdy(krdy),.req_addr(addr),.req_len(len),.req_tag(tag),.req_we(kwe),.req_wdata(wdata),.req_wstrb(wstrb),.wr_done(wdone),.rsp_v(rv),.rsp_rdy(rrdy),.rsp_tag(rtag),.rsp_beat(beat),.rsp_data(rawdata));
+reg portal_req_v=0,portal_receipt_r=0;
+reg[98:0]portal_req_d=0;
+wire portal_req_r,portal_receipt_v,source_fault,sink_fault,portal_v,portal_take;
+wire[98:0]portal_d;wire[72:0]portal_receipt_frame;
+wire[106:0]portal_rq_code;wire[80:0]portal_rc_code;
+wire[1:0]portal_rq_epoch,portal_rc_epoch,portal_release;
+reg receipt_seen=0;time receipt_time;
+integer actual_accepts=0;
+ot_hbm_index_prefetch_source source_mailbox(.clk(efck),.rst_n(rst_n),.req_v(portal_req_v),.req_d(portal_req_d),.req_r(portal_req_r),
+ .receipt_v(portal_receipt_v),.receipt_r(portal_receipt_r),.receipt_frame(portal_receipt_frame),.fault(source_fault),
+ .rq_w(portal_rq_code),.rq_epoch(portal_rq_epoch),.rc_w(portal_rc_code),.rc_epoch(portal_rc_epoch),.rc_fault(sink_fault),.rc_release(portal_release));
+ot_hbm_index_prefetch_sink sink_mailbox(.clk(clk),.rst_n(rst_n),.rq_w(portal_rq_code),.rq_epoch(portal_rq_epoch),
+ .ip_v(portal_v),.ip_d(portal_d),.ip_take(portal_take),.fault(sink_fault),.rc_w(portal_rc_code),.rc_epoch(portal_rc_epoch),.rc_release(portal_release));
+always@(posedge clk)if(portal_take)begin
+ actual_accepts=actual_accepts+1;
+ if(portal_d!==portal_req_d)$fatal(1,"portal admitted wrong descriptor");
+ $display("IKS_PORTAL actual_accepts=%0d frame73=%h at_ps=%0t",actual_accepts,portal_d[98:26],$time);
+end
 integer row0=4006;
 function automatic[29:0] kaddr(input integer pc,j);
  integer row,bank,col,bhi,blo,hi5;
@@ -86,13 +104,25 @@ if($value$plusargs("query_ns=%d",query_ns))begin end
 repeat(10)@(negedge clk);rst_n=1;
 #(phase*1000+3000);
 for(rep_=0;rep_<2;rep_=rep_+1)begin
- got=0;t=0;fin=0;query_ready=0;max_fifo=0;correction_seen=0;row0=4006+rep_*8;
+ got=0;t=0;fin=0;query_ready=0;max_fifo=0;correction_seen=0;receipt_seen=0;portal_receipt_r=0;row0=4006+rep_*8;
  req_beats=0;rsp_beats=0;req_stall=0;slot_stall=0;queued=0;max_queued=0;ref_head=0;scheduled_wait=0;return_wait=0;return_full=0;
- @(negedge efck);ed=0;ed[0]=1;ed[2:1]=2;ed[17:3]=15'(row0);ed[70:62]=342;launch=$time;
+ @(negedge efck);ed=0;
+ if(PORTAL)begin portal_req_d={73'(73'h12ab34001200345678+rep_),15'(row0),9'd342,2'd2};portal_req_v=1;end
+ else begin ed[0]=1;ed[2:1]=2;ed[17:3]=15'(row0);ed[70:62]=342;end
+ launch=$time;
  @(negedge efck);ed[0]=0;
  while(got<1368)begin
   @(negedge sclk);
-  if($time-launch>=query_ns*1000)query_ready=1;
+  if(PORTAL)begin
+   if(source_fault||sink_fault)$fatal(1,"prefetch mailbox fault");
+   if(portal_receipt_v&&!receipt_seen)begin
+    if(portal_receipt_frame!==portal_req_d[98:26])$fatal(1,"prefetch receipt identity");
+    if(actual_accepts!=rep_+1)$fatal(1,"receipt before actual core admission");
+    receipt_seen=1;receipt_time=$time;portal_receipt_r=1;portal_req_v=0;
+   end
+   if(receipt_seen&&!portal_receipt_v)portal_receipt_r=0;
+   if(receipt_seen&&$time-receipt_time>=query_ns*1000)query_ready=1;
+  end else if($time-launch>=query_ns*1000)query_ready=1;
   if(link_fault)$fatal(1,"coded crossing poisoned got=%0d",got);
   if(fault)$fatal(1,"svc fault got=%0d",got);
   t=t+1;if(t>2000000)$fatal(1,"protocol timeout got=%0d",got);
@@ -100,10 +130,11 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  query_ready=0;
  repeat(200)@(negedge clk);
  if(fifo_ne!=0)$fatal(1,"residual FIFO lines");
+ if(PORTAL&&(!receipt_seen||actual_accepts!=rep_+1))$fatal(1,"portal frame admission count");
  if(link_fault)$fatal(1,"coded crossing poisoned during drain");
  if((CODE_MUT==1||CODE_MUT==2)&&!correction_seen)$fatal(1,"missing correction witness");
  if(fault)$fatal(1,"fault during final credit drain");
- $display("IKS_PREFETCH rep=%0d phase_ns=%0d query_hold_ns=%0d keyleg=%0d code_mut=%0d correction_seen=%0d score_phase_ps=%0d lines=%0d max_fifo=%0d last_line_ns=%0.3f exposed_after_query_ns=%0.3f",rep_,phase,query_ns,KEYLEG,CODE_MUT,correction_seen,score_phase_ps,got,max_fifo,(lastline-launch)/1000.0,(lastline-launch-query_ns*1000)/1000.0);
+ $display("IKS_PREFETCH rep=%0d phase_ns=%0d query_hold_ns=%0d keyleg=%0d code_mut=%0d correction_seen=%0d score_phase_ps=%0d lines=%0d max_fifo=%0d last_line_ns=%0.3f exposed_after_query_ns=%0.3f",rep_,phase,query_ns,KEYLEG,CODE_MUT,correction_seen,score_phase_ps,got,max_fifo,(lastline-launch)/1000.0,(lastline-(PORTAL?receipt_time:launch)-query_ns*1000)/1000.0);
 end
 $display("PASS_HBM_SVC_IKS_PREFETCH");$finish;
 end
