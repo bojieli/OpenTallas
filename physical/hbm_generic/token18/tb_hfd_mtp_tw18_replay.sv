@@ -70,7 +70,7 @@ module tb_dshbm_dspark;
     // PRL 2 token reads); +define+HFD_MTP_XSEL feeds the selections from bench-side selectors (the die's hfd_router)
     localparam integer HM_FAST = `ifdef HFD_MTP_FAST 1 `else 0 `endif;
     localparam integer HM_XSEL = `ifdef HFD_MTP_XSEL 1 `else 0 `endif;
-    localparam integer HM_SPECF = `ifdef HFD_MTP_SPECF 1 `else 0 `endif;   // hgi-takeover: pipelined spec state (ot_dshbm_spec_state_f)
+    localparam integer HM_SPECF = `ifdef HFD_MTP_SPECF2 2 `elsif HFD_MTP_SPECF 1 `else 0 `endif;   // hgi-takeover: 1 = ot_dshbm_spec_state_f, 2 = _r
     wire x_v, x_draft; wire [KV*IW-1:0] x_ids; wire [2:0] x_col; reg u_flush_d = 0;
     ot_hfd_mtp_core #(.B(B), .PMAX(PMAX), .TW(TW), .NL(NL), .NST(3), .MAXPOS(MAXPOS), .W(W), .WR(WR), .SR(SR),
         .TR(16), .NG(4), .NSRC(4), .RLOG(16'h0111), .CKMAX(1 << 16), .AW(AW), .LP(LP), .FLAT(7), .NEXP(NEXP),

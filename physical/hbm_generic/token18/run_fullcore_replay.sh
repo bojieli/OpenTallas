@@ -16,7 +16,7 @@ print(" ".join(f"-Ptb_dshbm_dspark.{k}={v}" for k, v in p.items()))
 PY
 )
 S="rtl/gpu/dshbm/ot_dshbm_accept_port.sv rtl/gpu/dshbm/ot_dshbm_argmax.sv rtl/gpu/dshbm/ot_dshbm_expert_union.sv
- rtl/gpu/dshbm/ot_dshbm_spec_state.sv rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv
+ rtl/gpu/dshbm/ot_dshbm_spec_state.sv rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv rtl/gpu/dshbm/ot_dshbm_spec_state_r.sv rtl/gpu/dshbm/ot_dshbm_dspark_ctl.sv
  rtl/gpu/dshbm/ot_dshbm_dspark_top.sv rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
  rtl/experimental/ds_mtp_accept_20261003/ot_hdc_mtp_accept_guarded.sv rtl/hdc/ot_hdc_accept.sv
  rtl/gpu/ot_gpu_router_topk.sv rtl/gpu/ot_gpu_router_topk_f.sv rtl/gpu/ot_gpu_expert_fetch.sv rtl/hdc/kv/ot_hdc_hbm_model.sv
