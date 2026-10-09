@@ -14,7 +14,7 @@ module tb_hgi_quant_decode;
  wire take=v&&(!gen||legal);wire e4=gen&&hdr[123:118]==6;
  ot_hfd_actquant_m #(.MR(1),.MLAT(6)) refa(clk,rst_n,take&&!e4,gen ? hdr[123:118]==5 : fp4,x,av,q,e,ay,af);
  ot_hgi_fp4qdq refb(clk,rst_n,take&&e4,x,bv,by,bf);
- reg [14:0] rv=0,rf=0;reg [511:0] ry[0:14];integer i,cyc,n=0,decodes=0;reg [31:0] rnd;
+ reg [14:0] rv=0,rf=0;reg [511:0] ry[0:14];integer i,cyc,block_size,n=0,decodes=0;reg [31:0] rnd;
  always @(posedge clk) begin
   if(!rst_n) begin rv<=0;rf<=0;end
   else begin rv<={rv[13:0],bv};rf<={rf[13:0],bf};end
@@ -50,7 +50,15 @@ module tb_hgi_quant_decode;
  if(cyc%991==0)x[63:32]=32'h7fc12345;
  end
  @(posedge clk);#0.01;v=0;repeat(40)@(negedge clk);
- if(n<5000||decodes==0)$fatal(1,"COVERAGE outputs=%0d illegal=%0d",n,decodes);
+ // Binding review-0637: v1 E4M3 block set is exactly {16}.
+ for(block_size=0;block_size<256;block_size=block_size+1)begin
+ @(posedge clk);#0.01;v=1;gen=1;hdr=0;
+ hdr[127:124]=4;hdr[123:118]=6;hdr[71:64]=block_size;
+ x={32{32'h3f800000}};
+ end
+ @(posedge clk);#0.01;v=0;repeat(40)@(negedge clk);
+ if(n!=5410||decodes!=300)$fatal(1,"COVERAGE outputs=%0d illegal=%0d",n,decodes);
+ $display("CF-QDQ LEGAL BLOCK SET PASS accepted=16 rejected=255");
  $display("CF-QDQ LOCKSTEP PASS outputs=%0d illegal_decode=%0d mutant=%0d",n,decodes,`MUTANT);$finish;
  end
 endmodule
