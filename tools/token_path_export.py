@@ -1430,15 +1430,33 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
+OPTIONAL_TARGETS = ("qwen_hbm",)
+
+
+def target_functions(namespace):
+    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_ds=namespace["hbm"])
+    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_ds=namespace["hbm_mtp"])
+    for name in OPTIONAL_TARGETS:
+        if callable(namespace.get(name)):
+            fns[name] = namespace[name]
+            if callable(namespace.get(name + "_mtp")):
+                mtps[name] = namespace[name + "_mtp"]
+    return fns, mtps
+
+
+def optional_mtp_qualified(record):
+    """A characterization tau cannot establish deployment throughput."""
+    return bool((record.get("qualification") or {}).get("deployment_qualified") is True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--viz-dir", type=Path, default=None, help="also write data/ + geometry snapshots for the views here")
-    ap.add_argument("--only", default="qwen_rom,ds_rom,hbm_ds")
+    ap.add_argument("--only", default=None, help="comma-separated targets; default: all implemented targets")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    fns = dict(qwen_rom=qwen, ds_rom=ds_rom, hbm_ds=hbm)
-    mtps = dict(ds_rom=ds_rom_mtp, hbm_ds=hbm_mtp)
+    fns, mtps = target_functions(globals())
     index = []
 
     def write(name, rec):
@@ -1451,9 +1469,13 @@ def main():
             shutil.copy(p, dd / p.name)
         return p
 
-    for k in a.only.split(","):
+    for k in (a.only.split(",") if a.only else fns):
         rec = fns[k]()
         mrec = mtps[k](rec) if k in mtps else None
+        if mrec and k in OPTIONAL_TARGETS and not optional_mtp_qualified(mrec):
+            mrec = None
+            rec["mtp"] = dict(available=False, deployment_qualified=False,
+                              reason="speculative characterization has not passed deployment qualification")
         if mrec:
             t = mrec["totals"]
             rec["mtp"] = dict(available=True, file=f"{k}_mtp.json", tok_s=t["tok_s_published"], tau=t["tau"],
@@ -1466,7 +1488,8 @@ def main():
             for vk, vv in (mrec.get("mtp_variants") or {}).items():
                 print(f"   {vk}: {vv['reproduces']}")
         else:
-            rec["mtp"] = qwen_mtp_note()
+            rec.setdefault("mtp", qwen_mtp_note() if k == "qwen_rom" else
+                           dict(available=False, reason="no qualified speculative composition implemented"))
         p = write(k, rec)
         t = rec["totals"]
         print(f"{k}: {t['cycles']:,.1f} cycles = {t['us']} us = {t['tok_s']} tok/s (published {t['tok_s_published']}); "
