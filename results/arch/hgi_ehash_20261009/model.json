@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hgi-ehash-model.v1",
+  "default_generic": false,
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "integer_hash_products": 8,
+  "memory_bytes_per_cycle": {
+    "constants": 0,
+    "row_output": 4
+  },
+  "boundary_bits_per_cycle": {
+    "token": 17,
+    "selected_row": 32,
+    "constants": 1792
+  },
+  "constants_note": "typed validation tuple only; not a normative serialized B ABI",
+  "history_bits": 595,
+  "replica_mux_cost": "48x29 selected-layer rows, then24-row serialized mux",
+  "routing": {
+    "signal_bits": 1900,
+    "two_layer_pin_spread": true,
+    "channel_tracks_required": 950,
+    "channel_tracks_capacity": 2400,
+    "slot_um": [
+      400,
+      300
+    ]
+  },
+  "floorplan": {
+    "area_slot_um2": 120000,
+    "utilization_target": 0.45,
+    "measured_area_pending": true
+  },
+  "latency": {
+    "history_window": 1,
+    "replay_window_to_shipped_hash": 4,
+    "shipped_hash": 12,
+    "row_emit": 24,
+    "total_no_backpressure": 41,
+    "original_window_hash": 16,
+    "added_serialization_cycles": 25,
+    "token_path_priced_cycles": 25
+  },
+  "approval_gate": "exact DS lockstep + CF-EHASH + mutant + TT/FF/DRC; no generic-B claim"
+}

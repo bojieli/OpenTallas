@@ -432,6 +432,12 @@ def hbm_ha2_fixedpin_model():
     return model()
 
 
+def hgi_ehash_binding_model():
+    """Approved HGI EHASH decode/history around immutable DS shipped hash."""
+    from hgi_ehash_model import model
+    return model()
+
+
 def mtp_hist_pipeline_contract_model():
     """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
     from mtp_hist_pipeline_model import model
