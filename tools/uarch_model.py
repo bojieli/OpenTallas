@@ -14330,3 +14330,28 @@ def hbm_collective_typed_receipt_model():
         ABI_grant='start_valid/ready carries fullframe andbaseword under exclusive stable VM readlease after allproducer writeACK+same-sectorvisibility; service_fault separate, service_quiet cold/warmdrain',
         protection='full owner/op/PC/query/session SECDED perstoredsector; duplicate frame/bitmap/count/state detection before release',
         open=['productionTUdescriptor andVM arbitration/readgrant','capturetuple actualnative binding and program-consumer role','SS/FF realinterface budget and fullnative exactgate'],physical_qualified=False)
+
+def hbm_collective_query_release_join_model():
+    """Minimum actual query-release gap, without speculative guard expansion."""
+    frame=74+64+12+2+24
+    return dict(candidate='HBM_REAL_NORM_CAPTURE_QUERY_RELEASE_JOIN',default_enabled=False,
+        MACs_per_cycle=0,FP32_words=4096,quarters=4,quarter_words=1024,
+        VM_base_word=0,VM_namespace_words=262144,VM_request_bits=337,VM_response_bits=273,
+        producer_dependency='allfour matching arithmetic writeACK andsame-sector visibility precede actualexclusive VM readgrant',
+        norm_word_contract='BF16 rounding already represented in32bit native floatwords; collector preserveswords',
+        metadata_frame_bits=frame,frame_pack='owner74,operation64,PC12,query2,session24',
+        actual_SRAM_request_to_response_edges=4,hub_first_capture_edge=5,
+        hub_pipeline_total_edges_unchanged=True,
+        hub_first_capture='explicitfirst existingHUBW register; residualHUBW-1 stages retain total latency',
+        hub_capture_receipt_register_bits_per_endpoint=2*(frame+16+1),
+        receipt_unique_index_bitmap_bits=256,receipt_counter_bits=10,
+        receipt_header_bits=frame,receipt_state_bits=2,receipt_fault_bits=1,
+        receipt_FF_floor_bits=256+10+frame+2+1,
+        receipt_area_FF_floor_um2=(256+10+frame+2+1)*.2916,
+        publication_reader_operation_bits=64,publication_reader_operation_FF_delta=32,
+        SRAM_protection_changes=0,auth_epoch_guard_encoding_changes=0,
+        release_dependency='256unique matching actualhubFFcaptures +zeroSRAM/capturepending, matchingreleaseheader, publicationquiet',
+        query_finished_dependency='typedreceipt held untilproduceracknowledges same74bit owner/query; localsoftmaxPV/SV receipt remainsseparate requiredconsumer',
+        latency_cost='>=1coreedge afterfinalactualcapture andactualpublicationquiet; no dependency overlapcredit',
+        final_physical_policy='latestOct8 ownerOptionB TTsetup>=0 FFhold>=0 DRC0 SSreported, actualclock/60ps25psunchanged',
+        integration_open=['compilerTUdescriptorproducer and actualVMreadarbiterleasegrant','actualfourquartertyped normconsumerrole binding','softmaxlocalPV/SV capture neededbeforewholequeryrelease','minimumrealproducer-consumerjoin exactgate','Claude structuralreview beforeanyroute'],physical_qualified=False)
