@@ -160,7 +160,27 @@ L_ = "rtl/hbm_accel/tu/link_retry_sram_20261008"
 CASES["coll_vm_pub"] = dict(rtl=[f"{D}/ot_hbm_collective_vm_publication_rb.sv", "rtl/common/ot_secded.sv", f"{L_}/ot_hbm_replay_sram.sv",
      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"], tb=cvp_tb,
      top="tb_hbm_collective_vm_publication", ok="PASS_ALL", neg_defines=["OT_HBM_PUBLICATION_MUT_QID"], neg_ok="quarter read ownership lost")
+def artok(mode, w):
+    """tools/hbm_native_ar_token_join_gate.py (4 positive vectors, MUT and owner-17 truncation mutants) on the wrapper"""
+    import os, json as _j
+    w = Path(w); w.mkdir(parents=True, exist_ok=True)
+    src = ["rtl/hbm_accel/control/ot_hbm_token_loop.sv", f"{D}/ot_hbm_native_ar_token_join_rb.sv", "rtl/hbm_accel/qwen/r25/ot_qwen_r25_cmdproc18.sv",
+           "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv", "rtl/common/ot_sc_pfifo.sv", "rtl/test/hbm_accel/tb_hbm_native_ar_token_join.sv"]
+    env = dict(os.environ, OT_ARTOK_SRC=" ".join(src))
+    r = subprocess.run([sys.executable, str(R / "tools/hbm_native_ar_token_join_gate.py"), "--work", str(w / "g"), "--out", str(w / "g.json")],
+                       capture_output=True, text=True, env=env, cwd=R)
+    (w / "g.log").write_text(r.stdout + r.stderr)
+    try: c = _j.loads((w / "g.json").read_text())["cases"]
+    except Exception: print((r.stdout + r.stderr)[-1200:]); print("RB_ar_token_join_BENCH_ERROR no record"); return 2
+    pos = [x for x in c if not x["mutant"]]; neg = [x for x in c if x["mutant"]]
+    for x in c: print(x["mutant"], x["returncode"], x["output"][-160:].strip())
+    if mode == "pos":
+        if pos and all(x["returncode"] == 0 for x in pos): print("RB_ar_token_join_PASS"); return 0
+        print("RB_ar_token_join_BENCH_ERROR positive"); return 2
+    if neg and all(x["returncode"] != 0 for x in neg): print("RB_ar_token_join_NEG_FAIL"); return 1
+    print("RB_ar_token_join_BENCH_ERROR mutant escaped"); return 2
 def run(key, mode, w):
+    if key == "ar_token_join": return artok(mode, w)
     if key == "token_loop": return tokloop(mode, w)
     if key == "mtp_emit_queue": return mtpemit(mode, w)
     c = CASES[key]; w = Path(w); w.mkdir(parents=True, exist_ok=True)
