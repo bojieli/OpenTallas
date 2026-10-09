@@ -3128,6 +3128,10 @@ def measured_resta(j, m):
 # verdict; the routed insertion goes to measured_insertion.json as the block's die-plan value; the post-route hold ECO
 # gets the same SDC as its last post-SDC.  Spec "routed_ioref": false opts out.
 IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
+# FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
+# T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
+# instead of returning a re-STA cached under the old one.
+IOREF_VERSION = "ae0410"
 
 
 def routed_ioref(j, m):
@@ -3138,7 +3142,7 @@ def routed_ioref(j, m):
     orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
     if not orfs:
         return None
-    key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}"
+    key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}|{IOREF_VERSION}"
     rbj = j.get("rebudget") or {}
     if rbj.get("sdc"):
         key += f"|{rbj['rb']}"
@@ -3166,6 +3170,7 @@ def routed_ioref(j, m):
         errs = (res["setup_tt"].get("errors") or []) + (res["hold_ff"].get("errors") or []) + \
             [res[k]["error"] for k in ("setup_tt", "hold_ff") if res[k].get("error")]
         io = dict(tt=res["setup_tt"].get("ioref") or {}, ff=res["hold_ff"].get("ioref") or {})
+        rr["ioref_edge"] = dict(tt=res["setup_tt"].get("ioref_edge") or {}, ff=res["hold_ff"].get("ioref_edge") or {})
         rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
                   tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
                   ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
