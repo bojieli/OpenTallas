@@ -17,6 +17,10 @@ module tb_hgi_quant_vm_transport;
  .generic_enable(1'b1),.legacy_fp4(1'b0),.header(dut.header),.x(dut.x),
  .vo(ref_vo),.y(ref_y),.fault(ref_fault),.decode_fault(ref_dec));
  integer rbeat=0;
+ reg use_vector=0;reg [1023:0] vx;reg [511:0] vy;
+ reg [1023:0] gi8[0:48],gi4[0:48],gie[0:85];
+ reg [511:0] go8[0:48],go4[0:48],goe[0:85];
+ string vectors;
  always @(negedge clk)begin
   cycles=cycles+1;req_r=!pv&&!rsp_v&&(cycles%7!=0);
   if(req_v&&req_r)begin
@@ -43,7 +47,7 @@ module tb_hgi_quant_vm_transport;
  end
  always @(posedge clk)begin
   if(rsp_v&&rsp_r)begin if(rsp[256])acks=acks+1;#0.01;rsp_v=0;end
-  if(ref_vo)begin
+  if(ref_vo&&!use_vector)begin
    for(integer k=0;k<32;k=k+1)
     if(rbeat*32+k<current_n)expected[4096+rbeat*32+k]={ref_y[k*16+:16],16'd0};
    rbeat=rbeat+1;
@@ -55,7 +59,10 @@ module tb_hgi_quant_vm_transport;
    while(!ready)@(negedge clk);
    current_n=size;rbeat=0;writes=0;acks=0;reads=0;
    for(integer i=0;i<8192;i=i+1)begin vm[i]=32'hdeadbeef;expected[i]=32'hbadbad00;end
-   for(integer i=0;i<size;i=i+1)vm[i]=32'h3f800000+((i%8)<<21);
+   for(integer i=0;i<size;i=i+1)vm[i]=32'h3f800000+((i/32%64)<<23)+((i%8)<<19);
+   if(use_vector)for(integer i=0;i<size;i=i+1)begin
+    vm[i]=vx[i*32+:32];expected[4096+i]={vy[i*16+:16],16'd0};
+   end
    h=0;a=0;o=0;h[127:124]=4;h[123:118]=op;h[99:93]=17;
    if(op==6)h[71:64]=16;
    a[1:0]=1;a[67:48]=size;a[87:68]=1;
@@ -73,6 +80,16 @@ module tb_hgi_quant_vm_transport;
  initial begin
   repeat(4)@(negedge clk);rst_n=1;
   run(4,32);run(5,64);run(6,16);run(6,48);run(4,2048);
+  if($value$plusargs("VECTORS=%s",vectors))begin
+   $readmemh({vectors,"/fp8_e8m0.in.hex"},gi8);$readmemh({vectors,"/fp8_e8m0.out.hex"},go8);
+   $readmemh({vectors,"/fp4_e8m0.in.hex"},gi4);$readmemh({vectors,"/fp4_e8m0.out.hex"},go4);
+   $readmemh({vectors,"/fp4_e4m3.in.hex"},gie);$readmemh({vectors,"/fp4_e4m3.out.hex"},goe);
+   use_vector=1;
+   for(integer i=0;i<49;i=i+1)begin vx=gi8[i];vy=go8[i];run(4,32);end
+   for(integer i=0;i<49;i=i+1)begin vx=gi4[i];vy=go4[i];run(5,32);end
+   for(integer i=0;i<86;i=i+1)begin vx=gie[i];vy=goe[i];run(6,32);end
+   vx=gie[0];vy=goe[0];run(6,16);use_vector=0;
+  end
   // Illegal partialUEblock must fault with zero VM requests.
   while(!ready)@(negedge clk);
   begin reg [127:0]h;reg[255:0]a,o;

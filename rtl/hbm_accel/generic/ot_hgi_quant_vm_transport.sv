@@ -42,7 +42,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  ({1'b0,o[47:8]}+o[67:48]<=a[47:8]));
  assign ready=ENABLE&&rst_n&&!busy;
  assign drained=!busy&&!pending&&reserved==0;
- wire write_offer=queued!=0 && (read_words>=n || reserved>=DEPTH);
+ wire write_offer=queued!=0 && (read_words>=n || (reserved>=DEPTH && MUTANT!=3));
  wire read_offer=read_words<n && (read_part!=0 || (reserved<DEPTH || MUTANT==3));
  assign req_v=ENABLE&&rst_n&&busy&&!bad&&!pending&&!launch&&(write_offer||read_offer);
  wire [31:0] word_addr=write_offer ? obase+finished*32+write_part*8 : abase+read_words;
