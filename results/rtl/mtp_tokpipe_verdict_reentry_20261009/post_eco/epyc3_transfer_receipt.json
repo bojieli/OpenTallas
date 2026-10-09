@@ -1,0 +1,31 @@
+{
+  "schema": "opentallas.immutable_run_transfer.v1",
+  "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "observed_at": "2026-10-09T13:51:29.509919+00:00",
+  "source_host": "ot-epyc1tb",
+  "destination_host": "ot-epyc3",
+  "source": {
+    "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+    "tree_sha256": "d461a78c16f464215bd5e4cb6681de0b2c633e473c00f07d8f3b8f7b1f52c0e8",
+    "files": 13248,
+    "dirs": 1321,
+    "links": 1,
+    "bytes": 7150454386
+  },
+  "destination": {
+    "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+    "tree_sha256": "d461a78c16f464215bd5e4cb6681de0b2c633e473c00f07d8f3b8f7b1f52c0e8",
+    "files": 13248,
+    "dirs": 1321,
+    "links": 1,
+    "bytes": 7150454386
+  },
+  "equal": true,
+  "transfer_exit_status": 0,
+  "transfer": "remote tar stream preserving file modes and symlinks; same absolute destination path",
+  "verification": "SHA256 of sorted JSON [relative_path,kind,mode,content_SHA256_or_link_target] records; includes empty directories",
+  "original_preserved": true,
+  "scope": "unstarted READY collect stage_idx7 only; no compute restart or independent collection",
+  "qualification_receipt_commit": "af96e2c0a",
+  "operator": "fleet_closure owns same-job locked rehome and transfer-hold release"
+}

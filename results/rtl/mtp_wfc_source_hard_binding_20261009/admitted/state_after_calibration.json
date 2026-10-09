@@ -1,0 +1,23 @@
+{
+  "job": "mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+  "observed_status": "RUNNING",
+  "host": "ot-epyc3",
+  "stage_idx": 3,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-09T06:33:30-07:00",
+  "updated": "2026-10-09T06:48:14-07:00",
+  "events": [
+    "2026-10-09T05:56:43-07:00 launched calibrate (attempt 1) on ot-epyc3",
+    "2026-10-09T06:32:34-07:00 calibrate done (rc=0)",
+    "2026-10-09T06:32:34-07:00 calibrated insertion CK_SS_MEAN=426 CK_SS_MIN=411 CK_SS_MAX=449 CK_TT_MEAN=426 CK_TT_MIN=411 CK_TT_MAX=449 CK_FF_MEAN=347 CK_FF_MIN=333 CK_FF_MAX=367 CK_SSLIB_MEAN=558 CK_SSLIB_MIN=540 CK_SSLIB_MAX=584 CK_ROUTE_REF=TT",
+    "2026-10-09T06:33:30-07:00 launched route (attempt 1) on ot-epyc3"
+  ],
+  "actual_route_handles": {
+    "launcher": 1082636,
+    "stage_shell": 1082641,
+    "route_shell": 1082682,
+    "docker_client": 1082684
+  },
+  "qualification": "in progress; no final physical acceptance"
+}
