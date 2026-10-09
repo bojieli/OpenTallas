@@ -7,7 +7,7 @@ and provider state must be priced from their source before elaboration/P&R.
 import argparse,json
 from pathlib import Path
 
-def model(am=False):
+def model(am=False,mx1=False):
     w,h=1399.656,701.976
     result=dict(schema='opentallas.hbm.cp-mtp-native-south.v1',default_enabled=False,adopted=False,
         source_contract='f49a3d30f',MTP_facade_source='f90d728da',master='hfd_cmdproc_s_mtp_native',
@@ -30,7 +30,7 @@ def model(am=False):
         missing_before_adoption=['actual operation descriptor translator','mutable join state protection','real finite provider and tagged completion bindings','source-owned collar/pin context closure'],
         precision=dict(MTP_token_bits=17,Qwen18_supported=False,policy='native DS MTP contract only; no implicit narrowing'),
         physical_qualification=False,headline_rate=None)
-    if am:
+    if am or mx1:
         result['master']='hfd_cmdproc_s_mtp_native_am'
         result['MTP_facade_source']='native CP STOP197 grouped facade must bind source08e4b1bf7; separate from frozen179'
         result['native_controller_source']='08e4b1bf7'
@@ -41,8 +41,22 @@ def model(am=False):
         result['latency']['native_MTP_AM_pin_capture_cycles']=1
         result['AM_identity']='actual backend captured job/gen/sequence/epoch remains stable through CPRESULT winners and final completion'
         result['AM_order']='up to six ordered VHEAD winners precede final completion; no delayed/fabricated LG stream'
+    if mx1:
+        result['master']='hfd_cmdproc_s_mtp_native_mx1'
+        result['boundary_bits_per_cycle'].update(f_host=216,f_backend=73,t_backend=271,t_emit_host=100,t_drained=1)
+        result['routing'].update(extra_transaction_endpoint_tracks=947,total_new_interface_span_um=1661*.192)
+        result['area'].update(checked_join_source='f7498a6b1',emit_queue_source='f7498a6b1',emit_queue_storage_bits=584,emit_queue_other_state_bits_upper=152,emit_queue_cell_area_bound_um2=736*.2916+800)
+        result['AM_identity']='actual captured job/generation/sequence remains stable through winners and completion; no reset epoch'
+        result['reset']='MX1 drained only; no persistent epoch; original job/generation/sequence stale-completion checks retained'
+        result['control_protection']='plain flops; no SECDED, mirrors, authentication or lease machinery'
+        result['area']['checked_join_cell_area_bound_um2']=592*.2916+800
+        result['area']['checked_join_register_bits_upper']=592
+        result['missing_before_adoption']=['actual operation descriptor translator and provider binding','actual physical context and shared drained-reset wiring']
+        result['drain']='guard+queue drained_ready; backend bit71 is backend drained_ready AND no outstanding SM/service result; native done held high, emit/cmd low; job_ready remains low until coordinated reset'
+        result['peer_composition_evidence']='bf972bc00: two actual native drained-reset jobs and wrong-job completion negative'
+        result['acceptance']=dict(TT_setup_ps=0,FF_hold_ps=0,DRC=0,SS='sensitivity; no SS headline claim')
     return result
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);p.add_argument('--am',action='store_true');a=p.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(model(a.am),indent=2)+'\n')
+    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);p.add_argument('--am',action='store_true');p.add_argument('--mx1',action='store_true');a=p.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(model(a.am,a.mx1),indent=2)+'\n')
 if __name__=='__main__':main()

@@ -11,15 +11,16 @@ def main():
     gate=json.loads(a.gate.read_text());assert gate['verdict']=='PASS'
     for name,h in gate['source_sha256'].items():assert digest(ROOT/name)==h,name
     am=gate.get('native_CP_to_MTP_bits')==197
-    model=MODEL.model(am);assert model['model_ready_for_build']
+    mx1=gate.get('reset_contract')=='MX1_drained'
+    model=MODEL.model(am,mx1);assert model['model_ready_for_build']
     job=a.job_root.resolve();job.mkdir(parents=True,exist_ok=False)
-    master=model['master'];folder='collar_am197' if am else 'collar'
+    master=model['master'];folder='collar_mx1' if mx1 else 'collar_am197' if am else 'collar'
     collar='physical/hbm_cp_mtp_native/'+folder+'/'+master+'/io_place.tcl'
     sources=[s for s in gate['source_sha256'] if not s.startswith('physical/hbm_cp_mtp_native/rtl/tb_') and not 'asap7_memory_macros' in s]
     argv=['python3','tools/run_abi3_physical.py','--view','asap7','--top',master,
         '--param','ENABLE_MTP=1','--clock-port','ck','--clock-period-ns','0.833',
         '--clock-uncertainty-ns','0.06','--clock-uncertainty-hold-ns','0.025',
-        '--orfs-corner','WC','--hold-corners','WC,BC','--io-delay-fraction','0.2',
+        '--orfs-corner','TC' if mx1 else 'WC','--hold-corners','TC,BC' if mx1 else 'WC,BC','--io-delay-fraction','0.2',
         '--stages','pnr','--die-area','0','0','1399.656','701.976',
         '--core-area','0','0.54','1399.656','701.436','--place-density','0.55',
         '--routing-layers','M2','M7','--macro-view',
@@ -39,11 +40,13 @@ def main():
     record=dict(schema='opentallas.hbm.cp-mtp-native-route.v1',argv=argv,model=model,
         sources=gate['source_sha256'],gate_sha256=digest(a.gate),pin_record_sha256=digest(pins),
         io_tcl_sha256=digest(ROOT/collar),fresh_master=True,old_closed_LEF_used=False,
-        clocks=dict(setup_corner='SS/WC',hold_corner='FF/BC',period_ns=.833,setup_uncertainty_ns=.060,hold_uncertainty_ns=.025),
+        clocks=dict(setup_corner='TT/TC' if mx1 else 'SS/WC',hold_corner='FF/BC',period_ns=.833,setup_uncertainty_ns=.060,hold_uncertainty_ns=.025),
         die_link_budgets_qualified=False,mutable_MTP_state_protected=False,backend_translation_bound=False,
         physical_qualification=False,adopted=False,headline_rate=None,
         reservation_GiB=80,reservation_basis='existing full CPsouth physical job spec80GiB; same macro, slot and AR source; adds bounded1408 state bits and zero facade state',
-        build_inventory=dict(command_macro_count=1,guard_register_upper=600,emit_queue_storage=648,emit_queue_other_state_upper=160))
+        build_inventory=dict(command_macro_count=1,guard_register_upper=model['area']['checked_join_register_bits_upper'],emit_queue_storage=model['area']['emit_queue_storage_bits'],emit_queue_other_state_upper=model['area']['emit_queue_other_state_bits_upper']))
+    if mx1:
+        record.update(reset_contract='MX1_drained',control_storage='plain flops; no control ECC/mirrors or external epoch',physical_intake_owner='Claude',SS_sensitivity_required=True,acceptance=model['acceptance'])
     (job/'prepared.json').write_text(json.dumps(record,indent=2)+'\n')
     if a.prepare_only:return 0
     with (job/'run.log').open('w') as log:r=subprocess.run(argv,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT)
