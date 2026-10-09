@@ -14082,3 +14082,44 @@ def dsrom_wfc_prompt_pipe_model():
     """Approved DR5 SOURCE/token read extra cycle, physical margin and ownership."""
     from dsrom_wfc_prompt_pipe_model import model
     return model()
+
+
+def dsrom_mtp_seed_aligned_candidate():
+    """Unadopted seed fallback; native LV5 FP8 tree has only32 chunk8 leaves.
+
+    Four aligned subtrees preserve global60-leaf tree padded64. This sizes the
+    candidate before an adapter/collector build, and retains unmeasured latency.
+    """
+    return dict(schema='opentallas.dsrom-mtp-seed-aligned-candidate.v1',
+        adopted=False, native_fullK15360_exact=False, K=15360, output_rows=5120,
+        TP=4, rows_per_rank=1280, superrows_per_rank=640,
+        segments=[dict(start=0,K=4096,leaves=16),dict(start=4096,K=4096,leaves=16),
+                  dict(start=8192,K=4096,leaves=16),dict(start=12288,K=3072,leaves=12,padded_leaves=16)],
+        arithmetic='((root0+root1)+(root2+root3)); FP32 RNE at all3 joins; BF16 after global root',
+        native_tree=dict(LV=5,max_FP8_chunk8_leaves=32),
+        storage=dict(weight_bytes_per_rank=19660800,logical8192x32B_rowbanks=75,
+                     native_NB2_pairs=38,physical4096x274_macros=152,
+                     native_pair_payload_bytes=524288,superrow_words_per_rowbank=480,
+                     superrows_per_pair=17,pair_word_occupancy=8160,max_pair_words=8192,
+                     full_pairs=37,last_pair_superrows=11,scale_carrier_bits=8,remaining_carrier_bits=10),
+        compute=dict(native_NB2_MACs_per_issue_cycle=64,weight_payload_bytes_per_issue_cycle=64,
+                     ROM_boundary_bits_per_issue_cycle=548,replicas=1,
+                     pair_read_capture_cycles=2,parallel_engine_count_qualified=False),
+        activation=dict(quantisers=2,FP32_words_per_cycle=64,VM_bytes_per_cycle=256,
+                        blocks32=480,minimum_issue_cycles=240,quant_pipe_cycles=13,
+                        quantisation_once_before4segments=True,buffer_bytes=15960),
+        descriptors=dict(K_bits=13,each_segment_fits=True,segments_per_column=4,
+                         configuration_words_per_segment=25,minimum_component_config_cycles=100,
+                         row_batches_per_pair=3,maximum_superrows_per_phase=8,
+                         rowbatch_segment_phases=12,qualified_full_rank_schedule=False),
+        collector=dict(root_storage_bits_for_one_superrow=256,FP32_adds_per_row=3,
+                       adapter='new segment phase identity and finite root storage',
+                       adder='existing ot_v41_fadd CUT=101111011 LATENCY8 at1.2GHz',
+                       join_depth_cycles=16,MACs=30720,minimum_component='one native NB2 pair, four sequential aligned phases, two rows'),
+        latency=dict(quant_elapsed_cycles=None,config_elapsed_cycles=None,element_elapsed_cycles=None,
+                     collector_elapsed_cycles=None,whole_column_elapsed_cycles=None,
+                     six_positions_sharing_qualified=False,old_seed_3_217us_qualified=False),
+        physical=dict(new_collector_closed=False,old_element_source_unchanged=True,
+                      boundary_tracks='actual existing native element; new collector routing pending'),
+        limits=['Weight-only38-pair storage count is not a qualified38-engine latency extrapolation',
+                'Primary282 pair unit/placement and seednorm/HCcapture storage/bandwidth remain separately priced'])

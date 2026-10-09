@@ -52,7 +52,7 @@ module tb_mtp_seed;
 endmodule
 '''
 def main():
- p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--ref',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--qx',type=int,default=9);p.add_argument('--jobs',type=int,default=12);p.add_argument('--prepare-only',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--ref',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--qx',type=int,default=9);p.add_argument('--jobs',type=int,default=12);p.add_argument('--prepare-only',action='store_true');p.add_argument('--diagnostic',action='store_true');a=p.parse_args()
  a.work.mkdir(parents=True,exist_ok=True);G.set_arith('chunk8');ck=A.Ckpt(a.snapshot);m=A.Mat(ck,'mtp.0.main_proj','fp8',2,15360);m.s81_segments=[[0,15360]];m.s81_place=[(0,0,0)]
  hs=[np.load(a.ref/f'ctx1048576_L{l}.npz')['h_in'] for l in (37,38,39)]
  def mean(h):
@@ -68,7 +68,11 @@ def main():
  acc,_,xq,xe=A.golden_rows(m,x);codes=A.x_codes(xq)
  hexfile('x.hex',G.bits(x),8);hexfile('gold.hex',acc,8);hexfile('cfg.hex',fld.cfg[0][0],12);hexfile('stream.hex',fld.stream,12)
  hexfile('q.hex',[int.from_bytes(codes[k:k+32].tobytes(),'little') for k in range(0,15360,32)],64);hexfile('e.hex',xe.astype(int)&1023,3)
- tb=a.work/'tb.sv';tb.write_text(TB.replace('QXV',str(a.qx)).replace('NBTS',str(ph['nbeat'])))
+ tb=a.work/'tb.sv';bench=TB
+ if a.diagnostic:
+  bench=bench.replace('$fatal(1,"seed row', '$display("UNQUALIFIED seed row').replace('if(rst_n && fault)$fatal(1,"element fault");','if(rst_n && fault)$display("SEED_PROVENANCE element_fault cyc=%0d",cyc);')
+  bench=bench.replace('integer cyc=0,','integer issued=0,nodes=0;\n always @(posedge clk)begin\n if(dut.u_e.issue)issued<=issued+1;\n if(dut.u_e.g_mac[0].b_v)nodes<=nodes+1;\n if(dut.u_e.g_mac[0].g_tr5.u_tree.y_v && dut.u_e.g_mac[0].g_tr5.u_tree.y_l==5) $display("SEED_PROVENANCE root cyc=%0d issued=%0d nodes=%0d final=%0d fault=%0d",cyc,issued,nodes,dut.u_e.g_mac[0].g_tr5.u_tree.y_f,dut.u_e.g_mac[0].t_fault);\n end\n integer cyc=0,').replace('$display("MTP_SEED PASS', '$display("MTP_SEED DIAGNOSTIC')
+ tb.write_text(bench.replace('QXV',str(a.qx)).replace('NBTS',str(ph['nbeat'])))
  meta=dict(K=15360,rows=2,activation_blocks=480,quantisers=2,activation_port_bytes_per_cycle=256,weight_words_per_macro=480,units=30,subblocks=4,phase=ph,qx=a.qx,field_descriptor_K_limit=8191,whole_field_qualified=False,MACs_per_issue_cycle=64,issued_weight_bytes_per_cycle=64,weight_boundary_bits_per_cycle=548,activation_boundary_bits_per_cycle=2048,rom_carrier_bits=274,weight_payload_bits=256,UE8M0_bits=8,unused_carrier_bits=10,source_headers=ck.pins,input_sha256=hashlib.sha256(G.bits(x).tobytes()).hexdigest())
  (a.work/'plan.json').write_text(json.dumps(meta,indent=1)+'\n')
  if a.prepare_only:return
