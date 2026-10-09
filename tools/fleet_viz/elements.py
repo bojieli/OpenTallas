@@ -14,6 +14,9 @@ twins, _s2/_t/_split/... alternatives) folded into their master. Each element ge
   needs redesign (no live job)  NEEDS_RTL / NEEDS_BUDGET and nothing running
   flow failure (no live job) NEEDS_HUMAN / INVALID / REFUSED only, nothing running
   cancelled only             every job was cancelled
+  superseded                 listed in $FLEET_VIZ_SUPERSEDED (default ~/claude-takeover-20261007/superseded_elements.json,
+                             {element: {by, reason}}): replaced by another element or not used by any die; overrides every
+                             non-closed category and is excluded from the open counts (summary 'open' = all but closed/superseded)
 
 Sources: ~/.local/state/closure_loop/jobs/*.json (mtime-cached), <repo>/results/closure_loop/option_b_status_*/status.json
 and tt_restatus_*.json (latest by name), per-job revocations from $FLEET_VIZ_REVOKED (default
@@ -29,7 +32,7 @@ LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'MIGRATING'}
 FAIL = {'NEEDS_RTL', 'NEEDS_HUMAN', 'INVALID', 'NEEDS_BUDGET', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
-        'cancelled only']
+        'cancelled only', 'superseded']
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
@@ -202,7 +205,9 @@ class Elements:
         self.state.mkdir(parents=True, exist_ok=True)
         self.ssh_of = ssh_of; self.ctl = ctl; self.md_path = pathlib.Path(md_path); self.log = log
         self.period = period; self.md_period = md_period
-        self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {})
+        self.cache = {}; self.optb = (None, {}); self.rest = (None, {}); self.revk = (None, {}); self.supk = (None, {})
+        self.superseded_path = pathlib.Path(os.environ.get('FLEET_VIZ_SUPERSEDED', os.path.expanduser(
+            '~/claude-takeover-20261007/superseded_elements.json')))
         self.revoked_path = pathlib.Path(os.environ.get('FLEET_VIZ_REVOKED', os.path.expanduser(
             '~/claude-takeover-20261007/revoked_closures.json')))
         self.desc = Describer(repo, self.state / 'element_descriptions.json')
@@ -288,9 +293,20 @@ class Elements:
             self.revk = (key, d)
         return self.revk[1]
 
+    def superseded(self):
+        try: key = self.superseded_path.stat().st_mtime
+        except OSError: key = None
+        if key != self.supk[0]:
+            d = {}
+            if key is not None:
+                try: d = {k: v for k, v in json.loads(self.superseded_path.read_text()).items() if isinstance(v, dict)}
+                except Exception as e: self.log('elements: superseded: %s' % e)
+            self.supk = (key, d)
+        return self.supk[1]
+
     # ---- classification
     def compute(self):
-        js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs()
+        js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs(); sup = self.superseded()
         known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {}))
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known)].append(j)
@@ -298,7 +314,13 @@ class Elements:
             groups.setdefault(master(b, known), [])
         rows = []
         for m, g in groups.items():
-            rows.append(self.element(m, g, ob, rest, rj))
+            r = self.element(m, g, ob, rest, rj)
+            sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
+            r['superseded'] = None
+            if sv and not r['category'].startswith('closed'):
+                r['category'] = 'superseded'; r['superseded'] = dict(by=sv.get('by'), reason=sv.get('reason'))
+                r['via'] = 'superseded by %s' % sv.get('by')
+            rows.append(r)
         rows.sort(key=lambda r: (TARGETS.index(r['target']), CATS.index(r['category']), r['element']))
         summ = collections.defaultdict(lambda: collections.Counter())
         for r in rows: summ[r['target']][r['category']] += 1
@@ -306,7 +328,8 @@ class Elements:
         return dict(t=time.time(), rows=rows, cats=CATS, targets=TARGETS,
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
-                                 revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj)))
+                                 revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj),
+                                 superseded=str(self.superseded_path) if sup else None, n_superseded=len(sup)))
 
     def element(self, m, g, ob, rest, rj=None):
         rj = rj or {}

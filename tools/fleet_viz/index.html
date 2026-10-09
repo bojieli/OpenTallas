@@ -724,7 +724,7 @@ window.addEventListener('resize', () => { for (const c of cards.values()) layout
 // ---- per-element closure status (/api/elements; replay: RP.elems; share-safe: summary counts only)
 const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
-  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8'};
+  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b'};
 const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
@@ -738,13 +738,13 @@ function renderElements() {
   const tot = {}; let all = 0;
   let sh = '<tr><th>target</th>' + cats.map(c => `<th><span class="sw" style="background:${ECOL[c]}"></span>${esc(c)}</th>`).join('') + '<th>total</th></tr>';
   for (const t of tg) {
-    const s = ED.summary[t], n = Object.values(s).reduce((a, b) => a + b, 0); all += n;
+    const s = ED.summary[t], n = Object.entries(s).reduce((a, [c, v]) => a + (c === 'superseded' ? 0 : v), 0); all += n;
     sh += `<tr><td>${esc(t)}</td>` + cats.map(c => { tot[c] = (tot[c] || 0) + (s[c] || 0); return `<td class="${s[c] && !SAFE ? 'c' : ''}" data-t="${esc(t)}" data-c="${esc(c)}" style="${s[c] ? 'color:' + ECOL[c] : 'color:var(--faint)'}">${s[c] || '·'}</td>`; }).join('') + `<td><b>${n}</b></td></tr>`;
   }
   sh += '<tr><td><b>all</b></td>' + cats.map(c => `<td class="${tot[c] && !SAFE ? 'c' : ''}" data-t="" data-c="${esc(c)}"><b>${tot[c] || '·'}</b></td>`).join('') + `<td><b>${all}</b></td></tr>`;
   setHTML($('elSum'), sh);
   const closed = cats.filter(c => c.startsWith('closed')).reduce((a, c) => a + (tot[c] || 0), 0);
-  setText($('elNow'), `${closed} of ${all} closed · as of ${ago(ED.t)}`);
+  setText($('elNow'), `${closed} of ${all} closed` + (tot['superseded'] ? ` (+${tot['superseded']} superseded, not counted)` : '') + ` · as of ${ago(ED.t)}`);
   const rowsOK = !SAFE && ED.rows;
   for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;
@@ -770,7 +770,7 @@ function renderElements() {
       items.push(['g|' + g, `<tr class="grp"><td colspan="${ECOLS.length}">${esc(g)} · ${Object.values(c2).reduce((a, b) => a + b, 0)}<small>${cats.filter(c => c2[c]).map(c => c + ' ' + c2[c]).join(' · ')}</small></td></tr>`]);
     }
     const b = r.best, lt = r.latest;
-    const tip = `best job ${b.job || '-'} (${b.corner || '-'} line)` + (r.via ? ` · via ${r.via}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
+    const tip = `best job ${b.job || '-'} (${b.corner || '-'} line)` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
     items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
       `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
