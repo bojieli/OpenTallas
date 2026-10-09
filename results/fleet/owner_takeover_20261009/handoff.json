@@ -1,0 +1,120 @@
+{
+  "recorded_at": "2026-10-09T14:08:02.263779+00:00",
+  "instruction": "Claude takeover: no further new intake, requeue, design change or live cancellation. Existing queued/live jobs preserved.",
+  "canonical_states": {
+    "hgi-ehash-ds-a-95f75fa1e-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "hgi-ehash-ds-b-95f75fa1e-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "hgi_coll_decode_b_pinanchor-d261d43c7-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "hgi_coll_row_formatter_counter_a-c0c8382da-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx": {
+      "status": "QUEUED",
+      "host": null,
+      "run": null,
+      "stage_idx": 0,
+      "stage_key": null,
+      "stage_tag": null,
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    },
+    "mtp-wfc-stg-tokpipe-9f7a7f35e-tc": {
+      "status": "READY",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+      "stage_idx": 8,
+      "stage_key": "commit",
+      "stage_tag": "collect.a2",
+      "active": null,
+      "reason": "publish failed: command failed rc=24: rsync -a -e ssh -o BatchMode=yes -o ConnectTimeout=15 -o ServerAliveInterval=30 -o ServerAliveCountMax=6 -o ControlPersist=1800 -o ControlPath=/tmp/cl-ssh-1000-e99d836bd8d008f9/7f323e8949c91b578e09.sock -o ControlMaster=auto -o ProxyCommand=false ot-epyc3:/srv/opentallas-scratc",
+      "admission_hold": null
+    },
+    "bfk_recut_hs4_sm15-c674dadfd-tc-cx": {
+      "status": "RUNNING",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+      "stage_idx": 1,
+      "stage_key": "route",
+      "stage_tag": "route.a2",
+      "active": null,
+      "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+      "admission_hold": null
+    },
+    "md6_lookup_localcapture-outputlanding-24affff33-tc-cx": {
+      "status": "RUNNING",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/md6_lookup_localcapture-outputlanding-24affff33-tc-cx",
+      "stage_idx": 0,
+      "stage_key": "calibrate",
+      "stage_tag": "calibrate.a2",
+      "active": null,
+      "reason": null,
+      "admission_hold": null
+    }
+  },
+  "prepared_only": [
+    "TOPK d52820055 A/B",
+    "Token fullcore77f87268c PD48/55",
+    "Token accept pinfixbbd709a32 PD48/55",
+    "G12 balanced630558368 320/360",
+    "Argmax f6d441b6a PD55 HM5",
+    "QuantVM f71022804 draft pair"
+  ],
+  "accounting_handoff": [
+    "Pipeline original worker transitioned from CTS664023 to GRT1146497; latest owner measured HWM6451816KiB plus driver54616KiB (~6.205GiB). Stored ledger still uses CTS664023/3.2GiB and needs identity-verified refresh by Claude. No restart or cap requested.",
+    "EHASH boundary fac108b0b finished actual PASS; external32GiB entry may be removed only after fresh PID absence check.",
+    "Nominal GRT3669250 latest HWM6199872KiB plus driver23064; current6.0GiB entry. Wide GRT1074920 latest6688068KiB plus driver55252; current6.5GiB entry."
+  ],
+  "cache_contract": "Receipt records verified admitted source hashes and exact keys; old helper e0e0549d and current13ff766a have identical analyse/_verdict AST, and actual generic recipe/key is unchanged. Only expected verified entries were imported. No local Yosys fallback or deployed daemon edit.",
+  "publication_blocker": "STG collect.a2 rc0, READY idx8; publish rsync rc24. Preserve completed collect and qualified objects; do not rerun compute."
+}

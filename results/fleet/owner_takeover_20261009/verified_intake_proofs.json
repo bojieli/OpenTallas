@@ -1,0 +1,283 @@
+[
+  {
+    "helper_legacy": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+    "helper_current": "13ff766a0c4bc5ed829a9f615abbb1eaecd6a22827dcba16c416ed1cddf03c55",
+    "analysis_and_verdict_AST_identical": true,
+    "every_actual_final_recipe_key_verified_separately": true
+  },
+  {
+    "alias": {
+      "old_source": "fac108b0bb4924db48edc6b51e4876c6e70c87e2",
+      "new_source": "95f75fa1e121c8e1e7e312bc07496fbdb63bb6a9",
+      "old_key": "efd8818a1d33c0e2a27f2d0c",
+      "new_key": "88974f51ea2a1f8b8faf79cd",
+      "sources": {
+        "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": {
+          "sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+          "byte_identical": true
+        },
+        "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": {
+          "sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+          "byte_identical": true
+        },
+        "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv": {
+          "sha256": "01cd047a4243a7a06d7e30b4fab4d2aa3ded9176a965c824edac7a600d6f9337",
+          "byte_identical": true
+        }
+      },
+      "recipe": {
+        "top": "ot_hbm_idx_ehash_ds",
+        "sources": [
+          "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+          "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ],
+        "params": {
+          "ENABLE_GENERIC": "1",
+          "NSLOT": "8",
+          "MUTANT": "0"
+        },
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+      "reason": "only bench/evidence differences after actual native remote registered RTL proof; source blobs and params identical",
+      "actual_remote_receipt": "results/rtl/hgi_ehash_20261009/registered_boundary/receipt.json"
+    },
+    "actual": {
+      "host": "ot-pve1",
+      "source": "fac108b0bb4924db48edc6b51e4876c6e70c87e2",
+      "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+      "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+      "parameters": {
+        "ENABLE_GENERIC": 1,
+        "NSLOT": 8,
+        "MUTANT": 0
+      },
+      "boundary_timeout": null,
+      "results": {
+        "hgi-ehash-ds-b-27186ef49-tc-cx": {
+          "key": "efd8818a1d33c0e2a27f2d0c",
+          "recipe": {
+            "top": "ot_hbm_idx_ehash_ds",
+            "sources": [
+              "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+              "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+              "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+            ],
+            "params": {
+              "ENABLE_GENERIC": "1",
+              "NSLOT": "8",
+              "MUTANT": "0"
+            },
+            "incdirs": [
+              "rtl/common"
+            ]
+          },
+          "levels": 16,
+          "result": {
+            "in_to_out_bits": 0,
+            "in_to_out_max": -1,
+            "in_to_out_example": [],
+            "in_to_reg_max": 16,
+            "reg_to_out_max": 3,
+            "reg_to_out_example": "row_valid",
+            "cells": 7398547,
+            "ctrl_ports": [
+              "clk",
+              "rst_n"
+            ],
+            "top": "ot_hbm_idx_ehash_ds",
+            "levels": 16,
+            "strict": true,
+            "verdict": "PASS",
+            "message": "rtl_boundary ot_hbm_idx_ehash_ds: registered boundary (in->reg 16, reg->out 3 levels)"
+          }
+        },
+        "hgi-ehash-ds-a-27186ef49-tc-cx": {
+          "key": "efd8818a1d33c0e2a27f2d0c",
+          "recipe": {
+            "top": "ot_hbm_idx_ehash_ds",
+            "sources": [
+              "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+              "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+              "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+            ],
+            "params": {
+              "ENABLE_GENERIC": "1",
+              "NSLOT": "8",
+              "MUTANT": "0"
+            },
+            "incdirs": [
+              "rtl/common"
+            ]
+          },
+          "levels": 16,
+          "result": {
+            "in_to_out_bits": 0,
+            "in_to_out_max": -1,
+            "in_to_out_example": [],
+            "in_to_reg_max": 16,
+            "reg_to_out_max": 3,
+            "reg_to_out_example": "row_valid",
+            "cells": 7398547,
+            "ctrl_ports": [
+              "clk",
+              "rst_n"
+            ],
+            "cached": true,
+            "top": "ot_hbm_idx_ehash_ds",
+            "levels": 16,
+            "strict": true,
+            "verdict": "PASS",
+            "message": "rtl_boundary ot_hbm_idx_ehash_ds: registered boundary (in->reg 16, reg->out 3 levels)"
+          }
+        }
+      }
+    }
+  },
+  {
+    "probe": {
+      "hgi_coll_decode_b_pinanchor-d261d43c7-tc-cx": {
+        "source": "d261d43c7",
+        "key": "4a062e4e19f382b05dfcceaa",
+        "recipe": {
+          "top": "ot_hgi_coll_decode",
+          "sources": [
+            "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+          ],
+          "params": {
+            "ENABLE": "1"
+          },
+          "incdirs": [
+            "rtl/common"
+          ]
+        },
+        "levels": 16,
+        "result": {
+          "in_to_out_bits": 0,
+          "in_to_out_max": -1,
+          "in_to_out_example": [],
+          "in_to_reg_max": 4,
+          "reg_to_out_max": 2,
+          "reg_to_out_example": "cmd_r",
+          "cells": 4462,
+          "ctrl_ports": [
+            "clk",
+            "rst_n"
+          ]
+        },
+        "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+        "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+      },
+      "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx": {
+        "source": "d261d43c7",
+        "key": "4a062e4e19f382b05dfcceaa",
+        "recipe": {
+          "top": "ot_hgi_coll_decode",
+          "sources": [
+            "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+          ],
+          "params": {
+            "ENABLE": "1"
+          },
+          "incdirs": [
+            "rtl/common"
+          ]
+        },
+        "levels": 16,
+        "result": {
+          "in_to_out_bits": 0,
+          "in_to_out_max": -1,
+          "in_to_out_example": [],
+          "in_to_reg_max": 4,
+          "reg_to_out_max": 2,
+          "reg_to_out_example": "cmd_r",
+          "cells": 4462,
+          "ctrl_ports": [
+            "clk",
+            "rst_n"
+          ]
+        },
+        "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+        "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+      }
+    },
+    "verified_manifest_paths": "exact recipe RTL, cfg, and current helper"
+  },
+  {
+    "probe": {
+      "hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx": {
+        "source": "c0c8382da",
+        "key": "e2f3c31d5b09b5d5b2a7614d",
+        "recipe": {
+          "top": "ot_hgi_coll_row_formatter",
+          "sources": [
+            "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+          ],
+          "params": {
+            "ENABLE": "1"
+          },
+          "incdirs": [
+            "rtl/common"
+          ]
+        },
+        "levels": 16,
+        "result": {
+          "in_to_out_bits": 0,
+          "in_to_out_max": -1,
+          "in_to_out_example": [],
+          "in_to_reg_max": 8,
+          "reg_to_out_max": 3,
+          "reg_to_out_example": "response_r",
+          "cells": 17799,
+          "ctrl_ports": [
+            "clk",
+            "rst_n"
+          ]
+        },
+        "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+        "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+      },
+      "hgi_coll_row_formatter_counter_a-c0c8382da-tc-cx": {
+        "source": "c0c8382da",
+        "key": "e2f3c31d5b09b5d5b2a7614d",
+        "recipe": {
+          "top": "ot_hgi_coll_row_formatter",
+          "sources": [
+            "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+          ],
+          "params": {
+            "ENABLE": "1"
+          },
+          "incdirs": [
+            "rtl/common"
+          ]
+        },
+        "levels": 16,
+        "result": {
+          "in_to_out_bits": 0,
+          "in_to_out_max": -1,
+          "in_to_out_example": [],
+          "in_to_reg_max": 8,
+          "reg_to_out_max": 3,
+          "reg_to_out_example": "response_r",
+          "cells": 17799,
+          "ctrl_ports": [
+            "clk",
+            "rst_n"
+          ]
+        },
+        "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+        "yosys": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+        "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+      }
+    },
+    "verified_manifest_paths": "exact recipe RTL, cfg, and current helper"
+  }
+]

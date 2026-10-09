@@ -1,0 +1,235 @@
+{
+  "owner": "Codex operational resource ledger; tracked config Claude applies",
+  "hosts": {
+    "ot-epyc3": [
+      {
+        "name": "qwen-fmt3-pipe-calibration",
+        "pid": 664023,
+        "command_match": "openroad",
+        "peak_ram_gb": 3.2,
+        "owner": "Codex:qwen_hbm_unify/fmt3",
+        "reason": "Pipe actual CTS664023 HWM2952720KiB RSS2909212KiB; completed route detail2733064KiB, same-source calCTS3156988KiB plus launcher92332KiB supports measured3.2GiB phase. Previous resizer655416 absent.",
+        "launcher_pid": 1855945
+      },
+      {
+        "name": "qwen-fmt3-wide-calibration",
+        "pid": 1074920,
+        "command_match": "global_route.tcl",
+        "peak_ram_gb": 6.5,
+        "owner": "Codex:qwen_hbm_unify/fmt3",
+        "reason": "Measured GRT1074920 HWM6665540KiB plus driver55252KiB (~6.409GiB), rounded6.5GiB; no restart or cap.",
+        "launcher_pid": 1835875
+      }
+    ],
+    "ot-epyc1tb": [
+      {
+        "name": "hbm-hc64-physical",
+        "pid": 2939287,
+        "command_match": "yosys",
+        "peak_ram_gb": 15,
+        "owner": "Codex:hbm_system/hc_shard",
+        "reason": "Yosys SHARE dedicatedcontainer peak15482122240B14.42GiB; workerHWM15052780KiB. Helper+launcher aggregate rounds15GiB.",
+        "launcher_pid": 2938696
+      },
+      {
+        "name": "hbm-hc-epoch-physical",
+        "pid": 1579383,
+        "command_match": "yosys",
+        "peak_ram_gb": 15,
+        "owner": "Codex:hbm_system/hc_shard",
+        "reason": "Yosys SHARE dedicatedcontainer peak15577276416B14.51GiB; workerHWM15134892KiB. Helpers+launcher aggregate rounds15GiB.",
+        "launcher_pid": 1366211
+      },
+      {
+        "name": "hbm-router-dr3-existing-dump",
+        "pid": 3720051,
+        "command_match": "openroad -threads 16 -no_init -exit /rb/run_rb.tcl",
+        "peak_ram_gb": 47,
+        "owner": "Codex:hbm_wiring",
+        "launcher_pid": 3719939,
+        "reason": "Existing immutable R25 grt3 dump; same previous GNUtime peak48401148KiB46.16GiB rounded47. Current subtree31556468KiB and liveHWMsum31708644KiB; only helper clockcollection scalarization02b165495. No RTL/clock/SDC change."
+      }
+    ],
+    "ot-epyc2": [
+      {
+        "name": "hbm-indexer-deepcredit-exact",
+        "pid": 2153931,
+        "command_match": "hbm-indexer-2f27cb363/src",
+        "peak_ram_gb": 127,
+        "owner": "Codex:hbm_continuation",
+        "reason": "FA6 final1CPPcompile liveindividualHWMsum133116660KiB126.950GiB; exactly1missing180841184B CPP,9821objects1035522712B, noarchive. Ownermeasuredsnapshot ef5a7f6e8.",
+        "launcher_pid": 2153931
+      },
+      {
+        "name": "hbm-hc40-physical",
+        "pid": 1874796,
+        "command_match": "yosys",
+        "peak_ram_gb": 15,
+        "owner": "Codex:hbm_system/hc_shard",
+        "reason": "HC40 YosysSHARE dedicatedcontainer peak15524855808B14.46GiB; workerHWM15123332KiB; subtree15132452KiB. Aggregate rounds15GiB.",
+        "launcher_pid": 1873433
+      },
+      {
+        "name": "qwen-fmt3-nominal-route",
+        "pid": 3669250,
+        "command_match": "global_route.tcl",
+        "peak_ram_gb": 6.0,
+        "launcher_pid": 3549079,
+        "owner": "Codex:qwen_hbm_unify/fmt3",
+        "reason": "Nominal current GRT HWM6187040KiB plus driver23064KiB (~5.922GiB), rounded6.0; measured phase, no cap."
+      }
+    ],
+    "ot-epyc4": [
+      {
+        "name": "hbm-indexer-t1-exact",
+        "pid": 952687,
+        "command_match": "hbm-indexer-3a6f720d4",
+        "peak_ram_gb": 127,
+        "owner": "Codex:hbm_continuation",
+        "reason": "T1 final1CPPcompile liveindividualHWMsum133115456KiB126.949GiB;1of9805CPPmissing180841184B, objects1.035GB noarchive. Ownercompile_phase_measured/snapshot ef5a7f6e8.",
+        "launcher_pid": 952687
+      },
+      {
+        "name": "qwen-ar-quarter-frontend",
+        "pid": 3513967,
+        "command_match": "qwen-r25-quarter-ar/89a8ac363/",
+        "peak_ram_gb": 91.2,
+        "owner": "Codex:qwen_hbm_unify/stage_harness",
+        "launcher_pid": 2626636,
+        "reason": "ActualadmittedplainAR N256/M64 frontend3513967 RSS51075076/HWM51138320KiB. Evidence samefullquarter frontend source822ca7b65 completedGNUtime95595836KiB91.167GiB; rounded91.2GiB phase sibling, replacesunmeasured128. Eightworkers/outputsplit20000. No processcap/restart; C++phase refresh fromactualinventory."
+      }
+    ],
+    "ot-pve1": [
+      {
+        "name": "hgi-ehash-boundary-fac108b0b",
+        "pid": 1397289,
+        "command_match": "yosys",
+        "launcher_pid": 1397287,
+        "peak_ram_gb": 32,
+        "owner": "generic_index_decode/ehash",
+        "reason": "New sourcefac108b0b required boundary check;32GiB conservative above exact old same-family terminal HWM26091748KiB. Initial inventory estimate, no hard cap."
+      }
+    ],
+    "ot-agidock128": [],
+    "localhost": []
+  },
+  "terminal_history": [
+    {
+      "name": "qwen-quarter-fullshape-lint",
+      "pid": 1755537,
+      "command_match": "--lint-only -Wno-fatal --top-module ot_qwen_r25_su_quarter",
+      "peak_ram_gb": 128,
+      "owner": "Codex:qwen_hbm_unify",
+      "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint",
+      "host": "ot-epyc3",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193887+00:00"
+    },
+    {
+      "name": "mtp-ring-dyn-fixed-simulation-positive",
+      "pid": 1855952,
+      "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
+      "peak_ram_gb": 1,
+      "owner": "Codex:mtp_numerical_repair",
+      "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains",
+      "host": "ot-epyc3",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193914+00:00"
+    },
+    {
+      "name": "mtp-ring-dyn-fixed-simulation-negative",
+      "pid": 1855953,
+      "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
+      "peak_ram_gb": 1,
+      "owner": "Codex:mtp_numerical_repair",
+      "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains",
+      "host": "ot-epyc3",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193917+00:00"
+    },
+    {
+      "name": "mtp-ring-dyn-same-source19-build-positive",
+      "pid": 1915153,
+      "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+      "peak_ram_gb": 1,
+      "owner": "Codex:mtp_numerical_repair",
+      "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains",
+      "host": "ot-epyc3",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193920+00:00"
+    },
+    {
+      "name": "mtp-ring-dyn-same-source19-build-negative",
+      "pid": 1915154,
+      "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+      "peak_ram_gb": 1,
+      "owner": "Codex:mtp_numerical_repair",
+      "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains",
+      "host": "ot-epyc3",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193922+00:00"
+    },
+    {
+      "name": "s81-bf-correct-tt-reference-sta",
+      "pid": 2587827,
+      "command_match": "reference_probe.sh",
+      "peak_ram_gb": 40,
+      "owner": "Codex:s81_continuation",
+      "reason": "Actual admitted read-only sameCG0 finalODB/SPEF/actualTT+FF libraries,730ps originalroute clock60/25uncertainty; expected40GiB originalphysicalinventory until terminal, no P&R/restart",
+      "host": "ot-epyc4",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193929+00:00"
+    },
+    {
+      "name": "ha2-owner-opposite-phase-minimum-gate",
+      "pid": 299770,
+      "command_match": "ha2-owner-cx-20261009/run-gate.sh",
+      "peak_ram_gb": 12,
+      "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+      "reason": "Actual admitted fullPF384 NC8 NPT8 INJ2 owner positive/changed-phase mutant minimum; pinnedVerilator5.050 source31f18f89a. Owner fullshape inventory12GiB envelope, soft capacity reservation until terminal",
+      "host": "ot-pve1",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T09:52:15.193933+00:00"
+    },
+    {
+      "pid": 309330,
+      "host": "ot-pve1",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T10:04:26.303062+00:00"
+    },
+    {
+      "pid": 310774,
+      "host": "ot-pve1",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T10:04:26.303080+00:00"
+    },
+    {
+      "pid": 313584,
+      "host": "ot-pve1",
+      "status": "IDENTITY_ABSENT",
+      "verified_at": "2026-10-09T10:04:26.303081+00:00"
+    },
+    {
+      "pid": 303289,
+      "pgid": 303265,
+      "status": "TERMINAL_PASS",
+      "source": "82a708f5e",
+      "owner_receipt": "c674dadfd",
+      "proof": "IndependentPVEps noPID/noPGmembers; terminal.json pass true456positive goldenrows+stucksign numericalmutantrc1"
+    },
+    {
+      "name": "mtp-tokpipe-constraint-equivalence-observer",
+      "pid": 3793558,
+      "command_match": "mtp-tokpipe-eco-scope-observer-20261009-a1/src/tools/w18/corner_sta.py",
+      "peak_ram_gb": 4,
+      "owner": "Codex:fleet_closure/mtp_rom",
+      "launcher_pid": 3793538,
+      "reason": "Read-only serialcornerSTA exactsame-token6_report peak3952832KiB3.77GiB rounded4; original833 signoff/all4scopeunion equivalence beforeECO; currentSSworker3808817RSS1648644KiB.",
+      "host": "ot-epyc1tb",
+      "status": "TERMINAL_EQUIVALENCE_PASS",
+      "verified_at": "2026-10-09T11:46:21.531548+00:00"
+    }
+  ],
+  "measurement_commit": "629ab7fbb",
+  "updated": "2026-10-09T11:41:38.751063+00:00"
+}
