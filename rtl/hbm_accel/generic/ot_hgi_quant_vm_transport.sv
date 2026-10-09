@@ -38,8 +38,8 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  a[47:26]==0 && o[47:26]==0 && a[10:8]==0 && o[10:8]==0 &&
  ({1'b0,a[47:8]}+a[67:48]<=41'd262144) &&
  ({1'b0,o[47:8]}+o[67:48]<=41'd262144) &&
- // Reject overlapping records; forward streaming would overwrite unread inputs.
- (({1'b0,a[47:8]}+a[67:48]<=o[47:8]) ||
+ // Same-base same-geometry in-place is safe: the complete block is read before publication.
+ ((a[47:8]==o[47:8]) || ({1'b0,a[47:8]}+a[67:48]<=o[47:8]) ||
  ({1'b0,o[47:8]}+o[67:48]<=a[47:8]));
  assign ready=ENABLE&&rst_n&&!busy;
  assign drained=!busy&&!pending&&reserved==0;

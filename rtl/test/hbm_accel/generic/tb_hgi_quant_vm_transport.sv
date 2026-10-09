@@ -10,6 +10,7 @@ module tb_hgi_quant_vm_transport;
  ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.*);
  reg [31:0] vm[0:8191];reg [31:0] expected[0:8191];
  reg corrupt_tag=0;reg pv=0;reg [336:0] held;integer delay_count=0;
+ integer dest_base=4096;
  integer cycles=0,writes=0,acks=0,cases=0,nwords=0,reads=0;
  reg [19:0] current_n;
  wire ref_vo,ref_fault,ref_dec;wire [511:0] ref_y;
@@ -28,7 +29,7 @@ module tb_hgi_quant_vm_transport;
    if(req[336])begin
     writes=writes+1;
     for(integer k=0;k<8;k=k+1)begin
-     if(req[335:304]/4+k>=4096+current_n)$fatal(1,"tail neighbor overwrite");
+     if(req[335:304]/4+k>=dest_base+current_n)$fatal(1,"tail neighbor overwrite");
      if(req[303:48]>>k*32!==expected[req[335:304]/4+k])begin
       // Compare32bits only, preserve true lane extraction.
       if(req[48+k*32+:32]!==expected[req[335:304]/4+k])$fatal(1,"WRITE mismatch cases=%0d vector=%0d n=%0d addr=%0d lane=%0d actual=%h expected=%h head=%0d tail=%0d queued=%0d reserved=%0d",cases,use_vector,current_n,req[335:304]/4,k,req[48+k*32+:32],expected[req[335:304]/4+k],dut.head,dut.tail,dut.queued,dut.reserved);
@@ -51,7 +52,7 @@ module tb_hgi_quant_vm_transport;
  always @(posedge clk)begin
   if(ref_vo&&!use_vector)begin
    for(integer k=0;k<32;k=k+1)
-    if(rbeat*32+k<current_n)expected[4096+rbeat*32+k]={ref_y[k*16+:16],16'd0};
+    if(rbeat*32+k<current_n)expected[dest_base+rbeat*32+k]={ref_y[k*16+:16],16'd0};
    rbeat=rbeat+1;
   end
  end
@@ -63,19 +64,19 @@ module tb_hgi_quant_vm_transport;
    for(integer i=0;i<8192;i=i+1)begin vm[i]=32'hdeadbeef;expected[i]=32'hbadbad00;end
    for(integer i=0;i<size;i=i+1)vm[i]=32'h3f800000+((i/32%64)<<23)+((i%8)<<19);
    if(use_vector)for(integer i=0;i<size;i=i+1)begin
-    vm[i]=vx[i*32+:32];expected[4096+i]={vy[i*16+:16],16'd0};
+    vm[i]=vx[i*32+:32];expected[dest_base+i]={vy[i*16+:16],16'd0};
    end
    h=0;a=0;o=0;h[127:124]=4;h[123:118]=op;h[99:93]=17;
    if(op==6)h[71:64]=16;
    a[1:0]=1;a[67:48]=size;a[87:68]=1;
-   o=a;o[47:8]=4096;
+   o=a;o[47:8]=dest_base;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;start_cycle=cycles;
    while(!done&&cycles-start_cycle<200000)@(negedge clk);
    if(!done)$fatal(1,"DROP/CREDIT timeout");
    if(fault)$fatal(1,"unexpected fault");
    if(writes!=size/8||acks!=size/8)$fatal(1,"EARLY_DONE actualACK accounting");
-   if(vm[4096+size]!==32'hdeadbeef)$fatal(1,"TAIL clobber");
+   if(vm[dest_base+size]!==32'hdeadbeef)$fatal(1,"TAIL clobber");
    cases=cases+1;nwords=nwords+size;
   end
  endtask
@@ -87,7 +88,7 @@ module tb_hgi_quant_vm_transport;
    for(integer i=0;i<32;i=i+1)vm[i]=32'h3f800000;
    if(kind==2)vm[0]=32'h7fc00000;
    h=0;a=0;h[127:124]=4;h[123:118]=4;h[99:93]=17;
-   a[1:0]=1;a[67:48]=32;a[87:68]=1;o=a;o[47:8]=4096;
+   a[1:0]=1;a[67:48]=32;a[87:68]=1;o=a;o[47:8]=dest_base;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;begin_cycle=cycles;
    if(kind==0)begin while(!dut.pending)@(negedge clk);provider_fault=1;
@@ -103,6 +104,7 @@ module tb_hgi_quant_vm_transport;
  initial begin
   repeat(4)@(negedge clk);rst_n=1;
   run(4,32);run(5,64);run(6,16);run(6,48);run(4,2048);
+  dest_base=0;run(4,2048);run(5,64);run(6,48);dest_base=4096;
   if($value$plusargs("VECTORS=%s",vectors))begin
    $readmemh({vectors,"/fp8_e8m0.in.hex"},gi8);$readmemh({vectors,"/fp8_e8m0.out.hex"},go8);
    $readmemh({vectors,"/fp4_e8m0.in.hex"},gi4);$readmemh({vectors,"/fp4_e8m0.out.hex"},go4);
@@ -117,7 +119,7 @@ module tb_hgi_quant_vm_transport;
   while(!ready)@(negedge clk);
   begin reg [127:0]h;reg[255:0]a,o;
    h=0;a=0;h[127:124]=4;h[123:118]=4;h[99:93]=17;
-   a[1:0]=1;a[67:48]=16;a[87:68]=1;o=a;o[47:8]=4096;
+   a[1:0]=1;a[67:48]=16;a[87:68]=1;o=a;o[47:8]=dest_base;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;if(!done||!fault||req_v)$fatal(1,"invalid shape accepted");
   end
