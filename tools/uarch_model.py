@@ -15035,3 +15035,29 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hgi_quant_vm_transport_model(depth=32, vm_rtt=4):
+    """HGI QDQ component using existing CP 337/273 byte-sector ABI."""
+    if depth < 24 or vm_rtt < 1:
+        raise ValueError("result reservation must cover nonelastic 23-edge pipe")
+    return dict(candidate="HGI_QUANT_VM_TRANSPORT", default_enabled=False,
+        replicas=1, MACs_per_cycle=0, compute="existing 32-lane QDQ core,23 edges,II1",
+        input_words_per_beat=32, read_sector_bytes=32, write_sector_bytes=32,
+        max_VM_bytes_per_cycle=32, request_bits=337, response_bits=273,
+        core_input_bits=1024, core_output_bits=512, record_bits=1409,
+        output_queue_depth=depth, output_queue_flop_bits=depth*512,
+        output_queue_SRAM_macros=0, input_assembly_flop_bits=1024,
+        result_capacity_rule="reserve before first read; release only after final write ACK",
+        maximum_reserved_beats=depth, VM_outstanding_requests=1,
+        throughput_bound_beats_per_cycle=1/(8*(vm_rtt+1)),
+        latency_cycles_first_result=4*(vm_rtt+1)+23+4*(vm_rtt+1)+3,
+        legal_shapes="UE n%32=0;E4 n%16=0;one row;unit-stride;VM FP32 input/BF16-or-FP32 output",
+        E4_tail="two8word sectors;zero-fill absent half;publish exactly16 widenedBF16 words",
+        routing_tracks_boundary_bits=337+273+1409+6,
+        routing_tracks_required=2025, corridor_capacity_tracks=None,
+        slot_area_um2=None, slot_fit_proven=False,
+        floorplan_requirement="size from synthesized flop/core area at55percent before route",
+        fanout="record header held once;one selected result queue mux; no payload ECC on flops",
+        token_latency="sum actual 8sector handshakes perfull beat +23edges, no invented overlap credit",
+        physical_qualified=False)
