@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_hbm_production_clock_digital_body",
+ "orfs_dir": "/srv/opentallas-scratch/codex/ta15-body-export-206798f3f/orfs",
+ "post_sdc": "physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "2.015004829658551e-10",
+  "ws_min": "3.19222009936837e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "2.694578449258245e-10",
+  "ws_min": "2.4994919328724663e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "3.043464369412163e-10",
+  "ws_min": "8.025285297419416e-12"
+ },
+ "files": {
+  "ot_hbm_production_clock_digital_body.lef": "169c047d389d60996438a3e137e0c8488032e5f3eef0bf0979b0e86e28430156",
+  "ot_hbm_production_clock_digital_body_ff.lib": "c8a48cba498f589bc5a685ac9af20794cd9965a8f7ef4bf5ef11c3f9f0ead1c7",
+  "ot_hbm_production_clock_digital_body_ss.lib": "e2a7fbbcdd878a5adf0ff40d9fe261cbcb1ccaa6170cfb531d18d8527c08a62a",
+  "ot_hbm_production_clock_digital_body_tt.lib": "e7c019aedd99d576bf18d098046b50c98c812e768f71e17c0853016f7a1bcea0"
+ }
+}

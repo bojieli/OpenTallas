@@ -1,0 +1,119 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+OT_TA15_CL: collar sync 30, ready stage-1 12, status stage-1 34
+OT_WS_MAX 2.694578449258245e-10 OT_WS_MIN 2.4994919328724663e-11
+Clock aon
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  51.30         network latency sequence_control.state[2]$_DFFE_PN0P_/CLK
+          55.85 network latency rel_sync_q0[15]$_DFF_PN0_/CLK
+---------------
+  51.30   55.85 latency
+           4.55 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+  56.15         network latency sequence_control.state[2]$_DFFE_PN0P_/CLK
+          60.68 network latency rel_sync_q0[15]$_DFF_PN0_/CLK
+---------------
+  56.15   60.68 latency
+           4.54 skew
+
+
+Clock hbm
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  44.52         network latency collars.phy[0].c.sync_q[0]$_DFF_PN0_/CLK
+          45.74 network latency collars.phy[0].c.sync_q[1]$_DFF_PN0_/CLK
+---------------
+  44.52   45.74 latency
+           1.22 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+  49.83         network latency collars.phy[0].c.sync_q[0]$_DFF_PN0_/CLK
+          51.06 network latency collars.phy[0].c.sync_q[0]$_DFF_PN0_/CLK
+---------------
+  49.83   51.06 latency
+           1.22 skew
+
+
+Clock link
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  44.45         network latency collars.link[0].c.tree[0].q$_DFF_PN0_/CLK
+          46.00 network latency collars.link[0].c.sync_q[0]$_DFF_PN0_/CLK
+---------------
+  44.45   46.00 latency
+           1.55 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+  49.77         network latency collars.link[0].c.tree[0].q$_DFF_PN0_/CLK
+          51.31 network latency collars.link[0].c.sync_q[0]$_DFF_PN0_/CLK
+---------------
+  49.77   51.31 latency
+           1.55 skew
+
+
+Clock serial
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  44.85         network latency collars.cmd_serial.sync_q[1]$_DFF_PN0_/CLK
+          46.51 network latency collars.coll_serial.tree[0].q$_DFF_PN0_/CLK
+---------------
+  44.85   46.51 latency
+           1.66 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+  50.13         network latency collars.cmd_serial.sync_q[1]$_DFF_PN0_/CLK
+          51.79 network latency collars.coll_serial.tree[0].q$_DFF_PN0_/CLK
+---------------
+  50.13   51.79 latency
+           1.66 skew
+
+
+Clock stream
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+  44.21         network latency collars.cmd_stream.sync_q[0]$_DFF_PN0_/CLK
+          45.92 network latency collars.coll_stream.tree[0].q$_DFF_PN0_/CLK
+---------------
+  44.21   45.92 latency
+           1.71 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+  49.49         network latency collars.cmd_stream.sync_q[0]$_DFF_PN0_/CLK
+          51.20 network latency collars.coll_stream.tree[0].q$_DFF_PN0_/CLK
+---------------
+  49.49   51.20 latency
+           1.70 skew
+
+
+OT_EXPORT_DONE
