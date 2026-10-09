@@ -14076,3 +14076,27 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+def hbm_loader_native_service_model():
+    """Finite deployment ingress; unresolved transport never earns token credit."""
+    from hbm_loader_native_service_model import model
+    result = model()
+    result['design_applicability'] = {
+        'Qwen3-8B ROM': False, 'DeepSeek-V4.1 ROM': False,
+        'Qwen3-8B HBM': True, 'DeepSeek-V4.1 HBM': True,
+    }
+    result['physical_measurement'] = dict(
+        source_commit='05c0a8a00', per_PC_FF=316,
+        per_PC_routed_cell_area_um2=395.862, PCs_per_stack=32,
+        stacks_per_die=4, per_die_lease_cell_area_um2=395.862*32*4,
+        evidence='results/hbm_loader_native_pc_pathfinding_r2_20261009',
+        scope='generic IO primitive pathfinding; actual loaded pins and clock unresolved',
+        SS_setup_ps=-207.1, TT_setup_ps=58.1045, FF_hold_ps=34.03,
+        headline_closed=False)
+    result['unresolved_composition'] = dict(
+        dispatcher='actual landing coordinates, registered relay hops and channel occupancy required',
+        writes='actual external producer/link pending fence and configured capacity inventory required',
+        floorplan='station reservations must include existing PC/line logic occupancy',
+        token_delta='runtime native access not admitted or credited until measured arbitration is composed')
+    return result
+
+
