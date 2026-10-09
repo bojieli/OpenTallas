@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_prefetch #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64,MAXREAD=15,STREAM_PS=1024,KEYLEG=24,CODE_MUT=0,PORTAL=0);
+module tb_hbm_svc_iks_prefetch #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64,MAXREAD=15,STREAM_PS=1024,KEYLEG=24,CODE_MUT=0,PORTAL=0,CONTROL=0,EARLY=0);
 reg clk=0,sclk=0,efck=0,rst_n=0;always #512 clk=~clk;
 always begin #416 efck=1;#417 efck=0;end
 integer score_phase_ps=0;
@@ -21,16 +21,49 @@ wire portal_req_r,portal_receipt_v,source_fault,sink_fault,portal_v,portal_take;
 wire[98:0]portal_d;wire[72:0]portal_receipt_frame;
 wire[106:0]portal_rq_code;wire[80:0]portal_rc_code;
 wire[1:0]portal_rq_epoch,portal_rc_epoch,portal_release;
+reg command_v=0,key_visible=0,producer_published=0,producer_drained=0;
+reg[72:0]command_frame=0;reg[14:0]command_row=0;
+wire command_r,control_prefetch_v,control_start_v,control_done,control_fault,control_retained;
+wire[72:0]control_frame;wire[14:0]control_row;wire[5:0]control_layer;wire[13:0]control_ndie;
+wire[89:0]control_fs;wire[344:0]control_kin;wire[6:0]control_rank;
+reg control_done_seen=0;integer held_credit_witness=0;
+wire request_v=CONTROL?control_prefetch_v:portal_req_v;
+wire[98:0]request_d=CONTROL?{control_frame,control_row,9'd342,2'd2}:portal_req_d;
+wire receipt_r=CONTROL?control_prefetch_v:portal_receipt_r;
+ot_hbm_native_index_control #(.ENABLE(CONTROL),.PREFETCH(1)) actual_control(
+ .clk(efck),.por_n(rst_n),.owner_valid(1'b1),.owner_fault(1'b0),.allocation_granted(1'b1),
+ .owner_frame(command_frame),.allocation_frame(command_frame),.producer_published(producer_published),
+ .producer_drained(producer_drained),.selector_idle(1'b1),.command_v(command_v),.command_r(command_r),
+ .command_frame(command_frame),.command_rank(7'd17),.command_ndie(14'd2736),.command_k(10'd512),
+ .command_cand(1'b0),.command_keep(1'b0),.command_layer(6'(rep_)),.command_key_row0(command_row),
+ .key_visible(key_visible),.key_visibility_frame(command_frame),.prefetch_v(control_prefetch_v),
+ .prefetch_accepted(portal_receipt_v&&receipt_r),.prefetch_accepted_frame(portal_receipt_frame),
+ .held_layer(control_layer),.held_key_row0(control_row),.held_ndie(control_ndie),
+ .keep_v(1'b0),.keep_r(),.keep_frame(73'd0),.keep_quarter(2'd0),.keep_bitmap(342'd0),
+ .fs(control_fs),.kin(control_kin),.source_start_v(control_start_v),.source_start_r(1'b1),
+ .held_frame(control_frame),.held_rank(control_rank),.source_done(got==1368),
+ .index_event(got==1368?2'b01:2'b00),.returns_drained(!dut.idx_busy),
+ .source_idle(got==1368&&fifo_ne==0),.retained(control_retained),.done(control_done),.fault(control_fault));
+always@(posedge efck)if(rst_n&&CONTROL)begin
+ if(control_fault)$fatal(1,"actual dynamic controller fault");
+ if(control_done)control_done_seen=1;
+ if(control_start_v)query_ready=1;
+ if(!key_visible&&actual_accepts!=rep_)$fatal(1,"service admission before actual key visibility fence");
+end
+always@(posedge clk)if(rst_n&&EARLY&&rep_==1&&portal_v&&dut.idx_busy)begin
+ held_credit_witness=held_credit_witness+1;
+ if(portal_take)$fatal(1,"next frame admitted before old line credits retired");
+end
 reg receipt_seen=0;time receipt_time;
 integer actual_accepts=0;
-ot_hbm_index_prefetch_source source_mailbox(.clk(efck),.rst_n(rst_n),.req_v(portal_req_v),.req_d(portal_req_d),.req_r(portal_req_r),
- .receipt_v(portal_receipt_v),.receipt_r(portal_receipt_r),.receipt_frame(portal_receipt_frame),.fault(source_fault),
+ot_hbm_index_prefetch_source source_mailbox(.clk(efck),.rst_n(rst_n),.req_v(request_v),.req_d(request_d),.req_r(portal_req_r),
+ .receipt_v(portal_receipt_v),.receipt_r(receipt_r),.receipt_frame(portal_receipt_frame),.fault(source_fault),
  .rq_w(portal_rq_code),.rq_epoch(portal_rq_epoch),.rc_w(portal_rc_code),.rc_epoch(portal_rc_epoch),.rc_fault(sink_fault),.rc_release(portal_release));
 ot_hbm_index_prefetch_sink sink_mailbox(.clk(clk),.rst_n(rst_n),.rq_w(portal_rq_code),.rq_epoch(portal_rq_epoch),
  .ip_v(portal_v),.ip_d(portal_d),.ip_take(portal_take),.fault(sink_fault),.rc_w(portal_rc_code),.rc_epoch(portal_rc_epoch),.rc_release(portal_release));
 always@(posedge clk)if(portal_take)begin
  actual_accepts=actual_accepts+1;
- if(portal_d!==portal_req_d)$fatal(1,"portal admitted wrong descriptor");
+ if(portal_d!==request_d)$fatal(1,"portal admitted wrong descriptor");
  $display("IKS_PORTAL actual_accepts=%0d frame73=%h at_ps=%0t",actual_accepts,portal_d[98:26],$time);
 end
 integer row0=4006;
@@ -110,25 +143,43 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  if(PORTAL)begin portal_req_d={73'(73'h12ab34001200345678+rep_),15'(row0),9'd342,2'd2};portal_req_v=1;end
  else begin ed[0]=1;ed[2:1]=2;ed[17:3]=15'(row0);ed[70:62]=342;end
  launch=$time;
+ if(CONTROL)begin
+  command_frame=portal_req_d[98:26];command_row=row0;
+  key_visible=0;producer_published=0;producer_drained=0;control_done_seen=0;command_v=1;
+  do @(negedge efck);while(!command_r);
+  @(negedge efck);command_v=0;
+  repeat(70)@(negedge efck);
+  if(actual_accepts!=rep_)$fatal(1,"core accepted before visibility fence");
+  key_visible=1;
+ end
  @(negedge efck);ed[0]=0;
  while(got<1368)begin
   @(negedge sclk);
   if(PORTAL)begin
    if(source_fault||sink_fault)$fatal(1,"prefetch mailbox fault");
    if(portal_receipt_v&&!receipt_seen)begin
-    if(portal_receipt_frame!==portal_req_d[98:26])$fatal(1,"prefetch receipt identity");
+    if(portal_receipt_frame!==request_d[98:26])$fatal(1,"prefetch receipt identity");
     if(actual_accepts!=rep_+1)$fatal(1,"receipt before actual core admission");
     receipt_seen=1;receipt_time=$time;portal_receipt_r=1;portal_req_v=0;
    end
    if(receipt_seen&&!portal_receipt_v)portal_receipt_r=0;
-   if(receipt_seen&&$time-receipt_time>=query_ns*1000)query_ready=1;
+   if(receipt_seen&&$time-receipt_time>=query_ns*1000)begin
+    if(CONTROL)begin producer_published=1;producer_drained=1;end
+    else query_ready=1;
+   end
   end else if($time-launch>=query_ns*1000)query_ready=1;
   if(link_fault)$fatal(1,"coded crossing poisoned got=%0d",got);
   if(fault)$fatal(1,"svc fault got=%0d",got);
   t=t+1;if(t>2000000)$fatal(1,"protocol timeout got=%0d",got);
  end
  query_ready=0;
- repeat(200)@(negedge clk);
+ if(!EARLY)repeat(200)@(negedge clk);
+ if(CONTROL)begin
+  t=0;while(!control_done_seen)begin @(negedge efck);t=t+1;if(t>1000)$fatal(1,"controller retirement debt");end
+  if(dut.idx_busy||fifo_ne!=0)$fatal(1,"controller retired before transport drained");
+  $display("IKS_CONTROL full73=%h row15=%0d layer=%0d accepted=%0d retired=1",command_frame,command_row,rep_,actual_accepts);
+  @(negedge efck);key_visible=0;
+ end
  if(fifo_ne!=0)$fatal(1,"residual FIFO lines");
  if(PORTAL&&(!receipt_seen||actual_accepts!=rep_+1))$fatal(1,"portal frame admission count");
  if(link_fault)$fatal(1,"coded crossing poisoned during drain");
@@ -136,6 +187,8 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  if(fault)$fatal(1,"fault during final credit drain");
  $display("IKS_PREFETCH rep=%0d phase_ns=%0d query_hold_ns=%0d keyleg=%0d code_mut=%0d correction_seen=%0d score_phase_ps=%0d lines=%0d max_fifo=%0d last_line_ns=%0.3f exposed_after_query_ns=%0.3f",rep_,phase,query_ns,KEYLEG,CODE_MUT,correction_seen,score_phase_ps,got,max_fifo,(lastline-launch)/1000.0,(lastline-(PORTAL?receipt_time:launch)-query_ns*1000)/1000.0);
 end
+if(EARLY&&held_credit_witness==0)$fatal(1,"missing early next-frame held-credit witness");
+$display("IKS_RETENTION early=%0d held_credit_cycles=%0d",EARLY,held_credit_witness);
 $display("PASS_HBM_SVC_IKS_PREFETCH");$finish;
 end
 endmodule
