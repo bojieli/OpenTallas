@@ -1,0 +1,686 @@
+{
+ "schema": "opentallas.hbm_generic_iface.v1.0-draft",
+ "status": "PROPOSED, pending owner approval",
+ "version": "1.0-draft",
+ "base": "v0.9 (results/arch/hbm_generic_iface_20261009/spec.json)",
+ "doc": "docs/HBM_GENERIC_INTERFACE.md section 10.5",
+ "magic": "0x31494748",
+ "md_words": 64,
+ "md_fields": [
+  {
+   "name": "magic",
+   "word": 0,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject a non-HGI image",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_minor",
+   "word": 1,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_major",
+   "word": 1,
+   "lsb": 8,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "n_words",
+   "word": 1,
+   "lsb": 16,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "fixed 64; guards a truncated load",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "manifest_sha256",
+   "word": 32,
+   "lsb": 0,
+   "width": 256,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "sha256 of the model manifest JSON (C8); binds MD to one model",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cp_vocab",
+   "word": 40,
+   "lsb": 0,
+   "width": 18,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell / completion token range check (width 18 everywhere)",
+   "reset": 129280,
+   "legal": [
+    1,
+    262143
+   ]
+  },
+  {
+   "name": "cp_ctx_max",
+   "word": 41,
+   "lsb": 0,
+   "width": 21,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell position range check",
+   "reset": 1048576,
+   "legal": [
+    1,
+    1048576
+   ]
+  },
+  {
+   "name": "coll_group_size",
+   "word": 46,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "hfd_coll",
+   "why": "aligned groups (C6 set); rank = die_id mod size",
+   "reset": 96,
+   "legal": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    96
+   ]
+  },
+  {
+   "name": "entry_ar",
+   "word": 56,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "AR decode step: record offset in the image (16 B units)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_verify",
+   "word": 57,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP verify pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_draft",
+   "word": 58,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP draft pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_base",
+   "word": 60,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image in HBM, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_pages",
+   "word": 61,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image size, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "crc32",
+   "word": 63,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "IEEE CRC-32 of words 0..62",
+   "reset": null,
+   "legal": null
+  }
+ ],
+ "reserved_words": {
+  "section_b_moved_to_manifest": "2-31",
+  "mtp_D4": "49, 53-55",
+  "window_C4": "50-52"
+ },
+ "retired_never_reuse": [
+  "rope_half 42.0",
+  "rope_rot_log2 42.1-3",
+  "norm_d_units 43.0-5",
+  "norm_hc_off 43.6",
+  "norm_out_bf16 43.7",
+  "sfx_sink_off 44.0",
+  "sfx_multipass 44.1",
+  "glu_out_bf16 45.0",
+  "glu_clamp_off 45.1",
+  "glu_routew_off 45.2",
+  "coll_head_rows 46.8-25",
+  "kv_dense 47.0",
+  "emb_int8 48.0",
+  "emb_row_bytes 48.1-16"
+ ],
+ "errors": {
+  "0": "OK",
+  "1": "E_MAGIC",
+  "2": "E_VERSION",
+  "3": "E_CRC",
+  "4": "E_BUSY",
+  "5": "E_RANGE",
+  "6": "E_RESERVED"
+ },
+ "fmt": {
+  "FP32": 0,
+  "BF16": 1,
+  "FP8E4M3": 2,
+  "FP4E2M1": 3,
+  "INT8": 4,
+  "U32": 5,
+  "UE8M0": 6
+ },
+ "uop": {
+  "bits": 128,
+  "fields": [
+   {
+    "name": "imm_b",
+    "lsb": 0,
+    "width": 32
+   },
+   {
+    "name": "imm_a",
+    "lsb": 32,
+    "width": 32
+   },
+   {
+    "name": "param",
+    "lsb": 64,
+    "width": 25
+   },
+   {
+    "name": "slot",
+    "lsb": 89,
+    "width": 3
+   },
+   {
+    "name": "tmpl",
+    "lsb": 92,
+    "width": 1
+   },
+   {
+    "name": "opnd",
+    "lsb": 93,
+    "width": 7
+   },
+   {
+    "name": "pred",
+    "lsb": 100,
+    "width": 2
+   },
+   {
+    "name": "wait",
+    "lsb": 102,
+    "width": 16
+   },
+   {
+    "name": "op",
+    "lsb": 118,
+    "width": 6
+   },
+   {
+    "name": "unit",
+    "lsb": 124,
+    "width": 4
+   }
+  ],
+  "units": [
+   "CTL",
+   "SM",
+   "SU",
+   "SFU",
+   "FUSED",
+   "ATT",
+   "COLL",
+   "ARGMAX",
+   "DMA",
+   "IDX",
+   "HC",
+   "SIMT",
+   "RSV12",
+   "RSV13",
+   "RSV14",
+   "RSV15"
+  ],
+  "ops": {
+   "CTL": [
+    "NOP",
+    "LOOP",
+    "ENDLOOP",
+    "END",
+    "FENCE",
+    "TOKX",
+    "AMAX",
+    "ACCEPT"
+   ],
+   "SM": [
+    "MATVEC"
+   ],
+   "SU": [
+    "VOP"
+   ],
+   "SFU": [
+    "GLU"
+   ],
+   "FUSED": [
+    "HC_PRE_NORM",
+    "ROW_NORM",
+    "HC_POST",
+    "SOFTMAX"
+   ],
+   "ATT": [
+    "QK",
+    "PV"
+   ],
+   "COLL": [
+    "ALL_REDUCE_SUM",
+    "ALL_GATHER",
+    "TOPK_MERGE",
+    "ARGMAX_MERGE"
+   ],
+   "ARGMAX": [
+    "LOCAL"
+   ],
+   "DMA": [
+    "LOAD",
+    "STORE",
+    "FENCE",
+    "KVWB_DS"
+   ],
+   "IDX": [
+    "INDEX_Q",
+    "INDEX_SCORES",
+    "TOPK_LOCAL",
+    "SELECT"
+   ],
+   "HC": [
+    "HC_MIX"
+   ],
+   "SIMT": [
+    "RUN"
+   ]
+  },
+  "op_code": "index in ops[unit]",
+  "wait_bit": "bit u = unit code u",
+  "pred": [
+   "ALWAYS",
+   "POS0",
+   "NOT_POS0",
+   "LAST_ITER"
+  ],
+  "opnd_order": [
+   "A",
+   "B",
+   "C",
+   "D",
+   "O",
+   "R",
+   "I"
+  ],
+  "param": {
+   "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+   "CTL.END": "A present: token = A[0]; A absent: token = latest SIMT RESULT payload (G7); status 2 if none",
+   "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
+   "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
+   "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
+   "FUSED.ROW_NORM": "[5:0] d_units (32|40), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+   "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
+   "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (0 = ids already global)",
+   "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1; mask = B.n_sel (POS1 or POS_SLOT1)",
+   "SIMT.RUN": "[13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
+   "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
+   "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)"
+  },
+  "record": "header(16 B) + [SUT 32 B if tmpl] + one MDESC (32 B) per set opnd bit, in A,B,C,D,O,R,I order",
+  "same_unit_order": "a unit starts a record only after the previous record of the same unit has made its writes visible to that unit"
+ },
+ "mdesc": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "space",
+    "lsb": 0,
+    "width": 2
+   },
+   {
+    "name": "fmt",
+    "lsb": 2,
+    "width": 3
+   },
+   {
+    "name": "ibcast",
+    "lsb": 5,
+    "width": 1
+   },
+   {
+    "name": "base",
+    "lsb": 8,
+    "width": 40
+   },
+   {
+    "name": "n",
+    "lsb": 48,
+    "width": 20
+   },
+   {
+    "name": "m",
+    "lsb": 68,
+    "width": 20
+   },
+   {
+    "name": "stride",
+    "lsb": 88,
+    "width": 32
+   },
+   {
+    "name": "istride",
+    "lsb": 120,
+    "width": 16
+   },
+   {
+    "name": "lstride",
+    "lsb": 136,
+    "width": 32
+   },
+   {
+    "name": "dyn_sel",
+    "lsb": 168,
+    "width": 6
+   },
+   {
+    "name": "dyn_mul",
+    "lsb": 174,
+    "width": 27
+   },
+   {
+    "name": "n_sel",
+    "lsb": 201,
+    "width": 6
+   },
+   {
+    "name": "l1stride",
+    "lsb": 207,
+    "width": 32
+   }
+  ],
+  "space": [
+   "HBM",
+   "VM",
+   "STREAM",
+   "NONE"
+  ],
+  "dyn": [
+   "ZERO",
+   "POS",
+   "POS1",
+   "TOKEN",
+   "L",
+   "RANK",
+   "SLOT",
+   "POS_SLOT",
+   "L1",
+   "WIN_N0",
+   "WIN_START0",
+   "WIN_N1",
+   "WIN_START1",
+   "CHUNK_START",
+   "CHUNK_N",
+   "POS_SLOT1",
+   "DS_FULL_DYN[0]",
+   "DS_FULL_DYN[1]",
+   "DS_FULL_DYN[2]",
+   "DS_FULL_DYN[3]",
+   "DS_FULL_DYN[4]",
+   "DS_FULL_DYN[5]",
+   "DS_FULL_DYN[6]",
+   "DS_FULL_DYN[7]",
+   "DS_FULL_DYN[8]",
+   "DS_FULL_DYN[9]",
+   "DS_FULL_DYN[10]",
+   "DS_FULL_DYN[11]",
+   "DS_FULL_DYN[12]",
+   "DS_FULL_DYN[13]",
+   "DS_FULL_DYN[14]",
+   "DS_FULL_DYN[15]",
+   "DS_FULL_DYN[16]",
+   "DS_FULL_DYN[17]",
+   "DS_FULL_DYN[18]",
+   "DS_FULL_DYN[19]",
+   "DS_FULL_DYN[20]",
+   "DS_FULL_DYN[21]",
+   "DS_FULL_DYN[22]",
+   "DS_FULL_DYN[23]",
+   "DS_FULL_DYN[24]",
+   "DS_FULL_DYN[25]",
+   "DS_FULL_DYN[26]",
+   "DS_FULL_DYN[27]",
+   "DS_FULL_DYN[28]",
+   "DS_FULL_DYN[29]",
+   "DS_FULL_DYN[30]",
+   "DS_FULL_DYN[31]",
+   "DS_FULL_DYN[32]",
+   "DS_FULL_DYN[33]",
+   "DS_FULL_DYN[34]",
+   "DS_FULL_DYN[35]",
+   "DS_FULL_DYN[36]",
+   "DS_FULL_DYN[37]",
+   "DS_FULL_DYN[38]",
+   "DS_FULL_DYN[39]",
+   "DS_FULL_DYN[40]",
+   "DS_FULL_DYN[41]",
+   "DS_FULL_DYN[42]",
+   "DS_FULL_DYN[43]",
+   "DS_FULL_DYN[44]",
+   "DS_FULL_DYN[45]",
+   "DS_FULL_DYN[46]",
+   "DS_FULL_DYN[47]"
+  ],
+  "address": "base + L*lstride + L1*l1stride + DYN[dyn_sel]*dyn_mul",
+  "istride": "0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"
+ },
+ "sut": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "a_src",
+    "lsb": 0,
+    "width": 2
+   },
+   {
+    "name": "a_ind",
+    "lsb": 2,
+    "width": 2
+   },
+   {
+    "name": "b_src",
+    "lsb": 4,
+    "width": 2
+   },
+   {
+    "name": "b_half",
+    "lsb": 6,
+    "width": 1
+   },
+   {
+    "name": "c_src",
+    "lsb": 7,
+    "width": 2
+   },
+   {
+    "name": "c_pair",
+    "lsb": 9,
+    "width": 1
+   },
+   {
+    "name": "d_src",
+    "lsb": 10,
+    "width": 2
+   },
+   {
+    "name": "a_rnd",
+    "lsb": 12,
+    "width": 1
+   },
+   {
+    "name": "a_relu",
+    "lsb": 13,
+    "width": 1
+   },
+   {
+    "name": "a_min",
+    "lsb": 14,
+    "width": 1
+   },
+   {
+    "name": "c_clip",
+    "lsb": 15,
+    "width": 1
+   },
+   {
+    "name": "m1",
+    "lsb": 16,
+    "width": 3
+   },
+   {
+    "name": "m2",
+    "lsb": 19,
+    "width": 2
+   },
+   {
+    "name": "qm",
+    "lsb": 21,
+    "width": 3
+   },
+   {
+    "name": "ad",
+    "lsb": 24,
+    "width": 3
+   },
+   {
+    "name": "sfu",
+    "lsb": 27,
+    "width": 3
+   },
+   {
+    "name": "e1",
+    "lsb": 30,
+    "width": 3
+   },
+   {
+    "name": "e2",
+    "lsb": 33,
+    "width": 2
+   },
+   {
+    "name": "rnd",
+    "lsb": 35,
+    "width": 1
+   },
+   {
+    "name": "dst",
+    "lsb": 36,
+    "width": 2
+   },
+   {
+    "name": "red",
+    "lsb": 38,
+    "width": 2
+   },
+   {
+    "name": "red_sq",
+    "lsb": 40,
+    "width": 1
+   },
+   {
+    "name": "red_whole",
+    "lsb": 41,
+    "width": 1
+   },
+   {
+    "name": "red_rnd",
+    "lsb": 42,
+    "width": 1
+   },
+   {
+    "name": "su_vec",
+    "lsb": 43,
+    "width": 2
+   },
+   {
+    "name": "red_tree",
+    "lsb": 45,
+    "width": 1
+   },
+   {
+    "name": "imm1",
+    "lsb": 46,
+    "width": 32
+   },
+   {
+    "name": "imm2",
+    "lsb": 78,
+    "width": 32
+   },
+   {
+    "name": "imm3",
+    "lsb": 110,
+    "width": 32
+   }
+  ],
+  "semantics": "tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (C5)"
+ },
+ "linear_attention": {
+  "scope": "in scope via software (owner 2026-10-09)",
+  "engines": "existing (SM, SU, DMA, COLL)",
+  "state": "FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",
+  "conv_ring": "FP32 [conv_k-1][channels] in region STATE",
+  "softplus": "SU template (no SFU code)",
+  "per_head": "second loop level (CTL.LOOP level 1, MDESC l1stride)"
+ }
+}

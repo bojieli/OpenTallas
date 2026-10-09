@@ -1,0 +1,38 @@
+{
+ "ds_v41_flash": {
+  "block_modes": {
+   "cp_vocab": 129280,
+   "cp_ctx_max": 1048576,
+   "coll_group_size": 96
+  },
+  "equals_reset_ds": true,
+  "crc32": "0x741ec60b",
+  "negative_cases": {
+   "bad_magic": "E_MAGIC",
+   "bad_version": "E_VERSION",
+   "bad_crc": "E_CRC",
+   "busy": "E_BUSY",
+   "group_12": "E_RANGE",
+   "retired_sink_bit": "E_RESERVED",
+   "vocab_2p18": "E_RESERVED"
+  }
+ },
+ "qwen3_8b": {
+  "block_modes": {
+   "cp_vocab": 151936,
+   "cp_ctx_max": 40960,
+   "coll_group_size": 4
+  },
+  "equals_reset_ds": false,
+  "crc32": "0xa4ba061c",
+  "negative_cases": {
+   "bad_magic": "E_MAGIC",
+   "bad_version": "E_VERSION",
+   "bad_crc": "E_CRC",
+   "busy": "E_BUSY",
+   "group_12": "E_RANGE",
+   "retired_sink_bit": "E_RESERVED",
+   "vocab_2p18": "E_RESERVED"
+  }
+ }
+}

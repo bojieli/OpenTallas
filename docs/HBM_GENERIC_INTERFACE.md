@@ -977,6 +977,157 @@ Writing this edition surfaced points that v0.9 leaves implicit. They are listed 
 - the bit offsets of the SU template fields (`spec.json` gives order and widths only);
 - whether a unit may begin a record before an earlier record of the same unit has completed its writes (§4.2).
 
+The v1.0 draft (§10.5) proposes a resolution for all four.
+
+
+### 10.5 HGI-1 v1.0 draft: the proposed diff against v0.9
+
+> **Proposed, pending owner approval. Not frozen.** This section is the complete v1.0 draft written as a diff. Chapters 2–9 (v0.9) stay normative until the owner approves it.
+>
+> - Machine-readable draft: `results/arch/hbm_generic_iface_20261009/v1_0_draft/` (`spec.json`, `manifest_*.json`, `md_*.hex`, `descriptors.json`).
+> - Encoder: `tools/hbm_generic_iface.py --draft --out|--check DIR`. Without `--draft` the encoder produces and checks v0.9 exactly as before.
+
+**What the draft takes in:**
+- the review's zero-hardware set: C1, C2, C3a, C5, C7, C8, C9, C10 and V0;
+- the simulator's gaps G1–G7 and GDN-1 to GDN-6 (`tools/hgi_sim/records.py` `SPEC_GAPS`, hbm-sim.log);
+- the owner's decision that **linear attention is in scope through software**.
+
+**What it leaves out:** C4 (window/chunk) and C6 (group sizes) are encoded but are hardware items. C3b and C11–C14 stay deferred.
+
+#### 10.5.1 Summary of changes
+
+| # | Source | v0.9 | v1.0 draft | Hardware |
+|---|---|---|---|---|
+| 1 | C7, C10 | 17 static mode fields in 9 words | **3 static fields**: `cp_vocab` (40), `cp_ctx_max` (41), `coll_group_size` (46.0). The other 14 fields are retired. Their bits stay reserved forever, and setting one gives E_RESERVED. | less: fork H2 deleted; H5 and H9 shrink to per-op decode |
+| 2 | C7, G5 | output formats as modes | output format = the O descriptor's `fmt` per op. It is FP8, BF16 or FP32 for `ROW_NORM` (QK-norm emits FP32 and prenorm BF16 in the same layer), and FP8 or BF16 for `GLU`. | the same logic, decoded per op |
+| 3 | C5 | `rope_half`, `rope_rot_log2`, SU partner XOR dims/2 | RoPE pairing is **data**. Qwen's W_q/W_k output rows (and QK-norm gains) are permuted offline so that split-half pairs become adjacent. `c_pair` is always i XOR 1, which is DS's existing hardware. Partial or odd spans are descriptor ranges. | less (no H2) |
+| 4 | C2, G2 | `opnd` 4 bits (A, B, C, O) | `opnd` 7 bits: **A, B, C, D, O, R, I** (D = the 4th source, e.g. the RoPE sine; R = the reduction destination; I = the gather index). Descriptors follow in that order. | 0 |
+| 5 | C3a | `wait` 12 bits = 12 units, 0 spare | `wait` 16 bits (bit u = unit code u). Unit codes 12–15 reserved. `param` is 25 bits. | 0 |
+| 6 | G1 | SUT lsbs unspecified | SUT fields are packed from bit 0 in list order: 142 bits, with lsbs in `spec.json`. | 0 |
+| 7 | G3, GDN-3 | `istride` 0 means 1, so no broadcast | MDESC bit 5 **`ibcast`** = inner stride 0 (per-row scalar broadcast: softmax max and normaliser, row scales, per-head gates). | 0 |
+| 8 | C1, G4 | `FUSED.SOFTMAX` used but not defined | `FUSED.SOFTMAX`: A = scores, B = sink row as data (−2¹⁰⁰ = no sink, per D3), O, `param[0]` multipass, `imm_a` = scale. `IDX.TOPK_LOCAL` is documented as a generic top-k (n and k from descriptors, lowest-index ties, sorted ids out). | 0 |
+| 9 | G6 | "640-row chunks with carry-in" | The multipass carry is the **streaming csum8 binary-counter state**: the denominator equals the golden's csum8 tree exactly. The SU 3-pass fallback stays bound until CF-SFX proves the fused unit equal. | 0 (a fork requirement) |
+| 10 | G7 | `CTL.END` requires A | `CTL.END` with A absent: token = the latest SIMT `RESULT` payload (today's CP rule; status 2 if there is none). DS kernel-posted tokens need no extra record. | 0 |
+| 11 | C7 | `kv_dense` mode | Opcode distinction. `DMA.STORE` is the generic linear append (dense KV, GDN state); `DMA.KVWB_DS` is the DS native window ring. The cache-length mask is the attention B descriptor's `n_sel` = POS1, or the new POS_SLOT1 per verify slot. | 0 |
+| 12 | C7 | `coll_head_rows`, `emb_*` modes | `ARGMAX.LOCAL` `imm_a` = id offset multiplier (global id = local + DYN[RANK]·imm_a). The embedding is a `DMA.LOAD` whose descriptor gives the row (TOKEN · row bytes, `fmt` INT8 or BF16), plus an SU dequant. | 0 |
+| 13 | C7 | `norm_d_units`, `sfx_multipass` global | per-op: `ROW_NORM` `param[5:0]` d_units, `[13:6]` seg; `SOFTMAX` `param[0]`. | 0 |
+| 14 | GDN-6 | one loop level | a second loop level: `CTL.LOOP param[16]` = level, DYN code L1, MDESC `l1stride`. Effective base = base + L·lstride + L1·l1stride + DYN·dyn_mul. | sequencer only |
+| 15 | C4 (reserve) | DYN 8–31 = DS | DYN is 6 bits. Generic codes 0–15 (adds L1, WIN_N0/1, WIN_START0/1, CHUNK_START, CHUNK_N, POS_SLOT1); DS FULL_DYN selectors move to 16–63 in their order. Window parameters reserved in words 50–52. | encoding now; window logic when a windowed model is scheduled |
+| 16 | C8 | section B (words 4–31) in the descriptor | Moved to a versioned **model manifest** (JSON, one row per layer: mixer kind, heads, window, RoPE span and pairing-in-weights, compress ratio, Engram, FFN kind, norm). Words 2–31 are reserved. Words 32–39 = sha256 of the manifest. | 0 |
+| 17 | C9 | `derive()` mis-derives | Moot for the removed fields. `cp_vocab` legal ≤ 2¹⁸ − 1. Group sizes {1, 2, 4, 8, 16, 32, 64, 96} (the C6 legal set; the hardware table is H6's). | 0 / tiny |
+| 18 | V0 | `SIMT.RUN` informal | ABI pinned (§10.5.4). | verification |
+| 19 | editorial | implicit | op code = index in `ops[unit]`; same-unit order: a unit starts a record only after the previous record of the same unit has made its writes visible to that unit. | 0 |
+
+Rule 1 (reset = DS) still holds. The three remaining fields reset to DS, and DS records carry DS's own descriptor values (FP8 output formats, sink rows, clamp 10.0, route weights, D5120).
+
+#### 10.5.2 Header (UOP, 128 bits), draft
+
+| Bits | Field | Meaning |
+|---|---|---|
+| 127:124 | `unit` | 0 CTL, 1 SM, 2 SU, 3 SFU, 4 FUSED, 5 ATT, 6 COLL, 7 ARGMAX, 8 DMA, 9 IDX, 10 HC, 11 SIMT, 12–15 reserved |
+| 123:118 | `op` | index in `ops[unit]` |
+| 117:102 | `wait` | drain mask, bit u = unit u |
+| 101:100 | `pred` | as v0.9 |
+| 99:93 | `opnd` | A, B, C, D, O, R, I present (bit 0 = A) |
+| 92 | `tmpl` | an SU template follows |
+| 91:89 | `slot` | DYN bank |
+| 88:64 | `param` | per op (`spec.json` `uop.param`) |
+| 63:32, 31:0 | `imm_a`, `imm_b` | immediates |
+
+**MDESC (256 bits), draft:**
+
+| Bits | Field |
+|---|---|
+| 1:0 | `space` |
+| 4:2 | `fmt` |
+| 5 | **`ibcast`** |
+| 47:8 | `base` |
+| 67:48 | `n` |
+| 87:68 | `m` |
+| 119:88 | `stride` |
+| 135:120 | `istride` |
+| 167:136 | `lstride` |
+| 173:168 | `dyn_sel` (6 bits) |
+| 200:174 | `dyn_mul` |
+| 206:201 | `n_sel` (6 bits) |
+| 238:207 | **`l1stride`** |
+
+Bits 7:6 and 255:239 are reserved.
+
+#### 10.5.3 Model descriptor, draft
+
+| Words | Content |
+|---|---|
+| 0–1 | header, version **1.0** |
+| 2–31 | reserved (section B → manifest) |
+| 32–39 | manifest sha256 |
+| 40 | `cp_vocab` (18) |
+| 41 | `cp_ctx_max` (21) |
+| 42–45, 47–48 | retired v0.9 bits, reserved forever |
+| 46 [7:0] | `coll_group_size` (kept at its v0.9 position) |
+| 49, 53–55 | MTP (D4) |
+| 50–52 | C4 window/chunk parameters |
+| 56–61 | program entries and image, as v0.9 |
+| 63 | CRC |
+
+The CP's checks and error codes are unchanged. A retired bit that is set now gives E_RESERVED. The encoder's negative cases cover this, a group size of 12 (E_RANGE) and a vocabulary of 2¹⁸.
+
+#### 10.5.4 `SIMT.RUN` ABI (V0)
+
+- **Arguments:**
+  - `param[13:0]` = entry PC (instruction memory 2¹⁴ × 64-bit words); `imm_a` = SM mask.
+  - Uniform registers: UR0 token, UR1 position, UR2 SM id, UR3 die id (as today), UR4 = `imm_b`.
+  - UR5 onward = the effective bases of the present descriptors, in `opnd` order (at most 7, up to UR11). UR15 stays the stride register.
+- **Completion:** the kernel's done and fault signals; its `RESULT` payload feeds `CTL.END` with A absent (G7).
+- **Installation:** kernels are installed into the instruction memory through `hfd_loader` at model load (load-sequence step 1). The image manifest lists entry PCs.
+- **Exactness:** the arithmetic library has an OTG-1 entry (`tools/gpu_sys/isa.py` semantics), so the golden can bind a kernel.
+- **Open verification (owner of H10-SM):** confirm that the r25 die's SM elements execute OTG-1. If they do not, the tier-K escape collapses and C3b (indexed descriptors) moves forward.
+
+#### 10.5.5 Linear attention through software (owner decision)
+
+The owner put linear-attention layers (Gated DeltaNet, Qwen3-Next style) in scope as **programs on the existing engines**, with no new unit.
+
+The simulator lowered one GDN decode layer (Qwen3-Next dimensions, TP4) to 75 records a die. It is bit-exact against the golden for all nine families on 4 dies, and the golden matches transformers to an rms relative error of 5.8e-7. Its rate figures are estimates (hbm-sim.log).
+
+The draft fixes the conventions it needs:
+
+| Gap | Convention |
+|---|---|
+| GDN-1 (FP32 state path) | The recurrent state is FP32 and never passes through ATT, whose rows are FP8/BF16. S·k and S·q are `SU.VOP` reductions; the state is loaded by `DMA.LOAD`, updated by SU templates, and written back by `DMA.STORE`. |
+| GDN-2 (softplus) | An SU template sequence under its own golden. No SFU code (C13 stays deferred). |
+| GDN-3 (per-head scalars) | `ibcast` (row 7 of §10.5.1). |
+| GDN-4 (transposed state) | The state is stored **transposed**, `[dv][dk]` row-major per head, so the SU's inner-index reduction computes S·k. The manifest records the layout. |
+| GDN-5 (region) | New memory-map region **STATE**: per layer, per local head, the FP32 state (dk·dv·4 B) and the FP32 conv ring (`[conv_k − 1][channels]`). Base = STATE + layer · layer_bytes (`lstride`). STATE is not position-indexed, so the dead-row rollback invariant does not hold: **GDN + MTP needs a per-slot state snapshot** (open; not in v1.0). |
+| GDN-6 (per-head loops) | The second loop level (row 14 of §10.5.1). One record per head-family replays over the local heads instead of 32 records. |
+
+Manifest mixer kind `gated_deltanet` carries: heads (k, v), head dims, conv kernel, gate and state formats, and the layer order.
+
+#### 10.5.6 Verification and work-plan impact
+
+- **New conformance rows:**
+  - **CF-BCAST:** `ibcast` per-row scalar, plus a mutant that reads inner stride 1.
+  - **CF-OFMT:** `ROW_NORM` FP32 / BF16 / FP8 in one program.
+  - **CF-SFX2:** csum8 carry equality, T = 640, 641, 1,280 and 8,192.
+  - **CF-END2:** a SIMT-posted token.
+  - **CF-LOOP2:** two-level loop, `l1stride` and L1.
+  - **CF-GDN:** state round trip in the transposed layout, conv-ring wrap, per-head loop, and a GQA-map mutant.
+  - **CF-0:** retired-bit negatives.
+- **Forks:**
+  - H2 (RoPE modes) is **cancelled**. Qwen RoPE becomes an offline weight permutation plus the DS `c_pair`.
+  - H3 (norm), H4 (softmax) and H5 (GLU) read per-op fields instead of mode words.
+  - H6 needs only `coll_group_size` (C6 table).
+  - H9 keeps the linear append (`DMA.STORE`) and drops the `emb_*` and `kv_dense` decode.
+  - C1–C3 (CP config path, sequencer, receiver) shrink to 3 words.
+- **Simulator migration:** `records.py`'s provisional readings move to the draft:
+  - `param` bits 0/1 → `opnd` D/R bits;
+  - `istride` 0xFFFF → `ibcast`;
+  - `CTL.END` without A.
+- **Golden:** `qwen_r25` takes the permuted-RoPE summation order (C5). This is allowed because that golden is new; the quality run covers it.
+- **Owner decisions needed:**
+  1. approve or amend the draft as a whole;
+  2. C5 in particular, which cancels H2;
+  3. the GDN + MTP snapshot question, if linear-attention models will run with MTP.
+
 ---
 
 ## 11. Glossary

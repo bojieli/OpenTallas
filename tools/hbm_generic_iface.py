@@ -364,11 +364,233 @@ def spec_json():
     )
 
 
+# ============================================================================================================
+# HGI-1 v1.0 DRAFT (proposed, pending owner approval).  Used only with --draft; v0.9 above is untouched.
+# Incorporates the iface-review zero-hardware set (C1, C2, C3a, C5, C7, C8, C9, C10, V0), the simulator's gaps
+# G1-G7 and GDN-1..6 (tools/hgi_sim/records.py SPEC_GAPS, hbm-sim.log), and linear attention via software.
+# ============================================================================================================
+D_VERSION = (1, 0)
+D_MD_FIELDS = [
+    ("magic", 0, 0, 32, "u", "cp", "reject a non-HGI image"),
+    ("ver_minor", 1, 0, 8, "u", "cp", "reject an incompatible layout"),
+    ("ver_major", 1, 8, 8, "u", "cp", "reject an incompatible layout"),
+    ("n_words", 1, 16, 8, "u", "cp", "fixed 64; guards a truncated load"),
+    # words 2-31: RESERVED (C8: section B moved to the per-layer model manifest)
+    ("manifest_sha256", 32, 0, 256, "u", "sw", "sha256 of the model manifest JSON (C8); binds MD to one model"),
+    ("cp_vocab", 40, 0, 18, "u", "hfd_cmdproc", "doorbell / completion token range check (width 18 everywhere)"),
+    ("cp_ctx_max", 41, 0, 21, "u", "hfd_cmdproc", "doorbell position range check"),
+    ("coll_group_size", 46, 0, 8, "u", "hfd_coll", "aligned groups (C6 set); rank = die_id mod size"),
+    # word 49, 53-55: reserved for Qwen MTP (D4); words 50-52: reserved for C4 window/chunk parameters
+    ("entry_ar", 56, 0, 32, "u", "hfd_cmdproc", "AR decode step: record offset in the image (16 B units)"),
+    ("entry_verify", 57, 0, 32, "u", "hfd_cmdproc", "MTP verify pass (0 = absent)"),
+    ("entry_draft", 58, 0, 32, "u", "hfd_cmdproc", "MTP draft pass (0 = absent)"),
+    ("image_base", 60, 0, 28, "u", "hfd_cmdproc", "program image in HBM, 4 KiB pages"),
+    ("image_pages", 61, 0, 28, "u", "hfd_cmdproc", "program image size, 4 KiB pages"),
+    ("crc32", 63, 0, 32, "u", "hfd_cmdproc", "IEEE CRC-32 of words 0..62"),
+]
+D_RESET = dict(cp_vocab=129280, cp_ctx_max=1 << 20, coll_group_size=96)
+D_LEGAL = dict(cp_vocab=(1, (1 << 18) - 1), cp_ctx_max=(1, 1 << 20), coll_group_size={1, 2, 4, 8, 16, 32, 64, 96})
+# v0.9 section-C bits retired by C7/C10: reserved forever, never reused (change rule).
+D_RETIRED = ["rope_half 42.0", "rope_rot_log2 42.1-3", "norm_d_units 43.0-5", "norm_hc_off 43.6", "norm_out_bf16 43.7",
+             "sfx_sink_off 44.0", "sfx_multipass 44.1", "glu_out_bf16 45.0", "glu_clamp_off 45.1",
+             "glu_routew_off 45.2", "coll_head_rows 46.8-25", "kv_dense 47.0", "emb_int8 48.0", "emb_row_bytes 48.1-16"]
+D_UNITS = UNITS + ["RSV12", "RSV13", "RSV14", "RSV15"]          # C3a: codes 12-15 reserved
+D_OPS = {k: list(v) for k, v in OPS.items()}
+D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
+D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
+D_UOP_FIELDS = [  # (name, lsb, width): C3a wait 16, C2 opnd 7 (A,B,C,D,O,R,I)
+    ("imm_b", 0, 32), ("imm_a", 32, 32), ("param", 64, 25), ("slot", 89, 3), ("tmpl", 92, 1),
+    ("opnd", 93, 7), ("pred", 100, 2), ("wait", 102, 16), ("op", 118, 6), ("unit", 124, 4),
+]
+D_OPND = ["A", "B", "C", "D", "O", "R", "I"]
+D_MDESC_FIELDS = [  # G3 ibcast; C4/GDN-6 6-bit DYN codes and a second loop stride
+    ("space", 0, 2), ("fmt", 2, 3), ("ibcast", 5, 1), ("base", 8, 40), ("n", 48, 20), ("m", 68, 20),
+    ("stride", 88, 32), ("istride", 120, 16), ("lstride", 136, 32), ("dyn_sel", 168, 6), ("dyn_mul", 174, 27),
+    ("n_sel", 201, 6), ("l1stride", 207, 32),
+]
+D_DYN = ["ZERO", "POS", "POS1", "TOKEN", "L", "RANK", "SLOT", "POS_SLOT", "L1", "WIN_N0", "WIN_START0", "WIN_N1",
+         "WIN_START1", "CHUNK_START", "CHUNK_N", "POS_SLOT1"]          # 16-63: DS FULL_DYN selectors, in order
+D_SUT_LAYOUT = []
+_o = 0
+for _n, _w in SUT_FIELDS:                                         # G1: packed from bit 0 in list order
+    D_SUT_LAYOUT.append((_n, _o, _w))
+    _o += _w
+D_PARAM = {
+    "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+    "CTL.END": "A present: token = A[0]; A absent: token = latest SIMT RESULT payload (G7); status 2 if none",
+    "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
+    "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
+    "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
+    "FUSED.ROW_NORM": "[5:0] d_units (32|40), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+    "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
+    "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (0 = ids already global)",
+    "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1; mask = B.n_sel (POS1 or POS_SLOT1)",
+    "SIMT.RUN": "[13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
+    "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
+    "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
+}
+
+
+def d_spec_json():
+    return dict(
+        schema="opentallas.hbm_generic_iface.v1.0-draft", status="PROPOSED, pending owner approval",
+        version="1.0-draft", base="v0.9 (results/arch/hbm_generic_iface_20261009/spec.json)",
+        doc="docs/HBM_GENERIC_INTERFACE.md section 10.5", magic=hex(MAGIC), md_words=NWORDS,
+        md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y, reset=D_RESET.get(n),
+                        legal=(sorted(D_LEGAL[n]) if isinstance(D_LEGAL.get(n), set) else D_LEGAL.get(n)))
+                   for n, w, l, wd, k, c, y in D_MD_FIELDS],
+        reserved_words=dict(section_b_moved_to_manifest="2-31", mtp_D4="49, 53-55", window_C4="50-52"),
+        retired_never_reuse=D_RETIRED, errors=ERR, fmt=FMT,
+        uop=dict(bits=128, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_UOP_FIELDS], units=D_UNITS,
+                 ops=D_OPS, op_code="index in ops[unit]", wait_bit="bit u = unit code u", pred=PRED,
+                 opnd_order=D_OPND, param=D_PARAM,
+                 record="header(16 B) + [SUT 32 B if tmpl] + one MDESC (32 B) per set opnd bit, in A,B,C,D,O,R,I order",
+                 same_unit_order="a unit starts a record only after the previous record of the same unit has made its writes visible to that unit"),
+        mdesc=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_MDESC_FIELDS], space=SPACE,
+                   dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(48)],
+                   address="base + L*lstride + L1*l1stride + DYN[dyn_sel]*dyn_mul",
+                   istride="0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"),
+        sut=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_SUT_LAYOUT],
+                 semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (C5)"),
+        linear_attention=dict(scope="in scope via software (owner 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
+                              state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",
+                              conv_ring="FP32 [conv_k-1][channels] in region STATE", softplus="SU template (no SFU code)",
+                              per_head="second loop level (CTL.LOOP level 1, MDESC l1stride)"),
+    )
+
+
+def d_manifest(name):
+    spec = MODELS[name]
+    raw = (ROOT / spec["cfg"]).read_bytes()
+    t = json.loads(raw)
+    t = t.get("text_config", t)
+    ds = spec["model_class"] == 1
+    hd = t["head_dim"]
+    rd = t.get("qk_rope_head_dim", hd)
+    layers = []
+    for i in range(t["num_hidden_layers"]):
+        att = dict(kind="dsa_mla" if ds else "gqa", q_heads=t["num_attention_heads"], kv_heads=t["num_key_value_heads"],
+                   head_dim=hd, window=t.get("sliding_window") or 0,
+                   rope=dict(dims=rd, offset=hd - rd, pairing_in_weights="adjacent" if ds else "split_half_permuted_to_adjacent",
+                             table="yarn" if ds else "plain"))
+        if ds:
+            att.update(compress_ratio=t["compress_ratios"][i], kv_source=i in t["kv_source_layer_ids"],
+                       index_source=i in t["index_source_layer_ids"])
+        layers.append(dict(idx=i, mixer=att, engram=ds and i in t.get("engram_layer_ids", []), hc=ds,
+                           ffn=dict(kind="moe", experts=t["n_routed_experts"], shared=t["n_shared_experts"],
+                                    topk=t["num_experts_per_tok"]) if ds else dict(kind="dense", inter=t["intermediate_size"]),
+                           norm=dict(kind="rms", eps=t["rms_norm_eps"], qk_norm=not ds)))
+    return dict(schema="opentallas.hgi_model_manifest.v1-draft", model=name, config=spec["cfg"],
+                config_sha256=hashlib.sha256(raw).hexdigest(),
+                globals=dict(hidden=t["hidden_size"], vocab=t["vocab_size"], rope_theta=t["rope_theta"],
+                             rope_scaling=t.get("rope_scaling"), softmax_scale=f"FP32(head_dim^-0.5) = {hex(f32bits(hd ** -0.5))}",
+                             weight_fmt="FP8E4M3 block32 / FP4 experts" if ds else "INT8 per-row BF16 scale",
+                             kv_fmt="FP8E4M3", tp_size=spec["tp"], head_rows_per_die=spec["head_rows"] or None),
+                mixer_kinds_supported=["gqa", "dsa_mla", "gated_deltanet (software, see linear_attention)"],
+                layers=layers)
+
+
+def d_pack(md):
+    words = [0] * NWORDS
+    for name, w, lsb, width, *_ in D_MD_FIELDS:
+        if name == "crc32":
+            continue
+        v = int(md.get(name, 0))
+        assert 0 <= v < (1 << width), (name, v)
+        if width > 32:
+            for k in range(width // 32):
+                words[w + k] = (v >> (32 * k)) & 0xFFFFFFFF
+        else:
+            words[w] |= v << lsb
+    words[CRC_WORD] = zlib.crc32(struct.pack("<63I", *words[:63])) & 0xFFFFFFFF
+    return words
+
+
+def d_hw_check(words, busy=False):
+    if busy:
+        return 4
+    if words[0] != MAGIC:
+        return 1
+    if ((words[1] >> 8) & 0xFF, words[1] & 0xFF) != D_VERSION or ((words[1] >> 16) & 0xFF) != NWORDS:
+        return 2
+    if zlib.crc32(struct.pack("<63I", *words[:63])) & 0xFFFFFFFF != words[CRC_WORD]:
+        return 3
+    used = [0] * NWORDS
+    for name, w, lsb, width, *_ in D_MD_FIELDS:
+        for k in range(max(1, width // 32)):
+            used[w + k] |= 0xFFFFFFFF if width >= 32 else ((1 << width) - 1) << lsb
+    if any(words[w] & ~used[w] & 0xFFFFFFFF for w in range(1, CRC_WORD)):
+        return 6
+    v = {n: (words[w] >> l) & ((1 << wd) - 1) for n, w, l, wd, *_ in D_MD_FIELDS if wd <= 32}
+    for k, lim in D_LEGAL.items():
+        if (v[k] not in lim) if isinstance(lim, set) else not (lim[0] <= v[k] <= lim[1]):
+            return 5
+    return 0
+
+
+def d_build(name):
+    man = d_manifest(name)
+    mbytes = (json.dumps(man, indent=1, sort_keys=True) + "\n").encode()
+    g = man["globals"]
+    md = dict(magic=MAGIC, ver_minor=D_VERSION[1], ver_major=D_VERSION[0], n_words=NWORDS,
+              manifest_sha256=int.from_bytes(hashlib.sha256(mbytes).digest(), "little"),
+              cp_vocab=g["vocab"], cp_ctx_max=1 << 20 if MODELS[name]["model_class"] == 1 else 40960,
+              coll_group_size=g["tp_size"], entry_ar=1)
+    return man, mbytes, md, d_pack(md)
+
+
+def d_self_test(words):
+    out = {}
+    w = list(words); w[0] ^= 1; out["bad_magic"] = d_hw_check(w)
+    w = list(words); w[1] ^= 1; out["bad_version"] = d_hw_check(w)
+    w = list(words); w[40] ^= 1; out["bad_crc"] = d_hw_check(w)
+    out["busy"] = d_hw_check(words, busy=True)
+    w = list(words); w[46] = (w[46] & ~0xFF) | 12; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["group_12"] = d_hw_check(w)
+    w = list(words); w[44] |= 1; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["retired_sink_bit"] = d_hw_check(w)
+    w = list(words); w[40] = (1 << 18) - 0; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["vocab_2p18"] = d_hw_check(w)
+    return out
+
+
+def d_main(out_dir=None, check_dir=None):
+    names = list(MODELS)
+    if out_dir:
+        out = Path(out_dir)
+        out.mkdir(parents=True, exist_ok=True)
+        (out / "spec.json").write_text(json.dumps(d_spec_json(), indent=1) + "\n")
+        summ = {}
+        for name in names:
+            man, mbytes, md, words = d_build(name)
+            assert d_hw_check(words) == 0, name
+            neg = d_self_test(words)
+            assert neg == dict(bad_magic=1, bad_version=2, bad_crc=3, busy=4, group_12=5, retired_sink_bit=6,
+                               vocab_2p18=6), neg
+            (out / f"manifest_{name}.json").write_bytes(mbytes)
+            (out / f"md_{name}.hex").write_text("".join(f"{x:08x}\n" for x in words))
+            modes = {k: md[k] for k in D_RESET}
+            summ[name] = dict(block_modes=modes, equals_reset_ds=modes == D_RESET, crc32=hex(words[CRC_WORD]),
+                              negative_cases={k: ERR[v] for k, v in neg.items()})
+        assert summ["ds_v41_flash"]["equals_reset_ds"]
+        (out / "descriptors.json").write_text(json.dumps(summ, indent=1) + "\n")
+        print(json.dumps(summ, indent=1))
+    if check_dir:
+        d = Path(check_dir)
+        assert json.loads((d / "spec.json").read_text()) == json.loads(json.dumps(d_spec_json())), "draft spec drift"
+        for name in names:
+            man, mbytes, md, words = d_build(name)
+            assert (d / f"manifest_{name}.json").read_bytes() == mbytes, f"{name}: manifest drift"
+            assert [int(x, 16) for x in (d / f"md_{name}.hex").read_text().split()] == words, f"{name}: MD drift"
+        print("hbm_generic_iface --draft: v1.0-draft spec, manifests and descriptors current")
+
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out")
     ap.add_argument("--check")
+    ap.add_argument("--draft", action="store_true", help="v1.0 DRAFT (proposed, pending owner approval)")
     a = ap.parse_args()
+    if a.draft:
+        return d_main(a.out, a.check)
     if a.out:
         out = Path(a.out)
         out.mkdir(parents=True, exist_ok=True)
