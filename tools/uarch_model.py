@@ -169,6 +169,12 @@ def hbm_ha2_fixedpin_model():
     return model()
 
 
+def mtp_hist_pipeline_contract_model():
+    """Full 16-slot Engram history ring registered-boundary successor, sized before RTL."""
+    from mtp_hist_pipeline_model import model
+    return model()
+
+
 def qwen_stream4_mutable_interface_model():
     """Selected protected STREAM4 rings/owner/control, sized before RTL."""
     from qwen_stream4_protected_model import model
