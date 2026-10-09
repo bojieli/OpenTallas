@@ -1,0 +1,46 @@
+{
+  "source": "9b5a6fa7c",
+  "functional_RTL": "6529f2bd2",
+  "core_source": "b827340df",
+  "host": "ot-epyc3",
+  "admission_estimate_GiB": 4,
+  "driver_pid": 1071409,
+  "driver_terminal": true,
+  "driver_rc": 0,
+  "positive": {
+    "cases": 190,
+    "words": 8112,
+    "released_golden_beats": 184,
+    "E4_half_tail": 16,
+    "E4_full_plus_half_tail": 48,
+    "credit_stress_words": 2048,
+    "read_write_stalls": true,
+    "actual_write_ACK_delay": true
+  },
+  "mutants": {
+    "drop_vo": {
+      "rc": 134,
+      "checker": "DROP/CREDIT timeout"
+    },
+    "early_done": {
+      "rc": 134,
+      "checker": "EARLY_DONE actualACK accounting"
+    },
+    "credit_overflow": {
+      "rc": 134,
+      "checker": "WRITE mismatch realqueueoverflow at2048wordrecord"
+    }
+  },
+  "SHA256": {
+    "m0.log": "40b3c98d4fd74b5bcd425e99be7114a70a1f2cc0079f14b95b9da589ab2e32c9",
+    "driver.log": "f49192914f9f5f496652b46ea3f845ed8754fc09c6141b869ef544083976b8d1",
+    "m3.log": "8420b1463d5a88f1d603d9b3ad2b07cc73241f369d4e141c6e73ea5c280a7674",
+    "m1.log": "0c4b5b72c8aea4842f16d73218ea9ecd854f0be487ecfcff5faf302a57c8a5de",
+    "m2.log": "983d07add4e2cffe965f7a89fabcc29bbd088f57f41b7ccd406fc730717f9f06"
+  },
+  "limits": [
+    "fault/drain/cold reset rerun on newerbench pending",
+    "physicalVMdie ingress not yet bound",
+    "slot synth and two currentflowroutes pending"
+  ]
+}
