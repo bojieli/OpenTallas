@@ -10,7 +10,7 @@
 |---|---:|---:|
 | Die | 23,095.6 × 32,801.8 µm = **757.6 mm²** (reticle margin 100.4 mm²; r21c 846.8) | 7,082.2 × 24,328.1 µm = **172.3 mm²** |
 | UCIe-A x64 macro | 0.605 mm², 777.6 µm of the S edge, bottom of spine column M | 0.605 mm², 777.6 µm of the N edge |
-| Legality | 0 overlaps / 0 outside, 12,910 instances | 0 / 0, 1,142 instances; OpenROAD real case OT_LEGAL 0 / 0, OT_ASSERT PASS |
+| Legality | 0 overlaps / 0 outside, 12,910 instances | 0 / 0, 892 instances; OpenROAD placement OT_LEGAL 892 / 0 / 0 (local); case PA / PDN / GRT running |
 | die_top_lint | connectivity 0, missing pins 0, unbound real pins 0 | connectivity 0, missing pins 0; strict ports (bound masters) OK |
 | Relay margin lint (data buses, SS reach 504 µm) | 55 reach / 64 far-side, all on inherited r21c spine chains (r21c itself: 53 / 55); 0 on the new crossing buses | PASS (0 / 0) |
 | Area by kind | tiles 529.6, spine 36.4, IO 17.6, relays 16.4, stations 8.4 mm² | PHY 40.0, row engines 21.0, aggregators 24.9 (ASSUMED frame), controllers 12.0, landings 8.4, CDC 4.3, SerDes host PHY 3.6, relays 1.8, centre blocks 2.1 mm² |
@@ -39,16 +39,18 @@ The HBM model poisons the rows at t = T-1, so a result can only be exact if the 
 - Q beats swapped;
 - plus the credit-stress base, which must stay exact.
 
-**Re-price (`reprice.json`).** The ctx 8192 layer step through the link takes **1,879 cycles** (best 1,869, worst 1,883). It replaces the 1,756 cycles of tile attention plus softmax_norm.
+The early-credit, Q-swap and credit-stress runs were still running at the last collection; the COLLECT section of `kv-die.log` has them.
+
+**Re-price (`reprice.json`).** The ctx 8192 layer step through the link takes **1,855 cycles** (best 1,853, worst 1,867), at the final KV-die stage counts (q path 28, hub↔aggregator 5, hub→seq 22, seq→landings 24). It replaces the 1,756 cycles of tile attention plus softmax_norm. Run4, at the earlier and longer relay counts, measured 1,879.
 
 | | Cycles | tok/s |
 |---|---:|---:|
-| Layer | 6,077 (TP4 5,954) | |
-| Embedding fetch | 287 (worst 614) | |
+| Layer | 6,053 (TP4 5,954) | |
+| Embedding fetch | 287 typical (worst 614) | |
 | L0 cold KV-prefetch penalty | 0 (TP4: 762) | |
-| **Token** | **222,418** | **5,395.2** |
+| **Token** | **221,538** | **5,416.7** |
 
-The token is **−1.77 %** against TP4's 5,492.7 tok/s (range 5,383.8–5,404.1). It is −1.3 % against the option-1a model (5,466.4). That model assumed the tile attention stays and only 2 × 14 crossing cycles are added. Putting attention where the KV lives means near-HBM attention, and its step is the cost.
+The token is **−1.38 %** against TP4's 5,492.7 tok/s (range 5,398.2–5,418.5). It is −0.9 % against the option-1a model (5,466.4). That model assumed the tile attention stays and only 2 × 14 crossing cycles are added. Putting attention where the KV lives means near-HBM attention, and its step is the cost.
 
 ## Files
 

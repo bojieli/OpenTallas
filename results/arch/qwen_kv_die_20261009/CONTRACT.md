@@ -1,4 +1,4 @@
-# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09) — v0.9
+# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09) — v1.0
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a of `results/arch/qwen_tp8_vs_sysdie_20261009/result.json`). KV never crosses the link.
 
@@ -101,9 +101,37 @@ So a VM stall of any length does not lose a word in that layer. The bench stalls
 | UCIe macro, FDI to far FDI | 3 | 5 | 9 | `ot_qkvd_ucie_x64_phy.json` |
 | RX adapter (macro-pin capture, buffer write, pop to the registered face) | 3 | 3 | 3 | `ot_qkvd_d2d` RTL |
 | **Adapter + PHY** | **9** | **11** | **15** | |
-| On-die relay stages (430.56 µm each) | from the placements | | | `reprice.json` (r22k relays, KV-die placement) |
+| On-die relay stages | from the placements | | | `reprice.json` |
 
-The per-layer and per-token totals, measured through the link by the end-to-end bench, are in `bench.json` and `reprice.json`.
+The relay stage counts, each including the registered endpoint, are:
+
+| Path | Stages |
+|---|---:|
+| r22k: SU `x3` → ROM end | 27 |
+| r22k: ROM end → VM `ar` | 29 |
+| r22k: SU `ea` → ROM end | 26 |
+| r22k: ROM end → SU `eq` | 26 |
+| r22k: sequencer ↔ ROM end | 13 |
+| KV die: KV end ↔ `qkd_seq` | 1 |
+| KV die: `qkd_seq` → farthest aggregator (q) | 28 |
+| KV die: hub ↔ aggregators | 5 |
+| KV die: hub → `qkd_seq` (RES) | 22 |
+| KV die: `qkd_seq` → farthest landing (KVN rows) | 24 |
+| KV die: gateway ↔ farthest landing | 25 |
+
+**Measured (`bench.json`, ctx 8192).** The attention layer step, from the first ROM-face word to the last RES word at the VM, takes:
+- **1,855 cycles** typical;
+- 1,853 best;
+- 1,867 worst.
+
+That step contains:
+- the KVN wait (8 words) before the attention starts;
+- the near-HBM attention itself (R = 8);
+- both crossings.
+
+It replaces the 1,756 cycles of tile attention plus softmax_norm.
+
+Per token, the embedding row takes 287 cycles typical and 614 worst. The token is 221,538 cycles = 5,416.7 tok/s (`reprice.json`).
 
 ## 5. RTL and bench
 
