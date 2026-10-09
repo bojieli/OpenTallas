@@ -2646,6 +2646,36 @@
    "merged_sha": "46a24a9d8",
    "status": "merged",
    "adopted": "closed view physical/s81_ph_views/closed/dsfd_capt_ctl (branch tip incl. f9c674c0e, d1731f77f die-STA/generator commits)"
+  },
+  {
+   "job": "qfd_cst-orph2-a75cb556b-tc-hm50",
+   "closed": "2026-10-08T19:09:39-07:00",
+   "branch": "claude/orphans2-20261008",
+   "source_commit": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+   "record_commit": "d33ab6ab13300fd493858a3c1cf445866e319719",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "290904cd28aef8c18840810bf352a7301de993b1",
+   "status": "merged",
+   "adopted_view": true,
+   "note": "ADOPTED (RVT default): TT setup +235.03 / FF hold +29.64 / SS sens +114.19 ps, DRC 0; view physical/qwen_die_masters/views/qfd_cst; replaces revoked qfd_cst"
+  },
+  {
+   "job": "qfd_cst-orph2-a75cb556b-lvt-tc-hm25",
+   "closed": "2026-10-08T19:08:43-07:00",
+   "branch": "claude/orphans2-20261008",
+   "source_commit": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+   "record_commit": "e12e6680b1c8c0bddf5cd18b9c24974f80b1a465",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "290904cd28aef8c18840810bf352a7301de993b1",
+   "status": "merged",
+   "adopted_view": false,
+   "note": "closed, not adopted (LVT alternative): TT +251.39 / FF hold +13.18 / SS sens +132.09 ps, DRC 0"
   }
  ]
 }
