@@ -10,7 +10,7 @@ def model():
  path=ROOT/'physical/asap7_memory_macros'/name/(name+'.json')
  macro=json.loads(path.read_text())
  bits={'checks':64*32*10,'duplicated_valid':32*64*2,'write_metadata':2*32*(12+1),
- 'macro_capture':64*266,'decoded_data':64*256,'read_metadata_pipeline':2*4*(11+64*12+64)+8,
+ 'encoder_code':32*266,'macro_capture':64*266,'decoder_syndrome_data':64*266,'decoded_data':64*256,'output_lines':8792,'read_metadata_pipeline':2*4*(11+64*12+64)+8,
  'credit_state':8*7*2,'group_state':2*(11+11+1)}
  # Read metadata/capture/decoder registers are explicit RTL, not free SRAM.
  return dict(schema='opentallas.hbm_index_sram_model.v1',status='PREBUILD_NOT_QUALIFIED',
@@ -33,8 +33,8 @@ def model():
  initiation_interval_cycles=1,credits='reserved for all8lanes at issue; final returned credits retained'),
  boundaries=dict(captured_read_bits_per_cycle=34*266,output_bits_per_cycle=8*1099,reverse_credit_bits=8,
  descriptor_fanout=32,routing_tracks_lower_bound=8*1099+8,channel_capacity='pending r25I floorplan',routing_check='NOT QUALIFIED'),
- latency=dict(added_read_pipeline_cycles=5,added_write_encoder_cycles=1,ideal_fullframe_issue_cycles=171,
- theoretical_fullframe_drain_cycles=176,added_seconds_per_descriptor_at1p2GHz=6/1.2e9,
+ latency=dict(absolute_read_pipeline_cycles=5,baseline_reassembly_cycles=1,added_read_pipeline_cycles=4,added_write_encoder_cycles=1,ideal_fullframe_issue_cycles=171,
+ theoretical_fullframe_drain_cycles=176,added_seconds_per_descriptor_at1p2GHz=5/1.2e9,
  token_composition='8 index layers; descriptor delay and sustained bandwidth measured in actual controller bench, no speculative gain'),
  adopted=False,physical_qualified=False)
 if __name__=='__main__':print(json.dumps(model(),indent=2))
