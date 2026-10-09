@@ -130,14 +130,17 @@ for _n, _w in SUT_FIELDS:                                         # G1: packed f
     _o += _w
 D_PARAM = {
     "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
+    "CTL.TOKX": "PROPOSED (Q-MTP-1, hardware in hfd_cmdproc): A = U32 [1 + ncol]: A[0] = k (1 <= k <= ncol), A[1..k] = "
+                "the committed tokens; the CP emits k completion beats {token A[i], pos + i - 1, status 0}; END follows",
     "CTL.END": "token = A[0] (A required on r25: the ARGMAX / COLL.ARGMAX_MERGE output in VM); A-absent form (latest SIMT RESULT) only on dies with SIMT",
-    "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
+    "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1 (P <= 8 slots share one weight read; "
+                 "A and O then carry one row per slot, m = P; each slot's result is the single-slot arithmetic) (G18)",
     "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
     "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
-    "FUSED.ROW_NORM": "[5:0] d_units (32|40), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+    "FUSED.ROW_NORM": "[5:0] d_units (width/128: 32|40 prenorm; 8|2 Qwen TP4 QK-norm; with seg 128 and m > 1 rows, the width of one A row), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
     "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
     "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (DS 1347: uniform 1,347-row head shards; Qwen3-8B 37984) (G17)",
-    "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
+    "ATT.QK/PV": "[3:0] head lanes (0 encodes 16) (G19), [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
                  "POS_SLOT1 = the mask), C (optional) = second row source appended after B (e.g. DS selected compressed rows); "
                  "ring = 1: B is a ring of B.m slots (power of two), first row read = slot (POS1 - n) mod B.m, wrapping (G12)",
     "FUSED.QDQ_FP8": "act_quant FP8E4M3 with a UE8M0 scale per 32-element block (hfd_quant): O = dequantised values (G8)",
@@ -187,7 +190,7 @@ def d_spec_json():
         mdesc=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_MDESC_FIELDS], space=SPACE,
                    dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(47)] + ["N_FROM_VM"],
                    address="base + L*lstride + L1*l1stride + (indexed ? U32(VM[I_eff+L]) : DYN[dyn_sel])*dyn_mul",
-                   indexed="id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L)",
+                   indexed="id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L); id bounds software-owned: hardware checks only the 40-bit HBM / VM range, the simulator faults out-of-region accesses",
                    istride="0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"),
         sut=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_SUT_LAYOUT],
                  semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (RoPE pairing is in the weights)"),

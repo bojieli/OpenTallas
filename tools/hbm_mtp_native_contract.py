@@ -132,3 +132,30 @@ def cp_result_model(root=None):
     contract['latency']['checked_CPRESULT_pin_capture_cycles']=1
     contract['qualification']='actual additive checked CP-result input; old rawlogit and historical pin views unchanged; fresh context mapping required'
     return contract
+
+
+# mtp-lead 2026-10-09: the generic HBM die (R25G) MTP master = hgi_mtp_native (rtl/hbm_accel/generic/hgi_mtp_native.sv):
+# the checked CP-result controller (EXTERNAL_AM=1) without the su_red logit group.  The argmax is the die's ARGMAX unit
+# (ARGMAX.LOCAL) + COLL.ARGMAX_MERGE; the merged id enters through the CP (MX1 f_am -> t_mtp[179], [180 +: 17]).
+GENERIC_MASTER = 'hgi_mtp_native'
+GENERIC_SOURCE = 'rtl/hbm_accel/generic/hgi_mtp_native.sv'
+MX1_SPLIT = 'physical/hbm_cp_mtp_native/collar_mx1/split.json'
+MX1_BAND = 'hfd_cmdproc_s_mtp_native_mx1'
+
+
+def generic_model(root=None):
+    contract = cp_result_model(root)
+    groups = {k: v for k, v in contract['groups'].items() if k != 'f_su_red'}
+    assert {k: g['bits'] for k, g in groups.items()} == dict(
+        f_cmdproc=197, t_cmdproc=517, f_router=59, t_router=58, t_coll=19, f_coll=1), groups
+    contract.update(schema='opentallas.hbm-mtp-generic-die-contract.v1', controller_master=GENERIC_MASTER,
+        controller_source=GENERIC_SOURCE, groups=groups, EXTERNAL_AM=1,
+        argmax='ARGMAX.LOCAL in the die ARGMAX unit (ot_hgi_argmax18_m, this slot) + COLL.ARGMAX_MERGE; merged id via '
+               'the CP (MX1 f_am 18 = valid + 17-bit id, cp_vocab-checked) -> f_cmdproc[179], [180 +: 17]',
+        removed_groups=dict(f_su_red=523),
+        cp_peer=dict(master=MX1_BAND, split=MX1_SPLIT, t_mtp=197, f_mtp=517, f_am=18),
+        token_bits=17, token_bits_note='DS vocab 129,280 < 2^17; Qwen MTP reserved (HBM_GENERIC_INTERFACE 10.3)')
+    contract['routing'] = dict(contract['routing'], signal_tracks=sum(g['bits'] for g in groups.values()))
+    contract['qualification'] = ('facade of the gated cp_stop controller; needs its own route (hgi_mtp_native), the MX1 '
+                                 'route, the generic backend translator and the die connected bench before default-on')
+    return contract

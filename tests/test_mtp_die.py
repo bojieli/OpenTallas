@@ -1,8 +1,8 @@
 """MTP-DIE (2026-10-08): die-level homes of the DSpark MTP functions.
 
 HBM r25m: hfd_mtp in the low spine slot and the loader memory chains, outline unchanged, legal, no generated pin
-clashes.  S81: the --wfc-hard / --mtp-seq / --mtp-links options parse and stay off by default (the full-die builds
-take ~10-40 min; their check outputs are committed in results/arch/mtp_die_20261008/checks).  Plan: the record's
+clashes.  S81: the --wfc-hard / --mtp-seq / --mtp-links / --draft options parse AND bind (mtp-draftdie 2026-10-09: the head
+sequencer defaults ON, the WFC slab follows WFC_HARD_DEFAULT; the full-die builds take ~10-40 min and run remotely).  Plan: the record's
 reconciled die counts and budget terms.
 """
 import argparse
@@ -35,12 +35,41 @@ def test_hbm_r25m_mtp_and_loader_wiring():
     assert H.margin_lint(m)['verdict'] != 'FAIL'
 
 
-def test_s81_mtp_options_default_off():
+def test_s81_mtp_options_parse():
     ap = S.die_options(argparse.ArgumentParser())
     a = ap.parse_args(['--gen', 'r8', '--die', 'head', '--mtp-seq', '--mtp-links', '5', '--wfc-hard'])
     assert a.mtp_seq and a.mtp_links == 5 and a.wfc_hard
     b = ap.parse_args(['--gen', 'r8'])
-    assert not b.mtp_seq and b.mtp_links == 0 and not b.wfc_hard
+    assert b.mtp_seq is None and b.mtp_links == 0 and b.wfc_hard is None and b.draft is None
+    c = ap.parse_args(['--gen', 'r8', '--no-mtp-seq', '--no-wfc-hard', '--die', 'layer1', '--draft', 'A'])
+    assert c.mtp_seq is False and c.wfc_hard is False and c.draft == 'A'
+
+
+def test_s81_mtp_options_bind():
+    """the options must reach the module globals (a merge once dropped the binding: the flags were silent no-ops)"""
+    ap = S.die_options(argparse.ArgumentParser())
+    saved = (S.WFC_HARD, S.MTP_SEQ, S.MTP_LINKS, S.DRAFT_SIDE)
+    try:
+        S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'head', '--mtp-links', '5']))
+        assert S.MTP_SEQ is S.MTP_SEQ_DEFAULT is True and S.MTP_LINKS == 5
+        assert S.WFC_HARD is S.WFC_HARD_DEFAULT          # flips with the one constant when the SOURCE partner closes
+        S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'head', '--no-mtp-seq', '--wfc-hard']))
+        assert S.MTP_SEQ is False and S.WFC_HARD is True
+        S.apply_options(ap.parse_args(['--gen', 'r8', '--rev', 'r9', '--die', 'layer1', '--draft', 'B']))
+        assert S.DRAFT_SIDE == 'B'
+    finally:
+        S.WFC_HARD, S.MTP_SEQ, S.MTP_LINKS, S.DRAFT_SIDE = saved
+        S.configure('layer')
+
+
+def test_draft_buses_and_rule():
+    sys.path.insert(0, str(ROOT / 'tools'))
+    import dsrom_mtp_draft_images as D
+    assert D.md2_side('mtp.0.ffn.experts.5.w1.weight') == 'A' and D.md2_side('mtp.1.ffn.experts.0.w2.weight') == 'B'
+    assert D.md2_side('mtp.2.ffn.experts.63.w3.weight') == 'A' and D.md2_side('mtp.2.ffn.experts.64.w3.weight') == 'B'
+    names = [(a, b) for a, b, *_ in S.P2_BUSES]
+    assert len(names) == len(set(names))               # one chain per slab pair (hb_<a>_<b> names are unique)
+    assert S.DRAFT_IMAGE['words_per_die'] / S.DRAFT_IMAGE['words_capacity'] == S.DRAFT_IMAGE['fill']
 
 
 def test_plan_record():

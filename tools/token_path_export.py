@@ -404,6 +404,12 @@ def qwen(kv=None):
                 for k, ln in TOKEN_KV:
                     adders.append(dict(item=k, cycles=ln["effect"]["AR"], grade="measured" if ln["status"] == "measured" else "priced",
                                        record=ln["source"][0]["file"], note="per-token KV-path constant, placed on the cold layer"))
+            if kv and oid == "residual" and kv.get("split_structure"):
+                sp = kv["split_structure"]
+                adders = list(adders) + [dict(item="rom_split_stations", cycles=sp["l0_delta"] if L == 0 else sp["layer_delta"],
+                                              grade="measured", record=sp["source"][1],
+                                              note="ROM-die split structure (pin stations + compensation + SU ML 7), "
+                                                   "token-exact L0-L2 chain vs base; charged on the layer's last op")]
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
             deps = [prev_group_last] if i == 0 else None
             n = d.add(f"{g}.{oid}", lab, g, cls, cyc,
@@ -1104,6 +1110,74 @@ def accounting(total, tau, ar_cycles, phases, tau_source):
                      "per-accepted-token cost = step / tau")
 
 
+MTP_STEP = "results/arch/mtp_step_20261009/{}_step.json"     # tools/mtp_step_charges.py (mtp-lead 2026-10-09)
+
+
+def apply_mtp_charges(d, key, gdef, total):
+    """insert the MTP block charges of tools/mtp_step_charges.py: each critical charge becomes a node after its anchor
+    (every later node shifts by its cycles); an overlapped charge becomes a parallel node with the slack its proof states.
+    Returns (new total, summary) -- (total, None) when the step file is absent."""
+    p = ROOT / MTP_STEP.format(key)
+    if not p.exists():
+        return total, None
+    st = json.loads(p.read_text())
+    for ph in ("draft", "verify", "accept"):
+        gdef["MC." + ph] = dict(label=f"MTP block charges, {ph} (tools/mtp_step_charges.py)", kind={"verify": "wave"}.get(ph, ph), phase=ph)
+    crit_nodes = [d.nodes[x] for x in d.order]
+
+    def anchor_of(a):
+        if a == "wave.last":
+            return [n for n in crit_nodes if n["id"].startswith("wave.")][-1]["id"]
+        if a in ("draft.last", "verify.last"):
+            return [n for n in crit_nodes if n.get("phase") == a.split(".")[0]][-1]["id"]
+        if a == "draft.blocks":
+            return [n for n in crit_nodes if n.get("phase") == "draft" and not n["id"].startswith("draft.")][-1]["id"]
+        assert a in d.nodes, a
+        return a
+
+    added = 0.0
+    for c in st["charges"]:
+        nid = "mc." + c["id"]
+        hwd = hw("partial", f"{c['element']}: cycles charged from its RTL bench / record"
+                 + (f"; variant: {c['variant']}" if c.get("variant") else ""), evidence="; ".join(c["source"])[:300])
+        sg = src("measured" if c["grade"].startswith("measured") else "priced", MTP_STEP.format(key), f"charges[{c['id']}]",
+                 note=c["formula"])
+        if not c["critical"]:
+            n = d.add(nid, c["element"], "MC." + c["phase"], "ctl", c["cycles"], sg, op=nid, start=0.0, critical=False, deps=[],
+                      kind="parallel", elements=[], instances=[])
+            n["slack"] = r1(max(x["end"] for x in crit_nodes if x.get("phase") == "draft") - c["cycles"])
+            n["overlap_proof"] = c["overlap_proof"]
+            mark(n, c["phase"], hwd)
+            continue
+        a = anchor_of(c["anchor"])
+        t = d.nodes[a]["end"]
+        cyc = c["cycles"]
+        for n in d.nodes.values():
+            if "start" in n and n["start"] >= t - 1e-9:
+                n["start"], n["end"] = r1(n["start"] + cyc), r1(n["end"] + cyc)
+        k = d.order.index(a)
+        nxt = d.order[k + 1] if k + 1 < len(d.order) else None
+        n = dict(id=nid, label=c["element"], group="MC." + c["phase"], cls="ctl", op=nid, kind="op", base_cycles=r1(cyc), cycles=r1(cyc),
+                 adders=[], src=sg, elements=[], instances=[], critical=True, start=r1(t), end=r1(t + cyc))
+        d.nodes[nid] = n
+        d.order.insert(k + 1, nid)
+        for e in d.edges:
+            if e["src"] == a and e["dst"] == nxt:
+                e["dst"] = nid
+        d.edges.append(dict(src=a, dst=nid, bytes=None, link=None, cycles=0))
+        if nxt is not None:
+            d.edges.append(dict(src=nid, dst=nxt, bytes=None, link=None, cycles=0))
+        mark(n, c["phase"], hwd)
+        added += cyc
+        crit_nodes = [d.nodes[x] for x in d.order]
+    assert abs(added - st["totals"]["critical_cycles"]) < 0.5, (added, st["totals"])
+    summ = dict(source=MTP_STEP.format(key), critical_cycles=st["totals"]["critical_cycles"],
+                critical_cycles_lower=st["totals"]["critical_cycles_lower"],
+                overlapped_cycles=st["totals"]["overlapped_cycles"], composed_step_cycles=r1(total),
+                charged_step_cycles=r1(total + added))
+    return total + added, summ
+
+
 def ds_rom_mtp(ar=None):
     import dsrom_1m_measure as M
     ar = ar or ds_rom()
@@ -1273,10 +1347,15 @@ def ds_rom_mtp(ar=None):
     mark(n, "accept")
     total = t + n["cycles"]
     assert abs(total - hv["step_us"] * CY) < 0.6, (total, hv["step_us"] * CY)
+    total, charged = apply_mtp_charges(d, "ds_rom", gdef, total)
+    tok = round(m["tau"] * CLK / total, 1) if charged else hv["MTP_tok_s"]
+    if charged:
+        charged["MTP_tok_s_composed"] = hv["MTP_tok_s"]
+        hv["MTP_tok_s_charged"] = tok
     phases = phase_spans(d, total)
-    headline = dict(tok_s=hv["MTP_tok_s"], us=hv["step_us"], cycles=r1(hv["step_us"] * CY), tau=m["tau"],
+    headline = dict(tok_s=tok, us=round(total / CY, 3), cycles=r1(total), tau=m["tau"],
                     mode=f"MTP (DSpark gamma 5, tau {m['tau']}), position 1,048,575", ar_tok_s=hv["AR_tok_s"],
-                    mtp_over_ar=round(hv["MTP_tok_s"] / hv["AR_tok_s"], 3),
+                    mtp_over_ar=round(tok / hv["AR_tok_s"], 3), composed_tok_s=hv["MTP_tok_s"],
                     basis=f"{m['rule']}; 1,792 HALF mapping adds {hv['extra_hops_1792']} hops once a step",
                     source=REPRICE + " ds_rom.after.half_phl.MTP_tok_s", status="measured field + composed MTP rule "
                     "(wavefront and draft placement not physically qualified)", physical_qualified=m.get("physical_qualified"))
@@ -1292,8 +1371,13 @@ def ds_rom_mtp(ar=None):
         "accept unit closed as blocks but are not integrated (dashed).",
         "The verify pass's operators are the AR view's critical path (off-critical operators: see the AR view).",
     ]
+    if charged:
+        notes.append(f"MTP block charges (group MC, {charged['source']}): the WFC kit on the stage hops and intervals, the "
+                     f"P2 selected draft transport, the sequencer, the Markov floor, wfc_tok and mtp_commit add "
+                     f"{charged['critical_cycles']:,.1f} cycles a step: {hv['MTP_tok_s']:,.1f} -> {tok:,.1f} tok/s (composed "
+                     "rule -> charged).")
     rec = finish(d, headline, gdef, DS_CLASSES + MTP_CLASSES_EXTRA, drill, notes, tau=m["tau"],
-                 extra=dict(geometry=ar["geometry"], mtp_variants=variants))
+                 extra=dict(geometry=ar["geometry"], mtp_variants=variants, mtp_charges=charged))
     rec.update(phases=phases, hw_summary=hw_summary(d),
                accounting=accounting(total, m["tau"], ar["totals"]["cycles"], phases, m["tau_source"]))
     return rec
@@ -1484,10 +1568,14 @@ def hbm_mtp(ar=None):
     after = rp["upper"]["after"]
     exp_us = comp["MTP_step_us"] + sum(x["cycles_hi"] for x in rp["items"]) / CY
     assert abs(total / CY - exp_us) < 0.01, (total / CY, exp_us)
+    total, charged = apply_mtp_charges(d, "hbm_ds", gdef, total)
+    tok = round(tau * CLK / total, 1) if charged else after["MTP_tok_s"]
+    if charged:
+        charged["MTP_tok_s_composed"] = after["MTP_tok_s"]
     phases = phase_spans(d, total)
-    headline = dict(tok_s=after["MTP_tok_s"], us=round(exp_us, 3), cycles=r1(exp_us * CY), tau=tau,
+    headline = dict(tok_s=tok, us=round(total / CY, 3), cycles=r1(total), tau=tau,
                     mode=f"MTP (DSpark gamma 5, tau {tau}), position 1,048,575", ar_tok_s=after["AR_tok_s"],
-                    mtp_over_ar=round(after["MTP_tok_s"] / after["AR_tok_s"], 3),
+                    mtp_over_ar=round(tok / after["AR_tok_s"], 3), composed_tok_s=after["MTP_tok_s"],
                     basis=f"{UNI} hbm_ds unified_candidate_contracts_rtl MTP step ({comp['MTP_step_us']} us, {comp['MTP_tok_s']} "
                           f"tok/s) + the 2026-10-08 re-price upper bound; step = draft + verify (P6 walk + expert union) + seed/commit "
                           f"(gate row {gate['MTP_row']}, {gate['MTP_step_us']} us)",
@@ -1505,8 +1593,13 @@ def hbm_mtp(ar=None):
         f"Rate = tau {tau} / step = {after['MTP_tok_s']:,.1f} tok/s (re-price upper bound; lower bound in reprice.json).",
         "Hatched: no closed hardware; dashed: a closed block not adopted / integrated (expert union, spec state).",
     ]
+    if charged:
+        notes.append(f"MTP block charges (group MC, {charged['source']}): the hfd_mtp die master's pin crossings, argmax / "
+                     f"topK / union FAST registers, spec-state latency, fence and commit add {charged['critical_cycles']:,.1f} "
+                     f"cycles a step ({after['MTP_tok_s']:,.1f} -> {tok:,.1f} tok/s); the KV writer's +1/row "
+                     f"({charged['overlapped_cycles']:,.0f} cycles) is overlapped with the next draft (proof in the file).")
     rec = finish(d, headline, gdef, HBM_CLASSES + MTP_CLASSES_EXTRA[1:], drill, notes, tau=tau,
-                 extra=dict(geometry=ar["geometry"]))
+                 extra=dict(geometry=ar["geometry"], mtp_charges=charged))
     rec.update(phases=phases, hw_summary=hw_summary(d),
                accounting=accounting(total, tau, ar["totals"]["cycles"], phases, row["tau_source"]))
     return rec

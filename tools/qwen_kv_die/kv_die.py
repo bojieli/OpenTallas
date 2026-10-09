@@ -458,6 +458,8 @@ def masters(m, k=1, port_bits=None):
                     if mt and sp[0] == 'face':
                         cdc = by[f'cdc_WS_{mt.group(1)}']        # every stack has the same CDC column layout
                         sp[4] = cdc.y + cdc.h / 2 - land.y + (40.0 if mt.group(2) == 'i' else -40.0)
+                    if sp[0] == 'face' and sp[1] * 0.096 + 4.0 < (mm.w if sp[2] in 'NS' else mm.h):
+                        sp[5] = 2          # 2-track pitch where the face has room (emf[221] DRT-0073 at 1 track)
                     mm.ports[p] = tuple(sp)
                     mm.order.append(p)
         else:
@@ -517,7 +519,9 @@ def masters(m, k=1, port_bits=None):
                 layer = 'M6'                     # the 16.8 k-bit leaf word on M6, the 16.5 k-bit q word on M4 (same face)
             L = mm.h if face in ('E', 'W') else mm.w
             fl = face_load.setdefault((mst, face), [])
-            mm.face(p, bits, face, layer, 0.0, 1)
+            # re-cut D faces are narrow enough for 2-track pitch (1-track first bits had no access point next to the
+            # die PDN, DRT-0073 on astk e0i[0] / reng so[0])
+            mm.face(p, bits, face, layer, 0.0, 2 if (mst in ('qkd_reng', 'qkd_astk') or (mst == 'qkd_land' and face in 'NS')) else 1)
             fl.append(p)
         # spread the face pins of each face evenly (centres)
         for face in ('N', 'S', 'E', 'W'):

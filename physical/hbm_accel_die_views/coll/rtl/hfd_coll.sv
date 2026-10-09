@@ -108,7 +108,7 @@ module hfd_coll (
     assign w_ep_rank = {i_f_cmdproc[7:0]};
     assign w_ep_pf = {i_f_cmdproc[23:8]};
     assign w_ep_go = {i_f_cmdproc[24:24]};
-    assign w_ep_inj_data = {i_f_su_SW[1023:0]};
+    assign w_ep_inj_data = i_f_su_SW[1023:0] | i_f_su_NW[1023:0] | i_f_su_SE[1023:0] | i_f_su_NE[1023:0];
     assign w_ep_sw_cr_ret = {i_llk_N3[966:959]};
     assign w_ep_ph_rx_v = {i_llk_S0[494:487]};
     assign w_ep_ph_rx_flit = {i_llk_N3[958:487], i_llk_N2[973:487], i_llk_N1[973:487], i_llk_N0[973:487], i_llk_S4[973:487], i_llk_S3[973:487], i_llk_S2[973:487], i_llk_S1[973:487], i_llk_S0[973:495]};

@@ -1,0 +1,47 @@
+{
+  "source_commit": "cec6a6a5e",
+  "input_odb_sha256": "8a0caf763854c17743a5a171cf59e7727dd55553b1a6a376d42dcbbbe12eb4c8",
+  "input_spef_sha256": "b31a760afa9d6e41a453271240d8b2d9d65d3c232b810108869fe0781b4bc968",
+  "input_sdc_sha256": "0b392970af0403ca530a88108ec6028ed2fd0f271ae597b7767ec7979d2f8f4f",
+  "verdict": "ATTRIBUTED_CLOCK_PORT_PROPERTY; data timing verdict unchanged",
+  "negative_property_endpoint": "fclk_o",
+  "negative_property_ps": -1679.797241,
+  "outputs": 4929,
+  "negative_property_outputs": 1,
+  "exact_constrained_path_count": 0,
+  "exact_unconstrained_diagnostic_report": "No paths found",
+  "actual_data_outputs_ps": {
+    "paused": 48.74,
+    "in_r": 54.93
+  },
+  "tt_tns_ps": 0,
+  "sdcpolicy": "fclk_o generated clock forwarded_port, explicitly skipped in all_outputs data delay and load loop; original constraints unchanged",
+  "exporter_scope": "corner_sta.py all_outputs slack_max loop includes fclk_o; point/port property is not a constrained data PathEnd check at this generated clock output",
+  "primary_reference": "https://raw.githubusercontent.com/The-OpenROAD-Project/OpenSTA/master/search/Property.cc (portSlack->pinSlack; reference is current upstream, not proof of exact binary revision; actual pinned query determines attribution)",
+  "harness_exit": {
+    "rc": 1,
+    "failure": "Unsupported report_clocks command in optional footer AFTER all attribution queries; retained, no clean harnessPASS claimed; no repeat needed to resolve exactendpoint"
+  },
+  "resource": {
+    "time_v_max_rss_kib": 3033728,
+    "time_v_elapsed_seconds": 53.81,
+    "reservation_gib": 8,
+    "reservation_is_process_cap": false,
+    "whole_container_peak": "not measured"
+  },
+  "remaining_external_budget": [
+    "Forwarded-clock source/receiver phase, skew, waveform/pulse and link budget across actual downstream boundary must be composed and checked; port property is not that contract.",
+    "Original route retains23980um M7 wire; no M6-only qualification.",
+    "TT/FF standalone routine C1 closure is not SS headline or full die-boundary adoption."
+  ],
+  "files": {
+    "guard.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "launch.json": "530d050d5ff61c5a48cd6f319bce694660e4c38d1db30096739ad7b941716ede",
+    "output/probe.log": "875b9527e9454c80c68df153faad4d4a07eded12096d4e50561da84618a42364",
+    "output/exit.json": "4176d366dd3d2ff8b857c59bca7a2ba3e286a474aa3cac896e83a183fc4c2fcd",
+    "output/image.json": "cbc62e1ea26712a4586d6877b025bdb8d1679749923a4e128c22de04579b92b6",
+    "output/container_final.json": "a9f41a18939c23a80a90ab1ebbb9edc4e4db1006ec8cacda0fa37e54bc13cd3c",
+    "output/input_hashes.sha256": "da6b48ddf96202758af6e2633d3143cc46c75332da3411b897b8e041f28d9442",
+    "output/probe.tcl": "0f4aef8bb6a9d93b7c46c51827c039575140985f9d1d5dce1a5efbc557e38bb6"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "route_sdc": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc/routes/w2_rb_safe_no2_stpin_hm0_fec1faadd_tc/work/orfs/station.sdc",
+  "measured_insertion_SS": [
+    431.49,
+    491.87
+  ],
+  "measured_insertion_FF": [
+    267.04,
+    314.97
+  ],
+  "SS": {
+    "slack": {
+      "reg2reg_max": 237.51,
+      "reg2reg_min": 24.84,
+      "in2reg_max": 199.61,
+      "in2reg_min": -169.37,
+      "reg2out_max": -54.3,
+      "reg2out_min": 320.59
+    },
+    "worst": {
+      "max": -181.48,
+      "min": -186.22
+    },
+    "latency_rise": [
+      431.49,
+      491.87
+    ]
+  },
+  "FF": {
+    "slack": {
+      "reg2reg_max": 487.43,
+      "reg2reg_min": -20.26,
+      "in2reg_max": 34.44,
+      "in2reg_min": 3.23,
+      "reg2out_max": 270.41,
+      "reg2out_min": 83.05
+    },
+    "worst": {
+      "max": -59.18,
+      "min": -30.94
+    },
+    "latency_rise": [
+      267.04,
+      314.97
+    ]
+  },
+  "accept": {
+    "SS_setup_ps": -181.48,
+    "FF_hold_ps": -30.94,
+    "SS_ok": false,
+    "FF_ok": false
+  }
+}

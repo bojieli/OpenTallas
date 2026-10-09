@@ -11,6 +11,16 @@ module ot_dsrom_hc_mean_capture #(
     parameter integer ADD_LAT=7, MUL_LAT=7,
     parameter integer MAX_CONTEXT=1048576,
     parameter integer ECC_PIPE=0, // opt-in registered syndrome and correction
+    // MACRO_CAP (cont-takeover 2026-10-09, default off, needs ECC_PIPE): registered SRAM boundaries.  Read: the SECDED
+    // pipe decodes held_code (the flop capture of rd_out at RDECODE), never the raw macro output (eccpipe r4 TT -235 ps
+    // = rd_out -> overall-parity tree); +1 cycle per frame read.  Write: the encoded word is registered at STORE and the
+    // macro writes it at WCOMMIT (same address registers, which only change after WCOMMIT): 0 cycles.
+    parameter integer MACRO_CAP=0,
+    // IN_SKID (cont-takeover 2026-10-09, default off): registered cmd and residual-beat input boundaries via two
+    // ot_dsrom_hc_skid, +1 cycle per command and per beat; the command / beat checks then start at flops.
+    parameter integer IN_SKID=0,
+    // OUT_SKID (cont-takeover 2026-10-09, default off): registered output boundary, +1 cycle per output frame.
+    parameter integer OUT_SKID=0,
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -35,6 +45,33 @@ module ot_dsrom_hc_mean_capture #(
     output reg capture_done, output wire [1:0] capture_done_capture,
     output wire busy, output reg fault
 );
+    // OUT_SKID: registered output boundary (ot_dsrom_hc_skid): outputs straight from flops, out_ready lands in a flop.
+    wire y_out_valid,y_out_ready,y_out_last,y_out_corrected;wire [511:0] y_out_data;wire [USER_W-1:0] y_out_user;
+    wire [POS_W-1:0] y_out_position;wire [EPOCH_W-1:0] y_out_epoch;wire [1:0] y_out_capture;wire [5:0] y_out_frame;
+    generate if(OUT_SKID) begin:g_oskid
+        ot_dsrom_hc_skid #(.W(512+USER_W+POS_W+EPOCH_W+2+6+2)) u_out(.clk(clk),.rst_n(rst_n),
+            .i_valid(y_out_valid),.i_ready(y_out_ready),
+            .i_data({y_out_data,y_out_user,y_out_position,y_out_epoch,y_out_capture,y_out_frame,y_out_last,y_out_corrected}),
+            .o_valid(out_valid),.o_ready(out_ready),
+            .o_data({out_data,out_user,out_position,out_epoch,out_capture,out_frame,out_last,out_corrected}));
+    end else begin:g_odirect
+        assign out_valid=y_out_valid;assign y_out_ready=out_ready;assign out_data=y_out_data;assign out_user=y_out_user;
+        assign out_position=y_out_position;assign out_epoch=y_out_epoch;assign out_capture=y_out_capture;
+        assign out_frame=y_out_frame;assign out_last=y_out_last;assign out_corrected=y_out_corrected;
+    end endgenerate
+    wire x_cmd_valid,x_cmd_ready,x_in_valid,x_in_ready;wire [1:0] x_cmd_capture;wire [USER_W-1:0] x_cmd_user;
+    wire [POS_W-1:0] x_cmd_position;wire [EPOCH_W-1:0] x_cmd_epoch;wire [7:0] x_in_beat;wire [511:0] x_in_residuals;
+    generate if(IN_SKID) begin:g_skid
+        ot_dsrom_hc_skid #(.W(2+USER_W+POS_W+EPOCH_W)) u_cmd(.clk(clk),.rst_n(rst_n),.i_valid(cmd_valid),.i_ready(cmd_ready),
+            .i_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),
+            .o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}));
+        ot_dsrom_hc_skid #(.W(8+512)) u_in(.clk(clk),.rst_n(rst_n),.i_valid(in_valid),.i_ready(in_ready),
+            .i_data({in_beat,in_residuals}),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}));
+    end else begin:g_direct
+        assign x_cmd_valid=cmd_valid;assign cmd_ready=x_cmd_ready;assign x_cmd_capture=cmd_capture;assign x_cmd_user=cmd_user;
+        assign x_cmd_position=cmd_position;assign x_cmd_epoch=cmd_epoch;
+        assign x_in_valid=in_valid;assign in_ready=x_in_ready;assign x_in_beat=in_beat;assign x_in_residuals=in_residuals;
+    end endgenerate
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
                      STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12;
     reg [3:0] state;
@@ -50,6 +87,8 @@ module ot_dsrom_hc_mean_capture #(
     reg [255:0] acc;
     reg [511:0] pack_q;
     reg [575:0] held_code;
+    reg [575:0] wcode_q;
+    reg mc_go;
     wire [7:0] av,mv;
     wire [255:0] ay,my;
     wire [15:0] ae,me;
@@ -85,41 +124,45 @@ module ot_dsrom_hc_mean_capture #(
         ot_s81_secded_enc72 u_enc(.d(pack_q[64*l+:64]),.c(write_code[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_n),
-                .valid_in(state==RDECODE&&!fault),
-                .c(read_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-                .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),
+                .valid_in(MACRO_CAP?mc_go:(state==RDECODE&&!fault)),
+                .c((MACRO_CAP?held_code[72*l+:72]:read_code[72*l+:72])^(l==0?READ_INJECT:72'd0)),
+                .valid_out(decode_valid[l]),.d(y_out_data[64*l+:64]),
                 .ce(enc_ce[l]),.ue(dec_ue[l]));
         end else begin:g_comb
             assign decode_valid[l]=1'b0;
             ot_s81_secded_dec72 u_dec(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-                .d(out_data[64*l+:64]),.ce(enc_ce[l]),.ue(dec_ue[l]));
+                .d(y_out_data[64*l+:64]),.ce(enc_ce[l]),.ue(dec_ue[l]));
         end
     end endgenerate
     wire [7:0] write_addr=(MUT_LAYER_ALIAS?8'd0:{6'd0,capture_q})*8'd40+{2'd0,frame_q};
     wire [7:0] read_addr={6'd0,read_capture}*8'd40+{2'd0,read_frame};
-    wire [767:0] write_banks={192'd0,write_code};
+    wire [767:0] write_banks={192'd0,(MACRO_CAP?wcode_q:write_code)};
+    wire write_ce=MACRO_CAP?(state==WCOMMIT&&!fault):(state==STORE&&!fault);
     generate for(b=0;b<3;b=b+1) begin:g_sram
         ot_sram_1r1w_256x256_m2_r2c2 u_mem(
             .clk(clk),.r_ce_in(state==RREQ&&!fault),.r_addr_in(read_addr),
             .rd_out(bank_data[256*b+:256]),
-            .w_ce_in(state==STORE&&!fault),.w_addr_in(write_addr),
+            .w_ce_in(write_ce),.w_addr_in(write_addr),
             .wd_in(write_banks[256*b+:256]),.w_mask_in({256{1'b1}}),
             .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
     end endgenerate
     assign read_code=bank_data[575:0];
     assign busy=owned;
     assign capture_done_capture=capture_q;
-    assign cmd_ready=state==CMD&&!fault;
-    assign in_ready=state==LOAD&&!fault;
-    assign out_valid=state==RHOLD&&!fault&&!(|dec_ue);
-    assign out_user=user_q;
-    assign out_position=position_q;
-    assign out_epoch=epoch_q;
-    assign out_capture=read_capture;
-    assign out_frame=read_frame;
-    assign out_last=(SINGLE_CAPTURE || read_capture==2)&&read_frame==39;
-    assign out_corrected=out_valid&&(|enc_ce);
+    assign x_cmd_ready=state==CMD&&!fault;
+    assign x_in_ready=state==LOAD&&!fault;
+    assign y_out_valid=state==RHOLD&&!fault&&!(|dec_ue);
+    assign y_out_user=user_q;
+    assign y_out_position=position_q;
+    assign y_out_epoch=epoch_q;
+    assign y_out_capture=read_capture;
+    assign y_out_frame=read_frame;
+    assign y_out_last=(SINGLE_CAPTURE || read_capture==2)&&read_frame==39;
+    assign y_out_corrected=y_out_valid&&(|enc_ce);
     integer lane;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
+    always @(posedge clk) if(state==STORE) wcode_q<=write_code;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;
@@ -130,22 +173,22 @@ module ot_dsrom_hc_mean_capture #(
         end else if(!fault) begin
             capture_done<=0;
             case(state)
-                CMD: if(cmd_valid) begin
-                    if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || (owned &&
-                       (cmd_user!=user_q || cmd_position!=position_q || cmd_epoch!=epoch_q ||
-                        captured[cmd_capture]))) fault<=1;
+                CMD: if(x_cmd_valid) begin
+                    if(x_cmd_capture>2 || x_cmd_position>=MAX_CONTEXT || (owned &&
+                       (x_cmd_user!=user_q || x_cmd_position!=position_q || x_cmd_epoch!=epoch_q ||
+                        captured[x_cmd_capture]))) fault<=1;
                     else begin
-                        owned<=1;user_q<=cmd_user;position_q<=cmd_position;epoch_q<=cmd_epoch;
-                        capture_q<=cmd_capture;beat_q<=0;frame_q<=0;part<=0;
+                        owned<=1;user_q<=x_cmd_user;position_q<=x_cmd_position;epoch_q<=x_cmd_epoch;
+                        capture_q<=x_cmd_capture;beat_q<=0;frame_q<=0;part<=0;
                         state<=LOAD;
                     end
                 end
-                LOAD: if(in_valid) begin
-                    if(in_beat!=beat_q) fault<=1;
+                LOAD: if(x_in_valid) begin
+                    if(x_in_beat!=beat_q) fault<=1;
                     else begin
                         for(lane=0;lane<8;lane=lane+1)
-                            acc[32*lane+:32]<={in_residuals[16*lane+:16],16'd0};
-                        h1<=in_residuals[128+:128];h2<=in_residuals[256+:128];h3<=in_residuals[384+:128];
+                            acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
+                        h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
                         add_step<=0;state<=AISS;
                     end
                 end
@@ -184,7 +227,7 @@ module ot_dsrom_hc_mean_capture #(
                 RECC: if(&decode_valid) state<=RHOLD;
                 RHOLD: begin
                     if(|dec_ue) fault<=1;
-                    else if(out_ready) begin
+                    else if(y_out_ready) begin
                         if(read_frame==39) begin
                             read_frame<=0;
                             if(SINGLE_CAPTURE || read_capture==2) begin owned<=0;captured<=0;state<=CMD;end
