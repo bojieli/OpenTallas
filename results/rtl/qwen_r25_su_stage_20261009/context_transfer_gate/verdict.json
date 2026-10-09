@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "source_commit": "0f11ee283",
+  "host": "ot-agidock128",
+  "admission_gib": 4,
+  "parameters": {"OWNER_W": 74, "CONTEXT_CODE_COPY": 1},
+  "scope": "Actual flattened pipelined mask full p4 capacity8224, positions8191..8194, lengths8192..8195",
+  "comparison_count": 32896,
+  "secded8_exhaustive_cases": 23552,
+  "evidence": ["bench.log"],
+  "negative_controls": ["shared latest-limit leak six rows", "held owner/mask", "transient mask byte data CE/UE", "output data CE/UE", "truncated position", "unchecked owner", "capacity overflow"],
+  "change": "Only unchanged protected context codewords copied; original protected decode/encode occupancy updates retained.",
+  "rejected_variant": "bd5c628ab occupancy XOR variant failed exact gate; immutable evidence context_copy_first_gate/failed.log",
+  "physical_qualification": false,
+  "adopted": false
+}
