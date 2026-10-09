@@ -1,0 +1,247 @@
+{
+  "at": "2026-10-09T11:02:06.111283+00:00",
+  "authority": "root routine dead-owner observer cleanup exact13 afterfreshidentitycheck",
+  "observers": [
+    {
+      "pid": 162617,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "1"
+      ],
+      "before_stat": "162617 (python3) S 1 162611 162611 0 -1 4194304 1440 0 0 0 11 3 0 0 20 0 1 0 37186091 21286912 2871 18446744073709551615 4333568 8024065 140720735855024 0 0 0 0 16781312 2 1 0 0 17 127 0 0 0 0 0 11038136 11672456 800235520 140720735858122 140720735858170 140720735858170 140720735858663 0\n",
+      "before_rss_kib": 12520,
+      "requested_gib": 1.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "stopped_execution": true
+    },
+    {
+      "pid": 482996,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "2"
+      ],
+      "before_stat": "482996 (python3) T 1 482993 482993 0 -1 4194304 1438 0 0 0 1 0 0 0 20 0 1 0 36534970 21286912 2102 18446744073709551615 4333568 8024065 140725062859888 0 0 0 0 16781319 0 1 0 0 17 0 0 0 0 0 0 11038136 11672456 203378688 140725062868366 140725062868414 140725062868414 140725062868967 19\n",
+      "before_rss_kib": 7688,
+      "requested_gib": 2.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u00002\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 487102,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "40"
+      ],
+      "before_stat": "487102 (python3) T 1 487098 487098 0 -1 4194304 1442 0 0 0 0 0 0 0 20 0 1 0 36537862 21286912 2100 18446744073709551615 4333568 8024065 140733823531344 0 0 0 0 16781319 0 1 0 0 17 3 0 0 0 0 0 11038136 11672456 602509312 140733823532489 140733823532538 140733823532538 140733823533031 19\n",
+      "before_rss_kib": 7540,
+      "requested_gib": 40.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000040\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 499641,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "4"
+      ],
+      "before_stat": "499641 (python3) S 1 451588 451588 0 -1 4194304 1488 0 7 0 21 17 0 0 20 0 1 0 36544510 21291008 2634 18446744073709551615 4333568 8024065 140734009466704 0 0 0 0 16781319 0 1 0 0 17 119 0 0 0 0 0 11038136 11672456 751837184 140734009470078 140734009470126 140734009470126 140734009470951 0\n",
+      "before_rss_kib": 10404,
+      "requested_gib": 4.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "stopped_execution": true
+    },
+    {
+      "pid": 501264,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "1"
+      ],
+      "before_stat": "501264 (python3) S 1 501261 501261 0 -1 4194304 1486 0 0 0 22 6 0 0 20 0 1 0 36547546 21286912 2372 18446744073709551615 4333568 8024065 140734096329936 0 0 0 0 16781312 2 1 0 0 17 115 0 0 0 0 0 11038136 11672456 384479232 140734096334282 140734096334330 140734096334330 140734096334823 0\n",
+      "before_rss_kib": 10376,
+      "requested_gib": 1.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "stopped_execution": true
+    },
+    {
+      "pid": 1855411,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "24"
+      ],
+      "before_stat": "1855411 (python3) T 1 1855407 1855407 0 -1 4194304 1464 0 0 0 4 2 0 0 20 0 1 0 5485340 21458944 2374 18446744073709551615 4333568 8024065 140723915337104 0 0 0 0 16781319 0 1 0 0 17 96 0 0 0 0 0 11038136 11672456 613244928 140723915345109 140723915345158 140723915345158 140723915345895 19\n",
+      "before_rss_kib": 7092,
+      "requested_gib": 24.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000024\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 1869711,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "24"
+      ],
+      "before_stat": "1869711 (python3) T 1 1869708 1869708 0 -1 4194304 1473 0 0 0 4 2 0 0 20 0 1 0 5493748 21590016 2379 18446744073709551615 4333568 8024065 140723621172208 0 0 0 0 16781319 0 1 0 0 17 45 0 0 0 0 0 11038136 11672456 600145920 140723621178740 140723621178789 140723621178789 140723621179367 19\n",
+      "before_rss_kib": 7584,
+      "requested_gib": 24.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000024\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 1949119,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "48"
+      ],
+      "before_stat": "1949119 (python3) T 1 1949113 1949113 0 -1 4194304 1452 0 0 0 2 1 0 0 20 0 1 0 5533428 21590016 2373 18446744073709551615 4333568 8024065 140729059952528 0 0 0 0 16781319 0 1 0 0 17 39 0 0 0 0 0 11038136 11672456 109453312 140729059953951 140729059954000 140729059954000 140729059954663 19\n",
+      "before_rss_kib": 5208,
+      "requested_gib": 48.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000048\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 1970688,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "16"
+      ],
+      "before_stat": "1970688 (python3) T 1 1970684 1970684 0 -1 4194304 1469 0 0 0 2 0 0 0 20 0 1 0 5547645 21192704 2364 18446744073709551615 4333568 8024065 140726277461136 0 0 0 0 16781319 0 1 0 0 17 45 0 0 0 0 0 11038136 11672456 55697408 140726277467529 140726277467578 140726277467578 140726277468135 19\n",
+      "before_rss_kib": 3896,
+      "requested_gib": 16.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000016\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 1970689,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "16"
+      ],
+      "before_stat": "1970689 (python3) T 1 1970685 1970685 0 -1 4194304 1470 0 0 0 2 0 0 0 20 0 1 0 5547645 21192704 2097 18446744073709551615 4333568 8024065 140729256473872 0 0 0 0 16781319 0 1 0 0 17 45 0 0 0 0 0 11038136 11672456 619757568 140729256480137 140729256480186 140729256480186 140729256480743 19\n",
+      "before_rss_kib": 3784,
+      "requested_gib": 16.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000016\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 4103144,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "16"
+      ],
+      "before_stat": "4103144 (python3) T 1 4103049 4103049 0 -1 4194304 1485 0 0 0 4 3 0 0 20 0 1 0 5454546 21590016 1851 18446744073709551615 4333568 8024065 140725921281552 0 0 0 0 16781319 0 1 0 0 17 34 0 0 0 0 0 11038136 11672456 472846336 140725921283465 140725921283514 140725921283514 140725921284071 19\n",
+      "before_rss_kib": 3860,
+      "requested_gib": 16.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000016\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 4103145,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "16"
+      ],
+      "before_stat": "4103145 (python3) T 1 4103050 4103050 0 -1 4194304 1488 0 0 0 5 3 0 0 20 0 1 0 5454546 21590016 2111 18446744073709551615 4333568 8024065 140731661094528 0 0 0 0 16781319 0 1 0 0 17 105 0 0 0 0 0 11038136 11672456 881147904 140731661102473 140731661102522 140731661102522 140731661103079 19\n",
+      "before_rss_kib": 4028,
+      "requested_gib": 16.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000016\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    },
+    {
+      "pid": 4103159,
+      "before_ppid": 1,
+      "before_cmd": [
+        "python3",
+        "/srv/opentallas-scratch/admit_core.py",
+        "24"
+      ],
+      "before_stat": "4103159 (python3) T 1 4103051 4103051 0 -1 4194304 1487 0 0 0 4 3 0 0 20 0 1 0 5454547 21590016 1862 18446744073709551615 4333568 8024065 140730845366832 0 0 0 0 16781319 0 1 0 0 17 61 0 0 0 0 0 11038136 11672456 766402560 140730845371768 140730845371817 140730845371817 140730845372391 19\n",
+      "before_rss_kib": 3952,
+      "requested_gib": 24.0,
+      "signal": "TERM",
+      "absent_after": true,
+      "after_state": "State:\tT (stopped)",
+      "after_cmd": "python3\u0000/srv/opentallas-scratch/admit_core.py\u000024\u0000",
+      "stopped_execution": true,
+      "pending_term_verified": true,
+      "signal_cont_for_pending_term": true
+    }
+  ],
+  "recent_before": "[[1791530673.40929, 4294967296], [1791530673.8637874, 1073741824], [1791530674.3596952, 42949672960], [1791530675.7364004, 8589934592], [1791530676.6423202, 2147483648], [1791530676.9649968, 1073741824], [1791530680.5285213, 8589934592], [1791530680.8823187, 8589934592], [1791530681.2212846, 1073741824], [1791530683.9321358, 68719476736]]",
+  "recent_after": "[[1791530673.40929, 4294967296], [1791530673.8637874, 1073741824], [1791530674.3596952, 42949672960], [1791530675.7364004, 8589934592], [1791530676.6423202, 2147483648], [1791530676.9649968, 1073741824], [1791530680.5285213, 8589934592], [1791530680.8823187, 8589934592], [1791530681.2212846, 1073741824], [1791530683.9321358, 68719476736]]",
+  "recent_removed": [],
+  "recent_reason": "Recent format lacks PID identity; no matching identity claim removed. Pause unchanged; no live-parentguard action.",
+  "guard_code_sha256": "790eb2d13a0f226b4d38f145f673cceea0df8675c8767b706dfb02761c9c8a73",
+  "verified_at": "2026-10-09T11:03:05.504010+00:00"
+}

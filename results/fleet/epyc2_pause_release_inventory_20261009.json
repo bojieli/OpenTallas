@@ -1,0 +1,173 @@
+{
+  "at": "2026-10-09T11:01:25.312016+00:00",
+  "host": "ot-epyc2",
+  "pending_guards": [
+    {
+      "guard_pid": 162617,
+      "parent_pid": 1,
+      "requested_gib": 1.0,
+      "cwd": "/home/ubuntu",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 12520,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 430473,
+      "parent_pid": 430471,
+      "requested_gib": 60.0,
+      "cwd": "/srv/opentallas-data/claude/closure-loop/hbm_hc_quarter_hcp_79315a431-tt/src",
+      "parent_command": "/bin/bash /srv/opentallas-scratch/admit.sh 60 -- python3 tools/run_abi3_physical.py --view asap7 --top hfd_hc --source .views/hbm_hc_quarter_hcp_79315a431_tt_cal/hfd_hc.sv --macro-view ot_dsrom_su_hcpost_lane_pr=physical/hbm_accel_die_views/hcp/lane/ot_dsrom_su_hcpost_lane_pr --macro-place-halo 5 5 --clock-port ck* --clock-period-ns 0.833 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append physical/hbm_accel_die_views/common/budget_route.sdc --stages pnr --die-area 0 0 550.776 5529.576 --core-area 0 0.54 550.776 5529.036 --place-density 0.45 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/hbm_accel_die_views/su/pdn_quarter.tcl --orfs-var IO_CONSTRAINTS=/src/.views/hbm_hc_quarter_hcp_79315a431_tt_cal/io_place.tcl --orfs-var ADDER_MAP_FILE= --orfs-var CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none --step-tcl POST_SYNTH=physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl --step-tcl POST_GLOBAL_PLACE=physical/hbm_accel_die_views/common/face_chain_place.tcl --orfs-var OT_FC_STAGES=1 --orfs-var OT_FC_FILE=/src/physical/hbm_accel_die_views/hcp/rtl/face_stages.tcl --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.05 --purpose signoff_target --nickname-tag hv_hbm_hc_quarter_hcp_79315a431_tt_cal --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --orfs-var MACRO_PLACEMENT_TCL=/src/physical/hbm_accel_die_views/hcp/rtl/macro_place.tcl --orfs-var PLACE_DENSITY_LB_ADDON= --clock-period-ns 0.770 --io-delay-fraction 0.4 --orfs-var ENABLE_DPO=0 --orfs-var CELL_PAD_IN_SITES_DETAIL_PLACEMENT=0 --pnr-stop-after cts --keep-workdir /srv/opentallas-data/claude/closure-loop/hbm_hc_quarter_hcp_79315a431-tt/routes/hbm_hc_quarter_hcp_79315a431_tt_cal/work --force --output /srv/opentallas-data/claude/closure-loop/hbm_hc_quarter_hcp_79315a431-tt/routes/hbm_hc_quarter_hcp_79315a431_tt_cal/physical.json ",
+      "guard_rss_kib": 7720,
+      "orphan_cannot_launch_workload": false
+    },
+    {
+      "guard_pid": 482996,
+      "parent_pid": 1,
+      "requested_gib": 2.0,
+      "cwd": "/srv/opentallas-scratch/claude/engram/row-service-r1",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 7688,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 487102,
+      "parent_pid": 1,
+      "requested_gib": 40.0,
+      "cwd": "/home/ubuntu",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 7540,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 499641,
+      "parent_pid": 1,
+      "requested_gib": 4.0,
+      "cwd": "/srv/opentallas-scratch/codex/hbm-ta15-physical/source-r4",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 10404,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 501264,
+      "parent_pid": 1,
+      "requested_gib": 1.0,
+      "cwd": "/home/ubuntu",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 10376,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 520085,
+      "parent_pid": 520069,
+      "requested_gib": 1.0,
+      "cwd": "/srv/opentallas-scratch/codex/qwen-fmt3-die-fit-0cb3d9624/src",
+      "parent_command": "/bin/bash /srv/opentallas-scratch/admit.sh 1 -- python3 -c import sys,json;sys.path.insert(0,\"tools\");import hbm_accel_die_fp as H;m=H.build(H.R25,network_probe=True); print(json.dumps({\"legality\":H.legality(m),\"path_bounds\":H.class_bounds(H.manhattan_paths(m)),\"path_count\":len(m[\"paths\"]),\"bus_count\":len(m[\"buses\"])},indent=2)) ",
+      "guard_rss_kib": 12344,
+      "orphan_cannot_launch_workload": false
+    },
+    {
+      "guard_pid": 1744960,
+      "parent_pid": 1744958,
+      "requested_gib": 266.0,
+      "cwd": "/srv/opentallas-data/claude/closure-loop/hbm_su_full64_64cda61ab-tt-d1956-f3-hm10/src",
+      "parent_command": "bash /srv/opentallas-scratch/admit.sh 266 -- env OUT=/srv/opentallas-data/claude/closure-loop/hbm_su_full64_64cda61ab-tt-d1956-f3-hm10/routes CORES=8 PD=0.5 PER=0.770 SRCF=physical/hbm_su_div64/su_full_sources.txt XSDC=physical/hbm_su_div64/full_generated_clocks_candidate.sdc DIE=400.008 401.736 bash physical/hbm_su_div64/route_full64.sh hbm_su_full64_64cda61ab_tt_d1956_f3_hm10 ot_su64_full64 box --step-tcl POST_IO_PLACEMENT=physical/hbm_su_c12/red_pinflop_place.tcl ",
+      "guard_rss_kib": 12472,
+      "orphan_cannot_launch_workload": false
+    },
+    {
+      "guard_pid": 1855411,
+      "parent_pid": 1,
+      "requested_gib": 24.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/hbm-su/src",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 7092,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 1869711,
+      "parent_pid": 1,
+      "requested_gib": 24.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/hbm-sm-struct/r1/tileE_b2",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 7584,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 1949119,
+      "parent_pid": 1,
+      "requested_gib": 48.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/hbm-su/red/src",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 5208,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 1970688,
+      "parent_pid": 1,
+      "requested_gib": 16.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 3896,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 1970689,
+      "parent_pid": 1,
+      "requested_gib": 16.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 3784,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 2524713,
+      "parent_pid": 2524711,
+      "requested_gib": 32.0,
+      "cwd": "/srv/opentallas-data/claude/closure-loop/s81b-selt_q2-pipe2-g12-fa3cd7b3c-tc/src",
+      "parent_command": "/bin/bash /srv/opentallas-scratch/admit.sh 32 -- python3 tools/run_abi3_physical.py --view asap7 --top dsfd_selt_q2 --source rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv --source rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv --source rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv --source rtl/hdc/v41x/ot_hdc_v41x_sel.sv --source rtl/common/ot_fwd_link_stage.sv --source rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel.sv --source rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_lib.sv --source rtl/dsrom_sys/s81_ph/selector_native/ot_s81ph_native_sel_slice.sv --macro-view ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 --macro-place-halo 5 5 --clock-port ck --clock-period-ns 0.833333 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/s81b_selt_q2_pipe2_g12_fa3cd7b3c_tc_cal/margin.sdc --stages pnr --die-area 0 0 756.0 159.84 --core-area 0 0.54 756.0 159.3 --place-density 0.45 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/s81_ph_views/tiles/pdn_tile_sym.tcl --orfs-var IO_CONSTRAINTS=/src/.views/s81b_selt_q2_pipe2_g12_fa3cd7b3c_tc_cal/io_place.tcl --orfs-var ADDER_MAP_FILE= --step-tcl PRE_CTS=physical/s81_ph_views/common/pre_cts_fclk_root_buf.tcl --step-tcl POST_CTS=physical/s81_ph_views/common/post_cts_vclk.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.0 --purpose signoff_target --nickname-tag s81ph_s81b_selt_q2_pipe2_g12_fa3cd7b3c_tc_cal --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_q2_g12.tcl --param PIPE2=1 --param CMP_RETIME=1 --pnr-stop-after cts --keep-workdir /srv/opentallas-data/claude/closure-loop/s81b-selt_q2-pipe2-g12-fa3cd7b3c-tc/routes/s81b_selt_q2_pipe2_g12_fa3cd7b3c_tc_cal/work --force --output /srv/opentallas-data/claude/closure-loop/s81b-selt_q2-pipe2-g12-fa3cd7b3c-tc/routes/s81b_selt_q2_pipe2_g12_fa3cd7b3c_tc_cal/physical.json ",
+      "guard_rss_kib": 12524,
+      "orphan_cannot_launch_workload": false
+    },
+    {
+      "guard_pid": 2691512,
+      "parent_pid": 2691510,
+      "requested_gib": 40.0,
+      "cwd": "/srv/opentallas-data/claude/closure-loop/s81b-vm_bgq-grid10-72a0dca83-tc-hm10-a-cl/src",
+      "parent_command": "/bin/bash /srv/opentallas-scratch/admit.sh 40 -- python3 tools/run_abi3_physical.py --view asap7 --top dsfd_vm_bgq --source rtl/dsrom_sys/s81_ph/vm/dsfd_vm_bg.sv --source rtl/dsrom_sys/s81_ph/vm/ot_s81ph_vm_mem.sv --macro-view ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 --macro-place-halo 5 5 --clock-port ck --clock-period-ns 1.1111 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append .views/s81b_vm_bgq_grid10_72a0dca83_tc_hm10_a_cl_cal/margin.sdc --stages pnr --die-area 0 0 253.794 500.04 --core-area 0 0.54 253.794 499.5 --place-density 0.40 --routing-layers M2 M7 --orfs-var PDN_TCL=/src/physical/s81_ph_views/collective/pdn_coll.tcl --orfs-var IO_CONSTRAINTS=/src/.views/s81b_vm_bgq_grid10_72a0dca83_tc_hm10_a_cl_cal/io_place.tcl --orfs-var ADDER_MAP_FILE= --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl PRE_CTS=physical/s81_ph_views/common/pre_cts_fclk_root_buf.tcl --step-tcl POST_CTS=physical/s81_ph_views/common/post_cts_vclk.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl --slew-margin-percent 60 --hold-margin-ns 0.01 --purpose signoff_target --nickname-tag s81ph_s81b_vm_bgq_grid10_72a0dca83_tc_hm10_a_cl_cal --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/vm_mem/place_macros_vms.tcl --pnr-stop-after cts --keep-workdir /srv/opentallas-data/claude/closure-loop/s81b-vm_bgq-grid10-72a0dca83-tc-hm10-a-cl/routes/s81b_vm_bgq_grid10_72a0dca83_tc_hm10_a_cl_cal/work --force --output /srv/opentallas-data/claude/closure-loop/s81b-vm_bgq-grid10-72a0dca83-tc-hm10-a-cl/routes/s81b_vm_bgq_grid10_72a0dca83_tc_hm10_a_cl_cal/physical.json ",
+      "guard_rss_kib": 12556,
+      "orphan_cannot_launch_workload": false
+    },
+    {
+      "guard_pid": 4103144,
+      "parent_pid": 1,
+      "requested_gib": 16.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 3860,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 4103145,
+      "parent_pid": 1,
+      "requested_gib": 16.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 4028,
+      "orphan_cannot_launch_workload": true
+    },
+    {
+      "guard_pid": 4103159,
+      "parent_pid": 1,
+      "requested_gib": 24.0,
+      "cwd": "/srv/opentallas-scratch2/scratch/claude/qwen-stream4-cdc/bench",
+      "parent_command": "/usr/lib/systemd/systemd --system --deserialize=89 ",
+      "guard_rss_kib": 3952,
+      "orphan_cannot_launch_workload": true
+    }
+  ],
+  "count": 18,
+  "orphan_count": 13,
+  "orphan_gib_sum": 232.0,
+  "actions": [],
+  "policy": "No pause clearing or observer stopping; Claude release-effect inventory"
+}
