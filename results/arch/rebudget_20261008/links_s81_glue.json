@@ -1,0 +1,818 @@
+{
+"schema": "opentallas.rebudget.links.v1",
+"die": "s81_glue",
+"desc": "S81-PH slab-internal tile hops (tools/s81/assemble_views.py glue model)",
+"built_at": "2026-10-08T20:53:58-07:00",
+"links": [
+{
+"snd_inst": "dsfd_ctrl:dsfd_ctrl_pc",
+"snd_master": "dsfd_ctrl_pc",
+"snd_bus": "co_w",
+"rcv_inst": "dsfd_ctrl:dsfd_ctrl_pc",
+"rcv_master": "dsfd_ctrl_pc",
+"rcv_bus": "ci_w",
+"slab": "dsfd_ctrl",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "status chain PC p -> p+1",
+"length_um": 144.5,
+"tt": {
+"T": 833.333,
+"W": 168.6,
+"dskew": 0.0,
+"C": 514.7,
+"S_kit": 166.0,
+"R_kit": 113.3
+},
+"ff": {
+"W": 16.2,
+"dskew": 0.0,
+"H": -33.8,
+"smin_kit": 142.7,
+"h_kit": -27.1
+}
+},
+{
+"snd_inst": "dsfd_ctrl:dsfd_ctrl_pc",
+"snd_master": "dsfd_ctrl_pc",
+"snd_bus": "co_w",
+"rcv_inst": "dsfd_ctrl:dsfd_ctrl_ctr",
+"rcv_master": "dsfd_ctrl_ctr",
+"rcv_bus": "co_w",
+"slab": "dsfd_ctrl",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "PC 15/16 -> ctr",
+"length_um": 50.7,
+"tt": {
+"T": 833.333,
+"W": 85.7,
+"dskew": 0.0,
+"C": 597.6,
+"S_kit": 166.0,
+"R_kit": 113.3
+},
+"ff": {
+"W": 5.7,
+"dskew": 0.0,
+"H": -44.3,
+"smin_kit": 142.7,
+"h_kit": -14.6
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "q_w",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "q_e",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "quadrant station chain, station -> station",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 170.4,
+"R_kit": 111.4
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 130.8,
+"h_kit": -26.5
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "od_ev",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "od_wv",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "od chain, station -> station",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 154.7,
+"R_kit": 302.4
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 135.8,
+"h_kit": -31.7
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "od_ed",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "od_wd",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "od chain data",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 167.5,
+"R_kit": 176.4
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 131.9,
+"h_kit": -26.4
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "od_wr",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "od_er",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "od chain ready",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 151.4,
+"R_kit": 304.2
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 142.2,
+"h_kit": -41.0
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "a0_ev",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "a0_wv",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "a0 chain, station -> station",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 153.6,
+"R_kit": 280.7
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 137.9,
+"h_kit": -41.1
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "a0_ed",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "a0_wd",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "a0 chain data",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 172.6,
+"R_kit": 187.3
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 124.9,
+"h_kit": -25.5
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "a0_wr",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "a0_er",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "a0 chain ready",
+"length_um": 180.0,
+"tt": {
+"T": 833.333,
+"W": 208.2,
+"dskew": 0.0,
+"C": 475.1,
+"S_kit": 151.8,
+"R_kit": 296.1
+},
+"ff": {
+"W": 20.2,
+"dskew": 0.0,
+"H": -29.8,
+"smin_kit": 127.4,
+"h_kit": -40.5
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svcio_q",
+"snd_master": "dsfd_svcio_q",
+"snd_bus": "q_q",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "q_e",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "IO hub -> first station (q)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 80.8,
+"dskew": 0.0,
+"C": 602.5,
+"S_kit": 293.8,
+"R_kit": 111.4
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 155.1,
+"h_kit": -26.5
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "od_ed",
+"rcv_inst": "dsfd_svc:dsfd_svcio_od",
+"rcv_master": "dsfd_svcio_od",
+"rcv_bus": "od_d",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> IO hub (od)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 81.1,
+"dskew": 0.0,
+"C": 602.2,
+"S_kit": 167.5,
+"R_kit": 268.5
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 131.9,
+"h_kit": -3.8
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svcio_od",
+"snd_master": "dsfd_svcio_od",
+"snd_bus": "od_r",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "od_er",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "IO hub ready -> station (od)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 78.4,
+"dskew": 0.0,
+"C": 604.9,
+"S_kit": 164.8,
+"R_kit": 304.2
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 115.3,
+"h_kit": -41.0
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "a0_ed",
+"rcv_inst": "dsfd_svc:dsfd_svcio_ad",
+"rcv_master": "dsfd_svcio_ad",
+"rcv_bus": "a0_d",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> IO hub (a0)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 81.1,
+"dskew": 0.0,
+"C": 602.2,
+"S_kit": 172.6,
+"R_kit": 144.4
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 124.9,
+"h_kit": 2.4
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svcio_ad",
+"snd_master": "dsfd_svcio_ad",
+"snd_bus": "a0_r",
+"rcv_inst": "dsfd_svc:dsfd_svc_stn",
+"rcv_master": "dsfd_svc_stn",
+"rcv_bus": "a0_er",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "IO hub ready -> station (a0)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 78.5,
+"dskew": 0.0,
+"C": 604.8,
+"S_kit": 262.3,
+"R_kit": 296.1
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 152.9,
+"h_kit": -40.5
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svcio_od",
+"snd_master": "dsfd_svcio_od",
+"snd_bus": "bad",
+"rcv_inst": "dsfd_svc:dsfd_svcio_ad",
+"rcv_master": "dsfd_svcio_ad",
+"rcv_bus": "fi",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "u_od.bad -> u_ad.fi (fault)",
+"length_um": 430.0,
+"tt": {
+"T": 833.333,
+"W": 413.1,
+"dskew": 0.0,
+"C": 270.2,
+"S_kit": 176.8,
+"R_kit": 128.1
+},
+"ff": {
+"W": 48.2,
+"dskew": 0.0,
+"H": -1.8,
+"smin_kit": 107.6,
+"h_kit": -27.3
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_capt_ctl",
+"snd_master": "dsfd_capt_ctl",
+"snd_bus": "t_k",
+"rcv_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "ctl -> S station (t_k)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 278.5,
+"dskew": 0.0,
+"C": 404.8,
+"S_kit": 203.4,
+"R_kit": 31.2
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 91.8,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_sp_capture:dsfd_capt_g2",
+"rcv_master": "dsfd_capt_g2",
+"rcv_bus": "f_k",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "S station -> group (f_k)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 263.1,
+"dskew": 0.0,
+"C": 420.2,
+"S_kit": 113.7,
+"R_kit": 111.5
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 62.2,
+"h_kit": 0.3
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_capt_g2",
+"snd_master": "dsfd_capt_g2",
+"snd_bus": "t_sb",
+"rcv_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "group -> S station (t_sb)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 286.1,
+"dskew": 0.0,
+"C": 397.3,
+"S_kit": 192.5,
+"R_kit": 31.2
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 128.8,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_sp_capture:dsfd_capt_ctl",
+"rcv_master": "dsfd_capt_ctl",
+"rcv_bus": "f_sb",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "S station -> ctl (f_sb)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 263.1,
+"dskew": 0.0,
+"C": 420.2,
+"S_kit": 113.7,
+"R_kit": 99.4
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 62.2,
+"h_kit": -33.0
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_capt_ctl",
+"snd_master": "dsfd_capt_ctl",
+"snd_bus": "t_sn",
+"rcv_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "ctl status -> S station (t_sn)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 278.5,
+"dskew": 0.0,
+"C": 404.8,
+"S_kit": 156.7,
+"R_kit": 31.2
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 92.6,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_sp_capture:dsfd_capt_x",
+"rcv_master": "dsfd_capt_x",
+"rcv_bus": "f_sn",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "S station -> x tile (f_sn)",
+"length_um": 281.0,
+"tt": {
+"T": 833.333,
+"W": 263.1,
+"dskew": 0.0,
+"C": 420.2,
+"S_kit": 113.7,
+"R_kit": 85.9
+},
+"ff": {
+"W": 31.5,
+"dskew": 0.0,
+"H": -18.5,
+"smin_kit": 62.2,
+"h_kit": 2.4
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_capt_g2",
+"snd_master": "dsfd_capt_g2",
+"snd_bus": "t_w",
+"rcv_inst": "dsfd_sp_capture:dsfd_capt_x",
+"rcv_master": "dsfd_capt_x",
+"rcv_bus": "f_w",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "group -> x tile (neighbour)",
+"length_um": 118.8,
+"tt": {
+"T": 833.333,
+"W": 144.6,
+"dskew": 0.0,
+"C": 538.7,
+"S_kit": 208.9,
+"R_kit": 164.0
+},
+"ff": {
+"W": 13.3,
+"dskew": 0.0,
+"H": -36.7,
+"smin_kit": 108.9,
+"h_kit": 9.4
+}
+},
+{
+"snd_inst": "dsfd_sp_capture:dsfd_capt_x",
+"snd_master": "dsfd_capt_x",
+"snd_bus": "t_ho",
+"rcv_inst": "dsfd_sp_capture:dsfd_capt_g2",
+"rcv_master": "dsfd_capt_g2",
+"rcv_bus": "f_ho",
+"slab": "dsfd_sp_capture",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "x tile -> group (neighbour)",
+"length_um": 118.8,
+"tt": {
+"T": 833.333,
+"W": 143.2,
+"dskew": 0.0,
+"C": 540.1,
+"S_kit": 198.5,
+"R_kit": 104.0
+},
+"ff": {
+"W": 13.3,
+"dskew": 0.0,
+"H": -36.7,
+"smin_kit": 162.7,
+"h_kit": -12.6
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_colt_lane",
+"snd_master": "dsfd_colt_lane",
+"snd_bus": "t_w",
+"rcv_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "lane -> first station",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 365.6,
+"dskew": 0.0,
+"C": 317.8,
+"S_kit": 285.5,
+"R_kit": 31.2
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 168.3,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_colt_lane",
+"snd_master": "dsfd_colt_lane",
+"snd_bus": "t_f",
+"rcv_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "lane -> first station (fwd)",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 365.6,
+"dskew": 0.0,
+"C": 317.8,
+"S_kit": 249.2,
+"R_kit": 31.2
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 198.8,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_bk_collector:dsfd_colt_mrg",
+"rcv_master": "dsfd_colt_mrg",
+"rcv_bus": "f_w",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> merger",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 334.5,
+"dskew": 0.0,
+"C": 348.8,
+"S_kit": 113.7,
+"R_kit": 145.6
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 62.2,
+"h_kit": -13.6
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_bk_collector:dsfd_colt_mrg",
+"rcv_master": "dsfd_colt_mrg",
+"rcv_bus": "f_f",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> merger (fwd)",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 334.5,
+"dskew": 0.0,
+"C": 348.8,
+"S_kit": 113.7,
+"R_kit": 131.3
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 62.2,
+"h_kit": -25.0
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_colt_mrg",
+"snd_master": "dsfd_colt_mrg",
+"snd_bus": "t_cr",
+"rcv_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "merger credit -> first station",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 365.5,
+"dskew": 0.0,
+"C": 317.8,
+"S_kit": 182.6,
+"R_kit": 31.2
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 138.1,
+"h_kit": 15.8
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_bk_collector:dsfd_colt_lane",
+"rcv_master": "dsfd_colt_lane",
+"rcv_bus": "f_cr",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> lane credit",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 334.5,
+"dskew": 0.0,
+"C": 348.8,
+"S_kit": 113.7,
+"R_kit": 153.7
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 62.2,
+"h_kit": -37.7
+}
+},
+{
+"snd_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"snd_master": "dsfd_stnh_512x1",
+"snd_bus": "do0",
+"rcv_inst": "dsfd_bk_collector:dsfd_stnh_512x1",
+"rcv_master": "dsfd_stnh_512x1",
+"rcv_bus": "di0",
+"slab": "dsfd_bk_collector",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "station -> station",
+"length_um": 371.3,
+"tt": {
+"T": 833.333,
+"W": 334.5,
+"dskew": 0.0,
+"C": 348.8,
+"S_kit": 113.7,
+"R_kit": 31.2
+},
+"ff": {
+"W": 41.6,
+"dskew": 0.0,
+"H": -8.4,
+"smin_kit": 62.2,
+"h_kit": 15.8
+}
+}
+]
+}

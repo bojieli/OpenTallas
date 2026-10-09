@@ -72,6 +72,28 @@ class Assume(unittest.TestCase):
         env, _ = cl.assumed_insertion(self.j(spec("recut")))
         self.assertIsNone(env)
 
+    def test_backfill_newest_per_variant_keeps_existing(self):
+        env = lambda ss, ff: {"env": {"CK_SS_MEAN": ss, "CK_SS_MIN": ss - 20, "CK_SS_MAX": ss + 50,
+                                      "CK_FF_MEAN": ff, "CK_FF_MIN": ff - 20, "CK_FF_MAX": ff + 40}}
+        jobs = [("lvt_old", spec("recut", h="export OT_MULTI_VT=lvt; "), "2026-10-08T09:00:00-07:00 calibrate done (rc=0)", 990, 570),
+                ("lvt_new", spec("recut", "0.010", h="export OT_MULTI_VT=lvt; "),
+                 "2026-10-08T18:40:45-07:00 parallel calibrate: measured SS 951 / FF 556", 951, 556),
+                ("phl", spec("halfphl"), "2026-10-08T12:00:00-07:00 calibrate done (rc=0)", 1546, 875),
+                ("nocal", spec("recutcgl"), "2026-10-08T12:00:00-07:00 launched calibrate", 1, 1)]
+        for n, sp, ev, ss, ff in jobs:
+            (self.st / "jobs" / f"{n}.json").write_text(json.dumps(
+                {"name": n, "spec": sp, "events": [ev], "calibration": env(ss, ff)}))
+        keep = dict(job="kept", ss=dict(mean=1, min=1, max=1), ff=dict(mean=1, min=1, max=1))
+        (self.st / "measured_insertion.json").write_text(json.dumps(
+            {"blocks": {}, "variants": {cl.variant_key(spec("halfphl")): keep}}))
+        self.assertEqual(cl.backfill_variants(), 1)
+        self.assertEqual(cl.backfill_variants(), 0)
+        env_, _ = cl.assumed_insertion(self.j(spec("recut", h="export OT_MULTI_VT=lvt; ")))
+        self.assertEqual((env_["CK_SS_MEAN"], env_["CK_FF_MEAN"]), (951, 556))
+        d = json.loads((self.st / "measured_insertion.json").read_text())
+        self.assertEqual(d["variants"][cl.variant_key(spec("halfphl"))]["job"], "kept")
+        self.assertIsNone(cl.assumed_insertion(self.j(spec("recutcgl")))[0])
+
 
 if __name__ == "__main__":
     unittest.main()

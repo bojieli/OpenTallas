@@ -108,9 +108,35 @@ def patch_fp_lint(scripts: Path) -> str:
     return "patched"
 
 
+# PREROUTE-GATE (owner 2026-10-08): the pre-route timing gate runs at the end of ORFS detailed placement (POST DETAIL_PLACE,
+# after the block's own POST_DETAIL_PLACE hook: resizer + detailed placement done, placement parasitics estimated, timing
+# already updated by report_metrics).  Inert unless the container env has OT_PREROUTE_GATE=1 (the closure loop's docker
+# shim passes it only when the gate is enabled); tools/preroute_gate.tcl stops the flow with PREROUTE_MARGIN.
+PRG_CODE = ('  if {$hook_type eq "POST" && $step_name eq "DETAIL_PLACE" && [info exists ::env(OT_PREROUTE_GATE)] && '
+            '$::env(OT_PREROUTE_GATE) ni {"" 0 false}} {\n'
+            '    set ot_prg [expr {[info exists ::env(OT_PREROUTE_GATE_TCL)] ? $::env(OT_PREROUTE_GATE_TCL) : "/src/tools/preroute_gate.tcl"}]\n'
+            '    if {[file exists $ot_prg]} { source $ot_prg; ot_preroute_gate_flow } else { puts "OT_PREROUTE_GATE: $ot_prg missing: gate skipped" }\n'
+            '  }\n')
+
+
+def patch_preroute_gate(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_preroute_gate_flow" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: pre-route gate unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + PRG_CODE, 1))
+    return "patched"
+
+
 if __name__ == "__main__":
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
     try:
         print("orfs_hold_mm: fp lint hook", patch_fp_lint(Path(sys.argv[1])))
     except Exception as ex:  # noqa: BLE001 - the lint hook must never break a flow
         print(f"orfs_hold_mm: fp lint hook not installed ({ex})")
+    try:
+        print("orfs_hold_mm: pre-route gate hook", patch_preroute_gate(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the gate hook must never break a flow
+        print(f"orfs_hold_mm: pre-route gate hook not installed ({ex})")
