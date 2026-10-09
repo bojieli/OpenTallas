@@ -80,7 +80,12 @@ module ot_host_if #(
     parameter integer CTX_MAX = 64,     // KV positions per user (prompt + generated - 1 <= CTX_MAX)
     parameter integer AW      = 24,     // KV address bits
     parameter integer KVW     = 1024,   // KV words per user
-    parameter integer EVQ     = 4       // log2 completion-event queue depth
+    parameter integer EVQ     = 4,      // log2 completion-event queue depth
+    // FMT 1 (stream qwen-system 2026-10-08, the full-shape Qwen3-8B vocabulary needs NW = 18): 32-bit token fields.
+    //   descriptor w0 [47:32] prompt length / [63:48] max new tokens (16 b each); prompt tokens two per word
+    //   ([31:0], [63:32]); w3 [31:0] EOS id 0, [63:32] EOS id 1.  Completion w0 [47:32] position[15:0],
+    //   [63:48] token[15:0]; w1 [47:32] tokens generated[15:0], [63:48] token[31:16].  FMT 0: the layout above.
+    parameter integer FMT     = 0
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -357,8 +362,8 @@ module ot_host_if #(
     wire [7:0]    q_op   = dsc0[7:0];
     wire [7:0]    q_fl   = dsc0[15:8];
     wire [15:0]   q_tag  = dsc0[31:16];
-    wire [NW-1:0] q_plen = dsc0[32 +: NW];
-    wire [NW-1:0] q_max  = dsc0[48 +: NW];
+    wire [NW-1:0] q_plen = (FMT != 0) ? NW'(dsc0[47:32]) : dsc0[32 +: NW];
+    wire [NW-1:0] q_max  = (FMT != 0) ? NW'(dsc0[63:48]) : dsc0[48 +: NW];
     wire [7:0]    q_slot = dsc2[7:0];
     wire [SB-1:0] q_s    = q_slot[SB-1:0];
     wire [NW+1:0] q_span = q_plen + q_max;
@@ -367,8 +372,10 @@ module ot_host_if #(
     assign ev_pop = (d_st == D_CQ0_B) && m_bvalid;
 
     // CQ entry words of the head event
-    wire [63:0] cq_w0 = {eh_tok, eh_pos, eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, cq_phase};
-    wire [63:0] cq_w1 = {{(32-NW){1'b0}}, eh_ngen, eh_cyc};
+    wire [31:0] eh_tok32 = 32'(eh_tok), eh_pos32 = 32'(eh_pos), eh_ngen32 = 32'(eh_ngen);
+    wire [63:0] cq_w0 = (FMT != 0) ? {eh_tok32[15:0], eh_pos32[15:0], eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, cq_phase}
+                                   : 64'({eh_tok, eh_pos, eh_tag, eh_slot8, eh_st, 1'b0, eh_kind, cq_phase});
+    wire [63:0] cq_w1 = (FMT != 0) ? {eh_tok32[31:16], eh_ngen32[15:0], eh_cyc} : 64'({{(32-NW){1'b0}}, eh_ngen, eh_cyc});
 
     integer j;
     always @(posedge clk or negedge rst_n) begin
@@ -486,7 +493,7 @@ module ot_host_if #(
                     end else begin
                         sl_tag[q_s] <= q_tag; sl_plen[q_s] <= q_plen; sl_max[q_s] <= q_max;
                         sl_pos[q_s] <= 0; sl_ngen[q_s] <= 0; sl_eos[q_s] <= q_fl[1];
-                        sl_eos0[q_s] <= dsc3[NW-1:0]; sl_eos1[q_s] <= dsc3[16 +: NW];
+                        sl_eos0[q_s] <= dsc3[NW-1:0]; sl_eos1[q_s] <= (FMT != 0) ? dsc3[32 +: NW] : dsc3[16 +: NW];
                         sl_t[q_s] <= c_cycles[31:0];
                         pr_i <= 0;
                         m_arvalid <= 1'b1; m_araddr <= dsc1;
@@ -497,14 +504,15 @@ module ot_host_if #(
                 D_PR_W: begin
                     pb_we <= 1'b1;
                     pb_waddr <= {q_s, pr_i[PLB-1:0]};
-                    pb_wdata <= pr_word[16*dw +: NW];
+                    pb_wdata <= (FMT != 0) ? pr_word[32*dw[0] +: NW] : pr_word[16*dw +: NW];
                     pr_i <= pr_i + 1'b1;
                     dw <= dw + 1'b1;
                     if (pr_i + 1'b1 == q_plen) begin
                         sl_st[q_s] <= SL_RUN;
                         d_st <= D_IDLE;
-                    end else if (dw == 2'd3) begin
-                        m_arvalid <= 1'b1; m_araddr <= dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
+                    end else if ((FMT != 0) ? dw[0] : (dw == 2'd3)) begin
+                        m_arvalid <= 1'b1;
+                        m_araddr <= (FMT != 0) ? dsc1 + 64'({pr_i + 1'b1, 2'b0}) : dsc1 + {47'd0, pr_i + 1'b1, 1'b0};
                         d_st <= D_PR_AR;
                     end
                 end
