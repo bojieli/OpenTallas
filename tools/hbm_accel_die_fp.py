@@ -770,6 +770,19 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
             from hbm_mtp_native_contract import stop_model
             m['mtp_wb_native']['MTP'] = stop_model(ROOT)
         m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
+    if variant.get('native_backend_slot'):
+        from hbm_native_backend_slot import SLOT
+        slot = dict(SLOT)
+        box = [slot['x'],slot['y'],slot['x']+slot['w'],slot['y']+slot['h']]
+        m.setdefault('reserved_regions',[]).append(box)
+        m['native_backend_reservation'] = dict(slot=slot,
+            source_record='physical/hbm_native_backend/collar/ot_hbm_native_mtp_operation_backend_mx1/ports.json',
+            source_interface='f7498a6b1', storage_bits=2134, full_functional_pins=1921,
+            chosen_clock_source='ot_hbm_clock_reset_data_pll.pll.clk_stream',
+            actual_clock_arrival_ns=None, physical_qualified=False,
+            obligations=['actual PLL/CTS root-to-sink insertion and reset DATA boundary',
+                '32SM launch/result finite transport', 'native CP backend73/271 and AM18 joins',
+                'all final pin segments and loaded per-port budgets'])
     if geometry_only:
         m['buses'], m['paths'] = [], {}
         m['geometry_only'] = True
