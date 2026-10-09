@@ -9,6 +9,9 @@
     "tools/dsrom_s81_system_sources.py": "4e8937477805484e55151be188893254d5719b1d46112f3a312d5f4c1017e2ee",
     "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
     "tools/hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+    "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+    "tools/v41_fullshape_isa.py": "5d3e4dae0100b400a4ab7972b9090f5472a4d19237863c235b96187ffe633b09",
+    "tools/v41_fullshape_program_bind.py": "56fccd6e6daf22d4627e1e8e201ccab86f74195bc033d7676a6dcc69ffac90ab",
     "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp": "49e2ccac189f1bd487b7e10e6a770ceee7ef69e6e1857ccd67b1f161de042e78",
     "results/host/s81_native_head_capture_terminal_20261004/terminal.json": "6151e27ed8c3780c999f1bd6ab9cae60cad04a58b4fec9fcba02784745033d40",
     "results/host/s81_head_capture_binding_fix_20261004/terminal.json": "a55a7bb48e8619633f29c1a3d80efb71974201428ca15a413ab0a27af0201bad"
@@ -61,10 +64,11 @@
         "c_d=SLOTP8"
       ]
     },
-    "required_values": {
+    "canonical_reduced_fixture_values": {
       "DYN25": "(position & 7)<<2",
       "DYN26": "((position>>1)&3)<<7"
     },
+    "fullshape_record_stride_and_ME_address_units_bound": false,
     "actual_emitted_program_bound": false,
     "actual_fullshape_ISA_width_bound": false
   },
@@ -74,14 +78,15 @@
   },
   "qualification_prerequisites": {
     "canonical_source": "codex/mtp-numerical-repair-20261009",
-    "canonical_tip_reported": "667f02df0",
+    "canonical_tip_reported": "bfd8bcf8b",
+    "canonical_default_enable": "3dea693b1",
     "same_source_gates": [
       14,
       15,
       19,
       20
     ],
-    "all_four_terminal_qualified": false,
+    "all_four_terminal_qualified": true,
     "required_provider": [
       "actual compiled source list and source hashes",
       "actual program bytes/config/ISA fields",
@@ -93,6 +98,15 @@
   "historical_receipts": {
     "native_head": "exit1/source16d35fbeb; head+END only, no fulltoken or physical credit",
     "host_capture_fix": "compile/linkPASS/source0613be50f; host-only, no runtime/native rebuild"
+  },
+  "fullshape_provider": {
+    "source": "tools/hdc_replay_v41.py",
+    "layout": "ShapeLayout",
+    "allocated_slot_elements": "4*hd, two records",
+    "unpartitioned_compressor": "SLOTW/DYN18; no SLOTP8 or rollback_ring option",
+    "TP_compressor": "ratio1 only; ratio2 slot ring explicitly not emitted",
+    "ring8_compiler_selected": false,
+    "production_consumer_witness": false
   },
   "physical_context": {
     "actual_selected_sequencer_bound": false,

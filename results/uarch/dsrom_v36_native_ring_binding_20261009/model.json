@@ -37,7 +37,8 @@
     "slot_fit": false
   },
   "latency": {
-    "added_decode_cycles": 0,
+    "canonical_reported_added_decode_cycles": 0,
+    "native_measured_added_cycles": null,
     "changed_golden_order": false,
     "production_clock": "existing selected sequencer; not inferred from SOURCE dispatcher",
     "single_user_credit": 0,
