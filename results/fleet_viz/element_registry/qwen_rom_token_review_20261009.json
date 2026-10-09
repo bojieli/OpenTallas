@@ -497,13 +497,14 @@
         "positive": {
           "status": "pass",
           "evidence": [
-            "EPYC1:/srv/opentallas-scratch/codex/qwen-w1-native-20261009/run_r2.log"
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/run_r2.log",
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/tail_run.log"
           ]
         },
         "negative": {
-          "status": "running",
+          "status": "pass",
           "evidence": [
-            "EPYC1:/srv/opentallas-scratch/codex/qwen-w1-native-20261009/extra_campaign.log"
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/mut_run.log"
           ]
         }
       },
