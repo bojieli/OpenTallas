@@ -110,6 +110,8 @@ module tb_hgi_quant_vm_transport;
    current_n=32;use_vector=0;rbeat=0;writes=0;acks=0;reads=0;
    for(integer i=0;i<32;i=i+1)vm[i]=32'h3f800000;
    if(kind==2)vm[0]=32'h7fc00000;
+   if(kind==3)vm[0]=32'h7f800000;
+   if(kind==4)vm[0]=32'hff800000;
    h=0;a=0;h[127:124]=4;h[123:118]=4;h[99:93]=17;
    a[1:0]=1;a[67:48]=32;a[87:68]=1;o=a;o[47:8]=dest_base;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
@@ -151,7 +153,18 @@ module tb_hgi_quant_vm_transport;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;while(!done)@(negedge clk);if(!fault||req_v)$fatal(1,"invalid shape accepted");
   end
-  error_record(0);error_record(1);error_record(2);
+  error_record(0);error_record(1);error_record(2);error_record(3);error_record(4);
+  // GH7 v1 block-size domain: all255 otherparameters fault beforeVM allocation.
+  for(integer param_value=0;param_value<256;param_value=param_value+1)if(param_value!=16)begin
+   reg [127:0]h;reg [255:0]a,o;integer oldreads;
+   while(!ready)@(negedge clk);oldreads=reads;
+   h=0;a=0;h[127:124]=4;h[123:118]=6;h[99:93]=17;h[71:64]=param_value;
+   a[1:0]=1;a[67:48]=32;a[87:68]=1;o=a;o[47:8]=4096;
+   @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
+   @(negedge clk);cmd=0;while(!done)@(negedge clk);
+   if(!fault||req_v||reads!=oldreads||dut.reserved!=0)$fatal(1,"GH7 invalidblock allocatedbeat");
+   cases=cases+1;
+  end
   @(negedge clk);rst_n=0;repeat(3)@(negedge clk);rst_n=1;#0.01;
   if(!ready||req_v||!drained)$fatal(1,"cold reset leftovers");
   $display("PASS QUANT_TRANSPORT cases=%0d words=%0d arbitraryCPstall ACKdelay tail16/48 illegalUE",cases,nwords);$finish;

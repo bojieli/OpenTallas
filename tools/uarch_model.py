@@ -15068,7 +15068,7 @@ def hgi_quant_vm_transport_model(depth=32, vm_rtt=4):
         slot_area_um2=496080, legacy_die_slot_area_um2=500000, required_die_slot_delta_um2=0,
         current_die_slot_fit="outline fits1814.376x276.456; rails/halos/pinmap pending", die_geometry_adoption_requires_coordinator=True,
         actual_stdcell_area_um2=29108.0952, actual_cells=201444,
-        slot_fit_proven=True, slot_fit_source="4d9aa382b TT synthesis; physical route qualification pending",
+        slot_fit_proven=False, slot_fit_source="currentrelay/constantlane TT sizingpending;4d9aa382b priorTT29108um2 only nearestreference",
         floorplan_requirement="size from synthesized flop/core area at55percent before route",
         fanout="record header held once;one selected result queue mux; no payload ECC on flops",
         token_latency="sum actual 8sector handshakes perfull beat +23edges, no invented overlap credit",
