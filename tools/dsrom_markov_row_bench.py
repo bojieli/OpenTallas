@@ -46,6 +46,13 @@ def main():
   (a.out/f'run_{mutant}.log').write_text(p.stdout+p.stderr)
   results.append(dict(mutant=mutant,exit=p.returncode,pass_=('PASS released256' in p.stdout),log=f'run_{mutant}.log'))
   if (mutant==0 and (p.returncode or not results[-1]['pass_'])) or (mutant and not p.returncode): raise RuntimeError(results[-1])
- rec=dict(schema='opentallas.dsrom.markov-row-exact.v1',scope='48 independent256-term row transactions;40 released pairs plus8 stress; not ROM lookup or whole-vocab integration',checkpoint=SNAP.name,headers=dict(head=wh,embed=xh),rows=rowids,tokens=tokens,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in src},results=results,physical_qualified=False,adopted=False)
+ fsrc=src[:-1]+['rtl/test/dsrom_markov_20261008/tb_markov_fault.sv']
+ exe=a.out/'fault.vvp'
+ subprocess.run(['iverilog','-g2012','-s','tb_markov_fault','-o',str(exe),*[str(ROOT/s) for s in fsrc]],check=True,capture_output=True)
+ fp=subprocess.run(['vvp',str(exe)],text=True,capture_output=True)
+ (a.out/'fault.log').write_text(fp.stdout+fp.stderr)
+ assert fp.returncode==0 and 'PASS faultcases' in fp.stdout,fp.stdout
+ results.append(dict(faultcases=3,exit=fp.returncode,pass_=True,log='fault.log'))
+ rec=dict(schema='opentallas.dsrom.markov-row-exact.v1',scope='48 independent256-term row transactions;40 released pairs plus8 stress; not ROM lookup or whole-vocab integration',checkpoint=SNAP.name,headers=dict(head=wh,embed=xh),rows=rowids,tokens=tokens,source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in set(src+fsrc)},results=results,physical_qualified=False,adopted=False)
  (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n');print(json.dumps(results))
 if __name__=='__main__':main()
