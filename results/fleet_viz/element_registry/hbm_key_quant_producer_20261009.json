@@ -1,17 +1,64 @@
 {
- "schema_version":1,
- "records":[{
-  "element":"ot_hbm_key_quant_producer",
-  "target":"DeepSeek HBM accelerator",
-  "recorded_at":"2026-10-09T10:00:00+00:00",
-  "owner":"/root/hbm_system",
-  "source":{"commit":"a47acb560","paths":["rtl/hbm_accel/index/ot_hbm_key_quant_producer.sv","tools/hbm_key_quant_producer_model.py","tools/hbm_key_quant_producer_gate.py"]},
-  "description":"Actual unchanged FP4 quantizer plus finite complete68-byte key landing. Four FP32 blocks are quantized; routing metadata and result retain until actual append acceptance.",
-  "implementation":{"status":"implemented_not_gated","evidence":["Default-off RTL; actual ot_hdc_actquant arithmetic, not host-prequantized operands"]},
-  "model":{"status":"priced_unqualified_geometry","evidence":["tools/hbm_key_quant_producer_model.py; one32-element quantizer, fourblocks/key,13pipelineedges; complete544-bit landing; actualslotfit and clock timing pending"]},
-  "exactness":{"positive":{"status":"queued","evidence":["ot-agidock128 /srv/opentallas-scratch/codex/hbm-key-quant-a47acb560/gate-r1; measured1GiB guardobserver2093990; no gate verdict yet"]},"negative":{"status":"queued","evidence":["Same-source nibblepacking mutation and actual wrongblockorder check"]}},
-  "physical":{"status":"not_started","evidence":["Claude review and exclusivephysicalintake required; no new route"]},
-  "dependencies":["Actual chunk8 compressor and wk128x512 BF16 projection","Actual RMSnorm128 and YaRN64 RoPE producer","Actual68-byte HBM append completion fence","Native owner-die placement and clocks"],
-  "integration":{"status":"INCOMPLETE","evidence":["No completekeychain or tokenpath adoption; quantizer legacy physicaltiming remains unqualified at1.2GHz"]}
- }]
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_key_quant_producer",
+      "target": "DeepSeek HBM accelerator",
+      "recorded_at": "2026-10-09T10:00:00+00:00",
+      "owner": "/root/hbm_system",
+      "source": {
+        "commit": "a47acb560",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_key_quant_producer.sv",
+          "tools/hbm_key_quant_producer_model.py",
+          "tools/hbm_key_quant_producer_gate.py"
+        ]
+      },
+      "description": "Actual unchanged FP4 quantizer plus finite complete68-byte key landing. Four FP32 blocks are quantized; routing metadata and result retain until actual append acceptance.",
+      "implementation": {
+        "status": "implemented_component_exact",
+        "evidence": [
+          "Default-off RTL; actual ot_hdc_actquant arithmetic, not host-prequantized operands"
+        ]
+      },
+      "model": {
+        "status": "priced_unqualified_geometry",
+        "evidence": [
+          "tools/hbm_key_quant_producer_model.py; one32-element quantizer, fourblocks/key,13pipelineedges; complete544-bit landing; actualslotfit and clock timing pending"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_key_quant_producer_20261009/a47_minimum/positive.log:32keys each128elements; complete68-byte hold19edges and functional route retention; actualwrongblockorder refused. Functional10ns benchclock, no timingqualification."
+          ]
+        },
+        "negative": {
+          "status": "pass_detected",
+          "evidence": [
+            "Same-source nibblepacking mutation fails key1 against independentgolden; packing_mutant.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "not_started",
+        "evidence": [
+          "Claude review and exclusivephysicalintake required; no new route"
+        ]
+      },
+      "dependencies": [
+        "Actual chunk8 compressor and wk128x512 BF16 projection",
+        "Actual RMSnorm128 and YaRN64 RoPE producer",
+        "Actual68-byte HBM append completion fence",
+        "Native owner-die placement and clocks"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "No completekeychain or tokenpath adoption; quantizer legacy physicaltiming remains unqualified at1.2GHz"
+        ]
+      }
+    }
+  ]
 }
