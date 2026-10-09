@@ -18,6 +18,8 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
  ot_hbm_native_index_control #(.ENABLE(1),.PREFETCH(PREFETCH_CASE)) dut(.*);
  integer fr,q,j,frames=0,masks=0,starts=0,retirements=0;
  reg [89:0] expected_fs;reg [341:0] expected_mask[0:3];
+ reg bad_prefetch;
+ initial bad_prefetch=$test$plusargs("BAD_PREFETCH");
  always @(posedge clk)begin
   if(por_n)begin
    if(fs[0])begin
@@ -59,7 +61,12 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
     if(held_frame!==owner_frame||held_layer!=command_layer||held_key_row0!=command_key_row0||held_ndie!=command_ndie)
      $fatal(1,"prefetch dynamic descriptor mismatch");
     repeat(3)begin if(!prefetch_v||fs[0])$fatal(1,"lost prefetch debt");tick();end
-    prefetch_accepted_frame=owner_frame;prefetch_accepted=1;tick();prefetch_accepted=0;
+    prefetch_accepted_frame=bad_prefetch?(owner_frame^73'd1):owner_frame;
+    prefetch_accepted=1;tick();prefetch_accepted=0;
+    if(bad_prefetch)begin
+     tick();if(!fault||fs[0]||source_start_v)$fatal(1,"wrong prefetch receipt accepted");
+     $display("EXPECTED_PREFETCH_IDENTITY_REJECT");$finish;
+    end
    end
    producer_published=1;producer_drained=1;
    if(command_keep)begin
