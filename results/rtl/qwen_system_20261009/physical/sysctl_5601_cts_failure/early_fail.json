@@ -1,0 +1,100 @@
+{
+ "name": "qfd_sysctl_sram-5601e8881-tc-hm10",
+ "verdict": "EARLY_FAIL_SETUP",
+ "why": [
+  "post-cts TT setup WNS -720.6 ps at 833.333 (route-period -784.0 at 770), 3089 failing endpoints, TNS -556467; gate WNS < -400 with > 500 endpoints"
+ ],
+ "orfs": "/srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_sram-5601e8881-tc-hm10/routes/qfd_sysctl_sram_5601e8881_tc_hm10/work/orfs",
+ "corner": "TT",
+ "step": "5_1_grt",
+ "setup": {
+  "stage": "cts",
+  "ws": -720.626,
+  "raw_ws": -783.959,
+  "period": 770.0,
+  "count": 3089,
+  "tns": -556467
+ },
+ "hold": {
+  "found": [],
+  "guard": false,
+  "hm_auto": [],
+  "sync": [
+   [
+    "-506.44",
+    "-26.74"
+   ]
+  ],
+  "stall": false,
+  "chunks": []
+ },
+ "congestion": [],
+ "drt": [],
+ "paths": [
+  {
+   "cls": "input->reg",
+   "slack_ps": -783.96,
+   "group": "core_clk",
+   "dominated": "logic",
+   "wire_ps": 104.0,
+   "cell_ps": 796.3,
+   "max_fanout": 6,
+   "start": "c_done_gen[7]",
+   "end": "u_pkg.eng_cycles[31]$_DFFE_PN0P_",
+   "check": "rising edge-triggered flip-flop clocked by core_clk"
+  },
+  {
+   "cls": "input->out",
+   "slack_ps": -496.3,
+   "group": "ot_lb_v_core_clk",
+   "dominated": "logic",
+   "wire_ps": 3.4,
+   "cell_ps": 228.9,
+   "max_fanout": 3,
+   "start": "s_wvalid",
+   "end": "s_awready",
+   "check": "output port clocked by ot_lb_v_core_clk"
+  },
+  {
+   "cls": "reg->reg",
+   "slack_ps": 208.95,
+   "group": "asynchronous",
+   "dominated": "logic",
+   "wire_ps": 52.0,
+   "cell_ps": 432.8,
+   "max_fanout": 30,
+   "start": "u_rst.u_por.reset_pipe[1]$_DFF_PN0_",
+   "end": "u_host.sq_tail[3]$_DFFE_PN0P_",
+   "check": "recovery check against rising-edge clock core_clk"
+  }
+ ],
+ "block": "qfd_sysctl_sram",
+ "owner": "Codex:qwen-system-crom-control",
+ "gates": {
+  "setup_cts_ws_ps": -400.0,
+  "setup_cts_count": 500,
+  "setup_tns_ps": -1000000.0,
+  "setup_place_ws_ps": -900.0,
+  "setup_place_count": 2000,
+  "hold_buf_cap": 100000,
+  "hold_buf_frac": 0.3,
+  "hold_buf_min": 20000,
+  "hold_buf_improve_dwns": 5.0,
+  "hold_buf_improve_frac": 0.6,
+  "hold_buf_improve_min": 60000,
+  "hold_stall_it": 2000,
+  "hold_stall_dwns": 1.0,
+  "hold_stall_tns_pct": 2.0,
+  "hold_real_ws_ps": -150.0,
+  "hold_real_after_s": 3600,
+  "hold_deep_it": 2000,
+  "hold_deep_dwns": 5.0,
+  "grt_min_iter": 20,
+  "grt_markers": 1000,
+  "grt_flat": 0.95,
+  "drt_min_iter": 20,
+  "drt_k": 8,
+  "drt_min_viol": 100,
+  "stall_after_s": 10800
+ }
+}

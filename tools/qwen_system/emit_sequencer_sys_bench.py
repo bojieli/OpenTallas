@@ -70,7 +70,7 @@ def emit(out):
           "  if(c_mode)r_data={462'd0,18'd17+rx_rank*18'd37984,32'h3f800000};",
           '  rx_left=rx_left-1;rx_rank=rx_rank+1;',
           ' end else if(c_valid && c_ready && c_last)begin rx_left=c_mode?4:256;rx_rank=0;coll_ops=coll_ops+1;end',
-          ' if(cycles>200000)begin $display("SYS_TIMEOUT stage=%0d seq=%0d core=%0d",stage,dut.u_seq.u_seq.st,dut.u_ctrl.st);$fatal;end',
+          ' if(cycles>200000)begin $display("SYS_TIMEOUT stage=%0d seq=%0d core=%0d",stage,dut.u_seq.u_base.st,dut.u_ctrl.st);$fatal;end',
           'end',
           'initial begin',
           " kv_write_drained=1;kv_ok=1;me_mem_ok=1;c_ready=1;pi_me_ready=1;pi_me_idle=1;pi_me_am_idx=17;pi_me_am_val=32'h3f800000;pi_me_am_any=1;pi_me_progress=16'hffff;",
