@@ -38,6 +38,7 @@ import datetime as dt
 import fcntl
 import glob
 import json
+import hashlib
 import os
 import re
 import shlex
@@ -461,8 +462,34 @@ def save_job(j):
         os.replace(tmp, p)
 
 
+_STATE_READ_WARNINGS = set()
+
+
 def all_jobs():
-    return [json.loads(p.read_text()) for p in sorted((STATE / "jobs").glob("*.json"))]
+    """Keep unrelated fleet work running if an externally written state is malformed.
+
+    Leave the offending file untouched for owner recovery; never infer a fresh
+    status or resubmit it, since it could have a live producer outside the loop.
+    """
+    jobs = []
+    for p in sorted((STATE / "jobs").glob("*.json")):
+        raw = None
+        try:
+            raw = p.read_text()
+            j = json.loads(raw)
+            if not isinstance(j, dict) or not isinstance(j.get("spec"), dict) or \
+                    j.get("name") != p.stem or not isinstance(j.get("status"), str) or not j["status"]:
+                raise ValueError("job state requires matching name, nonempty status and object spec")
+        except (OSError, ValueError) as exc:
+            # One warning per distinct bad content; a persistent malformed file
+            # must not flood the daemon log on every status query and tick.
+            key = (str(p), str(exc), hashlib.sha256((raw or "").encode()).hexdigest())
+            if key not in _STATE_READ_WARNINGS:
+                _STATE_READ_WARNINGS.add(key)
+                log(f"MALFORMED job state {p}: {exc}; preserved, excluded from scheduling")
+            continue
+        jobs.append(j)
+    return jobs
 
 
 def keys_path():
@@ -1268,7 +1295,9 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl")
+           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py",
+           *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1426,6 +1455,26 @@ def preroute_gate_on(j, kind):
 FH_DIRS = ("/srv/opentallas-scratch/claude/flowhold/src", "/home/ubuntu/closure-loop-local/flowhold/src")
 FH_FILES = (("orfs_hold_mm.py", "tools"), ("orfs_hold_mm.tcl", "tools"), ("h1_patch.py", "tools/closure_loop"),
             ("hold_corners_patch.py", "tools/closure_loop"))
+# drive-2155 2026-10-09: the TT-batch overlay snapshot (26f14af32, 635 jobs) has the same failure: tt_overlay.py force-copies
+# its physical/common_flow files over the job's source, so even new-commit routes got link_budget_consistent.sdc WITHOUT
+# the rebudget hook (budget_rb never applied) and cg_pushdown.tcl without the BF HALF_PHL exclusion, plus a pre-audit
+# h1_patch.py.  Every main-vs-snapshot difference is an additive flow fix already on main, so the same refresh applies.
+TTB_DIRS = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32", "/home/ubuntu/closure-loop-local/ttbatch/26f14af32")
+TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/closure_loop"),
+             *((n, "physical/common_flow") for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                    "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
+
+
+def snapshot_refresh_sh(run):
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    out = ""
+    for dirs, files in SNAPSHOT_REFRESH:
+        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
+                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
+                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
+                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+    return out
 
 
 def fp_lint_env(j, t, lint=True, prg=False):
@@ -1433,10 +1482,7 @@ def fp_lint_env(j, t, lint=True, prg=False):
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
            f"preroute_gate.py preroute_gate.tcl; do "
            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
-           f"for fh in {' '.join(FH_DIRS)}; do for fd in {' '.join(f + ':' + d for f, d in FH_FILES)}; do "
-           f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
-           f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
-           f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; true; }}\nship_fpl\n"
+           f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "

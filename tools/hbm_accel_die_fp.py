@@ -546,6 +546,20 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         insts.append(it)
         hub[n_] = it
         yy = it.y + h_
+    # r25m (MTP-DIE 2026-10-08): one-per-die slots BELOW the lowest spine block (the loader), stacked downward at the
+    # spine's lower gap pitch, in the free bottom end of the spine column (r25: 2.17 mm free between the hub band
+    # edge and the loader).  hfd_mtp = ot_dshbm_dspark_top (dspark_ctl f2 + argmax f1 + union f3 + accept a0 +
+    # spec_state + scratch c2 + fence + the drafter's router_topk), 0.6-1.5 mm from its control peers (loader,
+    # router, cmdproc).  Nothing else moves; the die outline is unchanged.
+    yy = min(it.y for it in hub.values() if it.kind == 'spine' and it.x == sx0) - glo / 2
+    for n_, (w_, h_) in variant.get('spine_slots_low', {}).items():
+        y_ = dn(yy - glo / 2 - h_, GY)
+        it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
+                  kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'stream_1p2'))
+        assert it.y >= hy0 + 43.2, ('low spine slot below the hub band', n_, it.y, hy0)
+        insts.append(it)
+        hub[n_] = it
+        yy = it.y
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
         if 'hub_h_ref' in variant:     # r25s: a taller hub band moves the centred spine column up by half the growth
@@ -1462,9 +1476,17 @@ def apply_splits(m, specs, lattice=None):
         bands = sorted(sp['bands'].items(), key=lambda kv: kv[1]['y0_um'])
         Hp = sp['parent_size_um'][1]
         recs = {}
+        # r25m (MTP-DIE): ports a die variant adds to a closed split view (an ECO pin set the owning block stream adds
+        # to the block): {parent: {port: (band, bits, face, layer, fraction along the face, pitch in tracks)}}
+        extra = (m.get('variant') or {}).get('split_extra_ports', {}).get(parent, {})
         for bn, b in bands:
             recs[bn] = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
             spec, order = _split_spec(recs[bn]['ports'])
+            for pn_, (bn_, bits_, face_, layer_, frac_, pitch_) in extra.items():
+                if bn_ == bn:
+                    span_ = sp['parent_size_um'][0] if face_ in 'NS' else b['h_um']
+                    spec[pn_] = ('face', bits_, face_, layer_, round(frac_ * span_, 4), pitch_)
+                    order.append(pn_)
             def fn(mst, k=1, spec=spec, order=order):
                 sp_ = dict(spec)
                 if k > 1:
@@ -1474,6 +1496,7 @@ def apply_splits(m, specs, lattice=None):
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
+        owner.update({pn_: v_[0] for pn_, v_ in extra.items()})
         new_insts, repl = [], {}
         for it in m['insts']:
             if it.master != parent:
@@ -1580,9 +1603,41 @@ def apply_splits_x(m, rel):
     V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
     fixed = m.setdefault('fixed_ports', {})
+    # r25m (MTP-DIE, RQ-ING-4): ports a die variant adds to a split parent (the loader memory chains on the stream
+    # services): each lands on the band under its peer's x, as an inner-face (master N) M5 run at the free face span nearest the peer's x at the peer's x (an
+    # ECO pin set the owning block stream adds to that band's view)
+    newp = (m.get('variant') or {}).get('split_x_new_ports', {})
+    by_ = {it.name: it for it in m['insts']}
+    extra_x, new_owner = defaultdict(dict), {}
+    if newp:
+        for bid, cls, bits, eps in m['buses']:
+            for i, (inst, port) in enumerate(eps):
+                it = by_.get(inst)
+                if it is None or port not in newp or it.master not in sp['parents']:
+                    continue
+                o = by_[eps[1 - i][0]] if len(eps) == 2 else None
+                ox = (o.x + o.w / 2) if o is not None else it.x + it.w / 2
+                for bn in sp['parents'][it.master]['bands']:
+                    b = sp['bands'][bn]
+                    if it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == sp['parents'][it.master]['bands'][-1]:
+                        xl = min(max(ox - it.x - b['x0_um'], 0.1 * b['w_um']), 0.9 * b['w_um'])
+                        extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
+                        new_owner[(inst, port)] = bn
+                        break
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
         spec, order = _xy_or_split_spec(rec['ports'])
+        for pn_, t_ in extra_x.get(bn, {}).items():
+            # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
+            half_ = t_[1] * t_[5] * 0.048 / 2 + 2.0
+            occ = [(c - b_ * pt * 0.048 / 2 - 2.0, c + b_ * pt * 0.048 / 2 + 2.0)
+                   for f_, b_, fc_, ly, c, pt in (v_ for v_ in spec.values() if v_[0] == 'face') if fc_ == 'N' and ly == 'M5']
+            wb = sp['bands'][bn]['w_um']
+            cands = sorted((abs(c_ - t_[4]), c_) for c_ in (half_ + 0.5 * i for i in range(int((wb - 2 * half_) / 0.5) + 1))
+                           if all(c_ + half_ <= a or c_ - half_ >= b for a, b in occ))
+            assert cands, ('no free N-face span for', bn, pn_)
+            spec[pn_] = t_[:4] + (round(cands[0][1], 3),) + t_[5:]
+            order.append(pn_)
         def fn(mst, k=1, spec=spec, order=order):
             sp_ = dict(spec)
             if k > 1:       # bundled view: an xy port becomes one S-face M5 run centred on its pins
@@ -1637,7 +1692,8 @@ def apply_splits_x(m, rel):
         if not hit:
             nb.append((bid, cls, bits, eps))
             continue
-        split = [e for _, e in hit if e[1] not in ('ck', 'rst') and len(pmap[e[0]][e[1]]) > 1]
+        split = [e for _, e in hit if e[1] not in ('ck', 'rst') and (e[0], e[1]) not in new_owner
+                 and len(pmap[e[0]][e[1]]) > 1]
         if split:
             assert len(split) == 1 and len(eps) == 2, (bid, eps)
             (pi, pp), = split
@@ -1651,6 +1707,8 @@ def apply_splits_x(m, rel):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(nm, port) for nm in repl[inst].values()]
+            elif (inst, port) in new_owner:
+                e2.append((repl[inst][new_owner[(inst, port)]], port))
             else:
                 (bi, bp, lo, hi), = pmap[inst][port]
                 e2.append((bi, bp))
@@ -1923,11 +1981,13 @@ def buses(m):
     pos = 60.0
     for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('xt', 129), ('ct', 23), ('ef', 8)) + \
             ((('qa', 38),) if m['variant'].get('attn_rtl') else ()) + \
-            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()):
+            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()) + \
+            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()):
         sp_off[n_] = pos + nb * 1.2 / 2
         pos += nb * 1.2 + 40.0
     pos = 30.0
-    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)):
+    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)) + \
+            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()):
         ed_off[n_] = pos + nb * 0.8 / 2
         pos += nb * 0.8 + 25.0
     spx = (hub['vm'].x, hub['vm'].x + hub['vm'].w)
@@ -2200,6 +2260,28 @@ def buses(m):
         pts = [p0, (xr, p0[1]), (xr, ye_), (cc + 80.0, ye_), sn]
         chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
               fc=(128,))
+        lmem = m['variant'].get('ld_mem')
+        if lmem:
+            # r25m (MTP-DIE, RQ-ING-4): the loader's memory side (memory AXI m_* + request / response req_* / rsp_*,
+            # tied to a cfg shift chain in the r25 die view: NO physical loader -> HBM path) wired to every stack's
+            # stream service: request (loader -> svc) and response (svc -> loader) forwarded chains on the expert-fetch
+            # route (loader W/E face -> spine-side channel -> hub edge channel -> svc inner face), stations every
+            # <= 430.56 um (< the 504 um SS reach), a pin flop at both ends (the loader / svc pin banks)
+            ld_ = hub['loader']
+            q0 = _cxy(ld_, 'W' if half == 'W' else 'E', 0.35)
+            xl_ = xlane(half, 'lm', xs_sp + (-200.0 if half == 'W' else 200.0))
+            sn2 = _cxy(svc, 'N' if side == 'S' else 'S', (cc + 140.0 - svc.x) / svc.w)
+            yl_ = ylane(side, 'lm', ych[side] + 130.0 * sgn)
+            pts2 = [q0, (xl_, q0[1]), (xl_, yl_), (cc + 140.0, yl_), sn2]
+            chain(f'lq_{st}', 'loader_mem', lmem[0], (ld_.name, f'q{st}'), (svc.name, 'lq'), pts2,
+                  path=f'loader_mem_{st}', fc=(lmem[0],))
+            q1 = _cxy(ld_, 'W' if half == 'W' else 'E', 0.65)
+            xr2 = xl_ + (-60.0 if half == 'W' else 60.0)
+            sr2 = _cxy(svc, 'N' if side == 'S' else 'S', (cc + LR_DX - svc.x) / svc.w)
+            yr2 = yl_ + 60.0 * sgn
+            pts3 = [sr2, (cc + LR_DX, yr2), (xr2, yr2), (xr2, q1[1]), q1]
+            chain(f'lr_{st}', 'loader_mem', lmem[1], (svc.name, 'lr'), (ld_.name, f'r{st}'), pts3,
+                  path=f'loader_rsp_{st}', fc=(lmem[1],))
         # (6) KV rows -> the stack's scan quadrant (attention tiles nearest the stack) and index keys -> its index
         #     quarter: svc outer end -> outer column channel -> hub edge channel -> quadrant face
         sc = m['scan'][st]
@@ -2260,6 +2342,8 @@ def buses(m):
             ('vm', 'quant', 1024), ('vm', 'router', 512)] + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
+    if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
+        hl_ += list(MTP_HUB_LINKS)
     for q in ('SW', 'SE', 'NW', 'NE'):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
@@ -2975,6 +3059,8 @@ PATH_CLASSES = dict(
     result='SM -> SU result gather',
     control='cmdproc / issue -> SM control (start/op, arrive/release)',
     expert_req='router -> stream service (expert-fetch descriptor)',
+    loader_mem='loader -> stream service (memory AXI + request; r25m RQ-ING-4)',
+    loader_rsp='stream service -> loader (memory AXI + response; r25m RQ-ING-4)',
     kv='stream service -> attention tiles (KV rows)',
     ik='stream service -> index (index keys)',
     link='collective endpoint -> SerDes macro',
@@ -2986,7 +3072,8 @@ PATH_CLASSES = dict(
 
 
 def path_class(p):
-    for k in ('weight', 'xbcast', 'result', 'control', 'expert_req', 'kv', 'ik', 'link', 'host', 'attn_q'):
+    for k in ('weight', 'xbcast', 'result', 'control', 'expert_req', 'kv', 'ik', 'link', 'host', 'attn_q', 'loader_mem',
+              'loader_rsp'):
         if p.startswith(k + '_') or p == k:
             return k
     if p == 'hub_su_coll':
@@ -4055,12 +4142,14 @@ def main(argv=None):
     ap.add_argument('--die', choices=['ds', 'qwen'], default='ds', help='ds: the DS SM die (r8); qwen: the Qwen3-8B '
                     'W12 tile die')
     ap.add_argument('--var', default='', help='qwen floorplan variant knobs k=v,... (spine_w, spine_ch)')
+    ap.add_argument('--ds-var', default='', help='ds die: a preset name (e.g. r25m, the MTP-DIE variant) or a JSON '
+                    'variant (variant_arg); default the ADOPTED round')
     a = ap.parse_args(argv)
     if a.die == 'qwen':
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build()
+        m = build(variant_arg(a.ds_var))
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

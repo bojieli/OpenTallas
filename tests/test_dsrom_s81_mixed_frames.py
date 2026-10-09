@@ -103,3 +103,21 @@ def test_r4_nxt_reach_builds_with_adopted_pq_root():
     assert lg['overlaps'] == 0 and lg['outside'] == 0
     cls = m['hop_fix']['classes']
     assert all(isinstance(v, dict) for v in cls.values())
+
+
+def test_unbound_functional_pin_check_flags_a_missing_q_net():
+    # build-every-path rule (TA-10): a q element whose go_tag has no net is reported; walking is diagnostic only
+    class It:
+        def __init__(s, name, master, kind):
+            s.name, s.master, s.kind = name, master, kind
+    setup('--die layer1 --pairs 1792 --q-elem-h 221.4 --pq-place')
+    qn = F.real_lef(F.Q_LEF)['name']
+    m = dict(insts=[It('e0', qn, 'q')], buses=[])
+    ub = F.unbound_functional_pins(m)
+    assert all(pin != 'walking' for _, pin in ub)
+    if F.q_pq():
+        assert (qn, 'go_tag') in ub and (qn, 'sh_free') in ub
+        m['buses'] = [('gt', 'cfg', 2, [('s0', 'go_tag'), ('e0', 'gt')]), ('ef', 'cfg', 2, [('e0', 'ef'), ('s0', 'ef')])]
+        m['insts'].append(It('s0', 'ot_s81_cfg7_seq', 'seq'))
+        ub = F.unbound_functional_pins(m)
+        assert (qn, 'go_tag') not in ub and (qn, 'sh_free') not in ub and (qn, 'bank_free') not in ub

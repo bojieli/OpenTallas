@@ -4,7 +4,9 @@
 // wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles
 // earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.
 module tb_qfd_constants_sequencer;
-    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0;
+    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0, MSTN = 0;
+    // MMUT = 1 (with MSTN = 1): the bench still presents me_mem_ok IS edges late to the stationed master (double delay): must FAIL
+    parameter integer MMUT = 0;
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, PAW = 12, SW = 64, LV = 7, D = 4;
     localparam integer SMIN = 7, SMAX = 11, TCUT = 7, L = IS + OS;
     reg clk = 0, rst_n = 0;
@@ -140,7 +142,7 @@ module tb_qfd_constants_sequencer;
     wire m_me_clk, r_me_clk;
     wire me_mem_ok_m;
     ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));
-    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD)) dut (
+    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD), .MSTN(MSTN)) dut (
         .clk(clk),
         .rst_n(rst_n),
         .po_me_clk(m_me_clk),
@@ -149,7 +151,7 @@ module tb_qfd_constants_sequencer;
         .tp_pos(tp_pos),
         .kv_write_drained(kv_write_drained),
         .kv_ok(kv_ok),
-        .me_mem_ok(me_mem_ok_m),
+        .me_mem_ok((MSTN != 0 && MMUT == 0) ? me_mem_ok : me_mem_ok_m),
         .vm_rq(vm_rq),
         .c_ready(c_ready),
         .r_valid(r_valid),
