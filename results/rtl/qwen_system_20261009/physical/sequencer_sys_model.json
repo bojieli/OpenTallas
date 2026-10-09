@@ -71,10 +71,16 @@
   },
   "exact_contract": "Golden38entry stage traversal; immutableISAtemplates byte-identical to releasedstagegeneratorAR256; relocateddescriptorprogrambases; wbase/wcsaddstagebaseonlyforROMme_wsrc0; fullMEpacket/go alignment; fullstg/gen tag; argmaxranktie unchanged. PinnedFQS source unchanged. Opt-in SYS_ENABLE default0 until exact+physicalgates.",
   "packing": {
-    "stage_strides_code": 1056,
-    "stage_strides_scale": 50112,
-    "measured_default_profile_code_words": 512,
-    "measured_default_profile_scale_words": 1056,
-    "adoption": "golden padded strides retained; native ROM bank image packing proof pending"
+    "stage_strides_code": 512,
+    "stage_strides_scale": 1056,
+    "code_bank_capacity_words": 20480,
+    "code_required_words": 20016,
+    "scale_required_words_assumed_upper": 40392,
+    "scale_bank_capacity_words": 196608,
+    "historical_ctl_golden_strides": [
+      1056,
+      50112
+    ],
+    "adoption": "actual_sys generated packing only; historical ctl and original FQS untouched; generator asserts per-stage and totalcapacity"
   }
 }
