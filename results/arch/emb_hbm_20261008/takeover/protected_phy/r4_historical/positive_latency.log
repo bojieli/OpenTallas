@@ -1,0 +1,3 @@
+latency coreHBM1024ps WR min=117 sum=10403 max=552 RD min=70 sum=7682 max=456 ACT=169 conflicts=139
+PASS 64 WR 64 RD writes=128 reads=320 cycles=18341 real256 tagged issue-metadata visibility
+tb_qfd_protected_phy.sv:46: $finish called at 18786304 (1ps)

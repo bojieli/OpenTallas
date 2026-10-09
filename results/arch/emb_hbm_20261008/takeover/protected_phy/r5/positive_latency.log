@@ -1,0 +1,4 @@
+latency coreHBM1024ps WR min=117 sum=10403 max=552 RD min=70 sum=7682 max=456 ACT=169 conflicts=139
+PASS 64 WR 64 RD writes=128 reads=320 cycles=18341 real256 tagged issue-metadata visibility
+PASS actualphysicaldata CE corrected and UE retained againstreal sidecarchecks
+tb_qfd_protected_phy.sv:50: $finish called at 19077120 (1ps)
