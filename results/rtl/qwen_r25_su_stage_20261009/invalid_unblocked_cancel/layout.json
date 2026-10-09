@@ -1,0 +1,44 @@
+{
+  "source_commit": "9b98cc512",
+  "n": 64,
+  "m": 16,
+  "lv": 6,
+  "rows": [
+    {
+      "op": 0,
+      "shape": [
+        8,
+        8192
+      ],
+      "sfucode": 0,
+      "width": 64,
+      "time_levels": 7,
+      "bad": true,
+      "reduction": 2
+    },
+    {
+      "op": 1,
+      "shape": [
+        8,
+        8192
+      ],
+      "sfucode": 1,
+      "width": 16,
+      "time_levels": 9,
+      "bad": true,
+      "reduction": 1
+    },
+    {
+      "op": 2,
+      "shape": [
+        8,
+        8192
+      ],
+      "sfucode": 0,
+      "width": 64,
+      "time_levels": 10,
+      "bad": false,
+      "reduction": 0
+    }
+  ]
+}
