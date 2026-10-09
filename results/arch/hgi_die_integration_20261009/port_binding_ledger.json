@@ -1,0 +1,616 @@
+{
+  "schema": "opentallas.hgi_live_port_binding_ledger.v1",
+  "status": "INCOMPLETE_REAL_PRODUCERS_REQUIRED",
+  "blocks": [
+    {
+      "source_commit": "76bb97ff2",
+      "path": "results/hgi_attn_g12_20261009/record/port_manifest.json",
+      "sha256": "a4bd1876e376415a7075dfc1a9190957d35463137fc1c63b69194d30943456db",
+      "manifest": {
+        "schema": "hgi.g12.record-ports.v1",
+        "source_commit": "GH5 source commit pending",
+        "module": "ot_hgi_att_record_adapter",
+        "seq_tuple_ABI_bits": 1409,
+        "requires_normative_header": true,
+        "upstream_3fae_legacy_conversion": "OPEN/Claude",
+        "inputs": {
+          "clk": 1,
+          "rst_n": 1,
+          "rec_v": 1,
+          "rec_hdr": 128,
+          "rec_sut": 256,
+          "rec_desc": 1024,
+          "rec_pos1": 21,
+          "rec_b_count": 32,
+          "rec_c_count": 32,
+          "att_r": 1,
+          "att_done": 1,
+          "att_fault": 1,
+          "rows_cmd_r": 1,
+          "rows_done": 1,
+          "rows_fault": 1
+        },
+        "outputs": {
+          "rec_r": 1,
+          "att_v": 1,
+          "att_hdr": 128,
+          "att_desc": 1024,
+          "rows_cmd_v": 1,
+          "rows_ring": 1,
+          "rows_pos1": 21,
+          "rows_b_n": 21,
+          "rows_b_m": 21,
+          "rows_c_n": 21,
+          "busy": 1,
+          "u_done": 1,
+          "u_fault": 1
+        },
+        "normal_completion": "ActualATTdone ANDactualrowfrontdone",
+        "fault_completion": "Sticky u_fault halts CP and blocks new records/work; no fault u_done; recovery only by externally drained reset",
+        "SUT_by_design_unused": "ATT cannotcarrySUtemplate: templatebit92 rejects records; transportfixedwidth stillincludesSUT",
+        "producer_selected_ID_stream": "Independent realexistingIDstream binds unchangedG12physicalleaf c_id[31:0] ready/valid; thisadapterdoesnotproduceCID orrowpayload",
+        "latency": {
+          "adapter_edges": 3,
+          "existing_leaf_edges": 3,
+          "total_record_first_row_edges": 6,
+          "rowII": 1
+        },
+        "exact_gate": {
+          "status": "PENDING revised GH5 proof",
+          "scope": "Adapter + actual G12 leaf; ATTdone supplied by test completion driver, not full ATT arithmetic proof"
+        },
+        "adopted": false
+      },
+      "producer_required": "Claude sequencer normative header plus effective counts21/32",
+      "consumer_required": "Existing ATT setup and actual done/fault plus G12 row leaf85bit command",
+      "binding_status": "UNBOUND_DIE_GRAPH_OR_PEER",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false,
+      "placeholder_inputs_allowed": false
+    },
+    {
+      "source_commit": "75ef0dccf",
+      "path": "results/hgi_attn_g12_20261009/port_manifest.json",
+      "sha256": "ac3a4c5b42cf658c149345c782c692ec397cf9db8606f62560f56d68a2fe63fa",
+      "manifest": {
+        "schema": "hgi.g12.ports.v1",
+        "module": "ot_hgi_att_row_sources_p",
+        "source_commit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+        "inputs": {
+          "clk": 1,
+          "rst_n": 1,
+          "cmd_v": 1,
+          "ring": 1,
+          "pos1": 21,
+          "b_n": 21,
+          "b_m": 21,
+          "c_n": 21,
+          "c_id_v": 1,
+          "c_id": 32,
+          "row_r": 1
+        },
+        "outputs": {
+          "cmd_r": 1,
+          "c_id_r": 1,
+          "row_v": 1,
+          "row_source": 1,
+          "row_last": 1,
+          "row_index": 20,
+          "row_ordinal": 21,
+          "busy": 1,
+          "done": 1,
+          "fault": 1
+        },
+        "role": "Metadata row-front-end upstream existing gather reader; payload/formatter/tile arithmetic unchanged",
+        "producer_contract": "One acknowledged command owns exactly c_n selected IDs in list order; no unsolicited ID beat, no new command before completion. No payload is supplied by this block.",
+        "consumer_contract": "Ready/valid held row tuple; source0=B physical ring/linear slot,source1=C selected ID; ordinal concatenated B then C; last identifies final request.",
+        "latency": {
+          "first_request_cycles": 3,
+          "II": 1
+        },
+        "default_selection": "Standalone opt-in hardening vehicle; original ot_hgi_att_row_sources defaultENABLE_G12=0 bypasses unchanged legacy stream",
+        "unconnected_pending": [
+          "HGI descriptor receiver/row-gather request adapter",
+          "Claude entry formatter load-mode/bank/grp/w2v association",
+          "die generator slot/stream-net binding"
+        ]
+      },
+      "producer_required": "Actual G12 recordadapter and selected-ID reader U32 stream",
+      "consumer_required": "Existing gather row-request interface and its real backpressure",
+      "binding_status": "UNBOUND_DIE_GRAPH_OR_PEER",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false,
+      "placeholder_inputs_allowed": false
+    },
+    {
+      "source_commit": "7c38e6508",
+      "path": "rtl/hbm_accel/generic/collective/ports.json",
+      "sha256": "41b0818147040eabc90a42147dd5ebab356f1a3b734efd8dceb450ff6d7026cf",
+      "manifest": {
+        "module": "ot_hgi_coll_decode",
+        "source": "9ed547523",
+        "default_enable": 0,
+        "generic_enable": 1,
+        "ports": {
+          "clk": {
+            "width": 1,
+            "direction": "in",
+            "binding": "COLL production clock",
+            "must_not_tie": true
+          },
+          "rst_n": {
+            "width": 1,
+            "direction": "in",
+            "binding": "COLL reset",
+            "must_not_tie": true
+          },
+          "coll_group_size": {
+            "width": 8,
+            "direction": "in",
+            "binding": "active static config reset96 from Claude cfg receiver",
+            "must_not_tie": true
+          },
+          "die_id": {
+            "width": 8,
+            "direction": "in",
+            "binding": "physical die identity constant",
+            "must_not_tie": true
+          },
+          "cmd_v": {
+            "width": 1,
+            "direction": "in",
+            "binding": "Claude sequencer unit6 dispatch valid",
+            "must_not_tie": true
+          },
+          "cmd_r": {
+            "width": 1,
+            "direction": "out",
+            "binding": "sequencer dispatch ready",
+            "must_not_tie": true
+          },
+          "hdr": {
+            "width": 128,
+            "direction": "in",
+            "binding": "normative D_UOP_FIELDS header from sequencer",
+            "must_not_tie": true
+          },
+          "selected_count": {
+            "width": 32,
+            "direction": "in",
+            "binding": "indexed I count reader;0usesimm_a",
+            "must_not_tie": true
+          },
+          "backend_v": {
+            "width": 1,
+            "direction": "out",
+            "binding": "existing collective/gather launch valid",
+            "must_not_tie": true
+          },
+          "backend_r": {
+            "width": 1,
+            "direction": "in",
+            "binding": "existing collective/gather launch ready",
+            "must_not_tie": true
+          },
+          "backend_op": {
+            "width": 6,
+            "direction": "out",
+            "binding": "existing engine opdecode0..5",
+            "must_not_tie": true
+          },
+          "backend_gsz": {
+            "width": 4,
+            "direction": "out",
+            "binding": "PSG gsz Flegacy/0..3smallgroups",
+            "must_not_tie": true
+          },
+          "backend_group_size": {
+            "width": 8,
+            "direction": "out",
+            "binding": "selected payload group extent",
+            "must_not_tie": true
+          },
+          "backend_rank": {
+            "width": 8,
+            "direction": "out",
+            "binding": "rank in aligned group",
+            "must_not_tie": true
+          },
+          "backend_group": {
+            "width": 8,
+            "direction": "out",
+            "binding": "aligned group identity",
+            "must_not_tie": true
+          },
+          "backend_subgroup": {
+            "width": 8,
+            "direction": "out",
+            "binding": "GROUP_REDUCE_MCAST subgroup size",
+            "must_not_tie": true
+          },
+          "backend_owner_block": {
+            "width": 8,
+            "direction": "out",
+            "binding": "ROW_GATHER ownerblockB",
+            "must_not_tie": true
+          },
+          "backend_destinations": {
+            "width": 8,
+            "direction": "out",
+            "binding": "ROW_GATHER recipient rankcount",
+            "must_not_tie": true
+          },
+          "backend_row_count": {
+            "width": 21,
+            "direction": "out",
+            "binding": "ROW_GATHER selected k",
+            "must_not_tie": true
+          },
+          "error_v": {
+            "width": 1,
+            "direction": "out",
+            "binding": "explicit commandfault valid to engine completion/CP",
+            "must_not_tie": true
+          },
+          "error_r": {
+            "width": 1,
+            "direction": "in",
+            "binding": "CPfaultcompletion consumer ack",
+            "must_not_tie": true
+          },
+          "selected_count_valid": {
+            "width": 1,
+            "direction": "in",
+            "binding": "I-tablecountrowexists (false meansuseimm_a)",
+            "must_not_tie": true
+          }
+        },
+        "not_completion": "backend acceptance is not engine completion; retain existing result completion",
+        "open_binding": "ROW_GATHER backend binding and isolation gates remain pending; no fake tieoffs",
+        "dispatch_latency_cycles": 2,
+        "control_exact_source": "8d33d3b03",
+        "rows_fixture_evidence": "results/rtl/hgi_collective_row_20261009/ingress_8d33",
+        "manifest_scope": "RTL source9ed547523; currentconfigs/model4e9e838a2; independentfreshgatesrequired"
+      },
+      "producer_required": "Claude sequencer unit6 record/static group and Icount reader",
+      "consumer_required": "Qualified PSG and actual ROW backend",
+      "binding_status": "UNBOUND_DIE_GRAPH_OR_PEER",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false,
+      "placeholder_inputs_allowed": false
+    },
+    {
+      "source_commit": "7c38e6508",
+      "path": "rtl/hbm_accel/generic/collective/row_ports.json",
+      "sha256": "b7a46053ffe3a1198b4cf0ff19176beaf7c7981ef3ee74a20d46106a9b088815",
+      "manifest": {
+        "module": "ot_hgi_coll_row_formatter",
+        "source": "9ed547523",
+        "default_enable": 0,
+        "ports": {
+          "clk": {
+            "width": 1,
+            "direction": "in",
+            "binding": "COLL clock",
+            "must_not_tie": true
+          },
+          "rst_n": {
+            "width": 1,
+            "direction": "in",
+            "binding": "COLL reset",
+            "must_not_tie": true
+          },
+          "start_v": {
+            "width": 1,
+            "direction": "in",
+            "binding": "decodedop5launch",
+            "must_not_tie": true
+          },
+          "start_r": {
+            "width": 1,
+            "direction": "out",
+            "binding": "op5engineaccept",
+            "must_not_tie": true
+          },
+          "group_size": {
+            "width": 8,
+            "direction": "in",
+            "binding": "decodedstaticgroup",
+            "must_not_tie": true
+          },
+          "owner_block": {
+            "width": 8,
+            "direction": "in",
+            "binding": "op5paramB",
+            "must_not_tie": true
+          },
+          "destinations": {
+            "width": 8,
+            "direction": "in",
+            "binding": "op5imm_b",
+            "must_not_tie": true
+          },
+          "row_count": {
+            "width": 21,
+            "direction": "in",
+            "binding": "op5k count",
+            "must_not_tie": true
+          },
+          "row_words": {
+            "width": 16,
+            "direction": "in",
+            "binding": "A/Odescriptorrow width in512bitbeats",
+            "must_not_tie": true
+          },
+          "id_v": {
+            "width": 1,
+            "direction": "in",
+            "binding": "I-tableproducer valid",
+            "must_not_tie": true
+          },
+          "id_r": {
+            "width": 1,
+            "direction": "out",
+            "binding": "I-tableproducerready",
+            "must_not_tie": true
+          },
+          "id": {
+            "width": 32,
+            "direction": "in",
+            "binding": "selected U32rowidentifier afterboundcheck",
+            "must_not_tie": true
+          },
+          "read_v": {
+            "width": 1,
+            "direction": "out",
+            "binding": "currentreaderownedrowrequest valid",
+            "must_not_tie": true
+          },
+          "read_r": {
+            "width": 1,
+            "direction": "in",
+            "binding": "currentreaderready",
+            "must_not_tie": true
+          },
+          "read_owner": {
+            "width": 8,
+            "direction": "out",
+            "binding": "requiredowner rank routing/filter",
+            "must_not_tie": true
+          },
+          "read_local_row": {
+            "width": 20,
+            "direction": "out",
+            "binding": "ownerlocalrow index",
+            "must_not_tie": true
+          },
+          "read_word": {
+            "width": 16,
+            "direction": "out",
+            "binding": "wordinside selectedrow",
+            "must_not_tie": true
+          },
+          "response_v": {
+            "width": 1,
+            "direction": "in",
+            "binding": "currentreaderresponsevalid",
+            "must_not_tie": true
+          },
+          "response_r": {
+            "width": 1,
+            "direction": "out",
+            "binding": "currentreaderresponseack",
+            "must_not_tie": true
+          },
+          "response_data": {
+            "width": 512,
+            "direction": "in",
+            "binding": "actualcurrentreaderpayload",
+            "must_not_tie": true
+          },
+          "response_written": {
+            "width": 1,
+            "direction": "in",
+            "binding": "actualcurrentreaderrow-validknowledge",
+            "must_not_tie": true
+          },
+          "out_v": {
+            "width": 1,
+            "direction": "out",
+            "binding": "COLLgather/resultconsumer valid",
+            "must_not_tie": true
+          },
+          "out_r": {
+            "width": 1,
+            "direction": "in",
+            "binding": "COLLgather/resultconsumerready",
+            "must_not_tie": true
+          },
+          "out_data": {
+            "width": 512,
+            "direction": "out",
+            "binding": "heldpayload",
+            "must_not_tie": true
+          },
+          "out_index": {
+            "width": 20,
+            "direction": "out",
+            "binding": "selectedlistindex",
+            "must_not_tie": true
+          },
+          "out_word": {
+            "width": 16,
+            "direction": "out",
+            "binding": "wordinside selectedrow",
+            "must_not_tie": true
+          },
+          "out_destinations": {
+            "width": 8,
+            "direction": "out",
+            "binding": "recipientranks0..n-1",
+            "must_not_tie": true
+          },
+          "done_v": {
+            "width": 1,
+            "direction": "out",
+            "binding": "CPenginecompletion valid",
+            "must_not_tie": true
+          },
+          "done_r": {
+            "width": 1,
+            "direction": "in",
+            "binding": "CPenginecompletion ack",
+            "must_not_tie": true
+          },
+          "fault": {
+            "width": 1,
+            "direction": "out",
+            "binding": "invalidcommand/unwrittenrowcompletion fault",
+            "must_not_tie": true
+          },
+          "context_rows": {
+            "width": 32,
+            "direction": "in",
+            "binding": "active static cp_ctx_max count up to1048576",
+            "must_not_tie": true
+          }
+        },
+        "integration_pending": "actualreaderownerfilter/routing,writtenknowledge,I-tableproducer,COLLmulticastpayload andCPcompletion; no installedconsumer claim",
+        "manifest_scope": "RTL source9ed547523; currentconfigs/model4e9e838a2; independentfreshgatesrequired"
+      },
+      "producer_required": "Actual COL decoder/start metadata and U32 list producer",
+      "consumer_required": "Current DS rowreader delivery representation plus resultstore/mcast",
+      "binding_status": "UNBOUND_DIE_GRAPH_OR_PEER",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false,
+      "placeholder_inputs_allowed": false
+    },
+    {
+      "source_commit": "bf4cf8ece",
+      "path": "results/hgi_generic/quant_vm_transport/port_manifest.json",
+      "manifest_sha256": "bd649fec61e48413f157fe7c156dff981ee3d8a784f510645405c348edad326c",
+      "manifest": {
+        "module": "ot_hgi_quant_vm_transport",
+        "RTL": "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv",
+        "core_functional_source": "b827340df",
+        "sequencer_ABI_source": "3fae1571d",
+        "ports": {
+          "clk": [
+            "input",
+            1
+          ],
+          "rst_n": [
+            "input",
+            1
+          ],
+          "cmd": [
+            "input",
+            1409
+          ],
+          "ready": [
+            "output",
+            1
+          ],
+          "done": [
+            "output",
+            1
+          ],
+          "fault": [
+            "output",
+            1
+          ],
+          "drained": [
+            "output",
+            1
+          ],
+          "req_v": [
+            "output",
+            1
+          ],
+          "req_r": [
+            "input",
+            1
+          ],
+          "req": [
+            "output",
+            337
+          ],
+          "rsp_v": [
+            "input",
+            1
+          ],
+          "rsp_r": [
+            "output",
+            1
+          ],
+          "rsp": [
+            "input",
+            273
+          ],
+          "provider_fault": [
+            "input",
+            1
+          ]
+        },
+        "record": {
+          "valid": [
+            0,
+            0
+          ],
+          "header": [
+            128,
+            1
+          ],
+          "sut": [
+            384,
+            129
+          ],
+          "A": [
+            640,
+            385
+          ],
+          "B": [
+            896,
+            641
+          ],
+          "C": [
+            1152,
+            897
+          ],
+          "O": [
+            1408,
+            1153
+          ]
+        },
+        "VM": {
+          "req": "write1,byteaddr32,data256,byteMask32,tag16",
+          "rsp": "tag16,WRITE_ECHO1,data256",
+          "fault": "provider_fault separate",
+          "VM_addr": "FP32words converted byteaddr <<2",
+          "writes": "BF16 expanded FP32 one word per element"
+        },
+        "completion": "done pulse only final counted writeACK or drained fault; no die closure claim",
+        "params": {
+          "ENABLE": 0,
+          "DEPTH": 32
+        },
+        "open": [
+          "partialoverlap aliaspolicy",
+          "physicalVMingressbinding",
+          "remoteactualsynthfit/boundary",
+          "two routevariants"
+        ],
+        "command_capture_validate_edges": 2,
+        "clock_domain": "opt-instream1p2 pendingcombinedTT/FFphysicalgates;offpathlegacyserial0p9unchanged",
+        "legal_geometry": "multirow,unalignedbase,positiveinnerstride,inputbroadcast,outputrowstride inclaliaseswhenA/Odisjoint;UE n multiple32/E4 n multiple16;FP32input/BF16orFP32outputVM",
+        "alias_policy": "samebaseidenticalnonaliasingrowgeometryinplacepermitted;partiallyoverlappingrangesawaitnormativepolicy"
+      },
+      "manifest_status": "OWNER_WORKING_MANIFEST_LEGALSET_REFRESH_REQUIRED",
+      "producer_required": "Claude GH-d functional VM packetroot with separate provider fault/ECC and CP unit4 opcode4..6 dispatch",
+      "consumer_required": "Real tagmatched VM writeACK before done; provisional1.2stream master physical gate",
+      "binding_status": "UNBOUND_PROVIDER_BOUNDARY_FAIL46_LEVELS",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false
+    }
+  ]
+}

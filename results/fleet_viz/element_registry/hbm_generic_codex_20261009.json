@@ -612,7 +612,8 @@
         "paths": [
           "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
         ],
-        "evidence_commit": "8c6f2fa0a"
+        "evidence_commit": "8c6f2fa0a",
+        "electrical_script_evidence_commit": "54d4cc666"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -1149,7 +1150,7 @@
         }
       },
       "physical": {
-        "status": "SYNTH_COMPLETE_BOUNDARY_AND_SLOT_PENDING_NO_ROUTES",
+        "status": "SYNTH_FITS_BOUNDARY_FAIL46_INPUT_LEVELS_NO_ROUTE",
         "jobs": [],
         "corners": {},
         "measured_synth_area_um2": 29108.0952,
@@ -1162,7 +1163,13 @@
           "status": "NOT_VERIFIED",
           "evidence": []
         },
-        "evidence": []
+        "evidence": [],
+        "boundary": {
+          "input_to_register_levels": 46,
+          "register_to_output_levels": 4,
+          "input_to_output_paths": 0,
+          "limit_input_levels": 16
+        }
       },
       "dependencies": [
         "Actual337-bit request273-bit response provider is Claude GH-d; WRITE_ECHO response bit256 is not a fault",
@@ -1170,7 +1177,8 @@
         "Fullshape slot and boundary gates before any route",
         "Generic stream1.2 physical timing qualification; legacy serial0.9 domain unchanged",
         "Partialoverlap and overlapping-row alias contract unresolved; multirow/stride/unaligned/broadcast/inplace nonalias shapes exact",
-        "Unit4 opcode4..6 dispatch only; norm/HC sameunit require actual dispatch return arbitration"
+        "Unit4 opcode4..6 dispatch only; norm/HC sameunit require actual dispatch return arbitration",
+        "Actual raw-input arithmetic boundary needs registered capture structural fix; owner tracing/repricing/rebenching, no waiver"
       ],
       "integration": {
         "status": "UNBOUND_PROVIDER",
