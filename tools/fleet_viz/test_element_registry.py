@@ -4,7 +4,7 @@ import pathlib
 import tempfile
 import unittest
 
-from elements import Elements, change_key, qualification_text
+from elements import Elements, change_key, qualification_text, ts
 
 
 class Describer:
@@ -14,6 +14,8 @@ class Describer:
 
 class RegistryTest(unittest.TestCase):
     def test_unrouted_history_and_failed_physical_remain_distinct(self):
+        self.assertGreater(ts('2026-10-09T08:06:00Z'), 0)
+        self.assertEqual(ts('2026-10-09T08:06:00Z'), ts('2026-10-09T08:06:00+00:00'))
         with tempfile.TemporaryDirectory() as td:
             model = Elements.__new__(Elements)
             model.repo = pathlib.Path(td)
