@@ -11,7 +11,7 @@ F.QRTL.append(B.ROOT/'rtl/v41rom/ot_v41_elem_pq_tags.sv')
 def bench(wrong_three=False,unsafe_pq_start=False):
  s=B.TB.replace('gold[0:1]','gold[0:1],partgold[0:7],roots[0:7],jl[0:1],jr[0:1]').replace('cfg[0:24]','cfg[0:99]')
  s=s.replace('wire busy,fault;', 'wire busy,fault,walking,bank_free,sh_free;').replace('.go_tag(2\'d0),', '.go_tag(2\'d0),.walking(walking),.bank_free(bank_free),.sh_free(sh_free),')
- s=s.replace('if(rst_n && fault)$fatal(1,"element fault");', 'if(rst_n && fault)begin $display("SEED_QS5F_PROVENANCE cyc=%0d pq_fault=%b ffault=%b bk_fault=%b go=%b walking=%b sh_free=%b bank_free=%b",cyc,dut.u_e.pq_fault,dut.u_e.ffault,dut.u_e.bk_fault,go,walking,sh_free,bank_free);$fatal(1,"element fault");end')
+ s=s.replace('if(rst_n && fault)$fatal(1,"element fault");', 'if(rst_n && fault)begin $display("SEED_QS5F_PROVENANCE cyc=%0d pq_fault=%b ffault=%b bk_fault=%b go=%b walking=%b sh_free=%b bank_free=%b",cyc,dut.u_e.pq_fault,dut.u_e.ffault,dut.u_e.bk_fault,go,walking,sh_free,bank_free);$fatal(1,"element fault");end ')
  s=s.replace('integer cyc=0,', '''integer phase=0,phase_hits=0,join_start=0,join_end=0;reg jv=0;reg[31:0]ja=0,jb=0,jout;wire jvo;wire[31:0]jy;wire[1:0]je;
  ot_v41_fadd joiner(.clk(clk),.rst_n(rst_n),.valid_in(jv),.a(ja),.b(jb),.y(jy),.err(je),.valid_out(jvo));
  task automatic add_join(input[31:0]a,b,output[31:0]y);
