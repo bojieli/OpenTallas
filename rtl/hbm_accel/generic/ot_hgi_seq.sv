@@ -1,35 +1,52 @@
 `timescale 1ns/1ps
 `default_nettype none
 // ---------------------------------------------------------------------------------------------------------------------
-// hbm-forks 2026-10-09: the HGI-1 command-processor SEQUENCER (C2 of docs/HBM_GENERIC_INTERFACE.md section 6, owner
-// Claude per the REVIEW_20261009 HGI-1 work split).  It replaces the LAUNCH/END list walk of ot_ds_hbm_cmdproc20 with the
-// record stream of section 3:
-//   * fetch: records are read from the program image in HBM (image_base 4 KiB pages + entry offset in 16 B units, MD
-//     section D) through one 32 B-sector read port (in order; the die binds it to the loader's memory side), into a
-//     ring of RW 16 B words; credits keep at most the ring's free space requested;
-//   * decode: a record = header (16 B) + [SUT 32 B] + one MDESC (32 B) per opnd bit (A, B, C, O);
-//   * predicate (ALWAYS / POS0 / NOT_POS0 / LAST_ITER), one LOOP level (ENDLOOP re-fetches the body from its HBM
-//     address: no replay storage), CTL.FENCE (all units drained), CTL.END (completion with the posted result token,
-//     range-checked against cp_vocab: status 0 / 2 no result / 3 out of range, as today's cmdproc);
-//   * effective addresses BEFORE the wait: base + L*lstride + DYN[dyn_sel]*dyn_mul (40 b) and n = DYN[n_sel], by one
-//     radix-16 iterative multiplier (early exit on a zero multiplier), so address arithmetic hides behind the drain;
-//   * the `wait` mask: dispatch only when every unit in the mask has nothing outstanding; per-unit outstanding counts
-//     (+1 on dispatch, -1 on the unit's retire pulse);
-//   * dispatch: one unit port valid/ready at a time, payload {header, SUT, 4 effective MDESCs}.
-// DYN codes 0..7 (ZERO, POS, POS1, TOKEN, L, RANK, SLOT, POS_SLOT) per slot; codes 8..31 (DS window counters) and units
-// with no target on this die (SIMT: no r25 block runs kernels, hbm-forks.log 03:29) end the step with status 3.
-// A unit fault ends the step with status 1.  No protection beyond the existing interfaces (REVIEW_20261009).
+// hbm-forks 2026-10-09: the HGI-1 command-processor SEQUENCER, NORMATIVE v1.0 encoding (docs/HBM_GENERIC_INTERFACE.md
+// 2.2, 3.1-3.5, 4.2, 6.1-6.8; owner approval REVIEW_20261009 ~11:30 PT).  Owner Claude (hbm-forks, item 4: record
+// sequencer + indexed descriptors C3b + the 18-bit token).  Contract and vectors: tools/hgi_seq_vectors.py (Ref).
+//   * fetch: records come from the program image in HBM (image_base pages + entry offset in 16 B units, MD section D)
+//     through one in-order 32 B-sector read port into a PREFETCH RING of RW 16 B words (RW/2 sectors: one
+//     ot_sram_1r1w_256x256 macro at RW = 512; behavioural here, 1-cycle registered read);
+//   * decode word-serially: header (16 B) + [SUT 32 B] + one MDESC (32 B) per opnd bit in A, B, C, D, O, R, I order;
+//   * predicate ALWAYS / POS0 / NOT_POS0 / LAST_ITER (innermost loop); CTL.LOOP param[15:0] count, [16] level
+//     (0 -> L, 1 -> L1), two levels nested in either order, bodies REPLAYED from the ring (a body must fit: the record
+//     ending past RW - 2 words of the outermost body start faults); CTL.FENCE = every unit drained AND every posted
+//     HBM write visible (wr_quiet); CTL.END = token U32(VM[A_eff]) after END's wait mask, range-checked against 2^18 and
+//     cp_vocab;
+//   * effective base = base + L*lstride + L1*l1stride + X*dyn_mul (strides signed 32 b; one radix-16 iterative
+//     multiplier, early exit), X = DYN[dyn_sel] or U32(VM[I_eff + L]) for an INDEXED descriptor; n = n | DYN[n_sel]
+//     (1..62) | U32(VM[I_eff + I.stride + L]) (63, N_FROM_VM).  Everything that needs no VM read is computed BEFORE
+//     the wait; the I-table reads come AFTER the record's wait mask is met (the IDX.TOPK writer is ordered by a wait
+//     bit, section 3.3), through one VM read port;
+//   * DYN 0 ZERO 1 POS 2 POS1 3 TOKEN 4 L 5 RANK 6 SLOT 7 POS_SLOT 8 L1 15 POS_SLOT1; 16..40 the DS full-shape
+//     selectors (tools/hdc_isa_v41.FULL_DYN_KEYS order, tools/v41_fullshape_isa.full_dyn) at the slot's position;
+//   * dispatch: unit valid/ready, payload {header, SUT, 7 EFFECTIVE MDESCs (base = effective base, n = effective n
+//     low 20 b)} + full-width sidebands: 7 x 21-bit effective n, POS1, POS_SLOT1, L, L1;
+//   * completion status: 0 OK, 1 unit fault, 3 bad command or range (absent unit: SIMT / 12..15, op outside the unit's
+//     list, CTL.TOKX/AMAX/ACCEPT, reserved DYN 9..14 / 41..63, indexed or N_FROM_VM without a proper I, I-table read
+//     outside VM, HBM base outside 2^40 / VM base outside 2^18, n from VM >= 2^21, bad LOOP nesting / count 0, ENDLOOP
+//     without LOOP, body over the ring, END without a VM A, END token >= 2^18 or >= cp_vocab); a doorbell with
+//     token >= cp_vocab or pos >= cp_ctx_max completes at once with status 3.
+// Reset = DS (cp_vocab / cp_ctx_max come from the config path's active registers).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_seq #(
-    parameter integer RW  = 64,          // ring words (16 B each); a record is at most 11 words
-    parameter integer NOS = 8            // fetch sectors outstanding
+    parameter integer RW   = 512,        // ring words (16 B); a power of two
+    parameter integer NOS  = 8,          // fetch sectors outstanding
+    parameter integer USE_MACRO = 0,     // 1: the ring is one ot_sram_1r1w_256x256_m2_r2c2 (RW must be 512)
+    parameter integer DS_TPL = 2,        // DS full-shape DYN: log2 TP (4)
+    parameter integer DS_WIN = 128,      //   window
+    parameter integer DS_SCAN = 16384,   //   scan cap
+    parameter integer DS_TOPK = 512,     //   top-k
+    parameter integer DS_HDL = 9         //   log2 head dim (512)
 ) (
     input  wire          clk,
     input  wire          rst_n,
     input  wire [159:0]  md_d,           // {image_pages, image_base, entry_draft, entry_verify, entry_ar} (cfg master)
     input  wire [17:0]   cfg_vocab,
+    input  wire [20:0]   cfg_ctx_max,
     input  wire [7:0]    rank,
     input  wire          hold,           // config commit / settle: doorbells refused
+    output wire          busy,           // a job runs or a unit has work outstanding (config E_BUSY)
     // doorbell {token 18, pos 20, job 32, gen 4, entry 2, ncol 4}
     input  wire          db_v,
     output wire          db_rdy,
@@ -44,16 +61,26 @@ module ot_hgi_seq #(
     output reg  [39:0]   f_req_addr,
     input  wire          f_rsp_v,
     input  wire [255:0]  f_rsp_data,
+    // VM read port (I tables, the END token): one outstanding, in order
+    output reg           vr_v,
+    input  wire          vr_rdy,
+    output reg  [17:0]   vr_addr,
+    input  wire          vr_rsp_v,
+    input  wire [31:0]   vr_rsp_data,
     // unit dispatch (index = HGI unit code; CTL = 0 is internal)
-    output reg  [11:0]   u_v,
-    input  wire [11:0]   u_rdy,
+    output reg  [15:0]   u_v,
+    input  wire [15:0]   u_rdy,
     output reg  [127:0]  d_hdr,
     output reg  [255:0]  d_sut,
-    output reg  [1023:0] d_desc,         // {O, C, B, A}, each with its effective base and n
-    input  wire [11:0]   u_done,         // retire pulses (one per dispatched record)
-    input  wire [11:0]   u_fault,
-    input  wire          res_v,          // the step's result token (ARGMAX / COLL ARGMAX_MERGE posts it)
-    input  wire [31:0]   res_data,
+    output reg  [1791:0] d_desc,         // {I, R, O, D, C, B, A} effective
+    output reg  [146:0]  d_n,            // 7 x 21-bit effective n, A in bits 20:0
+    output reg  [20:0]   d_pos1,
+    output reg  [20:0]   d_pslot1,
+    output reg  [15:0]   d_L,
+    output reg  [15:0]   d_L1,
+    input  wire [15:0]   u_done,         // retire pulses (one per dispatched record)
+    input  wire [15:0]   u_fault,
+    input  wire          wr_quiet,       // every posted HBM write is visible
     // completion {token, pos, job, gen, status, cycles}
     output wire          cpl_v,
     input  wire          cpl_rdy,
@@ -65,190 +92,414 @@ module ot_hgi_seq #(
     output reg  [31:0]   cpl_cycles
 );
     localparam integer RB = $clog2(RW);
-    // ------------------------------------------------------------------ step state
-    localparam [3:0] S_IDLE = 4'd0, S_DEC = 4'd1, S_ADDR = 4'd2, S_WAIT = 4'd3, S_DISP = 4'd4, S_CPL = 4'd5,
-                     S_DRAIN = 4'd6;
-    reg [3:0]  st;
+    localparam integer RS = RW / 2;                       // sectors
+    localparam integer SB = RB - 1;
+    // ------------------------------------------------------------------ field positions (spec.json, v1.0)
+    localparam integer H_UNIT = 124, H_OP = 118, H_WAIT = 102, H_PRED = 100, H_OPND = 93, H_TMPL = 92, H_SLOT = 89,
+                       H_PARAM = 64;
+    localparam integer M_SPACE = 0, M_IBC = 5, M_IDX = 6, M_BASE = 8, M_N = 48, M_M = 68, M_STRIDE = 88,
+                       M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
+    // ------------------------------------------------------------------ states
+    localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
+                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11;
+    reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos;
-    reg [15:0] L, lcnt; reg loop_on; reg [39:0] loop_addr;
-    reg        have_res; reg [31:0] res_q;
-    // ------------------------------------------------------------------ ring + fetch
-    reg [127:0] ring [0:RW-1];
-    reg [RB:0]  rcount;                  // valid words
-    reg [RB-1:0] rp, wp;
-    reg [39:0]  rec_addr;                // byte address of the record word at rp
-    reg [39:0]  faddr;                   // next sector to request
-    reg [4:0]   inflight;                // sectors requested (accepted), not yet returned
-    reg [4:0]   drop;                    // responses to discard (requested before a jump / a new step)
-    reg         skip_lo;                 // the next kept sector starts mid-sector: drop its low word
+    // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
+    reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
+    reg [39:0]  faddr;
+    reg [4:0]   inflight, drop;
     reg         fetching;
-    wire signed [RB+7:0] space = RW - $signed({1'b0, rcount}) - 2 * $signed({1'b0, inflight}) - (f_req_v ? 2 : 0);
-    // ------------------------------------------------------------------ record fields at rp
-    wire [127:0] h = ring[rp];
-    wire [3:0]  h_unit = h[127:124];
-    wire [5:0]  h_op   = h[123:118];
-    wire [11:0] h_wait = h[117:106];
-    wire [1:0]  h_pred = h[105:104];
-    wire [3:0]  h_opnd = h[103:100];
-    wire        h_tmpl = h[99];
-    wire [31:0] h_param = h[95:64];
-    wire [3:0]  rlen = 4'd1 + {2'd0, h_tmpl, 1'b0} + {2'd0, h_opnd[0], 1'b0} + {2'd0, h_opnd[1], 1'b0} +
-                       {2'd0, h_opnd[2], 1'b0} + {2'd0, h_opnd[3], 1'b0};
-    wire        have_rec = (rcount != 0) && (rcount >= {{(RB-3){1'b0}}, rlen});
-    function automatic [127:0] rw(input [RB-1:0] base, input [3:0] k);
-        rw = ring[base + k];
+    wire [RB:0] frp_al = {frp[RB:1], 1'b0};
+    wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0} + (f_req_v ? 2 : 0);
+    reg         wv;                      // a sector has landed since the doorbell (before it, rp may lead wp by 1)
+    wire [RB:0] avail = wv ? wp - rp : {(RB+1){1'b0}};
+    reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
+    reg [255:0] rd_sec; reg rd_hi;
+    wire        ring_we = f_rsp_v && (drop == 5'd0);
+    always @(posedge clk) rd_hi <= rd_ptr[0];
+    generate if (USE_MACRO) begin : g_ring_m
+        initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
+        wire [255:0] q;
+        ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
+            .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data), .w_mask_in({256{1'b1}}),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        always @* rd_sec = q;
+    end else begin : g_ring_r
+        reg [255:0] ring [0:RS-1];
+        always @(posedge clk) begin
+            rd_sec <= ring[rd_ptr[RB-1:1]];
+            if (ring_we) ring[wp[RB-1:1]] <= f_rsp_data;
+        end
+    end endgenerate
+    wire [127:0] rd_word = rd_hi ? rd_sec[255:128] : rd_sec[127:0];
+    // ------------------------------------------------------------------ the current record
+    reg  [127:0] h;
+    wire [3:0]  h_unit = h[H_UNIT +: 4];
+    wire [5:0]  h_op   = h[H_OP +: 6];
+    wire [15:0] h_wait = h[H_WAIT +: 16];
+    wire [1:0]  h_pred = h[H_PRED +: 2];
+    wire [6:0]  h_opnd = h[H_OPND +: 7];
+    wire        h_tmpl = h[H_TMPL];
+    wire [2:0]  h_slot = h[H_SLOT +: 3];
+    wire [24:0] h_param = h[H_PARAM +: 25];
+    wire [2:0]  npres = h_opnd[0] + h_opnd[1] + h_opnd[2] + h_opnd[3] + h_opnd[4] + h_opnd[5] + h_opnd[6];
+    wire [4:0]  rlen = 5'd1 + {3'd0, h_tmpl, 1'b0} + {1'b0, npres, 1'b0};
+    // ops per unit (spec.json uop.ops), units 0..10 exist on r25
+    function automatic [3:0] nops(input [3:0] u);
+        case (u) 4'd0: nops = 4'd8; 4'd4: nops = 4'd7; 4'd5: nops = 4'd2; 4'd6: nops = 4'd6; 4'd8: nops = 4'd4;
+                 4'd9: nops = 4'd5; 4'd1, 4'd2, 4'd3, 4'd7, 4'd10: nops = 4'd1; default: nops = 4'd0; endcase
     endfunction
-    wire last_iter = loop_on && (L + 16'd1 == lcnt);
+    // slot of the m-th present descriptor
+    function automatic [2:0] mth(input [6:0] o, input [2:0] m);
+        integer q; reg [2:0] c; begin mth = 3'd7; c = 0;
+            for (q = 0; q < 7; q = q + 1) if (o[q]) begin if (c == m && mth == 3'd7) mth = q[2:0]; c = c + 3'd1; end
+        end
+    endfunction
+    // ------------------------------------------------------------------ loops
+    reg [1:0]  depth;
+    reg        lv_lvl [0:1]; reg [15:0] lv_cnt [0:1]; reg [RB:0] lv_body [0:1];
+    reg [15:0] Lc, L1c;
+    wire       in_lvl = (depth == 2'd2) ? lv_lvl[1] : lv_lvl[0];
+    wire [15:0] in_cnt = (depth == 2'd2) ? lv_cnt[1] : lv_cnt[0];
+    wire [15:0] in_ctr = in_lvl ? L1c : Lc;
+    wire       last_iter = (depth != 2'd0) && (in_ctr + 16'd1 == in_cnt);
     reg  pred_ok;
     always @* case (h_pred) 2'd0: pred_ok = 1'b1; 2'd1: pred_ok = (pos == 0); 2'd2: pred_ok = (pos != 0);
                             default: pred_ok = last_iter; endcase
     // ------------------------------------------------------------------ outstanding per unit
-    reg [7:0] outst [0:11];
-    reg [11:0] busy_u;
+    reg [7:0] outst [0:15];
+    reg [15:0] busy_u;
     integer u;
-    always @* for (u = 0; u < 12; u = u + 1) busy_u[u] = (outst[u] != 8'd0);
-    function automatic waitok(input [11:0] w, input [11:0] b);
+    always @* for (u = 0; u < 16; u = u + 1) busy_u[u] = (outst[u] != 8'd0);
+    function automatic waitok(input [15:0] w, input [15:0] b);
 `ifdef OT_HGI_SEQ_MUT_WAIT
         waitok = 1'b1;                                     // NEGATIVE CONTROL: the drain mask ignored
 `else
-        waitok = (w & b) == 12'd0;
+        waitok = ((w & 16'hFFFE) & b) == 16'd0;
 `endif
     endfunction
+    assign busy = (st != S_IDLE) || (busy_u != 16'd0);
     // ------------------------------------------------------------------ DYN
-    function automatic [31:0] dynv(input [4:0] sel, input [2:0] slot);
-        case (sel)
-            5'd0: dynv = 32'd0;
-            5'd1: dynv = {12'd0, pos};
-            5'd2: dynv = {12'd0, pos} + 32'd1;
-            5'd3: dynv = {14'd0, token};
-            5'd4: dynv = {16'd0, L};
-            5'd5: dynv = {24'd0, rank};
-            5'd6: dynv = {29'd0, slot};
-            5'd7: dynv = {12'd0, pos} + {29'd0, slot};
-            default: dynv = 32'd0;
+    wire [20:0] ps  = {1'b0, pos} + {18'd0, h_slot};
+    wire [20:0] p1  = ps + 21'd1;
+    wire [20:0] n2  = {1'b0, p1[20:1]};
+    function automatic [20:0] mn(input [20:0] a, input [20:0] b); mn = (a < b) ? a : b; endfunction
+    function automatic [20:0] cdv(input [20:0] a, input integer sh);       // ceil(a / 2^sh)
+        cdv = (a + ((21'd1 << sh) - 21'd1)) >> sh;
+    endfunction
+    wire [20:0] ns1 = mn(p1, DS_TOPK), ns2 = mn(n2, DS_TOPK), win = mn(p1, DS_WIN);
+    wire [20:0] sc1 = cdv(p1, DS_TPL), sc2 = cdv(n2, DS_TPL), scr = cdv(mn(p1, DS_SCAN), DS_TPL);
+    wire [28:0] rsc = {21'd0, rank} * {8'd0, sc1};
+    wire        own = ({8'd0, ps} >= rsc) && ({8'd0, ps} < rsc + {8'd0, sc1});
+    wire [28:0] nbo = ({8'd0, ps} - rsc) >> 3;
+    function automatic [31:0] dsv(input [5:0] c);
+        case (c)
+            6'd16: dsv = win;       6'd17: dsv = p1;        6'd18: dsv = n2;        6'd19: dsv = ns1;
+            6'd20: dsv = ns2;       6'd21: dsv = win;       6'd22: dsv = win + ns1; 6'd23: dsv = win + ns2;
+            6'd24: dsv = sc1;       6'd25: dsv = sc2;       6'd26: dsv = scr;       6'd27: dsv = mn(sc1, DS_TOPK);
+            6'd28: dsv = mn(sc2, DS_TOPK);                  6'd29: dsv = mn(scr, DS_TOPK);
+            6'd30: dsv = cdv(sc1, 4);                       6'd31: dsv = cdv(sc1, 3);
+            6'd32: dsv = cdv(sc2, 4);                       6'd33: dsv = cdv(scr, 4);
+            6'd34: dsv = cdv(win, 5);                       6'd35: dsv = cdv(win + ns1, 5);
+            6'd36: dsv = cdv(win + ns2, 5);                 6'd37: dsv = win - 21'd1;
+            6'd38: dsv = {11'd0, win} << DS_HDL;            6'd39: dsv = {11'd0, win - 21'd1} << DS_HDL;
+            6'd40: dsv = own ? {3'd0, nbo} : {11'd0, cdv(sc1, 3)};
+            default: dsv = 32'd0;
         endcase
     endfunction
-    // ------------------------------------------------------------------ address unit: radix-16 iterative multiply
-    localparam [2:0] A_LOAD = 3'd0, A_ML = 3'd1, A_DYN = 3'd2, A_MD = 3'd3, A_WR = 3'd4;
-    reg [2:0]  as;
-    reg [1:0]  aj;                       // descriptor (A, B, C, O)
-    reg [47:0] acc, mcand;
-    reg [31:0] mplier;
-    reg [5:0]  ash;                      // shift of the current digit (bits)
-    reg [3:0]  dk;                       // word offset of the next present descriptor
-    reg        bad;
-    wire [255:0] dcur = {rw(rp, dk + 4'd1), rw(rp, dk)};
-    wire [31:0]  n_dyn32 = dynv(dcur[204:200], d_hdr[98:96]);
-    wire [19:0]  n_dyn = n_dyn32[19:0];
+    function automatic dyn_rsv(input [5:0] c);           // codes with no value on r25
+        dyn_rsv = (c >= 6'd9 && c <= 6'd14) || (c >= 6'd41);
+    endfunction
+    function automatic [31:0] dynv(input [5:0] c);
+        case (c)
+            6'd0: dynv = 32'd0;
+            6'd1: dynv = {12'd0, pos};
+            6'd2: dynv = {11'd0, {1'b0, pos} + 21'd1};
+            6'd3: dynv = {14'd0, token};
+            6'd4: dynv = {16'd0, Lc};
+            6'd5: dynv = {24'd0, rank};
+            6'd6: dynv = {29'd0, h_slot};
+            6'd7: dynv = {11'd0, ps};
+            6'd8: dynv = {16'd0, L1c};
+            6'd15: dynv = {11'd0, p1};
+            default: dynv = dsv(c);
+        endcase
+    endfunction
+    // ------------------------------------------------------------------ descriptors and the address unit
+    reg [255:0] dr [0:6];                // raw descriptors as fetched
+    reg [63:0]  pacc [0:6];              // base + L*lstride + L1*l1stride (+ DYN term) before the VM-read terms
+    reg [20:0]  pn [0:6];
+    reg [6:0]   pend_x, pend_n;          // indexed X / N_FROM_VM read still owed (after the wait)
+    reg [4:0]   wk;                      // word index being read (0 = evaluate the header)
+    reg [2:0]   aj;                      // descriptor in the address pass (6 = I first, then 0..5)
+    reg [2:0]   as;                      // address sub-state
+    reg [63:0]  acc, mcand;
+    reg [31:0]  mplier;
+    reg [5:0]   ash;
+    reg [39:0]  ieff;
+    reg         have_i, is_end;
+    localparam [2:0] A_LOAD = 3'd0, A_ML = 3'd1, A_ML1 = 3'd2, A_MD = 3'd3, A_FIN = 3'd4, A_NEXT = 3'd5;
+    wire [255:0] dc = dr[aj];
+    wire        dc_idx = dc[M_IDX];
+    wire [5:0]  dc_dsel = dc[M_DSEL +: 6];
+    wire [5:0]  dc_nsel = dc[M_NSEL +: 6];
+    wire [1:0]  dc_sp = dc[M_SPACE +: 2];
+    wire [31:0] dyn_d = dynv(dc_dsel), dyn_n = dynv(dc_nsel);
+    wire [20:0] n_eff = (dc_nsel == 6'd0) ? {1'b0, dc[M_N +: 20]} : dyn_n[20:0];
+    function automatic [63:0] sx32(input [31:0] v); sx32 = {{32{v[31]}}, v}; endfunction
+    // range check of an effective base by space (HBM 2^40 bytes, VM 2^18 words; STREAM / NONE unchecked)
+    function automatic base_bad(input [1:0] sp, input [63:0] a);
+        base_bad = (sp == 2'd0) ? (a[63:40] != 24'd0) : (sp == 2'd1) ? (a[63:18] != 46'd0) : 1'b0;
+    endfunction
+    function automatic [255:0] eff_desc(input [255:0] raw, input [63:0] a, input [20:0] n);
+        eff_desc = raw;
+        eff_desc[M_BASE +: 40] = a[39:0];
+        eff_desc[M_N +: 20] = n[19:0];
+    endfunction
     // ------------------------------------------------------------------ main FSM
     integer k;
-    wire [11:0] u_acc = u_v & u_rdy;
+    wire [15:0] u_acc = u_v & u_rdy;
     assign db_rdy = (st == S_IDLE) && !hold;
     assign cpl_v = (st == S_CPL);
     wire [39:0] entry_off = {4'd0, (db_entry == 2'd0) ? md_d[31:0] : (db_entry == 2'd1) ? md_d[63:32] : md_d[95:64], 4'd0};
-    wire [39:0] img = {md_d[139:128], 12'd0} + entry_off;
-    wire is_ctl = (h_unit == 4'd0);
-`ifdef OT_HGI_SEQ_MUT_LOOP
-    wire more = loop_on && (L + 16'd2 < lcnt);             // NEGATIVE CONTROL: one iteration short
-`else
-    wire more = loop_on && (L + 16'd1 < lcnt);
-`endif
-    wire jump = (st == S_DEC) && have_rec && pred_ok && is_ctl && h_op == 6'd2 && more;
-    wire consume = (st == S_DEC && have_rec && !jump && (!pred_ok || (is_ctl && h_op <= 6'd2))) ||
-                   (st == S_DRAIN && busy_u == 12'd0) || (st == S_DISP && |u_acc);
+    wire [39:0] img = {md_d[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
     wire [4:0] fl_after = inflight + ((f_req_v && f_req_rdy) ? 5'd1 : 5'd0) - (f_rsp_v ? 5'd1 : 5'd0);
+    wire       is_ctl = (h_unit == 4'd0);
+    wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
+    wire [1:0] top = depth - 2'd1;
+    wire       top_lvl = lv_lvl[top[0]];
+    wire [15:0] top_ctr = top_lvl ? L1c : Lc;
+`ifdef OT_HGI_SEQ_MUT_LOOP
+    wire more = top_ctr + 16'd2 < lv_cnt[top[0]];         // NEGATIVE CONTROL: one iteration short
+`else
+    wire more = top_ctr + 16'd1 < lv_cnt[top[0]];
+`endif
+    // first present descriptor of 0..5 above j (7 = none)
+    function automatic [2:0] nxt(input [6:0] o, input [3:0] j);
+        integer q; begin nxt = 3'd7; for (q = 5; q >= 0; q = q - 1) if (o[q] && q > j) nxt = q[2:0]; end
+    endfunction
+    function automatic [2:0] nxtp(input [6:0] p, input [3:0] j);
+        integer q; begin nxtp = 3'd7; for (q = 5; q >= 0; q = q - 1) if (p[q] && q > j) nxtp = q[2:0]; end
+    endfunction
+    reg [1:0] rpipe_v; reg [4:0] rpipe_k0, rpipe_k1;
+    reg [2:0] ix;
+    reg [31:0] xval;
+    wire [4:0]  wk_m  = rpipe_k1 - 5'd1 - {3'd0, h_tmpl, 1'b0};
+    wire [2:0]  wk_sl = mth(h_opnd, wk_m[3:1]);
+    wire [63:0] iaddr_x = {24'd0, ieff} + {48'd0,
+`ifdef OT_HGI_SEQ_MUT_IDXL
+        16'd0                                               // NEGATIVE CONTROL: the indexed read ignores L
+`else
+        Lc
+`endif
+        };
+    wire [63:0] iaddr_n = {24'd0, ieff} + sx32(dr[6][M_STRIDE +: 32]) + {48'd0, Lc};
+    // one radix-16 step of the address unit; returns 1 when the multiplier is exhausted
+    wire        mdone = (mplier == 32'd0);
+    wire [63:0] mstep = acc + ((mcand * {60'd0, mplier[3:0]}) << ash);
+    function automatic [2:0] first0(input [6:0] o); first0 = o[0] ? 3'd0 : nxt(o, 4'd0); endfunction
+    task advance(input [RB:0] n);
+        begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
+    endtask
+    task fault3;
+        begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; f_req_v <= 1'b0; u_v <= 16'd0;
+              vr_v <= 1'b0; end
+    endtask
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; rcount <= 0; rp <= 0; wp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0; f_req_v <= 1'b0;
-            L <= 0; lcnt <= 0; loop_on <= 1'b0; have_res <= 1'b0; res_q <= 0; u_v <= 12'd0; skip_lo <= 1'b0;
-            cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; bad <= 1'b0; as <= A_LOAD; faddr <= 0; rec_addr <= 0;
-            for (k = 0; k < 12; k = k + 1) outst[k] <= 8'd0;
+            st <= S_IDLE; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0; f_req_v <= 1'b0;
+            depth <= 0; Lc <= 0; L1c <= 0; u_v <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00;
+            cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
+            for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
-            for (k = 0; k < 12; k = k + 1) outst[k] <= outst[k] + {7'd0, u_acc[k]} - {7'd0, u_done[k]};
-            if (res_v) begin have_res <= 1'b1; res_q <= res_data; end
+            for (k = 0; k < 16; k = k + 1) outst[k] <= outst[k] + {7'd0, u_acc[k]} - {7'd0, u_done[k]};
             if (st != S_IDLE && st != S_CPL) cpl_cycles <= cpl_cycles + 32'd1;
             inflight <= fl_after;
             // ---- fetch requests (valid held until ready)
             if (f_req_v && f_req_rdy) begin f_req_v <= 1'b0; faddr <= faddr + 40'd32; end
-            else if (fetching && !f_req_v && inflight < NOS && space >= 2) begin f_req_v <= 1'b1; f_req_addr <= faddr; end
-            // ---- fetch responses -> ring (the case below may restart the ring; its assignments win)
-            begin : rsp
-                reg [RB:0] add; add = 0;
-                if (f_rsp_v) begin
-                    if (drop != 0) drop <= drop - 5'd1;
-                    else if (skip_lo) begin ring[wp] <= f_rsp_data[255:128]; wp <= wp + 1'd1; add = 1; skip_lo <= 1'b0; end
-                    else begin ring[wp] <= f_rsp_data[127:0]; ring[wp + 1'd1] <= f_rsp_data[255:128]; wp <= wp + 2'd2; add = 2; end
-                end
-                rcount <= rcount + add - (consume ? {{(RB-3){1'b0}}, rlen} : {(RB+1){1'b0}});
+            else if (fetching && !f_req_v && inflight < NOS && used + 2 <= RW) begin f_req_v <= 1'b1; f_req_addr <= faddr; end
+            // ---- fetch responses -> ring (one sector a response)
+            if (f_rsp_v) begin
+                if (drop != 0) drop <= drop - 5'd1;
+                else begin wp <= wp + 2'd2; wv <= 1'b1; end         // the ring write: g_ring_*
             end
-            if (consume) begin rp <= rp + rlen; rec_addr <= rec_addr + {32'd0, rlen, 4'd0}; end
-            if ((|u_fault) && st != S_IDLE && st != S_CPL) begin
-                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_v <= 0; fetching <= 1'b0; f_req_v <= 1'b0;
+            // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
+            rpipe_v <= {rpipe_v[0], 1'b0}; rpipe_k1 <= rpipe_k0;
+            if (|(u_fault & ~16'd1) && st != S_IDLE && st != S_CPL) begin
+                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_v <= 0; vr_v <= 1'b0; fetching <= 1'b0; f_req_v <= 1'b0;
             end else case (st)
                 S_IDLE: if (db_v && !hold) begin
                     token <= db_token; pos <= db_pos; cpl_job <= db_job; cpl_gen <= db_gen; cpl_pos <= db_pos;
-                    cpl_cycles <= 0; have_res <= 1'b0; L <= 0; loop_on <= 1'b0;
-                    faddr <= {img[39:5], 5'd0}; skip_lo <= img[4]; rec_addr <= img; fetching <= 1'b1; f_req_v <= 1'b0;
-                    rp <= 0; wp <= 0; rcount <= 0; drop <= fl_after;
-                    st <= S_DEC;
-                end
-                S_DEC: if (have_rec) begin
-                    if (jump) begin                                   // ENDLOOP with iterations left: re-fetch the body
-                        L <= L + 16'd1;
-                        faddr <= {loop_addr[39:5], 5'd0}; skip_lo <= loop_addr[4]; rec_addr <= loop_addr;
-                        rp <= 0; wp <= 0; rcount <= 0; f_req_v <= 1'b0; drop <= fl_after;
-                    end else if (!pred_ok) ;                          // skipped
-                    else if (is_ctl) begin
-                        case (h_op)
-                            6'd0: ;                                   // NOP
-                            6'd1: begin loop_on <= 1'b1; lcnt <= h_param[15:0]; L <= 0;
-                                        loop_addr <= rec_addr + {32'd0, rlen, 4'd0}; end
-                            6'd2: begin loop_on <= 1'b0; L <= 0; end  // ENDLOOP, last iteration
-                            6'd3: if (waitok(h_wait, busy_u)) begin   // END
-                                st <= S_CPL; fetching <= 1'b0; f_req_v <= 1'b0;
-                                cpl_status <= !have_res ? 4'd2 :
-                                              ((res_q >> 18) != 0 || res_q >= {14'd0, cfg_vocab}) ? 4'd3 : 4'd0;
-                                cpl_token <= res_q[17:0];
-                            end
-                            6'd4: st <= S_DRAIN;                      // FENCE
-                            default: begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 0; fetching <= 1'b0; f_req_v <= 1'b0; end
-                        endcase
-                    end else if (h_unit >= 4'd11) begin               // SIMT / undefined: no target on this die
-                        st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 0; fetching <= 1'b0; f_req_v <= 1'b0;
+                    cpl_cycles <= 0; depth <= 0; Lc <= 0; L1c <= 0; cpl_token <= 0; cpl_status <= 0;
+                    if (db_token >= cfg_vocab || {1'b0, db_pos} >= cfg_ctx_max) begin
+                        st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
-                        d_hdr <= h; d_sut <= h_tmpl ? {rw(rp, 4'd2), rw(rp, 4'd1)} : 256'd0; d_desc <= 1024'd0;
-                        aj <= 2'd0; as <= A_LOAD; dk <= h_tmpl ? 4'd3 : 4'd1; bad <= 1'b0; st <= S_ADDR;
+                        faddr <= {img[39:5], 5'd0}; fetching <= 1'b1; f_req_v <= 1'b0;
+                        wp <= 0; wv <= 1'b0; rp <= {{RB{1'b0}}, img[4]}; frp <= {{RB{1'b0}}, img[4]}; drop <= fl_after;
+                        st <= S_DEC;
                     end
                 end
-                S_ADDR: if (!d_hdr[100 + aj]) begin                  // operand absent
-                        if (aj == 2'd3) st <= S_WAIT; else aj <= aj + 2'd1;
-                    end else case (as)
-                        A_LOAD: begin
-                            acc <= {8'd0, dcur[47:8]}; mcand <= {16'd0, dcur[167:136]}; mplier <= {16'd0, L}; ash <= 6'd0;
-                            if (dcur[172:168] > 5'd7 || dcur[204:200] > 5'd7) bad <= 1'b1;   // DS-only DYN codes
-                            as <= A_ML;
+                S_DEC: if (avail != 0) begin rd_ptr <= rp; st <= S_H1; end
+                S_H1: st <= S_H2;                                      // the sector read (registered address)
+                S_H2: begin h <= rd_word; st <= S_RDW; wk <= 5'd0;
+`ifdef SEQ_DEBUG
+                    $display("SEQDBG t=%0t rp=%0d wp=%0d frp=%0d hdr=%h", $time, rp, wp, frp, rd_word);
+`endif
+                end
+                S_RDW: if (wk == 5'd0) begin                           // ---- evaluate the header
+                    if (depth != 2'd0 && rec_end > RW - 2) fault3;
+                    else if (avail < {{(RB-4){1'b0}}, rlen}) ;          // wait for the record's words
+                    else if (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)}) fault3;
+                    else if (!pred_ok) begin advance(rlen); st <= S_DEC; end
+                    else if (is_ctl && h_op != 6'd3) begin
+                        case (h_op)
+                            6'd0: begin advance(rlen); st <= S_DEC; end                       // NOP
+                            6'd1: if (h_param[15:0] == 16'd0 || depth == 2'd2 ||
+                                      (depth == 2'd1 && lv_lvl[0] == h_param[16])) fault3;   // LOOP
+                                  else begin
+                                      lv_lvl[depth[0]] <= h_param[16]; lv_cnt[depth[0]] <= h_param[15:0];
+                                      lv_body[depth[0]] <= rp + rlen;
+                                      if (h_param[16]) L1c <= 16'd0; else Lc <= 16'd0;
+                                      depth <= depth + 2'd1; rp <= rp + rlen;
+                                      if (depth == 2'd0) frp <= rp + rlen;
+                                      st <= S_DEC;
+                                  end
+                            6'd2: if (depth == 2'd0) fault3;                                  // ENDLOOP
+                                  else if (more) begin
+                                      if (top_lvl) L1c <= L1c + 16'd1; else Lc <= Lc + 16'd1;
+                                      rp <= lv_body[top[0]]; st <= S_DEC;
+                                  end else begin
+                                      if (top_lvl) L1c <= 16'd0; else Lc <= 16'd0;
+                                      depth <= depth - 2'd1; rp <= rp + rlen;
+                                      if (depth == 2'd1) frp <= rp + rlen;
+                                      st <= S_DEC;
+                                  end
+                            6'd4: st <= S_DRAIN;                                              // FENCE
+                            default: fault3;                                                  // TOKX AMAX ACCEPT
+                        endcase
+                    end else if (is_ctl && !h_opnd[0]) fault3;                               // END needs A
+                    else begin
+                        is_end <= is_ctl;
+                        d_sut <= 256'd0;
+                        for (k = 0; k < 7; k = k + 1) dr[k] <= 256'd0;
+                        d_desc <= 1792'd0; d_n <= 147'd0; pend_x <= 7'd0; pend_n <= 7'd0; have_i <= h_opnd[6];
+                        wk <= 5'd1;
+                    end
+                end else begin                                         // ---- read words 1 .. rlen-1
+                    if (wk < rlen) begin rd_ptr <= rp + wk; rpipe_v[0] <= 1'b1; rpipe_k0 <= wk; wk <= wk + 5'd1; end
+                    if (rpipe_v[1]) begin
+`ifdef SEQ_DEBUG
+                        $display("SEQDBG word k=%0d m=%0d sl=%0d w=%h rd_ptr=%0d", rpipe_k1, wk_m, wk_sl, rd_word, rd_ptr);
+`endif
+                        if (h_tmpl && rpipe_k1 <= 5'd2) d_sut[(rpipe_k1 - 5'd1) * 128 +: 128] <= rd_word;
+                        else dr[wk_sl][wk_m[0] * 128 +: 128] <= rd_word;
+                    end
+                    if (wk == rlen && rpipe_v == 2'b00) begin
+                        aj <= h_opnd[6] ? 3'd6 : first0(h_opnd); as <= A_LOAD; st <= S_ADDR;
+                    end
+                end
+                S_ADDR: if (aj == 3'd7) st <= S_WAIT;
+                    else case (as)
+                    A_LOAD: begin
+                        if ((aj == 3'd6 && (dc_idx || dc_nsel == 6'd63 || dc_sp != 2'd1)) ||
+                            (aj != 3'd6 && (dc_idx || dc_nsel == 6'd63) && !have_i) ||
+                            (!dc_idx && dyn_rsv(dc_dsel)) ||
+                            (dc_nsel != 6'd0 && dc_nsel != 6'd63 && dyn_rsv(dc_nsel)) ||
+                            (is_end && aj == 3'd0 && dc_sp != 2'd1)) fault3;
+                        else begin
+                            acc <= {24'd0, dc[M_BASE +: 40]}; mcand <= sx32(dc[M_LSTR +: 32]); mplier <= {16'd0, Lc};
+                            ash <= 6'd0; as <= A_ML;
                         end
-                        A_ML, A_MD: if (mplier != 32'd0) begin
-                                acc <= acc + ((mcand * {44'd0, mplier[3:0]}) << ash);
-                                mplier <= mplier >> 4; ash <= ash + 6'd4;
-                            end else if (as == A_ML) as <= A_DYN;
-                            else as <= A_WR;
-                        A_DYN: begin
-                            mcand <= {21'd0, dcur[199:173]}; mplier <= dynv(dcur[172:168], d_hdr[98:96]); ash <= 6'd0;
-                            as <= A_MD;
+                    end
+                    A_ML, A_ML1, A_MD: if (!mdone) begin
+                            acc <= mstep; mplier <= mplier >> 4; ash <= ash + 6'd4;
+                        end else begin
+                            ash <= 6'd0;
+                            if (as == A_ML) begin mcand <= sx32(dc[M_L1STR +: 32]); mplier <= {16'd0, L1c}; as <= A_ML1; end
+                            else if (as == A_ML1 && !dc_idx) begin
+                                mcand <= {37'd0, dc[M_DMUL +: 27]}; mplier <= dyn_d; as <= A_MD;
+                            end else as <= A_FIN;
                         end
-                        default: begin                                // A_WR: the effective descriptor
-                            d_desc[aj*256 +: 256] <= {dcur[255:68],
-                                                      (dcur[204:200] != 5'd0) ? n_dyn : dcur[67:48],
-                                                      acc[39:0], dcur[7:0]};
-                            dk <= dk + 4'd2; as <= A_LOAD;
-                            if (aj == 2'd3) st <= S_WAIT; else aj <= aj + 2'd1;
+                    A_FIN: begin
+                        pn[aj] <= n_eff;
+                        if (aj == 3'd6) begin
+                            if (base_bad(2'd1, acc)) fault3;
+                            else begin
+                                ieff <= acc[39:0];
+                                d_desc[6*256 +: 256] <= eff_desc(dc, acc, n_eff);
+                                d_n[6*21 +: 21] <= n_eff;
+                                aj <= first0(h_opnd); as <= A_LOAD;
+                            end
+                        end else begin
+                            if (dc_idx || dc_nsel == 6'd63) begin
+                                pacc[aj] <= acc; pend_x[aj] <= dc_idx; pend_n[aj] <= (dc_nsel == 6'd63);
+                                aj <= nxt(h_opnd, {1'b0, aj}); as <= A_LOAD;
+                            end else if (base_bad(dc_sp, acc)) fault3;
+                            else begin
+                                d_desc[aj*256 +: 256] <= eff_desc(dc, acc, n_eff);
+                                d_n[aj*21 +: 21] <= n_eff;
+                                aj <= nxt(h_opnd, {1'b0, aj}); as <= A_LOAD;
+                            end
                         end
+                    end
+                    default: as <= A_LOAD;
                     endcase
-                S_WAIT: if (bad) begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 0; fetching <= 1'b0; f_req_v <= 1'b0; end
-                        else if (waitok(d_hdr[117:106], busy_u)) begin st <= S_DISP; u_v <= 12'd1 << d_hdr[127:124]; end
-                S_DISP: if (|u_acc) begin u_v <= 12'd0; st <= S_DEC; end
-                S_DRAIN: if (busy_u == 12'd0) st <= S_DEC;
+                S_WAIT: if (waitok(h_wait, busy_u)) begin
+                    aj <= (pend_x[0] | pend_n[0]) ? 3'd0 : nxtp(pend_x | pend_n, 4'd0); ix <= 3'd0; st <= S_IDX;
+                end
+                S_IDX: if (aj == 3'd7) begin
+                        if (is_end) begin
+                            vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_ENDRD;
+                        end else begin
+                            d_hdr <= h; d_pos1 <= {1'b0, pos} + 21'd1; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
+                            u_v <= 16'd1 << h_unit; st <= S_DISP;
+                        end
+                    end else case (ix)
+                    3'd0: begin                                        // the X read (indexed) or straight to n
+                        acc <= pacc[aj];
+                        if (pend_x[aj]) begin
+                            if (iaddr_x[63:18] != 46'd0) fault3;
+                            else begin vr_v <= 1'b1; vr_addr <= iaddr_x[17:0]; ix <= 3'd1; end
+                        end else ix <= 3'd3;
+                    end
+                    3'd1: begin
+                        if (vr_v && vr_rdy) vr_v <= 1'b0;
+                        if (vr_rsp_v) begin
+                            mcand <= {37'd0, dr[aj][M_DMUL +: 27]}; mplier <= vr_rsp_data; ash <= 6'd0; ix <= 3'd2;
+                        end
+                    end
+                    3'd2: if (!mdone) begin acc <= mstep; mplier <= mplier >> 4; ash <= ash + 6'd4; end
+                          else ix <= 3'd3;
+                    3'd3: if (pend_n[aj]) begin
+                            if (iaddr_n[63:18] != 46'd0) fault3;
+                            else begin vr_v <= 1'b1; vr_addr <= iaddr_n[17:0]; ix <= 3'd4; end
+                        end else ix <= 3'd5;
+                    3'd4: begin
+                        if (vr_v && vr_rdy) vr_v <= 1'b0;
+                        if (vr_rsp_v) begin
+                            if (vr_rsp_data[31:21] != 11'd0) fault3;
+                            else begin pn[aj] <= vr_rsp_data[20:0]; ix <= 3'd5; end
+                        end
+                    end
+                    default: begin                                     // finalize
+                        if (base_bad(dr[aj][M_SPACE +: 2], acc)) fault3;
+                        else begin
+                            d_desc[aj*256 +: 256] <= eff_desc(dr[aj], acc, pn[aj]);
+                            d_n[aj*21 +: 21] <= pn[aj];
+                            aj <= nxtp(pend_x | pend_n, {1'b0, aj}); ix <= 3'd0;
+                        end
+                    end
+                    endcase
+                S_DISP: if (|u_acc) begin u_v <= 16'd0; advance(rlen); st <= S_DEC; end
+                S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet) begin advance(rlen); st <= S_DEC; end
+                S_ENDRD: begin
+                    if (vr_v && vr_rdy) vr_v <= 1'b0;
+                    if (vr_rsp_v) begin
+                        st <= S_CPL; fetching <= 1'b0; f_req_v <= 1'b0;
+                        cpl_token <= vr_rsp_data[17:0];
+                        cpl_status <= (vr_rsp_data[31:18] != 14'd0 || vr_rsp_data[17:0] >= cfg_vocab) ? 4'd3 : 4'd0;
+                    end
+                end
                 S_CPL: if (cpl_rdy) st <= S_IDLE;
                 default: st <= S_IDLE;
             endcase
