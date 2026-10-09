@@ -30,7 +30,7 @@ module ot_hbm_loader_native_endpoint #(parameter integer ENABLE=0,ADDR_W=32)(
  assign wr_packet={data_q,addr_q,pc_q};
  assign rd_v=state==READ_ISSUE&&!sticky&&!service_fault;
  assign rd_pc=pc_q;assign rd_addr=addr_q;assign rd_tag=tag_q;
- assign rd_rsp_rdy=state==READ_WAIT&&rd_match&&!sticky&&!service_fault;
+ assign rd_rsp_rdy=state==READ_WAIT&&(!rd_rsp_v||rd_match)&&!sticky&&!service_fault;
  assign rsp_v=state==REPLY&&!sticky&&!service_fault;
  assign rsp_we=we_q;assign rsp_tag=tag_q;assign rsp_data=reply_q;
  assign busy=state!=IDLE;assign fault=sticky||service_fault;
