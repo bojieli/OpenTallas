@@ -106,6 +106,29 @@ def qwen_r25_fmt3_wide_model():
     return base
 
 
+def qwen_r25_int8_pipeline_model():
+    """Two elastic conversion stages; nested intake counter prevents lookahead across ops."""
+    m=qwen_r25_fmt3_wide_model()
+    extra_ff=1088+2+2*(9+8+16)+1
+    m.update(candidate="wide fmt3 optional PIPE_INT8=1",conversion_stages=2,
+        first_stage="signed magnitude plus leading-zero position",
+        second_stage="BF16 exponent/mantissa encode and output register",
+        additional_register_bits_vs_one_stage=extra_ff,
+        register_area_delta_mm2_die=32*extra_ff*0.2916/0.55/1e6,
+        estimated_area_mm2_die=0.14,
+        area_estimate_basis="existing0.1mm2 + ~0.02mm2 registered stage + ~0.02mm2 control/logic allowance; route measures it",
+        finite_buffers="two1088-bit elastic beats plus512 held high codes; no unbounded queue",
+        intake_count="nested C/G/row ordinal counter;1realbeat per legacy line,2perINT8 line; stops at exact rows*G*C without multiplication",
+        counter_cost="two33-bit dimension/index sets plus exhaustion bit; two nested increments at INT8 intake",
+        added_latency_cycles_per_dependent_sm_op=2,additional_cycles_vs_one_stage=1,
+        added_token_cycles=506,added_token_ns_at_1p2ghz=506/1.2,
+        incremental_token_ns_vs_one_stage=253/1.2,
+        sustained_output_beats_per_cycle=1,
+        correctness="same BF16 codes, rounding/tree, input ordering and finite backpressure; gates required",
+        physical_adoption="pending actual SS/FF>=15ps DRC0; no period/uncertainty relaxation")
+    return m
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
