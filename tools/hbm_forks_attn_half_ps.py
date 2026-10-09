@@ -39,14 +39,13 @@ def main():
         add += (f'place_macro -macro_name {{u_pks.gn.g_s\\[0\\].g_c\\[{c}\\].g_sn.u_b}} -location {{{x:.3f} 0.024}} '
                 '-orientation R0 -exact\n')
     # stage 0's third bank and stages 1-4 (5 stages x 3 banks: 1,102 b > 2 x 544), slots chosen free of every macro
-    add += (f'place_macro -macro_name {{u_pks.gn.g_s\\[0\\].g_c\\[2\\].g_sn.u_b}} -location {{1271.136 0.024}} -orientation R0 -exact\n')
     for s_, x, y0 in ((1, 570.36, 94.488), (2, 799.7, 308.712), (3, 955.22, 542.984), (4, 799.7, 735.912)):
-        for c in range(3):
+        for c in range(2):     # bank 2 (bits 1,088-1,101: the forwarded clocks, unused past the pin) is swept
             add += (f'place_macro -macro_name {{u_pks.gn.g_s\\[{s_}\\].g_c\\[{c}\\].g_sn.u_b}} '
                     f'-location {{{x:.3f} {y0 + 13.968 * c:.3f}}} -orientation R0 -exact\n')
     anchor = 'foreach ot_i [[ord::get_db_block] getInsts] {'      # before the FIRM freeze of every placed block
     txt = mp.read_text()
-    mp.write_text(txt.replace(anchor, add + anchor, 1).replace('banks=69"', 'banks=84"'))
+    mp.write_text(txt.replace(anchor, add + anchor, 1).replace('banks=69"', 'banks=79"'))
     print('written', lo)
 
 
