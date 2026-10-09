@@ -1098,7 +1098,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
     end endgenerate
 
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_tokpipe_src #(.DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .RD_PIPE(RD_PIPE), .SLEW_COPY(SLEW_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_tokpipe_src #(.PROMPT_EXTRA(PROMPT_EXTRA), .DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .RD_PIPE(RD_PIPE), .SLEW_COPY(SLEW_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users_i), .cfg_prompt_len(cfg_plen_i),
             .cfg_gen_len(cfg_glen_i), .core_free(src_free),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
@@ -1193,6 +1193,7 @@ endmodule
 // RESULT messages queue (4 deep; in_ready drops at 3 queued).
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
+    parameter integer PROMPT_EXTRA = 0, // token HARD successor:2 extra responseedges, off by default
     parameter integer DECODED_READ = 0,
     parameter integer REC_SRAM = 0,
     parameter integer STEPS_PIPE = 0,   // CFG_Q: steps / steps_m1 from a 2-edge log-depth pipeline
@@ -1269,6 +1270,12 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
     // prompt reads: tag 1 = new user's first token, 3 = a known-token read
     reg [1:0] t0, t1; reg [USER_W-1:0] u0, u1; reg [NW-1:0] p0, p1; reg [3:0] b0, b1;
     reg [1:0] t2; reg [USER_W-1:0] u2; reg [NW-1:0] p2; reg [3:0] b2;
+    reg [1:0] t3,t4; reg [USER_W-1:0] u3,u4;
+    reg [NW-1:0] p3,p4; reg [3:0] b3,b4;
+    wire [1:0] tr = PROMPT_EXTRA==2 ? t4 : t2;
+    wire [USER_W-1:0] ur = PROMPT_EXTRA==2 ? u4 : u2;
+    wire [NW-1:0] pr = PROMPT_EXTRA==2 ? p4 : p2;
+    wire [3:0] br = PROMPT_EXTRA==2 ? b4 : b2;
     // new users
     reg [UCW-1:0] next_u; reg nu_ok, nu_pend; reg [NW-1:0] nu_tok;
 
@@ -1551,7 +1558,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
         if (!rst_n) begin
             st <= S_IDLE; kind <= K_RES; ou <= 0; oslot <= 0; o_p <= 0; o_i <= 0; o_q <= 0; o_b <= 0; o_k <= 1'b0;
             rq_w <= 0; rq_r <= 0; rq_n <= 0; pq_w <= 0; pq_r <= 0; pq_n <= 0;
-            t2<=0;u2<=0;p2<=0;b2<=0; t0 <= 0; t1 <= 0; u0 <= 0; u1 <= 0; p0 <= 0; p1 <= 0; b0 <= 0; b1 <= 0;
+            t3<=0;t4<=0;u3<=0;u4<=0;p3<=0;p4<=0;b3<=0;b4<=0; t2<=0;u2<=0;p2<=0;b2<=0; t0 <= 0; t1 <= 0; u0 <= 0; u1 <= 0; p0 <= 0; p1 <= 0; b0 <= 0; b1 <= 0;
             next_u <= 0; nu_ok <= 1'b0; nu_pend <= 1'b0; nu_tok <= 0; settle <= 0;
         end else begin
             settle <= (w_en || b_en) ? 3'd0 : (settle == 3'd3 ? 3'd3 : settle + 1'b1);
@@ -1561,10 +1568,11 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
             t0 <= ex_rd ? 2'd3 : do_fetch ? 2'd1 : 2'd0; u0 <= ou; p0 <= r_wnp; b0 <= r_wblk;
             t1 <= t0; u1 <= u0; p1 <= p0; b1 <= b0;
             t2<=t1;u2<=u1;p2<=p1;b2<=b1;
+            t3<=t2;u3<=u2;p3<=p2;b3<=b2; t4<=t3;u4<=u3;p4<=p3;b4<=b3;
             if (do_fetch) nu_pend <= 1'b1;
-            if (t2 == 2'd1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
-            if (t2 == 2'd3) begin
-                pq_u[pq_w] <= u2; pq_pos[pq_w] <= p2; pq_blk[pq_w] <= b2; pq_q[pq_w] <= pr_q; pq_k[pq_w] <= pr_qk;
+            if (tr == 2'd1) begin nu_tok <= pr_q; nu_ok <= 1'b1; nu_pend <= 1'b0; end
+            if (tr == 2'd3) begin
+                pq_u[pq_w] <= ur; pq_pos[pq_w] <= pr; pq_blk[pq_w] <= br; pq_q[pq_w] <= pr_q; pq_k[pq_w] <= pr_qk;
                 pq_w <= pq_w + 1'b1;
             end
             if (idle_new) begin next_u <= next_u + 1'b1; nu_ok <= 1'b0; end
@@ -1596,7 +1604,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
                 default: st <= S_IDLE;
             endcase
             rq_n <= rq_n + (res_v ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n != 0) ? 3'd1 : 3'd0);
-            pq_n <= pq_n + (t2 == 2'd3 ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n == 0 && pq_n != 0) ? 3'd1 : 3'd0);
+            pq_n <= pq_n + (tr == 2'd3 ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n == 0 && pq_n != 0) ? 3'd1 : 3'd0);
         end
     end
 endmodule
@@ -1608,7 +1616,8 @@ endmodule
 // the started / eligibility bits are cleared (own reset copy, synchronous); a
 // record is written whole when its user starts and read only after.
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_tokpipe_grp #(parameter integer DECODED_READ = 0, parameter integer STORE = 1, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_tokpipe_grp #(parameter integer PROMPT_EXTRA = 0, // token HARD successor:2 extra responseedges, off by default
+    parameter integer DECODED_READ = 0, parameter integer STORE = 1, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    rd_lo,
     input  wire [2:0]    rd_slot,
