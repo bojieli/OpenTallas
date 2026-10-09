@@ -1,0 +1,31 @@
+{
+  "source_commit": "1fc92139a",
+  "model_before_build": "5bd1b6ab9",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/mtp-die-prefixpath1fc92139a",
+  "verdict": "PASS",
+  "values_per_rank": 1280,
+  "contribution_flits": 240,
+  "native_prefix_flits": 80,
+  "whole_gate_cycles": 5467,
+  "whole_gate_us": 4.555833333333333,
+  "modeled_upper_cycles": 7600,
+  "actual_SRAM_macros": 12,
+  "actual_fadd_lanes": 16,
+  "scope": "minimum synthetic BF16-widened contribution vehicle, actual transport/arithmetic/native decoder; no released contribution producer or primary shared-LAST arithmetic binding",
+  "arrival": "E2+E0 parallel then E1; actual transport drains E0/E1/E2",
+  "tail_hold_cycles": 16,
+  "context_release": "only final native output handshake",
+  "numerical": "synthetic deterministic full1280rank FP32 golden +0 then sorted three BF16-rounded/widened contributions",
+  "physical_qualified": false,
+  "CDC_qualified": false,
+  "source_sha256": {
+    "ot_mtp_p2_prefix.sv": "400b233263a4404dd2090a153f5f4b8e48fde73eb63647e45c3875aef30c359e",
+    "ot_mtp_p2_prefix_path.sv": "68a15c7fd769a567256c17ae2de93a3fd07513b64c2e21ea7f8bf44a3fda49d4",
+    "tb_mtp_p2_ordered_rows.sv": "2d0262d92f5fac7c94b574a161bb2ad5e0ca29e1b4fd0873a6daef24bc27b46d",
+    "tb_mtp_p2_prefix.sv": "f565ed83948ba2ec031f3da95fec7b019b9ee8659bb65eade8a329219f0e64d1",
+    "ot_mtp_p2_prefix_native.sv": "e2e0f26b9bf95096102ab0015ad48740b75f2900b3ce0c8b1ee161a7f08f00dd",
+    "ot_mtp_p2_ordered_rows.sv": "158dc526ab8b8ea9e0e51b384c37505b693da5717539002266c885a55ba3c07d",
+    "tb_mtp_p2_prefix_path.sv": "af6761201aef184576718789b9ff8f7d9b1ed9094cde8ebc61859b0cd17378a2"
+  }
+}
