@@ -1,0 +1,259 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+fp_margin_lint: PASS  util 43.7% (+hold 46.0%), pins 1803, max pin density 9.53 b/um, macros 3, slivers 0, channel worst 0.008
+fp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: E/M4 9.5 b/um
+fp_margin_lint: WARN pin_pdn: 517 pin(s) within 1 track of a PDN strap / via stack (column not full: escape tracks remain)
+OT_FP_LINT: 3 s
+[INFO RSZ-0026] Removed 16519 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 356 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 1219 BUFx2_ASAP7_75t_R output buffers.
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.40200001358985904, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.36000001430511475
+global_placement -density 0.40200001358985904 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  0.000  0.540 ) ( 756.000 159.300 ) um
+[INFO GPL-0016] Core area:                  120022.560 um^2
+[INFO GPL-0036] Movable instances area:      30091.472 um^2
+[INFO GPL-0037] Total instances area:        51759.233 um^2
+[INFO GPL-0035] Pin density area adjust:      3372.863 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            230708
+[INFO GPL-0007] Movable instances:              221549
+[INFO GPL-0008] Fixed instances:                  8438
+[INFO GPL-0009] Dummy instances:                   721
+[INFO GPL-0010] Number of nets:                 222901
+[INFO GPL-0011] Number of pins:                 755343
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 756.000 159.840 ) um
+[INFO GPL-0013] Placement BBox: (  0.000  0.540 ) ( 756.000 159.300 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                120022.560 um^2
+[INFO GPL-0017] Fixed instances area:        25200.626 um^2
+[INFO GPL-0018] Movable instances area:      33464.336 um^2
+[INFO GPL-0019] Utilization:                    35.292 %
+[INFO GPL-0020] Standard cells area:         33464.336 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 221549	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00213446 HPWL: 2142029700
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00025823 HPWL: 1553082327
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00024003 HPWL: 1540835683
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00014869 HPWL: 1536952769
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00012283 HPWL: 1530350511
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00014689 HPWL: 1523328476
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00012894 HPWL: 1508919709
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00020385 HPWL: 1492759378
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00023397 HPWL: 1478036609
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00019314 HPWL: 1471173566
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00020133 HPWL: 1460575641
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00019640 HPWL: 1450806807
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00011513 HPWL: 1445429419
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00008866 HPWL: 1436265580
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00009063 HPWL: 1423857079
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00010507 HPWL: 1416501672
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00005082 HPWL: 1411028222
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00004463 HPWL: 1411395336
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00003411 HPWL: 1405405464
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00002669 HPWL: 1407259654
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4020
+[INFO GPL-0024] Movable insts average area:      0.151 um^2
+[INFO GPL-0025] Ideal bin area:                  0.376 um^2
+[INFO GPL-0026] Ideal bin count:                319430
+[INFO GPL-0027] Total bin area:             120022.560 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.738 *  0.620 um
+[INFO GPL-0030] Number of bins:                 262144
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9893 |  8.312181e+05 |   +0.00% |  8.07e-15 |      
+       10 |   0.9834 |  9.421496e+05 |  +13.35% |  1.30e-14 |      
+       20 |   0.9778 |  1.014437e+06 |   +7.67% |  2.10e-14 |      
+       30 |   0.9728 |  1.047276e+06 |   +3.24% |  3.41e-14 |      
+       40 |   0.9702 |  1.063764e+06 |   +1.57% |  5.54e-14 |      
+       50 |   0.9681 |  1.080856e+06 |   +1.61% |  9.01e-14 |      
+       60 |   0.9673 |  1.091610e+06 |   +0.99% |  1.47e-13 |      
+       70 |   0.9665 |  1.098401e+06 |   +0.62% |  2.39e-13 |      
+       80 |   0.9657 |  1.104889e+06 |   +0.59% |  3.88e-13 |      
+       90 |   0.9648 |  1.109158e+06 |   +0.39% |  6.32e-13 |      
+      100 |   0.9640 |  1.111719e+06 |   +0.23% |  1.03e-12 |      
+      110 |   0.9636 |  1.113903e+06 |   +0.20% |  1.68e-12 |      
+      120 |   0.9627 |  1.116881e+06 |   +0.27% |  2.73e-12 |      
+      130 |   0.9619 |  1.121184e+06 |   +0.39% |  4.44e-12 |      
+      140 |   0.9609 |  1.127024e+06 |   +0.52% |  7.23e-12 |      
+      150 |   0.9593 |  1.134609e+06 |   +0.67% |  1.18e-11 |      
+      160 |   0.9580 |  1.143939e+06 |   +0.82% |  1.92e-11 |      
+      170 |   0.9557 |  1.155687e+06 |   +1.03% |  3.12e-11 |      
+      180 |   0.9521 |  1.171054e+06 |   +1.33% |  5.07e-11 |      
+      190 |   0.9467 |  1.191832e+06 |   +1.77% |  8.24e-11 |      
+      200 |   0.9388 |  1.220645e+06 |   +2.42% |  1.34e-10 |      
+      210 |   0.9264 |  1.259613e+06 |   +3.19% |  2.17e-10 |      
+      220 |   0.9095 |  1.311002e+06 |   +4.08% |  3.52e-10 |      
+      230 |   0.8875 |  1.376874e+06 |   +5.02% |  5.69e-10 |      
+      240 |   0.8565 |  1.451910e+06 |   +5.45% |  9.19e-10 |      
+      250 |   0.8190 |  1.531088e+06 |   +5.45% |  1.48e-09 |      
+      260 |   0.7763 |  1.625992e+06 |   +6.20% |  2.39e-09 |      
+      270 |   0.7331 |  1.719612e+06 |   +5.76% |  3.86e-09 |      
+      280 |   0.6967 |  1.790919e+06 |   +4.15% |  6.23e-09 |      
+      290 |   0.6549 |  1.880455e+06 |   +5.00% |  1.01e-08 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 295, overflow: 0.634, keep resizer changes at: 1, HPWL: 1924873538
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    222901
+    final |     +2.8% |     346 |    7834 |          2608 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1812 slew violations.
+[INFO RSZ-0035] Found 546 fanout violations.
+[INFO RSZ-0036] Found 263 capacitance violations.
+[INFO RSZ-0037] Found 1955 long wires.
+[INFO RSZ-0039] Resized 346 instances.
+[INFO RSZ-0038] Inserted 7834 buffers in 2608 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    212796
+    21200 |     +0.3% |     551 |     2473 |    191596
+    42400 |     +0.4% |     627 |     3082 |    170396
+    63600 |     +0.4% |    1352 |     4339 |    149196
+    84800 |     +0.6% |    2452 |     6641 |    127996
+   106000 |     +0.6% |    2801 |     7632 |    106796
+   127200 |     +0.6% |    3367 |     8635 |     85596
+   148400 |     +0.4% |    4662 |    10131 |     64396
+   169600 |     +0.5% |    5087 |    10886 |     43196
+   190800 |     +0.8% |    6266 |    14010 |     21996
+   212000 |     +0.9% |    7688 |    17265 |       796
+    final |     +0.9% |    7834 |    17342 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -1.0866666e-09
+[INFO GPL-0107] Timing-driven: repair_design delta area: 1898.419 um^2 (+5.67%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 17342 (+7.83%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 25176, deleted: 7834
+[INFO GPL-0110] Timing-driven: new target density: 0.42202088
+[INFO GPL-0038] Routability snapshot saved at iter = 299
+      298 |   0.5996 |  2.122459e+06 |          |           |      
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      300 |   0.5979 |  2.131081e+06 |  +13.33% |  1.59e-08 |      
+      310 |   0.5790 |  2.187055e+06 |   +2.63% |  2.57e-08 |      
+      320 |   0.5491 |  2.204718e+06 |   +0.81% |  4.17e-08 |      
+      330 |   0.5100 |  2.286366e+06 |   +3.70% |  6.75e-08 |      
+      340 |   0.4633 |  2.376175e+06 |   +3.93% |  1.09e-07 |      
+      350 |   0.4321 |  2.306622e+06 |   -2.93% |  1.77e-07 |      
+      360 |   0.3820 |  2.353008e+06 |   +2.01% |  2.87e-07 |      
+      370 |   0.3552 |  2.289290e+06 |   -2.71% |  4.67e-07 |      
+      380 |   0.3305 |  2.207949e+06 |   -3.55% |  7.09e-07 |      
+      390 |   0.3050 |  2.172636e+06 |   -1.60% |  1.04e-06 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net ck[0] has a large fanout of 37090 terminals.
+[INFO GPL-0041] Total routing overflow: 58.6885
+[INFO GPL-0042] Number of overflowed tiles: 354 (0.10%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.9868
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9476
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9175
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8826
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.9672
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      400 |   0.2899 |  2.124583e+06 |   -2.21% |  1.54e-06 |      
+      410 |   0.2710 |  2.074650e+06 |   -2.35% |  2.27e-06 |      
+      420 |   0.2503 |  2.047245e+06 |   -1.32% |  3.34e-06 |      
+      430 |   0.2275 |  2.028972e+06 |   -0.89% |  4.92e-06 |      
+      440 |   0.2057 |  2.013262e+06 |   -0.77% |  7.24e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 447, overflow: 0.193, keep resizer changes at: 1, HPWL: 2004645695
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    240243
+    final |     +1.5% |     381 |    2962 |          2135 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1260 slew violations.
+[INFO RSZ-0036] Found 93 capacitance violations.
+[INFO RSZ-0037] Found 1460 long wires.
+[INFO RSZ-0039] Resized 381 instances.
+[INFO RSZ-0038] Inserted 2962 buffers in 2135 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    212796
+    21200 |     -0.2% |    2544 |     1471 |    191596
+    42400 |     -0.3% |    3173 |     1731 |    170396
+    63600 |     -0.4% |    4500 |     2690 |    149196
+    84800 |     -0.7% |    6896 |     4097 |    127996
+   106000 |     -0.9% |    8121 |     4801 |    106796
+   127200 |     -1.0% |    9371 |     5658 |     85596
+   148400 |     -1.4% |   11539 |     6979 |     64396
+   169600 |     -1.4% |   12343 |     7648 |     43196
+   190800 |     -1.7% |   16147 |    11066 |     21996
+   212000 |     -1.9% |   20091 |    14585 |       796
+    final |     -2.0% |   20304 |    14669 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -1.0866666e-09
+[INFO GPL-0107] Timing-driven: repair_design delta area: -291.041 um^2 (-0.82%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -2673 (-1.12%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 17631, deleted: 20304
+[INFO GPL-0110] Timing-driven: new target density: 0.4189515
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      450 |   0.1908 |  2.029022e+06 |   +0.78% |  1.06e-05 |      
+      460 |   0.1703 |  1.994246e+06 |   -1.71% |  1.57e-05 |      
+      470 |   0.1492 |  1.985955e+06 |   -0.42% |  2.31e-05 |      
+      480 |   0.1300 |  1.980734e+06 |   -0.26% |  3.40e-05 |      
+      490 |   0.1131 |  1.977640e+06 |   -0.16% |  5.01e-05 |      
+      499 |   0.1000 |  1.978037e+06 |          |  7.38e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 499
+[INFO GPL-1017] Routability mode iteration count: 95
+[INFO GPL-1005] Routability final weighted congestion: 0.9574
+[INFO GPL-1002] Placed Cell Area            35071.7142
+[INFO GPL-1003] Available Free Area         94821.9340
+[INFO GPL-1004] Minimum Feasible Density        0.3600 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.4110
+[INFO GPL-1008]     - For 80% usage of free space: 0.4623
+[INFO GPL-1009]     - For 50% usage of free space: 0.7397
+[INFO GPL-1011] Original area (um^2): 33464.34
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 1607.38 (+4.80%)
+[INFO GPL-1014] Final placement area: 35071.71 (+4.80%)
+Took 476 seconds: global_placement -density 0.40200001358985904 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Took 13 seconds: estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 53231 um^2 44% utilization.
+write_db /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/3_3_place_gp.odb
+Elapsed time: 10:52.36[h:]min:sec. CPU time: user 1304.82 sys 43.96 (206%). Peak memory: 3855640KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          652           3765 6e8c1f0d44ea07d8c4df

@@ -1,0 +1,32 @@
+{
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "job": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "host": "ot-epyc4",
+  "completed_phases": {
+    "global_placement": {
+      "elapsed": "10:52.36",
+      "reported_peak_kib": 3855640
+    },
+    "resize": {
+      "elapsed": "4:38.27",
+      "reported_peak_kib": 1798264,
+      "observed_process_hwm_kib": 1855780
+    },
+    "detail_place": {
+      "elapsed": "5:28.39",
+      "reported_peak_kib": 2339660
+    },
+    "cts": {
+      "elapsed": "5:21.40",
+      "reported_peak_kib": 3074012,
+      "observed_process_hwm_kib": 3133124
+    }
+  },
+  "actual_route_peak": "not measured",
+  "scope": "calibration stages only; own clock insertion extraction pending, no routedSTA or final verdict",
+  "resource_reservation": "existing24GiB conservativeCTS-derivedR2/R6; unchanged",
+  "sha256": {
+    "3_3_place_gp.log": "a09d5af10a6ecd9f2efd16fb4ed2589024e0eb565c3a44dc96ec48cc2092edcd",
+    "4_1_cts.log": "0faeab075bfdfb37e60edec7d7745308b10562d608b52bceda3c48a4b13208f4"
+  }
+}
