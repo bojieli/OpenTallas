@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.hgi_sim.calibration.v0",
+ "clock_hz": 1.2e9,
+ "note": "Every entry: value (1.2 GHz cycles unless stated), grade (measured | measured_budget | model | estimate), source. Published numbers may use measured entries only (spec section 4); the rest is pathfinding.",
+ "cp": {
+  "fetch_req_bytes": {"value": 64, "grade": "estimate", "source": "HGI-1 sequencer C2 not built; two 32 B sectors per prefetch request"},
+  "fetch_issue_cycles": {"value": 2, "grade": "estimate", "source": "one 64 B request every 2 cycles (32 B/cycle CP port)"},
+  "fetch_latency": {"value": 160, "grade": "estimate", "source": "HBM first access ~133 ns (W19 fetch model 133.2 ns, modelled) on the svc read path"},
+  "ring_bytes": {"value": 8192, "grade": "estimate", "source": "prefetch ring; LOOP bodies replay from it when they fit"},
+  "decode_header": {"value": 1, "grade": "estimate", "source": "ot_qwen_r25_cmdproc18 S_FETCH/S_EXEC: 1 cycle a stage from local command SRAM"},
+  "decode_per_chunk": {"value": 1, "grade": "estimate", "source": "one 32 B ring read a cycle for each SUT / MDESC"},
+  "addr_latency": {"value": 2, "grade": "estimate", "source": "base + L*lstride + DYN*dyn_mul: one pipelined 40-bit MAC"},
+  "dispatch_cycles": {"value": 1, "grade": "estimate", "source": "one record a cycle into a unit queue"},
+  "dispatch_wire": {"value": 12, "grade": "estimate", "source": "cmdproc -> unit station hops (r25 hub span; 100 um relay segments)"},
+  "retire_wire": {"value": 12, "grade": "estimate", "source": "unit retire -> outstanding counter at the cmdproc"},
+  "queue_depth": {"value": 4, "grade": "estimate", "source": "per-unit record queue"}
+ },
+ "hbm": {
+  "bytes_per_cycle": {"value": 3166.7, "grade": "measured", "source": "3.80 TB/s sustained per die: vehicle A measured 95 % of 4.0 TB/s (results/rtl/qwen_hbmacc_p8191_20261004); r25 svc striping (H8) not yet qualified"},
+  "fmt3_transport": {"value": 1.25, "grade": "design", "source": "fmt3 installed stride 160 B per 128 INT8 codes (results/arch/qwen_on_r25_20261008/program_lowering README, producer f638941f6)"},
+  "first_access": {"value": 160, "grade": "estimate", "source": "W19 fetch model 133.2 ns; the DS composition's measured notice/first-access rows are 74-133 ns"}
+ },
+ "units": {
+  "SM.first_access": {"value": 425, "grade": "estimate", "source": "qwen_on_r25 PLAN section 4: 1,700 cycles a layer of first access for 4 matvecs + attention tail"},
+  "SM.drain": {"value": 12, "grade": "measured", "source": "ot_hbm_accel_sm_v +12 drain (dshbm_matched_reference C1-C3)"},
+  "FUSED.ROW_NORM.d4096": {"value": 175, "grade": "estimate", "source": "hbm-generic PLAN: RMSNorm 150-200 cycles on the D4096 norm engine"},
+  "FUSED.ROW_NORM.seg128": {"value": 125, "grade": "estimate", "source": "hbm-generic PLAN: QK-norm 100-150 cycles"},
+  "SU.model": {"value": "vec-campaign layout() at c12 depths, N1024 M256, BCAST 7 RET 8", "grade": "model", "source": "tools/rtl_hdc_v41x_vec_campaign.layout + tools/hbm_su_c12.set_c12 (the depth model the RTL benches are checked against)"},
+  "SU.issue_overhead": {"value": 4, "grade": "estimate", "source": "op setup between dependent SU ops"},
+  "SFU.GLU": {"value": 60, "grade": "estimate", "source": "hbm-generic PLAN SwiGLU fast path 40-80 cycles a layer (3,072 a die)"},
+  "ATT.fixed": {"value": 225, "grade": "measured", "source": "attention tile job T128: 225 cycles (results/rtl/v41_full_attention_numeric via dshbm_baseline_measure ATT_TILE)"},
+  "DMA.load_issue": {"value": 4, "grade": "estimate", "source": "svc row-load issue interval"},
+  "DMA.store_latency": {"value": 30, "grade": "estimate", "source": "hbm-generic PLAN posted KV append 30-60 a layer"},
+  "DMA.fence": {"value": 60, "grade": "estimate", "source": "posted-write visibility (kvwb ACK) after the last store"},
+  "COLL.ALL_REDUCE_SUM": {"value": 1350, "grade": "measured_budget", "source": "TP4 256-word AR: endpoint RTL 928 ns (dshbm_1m_allmeasured_20261004/collectives.json ar_matched_p1) + ~0.2 us FEC budget"},
+  "COLL.ARGMAX_MERGE": {"value": 586, "grade": "measured", "source": "ga_ha2hub gather 488 ns (qwen_on_r25 PLAN G2) ~ 586 cycles"},
+  "ARGMAX.LOCAL.per_elem": {"value": 0.0625, "grade": "estimate", "source": "16 compares a cycle on the streamed logits"}
+ }
+}
