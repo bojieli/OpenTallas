@@ -1954,11 +1954,14 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     return kept
 
 
-def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False) -> str:
+def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False,
+                       die_area_um: list[float] | None = None) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
     block's own terminal names, so a bus is pinned bit by bit, in order.
     OT_PIN_GROUP_MAX optionally bounds each ordered group; every chunk keeps
     the original region. Zero (default) retains the original single group.
+    OT_PIN_BALANCE_H/V optionally fixes uniformly spaced pins across the
+    named edge layers, alternating groups, to bound per-layer density.
 
     exhaustive (--pin-regions-exhaustive): before any constraint, every signal
     terminal must match EXACTLY ONE region regex, else the floorplan errors out.
@@ -2005,7 +2008,33 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         group_max = int(os.environ.get("OT_PIN_GROUP_MAX", "0"))
         if group_max < 0:
             raise ValueError("OT_PIN_GROUP_MAX must be nonnegative")
-        if group_max:
+        balanced_h = os.environ.get("OT_PIN_BALANCE_H", "").split()
+        balanced_v = os.environ.get("OT_PIN_BALANCE_V", "").split()
+        if balanced_h or balanced_v:
+            if not (group_max and balanced_h and balanced_v and die_area_um and "range_um" in region):
+                raise ValueError("balanced pins require group bound, both layer lists, die area and bounded regions")
+            if any(not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", layer)
+                   for layer in balanced_h + balanced_v):
+                raise ValueError("invalid balanced pin layer name")
+            lo, hi = region["range_um"]
+            dx0, dy0, dx1, dy1 = die_area_um
+            edge = region["edge"]
+            layers = balanced_h if edge in ("left", "right") else balanced_v
+            location = (f"[list {dx1 if edge == 'right' else dx0:g} $ot_pos]"
+                        if edge in ("left", "right") else
+                        f"[list $ot_pos {dy1 if edge == 'top' else dy0:g}]")
+            lines += [
+                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                "set ot_count [llength $ot_region_pins]",
+                "set ot_first 0",
+                "foreach ot_pin $ot_region_pins {",
+                f"  set ot_pos [expr {{{lo:g} + ({hi:g} - {lo:g}) * ($ot_first + 0.5) / $ot_count}}]",
+                f"  set ot_layer [lindex {{{' '.join(layers)}}} [expr {{($ot_first / {group_max}) % {len(layers)}}}]]",
+                f"  place_pin -pin_name $ot_pin -layer $ot_layer -location {location} -force_to_die_boundary",
+                "  incr ot_first",
+                "}",
+            ]
+        elif group_max:
             lines += [
                 f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
                 f"for {{set ot_first 0}} {{$ot_first < [llength $ot_region_pins]}} {{incr ot_first {group_max}}} {{",
@@ -2384,7 +2413,8 @@ def run_pnr(
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(
-            io_constraints_tcl(floorplan["pin_regions"], bool(floorplan.get("pin_regions_exhaustive"))),
+            io_constraints_tcl(floorplan["pin_regions"], bool(floorplan.get("pin_regions_exhaustive")),
+                               floorplan.get("die_area_um")),
             encoding="utf-8"
         )
     if floorplan and floorplan.get("step_tcl"):
