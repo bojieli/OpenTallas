@@ -138,9 +138,15 @@ module ot_dsrom_wfc_vmx #(
         end
     end
     // the WFC's synchronous read (one edge) from the staging buffer
-    wire [VWA-1:0] ra_tx = vm_raddr - TXB[VWA-1:0];
-    wire [VWA-1:0] ra_sd = vm_raddr - SIDE_TXB[VWA-1:0] + XWORDS[VWA-1:0];
-    wire [VWA-1:0] ra = (ra_tx < XWORDS) ? ra_tx : ra_sd;
+    // (fixed one-edge read: with no SIDE region the staging index is the address minus a constant, no compare)
+    wire [VWA-1:0] ra;
+    generate if (SIDE_WORDS == 0) begin : g_ra_tx
+        assign ra = vm_raddr - TXB[VWA-1:0];
+    end else begin : g_ra_side
+        wire [VWA-1:0] ra_tx = vm_raddr - TXB[VWA-1:0];
+        wire [VWA-1:0] ra_sd = vm_raddr - SIDE_TXB[VWA-1:0] + XWORDS[VWA-1:0];
+        assign ra = (ra_tx < XWORDS) ? ra_tx : ra_sd;
+    end endgenerate
     always @(posedge fclk) if (vm_re) vm_rq <= stg[ra[IB-1:0]];
     // credit return: the slow side's issued-write count, sampled flop -> flop
     reg [3:0] wcnt_s, wcnt_f, wcnt_seen;

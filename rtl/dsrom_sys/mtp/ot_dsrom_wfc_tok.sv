@@ -9,7 +9,7 @@
 //   pr_re / pr_user / pr_pos / pr_blk -> pr_q / pr_qk   a synchronous read: the response is taken on the edge
 //                                              after the one that launched pr_re (fixed, not latency-insensitive),
 //                                              so this block answers from flops through one registered level.
-// pr_qk = 1 when the token at (user, pos) is KNOWN for draft block pr_blk:
+// pr_qk = 1 when the token at (user, pos) is KNOWN for draft block pr_blk (direct-mapped table, below):
 //   * a prompt token: pos < plen (prompt memory, PU users x PMAX positions, written by the config port);
 //   * a draft: user < MAXU, pr_blk == the user's stored epoch and base <= pos < base + n (the DRAFT flit of
 //     ot_dsrom_mtp_seq, delivered by ot_dsrom_wfc_lnk on dw_*).  base + k is precomputed per entry at write
@@ -62,61 +62,63 @@ module ot_dsrom_wfc_tok #(
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
     localparam integer PB = (PMAX > 1) ? $clog2(PMAX) : 1;
 
-    // static configuration + prompt memory
-    reg [NW-1:0] pm [0:PU*PMAX-1];
+    // static configuration
     always @(posedge clk) if (c_we) begin
         case (c_sel)
             2'd0: cfg_users <= c_val[UCW-1:0];
             2'd1: cfg_prompt_len <= c_val;
             2'd2: cfg_gen_len <= c_val;
-            default: if (c_user < PU && c_pos < PMAX) pm[c_user * PMAX + c_pos] <= c_val;
+            default: ;
         endcase
     end
 
-    // DRAFT write: pin flop, then the entry (base + k precomputed)
+    // DIRECT-MAPPED token table (route r1 missed -817 ps on the one-edge read through prompt mux + draft compares):
+    // one entry per (user, pos[PB-1:0]) = {valid, prompt, epoch, pos high bits, token}; a prompt token or a draft
+    // lands in the slot of its position.  Read = one PU*PMAX:1 select of the entry + a tag compare (pos high bits;
+    // epoch unless the entry is a prompt token).  A stale entry can only match a read with the same FULL position
+    // and the same epoch: a rejected block's epoch is dead (the WFC reads with the new one), an accepted block's
+    // positions were all issued and are never read again; prompt slots are read only during the prefill, before the
+    // first DRAFT write.  (The previous one-block-per-user form answered the same for every read the WFC makes.)
+    localparam integer TW = 1 + 4 + (NW - PB) + NW;        // {prompt, epoch, pos high, token}; valid in tv
+    localparam integer NE = MAXU * PMAX;
+    reg [TW-1:0] tb [0:NE-1];
+    reg [NE-1:0] tv;
     reg dv; reg [FLIT-1:0] dd;
-    always @(posedge clk) begin dv <= dw_v && rst_n; dd <= dw_d; end
+    always @(posedge clk) begin dv <= dw_v && rst_n; dd <= dw_d; end       // pin flops
     wire [USER_W-1:0] d_u = USER_W'(dd[HDR_USER +: 8]) | (USER_W'(dd[HDR_USER_HI +: UHIW]) << 8);
     wire [NW-1:0]     d_b = dd[HDR_POS +: NW];
-    reg [3:0]    e_ep [0:MAXU-1];
-    reg [G-1:0]  e_vk [0:MAXU-1];                 // slot k valid (k < n)
-    reg [NW-1:0] e_bk [0:MAXU*G-1];               // base + k
-    reg [NW-1:0] e_tk [0:MAXU*G-1];
     integer i, k;
+    function automatic [PB-1:0] dpk(input [NW-1:0] b, input integer kk); reg [NW-1:0] t; begin t = b + kk; dpk = t[PB-1:0]; end endfunction
+    function automatic [NW-PB-1:0] dph(input [NW-1:0] b, input integer kk); reg [NW-1:0] t; begin t = b + kk; dph = t[NW-1:PB]; end endfunction
     always @(posedge clk) begin
         if (!rst_n) begin
-            for (i = 0; i < MAXU; i = i + 1) begin e_vk[i] <= {G{1'b0}}; e_ep[i] <= 4'd0; end
             fault <= 1'b0;
-        end else if (dv) begin
+        end
+        if (c_we && c_sel == 2'd3 && c_user < MAXU && c_user < PU && c_pos < PMAX)
+            tb[c_user * PMAX + c_pos[PB-1:0]] <= {1'b1, 4'd0, c_pos[NW-1:PB], c_val};
+        if (rst_n && dv) begin
             if (dd[HDR_TYPE +: 4] != MT_DRAFT || d_u >= MAXU || dd[DR_N +: 3] > G) fault <= 1'b1;
-            else begin
-                e_ep[d_u[UB-1:0]] <= dd[HDR_ADDR +: 4];
-                for (k = 0; k < G; k = k + 1) begin
-                    e_vk[d_u[UB-1:0]][k] <= k < dd[DR_N +: 3];
-                    e_bk[d_u[UB-1:0] * G + k] <= d_b + k;
-                    e_tk[d_u[UB-1:0] * G + k] <= dd[DR_D + k * NW +: NW];
-                end
-            end
+            else for (k = 0; k < G; k = k + 1) if (k < dd[DR_N +: 3])
+                tb[d_u[UB-1:0] * PMAX + dpk(d_b, k)] <= {1'b0, dd[HDR_ADDR +: 4], dph(d_b, k), dd[DR_D + k * NW +: NW]};
         end
     end
-
+    // valid bits: the config port validates prompt slots (static, before reset release); a DRAFT validates its slots
+    always @(posedge clk) begin
+        if (c_we && c_sel == 2'd3 && c_user < MAXU && c_user < PU && c_pos < PMAX) tv[c_user * PMAX + c_pos[PB-1:0]] <= 1'b1;
+        else if (c_we && c_sel == 2'd0) tv <= {NE{1'b0}};                  // cfg_users written first: clear
+        if (rst_n && dv && dd[HDR_TYPE +: 4] == MT_DRAFT && d_u < MAXU && dd[DR_N +: 3] <= G)
+            for (k = 0; k < G; k = k + 1) if (k < dd[DR_N +: 3]) tv[d_u[UB-1:0] * PMAX + dpk(d_b, k)] <= 1'b1;
+    end
     // the read: one registered level from the WFC's flops
-    reg          hit;
-    reg [NW-1:0] tok;
-    always @(*) begin
-        hit = 1'b0; tok = {NW{1'b0}};
-        if (pr_user < PU && pr_pos < cfg_prompt_len && pr_pos < PMAX) begin
-            hit = 1'b1; tok = pm[pr_user * PMAX + pr_pos[PB-1:0]];
-        end else if (pr_user < MAXU
+    wire [TW-1:0] e = tb[pr_user[UB-1:0] * PMAX + pr_pos[PB-1:0]];
+    wire e_v = tv[pr_user[UB-1:0] * PMAX + pr_pos[PB-1:0]], e_p = e[TW-1];
+    wire [3:0] e_ep = e[TW-2 -: 4];
+    wire [NW-PB-1:0] e_hi = e[NW +: NW - PB];
+    wire u_ok = (pr_user >> UB) == 0;
+    wire hit = u_ok && e_v && e_hi == pr_pos[NW-1:PB]
 `ifndef OT_WFCTOK_MUT_NOEPOCH
-                     && e_ep[pr_user[UB-1:0]] == pr_blk
+               && (e_p || e_ep == pr_blk)
 `endif
-                     ) begin
-            for (k = 0; k < G; k = k + 1)
-                if (e_vk[pr_user[UB-1:0]][k] && e_bk[pr_user[UB-1:0] * G + k] == pr_pos) begin
-                    hit = 1'b1; tok = e_tk[pr_user[UB-1:0] * G + k];
-                end
-        end
-    end
-    always @(posedge clk) if (pr_re) begin pr_qk <= hit; pr_q <= tok; end
+               ;
+    always @(posedge clk) if (pr_re) begin pr_qk <= hit; pr_q <= e[NW-1:0]; end
 endmodule

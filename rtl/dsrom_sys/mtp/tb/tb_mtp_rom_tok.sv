@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-// tb_mtp_rom_tok: dsfd_wfc_tok against a reference model (stream mtp-rom, 2026-10-08).  Random DRAFT blocks
+// tb_mtp_rom_tok: dsfd_wfc_tok (direct-mapped token table) against a reference model (stream mtp-rom, 2026-10-08).  Random DRAFT blocks
 // (user, epoch, base, n, tokens) and random WFC prompt-port reads (user, pos, blk) every cycle; the reference
 // applies a DRAFT write two cycles after it is presented (the documented visibility) and answers
 // known = prompt (pos < plen) or (epoch match and base <= pos < base + n); the token is checked when known.
@@ -21,6 +21,8 @@ module tb_mtp_rom_tok;
     // reference
     integer pm [0:PU*PMAX-1];
     integer ep [0:MAXU-1], bs [0:MAXU-1], nn [0:MAXU-1], tk [0:MAXU*G-1];
+    // direct-mapped reference (one entry per (user, pos mod PMAX)): valid, prompt, epoch, full position, token
+    integer rv [0:MAXU*PMAX-1], rp [0:MAXU*PMAX-1], re [0:MAXU*PMAX-1], rpos [0:MAXU*PMAX-1], rt [0:MAXU*PMAX-1];
     reg [FLIT:0] d1, d2;                          // the write pipeline of the reference (2 cycles)
     integer cyc = 0, reads = 0, hits = 0, dhits = 0, i, uu, pp, bb, rnd, eknown, etok;
     reg pend; integer pk, pt;
@@ -29,7 +31,14 @@ module tb_mtp_rom_tok;
             if (w[FLIT]) begin
                 u_ = w[HDR_USER +: 8];
                 ep[u_] = w[HDR_ADDR +: 4]; bs[u_] = w[HDR_POS +: NW]; nn[u_] = w[DR_N +: 3];
-                for (k_ = 0; k_ < G; k_ = k_ + 1) tk[u_ * G + k_] = w[DR_D + k_ * NW +: NW];
+                for (k_ = 0; k_ < G; k_ = k_ + 1) begin
+                    tk[u_ * G + k_] = w[DR_D + k_ * NW +: NW];
+                    if (k_ < nn[u_]) begin
+                        rv[u_ * PMAX + (bs[u_] + k_) % PMAX] = 1; rp[u_ * PMAX + (bs[u_] + k_) % PMAX] = 0;
+                        re[u_ * PMAX + (bs[u_] + k_) % PMAX] = ep[u_]; rpos[u_ * PMAX + (bs[u_] + k_) % PMAX] = bs[u_] + k_;
+                        rt[u_ * PMAX + (bs[u_] + k_) % PMAX] = w[DR_D + k_ * NW +: NW];
+                    end
+                end
             end
         end
     endtask
@@ -38,9 +47,11 @@ module tb_mtp_rom_tok;
     endtask
     initial begin
         for (i = 0; i < MAXU; i = i + 1) begin ep[i] = 0; nn[i] = 0; bs[i] = 0; end
+        for (i = 0; i < MAXU * PMAX; i = i + 1) rv[i] = 0;
         cput(0, 0, 0, 4); cput(1, 0, 0, PLEN); cput(2, 0, 0, 100);
         for (uu = 0; uu < PU; uu = uu + 1) for (pp = 0; pp < PLEN; pp = pp + 1) begin
             pm[uu * PMAX + pp] = mix(uu, pp) % 129280; cput(3, uu, pp, pm[uu * PMAX + pp]);
+            rv[uu * PMAX + pp] = 1; rp[uu * PMAX + pp] = 1; rpos[uu * PMAX + pp] = pp; rt[uu * PMAX + pp] = pm[uu * PMAX + pp];
         end
         repeat (4) @(posedge clk); rst_n = 1; repeat (4) @(posedge clk);
         d1 = 0; d2 = 0; pend = 0;
@@ -70,10 +81,11 @@ module tb_mtp_rom_tok;
             pr = {1'b1, USER_W'(uu), NW'(pp), 4'(bb)};
             // the answer the reference expects at the next edge (after this edge's write lands)
             begin : expect_
-                integer kk; eknown = 0; etok = 0;
-                if (pp >= 0 && pp < PLEN && pp < PMAX) begin eknown = 1; etok = pm[uu * PMAX + pp]; end
-                else if (ep[uu] == bb) for (kk = 0; kk < G; kk = kk + 1)
-                    if (kk < nn[uu] && bs[uu] + kk == pp) begin eknown = 1; etok = tk[uu * G + kk]; dhits = dhits + 1; end
+                integer kk, ix; eknown = 0; etok = 0; kk = 0;
+                ix = uu * PMAX + pp % PMAX;
+                if (rv[ix] && rpos[ix] == pp && (rp[ix] || re[ix] == bb)) begin
+                    eknown = 1; etok = rt[ix]; if (!rp[ix]) dhits = dhits + 1;
+                end
             end
             pend = 1; pk = eknown; pt = etok;
         end

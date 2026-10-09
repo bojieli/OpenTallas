@@ -14,6 +14,7 @@
 //     (VCRED = the vmx transport capacity), returned by vmx (vc_ret) when the write has left for the VM.
 //     Headers (the first flit of a message) need none.
 // Cycles: inbound +3 (skid out flop, ltx grant + launch), outbound +3 (lrx pin flop, skid, output flop).
+// Outputs to the die link (lo_*) come straight from flops (OREG skid); dw_d is captured every cycle (no enable fanout).
 // Mutants: OT_WFCLNK_MUT_DRAFT2WFC (DRAFT flits go to the WFC), OT_WFCLNK_MUT_NOCRED (no VM credit check).
 // ---------------------------------------------------------------------------
 module ot_dsrom_wfc_lnk #(
@@ -83,12 +84,13 @@ module ot_dsrom_wfc_lnk #(
     wire pop = fwd || take_d;
     ot_dsrom_mtp_skid #(.W(FLIT + 1)) u_isk (.clk(clk), .rst_n(live), .in_valid(li_valid), .in_ready(li_ready),
         .in_data({li_last, li_data}), .out_valid(sk_v), .out_ready(pop), .out_data(sk_h));
+    always @(posedge clk) dw_d <= sk_h[FLIT-1:0];          // unconditional: no 512-wide enable fanout (dw_v qualifies it)
     always @(posedge clk) begin
         if (!live) begin
             hdr <= 1'b1; cred <= CB'(VCRED); gd <= 0; dw_v <= 1'b0; fault <= 1'b0;
         end else begin
             if (pop) hdr <= sk_h[FLIT];
-            dw_v <= take_d; if (take_d) dw_d <= sk_h[FLIT-1:0];
+            dw_v <= take_d;
             if (take_d && !sk_h[FLIT]) fault <= 1'b1;            // a DRAFT is one flit
             gd <= take_d ? GUARD[2:0] : (gd != 0) ? gd - 1'b1 : 3'd0;
             cred <= cred - ((fwd && need_c) ? 1'b1 : 1'b0) + (vc_ret ? 1'b1 : 1'b0);
@@ -104,7 +106,7 @@ module ot_dsrom_wfc_lnk #(
     ot_dsrom_mtp_lrx #(.W(FLIT + 1), .D(4)) u_rx (.clk(clk), .rst_n(live),
         .l_valid(wo_valid), .l_ready(wo_grant), .l_data({wo_last, wo_data}),
         .c_valid(o_v), .c_ready(o_rdy), .c_data(o_d));
-    ot_dsrom_mtp_skid #(.W(FLIT + 1)) u_osk (.clk(clk), .rst_n(live), .in_valid(o_v), .in_ready(o_rdy),
+    ot_dsrom_mtp_skid #(.W(FLIT + 1), .OREG(1)) u_osk (.clk(clk), .rst_n(live), .in_valid(o_v), .in_ready(o_rdy),
         .in_data(o_d), .out_valid(lo_valid), .out_ready(lo_ready), .out_data(od));
     assign lo_data = od[FLIT-1:0]; assign lo_last = od[FLIT];
 endmodule

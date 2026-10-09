@@ -65,12 +65,28 @@ VMX_VARIANTS = [
 ]
 
 
+ABUT = "physical/s81_ph_views/mtp/abut_read_budget.sdc"
+TOK_VARIANTS = [
+    ("a", "0.000", "0.45", "", "HM 0, abutted one-edge read budget (f_pr 150 ps: abut_read_budget.sdc)", ABUT),
+    ("b", "0.025", "0.45", "", "HM 25, abutted read budget", ABUT),
+    ("c", "0.010", "0.30", "", "HM 10, PD 0.30, generic IO budget (the direct-mapped table alone)", None),
+]
+VMX2_VARIANTS = [
+    ("d", "0.000", "0.45", "", "HM 0, LAG 0, abutted VM-read budget (f_vr 150 ps)", ABUT),
+    ("e", "0.010", "0.45", "--param LAG=1", "HM 10, LAG 1, abutted VM-read budget", ABUT),
+]
+
+
 def job(elem, e, vi, commit, branch, v):
-    tag, hm, pd, extra, vdesc = v
+    tag, hm, pd, extra, vdesc = v[:5]
+    sdcx = v[5] if len(v) > 5 else None
     name = f"mtp-{elem.replace('dsfd_', '')}-{tag}-{commit[:9]}-tc"
     two = e.get("two_clock", False)
     clk = ("CLK=ck SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl "
            "POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl" if two else "CLK=ck")
+    if sdcx:
+        sdcx_all = (f"physical/s81_ph_views/mtp/ser_clock_vmx.sdc {sdcx}" if two else sdcx)
+        clk = clk.replace("SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc", "") + f" SDCX='{sdcx_all}'"
     base = (f"{HOOKS}export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM={hm} PD={pd} SRC={{SRC}} "
             f"OUT={{RUN}}/routes CORES={e['threads']} NEED={e['ram']} SRCS='{SRCS_ALL}' {clk} bash "
             f"physical/s81_ph_views/common/route_view.sh {{LABEL}}{{SUFFIX}} contract {elem} {M}/dsfd_mtp_tops.sv {extra}")
@@ -119,12 +135,18 @@ def main():
     ap.add_argument("--commits", required=True)
     ap.add_argument("--branch", required=True)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--only", default="")
+    ap.add_argument("--set", default="", help="tok2: TOK_VARIANTS for tok, VMX2_VARIANTS for vmx")
     a = ap.parse_args()
     commits = a.commits.split(",")
     a.out.mkdir(parents=True, exist_ok=True)
     names = []
     for elem, e in ELEMS.items():
+        if a.only and elem not in a.only.split(","):
+            continue
         vs = VMX_VARIANTS if elem == "dsfd_wfc_vmx" else VARIANTS
+        if a.set == "r2":
+            vs = {"dsfd_wfc_tok": TOK_VARIANTS, "dsfd_wfc_vmx": VMX2_VARIANTS}.get(elem, VARIANTS)
         for vi, v in enumerate(vs):
             j = job(elem, e, vi, commits[vi], a.branch, v)
             (a.out / f"{j['name']}.json").write_text(json.dumps(j, indent=1) + "\n")
