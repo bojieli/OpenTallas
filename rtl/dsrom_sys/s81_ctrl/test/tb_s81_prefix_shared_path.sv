@@ -14,6 +14,22 @@ module tb_s81_prefix_shared_path #(parameter integer INJECT=0);
  reg[31:0] inputs[0:3839],shared[0:1279],gold[0:1279];
  integer w,l,received=0,cycles=0,sumcycles=0,first=0,ptail=0,stail=0,corrected_count=0;
  reg[511:0] held;reg stalled=0;
+`ifdef BINDING_DUT
+ ot_s81_prefix_shared_binding #(.ENABLE(1)) binding(.stream_clk(clk),.serial_clk(serial_clk),
+ .rst_n(rst_n),.start_valid(start_v),.start_ready(start_r),.start_identity(id),
+ .start_ids({9'd127,9'd65,9'd3}),.expert_valid(iv),.expert_ready(ir),
+ .expert_identity(itag),.expert_id(ie),.expert_last(ilast),.expert_word(iw),.expert_data(data),
+ .shared_valid(siv),.shared_ready(sir),.shared_data(sidata),.shared_identity(id),
+ .shared_word(siword),.shared_last(siword==79),.shared_fmt_fp32(1'b0),.shared_error(1'b0),
+ .out_valid(ov),.out_ready(ordy),.out_data(out),.out_identity(ot),.out_word(ow),.out_last(ol),
+ .done(cd),.busy(busy),.fault(fault));
+ assign scr=start_r;assign pfault=0;assign sfault=0;assign sbusy=0;
+ assign pv=binding.enabled.prefix_v;assign pr=binding.enabled.prefix_r;
+ assign pl=binding.enabled.prefix_last;
+ assign sv=binding.enabled.sv;assign sr=binding.enabled.sr;assign sl=binding.enabled.sl;
+ assign sce=0;
+ always @(posedge clk)if(rst_n&&busy&&start_r)$fatal(1,"BINDING released owned command early");
+`else
  ot_mtp_p2_prefix_path #(.ENABLE(1)) prefix(.clk(clk),.rst_n(rst_n),
  .start_v(start_v),.start_r(start_r),.start_identity(id),.start_ids({9'd127,9'd65,9'd3}),
  .in_v(iv),.in_r(ir),.in_identity(itag),.in_expert(ie),.in_shared(2'b00),
@@ -31,6 +47,7 @@ module tb_s81_prefix_shared_path #(parameter integer INJECT=0);
  .s_valid(sv),.s_ready(sr),.s_data(sd),.s_tag(st),.s_word(sw),.s_last(sl),
  .out_valid(ov),.out_ready(ordy),.out_data(out),.out_tag(ot),.out_word(ow),
  .out_last(ol),.context_done(cd),.busy(busy),.fault(fault));
+`endif
  always @(posedge clk)if(rst_n)begin
  cycles=cycles+1;
  if(INJECT==3&&sfault)begin
