@@ -126,8 +126,8 @@ module tb_hgi_att_record_adapter;
   run_good(0,0,8192,8192,0,0,1);
   run_good(1,0,1048576,1048576,0,0,1);
   run_good(0,0,0,0,0,0,0);
-  for(j=0;j<12;j=j+1)run_bad(j);
   run_sticky_fault();
+  for(j=0;j<12;j=j+1)run_bad(j);
   $display("PASS G12_RECORD cases=%0d rows=%0d",cases,rows);$finish;
  end
 endmodule
