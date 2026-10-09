@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.engram-protected-idwin-gate.v1",
+ "retained_objects": "/tmp/engram-protected-idwin-vdiby5eo",
+ "model": {
+  "schema": "opentallas.engram-protected-idwin-model.v1",
+  "opt_in_default": false,
+  "users": 64,
+  "history_depth": 8,
+  "payload_bits_per_entry": 18,
+  "stored_bits_per_entry": 72,
+  "history_storage_bits": 36864,
+  "historical_storage_bits": 9216,
+  "history_added_bits": 27648,
+  "metadata_payload_bits_per_user": 29,
+  "metadata_stored_bits_per_user": 72,
+  "metadata_storage_bits": 4608,
+  "historical_metadata_bits": 1856,
+  "total_added_bits": 30400,
+  "added_sequential_area_mm2": 0.008864640000000002,
+  "macs_per_cycle": 0,
+  "history_read_ports": 3,
+  "history_write_ports": 1,
+  "history_bits_per_read_cycle": 216,
+  "history_bits_per_write_cycle": 72,
+  "metadata_bits_per_read_cycle": 144,
+  "metadata_bits_per_write_cycle": 72,
+  "decoder_replicas": 5,
+  "encoder_replicas": 3,
+  "mux_cost": "three512:1 protected72-bit history selectors; two64:1 metadata selectors; conditionalwritefanout512",
+  "correction": "SECDED64payload72stored;18history bits and29metadata bits zero-padded, singlecorrected before use; doublefault suppresseswindow and latchesfault",
+  "metadata": "writepointer3, retainedhistorycount4 max8, explicitposition22 protected together; rewind leaves min(3,newposition) retained entries; no duplicate unprotectedposition guard",
+  "added_latency_cycles": 0,
+  "latency_qualification": "zero additional stages proposed, not physically qualified; native lead remains4capture stages before output",
+  "replicas": 4,
+  "replica_home": "S0 embedding TP rank",
+  "boundary_added_bits": 1,
+  "history_mux_area_mm2_modelled": 0.006181056000000001,
+  "metadata_mux_area_mm2_modelled": 0.000508032,
+  "hardened_outline_um": [
+   432,
+   288
+  ],
+  "floorplan_slot_fit": "432x288um protected candidate; ROM0.01913mm2, mutable storage0.01209mm2, selectors0.00669mm2 beforeSECDED/control/route; retain324x216 historical unprotected job",
+  "qualification": "model before protected implementation; functional injection and real SS/FF physical timing required; unprotected idwin retained only as historical default"
+ },
+ "cases": {
+  "0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED PASS users64 history8 windows12865 singlehistory4608 singlemeta4608 dead rewind5 reset\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:49: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode1 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode2 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode3 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "4": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode4 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "5": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode5 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "6": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode6 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "7": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode7 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "8": {
+   "returncode": 0,
+   "stdout": "ENGRAM_PROTECTED NEG mode8 all64 caught\n- /srv/opentallas-scratch/claude/engram/protected-17cb6310c/rtl/test/tb_dsrom_engram_idwin_protected.sv:69: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin_protected.sv": "6fcdd90a470af736e61e02244bdc42808b0dd6f816108e1cbf1de927657f7c6e",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/test/tb_dsrom_engram_idwin_protected.sv": "58d018a55cb27410c99c1581ed957637541abc5c613e56f5a0f71a162fc549db",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "c26d75fddc194f023122e163f7db27f63e70233efce88bc4a848b516bbe4cb74",
+  "tools/engram_protected_idwin_gate.py": "314468bfc537f3f61ffda6b7e2b794b2f4c959382f223baeb3ce3c898492d8f1"
+ },
+ "status": "pass"
+}

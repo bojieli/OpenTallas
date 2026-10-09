@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 """Elaborate the opt-in producer/context binding inside the actual native controller."""
-import hashlib,json,subprocess,tempfile
+import argparse,hashlib,json,subprocess,tempfile
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
 paths=[*sorted((R/'rtl/dsrom_sys/s81_ctrl').glob('*.sv')),
-    *[R/'rtl/dsrom_sys/engram'/p for p in ['ot_dsrom_engram_lead_producer.sv','ot_dsrom_engram_token_map.sv','ot_dsrom_engram_idwin.sv']],
+    *[R/'rtl/dsrom_sys/engram'/p for p in ['ot_dsrom_engram_lead_producer.sv','ot_dsrom_engram_token_map.sv','ot_dsrom_engram_idwin.sv','ot_dsrom_engram_idwin_protected.sv']],
     R/'rtl/dsrom_sys/ot_dsrom_stall_export.sv',R/'physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v']
 def main():
-    out=R/'results/rtl/engram_native_elab_gate_20261009.json'
+    parser=argparse.ArgumentParser();parser.add_argument('--protected',action='store_true');args=parser.parse_args()
+    out=R/'results/rtl'/('engram_native_protected_elab_gate_20261009.json' if args.protected else 'engram_native_elab_gate_20261009.json')
     if out.exists():raise FileExistsError(out)
     work=Path(tempfile.mkdtemp(prefix='engram-native-elab-'))
     rec=dict(schema='opentallas.engram-native-elab.v1',retained_objects=str(work),qualification='actual64user SOURCE/layer/head controller elaboration; no whole-array simulation or numerical/physical adoption claim',cases={},input_sha256={str(p.relative_to(R)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths+[Path(__file__)]})
     for role in [1,0,2]:
-        run=subprocess.run(['verilator','--lint-only','-Wno-fatal','--top-module','ot_s81_ctrl','-GWINDOW_CONTEXT=1',f'-GROLE={role}','-GMAXU=64',*[str(p) for p in paths]],capture_output=True,text=True)
+        run=subprocess.run(['verilator','--lint-only','-Wno-fatal','--top-module','ot_s81_ctrl','-GWINDOW_CONTEXT=1',f'-GPROTECT_HISTORY={int(args.protected)}',f'-GROLE={role}','-GMAXU=64',*[str(p) for p in paths]],capture_output=True,text=True)
         (work/f'role{role}.log').write_text(run.stdout+run.stderr)
         rec['cases'][str(role)]=dict(returncode=run.returncode,log_sha256=hashlib.sha256((run.stdout+run.stderr).encode()).hexdigest())
     rec['status']='pass' if all(v['returncode']==0 for v in rec['cases'].values()) else 'fail'
