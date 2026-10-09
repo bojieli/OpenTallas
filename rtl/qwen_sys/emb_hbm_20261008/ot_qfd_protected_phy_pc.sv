@@ -69,8 +69,8 @@ module ot_qfd_protected_phy_pc #(parameter integer ENABLE=0, PC=0, ROW0=24427)(
  da<=nd;ea<=ne;lane<=j[2:0];
  st<=q_we?ER:DR;end end
  DR,ER,FD,FE:if(p_v&&p_rdy)begin
- if(serial==16'hffff)begin fault<=1;st<=DEAD;end else begin expected<=serial;serial<=serial+1'b1;
- case(st)DR:st<=DWAIT;ER:st<=EWAIT;FD:st<=FDWAIT;FE:st<=FEWAIT;default:st<=DEAD;endcase end end
+ expected<=serial;serial<=serial+1'b1;
+ case(st)DR:st<=DWAIT;ER:st<=EWAIT;FD:st<=FDWAIT;FE:st<=FEWAIT;default:st<=DEAD;endcase end
  DWAIT:if(r_v&&r_rdy)begin data_q<=r_data;st<=ER;end
  EWAIT:if(r_v&&r_rdy)begin
  if(wr)begin ec=r_data;ec[lane*32+:32]=checks(code_q);ecc_q<=ec;st<=DW;end
