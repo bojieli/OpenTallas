@@ -34,6 +34,40 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+
+def hgi_collective_payload_secded_model(widths=(544,545), ports=8):
+    """Payload-only SECDED64 before pin flops and after raw capture, opt-in.
+
+    SRAM metadata source: physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2.
+    Standard-cell and channel fit remains a source-matched physical gate.
+    """
+    rows=[]
+    for w in widths:
+        chunks=(w+63)//64; coded=chunks*72
+        rows.append(dict(payload_bits=w, codewords=chunks, coded_bits=coded,
+            raw_macros=(w+255)//256, coded_macros=(coded+255)//256,
+            spare_bits=((coded+255)//256)*256-coded,
+            read_bytes_per_cycle=coded/8, write_bytes_per_cycle=coded/8,
+            payload_bytes_per_cycle=w/8, depth=128, ports='1R1W',
+            input_pin_register_bits=coded, raw_capture_bits=coded,
+            encode_fanout='64 input bits feed seven parity XOR trees',
+            decode_mux='72-bit codeword syndrome correction; nine independent chunks',
+            routing_tracks=coded, channel_capacity='physical gate, not assumed fit'))
+    return dict(schema='opentallas.hgi-collective-payload-secded.v1',opt_in_default=False,
+        macs_per_cycle=0, replicas=ports, per_port_macros=18, core_macros=21,
+        total_macros=18*ports+21, macro_area_um2=3891.57696,
+        macro_total_area_mm2=(18*ports+21)*3891.57696/1e6,
+        macro_outline_um=[94.824,41.04], words=rows,
+        source='ot_hcoll_sram_prims.sv:sfifo/sfifo_x/sdelay;PSG NC8,NOG12',
+        latency_added_edges=0, fifo_existing_edges=5, exported_fifo_existing_edges=5,
+        delay_existing_edges='D, 4..130', initiation_interval=1,
+        token_latency_delta_cycles=0, throughput_qualification='pending RTL and timing gates',
+        floorplan_slot_fit='same 165 macros at W544/545; codec cell area and channel fit pending',
+        ue_consumer='suppress publication; local FIFO credit refund; delay drop pulse for source credit',
+        protection='mutable SRAM payload only, no register/control ECC',
+        qualification='unadopted until connected fault-free lockstep, CE/UE and physical gates')
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,

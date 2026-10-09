@@ -32,14 +32,74 @@ module ot_hcoll_sram128 #(parameter integer W = 545) (
     assign rd = q[W-1:0];
 endmodule
 
+// Qualified W6 payload codec; no control-state or flop protection.
+// A codeword is stored in actual macro payload columns, not a sidecar mirror.
+module ot_hcoll_payload_codec #(parameter integer W=545, parameter integer ECC=0,
+    parameter integer CW=ECC ? ((W+63)/64)*72 : W)(
+    input wire [W-1:0] payload, output wire [CW-1:0] code,
+    input wire [CW-1:0] sampled, output wire [W-1:0] decoded,
+    output wire ce, output wire ue
+);
+  function automatic logic [71:0] encode64(input logic [63:0] data);
+    logic [71:0] c; integer p, k, j;
+    begin
+      c='0; j=0;
+      for (p=1;p<=71;p=p+1)
+        if ((p & (p-1)) != 0) begin c[p-1]=data[j]; j=j+1; end
+      for (k=0;k<7;k=k+1)
+        for (p=1;p<=71;p=p+1)
+          if ((p & (1<<k)) != 0 && p!=(1<<k)) c[(1<<k)-1]=c[(1<<k)-1]^c[p-1];
+      c[71]=^c[70:0]; encode64=c;
+    end
+  endfunction
+  // {uncorrectable, corrected, data64}; overall parity is bit71.
+  function automatic logic [65:0] decode64(input logic [71:0] code);
+    logic [71:0] c; logic [6:0] syndrome; logic overall, ue, corrected;
+    logic [63:0] data; integer p,k,j;
+    begin
+      c=code; syndrome='0; overall=^code; ue=0; corrected=0;
+      for (k=0;k<7;k=k+1)
+        for (p=1;p<=71;p=p+1)
+          if ((p & (1<<k)) != 0) syndrome[k]=syndrome[k]^code[p-1];
+      if (syndrome!=0) begin
+        if (overall && syndrome<=71) begin c[syndrome-1]=~c[syndrome-1]; corrected=1; end
+        else ue=1;
+      end else if (overall) begin c[71]=~c[71]; corrected=1; end
+      data='0; j=0;
+      for (p=1;p<=71;p=p+1)
+        if ((p & (p-1)) != 0) begin data[j]=c[p-1]; j=j+1; end
+      decode64={ue,corrected,data};
+    end
+  endfunction
+    if (ECC) begin : g_ecc
+        localparam integer N=(W+63)/64;
+        wire [N*64-1:0] padded={{(N*64-W){1'b0}},payload};
+        wire [N*64-1:0] unpacked;
+        wire [N-1:0] cs, us;
+        for(genvar c=0;c<N;c=c+1) begin : g_c
+            wire [65:0] result=decode64(sampled[c*72+:72]);
+            assign code[c*72+:72]=encode64(padded[c*64+:64]);
+            assign unpacked[c*64+:64]=result[63:0];
+            assign cs[c]=result[64]; assign us[c]=result[65];
+        end
+        assign decoded=unpacked[W-1:0]; assign ce=|cs; assign ue=|us;
+    end else begin : g_raw
+        assign code=payload; assign decoded=sampled; assign ce=1'b0; assign ue=1'b0;
+    end
+endmodule
+
 // Fixed-latency delay line in SRAM: same port list and the same latency D as ot_ha2_delay, exact on valid beats
 // (d_out is defined only while v_out).  v_in at cycle t -> d_p (input flop, edge t) -> macro write (edge t+1, address
 // cnt) -> macro read at the fixed offset cnt - (D-3) (edge t+D-2) -> capture flop q (edge t+D-1) -> d_out at t+D.
 // Valid travels a D-flop shift line; the macro is only enabled on valid beats.  4 <= D <= 130.
 module ot_hcoll_sdelay #(
     parameter integer W = 1,
-    parameter integer D = 4
+    parameter integer D = 4,
+    parameter integer PAYLOAD_ECC = 0
 ) (
+    output wire         ecc_ce,
+    output wire         ecc_ue,
+    output wire         ecc_drop,
     input  wire         clk,
     input  wire         rst_n,
     input  wire         v_in,
@@ -47,21 +107,28 @@ module ot_hcoll_sdelay #(
     output wire         v_out,
     output wire [W-1:0] d_out
 );
+    localparam integer CW = PAYLOAD_ECC ? ((W+63)/64)*72 : W;
 `ifndef SYNTHESIS
     initial if (D < 4 || D - 3 >= 128) $fatal(1, "ot_hcoll_sdelay: D=%0d out of range 4..130", D);
 `endif
     reg [D-1:0] vs;
     reg [6:0]   cnt;
-    reg [W-1:0] d_p, q;
-    wire [W-1:0] rd;
+    reg [CW-1:0] d_p, q;
+    wire [CW-1:0] rd, encoded;
+    wire [W-1:0] decoded;
+    wire ce, ue;
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(d_in),.code(encoded),.sampled(q),.decoded(decoded),.ce(ce),.ue(ue));
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin vs <= '0; cnt <= 7'd0; end
         else begin vs <= {vs[D-2:0], v_in}; cnt <= cnt + 7'd1; end
-    always @(posedge clk) begin d_p <= d_in; q <= rd; end
-    ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(vs[D-3]), .r_addr(cnt - 7'(D - 3)), .rd(rd),
+    always @(posedge clk) begin d_p <= encoded; q <= rd; end
+    ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(vs[D-3]), .r_addr(cnt - 7'(D - 3)), .rd(rd),
         .w_ce(vs[0]), .w_addr(cnt), .wd(d_p));
-    assign v_out = vs[D-1];
-    assign d_out = q;
+    assign v_out = vs[D-1] && !ue;
+    assign ecc_ce = vs[D-1] && ce;
+    assign ecc_ue = vs[D-1] && ue;
+    assign ecc_drop = ecc_ue;
+    assign d_out = decoded;
 endmodule
 
 // Plain shift-register delay (no read mux) for short / narrow lines; same ports and latency as ot_ha2_delay.
@@ -101,8 +168,12 @@ endmodule
 module ot_hcoll_sfifo #(
     parameter integer W  = 8,
     parameter integer AW = 7,
-    parameter integer K  = 4
+    parameter integer K  = 4,
+    parameter integer PAYLOAD_ECC = 0
 ) (
+    output wire         ecc_ce,
+    output wire         ecc_ue,
+    output wire         ecc_drop,
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -113,15 +184,22 @@ module ot_hcoll_sfifo #(
     output reg          ovf,
     output wire [AW:0]  count
 );
+    localparam integer CW = PAYLOAD_ECC ? ((W+63)/64)*72 : W;
 `ifndef SYNTHESIS
     initial if (AW > 8 || AW < 1 || K != 4) $fatal(1, "ot_hcoll_sfifo: AW=%0d (1..8), K=%0d (4)", AW, K);
 `endif
     localparam integer N = 1 << AW;
     localparam integer NBK = (AW > 7) ? 2 : 1;
     reg          push_p;
-    reg [W-1:0]  din_p;
-    reg [W-1:0]  rawb [0:NBK-1];
-    wire [W-1:0] rdb [0:NBK-1];
+    reg [CW-1:0] din_p;
+    reg [CW-1:0] rawb [0:NBK-1];
+    wire [CW-1:0] rdb [0:NBK-1];
+    wire [CW-1:0] encoded;
+    wire [W-1:0] decoded;
+    wire ce, ue;
+    wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
+    assign ecc_ce=v2 && ce; assign ecc_ue=v2 && ue; assign ecc_drop=ecc_ue;
     reg          bs1, bs2;
     reg [AW:0]   scnt;
     reg [AW-1:0] wp, rp;
@@ -141,21 +219,21 @@ module ot_hcoll_sfifo #(
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
-            ocr <= ocr - 3'(fetch) + 3'(do_pop);
+            ocr <= ocr - 3'(fetch) + 3'(do_pop) + 3'(ecc_drop);
             v1 <= fetch; v2 <= v1;
             if ((push_p && full) || hovf) ovf <= 1'b1;
         end
     always @(posedge clk) begin
-        din_p <= din;
+        din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
-        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
+        ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
-    wire [W-1:0] raw_q = rawb[(NBK > 1) ? bs2 : 1'b0];
-    ot_ha2_fifo #(.W(W), .AW(2)) u_head (.clk(clk), .rst_n(rst_n), .push(v2), .din(raw_q), .pop(pop),
+    wire [W-1:0] raw_q = decoded;
+    ot_ha2_fifo #(.W(W), .AW(2)) u_head (.clk(clk), .rst_n(rst_n), .push(v2 && !ue), .din(raw_q), .pop(pop),
         .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
     assign count = scnt;
 endmodule
@@ -167,8 +245,12 @@ endmodule
 module ot_hcoll_sfifo_x #(
     parameter integer W  = 8,
     parameter integer AW = 7,
-    parameter integer K  = 8
+    parameter integer K  = 8,
+    parameter integer PAYLOAD_ECC = 0
 ) (
+    output wire         ecc_ce,
+    output wire         ecc_ue,
+    output wire         ecc_drop,
     input  wire         clk,
     input  wire         rst_n,
     input  wire         push,
@@ -178,15 +260,22 @@ module ot_hcoll_sfifo_x #(
     output reg  [W-1:0] out_d,
     output reg          ovf
 );
+    localparam integer CW = PAYLOAD_ECC ? ((W+63)/64)*72 : W;
 `ifndef SYNTHESIS
     initial if (AW > 8 || AW < 1 || K < 1 || K > 15) $fatal(1, "ot_hcoll_sfifo_x: AW=%0d (1..8), K=%0d (1..15)", AW, K);
 `endif
     localparam integer N = 1 << AW;
     localparam integer NBK = (AW > 7) ? 2 : 1;
     reg          push_p;
-    reg [W-1:0]  din_p;
-    reg [W-1:0]  rawb [0:NBK-1];
-    wire [W-1:0] rdb [0:NBK-1];
+    reg [CW-1:0] din_p;
+    reg [CW-1:0] rawb [0:NBK-1];
+    wire [CW-1:0] rdb [0:NBK-1];
+    wire [CW-1:0] encoded;
+    wire [W-1:0] decoded;
+    wire ce, ue;
+    wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
+    ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
+    assign ecc_ce=v2 && ce; assign ecc_ue=v2 && ue; assign ecc_drop=ecc_ue;
     reg          bs1, bs2;
     reg [AW:0]   scnt;
     reg [AW-1:0] wp, rp;
@@ -203,18 +292,18 @@ module ot_hcoll_sfifo_x #(
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
-            ocr <= ocr - 4'(fetch) + 4'(cr_in);
-            v1 <= fetch; v2 <= v1; out_v <= v2;
+            ocr <= ocr - 4'(fetch) + 4'(cr_in) + 4'(ecc_drop);
+            v1 <= fetch; v2 <= v1; out_v <= v2 && !ue;
             if (push_p && full) ovf <= 1'b1;
         end
     always @(posedge clk) begin
-        din_p <= din;
+        din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
-        out_d <= rawb[(NBK > 1) ? bs2 : 1'b0];
+        out_d <= decoded;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
-        ot_hcoll_sram128 #(.W(W)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
+        ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
 endmodule

@@ -102,7 +102,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer SWCRED = 256,
     parameter integer LAT    = 7,
     parameter integer FW     = 32 * LANES,
-    parameter integer PWT    = FW + 33
+    parameter integer PWT    = FW + 33,
+    parameter integer PAYLOAD_ECC = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -130,6 +131,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     output wire [NPT-1:0]       rx_credit,       // receive-buffer pop (core clock) -> switch egress credit
     output wire [DEL-1:0]       del_valid,
     output wire [DEL*PWT-1:0]   del_flit,
+    output wire                 ecc_ce,
     output wire                 fault,
     output wire [31:0]          stat_credit_stall
 );
@@ -138,7 +140,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
 
     generate if (ENABLE == 0) begin : g_off
         assign inj_idx = '0; assign inj_rd = '0; assign ph_tx_v = '0; assign ph_tx_flit = '0;
-        assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
+        assign ecc_ce=1'b0; assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer;
@@ -234,7 +236,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             hfo[i] = f - mOF[hs[i]];
         end
         for (genvar i = 0; i < INJ; i = i + 1) begin : g_hub
-            (* keep_hierarchy *) ot_hcoll_sdelay #(.W(32 + FW), .D(HUBW)) u_h (.clk(clk), .rst_n(rst_n), .v_in(r_rd[i]),
+            (* keep_hierarchy *) ot_hcoll_sdelay #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(32 + FW), .D(HUBW)) u_h (.ecc_ce(h_ce[i]),.ecc_ue(h_ue[i]),.ecc_drop(h_drop[i]),.clk(clk), .rst_n(rst_n), .v_in(r_rd[i]),
                 .d_in({16'(k + i), r_idx[16*i +: 16], inj_data[FW*i +: FW]}), .v_out(h_v[i]),
                 .d_out(h_d[(32+FW)*i +: 32+FW]));
         end
@@ -251,6 +253,16 @@ module ot_hbm_accel_tu_endpoint_psg #(
         reg  [PWT-1:0] ld_q [0:NPT-1];
         reg  [31:0] cstall;
         reg  [NPT-1:0] rb_pop;
+        wire [NPT-1:0] port_ce;
+        wire [1:0] rx_drop[0:NPT-1];
+        wire [INJ-1:0] h_ce,h_ue,h_drop;
+        wire [DEL-1:0] d_ce,d_ue,d_drop;
+        wire dq_ce,dq_ue,dq_drop;
+        reg payload_error;
+        wire ue_now=(|h_ue)|(|d_ue)|dq_ue;
+        assign ecc_ce=(|port_ce)|(|h_ce)|(|d_ce)|dq_ce;
+        always @(posedge clk or negedge rst_n)
+          if(!rst_n)payload_error<=1'b0; else if(ue_now)payload_error<=1'b1;
         wire [NPT-1:0] rb_empty, rb_ovf, pstall, pfault, s_rbv;
         wire [PWT-1:0] rb_head [0:NPT-1];
         wire [PWT-1:0] s_rbd [0:NPT-1];
@@ -268,17 +280,26 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `endif
         for (genvar p = 0; p < NPT; p = p + 1) begin : g_port
             // the slice is ONE hardened view: instantiated at its defaults (a hard macro takes no parameters)
-            ot_hcoll_port u_port (.clk(clk), .rst_n(rst_n),
+            ot_hcoll_port #(.PAYLOAD_ECC(PAYLOAD_ECC)) u_port (.clk(clk), .rst_n(rst_n),
                 .qp_push(qp_push_q[p]), .qp_din(qp_din_q[p]), .qr_push(qr_push_q[p]), .qr_din(qr_din_q[p]),
                 .sw_cr_ret(sw_cr_ret[p]), .ph_tx_v(ph_tx_v[p]), .ph_tx_flit(ph_tx_flit[p*PWT +: PWT]),
                 .ph_rx_v(ph_rx_v[p]), .ph_rx_flit(ph_rx_flit[p*PWT +: PWT]),
-                .rb_v(s_rbv[p]), .rb_d(s_rbd[p]), .rb_cr(rbcr_q[p]), .stall(pstall[p]), .fault(pfault[p]));
+                .ecc_ce(port_ce[p]),.rx_ecc_drop(rx_drop[p]),.rb_v(s_rbv[p]), .rb_d(s_rbd[p]), .rb_cr(rbcr_q[p]), .stall(pstall[p]), .fault(pfault[p]));
             wire [3:0] lc;
             (* keep_hierarchy *) ot_ha2_fifo #(.W(PWT), .AW(3)) u_land (.clk(clk), .rst_n(rst_n), .push(lv_q[p]), .din(ld_q[p]),
                 .pop(rb_pop[p]), .empty(rb_empty[p]), .dout(rb_head[p]), .ovf(rb_ovf[p]), .count(lc));
         end
         assign stat_credit_stall = cstall;
-        assign rx_credit = rb_pop & ~rb_empty;
+        // Count rather than OR normal pop + two simultaneous poisoned-store retires.
+        // Each retired word returns exactly one physical switch credit. No epoch/reset.
+        for(genvar p=0;p<NPT;p=p+1) begin:g_ecc_credit
+            reg [RXAW+1:0] debt;
+            wire [RXAW+2:0] available={1'b0,debt}+{{(RXAW+1){1'b0}},rx_drop[p]}+(rb_pop[p]&&!rb_empty[p]);
+            assign rx_credit[p]=available!=0;
+            always @(posedge clk or negedge rst_n)
+              if(!rst_n)debt<=0;
+              else debt<=available-(available!=0);
+        end
 
         // ================= operand slots and the golden reduction tree (HA2) ======================
         reg [OFMX-1:0] pres [0:NC-1];
@@ -363,7 +384,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire [PWT-1:0] dq_own_head;
         reg dq_own_pop;
         wire [QAW:0] dc0;
-        (* keep_hierarchy *) ot_hcoll_sfifo #(.W(PWT), .AW(QAW)) u_dqo (.clk(clk), .rst_n(rst_n), .push(r_v), .din(res_flit),
+        (* keep_hierarchy *) ot_hcoll_sfifo #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .AW(QAW)) u_dqo (.ecc_ce(dq_ce),.ecc_ue(dq_ue),.ecc_drop(dq_drop),.clk(clk), .rst_n(rst_n), .push(r_v), .din(res_flit),
             .pop(dq_own_pop), .empty(dq_own_empty), .dout(dq_own_head), .ovf(dq_own_ovf), .count(dc0));
 
         // ================= receive dispatch and delivery =========================================
@@ -425,7 +446,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             end
         end
         for (genvar i = 0; i < DEL; i = i + 1) begin : g_del
-            (* keep_hierarchy *) ot_hcoll_sdelay #(.W(PWT), .D(HUBW)) u_d (.clk(clk), .rst_n(rst_n), .v_in(dv[i]), .d_in(dfl[i]),
+            (* keep_hierarchy *) ot_hcoll_sdelay #(.PAYLOAD_ECC(PAYLOAD_ECC),.W(PWT), .D(HUBW)) u_d (.ecc_ce(d_ce[i]),.ecc_ue(d_ue[i]),.ecc_drop(d_drop[i]),.clk(clk), .rst_n(rst_n), .v_in(dv[i]), .d_in(dfl[i]),
                 .v_out(del_valid[i]), .d_out(del_flit[i*PWT +: PWT]));
         end
 
@@ -522,7 +543,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @* begin
             ntx=0;nrx=0;npop=0;ndel=0;seen_next=result_seen;bad_result=0;
             for(integer p=0;p<NPT;p=p+1)begin
-                ntx=ntx+ph_tx_v[p];nrx=nrx+ph_rx_v[p];npop=npop+(rb_pop[p]&&!rb_empty[p]);
+                ntx=ntx+ph_tx_v[p];nrx=nrx+ph_rx_v[p];npop=npop+(rb_pop[p]&&!rb_empty[p])+integer'(rx_drop[p]);
             end
             for(integer l=0;l<DEL;l=l+1)if(del_valid[l])begin
                 integer gi;gi=integer'(del_flit[l*PWT+FW+:16]);ndel=ndel+1;
@@ -563,6 +584,6 @@ module ot_hbm_accel_tu_endpoint_psg #(
             for (integer p = 0; p < NPT; p = p + 1)
                 anyovf = anyovf | pfault[p] | rb_ovf[p];
         end
-        assign fault = anyovf | dupe | mode_error | (REARM && result_error);
+        assign fault = payload_error | ue_now | anyovf | dupe | mode_error | (REARM && result_error);
     end endgenerate
 endmodule
