@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm_iks_prefetch_fifo.v1",
+  "source_commit": "f13c4d9f1",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "c5087709e681bd4a89a16e5dab19ecdc3e2e91069ef7e1063816ac51b1d856ca",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "c171de3848b454a79eada38be1687e91beb4c1efe65e52a060d84d48747aa5b7",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv": "2243d49fd196fbf55ad4711255ade75424e4a8f9b932be1cfa1ca02ce21e4ac0",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv": "214baf61951dbfb62d9bb7766b01ddd418cad0f461a534f574d67e58e3a4643a",
+    "rtl/hbm_accel/service/ot_hbm_index_line_cdc.sv": "5c03f9ca2a8f8d59cc272230e0e7e6ef5145ab2f5151e0b5d4017fc7b4d6178b",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv": "0e72ff1abbcb7bc5d3637137d3acf1457ace8d6b8f1e4169f9f8a3d7639211a0",
+    "tools/hbm_svc_iks_prefetch_bench.py": "790bdcd8fb1bff07f24f797298614872e1d1c9cca05fca6ad0f1c0d98630dc82",
+    "results/rtl/hbm_index_service_20261008/binding_before_bench.json": "ac536ee8c47961a69b8dc23355032a3df964d359f25b55563c1c84338323ee49"
+  },
+  "scope": "actual1024psHBM service to actual833ps scorer FA6 through protectedfinitecodedCDC and24stationrelays; heldquery sensitivities only, no physical adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 PULL0 BATCH0 MEM_MODE1 QD64 TCK1024ps BURST1024ps SCORE833ps",
+  "query_window_bound": false,
+  "sector_reservation_depth": 64,
+  "maximum_inflight_read_requests": 15,
+  "cases": [
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 300,
+      "mut": 0,
+      "code_mut": 3,
+      "score_phase_ps": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 1,
+      "raw_log": "phase0_delay300_mut0_scorephase0.log",
+      "raw_sha256": "6baab893eaa9acf4b55145d93b2660e71087ef06589eb8ea11af31946e2e6777",
+      "rows": [],
+      "diagnostics": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_returncode": 0
+}
