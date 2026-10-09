@@ -2,17 +2,17 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22k = r21c + tools/qwen_kv_die/rom_r22k.py surgery",
  "generator_sha256": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0",
- "surgery_sha256": "65e8fc88c1dc374e756c9d61d1a8afe3eb8dcfc2fcd6e58370f7bac3f452c9df",
+ "surgery_sha256": "70c4792bdadd2e24ed5ca86386205887d7b8616802552ac07f59fd0d26883ab2",
  "die_um": [
-  23095.584,
+  23484.384,
   32801.76
  ],
- "die_mm2": 757.576,
+ "die_mm2": 770.329,
  "reticle_mm2": 858.0,
- "margin_mm2": 100.424,
+ "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 12869,
- "buses": 16031,
+ "instances": 12885,
+ "buses": 16047,
  "instance_mm2": 610.437,
  "area_by_kind_mm2": {
   "tile": 529.628,
@@ -30,7 +30,7 @@
  "ucie": {
   "name": "ucie_kv",
   "master": "ot_qkvd_ucie_x64_phy",
-  "x": 11289.024,
+  "x": 11418.624,
   "y": 21.6,
   "w": 777.6,
   "h": 777.6,
@@ -45,7 +45,7 @@
  "d2d_rom": {
   "name": "d2d_rom",
   "master": "qfd_d2d_rom",
-  "x": 11289.024,
+  "x": 11418.624,
   "y": 801.36,
   "w": 777.576,
   "h": 518.376,
@@ -67,7 +67,7 @@
   "domain": "stream_1p2"
  },
  "crossing_bus_stages": {
-  "x3": 26,
+  "x3": 25,
   "attn_ret": 28,
   "emb": 25,
   "emb_a": 25,
@@ -82,17 +82,17 @@
  "r22k": {
   "removed_instances": {
    "qfd_cdc": 128,
-   "ot_hbm3e_phy": 4,
-   "qfd_lst_h_e": 10,
-   "qfd_lst_h_w": 10,
-   "qfd_kvc_n": 2,
-   "qfd_lst_v": 3,
    "qfd_lst_v_split": 6,
-   "qfd_hub": 1,
-   "qfd_ctrl": 4,
-   "qfd_kvc": 2,
    "qfd_lst_c_split": 2,
-   "qfd_lst_c": 1
+   "qfd_kvc_n": 2,
+   "qfd_lst_h_w": 10,
+   "ot_hbm3e_phy": 4,
+   "qfd_lst_v": 3,
+   "qfd_kvc": 2,
+   "qfd_ctrl": 4,
+   "qfd_lst_h_e": 10,
+   "qfd_lst_c": 1,
+   "qfd_hub": 1
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -306,120 +306,26 @@
      ]
     ]
    ]
-  ]
+  ],
+  "spine_relay_channel_um": 259.2,
+  "spine_relay_channel_wm_um": 129.6
  },
  "margin_lint": {
   "chains": 2676,
   "reach_um": 504.0,
-  "reach_violations": 55,
-  "far_side_relays": 64,
+  "reach_violations": 10,
+  "far_side_relays": 36,
   "reach_examples": [
    {
     "chain": "sp_vector_memory->io_xfifo",
-    "seg": "rly_coll_tx_0->rly_coll_tx_1",
-    "um": 2329.8,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_0",
-    "seg": "rly_tt_ty_25->rly_tt_ty_26",
-    "um": 1922.0,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_0",
-    "seg": "rly_tt_ty_11->rly_tt_ty_12",
-    "um": 1878.8,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_0",
-    "seg": "rly_tt_ty_12->rly_tt_ty_13",
-    "um": 1652.0,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_0",
-    "seg": "rly_tt_ty_26->rly_tt_ty_27",
-    "um": 1591.5,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_0->sp_tree_top",
-    "seg": "rly_tt_lf0_28->rly_tt_lf0_29",
-    "um": 1545.7,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "seg": "rly_tt_mx_12->rly_tt_mx_13",
-    "um": 1524.1,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "seg": "rly_tt_mx_10->rly_tt_mx_11",
-    "um": 1411.8,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_1",
-    "seg": "rly_tt_lc1_3->rly_tt_lc1_4",
-    "um": 1404.9,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "seg": "rly_tt_mx_0->rly_tt_mx_1",
-    "um": 1396.7,
-    "hops": 1
-   },
-   {
-    "chain": "sp_res_ser_5->sp_vector_memory",
-    "seg": "rly_rs_5_20->rly_rs_5_21",
-    "um": 1395.0,
-    "hops": 1
-   },
-   {
-    "chain": "sp_res_ser_5->sp_vector_memory",
-    "seg": "rly_rk_5_6->rly_rk_5_7",
-    "um": 1390.2,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_0->sp_tree_top",
-    "seg": "rly_tt_lf0_12->rly_tt_lf0_13",
-    "um": 1349.2,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_0->sp_tree_top",
-    "seg": "rly_tt_lf0_7->rly_tt_lf0_8",
-    "um": 1297.3,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_0->sp_tree_top",
-    "seg": "rly_tt_lf0_23->rly_tt_lf0_24",
-    "um": 1297.3,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_1->sp_tree_top",
-    "seg": "rly_tt_lf1_14->rly_tt_lf1_15",
-    "um": 1286.5,
+    "seg": "rly_coll_tx_4->rly_coll_tx_5",
+    "um": 1559.6,
     "hops": 1
    },
    {
     "chain": "sp_band_lanes_4->sp_tree_top",
     "seg": "rly_pword_4_4->rly_pword_4_5",
     "um": 1264.9,
-    "hops": 1
-   },
-   {
-    "chain": "io_xfifo->sp_vector_memory",
-    "seg": "rly_coll_rx_x_33->rly_coll_rx_x_34",
-    "um": 1216.1,
     "hops": 1
    },
    {
@@ -433,32 +339,48 @@
     "seg": "rly_pword_1_8->rly_pword_1_9",
     "um": 1213.1,
     "hops": 1
+   },
+   {
+    "chain": "sp_band_lanes_1->sp_tree_top",
+    "seg": "rly_pword_1_14->rly_pword_1_15",
+    "um": 1128.9,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
+    "um": 1109.4,
+    "hops": 1
+   },
+   {
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "seg": "rly_tt_lf2_7->rly_tt_lf2_8",
+    "um": 865.3,
+    "hops": 1
+   },
+   {
+    "chain": "sp_tree_top->sp_vector_memory",
+    "seg": "rly_tt_mx_13->rly_tt_mx_14",
+    "um": 822.1,
+    "hops": 1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "seg": "rly_coll_tx_5->rly_coll_tx_6",
+    "um": 671.4,
+    "hops": 1
+   },
+   {
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "seg": "rly_tt_lf2_8->rly_tt_lf2_9",
+    "um": 616.5,
+    "hops": 1
    }
   ],
   "far_side_examples": [
    {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "relay": "rly_tt_mx_13",
-    "back_um": 587.5
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_1",
-    "relay": "rly_tt_lc1_3",
-    "back_um": 534.0
-   },
-   {
-    "chain": "sp_res_ser_4->sp_vector_memory",
-    "relay": "rly_rk_4_14",
-    "back_um": 492.0
-   },
-   {
     "chain": "t_31_1->sp_port_tiles_0",
     "relay": "rly_bword_42_9",
-    "back_um": 410.4
-   },
-   {
-    "chain": "t_31_17->sp_port_tiles_4",
-    "relay": "rly_bword_46_9",
     "back_um": 410.4
    },
    {
@@ -467,39 +389,24 @@
     "back_um": 410.4
    },
    {
+    "chain": "sp_port_tiles_2_f1->sp_port_tiles_2",
+    "relay": "rly_pfrag_2_port_tiles_2_f1_19",
+    "back_um": 410.4
+   },
+   {
+    "chain": "sp_constants_sequencer->sp_tree_top",
+    "relay": "rly_tt_si_33",
+    "back_um": 410.4
+   },
+   {
     "chain": "sp_tree_top->sp_port_tiles_2",
     "relay": "rly_tt_c2_18",
     "back_um": 410.4
    },
    {
-    "chain": "sp_constants_sequencer->sp_tree_top",
-    "relay": "rly_tt_si_38",
-    "back_um": 367.2
-   },
-   {
     "chain": "sp_tree_top->sp_port_tiles_0",
-    "relay": "rly_tt_c0_56",
-    "back_um": 367.2
-   },
-   {
-    "chain": "sp_res_ser_3->sp_vector_memory",
-    "relay": "rly_rs_3_3",
-    "back_um": 367.2
-   },
-   {
-    "chain": "sp_port_tiles_1->sp_tree_top",
-    "relay": "rly_tt_f1_44",
+    "relay": "rly_tt_c0_41",
     "back_um": 324.0
-   },
-   {
-    "chain": "sp_res_ser_3->sp_vector_memory",
-    "relay": "rly_rk_3_5",
-    "back_um": 324.0
-   },
-   {
-    "chain": "sp_tree_top->sp_port_tiles_3",
-    "relay": "rly_tt_c3_6",
-    "back_um": 315.4
    },
    {
     "chain": "t_27_17->sp_port_tiles_4",
@@ -507,19 +414,14 @@
     "back_um": 291.6
    },
    {
-    "chain": "io_collective->io_xfifo",
-    "relay": "rly_coll_rx_3",
-    "back_um": 274.3
+    "chain": "t_31_17->sp_port_tiles_4",
+    "relay": "rly_bword_46_9",
+    "back_um": 280.8
    },
    {
-    "chain": "sp_res_ser_4->sp_vector_memory",
-    "relay": "rly_rs_4_14",
-    "back_um": 273.5
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_2",
-    "relay": "rly_tt_lc2_3",
-    "back_um": 257.9
+    "chain": "t_63_21->sp_port_tiles_5_f1",
+    "relay": "rly_bword_95_31",
+    "back_um": 259.2
    },
    {
     "chain": "t_63_1->sp_port_tiles_0_f1",
@@ -532,9 +434,49 @@
     "back_um": 226.8
    },
    {
-    "chain": "sp_band_lanes_0->sp_tree_top",
-    "relay": "rly_pword_0_51",
+    "chain": "sp_vector_memory->sp_tree_top",
+    "relay": "rly_tt_xr_21",
     "back_um": 216.0
+   },
+   {
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "relay": "rly_tt_lf2_14",
+    "back_um": 208.2
+   },
+   {
+    "chain": "sp_res_ser_3->sp_vector_memory",
+    "relay": "rly_rs_3_3",
+    "back_um": 151.2
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "relay": "rly_tt_lc2_4",
+    "back_um": 148.6
+   },
+   {
+    "chain": "sp_band_lanes_1->sp_tree_top",
+    "relay": "rly_pword_1_8",
+    "back_um": 121.0
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "relay": "rly_tt_lc2_3",
+    "back_um": 113.2
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_4",
+    "back_um": 102.4
+   },
+   {
+    "chain": "sp_tree_top->sp_vector_memory",
+    "relay": "rly_tt_mx_14",
+    "back_um": 101.5
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_6",
+    "back_um": 88.1
    }
   ],
   "verdict": "FAIL"

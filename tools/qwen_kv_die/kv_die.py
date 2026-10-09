@@ -10,7 +10,8 @@ r21c ROM die.  Per side, outward to inward, the r21c HBM band re-placed with the
     KV landing qkd_land (qfd_kvc successor: CDC core sides -> the stack's row engines, the KV merges, the KVN posted
     write, the embedding strip) | the stack's attention group:
         [ 4 row engines qkd_reng | stack aggregator qkd_astk | 4 row engines ]   (engine long faces abut the
-        aggregator: the engine <-> aggregator words are 16.5 k / 16.8 k bits, ot_qwen_nearhbm_row_engine_p ports)
+        aggregator; RE-CUT D (results/arch/qwen_kv_die_20261009/recut.json): q in as a 519-b beat broadcast, P.V levels
+        1-3 in the engine, one level-3 node a group out in 4,096-b beats -- ot_qwen_nearhbm_row_engine_d ports)
 
 and a centre column: N edge -- UCIe macro (MX: bumps N, FDI S) / qkd_d2d (ot_qkvd_d2d) / qkd_seq (ot_qkvd_kv_seq) /
 qkd_embgw (ot_qfd_emb_gw) / qkd_pll (PLL + reset sequencer, forwarded clock to the ROM die); die centre -- qkd_ahub
@@ -36,7 +37,8 @@ up = F.up
 TPL_PATH = ROOT / 'tools' / 'qwen_kv_die' / 'r21c_band.json'
 MARGIN = 21.6
 R = 8                           # row engines a stack (near-HBM gate R = 8: 1,824 cycles at ctx 8192)
-RENG = (328.32, 1998.0)         # r17b qfd_reng frame (310 k um2 synthesised row engine at ~0.47)
+RENG = (531.36, 1998.0)         # re-cut D row engine: ~529 k um2 cells (synth: _e 310 k measured + D's 512-adder
+                                # bank 207 k + level / node registers 19 k - E's X / out words 12 k) at <= 0.50 (was r17b 328.32)
 ASTK_W = 777.6                  # stack aggregator column (q registers, exp, Z / P.V trees): ASSUMED ~3 mm2 cells at 0.5
 LAND_W = 172.8                  # KV landing column: 8 x 32 crossbar, 8 KV merges, emb strip (ASSUMED; r21c qfd_kvc 96.7)
 UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
@@ -52,14 +54,16 @@ STACKS = ('WS', 'WN', 'ES', 'EN')
 W = 528
 FDI_UCIE = 1 + 1 + 548 + 1 + 548
 FDI_SERDES = 1 + 1 + 1041 + 1 + 1041
-ENG_IN = 1 + 14 + 3 + 1 + 16384 + 32 + 64 + 1          # start, T, cyc8, q_ready, q_bf16, exp_done, er_data, lf_take
-ENG_OUT = 1 + 12 + 1 + 12 + 128 + 256 + 2 + 1 + 1 + 4 + 3 + 16384 + 1 + 1 + 1   # er, sc, lmax, lf, k/v_done, fault
+# re-cut D (stack_d, LFB 4): start, T, cyc8, q beat {valid, beat, 512 b}, exp_done, er_data, node credit
+ENG_IN = 1 + 14 + 3 + 1 + 6 + 512 + 32 + 64 + 1
+# er, sc, lmax, node beat {valid, beat, g, gam, 4,096 b}, k/v_done, fault
+ENG_OUT = 1 + 12 + 1 + 12 + 128 + 256 + 2 + 1 + 4 + 1 + 4 + 4096 + 1 + 1 + 1
 ABUT = {'stack_local', 'phy_dfi', 'd2d_fdi', 'hbm_cdc', 'cdc_core'}    # abutted / band buses: no relays
 RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv + per-PC leaves)',
            qkd_cdc='rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv ot_qwen_stream4_cdc_pc (route r11a)',
            qkd_land='qfd_kvc successor (landing crossbar) + ot_qkvd_kv_seq KV-merge slices + ot_qfd_emb_strip',
-           qkd_reng='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv ot_qwen_nearhbm_row_engine_p',
-           qkd_astk='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv ot_qwen_nearhbm_attn_stack_p minus its engines',
+           qkd_reng='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv ot_qwen_nearhbm_row_engine_d (re-cut D)',
+           qkd_astk='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv ot_qwen_nearhbm_attn_stack_d minus its engines',
            qkd_ahub='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv ot_qwen_nearhbm_attn_hub_p',
            qkd_seq='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv ot_qkvd_kv_seq',
            qkd_d2d='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv ot_qkvd_kv_end (ot_qkvd_d2d NT 3 / NR 4)',
@@ -70,10 +74,11 @@ RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctr
 
 # die port -> RTL ports of the bound module (strict_ports: every RTL port is in exactly one die port or is classed)
 BINDINGS = dict(
-    qkd_reng=dict(module='ot_qwen_nearhbm_row_engine_p', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv',
-                  ports=dict(si=['start_in', 'T_in', 'cyc8_in', 'q_ready', 'q_bf16', 'exp_done', 'er_data', 'lf_take'],
-                             so=['er_valid', 'er_addr', 'sc_valid', 'sc_addr', 'sc_data', 'lmax', 'lmax_any', 'lf_valid',
-                                 'lf_g', 'lf_gam', 'lf_slot', 'lf_data', 'k_done', 'v_done', 'fault'],
+    qkd_reng=dict(module='ot_qwen_nearhbm_row_engine_d', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv',
+                  ports=dict(si=['start_in', 'T_in', 'cyc8_in', 'q_valid_in', 'q_beat_in', 'q_data_in', 'exp_done',
+                                 'er_data', 'nb_cr'],
+                             so=['er_valid', 'er_addr', 'sc_valid', 'sc_addr', 'sc_data', 'lmax', 'lmax_any', 'nb_valid',
+                                 'nb_beat', 'nb_g', 'nb_gam', 'nb_data', 'k_done', 'v_done', 'fault'],
                              rq=['req_valid', 'req_v', 'req_g', 'req_t'], rs=['rsp_valid_in', 'rsp_data_in'],
                              ck=['clk'], rst_n=['rst_n']),
                   classed={'ev_k_first': 'debug', 'ev_v_first': 'debug'}),
@@ -105,8 +110,8 @@ BINDINGS = dict(
                  classed={}),
 )
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
-FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_p minus its engines (re-cut owed: q registers into the engines '
-                           'or abutted 16 k-bit faces, see review_queue/kv-die.md)',
+FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, '
+                           'P.V levels 4-7; recut.json)',
                   qkd_land='qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip',
                   qkd_embgw='ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)',
                   qkd_host='qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter', qkd_pll='vendor PLL + '
@@ -571,7 +576,7 @@ def record(m):
                     seq_to_land={s: st.get(f'kvn_{s}', 0) for s in STACKS},
                     gw_to_land={s: st.get(f'emf_{s}', 0) for s in STACKS}, land_to_gw={s: st.get(f'emr_{s}', 0) for s in STACKS},
                     seq_to_gw=st.get('gq', 0), gw_to_seq=st.get('gr', 0)),
-                assumed=dict(row_engine_frame='r17b qfd_reng 328.32 x 1,998 (310 k um2 synthesised, ~0.47)',
+                assumed=dict(row_engine_frame='re-cut D qkd_reng 531.36 x 1,998 (~529 k um2 cells composed from synthesis, 0.50)',
                              astk_w=ASTK_W, land_w=LAND_W, frames=FRAMES,
                              note='frames without a routed element are sized from synthesis or stated as ASSUMED'))
 

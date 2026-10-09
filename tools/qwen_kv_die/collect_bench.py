@@ -29,6 +29,7 @@ def main():
     ap.add_argument('--case', action='append', required=True)
     ap.add_argument('--params', required=True)
     ap.add_argument('--src', required=True)
+    ap.add_argument('--rtl', default=None, help='attention RTL statement (default: the _p successors)')
     ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     params = {k: int(v) for k, v in (x.split('=') for x in a.params.split(','))}
@@ -39,6 +40,7 @@ def main():
                attention_rtl='ot_qwen_nearhbm_attn_stack_p + ot_qwen_nearhbm_attn_hub_p (timing successors, via the '
                              'bench shims), R = 8 row engines a stack, DPI host-float FP32 add / mul stand-ins (the '
                              'repo precedent: identical to the real units at head_dim 16, real_vs_dpi_hd16.json)',
+               **({'attention_rtl_used': a.rtl} if a.rtl else {}),
                hbm_model='per-engine in-order queues, 750 B / cycle / stack, 16-cycle latency; t = T-1 rows poisoned',
                checks='RES (1,024 FP32) bit-exact vs gold, the 4 posted KV rows, 65 EMBQ / EMBD words in order, 2 '
                       'HCTL words, the TOKEN word, every fault flag 0; stall = 1 withholds the VM RES credits 300 cycles',

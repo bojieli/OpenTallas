@@ -35,6 +35,8 @@ FDI_BITS = 1 + 1 + 548 + 1 + 548          # tx_up, tx_v, tx_flit, rx_v, rx_flit
 CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
+SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+SPINE_RELAY_CH_WM = 129.6                   # KV2: extra relay channel width between spine columns W and M
 
 
 def surgery(v, m):
@@ -135,10 +137,42 @@ def surgery(v, m):
     g['r22k_dx_um'] = dx
     m['insts'] = insts
     m['buses'] = nb
+    if SPINE_RELAY_CH:
+        W = _spine_relay_channel(v, m, g, round(xc + g['cw'], 4), SPINE_RELAY_CH, W)
+        rec['spine_relay_channel_um'] = SPINE_RELAY_CH
+    if SPINE_RELAY_CH_WM:
+        W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
+        rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
     H = m['die']['h']
     m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
     m['r22k'] = rec
     _wrap_masters(v, m)
+
+
+def _spine_relay_channel(v, m, g, xs, ch, W):
+    """review-0528 KV2: a vertical relay channel between spine columns M and E (the r21c columns abut there, so a
+    vertical word passing an E-column block -- the port-tile slabs, 1.8 mm tall -- had no relay site and took a
+    1.7-2.1 mm hop or a detour).  Everything at or right of x = xs moves right by ch; the die widens by ch."""
+    for i in m['insts']:
+        if i.x >= xs - 1e-3:
+            i.x = round(i.x + ch, 4)
+    for key in ('regions', 'clock_regions'):
+        out = []
+        for r in m.get(key, []):
+            x0, y0r, x1, y1 = r['rect']
+            if x0 >= xs - 1e-3:
+                x0, x1 = x0 + ch, x1 + ch
+            elif x1 > xs + 1e-3:
+                x1 = x1 + ch
+            out.append(dict(r, rect=[round(x0, 4), y0r, round(x1, 4), y1]))
+        m[key] = out
+    for k in list(g):
+        if k.startswith('x_') and isinstance(g[k], (int, float)) and g[k] >= xs - 1e-3:
+            g[k] = round(g[k] + ch, 4)
+    old = m['col_x']
+    m['col_x'] = lambda c, f=old: f(c) + (ch if f(c) >= xs - 1e-3 else 0.0)
+    g.setdefault('r22k_spine_relay_channels', []).append(dict(x_um=xs, w_um=ch))
+    return round(W + ch, 4)
 
 
 def _wrap_masters(v, m):
