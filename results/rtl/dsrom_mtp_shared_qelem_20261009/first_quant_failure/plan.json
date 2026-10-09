@@ -1,0 +1,125 @@
+{
+  "schema": "opentallas.mtp-shared-qelem.v1",
+  "adopted": false,
+  "source": "fa27bd60819f9bf61483d5605a02837fe6a34088",
+  "shape": {
+    "K": 2304,
+    "rows": 2,
+    "rank_rows": 1280,
+    "TP": 4,
+    "positions": 6
+  },
+  "MACs_per_issue_cycle": 64,
+  "compute_intensity_MACs_per_weight_byte": 1,
+  "reads": {
+    "issues": 72,
+    "rowbank_reads": 144,
+    "weight_payload_bytes": 4608,
+    "activation_blocks": 72,
+    "quantisers": 2
+  },
+  "ports_bytes_per_cycle": {
+    "ROM_payload": 64,
+    "ROM_carrier": 68.5,
+    "quantiser_testbench_feed": 256,
+    "native_VM": "unbound; no 256B/cycle VM claim"
+  },
+  "boundaries_bits_per_cycle": {
+    "ROM_carrier": 548,
+    "quantiser_testbench_feed": 2048,
+    "element_root": 64,
+    "rounded_widened_output": 64
+  },
+  "replicas": {
+    "minimum_NB2_elements": 1,
+    "production_engine_count": "unqualified",
+    "measured_rows_per_run": 2
+  },
+  "mux_demux": "one configured phase; two independent rowbank roots and actual return rounders",
+  "fanout": "one clock domain; one activation stream per rowbank",
+  "routing": {
+    "element_slot_um": [
+      510.84,
+      221.4
+    ],
+    "new_route": false,
+    "channel_capacity": "existing selected native master; no new physical claims"
+  },
+  "area": {
+    "native_master": "ot_v41_rom_elem_q_qxpq_w10",
+    "physical_closed": false,
+    "return_rounders": 2,
+    "return_rounder_parameters": {
+      "D": 16,
+      "QD": 16
+    }
+  },
+  "latency": {
+    "issue_cycles": 72,
+    "quantiser_input_cycles": 36,
+    "configuration_words": 25,
+    "PQ_shadow_replay": "wait actual sh_free/walking plus existing six-cycle guard",
+    "root_and_round_fill": "must measure actual RTL",
+    "six_position_sharing": "no production extrapolation",
+    "W1_W3_GU": "golden fixture generation only; not measured RTL or production input"
+  },
+  "arithmetic": "golden chunk8 FP8 exact block32 dot, native raw FP32 root, actual ot_v41_ret_root RNE BF16 then widen",
+  "fixture": "released shared W1/W3/W2, scoped backbone L38 h_in[0] BF16 sample; NOT MTP shared GU capture",
+  "qualification": {
+    "field_descriptor": false,
+    "production_VM_binding": false,
+    "actual_MTP_input": false,
+    "native_arithmetic": false,
+    "physical": false
+  },
+  "phase": {
+    "index": 0,
+    "bf": false,
+    "K": 2304,
+    "nbeat": 72,
+    "sbase": 0,
+    "nrows": 2,
+    "fmt_fp32": [
+      false,
+      false
+    ],
+    "rsplit": 0,
+    "t_read": 72,
+    "t_phase_model": 72,
+    "matrices": [
+      {
+        "name": "mtp.0.ffn.shared_experts.w2",
+        "fmt": "fp8",
+        "rows": [
+          0,
+          2
+        ],
+        "cols": [
+          0,
+          2304
+        ],
+        "off": 0,
+        "split": 1,
+        "segment_elems": [
+          2304
+        ]
+      }
+    ],
+    "segments_per_pair_max": 1
+  },
+  "source_headers": {
+    "shared.safetensors": "31951bdc11e3ae601d324eb6aca6f1cb704fbaaa89eece939ba90a293c15e7b7"
+  },
+  "config_sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879",
+  "sample_sha256": "f4fe6eab1224f69cdcb3b414240e29f96a11fc15fe70067dbc0f3470f3f0ea79",
+  "GU_sha256": "eefaafb41216bcc28c7414223fce0e1e8ee6f953322049ecf7ea0217bcc003d1",
+  "raw_roots": [
+    3269403414,
+    1104237220
+  ],
+  "rounded_widened_roots": [
+    3269394432,
+    1104216064
+  ],
+  "swiglu_limit": 10.0
+}
