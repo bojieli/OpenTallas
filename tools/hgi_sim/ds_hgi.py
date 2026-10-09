@@ -119,7 +119,7 @@ def lower(prog, die=0):
                     r = Rec("ATT", "QK", param=1, desc=dict(A=V("q_own", 512), O=V("att_s", 1024)), tag="attend.tile",
                             family="attend")
                     r.src = dict(src, part="tile")
-                    b.add(r, ["q_own", "sel_rows"], ["att_s"])
+                    b.add(r, ["q_own", "sel_rows", "win_new"], ["att_s"])
                     r = Rec("SU", "VOP", sut={}, desc=dict(A=V("att_s", 1024), O=V("o_own", 512)),
                             tag="attend.chain", family="attend")
                     r.src = dict(src, part="chain")
@@ -136,6 +136,8 @@ def lower(prog, die=0):
                 uop = {"all_gather": "ALL_GATHER", "kv_gather": "ALL_GATHER", "all_reduce": "ALL_REDUCE_SUM",
                        "topk_merge": "ARGMAX_MERGE" if op.get("what") == "argmax" else "TOPK_MERGE"}[k]
                 rd = op.get("bufs") or [op.get("buf") or (f"{op.get('what')}_v" if k == "topk_merge" else "sel")]
+                if k == "kv_gather":
+                    rd = ["sel", "kvstore"]
                 wr = rd if k == "all_gather" else ([op["out"]] if k == "all_reduce" else
                                                    (["sel_rows"] if k == "kv_gather" else [f"{op.get('what')}_m"]))
                 r = Rec("COLL", uop, desc=dict(A=V(rd[0], 1024), O=V(wr[0], 1024)), tag=op["tag"], family=k)
@@ -246,6 +248,14 @@ def main():
     variants["S2_compiler_reordered"] = sro["total_cycles"]
     variants["S2_compiler_reordered_races"] = len(sro["races"])
     variants["SX_compiler_reordered"] = T.schedule(ro, POSV, "SX", **kw)["total_cycles"]
+    ls = T.list_schedule(recs, POSV, **kw)
+    sls = T.schedule(ls, POSV, "S2", **kw)
+    variants["S2_compiler_list_scheduled"] = sls["total_cycles"]
+    variants["S2_compiler_list_scheduled_races"] = len(sls["races"])
+    variants["S2_compiler_list_scheduled_no_wires"] = T.schedule(ls, POSV, "S2", wires=False, **kw)["total_cycles"]
+    variants["S0_dataflow"] = S_["S0"]["total_cycles"]
+    res["list_scheduled_program"] = dict(records=len(ls), image_sha256=hashlib.sha256(encode_program(ls)).hexdigest(),
+                                         per_unit=sls["per_unit"])
     res["cp_fix_variants"] = {k: (round(v, 1) if isinstance(v, float) else v) for k, v in variants.items()}
     print(json.dumps(res["cp_fix_variants"], indent=1))
     t0, t1, t2, t3 = (S_[m]["total_cycles"] for m in ("S0", "S1", "S2", "S3"))

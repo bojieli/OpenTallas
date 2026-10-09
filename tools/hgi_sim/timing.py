@@ -39,6 +39,50 @@ import hdc_isa_v41 as I  # noqa: E402
 from .records import ISTRIDE_BCAST, rec_bytes  # noqa: E402
 
 CAL = json.loads((Path(__file__).with_name("calibration.json")).read_text())
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _measured():
+    """Replace estimates with RTL / bench measurements wherever a committed record exists (pins recorded)."""
+    out = {}
+    try:
+        s = json.loads((ROOT / "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json").read_text())["streams"]
+        v = s["embedding_row_notice"]["complete_cycles_1p2GHz"]["max"]
+        out["hbm.first_access"] = dict(value=v, grade="measured",
+                                       source="results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json "
+                                              "embedding_row_notice worst of 64 refresh phases (static program: notice)")
+    except Exception:
+        pass
+    try:
+        import statistics
+        rows = []
+        for f in ("results/rtl/w19_sm_real_ops.json", "results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json"):
+            for c in json.loads((ROOT / f).read_text())["cases"].get("ar", []):
+                if c["fmt"] == "v41_bf16" and c["exact"]:
+                    r = c["rtl"]
+                    rows.append((c["K"], c["sm_rows"][1] - c["sm_rows"][0], r["lines"],
+                                 r["drain_last_line_to_last_result"], r["cycles_start_to_done"]))
+        rate = max(l / (R * K) for K, R, l, d, t in rows)
+        out["SM.bf16_lines_per_row_k"] = dict(value=rate, grade="measured",
+                                              source=f"ot_gpu_sm_v / sm_v BF16 lines on real operands ({len(rows)} cases)")
+        out["SM.drain"] = dict(value=statistics.median(d for *_, d, t in rows), grade="measured", source="same, median")
+        out["SM.overhead"] = dict(value=statistics.median(t - l - d for K, R, l, d, t in rows), grade="measured",
+                                  source="same: start_to_done - lines - drain, median")
+    except Exception:
+        pass
+    try:
+        c = json.loads((ROOT / "results/rtl/hbm_su_c12_20261005/campaign_full.json").read_text())
+        cls = c["perf_N64_M16"]["depths"]["classes"]
+        ok = all(v["emit_to_write"] == v["model"] for v in cls.values())
+        out["SU.model_check"] = dict(value=ok, grade="measured" if ok else "model",
+                                     source="results/rtl/hbm_su_c12_20261005/campaign_full.json perf depths: RTL "
+                                            "emit->write == depth model for every op class")
+    except Exception:
+        pass
+    return out
+
+
+MEAS = _measured()
 ESZ = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 
 
@@ -174,6 +218,14 @@ def su_cost(r, dyn, L):
     return lay["nv"] + depth + cv("units", "SU.issue_overhead"), f"SU model nv {lay['nv']} + depth {depth}"
 
 
+TRANSPORT = cv("hbm", "fmt3_transport")       # bytes moved per code byte (fmt3 line stride / codes)
+SM_RATE = 1.0                                   # fmt3 issue relative to the BF16 lanes (1.0 = 64 codes / cycle / SM)
+
+
+def first_access():
+    return MEAS["hbm.first_access"]["value"] if "hbm.first_access" in MEAS else cv("hbm", "first_access")
+
+
 def cost(r, dyn, L, cfg=None):
     """(cycles, grade, how) of the record's unit work on one die."""
     bw = cv("hbm", "bytes_per_cycle")
@@ -181,12 +233,23 @@ def cost(r, dyn, L, cfg=None):
     if u == "SM":
         b = r.desc["B"]
         _, n, m, st, _ = eff(b, dyn, L)
-        nbytes = n * m * ESZ[b.fmt] * (cv("hbm", "fmt3_transport") if (r.param & 3) == 3 else 1.0)
+        tr = TRANSPORT if (r.param & 3) == 3 else 1.0
+        nbytes = n * m * ESZ[b.fmt] * tr
+        stream = nbytes / bw
+        if "SM.bf16_lines_per_row_k" in MEAS:
+            # fmt 0 and fmt 3 issue on the same BF16 lanes (fmt 3: a 128-code line in two 64-code beats)
+            R = -(-m // 32)
+            lines = math.ceil(MEAS["SM.bf16_lines_per_row_k"]["value"] * R * n * SM_RATE)
+            comp = lines + MEAS["SM.drain"]["value"]
+            fa = MEAS["hbm.first_access"]["value"] + MEAS["SM.overhead"]["value"]
+            c = fa + max(comp, stream)
+            return c, "measured", (f"SM {m}x{n} {b.fmt}: lines {lines} (+drain) vs stream {stream:.0f} "
+                                   f"({nbytes / 1e6:.2f} MB, transport {tr}) -> {'SM' if comp > stream else 'HBM'}-bound")
         c = cv("units", "SM.first_access") + nbytes / bw + cv("units", "SM.drain")
         return c, "estimate", f"SM {m}x{n} {b.fmt}: {nbytes / 1e6:.2f} MB at {bw:.0f} B/cyc + first access"
     if u == "SU":
         c, how = su_cost(r, dyn, L)
-        return c, "model", how
+        return c, ("measured_depth_model" if MEAS.get("SU.model_check", {}).get("value") else "model"), how
     if u == "FUSED":
         seg = r.param & 0xFF
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
@@ -199,13 +262,14 @@ def cost(r, dyn, L, cfg=None):
         lanes = r.param & 0xF
         hd = 128
         nbytes = P * hd * ESZ[b.fmt]
-        c = cv("hbm", "first_access") + nbytes / bw + cv("units", "ATT.fixed")
+        c = first_access() + nbytes / bw + cv("units", "ATT.fixed")
         return c, "estimate", f"ATT.{op} {P} rows x {hd} FP8 ({nbytes / 1e6:.2f} MB), {lanes} lanes"
     if u == "DMA":
         if op == "LOAD":
             a = r.desc["A"]
             _, n, m, _, _ = eff(a, dyn, L)
-            return cv("hbm", "first_access") + n * m * ESZ[a.fmt] / bw, "estimate", "DMA load"
+            return first_access() + n * m * ESZ[a.fmt] / bw, ("measured" if "hbm.first_access" in MEAS
+                                                               else "estimate"), "DMA load"
         if op == "STORE":
             return cv("units", "DMA.store_latency"), "estimate", "posted KV store"
         return cv("units", "DMA.fence"), "estimate", "fence"
@@ -454,3 +518,90 @@ def rebuild_waits(recs):
     for r in out:
         r.reads, r.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))
     return assign_waits(out)
+
+
+def list_schedule(recs, pos, cost_fn=cost):
+    """Compiler pass: CP-aware list scheduling of a straight-line record stream (no LOOP).  Records keep every
+    program-order hazard edge (RAW / WAR / WAW on region names); among the records whose predecessors are all
+    issued, issue next the one that would START earliest on the modelled command processor (in-order dispatch,
+    drain waits, wires, unit queues), ties to the longest remaining dataflow path.  Waits are recomputed after."""
+    import copy as _c
+    from .qwen_compiler import Builder
+    cpc = CAL["cp"]
+    dw, rw, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
+    body = [r for r in recs if not (r.unit == "CTL" and r.op == "END")]
+    tail = [r for r in recs if r.unit == "CTL" and r.op == "END"]
+    n = len(body)
+    dyn = Dyn(pos)
+    cst = [cost_fn(r, dyn, 0)[0] for r in body]
+    rd = [set(getattr(r, "reads", ())) for r in body]
+    wr = [set(getattr(r, "writes", ())) for r in body]
+    preds = [set() for _ in range(n)]
+    last_w, readers = {}, {}
+    for i in range(n):
+        for x in rd[i]:
+            if x in last_w:
+                preds[i].add(last_w[x])
+        for x in wr[i]:
+            if x in last_w:
+                preds[i].add(last_w[x])
+            for j in readers.get(x, ()):
+                preds[i].add(j)
+        for x in wr[i]:
+            last_w[x] = i
+            readers[x] = []
+        for x in rd[i]:
+            readers.setdefault(x, []).append(i)
+        if body[i].unit == "SU" and False:
+            pass
+    succ = [[] for _ in range(n)]
+    for i in range(n):
+        for j in preds[i]:
+            succ[j].append(i)
+    blev = [0.0] * n
+    for i in range(n - 1, -1, -1):
+        blev[i] = cst[i] + max([blev[j] for j in succ[i]] + [0.0])
+    npred = [len(p) for p in preds]
+    ready = [i for i in range(n) if npred[i] == 0]
+    b = Builder(None)
+    unit_end, out_end, cp_t = {}, {}, 0.0
+    qstarts = {}
+    order = []
+    while ready:
+        best = None
+        for i in ready:
+            r = body[i]
+            mask_units = [u for u in HGI.UNITS if u != r.unit and
+                          ((rd[i] & b.pwr[u]) or (wr[i] & (b.prd[u] | b.pwr[u])))]
+            wt = max([out_end.get(u, 0.0) + rw for u in mask_units] + [0.0])
+            q = qstarts.get(r.unit, [])
+            qt = q[-qd] if len(q) >= qd else 0.0
+            d_t = max(cp_t + 1, wt, qt)
+            st = max(d_t + dw, unit_end.get(r.unit, 0.0))
+            key = (st, -blev[i], i)
+            if best is None or key < best[0]:
+                best = (key, i, d_t, st)
+        _, i, d_t, st = best
+        ready.remove(i)
+        r2 = _c.copy(body[i])
+        b.add(r2, rd[i], wr[i])
+        for a in ("implicit", "src"):
+            if hasattr(body[i], a):
+                setattr(r2, a, getattr(body[i], a))
+        cp_t = d_t
+        e = st + cst[i]
+        unit_end[r2.unit] = e
+        out_end[r2.unit] = max(out_end.get(r2.unit, 0.0), e)
+        qstarts.setdefault(r2.unit, []).append(st)
+        order.append(i)
+        for j in succ[i]:
+            npred[j] -= 1
+            if npred[j] == 0:
+                ready.append(j)
+    assert len(order) == n
+    for r in tail:
+        r2 = _c.copy(r)
+        b.add(r2, getattr(r, "reads", ()), getattr(r, "writes", ()))
+        if hasattr(r, "src"):
+            r2.src = r.src
+    return b.recs

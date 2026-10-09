@@ -23,6 +23,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import hbm_generic_iface as HGI  # noqa: E402
 
 OPND = ("A", "B", "C", "O")
+# PROVISIONAL op codes the DS native lowering needs and v0.9 lacks (appended after the spec's ops; gaps G8, G10)
+PROVISIONAL_OPS = {"FUSED": ["QDQ_FP8"], "COLL": ["GROUP_REDUCE_MCAST"]}
+OPS_X = {u: list(v) + PROVISIONAL_OPS.get(u, []) for u, v in HGI.OPS.items()}
 EXTRA = ("D", "R")                 # SU.VOP param bits 0, 1 (provisional)
 ISTRIDE_BCAST = 0xFFFF
 
@@ -38,6 +41,16 @@ SPEC_GAPS = [
     dict(id="G5", item="norm_out_bf16 is static, but Qwen issues ROW_NORM for both prenorm (BF16 out at the matvec "
          "boundary) and QK-norm (FP32 out: RoPE runs in FP32 and q rounds to BF16 only after RoPE)",
          reading="ROW_NORM output format = the O descriptor's fmt (FP32 or BF16) per op"),
+    dict(id="G8", item="DS needs the FP8 act_quant QDQ (UE8M0 block-32; hfd_quant) as a unit op: the window row and "
+         "the indexer / KV rows are quantised-dequantised; SU cannot form ceil(log2(amax)) exactly",
+         reading="provisional FUSED.QDQ_FP8 (op 3)"),
+    dict(id="G9", item="COLL.ALL_GATHER segment rule: DS even splits (rank r owns [r*n//G, (r+1)*n//G)) are not "
+         "expressible as base + RANK*dyn_mul when G does not divide n", reading="the collective applies the even-split "
+         "rule over A.n"),
+    dict(id="G10", item="DS o-group reduce: 8-die sub-group owner-tree reduce + multicast to all 96, BF16 out; "
+         "coll_group_size is static (96)", reading="provisional COLL.GROUP_REDUCE_MCAST, param = sub-group size"),
+    dict(id="C3b", item="indexed descriptors (expert weight base, route-weight gather by router ids)",
+         reading="dyn_sel 31: base += VM[lstride] * dyn_mul (one dispatcher VM read; no L*lstride on that record)"),
     dict(id="G6", item="sfx_multipass 'fixed 640-row chunks with carry-in': a scalar carry changes the denominator's "
          "order vs the csum8 tree of the golden / quality run", reading="the carry must be the streaming binary-counter "
          "state (exactly the csum8 tree); the SU fallback is bound until the fused unit is shown equal"),
@@ -139,7 +152,7 @@ class Rec:
             self.param = extra
         elif any(k in self.desc for k in EXTRA):
             raise ValueError("D / R descriptors exist only on SU.VOP")
-        v = dict(unit=HGI.UNITS.index(self.unit), op=HGI.OPS[self.unit].index(self.op), wait=self.wait,
+        v = dict(unit=HGI.UNITS.index(self.unit), op=OPS_X[self.unit].index(self.op), wait=self.wait,
                  pred=HGI.PRED.index(self.pred), opnd=self.opnd, tmpl=int(self.sut is not None), slot=self.slot,
                  param=self.param & 0xFFFFFFFF, imm_a=self.imm_a & 0xFFFFFFFF, imm_b=self.imm_b & 0xFFFFFFFF)
         h = 0
@@ -160,7 +173,7 @@ def decode_one(buf: bytes, off: int):
     h = int.from_bytes(buf[off:off + 16], "little")
     v = {name: (h >> lsb) & ((1 << width) - 1) for name, lsb, width in HGI.UOP_FIELDS}
     unit = HGI.UNITS[v["unit"]]
-    ops = HGI.OPS[unit]
+    ops = OPS_X[unit]
     if v["op"] >= len(ops):
         raise ValueError(f"illegal op {v['op']} for {unit}")
     r = Rec(unit=unit, op=ops[v["op"]], wait=v["wait"], pred=HGI.PRED[v["pred"]], slot=v["slot"], param=v["param"],

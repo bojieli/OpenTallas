@@ -105,11 +105,8 @@ def att_qk(q, K):
     """q [hd] (BF16 values), K [P, hd] -> raw dots [P] (chunk8 per 64-slice, slices in order == csum8 over hd)."""
     hd = K.shape[1]
     if hd % 64 == 0 and hd > 64:
-        parts = [csum(mul(q[None, s:s + 64], K[:, s:s + 64])) for s in range(0, hd, 64)]
-        acc = parts[0]
-        for p in parts[1:]:
-            acc = add(acc, p)
-        return acc
+        # each 64-slice a chunk8 tree, the slices a pairwise tree in slice order (== csum8 over hd for hd = 2^k)
+        return pairwise([csum(mul(q[None, s:s + 64], K[:, s:s + 64])) for s in range(0, hd, 64)])
     return csum(mul(q[None, :], K))
 
 

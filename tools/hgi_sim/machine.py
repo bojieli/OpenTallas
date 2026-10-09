@@ -32,6 +32,7 @@ from .records import ISTRIDE_BCAST, MDesc, Rec, decode_program  # noqa: E402
 
 F = np.float32
 VM_WORDS = 1 << 18
+IDX_DYN = 31                     # provisional C3b: dyn_sel code of an indexed descriptor
 ESIZE = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 _E4M3 = None
 
@@ -138,7 +139,13 @@ class Machine:
 
     # -- addressing ------------------------------------------------------------------------------------------------
     def eff(self, d: MDesc, die: Die, L):
-        base = d.base + L * d.lstride + die.dyn[d.dyn_sel] * d.dyn_mul
+        if d.dyn_sel == IDX_DYN:
+            # C3b (provisional): an INDEXED descriptor; the dispatcher reads the U32 index at VM[lstride] and adds
+            # index * dyn_mul to the base (the record cannot also use L * lstride)
+            idx = int(die.vm[d.lstride])
+            base = d.base + idx * d.dyn_mul
+        else:
+            base = d.base + L * d.lstride + die.dyn[d.dyn_sel] * d.dyn_mul
         n = die.dyn[d.n_sel] if d.n_sel else d.n
         ist = 0 if d.istride == ISTRIDE_BCAST else (d.istride or 1)
         return base, n, d.m, d.stride, ist
@@ -467,7 +474,12 @@ def u_su_vop(M: Machine, r: Rec, L):
             if d is None:
                 return np.zeros(no * ni, dtype=F), None
             if d.space == "VM":
-                ad = M.vm_addrs(d, die, L, no, ni)
+                if f["b_half"] and k in ("B", "D"):        # b / d inner index i >> 1 (adjacent-pair tables)
+                    base, _, _, st, ist = M.eff(d, die, L)
+                    o, i = np.meshgrid(np.arange(no), np.arange(ni), indexing="ij")
+                    ad = (base + o * st + (i >> 1) * ist).reshape(-1)
+                else:
+                    ad = M.vm_addrs(d, die, L, no, ni)
                 return die.vm[ad].view(F), ad
             return M.hbm_read(d, die, L, no, ni).reshape(-1), None
         av, ea = src("A", "a")
@@ -525,7 +537,7 @@ def u_su_vop(M: Machine, r: Rec, L):
             out = A.to_bf16(out)
         if f["red"]:
             v = A.mul(out, out) if f["red_sq"] else out
-            segs = v.reshape(1, -1) if f["red_whole"] else v.reshape(no, ni)
+            segs = v.reshape(1, -1) if (f["red_whole"] or f["red_tree"]) else v.reshape(no, ni)
             if f["red"] == I.RED_SUM:
                 vals = A.csum(segs)
             elif f["red"] == I.RED_MAX:
