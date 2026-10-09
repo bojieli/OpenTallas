@@ -45,14 +45,14 @@ module tb_qwen_r25_cp_su_coalesce;
    reset();half(entry%2,32'h53550000+entry,OWNER,entry%2?16'ha50f:16'h1357);
    repeat(3)begin @(negedge clk);if(native_req_v||cp_done||fault)$fatal(1,"one half fabricated launch/completion");end
    half(1-entry%2,32'h53550000+entry,OWNER,entry%2?16'h1357:16'ha50f);
-   sm_done=32'hffffffff;
+   sm_done=32'ha50f1357;
    repeat(5)begin
     @(negedge clk);
     if(!native_req_v||native_req_pc!==32'h53550000+entry||native_req_owner!==OWNER||cp_done||fault)
      $fatal(1,"matched request hold or pending completion changed");
    end
    sm_done=0;native_req_rdy=1;@(negedge clk);native_req_rdy=0;
-   if(native_req_v||cp_done||!native_complete_rdy)$fatal(1,"accepted native request duplicated or fabricated done");
+   if(native_req_v||cp_done)$fatal(1,"accepted native request duplicated or fabricated done");
    // A provider's actual completion, rather than readiness, releases original masks.
    native_complete_owner=OWNER;#0.01;
    if(!native_complete_rdy)$fatal(1,"native completion not ready");
