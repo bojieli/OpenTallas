@@ -1,0 +1,42 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/3_1_place_gp_skip_io.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_io_placement_interior_pins.tcl
+place_pins -hor_layers "M4 M6" -ver_layers "M3 M5" -min_distance 4 -min_distance_in_tracks
+Found 18 macro blocks.
+[INFO PPL-0067] Restrict pins [ clk rb_cr rst_n sw_cr_ret ] to region 60.00u-420.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ ph_rx_flit[0] ph_rx_flit[100] ph_rx_flit[101] ph_rx_flit[102] ph_rx_flit[103] ... ] to region 60.00u-420.00u at the BOTTOM edge.
+[INFO PPL-0067] Restrict pins [ qp_din[0] qp_din[100] qp_din[101] qp_din[102] qp_din[103] ... ] to region 60.00u-480.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ fault ph_tx_flit[0] ph_tx_flit[100] ph_tx_flit[101] ph_tx_flit[102] ... ] to region 60.00u-480.00u at the RIGHT edge.
+[INFO PPL-0001] Number of available slots 21452
+[INFO PPL-0002] Number of I/O             2736
+[INFO PPL-0003] Number of I/O w/sink      2736
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 782384.94 um.
+Design area 77500 um^2 30% utilization.
+write_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_da3b6c691_tc_cal/base/3_2_place_iop.odb
+Elapsed time: 0:12.02[h:]min:sec. CPU time: user 11.36 sys 0.45 (98%). Peak memory: 454748KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb           12            444 d2d6d7d726faf122525d
