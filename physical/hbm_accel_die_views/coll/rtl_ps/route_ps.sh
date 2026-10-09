@@ -9,6 +9,12 @@
 #         + the core's SRAM macros, PDN pdn_top.tcl; corner_sta reads EVERY macro view (route_view.sh reads the first).
 # env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
 #      macro halo "x y", default 340x340 / "4 4"), route_view.sh env (top)
+# coll-fallback 2026-10-08 (all default to the 8-slice behaviour above):
+#   SLICE   slice top module, ot_hcoll_port (default) or ot_hcoll_port2 (the 4-slice fallback: 2 ports a slice, 36 SRAMs;
+#           rtl/hbm_accel/tu/ot_hcoll_port2.sv is added to the sources)
+#   MPT     slice MACRO_PLACEMENT_TCL (e.g. rtl_ps2/macro_rows.tcl: SRAM rows with wide horizontal channels)
+#   PINTOP / PINBOT  --pin-region regexes for the top / bottom slice edges (core side / PHY side)
+#   TOPDIR  directory of the top's hfd_coll.sv (default rtl_ps; rtl_ps2 for the 4-slice top)
 # coll-port 2026-10-08: 340x340 (67% util incl. the 18 SRAMs = 61% of the die) failed GRT-0116 twice: the placer ringed
 #      the die edge with macros, so the 2,736 edge pins and the macro q buses crossed macros on M6 alone (the only
 #      horizontal layer over an SRAM; M6 53% used, 7,351 of 12,948 overflow gcells, 8,452 H vs 3,593 V). Variants
@@ -21,10 +27,12 @@ if [ "$kind" = port ]; then
   W=${OUT:?}/$lab; mkdir -p $W
   C=${CORES:-8}; DW=${DIEW:-340}; DH=${DIEH:-340}
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
-  echo "kind=port die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
+  SL=${SLICE:-ot_hcoll_port}; SLSRC=""; [ $SL = ot_hcoll_port2 ] && SLSRC="--source rtl/hbm_accel/tu/ot_hcoll_port2.sv"
+  echo "kind=port slice=$SL mpt=${MPT:-} pintop=${PINTOP:-} pinbot=${PINBOT:-} die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
   cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
-  python3 tools/run_abi3_physical.py --view asap7 --top ot_hcoll_port \
-    --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv \
+  python3 tools/run_abi3_physical.py --view asap7 --top $SL \
+    --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv $SLSRC \
+    ${MPT:+--orfs-var MACRO_PLACEMENT_TCL=/src/$MPT} ${PINTOP:+--pin-region "$PINTOP=top"} ${PINBOT:+--pin-region "$PINBOT=bottom"} \
     --macro-view $SRAM=$SD --macro-place-halo ${PHALO:-4 4} \
     --clock-port clk --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
     --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 --sdc-append physical/hbm_contracts_20261007/screening.sdc \
@@ -41,16 +49,17 @@ if [ "$kind" = port ]; then
   case " $* " in *"stop-after"*) exit $rc ;; esac
   python3 tools/w18/corner_sta.py --macro $SD --orfs-dir $W/work/orfs ${IO_FF_SDC:+--post-sdc $IO_FF_SDC} --output $W/corner_sta.json > $W/corner.log 2>&1
   echo "corner_rc=$?" >> $W/exit
-  python3 tools/tt_views/view_export.py --orfs-dir $W/work/orfs --name ot_hcoll_port --out $W/view --tmp-dir $W/abs_tmp \
+  python3 tools/tt_views/view_export.py --orfs-dir $W/work/orfs --name $SL --out $W/view --tmp-dir $W/abs_tmp \
     --macro-view $SD --corners ss,ff,tt > $W/export.log 2>&1
   echo "export_rc=$?" >> $W/exit
   exit $rc
 fi
 # ---- top: route_view.sh with every macro view read by corner_sta ----
-PV=$D/views/ot_hcoll_port
-[ -s $PV/ot_hcoll_port_tt.lib ] || { mkdir -p ${OUT:?}/$lab; echo "slice view missing: $PV" > $OUT/$lab/run.log; echo "rc=2" > $OUT/$lab/exit; exit 2; }
+SL=${SLICE:-ot_hcoll_port}; TD=${TOPDIR:-$D}
+PV=$D/views/$SL
+[ -s $PV/${SL}_tt.lib ] || { mkdir -p ${OUT:?}/$lab; echo "slice view missing: $PV" > $OUT/$lab/run.log; echo "rc=2" > $OUT/$lab/exit; exit 2; }
 R=physical/hbm_accel_die_views/common/route_view.sh
 sed -e 's#python3 tools/w18/corner_sta.py \${mac1:+--macro \$mac1}#python3 tools/w18/corner_sta.py $(for mv in ${MACROS:-}; do echo -n " --macro ${mv\#*=}"; done)#' $R > $D/.route_view_ps.sh
 grep -q 'echo -n " --macro' $D/.route_view_ps.sh || { echo "route_ps.sh: route_view.sh corner_sta line not found" >&2; exit 3; }
-export MACROS="ot_hcoll_port=$PV $SRAM=$SD" PDN=$D/pdn_top.tcl HALO=${HALO:-"4 4"}
-bash $D/.route_view_ps.sh $lab hfd_coll $D/hfd_coll.sv "$@"
+export MACROS="$SL=$PV $SRAM=$SD" PDN=$D/pdn_top.tcl HALO=${HALO:-"4 4"}
+bash $D/.route_view_ps.sh $lab hfd_coll $TD/hfd_coll.sv "$@"
