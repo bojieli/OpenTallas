@@ -50,6 +50,15 @@ class Boundary(unittest.TestCase):
         self.assertEqual(r["in_to_reg_max"], 0)
         self.assertIn("rst_n", r["ctrl_ports"])
 
+    def test_cl_spec_refused_by_default(self):
+        r = B.check(spec("t_comb", "rtl/t.sv", name="x-tc-cl"), show_for({"rtl/t.sv": COMB}))
+        self.assertEqual(r["verdict"], "REFUSE")
+        r = B.check(spec("t_comb", "rtl/t.sv", name="x-tc-cl", rtl_boundary={"waive": "immediate-drop ready by design"}),
+                    show_for({"rtl/t.sv": COMB}))
+        self.assertEqual(r["verdict"], "WARN")
+        r = B.check(spec("t_comb", "rtl/t.sv", name="x-tc-cx", registered_io=False), show_for({"rtl/t.sv": COMB}))
+        self.assertEqual(r["verdict"], "WARN")
+
     def test_unreadable_recipe_skips(self):
         r = B.check({"source": {"commit": "c"}, "stages": {"route": {"cmd": "bash other.sh x"}}}, show_for({}))
         self.assertEqual(r["verdict"], "SKIP")
