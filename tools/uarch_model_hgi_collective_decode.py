@@ -34,13 +34,16 @@ def endpoint_model():
         qualification='DS legacy 62run evidence reused; n1/isolation/reservedguard additional exact benches required')
 
 def row_formatter_model(k=2048,row_words=32):
-    return dict(status='analytic_before_build',macs_per_cycle=0,replicas_per_die=1,
+    return dict(status='analytic_before_counter_feedback_repair',macs_per_cycle=0,replicas_per_die=1,
       compute_intensity='address/control only, no new HBM reader or row storage',
       memory_bytes_per_response=64,request_bits=60,response_bits=513,
       output_bits=560,routing_tracks_needed=1133,routing_channel_capacity=6250,
       channel_basis='300um /0.048um one-layer pitch estimate',slot_um=[600,240],
       area_estimate_um2=12000,area_fraction_estimate=12000/144000,
-      mux_inputs=2,max_control_fanout=32,held_payload_register_bits=512,
+      mux_inputs=2,max_control_fanout=32,held_payload_register_bits=512,progress_lookahead_register_bits=38,
+      structural_repair='precompute word/index next and terminal flags in existing REQUEST/MAP states; narrow B8/G96 quotient to12-bit /3 and residue',
+      observed_failed_path=dict(source='7c38e6508',start='read_word[0]',end='read_word[15]',cell_ps=934.8,wire_ps=243.4,fanout=12,TT_signoff_slack_ps=-430),
+      schedule_added_cycles=0,physical_gain_not_yet_measured=True,
       owner_block_range=[1,255],selection_count_bits=21,incoming_selected_id_bits=32,context_count_bits=32,context_rows_limit=1048576,group_sizes=[1,2,4,8,96],
       start_capture_validation_cycles=2,ds_B8_fast_mapping_cycles=1,generic_mapping_cycles=41,
       stream_policy='one selected row in flight, one reader word outstanding; retain response under output backpressure',
