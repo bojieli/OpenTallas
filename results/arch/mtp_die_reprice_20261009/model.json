@@ -159,7 +159,21 @@
   "physical": {
     "historical_head_case": "511-pair headmtp, source0544fca2c",
     "released_head_case_required": true,
-    "routing_or_clock_closure_credit": false
+    "routing_or_clock_closure_credit": false,
+    "vmx_fallback": {
+      "source_commit": "a2f264c8b",
+      "outline_um": [
+        291.6,
+        280.8
+      ],
+      "gross_um2": 81881.28,
+      "prior_gross_um2": 60092.928,
+      "added_gross_um2": 21788.352,
+      "historical_cells_um2": 38438,
+      "estimated_gross_utilization": 0.46943574892820433,
+      "added_cycles": 0,
+      "status": "sized_from_prior_cells_route_pending"
+    }
   },
   "loader": {
     "historical_svc_bits": [
