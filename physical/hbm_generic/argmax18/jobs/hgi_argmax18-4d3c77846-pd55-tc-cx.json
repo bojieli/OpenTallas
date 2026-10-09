@@ -55,7 +55,7 @@
       }
     ],
     "calibrate": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes cts",
       "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
       "clock": "core_clk",
       "threads": 16,
