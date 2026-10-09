@@ -61,7 +61,8 @@ module ot_hbm_token_loop #(
     else begin hw <= hw + ((pv && post_en && !hq_full) ? 1'b1 : 1'b0); hr_ <= hr_ + ((hr_v && hr_rdy) ? 1'b1 : 1'b0); end
   // Reserve the registered push before authorizing another emission.
   // MUT=2 restores the overflow bug for the directed negative control.
-  wire [HQ_AW+1:0] hq_reserved = {1'b0, (hw - hr_)} + ((pv && post_en) ? 1'b1 : 1'b0);
+  wire [HQ_AW+1:0] hq_reserved = {1'b0, (hw - hr_)} + ((pv && post_en) ? 1'b1 : 1'b0)
+                              - ((hr_v && hr_rdy) ? 1'b1 : 1'b0);
   wire can_post = !post_en || ((MUT == 2) ? !hq_full : (hq_reserved < HD));
   // ---------------------------------------------------------------- the stop decision of one emitted token
   function automatic [2:0] verdict(input [TW-1:0] t, input [PW-1:0] p_, input [PW-1:0] ne_);
@@ -90,7 +91,7 @@ module ot_hbm_token_loop #(
       if (EXTERNAL_FAULT_EN && external_fault && busy && ls != L_DONE) begin
         db_v <= 1'b0; mtp_stop <= 1'b1;
         // Reserve room for the previous registered push before posting abort.
-        if (!post_en || ((hw - hr_) + (pv ? 1 : 0) < HD)) begin
+        if (can_post) begin
           pv <= 1'b1; pd <= {1'b1, S_FLT, job, {1'b0,pos}, {TW{1'b0}}};
           last_status <= S_FLT; mtp_emit_v <= mtp; mtp_emit <= 0; ls <= L_DONE;
         end
