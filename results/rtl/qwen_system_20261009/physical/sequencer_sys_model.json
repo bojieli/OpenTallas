@@ -84,7 +84,20 @@
       1056,
       50112
     ],
-    "adoption": "actual_sys generated packing only; historical ctl and original FQS untouched; generator asserts per-stage and totalcapacity"
+    "adoption": "actual_sys generated packing only; historical ctl and original FQS untouched; generator asserts per-stage and totalcapacity",
+    "scale_bases": [
+      0,
+      96,
+      384,
+      768
+    ],
+    "code_bases": [
+      0,
+      64,
+      112,
+      368
+    ],
+    "scale_contract": "Opt-in corrected template uses released padded scale addresses; same1056 padded physical rowstride. Parent native148stage payload/permutation gate pending. Historical50112 stageimage rows are padded beyond active1056 after q_active masks; no numerical adoption before measured gate."
   },
   "validation": {
     "scope": "actual controlcommands against hostswapped oldFQS currentcompilerISA, stubengines; notnumericalpayloadgate",
@@ -94,7 +107,7 @@
     "collectives": 584,
     "bad": 0,
     "basefoldmutantbad": 576,
-    "pending": "native releasedimage relocation and numerical order proof +physicalroute",
+    "pending": "Corrected native scale bases fixture, parent all148stage nativepayload/permutation numerical gate, source-matched physical closure",
     "ranks": 4,
     "program_bounds_fault_checks": 4,
     "head_rank_offsets": [
