@@ -1,0 +1,6 @@
+{
+  "updated": true,
+  "old_route_cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+  "new_route_cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.020 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd55.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+  "cal_gib": 12
+}

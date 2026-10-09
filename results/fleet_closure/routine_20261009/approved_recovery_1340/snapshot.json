@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-09T13:41:01.942865+00:00",
+  "BF": {
+    "same_job_route": "RUNNING EPYC4 route.a2",
+    "launcher": 2082039,
+    "driver": 2082088,
+    "preserved_E4_duplicate_cal": true,
+    "calib_env_sha256": "3cffd72e96010776f67caa62e74377930f67341598f4751e99ef30dba5cbfdaa",
+    "calibration": {
+      "TT": 806,
+      "FF": 663
+    },
+    "route_gib": 44
+  },
+  "quant_pd55_future_only": "HM20 route versus HM10 unchanged calibration; both actual densities0.079 due LB_ADDON, source and constraints unchanged.",
+  "STG": "Qualified independent TT audit; unstarted collect held for complete immutable E1-to-E3 transfer.",
+  "EHASH": "Original required remote boundary REFUSE, terminal claim released. New sourcefac108b0b probe actual1397289 admitted32GiB conservative measured sibling basis; original route retry holds stay.",
+  "daemon_deployment": false
+}

@@ -1,0 +1,74 @@
+{
+  "at": "2026-10-09T13:38:37.249839+00:00",
+  "source": "f4babd572",
+  "key": "8883d9f3c982c2bef284bed4",
+  "source_manifest_verified": true,
+  "helper_verified": true,
+  "local_synthesis_fallback_blocked": true,
+  "names": [
+    "hgi_mtp_accept18-4bffda75f-seat-pd48-tc-cx",
+    "hgi_mtp_accept18-4bffda75f-seat-pd55-tc-cx"
+  ],
+  "submit_results": [
+    {
+      "cfg": "hgi_mtp_accept18_pd48",
+      "pins": 384,
+      "die_um": [
+        180.0,
+        140.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 0.67,
+        "E": 3.15,
+        "N": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary hgi_mtp_accept18_route: registered boundary (in->reg 0, reg->out 0 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 0,
+        "reg_to_out_max": 0,
+        "levels": 16,
+        "strict": true
+      }
+    },
+    {
+      "cfg": "hgi_mtp_accept18",
+      "pins": 384,
+      "die_um": [
+        180.0,
+        140.0
+      ],
+      "layers": {
+        "PIN_H": "M4 M6",
+        "PIN_V": "M5 M7"
+      },
+      "tracks": 1.0,
+      "limit": 12.0,
+      "est": {
+        "W": 0.67,
+        "E": 3.15,
+        "N": 0.02
+      },
+      "verdict": "PASS",
+      "message": "pin density within limits (estimate)",
+      "rtl_boundary": {
+        "verdict": "PASS",
+        "message": "rtl_boundary hgi_mtp_accept18_route: registered boundary (in->reg 0, reg->out 0 levels)",
+        "in_to_out_bits": 0,
+        "in_to_reg_max": 0,
+        "reg_to_out_max": 0,
+        "levels": 16,
+        "strict": true
+      }
+    }
+  ]
+}
