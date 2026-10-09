@@ -1,49 +1,22 @@
-# Four columns / twelve rows: preserve capture corridors within approved outline.
-place_macro -macro_name {g_w[0].g_d[0].u_m} -location {12.960 12.960} -orientation R0
-place_macro -macro_name {g_w[0].g_d[1].u_m} -location {202.960 12.960} -orientation R0
-place_macro -macro_name {g_w[1].g_d[0].u_m} -location {392.960 12.960} -orientation R0
-place_macro -macro_name {g_w[1].g_d[1].u_m} -location {582.960 12.960} -orientation R0
-place_macro -macro_name {g_w[2].g_d[0].u_m} -location {12.960 92.960} -orientation R0
-place_macro -macro_name {g_w[2].g_d[1].u_m} -location {202.960 92.960} -orientation R0
-place_macro -macro_name {g_w[3].g_d[0].u_m} -location {392.960 92.960} -orientation R0
-place_macro -macro_name {g_w[3].g_d[1].u_m} -location {582.960 92.960} -orientation R0
-place_macro -macro_name {g_w[4].g_d[0].u_m} -location {12.960 172.960} -orientation R0
-place_macro -macro_name {g_w[4].g_d[1].u_m} -location {202.960 172.960} -orientation R0
-place_macro -macro_name {g_w[5].g_d[0].u_m} -location {392.960 172.960} -orientation R0
-place_macro -macro_name {g_w[5].g_d[1].u_m} -location {582.960 172.960} -orientation R0
-place_macro -macro_name {g_w[6].g_d[0].u_m} -location {12.960 252.960} -orientation R0
-place_macro -macro_name {g_w[6].g_d[1].u_m} -location {202.960 252.960} -orientation R0
-place_macro -macro_name {g_w[7].g_d[0].u_m} -location {392.960 252.960} -orientation R0
-place_macro -macro_name {g_w[7].g_d[1].u_m} -location {582.960 252.960} -orientation R0
-place_macro -macro_name {g_w[8].g_d[0].u_m} -location {12.960 332.960} -orientation R0
-place_macro -macro_name {g_w[8].g_d[1].u_m} -location {202.960 332.960} -orientation R0
-place_macro -macro_name {g_w[9].g_d[0].u_m} -location {392.960 332.960} -orientation R0
-place_macro -macro_name {g_w[9].g_d[1].u_m} -location {582.960 332.960} -orientation R0
-place_macro -macro_name {g_w[10].g_d[0].u_m} -location {12.960 412.960} -orientation R0
-place_macro -macro_name {g_w[10].g_d[1].u_m} -location {202.960 412.960} -orientation R0
-place_macro -macro_name {g_w[11].g_d[0].u_m} -location {392.960 412.960} -orientation R0
-place_macro -macro_name {g_w[11].g_d[1].u_m} -location {582.960 412.960} -orientation R0
-place_macro -macro_name {g_w[12].g_d[0].u_m} -location {12.960 492.960} -orientation R0
-place_macro -macro_name {g_w[12].g_d[1].u_m} -location {202.960 492.960} -orientation R0
-place_macro -macro_name {g_w[13].g_d[0].u_m} -location {392.960 492.960} -orientation R0
-place_macro -macro_name {g_w[13].g_d[1].u_m} -location {582.960 492.960} -orientation R0
-place_macro -macro_name {g_w[14].g_d[0].u_m} -location {12.960 572.960} -orientation R0
-place_macro -macro_name {g_w[14].g_d[1].u_m} -location {202.960 572.960} -orientation R0
-place_macro -macro_name {g_w[15].g_d[0].u_m} -location {392.960 572.960} -orientation R0
-place_macro -macro_name {g_w[15].g_d[1].u_m} -location {582.960 572.960} -orientation R0
-place_macro -macro_name {g_n[0].g_d[0].u_m} -location {12.960 652.960} -orientation R0
-place_macro -macro_name {g_n[0].g_d[1].u_m} -location {202.960 652.960} -orientation R0
-place_macro -macro_name {g_n[1].g_d[0].u_m} -location {392.960 652.960} -orientation R0
-place_macro -macro_name {g_n[1].g_d[1].u_m} -location {582.960 652.960} -orientation R0
-place_macro -macro_name {g_n[2].g_d[0].u_m} -location {12.960 732.960} -orientation R0
-place_macro -macro_name {g_n[2].g_d[1].u_m} -location {202.960 732.960} -orientation R0
-place_macro -macro_name {g_n[3].g_d[0].u_m} -location {392.960 732.960} -orientation R0
-place_macro -macro_name {g_n[3].g_d[1].u_m} -location {582.960 732.960} -orientation R0
-place_macro -macro_name {g_n[4].g_d[0].u_m} -location {12.960 812.960} -orientation R0
-place_macro -macro_name {g_n[4].g_d[1].u_m} -location {202.960 812.960} -orientation R0
-place_macro -macro_name {g_n[5].g_d[0].u_m} -location {392.960 812.960} -orientation R0
-place_macro -macro_name {g_n[5].g_d[1].u_m} -location {582.960 812.960} -orientation R0
-place_macro -macro_name {g_n[6].g_d[0].u_m} -location {12.960 892.960} -orientation R0
-place_macro -macro_name {g_n[6].g_d[1].u_m} -location {202.960 892.960} -orientation R0
-place_macro -macro_name {g_n[7].g_d[0].u_m} -location {392.960 892.960} -orientation R0
-place_macro -macro_name {g_n[7].g_d[1].u_m} -location {582.960 892.960} -orientation R0
+# Enumerate the actual OpenDB instances: frontend escaping of generated hierarchy names
+# differs between the synthesis Verilog and the linked DB. Placement never guesses names.
+set crom_block [ord::get_db_block]
+set crom_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+set crom_macros {}
+foreach m [$crom_block getInsts] {
+ if {[[$m getMaster] isBlock] && [[$m getMaster] getName] eq "ot_rom_4096x266_m8"} {
+  lappend crom_macros [$m getName]
+ }
+}
+if {[llength $crom_macros] != 48} {error "CROM48 requires48 real macros; found [llength $crom_macros]"}
+set crom_i 0
+foreach name [lsort -dictionary $crom_macros] {
+ set m [$crom_block findInst $name]
+ set x [expr {12.96+($crom_i%4)*190.0}]
+ set y [expr {12.96+($crom_i/4)*80.0}]
+ $m setOrient R0
+ $m setLocation [expr {round($x*$crom_dbu)}] [expr {round($y*$crom_dbu)}]
+ $m setPlacementStatus FIRM
+ puts "CROM48 macro $name at $x $y"
+ incr crom_i
+}
