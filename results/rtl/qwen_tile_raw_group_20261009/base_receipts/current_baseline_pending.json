@@ -1,0 +1,70 @@
+{
+  "schema": "QWEN_TILE_BASE_QUALIFICATION_RECEIPT_V1",
+  "owner_rule": "Z4 actual baseline same vehicle/currentbudget failure required before cx intake route",
+  "bases": [
+    {
+      "name": "qfd_tile_rp1p-1ee48d600tc",
+      "source": {
+        "branch": "claude/qwen-tile-20261008",
+        "commit": "1ee48d60061277e0f7920c72a0688377f45cd0b6"
+      },
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile_rp1p-1ee48d600tc",
+      "status": "RUNNING",
+      "stage_idx": 4,
+      "actual_routed_TT_FF_DRC_receipt_available": false
+    },
+    {
+      "name": "qfd_tile_e_rp1p-1ee48d600tc",
+      "source": {
+        "branch": "claude/qwen-tile-20261008",
+        "commit": "1ee48d60061277e0f7920c72a0688377f45cd0b6"
+      },
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile_e_rp1p-1ee48d600tc",
+      "status": "RUNNING",
+      "stage_idx": 4,
+      "actual_routed_TT_FF_DRC_receipt_available": false
+    },
+    {
+      "name": "qfd_tile_rp2np-1ee48d600tc",
+      "source": {
+        "branch": "claude/qwen-tile-20261008",
+        "commit": "1ee48d60061277e0f7920c72a0688377f45cd0b6"
+      },
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_tile_rp2np-1ee48d600tc",
+      "status": "RUNNING",
+      "stage_idx": 4,
+      "actual_routed_TT_FF_DRC_receipt_available": false
+    },
+    {
+      "name": "qfd_tile_e_rp2np-1ee48d600tc",
+      "source": {
+        "branch": "claude/qwen-tile-20261008",
+        "commit": "1ee48d60061277e0f7920c72a0688377f45cd0b6"
+      },
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_tile_e_rp2np-1ee48d600tc",
+      "status": "RUNNING",
+      "stage_idx": 4,
+      "actual_routed_TT_FF_DRC_receipt_available": false
+    }
+  ],
+  "baseline_pass_or_fail": null,
+  "cx_adoption": false,
+  "cx_route_authorized": false,
+  "report": {
+    "path": "rp1p_1ee48d600_SS_place.rpt",
+    "historical_filename_retained": true,
+    "corner_correction": "Mode:ss/CornerWC namespace reads TT stdcell+macro_tt liberties under OT_ORFS_CORNER_OVERRIDE=TC, as recovered own flow.log states",
+    "sha256": "ca3fa685c89e160f8e563dc2feafc15886ac98583bf716f4949e9b8c3c9177c7",
+    "placement_only_ideal_clock": true,
+    "place_period_ps": 770,
+    "place_setup_uncertainty_ps": 60,
+    "place_WNS_ps": -102.24,
+    "current833_arithmetic_normalization_ps": -38.907,
+    "normalization_is_not_current_propagated_STA": true
+  },
+  "next": "Preserve all4 progressing bases; collect actual source/frame/current833.333 TTref/FF25/DRC receipt. Passing0/0/DRC0 baseline retains baseline and cx remains unused."
+}
