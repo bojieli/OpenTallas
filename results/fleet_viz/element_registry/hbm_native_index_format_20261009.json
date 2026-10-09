@@ -40,14 +40,15 @@
         }
       },
       "physical": {
-        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "status": "pending independent mapped storage protection audit, die slots/channel allocation and TT/FF route; RTL dualrail fault gates PASS only, no mapped reliability or correction claim",
         "corners": {},
         "evidence": []
       },
       "dependencies": [
         "actual published/drained query source and dynamic owner controller",
         "native selector quarter-completion pin record",
-        "actual TU publication store and ordered global consumer"
+        "actual TU publication store and ordered global consumer",
+        "independent mapped storage audit: complementary RTL copies may be merged during synthesis; actual native service metadata mapping demonstrated this failure mode"
       ],
       "integration": {
         "status": "component gates; source/controller/selector/store end-to-end join pending",
@@ -97,14 +98,15 @@
         }
       },
       "physical": {
-        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "status": "pending independent mapped storage protection audit, die slots/channel allocation and TT/FF route; RTL dualrail fault gates PASS only, no mapped reliability or correction claim",
         "corners": {},
         "evidence": []
       },
       "dependencies": [
         "actual published/drained query source and dynamic owner controller",
         "native selector quarter-completion pin record",
-        "actual TU publication store and ordered global consumer"
+        "actual TU publication store and ordered global consumer",
+        "independent mapped storage audit: complementary RTL copies may be merged during synthesis; actual native service metadata mapping demonstrated this failure mode"
       ],
       "integration": {
         "status": "component gates; source/controller/selector/store end-to-end join pending",
@@ -153,14 +155,15 @@
         }
       },
       "physical": {
-        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "status": "pending independent mapped storage protection audit, die slots/channel allocation and TT/FF route; RTL dualrail fault gates PASS only, no mapped reliability or correction claim",
         "corners": {},
         "evidence": []
       },
       "dependencies": [
         "actual published/drained query source and dynamic owner controller",
         "native selector quarter-completion pin record",
-        "actual TU publication store and ordered global consumer"
+        "actual TU publication store and ordered global consumer",
+        "independent mapped storage audit: complementary RTL copies may be merged during synthesis; actual native service metadata mapping demonstrated this failure mode"
       ],
       "integration": {
         "status": "component gates; source/controller/selector/store end-to-end join pending",
