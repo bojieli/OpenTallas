@@ -1,0 +1,17 @@
+{
+ "verdict":"PASS_MINIMUM_FACADE",
+ "source_commit":"e30dbaef1","reader_default_ENABLE":0,"gate_ENABLE":1,
+ "endpoint_ECC_PIPE":1,"context_bits":74,"native_payload_bits":512,
+ "fixture":"twoactualalignedv2 SRAM256x256macros compose512bit readfixture; realmacroread/capture plus explicitvariable arbitergrant/response-valid calendar",
+ "reads":80,"scalars":1280,"output_flits":80,"elapsed_cycles":981,
+ "excluded_from_elapsed":["native sharedW1/W3/GU/W2 arithmetic","selectedNP8 arbitration calendar","actualnativefieldwritevisibility","realE3 executablebase","physicalclockclosure"],
+ "maximum_outstanding_reads":1,"lease_release":"only after realprotectedpublisher80thacceptedoutput",
+ "negative_cases":["native_write_retiredfalse:zeroreads/zerooutputs","lease_contextmismatch:zeroreads/zerooutputs","rangeinvalid:zeroreads/zerooutputs","staleRSPcontext","wrongRSPword","rawFP32low16nonzero","RSPfault","leasewithdrawnwhileowned"],
+ "positive_values":"exact widenedBF16 synthetic words including signedzero/subnormal, not releasedsharedarithmetic",
+ "CE":"publisherSRAM correction exact andreported","UE":"publisherSRAM UE blocksalloutput, readerretainsleaseandbusy",
+ "remote_host":"ot-epyc1tb","remote_run":"/srv/opentallas-scratch/claude/mtp-shared-reader-e30dbaef1",
+ "maximum_process_RSS_KiB":32932,"admission_GB":1,
+ "native_binding_qualified":false,"native_shared_arithmetic_qualified":false,"physical_qualified":false,
+ "missing_namespace":["selectedsharedW2phase/instruction","numericE3 o_base+decodedo_d withrankorigin","nativeVMwrite-retirement/visibilityfence","read1scheduler rangelease"],
+ "review":"Claude review requested in review_queue/mtp_rom_draft_p2_shared.md; no newreaderroute before review"
+}

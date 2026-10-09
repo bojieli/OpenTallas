@@ -1,0 +1,12 @@
+{
+ "verdict":"SYNTHESIS_ONLY_ROUTE_LIVE",
+ "source_commit":"7279623a2","top":"ot_dsrom_mtp_shared_producer","ECC_PIPE":1,
+ "mapped_area_um2":24004.513620,"mapped_sequential_area_um2":1172.581920,
+ "macro_count":3,"macro_area_um2_total":21290.534208,
+ "macro":"ot_sram_1r1w_256x256_m2_r2c2 alignedv2","macro_size_um":[172.824,41.064],
+ "candidate_die_um":[320,320],"replicas":4,
+ "route_host":"ot-epyc1tb","run":"/srv/opentallas-scratch/claude/mtp-shared-physical-7279623a2-a2",
+ "admission_GB":16,"clock_period_ns":0.833333,"setup_uncertainty_ns":0.06,"hold_uncertainty_ns":0.025,
+ "corners":"TTroute/FFhold,SSsensitivitypending","closure_qualified":false,
+ "pre_synthesis_failure":"attempt1 lacked tools/orfs_hold_mm.py; failure retained, no synthesisobjectsstarted; attempt2 includes exactsame727helperpy/tcl with otherwisepinnedsource"
+}

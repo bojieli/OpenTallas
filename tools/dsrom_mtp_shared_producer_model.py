@@ -24,7 +24,8 @@ def model():
             pin_pitch_um=.4,face_um=320),
         area=dict(slot_um=[320,320],SRAM_macro_um=[172.824,41.064],
             SRAM_area_um2_per_rank=3*7096.844736,planning_cells_um2=20000,
-            utilization_limit=.55,planning_fit=True,physical_closed=False),
+            mapped_total_um2=24004.513620,mapped_sequential_um2=1172.581920,
+            mapped_source='7279623a2',utilization_limit=.55,planning_fit=True,physical_closed=False),
         latency=dict(input_frame_II=3,input_frames=80,read_prepare_cycles=3,
             output_frames=80,unoverlapped_endpoint_cycles_upper=562,
             selected_ECC_pipe=True,ECC_decoder_stages=2,
@@ -34,8 +35,11 @@ def model():
         clock=dict(domain='stream',GHz=1.2,setup_uncertainty_ps=60,hold_uncertainty_ps=25,
             acceptance='TTsetup>=0 FFhold>=0 DRC0; SS sensitivity'),
         native_field_abi='spine pq396-399/pqc607: o_we/o_addr/o_data scalar32 perregion, BF16format selects{r_bf16,16zero}; first512bitpublisher requires actualVMreader, not assumed packedfieldflits',
+        minimum_measurement=dict(source='906347f3a',synthetic_contexts=6,
+            rows_per_context=1280,flits=480,elapsed_cycles_with_stalls=4092,
+            record='results/rtl/dsrom_mtp_shared_20261009/endpoint/terminal.json'),
         qualification=dict(native_shared_arithmetic=False,actual_field_return_binding=False,
-            endpoint_exact=False,contextual_physical=False))
+            endpoint_transport_exact=True,contextual_physical=False))
 
 def reader_model():
     return dict(schema='opentallas.dsrom.mtp-shared-native-reader.v1',default_enabled=False,
@@ -62,4 +66,7 @@ def reader_model():
         source_namespace=dict(symbolic='E3, o_base+decodedo_d, rank-origin from selected dispatch',
             numeric_base_bound=False,selected_phase_bound=False,native_write_visibility_bound=False,
             reserved_read1_owner_bound=False),
-        qualification=dict(minimum_facade=False,native_binding=False,physical=False))
+        minimum_measurement=dict(source='e30dbaef1',fixture='twoactualSRAMmacros as one512bitreadfixture; noNP8bindingclaim',
+            reads=80,rows=1280,output_flits=80,elapsed_cycles_with_variable_fixture_calendar=981,
+            record='results/rtl/dsrom_mtp_shared_20261009/reader/terminal.json'),
+        qualification=dict(minimum_facade=True,native_binding=False,physical=False))
