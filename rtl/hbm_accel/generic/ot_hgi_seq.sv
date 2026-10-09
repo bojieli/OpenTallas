@@ -55,6 +55,7 @@ module ot_hgi_seq #(
     input  wire [31:0]   db_job,
     input  wire [3:0]    db_gen,
     input  wire [1:0]    db_entry,
+    input  wire [3:0]    db_ncol,       // verify columns: bounds the TOKX count k
     // record fetch: 32 B sectors, in-order responses
     output wire          f_req_v,
     input  wire          f_req_rdy,
@@ -91,8 +92,7 @@ module ot_hgi_seq #(
     output reg  [3:0]    cpl_status,
     output reg  [31:0]   cpl_cycles,
     // CTL.TOKX (Q-MTP-1, hbm-forks 2026-10-09): the committed tokens of the step, up to 16, carried on the completion
-    output reg  [4:0]    cpl_ntok,
-    output reg  [287:0]  cpl_toks       // token i in bits 18 i + 17 : 18 i
+    output wire          cpl_tokx       // 1: this completion beat is a CTL.TOKX committed token (status 0), END follows
 );
     // ---- registered boundary (submit rule X4): every data / status input lands in a pin flop (config words are
     // quasi-static, retire / fault pulses and VM read data one cycle later: the drain mask only waits longer)
@@ -114,9 +114,9 @@ module ot_hgi_seq #(
                        M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
-                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14;
+                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15;
     reg [4:0]  st;
-    reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q;
+    reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
     reg [RB:0]  wp, rp, frp;             // write (sector aligned), record, free (outermost loop body start or rp)
     reg [39:0]  faddr;
@@ -234,7 +234,7 @@ module ot_hgi_seq #(
         case (c)
             6'd0: dynv = 32'd0;
             6'd1: dynv = {12'd0, pos};
-            6'd2: dynv = {11'd0, {1'b0, pos} + 21'd1};
+            6'd2: dynv = {11'd0, pos1_q};       // registered pos + 1 (drive-0849: pos -> d_n path)
             6'd3: dynv = {14'd0, token};
             6'd4: dynv = {16'd0, Lc};
             6'd5: dynv = {24'd0, rank_r};
@@ -259,7 +259,7 @@ module ot_hgi_seq #(
     reg [5:0]   ash;
     reg [39:0]  ieff;
     reg         have_i, is_end, is_tokx;
-    reg [4:0]   tk_i, tk_n; reg [17:0] tk_base;
+    reg [4:0]   tk_i, tk_n; reg [17:0] tk_base; reg tk_k; reg [3:0] ncol; reg [19:0] tk_pos;
     localparam [2:0] A_LOAD = 3'd0, A_ML = 3'd1, A_ML1 = 3'd2, A_MD = 3'd3, A_FIN = 3'd4, A_NEXT = 3'd5;
     wire [255:0] dc = dr[aj];
     wire        dc_idx = dc[M_IDX];
@@ -282,7 +282,8 @@ module ot_hgi_seq #(
     integer k;
     wire [15:0] u_acc = u_v & u_rdy;
     assign db_rdy = (st == S_IDLE) && !hold_r;
-    assign cpl_v = (st == S_CPL);
+    assign cpl_v = (st == S_CPL) || (st == S_TKB);
+    assign cpl_tokx = (st == S_TKB);
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
     wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
     wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
@@ -344,7 +345,7 @@ module ot_hgi_seq #(
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
     endtask
     task fault3;
-        begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_v <= 16'd0; cpl_ntok <= 5'd0;
+        begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_v <= 16'd0;
               vr_v <= 1'b0; end
     endtask
     always @(posedge clk or negedge rst_n) begin
@@ -376,9 +377,10 @@ module ot_hgi_seq #(
                     token <= db_token; pos <= db_pos; cpl_job <= db_job; cpl_gen <= db_gen; cpl_pos <= db_pos;
                     db_entry_q <= db_entry;
                     cpl_cycles <= 0; depth <= 0; Lc <= 0; L1c <= 0; cpl_token <= 0; cpl_status <= 0; st <= S_DB;
-                    cpl_ntok <= 5'd0; cpl_toks <= 288'd0;
+                    ncol <= db_ncol;
                 end
                 S_DB: begin
+                    pos1_q <= {1'b0, pos} + 21'd1;
                     if (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
@@ -397,7 +399,8 @@ module ot_hgi_seq #(
                 S_RDW: if (wk == 5'd0) begin                           // ---- evaluate the header
                     if (depth != 2'd0 && rec_end > RW - 2) fault3;
                     else if (avail < {{(RB-4){1'b0}}, rlen}) ;          // wait for the record's words
-                    else if (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)}) fault3;
+                    else if (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)} ||
+                             (h_unit == 4'd9 && (h_op == 6'd1 || h_op == 6'd3))) fault3;   // IDX ops 1 / 3 reserved (HGI-1 6.7)
                     else if (!pred_ok) begin advance(rlen); st <= S_DEC; end
                     else if (is_ctl && h_op != 6'd3 && h_op != 6'd5) begin
                         case (h_op)
@@ -502,15 +505,14 @@ module ot_hgi_seq #(
                 S_IDX: if (aj == 3'd7) begin
                         if (is_end) begin
                             vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_ENDRD;
-                        end else if (is_tokx) begin                 // k = A's effective n, 1..16 tokens from VM
-                            if (d_n[20:0] == 21'd0 || d_n[20:0] > 21'd16 ||
-                                {3'd0, d_desc[M_BASE +: 18]} + d_n[20:0] > 21'h40000) fault3;
+                        end else if (is_tokx) begin                 // A[0] = k, then A[1..k]: k completion beats
+                            if ({3'd0, d_desc[M_BASE +: 18]} + 21'd17 > 21'h40000) fault3;
                             else begin
-                                tk_base <= d_desc[M_BASE +: 18]; tk_n <= d_n[4:0]; tk_i <= 5'd0;
-                                vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; cpl_toks <= 288'd0; st <= S_TOKX;
+                                tk_base <= d_desc[M_BASE +: 18]; tk_i <= 5'd0; tk_k <= 1'b1; tk_pos <= pos;
+                                vr_v <= 1'b1; vr_addr <= d_desc[M_BASE +: 18]; st <= S_TOKX;
                             end
                         end else begin
-                            d_hdr <= h; d_pos1 <= {1'b0, pos} + 21'd1; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
+                            d_hdr <= h; d_pos1 <= pos1_q; d_pslot1 <= p1; d_L <= Lc; d_L1 <= L1c;
                             u_v <= 16'd1 << h_unit; st <= S_DISP;
                         end
                     end else case (ix)
@@ -556,25 +558,38 @@ module ot_hgi_seq #(
                 S_ENDRD: begin
                     if (vr_v && vr_rdy) vr_v <= 1'b0;
                     if (vr_rsp_v_r) begin
-                        st <= S_CPL; fetching <= 1'b0;
+                        st <= S_CPL; fetching <= 1'b0; cpl_pos <= pos;
                         cpl_token <= vr_rsp_data_r[17:0];
                         cpl_status <= (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) ? 4'd3 : 4'd0;
                     end
                 end
+                // CTL.TOKX (HGI-1 7.4, Q-MTP-1): A = U32 [1 + ncol], A[0] = k (1 <= k <= ncol), A[1 .. k] = the committed
+                // tokens; each becomes a completion beat {token A[i], pos + i - 1, status 0} (cpl_tokx) before END
                 S_TOKX: begin
                     if (vr_v && vr_rdy) vr_v <= 1'b0;
                     if (vr_rsp_v_r) begin
-                        if (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) fault3;
+                        if (tk_k) begin
+                            if (vr_rsp_data_r == 32'd0 || vr_rsp_data_r > {28'd0, ncol}) fault3;
+                            else begin
+                                tk_k <= 1'b0; tk_n <= vr_rsp_data_r[4:0]; tk_i <= 5'd1;
+                                vr_v <= 1'b1; vr_addr <= tk_base + 18'd1;
+                            end
+                        end else if (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) fault3;
                         else begin
-                            cpl_toks[tk_i * 18 +: 18] <= vr_rsp_data_r[17:0];
-                            if (tk_i + 5'd1 == tk_n) begin cpl_ntok <= tk_n; advance(rlen); st <= S_DEC; end
-                            else begin tk_i <= tk_i + 5'd1; vr_v <= 1'b1; vr_addr <= tk_base + {13'd0, tk_i} +
-`ifdef OT_HGI_SEQ_MUT_TOKX
-                                18'd0; end                                // NEGATIVE CONTROL: the token address does not advance
-`else
-                                18'd1; end
-`endif
+                            cpl_token <= vr_rsp_data_r[17:0]; cpl_pos <= tk_pos; cpl_status <= 4'd0; st <= S_TKB;
                         end
+                    end
+                end
+                S_TKB: if (cpl_rdy) begin
+                    tk_pos <= tk_pos + 20'd1;
+                    if (tk_i == tk_n) begin advance(rlen); st <= S_DEC; end
+                    else begin
+                        tk_i <= tk_i + 5'd1; vr_v <= 1'b1; st <= S_TOKX;
+`ifdef OT_HGI_SEQ_MUT_TOKX
+                        vr_addr <= tk_base + {13'd0, tk_i};       // NEGATIVE CONTROL: the token address does not advance
+`else
+                        vr_addr <= tk_base + {13'd0, tk_i} + 18'd1;
+`endif
                     end
                 end
                 S_CPL: if (cpl_rdy) st <= S_IDLE;

@@ -1,0 +1,47 @@
+{
+ "capture_block_verbatim": true,
+ "lines": 77,
+ "differences": [
+  "enable st==S_DYN -> cap (driven st == S_DYN)",
+  "b_tok/b_pos stay in the core"
+ ],
+ "dy_fields_old": [
+  "A_D",
+  "B_D",
+  "C_D",
+  "D_D",
+  "ME_D_K",
+  "ME_D_NOUT",
+  "ME_D_OBASE",
+  "ME_D_TILES",
+  "ME_D_WBASE",
+  "ME_D_XBASE",
+  "O_D",
+  "QE_D_OBASE",
+  "SU_D_NIN",
+  "SU_D_NOUT",
+  "XU_D_K",
+  "XU_D_N"
+ ],
+ "dy_fields_new": [
+  "A_D",
+  "B_D",
+  "C_D",
+  "D_D",
+  "ME_D_K",
+  "ME_D_NOUT",
+  "ME_D_OBASE",
+  "ME_D_TILES",
+  "ME_D_WBASE",
+  "ME_D_XBASE",
+  "O_D",
+  "QE_D_OBASE",
+  "SU_D_NIN",
+  "SU_D_NOUT",
+  "XU_D_K",
+  "XU_D_N"
+ ],
+ "dy_fields_equal": true,
+ "dyn_array_reads_left_in_core": 0,
+ "rope_read": "dyn[d_cslot * NDYN + 4] -> port DYI_ROPE (slot d_cslot, idx 4)"
+}

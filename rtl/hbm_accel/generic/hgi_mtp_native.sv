@@ -17,7 +17,9 @@
 // Token width: 17 bits (DS vocab 129,280 < 2^17).  The generic interface carries 18-bit ids; the CP range-checks
 // every completion / AMAX id against cp_vocab before it reaches f_am, so bit 17 is 0 for DS.  Qwen MTP is reserved
 // (HBM_GENERIC_INTERFACE 10.3); its 18-bit controller is hgi-takeover's ot_hgi_mtp_core18 lineage.
-module hgi_mtp_native (
+// PRL 4: the controller's prompt / forced-token read wait behind MX1 REGB=1 (t_provider and t_mtp pin flops add 2 to
+// its own 2).  A longer wait is exact for any shorter loop (the address is held until the read).
+module hgi_mtp_native #(parameter integer PRL=4) (
   input  wire         clk,
   input  wire         rst_n,
   input  wire [196:0] f_cmdproc,
@@ -27,7 +29,7 @@ module hgi_mtp_native (
   output wire [18:0]  t_coll,
   input  wire [0:0]   f_coll
 );
-  hfd_mtp_native_cp_stop #(.ENABLE(1)) u_native (
+  hfd_mtp_native_cp_stop #(.ENABLE(1),.PRL(PRL)) u_native (
     .clk(clk), .rst_n(rst_n),
     .f_cmdproc(f_cmdproc), .t_cmdproc(t_cmdproc),
     .f_su_red(523'b0),
