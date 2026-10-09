@@ -94,7 +94,7 @@ def networks(m, fp, buses, paths, chain):
             cxs=[group['x']+fp.CH/2+c*(row0.w+fp.SHAVE+fp.CH) for c in range(5)]
             col=min(cxs,key=lambda x:abs(x-a[0]))
             if p<2:
-                cross=gutter+sgn*(20+70*p)
+                cross=gutter+sgn*(10+24*p)
             elif p<7:
                 mid=row0.y+row0.h+fp.SHAVE+fp.CH/2 if side=='S' else row0.y-fp.CH/2
                 cross=mid+sgn*((p-4)*72)
