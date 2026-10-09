@@ -32,6 +32,6 @@ EXTRA=${EXTRA_SRC:-}
   physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
 D=""; [ -n "$MUT" ] && D="-D$MUT"
 "$VL" --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKSEQ -Wno-UNOPTFLAT -Wno-MULTIDRIVEN --top-module $TOP \
-  -I"$OUT/vec" $D -Mdir "$OUT/obj${MUT:+_$MUT}" $SRC $EXTRA $TB -j ${J:-16} \
+  -I"$OUT/vec" $D ${CFAST:+-MAKEFLAGS "OPT_FAST=-O0 OPT_SLOW=-O0 OPT_GLOBAL=-O0"} -Mdir "$OUT/obj${MUT:+_$MUT}" $SRC $EXTRA $TB -j ${J:-16} \
   > "$OUT/build${MUT:+_$MUT}.log" 2>&1 || { rm -f "$OUT/run${MUT:+_$MUT}.log"; tail -30 "$OUT/build${MUT:+_$MUT}.log"; exit 2; }
 "$OUT/obj${MUT:+_$MUT}/V$TOP" +DIR="$OUT/vec" | tee "$OUT/run${MUT:+_$MUT}.log" | tail -8
