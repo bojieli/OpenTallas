@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_mtp_p2_prefix;
- parameter integer MUT_COPY_FIRST=0;
+ parameter integer MUT_COPY_FIRST=0,ERROR_MODE=0;
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0,start_v=0,iv=0,abort=0;wire sr,ir,ov,done,fault,corrected;
  reg [73:0] identity=74'h12345678;reg [26:0] ids={9'd127,9'd65,9'd3};
@@ -22,7 +22,12 @@ module tb_mtp_p2_prefix;
  always @(negedge clk)ordy<=rst_n&&(cycles%7!=1)&&(cycles%7!=2);
  always @(posedge clk)begin
  cycles=cycles+1;
- if(fault)$fatal(1,"PREFIX unexpected fault atcycle%0d",cycles);
+ if(fault)begin
+ if(ERROR_MODE!=0)begin $display("PREFIX NEGATIVE PASS mode%0d abort before output cycles%0d",ERROR_MODE,cycles);$finish;end
+ else $fatal(1,"PREFIX unexpected fault atcycle%0d",cycles);
+ end
+ if(dut.enabled.state==11&&dut.enabled.expert_index==0&&dut.enabled.word_index==0&&dut.enabled.sum_q[31:0]!==32'd0)
+ $fatal(1,"PREFIX +0/-0 first-round mutant detected");
  if(ov&&ordy)begin
  if(oid!==identity||ow!==received||olast!==(received==79))$fatal(1,"PREFIX metadata");
  for(l=0;l<16;l=l+1)begin
@@ -41,10 +46,12 @@ module tb_mtp_p2_prefix;
  for(e=0;e<3;e=e+1)for(w=0;w<80;w=w+1)begin
  wait(ir);@(negedge clk);
  for(s=0;s<16;s=s+1)raw[32*s+:32]=inputs[e*1280+w*16+s];
+ if(ERROR_MODE==2&&e==0&&w==0)raw[0]=1;
  expert=ids[9*e+:9];word=w;last=w==79;transaction_last=(e==2)&&(w==79);
  @(negedge clk);incoming=enc;
  // Actual transport-code single data-bit error: decoder must correct it.
  if(e==1&&w==17)incoming[3]=~incoming[3];
+ if(ERROR_MODE==1&&e==0&&w==0)begin incoming[3]=~incoming[3];incoming[5]=~incoming[5];end
  iv=1;@(posedge clk);if(!ir)$fatal(1,"PREFIX input ready");
  @(negedge clk);iv=0;
  end
