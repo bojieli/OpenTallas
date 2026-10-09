@@ -38,6 +38,10 @@ def sram_model():
 def private_operand_model():
     row=sram_model()
     row.update({"independent_activation_supply":True,
+      "service_clock_hz":976562500,
+      "producer_stream_clock_hz":1200000000,
+      "serial_operand_clock_hz":900000000,
+      "clock_source_basis":"current die external clock contract: HBM1.024ns; streaming5/6ns; serial10/9ns; actual CDC binding pending",
       "activation_payload_dtype":"BF16 copiedbitwise at existing golden rounding boundary",
       "activation_input_bits":256,"activation_input_beat_bits":11,"activation_transaction_bits":16,
       "activation_input_forward_boundary_bits":284,
