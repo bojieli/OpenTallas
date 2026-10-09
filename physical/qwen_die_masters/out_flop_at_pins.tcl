@@ -44,10 +44,10 @@ foreach bt [$ot_blk getBTerms] {
   if {$px <= $cx0} { set side L } elseif {$px >= $cx1} { set side R } elseif {$py <= $cy0} { set side B } else { set side T }
   lappend cand [list $side [expr {($side eq "L" || $side eq "R") ? $py : $px}] $ff $px $py]
 }
-foreach side {L R B T} { set k($side) 0 }
+foreach side {L R B T} { set ot_k($side) 0 }
 foreach c [lsort -real -index 1 $cand] {
   lassign $c side pos ff px py
-  set col [expr {$k($side) % 4}]; incr k($side)
+  set col [expr {$ot_k($side) % 4}]; incr ot_k($side)
   set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
   set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
   switch $side {

@@ -2,7 +2,7 @@
 """Closure-loop calibrate stage: measure a block's real clock insertion after CTS, at SS, TT and FF.
 
 Reads <base>/4_1_cts.odb (+ its SDC: 4_cts.sdc, else 3_place.sdc) with placement-estimated parasitics (or a routed
-6_final.odb + SPEF if --routed), propagates clocks and reports, per corner, the clock arrival (rise) at the CLK pins of
+6_final.odb + SPEF if --routed), propagates clocks and reports, per corner, the clock arrival of the ACTIVE edge (FLOW-FIX-0410) at the CLK pins of
 (a) BOUNDARY registers -- registers whose D is in the fan-out of a data input, or whose output reaches a data output,
 i.e. the flops the IO SDC really talks to -- and (b) every register of the clock.  mean / min / max in ps.  Read-only
 on the ORFS dir (Tcl in a temp dir).  Writes JSON and prints shell assignments (CK_SS_MEAN=.. CK_FF_MIN=..) that the
@@ -23,6 +23,45 @@ from pathlib import Path
 
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 
+# FLOW-FIX-0410 2026-10-09: the arrival of the sink's ACTIVE transition (from-transition of its clock->output arc),
+# measured from the source edge that produces it, on the rise-edge time base (an arrival from the source FALL edge has
+# the half period removed).  Same rule as physical/common_flow/io_ref_routed.sdc: behind an odd clock inversion
+# (ot_fwd_link_stage, fck = ~ck) arrival_max_rise is T/2 + tree (dsfd_hstnh_515: 603 vs ~190 ps).
+ACTIVE_TCL = r"""
+set ::ot_ck_act [dict create]
+proc ot_ck_active {p} {
+  set c [get_cells -quiet -of_objects $p]
+  if {![llength $c]} { return "" }
+  set k "[get_property $c ref_name]/[get_property $p lib_pin_name]"
+  if {[dict exists $::ot_ck_act $k]} { return [dict get $::ot_ck_act $k] }
+  sta::redirect_string_begin
+  catch {report_edges -from $p}
+  set r [sta::redirect_string_end]
+  set on 0; set fr {}
+  foreach l [split $r "\n"] {
+    if {[regexp {^\S} $l]} { set on [regexp {(Clk|En) to Q} $l]; continue }
+    if {$on && [regexp {^\s+([\^v])\s+->} $l -> e]} { if {[lsearch -exact $fr $e] < 0} { lappend fr $e } }
+  }
+  set a [expr {[llength $fr] == 1 ? ([lindex $fr 0] eq "^" ? "r" : "f") : ""}]
+  dict set ::ot_ck_act $k $a
+  return $a
+}
+proc ot_ck_arr {p clk} {
+  set half 0.0
+  if {![catch {list [$clk waveform] [$clk period] [get_property $clk period]} w]} {
+    lassign $w wf ps pu
+    if {[llength $wf] >= 2 && $ps > 0} { set half [expr {([lindex $wf 1] - [lindex $wf 0]) * $pu / $ps}] } }
+  set ar [get_property $p arrival_max_rise]; set af [get_property $p arrival_max_fall]
+  set okr [string is double -strict $ar]; set okf [string is double -strict $af]
+  if {!($okr && $okf)} { return [expr {$okr ? $ar : ($okf ? $af : "")}] }
+  set t [ot_ck_active $p]
+  set lo [expr {$ar <= $af ? "r" : "f"}]
+  if {$t eq ""} { set t $lo }
+  set v [expr {$t eq "r" ? $ar : $af}]
+  return [expr {$t eq $lo ? $v : $v - $half}]
+}
+"""
+
 
 def tcl(corner, db, sdc, routed, clock):
     C = corner.upper()
@@ -40,8 +79,10 @@ set bnd {{}}
 set din [all_inputs -no_clocks]
 if {{[llength $din]}} {{ foreach pe [find_timing_paths -path_delay max -from $din -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe endpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }} }}
 foreach pe [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {{ set i [regsub {{/[^/]+$}} [get_full_name [get_property $pe startpoint]] {{}}]; if {{[dict exists $regs $i]}} {{ dict set bnd $i 1 }} }}
+{ACTIVE_TCL}
+set ot_ck_clk [lindex [get_clocks {{{clock}}}] 0]
 dict for {{i cp}} $regs {{
-  set a [get_property [get_pins $cp] arrival_max_rise]
+  set a [ot_ck_arr [get_pins $cp] $ot_ck_clk]
   if {{$a eq "" || $a eq "INF" || $a eq "-INF"}} continue
   puts "OT_CK [expr {{[dict exists $bnd $i] ? 1 : 0}}] $a"
 }}

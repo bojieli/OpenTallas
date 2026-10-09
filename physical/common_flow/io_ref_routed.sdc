@@ -15,14 +15,80 @@
 # names its scene in ::ot_ioref_scene (ot_mm_sync: BC); arrivals are then read with report_arrival -scene (the max of
 # the rise arrivals, = arrival_max_rise of a single-corner session).  A single-scene session is unchanged.
 proc ot_ir_multi {} { expr {![catch {sta::multi_scene} m] && $m} }
-proc ot_ir_arr {p} {
-  if {![ot_ir_multi]} { return [get_property $p arrival_max_rise] }
+# FLOW-FIX-0410 2026-10-09 (struct-close SC-4/SC-14): the insertion of a sink is the arrival of its ACTIVE transition,
+# measured from the source edge that produces it.  Behind an odd number of clock inversions (ot_fwd_link_stage on
+# fck = ~ck with negedge flops: every common-clock station) the pin RISE comes from the source FALL edge, so
+# arrival_max_rise = T/2 + tree: dsfd_hstnh_515 read "vclk core_clk mean 603.1" for a ~190 ps tree and CTS hold repair
+# chased FF -384.7 on all 515 outputs (RSZ-0060).  The active transition is the from-transition of the cell's
+# clock->output arc ("Reg Clk to Q" / latch "En to Q"; cached per cell and pin); an arrival produced by the source
+# fall edge has the half period (fall - rise of the waveform) removed, so the result stays on the rise-edge time base
+# of every earlier reading.  A non-inverted posedge sink is unchanged; a negedge sink reads its fall tree (not its
+# rise tree); a cell without a recognisable arc reads the transition produced by the source RISE edge.
+set ::ot_ir_act [dict create]
+proc ot_ir_active {p} {
+  set c [get_cells -quiet -of_objects $p]
+  if {![llength $c]} { return "" }
+  set k "[get_property $c ref_name]/[get_property $p lib_pin_name]"
+  if {[dict exists $::ot_ir_act $k]} { return [dict get $::ot_ir_act $k] }
+  sta::redirect_string_begin
+  catch {report_edges -from $p}
+  set r [sta::redirect_string_end]
+  set on 0; set fr {}
+  foreach l [split $r "\n"] {
+    if {[regexp {^\S} $l]} { set on [regexp {(Clk|En) to Q} $l]; continue }
+    if {$on && [regexp {^\s+([\^v])\s+->} $l -> e]} { if {[lsearch -exact $fr $e] < 0} { lappend fr $e } }
+  }
+  set a [expr {[llength $fr] == 1 ? ([lindex $fr 0] eq "^" ? "r" : "f") : ""}]
+  dict set ::ot_ir_act $k $a
+  return $a
+}
+# {edge transition value} triples (edge ^ / v of the source clock, transition r / f at the pin, max arrival)
+proc ot_ir_arrs {p cn} {
+  if {![ot_ir_multi]} {
+    set ar [get_property $p arrival_max_rise]; set af [get_property $p arrival_max_fall]
+    set ok [expr {[string is double -strict $ar] && [string is double -strict $af]}]
+    if {!$ok} {
+      # one transition only: it is taken as produced by the source rise edge (pre-0410 reading)
+      if {[string is double -strict $ar]} { return [list [list ^ r $ar]] }
+      if {[string is double -strict $af]} { return [list [list ^ f $af]] }
+      return {}
+    }
+    # single-scene property = latest arrival of each transition: the earlier of the two comes from the rise edge
+    if {$ar <= $af} { return [list [list ^ r $ar] [list v f $af]] }
+    return [list [list ^ f $af] [list v r $ar]]
+  }
   set sc [expr {[info exists ::ot_ioref_scene] ? [list -scene $::ot_ioref_scene] : {}}]
   sta::redirect_string_begin
   catch {report_arrival {*}$sc -digits 4 $p}
   set r [sta::redirect_string_end]
-  set v ""
-  foreach {- x} [regexp -all -inline {\sr\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($v eq "" || $x > $v)} { set v $x } }
+  set out {}; set mine {}
+  foreach {- ck e rv fv} [regexp -all -inline {\((\S+) ([\^v])\)\s+r\s+(\S+)\s+f\s+(\S+)} $r] {
+    foreach {tr v} [list r $rv f $fv] {
+      set x [lindex [split $v :] end]
+      if {![string is double -strict $x]} continue
+      lappend out [list $e $tr $x]
+      if {$ck eq $cn} { lappend mine [list $e $tr $x] }
+    }
+  }
+  return [expr {[llength $mine] ? $mine : $out}]
+}
+proc ot_ir_arr {p {cn ""}} {
+  if {$cn eq ""} { set cn [get_full_name [lindex [get_clocks -quiet -of_objects $p] 0]] }
+  set half 0.0
+  # Clock_waveform / Clock_period are in seconds; get_property period is in user units (ps)
+  if {$cn ne "" && ![catch {set c [get_clocks $cn]; list [$c waveform] [$c period] [get_property $c period]} w]} {
+    lassign $w wf ps pu
+    if {[llength $wf] >= 2 && $ps > 0} { set half [expr {([lindex $wf 1] - [lindex $wf 0]) * $pu / $ps}] } }
+  set t [ot_ir_active $p]
+  set v ""; set shifted 0
+  foreach a [ot_ir_arrs $p $cn] {
+    lassign $a e tr x
+    if {$t eq "" ? ($e ne "^") : ($tr ne $t)} continue
+    set y [expr {$e eq "v" ? $x - $half : $x}]
+    if {$v eq "" || $y > $v} { set v $y; set shifted [expr {$e eq "v"}] }
+  }
+  # for the caller's census: {active transition (r / f / "" = no clock->output arc), half period removed}
+  set ::ot_ir_last [list $t $shifted]
   return $v
 }
 if {[ot_ir_multi] && ![info exists ::ot_ioref_scene]} {
@@ -66,11 +132,18 @@ set ot_ir_ins [dict create]
 set ot_ir_nreg [dict create]
 foreach cn $ot_ir_real {
   set b {}; set a {}
+  array unset ot_ir_e; array set ot_ir_e {neg 0 noarc 0 half 0}
   foreach p [all_registers -clock_pins -clock [get_clocks $cn]] {
-    set v [ot_ir_arr $p]
+    set v [ot_ir_arr $p $cn]
     if {$v eq "" || $v eq "INF" || $v eq "-INF"} continue
     lappend a $v
-    if {[dict exists $ot_ir_bnd [regsub {/[^/]+$} [get_full_name $p] {}]]} { lappend b $v }
+    if {[dict exists $ot_ir_bnd [regsub {/[^/]+$} [get_full_name $p] {}]]} {
+      lappend b $v
+      lassign $::ot_ir_last t sh
+      if {$t eq "f"} { incr ot_ir_e(neg) }
+      if {$t eq ""} { incr ot_ir_e(noarc) }
+      if {$sh} { incr ot_ir_e(half) }
+    }
   }
   set use [expr {[llength $b] ? $b : $a}]
   if {![llength $use]} continue
@@ -78,6 +151,9 @@ foreach cn $ot_ir_real {
   set u [lsort -real $use]
   dict set ot_ir_ins $cn [list [expr {$s / [llength $use]}] [lindex $u 0] [lindex $u end] [llength $use] [expr {[llength $b] ? "boundary" : "all"}]]
   dict set ot_ir_nreg $cn [llength $a]
+  # census of the boundary sinks: negedge-active, no clock->output arc, read through an odd clock inversion (the half
+  # period was removed; a pre-0410 reading of these sinks was T/2 late)
+  puts [format "OT_IOREF_EDGE %s boundary %d negedge %d noarc %d inverted %d" $cn [llength $b] $ot_ir_e(neg) $ot_ir_e(noarc) $ot_ir_e(half)]
 }
 foreach c [all_clocks] {
   if {[llength [get_property $c sources]]} continue
