@@ -24,7 +24,7 @@ foreach ot_m [$ot_blk getInsts] {
   set mx0 [expr {double([$b xMin]) / $ot_dbu}]; set mx1 [expr {double([$b xMax]) / $ot_dbu}]
   set left_ok  [expr {($mx0 - $ot_halo - $ot_cx0) > 5.0}]
   set right_ok [expr {($ot_cx1 - $mx1 - $ot_halo) > 5.0}]
-  set k(L) 0; set k(R) 0
+  set ot_k(L) 0; set ot_k(R) 0
   foreach it [$ot_m getITerms] {
     if {![string match "rd_out*" [[$it getMTerm] getName]]} continue
     set net [$it getNet]
@@ -44,7 +44,7 @@ foreach ot_m [$ot_blk getInsts] {
     set dy 0.0
     if {$side eq "L" && !$left_ok} { set side R; set dy 16.0; incr ot_far }
     if {$side eq "R" && !$right_ok} { set side L; set dy 16.0; incr ot_far }
-    set col [expr {$k($side) % 4}]; incr k($side)
+    set col [expr {$ot_k($side) % 4}]; incr ot_k($side)
     set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
     if {$side eq "L"} {
       set x [expr {$mx0 - $ot_halo - $ot_gap - ($col + 1) * ($w + 0.2)}]
