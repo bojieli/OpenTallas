@@ -1,0 +1,404 @@
+{
+  "schema": "opentallas.fleet.scope_retirement.v1",
+  "at": "2026-10-09T10:18:31.891689+00:00",
+  "owner_decision": "CONFIRMEDreview0313 I1-I16 STOPstripvariants",
+  "counts": {
+    "NEEDS_HUMAN": 2,
+    "PREROUTE_MARGIN": 1,
+    "CANCELLED": 4,
+    "FLOORPLAN_MARGIN": 3
+  },
+  "job_count": 10,
+  "live_handles": 0,
+  "active_jobs_cancelled": 0,
+  "jobs": [
+    {
+      "name": "qfd_emb_strip_bus92-a39f8ed5d-tc",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_bus92-a39f8ed5d-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "a39f8ed5dc8e7585559d8cafdfe21e6fbddeb8d9"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "a39f8ed5dc8e7585559d8cafdfe21e6fbddeb8d9",
+        "historical_status_preserved": "NEEDS_HUMAN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_bus92-a39f8ed5d-tc.before.json",
+        "state_sha256": "ac86b3ed14dfc7649c2070e97f918c4bb4e2dc483e5a3b9eefed6984539fc59a"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_grid92-3a22276d6-tc",
+      "status": "PREROUTE_MARGIN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_grid92-3a22276d6-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "3a22276d6b3909bc5f64bc144c40c48629cbfe82"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "3a22276d6b3909bc5f64bc144c40c48629cbfe82",
+        "historical_status_preserved": "PREROUTE_MARGIN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_grid92-3a22276d6-tc.before.json",
+        "state_sha256": "555eb93a424596afc48236ae1812b4523fdcf11d1f4252744218d7f335465499"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_narrow92-975fdada2-tc-ls",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc-ls",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc",
+        "historical_status_preserved": "CANCELLED",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_narrow92-975fdada2-tc-ls.before.json",
+        "state_sha256": "bc3fab9d6651742df671f9060b1fc9874c20fcf7247a9ca4e52a33a22cd36521"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_narrow92-975fdada2-tc",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_narrow92-975fdada2-tc.before.json",
+        "state_sha256": "ba95af001ca2e0d06e491fd8d82979b6b3b0a0b5a6c5fb96d77d08a7e40b6c6a"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_narrow96-4f7992d5d-tc-ls",
+      "status": "CANCELLED",
+      "host": "ot-agidock128",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc-ls",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "4f7992d5dedfa857249dc0c0025c9069ecd5a322"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "4f7992d5dedfa857249dc0c0025c9069ecd5a322",
+        "historical_status_preserved": "CANCELLED",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_narrow96-4f7992d5d-tc-ls.before.json",
+        "state_sha256": "16956f9d4ff971dfd872fb6913e8742ead3bbe0854903c3354fc74ea4706390c"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_narrow96-4f7992d5d-tc",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "4f7992d5dedfa857249dc0c0025c9069ecd5a322"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "4f7992d5dedfa857249dc0c0025c9069ecd5a322",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_narrow96-4f7992d5d-tc.before.json",
+        "state_sha256": "2c268c891482dd733b49b84430a53739eb0a82b95dd53e63c687bbafe1bfc14c"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_w600-2b0cdede4-ss",
+      "status": "CANCELLED",
+      "host": null,
+      "run": null,
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406",
+        "historical_status_preserved": "CANCELLED",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_w600-2b0cdede4-ss.before.json",
+        "state_sha256": "bc5fd5e34f27938a79853380fa03cc1638a3174b137bdb08680c64ac10efa2b0"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_w600-2b0cdede4-tc",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_w600-2b0cdede4-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406",
+        "historical_status_preserved": "NEEDS_HUMAN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_w600-2b0cdede4-tc.before.json",
+        "state_sha256": "bf6c751fda0f8ae7f7f958db93fc507afefaa395a46923ce37ba3080c8c6531c"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_w600-f42e102ca-tc-ls",
+      "status": "CANCELLED",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc-ls",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "f42e102cadfbebc8251c874e167b2783227377ec"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "f42e102cadfbebc8251c874e167b2783227377ec",
+        "historical_status_preserved": "CANCELLED",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_w600-f42e102ca-tc-ls.before.json",
+        "state_sha256": "f616ce188938a4c1ffce1442d06b39323667b0a3501f3f3a019c4d8278107a90"
+      }
+    },
+    {
+      "name": "qfd_emb_strip_w600-f42e102ca-tc",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc",
+      "source": {
+        "branch": "codex/emb-hbm-takeover-20261008",
+        "commit": "f42e102cadfbebc8251c874e167b2783227377ec"
+      },
+      "retired_scope": {
+        "reason": "CONFIRMEDreview0313 ownerSTOP QwenROMstrip grid92/bus92/narrow/w600; standalonePC/KVfetch remainactive",
+        "owner": "Claude review0313 I1-I16",
+        "at": "2026-10-09T10:18:31.891689+00:00",
+        "source_commit": "f42e102cadfbebc8251c874e167b2783227377ec",
+        "historical_status_preserved": "FLOORPLAN_MARGIN",
+        "remote_handles_verified": "allstagePIDsabsent/nojobmountedcontainer; ownerdirectstripnone",
+        "state_snapshot": "/home/ubuntu/.local/state/closure_loop/retire_scope/qwen_rom_strip_review0313/qfd_emb_strip_w600-f42e102ca-tc.before.json",
+        "state_sha256": "bc00927ba0991715af19a1d15fa15815c4424f21018c460fda74089975101ad0"
+      }
+    }
+  ],
+  "remote_inventory": [
+    {
+      "host": "ot-epyc1tb",
+      "jobs": [
+        {
+          "name": "qfd_emb_strip_narrow92-975fdada2-tc-ls",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc-ls",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc-ls/cl/route.a1.pid",
+              "pid": 2772847,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        },
+        {
+          "name": "qfd_emb_strip_bus92-a39f8ed5d-tc",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_bus92-a39f8ed5d-tc",
+          "tag": "route.a2",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_bus92-a39f8ed5d-tc/cl/route.a1.pid",
+              "pid": 872037,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            },
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_bus92-a39f8ed5d-tc/cl/route.a2.pid",
+              "pid": 639402,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        },
+        {
+          "name": "qfd_emb_strip_w600-f42e102ca-tc",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc/cl/route.a1.pid",
+              "pid": 458009,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        },
+        {
+          "name": "qfd_emb_strip_narrow96-4f7992d5d-tc",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc/cl/route.a1.pid",
+              "pid": 920498,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        }
+      ]
+    },
+    {
+      "host": "ot-epyc4",
+      "jobs": [
+        {
+          "name": "qfd_emb_strip_w600-2b0cdede4-tc",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_w600-2b0cdede4-tc",
+          "tag": "route.a2",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_w600-2b0cdede4-tc/cl/route.a1.pid",
+              "pid": 3112649,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            },
+            {
+              "pidfile": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_w600-2b0cdede4-tc/cl/route.a2.pid",
+              "pid": 3266214,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        },
+        {
+          "name": "qfd_emb_strip_grid92-3a22276d6-tc",
+          "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_grid92-3a22276d6-tc",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_strip_grid92-3a22276d6-tc/cl/route.a1.pid",
+              "pid": 747743,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        }
+      ]
+    },
+    {
+      "host": "ot-pve1",
+      "jobs": [
+        {
+          "name": "qfd_emb_strip_w600-f42e102ca-tc-ls",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc-ls",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_w600-f42e102ca-tc-ls/cl/route.a1.pid",
+              "pid": 276410,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        },
+        {
+          "name": "qfd_emb_strip_narrow92-975fdada2-tc",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow92-975fdada2-tc/cl/route.a1.pid",
+              "pid": 2885164,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        }
+      ]
+    },
+    {
+      "host": "ot-agidock128",
+      "jobs": [
+        {
+          "name": "qfd_emb_strip_narrow96-4f7992d5d-tc-ls",
+          "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc-ls",
+          "tag": "route.a1",
+          "stages": [
+            {
+              "pidfile": "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_strip_narrow96-4f7992d5d-tc-ls/cl/route.a1.pid",
+              "pid": 4160121,
+              "alive": false,
+              "cmd": "",
+              "cwd": null,
+              "pgid": null
+            }
+          ],
+          "containers": []
+        }
+      ]
+    }
+  ],
+  "direct_runs": "embedding_hbm owner verifies none outsidecanonicaljobs",
+  "preserved_active_providers": [
+    "qfd_emb_pc_00-0ebf67a31-tc",
+    "actualqwenKVfetch"
+  ],
+  "runtime_code_deployment": "No Codexedit/deploy/restart; policyretiredprefix operational, genericfilter e748 READYrequiresClaudedeploy."
+}

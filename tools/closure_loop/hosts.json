@@ -33,11 +33,11 @@
     },
     {
      "name": "qwen-fmt3-pipe-calibration",
-     "pid": 3726300,
+     "pid": 655416,
      "command_match": "openroad",
      "peak_ram_gb": 3.2,
      "owner": "Codex:qwen_hbm_unify/fmt3",
-     "reason": "Pipe source77 actualGP worker3726300 HWM959612KiB, samecalGP2381132KiB/calCTS3156988KiB pluslauncher; measured3.2GiB phase envelope unchanged.",
+     "reason": "Pipe actualresizer655416 HWM1414028KiB, samecalresizer1494784KiB/calCTS3156988KiB knownremainingstage; existingmeasured3.2GiBceiling retained. PreviousrouteGPpeak2364808KiB.",
      "launcher_pid": 1855945
     }
    ]
