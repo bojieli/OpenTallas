@@ -10,6 +10,9 @@ def model():
     capture_bits=(reads*2+writes)*72
     command_bits=11*72+3*72
     return dict(schema='opentallas.qwen_r25_su_quarter.v1', adopted=False,
+        Qwen_owner=dict(bits=74,legacy_default_bits=73,
+            fields={'job':[31,0],'generation':[35,32],'token':[53,36],'position':[73,54]},
+            protection='Two64payload SECDED72 seats retained; high10ownerbits share protected quarter identity seat with PC/query; no new ECC seat'),
         models=['Qwen3-8B HBM'], native=dict(N=n,M=m,quarters=q,LV=7,
             MLAT=6,ALAT=6,CTL12=2,OPR=1,CAPR=1,DDIV=21,SIDEX=4,FSQ=1,
             BCAST_STAGES=5,RET_STAGES=6,MACs_per_virtual_edge=n,

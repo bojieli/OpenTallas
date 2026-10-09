@@ -12,12 +12,12 @@ HEADER = r'''`timescale 1ns/1ps
 // Default off. Serial virtual edges retain the native fixed operand calendar;
 // a native edge occurs only after all captured requests and publications finish.
 module ot_qwen_r25_su_quarter #(
- parameter integer ENABLE=0,N=256,M=64,QID=0,GROUP_SKIP=0
+ parameter integer ENABLE=0,N=256,M=64,QID=0,GROUP_SKIP=0,OWNER_W=73
 )(
  input wire clk,rst_n,warm_abort,
  input wire cmd_v,output wire cmd_rdy,input wire [689:0] cmd_word,
- input wire [72:0] cmd_owner,input wire [11:0] cmd_pc,input wire [1:0] cmd_query,
- output wire done_v,output wire [72:0] done_owner,
+ input wire [OWNER_W-1:0] cmd_owner,input wire [11:0] cmd_pc,input wire [1:0] cmd_query,
+ output wire done_v,output wire [OWNER_W-1:0] done_owner,
  output wire [11:0] done_pc,output wire [1:0] done_query,
  output wire req_v,input wire req_rdy,output wire [336:0] req,
  input wire rsp_v,output wire rsp_rdy,input wire [272:0] rsp,
@@ -30,6 +30,7 @@ module ot_qwen_r25_su_quarter #(
   assign virtual_edges=0;assign reads=0;assign writes=0;assign visibility_reads=0;
  end else begin:g_on
  localparam integer AW=24,NR=N/8,LV=7,BCAST_STAGES=5,RET_STAGES=6,MLAT=6,ALAT=6;
+ localparam integer OH=OWNER_W-64;
  `include "tb_hdc_v41x_vec_fields.svh"
  localparam integer RN=5*N,WN=2*N+NR;
  localparam integer RG=(RN+63)/64,WG=(WN+63)/64;
@@ -103,8 +104,8 @@ FOOTER = r'''
  wire [31:0] result32=rsp[byte_address[4:0]*8+:32];
  wire [31:0] read_result=src==3?{rsp[byte_address[4:0]*8+:16],16'd0}:result32;
  assign cmd_rdy=state==IDLE&&!bad;assign done_v=state==COMPLETE&&!bad;
- assign done_owner={ident[8:0],od[63:0]};
- assign done_pc=ident[20:9];assign done_query=ident[22:21];
+ assign done_owner={ident[OH-1:0],od[63:0]};
+ assign done_pc=ident[OH+:12];assign done_query=ident[OH+12+:2];
  assign fault=bad||state==FAILED;
  assign virtual_edges=vcount;assign reads=rcount;assign writes=wcount;assign visibility_reads=fcount;
  wire [RG*64-1:0] read_enable_bits={{(RG*64-RN){1'b0}},rd_re,vi_re};
@@ -196,7 +197,7 @@ FOOTER = r'''
    control<=encode64(next_c);
    if(state==IDLE&&cmd_v&&cmd_rdy)begin
     owner_low<=encode64(cmd_owner[63:0]);
-    identity<=encode64({41'd0,cmd_query,cmd_pc,cmd_owner[72:64]});
+    identity<=encode64({{(50-OH){1'b0}},cmd_query,cmd_pc,cmd_owner[OWNER_W-1:64]});
     for(i=0;i<11;i=i+1)word_chunks[i]<=encode64(({14'd0,cmd_word}>>(i*64)));
    end
    if(!bad)case(state)
@@ -222,7 +223,8 @@ FOOTER = r'''
    endcase
   end
  end
- initial if(N!=256||M!=64||QID<0||QID>3)$fatal(1,"Qwen real quarter requires N256/M64 and QID0..3");
+ initial if(N!=256||M!=64||QID<0||QID>3||(OWNER_W!=73&&OWNER_W!=74))
+  $fatal(1,"Qwen real quarter requires N256/M64 QID0..3 OWNER_W73/74");
  end endgenerate
 endmodule
 '''
