@@ -450,26 +450,111 @@ def locked_job_command(fn):
     return command
 
 
+class JobState(dict):
+    """A job dict that remembers the file version it was read from (raw text + mtime_ns; never serialised).
+
+    STALE-SAVE 2026-10-09 (flow-fix-0410): a worker that loaded a job, ran a long step (bench relaunch, verdict) and
+    then saved it overwrote a hand edit made meanwhile: pi-ta15prod hm10/hm25 went back to a ~45-min-old snapshot
+    twice (03:00:51 and earlier; drive-0212.log).  Hand edits do not take the job flock, so the lock alone cannot
+    prevent it.  save_job now does read-modify-write against the version this dict was read from."""
+    __slots__ = ("cl_mtime", "cl_raw")
+
+
+def _stamp(j, mtime, raw):
+    if not isinstance(j, JobState):
+        return j
+    j.cl_mtime, j.cl_raw = mtime, raw
+    return j
+
+
+def _read_state(p):
+    """(mtime_ns, raw) with the stat taken BEFORE the read: a change racing the read looks newer, never older."""
+    st = p.stat()
+    return st.st_mtime_ns, p.read_text()
+
+
 def load_job(name):
-    return json.loads(jpath(name).read_text())
+    mtime, raw = _read_state(jpath(name))
+    return _stamp(JobState(json.loads(raw)), mtime, raw)
+
+
+STALE_SAVE_LOG = "stale_save.log"
+
+
+def _stale_log(name, line):
+    try:
+        with open(STATE / STALE_SAVE_LOG, "a") as f:
+            f.write(f"{now_iso()} {name} {line}\n")
+    except OSError:
+        pass
+    log(f"STALE-SAVE {name}: {line}")
+
+
+def _merge_newer(j, current, cur_mtime):
+    """The file changed since j was read.  Returns the dict to write, or None to refuse (j then becomes the file).
+
+    Three-way merge on top-level keys against the version j was read from: the keys this writer changed are applied
+    over the newer file when the external writer changed none of them; any overlap (or no known base) refuses."""
+    base = None
+    raw = getattr(j, "cl_raw", None)
+    if raw is not None:
+        try:
+            base = json.loads(raw)
+        except ValueError:
+            base = None
+    ignore = {"updated"}
+    if base is None:
+        _stale_log(j["name"], f"REFUSED: file changed (mtime {cur_mtime}) and this copy has no base version; kept the file")
+        return None
+    mine = {k for k in set(base) | set(j) if k not in ignore and base.get(k) != j.get(k)}
+    theirs = {k for k in set(base) | set(current) if k not in ignore and base.get(k) != current.get(k)}
+    if mine & theirs:
+        _stale_log(j["name"], f"REFUSED: newer file (mtime {cur_mtime}) changed {sorted(theirs)}; this writer changed "
+                              f"{sorted(mine)} from an older version; kept the file, dropped this save")
+        return None
+    merged = dict(current)
+    for k in mine:
+        if k in j:
+            merged[k] = j[k]
+        else:
+            merged.pop(k, None)
+    if mine:
+        _stale_log(j["name"], f"MERGED: newer file changed {sorted(theirs)}; applied this writer's {sorted(mine)} on top")
+    return merged
 
 
 def save_job(j):
     with job_lock(j["name"]):
         p = jpath(j["name"])
-        # Auto-requeue/ingest may have taken their snapshot before cancel.  CANCELLED
-        # is absorbing: another attempt needs a new job name, never a stale save.
         if p.exists():
-            current = load_job(j["name"])
+            cur_mtime, cur_raw = _read_state(p)
+            current = json.loads(cur_raw)
+            # Auto-requeue/ingest may have taken their snapshot before cancel.  CANCELLED
+            # is absorbing: another attempt needs a new job name, never a stale save.
             if current["status"] == "CANCELLED" and j["status"] != "CANCELLED":
                 j.clear()
                 j.update(current)
+                _stamp(j, cur_mtime, cur_raw)
                 return
+            # version check on the exact text read (every save rewrites "updated"); mtime_ns alone is not enough:
+            # ext4 stamps with the coarse kernel clock, so two writes a few ms apart can share one mtime
+            known = getattr(j, "cl_raw", None)
+            if isinstance(j, JobState) and known is not None and known != cur_raw:
+                merged = _merge_newer(j, current, cur_mtime)
+                if merged is None:
+                    j.clear()
+                    j.update(current)
+                    _stamp(j, cur_mtime, cur_raw)
+                    return
+                j.clear()
+                j.update(merged)
         j["updated"] = now_iso()
         p.parent.mkdir(parents=True, exist_ok=True)
         tmp = p.with_suffix(".tmp")
-        tmp.write_text(json.dumps(j, indent=1) + "\n")
+        raw = json.dumps(j, indent=1) + "\n"
+        tmp.write_text(raw)
         os.replace(tmp, p)
+        _stamp(j, p.stat().st_mtime_ns, raw)
 
 
 _STATE_READ_WARNINGS = set()
@@ -485,8 +570,8 @@ def all_jobs():
     for p in sorted((STATE / "jobs").glob("*.json")):
         raw = None
         try:
-            raw = p.read_text()
-            j = json.loads(raw)
+            mtime, raw = _read_state(p)
+            j = _stamp(JobState(json.loads(raw)), mtime, raw) if raw.lstrip().startswith("{") else json.loads(raw)
             if not isinstance(j, dict) or not isinstance(j.get("spec"), dict) or \
                     j.get("name") != p.stem or not isinstance(j.get("status"), str) or not j["status"]:
                 raise ValueError("job state requires matching name, nonempty status and object spec")
@@ -500,6 +585,7 @@ def all_jobs():
             continue
         jobs.append(j)
     return jobs
+
 
 
 def keys_path():
@@ -668,6 +754,17 @@ def ingest():
     keys = route_keys()
     for origin, spec in load_sources():
         name = spec.get("name") or Path(origin.split(":")[-1]).stem
+        policy_path = STATE / 'main_publish_owner.json'
+        policy = json.loads(policy_path.read_text()) if policy_path.exists() else {}
+        if any(str(name).startswith(prefix) for prefix in policy.get('retired_job_prefixes', [])):
+            archive = STATE / 'retired_sources'
+            archive.mkdir(parents=True, exist_ok=True)
+            digest = hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()
+            retired = archive / (str(name) + '-' + digest[:12] + '.json')
+            if not retired.exists():
+                retired.write_text(json.dumps(dict(at=now_iso(), origin=origin, spec=spec,
+                    reason=policy.get('retired_scope_reason', 'Owner retired scope')), indent=1) + '\n')
+            continue
         if spec.get("enabled") is False:
             continue
         p = jpath(name) if NAME_RE.match(str(name)) else None
@@ -1277,6 +1374,24 @@ def record_measured(j):
         (STATE / "measured.dirty").write_text(now_iso())
 
 
+def claude_owns_main():
+    policy = STATE / 'main_publish_owner.json'
+    if not policy.exists():
+        return False
+    try:
+        return json.loads(policy.read_text()).get('automatic_main_publish') is False
+    except (OSError, ValueError):
+        return True  # malformed ownership policy never authorizes a main push
+
+
+def notify_claude_record(name, branch, commit):
+    line = f"{now_iso()} READY {name}: {branch} {commit}; Claude owns main merge.\n"
+    root = Path('/home/ubuntu/claude-takeover-20261007')
+    root.mkdir(parents=True, exist_ok=True)
+    append_locked(root / 'fleet_closure.log', line)
+    append_locked(root / 'READY_TO_MERGE.md', '\n- ' + line)
+
+
 MEASURED_REPO_PATH = "results/rtl/budgets_20261006/measured_insertion.json"
 
 
@@ -1289,6 +1404,8 @@ def publish_measured():
     if stamp.exists() and time.time() - stamp.stat().st_mtime < 600:
         return
     with PUBLISH_LOCK:
+        if claude_owns_main():
+            return  # owner consumes durable measured.dirty / measured_insertion.json; no main push
         if (STATE / "main_integration_hold.json").exists():
             return  # central coordinator is integrating; keep all unpublished measurements
         wt = STATE / "git" / "measured-main"
@@ -2041,7 +2158,7 @@ def setup_sensitivity_text(metrics):
 
 def defer_record_merge(j, out, sparse, dry=False):
     """Keep the source-branch record durable while the owner's main window is held."""
-    if dry or j['spec'].get('merge_target') != 'main' or not (STATE / 'main_integration_hold.json').exists():
+    if dry or j['spec'].get('merge_target') != 'main' or not (claude_owns_main() or (STATE / 'main_integration_hold.json').exists()):
         return False
     pending = STATE / 'deferred_record_merges'
     pending.mkdir(parents=True, exist_ok=True)
@@ -2051,14 +2168,17 @@ def defer_record_merge(j, out, sparse, dry=False):
     path = pending / (j['name'] + '.json')
     tmp = path.with_suffix('.tmp')
     tmp.write_text(json.dumps(record, indent=1) + '\n')
+    was_pending = path.exists()
     tmp.replace(path)
-    out['merge'] = 'DEFERRED main merge: owner integration window; record committed on source branch'
+    if claude_owns_main() and not was_pending:
+        notify_claude_record(j['name'], out.get('record_branch', j['spec']['source']['branch']), out['branch_commit'])
+    out['merge'] = ('DEFERRED main merge: Claude owns integration; record committed on source branch' if claude_owns_main() else 'DEFERRED main merge: owner integration window; record committed on source branch')
     return True
 
 
 def merge_record(j, out, sparse, dry=False):
     spec = j['spec']
-    branch, target = j['spec']['source']['branch'], j['spec'].get('merge_target')
+    branch, target = out.get('record_branch', j['spec']['source']['branch']), j['spec'].get('merge_target')
     mwt = STATE / 'git' / (j['name'] + '-merge')
     for attempt in range(4):
         if defer_record_merge(j, out, sparse, dry):
@@ -2098,7 +2218,7 @@ def merge_record(j, out, sparse, dry=False):
 
 
 def retry_deferred_record_merges():
-    if (STATE / 'main_integration_hold.json').exists():
+    if claude_owns_main() or (STATE / 'main_integration_hold.json').exists():
         return
     for path in sorted((STATE / 'deferred_record_merges').glob('*.json')):
         if (STATE / 'main_integration_hold.json').exists():
@@ -2131,7 +2251,8 @@ def schedule_deferred_record_merges():
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
-    branch, target = spec["source"]["branch"], spec.get("merge_target")
+    source_branch, target = spec["source"]["branch"], spec.get("merge_target")
+    branch = f"codex/closure-record-{j['name']}" if claude_owns_main() else source_branch
     rec_dir = f"results/closure_loop/{j['name']}"
     tos = [r["to"] for r in spec.get("record", [])] + [rec_dir]
     sparse = ["/" + t.rstrip("/") for t in tos] + ["/tools/closure_loop/"]
@@ -2141,8 +2262,13 @@ def publish(j, metrics):
     dry = spec.get("dry_run_git", False)
     out = {}
     for attempt in range(4):
-        gfetch(branch, timeout=600)
-        wt_add(cwt, f"origin/{branch}", sparse)
+        base = branch
+        if branch != source_branch:
+            exists = git('ls-remote', '--heads', 'origin', branch).stdout.strip()
+            if not exists:
+                base = source_branch
+        gfetch(base, timeout=600)
+        wt_add(cwt, f"origin/{base}", sparse)
         for r in spec.get("record", []):
             src = subst(r["from"], j)
             dst = cwt / r["to"]
@@ -2158,7 +2284,7 @@ def publish(j, metrics):
                     sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
-                       owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
+                       owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
                        rule="OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), "
                             "agreed die-clock IO budgets, DRC 0"),
@@ -2177,6 +2303,7 @@ def publish(j, metrics):
         if staged:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m", msg,
                 cwd=cwt)
+        out["record_branch"] = branch
         out["branch_commit"] = git("rev-parse", "HEAD", cwd=cwt).stdout.strip()
         out["files"] = len(staged)
         if dry:
@@ -2191,6 +2318,8 @@ def publish(j, metrics):
     if target:
         return merge_record(j, out, sparse, dry)
     out["merge"] = "no merge target"
+    if claude_owns_main():
+        notify_claude_record(j["name"], branch, out["branch_commit"])
     return out
 
 
@@ -2999,6 +3128,10 @@ def measured_resta(j, m):
 # verdict; the routed insertion goes to measured_insertion.json as the block's die-plan value; the post-route hold ECO
 # gets the same SDC as its last post-SDC.  Spec "routed_ioref": false opts out.
 IOREF_SDC = "physical/common_flow/io_ref_routed.sdc"
+# FLOW-FIX-0410 2026-10-09: io_ref_routed.sdc reads the ACTIVE-edge insertion (sinks behind an odd clock inversion were
+# T/2 late).  The version is part of the routed_ioref cache key, so ioref-rejudge / a verdict re-STA under the new rule
+# instead of returning a re-STA cached under the old one.
+IOREF_VERSION = "ae0410"
 
 
 def routed_ioref(j, m):
@@ -3009,7 +3142,7 @@ def routed_ioref(j, m):
     orfs = m.get("orfs_dir") or (m.get("raw") or {}).get("orfs_dir")
     if not orfs:
         return None
-    key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}"
+    key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}|{IOREF_VERSION}"
     rbj = j.get("rebudget") or {}
     if rbj.get("sdc"):
         key += f"|{rbj['rb']}"
@@ -3037,6 +3170,7 @@ def routed_ioref(j, m):
         errs = (res["setup_tt"].get("errors") or []) + (res["hold_ff"].get("errors") or []) + \
             [res[k]["error"] for k in ("setup_tt", "hold_ff") if res[k].get("error")]
         io = dict(tt=res["setup_tt"].get("ioref") or {}, ff=res["hold_ff"].get("ioref") or {})
+        rr["ioref_edge"] = dict(tt=res["setup_tt"].get("ioref_edge") or {}, ff=res["hold_ff"].get("ioref_edge") or {})
         rr.update(available=tt is not None and ff is not None and not errs, tt=tt, ff=ff, errors=errs[:5], ioref=io,
                   tt_i2r=res["setup_tt"].get("worst_input_to_reg_slack_ps"), tt_out=res["setup_tt"].get("worst_output_port_slack_ps"),
                   ff_i2r=res["hold_ff"].get("worst_input_to_reg_slack_ps"), ff_out=res["hold_ff"].get("worst_output_port_slack_ps"),
@@ -3582,7 +3716,9 @@ def do_verdict(j, fleet, stl):
             # while check.json said MATCH): raise, so the verdict backs off and is re-taken
             raise RuntimeError(f"verdict check {c['name']}: ssh/network failure: {out.strip()[-200:]}")
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
-        if not ok:
+        if not ok and restates_line(c):
+            checks[c["name"]]["restates_line"] = True     # judged by the line itself, below (drive-0212)
+        elif not ok:
             failed.append(c["name"])
     j["checks"], j["failed_checks"] = checks, failed
     if (j.get("eco") or {}).get("installed"):     # the post-route hold ECO replaced the route: its DRC counts
@@ -3663,6 +3799,41 @@ def eco_passes(res, rc):
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
             return False
     return type(res.get("drc")) in (int, float) and res["drc"] == 0
+
+
+LINE_COND_RE = re.compile(r"""\b[A-Za-z_]\w*\[["'](setup_tt|hold_ff)["']\]\s*\[["']worst_slack_ps["']\]\s*>=\s*(-?[\d.]+)""")
+
+
+def restates_line(c):
+    """drive-0212 (coordinator APPROVED 2026-10-09): a verdict check that only restates the TT/FF acceptance line
+    (owner_TT_FF_nonnegative: corner_sta.json setup_tt / hold_ff worst_slack_ps >= 0, 18 specs) is not an independent
+    condition.  Counted as a failed check it blocked the one fix that applies: qfd_emb_pc_00-0ebf67a31-tc, TT +15.99 /
+    FF -59.47 / DRC 0, never got its post-route hold ECO.  Such a check is recorded but never counts as failed: the
+    line itself is judged on the metrics (route, routed insertion, or the installed ECO).  A check is a restatement
+    iff spec says "restates_line": true, or its command only reads corner_sta.json and asserts setup_tt >= SS_MIN /
+    hold_ff >= FF_MIN (nothing stricter: owner_SS_FF_15ps keeps counting)."""
+    if c.get("restates_line") is True:
+        return True
+    cmd = c.get("cmd") or ""
+    if "corner_sta.json" not in cmd:
+        return False
+    conds = LINE_COND_RE.findall(cmd)
+    if not conds:
+        return False
+    for key, val in conds:
+        if float(val) != (SS_MIN if key == "setup_tt" else FF_MIN):
+            return False
+    m = re.search(r"\bassert\b(.*?)(?:['\"]\s*$|;|$)", cmd, re.S)
+    if not m or not re.fullmatch(r"\s*C(\s+and\s+C)*\s*", LINE_COND_RE.sub("C", m.group(1))):
+        return False
+    files = set(re.findall(r"[\w{}./-]+\.(?:json|rpt|log|txt|csv)", cmd))
+    return bool(files) and all(x.endswith("corner_sta.json") for x in files)
+
+
+def blocking_checks(j):
+    """the job's recorded failed checks minus restatements of the line (records written before drive-0212)"""
+    rest = {c.get("name") for c in (j["spec"].get("verdict") or {}).get("checks", []) if restates_line(c)}
+    return [x for x in (j.get("failed_checks") or []) if x not in rest]
 
 
 def hold_only(j, m, failed=(), benches_ok=True):
@@ -3887,14 +4058,20 @@ def reevaluate_benches(jobs):
     """Fix bench-regex-multiline (2026-10-06): bench verdicts were taken on 20 log lines without re.M.  Re-judge every
     job that stopped on a bench verdict with the fixed rule; a bench that now passes resumes the job at the next stage."""
     fid = "bench-log-retry-20261007"  # was bench-regex-multiline-20261006; re-judge once more with the retried log fetch
-    for j in jobs:
+
+    def eligible(j):
         m = BENCH_RE.match(j.get("reason") or "")
-        if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
+        return m if j["status"] in ("NEEDS_RTL", "NEEDS_HUMAN") and m and fid not in j.get("fix_requeued", []) else None
+    for j in jobs:
+        m = eligible(j)
+        if not m:
             continue
         stl = stage_list(j["spec"])
         idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
         if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
-            save_job(j)
+            # STALE-SAVE 2026-10-09: this branch used to save_job(j) with no change -- a rewrite of the snapshot the
+            # recovery pass took at its start (minutes to ~45 min earlier, behind slow historical log reads): it
+            # reverted pi-ta15prod's hand re-entry twice.  Nothing to write.
             continue
         st = stl[idx]
         try:
@@ -3904,16 +4081,26 @@ def reevaluate_benches(jobs):
             # independent recovery passes. Do not consume this retry until read.
             log(f"[{j['name']}] bench re-judgment deferred: {exc}")
             continue
-        j.setdefault("fix_requeued", []).append(fid)
-        if correct:
-            j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
-            j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
-            event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
-            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid}")
-            experiment(j, f"running: resumed after {fid}")
-        else:
-            event(j, f"{st['key']} re-judged under {fid}: verdict stands")
-        save_job(j)
+        with job_lock(j["name"]):
+            # read-modify-write: act on the CURRENT file, and only if it is still the same bench verdict
+            fresh = load_job(j["name"])
+            if eligible(fresh) is None or fresh.get("reason") != j.get("reason") or fresh.get("stage_tag") != j.get("stage_tag"):
+                continue
+            j = fresh
+            reevaluate_bench_apply(j, st, idx, m, fid, correct)
+
+
+def reevaluate_bench_apply(j, st, idx, m, fid, correct):
+    j.setdefault("fix_requeued", []).append(fid)
+    if correct:
+        j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
+        j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
+        event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
+        ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid}")
+        experiment(j, f"running: resumed after {fid}")
+    else:
+        event(j, f"{st['key']} re-judged under {fid}: verdict stands")
+    save_job(j)
 
 
 def requeue_toolchain(jobs):
@@ -3961,7 +4148,7 @@ def requeue_hold_only(jobs):
     busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL} | closed_blocks(jobs)
     for j in jobs:
         m = j.get("metrics") or {}
-        if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, j.get("failed_checks") or []):
+        if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, blocking_checks(j)):
             continue
         j.setdefault("fix_requeued", []).append(fid)
         if j["spec"].get("block") in busy:
@@ -4191,7 +4378,7 @@ def handle_transient(j, fleet, ex):
 def advance_job(name, fleet):
     with job_lock(name):
         j = load_job(name)
-        if j["status"] in TERMINAL:
+        if j["status"] in TERMINAL or j.get("admission_hold"):
             return
         nt = j.get("transient_next")
         if nt and time.time() < nt:
