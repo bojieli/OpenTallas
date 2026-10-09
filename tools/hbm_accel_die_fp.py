@@ -2377,8 +2377,9 @@ def buses(m):
         sn = _cxy(svc, 'N' if side == 'S' else 'S', (cc + 80.0 - svc.x) / svc.w)
         ye_ = ylane(side, 'ef', ych[side] + 100.0 * sgn)
         pts = [p0, (xr, p0[1]), (xr, ye_), (cc + 80.0, ye_), sn]
-        chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
-              fc=(128,))
+        if 'cp' not in (m['variant'].get('hgi_dispatch') or []):   # HGI (review 10:45): expert weights stream by id
+            chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
+                  fc=(128,))
         lmem = m['variant'].get('ld_mem')
         if lmem:
             # r25m (MTP-DIE, RQ-ING-4): the loader's memory side (memory AXI m_* + request / response req_* / rsp_*,
@@ -2496,7 +2497,7 @@ def buses(m):
         hl_ = [('cmdproc', 'coll', 64)]
     hgi_q = 'quant' in (V.get('hgi_dispatch') or [])      # hgi-takeover: the hgi quant unit reads / writes VM by packets
     hgi_cp_ = 'cp' in (V.get('hgi_dispatch') or [])    # hgi-takeover: the loader <-> CP link replaces the program-store bus
-    hl_ += ([] if hgi_cp_ else [('loader', 'cmdproc', 341)]) + [('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
+    hl_ += ([] if hgi_cp_ else [('loader', 'cmdproc', 341), ('router', 'cmdproc', 64)]) + [('barrier', 'cmdproc', 64),
             ('vm', 'router', 512)] + ([] if hgi_q else [('vm', 'quant', 1024)]) + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]

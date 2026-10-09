@@ -1,0 +1,27 @@
+{
+  "bench_source": "e52e2b2c35b060b46b036786ebc42b6eb5e3f234",
+  "physical_source": "f6d441b6ae5ec8f6e79cfd46290a086103fed4b8",
+  "host": "ot-pve1",
+  "remote_run": "/srv/opentallas-scratch/codex/hgi-argmax18-zero8",
+  "admission_gb": 1,
+  "positive": {
+    "rc": 0,
+    "rows": 8,
+    "cycles": 19063,
+    "ds_cycle_lockstep": true,
+    "max_rss_kib": 315256
+  },
+  "mutant6": {
+    "build_rc": 0,
+    "sim_rc": 1,
+    "mechanism": "canonicalize actual selected negative zero to positive zero",
+    "consuming_failure_row": 5,
+    "max_rss_kib": 315188
+  },
+  "rtl_manifest_matches_physical_pin": {
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv": "046576b1a4108910a7fea70d3744afe3f737c03b24345333dce1147e96f15b2d",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv": "11c083427355ef0b56a95e1eb6d299e6d67975cda7750e856b5a9b4841de0020",
+    "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv": "9deb1f20846b0e96a7e753166c1d7992d1967d901240074171ff33ba28813741"
+  },
+  "scope": "Evidence collection only; probes were already launched before takeover. No new physical RTL or routes."
+}

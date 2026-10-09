@@ -1,0 +1,874 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 8229 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 8229.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 32 and max clustering diameter of 21.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 407.
+[INFO CTS-0024]  Normalized sink region: [(3.04045, 3.47823), (84.3336, 84.6882)].
+[INFO CTS-0025]     Width:  81.2932.
+[INFO CTS-0026]     Height: 81.2100.
+ Level 1
+    Direction: Horizontal
+    Sinks per sub-region: 204
+    Sub-region size: 40.6466 X 81.2100
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 2
+    Direction: Vertical
+    Sinks per sub-region: 102
+    Sub-region size: 40.6466 X 40.6050
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 3
+    Direction: Horizontal
+    Sinks per sub-region: 51
+    Sub-region size: 20.3233 X 40.6050
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 4
+    Direction: Vertical
+    Sinks per sub-region: 26
+    Sub-region size: 20.3233 X 20.3025
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 5
+    Direction: Horizontal
+    Sinks per sub-region: 13
+    Sub-region size: 10.1616 X 20.3025
+[INFO CTS-0034]     Segment length (rounded): 6.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 407.
+[INFO CTS-0018]     Created 452 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 5.
+[INFO CTS-0015]     Created 452 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 9:2, 10:3, 11:5, 12:15, 13:6, 14:8, 15:11, 16:21, 17:30, 18:40, 19:46, 20:48, 21:61, 22:55, 23:37, 24:29, 25:14, 26:6, 27:2..
+[INFO CTS-0017]     Max level of the clock tree: 5.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 8625
+[INFO CTS-0100]  Leaf buffers 407
+[INFO CTS-0101]  Average sink wire length 212.76 um
+[INFO CTS-0102]  Path depth 4 - 5
+[INFO CTS-0207]  Dummy loads inserted 396
+[INFO CTS-0500] Runtime: 5.32s
+Took 5 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 13062.43 um^2
+[INFO DPL-0007] Movable instances area: 5586.49 um^2
+[INFO DPL-0008] Fixed instances area within core: 49.46 um^2
+[INFO DPL-0009] Utilization: 43.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 42020 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         18 |         6 |        12
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.52s
+Placement Analysis
+---------------------------------
+total displacement       4556.1 u
+average displacement        0.1 u
+max displacement            2.5 u
+original HPWL          112179.8 u
+legalized HPWL         114773.3 u
+delta HPWL                    2 %
+
+estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=453 clock buffers=452
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/hbm_accel_die_views/common/signoff_unc60.sdc
+OT_HOLD_MM: ff mode reads /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc
+OT_VCLK_CT: FF insertion 148.10 .. 169.59 ps: outputs vs vclk at the mean + 50 (H1 sender), inputs launched at the mean (receiver, 25)
+OT_HOLD_MM: ff mode reads /src/.ot_mm/io_ref_routed.sdc
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+OT_IOREF vclk core_clk mean 162.3 min 156.0 max 169.6 n 4193 boundary
+OT_HOLD_MM sync: SS setup ws 17.96 / FF hold ws -27.90 ps
+repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0098] No setup violations found
+[INFO RSZ-0505] Runtime: 0.37s
+OT_HM_GUARD: margin 25 kept: 5971 endpoints in margin, ~9673 buffers, +5.9 util pts (within limits)
+OT_HOLD_GUARD start: hold ws -27.90 tns -17099.9 viol 1243 (margin 25, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 5971 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -27.905 | -17099.883 | g_add[5].u_add.u.u_ca.g_r.r[16]$_DFF_PN0_/D
+       10 |       0 |      18 |            0 |    +0.0% | -26.093 | -16802.338 | g_add[7].u_add.u.u_ca.g_r.r[80]$_DFF_PN0_/D
+       20 |       0 |      39 |            0 |    +0.1% | -25.545 | -16527.959 | g_add[5].u_add.u.u_ca.g_r.r[38]$_DFF_PN0_/D
+       30 |       0 |      60 |            0 |    +0.1% | -24.999 | -16242.119 | g_add[1].u_add.u.u_ca.g_r.r[22]$_DFF_PN0_/D
+       40 |       0 |      80 |            0 |    +0.1% | -24.649 | -15888.601 | g_add[4].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+       50 |       0 |     102 |            0 |    +0.1% | -24.285 | -15612.279 | g_add[4].u_add.u.u_ca.g_r.r[61]$_DFF_PN0_/D
+       60 |       0 |     122 |            0 |    +0.2% | -24.141 | -15226.108 | g_add[7].u_add.u.u_ca.g_r.r[18]$_DFF_PN0_/D
+       70 |       0 |     144 |            0 |    +0.2% | -23.978 | -14893.550 | g_add[5].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+       80 |       0 |     167 |            0 |    +0.2% | -23.752 | -14659.440 | g_add[5].u_add.u.u_ca.g_r.r[22]$_DFF_PN0_/D
+       90 |       0 |     188 |            0 |    +0.2% | -23.547 | -14416.908 | g_add[7].u_add.u.u_ca.g_r.r[38]$_DFF_PN0_/D
+      100 |       0 |     210 |            0 |    +0.3% | -23.450 | -14195.082 | g_add[5].u_add.u.u_ca.g_r.r[43]$_DFF_PN0_/D
+      110 |       0 |     230 |            0 |    +0.3% | -23.356 | -13856.804 | g_add[5].u_add.u.u_ca.g_r.r[54]$_DFF_PN0_/D
+      120 |       0 |     250 |            0 |    +0.3% | -23.217 | -13501.166 | g_add[7].u_add.u.u_ca.g_r.r[20]$_DFF_PN0_/D
+      130 |       0 |     270 |            0 |    +0.3% | -22.965 | -13289.870 | g_add[5].u_add.u.u_ca.g_r.r[61]$_DFF_PN0_/D
+      140 |       0 |     290 |            0 |    +0.4% | -22.876 | -13026.420 | g_add[7].u_add.u.u_ca.g_r.r[29]$_DFF_PN0_/D
+      150 |       0 |     310 |            0 |    +0.4% | -22.786 | -12779.903 | g_add[7].u_add.u.u_ca.g_r.r[46]$_DFF_PN0_/D
+      160 |       0 |     330 |            0 |    +0.4% | -22.679 | -12400.760 | g_add[7].u_add.u.u_ca.g_r.r[60]$_DFF_PN0_/D
+      170 |       0 |     351 |            0 |    +0.5% | -22.593 | -12072.170 | g_add[1].u_add.u.u_ca.g_r.r[42]$_DFF_PN0_/D
+      180 |       0 |     371 |            0 |    +0.5% | -22.493 | -11789.644 | dval[0][223]$_DFF_P_/D
+      190 |       0 |     391 |            0 |    +0.5% | -22.381 | -11654.947 | g_add[1].u_add.u.u_ca.g_r.r[38]$_DFF_PN0_/D
+      200 |       0 |     411 |            0 |    +0.5% | -22.242 | -11448.504 | g_add[1].u_add.u.u_ca.g_r.r[43]$_DFF_PN0_/D
+      210 |       0 |     431 |            0 |    +0.6% | -22.100 | -11158.354 | g_add[7].u_add.u.u_ca.g_r.r[45]$_DFF_PN0_/D
+      220 |       0 |     451 |            0 |    +0.6% | -21.992 | -10811.476 | g_add[7].u_add.u.u_ca.g_r.r[47]$_DFF_PN0_/D
+      230 |       0 |     471 |            0 |    +0.6% | -21.911 | -10537.019 | g_add[4].u_add.u.u_ca.g_r.r[17]$_DFF_PN0_/D
+      240 |       0 |     491 |            0 |    +0.6% | -21.798 | -10344.948 | g_add[6].u_add.u.u_ca.g_r.r[30]$_DFF_PN0_/D
+      250 |       0 |     511 |            0 |    +0.7% | -21.668 | -10103.733 | g_add[0].u_add.u.u_ca.g_r.r[20]$_DFF_PN0_/D
+      260 |       0 |     531 |            0 |    +0.7% | -21.536 | -9838.782 | dval[0][142]$_DFF_P_/D
+      270 |       0 |     551 |            0 |    +0.7% | -21.444 | -9588.131 | g_add[3].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+      280 |       0 |     571 |            0 |    +0.7% | -21.304 | -9394.955 | g_add[6].u_add.u.u_ca.g_r.r[71]$_DFF_PN0_/D
+      290 |       0 |     591 |            0 |    +0.8% | -21.110 | -9109.711 | g_add[3].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+      300 |       0 |     611 |            0 |    +0.8% | -21.034 | -8894.829 | g_add[5].u_add.u.u_ca.g_r.r[76]$_DFF_PN0_/D
+      310 |       0 |     631 |            0 |    +0.8% | -20.928 | -8612.891 | g_add[1].u_add.u.u_ca.g_r.r[54]$_DFF_PN0_/D
+      320 |       0 |     651 |            0 |    +0.8% | -20.865 | -8348.039 | g_add[7].u_add.u.u_ca.g_r.r[55]$_DFF_PN0_/D
+      330 |       0 |     671 |            0 |    +0.9% | -20.730 | -8066.449 | g_add[6].u_add.u.u_ca.g_r.r[46]$_DFF_PN0_/D
+      340 |       0 |     691 |            0 |    +0.9% | -20.652 | -7790.204 | g_add[6].u_add.u.u_ca.g_r.r[66]$_DFF_PN0_/D
+      350 |       0 |     711 |            0 |    +0.9% | -20.518 | -7656.223 | g_add[1].u_add.u.u_ca.g_r.r[80]$_DFF_PN0_/D
+      360 |       0 |     731 |            0 |    +0.9% | -20.448 | -7456.089 | g_add[5].u_add.u.u_ca.g_r.r[69]$_DFF_PN0_/D
+      370 |       0 |     751 |            0 |    +1.0% | -20.352 | -7206.067 | dval[0][30]$_DFF_P_/D
+      380 |       0 |     771 |            0 |    +1.0% | -20.246 | -6917.718 | g_add[4].u_add.u.u_ca.g_r.r[34]$_DFF_PN0_/D
+      390 |       0 |     791 |            0 |    +1.0% | -20.133 | -6744.072 | g_add[2].u_add.u.u_ca.g_r.r[60]$_DFF_PN0_/D
+      400 |       0 |     811 |            0 |    +1.0% | -20.015 | -6449.142 | g_add[6].u_add.u.u_ca.g_r.r[17]$_DFF_PN0_/D
+      410 |       0 |     831 |            0 |    +1.1% | -19.903 | -6274.463 | g_add[0].u_add.u.u_ca.g_r.r[61]$_DFF_PN0_/D
+      420 |       0 |     851 |            0 |    +1.1% | -19.854 | -6043.259 | g_add[3].u_add.u.u_ca.g_r.r[71]$_DFF_PN0_/D
+      430 |       0 |     871 |            0 |    +1.1% | -19.795 | -5761.750 | g_add[3].u_add.u.u_ca.g_r.r[40]$_DFF_PN0_/D
+      440 |       0 |     891 |            0 |    +1.2% | -19.705 | -5536.118 | g_add[6].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+      450 |       0 |     911 |            0 |    +1.2% | -19.609 | -5296.333 | g_add[1].u_add.u.u_ca.g_r.r[57]$_DFF_PN0_/D
+      460 |       0 |     931 |            0 |    +1.2% | -19.532 | -5174.066 | dval[0][192]$_DFF_P_/D
+      470 |       0 |     951 |            0 |    +1.2% | -19.427 | -4971.221 | g_add[0].u_add.u.u_ca.g_r.r[48]$_DFF_PN0_/D
+      480 |       0 |     971 |            0 |    +1.3% | -19.302 | -4755.925 | g_add[4].u_add.u.u_ca.g_r.r[51]$_DFF_PN0_/D
+      490 |       0 |     991 |            0 |    +1.3% | -19.191 | -4588.869 | g_add[3].u_add.u.u_ca.g_r.r[80]$_DFF_PN0_/D
+      500 |       0 |    1011 |            0 |    +1.3% | -19.134 | -4525.762 | g_add[3].u_add.u.u_ca.g_r.r[34]$_DFF_PN0_/D
+      510 |       0 |    1031 |            0 |    +1.3% | -18.993 | -4287.983 | g_add[6].u_add.u.u_ca.g_r.r[55]$_DFF_PN0_/D
+      520 |       0 |    1051 |            0 |    +1.4% | -18.926 | -4016.912 | dval[0][222]$_DFF_P_/D
+      530 |       0 |    1071 |            0 |    +1.4% | -18.777 | -3756.543 | g_add[0].u_add.u.u_ca.g_r.r[73]$_DFF_PN0_/D
+      540 |       0 |    1091 |            0 |    +1.4% | -18.624 | -3604.505 | dm[0][4]$_DFF_P_/D
+      550 |       0 |    1111 |            0 |    +1.4% | -18.541 | -3501.341 | g_add[1].u_add.u.u_ca.g_r.r[27]$_DFF_PN0_/D
+      560 |       0 |    1131 |            0 |    +1.5% | -18.380 | -3311.270 | g_add[1].u_add.u.u_ca.g_r.r[52]$_DFF_PN0_/D
+      570 |       0 |    1151 |            0 |    +1.5% | -18.293 | -3164.161 | dval[0][201]$_DFF_P_/D
+      580 |       0 |    1171 |            0 |    +1.5% | -18.190 | -2986.045 | g_add[6].u_add.u.u_ca.g_r.r[47]$_DFF_PN0_/D
+      590 |       0 |    1191 |            0 |    +1.5% | -18.099 | -2837.364 | g_add[0].u_add.u.u_ca.g_r.r[51]$_DFF_PN0_/D
+      600 |       0 |    1211 |            0 |    +1.6% | -17.836 | -2680.180 | dval[0][204]$_DFF_P_/D
+      610 |       0 |    1231 |            0 |    +1.6% | -17.651 | -2511.748 | g_add[7].u_add.u.u_ca.g_r.r[51]$_DFF_PN0_/D
+      620 |       0 |    1251 |            0 |    +1.6% | -17.505 | -2281.510 | dval[0][205]$_DFF_P_/D
+      630 |       0 |    1271 |            0 |    +1.6% | -17.369 | -2104.788 | g_add[0].u_add.u.u_ca.g_r.r[31]$_DFF_PN0_/D
+      640 |       0 |    1291 |            0 |    +1.7% | -17.303 | -1999.967 | dval[0][105]$_DFF_P_/D
+      650 |       0 |    1311 |            0 |    +1.7% | -17.136 | -1865.582 | g_add[6].u_add.u.u_ca.g_r.r[51]$_DFF_PN0_/D
+      660 |       0 |    1331 |            0 |    +1.7% | -16.906 | -1690.230 | g_add[2].u_add.u.u_ca.g_r.r[25]$_DFF_PN0_/D
+      670 |       0 |    1351 |            0 |    +1.7% | -16.716 | -1590.285 | g_add[3].u_add.u.u_ca.g_r.r[55]$_DFF_PN0_/D
+      680 |       0 |    1371 |            0 |    +1.8% | -16.327 | -1374.354 | g_add[2].u_add.u.u_ca.g_r.r[76]$_DFF_PN0_/D
+      690 |       0 |    1391 |            0 |    +1.8% | -15.880 | -1217.458 | g_add[3].u_add.u.u_ca.g_r.r[75]$_DFF_PN0_/D
+      700 |       0 |    1411 |            0 |    +1.8% | -15.430 | -1110.810 | g_add[3].u_add.u.u_ca.g_r.r[45]$_DFF_PN0_/D
+      710 |       0 |    1431 |            0 |    +1.9% | -15.057 | -995.044 | g_add[3].u_add.u.u_ca.g_r.r[58]$_DFF_PN0_/D
+      720 |       0 |    1450 |            0 |    +1.9% | -14.403 | -879.500 | dval[0][124]$_DFF_P_/D
+      730 |       0 |    1469 |            0 |    +1.9% | -13.342 | -795.044 | g_add[3].u_add.u.u_ca.g_r.r[48]$_DFF_PN0_/D
+      740 |       0 |    1488 |            0 |    +1.9% | -12.033 | -698.865 | dval[3][253]$_DFF_P_/D
+      750 |       0 |    1508 |            0 |    +2.0% |  -9.954 | -657.230 | dval[3][252]$_DFF_P_/D
+      760 |       0 |    1536 |            0 |    +2.0% |  -9.954 | -652.710 | dval[3][252]$_DFF_P_/D
+      770 |       0 |    1562 |            0 |    +2.0% |  -8.465 | -641.722 | dm[3][3]$_DFF_P_/D
+      780 |       0 |    1591 |            0 |    +2.1% |  -8.465 | -637.697 | dm[3][3]$_DFF_P_/D
+      790 |       0 |    1617 |            0 |    +2.1% |  -7.100 | -629.064 | g_add[7].u_add.u.u_ca.g_r.r[64]$_DFF_PN0_/D
+      800 |       0 |    1641 |            0 |    +2.1% |  -7.100 | -629.064 | g_add[7].u_add.u.u_ca.g_r.r[64]$_DFF_PN0_/D
+      810 |       0 |    1661 |            0 |    +2.1% |  -7.100 | -629.064 | g_add[7].u_add.u.u_ca.g_r.r[64]$_DFF_PN0_/D
+      820 |       0 |    1682 |            0 |    +2.2% |  -7.100 | -629.064 | g_add[7].u_add.u.u_ca.g_r.r[64]$_DFF_PN0_/D
+      830 |       0 |    1703 |            0 |    +2.2% |  -7.023 | -618.921 | g_add[2].u_add.u.u_cc.g_r.r[33]$_DFF_PN0_/D
+      840 |       0 |    1724 |            0 |    +2.2% |  -6.608 | -595.564 | g_add[2].u_add.u.u_cc.g_r.r[32]$_DFF_PN0_/D
+      850 |       0 |    1745 |            0 |    +2.3% |  -6.219 | -575.869 | g_add[2].u_add.u.u_cc.g_r.r[34]$_DFF_PN0_/D
+      860 |       0 |    1766 |            0 |    +2.3% |  -6.043 | -561.610 | g_add[6].u_add.u.u_cb.g_r.r[85]$_DFF_PN0_/D
+      870 |       0 |    1785 |            0 |    +2.3% |  -5.890 | -543.583 | out_idx[0]
+      880 |       0 |    1806 |            0 |    +2.3% |  -5.663 | -520.267 | g_add[2].u_add.u.u_cc.g_r.r[63]$_DFF_PN0_/D
+      890 |       0 |    1826 |            0 |    +2.4% |  -5.329 | -498.132 | out_idx[11]
+      900 |       0 |    1845 |            0 |    +2.4% |  -5.229 | -492.803 | out_idx[7]
+      910 |       0 |    1870 |            0 |    +2.4% |  -5.063 | -460.221 | g_add[6].u_add.u.u_cb.g_r.r[95]$_DFF_PN0_/D
+      920 |       0 |    1890 |            0 |    +2.4% |  -4.985 | -440.062 | out_idx[9]
+      930 |       0 |    1914 |            0 |    +2.5% |  -4.753 | -420.496 | out_idx[1]
+      940 |       0 |    1936 |            0 |    +2.5% |  -4.583 | -395.027 | dval[1][17]$_DFF_P_/D
+      950 |       0 |    1958 |            0 |    +2.5% |  -4.317 | -363.727 | dval[5][91]$_DFF_P_/D
+      960 |       0 |    1978 |            0 |    +2.6% |  -4.024 | -346.761 | g_add[6].u_add.u.u_cb.g_r.r[69]$_DFF_PN0_/D
+      970 |       0 |    1998 |            0 |    +2.6% |  -3.917 | -326.805 | g_add[2].u_add.u.u_cc.g_r.r[35]$_DFF_PN0_/D
+      980 |       0 |    2018 |            0 |    +2.6% |  -3.660 | -307.626 | g_add[1].u_add.u.u_ca.g_r.r[39]$_DFF_PN0_/D
+      990 |       0 |    2038 |            0 |    +2.6% |  -3.507 | -282.883 | g_add[2].u_add.u.u_cb.g_r.r[101]$_DFF_PN0_/D
+     1000 |       0 |    2059 |            0 |    +2.7% |  -3.381 | -262.097 | g_add[0].u_add.u.u_cb.g_r.r[94]$_DFF_PN0_/D
+     1010 |       0 |    2079 |            0 |    +2.7% |  -3.271 | -235.233 | g_add[4].u_add.u.u_cb.g_r.r[75]$_DFF_PN0_/D
+     1020 |       0 |    2099 |            0 |    +2.7% |  -3.110 | -212.933 | dval[1][204]$_DFF_P_/D
+     1030 |       0 |    2118 |            0 |    +2.7% |  -2.990 | -197.748 | dval[5][87]$_DFF_P_/D
+     1040 |       0 |    2136 |            0 |    +2.8% |  -2.809 | -186.164 | dval[1][198]$_DFF_P_/D
+     1050 |       0 |    2155 |            0 |    +2.8% |  -2.661 | -166.860 | g_add[2].u_add.u.u_cb.g_r.r[72]$_DFF_PN0_/D
+     1060 |       0 |    2174 |            0 |    +2.8% |  -2.579 | -156.262 | dval[6][69]$_DFF_P_/D
+     1070 |       0 |    2193 |            0 |    +2.8% |  -2.464 | -143.621 | dval[5][182]$_DFF_P_/D
+     1080 |       0 |    2213 |            0 |    +2.9% |  -2.322 | -126.719 | g_add[5].u_add.u.u_cc.g_r.r[63]$_DFF_PN0_/D
+     1090 |       0 |    2235 |            0 |    +2.9% |  -2.144 | -114.910 | dval[6][68]$_DFF_P_/D
+     1100 |       0 |    2251 |            0 |    +2.9% |  -1.908 | -98.634 | dval[5][173]$_DFF_P_/D
+     1110 |       0 |    2269 |            0 |    +2.9% |  -1.799 | -89.353 | g_add[6].u_add.u.u_cd.g_r.r[70]$_DFF_PN0_/D
+     1120 |       0 |    2289 |            0 |    +3.0% |  -1.654 | -73.731 | dval[5][20]$_DFF_P_/D
+     1130 |       0 |    2306 |            0 |    +3.0% |  -1.428 | -62.772 | dval[2][21]$_DFF_P_/D
+     1140 |       0 |    2326 |            0 |    +3.0% |  -1.328 | -52.973 | dval[3][16]$_DFF_P_/D
+     1150 |       0 |    2346 |            0 |    +3.0% |  -1.140 | -41.686 | dval[4][212]$_DFF_P_/D
+     1160 |       0 |    2366 |            0 |    +3.1% |  -1.030 | -36.075 | dval[5][28]$_DFF_P_/D
+     1170 |       0 |    2382 |            0 |    +3.1% |  -0.961 | -31.042 | di[1][15]$_DFF_P_/D
+     1180 |       0 |    2402 |            0 |    +3.1% |  -0.864 | -22.673 | dval[5][121]$_DFF_P_/D
+     1190 |       0 |    2422 |            0 |    +3.1% |  -0.743 | -15.482 | g_add[0].u_add.u.u_cb.g_r.r[90]$_DFF_PN0_/D
+     1200 |       0 |    2442 |            0 |    +3.2% |  -0.512 | -11.064 | dval[5][122]$_DFF_P_/D
+     1210 |       0 |    2460 |            0 |    +3.2% |  -0.413 |  -7.745 | dval[5][136]$_DFF_P_/D
+     1220 |       0 |    2480 |            0 |    +3.2% |  -0.278 |  -4.352 | dval[5][155]$_DFF_P_/D
+     1230 |       0 |    2500 |            0 |    +3.2% |  -0.207 |  -1.926 | dval[5][167]$_DFF_P_/D
+     1240 |       0 |    2519 |            0 |    +3.3% |  -0.109 |  -0.281 | dval[4][123]$_DFF_P_/D
+     1250 |       0 |    2537 |            0 |    +3.3% |   0.079 |   0.000 | dval[5][66]$_DFF_P_/D
+     1260 |       0 |    2557 |            0 |    +3.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1270 |       0 |    2577 |            0 |    +3.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1280 |       0 |    2597 |            0 |    +3.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1290 |       0 |    2615 |            0 |    +3.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1300 |       0 |    2635 |            0 |    +3.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1310 |       0 |    2655 |            0 |    +3.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1320 |       0 |    2675 |            0 |    +3.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1330 |       0 |    2695 |            0 |    +3.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1340 |       0 |    2715 |            0 |    +3.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1350 |       0 |    2735 |            0 |    +3.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1360 |       0 |    2755 |            0 |    +3.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1370 |       0 |    2773 |            0 |    +3.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1380 |       0 |    2793 |            0 |    +3.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1390 |       0 |    2813 |            0 |    +3.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1400 |       0 |    2833 |            0 |    +3.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1410 |       0 |    2853 |            0 |    +3.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1420 |       0 |    2873 |            0 |    +3.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1430 |       0 |    2891 |            0 |    +3.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1440 |       0 |    2909 |            0 |    +3.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1450 |       0 |    2929 |            0 |    +3.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1460 |       0 |    2949 |            0 |    +3.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1470 |       0 |    2969 |            0 |    +3.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1480 |       0 |    2989 |            0 |    +3.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1490 |       0 |    3009 |            0 |    +3.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1500 |       0 |    3029 |            0 |    +3.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1510 |       0 |    3049 |            0 |    +3.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1520 |       0 |    3069 |            0 |    +4.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1530 |       0 |    3089 |            0 |    +4.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1540 |       0 |    3109 |            0 |    +4.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1550 |       0 |    3129 |            0 |    +4.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1560 |       0 |    3150 |            0 |    +4.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1570 |       0 |    3170 |            0 |    +4.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1580 |       0 |    3190 |            0 |    +4.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1590 |       0 |    3210 |            0 |    +4.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1600 |       0 |    3230 |            0 |    +4.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1610 |       0 |    3250 |            0 |    +4.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1620 |       0 |    3270 |            0 |    +4.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1630 |       0 |    3290 |            0 |    +4.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1640 |       0 |    3310 |            0 |    +4.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1650 |       0 |    3330 |            0 |    +4.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1660 |       0 |    3350 |            0 |    +4.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1670 |       0 |    3370 |            0 |    +4.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1680 |       0 |    3390 |            0 |    +4.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1690 |       0 |    3410 |            0 |    +4.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1700 |       0 |    3430 |            0 |    +4.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1710 |       0 |    3450 |            0 |    +4.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1720 |       0 |    3470 |            0 |    +4.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1730 |       0 |    3490 |            0 |    +4.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1740 |       0 |    3510 |            0 |    +4.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1750 |       0 |    3530 |            0 |    +4.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1760 |       0 |    3550 |            0 |    +4.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1770 |       0 |    3570 |            0 |    +4.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1780 |       0 |    3591 |            0 |    +4.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1790 |       0 |    3611 |            0 |    +4.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1800 |       0 |    3631 |            0 |    +4.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1810 |       0 |    3651 |            0 |    +4.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1820 |       0 |    3671 |            0 |    +4.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1830 |       0 |    3691 |            0 |    +4.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1840 |       0 |    3711 |            0 |    +4.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1850 |       0 |    3731 |            0 |    +4.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1860 |       0 |    3751 |            0 |    +4.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1870 |       0 |    3770 |            0 |    +4.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1880 |       0 |    3790 |            0 |    +4.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1890 |       0 |    3810 |            0 |    +4.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1900 |       0 |    3830 |            0 |    +5.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1910 |       0 |    3850 |            0 |    +5.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1920 |       0 |    3870 |            0 |    +5.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1930 |       0 |    3890 |            0 |    +5.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1940 |       0 |    3910 |            0 |    +5.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1950 |       0 |    3930 |            0 |    +5.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1960 |       0 |    3950 |            0 |    +5.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1970 |       0 |    3970 |            0 |    +5.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1980 |       0 |    3990 |            0 |    +5.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     1990 |       0 |    4010 |            0 |    +5.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2000 |       0 |    4030 |            0 |    +5.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2010 |       0 |    4050 |            0 |    +5.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2020 |       0 |    4070 |            0 |    +5.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2030 |       0 |    4090 |            0 |    +5.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2040 |       0 |    4110 |            0 |    +5.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2050 |       0 |    4130 |            0 |    +5.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2060 |       0 |    4150 |            0 |    +5.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2070 |       0 |    4170 |            0 |    +5.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2080 |       0 |    4190 |            0 |    +5.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2090 |       0 |    4210 |            0 |    +5.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2100 |       0 |    4231 |            0 |    +5.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2110 |       0 |    4251 |            0 |    +5.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2120 |       0 |    4271 |            0 |    +5.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2130 |       0 |    4292 |            0 |    +5.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2140 |       0 |    4310 |            0 |    +5.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2150 |       0 |    4330 |            0 |    +5.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2160 |       0 |    4350 |            0 |    +5.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2170 |       0 |    4370 |            0 |    +5.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2180 |       0 |    4390 |            0 |    +5.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2190 |       0 |    4410 |            0 |    +5.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2200 |       0 |    4430 |            0 |    +5.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2210 |       0 |    4450 |            0 |    +5.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2220 |       0 |    4470 |            0 |    +5.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2230 |       0 |    4490 |            0 |    +5.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2240 |       0 |    4510 |            0 |    +5.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2250 |       0 |    4530 |            0 |    +5.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2260 |       0 |    4550 |            0 |    +5.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2270 |       0 |    4570 |            0 |    +5.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2280 |       0 |    4590 |            0 |    +5.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2290 |       0 |    4610 |            0 |    +6.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2300 |       0 |    4630 |            0 |    +6.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2310 |       0 |    4650 |            0 |    +6.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2320 |       0 |    4670 |            0 |    +6.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2330 |       0 |    4690 |            0 |    +6.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2340 |       0 |    4710 |            0 |    +6.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2350 |       0 |    4730 |            0 |    +6.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2360 |       0 |    4750 |            0 |    +6.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2370 |       0 |    4770 |            0 |    +6.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2380 |       0 |    4790 |            0 |    +6.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2390 |       0 |    4810 |            0 |    +6.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2400 |       0 |    4829 |            0 |    +6.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2410 |       0 |    4849 |            0 |    +6.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2420 |       0 |    4869 |            0 |    +6.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2430 |       0 |    4889 |            0 |    +6.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2440 |       0 |    4909 |            0 |    +6.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2450 |       0 |    4929 |            0 |    +6.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2460 |       0 |    4949 |            0 |    +6.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2470 |       0 |    4969 |            0 |    +6.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2480 |       0 |    4989 |            0 |    +6.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2490 |       0 |    5009 |            0 |    +6.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2500 |       0 |    5029 |            0 |    +6.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2510 |       0 |    5049 |            0 |    +6.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2520 |       0 |    5069 |            0 |    +6.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2530 |       0 |    5089 |            0 |    +6.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2540 |       0 |    5109 |            0 |    +6.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2550 |       0 |    5129 |            0 |    +6.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2560 |       0 |    5149 |            0 |    +6.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2570 |       0 |    5169 |            0 |    +6.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2580 |       0 |    5189 |            0 |    +6.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2590 |       0 |    5209 |            0 |    +6.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2600 |       0 |    5229 |            0 |    +6.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2610 |       0 |    5249 |            0 |    +6.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2620 |       0 |    5269 |            0 |    +6.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2630 |       0 |    5289 |            0 |    +6.8% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2640 |       0 |    5309 |            0 |    +6.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2650 |       0 |    5329 |            0 |    +6.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2660 |       0 |    5349 |            0 |    +6.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2670 |       0 |    5369 |            0 |    +6.9% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2680 |       0 |    5389 |            0 |    +7.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2690 |       0 |    5409 |            0 |    +7.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2700 |       0 |    5429 |            0 |    +7.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2710 |       0 |    5449 |            0 |    +7.0% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2720 |       0 |    5469 |            0 |    +7.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2730 |       0 |    5489 |            0 |    +7.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2740 |       0 |    5509 |            0 |    +7.1% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2750 |       0 |    5529 |            0 |    +7.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2760 |       0 |    5549 |            0 |    +7.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2770 |       0 |    5569 |            0 |    +7.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2780 |       0 |    5589 |            0 |    +7.2% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2790 |       0 |    5609 |            0 |    +7.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2800 |       0 |    5629 |            0 |    +7.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2810 |       0 |    5649 |            0 |    +7.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2820 |       0 |    5669 |            0 |    +7.3% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2830 |       0 |    5689 |            0 |    +7.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2840 |       0 |    5709 |            0 |    +7.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2850 |       0 |    5729 |            0 |    +7.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2860 |       0 |    5749 |            0 |    +7.4% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2870 |       0 |    5765 |            0 |    +7.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2880 |       0 |    5785 |            0 |    +7.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2890 |       0 |    5803 |            0 |    +7.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2900 |       0 |    5823 |            0 |    +7.5% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2910 |       0 |    5843 |            0 |    +7.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2920 |       0 |    5863 |            0 |    +7.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2930 |       0 |    5883 |            0 |    +7.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2940 |       0 |    5903 |            0 |    +7.6% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2950 |       0 |    5923 |            0 |    +7.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2960 |       0 |    5943 |            0 |    +7.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2970 |       0 |    5963 |            0 |    +7.7% |   0.212 |   0.000 | g_add[4].u_add.u.u_ca.g_r.r[36]$_DFF_PN0_/D
+     2980 |       0 |    5984 |            0 |    +7.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     2990 |       0 |    6004 |            0 |    +7.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3000 |       0 |    6024 |            0 |    +7.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3010 |       0 |    6044 |            0 |    +7.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3020 |       0 |    6064 |            0 |    +7.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3030 |       0 |    6084 |            0 |    +7.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3040 |       0 |    6104 |            0 |    +7.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3050 |       0 |    6124 |            0 |    +7.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3060 |       0 |    6144 |            0 |    +7.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3070 |       0 |    6164 |            0 |    +8.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3080 |       0 |    6184 |            0 |    +8.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3090 |       0 |    6204 |            0 |    +8.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3100 |       0 |    6224 |            0 |    +8.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3110 |       0 |    6244 |            0 |    +8.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3120 |       0 |    6262 |            0 |    +8.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3130 |       0 |    6282 |            0 |    +8.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3140 |       0 |    6302 |            0 |    +8.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3150 |       0 |    6322 |            0 |    +8.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3160 |       0 |    6342 |            0 |    +8.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3170 |       0 |    6362 |            0 |    +8.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3180 |       0 |    6382 |            0 |    +8.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3190 |       0 |    6402 |            0 |    +8.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3200 |       0 |    6422 |            0 |    +8.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3210 |       0 |    6442 |            0 |    +8.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3220 |       0 |    6462 |            0 |    +8.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3230 |       0 |    6482 |            0 |    +8.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3240 |       0 |    6502 |            0 |    +8.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3250 |       0 |    6520 |            0 |    +8.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3260 |       0 |    6540 |            0 |    +8.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3270 |       0 |    6560 |            0 |    +8.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3280 |       0 |    6580 |            0 |    +8.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3290 |       0 |    6600 |            0 |    +8.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3300 |       0 |    6620 |            0 |    +8.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3310 |       0 |    6640 |            0 |    +8.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3320 |       0 |    6660 |            0 |    +8.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3330 |       0 |    6680 |            0 |    +8.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3340 |       0 |    6700 |            0 |    +8.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3350 |       0 |    6720 |            0 |    +8.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3360 |       0 |    6740 |            0 |    +8.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3370 |       0 |    6760 |            0 |    +8.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3380 |       0 |    6780 |            0 |    +8.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3390 |       0 |    6800 |            0 |    +8.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3400 |       0 |    6820 |            0 |    +8.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3410 |       0 |    6840 |            0 |    +8.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3420 |       0 |    6860 |            0 |    +8.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3430 |       0 |    6878 |            0 |    +8.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3440 |       0 |    6898 |            0 |    +8.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3450 |       0 |    6918 |            0 |    +8.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3460 |       0 |    6936 |            0 |    +9.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3470 |       0 |    6956 |            0 |    +9.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3480 |       0 |    6976 |            0 |    +9.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3490 |       0 |    6994 |            0 |    +9.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3500 |       0 |    7012 |            0 |    +9.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3510 |       0 |    7032 |            0 |    +9.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3520 |       0 |    7052 |            0 |    +9.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3530 |       0 |    7072 |            0 |    +9.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3540 |       0 |    7092 |            0 |    +9.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3550 |       0 |    7112 |            0 |    +9.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3560 |       0 |    7132 |            0 |    +9.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3570 |       0 |    7150 |            0 |    +9.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3580 |       0 |    7170 |            0 |    +9.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3590 |       0 |    7190 |            0 |    +9.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3600 |       0 |    7210 |            0 |    +9.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3610 |       0 |    7230 |            0 |    +9.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3620 |       0 |    7250 |            0 |    +9.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3630 |       0 |    7270 |            0 |    +9.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3640 |       0 |    7290 |            0 |    +9.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3650 |       0 |    7310 |            0 |    +9.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3660 |       0 |    7330 |            0 |    +9.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3670 |       0 |    7350 |            0 |    +9.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3680 |       0 |    7370 |            0 |    +9.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3690 |       0 |    7390 |            0 |    +9.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3700 |       0 |    7410 |            0 |    +9.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3710 |       0 |    7430 |            0 |    +9.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3720 |       0 |    7450 |            0 |    +9.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3730 |       0 |    7470 |            0 |    +9.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3740 |       0 |    7490 |            0 |    +9.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3750 |       0 |    7510 |            0 |    +9.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3760 |       0 |    7528 |            0 |    +9.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3770 |       0 |    7548 |            0 |    +9.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3780 |       0 |    7568 |            0 |    +9.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3790 |       0 |    7586 |            0 |    +9.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3800 |       0 |    7606 |            0 |    +9.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3810 |       0 |    7626 |            0 |    +9.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3820 |       0 |    7644 |            0 |    +9.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3830 |       0 |    7664 |            0 |    +9.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3840 |       0 |    7684 |            0 |    +9.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3850 |       0 |    7704 |            0 |   +10.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3860 |       0 |    7724 |            0 |   +10.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3870 |       0 |    7744 |            0 |   +10.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3880 |       0 |    7764 |            0 |   +10.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3890 |       0 |    7784 |            0 |   +10.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3900 |       0 |    7804 |            0 |   +10.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3910 |       0 |    7824 |            0 |   +10.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3920 |       0 |    7844 |            0 |   +10.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3930 |       0 |    7864 |            0 |   +10.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3940 |       0 |    7884 |            0 |   +10.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3950 |       0 |    7904 |            0 |   +10.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3960 |       0 |    7924 |            0 |   +10.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3970 |       0 |    7943 |            0 |   +10.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3980 |       0 |    7961 |            0 |   +10.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     3990 |       0 |    7981 |            0 |   +10.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4000 |       0 |    8001 |            0 |   +10.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4010 |       0 |    8021 |            0 |   +10.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4020 |       0 |    8041 |            0 |   +10.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4030 |       0 |    8061 |            0 |   +10.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4040 |       0 |    8081 |            0 |   +10.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4050 |       0 |    8101 |            0 |   +10.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4060 |       0 |    8121 |            0 |   +10.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4070 |       0 |    8141 |            0 |   +10.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4080 |       0 |    8161 |            0 |   +10.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4090 |       0 |    8181 |            0 |   +10.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4100 |       0 |    8201 |            0 |   +10.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4110 |       0 |    8221 |            0 |   +10.6% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4120 |       0 |    8241 |            0 |   +10.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4130 |       0 |    8261 |            0 |   +10.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4140 |       0 |    8279 |            0 |   +10.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4150 |       0 |    8299 |            0 |   +10.7% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4160 |       0 |    8319 |            0 |   +10.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4170 |       0 |    8339 |            0 |   +10.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4180 |       0 |    8359 |            0 |   +10.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4190 |       0 |    8379 |            0 |   +10.8% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4200 |       0 |    8397 |            0 |   +10.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4210 |       0 |    8415 |            0 |   +10.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4220 |       0 |    8435 |            0 |   +10.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4230 |       0 |    8455 |            0 |   +10.9% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4240 |       0 |    8473 |            0 |   +11.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4250 |       0 |    8492 |            0 |   +11.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4260 |       0 |    8512 |            0 |   +11.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4270 |       0 |    8532 |            0 |   +11.0% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4280 |       0 |    8548 |            0 |   +11.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4290 |       0 |    8568 |            0 |   +11.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4300 |       0 |    8588 |            0 |   +11.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4310 |       0 |    8606 |            0 |   +11.1% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4320 |       0 |    8626 |            0 |   +11.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4330 |       0 |    8646 |            0 |   +11.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4340 |       0 |    8666 |            0 |   +11.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4350 |       0 |    8686 |            0 |   +11.2% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4360 |       0 |    8706 |            0 |   +11.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4370 |       0 |    8726 |            0 |   +11.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4380 |       0 |    8746 |            0 |   +11.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4390 |       0 |    8766 |            0 |   +11.3% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4400 |       0 |    8784 |            0 |   +11.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4410 |       0 |    8804 |            0 |   +11.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4420 |       0 |    8824 |            0 |   +11.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4430 |       0 |    8844 |            0 |   +11.4% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4440 |       0 |    8864 |            0 |   +11.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4450 |       0 |    8884 |            0 |   +11.5% |   0.570 |   0.000 | g_add[7].u_add.u.u_ca.g_r.r[67]$_DFF_PN0_/D
+     4460 |       0 |    8905 |            0 |   +11.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4470 |       0 |    8923 |            0 |   +11.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4480 |       0 |    8943 |            0 |   +11.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4490 |       0 |    8963 |            0 |   +11.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4500 |       0 |    8982 |            0 |   +11.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4510 |       0 |    9002 |            0 |   +11.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4520 |       0 |    9018 |            0 |   +11.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4530 |       0 |    9038 |            0 |   +11.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4540 |       0 |    9058 |            0 |   +11.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4550 |       0 |    9074 |            0 |   +11.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4560 |       0 |    9094 |            0 |   +11.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4570 |       0 |    9113 |            0 |   +11.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4580 |       0 |    9132 |            0 |   +11.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4590 |       0 |    9151 |            0 |   +11.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4600 |       0 |    9170 |            0 |   +11.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4610 |       0 |    9187 |            0 |   +11.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4620 |       0 |    9204 |            0 |   +11.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4630 |       0 |    9223 |            0 |   +11.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4640 |       0 |    9243 |            0 |   +12.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4650 |       0 |    9260 |            0 |   +12.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4660 |       0 |    9278 |            0 |   +12.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4670 |       0 |    9295 |            0 |   +12.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4680 |       0 |    9309 |            0 |   +12.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4690 |       0 |    9326 |            0 |   +12.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4700 |       0 |    9343 |            0 |   +12.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4710 |       0 |    9361 |            0 |   +12.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4720 |       0 |    9379 |            0 |   +12.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4730 |       0 |    9395 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4740 |       0 |    9409 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4750 |       0 |    9425 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4760 |       0 |    9440 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4770 |       0 |    9455 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4780 |       0 |    9467 |            0 |   +12.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4790 |       0 |    9483 |            0 |   +12.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4800 |       0 |    9498 |            0 |   +12.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4810 |       0 |    9514 |            0 |   +12.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4820 |       0 |    9530 |            0 |   +12.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4830 |       0 |    9543 |            0 |   +12.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4840 |       0 |    9560 |            0 |   +12.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4850 |       0 |    9574 |            0 |   +12.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4860 |       0 |    9589 |            0 |   +12.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4870 |       0 |    9606 |            0 |   +12.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4880 |       0 |    9620 |            0 |   +12.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4890 |       0 |    9637 |            0 |   +12.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4900 |       0 |    9654 |            0 |   +12.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4910 |       0 |    9668 |            0 |   +12.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4920 |       0 |    9684 |            0 |   +12.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4930 |       0 |    9699 |            0 |   +12.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4940 |       0 |    9711 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4950 |       0 |    9725 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4960 |       0 |    9738 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4970 |       0 |    9751 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4980 |       0 |    9765 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     4990 |       0 |    9776 |            0 |   +12.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5000 |       0 |    9789 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5010 |       0 |    9803 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5020 |       0 |    9815 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5030 |       0 |    9825 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5040 |       0 |    9836 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5050 |       0 |    9847 |            0 |   +12.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5060 |       0 |    9858 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5070 |       0 |    9868 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5080 |       0 |    9877 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5090 |       0 |    9889 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5100 |       0 |    9901 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5110 |       0 |    9911 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5120 |       0 |    9920 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5130 |       0 |    9931 |            0 |   +12.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5140 |       0 |    9941 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5150 |       0 |    9954 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5160 |       0 |    9962 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5170 |       0 |    9970 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5180 |       0 |    9979 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5190 |       0 |    9990 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5200 |       0 |    9999 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5210 |       0 |   10010 |            0 |   +12.9% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5220 |       0 |   10018 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5230 |       0 |   10028 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5240 |       0 |   10036 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5250 |       0 |   10046 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5260 |       0 |   10055 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5270 |       0 |   10066 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5280 |       0 |   10076 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5290 |       0 |   10085 |            0 |   +13.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5300 |       0 |   10095 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5310 |       0 |   10106 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5320 |       0 |   10116 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5330 |       0 |   10126 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5340 |       0 |   10136 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5350 |       0 |   10146 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5360 |       0 |   10156 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5370 |       0 |   10166 |            0 |   +13.1% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5380 |       0 |   10177 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5390 |       0 |   10187 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5400 |       0 |   10197 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5410 |       0 |   10207 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5420 |       0 |   10217 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5430 |       0 |   10225 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5440 |       0 |   10233 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5450 |       0 |   10243 |            0 |   +13.2% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5460 |       0 |   10252 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5470 |       0 |   10261 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5480 |       0 |   10271 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5490 |       0 |   10280 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5500 |       0 |   10290 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5510 |       0 |   10299 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5520 |       0 |   10310 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5530 |       0 |   10320 |            0 |   +13.3% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5540 |       0 |   10331 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5550 |       0 |   10342 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5560 |       0 |   10353 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5570 |       0 |   10365 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5580 |       0 |   10376 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5590 |       0 |   10385 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5600 |       0 |   10394 |            0 |   +13.4% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5610 |       0 |   10404 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5620 |       0 |   10414 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5630 |       0 |   10423 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5640 |       0 |   10434 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5650 |       0 |   10444 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5660 |       0 |   10451 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5670 |       0 |   10461 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5680 |       0 |   10470 |            0 |   +13.5% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5690 |       0 |   10479 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5700 |       0 |   10488 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5710 |       0 |   10497 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5720 |       0 |   10506 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5730 |       0 |   10515 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5740 |       0 |   10523 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5750 |       0 |   10530 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5760 |       0 |   10538 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5770 |       0 |   10544 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5780 |       0 |   10551 |            0 |   +13.6% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5790 |       0 |   10560 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5800 |       0 |   10567 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5810 |       0 |   10575 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5820 |       0 |   10582 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5830 |       0 |   10588 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5840 |       0 |   10596 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5850 |       0 |   10605 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5860 |       0 |   10612 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5870 |       0 |   10618 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5880 |       0 |   10627 |            0 |   +13.7% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5890 |       0 |   10635 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5900 |       0 |   10644 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5910 |       0 |   10652 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5920 |       0 |   10661 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5930 |       0 |   10669 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5940 |       0 |   10681 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5950 |       0 |   10688 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5960 |       0 |   10696 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+     5970 |       0 |   10705 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+    final |       0 |   10707 |            0 |   +13.8% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+[INFO RSZ-0032] Inserted 10707 hold buffers.
+[INFO RSZ-0506] Runtime: 1072.88s
+Took 1073 seconds: repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 1: hold ws 5.27 (+33.18) tns 0.0 (+100.0%) viol 0, 1073 s
+repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 734 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% |   5.274 |   0.000 | g_add[6].u_add.u.u_ca.g_r.r[37]$_DFF_PN0_/D
+       10 |       0 |      14 |            0 |    +0.0% |  16.153 |   0.000 | g_add[2].u_add.u.u_cc.g_r.r[52]$_DFF_PN0_/D
+       20 |       0 |      24 |            0 |    +0.0% |  17.016 |   0.000 | g_add[2].u_add.u.u_cc.g_r.r[30]$_DFF_PN0_/D
+       30 |       0 |      34 |            0 |    +0.0% |  18.215 |   0.000 | g_add[2].u_add.u.u_cc.g_r.r[44]$_DFF_PN0_/D
+       40 |       0 |      44 |            0 |    +0.0% |  18.589 |   0.000 | g_add[6].u_add.u.u_cb.g_r.r[71]$_DFF_PN0_/D
+       50 |       0 |      54 |            0 |    +0.1% |  18.848 |   0.000 | g_add[2].u_add.u.u_cc.g_r.r[46]$_DFF_PN0_/D
+       60 |       0 |      64 |            0 |    +0.1% |  19.276 |   0.000 | g_add[4].u_add.u.u_cc.g_r.r[43]$_DFF_PN0_/D
+       70 |       0 |      74 |            0 |    +0.1% |  19.611 |   0.000 | dval[3][213]$_DFF_P_/D
+       80 |       0 |      84 |            0 |    +0.1% |  19.841 |   0.000 | dval[6][142]$_DFF_P_/D
+       90 |       0 |      94 |            0 |    +0.1% |  20.065 |   0.000 | g_add[7].u_add.u.u_cb.g_r.r[72]$_DFF_PN0_/D
+      100 |       0 |     103 |            0 |    +0.1% |  20.330 |   0.000 | g_add[2].u_add.u.u_cc.g_r.r[43]$_DFF_PN0_/D
+      110 |       0 |     113 |            0 |    +0.1% |  20.561 |   0.000 | g_add[4].u_add.u.u_cc.g_r.r[48]$_DFF_PN0_/D
+      120 |       0 |     123 |            0 |    +0.1% |  20.800 |   0.000 | g_add[6].u_add.u.u_cd.g_r.r[70]$_DFF_PN0_/D
+      130 |       0 |     133 |            0 |    +0.2% |  20.905 |   0.000 | g_add[4].u_add.u.u_cc.g_r.r[28]$_DFF_PN0_/D
+      140 |       0 |     143 |            0 |    +0.2% |  21.081 |   0.000 | g_add[1].u_add.u.u_cb.g_r.r[64]$_DFF_PN0_/D
+      150 |       0 |     153 |            0 |    +0.2% |  21.334 |   0.000 | g_add[7].u_add.u.u_cd.g_r.r[35]$_DFF_PN0_/D
+      160 |       0 |     163 |            0 |    +0.2% |  21.504 |   0.000 | dval[5][252]$_DFF_P_/D
+      170 |       0 |     173 |            0 |    +0.2% |  21.637 |   0.000 | g_add[2].u_add.u.u_cb.g_r.r[87]$_DFF_PN0_/D
+      180 |       0 |     183 |            0 |    +0.2% |  21.906 |   0.000 | g_add[0].u_add.u.u_cc.g_r.r[40]$_DFF_PN0_/D
+      190 |       0 |     193 |            0 |    +0.2% |  22.065 |   0.000 | dval[4][71]$_DFF_P_/D
+      200 |       0 |     203 |            0 |    +0.2% |  22.203 |   0.000 | dval[5][120]$_DFF_P_/D
+      210 |       0 |     213 |            0 |    +0.2% |  22.394 |   0.000 | dval[5][122]$_DFF_P_/D
+      220 |       0 |     223 |            0 |    +0.3% |  22.498 |   0.000 | dval[2][171]$_DFF_P_/D
+      230 |       0 |     233 |            0 |    +0.3% |  22.616 |   0.000 | dval[5][254]$_DFF_P_/D
+      240 |       0 |     243 |            0 |    +0.3% |  22.712 |   0.000 | dval[3][74]$_DFF_P_/D
+      250 |       0 |     253 |            0 |    +0.3% |  22.843 |   0.000 | dval[2][115]$_DFF_P_/D
+      260 |       0 |     263 |            0 |    +0.3% |  22.944 |   0.000 | dval[4][241]$_DFF_P_/D
+      270 |       0 |     273 |            0 |    +0.3% |  23.080 |   0.000 | g_add[0].u_add.u.u_cc.g_r.r[61]$_DFF_PN0_/D
+      280 |       0 |     283 |            0 |    +0.3% |  23.145 |   0.000 | dval[2][248]$_DFF_P_/D
+      290 |       0 |     293 |            0 |    +0.3% |  23.228 |   0.000 | g_add[0].u_add.u.u_cc.g_r.r[69]$_DFF_PN0_/D
+      300 |       0 |     303 |            0 |    +0.3% |  23.269 |   0.000 | g_add[3].u_add.u.u_cd.g_r.r[81]$_DFF_PN0_/D
+      310 |       0 |     313 |            0 |    +0.4% |  23.357 |   0.000 | g_add[5].u_add.u.u_cb.g_r.r[92]$_DFF_PN0_/D
+      320 |       0 |     323 |            0 |    +0.4% |  23.422 |   0.000 | dval[2][201]$_DFF_P_/D
+      330 |       0 |     333 |            0 |    +0.4% |  23.462 |   0.000 | g_add[4].u_add.u.u_cb.g_r.r[84]$_DFF_PN0_/D
+      340 |       0 |     343 |            0 |    +0.4% |  23.512 |   0.000 | dval[3][208]$_DFF_P_/D
+      350 |       0 |     353 |            0 |    +0.4% |  23.541 |   0.000 | g_add[1].u_add.u.u_cb.g_r.r[78]$_DFF_PN0_/D
+      360 |       0 |     363 |            0 |    +0.4% |  23.574 |   0.000 | dval[2][223]$_DFF_P_/D
+      370 |       0 |     373 |            0 |    +0.4% |  23.624 |   0.000 | g_add[5].u_add.u.u_cb.g_r.r[56]$_DFF_PN0_/D
+      380 |       0 |     383 |            0 |    +0.4% |  23.667 |   0.000 | g_add[6].u_add.u.u_cd.g_r.r[89]$_DFF_PN0_/D
+      390 |       0 |     393 |            0 |    +0.4% |  23.717 |   0.000 | g_add[1].u_add.u.u_cb.g_r.r[61]$_DFF_PN0_/D
+      400 |       0 |     403 |            0 |    +0.5% |  23.759 |   0.000 | out_idx[2]$_DFF_P_/D
+      410 |       0 |     413 |            0 |    +0.5% |  23.826 |   0.000 | dval[1][77]$_DFF_P_/D
+      420 |       0 |     423 |            0 |    +0.5% |  23.844 |   0.000 | g_add[1].u_add.u.u_cb.g_r.r[96]$_DFF_PN0_/D
+      430 |       0 |     433 |            0 |    +0.5% |  23.886 |   0.000 | dval[3][87]$_DFF_P_/D
+      440 |       0 |     443 |            0 |    +0.5% |  23.918 |   0.000 | dval[6][199]$_DFF_P_/D
+      450 |       0 |     453 |            0 |    +0.5% |  23.945 |   0.000 | g_add[2].u_add.u.s2_code[22]$_DFF_P_/D
+      460 |       0 |     463 |            0 |    +0.5% |  23.993 |   0.000 | g_add[2].u_add.u.u_cb.g_r.r[83]$_DFF_PN0_/D
+      470 |       0 |     473 |            0 |    +0.5% |  24.071 |   0.000 | dval[1][131]$_DFF_P_/D
+      480 |       0 |     483 |            0 |    +0.5% |  24.105 |   0.000 | dm[1][6]$_DFF_P_/D
+      490 |       0 |     493 |            0 |    +0.6% |  24.135 |   0.000 | dval[3][22]$_DFF_P_/D
+      500 |       0 |     503 |            0 |    +0.6% |  24.148 |   0.000 | dval[5][168]$_DFF_P_/D
+      510 |       0 |     513 |            0 |    +0.6% |  24.196 |   0.000 | dval[6][16]$_DFF_P_/D
+      520 |       0 |     523 |            0 |    +0.6% |  24.238 |   0.000 | g_add[7].u_add.u.u_cc.g_r.r[45]$_DFF_PN0_/D
+      530 |       0 |     533 |            0 |    +0.6% |  24.275 |   0.000 | e_m[5]$_DFF_P_/D
+      540 |       0 |     543 |            0 |    +0.6% |  24.310 |   0.000 | g_add[7].u_add.u.u_cb.g_r.r[94]$_DFF_PN0_/D
+      550 |       0 |     553 |            0 |    +0.6% |  24.364 |   0.000 | dval[5][79]$_DFF_P_/D
+      560 |       0 |     563 |            0 |    +0.6% |  24.379 |   0.000 | dval[2][236]$_DFF_P_/D
+      570 |       0 |     573 |            0 |    +0.7% |  24.423 |   0.000 | out_idx[7]$_DFF_P_/D
+      580 |       0 |     583 |            0 |    +0.7% |  24.477 |   0.000 | g_add[5].u_add.u.u_cd.g_r.r[86]$_DFF_PN0_/D
+      590 |       0 |     593 |            0 |    +0.7% |  24.540 |   0.000 | dval[6][12]$_DFF_P_/D
+      600 |       0 |     603 |            0 |    +0.7% |  24.581 |   0.000 | g_add[6].u_add.u.u_cb.g_r.r[79]$_DFF_PN0_/D
+      610 |       0 |     613 |            0 |    +0.7% |  24.607 |   0.000 | dval[4][112]$_DFF_P_/D
+      620 |       0 |     623 |            0 |    +0.7% |  24.650 |   0.000 | dval[1][132]$_DFF_P_/D
+      630 |       0 |     633 |            0 |    +0.7% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      640 |       0 |     643 |            0 |    +0.7% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      650 |       0 |     653 |            0 |    +0.7% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      660 |       0 |     663 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      670 |       0 |     673 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      680 |       0 |     683 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      690 |       0 |     693 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      700 |       0 |     703 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      710 |       0 |     713 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      720 |       0 |     723 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+      730 |       0 |     733 |            0 |    +0.8% |  24.663 |   0.000 | seen[5]$_DFFE_PN0P_/D
+    final |       0 |     739 |            0 |    +0.8% |  25.003 |   0.000 | dval[2][161]$_DFF_P_/D
+--------------------------------------------------------------------------------------
+[INFO RSZ-0032] Inserted 739 hold buffers.
+[INFO RSZ-0506] Runtime: 80.59s
+Took 80 seconds: repair_timing -setup_margin 0 -hold_margin 25 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+OT_HOLD_GUARD chunk 2: hold ws 25.00 (+19.73) tns 0.0 (+0.0%) viol 0, 1154 s
+OT_HOLD_MM after repair: SS setup ws 4.41 / FF hold ws 25.00 ps
+detailed_placement
+[INFO DPL-0006] Core area: 13062.43 um^2
+[INFO DPL-0007] Movable instances area: 6420.90 um^2
+[INFO DPL-0008] Fixed instances area within core: 49.46 um^2
+[INFO DPL-0009] Utilization: 49.5%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 53466 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       6531 |      1337 |      4638
+        1 |       2529 |       487 |      1823
+        2 |       1189 |       239 |       917
+        3 |        514 |       112 |       393
+        4 |        209 |        47 |       162
+        5 |        114 |        24 |        90
+        6 |         14 |         4 |        10
+        7 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 7.
+[INFO DPL-0500] Runtime: 1.85s
+Placement Analysis
+---------------------------------
+total displacement       6868.8 u
+average displacement        0.1 u
+max displacement            5.2 u
+original HPWL          118810.9 u
+legalized HPWL         123842.4 u
+delta HPWL                    4 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 6470 um^2 50% utilization.
+write_db /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_dshbm_argmax_m_asap7_mtp_mtp_argmax_f1_d30fa5f39_tc/base/4_cts.sdc
+Elapsed time: 20:12.22[h:]min:sec. CPU time: user 1229.00 sys 3.87 (101%). Peak memory: 884264KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb         1212            863 8919115467e0b2c665e4
