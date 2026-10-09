@@ -14533,3 +14533,15 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         replay_steady_records_per_cycle=1/7,
         token_fault_free_added_cycles=0,
         adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
+
+
+def hbm_native_token_join_model(qwen=False):
+    """Native Qwen/DeepSeek real two-half AR token runtime; qualification pending."""
+    from hbm_native_token_join_model import model
+    return model(qwen=qwen)
+
+
+def hbm_native_mtp_stop_model(tw=17):
+    """Full-context native MTP stop/ready successor with composed ACK cycles."""
+    from hbm_native_mtp_stop_model import model
+    return model(tw=tw)
