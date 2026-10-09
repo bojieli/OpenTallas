@@ -179,6 +179,20 @@ def artok(mode, w):
         print("RB_ar_token_join_BENCH_ERROR positive"); return 2
     if neg and all(x["returncode"] != 0 for x in neg): print("RB_ar_token_join_NEG_FAIL"); return 1
     print("RB_ar_token_join_BENCH_ERROR mutant escaped"); return 2
+def pco_n_tb():
+    t = tbfile("rtl/test/qwen_system/tb_qfd_pc_head_owner_n.sv")
+    for a, b in (("for(n=1;n<=16;n=n+1)push(n);\n  if(dut.count[0]!=16)", "for(n=1;n<=16;n=n+1)push(n);\n  step;if(dut.count[0]!=16)"),
+                 ("  if(credits!=16||dut.count[0]!=0)", "  step;step;if(credits!=16||dut.count[0]!=0)"),
+                 ("acknowledge(n,2);repeat(2)step;", "acknowledge(n,2);repeat(4)step;"),
+                 ("acknowledge(1,3);wait_head(2);", "acknowledge(1,3);step;step;wait_head(2);"),
+                 ("push(n);if(!fault)$fatal(1,\"overflow escaped\")", "push(n);step;step;if(!fault)$fatal(1,\"overflow escaped\")"),
+                 ("monitor=0;acknowledge(1,1);step;if(!fault||head_v)", "monitor=0;acknowledge(1,1);step;step;step;if(!fault||head_v)"),
+                 ("monitor=0;acknowledge(1,1);if(!fault)", "monitor=0;acknowledge(1,1);step;step;if(!fault)")):
+        assert a in t, a
+        t = t.replace(a, b)
+    return t
+CASES["pc_head_owner_n"] = dict(rtl=[f"{D}/ot_qfd_pc_head_owner_n_rb.sv", "rtl/common/ot_secded.sv"], tb=pco_n_tb, top="tb_qfd_pc_head_owner_n",
+     ok="PASS pcowner UE", neg_params=["-Ptb_qfd_pc_head_owner_n.MUT=1"], neg_ok="NEG_DETECTED pcowner incorrect")
 def run(key, mode, w):
     if key == "ar_token_join": return artok(mode, w)
     if key == "token_loop": return tokloop(mode, w)
