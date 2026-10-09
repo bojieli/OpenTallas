@@ -3,6 +3,13 @@
 set -eu
 run=${1:?absolute output directory}
 mkdir -p "$run"
+# The original golden authority is private historical Git state. Recover its
+# exact commit/tree/source objects when a fresh clone lacks them; the bench
+# still checks every source SHA against the original model before generation.
+if ! git cat-file -e 4e38326d6f361bc85e660f48c59c355e2bb95274 2>/dev/null; then
+    echo '265933e9a8f20fb24438d6b909e4d6a61f971799d590adbc5e9ed6aef01cf84d  rtl/test/s81_bf_fixtures/4e38326d6.pack' | sha256sum --check
+    git index-pack --stdin < rtl/test/s81_bf_fixtures/4e38326d6.pack
+fi
 python3 - "$run" <<'PY'
 import ast, hashlib, json, pathlib, sys
 # Evaluate the actual component function from the unified model. Importing
