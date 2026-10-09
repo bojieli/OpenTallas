@@ -13,3 +13,22 @@ def model():
         row_mapping='existing gather backend consumes owner block and group; no new row storage',
         group_sizes=[1,2,4,8,96], reserved_rejected=[16,32,64],
         gate='TT>=0 FF>=0 DRC0 plus exact DS lockstep/conformance/mutants; SS sensitivity only')
+
+def endpoint_model():
+    # Physical shell from physical/hbm_accel_die_views/coll/view.json; existing
+    # NC=8 datapath remains, small groups mask lanes, no extra arithmetic.
+    return dict(status='existing_HF5_tree_plus_mode_guard_not_physically_qualified',
+        models=['Qwen3-8B HBM','DeepSeek-V4.1 HBM'], replicas_per_die=1,
+        macs_per_cycle=0, fp32_adds_per_cycle=112, contributor_columns=8, lanes=16,
+        memory_payload_bytes_per_port_cycle=64, network_flit_bits=545,
+        network_ports=8, ingress_boundary_bits=4360, egress_boundary_bits=4360,
+        reduction_order='rank-order adjacent pairs; depth3 x LAT7',
+        group_mux_inputs=4, max_group_mask_fanout=8, reduction_datapath_replicas=1,
+        routing_tracks_needed=8720, port_boundary_capacity_bits=8*545,
+        routing_capacity_basis='hierarchical core/per-port boundaries retain current PS slot; no flat8680pin launch',
+        floorplan_slot='current hfd_coll PS core with8hardenedport leaves, see physical/hbm_accel_die_views/coll',
+        additional_area_estimate_um2=40, new_register_bits=0,
+        added_data_cycles=0, token_added_cycles_ds=0, token_added_cycles_qwen=0,
+        group_sizes=[1,2,4,8,96], rejected_raw_modes=[4,5,6,7,8,9,10,11,12,13,14],
+        physical_gate='TT>=0 FF>=0 DRC0; measured macro pin and floorplan fit; SS sensitivity',
+        qualification='DS legacy 62run evidence reused; n1/isolation/reservedguard additional exact benches required')
