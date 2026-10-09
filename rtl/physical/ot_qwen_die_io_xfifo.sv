@@ -10,7 +10,7 @@
 module ot_qwen_die_io_xfifo #(
     parameter integer WIO = 1024,
     parameter integer WSQ = 66,
-    parameter integer PIPE = 0          // ot_qwen_die_cdc_ch PIPE (qwen-blocks 2026-10-07)
+    parameter integer PIPE = 0          // ot_qwen_die_cdc_ch PIPE (qwen-blocks 2026-10-07; 2 = safe-qwen S-A2)
 ) (
     input  wire ck, input wire cku, input wire cks, input wire ckd, input wire rst_n,
     input  wire i_ucie_tx_v,   input  wire [WIO-1:0] i_ucie_tx,   output wire i_ucie_tx_cr,

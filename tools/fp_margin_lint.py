@@ -508,12 +508,21 @@ def lint(dump, th=None):
         fails.append(("macro_edge", f"{len(shadow)} macro(s) abut a pin edge with signal pins behind them ({ex}): keep "
                                     f"macros off pin edges (rows/columns inside, channels to the pins)"))
 
-    # pin bank distance
+    # pin bank distance, direction-aware (safe-hbm 2026-10-08, reviewer Q8/Q9): the rule is about the macro that DRIVES
+    # an output pin or RECEIVES from an input pin.  On a net whose block port is an OUTPUT, only the macro whose pin on it
+    # is an output (the driver) is measured; sink macros of that net (a fanout of the same register bank into other
+    # banks, e.g. hfd_attn_half_lo root_q -> xp ports + u_fr / u_mid) are exempt.  Nets with an INPUT port are unchanged.
+    port_io = {name: io for name, net, sig, io, boxes in dump["bterms"]}
     far = []
     for i, m in enumerate(macros):
         pts = []
         for net, x, y, io, cap in m["pins"]:
-            pts += [(t[2], t[3]) for t in net_terms.get(net, ()) if t[0] == "P"]
+            for t in net_terms.get(net, ()):
+                if t[0] != "P":
+                    continue
+                if port_io.get(t[1]) == "OUTPUT" and io != "OUTPUT":
+                    continue
+                pts.append((t[2], t[3]))
         if len(pts) < T["bank_min_pins"]:
             continue
         cx = sum(p[0] for p in pts) / len(pts)

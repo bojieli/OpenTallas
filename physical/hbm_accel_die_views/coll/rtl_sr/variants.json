@@ -1,0 +1,73 @@
+{
+ "schema": "hbm-coll-rtl.variants.v1",
+ "date": "2026-10-08",
+ "stream": "hbm-coll-rtl",
+ "replaces": "hbm_coll_d51dc71a2(-tt): flop endpoint, 4.80 M cells / 686 k flops (synth_stat), 4.18 M nets, repair_design frozen",
+ "rtl": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_sr.sv + rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+ "bench": "physical/hbm_accel_die_views/coll/rtl_sr/run_sr_bench.sh (28 runs PASS; mutants m1..m6 FAIL)",
+ "estimate": {
+  "tool": "yosys 0.68 synth -flatten -run :fine; memory_map; techmap (pre-ABC generic gates)",
+  "gates_total": 1015967,
+  "flops": 270214,
+  "fp32_adders": 112,
+  "fp32_adder_gates": 410000,
+  "macros": {
+   "cell": "ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 165,
+   "area_um2_each": 3892,
+   "area_um2": 642180,
+   "slot_um2": 1965083,
+   "note": "3 macros a 545 b word: 17 queues (QAW 7), 8 receive buffers x 2 banks (RXAW 8), 22 delay lines (HUBW 35 x 6, WSTG 14 x 16)"
+  }
+ },
+ "cycles": {
+  "basis": "tb_hbm_accel_tu_endpoint campaign set (92 runs each side, ha2hub INJ 2 / DEL 4, T_PHY 1.0 ns), sr vs flop endpoint at the RTL defaults",
+  "allreduce": "+15..+17 core cycles of ~1144..1459",
+  "gather": "+7..+14 of ~586..9717",
+  "source": "+4 edges a SRAM-queue crossing (pin flop, macro, capture, head); delay lines keep their latency D"
+ },
+ "variants": {
+  "v1": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv",
+   "what": "SYNCPHY 1 (pclk = clk: 2-entry sync FIFOs replace the CDC FIFOs), route 833 ps",
+   "commit": "92f17970a1444db31eb1d637f2761b5f35fb9528"
+  },
+  "v2": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll_cdc.sv",
+   "what": "conservative: CDC FIFOs kept (ot_link_afifo, 8 entries)",
+   "commit": "088d3df3e"
+  },
+  "v3": {
+   "top": "physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv",
+   "commit": "this commit",
+   "what": "floorplan variant of v1: place density 0.45 and macro halo 4 x 6 um (more channel around the 165 macros); every route already runs at the 770 ps effective margin (io_vclk_m: setup uncertainty 123 ps), sign-off at 833"
+  }
+ },
+ "next_if_fails": "per-port split (8 port slices: 2 queues + 2 wire lines + receive buffer, 21 macros each; core = slots + 112-adder tree + hub/delivery lines) as replicated sub-blocks with a thin top",
+ "round2": {
+  "v2": {
+   "note": "requeued with SAMECOL + m7 benches",
+   "v1_commit": "47f8fa47f45dcfd133fbe9cd4e1bc95b9ab828d4",
+   "v2_commit": "this"
+  },
+  "v3": {
+   "v3_commit": "this"
+  },
+  "v4_ps": {
+   "what": "per-port split: 8 x ot_hcoll_port (18 macros, 23 k pre-ABC gates each) + top/core (0.87 M pre-ABC gates, 21 macros)",
+   "slice_job_commit": "47f8fa47f45dcfd133fbe9cd4e1bc95b9ab828d4",
+   "top_commit": "this",
+   "cost": "die-view AR 1160 vs 1152 (sr) vs 1144 (flop)"
+  }
+ },
+ "round3": {
+  "date": "2026-10-08 14:50 PT",
+  "stream": "drive-1443",
+  "cal_failures": {
+   "v1 sr (PD .55, halo 2x5)": "2_2 rtl_macro_placer MPL-0008 annealing failed at the hub/txq macro cluster (utilisation auto-raised to 0.417)",
+   "v2 cdc, v3 pd45": "3_3 POST_GLOBAL_PLACE face_chain_place.tcl: an input pin-flop chain walked into a delay-line SRAM (u_ep.g_on.g_del[3].u_d/u_m.g_m[0].u_sram) and setLocation on the LOCKED macro -> ODB-0359"
+  },
+  "fix": "common/face_chain_place.tcl: a macro (BLOCK master) or LOCKED/FIRM/COVER instance ends every chain walk and is never moved; v1 macro halo 2x5 -> 4x6 (the halo with which v3 placed all 165 macros)",
+  "jobs": "v1 sr3, v2 srcdc3, v3 srpd453, v4 ps slice + armed ps top (ttv.py produce/queue); all at the fix commit with the 35-run SAMECOL bench + m7"
+ }
+}

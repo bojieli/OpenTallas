@@ -15,7 +15,7 @@ SRC = HERE.parents[1]
 TCL = r"""
 set P /OpenROAD-flow-scripts/flow/platforms/asap7
 foreach f [lsort [glob $P/lib/NLDM/*_RVT_$::env(LIBC)_*.lib*]] { read_liberty $f }
-read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_[string tolower [expr {$::env(LIBC) eq "SS" ? "ss" : "ff"}]].lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_[string tolower $::env(LIBC)].lib
 read_db $::env(ODB)
 read_sdc $::env(SDC)
 read_spef $::env(SPEF)
@@ -69,7 +69,10 @@ def acceptance(ss, ff):
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true'); a = ap.parse_args()
+    ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true')
+    ap.add_argument('--tt', action='store_true', help='OPTION B (owner 2026-10-07 20:45): accept = TT setup >= 0 + FF hold >= 0; SS setup is a sensitivity')
+    ap.add_argument('--h1', action='store_true', help='make_sdc.py --h1 (rule H1 receiver input min)')
+    a = ap.parse_args()
     run = a.run.resolve()
     # Preserve every previous verdict, including failures. Use a fresh copied
     # run for a new evaluation; never overwrite a prior signoff.
@@ -89,17 +92,37 @@ def main():
     result = dict(route_sdc=str(sdc0), measured_insertion_SS=ss_lat, measured_insertion_FF=ff_lat)
     sdc = case/'signoff.sdc'
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
-                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []),
+                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []),
                    check=True, capture_output=True)
-    for corner, delay in (('SS', 'max'), ('FF', 'min')):
-        log = sta(case, odb, sdc, spef, corner, delay)
+    sdcs = {'SS': sdc, 'FF': sdc}
+    if a.tt:
+        # routed IO reference per corner (drive-1443, as d4441ee39 / c4ffc4f9d): the forwarded-clock sender's arrival
+        # scales with the analysis corner, so the TT setup check uses the TT-measured insertion, not the SS one
+        # (ha2_h2_fixedpins_ca0d6a5a2-tt: in2reg TT -205.9 = SS L_max 1073.6 vs TT capture 662 on pin-direct flops)
+        log1t = sta(case, odb, sdc0, spef, 'TT', 'max'); p1t = parse(log1t)
+        (run/'signoff_pass1_TT.log').write_text(log1t)
+        tt_lat = p1t['latency_rise']
+        if not tt_lat:
+            raise SystemExit('no TT clock latency measured; see signoff_pass1_TT.log')
+        result['measured_insertion_TT'] = tt_lat
+        sdcs['TT'] = case/'signoff_tt.sdc'
+        subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{tt_lat[1]:.2f}',
+                        '--l-min', f'{tt_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdcs['TT'])]
+                       + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []), check=True, capture_output=True)
+    for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
+        log = sta(case, odb, sdcs[corner], spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
         result[corner] = parse(log)
     ss = result['SS']['worst'].get('max'); ff = result['FF']['worst'].get('min')
     result['accept'] = acceptance(ss, ff)
+    if a.tt:
+        tt = result['TT']['worst'].get('max')
+        fin = lambda v: v is not None and math.isfinite(v)
+        result['accept'] = dict(TT_setup_ps=tt, FF_hold_ps=ff, SS_setup_sensitivity_ps=ss,
+                                TT_ok=fin(tt) and tt >= 0, FF_ok=fin(ff) and ff >= 0, rule='option B: TT setup >= 0, FF hold >= 0')
     (run/'signoff.json').write_text(json.dumps(result, indent=2)+'\n')
     print(json.dumps(result['accept']))
-    return 0 if all(result['accept'][k] for k in ('SS_ok', 'FF_ok')) else 1
+    return 0 if all(result['accept'][k] for k in (('TT_ok' if a.tt else 'SS_ok'), 'FF_ok')) else 1
 
 
 if __name__ == '__main__':

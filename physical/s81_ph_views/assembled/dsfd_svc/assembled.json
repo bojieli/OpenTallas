@@ -459,25 +459,39 @@
   },
   {
    "tt_wire_ratio": 0.762,
-   "what": "u_od.bad -> u_ad.fi (fault)",
+   "what": "u_od.bad -> fault station u_fs",
    "launch": "dsfd_svcio_od.bad",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 406.9,
+   "stations": 1,
+   "tt_setup": -35.9,
+   "tt_setup_bal": 82.2,
+   "ss_setup": -189.0,
+   "ss_setup_bal": -46.3,
+   "ff_hold": 161.6,
+   "ff_hold_bal": 87.4
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "fault station u_fs -> u_ad.fi",
+   "launch": "dsfd_stnh_512x1.do0",
    "capture": "dsfd_svcio_ad.fi",
-   "length_um": 430.0,
-   "stations": 0,
-   "tt_setup": 22.2,
-   "tt_setup_bal": -34.7,
-   "ss_setup": -133.9,
-   "ss_setup_bal": -207.5,
-   "ff_hold": 83.9,
-   "ff_hold_bal": 133.1
+   "length_um": 400.2,
+   "stations": 1,
+   "tt_setup": 259.2,
+   "tt_setup_bal": 84.2,
+   "ss_setup": 38.2,
+   "ss_setup_bal": -178.0,
+   "ff_hold": -39.0,
+   "ff_hold_bal": 84.4
   }
  ],
  "glue_worst_ps": {
   "tt_setup": -49.2,
   "ss_setup": -246.5,
-  "ff_hold": -0.0,
-  "tt_setup_bal": -34.7,
-  "ss_setup_bal": -207.5,
+  "ff_hold": -39.0,
+  "tt_setup_bal": 18.0,
+  "ss_setup_bal": -178.0,
   "ff_hold_bal": 77.3
  }
 }

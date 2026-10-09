@@ -28,6 +28,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
+    closure_loop.py rebudget-rejudge <name> --rb budget_rbN --sdc F [--dry]   # re-judge under a re-derived die-link IO budget
     closure_loop.py cancel <name>              # stop this loop's own stage for <name>; status CANCELLED
 """
 from __future__ import annotations
@@ -1264,10 +1265,12 @@ def corner_sta_compat(j, host, run, full):
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl")
+           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py",
+           *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1326,9 +1329,10 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
+    # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1360,6 +1364,37 @@ def route_ref(j):
     return "TT" if route_corner(j) in ("TC", "TT") else None
 
 
+# REBUDGET 2026-10-08 (tools/budgets/rebudget.py): new routes use the LATEST re-derived die-link IO budget of their block.
+# rebudget.py derive publishes STATE/rebudget/current.json {blocks: {block: {rb, sdc}}}; a calibrate / route stage
+# installs that SDC as {SRC}/physical/common_flow/rebudget_block.sdc and makes sure the snapshot's
+# link_budget_consistent.sdc sources it last (older snapshots predate the hook).  Spec "rebudget": false opts out.
+REBUDGET_CURRENT = STATE / "rebudget" / "current.json"
+REBUDGET_HOOK = ("\n# REBUDGET hook (closure loop): the block's re-derived per-port die-link budget, installed beside this file\n"
+                 "set ot_rb_hook [file join [file dirname [info script]] rebudget_block.sdc]\n"
+                 "if {[file exists $ot_rb_hook]} { puts \"OT_REBUDGET hook $ot_rb_hook\"; source $ot_rb_hook }\n")
+
+
+def install_rebudget(j):
+    if j["spec"].get("rebudget") is False or not REBUDGET_CURRENT.exists():
+        return
+    try:
+        cur = json.loads(REBUDGET_CURRENT.read_text())["blocks"].get(j["spec"].get("block"))
+    except (OSError, ValueError, KeyError):
+        return
+    if not cur or not Path(cur.get("sdc", "")).is_file():
+        return
+    d = f"{j['run']}/src/physical/common_flow"
+    r = ssh(j["host"], f"mkdir -p {d} && cat > {d}/rebudget_block.sdc", input=Path(cur["sdc"]).read_text(), timeout=60)
+    if r.returncode:
+        return
+    ssh(j["host"], f"f={d}/link_budget_consistent.sdc; [ -f $f ] && ! grep -q 'REBUDGET hook' $f && cat >> $f", input=REBUDGET_HOOK,
+        timeout=60)
+    if j.get("rebudget_route") != cur["rb"]:
+        j["rebudget_route"] = cur["rb"]
+        event(j, f"route IO budget: {cur['rb']} (re-derived die-link budget of {j['spec'].get('block')}) installed as "
+                 f"rebudget_block.sdc, sourced by link_budget_consistent.sdc")
+
+
 # FP-LINT (owner 2026-10-08): floorplan margin lint before global placement, on by default for calibrate and route.
 # tools/orfs_hold_mm.py (run in every run_abi3_physical flow container) hooks ORFS PRE GLOBAL_PLACE; the docker shim
 # passes OT_FP_LINT and mounts {CL}/fplint/<tag> at /ot_fplint; a failing floorplan writes FAIL there and stops the
@@ -1384,11 +1419,43 @@ def preroute_gate_on(j, kind):
     return kind == "route" and j["spec"].get("preroute_gate", True) is not False
 
 
+# drive-2155 2026-10-08: recipes that run the FLOW-HOLD snapshot's hold_corners_patch.py ({FH}/tools/closure_loop, 164
+# jobs: every hbm view / vm8 recipe) re-copy {FH}/tools/orfs_hold_mm.{py,tcl} over the helpers shipped here ("always
+# refresh").  The FH copy of orfs_hold_mm.py was the pre-guard generation, so those routes ran without the hold-stall
+# guard, the HM guard and MET-FIRST.  The FH h1_patch.py / hold_corners_patch.py those recipes run were stale too (no
+# h1-audit families: fh_quad / head ioreg / BF / hbglue / attn_tile_r kept the receiver hold term; no TC / CTS-only
+# calibrate code).  ship_fpl refreshes the FH snapshots on the launch host (tmp + mv: atomic for a concurrent reader).
+FH_DIRS = ("/srv/opentallas-scratch/claude/flowhold/src", "/home/ubuntu/closure-loop-local/flowhold/src")
+FH_FILES = (("orfs_hold_mm.py", "tools"), ("orfs_hold_mm.tcl", "tools"), ("h1_patch.py", "tools/closure_loop"),
+            ("hold_corners_patch.py", "tools/closure_loop"))
+# drive-2155 2026-10-09: the TT-batch overlay snapshot (26f14af32, 635 jobs) has the same failure: tt_overlay.py force-copies
+# its physical/common_flow files over the job's source, so even new-commit routes got link_budget_consistent.sdc WITHOUT
+# the rebudget hook (budget_rb never applied) and cg_pushdown.tcl without the BF HALF_PHL exclusion, plus a pre-audit
+# h1_patch.py.  Every main-vs-snapshot difference is an additive flow fix already on main, so the same refresh applies.
+TTB_DIRS = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32", "/home/ubuntu/closure-loop-local/ttbatch/26f14af32")
+TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/closure_loop"),
+             *((n, "physical/common_flow") for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                    "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
+
+
+def snapshot_refresh_sh(run):
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    out = ""
+    for dirs, files in SNAPSHOT_REFRESH:
+        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
+                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
+                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
+                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+    return out
+
+
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
            f"preroute_gate.py preroute_gate.tcl; do "
-           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
+           f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
@@ -1469,6 +1536,8 @@ def launch_stage(j, st, cmd):
         if route_ref(j):
             # CALIB-CORNER: CTS at the route corner, insertion referenced to it (ck_insertion.py --route-corner)
             env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
+    if st["kind"] in ("calibrate", "route"):
+        install_rebudget(j)
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
@@ -1794,7 +1863,8 @@ def publish(j, metrics):
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
                        checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
-                       closed_at=now_iso(), job_spec=spec)
+                       closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
+                       rebudget=j.get("rebudget"))
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
@@ -2666,17 +2736,27 @@ def routed_ioref(j, m):
     if not orfs:
         return None
     key = f"{j['attempt']}|{orfs}|{int(bool((j.get('eco') or {}).get('installed')))}"
+    rbj = j.get("rebudget") or {}
+    if rbj.get("sdc"):
+        key += f"|{rbj['rb']}"
     rr = j.get("routed_ioref")
     if rr and rr.get("key") == key:
         return rr
     rr = dict(key=key, at=now_iso(), available=False)
-    out = f"{j['run']}/cl/routed_ioref.a{j['attempt']}.json"
+    out = f"{j['run']}/cl/routed_ioref.a{j['attempt']}" + (f".{rbj['rb']}" if rbj.get("sdc") else "") + ".json"
     with TT_STA_SLOTS:
         ship_helpers(j["host"], j["run"])
         ssh(j["host"], f"mkdir -p {j['run']}/src/physical/common_flow && cp {j['run']}/cl/io_ref_routed.sdc "
                        f"{j['run']}/src/{IOREF_SDC}", timeout=60)
+        app = f"--append {j['run']}/cl/io_ref_routed.sdc"
+        if rbj.get("sdc"):
+            # REBUDGET (tools/budgets/rebudget.py): the block's re-derived IO budget (budget_rb<N>) read after the routed
+            # reference, so the verdict is the IO paths against the CURRENT die-link budget
+            rp = f"{j['run']}/cl/{rbj['rb']}.sdc"
+            ssh(j["host"], f"cat > {rp}", input=Path(rbj["sdc"]).read_text(), timeout=60)
+            app += f" --append {rp}"
         r = ssh(j["host"], f"python3 {j['run']}/cl/meas_resta.py --orfs {shlex.quote(orfs)} --src {j['run']}/src "
-                           f"--out {out} --append {j['run']}/cl/io_ref_routed.sdc", timeout=12000)
+                           f"--out {out} {app}", timeout=12000)
     try:
         res = json.loads([x for x in r.stdout.splitlines() if x.startswith("{")][-1])
         tt, ff = res["setup_tt"].get("worst_slack_ps"), res["hold_ff"].get("worst_slack_ps")
@@ -2693,7 +2773,7 @@ def routed_ioref(j, m):
         # sign-off number there (the bare re-STA does not reproduce every recipe's sign-off: dshead-elemB-safe TT
         # -201 route vs +121 re-STA with no clock moved)
         for c, k in (("tt", "ss_ps"), ("ff", "ff_ps")):
-            if rr["available"] and not io[c]:
+            if rr["available"] and not io[c] and not rbj.get("sdc"):
                 rr[c + "_resta_raw"], rr[c] = rr[c], m.get(k)
         if rr["available"] and (rr["tt"] is None or rr["ff"] is None):
             rr.update(available=False, why="route sign-off number missing for an unchanged corner")
@@ -2701,7 +2781,9 @@ def routed_ioref(j, m):
         rr["why"] = f"re-STA output unreadable ({ex}; rc={r.returncode})"
     j["routed_ioref"] = rr
     ref = lambda c: ", ".join(f"{v} {d['mean']:.0f}" for v, d in sorted(rr.get("ioref", {}).get(c, {}).items())) or "none"
-    event(j, "routed-insertion IO re-STA: " + (f"TT setup {rr['tt']:+.2f} / FF hold {rr['ff']:+.2f} (route SDC "
+    if rbj.get("sdc"):
+        rr["rebudget"] = rbj["rb"]
+    event(j, "routed-insertion IO re-STA" + (f" under {rbj['rb']}" if rbj.get("sdc") else "") + ": " + (f"TT setup {rr['tt']:+.2f} / FF hold {rr['ff']:+.2f} (route SDC "
              f"{m.get('ss_ps')} / {m.get('ff_ps')}); routed reference TT [{ref('tt')}] FF [{ref('ff')}]"
              if rr["available"] else f"unavailable: {rr['why']}"))
     if rr["available"]:
@@ -3406,7 +3488,9 @@ def do_commit(j):
         return
     j["publish"] = out
     merge = out.get("merge", "")
-    detail = (f"CLOSED SS {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f} ps DRC {m['drc']} | record "
+    rbn = (j.get("rebudget") or {}).get("rb")
+    detail = (f"CLOSED SS {m['ss_ps']:+.2f} / FF {m['ff_ps']:+.2f} ps DRC {m['drc']}" + (f" under IO budget {rbn} (re-derived die-link "
+              f"budget, no re-route)" if rbn else "") + " | record "
               f"{j['spec']['source']['branch']} {out.get('branch_commit', '')[:9]} ({out.get('files')} files) | {merge}")
     if merge.startswith(("CONFLICT", "PUSH-RACE")):
         finish(j, "NEEDS_HUMAN", f"closed and recorded, merge failed: {merge}", detail)
@@ -4089,6 +4173,60 @@ def cmd_ioref_rejudge(a):
 
 
 @locked_job_command
+def cmd_rebudget_rejudge(a):
+    """human / tools/budgets/rebudget.py (REBUDGET 2026-10-08): re-judge a NEEDS_RTL job whose internal paths pass, with
+    its RE-DERIVED IO budget (budget_rb<N> SDC: real die links, real block needs) appended after io_ref_routed.sdc in the
+    routed re-STA -- no re-route.  Closes -> back to the verdict stage (READY; the cached re-STA is the verdict, the
+    record cites budget_rb<N>); hold-only at the new budget with no ECO tried -> verdict stage too (post-route hold ECO);
+    else it stays NEEDS_RTL with the result recorded under j["rebudget"].  --dry: re-STA only, the job is not changed."""
+    j = load_job(a.name)
+    m = dict(j.get("metrics") or {})
+    if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m.get("orfs_dir"):
+        print(f"SKIP {a.name}: {j['status']}, orfs_dir {m.get('orfs_dir')}")
+        return
+    if (j.get("eco") or {}).get("installed"):
+        print(f"SKIP {a.name}: an installed ECO replaced the route")
+        return
+    sdc = Path(a.sdc).resolve()
+    if not sdc.is_file():
+        print(f"SKIP {a.name}: no SDC {sdc}")
+        return
+    old_rb, old_rr = j.get("rebudget"), j.get("routed_ioref")
+    j["rebudget"] = dict(rb=a.rb, sdc=str(sdc), at=now_iso())
+    ss0 = m.get("route_sdc_clock", {}).get("ss_ps", m.get("ss_ps"))
+    ff0 = m.get("route_sdc_clock", {}).get("ff_ps", m.get("ff_ps"))
+    m["ss_ps"], m["ff_ps"] = ss0, ff0
+    rr = routed_ioref(j, m)
+    drc, failed = m.get("drc"), j.get("failed_checks") or []
+    if not rr or not rr.get("available"):
+        print(f"NOREF {a.name}: {(rr or {}).get('why')}")
+        if not a.dry:
+            j["rebudget"]["result"] = dict(available=False, why=(rr or {}).get("why"))
+            save_job(j)
+        return
+    closes = rr["tt"] >= SS_MIN and rr["ff"] >= FF_MIN and drc == 0 and not failed
+    holdonly = rr["tt"] >= SS_MIN and rr["ff"] < FF_MIN and drc == 0 and not failed and not (j.get("eco") or {}).get("tried")
+    line = (f"{a.name}: route IO TT {ss0} / FF {ff0} -> {a.rb} TT {rr['tt']:+.2f} / FF {rr['ff']:+.2f} DRC {drc} "
+            f"(TT i2r {rr.get('tt_i2r')} out {rr.get('tt_out')}; FF i2r {rr.get('ff_i2r')} out {rr.get('ff_out')} r2r {rr.get('ff_r2r')})")
+    tag = "FLIP " if closes else "HOLDONLY " if holdonly else "STILL "
+    if a.dry:
+        print("DRY " + tag + line)
+        return
+    j["rebudget"]["result"] = dict(available=True, tt=rr["tt"], ff=rr["ff"], closes=closes, holdonly=holdonly)
+    if closes or holdonly:
+        stl = stage_list(j["spec"])
+        vidx = next(i for i, x in enumerate(stl) if x["kind"] == "verdict")
+        j.update(status="READY", stage_idx=vidx, stage_key="verdict", retries_used=0, errors=[], reason=None)
+        event(j, f"REBUDGET re-judge under {a.rb} (re-derived die-link IO budget, no re-route): {line} -> "
+                 f"{'CLOSES' if closes else 'hold-only: ECO at the new budget'}")
+        ledger(j, f"RE-JUDGE under {a.rb} (re-derived die-link IO budget, no re-route): {line}")
+    else:
+        event(j, f"REBUDGET re-judge under {a.rb}: {line} -> still failing (stays NEEDS_RTL)")
+    save_job(j)
+    print(tag + line)
+
+
+@locked_job_command
 def cmd_reverdict(a):
     """human: re-judge a NEEDS_RTL / NEEDS_HUMAN job on its recorded evidence after an acceptance-line change, no re-route.
     Route sign-off meets the line -> back to the verdict stage (READY).  Else an earlier hold ECO whose recorded result
@@ -4291,6 +4429,8 @@ def main():
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
+    r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
+    r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
@@ -4318,6 +4458,8 @@ def main():
         cmd_reverdict(a)
     elif a.cmd == "ioref-rejudge":
         cmd_ioref_rejudge(a)
+    elif a.cmd == "rebudget-rejudge":
+        cmd_rebudget_rejudge(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
     elif a.cmd == "early-fail":

@@ -20,7 +20,7 @@
 // MUT = 1: the memory's SU lane select is one lane off; SMUT = 1: a serializer swaps a slot's mask.  Both must FAIL.
 module tb_qfd_vm_bv_ports;
     parameter integer ELEMS = 16384, NRB = 16, SMIN = 3, SMAX = 7, XVM = 12, BMAX = 4, SW = 8, VL = 7;
-    parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
+    parameter integer DB = 16, RSD = 4, CRB = 4, MUT = 0, SMUT = 0, TSR = 0, CYCLES = 30000, SEED = 5, XRN = 4096;
     parameter integer ND = 9;
     parameter [ND*8-1:0] DSET = {8'd16, 8'd12, 8'd8, 8'd6, 8'd4, 8'd3, 8'd2, 8'd1, 8'd0};
     localparam integer AW = 24, RW = 20, NX = 1 << SMAX, BEAT = (NRB - 1) * 16, NB = 6, NS = 8;
@@ -59,7 +59,7 @@ module tb_qfd_vm_bv_ports;
     wire [NB*512-1:0] l_data;
     genvar gb;
     generate for (gb = 0; gb < NB; gb = gb + 1) begin : g_ser
-        ot_qfd_res_ser #(.NS(NS), .W(16), .AW(AW), .RW(RW), .DB(DB), .RS(RSD + 2), .CRB(CRB), .MUT(gb == 2 ? SMUT : 0)) u_s (
+        ot_qfd_res_ser #(.NS(NS), .W(16), .AW(AW), .RW(RW), .DB(DB), .RS(RSD + 2), .CRB(CRB), .MUT(gb == 2 ? SMUT : 0), .TSR(TSR)) u_s (
             .clk(clk), .rst_n(rst_n), .me_en(me_en), .i_ov(b_ov), .i_we(b_we[gb*NS +: NS]),
             .i_addr(b_addr[gb*NS*AW +: NS*AW]), .i_mask(b_mask[gb*NS*16 +: NS*16]), .i_data(b_data[gb*NS*512 +: NS*512]),
             .o_v(l_v[gb]), .o_end(l_end[gb]), .o_nul(l_nul[gb]), .o_row(l_row[gb*RW +: RW]), .o_mask(l_mask[gb*16 +: 16]),

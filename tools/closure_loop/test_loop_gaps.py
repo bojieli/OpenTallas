@@ -103,4 +103,4 @@ class DockerLecOffTests(unittest.TestCase):
             env = cl.docker_lec_off(f"{d}/cl")
             out = subprocess.run(["bash", "-c", env + "docker run --rm img make x; docker image ls"],
                                  capture_output=True, text=True, env={"PATH": f"{fake}:/usr/bin:/bin"}).stdout
-            self.assertEqual(out.splitlines(), ["REAL run -e LEC_CHECK=0 --rm img make x", "REAL image ls"])
+            self.assertEqual(out.splitlines(), ["REAL run -e LEC_CHECK=0 -e OT_ABC_NO_DCH --rm img make x", "REAL image ls"])

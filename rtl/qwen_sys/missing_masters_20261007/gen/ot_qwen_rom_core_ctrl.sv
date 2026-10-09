@@ -27,6 +27,7 @@
 // write) and vector memory (FP32 elements).
 // ---------------------------------------------------------------------------
 module ot_qwen_rom_core_ctrl #(
+    parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)
     parameter integer INSTR_BITS = 1024,   // must equal ISA_INSTR_BITS (tools/hdc_isa.py)
     parameter integer W    = 16,
     parameter integer G    = 4,
@@ -453,7 +454,9 @@ localparam integer W_ME_AMC = 1;
     reg [1:0]  fq_rd, fq_wr;
     reg [2:0]  fq_n;
     reg        pend1;                     // a program read whose word arrives this cycle
-    wire [INSTR_BITS-1:0] ir = fq[fq_rd]; // FIFO head: the word decode reads
+    reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word
+    reg                   hq_v;
+    wire [INSTR_BITS-1:0] ir = (FQ_HEAD != 0) ? hq : fq[fq_rd]; // FIFO head: the word decode reads
     reg        nx_v;                      // NEXT holds a decoded instruction
     wire       me_go, su_go;
     wire       me_ready, me_idle, su_ready, su_idle;
@@ -518,13 +521,16 @@ localparam integer W_ME_AMC = 1;
     assign su_go = issue && (d_unit == 2'd2);
     wire fin = (st == S_RUN) && nx_v && (d_unit == 2'd0) && drained;
     //: decode the FIFO head into NEXT when NEXT is empty or issuing
-    wire load = (st == S_RUN) && (fq_n != 0) && (!nx_v || issue);
+    wire load = (st == S_RUN) && ((FQ_HEAD != 0) ? hq_v : (fq_n != 0)) && (!nx_v || issue);
+    // FQ_HEAD: the FIFO pops into hq when hq is empty or being loaded into NEXT
+    wire hq_fill = (FQ_HEAD != 0) && (st == S_RUN) && (fq_n != 0) && (!hq_v || load);
+    wire fq_pop = (FQ_HEAD != 0) ? hq_fill : load;
     wire push = (st == S_RUN) && pend1;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; pc <= 0; fpc <= 0; done <= 1'b0; prog_re <= 1'b0; pend1 <= 1'b0;
-            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0;
+            fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; hq_v <= 1'b0;
             cycles <= 0; next_token <= 0;
         end else begin
             if (st != S_IDLE) cycles <= cycles + 1;
@@ -533,18 +539,20 @@ localparam integer W_ME_AMC = 1;
             case (st)
                 S_IDLE: if (start) begin
                     tok_r <= token; pos_r <= pos; pc <= 0; fpc <= 0; done <= 1'b0; cycles <= 0;
-                    fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0;
+                    fq_rd <= 0; fq_wr <= 0; fq_n <= 0; nx_v <= 1'b0; pend1 <= 1'b0; hq_v <= 1'b0;
                     st <= S_DYN;
                 end
                 S_DYN: st <= S_RUN;
                 S_RUN: begin
                     // fetch: one word a cycle while fewer than NFQ are held or in flight
-                    if ({1'b0, fq_n} + prog_re + pend1 < NFQ) begin
+                    if ({1'b0, fq_n} + ((FQ_HEAD != 0) ? hq_v : 1'b0) + prog_re + pend1 < NFQ) begin
                         prog_re <= 1'b1; prog_addr <= fpc; fpc <= fpc + 1'b1;
                     end
                     if (push) begin fq[fq_wr] <= prog_q; fq_wr <= fq_wr + 1'b1; end
-                    if (load) fq_rd <= fq_rd + 1'b1;
-                    fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (load ? 3'd1 : 3'd0);
+                    if (fq_pop) fq_rd <= fq_rd + 1'b1;
+                    fq_n <= fq_n + (push ? 3'd1 : 3'd0) - (fq_pop ? 3'd1 : 3'd0);
+                    if (hq_fill) begin hq <= fq[fq_rd]; hq_v <= 1'b1; end
+                    else if (load && FQ_HEAD != 0) hq_v <= 1'b0;
                     if (issue) pc <= pc + 1'b1;
                     if (load) nx_v <= 1'b1;
                     else if (issue) nx_v <= 1'b0;
