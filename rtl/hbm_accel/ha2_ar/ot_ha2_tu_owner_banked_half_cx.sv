@@ -77,13 +77,16 @@ module ot_ha2_tu_owner_banked_half_cx #(
    .hd(h_fifo_d[i*HW+:HW]),.nonempty(h_nonempty[i]),.cnt(h_cnt[i*4+:4]),.ovf(h_ovf[i]));
 
  end
- // Complete FIFO heads are sampled on the intervening fast edge. Their
+ // Complete FIFO heads are sampled on the fast falling edge immediately before
+ // the consuming core edge. Both FIFO-to-seat and seat-to-core therefore use
+ // the actual 416.667ps nominal half-cycle, rather than a same-edge crossing.
+ // Their
  // registered valid is both the next core offer and the fast FIFO pop decision;
  // the head remains stable across that consuming core edge. No duplicate state
  // checks or protection mirrors are introduced here.
  generate if(LANDING!=0)begin:g_landing
   wire headclk;
-  ot_ha2_hr_icg u_head_icg(.clk(clk),.en(MUT_PHASE!=0?ph:!ph),.gclk(headclk));
+  ot_ha2_hr_icg u_head_icg(.clk(MUT_PHASE!=0?clk:!clk),.en(MUT_PHASE!=0?ph:!ph),.gclk(headclk));
   reg [NPT*PWT-1:0] pd;reg [INJ*HW-1:0] hd;
   reg [NPT-1:0] pv;reg [INJ-1:0] hv;
   reg act,arm_q;reg [7:0] rank_q;reg [15:0] pf_q;
