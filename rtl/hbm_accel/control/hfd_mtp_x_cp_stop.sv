@@ -1,6 +1,6 @@
 // Additive native MTP CPRESULT input branch; off bydefault.
 // Actual fullshape native MTP XSEL successor; legacy hfd_mtp_x source unchanged.
-module hfd_mtp_x_cp_stop #(parameter integer EXTERNAL_AM=0) (
+module hfd_mtp_x_cp_stop #(parameter integer EXTERNAL_AM=0, parameter integer PRL=2) (
     input wire clk,
     input wire rst_n,
     input wire start,
@@ -74,6 +74,6 @@ module hfd_mtp_x_cp_stop #(parameter integer EXTERNAL_AM=0) (
     output wire [31:0] cyc_engine,
     output wire [31:0] cyc_markov
 );
-    ot_hfd_mtp_core_cp_stop #(.EXTERNAL_AM(EXTERNAL_AM),.STOP_EN(1),.W(128), .WR(256), .SR(10), .NSRC(4), .RLOG(16'h0111), .CKMAX(1 << 20), .NEXP(384), .KV(6), .NDEXP(384), .KD(6), .RP(16), .IW(9), .FAST(1), .SPECF(1), .AMF(1), .UNF(1),
+    ot_hfd_mtp_core_cp_stop #(.EXTERNAL_AM(EXTERNAL_AM),.PRL(PRL),.STOP_EN(1),.W(128), .WR(256), .SR(10), .NSRC(4), .RLOG(16'h0111), .CKMAX(1 << 20), .NEXP(384), .KV(6), .NDEXP(384), .KD(6), .RP(16), .IW(9), .FAST(1), .SPECF(1), .AMF(1), .UNF(1),
         .XSEL(1)) u_core (.clk(clk), .rst_n(rst_n), .start(start), .cfg_gamma(cfg_gamma), .cfg_force(cfg_force), .cfg_ngen(cfg_ngen), .cfg_plen(cfg_plen), .p_addr(p_addr), .p_tok(p_tok), .f_addr(f_addr), .f_tok(f_tok), .e_ready(e_ready),.cfg_eos_en(cfg_eos_en),.cfg_eos(cfg_eos),.cfg_maxpos(cfg_maxpos),.stop_status(stop_status),.e_v(e_v), .e_tok(e_tok), .e_idx(e_idx), .done(done), .cmd_v(cmd_v), .cmd_ready(cmd_ready), .cmd_op(cmd_op), .cmd_idx(cmd_idx), .cmd_ncol(cmd_ncol), .cmd_pos(cmd_pos), .cmd_tok1(cmd_tok1), .cmd_toks(cmd_toks), .eng_done(eng_done), .cp_am_v(cp_am_v),.cp_am_idx(cp_am_idx),.lg_v(lg_v), .lg_last(lg_last), .lg_bias_en(lg_bias_en), .lg_mask(lg_mask), .lg_vals(lg_vals), .lg_bias(lg_bias), .am_v(am_v), .am_idx(am_idx), .am_fault(am_fault), .sr_v(sr_v), .sr_ready(sr_ready), .sr_kind(sr_kind), .sr_idx(sr_idx), .sr_pos(sr_pos), .sa_v(sa_v), .sa_addr(sa_addr), .sa_tok(sa_tok), .sa_pad(sa_pad), .sa_last(sa_last), .sa_err(sa_err), .n_committed(n_committed), .rv_v('0), .rv_draft('0), .rv_vals('0), .rv_last('0), .rv_col('0), .x_v(x_v), .x_draft(x_draft), .x_ids(x_ids), .x_col(x_col), .t_v(t_v), .t_ids(t_ids), .t_col(t_col), .u_clr(u_clr), .u_flush(u_flush), .u_v(u_v), .u_ready(u_ready), .u_id(u_id), .u_mask(u_mask), .u_last(u_last), .step_v(step_v), .step_a(step_a), .step_g(step_g), .steps(steps), .cyc_total(cyc_total), .cyc_engine(cyc_engine), .cyc_markov(cyc_markov));
 endmodule
