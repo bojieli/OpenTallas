@@ -1,4 +1,4 @@
-# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09) — v1.0
+# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09) — v1.1
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a of `results/arch/qwen_tp8_vs_sysdie_20261009/result.json`). KV never crosses the link.
 
@@ -70,6 +70,13 @@ Idle flits carry credits only.
 3. **Receiver adapter → consumer.** The credits are the consumer's buffer.
 
 **Ordering.** Order is preserved within a class. Classes are round-robin and independent. The KV die starts a layer only when CTL ATTN and all 8 KVN words have arrived. It forwards Q beats to the stacks as they arrive.
+
+**KV merge: write-then-read fence (review-0528 KV4, binding).** The new position's K / V rows cross on KVN and are posted to HBM by the landing. The t = T-1 row read of a layer is not allowed to race that write:
+- the layer start reaches each landing as `lay_*` {T, layer} on the same wavefront that starts the row engines;
+- the landing keeps each posted row tagged {t, layer}; a row request for t = T-1 waits at the head of its engine's in-order request queue until row {v, g} of THIS layer is merged ("row merged"), and the requests behind it wait with it;
+- the response to that request is replaced by the kept row, so the attention uses exactly the K / V that crossed the link, whether or not the HBM write has landed.
+
+No timing assumption remains: a KVN credit stall of any length is a stall, not a fault (bench `mut8`: rows held 400 cycles, still exact; `mut7`: fence off, caught). Measured cost: +8 cycles a layer (run7 against run5, ctx 8192). RTL `rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_merge.sv`.
 
 **When RES cannot stall.** The attention hub has no ready. A RES credit must therefore be in hand, or the sequencer raises a sticky fault. The buffering behind the hub is sized to hold a whole layer's 64 RES words:
 - the KV adapter input buffer;
@@ -170,6 +177,10 @@ Mutants: an extra link credit, no KV merge, a dropped flit, an early credit, and
 - The SECDED check bits of the KV (and embedding) sectors in HBM are fetched by the KV-die controller (`qkd_ctrl`) as an ordinary descriptor read, scheduled with the data rows.
 - There is no new typed request class and no separate provider.
 - Nothing about ECC crosses the link. A KV row is corrected in `qkd_ctrl` before the CDC (Q7, approved). The KVN rows posted from the ROM die are written with their check bits by the same controller write path.
+
+**AB5 / Q6: no 64-bit head identity on any ACK (struct-close e0aa47d8d).**
+- `ot_qfd_pc_head_owner_n` drops `head_id[63:0]`: an ACK lane is {pc[4:0], mask[1:0]} (7 b; was 71 b) and refers to the current head in queue order (credits / fences order them).
+- No class of this contract carries a head identity or an ordinal: the KV die produces no head-owner ACK across the link (the posted KVN write completes on the KV die and is ordered by the KV4 fence above). Any future ACK class must use the 7-bit {pc, mask} lane, never an ID field.
 
 **J2: the hub SRAM chain is a measured fallback for the KV-die hub, not the default.**
 - Its saving is ~92k µm² net per hub, from 4 links × 38,799 → 4,035 µm² std cells against 12 SRAM macros at 46,699 µm².

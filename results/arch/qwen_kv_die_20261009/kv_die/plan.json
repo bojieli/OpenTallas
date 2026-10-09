@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
+ "generator_sha256": "d2d7ecbd2304db31c88f6bfd9483112aabba66df905c3ad5810bc1534292ebae",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
@@ -11,10 +11,10 @@
   24328.08
  ],
  "die_mm2": 172.297,
- "instances": 892,
- "buses": 1423,
- "instance_mm2": 117.984,
- "fill": 0.6848,
+ "instances": 936,
+ "buses": 1468,
+ "instance_mm2": 118.054,
+ "fill": 0.6852,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -39,6 +39,10 @@
   "qkd_cdc": {
    "n": 128,
    "mm2": 4.2888
+  },
+  "qkd_ckbump": {
+   "n": 1,
+   "mm2": 0.0019
   },
   "qkd_ctrl": {
    "n": 4,
@@ -71,6 +75,10 @@
   "qkd_rly_1": {
    "n": 153,
    "mm2": 0.2434
+  },
+  "qkd_rly_10": {
+   "n": 43,
+   "mm2": 0.0684
   },
   "qkd_rly_1025": {
    "n": 73,
@@ -180,6 +188,7 @@
   "krs_WS_5": 7,
   "krs_WS_6": 7,
   "krs_WS_7": 2,
+  "kst": 43,
   "kvn_EN": 3,
   "kvn_ES": 23,
   "kvn_WN": 3,
@@ -238,6 +247,10 @@
   "astk_w": 777.6,
   "land_w": 172.8,
   "frames": {
+   "qkd_ckbump": [
+    43.2,
+    43.2
+   ],
    "qkd_d2d": [
     777.6,
     518.4
@@ -305,17 +318,22 @@
   "qkd_d2d": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 7
+   "ports": 6
   },
   "qkd_seq": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 27
+   "ports": 29
   },
   "qkd_embgw": {
    "w": 388.776,
    "h": 388.776,
    "ports": 12
+  },
+  "qkd_ckbump": {
+   "w": 43.176,
+   "h": 43.176,
+   "ports": 2
   },
   "qkd_pll": {
    "w": 323.976,
@@ -335,7 +353,7 @@
   "qkd_host": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 9
+   "ports": 10
   },
   "qkd_rly_534": {
    "w": 52.656,
@@ -381,6 +399,11 @@
    "w": 52.656,
    "h": 30.216,
    "ports": 2
+  },
+  "qkd_rly_10": {
+   "w": 52.656,
+   "h": 30.216,
+   "ports": 2
   }
  },
  "strict_ports": {
@@ -409,24 +432,16 @@
    {
     "master": "qkd_seq",
     "module": "ot_qkvd_kv_seq",
-    "rtl_ports": 40,
-    "die_ports": 27,
-    "classed": {
-     "fault": "by_design: sticky status, carried to the host on HCTL op 8 (internal path)",
-     "fault_cause": "by_design: as fault"
-    }
+    "rtl_ports": 42,
+    "die_ports": 29,
+    "classed": {}
    },
    {
     "master": "qkd_d2d",
     "module": "ot_qkvd_kv_end",
-    "rtl_ports": 19,
-    "die_ports": 7,
-    "classed": {
-     "pll_fwd_pad": "by_design: package bump (forwarded clock to the ROM die)",
-     "rst_fwd_pad": "by_design: package bump (reset to the ROM die)",
-     "fault": "by_design: sticky status to qkd_seq (HCTL op 8) through the status word",
-     "fault_cause": "by_design: as fault"
-    }
+    "rtl_ports": 15,
+    "die_ports": 6,
+    "classed": {}
    }
   ],
   "frame_only": {
@@ -435,7 +450,8 @@
    "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
    "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
    "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
-   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)"
+   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)",
+   "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
   }
  }
 }

@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22k = r21c + tools/qwen_kv_die/rom_r22k.py surgery",
  "generator_sha256": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0",
- "surgery_sha256": "cd277e2dae921457374ca98e15e3a1ca31f2909e677aa007b69a7fbbda13507e",
+ "surgery_sha256": "65e8fc88c1dc374e756c9d61d1a8afe3eb8dcfc2fcd6e58370f7bac3f452c9df",
  "die_um": [
   23095.584,
   32801.76
@@ -11,20 +11,21 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 100.424,
  "r21c_die_mm2": 846.792,
- "instances": 12910,
- "buses": 16072,
- "instance_mm2": 610.528,
+ "instances": 12869,
+ "buses": 16031,
+ "instance_mm2": 610.437,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 36.369,
   "io": 17.6,
-  "relay": 16.39,
+  "relay": 16.297,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
   "d2d": 0.403,
   "head": 0.349,
-  "clock_root": 0.17
+  "clock_root": 0.17,
+  "bump": 0.002
  },
  "ucie": {
   "name": "ucie_kv",
@@ -75,23 +76,23 @@
   "d2d_seq": 12,
   "d2d_fdi": 0,
   "pll_fwd": 0,
-  "rst_fwd": 38
+  "rst_fwd": 0
  },
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
    "qfd_cdc": 128,
-   "qfd_ctrl": 4,
+   "ot_hbm3e_phy": 4,
    "qfd_lst_h_e": 10,
    "qfd_lst_h_w": 10,
-   "ot_hbm3e_phy": 4,
-   "qfd_hub": 1,
-   "qfd_lst_v_split": 6,
-   "qfd_lst_v": 3,
    "qfd_kvc_n": 2,
+   "qfd_lst_v": 3,
+   "qfd_lst_v_split": 6,
+   "qfd_hub": 1,
+   "qfd_ctrl": 4,
+   "qfd_kvc": 2,
    "qfd_lst_c_split": 2,
-   "qfd_lst_c": 1,
-   "qfd_kvc": 2
+   "qfd_lst_c": 1
   },
   "dropped_buses": {
    "link_channel": 24,
@@ -147,6 +148,18 @@
     "kind": "clock_root",
     "region": "hub",
     "domain": "stream_1p2"
+   },
+   {
+    "name": "ckb_rom",
+    "master": "qfd_ckbump",
+    "x": 11241.504,
+    "y": 21.6,
+    "w": 43.176,
+    "h": 43.176,
+    "orient": "R0",
+    "kind": "bump",
+    "region": "io",
+    "domain": "stream_1p2"
    }
   ],
   "added_buses": [
@@ -201,8 +214,8 @@
     1,
     [
      [
-      "d2d_rom",
-      "pll_fwd_o"
+      "ckb_rom",
+      "pll_ck"
      ],
      [
       "clk_rx",
@@ -212,12 +225,12 @@
    ],
    [
     "rst_fwd",
-    "spine_local",
+    "reset",
     1,
     [
      [
-      "d2d_rom",
-      "rst_fwd_o"
+      "ckb_rom",
+      "rs"
      ],
      [
       "clk_rx",
@@ -275,6 +288,21 @@
      [
       "sp_constants_sequencer",
       "rsi"
+     ]
+    ]
+   ],
+   [
+    "d2d_flt",
+    "spine_local",
+    9,
+    [
+     [
+      "d2d_rom",
+      "flt"
+     ],
+     [
+      "sp_constants_sequencer",
+      "dflt"
      ]
     ]
    ]
@@ -444,11 +472,6 @@
     "back_um": 410.4
    },
    {
-    "chain": "sp_res_ser_1->sp_vector_memory",
-    "relay": "rly_rs_1_35",
-    "back_um": 410.4
-   },
-   {
     "chain": "sp_constants_sequencer->sp_tree_top",
     "relay": "rly_tt_si_38",
     "back_um": 367.2
@@ -507,6 +530,11 @@
     "chain": "t_63_9->sp_port_tiles_2_f1",
     "relay": "rly_bword_92_31",
     "back_um": 226.8
+   },
+   {
+    "chain": "sp_band_lanes_0->sp_tree_top",
+    "relay": "rly_pword_0_51",
+    "back_um": 216.0
    }
   ],
   "verdict": "FAIL"

@@ -3,12 +3,12 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
+ "generator_sha256": "d2d7ecbd2304db31c88f6bfd9483112aabba66df905c3ad5810bc1534292ebae",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
-  "tree_head": "0760d842a25352ffe11ea36941bdf6cce5a6c5a5",
-  "file_commit": "d1356214c9c03d72ac86f2eb432e62f0c3fcadbe"
+  "sha256": "d2d7ecbd2304db31c88f6bfd9483112aabba66df905c3ad5810bc1534292ebae",
+  "tree_head": "c063db3e99fc59cd806b0a02fec47c51978087d7",
+  "file_commit": "c063db3e99fc59cd806b0a02fec47c51978087d7"
  },
  "qwen_source": null,
  "qwen_recipe": null,
@@ -16,12 +16,12 @@
  "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
  "variant": null,
  "census": {
-  "instances": 892,
-  "buses": 1423,
-  "net_bits": 1626474,
-  "masters": 23,
+  "instances": 936,
+  "buses": 1468,
+  "net_bits": 1626920,
+  "masters": 25,
   "real_instances": 134,
-  "placeholder_instances": 758
+  "placeholder_instances": 802
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -105,6 +105,12 @@
    "instances": 128
   },
   {
+   "master": "qkd_ckbump",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qkd_ctrl",
    "view": "placeholder",
    "clock": "clock_trunk",
@@ -151,6 +157,12 @@
    "view": "placeholder",
    "clock": "NO_CLOCK",
    "instances": 153
+  },
+  {
+   "master": "qkd_rly_10",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 43
   },
   {
    "master": "qkd_rly_1025",
@@ -228,9 +240,8 @@
    "pll_c",
    "pll_fwd"
   ],
-  "d2d_kv": [
-   "ck",
-   "pll_fwd_i"
+  "ckb_kv": [
+   "pll_ck"
   ]
  },
  "reset": [],
@@ -316,7 +327,7 @@
     "endpoints": 137,
     "bits": 137,
     "examples": [
-     "rly_hs_0.a face W peer 649 um behind (hs)",
+     "rly_hs_0.a face W peer 647 um behind (hs)",
      "rly_hs_1.a face W peer 52 um behind (hs__r1)",
      "rly_hs_2.a face W peer 52 um behind (hs__r2)"
     ]
@@ -331,6 +342,30 @@
      "rly_hs_0.b face E peer 52 um behind (hs__r1)",
      "rly_hs_1.b face E peer 52 um behind (hs__r2)",
      "rly_hs_2.b face E peer 52 um behind (hs__r3)"
+    ]
+   },
+   {
+    "master": "qkd_rly_10",
+    "port": "a",
+    "orient": "R0",
+    "endpoints": 41,
+    "bits": 410,
+    "examples": [
+     "rly_kst_0.a face W peer 649 um behind (kst)",
+     "rly_kst_1.a face W peer 52 um behind (kst__r1)",
+     "rly_kst_2.a face W peer 52 um behind (kst__r2)"
+    ]
+   },
+   {
+    "master": "qkd_rly_10",
+    "port": "b",
+    "orient": "R0",
+    "endpoints": 40,
+    "bits": 400,
+    "examples": [
+     "rly_kst_0.b face E peer 52 um behind (kst__r1)",
+     "rly_kst_1.b face E peer 52 um behind (kst__r2)",
+     "rly_kst_2.b face E peer 52 um behind (kst__r3)"
     ]
    },
    {
@@ -457,8 +492,8 @@
     "master": "qkd_rly_530",
     "port": "a",
     "orient": "R0",
-    "endpoints": 218,
-    "bits": 115540,
+    "endpoints": 217,
+    "bits": 115010,
     "examples": [
      "rly_emf_WS_0.a face W peer 284 um behind (emf_WS)",
      "rly_emf_WS_1.a face W peer 52 um behind (emf_WS__r1)",
@@ -469,8 +504,8 @@
     "master": "qkd_rly_530",
     "port": "b",
     "orient": "R0",
-    "endpoints": 216,
-    "bits": 114480,
+    "endpoints": 215,
+    "bits": 113950,
     "examples": [
      "rly_emf_WS_0.b face E peer 52 um behind (emf_WS__r1)",
      "rly_emf_WS_1.b face E peer 52 um behind (emf_WS__r2)",
@@ -484,7 +519,7 @@
     "endpoints": 50,
     "bits": 26700,
     "examples": [
-     "rly_aq_WS_0.a face W peer 286 um behind (aq_WS)",
+     "rly_aq_WS_0.a face W peer 285 um behind (aq_WS)",
      "rly_aq_WS_1.a face W peer 52 um behind (aq_WS__r1)",
      "rly_aq_WS_2.a face W peer 52 um behind (aq_WS__r2)"
     ]
@@ -1214,9 +1249,9 @@
     "buses": 13,
     "bits": 13
    },
-   "spine_local|region": {
-    "buses": 143,
-    "bits": 60093
+   "reset|region": {
+    "buses": 1,
+    "bits": 1
    },
    "d2d_fdi|region": {
     "buses": 1,
@@ -1225,6 +1260,10 @@
    "d2d_face|region": {
     "buses": 2,
     "bits": 3710
+   },
+   "spine_local|region": {
+    "buses": 145,
+    "bits": 60118
    },
    "stack_local|region": {
     "buses": 64,
@@ -1250,6 +1289,11 @@
   }
  },
  "block_shape": {
+  "qkd_ckbump": {
+   "in_bits": 1,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
   "qkd_pll": {
    "in_bits": 0,
    "out_bits": 6,
@@ -1298,13 +1342,13 @@
   }
  },
  "margin_lint": {
-  "chains": 73,
+  "chains": 74,
   "reach_um": 504.0,
   "reach_violations": 0,
   "far_side_relays": 0,
   "reach_examples": [],
   "far_side_examples": [],
-  "slivers": 329,
+  "slivers": 330,
   "sliver_examples": [
    [
     "cdc_WN_0",
@@ -1413,7 +1457,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_kv_lint_top",
-  "stubs": 19,
+  "stubs": 21,
   "nc_wires": 8,
   "filelist": "qwen_kv_lint_top.f",
   "rtl_files": 2,
