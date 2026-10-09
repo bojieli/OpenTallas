@@ -220,7 +220,7 @@ module tb_hgi_coll_rearm #(
     // credits (core clock side)
     always @(posedge clk) begin
         for (integer p = 0; p < NPT; p = p + 1) begin
-            if (rxc[p]) cr_eg[p].push_back($realtime + cred);
+            if (rxc[p]) cr_eg[p].push_back($realtime + 12.0); // Independent fast egress credits; ingress credits remain deliberately late.
             crr[p] <= 1'b0;
             if (cr_in[p].size() > 0 && cr_in[p][0] <= $realtime) begin void'(cr_in[p].pop_front()); crr[p] <= 1'b1; end
         end
@@ -306,6 +306,8 @@ module tb_hgi_coll_rearm #(
             if(queue_words()!=0 || |rxv)$fatal(1,"external old traffic remains at ack");
             active=0;dr=1;@(negedge clk);dr=0;
             repeat(2)@(negedge clk);
+            if(cmd<6)for(integer p=0;p<NPT;p=p+1)
+                if(credits[p]!=cr_before[p])$fatal(1,"ingress credit reset at rearm p=%0d prior=%0d now=%0d",p,cr_before[p],credits[p]);
             if(done || !sr)$fatal(1,"rearm handshake failed");
         end
         if(delayed_credit_observations==0 || stall_observations==0)$fatal(1,"credit-delay/stall coverage missing");
