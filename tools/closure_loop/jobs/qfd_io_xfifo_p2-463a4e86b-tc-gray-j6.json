@@ -1,0 +1,155 @@
+{
+  "name": "qfd_io_xfifo_p2-463a4e86b-tc-gray-j6",
+  "block": "qfd_io_xfifo",
+  "owner": "Codex:qwen_system routine; Claude phys-intake J6",
+  "purpose": "CONFIRMED0327 J6 approved CONFIG-ONLY continuation of immutable p2 placement. Unchanged PIPE2 RTL/golden1d3c576bb; new run fork checks five RTL files and237MiB3_place.odb SHA. Current daemon MM/hold guard/budget hooks,40published Gray firstsyncbits QN-through/D-only max<=actualdestinationperiod, holdonlyfalsepath. No RTL/clock/uncertainty/payload exception change. SavedPLACE TT-137.68/FF-26.63 is history, NOT routedclosure. Rejudge output-pin class under daemon currentbudget_rb after route, before redesign/adoption; no Qwen row in currentbudget_rb2 yet, therefore finalbudget check remains pending until Claude provides it. OldEARLY_FAIL_HOLD verdict and objects untouched.",
+  "hosts": [
+    "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/qwen-system-resume-20261009",
+    "commit": "463a4e86b",
+    "required_files": [
+      "physical/qwen_die_masters/jobs/resume_xfifo_gray.sh",
+      "physical/qwen_die_masters/jobs/stage_xfifo_gray.py",
+      "physical/qwen_die_masters/signoff/qfd_io_xfifo_gray_cdc.tcl",
+      "physical/qwen_die_masters/signoff/qfd_io_xfifo_p2_gray.sdc",
+      "physical/qwen_die_masters/signoff/qfd_io_xfifo_p2.sdc",
+      "rtl/physical/ot_qwen_die_io_xfifo.sv",
+      "rtl/physical/ot_qwen_die_cdc_ch.sv",
+      "rtl/physical/ot_qwen_async_fifo_w.sv",
+      "rtl/lib/ot_async_fifo.sv",
+      "rtl/lib/ot_reset_sync.sv",
+      "rtl/test/tb_qwen_die_cdc_ch.sv",
+      "tools/orfs_hold_mm.py",
+      "tools/orfs_hold_mm.tcl",
+      "tools/orfs_allcorner_spef.py",
+      "physical/common_flow/link_budget_hook.tcl",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "cdc_ch_p2_exact",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp0 -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp0 | tee {RUN}/bench/cp0.log && grep -q '^PASS' {RUN}/bench/cp0.log",
+        "expect": "pass",
+        "pass_regex": "^PASS cdc_ch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "min_count_regex": "words=(\\d+)"
+      },
+      {
+        "name": "cdc_ch_p2_exact_fastw",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp0f -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.HW=1.35 -P tb_qwen_die_cdc_ch.HR=1.0 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp0f | tee {RUN}/bench/cp0f.log && grep -q '^PASS' {RUN}/bench/cp0f.log",
+        "expect": "pass",
+        "pass_regex": "^PASS cdc_ch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ],
+        "min_count_regex": "words=(\\d+)"
+      },
+      {
+        "name": "cdc_ch_p2_neg",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp1 -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=1 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp1 | tee {RUN}/bench/cp1.log && grep -q '^PASS' {RUN}/bench/cp1.log",
+        "expect": "fail",
+        "fail_regex": "^FAIL cdc_ch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "cdc_ch_p2_mut_rsel2",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DOT_MUT_RSEL2 -o {RUN}/bench/cpm -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cpm | tee {RUN}/bench/cpm.log && grep -q '^PASS' {RUN}/bench/cpm.log",
+        "expect": "fail",
+        "fail_regex": "^FAIL cdc_ch",
+        "threads": 1,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "J6 separately approved CTS-next-stage resume. Actual read-only make-n cts on old and copied checkpoint both show ONLY4_1_cts; own2.5GiBpreservedORFSfork freshCTS will measure allfour realclock trees/833.333postSDC."
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/qwen_die_masters/jobs/resume_xfifo_gray.sh {RUN} {LABEL}",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow_cts.log",
+        "{RUN}/routes/{LABEL}/flow_finish.log",
+        "{RUN}/routes/{LABEL}/sta.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/routes/{LABEL}/checkpoint_import.json {RUN}/routes/{LABEL}/resume_dryrun.log {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_io_xfifo_p2_gray.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ],
+    "checks": [
+      {
+        "name": "Gray40 scoped-destination audit",
+        "cmd": "grep -q 'OT_XFIFO_GRAY_TOTAL 40' {RUN}/routes/{LABEL}/flow_cts.log && ! grep -q 'OT_XFIFO_GRAY max .* exceeds destination' {RUN}/routes/{LABEL}/flow_cts.log"
+      },
+      {
+        "name": "current output-budget rejudge required (J6)",
+        "cmd": "test -s {SRC}/physical/common_flow/rebudget_block.sdc"
+      }
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Unchanged original multiclock833.333/60-25/IO150p2 context. Daemon install_rebudget remains ENABLED; J6 mandates currentbudget_rb output-port rejudge afterroute, mandatoryfinalcheck preventsgenericIO closure ifQwen row notyetpublished."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/qwen_system_20261009/routes/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "host_require": [
+    "ot-epyc4"
+  ],
+  "routed_ioref": true,
+  "checkpoint_continuation": {
+    "host": "ot-epyc4",
+    "original_job": "qfd_io_xfifo_p2-1d3c576bbtc",
+    "original_stage": "3_place",
+    "sha256": "7faacf15e72e118e151e0cee53082099d70d62019ba4f000a9c460951a72a439",
+    "fork_new_run": true,
+    "next_stage": "4_1_cts",
+    "gate": "bothold/fork make-n cts ONLY do4_1_cts; actual40Gray710<=destination770; no payload cut",
+    "approval": "REVIEW_20261009 J6 CONFIRMED0327"
+  },
+  "notes": "Fouroriginalminimum benches copied verbatim (4000words exact/fastwriter plus realNEG andRSEL2mutant); sourcebench and fiveRTL byteidentical1d3c. Originalrecords preserved. Intake source463a adds onlyconfig/runtimefork code. Family duplicatecheck beforeaccept mandatory; no centralmerge byCodex.32GiB originallyapproved routeclaim retained; currentadmission/peakmeasurement replaces guess before laterexpansion."
+}

@@ -1,0 +1,29 @@
+{
+  "approved": "J6 CONFIRMED0327",
+  "physical_source": "463a4e86b",
+  "job": "qfd_io_xfifo_p2-463a4e86b-tc-gray-j6",
+  "RTL_and_bench_unchanged_from": "1d3c576bb",
+  "checkpoint_SHA": "7faacf15e72e118e151e0cee53082099d70d62019ba4f000a9c460951a72a439",
+  "baseline_make_n_cts": [
+    "4_1_cts"
+  ],
+  "copied_checkpoint_make_n_cts": [
+    "4_1_cts"
+  ],
+  "full_finish_dryrun": "PRESERVED_FAILURE: no rule to future5_1_grt.sdc (sideeffect not yet generated); CTS-only dryrun succeeds",
+  "Gray_destination_gate": {
+    "first_sync_bits": 40,
+    "actual_route_max_ps": 710,
+    "all_actual_destination_periods_ps": 770,
+    "no_invalid_startpoint_warnings": true,
+    "signoff_max_ps": 773.333,
+    "signoff_dest_periods_ps": 833.333
+  },
+  "job_schema_validation": "admitted AGIdock1GiB closure_loop validate =>OK",
+  "currentbudget_rb": "daemon currentbudget_rb2 has NO qfd_io_xfifo row; finalbudget check deliberately pending, no invented portbudget",
+  "new_stage_gate_root": "ot-epyc4:/srv/opentallas-scratch/codex/qwen-xfifo-cdc-audit-1d3c576bb/resume_gate",
+  "new_route_started": false,
+  "old_job_modified": false,
+  "disposable_fork_size_gb": 2.5,
+  "existing_place_verdict": "TT\u2212137.68/FF\u221226.63 remains history, currentroute/rebudget must judgeoutputclass"
+}
