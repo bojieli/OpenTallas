@@ -51,5 +51,15 @@
     }
   },
   "clock": "functional bench inherited #0.4166ns halfperiod; no timing/adoption claim",
-  "payload_sram": "plain; SECDED adoption dependency"
+  "payload_sram": "plain; SECDED adoption dependency",
+  "integration_limitations": {
+    "default_controller_not_preserved": "Draft imports36b7 tile/wrapper defaultsSEARCH_PIPE1; pinnedcd333 original had nativecontroller/noSEARCH parameter. Do not merge/adopt draft as-is. Chosen successor must isolate cx modules or restore historical native default before its gate.",
+    "pinned_golden_unchanged": [
+      "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv"
+    ],
+    "next_RTL": "held until actual TT IO rejudge/path class confirms chosen fix"
+  }
 }
