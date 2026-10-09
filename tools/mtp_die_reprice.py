@@ -2,7 +2,7 @@
 """Released-checkpoint correction to the reduced-shape MTP die budget.
 
 Retain the 2026-10-08 plan as history.  Storage is sized in its four-ROM
-allocation pairs; the proposed two-ROM head successor has a separate unit.
+allocation pairs; two-ROM row-bank units are distinct from native NB2 field pairs.
 This record does not invent timing for the missing full-shape accumulator.
 """
 import hashlib
@@ -87,14 +87,15 @@ def compose():
     logical_engines = math.ceil(math.ceil(129280 / heads) / 32)
     seed_bytes = sum(t['bytes'] for t in seed.values())
     seed_pairs_per_rank = math.ceil(math.ceil(seed_bytes / 4) / source_pair_bytes)
-    # A physical field slot has one two-ROM base element; BF-double slots
-    # add another such element.  Historical "pair" counts mixed those units.
+    # Native NB2 field pairs contain two row banks, each two real ROMs.
+    # BF-double changes logic/slot width, not the physical ROM count per pair.
     globals_bf_slots = math.ceil((5051-2525)/heads)
     embed_bf_slots = math.ceil(embedded/source_pair_bytes)
     # The released FP8 seed projection uses 32 data bytes/word.  Its scales
     # fit in the carrier's 18 spare bits; norm spills beyond 75 full pairs.
-    seed_logical_pairs = math.ceil((seed['weight']['bytes']/4+seed['norm']['bytes']/4)/successor_pair_bytes)
-    regular_slots = 282+seed_logical_pairs
+    seed_row_bank_units = math.ceil((seed['weight']['bytes']/4+seed['norm']['bytes']/4)/successor_pair_bytes)
+    seed_native_pairs = math.ceil(seed_row_bank_units/2)
+    regular_slots = 282+seed_native_pairs
     bf_slots = globals_bf_slots+embed_bf_slots
     field_slots = regular_slots+bf_slots
     return dict(
@@ -138,24 +139,39 @@ def compose():
                           local_weight_words_per_macro=256, macro_used_fraction=256/4096,
                           row_launch_interval_cycles=256,
                           measured_component_cycles_after_first_beat=177,
-                          integrated_join_cycles=None,
+                          integrated_join_cycles=184,
+                          measured_driver_head_to_join_ns=184/1.2,
+                          driver_source='caf38a801',
+                          added_embedding_cache_warmup_cycles=2,
                           reason_two_macros='real SS macro clkq needs two-edge capture; alternating banks preserve q',
                           row_engine_route_area_mm2=None,
                           physical_slot_fit=False),
         typed_head_inventory=dict(
-            field_slots=field_slots, regular_two_ROM_slots=regular_slots,
+            field_slots=field_slots, regular_NB2_four_ROM_slots=regular_slots,
             BF_double_four_ROM_slots=bf_slots,
             non_lm_head_global_BF_double_slots=globals_bf_slots,
             Markov_embed_BF_double_slots=embed_bf_slots,
             primary_block_regular_slots=282,
-            seed_regular_slots=seed_logical_pairs,
-            seed_weight_regular_slots=75, seed_norm_words_per_rank=80,
+            seed_regular_slots=seed_native_pairs,
+            seed_two_ROM_row_bank_units=seed_row_bank_units,
+            seed_weight_two_ROM_row_bank_units=75, seed_norm_words_per_rank=80,
             seed_scale_carrier_bits=18,
             seed_scale_packing_qualification='proposed repeated scale in carrier; packed proof required',
-            field_ROM4096_macros=field_slots*2+bf_slots*2,
+            field_ROM4096_macros=field_slots*4,
             lm_head_bundles=head_bundles, lm_head_ROM4096_macros=head_bundles*10,
             local_Markov_ROM4096_macros=physical_engines*2,
-            total_ROM4096_macros=field_slots*2+bf_slots*2+head_bundles*10+physical_engines*2,
+            total_ROM4096_macros=field_slots*4+head_bundles*10+physical_engines*2,
+            configuration_ROM4096x72_per_field_slot=7,
+            configuration_ROM4096x72_macros=field_slots*7,
+            total_all_ROM_macro_types=field_slots*11+head_bundles*10+physical_engines*2,
+            weight_ROM_inventory_excludes_configuration=True,
+            native_pair_ROM4096_macros=4,
+            native_pair_inventory_sources=['tools/dsrom_s81_component_word_server.py:61',
+                'tools/dsrom_s81_expert_placement_sweep.py:85',
+                'tools/dsrom_head_source_binding.py:112'],
+            BF_double_additional_ROM4096_macros=0,
+            supersedes_proposed_inventory=dict(field_slots=696, total_ROM4096_macros=3598,
+                reason="two-ROM row-bank units were incorrectly treated as native NB2 pairs"),
             dense_Markov_head_storage_slots_removed=math.ceil(head/source_pair_bytes/heads),
             generator_BF_map_must_be_explicit=True,
             floorplan_slot_fit=False,
@@ -191,7 +207,8 @@ def compose():
                                         estimated_gross_utilization=38438/81881.28,
                                         added_cycles=0,
                                         status='sized_from_prior_cells_route_pending')),
-        loader=dict(historical_svc_bits=[904,624], native_svc_bits=[688,550],
+        loader=dict(historical_svc_bits=[904,624], native_svc_bits=[344,275],
+                    per_die_native_targets=1, historical_two_die_target_bits=[688,550],
                     native_address_bits=37, physical_stacks=4,
                     external_host_AXI_bits=[226,74], additional_host_DMA_write_data_bits=64,
                     host_minimum_out_bits=404, host_minimum_in_bits=381,
