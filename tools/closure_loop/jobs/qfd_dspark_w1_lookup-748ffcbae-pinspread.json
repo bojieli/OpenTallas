@@ -1,0 +1,86 @@
+{
+  "name": "qfd_dspark_w1_lookup-748ffcbae-pinspread",
+  "block": "qfd_dspark_w1_lookup",
+  "owner": "Codex:review_qwen_token_path",
+  "purpose": "One real8macrobank feeding exact64lane dequant under one lease through final converted retirement; fullcohort64+sequence8. Shared38bankmux/broadcast and mutablecontrol protection pending.; configuration-only physical successor: disjoint64bit-wide bus groups spread across full existing edge; max32groups for2048b, outline/clocks/timing/density rule unchanged.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-q5-ecc-20261009",
+    "commit": "748ffcbae",
+    "required_files": [
+      "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_lookup.sv",
+      "rtl/test/qwen_system/tb_qwen_dspark_w1_lookup.sv",
+      "tools/uarch_qwen_dspark_native_model.py",
+      "physical/qwen_die_masters/cfg/qfd_dspark_w1_lookup.env",
+      "physical/qwen_die_masters/signoff/qfd_dspark_w1_lookup.sdc",
+      "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+      "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv",
+      "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+      "physical/qwen_die_masters/qwen_w1_bank8_place.tcl",
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_dspark_w1_lookup.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_dspark_w1_lookup {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_dspark_w1_lookup --out {RUN}/record/views/qfd_dspark_w1_lookup --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "actual_TT_WC_alias_logged",
+        "cmd": "grep -q 'corner WC reads the TT liberties' {RUN}/routes/{LABEL}/flow.log"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_dspark_w1_lookup.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x266_m8"
+    ]
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "Native serial0.9GHz leaf with true macro, actual1111.111ps plus60/25ps uncertainty,166.667ps external IO+90ps skew50ps hold; no relaxation/adoption."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_native_pinspread_20261009/qfd_dspark_w1_lookup-748ffcbae-pinspread"
+    },
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    }
+  ],
+  "cycles_added": "Native0.9GHz local leaf: W1 lookup<=16serialedges17.778ns per4quarters, transient read<=5edges5.556ns. Actual full38bankmux/attention scan/productionfence additional costs remain open; no headline rate/adoption claim.",
+  "merge_target": "main",
+  "no_bench_reason": "Actual remotely admitted AGIdock positive+negative gate already passed, source 70dc3a9ca and immutable records results/rtl/qwen_dspark_native_20261009/lookup_exact committed926cf8fb2. Numerical source unchanged, no redundant golden rerun; route uses full realmacro leaf geometry. Integration/controlprotection remain open. RTL/exact arithmetic unchanged; explicit balanced pin constraints fix observed20.8b/um packed 100um cluster. Physical density and timing remain mandatory; failed original records retained.",
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+}

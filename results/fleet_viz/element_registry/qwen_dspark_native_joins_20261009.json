@@ -42,8 +42,10 @@
         "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_lookup-748ffcbae-pinspread.json"
+        ],
+        "qualification": "Config successor after actual packed-pinFLOORPLAN_MARGIN; unchanged outline, clock and IO/density checks. No running/closure claim."
       },
       "dependencies": [
         "qfd_dspark_w1_bank",
