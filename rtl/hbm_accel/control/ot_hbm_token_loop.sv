@@ -19,10 +19,12 @@
 // Record to host: {last, status3, job32, pos21 (the emitted token's position; 2^20 for the last of a 1M context), tok17}.  Status: 0 RUN 1 EOS 2 LEN 3 MAXPOS 4 FAULT 5 HOST.
 module ot_hbm_token_loop #(
   parameter integer TW = 17, PW = 20, parameter integer DB_LAT = 2, parameter integer HQ_AW = 3,
+  parameter integer EXTERNAL_FAULT_EN = 0,
   parameter integer MUT = 0                      // bench negative control: 1 = EOS compare disabled
 )(
   input  wire          clk, rst_n,
   input  wire          post_en,
+  input  wire          external_fault,
   // host: job descriptor and stop
   input  wire          job_v, output wire job_rdy,
   input  wire [31:0]   job_id, input wire [TW-1:0] job_tok, input wire [PW-1:0] job_pos, input wire [PW-1:0] job_ngen,
@@ -82,7 +84,14 @@ module ot_hbm_token_loop #(
       pv <= 1'b0; mtp_emit_v <= 1'b0;
       if (host_stop && busy) stop_req <= 1'b1;
       if ((ls == L_WAIT || ls == L_EMIT) && post_en && hq_full) st_hq_stall <= st_hq_stall + 1;
-      case (ls)
+      if (EXTERNAL_FAULT_EN && external_fault && busy && ls != L_DONE) begin
+        db_v <= 1'b0; mtp_stop <= 1'b1;
+        // Reserve room for the previous registered push before posting abort.
+        if (!post_en || ((hw - hr_) + (pv ? 1 : 0) < HD)) begin
+          pv <= 1'b1; pd <= {1'b1, S_FLT, job, {1'b0,pos}, {TW{1'b0}}};
+          last_status <= S_FLT; mtp_emit_v <= mtp; mtp_emit <= 0; ls <= L_DONE;
+        end
+      end else case (ls)
         L_IDLE: if (job_v) begin
           job <= job_id; eos <= job_eos; eos_en <= job_eos_en; maxpos <= job_maxpos; ngen <= job_ngen; mtp <= job_mtp;
           nemit <= 0; pos <= job_pos; busy <= 1'b1; stop_req <= 1'b0; mtp_stop <= 1'b0;

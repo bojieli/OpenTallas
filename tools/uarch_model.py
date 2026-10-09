@@ -14076,3 +14076,8 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+def hbm_control_robustness_model():
+    """HBM reset sequencer and SRAM/transport fault aggregation before build."""
+    from tools.hbm_control_robustness_model import model
+    return model()
