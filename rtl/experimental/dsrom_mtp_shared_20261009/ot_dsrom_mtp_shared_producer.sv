@@ -4,7 +4,7 @@
 // receives native widened FP32 for the shared-LAST add. One context owns the SRAM until
 // all 80 output flits retire; six draft frames share it serially.
 module ot_dsrom_mtp_shared_producer #(
-    parameter integer MAXU=866, MAX_CONTEXT=1048576,
+    parameter integer MAXU=866, MAX_CONTEXT=1048576,ECC_PIPE=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -29,15 +29,23 @@ module ot_dsrom_mtp_shared_producer #(
     wire [575:0] write_code;
     wire [767:0] bank_data;
     wire [511:0] decoded;
-    wire [7:0] ce,ue;
+    wire [7:0] ce,ue,decode_valid;
     wire guard_bad=(state_n!=~state)||(context_n!=~context_q)||
         (write_n!=~write_word)||(read_n!=~read_word)||
         (pack_n!=~pack_q)||(output_n!=~output_q);
     genvar k;
     generate for(k=0;k<8;k=k+1)begin:g_ecc
         ot_s81_secded_enc72 enc(.d(pack_q[64*k+:64]),.c(write_code[72*k+:72]));
-        ot_s81_secded_dec72 dec(.c(held_code[72*k+:72]^(k==0?READ_INJECT:72'd0)),
-            .d(decoded[64*k+:64]),.ce(ce[k]),.ue(ue[k]));
+        if(ECC_PIPE)begin:g_pipe
+            ot_dsrom_hc_secded_pipe dec(.clk(clk),.rst_n(rst_n),
+                .valid_in(state==RWAIT&&!fault),
+                .c(bank_data[72*k+:72]^(k==0?READ_INJECT:72'd0)),
+                .valid_out(decode_valid[k]),.d(decoded[64*k+:64]),.ce(ce[k]),.ue(ue[k]));
+        end else begin:g_comb
+            assign decode_valid[k]=0;
+            ot_s81_secded_dec72 dec(.c(held_code[72*k+:72]^(k==0?READ_INJECT:72'd0)),
+                .d(decoded[64*k+:64]),.ce(ce[k]),.ue(ue[k]));
+        end
     end
     for(k=0;k<3;k=k+1)begin:g_mem
         wire [767:0] wd={192'd0,write_code};
@@ -100,7 +108,7 @@ module ot_dsrom_mtp_shared_producer #(
                 end
                 RREQ:transition(RWAIT);
                 RWAIT:begin held_code<=bank_data[575:0];transition(RDECODE);end
-                RDECODE:begin
+                RDECODE:if(!ECC_PIPE||(&decode_valid))begin
                     if(|ue)fault<=1;
                     else begin output_q<=decoded;output_n<=~decoded;
                         corrected_q<=|ce;transition(RHOLD);end

@@ -14,7 +14,7 @@ module tb_shared_producer;
 `else
     localparam [71:0] INJECT=72'd0;
 `endif
-    ot_dsrom_mtp_shared_producer #(.READ_INJECT(INJECT)) dut(.*);
+    ot_dsrom_mtp_shared_producer #(.READ_INJECT(INJECT),.ECC_PIPE(1)) dut(.*);
     integer frame=0,received=0,total=0,cyc=0,bad=0,start=0;
     reg [73:0] expected_context;
     function automatic [15:0] value(input integer row,f);
