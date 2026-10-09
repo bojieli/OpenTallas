@@ -29,6 +29,14 @@
      "peak_ram_gb": 128,
      "owner": "Codex:qwen_hbm_unify",
      "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
+    },
+    {
+     "name": "qwen-fmt3-wide-calibration",
+     "pid": 1835875,
+     "command_match": "qwen-fmt3-wide-2831b78d5/src/tools/qwen_r25_fmt3_physical.py --wide",
+     "peak_ram_gb": 64,
+     "owner": "Codex:qwen_hbm_unify/fmt3",
+     "reason": "Admitted fullshape three-strip wide FMT3 calibration;64GiB inventory future envelope, preserve original nominal route; primarydriverRSS subtraction is conservative, worker memory already reflected MemAvailable"
     }
    ]
   },
