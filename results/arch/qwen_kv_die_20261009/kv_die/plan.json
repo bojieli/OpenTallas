@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "f3e80718619d45e7cf7ead549e3553e24d0207b92afd9af5f4df613d9fca8f39",
+ "generator_sha256": "a4d9aa64ab266b6cfe449748c034173e3c144522604b8b8ca3ea15c18858029b",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
@@ -11,10 +11,10 @@
   24328.08
  ],
  "die_mm2": 172.297,
- "instances": 1142,
- "buses": 1673,
- "instance_mm2": 118.452,
- "fill": 0.6875,
+ "instances": 888,
+ "buses": 1419,
+ "instance_mm2": 117.976,
+ "fill": 0.6847,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -69,40 +69,40 @@
    "mm2": 20.9897
   },
   "qkd_rly_1": {
-   "n": 201,
-   "mm2": 0.3198
+   "n": 153,
+   "mm2": 0.2434
   },
   "qkd_rly_1025": {
-   "n": 104,
-   "mm2": 0.2956
+   "n": 72,
+   "mm2": 0.2046
   },
   "qkd_rly_1048": {
-   "n": 74,
-   "mm2": 0.2187
+   "n": 51,
+   "mm2": 0.1508
   },
   "qkd_rly_16": {
-   "n": 104,
-   "mm2": 0.1655
-  },
-  "qkd_rly_36": {
-   "n": 22,
-   "mm2": 0.035
-  },
-  "qkd_rly_520": {
-   "n": 27,
-   "mm2": 0.043
-  },
-  "qkd_rly_530": {
-   "n": 332,
-   "mm2": 0.5282
-  },
-  "qkd_rly_534": {
    "n": 72,
    "mm2": 0.1146
   },
+  "qkd_rly_36": {
+   "n": 16,
+   "mm2": 0.0255
+  },
+  "qkd_rly_520": {
+   "n": 21,
+   "mm2": 0.0334
+  },
+  "qkd_rly_530": {
+   "n": 248,
+   "mm2": 0.3946
+  },
+  "qkd_rly_534": {
+   "n": 55,
+   "mm2": 0.0875
+  },
   "qkd_rly_563": {
-   "n": 22,
-   "mm2": 0.0375
+   "n": 16,
+   "mm2": 0.0273
   },
   "qkd_seq": {
    "n": 1,
@@ -117,119 +117,118 @@
  },
  "relay_stages": {
   "af_EN": 1,
-  "af_ES": 35,
+  "af_ES": 26,
   "af_WN": 1,
-  "af_WS": 35,
-  "am_EN": 5,
-  "am_ES": 6,
-  "am_WN": 5,
-  "am_WS": 6,
-  "ap_EN": 5,
-  "ap_ES": 6,
-  "ap_WN": 5,
-  "ap_WS": 6,
+  "af_WS": 27,
+  "am_EN": 4,
+  "am_ES": 4,
+  "am_WN": 4,
+  "am_WS": 4,
+  "ap_EN": 4,
+  "ap_ES": 4,
+  "ap_WN": 4,
+  "ap_WS": 4,
   "aq_EN": 1,
-  "aq_ES": 35,
+  "aq_ES": 27,
   "aq_WN": 1,
-  "aq_WS": 35,
-  "ares": 27,
-  "emf_EN": 5,
-  "emf_ES": 32,
-  "emf_WN": 5,
-  "emf_WS": 32,
-  "emr_EN": 5,
-  "emr_ES": 32,
-  "emr_WN": 5,
-  "emr_WS": 32,
-  "hc": 56,
-  "hf": 27,
-  "hs": 27,
-  "ing_EN": 32,
-  "ing_ES": 4,
-  "ing_WN": 32,
-  "ing_WS": 4,
-  "krq_EN_0": 3,
-  "krq_EN_1": 10,
-  "krq_EN_2": 10,
-  "krq_EN_3": 3,
-  "krq_ES_0": 3,
-  "krq_ES_1": 10,
-  "krq_ES_2": 10,
-  "krq_ES_3": 3,
-  "krq_WN_4": 3,
-  "krq_WN_5": 10,
-  "krq_WN_6": 10,
-  "krq_WN_7": 3,
-  "krq_WS_4": 3,
-  "krq_WS_5": 10,
-  "krq_WS_6": 10,
-  "krq_WS_7": 3,
-  "krs_EN_0": 3,
-  "krs_EN_1": 10,
-  "krs_EN_2": 10,
-  "krs_EN_3": 3,
-  "krs_ES_0": 3,
-  "krs_ES_1": 10,
-  "krs_ES_2": 10,
-  "krs_ES_3": 3,
-  "krs_WN_4": 3,
-  "krs_WN_5": 10,
-  "krs_WN_6": 10,
-  "krs_WN_7": 3,
-  "krs_WS_4": 3,
-  "krs_WS_5": 10,
-  "krs_WS_6": 10,
-  "krs_WS_7": 3,
-  "kvn_EN": 4,
-  "kvn_ES": 33,
-  "kvn_WN": 4,
-  "kvn_WS": 33,
-  "mf_EN": 4,
-  "mf_ES": 33,
-  "mf_WN": 4,
-  "mf_WS": 33,
-  "rst_fwd": 1,
-  "tk": 56
+  "aq_WS": 26,
+  "ares": 21,
+  "emf_EN": 3,
+  "emf_ES": 24,
+  "emf_WN": 3,
+  "emf_WS": 24,
+  "emr_EN": 3,
+  "emr_ES": 24,
+  "emr_WN": 3,
+  "emr_WS": 24,
+  "hc": 43,
+  "hf": 21,
+  "hs": 21,
+  "ing_EN": 24,
+  "ing_ES": 3,
+  "ing_WN": 24,
+  "ing_WS": 3,
+  "krq_EN_0": 2,
+  "krq_EN_1": 7,
+  "krq_EN_2": 7,
+  "krq_EN_3": 2,
+  "krq_ES_0": 2,
+  "krq_ES_1": 7,
+  "krq_ES_2": 7,
+  "krq_ES_3": 2,
+  "krq_WN_4": 2,
+  "krq_WN_5": 7,
+  "krq_WN_6": 7,
+  "krq_WN_7": 2,
+  "krq_WS_4": 2,
+  "krq_WS_5": 7,
+  "krq_WS_6": 7,
+  "krq_WS_7": 2,
+  "krs_EN_0": 2,
+  "krs_EN_1": 7,
+  "krs_EN_2": 7,
+  "krs_EN_3": 2,
+  "krs_ES_0": 2,
+  "krs_ES_1": 7,
+  "krs_ES_2": 7,
+  "krs_ES_3": 2,
+  "krs_WN_4": 2,
+  "krs_WN_5": 7,
+  "krs_WN_6": 7,
+  "krs_WN_7": 2,
+  "krs_WS_4": 2,
+  "krs_WS_5": 7,
+  "krs_WS_6": 7,
+  "krs_WS_7": 2,
+  "kvn_EN": 3,
+  "kvn_ES": 23,
+  "kvn_WN": 3,
+  "kvn_WS": 22,
+  "mf_EN": 3,
+  "mf_ES": 25,
+  "mf_WN": 3,
+  "mf_WS": 25,
+  "tk": 43
  },
  "critical_stages": {
   "d2d_to_seq": 0,
   "seq_to_astk": {
-   "WS": 35,
+   "WS": 26,
    "WN": 1,
-   "ES": 35,
+   "ES": 27,
    "EN": 1
   },
   "astk_to_hub": {
-   "WS": 6,
-   "WN": 5,
-   "ES": 6,
-   "EN": 5
-  },
-  "hub_to_astk": {
-   "WS": 6,
-   "WN": 5,
-   "ES": 6,
-   "EN": 5
-  },
-  "hub_to_seq": 27,
-  "seq_to_d2d": 0,
-  "seq_to_land": {
-   "WS": 33,
+   "WS": 4,
    "WN": 4,
-   "ES": 33,
+   "ES": 4,
    "EN": 4
   },
+  "hub_to_astk": {
+   "WS": 4,
+   "WN": 4,
+   "ES": 4,
+   "EN": 4
+  },
+  "hub_to_seq": 21,
+  "seq_to_d2d": 0,
+  "seq_to_land": {
+   "WS": 22,
+   "WN": 3,
+   "ES": 23,
+   "EN": 3
+  },
   "gw_to_land": {
-   "WS": 32,
-   "WN": 5,
-   "ES": 32,
-   "EN": 5
+   "WS": 24,
+   "WN": 3,
+   "ES": 24,
+   "EN": 3
   },
   "land_to_gw": {
-   "WS": 32,
-   "WN": 5,
-   "ES": 32,
-   "EN": 5
+   "WS": 24,
+   "WN": 3,
+   "ES": 24,
+   "EN": 3
   },
   "seq_to_gw": 0,
   "gw_to_seq": 0
@@ -338,11 +337,6 @@
    "h": 518.376,
    "ports": 9
   },
-  "qkd_rly_1": {
-   "w": 52.656,
-   "h": 30.216,
-   "ports": 2
-  },
   "qkd_rly_534": {
    "w": 52.656,
    "h": 30.216,
@@ -379,6 +373,11 @@
    "ports": 2
   },
   "qkd_rly_520": {
+   "w": 52.656,
+   "h": 30.216,
+   "ports": 2
+  },
+  "qkd_rly_1": {
    "w": 52.656,
    "h": 30.216,
    "ports": 2

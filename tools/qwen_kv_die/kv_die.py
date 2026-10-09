@@ -44,7 +44,8 @@ SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
 FRAMES = dict(qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
-RELAY_TARGET = 360.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
+REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
+RELAY_TARGET = 320.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -315,7 +316,9 @@ def _relays(m):
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     rocc = {}
 
-    def free(x, y, w, h):
+    def free(x, y, w, h, gap=2.16):
+        # a 2.16 um keep-out around every frame: the die placer snaps origins to the row / track lattice
+        x, y, w, h = x - gap, y - gap, w + 2 * gap, h + 2 * gap
         if x < 0 or y < 0 or x + w > Wd or y + h > Hd:
             return False
         for gx in range(int(x // G) - 1, int((x + w) // G) + 2):
@@ -371,38 +374,46 @@ def _relays(m):
         path = route(a, b)
         L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
         lengths[bid] = round(L, 1)
-        n = max(0, math.ceil(L / RELAY_TARGET) - 1)
-        stages[bid] = n
-        if n == 0:
-            nb.append((bid, cl, bits, eps))
-            continue
         span = bits * 0.048 + 4.0
         fw, fh = (52.68, 30.24) if bits <= 512 else (52.68, up(span, GY))
         mst = f'qkd_rly_{bits}'
-        prev_ep = (a, pa)
-        step = L / (n + 1)
-        for k in range(1, n + 1):
-            idx = int(round(k * step / G))
+
+        def near_d(r0, r1):
+            # nearest-point Manhattan distance between two rectangles (x0, y0, x1, y1)
+            dx_ = max(0.0, r0[0] - r1[2], r1[0] - r0[2])
+            dy_ = max(0.0, r0[1] - r1[3], r1[1] - r0[3])
+            return dx_ + dy_
+        rect = lambda it: (it.x, it.y, it.x + it.w, it.y + it.h)  # noqa: E731
+        prev_r, prev_ep, k, idx0 = rect(by[a]), (a, pa), 0, 0
+        offs = [(0, 0)] + [(i * G, j * G) for r_ in (1, 2, 3) for i in range(-r_, r_ + 1) for j in range(-r_, r_ + 1)
+                           if max(abs(i), abs(j)) == r_]
+        while near_d(prev_r, rect(by[b])) > REACH_TARGET:
             got = None
-            for back in range(0, 6):                    # on the path, at most 5 cells back toward the driver
-                px, py = path[max(0, idx - back)]
-                for dx_, dy_ in ((0, 0), (G, 0), (-G, 0), (0, G), (0, -G), (2 * G, 0), (-2 * G, 0), (0, 2 * G), (0, -2 * G)):
+            # the farthest path point (from the previous chain point) with a free spot within reach
+            for idx in range(min(len(path) - 1, idx0 + int(REACH_TARGET // G) + 2), idx0, -1):
+                px, py = path[idx]
+                for dx_, dy_ in offs:
                     qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
-                    if free(qx, qy, fw, fh):
-                        got = (qx, qy)
+                    if near_d(prev_r, (qx, qy, qx + fw, qy + fh)) <= REACH_TARGET and free(qx, qy, fw, fh):
+                        got = (qx, qy, idx)
                         break
                 if got:
                     break
             if got is None:
-                raise ValueError(f'kv die relays: no spot for {bid} stage {k} near ({px:.0f}, {py:.0f})')
-            nm = f'rly_{bid}_{k - 1}'
+                raise ValueError(f'kv die relays: no spot for {bid} stage {k} after path index {idx0}')
+            nm = f'rly_{bid}_{k}'
             it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
             m['insts'].append(it)
             for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
                 for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
                     rocc.setdefault((gx, gy), []).append((it.x, it.y, it.x + fw, it.y + fh))
-            nb.append((f'{bid}__r{k - 1}' if k > 1 else bid, cl, bits, [prev_ep, (nm, 'a')]))
-            prev_ep = (nm, 'b')
+            nb.append((f'{bid}__r{k}' if k else bid, cl, bits, [prev_ep, (nm, 'a')]))
+            prev_ep, prev_r, idx0, k = (nm, 'b'), (it.x, it.y, it.x + fw, it.y + fh), got[2], k + 1
+        n = k
+        stages[bid] = n
+        if n == 0:
+            nb.append((bid, cl, bits, eps))
+            continue
         nb.append((f'{bid}__r{n}', cl, bits, [prev_ep, (b, pb)]))
     m['buses'] = nb
     m['relay_stages'] = stages

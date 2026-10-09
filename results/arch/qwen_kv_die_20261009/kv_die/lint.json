@@ -3,12 +3,12 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "f3e80718619d45e7cf7ead549e3553e24d0207b92afd9af5f4df613d9fca8f39",
+ "generator_sha256": "a4d9aa64ab266b6cfe449748c034173e3c144522604b8b8ca3ea15c18858029b",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "f3e80718619d45e7cf7ead549e3553e24d0207b92afd9af5f4df613d9fca8f39",
-  "tree_head": "b3c65b0a3e52337d87a93da8bfe4d80d089e9d5d",
-  "file_commit": "ebcfcee58d25e29fcfde7b59705ac95ffc419726"
+  "sha256": "a4d9aa64ab266b6cfe449748c034173e3c144522604b8b8ca3ea15c18858029b",
+  "tree_head": "9a665a8b31e0e1f55fa39c4d2025072027f28150",
+  "file_commit": "3f521547823a57b7597a929fac60076fbc1d10d3"
  },
  "qwen_source": null,
  "qwen_recipe": null,
@@ -16,12 +16,12 @@
  "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
  "variant": null,
  "census": {
-  "instances": 1142,
-  "buses": 1673,
-  "net_bits": 1741635,
+  "instances": 888,
+  "buses": 1419,
+  "net_bits": 1623859,
   "masters": 23,
   "real_instances": 134,
-  "placeholder_instances": 1008
+  "placeholder_instances": 754
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -150,55 +150,55 @@
    "master": "qkd_rly_1",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 201
+   "instances": 153
   },
   {
    "master": "qkd_rly_1025",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 104
+   "instances": 72
   },
   {
    "master": "qkd_rly_1048",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 74
+   "instances": 51
   },
   {
    "master": "qkd_rly_16",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 104
+   "instances": 72
   },
   {
    "master": "qkd_rly_36",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 22
+   "instances": 16
   },
   {
    "master": "qkd_rly_520",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 27
+   "instances": 21
   },
   {
    "master": "qkd_rly_530",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 332
+   "instances": 248
   },
   {
    "master": "qkd_rly_534",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 72
+   "instances": 55
   },
   {
    "master": "qkd_rly_563",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 22
+   "instances": 16
   },
   {
    "master": "qkd_seq",
@@ -246,8 +246,8 @@
     "endpoints": 2,
     "bits": 72,
     "examples": [
-     "astk_WN.am face N peer 8260 um behind (am_WN__r5)",
-     "astk_EN.am face N peer 8260 um behind (am_EN__r5)"
+     "astk_WN.am face N peer 8260 um behind (am_WN__r4)",
+     "astk_EN.am face N peer 8260 um behind (am_EN__r4)"
     ]
    },
    {
@@ -257,7 +257,7 @@
     "endpoints": 2,
     "bits": 1126,
     "examples": [
-     "astk_WN.ap face N peer 8043 um behind (ap_WN)",
+     "astk_WN.ap face N peer 8086 um behind (ap_WN)",
      "astk_EN.ap face N peer 8043 um behind (ap_EN)"
     ]
    },
@@ -269,7 +269,7 @@
     "bits": 128,
     "examples": [
      "reng_WS_4.rq face N peer 2039 um behind (krq_WS_4)",
-     "reng_WS_5.rq face N peer 2397 um behind (krq_WS_5)",
+     "reng_WS_5.rq face N peer 2441 um behind (krq_WS_5)",
      "reng_WN_4.rq face N peer 2043 um behind (krq_WN_4)"
     ]
    },
@@ -292,9 +292,9 @@
     "endpoints": 8,
     "bits": 8200,
     "examples": [
-     "reng_WS_4.rs face N peer 2038 um behind (krs_WS_4__r3)",
-     "reng_WS_5.rs face N peer 2310 um behind (krs_WS_5__r10)",
-     "reng_WN_4.rs face N peer 2042 um behind (krs_WN_4__r3)"
+     "reng_WS_4.rs face N peer 2124 um behind (krs_WS_4__r2)",
+     "reng_WS_5.rs face N peer 2094 um behind (krs_WS_5__r7)",
+     "reng_WN_4.rs face N peer 2129 um behind (krs_WN_4__r2)"
     ]
    },
    {
@@ -313,143 +313,143 @@
     "master": "qkd_rly_1",
     "port": "a",
     "orient": "R0",
-    "endpoints": 186,
-    "bits": 186,
+    "endpoints": 135,
+    "bits": 135,
     "examples": [
-     "rly_rst_fwd_0.a face W peer 134 um behind (rst_fwd)",
-     "rly_hs_0.a face W peer 668 um behind (hs)",
-     "rly_hs_1.a face W peer 52 um behind (hs__r1)"
+     "rly_hs_0.a face W peer 693 um behind (hs)",
+     "rly_hs_1.a face W peer 96 um behind (hs__r1)",
+     "rly_hs_2.a face W peer 52 um behind (hs__r2)"
     ]
    },
    {
     "master": "qkd_rly_1",
     "port": "b",
     "orient": "R0",
-    "endpoints": 184,
-    "bits": 184,
+    "endpoints": 134,
+    "bits": 134,
     "examples": [
-     "rly_rst_fwd_0.b face E peer 93 um behind (rst_fwd__r1)",
-     "rly_hs_0.b face E peer 52 um behind (hs__r1)",
-     "rly_hs_1.b face E peer 52 um behind (hs__r2)"
+     "rly_hs_0.b face E peer 96 um behind (hs__r1)",
+     "rly_hs_1.b face E peer 52 um behind (hs__r2)",
+     "rly_hs_3.b face E peer 52 um behind (hs__r4)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "a",
     "orient": "R0",
-    "endpoints": 72,
-    "bits": 73800,
+    "endpoints": 45,
+    "bits": 46125,
     "examples": [
+     "rly_krs_WS_5_4.a face W peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_5.a face W peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)",
-     "rly_krs_WS_5_7.a face W peer 52 um behind (krs_WS_5__r7)"
+     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "b",
     "orient": "R0",
-    "endpoints": 72,
-    "bits": 73800,
+    "endpoints": 45,
+    "bits": 46125,
     "examples": [
+     "rly_krs_WS_5_3.b face E peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_4.b face E peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)",
-     "rly_krs_WS_5_6.b face E peer 52 um behind (krs_WS_5__r7)"
+     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)"
     ]
    },
    {
     "master": "qkd_rly_1048",
     "port": "a",
     "orient": "R0",
-    "endpoints": 65,
-    "bits": 68120,
+    "endpoints": 44,
+    "bits": 46112,
     "examples": [
-     "rly_kvn_WS_0.a face W peer 435 um behind (kvn_WS)",
-     "rly_kvn_WS_1.a face W peer 398 um behind (kvn_WS__r1)",
-     "rly_kvn_WS_2.a face W peer 398 um behind (kvn_WS__r2)"
+     "rly_kvn_WS_0.a face W peer 521 um behind (kvn_WS)",
+     "rly_kvn_WS_1.a face W peer 571 um behind (kvn_WS__r1)",
+     "rly_kvn_WS_2.a face W peer 571 um behind (kvn_WS__r2)"
     ]
    },
    {
     "master": "qkd_rly_1048",
     "port": "b",
     "orient": "R0",
-    "endpoints": 65,
-    "bits": 68120,
+    "endpoints": 44,
+    "bits": 46112,
     "examples": [
-     "rly_kvn_WS_0.b face E peer 398 um behind (kvn_WS__r1)",
-     "rly_kvn_WS_1.b face E peer 398 um behind (kvn_WS__r2)",
-     "rly_kvn_WS_2.b face E peer 398 um behind (kvn_WS__r3)"
+     "rly_kvn_WS_0.b face E peer 571 um behind (kvn_WS__r1)",
+     "rly_kvn_WS_1.b face E peer 571 um behind (kvn_WS__r2)",
+     "rly_kvn_WS_2.b face E peer 182 um behind (kvn_WS__r3)"
     ]
    },
    {
     "master": "qkd_rly_16",
     "port": "a",
     "orient": "R0",
-    "endpoints": 72,
-    "bits": 1152,
+    "endpoints": 48,
+    "bits": 768,
     "examples": [
-     "rly_krq_WS_4_0.a face W peer 690 um behind (krq_WS_4)",
-     "rly_krq_WS_4_1.a face W peer 398 um behind (krq_WS_4__r1)",
-     "rly_krq_WS_4_2.a face W peer 355 um behind (krq_WS_4__r2)"
+     "rly_krq_WS_4_0.a face W peer 819 um behind (krq_WS_4)",
+     "rly_krq_WS_4_1.a face W peer 571 um behind (krq_WS_4__r1)",
+     "rly_krq_WS_5_1.a face W peer 52 um behind (krq_WS_5__r1)"
     ]
    },
    {
     "master": "qkd_rly_16",
     "port": "b",
     "orient": "R0",
-    "endpoints": 72,
-    "bits": 1152,
+    "endpoints": 48,
+    "bits": 768,
     "examples": [
-     "rly_krq_WS_4_0.b face E peer 398 um behind (krq_WS_4__r1)",
-     "rly_krq_WS_4_1.b face E peer 355 um behind (krq_WS_4__r2)",
-     "rly_krq_WS_4_2.b face E peer 298 um behind (krq_WS_4__r3)"
+     "rly_krq_WS_4_0.b face E peer 571 um behind (krq_WS_4__r1)",
+     "rly_krq_WS_4_1.b face E peer 298 um behind (krq_WS_4__r2)",
+     "rly_krq_WS_5_0.b face E peer 52 um behind (krq_WS_5__r1)"
     ]
    },
    {
     "master": "qkd_rly_36",
     "port": "a",
     "orient": "R0",
-    "endpoints": 18,
-    "bits": 648,
+    "endpoints": 14,
+    "bits": 504,
     "examples": [
-     "rly_am_WS_0.a face W peer 370 um behind (am_WS)",
-     "rly_am_WS_1.a face W peer 182 um behind (am_WS__r1)",
-     "rly_am_WS_2.a face W peer 52 um behind (am_WS__r2)"
+     "rly_am_WS_0.a face W peer 457 um behind (am_WS)",
+     "rly_am_WS_1.a face W peer 96 um behind (am_WS__r1)",
+     "rly_am_WS_2.a face W peer 96 um behind (am_WS__r2)"
     ]
    },
    {
     "master": "qkd_rly_36",
     "port": "b",
     "orient": "R0",
-    "endpoints": 18,
-    "bits": 648,
+    "endpoints": 14,
+    "bits": 504,
     "examples": [
-     "rly_am_WS_0.b face E peer 182 um behind (am_WS__r1)",
-     "rly_am_WS_1.b face E peer 52 um behind (am_WS__r2)",
-     "rly_am_WS_2.b face E peer 52 um behind (am_WS__r3)"
+     "rly_am_WS_0.b face E peer 96 um behind (am_WS__r1)",
+     "rly_am_WS_1.b face E peer 96 um behind (am_WS__r2)",
+     "rly_am_WS_2.b face E peer 96 um behind (am_WS__r3)"
     ]
    },
    {
     "master": "qkd_rly_520",
     "port": "a",
     "orient": "R0",
-    "endpoints": 27,
-    "bits": 14040,
+    "endpoints": 20,
+    "bits": 10400,
     "examples": [
      "rly_ares_0.a face W peer 171 um behind (ares)",
-     "rly_ares_1.a face W peer 52 um behind (ares__r1)",
-     "rly_ares_2.a face W peer 52 um behind (ares__r2)"
+     "rly_ares_1.a face W peer 96 um behind (ares__r1)",
+     "rly_ares_2.a face W peer 96 um behind (ares__r2)"
     ]
    },
    {
     "master": "qkd_rly_520",
     "port": "b",
     "orient": "R0",
-    "endpoints": 26,
-    "bits": 13520,
+    "endpoints": 19,
+    "bits": 9880,
     "examples": [
-     "rly_ares_0.b face E peer 52 um behind (ares__r1)",
-     "rly_ares_1.b face E peer 52 um behind (ares__r2)",
+     "rly_ares_0.b face E peer 96 um behind (ares__r1)",
+     "rly_ares_1.b face E peer 96 um behind (ares__r2)",
      "rly_ares_2.b face E peer 52 um behind (ares__r3)"
     ]
    },
@@ -457,8 +457,8 @@
     "master": "qkd_rly_530",
     "port": "a",
     "orient": "R0",
-    "endpoints": 293,
-    "bits": 155290,
+    "endpoints": 213,
+    "bits": 112890,
     "examples": [
      "rly_emf_WS_0.a face W peer 284 um behind (emf_WS)",
      "rly_emf_WS_1.a face W peer 52 um behind (emf_WS__r1)",
@@ -469,8 +469,8 @@
     "master": "qkd_rly_530",
     "port": "b",
     "orient": "R0",
-    "endpoints": 291,
-    "bits": 154230,
+    "endpoints": 211,
+    "bits": 111830,
     "examples": [
      "rly_emf_WS_0.b face E peer 52 um behind (emf_WS__r1)",
      "rly_emf_WS_1.b face E peer 52 um behind (emf_WS__r2)",
@@ -481,10 +481,10 @@
     "master": "qkd_rly_534",
     "port": "a",
     "orient": "R0",
-    "endpoints": 68,
-    "bits": 36312,
+    "endpoints": 50,
+    "bits": 26700,
     "examples": [
-     "rly_aq_WS_0.a face W peer 259 um behind (aq_WS)",
+     "rly_aq_WS_0.a face W peer 286 um behind (aq_WS)",
      "rly_aq_WS_1.a face W peer 52 um behind (aq_WS__r1)",
      "rly_aq_WS_2.a face W peer 52 um behind (aq_WS__r2)"
     ]
@@ -493,8 +493,8 @@
     "master": "qkd_rly_534",
     "port": "b",
     "orient": "R0",
-    "endpoints": 68,
-    "bits": 36312,
+    "endpoints": 50,
+    "bits": 26700,
     "examples": [
      "rly_aq_WS_0.b face E peer 52 um behind (aq_WS__r1)",
      "rly_aq_WS_1.b face E peer 52 um behind (aq_WS__r2)",
@@ -505,24 +505,24 @@
     "master": "qkd_rly_563",
     "port": "a",
     "orient": "R0",
-    "endpoints": 18,
-    "bits": 10134,
+    "endpoints": 14,
+    "bits": 7882,
     "examples": [
+     "rly_ap_WS_1.a face W peer 96 um behind (ap_WS__r1)",
      "rly_ap_WS_2.a face W peer 52 um behind (ap_WS__r2)",
-     "rly_ap_WS_3.a face W peer 52 um behind (ap_WS__r3)",
-     "rly_ap_WS_4.a face W peer 52 um behind (ap_WS__r4)"
+     "rly_ap_WS_3.a face W peer 52 um behind (ap_WS__r3)"
     ]
    },
    {
     "master": "qkd_rly_563",
     "port": "b",
     "orient": "R0",
-    "endpoints": 18,
-    "bits": 10134,
+    "endpoints": 14,
+    "bits": 7882,
     "examples": [
+     "rly_ap_WS_0.b face E peer 96 um behind (ap_WS__r1)",
      "rly_ap_WS_1.b face E peer 52 um behind (ap_WS__r2)",
-     "rly_ap_WS_2.b face E peer 52 um behind (ap_WS__r3)",
-     "rly_ap_WS_3.b face E peer 52 um behind (ap_WS__r4)"
+     "rly_ap_WS_2.b face E peer 52 um behind (ap_WS__r3)"
     ]
    }
   ],
@@ -1215,8 +1215,8 @@
     "bits": 13
    },
    "spine_local|region": {
-    "buses": 144,
-    "bits": 60094
+    "buses": 143,
+    "bits": 60093
    },
    "d2d_fdi|region": {
     "buses": 1,
@@ -1298,13 +1298,13 @@
   }
  },
  "margin_lint": {
-  "chains": 74,
+  "chains": 73,
   "reach_um": 504.0,
   "reach_violations": 0,
   "far_side_relays": 0,
   "reach_examples": [],
   "far_side_examples": [],
-  "slivers": 515,
+  "slivers": 393,
   "sliver_examples": [
    [
     "cdc_WN_0",
