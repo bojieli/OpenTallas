@@ -15041,3 +15041,9 @@ def hbm_native_candidate_publication_store_model():
     """Actual SECDED macro inventory, no raw-payload-only area fiction."""
     from hbm_candidate_store_model import model
     return model()
+
+
+def hbm_candidate_rank_cache_proposal_model():
+    """Native96-rank schedule, real state and port-cut price before cache RTL."""
+    from hbm_candidate_rank_cache_model import model
+    return model()
