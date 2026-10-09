@@ -1,0 +1,935 @@
+{
+ "schema": "opentallas.hbm-generic-plan.v1",
+ "stream": "hbm-generic",
+ "date": "2026-10-09",
+ "clock_hz": 1200000000.0,
+ "grade": "planning estimate; no measured rate; no RTL edited; no route launched",
+ "reticle": {
+  "W_mm": 33.0,
+  "H_mm": 26.0,
+  "mm2": 858.0
+ },
+ "die_fit": {
+  "runs": [
+   {
+    "name": "r25",
+    "variant": "R25 (ADOPTED)",
+    "mm2": 753.19,
+    "W_um": 30590.352,
+    "H_um": 24621.84,
+    "overlaps": 0,
+    "note": "adopted round"
+   },
+   {
+    "name": "r25s",
+    "variant": "R25S (attention split into half tiles)",
+    "mm2": 787.15,
+    "W_um": 30590.352,
+    "H_um": 25732.08,
+    "overlaps": 0,
+    "note": "owner 10-08: split tiles"
+   },
+   {
+    "name": "r25sm",
+    "variant": "R25S + R25M (hfd_mtp spine slot, native loader memory ports)",
+    "mm2": 787.15,
+    "W_um": 30590.352,
+    "H_um": 25732.08,
+    "overlaps": 0,
+    "note": "mtp-die: MTP + loader add no W/H"
+   },
+   {
+    "name": "r25+fmt3",
+    "variant": "R25 + sm_physical_grid (3,3), sm_wh 3214.08 x 1131.84, side_padding 207.36",
+    "mm2": 763.26,
+    "W_um": 31734.288,
+    "H_um": 24051.6,
+    "overlaps": 0,
+    "note": "reproduces Codex qwen_r25_fmt3 wide (+10.07 mm2)"
+   },
+   {
+    "name": "r25s+fmt3",
+    "variant": "R25S + fmt3 wide SM grid",
+    "mm2": 798.49,
+    "W_um": 31734.3,
+    "H_um": 25161.8,
+    "overlaps": 0,
+    "note": "geometry_only"
+   },
+   {
+    "name": "r25s+m+iqg",
+    "variant": "R25S + R25M + R25IQG (native indexer, as committed)",
+    "mm2": 787.15,
+    "W_um": 30590.4,
+    "H_um": 25732.1,
+    "overlaps": 1,
+    "note": "hb_su_full x idx_selector: selector anchor is an r25 absolute coordinate"
+   },
+   {
+    "name": "r25s+m+iqg+fmt3",
+    "variant": "R25S + R25M + R25IQG + fmt3 wide (as committed)",
+    "mm2": 798.49,
+    "W_um": 31734.3,
+    "H_um": 25161.8,
+    "overlaps": 5,
+    "note": "idx_score_SW/NW at hard-coded x=10,732.608 overlap the widened SW/NW SM groups (4) + selector (1)"
+   },
+   {
+    "name": "R25G candidate",
+    "variant": "R25S + R25M + R25IQG + fmt3 wide, indexer anchors re-based by the cx shift (+571.968 um) and idx_selector moved above hb_su_full (y 17,244.72)",
+    "mm2": 798.49,
+    "W_um": 31734.3,
+    "H_um": 25161.8,
+    "overlaps": 0,
+    "note": "geometry_only: 0 overlaps, 0 outside; network paths / pin transforms unqualified"
+   }
+  ],
+  "live": [
+   {
+    "name": "r25s+fmt3",
+    "mm2": 798.49,
+    "W": 31734.288,
+    "H": 25161.84,
+    "overlaps": 0
+   },
+   {
+    "name": "R25G candidate",
+    "mm2": 798.49,
+    "W": 31734.288,
+    "H": 25161.84,
+    "overlaps": 0
+   }
+  ]
+ },
+ "qwen": {
+  "shape": {
+   "layers": 36,
+   "hidden": 4096,
+   "q_heads": 32,
+   "kv_heads": 8,
+   "head_dim": 128,
+   "inter": 12288,
+   "vocab": 151936,
+   "pos": 8191
+  },
+  "su_family_model": {
+   "families": [
+    {
+     "family": "prenorm (RMSNorm 4096, x2/layer + final)",
+     "ops_per_token": 73,
+     "fallback": [
+      600,
+      800
+     ],
+     "fast": [
+      300,
+      400
+     ],
+     "fast_path": "norm engine D=4096, HC_MIX=off, OUT=BF16, GAIN=on"
+    },
+    {
+     "family": "qk_norm (per head 128, gain)",
+     "ops_per_token": 36,
+     "fallback": [
+      200,
+      300
+     ],
+     "fast": [
+      100,
+      150
+     ],
+     "fast_path": "norm engine SEG=128 (10 segments a die at TP4)"
+    },
+    {
+     "family": "rope (split-half, 128, theta 1e6)",
+     "ops_per_token": 36,
+     "fallback": [
+      60,
+      120
+     ],
+     "fast": [
+      20,
+      40
+     ],
+     "fast_path": "rope chain PAIR=split-half, ROT=128, table from HBM"
+    },
+    {
+     "family": "roundQ (KV FP8 E4M3)",
+     "ops_per_token": 36,
+     "fallback": [
+      40,
+      80
+     ],
+     "fast": [
+      10,
+      30
+     ],
+     "fast_path": "kv chain quant tail (DS kv chain already quantises to FP8)"
+    },
+    {
+     "family": "softmax (8 q heads x 8,192 rows)",
+     "ops_per_token": 36,
+     "fallback": [
+      300,
+      600
+     ],
+     "fast": [
+      150,
+      250
+     ],
+     "fast_path": "fused softmax SINK=off, MULTIPASS chunked (NVMAX 40 kept)"
+    },
+    {
+     "family": "pv_normalize",
+     "ops_per_token": 36,
+     "fallback": [
+      30,
+      60
+     ],
+     "fast": [
+      0,
+      10
+     ],
+     "fast_path": "fused into softmax pass 3 / attention tail"
+    },
+    {
+     "family": "swiglu",
+     "ops_per_token": 36,
+     "fallback": [
+      150,
+      300
+     ],
+     "fast": [
+      40,
+      80
+     ],
+     "fast_path": "fused swiglu OUT=BF16, CLAMP=off, ROUTE_W=bypass"
+    },
+    {
+     "family": "residual (x2)",
+     "ops_per_token": 72,
+     "fallback": [
+      40,
+      80
+     ],
+     "fast": [
+      0,
+      20
+     ],
+     "fast_path": "fused with the next norm input (dataflow level 5)"
+    },
+    {
+     "family": "row_scale_qkv/o/gu/down",
+     "ops_per_token": 144,
+     "fallback": [
+      80,
+      160
+     ],
+     "fast": [
+      80,
+      160
+     ],
+     "fast_path": "SU program on arrival (no closed-block reopen)"
+    },
+    {
+     "family": "kv_append / kv_fence",
+     "ops_per_token": 72,
+     "fallback": [
+      30,
+      60
+     ],
+     "fast": [
+      30,
+      60
+     ],
+     "fast_path": "kvwb LAYOUT=qwen_linear, posted"
+    }
+   ],
+   "bottom_up_fallback": [
+    1530,
+    2560
+   ],
+   "bottom_up_fast": [
+    730,
+    1200
+   ],
+   "ratio": [
+    0.477124183006536,
+    0.46875
+   ],
+   "plan_fallback": [
+    2000,
+    3500
+   ],
+   "fast": [
+    954.248366013072,
+    1640.625
+   ]
+  },
+  "chain_fixed": {
+   "all_reduce": [
+    2700,
+    2700
+   ],
+   "first_access_attn_tail": [
+    1700,
+    1700
+   ],
+   "die_wire": [
+    500,
+    1000
+   ]
+  },
+  "rates": {
+   "TP2": {
+    "p_min_fallback": {
+     "tp": 2,
+     "bytes_mb": {
+      "layers": 3472.9,
+      "head": 311.2,
+      "kv": 302.0,
+      "total": 4086.0
+     },
+     "stream_cycles": 1290316,
+     "chain_per_layer": [
+      6880,
+      8880
+     ],
+     "cycles": [
+      1543496,
+      1615496
+     ],
+     "tok_s": [
+      742.8,
+      777.5
+     ]
+    },
+    "generic_fast": {
+     "tp": 2,
+     "bytes_mb": {
+      "layers": 3472.9,
+      "head": 311.2,
+      "kv": 302.0,
+      "total": 4086.0
+     },
+     "stream_cycles": 1290316,
+     "chain_per_layer": [
+      5897,
+      7084
+     ],
+     "cycles": [
+      1507617,
+      1550327
+     ],
+     "tok_s": [
+      774.0,
+      796.0
+     ]
+    }
+   },
+   "TP4": {
+    "p_min_fallback": {
+     "tp": 4,
+     "bytes_mb": {
+      "layers": 1736.4,
+      "head": 155.6,
+      "kv": 151.0,
+      "total": 2043.0
+     },
+     "stream_cycles": 645158,
+     "chain_per_layer": [
+      6900,
+      8900
+     ],
+     "cycles": [
+      899058,
+      971058
+     ],
+     "tok_s": [
+      1235.8,
+      1334.7
+     ]
+    },
+    "generic_fast": {
+     "tp": 4,
+     "bytes_mb": {
+      "layers": 1736.4,
+      "head": 155.6,
+      "kv": 151.0,
+      "total": 2043.0
+     },
+     "stream_cycles": 645158,
+     "chain_per_layer": [
+      5917,
+      7104
+     ],
+     "cycles": [
+      863179,
+      905889
+     ],
+     "tok_s": [
+      1324.7,
+      1390.2
+     ]
+    }
+   },
+   "TP8": {
+    "p_min_fallback": {
+     "tp": 8,
+     "bytes_mb": {
+      "layers": 868.2,
+      "head": 77.8,
+      "kv": 75.5,
+      "total": 1021.5
+     },
+     "stream_cycles": 322579,
+     "chain_per_layer": [
+      6940,
+      8940
+     ],
+     "cycles": [
+      577919,
+      649919
+     ],
+     "tok_s": [
+      1846.4,
+      2076.4
+     ]
+    },
+    "generic_fast": {
+     "tp": 8,
+     "bytes_mb": {
+      "layers": 868.2,
+      "head": 77.8,
+      "kv": 75.5,
+      "total": 1021.5
+     },
+     "stream_cycles": 322579,
+     "chain_per_layer": [
+      5957,
+      7144
+     ],
+     "cycles": [
+      542040,
+      584750
+     ],
+     "tok_s": [
+      2052.2,
+      2213.9
+     ]
+    }
+   }
+  },
+  "mtp": {
+   "speedup": [
+    2.2,
+    2.7
+   ],
+   "basis": "qwen_on_r25 PLAN \u00a75 DSpark p=4 estimate; tau NOT measured on the 6-class blend",
+   "tok_s_tp4": [
+    2914,
+    3754
+   ]
+  },
+  "aggregate_tp4": {
+   "weights_gb_per_die": 2.51,
+   "kv_mb_per_user_die": 151.0,
+   "capacity_users": 937,
+   "kv_bound_tok_s": 25169,
+   "su_bound_tok_s": [
+    20317,
+    34932
+   ],
+   "aggregate_estimate_tok_s": [
+    16254,
+    25169
+   ],
+   "grade": "model (KV-stream and SU-occupancy ceilings; SM compute at batch and VM capacity not checked)"
+  },
+  "references": {
+   "vehicle_a_tp4_measured": 2154.2,
+   "vehicle_a_dspark": 5055.0,
+   "qwen_rom_tp4_priced": 5492.7,
+   "qwen_rom_tp8a_modelled": 6586.9,
+   "qwen_rom_tp4_aggregate": 25362
+  }
+ },
+ "ds": {
+  "ar_tok_s": 1716.3,
+  "mtp_tok_s": 3700.3,
+  "ar_cycles": 699175.7,
+  "source": "results/arch/token_path_20261008/hbm_ds.json",
+  "critical_sm_ops": 343,
+  "generic_delta_cycles": {
+   "fmt3_adapter_if_not_bypass_matched": 343,
+   "fmt3_activation_stage_growth_worst": 2744,
+   "modes_static": 0
+  },
+  "ar_tok_s_worst": 1708.8
+ },
+ "blocks": [
+  {
+   "block": "hfd_sm (smh_front_c/n/s, smh_tile_e/w) x32",
+   "cls": "PARAMETERISE",
+   "area_mm2": 10.07,
+   "params": "FMT {0 BF16, 1 FP8 block-dot, 2 FP4 (DS), 3 INT8->BF16 (Qwen)}; half-line issue for fmt3; fmt0-2 bypass-matched latency",
+   "cycles": "+1 per dependent SM op (one-stage adapter; +2 with the two-stage fallback); activation wire class 73->81 stages",
+   "timing": "HIGH: front_c failing (nominal postCTS setup ~-267 ps); wide one-stage and two-stage routes in flight",
+   "closure": "front_c failing/re-running; tile_e/w failing; front_n/s closed (TT era) -> re-route for widened pins",
+   "reopen": [
+    "ot_hbm_accel_smh_front_n",
+    "ot_hbm_accel_smh_front_s"
+   ],
+   "bench": "fmt3 gate (exists: 256 codes, ordering, negatives) + DS fmt0/1/2 bit-identical regression on the new source"
+  },
+  {
+   "block": "hfd_svc_* stream service (17 segment masters x2)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.3,
+   "params": "kind-1 KV and kind-2 index-key reads striped over all 32 PCs of a stack (today one fixed KV_PC); kind-3 posted writes merged (dskv_wb strict, then ingest/loader RR)",
+   "cycles": "Qwen: makes the 8K dense KV sweep reach >= 90 % of die bandwidth (one PC is ~1/32 rate); DS: index keys at full rate",
+   "timing": "LOW-MED: segments are TT-era closed with SS ~-200 ps; 34 instances to re-route",
+   "closure": "15 of 17 closed (TT era); SE_s6 / SW_s4 revoked",
+   "reopen": [
+    "hfd_svc_* (15 masters)"
+   ],
+   "bench": "KV-sweep bandwidth bench (Qwen 8K dense; DS window+selected rows) with a PC-collapse negative; write-merge ACK bench"
+  },
+  {
+   "block": "hfd_attn_half_lo/hi x64 (ot_attn_tile_m6h1q quads)",
+   "cls": "GENERIC",
+   "area_mm2": 0.0,
+   "params": "program mapping only: GQA = one KV head a tile, 4 of 16 head lanes at AR (16 at DSpark p=4); head_dim 128 = two 64 slices; cache-length mask via the pad bit",
+   "cycles": "KV-bandwidth bound (1,325 cycles a layer of KV stream at TP4); lanes not binding",
+   "timing": "as DS (half tiles first trial / failing)",
+   "closure": "half_lo first trial, half_hi failing; quads closed",
+   "reopen": [],
+   "bench": "Qwen GQA attention stage at P8191 vs qwen_r25 (chunk8 + pairwise), negative: wrong KV-head map",
+   "rejected": "per-lane KV group select (reopens closed quads, no gain while KV-bound)"
+  },
+  {
+   "block": "ot_qwen_r25_causal_mask",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "MASK {DS window/selected rows, Qwen cache-length causal}",
+   "cycles": "0",
+   "timing": "LOW",
+   "closure": "first trial in flight",
+   "reopen": [],
+   "bench": "mask mutant at len-1 / len / len+1"
+  },
+  {
+   "block": "norm engine (ot_hbm_norm_engine_view, norm_grp16, su_fused norm hc/q/kv chains)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.5,
+   "params": "D {5120 DS, 4096 Qwen}; SEG {off, 128} for QK-norm (10 segments a die at TP4); HC_MIX {on DS, off}; OUT {FP8 DS, BF16 Qwen}; GAIN on; eps port (exists)",
+   "cycles": "Qwen RMSNorm ~300-400 -> 150-200 a norm; QK-norm 200-300 -> 100-150 a layer; DS 0 (static mode)",
+   "timing": "MED: engine and grp16 failing/re-running; modes are static config registers decoded off-path",
+   "closure": "failing / re-running; grp8 needs redesign",
+   "reopen": [],
+   "bench": "Qwen RMSNorm 4096 BF16 and QK-norm 10x128 vs qwen_r25 segmented tree order; DS norm regression bit-identical"
+  },
+  {
+   "block": "RoPE (su_norm q/kv chain) + cos/sin table fetch",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.15,
+   "params": "PAIR {adjacent (DS), split-half i/i+64 (Qwen)}; ROT_DIM {64 tail, 128}; tables are DATA in HBM (theta 1e6 plain / DS plain+YaRN x4), fetched per position over svc kind-1",
+   "cycles": "Qwen 60-120 -> 20-40 a layer; table fetch 512 B/pos (Qwen), ~1 KB (DS) hidden under the layer stream",
+   "timing": "LOW-MED: a 2:1 lane-partner mux on open SU chains",
+   "closure": "open (SU chains failing)",
+   "reopen": [],
+   "bench": "Qwen split-half at pos 0 / 4095 / 8191; DS YaRN regression; table-fetch bench (also closes T3 gap 6: no table producer)"
+  },
+  {
+   "block": "softmax (ot_dsrom_su_softmax in the SU)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.2,
+   "params": "SINK_EN {DS on, Qwen off}; MULTIPASS: pass1 global max, pass2 exp+sum in fixed chunk order with sum carry-in, pass3 scale; NVMAX 40 (640 rows) kept, Qwen 8,192 rows = 13 chunks",
+   "cycles": "Qwen 300-600 -> 150-250 a layer",
+   "timing": "MED (on failing SU)",
+   "closure": "open",
+   "reopen": [],
+   "bench": "Qwen 8 heads x 8,192 softmax vs qwen_r25 chunk order; sink-on DS regression; negative: chunk-order swap"
+  },
+  {
+   "block": "SwiGLU fused chain (ot_dsrom_su_swiglu)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.05,
+   "params": "OUT {FP8 DS, BF16 Qwen}; CLAMP_EN; ROUTE_W bypass (=1.0 exact)",
+   "cycles": "Qwen 150-300 -> 40-80 a layer",
+   "timing": "LOW",
+   "closure": "open",
+   "reopen": [],
+   "bench": "Qwen SwiGLU 3,072/die vs qwen_r25; DS regression"
+  },
+  {
+   "block": "hfd_su lane array / hfd_sfu / hfd_su_red / su_full",
+   "cls": "GENERIC",
+   "area_mm2": 0.0,
+   "params": "programmable: SU fallbacks for every family, row scale, residual, embedding dequant, argmax merge fallback",
+   "cycles": "see qwen.su_family_model",
+   "timing": "as DS",
+   "closure": "hfd_su / hfd_sfu failing; ot_su12_* failing",
+   "reopen": [],
+   "bench": "per-program exact benches (Codex W23 plain AR quarter is the vehicle)"
+  },
+  {
+   "block": "hfd_su_result_ingress",
+   "cls": "GENERIC",
+   "area_mm2": 0.0,
+   "params": "unchanged; optional ROW_SCALE-on-arrival mode deferred (would reopen a closed block for ~80-160 cycles a layer)",
+   "cycles": "0",
+   "timing": "-",
+   "closure": "closed (TT era)",
+   "reopen": [],
+   "bench": "-"
+  },
+  {
+   "block": "hfd_cmdproc_n/s",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "TW 17 -> 18; NCMD 256 holds the Qwen launch list (36 layer kernels + head); one model image resident at a time",
+   "cycles": "0",
+   "timing": "LOW",
+   "closure": "cmdproc_n closed (TT era), cmdproc_s revoked/re-running",
+   "reopen": [
+    "hfd_cmdproc_n"
+   ],
+   "bench": "token ids 131071 / 131072 / 151935, pos 524288 (Codex W21 smoke exists, control only)"
+  },
+  {
+   "block": "ot_dshbm_argmax_m",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "IW 17 -> 18 (vocab <= 262,144); greedy only (non-greedy sampling not claimed by either model)",
+   "cycles": "Qwen argmax merge on the collective select instead of an SU merge (~-500 a token)",
+   "timing": "LOW (tiny)",
+   "closure": "closed (TT era)",
+   "reopen": [
+    "ot_dshbm_argmax_m"
+   ],
+   "bench": "tie / lowest-index rule across die shards"
+  },
+  {
+   "block": "hfd_mtp (dspark_top) + ot_dshbm_dspark_ctl + ot_hdc_accept",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "TW 18; B {5 DS, 4 Qwen}; PMAX 8; NSLOT; STAGES {3 DS, 1 Qwen DSpark}; MARKOV_EN; UNION_EN (DS experts only)",
+   "cycles": "Qwen verify p=4 shares the weight stream (2.2-2.7x est., tau unmeasured)",
+   "timing": "MED: hfd_mtp first trial; ctl/accept TT-era closed",
+   "closure": "hfd_mtp first trial; dspark_ctl / accept closed (TT era)",
+   "reopen": [
+    "ot_dshbm_dspark_ctl",
+    "ot_hdc_accept"
+   ],
+   "bench": "Qwen accept/commit/rollback with negative mutant; DS MTP regression"
+  },
+  {
+   "block": "hfd_coll (TU endpoint) + truecredit / owner banked half",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.05,
+   "params": "GROUP {size 4/8/96, member map, owner-order table}; payload length; ops AR / all-gather / argmax-select (18-bit idx) / multicast",
+   "cycles": "Qwen TP4 AR 256 words = 928 ns endpoint (measured ar_matched_p1) + ~0.2 us FEC = ~1,350 cycles",
+   "timing": "as DS (failing)",
+   "closure": "failing / re-running",
+   "reopen": [],
+   "bench": "TP4 and TP8 AR at 4,096 FP32 vs fixed-order golden; DS TP-96 regression"
+  },
+  {
+   "block": "hfd_kvwb_native / dskv_wb",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.073,
+   "params": "LAYOUT {DS ring pos mod WR (WR >= W+PMAX), CKV/IK owner die; Qwen linear [layer][kvhead][K|V][pos][128] FP8}; cache-length register; dead-row rollback",
+   "cycles": "posted (0 exposed) + fence ~30-60 a layer",
+   "timing": "LOW-MED",
+   "closure": "dskv_wb_spec failing; slot reserved (R25IMW)",
+   "reopen": [],
+   "bench": "append + rollback mutant, both models"
+  },
+  {
+   "block": "hfd_host_ingest (+ loader write merge)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.1,
+   "params": "MODE {DS ROWS/IKEY, Qwen QKV: vLLM NHD pages FP32/BF16/FP8 -> FP8 per-head rows}",
+   "cycles": "off the token path",
+   "timing": "LOW",
+   "closure": "failing / re-running",
+   "reopen": [],
+   "bench": "GPU-prefill KV ingest, both layouts, fence negative"
+  },
+  {
+   "block": "embedding fetch (svc kind-1 + SU dequant)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "ROW_BYTES; FMT {DS BF16 row, Qwen INT8 + BF16 row scale}; IDX 18 b",
+   "cycles": "~0.5k a token (Qwen)",
+   "timing": "-",
+   "closure": "-",
+   "reopen": [],
+   "bench": "row 151,935 fetch + dequant"
+  },
+  {
+   "block": "hfd_quant (actquant)",
+   "cls": "PARAMETERISE",
+   "area_mm2": 0.0,
+   "params": "FP8 E4M3 path shared (KV); FP4 index path DS-only (moves to idx_sel under R25I)",
+   "cycles": "0",
+   "timing": "-",
+   "closure": "closed (TT era)",
+   "reopen": [],
+   "bench": "-"
+  },
+  {
+   "block": "hfd_vm x4 (+ VM8 sub-tiles), mcast/meso/stn/gath stations, relays",
+   "cls": "GENERIC",
+   "area_mm2": 0.0,
+   "params": "width-agnostic (2,048-b x lanes); Qwen 4,096 BF16 hidden fits",
+   "cycles": "activation class +8 stages from the fmt3 SM grid",
+   "timing": "as DS",
+   "closure": "VM halves failing / flow failures; most stations closed",
+   "reopen": [],
+   "bench": "-"
+  },
+  {
+   "block": "hfd_loader, hfd_barrier, hfd_router (dense bypass), serdes slab, host slab, HBM PHY, PLL",
+   "cls": "GENERIC",
+   "area_mm2": 0.1,
+   "params": "router: dense layers bypass routing (as the DS shared expert); loader loads either model image",
+   "cycles": "0",
+   "timing": "as DS",
+   "closure": "loader failing; router revoked; barrier closed",
+   "reopen": [],
+   "bench": "image load + boot gate"
+  },
+  {
+   "block": "hfd_hc x4 (hc_post lanes + Sinkhorn) + HCP unit",
+   "cls": "DS-ONLY",
+   "area_mm2": 0.8,
+   "params": "kept; clock-gated idle under Qwen",
+   "cycles": "0 for Qwen",
+   "timing": "HIGH (TT -2,696 ps)",
+   "closure": "failing",
+   "reopen": [],
+   "bench": "DS only"
+  },
+  {
+   "block": "native indexer: hfd_idx_score x4 + hfd_idx_sel (replaces hfd_index_q placeholder)",
+   "cls": "DS-ONLY",
+   "area_mm2": 0.0,
+   "params": "kept; idle under Qwen",
+   "cycles": "0 for Qwen",
+   "timing": "MED (first trials)",
+   "closure": "first trials in flight",
+   "reopen": [],
+   "bench": "DS only",
+   "note": "placed in the mid-channel side bands; must be re-anchored on the fmt3 grid (see die_fit)"
+  },
+  {
+   "block": "MoE routing (hfd_router top-k, expert union, expert steering)",
+   "cls": "DS-ONLY",
+   "area_mm2": 0.0,
+   "params": "bypass for dense",
+   "cycles": "0 for Qwen",
+   "timing": "router FF -69",
+   "closure": "revoked",
+   "reopen": [],
+   "bench": "DS only"
+  },
+  {
+   "block": "compressor / Engram hash + history / candidate merge / DS MTP heads (Markov, 3 stages)",
+   "cls": "DS-ONLY",
+   "area_mm2": 0.1,
+   "params": "SU programs + small control; Engram tables are data in HBM",
+   "cycles": "0 for Qwen",
+   "timing": "LOW",
+   "closure": "not on die (T3 gaps 5, 9)",
+   "reopen": [],
+   "bench": "DS only"
+  }
+ ],
+ "work": [
+  {
+   "id": "W0",
+   "item": "Owner sign-off: generic mandate replaces P-min where they differ (TW 18 on argmax/dspark_ctl/accept; fused modes)",
+   "days": [
+    0,
+    0
+   ],
+   "deps": []
+  },
+  {
+   "id": "W1",
+   "item": "uarch_model + token_path_export qwen_hbm target (+ unified_composition / reprice) for the generic die",
+   "days": [
+    3,
+    4
+   ],
+   "deps": [
+    "W0"
+   ]
+  },
+  {
+   "id": "W2",
+   "item": "qwen_r25 golden in r25 arithmetic (SM ring/tree, attention chunk8+pairwise, SU vred, segmented norm, chunked softmax, TU owner order) + one quality run",
+   "days": [
+    4,
+    6
+   ],
+   "deps": [
+    "W0"
+   ]
+  },
+  {
+   "id": "W3",
+   "item": "SM fmt3 to adoption: wide route verdicts, N/S pin re-routes, die network (activation 73->81), DS fmt0-2 regression",
+   "days": [
+    4,
+    6
+   ],
+   "deps": []
+  },
+  {
+   "id": "W4",
+   "item": "SU fused modes: norm D/SEG/HC/OUT, RoPE PAIR/ROT, softmax SINK/MULTIPASS, SwiGLU OUT/CLAMP/ROUTE_W; ride the open SU/norm re-runs",
+   "days": [
+    10,
+    14
+   ],
+   "deps": [
+    "W2"
+   ]
+  },
+  {
+   "id": "W5",
+   "item": "Token width 18: cmdproc, argmax_m, dspark_ctl, accept, hfd_mtp params; 4 small re-routes",
+   "days": [
+    2,
+    3
+   ],
+   "deps": [
+    "W0"
+   ]
+  },
+  {
+   "id": "W6",
+   "item": "svc multi-PC KV/IK striping + kind-3 write merge; 15 closed segment masters re-routed (shared with the DS indexer)",
+   "days": [
+    5,
+    8
+   ],
+   "deps": []
+  },
+  {
+   "id": "W7",
+   "item": "Collective group config TP4/8/96 + argmax select 18 b + Qwen payloads",
+   "days": [
+    3,
+    4
+   ],
+   "deps": []
+  },
+  {
+   "id": "W8",
+   "item": "KV write-back layouts + rollback; host ingest Qwen QKV mode; RoPE/embedding table images",
+   "days": [
+    5,
+    7
+   ],
+   "deps": []
+  },
+  {
+   "id": "W9",
+   "item": "Program lowering: 22 unresolved Qwen families (618 ops) + re-target the 6 joined families to the fast modes; cmdproc launch list, SM descriptors, SU programs, KV layout, TP4 TU group",
+   "days": [
+    12,
+    18
+   ],
+   "deps": [
+    "W0"
+   ]
+  },
+  {
+   "id": "W10",
+   "item": "Qwen stage benches at P8191 (one exact stage per layer type + head + MTP accept/rollback), each with a negative mutant",
+   "days": [
+    8,
+    12
+   ],
+   "deps": [
+    "W2",
+    "W4",
+    "W6",
+    "W9"
+   ]
+  },
+  {
+   "id": "W11",
+   "item": "DS regression benches for every parameterised block in DS mode (bit-identical to the current DS goldens)",
+   "days": [
+    4,
+    6
+   ],
+   "deps": [
+    "W3",
+    "W4",
+    "W5",
+    "W6"
+   ]
+  },
+  {
+   "id": "W12",
+   "item": "Die: R25G generator variant (r25s + fmt3 wide + indexer re-anchored + MTP/kvwb/ingest/PLL), die views, GRT, clock plan, wire re-price",
+   "days": [
+    4,
+    6
+   ],
+   "deps": [
+    "W3"
+   ]
+  },
+  {
+   "id": "W13",
+   "item": "Qwen tau on the 6-class blend + DSpark drafter image on r25 + MTP verify/accept bench",
+   "days": [
+    4,
+    6
+   ],
+   "deps": [
+    "W5",
+    "W9"
+   ]
+  },
+  {
+   "id": "W14",
+   "item": "Measured composition: Qwen TP4 AR (+TP8 sensitivity), DS delta; publish only measured",
+   "days": [
+    2,
+    3
+   ],
+   "deps": [
+    "W1",
+    "W10",
+    "W11",
+    "W12"
+   ]
+  }
+ ],
+ "work_totals": {
+  "agent_days": [
+   70,
+   103
+  ],
+  "critical_path_days": [
+   24,
+   35
+  ],
+  "critical_path": [
+   "W0",
+   "W2",
+   "W4",
+   "W10",
+   "W14"
+  ],
+  "block_area_delta_mm2": 12.49
+ }
+}
