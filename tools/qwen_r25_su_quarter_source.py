@@ -105,7 +105,12 @@ FOOTER = r'''
  reg [63:0] next_c;integer i;
  always @* begin
   next_c=c;
-  if(bad||warm_abort||native_fault||native_order_fault||(|reply_ue))begin next_c[37]=1;next_c[4:0]=FAILED;end
+  if(bad||warm_abort||native_fault||native_order_fault||(|reply_ue)||
+     (waiting&&rsp_v&&!matched)||
+     (state>=READ_SELECT&&state<=RENC1&&cursor>=RN)||
+     (state>=WRITE_SELECT&&state<=FWAIT&&cursor>=WN))begin
+   next_c[37]=1;next_c[4:0]=FAILED;
+  end
   else case(state)
    IDLE:if(cmd_v&&cmd_rdy)begin
     if(cmd_word[F_X_START]||cmd_word[F_NOUT+:16]==0||cmd_word[F_NIN+:16]==0)begin
