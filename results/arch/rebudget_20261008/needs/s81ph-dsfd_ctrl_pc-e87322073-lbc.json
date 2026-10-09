@@ -1,0 +1,244 @@
+{
+ "schema": "opentallas.rebudget.needs.v1",
+ "job": "s81ph-dsfd_ctrl_pc-e87322073-lbc",
+ "block": "dsfd_ctrl_pc",
+ "die": "s81_r3",
+ "die_master": "dsfd_ctrl",
+ "tile": "dsfd_ctrl_pc",
+ "host": "ot-epyc2",
+ "run": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073-lbc",
+ "orfs": "/srv/opentallas-data/claude/closure-loop/s81ph-dsfd_ctrl_pc-e87322073-lbc/routes/s81ph_dsfd_ctrl_pc_e87322073_lbc/work/orfs",
+ "measured_at": "2026-10-08T20:35:41-07:00",
+ "method": "meas_resta.py --append io_ref_routed.sdc --append rebudget_measure.sdc (zero IO budget at the routed boundary-register mean, no IO uncertainty)",
+ "ref": {
+  "tt": {
+   "core_clk": {
+    "L": 233.8,
+    "T": 833.333
+   },
+   "hbm_clk": {
+    "L": 796.0,
+    "T": 900.0
+   }
+  },
+  "ff": {
+   "core_clk": {
+    "L": 188.6,
+    "T": 833.333
+   },
+   "hbm_clk": {
+    "L": 752.1,
+    "T": 900.0
+   }
+  }
+ },
+ "r2r": {
+  "tt": 250.66,
+  "ff": 38.6
+ },
+ "errors": [],
+ "ports": {
+  "ci_e": {
+   "dir": "in",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 93.6,
+   "h": -42.0
+  },
+  "ci_w": {
+   "dir": "in",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 93.7,
+   "h": -42.6
+  },
+  "k_rdy": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 844.4,
+   "h": -600.3
+  },
+  "k_wr_done": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 659.5,
+   "h": -607.1
+  },
+  "kr_beat": {
+   "dir": "in",
+   "bits": 4,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 654.8,
+   "h": -594.5
+  },
+  "kr_data": {
+   "dir": "in",
+   "bits": 256,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 660.8,
+   "h": -589.8
+  },
+  "kr_tag": {
+   "dir": "in",
+   "bits": 17,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 654.2,
+   "h": -589.9
+  },
+  "kr_v": {
+   "dir": "in",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "R": 798.9,
+   "h": -643.1
+  },
+  "rq": {
+   "dir": "in",
+   "bits": 341,
+   "clock": "core_clk",
+   "T": 833.333,
+   "R": 109.0,
+   "h": -17.5
+  },
+  "co_e": {
+   "dir": "out",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 203.1,
+   "smin": 118.6
+  },
+  "co_w": {
+   "dir": "out",
+   "bits": 2,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 231.0,
+   "smin": 115.1
+  },
+  "k_addr": {
+   "dir": "out",
+   "bits": 30,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -303.7,
+   "smin": -459.1
+  },
+  "k_len": {
+   "dir": "out",
+   "bits": 4,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -336.9,
+   "smin": -443.8
+  },
+  "k_tag": {
+   "dir": "out",
+   "bits": 17,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -278.0,
+   "smin": -453.2
+  },
+  "k_v": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -379.9,
+   "smin": -452.7
+  },
+  "k_wdata": {
+   "dir": "out",
+   "bits": 256,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -286.4,
+   "smin": -462.5
+  },
+  "k_we": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -375.0,
+   "smin": -445.9
+  },
+  "k_wstrb": {
+   "dir": "out",
+   "bits": 32,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -288.4,
+   "smin": -454.2
+  },
+  "kr_rdy": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "hbm_clk",
+   "T": 900.0,
+   "S": -374.9,
+   "smin": -448.1
+  },
+  "r_beat": {
+   "dir": "out",
+   "bits": 4,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 197.5,
+   "smin": 118.4
+  },
+  "r_data": {
+   "dir": "out",
+   "bits": 256,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 212.0,
+   "smin": 102.1
+  },
+  "r_tag": {
+   "dir": "out",
+   "bits": 17,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 228.0,
+   "smin": 116.2
+  },
+  "rk": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 182.5,
+   "smin": 114.0
+  },
+  "rv": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 189.7,
+   "smin": 121.6
+  },
+  "wd": {
+   "dir": "out",
+   "bits": 1,
+   "clock": "core_clk",
+   "T": 833.333,
+   "S": 182.2,
+   "smin": 113.7
+  }
+ },
+ "fwd": {},
+ "internal_ok": true
+}

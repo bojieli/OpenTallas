@@ -838,6 +838,17 @@ def cmd_drive(a):
     """loop hook (BRIEF.md drive step): when a die dump or new candidates landed, measure, derive rb<N+1>, rejudge"""
     cur = OUT / 'current.json'
     n = int(re.sub(r'\D', '', json.loads(cur.read_text()).get('rb', 'budget_rb0'))) if cur.exists() else 0
+    # a die dump that landed after its links file (HBM r25 grt3, Qwen r21b when added to DIES, an S81 refresh)
+    for die, cfg in DIES.items():
+        lf = OUT / f'links_{die}.json'
+        p = ssh(cfg['host'], f"stat -c %Y {cfg['dump']}/links_*tt.tsv 2>/dev/null | sort -n | tail -1", timeout=120)
+        try:
+            t = int(p.stdout.strip())
+        except ValueError:
+            continue
+        if not lf.exists() or t > lf.stat().st_mtime:
+            print(f'{die}: new die dump -> links')
+            cmd_links(argparse.Namespace(die=die, glue=die == 's81_r3'))
     a.jobs, a.all, a.force, a.reparse = None, False, False, False
     cmd_measure(a)
     a.rb, a.no_publish = n + 1, False
