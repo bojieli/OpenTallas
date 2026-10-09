@@ -2,7 +2,8 @@
 """Export a routed, signoff-closed hardened element (ORFS keep-workdir) as a macro view for hierarchical routes:
 abstract LEF + extracted timing models at SS (setup corner) and FF (hold corner), from the routed 6_final
 odb/sdc/spef, in the layout --macro-view / tools/w18/corner_sta.py --macro expect (DIR/NAME.lef, DIR/NAME_ss.lib,
-DIR/NAME_ff.lib).  Same OpenROAD commands as tools/w18/recover_abstract.py (write_timing_model, write_abstract_lef).
+DIR/NAME_ff.lib). Add --tt for the actual TT setup model required by OptionB
+composition; SS remains a sensitivity. Same OpenROAD commands as tools/w18/recover_abstract.py (write_timing_model, write_abstract_lef).
 
     python3 tools/hbm_fmax_attn_abstract.py --orfs-dir W/work/orfs --name ot_attn_hgrp_m --out physical/hbm_fmax_attn/ot_attn_hgrp_m
 """
@@ -31,6 +32,7 @@ def main():
     ap.add_argument("--name", required=True)
     ap.add_argument("--out", type=Path, required=True)
     ap.add_argument("--image", default="openroad/orfs:latest")
+    ap.add_argument("--tt", action="store_true", help="also export actual TT Liberty for OptionB parent setup timing")
     ap.add_argument("--interface-sdc", type=Path,
                     help="source-pinned interface constraints without leaf IO exceptions, for parent timing views")
     ap.add_argument("--macro-view", action="append", default=[], type=Path,
@@ -56,12 +58,18 @@ def main():
         tmp_args += ["-v", f"{interface_sdc}:/interface.sdc:ro"]
         rec["interface_sdc"] = dict(path=str(interface_sdc), sha256=sha(interface_sdc),
                                     purpose="interface timing extraction, not a new leaf signoff verdict")
-    mv_lef, mv_lib = "", {"ss": "", "ff": ""}
+    corners = ("ss", "ff", "tt") if a.tt else ("ss", "ff")
+    if a.tt:
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parent / "w18"))
+        from corner_sta import LIBS as SIGNOFF_LIBS
+        LIBS["tt"] = SIGNOFF_LIBS["tt"]
+    mv_lef, mv_lib = "", {c: "" for c in corners}
     for i, d in enumerate(a.macro_view):
         d = d.resolve()
         tmp_args += ["-v", f"{d}:/mv{i}:ro"]
         mv_lef += f"read_lef /mv{i}/{d.name}.lef\n"
-        for c in ("ss", "ff"):
+        for c in corners:
             mv_lib[c] += f"read_liberty /mv{i}/{d.name}_{c}.lib\n"
     rec["macro_views"] = [str(d) for d in a.macro_view]
     # MULTI-VT: an odb with LVT/SLVT cells exports with those libraries/LEFs too (detection: tools/w18/corner_sta.py)
@@ -72,7 +80,7 @@ def main():
     if vts:
         rec["vt_flavours_added"] = vts
     vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
-    for c in ("ss", "ff"):
+    for c in corners:
         libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{x}" for x in
                          LIBS[c] + [y.replace("_RVT_", f"_{v}_") for v in vts for y in LIBS[c]]) + "\n" + mv_lib[c] + mv_lef
         lef = f"write_abstract_lef /out/{a.name}.lef\n" if c == "ss" else ""
@@ -83,7 +91,7 @@ read_db /in/{rel}/6_final.odb
 read_sdc {"/interface.sdc" if a.interface_sdc is not None else f"/in/{rel}/6_final.sdc"}
 read_spef /in/{rel}/6_final.spef
 set_propagated_clock [all_clocks]
-puts "OT_WS [sta::worst_slack_cmd {'max' if c == 'ss' else 'min'}]"
+puts "OT_WS [sta::worst_slack_cmd {'max' if c in ('ss', 'tt') else 'min'}]"
 write_timing_model -library_name {a.name}_{c} /out/{a.name}_{c}.lib
 {lef}puts "OT_EXPORT_DONE"
 exit
@@ -99,7 +107,7 @@ exit
             rec["corners"][c]["command"] = cmd
     # the element name is the liberty cell; the per-corner library names differ
     rec["files"] = {f.name: sha(f) for f in sorted(out.iterdir()) if f.suffix in (".lef", ".lib")}
-    rec["ok"] = all(v["done"] for v in rec["corners"].values()) and len(rec["files"]) == 3
+    rec["ok"] = all(v["done"] for v in rec["corners"].values()) and len(rec["files"]) == len(corners) + 1
     (out / "abstract.json").write_text(json.dumps(rec, indent=2) + "\n")
     print(json.dumps(rec))
     raise SystemExit(0 if rec["ok"] else 1)
