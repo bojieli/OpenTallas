@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def dsrom_markov_row_model(**kwargs):
+    """Released256-term DSpark second dot and separate logit add; no rate credit."""
+    from dsrom_markov_model import model
+    return model(**kwargs)
