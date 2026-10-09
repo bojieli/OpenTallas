@@ -11,7 +11,8 @@ module ot_s81_ingest_afifo #(
  output wire wfull,output wire[AW:0] wfreed,output wire ovf,
  input wire rclk,rrst_n,rd,output wire rempty,output wire[W-1:0] rdata,output wire[AW:0] rcount);
  localparam integer N=(W+63)/64;
- wire[N*64-1:0] padded={{(N*64-W){1'b0}},wdata},decoded;
+ wire[N*64-1:0] padded,decoded;
+ assign padded={{(N*64-W){1'b0}},wdata};
  wire[N*72-1:0] encoded,head;wire[N-1:0] ce,ue;
  wire full,empty,bovf;wire[AW:0] count;
  reg read_fault;reg[1:0] read_fault_w;
