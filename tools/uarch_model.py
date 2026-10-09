@@ -14076,3 +14076,27 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def s81_ctrl_die_model(column_width_um, role='layer', stage_handoffs=121):
+    """RQ-DSC1/2 native controller shell sizing before build; closure credit is zero."""
+    if column_width_um <= 0 or role not in ('layer', 'source', 'head'):
+        raise ValueError('positive controller slot width and a native role required')
+    area_mm2 = 0.15
+    return dict(schema='opentallas.uarch.s81-ctrl-die.v1', enabled_default=False,
+        macs_per_cycle=0, compute_intensity=0, clock_ghz=1.2, replicas_per_die=1,
+        area_mm2_nominal=area_mm2, slot_width_um=column_width_um,
+        slot_height_um=area_mm2*1e6/column_width_um,
+        program_bits=128*28, sequencer_queue_bits=12*4*84, engine_queue_bits=12*8*84,
+        command_boundary_bits_per_cycle=12*85, done_boundary_bits_per_cycle=12*9,
+        message_bits_per_cycle_each_direction=515,
+        vm_port_bytes_per_cycle=dict(write=64, read=64),
+        vm_write_control_bits_per_cycle=15, vm_read_control_bits_per_cycle=15,
+        nominal_endpoint_tracks=dict(command=1020, done=108, message_each_direction=515,
+                                     vm_write=527, vm_read_request=15, vm_read_response=512),
+        routing_capacity_verdict='PENDING_FLOORPLAN_PIN_AND_CHANNEL_CHECK',
+        fanout='12 independent descriptor lanes; engine completion supplies credit',
+        stage_handoff_added_cycles=3, stage_handoffs=stage_handoffs,
+        ar_added_cycles=3*stage_handoffs+(1 if role == 'head' else 0),
+        engine_cdc_added_cycles='PENDING_REAL_ADAPTER',
+        physical_qualification='PENDING', evidence_scope='native-shell-contract and nominal reservation')
