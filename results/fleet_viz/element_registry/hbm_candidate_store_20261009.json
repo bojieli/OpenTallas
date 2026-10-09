@@ -125,13 +125,13 @@
       "owner": "candidate_store",
       "description": "Real native73-bit global-order consumer bound to actual checked SRAM reads",
       "source": {
-        "commit": "a54dd9b39",
+        "commit": "964d8cf1a",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_global_publication_join.sv"
         ]
       },
       "implementation": {
-        "status": "S2/S4 reviewed payload SECDED; plain finite control, no mirrors/TMR/lease framework",
+        "status": "actual native73consumer with checked74boundary rejecting unsupportedhighbit; no silent truncation/new control mirrors/epochs",
         "evidence": [
           "rtl/hbm_accel/index/ot_hbm_candidate_global_publication_join.sv"
         ]
@@ -144,16 +144,23 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending actual native consumer/global-order joined gate; store/provider transport independently PASS",
-          "evidence": []
+          "status": "PASS actual96rank SRAM\u2192native globalconsumer:380nativeflits5700literals950canonicaloutputs, invalid/empty/stalls/realCE",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/global_join/record.json",
+            "results/rtl/hbm_candidate_store_20261009/global_join/mode0.log",
+            "results/rtl/hbm_candidate_store_20261009/global_join/mode2.log"
+          ]
         },
         "negative": {
-          "status": "pending native joined malformed/stale/order gate; bank/store component negative controls PASS",
-          "evidence": []
+          "status": "PASS misrank/UE/earlyretire/highowner74 rejected; same-source MUT_SLOT1 golden mismatch EXIT1",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/global_join/record.json",
+            "results/rtl/hbm_candidate_store_20261009/global_join/mutant.log"
+          ]
         }
       },
       "physical": {
-        "status": "Claude phys-intake exclusive; standalone full-depth bank recipe prepared, no route submitted",
+        "status": "bank pathfinding ready inClaudeintake; full store/globalconsumer physicalhierarchy pending",
         "corners": {},
         "evidence": [
           "physical/hbm_candidate_store_pathfinding/recipe.json"
@@ -165,9 +172,9 @@
         "latest source exact+mutant gate"
       ],
       "integration": {
-        "status": "provider ABI implemented; real global-order join pending",
+        "status": "PASS minimum actual96rank native store/global-consumer mechanism; full token producer binding/physical context pending",
         "evidence": [
-          "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
+          "results/rtl/hbm_candidate_store_20261009/global_join/record.json"
         ]
       }
     }
