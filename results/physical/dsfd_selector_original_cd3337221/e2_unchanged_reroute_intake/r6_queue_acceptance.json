@@ -1,0 +1,100 @@
+{
+  "captured_utc": "2026-10-09T11:16:05.177199+00:00",
+  "canonical_state": {
+    "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+    "status": "READY",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+    "stage_key": null,
+    "pid": null,
+    "created": "2026-10-09T04:15:10-07:00",
+    "events": [
+      "2026-10-09T04:15:10-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx.json",
+      "2026-10-09T04:15:10-07:00 submit lint PASS (estimate None b/um, limit None); PASS rtl_boundary dsfd_selt_q: registered boundary (in->reg 0, reg->out 0 levels)",
+      "2026-10-09T04:15:35-07:00 source cd33372216bc synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx/src"
+    ],
+    "source_archive": {
+      "commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+      "paths": [
+        "rtl/common",
+        "rtl/hdc/v41x",
+        "rtl/dsrom_sys/s81_ph",
+        "physical/abi3",
+        "physical/s81_ph_views",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+        "tools",
+        "configs",
+        "Makefile"
+      ],
+      "required_sha256": {
+        "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "c7624c6f573a6623db6e840d15ef1fe4376e6bd1ead7e8e23dc6215e5d52e850",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "497f3079a4f70d07b7b9668ff44a1facdcaef61e3ea2e09ee1726c3be1aa0d0c",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv": "9aa9edcdef3ae8995957bc0b71094863688293b026d9b1309c6569b6c2c6c402",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "97d053572bf7ed0b8bdc93350fc6ca443c5d89012e59e035470e445bd4a353eb",
+        "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv": "fdae86b95d6d167c8b087f24c2643e5c92dc2233a311857d9b229a2432682449",
+        "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv": "fcaeddee7f6201aec6ee69381389eea1f13bca8146ba4e543987648f23477a39",
+        "physical/s81_ph_views/tiles/place_macros_tile.tcl": "76615638ccd0441e8b607761ad41347f9e9e4e08bd07f1d0da885d8f6f35dfcc",
+        "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json": "c06b32150b8cdd472d5b8984671513b8389b1a38817e4cac56948565bcebc63e",
+        "physical/s81_ph_views/specs/dsfd_selt_q.json": "1b8ae36816e084c944cbbdad8d18c926ac9ddac775c219beed0e793e7f981098",
+        "physical/s81_ph_views/common/route_view.sh": "54f46cce1c5e9eccde84eb2094009c7f64f6d85d6ce7ea8e89a0207a925e0867",
+        "physical/s81_ph_views/common/make_io_vclk_margin.sh": "2ed4064632f7fbf5b78dfa597a2541889a7ef6c009bc2f5aca9133f70d663c7c",
+        "physical/s81_ph_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+        "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3"
+      },
+      "archive_sha256": "6ec83eda945e34bc0b2b1847d60d6f5776d8bbaf63121e7252f9f7e65d05e65f",
+      "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+      "runtime_files_pending": []
+    },
+    "source_synced": true,
+    "commit_full": "cd33372216bcd972bb9a2667d7cd69d36c0690ac"
+  },
+  "statement": "Canonical accepted and source synced READY; engine not yet claimed RUNNING",
+  "watch_registration": {
+    "at": "2026-10-09T11:14:47.562422+00:00",
+    "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+    "source": {
+      "branch": "codex/dsfd-selt-q-cx-20261009",
+      "commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+      "paths": [
+        "rtl/common",
+        "rtl/hdc/v41x",
+        "rtl/dsrom_sys/s81_ph",
+        "physical/abi3",
+        "physical/s81_ph_views",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+        "tools",
+        "configs",
+        "Makefile"
+      ],
+      "required_files": [
+        "rtl/common/ot_fwd_link_stage.sv",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+        "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+        "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+        "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv",
+        "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv",
+        "physical/s81_ph_views/tiles/place_macros_tile.tcl",
+        "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json",
+        "physical/s81_ph_views/specs/dsfd_selt_q.json",
+        "physical/s81_ph_views/common/route_view.sh",
+        "physical/s81_ph_views/common/make_io_vclk_margin.sh",
+        "physical/s81_ph_views/common/signoff_unc60.sdc",
+        "tools/run_abi3_physical.py"
+      ]
+    },
+    "proof_commit": "09e58cb42",
+    "exact_mutant_receipt": "9b2120c0e",
+    "spec_sha256": "9eb89820c9cd9b46f9c0b3d89ec209c7207372cd6cd5d84dfef924ff9462aa6e",
+    "watched_path": "/tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx.json",
+    "origin": "/home/ubuntu/claude-takeover-20261007/phys-intake/proposals/r6_watched_spec.json",
+    "resource_basis": "24GiB conservative >=2xnear S81tile/SRAM DRT11.26GiB, plusq2logicalquarterCTS4.026; explicitdifferentstdarea/inventory, not measuredselectorDRT",
+    "dedupe": "NoexactR6state/watch; originalcd333failures retained andq2/HBMproviders untouched",
+    "process_actions": 0
+  }
+}
