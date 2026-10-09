@@ -34,11 +34,12 @@ else
   DW=${DIEW:-$DW}; DH=${DIEH:-$DH}
   MV="ot_hbm_norm_grp$G=$GV"; MACD=$GV; HALO="10 10"
 fi
+# struct-close 2026-10-09 (fill-5 F5-1): CORE_INSET (um, default 2) keeps the macro placer off the pin faces (macro_edge).
 echo "kind=$kind top=$top G=$G die=${DW}x${DH} PD=${PD:-0.5} PER=${PER:-0.770} HM=${HM:-0.050} IO_ROUTE_SDC=$IO_ROUTE_SDC IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
 python3 tools/run_abi3_physical.py --view asap7 --top $top $srcargs --macro-view $MV --macro-place-halo $HALO \
   --clock-port clk --clock-period-ns ${PER:-0.770} --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 \
   --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --sdc-append $IO_ROUTE_SDC --stages pnr \
-  --die-area 0 0 $DW $DH --core-area 2 2 $(python3 -c "print(round($DW-2,3), round($DH-2,3))") --place-density ${PD:-0.5} \
+  --die-area 0 0 $DW $DH --core-area ${CORE_INSET:-2} ${CORE_INSET:-2} $(python3 -c "print(round($DW-${CORE_INSET:-2},3), round($DH-${CORE_INSET:-2},3))") --place-density ${PD:-0.5} \
   --orfs-var NUM_CORES=$C --orfs-var ADDER_MAP_FILE= --orfs-var PLACE_DENSITY_LB_ADDON= --orfs-var "SYNTH_KEEP_MODULES=$KEEPM" \
   --orfs-var "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks" --orfs-var "IO_PLACER_H=M4 M6" --orfs-var "IO_PLACER_V=M5 M7" \
   --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
