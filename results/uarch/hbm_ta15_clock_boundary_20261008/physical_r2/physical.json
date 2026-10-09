@@ -1,0 +1,212 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T07:16:01.407220+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_hbm_clock_reset_collars",
+    "clock_port": "clk_stream",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/hbm_accel_die_views/clock_boundary/isolated.sdc",
+          "sha256": "cd87122cb49876bcde95b8d4709d103c5e343e72b8922cba63ce47b21af8a81c"
+        }
+      ],
+      "lines": [
+        "remove_input_delay [all_inputs]",
+        "remove_output_delay [all_outputs]",
+        "remove_clock [all_clocks]",
+        "create_clock -name stream -period 0.833333333 [get_ports clk_stream]",
+        "create_clock -name serial -period 1.111111111 [get_ports clk_serial]",
+        "create_clock -name hbm -period 1.024 [get_ports clk_hbm]",
+        "create_clock -name link -period 0.833333333 [get_ports clk_link]",
+        "set_clock_uncertainty -setup 0.060 [all_clocks]",
+        "set_clock_uncertainty -hold 0.025 [all_clocks]",
+        "set_input_delay -min 0.025 -clock hbm [get_ports {por_n pll_reset_n pll_lock phy_reset_intent_n*}]",
+        "set_input_delay -max 0.100 -clock hbm [get_ports {por_n pll_reset_n pll_lock phy_reset_intent_n*}]",
+        "set_input_delay -min 0.025 -clock link [get_ports {link_reset_intent_n*}]",
+        "set_input_delay -max 0.100 -clock link [get_ports {link_reset_intent_n*}]",
+        "set_input_delay -min 0.025 -clock stream [get_ports {coll_reset_intent_n cmd_reset_intent_n}]",
+        "set_input_delay -max 0.100 -clock stream [get_ports {coll_reset_intent_n cmd_reset_intent_n}]",
+        "set_output_delay -min 0.025 -clock hbm [get_ports phy_reset_n*]",
+        "set_output_delay -max 0.100 -clock hbm [get_ports phy_reset_n*]",
+        "set_output_delay -min 0.025 -clock link [get_ports link_reset_n*]",
+        "set_output_delay -max 0.100 -clock link [get_ports link_reset_n*]",
+        "set_output_delay -min 0.025 -clock stream [get_ports {coll_reset_stream_n cmd_reset_stream_n}]",
+        "set_output_delay -max 0.100 -clock stream [get_ports {coll_reset_stream_n cmd_reset_stream_n}]",
+        "set_output_delay -min 0.025 -clock serial [get_ports {coll_reset_serial_n cmd_reset_serial_n}]",
+        "set_output_delay -max 0.100 -clock serial [get_ports {coll_reset_serial_n cmd_reset_serial_n}]"
+      ]
+    },
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "LINK_PORTS": 9
+    },
+    "sources": [
+      {
+        "path": "rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv",
+        "sha256": "b56ae9fff7924b92d5bb78f1c678ad9c573f9be77b1d5db0d7650c0ef61b7b23",
+        "size_bytes": 3214
+      },
+      {
+        "path": "rtl/hbm_accel/control/ot_hbm_reset_seq.sv",
+        "sha256": "b930a255caa1574c6937082e403940c13586d030b81fe3a3a9c9a5d1669989bf",
+        "size_bytes": 2358
+      }
+    ],
+    "top": "ot_hbm_clock_reset_collars"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n32c8fce25f1fc67a3b0674c99329\"}\norfs_hold_mm: abc no-dch off\norfs_hold_mm: fp lint hook patched\norfs_hold_mm: pre-route gate hook patched\n{\"allcorner_spef_evaluator\": \"/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl\", \"original_sha256\": \"8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c\", \"patched_sha256\": \"532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\ncp /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 4 thread(s).\nmkdir -p /work/objects/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty -corner TC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner TC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty -corner TC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner TC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty -corner TC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells\nlink_design ot_hbm_clock_reset_collars\nread_sdc /work/results/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base/1_2_yosys.sdc\nError: 1_2_yosys.sdc, 10 invalid command name \"remove_input_delay\"\n\nElapsed time: 0:02.50[h:]min:sec. CPU time: user 2.39 sys 0.09 (99%). Peak memory: 291100KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/asap7/opentallas_ot_hbm_clock_reset_collars_asap7_ta15_digital_multiclock/base/1_synth.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:15:53.264765+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hbm_clock_reset_collars",
+      "--source",
+      "rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv",
+      "--source",
+      "rtl/hbm_accel/control/ot_hbm_reset_seq.sv",
+      "--param",
+      "LINK_PORTS=9",
+      "--clock-port",
+      "clk_stream",
+      "--clock-period-ns",
+      "0.833333333",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--sdc-append",
+      "physical/hbm_accel_die_views/clock_boundary/isolated.sdc",
+      "--orfs-corner",
+      "TC",
+      "--hold-corners",
+      "TC,BC",
+      "--stages",
+      "pnr",
+      "--die-area",
+      "0",
+      "0",
+      "100.224",
+      "99.36",
+      "--core-area",
+      "0",
+      "0.54",
+      "100.224",
+      "98.82",
+      "--place-density",
+      "0.55",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none",
+      "--slew-margin-percent",
+      "60",
+      "--hold-margin-ns",
+      "0.010",
+      "--purpose",
+      "characterization",
+      "--nickname-tag",
+      "ta15_digital_multiclock",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/hbm-ta15-physical/run-r2/work",
+      "--output",
+      "/srv/opentallas-scratch/codex/hbm-ta15-physical/run-r2/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/hbm-ta15-physical/source-r2/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "9a8288a21396120eed6610eb60099d5ec5f1c11c57808d68a6d91ce504957e9f",
+      "tree": "/srv/opentallas-scratch/codex/hbm-ta15-physical/source-r2"
+    },
+    "orfs_num_cores": 4,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/hbm-ta15-physical/source-r2"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.833333333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
