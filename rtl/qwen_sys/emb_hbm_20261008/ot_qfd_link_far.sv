@@ -17,7 +17,15 @@ module ot_qfd_link_far #(
     parameter integer ECR = 4,
     parameter integer KCR = 4,
     parameter integer TQ  = 4,
-    parameter integer AD  = 8
+    parameter integer AD  = 8,
+    // AFW (sys-takeover 2026-10-09, opt-in): the receive channel's wide async FIFO with a registered write
+    // (ot_qwen_die_cdc_ch AFW = 1, +1 ck before visibility): qfd_emb_far92 PREROUTE -941 = ir -> 128:1 receive-buffer
+    // mux -> async FIFO mem write.  Default from `OT_QFD_FAR_AFW (bench) else 0.
+`ifdef OT_QFD_FAR_AFW
+    parameter integer AFW = 1
+`else
+    parameter integer AFW = 0
+`endif
 ) (
     input  wire          ck,
     input  wire          lclk,
@@ -47,7 +55,7 @@ module ot_qfd_link_far #(
     wire rv, rcr, rwf, rrf;
     wire [522:0] rd;
     reg rtake;
-    ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD)) u_rx (
+    ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD), .AFW(AFW)) u_rx (
         .wclk(ck), .wrst_n(rst_n), .i_v(l_i[0]), .i_d({l_i[15:5], l_i[527:16]}), .i_cr(rcr), .w_fault(rwf),
         .rclk(lclk), .rrst_n(rst_n), .o_v(rv), .o_d(rd), .o_cr(rtake), .r_fault(rrf));
     reg [3:0] cb, cg;
