@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.embedding_hbm_station_pair.v1",
+  "model_before_RTL": true,
+  "geometry_source_commit": "fcda1b2f1",
+  "geometry_source_file": "results/arch/emb_hbm_20261008/takeover/composed_slots/transport_lower_bound.json",
+  "MAC_per_cycle": 0,
+  "communication_bits_per_cycle": {
+    "command": 288,
+    "return": 260
+  },
+  "memory_port_bytes_per_cycle": {
+    "command_register": 36,
+    "return_register": 32.5
+  },
+  "replicas_lower_bound": 716,
+  "mux_demux": "No select; each station passes entire packet in each direction independently",
+  "fanout": "one downstream station per bus; actual physical IO load qualification open",
+  "register_bits_per_pair": 548,
+  "frame_um": [
+    92.016,
+    36.72
+  ],
+  "frame_area_um2": 3378.8275200000003,
+  "area_proxy_um2_per_bit": 0.32,
+  "flop_proxy_um2": 175.36,
+  "proxy_utilisation": 0.05189966015193341,
+  "routing": {
+    "left_command_plus_return_tracks": 548,
+    "right_command_plus_return_tracks": 548,
+    "pin_layers": [
+      "M4",
+      "M6"
+    ],
+    "other_layers": [
+      "M5",
+      "M7"
+    ],
+    "minimum_track_spacing": 2,
+    "spacing_um": 0.096,
+    "usable_fraction": 0.75,
+    "side_capacity_tracks": 573,
+    "edge_fit": "planned fit548 demand<=573 conservative capacity at36.72um height; original30.24um proposal rejected472 capacity",
+    "previous_side_capacity_tracks": 472
+  },
+  "clock_period_ps": 833.333334,
+  "STAGES_default": 0,
+  "max_measured_candidate_STAGES": 17,
+  "command_added_cycles": 17,
+  "return_added_cycles": 17,
+  "roundtrip_added_edges": 34,
+  "roundtrip_nominal_ns": 28.333333356000004,
+  "finite_flow": {
+    "SQD": 4,
+    "CDC_depth": 8,
+    "backend_queue": 4,
+    "PFD": 4,
+    "responses_per_fetch_max": 2,
+    "initial_credit_policy": "DestinationSQD4 only; pipeline storage does not create credits",
+    "gate_scope": "One actual PC, independent timing runs0vs17; golden data/ECC andJEDEC checks, no array simulation"
+  },
+  "physical_slots": "OPEN: parent binds actual pin slots and clock arrival",
+  "physical_closed": false,
+  "adopted": false,
+  "energy": "OPEN: measured activity and real clock tree required",
+  "ECC_provider": "OPEN",
+  "rejected_frame_um": [
+    92.016,
+    30.24
+  ]
+}
