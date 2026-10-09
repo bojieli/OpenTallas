@@ -80,7 +80,7 @@
     },
     {
       "element": "quant23_core_and_VM_transport",
-      "source": "bf4cf8ece",
+      "source": "bf4cf8ece_FAILED_BOUNDARY_46",
       "core_source": "7c0dd09fa",
       "model_hook": "hgi_quant_decode_model + hgi_quant_vm_transport_model",
       "replicas": 1,
@@ -102,8 +102,12 @@
         "route TT/FF closure",
         "genericVM root/provider and SECDED contract Claude GH-d",
         "partial overlap alias semantics",
-        "actual VM RTT and sustainable input bandwidth"
-      ]
+        "actual VM RTT and sustainable input bandwidth",
+        "Real response-seat repair exact/boundary and source-rebound fullshape physical fit"
+      ],
+      "repair_source": "bd5e792c7",
+      "repair_added_flops": 274,
+      "repair_added_edges_per_sector_handshake": 1
     },
     {
       "element": "TOPK_K2048",

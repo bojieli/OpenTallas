@@ -138,7 +138,8 @@
         "Typed ports gsz4, mcast_all1, mcast_group_size8, start_ready/done_valid/done_ready/fault_ack; REARM1 required for generic programming",
         "Op4 gsz=log2(subgroup), mcast_all=1, outer membership mcast_group_size=backend_group_size; global die rank required",
         "PAYLOAD_ECC default-off connected SRAM fix 2f7865e3b running macro-array and FIFO CE/UE gates; adoption not qualified",
-        "18 SRAM port view 480x540 times8 alone exceeds old collective slot; full core plus corridors/ports area not yet fitted"
+        "18 SRAM port view 480x540 times8 alone exceeds old collective slot; full core plus corridors/ports area not yet fitted",
+        "Semantic op0 gap: NC8/NOG12 gszF is12 independent8rank trees plus global96owner assembly; not proven96contributor ALL_REDUCE_SUM"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -810,7 +811,8 @@
         "commit": "7c38e6508",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
-        ]
+        ],
+        "repair_candidate": "61a_SETUP_LOOKAHEAD"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -873,7 +875,8 @@
         "normative simulator vector ABI and DS payload/isolation gate",
         "boundary lint running; no physical job claimed",
         "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open",
-        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim"
+        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim",
+        "Setuprepair fa514/functional61a adds75lookaheadbits with identical publicports/cycles;65535word goldenPASS pendingmutants/edge equivalence; running7c routes qualify older source only"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -1110,7 +1113,8 @@
         "paths": [
           "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv"
         ],
-        "exact_evidence_commit": "90fe3ec1e"
+        "exact_evidence_commit": "90fe3ec1e",
+        "repair_candidate": "bd5e792c7"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -1150,7 +1154,7 @@
         }
       },
       "physical": {
-        "status": "SYNTH_FITS_BOUNDARY_FAIL46_INPUT_LEVELS_NO_ROUTE",
+        "status": "FAILED46_PRESERVED_RESPONSE_SEAT_REPAIR_GATES_RUNNING_NO_ROUTE",
         "jobs": [],
         "corners": {},
         "measured_synth_area_um2": 29108.0952,
@@ -1178,7 +1182,8 @@
         "Generic stream1.2 physical timing qualification; legacy serial0.9 domain unchanged",
         "Partialoverlap and overlapping-row alias contract unresolved; multirow/stride/unaligned/broadcast/inplace nonalias shapes exact",
         "Unit4 opcode4..6 dispatch only; norm/HC sameunit require actual dispatch return arbitration",
-        "Actual raw-input arithmetic boundary needs registered capture structural fix; owner tracing/repricing/rebenching, no waiver"
+        "Actual raw-input arithmetic boundary needs registered capture structural fix; owner tracing/repricing/rebenching, no waiver",
+        "Repair adds273-bit responsepacket+valid seat:274flops and1edge persector; exact/boundary reruns remote on pinnedbd5e792c7, actualfit pending source rebinding"
       ],
       "integration": {
         "status": "UNBOUND_PROVIDER",
