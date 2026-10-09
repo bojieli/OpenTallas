@@ -36,9 +36,53 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import hbm_generic_iface as HGI  # noqa: E402
 import hdc_isa_v41 as I  # noqa: E402
 
-from .records import ISTRIDE_BCAST, rec_bytes  # noqa: E402
+from .records import rec_bytes  # noqa: E402
 
 CAL = json.loads((Path(__file__).with_name("calibration.json")).read_text())
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _measured():
+    """Replace estimates with RTL / bench measurements wherever a committed record exists (pins recorded)."""
+    out = {}
+    try:
+        s = json.loads((ROOT / "results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json").read_text())["streams"]
+        v = s["embedding_row_notice"]["complete_cycles_1p2GHz"]["max"]
+        out["hbm.first_access"] = dict(value=v, grade="measured",
+                                       source="results/rtl/dshbm_1m_allmeasured_20261004/hbm_streams.json "
+                                              "embedding_row_notice worst of 64 refresh phases (static program: notice)")
+    except Exception:
+        pass
+    try:
+        import statistics
+        rows = []
+        for f in ("results/rtl/w19_sm_real_ops.json", "results/rtl/dshbm_baseline_measured_20261004/sm_real_ops.json"):
+            for c in json.loads((ROOT / f).read_text())["cases"].get("ar", []):
+                if c["fmt"] == "v41_bf16" and c["exact"]:
+                    r = c["rtl"]
+                    rows.append((c["K"], c["sm_rows"][1] - c["sm_rows"][0], r["lines"],
+                                 r["drain_last_line_to_last_result"], r["cycles_start_to_done"]))
+        rate = max(l / (R * K) for K, R, l, d, t in rows)
+        out["SM.bf16_lines_per_row_k"] = dict(value=rate, grade="measured",
+                                              source=f"ot_gpu_sm_v / sm_v BF16 lines on real operands ({len(rows)} cases)")
+        out["SM.drain"] = dict(value=statistics.median(d for *_, d, t in rows), grade="measured", source="same, median")
+        out["SM.overhead"] = dict(value=statistics.median(t - l - d for K, R, l, d, t in rows), grade="measured",
+                                  source="same: start_to_done - lines - drain, median")
+    except Exception:
+        pass
+    try:
+        c = json.loads((ROOT / "results/rtl/hbm_su_c12_20261005/campaign_full.json").read_text())
+        cls = c["perf_N64_M16"]["depths"]["classes"]
+        ok = all(v["emit_to_write"] == v["model"] for v in cls.values())
+        out["SU.model_check"] = dict(value=ok, grade="measured" if ok else "model",
+                                     source="results/rtl/hbm_su_c12_20261005/campaign_full.json perf depths: RTL "
+                                            "emit->write == depth model for every op class")
+    except Exception:
+        pass
+    return out
+
+
+MEAS = _measured()
 ESZ = {"FP32": 4, "BF16": 2, "FP8E4M3": 1, "INT8": 1, "U32": 4, "UE8M0": 1, "FP4E2M1": 1}
 
 
@@ -50,26 +94,31 @@ def cv(sec, key):
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
 def expand(recs, pos, token=0, rank=0):
-    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay and predicates."""
-    out, pc, loop, L = [], 0, None, 0
+    """The executed record sequence of one doorbell: [(record index, L)] with LOOP replay (two levels: CTL.LOOP
+    param[15:0] count, [16] level) and predicates.  L is the level-0 counter (L1 is not used by the cost model)."""
+    out, pc, loops = [], 0, []
     while pc < len(recs):
         r = recs[pc]
         p = r.pred
+        L = next((x[2] for x in reversed(loops) if x[3] == 0), 0)
+        L1 = next((x[2] for x in reversed(loops) if x[3] == 1), 0)
         if not (p == "ALWAYS" or (p == "POS0" and pos == 0) or (p == "NOT_POS0" and pos != 0)
-                or (p == "LAST_ITER" and loop and L == loop[1] - 1)):
+                or (p == "LAST_ITER" and loops and loops[-1][2] == loops[-1][1] - 1)):
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "LOOP":
-            loop, L, pc = (pc + 1, r.param), 0, pc + 1
+            loops.append([pc + 1, r.param & 0xFFFF, 0, (r.param >> 16) & 1])
+            pc += 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
-            L += 1
-            if L < loop[1]:
-                pc = loop[0]
+            loops[-1][2] += 1
+            if loops[-1][2] < loops[-1][1]:
+                pc = loops[-1][0]
                 continue
-            loop, L, pc = None, 0, pc + 1
+            loops.pop()
+            pc += 1
             continue
-        out.append((pc, L))
+        out.append((pc, L, L1))
         if r.unit == "CTL" and r.op == "END":
             break
         pc += 1
@@ -82,9 +131,12 @@ class Dyn:
 
 
 def eff(d, dyn, L):
-    base = d.base + L * d.lstride + dyn.v[d.dyn_sel] * d.dyn_mul
-    n = dyn.v[d.n_sel] if d.n_sel else d.n
-    ist = 0 if d.istride == ISTRIDE_BCAST else (d.istride or 1)
+    if d.indexed:                             # C3b indexed descriptor: timing uses id 0 (values are not modelled)
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride
+    else:
+        base = d.base + L * d.lstride + dyn.v[8] * d.l1stride + dyn.v[d.dyn_sel] * d.dyn_mul
+    n = dyn.v[d.n_sel] if 0 < d.n_sel < 63 else d.n
+    ist = 0 if d.ibcast else (d.istride or 1)
     return base, n, d.m, d.stride, ist
 
 
@@ -105,8 +157,8 @@ def intervals(d, dyn, L):
     if 1 < m <= 64 and st:
         out = []
         for o in range(m):
-            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "dyn_sel": 0, "dyn_mul": 0,
-                             "n_sel": 0, "n": n})
+            sub = type(d)(**{**d.__dict__, "base": base + o * st, "m": 1, "lstride": 0, "l1stride": 0, "dyn_sel": 0,
+                             "dyn_mul": 0, "n_sel": 0, "n": n, "indexed": 0})
             out.append(interval(sub, dyn, 0))
         return out
     return [interval(d, dyn, L)]
@@ -121,7 +173,7 @@ def footprint(r, dyn, L):
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
             continue
-        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))
+        (writes if k in ("O", "R") else reads).extend(intervals(d, dyn, L))      # I (id table): a read
     if r.unit == "SU" and r.sut and r.sut.get("c_pair") and "A" in r.desc:
         pass                                             # partner lies inside A's head span (aligned)
     return reads, writes
@@ -174,6 +226,14 @@ def su_cost(r, dyn, L):
     return lay["nv"] + depth + cv("units", "SU.issue_overhead"), f"SU model nv {lay['nv']} + depth {depth}"
 
 
+TRANSPORT = cv("hbm", "fmt3_transport")       # bytes moved per code byte (fmt3 line stride / codes)
+SM_RATE = 1.0                                   # fmt3 issue relative to the BF16 lanes (1.0 = 64 codes / cycle / SM)
+
+
+def first_access():
+    return MEAS["hbm.first_access"]["value"] if "hbm.first_access" in MEAS else cv("hbm", "first_access")
+
+
 def cost(r, dyn, L, cfg=None):
     """(cycles, grade, how) of the record's unit work on one die."""
     bw = cv("hbm", "bytes_per_cycle")
@@ -181,14 +241,25 @@ def cost(r, dyn, L, cfg=None):
     if u == "SM":
         b = r.desc["B"]
         _, n, m, st, _ = eff(b, dyn, L)
-        nbytes = n * m * ESZ[b.fmt] * (cv("hbm", "fmt3_transport") if (r.param & 3) == 3 else 1.0)
+        tr = TRANSPORT if (r.param & 3) == 3 else 1.0
+        nbytes = n * m * ESZ[b.fmt] * tr
+        stream = nbytes / bw
+        if "SM.bf16_lines_per_row_k" in MEAS:
+            # fmt 0 and fmt 3 issue on the same BF16 lanes (fmt 3: a 128-code line in two 64-code beats)
+            R = -(-m // 32)
+            lines = math.ceil(MEAS["SM.bf16_lines_per_row_k"]["value"] * R * n * SM_RATE)
+            comp = lines + MEAS["SM.drain"]["value"]
+            fa = MEAS["hbm.first_access"]["value"] + MEAS["SM.overhead"]["value"]
+            c = fa + max(comp, stream)
+            return c, "measured", (f"SM {m}x{n} {b.fmt}: lines {lines} (+drain) vs stream {stream:.0f} "
+                                   f"({nbytes / 1e6:.2f} MB, transport {tr}) -> {'SM' if comp > stream else 'HBM'}-bound")
         c = cv("units", "SM.first_access") + nbytes / bw + cv("units", "SM.drain")
         return c, "estimate", f"SM {m}x{n} {b.fmt}: {nbytes / 1e6:.2f} MB at {bw:.0f} B/cyc + first access"
     if u == "SU":
         c, how = su_cost(r, dyn, L)
-        return c, "model", how
+        return c, ("measured_depth_model" if MEAS.get("SU.model_check", {}).get("value") else "model"), how
     if u == "FUSED":
-        seg = r.param & 0xFF
+        seg = (r.param >> 6) & 0xFF
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
@@ -199,13 +270,14 @@ def cost(r, dyn, L, cfg=None):
         lanes = r.param & 0xF
         hd = 128
         nbytes = P * hd * ESZ[b.fmt]
-        c = cv("hbm", "first_access") + nbytes / bw + cv("units", "ATT.fixed")
+        c = first_access() + nbytes / bw + cv("units", "ATT.fixed")
         return c, "estimate", f"ATT.{op} {P} rows x {hd} FP8 ({nbytes / 1e6:.2f} MB), {lanes} lanes"
     if u == "DMA":
         if op == "LOAD":
             a = r.desc["A"]
             _, n, m, _, _ = eff(a, dyn, L)
-            return cv("hbm", "first_access") + n * m * ESZ[a.fmt] / bw, "estimate", "DMA load"
+            return first_access() + n * m * ESZ[a.fmt] / bw, ("measured" if "hbm.first_access" in MEAS
+                                                               else "estimate"), "DMA load"
         if op == "STORE":
             return cv("units", "DMA.store_latency"), "estimate", "posted KV store"
         return cv("units", "DMA.fence"), "estimate", "fence"
@@ -234,9 +306,9 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     n = len(ex)
     units = HGI.UNITS
     costs, fps = [], []
-    for (k, L) in ex:
+    for (k, L, L1) in ex:
         r = recs[k]
-        dyn.v[4] = L
+        dyn.v[4], dyn.v[8] = L, L1
         costs.append(cost_fn(r, dyn, L))
         fps.append(footprint(r, dyn, L))
     # true dependences (exact intervals): producer = last writer of an overlapping region (RAW / WAW), readers since
@@ -269,8 +341,8 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     dwire, rwire, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
     if not wires:
         dwire = rwire = 0
-    nm_rd = [set(getattr(recs[k], "reads", ())) for k, _ in ex]
-    nm_wr = [set(getattr(recs[k], "writes", ())) for k, _ in ex]
+    nm_rd = [set(getattr(recs[k], "reads", ())) for k, *_ in ex]
+    nm_wr = [set(getattr(recs[k], "writes", ())) for k, *_ in ex]
     # record byte offsets in the image (for fetch); loop replays hit the ring when the body fits
     offs, o = [], 0
     for r in recs:
@@ -306,7 +378,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     hol_block = [0.0] * n
     wait_block = [0.0] * n
     cp_busy = 0.0
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         r = recs[k]
         c = costs[i][0]
         u = r.unit
@@ -319,6 +391,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             nch = (1 if r.sut is not None else 0) + len(r.descs_in_order())
             dcyc = 0.0 if mode in ("S1",) else cpc["decode_header"]["value"] + nch * cpc["decode_per_chunk"]["value"]
             alat = 0.0 if mode in ("S1",) else cpc["addr_latency"]["value"]
+            nidx = sum(1 for d in r.desc.values() if d.indexed)
             f_r = fetch_ready(i, k, L)
             dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2", "SX") else (dec_t + dcyc)
             ready = dec_t + alat
@@ -328,6 +401,12 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                     wt = max(wt, outstanding_end[un] + rwire)
             q = unit_starts[u]
             qt = q[-qd] if len(q) >= qd else 0.0
+            if nidx:
+                # C3b: the dispatcher reads the index word only after its producer retired (the wait is satisfied)
+                ivs = [interval(r.desc["I"], dyn, L)] if "I" in r.desc else []
+                prod = max([end[j] + rwire for j in deps[i]
+                            if any(overlap(w_, iv) for w_ in fps[j][1] for iv in ivs)] + [0.0])
+                ready = max(ready, prod + cpc["indexed_read"]["value"] * nidx)
             if mode == "S1":
                 # per-unit sequencers, drain semantics: wait for every unit that produced an input to drain
                 wt = max([outstanding_end[recs[ex[j][0]].unit] for j in deps[i]] + [0.0])
@@ -370,7 +449,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     # per-unit busy / idle split: idle caused by true dependences vs by issue (CP, HOL, drain waits)
     per_unit = defaultdict(lambda: dict(busy=0.0, idle_true_dep=0.0, idle_issue=0.0, records=0))
     prev = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         u = recs[k].unit
         pu = per_unit[u]
         pu["records"] += 1
@@ -382,7 +461,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         pu["idle_issue"] += gap_issue
         prev[u] = end[i]
     fam = defaultdict(float)
-    for i, (k, L) in enumerate(ex):
+    for i, (k, L, *_) in enumerate(ex):
         fam[recs[k].family or recs[k].tag] += end[i] - start[i]
     return dict(mode=mode, total_cycles=total, records_executed=n, deps=deps, start=start, end=end, disp=disp,
                 costs=costs, ex=ex, races=races, per_unit={k: {a: round(b, 1) for a, b in v.items()}
@@ -401,7 +480,7 @@ def critical_path(s, recs):
     seen = set()
     while i is not None and i not in seen:
         seen.add(i)
-        k, L = s["ex"][i]
+        k, L, *_ = s["ex"][i]
         path.append(dict(tag=recs[k].tag, L=L, unit=recs[k].unit, start=round(s["start"][i], 1),
                          end=round(s["end"][i], 1)))
         cands = [(s["end"][j], j) for j in s["deps"][i]]
@@ -427,7 +506,7 @@ def reorder(recs, pos, cost_fn=cost, rebuild=None):
     producer ends), so the program's results are unchanged."""
     s0 = schedule(recs, pos, "S0", cost_fn=cost_fn)
     first = {}
-    for i, (k, L) in enumerate(s0["ex"]):
+    for i, (k, L, *_) in enumerate(s0["ex"]):
         first.setdefault(k, (s0["start"][i], s0["end"][i], i))
     out, seg = [], []
 
@@ -454,3 +533,90 @@ def rebuild_waits(recs):
     for r in out:
         r.reads, r.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))
     return assign_waits(out)
+
+
+def list_schedule(recs, pos, cost_fn=cost):
+    """Compiler pass: CP-aware list scheduling of a straight-line record stream (no LOOP).  Records keep every
+    program-order hazard edge (RAW / WAR / WAW on region names); among the records whose predecessors are all
+    issued, issue next the one that would START earliest on the modelled command processor (in-order dispatch,
+    drain waits, wires, unit queues), ties to the longest remaining dataflow path.  Waits are recomputed after."""
+    import copy as _c
+    from .qwen_compiler import Builder
+    cpc = CAL["cp"]
+    dw, rw, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
+    body = [r for r in recs if not (r.unit == "CTL" and r.op == "END")]
+    tail = [r for r in recs if r.unit == "CTL" and r.op == "END"]
+    n = len(body)
+    dyn = Dyn(pos)
+    cst = [cost_fn(r, dyn, 0)[0] for r in body]
+    rd = [set(getattr(r, "reads", ())) for r in body]
+    wr = [set(getattr(r, "writes", ())) for r in body]
+    preds = [set() for _ in range(n)]
+    last_w, readers = {}, {}
+    for i in range(n):
+        for x in rd[i]:
+            if x in last_w:
+                preds[i].add(last_w[x])
+        for x in wr[i]:
+            if x in last_w:
+                preds[i].add(last_w[x])
+            for j in readers.get(x, ()):
+                preds[i].add(j)
+        for x in wr[i]:
+            last_w[x] = i
+            readers[x] = []
+        for x in rd[i]:
+            readers.setdefault(x, []).append(i)
+        if body[i].unit == "SU" and False:
+            pass
+    succ = [[] for _ in range(n)]
+    for i in range(n):
+        for j in preds[i]:
+            succ[j].append(i)
+    blev = [0.0] * n
+    for i in range(n - 1, -1, -1):
+        blev[i] = cst[i] + max([blev[j] for j in succ[i]] + [0.0])
+    npred = [len(p) for p in preds]
+    ready = [i for i in range(n) if npred[i] == 0]
+    b = Builder(None)
+    unit_end, out_end, cp_t = {}, {}, 0.0
+    qstarts = {}
+    order = []
+    while ready:
+        best = None
+        for i in ready:
+            r = body[i]
+            mask_units = [u for u in HGI.UNITS if u != r.unit and
+                          ((rd[i] & b.pwr[u]) or (wr[i] & (b.prd[u] | b.pwr[u])))]
+            wt = max([out_end.get(u, 0.0) + rw for u in mask_units] + [0.0])
+            q = qstarts.get(r.unit, [])
+            qt = q[-qd] if len(q) >= qd else 0.0
+            d_t = max(cp_t + 1, wt, qt)
+            st = max(d_t + dw, unit_end.get(r.unit, 0.0))
+            key = (st, -blev[i], i)
+            if best is None or key < best[0]:
+                best = (key, i, d_t, st)
+        _, i, d_t, st = best
+        ready.remove(i)
+        r2 = _c.copy(body[i])
+        b.add(r2, rd[i], wr[i])
+        for a in ("implicit", "src"):
+            if hasattr(body[i], a):
+                setattr(r2, a, getattr(body[i], a))
+        cp_t = d_t
+        e = st + cst[i]
+        unit_end[r2.unit] = e
+        out_end[r2.unit] = max(out_end.get(r2.unit, 0.0), e)
+        qstarts.setdefault(r2.unit, []).append(st)
+        order.append(i)
+        for j in succ[i]:
+            npred[j] -= 1
+            if npred[j] == 0:
+                ready.append(j)
+    assert len(order) == n
+    for r in tail:
+        r2 = _c.copy(r)
+        b.add(r2, getattr(r, "reads", ()), getattr(r, "writes", ()))
+        if hasattr(r, "src"):
+            r2.src = r.src
+    return b.recs

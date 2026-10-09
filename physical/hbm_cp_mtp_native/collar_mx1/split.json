@@ -1,0 +1,190 @@
+{
+  "parent": "hfd_cmdproc",
+  "parent_size_um": [
+    1399.656,
+    1403.976
+  ],
+  "spec": "physical/hbm_accel_die_views/cmdproc/split_spec.json",
+  "bands": {
+    "hfd_cmdproc_n": {
+      "y0_um": 702.0,
+      "h_um": 701.976,
+      "parent_ports": [
+        "cNE",
+        "cNW",
+        "t_su_NE",
+        "t_su_NW",
+        "ck",
+        "rst",
+        "f_barrier",
+        "f_coll",
+        "t_barrier",
+        "t_coll"
+      ],
+      "new_ports": {
+        "xl": {
+          "bits": 147,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "f_loader[147:294] from the S band"
+        },
+        "xb": {
+          "bits": 16,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "f_barrier[0:16] to the S band"
+        },
+        "xt": {
+          "bits": 16,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "t_barrier[0:16] from the S band"
+        }
+      },
+      "source_port_record": "physical/hbm_accel_die_views/cmdproc/split/hfd_cmdproc_n/ports.json"
+    },
+    "hfd_cmdproc_s_mtp_native_mx1": {
+      "y0_um": 0.0,
+      "h_um": 701.976,
+      "parent_ports": [
+        "cSE",
+        "cSW",
+        "t_su_SE",
+        "t_su_SW",
+        "f_loader",
+        "f_router",
+        "t_mtp",
+        "f_mtp"
+      ],
+      "new_ports": {
+        "ck": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "die clock (new die net from the die clock tree)"
+        },
+        "rst": {
+          "bits": 1,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "die reset (same die net as hfd_cmdproc rst)"
+        },
+        "xl": {
+          "bits": 147,
+          "direction": "output",
+          "edge": "top",
+          "role": "f_loader[147:294] to the N band"
+        },
+        "xb": {
+          "bits": 16,
+          "direction": "input",
+          "edge": "top",
+          "role": "f_barrier[0:16] from the N band"
+        },
+        "xt": {
+          "bits": 16,
+          "direction": "output",
+          "edge": "top",
+          "role": "t_barrier[0:16] to the N band"
+        },
+        "f_host": {
+          "bits": 216,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_host": {
+          "bits": 5,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "f_provider": {
+          "bits": 179,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "f_backend": {
+          "bits": 73,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_backend": {
+          "bits": 271,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_emit": {
+          "bits": 38,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_provider": {
+          "bits": 43,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "f_emit_host": {
+          "bits": 2,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_emit_host": {
+          "bits": 100,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_abort": {
+          "bits": 1,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "f_am": {
+          "bits": 18,
+          "direction": "input",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        },
+        "t_drained": {
+          "bits": 1,
+          "direction": "output",
+          "edge": "bottom",
+          "role": "actual native transaction endpoint; external producer binding required"
+        }
+      },
+      "source_port_record": "physical/hbm_cp_mtp_native/collar_mx1/hfd_cmdproc_s_mtp_native_mx1/ports.json"
+    }
+  },
+  "cross": [
+    {
+      "from": "hfd_cmdproc_s_mtp_native_mx1.xl",
+      "to": "hfd_cmdproc_n.xl",
+      "bits": 147,
+      "carries": "hfd_cmdproc f_loader[147:294]"
+    },
+    {
+      "from": "hfd_cmdproc_n.xb",
+      "to": "hfd_cmdproc_s_mtp_native_mx1.xb",
+      "bits": 16,
+      "carries": "hfd_cmdproc f_barrier[0:16]"
+    },
+    {
+      "from": "hfd_cmdproc_s_mtp_native_mx1.xt",
+      "to": "hfd_cmdproc_n.xt",
+      "bits": 16,
+      "carries": "hfd_cmdproc t_barrier[0:16]"
+    }
+  ],
+  "die_nets": [
+    "hfd_cmdproc_s.ck <- die clock",
+    "hfd_cmdproc_s.rst <- die reset (net of hfd_cmdproc.rst)"
+  ]
+}

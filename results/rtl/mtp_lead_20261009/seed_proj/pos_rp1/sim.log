@@ -1,0 +1,7 @@
+SEED_PROJ TOKEN 0 rows=2 first_x_to_done=1749 last_x_to_done=1509
+SEED_PROJ TOKEN 1 rows=2 first_x_to_done=1749 last_x_to_done=1509
+SEED_PROJ PASS K=15360 RP=1 rows=2 tokens=2 first_x_to_last_y=3498
+- /srv/opentallas-scratch/claude/mtp-seedproj/src/rtl/dsrom_sys/mtp/tb_dsrom_mtp_seed_proj.sv:54: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.144 s; speed 20.516 us/s
+- Verilator: cpu 0.133 s on 1 threads; allocated 9 MB

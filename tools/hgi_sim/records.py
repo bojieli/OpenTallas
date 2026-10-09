@@ -1,17 +1,10 @@
-"""HGI-1 v0.9 program records (docs/HBM_GENERIC_INTERFACE.md section 3.2): encode / decode, bit for bit.
+"""HGI-1 program records (docs/HBM_GENERIC_INTERFACE.md section 6, the owner-approved current design): encode / decode,
+bit for bit.
 
-Every field position comes from tools/hbm_generic_iface.py (UOP_FIELDS, MDESC_FIELDS, SUT_FIELDS, OPS, UNITS, PRED,
-SPACE, DYN, FMT), so a spec change shows up here without edits.  A record is a 128-bit header (UOP), an optional
-256-bit SU template (SUT), then one 256-bit memory descriptor (MDESC) per set `opnd` bit in A, B, C, O order;
-all little-endian.
-
-PROVISIONAL READINGS of v0.9 (reported to hbm-iface; see SPEC_GAPS):
-  * SUT bit positions: the spec lists SUT fields without lsbs; they are packed from bit 0 in list order (142 bits).
-  * SU.VOP extra descriptors: su1 reads four sources (a, b, c, d) and writes elements (o) AND a reduction (r), but
-    `opnd` has four bits (A, B, C, O).  SU.VOP `param` bit 0 = a D descriptor follows, bit 1 = an R descriptor
-    follows (after O, in D, R order).  `param` is "—" for SU.VOP in v0.9, so this reading is an amendment.
-  * Broadcast: `istride` 0 means 1 (spec), so a per-row scalar broadcast (softmax max, normaliser, row scale of an
-    embedding row) cannot be expressed.  `istride` = 0xFFFF is read as inner stride 0.
+Every field position comes from tools/hbm_generic_iface.py's current-design tables (D_UOP_FIELDS, D_MDESC_FIELDS,
+D_SUT_LAYOUT, D_OPS, D_UNITS, D_OPND, PRED, SPACE, FMT), so a spec change shows up here without edits.  A record is a
+128-bit header (UOP), an optional 256-bit SU template (SUT), then one 256-bit memory descriptor (MDESC) per set `opnd`
+bit in A, B, C, D, O, R, I order; all little-endian.  The legacy v0.9 encoding is not used.
 """
 from __future__ import annotations
 
@@ -22,25 +15,47 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import hbm_generic_iface as HGI  # noqa: E402
 
-OPND = ("A", "B", "C", "O")
-EXTRA = ("D", "R")                 # SU.VOP param bits 0, 1 (provisional)
-ISTRIDE_BCAST = 0xFFFF
+OPND = tuple(HGI.D_OPND)                    # A, B, C, D, O, R, I
+OPS = HGI.D_OPS
+UNITS = HGI.D_UNITS
+NSEL_FROM_VM = HGI.NSEL_FROM_VM
+DYN = {k: i for i, k in enumerate(HGI.D_DYN)}
 
+# Gaps found while lowering; G1-G14 and C3b are folded into the approved spec (aba41e7b4).  Kept as history.
 SPEC_GAPS = [
-    dict(id="G1", item="SUT field bit positions are not given (spec.json sut.fields has widths only)",
-         reading="packed from bit 0 in list order"),
-    dict(id="G2", item="SU.VOP needs a D source (qm: RoPE sin) and an R destination (reductions) but opnd has A,B,C,O",
-         reading="SU.VOP param bit0 = D descriptor follows, bit1 = R descriptor follows (after O)"),
-    dict(id="G3", item="no broadcast: istride 0 means 1, so per-row scalars (softmax max / normaliser, embedding scale) "
-         "cannot be addressed", reading="istride 0xFFFF = inner stride 0"),
-    dict(id="G4", item="softmax: section 3.7 binds softmax + pv_normalize to a FUSED softmax but FUSED has no SOFTMAX op",
-         reading="bound to the SU 3-pass fallback (SU.VOP templates), whose order is the quality harness's"),
-    dict(id="G5", item="norm_out_bf16 is static, but Qwen issues ROW_NORM for both prenorm (BF16 out at the matvec "
-         "boundary) and QK-norm (FP32 out: RoPE runs in FP32 and q rounds to BF16 only after RoPE)",
-         reading="ROW_NORM output format = the O descriptor's fmt (FP32 or BF16) per op"),
-    dict(id="G6", item="sfx_multipass 'fixed 640-row chunks with carry-in': a scalar carry changes the denominator's "
-         "order vs the csum8 tree of the golden / quality run", reading="the carry must be the streaming binary-counter "
-         "state (exactly the csum8 tree); the SU fallback is bound until the fused unit is shown equal"),
+    dict(id="G1", item="SUT bit positions", status="resolved: packed from bit 0 in list order"),
+    dict(id="G2", item="SU.VOP D and R operands", status="resolved: opnd A,B,C,D,O,R,I"),
+    dict(id="G3", item="per-row scalar broadcast", status="resolved: MDESC ibcast"),
+    dict(id="G4", item="softmax op", status="resolved: FUSED.SOFTMAX (SU fallback bound until CF-SFX)"),
+    dict(id="G5", item="norm output format per op", status="resolved: O.fmt"),
+    dict(id="G6", item="multipass carry order", status="resolved: carry the csum8 binary-counter state"),
+    dict(id="G7", item="CTL.END token source", status="resolved: A required on r25"),
+    dict(id="G8-G14", item="DS native lowering items", status="resolved: QDQ ops, even-split gather, group reduce, "
+         "per-die images, ATT B+C ring, IDX.EHASH, COLL.ROW_GATHER"),
+    dict(id="C3b", item="indexed descriptors", status="resolved: MDESC indexed + I operand"),
+    # OPEN (found while moving the DS native lowering onto the approved encoding, 2026-10-09; sent to hbm-iface)
+    dict(id="G15", item="IDX.TOPK output order: the approved order is descending score, but the DS router top-6 and "
+         "the DS index top-512 select by rank comparators and emit ids in ASCENDING ID order, which is the golden's "
+         "order (expert slot order, the route-weight sum order, the selected-row order); no order flag exists",
+         status="open; PROVISIONAL reading param[12] = 1 -> ids in ascending id order (machine.TOPK_ASC)"),
+    dict(id="G16", item="DS indexer engines (IDX.INDEX_Q, INDEX_SCORES, SELECT, the index TOPK and COLL.TOPK_MERGE "
+         "of the candidate lists) keep their scores / candidates in the indexer engine's own buffers; section 6.7 "
+         "defines no operands, param or immediates for them",
+         status="open; the DS lowering passes layer = imm_b, source layer = param, count = imm_a (DS engine fields)"),
+    dict(id="G17", item="ARGMAX.LOCAL id offset for DS: spec 5.4 lists DS imm_a = 0 (ids already global), but the "
+         "DS head's even split (129,280 over 96: 1,346 or 1,347 rows) is not RANK x imm_a",
+         status="open; the DS lowering uses uniform 1,347-row head shards (rows are independent dots, so logits are "
+                "unchanged) and imm_a = 1,347"),
+    # OPEN (DFlash on Qwen3-8B, stream qwen-hbm-spec 2026-10-09; spec 7.4)
+    dict(id="G18", item="SM.MATVEC [4:2] positions - 1: the spec shares one weight read over P <= 8 slots, but the r25 "
+         "SM element ot_hbm_accel_smh carries op_rows/op_c/op_g/op_gs/op_fmt/op_xb and no slot count; whether one "
+         "issued line serves P x-fragments in the same beat is not benched",
+         status="open (hbm-forks): simulator implements P rows bit-exact; timing reports 'spec' (issue unchanged) and "
+                "'reissue' (issue x P) modes"),
+    dict(id="G19", item="ATT [3:0] head lanes cannot encode 16 (4 query heads x 4 verify slots)",
+         status="clarified: 0 encodes 16 (backward compatible; machine.py)"),
+    dict(id="Q-MTP-1", item="a verify step commits k = 1..ncol tokens but the completion carries one token",
+         status="proposed CTL.TOKX (cmdproc): A[0] = k, A[1..k] tokens -> k completion beats; simulated"),
 ]
 
 
@@ -52,18 +67,22 @@ class MDesc:
     n: int = 1
     m: int = 1
     stride: int = 0
-    istride: int = 0           # 0 = 1; ISTRIDE_BCAST = 0
+    istride: int = 0           # 0 = 1
     lstride: int = 0
     dyn_sel: int = 0
     dyn_mul: int = 0
     n_sel: int = 0
+    l1stride: int = 0
+    ibcast: int = 0            # inner stride 0 (per-row scalar broadcast)
+    indexed: int = 0           # base += U32(VM[I + L]) * dyn_mul instead of the DYN term
 
     def encode(self) -> int:
         v = dict(space=HGI.SPACE.index(self.space), fmt=HGI.FMT[self.fmt], base=self.base, n=self.n, m=self.m,
                  stride=self.stride & 0xFFFFFFFF, istride=self.istride, lstride=self.lstride & 0xFFFFFFFF,
-                 dyn_sel=self.dyn_sel, dyn_mul=self.dyn_mul, n_sel=self.n_sel)
+                 dyn_sel=self.dyn_sel, dyn_mul=self.dyn_mul, n_sel=self.n_sel, l1stride=self.l1stride & 0xFFFFFFFF,
+                 ibcast=self.ibcast, indexed=self.indexed)
         w = 0
-        for name, lsb, width in HGI.MDESC_FIELDS:
+        for name, lsb, width in HGI.D_MDESC_FIELDS:
             x = int(v[name])
             if not 0 <= x < (1 << width):
                 raise ValueError(f"MDESC {name}={x} outside {width} bits")
@@ -72,24 +91,19 @@ class MDesc:
 
     @classmethod
     def decode(cls, w: int):
-        v = {name: (w >> lsb) & ((1 << width) - 1) for name, lsb, width in HGI.MDESC_FIELDS}
+        v = {name: (w >> lsb) & ((1 << width) - 1) for name, lsb, width in HGI.D_MDESC_FIELDS}
         inv = {b: a for a, b in HGI.FMT.items()}
         return cls(space=HGI.SPACE[v["space"]], fmt=inv[v["fmt"]], base=v["base"], n=v["n"], m=v["m"],
                    stride=_s32(v["stride"]), istride=v["istride"], lstride=_s32(v["lstride"]), dyn_sel=v["dyn_sel"],
-                   dyn_mul=v["dyn_mul"], n_sel=v["n_sel"])
+                   dyn_mul=v["dyn_mul"], n_sel=v["n_sel"], l1stride=_s32(v["l1stride"]), ibcast=v["ibcast"],
+                   indexed=v["indexed"])
 
 
 def _s32(x):
     return x - (1 << 32) if x & (1 << 31) else x
 
 
-SUT_LAYOUT = []
-_o = 0
-for _n, _w in HGI.SUT_FIELDS:
-    SUT_LAYOUT.append((_n, _o, _w))
-    _o += _w
-SUT_BITS = _o
-assert SUT_BITS <= 256
+SUT_LAYOUT = HGI.D_SUT_LAYOUT
 
 
 def sut_encode(t: dict) -> int:
@@ -110,40 +124,33 @@ def sut_decode(w: int) -> dict:
 class Rec:
     unit: str
     op: str
-    wait: int = 0              # 12-bit unit drain mask (bit = HGI.UNITS index)
+    wait: int = 0              # drain mask (bit = unit code)
     pred: str = "ALWAYS"
     slot: int = 0
     param: int = 0
     imm_a: int = 0
     imm_b: int = 0
     sut: dict | None = None
-    desc: dict = dataclasses.field(default_factory=dict)    # A, B, C, O (+ D, R for SU.VOP)
-    tag: str = ""              # not encoded: the compiler's name of the op (trace only)
-    family: str = ""           # not encoded: the Qwen / DS family the record belongs to
+    desc: dict = dataclasses.field(default_factory=dict)    # A, B, C, D, O, R, I
+    tag: str = ""              # not encoded (trace only)
+    family: str = ""           # not encoded
 
     @property
     def opnd(self):
         return sum(1 << i for i, k in enumerate(OPND) if k in self.desc)
 
     def descs_in_order(self):
-        out = [(k, self.desc[k]) for k in OPND if k in self.desc]
-        if self.unit == "SU":
-            out += [(k, self.desc[k]) for k in EXTRA if k in self.desc]
-        return out
+        return [(k, self.desc[k]) for k in OPND if k in self.desc]
 
     def encode(self) -> bytes:
-        if self.unit == "SU":
-            extra = sum(1 << i for i, k in enumerate(EXTRA) if k in self.desc)
-            if self.param & ~0x3:
-                raise ValueError("SU.VOP param holds only the D / R presence bits")
-            self.param = extra
-        elif any(k in self.desc for k in EXTRA):
-            raise ValueError("D / R descriptors exist only on SU.VOP")
-        v = dict(unit=HGI.UNITS.index(self.unit), op=HGI.OPS[self.unit].index(self.op), wait=self.wait,
+        bad = set(self.desc) - set(OPND)
+        if bad:
+            raise ValueError(f"unknown operand slots {bad}")
+        v = dict(unit=UNITS.index(self.unit), op=OPS[self.unit].index(self.op), wait=self.wait,
                  pred=HGI.PRED.index(self.pred), opnd=self.opnd, tmpl=int(self.sut is not None), slot=self.slot,
-                 param=self.param & 0xFFFFFFFF, imm_a=self.imm_a & 0xFFFFFFFF, imm_b=self.imm_b & 0xFFFFFFFF)
+                 param=self.param, imm_a=self.imm_a & 0xFFFFFFFF, imm_b=self.imm_b & 0xFFFFFFFF)
         h = 0
-        for name, lsb, width in HGI.UOP_FIELDS:
+        for name, lsb, width in HGI.D_UOP_FIELDS:
             x = int(v[name])
             if not 0 <= x < (1 << width):
                 raise ValueError(f"UOP {name}={x} outside {width} bits")
@@ -158,9 +165,11 @@ class Rec:
 
 def decode_one(buf: bytes, off: int):
     h = int.from_bytes(buf[off:off + 16], "little")
-    v = {name: (h >> lsb) & ((1 << width) - 1) for name, lsb, width in HGI.UOP_FIELDS}
-    unit = HGI.UNITS[v["unit"]]
-    ops = HGI.OPS[unit]
+    v = {name: (h >> lsb) & ((1 << width) - 1) for name, lsb, width in HGI.D_UOP_FIELDS}
+    unit = UNITS[v["unit"]]
+    if unit not in OPS:
+        raise ValueError(f"reserved unit code {v['unit']}")
+    ops = OPS[unit]
     if v["op"] >= len(ops):
         raise ValueError(f"illegal op {v['op']} for {unit}")
     r = Rec(unit=unit, op=ops[v["op"]], wait=v["wait"], pred=HGI.PRED[v["pred"]], slot=v["slot"], param=v["param"],
@@ -169,12 +178,10 @@ def decode_one(buf: bytes, off: int):
     if v["tmpl"]:
         r.sut = sut_decode(int.from_bytes(buf[p:p + 32], "little"))
         p += 32
-    keys = [k for i, k in enumerate(OPND) if v["opnd"] >> i & 1]
-    if unit == "SU":
-        keys += [k for i, k in enumerate(EXTRA) if v["param"] >> i & 1]
-    for k in keys:
-        r.desc[k] = MDesc.decode(int.from_bytes(buf[p:p + 32], "little"))
-        p += 32
+    for i, k in enumerate(OPND):
+        if v["opnd"] >> i & 1:
+            r.desc[k] = MDesc.decode(int.from_bytes(buf[p:p + 32], "little"))
+            p += 32
     return r, p
 
 
@@ -197,5 +204,10 @@ def rec_bytes(r: Rec) -> int:
 def wait_mask(*units):
     m = 0
     for u in units:
-        m |= 1 << HGI.UNITS.index(u)
+        m |= 1 << UNITS.index(u)
     return m
+
+
+def bcast(d: MDesc) -> MDesc:
+    d.ibcast = 1
+    return d

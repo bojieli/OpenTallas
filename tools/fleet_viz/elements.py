@@ -36,9 +36,9 @@ CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
-STRONG = [('Qwen ROM', re.compile(r'^(qfd|ot_qwen|ot_qfd|qwen)')),
-          ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_)')),
-          ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_)'))]
+STRONG = [('Qwen ROM', re.compile(r'^(qfd|qkd|ot_qwen|ot_qfd|ot_qkvd|qwen)')),   # qkd / ot_qkvd: the KV die (kv-die 2026-10-09)
+          ('HBM accelerator', re.compile(r'^(hfd|ot_hbm|ot_ha2|ot_su\d|ot_attn|hbm|smh|w2_|hgi|ot_hgi|ot_hcoll|ot_gpu_rf_)')),
+          ('DeepSeek ROM', re.compile(r'^(dsfd|ot_dsrom|ot_s81|s81|dshead|dsrom|ot_v41_|bf_|pq_|ot_mtp_)'))]
 WEAK = [('Qwen ROM', re.compile(r'qwen')), ('HBM accelerator', re.compile(r'hbm|ha2')),
         ('DeepSeek ROM', re.compile(r's81|dsrom|ds-|deepseek|v41|dshead'))]
 
@@ -56,7 +56,7 @@ VARIANT = [(r'_signoff\d+$', '', True), (r'_(parent|retained)$', '', False), (r'
            (r'_split$', '', False), (r'_s2$', '', False), (r'_t$', '', False), (r'_(ab|bv|sq)$', '', False),
            (r'_l$', '', False), (r'_w\d+$', '', False), (r'_fr$', '', False), (r'_credit$', '', False),
            (r'^(ot_qwen_stream4_cdc_pc)_.+$', r'\1', True), (r'^(ot_hbm_native_frame_station_rb_NO\d)_(HALF|SAFE)$', r'\1', True),
-           (r'_c12[hs]$', '', True), (r'_halfwrite_distributed$', '_halfwrite', False), (r'_root_phase$', '', False)]
+           (r'_c12[hs]$', '', True), (r'^(qfd_sysctl_stn)_pb2$', r'\1', True), (r'_halfwrite_distributed$', '_halfwrite', False), (r'_root_phase$', '', False)]
 
 def master(block, known):
     b = block

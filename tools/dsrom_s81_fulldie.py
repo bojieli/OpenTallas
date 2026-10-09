@@ -3566,12 +3566,16 @@ NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a rel
 WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f_vm'),
              ('collective', 'wfc', 514, 't_wfc', 'f_collective'), ('wfc', 'collective', 514, 't_collective', 'f_wfc'),
              ('wfc', 'capture', 64, 't_capture', 'f_wfc'), ('capture', 'wfc', 64, 't_wfc', 'f_capture'))
-# sequencer: argmax token words in from the capture (verify targets t_0..t_5 + draft d_i, 17 b + valid + index), out
-# to the collective: acc_n / bonus / squash / epoch word on the token return + seed dispatch to the draft primary
-# (128 b); in from the collective: draft-chain completions and the 12-die argmax merge (128 b); to the VM: the Markov
-# embed row (32 x BF16 = 512 b) and the draft seed x control (64 b).
-MTP_SEQ_BUSES = (('capture', 'mtp', 64, 't_mtp', 'f_capture'), ('mtp', 'collective', 128, 't_collective', 'f_mtp'),
-                 ('collective', 'mtp', 128, 't_mtp', 'f_collective'), ('mtp', 'vm', 576, 't_vm', 'f_mtp'))
+# sequencer (mtp-lead 2026-10-09, native binding): widths from the ACTUAL dsfd_mtp_seq wrapper ports
+# (rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv, NW 21 / USER_W 10 / FLIT 512; each grant port = data + valid + grant):
+#   capture -> mtp   RESULT flit f_rv/f_rd/t_rg                                  512 + 2 = 514
+#   mtp -> collective token return t_tv/t_td/f_tg 514 + seed to the draft primary t_sv/t_sd/f_sg (SW = 10+3*21+4 = 77)
+#                    79 + accept word t_acc (2*21+10+5 = 57, from flops)          514 + 79 + 57 = 650
+#   vm -> mtp        rows-ready f_wv/f_wd/t_wg 12 + draft-head result f_qv/f_qd/t_qg (DW = 10+3+21 = 34) 36 = 48
+#   mtp -> vm        draft-head step t_hv/t_hd/f_hg                                34 + 2 = 36
+# (replaces the 64/128/128/576 aggregates of 2026-10-08, which did not describe the wrapper).
+MTP_SEQ_BUSES = (('capture', 'mtp', 514, 't_mtp', 'f_capture'), ('mtp', 'collective', 650, 't_collective', 'f_mtp'),
+                 ('vm', 'mtp', 48, 't_mtp', 'f_vm'), ('mtp', 'vm', 36, 't_vm', 'f_mtp'))
 # MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
 # r3 / r4 dies stay reproducible).
 CTRL_SLAB = False
@@ -3627,6 +3631,11 @@ PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 
 FACE_PIN_INSET = 0.0           # --face-pin-inset: generated face pins 0.048 um inside the outline (abutment EOL)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
+# OT_S81_HOP_R_CC (cont-takeover 2026-10-09, default unset = 410): common-clock hop reach for the frame / column relays.
+# Option-B sign-off is TT setup (SS a sensitivity); the TT wire reach exceeds the SS 504 um, so a longer hop cap trades a
+# few longer relay segments (timed by the die STA on GRT parasitics) for fewer relays in the 100 %-packed frame cfg bands
+# (m221pq_r4c GEN_FAIL rt_0_8a_y1: no legal relay box within 400 um of the driver).
+HOP_R_CC = float(os.environ.get('OT_S81_HOP_R_CC', HOP_R_CC))
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing

@@ -1,0 +1,118 @@
+{
+ "id": "qdq_fp4_e4m3_block32_undefined",
+ "row": "CF-QDQ",
+ "mode": "GENERIC",
+ "what": "QDQ_FP4_E4M3 with param[7:0] = 32: undefined block size faults (status 3) until a vector defines it",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "00000000000000002000002002008041010000000000400010000000000000000000000000000000000000000000000001001000000040001000000000000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "0000000000000000200000200200804101000000000040001000000000000000000000000000000000000000000000000100100000004000100000000000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "FUSED",
+   "op": "QDQ_FP4_E4M3",
+   "param": 32,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 4096,
+     "n": 64,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "qdq",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "5b6422c0e84b4fbe69ae28bf91c385bf251669be5d79053f2d4cd73f405d73408d6b36c0fbec8b3fad90413f0ff43940372f543f930f6a40113375405f3a8240b2a44940df87973f8a1b55c0a2ae9ebe099aa4bf8487e03ee6edd7bf7627dbbf337623bd63ab5640a22abdc01bec0740c4c1ddbfc128a73ff095643fddae39c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 3,
+  "dies": [],
+  "outputs_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+ },
+ "mutants": []
+}

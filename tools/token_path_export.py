@@ -290,7 +290,15 @@ Q_LINK = dict(rmsnorm1="VM -> SU", qkv="VM -> tile band broadcast (tree)", qknor
               down="VM -> tile band", allreduce2="hub -> SerDes TP4 ring", residual="link -> VM")
 
 
-def qwen():
+KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
+
+
+def qwen_kvdie():
+    """kv-die 2026-10-09 (owner option 1a): the TP4 token on the ROM die + KV die pair (attention on the KV die)."""
+    return qwen(kv=J(KVD))
+
+
+def qwen(kv=None):
     T = "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json"
     DS4 = "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_step_stream4.json"
     OPT = "results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verify_P8187/optrace/k_AR_op.trace.log"
@@ -328,16 +336,24 @@ def qwen():
     AR_ADD = [dict(item="die_relays_430um", cycles=d_link, grade="priced", record=REL + " delta_link_per_traversal"),
               dict(item="serdes_pinreg (re-price 10-08)", cycles=1, grade="priced", record=REPRICE + " qwen_rom serdes_pinreg")]
     TOKEN_KV = [(k, lines[k]) for k in ("kv_map_m", "kv_crossbar_model", "ctrl_shift")]
-    d = Design("qwen_rom", "Qwen3-8B ROM, 8K context, AR (TP4 dies)", "cycles")
+    kvc = kv["cases"]["typical"] if kv else None
+    d = Design("qwen_kvdie" if kv else "qwen_rom", "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)" if kv else
+               "Qwen3-8B ROM, 8K context, AR (TP4 dies)", "cycles")
     gdef = collections.OrderedDict()
     gdef["embed"] = dict(label="Embed", kind="embed")
-    d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
-          src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
-          instances=QCLS["embed"]["instances"])
+    if kv:
+        d.add("embed", "Embedding row fetch from HBM through the KV die (EMBQ / EMBD over the link)", "embed", "embed",
+              kvc["embed_cycles"], src("priced", KVD, "cases.typical.embed_cycles", note="r22k + KV-die relay chains, the "
+              "link (adapter + PHY), the EMB_HBM_FEASIBILITY DRAM / port / ingest constants"),
+              elements=["ot_qfd_emb_gw", "ot_qkvd_d2d"], instances=["embgw", "d2d_kv", "d2d_rom"])
+    else:
+        d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
+              src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
+              instances=QCLS["embed"]["instances"])
     # emb-hbm 2026-10-08: the measured HBM embedding path replaces this behavioural-ROM node at the next reprice run;
     # recorded here as a pending annotation only (the node's cycles are unchanged until then)
     emb = ROOT / "results/arch/emb_hbm_20261008/token_path_inputs.json"
-    if emb.exists():
+    if emb.exists() and not kv:
         d.nodes["embed"]["pending_next_reprice"] = J("results/arch/emb_hbm_20261008/token_path_inputs.json")["embed_node"]
     prev_group_last = "embed"
     for L in range(36):
@@ -366,7 +382,23 @@ def qwen():
             s_note = f"isolated AR L0 RT_OPTRACE op-fetch window [{lo}, {hi}) of the measured {L_iso}-cycle trace; {note}"
             if oid == "attn_tail":
                 s_note += f"; chained layer {chained} = isolated {L_iso} - {drain} drain cycles (all taken here)"
-            if L == 0 and oid == "attn_kv":
+            if kv and oid == "attn_kv":
+                cyc = kvc["layer_step"]
+                adders = []         # the tile ME-op adders (relays, MUL_LAT, band) do not apply: no tile op; the KV-die
+                                    # and r22k relay stages are inside the measured step (placement stage counts)
+                grade = "measured"
+                s_note = (f"ATTENTION LAYER STEP THROUGH THE LINK (kv-die): CTL / KVN / Q from the ROM faces -> r22k relays -> "
+                          f"ROM end -> UCIe pair -> KV end -> qkd_seq -> near-HBM attention (R 8, _p) with the KV merge -> RES "
+                          f"to the VM; bench {kvc['layer_step_measured']} + ROM relay correction {kvc['rom_stage_correction']} "
+                          f"({KVD} cases.typical); replaces the tile attention + softmax_norm windows")
+            if kv and oid == "softmax_norm":
+                cyc = 0
+                s_note = "inside the KV-die attention hub (x 1/Z) and the RES return: 0 on the ROM die"
+            if L == 0 and oid == "attn_kv" and kv:
+                for k, ln in TOKEN_KV:
+                    adders.append(dict(item=k, cycles=ln["effect"]["AR"], grade="measured" if ln["status"] == "measured" else "priced",
+                                       record=ln["source"][0]["file"], note="per-token KV-path constant, placed on layer 0"))
+            elif L == 0 and oid == "attn_kv":
                 cyc += L0_extra
                 s_note += f"; + {L0_extra} cold-layer cycles (L0 {stages['L0']['cycles']} vs chained {chained}: no earlier layer hides its KV prefetch)"
                 for k, ln in TOKEN_KV:
@@ -375,13 +407,13 @@ def qwen():
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
             deps = [prev_group_last] if i == 0 else None
             n = d.add(f"{g}.{oid}", lab, g, cls, cyc,
-                      src(grade, f"{T} stages[{g}] + {OPT}", note=s_note + f"; layer total measured {stages[g]['cycles']} cycles"),
+                      src(grade, (KVD if kv and oid in ("attn_kv", "softmax_norm") else f"{T} stages[{g}] + {OPT}"), note=s_note + f"; layer total measured {stages[g]['cycles']} cycles"),
                       op=oid, elements=QCLS[cls]["elements"], instances=QCLS[cls]["instances"], adders=adders, deps=deps,
                       bytes_in=Q_BYTES[oid] if i else 16384, link_in=li, edge_cycles=1 if (i == 0 and L > 0) else 0)
             n["layer"] = L
         prev_group_last = f"{g}.residual"
         # parallel KV prefetch for the next layer, inside this layer's MLP window
-        if L < 35:
+        if L < 35 and not kv:
             fill = 1362
             st = None  # placed after the chain is scheduled
             n = d.add(f"{g}.kv_prefetch", f"KV prefetch for layer {L + 1} (HBM -> landing, 4.19 MB a die)", g, "kv", fill,
@@ -400,13 +432,28 @@ def qwen():
                edge_cycles=1)
     total = d.chain_schedule()
     # place the prefetch nodes: start at this layer's rmsnorm2 (MLP window), feed the next layer's attn_kv
-    for L in range(35):
+    for L in (range(35) if not kv else ()):
         n = d.nodes[f"L{L}.kv_prefetch"]
         st = d.nodes[f"L{L}.rmsnorm2"]["start"]
         n["start"], n["end"] = r1(st), r1(st + n["cycles"])
         d.edges.append(dict(src=n["id"], dst=f"L{L + 1}.attn_kv", bytes=4194304, link="HBM3E x4 stacks -> PC landing FIFOs (CK/2 -> core)", cycles=0))
     measured_total = t["total_cycles"]
     adders_total = sum(c for n in d.nodes.values() if n["critical"] for _, c in n["adders"])
+    if kv:
+        drill = dict(group="L1", why="a chained layer: the attention step runs on the KV die (measured through the link RTL)")
+        headline = dict(tok_s=round(1.2e9 / total, 1), cycles=round(total, 1), mode="AR (DSpark off), position 8,191",
+                        basis=f"{KVD} (priced candidate: the TP4 basis with the attention step measured through the link; "
+                              f"reprice.json typical {kvc['token_cycles']:,} cycles)",
+                        source=KVD + " cases.typical", status="priced candidate (not a closed rate)",
+                        per_user_cost_vs_tp4_pct=kv["per_user_cost"]["vs_tp4_pct"], die_pair_mm2=kv["silicon"]["pair_mm2"],
+                        interposer_reticles=kv["silicon"]["interposer_reticles"],
+                        measured_cycles=None, priced_cycles=None)
+        notes = [f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
+                 "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "
+                 "new K / V and the attention output cross the UCIe link (results/arch/qwen_kv_die_20261009/CONTRACT.md).",
+                 "Every other operation keeps the measured TP4 windows and priced adders of the qwen_rom view."]
+        return finish(d, headline, gdef, QWEN_CLASSES, drill, notes,
+                      extra=dict(geometry=dict(source=GEO, key="qwen_kvdie", die="Qwen ROM die (r22k) + KV die")))
     assert abs(total - rp["after"]["cycles"]) < 0.5, (total, rp["after"]["cycles"])
     assert abs(total - adders_total - measured_total) < 0.5
     headline = dict(tok_s=rp["after"]["AR_tok_s"], cycles=rp["after"]["cycles"], mode="AR (DSpark off), position 8,191",
@@ -1057,6 +1104,74 @@ def accounting(total, tau, ar_cycles, phases, tau_source):
                      "per-accepted-token cost = step / tau")
 
 
+MTP_STEP = "results/arch/mtp_step_20261009/{}_step.json"     # tools/mtp_step_charges.py (mtp-lead 2026-10-09)
+
+
+def apply_mtp_charges(d, key, gdef, total):
+    """insert the MTP block charges of tools/mtp_step_charges.py: each critical charge becomes a node after its anchor
+    (every later node shifts by its cycles); an overlapped charge becomes a parallel node with the slack its proof states.
+    Returns (new total, summary) -- (total, None) when the step file is absent."""
+    p = ROOT / MTP_STEP.format(key)
+    if not p.exists():
+        return total, None
+    st = json.loads(p.read_text())
+    for ph in ("draft", "verify", "accept"):
+        gdef["MC." + ph] = dict(label=f"MTP block charges, {ph} (tools/mtp_step_charges.py)", kind={"verify": "wave"}.get(ph, ph), phase=ph)
+    crit_nodes = [d.nodes[x] for x in d.order]
+
+    def anchor_of(a):
+        if a == "wave.last":
+            return [n for n in crit_nodes if n["id"].startswith("wave.")][-1]["id"]
+        if a in ("draft.last", "verify.last"):
+            return [n for n in crit_nodes if n.get("phase") == a.split(".")[0]][-1]["id"]
+        if a == "draft.blocks":
+            return [n for n in crit_nodes if n.get("phase") == "draft" and not n["id"].startswith("draft.")][-1]["id"]
+        assert a in d.nodes, a
+        return a
+
+    added = 0.0
+    for c in st["charges"]:
+        nid = "mc." + c["id"]
+        hwd = hw("partial", f"{c['element']}: cycles charged from its RTL bench / record"
+                 + (f"; variant: {c['variant']}" if c.get("variant") else ""), evidence="; ".join(c["source"])[:300])
+        sg = src("measured" if c["grade"].startswith("measured") else "priced", MTP_STEP.format(key), f"charges[{c['id']}]",
+                 note=c["formula"])
+        if not c["critical"]:
+            n = d.add(nid, c["element"], "MC." + c["phase"], "ctl", c["cycles"], sg, op=nid, start=0.0, critical=False, deps=[],
+                      kind="parallel", elements=[], instances=[])
+            n["slack"] = r1(max(x["end"] for x in crit_nodes if x.get("phase") == "draft") - c["cycles"])
+            n["overlap_proof"] = c["overlap_proof"]
+            mark(n, c["phase"], hwd)
+            continue
+        a = anchor_of(c["anchor"])
+        t = d.nodes[a]["end"]
+        cyc = c["cycles"]
+        for n in d.nodes.values():
+            if "start" in n and n["start"] >= t - 1e-9:
+                n["start"], n["end"] = r1(n["start"] + cyc), r1(n["end"] + cyc)
+        k = d.order.index(a)
+        nxt = d.order[k + 1] if k + 1 < len(d.order) else None
+        n = dict(id=nid, label=c["element"], group="MC." + c["phase"], cls="ctl", op=nid, kind="op", base_cycles=r1(cyc), cycles=r1(cyc),
+                 adders=[], src=sg, elements=[], instances=[], critical=True, start=r1(t), end=r1(t + cyc))
+        d.nodes[nid] = n
+        d.order.insert(k + 1, nid)
+        for e in d.edges:
+            if e["src"] == a and e["dst"] == nxt:
+                e["dst"] = nid
+        d.edges.append(dict(src=a, dst=nid, bytes=None, link=None, cycles=0))
+        if nxt is not None:
+            d.edges.append(dict(src=nid, dst=nxt, bytes=None, link=None, cycles=0))
+        mark(n, c["phase"], hwd)
+        added += cyc
+        crit_nodes = [d.nodes[x] for x in d.order]
+    assert abs(added - st["totals"]["critical_cycles"]) < 0.5, (added, st["totals"])
+    summ = dict(source=MTP_STEP.format(key), critical_cycles=st["totals"]["critical_cycles"],
+                critical_cycles_lower=st["totals"]["critical_cycles_lower"],
+                overlapped_cycles=st["totals"]["overlapped_cycles"], composed_step_cycles=r1(total),
+                charged_step_cycles=r1(total + added))
+    return total + added, summ
+
+
 def ds_rom_mtp(ar=None):
     import dsrom_1m_measure as M
     ar = ar or ds_rom()
@@ -1226,10 +1341,15 @@ def ds_rom_mtp(ar=None):
     mark(n, "accept")
     total = t + n["cycles"]
     assert abs(total - hv["step_us"] * CY) < 0.6, (total, hv["step_us"] * CY)
+    total, charged = apply_mtp_charges(d, "ds_rom", gdef, total)
+    tok = round(m["tau"] * CLK / total, 1) if charged else hv["MTP_tok_s"]
+    if charged:
+        charged["MTP_tok_s_composed"] = hv["MTP_tok_s"]
+        hv["MTP_tok_s_charged"] = tok
     phases = phase_spans(d, total)
-    headline = dict(tok_s=hv["MTP_tok_s"], us=hv["step_us"], cycles=r1(hv["step_us"] * CY), tau=m["tau"],
+    headline = dict(tok_s=tok, us=round(total / CY, 3), cycles=r1(total), tau=m["tau"],
                     mode=f"MTP (DSpark gamma 5, tau {m['tau']}), position 1,048,575", ar_tok_s=hv["AR_tok_s"],
-                    mtp_over_ar=round(hv["MTP_tok_s"] / hv["AR_tok_s"], 3),
+                    mtp_over_ar=round(tok / hv["AR_tok_s"], 3), composed_tok_s=hv["MTP_tok_s"],
                     basis=f"{m['rule']}; 1,792 HALF mapping adds {hv['extra_hops_1792']} hops once a step",
                     source=REPRICE + " ds_rom.after.half_phl.MTP_tok_s", status="measured field + composed MTP rule "
                     "(wavefront and draft placement not physically qualified)", physical_qualified=m.get("physical_qualified"))
@@ -1245,8 +1365,13 @@ def ds_rom_mtp(ar=None):
         "accept unit closed as blocks but are not integrated (dashed).",
         "The verify pass's operators are the AR view's critical path (off-critical operators: see the AR view).",
     ]
+    if charged:
+        notes.append(f"MTP block charges (group MC, {charged['source']}): the WFC kit on the stage hops and intervals, the "
+                     f"P2 selected draft transport, the sequencer, the Markov floor, wfc_tok and mtp_commit add "
+                     f"{charged['critical_cycles']:,.1f} cycles a step: {hv['MTP_tok_s']:,.1f} -> {tok:,.1f} tok/s (composed "
+                     "rule -> charged).")
     rec = finish(d, headline, gdef, DS_CLASSES + MTP_CLASSES_EXTRA, drill, notes, tau=m["tau"],
-                 extra=dict(geometry=ar["geometry"], mtp_variants=variants))
+                 extra=dict(geometry=ar["geometry"], mtp_variants=variants, mtp_charges=charged))
     rec.update(phases=phases, hw_summary=hw_summary(d),
                accounting=accounting(total, m["tau"], ar["totals"]["cycles"], phases, m["tau_source"]))
     return rec
@@ -1437,10 +1562,14 @@ def hbm_mtp(ar=None):
     after = rp["upper"]["after"]
     exp_us = comp["MTP_step_us"] + sum(x["cycles_hi"] for x in rp["items"]) / CY
     assert abs(total / CY - exp_us) < 0.01, (total / CY, exp_us)
+    total, charged = apply_mtp_charges(d, "hbm_ds", gdef, total)
+    tok = round(tau * CLK / total, 1) if charged else after["MTP_tok_s"]
+    if charged:
+        charged["MTP_tok_s_composed"] = after["MTP_tok_s"]
     phases = phase_spans(d, total)
-    headline = dict(tok_s=after["MTP_tok_s"], us=round(exp_us, 3), cycles=r1(exp_us * CY), tau=tau,
+    headline = dict(tok_s=tok, us=round(total / CY, 3), cycles=r1(total), tau=tau,
                     mode=f"MTP (DSpark gamma 5, tau {tau}), position 1,048,575", ar_tok_s=after["AR_tok_s"],
-                    mtp_over_ar=round(after["MTP_tok_s"] / after["AR_tok_s"], 3),
+                    mtp_over_ar=round(tok / after["AR_tok_s"], 3), composed_tok_s=after["MTP_tok_s"],
                     basis=f"{UNI} hbm_ds unified_candidate_contracts_rtl MTP step ({comp['MTP_step_us']} us, {comp['MTP_tok_s']} "
                           f"tok/s) + the 2026-10-08 re-price upper bound; step = draft + verify (P6 walk + expert union) + seed/commit "
                           f"(gate row {gate['MTP_row']}, {gate['MTP_step_us']} us)",
@@ -1458,8 +1587,13 @@ def hbm_mtp(ar=None):
         f"Rate = tau {tau} / step = {after['MTP_tok_s']:,.1f} tok/s (re-price upper bound; lower bound in reprice.json).",
         "Hatched: no closed hardware; dashed: a closed block not adopted / integrated (expert union, spec state).",
     ]
+    if charged:
+        notes.append(f"MTP block charges (group MC, {charged['source']}): the hfd_mtp die master's pin crossings, argmax / "
+                     f"topK / union FAST registers, spec-state latency, fence and commit add {charged['critical_cycles']:,.1f} "
+                     f"cycles a step ({after['MTP_tok_s']:,.1f} -> {tok:,.1f} tok/s); the KV writer's +1/row "
+                     f"({charged['overlapped_cycles']:,.0f} cycles) is overlapped with the next draft (proof in the file).")
     rec = finish(d, headline, gdef, HBM_CLASSES + MTP_CLASSES_EXTRA[1:], drill, notes, tau=tau,
-                 extra=dict(geometry=ar["geometry"]))
+                 extra=dict(geometry=ar["geometry"], mtp_charges=charged))
     rec.update(phases=phases, hw_summary=hw_summary(d),
                accounting=accounting(total, tau, ar["totals"]["cycles"], phases, row["tau_source"]))
     return rec
@@ -1485,7 +1619,7 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
-OPTIONAL_TARGETS = ("qwen_hbm",)
+OPTIONAL_TARGETS = ("qwen_hbm", "qwen_kvdie")
 
 
 def target_functions(namespace):

@@ -1,0 +1,33 @@
+{
+  "source_commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
+  "immutable_baseline_commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+  "verdict": "Canonical routine C1 TT/FF/DRC PASS; no adoption until boundary attribution",
+  "tt_setup_ps": 48.74,
+  "ff_hold_ps": 5.65,
+  "ss_sensitivity_ps": -178.61,
+  "drc": 0,
+  "hold_cells_added": 5588,
+  "reset_recovery_ps": 206.76,
+  "reset_removal_ps": 13.68,
+  "drt_peak_mb": 29677.57,
+  "retained_M7_wire_um": 23980,
+  "boundary_caveat": "corner_sta sampled output-port property\u22121679.80 contradicts actual worst timed output path paused+48.74 and TNS0; retain for endpoint attribution; no clock or SDC relaxation",
+  "files": {
+    "route_preflight.json": "3c08abda0f3fab910b77accaab166fd881e7035ecb51fc15bbbc1c0b4f31d5a3",
+    "canonical_state.json": "5529fadefd90cfdbd87b6fa04d3e972ea4f571e45c03fb308eb2f82d3ae1617e",
+    "eco_exit.json": "2abc41b85ba3c5e70d007487aca3b2ff364f80d1ad6b02a9762ec5cd9010bdae",
+    "eco_drc_metrics.json": "296f37b4e80eddf984c1d2490130adf9c52ddf30d04f0f2c4fa1e0455d1905e2",
+    "eco/eco.log": "a144d377b529cb67a70d23dc0d0539692d7c6505df2d90f8473d74582cc6de48",
+    "eco/corner_sta.json": "d72fa6f078cb3fb1a0c45ae35463adae400e634860a006840d811000f46cab3d",
+    "eco/result.json": "8188047821c1656385f429e119d82fb9eb0ec8837dd77289a08801c4eda61002",
+    "eco/pass1/eff_ss.sdc": "839aa35d517c1964a3c41dc513d735f1fdaf7486bc9071036cbb984aab840a95",
+    "eco/pass1/eff_ff.sdc": "839aa35d517c1964a3c41dc513d735f1fdaf7486bc9071036cbb984aab840a95",
+    "eco/pass1/eco_mm.log": "0c34e8679433658af45bf653d97dd221a7ad0014ed3ef02f5c59210ff126b954",
+    "eco/pass1/corner_ff.log": "6384421712ce0b16cae859633c7ac3ecb3b49627bab9e3d3a922d38e0291401f",
+    "eco/pass1/corner_ss.log": "5f78d9110f91e0c78cca92a1d73c7e1b4cd9b1f2341625b25dfe46ae1fab9511",
+    "eco/pass1/orfs/w18_sta_tt.log": "96281d1d17e625d5413a13bff1131e4b687ad6742721226bd2faf6d1b619d52e",
+    "eco/pass1/orfs/w18_sta_ff.log": "12fb91ab15cb5d25d4d10757e868eaf762017cf563f0fea4031079aee209e546",
+    "eco/pass1/orfs/w18_sta_ss.log": "9482581b4eab776fa90f546713c485fe94ae3b6202d5faf67e4d48d08c21f129",
+    "signoff_seed/6_final.sdc": "0b392970af0403ca530a88108ec6028ed2fd0f271ae597b7767ec7979d2f8f4f"
+  }
+}

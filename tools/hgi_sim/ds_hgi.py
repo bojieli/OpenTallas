@@ -5,8 +5,8 @@ program.json) as an HGI-1 record stream for one die, scheduled with the command 
 Lowering (spec section 3.8 native engine ops; one record per program op):
   mv            SM.MATVEC fmt 0 / 1 / 2 (BF16 / FP8 / FP4 block dot); A x (VM), B weights (HBM), O (VM)
   hc_mixes      HC.HC_MIX                 hc_pre_norm / final_norm   FUSED.HC_PRE_NORM     hc_post  FUSED.HC_POST
-  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK_LOCAL
-  route / cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
+  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK
+  route  IDX.TOPK;  cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
   attend        ATT.QK (the tile job) + SU.VOP (the fused softmax / PV-normalise / inverse-RoPE chain)
   q_norm_kv_row / q_rope / router_act / moe_sum / compressor / engram_mix   SU.VOP (one record a fused chain)
   swiglu        SFU.GLU                   argmax_local  ARGMAX.LOCAL
@@ -46,11 +46,12 @@ FMT = {"fp8": (1, "FP8E4M3", 1.0), "fp4": (2, "FP4E2M1", 0.5), "bf16": (0, "BF16
 LOCAL_UNIT = {"hc_mixes": ("HC", "HC_MIX"), "hc_pre_norm": ("FUSED", "HC_PRE_NORM"),
               "final_norm": ("FUSED", "HC_PRE_NORM"), "hc_post": ("FUSED", "HC_POST"),
               "index_q": ("IDX", "INDEX_Q"), "index_scores": ("IDX", "INDEX_SCORES"),
-              "topk_local": ("IDX", "TOPK_LOCAL"), "route": ("IDX", "SELECT"), "cand_local": ("IDX", "SELECT"),
+              "topk_local": ("IDX", "TOPK"), "route": ("IDX", "TOPK"), "cand_local": ("IDX", "SELECT"),
               "cand_apply": ("IDX", "SELECT"), "cand_mask": ("IDX", "SELECT"), "swiglu": ("SFU", "GLU"),
               "argmax_local": ("ARGMAX", "LOCAL"), "engram_fetch": ("DMA", "LOAD")}
-SUB = {"route": 0, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
+SUB = {"route": 6, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
 TP = 96
+C3B = [False]
 
 
 class VMAlloc:
@@ -103,11 +104,16 @@ def lower(prog, die=0):
                 rows = max(1, r1 - r0)
                 x = op["x"]
                 xin = "ea" if x.startswith("ea") and x[2:].isdigit() else x
-                r = Rec("SM", "MATVEC", param=fp, desc=dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304),
-                                                            B=H(fmt, op["k"], rows), O=V(op["out"], op["n"])),
+                bdesc = H(fmt, op["k"], rows)
+                slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
+                if slot and op["w"][0] < 6 and C3B[0]:      # routed expert: indexed descriptor on the router id word
+                    bdesc.indexed, bdesc.dyn_mul = 1, 1 << 20
+                dd = dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304), B=bdesc, O=V(op["out"], op["n"]))
+                if bdesc.indexed:
+                    dd["I"] = MDesc(space="VM", fmt="U32", base=vm("route_ids", 8) + op["w"][0], n=1)
+                r = Rec("SM", "MATVEC", param=fp, desc=dd,
                         tag=op["tag"], family="mv." + op["fn"])
                 r.src = src
-                slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
                 b.add(r, [xin] + (["expert_w"] if slot else []), [op["out"]])
             elif k == "local":
                 fn = op["fn"]
@@ -119,7 +125,7 @@ def lower(prog, die=0):
                     r = Rec("ATT", "QK", param=1, desc=dict(A=V("q_own", 512), O=V("att_s", 1024)), tag="attend.tile",
                             family="attend")
                     r.src = dict(src, part="tile")
-                    b.add(r, ["q_own", "sel_rows"], ["att_s"])
+                    b.add(r, ["q_own", "sel_rows", "win_new"], ["att_s"])
                     r = Rec("SU", "VOP", sut={}, desc=dict(A=V("att_s", 1024), O=V("o_own", 512)),
                             tag="attend.chain", family="attend")
                     r.src = dict(src, part="chain")
@@ -136,6 +142,8 @@ def lower(prog, die=0):
                 uop = {"all_gather": "ALL_GATHER", "kv_gather": "ALL_GATHER", "all_reduce": "ALL_REDUCE_SUM",
                        "topk_merge": "ARGMAX_MERGE" if op.get("what") == "argmax" else "TOPK_MERGE"}[k]
                 rd = op.get("bufs") or [op.get("buf") or (f"{op.get('what')}_v" if k == "topk_merge" else "sel")]
+                if k == "kv_gather":
+                    rd = ["sel", "kvstore"]
                 wr = rd if k == "all_gather" else ([op["out"]] if k == "all_reduce" else
                                                    (["sel_rows"] if k == "kv_gather" else [f"{op.get('what')}_m"]))
                 r = Rec("COLL", uop, desc=dict(A=V(rd[0], 1024), O=V(wr[0], 1024)), tag=op["tag"], family=k)
@@ -246,6 +254,21 @@ def main():
     variants["S2_compiler_reordered"] = sro["total_cycles"]
     variants["S2_compiler_reordered_races"] = len(sro["races"])
     variants["SX_compiler_reordered"] = T.schedule(ro, POSV, "SX", **kw)["total_cycles"]
+    C3B[0] = True
+    recs_c3b = lower(prog)
+    s_c3b = T.schedule(recs_c3b, POSV, "S2", **kw)
+    ls_c3b = T.schedule(T.list_schedule(recs_c3b, POSV, **kw), POSV, "S2", **kw)
+    variants["S2_with_C3b_indexed_expert_descriptors"] = s_c3b["total_cycles"]
+    variants["S2_list_scheduled_with_C3b"] = ls_c3b["total_cycles"]
+    C3B[0] = False
+    ls = T.list_schedule(recs, POSV, **kw)
+    sls = T.schedule(ls, POSV, "S2", **kw)
+    variants["S2_compiler_list_scheduled"] = sls["total_cycles"]
+    variants["S2_compiler_list_scheduled_races"] = len(sls["races"])
+    variants["S2_compiler_list_scheduled_no_wires"] = T.schedule(ls, POSV, "S2", wires=False, **kw)["total_cycles"]
+    variants["S0_dataflow"] = S_["S0"]["total_cycles"]
+    res["list_scheduled_program"] = dict(records=len(ls), image_sha256=hashlib.sha256(encode_program(ls)).hexdigest(),
+                                         per_unit=sls["per_unit"])
     res["cp_fix_variants"] = {k: (round(v, 1) if isinstance(v, float) else v) for k, v in variants.items()}
     print(json.dumps(res["cp_fix_variants"], indent=1))
     t0, t1, t2, t3 = (S_[m]["total_cycles"] for m in ("S0", "S1", "S2", "S3"))
@@ -256,7 +279,7 @@ def main():
         hol_and_drain_vs_dataflow_pct=round(100 * (t2 - t0) / t2, 2),
         s2_vs_published_walk_pct=round(100 * (t2 / (walk_us * 1200) - 1), 2))
     print(json.dumps(res["overheads"], indent=1))
-    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 v0.9 (024fa2af1)", position=1048575,
+    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 1.0 (approved encoding)", position=1048575,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                grade="unit costs = the DS composition's (measured / measured_tu_budget / modelled rows as there); "
                      "CP entries estimates (calibration.json)", result=res, calibration_cp=T.CAL["cp"])

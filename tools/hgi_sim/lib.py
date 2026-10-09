@@ -101,15 +101,29 @@ def rope_half(v, cos, sin):
     return np.concatenate([add(mul(a, cos), mul(b, neg(sin))), add(mul(b, cos), mul(a, sin))], axis=-1).astype(F)
 
 
+def rope_perm_index(hd):
+    """The offline RoPE permutation (spec 7.2): new element 2t <- old t, 2t + 1 <- old t + hd/2 (split-half pairs
+    become adjacent pairs)."""
+    h = hd // 2
+    return np.stack([np.arange(h), np.arange(h) + h], axis=1).reshape(-1)
+
+
+def rope_adj(v, cos, sin):
+    """Adjacent-pair RoPE (the SU template with c_pair = i XOR 1, alternating sign): pair (2t, 2t+1) with angle t:
+    y[2t] = x[2t]*cos - x[2t+1]*sin, y[2t+1] = x[2t+1]*cos + x[2t]*sin."""
+    a, b = v[..., 0::2], v[..., 1::2]
+    out = np.empty_like(np.asarray(v, dtype=F))
+    out[..., 0::2] = add(mul(a, cos), mul(b, neg(sin)))
+    out[..., 1::2] = add(mul(b, cos), mul(a, sin))
+    return out.astype(F)
+
+
 def att_qk(q, K):
     """q [hd] (BF16 values), K [P, hd] -> raw dots [P] (chunk8 per 64-slice, slices in order == csum8 over hd)."""
     hd = K.shape[1]
     if hd % 64 == 0 and hd > 64:
-        parts = [csum(mul(q[None, s:s + 64], K[:, s:s + 64])) for s in range(0, hd, 64)]
-        acc = parts[0]
-        for p in parts[1:]:
-            acc = add(acc, p)
-        return acc
+        # each 64-slice a chunk8 tree, the slices a pairwise tree in slice order (== csum8 over hd for hd = 2^k)
+        return pairwise([csum(mul(q[None, s:s + 64], K[:, s:s + 64])) for s in range(0, hd, 64)])
     return csum(mul(q[None, :], K))
 
 
