@@ -17,7 +17,7 @@ module tb_dsrom_engram_boot_rowstripe;
         .rq(rq),.wd(wd),.ready(ready),.fault(fault));
     always @(posedge ck) if(rst_n) begin
         if(credit) credits=credits+1;
-        if(iv && addr!=32'hffffffff) begin credits=credits-1;sent=sent+1;end
+        if(iv) begin credits=credits-1;if(addr!=32'hffffffff) sent=sent+1;end
     end
     always @(negedge ck) if(rst_n) begin
         wd=0;ticks=ticks+1;
@@ -47,6 +47,7 @@ module tb_dsrom_engram_boot_rowstripe;
         repeat(4) @(posedge ck);#1;rst_n=1;
         for(n=0;n<576;n=n+1) begin
             @(posedge ck);#1;
+            iv=0;
             while(credits==0) begin @(posedge ck);#1;end
             iv=1;addr=32'hc0000000+n;data=n;
         end
