@@ -71,6 +71,7 @@ def networks(m, fp, buses, paths, chain):
         if it.orient in ('MX','R180'):y=it.h-y
         return it.x+x,it.y+y
     def route(cid,bits,src,dst,pts):
+        paths.setdefault(cid,[])
         jogged=[pts[0]]
         for a,b in zip(pts,pts[1:]):
             if abs(a[0]-b[0])>1e-6 and abs(a[1]-b[1])>1e-6:
