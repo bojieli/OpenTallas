@@ -14632,3 +14632,8 @@ def dsrom_mtp_p2_prefix_arithmetic_model():
 def dsrom_mtp_p2_prefix_composed_model():
     from dsrom_mtp_p2_prefix_arithmetic_model import composed_model
     return composed_model()
+
+
+def hbm_perstack_write_join_model():
+    from hbm_perstack_write_join_model import model
+    return model()
