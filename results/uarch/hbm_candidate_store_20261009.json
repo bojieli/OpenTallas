@@ -42,8 +42,8 @@
   },
   "protection": {
     "payload": "8 SECDED(72,64) words, held captured raw SRAM output, registered syndrome then registered correction",
-    "bank_extra_detect_only_ff_bits": 1675,
-    "control": "lease/state/extents/held pipeline checked; mapped independent-storage audit required"
+    "bank_extra_detect_only_ff_bits": 0,
+    "control": "plain finite transaction state; actual write ACK and publication/read fences; no control mirrors or lease framework"
   },
   "latency": {
     "write_ack_cycles": 4,

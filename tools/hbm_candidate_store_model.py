@@ -13,7 +13,7 @@ def model():
       compute=dict(macs_per_cycle=0,arithmetic_reordering=False),memory=dict(payload_bytes_per_request=64,physical_bytes_per_bank_request=96,single_outstanding=True),
       boundaries=dict(input_flit_bits=545,owner_bits_default=73,owner_bits_supported=74,provider_tuple_bits=34,registered_bank_request_bits=521,registered_bank_response_bits=515),
       mux=dict(depth_bank_fanout=70,response_mux_inputs=70,provider_division='ordinal/15 and ordinal%15 registered before memory request',physical_full_store_routing='hierarchical bank placement and relay allocation pending; standalone bank route only'),
-      protection=dict(payload='8 SECDED(72,64) words, held captured raw SRAM output, registered syndrome then registered correction',bank_extra_detect_only_ff_bits=1675,control='lease/state/extents/held pipeline checked; mapped independent-storage audit required'),
+      protection=dict(payload='8 SECDED(72,64) words, held captured raw SRAM output, registered syndrome then registered correction',bank_extra_detect_only_ff_bits=0,control='plain finite transaction state; actual write ACK and publication/read fences; no control mirrors or lease framework'),
       latency=dict(write_ack_cycles=4,read_response_cycles=6,provider_overhead_cycles=2,whole_token='8832 serialized writes and actual provider measured cycles; no free overlap'),
       floorplan=dict(bank_pathfinding_um=[350,150],bank_macro_area_um2=3*macro['area']['macro_area_um2'],full_store_slot='pending die-owner real allocation'),
       publication='all96 explicit receipts; disabled-empty rank separate receipt; q3 final accepted and all SRAM positive ACKs before enabled rank published',

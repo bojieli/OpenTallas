@@ -15,14 +15,14 @@ module ot_hbm_candidate_global_publication_join #(parameter integer ENABLE=0)(
 );
  wire rv,rr,sv,sr,last,empty,ce,consumer_retained,consumer_done,consumer_fault,store_fault;
  wire[72:0] rf,sf;wire[6:0] rank,srank;wire[16:0] ordinal,sordinal;wire[33:0] tuple;
- reg finished,finished_n,failed;
+ reg finished,failed;
  wire legal_retire=finished&&downstream_drained&&!consumer_retained&&!out_v;
  always @(posedge clk or negedge por_n)begin
- if(!por_n)begin finished<=0;finished_n<=1;failed<=0;end
+ if(!por_n)begin finished<=0;failed<=0;end
  else if(ENABLE)begin
- if(finished_n!=~finished)failed<=1;
- if(publication_start&&publication_start_r)begin finished<=0;finished_n<=1;end
- if(consumer_done)begin finished<=1;finished_n<=0;end
+ 
+ if(publication_start&&publication_start_r)begin finished<=0;end
+ if(consumer_done)begin finished<=1;end
  if(retire&&!legal_retire)failed<=1;
  end
  end
@@ -43,6 +43,6 @@ module ot_hbm_candidate_global_publication_join #(parameter integer ENABLE=0)(
  .out_v(out_v),.out_r(out_r),.out_tuple(out_tuple),.out_frame(out_frame),.out_rank(out_rank),
  .retained(consumer_retained),.done(consumer_done),.fault(consumer_fault));
  assign done=ENABLE&&finished&&!failed;
- assign fault=ENABLE&&(store_fault||consumer_fault||failed||finished_n!=~finished);
+ assign fault=ENABLE&&(store_fault||consumer_fault||failed);
 endmodule
 `default_nettype wire
