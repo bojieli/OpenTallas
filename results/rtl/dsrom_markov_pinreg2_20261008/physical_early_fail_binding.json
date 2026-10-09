@@ -7,6 +7,27 @@
   "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-pinreg2-8685c9cda-tt-remote",
   "observed_endpoint": "g_pin.weight_q[63]$_DFF_P_/D",
   "endpoint_source": "live CTS repair log observation preceding terminal early-fail",
-  "critical_path_collection": "pending remote access; no successor selected",
+  "critical_path_collection": {
+    "failed_route_preCTS_setup": {
+      "startpoint": "start",
+      "endpoint": "fault$_DFF_PN0_",
+      "raw_slack_ps": -445.53,
+      "period_ps": 770,
+      "input_max_ps": 922,
+      "clock": "ideal before CTS",
+      "file": "physical_failed_preCTS_paths.rpt"
+    },
+    "failed_route_preCTS_reg2reg_setup": {
+      "startpoint": "g_pin.embed_q[217]$_DFF_P_",
+      "endpoint": "g_mul[13].u_mul.s1_e[8]$_DFF_P_",
+      "raw_slack_ps": -37.98,
+      "period_ps": 770,
+      "file": "physical_failed_preCTS_paths.rpt"
+    },
+    "failed_route_last_CTS_hold_endpoint": "g_pin.weight_q[63]$_DFF_P_/D",
+    "failed_route_last_CTS_hold_slack_ps": -297.969,
+    "failed_route_CTS_note": "Terminated before final CTS database/report written. Full repair log preserved; cannot infer an exact final startpoint from endpoint alone.",
+    "parallel_calibration_CTS_paths": "physical_calibration_CTS_paths.rpt (separate calibration using provisional input min300ps; not failed-route critical-path evidence)"
+  },
   "scope": "Standalone PINREG2 TT pathfinding early hold failure; exact PASS does not establish closure. No clock relaxation, multicycle exception or retry."
 }

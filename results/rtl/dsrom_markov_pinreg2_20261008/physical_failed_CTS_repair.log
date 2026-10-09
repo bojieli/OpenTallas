@@ -1,0 +1,1090 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_markov_row_asap7_dsrom_markov256_pinreg2_8685c9cda_tt_remote/base/3_place.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_dsrom_markov_row_asap7_dsrom_markov256_pinreg2_8685c9cda_tt_remote/base/3_place.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_dsrom_markov_row_asap7_dsrom_markov256_pinreg2_8685c9cda_tt_remote/base/3_place.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_dsrom_markov_row_asap7_dsrom_markov256_pinreg2_8685c9cda_tt_remote/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_cts_ot_cts_fix.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+OT_CG_PUSHDOWN total gates=0 clones=0 K=48 MIN=64
+[INFO CTS-0050] Root buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 42587 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 1 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 42587.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 16 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0204] A clustering solution was found from clustering size of 16 and max clustering diameter of 60.
+[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.
+[INFO CTS-0019]  Total number of sinks after clustering: 2682.
+[INFO CTS-0024]  Normalized sink region: [(2.77185, 2.975), (317.38, 440.533)].
+[INFO CTS-0025]     Width:  314.6085.
+[INFO CTS-0026]     Height: 437.5581.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 1341
+    Sub-region size: 314.6085 X 218.7790
+[INFO CTS-0034]     Segment length (rounded): 110.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 671
+    Sub-region size: 157.3042 X 218.7790
+[INFO CTS-0034]     Segment length (rounded): 78.
+ Level 3
+    Direction: Vertical
+    Sinks per sub-region: 336
+    Sub-region size: 157.3042 X 109.3895
+[INFO CTS-0034]     Segment length (rounded): 54.
+ Level 4
+    Direction: Horizontal
+    Sinks per sub-region: 168
+    Sub-region size: 78.6521 X 109.3895
+[INFO CTS-0034]     Segment length (rounded): 40.
+ Level 5
+    Direction: Vertical
+    Sinks per sub-region: 84
+    Sub-region size: 78.6521 X 54.6948
+[INFO CTS-0034]     Segment length (rounded): 28.
+ Level 6
+    Direction: Horizontal
+    Sinks per sub-region: 42
+    Sub-region size: 39.3261 X 54.6948
+[INFO CTS-0034]     Segment length (rounded): 20.
+ Level 7
+    Direction: Vertical
+    Sinks per sub-region: 21
+    Sub-region size: 39.3261 X 27.3474
+[INFO CTS-0034]     Segment length (rounded): 14.
+ Level 8
+    Direction: Horizontal
+    Sinks per sub-region: 11
+    Sub-region size: 19.6630 X 27.3474
+[INFO CTS-0034]     Segment length (rounded): 10.
+ Level 9
+    Direction: Vertical
+    Sinks per sub-region: 6
+    Sub-region size: 19.6630 X 13.6737
+[INFO CTS-0034]     Segment length (rounded): 6.
+ Level 10
+    Direction: Horizontal
+    Sinks per sub-region: 3
+    Sub-region size: 9.8315 X 13.6737
+[INFO CTS-0034]     Segment length (rounded): 4.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 2682.
+[INFO CTS-0018]     Created 4435 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 15.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 15.
+[INFO CTS-0015]     Created 4435 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 1:167, 2:371, 3:263, 4:157, 5:41, 6:18, 7:11, 8:3, 9:7, 10:8, 11:8, 12:7, 13:8, 14:12, 15:26, 16:2597..
+[INFO CTS-0017]     Max level of the clock tree: 10.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 43196
+[INFO CTS-0100]  Leaf buffers 2682
+[INFO CTS-0101]  Average sink wire length 887.44 um
+[INFO CTS-0102]  Path depth 13 - 15
+[INFO CTS-0207]  Dummy loads inserted 609
+[INFO RSZ-0047] Found 1 long wires.
+[INFO RSZ-0048] Inserted 2 buffers in 1 nets.
+[INFO CTS-0500] Runtime: 12.44s
+OT_LINK_BUDGET clock core_clk T 770.000 L 649.2 (611.5..686.9) skew 150 link 114 -> S 223.0 R 223.0; in max 487.0 out max 487.0
+OT_LINK_BUDGET ports in:core_clk 547 out:core_clk 36 async_pins_excluded 3022
+Took 30 seconds: clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+estimate_parasitics -placement
+Took 6 seconds: estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 354956.17 um^2
+[INFO DPL-0007] Movable instances area: 21528.24 um^2
+[INFO DPL-0008] Fixed instances area within core: 869.08 um^2
+[INFO DPL-0009] Utilization: 6.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 165424 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |        612 |       130 |       482
+        1 |         59 |        15 |        44
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 2.77s
+Placement Analysis
+---------------------------------
+total displacement      11424.4 u
+average displacement        0.1 u
+max displacement            3.8 u
+original HPWL          431375.0 u
+legalized HPWL         437740.7 u
+delta HPWL                    1 %
+
+estimate_parasitics -placement
+Took 6 seconds: estimate_parasitics -placement
+OT_CLK_PROTECT dont_touch clock nets=4438 clock buffers=4437
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/physical/dsrom_markov/gen/signoff_markov256.sdc
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_HOLD_MM: ff mode reads /src/.ot_mm/io_ref_routed.sdc
+OT_IOREF multi-scene session: arrivals of scene BC
+OT_IOREF clock-port clk (core_clk): data input delays dropped
+OT_IOREF ot_lb_v_core_clk core_clk mean 556.6 min 527.8 max 570.6 n 585 boundary
+OT_HOLD_MM sync: SS setup ws -264.61 / FF hold ws -297.97 ps
+repair_timing -setup_margin 0 -hold_margin 50 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 28 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 28 out of 28 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -264.605 |    -2951.6 |    -1496.0 |     28 | in_ready
+      10* |       1 |       7 |        1 |      0 |     0 |    +0.0% | -233.483 |    -2817.2 |    -1441.3 |     28 | in_ready
+      20* |       1 |      15 |        2 |      0 |     1 |    +0.0% | -227.535 |    -2772.9 |    -1418.5 |     28 | in_ready
+      24* |       1 |      18 |        3 |      0 |     1 |    +0.0% | -212.031 |    -2715.7 |    -1400.9 |     28 | in_ready
+      30* |       2 |      22 |        3 |      0 |     1 |    +0.0% | -212.868 |    -2716.6 |    -1408.4 |     28 | start_ready
+      32* |       1 |      18 |        3 |      0 |     1 |    +0.0% | -212.031 |    -2715.7 |    -1400.9 |     28 | in_ready
+      40* |       1 |      24 |        4 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1362.1 |     28 | in_ready
+      50* |       4 |      28 |        7 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1356.7 |     28 | in_ready
+      60* |       9 |      28 |       12 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1356.7 |     28 | in_ready
+      70* |      14 |      28 |       17 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1356.7 |     28 | in_ready
+      80* |      19 |      28 |       22 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1356.7 |     28 | in_ready
+      90* |      24 |      28 |       27 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1356.7 |     28 | in_ready
+      97* |       2 |      28 |        6 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1352.4 |     28 | in_ready
+     100* |       2 |      30 |        6 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1338.3 |     28 | in_ready
+     110* |       2 |      40 |        6 |      0 |     1 |    +0.0% | -213.851 |    -2703.8 |    -1312.5 |     28 | in_ready
+     110* |       2 |      35 |        6 |      0 |     1 |    +0.0% | -212.031 |    -2701.9 |    -1317.7 |     28 | in_ready
+     120* |       4 |      38 |        9 |      0 |     3 |    +0.0% | -212.031 |    -2721.4 |    -1315.2 |     28 | in_ready
+     130* |       9 |      40 |       12 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     140* |      14 |      40 |       17 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     150* |      19 |      40 |       22 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     160* |      24 |      40 |       27 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     170* |      29 |      40 |       32 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     170* |       4 |      38 |        9 |      0 |     3 |    +0.0% | -212.031 |    -2721.4 |    -1315.2 |     28 | in_ready
+     180* |       8 |      40 |       12 |      0 |     3 |    +0.0% | -212.031 |    -2732.3 |    -1368.8 |     28 | in_ready
+     190* |      13 |      40 |       17 |      0 |     3 |    +0.0% | -212.031 |    -2732.3 |    -1368.8 |     28 | in_ready
+     200* |      18 |      40 |       22 |      0 |     3 |    +0.0% | -212.031 |    -2732.3 |    -1368.8 |     28 | in_ready
+     210* |      23 |      40 |       27 |      0 |     3 |    +0.0% | -212.031 |    -2732.3 |    -1368.8 |     28 | in_ready
+     220* |      28 |      40 |       32 |      0 |     3 |    +0.0% | -212.031 |    -2732.3 |    -1368.8 |     28 | in_ready
+     221* |       4 |      38 |        9 |      0 |     3 |    +0.0% | -212.031 |    -2721.4 |    -1315.2 |     28 | in_ready
+     230* |       8 |      40 |       11 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     240* |      13 |      40 |       16 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     250* |      18 |      40 |       21 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     260* |      23 |      40 |       26 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     270* |      28 |      40 |       31 |      0 |     3 |    +0.0% | -212.031 |    -2739.4 |    -1403.1 |     28 | in_ready
+     272* |       4 |      38 |        9 |      0 |     3 |    +0.0% | -212.031 |    -2721.4 |    -1315.2 |     28 | in_ready
+     280* |       6 |      42 |       10 |      0 |     3 |    +0.0% | -212.031 |    -2596.9 |    -1318.8 |     28 | in_ready
+     290* |       8 |      43 |       12 |      0 |     8 |    +0.0% | -212.031 |    -2485.8 |    -1256.4 |     28 | in_ready
+     295* |       8 |      44 |       13 |      0 |     9 |    +0.0% | -212.031 |    -2470.0 |    -1247.8 |     28 | in_ready
+     298* |       8 |      44 |       13 |      0 |     9 |    +0.0% | -212.031 |    -2470.0 |    -1247.8 |     28 | in_ready
+     300* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.0 |    -1249.4 |     28 | in_ready
+     300* |       8 |      44 |       13 |      0 |     9 |    +0.0% | -212.031 |    -2470.0 |    -1247.8 |     28 | in_ready
+     310* |      12 |      46 |       16 |      0 |     9 |    +0.0% | -212.031 |    -2480.8 |    -1301.4 |     28 | in_ready
+     320* |      17 |      46 |       21 |      0 |     9 |    +0.0% | -212.031 |    -2480.8 |    -1301.4 |     28 | in_ready
+     330* |      22 |      46 |       26 |      0 |     9 |    +0.0% | -212.031 |    -2480.8 |    -1301.4 |     28 | in_ready
+     340* |      27 |      46 |       31 |      0 |     9 |    +0.0% | -212.031 |    -2480.8 |    -1301.4 |     28 | in_ready
+     350* |      32 |      46 |       36 |      0 |     9 |    +0.0% | -212.031 |    -2480.8 |    -1301.4 |     28 | in_ready
+     351* |       8 |      44 |       13 |      0 |     9 |    +0.0% | -212.031 |    -2470.0 |    -1247.8 |     28 | in_ready
+     354* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.4 |    -1246.9 |     28 | in_ready
+     360* |      10 |      47 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2536.5 |    -1554.6 |     28 | in_ready
+     370* |      10 |      53 |       16 |      0 |    12 |    +0.0% | -212.031 |    -2493.8 |    -1445.5 |     28 | in_ready
+     380* |      10 |      56 |       17 |      0 |    18 |    +0.0% | -212.031 |    -2478.7 |    -1442.2 |     28 | in_ready
+     381* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.4 |    -1246.9 |     28 | in_ready
+     390* |      10 |      50 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2529.8 |    -1514.5 |     28 | in_ready
+     400* |      10 |      56 |       18 |      0 |    10 |    +0.0% | -212.031 |    -2543.7 |    -1483.7 |     28 | in_ready
+     400* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.4 |    -1246.9 |     28 | in_ready
+     410* |      10 |      51 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2526.7 |    -1496.4 |     28 | in_ready
+     419* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.4 |    -1246.9 |     28 | in_ready
+     420* |       8 |      44 |       13 |      0 |    10 |    +0.0% | -212.031 |    -2470.4 |    -1246.9 |     28 | in_ready
+     425* |       8 |      46 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2466.7 |    -1242.2 |     28 | in_ready
+     430* |      10 |      48 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2484.7 |    -1330.1 |     28 | in_ready
+     440* |      15 |      48 |       18 |      0 |    13 |    +0.0% | -212.031 |    -2484.7 |    -1330.1 |     28 | in_ready
+     450* |      20 |      48 |       23 |      0 |    13 |    +0.0% | -212.031 |    -2484.7 |    -1330.1 |     28 | in_ready
+     460* |      25 |      48 |       28 |      0 |    13 |    +0.0% | -212.031 |    -2484.7 |    -1330.1 |     28 | in_ready
+     470* |      30 |      48 |       33 |      0 |    13 |    +0.0% | -212.031 |    -2484.7 |    -1330.1 |     28 | in_ready
+     476* |       8 |      46 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2466.7 |    -1242.2 |     28 | in_ready
+     480* |       8 |      49 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2457.3 |    -1233.1 |     28 | in_ready
+     490* |      10 |      55 |       14 |      0 |    14 |    +0.0% | -212.031 |    -2508.6 |    -1447.5 |     28 | in_ready
+     500* |      16 |      56 |       20 |      0 |    14 |    +0.0% | -212.031 |    -2512.4 |    -1470.3 |     28 | in_ready
+     510* |      22 |      56 |       28 |      0 |    14 |    +0.0% | -212.031 |    -2457.5 |    -1238.1 |     28 | in_ready
+     520* |      29 |      56 |       34 |      0 |    14 |    +0.0% | -212.031 |    -2479.0 |    -1300.9 |     28 | in_ready
+     530* |      36 |      56 |       40 |      0 |    14 |    +0.0% | -212.031 |    -2512.4 |    -1470.3 |     28 | in_ready
+     534* |       8 |      53 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2451.0 |    -1231.7 |     28 | in_ready
+     536* |       8 |      54 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2394.9 |    -1221.9 |     28 | in_ready
+     540* |       9 |      56 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2417.2 |    -1292.1 |     28 | in_ready
+     550* |      10 |      60 |       15 |      0 |    16 |    +0.0% | -212.031 |    -2466.4 |    -1536.8 |     28 | in_ready
+     559* |       8 |      56 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2392.6 |    -1218.2 |     28 | in_ready
+     560* |       8 |      56 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2392.6 |    -1218.2 |     28 | in_ready
+     570* |      10 |      64 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2449.1 |    -1468.5 |     28 | in_ready
+     580* |      10 |      69 |       18 |      0 |    14 |    +0.0% | -212.031 |    -2466.1 |    -1454.4 |     28 | in_ready
+     580* |       8 |      56 |       13 |      0 |    13 |    +0.0% | -212.031 |    -2392.6 |    -1218.2 |     28 | in_ready
+     583* |       8 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2388.4 |    -1214.0 |     28 | in_ready
+     584* |       8 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2388.4 |    -1214.0 |     28 | in_ready
+     590* |      10 |      59 |       14 |      0 |    14 |    +0.0% | -212.031 |    -2471.5 |    -1578.6 |     28 | in_ready
+     597* |       8 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2388.4 |    -1214.0 |     28 | in_ready
+     598* |       8 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2388.4 |    -1214.0 |     28 | in_ready
+     600* |       9 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2413.1 |    -1288.0 |     28 | in_ready
+     610* |      10 |      63 |       16 |      0 |    14 |    +0.0% | -212.031 |    -2460.0 |    -1541.9 |     28 | in_ready
+     611* |       8 |      57 |       13 |      0 |    14 |    +0.0% | -212.031 |    -2388.4 |    -1214.0 |     28 | in_ready
+     614* |       8 |      57 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1213.0 |     28 | in_ready
+     615* |       8 |      57 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1213.0 |     28 | in_ready
+     615* |       8 |      57 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1213.0 |     28 | in_ready
+     616+ |       8 |      57 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1213.0 |     22 | in_ready
+     619+ |       8 |      59 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1202.3 |     22 | in_ready
+     620+ |       8 |      59 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1202.3 |     22 | in_ready
+     621+ |       8 |      60 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2387.4 |    -1200.0 |     22 | in_ready
+     630+ |       8 |      68 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2372.5 |    -1183.1 |     22 | in_ready
+     631+ |       8 |      70 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2367.0 |    -1181.8 |     22 | in_ready
+     633+ |       8 |      71 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2363.9 |    -1181.7 |     22 | in_ready
+     634+ |       8 |      71 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2363.9 |    -1181.7 |     22 | in_ready
+     635+ |       8 |      71 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2363.9 |    -1181.7 |     22 | in_ready
+     636+ |       8 |      71 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2363.9 |    -1181.7 |     22 | in_ready
+     637+ |       8 |      71 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2363.9 |    -1181.7 |     22 | in_ready
+     640+ |       8 |      73 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2361.3 |    -1171.3 |     22 | in_ready
+     646+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     647+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     648+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     649+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     650+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     650+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     651+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     652+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     653+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     654+ |       8 |      79 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2350.2 |    -1142.4 |     22 | in_ready
+     660+ |       8 |      84 |       14 |      0 |    15 |    +0.0% | -212.031 |    -2339.2 |    -1139.3 |     22 | in_ready
+     664+ |       8 |      88 |       14 |      0 |    16 |    +0.0% | -212.031 |    -2330.7 |    -1136.2 |     22 | in_ready
+     665+ |       8 |      88 |       14 |      0 |    16 |    +0.0% | -212.031 |    -2330.7 |    -1136.2 |     22 | in_ready
+     666+ |       8 |      88 |       14 |      0 |    16 |    +0.0% | -212.031 |    -2330.7 |    -1136.2 |     22 | in_ready
+     667+ |       8 |      88 |       14 |      0 |    16 |    +0.0% | -212.031 |    -2330.7 |    -1136.2 |     22 | in_ready
+    final |       8 |      88 |       14 |      0 |    16 |    +0.0% | -212.031 |    -2330.7 |    -1136.2 |     21 | in_ready
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 8 buffers.
+[INFO RSZ-0040] Inserted 14 buffers.
+[INFO RSZ-0051] Resized 88 instances: 80 up, 8 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 16 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 88.85s
+Took 88 seconds: repair_timing -setup_margin 0 -hold_margin 50 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+OT_HM_GUARD: margin 50 kept: 40044 endpoints in margin, ~115918 buffers, +2.6 util pts (40044 endpoints in margin > 10000)
+OT_HOLD_GUARD start: hold ws -297.97 tns -165922.9 viol 3736 (margin 50, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 50 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 40044 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       10 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       20 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       30 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       40 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       50 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       60 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       70 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       80 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+       90 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      100 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      110 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      120 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      130 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      140 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      150 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      160 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      170 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      180 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      190 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      200 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      210 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      220 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      230 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      240 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      250 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      260 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      270 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      280 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      290 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      300 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      310 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      320 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      330 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      340 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      350 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      360 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      370 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      380 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      390 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      400 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      410 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      420 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      430 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      440 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      450 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      460 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      470 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      480 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      490 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      500 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      510 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      520 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      530 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      540 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      550 |       0 |       0 |            0 |    +0.0% | -297.969 | -165922.875 | g_pin.weight_q[63]$_DFF_P_/D
+      560 |       0 |      12 |            0 |    +0.0% | -297.969 | -165787.375 | g_pin.weight_q[63]$_DFF_P_/D
+      570 |       0 |      32 |            0 |    +0.0% | -297.969 | -165557.812 | g_pin.weight_q[63]$_DFF_P_/D
+      580 |       0 |      52 |            0 |    +0.0% | -297.969 | -165370.438 | g_pin.weight_q[63]$_DFF_P_/D
+      590 |       0 |      72 |            0 |    +0.0% | -297.969 | -165218.656 | g_pin.weight_q[63]$_DFF_P_/D
+      600 |       0 |      92 |            0 |    +0.0% | -297.969 | -165077.688 | g_pin.weight_q[63]$_DFF_P_/D
+      610 |       0 |     112 |            0 |    +0.0% | -297.969 | -164945.141 | g_pin.weight_q[63]$_DFF_P_/D
+      620 |       0 |     132 |            0 |    +0.0% | -297.969 | -164817.188 | g_pin.weight_q[63]$_DFF_P_/D
+      630 |       0 |     152 |            0 |    +0.0% | -297.969 | -164691.531 | g_pin.weight_q[63]$_DFF_P_/D
+      640 |       0 |     172 |            0 |    +0.1% | -297.969 | -164568.234 | g_pin.weight_q[63]$_DFF_P_/D
+      650 |       0 |     192 |            0 |    +0.1% | -297.969 | -164447.344 | g_pin.weight_q[63]$_DFF_P_/D
+      660 |       0 |     212 |            0 |    +0.1% | -297.969 | -164328.375 | g_pin.weight_q[63]$_DFF_P_/D
+      670 |       0 |     232 |            0 |    +0.1% | -297.969 | -164211.078 | g_pin.weight_q[63]$_DFF_P_/D
+      680 |       0 |     252 |            0 |    +0.1% | -297.969 | -164095.344 | g_pin.weight_q[63]$_DFF_P_/D
+      690 |       0 |     272 |            0 |    +0.1% | -297.969 | -163981.031 | g_pin.weight_q[63]$_DFF_P_/D
+      700 |       0 |     292 |            0 |    +0.1% | -297.969 | -163868.516 | g_pin.weight_q[63]$_DFF_P_/D
+      710 |       0 |     312 |            0 |    +0.1% | -297.969 | -163757.203 | g_pin.weight_q[63]$_DFF_P_/D
+      720 |       0 |     332 |            0 |    +0.1% | -297.969 | -163647.281 | g_pin.weight_q[63]$_DFF_P_/D
+      730 |       0 |     352 |            0 |    +0.1% | -297.969 | -163538.953 | g_pin.weight_q[63]$_DFF_P_/D
+      740 |       0 |     372 |            0 |    +0.1% | -297.969 | -163431.859 | g_pin.weight_q[63]$_DFF_P_/D
+      750 |       0 |     392 |            0 |    +0.1% | -297.969 | -163325.609 | g_pin.weight_q[63]$_DFF_P_/D
+      760 |       0 |     412 |            0 |    +0.1% | -297.969 | -163220.047 | g_pin.weight_q[63]$_DFF_P_/D
+      770 |       0 |     432 |            0 |    +0.1% | -297.969 | -163115.922 | g_pin.weight_q[63]$_DFF_P_/D
+      780 |       0 |     452 |            0 |    +0.1% | -297.969 | -163013.531 | g_pin.weight_q[63]$_DFF_P_/D
+      790 |       0 |     472 |            0 |    +0.2% | -297.969 | -162912.516 | g_pin.weight_q[63]$_DFF_P_/D
+      800 |       0 |     492 |            0 |    +0.2% | -297.969 | -162812.828 | g_pin.weight_q[63]$_DFF_P_/D
+      810 |       0 |     512 |            0 |    +0.2% | -297.969 | -162713.984 | g_pin.weight_q[63]$_DFF_P_/D
+      820 |       0 |     532 |            0 |    +0.2% | -297.969 | -162616.188 | g_pin.weight_q[63]$_DFF_P_/D
+      830 |       0 |     552 |            0 |    +0.2% | -297.969 | -162519.062 | g_pin.weight_q[63]$_DFF_P_/D
+      840 |       0 |     572 |            0 |    +0.2% | -297.969 | -162423.297 | g_pin.weight_q[63]$_DFF_P_/D
+      850 |       0 |     592 |            0 |    +0.2% | -297.969 | -162328.328 | g_pin.weight_q[63]$_DFF_P_/D
+      860 |       0 |     612 |            0 |    +0.2% | -297.969 | -162234.438 | g_pin.weight_q[63]$_DFF_P_/D
+      870 |       0 |     632 |            0 |    +0.2% | -297.969 | -162141.281 | g_pin.weight_q[63]$_DFF_P_/D
+      880 |       0 |     652 |            0 |    +0.2% | -297.969 | -162048.797 | g_pin.weight_q[63]$_DFF_P_/D
+      890 |       0 |     672 |            0 |    +0.2% | -297.969 | -161957.453 | g_pin.weight_q[63]$_DFF_P_/D
+      900 |       0 |     692 |            0 |    +0.2% | -297.969 | -161867.156 | g_pin.weight_q[63]$_DFF_P_/D
+      910 |       0 |     712 |            0 |    +0.2% | -297.969 | -161777.984 | g_pin.weight_q[63]$_DFF_P_/D
+      920 |       0 |     732 |            0 |    +0.2% | -297.969 | -161689.531 | g_pin.weight_q[63]$_DFF_P_/D
+      930 |       0 |     752 |            0 |    +0.2% | -297.969 | -161601.656 | g_pin.weight_q[63]$_DFF_P_/D
+      940 |       0 |     772 |            0 |    +0.3% | -297.969 | -161515.391 | g_pin.weight_q[63]$_DFF_P_/D
+      950 |       0 |     792 |            0 |    +0.3% | -297.969 | -161429.875 | g_pin.weight_q[63]$_DFF_P_/D
+      960 |       0 |     812 |            0 |    +0.3% | -297.969 | -161345.438 | g_pin.weight_q[63]$_DFF_P_/D
+      970 |       0 |     832 |            0 |    +0.3% | -297.969 | -161262.141 | g_pin.weight_q[63]$_DFF_P_/D
+      980 |       0 |     852 |            0 |    +0.3% | -297.969 | -161180.016 | g_pin.weight_q[63]$_DFF_P_/D
+      990 |       0 |     872 |            0 |    +0.3% | -297.969 | -161099.672 | g_pin.weight_q[63]$_DFF_P_/D
+     1000 |       0 |     892 |            0 |    +0.3% | -297.969 | -161020.391 | g_pin.weight_q[63]$_DFF_P_/D
+     1010 |       0 |     912 |            0 |    +0.3% | -297.969 | -160941.922 | g_pin.weight_q[63]$_DFF_P_/D
+     1020 |       0 |     932 |            0 |    +0.3% | -297.969 | -160864.422 | g_pin.weight_q[63]$_DFF_P_/D
+     1030 |       0 |     952 |            0 |    +0.3% | -297.969 | -160787.828 | g_pin.weight_q[63]$_DFF_P_/D
+     1040 |       0 |     972 |            0 |    +0.3% | -297.969 | -160712.516 | g_pin.weight_q[63]$_DFF_P_/D
+     1050 |       0 |     992 |            0 |    +0.3% | -297.969 | -160638.188 | g_pin.weight_q[63]$_DFF_P_/D
+     1060 |       0 |    1012 |            0 |    +0.3% | -297.969 | -160564.703 | g_pin.weight_q[63]$_DFF_P_/D
+     1070 |       0 |    1032 |            0 |    +0.3% | -297.969 | -160492.953 | g_pin.weight_q[63]$_DFF_P_/D
+     1080 |       0 |    1052 |            0 |    +0.3% | -297.969 | -160422.453 | g_pin.weight_q[63]$_DFF_P_/D
+     1090 |       0 |    1072 |            0 |    +0.3% | -297.969 | -160352.656 | g_pin.weight_q[63]$_DFF_P_/D
+     1100 |       0 |    1092 |            0 |    +0.4% | -297.969 | -160284.016 | g_pin.weight_q[63]$_DFF_P_/D
+     1110 |       0 |    1112 |            0 |    +0.4% | -297.969 | -160216.250 | g_pin.weight_q[63]$_DFF_P_/D
+     1120 |       0 |    1132 |            0 |    +0.4% | -297.969 | -160149.422 | g_pin.weight_q[63]$_DFF_P_/D
+     1130 |       0 |    1152 |            0 |    +0.4% | -297.969 | -160083.266 | g_pin.weight_q[63]$_DFF_P_/D
+     1140 |       0 |    1172 |            0 |    +0.4% | -297.969 | -160017.875 | g_pin.weight_q[63]$_DFF_P_/D
+     1150 |       0 |    1192 |            0 |    +0.4% | -297.969 | -159953.781 | g_pin.weight_q[63]$_DFF_P_/D
+     1160 |       0 |    1212 |            0 |    +0.4% | -297.969 | -159890.453 | g_pin.weight_q[63]$_DFF_P_/D
+     1170 |       0 |    1232 |            0 |    +0.4% | -297.969 | -159827.828 | g_pin.weight_q[63]$_DFF_P_/D
+     1180 |       0 |    1252 |            0 |    +0.4% | -297.969 | -159766.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1190 |       0 |    1272 |            0 |    +0.4% | -297.969 | -159705.375 | g_pin.weight_q[63]$_DFF_P_/D
+     1200 |       0 |    1292 |            0 |    +0.4% | -297.969 | -159645.156 | g_pin.weight_q[63]$_DFF_P_/D
+     1210 |       0 |    1312 |            0 |    +0.4% | -297.969 | -159585.875 | g_pin.weight_q[63]$_DFF_P_/D
+     1220 |       0 |    1332 |            0 |    +0.4% | -297.969 | -159527.156 | g_pin.weight_q[63]$_DFF_P_/D
+     1230 |       0 |    1352 |            0 |    +0.4% | -297.969 | -159469.000 | g_pin.weight_q[63]$_DFF_P_/D
+     1240 |       0 |    1372 |            0 |    +0.4% | -297.969 | -159411.484 | g_pin.weight_q[63]$_DFF_P_/D
+     1250 |       0 |    1392 |            0 |    +0.5% | -297.969 | -159354.453 | g_pin.weight_q[63]$_DFF_P_/D
+     1260 |       0 |    1412 |            0 |    +0.5% | -297.969 | -159297.875 | g_pin.weight_q[63]$_DFF_P_/D
+     1270 |       0 |    1432 |            0 |    +0.5% | -297.969 | -159241.844 | g_pin.weight_q[63]$_DFF_P_/D
+     1280 |       0 |    1452 |            0 |    +0.5% | -297.969 | -159186.453 | g_pin.weight_q[63]$_DFF_P_/D
+     1290 |       0 |    1472 |            0 |    +0.5% | -297.969 | -159131.562 | g_pin.weight_q[63]$_DFF_P_/D
+     1300 |       0 |    1492 |            0 |    +0.5% | -297.969 | -159077.297 | g_pin.weight_q[63]$_DFF_P_/D
+     1310 |       0 |    1512 |            0 |    +0.5% | -297.969 | -159023.641 | g_pin.weight_q[63]$_DFF_P_/D
+     1320 |       0 |    1532 |            0 |    +0.5% | -297.969 | -158970.453 | g_pin.weight_q[63]$_DFF_P_/D
+     1330 |       0 |    1552 |            0 |    +0.5% | -297.969 | -158917.594 | g_pin.weight_q[63]$_DFF_P_/D
+     1340 |       0 |    1572 |            0 |    +0.5% | -297.969 | -158865.266 | g_pin.weight_q[63]$_DFF_P_/D
+     1350 |       0 |    1592 |            0 |    +0.5% | -297.969 | -158813.406 | g_pin.weight_q[63]$_DFF_P_/D
+     1360 |       0 |    1612 |            0 |    +0.5% | -297.969 | -158762.047 | g_pin.weight_q[63]$_DFF_P_/D
+     1370 |       0 |    1632 |            0 |    +0.5% | -297.969 | -158711.391 | g_pin.weight_q[63]$_DFF_P_/D
+     1380 |       0 |    1652 |            0 |    +0.5% | -297.969 | -158661.219 | g_pin.weight_q[63]$_DFF_P_/D
+     1390 |       0 |    1672 |            0 |    +0.5% | -297.969 | -158611.516 | g_pin.weight_q[63]$_DFF_P_/D
+     1400 |       0 |    1692 |            0 |    +0.6% | -297.969 | -158562.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1410 |       0 |    1712 |            0 |    +0.6% | -297.969 | -158513.234 | g_pin.weight_q[63]$_DFF_P_/D
+     1420 |       0 |    1732 |            0 |    +0.6% | -297.969 | -158464.906 | g_pin.weight_q[63]$_DFF_P_/D
+     1430 |       0 |    1752 |            0 |    +0.6% | -297.969 | -158417.078 | g_pin.weight_q[63]$_DFF_P_/D
+     1440 |       0 |    1772 |            0 |    +0.6% | -297.969 | -158369.672 | g_pin.weight_q[63]$_DFF_P_/D
+     1450 |       0 |    1792 |            0 |    +0.6% | -297.969 | -158322.703 | g_pin.weight_q[63]$_DFF_P_/D
+     1460 |       0 |    1812 |            0 |    +0.6% | -297.969 | -158276.031 | g_pin.weight_q[63]$_DFF_P_/D
+     1470 |       0 |    1832 |            0 |    +0.6% | -297.969 | -158229.656 | g_pin.weight_q[63]$_DFF_P_/D
+     1480 |       0 |    1852 |            0 |    +0.6% | -297.969 | -158183.688 | g_pin.weight_q[63]$_DFF_P_/D
+     1490 |       0 |    1872 |            0 |    +0.6% | -297.969 | -158138.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1500 |       0 |    1892 |            0 |    +0.6% | -297.969 | -158093.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1510 |       0 |    1912 |            0 |    +0.6% | -297.969 | -158048.547 | g_pin.weight_q[63]$_DFF_P_/D
+     1520 |       0 |    1932 |            0 |    +0.6% | -297.969 | -158004.547 | g_pin.weight_q[63]$_DFF_P_/D
+     1530 |       0 |    1952 |            0 |    +0.6% | -297.969 | -157961.062 | g_pin.weight_q[63]$_DFF_P_/D
+     1540 |       0 |    1972 |            0 |    +0.6% | -297.969 | -157918.078 | g_pin.weight_q[63]$_DFF_P_/D
+     1550 |       0 |    1992 |            0 |    +0.6% | -297.969 | -157875.438 | g_pin.weight_q[63]$_DFF_P_/D
+     1560 |       0 |    2012 |            0 |    +0.7% | -297.969 | -157833.344 | g_pin.weight_q[63]$_DFF_P_/D
+     1570 |       0 |    2032 |            0 |    +0.7% | -297.969 | -157791.781 | g_pin.weight_q[63]$_DFF_P_/D
+     1580 |       0 |    2052 |            0 |    +0.7% | -297.969 | -157750.688 | g_pin.weight_q[63]$_DFF_P_/D
+     1590 |       0 |    2072 |            0 |    +0.7% | -297.969 | -157709.906 | g_pin.weight_q[63]$_DFF_P_/D
+     1600 |       0 |    2092 |            0 |    +0.7% | -297.969 | -157669.500 | g_pin.weight_q[63]$_DFF_P_/D
+     1610 |       0 |    2112 |            0 |    +0.7% | -297.969 | -157629.484 | g_pin.weight_q[63]$_DFF_P_/D
+     1620 |       0 |    2132 |            0 |    +0.7% | -297.969 | -157589.797 | g_pin.weight_q[63]$_DFF_P_/D
+     1630 |       0 |    2152 |            0 |    +0.7% | -297.969 | -157550.531 | g_pin.weight_q[63]$_DFF_P_/D
+     1640 |       0 |    2172 |            0 |    +0.7% | -297.969 | -157511.688 | g_pin.weight_q[63]$_DFF_P_/D
+     1650 |       0 |    2192 |            0 |    +0.7% | -297.969 | -157473.359 | g_pin.weight_q[63]$_DFF_P_/D
+     1660 |       0 |    2212 |            0 |    +0.7% | -297.969 | -157435.359 | g_pin.weight_q[63]$_DFF_P_/D
+     1670 |       0 |    2232 |            0 |    +0.7% | -297.969 | -157397.562 | g_pin.weight_q[63]$_DFF_P_/D
+     1680 |       0 |    2252 |            0 |    +0.7% | -297.969 | -157360.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1690 |       0 |    2272 |            0 |    +0.7% | -297.969 | -157323.234 | g_pin.weight_q[63]$_DFF_P_/D
+     1700 |       0 |    2292 |            0 |    +0.7% | -297.969 | -157286.609 | g_pin.weight_q[63]$_DFF_P_/D
+     1710 |       0 |    2312 |            0 |    +0.8% | -297.969 | -157250.234 | g_pin.weight_q[63]$_DFF_P_/D
+     1720 |       0 |    2332 |            0 |    +0.8% | -297.969 | -157214.203 | g_pin.weight_q[63]$_DFF_P_/D
+     1730 |       0 |    2352 |            0 |    +0.8% | -297.969 | -157178.406 | g_pin.weight_q[63]$_DFF_P_/D
+     1740 |       0 |    2372 |            0 |    +0.8% | -297.969 | -157142.875 | g_pin.weight_q[63]$_DFF_P_/D
+     1750 |       0 |    2392 |            0 |    +0.8% | -297.969 | -157107.547 | g_pin.weight_q[63]$_DFF_P_/D
+     1760 |       0 |    2412 |            0 |    +0.8% | -297.969 | -157072.578 | g_pin.weight_q[63]$_DFF_P_/D
+     1770 |       0 |    2432 |            0 |    +0.8% | -297.969 | -157037.828 | g_pin.weight_q[63]$_DFF_P_/D
+     1780 |       0 |    2452 |            0 |    +0.8% | -297.969 | -157003.312 | g_pin.weight_q[63]$_DFF_P_/D
+     1790 |       0 |    2472 |            0 |    +0.8% | -297.969 | -156969.172 | g_pin.weight_q[63]$_DFF_P_/D
+     1800 |       0 |    2492 |            0 |    +0.8% | -297.969 | -156935.359 | g_pin.weight_q[63]$_DFF_P_/D
+     1810 |       0 |    2512 |            0 |    +0.8% | -297.969 | -156901.812 | g_pin.weight_q[63]$_DFF_P_/D
+     1820 |       0 |    2532 |            0 |    +0.8% | -297.969 | -156868.516 | g_pin.weight_q[63]$_DFF_P_/D
+     1830 |       0 |    2552 |            0 |    +0.8% | -297.969 | -156835.531 | g_pin.weight_q[63]$_DFF_P_/D
+     1840 |       0 |    2572 |            0 |    +0.8% | -297.969 | -156802.781 | g_pin.weight_q[63]$_DFF_P_/D
+     1850 |       0 |    2592 |            0 |    +0.8% | -297.969 | -156770.281 | g_pin.weight_q[63]$_DFF_P_/D
+     1860 |       0 |    2612 |            0 |    +0.8% | -297.969 | -156737.953 | g_pin.weight_q[63]$_DFF_P_/D
+     1870 |       0 |    2632 |            0 |    +0.9% | -297.969 | -156705.875 | g_pin.weight_q[63]$_DFF_P_/D
+     1880 |       0 |    2652 |            0 |    +0.9% | -297.969 | -156674.234 | g_pin.weight_q[63]$_DFF_P_/D
+     1890 |       0 |    2672 |            0 |    +0.9% | -297.969 | -156643.000 | g_pin.weight_q[63]$_DFF_P_/D
+     1900 |       0 |    2692 |            0 |    +0.9% | -297.969 | -156612.125 | g_pin.weight_q[63]$_DFF_P_/D
+     1910 |       0 |    2712 |            0 |    +0.9% | -297.969 | -156581.484 | g_pin.weight_q[63]$_DFF_P_/D
+     1920 |       0 |    2732 |            0 |    +0.9% | -297.969 | -156551.125 | g_pin.weight_q[63]$_DFF_P_/D
+     1930 |       0 |    2752 |            0 |    +0.9% | -297.969 | -156521.016 | g_pin.weight_q[63]$_DFF_P_/D
+     1940 |       0 |    2772 |            0 |    +0.9% | -297.969 | -156491.109 | g_pin.weight_q[63]$_DFF_P_/D
+     1950 |       0 |    2792 |            0 |    +0.9% | -297.969 | -156461.500 | g_pin.weight_q[63]$_DFF_P_/D
+     1960 |       0 |    2812 |            0 |    +0.9% | -297.969 | -156432.062 | g_pin.weight_q[63]$_DFF_P_/D
+     1970 |       0 |    2832 |            0 |    +0.9% | -297.969 | -156402.828 | g_pin.weight_q[63]$_DFF_P_/D
+     1980 |       0 |    2852 |            0 |    +0.9% | -297.969 | -156373.766 | g_pin.weight_q[63]$_DFF_P_/D
+     1990 |       0 |    2872 |            0 |    +0.9% | -297.969 | -156344.812 | g_pin.weight_q[63]$_DFF_P_/D
+     2000 |       0 |    2892 |            0 |    +0.9% | -297.969 | -156316.016 | g_pin.weight_q[63]$_DFF_P_/D
+     2010 |       0 |    2912 |            0 |    +0.9% | -297.969 | -156287.516 | g_pin.weight_q[63]$_DFF_P_/D
+     2020 |       0 |    2932 |            0 |    +1.0% | -297.969 | -156259.250 | g_pin.weight_q[63]$_DFF_P_/D
+     2030 |       0 |    2952 |            0 |    +1.0% | -297.969 | -156231.203 | g_pin.weight_q[63]$_DFF_P_/D
+     2040 |       0 |    2972 |            0 |    +1.0% | -297.969 | -156203.406 | g_pin.weight_q[63]$_DFF_P_/D
+     2050 |       0 |    2992 |            0 |    +1.0% | -297.969 | -156175.938 | g_pin.weight_q[63]$_DFF_P_/D
+     2060 |       0 |    3012 |            0 |    +1.0% | -297.969 | -156148.719 | g_pin.weight_q[63]$_DFF_P_/D
+     2070 |       0 |    3032 |            0 |    +1.0% | -297.969 | -156121.766 | g_pin.weight_q[63]$_DFF_P_/D
+     2080 |       0 |    3052 |            0 |    +1.0% | -297.969 | -156095.109 | g_pin.weight_q[63]$_DFF_P_/D
+     2090 |       0 |    3072 |            0 |    +1.0% | -297.969 | -156068.953 | g_pin.weight_q[63]$_DFF_P_/D
+     2100 |       0 |    3092 |            0 |    +1.0% | -297.969 | -156043.016 | g_pin.weight_q[63]$_DFF_P_/D
+     2110 |       0 |    3112 |            0 |    +1.0% | -297.969 | -156017.250 | g_pin.weight_q[63]$_DFF_P_/D
+     2120 |       0 |    3132 |            0 |    +1.0% | -297.969 | -155991.750 | g_pin.weight_q[63]$_DFF_P_/D
+     2130 |       0 |    3152 |            0 |    +1.0% | -297.969 | -155966.578 | g_pin.weight_q[63]$_DFF_P_/D
+     2140 |       0 |    3173 |            0 |    +1.0% | -297.969 | -155941.656 | g_pin.weight_q[63]$_DFF_P_/D
+     2150 |       0 |    3193 |            0 |    +1.0% | -297.969 | -155917.031 | g_pin.weight_q[63]$_DFF_P_/D
+     2160 |       0 |    3213 |            0 |    +1.0% | -297.969 | -155892.750 | g_pin.weight_q[63]$_DFF_P_/D
+     2170 |       0 |    3233 |            0 |    +1.1% | -297.969 | -155868.781 | g_pin.weight_q[63]$_DFF_P_/D
+     2180 |       0 |    3253 |            0 |    +1.1% | -297.969 | -155845.062 | g_pin.weight_q[63]$_DFF_P_/D
+     2190 |       0 |    3273 |            0 |    +1.1% | -297.969 | -155821.547 | g_pin.weight_q[63]$_DFF_P_/D
+     2200 |       0 |    3293 |            0 |    +1.1% | -297.969 | -155798.297 | g_pin.weight_q[63]$_DFF_P_/D
+     2210 |       0 |    3313 |            0 |    +1.1% | -297.969 | -155775.172 | g_pin.weight_q[63]$_DFF_P_/D
+     2220 |       0 |    3333 |            0 |    +1.1% | -297.969 | -155752.219 | g_pin.weight_q[63]$_DFF_P_/D
+     2230 |       0 |    3354 |            0 |    +1.1% | -297.969 | -155729.453 | g_pin.weight_q[63]$_DFF_P_/D
+     2240 |       0 |    3374 |            0 |    +1.1% | -297.969 | -155706.922 | g_pin.weight_q[63]$_DFF_P_/D
+     2250 |       0 |    3394 |            0 |    +1.1% | -297.969 | -155684.641 | g_pin.weight_q[63]$_DFF_P_/D
+     2260 |       0 |    3414 |            0 |    +1.1% | -297.969 | -155662.484 | g_pin.weight_q[63]$_DFF_P_/D
+     2270 |       0 |    3434 |            0 |    +1.1% | -297.969 | -155640.438 | g_pin.weight_q[63]$_DFF_P_/D
+     2280 |       0 |    3454 |            0 |    +1.1% | -297.969 | -155618.672 | g_pin.weight_q[63]$_DFF_P_/D
+     2290 |       0 |    3475 |            0 |    +1.1% | -297.969 | -155597.172 | g_pin.weight_q[63]$_DFF_P_/D
+     2300 |       0 |    3495 |            0 |    +1.1% | -297.969 | -155575.938 | g_pin.weight_q[63]$_DFF_P_/D
+     2310 |       0 |    3515 |            0 |    +1.1% | -297.969 | -155554.984 | g_pin.weight_q[63]$_DFF_P_/D
+     2320 |       0 |    3535 |            0 |    +1.2% | -297.969 | -155534.250 | g_pin.weight_q[63]$_DFF_P_/D
+     2330 |       0 |    3555 |            0 |    +1.2% | -297.969 | -155513.828 | g_pin.weight_q[63]$_DFF_P_/D
+     2340 |       0 |    3575 |            0 |    +1.2% | -297.969 | -155493.562 | g_pin.weight_q[63]$_DFF_P_/D
+     2350 |       0 |    3595 |            0 |    +1.2% | -297.969 | -155473.406 | g_pin.weight_q[63]$_DFF_P_/D
+     2360 |       0 |    3615 |            0 |    +1.2% | -297.969 | -155453.406 | g_pin.weight_q[63]$_DFF_P_/D
+     2370 |       0 |    3635 |            0 |    +1.2% | -297.969 | -155433.641 | g_pin.weight_q[63]$_DFF_P_/D
+     2380 |       0 |    3655 |            0 |    +1.2% | -297.969 | -155414.141 | g_pin.weight_q[63]$_DFF_P_/D
+     2390 |       0 |    3675 |            0 |    +1.2% | -297.969 | -155394.859 | g_pin.weight_q[63]$_DFF_P_/D
+     2400 |       0 |    3695 |            0 |    +1.2% | -297.969 | -155375.781 | g_pin.weight_q[63]$_DFF_P_/D
+     2410 |       0 |    3715 |            0 |    +1.2% | -297.969 | -155356.938 | g_pin.weight_q[63]$_DFF_P_/D
+     2420 |       0 |    3735 |            0 |    +1.2% | -297.969 | -155338.312 | g_pin.weight_q[63]$_DFF_P_/D
+     2430 |       0 |    3755 |            0 |    +1.2% | -297.969 | -155319.953 | g_pin.weight_q[63]$_DFF_P_/D
+     2440 |       0 |    3775 |            0 |    +1.2% | -297.969 | -155301.875 | g_pin.weight_q[63]$_DFF_P_/D
+     2450 |       0 |    3795 |            0 |    +1.2% | -297.969 | -155283.969 | g_pin.weight_q[63]$_DFF_P_/D
+     2460 |       0 |    3815 |            0 |    +1.2% | -297.969 | -155266.422 | g_pin.weight_q[63]$_DFF_P_/D
+     2470 |       0 |    3835 |            0 |    +1.2% | -297.969 | -155249.078 | g_pin.weight_q[63]$_DFF_P_/D
+     2480 |       0 |    3855 |            0 |    +1.3% | -297.969 | -155231.953 | g_pin.weight_q[63]$_DFF_P_/D
+     2490 |       0 |    3875 |            0 |    +1.3% | -297.969 | -155215.031 | g_pin.weight_q[63]$_DFF_P_/D
+     2500 |       0 |    3895 |            0 |    +1.3% | -297.969 | -155198.344 | g_pin.weight_q[63]$_DFF_P_/D
+     2510 |       0 |    3915 |            0 |    +1.3% | -297.969 | -155181.859 | g_pin.weight_q[63]$_DFF_P_/D
+     2520 |       0 |    3935 |            0 |    +1.3% | -297.969 | -155165.594 | g_pin.weight_q[63]$_DFF_P_/D
+     2530 |       0 |    3955 |            0 |    +1.3% | -297.969 | -155149.500 | g_pin.weight_q[63]$_DFF_P_/D
+     2540 |       0 |    3975 |            0 |    +1.3% | -297.969 | -155133.656 | g_pin.weight_q[63]$_DFF_P_/D
+     2550 |       0 |    3995 |            0 |    +1.3% | -297.969 | -155117.984 | g_pin.weight_q[63]$_DFF_P_/D
+     2560 |       0 |    4015 |            0 |    +1.3% | -297.969 | -155102.547 | g_pin.weight_q[63]$_DFF_P_/D
+     2570 |       0 |    4035 |            0 |    +1.3% | -297.969 | -155087.266 | g_pin.weight_q[63]$_DFF_P_/D
+     2580 |       0 |    4056 |            0 |    +1.3% | -297.969 | -155072.172 | g_pin.weight_q[63]$_DFF_P_/D
+     2590 |       0 |    4076 |            0 |    +1.3% | -297.969 | -155057.266 | g_pin.weight_q[63]$_DFF_P_/D
+     2600 |       0 |    4096 |            0 |    +1.3% | -297.969 | -155042.500 | g_pin.weight_q[63]$_DFF_P_/D
+     2610 |       0 |    4116 |            0 |    +1.3% | -297.969 | -155027.938 | g_pin.weight_q[63]$_DFF_P_/D
+     2620 |       0 |    4136 |            0 |    +1.3% | -297.969 | -155013.531 | g_pin.weight_q[63]$_DFF_P_/D
+     2630 |       0 |    4156 |            0 |    +1.4% | -297.969 | -154999.219 | g_pin.weight_q[63]$_DFF_P_/D
+     2640 |       0 |    4176 |            0 |    +1.4% | -297.969 | -154985.141 | g_pin.weight_q[63]$_DFF_P_/D
+     2650 |       0 |    4196 |            0 |    +1.4% | -297.969 | -154971.234 | g_pin.weight_q[63]$_DFF_P_/D
+     2660 |       0 |    4216 |            0 |    +1.4% | -297.969 | -154957.453 | g_pin.weight_q[63]$_DFF_P_/D
+     2670 |       0 |    4236 |            0 |    +1.4% | -297.969 | -154943.891 | g_pin.weight_q[63]$_DFF_P_/D
+     2680 |       0 |    4256 |            0 |    +1.4% | -297.969 | -154930.516 | g_pin.weight_q[63]$_DFF_P_/D
+     2690 |       0 |    4276 |            0 |    +1.4% | -297.969 | -154917.297 | g_pin.weight_q[63]$_DFF_P_/D
+     2700 |       0 |    4296 |            0 |    +1.4% | -297.969 | -154904.359 | g_pin.weight_q[63]$_DFF_P_/D
+     2710 |       0 |    4316 |            0 |    +1.4% | -297.969 | -154891.672 | g_pin.weight_q[63]$_DFF_P_/D
+     2720 |       0 |    4336 |            0 |    +1.4% | -297.969 | -154879.109 | g_pin.weight_q[63]$_DFF_P_/D
+     2730 |       0 |    4356 |            0 |    +1.4% | -297.969 | -154866.672 | g_pin.weight_q[63]$_DFF_P_/D
+     2740 |       0 |    4376 |            0 |    +1.4% | -297.969 | -154854.375 | g_pin.weight_q[63]$_DFF_P_/D
+     2750 |       0 |    4396 |            0 |    +1.4% | -297.969 | -154842.234 | g_pin.weight_q[63]$_DFF_P_/D
+     2760 |       0 |    4416 |            0 |    +1.4% | -297.969 | -154830.219 | g_pin.weight_q[63]$_DFF_P_/D
+     2770 |       0 |    4436 |            0 |    +1.4% | -297.969 | -154818.328 | g_pin.weight_q[63]$_DFF_P_/D
+     2780 |       0 |    4456 |            0 |    +1.4% | -297.969 | -154806.562 | g_pin.weight_q[63]$_DFF_P_/D
+     2790 |       0 |    4476 |            0 |    +1.5% | -297.969 | -154794.922 | g_pin.weight_q[63]$_DFF_P_/D
+     2800 |       0 |    4496 |            0 |    +1.5% | -297.969 | -154783.375 | g_pin.weight_q[63]$_DFF_P_/D
+     2810 |       0 |    4516 |            0 |    +1.5% | -297.969 | -154771.984 | g_pin.weight_q[63]$_DFF_P_/D
+     2820 |       0 |    4536 |            0 |    +1.5% | -297.969 | -154760.703 | g_pin.weight_q[63]$_DFF_P_/D
+     2830 |       0 |    4556 |            0 |    +1.5% | -297.969 | -154749.516 | g_pin.weight_q[63]$_DFF_P_/D
+     2840 |       0 |    4576 |            0 |    +1.5% | -297.969 | -154738.469 | g_pin.weight_q[63]$_DFF_P_/D
+     2850 |       0 |    4596 |            0 |    +1.5% | -297.969 | -154727.547 | g_pin.weight_q[63]$_DFF_P_/D
+     2860 |       0 |    4616 |            0 |    +1.5% | -297.969 | -154716.734 | g_pin.weight_q[63]$_DFF_P_/D
+     2870 |       0 |    4636 |            0 |    +1.5% | -297.969 | -154706.047 | g_pin.weight_q[63]$_DFF_P_/D
+     2880 |       0 |    4656 |            0 |    +1.5% | -297.969 | -154695.547 | g_pin.weight_q[63]$_DFF_P_/D
+     2890 |       0 |    4676 |            0 |    +1.5% | -297.969 | -154685.266 | g_pin.weight_q[63]$_DFF_P_/D
+     2900 |       0 |    4696 |            0 |    +1.5% | -297.969 | -154675.109 | g_pin.weight_q[63]$_DFF_P_/D
+     2910 |       0 |    4716 |            0 |    +1.5% | -297.969 | -154665.062 | g_pin.weight_q[63]$_DFF_P_/D
+     2920 |       0 |    4736 |            0 |    +1.5% | -297.969 | -154655.109 | g_pin.weight_q[63]$_DFF_P_/D
+     2930 |       0 |    4756 |            0 |    +1.5% | -297.969 | -154645.250 | g_pin.weight_q[63]$_DFF_P_/D
+     2940 |       0 |    4776 |            0 |    +1.6% | -297.969 | -154635.484 | g_pin.weight_q[63]$_DFF_P_/D
+     2950 |       0 |    4796 |            0 |    +1.6% | -297.969 | -154625.859 | g_pin.weight_q[63]$_DFF_P_/D
+     2960 |       0 |    4816 |            0 |    +1.6% | -297.969 | -154616.344 | g_pin.weight_q[63]$_DFF_P_/D
+     2970 |       0 |    4836 |            0 |    +1.6% | -297.969 | -154607.031 | g_pin.weight_q[63]$_DFF_P_/D
+     2980 |       0 |    4856 |            0 |    +1.6% | -297.969 | -154597.875 | g_pin.weight_q[63]$_DFF_P_/D
+     2990 |       0 |    4876 |            0 |    +1.6% | -297.969 | -154588.797 | g_pin.weight_q[63]$_DFF_P_/D
+     3000 |       0 |    4896 |            0 |    +1.6% | -297.969 | -154579.828 | g_pin.weight_q[63]$_DFF_P_/D
+     3010 |       0 |    4916 |            0 |    +1.6% | -297.969 | -154570.938 | g_pin.weight_q[63]$_DFF_P_/D
+     3020 |       0 |    4936 |            0 |    +1.6% | -297.969 | -154562.156 | g_pin.weight_q[63]$_DFF_P_/D
+     3030 |       0 |    4956 |            0 |    +1.6% | -297.969 | -154553.469 | g_pin.weight_q[63]$_DFF_P_/D
+     3040 |       0 |    4976 |            0 |    +1.6% | -297.969 | -154544.906 | g_pin.weight_q[63]$_DFF_P_/D
+     3050 |       0 |    4996 |            0 |    +1.6% | -297.969 | -154536.578 | g_pin.weight_q[63]$_DFF_P_/D
+     3060 |       0 |    5016 |            0 |    +1.6% | -297.969 | -154528.391 | g_pin.weight_q[63]$_DFF_P_/D
+     3070 |       0 |    5036 |            0 |    +1.6% | -297.969 | -154520.328 | g_pin.weight_q[63]$_DFF_P_/D
+     3080 |       0 |    5056 |            0 |    +1.6% | -297.969 | -154512.344 | g_pin.weight_q[63]$_DFF_P_/D
+     3090 |       0 |    5076 |            0 |    +1.7% | -297.969 | -154504.500 | g_pin.weight_q[63]$_DFF_P_/D
+     3100 |       0 |    5096 |            0 |    +1.7% | -297.969 | -154496.844 | g_pin.weight_q[63]$_DFF_P_/D
+     3110 |       0 |    5116 |            0 |    +1.7% | -297.969 | -154489.375 | g_pin.weight_q[63]$_DFF_P_/D
+     3120 |       0 |    5136 |            0 |    +1.7% | -297.969 | -154482.078 | g_pin.weight_q[63]$_DFF_P_/D
+     3130 |       0 |    5156 |            0 |    +1.7% | -297.969 | -154474.969 | g_pin.weight_q[63]$_DFF_P_/D
+     3140 |       0 |    5176 |            0 |    +1.7% | -297.969 | -154468.000 | g_pin.weight_q[63]$_DFF_P_/D
+     3150 |       0 |    5196 |            0 |    +1.7% | -297.969 | -154461.156 | g_pin.weight_q[63]$_DFF_P_/D
+     3160 |       0 |    5216 |            0 |    +1.7% | -297.969 | -154454.438 | g_pin.weight_q[63]$_DFF_P_/D
+     3170 |       0 |    5236 |            0 |    +1.7% | -297.969 | -154447.906 | g_pin.weight_q[63]$_DFF_P_/D
+     3180 |       0 |    5256 |            0 |    +1.7% | -297.969 | -154441.516 | g_pin.weight_q[63]$_DFF_P_/D
+     3190 |       0 |    5276 |            0 |    +1.7% | -297.969 | -154435.297 | g_pin.weight_q[63]$_DFF_P_/D
+     3200 |       0 |    5296 |            0 |    +1.7% | -297.969 | -154429.219 | g_pin.weight_q[63]$_DFF_P_/D
+     3210 |       0 |    5317 |            0 |    +1.7% | -297.969 | -154423.188 | g_pin.weight_q[63]$_DFF_P_/D
+     3220 |       0 |    5337 |            0 |    +1.7% | -297.969 | -154417.234 | g_pin.weight_q[63]$_DFF_P_/D
+     3230 |       0 |    5357 |            0 |    +1.7% | -297.969 | -154411.375 | g_pin.weight_q[63]$_DFF_P_/D
+     3240 |       0 |    5377 |            0 |    +1.7% | -297.969 | -154405.594 | g_pin.weight_q[63]$_DFF_P_/D
+     3250 |       0 |    5397 |            0 |    +1.8% | -297.969 | -154399.984 | g_pin.weight_q[63]$_DFF_P_/D
+     3260 |       0 |    5417 |            0 |    +1.8% | -297.969 | -154394.531 | g_pin.weight_q[63]$_DFF_P_/D
+     3270 |       0 |    5437 |            0 |    +1.8% | -297.969 | -154389.203 | g_pin.weight_q[63]$_DFF_P_/D
+     3280 |       0 |    5457 |            0 |    +1.8% | -297.969 | -154383.969 | g_pin.weight_q[63]$_DFF_P_/D
+     3290 |       0 |    5477 |            0 |    +1.8% | -297.969 | -154378.875 | g_pin.weight_q[63]$_DFF_P_/D
+     3300 |       0 |    5497 |            0 |    +1.8% | -297.969 | -154373.844 | g_pin.weight_q[63]$_DFF_P_/D
+     3310 |       0 |    5517 |            0 |    +1.8% | -297.969 | -154368.969 | g_pin.weight_q[63]$_DFF_P_/D
+     3320 |       0 |    5537 |            0 |    +1.8% | -297.969 | -154364.172 | g_pin.weight_q[63]$_DFF_P_/D
+     3330 |       0 |    5557 |            0 |    +1.8% | -297.969 | -154359.516 | g_pin.weight_q[63]$_DFF_P_/D
+     3340 |       0 |    5577 |            0 |    +1.8% | -297.969 | -154354.984 | g_pin.weight_q[63]$_DFF_P_/D
+     3350 |       0 |    5597 |            0 |    +1.8% | -297.969 | -154350.531 | g_pin.weight_q[63]$_DFF_P_/D
+     3360 |       0 |    5617 |            0 |    +1.8% | -297.969 | -154346.203 | g_pin.weight_q[63]$_DFF_P_/D
+     3370 |       0 |    5637 |            0 |    +1.8% | -297.969 | -154341.969 | g_pin.weight_q[63]$_DFF_P_/D
+     3380 |       0 |    5657 |            0 |    +1.8% | -297.969 | -154337.812 | g_pin.weight_q[63]$_DFF_P_/D
+     3390 |       0 |    5677 |            0 |    +1.8% | -297.969 | -154333.750 | g_pin.weight_q[63]$_DFF_P_/D
+     3400 |       0 |    5697 |            0 |    +1.9% | -297.969 | -154329.812 | g_pin.weight_q[63]$_DFF_P_/D
+     3410 |       0 |    5717 |            0 |    +1.9% | -297.969 | -154326.000 | g_pin.weight_q[63]$_DFF_P_/D
+     3420 |       0 |    5737 |            0 |    +1.9% | -297.969 | -154322.328 | g_pin.weight_q[63]$_DFF_P_/D
+     3430 |       0 |    5757 |            0 |    +1.9% | -297.969 | -154318.781 | g_pin.weight_q[63]$_DFF_P_/D
+     3440 |       0 |    5777 |            0 |    +1.9% | -297.969 | -154315.281 | g_pin.weight_q[63]$_DFF_P_/D
+     3450 |       0 |    5797 |            0 |    +1.9% | -297.969 | -154311.891 | g_pin.weight_q[63]$_DFF_P_/D
+     3460 |       0 |    5817 |            0 |    +1.9% | -297.969 | -154308.578 | g_pin.weight_q[63]$_DFF_P_/D
+     3470 |       0 |    5837 |            0 |    +1.9% | -297.969 | -154305.391 | g_pin.weight_q[63]$_DFF_P_/D
+     3480 |       0 |    5857 |            0 |    +1.9% | -297.969 | -154302.344 | g_pin.weight_q[63]$_DFF_P_/D
+     3490 |       0 |    5877 |            0 |    +1.9% | -297.969 | -154299.422 | g_pin.weight_q[63]$_DFF_P_/D
+     3500 |       0 |    5897 |            0 |    +1.9% | -297.969 | -154296.594 | g_pin.weight_q[63]$_DFF_P_/D
+     3510 |       0 |    5917 |            0 |    +1.9% | -297.969 | -154293.859 | g_pin.weight_q[63]$_DFF_P_/D
+     3520 |       0 |    5937 |            0 |    +1.9% | -297.969 | -154291.250 | g_pin.weight_q[63]$_DFF_P_/D
+     3530 |       0 |    5957 |            0 |    +1.9% | -297.969 | -154288.750 | g_pin.weight_q[63]$_DFF_P_/D
+     3540 |       0 |    5977 |            0 |    +1.9% | -297.969 | -154286.375 | g_pin.weight_q[63]$_DFF_P_/D
+     3550 |       0 |    5997 |            0 |    +2.0% | -297.969 | -154284.141 | g_pin.weight_q[63]$_DFF_P_/D
+     3560 |       0 |    6017 |            0 |    +2.0% | -297.969 | -154282.125 | g_pin.weight_q[63]$_DFF_P_/D
+     3570 |       0 |    6037 |            0 |    +2.0% | -297.969 | -154280.219 | g_pin.weight_q[63]$_DFF_P_/D
+     3580 |       0 |    6057 |            0 |    +2.0% | -297.969 | -154278.406 | g_pin.weight_q[63]$_DFF_P_/D
+     3590 |       0 |    6077 |            0 |    +2.0% | -297.969 | -154276.688 | g_pin.weight_q[63]$_DFF_P_/D
+     3600 |       0 |    6097 |            0 |    +2.0% | -297.969 | -154275.062 | g_pin.weight_q[63]$_DFF_P_/D
+     3610 |       0 |    6117 |            0 |    +2.0% | -297.969 | -154273.641 | g_pin.weight_q[63]$_DFF_P_/D
+     3620 |       0 |    6137 |            0 |    +2.0% | -297.969 | -154272.312 | g_pin.weight_q[63]$_DFF_P_/D
+     3630 |       0 |    6157 |            0 |    +2.0% | -297.969 | -154271.125 | g_pin.weight_q[63]$_DFF_P_/D
+     3640 |       0 |    6177 |            0 |    +2.0% | -297.969 | -154270.047 | g_pin.weight_q[63]$_DFF_P_/D
+     3650 |       0 |    6197 |            0 |    +2.0% | -297.969 | -154269.062 | g_pin.weight_q[63]$_DFF_P_/D
+     3660 |       0 |    6217 |            0 |    +2.0% | -297.969 | -154268.203 | g_pin.weight_q[63]$_DFF_P_/D
+     3670 |       0 |    6237 |            0 |    +2.0% | -297.969 | -154267.422 | g_pin.weight_q[63]$_DFF_P_/D
+     3680 |       0 |    6257 |            0 |    +2.0% | -297.969 | -154266.750 | g_pin.weight_q[63]$_DFF_P_/D
+     3690 |       0 |    6277 |            0 |    +2.0% | -297.969 | -154266.156 | g_pin.weight_q[63]$_DFF_P_/D
+     3700 |       0 |    6297 |            0 |    +2.0% | -297.969 | -154265.703 | g_pin.weight_q[63]$_DFF_P_/D
+     3710 |       0 |    6317 |            0 |    +2.1% | -297.969 | -154265.375 | g_pin.weight_q[63]$_DFF_P_/D
+     3720 |       0 |    6337 |            0 |    +2.1% | -297.969 | -154265.156 | g_pin.weight_q[63]$_DFF_P_/D
+     3730 |       0 |    6357 |            0 |    +2.1% | -297.969 | -154264.984 | g_pin.weight_q[63]$_DFF_P_/D
+     3740 |       0 |    6377 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3750 |       0 |    6397 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3760 |       0 |    6417 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3770 |       0 |    6437 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3780 |       0 |    6457 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3790 |       0 |    6477 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3800 |       0 |    6497 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3810 |       0 |    6517 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3820 |       0 |    6537 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3830 |       0 |    6557 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3840 |       0 |    6577 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3850 |       0 |    6597 |            0 |    +2.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3860 |       0 |    6617 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3870 |       0 |    6637 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3880 |       0 |    6657 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3890 |       0 |    6677 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3900 |       0 |    6697 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3910 |       0 |    6717 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3920 |       0 |    6737 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3930 |       0 |    6757 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3940 |       0 |    6777 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3950 |       0 |    6797 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3960 |       0 |    6817 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3970 |       0 |    6837 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3980 |       0 |    6857 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     3990 |       0 |    6877 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4000 |       0 |    6897 |            0 |    +2.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4010 |       0 |    6917 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4020 |       0 |    6937 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4030 |       0 |    6957 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4040 |       0 |    6977 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4050 |       0 |    6997 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4060 |       0 |    7017 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4070 |       0 |    7037 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4080 |       0 |    7057 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4090 |       0 |    7077 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4100 |       0 |    7097 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4110 |       0 |    7117 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4120 |       0 |    7137 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4130 |       0 |    7157 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4140 |       0 |    7177 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4150 |       0 |    7197 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4160 |       0 |    7217 |            0 |    +2.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4170 |       0 |    7237 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4180 |       0 |    7257 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4190 |       0 |    7277 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4200 |       0 |    7297 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4210 |       0 |    7317 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4220 |       0 |    7337 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4230 |       0 |    7357 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4240 |       0 |    7377 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4250 |       0 |    7397 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4260 |       0 |    7417 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4270 |       0 |    7437 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4280 |       0 |    7457 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4290 |       0 |    7477 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4300 |       0 |    7497 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4310 |       0 |    7517 |            0 |    +2.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4320 |       0 |    7537 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4330 |       0 |    7557 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4340 |       0 |    7577 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4350 |       0 |    7597 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4360 |       0 |    7617 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4370 |       0 |    7637 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4380 |       0 |    7657 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4390 |       0 |    7677 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4400 |       0 |    7697 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4410 |       0 |    7717 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4420 |       0 |    7737 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4430 |       0 |    7757 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4440 |       0 |    7777 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4450 |       0 |    7797 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4460 |       0 |    7817 |            0 |    +2.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4470 |       0 |    7837 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4480 |       0 |    7857 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4490 |       0 |    7877 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4500 |       0 |    7897 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4510 |       0 |    7917 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4520 |       0 |    7937 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4530 |       0 |    7957 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4540 |       0 |    7977 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4550 |       0 |    7997 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4560 |       0 |    8017 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4570 |       0 |    8037 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4580 |       0 |    8057 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4590 |       0 |    8077 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4600 |       0 |    8097 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4610 |       0 |    8117 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4620 |       0 |    8137 |            0 |    +2.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4630 |       0 |    8157 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4640 |       0 |    8177 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4650 |       0 |    8197 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4660 |       0 |    8217 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4670 |       0 |    8237 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4680 |       0 |    8257 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4690 |       0 |    8277 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4700 |       0 |    8297 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4710 |       0 |    8317 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4720 |       0 |    8337 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4730 |       0 |    8357 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4740 |       0 |    8377 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4750 |       0 |    8397 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4760 |       0 |    8417 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4770 |       0 |    8437 |            0 |    +2.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4780 |       0 |    8457 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4790 |       0 |    8477 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4800 |       0 |    8497 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4810 |       0 |    8517 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4820 |       0 |    8537 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4830 |       0 |    8557 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4840 |       0 |    8577 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4850 |       0 |    8597 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4860 |       0 |    8617 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4870 |       0 |    8637 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4880 |       0 |    8657 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4890 |       0 |    8677 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4900 |       0 |    8697 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4910 |       0 |    8717 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4920 |       0 |    8737 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4930 |       0 |    8757 |            0 |    +2.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4940 |       0 |    8777 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4950 |       0 |    8797 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4960 |       0 |    8817 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4970 |       0 |    8837 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4980 |       0 |    8857 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     4990 |       0 |    8877 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5000 |       0 |    8897 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5010 |       0 |    8917 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5020 |       0 |    8937 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5030 |       0 |    8957 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5040 |       0 |    8977 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5050 |       0 |    8997 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5060 |       0 |    9017 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5070 |       0 |    9037 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5080 |       0 |    9057 |            0 |    +2.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5090 |       0 |    9077 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5100 |       0 |    9097 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5110 |       0 |    9117 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5120 |       0 |    9137 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5130 |       0 |    9157 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5140 |       0 |    9177 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5150 |       0 |    9197 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5160 |       0 |    9217 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5170 |       0 |    9237 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5180 |       0 |    9257 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5190 |       0 |    9277 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5200 |       0 |    9297 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5210 |       0 |    9317 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5220 |       0 |    9337 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5230 |       0 |    9357 |            0 |    +3.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5240 |       0 |    9377 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5250 |       0 |    9397 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5260 |       0 |    9417 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5270 |       0 |    9437 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5280 |       0 |    9457 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5290 |       0 |    9477 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5300 |       0 |    9497 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5310 |       0 |    9517 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5320 |       0 |    9537 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5330 |       0 |    9557 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5340 |       0 |    9577 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5350 |       0 |    9597 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5360 |       0 |    9617 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5370 |       0 |    9637 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5380 |       0 |    9657 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5390 |       0 |    9677 |            0 |    +3.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5400 |       0 |    9697 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5410 |       0 |    9717 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5420 |       0 |    9737 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5430 |       0 |    9757 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5440 |       0 |    9777 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5450 |       0 |    9797 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5460 |       0 |    9817 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5470 |       0 |    9837 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5480 |       0 |    9857 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5490 |       0 |    9877 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5500 |       0 |    9897 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5510 |       0 |    9917 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5520 |       0 |    9937 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5530 |       0 |    9957 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5540 |       0 |    9977 |            0 |    +3.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5550 |       0 |    9997 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5560 |       0 |   10017 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5570 |       0 |   10037 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5580 |       0 |   10057 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5590 |       0 |   10077 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5600 |       0 |   10097 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5610 |       0 |   10117 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5620 |       0 |   10137 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5630 |       0 |   10157 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5640 |       0 |   10177 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5650 |       0 |   10197 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5660 |       0 |   10217 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5670 |       0 |   10237 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5680 |       0 |   10257 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5690 |       0 |   10277 |            0 |    +3.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5700 |       0 |   10297 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5710 |       0 |   10317 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5720 |       0 |   10337 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5730 |       0 |   10357 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5740 |       0 |   10377 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5750 |       0 |   10397 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5760 |       0 |   10417 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5770 |       0 |   10437 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5780 |       0 |   10457 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5790 |       0 |   10477 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5800 |       0 |   10497 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5810 |       0 |   10517 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5820 |       0 |   10537 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5830 |       0 |   10557 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5840 |       0 |   10577 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5850 |       0 |   10597 |            0 |    +3.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5860 |       0 |   10617 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5870 |       0 |   10637 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5880 |       0 |   10657 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5890 |       0 |   10677 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5900 |       0 |   10697 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5910 |       0 |   10717 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5920 |       0 |   10737 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5930 |       0 |   10757 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5940 |       0 |   10777 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5950 |       0 |   10797 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5960 |       0 |   10817 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5970 |       0 |   10837 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5980 |       0 |   10857 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     5990 |       0 |   10877 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6000 |       0 |   10897 |            0 |    +3.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6010 |       0 |   10917 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6020 |       0 |   10937 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6030 |       0 |   10957 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6040 |       0 |   10977 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6050 |       0 |   10997 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6060 |       0 |   11017 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6070 |       0 |   11037 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6080 |       0 |   11057 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6090 |       0 |   11077 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6100 |       0 |   11097 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6110 |       0 |   11117 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6120 |       0 |   11137 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6130 |       0 |   11157 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6140 |       0 |   11177 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6150 |       0 |   11197 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6160 |       0 |   11217 |            0 |    +3.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6170 |       0 |   11237 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6180 |       0 |   11257 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6190 |       0 |   11277 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6200 |       0 |   11297 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6210 |       0 |   11317 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6220 |       0 |   11337 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6230 |       0 |   11357 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6240 |       0 |   11377 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6250 |       0 |   11397 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6260 |       0 |   11417 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6270 |       0 |   11437 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6280 |       0 |   11457 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6290 |       0 |   11477 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6300 |       0 |   11497 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6310 |       0 |   11517 |            0 |    +3.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6320 |       0 |   11537 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6330 |       0 |   11557 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6340 |       0 |   11577 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6350 |       0 |   11597 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6360 |       0 |   11617 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6370 |       0 |   11637 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6380 |       0 |   11657 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6390 |       0 |   11677 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6400 |       0 |   11697 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6410 |       0 |   11717 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6420 |       0 |   11737 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6430 |       0 |   11757 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6440 |       0 |   11777 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6450 |       0 |   11797 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6460 |       0 |   11817 |            0 |    +3.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6470 |       0 |   11837 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6480 |       0 |   11857 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6490 |       0 |   11877 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6500 |       0 |   11897 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6510 |       0 |   11917 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6520 |       0 |   11937 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6530 |       0 |   11957 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6540 |       0 |   11977 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6550 |       0 |   11997 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6560 |       0 |   12018 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6570 |       0 |   12038 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6580 |       0 |   12058 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6590 |       0 |   12078 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6600 |       0 |   12098 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6610 |       0 |   12118 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6620 |       0 |   12138 |            0 |    +3.9% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6630 |       0 |   12158 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6640 |       0 |   12178 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6650 |       0 |   12198 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6660 |       0 |   12218 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6670 |       0 |   12238 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6680 |       0 |   12258 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6690 |       0 |   12278 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6700 |       0 |   12298 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6710 |       0 |   12318 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6720 |       0 |   12338 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6730 |       0 |   12358 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6740 |       0 |   12378 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6750 |       0 |   12398 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6760 |       0 |   12418 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6770 |       0 |   12438 |            0 |    +4.0% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6780 |       0 |   12458 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6790 |       0 |   12478 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6800 |       0 |   12498 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6810 |       0 |   12518 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6820 |       0 |   12538 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6830 |       0 |   12558 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6840 |       0 |   12578 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6850 |       0 |   12598 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6860 |       0 |   12618 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6870 |       0 |   12638 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6880 |       0 |   12658 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6890 |       0 |   12678 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6900 |       0 |   12698 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6910 |       0 |   12718 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6920 |       0 |   12738 |            0 |    +4.1% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6930 |       0 |   12758 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6940 |       0 |   12778 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6950 |       0 |   12798 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6960 |       0 |   12818 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6970 |       0 |   12838 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6980 |       0 |   12858 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     6990 |       0 |   12878 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7000 |       0 |   12898 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7010 |       0 |   12918 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7020 |       0 |   12938 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7030 |       0 |   12958 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7040 |       0 |   12978 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7050 |       0 |   12998 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7060 |       0 |   13018 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7070 |       0 |   13038 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7080 |       0 |   13058 |            0 |    +4.2% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7090 |       0 |   13078 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7100 |       0 |   13098 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7110 |       0 |   13118 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7120 |       0 |   13138 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7130 |       0 |   13158 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7140 |       0 |   13178 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7150 |       0 |   13198 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7160 |       0 |   13218 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7170 |       0 |   13238 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7180 |       0 |   13258 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7190 |       0 |   13278 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7200 |       0 |   13298 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7210 |       0 |   13318 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7220 |       0 |   13338 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7230 |       0 |   13358 |            0 |    +4.3% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7240 |       0 |   13378 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7250 |       0 |   13398 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7260 |       0 |   13418 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7270 |       0 |   13438 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7280 |       0 |   13458 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7290 |       0 |   13478 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7300 |       0 |   13498 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7310 |       0 |   13518 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7320 |       0 |   13538 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7330 |       0 |   13558 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7340 |       0 |   13578 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7350 |       0 |   13598 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7360 |       0 |   13618 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7370 |       0 |   13638 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7380 |       0 |   13658 |            0 |    +4.4% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7390 |       0 |   13678 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7400 |       0 |   13698 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7410 |       0 |   13718 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7420 |       0 |   13738 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7430 |       0 |   13758 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7440 |       0 |   13778 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7450 |       0 |   13798 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7460 |       0 |   13818 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7470 |       0 |   13838 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7480 |       0 |   13858 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7490 |       0 |   13878 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7500 |       0 |   13898 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7510 |       0 |   13918 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7520 |       0 |   13938 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7530 |       0 |   13958 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7540 |       0 |   13978 |            0 |    +4.5% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7550 |       0 |   13998 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7560 |       0 |   14018 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7570 |       0 |   14038 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7580 |       0 |   14058 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7590 |       0 |   14078 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7600 |       0 |   14098 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7610 |       0 |   14118 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7620 |       0 |   14138 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7630 |       0 |   14158 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7640 |       0 |   14178 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7650 |       0 |   14198 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7660 |       0 |   14218 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7670 |       0 |   14238 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7680 |       0 |   14258 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7690 |       0 |   14278 |            0 |    +4.6% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7700 |       0 |   14298 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7710 |       0 |   14318 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7720 |       0 |   14338 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7730 |       0 |   14358 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7740 |       0 |   14378 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7750 |       0 |   14398 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7760 |       0 |   14418 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7770 |       0 |   14438 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7780 |       0 |   14458 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7790 |       0 |   14478 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7800 |       0 |   14498 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7810 |       0 |   14518 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7820 |       0 |   14538 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7830 |       0 |   14558 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7840 |       0 |   14578 |            0 |    +4.7% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7850 |       0 |   14598 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7860 |       0 |   14618 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7870 |       0 |   14638 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7880 |       0 |   14658 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7890 |       0 |   14678 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7900 |       0 |   14698 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
+     7910 |       0 |   14718 |            0 |    +4.8% | -297.969 | -154264.953 | g_pin.weight_q[63]$_DFF_P_/D
