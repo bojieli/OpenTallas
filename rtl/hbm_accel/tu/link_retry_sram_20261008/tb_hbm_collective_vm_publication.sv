@@ -40,14 +40,19 @@ module tb_hbm_collective_vm_publication;
  end
  integer issued=0,seen=0,captured=0;
  reg[31:0] ordinal=0;wire[1:0] cv,cf;wire[1087:0] cp;
+ reg[1:0] cv_before=0,cf_before=0;reg[1087:0] cp_before=0;
+ // Hub FFs sample the stable packet before the capture edge. A bench active
+ // region read can otherwise race same-edge SRAM/metadata NBA updates.
+ always@(negedge clk)begin cv_before=cv;cf_before=cf;cp_before=cp;end
  for(genvar l=0;l<2;l=l+1)begin:g_capture
  ot_hbm_collective_indexed_capture u_capture(.clk(clk),.rst_n(rst),.request_valid(injrd[l]),
  .ordinal(ordinal[16*l+:16]),.index(idx[16*l+:16]),.response_valid(injv[l]),.response_fault(fault),
  .response_data(data[512*l+:512]),.capture_valid(cv[l]),.capture_packet(cp[544*l+:544]),.pending(),.fault(cf[l]));
  end
  always@(posedge clk)if(reading&&rst)begin
- for(integer l=0;l<2;l=l+1)if(cv[l])begin
- if(cp[544*l+528+:16]!=captured || cp[544*l+512+:16]!=expected_idx[captured] || cp[544*l+:512]!==flit(expected_idx[captured]))$fatal(1,"native indexed capture ownership");
+ if(|cf_before)$fatal(1,"native indexed capture fault");
+ for(integer l=0;l<2;l=l+1)if(cv_before[l])begin
+ if(cp_before[544*l+528+:16]!=captured || cp_before[544*l+512+:16]!=expected_idx[captured] || cp_before[544*l+:512]!==flit(expected_idx[captured]))$fatal(1,"native indexed capture ownership");
  if(cycles-expected_cycle[captured]!=5)$fatal(1,"native hub capture latency");
  captured=captured+1;end
  if(|cf)$fatal(1,"native indexed capture fault");
@@ -97,6 +102,10 @@ module tb_hbm_collective_vm_publication;
  if(!fault||published||reqv)$fatal(1,"external VM fault did not quarantine");
  $display("PASS separate provider fault quarantines; writeEcho is not fault transport");
  $display("PASS_ALL");$finish;
+ end
+ initial if($test$plusargs("CORRUPT_CAPTURE_TAG"))begin
+ wait(injv[0]);#0.02;
+ g_capture[0].u_capture.metadata[128]=~g_capture[0].u_capture.metadata[128];
  end
  initial begin#15000;$fatal(1,"watchdog");end
 endmodule

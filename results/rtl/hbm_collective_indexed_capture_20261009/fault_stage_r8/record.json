@@ -1,0 +1,13 @@
+{
+  "exactness_gate": "PASS",
+  "metadata_single_bit_fault_gate": "PASS_CAPTURE_BLOCKED_EXPECTED_FATAL",
+  "qualification": "FULL4096_REAL_PUBLICATION_SRAM_AND_ACTUAL_CAPTURE_LEAF",
+  "source_sha256": {
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_indexed_capture.sv": "71586aab1e8d95d3fb91ae10edbfd1a3781b117c518f8fc5e7d4e8b80b2126b4",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_collective_vm_publication.sv": "cf27feffe48a52d750443ca7cfec1395bd48ecd24a79521fb8a2c9d7bd632ff5"
+  },
+  "bench_capture_sampling": "Stable preedge checkpoint reflects hub FF capture; historical active-region monitor raced same-edge producer NBA updates. Diagnostic raw log shows fault1/capturevalid0 before that edge.",
+  "protection_scope": "single metadata-bit detect/poison plus duplicate validity; not arbitrary multi-bit control fault proof",
+  "physical_qualified": false,
+  "full_native_current_source_qualified": false
+}

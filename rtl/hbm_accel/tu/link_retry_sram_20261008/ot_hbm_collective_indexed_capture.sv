@@ -9,22 +9,22 @@ module ot_hbm_collective_indexed_capture #(parameter W=512)(
  output wire pending,output wire fault
 );
  reg[4:0] valid_pipe,valid_check;
- reg[31:0] metadata[0:4];reg parity[0:4];reg bad;
+ reg[159:0] metadata;reg[4:0] parity;reg bad;
  wire mismatch=response_valid!=valid_pipe[4] || valid_pipe!=valid_check ||
- (valid_pipe[4] && (^metadata[4])!=parity[4]);
+ (valid_pipe[4] && (^metadata[128+:32])!=parity[4]);
  assign pending=|valid_pipe;
  assign fault=bad || mismatch || response_fault;
  assign capture_valid=response_valid && !fault;
- assign capture_packet={metadata[4],response_data};
+ assign capture_packet={metadata[128+:32],response_data};
  always@(posedge clk or negedge rst_n)begin
  if(!rst_n)begin
  valid_pipe<=0;valid_check<=0;bad<=0;
- for(integer t=0;t<5;t=t+1)begin metadata[t]<=0;parity[t]<=0;end
+ metadata<=0;parity<=0;
  end else begin
  if(mismatch || response_fault)bad<=1;
  valid_pipe<={valid_pipe[3:0],request_valid};
  valid_check<={valid_check[3:0],request_valid};
- metadata[0]<={ordinal,index};parity[0]<=^{ordinal,index};
- for(integer t=1;t<5;t=t+1)begin metadata[t]<=metadata[t-1];parity[t]<=parity[t-1];end
+ metadata<={metadata[127:0],ordinal,index};
+ parity<={parity[3:0],^{ordinal,index}};
  end end
 endmodule

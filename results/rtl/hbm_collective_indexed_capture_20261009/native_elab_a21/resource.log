@@ -1,0 +1,64 @@
+%Warning-LATCH: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:444:9: Latch inferred for signal 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.unnamedblk9.inj.ord' (not all control paths of combinational always assign a value)
+                                                                                                                 : ... Suggest use of always_latch for intentional latches
+  444 |         always @* begin
+      |         ^~~~~~
+                ... For warning description see https://verilator.org/warn/LATCH?v=5.050
+                ... Use "/* verilator lint_off LATCH */" and lint_on around source to disable this message.
+%Warning-LATCH: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:444:9: Latch inferred for signal 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.unnamedblk9.inj.f' (not all control paths of combinational always assign a value)
+                                                                                                                 : ... Suggest use of always_latch for intentional latches
+  444 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:444:9: Latch inferred for signal 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.unnamedblk9.inj.pt' (not all control paths of combinational always assign a value)
+                                                                                                                 : ... Suggest use of always_latch for intentional latches
+  444 |         always @* begin
+      |         ^~~~~~
+%Warning-LATCH: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:444:9: Latch inferred for signal 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.unnamedblk9.inj.s' (not all control paths of combinational always assign a value)
+                                                                                                                 : ... Suggest use of always_latch for intentional latches
+  444 |         always @* begin
+      |         ^~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:174:40: Signal has multiple driving blocks with different clocking: 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.g_truecredit.rtag'
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:115:6: ... Location of first driving block
+  115 |      return_tag[i*TAGW+:TAGW]<=head_tag ^ ((MUTANT==2)?TAGW'(1):TAGW'(0));
+      |      ^~~~~~~~~~
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:115:6: ... Location of other driving block
+  115 |      return_tag[i*TAGW+:TAGW]<=head_tag ^ ((MUTANT==2)?TAGW'(1):TAGW'(0));
+      |      ^~~~~~~~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:172:33: Signal has multiple driving blocks with different clocking: 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.g_truecredit.rv'
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:106:20: ... Location of first driving block
+  106 |     send_v[i]<=pop;return_v[i]<=pop;
+      |                    ^~~~~~~~
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:106:20: ... Location of other driving block
+  106 |     send_v[i]<=pop;return_v[i]<=pop;
+      |                    ^~~~~~~~
+%Warning-MULTIDRIVEN: rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_collective_native_publication_candidate.sv:150:24: Signal has multiple driving blocks with different clocking: 'ot_hbm_collective_native_publication_candidate.g_candidate.g_on.h_v'
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:106:5: ... Location of first driving block
+  106 |     send_v[i]<=pop;return_v[i]<=pop;
+      |     ^~~~~~
+                      rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv:106:5: ... Location of other driving block
+  106 |     send_v[i]<=pop;return_v[i]<=pop;
+      |     ^~~~~~
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only --timing -Wno-fatal -Wno-WIDTH --top-module ot_hbm_collective_native_publication_candidate -GENABLE=1 -GOWNER_REDUCER=1 -GPACKET_SRAM=2 -GLINK_PROTECTION=1 -GOWNER_BANKED_HALF=1 -GOWNER_TRUE_CREDIT=1 -GOWNER_RX_CREDIT=1 -f files.txt"
+	User time (seconds): 425.37
+	System time (seconds): 2.76
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 7:08.17
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4152576
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1039927
+	Voluntary context switches: 48
+	Involuntary context switches: 704
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 24
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

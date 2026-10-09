@@ -1,0 +1,5 @@
+PASS fourquarter4096 FP32512 matched VM sectors, held requests/responses and write visibility
+INJECT meta00000080 parity1 vp1 rsp1 fault0 cv1
+INJECT_AFTER meta00000081 parity1 vp1 rsp1 fault1 cv0
+FATAL: rtl/tb_hbm_collective_vm_publication.sv:50: native indexed capture ownership
+       Time: 2572473000  Scope: tb_hbm_collective_vm_publication.$ivl_for_loop4
