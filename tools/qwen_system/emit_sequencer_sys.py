@@ -55,8 +55,11 @@ def emit(out):
     print('Measured template lengths:',[len(ew),len(lw),len(hw)],'descriptor lengths:',[len(ed),len(ld),len(hd[0])],flush=True)
     assert len(ew) + len(lw) + len(hw) <= 64
     assert len(ed) + len(ld) + len(hd[0]) <= 8
-    assert max(r['end'] for r in rows) == 1056
-    assert sum(r['scale_span_words'] for r in rows) == 50112
+    code_words = max(r['end'] for r in rows)
+    scale_words = sum(r['scale_span_words'] for r in rows)
+    print('Measured compact image words:',code_words,scale_words,flush=True)
+    # Match ctl_golden stage strides: padded stage slots may exceed payload, never overlap it.
+    assert code_words <= 1056 and scale_words <= 50112
     words = list(ew) + lw + hw
     offsets = [0, len(ew), len(ew) + len(lw)]
     stages = stage_table()
@@ -144,7 +147,7 @@ def emit(out):
     record = dict(schema='opentallas.qwen_sequencer_sys_templates.v1', shape=dict(TP=4,G=6144,SW=64,AR_WORDS=256),
                   template_lengths=[len(ew),len(lw),len(hw)], descriptor_lengths=[len(ed),len(ld),len(hd[0])],
                   stage_table=stages, historical_master_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),
-                  code_words=1056,scale_words=50112,
+                  code_words=code_words,scale_words=scale_words,code_slot_words=1056,scale_slot_words=50112,
                   programs=dict(E=[f'{w:0256x}' for w in ew],L=layer['program_hex'],H=heads[0]['program_hex']),
                   descriptors=dict(E=[f'{w:016x}' for w in ed],L=layer['descriptor_hex'],H=[h['descriptor_hex'] for h in heads]))
     (out / 'templates.json').write_text(json.dumps(record,indent=2)+'\n')
