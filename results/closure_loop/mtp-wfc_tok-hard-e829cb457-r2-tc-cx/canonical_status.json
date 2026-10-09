@@ -1,0 +1,51 @@
+{
+  "schema": "opentallas.wfc-hard-canonical.v1",
+  "job": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "status": "CLOSED",
+  "source": "e829cb45763defec6166dcacf33a2efe873c730c",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "record_commit": "41fbb1fbffdd1f09e9ba0adc1612cbd2b3371b58",
+  "owner_record_cherry_pick": "019825f27",
+  "selected_reference": "actual routed boundary insertion",
+  "TT_setup_ps": 8.85,
+  "FF_hold_ps": 22.26,
+  "DRC": 0,
+  "SS_setup_sensitivity_ps": -332.77,
+  "original_budget_FF_sensitivity_ps": -34.03,
+  "uncertainty_ps": {
+    "setup": 60,
+    "hold": 25
+  },
+  "export": {
+    "ok": true,
+    "LEF_match": true,
+    "views": [
+      "LEF",
+      "SS_ETM",
+      "FF_ETM"
+    ],
+    "sha256": {
+      "dsfd_wfc_tok_hard.lef": "ebb76ec00d76f1ac0b919aae412dfe79351bc145481cd1521665198d6858581a",
+      "args": "1f137fd1f72f2856a9236f81bf7144d9ba8fdb235a2b4b246d0330edf95385ed",
+      "abstract.json": "67d0a7469ffc551b481ed7d3d47af744550d5b8a58ae5c8187e0cc958b218eaf",
+      "dsfd_wfc_tok_hard_ff.lib": "e3a4c768afc26c4491eaae83cbe639e1ff2a2d77fd3dd08459d4bf6d2d5f22dc",
+      "export_ff.tcl": "009463d46dcf97931ec15e7a9b1773ac9762cb4e2f845e8ac76150d1089ba99b",
+      "export_ss.log": "e63449319c4a56a4bf2f0747a73057b050ce96e29afebf39873ed25f0193a690",
+      "dsfd_wfc_tok_hard_ss.lib": "58ede1b41f30fb29c3ae99708bbe0c38f930f360880a3ef653ff3dd96efae621",
+      "export_ff.log": "099b78fc8ef34a62a757d05e28174c173d0dafcbe4379bb6747c7fdb310554b6",
+      "calib.json": "b0f1e74af421a87d035081017294c082db3f986325eba48afd8b1b6aae61251f",
+      "corner_sta.json": "7363052ceffcd72f7f5bd7f4754cfcd50e0aba9034d8f60875a8f30dcc6ed2cb",
+      "export_ss.tcl": "1e789ed95fe7b764cb92ab4cca23ec01fe521fba5f9470dc56eb9108bbcd49cd",
+      "check.json": "55192e56042b7c6e0d192dbca6b230c5ffca439a31032bb95de2489935ba35ea"
+    }
+  },
+  "adoption": {
+    "enabled": false,
+    "condition": "Pair only with physically routed PROMPT_EXTRA2 SOURCE from4b13388a5; owned by parent mtp_rom",
+    "latency_added_original_cycles": 3,
+    "latency_added_r3_cycles": 2,
+    "metadata_FF": 74
+  },
+  "review": "REVIEW_20261009.md CONFIRMED review-0512 AB3/AA-a"
+}

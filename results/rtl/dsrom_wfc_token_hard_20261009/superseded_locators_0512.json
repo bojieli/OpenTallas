@@ -1,0 +1,140 @@
+{
+  "review": "Confirmed0512 AB3",
+  "winner": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "canonical": [
+    {
+      "name": "mtp-wfc_tok-a-aeef13974-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-a-aeef13974-tc.json",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "localhost",
+      "run": "/home/ubuntu/closure-loop-local/mtp-wfc_tok-a-aeef13974-tc",
+      "stage": "calibrate",
+      "source": "aeef1397446c4908e5fa6657156dfd627e7c2321",
+      "failure_reason": "util: utilisation 61.9% > 60% (std 7145 + macro 0 um2 in 11547 um2): grow the outline to <= 55-60%"
+    },
+    {
+      "name": "mtp-wfc_tok-a-e1c20dfb6-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-a-e1c20dfb6-tc.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-a-e1c20dfb6-tc",
+      "stage": "summary",
+      "source": "e1c20dfb6ed52eefc6a83f5fa3cf5d9771d2a2ec",
+      "failure_reason": "SS -478.67 / FF 6.61 ps / DRC 0 (line SS >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "mtp-wfc_tok-b-0cd6caa1b-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-b-0cd6caa1b-tc.json",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-b-0cd6caa1b-tc",
+      "stage": "calibrate",
+      "source": "0cd6caa1bd0cbff7af7e97368219cac19e626d38",
+      "failure_reason": "util: utilisation 61.9% > 60% (std 7145 + macro 0 um2 in 11547 um2): grow the outline to <= 55-60%"
+    },
+    {
+      "name": "mtp-wfc_tok-b-511fa714d-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-b-511fa714d-tc.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-b-511fa714d-tc",
+      "stage": "summary",
+      "source": "511fa714d18826c98280aa2248d04f8d82142e53",
+      "failure_reason": "SS -478.41 / FF 24.07 ps / DRC 0 (line SS >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "mtp-wfc_tok-c-ae06a240d-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-c-ae06a240d-tc.json",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-c-ae06a240d-tc",
+      "stage": "route",
+      "source": "ae06a240d36c36f8350f349cb2195b591d2eca16",
+      "failure_reason": "util: utilisation 62.0% > 60% (std 7157 + macro 0 um2 in 11547 um2): grow the outline to <= 55-60%"
+    },
+    {
+      "name": "mtp-wfc_tok-c-c67a71fe5-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-c-c67a71fe5-tc.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-c-c67a71fe5-tc",
+      "stage": "summary",
+      "source": "c67a71fe589df4c8aeccfc9557e190620c5181c6",
+      "failure_reason": "SS -477.87 / FF 10.14 ps / DRC 0 (line SS >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-1718d445e-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-r3-1718d445e-tc.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-r3-1718d445e-tc",
+      "stage": "calibrate",
+      "source": "1718d445eb6607be7b87ec944cb4cf78b6deffc5",
+      "failure_reason": "bench_exact_source_stage_and_negatives expected PASS but rc=1"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-3413bba96-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-r3-3413bba96-tc.json",
+      "status": "INVALID",
+      "host": null,
+      "run": null,
+      "stage": null,
+      "source": null,
+      "failure_reason": "need >= 1 bench expect=pass and >= 1 expect=fail (or no_bench_reason: e.g. pure re-route of a benched commit, naming the bench record)"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-8a357077f-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-r3-8a357077f-tc.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-r3-8a357077f-tc",
+      "stage": "summary",
+      "source": "8a357077f322df54d9ea4d638e784f8a9865acdb",
+      "failure_reason": "TT -321.78 / FF 23.23 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc-v2",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-r3-f94ff05bb-tc-v2.json",
+      "status": "NEEDS_RTL",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-r3-f94ff05bb-tc-v2",
+      "stage": "calibrate",
+      "source": "f94ff05bba71a56155b40e8a6ced474069d46ffe",
+      "failure_reason": "bench_exact_source_stage_and_negatives expected PASS but rc=1"
+    },
+    {
+      "name": "mtp-wfc_tok-r3-f94ff05bb-tc",
+      "canonical_state": "/home/ubuntu/.local/state/closure_loop/jobs/mtp-wfc_tok-r3-f94ff05bb-tc.json",
+      "status": "NEEDS_HUMAN",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-r3-f94ff05bb-tc",
+      "stage": null,
+      "source": null,
+      "failure_reason": "source commit f94ff05bba71 is not on origin/codex/mtp-wfc-token-r3-route-20261009"
+    }
+  ],
+  "noncanonical_roots": [
+    {
+      "host": "ot-epyc1tb",
+      "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-r3-1718d445e-tc"
+    },
+    {
+      "host": "ot-epyc1tb",
+      "root": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-r3-f94ff05bb-tc-v2"
+    },
+    {
+      "host": "ot-epyc2",
+      "root": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-b-0cd6caa1b-tc"
+    },
+    {
+      "host": "ot-epyc2",
+      "root": "/srv/opentallas-data/claude/closure-loop/mtp-wfc_tok-c-ae06a240d-tc"
+    },
+    {
+      "host": "ot-epyc3",
+      "root": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-wfc_tok-c-c67a71fe5-tc"
+    }
+  ],
+  "process_search_scope": "Exact top dsfd_wfc_tok or dsfd_wfc_tok_r3 only; source filenames also appear in live VMX jobs and must not be used as kill match.",
+  "retirement": "Fleet/Claude executes, preserve unique source and immutable failures; no deletion or cancellation performed here"
+}
