@@ -24,6 +24,7 @@ module ot_s81_ctrl #(
     parameter integer WINDOW_CONTEXT = 0,
     parameter integer PROTECT_HISTORY = 0,
     parameter integer TOKEN_TYPES = 0,
+    parameter integer SOURCE_WORD = 0,
     parameter integer ROLE     = 0,          // 0 layer, 1 SOURCE (stage 0), 2 HEAD root
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
@@ -60,6 +61,7 @@ module ot_s81_ctrl #(
     input  wire                  rst_n,
     input wire source_token_dead,
     input wire [2:0] hc_token_type,
+    input wire [63:0] hc_word,
     input wire eng_rb_v,
     input wire [11:0] eng_rb_user,
     input wire [2:0] eng_rb_n,
@@ -138,6 +140,10 @@ module ot_s81_ctrl #(
     wire [NW-1:0] cfg_plen, cfg_glen, cfg_eos_id; wire [NW:0] cfg_maxl; wire cfg_eos_en;
     wire pr_re; wire [7:0] pr_user; wire [NW-1:0] pr_pos, pr_q;
     wire [2:0] pr_type,j_token_type;
+    wire [1:0] word_op;wire [7:0] word_tag,word_user;
+    wire [20:0] word_pos,word_token;wire [2:0] word_type;
+    ot_s81_source_command_decode source_word(.word(hc_word),.op(word_op),.tag(word_tag),.user(word_user),
+        .pos(word_pos),.token(word_token),.token_type(word_type));
     wire tok_v, tok_stop; wire [7:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
     wire hq_f, hq_wd, hq_act; wire [3:0] hq_fc; wire [31:0] hq_wc;
     wire [15:0] snap;
@@ -145,9 +151,9 @@ module ot_s81_ctrl #(
         wire [31:0] s1, s2, s3, s4;
         ot_s81_host_cq #(.TOKEN_TYPES(TOKEN_TYPES),.MAXU(MAXU), .PMAX(PMAX), .NW(NW), .TAGW(8), .CQ_DEPTH(CQ_DEPTH), .CAUSEW(32), .WDOG(WDOG),
                          .UCW(8)) u_hq (
-            .clk(clk), .rst_n(rst_n), .cmd_valid(hc_valid), .cmd_ready(hc_ready), .cmd_op(hc_op), .cmd_tag(hc_tag),
-            .cmd_user(hc_user), .cmd_pos(hc_pos), .cmd_token(hc_token), .cpl_valid(cpl_valid), .cpl_ready(cpl_ready),
-            .cmd_token_type(hc_token_type),.pr_token_type(pr_type),
+            .clk(clk), .rst_n(rst_n), .cmd_valid(hc_valid), .cmd_ready(hc_ready), .cmd_op(SOURCE_WORD?word_op:hc_op), .cmd_tag(SOURCE_WORD?word_tag:hc_tag),
+            .cmd_user(SOURCE_WORD?word_user:hc_user), .cmd_pos(SOURCE_WORD?word_pos:hc_pos), .cmd_token(SOURCE_WORD?word_token:hc_token), .cpl_valid(cpl_valid), .cpl_ready(cpl_ready),
+            .cmd_token_type(SOURCE_WORD?word_type:hc_token_type),.pr_token_type(pr_type),
             .cpl_data(cpl_data), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
             .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(boot_ok),
             .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),

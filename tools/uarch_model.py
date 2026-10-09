@@ -112,6 +112,8 @@ def dsrom_engram_dead_metadata_model(users=64,prompt_words=8):
         prefetched_per_user_type_bits=users*3, queued_type_bits=users*3,
         total_added_register_bits=bits, sequential_area_mm2_modelled=bits*.2916/1e6,
         added_host_boundary_bits_per_command=3,
+        source_command_word_bits=64,source_command_payload_bits=63,
+        source_command_layout='op2,tag8,user8,position21,token21,token_type3,reserved0; lowbitfirst; combinational decoder',
         prompt_read_added_bits_per_cycle=3,prompt_read_added_bytes_per_cycle=3/8,
         header_added_bits=0,source_stage_added_cycles=0,
         mux_cost=f'3bit {users*prompt_words}:1 prompttype read and {users}:1 nexttoken type read',
