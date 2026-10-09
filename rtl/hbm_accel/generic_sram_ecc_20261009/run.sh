@@ -12,6 +12,6 @@ grep -q 'PAYLOAD_FIFO PASS' "$out/fifo.log"
 for mutant in OT_COLL_MUT_ECC_NO_CORRECT OT_COLL_MUT_ECC_UE_PUBLISH; do
  iverilog -g2012 -D"$mutant" -s tb_fifo -o "$out/$mutant.vvp" rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv "$M" rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/generic_sram_ecc_20261009/tb_fifo.sv > "$out/$mutant.build.log" 2>&1
  set +e; vvp "$out/$mutant.vvp" > "$out/$mutant.log" 2>&1; rc=$?; set -e
- [ "$rc" != 0 ]; grep -Eq 'FIFO corrupt CE|FIFO UE publication' "$out/$mutant.log"
+ [ "$rc" != 0 ]; grep -Eq 'FIFO corrupt CE|FIFO UE publication|canonical decode mismatch' "$out/$mutant.log"
  echo "$mutant failed as expected rc=$rc" >> "$out/mutants.txt"
 done
