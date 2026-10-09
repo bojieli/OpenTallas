@@ -101,7 +101,7 @@ D_OPTIONAL_UNITS = {"SIMT": "absent on r25; a record to an absent unit faults (c
 D_OPS = {k: list(v) for k, v in OPS.items()}
 D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
 D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
-D_OPS["IDX"] = ["INDEX", "MERGE", "TOPK", "RESERVED3", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
+D_OPS["IDX"] = ["INDEX", "MERGE", "TOPK", "OWNED", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
 # DS native lowering (hgi_sim ds_native, gaps G8-G14): quantise-dequantise on the act-quant engine, the o-group
 # sub-group reduce with multicast, and the selected compressed-row gather from owner dies.
 D_OPS["FUSED"] += ["QDQ_FP8", "QDQ_FP4_E8M0", "QDQ_FP4_E4M3"]                          # G8
@@ -164,6 +164,7 @@ D_PARAM = {
     "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = keep bitmap (keep_en), O / R = local top-k ids (ascending) / values, D = candidates (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
     "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
+    "IDX.OWNED": "[7:0] B (power of two <= 128), [15:8] G (1, 2, 4, 8, 96); A U32 = K selected row ids (K <= 2048, id < 2^20); O = this rank's owned local rows in list order padded with 0 to M; R = per-entry gathered row r * M + j; D[0] = M (G21)",
     "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
