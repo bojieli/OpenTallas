@@ -1,10 +1,15 @@
 """Distributed row duplicate suppression and ID-tagged reverse grants."""
 def model(dff_um2=.2916):
     states=3*32*(64+2+1)+3*(64+5+2)+3
+    from uarch_model_qwen_kv_row import model as row_model
+    base=row_model(dff_um2)
     area=states*dff_um2+1800
+    total_area=base["cell_area_bound_um2"]+area
     return dict(schema='opentallas.qwen-row-endpoint.v1',default_off=True,adopted=False,
         model_precedes_rtl=True,replicas=48,macs_per_cycle=0,compute_intensity_macs_per_byte=0,
-        memory_ports=[],state_bits=states,cell_area_bound_um2=area,
+        memory_ports=[],state_bits=states,added_cell_area_bound_um2=area,
+        cell_area_bound_um2=total_area,
+        slot_fit_at_55pct=total_area<=96.768*1200.096*.55,
         head_boundary_bits=9760+2048,reverse_grant_bits=3*(64+5+2)+3,
         row_data_boundary_bits=3*281+3,slot_um=[96.768,1200.096],
         max_input_face_bits=11808,face_pin_layers=2,

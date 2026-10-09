@@ -14536,3 +14536,9 @@ def qwen_kv_row_model():
     """Full32-PC option-M row mechanism and merged-word prepaid credits."""
     from uarch_model_qwen_kv_row import model
     return model(DFF_UM2)
+
+
+def qwen_kv_row_endpoint_model():
+    """Distributed ID-tagged row mechanism, additive over the native arbiter."""
+    from uarch_model_qwen_row_endpoint import model
+    return model()
