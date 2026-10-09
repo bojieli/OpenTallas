@@ -53,7 +53,7 @@ set_load 4 [all_outputs]
     w,h=part['width_um'],part['height_um']
     cmd+=['--clock-period-ns','0.833333','--clock-uncertainty-ns','0.06',
           '--clock-uncertainty-hold-ns','0.025','--orfs-corner','WC','--hold-corners','WC,BC',
-          '--io-delay-fraction','0.2','--sdc-append',str(sdc),'--stages','synth,pnr',
+          '--io-delay-fraction','0.2','--sdc-append',str(sdc),'--stages','pnr' if part.get('macros') else 'synth,pnr',
           '--die-area','0','0',str(w),str(h),'--core-area','1.08','1.08',str(w-1.08),str(h-1.08),
           '--place-density','0.55','--hold-margin-ns',os.environ.get('HA2_HM','0.015'),'--orfs-var','ADDER_MAP_FILE=',
           '--step-tcl',f'POST_IO_PLACEMENT=physical/ha2_truecredit_20261007/{a.part}_pins_signal_only.tcl',
