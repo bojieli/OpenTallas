@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_split_bench.sh <outdir> <8|16> [mut]   (cwd = repo root): transaction-level exactness of the partitioned norm
+# run_split_bench.sh <outdir> <8|16|8r|16r> [mut|repmut]   (cwd = repo root): transaction-level exactness of the partitioned norm
 # engine (ot_hbm_norm_split_view_g<G>) against the flat MEM1 view (ot_hbm_norm_engine_view), tb_hbm_norm_split on the
 # DS1M golden row + 3 overlapped rows + gain reload.  Both DUTs must PASS their own golden-row check, and the split's
 # y / q / rstd stream must equal the reference's byte for byte.  mut: +define+OT_NSPLIT_MUT (group 1's tree partial
@@ -14,7 +14,9 @@ build() {  # build <dir> <defines>
 }
 # the golden memories must be in the snapshot (closure-loop source.paths must list results/rtl/hbm_norm_engine_view_20261006)
 ls $G0/x.mem $G0/eqc.mem > /dev/null 2>&1 || { echo "BENCH_SETUP_FAILED: golden memories missing under $G0"; exit 4; }
-DEF="+define+OT_NSPLIT_G$G"; [ "$M" = mut ] && DEF="$DEF +define+OT_NSPLIT_MUT"
+# safe-hbm S-C7: G = 8r / 16r selects the REP=1 top (broadcast flops replicated per group); M = repmut is its
+# negative control (group 1's rstd replica one edge late)
+DEF="+define+OT_NSPLIT_$(echo $G | tr r R)"; [ "$M" = mut ] && DEF="$DEF +define+OT_NSPLIT_MUT"; [ "$M" = repmut ] && DEF="$DEF +define+OT_NSPLIT_REP_MUT"
 mkdir -p $O/ref $O/dut
 build $O/ref "" & p1=$!
 build $O/dut "$DEF" & p2=$!

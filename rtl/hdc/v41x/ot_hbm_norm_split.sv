@@ -236,7 +236,12 @@ module ot_hbm_norm_split_core #(
     parameter integer LM = 5,
     parameter integer LA = 6,
     parameter integer RW = 9,
-    parameter integer BW = 9
+    parameter integer BW = 9,
+    // safe-hbm 2026-10-08 (REVIEW_20261008 C7, S-C7): REP=1 replicates the top's broadcast flops per group: the rstd
+    // broadcast output flops (rbv_o / rbd_o) and the capture flops that every group reads (go, in_v, wl_v, wl_i, pre).
+    // Each replica is loaded from the same source on the same edge as the shared flop, so the groups see identical
+    // values on identical cycles (0 cycles).  REP=0 (default) is the original netlist.
+    parameter integer REP = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -304,29 +309,54 @@ module ot_hbm_norm_split_core #(
     wire [NG*8-1:0]    g_si, g_yi;
     wire [NG*32-1:0]   g_s;
     wire [N*32-1:0]    g_y;
+    wire [32:0]        rbw;             // broadcast wire output (declared here: the REP replicas read it)
     wire               rb_v_o;          // broadcast output flops
     wire [31:0]        rb_d_o;
     genvar g, c, k, n;
     generate
         for (g = 0; g < NG; g = g + 1) begin : g_grp
             wire [4*G*32-1:0] gx;
+            wire b_go, b_inv, b_wlv, b_rbv; wire [7:0] b_wli; wire [127:0] b_pre; wire [31:0] b_rbd;
+            if (REP != 0) begin : g_rep
+                // per-group replicas of the broadcast flops (same D, same edge, same reset as the shared ones)
+                reg r_go, r_inv, r_wlv; reg [7:0] r_wli; reg [127:0] r_pre; reg r_rbv; reg [31:0] r_rbd;
+`ifdef OT_NSPLIT_REP_MUT
+                reg [31:0] r_rbd_late;
+                always @(posedge clk) r_rbd_late <= rbw[31:0];
+`endif
+                always @(posedge clk) begin
+                    r_go <= go; r_inv <= in_v; r_wlv <= wl_v; r_wli <= wl_i; r_pre <= pre;
+`ifdef OT_NSPLIT_REP_MUT
+                    // NEGATIVE CONTROL: group 1's rstd replica loads one edge late (a replica off the shared timing)
+                    if (g != 1) r_rbd <= rbw[31:0]; else r_rbd <= r_rbd_late;
+`else
+                    r_rbd <= rbw[31:0];
+`endif
+                end
+                always @(posedge clk or negedge rstn) if (!rstn) r_rbv <= 1'b0; else r_rbv <= rbw[32];
+                assign b_go = r_go; assign b_inv = r_inv; assign b_wlv = r_wlv; assign b_wli = r_wli;
+                assign b_pre = r_pre; assign b_rbv = r_rbv; assign b_rbd = r_rbd;
+            end else begin : g_shr
+                assign b_go = go_c; assign b_inv = in_v_c; assign b_wlv = wl_v_c; assign b_wli = wl_i_c;
+                assign b_pre = pre_c; assign b_rbv = rb_v_o; assign b_rbd = rb_d_o;
+            end
             for (k = 0; k < 4; k = k + 1) begin : g_cp
                 assign gx[k * G * 32 +: G * 32] = x_c[(k * N + g * G) * 32 +: G * 32];
             end
             if (G == 8) begin : g8
-                ot_hbm_norm_grp8 u_g (.clk(clk), .rst_n(rstn), .go(go_c), .in_v(in_v_c), .in_x(gx), .pre(pre_c),
-                    .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(rb_v_o), .rb_d(rb_d_o),
+                ot_hbm_norm_grp8 u_g (.clk(clk), .rst_n(rstn), .go(b_go), .in_v(b_inv), .in_x(gx), .pre(b_pre),
+                    .wl_v(b_wlv), .wl_i(b_wli), .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(b_rbv), .rb_d(b_rbd),
                     .s_v(g_sv[g]), .s_i(g_si[g * 8 +: 8]), .s(g_s[g * 32 +: 32]), .y_v(g_yv[g]), .y_i(g_yi[g * 8 +: 8]),
                     .y(g_y[g * G * 32 +: G * 32]), .gf(g_f[g]));
             end else if (G == 16) begin : g16
-                ot_hbm_norm_grp16 u_g (.clk(clk), .rst_n(rstn), .go(go_c), .in_v(in_v_c), .in_x(gx), .pre(pre_c),
-                    .wl_v(wl_v_c), .wl_i(wl_i_c), .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(rb_v_o), .rb_d(rb_d_o),
+                ot_hbm_norm_grp16 u_g (.clk(clk), .rst_n(rstn), .go(b_go), .in_v(b_inv), .in_x(gx), .pre(b_pre),
+                    .wl_v(b_wlv), .wl_i(b_wli), .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(b_rbv), .rb_d(b_rbd),
                     .s_v(g_sv[g]), .s_i(g_si[g * 8 +: 8]), .s(g_s[g * 32 +: 32]), .y_v(g_yv[g]), .y_i(g_yi[g * 8 +: 8]),
                     .y(g_y[g * G * 32 +: G * 32]), .gf(g_f[g]));
             end else begin : gp
-                ot_hbm_norm_grp #(.G(G), .D(D), .N(N), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rstn), .go(go_c),
-                    .in_v(in_v_c), .in_x(gx), .pre(pre_c), .wl_v(wl_v_c), .wl_i(wl_i_c),
-                    .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(rb_v_o), .rb_d(rb_d_o),
+                ot_hbm_norm_grp #(.G(G), .D(D), .N(N), .LM(LM), .LA(LA)) u_g (.clk(clk), .rst_n(rstn), .go(b_go),
+                    .in_v(b_inv), .in_x(gx), .pre(b_pre), .wl_v(b_wlv), .wl_i(b_wli),
+                    .wl_d(wl_d_c[g * G * 32 +: G * 32]), .rb_v(b_rbv), .rb_d(b_rbd),
                     .s_v(g_sv[g]), .s_i(g_si[g * 8 +: 8]), .s(g_s[g * 32 +: 32]), .y_v(g_yv[g]), .y_i(g_yi[g * 8 +: 8]),
                     .y(g_y[g * G * 32 +: G * 32]), .gf(g_f[g]));
             end
@@ -442,7 +472,6 @@ module ot_hbm_norm_split_core #(
     ot_dsrom_rsqrt #(.LM(LM), .LA(LA)) u_rsq (.clk(clk), .rst_n(rstn), .v(me_v), .x(me), .y(rr), .vo(rr_v), .fault(f_rsq));
     // broadcast wire: BW - 3 stages here, then the output flop (here) and the group's pin flop = the flat engine's
     // BW - 1 stages; the group's rh is the BW-th
-    wire [32:0] rbw;
     ot_hdc_delay #(.W(33), .D(BW - 3), .RESET(1)) u_bw (.clk(clk), .rst_n(rstn), .d({rr_v, rr}), .q(rbw));
     reg rbv_o; reg [31:0] rbd_o;
     always @(posedge clk or negedge rstn) if (!rstn) rbv_o <= 1'b0; else rbv_o <= rbw[32];
@@ -514,6 +543,36 @@ module ot_hbm_norm_split_view_g16 (
     output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
 );
     ot_hbm_norm_split_core #(.G(16)) u (.clk(clk), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
+        .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
+        .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
+        .ro_v(ro_v), .ro(ro), .fault(fault));
+endmodule
+
+// safe-hbm S-C7: g8 top with the broadcast flops replicated per group (REP=1, 0 cycles)
+module ot_hbm_norm_split_view_g8r (
+    input wire clk, input wire rst_n, input wire go, input wire in_v, input wire [4*64*32-1:0] in_x,
+    input wire [127:0] pre, input wire [31:0] n_f, input wire [31:0] eps, input wire wl_v, input wire [7:0] wl_i,
+    input wire [64*32-1:0] wl_d, input wire [31:0] cos_t, input wire [31:0] sin_t,
+    output wire y_v, output wire [7:0] y_i, output wire [64*32-1:0] y, output wire r_v, output wire [31:0] r,
+    output wire q_v, output wire [7:0] q_i, output wire [2*256-1:0] q_codes, output wire [2*10-1:0] q_e,
+    output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
+);
+    ot_hbm_norm_split_core #(.G(8), .REP(1)) u (.clk(clk), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
+        .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
+        .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
+        .ro_v(ro_v), .ro(ro), .fault(fault));
+endmodule
+
+// safe-hbm S-C7: g16 top with the broadcast flops replicated per group (REP=1, 0 cycles)
+module ot_hbm_norm_split_view_g16r (
+    input wire clk, input wire rst_n, input wire go, input wire in_v, input wire [4*64*32-1:0] in_x,
+    input wire [127:0] pre, input wire [31:0] n_f, input wire [31:0] eps, input wire wl_v, input wire [7:0] wl_i,
+    input wire [64*32-1:0] wl_d, input wire [31:0] cos_t, input wire [31:0] sin_t,
+    output wire y_v, output wire [7:0] y_i, output wire [64*32-1:0] y, output wire r_v, output wire [31:0] r,
+    output wire q_v, output wire [7:0] q_i, output wire [2*256-1:0] q_codes, output wire [2*10-1:0] q_e,
+    output wire [2*512-1:0] q_y, output wire ro_v, output wire [64*32-1:0] ro, output wire fault
+);
+    ot_hbm_norm_split_core #(.G(16), .REP(1)) u (.clk(clk), .rst_n(rst_n), .go(go), .in_v(in_v), .in_x(in_x), .pre(pre),
         .n_f(n_f), .eps(eps), .wl_v(wl_v), .wl_i(wl_i), .wl_d(wl_d), .cos_t(cos_t), .sin_t(sin_t), .y_v(y_v),
         .y_i(y_i), .y(y), .r_v(r_v), .r(r), .q_v(q_v), .q_i(q_i), .q_codes(q_codes), .q_e(q_e), .q_y(q_y),
         .ro_v(ro_v), .ro(ro), .fault(fault));

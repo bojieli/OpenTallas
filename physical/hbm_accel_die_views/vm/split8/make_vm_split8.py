@@ -94,7 +94,8 @@ def sw_n():
     s.a('wire m_v, m_we, m_bank; wire [6:0] m_addr; wire [2815:0] m_wd; wire m_rd_v; wire [2815:0] m_rd;')
     s.a('wire wr_ready, wr_ACK_v, rd_ready, native_release, drained, fault; wire [3:0] tap_v; wire [191:0] wr_ACK_owner;')
     s.a('wire [767:0] tap_owner; wire [4*2063-1:0] tap_data;')
-    s.a('ot_hfd_vm_root_x #(.ENABLE(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), .mem_cmd_bank(m_bank), '
+    s.a('// safe-hbm S-D3 (REVIEW_20261008 D3): seat select pipelined as a registered 2-level select (SEATP=1, +1 per transaction)')
+    s.a('ot_hfd_vm_root_x #(.ENABLE(1), .SEATP(1)) u_mr (.clk(clk), .por_n(rst_n), .mem_cmd_v(m_v), .mem_cmd_we(m_we), .mem_cmd_bank(m_bank), '
         '.mem_cmd_addr(m_addr), .mem_wd(m_wd), .mem_rd_v(m_rd_v), .mem_rd(m_rd), '
         '.wr_v(x_f_n_wr[15]), .wr_ready(wr_ready), .wr_bank(x_f_n_wr[16]), .wr_addr(x_f_n_wr[23:17]), '
         '.wr_data({x_f_n_wr[14:0], wd_f_su_SW[2047:0]}), .wr_owner(x_f_n_wr[215:24]), .wr_ACK_v(wr_ACK_v), '
