@@ -66,6 +66,9 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                 added_decode_cycles=0,
                 read_adapter=dict(
                     reserved_rows=6, atoms_per_row=9, controller_pc_endpoints=64,
+                    lookup_credit_request_queue_entries=8, request_queue_bits=8*34+35+10,
+                    request_queue_added_capture_cycles=2,
+                    request_queue_credit_return='when accepted into reserved controller row; not controller rk',
                     protected_buffer_bits=6*9*288, return_pin_bits=64*278,
                     return_mux_2to1_equivalents=6*278*63,
                     buffer_area_sequential_mm2=6*9*288*.2916/1e6,
