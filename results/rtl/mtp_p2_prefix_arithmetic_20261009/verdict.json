@@ -1,0 +1,31 @@
+{
+  "source_commit": "0c0397e7e",
+  "RTL_source": "0a8b5640b",
+  "model_before_RTL": "4bebb2f5d",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/mtp-die-prefix0c0397e7e",
+  "verdict": "PASS",
+  "numerical_scope": "full1280rank synthetic BF16-rounded widenedFP32 contributions; no released expert fixture",
+  "clock_GHz": 1.2,
+  "measured_cycles": 5558,
+  "model_upper_cycles": 6240,
+  "measured_unoverlapped_us": 4.631666666666667,
+  "flits_in": 240,
+  "flits_out": 80,
+  "lanes": 16,
+  "adder": "real ot_v41_fadd CUT1_0111_1011/SPLIT9=0",
+  "SRAM_macros": 3,
+  "CE_gate": "single data-bit error corrected before actual arithmetic",
+  "UE_gate": "double data-bit error stops before output at11cycles",
+  "native_dtype_gate": "nonzero low16 contribution rejected at11cycles",
+  "mutant": {
+    "copy_first_verdict": "FAIL",
+    "checkpoint": "first expert word0 partial must RN(+0,-0)=+0; detects copied negativezero"
+  },
+  "qualification": "no released-model/fullarray/contextual physical/production native publisher claim",
+  "source_sha256": {
+    "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_prefix.sv": "400b233263a4404dd2090a153f5f4b8e48fde73eb63647e45c3875aef30c359e",
+    "rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_prefix.sv": "f565ed83948ba2ec031f3da95fec7b019b9ee8659bb65eade8a329219f0e64d1",
+    "tools/mtp_p2_prefix_fixture.py": "a94259d2523ee2a5fb8f7054de564982ab0a2d58c95c5f63484c819fdb945a4c"
+  }
+}

@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -Irtl/common -s tb_mtp_p2_prefix -Ptb_mtp_p2_prefix.ERROR_MODE=0 -o p0.vvp ot_mtp_p2_prefix.sv tb_mtp_p2_prefix.sv ot_v41_fadd.sv rtl/common/ot_prefix.sv rtl/common/ot_secded.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv"
+	User time (seconds): 2.00
+	System time (seconds): 0.12
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.13
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 156432
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 38097
+	Voluntary context switches: 8
+	Involuntary context switches: 2
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 21312
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
