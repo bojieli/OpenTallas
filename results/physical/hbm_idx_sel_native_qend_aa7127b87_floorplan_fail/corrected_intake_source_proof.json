@@ -1,0 +1,43 @@
+{
+  "approved_existing_vehicle": "hbm_idx_sel_native_qend_aa7127b87_pathfinding",
+  "baseline_source": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "bounded_config_source": "3f2cc25b79efac6dd9eca6a562fd84cb337ec0ec",
+  "owner_authorization": "root existing aa7127 routine monitoring + explicit bounded scalar IO correction and same-approved-baseline intake",
+  "not_ds_draft_380": true,
+  "rtl_wrapper_native_pin_changes": [],
+  "actual_parameters": {
+    "T": 1,
+    "LA": 7,
+    "MEMV": 1,
+    "READLAT": 2,
+    "EXPOSE_QUARTER_LAST": 1
+  },
+  "component_gate": "results/rtl/hbm_selector_capture_macro_20261009_r2/exact/gate.json",
+  "component_gate_sha256": "45e7de5bca06dffce07061cbca98c16d79d48c21ef9d511d23032f405a4fcddf",
+  "component_gate_pass": true,
+  "actual_base_source_hash_matches": {
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": true,
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": true,
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": true,
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": true,
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv": true
+  },
+  "mutants": [
+    {
+      "tag": "selector_r1_m2",
+      "pass_gate": true
+    },
+    {
+      "tag": "candidate_r1_m2",
+      "pass_gate": true
+    }
+  ],
+  "native_elaboration_binding": "results/rtl/hbm_selector_native_qend_aa7127b87/binding.json",
+  "quarter_completion_gate": "4ba6437bd:results/rtl/hbm_native_index_format_20261009/quarter_completion",
+  "model": "results/rtl/hbm_selector_native_qend_aa7127b87/model.json",
+  "actual_synthesis_receipt": "results/physical/hbm_idx_sel_native_qend_aa7127b87_synth/receipt.json",
+  "capture_hook_placement": "not reached; must prove on corrected run",
+  "payload_reliability": "plain SRAM; isolated fault-free pathfinding only, not SECDED qualification",
+  "resource_admission": "pending nearest measured comparable remaining-phase basis; own synthesis/floorplan peaks are not DRT",
+  "intrinsic_etm_sdc": "present but unused; existing leaf constraints retained"
+}
