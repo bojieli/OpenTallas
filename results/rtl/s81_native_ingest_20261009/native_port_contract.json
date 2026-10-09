@@ -1,0 +1,32 @@
+{
+ "schema":"opentallas.s81-native-host-controller-ports.v1",
+ "source_pin":"3ba34f388",
+ "host_master":"dsfd_host_native",
+ "host_legacy_dependency":"physical/rom_host_ingest/rtl/dsfd_host.sv",
+ "host_ports":[
+  {"names":["rst_n"],"bits":1,"direction":"input","domain":"async reset"},
+  {"names":["clk_h","clk_i","ck"],"bits":3,"direction":"input","domain":"hostlink/implementeddividedengine/stream"},
+  {"names":["h_v","h_cls","h_d"],"bits":515,"direction":"input","domain":"clk_h"},
+  {"names":["h_crn"],"bits":5,"direction":"output","domain":"clk_h"},
+  {"names":["t_v","t_d"],"bits":65,"direction":"output","domain":"clk_h"},
+  {"names":["t_cr"],"bits":1,"direction":"input","domain":"clk_h"},
+  {"names":["o_v","o_we","o_addr","o_d"],"bits":290,"direction":"output","domain":"ck","format":"v,we,address32,data256"},
+  {"names":["o_cr"],"bits":1,"direction":"input","domain":"ck","initial_seats":8},
+  {"names":["i_rv","i_rd"],"bits":257,"direction":"input","domain":"ck","status":"retained real ABI; unused_by_parameter RMW_EN0, read/rmw descriptors rejected"},
+  {"names":["host_ack_n"],"bits":8,"direction":"input","domain":"ck","meaning":"count of physically committed host-source sectors only; no FIFO-pop/request-credit substitution"},
+  {"names":["fault"],"bits":1,"direction":"output","domain":"latched host/fence fault"}
+ ],
+ "native_per_pc_master":"ot_s81_native_pc_mux",
+ "controller_endpoint":"dsfd_ctrl_pc",
+ "controller_request":{"bits":341,"format":"{data256,strb32,tag17,length_count4,global_sector_addr30,we,valid}","direction":"mux-to-controller","domain":"cks=ck"},
+ "controller_return":{"bits":278,"format":"valid1,data256,tag17,beat4","direction":"controller-to-mux","domain":"cks=ck"},
+ "controller_sidebands":{"bits":3,"ports":["rk","wd","ctrl_live"],"direction":"controller-to-mux","meaning":"rk request FIFO credit; wd true write completion; live initialized domains"},
+ "controller_replication":{"pcs_per_stack":32,"scan_stacks":4,"head_stacks":4,"per_pc_endpoint_anchor":"p*265.584um aligned ctrlPC/servicePC column"},
+ "source_roles":{"0":"existing runtime decode service","1":"hostKV sectors","2":"RoPE boot/runtime service","3":"Engram boot/runtime service"},
+ "source_queues":{"sources":4,"seats_each":8,"payload_secdec_bits":432,"one_active_transaction_per_pc":true,"source_request_credit_return":"after dequeue into controller issue register","write_visibility_return":"after actual controller wd, returned only to owning source"},
+ "clock_crossings":{"host_to_engine_to_stream":"unchanged ot_rom_host_ingest asyncFIFOs","controller":"unchanged ot_s81ph_ctrl_pc cks/ckh request and response FIFOs plus write-event CDC","fence":"held counter snapshot MCP handshake ck/clk_h, not multiincrement Gray"},
+ "added_pipeline_cycles":{"source_queue_to_controller":1,"registered_source_return":1,"host_completion_release":1},
+ "physical_slot_proposal":{"width_um":240,"height_um":480,"per_pc_pitch_um":265.584,"proposed_not_measured":true,"faces":"controller-request/return align adjacent PC tile; sourcefaces native packet bundles; exact pin coordinates pending corridor owner"},
+ "qualification":{"source_owned_minimum_component":"remote PASS","full_host_controller_path":"pending router and actual physical aperture","physical":"pending slot and explicit pin budget","no_synthetic_buses":true},
+ "remaining_bindings":["host class10/11 dispatch and KV physical stack profile","RoPE four-stack and Engram two-stack region ledger","actual source-owned writeACK aggregation","production descriptor/CDC memory protection obligations beyond new protected queues"]
+}
