@@ -1,0 +1,23 @@
+{
+ "shape": "rearm0",
+ "seed": 20261009,
+ "params": {
+  "GS": 1,
+  "NG": 96,
+  "NC": 1,
+  "NOG": 96,
+  "E": 128,
+  "LANES": 16,
+  "ONESHOT": 0,
+  "BF16": 1
+ },
+ "partial_flits": 8,
+ "result_flits": 384,
+ "golden": "hdc_golden.add pairwise tree in contributor rank order + hdc_golden.to_bf16",
+ "sha256": {
+  "part.hex": "027793ebe50114765f3047e347ecacf36bf31268c78a23dd40126fbffb362420",
+  "expected.hex": "46c55b2f5d66152a790bf847ddc9b510dc481726c4bd6ad468e18d21b7955385"
+ },
+ "zero_results": 1001,
+ "subnormal_results": 302
+}
