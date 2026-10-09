@@ -29,5 +29,29 @@
     "failed_route_CTS_note": "Terminated before final CTS database/report written. Full repair log preserved; cannot infer an exact final startpoint from endpoint alone.",
     "parallel_calibration_CTS_paths": "physical_calibration_CTS_paths.rpt (separate calibration using provisional input min300ps; not failed-route critical-path evidence)"
   },
-  "scope": "Standalone PINREG2 TT pathfinding early hold failure; exact PASS does not establish closure. No clock relaxation, multicycle exception or retry."
+  "scope": "Standalone PINREG2 TT pathfinding early hold failure; exact PASS does not establish closure. No clock relaxation, multicycle exception or retry.",
+  "constraint_basis": {
+    "source_commit": "8685c9cda8cba5e520785419838b6864a5eb7fb2",
+    "route_recipe": "physical/dsrom_markov/route.sh",
+    "macro_count": 0,
+    "measured_TT_boundary_mean_ps": 671.6,
+    "rounded_TT_insertion_ps": 672,
+    "measured_FF_boundary_mean_ps": 555.5,
+    "rounded_FF_insertion_ps": 556,
+    "external_generic_setup_ps": 250,
+    "input_max_ps": 922,
+    "input_min_ps": 556,
+    "output_max_ps": -422,
+    "output_min_ps": -606,
+    "period_route_ps": 770,
+    "period_signoff_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "route_hold_margin_ps": 50,
+    "TT_library_overlay": "physical_TT_corner_mark.txt verifies WC reads TT; report Mode ss/Corner WC are flow scene labels",
+    "CTS_link_hook": "physical/common_flow/link_budget_hook.tcl adds link_budget_consistent.sdc max-only virtual reference; defaults skew150/link114/split0.5, preserves original delays with -add_delay",
+    "CTS_IO_reference_observation": "OT_IOREF virtualclock actualFF boundarymean556.6/min527.8/max570.6, followed hold_sync-297.97",
+    "preCTS_interpretation": "start to fault path uses ideal capture clock0; inputmax922 includes eventual insertion672. Negative preCTS full slack does not establish postCTS setup failure.",
+    "final_CTS_report": "not written before terminal; no final startpoint or exact fullpath available"
+  }
 }
