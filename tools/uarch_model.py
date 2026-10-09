@@ -76,6 +76,12 @@ def qwen_stream4_mutable_interface_model():
     return model()
 
 
+def hbm_write_merge_contract_model():
+    """Per-stack source-owned service completion, registered full-width arbitration."""
+    from hbm_write_merge_model import model
+    return model()
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Physical constants (sources in-line)
 # ---------------------------------------------------------------------------------------------------------
