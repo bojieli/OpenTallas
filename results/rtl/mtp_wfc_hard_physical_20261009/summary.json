@@ -1,0 +1,114 @@
+{
+  "job": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "source": {
+    "branch": "codex/mtp-wfc-hard-20261009",
+    "commit": "e829cb457",
+    "extra_paths": [
+      "results/rtl/dshbm_dspark_rtl_20261003/traces"
+    ],
+    "required_files": [
+      "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv",
+      "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv",
+      "tools/s81_ph/s81_ph_wfc_token_hard_plan.py",
+      "tools/dsrom_wfc_token_hard_gate.py",
+      "tools/uarch_model.py",
+      "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv"
+    ]
+  },
+  "status": "READY",
+  "setup_corner": "TT",
+  "tt_ps": 8.85,
+  "ff_ps": 22.26,
+  "drc": 0,
+  "ss_sensitivity_ps": -332.77,
+  "original_route_budget": {
+    "ss_ps": 8.85,
+    "ff_ps": -34.03
+  },
+  "routed_ioref": {
+    "key": "1|/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/routes/mtp_wfc_tok_hard_e829cb457_r2_tc_cx/work/orfs|0|ae0410",
+    "at": "2026-10-09T04:54:29-07:00",
+    "available": true,
+    "ioref_edge": {
+      "tt": {
+        "core_clk": {
+          "boundary": 310,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      },
+      "ff": {
+        "core_clk": {
+          "boundary": 310,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      }
+    },
+    "tt": 8.85,
+    "ff": 22.26,
+    "errors": [],
+    "ioref": {
+      "tt": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 225.3,
+          "min": 212.1,
+          "max": 232.4,
+          "n": 310,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 225.3,
+          "min": 212.1,
+          "max": 232.4,
+          "n": 310,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 183.4,
+          "min": 171.6,
+          "max": 189.9,
+          "n": 310,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 183.4,
+          "min": 171.6,
+          "max": 189.9,
+          "n": 310,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": 72.66,
+    "tt_out": 59.7,
+    "ff_i2r": 22.35,
+    "ff_out": 23.52,
+    "ff_r2r": 22.26,
+    "json": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/cl/routed_ioref.a1.json"
+  },
+  "benches": {
+    "bench_exact_and_epoch_mutant": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "WFC_TOKEN_HARD_GATE PASS\n"
+    },
+    "bench_negative_epoch": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "WFC_TOKEN_HARD_NEGATIVE FAIL_AS_REQUIRED\n"
+    }
+  },
+  "latency": "HARD4edges vsoriginal1 (+3 atowner cap), vsr3two (+2); SOURCE74metadataFF andPROMPT_EXTRA2 gate3b04 preserved. Measured94hidden crossing cycles; no newcycle or speculative gain.",
+  "physical_scope": "Same e829 fullshape token128 storage, exact636reads +genuineepochmutant and actualSOURCE matchingall10cases. Source unchanged, no reroute/ECO. Actual routed-insertion verdict closes; collect/export/canonicalCLOSED transition pending."
+}
