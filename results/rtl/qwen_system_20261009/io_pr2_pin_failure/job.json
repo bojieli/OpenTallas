@@ -1,0 +1,207 @@
+{
+ "name": "qfd_io_collective_pr2-942f13c8atc",
+ "spec": {
+  "name": "qfd_io_collective_pr2-942f13c8atc",
+  "block": "qfd_io_collective",
+  "owner": "Claude:safe-qwen",
+  "purpose": "safe-qwen 2026-10-08 (REVIEW_20261008, binding): S-A3 qfd_io_collective_pr2: hv / pop / refill replicated by a 2-level registered fanout tree per (source, 128-b slice) of keep_hierarchy leaves (the PR=1 copies were merged by Yosys: 6_final.v of _pr-f5c360282 kept only g_r[0].g_k[0], so hv[0] fanned out to every head bit, SS -709 hv[0] -> hdk) + a reset synchroniser per region (control, each source, each adder stage) | current flow: TC route (OT_ORFS_CORNER_OVERRIDE=TC, tt_overlay, CTS fix hooks), mm route hold repair at HM 10 with the HM guard, route-time FF hold at io_ref_routed (route-ff-ioref), early-fail gates; Qwen IO referenced in-run to the block's own propagated clock (io_ref_skew.sdc: the same variant's insertion; no calibrate) | SQ-9 requeue (reviewer ~22:20): same RTL, two-layer pin spread PIN_H='M4 M6' / PIN_V='M5 M7' (the previous route stopped at FLOORPLAN_MARGIN, 20.5-20.8 b/um on M4), 0 cycles",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+   "branch": "claude/safe-qwen-20261008",
+   "commit": "942f13c8a3795692d7bdecd2d73c10aa2ace274b"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "coll_margin3_exact",
+     "cmd": "python3 tools/qwen_coll_margin_bench.py --out {RUN}/bench/m3 --margin 3",
+     "expect": "pass",
+     "pass_regex": "^COLL_MARGIN PASS",
+     "threads": 8,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ]
+    },
+    {
+     "name": "coll_margin3_mutant",
+     "cmd": "python3 tools/qwen_coll_margin_bench.py --out {RUN}/bench/m3mut --margin 3 --mutant",
+     "expect": "fail",
+     "fail_regex": "^COLL_MARGIN FAIL",
+     "threads": 8,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_io_collective_pr2.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_collective_pr2 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 40
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_collective --out {RUN}/record/views/qfd_io_collective --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_io_collective_pr2.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {
+   "enabled": true,
+   "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+   "session": "mm"
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/safe_qwen_20261008/qfd_io_collective_pr2-942f13c8atc"
+   }
+  ],
+  "cycles_added": "+1 cycle per collective word vs PR=1 (MEASURED, bench MARGIN 3 vs 2: reduce_8w 1,018 vs 1,017; gather_1w 355 vs 354; mixed_gather_gaps_skew 2,114 vs 2,094; reduce_320w_depth32 1,321 vs 1,320; fault cases 88 vs 87); reset release +2 edges",
+  "merge_target": "main",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC"
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_io_collective_pr2-942f13c8atc.json",
+ "created": "2026-10-08T22:23:04-07:00",
+ "status": "NEEDS_HUMAN",
+ "stage_idx": 2,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {
+  "bench_coll_margin3_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "se gather_1w margin=3 mutant=0 PASS mismatches=0 words_out=1024 cycles=355\ncase reduce_320w_depth16 margin=3 mutant=0 PASS mismatches=0 words_out=5120 cycles=2506\ncase reduce_320w_depth32 margin=3 mutant=0 PASS mismatches=0 words_out=5120 cycles=1321\ncase fault_nan margin=3 mutant=0 PASS mismatches=0 words_out=128 cycles=88\ncase fault_inf margin=3 mutant=0 PASS mismatches=0 words_out=128 cycles=88\ncase fault_overflow margin=3 mutant=0 PASS mismatches=0 words_out=128 cycles=88\ncase fault_tag_mismatch margin=3 mutant=0 PASS mismatches=0 words_out=128 cycles=88\nCOLL_MARGIN PASS margin=3 cases=10\n",
+   "track": "parallel"
+  },
+  "bench_coll_margin3_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "3 mutant=1 FAIL mismatches=3328 words_out=5120 cycles=2506\ncase reduce_320w_depth32 margin=3 mutant=1 FAIL mismatches=3200 words_out=5120 cycles=1321\ncase fault_nan margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88\ncase fault_inf margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88\ncase fault_overflow margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88\ncase fault_tag_mismatch margin=3 mutant=1 PASS mismatches=68 words_out=128 cycles=88\nCOLL_MARGIN FAIL margin=3 mutant=1 failed=reduce_8w,reduce_8w_gaps_skew,mixed_gather_gaps_skew,reduce_320w_depth16,reduce_320w_depth32\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-08T22:23:04-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_io_collective_pr2-942f13c8atc.json",
+  "2026-10-08T22:23:06-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+  "2026-10-08T22:24:30-07:00 source 942f13c8a379 synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/src",
+  "2026-10-08T22:25:09-07:00 bench track: launched bench_coll_margin3_exact (bench_coll_margin3_exact.a1b1) beside None",
+  "2026-10-08T22:25:12-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-08T22:26:54-07:00 bench track: bench_coll_margin3_exact PASS (rc=0) work: [('cases', 10)]",
+  "2026-10-08T22:26:56-07:00 bench track: launched bench_coll_margin3_mutant (bench_coll_margin3_mutant.a1b1) beside route",
+  "2026-10-08T22:28:55-07:00 bench track: bench_coll_margin3_mutant FAIL as expected (rc=1) ",
+  "2026-10-08T22:53:53-07:00 ot-epyc4 unreachable while polling route (will keep polling)",
+  "2026-10-08T22:56:18-07:00 ot-epyc4 reachable again; route still running",
+  "2026-10-08T23:32:30-07:00 route crashed (rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]) -> retry once on the same host",
+  "2026-10-08T23:34:15-07:00 route waiting for capacity: EPYC4 MemAvailable 390-330 GB < 40+57",
+  "2026-10-08T23:35:40-07:00 launched route (attempt 2) on ot-epyc4",
+  "2026-10-09T00:34:27-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]; resource=False)"
+ ],
+ "updated": "2026-10-09T00:34:27-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_coll_margin3_exact": {
+   "state": "done",
+   "tag": "bench_coll_margin3_exact.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc",
+   "n": 1,
+   "started": "2026-10-08T22:25:09-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/bench_src_a1"
+  },
+  "bench_coll_margin3_mutant": {
+   "state": "done",
+   "tag": "bench_coll_margin3_mutant.a1b1",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc",
+   "n": 1,
+   "started": "2026-10-08T22:26:56-07:00",
+   "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc",
+ "source_synced": true,
+ "commit_full": "942f13c8a3795692d7bdecd2d73c10aa2ace274b",
+ "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]; resource=False)",
+ "bench_location": {
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "route",
+ "stage_tag": "route.a2",
+ "stage_started": "2026-10-08T23:35:40-07:00",
+ "wd_checked": 1791529607.3866189,
+ "ef_checked": 1791530521.9573455,
+ "bench_work": {
+  "bench_coll_margin3_exact": "work: [('cases', 10)]"
+ },
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "crashes": [
+  {
+   "stage": "route",
+   "host": "ot-epyc4",
+   "attempt": 1,
+   "why": "rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]",
+   "resource": false,
+   "tail": "n out_data[497] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[498] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[499] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[49] is not placed in its constraint interval.\n[WARNING PPL-0102] message limit (1000) reached. This message will no longer print.\n[ERROR PPL-0107] Invalid pin placement.\nError: io_placement.tcl, 21 PPL-0107\n\nElapsed time: 0:16.05[h:]min:sec. CPU time: user 15.42 sys 0.63 (99%). Peak memory: 1586108KB.\nElapsed time: 35:44.15[h:]min:sec. CPU time: user 2188.37 sys 41.53 (103%). Peak memory: 2551120KB.\nElapsed time: 0:05.94[h:]min:sec. CPU time: user 5.42 sys 0.50 (99%). Peak memory: 1138692KB.\nElapsed time: 0:05.52[h:]min:sec. CPU time: user 5.14 sys 0.37 (99%). Peak memory: 845512KB.\nElapsed time: 0:20.03[h:]min:sec. CPU time: user 19.52 sys 0.51 (99%). Peak memory: 1308684KB.\nElapsed time: 4:00.09[h:]min:sec. CPU time: user 875.44 sys 1.97 (365%). Peak memory: 2700180KB.\nElapsed time: 0:09.55[h:]min:sec. CPU time: user 8.90 sys 0.56 (98%). Peak memory: 1287248KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_pr2_942f13c8atc/base/3_2_place_iop.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/routes/qfd_io_collective_pr2_942f13c8atc/physical.json\n",
+   "first_error": "qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]"
+  },
+  {
+   "stage": "route",
+   "host": "ot-epyc4",
+   "attempt": 2,
+   "why": "rc=1 ok-check failed;; first error: qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]",
+   "resource": false,
+   "tail": "n out_data[497] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[498] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[499] is not placed in its constraint interval.\n[WARNING PPL-0102] Pin out_data[49] is not placed in its constraint interval.\n[WARNING PPL-0102] message limit (1000) reached. This message will no longer print.\n[ERROR PPL-0107] Invalid pin placement.\nError: io_placement.tcl, 21 PPL-0107\n\nElapsed time: 0:17.83[h:]min:sec. CPU time: user 17.10 sys 0.71 (99%). Peak memory: 1588364KB.\nElapsed time: 36:00.77[h:]min:sec. CPU time: user 2198.35 sys 12.84 (102%). Peak memory: 2556772KB.\nElapsed time: 0:05.34[h:]min:sec. CPU time: user 4.84 sys 0.49 (99%). Peak memory: 1140724KB.\nElapsed time: 0:04.84[h:]min:sec. CPU time: user 4.46 sys 0.36 (99%). Peak memory: 847864KB.\nElapsed time: 0:16.17[h:]min:sec. CPU time: user 15.64 sys 0.52 (99%). Peak memory: 1306828KB.\nElapsed time: 2:00.79[h:]min:sec. CPU time: user 577.69 sys 1.53 (479%). Peak memory: 2699308KB.\nElapsed time: 0:09.08[h:]min:sec. CPU time: user 8.65 sys 0.42 (99%). Peak memory: 1284360KB.\nmake[1]: *** [Makefile:495: do-3_2_place_iop] Error 1\nmake: *** [Makefile:495: /work/results/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_pr2_942f13c8atc/base/3_2_place_iop.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/routes/qfd_io_collective_pr2_942f13c8atc/physical.json\n",
+   "first_error": "qfd_io_collective_pr2_942f13c8atc/flow.log: [ERROR PPL-0107] Invalid pin placement. [step do-3_2_place_iop]"
+  }
+ ]
+}

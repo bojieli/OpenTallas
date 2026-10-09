@@ -1,0 +1,17 @@
+{
+ "schema":"opentallas.qwen-collective-pin-spread.v1",
+ "model_precedes_build":true,
+ "frame_um":[760.32,760.32],
+ "rtl_changed":false,
+ "cycles_added":0,
+ "maximum_raw_port_bits_per_region":{"bottom_input":548,"bottom_output":517,"right_tx":559,"right_rx":2188,"top_control":6},
+ "region_length_um":{"bottom_input":350,"bottom_output":350,"right_tx":180,"right_rx":530,"top_control":160},
+ "layers_per_face":2,
+ "minimum_spacing_tracks":2,
+ "maximum_bits_per_um_per_layer":2.064151,
+ "routing_gate_bits_per_um_per_layer":6,
+ "mechanism":"Fixed uniformly spaced pins in existing windows; alternating64-pin chunks across M4/M6 or M5/M7 using existing source-pinned balanced helper.",
+ "prior_failure":"out_data468+ outside bottom390-740; PPL0107. Old whole-face -group -order constraints did not implement the sized spacing.",
+ "latency":"Existing PR2+1collective-word edge remains separately priced by prior block model; layout adds0edges.",
+ "limits":"Requires actual emitted pin lint and full routed TT/FF/DRC verdict; no closure claim."
+}

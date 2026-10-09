@@ -1,0 +1,54 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/qwen_die_masters/signoff/qfd_io_collective_pr2.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+WARNING PPL-0102] Pin out_data[468] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[469] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[46] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[470] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[471] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[472] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[473] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[474] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[475] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[476] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[477] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[478] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[479] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[47] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[480] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[481] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[482] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[483] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[484] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[485] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[486] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[487] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[488] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[489] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[48] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[490] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[491] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[492] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[493] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[494] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[495] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[496] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[497] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[498] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[499] is not placed in its constraint interval.
+[WARNING PPL-0102] Pin out_data[49] is not placed in its constraint interval.
+[WARNING PPL-0102] message limit (1000) reached. This message will no longer print.
+[ERROR PPL-0107] Invalid pin placement.
+Error: io_placement.tcl, 21 PPL-0107
+
+Elapsed time: 0:17.83[h:]min:sec. CPU time: user 17.10 sys 0.71 (99%). Peak memory: 1588364KB.
+Elapsed time: 36:00.77[h:]min:sec. CPU time: user 2198.35 sys 12.84 (102%). Peak memory: 2556772KB.
+Elapsed time: 0:05.34[h:]min:sec. CPU time: user 4.84 sys 0.49 (99%). Peak memory: 1140724KB.
+Elapsed time: 0:04.84[h:]min:sec. CPU time: user 4.46 sys 0.36 (99%). Peak memory: 847864KB.
+Elapsed time: 0:16.17[h:]min:sec. CPU time: user 15.64 sys 0.52 (99%). Peak memory: 1306828KB.
+Elapsed time: 2:00.79[h:]min:sec. CPU time: user 577.69 sys 1.53 (479%). Peak memory: 2699308KB.
+Elapsed time: 0:09.08[h:]min:sec. CPU time: user 8.65 sys 0.42 (99%). Peak memory: 1284360KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_pr2_942f13c8atc/base/3_2_place_iop.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr2-942f13c8atc/routes/qfd_io_collective_pr2_942f13c8atc/physical.json
