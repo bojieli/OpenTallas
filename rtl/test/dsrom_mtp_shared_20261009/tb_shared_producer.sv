@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_shared_producer;
-    reg clk=0;always #.416667 clk=~clk;
+    reg clk=0;always #0.416667 clk=~clk;
     reg rst_n=0,cmd_valid=0,in_valid=0,out_ready=0;
     reg [73:0] cmd_context=0,in_context=0;
     reg [511:0] in_data=0;reg [6:0] in_word=0;
