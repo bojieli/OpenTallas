@@ -1,0 +1,27 @@
+{
+  "source_commit": "a2f264c8b2075f2632d9bf014bcb26b54da3ba38",
+  "job": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+  "verdict": "EARLY_FAIL_SETUP",
+  "reason": "post-cts TT setup WNS -487.9 ps at 833.333 (route-period -487.9 at 833.333), 14769 failing endpoints, TNS -632498; gate WNS < -400 with > 500 endpoints",
+  "scope": "Enlarged VMX slot margin passes; standalone TT timing candidate fails. Preserve historical smaller-slot failure and current measured failure. No adoption or clock/multicycle relaxation.",
+  "actual_critical_path": {
+    "startpoint": "f_vr[10] input port referenced to ot_lb_v_core_clk",
+    "endpoint": "u_vmx.vm_rq[387]$_DFFE_PP_",
+    "raw_setup_slack_ps": -487.93,
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 123,
+    "hold_uncertainty_ps": 25,
+    "route_margin_ps_over_policy": 63,
+    "note": "Route flow keeps833.333 period and tightens setup uncertainty to123 (policy60+implementationmargin63); rawslack is not policy60 signoff. Arithmetic normalization +63 remains about-424.93ps, but no signoff STA was run after failure.",
+    "input_virtual_insertion_ps": 377.41,
+    "input_max_ps": 518.67,
+    "data_arrival_ps": 1565.97,
+    "data_required_ps": 1078.05,
+    "capture_insertion_ps": 370.73,
+    "mechanism": "Input read-address mapping/decode and broad fanout before staging array read result. RTL vm_raddr subtraction/selection\u2192stg[ra]\u2192vm_rq; full path includes OR4/OR3 decode, buffer tree fanout32,AO21/AND4/OR4/AO221. No outline remedy/structural successor selected."
+  },
+  "source_path": "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv:139-143",
+  "corner_basis": "physical_failed_config.mk actual export WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES), CORNERS=WC BC; raw rpt mode ss/WC is flow label, TT libraries selected. No SRAM macros in this vehicle."
+}

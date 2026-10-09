@@ -1,0 +1,319 @@
+{
+ "name": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+ "spec": {
+  "name": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+  "block": "dsfd_wfc_vmx",
+  "owner": "Claude:mtp-rom (requeued by drive-2155, DR6)",
+  "purpose": "Enlarged standalone VMX fallback from measured38438um2 cells,291.6x280.8 outline and regenerated2336pins. Zero RTL/cycle change; previous o248 variants continue; actual floorplan/TT/FF/DRC qualification required.; owner latest directive: no localhost compute",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "codex/mtp-vmx-route-20261008",
+   "commit": "a2f264c8b"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "export OT_ABC_NO_DCH=1; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_wfc_vmx rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv  $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 48
+   },
+   "route": {
+    "cmd": "export OT_ABC_NO_DCH=1; export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.000 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck SDCX=physical/s81_ph_views/mtp/ser_clock_vmx.sdc PRECTS=physical/s81_ph_views/tiles/pre_cts_ser_balance.tcl POSTCTS=physical/s81_ph_views/tiles/post_cts_ser_vclk2.tcl bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_wfc_vmx rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv ",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_wfc_vmx_a"
+   }
+  ],
+  "cycles_added": 94,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "new MTP element: no budget sheet yet (stream mtp-die owns the MTP die/array budget); routed on the calibrated measured insertion (standard S81-PH flow)"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.0,
+  "no_bench_reason": "Source16c0b3533 unchanged RTL, benches on mtp-wfc_vmx-a-16c0b3533-tc-o248 and prior fullbenches passed. This change only floorplan and port coordinates; no arithmetic or protocol logic modified.",
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-pve1",
+   "ot-agidock128"
+  ]
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote.json",
+ "created": "2026-10-08T23:37:06-07:00",
+ "status": "EARLY_FAIL_SETUP",
+ "stage_idx": 1,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-08T23:37:06-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote.json",
+  "2026-10-08T23:37:53-07:00 source a2f264c8b207 synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote/src",
+  "2026-10-08T23:38:20-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+  "2026-10-09T00:08:44-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+  "2026-10-09T00:09:45-07:00 ot-epyc1tb reachable again; calibrate still running",
+  "2026-10-09T00:24:59-07:00 calibrate done (rc=0)",
+  "2026-10-09T00:24:59-07:00 calibrated insertion CK_SS_MEAN=386 CK_SS_MIN=375 CK_SS_MAX=395 CK_TT_MEAN=386 CK_TT_MIN=375 CK_TT_MAX=395 CK_FF_MEAN=316 CK_FF_MIN=305 CK_FF_MAX=324 CK_SSLIB_MEAN=499 CK_SSLIB_MIN=487 CK_SSLIB_MAX=510 CK_ROUTE_REF=TT",
+  "2026-10-09T00:26:19-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-09T00:28:07-07:00 ot-epyc1tb unreachable while polling route (will keep polling)",
+  "2026-10-09T00:30:08-07:00 ot-epyc1tb reachable again; route still running",
+  "2026-10-09T01:45:47-07:00 EARLY_FAIL_SETUP: post-cts TT setup WNS -487.9 ps at 833.333 (route-period -487.9 at 833.333), 14769 failing endpoints, TNS -632498; gate WNS < -400 with > 500 endpoints"
+ ],
+ "updated": "2026-10-09T01:45:47-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+ "source_synced": true,
+ "commit_full": "a2f264c8b2075f2632d9bf014bcb26b54da3ba38",
+ "reason": "post-cts TT setup WNS -487.9 ps at 833.333 (route-period -487.9 at 833.333), 14769 failing endpoints, TNS -632498; gate WNS < -400 with > 500 endpoints",
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-09T00:26:19-07:00",
+ "wd_checked": 1791535302.7522848,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1195,
+    "mean": 499.4,
+    "min": 486.8,
+    "max": 509.7
+   },
+   "all": {
+    "n": 35286,
+    "mean": 498.5,
+    "min": 486.5,
+    "max": 509.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1195,
+    "mean": 315.6,
+    "min": 305.3,
+    "max": 323.8
+   },
+   "all": {
+    "n": 35286,
+    "mean": 314.7,
+    "min": 304.8,
+    "max": 324.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 386,
+   "CK_SS_ALL_MEAN": 385,
+   "CK_SS_MIN": 375,
+   "CK_SS_ALL_MIN": 374,
+   "CK_SS_MAX": 395,
+   "CK_SS_ALL_MAX": 395,
+   "CK_TT_MEAN": 386,
+   "CK_TT_ALL_MEAN": 385,
+   "CK_TT_MIN": 375,
+   "CK_TT_ALL_MIN": 374,
+   "CK_TT_MAX": 395,
+   "CK_TT_ALL_MAX": 395,
+   "CK_FF_MEAN": 316,
+   "CK_FF_ALL_MEAN": 315,
+   "CK_FF_MIN": 305,
+   "CK_FF_ALL_MIN": 305,
+   "CK_FF_MAX": 324,
+   "CK_FF_ALL_MAX": 325,
+   "CK_SSLIB_MEAN": 499,
+   "CK_SSLIB_MIN": 487,
+   "CK_SSLIB_MAX": 510,
+   "CK_SSLIB_ALL_MEAN": 498,
+   "CK_SSLIB_ALL_MIN": 486,
+   "CK_SSLIB_ALL_MAX": 510,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ef_checked": 1791535543.7045856,
+ "early_fail": {
+  "verdict": "EARLY_FAIL_SETUP",
+  "why": "post-cts TT setup WNS -487.9 ps at 833.333 (route-period -487.9 at 833.333), 14769 failing endpoints, TNS -632498; gate WNS < -400 with > 500 endpoints",
+  "at": "2026-10-09T01:45:46-07:00",
+  "detail": {
+   "name": "mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote",
+   "verdict": "EARLY_FAIL_SETUP",
+   "why": [
+    "post-cts TT setup WNS -487.9 ps at 833.333 (route-period -487.9 at 833.333), 14769 failing endpoints, TNS -632498; gate WNS < -400 with > 500 endpoints"
+   ],
+   "orfs": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_vmx-a-a2f264c8b-tc-o292-remote/routes/mtp_wfc_vmx_a_a2f264c8b_tc_o292_remote/work/orfs",
+   "corner": "TT",
+   "step": "5_1_grt",
+   "setup": {
+    "stage": "cts",
+    "ws": -487.927,
+    "raw_ws": -487.927,
+    "period": 833.333,
+    "count": 14769,
+    "tns": -632498
+   },
+   "hold": {
+    "found": [],
+    "guard": false,
+    "hm_auto": [],
+    "sync": [
+     [
+      "-498.96",
+      "-11.65"
+     ]
+    ],
+    "stall": false,
+    "chunks": []
+   },
+   "congestion": [],
+   "drt": [],
+   "paths": [
+    {
+     "cls": "input->reg",
+     "slack_ps": -487.93,
+     "group": "core_clk",
+     "dominated": "logic",
+     "wire_ps": 69.4,
+     "cell_ps": 600.5,
+     "max_fanout": 32,
+     "start": "f_vr[10]",
+     "end": "u_vmx.vm_rq[387]$_DFFE_PP_",
+     "check": "rising edge-triggered flip-flop clocked by core_clk"
+    },
+    {
+     "cls": "reg->out",
+     "slack_ps": -66.74,
+     "group": "ot_lb_v_core_clk",
+     "dominated": "logic",
+     "wire_ps": 43.5,
+     "cell_ps": 268.7,
+     "max_fanout": 2,
+     "start": "u_vmx.vm_rq[83]$_DFFE_PP_",
+     "end": "t_vq[83]",
+     "check": "output port clocked by ot_lb_v_core_clk"
+    },
+    {
+     "cls": "reg->reg",
+     "slack_ps": -15.19,
+     "group": "ser_clk",
+     "dominated": "logic",
+     "wire_ps": 1.5,
+     "cell_ps": 140.3,
+     "max_fanout": 11,
+     "start": "u_vmx.u_s2f.rp[1]$_SDFFE_PP0P_",
+     "end": "u_vmx.u_s2f.rp_w[1]$_DFF_P_",
+     "check": "rising edge-triggered flip-flop clocked by ser_clk"
+    },
+    {
+     "cls": "reg->out",
+     "slack_ps": 45.64,
+     "group": "ot_lb_v_ser_clk",
+     "dominated": "logic",
+     "wire_ps": 25.6,
+     "cell_ps": 329.4,
+     "max_fanout": 25,
+     "start": "_435384_",
+     "end": "t_swd[336]",
+     "check": "output port clocked by ot_lb_v_ser_clk"
+    },
+    {
+     "cls": "reg->out",
+     "slack_ps": 72.85,
+     "group": "vclk",
+     "dominated": "logic",
+     "wire_ps": 43.5,
+     "cell_ps": 268.7,
+     "max_fanout": 2,
+     "start": "u_vmx.vm_rq[83]$_DFFE_PP_",
+     "end": "t_vq[83]",
+     "check": "output port clocked by vclk"
+    },
+    {
+     "cls": "reg->out",
+     "slack_ps": 644.51,
+     "group": "vclk_s",
+     "dominated": "logic",
+     "wire_ps": 25.6,
+     "cell_ps": 329.4,
+     "max_fanout": 25,
+     "start": "_435384_",
+     "end": "t_swd[336]",
+     "check": "output port clocked by vclk_s"
+    }
+   ],
+   "block": "dsfd_wfc_vmx",
+   "owner": "Claude:mtp-rom (requeued by drive-2155, DR6)",
+   "gates": {
+    "setup_cts_ws_ps": -400.0,
+    "setup_cts_count": 500,
+    "setup_tns_ps": -1000000.0,
+    "setup_place_ws_ps": -900.0,
+    "setup_place_count": 2000,
+    "hold_buf_cap": 100000,
+    "hold_buf_frac": 0.3,
+    "hold_buf_min": 20000,
+    "hold_buf_improve_dwns": 5.0,
+    "hold_buf_improve_frac": 0.6,
+    "hold_buf_improve_min": 60000,
+    "hold_stall_it": 2000,
+    "hold_stall_dwns": 1.0,
+    "hold_stall_tns_pct": 2.0,
+    "hold_real_ws_ps": -150.0,
+    "hold_real_after_s": 3600,
+    "hold_deep_it": 2000,
+    "hold_deep_dwns": 5.0,
+    "grt_min_iter": 20,
+    "grt_markers": 1000,
+    "grt_flat": 0.95,
+    "drt_min_iter": 20,
+    "drt_k": 8,
+    "drt_min_viol": 100,
+    "stall_after_s": 10800
+   }
+  }
+ }
+}
