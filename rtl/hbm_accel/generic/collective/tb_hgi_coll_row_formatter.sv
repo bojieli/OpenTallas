@@ -63,6 +63,7 @@ module tb_hgi_coll_row_formatter;
       if(!ov||req||odata!==expected||oi!=i||oword!=j)$fatal(1,"output backpressure changed held payload");
      end
      ow=1;@(negedge clk);ow=0;totalwords=totalwords+1;
+     if(j<W-1 && (ir||done))$fatal(1,"progress mutant retired row before its last word was consumed");
     end
    end
    totalrows=totalrows+1;
