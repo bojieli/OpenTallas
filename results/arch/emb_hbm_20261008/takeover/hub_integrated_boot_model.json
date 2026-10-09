@@ -1,0 +1,162 @@
+{
+  "schema": "opentallas.embedding_hub_integrated_boot_proposal.v1",
+  "status": "PRE_RTL_CLAUDE_REVIEW_ONLY",
+  "source_commit": "62d0c63b4",
+  "model_before_RTL": true,
+  "default_enable": 0,
+  "original_sources_unchanged": true,
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_hub_boot_merge.sv": "3e18538380d4551b7194d72aa0a9bde368c2631b1832daf07cef6801e3fc5d82",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv": "f7c420676f57d6b377b89cd52da7d78f9332e2a7d762dca039565076c5a49dfa",
+    "rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge.sv": "35a9465a04707ea71d7cbc66842af2f046f193832ac5ca968ec91c69058969f6",
+    "physical/rom_host_ingest/rtl/qfd_io_host.sv": "b5269d3fa6a92bcbec750acf2ffec220e9e21373dc93b3f601330554181908b1",
+    "results/arch/emb_hbm_20261008/takeover/hub_boot_merge_gate/gate.json": "9a653f7cd98c875d0ca134a762f335f70ef3aca64f0dd82b000594ed708e9791",
+    "rtl/physical/ot_qwen_die_hub_identity.sv": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge_cancel.sv": "005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge_fenced.sv": "2850b3c802fba70921389f45c9191bb151d04b0a073f7b78bd871c49186a6aa5",
+    "rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8"
+  },
+  "external_model": {
+    "commit": "eb10d5073",
+    "path": "results/arch/emb_hbm_20261008/takeover/hub_sram_model.json",
+    "sha256": "f64c49f33b10a1e8a267578d3cf1303422d03e46767cfaf072ac49af39492a7c"
+  },
+  "clock_ps": 833.333334,
+  "MAC_per_cycle": 0,
+  "compute_intensity": "No arithmetic; finite packet transport only.",
+  "replicas": 1,
+  "scope": "Additive integrated hub variant replaces native XS8 with separate SU8/HOST_BOOT8 queues. It removes the separate merger and its forwarding/owner stages; receive, gateway, link counters and existing output pin flops remain unchanged. No RTL authorized by this proposal.",
+  "ports_bits": {
+    "SU_native_input_including_valid": 524,
+    "native_host_input_including_valid": 290,
+    "SU_return_credit": 1,
+    "HOST_BOOT_return_credit": 1,
+    "HOST_BOOT_accept": 1,
+    "runtime_host_valid_unconsumed": 1,
+    "unchanged_four_link_outputs": 2112
+  },
+  "memory_bytes_per_cycle": {
+    "each_queue_write": 65.75,
+    "simultaneous_two_queue_write": 131.5,
+    "one_selected_queue_read": 65.75
+  },
+  "finite_flow": {
+    "SU_capacity_including_input_pending": 8,
+    "HOST_BOOT_capacity_including_input_pending": 8,
+    "link_prepaid_credit_per_link": 128,
+    "SU_transport_bridge_actual_prepaid_credits": 2,
+    "credit_policy": "Each actual native link send pops exactly one selected producer queue and registers that producer credit on the same edge as native link output. Input capture/enqueue is not retirement. Broadcast consumes one credit on every link but returns one producer credit. No owner FIFO, extra forwarding slot, debt mirror or new credit pool.",
+    "guards": "Per-producer queue pointer difference plus valid pin-pending capture cannot exceed 8. Validate accepted input/pending/send next occupancy, queue full/empty, duplicate/excess returned link credit and invalid host address. Simultaneous accept/send must be accounted once. Sticky functional faults; no SEU correction claim.",
+    "reset": "Cold reset clears pending valid, pointers and credit pulses, initializes existing link credits to128; outstanding transaction discard is not a runtime reset contract."
+  },
+  "arbitration": {
+    "order": "Actual gateway FETCH has original absolute priority when every link has credit; otherwise nonempty SU head is selected; HOST head is selected only if SU queue empty. If selected SU head lacks its required link credit, HOST waits.",
+    "per_producer_order": true,
+    "cross_producer_order": "Not identical to separate-merger global XS order: a newly queued SU may precede an older HOST. Only per-producer ordering is contracted; HOST marker never bypasses older HOST RAW.",
+    "fairness": "Continuous SU can starve HOST; no bounded HOST service claim without boot/runtime phase assumption."
+  },
+  "packet_contract": {
+    "SU": "Full original512 data/11 tag stored, native destination and broadcast/class predicates retained exactly. Queue selection owns credit; no tag bit used as source ID.",
+    "HOST_RAW": "Qualified native o_v && o_we && o_addr[31]; nonmarker upper30:25 must be0, E25<19457304. Captured packet={tag11=0x500,data512={231zero,data256,E25}}.",
+    "HOST_BOOT_END": "Qualified allones native address; packet tag0x600,data512={448zero,data63:0}; native broadcast and actual-send bend_v preserved.",
+    "runtime": "addr31=0 is unconsumed/uncredited and exposed to separate runtime owner. KVservice w_room/wd is not nativehost o_cr. SOURCE64 runtime decoder/shared host credit binding OPEN."
+  },
+  "SU_tag_domain": {
+    "native_hub_header": "Historical x3 is labelled SU q but physical current SU master exposes kv_we/waddr/wdata, not x3/tag. A complete current SU-to-x3 producer binding is not present in that master.",
+    "actual_native_KV_bridge": "ot_qwen_kvc_hub_cdc assigns all11 sequence bits td[481:471] to x3_tag. write_link_bridge seq is16bits and identity compares seq[10:0]; tag[10] is not reserved as owner/class.",
+    "conflict": "Embedding native hub interprets tag[10] as EMB on both transmit and receive. KV sequence>=1024 aliases EMB class. Existing merger gate used synthetic restricted SU tags and does not close this namespace contract.",
+    "proposal": "Preserve all11 SU tag bits and original classification; separate physical queues determine source credit. Do not silently truncate sequence, reinterpret tag or add owner IDs. Full native KV/EMB class integration remains OPEN pending actual producer/receiver contract review.",
+    "receive_source_trace": {
+      "native_emb_hub": "KV ar_d is512bits from523-bit FIFO; outer11tag is dropped. No ar_tag/ar_source ports.",
+      "identity_hub": "ot_qwen_die_hub_identity ENABLE_IDENTITY=1 preserves outer11tag and physical picked link on separate ar_tag/ar_source outputs.",
+      "all_three_write_bridge_receivers": "Base, cancel and fenced variants capture rx_tag and require identity_tag==dec_seq[10:0] along with source/PC/other existing predicates; tests use identity hub.",
+      "outer_normalization_as_is": "NOT SAFE for those receivers: clearing tag[10] leaves payload unchanged but causes identity mismatch for seq1024..2047. Changing receiver to ignore/recover outerbit is a reviewed contract change; no guessed ID signatures or package bits.",
+      "actual_codec": "Native parallel encoder body contains seq16; native parallel decoder publishes exact seq16 from packet[505:182]. Native SU512 => wire512={SU[509:0],2zero}; CDC receive selects ar_d[511:2], preserving510bit codec packet.",
+      "source_bound_exhaustive_gate": "Required2048 sequences and high-seq negative; no gate result claimed in this proposal."
+    }
+  },
+  "state_comparison": {
+    "excludes_common_receive_gateway_link_counters_and_link_output_flops": true,
+    "baseline_native_XS": {
+      "pin_packet_valid": 524,
+      "queue_data_tag_dst_broadcast": 4208,
+      "read_write_pointers": 8,
+      "source_credit_overflow_link_overflow": 3,
+      "total_bits": 4743
+    },
+    "existing_separate_merger_actual_declared_bits": 8946,
+    "existing_combined_bits": 13689,
+    "integrated_plan": {
+      "two_pin_packet_valid": 1048,
+      "two_queue_data_tag_dst_broadcast": 8416,
+      "four_queue_pointers": 16,
+      "two_source_credit_pulses": 2,
+      "two_queue_faults": 2,
+      "retained_link_overflow": 1,
+      "total_bits": 9485
+    },
+    "increment_over_native_bits": 4742,
+    "saving_over_existing_combination_bits": 4204,
+    "qualification": "Native and merger figures are source-declared counts. Integrated count is proposed exact inventory, not measured synthesized or mapped area. No host compaction assumed."
+  },
+  "area": {
+    "flop_proxy_um2_per_bit": 0.32,
+    "existing_merger_increment_flop_proxy_um2": 2862.72,
+    "integrated_increment_flop_proxy_um2": 1517.44,
+    "saving_flop_proxy_um2": 1345.28,
+    "existing_merger_mux_guard_proxy_um2": 800,
+    "integrated_extra_mux_guard_planning_um2": 800,
+    "integrated_increment_proxy_total_um2": 2317.44,
+    "SRAM_hub_codec_control_buffer_allowance_um2": 6745.005856,
+    "remaining_with_separate_merger_proxy_um2": 3082.285856,
+    "remaining_with_integrated_proxy_um2": 4427.565856,
+    "fit": "KV-die component only. No assumed KV-die outline/frame; source/physical inventory belongs to shared contract. Historical r21c SRAM codec allowance comparison is context, not a current fit requirement or outline-growth argument.",
+    "historical_budget_context_only": true
+  },
+  "mux_demux_fanout": {
+    "added_queue_head_mux": "2input523-bit packet plus2destination+1broadcast fields; source select drives two credit registers and one queue pop. FETCH mux and four-link output fanout remain existing.",
+    "simultaneous_acceptance": "Independent two queue write ports; up to1052 storedbits/core edge with both producers active.",
+    "largest_packet_boundary_bits": 524,
+    "new_host_boundary_bits": 290
+  },
+  "routing": {
+    "no_new_geometry": true,
+    "local_queue_mux_crosssection_bits": 526,
+    "hub_macro_escape_from_external_model": "Existing SRAM proposal M4-only capacity320<410 pins FAIL; M4+M6 planned641. Integrated XS does not resolve macro escape.",
+    "capacity": "Existing actual hub routing-layer policy and new host/SU local pin placement/clock insertion must be checked in context. No new measured track/area/clock capacity claimed.",
+    "target": "Separate KV die; placement/pin paths TBD under shared contract."
+  },
+  "latency": {
+    "native_capture_to_link_send_min_core_edges": 2,
+    "separate_merger_capture_to_native_send_min_core_edges": 4,
+    "integrated_capture_to_native_send_min_core_edges": 2,
+    "added_SU_forward_edges_over_original": 0,
+    "forward_edges_saved_vs_separate": 2,
+    "forward_ns_saved_vs_separate": 1.666666668,
+    "extra_source_credit_register_edges_over_original": 0,
+    "credit_edges_saved_vs_separate": 1,
+    "finite_flow_roundtrip_edges_saved_vs_separate_min": 3,
+    "integrated_delay_measured": false,
+    "prior_marker_measurement": "Prior actual hub gate marker acceptance372/native send376/ready481; successor cannot reuse these as measured integrated results.",
+    "boot_ready": "Still requires actual HOST BOOT_END link send plus all four ordered STATUS count/checksum matches; acceptance is not readiness.",
+    "per_token": "Analytical removes previous+2 SU forward edges if minimum native timing is confirmed. Arbitration/backpressure and actual physical added stages remain to measure/compose; no rate or headline credit."
+  },
+  "policy": "Plain flop queues/control; no ECC/TMR/control mirrors/auth/lease/epoch. Existing SRAM/HBM payload protection belongs to actual SRAM/HBM providers only.",
+  "review_gates": [
+    "Claude approval before additive integrated RTL",
+    "Minimum actual hub/gateway gate: simultaneous producers, each full8 outstanding, true linkCR128 stalls, independent returned credit, wrap/reset, all4 orderedSTATUS",
+    "Default-off original path and original source hash gate",
+    "Payload mutant and wrong-producer/early-credit mutant fail",
+    "SU tag/class namespace contract separate owner review; test high tag bits without claiming unsupported receive semantics",
+    "Remote admitted source inventory/elaboration plus actual mapped area against SRAM codec fit allowance",
+    "Existing hub routing-layer/pin/PDN/clock checks; no route before Claude intake"
+  ],
+  "adopted": false,
+  "physical_closed": false,
+  "runtime_host_binding_complete": false,
+  "placement_target": "Qwen TP4 ROM plus separate KV die/package, owner retarget2026-10-09. Hub/fetch/HBM PHY/landing/near-HBM attention/host/PLL on KV die; KV payload remains there. No new package wire fields proposed; wait shared results/arch/qwen_kv_die_20261009/CONTRACT.md and kv-die.log."
+}
