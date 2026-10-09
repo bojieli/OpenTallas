@@ -46,8 +46,21 @@
         }
       },
       "physical": {
-        "status": "ROUTE_QUEUED_VEHICLE",
-        "corners": {},
+        "status": "CLOSED_VEHICLE_ROUTE",
+        "corners": {
+          "mtp-ringdyn-a-673d12103-tc": {
+            "tt_setup_ps": 64.79,
+            "ff_hold_ps": 24.03,
+            "drc": 0,
+            "ss_sensitivity_ps": -289.99
+          },
+          "mtp-ringdyn-b-673d12103-tc": {
+            "tt_setup_ps": 30.74,
+            "ff_hold_ps": 3.39,
+            "drc": 0,
+            "ss_sensitivity_ps": -306.29
+          }
+        },
         "vehicle": "physical/mtp_ring_dyn/ot_dsrom_ring_dyn_vehicle.sv",
         "module": "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv",
         "jobs": [
@@ -58,7 +71,9 @@
           "physical/mtp_ring_dyn/model.json",
           "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/bench.json",
           "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/refactor_verbatim.json",
-          "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/core_lint.txt"
+          "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/core_lint.txt",
+          "results/rtl/mtp_lead_20261009/routes/mtp-ringdyn-a-673d12103-tc",
+          "results/rtl/mtp_lead_20261009/routes/mtp-ringdyn-b-673d12103-tc"
         ],
         "note": "mtp-lead 2026-10-09: DYN table + read selectors extracted verbatim into ot_hdc_v41x_dyn_unit; core behaviour proven unchanged by campaign 14/15 rerun (record in ring_dyn_vehicle/)"
       },

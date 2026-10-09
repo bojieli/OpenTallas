@@ -40,5 +40,9 @@
     "mtp-ringdyn-a-673d12103-tc",
     "mtp-ringdyn-b-673d12103-tc"
   ],
-  "vehicle_bench": "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/bench.json"
+  "vehicle_bench": "results/rtl/mtp_lead_20261009/ring_dyn_vehicle/bench.json",
+  "route_verdicts": {
+    "mtp-ringdyn-a-673d12103-tc": "CLOSED TT +64.79 / FF +24.03 / DRC 0 (adopted: larger margin)",
+    "mtp-ringdyn-b-673d12103-tc": "CLOSED TT +30.74 / FF +3.39 / DRC 0"
+  }
 }
