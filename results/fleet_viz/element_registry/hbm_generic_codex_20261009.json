@@ -242,7 +242,7 @@
       "owner": "generic_quant_decode",
       "description": "hgi quant decode",
       "source": {
-        "commit": "b827340df",
+        "commit": "7c0dd09fa",
         "paths": [
           "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
           "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"
@@ -263,13 +263,13 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_148_BOUNDARIES_5409_LOCKSTEP_FINAL184_REPIN_PENDING",
+          "status": "PASS_COMPONENT_184_CF_GOLDENS_5409_DS_LOCKSTEP_NONFINITE",
           "evidence": [
             "results/hgi_generic/quant_decode_20261009/manifest.json"
           ]
         },
         "negative": {
-          "status": "PASS_SCALE_FORMAT_MUTANTS_FINAL_SOURCE_REPIN_PENDING",
+          "status": "PASS_COMPILED_SCALE_FORMAT_MUTANTS_AT_OUTPUT134",
           "evidence": [
             "results/hgi_generic/quant_decode_20261009/manifest.json"
           ]
@@ -281,7 +281,7 @@
         }
       },
       "physical": {
-        "status": "TWO_ROUTE_SPECS_PREPARING_NOT_SUBMITTED",
+        "status": "SYNTHESIS_RUNNING_PAIR_SLOT_FIT_PENDING_NO_ROUTE_SUBMISSION",
         "jobs": [],
         "corners": {},
         "evidence": []
@@ -290,7 +290,7 @@
         "real valid/header/mode/fault/retire consumers replacing old quant tie/fold topology",
         "23 actual edges, E4 native8+15 alignment",
         "E4 param16-only coverage must match normative legal block set",
-        "final184vector receipt/source pin being collected"
+        "strict boundary PASS inreg10/regout2; mapped fullshape area pending, no cell-fit claim"
       ],
       "integration": {
         "status": "INCOMPLETE",

@@ -2469,6 +2469,11 @@ def buses(m):
     for a_, b_, bits in hl_:
         B.append((f'hb_{a_}_{b_}', 'hub', bits, [(hub[a_].name, f't_{role(a_, b_)}'), (hub[b_].name, f'f_{role(b_, a_)}')]))
         P[f'hub_{a_}_{b_}'] = [f'hb_{a_}_{b_}']
+    if V.get('hgi_record_units'):
+        # Owner-approved HGI-1: actual sequencer record ABI, default absent.
+        # Shared Claude geometry stays unchanged; this graph alone is not RTL integration.
+        from hgi_die_record_ports import install as install_hgi_records
+        install_hgi_records(m, B, P, V['hgi_record_units'])
     # ---- collective -> SerDes: 8 TU ports x 546 b each direction striped over the 9 macros (S centre 5, N centre 4):
     #      spine-side channel -> hub edge channel -> the channel east of the macro -> its E-face pins
     coll = hub['coll']
