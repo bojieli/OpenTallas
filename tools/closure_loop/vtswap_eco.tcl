@@ -27,7 +27,7 @@ proc ot_vt_libs {C} {
   }
   return $r
 }
-set target [envd OT_TARGET 10]; set cap [envd OT_CAP_PCT 2.0]; set rounds [envd OT_ROUNDS 10]
+set target [envd OT_TARGET 10]; set cap [envd OT_CAP_PCT 2.0]; set rounds [envd OT_ROUNDS 60]
 set hfloor [envd OT_HOLD_FLOOR 2]; set npaths [envd OT_NPATHS 20000]
 set_thread_count [envd OT_THREADS 8]
 read_lef $P/lef/asap7_tech_1x_201209.lef
@@ -92,31 +92,35 @@ proc set_vt {inst base to} {
   return 1
 }
 set c0 [vt_counts]
+set one_pct [expr {100.0 / max(1, [dict get $c0 R] + [dict get $c0 L] + [dict get $c0 SL])}]
+set ::nlow [expr {[dict get $c0 L] + [dict get $c0 SL]}]   ;# incremental LVT/SLVT count (a full scan per swap is O(cells))
 set tt0 [ws max ss]; set ff0 [ws min ff]
 puts [format "OT_VTSWAP pre tt %.2f ff %.2f vt %s lvt_pct %.3f" $tt0 $ff0 $c0 [lvt_pct]]
 set swapped [dict create]; set frozen [dict create]; set capped 0
 for {set r 1} {$r <= $rounds} {incr r} {
   set tt [ws max ss]
   if {$tt >= $target} break
+  # BAND: only the paths within OT_BAND ps of the current worst (worst first), so the fewest cells go LVT
+  set band [expr {min($target, $tt + [envd OT_BAND 4])}]
   set n 0
-  dict for {inst bv} [path_insts max ss $target] {
+  dict for {inst bv} [path_insts max ss $band] {
     lassign $bv base vt
     if {$vt ne "R" || [dict exists $frozen $inst] || [regexp {^(FILLER|TAPCELL|DECAP)} $base]} continue
-    if {[lvt_pct] >= $cap} { set capped 1; break }
-    if {[set_vt $inst $base L]} { dict set swapped $inst $base; incr n }
+    if {($::nlow + 1) * $::one_pct > $cap} { set capped 1; break }   ;# prospective: never past the cap
+    if {[set_vt $inst $base L]} { dict set swapped $inst $base; incr n; incr ::nlow }
   }
   # FF hold guard: revert (and freeze) swapped cells on hold paths under the floor
   set nrev 0
   for {set g 0} {$g < 4 && [ws min ff] < $hfloor} {incr g} {
     set k 0
     dict for {inst bv} [path_insts min ff $hfloor] {
-      if {[dict exists $swapped $inst]} { set_vt $inst [dict get $swapped $inst] R; dict unset swapped $inst; dict set frozen $inst 1; incr k }
+      if {[dict exists $swapped $inst]} { set_vt $inst [dict get $swapped $inst] R; dict unset swapped $inst; dict set frozen $inst 1; incr k; incr ::nlow -1 }
     }
     incr nrev $k
     if {!$k} break
   }
   puts [format "OT_VTSWAP round %d swapped %d reverted %d tt %.2f -> %.2f ff %.2f lvt_pct %.3f" $r $n $nrev $tt [ws max ss] [ws min ff] [lvt_pct]]
-  if {$capped || ($n == 0)} break
+  if {$capped || $n == 0} break
 }
 set tt1 [ws max ss]; set ff1 [ws min ff]
 puts [format "OT_VTSWAP post tt %.2f ff %.2f vt %s lvt_pct %.3f swapped %d frozen %d capped %d" $tt1 $ff1 [vt_counts] [lvt_pct] [dict size $swapped] [dict size $frozen] $capped]

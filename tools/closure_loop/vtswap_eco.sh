@@ -5,7 +5,7 @@
 # the route's DRC count stands (DRC0) and the routed SPEF is kept.  Output layout = hold_eco.sh's, so the loop's ECO
 # completion (result.json -> eco_passes -> eco_install_cmd -> re-verdict -> commit) installs and records it unchanged.
 #   vtswap_eco.sh <route base (6_final.odb)> <sign-off base (SDC_NAME)> <out dir> <block> [post-SDC (src-rel)...]
-# env: TARGET (TT setup target ps, 10), CAP_PCT (2.0), ROUNDS (10), HOLD_FLOOR (2), DRC0 (the route's DRC count, required),
+# env: TARGET (TT setup target ps, 10), CAP_PCT (2.0), ROUNDS (60), BAND (4: per round only paths within BAND ps of the worst), HOLD_FLOOR (2), DRC0 (the route's DRC count, required),
 #      SDC_NAME (6_final.sdc), SETUP_POST_SDC, MACROS, THREADS (8), ACC_SS / ACC_FF (0 / 0),
 #      ORFS_W18 (the route's ORFS dir: on a passing result its w18_sta_{ss,ff}.tcl gain the LVT libraries/LEF, so the
 #      loop's routed-insertion re-STA (meas_resta.py) can time the installed db; harmless on an RVT db; originals kept
@@ -47,7 +47,7 @@ done
 { cat $P/eff_ff.sdc; echo 'set_false_path -setup -to [all_clocks]'; } > $P/mode_ff.sdc
 orun $P/eco_vtswap.log vtswap_eco.tcl -e OT_DB=/in/$DB -e OT_SDC_SS=/p/mode_ss.sdc -e OT_SDC_FF=/p/mode_ff.sdc \
   -e OT_SPEF=/inspef/$(basename $SPEF) -e OT_OUT=/p/orfs/results/asap7/$D/base -e OT_TARGET=${TARGET:-10} \
-  -e OT_CAP_PCT=${CAP_PCT:-2.0} -e OT_ROUNDS=${ROUNDS:-10} -e OT_HOLD_FLOOR=${HOLD_FLOOR:-2} -e OT_THREADS=${THREADS:-8} || true
+  -e OT_CAP_PCT=${CAP_PCT:-2.0} -e OT_ROUNDS=${ROUNDS:-60} -e OT_BAND=${BAND:-4} -e OT_HOLD_FLOOR=${HOLD_FLOOR:-2} -e OT_THREADS=${THREADS:-8} || true
 cat $P/eco_vtswap.log | grep -v "^\[WARNING STA-1212\]" >> $OUT/eco.log
 grep -q "OT_ECO done" $P/eco_vtswap.log || { echo "VT-swap pass failed (no OT_ECO done)"; tail -30 $P/eco_vtswap.log; exit 9; }
 cp $SPEF $EB/6_final.spef
