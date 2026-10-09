@@ -21,7 +21,11 @@ module tb_hgi_idx_topk;
   @(negedge clk);cv=0;
   for(ri=0;ri<rows;ri=ri+1)begin
    for(i=0;i<count;i=i+1)begin
-    scores[i]=(i%11==0)?32'h80000000:(i%7==0)?32'd0:32'h3f800000+((i*31+ri*17)%67);
+    case(i%13)
+     0:scores[i]=32'h80000000;1:scores[i]=0;2:scores[i]=32'hff800000;
+     3:scores[i]=32'h7f800000;4:scores[i]=32'hbf800000+((i*31+ri*17)%67);
+     default:scores[i]=32'h3f800000+((i*31+ri*17)%67);
+    endcase
     refids[i]=i;
    end
    for(i=1;i<count;i=i+1)begin
