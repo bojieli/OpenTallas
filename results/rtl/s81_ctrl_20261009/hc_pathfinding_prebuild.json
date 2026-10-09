@@ -1,0 +1,18 @@
+{
+ "schema":"opentallas.s81-hc-control.pathfinding-prebuild.v1",
+ "purpose":"Standalone TT characterization only; merge_target null",
+ "unified_model_hook":"tools/uarch_model.py:s81_control_transport_model",
+ "native_model":"results/rtl/s81_ctrl_20261009/hc_cmd_prebuild_model.json",
+ "actual_fixture_op_mask":[23,24,25],
+ "fixture_authority":"Component fixture only, no actual per-die opcode assignment",
+ "top":"dsfd_sp_hc_cmd_bridge_pf", "physical_port_bits":176,
+ "ports":{"clk":1,"rst_n":1,"e_cmd_v":1,"e_cmd_d":84,"e_cmd_ready":1,"e_done_v":1,"e_done_tag":8,"fault":1,"h_cmd_valid":1,"h_cmd_ready":1,"h_cmd_capture":2,"h_cmd_user":10,"h_cmd_position":21,"h_cmd_epoch":4,"h_capture_done":1,"h_done_capture":2,"h_done_user":10,"h_done_position":21,"h_done_epoch":4,"h_fault":1},
+ "clock":{"port":"clk","period_ns":0.833,"setup_uncertainty_ns":0.060,"hold_uncertainty_ns":0.025,"domain":"streaming1.2GHz"},
+ "interface":"Native valid/ready command and named committed completion, unregistered fixture IO; no die credit/relay shell proven",
+ "measured_synthesis":{"tool":"Yosys0.52","generic_cells":176,"flops":56,"memories":0,"peak_rss_kib":18412,"evidence":"results/rtl/s81_ctrl_20261009/hc_synth_inventory.log"},
+ "first_route_reservation":{"ram_gb":4,"threads":4,"basis":"Actual176genericcells/56flops/no memories and18MiB synthesis RSS;4GiB reserves physical tool runtime headroom, not a measured route peak or enforced address-space cap. Update from actual first-route RSS."},
+ "io_delay_fraction":0.2,"io_budget_status":"Generic reference only; production floorplan clock arrival/relay/credit budgets pending",
+ "routing":{"layers":["M2","M7"],"utilization_percent":45,"place_density":0.55,"tracks_capacity":"Actual die corridor and slot-fit not yet provided"},
+ "latency_cycles":{"native_dispatch_added":0,"done_after_actual_capture_commit":1,"three_capture_controller_contribution":3},
+ "adoption":"No SS/FF contextual timing, physical die authorization, hardened registered IO, or full-token integration claim"
+}
