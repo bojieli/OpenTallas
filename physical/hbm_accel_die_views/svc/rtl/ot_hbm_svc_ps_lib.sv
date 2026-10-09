@@ -40,7 +40,11 @@ module ot_svs_eps #(parameter integer WEMPTY = 0, parameter integer EEMPTY = 0) 
   wire [1:0] kind = ed[1:0];
   wire strm = ed[126] && (kind == 2'd1 || kind == 2'd2);
   reg [2:0] pend; reg spend, ph, kdv;
+`ifdef OT_PS_MUT_CONC
+  wire e_re = !e_empty && ((kind == 2'd3) || (strm ? 1'b1 : !pend[kind]));   // NEGATIVE CONTROL: streams overlap
+`else
   wire e_re = !e_empty && ((kind == 2'd3) || (strm ? !spend : !pend[kind]));
+`endif
   ot_hbm_accel_cdc_fifo #(.W(127), .AW(2)) u_e (.wclk(e_wck), .wrst_n(rst), .we(e_f[0]), .wdata(e_f[127:1]),
     .full(e_full), .rd_freed(e_fr), .rclk(ck), .rrst_n(rn), .re(e_re), .rdata(ed), .empty(e_empty));
   assign ow_v = e_re && (kind == 2'd0);
@@ -131,18 +135,18 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   wire s_ret = bv && bt[16:15] == 2'b11;          // a stream beat returned (counted at the aligned register)
   // ---- stream engine
   always @(posedge ck or negedge rn)
-    if (!rn) begin act <= 1'b0; ph <= 1'b0; idx <= 1'b0; nocr <= 1'b1; mine <= 1'b0; jn <= 0; jr <= 0; nob <= 0; cred <= 8'd0;
+    if (!rn) begin act <= 1'b0; ph <= 1'b0; idx <= 1'b0; nocr <= 1'b1; mine <= 1'b0; jn <= 0; jr <= 0; nob <= 0; cred <= 8'(CRR);
                    do_v <= 1'b0; dno_ok <= 1'b0; dno_ph <= 1'b0; end
     else begin
       do_v <= di_v;
+      cred <= cred - ((sacc && !nocr) ? 8'd1 : 8'd0) + (cr_v ? 8'd1 : 8'd0);
       if (di_v) begin
         {ph, idx, nocr} <= di_d[61:59]; mine <= di_d[PCID]; act <= di_d[PCID];
-        jn <= 0; jr <= 0; nob <= 0; cred <= 8'(CRR);
+        jn <= 0; jr <= 0; nob <= 0;    // cred persists: a credit returned after a stream ended still counts
       end else begin
         if (sacc) jn <= jn + 12'd4;
         if (s_ret) jr <= jr + 13'd1;
         nob <= nob + (sacc ? 7'd4 : 7'd0) - (s_ret ? 7'd1 : 7'd0);
-        cred <= cred - ((sacc && !nocr) ? 8'd1 : 8'd0) + ((cr_v && !nocr) ? 8'd1 : 8'd0);
         if (act && pdone) act <= 1'b0;
       end
       // done chain: every PC upstream finished in the same phase, and this one
