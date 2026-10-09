@@ -83,8 +83,10 @@ with a live sibling; an old-flow hold flood is a `flow` item: re-route under the
   the assumption, or the assumption came from another variant and is not measured yet) has its setup gate judged on
   reg->reg/macro paths only (IO slack is fake on a wrong insertion; bfh_halfphl started on the full-rate SS 1169 / FF 714
   vs its real 1546 / 875), and the real-hold-WNS gate does not apply to it.
-- `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, > 20,000 endpoints in margin (RSZ-0046) unless the HM guard
-  already auto-reduced the margin, or real hold WNS < -150 ps after 1 h of repair.
+- `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, only when the repair is NOT converging (drive-2140; the endpoint
+  count in margin is not a verdict -- 30k-70k endpoints at HM 10-25 with WNS -20..-40 converge): hold buffers inserted
+  in the step > 100k (or > 0.30 x placed instances, floor 20k); real WNS < 0 gaining < 1 ps over the last 2,000
+  cumulative iterations (guard chunks summed); or real WNS < -150 ps after 1 h gaining < 5 ps over 2,000 iterations.
 - `EARLY_FAIL_CONGESTION`: GRT past extra iteration 20 with > 1,000 markers in the latest congestion-N.rpt and no new
   best (by 5%) over the last two reports (10 iterations).
 - `EARLY_FAIL_DRC`: DRT past iteration 20 with > 100 violations and no new best over the last 8 iterations.

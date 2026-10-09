@@ -147,14 +147,66 @@ class ProbeAndGates(unittest.TestCase):
         self.assertEqual(ss.norm_ws(-282.8, 1111.1), -282.8)
         self.assertAlmostEqual(ss.norm_ws(-100, 770), -36.667, places=2)
 
-    def test_hold_flood(self):
-        txt = "OT_HOLD_MM sync: SS setup ws -10.00 / FF hold ws -40.00 ps\n[INFO RSZ-0046] Found 80635 endpoints with " \
-              "hold violations.\n" + hold_rows(100, -40, -38)
+    HOLD_AGES = {"1_2_yosys.log": 9000, "3_5_place_dp.log": 8000}
+
+    def hold_diag(self, txt, ages=None):
         with tempfile.TemporaryDirectory() as t:
-            d = self.diag(make_run(t, cts_ws=0, count=0, tns=0, tmp="4_1_cts.tmp.log", tmp_text=txt,
-                                   ages={"1_2_yosys.log": 9000, "3_5_place_dp.log": 8000}))
-            self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
-            self.assertIn("old flow", d["why"][0])
+            return self.diag(make_run(t, cts_ws=0, count=0, tns=0, tmp="4_1_cts.tmp.log", tmp_text=txt,
+                                      ages=ages or self.HOLD_AGES))
+
+    def test_hold_flood_alone_is_not_a_verdict(self):
+        # drive-2140: qfd_tile_rp1p was killed at iteration 10 (37,041 endpoints in margin at HM 10, WNS -32.6 -> -29.6)
+        txt = "OT_HOLD_MM sync: SS setup ws -234.44 / FF hold ws -32.58 ps\nOT_HOLD_GUARD start: hold ws -32.58\n" \
+              "[INFO RSZ-0046] Found 37041 endpoints with hold violations.\n" + hold_rows(0, -32.584, -29.586, rows=2)
+        d = self.hold_diag(txt)
+        self.assertEqual(d["action"], "let_run")
+        # 80k endpoints in margin, old flow, but improving 2 ps per 100 iterations: still converging
+        txt = "[INFO RSZ-0046] Found 80635 endpoints with hold violations.\n" + hold_rows(0, -120, -40)
+        self.assertEqual(self.hold_diag(txt)["action"], "let_run")
+
+    def test_hold_stall_fires(self):
+        # WNS frozen at -38 ps over 3,900 iterations: not converging
+        txt = "[INFO RSZ-0046] Found 80635 endpoints with hold violations.\n" + hold_rows(100, -38.5, -38.0)
+        d = self.hold_diag(txt)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("not converging", d["why"][0])
+        self.assertIn("old flow", d["why"][0])
+
+    def test_hold_stall_across_guard_chunks(self):
+        # the guard restarts iteration / buffer columns every 1000-it chunk: progress is measured over the whole step
+        chunk = lambda ws0, ws1: "[INFO RSZ-0046] Found 50000 endpoints with hold violations.\n" + \
+            hold_rows(0, ws0, ws1, rows=11).replace("|    +6.1%", "|    +0.1%")
+        txt = "OT_HOLD_GUARD start: x\n" + chunk(-60, -50) + "\n" + chunk(-50, -40) + "\n" + chunk(-40, -30)
+        o = self.probe_text(txt)
+        ser = o["bases"][0]["hold"]["series"]
+        self.assertEqual(ser[-1][0], 3000)            # 3 chunks x 1000 iterations
+        self.assertEqual(ser[-1][1], 3 * 1010)        # buffers summed over the chunks
+        self.assertEqual(self.hold_diag(txt)["action"], "let_run")
+        txt = "OT_HOLD_GUARD start: x\n" + chunk(-60, -50) + "\n" + chunk(-50, -49.8) + "\n" + chunk(-49.8, -49.5)
+        self.assertEqual(self.hold_diag(txt)["verdict"], "EARLY_FAIL_HOLD")
+
+    def test_hold_buffer_cap(self):
+        rows = "\n".join(f"{100 * k:9d} |       0 | {4000 * k:7d} |            0 |    +6.1% | {-90 + k:7.3f} |   0.000 | "
+                         f"u.x$_DFF_P_/D" for k in range(30))
+        d = self.hold_diag("[INFO RSZ-0046] Found 90000 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("buffer cap", d["why"][0])
+
+    def test_hold_deep_needs_no_progress(self):
+        ages = {"1_2_yosys.log": 4 * 3600, "3_5_place_dp.log": 3 * 3600, "4_1_cts.log": 2 * 3600}
+        # -200 ps but gaining 10 ps per 2000 iterations: keep
+        txt = "[INFO RSZ-0046] Found 18000 endpoints with hold violations.\n" + hold_rows(0, -230, -210)
+        self.assertEqual(self.hold_diag(txt, ages)["action"], "let_run")
+        # -200 ps, 3 ps per 2000 iterations: no progress
+        txt = "[INFO RSZ-0046] Found 18000 endpoints with hold violations.\n" + hold_rows(0, -206, -200)
+        d = self.hold_diag(txt, ages)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("no progress", d["why"][0])
+
+    def probe_text(self, txt):
+        with tempfile.TemporaryDirectory() as t:
+            return self.probe(make_run(t, cts_ws=0, count=0, tns=0, tmp="4_1_cts.tmp.log", tmp_text=txt,
+                                       ages=self.HOLD_AGES))
 
     def test_margin_chase_stall_kill_and_guarded_run_kept(self):
         txt = "[INFO RSZ-0046] Found 13110 endpoints with hold violations.\n" + hold_rows(8000, 38.2, 38.5)
