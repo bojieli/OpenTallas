@@ -14081,3 +14081,8 @@ def hbm_control_robustness_model():
     """HBM reset sequencer and SRAM/transport fault aggregation before build."""
     from tools.hbm_control_robustness_model import model
     return model()
+
+def hbm_write_source_transport_model():
+    """Source bits stay with accepted write until its actual PC completion."""
+    from tools.hbm_write_source_transport_model import model
+    return model()

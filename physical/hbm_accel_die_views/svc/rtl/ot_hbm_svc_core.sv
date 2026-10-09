@@ -121,6 +121,7 @@ module ot_hbm_svc_core #(
   // write-back unit (rtl/hbm_accel/service/ot_hbm_kvwb_hub.sv) and drives k_we / k_wdata / k_wstrb; WB = 0 (default)
   // is the read-only service, bit for bit.
   parameter integer WB = 0,
+  parameter integer WB_SOURCE_ACK = 0, // opt-in source-owned per-PC DRAM completions
   parameter integer WQ_ST = 0,            // wire stages, wq port -> the PC request registers (and back)
   // hbm-system 2026-10-08 (coordinator: one fixed KV_PC per stack cannot reach the >= 90 % KV bandwidth rule):
   // KVS = 1 turns e kind 1 into a PER-PC KV STREAM.  Descriptor ed: [1:0] = 1, [16:2] row0 (15 b), [28:17] nsec
@@ -149,6 +150,7 @@ module ot_hbm_svc_core #(
   input  wire [2047:0] wr_data,
   // WB = 1: sector writes {data256, addr30, pc5, v} forwarded with wq_fclk; returns {ack_gray8, pop_gray8} on ck
   input  wire [291:0] wq_d, input wire wq_fclk, output wire [15:0] wq_g, input wire [NPC-1:0] k_wr_done,
+  input wire [1:0] wq_source, output wire [31:0] wq_source_g, output wire wq_source_fault, output wire [NPC-1:0] wq_source_busy, output wire wq_pending,
   // KVS = 1: per-PC KV stream lanes (launched on ck, forwarded with fclk) and the stream-complete pulse
   output wire [NPC*269-1:0] kvs, output wire kvs_done
 );
@@ -409,25 +411,35 @@ module ot_hbm_svc_core #(
   // ---------------------------------------------------------------- WB: sector-write ingress, landing, completions
   generate if (WB != 0) begin : gwb
     // forwarded link: capture on the falling edge of wq_fclk, two-clock FIFO (the hub holds SO_DEPTH = 8 credits)
-    reg wf_v; reg [290:0] wf_d;
+    localparam integer WFW = (WB_SOURCE_ACK != 0) ? 293 : 291;
+    reg wf_v; reg [WFW-1:0] wf_d;
     wire wq_wck = ~wq_fclk;
     always @(posedge wq_wck or negedge rst) if (!rst) wf_v <= 1'b0; else wf_v <= wq_d[0];
-    always @(posedge wq_wck) wf_d <= wq_d[291:1];
-    wire w_empty, w_full; wire [2:0] w_fr; wire [290:0] wh;
+    always @(posedge wq_wck) wf_d <= (WB_SOURCE_ACK != 0) ? {wq_source,wq_d[291:1]} : wq_d[291:1];
+    wire w_empty, w_full; wire [2:0] w_fr; wire [WFW-1:0] wh;
     reg wbusy;                                         // one write between the FIFO and the PHY
     wire w_pop = !w_empty && !wbusy;
-    ot_hbm_accel_cdc_fifo #(.W(291), .AW(3)) u_wq (.wclk(wq_wck), .wrst_n(rst), .we(wf_v), .wdata(wf_d),
+    // Conservative global hazard includes queued, in-flight pipeline and landing writes.
+    // Native read admission must additionally fence outer producer/link debt.
+    assign wq_pending = !w_empty || wbusy || hv || wf_v;
+    ot_hbm_accel_cdc_fifo #(.W(WFW), .AW(3)) u_wq (.wclk(wq_wck), .wrst_n(rst), .we(wf_v), .wdata(wf_d),
       .full(w_full), .rd_freed(w_fr), .rclk(ck), .rrst_n(rn), .re(w_pop), .rdata(wh), .empty(w_empty));
     // to the PC request registers through WQ_ST (+ XST) wire stages; the accept token returns the same way
-    wire lv, back; wire [290:0] ld;
-    ot_svc_vpipe #(.W(291), .N(WQ_ST), .X(XST)) u_wp (.ck(ck), .rst_n(rn), .v(w_pop), .d(wh), .qv(lv), .q(ld));
+    wire lv, back; wire [WFW-1:0] ld;
+    ot_svc_vpipe #(.W(WFW), .N(WQ_ST), .X(XST)) u_wp (.ck(ck), .rst_n(rn), .v(w_pop), .d(wh), .qv(lv), .q(ld));
     ot_svc_vpipe #(.W(1), .N(WQ_ST), .X(XST)) u_wb (.ck(ck), .rst_n(rn), .v(|wacc), .d(1'b0), .qv(back), .q());
     always @(posedge ck or negedge rn) if (!rn) wbusy <= 1'b0; else if (w_pop) wbusy <= 1'b1; else if (back) wbusy <= 1'b0;
+    reg [1:0] hsource; wire [NPC-1:0] source_room;
     reg hv; reg [4:0] hpc; reg [29:0] ha; reg [255:0] hd;
     always @(posedge ck or negedge rn) if (!rn) hv <= 1'b0; else if (lv) hv <= 1'b1; else if (|wacc) hv <= 1'b0;
     always @(posedge ck) if (lv) begin hpc <= ld[4:0]; ha <= ld[34:5]; hd <= ld[290:35]; end
+    if (WB_SOURCE_ACK != 0) begin : source_capture
+      always @(posedge ck) if(lv) hsource <= ld[292:291];
+    end else begin : legacy_source
+      always @* hsource = 0;
+    end
     for (p = 0; p < NPC; p = p + 1) begin : gq
-      assign wreq[p] = hv && (hpc == p);
+      assign wreq[p] = hv && (hpc == p) && source_room[p];
     end
     assign wl_d = hd; assign wl_a = ha;
     // completions: raw capture of k_wr_done, count, Gray token counter (moves <= 1 a cycle toward the total)
@@ -444,8 +456,34 @@ module ot_hbm_svc_core #(
         g_q <= {ack_tok[7:0] ^ (ack_tok[7:0] >> 1), pop_cnt[7:0] ^ (pop_cnt[7:0] >> 1)};
       end
     assign wq_g = g_q;
+    if (WB_SOURCE_ACK != 0) begin : source_ack
+      wire [17:0] deltas;
+      reg [15:0] total [0:2], token [0:2];
+      reg [31:0] gray;
+      ot_hbm_write_source_pc #(.DEPTH(8)) u_source (
+        .ck(ck),.rst_n(rn),.issue_v(wacc),.issue_source(hsource),
+        .issue_rdy(source_room),.done_v(wd_q),.ack_n(deltas),.fault(wq_source_fault),.busy_pc(wq_source_busy));
+      integer a;
+      always @(posedge ck or negedge rn)
+        if(!rn) begin
+          for(a=0;a<3;a=a+1) begin total[a]<=0;token[a]<=0;end
+          gray<=0;
+        end else begin
+          for(a=0;a<3;a=a+1) begin
+            total[a]<=total[a]+16'(deltas[6*a +: 6]);
+            if(token[a]!=total[a]) token[a]<=token[a]+16'd1;
+            gray[8+8*a +: 8]<=token[a][7:0]^(token[a][7:0]>>1);
+          end
+          gray[7:0]<=pop_cnt[7:0]^(pop_cnt[7:0]>>1);
+        end
+      assign wq_source_g=gray;
+    end else begin : legacy_ack
+      assign source_room={NPC{1'b1}};
+      assign wq_source_g=0; assign wq_source_fault=1'b0; assign wq_source_busy=0;
+    end
   end else begin : gnwb
     assign wreq = {NPC{1'b0}}; assign wl_d = 256'd0; assign wl_a = 30'd0; assign wq_g = 16'd0;
+    assign wq_source_g=0; assign wq_source_fault=1'b0; assign wq_source_busy=0; assign wq_pending=0;
   end endgenerate
 
   // ---------------------------------------------------------------- KVS: per-PC KV stream engine
