@@ -19,7 +19,7 @@ module ot_hbm_native_mtp_operation_backend_mx1 #(parameter integer ENABLE=0)(
  output wire [33:0] launch_token,output wire [39:0] launch_pos,
  output wire [145:0] launch_owner,
  input wire [31:0] sm_done,sm_fault,res_v,input wire [1023:0] res_data,
- output wire busy,output reg fault,output reg [31:0] st_launches
+ output wire busy,output wire drained_ready,output reg fault,output reg [31:0] st_launches
 );
  localparam IDLE=0,SELECT=1,LOAD0=2,LOAD1=3,DB=4,WAIT=5,CPL=6;
  reg [2:0] state;reg [5:0] cursor,total;
@@ -84,6 +84,7 @@ module ot_hbm_native_mtp_operation_backend_mx1 #(parameter integer ENABLE=0)(
  wire [1:0] cp_ready,cp_valid;wire [7:0] cp_status,cp_gen;
  wire [63:0] cp_job;wire [39:0] cp_position;wire [33:0] cp_token;
  wire both_ready=&cp_ready,both_valid=&cp_valid;
+ assign drained_ready=ENABLE && rst_n && state==IDLE && both_ready && !(|cp_valid) && backend_quiescent;
  wire owned=cp_job[31:0]==cpl_job && cp_job[63:32]==cpl_job &&
   cp_gen[3:0]==cpl_generation && cp_gen[7:4]==cpl_generation &&
   cp_position[19:0]==position_q && cp_position[39:20]==position_q;

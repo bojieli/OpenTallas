@@ -5,7 +5,7 @@ module tb_hbm_native_mtp_cp_closed_control_mx1 #(parameter integer MUT=0);
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,jv=0,iv=0;reg [3:0] ik=0;reg [63:0] ipc=0;
  wire [516:0] fm;wire [196:0] tm;reg [178:0] cfg=0,provider=0;
- wire gjr,qjr;wire accepted=jv&&gjr&&qjr;
+ wire gd,qd,bd;wire gjr,qjr;wire accepted=jv&&gjr&&qjr;
  wire bv,br,bcv,bcr,bcf,bam;wire [16:0] bai;
  wire [200:0] bc;wire [31:0] bj,bs,cj,cs;wire [3:0] bg,cg;
  wire active,inflight,gif,gfault,qfault,er,hv,hdv;wire [72:0] hd;wire [20:0] ac;wire [2:0] hs;
@@ -20,15 +20,15 @@ module tb_hbm_native_mtp_cp_closed_control_mx1 #(parameter integer MUT=0);
  .job_v(jv&&qjr),.job_rdy(gjr),.job_id(32'h12345678),.job_generation(4'hb),.job_config(cfg),.provider_controls(ownedprovider),.f_mtp(fm),.t_mtp(tm),
  .eng_cmd_v(bv),.eng_cmd_rdy(br),.eng_cmd(bc),.eng_job(bj),.eng_generation(bg),.eng_sequence(bs),
  .cp_am_v(bam),.cp_am_idx(bai),.eng_cpl_v(bcv),.eng_cpl_rdy(bcr),.eng_cpl_job(cj),.eng_cpl_generation(cg),.eng_cpl_sequence(cs),.eng_cpl_fault(bcf),
- .active(active),.inflight(inflight),.identity_fault(gif),.fault(gfault));
+ .active(active),.inflight(inflight),.identity_fault(gif),.fault(gfault),.drained_ready(gd));
  ot_hbm_native_mtp_operation_backend_mx1 #(.ENABLE(1)) backend(
  .clk(clk),.rst_n(rst_n),.external_fault(gfault),.backend_quiescent(1'b1),.install_v(iv),.install_kind(ik),.install_pc(ipc),.noise_token(17'd129279),
  .cmd_v(bv),.cmd_ready(br),.cmd(bc),.cmd_job(bj),.cmd_generation(bg),.cmd_sequence(bs),
  .cpl_v(bcv),.cpl_ready(bcr),.cpl_job(cj),.cpl_generation(cg),.cpl_sequence(cs),.cpl_fault(bcf),.am_v(bam),.am_idx(bai),
- .launch_v(lv),.launch_pc(pc),.launch_token(tok),.launch_pos(pos),.launch_owner(owner),.sm_done(sd),.sm_fault(32'b0),.res_v(rv),.res_data(rd));
+ .launch_v(lv),.launch_pc(pc),.launch_token(tok),.launch_pos(pos),.launch_owner(owner),.sm_done(sd),.sm_fault(32'b0),.res_v(rv),.res_data(rd),.drained_ready(bd));
  ot_hbm_native_mtp_emit_queue_mx1 #(.ENABLE(1)) queue(
  .clk(clk),.rst_n(rst_n),.external_fault(gfault),.job_v(jv&&gjr),.job_rdy(qjr),.job_id(32'h12345678),.job_generation(4'hb),
- .emit(fm[43+:38]),.native_done(fm[81]),.native_status(fm[514+:3]),.emit_ready(er),.host_v(hv),.host_ready(hr),.host_data(hd),.host_done_v(hdv),.host_done_ready(dr),.host_status(hs),.accepted_count(ac),.fault(qfault));
+ .emit(fm[43+:38]),.native_done(fm[81]),.native_status(fm[514+:3]),.emit_ready(er),.host_v(hv),.host_ready(hr),.host_data(hd),.host_done_v(hdv),.host_done_ready(dr),.host_status(hs),.accepted_count(ac),.fault(qfault),.drained_ready(qd));
  always @(posedge clk)if(rst_n)begin
   cycles=cycles+1;hr<=cycles%5==0;
   if(bv&&br&&bc[3:0]==1)begin headpass=headpass+1;headrow=0;end
@@ -53,7 +53,7 @@ module tb_hbm_native_mtp_cp_closed_control_mx1 #(parameter integer MUT=0);
  wait(hdv);@(negedge clk);
  if(received!=4||ac!=4||hs!=1||fm[357+:32]!=5)$fatal(1,"composed finalcommit");
  dr=1;@(negedge clk);dr=0;repeat(8)@(negedge clk);
- if(!gjr||!qjr||active||inflight||fm[43]||fm[81]||fm[82]||!br)$fatal(1,"MX1 not drained");
+ if(!gd||!qd||!bd||active||inflight||fm[43]||!fm[81]||fm[82])$fatal(1,"MX1 not drained");
  rst_n=0;repeat(4)@(negedge clk);
  received=0;headpass=0;headrow=0;sd=0;rv=0;q=0;qp=0;winner=0;
  rst_n=1;repeat(6)@(negedge clk);

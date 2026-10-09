@@ -11,13 +11,14 @@ module ot_hbm_native_mtp_emit_queue_mx1 #(parameter integer ENABLE=0,DEPTH=8)(
  output wire emit_ready,
  output wire host_v,input wire host_ready,output wire [72:0] host_data,
  output wire host_done_v,input wire host_done_ready,output wire [2:0] host_status,
- output wire [20:0] accepted_count,output reg fault
+ output wire [20:0] accepted_count,output wire drained_ready,output reg fault
 );
  localparam integer AW=$clog2(DEPTH);
  reg [72:0] storage[0:DEPTH-1];reg [AW-1:0] wp,rp;reg [AW:0] count;
  reg active,done_pending;reg [2:0] status;
  reg [31:0] job;reg [3:0] generation;reg [20:0] accepted;
  wire pop=host_v && host_ready;
+ assign drained_ready=ENABLE && rst_n && !active && !done_pending && count==0;
  assign job_rdy=ENABLE && rst_n && !active && !done_pending && count==0 && !external_fault && !emit[0] && !native_done;
  assign emit_ready=ENABLE && active && !done_pending && !fault && !external_fault && (count<DEPTH || pop);
  wire push=emit[0] && emit_ready;

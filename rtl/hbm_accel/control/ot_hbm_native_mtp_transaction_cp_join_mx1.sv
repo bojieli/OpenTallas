@@ -20,7 +20,7 @@ module ot_hbm_native_mtp_transaction_cp_join_mx1 #(
  input wire eng_cpl_v,output wire eng_cpl_rdy,input wire [31:0] eng_cpl_job,
  input wire [3:0] eng_cpl_generation,input wire [SEQ_W-1:0] eng_cpl_sequence,
  input wire eng_cpl_fault,
- output reg active,inflight,identity_fault,fault
+ output wire drained_ready,output reg active,inflight,identity_fault,fault
 );
  reg [178:0] config_q;
  reg [31:0] owner_job;reg [3:0] owner_gen;
@@ -28,6 +28,7 @@ module ot_hbm_native_mtp_transaction_cp_join_mx1 #(
  reg start_q,done_q;
  wire owned=eng_cpl_job==owner_job && eng_cpl_generation==owner_gen &&
   eng_cpl_sequence==sequence_q;
+ assign drained_ready=ENABLE && rst_n && !active && !inflight && !eng_cpl_v;
  assign job_rdy=ENABLE && rst_n && !active && !inflight && backend_quiescent && !external_fault && !eng_cpl_v;
  assign eng_cmd_v=ENABLE && active && !inflight && !fault && !external_fault &&
   !done_q && f_mtp[82] && sequence_q!={SEQ_W{1'b1}};
