@@ -1,0 +1,5 @@
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)
+Terminated                 python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix $VA --period .730 --work $O/work --output $O/physical.json --util 45 --tag $L --ins-ss $SS --ins-ff $SS --extra="$*" > $O/run.log 2>&1
+calibrate: no 4_1_cts.odb under /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work/orfs/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base
+CALIBRATE_FAIL class=synth_or_place detail=
