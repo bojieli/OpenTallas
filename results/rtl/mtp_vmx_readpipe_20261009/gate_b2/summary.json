@@ -1,0 +1,50 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "stg_readpipe_baseline",
+   "expect": "pass",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 0,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12883 vmslow=0 core_user_mismatch_at_start=30",
+   "got": "pass",
+   "verdict": "OK"
+  },
+  {
+   "case": "s0_readpipe2",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2,
+    "READPIPE": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "rtl/test/mtp_rom_fixtures/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41381",
+   "got": "pass",
+   "verdict": "OK"
+  }
+ ]
+}

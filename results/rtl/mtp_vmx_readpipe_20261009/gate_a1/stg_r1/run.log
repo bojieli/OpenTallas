@@ -1,0 +1,3 @@
+MTP_STG_QUEUE peak=4 debt=2 stalls=390 readpipe=0
+MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45
+MTP_STG_CYC start_mean=14.50 start_max=17 done_mean=98.67 done_max=113 link_in_mean=13.37 link_in_max=238 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)

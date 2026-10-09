@@ -1,0 +1,117 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "stg_r1",
+   "expect": "pass",
+   "params": {
+    "SEED": 1,
+    "NJOB": 60
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45",
+   "got": "pass",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2",
+   "expect": "pass",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12883 vmslow=0 core_user_mismatch_at_start=29",
+   "got": "pass",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2_tokpipe",
+   "expect": "pass",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [
+    "OT_VMX_TOKPIPE"
+   ],
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12883 vmslow=0 core_user_mismatch_at_start=0",
+   "got": "pass",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2_neg_index",
+   "expect": "fail",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [
+    "OT_VMX_MUT_INDEX"
+   ],
+   "result": "MTP_STG FAIL: fault wfc 1 lnk 0 vmx 0",
+   "got": "fail",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2_neg_last",
+   "expect": "fail",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [
+    "OT_VMX_MUT_LAST"
+   ],
+   "result": "MTP_STG FAIL: last flag word=43",
+   "got": "fail",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2_neg_early_response",
+   "expect": "fail",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [
+    "OT_VMX_MUT_EARLY_RESPONSE"
+   ],
+   "result": "MTP_STG FAIL: fault wfc 1 lnk 0 vmx 0",
+   "got": "fail",
+   "verdict": "OK"
+  },
+  {
+   "case": "stg_readpipe2_neg_nodebt",
+   "expect": "fail",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "READPIPE": 2,
+    "FULLSTALL": 1,
+    "VMNAT": 1
+   },
+   "defines": [
+    "OT_VMX_MUT_NODEBT"
+   ],
+   "result": "MTP_STG FAIL: outbound word 5 of (u0 p0) (staging / prefetch)",
+   "got": "fail",
+   "verdict": "OK"
+  }
+ ]
+}

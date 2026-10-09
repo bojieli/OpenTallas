@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.mtp.v14.exact.v1",
+ "status": "PASS",
+ "rtl_source_commit": "86c451d501d35ba8824236fec64bdba9d41003dc",
+ "gate_a1_source": "d25c5d548",
+ "gate_b2_source": "327a29a26",
+ "gate_c3_source": "86c451d50",
+ "host": "ot-pve1",
+ "admission": "/srv/opentallas-scratch/admit.sh 4",
+ "runtime": "native iverilog/vvp",
+ "slot_model_before_RTL": "99c7c14d7",
+ "corrected_FF_model_before_RTL": "a6f66e31b",
+ "added_FFbits_planning": 2350,
+ "added_read_edges": 2,
+ "TXQ": 8,
+ "read_debt": 4,
+ "stage_words": 46,
+ "stage_jobs_per_positive": 40,
+ "source_exact_starts": 94,
+ "source_exact_cycles": 41381,
+ "matched_stalled_total_cycles_READ0_and_READ2": 12883,
+ "scope": "Component transport exactness; no speed, physical closure or HARD prompt adoption claim",
+ "mutants": [
+  "INDEX",
+  "LAST",
+  "EARLY_RESPONSE",
+  "NODEBT"
+ ],
+ "actual_fixed_response_edges": {
+  "READ0": 1,
+  "READ2": 3
+ },
+ "stalled_payload_assertion": "PASS",
+ "file_sha256": {
+  "rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv": "6a8b9670c33717932a753fcfb26662a50ea0676a0ca7582225018b5ee846ab85",
+  "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv": "a3a032fa2c756af6246a814758350271c84383421457a655f561ac73e06383ac",
+  "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "a39ff77f0b4fcb5c55459175b4b5929ff6c97b94e8f9af654464d33674258d97"
+ }
+}
