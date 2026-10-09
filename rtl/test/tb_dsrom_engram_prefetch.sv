@@ -32,6 +32,8 @@ module tb_dsrom_engram_prefetch #(
         end else if(!ue) $fatal(1,"prefetch double error not rejected");
         read_count=read_count+1;
     end
+    always @(negedge ck) if(wv&&wa==0)
+        $display("PREFETCH_FIRST_WRITE payload=%h encoded=%h",data[63:0],dut.encoded[71:0]);
     initial begin
         repeat(3) @(posedge ck);#1;rst_n=1;
         for(n=0;n<1536;n=n+1) begin

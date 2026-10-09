@@ -25,7 +25,9 @@ module ot_s81_secded_enc72 #(parameter integer MUT = 0) (
 );
     reg [71:0] x;
     integer p, k, j;
-    always @(*) begin
+    // Evaluate once at time zero too: an all-zero first sector need not toggle
+    // any input bit before the first capture (always_comb preserves hardware).
+    always_comb begin
         x = 72'd0; j = 0;
         {x[70], x[69], x[68], x[67], x[66], x[65], x[64], x[62], x[61], x[60], x[59], x[58], x[57], x[56], x[55], x[54], x[53], x[52], x[51], x[50], x[49], x[48], x[47], x[46], x[45], x[44], x[43], x[42], x[41], x[40], x[39], x[38], x[37], x[36], x[35], x[34], x[33], x[32], x[30], x[29], x[28], x[27], x[26], x[25], x[24], x[23], x[22], x[21], x[20], x[19], x[18], x[17], x[16], x[14], x[13], x[12], x[11], x[10], x[9], x[8], x[6], x[5], x[4], x[2]} = d;
         for (k = 0; k < 7; k = k + 1)
@@ -44,7 +46,7 @@ module ot_s81_secded_dec72 #(parameter integer MUT = 0) (
 );
     reg [71:0] x; reg [6:0] sy; reg ov, ce_r, ue_r; reg [63:0] dd;
     integer p, k, j;
-    always @(*) begin
+    always_comb begin
         x = c; sy = 7'd0; ov = ^c; ce_r = 1'b0; ue_r = 1'b0;
         for (k = 0; k < 7; k = k + 1)
             for (p = 1; p <= 71; p = p + 1)
