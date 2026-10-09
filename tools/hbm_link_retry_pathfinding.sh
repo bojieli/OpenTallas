@@ -16,7 +16,7 @@ export OT_ORFS_NUM_CORES=16 OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_S
  --clock-period-ns .833333333 --clock-uncertainty-ns .06 --clock-uncertainty-hold-ns .025 \
  --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 \
  --die-area 0 0 470 340 --core-area 5.4 5.4 464.6 334.6 \
- --stages synth,pnr --core-utilization 55 --place-density .55 \
+ --stages pnr --core-utilization 55 --place-density .55 \
  --hold-margin-ns .015 --orfs-var ADDER_MAP_FILE= --slew-margin-percent 30 \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  --purpose characterization --nickname-tag hbm_retry545_pathfinding \
