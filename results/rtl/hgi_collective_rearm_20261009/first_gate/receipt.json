@@ -1,0 +1,24 @@
+{
+  "source": "1303727ae",
+  "endpoint_source": "5159113a0",
+  "host": "ot-epyc3",
+  "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-5740",
+  "driver_pid": 1063715,
+  "state": "terminal",
+  "rc": 1,
+  "classification": "bench external egress-credit starvation: corrected harness successor10d737a07",
+  "passed_commands": 41,
+  "final_command": 41,
+  "final_got": 277,
+  "final_expected": 384,
+  "final_tx": 60,
+  "final_rx": 329,
+  "final_fault": 0,
+  "final_done": 0,
+  "new_admitted_handle": 1068339,
+  "reservation_gib": 8,
+  "sha256": {
+    "positive.log": "a74596855c1f9a9e38f5d49d44c53b50e9594c1c09994cebb38a1523ad4c9219",
+    "driver.log": "24a4848c8207406fedce5901cc29a29e12b2b9838f3a51f4210e64d031e9b5ce"
+  }
+}
