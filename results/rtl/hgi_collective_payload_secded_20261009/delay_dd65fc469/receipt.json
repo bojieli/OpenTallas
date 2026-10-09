@@ -1,0 +1,17 @@
+{
+  "source_commit": "dd65fc469",
+  "host": "ot-epyc3",
+  "source_sha256": {
+    "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv": "3441abe688bb6bd19cbae7f618807e5a602317de14a833e0ba94ef5c2db690c3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "gate": "PASS",
+  "scope": "actual macro array fault injection; fault-free exact data and cycle equivalence",
+  "physical_closed": false,
+  "artifact_sha256": {
+    "positive.log": "9ae3c1ffa2a3f66b22b1bdc1713baa95049fa9010a5db31e5d8e8268bf02289e",
+    "time.txt": "105be6485d3b8d7b4ce47c54770471d2040cf4a5180cbab81b0de2df982036c6",
+    "build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
