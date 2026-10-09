@@ -24,6 +24,10 @@
 // ot_qfd_io_embedding_rom assembles root + NCOL columns of taps + the banks (behavioural banks with the parents'
 // protocol for simulation, BANK_BEH = 1; the bank parents are their own die-level element masters).
 // MUT = 1: the root decodes the column with one bank off (the bench must FAIL).
+// PINREG = 1 (drive-0928 2026-10-08): the root registers r_v / r_data at its column-face pins (no logic between pin and
+// flop) and merges the registered copy: +1 cycle on every response (eq_v/eq_data one edge later; the outstanding count
+// returns one edge later, which only delays a bank switch).  PINREG = 0 is the r21 root unchanged.  Fixes the routed
+// TT -5.34 ps r_v[2] -> buffered 512-load fanout -> AO22/OR4 merge -> eq_data[305] input-to-register path.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_emb_root #(
     parameter integer AW = 24,
@@ -34,7 +38,8 @@ module ot_qfd_emb_root #(
     parameter integer LSB = 16,               // scales a scale bank: 2^LSB
     parameter integer CRD = 4,
     parameter integer RW = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PINREG = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -56,6 +61,18 @@ module ot_qfd_emb_root #(
     localparam integer LT = $clog2(NTAP);
     localparam integer LC = (NCOL > 1) ? $clog2(NCOL) : 1;
     localparam integer LF = $clog2(CRD);
+    // column-face response pins: registered (PINREG = 1) or used directly (PINREG = 0, r21)
+    wire [NCOL-1:0]     rv;
+    wire [NCOL*512-1:0] rd;
+    generate if (PINREG != 0) begin : g_pin
+        reg [NCOL-1:0]     rv_q;
+        reg [NCOL*512-1:0] rd_q;
+        always @(posedge clk or negedge rst_n) if (!rst_n) rv_q <= 0; else rv_q <= r_v;
+        always @(posedge clk) rd_q <= r_data;
+        assign rv = rv_q; assign rd = rd_q;
+    end else begin : g_nopin
+        assign rv = r_v; assign rd = r_data;
+    end endgenerate
     // input register + FIFO
     reg iv, ik; reg [AW-1:0] ia;
     always @(posedge clk or negedge rst_n) if (!rst_n) iv <= 1'b0; else iv <= ea_v;
@@ -89,9 +106,9 @@ module ot_qfd_emb_root #(
                 rp <= rp + 1'b1; ea_cr <= 1'b1; gap <= 1'b1;
                 if (hbank >= NCOL * NTAP) fault <= 1'b1;
             end
-            eq_v <= |r_v;
-            outst <= outst + (can ? 1'b1 : 1'b0) - ((|r_v) ? 1'b1 : 1'b0);
-            if ((r_v & (r_v - 1'b1)) != 0 || ((|r_v) && outst == 0)) fault <= 1'b1;
+            eq_v <= |rv;
+            outst <= outst + (can ? 1'b1 : 1'b0) - ((|rv) ? 1'b1 : 1'b0);
+            if ((rv & (rv - 1'b1)) != 0 || ((|rv) && outst == 0)) fault <= 1'b1;
         end
     end
     always @(posedge clk) if (iv) fq[wp[LF-1:0]] <= {ik, ia};
@@ -99,7 +116,7 @@ module ot_qfd_emb_root #(
     reg [511:0] m;
     always @(*) begin
         m = 512'd0;
-        for (c = 0; c < NCOL; c = c + 1) if (r_v[c]) m = m | r_data[c*512 +: 512];
+        for (c = 0; c < NCOL; c = c + 1) if (rv[c]) m = m | rd[c*512 +: 512];
     end
     always @(posedge clk) eq_data <= m;
 endmodule
@@ -196,6 +213,9 @@ module ot_qfd_emb_bank_beh #(
             end
         end
     endfunction
+    // yosys cannot parse a part-select of a function return (word(...)[15:0]): name both words first (same expressions)
+    wire [511:0] w_scale = word(32'h8000_0000 | (((BANK - NCODE) << LSB) + ap1));
+    wire [511:0] w_code  = word((BANK << LWB) + ap1);
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin wp <= 0; rp <= 0; seats <= OCRED; ph <= 1'b0; vp <= 0; i_cr <= 1'b0; o_v <= 1'b0; end
         else begin
@@ -211,8 +231,7 @@ module ot_qfd_emb_bank_beh #(
         if (i_v) q[wp[0]] <= i_addr;
         if (launch) ap0 <= q[rp[0]];
         ap1 <= ap0;
-        if (vp[1]) o_data <= (BANK >= NCODE) ? {496'd0, word(32'h8000_0000 | (((BANK - NCODE) << LSB) + ap1))[15:0]}
-                                             : word((BANK << LWB) + ap1);
+        if (vp[1]) o_data <= (BANK >= NCODE) ? {496'd0, w_scale[15:0]} : w_code;
     end
 endmodule
 
@@ -227,7 +246,8 @@ module ot_qfd_io_embedding_rom #(
     parameter integer LSB = 16,
     parameter integer CRD = 4,
     parameter integer RW = 4,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer PINREG = 0
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -247,7 +267,7 @@ module ot_qfd_io_embedding_rom #(
     wire rf;
     wire [NCOL*NTAP-1:0] tf;
     ot_qfd_emb_root #(.AW(AW), .NCOL(NCOL), .NTAP(NTAP), .NCODE(NCODE), .LWB(LWB), .LSB(LSB), .CRD(CRD), .RW(RW),
-        .MUT(MUT)) u_root (.clk(clk), .rst_n(rst_n), .ea_v(ea_v), .ea_kind(ea_kind), .ea_addr(ea_addr), .ea_cr(ea_cr),
+        .MUT(MUT), .PINREG(PINREG)) u_root (.clk(clk), .rst_n(rst_n), .ea_v(ea_v), .ea_kind(ea_kind), .ea_addr(ea_addr), .ea_cr(ea_cr),
         .eq_v(eq_v), .eq_data(eq_data), .c_v(c_v), .c_tap(c_tap), .c_line(c_line), .r_v(r_v), .r_data(r_data),
         .fault(rf));
     genvar col, t;

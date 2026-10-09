@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hbm_native_mtp_transaction_join",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Full native201-bit command single-inflight job/generation/sequence/reset-epoch guard",
+      "source": {
+        "commit": "442da48ad",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_join.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_join.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_transaction_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/transaction_r2_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/transaction_r2_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_FRESH_CP_SOUTH_MASTER",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual201-bit operation backend/descriptor binding",
+        "externally persistent reset epoch and actual backend quiescence",
+        "finite emitted-token sink",
+        "protected mutable command state"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": []
+      }
+    }
+  ]
+}

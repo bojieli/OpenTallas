@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.qwen_lane_band.v1",
+ "stream": "qwen-lane-band",
+ "date": "2026-10-08",
+ "base": "claude/qwen-vm-me-20261007 @ 1c346e276 (qwen-rtl-finish already on main 71b11fc70)",
+ "rtl": {
+  "file": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+  "modules": {
+   "ot_qfd_band_lanes": "r21m master qfd_sp_band_lanes: one band, NL lanes (16), tree levels 8..10 over the band 8 level-7 positions (7 FP32 adders LAT 7 a lane = 112), level holds, 20+2LNK-edge ring wait for the round trip, band-0 tree-top mux (b0 strap, one netlist for all 6 bands), pin flops on every input (sel/tv/b0/tt_use per-lane flop copies), stations on every output",
+   "ot_qfd_band_upper": "tree-top part: levels 11, 12 over the 6 band words (3 + 1 adders a lane = 64), c taps delayed DLY = 2 + LNK, use / valid carried to the station, lockstep valid check on the 6 band words",
+   "ot_qfd_bt_levels": "generic per-lane levels (ot_qwen_me_sptree_w12 g_lvl with HOLD_TO = GI)"
+  },
+  "frame": "band-local result slots: split s <= 10: band b slot k = global group b*2^(10-s)+k (k < 2^(10-s)); s = 11/12: band 0 slot k = group k (k < 6144>>s); s = 13: none (as the lane). s = 7 is the lane frame (8b+k). Out-of-range slots are don't-care, as the lane's out-of-range positions.",
+  "link": "band <-> tree top: words + VALID through registered pin stations; no credits (both ends are fixed-latency, never-stalling pipelines: a credit counter would be a constant); receivers check the arriving valid against their own (lockstep) and fault on mismatch",
+  "contract": "sel/tv per level are split-derived (monotone over levels for a valid op), as ot_qwen_me_spctl_w12 / ot_qwen_spine_lane_credit generate them",
+  "cycles_added": "+5 + 2*LNK edges on every ME op result vs the monolithic lane (pw station, tree-top pin flop, tree-top station, band-0 pin flop, ty station; LNK relay stages each way). Recorded, not priced (directive)."
+ },
+ "bench": {
+  "tb": "rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv",
+  "run": "rtl/test/qwen_lane_band/run_band_lanes.sh",
+  "host": "ot-agidock128, Verilator 5.050",
+  "method": "6 band blocks + upper with LNK relays vs NL copies of ot_qwen_spine_lane (TREE_LAT 7) on the same words and split-derived sel/tv (ot_qwen_spine_lane_credit generation); random FP32 words with exponents 112..143 (reassociation changes rounding), random splits 7..13, valid gaps + back-to-back runs; every in-range group of every valid op compared bit-exact; fault: finite phase 0/0, NaN in a split-12 op 1/1",
+  "results": {
+   "NL16 LNK0 SEED3": "PASS ops 2,295, groups 29,635, words 474,160, latency +5",
+   "NL4 LNK2 SEED7": "PASS ops 3,159, groups 43,658, words 174,632, latency +9",
+   "MUT1 band level-9 pairs (0,2)(1,3)": "FAIL as required (5,380 / 29,400 words)",
+   "MUT2 upper level-11 pairs (b0,b3)(b1,b4)(b2,b5)": "FAIL as required (1,248 / 29,400 words)"
+  },
+  "logs": "results/rtl/qwen_lane_band_20261008/bench/"
+ },
+ "yosys": "yosys 0.68 read + hierarchy -check of ot_qfd_band_lanes and ot_qfd_band_upper (NL 2): no errors",
+ "slab_port_groups": {
+  "fix": "tools/qwen_rom_fulldie_b3r2.py RTL_PORT_GROUPS = 48: from r21m the slab reserves one routed port-group element per RESULT group (8 a band, 4 a half; 12 W12 port elements x PQ 4) instead of one per block word (96); the 96 block-word meso FIFOs (two block words, level 6, per result group, level 7) are unchanged; a fragment of n block words holds ceil(n/2) port-group elements",
+  "r21m_check": "results/rtl/qwen_lane_band_20261008/r21m_check.json: ok, 0 outside / 0 overlaps, die 846.792 mm2 (margin 11.208), spine block area 35.86 mm2 in 72.32 mm2 of spine columns (utilisation 0.496), 13,510 instances (10,167 relays), SU-VM bus aligned",
+  "lint": "results/rtl/qwen_lane_band_20261008/die_top_lint_r21m.json: 13,510 instances, 18,815 buses, 8,344,593 net bits; pin_fit_errors 0, connectivity 0, unbound real pins 0, abstract ports without net 0",
+  "note": "the shorter slabs leave the three spine columns half empty: a re-pack (dropping column M or shrinking the die) is now possible; not done here"
+ },
+ "routes": {
+  "jobs": [
+   "qfd_sp_band_lanes-<commit>tt (777.6 x 1131.84, PD 0.50)",
+   "qfd_sp_band_lanes_t-<commit>tt (777.6 x 1555.2, PD 0.40)"
+  ],
+  "flow": "OPTION B TT: ORFS corner TC, MM FF hold HM 50 ps, rule H1, CTS fix hooks + consistent die-link budget (tt_overlay); cfg physical/qwen_die_masters/cfg/qfd_sp_band_lanes(_t).env; generator tools/qwen_lane_band/mk_jobs.py"
+ },
+ "open": [
+  "slab result-port groups (ot_qwen_slab_port_group / port element) must take the band-local group index g = frame(split, band, slot) for row base / address / in-range mask (argmax is a total order on (key,row), so port order is free); not done",
+  "ot_qfd_band_upper is not yet instantiated in ot_qfd_sp_tree_top (pw / lc / lf / tt_ty die ports exist in r21m); DLY must add the relay stages of the c link",
+  "tree-top / spine end-to-end bench (ot_qfd_spine_part with band lanes) not run: the +5+2LNK result shift needs the port tags shifted by the same amount"
+ ]
+}

@@ -1,0 +1,281 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T07:13:55.773298+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_markov_head_driver",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.75,
+    "core_input_delay_min_ns": 0.5,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_markov_head_driver/macro_capture.sdc",
+          "sha256": "0757840122307e81e707ea9c842413428d344fc4e26e308d108af6793ba237ed"
+        }
+      ],
+      "lines": [
+        "set_multicycle_path -setup 2 -from [get_cells -hierarchical *weights.m?]",
+        "set_multicycle_path -hold 1 -from [get_cells -hierarchical *weights.m?]"
+      ]
+    },
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": -0.25,
+    "output_delay_min_ns": -0.55,
+    "parameters": {
+      "CACHE_PINREG": 1,
+      "CUT": 511,
+      "ENABLE": 1,
+      "MUTANT_FOLD": 0,
+      "PINREG": 2,
+      "SPLIT9": 1,
+      "VALID_ROWS": 32
+    },
+    "sources": [
+      {
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv",
+        "sha256": "5f425991704c88906c6bd6d9e18953f962132b8f892c378127a93eeb8d975e54",
+        "size_bytes": 11966
+      },
+      {
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv",
+        "sha256": "1fd607d6540d3a644ba64fcc7c596bf9c52ce6bdb9a2c068883aaf7f56252034",
+        "size_bytes": 5200
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_fadd.sv",
+        "sha256": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+        "size_bytes": 13305
+      },
+      {
+        "path": "rtl/common/ot_prefix.sv",
+        "sha256": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+        "size_bytes": 2757
+      },
+      {
+        "path": "rtl/v41rom/ot_v41_bmul2.sv",
+        "sha256": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+        "size_bytes": 4494
+      },
+      {
+        "path": "rtl/v41rom/ot_dsrom_bmul3.sv",
+        "sha256": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+        "size_bytes": 4919
+      }
+    ],
+    "top": "ot_dsrom_markov_head_driver"
+  },
+  "error": "FlowError: ORFS synthesis failed with exit 2:\norfs_hold_mm: {\"helper\": \"/src/tools/orfs_hold_mm.tcl\", \"load_before\": \"bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934\", \"util_before\": \"3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81\", \"status\": \"patched\", \"load_after\": \"50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c\", \"util_after\": \"9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329\"}\n{\"allcorner_spef_evaluator\": \"/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl\", \"original_sha256\": \"8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c\", \"patched_sha256\": \"532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\nmkdir -p /work/results/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_cache2_compact/base/\necho 770 > /work/results/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_cache2_compact/base/clock_period.txt\n/OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth_canonicalize.tcl /work/logs/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_cache2_compact/base/1_1_yosys_canonicalize.log\nUsing ABC speed script.\nExtracting clock period from SDC file: /work/results/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_cache2_compact/base/clock_period.txt\nSetting clock period to 770\n1. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\n2. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\n3. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\n4. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n5. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n6. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib\n7. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz\n8. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz\n9. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz\n10. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib\n11. Executing Liberty frontend: /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz\n12. Executing Liberty frontend: /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib\n13. Executing SLANG frontend.\nERROR: Design elaboration failed; see full log for details\n\nElapsed time: 0:01.91[h:]min:sec. CPU time: user 1.75 sys 0.14 (98%). Peak memory: 364344KB.\nmake[1]: *** [Makefile:305: do-yosys-canonicalize] Error 1\nmake: *** [Makefile:308: /work/results/asap7/opentallas_ot_dsrom_markov_head_driver_asap7_md6_cache2_compact/base/1_1_yosys_canonicalize.rtlil] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:13:52.404642+00:00",
+  "git": {
+    "commit": "6727a89335e554fabace254bd7d9014df1304a26",
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": true,
+    "worktree_status": [
+      "?? physical/dsrom_markov_head_driver/gen/"
+    ]
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/srv/opentallas-data/claude/md6-head-driver-compact-wt",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_markov_head_driver",
+      "--source",
+      "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv",
+      "--source",
+      "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--source",
+      "rtl/v41rom/ot_v41_fadd.sv",
+      "--source",
+      "rtl/common/ot_prefix.sv",
+      "--source",
+      "rtl/v41rom/ot_v41_bmul2.sv",
+      "--source",
+      "rtl/v41rom/ot_dsrom_bmul3.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "CACHE_PINREG=1",
+      "--param",
+      "VALID_ROWS=32",
+      "--param",
+      "PINREG=2",
+      "--param",
+      "CUT=511",
+      "--param",
+      "SPLIT9=1",
+      "--param",
+      "MUTANT_FOLD=0",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--die-area",
+      "0",
+      "0",
+      "300",
+      "380",
+      "--core-area",
+      "2",
+      "2",
+      "298",
+      "378",
+      "--core-utilization",
+      "55",
+      "--max-fanout",
+      "16",
+      "--routing-layers",
+      "M2",
+      "M6",
+      "--pin-region",
+      "^embed_data.*=left:30-350",
+      "--pin-region",
+      "^(embed_id.*|embed_beat.*|embed_last|embed_valid|transaction.*|row0.*|start)$=bottom:30-270",
+      "--pin-region",
+      "^(head_bits.*|head_valid|head_fault|clk|rst_n)$=top:30-270",
+      "--pin-region",
+      "^(start_ready|embed_ready|head_go|joined_valid|joined_bits.*|joined_row.*|done|best_valid|best_row.*|best_bits.*|fault)$=right:30-350",
+      "--pin-regions-exhaustive",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--false-path-from",
+      "rst_n",
+      "--core-input-delay-min-ns",
+      ".50000000000000000000",
+      "--core-input-delay-max-ns",
+      ".75000000000000000000",
+      "--output-delay-min-ns",
+      "-.55000000000000000000",
+      "--output-delay-max-ns",
+      "-.25000000000000000000",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--place-density",
+      "0.55",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--max-transition-ns",
+      "0.25",
+      "--hold-margin-ns",
+      "0.025",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--sdc-append",
+      "physical/dsrom_markov_head_driver/macro_capture.sdc",
+      "--keep-workdir",
+      "/srv/opentallas-data/claude/md6-head-driver-caf38a801/route_cache2_compact_r1/work",
+      "--nickname-tag",
+      "md6_cache2_compact",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-data/claude/md6-head-driver-caf38a801/route_cache2_compact_r1/physical.json"
+    ],
+    "driver": {
+      "commit": "6727a89335e554fabace254bd7d9014df1304a26",
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-data/claude/md6-head-driver-compact-wt/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "00dc1c640f606e580a41b3ed7fc142bf24d776b426cfb5c9e14ec559e0ee2006",
+      "tree": "/srv/opentallas-data/claude/md6-head-driver-compact-wt"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-data/claude/md6-head-driver-compact-wt"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

@@ -1,0 +1,686 @@
+{
+ "schema": "opentallas.qwen_r21b_check.v1",
+ "recipe": "r21bt",
+ "recipe_args": {
+  "b3r3": true,
+  "b3r6": true,
+  "tree_cols": 6,
+  "bw_align": true,
+  "bw_edge": true,
+  "io_faces": true,
+  "bw_edge_inner": true,
+  "bw_sp": 200,
+  "m6_strip": 40,
+  "slab_group_h": 455.76,
+  "r19": true,
+  "tree_interleave": true,
+  "slab_bw_m8": true,
+  "relay_pitch": 430.56,
+  "su_vm_abut": true,
+  "rtl_finish": true,
+  "su_core_clock": true,
+  "vm_me": true,
+  "tt_h": 4354.56,
+  "bl_h": 1555.2
+ },
+ "die_um": [
+  25815.456,
+  32801.76
+ ],
+ "die_mm2": 846.792,
+ "reticle_mm2": 858.0,
+ "margin_mm2": 11.208,
+ "fits_reticle": true,
+ "instances": 13218,
+ "instance_mm2": 685.92,
+ "die_utilisation": 0.81,
+ "spine_columns": 3,
+ "spine_block_mm2": 38.83,
+ "spine_column_mm2": 76.52,
+ "spine_utilisation": 0.5074,
+ "relays": 9876,
+ "buses": 18523,
+ "legality": {
+  "overlaps": 0,
+  "overlap_examples": [],
+  "outside": 0,
+  "outside_examples": []
+ },
+ "tree_top": [
+  12648.96,
+  17722.8,
+  777.576,
+  4354.536
+ ],
+ "vm": [
+  12648.96,
+  11502.0,
+  777.576,
+  6220.776
+ ],
+ "su": [
+  12648.96,
+  9443.52,
+  777.576,
+  2058.456
+ ],
+ "su_vm_gap_um": 0.024,
+ "slots_um": {
+  "tree_top": 4354.56,
+  "band_lanes": 1555.2,
+  "res_ser": 518.4
+ },
+ "stacks": [
+  {
+   "band": 0,
+   "ser": [
+    11611.296,
+    648.0,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    1166.4,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    3006.72,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  },
+  {
+   "band": 1,
+   "ser": [
+    11611.296,
+    5149.44,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    5667.84,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    7508.16,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  },
+  {
+   "band": 2,
+   "ser": [
+    11611.296,
+    11078.64,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    11597.04,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    13437.36,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  },
+  {
+   "band": 3,
+   "ser": [
+    11611.296,
+    16245.36,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    16763.76,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    18604.08,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  },
+  {
+   "band": 4,
+   "ser": [
+    11611.296,
+    22174.56,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    22692.96,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    24533.28,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  },
+  {
+   "band": 5,
+   "ser": [
+    11611.296,
+    26676.0,
+    777.576,
+    518.376
+   ],
+   "slab": [
+    11611.296,
+    27194.4,
+    777.576,
+    1840.296
+   ],
+   "lanes": [
+    11611.296,
+    29034.72,
+    777.576,
+    1555.176
+   ],
+   "same_x": true,
+   "ser_gap_um": 0.024,
+   "lanes_gap_um": 0.024
+  }
+ ],
+ "spine_free_after_um": {
+  "W": [
+   [
+    21.6,
+    648.0
+   ],
+   [
+    4561.9,
+    5149.4
+   ],
+   [
+    9160.6,
+    11078.6
+   ],
+   [
+    14992.6,
+    15413.8
+   ],
+   [
+    15826.3,
+    16245.4
+   ],
+   [
+    20159.3,
+    22077.4
+   ],
+   [
+    26088.5,
+    26676.0
+   ],
+   [
+    30589.9,
+    31216.3
+   ]
+  ],
+  "M": [
+   [
+    21.6,
+    6287.8
+   ],
+   [
+    9160.6,
+    9443.5
+   ],
+   [
+    22174.6,
+    31216.3
+   ]
+  ],
+  "E": [
+   [
+    21.6,
+    1684.8
+   ],
+   [
+    3525.1,
+    6901.2
+   ],
+   [
+    8741.5,
+    9063.4
+   ],
+   [
+    9160.6,
+    12115.4
+   ],
+   [
+    13955.8,
+    17282.2
+   ],
+   [
+    19122.5,
+    22077.4
+   ],
+   [
+    22174.6,
+    22498.6
+   ],
+   [
+    24338.9,
+    27712.8
+   ],
+   [
+    29553.1,
+    31216.3
+   ]
+  ]
+ },
+ "spine_parts": [
+  {
+   "name": "vector_memory",
+   "col": "M",
+   "y": 11502.0,
+   "h": 6220.8
+  },
+  {
+   "name": "su64_sfu",
+   "col": "M",
+   "y": 9443.52,
+   "h": 2058.48
+  },
+  {
+   "name": "tree_top",
+   "col": "M",
+   "y": 17722.8,
+   "h": 4354.56
+  },
+  {
+   "name": "constants_sequencer",
+   "col": "M",
+   "y": 6287.76,
+   "h": 2775.6
+  },
+  {
+   "name": "res_ser_2",
+   "kind": "res_ser",
+   "band": 2,
+   "col": "W",
+   "y": 11078.64,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_2",
+   "kind": "band_lanes",
+   "band": 2,
+   "col": "W",
+   "y": 13437.36,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_2",
+   "kind": "port+scale",
+   "band": 2,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+   ],
+   "y": 11597.04,
+   "h": 1840.32,
+   "target_y": 13035.6,
+   "offset_um": -518.4
+  },
+  {
+   "name": "port_tiles_2_f1",
+   "kind": "port+scale",
+   "band": 2,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "y": 12115.44,
+   "h": 1840.32,
+   "target_y": 13035.6,
+   "offset_um": -0.0
+  },
+  {
+   "name": "res_ser_3",
+   "kind": "res_ser",
+   "band": 3,
+   "col": "W",
+   "y": 16245.36,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_3",
+   "kind": "band_lanes",
+   "band": 3,
+   "col": "W",
+   "y": 18604.08,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_3",
+   "kind": "port+scale",
+   "band": 3,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55
+   ],
+   "y": 16763.76,
+   "h": 1840.32,
+   "target_y": 18202.3,
+   "offset_um": -518.4
+  },
+  {
+   "name": "port_tiles_3_f1",
+   "kind": "port+scale",
+   "band": 3,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "y": 17282.16,
+   "h": 1840.32,
+   "target_y": 18202.3,
+   "offset_um": -0.0
+  },
+  {
+   "name": "res_ser_4",
+   "kind": "res_ser",
+   "band": 4,
+   "col": "W",
+   "y": 22174.56,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_4",
+   "kind": "band_lanes",
+   "band": 4,
+   "col": "W",
+   "y": 24533.28,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_4",
+   "kind": "port+scale",
+   "band": 4,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "y": 22692.96,
+   "h": 1840.32,
+   "target_y": 23417.6,
+   "offset_um": 195.5
+  },
+  {
+   "name": "port_tiles_4_f1",
+   "kind": "port+scale",
+   "band": 4,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "y": 22498.56,
+   "h": 1840.32,
+   "target_y": 23417.6,
+   "offset_um": 1.1
+  },
+  {
+   "name": "res_ser_1",
+   "kind": "res_ser",
+   "band": 1,
+   "col": "W",
+   "y": 5149.44,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_1",
+   "kind": "band_lanes",
+   "band": 1,
+   "col": "W",
+   "y": 7508.16,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_1",
+   "kind": "port+scale",
+   "band": 1,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "y": 5667.84,
+   "h": 1840.32,
+   "target_y": 7820.3,
+   "offset_um": -1232.3
+  },
+  {
+   "name": "port_tiles_1_f1",
+   "kind": "port+scale",
+   "band": 1,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+   ],
+   "y": 6901.2,
+   "h": 1840.32,
+   "target_y": 7820.3,
+   "offset_um": 1.1
+  },
+  {
+   "name": "res_ser_0",
+   "kind": "res_ser",
+   "band": 0,
+   "col": "W",
+   "y": 648.0,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_0",
+   "kind": "band_lanes",
+   "band": 0,
+   "col": "W",
+   "y": 3006.72,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_0",
+   "kind": "port+scale",
+   "band": 0,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "y": 1166.4,
+   "h": 1840.32,
+   "target_y": 2605.0,
+   "offset_um": -518.4
+  },
+  {
+   "name": "port_tiles_0_f1",
+   "kind": "port+scale",
+   "band": 0,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "y": 1684.8,
+   "h": 1840.32,
+   "target_y": 2605.0,
+   "offset_um": 0.0
+  },
+  {
+   "name": "res_ser_5",
+   "kind": "res_ser",
+   "band": 5,
+   "col": "W",
+   "y": 26676.0,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_5",
+   "kind": "band_lanes",
+   "band": 5,
+   "col": "W",
+   "y": 29034.72,
+   "h": 1555.2
+  },
+  {
+   "name": "port_tiles_5",
+   "kind": "port+scale",
+   "band": 5,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "y": 27194.4,
+   "h": 1840.32,
+   "target_y": 28633.0,
+   "offset_um": -518.4
+  },
+  {
+   "name": "port_tiles_5_f1",
+   "kind": "port+scale",
+   "band": 5,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+   ],
+   "y": 27712.8,
+   "h": 1840.32,
+   "target_y": 28633.0,
+   "offset_um": -0.0
+  }
+ ],
+ "pin_regions": {
+  "cfgs": 149,
+  "failing": []
+ },
+ "ok": true
+}

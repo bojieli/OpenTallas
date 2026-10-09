@@ -1,0 +1,153 @@
+{
+  "pinreg": 2,
+  "vector_record_sha256": "f29d4f4d73430d557fd630f6929b1b66d903cafbd4b9aaa3077aba47295d92a0",
+  "schema": "opentallas.dsrom.markov-row-exact.v1",
+  "scope": "48 independent256-term row transactions;40 released pairs plus8 stress; not ROM lookup or whole-vocab integration",
+  "checkpoint": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "headers": {
+    "head": {
+      "file": "model-00046-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          71470552,
+          137661912
+        ]
+      }
+    },
+    "embed": {
+      "file": "model-00046-of-00048.safetensors",
+      "header": {
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "data_offsets": [
+          5279192,
+          71470552
+        ]
+      }
+    }
+  },
+  "rows": [
+    0,
+    1,
+    31,
+    1000,
+    21946,
+    32319,
+    32320,
+    129279,
+    0,
+    1,
+    31,
+    1000,
+    21946,
+    32319,
+    32320,
+    129279,
+    0,
+    1,
+    31,
+    1000,
+    21946,
+    32319,
+    32320,
+    129279,
+    0,
+    1,
+    31,
+    1000,
+    21946,
+    32319,
+    32320,
+    129279,
+    0,
+    1,
+    31,
+    1000,
+    21946,
+    32319,
+    32320,
+    129279
+  ],
+  "tokens": [
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001,
+    21946,
+    0,
+    129279,
+    7,
+    1001
+  ],
+  "source_commit": "8685c9cda",
+  "source_sha256": {
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv": "1fd607d6540d3a644ba64fcc7c596bf9c52ce6bdb9a2c068883aaf7f56252034",
+    "rtl/v41rom/ot_v41_fadd.sv": "9062c07e99f3baedf2b4e6399d5e12e2501be1db2d99bf71a73c2437bf3a5b91",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc",
+    "rtl/test/dsrom_markov_20261008/tb_markov_row.sv": "fdae8097959107d9f8aec76870a9591baaf0ffe17e434c7519038e1e14f6a657",
+    "rtl/v41rom/ot_v41_bmul2.sv": "15015cbd92c76526298c6647561f530499ee678e7bbe656bcc689fa40bb7c1e6",
+    "rtl/v41rom/ot_dsrom_bmul3.sv": "753636fd6fdc34a2229b492c46b71d130ed41d95cf97665cac5d1df6daa27498",
+    "rtl/test/dsrom_markov_20261008/tb_markov_fault.sv": "011438527c5cebd820ade3d8536f94065793d565e4f1da8232f82492c91a12ce"
+  },
+  "results": [
+    {
+      "mutant": 0,
+      "exit": 0,
+      "pass_": true,
+      "log": "run_0.log"
+    },
+    {
+      "mutant": 1,
+      "exit": 1,
+      "pass_": false,
+      "log": "run_1.log"
+    },
+    {
+      "faultcases": 3,
+      "exit": 0,
+      "pass_": true,
+      "log": "fault.log"
+    }
+  ],
+  "physical_qualified": false,
+  "adopted": false
+}

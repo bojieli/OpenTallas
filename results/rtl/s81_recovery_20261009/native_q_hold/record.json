@@ -1,0 +1,37 @@
+{
+  "native_source": "fa27bd60819f9bf61483d5605a02837fe6a34088",
+  "diagnostic_source": "4aa049eb6",
+  "h1_source": "3b73b0227",
+  "host": "ot-epyc1tb",
+  "remote_root": "/srv/opentallas-scratch/codex/s81-native-q-hold-20261009",
+  "retained_database": "calibration 4_1_cts.odb, original source/objects retained on ot-epyc2",
+  "calibration_ff_ps": {
+    "input_original": -84.10,
+    "input_h1": 25.36,
+    "reset_unchanged": 17.84,
+    "internal": 9.33,
+    "measured_boundary_mean": 419.5
+  },
+  "reference_correction": "Data minimum changes from absolute 360 ps on source-zero core_clk to H1 sender 50 ps on its actual measured virtual reference; reset, every maximum budget, clock period and 60/25 uncertainties remain unchanged.",
+  "exact_gate": {
+    "verdict": "PASS_BOUND_TO_RETAINED_RTL",
+    "actual_source_hashes": 37,
+    "positive_runs": 5,
+    "caught_negative_runs": 3,
+    "compared_cycles": 12775002,
+    "note": "Original spec purpose's 44-source count is inaccurate; source-bound receipt contains 37 hashes. This does not substitute PQ0 evidence for a new PQ1 mechanism. RTL is unchanged."
+  },
+  "model_delta": {
+    "hardware": 0,
+    "area": 0,
+    "cycles": 0,
+    "routing_tracks": 0,
+    "memory_bytes_per_cycle": 0,
+    "boundary_bits_per_cycle": 0,
+    "replicas": 0,
+    "basis": "Retain already sized native QS5f hardware, macro/slot shape and latency contract; correction only changes the stale clock reference."
+  },
+  "verdict": "DIAGNOSTIC_REFERENCE_FIX_VALIDATED_NOT_ROUTED_CLOSURE",
+  "prior_route_failure_preserved": "dsrom-qelem-qs5f-hm10-fa27bd608-tc EARLY_FAIL_HOLD -111.273 ps",
+  "physical_successor_required": true
+}

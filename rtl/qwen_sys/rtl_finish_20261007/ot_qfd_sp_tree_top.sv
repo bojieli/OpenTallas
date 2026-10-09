@@ -57,10 +57,37 @@ module ot_qfd_sp_tree_top #(
     parameter integer SCALE_LAT = 5,
     parameter integer IS = 1,
     parameter integer OS = 1,
-    parameter integer MUT = 0
+    parameter integer LANDED = 0,          // qwen-vm-me: progress / idle on the vector memory's landed result bursts
+    parameter integer MUT = 0,
+    // qwen-band-integrate 2026-10-08: BAND 1 = the r21m band-lane spine (ot_qfd_band_lanes x 6 beside the slabs): the
+    // tree top hosts the upper tree levels TCUT+4 / TCUT+5 (ot_qfd_band_upper) over the 6 band words (b_pw / b_pv / b_lf
+    // in, straight into its pin flops) and returns the split-(TCUT+4 / TCUT+5) words to band 0 (tt_ty / tt_use / tt_v,
+    // from its station).  The control element runs with RX = 5 + 2 LNK (the band round trip: element tags, scale
+    // requests and every result-side output move RX edges later) and BANDF (band-local result positions).
+    // LNK: relay stages on each band <-> tree-top word link; CLNK: relay stages on the control link (t_sel_e / t_tv_e)
+    // from this block's output station to the bands.  The control element makes the per-level selects CLNK edges
+    // EARLY (its XD is XD - CLNK: the selects depend only on the op's tag, known that early), so they reach the bands
+    // with the tree words (lane-timed, XD edges after issue as before); its result tags then carry RX = 5 + 2 LNK + CLNK,
+    // i.e. the results stay 5 + 2 LNK edges behind the monolithic spine's (CLNK costs no cycle).  The upper's control
+    // delay DLY = OS + CLNK + 2 + LNK: the bands use the selects OS + CLNK edges after the control element makes them,
+    // and the band word reaches the upper's pin flop 2 + LNK edges after that.
+    parameter integer BAND = 0,
+    parameter integer NB = 6,
+    parameter integer LNK = 0,
+    parameter integer CLNK = 0,
+    parameter integer UMUT = 0,           // ot_qfd_band_upper MUT (negative mutant)
+    parameter integer AMR = 0             // ot_qwen_me_spctl_w12 AMR (safe-qwen S-D1: argmax top registered at the accumulator)
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    // BAND: the band words (level TCUT+3, lane-major per band), their valids and the bands' faults; band 0's return
+    input  wire [NB*W*32-1:0] b_pw,
+    input  wire [NB-1:0]     b_pv,
+    input  wire [NB-1:0]     b_lf,
+    output wire [3*W*32-1:0] tt_ty,
+    output wire              tt_use,
+    output wire              tt_v,
+    input  wire [15:0]       land_cnt,     // LANDED: the memory's landed-burst count (ot_qfd_res_merge), IS-stationed
     // issue (from the sequencer)
     input  wire              go,
     output wire              ready,
@@ -118,6 +145,7 @@ module ot_qfd_sp_tree_top #(
     localparam integer FW  = 1 + 1 + 1 + 1 + 4 + AW + AW + 3 * (NW + 1);
     localparam integer IBW = 3 * NW + 13 * AW + 13;
     wire rs;
+    wire u_fault;          // BAND: the upper levels' fault (adders, bands, lockstep), into the control element's fault
     ot_qfd_rst_stn #(.D(IS)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
     // ---- input stations ----
     wire [IBW-1:0] ib = {i_nout, i_tiles, i_k, i_wsrc, i_wbase, i_ts, i_ks, i_js, i_xbase, i_xks, i_xjs, i_xcs,
@@ -128,7 +156,9 @@ module ot_qfd_sp_tree_top #(
     wire [W-1:0] trf_q;
     wire [NPE*CW-1:0] pam_q;
     wire [NPE-1:0] pf_q;
-    ot_hdc_delay #(.W(IBW + NPE*CW), .D(IS)) u_id (.clk(clk), .rst_n(rst_n), .d({ib, p_am}), .q({ib_q, pam_q}));
+    wire [15:0] land_q;
+    ot_hdc_delay #(.W(IBW + NPE*CW + 16), .D(IS)) u_id (.clk(clk), .rst_n(rst_n), .d({ib, p_am, land_cnt}),
+        .q({ib_q, pam_q, land_q}));
     ot_hdc_delay #(.W(3 + W + NPE), .D(IS), .RESET(1)) u_is (.clk(clk), .rst_n(rst_n),
         .d({go, fab_fault, x_rdy, tr_fault, p_fault}), .q({go_q, fab_q, xr_q, trf_q, pf_q}));
     wire [NW-1:0] q_nout, q_tiles, q_k;
@@ -152,10 +182,11 @@ module ot_qfd_sp_tree_top #(
     wire [W*32-1:0] c_mxdata;
     wire [15:0] c_prog;
     ot_qwen_me_spctl_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT),
-        .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL),
-        .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT)) u_ctl (
-        .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle),
+        .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
+        .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
+        .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
+        .RX((BAND != 0) ? 5 + 2 * LNK + CLNK : 0), .RXA((BAND != 0) ? 5 + 2 * LNK : 0), .BANDF(BAND), .AMR(AMR)) u_ctl (
+        .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle), .land_cnt(land_q),
         .i_nout(q_nout), .i_tiles(q_tiles), .i_k(q_k), .i_wsrc(q_wsrc),
         .i_wbase(q_wbase), .i_ts(q_ts), .i_ks(q_ks), .i_js(q_js),
         .i_xbase(q_xbase), .i_xks(q_xks), .i_xjs(q_xjs), .i_xcs(q_xcs),
@@ -164,14 +195,24 @@ module ot_qfd_sp_tree_top #(
         .i_mmode(q_mmode), .i_oen(q_oen), .i_amax(q_amax), .i_rmax(q_rmax), .i_mbase(q_mbase),
         .wrom_re(c_wrom_re), .wrom_addr(c_wrom_addr), .kv_re(c_kv_re),
         .scale_re(c_scale_re), .scale_gre(c_sgre), .scale_addr(c_saddr),
-        .x_re(), .x_addr(), .x_q('0), .xl0(),
+        .x_re(), .x_addr(), .x_q({((1<<SMAX)*32){1'b0}}), .xl0(),
         .x_dv(c_xdv), .x_dc(c_xdc), .x_dcs(c_xdcs), .x_dsp(c_xdsp),
-        .t_sel_e(c_sel), .t_tv_e(c_tv), .tr_fault(trf_q),
+        .t_sel_e(c_sel), .t_tv_e(c_tv), .tr_fault(trf_q | {{(W-1){1'b0}}, u_fault}),
         .p_v_e2(c_pv), .p_f_e2(c_pf), .p_am(pam_q), .p_fault(pf_q), .fab_fault(fab_q),
         .ov(c_ov), .am_idx(c_amidx), .am_val(c_amval), .am_any(c_amany),
         .mx_we(c_mxwe), .mx_addr(c_mxaddr), .mx_mask(c_mxmask), .mx_data(c_mxdata),
         .progress(c_prog), .fault(c_fault));
     wire [AW-1:0] c_xdcs_m = (MUT != 0) ? (c_xdcs ^ {{(AW-1){1'b0}}, 1'b1}) : c_xdcs;
+    // ---- BAND: the upper tree levels (reset as the control element: the IS-stationed reset) ----
+    generate if (BAND != 0) begin : g_band
+        ot_qfd_band_upper #(.NL(W), .NB(NB), .LNK(LNK), .DLY(OS + CLNK + 2 + LNK), .TREE_LAT(TREE_LAT), .MUT(UMUT),
+            .TCUT(TCUT), .LG(LG)) u_up (
+            .clk(clk), .rst_n(rs), .pw(b_pw), .pw_v(b_pv), .lf(b_lf), .sel_e(c_sel), .tv_e(c_tv),
+            .tt_ty(tt_ty), .tt_use(tt_use), .tt_v(tt_v), .fault(u_fault));
+    end else begin : g_noband
+        assign u_fault = 1'b0;
+        assign tt_ty = {3*W*32{1'b0}}; assign tt_use = 1'b0; assign tt_v = 1'b0;
+    end endgenerate
     // ---- output stations: strobes / valids on reset lines, fields plain ----
     ot_hdc_delay #(.W(9 + NPG + 2*(LG+1)), .D(OS), .RESET(1)) u_os (.clk(clk), .rst_n(rst_n),
         .d({c_ready && xr_q, c_idle, c_wrom_re, c_kv_re, c_scale_re, c_xdv, c_pv, c_ov, c_mxwe, c_sgre, c_sel, c_tv}),
@@ -263,10 +304,12 @@ module ot_qfd_spine_part #(
     parameter integer TREE_LAT = 3,
     parameter integer PQ = 4,
     parameter integer SCALE_LAT = 5,
+    parameter integer LANDED = 0,          // qwen-vm-me: the tree top counts landed result bursts (land_cnt)
     parameter integer MUT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
+    input  wire [15:0]       land_cnt,
     input  wire              go,
     output wire              ready,
     output wire              idle,
@@ -337,8 +380,8 @@ module ot_qfd_spine_part #(
     ot_qfd_sp_tree_top #(.W(W), .IL(IL), .AW(AW), .NW(NW), .INT8_SCALE_WCS_BASE(INT8_SCALE_WCS_BASE), .GT(GT), .TG(TG),
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
-        .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .MUT(MUT)) u_tt (
-        .clk(clk), .rst_n(rst_n), .go(go), .ready(ready), .idle(idle),
+        .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT)) u_tt (
+        .clk(clk), .rst_n(rst_n), .land_cnt(land_cnt), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),
         .i_wbase(i_wbase), .i_ts(i_ts), .i_ks(i_ks), .i_js(i_js),
         .i_xbase(i_xbase), .i_xks(i_xks), .i_xjs(i_xjs), .i_xcs(i_xcs),

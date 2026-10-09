@@ -1,0 +1,8 @@
+cyc 0
+seg 0 full_rank_1m k 512 sel 512 beats 34 reps 0 tail_slab_minus_ref 114 cyc 4366
+SEL_STAGE_MEASURE name=full_rank_1m elapsed=4318 dut_elapsed=4317 bubbles_pct=0 score_beats_per_quarter=4096/4096/4096/4096
+RESULT PASS full_rank_scores=262144 segments=1 errors=0
+- /srv/opentallas-scratch/codex/ds-control/tb_selector_v5.sv:297: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 4.170 s; speed 876.871 ns/s
+- Verilator: cpu 4.173 s on 1 threads; alloced 515 MB

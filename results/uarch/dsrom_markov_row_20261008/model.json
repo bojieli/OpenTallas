@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.dsrom.markov-row.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "shape": {
+    "vocab": 129280,
+    "k": 256,
+    "source": "released mtp.2.markov_head.{head,embed}.weight safetensors headers"
+  },
+  "arithmetic": "BF16 exact products; each contiguous8 summed sequentially from+0; pairwise tree; separate add(lm_head,markov)",
+  "MACs_per_cycle": 16,
+  "compute_intensity_macs_per_weight_byte": 0.5,
+  "ports_bytes_per_cycle": {
+    "weights": 32,
+    "embedding": 32,
+    "head_logit": 4,
+    "result": 4
+  },
+  "boundary_bits_per_cycle": {
+    "weights": 256,
+    "embedding": 256,
+    "control": 2,
+    "head_logit": 32,
+    "result": 32
+  },
+  "replicas": {
+    "row_engine": 1,
+    "multipliers": 16,
+    "chunk_adders": 16,
+    "tree_adders": 5,
+    "join_adders": 1
+  },
+  "fanout": {
+    "clock_loads": "measure synthesis",
+    "embedding_lanes": 16,
+    "token_broadcast": "129280-row bounds check; identity required"
+  },
+  "routing": {
+    "input_tracks": 546,
+    "output_tracks": 33,
+    "capacity": "requires actual slot and pin plan before route"
+  },
+  "storage": {
+    "embed_bytes": 66191360,
+    "head_bytes": 66191360,
+    "head_pair_payload_bytes": 262144,
+    "embed_head_pairs": 253
+  },
+  "area": {
+    "product_delay_bits": 19712,
+    "floorplan_slot": "new dedicated engine; no existing closed view qualifies it"
+  },
+  "latency": {
+    "first_beat_to_join_cycles_upper": 179,
+    "last_beat_to_join_cycles_upper": 163,
+    "words_per_row": 16,
+    "minimum_transaction_II_upper": 181,
+    "five_sweeps_compute_ratio": 0.05,
+    "previous_reduced_ratio": 0.0078125,
+    "claimed_54_6ns_budget_met": false
+  },
+  "qualified": false,
+  "open": [
+    "ROM embed port",
+    "head row ROM allocation",
+    "full head element integration",
+    "exactness",
+    "TT/FF physical admission"
+  ]
+}

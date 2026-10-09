@@ -19,7 +19,7 @@ HDC_SU = ("rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv rtl/qwen_sys/mis
           "rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_vstream.sv "
           "rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_reduce.sv "
           "rtl/hdc/ot_hdc_reduce_q.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/proto/ot_fp32_mul_rne_pipe.sv")
-VM_SRC = ("rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv "
+VM_SRC = ("rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv "
           "rtl/hdc/ot_hdc_delay.sv")
 EMB_SRC = "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv"
 SEQ_SRC = ("rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv "

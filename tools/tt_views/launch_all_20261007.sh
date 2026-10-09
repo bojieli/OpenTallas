@@ -15,7 +15,7 @@ done
 run q_quad "$P queue --spec $S/hbm_attn_quad_qb1_tc_6ce4b64fd.json --view physical/hbm_attn_tile_r/leaf_b/ot_attn_hgrp_m6h1=ot_attn_hgrp_m6h1"
 run p_quad "$P produce --name ot_attn_tile_m6h1q --loop-job hbm_attn_quad_qb1_tc_6ce4b64fd --orfs '{RUN}/routes/*/work/orfs' --ready '{RUN}/routes/*/view' --wait-file '{RUN}/routes/*/view/abstract.json'"
 for j in hbm_attn_tile_r23_9604a57e4-tt hbm_attn_tile_r23h_mmcg_0d1f9513e-tt; do
-  run q_$j "$P queue --spec $A/$j.json --view physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q=ot_attn_tile_m6h1q --view physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544=ot_attn_bank_sn544 --view physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544=ot_attn_bank_ew544"
+  run q_$j "$P queue --spec $A/$j.json --view physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q=ot_attn_tile_m6h1q --view physical/hbm_attn_tile_r/quad_b_cts/ot_attn_tile_m6h1q=ot_attn_tile_m6h1q --view physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544=ot_attn_bank_sn544 --view physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544=ot_attn_bank_ew544"
 done
 # ---- HBM hub lanes: hbm-die TC re-hardens on EPYC1 (lanes_tc) -> TT on the same interface SDC -> HC / SU quarters
 run p_hcpost "$P produce --name ot_dsrom_su_hcpost_lane --host ot-epyc1tb --orfs $L1/routes/hcpost_tc/work/orfs --view-src $L1/routes/hcpost_tc/view --wait-file $L1/routes/hcpost_tc/view/abstract.json --interface-sdc $L1/src_hc/physical/hbm_die_abstracts_20261006/compute/ot_su12_full/interface.sdc"

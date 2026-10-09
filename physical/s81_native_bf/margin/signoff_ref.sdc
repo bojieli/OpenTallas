@@ -4,7 +4,9 @@
 # L = mean propagated clock arrival at the PINREG boundary registers' CLK pins (corner_sta runs one corner per STA, so
 # L is the SS insertion in the setup run and the FF insertion in the hold run; OpenROAD 26Q3 crashes on -reference_pin,
 # so the reference is applied numerically, as physical/qwen_core_ctx/io_ref.sdc).
-#   input  max = L + 250, min = L - 50        output max = 250 - L, min = -(L + 50)
+#   input  max = L + 250, min = L             output max = 250 - L, min = -(L + 50)
+# rule H1 (flow-hold 2026-10-07; bf-hold 2026-10-08): the die-link hold term is carried ONCE, by the sender's output
+# min -(L + 50); the receiver's input min is L (it was L - 50: the 50 ps counted on both sides of every die link).
 create_clock -name core_clk -period 833.333 [get_ports clk]
 set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup 60 [all_clocks]
@@ -34,6 +36,6 @@ set bf_lmax [expr {$bf_amax / $bf_n}]; set bf_lmin [expr {$bf_amin / $bf_n}]
 puts "BF_IO boundary registers $bf_n insertion mean max $bf_lmax min $bf_lmin"
 set bf_ins [all_inputs -no_clocks]
 set_input_delay -max [expr {$bf_lmax + 250}] -clock core_clk $bf_ins
-set_input_delay -min [expr {$bf_lmin - 50}] -clock core_clk $bf_ins
+set_input_delay -min $bf_lmin -clock core_clk $bf_ins
 set_output_delay -max [expr {250 - $bf_lmax}] -clock core_clk [all_outputs]
 set_output_delay -min [expr {-($bf_lmin + 50)}] -clock core_clk [all_outputs]

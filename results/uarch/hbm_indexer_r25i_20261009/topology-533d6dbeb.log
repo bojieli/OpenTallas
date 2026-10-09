@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys;sys.path.insert(0,"tools");import hbm_accel_die_fp as f;m=f.build(f.R25I);print("NATIVE_BUSES",len([b for b in m["buses"] if b[1]=="index_native"]));print("PATHS",[(p,len(v)) for p,v in m["paths"].items() if p.startswith("idx_")])
+                                                                         ~~~~~~~^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 836, in build
+    m['buses'], m['paths'] = buses(m)
+                             ~~~~~^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 2528, in buses
+    networks(m, sys.modules[__name__], B, P, chain)
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_die_topology.py", line 88, in networks
+    route(f'idx_key_{st}_{p}',1099,(svc.name,f'ki{p}'),
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          (score.name,f'ik@{p*1099}:{(p+1)*1099-1}'),pts)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_indexer_die_topology.py", line 73, in route
+    chain(cid,'index_native',bits,src,dst,pts,path=cid,fc=(bits,),
+    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+          local_src=True,meso_end=True,dom='stream')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1948, in chain
+    st = station(x, y, cid, bits, fa, fb, hor, kind='meso' if last else 'stn',
+                 fifo_bits=(fc[0] if fc else bits) if last else 0, dom=dom)
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1907, in station
+    raise RuntimeError(f'no room for station of {chain} near ({cx:.0f}, {cy:.0f})')
+RuntimeError: no room for station of idx_key_NE_7 near (22973, 23041)

@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.s81.collective_core_sizing.v1",
+  "status": "CANDIDATE_NOT_ADOPTED",
+  "source_commit": "3abd84e2c0faf561e8a1da8238c50799dadf3e03",
+  "measured_predecessor": {
+    "core_um2": 689900.2,
+    "std_um2": 68475.0,
+    "macro_um2": 170324.3,
+    "flops": 94223,
+    "south_pins_per_100_um": 2084
+  },
+  "core_um": [
+    540.0,
+    1360.8
+  ],
+  "area_um2": 734832.0,
+  "area_delta_um2": 44383.85279999998,
+  "slab_um": [
+    1231.392,
+    1369.416
+  ],
+  "replicas": 1,
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_ports": {
+    "macros": 24,
+    "macro_width_bits": 256,
+    "read_capacity_bytes_per_cycle": 768,
+    "write_capacity_bytes_per_cycle": 768,
+    "note": "Physical capacity; finite queues and existing schedule unchanged"
+  },
+  "boundaries_bits_per_cycle": {
+    "vm_in": 592,
+    "vm_out": 2100,
+    "time_slice": 3,
+    "lane_send": 4424,
+    "lane_receive": 4424
+  },
+  "routing": {
+    "vm_layer": "M5",
+    "track_pitch_um": 0.048,
+    "track_stride": 4,
+    "vm_bits": 2695,
+    "span_um": 517.44,
+    "available_um": 534.2,
+    "pins_per_100_um_upper": 522,
+    "gate_pins_per_100_um": 1200,
+    "target_pins_per_100_um": 600
+  },
+  "replication_cost": "Existing eight lane handshakes and output queue fanout; no new mux, demux or storage",
+  "latency": {
+    "physical_footprint_added_cycles": 0,
+    "existing_oqpipe_visibility_edges_per_collective": 1,
+    "pipeline_ii_added_cycles": 0,
+    "cost_row": "coll_core_oqpipe in dsrom_closure_cost_ledger.CANDIDATES",
+    "condition": "Die boundary wire/station latency must be composed separately"
+  },
+  "admission": {
+    "calibrate_ram_gb": 12,
+    "route_ram_gb": 112,
+    "route_peak_measured": false,
+    "basis": "W DRT14,533,068KB scaled by core/W area6.25 plus20% inventory allowance; own core floorplan2,854,364KB"
+  },
+  "gate": "TT setup>=0,FF hold>=0,DRC0,current routed reference; SS sensitivity; die context required"
+}

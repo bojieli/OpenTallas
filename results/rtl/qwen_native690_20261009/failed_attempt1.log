@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/qwen-native690-20261009/tools/qwen_r25_native690_gate.py", line 101, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch/codex/qwen-native690-20261009/tools/qwen_r25_native690_gate.py", line 97, in main
+    else:assert mism>0 or rec['nonfinite']
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

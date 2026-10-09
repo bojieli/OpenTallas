@@ -1,0 +1,10 @@
+PASS full551 payload, pressure, ringwrap, faultfree0replay
+PASS UE NAK replay full551
+PASS reset session, duplicate/stale/corrupt ACK
+PASS bounded retry exhaustion retains owned debt
+PASS full configured replay512 entries, duplicate/stale NAK
+PASS replay SRAM double error faults before emission and retains debt
+PASS_ALL
+rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_link_retry_sram.sv:107: $finish called at 48096000000 (1fs)
+FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_link_retry_sram.sv:39: payload/order expected 1 got 0
+       Time: 155000000  Scope: tb_hbm_link_retry_sram

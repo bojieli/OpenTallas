@@ -1,0 +1,117 @@
+{
+  "captured_at": "2026-10-09T05:54:48.368178+00:00",
+  "host": "ot-epyc1tb",
+  "remote_root": "/srv/opentallas-scratch/claude/bficg",
+  "scope": "Full BF element transaction exactness; does not establish physical closure. Existing terminal verdicts preserved unchanged.",
+  "prepared_package_commit": "6e8f0b698e83f5010050afdbf7cdccde8bdf15e7",
+  "terminal_source_commit": "e4272b562e347dae3ff9662519737fdd17c81c31",
+  "same_tree": {
+    "e4272b562": "ca135505474c57fa6035431c4ab779c7f9383ea6",
+    "6e8f0b698": "ca135505474c57fa6035431c4ab779c7f9383ea6"
+  },
+  "external_artifacts_sha256": {
+    "run_bench.sh": {
+      "bytes": 648,
+      "sha256": "991fd3bb7d128699513ff649a1f7218a8c770de33e389517fe2de7e2b037e319"
+    },
+    "prep/prepared.json": {
+      "bytes": 848891,
+      "sha256": "103b38b83d0240845c8f9be3794cc51168c32c77f72e1c9837026f58b994376e"
+    },
+    "cg0/terminal.json": {
+      "bytes": 1401,
+      "sha256": "f068fadc1ea40f3aefe84fbbf3de2bdf95dd3de9ac141267a9b8a81ee7ea4ecf"
+    },
+    "cg0/positive/build.log": {
+      "bytes": 92684,
+      "sha256": "c300e6cf02b8ee8055122ca5d7b8a1262d93ab2619ee003839a1dfca8b3f6405"
+    },
+    "cg0/positive/run.log": {
+      "bytes": 1819,
+      "sha256": "c2431c61eee3733ddd00cefd6b2f5f0e5c7c5603b5be58799188a22595157f5f"
+    },
+    "cg0/mutant_recut/build.log": {
+      "bytes": 92210,
+      "sha256": "ab5be0bd2a9bf4748b169df2c6c4901e15ba8ee7227a5394a0df02741179cccd"
+    },
+    "cg0/mutant_recut/run.log": {
+      "bytes": 425,
+      "sha256": "d149afd9a747fa0ef9412886babd0c5af2764ea1937346e16ed029d31de3dc6a"
+    },
+    "cg0/mutant_dp/build.log": {
+      "bytes": 92203,
+      "sha256": "0672adceb62fc060c83eda27c088194e03c69cccdb99ce559bbbb3b1c14e6502"
+    },
+    "cg0/mutant_dp/run.log": {
+      "bytes": 424,
+      "sha256": "0d0f0b6300c7c3a2f85ddb42ab76564476fc99ba3c99bbda2467767a0d916cf9"
+    },
+    "qze/terminal.json": {
+      "bytes": 2088,
+      "sha256": "66923e3ce21d03fba2d3bd21e20ffd1d0cc8da5ef90d407da6eaa66465f6d191"
+    },
+    "qze/positive/build.log": {
+      "bytes": 92684,
+      "sha256": "a3016662beb054243d6f6437dc396507d80925f32195bdfaa54953831fd2063b"
+    },
+    "qze/positive/run.log": {
+      "bytes": 1819,
+      "sha256": "0fd6a82f08944fb9341e9033c0c8afa6aa908e522534d56db258574fb35adc29"
+    },
+    "qze/mutant_ze/build.log": {
+      "bytes": 92203,
+      "sha256": "b6b94022ed3f0e078dcfd9f02792a427705ea331d784c0d6c067432dda7d836e"
+    },
+    "qze/mutant_ze/run.log": {
+      "bytes": 1770,
+      "sha256": "0f0b3ef33b7e70dcfb59db29dc9dcc9ad1c735339b627ebb92eba52b5db24041"
+    },
+    "qze/mutant_recut/build.log": {
+      "bytes": 92210,
+      "sha256": "cb4edbd604f7d2f37e9e0eebf750b84035968d2628b5b56f692bc213c2d54683"
+    },
+    "qze/mutant_recut/run.log": {
+      "bytes": 425,
+      "sha256": "d149afd9a747fa0ef9412886babd0c5af2764ea1937346e16ed029d31de3dc6a"
+    },
+    "qze/mutant_dp/build.log": {
+      "bytes": 92203,
+      "sha256": "3709f5d597c64a843273fe25072adad5b20b5cae32816783222bf757c08b8f2c"
+    },
+    "qze/mutant_dp/run.log": {
+      "bytes": 424,
+      "sha256": "0d0f0b6300c7c3a2f85ddb42ab76564476fc99ba3c99bbda2467767a0d916cf9"
+    },
+    "qze/mutant_z/build.log": {
+      "bytes": 92201,
+      "sha256": "6fc89a84d346c9a0b7a46dcf00f5bed2477dc2c577c69e1f59c34fc733935dbd"
+    },
+    "qze/mutant_z/run.log": {
+      "bytes": 622,
+      "sha256": "e9671320ded57c78a2372ce979ea5a2f809ebdd35b3a4b59e76ecb52c613f2fe"
+    }
+  },
+  "excluded_from_commit": "build.log and prepared.json remain remote with SHA256 above; prepared_record.json retains compiler invocation and original source hash inventory.",
+  "checks": {
+    "qze": {
+      "terminal_pass": true,
+      "markers_match_original_run_logs": true,
+      "cases": [
+        "positive",
+        "mutant_dp",
+        "mutant_recut",
+        "mutant_ze",
+        "mutant_z"
+      ]
+    },
+    "cg0": {
+      "terminal_pass": true,
+      "markers_match_original_run_logs": true,
+      "cases": [
+        "positive",
+        "mutant_dp",
+        "mutant_recut"
+      ]
+    }
+  }
+}

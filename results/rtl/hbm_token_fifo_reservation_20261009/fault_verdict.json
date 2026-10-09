@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.hbm.token_fault_pressure.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "output": "PASS full-FIFO MTP fault preserves8 tokens and final zero-token abort\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_token_fault_pressure.sv:35: $finish called at 30858000 (1fs)\n"
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_token_fault_pressure.sv:19: fault record lost/fabricated\n       Time: 27105000  Scope: tb_hbm_token_fault_pressure\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_token_loop.sv": "6a22b46233c8a9f5ccb79559f6920466e61f7a9dcc202285a9b811f36298c294",
+    "rtl/test/hbm_accel/tb_hbm_token_fault_pressure.sv": "1b0d2b946f6c4e928ff330a6ca84ac19fc4b9740cc6ce04e3a8c67ce838f89a2"
+  }
+}

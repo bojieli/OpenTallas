@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen-die-legacy-oom-lineage.v1",
+  "verdict": "OOM_EXIT_137",
+  "host": "ot-epyc3",
+  "container": "qfd_dietop_r22_m8m9_t4p8",
+  "remote_outputs": "/srv/opentallas-scratch/claude/qwen-die-r20/dietop_r21/r22_m8m9_t4p8",
+  "variant": "old r22 physical-PDN route, signals restricted to M8-M9",
+  "owner_trajectory": "Claude qwen-dietop-20261007; queue_r22.sh alternate r22_pdn case",
+  "last_completed_iteration": 5,
+  "stopped_during_iteration": 6,
+  "requested_iterations": 30,
+  "elapsed_seconds": 76604,
+  "max_rss_kib": 136335692,
+  "checkpoint_preserved": {
+    "file": "floorplan_pdn.odb",
+    "bytes": 3043754855,
+    "hardlink_count": 3,
+    "modified_utc": "2026-10-08 10:32",
+    "hash": null,
+    "hash_reason": "No new heavyweight scan of preserved multi-GB checkpoint; remote stat and surviving input recorded."
+  },
+  "completed_global_route_checkpoint": false,
+  "completed_route_guide": false,
+  "source_tcl": "grt.tcl",
+  "current_lineage": {
+    "path": "/srv/opentallas-scratch/claude/qwen-die-r20/r21b",
+    "source": "f4dc31d3d",
+    "instances": 13220,
+    "nets": 8277351,
+    "real_case": "OT_LEGAL instances=13220 overlaps=0 outside=0",
+    "pdn_pass_utc": "2026-10-09 06:52:53",
+    "routing_layers": "M4-M9",
+    "grt_path": "/srv/opentallas-scratch/claude/qwen-die-r20/dietop_r21/r21b_adjfix_t4p8"
+  },
+  "action": "Preserve remote input and raw outputs; do not restart superseded M8-M9 alternate. Continue actual r21b chain and source integration.",
+  "limits": "No die closure claim; OOM evidence says nothing about DRC, final overflow or current successor timing."
+}

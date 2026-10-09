@@ -115,6 +115,11 @@ def main():
                     "goes to the middle channel between the quad rows (r23 GRT: 8.2M overflow, M6-H in the 124 um middle channel)")
     for k, v in dict(NK=4, NC=2, NR=3, PMID=1, NFC=2, NFR=3, NL=6, NI=4).items():
         ap.add_argument(f"--{k}", type=int, default=v)
+    ap.add_argument("--io-place", help="attn-tile 2026-10-08: the tile's io_place tcl; every S/N face pin bank (k/ci/cf) must "
+                    "span its pins (r23h was generated with the r16 --kx/--cx defaults: banks 215-260 um off their pins, "
+                    "503k repair_design buffers, DPL-0033)")
+    ap.add_argument("--q-top", action="store_true", help="attn-tile 2026-10-08: q over the top (the r23 path) even in a taller "
+                    "tile, -583 bits from the middle channel (r23hq, parallel variant to r23h)")
     a = ap.parse_args()
     global TW, CW_, QR_X, QL_X, TH, CH_, QY
     dh = round(a.th - TH, 3)
@@ -187,8 +192,10 @@ def main():
 
     cx = cc_x
     pipe("u_pk", pin["k"], a.NK, 2, 1, [(cx, 25.0)], rc, "k")
-    if a.th > 1349.976 + 1e-6:      # taller tile: q runs the (now wide) middle channel like ri, not over the top
+    if a.th > 1349.976 + 1e-6 and not a.q_top:      # taller tile: q runs the (now wide) middle channel like ri, not over the top
         pipe("u_pq", pin["q"], a.NK, 1, 1, [(TW - 30.0, mc_y), (cx, mc_y)], rc, "q")
+    elif a.q_top and a.th > 1349.976 + 1e-6:   # r23hq: up the E side to the strip above quad row 1, then the r23 path
+        pipe("u_pq", pin["q"], a.NK, 1, 1, [(TW - 60.0, TH - 25.0), (cx, TH - 25.0)], rc, "q")
     else:
         pipe("u_pq", pin["q"], a.NK, 1, 1, [(cx, TH - 25.0)], rc, "q")
     pipe("u_pc", pin["ci"], a.NC, 3, 1, [(cx, 25.0)], rc, "ci")
@@ -245,6 +252,17 @@ def main():
           "  if {[[$ot_i getMaster] isBlock]} { $ot_i setPlacementStatus FIRM }",
           "}",
           f"puts \"OT_DIE_TILE_B_PLACED banks={len(P.banks)}\""]
+    if a.io_place:
+        import re
+        px = {}
+        for ln in open(a.io_place):
+            m = re.search(r"-pin_name \{(\w+)[\[}].*-location \{([\d.]+) ", ln)
+            if m:
+                px.setdefault(m.group(1), []).append(float(m.group(2)))
+        for k, banks in (("k", pin["k"]), ("ci", pin["ci"]), ("cf", pin["cf"])):
+            lo, hi = min(b[0] for b in banks) - SNW / 2, max(b[0] for b in banks) + SNW / 2   # put() returns centres
+            assert lo <= min(px[k]) and max(px[k]) <= hi, (f"{k} pins {min(px[k]):.1f}..{max(px[k]):.1f} "
+                                                           f"outside their pin banks {lo:.1f}..{hi:.1f}: set --kx/--cx")
     open(a.out, "w").write("\n".join(L) + "\n")
     bad = [h for h in hops if h[1] > a.max_hop]
     rec = dict(params={k: getattr(a, k) for k in ("NK", "NC", "NR", "PMID", "NFC", "NFR", "NL", "NI")},

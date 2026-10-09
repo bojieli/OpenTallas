@@ -65,7 +65,71 @@ def cut():
     for n in ('M4', 'M5', 'M6', 'M7', 'M8', 'M9'):
         tg = block.findTrackGrid(layers[n])
         grids[n] = sorted(tg.getGridY() if hdir[n] else tg.getGridX())
+    stats = dict(guided=0, projected=0, nets=0, guides_kept=0, guides_clipped=0, guides_dropped=0, no_track=0,
+                 track_blocked=0, guides_floating=0, nets_bbox_guide=0, guides_lifted=0)
     used = {}
+    # ON-TRACK ACCESS CHECK (2026-10-08, gw_cong DRT-0255 at x 10,599.552 = the region box grown to a kept macro: the
+    # boundary pin sat on that macro's OBS, so the maze router had no way out).  A boundary pin goes only on a track
+    # whose pin box + access stub (depth ACC from the edge), grown by half the wire width + min spacing, is clear of
+    # every same-layer blocker in the edge strip: kept-instance bodies with OBS/pins on that layer, the intruder
+    # obstructions, and the PDN special wires.
+    ACC = um(1.0)
+    strips = {'W': (x0, y0, x0 + ACC, y1), 'E': (x1 - ACC, y0, x1, y1), 'S': (x0, y0, x1, y0 + ACC),
+              'N': (x0, y1 - ACC, x1, y1)}
+    blk = {}
+
+    def add_blocker(ln, bx0, by0, bx1, by1):
+        if ln not in grids:
+            return
+        for edge, (sx0, sy0, sx1, sy1) in strips.items():
+            if hdir[ln] != (edge in ('W', 'E')) or bx0 >= sx1 or bx1 <= sx0 or by0 >= sy1 or by1 <= sy0:
+                continue
+            blk.setdefault((edge, ln), []).append((by0, by1) if edge in ('W', 'E') else (bx0, bx1))
+
+    for i in insts:
+        if i.getName() not in keep:
+            continue
+        m = i.getMaster()
+        lays = {ob.getTechLayer().getName() for ob in m.getObstructions() if ob.getTechLayer() is not None}
+        for mt in m.getMTerms():
+            for mp in mt.getMPins():
+                lays |= {g.getTechLayer().getName() for g in mp.getGeometry() if g.getTechLayer() is not None}
+        b = i.getBBox()
+        for ln in lays:
+            add_blocker(ln, b.xMin(), b.yMin(), b.xMax(), b.yMax())
+    for ob in block.getObstructions():
+        b = ob.getBBox()
+        add_blocker(b.getTechLayer().getName(), b.xMin(), b.yMin(), b.xMax(), b.yMax())
+    for n in block.getNets():
+        if not n.isSpecial():
+            continue
+        for sw in n.getSWires():
+            for sb in sw.getWires():
+                if sb.isVia():
+                    continue
+                if sb.xMax() <= x0 or sb.xMin() >= x1 or sb.yMax() <= y0 or sb.yMin() >= y1:
+                    continue
+                add_blocker(sb.getTechLayer().getName(), sb.xMin(), sb.yMin(), sb.xMax(), sb.yMax())
+    blk_iv = {}
+    for key, iv in blk.items():
+        lay = layers[key[1]]
+        g = lay.getWidth() // 2 + max(lay.getSpacing(), 0)
+        merged = []
+        for a_, b_ in sorted((a_ - g, b_ + g) for a_, b_ in iv):
+            if merged and a_ <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], b_)
+            else:
+                merged.append([a_, b_])
+        blk_iv[key] = ([a_ for a_, _ in merged], [b_ for _, b_ in merged])
+    print('QDR access blockers', json.dumps({f'{e}/{ln}': len(v[0]) for (e, ln), v in sorted(blk_iv.items())}),
+          flush=True)
+
+    def blocked(edge, ln, t):
+        iv = blk_iv.get((edge, ln))
+        if not iv:
+            return False
+        k = bisect.bisect_right(iv[0], t) - 1
+        return k >= 0 and t <= iv[1][k]
 
     def free_track(edge, ln, coord, lo, hi):
         g = grids[ln]
@@ -74,6 +138,9 @@ def cut():
         for d in range(0, len(g)):
             for j in (k - d, k + d):
                 if 0 <= j < len(g) and lo <= g[j] <= hi and j not in s:
+                    if blocked(edge, ln, g[j]):
+                        stats['track_blocked'] += 1
+                        continue
                     s.add(j)
                     return g[j]
         return None
@@ -86,14 +153,66 @@ def cut():
         bt.setIoType('INOUT')
         bp = odb.dbBPin.create(bt)
         if edge == 'W':
-            odb.dbBox.create(bp, lay, x0, t - w // 2, x0 + ln_len, t + w // 2)
+            r = (x0, t - w // 2, x0 + ln_len, t + w // 2)
         elif edge == 'E':
-            odb.dbBox.create(bp, lay, x1 - ln_len, t - w // 2, x1, t + w // 2)
+            r = (x1 - ln_len, t - w // 2, x1, t + w // 2)
         elif edge == 'N':
-            odb.dbBox.create(bp, lay, t - w // 2, y1 - ln_len, t + w // 2, y1)
+            r = (t - w // 2, y1 - ln_len, t + w // 2, y1)
         else:
-            odb.dbBox.create(bp, lay, t - w // 2, y0, t + w // 2, y0 + ln_len)
+            r = (t - w // 2, y0, t + w // 2, y0 + ln_len)
+        odb.dbBox.create(bp, lay, *r)
         bp.setPlacementStatus('FIRM')
+        return (ln, *r)
+
+    lvl = {n: l.getRoutingLevel() for n, l in layers.items()}
+    MIN_LVL, MAX_LVL = lvl['M4'], lvl['M9']          # the region routes M4-M9 (drt_tcl / sta set_routing_layers)
+
+    def low_same_dir(ln):
+        return 'M4' if hdir[ln] == hdir['M4'] else 'M5'
+    TOUCH = um(2.0)
+
+    def connected_guides(net, boxes, pins):
+        """DRT-0218 fix (gw_io / gw_col 2026-10-08: 'Guide is not connected to design'): the clipped guides of a net
+        that leaves and re-enters the window fall into pieces.  Pieces touching no pin (boundary pin on the same layer,
+        or an in-window ITerm within TOUCH) are dropped; a net still in several pinned pieces gets a bounding-box guide
+        on every routing layer (its pieces are joined only outside the window)."""
+        if not boxes:
+            return boxes
+        n = len(boxes)
+        par = list(range(n))
+
+        def find(a):
+            while par[a] != a:
+                par[a] = par[par[a]]
+                a = par[a]
+            return a
+
+        def touch(p, q, g=0):
+            return p[1] <= q[3] + g and q[1] <= p[3] + g and p[2] <= q[4] + g and q[2] <= p[4] + g
+        for a_ in range(n):
+            for b_ in range(a_ + 1, n):
+                p, q = boxes[a_], boxes[b_]
+                if abs(lvl.get(p[0], 0) - lvl.get(q[0], 0)) <= 1 and touch(p, q):
+                    par[find(a_)] = find(b_)
+        its = [('', it.getBBox()) for it in net.getITerms() if it.getInst().getName() in keep]
+        its = [('', r.xMin(), r.yMin(), r.xMax(), r.yMax()) for _, r in its]
+        live = set()
+        for a_ in range(n):
+            if any(pn[0] == boxes[a_][0] and touch(pn, boxes[a_]) for pn in pins) or \
+                    any(touch(it, boxes[a_], TOUCH) for it in its):
+                live.add(find(a_))
+        dropped = sum(1 for a_ in range(n) if find(a_) not in live)
+        stats['guides_floating'] += dropped
+        boxes = [boxes[a_] for a_ in range(n) if find(a_) in live]
+        if len(live) <= 1:
+            return boxes
+        stats['nets_bbox_guide'] += 1
+        allr = [b[1:] for b in boxes] + [p[1:] for p in pins] + [i[1:] for i in its]
+        bx0 = max(x0, min(r[0] for r in allr) - TOUCH)
+        by0 = max(y0, min(r[1] for r in allr) - TOUCH)
+        bx1 = min(x1, max(r[2] for r in allr) + TOUCH)
+        by1 = min(y1, max(r[3] for r in allr) + TOUCH)
+        return [(ln, bx0, by0, bx1, by1) for ln in sorted(layers, key=lambda v: lvl[v]) if MIN_LVL <= lvl[ln] <= MAX_LVL]
 
     def inside(r):
         return r.xMin() >= x0 and r.xMax() <= x1 and r.yMin() >= y0 and r.yMax() <= y1
@@ -101,7 +220,6 @@ def cut():
     def overlaps(r):
         return r.xMin() < x1 and r.xMax() > x0 and r.yMin() < y1 and r.yMax() > y0
 
-    stats = dict(guided=0, projected=0, nets=0, guides_kept=0, guides_clipped=0, guides_dropped=0, no_track=0)
     gwrite = []
     nets_seen = set()
     for i in insts:
@@ -116,10 +234,24 @@ def cut():
             outside = [ot for ot in net.getITerms() if ot.getInst().getName() not in keep]
             guides = list(net.getGuides())
             kept_boxes = []
+            pins = []
             k = 0
             for g in guides:
                 r = g.getBox()
                 ln = g.getLayer().getName()
+                if lvl.get(ln, 99) < MIN_LVL:
+                    # die-gaps 2026-10-08 (HBM r25 hub DRT-0155: a die guide of n_clk_serial on M3, below the region's
+                    # M4-M9 routing range): a guide below M4 is lifted to the lowest allowed layer of its direction
+                    # (M2 -> M4, M3 -> M5) plus M4 so the lifted box still touches the net's M4 guides; DRT reaches
+                    # the M1-M3 pins through its via access.
+                    ln = low_same_dir(ln)
+                    stats['guides_lifted'] += 1
+                    if ln != 'M4' and overlaps(r):
+                        kept_boxes.append(('M4', max(r.xMin(), x0), max(r.yMin(), y0), min(r.xMax(), x1),
+                                           min(r.yMax(), y1)))
+                elif lvl.get(ln, 0) > MAX_LVL:
+                    ln = 'M9'
+                    stats['guides_lifted'] += 1
                 if inside(r):
                     kept_boxes.append((ln, r.xMin(), r.yMin(), r.xMax(), r.yMax()))
                     stats['guides_kept'] += 1
@@ -144,7 +276,7 @@ def cut():
                         stats['no_track'] += 1
                         continue
                     k += 1
-                    make_pin(net, edge, ln, t, k)
+                    pins.append(make_pin(net, edge, ln, t, k))
                     stats['guided'] += 1
             if outside and k == 0:
                 # no guide crosses an edge in its preferred direction: projected pin (the win tool's rule)
@@ -159,10 +291,11 @@ def cut():
                 t = free_track(edge, ln, c, (y0 if edge in ('W', 'E') else x0) + 2 * w,
                                (y1 if edge in ('W', 'E') else x1) - 2 * w)
                 if t is not None:
-                    make_pin(net, edge, ln, t, 1)
+                    pins.append(make_pin(net, edge, ln, t, 1))
                     stats['projected'] += 1
             for g in guides:
                 odb.dbGuide_destroy(g)
+            kept_boxes = connected_guides(net, kept_boxes, pins)
             for ln, a, b_, c, d in kept_boxes:
                 gwrite.append((net.getName(), ln, a, b_, c, d))
     print('QDR pins/guides', json.dumps(stats), flush=True)
@@ -299,7 +432,10 @@ puts OT_FLOW_DONE
 def sta_tcl(corner, para):
     c, C = corner, corner.upper()
     load = ('step load { read_db /work/region.odb }\nset_routing_layers -signal M4-M9 -clock M4-M9\n'
-            'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nstep guides { read_guides /work/route.guide }\n'
+            'source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\n'
+            # read_guides cannot feed estimate_parasitics (GRT-0008: the 'GRT' slacks of regions21g had no wire RC);
+            # re-route the cut region globally (M4-M9, default adjustments) instead
+            'step grt { global_route -congestion_iterations 30 -allow_congestion }\n'
             'step est { estimate_parasitics -global_routing }\n') if para == 'grt' else \
         'step load { read_db /work/routed.odb }\nstep spef { read_spef /work/routed.spef }\n'
     chk = 'max' if c == 'ss' else 'min'

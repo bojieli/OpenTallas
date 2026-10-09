@@ -1,0 +1,14 @@
+{
+  "job": "qfd_crom48-91e710eae-tc-hm10",
+  "host": "ot-epyc2",
+  "source": "91e710eae",
+  "flow_rc": 1,
+  "corner_rc": 1,
+  "failure": "[ERROR MPL-0020] Could not find a macro named g_w[0].g_d[0].u_m.",
+  "scope": "post-synthesis macro placement; no route or timing verdict",
+  "synthesis_success": true,
+  "yosys_peak_MB": 835,
+  "yosys_elapsed_s": 141.01,
+  "original_run_preserved": "/srv/opentallas-data/claude/closure-loop/qfd_crom48-91e710eae-tc-hm10",
+  "repair": "enumerate OpenDB real ROM instances, enforce count48, direct placed coordinates in same approved outline"
+}

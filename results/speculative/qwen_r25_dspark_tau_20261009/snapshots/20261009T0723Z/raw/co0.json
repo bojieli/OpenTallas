@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-tau.v1",
+ "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+ "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+ "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+ "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+ "max_new_tokens": 512,
+ "mode": "non-thinking chat template, greedy",
+ "compute_dtype": "float32",
+ "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
+ "samples": [
+  {
+   "class": "coding",
+   "workload": "reasoning_humaneval",
+   "prompt_id": "HumanEval/31",
+   "thinking": true,
+   "prompt_index": 0,
+   "prompt_tokens": 128,
+   "generated": 512,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.8091872791519434,
+   "tau_bf16_S7_B3": 2.392523364485981,
+   "tau_bf16_S7_B4": 2.7379679144385025,
+   "tau_bf16_S7_B5": 2.9941520467836256,
+   "tau_bf16_S7_B6": 3.103030303030303,
+   "tau_bf16_S7_B7": 3.1604938271604937,
+   "tau_bf16_S7_B8": 3.240506329113924,
+   "tau_bf16_S3_B4": 2.598984771573604,
+   "tau_bf16_S1_B2": 1.7655172413793103,
+   "seconds": 2294.0
+  },
+  {
+   "class": "coding",
+   "workload": "reasoning_humaneval",
+   "prompt_id": "HumanEval/102",
+   "thinking": true,
+   "prompt_index": 1,
+   "prompt_tokens": 121,
+   "generated": 512,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.8056537102473498,
+   "tau_bf16_S7_B3": 2.4150943396226414,
+   "tau_bf16_S7_B4": 2.8131868131868134,
+   "tau_bf16_S7_B5": 2.959537572254335,
+   "tau_bf16_S7_B6": 3.1411042944785277,
+   "tau_bf16_S7_B7": 3.261146496815287,
+   "tau_bf16_S7_B8": 3.282051282051282,
+   "tau_bf16_S3_B4": 2.6666666666666665,
+   "tau_bf16_S1_B2": 1.7263513513513513,
+   "seconds": 1128.3
+  },
+  {
+   "class": "coding",
+   "workload": "reasoning_humaneval",
+   "prompt_id": "HumanEval/17",
+   "thinking": true,
+   "prompt_index": 2,
+   "prompt_tokens": 194,
+   "generated": 512,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 1.8285714285714285,
+   "tau_bf16_S7_B3": 2.3878504672897196,
+   "tau_bf16_S7_B4": 2.8287292817679557,
+   "tau_bf16_S7_B5": 3.059880239520958,
+   "tau_bf16_S7_B6": 3.261146496815287,
+   "tau_bf16_S7_B7": 3.4829931972789114,
+   "tau_bf16_S7_B8": 3.5310344827586206,
+   "tau_bf16_S3_B4": 2.747311827956989,
+   "tau_bf16_S1_B2": 1.7594501718213058,
+   "seconds": 1757.4
+  }
+ ],
+ "fp32_greedy_check": null,
+ "device": "cpu",
+ "prompts_jsonl": {
+  "path": "src/prompts.jsonl.gz",
+  "sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+  "class_map": {
+   "chat": [
+    "chat_mt_bench"
+   ],
+   "reasoning": [
+    "reasoning_math500"
+   ],
+   "coding": [
+    "reasoning_humaneval"
+   ],
+   "agentic": [
+    "agentic_swe_agent",
+    "agentic_tau_bench",
+    "agentic_mind2web"
+   ],
+   "assistant_fc": [
+    "agentic_bfcl",
+    "agentic_json_mode"
+   ]
+  }
+ }
+}

@@ -1,0 +1,196 @@
+{
+  "schema": "opentallas.hbm_iks_native_sram_timed.v1",
+  "source_commit": "2a570d0c0",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "ae114bfda8f2ea931074e8c30131ba389ac29c4f72f3618f1858ef7da4e88ddb",
+    "rtl/test/hbm_accel/ot_hbm_index_lines_sram_binding.sv": "bea840e9cba56345b0e273479ee9d29308021b0dd209a59dcebeb8ed16a2a01b",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "97f85a65d42d8882fdacd40e136a79c00cda6d7fab0a5fb5dd888191f0224073",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv": "b2c66a7f742346de8bae2555494fd9fb709440324cc59f7d13aa9af7a6da868d",
+    "tools/hbm_svc_iks_sram_timed_bench.py": "2b9518eb90a641bd7f571004c4e05e92b43840053730b1b0d4e7dc6e23595b47",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "results/uarch/hbm_index_sram_20261008/prebuild_r2.json": "c1b877c2fff377ac7dc9925c94a34cb56b222fbb23983797cc8c9cd8e643a85a"
+  },
+  "scope": "timed request-level controller; native SRAM substitution and SECDED, no physical signoff or performance adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps",
+  "cases": [
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay1_mut0.log",
+      "raw_sha256": "32a42342b0fef43e00cc67e5847d108dc0290121645fa7e5b490a5faf16758f2",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 456.704,
+          "drain_ns": 457.216,
+          "logical_tbs": 0.407371
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 402.688,
+          "drain_ns": 403.2,
+          "logical_tbs": 0.462015
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 1300,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase1300_delay1_mut0.log",
+      "raw_sha256": "e6cbe8704cb3be60f49f3fe72c36207fe57101d5658618a194ae7dc735235814",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 292.928,
+          "drain_ns": 293.44,
+          "logical_tbs": 0.635132
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 327.04,
+          "drain_ns": 327.552,
+          "logical_tbs": 0.568885
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 2700,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase2700_delay1_mut0.log",
+      "raw_sha256": "025e6ddcc3d8697b06040950e6d12436150afa12d167e9890c698915446e64d8",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 294.528,
+          "drain_ns": 295.04,
+          "logical_tbs": 0.631682
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 328.0,
+          "drain_ns": 328.512,
+          "logical_tbs": 0.56722
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay1_mut0.log",
+      "raw_sha256": "e31c7d3096bb9d40ced6fa7cc5c61965d92faf70727b98104eec9aaa34bef1d8",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 543.744,
+          "drain_ns": 544.256,
+          "logical_tbs": 0.342161
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 317.184,
+          "drain_ns": 317.696,
+          "logical_tbs": 0.586562
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 5500,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase5500_delay1_mut0.log",
+      "raw_sha256": "1b42d241bb3e502fe463dc76bad1491db136673e1a0038d3cef8305c8e33b909",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 294.464,
+          "drain_ns": 294.976,
+          "logical_tbs": 0.631819
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 327.936,
+          "drain_ns": 328.448,
+          "logical_tbs": 0.56733
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 6900,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase6900_delay1_mut0.log",
+      "raw_sha256": "19305b906a8321424a3ac834db440a531921cd7f0e47713a619a6c082dac9bc5",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 296.064,
+          "drain_ns": 296.576,
+          "logical_tbs": 0.628405
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 1034.432,
+          "drain_ns": 1034.944,
+          "logical_tbs": 0.179855
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 23,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay23_mut0.log",
+      "raw_sha256": "2422631d06b389c5c8004344bae1f0687573f88593497e886548194f84a73004",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 2692.096,
+          "drain_ns": 2758.144,
+          "logical_tbs": 0.069109
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 2621.312,
+          "drain_ns": 2687.36,
+          "logical_tbs": 0.070975
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 1,
+      "returncode": 1,
+      "raw_log": "phase0_delay1_mut1.log",
+      "raw_sha256": "0cc09c4400765b05dc93dcec56d25f420575c81a0fae75190a31678d0437db8f",
+      "rows": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_returncode": 0
+}

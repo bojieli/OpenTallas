@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.hbm.native_mtp_transaction.rtl.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "output": "PASS full201 command, ownership, backpressure, fault, reset epoch\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_transaction_join.sv:44: $finish called at 1770000 (1ps)\n"
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_transaction_join.sv:33: stale epoch accepted\n       Time: 700000  Scope: tb_hbm_native_mtp_transaction_join\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_join.sv": "be705ddda730733cc6aabeacee1ffc8a57f328395be305b45ab2bf4f4656215f",
+    "rtl/test/hbm_accel/tb_hbm_native_mtp_transaction_join.sv": "68a8bf3deaa19f25982650e241cf24c96aad3e098a35b0fc19606ec10e36567f"
+  },
+  "scope": "minimum full201 command/tagged ownership mechanism; engine operation translator and finite host queue integration pending"
+}

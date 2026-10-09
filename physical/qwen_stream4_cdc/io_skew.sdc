@@ -7,6 +7,7 @@
 set ot_sk [expr {[info exists ::env(OT_IO_SKEW)] ? $::env(OT_IO_SKEW) : 150}]
 # hold side (coordinator decision 2026-10-06): a 50 ps die-clock IO hold allowance (OT_IO_HOLD_SKEW), not the setup skew
 set ot_hk [expr {[info exists ::env(OT_IO_HOLD_SKEW)] ? $::env(OT_IO_HOLD_SKEW) : 50}]
+set ::ot_hki [expr {[info exists ::env(OT_IO_IN_HOLD_SKEW)] ? $::env(OT_IO_IN_HOLD_SKEW) : 0}]  ;# rule H1: receiver input min carries no hold term (sender output min does)
 sta::worst_slack_cmd max
 unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
@@ -19,7 +20,7 @@ foreach {clk ins outs} {
   set T [get_property [get_clocks $clk] period]
   puts "OT_IO_SKEW $clk ref [get_full_name $ref] L max $lmax min $lmin skew $ot_sk"
   set_input_delay  [expr {0.2*$T + $lmax + $ot_sk}] -max -clock $clk [get_ports $ins]
-  set_input_delay  [expr {$lmin - $ot_hk}]          -min -clock $clk [get_ports $ins]
+  set_input_delay  [expr {$lmin - $::ot_hki}]          -min -clock $clk [get_ports $ins]
   set_output_delay [expr {0.2*$T - $lmax + $ot_sk}] -max -clock $clk [get_ports $outs]
   set_output_delay [expr {-$lmin - $ot_hk}]         -min -clock $clk [get_ports $outs]
 }

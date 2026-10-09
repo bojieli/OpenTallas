@@ -1,0 +1,78 @@
+{
+  "top": "ot_qwen_embed_code_bank_retained",
+  "netlist": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_embed_code_bank_retained-24bd6a53b-tt/routes/qfd_embed_code_bank_retained_24bd6a53b_tt/work/orfs/results/asap7/opentallas_ot_qwen_embed_code_bank_retained_asap7_qdm_qfd_embed_code_bank_retained_24bd6a53b_tt/base/1_2_yosys.v",
+  "verdict": "PASS",
+  "checks": {
+    "fault/fault_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "wp/wp_n": {
+      "primary_FFs": 2,
+      "shadow_FFs": 2,
+      "separate": true
+    },
+    "rp/rp_n": {
+      "primary_FFs": 2,
+      "shadow_FFs": 2,
+      "separate": true
+    },
+    "credits/credits_n": {
+      "primary_FFs": 4,
+      "shadow_FFs": 4,
+      "separate": true
+    },
+    "phase/phase_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "valid_pipe/valid_n": {
+      "primary_FFs": 4,
+      "shadow_FFs": 4,
+      "separate": true
+    },
+    "addr_q/addr_n": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "ce_q/ce_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "iv_q/iv_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "cr_q/cr_n": {
+      "primary_FFs": 1,
+      "shadow_FFs": 1,
+      "separate": true
+    },
+    "ia_q/ia_n": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "fifo[0]/fifo_n[0]": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "fifo[1]/fifo_n[1]": {
+      "primary_FFs": 12,
+      "shadow_FFs": 12,
+      "separate": true
+    },
+    "capture_data": {
+      "capture_FFs": 512
+    },
+    "capture_en_q": {
+      "capture_enable_FFs": 16
+    }
+  }
+}

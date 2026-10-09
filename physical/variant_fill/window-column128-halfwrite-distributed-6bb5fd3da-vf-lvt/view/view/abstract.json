@@ -1,0 +1,60 @@
+{
+  "name": "ot_dsrom_window_column_halfwrite_distributed",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt/routes/window_column128_halfwrite_distributed_6bb5fd3da_vf_lvt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "ot_dsrom_window_column_halfwrite_distributed.lef": "faa5a90fd8adaa2b36554c0e107ac063893d498049fe496cc3b5a82daea8dea0",
+    "ot_dsrom_window_column_halfwrite_distributed_ff.lib": "6dc19ab18563d1c7ebd96e4c78947db889390aca6ab6432c2bfaa9099197b7d1",
+    "ot_dsrom_window_column_halfwrite_distributed_ss.lib": "dfe11a85db3c1496423b892400c1f27d9592018a65e62788f1de9666ad594da1"
+  },
+  "ok": true
+}

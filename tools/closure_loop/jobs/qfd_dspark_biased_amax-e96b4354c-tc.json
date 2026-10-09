@@ -1,0 +1,73 @@
+{
+  "name": "qfd_dspark_biased_amax-e96b4354c-tc",
+  "block": "qfd_dspark_biased_amax",
+  "owner": "Codex:review_qwen_token_path",
+  "purpose": "Full37984-row/rank nativealreadybiasedSUlogits argmax64lanes, global18bitvocabIDs, stable64bitcohort; actual0.9GHzserial domain; S7dispatcher/provider/crossdieintegrationOPEN",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/qwen-q5-ecc-20261009",
+    "commit": "e96b4354c",
+    "required_files": [
+      "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv",
+      "rtl/test/qwen_system/tb_qwen_dspark_biased_amax.sv",
+      "tools/uarch_qwen_dspark_native_model.py",
+      "physical/qwen_die_masters/cfg/qfd_dspark_biased_amax.env",
+      "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+      "physical/qwen_die_masters/signoff/qfd_dspark_biased_amax.sdc"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+    },
+    "route": {
+      "cmd": "SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_dspark_biased_amax {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 16
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_dspark_biased_amax --out {RUN}/record/views/qfd_dspark_biased_amax --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_dspark_biased_amax.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+    "enabled": false,
+    "reason": "new HCLK leaf pathfinding only; preserve166.667ps outside+90ps clock skew+50ps hold; no parent adoption before model/control binding"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_dspark_native_20261009/qfd_dspark_biased_amax-e96b4354c-tc"
+    },
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    }
+  ],
+  "cycles_added": "Separatepass594+7=601serialcycles/rank, S7=4207serialcycles=4674.444ns; nativeSUtapoverlapnotcrediteduntilmeasured.",
+  "merge_target": "main",
+  "no_bench_reason": "Ownerapproved exactness+physical inparallel: real64laneRTLelaboratedEPYC2. Nativefull37984row all4ranks positive+negative remoteadmittedcampaign live handle482388; firstfixtureFAIL(retained) wrongly demandedpositive0 winner insteadactualfirstnegative0. RTLunchanged; correctedfixture pending. Physicalineligible until exactandmutants pass."
+}

@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "ot_hdc_v41_fh_sram_lane_hardened",
+ "orfs_dir": "/srv/opentallas-data/claude/closure-loop/dsfh-sramlane-tc-6ce4b64fd-lvt/routes/dsfh_sramlane_tc_6ce4b64fd_lvt/work/orfs",
+ "post_sdc": "physical/dsrom_fh_hardened_lane/boundary.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-6.071404490270993e-11",
+  "ws_min": "-2.9966584769169913e-12"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "5.214584319901405e-11",
+  "ws_min": "1.8671064694331108e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "1.3407996934944322e-11",
+  "ws_min": "3.4227745637771534e-11"
+ },
+ "files": {
+  "ot_hdc_v41_fh_sram_lane_hardened.lef": "242f6d49918660635c61ff41e51a05b1edbeacd28a3c8507d16a548dce68a50e",
+  "ot_hdc_v41_fh_sram_lane_hardened_ff.lib": "bcef508d126bedf45da18198af31f01a85f0eb86cfad5ab5c1d8c0dd55621215",
+  "ot_hdc_v41_fh_sram_lane_hardened_ss.lib": "037c2e2b9783c8e5596bc0dcbbfdd54471d639281d76ecccdd82b33307790657",
+  "ot_hdc_v41_fh_sram_lane_hardened_tt.lib": "598adf741c851fc2c833fbf562a2af818f6ed209726c93e3fdc21840d3cd7a32"
+ }
+}

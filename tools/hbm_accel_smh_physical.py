@@ -325,7 +325,7 @@ def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io
                f"set elem_in [get_ports {{{elem[0]}}}]",
                f"set elem_out [get_ports {{{elem[1]}}}]",
                "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
-               "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+               "set_input_delay -min [expr 833 * 0.2] -clock nbr_clk $elem_in   ;# RULE H1: hold_io on the sender output min only",
                "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
                "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out"]
         base = base.replace(f"set nbr_in [get_ports {{{nbr[0]}}}]", "\n".join(add) + f"\nset nbr_in [get_ports {{{nbr[0]}}}]")
@@ -388,7 +388,8 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          f"set dlo {float(lat) - float(lat_ff):g}",
          "# (margin rule, clarified 2026-10-06) setup: abutting ports between pieces of one element (one clock region)",
          "# budget the region pair skew + 25 (skew); the element pins cross a die wire to another region (die_skew).",
-         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io), closed by hold repair.",
+         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io) on the SENDER output min only (rule H1,",
+         "# h1-verify 2026-10-08: the receiver input min carried it too), closed by hold repair.",
          f"set skew {skew}",
          f"set die_skew {die_skew}",
          f"set hold_io {hold_io}",
@@ -404,7 +405,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
               "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
-              "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr 833 * 0.2] -clock nbr_clk $elem_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
               "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
@@ -420,7 +421,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
               "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
               "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
-              "set_input_delay -min [expr 30 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_input_delay -min 30 -clock core_clk -reference_pin $refpin $nbr_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
               "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
               "set_load 2.0 [all_outputs]",
@@ -428,7 +429,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     else:
         s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
           "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
-          "set_input_delay -min [expr 30 - $hold_io] -clock nbr_clk $nbr_in",
+          "set_input_delay -min 30 -clock nbr_clk $nbr_in   ;# RULE H1: hold_io on the sender output min only",
           "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
           "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
@@ -1061,7 +1062,27 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
     (work / "run.sh").chmod(0o755)
 
 
+SIGNOFF_HOLD_UNC_PS = 25.0   # set_clock_uncertainty -hold of the generated SDC (sign-off at FF)
+
+
+def loop_hold_margin(arg_ps, env=None):
+    """ORFS HOLD_SLACK_MARGIN (ps) for this piece.  The closure loop exports HM (ns: spec route_hold_margin_ns, default
+    HM_MM 0.050) to every calibrate / route stage; a piece routed with its own --hold-margin 25 ignored it (redesign-0315,
+    hbm_smh_front_s m3f/m3g: FF -18..-28).  When HM is set the repair aims HM + the sign-off hold uncertainty (50 + 25 =
+    75 ps), never below an explicit larger --hold-margin."""
+    hm = (os.environ if env is None else env).get("HM", "").strip()
+    if not hm:
+        return arg_ps
+    try:
+        want = float(hm) * 1000.0 + SIGNOFF_HOLD_UNC_PS
+    except ValueError:
+        return arg_ps
+    return f"{max(float(arg_ps), want):g}"
+
+
 def cmd_block(a):
+    a.hold_margin = loop_hold_margin(a.hold_margin)
+    print(f"HOLD_SLACK_MARGIN {a.hold_margin} ps (loop HM={os.environ.get('HM', '')} ns)")
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM
@@ -1127,7 +1148,7 @@ def cmd_block(a):
         if a.piece == "front_c":
             macros = [SRAM_R]
             mw, mh = 96.552, 69.66
-            ch = 120.0
+            ch = float(g.get("front_channel_um", 120.0))
             xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
             y0 = qd(h / 2 - 2.5 * (mh + 4.32))
             tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
@@ -1139,7 +1160,27 @@ def cmd_block(a):
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
-        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
+        hops = STRIP_HOPS[a.piece]
+        if g.get("front_channel_um", 120.0) != 120.0:
+            if a.piece == "front_c":
+                shift = w - 432.0
+                channel = float(g["front_channel_um"])
+                def widen_hop(match):
+                    prefix, xlo, xhi, suffix = match.groups()
+                    xlo, xhi = float(xlo), float(xhi)
+                    if "g_bs" in prefix and "1" in prefix or "g_h" in prefix and ("2" in prefix or "3" in prefix):
+                        xlo += shift; xhi += shift
+                    elif xlo >= 152 and xhi <= 272:
+                        xlo = w / 2 + (xlo - 212) * channel / 120
+                        xhi = w / 2 + (xhi - 212) * channel / 120
+                    elif "u_prd" in prefix:
+                        xhi += shift
+                    return f"{prefix} {xlo:g} {xhi:g}{suffix}"
+                hops = re.sub(r"^(ot_place \{[^\n]*?\}) ([0-9.]+) ([0-9.]+)( [0-9.]+ [0-9.]+)$", widen_hop, hops, flags=re.M)
+                # Converter register stations beside skid/issue, in the enlarged
+                # macro corridor. Pin-facing register placement remains literal.
+                hops += f"ot_place {{^g_int8\\.}} {w/2-channel/2:g} {w/2+channel/2:g} 100 140\n"
+        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + hops)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
         pos, die, hcore = floorplan(g)
@@ -1150,7 +1191,7 @@ def cmd_block(a):
         mw, mh = 96.552, 69.66
         # the 2 x 5 ring macros: slice mb in row mb, group 0 left (MY: pins on its right edge) and group 1 right (R0:
         # pins on its left edge), both facing a central channel where the bulk copy's queue and control sit
-        ch = 120.0
+        ch = float(g.get("front_channel_um", 120.0))
         xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
         y0 = qd(h / 2 - 2.5 * (mh + 4.32))
         tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
@@ -1183,6 +1224,15 @@ def cmd_block(a):
         with (work / "config.mk").open("a") as f:
             f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_csnk_ne.sv\n"
                     "export VERILOG_DEFINES += -DOT_SMH_RCH_NONEMPTY\n")
+    int8_enabled = any(x == "ENABLE_INT8=1" for x in (a.top_param or []))
+    if int8_enabled:
+        if a.piece != "front_c":
+            raise ValueError("ENABLE_INT8 belongs to the central strip candidate")
+        with (work / "config.mk").open("a") as f:
+            f.write("export VERILOG_FILES += /src/rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv\n")
+    if getattr(a, "hold_mm", False):
+        with (work / "config.mk").open("a") as f:
+            f.write("export OT_HOLD_MM = 1\n")
     write_abstract(work, name, macros, name)
     if a.top_param:
         # e.g. --top-param REQCR=1: the hardened master built with a non-default parameter (ORFS VERILOG_TOP_PARAMS)
@@ -1193,6 +1243,14 @@ def cmd_block(a):
            make_extra=(mx + " ") if mx else "")
     (work / "geometry.json").write_text(json.dumps(dict(piece=a.piece, variant=a.variant, die=die, geom=g,
                                                         pins=len(pins)), indent=1) + "\n")
+    if getattr(a, "hold_mm", False):
+        script = work / "run.sh"
+        content = script.read_text()
+        hook = "python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts; "
+        token = "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make"
+        if content.count(token) != 1:
+            raise ValueError("multi-mode container patch anchor missing")
+        script.write_text(content.replace(token, hook + token))
     print(f"wrote {work}: {name} {a.variant} die {die} pins {len(pins)} macros {len(macros)}")
 
 
@@ -1309,6 +1367,7 @@ def main(argv=None):
     b.add_argument("--no-admit", action="store_true", help="run without /srv/opentallas-scratch/admit.sh (the closure "
                    "loop does its own admission)")
     b.add_argument("--make-var", action="append", default=None, help="extra NAME=VALUE on the ORFS make line")
+    b.add_argument("--hold-mm", action="store_true", help="opt-in SS setup/FF hold multi-mode flow repair")
     b.add_argument("--top-param", action="append", default=None, help="NAME=VALUE parameter of the hardened master")
     b.add_argument("--rch-nonempty", action="store_true", help="opt-in front_s cached-nonempty request FIFO candidate")
     t = sub.add_parser("top")

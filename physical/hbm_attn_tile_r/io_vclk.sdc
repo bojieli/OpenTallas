@@ -10,6 +10,6 @@ set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock core_clk $ot_in
 unset_output_delay -clock core_clk [all_outputs]
 set_input_delay -max 300 -clock vclk $ot_in
-set_input_delay -min -150 -clock vclk $ot_in
+set_input_delay -min 0 -clock vclk $ot_in
 set_output_delay -max 300 -clock vclk [all_outputs]
 set_output_delay -min -150 -clock vclk [all_outputs]

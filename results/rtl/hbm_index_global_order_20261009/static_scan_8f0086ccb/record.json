@@ -1,0 +1,31 @@
+{
+  "source_commit": "8f0086ccb",
+  "bench_commit": "826c648fc",
+  "source_sha256": "14fd4e92a194b419937eab4e015a962f267d8603a2d3a3d9b74c257ab13d3693",
+  "bench_sha256": "044588bddab4aef67fd72862b2bb4816fdc0a0efc2aa4769fb9716fa13979b95",
+  "passed": true,
+  "results": {
+    "positive": {
+      "compile_rc": 0,
+      "run_rc": 0,
+      "output": "PASS_GLOBAL_ORDER ranks=96 tuples=131072 actual_reads=131264 cycles=1059467\n/srv/opentallas-scratch/codex/hbm-index-global-final-r1/tb_hbm_index_global_order.sv:63: $finish called at 882893622981 (1fs)\n"
+    },
+    "wrong-rank": {
+      "compile_rc": 0,
+      "run_rc": 0,
+      "output": "EXPECTED_BAD_IDENTITY_REJECT received=0\n/srv/opentallas-scratch/codex/hbm-index-global-final-r1/tb_hbm_index_global_order.sv:57: $finish called at 22083351 (1fs)\n"
+    },
+    "future-id": {
+      "compile_rc": 0,
+      "run_rc": 0,
+      "output": "EXPECTED_BAD_IDENTITY_REJECT received=0\n/srv/opentallas-scratch/codex/hbm-index-global-final-r1/tb_hbm_index_global_order.sv:57: $finish called at 22083351 (1fs)\n"
+    },
+    "skip-id": {
+      "compile_rc": 0,
+      "run_rc": 1,
+      "output": "FATAL: /srv/opentallas-scratch/codex/hbm-index-global-final-r1/tb_hbm_index_global_order.sv:58: unexpected order fault at 1\n       Time: 687083883  Scope: tb_hbm_index_global_order\n"
+    }
+  },
+  "scope": "Full96 protected head seats, finite delayed provider and 80% output stalls; actual publication store and production binding remain absent.",
+  "assessment_correction": "Runner expected output-comparison text; actual mutation fails earlier on retained order invariant at tuple1. Original false runner verdict preserved; no simulation rerun."
+}

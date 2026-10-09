@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 5359, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 5229, in main
+    m = build()
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 399, in build
+    return build_r8(variant)
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 3032, in build_r8
+    buses_r8(m)
+    ~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 3398, in buses_r8
+    _hop_fix(m, P)
+    ~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_fulldie.py", line 3750, in _hop_fix
+    assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
+           ^^
+AssertionError: ('rt_0_8a_y1', ('y_rt_0_8a_1', 'i'), 0, 1, 773.7, (12651.108, 4665.6), (12861.060000000001, 5229.36), (12861.1, 4842.5), (12651.108, 4665.6), 'frame_0', 410.0, 17.256, 17.256, {'nxt': (12861.060000000001, 5229.36), 'nreach': 426.8560000000002})

@@ -1,0 +1,22 @@
+make: Entering directory '/srv/opentallas-data/codex/hc-row-shard-r2/90c290853/scratch/obj'
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -include Vtb_hbm_hc_row_projection__pch.h.slow -c Vtb_hbm_hc_row_projection_vm_classes_Slow_0.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -include Vtb_hbm_hc_row_projection__pch.h.slow -c Vtb_hbm_hc_row_projection_vm_classes_Slow_1.cpp
+g++   -I.  -MMD -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include -I/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable      -include Vtb_hbm_hc_row_projection__pch.h.slow -c Vtb_hbm_hc_row_projection__Syms__Slow.cpp
+cc1plus: error: one or more PCH files were found, but they were invalid
+cc1plus: note: use ‘-Winvalid-pch’ for more information
+<command-line>: fatal error: Vtb_hbm_hc_row_projection__pch.h.slow: No such file or directory
+compilation terminated.
+cc1plus: error: one or more PCH files were found, but they were invalid
+cc1plus: note: use ‘-Winvalid-pch’ for more information
+<command-line>: fatal error: Vtb_hbm_hc_row_projection__pch.h.slow: No such file or directory
+compilation terminated.
+make: *** [/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk:296: Vtb_hbm_hc_row_projection__Syms__Slow.o] Error 1
+make: *** Waiting for unfinished jobs....
+cc1plus: error: one or more PCH files were found, but they were invalid
+cc1plus: note: use ‘-Winvalid-pch’ for more information
+<command-line>: fatal error: Vtb_hbm_hc_row_projection__pch.h.slow: No such file or directory
+compilation terminated.
+make: *** [/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk:296: Vtb_hbm_hc_row_projection_vm_classes_Slow_0.o] Error 1
+make: *** [/home/ubuntu/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.mk:296: Vtb_hbm_hc_row_projection_vm_classes_Slow_1.o] Error 1
+rm Vtb_hbm_hc_row_projection__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-data/codex/hc-row-shard-r2/90c290853/scratch/obj'

@@ -1,0 +1,9 @@
+Full-shape fused-head endpoint r6 FPIPE3, route source 60f5a0a9050fcea5f5db815d4b72c04144730c70.
+The original real-clock IO SDC retained calibration SS736/FF478 after routing changed boundary insertion to TT491.7/FF397.2.
+io_ref_routed moves virtual clocks; it does not update real-clock input/output delays. The stale model hid input hold and overstated output setup margin.
+Opt-in FH_ROUTED_BOUNDARY=1 updates real-clock delays from each routed corner while retaining 250ps setup IO windows, sender-only 50ps hold, and 60/25ps clock uncertainty.
+Original TT+3.14/FF-82.55 changes to TT+158.92/FF-19.23. Corrected TT input+247.40/internal+224.98/output+158.92; corrected FF input-19.23/internal-4.25/output-1.80.
+This fresh result FAILS hold and is preserved. A remote admitted postroute ECO is active on the same full-shape route.
+No RTL change, arithmetic change, new flops, new latency, or new clocks. No numerical proof rerun is required for this constraint-reference repair.
+Prior exact source binding: results/rtl/dsrom_fh_redesign_20261006/gold4_fpipe3/clean_cf14728ff/harvest_validation.json (route RTL matches checked run; five draft tokens, zero VM mismatches, FPIPE3 already priced +25cycles vs FPIPE2).
+No final closure or half-rate die-crossing qualification is claimed by this failed pre-ECO measurement.

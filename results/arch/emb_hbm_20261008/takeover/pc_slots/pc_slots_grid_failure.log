@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-geometry-grid92/pc_slots.py", line 14, in <module>
+    r=plan_slots(v,m)
+  File "/srv/opentallas-scratch/codex/emb-geometry-grid92/src/tools/qwen_system/embedding_pc_slots.py", line 15, in plan_slots
+    raise ValueError('PC composite frame must be on the placement lattice')
+ValueError: PC composite frame must be on the placement lattice

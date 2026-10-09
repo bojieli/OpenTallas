@@ -1,0 +1,87 @@
+{
+  "source_sha256": "60db8b20cb40b81ae1731e3d7edc02491a642a4ccdd84d072be5b086b96a792d",
+  "bench_sha256": "1e5686b2cd571a2c7d48a214a587fb13db162a5f3cb25e0393ee185e214b0f8b",
+  "checks": {
+    "positive": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive/gate.vvp"
+      ]
+    },
+    "positive_prefetch": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive_prefetch/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive_prefetch/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/positive_prefetch/gate.vvp"
+      ]
+    },
+    "negative_prefetch_identity": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/negative_prefetch_identity/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/negative_prefetch_identity/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/negative_prefetch_identity/gate.vvp",
+        "+BAD_PREFETCH"
+      ]
+    },
+    "generation_drop": {
+      "compile_returncode": 0,
+      "run_returncode": 1,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/generation_drop/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/generation_drop/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-prefetch-r2/generation_drop/gate.vvp"
+      ]
+    }
+  },
+  "passed": true,
+  "scope": "24 dynamic frames,48 full342b masks,24 source starts/receipts; publication stalls and retained return debt. Control only; production query/VM/TU joins and physical qualification remain incomplete."
+}

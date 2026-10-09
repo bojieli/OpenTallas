@@ -1,0 +1,20 @@
+{
+  "status": "COMPILER_MECHANISM_PASS_PRODUCTION_NATIVE_BINDINGS_BLOCKED",
+  "host": "ot-agidock128",
+  "admission": "admit.sh1",
+  "source_sha256": {
+    "tools/s81_ctrl/native_descriptors.py": "56f8927e0e8cab4c45366b99175dbad2353b8dbf3c0c44b14ef639ff622c6038",
+    "tools/s81_ctrl/native_registry.json": "2ce5332a053a99b47733660d63c437a04666dbba3a3d3b96d0dbdb09556aa211",
+    "tools/s81_ctrl/test_native_descriptors.py": "9e9bc8d106a6cbc0659a66195e7615eebfc943bb2ac8ffb8d34deeb6d50046f1",
+    "tools/s81_ctrl/stage_programs.py": "96e617b559d15a7e32f35d4421ab14b3707fa7e7954000afd83a7a3505ee8beb"
+  },
+  "fullwidth_signal_checks": 13,
+  "payload_bits": 512,
+  "position_bits": 21,
+  "scope": "Synthetic fixture proves lossless named signal packing, bounds/opcode/source checks and atomic failclosed. It is not production engine execution proof. Actual59 stage schedule fails native compilation because authoritative perengine operation/program/vector address bindings do not yet exist. No native dispatch rows emitted.",
+  "logs": [
+    "native_descriptor_mechanism.log",
+    "native_program_blocked.log"
+  ],
+  "remote_production_blocked_manifest": "/srv/opentallas-scratch/codex/ds-control/compiler-test/native_dispatch.json"
+}

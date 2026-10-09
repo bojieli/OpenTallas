@@ -3,7 +3,14 @@
 // engine with SRAM FIFOs, VM input queues, output packer) + pin registers.  Lane interfaces lo (core -> lane i) /
 // li (lane i -> core) through 2-slot skids at this tile's pins (valid / data / ready all registered), lane faults
 // registered at the pin.  VM side as the v1 slab: f_vm / ts captured at the pin, t_vm from the core's register.
-module dsfd_coll_core (
+module dsfd_coll_core #(
+`ifdef OT_S81PH_COLL_OQPIPE
+    parameter integer OQPIPE = 1,     // CLAUDE safe-s81 2026-10-08 S-D4 (ot_s81ph_coll_core OQPIPE): +1 cycle on t_vm
+`else
+    parameter integer OQPIPE = 0,
+`endif
+    parameter integer UNUSED_P = 0
+) (
     input  wire [0:0]        ck,
     input  wire [0:0]        rs,          // stream reset (async assert), synchronised here
     input  wire [591:0]      f_vm,
@@ -34,7 +41,7 @@ module dsfd_coll_core (
         ot_s81ph_skid2 #(.W(553)) u_si (.clk(clk), .rst_n(rst_n), .in_v(li_v[l]), .in_r(li_r[l]), .in_d(li_d[l*553 +: 553]),
             .out_v(x_li_v[l]), .out_r(x_li_r[l]), .out_d({x_li_l[l], x_li_d[l*552 +: 552]}));
     end endgenerate
-    ot_s81ph_coll_core #(.EXT(1)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
+    ot_s81ph_coll_core #(.EXT(1), .OQPIPE(OQPIPE)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
         .ts(ts_r), .t_vm(t_vm), .fault(), .rank(), .eng_en(),
         .x_lo_v(x_lo_v), .x_lo_r(x_lo_r), .x_lo_d(x_lo_d), .x_lo_l(x_lo_l),
         .x_li_v(x_li_v), .x_li_r(x_li_r), .x_li_d(x_li_d), .x_li_l(x_li_l), .x_lflt(flt_r));

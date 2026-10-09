@@ -1,0 +1,22 @@
+{
+  "source_commit": "ec8174332",
+  "host": "ot-epyc2",
+  "pid": 3549079,
+  "remote_root": "/srv/opentallas-scratch/codex/qwen-fmt3-ec8174332",
+  "source_inventory": "tools/closure_loop/source_inventories/hbm_smh_area.json",
+  "archive_paths": 62,
+  "admission": "/srv/opentallas-scratch/admit.sh 64 -- python3 src/tools/qwen_r25_fmt3_physical.py --out run --source-commit ec8174332",
+  "admission_basis": "existing front_c physical inventory uses 64 GiB; measured host available368 GiB and752 GiB disk; guard retains100 GiB cushion",
+  "last_verified_process": "live Python driver; calibration Docker synthesis progressing at ABC top-module extraction",
+  "phase_at_receipt": "calibration",
+  "terminal_verdict": null,
+  "qualification": "unqualified until source-pinned SS>=15ps FF>=15ps DRC0 evidence exists",
+  "clock_period_ps": 833,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "setup_route_corner": "WC (SS)",
+  "hold_route_corner": "BC (FF), own scene constraints",
+  "fixed_pin_abi": "432x518.4um central front strip,12372pins;calibration and route pin files must match",
+  "exact_gates": "both adapter and canonical image gates passed remotely before CTS/P&R",
+  "no_existing_job_restart": true
+}

@@ -80,7 +80,7 @@ def main():
     tr, tk = {}, {}
     for n in tn:
         # (a76724a9c put the macro under a BAW generate scope g_f/g_h: allow one optional generate level)
-        m = re.fullmatch(r'\w*g_col__BRA__(\d+)__KET____DOT__g_bank__BRA__(\d+)__KET____DOT__'
+        m = re.fullmatch(r'\w*g_colh?__BRA__(\d+)__KET____DOT__g_bank__BRA__(\d+)__KET____DOT__'
                          r'(?:g_[A-Za-z0-9]+__DOT__)?u_rom__DOT__arr', n)
         if m:
             tr[(int(m.group(1)), int(m.group(2)))] = n

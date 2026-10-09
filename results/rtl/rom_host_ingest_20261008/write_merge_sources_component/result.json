@@ -1,0 +1,19 @@
+{
+  "schema": "opentallas.hbm-write-merge-sources.v1",
+  "pass": true,
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0
+    },
+    {
+      "name": "wrong_owner",
+      "returncode": 1
+    }
+  ],
+  "scope": "291bit arbitration with atomic owner2 transport, source-owned completion counts supplied by full32PC ledger. Registered ingress1cycle; alreadyqueued background service requests remain ahead of subsequentWB until FIFO drain, at most8queued+1pending serviceintervals. ActualPC ledger stalls on its8entrycapacity. No complete die/route claim.",
+  "input_sha256": {
+    "rtl/hbm_accel/ingest/ot_hbm_write_merge_sources.sv": "90ad19b597ad8d0e47d5124f390dc256885e33db98c8981d024ba6e7bb4ecb92",
+    "rtl/test/tb_hbm_write_merge_sources.sv": "268cc89fa5485a45c312ec3884ae642d75fec6b865fb2fbd118a709f1c0127ac"
+  }
+}

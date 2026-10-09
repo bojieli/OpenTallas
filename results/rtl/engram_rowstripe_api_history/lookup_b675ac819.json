@@ -1,0 +1,69 @@
+{
+ "schema": "opentallas.engram-rowstripe-lookup-gate.v1",
+ "boundary": "one full six-column lookup/hardened credit wrapper/read service, eight sequential static layer/rank straps; synthetic row content, released hash/CRC/addresses; no physical/die claim",
+ "input_sha256": {
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+  "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv": "64f357c0450b003be4739a2c67f4ffa7eccc7b2ba9cc6ee39fac74d6310e5829",
+  "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv": "0a7390bfae1e161def62f335e8ebdda9812a8bc572394fdbe5c619edd72969be",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "8b54008d8c5085c1209153cdf82c62e5340b689a614f8d5b0811be2931dc957b",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_service.sv": "7ca0b2b3babc0f2542ea38aaae3b6daf518ae557ce4902e0d6d7a188818a5e0d",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/test/tb_dsrom_engram_rowstripe_lookup.sv": "1e6197b47a232335f803da938b898f0cb61748f51d87753a29de067366817f90",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "781cea6a31cdb092bfb506fb287b7320ba32bfae206eae9467d97a4e98971186",
+  "tools/engram_boot_image.py": "f6c96ee8bfb5d5d0a3fbe13f884c8f1182e7a8c0d9508786b281ebc32f7ee1b3",
+  "tools/engram_rowstripe_lookup_gate.py": "cf88f8746d5c4d6791ba7e1d6db83c705993d84d94d6a9a5719da7eca0e40d86"
+ },
+ "cases": {
+  "L0_R0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=0 rank=0 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L0_R1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=0 rank=1 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L0_R2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=0 rank=2 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L0_R3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=0 rank=3 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L1_R0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=1 rank=0 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L1_R1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=1 rank=1 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L1_R2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=1 rank=2 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "L1_R3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_ROWSTRIPE_LOOKUP PASS layer=1 rank=3 rows=6 atoms=54 beats=48 crc=6 golden=1 cycles=176\n- /srv/opentallas-scratch/claude/engram/row-lookup-b675ac819/rtl/test/tb_dsrom_engram_rowstripe_lookup.sv:64: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

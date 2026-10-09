@@ -3,6 +3,19 @@
  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_stn_stn_r33_30f87bcc4-lbc/routes/hbm_stn_stn_r33_30f87bcc4_lbc/signoff",
  "sdc": "# hfd_stn_r33: forwarded clocks (one per 512 b slice and direction), the local clock ck, the meso\n# crossings (max 356.667 / min 0 ps ignoring latency, the closed ot_meso_fifo W512 D4 contract), io budget 0.2 T.\nset_max_fanout 32 [current_design]\ncreate_clock -name ck -period 833.333 [get_ports {ck[0]}]\ncreate_clock -name vclk -period 833.333\nset_clock_latency 132 [get_clocks vclk]\ncreate_generated_clock -name o_b512 -source [get_ports {ck[0]}] -master_clock ck -divide_by 1 [get_ports {b[512]}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_input_d",
  "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries) on the same 6_final odb/sdc/spef (closure-loop re-STA 2026-10-07 20:30 PT, EPYC1 run dir corner_sta.json.tt.json)",
+  "worst_slack_ps": 87.71,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": Infinity,
+  "worst_input_to_reg_slack_ps": 275.579102,
+  "worst_output_port_slack_ps": -588.661316,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tcl_sha256": "7155b9695a242538f9620bc18603889ac2751ee572d9a5787b9d8d3bf94ef589"
+ },
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
@@ -53,6 +66,7 @@
   ]
  },
  "tool_sha256": "2e5a97c1fa683d2e37618606895758fe31e53a820915b1e6015e99178b1916b3",
- "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
- "closes_signoff": true
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "closes_signoff": true,
+ "ss_sensitivity": 37.48
 }

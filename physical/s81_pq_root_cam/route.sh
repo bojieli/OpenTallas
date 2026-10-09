@@ -5,7 +5,7 @@
 set -u
 lab=$1; w=128; shift
 W=$OUT/$lab; mkdir -p $W; cd $SRC
-L=${CK_SS_MEAN:-0}; FMIN=${CK_FF_MIN:-0}; FMAX=${CK_FF_MAX:-0}
+L=${CK_SS_MEAN:-0}; FMIN=${CK_FF_MIN:-0}; FMAX=${CK_FF_MAX:-0}; FMID=${CK_FF_MEAN:-$(awk "BEGIN{print ($FMIN+$FMAX)/2}")}
 # Zero insertion is ONLY the initial calibration coordinate, never sign-off.
 if [[ -z "${CK_SS_MEAN+x}" && "$*" != *"--pnr-stop-after cts"* ]]; then
   echo "missing calibrated CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX" >&2; exit 2
@@ -25,9 +25,10 @@ unset_input_delay -clock core_clk \$ot_in
 unset_output_delay -clock core_clk [all_outputs]
 set_input_delay 333.5 -clock vclk \$ot_in
 set_output_delay 274.5 -clock vclk [all_outputs]
-set_input_delay -min [expr {$FMAX - $L + 32.2 - 50}] -clock vclk \$ot_in
+set_input_delay -min [expr {$FMID - $L + 32.2}] -clock vclk \$ot_in
 # CLAUDE s81-blocks: sign fixed (was FMIN - L + 65: required = L + 25 - min must equal the sign-off FMIN + 50 - 15)
-set_output_delay -min [expr {$L - $FMIN - 10}] -clock vclk [all_outputs]
+# RULE H1 (h1-verify 2026-10-08): capture at the FF mean leaf FMID + 50 - 15
+set_output_delay -min [expr {$L - $FMID - 10}] -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ss.sdc <<EOT
 create_clock -name core_clk -period 833.333 [get_ports clk]
@@ -46,14 +47,15 @@ set_output_delay -min 15 -clock vclk [all_outputs]
 EOT
 cat > $C/signoff_ff_guarded.sdc <<EOT
 if {[llength [get_libs -quiet *_FF_*]]} {
-set_clock_latency $FMIN [get_clocks vclk]
+# RULE H1 (h1-verify 2026-10-08): outputs vs the FF mean leaf + 50 (sender, latest capture); inputs launch at the FF mean, 25 (receiver)
+set_clock_latency $FMID [get_clocks vclk]
 create_clock -name vclki -period [get_property [get_clocks core_clk] period]
-set_clock_latency $FMAX [get_clocks vclki]
+set_clock_latency $FMID [get_clocks vclki]
 set ot_in [all_inputs -no_clocks]
 unset_input_delay -clock vclk \$ot_in
 set_input_delay 333.5 -clock vclki \$ot_in
 set_input_delay -min 32.2 -clock vclki \$ot_in
-set_clock_uncertainty -hold 50 -from [get_clocks vclki] -to [get_clocks core_clk]
+set_clock_uncertainty -hold 25 -from [get_clocks vclki] -to [get_clocks core_clk]
 set_clock_uncertainty -hold 50 -from [get_clocks core_clk] -to [get_clocks vclk]
 }
 EOT

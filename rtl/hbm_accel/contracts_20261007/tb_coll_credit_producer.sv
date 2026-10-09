@@ -9,7 +9,7 @@
 // release orders; TX: no CDC overflow at DTX = CDC depth under stalls, full rate at DTX_MIN.
 // -DNEG_PRELOAD: partner preloads C at its own reset (the legacy stub) -> CREDIT_LOSS / OVERFLOW.
 module tb_coll_credit_producer;
- parameter integer C=256, CW=9, SYNC=2, FWD=77, RET=137, NFLITS=30000, DTX_MIN=27, WSTG=14, H=2;
+ parameter integer C=256, CW=9, SYNC=2, FWD=77, RET=137, NFLITS=30000, DTX_MIN=27, WSTG=14, H=2, PIN=0;
  // PHY slightly faster than core (same nominal rate, slow phase sweep) so every synchroniser sees edges
  // inside its metastability window; the partner runs at the core rate (locked).  Arrival <= drain.
  parameter real TCORE_PS=833.333, TPH_PS=832.9, TPART_PS=833.333;
@@ -27,7 +27,7 @@ module tb_coll_credit_producer;
  wire brst_n=~brs[1];
  // ---------------------------------------------------------------- RX endpoint
  wire [CW-1:0] k_gray,k_gray_ph;wire ready,ready_ph;reg rb_pop=0;
- ot_hbm_coll_credit_producer #(.C(C),.CW(CW),.SYNC(SYNC)) u_prod(.clk(clk),.rst_n(rst_n),.phy_rst_n(prst_n),
+ ot_hbm_coll_credit_producer #(.C(C),.CW(CW),.SYNC(SYNC),.PIN(PIN)) u_prod(.clk(clk),.rst_n(rst_n),.phy_rst_n(prst_n),
   .rb_pop(rb_pop),.k_gray(k_gray),.ready(ready));
  ot_hbm_coll_credit_phy_tx #(.CW(CW),.SYNC(SYNC)) u_ptx(.pclk(pclk),.prst_n(prst_n),.k_gray_core(k_gray),
   .ready_core(ready),.k_gray_ph(k_gray_ph),.ready_ph(ready_ph));
@@ -44,7 +44,7 @@ module tb_coll_credit_producer;
 `else
  wire rdy_in=rdy_link;
 `endif
- ot_hbm_coll_credit_consumer #(.C(C),.CW(CW),.SYNC(SYNC)) u_cons(.clk(bclk),.rst_n(brst_n),.k_gray_link(k_link),
+ ot_hbm_coll_credit_consumer #(.C(C),.CW(CW),.SYNC(SYNC),.PIN(PIN)) u_cons(.clk(bclk),.rst_n(brst_n),.k_gray_link(k_link),
   .ready_link(rdy_in),.send(send),.can_send(can_send),.avail_o(avail),.k_seen_o(k_seen),.ready_seen_o(rdy_seen));
  // ---------------------------------------------------------------- links (transport delay queues)
  realtime fq_t[0:65535];reg [63:0] fq_d[0:65535];integer fw=0,fr=0;
@@ -118,9 +118,9 @@ module tb_coll_credit_producer;
  reg [WSTG-1:0] wv0=0,wv1=0;wire [1:0] cdc_wr={wv1[WSTG-1],wv0[WSTG-1]};
  wire [1:0] tin_r,tout_v;reg [1:0] tout_r=0;wire [1:0] phy_pop=tout_v&tout_r;wire [63:0] td0,td1;
  wire [7:0] infl0,infl1;
- ot_hbm_coll_tx_flight_gate #(.DTX(64),.DW(8),.WSTG(WSTG),.SYNC(SYNC),.H(H)) u_g0(.clk(clk),.rst_n(rst_n),.pclk(pclk),
+ ot_hbm_coll_tx_flight_gate #(.DTX(64),.DW(8),.WSTG(WSTG),.SYNC(SYNC),.H(H),.PIN(PIN)) u_g0(.clk(clk),.rst_n(rst_n),.pclk(pclk),
   .prst_n(prst_n),.issue(issue[0]),.cdc_wr(cdc_wr[0]),.phy_pop(phy_pop[0]),.allow(allow[0]),.inflight_o(infl0));
- ot_hbm_coll_tx_flight_gate #(.DTX(DTX_MIN),.DW(8),.WSTG(WSTG),.SYNC(SYNC),.H(H)) u_g1(.clk(clk),.rst_n(rst_n),.pclk(pclk),
+ ot_hbm_coll_tx_flight_gate #(.DTX(DTX_MIN),.DW(8),.WSTG(WSTG),.SYNC(SYNC),.H(H),.PIN(PIN)) u_g1(.clk(clk),.rst_n(rst_n),.pclk(pclk),
   .prst_n(prst_n),.issue(issue[1]),.cdc_wr(cdc_wr[1]),.phy_pop(phy_pop[1]),.allow(allow[1]),.inflight_o(infl1));
  ot_hbm_collective_protected_cdc_refill #(.ENABLE(1),.W(64),.AW(6)) u_tx0(.wclk(clk),.wrst_n(rst_n),.in_v(cdc_wr[0]),
   .in_r(tin_r[0]),.in_d(64'd0),.rclk(pclk),.rrst_n(prst_n),.out_v(tout_v[0]),.out_r(tout_r[0]),.out_d(td0),.wempty(),.rempty(),.fault());

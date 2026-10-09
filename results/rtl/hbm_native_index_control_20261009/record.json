@@ -1,0 +1,38 @@
+{
+  "source_sha256": "fff2769e422a25322c5cf353103be24825549105c9aaa0e9cf39a0d1c223f98b",
+  "bench_sha256": "63e2d5c24a77e4d1dcabac2ca52ad3fbcfcc389f252ffaa29cf0bd2a2c35a402",
+  "checks": {
+    "positive": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/positive/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/positive/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ]
+    },
+    "generation_drop": {
+      "compile_returncode": 0,
+      "run_returncode": 1,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/generation_drop/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/generation_drop/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-order-4b801cc28/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ]
+    }
+  },
+  "passed": true,
+  "scope": "24 dynamic frames,48 full342b masks,24 source starts/receipts; publication stalls and retained return debt. Control only; production query/VM/TU joins and physical qualification remain incomplete."
+}

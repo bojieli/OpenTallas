@@ -1,0 +1,145 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_hcp_lane_pr_79315a431-tc",
+ "block": "ot_dsrom_su_hcpost_lane_pr",
+ "owner": "Claude:safe-hbm",
+ "source_branch": "claude/safe-hbm-20261008",
+ "source_commit": "79315a431e0b3f88e901b18f044f3f8af1069c23",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hcp_lane_pr_79315a431-tc",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 155.24,
+  "ff_ps": 4.54,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/hbm_accel_die_views/su/signoff833_clk.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hcp_lane_pr_79315a431-tc/routes/hbm_hcp_lane_pr_79315a431_tc/corner_sta_833.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hcp_lane_pr_79315a431-tc/routes/hbm_hcp_lane_pr_79315a431_tc/work/orfs/logs/asap7/opentallas_ot_dsrom_su_hcpost_lane_pr_asap7_hub_hbm_hcp_lane_pr_79315a431_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_lane_pr_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS_HCPOST_LANE_PR cycles=20000 outputs=15083 latency=+1\nrtl/test/tb_hcpost_lane_pr.sv:40: $finish called at 20045000 (1ps)\n",
+   "track": "parallel"
+  },
+  "bench_lane_pr_neg_bypass": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "MISMATCH cyc=38 ref(vo=1 o=39b70000 f=1) dut(vo=1 o=3cbb0000 f=1)\nMISMATCH cyc=39 ref(vo=1 o=427c0000 f=1) dut(vo=1 o=bbfa0000 f=1)\nMISMATCH cyc=40 ref(vo=1 o=41130000 f=1) dut(vo=1 o=41140000 f=1)\nFAIL_HCPOST_LANE_PR mismatches=1751 outputs=3823\nrtl/test/tb_hcpost_lane_pr.sv:40: $finish called at 5045000 (1ps)\nLANE_PR_NEG_DETECTED\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "register_direct_io": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 1,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T21:40:14-07:00",
+ "job_spec": {
+  "name": "hbm_hcp_lane_pr_79315a431-tc",
+  "block": "ot_dsrom_su_hcpost_lane_pr",
+  "owner": "Claude:safe-hbm",
+  "purpose": "safe-hbm S-C1 (REVIEW_20261008 C1): re-harden the HC lane with a flop at every input pin (ot_dsrom_su_hcpost_lane_pr around the unchanged ML7/AL6 lane), same 85.32 x 115.02 footprint and recipe as the closed m11hc lane; +1 cycle per lane input. Its closure arms the hcp quarter route.",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "claude/safe-hbm-20261008",
+   "commit": "79315a431e0b3f88e901b18f044f3f8af1069c23"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "lane_pr_exact",
+     "cmd": "iverilog -g2012 -s tb_hcpost_lane_pr -Ptb_hcpost_lane_pr.CYC=20000 -o {RUN}/lpr.vvp rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/test/tb_hcpost_lane_pr.sv && vvp -n {RUN}/lpr.vvp",
+     "expect": "pass",
+     "pass_regex": "PASS_HCPOST_LANE_PR",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "lane_pr_neg_bypass",
+     "cmd": "iverilog -g2012 -s tb_hcpost_lane_pr -Ptb_hcpost_lane_pr.MUTANT=1 -Ptb_hcpost_lane_pr.CYC=5000 -o {RUN}/lprn.vvp rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/test/tb_hcpost_lane_pr.sv && vvp -n {RUN}/lprn.vvp | tee {RUN}/lprn.log; grep -q FAIL_HCPOST_LANE_PR {RUN}/lprn.log && echo LANE_PR_NEG_DETECTED && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "LANE_PR_NEG_DETECTED",
+     "threads": 1,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "lane element: IO false-pathed and register-direct (route_lane.sh --false-path-io + outcheck), no IO SDC to calibrate; the quarter carries the lane clock"
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; R={RUN} SRC=src SRCS=\"rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv rtl/hdc/v41x/ot_dsrom_su_hcpost.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv\" CORES=12 NEED=24 CP=0.77 HM=0.01 bash physical/hbm_accel_die_views/su/route_lane.sh {LABEL} ot_dsrom_su_hcpost_lane_pr 85.32 115.02 --param ML=7 --param AL=6",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/ot_dsrom_su_hcpost_lane_pr.lef {RUN}/routes/{LABEL}/view/ot_dsrom_su_hcpost_lane_pr_ss.lib {RUN}/routes/{LABEL}/view/ot_dsrom_su_hcpost_lane_pr_ff.lib {RUN}/routes/{LABEL}/corner_sta_833.json {RUN}/routes/{LABEL}/outcheck.txt {RUN}/record/ && cp {RUN}/routes/{LABEL}/args {RUN}/record/route_args.txt"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta_833.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "register_direct_io",
+     "cmd": "grep -q 'not_register_direct 0' {RUN}/routes/{LABEL}/outcheck.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/su/signoff833_clk.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_accel_die_views/hcp/lane/ot_dsrom_su_hcpost_lane_pr_tc"
+   }
+  ],
+  "cycles_added": 1,
+  "merge_target": null,
+  "hold_eco": {
+   "reexport": true
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

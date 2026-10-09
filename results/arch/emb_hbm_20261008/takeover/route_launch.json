@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.emb_hbm_route_launch.v1",
+  "review": "Root coordinator reviewed and approved enlarged strip and actual domain binding. Recovered later user trajectory12960/13104 setsTT setup>=0,FF hold>=0,DRC0; SS recorded as sensitivity.",
+  "source_commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406",
+  "original_SS_specs": "Preserved; cancelled while queued/source synchronization before route, following recovered current owner policy. No progressing implementation restarted.",
+  "submitted_TC_jobs": [
+    "qfd_hub_emb-2b0cdede4-tc",
+    "qfd_emb_strip_w600-2b0cdede4-tc",
+    "qfd_ctrl_emb_00-2b0cdede4-tc",
+    "qfd_emb_pcport-2b0cdede4-tc"
+  ],
+  "actual_clock_periods_ps": {
+    "hub": 833.333,
+    "strip": 833.333,
+    "controller": 1024.0,
+    "pcport": 1024.0
+  },
+  "stream_HBM_crossing": "Existing explicit976.5625MHz HBM scheduler plus asyncFIFO crossing exercised by full-shape bench; these constraints bind the implemented domains.",
+  "die_slot_fit": "OPEN; shared with qwen_system owner. Enlargement adds0.7520292864mm\u00b2 across4 strip frames. No final die qualification or performance credit."
+}

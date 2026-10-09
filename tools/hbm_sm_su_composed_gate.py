@@ -19,7 +19,7 @@ import hbm_accel_sm_v_gate as G  # noqa: E402
 CT = "rtl/hbm_accel/contracts_20261007/"
 EDGE = ["rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv",
         "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
-        CT + "ot_hbm_su_result_ingress.sv", CT + "ot_hbm_sm_su_result_edge.sv"]
+        CT + "ot_hbm_su_result_ingress.sv", CT + "ot_hbm_su_result_pinshell.sv", CT + "ot_hbm_sm_su_result_edge.sv"]
 
 
 def main():

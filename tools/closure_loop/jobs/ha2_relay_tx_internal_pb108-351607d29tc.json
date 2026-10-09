@@ -1,0 +1,58 @@
+{
+ "name": "ha2_relay_tx_internal_pb108-351607d29tc",
+ "block": "ot_ha2_relay_tx_internal",
+ "owner": "Claude:gaps-design",
+ "source": {
+  "branch": "claude/gaps-design-20261008",
+  "commit": "351607d299226e8fe72da6864c9c93c93676e630"
+ },
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "purpose": "GAPS-DESIGN item 3: ha2_relay_tx_internal DPL-0033 on every version. Cause: the lane fences ran the full core height under the lane's own 0.144-um pin rows, so the port buffers (non-members) had to leave the fence beyond the legaliser's +/-27 um window; wider fences (100-300 um) all fail. Fix: fences stop 10.8 um short of the top/bottom pin rows (width 100.008); placement trials on EPYC1: 2.7 / 10.8 um bands legalise with 0 violations. Route at TC (CORNER TC, CORNERS TC BC, hold margin 50). Signoff TT setup + FF hold (internal-only scope, as the original vehicle).",
+ "resource_basis": "Original 1216FF TX observed peak256724KB through initial placement. New2306FF plus same840x40 frame; reserve8GiB for unmeasured CTS/DRT, capacity reservation only, no per-process limit or deadline.",
+ "no_bench_reason": "Eight proof source hashes match source-pinned W2 fullwidth lockstep7+7/64+64 and D35vsD34+D1 reset/bubble PASS, results/rtl/ha2_truecredit_capture_20261007/unconditional_launch/terminal.json. Wrapper wires actual D1 and TX; fullshape lint PASS. External adoption hold persists for component negatives and complete parent qualification.",
+ "stages": {
+  "calibrate": {
+   "enabled": false,
+   "reason": "One actual common CTS tree. No virtual arrival calibration; measure real source and capture branches from final routed ODB/SPEF."
+  },
+  "route": {
+   "cmd": "export HA2_FENCE_W=100.008 HA2_FENCE_YM=10.8; bash physical/ha2_relay_tx_internal_20261008/run.sh {SRC} {RUN}/route",
+   "ok": "test \"$(cat {RUN}/route/terminal.exit)\" = 0",
+   "logs": [
+    "{RUN}/route/run.log"
+   ],
+   "needs": [
+    "orfs"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 tools/ha2_relay_tx_internal_signoff.py --run {RUN}/route --here physical/ha2_relay_tx_internal_20261008 --corners TT,FF",
+   "needs": [
+    "orfs"
+   ]
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 - <<'METRICS'\nimport json\ns=json.load(open('{RUN}/route/internal_timing.json'))\nm=json.load(open('{RUN}/route/logs/asap7/ha2_relay_tx_internal/base/5_2_route.json'))\nprint(json.dumps(dict(ss_ps=s['corners']['TT']['internal_slack_ps']['all_reg2reg_max'],ff_ps=s['corners']['FF']['internal_slack_ps']['all_reg2reg_min'],drc=m['detailedroute__route__drc_errors'],scope='INTERNAL_ONLY_NOT_LEAF_CLOSURE')))\nMETRICS",
+  "checks": []
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "Preserve first internal path result; no automatic conversion of partial internal evidence into leaf closure"
+ },
+ "merge_target": null,
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

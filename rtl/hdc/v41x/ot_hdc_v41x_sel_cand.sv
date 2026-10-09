@@ -35,6 +35,7 @@ module ot_hdc_v41x_sel_cand #(
     parameter integer K   = 2048,     // largest runtime k (blocks)
     parameter integer AW  = 10,       // line-memory address width per quarter
     parameter integer DG  = 8,
+    parameter integer READLAT = 1,   // external line memory latency (1 baseline, 2 captured)
     parameter integer OD  = 4,
     parameter integer KW  = $clog2(K + 1)
 ) (
@@ -88,7 +89,7 @@ module ot_hdc_v41x_sel_cand #(
 
     wire [Q*BL*16-1:0] o_val;
     wire [Q*BL-1:0]    o_lv, o_ninf;
-    ot_hdc_v41x_sel #(.Q(Q), .W(BL), .IW(BW), .K(K), .AW(AW), .DG(DG), .OD(OD), .KW(KW)) u_sel (
+    ot_hdc_v41x_sel #(.Q(Q), .W(BL), .IW(BW), .K(K), .AW(AW), .DG(DG), .OD(OD), .READLAT(READLAT), .KW(KW)) u_sel (
         .clk(clk), .rst_n(rst_n), .in_valid(f_v), .in_ready(c_ready), .in_last(f_last),
         .in_lv(c_lv), .in_val(c_val), .in_idx(c_idx), .in_k(k_r),
         .out_valid(out_valid), .out_ready(out_ready), .out_last(out_last), .out_lv(o_lv), .out_val(o_val),

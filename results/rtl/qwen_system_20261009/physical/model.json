@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.qwen_system_physical_model.v1",
+  "model": "Qwen3-8B ROM TP4",
+  "crom": {
+    "macs_per_cycle": 0,
+    "compute_intensity": 0,
+    "replicas_per_die": 1,
+    "macros": 48,
+    "macro": "ot_rom_4096x266_m8",
+    "macro_bits": 52297728,
+    "useful_data_bits": 50331648,
+    "memory_ports": {
+      "wide_read_bytes_cycle": 512,
+      "narrow_read_bytes_cycle": 256,
+      "peak_useful_output_bytes_cycle": 512
+    },
+    "boundaries_bits_cycle": {
+      "input": 1606,
+      "output": 4099
+    },
+    "communication_intensity": "one read response per active lane per cycle; no MACs",
+    "replication_cost": {
+      "priority_muxes_4to1x13": 16,
+      "priority_muxes_8to1x13": 8,
+      "depth_selects_2to1x64": 64,
+      "capture_flops": 12288,
+      "stage_fanout": 64
+    },
+    "outline_um": [
+      777.6,
+      1000
+    ],
+    "grid": [
+      4,
+      12
+    ],
+    "macro_pitch_um": [
+      190,
+      80
+    ],
+    "macro_area_um2": 367869.49632,
+    "slot_area_um2": 777600,
+    "remaining_area_um2": 409730.50368,
+    "standard_cell_utilization_target": 0.55,
+    "capture_pin_corridor_um": 68.176,
+    "tracks": {
+      "abutted_top_bits": 5696,
+      "layers": [
+        "M4",
+        "M6"
+      ],
+      "bits_um_per_layer": 3.662551440329218,
+      "pitch_um_assumed": 0.064,
+      "capacity_tracks": 24300
+    },
+    "macro_clk_q_ps": {
+      "ss": 739.210334475635,
+      "tt": 585.7959890612832,
+      "ff": 487.4923466936284
+    },
+    "latency": {
+      "pin_edges": 5,
+      "su_CRX": 4,
+      "su_ML": 7,
+      "added_cycles_token": 0,
+      "condition": "SU abutted, no relay; no rate credit until physical boundary qualification"
+    },
+    "capture_contract": "single-cycle; all 12288 captures at sole macro output pin, no multicycle exception",
+    "physical_gate": "TC setup and FF hold actual routed; SS sensitivity, DRC0; preserve 60ps/25ps uncertainty"
+  },
+  "sysctl": {
+    "macs_per_cycle": 0,
+    "replicas_per_die": 1,
+    "prompt_tokens": 8192,
+    "token_bits": 18,
+    "payload_bits": 147456,
+    "memory_bytes_cycle": {
+      "read": 2.25,
+      "write": 2.25
+    },
+    "outline_um": [
+      500,
+      300
+    ],
+    "slot_area_um2": 150000,
+    "latency": {
+      "stage_switch_edges": 3,
+      "stage_switch_added_cycles_token": 74,
+      "argmax_to_next_edges": "19 + 2*(CTRL_oneway_edges-1)"
+    },
+    "prompt_sram": {
+      "macro": "ot_sram_1r1w_1024x256_m2_r2c2",
+      "count": 1,
+      "tokens_per_row": 8,
+      "slot_bits": 32,
+      "ecc_bits_token": 6,
+      "protected_bits_token": 24,
+      "used_bits_row": 192,
+      "capacity_tokens": 8192,
+      "macro_area_um2": 12314.20968,
+      "read_latency_edges": 1,
+      "generation_unused_reads": 0,
+      "read_enable_contract": "MODE0 reads only sl_pos<promptlen; poisonedunwritten-memoryfullshape golden+oldreadmutant PASS5601e8881",
+      "write_mask_bits": 256,
+      "replication_cost": "8 static slot write decoders; 8:1 read24 mux; shortened SECDED24 decode; sticky UE fault",
+      "read_memory_bytes_cycle": 32,
+      "write_memory_bytes_cycle": 32,
+      "mutable_protection": "SECDED24 on18btoken; doubles fail closed; no ROM ECC"
+    },
+    "state": "default-off SRAM candidate; physical and exact gates pending"
+  }
+}

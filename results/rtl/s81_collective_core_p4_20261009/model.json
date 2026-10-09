@@ -1,0 +1,75 @@
+{
+  "schema": "opentallas.s81_collective_core_physical_model.v1",
+  "parent_model": "tools/uarch_model.py / tools/dsrom_closure_cost_ledger.py existing collective/OQPIPE+1 cost",
+  "source_core": "3abd84e2c",
+  "selected_parameters": {
+    "OQPIPE": 1
+  },
+  "south_ports_bits": {
+    "f_vm": 592,
+    "ts": 3,
+    "t_vm": 2100
+  },
+  "south_bits_cycle": 2695,
+  "native_memory_port_bytes_cycle": {
+    "f_vm": 74,
+    "t_vm": 262.5
+  },
+  "macs_cycle": 0,
+  "sram_macros": 24,
+  "replicas_per_die": 1,
+  "south_pin_layers": [
+    "M5"
+  ],
+  "track_pitch_um": 0.048,
+  "pin_track_stride": 4,
+  "pins_per_um": 5.208333333333333,
+  "pins_per_100_um_upper": 522,
+  "acceptance_pins_per_100_um": 1200,
+  "target_pins_per_100_um": 600,
+  "south_pin_length_um": 517.44,
+  "old_core_um": [
+    507.384,
+    1360.8
+  ],
+  "new_core_um": [
+    540.0,
+    1360.8
+  ],
+  "area_delta_um2": 44383.85279999998,
+  "area_delta_fraction": 0.0642826734780757,
+  "old_slab_um": [
+    1198.776,
+    1369.416
+  ],
+  "new_slab_um": [
+    1231.392,
+    1369.416
+  ],
+  "east_lane_translation_um": 32.616,
+  "core_clock_pin_translation_um": 16.308,
+  "macro_column_x_um": 183.6,
+  "macro_rows_gap_um": 14.015999999999998,
+  "core_macro_placement": "single centered24macro column,unchangedrowpitch55.08um;gap14.016um",
+  "latency_added_cycles": 0,
+  "storage_added_bits": 0,
+  "latency_composition": "Existing OQPIPE+1 on output unchanged. No clock,wire,area,energy performance credit; new boundary wires require die-context timing and power composition.",
+  "routing_gate": "FPLINT and TT/FF/DRC, no thresholds relaxed",
+  "critical_path_failure": "South/M5 t_vm1track20.8pins/um over100um,from core_failure.json",
+  "source_evidence_sha256": "96e9f1b84cf7b07dcf2003004b9acd399a3dc754a77445b21aaa626f4d0a1b53",
+  "measured_predecessor": {
+    "core_um2": 689900.2,
+    "std_um2": 68475.0,
+    "macro_um2": 170324.3,
+    "flops": 94223,
+    "floorplan_peak_kb": 2854364,
+    "floorplan_elapsed": "1h49m"
+  },
+  "resource_admission": {
+    "route_ram_gb": 112,
+    "calibrate_ram_gb": 12,
+    "bench_ram_gb": 12,
+    "basis": "Measured W detailed-route peak14,533,068KB scaled by core/W footprint ratio6.25, then20% inventory allowance for94,223core flops versus12,152W flops; route reservation112GB. Core own floorplan2,854,364KB; calibration12GB accounts for subsequentCTS growth. No address-space or time caps. Must reconcile measured peak after first stage."
+  },
+  "model_limitations": "Sizing is a physical interface alternative composed with existing uarch collective/OQPIPE+1; no new engine or token-rate gain claimed. Slab widening must be integrated into die floorplan before adoption."
+}

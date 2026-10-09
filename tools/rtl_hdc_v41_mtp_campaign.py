@@ -62,6 +62,7 @@ import hdc_isa_v41 as I  # noqa: E402
 import hdc_program_v41 as P  # noqa: E402
 
 OUT = ROOT / "results/rtl/hdc_v41_mtp_campaign.json"
+IMAGES_ONLY = None   # --images-only DIR: write the images (golden + ISA model: GPU host) and stop before Verilator
 RTL = ([ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/proto/ot_fp32_mul_rne_pipe.sv"] +
        [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_delay", "ot_hdc_fp32_mul_pipe", "ot_hdc_fpu", "ot_hdc_sfu",
                                            "ot_hdc_reduce", "ot_hdc_accept")] +
@@ -98,10 +99,12 @@ def sha(path: Path) -> str:
 
 def prompts():
     """Three prompts: the oracle workload's (8 tokens), a 4-token slice of its
-    gold continuation, and 6 tokens spread over the vocabulary."""
+    gold continuation, and 6 tokens spread over the vocabulary; plus its 3- and
+    5-token prefixes (mtp-exact: with the forced drafter they start the accept
+    cycle at lengths 2 and 4, so every length 0 .. 5 occurs in the RTL runs)."""
     p0, gold = V.prompt_and_expected()
     return {"oracle8": list(p0), "gold4": [int(t) for t in gold[:4]],
-            "spread6": [0, 1377, 2754, 91, 3999, 640]}
+            "spread6": [0, 1377, 2754, 91, 3999, 640], "oracle3": list(p0)[:3], "oracle5": list(p0)[:5]}
 
 
 # -- images ---------------------------------------------------------------------------------------
@@ -272,12 +275,12 @@ def plain_part(name, ngen, mp, hbm, prompt_names):
     rec = {"part": name, "mode": "plain", "mp": mp, "target": "hbm" if hbm else "rom", "runs": [],
            "program": {"instructions": len(prog), "weights": weight_words(prog)}}
     with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH")) as scratch:
-        s = Path(scratch)
+        s = IMAGES_ONLY or Path(scratch)
         jobs = []
         for pn in prompt_names:
             prompt = ps[pn]
             toks, rows = golden_run(model, prompt, ngen)
-            img = s / f"img_{pn}"
+            img = s / (f"img_plain_{pn}_n{ngen}" if IMAGES_ONLY else f"img_{pn}")
             img.mkdir(parents=True)
             mach = P.Machine(lay, np.zeros(I.KV_WORDS * I.W_LANES, dtype=F), np.zeros(lay.vm.size, dtype=F))
             seq = list(prompt)
@@ -305,7 +308,12 @@ def plain_part(name, ngen, mp, hbm, prompt_names):
                 (img / "qlist.hex").write_text(P.hexwords(P.encode_list(P.qe_fetch_list(lay, prog, first)),
                                                           P.LIST_BITS))
             (img / "run.args").write_text(" ".join(args) + "\n")
+            (img / "isa.json").write_text(json.dumps(isa))
             jobs.append((pn, img, isa))
+        if IMAGES_ONLY:
+            rec["images"] = [{"prompt": pn, "image": img.name, "isa": isa} for pn, img, isa in jobs]
+            rec["pass"] = all(isa["equal_golden_tokens"] for _, _, isa in jobs)
+            return rec
         exe = build(s, mp, hbm)
         with ThreadPoolExecutor(max_workers=len(jobs)) as ex:
             futs = [(pn, isa, ex.submit(subprocess.run, [str(exe), f"+DIR={img}",
@@ -344,15 +352,24 @@ def part(name, gamma, ngen, mp, hbm, prompt_names, drafters, mutate=False, isa_o
                       "weight_ops_batched": sum(1 for f in prog[entry:] if f.get("mx_m", 0) > 1),
                       "step_weights": weight_words(prog[:entry]), "iter_weights": weight_words(prog[entry:])}
     with tempfile.TemporaryDirectory(dir=os.environ.get("OT_SCRATCH")) as scratch:
-        s = Path(scratch)
+        s = IMAGES_ONLY or Path(scratch)
         jobs = []
         for pn in prompt_names:
             prompt = ps[pn]
             golden = golden_run(model, prompt, ngen)
             for d in drafters:
-                img = s / f"img_{pn}_{d}"
+                img = s / (f"img_{pn}_{d}_g{gamma}_n{ngen}" if IMAGES_ONLY else f"img_{pn}_{d}")
                 isa = make_images(img, model, lay, prog, entry, prompt, ngen, gamma, d, hbm, golden)
+                (img / "isa.json").write_text(json.dumps(isa))
                 jobs.append((pn, d, img, isa, golden))
+        if IMAGES_ONLY:
+            rec["images"] = [{"prompt": pn, "drafter": d, "image": img.name, "isa": isa} for pn, d, img, isa, _ in jobs]
+            if isa_only_checks:
+                pn = prompt_names[0]
+                rec["isa_checks"] = isa_checks(model, gamma, ps[pn], ngen, golden_run(model, ps[pn], ngen))
+            rec["pass"] = all(i["equal_golden_tokens"] and i["committed_logits_bit_exact_with_golden"]
+                              for _, _, _, i, _ in jobs)
+            return rec
         exe = build(s, mp, hbm)
         mexe = build(s, mp, hbm, ("HDC_MUTATE_RESTORE",)) if mutate else None
         with ThreadPoolExecutor(max_workers=len(jobs) + 1) as ex:
@@ -393,6 +410,8 @@ def main() -> int:
     ap.add_argument("--mutate", action="store_true")
     ap.add_argument("--isa-checks", action="store_true")
     ap.add_argument("--plain", action="store_true", help="the one-position baseline on the same bench")
+    ap.add_argument("--images-only", type=Path, help="write the images under DIR (golden + ISA model, GPU host) "
+                                                      "and stop: tools/dsrom_dspark_cached_rtl_v41.py simulates them")
     ap.add_argument("--output", type=Path)
     ap.add_argument("--merge", nargs="*", type=Path, help="merge part records into results/rtl/hdc_v41_mtp_campaign.json")
     a = ap.parse_args()
@@ -408,6 +427,10 @@ def main() -> int:
         (a.output or OUT).write_text(json.dumps(res, indent=1) + "\n")
         print(res["status"], [(p["part"], p["pass"]) for p in parts])
         return 0 if res["status"] == "pass" else 1
+    global IMAGES_ONLY
+    if a.images_only:
+        IMAGES_ONLY = a.images_only.resolve()
+        IMAGES_ONLY.mkdir(parents=True, exist_ok=True)
     if a.plain:
         rec = plain_part(a.part, a.ngen, a.mp, a.hbm, a.prompts.split(","))
     else:
@@ -416,6 +439,9 @@ def main() -> int:
     out = a.output or (ROOT / f"results/rtl/hdc_v41_mtp_parts/{a.part}.json")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + "\n")
+    if IMAGES_ONLY:
+        print(a.part, "images", "pass" if rec["pass"] else "FAIL", out)
+        return 0 if rec["pass"] else 1
     print(a.part, "pass" if rec["pass"] else "FAIL",
           [(r["prompt"], r.get("drafter"), r["pass"], r["rtl"].get("cycles_per_emitted_token",
                                                                    r["rtl"].get("cycles_per_token")))

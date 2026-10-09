@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/run.py", line 15, in <module>
+    v,m=B.selected(enabled=True,before_relays=cb,**args)
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/src/tools/qwen_rom_fulldie_b3r2.py", line 247, in selected
+    before_relays(v, m)
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/run.py", line 14, in <lambda>
+    cb=(lambda v,m:insert_columns(v,m,width)) if width else None
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/src/tools/qwen_system/embedding_columns.py", line 21, in insert_columns
+    raise ValueError(f'embedding outline {new_w:.3f} x {die["h"]:.3f} um exceeds 26 x 33 mm')
+ValueError: embedding outline 26000.352 x 32801.760 um exceeds 26 x 33 mm
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/run.py", line 15, in <module>
+    v,m=B.selected(enabled=True,before_relays=cb,**args)
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/src/tools/qwen_rom_fulldie_b3r2.py", line 247, in selected
+    before_relays(v, m)
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/run.py", line 14, in <lambda>
+    cb=(lambda v,m:insert_columns(v,m,width)) if width else None
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/src/tools/qwen_system/embedding_columns.py", line 21, in insert_columns
+    raise ValueError(f'embedding outline {new_w:.3f} x {die["h"]:.3f} um exceeds 26 x 33 mm')
+ValueError: embedding outline 26008.992 x 32801.760 um exceeds 26 x 33 mm
+{"source_sha256": {"tools/qwen_rom_fulldie_b3r2.py": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0", "tools/qwen_system/embedding_columns.py": "1021d869862eaaa63493c3890cd1c20616119b293d1db20759e119e68f105e5f", "tools/die_top_lint.py": "c1cd1c5e553a21cacb946c550afa98bf162d87802b73b2aeb7b0b3e49802691d"}, "signature": "(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=500.0, spread=False, b3r6=False, tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False, bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0, slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False, tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0, su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0, strict_ports=False, rtl_bound_masters=None, port_exemptions=None, emb_hbm=False, before_relays=None)", "cases": {"r21b_default": {"verdict": "PASS", "die": {"w": 25815.456, "h": 32801.76, "mm2": 846.792, "budget_mm2": 858, "margin_mm2": 11.208}, "embedding_enabled": false, "engines": [], "interfaces_bound": false}, "r21c_embtrue": {"verdict": "PASS", "die": {"w": 25815.456, "h": 32801.76, "mm2": 846.792, "budget_mm2": 858, "margin_mm2": 11.208}, "embedding_enabled": true, "engines": [], "interfaces_bound": false}, "r21c_columns92": {"verdict": "FAIL", "error": "embedding outline 26000.352 x 32801.760 um exceeds 26 x 33 mm"}, "r21c_columns96_rejected": {"verdict": "EXPECTED_REJECT", "error": "embedding outline 26008.992 x 32801.760 um exceeds 26 x 33 mm"}}}
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/codex/emb-geometry-current/run.py", line 22, in <module>
+    assert all(c["verdict"] in ("PASS","EXPECTED_REJECT") for c in rec["cases"].values())
+AssertionError

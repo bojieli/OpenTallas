@@ -19,7 +19,7 @@ SW, SH = 8500.032, 1576.776
 PW_, PH_ = 121.068, 43.2
 TW, TH = 43.2, 216.0
 HW, HH = 1080.0, 129.6
-REACH = 430.0
+REACH = 180.0                   # s81-die-timing 2026-10-08: was 430 (assembled glue TT -214 on the od valid hop); 215 still -14.5 TT, 180 +18
 
 
 def main():

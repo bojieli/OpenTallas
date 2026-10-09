@@ -1,0 +1,12 @@
+{
+  "host": "ot-agidock128",
+  "source": "8e26b397f",
+  "launcher": 2832084,
+  "guard": "/srv/opentallas-scratch/admit.sh 2",
+  "run": "/srv/opentallas-scratch/codex/qwen-transient-kv-8e26b397f",
+  "positive": "64realSRAMrows/512bits payload +128bits identity; globalpositions8191..8198; all720singlebiterrors corrected",
+  "negative": "two-bit UE quarantines, unfencedretirement/staleowner/unwrittenreadsblocked",
+  "mutable_control_protection": "OPEN",
+  "actual_ingress_scan_commit": "OPEN",
+  "macro_source_SHA256": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83"
+}

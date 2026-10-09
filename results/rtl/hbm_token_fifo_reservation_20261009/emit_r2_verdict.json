@@ -1,0 +1,21 @@
+{
+  "schema": "opentallas.hbm.native_mtp_emit.rtl.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "mutant": 0,
+      "returncode": 0,
+      "output": "PASS finite8 fullpressure40 ordered commits plus bad index\n/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_emit_queue.sv:26: $finish called at 2090000 (1ps)\n"
+    },
+    {
+      "mutant": 1,
+      "returncode": 1,
+      "output": "FATAL: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_emit_queue.sv:9: token lost/reordered/identity\n       Time: 435000  Scope: tb_hbm_native_mtp_emit_queue\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue.sv": "8bd0c43ff9979b82450531680d9def80edc1eb1645a1cbd6bf0291d3b1aa2279",
+    "rtl/test/hbm_accel/tb_hbm_native_mtp_emit_queue.sv": "d34a14d6981129e6b25d9a20904e0aee0ae3189337b07b55477863126de0427e"
+  },
+  "scope": "minimum full38-bit native output and finite host81-bit identity queue"
+}

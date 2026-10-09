@@ -47,7 +47,7 @@ class CompletedRouteRecovery(unittest.TestCase):
         self.assertIsNone(probe(self.config))
 
     def route_job(self):
-        j = job(host='EPYC', run='/saved/job', bench_par=False, source_synced=True)
+        j = job(host='ot-epyc1tb', run='/saved/job', bench_par=False, source_synced=True)
         j['spec'] = dict(j['spec'], verdict={'corner_sta': '{RUN}/routes/{LABEL}/corner_sta.json',
                                            'drc_metrics': '{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json'})
         j.update(stage_tag='route.a1', status='RUNNING', retries_used=0, attempt=1)
@@ -69,10 +69,19 @@ class CompletedRouteRecovery(unittest.TestCase):
     def test_actual_route_failure_still_uses_existing_retry(self):
         j = self.route_job(); fleet = Fleet(); fleet.choose = Mock()
         with patch.object(C, 'ssh', return_value=subprocess.CompletedProcess([], 0, 'null', '')), \
-             patch.object(C, 'stage_tail', return_value='[ERROR GRT-0116] routing congestion'), patch.object(C, 'log'):
+             patch.object(C, 'stage_tail', return_value='[ERROR DRT-0305] detailed route aborted'), patch.object(C, 'log'):
             C.crash(j, {'kind': 'route', 'key': 'route'}, fleet, 'rc=2')
         self.assertEqual(j['status'], 'READY')
         self.assertEqual(j['attempt'], 2); self.assertEqual(j['retries_used'], 1)
+        self.assertNotIn('postroute_repair', j)
+
+    def test_grt_congestion_is_terminal_not_retried(self):
+        # 8740289f6: GRT-0116 is deterministic -> EARLY_FAIL_CONGESTION, no retry, no post-route repair
+        j = self.route_job(); fleet = Fleet(); fleet.choose = Mock()
+        with patch.object(C, 'ssh', return_value=subprocess.CompletedProcess([], 0, 'null', '')), \
+             patch.object(C, 'stage_tail', return_value='[ERROR GRT-0116] routing congestion'), patch.object(C, 'log'):
+            C.crash(j, {'kind': 'route', 'key': 'route'}, fleet, 'rc=2')
+        self.assertEqual((j['status'], j['retries_used']), ('EARLY_FAIL_CONGESTION', 0))
         self.assertNotIn('postroute_repair', j)
 
     def test_transport_failure_waits_without_reroute(self):

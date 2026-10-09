@@ -1,0 +1,34 @@
+{
+ "schema": "opentallas.equivalence-receipt.v1",
+ "subject": "90526cabb 'Add opt-in captured selector memory return with aligned tokens': rtl/hdc/v41x/ot_hdc_v41x_sel.sv, ot_hdc_v41x_sel_slice.sv",
+ "claim": "At the default READLAT=1 (the value every v41x array/whbm vehicle uses; only hfd_idx_sel sets READLAT=2) the post-edit selector is sequentially equivalent to the pre-edit selector. The g_read_direct branch is pure assigns rt_*=t2_*, and every changed use site substitutes t2_*->rt_* symbolically, independent of width parameters.",
+ "status": "PROVEN",
+ "tool": "Yosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)",
+ "host": "ot-epyc4:/srv/opentallas-scratch/claude/main-health/sel_equiv",
+ "method": "equiv_make gold gate; equiv_struct; equiv_simple -seq 2; equiv_induct -seq 2; equiv_status -assert (async2sync, flattened top ot_hdc_v41x_sel)",
+ "parameters": {
+  "Q": 2,
+  "W": 2,
+  "IW": 4,
+  "K": 8,
+  "AW": 3,
+  "DG": 2,
+  "OD": 2,
+  "READLAT": "default (1)"
+ },
+ "result": {
+  "equiv_cells": 39050,
+  "proven": 39050,
+  "unproven": 0,
+  "yosys_rc": 0
+ },
+ "full_default_parameters": "also started (471,574 equiv bits after equiv_struct); ~4 h projected, stopped because the edit is width-independent; not claimed",
+ "sha256": {
+  "gold/ot_hdc_v41x_sel.sv (90526cabb^)": "c35ed7c7bed5a656b122faeb7a7a86ee460af81e8b3dd92e02efe40111251c38",
+  "gold/ot_hdc_v41x_sel_slice.sv (90526cabb^)": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+  "gate/ot_hdc_v41x_sel.sv (90526cabb)": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+  "gate/ot_hdc_v41x_sel_slice.sv (90526cabb)": "3716c56efe4dcd751d1dfa501de364b36b8357b03c4a10f0d93f9d6cb7971e6b",
+  "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb"
+ },
+ "consequence": "The six pins in results/rtl/hdc_v41x_whbm_pooled_multi.json, hdc_v41x_array_b2_6afcfba3_campaign.json and hdc_v41x_array_allunit_b2_o1fast_full.json are stale by bytes only; the records already carry 24-32 known stale pins each and snapshot commits outside HEAD, so they are ratcheted into headline_bundle known_findings rather than re-run (a re-run at HEAD would replace historical 2026-09-27 results with ones reflecting dozens of unrelated RTL changes)."
+}

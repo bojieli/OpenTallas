@@ -1,0 +1,64 @@
+{
+ "name": "mtp_topk_f384_lvt-fc1b8a377-tc",
+ "block": "mtp_topk_f384",
+ "owner": "Claude:mtp-hbm",
+ "purpose": "mtp-hbm 2026-10-08 router_topk (owner: fix the Yosys issue and route). topk_f1 (REG_IN=1, 10-04) died in Yosys 0.68 'modules_.count(module->name) == 0' under run_abi3 --param on a parameterised top; fix = parameter-free wrapper physical/hbm_mtp/rtl/mtp_topk_tops.sv (route-tops lesson). Successor ot_gpu_router_topk_f (topk_f3 10-05 routed SS -369.8 r2r; lockstep 2,000 vectors exact). LVT variant.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "threads": 24,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/mtp-hbm-20261008",
+  "commit": "fc1b8a377bfd9676a35e3fec7b87bc1b7316288c"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_MULTI_VT=lvt;  OUT={RUN}/routes CORES=24 UTIL=35 PD=0.55 HM=0.025 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} mtp_topk_f384 --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source physical/hbm_mtp/rtl/mtp_topk_tops.sv     $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 24,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_MULTI_VT=lvt;  OUT={RUN}/routes CORES=24 UTIL=35 PD=0.55 HM=0.025 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL} mtp_topk_f384 --source rtl/gpu/ot_gpu_router_topk.sv --source rtl/gpu/ot_gpu_router_topk_f.sv --source physical/hbm_mtp/rtl/mtp_topk_tops.sv    ",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/hbm_mtp_20261008/routes/mtp_topk_f384_lvt-fc1b8a377-tc"
+  }
+ ],
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 1,
+ "notes": "cycles added: 1",
+ "no_bench_reason": "RTL = ot_gpu_router_topk_f (rtl/test/hbm_fmax_ctl/tb_router_topk_lockstep.sv: N 384 P 16 K 6, 2,000 vectors, 0 mismatches vs ot_gpu_router_topk)"
+}

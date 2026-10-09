@@ -22,6 +22,6 @@ unset_output_delay -clock core_clk [all_outputs]
 set ins {}
 foreach p $ot_all_in { if {[get_name $p] ne "rst_n"} { lappend ins $p } }
 set_input_delay -max 300 -clock vclk $ins
-set_input_delay -min [expr {-30 - ($ot_lss - $ot_lff)}] -clock vclk $ins
+set_input_delay -min [expr {20 - ($ot_lss - $ot_lff)}] -clock vclk $ins   ;# RULE H1: 50 ps hold IO term on the output min only
 set_output_delay -max 280 -clock vclk [all_outputs]
 set_output_delay -min [expr {-60 + ($ot_lss - $ot_lff)}] -clock vclk [all_outputs]

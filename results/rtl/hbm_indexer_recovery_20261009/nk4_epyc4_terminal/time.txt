@@ -1,0 +1,24 @@
+Command terminated by signal 9
+	Command being timed: "yosys -l slice_nk4/yosys.log -p read_verilog -sv -DSYNTHESIS src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv src/rtl/hdc/ot_hdc_delay.sv src/rtl/hdc/ot_hdc_fastfp.sv src/ot_hdc_fp32_add_lat_nt.sv src/rtl/hdc/ot_hdc_prefix.sv; hierarchy -top ot_hdc_v41x_idx_score_slice_l -chparam NK 4 -chparam IW 20 -chparam FPL 7 -chparam FML 5 -chparam QL 5; synth -noshare -flatten -top ot_hdc_v41x_idx_score_slice_l; dfflibmap -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib; abc -D 833  -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib; opt_clean; stat  -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib -liberty /home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib"
+	User time (seconds): 3657.81
+	System time (seconds): 146.93
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:03:30
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 481352416
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 111
+	Minor (reclaiming a frame) page faults: 142181861
+	Voluntary context switches: 1549
+	Involuntary context switches: 5561
+	Swaps: 0
+	File system inputs: 6240
+	File system outputs: 425728
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -163,7 +163,12 @@ def constraints(sinks, corner):
          'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}']
     for key, s in sorted(sinks.items()):
         pin = key if '[' in s['port'] else key + '[0]'
-        L.append(f'set p [get_pins -quiet {{{pin}}}]; if {{![llength $p]}} {{ set p [get_pins -quiet {{{key}}}] }}; '
+        # die-gaps 2026-10-08: the r25 kit left 22 view clocks unbound (paths untimed): the hub quarters hfd_hc /
+        # hfd_sfu / hfd_su enter their clock on ck0..ck7 (one die net) and the SerDes / host PHY macros on 'clk', while
+        # the die model names every sink port 'ck'.  Fallbacks: <inst>/clk, then <inst>/ck? (all taps, same entry).
+        inst = key.rsplit('/', 1)[0]
+        L.append(f'set p [get_pins -quiet {{{pin}}}]; foreach alt {{{{{key}}} {{{inst}/clk}} {{{inst}/ck?}} {{{inst}/ck?[0]}}}} '
+                 f'{{ if {{![llength $p]}} {{ set p [get_pins -quiet $alt] }} }}; '
                  f'if {{![llength $p]}} {{ lappend ot_clock_missing {{{pin}}} }} else {{ dict lappend ot_dom {s["domain"]} $p; '
                  f'lappend ot_lat [list {s["domain"]} {s["entry_ps"][corner] / 1000:.6f} $p] }}')
     for d, per in PERIOD_PS.items():
@@ -205,35 +210,62 @@ def tt_prefix(prefix, case):
 PAD_SCALE = dict(ff=1.0, tt=1.4, ss=1.9)    # a hold-pad delay cell's delay at TT / SS relative to FF (ASAP7 BUF chains)
 
 
+# OpenROAD has no set_annotated_delay (OpenSTA's Tcl wrapper is not loaded; run_grt_sta.tcl died on it 2026-10-08), but
+# it carries the SWIG primitive under it: sta::set_arc_delay edge arc scene min_max delay.  ot_pad adds the pad to the
+# CURRENT wire-arc delay (driver -> the listed load pin, i.e. set_annotated_delay -net -incremental) on that corner's
+# scene only, so it rides on the GRT parasitics of the same session; probed on ASAP7 BUFx2 (+50 ps at FF, TT unchanged).
+OT_PAD_PROC = r"""proc ot_pad {l sc ps} {
+  set n 0
+  set scene [sta::find_scene $sc]
+  foreach d [get_pins -quiet -of_objects [get_nets -of_objects $l] -filter "direction==output"] {
+    foreach v [$d vertices] {
+      set it [$v out_edge_iterator]
+      while {[$it has_next]} {
+        set e [$it next]
+        if {[$e role] ne "wire" || [$e to_pin] ne $l} continue
+        foreach arc [$e timing_arcs] { foreach mm {min max} {
+          sta::set_arc_delay $e $arc $scene $mm [expr {[$e arc_delay $arc $scene $mm] + $ps * 1e-12}] } }
+        incr n
+      }
+      $it finish
+    }
+  }
+  return $n
+}
+"""
+
+
 def hold_pads(path, corner):
     """die-level hold padding (rule H1, die links): a delay on the die net into each listed load pin (the relay input,
     or the receiving block pin for a relay -> block hop), sized at FF; the same cells cost PAD_SCALE x at TT / SS
-    setup, so every corner is timed with them"""
+    setup, so every corner is timed with them.  Modelled as an incremental wire-arc annotation (ot_pad above): an
+    ideal delay (no slew / load change, no pad area), disclosed as such."""
     if not path:
         return ''
     pads = json.loads(Path(path).read_text())
-    L = ['# die hold pads (tools/hbm_die_relay_sta.py --hold-pads)', 'set ot_npad 0']
+    L = [f'# die hold pads (tools/hbm_die_relay_sta.py --hold-pads), corner {corner}', OT_PAD_PROC,
+         'sta::worst_slack -max', 'set ot_npad 0; set ot_nmiss 0']
     for pin, ps in sorted(pads.items()):
-        v = ps * PAD_SCALE[corner] / 1000.0
-        L.append(f'set l [get_pins -quiet {{{pin}}}]; if {{[llength $l]}} {{ foreach d [get_pins -quiet -of_objects '
-                 f'[get_nets -of_objects $l] -filter "direction==output"] {{ set_annotated_delay -net -incremental '
-                 f'-from $d -to $l {v:.6f}; incr ot_npad }} }}')
-    L.append('puts "OT_HOLD_PADS n=$ot_npad"')
+        L.append(f'set l [get_pins -quiet {{{pin}}}]; if {{[llength $l]}} {{ set k [ot_pad $l {corner} '
+                 f'{ps * PAD_SCALE[corner]:.3f}]; if {{$k}} {{ incr ot_npad $k }} else {{ incr ot_nmiss }} }} else {{ incr ot_nmiss }}')
+    L.append(f'puts "OT_HOLD_PADS corner={corner} pins={len(pads)} arcs_padded=$ot_npad missing=$ot_nmiss"')
     return '\n'.join(L) + '\n'
 
 
-def report(corner):
+def report(corner, tag=''):
     k = 'min' if corner == 'ff' else 'max'
+    sfx = f'_{tag}' if tag else ''
+    tg = f' pads={tag}' if tag else ''
     return f'''
-puts "OT_WNS corner={corner} ns=[sta::worst_slack -{k}] tns_ns=[sta::total_negative_slack -{k}]"
-set f [open /out/paths_{corner}.txt w]
+puts "OT_WNS corner={corner}{tg} ns=[sta::worst_slack -{k}] tns_ns=[sta::total_negative_slack -{k}]"
+set f [open /out/paths_{corner}{sfx}.txt w]
 set n 0
 foreach pe [find_timing_paths -path_delay {k} -corner {corner} -group_path_count 200000 -endpoint_path_count 1 -slack_max 0.015] {{
   puts $f "[get_full_name [get_property $pe startpoint]] [get_full_name [get_property $pe endpoint]] [get_property $pe slack]"
   incr n
 }}
 close $f
-puts "OT_FAIL_ENDPOINTS corner={corner} n=$n"
+puts "OT_FAIL_ENDPOINTS corner={corner}{tg} n=$n"
 report_checks -path_delay {k} -corner {corner} -group_path_count 10 -format full_clock_expanded -digits 4 -fields {{slew cap input_pins}}
 puts OT_DONE
 '''
@@ -319,9 +351,18 @@ report_wire_length -net * -global_route -file /out/wirelength_grt.csv
 estimate_parasitics -global_routing''')
     assert 'global_route' in gp
     # OPTION B: setup at TT, hold at FF, SS setup as a sensitivity
-    (case / 'run_grt_sta.tcl').write_text(gp + constraints(sinks, 'tt') + hold_pads(a.hold_pads, 'tt') + report('tt').replace('puts OT_DONE', '')
-                                          + constraints(sinks, 'ff') + hold_pads(a.hold_pads, 'ff') + report('ff').replace('puts OT_DONE', '')
-                                          + constraints(sinks, 'ss') + hold_pads(a.hold_pads, 'ss') + report('ss'))
+    # with pads: each corner is reported raw (paths_<c>_nopad.txt) and then with the pads (paths_<c>.txt), one GRT
+    def corner_block(c, last):
+        r = report(c, 'nopad').replace('puts OT_DONE', '') + hold_pads(a.hold_pads, c) if a.hold_pads else ''
+        t = report(c, 'pad' if a.hold_pads else '')
+        t = t.replace('/out/paths_' + c + '_pad.txt', '/out/paths_' + c + '.txt')
+        return constraints(sinks, c) + r + (t if last else t.replace('puts OT_DONE', ''))
+    (case / 'run_grt_sta.tcl').write_text(gp + corner_block('tt', False) + corner_block('ff', False) + corner_block('ss', True))
+    # STA-only on an existing GRT checkpoint: guides cannot feed estimate_parasitics (GRT-0008), so the session
+    # re-runs the same global route (deterministic, same layers / adjustments) -- written only to a scratch odb
+    (case / 'run_grt_sta_only.tcl').write_text((case / 'run_grt_sta.tcl').read_text().replace(
+        'write_db /out/ckpt_grt.odb', '').replace('write_guides /out/route.guide', '').replace(
+        'report_wire_length -net * -global_route -file /out/wirelength_grt.csv', ''))
     print(json.dumps(dict(planned_sinks=len(ctx['sinks']), relay_sinks=len(added), relays_without_domain=len(nodom))))
 
 

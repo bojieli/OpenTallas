@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src/tools/w18/corner_sta_ref.py", line 50, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src/tools/w18/corner_sta_ref.py", line 37, in main
+    setup_tt=C.run(o, "tt", a.macro), setup_ss=C.run(o, "ss", a.macro), hold_ff=C.run(o, "ff", a.macro),
+             ~~~~~^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src/tools/w18/corner_sta.py", line 142, in run
+    raise FileNotFoundError(selected_sdc)
+FileNotFoundError: /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/routes/qfd_ctrl_emb_00_2b0cdede4_tc/work/orfs/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/6_final.sdc

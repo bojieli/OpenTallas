@@ -17,7 +17,13 @@ module ot_qwen_die_cdc_ch #(
     // async FIFO (ot_qwen_async_fifo_w: registered write, per-slice read-pointer copies; +1 wclk before visibility),
     // an enable-free output capture (o_d is meaningful only with o_v) and a kept output pin station (+1 rclk).
     // Order, values, credits and faults unchanged.
-    parameter integer PIPE = 0
+    // PIPE = 2 (safe-qwen S-A2, 2026-10-08): PIPE = 1 plus the FIFO's 2-level REGISTERED read select
+    // (ot_qwen_async_fifo_w RSEL2 = 1, <= 8:1 per stage): the popped word reaches od_q one rclk later, o_v is re-timed
+    // with it (+1 rclk; +3 rclk total vs PIPE = 0 on the read face).  Order, values, credits and faults unchanged.
+    parameter integer PIPE = 0,
+    // AFW = 1 (safe-qwen S-A4 rx128, 2026-10-08): with PIPE = 0, use the wide FIFO's per-slice read-pointer copies
+    // (ot_qwen_async_fifo_w, registered write: +1 wclk before visibility) and nothing else of PIPE = 1.
+    parameter integer AFW = 0
 ) (
     input  wire         wclk,
     input  wire         wrst_n,
@@ -75,14 +81,23 @@ module ot_qwen_die_cdc_ch #(
     wire         af_v;
     wire [W-1:0] af_d;
     wire         send;
-    generate if (PIPE != 0) begin : g_afw
-        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD)) u_af (
+`ifndef SYNTHESIS
+    wire         af_drained;              // bench view: both FIFO pointers equal (whichever FIFO is built)
+`endif
+    generate if (PIPE != 0 || AFW != 0) begin : g_afw
+        ot_qwen_async_fifo_w #(.WIDTH(W), .DEPTH(AD), .RSEL2(PIPE >= 2 ? 1 : 0)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
+`ifndef SYNTHESIS
+        assign af_drained = (u_af.wr_bin == u_af.rd_bin);
+`endif
     end else begin : g_af
         ot_async_fifo #(.WIDTH(W), .DEPTH(AD)) u_af (
             .wr_clk(wclk), .wr_rst_n(wr_n), .wr_valid(pop), .wr_ready(af_ready), .wr_data(ib[ir[IA-1:0]]), .wr_overflow(),
             .rd_clk(rclk), .rd_rst_n(rr_n), .rd_valid(af_v), .rd_ready(send), .rd_data(af_d), .rd_underflow());
+`ifndef SYNTHESIS
+        assign af_drained = (u_af.wr_bin == u_af.rd_bin);
+`endif
     end endgenerate
     // ---- read face -------------------------------------------------------------------------------------------------
     reg          ocr_q, ov_q, rf_q;
@@ -97,7 +112,17 @@ module ot_qwen_die_cdc_ch #(
             cred <= cred - {{(CB-1){1'b0}}, send} + {{(CB-1){1'b0}}, ocr_q};
             rf_q <= rf_q | (cred - {{(CB-1){1'b0}}, send} + {{(CB-1){1'b0}}, ocr_q} > OCRED[CB-1:0]);
         end
-    generate if (PIPE != 0) begin : g_ops
+    generate if (PIPE >= 2) begin : g_ops2
+        // RSEL2: af_d is the word popped (send) at the previous edge; ovd re-times o_v with it
+        reg ovd;
+        always @(posedge rclk or negedge rr_n) if (!rr_n) ovd <= 1'b0; else ovd <= ov_q;
+        always @(posedge rclk) od_q <= af_d;            // enable-free: o_d is meaningful only with o_v
+        (* keep *) reg         ovp;
+        (* keep *) reg [W-1:0] odp;
+        always @(posedge rclk or negedge rr_n) if (!rr_n) ovp <= 1'b0; else ovp <= ovd;
+        always @(posedge rclk) odp <= od_q;
+        assign o_v = ovp; assign o_d = odp;
+    end else if (PIPE != 0) begin : g_ops
         always @(posedge rclk) od_q <= af_d;            // enable-free: o_d is meaningful only with o_v
         (* keep *) reg         ovp;
         (* keep *) reg [W-1:0] odp;

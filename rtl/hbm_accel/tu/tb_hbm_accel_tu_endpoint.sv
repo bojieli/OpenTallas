@@ -43,6 +43,9 @@
 `ifndef TU_NPT
 `define TU_NPT 8
 `endif
+`ifndef TU_DUT
+`define TU_DUT ot_hbm_accel_tu_endpoint   // hbm-coll-rtl: +define+TU_DUT=ot_hbm_accel_tu_endpoint_sr
+`endif
 `ifndef TU_RXAW
 `define TU_RXAW 8
 `endif
@@ -54,7 +57,7 @@ module tb_hbm_accel_tu_endpoint #(
 );
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
     localparam integer MAXL = NR * PFMAX;
-    integer seed, seed0, pf, rank;
+    integer seed, seed0, pf, rank, samecol, npdep = 0;
     real budget, cred;
     string vecdir;
     reg [FW-1:0] part [0:MAXL-1];      // AR: contributor partials; gather: every rank's segment
@@ -70,6 +73,7 @@ module tb_hbm_accel_tu_endpoint #(
         if (!$value$plusargs("RANK=%d", rank)) rank = 0;
         if (!$value$plusargs("BUDGET=%f", budget)) budget = 377.6;
         if (!$value$plusargs("CRED=%f", cred)) cred = 113.8;
+        if (!$value$plusargs("SAMECOL=%d", samecol)) samecol = 0;
         if (pf > PFMAX || pf % NC != 0 || (BF16 && (pf / NC) % 2 != 0)) $fatal(1, "bad PF");
         ph0 = (($unsigned($random(seed)) % 1000) / 1000.0);
         ph1 = (($unsigned($random(seed)) % 1000) / 1000.0);
@@ -81,9 +85,14 @@ module tb_hbm_accel_tu_endpoint #(
                  seed0, rank, NC, NOG, pf, INJ, DEL, NPT, RXAW, budget, cred, T_CORE, T_PHY, TOT);
         go_clk = 1;
     end
-    reg clk = 0, pclk = 0, rst_n = 0, prst_n = 0;
+    reg clk = 0, pclk_r = 0, rst_n = 0, prst_n = 0;
     initial begin wait(go_clk); #(T_CORE * ph0 + 0.001); forever #(T_CORE/2) clk = ~clk; end
-    initial begin wait(go_clk); #(T_PHY * ph1 + 0.001);  forever #(T_PHY/2) pclk = ~pclk; end
+    initial begin wait(go_clk); #(T_PHY * ph1 + 0.001);  forever #(T_PHY/2) pclk_r = ~pclk_r; end
+`ifdef TU_PCLK_IS_CLK
+    wire pclk = clk;      // hbm-coll-rtl: the hfd_coll die view wires pclk = clk (SYNCPHY = 1 endpoints)
+`else
+    wire pclk = pclk_r;
+`endif
     always @(posedge clk)  rst_n  <= ($realtime > 40.0);
     always @(posedge pclk) prst_n <= ($realtime > 40.0);
     initial begin wait(go_clk); #(400.0); @(posedge clk); go <= 1'b1; end
@@ -100,9 +109,13 @@ module tb_hbm_accel_tu_endpoint #(
     wire [DEL*PWT-1:0] dfl;
     wire flt;
     wire [31:0] cst;
-    ot_hbm_accel_tu_endpoint #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+    `TU_DUT #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
-        .SWCRED(1 << RXAW), .LAT(LAT))
+        .SWCRED(1 << RXAW), .LAT(LAT)
+`ifdef TU_SYNCPHY
+        , .SYNCPHY(1)
+`endif
+        )
       dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
@@ -137,7 +150,13 @@ module tb_hbm_accel_tu_endpoint #(
             t_ldep = $realtime; ndep = ndep + 1;
             ta = $realtime + budget;
             cr_in[p].push_back($realtime + cred);
-            if (kind == 0) begin                           // partial to owner dst: peer 2J - s sends us its slice-J flit
+            if (kind == 0 && samecol != 0) begin          // +SAMECOL=1 (hbm-coll-rtl directed test): hold every peer
+                npdep = npdep + 1;                         // partial, then release them all at once, flit idx of every
+                if (npdep == (NC - 1) * OF)                // peer on port idx % NPT: each pclk all ports carry partials
+                    for (integer q = 0; q < NC; q = q + 1) // of the SAME contributor -> same-column collisions
+                        if (q != J) for (integer x = 0; x < OF; x = x + 1)
+                            sched(x % NPT, ta, {1'b0, 8'(rank), 8'(q), 16'(x), part[(OG * NC + q) * pf + J * OF + x]});
+            end else if (kind == 0) begin                  // partial to owner dst: peer 2J - s sends us its slice-J flit
                 sl = dst - OG * NC;
                 jp = ((2 * J - sl) % NC + NC) % NC;
                 sched(p, ta, {1'b0, 8'(rank), 8'(jp), 16'(idx), part[(OG * NC + jp) * pf + J * OF + idx]});

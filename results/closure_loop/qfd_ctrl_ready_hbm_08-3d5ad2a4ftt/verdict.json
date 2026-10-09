@@ -1,0 +1,141 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_ctrl_ready_hbm_08-3d5ad2a4ftt",
+ "block": "qfd_ctrl_pc_08",
+ "owner": "Claude:qwen-blocks",
+ "source_branch": "claude/qwen-blocks-20261007",
+ "source_commit": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_ready_hbm_08-3d5ad2a4ftt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 269.77,
+  "ff_ps": 32.26,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_ready_hbm_08-3d5ad2a4ftt/routes/qfd_ctrl_ready_hbm_08_3d5ad2a4ftt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_ready_hbm_08-3d5ad2a4ftt/routes/qfd_ctrl_ready_hbm_08_3d5ad2a4ftt/work/orfs/logs/asap7/opentallas_ot_qwen_ctrl_pc_head_asap7_qdm_qfd_ctrl_ready_hbm_08_3d5ad2a4ftt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_ctrl_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_ready.sv:333: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS ctrl_pc PC=8 reads=2048 writes=16 rows=187 packets=21 invalid_opcode=detected\nrtl/test/tb_qwen_ctrl_pc_head.sv:80: $finish called at 60690000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_ctrl_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_ready.sv:333: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nFAIL ctrl_pc                   column command PC=8 reads=17 writes=0\nFATAL: rtl/test/tb_qwen_ctrl_pc_head.sv:31: \n       Time: 560000000  Scope: tb_qwen_ctrl_pc.fail\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": "Zero incremental cycles vs74d839a79; base isolated PC boundary still144cycles/token; physical gain unmeasured.",
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T03:22:40-07:00",
+ "job_spec": {
+  "name": "qfd_ctrl_ready_hbm_08-3d5ad2a4ftt",
+  "block": "qfd_ctrl_pc_08",
+  "owner": "Claude:qwen-blocks",
+  "purpose": "Qwen JEDEC scheduler PC8 ready-cut in the hbm_976p6 domain (1.024 ns) | OPTION B TT route (TC setup repair, MM FF hold HM 50, rule H1)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/qwen-blocks-20261007",
+   "commit": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "ctrl_exact",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=8 -P tb_qwen_ctrl_pc.NEG=0 -o {RUN}/bench/ctrl0 rtl/test/tb_qwen_ctrl_pc_head.sv rtl/physical/ot_qwen_ctrl_pc_head.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/physical/ot_hbm_r14_stream_pc_ready.sv && vvp -n {RUN}/bench/ctrl0",
+     "expect": "pass",
+     "pass_regex": "^PASS ctrl_pc PC=8 reads=2048 writes=16",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "ctrl_mutant",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=8 -P tb_qwen_ctrl_pc.NEG=1 -o {RUN}/bench/ctrl1 rtl/test/tb_qwen_ctrl_pc_head.sv rtl/physical/ot_qwen_ctrl_pc_head.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/physical/ot_hbm_r14_stream_pc_ready.sv && vvp -n {RUN}/bench/ctrl1",
+     "expect": "fail",
+     "fail_regex": "^FAIL ctrl_pc",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+   },
+   "route": {
+    "cmd": "OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_ctrl_ready_hbm_08.sdc SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_ctrl_ready_hbm_08 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_ctrl_pc_08 --out {RUN}/record/views/qfd_ctrl_pc_08 --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_ctrl_ready_hbm_08.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_masters_final_20261007/qfd_ctrl_ready_hbm_08-3d5ad2a4ftt"
+   }
+  ],
+  "cycles_added": "Zero incremental cycles vs74d839a79; base isolated PC boundary still144cycles/token; physical gain unmeasured.",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ }
+}

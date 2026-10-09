@@ -1,0 +1,52 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r6a_f78eb159f-mmq/routes/hbm_stn_mcast_r6a_f78eb159f_mmq_cal/work/orfs/results/asap7/opentallas_hfd_mcast_r6a_asap7_hv_hbm_stn_mcast_r6a_f78eb159f_mmq_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "ck",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 1024,
+   "mean": 541.5,
+   "min": 530.7,
+   "max": 547.8
+  },
+  "all": {
+   "n": 4238,
+   "mean": 544.7,
+   "min": 528.6,
+   "max": 575.7
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 1024,
+   "mean": 372.0,
+   "min": 359.2,
+   "max": 378.8
+  },
+  "all": {
+   "n": 4238,
+   "mean": 375.2,
+   "min": 359.2,
+   "max": 406.2
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 542,
+  "CK_SS_ALL_MEAN": 545,
+  "CK_SS_MIN": 531,
+  "CK_SS_ALL_MIN": 529,
+  "CK_SS_MAX": 548,
+  "CK_SS_ALL_MAX": 576,
+  "CK_FF_MEAN": 372,
+  "CK_FF_ALL_MEAN": 375,
+  "CK_FF_MIN": 359,
+  "CK_FF_ALL_MIN": 359,
+  "CK_FF_MAX": 379,
+  "CK_FF_ALL_MAX": 406
+ }
+}

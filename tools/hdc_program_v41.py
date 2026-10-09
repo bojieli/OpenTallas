@@ -84,19 +84,24 @@ class Alloc:
 class Layout:
     """Weight ROMs, constant ROM, vector-memory and KV maps for the reduced model."""
 
-    def __init__(self, m, mtp=None):
+    def __init__(self, m, mtp=None, rollback_ring=False):
         """mtp: None (the one-position core), or {"slots": NS} -- the multi-token-
         prediction configuration: NS position slots, each with its own copy of
         every per-position vector-memory region (slot j's at + j*slot_stride),
         the compressor slot ring of I.POS_RING entries, the DSpark stages'
-        weights, constants and window caches, RoPE tables to I.ROPE_POS."""
+        weights, constants and window caches, RoPE tables to I.ROPE_POS.
+
+        rollback_ring: opt in to the position-indexed compressor record ring
+        for a one-position wavefront core. Squashed successors may write ahead
+        before the corrected position is reissued (MR-2/MR-5); the legacy two
+        records cannot preserve the corrected position's pooling partner."""
         self.m = m
         c = m.c
         self.mtp = mtp
         self.L, self.dim, self.hc = m.L, m.dim, m.hc
         self.nh, self.ih = m.heads, m.ih
         assert m.hd == HD and m.ihd == HD and m.rd == 4 and m.window >= PMAX
-        self.ring = mtp.get("ring", I.POS_RING) if mtp else 2   # "ring": 2 only as a mutation check
+        self.ring = mtp.get("ring", I.POS_RING) if mtp else (I.POS_RING if rollback_ring else 2)
         self.nmtp = m.n_mtp if mtp else 0
         self.rope_pos = I.ROPE_POS if mtp else PMAX
         layers = range(self.L + self.nmtp)

@@ -1,0 +1,18 @@
+{
+  "source_commit": "0544fca2c",
+  "host": "ot-epyc3",
+  "scratch": "/srv/opentallas-scratch/claude/mtp-die/s81/headmtp/rebudget",
+  "status": "HISTORICAL_REBUDGET_COMPLETED",
+  "scope": "16 paths/60 wires per corner from interim511pair head; literal backslash-t separated fields; clocktrunk rows include unqualified upstream PHY/PLL abstractions",
+  "setup_corner": "tt",
+  "hold_corner": "ff",
+  "adoption": false,
+  "files": {
+    "links_fwd_ff.tsv": {
+      "sha256": "cd6c2927def32d6817e5a4dbf8325a28f739dbdb35ae8ae341ff11225bea0210"
+    },
+    "links_fwd_tt.tsv": {
+      "sha256": "f64daf2958da7e7a615427ca35915257ef778c742a0bf8f5ca5818be107967bb"
+    }
+  }
+}

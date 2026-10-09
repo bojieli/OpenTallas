@@ -39,6 +39,35 @@ BLOCKS = dict(
                 macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
     idle=dict(top='hfd_coll_idle_tx', src=[CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx.sv'],
               macros=[], die=(30, 30), density=.55, sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    # drive-0532 2026-10-08: pin-registered II=1 packet queue (ot_hbm_collective_packet_fifo_ii1r): pin flops on every
+    # input/output, registered ready with a 2-slot reserve, credit-flow output, SRAM output capture flop, syndrome and
+    # correct stages split.  r = a geometry, rb = b geometry, rw = b geometry + WREG=1 (flop at the macro inputs).
+    pkt_ii1r=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                  CT + 'hfd_coll_pkt_fifo_ii1r.sv'], macros=[M256], die=(330.048, 216), density=.55,
+                  macro_tcl='physical/hbm_contracts_20261007/pkt_macros_a.tcl',
+                  pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    pkt_ii1rb=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                   CT + 'hfd_coll_pkt_fifo_ii1r.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
+                   macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
+                   pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    pkt_ii1rw=dict(top='hfd_coll_pkt_fifo_ii1', src=[PKG, CF + 'ot_hbm_collective_packet_fifo_ii1r.sv',
+                   CT + 'hfd_coll_pkt_fifo_ii1w.sv'], macros=[M256], die=(397.44, 250.56), density=.45,
+                   macro_tcl='physical/hbm_contracts_20261007/pkt_macros_b.tcl',
+                   pins=['dout.*=left', 'din.*=right', '(clk|rst_n|push|pop|ready|valid|fault|count.*)=top'], sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    # redesign-hbm 2026-10-08 PIN variants: every data input lands in a flop, every output leaves a flop (consistent
+    # die-link budget, R = S = 254.5 ps).  Same top names; RTL in the *_pin.sv wrappers.
+    idle_pin=dict(top='hfd_coll_idle_tx', src=[CT + 'hfd_coll_idle_tx_pin.sv'],
+                  macros=[], die=(30, 30), density=.55, sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    credit_pin=dict(top='hfd_coll_credit_prod', src=[CT + 'ot_hbm_coll_credit_producer.sv', CT + 'hfd_coll_credit_pin.sv'],
+                    macros=[], die=(40, 40), density=.55, sdc=['physical/hbm_contracts_20261007/credit_reset.sdc']),
+    su_rin_pin=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv',
+                    CT + 'hfd_su_result_ingress_pin.sv'], macros=[M64], die=(230, 150), density=.55,
+                    sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
+    su_rin_pin_b=dict(top='hfd_su_result_ingress', src=[CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv',
+                      CT + 'hfd_su_result_ingress_pin.sv'], macros=[M64], die=(299.592, 120.96), density=.5,
+                      macro_tcl='physical/hbm_contracts_20261007/su_rin_macros_b.tcl',
+                      pins=['^r_in=left', '^out_=top', '^(op_|fault|free_o|clk|rst_n)=bottom'],
+                      sdc=['physical/hbm_contracts_20261007/reset_rst_n.sdc']),
 )
 
 

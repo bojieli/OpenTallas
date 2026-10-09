@@ -1,0 +1,185 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_dsrom_hc_mean_capture",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T08:00:37.671418+00:00",
+      "description": "Proximal independent HC4 input mean forL37/L38/L39: SINGLE_CAPTURE1,1280d/rank,40protected512bflits/source. Actual distributed count12sources+4headjoins; source-homes and registeredMT_SEED5/header binding pending.",
+      "source": {
+        "commit": "5799ddda6",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented; minimum full-shape exact mechanism PASS",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "running proximal SINGLE_CAPTURE1 characterization/global placement; parent context pending",
+        "corners": {
+          "route": "TT",
+          "hold": "FF"
+        },
+        "evidence": [
+          "ot-epyc1tb:/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/source-route-r3.pid:429671"
+        ]
+      },
+      "dependencies": [
+        "actual selected stage_join homes L37/L38/L39",
+        "native VM owner arbiter",
+        "MT_SEED5 formatter/header authentication and registered finite credits"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_dsrom_hc_input_reader",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T08:00:37.671435+00:00",
+      "description": "Actual residentH4x5120/rank:320-rowcopy stride+80-rowTPoffset,320variable-rvalid reads/capture; protected4rowholds. Prior523b8b43c full4ranks+readbounds/BF16negativePASS. Source/headportbinding and distributed successor pending.",
+      "source": {
+        "commit": "5799ddda6",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_input_reader.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented; minimum full-shape exact mechanism PASS",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "historical local-shard candidate running; actual full-H successor pending",
+        "corners": {},
+        "evidence": [
+          "ot-agidock128:/srv/opentallas-scratch/codex-dsrom-hc-reader-a6e02b292/route-r1.pid:2780058"
+        ]
+      },
+      "dependencies": [
+        "actual selected stage_join homes L37/L38/L39",
+        "native VM owner arbiter",
+        "MT_SEED5 formatter/header authentication and registered finite credits"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_dsrom_hc_seed_join",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T08:00:37.671437+00:00",
+      "description": "HeadTP4rank join ofthreeindependent40flit means: real3SRAM SECDED, per-capture framecount/last/user/position/epoch checks and ordered120flit seed delivery. All4headjoinhomes/contextbudgets pending.",
+      "source": {
+        "commit": "5799ddda6",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_seed_join.sv",
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented; minimum full-shape exact mechanism PASS",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/join_r1/terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS component scope; packet/source binding pending",
+          "evidence": [
+            "results/rtl/dsrom_hc_mean_capture_20261009/join_r1/terminal.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "running characterization/global placement; parent context pending",
+        "corners": {
+          "route": "TT",
+          "hold": "FF"
+        },
+        "evidence": [
+          "ot-epyc1tb:/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9/join-route-r1.pid:2473750"
+        ]
+      },
+      "dependencies": [
+        "actual selected stage_join homes L37/L38/L39",
+        "native VM owner arbiter",
+        "MT_SEED5 formatter/header authentication and registered finite credits"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    }
+  ]
+}

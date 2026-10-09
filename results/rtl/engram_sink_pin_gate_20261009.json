@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.engram-sink-pin-gate.v1",
+ "boundary": "1536beats, eight slots, four burst sources; no physical qualification",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv": "a3ccd59b719e36379d0285bb3489a90c1cf3e5fd26ec8a3236188ef2c837b98e",
+  "rtl/dsrom_sys/engram/dsfd_engram_sink.sv": "d16851d7fd67fe0baba783a50774ba7f296f2d84f6b1b64ee6226155a181d1dd",
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+  "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+  "rtl/test/tb_dsrom_engram_sink_pin.sv": "b8f90ea615bf7f44b68a0eaa71a84955f407887f9e136aceeb21470c8fdb8478",
+  "tools/uarch_model.py": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9",
+  "tools/engram_sink_pin_gate.py": "965f1d50ad4c77204462e6c92d34d6abe4ebc75d6468d8f11d1f73c79722344f"
+ },
+ "cases": {
+  "control": {
+   "returncode": 0,
+   "stdout": "ENGRAM_SINK_PIN PASS words=1536 sources=4 slots=8 burst=1 reset=1 payload=1 tags=1 release=1\n/srv/opentallas-scratch/claude/engram/pin-r2/rtl/test/tb_dsrom_engram_sink_pin.sv:74: $finish called at 16450000 (1ps)\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "overflow_reservation_removed": {
+   "returncode": 1,
+   "stdout": "FATAL: /srv/opentallas-scratch/claude/engram/pin-r2/rtl/test/tb_dsrom_engram_sink_pin.sv:61: fullshape acceptance/ready mismatch\n       Time: 4550000  Scope: tb_dsrom_engram_sink_pin\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}

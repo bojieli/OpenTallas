@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/tools/w18/corner_sta_ref.py", line 50, in <module>
+    main()
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/tools/w18/corner_sta_ref.py", line 23, in main
+    shutil.copy(a.extra_sdc, o / "w18_extra.sdc")
+  File "/usr/lib/python3.10/shutil.py", line 417, in copy
+    copyfile(src, dst, follow_symlinks=follow_symlinks)
+  File "/usr/lib/python3.10/shutil.py", line 256, in copyfile
+    with open(dst, 'wb') as fdst:
+FileNotFoundError: [Errno 2] No such file or directory: '/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/routes/qfd_emb_pcport_2b0cdede4_tc/work/orfs/w18_extra.sdc'

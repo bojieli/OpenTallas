@@ -27,7 +27,10 @@ def main():
     manifest['signal_pin_successor']=successor['scope']
     for name,pin in manifest['files'].items():
         assert hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==pin,name
-    insertion=float(os.environ.get('CK_SS_MEAN','0'))
+    # hbm-blocks 2026-10-07: the CTS-only calibration run has no measurement yet; vclk latency 0 there made CTS repair
+    # an input hold of -(insertion) on every data pin (rx/tx d7a64a321: hold -583, setup -1,281, 73,998 violators) and
+    # the calibration never finished.  Calibrate against a nominal leaf insertion; the route uses the measured mean.
+    insertion=float(os.environ.get('CK_SS_MEAN') or os.environ.get('HA2_CAL_INSERTION','650'))
     sdc=run/'screening_route.sdc'
     sdc.write_text(f'''# UNBOUND PARENT: screening assumptions only.
 create_clock -name core_clk -period 833.333 [get_ports clk]

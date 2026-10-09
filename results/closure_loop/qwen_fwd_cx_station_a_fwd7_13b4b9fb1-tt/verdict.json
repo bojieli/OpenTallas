@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+ "block": "ot_qwen_link_fwd_cx_station",
+ "owner": "Claude:drive-1113",
+ "source_branch": "claude/drive-1113-cxstn-20261008",
+ "source_commit": "13b4b9fb144b43a52a4d13aba8406fe3a97fef9e",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 6.19,
+  "ff_ps": 16.31,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt/routes/qwen_fwd_cx_station_a_fwd7_13b4b9fb1_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt/routes/qwen_fwd_cx_station_a_fwd7_13b4b9fb1_tt/work/orfs/logs/asap7/opentallas_ot_qwen_link_fwd_cx_station_asap7_qfcxa_qwen_fwd_cx_station_a_fwd7_13b4b9fb1_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "route frontend (prepare.py) runs the two-hop exact bench: golden PASS, wrong-clock negative + 6 RTL mutants must FAIL, before synthesis.",
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T11:47:19-07:00",
+ "job_spec": {
+  "name": "qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+  "block": "ot_qwen_link_fwd_cx_station",
+  "owner": "Claude:drive-1113",
+  "purpose": "drive-1113: delay-matched forward on variant a geometry (140 um; b 180 um is the 134 ps port-buffer geometry, dropped): FWD_INV=7 kept inverters in series on the forwarded clock (RVT). a/b LVT TT -16.25/-68.03: data_q fall -> QN 101.6 -> INVx1 67.8 -> port buf vs forwarded clock at the port (leaf+inv+buf 34 ps); FF output hold had +253. Forwarded edge later by ~(FWD_INV-1) inv delays. Same logic, 0 cycles. Exact: bench.sh BENCH_OK (golden PASS, neg + 6 mutants FAIL).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/drive-1113-cxstn-20261008",
+   "commit": "13b4b9fb144b43a52a4d13aba8406fe3a97fef9e",
+   "extra_paths": [
+    "results/uarch/topk_station_SSFF_cell_model_20261002"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Station block: received and forwarded clocks are ports; internal timing uses the propagated clock and parasitics."
+   },
+   "route": {
+    "cmd": "TTB=/srv/opentallas-scratch/claude/ttbatch/26f14af32; [ -d $TTB ] || TTB=/home/ubuntu/closure-loop-local/ttbatch/26f14af32; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; FH=/srv/opentallas-scratch/claude/flowhold/src; [ -d $FH ] || FH=/home/ubuntu/closure-loop-local/flowhold/src; python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} VARIANT=a bash physical/qwen_link_fwd_cx_station/route.sh {LABEL} {RUN}/routes",
+    "ok": "grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/status {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ]
+  },
+  "hold_eco": {},
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/qwen_link_fwd_cx_station/a_fwd7_13b4b9fb1_tt"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "no_bench_reason": "route frontend (prepare.py) runs the two-hop exact bench: golden PASS, wrong-clock negative + 6 RTL mutants must FAIL, before synthesis.",
+  "dispatch_prerequisites": [],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+   "enabled": false,
+   "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  }
+ }
+}

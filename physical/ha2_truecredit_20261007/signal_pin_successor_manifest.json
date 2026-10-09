@@ -7,7 +7,15 @@
     "physical/ha2_truecredit_20261007/tx_pins_signal_only.tcl": "5e24f5954b4b1d4f4aca8049f6fab3da7522131ca2951c69643f313d200ca8d4",
     "physical/ha2_truecredit_20261007/tx_check_pins_signal_only.tcl": "67760eddba2a0112fe384b3a18fae7828e3a03737d9f54edc84d9ea7bb64a80e",
     "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl": "31e17d9c4ca6aeb477302ef98781bd30d6f4fa6430574bb4976c1b604d5572dd",
-    "tools/ha2_truecredit_physical_signalpins.py": "f5669ccd1de2c374a3d0515ab17ab0d7b399e166a9a950c7303588c36c0bada7",
+    "tools/ha2_truecredit_physical_signalpins.py": "0e5d00e666f08d4b0001c291668ac88dd5c1778e59ef9fa6e24ee0bd3f66f6f0",
     "tests/test_ha2_truecredit_signal_pins.py": "a509e46a8eaf9189e70639f8f9d44aafc2173fce5068ce993d2a897c8a06adf6"
-  }
+  },
+  "revisions": [
+    {
+      "by": "hbm-blocks 2026-10-07",
+      "file": "tools/ha2_truecredit_physical_signalpins.py",
+      "old_sha256": "f5669ccd1de2c374a3d0515ab17ab0d7b399e166a9a950c7303588c36c0bada7",
+      "why": "calibrate at nominal 650 ps vclk insertion instead of 0"
+    }
+  ]
 }

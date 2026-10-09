@@ -1,0 +1,13 @@
+{
+  "verdict": "PASS",
+  "source_commit": "68bca1124",
+  "default_elaborates_without_sram_codec_dependencies": true,
+  "positive_descriptors": 14,
+  "independent_byte_negative_pass": true,
+  "logical_tbs_mean": 0.51736975,
+  "logical_tbs_min": 0.179855,
+  "logical_tbs_max": 0.635132,
+  "timing_reference": "controller1024ps clock; distinct from target service833ps",
+  "scope": "actual core IK_SRAM1 IK_SRAM_ROTATE1 with legacy E descriptors; portal disabled. Full342blocks/1368lines exact byte/tag/order and final credits. No adoption,90percent-bandwidth,physical-fit or closure claim.",
+  "comparison": "Nominal and delayed rows equal prior test-only native substitution integrated_r2; CW legacy source synced from main subsequently, inactive in this gate."
+}

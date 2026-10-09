@@ -24,7 +24,7 @@ unset_input_delay [all_inputs]
 unset_output_delay [all_outputs]
 set fs_in [get_ports {go i_ph* i_np* i_xbase* i_xps* i_obase* i_ops* i_fmt* x_q* r_v* r_row* r_pos* r_fp32* r_bf16* r_e* f_fault}]
 set_input_delay  250 -max -clock io_ci $fs_in
-set_input_delay  -50 -min -clock io_ci $fs_in
+set_input_delay  0 -min -clock io_ci $fs_in
 set_output_delay 250 -max -clock io_co [all_outputs]
 set_output_delay -50 -min -clock io_co [all_outputs]
 set_false_path -from [get_ports {rw_ph rw_st rw_a* rw_d* rst_n}]

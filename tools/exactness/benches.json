@@ -174,10 +174,130 @@
     "source": "main",
     "evidence": "results/rtl/hdc_v41_mtp_isa_evidence.json"
    }
+  },
+  {
+   "bench": "s81_token_l20",
+   "target": "ds_s81",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "ds_s81",
+   "peak_gb": 60,
+   "label": "DS ROM S81 one-layer token bench at the 1M token: L20 rank 0 on the 1,792 HALF-dedicated + router K-split mapping; every field phase x every region in RTL (field vehicle, q element QX 10), RTL rows chained through the layer VM to the golden layer output; S81 selector (ot_hdc_v41x_sel Q4/W16/K512) on the 1,048,576 golden index scores; mutant = one flipped RTL row bit must FAIL",
+   "expect": {
+    "exact": true,
+    "cycles": null
+   },
+   "last_pass": null,
+   "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture /srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20 (prep on the checkpoint host)."
+  },
+  {
+   "bench": "v41_mtp_rom_rtl",
+   "target": "ds_v41",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "mtp_rom",
+   "peak_gb": 40,
+   "label": "Reduced V4.1 core, multi-step DSpark/forced speculative decode, acceptance lengths 0..5, final VM/KV and tokens against golden; restore-slot and accept-extra negative controls",
+   "expect": {
+    "exact": true,
+    "cycles": 11387277,
+    "runs_cycles": {
+     "img_gold4_forced_g5_n12": 11387277,
+     "img_oracle3_forced_g5_n12": 8333009,
+     "img_oracle5_forced_g5_n12": 9255693,
+     "img_gold4_dspark_g5_n12": 29049215
+    }
+   },
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Pinned Claude mtp-exact/src snapshot; source and image hashes in validation/rom_record.json",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/rom.json"
+   },
+   "note": "Terminal exact true on all four cases (acceptance0..5), all five restore/accept-extra mutants detected. Reduced core with XU/Sinkhorn handshake successor; no full-shape S81 implementation claim."
+  },
+  {
+   "bench": "v41_mtp_rom_wf2",
+   "target": "ds_s81",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "mtp_rom",
+   "peak_gb": 40,
+   "label": "Reduced L19/L20 two-stage wavefront with closed WFC, basic squash/reissue, WAVE0 negative control",
+   "expect": {
+    "exact": true,
+    "cycles": 83925
+   },
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Claude pinned /srv/opentallas-scratch/claude/mtp-exact/src snapshot; individual records contain source digests",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/wf2.json"
+   },
+   "note": "Basic order only; successors after rejected position do not run before correction. Deep MR-5 remains unqualified; see wf2/mr5_isa_probe.json; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
+  },
+  {
+   "bench": "v41_mtp_hbm_rtl",
+   "target": "hbm_ds",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "mtp_hbm",
+   "peak_gb": 40,
+   "label": "Connected HBM MTP control successors against golden traces, acceptance 0..5 and wrapping window; control and accept negative controls",
+   "expect": {
+    "exact": true,
+    "cycles": 598611,
+    "runs_cycles": {
+     "forced": 598611,
+     "forced_w16": 710683,
+     "mut1": 188240,
+     "accx": 188241
+    }
+   },
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Claude pinned /srv/opentallas-scratch/claude/mtp-exact/src snapshot; individual records contain source digests",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/hbm.json"
+   },
+   "note": "Trace-driven arithmetic responses; control/state exactness only, not full-target SM arithmetic or die physical qualification; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
+  },
+  {
+   "bench": "hbm_spec_state_lockstep",
+   "target": "hbm_ds",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "mtp_hbm",
+   "peak_gb": 40,
+   "label": "HBM token-edge spec-state successor in cycle lockstep: seed8 undrained and seeds1..8 drained",
+   "expect": {
+    "exact": true
+   },
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Pinned Claude mtp-exact/src snapshot; source digests in spec_state/sweep.json, validator logs archived",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/spec_state.json"
+   },
+   "note": "9-run validation terminal exact true: original undrained seed8 plus drained seeds1..8, all mismatches0; prior64-seed sweep covers both reset modes; no full-die physical qualification"
+  },
+  {
+   "bench": "v41_mtp_rollback_rtl",
+   "target": "ds_v41",
+   "tier": "nightly",
+   "host": "ot-epyc3",
+   "group": "mtp_rollback",
+   "peak_gb": 40,
+   "label": "33 ROM/HBM rollback storage positive and mutant cases, W128/W8 wrap, golden truncate, commit/accept and prefetch",
+   "expect": {
+    "exact": true
+   },
+   "last_pass": {
+    "commit": "e12c9a0fe",
+    "source": "Inherited rollback campaign source digests in record.json",
+    "evidence": "results/rtl/mtp_rollback_20261008/record.json"
+   },
+   "note": "Synthetic32-bit mixing replaces model arithmetic; this proves storage dataflow and negative-control detection, not released-weight arithmetic or full-target die timing. Ring-bearing fullgamma reduced RTL vehicle is separate. 40GB retains campaign admission reservation; no measured-peak claim."
   }
  ],
  "not_covered": [
-  "DS ROM S81: no system-level token bench exists (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
+  "DS ROM S81: one-layer token bench s81_token_l20 (L20, field phases + selector in RTL, the rest golden-composed); no full-model S81 token bench (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
   "The closure-block RTL (Qwen die masters r21/r22 stations, controller TMR/cancel, native links; S81 BF/selector/PQ/softmax/gearbox; HBM die views, SU/SFU/packet SRAM) is NOT instantiated by any bench above: those are physical-closure variants verified by their own component benches."
  ],
  "fixtures": {
@@ -201,6 +321,7 @@
    "qwen_gold_tp2_l3": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle_l3.json",
    "qwen_kv_history": "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json (history_source_sha256, L0 die0)",
    "hbm_ds_joint": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json (source_sha256)"
-  }
+  },
+  "mtp_exact": "/srv/opentallas-scratch/claude/exactness/fixtures/mtp_exact"
  }
 }

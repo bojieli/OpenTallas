@@ -1,0 +1,51 @@
+{
+  "gate": "PASS",
+  "drop_event_mutant": "EXPECTED_FAIL",
+  "model": {
+    "candidate": "HBM_RETRY_POP_CDC",
+    "capacity": 256,
+    "counter_bits": 10,
+    "macs_per_cycle": 0,
+    "memory_ports": 0,
+    "source_event_per_cycle": 1,
+    "Gray_crossing_bits": 10,
+    "synchronizer_stages": 2,
+    "registered_source_bits": 20,
+    "destination_state_bits": 30,
+    "source_period_ns": 0.8333333333333334,
+    "destination_period_ns": 0.8333333333333334,
+    "first_event_latency_ns_bound": 2.5,
+    "steady_events_per_cycle": 1,
+    "retained_event_debt": 256,
+    "area_um2": null,
+    "floorplan_slot_fit": null,
+    "routing_tracks_needed": 10,
+    "channel_capacity": null,
+    "actual_clock_reset_bound": false,
+    "physical_qualified": false
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_pop_cdc.sv": "085488bb8cac07f74ff125ecdc657d482e4d017f1e0021a96d80861ad29d21e7",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_pop_cdc.sv": "aa87cefe605833cc08bb2a385befc3c71fdb34c91af6b34836bf03ee6407e61d",
+    "tools/uarch_model.py": "67ca35bc2bad2b0393859c024c51915b1a8b1f2092347e85f15ea99863352904"
+  },
+  "host": "ot-epyc2",
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "source_events": 1542,
+  "source_destination_phase_offset_ns": 1.7,
+  "source_destination_period_ns": 8.333334,
+  "coverage": [
+    "oneeventperedge independentphase clocks",
+    "10bitGraycounter wraps at1024",
+    "all1542 events exactlyonce",
+    "coordinated reset followedby32events"
+  ],
+  "physical_qualified": false,
+  "MTBF_qualified": false,
+  "die_bound": false,
+  "open": [
+    "sync1 targetedCDC timingexception andskewbounds",
+    "physicalSS/FF andsynchronizerMTBF",
+    "actualTUrxpop clocks/reset context"
+  ]
+}

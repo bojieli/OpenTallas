@@ -1,0 +1,497 @@
+{
+ "slab": "dsfd_svc",
+ "method": "The S81 die places dsfd_ctrl / dsfd_svc / dsfd_sp_capture / dsfd_bk_collector as single masters; S81-PH hardened each as tiles (physical/s81_ph_views/closed/<tile>/<tile>_{ss,tt,ff}.lib, write_timing_model ETMs of the routed tiles).  With every tile of a slab closed, the slab's die-facing timing is the tile timing: a die-facing slab pin IS a tile pin (tools/budgets/ tiles.py: \"the slab pin is the tile pin\", inherit, length 0), so the assembled ETM of a slab takes, per slab die port, the worst arc over every tile pin bit that implements it (setup / hold / recovery / removal: max constraint; clk->q: max delay at SS / TT, min delay at FF), tables copied verbatim (tile clock insertion is inside them: the die must NOT add the routed insertion of an assembled master again).  Tile clock pins map to the slab clock pins by name (capture's serial-clock ckv arcs map to the slab's only die clock 'ck', as the die netlist feeds the slab one clock).",
+ "corners": {
+  "ss": {
+   "ports": {
+    "ad": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "ad[109]",
+      "ps_at_5p76fF": 744.5
+     }
+    },
+    "af": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": 458.0
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": 418.7
+     }
+    },
+    "od": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "od[74]",
+      "ps_at_5p76fF": 499.6
+     }
+    },
+    "of": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": 412.3
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": 371.0
+     }
+    },
+    "q": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[40]",
+      "ps_at_5p76fF": 158.6
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[392]",
+      "ps_at_5p76fF": -47.4
+     }
+    },
+    "rd": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "rv[0]",
+      "ps_at_5p76fF": 98.9
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "r_tag[1]",
+      "ps_at_5p76fF": -22.5
+     }
+    },
+    "rst": {},
+    "xd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xd[181]",
+      "ps_at_5p76fF": 472.3
+     }
+    },
+    "xf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": 323.7
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": 292.0
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_svc_pc": "physical/s81_ph_views/closed/dsfd_svc_pc/dsfd_svc_pc_ss.lib",
+    "dsfd_svc_stn": "physical/s81_ph_views/closed/dsfd_svc_stn/dsfd_svc_stn_ss.lib",
+    "dsfd_svcio_ad": "physical/s81_ph_views/closed/dsfd_svcio_ad/dsfd_svcio_ad_ss.lib",
+    "dsfd_svcio_od": "physical/s81_ph_views/closed/dsfd_svcio_od/dsfd_svcio_od_ss.lib",
+    "dsfd_svcio_q": "physical/s81_ph_views/closed/dsfd_svcio_q/dsfd_svcio_q_ss.lib",
+    "dsfd_svcio_x": "physical/s81_ph_views/closed/dsfd_svcio_x/dsfd_svcio_x_ss.lib"
+   }
+  },
+  "tt": {
+   "ports": {
+    "ad": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "ad[91]",
+      "ps_at_5p76fF": 525.8
+     }
+    },
+    "af": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": 333.0
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": 312.8
+     }
+    },
+    "od": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "od[232]",
+      "ps_at_5p76fF": 418.5
+     }
+    },
+    "of": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": 289.5
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": 271.0
+     }
+    },
+    "q": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[16]",
+      "ps_at_5p76fF": 137.2
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[392]",
+      "ps_at_5p76fF": -49.5
+     }
+    },
+    "rd": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "r_data[138]",
+      "ps_at_5p76fF": 80.1
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "r_tag[1]",
+      "ps_at_5p76fF": -27.0
+     }
+    },
+    "rst": {},
+    "xd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xd[185]",
+      "ps_at_5p76fF": 329.3
+     }
+    },
+    "xf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": 234.9
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": 13011.4
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_svc_pc": "physical/s81_ph_views/closed/dsfd_svc_pc/dsfd_svc_pc_tt.lib",
+    "dsfd_svc_stn": "physical/s81_ph_views/closed/dsfd_svc_stn/dsfd_svc_stn_tt.lib",
+    "dsfd_svcio_ad": "physical/s81_ph_views/closed/dsfd_svcio_ad/dsfd_svcio_ad_tt.lib",
+    "dsfd_svcio_od": "physical/s81_ph_views/closed/dsfd_svcio_od/dsfd_svcio_od_tt.lib",
+    "dsfd_svcio_q": "physical/s81_ph_views/closed/dsfd_svcio_q/dsfd_svcio_q_tt.lib",
+    "dsfd_svcio_x": "physical/s81_ph_views/closed/dsfd_svcio_x/dsfd_svcio_x_tt.lib"
+   }
+  },
+  "ff": {
+   "ports": {
+    "ad": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "ad[532]",
+      "ps_at_5p76fF": 316.3
+     }
+    },
+    "af": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": -408.5
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_ad",
+      "bit": "af[0]",
+      "ps_at_5p76fF": 8.6
+     }
+    },
+    "od": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "od[494]",
+      "ps_at_5p76fF": 232.2
+     }
+    },
+    "of": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": -142.8
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_od",
+      "bit": "of[0]",
+      "ps_at_5p76fF": 8.5
+     }
+    },
+    "q": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[16]",
+      "ps_at_5p76fF": 129.3
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svcio_q",
+      "bit": "q[392]",
+      "ps_at_5p76fF": -49.5
+     }
+    },
+    "rd": {
+     "hold_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "r_data[138]",
+      "ps_at_5p76fF": 70.8
+     },
+     "setup_rising/ck": {
+      "tile": "dsfd_svc_pc",
+      "bit": "r_tag[1]",
+      "ps_at_5p76fF": -29.9
+     }
+    },
+    "rst": {},
+    "xd": {
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xd[207]",
+      "ps_at_5p76fF": 210.2
+     }
+    },
+    "xf": {
+     "falling_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": -178.7
+     },
+     "rising_edge/ck": {
+      "tile": "dsfd_svcio_x",
+      "bit": "xf[0]",
+      "ps_at_5p76fF": 177.5
+     }
+    }
+   },
+   "tiles_ss_as_tt": [],
+   "libs": {
+    "dsfd_svc_pc": "physical/s81_ph_views/closed/dsfd_svc_pc/dsfd_svc_pc_ff.lib",
+    "dsfd_svc_stn": "physical/s81_ph_views/closed/dsfd_svc_stn/dsfd_svc_stn_ff.lib",
+    "dsfd_svcio_ad": "physical/s81_ph_views/closed/dsfd_svcio_ad/dsfd_svcio_ad_ff.lib",
+    "dsfd_svcio_od": "physical/s81_ph_views/closed/dsfd_svcio_od/dsfd_svcio_od_ff.lib",
+    "dsfd_svcio_q": "physical/s81_ph_views/closed/dsfd_svcio_q/dsfd_svcio_q_ff.lib",
+    "dsfd_svcio_x": "physical/s81_ph_views/closed/dsfd_svcio_x/dsfd_svcio_x_ff.lib"
+   }
+  }
+ },
+ "glue": [
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "quadrant station chain, station -> station",
+   "launch": "dsfd_svc_stn.q_w",
+   "capture": "dsfd_svc_stn.q_e",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 193.4,
+   "tt_setup_bal": 193.4,
+   "ss_setup": -65.1,
+   "ss_setup_bal": -65.1,
+   "ff_hold": 127.5,
+   "ff_hold_bal": 127.5
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "od chain, station -> station",
+   "launch": "dsfd_svc_stn.od_ev",
+   "capture": "dsfd_svc_stn.od_wv",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 18.0,
+   "tt_setup_bal": 18.0,
+   "ss_setup": -155.0,
+   "ss_setup_bal": -155.0,
+   "ff_hold": 137.6,
+   "ff_hold_bal": 137.6
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "od chain data",
+   "launch": "dsfd_svc_stn.od_ed",
+   "capture": "dsfd_svc_stn.od_wd",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 131.2,
+   "tt_setup_bal": 131.2,
+   "ss_setup": -134.8,
+   "ss_setup_bal": -134.8,
+   "ff_hold": 128.5,
+   "ff_hold_bal": 128.5
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "od chain ready",
+   "launch": "dsfd_svc_stn.od_wr",
+   "capture": "dsfd_svc_stn.od_er",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 19.5,
+   "tt_setup_bal": 19.5,
+   "ss_setup": -165.0,
+   "ss_setup_bal": -165.0,
+   "ff_hold": 153.4,
+   "ff_hold_bal": 153.4
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "a0 chain, station -> station",
+   "launch": "dsfd_svc_stn.a0_ev",
+   "capture": "dsfd_svc_stn.a0_wv",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 40.8,
+   "tt_setup_bal": 40.8,
+   "ss_setup": -144.8,
+   "ss_setup_bal": -144.8,
+   "ff_hold": 149.2,
+   "ff_hold_bal": 149.2
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "a0 chain data",
+   "launch": "dsfd_svc_stn.a0_ed",
+   "capture": "dsfd_svc_stn.a0_wd",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 115.2,
+   "tt_setup_bal": 115.2,
+   "ss_setup": -114.4,
+   "ss_setup_bal": -114.4,
+   "ff_hold": 120.6,
+   "ff_hold_bal": 120.6
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "a0 chain ready",
+   "launch": "dsfd_svc_stn.a0_wr",
+   "capture": "dsfd_svc_stn.a0_er",
+   "length_um": 180.0,
+   "stations": 0,
+   "tt_setup": 27.2,
+   "tt_setup_bal": 27.2,
+   "ss_setup": -137.9,
+   "ss_setup_bal": -137.9,
+   "ff_hold": 138.1,
+   "ff_hold_bal": 138.1
+  },
+  {
+   "tt_wire_ratio": 0.812,
+   "what": "IO hub -> first station (q)",
+   "launch": "dsfd_svcio_q.q_q",
+   "capture": "dsfd_svc_stn.q_e",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 176.3,
+   "tt_setup_bal": 197.3,
+   "ss_setup": -66.1,
+   "ss_setup_bal": -38.6,
+   "ff_hold": 132.3,
+   "ff_hold_bal": 136.4
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "last station -> IO hub (od)",
+   "launch": "dsfd_svc_stn.od_ed",
+   "capture": "dsfd_svcio_od.od_d",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 204.9,
+   "tt_setup_bal": 166.1,
+   "ss_setup": 9.8,
+   "ss_setup_bal": -57.0,
+   "ff_hold": 62.4,
+   "ff_hold_bal": 90.5
+  },
+  {
+   "tt_wire_ratio": 0.762,
+   "what": "IO hub ready -> station (od)",
+   "launch": "dsfd_svcio_od.od_r",
+   "capture": "dsfd_svc_stn.od_er",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 97.1,
+   "tt_setup_bal": 135.9,
+   "ss_setup": -16.4,
+   "ss_setup_bal": 50.4,
+   "ff_hold": 139.3,
+   "ff_hold_bal": 111.2
+  },
+  {
+   "tt_wire_ratio": 0.818,
+   "what": "last station -> IO hub (a0)",
+   "launch": "dsfd_svc_stn.a0_ed",
+   "capture": "dsfd_svcio_ad.a0_d",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": 380.8,
+   "tt_setup_bal": 285.2,
+   "ss_setup": 231.4,
+   "ss_setup_bal": 91.0,
+   "ff_hold": -0.0,
+   "ff_hold_bal": 77.3
+  },
+  {
+   "tt_wire_ratio": 0.765,
+   "what": "IO hub ready -> station (a0)",
+   "launch": "dsfd_svcio_ad.a0_r",
+   "capture": "dsfd_svc_stn.a0_er",
+   "length_um": 43.2,
+   "stations": 0,
+   "tt_setup": -49.2,
+   "tt_setup_bal": 46.4,
+   "ss_setup": -246.5,
+   "ss_setup_bal": -106.1,
+   "ff_hold": 225.6,
+   "ff_hold_bal": 148.3
+  },
+  {
+   "tt_wire_ratio": 0.762,
+   "what": "u_od.bad -> fault station u_fs",
+   "launch": "dsfd_svcio_od.bad",
+   "capture": "dsfd_stnh_512x1.di0",
+   "length_um": 406.9,
+   "stations": 1,
+   "tt_setup": -35.9,
+   "tt_setup_bal": 82.2,
+   "ss_setup": -189.0,
+   "ss_setup_bal": -46.3,
+   "ff_hold": 161.6,
+   "ff_hold_bal": 87.4
+  },
+  {
+   "tt_wire_ratio": 0.696,
+   "what": "fault station u_fs -> u_ad.fi",
+   "launch": "dsfd_stnh_512x1.do0",
+   "capture": "dsfd_svcio_ad.fi",
+   "length_um": 400.2,
+   "stations": 1,
+   "tt_setup": 259.2,
+   "tt_setup_bal": 84.2,
+   "ss_setup": 38.2,
+   "ss_setup_bal": -178.0,
+   "ff_hold": -39.0,
+   "ff_hold_bal": 84.4
+  }
+ ],
+ "glue_worst_ps": {
+  "tt_setup": -49.2,
+  "ss_setup": -246.5,
+  "ff_hold": -39.0,
+  "tt_setup_bal": 18.0,
+  "ss_setup_bal": -178.0,
+  "ff_hold_bal": 77.3
+ }
+}

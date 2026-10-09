@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.emb_hbm_package_inline_gate.v1",
+  "host": "ot-pve1",
+  "source_commit": "6a23406c6",
+  "transformation_manifest": "rtl/qwen_sys/emb_hbm_20261008/synth/manifest.json",
+  "comparison": "Original package-import pcport vs mechanically generated inlined pcport;64writes192reads includesKV,CE,UE; negativecontrol flips1decodedoutputbit and mustFAIL.",
+  "positive": "exact_real.log",
+  "negative": "negative_real.log",
+  "parser": "parse_real.log",
+  "parser_error_history": "parse.log records unavailablebareyosys command; retried knowninstalled nativeYosys path, no RTLfailure",
+  "status": "PASS",
+  "testbench_sha256": "a9c2cb03174ae8ac414aab5bf9c3e97b51dfa76b28343cf9a7bf940c0cdd6a51",
+  "source_pair_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+    "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv": "9ff7913899721f678082629b4865f1623aebc79b289c3be6250e91b13eeb8f99"
+  }
+}

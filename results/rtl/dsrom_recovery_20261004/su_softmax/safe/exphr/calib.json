@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exphrf_bd30aca4a/routes/dsrom_softmax_safe_exphrf_bd30aca4a_cal/work/orfs/results/asap7/opentallas_ot_dsrom_su_softmax_exp_hr_asap7_safe_dsrom_softmax_safe_exphrf_bd30aca4a_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": null,
+  "all": {
+   "n": 35817,
+   "mean": 554.6,
+   "min": 515.7,
+   "max": 591.6
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": null,
+  "all": {
+   "n": 35817,
+   "mean": 339.6,
+   "min": 309.8,
+   "max": 372.9
+  },
+  "errors": []
+ },
+ "env": {
+  "CK_SS_MEAN": 555,
+  "CK_SS_ALL_MEAN": 555,
+  "CK_SS_MIN": 516,
+  "CK_SS_ALL_MIN": 516,
+  "CK_SS_MAX": 592,
+  "CK_SS_ALL_MAX": 592,
+  "CK_FF_MEAN": 340,
+  "CK_FF_ALL_MEAN": 340,
+  "CK_FF_MIN": 310,
+  "CK_FF_ALL_MIN": 310,
+  "CK_FF_MAX": 373,
+  "CK_FF_ALL_MAX": 373
+ }
+}

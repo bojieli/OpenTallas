@@ -1,0 +1,309 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_ctrl_protected_oreg_00-3d5ad2a4ftt",
+ "block": "qfd_ctrl_protected_00",
+ "owner": "Claude:qwen-blocks",
+ "source_branch": "claude/qwen-blocks-20261007",
+ "source_commit": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_protected_oreg_00-3d5ad2a4ftt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 245.49,
+  "ff_ps": 30.79,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_protected_oreg_00-3d5ad2a4ftt/routes/qfd_ctrl_protected_oreg_00_3d5ad2a4ftt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/qfd_ctrl_protected_oreg_00-3d5ad2a4ftt/routes/qfd_ctrl_protected_oreg_00_3d5ad2a4ftt/work/orfs/logs/asap7/opentallas_ot_qwen_ctrl_protected_pc00_asap7_qdm_qfd_ctrl_protected_oreg_00_3d5ad2a4ftt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_containment_-1_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected PC=0 reads=2048 writes=64 rows=338 columns=2112 first_ref=120 credits=68\nrtl/test/tb_qwen_ctrl_pc_protected.sv:73: $finish called at 83110000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_0_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=0 injected=3 fault=8 accepted_rows=0 accepted_cols=0 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 260000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_1_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=1 injected=2758 fault=2760 accepted_rows=90 accepted_cols=1024 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 27780000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_2_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=2 injected=2747 fault=2760 accepted_rows=90 accepted_cols=1024 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 27780000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_3_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=3 injected=110 fault=120 accepted_rows=8 accepted_cols=58 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 1380000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_4_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=4 injected=12 fault=13 accepted_rows=2 accepted_cols=0 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 310000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_5_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=5 injected=12 fault=13 accepted_rows=2 accepted_cols=0 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 310000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_6_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=6 injected=12 fault=13 accepted_rows=2 accepted_cols=0 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 310000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_7_0": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nPASS protected upset PC=0 target=7 injected=12 fault=13 accepted_rows=2 accepted_cols=0 wrong_accepted=0\nrtl/test/tb_qwen_ctrl_pc_protected.sv:101: $finish called at 310000000 (1fs)\n",
+   "track": "parallel"
+  },
+  "bench_containment_0_1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nFAIL protected        wrong row command escaped PC=0 INJECT=0 cycle=8\nFATAL: rtl/test/tb_qwen_ctrl_pc_protected.sv:23: \n       Time: 120010000  Scope: tb_qwen_ctrl_pc_protected.fail\n",
+   "track": "parallel"
+  },
+  "bench_containment_4_1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "rtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/physical/ot_hbm_r14_stream_pc_shift.sv:335: warning: @* found no sensitivities so it will never trigger.\nrtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv:312: warning: @* found no sensitivities so it will never trigger.\nFAIL protected             wrong credit escaped PC=0 INJECT=4 cycle=13\nFATAL: rtl/test/tb_qwen_ctrl_pc_protected.sv:23: \n       Time: 170010000  Scope: tb_qwen_ctrl_pc_protected.fail\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": null,
+ "cycles_added": "Zero command/credit cycles;2 full controller copies+guard; expandedframe14.77189mm\u00b2 across128PCs; parentabort/refreshandmappedretentionunqualified.",
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T03:46:30-07:00",
+ "job_spec": {
+  "name": "qfd_ctrl_protected_oreg_00-3d5ad2a4ftt",
+  "block": "qfd_ctrl_protected_00",
+  "owner": "Claude:qwen-blocks",
+  "purpose": "Fail-closed dual-controller replicas with synchronous stream acceptance guard; runtime containment gates pass but actual mapped independence, guard IO timing and parent abort/refresh binding remain mandatory. | OPTION B TT route (TC setup repair, MM FF hold HM 50, rule H1)",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "claude/qwen-blocks-20261007",
+   "commit": "3d5ad2a4fba12b21909b86d18314a5fa48bd27a2"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "containment_-1_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=-1 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_-1_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_-1_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_0_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=0 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_0_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_0_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_1_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=1 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_1_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_1_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_2_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=2 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_2_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_2_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_3_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=3 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_3_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_3_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_4_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=4 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_4_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_4_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_5_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=5 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_5_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_5_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_6_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=6 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_6_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_6_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_7_0",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=7 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=0 -o {RUN}/bench/containment_7_0 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_7_0",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "pass_regex": "PASS protected"
+    },
+    {
+     "name": "containment_0_1",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=0 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=1 -o {RUN}/bench/containment_0_1 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_0_1",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "fail_regex": "FAIL protected.*(accepted wrong|escaped)"
+    },
+    {
+     "name": "containment_4_1",
+     "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc_protected -P tb_qwen_ctrl_pc_protected.PC=0 -P tb_qwen_ctrl_pc_protected.INJECT=4 -P tb_qwen_ctrl_pc_protected.OREG=1 -P tb_qwen_ctrl_pc_protected.NEG=1 -o {RUN}/bench/containment_4_1 rtl/test/tb_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_protected.sv rtl/physical/ot_qwen_ctrl_pc_shift.sv rtl/physical/ot_hbm_r14_stream_pc_shift.sv rtl/physical/ot_qwen_ctrl_pc.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv && vvp -n {RUN}/bench/containment_4_1",
+     "expect": "fail",
+     "threads": 1,
+     "peak_ram_gb": 2,
+     "needs": [
+      "iverilog"
+     ],
+     "fail_regex": "FAIL protected.*(accepted wrong|escaped)"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+   },
+   "route": {
+    "cmd": "OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_ctrl_protected_oreg_00.sdc SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_ctrl_protected_oreg_00 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_ctrl_protected_00 --out {RUN}/record/views/qfd_ctrl_protected_00 --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_ctrl_protected_oreg_00.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/qwen_masters_final_20261007/qfd_ctrl_protected_oreg_00-3d5ad2a4ftt"
+   }
+  ],
+  "cycles_added": "Zero command/credit cycles;2 full controller copies+guard; expandedframe14.77189mm\u00b2 across128PCs; parentabort/refreshandmappedretentionunqualified.",
+  "merge_target": null,
+  "host_require": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ }
+}

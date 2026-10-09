@@ -1,0 +1,47 @@
+{
+  "source_branch": "codex/qwen-crom-ctl-physical-20261009",
+  "source_crom": "337dcce39",
+  "source_sysctl": "52e97db99",
+  "crom": {
+    "job": "qfd_crom48-337dcce39-tc-hm10",
+    "host": "ot-pve1",
+    "status": "RUNNING placement, actuallogsadvance;48realmacros+64lane2layerpinspread",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_crom48-337dcce39-tc-hm10",
+    "physical_claim": "pending",
+    "exact_claim": "historical full-shape pass/mutant; simulationtoken-equivalent",
+    "successor": "qfd_crom48-337dcce39-tc-hm10",
+    "successor_status": "RUNNING"
+  },
+  "sysctl": {
+    "job": "qfd_sysctl_stn-52e97db99-tc-hm10",
+    "status": "RUNNING ot-epyc1tb, CTS",
+    "physical_claim": "pending",
+    "exact_claim": "NineprotectedSRAMpoison+controlscenariosPASS8192steps/1245184events/8191CQ/0bad; oldreadmutant detected; measuredCL40 maxturn98 vs97 base",
+    "mutable_storage": "SECDED24 per18b token in32b slot, eight slots per1024x256 SRAM row",
+    "fault_source": 22,
+    "UE_contract": "qzero, sticky pb_fault gates package readiness",
+    "successor": "qfd_sysctl_stn-52e97db99-tc-hm10",
+    "cycles_added": 1,
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_stn-52e97db99-tc-hm10"
+  },
+  "remaining": [
+    "route verdicts",
+    "die integration and matched CROM/SU pin abutment",
+    "SS sensitivity and TC/FF timing composed"
+  ],
+  "cycles_added": 1,
+  "sequencer_sys": {
+    "source": "08ef6a8a8",
+    "opt_in": "SYS_ENABLE default0",
+    "exact": "All4ranks P0/P8191 currentcompiler command/tag fixturePASS304stages/1760ME/5792SU/584collectives/0bad; forcedprogrambounds failclosed all4; basefoldmutant576bad rank0",
+    "physical": "RUNNING admitted ot-epyc4 qfd_sp_constants_sequencer_sys-08ef6a8a8-tc-hm10",
+    "payload": "nativeprogramaudit provesME nonaddressfieldsidentical, releasedaddressrelocation+AR256numericalgate stillpending; noadoptionclaim",
+    "packing": {
+      "code": 20016,
+      "code_capacity": 20480,
+      "scale": 40392,
+      "scale_capacity": 196608
+    }
+  }
+}

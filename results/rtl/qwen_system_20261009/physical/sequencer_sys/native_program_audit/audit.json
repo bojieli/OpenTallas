@@ -1,0 +1,109 @@
+{
+  "schema": "opentallas.qwen_native_isa_address_audit.v1",
+  "origin_host": "ot-epyc1tb",
+  "origin_path": "/srv/opentallas/scratch-overflow/claude/layer-parallel-sim/data/st_tp4_sw64/sw",
+  "scope": "smallreleasedprogramrecords only; no payload read or numericaladoptionclaim",
+  "files": {
+    "H_d0_program.hex": {
+      "sha256": "be67140c92f41c911a725d5b8d7376aeb03f4bdfb639dfa10e494f6e563cd249",
+      "words": 8
+    },
+    "L0_d0_segments.hex": {
+      "sha256": "00b2600e4b1781eca30118c11500f6e15b7682f7ab3d90dbc3874cf9661fbd48",
+      "words": 5
+    },
+    "L0_d0_program.hex": {
+      "sha256": "50934438a4c845a6f9cf82304128c10660ad5a4da3bf8833b8ffd4a259b3ef77",
+      "words": 31
+    },
+    "H_d0_segments.hex": {
+      "sha256": "5199e0ce362202a5f6dd77a246106964fb7d8265b66ef4136b53bd7809c8a18d",
+      "words": 1
+    }
+  },
+  "comparison": {
+    "L": {
+      "ME_pairs": [
+        {
+          "old_instruction": 1,
+          "new_instruction": 1,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 11,
+          "new_instruction": 11,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 13,
+          "new_instruction": 13,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 16,
+          "new_instruction": 16,
+          "changed_fields": {
+            "me_wbase": {
+              "old": 96,
+              "new": 64
+            }
+          }
+        },
+        {
+          "old_instruction": 21,
+          "new_instruction": 20,
+          "changed_fields": {
+            "me_wbase": {
+              "old": 384,
+              "new": 112
+            },
+            "me_wcs": {
+              "old": 384,
+              "new": 352
+            }
+          }
+        },
+        {
+          "old_instruction": 25,
+          "new_instruction": 24,
+          "changed_fields": {
+            "me_wbase": {
+              "old": 768,
+              "new": 368
+            },
+            "me_wcs": {
+              "old": 768,
+              "new": 736
+            }
+          }
+        }
+      ],
+      "all_nonaddress_ME_fields_identical": true
+    },
+    "H": {
+      "ME_pairs": [
+        {
+          "old_instruction": 3,
+          "new_instruction": 3,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 4,
+          "new_instruction": 4,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 5,
+          "new_instruction": 5,
+          "changed_fields": {}
+        },
+        {
+          "old_instruction": 6,
+          "new_instruction": 6,
+          "changed_fields": {}
+        }
+      ],
+      "all_nonaddress_ME_fields_identical": true
+    }
+  }
+}

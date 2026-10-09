@@ -1,0 +1,212 @@
+{
+  "historical_FA4": {
+    "scope": "prebuild estimate; no exactness, physical closure or service bandwidth credit",
+    "source": "physical/hbm_accel_die_views/index/DESIGN.md; eb67c5c57",
+    "arithmetic": {
+      "keys_per_stack_cycle": 16,
+      "slices_NK4_per_stack": 4,
+      "MACs_per_stack_cycle": 65536,
+      "MACs_per_key_byte": 60.23529411764706,
+      "compute_issue_cycles_at_2736_keys": 171
+    },
+    "service": {
+      "required_keys_per_stack_cycle": 12.254901960784315,
+      "required_bytes_per_stack_cycle": 833.3333333333334,
+      "line_ports_per_stack": 8,
+      "line_payload_bytes": 136,
+      "provided_bytes_per_stack_cycle": 1088,
+      "contiguous_blocks_per_stack": 342,
+      "PCs_per_stack": 32,
+      "caveat": "kind2 single-PC service must be replaced by admitted striped credit reassembly"
+    },
+    "boundaries_per_stack": {
+      "key_input_bits_per_cycle": 8792,
+      "query_bus_bits": 571,
+      "score_bits_per_cycle": 610,
+      "input_credit_bits": 8,
+      "output_credit_bits": 1
+    },
+    "replication": {
+      "stacks": 4,
+      "scorer_instances": 4,
+      "slices_NK4_per_die": 16,
+      "selector_instances": 1,
+      "query_fanout_per_slice": 32,
+      "score_quarter_mux_inputs": 4,
+      "selector_lane_join": 1
+    },
+    "storage": {
+      "line_landing_bits_per_stack": 140544,
+      "score_landing_bits_per_die": 155904,
+      "added_line_landing_bits_per_stack": 0,
+      "added_score_landing_bits_per_die": 0
+    },
+    "flow_control": {
+      "line_credits": 16,
+      "score_credits": 64,
+      "key_credit_roundtrip_lower_bound": 50,
+      "score_credit_roundtrip_lower_bound": 66,
+      "sustained_key_lines_per_port_cycle_bound": 0.32,
+      "sustained_score_beats_per_stack_cycle_bound": 0.9696969696969697
+    },
+    "floorplan": {
+      "scorer_cells_um2_estimate_per_stack": 3050000,
+      "scorer_slot_um2_per_stack": 5600000,
+      "scorer_slot_capacity_um2": 3080000.0000000005,
+      "extra_FIFO_cell_area_status": "unqualified until mapped and routed; original 3.05mm2 estimate excludes added landing storage",
+      "selector_cells_and_macros_um2_estimate": 400000,
+      "selector_slot_um2_estimate": 727272.7272727272,
+      "utilisation": 0.55,
+      "routing_track_demand_per_stack": 9982,
+      "routing_capacity_status": "unqualified: requires R25I real pins and global route corridors"
+    },
+    "latency": {
+      "relay_stages_one_way": 32,
+      "key_relay_stages_one_way": 24,
+      "interface_lower_bound_cycles_per_layer": 66,
+      "interface_lower_bound_cycles_per_token_8_index_layers": 528,
+      "tap_query_extra_hops": 0,
+      "benchmark_required": "base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"
+    }
+  },
+  "R25I_FA6_LA7_3000": {
+    "scope": "prebuild estimate; no exactness, physical closure or service bandwidth credit",
+    "source": "physical/hbm_accel_die_views/index/DESIGN.md; eb67c5c57",
+    "arithmetic": {
+      "keys_per_stack_cycle": 16,
+      "slices_NK4_per_stack": 4,
+      "MACs_per_stack_cycle": 65536,
+      "MACs_per_key_byte": 60.23529411764706,
+      "compute_issue_cycles_at_2736_keys": 171
+    },
+    "service": {
+      "required_keys_per_stack_cycle": 12.254901960784315,
+      "required_bytes_per_stack_cycle": 833.3333333333334,
+      "line_ports_per_stack": 8,
+      "line_payload_bytes": 136,
+      "provided_bytes_per_stack_cycle": 1088,
+      "contiguous_blocks_per_stack": 342,
+      "PCs_per_stack": 32,
+      "caveat": "kind2 single-PC service must be replaced by admitted striped credit reassembly"
+    },
+    "boundaries_per_stack": {
+      "key_input_bits_per_cycle": 8792,
+      "query_bus_bits": 571,
+      "score_bits_per_cycle": 610,
+      "input_credit_bits": 8,
+      "output_credit_bits": 1
+    },
+    "replication": {
+      "stacks": 4,
+      "scorer_instances": 4,
+      "slices_NK4_per_die": 16,
+      "selector_instances": 1,
+      "query_fanout_per_slice": 32,
+      "score_quarter_mux_inputs": 4,
+      "selector_lane_join": 1
+    },
+    "storage": {
+      "line_landing_bits_per_stack": 562176,
+      "score_landing_bits_per_die": 311808,
+      "added_line_landing_bits_per_stack": 421632,
+      "added_score_landing_bits_per_die": 155904
+    },
+    "flow_control": {
+      "line_credits": 64,
+      "score_credits": 128,
+      "key_credit_roundtrip_lower_bound": 50,
+      "score_credit_roundtrip_lower_bound": 66,
+      "sustained_key_lines_per_port_cycle_bound": 1,
+      "sustained_score_beats_per_stack_cycle_bound": 1
+    },
+    "floorplan": {
+      "scorer_cells_um2_estimate_per_stack": 3050000,
+      "scorer_slot_um2_per_stack": 6000000,
+      "scorer_slot_capacity_um2": 3300000.0000000005,
+      "extra_FIFO_cell_area_status": "unqualified until mapped and routed; original 3.05mm2 estimate excludes added landing storage",
+      "selector_cells_and_macros_um2_estimate": 400000,
+      "selector_slot_um2_estimate": 727272.7272727272,
+      "utilisation": 0.55,
+      "routing_track_demand_per_stack": 9982,
+      "routing_capacity_status": "unqualified: requires R25I real pins and global route corridors"
+    },
+    "latency": {
+      "relay_stages_one_way": 32,
+      "key_relay_stages_one_way": 24,
+      "interface_lower_bound_cycles_per_layer": 66,
+      "interface_lower_bound_cycles_per_token_8_index_layers": 528,
+      "tap_query_extra_hops": 0,
+      "benchmark_required": "base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"
+    }
+  },
+  "R25I_FA6_LA7_3400": {
+    "scope": "prebuild estimate; no exactness, physical closure or service bandwidth credit",
+    "source": "physical/hbm_accel_die_views/index/DESIGN.md; eb67c5c57",
+    "arithmetic": {
+      "keys_per_stack_cycle": 16,
+      "slices_NK4_per_stack": 4,
+      "MACs_per_stack_cycle": 65536,
+      "MACs_per_key_byte": 60.23529411764706,
+      "compute_issue_cycles_at_2736_keys": 171
+    },
+    "service": {
+      "required_keys_per_stack_cycle": 12.254901960784315,
+      "required_bytes_per_stack_cycle": 833.3333333333334,
+      "line_ports_per_stack": 8,
+      "line_payload_bytes": 136,
+      "provided_bytes_per_stack_cycle": 1088,
+      "contiguous_blocks_per_stack": 342,
+      "PCs_per_stack": 32,
+      "caveat": "kind2 single-PC service must be replaced by admitted striped credit reassembly"
+    },
+    "boundaries_per_stack": {
+      "key_input_bits_per_cycle": 8792,
+      "query_bus_bits": 571,
+      "score_bits_per_cycle": 610,
+      "input_credit_bits": 8,
+      "output_credit_bits": 1
+    },
+    "replication": {
+      "stacks": 4,
+      "scorer_instances": 4,
+      "slices_NK4_per_die": 16,
+      "selector_instances": 1,
+      "query_fanout_per_slice": 32,
+      "score_quarter_mux_inputs": 4,
+      "selector_lane_join": 1
+    },
+    "storage": {
+      "line_landing_bits_per_stack": 562176,
+      "score_landing_bits_per_die": 311808,
+      "added_line_landing_bits_per_stack": 421632,
+      "added_score_landing_bits_per_die": 155904
+    },
+    "flow_control": {
+      "line_credits": 64,
+      "score_credits": 128,
+      "key_credit_roundtrip_lower_bound": 50,
+      "score_credit_roundtrip_lower_bound": 66,
+      "sustained_key_lines_per_port_cycle_bound": 1,
+      "sustained_score_beats_per_stack_cycle_bound": 1
+    },
+    "floorplan": {
+      "scorer_cells_um2_estimate_per_stack": 3050000,
+      "scorer_slot_um2_per_stack": 6800000,
+      "scorer_slot_capacity_um2": 3740000.0000000005,
+      "extra_FIFO_cell_area_status": "unqualified until mapped and routed; original 3.05mm2 estimate excludes added landing storage",
+      "selector_cells_and_macros_um2_estimate": 400000,
+      "selector_slot_um2_estimate": 727272.7272727272,
+      "utilisation": 0.55,
+      "routing_track_demand_per_stack": 9982,
+      "routing_capacity_status": "unqualified: requires R25I real pins and global route corridors"
+    },
+    "latency": {
+      "relay_stages_one_way": 32,
+      "key_relay_stages_one_way": 24,
+      "interface_lower_bound_cycles_per_layer": 66,
+      "interface_lower_bound_cycles_per_token_8_index_layers": 528,
+      "tap_query_extra_hops": 0,
+      "benchmark_required": "base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"
+    }
+  }
+}

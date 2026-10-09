@@ -1,0 +1,89 @@
+{
+  "rtl_commit": "90526cabb",
+  "original_gate": true,
+  "measured_component_deltas": {
+    "selector": [
+      {
+        "bubble": 0,
+        "stall": 0,
+        "baseline_cycles": 3977,
+        "captured_cycles": 3986,
+        "delta_cycles": 9
+      },
+      {
+        "bubble": 17,
+        "stall": 80,
+        "baseline_cycles": 5064,
+        "captured_cycles": 5064,
+        "delta_cycles": 0
+      }
+    ],
+    "candidate": [
+      {
+        "bubble": 0,
+        "stall": 0,
+        "baseline_cycles": 5463,
+        "captured_cycles": 5480,
+        "delta_cycles": 17
+      },
+      {
+        "bubble": 17,
+        "stall": 80,
+        "baseline_cycles": 11695,
+        "captured_cycles": 11698,
+        "delta_cycles": 3
+      }
+    ]
+  },
+  "model": {
+    "read_latency_cycles": 2,
+    "extra_cycles_per_sweep": 1,
+    "token_extra_cycles_formula": "sum(measured_selector_cycle_deltas per token stage)",
+    "additional_credit_recycle_cycles": 1,
+    "nominal_drain_cycles_formula": "(gc_sweeps + pass2_sweeps + pass3_sweeps + emit_sweeps) * extra_cycles_per_sweep",
+    "token_gain_claim": false,
+    "macs_per_cycle": 0,
+    "replicas": 4,
+    "memory": {
+      "topk_bytes_per_cycle": 74,
+      "candidate_bytes_per_cycle": 8.5,
+      "topk_bits_per_cycle": 592,
+      "candidate_bits_per_cycle": 68
+    },
+    "capture_payload_bits": 2640,
+    "capture_metadata_bits": 32,
+    "mux_demux_added": 0,
+    "cross_boundary_bits_added": 0,
+    "routing_tracks_added": 0,
+    "reservations": {
+      "gc_lines": 8,
+      "output_beats": 4,
+      "policy": "issue counts outstanding until pack exit/output enqueue; capture included"
+    },
+    "area": {
+      "capture_flops": 2672,
+      "floorplan_fit": "requires real mapped area and pins; not physically qualified"
+    },
+    "latency_clock_ns": 0.8333333333333334,
+    "physical_status": "candidate; macro output must terminate at capture D pins"
+  },
+  "source_sha256": {
+    "tools/uarch_model.py": "469eb32e14ded5d5bd91daf2b00f35aca7a97efd75babf973dc0e123692f6034",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv": "1eb569aac509eab0e7eca5d719896ce36d200838bfc25ea1e371cb801a9615b6",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv": "37fdcef9dd966c29560bd7f77437b98e29e4e49ee05878f91eda67ba91e3abf2",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv": "2243d49fd196fbf55ad4711255ade75424e4a8f9b932be1cfa1ca02ce21e4ac0",
+    "physical/hbm_accel_die_views/index/tb/tb_hfd_idx_mem_capture.sv": "87b109c3b05dde0342ac218ac9dd9c2f8a55442a72d6910317513a4d6723bacc"
+  },
+  "initial_model_record": "model.json preserves original pre-build sizing; final model corrects finite-credit latency pricing without RTL changes",
+  "physical_qualification": false,
+  "scope": "No token-rate claim: five consecutive golden segments at full production shape; two replay-overflow segments; finite-credit hold under 80pct output stalls",
+  "memory_capture_unit": "PASS_HFD_IDX_MEM_CAPTURE; continuous and gapped reads; W592/AW8 and W68/AW10",
+  "wrapper_elaboration": {
+    "top": "hfd_idx_sel",
+    "READLAT": 2,
+    "MEMV": 0,
+    "exit": 0,
+    "log": "wrapper_lint_r2.log",
+    "prior_missing_dependency_failure": "wrapper_lint.log"
+  }
+}

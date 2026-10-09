@@ -382,6 +382,66 @@ R25 = dict(R24P, vm_cross_2layer=True, hub_ports_file='physical/hbm_accel_die_vi
 R25['pin_centre'] = {**R25.get('pin_centre', {}), **{(m_, p_): c_ for m_ in ('hfd_router', 'hfd_loader')
                                                      for p_, c_ in (('rst', 366.0253), ('ck', 612.5932))}}
 R25A = dict(R25, attn_tile_h_um=1600.5)
+# r25s (attn-split, OWNER 2026-10-08 18:10 PT; flag default OFF, r25 stays ADOPTED until both halves close): every
+#   attention tile slot holds the two HALF tiles hfd_attn_half_lo / hfd_attn_half_hi (rtl/hdc/v41x/
+#   ot_hdc_v41x_attn_die_half_b.sv, cut between the quad rows; pins / outlines from tools/hbm_attn_half_tile_place.py,
+#   physical/hbm_attn_tile_r/half/<master>/ports.json + io_place.tcl), abutting at the seam: xp (1,619 b) and xr (272 b)
+#   are die nets between face-to-face pin banks (register -> pin | pin -> register, ~0 um, no relay, no credit: no ready
+#   crosses).  Slot 1778.52 x (814.32 + 673.92) = 1,488.24 um (+10.2 % vs r25's 1,349.976); the hub band grows by
+#   2 x 4 x 138.264 um so the four tile rows still fit each scan quadrant (die H 25.7 mm <= 26 mm; a 1,661 um slot made
+#   27.1 mm).  Zero added cycles (the halves keep hfd_attn_tile_b's port latencies).
+ATTN_HALF_DIR = 'physical/hbm_attn_tile_r/half'
+ATTN_HALF_OF = dict(k='lo', ci='lo', q='lo', ri='lo', rf='lo', rst='lo', cf='hi', i='hi', o='hi')
+R25S = dict(R25, attn_split=ATTN_HALF_DIR, attn_tile_h_um=1488.24,
+            hub_h=R25['hub_h'] + 2 * (4 * (1488.24 - 1349.976)) + 2 * 2.16,
+            # everything else in the hub keeps its r25 size: SU / SFU / HC quarters (cq_h, at the hub edge) and their
+            # widths (hub_h_ref), the index quarters (index_h: their closed split bands), the spine (spine_h, centred;
+            # the router envelope moves with it)
+            hub_h_ref=R25['hub_h'], cq_h=5529.6, index_h=5529.6)
+# r25m (MTP-DIE 2026-10-08): r25 + the DSpark MTP master hfd_mtp in a low spine slot (see build).  Slot from the closed
+# standalone routes (ctl_takeover_20261005 cell areas: topk_f3 28,799.6 + argmax_f1 6,144.3 + union_f3 3,116.3 +
+# spec_f3 1,430.7 + scratch_c2 909.8 + ctl_f2 885.3 + accept_a0 290.1 + fence_a1 247.9 = 41,824 um2 of cells) at 45 %
+# cell / 55 % with pin-flop banks and hold buffers: 92.9k um2 -> 466.56 x 200.88 um (0.0937 mm2), <= 1 mm a side.
+MTP_SLOT = (466.56, 200.88)
+# (a, b, bits): dspark_top ports.  cmdproc -> mtp: start / cfg_gamma / force / ngen / plen (37) + eng_done + sr_* spec
+#   requests (54) + host token reads p_tok / f_tok (34) = 126; mtp -> cmdproc: cmd_v/op/idx/ncol/pos/tok1/toks (203) +
+#   sa_* rollback addresses / n_committed (84) + p_addr / f_addr (32) + done = 320; su_red -> mtp: logit rows lg_*
+#   (523: 8 lanes x FP32 value + bias, mask, last, bias_en); mtp -> coll: am_v / am_idx / am_fault for the 96-die
+#   argmax select (19) + e_v / e_tok / e_idx (34) -> 64; coll -> mtp: merged argmax (64); su_red -> mtp: router vectors
+#   rv_* (134); mtp -> router: t_ids / t_col (58) + union u_* (20) = 78 (the expert-fetch request rides the router's
+#   expert_req chain); router -> mtp: u_ready (1) -> 8; loader -> mtp emitted-token sink is the cmdproc's.
+MTP_HUB_LINKS = (('cmdproc', 'mtp', 126), ('mtp', 'cmdproc', 320), ('su_red', 'mtp', 523 + 134), ('mtp', 'coll', 64),
+                 ('coll', 'mtp', 64), ('mtp', 'router', 78), ('router', 'mtp', 8))
+# loader memory side widths (ot_hfd_loader_half ports): request = req_v 2 + req_we 2 + req_addr 64 + req_wdata 512 +
+#   req_wstrb 64 + req_tag 32 + m_ar* 76 + m_aw* 76 + m_w* 74 + m_rready + m_bready = 904; response = rsp_v 2 + rsp_we 2 +
+#   rsp_tag 32 + rsp_data 512 + req_rdy 2 + m_arready + m_r* 68 + m_awready + m_wready + m_b* 3 = 624 (per stack: the
+#   loader's address decode selects the stack; ingest owns the RTL demux)
+LD_MEM_NATIVE = (904, 624)
+LR_DX = 420.0                   # response chain's svc-face offset from the column channel (its own station column)
+LM_BUNDLES = lambda m: math.ceil(sum(m['variant']['ld_mem']) / 16)    # lane width in k16 bundles (both directions)
+R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0], 'lr': LD_MEM_NATIVE[1]}, spine_slots_low={'mtp': MTP_SLOT}, spine_slot_domains=dict(R25.get('spine_slot_domains', {}), mtp='stream_1p2'),
+            # ECO pins on the closed cmdproc S half's S face (it looks at the loader and the MTP slot below): the MTP
+            # command port pair; the cmdproc stream adds them (re-route of hfd_cmdproc_s, mtp-hbm / cmdproc owner)
+            split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 320, 'S', 'M5', 0.30, 2),
+                                               'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
+# Native indexer successors remain opt-in until source joins and physical evidence close.
+R25I = dict(R25, native_indexer=True, iv_pin_stn=False,
+    split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}},
+    split_x_new_port_band={f'{kind}{p}':p for kind in ('ki','kc') for p in range(8)})
+R25IC2 = dict(R25I, indexer_large_slot=True)
+R25IQ = dict(R25I,indexer_quarter_end=True)
+R25IQC2 = dict(R25IQ,indexer_large_slot=True)
+R25IQG = dict(R25IQ,indexer_mirror_grid=True)
+R25IQGC2 = dict(R25IQG,indexer_large_slot=True)
+# Actual x-controller bus facade and SRAM writeback slots. Loader stays on its
+# historical base until the ND1/ADDR37 facade and service landing are qualified.
+R25IMW = dict(R25IQG, native_mtp_wb=True,
+    spine_slots_low={'mtp': MTP_SLOT, 'kvwb': (300.24, 241.92)},
+    spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
+    spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
+        mtp='stream_1p2', kvwb='stream_1p2'))
+R25IMWS = dict(R25IMW, native_mtp_stop=True,
+    spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
 ADOPTED = R25
 
 
@@ -406,7 +466,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     mid_ch = up(variant.get('mid_ch', 2592.0), GX)
     if variant.get('hub_scale'):        # r23: the SU / SFU / HC quarters grow by hub_scale; the centre channel widens by
         #   the added quarter widths on both sides (each quarter is BLOCKS mm2 / 4 over the quarter height qhc)
-        hub_h0 = up(variant.get('hub_h', 7200.0), GY)
+        hub_h0 = up(variant.get('hub_h_ref', variant.get('hub_h', 7200.0)), GY)   # r25s: the r25 quarter widths
         hh0 = dn(hub_h0 - 2 * HCH, GY) - 0.0
         qh0 = dn((dn(hub_h0 - 2 * HCH, GY) - HCH) / 2, GY)
         add = 0.0
@@ -530,8 +590,25 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         insts.append(it)
         hub[n_] = it
         yy = it.y + h_
+    # r25m (MTP-DIE 2026-10-08): one-per-die slots BELOW the lowest spine block (the loader), stacked downward at the
+    # spine's lower gap pitch, in the free bottom end of the spine column (r25: 2.17 mm free between the hub band
+    # edge and the loader).  hfd_mtp = ot_dshbm_dspark_top (dspark_ctl f2 + argmax f1 + union f3 + accept a0 +
+    # spec_state + scratch c2 + fence + the drafter's router_topk), 0.6-1.5 mm from its control peers (loader,
+    # router, cmdproc).  Nothing else moves; the die outline is unchanged.
+    yy = min(it.y for it in hub.values() if it.kind == 'spine' and it.x == sx0) - glo / 2
+    for n_, (w_, h_) in variant.get('spine_slots_low', {}).items():
+        y_ = dn(yy - glo / 2 - h_, GY)
+        master_ = variant.get('spine_slot_masters', {}).get(n_, f'hfd_{n_}')
+        it = Inst(f'hb_{n_}', master_, up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
+                  kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'stream_1p2'))
+        assert it.y >= hy0 + 43.2, ('low spine slot below the hub band', n_, it.y, hy0)
+        insts.append(it)
+        hub[n_] = it
+        yy = it.y
     if 'router_env' in variant:      # r16h: scoped router envelope (loader / cmdproc fixed, taken from their gaps)
         ry, rh = variant['router_env']
+        if 'hub_h_ref' in variant:     # r25s: a taller hub band moves the centred spine column up by half the growth
+            ry = up(ry + (hub_h - up(variant['hub_h_ref'], GY)) / 2, GY)
         if variant.get('sm_physical_grid'):
             # Historical envelope is absolute; preserve its hub-relative location.
             ry += grp_h - (2 * (sm_dims()[1] + SHAVE) + 2 * CH) + variant.get('side_padding_um', 0.0)
@@ -593,7 +670,10 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     th = up(variant.get('attn_tile_h_um', BLOCKS['attn_tile'][0] * 1e6 / tw), GY)
     tg = 43.2
     assert 4 * th + 3 * tg <= qh + 1e-6, ('attention tiles do not fit the quadrant', 4 * th + 3 * tg, qh)
-    iw = up(BLOCKS['index'][0] / 4 * 1e6 / qh, GX)
+    # r25s: the index quarters keep the r25 height (their closed split bands, physical/hbm_accel_die_views/index_q/split)
+    #   at the hub edge of a taller scan quadrant
+    ixh = min(qh, dn(variant['index_h'], GY)) if 'index_h' in variant else qh
+    iw = up(BLOCKS['index'][0] / 4 * 1e6 / ixh, GX)
     tiles, scan = [], {}
     for st in ('SW', 'SE', 'NW', 'NE'):
         side, half = st
@@ -606,7 +686,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
             ix_x = up(hub['hc_SE'].x + hub['hc_SE'].w + SHAVE + HCH, GX)
             tx0 = up(ix_x + iw + HCH, GX)
             assert tx0 + 4 * tw + 3 * tg <= x0 + core_w - HCH / 2 + 1e-6, ('E scan quadrant overflows', tx0)
-        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy, iw - SHAVE, qh - SHAVE, qori(st), kind='hub', region='hub')
+        ix = Inst(f'hb_index_{st}', 'hfd_index_q', ix_x, qy if side == 'S' else dn(qy + qh - ixh, GY), iw - SHAVE, ixh - SHAVE,
+                  qori(st), kind='hub', region='hub')
         insts.append(ix)
         hub[f'index_{st}'] = ix
         ty0 = up(qy + (qh - 4 * th - 3 * tg) / 2, GY)
@@ -672,6 +753,17 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     if variant.get('r5a_sidebands'):
         from hbm_r5a_parent_allocation import allocate
         allocate(m)
+    if variant.get('native_indexer'):
+        from hbm_indexer_die_topology import install
+        import sys
+        install(m, sys.modules[__name__])
+    if variant.get('native_mtp_wb'):
+        from hbm_mtp_wb_die_model import model as native_model
+        m['mtp_wb_native'] = native_model(ROOT)
+        if variant.get('native_mtp_stop'):
+            from hbm_mtp_native_contract import stop_model
+            m['mtp_wb_native']['MTP'] = stop_model(ROOT)
+        m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
     if geometry_only:
         m['buses'], m['paths'] = [], {}
         m['geometry_only'] = True
@@ -771,6 +863,28 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         m['child_reservations'] = allocations(m)
     if variant.get('split_masters'):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
+    if variant.get('native_indexer'):
+        # Allocate the already-qualified wide station A/B footprints first;
+        # native relays must not occupy a required B-half landing region.
+        for role_ in variant.get('split_stations', ()):
+            split_station(m, role_)
+        from hbm_indexer_die_topology import networks
+        import sys
+        old_names={i.name for i in m['insts']}
+        _,native_chain=_router(m,m['buses'],m['paths'])
+        networks(m,sys.modules[__name__],m['buses'],m['paths'],native_chain)
+        # Existing split clock leaves remain intact. Extend the unique domain
+        # roots only with newly allocated native relay endpoints.
+        for i in m['insts']:
+            if i.name in old_names:
+                continue
+            d=m.get('clocked',{}).get(i.name)
+            if d:
+                bus=next(b for b in m['buses'] if b[0]==f'clk_{d}')
+                bus[3].append((i.name,'ck'))
+            d=d or m.get('fwd_dom',{}).get(i.name,'stream')
+            bus=next(b for b in m['buses'] if b[0]==f'rst_{d}')
+            bus[3].append((i.name,'rst'))
     if variant.get('split_x_masters'):
         apply_splits_x(m, variant['split_x_masters'])
     fixv = ['hfd_barrier'] if variant.get('barrier_low') else []
@@ -784,7 +898,9 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         split_vm(m)
     if variant.get('vm_split8'):        # r23v: VM 8-way fallback (default off)
         split_vm8(m)
-    for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
+    if variant.get('attn_split'):       # r25s: attention tiles as two half-tile die blocks (default off)
+        split_attn(m, variant['attn_split'])
+    for role_ in (() if variant.get('native_indexer') else variant.get('split_stations', ())):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
         rf = ROOT / 'physical/hbm_accel_die_views/relay_ends.json'   # the budget's pin-to-pin list (authoritative)
@@ -1307,6 +1423,98 @@ def split_vm8(m):
     m['vm8'] = {nm: [x.name for x in ab] for nm, ab in halves.items()}
 
 
+def split_attn(m, half_dir):
+    """r25s (attn-split): every hfd_attn_tile instance becomes hfd_attn_half_lo (master frame: the bottom of the slot)
+    + hfd_attn_half_hi (the top), abutting; the tile's die ports go to the half that owns them (ATTN_HALF_OF; ck to
+    both), and the seam buses xp (lo -> hi, the ROOT packet) / xr (lo -> hi, quad row 0's results) join face-to-face
+    pin banks.  Pin plans fixed to the half records (exact rectangles at k = 1, face runs when bundled).  m['tiles'] and
+    the scan grids keep the lo halves (one per logical tile)."""
+    recs = {h: json.loads((ROOT / half_dir / f'hfd_attn_half_{h}/ports.json').read_text()) for h in ('lo', 'hi')}
+    hl, hh = recs['lo']['h_um'], recs['hi']['h_um']
+    tiles = {it.name: it for it in m['insts'] if it.master == 'hfd_attn_tile'}
+    halves = {}
+    for nm, it in tiles.items():
+        assert it.h + SHAVE >= hl + hh - 1e-6, ('attention tile slot shorter than the two halves', nm, it.h, hl + hh)
+        flip = it.orient in ('MX', 'R180')                  # mirrored copies: lo on top, still facing its quadrant
+        lo = Inst(nm + '_lo', 'hfd_attn_half_lo', it.x, round(it.y + (hh if flip else 0.0), 4), recs['lo']['w_um'], hl,
+                  it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        hi = Inst(nm + '_hi', 'hfd_attn_half_hi', it.x, round(it.y + (0.0 if flip else hl), 4), recs['hi']['w_um'], hh,
+                  it.orient, kind=it.kind, region=it.region, domain=it.domain)
+        halves[nm] = dict(lo=lo, hi=hi)
+    m['insts'] = [i for i in m['insts'] if i.name not in tiles] + [x for d in halves.values() for x in (d['lo'], d['hi'])]
+    nb = []
+    for bid, cls, bits, eps in m['buses']:
+        e2 = []
+        for inst, port in eps:
+            if inst not in tiles:
+                e2.append((inst, port))
+            elif port == 'ck':
+                e2 += [(halves[inst]['lo'].name, port), (halves[inst]['hi'].name, port)]
+            else:
+                e2.append((halves[inst][ATTN_HALF_OF[port]].name, port))
+        nb.append((bid, cls, bits, e2))
+    for nm, d in halves.items():
+        for p_ in ('xp', 'xr'):
+            nb.append((f'{nm}_seam_{p_}', 'hub', recs['lo']['ports'][p_]['bits'], [(d['lo'].name, p_), (d['hi'].name, p_)]))
+    m['buses'] = nb
+    for k_ in ('tiles',):
+        m[k_] = [halves[t.name]['lo'] if t.name in halves else t for t in m[k_]]
+    for sc in m['scan'].values():
+        sc['tiles'] = [[halves[t.name]['lo'] for t in row] for row in sc['tiles']]
+    if isinstance(m.get('clocked'), dict):
+        for nm, d in halves.items():
+            if nm in m['clocked']:
+                dom = m['clocked'].pop(nm)
+                m['clocked'][d['lo'].name] = m['clocked'][d['hi'].name] = dom
+    for e in m.get('meso', []):
+        if e.get('inst') in halves:
+            e['inst'] = halves[e['inst']]['lo'].name            # the q receiver
+    fixed = m.setdefault('fixed_ports', {})
+    for h, rec in recs.items():
+        text = (ROOT / half_dir / f'hfd_attn_half_{h}/io_place.tcl').read_text()
+        pat = r'place_pin -pin_name \{(\w+)\[(\d+)\]\} -layer (\w+) -location \{([\d.]+) ([\d.]+)\} -pin_size \{([\d.]+) ([\d.]+)\}'
+        exact = defaultdict(dict)
+        for port, bit, layer, x, y, w_, h_ in re.findall(pat, text):
+            x, y, w_, h_ = map(float, (x, y, w_, h_))
+            exact[port][int(bit)] = (f'{port}[{bit}]', layer, (x - w_ / 2, y - h_ / 2, x + w_ / 2, y + h_ / 2))
+        if set(exact) != set(rec['ports']) or any(set(exact[p_]) != set(range(v['bits'])) for p_, v in rec['ports'].items()):
+            raise ValueError(f'attn half {h}: io_place / ports.json mismatch')
+        W_, H_ = rec['w_um'], rec['h_um']
+        spec, order = {}, []
+        for p_, v in rec['ports'].items():
+            (x0, x1), (y0, y1) = v['x'], v['y']
+            n_ = v['bits']
+            if x0 == x1:
+                face, lo_, hi_ = ('W' if x0 < W_ / 2 else 'E'), y0, y1
+            else:
+                face, lo_, hi_ = ('S' if y0 < H_ / 2 else 'N'), x0, x1
+            tr = Q.TRK[v['layer']][1]
+            # bundled planning: a port in separate runs (xr: W and E ends of the seam) is planned at its longest run
+            al = sorted(((r[2][0] + r[2][2]) / 2 if face in 'SN' else (r[2][1] + r[2][3]) / 2) for r in exact[p_].values())
+            runs, cur = [], [al[0]]
+            for u in al[1:]:
+                if u - cur[-1] > 10.0:
+                    runs.append(cur)
+                    cur = []
+                cur.append(u)
+            runs.append(cur)
+            run_ = max(runs, key=len)
+            pitch = max(1, round((hi_ - lo_) / max(1, n_ - 1) / tr)) if n_ > 1 and len(runs) == 1 else 4
+            spec[p_] = ('face', n_, face, v['layer'], round((run_[0] + run_[-1]) / 2, 4), pitch)
+            order.append(p_)
+        rects = {p_: ('rects', [exact[p_][b] for b in range(v['bits'])]) for p_, v in rec['ports'].items()}
+
+        def fn(mst, k=1, spec=spec, rects=rects, order=order):
+            if k > 1:                                       # bundled planning: face runs (the jogs between bank
+                sp_ = dict(spec)                            #   chunks are below the bundle pitch)
+                _bundle_pack(mst, sp_, order, k)
+            else:
+                sp_ = dict(rects)
+            mst.ports, mst.order = sp_, list(order)
+        fixed[f'hfd_attn_half_{h}'] = fn
+    m['attn_halves'] = {nm: [d['lo'].name, d['hi'].name] for nm, d in halves.items()}
+
+
 def fix_ports_from_views(m, masters_):
     """r17: masters whose generated pin plan must stay the CLOSED view's although the block moved (barrier_low): the
     pins are fixed to the view LEF (same faces / layers / positions), so the view still checks MATCH."""
@@ -1346,9 +1554,17 @@ def apply_splits(m, specs, lattice=None):
         bands = sorted(sp['bands'].items(), key=lambda kv: kv[1]['y0_um'])
         Hp = sp['parent_size_um'][1]
         recs = {}
+        # r25m (MTP-DIE): ports a die variant adds to a closed split view (an ECO pin set the owning block stream adds
+        # to the block): {parent: {port: (band, bits, face, layer, fraction along the face, pitch in tracks)}}
+        extra = (m.get('variant') or {}).get('split_extra_ports', {}).get(parent, {})
         for bn, b in bands:
             recs[bn] = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
             spec, order = _split_spec(recs[bn]['ports'])
+            for pn_, (bn_, bits_, face_, layer_, frac_, pitch_) in extra.items():
+                if bn_ == bn:
+                    span_ = sp['parent_size_um'][0] if face_ in 'NS' else b['h_um']
+                    spec[pn_] = ('face', bits_, face_, layer_, round(frac_ * span_, 4), pitch_)
+                    order.append(pn_)
             def fn(mst, k=1, spec=spec, order=order):
                 sp_ = dict(spec)
                 if k > 1:
@@ -1358,6 +1574,7 @@ def apply_splits(m, specs, lattice=None):
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
         owner = {pp: bn for bn, b in bands for pp in b['parent_ports']}
+        owner.update({pn_: v_[0] for pn_, v_ in extra.items()})
         new_insts, repl = [], {}
         for it in m['insts']:
             if it.master != parent:
@@ -1464,9 +1681,44 @@ def apply_splits_x(m, rel):
     V_ck = (m.get('variant') or {}).get('ck_centre')
     sp = json.loads((ROOT / rel).read_text())
     fixed = m.setdefault('fixed_ports', {})
+    # r25m (MTP-DIE, RQ-ING-4): ports a die variant adds to a split parent (the loader memory chains on the stream
+    # services): each lands on the band under its peer's x, as an inner-face (master N) M5 run at the free face span nearest the peer's x at the peer's x (an
+    # ECO pin set the owning block stream adds to that band's view)
+    newp = (m.get('variant') or {}).get('split_x_new_ports', {})
+    by_ = {it.name: it for it in m['insts']}
+    extra_x, new_owner = defaultdict(dict), {}
+    if newp:
+        for bid, cls, bits, eps in m['buses']:
+            for i, (inst, port) in enumerate(eps):
+                it = by_.get(inst)
+                if it is None or port not in newp or it.master not in sp['parents']:
+                    continue
+                o = by_[eps[1 - i][0]] if len(eps) == 2 else None
+                ox = (o.x + o.w / 2) if o is not None else it.x + it.w / 2
+                ordered = sp['parents'][it.master]['bands']
+                forced = (m.get('variant') or {}).get('split_x_new_port_band', {}).get(port)
+                eligible = [ordered[forced]] if forced is not None else ordered
+                for bn in eligible:
+                    b = sp['bands'][bn]
+                    if forced is not None or it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == ordered[-1]:
+                        xl = min(max(ox - it.x - b['x0_um'], 0.1 * b['w_um']), 0.9 * b['w_um'])
+                        extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
+                        new_owner[(inst, port)] = bn
+                        break
     for bn in sp['bands']:
         rec = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
         spec, order = _xy_or_split_spec(rec['ports'])
+        for pn_, t_ in extra_x.get(bn, {}).items():
+            # the nearest free N-face M5 span (existing band pins + earlier new ports, 2 um apart)
+            half_ = t_[1] * t_[5] * 0.048 / 2 + 2.0
+            occ = [(c - b_ * pt * 0.048 / 2 - 2.0, c + b_ * pt * 0.048 / 2 + 2.0)
+                   for f_, b_, fc_, ly, c, pt in (v_ for v_ in spec.values() if v_[0] == 'face') if fc_ == 'N' and ly == 'M5']
+            wb = sp['bands'][bn]['w_um']
+            cands = sorted((abs(c_ - t_[4]), c_) for c_ in (half_ + 0.5 * i for i in range(int((wb - 2 * half_) / 0.5) + 1))
+                           if all(c_ + half_ <= a or c_ - half_ >= b for a, b in occ))
+            assert cands, ('no free N-face span for', bn, pn_)
+            spec[pn_] = t_[:4] + (round(cands[0][1], 3),) + t_[5:]
+            order.append(pn_)
         def fn(mst, k=1, spec=spec, order=order):
             sp_ = dict(spec)
             if k > 1:       # bundled view: an xy port becomes one S-face M5 run centred on its pins
@@ -1521,7 +1773,8 @@ def apply_splits_x(m, rel):
         if not hit:
             nb.append((bid, cls, bits, eps))
             continue
-        split = [e for _, e in hit if e[1] not in ('ck', 'rst') and len(pmap[e[0]][e[1]]) > 1]
+        split = [e for _, e in hit if e[1] not in ('ck', 'rst') and (e[0], e[1]) not in new_owner
+                 and len(pmap[e[0]][e[1]]) > 1]
         if split:
             assert len(split) == 1 and len(eps) == 2, (bid, eps)
             (pi, pp), = split
@@ -1535,6 +1788,8 @@ def apply_splits_x(m, rel):
                 e2.append((inst, port))
             elif port in ('ck', 'rst'):
                 e2 += [(nm, port) for nm in repl[inst].values()]
+            elif (inst, port) in new_owner:
+                e2.append((repl[inst][new_owner[(inst, port)]], port))
             else:
                 (bi, bp, lo, hi), = pmap[inst][port]
                 e2.append((bi, bp))
@@ -1644,7 +1899,8 @@ def _router(m, B, P):
     insts = m['insts']
     g = m['geo']
     faces = m['stn_faces']
-    n_wp = [0]
+    n_wp = [max([int(q.group(1)) for it in insts
+                 if (q := re.match(r'^w(\d+)_',it.name))]+[0])]
     pf = m['variant'].get('port_fix')
     fwd_on = m['variant'].get('fwd')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
@@ -1669,6 +1925,11 @@ def _router(m, B, P):
 
     def station(cx, cy, chain, bits, fa, fb, horizontal, kind='stn', extra=None, fifo_bits=0, dom='stream'):
         w, h = stn_size(bits, horizontal)
+        if m['variant'].get('native_indexer') and bits == 1 and chain.startswith('idx_'):
+            from hbm_indexer_r25i_model import hbm_indexer_scalar_credit_relay_model
+            scalar_model = hbm_indexer_scalar_credit_relay_model()
+            w,h=scalar_model['outline_um']
+            m['scalar_credit_station_model']=scalar_model
         if extra:
             w, h = max(w, extra[0]), max(h, extra[1])
         nf = math.ceil(fifo_bits / 512) if fifo_bits else 0
@@ -1807,11 +2068,13 @@ def buses(m):
     pos = 60.0
     for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('xt', 129), ('ct', 23), ('ef', 8)) + \
             ((('qa', 38),) if m['variant'].get('attn_rtl') else ()) + \
-            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()):
+            ((('iv', 33), ('rv', 33)) if m['variant'].get('fwd_hub') else ()) + \
+            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()):
         sp_off[n_] = pos + nb * 1.2 / 2
         pos += nb * 1.2 + 40.0
     pos = 30.0
-    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)):
+    for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)) + \
+            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()):
         ed_off[n_] = pos + nb * 0.8 / 2
         pos += nb * 0.8 + 25.0
     spx = (hub['vm'].x, hub['vm'].x + hub['vm'].w)
@@ -1878,7 +2141,8 @@ def buses(m):
         P[f'attn_q_{st}'] = qids + hops_c + hops_r
         P[f'kv_{st}'] = P[f'kv_{st}'] + hops_c + hops_r
         B.append((f'ao_{st}', 'attn_out', 2 * ATTN_OUT, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = hops_o + [tr, f'ao_{st}']
 
     for st, G in m['groups'].items():
@@ -2084,6 +2348,28 @@ def buses(m):
         pts = [p0, (xr, p0[1]), (xr, ye_), (cc + 80.0, ye_), sn]
         chain(f'ef_{st}', 'expert_req', 128, (rt.name, f'e{st}'), (svc.name, 'e'), pts, path=f'expert_req_{st}',
               fc=(128,))
+        lmem = m['variant'].get('ld_mem')
+        if lmem:
+            # r25m (MTP-DIE, RQ-ING-4): the loader's memory side (memory AXI m_* + request / response req_* / rsp_*,
+            # tied to a cfg shift chain in the r25 die view: NO physical loader -> HBM path) wired to every stack's
+            # stream service: request (loader -> svc) and response (svc -> loader) forwarded chains on the expert-fetch
+            # route (loader W/E face -> spine-side channel -> hub edge channel -> svc inner face), stations every
+            # <= 430.56 um (< the 504 um SS reach), a pin flop at both ends (the loader / svc pin banks)
+            ld_ = hub['loader']
+            q0 = _cxy(ld_, 'W' if half == 'W' else 'E', 0.35)
+            xl_ = xlane(half, 'lm', xs_sp + (-200.0 if half == 'W' else 200.0))
+            sn2 = _cxy(svc, 'N' if side == 'S' else 'S', (cc + 140.0 - svc.x) / svc.w)
+            yl_ = ylane(side, 'lm', ych[side] + 130.0 * sgn)
+            pts2 = [q0, (xl_, q0[1]), (xl_, yl_), (cc + 140.0, yl_), sn2]
+            chain(f'lq_{st}', 'loader_mem', lmem[0], (ld_.name, f'q{st}'), (svc.name, 'lq'), pts2,
+                  path=f'loader_mem_{st}', fc=(lmem[0],))
+            q1 = _cxy(ld_, 'W' if half == 'W' else 'E', 0.65)
+            xr2 = xl_ + (-60.0 if half == 'W' else 60.0)
+            sr2 = _cxy(svc, 'N' if side == 'S' else 'S', (cc + LR_DX - svc.x) / svc.w)
+            yr2 = yl_ + 60.0 * sgn
+            pts3 = [sr2, (cc + LR_DX, yr2), (xr2, yr2), (xr2, q1[1]), q1]
+            chain(f'lr_{st}', 'loader_mem', lmem[1], (svc.name, 'lr'), (ld_.name, f'r{st}'), pts3,
+                  path=f'loader_rsp_{st}', fc=(lmem[1],))
         # (6) KV rows -> the stack's scan quadrant (attention tiles nearest the stack) and index keys -> its index
         #     quarter: svc outer end -> outer column channel -> hub edge channel -> quadrant face
         sc = m['scan'][st]
@@ -2094,6 +2380,8 @@ def buses(m):
         corner = (rowt[-1] if half == 'W' else rowt[0]) if attn_rtl else (rowt[0] if half == 'W' else rowt[-1])
         for name, tgt_inst, port, off in (('kv', corner, 'k' if pf else f'k{st}', -50.0),
                                           ('ik', sc['index'], 'k' if pf else f'k{st}', 50.0)):
+            if V.get('native_indexer') and name == 'ik':
+                continue
             tp = _cxy(tgt_inst, 'S' if side == 'S' else 'N', 0.5)
             so = _cxy(svc, 'W' if half == 'W' else 'E', 0.3 if name == 'kv' else 0.7)
             yy_ = ylane(side, 'lk0' if name == 'kv' else 'lk1', ych[side] + 40.0 * sgn * (1 if name == 'kv' else -1))
@@ -2131,7 +2419,8 @@ def buses(m):
                 lo, hi_ = (grid[r][c], grid[r + 1][c]) if side == 'S' else (grid[3 - r][c], grid[2 - r][c])
                 B.append((f'tk_{st}{r}{c}', 'attn_kv', 1618 if actual_attn else 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
         B.append((f'ao_{st}', 'attn_out', 1058 if actual_attn else 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = [f'tr_{st}0', f'ao_{st}']
     # ---- hub internal (adjacent slabs across one channel, or vertical in the spine column): direct nets; their
     #      stage count is read from the routed length
@@ -2144,6 +2433,17 @@ def buses(m):
             ('vm', 'quant', 1024), ('vm', 'router', 512)] + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
+    if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
+        if V.get('native_mtp_wb'):
+            from hbm_mtp_native_contract import model, stop_model
+            native_contract = stop_model if V.get('native_mtp_stop') else model
+            contract = native_contract(ROOT)
+            for name, group in contract['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_')
+                           else ('mtp', peer_, group['bits']))
+        else:
+            hl_ += list(MTP_HUB_LINKS)
     for q in ('SW', 'SE', 'NW', 'NE'):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
@@ -2227,7 +2527,7 @@ def buses(m):
         vm = hub['vm']
         hy0_, hy1_ = g['hub_y']
         drop = set()
-        for st in ('SW', 'SE', 'NW', 'NE'):
+        for st in (() if V.get('native_indexer') else ('SW', 'SE', 'NW', 'NE')):
             sc = m['scan'][st]
             ix = sc['index']
             side, half = st[0], st[1]
@@ -2815,6 +3115,17 @@ def svg(m, path, scale=0.03):
     Path(path).write_text('\n'.join(o))
 
 
+# FP-LINT (owner 2026-10-08): die relay margin -- every driver -> station / waypoint ... -> load chain against the SS
+# reach (504 um) after the segment's priced wire stages (seg_stages), and no station on the far side of its driver.
+MARGIN_RELAY_KINDS = ('stn', 'waypoint')
+
+
+def margin_lint(m):
+    import fp_margin_lint as FPL
+    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+                          stages=lambda bid, L: seg_stages(m, bid, L))
+
+
 def manhattan_paths(m):
     """Built-route length per critical path (sum of segment Manhattan lengths between consecutive endpoints)."""
     by = {it.name: it for it in m['insts']}
@@ -2848,6 +3159,8 @@ PATH_CLASSES = dict(
     result='SM -> SU result gather',
     control='cmdproc / issue -> SM control (start/op, arrive/release)',
     expert_req='router -> stream service (expert-fetch descriptor)',
+    loader_mem='loader -> stream service (memory AXI + request; r25m RQ-ING-4)',
+    loader_rsp='stream service -> loader (memory AXI + response; r25m RQ-ING-4)',
     kv='stream service -> attention tiles (KV rows)',
     ik='stream service -> index (index keys)',
     link='collective endpoint -> SerDes macro',
@@ -2859,7 +3172,8 @@ PATH_CLASSES = dict(
 
 
 def path_class(p):
-    for k in ('weight', 'xbcast', 'result', 'control', 'expert_req', 'kv', 'ik', 'link', 'host', 'attn_q'):
+    for k in ('weight', 'xbcast', 'result', 'control', 'expert_req', 'kv', 'ik', 'link', 'host', 'attn_q', 'loader_mem',
+              'loader_rsp'):
         if p.startswith(k + '_') or p == k:
             return k
     if p == 'hub_su_coll':
@@ -3297,7 +3611,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
@@ -3928,12 +4242,14 @@ def main(argv=None):
     ap.add_argument('--die', choices=['ds', 'qwen'], default='ds', help='ds: the DS SM die (r8); qwen: the Qwen3-8B '
                     'W12 tile die')
     ap.add_argument('--var', default='', help='qwen floorplan variant knobs k=v,... (spine_w, spine_ch)')
+    ap.add_argument('--ds-var', default='', help='ds die: a preset name (e.g. r25m, the MTP-DIE variant) or a JSON '
+                    'variant (variant_arg); default the ADOPTED round')
     a = ap.parse_args(argv)
     if a.die == 'qwen':
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build()
+        m = build(variant_arg(a.ds_var))
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
@@ -3967,7 +4283,9 @@ def main(argv=None):
         print(json.dumps(class_bounds(manhattan_paths(m)), indent=1))
         print(json.dumps(dict(die_mm2=round(m['geo']['W'] * m['geo']['H'] / 1e6, 2), W=m['geo']['W'], H=m['geo']['H'],
                               notes=m['notes'], power=die_power(m)['peak_in_phase_w'])))
-        return 0
+        ml = margin_lint(m)
+        print(json.dumps(dict(margin_lint=ml), indent=1))
+        return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'irwin':
         print(' '.join(ir_windows(m)))
         return 0

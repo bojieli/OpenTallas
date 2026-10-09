@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_cst",
+ "orfs_dir": "/srv/opentallas-data/claude/closure-loop/qfd_cst-orph2-a75cb556b-lvt-tc-hm25/routes/qfd_cst_orph2_a75cb556b_lvt_tc_hm25/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_cst.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "1.320852316410992e-10",
+  "ws_min": "5.7456941982003684e-11"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "2.5139176851318723e-10",
+  "ws_min": "3.634180456568714e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "3.163466155697847e-10",
+  "ws_min": "1.318062325950109e-11"
+ },
+ "files": {
+  "qfd_cst.lef": "c093753d17afdbd8369162ca8e8464a5fc2bca29ab7b333b15a872aa4815f08d",
+  "qfd_cst_ff.lib": "e8aa194676f38dd2e175e0ba22cd622fae56ec47b4b7ec09419cbb7158c0cbf9",
+  "qfd_cst_ss.lib": "d8e579dfc12c33c2b0158452cf4dc243a619cf520a731f2f5407f95836a12b3f",
+  "qfd_cst_tt.lib": "af2954c76fecb6b11918798c4d7f9346eb528d31b96a14d8d920d7c20a2c7ca3"
+ }
+}

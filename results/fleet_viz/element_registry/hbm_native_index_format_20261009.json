@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_native_index_query_credit",
+      "target": "HBM accelerator",
+      "owner": "hbm_continuation",
+      "description": "Full FP32 query readyvalid to cold four-credit native selector ABI",
+      "source": {
+        "commit": "57ef00fce",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_native_index_query_credit.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_index_query_credit.sv"
+        ]
+      },
+      "model": {
+        "status": "sized, physical slot/channel pending",
+        "evidence": [
+          "tools/hbm_index_native_format_model.py",
+          "results/uarch/hbm_index_native_format_20261009.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component transport exactness",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual published/drained query source and dynamic owner controller",
+        "native selector quarter-completion pin record",
+        "actual TU publication store and ordered global consumer"
+      ],
+      "integration": {
+        "status": "component gates; source/controller/selector/store end-to-end join pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_index_query_credit.sv"
+        ]
+      }
+    },
+    {
+      "element": "ot_hbm_native_candidate_format",
+      "target": "HBM accelerator",
+      "owner": "hbm_continuation",
+      "description": "Literal fifteen34-bit tuple formatter preserving realTU33-bit header and actualquartercompletion",
+      "source": {
+        "commit": "57ef00fce",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_format.sv",
+          "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_format.sv",
+          "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv"
+        ]
+      },
+      "model": {
+        "status": "sized, physical slot/channel pending",
+        "evidence": [
+          "tools/hbm_index_native_format_model.py",
+          "results/uarch/hbm_index_native_format_20261009.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component transport exactness",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/format/record.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/format/record.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual published/drained query source and dynamic owner controller",
+        "native selector quarter-completion pin record",
+        "actual TU publication store and ordered global consumer"
+      ],
+      "integration": {
+        "status": "component gates; source/controller/selector/store end-to-end join pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_format.sv",
+          "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv"
+        ]
+      }
+    },
+    {
+      "element": "ot_hbm_native_candidate_parse",
+      "target": "HBM accelerator",
+      "owner": "hbm_continuation",
+      "description": "Finite readyvalid decoder preserving all fifteen slots, fullowner73 and TU metadata",
+      "source": {
+        "commit": "57ef00fce",
+        "paths": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_parse.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented optin defaultoff",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_parse.sv"
+        ]
+      },
+      "model": {
+        "status": "sized, physical slot/channel pending",
+        "evidence": [
+          "tools/hbm_index_native_format_model.py",
+          "results/uarch/hbm_index_native_format_20261009.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS component transport exactness",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
+          "evidence": [
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual published/drained query source and dynamic owner controller",
+        "native selector quarter-completion pin record",
+        "actual TU publication store and ordered global consumer"
+      ],
+      "integration": {
+        "status": "component gates; source/controller/selector/store end-to-end join pending",
+        "evidence": [
+          "rtl/hbm_accel/index/ot_hbm_native_candidate_parse.sv"
+        ]
+      }
+    }
+  ]
+}

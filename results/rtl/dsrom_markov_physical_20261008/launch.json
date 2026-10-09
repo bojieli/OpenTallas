@@ -1,0 +1,16 @@
+{
+ "schema": "opentallas.markov.physical.launch.v1",
+ "observed_at": "2026-10-09T06:35:24.620653+00:00",
+ "job": "dsrom-markov256-a2c7f3cd4-tt",
+ "status": "RUNNING",
+ "source_commit": "a2c7f3cd4bf5955b5097f5b169713d4ceefed74a",
+ "host": "ot-pve1",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-a2c7f3cd4-tt",
+ "events": [
+  "2026-10-08T23:03:50-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/dsrom-markov256-a2c7f3cd4-tt.json",
+  "2026-10-08T23:32:21-07:00 source a2c7f3cd4bf5 synced to ot-pve1:/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-a2c7f3cd4-tt/src",
+  "2026-10-08T23:34:10-07:00 launched calibrate (attempt 1) on ot-pve1"
+ ],
+ "confirmed_live_process": "    PID    PPID ELAPSED STAT COMMAND\n1910768       1      74 Ss   bash /srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-a2c7f3cd4-tt/cl/run.sh calibrate.a1\n",
+ "scope": "standalone fullK256 streaming Markov row calibration; no terminal timing evidence yet; no ROM-port/head-parent closure or performance credit"
+}

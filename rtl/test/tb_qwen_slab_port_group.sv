@@ -36,6 +36,19 @@ endmodule
 module tb_qwen_slab_port_group;
     parameter integer W = 16, IL = 8, AW = 24, NW = 16, GID = 95, MUL_LAT = 6, LEAD = 8;
     parameter integer IN_STAGE = 0, AM_SPLIT = 0, S5_CTL = 0, COVER_DPOS = 0, SCALE_PAIR = 0, OREG = 0, MUL_KCP = 1;
+    // qwen-band-integrate: BANDF 1 = GID is the r21m slot 8b + k; each op's split is random in SMIN-1 .. SMAX+1 and the
+    // expected group is the band-local frame's g(split, slot) (out-of-range splits / slots: no write, empty masks).
+    // BMUT 1: the bench expects the slot index itself as the group (the pre-fix element): must FAIL.
+    parameter integer BANDF = 0, TCUT = 7, SMIN = 7, SMAX = 11, GT = 6144, BMUT = 0;
+    localparam integer TB = TCUT + 3;
+    function automatic integer xg(input integer sp);
+        xg = (BANDF == 0 || BMUT != 0) ? GID : (sp <= TB) ? (((GID >> 3) << (TB - sp)) + (GID & 7)) : (GID & 7);
+    endfunction
+    function automatic integer xok(input integer sp);
+        xok = (BANDF == 0) ? 1 : (sp < SMIN || sp > SMAX) ? 0 :
+              (sp <= TB) ? (((GID & 7) >> (TB - sp)) == 0) : (((GID >> 3) == 0) && ((GID & 7) < (GT >> sp)));
+    endfunction
+    integer G, GOK, sp_r;
     reg clk = 0, rst_n = 0;
     always #0.5 clk = !clk;
 
@@ -63,7 +76,7 @@ module tb_qwen_slab_port_group;
     wire [W-1:0] o_mask;
     wire [W*32-1:0] o_data, tw_d;
     wire [1+32+NW-1:0] am_top;
-    ot_qwen_slab_port_group #(.GID(GID), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
+    ot_qwen_slab_port_group #(.GID(GID), .GT(GT), .BANDF(BANDF), .TCUT(TCUT), .SMIN(SMIN), .SMAX(SMAX), .MUL_LAT(MUL_LAT), .BW_FIFO(0), .IN_STAGE(IN_STAGE), .AM_SPLIT(AM_SPLIT),
         .S5_CTL(S5_CTL), .SCALE_PAIR(SCALE_PAIR), .OREG(OREG), .MUL_KCP(MUL_KCP)) dut (
         .clk(clk), .rst_n(rst_n), .bw_clk(clk), .bw_rst_n(rst_n), .bw_v(1'b0), .bw_rdy(bw_rdy), .bw_d({W*32{1'b0}}),
         .tw_v(tw_v), .tw_rdy(1'b1), .tw_d(tw_d),
@@ -94,7 +107,9 @@ module tb_qwen_slab_port_group;
     reg [NW-1:0]   q_nb [0:4095];
     reg            q_wsrc [0:4095];
     reg            q_amax [0:4095];
-    integer nq = 0, nd = 0, na = 0, errors = 0, nreq = 0;
+    reg            q_ok [0:4095];
+    integer        q_gi [0:4095];
+    integer nq = 0, nd = 0, na = 0, errors = 0, nreq = 0, nok = 0;
     reg [W*32-1:0] pend_res [0:LEAD];   // res_in is driven LEAD cycles after the tag
     reg            pend_v [0:LEAD];
     reg [W*32-1:0] ref_y [0:4095];
@@ -129,22 +144,26 @@ module tb_qwen_slab_port_group;
             p_last <= (rnd32(seed + 1) % 3) != 0;
             p_wsrc <= (rnd32(seed + 2) % 8) == 0;
             p_mmode <= rnd32(seed + 3) % 2;
-            p_split <= 6;                                   // GT >> 6 = 96 ports: GID 95 is a port
+            sp_r = (BANDF != 0) ? SMIN - 1 + (rnd32(seed + 12) % (SMAX - SMIN + 3)) : 6;
+            G = xg(sp_r); GOK = xok(sp_r);
+            p_split <= sp_r;                                // base: GT >> 6 = 96 ports: GID 95 is a port
             p_oen <= 1; p_amax <= (rnd32(seed + 4) % 2); p_rmax <= 0;
             p_nb <= (rnd32(seed + 5) % 64) * 16;
             p_lb <= rnd32(seed + 6) % 32;
             // partial masks near GID*W*IL = 12160 .. and lb + GID*W; with COVER_DPOS, one op in 8 has a small nout
             // (row-count difference d <= 0 and near 0 in both modes: no active request, all-zero masks)
-            p_nout <= (COVER_DPOS != 0 && (rnd32(seed + 11) % 8) == 0) ? 1400 + (rnd32(seed + 7) % 12000)
+            p_nout <= (BANDF != 0) ? ((rnd32(seed + 11) % 8) == 0 ? rnd32(seed + 7) % 2000
+                                                                   : G * W * IL + 900 + (rnd32(seed + 7) % 400)) :
+                      (COVER_DPOS != 0 && (rnd32(seed + 11) % 8) == 0) ? 1400 + (rnd32(seed + 7) % 12000)
                                                                     : 15000 + (rnd32(seed + 7) % 3000);
             p_sbase <= rnd32(seed + 8) % 60000;
             p_oa <= rnd32(seed + 9) % (1 << 20);
             p_ots <= rnd32(seed + 10) % 4096;
             @(negedge clk);
             if (p_v && p_last) begin
-                nreq = nreq + 1;
-                sa = (!p_wsrc && (p_mmode ? (p_lb + GID * W < p_nout) : (p_nb + GID * (W * IL) < p_nout))) ?
-                     p_sbase + (p_nb >> 4) + GID * IL : p_sbase;
+                nreq = nreq + 1; nok = nok + GOK;
+                sa = (GOK && !p_wsrc && (p_mmode ? (p_lb + G * W < p_nout) : (p_nb + G * (W * IL) < p_nout))) ?
+                     p_sbase + (p_nb >> 4) + G * IL : p_sbase;
                 bank = sa[AW-1:12];
                 sw = word(bank, sa[11:0]);
                 for (l = 0; l < W; l = l + 1) begin
@@ -152,9 +171,10 @@ module tb_qwen_slab_port_group;
                     // FP32 operands, normal range plus a few zeros
                     rv_res[32*l +: 32] = (lane % 23 == 0) ? 32'd0 : {lane[31], 8'd100 + {2'd0, lane[30:25]}, lane[22:0]};
                     bvec[32*l +: 32] = {p_wsrc ? 16'h3F80 : sw[16*l +: 16], 16'd0};
-                    mask[l] = p_mmode ? (p_lb + GID * W + l < p_nout) : (p_nb + GID * (W * IL) + l < p_nout);
+                    mask[l] = GOK && (p_mmode ? (p_lb + G * W + l < p_nout) : (p_nb + G * (W * IL) + l < p_nout));
                 end
-                q_res[nq] = rv_res; q_scl[nq] = bvec; q_addr[nq] = p_oa + GID * p_ots; q_mask[nq] = mask;
+                q_res[nq] = rv_res; q_scl[nq] = bvec; q_addr[nq] = p_oa + G * p_ots; q_mask[nq] = mask;
+                q_ok[nq] = GOK; q_gi[nq] = G;
                 q_nb[nq] = p_nb[NW-1:0]; q_wsrc[nq] = p_wsrc; q_amax[nq] = p_amax;
                 nq = nq + 1;
                 pend_res[0] = rv_res; pend_v[0] = 1;
@@ -169,7 +189,9 @@ module tb_qwen_slab_port_group;
         p_v <= 0;
         repeat (60) @(posedge clk);
         if (nd != nq) begin $display("FAIL: %0d results for %0d requests", nd, nq); errors = errors + 1; end
-        if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
+        if (errors == 0 && BANDF == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops", nreq, nd, na);
+        else if (errors == 0) $display("PASS: %0d requests, %0d results bit-exact vs ot_hdc_fmul; %0d argmax tops; BANDF slot %0d: %0d in range",
+                                       nreq, nd, na, GID, nok);
         else $display("FAIL: %0d errors", errors);
         if (errors != 0) $fatal(1, "EQUIVALENCE_TERMINAL_FAIL");
         $finish;
@@ -190,7 +212,7 @@ module tb_qwen_slab_port_group;
     reg [NW-1:0] brow;
     integer bl;
     always @(posedge clk) if (ov) begin
-        if (!o_we) begin $display("FAIL: ov without o_we at %0d", nd); errors = errors + 1; end
+        if (o_we !== q_ok[nd]) begin $display("FAIL: o_we %0d want %0d at %0d", o_we, q_ok[nd], nd); errors = errors + 1; end
         if (nd >= nr) begin $display("FAIL: result %0d before its reference", nd); errors = errors + 1; end
         else begin
             for (bl = 0; bl < W; bl = bl + 1)
@@ -198,7 +220,7 @@ module tb_qwen_slab_port_group;
                     $display("FAIL: result %0d lane %0d got %h want %h", nd, bl, o_data[32*bl +: 32], ref_y[nd][32*bl +: 32]);
                     errors = errors + 1;
                 end
-            if (o_addr !== q_addr[nd]) begin $display("FAIL: result %0d addr %h want %h", nd, o_addr, q_addr[nd]); errors = errors + 1; end
+            if (q_ok[nd] && o_addr !== q_addr[nd]) begin $display("FAIL: result %0d addr %h want %h", nd, o_addr, q_addr[nd]); errors = errors + 1; end
             if (o_mask !== q_mask[nd]) begin $display("FAIL: result %0d mask %h want %h", nd, o_mask, q_mask[nd]); errors = errors + 1; end
         end
         nd <= nd + 1;
@@ -211,7 +233,7 @@ module tb_qwen_slab_port_group;
         for (bl = 0; bl < W; bl = bl + 1)
             if (q_mask[am_i][bl] && (!best[1+32+NW-1] || okey(ref_y[am_i][32*bl +: 32]) > best[NW +: 32]))
             begin
-                brow = q_nb[am_i] + GID * (W * IL) + bl;
+                brow = q_nb[am_i] + q_gi[am_i] * (W * IL) + bl;
                 best = {1'b1, okey(ref_y[am_i][32*bl +: 32]), brow};
             end
         if (best[1+32+NW-1] && am_top !== best) begin

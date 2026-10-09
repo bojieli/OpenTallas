@@ -1,6 +1,6 @@
 {
   "name": "dsfd_stnh_512x1",
-  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/routes/s81_dsfd_stnh_512x1_2e2d7aa3f/work/orfs",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/routes/s81_dsfd_stnh_512x1_b85da0774_c/work/orfs",
   "corners": {
     "ss": {
       "returncode": 0,
@@ -10,11 +10,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/routes/s81_dsfd_stnh_512x1_2e2d7aa3f/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/routes/s81_dsfd_stnh_512x1_b85da0774_c/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/record:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/abs_tmp:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -32,11 +32,11 @@
         "run",
         "--rm",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/routes/s81_dsfd_stnh_512x1_2e2d7aa3f/work/orfs:/in:ro",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/routes/s81_dsfd_stnh_512x1_b85da0774_c/work/orfs:/in:ro",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/record:/out",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/record:/out",
         "-v",
-        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-2e2d7aa3f/abs_tmp:/tmp",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-dsfd-stnh-512x1-b85da0774-c/abs_tmp:/tmp",
         "-e",
         "TMPDIR=/tmp",
         "openroad/orfs:latest",
@@ -49,9 +49,9 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_stnh_512x1.lef": "1023ffe7c888b74c33968688a13cfa2cfa741469db482d74e7677349f62c35a8",
-    "dsfd_stnh_512x1_ff.lib": "4f26fc6780c8322c158296d6bd79262bd9a18c9e12836301e4a9d48c56be5b54",
-    "dsfd_stnh_512x1_ss.lib": "20efcea3bc1460ed74be10460e8a035cc9386a01b09c87bc03fef7d315610cdb"
+    "dsfd_stnh_512x1.lef": "59b169e577fd2a3d5c827160dc6128d74e04056897719c208de70c9b3b05e5cd",
+    "dsfd_stnh_512x1_ff.lib": "022327155d0274a7b68a85e7a496a5b093eeb282e06387fbe9b46f4298d0701d",
+    "dsfd_stnh_512x1_ss.lib": "3e269dbab6c7cc5e51e4d72a632da621d2aacbcfc41366fa0f88214b784deb18"
   },
   "ok": true
 }

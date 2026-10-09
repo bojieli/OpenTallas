@@ -1,0 +1,35 @@
+{
+  "status": "PASS",
+  "scope": "one full20480-term F32 row, simulation-only FP DPI, chunk8 scale, serial256b prefetch, stalled request,response,and consumer; synthetic operands; no die integration or physical qualification",
+  "arms": {
+    "exact": {
+      "returncode": 0,
+      "log": "HC_ROW_PASS K=20480 W=32 sectors=2560 total_cycles=3998 result=40c340af\n- /home/ubuntu/wt/codex-hc-row-shard-r2/rtl/test/tb_hbm_hc_row_projection.sv:40: Verilog $finish\n"
+    },
+    "negative_sign_flip": {
+      "returncode": -6,
+      "log": "[0] %Error: tb_hbm_hc_row_projection.sv:39: Assertion failed in TOP.tb_hbm_hc_row_projection: mismatch 40c10bf6 expected 40c340af sectors2560\n%Error: /home/ubuntu/wt/codex-hc-row-shard-r2/rtl/test/tb_hbm_hc_row_projection.sv:39: Verilog $stop\nAborting...\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hbm_hc_row_projection.sv": "71fd57f43214a6bd3687428e01608aa10584f1d57f40bb5848c2be6a1a9ccdd6",
+    "rtl/hdc/hbm/ot_hdc_v41x_hcp_hbm_window.sv": "83a771db3ffcc35fe108b9f7aec89b3ef9bdc9bf4191cbb458a3d83fdc10d6dd",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv": "c6d108ba9d3f740703b3f0af5cdc62e5359a6d0687608e8ef875d5e0e6a9f2d0",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/test/tb_hbm_hc_row_projection.sv": "05bdb15b2001d16e563141da72e9953ec77b7c5bb33ab14d5e2a7aca5ef09cbc",
+    "rtl/test/sim_hdc_v41x_fastfp_dpi.sv": "10e824a48481aed1cefda70a785dae6fb574ad2f88e7ea01041da55bcbfd2545",
+    "rtl/test/sim_hdc_v41x_fastfp_dpi.cpp": "0454f0c8bbbb5dead3229ce5e571f89de9b65d3b824542cb45454b1b0a78101e",
+    "tools/rtl_hbm_hc_row_projection.py": "ae5273909eb36e11e8a8f8d4f7d61bd9f4dc1172ef49ad6ea8c1eefa2f1297bc"
+  },
+  "fixture_sha256": {
+    "hcp_x.mem": "140aa45a8b59175b72c079ddf6139eb868e71fe5be0a18e136144241826b7b2a",
+    "expected.mem": "1c2e017f11206c808da73851d30be6bca421a1496f6f4b7529c697d203652209",
+    "hcp_exp.mem": "8e01486247521d61cd07795a2e0be9bc2bb57f2c802a9691caea1a6d8bedbbf6",
+    "hcp_meta.mem": "d2d9aa11926b4e09cfbc196578c090dd05e4bd08133c2f5af0e5a24bad640fde",
+    "hcp_cmd.mem": "62bb43ff5a97a90765875502b7fbd4cc89d9a61efdb00e96a540ccd2854f649f",
+    "hcp_w.mem": "80731d31a6654100898a9df1ae049d06d920fe29d38e9c338c78e390a51b38ed"
+  }
+}

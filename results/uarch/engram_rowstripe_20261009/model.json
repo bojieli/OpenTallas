@@ -1,0 +1,78 @@
+{
+ "schema": "opentallas.engram-rowstripe-model.v1",
+ "opt_in_default": false,
+ "replicas": 8,
+ "macs_per_cycle": 0,
+ "released_row_bytes": 264,
+ "stored_row_bytes": 288,
+ "table_increase_percent": 9.090909090909083,
+ "historical_rank_bytes": [
+  [
+   25344149024,
+   25344310560,
+   25344505408,
+   25344663776
+  ],
+  [
+   25344806336,
+   25345046080,
+   25345200768,
+   25345351264
+  ]
+ ],
+ "rowstripe_rank_bytes": [
+  [
+   27648162432,
+   27648338688,
+   27648551232,
+   27648724032
+  ],
+  [
+   27648879552,
+   27649141056,
+   27649309824,
+   27649473984
+  ]
+ ],
+ "historical_total_bytes": 202758033216,
+ "total_bytes": 221190580800,
+ "usable_bytes_per_home_die": 40500000000.0,
+ "context": 1048576,
+ "users": 64,
+ "kv_bytes_per_user_busiest": 93750000.0,
+ "required_kv_bytes": 6000000000.0,
+ "kv_headroom_bytes": 12850526016.0,
+ "matched_context_capacity_pass": true,
+ "maximum_users_at_context": 137,
+ "mapping": "row=logical_atom//9; atom_in_row=logical_atom%9; stack=row[0]; PC=row[5:1]; PC_atom=(row>>6)*9+atom_in_row",
+ "read_request": "one len=8 controller burst of nine32B atoms per row; original row tag",
+ "table_bytes_per_token_per_rank": 1728,
+ "read_bytes_per_cycle_per_pc": 32,
+ "boundary_bits_per_pc": 341,
+ "concurrent_rows_per_rank": 6,
+ "return_obligation": "64 PC identity streams, finite tagged buffering and simultaneous stalls exact gate",
+ "added_decode_cycles": 0,
+ "read_adapter": {
+  "reserved_rows": 6,
+  "atoms_per_row": 9,
+  "controller_pc_endpoints": 64,
+  "protected_buffer_bits": 15552,
+  "return_pin_bits": 17792,
+  "return_mux_2to1_equivalents": 105084,
+  "buffer_area_sequential_mm2": 0.0045349632,
+  "pin_area_sequential_mm2": 0.005188147200000001,
+  "mux_area_mm2_modelled": 0.005884704,
+  "area_basis": "FF0.2916um2 and MUX2 0.056um2 assumptions, SECDED/route overhead pending",
+  "protection": "four72-bit SECDED words per captured256-bit atom, nine atom identity bits per row",
+  "transaction": "14-bit generation plus original3-bit row tag; one outstanding row per PC",
+  "return_capture_cycles": 2,
+  "output_capture_cycles": 1,
+  "added_row_latency_cycles": 3,
+  "emitted_atoms_per_cycle": 1,
+  "simultaneous_return_atoms_per_cycle": 6,
+  "fanout": "six64:1 PC response selectors, six SECDED encoders/decoders, six9:1 protected atom selectors",
+  "qualification": "sizing before service RTL; generation wrap requires drain/fence; no physical credit"
+ },
+ "qualification": "layout model only; no service/physical/performance credit",
+ "unified_model_sha256": "cd258361e3a03433eb18c93dbcc5819cf6e05851846113b7f01af2ca8b96f6b9"
+}

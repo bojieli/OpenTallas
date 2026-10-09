@@ -183,7 +183,21 @@ def queue(a):
     if not hosts:
         raise SystemExit(f"{spec['name']}: no host took the views")
     spec["hosts"] = hosts
-    inst = f"bash {TTV_FIND} {{SRC}} " + " ".join(f"{n}={d}" for d, n in views) + " && "
+    # the loop may place a job on a fleet host outside spec["hosts"] (r23hq-tt landed on EPYC4 and died in ttv_install
+    # three times): push the views to every other fleet host too, best effort, without widening the job's host list
+    try:
+        fleet = [h["name"] for h in json.loads((LOOPCODE.parent / "hosts.json").read_text())["hosts"]]
+    except Exception:
+        fleet = []
+    for h in fleet:
+        if h in hosts or h == "localhost":
+            continue
+        try:
+            for _, n in views:
+                push_view(h, n)
+        except Exception as e:
+            log(f"{spec['name']}: spill host {h} not given the views ({e})")
+    inst =f"bash {TTV_FIND} {{SRC}} " + " ".join(f"{n}={d}" for d, n in views) + " && "
     st = spec["stages"]
     for k in ("calibrate", "route"):
         if isinstance(st.get(k), dict) and st[k].get("cmd") and "ttv_install.sh" not in st[k]["cmd"]:

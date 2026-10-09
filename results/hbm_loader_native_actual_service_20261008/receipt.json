@@ -1,0 +1,19 @@
+{
+ "verdict": "PASS_ACTUAL_SERVICE_MINIMUM_STAGE",
+ "source_commit": "95294ff259ddac009a4e17ebb96b855d431a7eb0",
+ "KVS_bench_commit": "6a767bb37",
+ "actual_core_commit": "adf5e21d4",
+ "address_mapper_commit": "4cc9fe7bc",
+ "address_mapper_bench_commit": "ff3c3e580",
+ "remote_host": "ot-epyc2",
+ "remote_run": "/srv/opentallas-data/codex/loader-read/95294ff25",
+ "resource_guard": "/srv/opentallas-scratch/admit.sh 4 -- bash pinned-run.sh",
+ "actual_stage": ["full32PC stack", "native endpoint ADDR_W37", "real address mapper", "service WB_SOURCE_ACK1", "physical write-done source ledger", "refresh-aware HBM controller", "controller backing memory"],
+ "native_write_read": {"transactions":64,"PCs":32,"wait_cycles":2245,"exact":true,"native_tags_include_high_bit":true,"held_replies":true},
+ "mapper": {"canonical_cases":32768,"stacks":4,"address_bits":37,"pass":true},
+ "production_KVS": {"normal_reads_outstanding_per_PC":15,"sectors_per_PC":1024,"total_bytes":1048576,"NATIVE0_and_NATIVE1_cycles_identical":true,"descriptor_to_done_ns":1311.6,"fixture_fraction_peak":0.7994,"both_exact":true},
+ "fixture_stack_capacity_bytes":22500000000,
+ "limitations": ["capacity is an explicitly configured test fixture; actual region allocation remains a parent ownership obligation", "IKS successor union requires wrapper regeneration and its own relevant gate", "external producer pending fence remains an explicit wrapper port and needs actual topology binding", "native dispatcher wire relays, PC slot placement and loaded clock budgets remain physically unqualified"],
+ "physical_qualified":false,
+ "adopted":false
+}

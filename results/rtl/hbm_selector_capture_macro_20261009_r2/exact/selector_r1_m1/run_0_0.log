@@ -1,0 +1,8 @@
+SEG 0 tail=83 first=27 last=27 ovf=0 rep=0 stall=0 k=512 nhead=0,0,0,1  n2=0,0,0,1  n3=0,0,0,1 
+SEG 1 tail=172 first=136 last=306 ovf=0 rep=0 stall=0 k=512 nhead=81,81,80,82  n2=47,44,47,46  n3=44,41,44,43 
+SEG 2 tail=118 first=504 last=1285 ovf=0 rep=0 stall=0 k=512 nhead=79,82,81,81  n2=19,19,17,18  n3=17,18,16,18 
+SEG 3 tail=1635 first=1429 last=2210 ovf=1 rep=2 stall=0 k=512 nhead=32,37,44,256  n2=0,0,0,0  n3=0,0,0,0 
+SEG 4 tail=81 first=3871 last=3871 ovf=1 rep=0 stall=0 k=512 nhead=1,1,1,1  n2=1,1,1,1  n3=1,1,1,1 
+V41XSEL Q=4 W=16 IW=20 K=512 AW=8 segments=5 beats=6948 elements=111009 outputs=1601 out_beats=112 errors=0 tail_min=81 tail_max=1635 ovf_segs=2 stall=0 cycles=3977
+PASS
+- /srv/opentallas-data/codex/hbm_selector_capture_83fd85eec/src/rtl/test/tb_hdc_v41x_sel.sv:298: Verilog $finish

@@ -1,0 +1,23 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes TC,BC (SS setup + FF hold), FF SDCs [/src/physical/qwen_die_masters/signoff/qfd_emb_pcport.sdc]
+FAILED: FlowError: yosys synthesis failed with exit 1:
+
+ /----------------------------------------------------------------------------\
+ |  yosys -- Yosys Open SYnthesis Suite                                       |
+ |  Copyright (C) 2012 - 2026  Claire Xenia Wolf <claire@yosyshq.com>         |
+ |  Distributed under an ISC-like license, type "license" to see terms        |
+ \----------------------------------------------------------------------------/
+ Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+
+-- Executing script file `/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/routes/qfd_emb_pcport_2b0cdede4_tc/work/synth.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv' to AST representation.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv' to AST representation.
+
+/srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/src/rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv:37: ERROR: syntax error, unexpected TOK_IMPORT
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/qfd_emb_pcport-2b0cdede4-tc/routes/qfd_emb_pcport_2b0cdede4_tc/physical.json

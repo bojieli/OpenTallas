@@ -22,7 +22,11 @@ def main():
     spec = json.loads(Path(sys.argv[1]).read_text())
     W, H = spec['w_um'], spec['h_um']
     ports, used = {}, {}
+    # Handwritten masters can declare scalar pins. Retain the historical
+    # one-bit-vector convention unless the contract explicitly marks a scalar.
+    scalars = set(spec.get('scalar_ports', []))
     for name, bits, d, face, layer, pt, fc in spec['ports']:
+        assert name not in scalars or bits == 1, (name, 'scalar width must be 1')
         horiz = face in 'NS'
         span = W if horiz else H
         n_tr = int((span - 2 * OFF) / P)
@@ -40,7 +44,7 @@ def main():
             elif face == 'N': r = (pos - 0.012, H - 0.192, pos + 0.012, H)
             elif face == 'W': r = (0.0, pos - 0.012, 0.192, pos + 0.012)
             else: r = (W - 0.192, pos - 0.012, W, pos + 0.012)
-            pins.append([f'{name}[{i}]', layer] + [round(v, 4) for v in r])
+            pins.append([name if name in scalars else f'{name}[{i}]', layer] + [round(v, 4) for v in r])
         assert t0 + need < n_tr, (name, 'does not fit')
         ports[name] = dict(bits=bits, layer=layer, pins=pins, direction=d, face=face)
     rec = dict(master=spec['master'], die='contract', w_um=W, h_um=H, obs_top=7, domain=spec.get('domain'), instances=None,
@@ -54,7 +58,9 @@ def main():
             L.append(f'place_pin -pin_name {{{nm}}} -layer {ly} -location {{{(x0 + x1) / 2:.4f} {(y0 + y1) / 2:.4f}}} '
                      f'-pin_size {{{x1 - x0:.4f} {y1 - y0:.4f}}}')
     (d / 'io_place.tcl').write_text('\n'.join(L) + '\n')
-    (d / 'ports.svh').write_text(',\n'.join(f"    {ports[p]['direction']} wire [{ports[p]['bits'] - 1}:0] {p}" for p in sorted(ports)) + '\n')
+    (d / 'ports.svh').write_text(',\n'.join(
+        f"    {ports[p]['direction']} wire " + ('' if p in scalars else f"[{ports[p]['bits'] - 1}:0] ") + p
+        for p in sorted(ports)) + '\n')
     print(d, {p: (v['bits'], v['face']) for p, v in ports.items()})
 
 

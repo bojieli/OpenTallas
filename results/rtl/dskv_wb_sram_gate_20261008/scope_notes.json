@@ -1,0 +1,9 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_sram_gate_scope_notes.v1",
+  "current_record": "dskv-wb-sram-gate-20261008-r4.json",
+  "historical_clock_correction": "The r1-r3 benches used 1ns/1ps precision with a 0.4165 ns half period, effectively 834 ps per cycle. The r4 benches use 1ps/1fs precision with a 416.5 ps half period, exactly 833 ps per cycle. Earlier records are preserved unchanged.",
+  "source_snapshots": "Prior uncommitted benches with differing hashes archived under r1_source/r2_source/r3_source; primitive original is r1_source/ot_hbm_accel_dskv_shadow_sram.sv.",
+  "scope": "Minimum component functional and protocol correctness with real SRAM provider model. No SS/FF physical closure claim.",
+  "resource": "All builds used the EPYC2 admission guard with a 2 GiB reservation and two C++ compile jobs. Measured maximum child RSS was about 0.304 GiB.",
+  "merge_coverage": "A 68 B key spans three sectors for all eight key offsets. The gate tests 64 updates: 192 key sectors plus 17 window sectors and nine compressed sectors, totaling 218. MUT_MERGE=1 detects 192 wrong sectors. Historical prose describing two or three sectors is incorrect."
+}

@@ -1,0 +1,416 @@
+{
+ "part": "rom_m1_g5_b",
+ "core": "ot_hdc_core_v41",
+ "nslot": 8,
+ "mp": 1,
+ "sink_handshake": true,
+ "defines": [
+  "OT_MTP_SINK_HANDSHAKE=1",
+  "OT_MTP_HE_TAG=1"
+ ],
+ "status": "done",
+ "input_sha256": {
+  "rtl/hdc/v41/ot_hdc_isa_v41.svh": "fc694e30596d4a906cfcf95c75f56a062d96e857d296a595c3e4e71dcd442da7",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+  "rtl/proto/ot_fp32_mul_rne_pipe.sv": "1d8e8c76f2bdab753e8edc41b51ef4264c0932d551f0ba529392c853cca36de2",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+  "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+  "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+  "rtl/hdc/ot_hdc_reduce.sv": "ab3e0a5cd62a7ab9ecbca82004467375a9e363ebf1299da6310d5bedd8c03a0f",
+  "rtl/hdc/ot_hdc_accept.sv": "1f76ad8948cda53a9576c95d5d13d47ce2209cebb6e0dabbc6aea9f4a452dd3e",
+  "rtl/hdc/v41/ot_hdc_engram_tables_pkg.sv": "00567e952b8779f24815a95f170bfa8126a3d703591bf379311f2c0a742cfbb9",
+  "rtl/hdc/v41/ot_hdc_engram_hash.sv": "d12ad14278510d75ace0b0c078320dd69e2e3bd0f0b0937e28cf59f41fee3c91",
+  "rtl/hdc/v41/ot_hdc_select.sv": "85a4d9cf54443e6995da7d770c8ac0ee81835a4ab58923817fdb16b8d77c271e",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+  "rtl/hdc/v41/ot_hdc_actquant.sv": "1db9e512398dd00634865b33c038b43a90df740e7fe9e84f52d905cb38d18be9",
+  "rtl/hdc/v41/ot_hdc_fp4qdq.sv": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv": "9b2a87e62b62bcaf3fc9b901b2dcde63f966d13925126711aa2ebf6b7b1aff8f",
+  "rtl/hdc/v41/ot_hdc_softplus.sv": "c4b101fccaa9aefd11795d6d16a2a30044f80ee14f21cdea0bac8db53d23ac88",
+  "rtl/hdc/v41/ot_hdc_sinkhorn_seq.sv": "5a6cc941af82d6b74e0be17578c852ca3863fb439f1eb47da7612aebfcb8d77c",
+  "rtl/hdc/v41/ot_hdc_sk_arith.sv": "aa99d671592f8f3896f09e368d544a6e3f380e184e7b0cde994bb809c32642a3",
+  "rtl/hdc/v41/ot_hdc_sk_recip_rom.sv": "8a25d38991d44354c6701683019adfcdbf1e520874b72a40810b2aecde876142",
+  "rtl/hdc/v41/ot_hdc_sinkhorn.sv": "ba413bc2e2295ad66de4f187bf8b8476242bda002e9199f073783fd2432dfd90",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_sinkhorn_mc.sv": "c1652c48bf10117c36ca6ac5737cbe5bed91e1bb10b024c8a8ccb1db91559b78",
+  "rtl/hdc/v41/ot_hdc_v41_matvec.sv": "907b2979b89f324a32bf8de9b8b1ecc4281346cfce221c2d0123ca6cb2d8d8fc",
+  "rtl/hdc/v41/ot_hdc_v41_stream.sv": "77b2e63866e1de2c12fb7a2128c80a44722abd52d606e4486b3579d4a2df475a",
+  "rtl/hdc/v41/ot_hdc_v41_qe.sv": "1faff036110bff03e785deb73154d9f7b79d341111cfab5282fe2c797700fcd7",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_xu.sv": "56894f16075b7c7c1ab79dd537272ee7161d235d07040b3b6a0481bc281200c8",
+  "rtl/hdc/v41/dspark_sink_handshake/ot_hdc_v41_hcproj.sv": "d4cbe607f95c6c2acf3f6e9f569e0b1a5bdad2ca388404d306d6246df54a64b8",
+  "rtl/hdc/v41/ot_hdc_core_v41.sv": "94597e0576c118953448ffaf7b5e78aa917d51b852d85b3c777891a6cab5fa51",
+  "rtl/test/tb_hdc_core_v41_mtp.sv": "a1b937307416db03fade119dda96125dcdee7e1d3bc32c33b84b2c730f901437",
+  "rtl/test/hdc_core_v41_mtp_harness.cpp": "ccaaa473613dbd951ba58fa4e3c3d5c84a464cea4cba811679cfd43f2bd40855",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+  "tools/hdc_program_v41.py": "deb075b8d8103db9a32ff171b25309304a857cbf4d7942f761820fb3c61add0f",
+  "tools/rtl_hdc_v41_mtp_campaign.py": "0c46ffe57a3e7d3bed8ce233a34b9fbb4439b97f217a9ddb9ff8f3fda4fc41c6",
+  "tools/dsrom_dspark_cached_rtl_v41.py": "4df40e5e3bd0fcfaea6eb103f7633557207f0c8d471af6b20ac620b677c5da51",
+  "tools/dsrom_sink_handshake.py": "b670e2fb83d44f3da3fec78d35b297b873e978cd82c2c71bb684794779d4ba87",
+  "tools/mtp_exact_mutants.py": "1ccfbd1ae9b6f0d2160a60e165d75cfd763b48a47140d4aa9d8d5ad3c3aa9fd1"
+ },
+ "image_sha256": {
+  "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle3_forced_g5_n12": {
+   "crom.hex": "d2e043377af91c9b58fb5587cf37852d8a3a13734652d8cb4f5997fd2ec19c48",
+   "erom.hex": "6e84b7c8a40bf076475900d020495237375f7a52ca72e9908f9056a6f2710e7c",
+   "exp_accept.hex": "a4527ef97fcd7bf74270ccb57f83e85cf5a0f4570f48c7e4d10d07de0c1cca60",
+   "exp_heads.hex": "dca7e0a924cd3106f9af4f52ef2eca1d135a303a64e4d07a41b6591d0a90b022",
+   "exp_tokens.hex": "94a7f5cc6074f499ffb1a2cdd3eeadd97dde5927bc9c144545c6ac00b9b441a2",
+   "expect_kv.hex": "992903734153496f60e178f139ba41c79f46e52dea9c90e99bd36a48567ad0e6",
+   "expect_vm.hex": "5a522004dec133be1b94e8c652649c08c14bc1c381413b511bb73a6c3535382d",
+   "force.hex": "a90e0e2ec9b6c44a37fa506644cd3f82b44a76a294317582b699c2bf145c8914",
+   "hrom.hex": "f52322a810ae845710c7275b3821ff7fa649512490d3c1b5b8da35ac422539d6",
+   "isa.json": "54aff85aee7096a8eb849c38138aa47d11683b9eae73ae7a455a0e78075c1467",
+   "mtp_prompt.hex": "303c273a875f853df7f3ece60b768935d5fef3a819e0fe5d16f72e77ee11267d",
+   "prog.hex": "8506f162793c16bc9d5d8b0e96abd634e940a0524e89f3b7522d249d454f69c7",
+   "prog_tags.txt": "977cc762c7f32565fbbd0fba2d253c0000b59562f61daea1c0494299a8a94805",
+   "qrom.hex": "58fe286232964d995ca3663dba0ac0567e2500441746167464bc0463e509706a",
+   "run.args": "3575a1248659f8a51eb0ecbeaa8117d04bf0983785d4929b76da024425d95a77",
+   "wrom.hex": "1c161b313d3cbef7d908711689c815377c1e5f7fd6baac7c58604ea43b1e36bb"
+  },
+  "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle5_forced_g5_n12": {
+   "crom.hex": "d2e043377af91c9b58fb5587cf37852d8a3a13734652d8cb4f5997fd2ec19c48",
+   "erom.hex": "6e84b7c8a40bf076475900d020495237375f7a52ca72e9908f9056a6f2710e7c",
+   "exp_accept.hex": "704e83275758d85bca58803b2dab8b4c10ca7cb1c062b2d558dc2a82be5a18fc",
+   "exp_heads.hex": "41e9d715110b91211f45c16ff31d28e8c9696e110e86fe67cea4e043d4842954",
+   "exp_tokens.hex": "4c4f557e982ed2bd28055d50ace802bc70c8b3aa1f43a85687ecce801f413c7f",
+   "expect_kv.hex": "13bc182bdb9e38352d13989697a2551e205ace6740dde30d9a3934203ec71186",
+   "expect_vm.hex": "bc275216babebd693dc80617fdec890ba568289ddd6c74ec6acdf275d0b5f220",
+   "force.hex": "858c48f2811e4e3d2e27b62419f524815d147ac5c8c3c9195589dc3d7144a910",
+   "hrom.hex": "f52322a810ae845710c7275b3821ff7fa649512490d3c1b5b8da35ac422539d6",
+   "isa.json": "83f80fd6d201a5ad7511155e42fd82f47895d4a02330bf7176667fc4ce6799c9",
+   "mtp_prompt.hex": "cf1e7ce2847a29ccff81491086ad4ebe55c0fb2383c7ee9b77938b9ce50c1dd6",
+   "prog.hex": "8506f162793c16bc9d5d8b0e96abd634e940a0524e89f3b7522d249d454f69c7",
+   "prog_tags.txt": "977cc762c7f32565fbbd0fba2d253c0000b59562f61daea1c0494299a8a94805",
+   "qrom.hex": "58fe286232964d995ca3663dba0ac0567e2500441746167464bc0463e509706a",
+   "run.args": "7557b05dd343d2eb4edb1c1b29caeb710f8a09f30bebdd1e99bf4b0f0d31129d",
+   "wrom.hex": "1c161b313d3cbef7d908711689c815377c1e5f7fd6baac7c58604ea43b1e36bb"
+  },
+  "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_plain_oracle8_n12": {
+   "crom.hex": "03dcd11176a51cc3a7d11980c0e8fb782655fbe056f6f06fd2abb2f47167f418",
+   "erom.hex": "6e84b7c8a40bf076475900d020495237375f7a52ca72e9908f9056a6f2710e7c",
+   "exp_accept.hex": "8982b0e36eb1bacbb400dea0997b13cce756d7a48dbe0b05c560a13c1973afd0",
+   "exp_heads.hex": "f696d83a21b717d5f54a264bf69c3cf8b940ba1ac16c621a2b84c9bb10ecd8c1",
+   "exp_tokens.hex": "d57f378e93983c415324e3e0ac3ef312a465c6ae39b4e17bba593149331e3ceb",
+   "expect_kv.hex": "bc1cc52435087559a8e5de7f9753d360f945c33e94ab0bb7b3354b233bd148eb",
+   "expect_vm.hex": "7abf54f1321b3ce0db34e78a5d5a5862731e5d0e69cee8a9ed5aae381913190b",
+   "hrom.hex": "36b9ef72e36132d631c00109bea16720a6eb7cc8bb6d33a205de9b6ac5e28f12",
+   "isa.json": "f11f5652d775da104f58cc6c423c9207b4757346334451103045088e67a01ac4",
+   "mtp_prompt.hex": "ccbbfec32871ea2ceabe836eddeb782528c4c990d8661d083c0bf022ad11e385",
+   "prog.hex": "b5bdaa5f1becbb1b876e450b36f84f38b799336b81f8b4dee17beec2bf994cb1",
+   "prog_tags.txt": "38b2666b6e56ee47eb52dd9a3e149ebf778385ca7d844ae390189cf04c226b4e",
+   "qrom.hex": "c0df6de5d8e866d184a4a6f6c9e2648a069fcf49e2b0e894e91c94b2601bffd2",
+   "run.args": "163ee086a49d16db743e8fc66e35ad25671f068e3f2aaa993bafe0f0c3a238b7",
+   "wrom.hex": "a284ce479aec291f8fb3a112530569c378dff6758d72fd30cae52e366646557b"
+  }
+ },
+ "runs": [
+  {
+   "image": "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle3_forced_g5_n12",
+   "args": [
+    "+NPROMPT=3",
+    "+NGEN=12",
+    "+GAMMA=5",
+    "+ENTRY=4029",
+    "+FORCE"
+   ],
+   "rtl": {
+    "returncode": 0,
+    "pass": true,
+    "prompt": 3,
+    "generated": 13,
+    "iters": 3,
+    "token_mismatches": 0,
+    "accept_mismatches": 0,
+    "heads": 21,
+    "head_mismatches": 0,
+    "prefill_cycles": 967745,
+    "iter_cycles": 7365264,
+    "draft_cycles": 601570,
+    "vm_mismatches": 0,
+    "kv_mismatches": 0,
+    "per_iter": [
+     {
+      "it": 0,
+      "pos": 3,
+      "input": 2047,
+      "accepted": 2,
+      "emitted": 3,
+      "cycles": 2316388,
+      "draft_cycles": 195658,
+      "fault": 0
+     },
+     {
+      "it": 1,
+      "pos": 6,
+      "input": 2442,
+      "accepted": 5,
+      "emitted": 6,
+      "cycles": 2414710,
+      "draft_cycles": 197460,
+      "fault": 0
+     },
+     {
+      "it": 2,
+      "pos": 12,
+      "input": 2731,
+      "accepted": 2,
+      "emitted": 3,
+      "cycles": 2634166,
+      "draft_cycles": 208452,
+      "fault": 0
+     }
+    ],
+    "draft_cycles_per_step": 200523.3,
+    "verify_accept_cycles_per_step": 2254564.7,
+    "cycles_per_step": 2455088.0,
+    "emitted": 12,
+    "cycles_per_emitted_token": 613772.0,
+    "accepted_hist": {
+     "2": 2,
+     "5": 1
+    },
+    "iter_unit_busy_cycles": {
+     "me": 2612152,
+     "su": 2873935,
+     "qe": 1362604,
+     "xu": 576936,
+     "he": 989484
+    },
+    "tail": [
+     "ITER it=0 pos=3 in=2047 accepted=2 emitted=3 cycles=2316388 draft_cycles=195658 fault=0",
+     "ITER it=1 pos=6 in=2442 accepted=5 emitted=6 cycles=2414710 draft_cycles=197460 fault=0",
+     "ITER it=2 pos=12 in=2731 accepted=2 emitted=3 cycles=2634166 draft_cycles=208452 fault=0",
+     "HDC41_MTP prompt=3 generated=13 iters=3 token_mismatches=0 accept_mismatches=0 heads=21 head_mismatches=0 prefill_cycles=967745 iter_cycles=7365264 draft_cycles=601570 vm_mismatch=0 kv_mismatch=0",
+     "ACCEPT_HIST a0=0 a1=0 a2=2 a3=0 a4=0 a5=1",
+     "UTIL me_busy=2612152 su_busy=2873935 qe_busy=1362604 xu_busy=576936 he_busy=989484",
+     "PASS",
+     "- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish"
+    ],
+    "seconds": 1513.1
+   },
+   "pass": true
+  },
+  {
+   "image": "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle5_forced_g5_n12",
+   "args": [
+    "+NPROMPT=5",
+    "+NGEN=12",
+    "+GAMMA=5",
+    "+ENTRY=4029",
+    "+FORCE"
+   ],
+   "rtl": {
+    "returncode": 0,
+    "pass": true,
+    "prompt": 5,
+    "generated": 12,
+    "iters": 3,
+    "token_mismatches": 0,
+    "accept_mismatches": 0,
+    "heads": 23,
+    "head_mismatches": 0,
+    "prefill_cycles": 1630853,
+    "iter_cycles": 7624840,
+    "draft_cycles": 606954,
+    "vm_mismatches": 0,
+    "kv_mismatches": 0,
+    "per_iter": [
+     {
+      "it": 0,
+      "pos": 5,
+      "input": 3159,
+      "accepted": 4,
+      "emitted": 5,
+      "cycles": 2375900,
+      "draft_cycles": 196850,
+      "fault": 0
+     },
+     {
+      "it": 1,
+      "pos": 10,
+      "input": 2932,
+      "accepted": 3,
+      "emitted": 4,
+      "cycles": 2553182,
+      "draft_cycles": 200220,
+      "fault": 0
+     },
+     {
+      "it": 2,
+      "pos": 14,
+      "input": 3687,
+      "accepted": 1,
+      "emitted": 2,
+      "cycles": 2695758,
+      "draft_cycles": 209884,
+      "fault": 0
+     }
+    ],
+    "draft_cycles_per_step": 202318.0,
+    "verify_accept_cycles_per_step": 2339295.3,
+    "cycles_per_step": 2541613.3,
+    "emitted": 11,
+    "cycles_per_emitted_token": 693167.3,
+    "accepted_hist": {
+     "1": 1,
+     "3": 1,
+     "4": 1
+    },
+    "iter_unit_busy_cycles": {
+     "me": 2820408,
+     "su": 2937775,
+     "qe": 1362454,
+     "xu": 577483,
+     "he": 989484
+    },
+    "tail": [
+     "ITER it=0 pos=5 in=3159 accepted=4 emitted=5 cycles=2375900 draft_cycles=196850 fault=0",
+     "ITER it=1 pos=10 in=2932 accepted=3 emitted=4 cycles=2553182 draft_cycles=200220 fault=0",
+     "ITER it=2 pos=14 in=3687 accepted=1 emitted=2 cycles=2695758 draft_cycles=209884 fault=0",
+     "HDC41_MTP prompt=5 generated=12 iters=3 token_mismatches=0 accept_mismatches=0 heads=23 head_mismatches=0 prefill_cycles=1630853 iter_cycles=7624840 draft_cycles=606954 vm_mismatch=0 kv_mismatch=0",
+     "ACCEPT_HIST a0=0 a1=1 a2=0 a3=1 a4=1 a5=0",
+     "UTIL me_busy=2820408 su_busy=2937775 qe_busy=1362454 xu_busy=577483 he_busy=989484",
+     "PASS",
+     "- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish"
+    ],
+    "seconds": 1816.0
+   },
+   "pass": true
+  },
+  {
+   "image": "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_plain_oracle8_n12",
+   "args": [
+    "+NPROMPT=8",
+    "+NGEN=12",
+    "+PLAIN",
+    "+ENTRY=0"
+   ],
+   "rtl": {
+    "returncode": 0,
+    "pass": true,
+    "prompt": 8,
+    "generated": 12,
+    "token_mismatches": 0,
+    "heads": 19,
+    "head_mismatches": 0,
+    "prefill_cycles": 2648183,
+    "decode_cycles": 4196490,
+    "decode_steps": 11,
+    "vm_mismatches": 0,
+    "kv_mismatches": 0,
+    "cycles_per_token": 381499.1,
+    "tail": [
+     "HDC41_PLAIN prompt=8 generated=12 token_mismatches=0 heads=19 head_mismatches=0 prefill_cycles=2648183 decode_cycles=4196490 decode_steps=11 vm_mismatch=0 kv_mismatch=0",
+     "PASS",
+     "- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:383: Verilog $finish"
+    ],
+    "seconds": 1331.8
+   },
+   "pass": true
+  }
+ ],
+ "build_seconds": 485.5,
+ "mutation_rtl_accept_extra": [
+  {
+   "image": "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle3_forced_g5_n12",
+   "detected": true,
+   "returncode": 0,
+   "pass": false,
+   "prompt": 3,
+   "generated": 13,
+   "iters": 5,
+   "token_mismatches": 8,
+   "accept_mismatches": 5,
+   "heads": 33,
+   "head_mismatches": 24,
+   "prefill_cycles": 967745,
+   "iter_cycles": 12553436,
+   "draft_cycles": 1003282,
+   "vm_mismatches": 99093,
+   "kv_mismatches": 64399,
+   "draft_cycles_per_step": 200656.4,
+   "verify_accept_cycles_per_step": 2310030.8,
+   "cycles_per_step": 2510687.2,
+   "emitted": 12,
+   "cycles_per_emitted_token": 1046119.7,
+   "accepted_hist": {
+    "1": 4,
+    "3": 1
+   },
+   "iter_unit_busy_cycles": {
+    "me": 4581768,
+    "su": 4856025,
+    "qe": 2270886,
+    "xu": 961974,
+    "he": 1649140
+   },
+   "tail": [
+    "kv 9 rtl 3f900000 expect 3b400000",
+    "kv 10 rtl bfc00000 expect 3fc00000",
+    "kv 11 rtl 3fb00000 expect bfc00000",
+    "kv 12 rtl bfb00000 expect 3ec00000",
+    "kv 13 rtl 3e700000 expect bfc00000",
+    "kv 14 rtl bfb00000 expect bed00000",
+    "kv 22 rtl 3df00000 expect 40000000",
+    "HDC41_MTP prompt=3 generated=13 iters=5 token_mismatches=8 accept_mismatches=5 heads=33 head_mismatches=24 prefill_cycles=967745 iter_cycles=12553436 draft_cycles=1003282 vm_mismatch=99093 kv_mismatch=64399",
+    "ACCEPT_HIST a0=0 a1=4 a2=0 a3=1 a4=0 a5=0",
+    "UTIL me_busy=4581768 su_busy=4856025 qe_busy=2270886 xu_busy=961974 he_busy=1649140",
+    "FAIL",
+    "- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish"
+   ],
+   "seconds": 2286.7
+  },
+  {
+   "image": "/srv/opentallas-scratch/claude/mtp-exact/rom_img/img_oracle5_forced_g5_n12",
+   "detected": true,
+   "returncode": 0,
+   "pass": false,
+   "prompt": 5,
+   "generated": 13,
+   "iters": 4,
+   "token_mismatches": 6,
+   "accept_mismatches": 3,
+   "heads": 29,
+   "head_mismatches": 18,
+   "prefill_cycles": 1630853,
+   "iter_cycles": 10361070,
+   "draft_cycles": 817574,
+   "vm_mismatches": 95015,
+   "kv_mismatches": 60043,
+   "draft_cycles_per_step": 204393.5,
+   "verify_accept_cycles_per_step": 2385874.0,
+   "cycles_per_step": 2590267.5,
+   "emitted": 12,
+   "cycles_per_emitted_token": 863422.5,
+   "accepted_hist": {
+    "1": 3,
+    "5": 1
+   },
+   "iter_unit_busy_cycles": {
+    "me": 3920288,
+    "su": 3957844,
+    "qe": 1816574,
+    "xu": 770120,
+    "he": 1319312
+   },
+   "tail": [
+    "kv 13 rtl c0100000 expect 3ef00000",
+    "kv 14 rtl bf200000 expect bf600000",
+    "kv 15 rtl bc900000 expect bf200000",
+    "kv 26 rtl 3ee00000 expect bfc00000",
+    "kv 27 rtl 3ed00000 expect 3f600000",
+    "kv 28 rtl 3f600000 expect 3df00000",
+    "kv 29 rtl 3e400000 expect 3ec00000",
+    "HDC41_MTP prompt=5 generated=13 iters=4 token_mismatches=6 accept_mismatches=3 heads=29 head_mismatches=18 prefill_cycles=1630853 iter_cycles=10361070 draft_cycles=817574 vm_mismatch=95015 kv_mismatch=60043",
+    "ACCEPT_HIST a0=0 a1=3 a2=0 a3=0 a4=0 a5=1",
+    "UTIL me_busy=3920288 su_busy=3957844 qe_busy=1816574 xu_busy=770120 he_busy=1319312",
+    "FAIL",
+    "- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish"
+   ],
+   "seconds": 2127.2
+  }
+ ],
+ "pass": true
+}

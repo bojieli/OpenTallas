@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.mtp_rollback_mr5_provenance.v1",
+  "source_commit": "7dd2669ac",
+  "positive": "ring8_golden_fullgamma_pass.json",
+  "negative": "legacy_ring2_fullgamma_failure.json",
+  "negative_source_commit": "50ff9c62e",
+  "sequence": "sequence.json",
+  "command": "OPENTALLAS_BUILD=/home/ubuntu/OpenTallas/build OPENBLAS_NUM_THREADS=1 python tools/mtp_rollback_isa_probe.py --sequence results/rtl/mtp_rollback_20261008/mr5/sequence.json --output OUTPUT.json",
+  "negative_command": "same command at negative_source_commit with --legacy-ring",
+  "qualification": "Exact ISA proof on released reduced checkpoint. Full gamma=5 ordering and independent golden logits. Physical closure and RTL ring qualification remain separate gates.",
+  "latest_cost": "6144 extra allocated bytes per reduced package; unchanged instruction count and arithmetic latency"
+}

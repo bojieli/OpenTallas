@@ -477,7 +477,14 @@ endmodule
 // existing read edges and read-before-write behavior, including payload state
 // across reset. The parent owns the write-data/enable registers and validity.
 module ot_dsrom_window_column #(
-    parameter integer WIDTH=256
+    parameter integer WIDTH=256,
+    // REDESIGN-S81 2026-10-08 (wcol256 TT+link budget -110.4 / wcol128 -84.6: row_we pin -> enable mux -> mem,
+    // 2 logic + buffers on a fanout-WIDTH enable).  PINREG 1: row_we / write_data captured at the pins, the write
+    // commits one cycle later, and the read captures the row's NEXT value (the mem D input: the committing write
+    // bypassed), so every port is cycle-identical to PINREG 0 -- zero protocol cycles.  WE_REP: kept copies of each
+    // captured row enable, one per WIDTH/WE_REP slice (fanout WIDTH/WE_REP, reg -> reg).
+    parameter integer PINREG=0,
+    parameter integer WE_REP=1
 ) (
     input wire clk, rst_n,
     input wire [31:0] row_we,
@@ -491,11 +498,33 @@ module ot_dsrom_window_column #(
     reg [1:0] rh;
     reg pending;
     generate
-        for(genvar row=0;row<32;row=row+1) begin : g_write
-            always @(posedge clk) if(row_we[row]) mem[row]<=write_data;
-        end
-        for(genvar group=0;group<4;group=group+1) begin : g_read
-            always @(posedge clk) if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];
+        if (PINREG) begin : g_pin
+            localparam integer SW = WIDTH / WE_REP;
+            reg [WIDTH-1:0] wd_q;
+            always @(posedge clk) wd_q <= write_data;
+            wire [WIDTH-1:0] nxt [0:31];
+            for(genvar row=0;row<32;row=row+1) begin : g_write
+                wire [WE_REP-1:0] we_q;
+                for (genvar c=0;c<WE_REP;c=c+1) begin : g_rep
+                    ot_dsrom_window_keep_reg #(.W(1), .RESET(0)) u_we (.clk(clk), .rst_n(rst_n), .d(row_we[row]), .q(we_q[c]));
+                    assign nxt[row][SW*c +: SW] = we_q[c] ? wd_q[SW*c +: SW] : mem[row][SW*c +: SW];
+                end
+                always @(posedge clk) mem[row] <= nxt[row];
+            end
+            for(genvar group=0;group<4;group=group+1) begin : g_read
+`ifdef OT_WCOL_MUT_NOBYPASS
+                always @(posedge clk) if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];   // negative control
+`else
+                always @(posedge clk) if(read_v) rq[group]<=nxt[8*group+read_addr[2:0]];
+`endif
+            end
+        end else begin : g_base
+            for(genvar row=0;row<32;row=row+1) begin : g_write
+                always @(posedge clk) if(row_we[row]) mem[row]<=write_data;
+            end
+            for(genvar group=0;group<4;group=group+1) begin : g_read
+                always @(posedge clk) if(read_v) rq[group]<=mem[8*group+read_addr[2:0]];
+            end
         end
     endgenerate
     always @(posedge clk or negedge rst_n)
@@ -508,7 +537,8 @@ module ot_dsrom_window_column #(
 endmodule
 
 // Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
-module ot_dsrom_window_column_128 (
+// REDESIGN-S81 2026-10-08: the hardened columns default to PINREG 1 (cycle-identical ports, pins registered).
+module ot_dsrom_window_column_128 #(parameter integer PINREG=1, parameter integer WE_REP=2) (
     input wire clk, rst_n,
     input wire [31:0] row_we,
     input wire [127:0] write_data,
@@ -516,11 +546,11 @@ module ot_dsrom_window_column_128 (
     input wire [4:0] read_addr,
     output wire [127:0] read_data
 );
-    ot_dsrom_window_column #(.WIDTH(128)) u_logic (.*);
+    ot_dsrom_window_column #(.WIDTH(128), .PINREG(PINREG), .WE_REP(WE_REP)) u_logic (.*);
 endmodule
 
 // Fixed-width names permit simultaneous LEF/LIB binding of both physical kinds.
-module ot_dsrom_window_column_256 (
+module ot_dsrom_window_column_256 #(parameter integer PINREG=1, parameter integer WE_REP=4) (
     input wire clk, rst_n,
     input wire [31:0] row_we,
     input wire [255:0] write_data,
@@ -528,7 +558,7 @@ module ot_dsrom_window_column_256 (
     input wire [4:0] read_addr,
     output wire [255:0] read_data
 );
-    ot_dsrom_window_column #(.WIDTH(256)) u_logic (.*);
+    ot_dsrom_window_column #(.WIDTH(256), .PINREG(PINREG), .WE_REP(WE_REP)) u_logic (.*);
 endmodule
 
 // Kept register: one instance per physical copy.  The hierarchy boundary stops synthesis from merging

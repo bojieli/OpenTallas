@@ -1,0 +1,129 @@
+{
+ "master": "hfd_attn_half_lo",
+ "kind": "attn_half",
+ "w_um": 1778.52,
+ "h_um": 814.32,
+ "obs_top": 7,
+ "parent": "hfd_attn_tile",
+ "half": "lo",
+ "generator": "tools/hbm_attn_half_tile_place.py",
+ "ports": {
+  "k": {
+   "bits": 1041,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    518.892,
+    721.644
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "ci": {
+   "bits": 1618,
+   "direction": "input",
+   "layer": "M5",
+   "x": [
+    733.932,
+    1050.54
+   ],
+   "y": [
+    0.096,
+    0.096
+   ]
+  },
+  "ri": {
+   "bits": 1618,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    115.596,
+    432.204
+   ]
+  },
+  "rf": {
+   "bits": 1618,
+   "direction": "output",
+   "layer": "M4",
+   "x": [
+    0.096,
+    0.096
+   ],
+   "y": [
+    115.596,
+    432.204
+   ]
+  },
+  "q": {
+   "bits": 582,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    2.412,
+    113.964
+   ]
+  },
+  "rst": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    114.156,
+    114.156
+   ]
+  },
+  "ck": {
+   "bits": 1,
+   "direction": "input",
+   "layer": "M4",
+   "x": [
+    1778.424,
+    1778.424
+   ],
+   "y": [
+    600.012,
+    600.012
+   ]
+  },
+  "xp": {
+   "bits": 1619,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    733.932,
+    1050.732
+   ],
+   "y": [
+    814.224,
+    814.224
+   ]
+  },
+  "xr": {
+   "bits": 272,
+   "direction": "output",
+   "layer": "M5",
+   "x": [
+    30.396,
+    1664.844
+   ],
+   "y": [
+    814.224,
+    814.224
+   ]
+  }
+ }
+}

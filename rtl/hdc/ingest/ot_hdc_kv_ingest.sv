@@ -263,7 +263,9 @@ module ot_hdc_kv_ingest #(
     reg [7:0]   ra_rp;                         // head byte (mod 256)
     reg [2:0]   ra_wp;
     wire [2:0]  ra_w0 = ra_rp[7:5];
-    wire [511:0] ra_pair = {ra[ra_w0 + 3'd1], ra[ra_w0]};
+    wire [2:0]  ra_w1 = ra_w0 + 3'd1;          // mod 8 (a named 3-b net: some simulators widen an index sum)
+    wire [2:0]  ra_wq = ra_wp + 3'd1;
+    wire [511:0] ra_pair = {ra[ra_w1], ra[ra_w0]};
     wire [511:0] ra_sh = ra_pair >> {ra_rp[4:0], 3'b000};
     wire [255:0] ra_head = ra_sh[255:0];      // the next 32 bytes
     reg         st_act, st_pad;
@@ -475,7 +477,7 @@ module ot_hdc_kv_ingest #(
 
             // ---- stream path
             if (ra_push) begin
-                ra[ra_wp] <= in_data[255:0]; ra[ra_wp + 3'd1] <= in_data[511:256]; ra_wp <= ra_wp + 3'd2;
+                ra[ra_wp] <= in_data[255:0]; ra[ra_wq] <= in_data[511:256]; ra_wp <= ra_wp + 3'd2;
             end
             if (ra_push || pad_take) st_beats <= st_beats - 16'd1;
             if (st_pad) begin

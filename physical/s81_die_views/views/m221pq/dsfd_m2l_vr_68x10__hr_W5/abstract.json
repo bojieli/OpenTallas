@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_m2l_vr_68x10__hr_W5",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/routes/s81_hend_m221pq_hr_W5_a1f23fa0b_mm/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/routes/s81_hend_m221pq_hr_W5_a1f23fa0b_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/routes/s81_hend_m221pq_hr_W5_a1f23fa0b_mm/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W5-a1f23fa0b-mm/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_m2l_vr_68x10__hr_W5.lef": "2f903662e85d8c43daac920317db19b84e8baff59e94c708faf9b97b7438b144",
+    "dsfd_m2l_vr_68x10__hr_W5_ff.lib": "b810c461d395728682e6102de6f61348ad4d333f4b468f2b38ec60285c2cc43e",
+    "dsfd_m2l_vr_68x10__hr_W5_ss.lib": "745b42f9938c2bcc75d00821bee500d54210f866a31cbee3d4cae67c411603b0"
+  },
+  "ok": true
+}
