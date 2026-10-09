@@ -47,6 +47,21 @@ module tb_ha2_tu_owner_banked_half_cx;
  reg [15:0] Rm[0:255],Dm[0:255];reg [FW-1:0] Rd[0:255],Dd[0:255];integer rn=0,dn=0;
  integer cyc=0,first_issue_r=-1,first_issue_d=-1,last_r=-1,last_d=-1,stall=0;
  integer seed=1,thr=0;reg feeding=0;
+ // Service coverage at the actual shell/core boundary, in fast edges. These
+ // counters are bench observations, not hardware control or protection state.
+ integer last_pop[0:NPT-1],pop_count=0,pair_count=0;
+ initial for(integer p=0;p<NPT;p=p+1)last_pop[p]=-1;
+ if(HALF)begin:g_cadence
+  always @(posedge clk)if(rst_n&&g_half.dut.ph)begin
+   for(integer p=0;p<NPT;p=p+1)if(g_half.dut.p_head_v[p])begin
+    if(last_pop[p]>=0)begin
+     if(cyc-last_pop[p]<2)$fatal(1,"owner consumed twice within two fast edges");
+     if(cyc-last_pop[p]==2)pair_count=pair_count+1;
+    end
+    last_pop[p]=cyc;pop_count=pop_count+1;
+   end
+  end
+ end
  always @(posedge clk)begin
   cyc=cyc+1;
   if(rv)begin Rm[rn]=rm;Rd[rn]=rd;rn=rn+1;last_r=cyc;end
@@ -127,6 +142,8 @@ module tb_ha2_tu_owner_banked_half_cx;
    if(fails)$fatal(1,"FAIL scenario %0d (%0d mismatches)",s,fails);
    active=0;repeat(3)@(negedge clk);
   end
+  if(HALF&&pair_count==0)$fatal(1,"missing consecutive two-fast-edge service coverage");
+  $display("CADENCE fast_period_ps=833.333334 core_service_fast_edges=2 pops=%0d adjacent_pairs=%0d",pop_count,pair_count);
   $display("PASS banked HA2 owner reducer: 4 scenarios bit-exact vs unchanged TU adapter (CUTS=0)");
   $finish;
  end
