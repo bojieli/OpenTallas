@@ -142,7 +142,8 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer;
-        reg pending_start, completed;
+        reg pending_start, completed, started;
+        reg [15:0] rx_pending;
         wire active_desc = REARM && (started || pending_start || completed);
         wire [7:0] eff_rank = active_desc ? run_rank : rank;
         wire [15:0] eff_pf = active_desc ? run_pf : pf;
@@ -188,7 +189,6 @@ module ot_hbm_accel_tu_endpoint_psg #(
 
         // ================= hub issue -> HUBW wire stages ==========================================
         integer k;
-        reg started;
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
@@ -513,7 +513,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16) ? 2 : 1);
         reg [RMX-1:0] result_seen;
         reg result_error;
-        reg [15:0] tx_count, delivery_count, own_count, produced_count, rx_pending;
+        reg [15:0] tx_count, delivery_count, own_count, produced_count;
         integer ntx, nrx, npop, ndel;
         reg [RMX-1:0] seen_next;
         reg bad_result;
