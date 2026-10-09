@@ -24,5 +24,5 @@ def model():
       'sysctl':{'macs_per_cycle':0,'replicas_per_die':1,'prompt_tokens':8192,'token_bits':18,'payload_bits':147456,
        'memory_bytes_cycle':{'read':2.25,'write':2.25},'outline_um':[500,300],'slot_area_um2':150000,
        'latency':{'stage_switch_edges':3,'stage_switch_added_cycles_token':74,'argmax_to_next_edges':'19 + 2*(CTRL_oneway_edges-1)'},
-       'state':'behavioral prompt array must be replaced before physical route; no SRAM closure claimed'}}
+       'prompt_sram':{'macro':'ot_sram_1r1w_1024x256_m2_r2c2','count':1,'tokens_per_row':8,'slot_bits':32,'ecc_bits_token':6,'protected_bits_token':24,'used_bits_row':192,'capacity_tokens':8192,'macro_area_um2':12314.20968,'read_latency_edges':1,'write_mask_bits':256,'replication_cost':'8 static slot write decoders; 8:1 read24 mux; shortened SECDED24 decode; sticky UE fault','read_memory_bytes_cycle':32,'write_memory_bytes_cycle':32,'mutable_protection':'SECDED24 on18btoken; doubles fail closed; no ROM ECC'},'state':'default-off SRAM candidate; physical and exact gates pending'}}
 if __name__=='__main__': print(json.dumps(model(),indent=2))
