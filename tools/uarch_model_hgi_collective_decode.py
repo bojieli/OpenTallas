@@ -32,3 +32,21 @@ def endpoint_model():
         group_sizes=[1,2,4,8,96], rejected_raw_modes=[4,5,6,7,8,9,10,11,12,13,14],
         physical_gate='TT>=0 FF>=0 DRC0; measured macro pin and floorplan fit; SS sensitivity',
         qualification='DS legacy 62run evidence reused; n1/isolation/reservedguard additional exact benches required')
+
+def row_formatter_model(k=2048,row_words=32):
+    return dict(status='analytic_before_build',macs_per_cycle=0,replicas_per_die=1,
+      compute_intensity='address/control only, no new HBM reader or row storage',
+      memory_bytes_per_response=64,request_bits=60,response_bits=513,
+      output_bits=560,routing_tracks_needed=1133,routing_channel_capacity=6250,
+      channel_basis='300um /0.048um one-layer pitch estimate',slot_um=[600,240],
+      area_estimate_um2=12000,area_fraction_estimate=12000/144000,
+      mux_inputs=2,max_control_fanout=32,held_payload_register_bits=512,
+      owner_block_range=[1,255],group_sizes=[1,2,4,8,96],
+      ds_B8_fast_mapping_cycles=1,generic_mapping_cycles=41,
+      stream_policy='one selected row in flight, one reader word outstanding; retain response under output backpressure',
+      added_ds_control_cycles_per_row_upper_bound=3,
+      added_ds_token_cycles_upper_bound=8*k*3,
+      added_generic_cycles_per_row_upper_bound=43,
+      row_words=row_words,rows=k,default_enable=0,
+      source_access='existing reader request owner/local_row/word, response written/data; no second indexed reader',
+      acceptance='TT>=0 FF>=0 DRC0 exact owner/local/list/payload/written faults plus mutants')
