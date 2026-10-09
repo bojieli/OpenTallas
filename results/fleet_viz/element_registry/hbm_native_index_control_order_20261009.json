@@ -2,7 +2,7 @@
   "schema_version": 1,
   "records": [
     {
-      "element": "HBM native index dynamic controller",
+      "element": "ot_hbm_native_index_control",
       "target": "HBM accelerator",
       "recorded_at": "2026-10-09T00:35:00-07:00",
       "owner": "/root/hbm_system",
@@ -15,11 +15,11 @@
         "negative": {"status": "pass_expected_rejection", "evidence": ["results/rtl/hbm_native_index_control_20261009/generation_drop.log:generation metadata mutation rejected"]}
       },
       "physical": {"status": "pending", "evidence": ["No SS/FF or actual R25I loaded boundary qualification; no rate credit"]},
-      "dependencies": {"status": "missing_bindings", "evidence": ["actual CP descriptor; checked FP32 SRAM producer publication; continuation native query credit and return joins; actual keep-mask source"]},
+      "dependencies": ["missing_bindings", "actual CP descriptor; checked FP32 SRAM producer publication; continuation native query credit and return joins; actual keep-mask source"],
       "integration": {"status": "incomplete", "evidence": ["Component gate does not establish full AR/MTP production connectivity"]}
     },
     {
-      "element": "HBM TP96 global candidate ordering",
+      "element": "ot_hbm_index_global_order",
       "target": "HBM accelerator",
       "recorded_at": "2026-10-09T00:35:00-07:00",
       "owner": "/root/hbm_system",
@@ -32,7 +32,7 @@
         "negative": {"status": "pending", "evidence": ["Provider wrong-rank and ordering mutations required"]}
       },
       "physical": {"status": "pending", "evidence": ["No actual SS/FF/context closure; model only; no rate credit"]},
-      "dependencies": {"status": "missing", "evidence": ["Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"]},
+      "dependencies": ["missing", "Actual protected candidate allgather publication store and verified write extent; whole-TU functional controller; native global top2048 selector; actual keep-mask publication"],
       "integration": {"status": "incomplete", "evidence": ["Provider read interface is real finite control contract but production store is unbound; full AR/MTP token path remains incomplete"]}
     }
   ]
