@@ -1,6 +1,7 @@
 """Primary shared-expert publication, sized before RTL; no execution credit."""
 def model():
     return dict(schema='opentallas.dsrom.mtp-shared-producer.v1', adopted=False,
+        selection_status='historical unselected: complemented control mirrors excluded by latest owner scope; existing physical job retained as evidence',
         golden='expert W2 linear_q rounds BF16; widened FP32 shared contribution is added LAST to ordered routed prefix; final sum rounds BF16 once',
         shape=dict(TP=4, rank_rows=1280, row_origin='1280*rank', W2_K=2304,
             W2_fmt_fp32=False, input_native_widened_FP32_flits=80, output_widened_FP32_flits=80,
@@ -43,6 +44,7 @@ def model():
 
 def reader_model():
     return dict(schema='opentallas.dsrom.mtp-shared-native-reader.v1',default_enabled=False,
+        selection_status='historical UNSELECTED; no lease/control-mirror/auth/epoch expansion permitted; no reader route launched',
         shape=dict(rank_rows=1280,native_VM_rows=80,words_per_row=16,row_bits=512),
         port=dict(existing_reserved_slot='read1, shared through ds_control arbiter',
             native_ready=False,facade_req_ready='actual arbiter grant',
