@@ -12803,7 +12803,7 @@ def dsfd_selector_plan_c_model():
     """
     hist_ff = 2 * (2 + 16 + 16*8 + 128*12 + 32*14)
     capture_ff = 592 + 4
-    other_pipe_ff = 16 + 594
+    other_pipe_ff = 16 + 594 + 16*9  # CMP_RETIME local nibble comparisons
     macro_area = 3 * 172.824 * 41.064
     return {
         "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
