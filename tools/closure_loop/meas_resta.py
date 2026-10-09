@@ -94,7 +94,7 @@ def main():
             text = text.replace('puts "OT_CORNER ss"', 'puts "OT_CORNER tt"')
         tcl = d / f"meas_{corner}.tcl"
         tcl.write_text(text)
-        r = subprocess.run(["timeout", "5400", "docker", "run", "--rm", "-v", f"{a.orfs}:/work:ro", "-v", f"{a.src}:/src:ro",
+        r = subprocess.run(["docker", "run", "--rm", "-v", f"{a.orfs}:/work:ro", "-v", f"{a.src}:/src:ro",
                             "-v", f"{d}:/meas:ro", IMAGE, "bash", "-lc",
                             f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /meas/{tcl.name}"],
                            capture_output=True, text=True)
