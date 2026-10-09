@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
-module tb_dsrom_engram_lead(input wire clk);
+module tb_dsrom_engram_lead #(parameter integer PROTECT_HISTORY=0)(input wire clk);
     reg rst_n=0;
     reg mv=0;reg [20:0] mt=0;wire mo,mf;wire [16:0] mc;
     ot_dsrom_engram_token_map m(.clk(clk),.rst_n(rst_n),.in_v(mv),.in_tok(mt),.out_v(mo),.out_cid(mc),.fault(mf));
     reg tv=0,first=0,dead=0,slot=0,rv=0,oready=0;
     reg [11:0] user=0,ru=0;reg [20:0] pos=0,tok=0;reg [2:0] rn=0;
     wire ready,rr,ov,od,os,fault;wire [67:0] ids;wire [11:0] ou;wire [20:0] op,ot;
-    ot_dsrom_engram_lead_producer p(.clk(clk),.rst_n(rst_n),.t_v(tv),.t_ready(ready),.t_user(user),
+    ot_dsrom_engram_lead_producer #(.PROTECT_HISTORY(PROTECT_HISTORY)) p(.clk(clk),.rst_n(rst_n),.t_v(tv),.t_ready(ready),.t_user(user),
         .t_pos(pos),.t_tok(tok),.t_first(first),.t_dead(dead),.t_slot(slot),.rb_v(rv),.rb_user(ru),.rb_n(rn),
         .rb_ready(rr),.out_v(ov),.out_ready(oready),.out_ids(ids),.out_dead(od),.out_slot(os),
         .out_user(ou),.out_pos(op),.out_tok(ot),.fault(fault));
