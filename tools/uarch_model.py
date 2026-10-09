@@ -77,6 +77,12 @@ def qwen_stream4_mutable_interface_model():
 
 
 # ---------------------------------------------------------------------------------------------------------
+
+def hbm_index_service_model():
+    """Full-stack key source geometry and finite return-reservation obligations."""
+    from hbm_index_service_model import model
+    return model()
+
 # Physical constants (sources in-line)
 # ---------------------------------------------------------------------------------------------------------
 WIRE_PS_PER_UM = 0.5997       # routed express-link fit (tools/chip_assembly/floorplans.wire_delay_model)
