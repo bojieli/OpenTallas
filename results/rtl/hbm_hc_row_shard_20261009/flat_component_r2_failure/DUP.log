@@ -1,0 +1,3 @@
+HC_FLAT_PASS protocol_reject mode=5
+- rtl/test/tb_hbm_hc_flat_operand_sram.sv:38: Verilog $finish
+[0] %Fatal: tb_hbm_hc_flat_operand_sram.sv:39: Assertion failed in TOP.tb_hbm_hc_flat_operand_sram: unexpectedflatfault mode5
