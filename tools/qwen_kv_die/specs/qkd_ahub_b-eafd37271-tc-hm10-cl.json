@@ -1,0 +1,117 @@
+{
+ "name": "qkd_ahub_b-eafd37271-tc-hm10-cl",
+ "block": "ot_qwen_nearhbm_attn_hub_p",
+ "owner": "Claude:kv-die",
+ "purpose": "kv-die 2026-10-09 (OWNER DECISION option 1a): near-HBM attention hub on the KV die (max exchange, Z 5-10, P.V 8-9, reciprocal, x 1/Z). Variant b: same frame; hub: OT_MULTI_VT=lvt (<=~2% cells) / engine: GPL_TIMING_DRIVEN=0 (runtime). Re-try of the element DROPPED 10-04 under the old SS sign-off and a 6 h / 24-core cap (hub_r9 post-CTS SS -88.95 ps; row engines stopped in resize): option-B sign-off is TT setup / FF hold and the run has no wall-time cap. RTL unchanged (exact: results/uarch/qwen_nearhbm_attn_rtl_20261003/gate_hd128_r8_dpi.json 20/20, and the layer step through the link results/arch/qwen_kv_die_20261009/bench.json).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "claude/kv-die-20261009",
+  "commit": "eafd37271",
+  "required_files": [
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv",
+   "rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv",
+   "rtl/hdc/ot_hdc_sfu.sv",
+   "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_delay.sv",
+   "physical/qwen_die_masters/cfg/qkd_ahub_b.env",
+   "physical/qwen_die_masters/signoff/qkd_ahub_b.sdc",
+   "results/arch/qwen_kv_die_20261009/bench.json",
+   "results/uarch/qwen_nearhbm_attn_rtl_20261003/gate_hd128_r8_dpi.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_attn_hub_p rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "gate_hd128_r8_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/uarch/qwen_nearhbm_attn_rtl_20261003/gate_hd128_r8_dpi.json')); sys.exit(0 if d['verdict'] == 'PASS' else 1)\"",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 1
+   },
+   {
+    "name": "q_swap_mutant_record",
+    "cmd": "python3 -c \"import json,sys; d=json.load(open('results/arch/qwen_kv_die_20261009/bench.json')); sys.exit(1 if d['cases']['typical']['mutants']['mut5']['verdict'] == 'CAUGHT' else 0)\"",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_qwen_nearhbm_attn_hub_p rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv rtl/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MULTI_VT=lvt; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qkd_ahub_b.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qkd_ahub_b {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qkd_ahub_b --post-sdc physical/qwen_die_masters/signoff/qkd_ahub_b.sdc --corners ss,tt,ff --out {RUN}/record/views/qkd_ahub_b > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qkd_ahub_b.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "current corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no KV-die budget sheet yet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_kv_die_20261009/qkd_ahub_b-eafd37271-tc-hm10-cl"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "KV-die element; its cycles are inside the measured layer step (reprice.json)",
+ "merge_target": "main"
+}
