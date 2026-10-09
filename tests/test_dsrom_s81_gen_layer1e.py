@@ -52,6 +52,8 @@ def test_reach_and_path_options(monkeypatch):
     monkeypatch.setenv('OT_S81_HOP_R_CC', '500')
     F.apply_options(_opts(''))
     assert F.HOP_R_CC == 500.0                          # 9917e9987 override was reset to 410 by apply_options
+    F.apply_options(_opts('--hop-r-cc 480'))
+    assert F.HOP_R_CC == 480.0
 
 
 def test_hop_path_candidates():
