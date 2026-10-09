@@ -71,6 +71,7 @@ def acceptance(ss, ff):
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--run', type=Path, required=True); ap.add_argument('--half', action='store_true')
     ap.add_argument('--tt', action='store_true', help='OPTION B (owner 2026-10-07 20:45): accept = TT setup >= 0 + FF hold >= 0; SS setup is a sensitivity')
+    ap.add_argument('--landing', action='store_true', help='make_sdc.py --landing (TUhalf -cx headclk + clock-gating checks)')
     ap.add_argument('--h1', action='store_true', help='make_sdc.py --h1 (rule H1 receiver input min)')
     a = ap.parse_args()
     run = a.run.resolve()
@@ -92,7 +93,7 @@ def main():
     result = dict(route_sdc=str(sdc0), measured_insertion_SS=ss_lat, measured_insertion_FF=ff_lat)
     sdc = case/'signoff.sdc'
     subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{ss_lat[1]:.2f}',
-                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []),
+                    '--l-min', f'{ss_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdc)] + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []) + (['--landing'] if a.landing else []),
                    check=True, capture_output=True)
     sdcs = {'SS': sdc, 'FF': sdc}
     if a.tt:
@@ -108,7 +109,7 @@ def main():
         sdcs['TT'] = case/'signoff_tt.sdc'
         subprocess.run([sys.executable, str(HERE/'make_sdc.py'), '--period-ps', '833.333', '--l-max', f'{tt_lat[1]:.2f}',
                         '--l-min', f'{tt_lat[0]:.2f}', '--l-ff-min', f'{ff_lat[0]:.2f}', '--out', str(sdcs['TT'])]
-                       + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []), check=True, capture_output=True)
+                       + (['--half'] if a.half else []) + (['--h1'] if a.h1 else []) + (['--landing'] if a.landing else []), check=True, capture_output=True)
     for corner, delay in (('SS', 'max'), ('FF', 'min')) + ((('TT', 'max'),) if a.tt else ()):
         log = sta(case, odb, sdcs[corner], spef, corner, delay)
         (run/f'signoff_{corner}.log').write_text(log)
