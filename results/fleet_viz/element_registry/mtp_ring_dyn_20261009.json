@@ -5,19 +5,20 @@
       "element": "dsrom_one_position_compressor_ring_dyn",
       "target": "DeepSeek ROM",
       "owner": "mtp_numerical_repair",
-      "description": "Default-off DYN25/26 address repair for one-position eight-record ring; original two-stage fixture exactness gates are separate from native production and physical qualification",
+      "description": "Canonical one-position compressor ring DYN25/26 address-state repair; default enabled after four source-identical original campaign gates, native selected consumer binding pending",
       "source": {
-        "commit": "aff63db74",
+        "commit": "3dea693b1",
         "paths": [
           "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
           "tools/mtp_exact_wavefront2.py"
         ]
       },
       "implementation": {
-        "status": "IMPLEMENTED_DEFAULT_OFF_FIRST_ADDRESS_FAULT_PROVED",
+        "status": "CANONICAL_DEFAULT_ENABLED_AFTER_FOUR_CASE_GATE_V36",
         "evidence": [
           "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
-          "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json"
+          "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json",
+          "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
         ]
       },
       "model": {
@@ -29,15 +30,18 @@
       },
       "exactness": {
         "positive": {
-          "status": "CAMPAIGN14_18_JOB_PASS_CAMPAIGN19_BUILDING_SAME_SOURCE",
+          "status": "CAMPAIGNS14_AND19_18_JOB_PASS_ORIGINAL_RING8_FIXTURE",
           "evidence": [
-            "results/rtl/mtp_ring_dyn_20261009/campaign14_terminal.json"
+            "results/rtl/mtp_ring_dyn_20261009/campaign14_vehicle_bound.json",
+            "results/rtl/mtp_ring_dyn_20261009/campaign19_terminal.json",
+            "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
           ]
         },
         "negative": {
-          "status": "CAMPAIGN15_PROTOCOL11_EXPECTED_FAIL_PAYLOAD_AND_STATE_EXACT_CAMPAIGN20_BUILDING",
+          "status": "CAMPAIGNS15_AND20_PROTOCOL11_EXPECTED_FAIL_PAYLOAD_AND_STATE_EXACT",
           "evidence": [
-            "results/rtl/mtp_ring_dyn_20261009/campaign15_terminal.json"
+            "results/rtl/mtp_ring_dyn_20261009/campaign15_vehicle_bound.json",
+            "results/rtl/mtp_ring_dyn_20261009/campaign20_terminal.json"
           ]
         }
       },
@@ -49,16 +53,17 @@
         ]
       },
       "dependencies": [
-        "All four same-source gates: campaign14 positive PASS,15 WAVE0 protocol FAIL,19 positive PASS,20 WAVE0 protocol FAIL",
-        "Actual production single-position ring consumer binding",
-        "Contextual sequencer SS setup and FF hold qualification with unchanged clocks and boundary obligations",
+        "Native selected one-position ring8 consumer binding: owner mtp_rom/draft_p2; must demonstrate actual compiled program DYN25/26 use before porting canonical repair",
+        "Consuming sequencer contextual SS setup and FF hold qualification; no standalone route per V36",
         "Claude central integration before live registry publication"
       ],
       "integration": {
-        "status": "SOURCE_BRANCH_PUSHED_CLAUDE_MAIN_REVIEW_PENDING",
-        "evidence": []
+        "status": "FOUR_CASE_GATE_QUALIFIED_BRANCH_PUSHED_CLAUDE_MAIN_INTEGRATION_PENDING",
+        "evidence": [
+          "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json"
+        ]
       },
-      "recorded_at": "2026-10-09T09:29:00Z"
+      "recorded_at": "2026-10-09T09:47:00Z"
     }
   ]
 }
