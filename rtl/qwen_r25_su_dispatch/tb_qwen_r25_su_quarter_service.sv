@@ -3,9 +3,15 @@
 // actual337/273 transactions; quarter completion comes only from real c12 RTL.
 module tb_qwen_r25_su_quarter_service;
  reg clk=0;always #0.555556 clk=~clk;
- reg rst_n=0,warm_abort=0,cmd_v=0;wire cmd_rdy;
- reg [689:0] cmd_word;reg [72:0] cmd_owner=73'h1a3123456789abcdef0;
- reg [11:0] cmd_pc=0;reg [1:0] cmd_query=0;
+ reg rst_n=0,warm_abort=0;wire cmd_v,cmd_rdy;
+ wire [689:0] cmd_word;wire [72:0] cmd_owner;
+ wire [11:0] cmd_pc;wire [1:0] cmd_query;
+ reg launch_v=0;wire launch_rdy,finished_v,dispatch_fault;
+ wire rom_v,rom_out_rdy;wire [11:0] rom_pc;
+ wire [3:0] all_cmd_v;wire [2759:0] all_cmd_words;
+ wire [19:0] cmd_position;wire [20:0] cmd_valid_length;
+ reg rom_out_v=0;
+ assign cmd_v=all_cmd_v[0];assign cmd_word=all_cmd_words[689:0];
  wire done_v;wire [72:0] done_owner;wire [11:0] done_pc;wire [1:0] done_query;
  wire req_v;wire req_rdy;wire [336:0] req;
  reg rsp_v=0;wire rsp_rdy;reg [272:0] rsp=0;
@@ -16,6 +22,23 @@ module tb_qwen_r25_su_quarter_service;
  string program_file,meta_file,vm_file,expected_prefix,expected_file;
  integer start_pc=0,nops=4,queries=1,position=8191,nchecks=1024,stall=0,negative=0;
  integer i,j,p,q,byte_index,word_index,delay_count=0,checks=0,transactions=0;
+
+ ot_qwen_r25_su_dispatch #(.ENABLE(1),.CAPACITY(8224)) u_dispatch(
+  .clk(clk),.rst_n(rst_n),.launch_v(launch_v),.launch_rdy(launch_rdy),.launch_checked(2'b11),
+  .launch_owner(73'h1a3123456789abcdef0),.launch_pc(12'(start_pc)),
+  .launch_count(13'(nops)),.launch_position(20'(position)),.launch_queries(3'(queries)),
+  .rom_v(rom_v),.rom_rdy(1'b1),.rom_pc(rom_pc),.rom_out_v(rom_out_v),
+  .rom_out_rdy(rom_out_rdy),.rom_out_pc(rom_pc),
+  .rom_words({2070'd0,program_words[rom_pc]}),.rom_quarters(metadata[rom_pc][40:37]&4'b0001),
+  .rom_valid(metadata[rom_pc][41]),.rom_window(metadata[rom_pc][36]),
+  .rom_row0(metadata[rom_pc][35:16]),.rom_rows(metadata[rom_pc][15:0]),
+  .cmd_v(all_cmd_v),.cmd_rdy({3'd0,cmd_rdy}),.cmd_words(all_cmd_words),
+  .cmd_owner(cmd_owner),.cmd_pc(cmd_pc),.cmd_query(cmd_query),
+  .cmd_position(cmd_position),.cmd_valid_length(cmd_valid_length),
+  .done_v({3'd0,done_v}),.done_owner({219'd0,done_owner}),
+  .done_pc({36'd0,done_pc}),.done_query({6'd0,done_query}),
+  .finished_v(finished_v),.finished_rdy(1'b0),.fault(dispatch_fault));
+ always @(negedge clk)rom_out_v=rom_out_rdy;
  reg pending=0;reg [272:0] held_response;reg [255:0] sector;
  reg [31:0] address,mask;reg write_request;reg [20:0] valid_length,available;
  reg [15:0] clipped;reg [275:0] last_held;
@@ -26,6 +49,7 @@ module tb_qwen_r25_su_quarter_service;
    if(delay_count>0)delay_count<=delay_count-1;
    else begin rsp<=held_response;rsp_v<=1;pending<=0;end
   end
+  if(done_v&&(done_owner!==cmd_owner||done_pc!==cmd_pc||done_query!==cmd_query))$fatal(1,"completion identity");
   if(req_v&&req_rdy)begin
    address=req[335:304];mask=req[47:16];write_request=req[336];sector=0;
    if(address[4:0]!=0||address>=32'h100000)$fatal(1,"VM sector bounds");
@@ -65,32 +89,18 @@ module tb_qwen_r25_su_quarter_service;
   $readmemh(vm_file,vm);$readmemh(program_file,program_words);$readmemh(meta_file,metadata);
   if(vm[262143]!==0)$fatal(1,"CONST0 fixture not zero");
   repeat(3)@(negedge clk);rst_n=1;
+  wait(launch_rdy);@(negedge clk);launch_v=1;@(negedge clk);launch_v=0;
+  if(negative==1)begin
+   wait(rsp_v);repeat(8)begin @(negedge clk);if(rsp_rdy||done_v)$fatal(1,"foreign service reply consumed");end
+   warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort did not fence");
+   $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
+  end
   for(q=0;q<queries;q=q+1)begin
-   cmd_query=q;valid_length=position+q+1;
-   for(p=start_pc;p<start_pc+nops;p=p+1)begin
-    if(!metadata[p][41])$fatal(1,"invalid program metadata");
-    if(metadata[p][37])begin
-     cmd_word=program_words[p];cmd_pc=p;
-     if(metadata[p][36])begin
-      available=valid_length>metadata[p][35:16]?valid_length-metadata[p][35:16]:0;
-      clipped=available<metadata[p][15:0]?available[15:0]:metadata[p][15:0];
-      cmd_word[31:16]=clipped;
-     end else clipped=cmd_word[31:16];
-     if(clipped!=0)begin
-      wait(cmd_rdy);@(negedge clk);cmd_v=1;@(negedge clk);cmd_v=0;
-      if(negative==1)begin
-       wait(rsp_v);repeat(8)begin @(negedge clk);if(rsp_rdy||done_v)$fatal(1,"foreign service reply consumed");end
-       warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort did not fence");
-       $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
-      end
-      wait(done_v||fault);if(fault)$fatal(1,"actual quarter fault PC%0d",p);
-      if(done_owner!==cmd_owner||done_pc!==cmd_pc||done_query!==cmd_query)$fatal(1,"completion identity");
-      @(negedge clk);
-     end
-    end
-   end
+   wait(cmd_query>q||finished_v||fault||dispatch_fault);
+   if(fault||dispatch_fault)$fatal(1,"actual quarter/dispatch fault PC%0d",cmd_pc);
    check_result(q);
   end
+  if(!finished_v)$fatal(1,"native dispatcher did not finish");
   if(reads==0||writes==0||visibility_reads!=writes||transactions!=reads+writes+visibility_reads)
    $fatal(1,"actual memory mechanism vacuous or visibility count wrong");
   $display("PASS_QWEN_NATIVE_QUARTER_REAL_FP N256 M64 queries%0d checks%0d virtual_edges%0d reads%0d writes%0d visibility_reads%0d transactions%0d stall%0d",queries,checks,virtual_edges,reads,writes,visibility_reads,transactions,stall);

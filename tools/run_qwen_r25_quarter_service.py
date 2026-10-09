@@ -18,6 +18,7 @@ rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv
 rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv
 rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv
+rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv
 rtl/qwen_r25_su_dispatch/tb_qwen_r25_su_quarter_service.sv'''.split()
 def main():
  p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--prepare-only',action='store_true');a=p.parse_args()
