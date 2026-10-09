@@ -7,8 +7,11 @@
   "measured_available_mib": 92421,
   "measured_disk_available": "2.4TiB",
   "admission_peak_gib": 64,
-  "admission_cushion_gib": 100,
   "geometry_source_evidence": "3467f362e",
   "flow_source_gate": "wide_planning_gate.json",
-  "scope": "standalone widened front_c; whole R25 adoption awaits actual widened network and SS/FF/DRC"
+  "scope": "standalone widened front_c; whole R25 adoption awaits actual widened network and SS/FF/DRC",
+  "initial_reported_cushion_gib": 100,
+  "admission_cushion_policy": "actual admit_core.py uses5% physicalcapacity; admit.sh comments still say100GiB",
+  "admission_cushion_gib": 56.653173828125006,
+  "minimum_available_gib_before_recent_admissions": 120.653173828125
 }
