@@ -24,7 +24,6 @@ h1 .g{background:linear-gradient(90deg,var(--accent),#a78bfa 60%,var(--hot));-we
 .live{display:inline-flex;align-items:center;gap:8px;font:600 12px var(--mono);color:var(--ink);padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:#0b1020cc}
 .dot{width:8px;height:8px;border-radius:50%;background:var(--hot);box-shadow:0 0 10px var(--hot);animation:pulse 1.6s infinite}
 .live.stale .dot{background:var(--faint);box-shadow:none;animation:none}
-.live.stale{border-color:#ff5d73;color:#ff8a9b}
 @keyframes pulse{50%{opacity:.35}}
 .cols{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:14px;align-items:start}
 .col{display:flex;flex-direction:column;gap:12px;min-width:0}
@@ -147,7 +146,7 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 .smallc .hn{font-size:12px}.smallc .hk,.smallc .hm,.smallc .gpu{font-size:10.5px}
 .smallc .grid{margin:7px 0 6px}.smallc .offline{height:56px}
 .host{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:14px;padding:12px 14px;transition:border-color .6s;min-width:0}
-.host.pending,.host.connecting{opacity:.55}
+.host.down,.host.pending,.host.connecting{opacity:.55}
 .hh{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
 .hn{font:800 14px var(--mono);letter-spacing:.02em;display:flex;align-items:center;gap:6px}
 .hk{color:var(--dim);font-size:11px}
@@ -160,8 +159,7 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 .hm b{color:var(--ink);font-weight:600}
 .offline{height:84px;display:grid;place-items:center;color:var(--faint);font:600 12px var(--mono);border:1px dashed var(--line);border-radius:8px;margin:10px 0 8px;letter-spacing:.1em}
 .host.pending .offline{color:var(--accent);border-color:#5ee7ff55;animation:pulse 2.2s infinite}
-.offline.bad{color:#ff8a9b;border-color:#ff5d7388;background:repeating-linear-gradient(135deg,rgba(255,93,115,.12) 0 6px,transparent 6px 13px);text-align:center;padding:0 8px}
-.host.down,.host.stale{opacity:.85}
+.hn .sdot{width:6px;height:6px;border-radius:50%;background:#fbbf24;display:inline-block;cursor:help}
 .gpu{margin-top:6px;font:12px var(--mono);color:var(--dim)}
 .gpu b{color:var(--ink)}
 footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:var(--faint);font:11px var(--mono);margin-top:14px}
@@ -192,7 +190,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div class="col">
       <div class="coltitle">CPU</div>
       <section class="panel" id="cpuPanel">
-        <div class="ptitle"><span>Threads busy · last 60 min <span class="fv-age" data-age="fleet"></span></span><b id="cpu-now"></b></div>
+        <div class="ptitle"><span>Threads busy · last 60 min</span><b id="cpu-now"></b></div>
         <div class="stats" id="cpu-stats"></div>
         <canvas class="chart" id="cpuSpark" style="height:46px"></canvas>
       </section>
@@ -200,7 +198,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <section class="hosts small" id="hostsSmall"></section>
       <div class="coltitle">Memory</div>
       <section class="panel" id="ramPanel">
-        <div class="ptitle"><span>RAM in use across the fleet · last 60 min <span class="fv-age" data-age="fleet"></span></span><b id="ram-now"></b></div>
+        <div class="ptitle"><span>RAM in use across the fleet · last 60 min</span><b id="ram-now"></b></div>
         <canvas class="chart" id="ramArea"></canvas>
         <div class="legend2" id="ramLegend"></div>
         <canvas class="chart" id="tanks"></canvas>
@@ -210,19 +208,19 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     <div class="col">
       <div class="coltitle">Timing closure</div>
       <section class="panel closepanel" id="closepanel">
-        <div class="ptitle"><span><i class="flame"></i><span id="feedTitle">Live closures</span> <span class="fv-age" data-age="fleet"></span></span><span id="closeHot"></span></div>
+        <div class="ptitle"><span><i class="flame"></i><span id="feedTitle">Live closures</span></span><span id="closeHot"></span></div>
         <div id="vban" hidden></div><div class="vctl" id="vctl" hidden><span id="vchips"></span><select id="vTgt"><option value="">all targets</option><option value="TT">TT ≥0 / FF ≥0</option><option value="SS">SS ≥0 / FF ≥0</option></select></div>
         <ul class="ticker" id="ticker"></ul>
         <ul id="vfeed" hidden></ul>
       </section>
       <section class="panel" id="loopPanel">
-        <div class="ptitle"><span>Closure loop</span><span class="fv-age" data-age="fleet"></span></div>
+        <div class="ptitle"><span>Closure loop</span></div>
         <div class="stats" id="loop-stats"></div>
         <div class="ptitle" style="margin-top:6px"><span>Routes running by target</span></div>
         <div class="runbars" id="runbars"></div>
       </section>
       <section class="panel" id="c24Panel">
-        <div class="ptitle"><span>Closures per target · last 24 h, hourly <span class="fv-age" data-age="fleet"></span></span><b id="close24"></b></div>
+        <div class="ptitle"><span>Closures per target · last 24 h, hourly</span><b id="close24"></b></div>
         <canvas class="chart" id="closeChart"></canvas>
         <div class="legend2" id="closeLegend"></div>
       </section>
@@ -230,7 +228,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
   </div>
 
   <section class="panel jobs" id="jobsPanel" hidden>
-    <div class="ptitle"><span>Closure loop · live progress (every active job) <span class="fv-age" id="jobsAge"></span></span><b id="jobsNow"></b></div>
+    <div class="ptitle"><span>Closure loop · live progress (every active job)</span><b id="jobsNow"></b></div>
     <div class="ctl">
       <select id="fHost"><option value="">all hosts</option></select>
       <select id="fTgt"><option value="">all targets</option><option>TT</option><option>SS</option></select>
@@ -240,13 +238,13 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
     </div>
     <div class="tblwrap"><table class="jt"><thead><tr id="jHead"></tr></thead><tbody id="jBody"></tbody></table></div>
     <div class="stmd" id="stmd">
-      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · fleet admission</span><span id="mdAge" class="fv-age"></span></div><pre id="mdFleet"></pre></div>
+      <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · fleet admission</span><span id="mdAge"></span></div><pre id="mdFleet"></pre></div>
       <div><div class="ptitle" style="margin-bottom:4px"><span>Loop status · recent terminal</span></div><pre id="mdTerm"></pre></div>
     </div>
   </section>
 
   <section class="panel elems" id="elPanel" hidden>
-    <div class="ptitle"><span>Elements · per-block closure status <span class="fv-age" id="elAge"></span></span><b id="elNow"></b></div>
+    <div class="ptitle"><span>Elements · per-block closure status</span><b id="elNow"></b></div>
     <div class="sumwrap"><table class="esum" id="elSum"></table></div>
     <div class="ctl" id="elCtl">
       <select id="eTgt"><option value="">all targets</option></select>
@@ -342,7 +340,7 @@ function card(h, i) {
   let c = cards.get(h.label);
   if (c) return c;
   const el = document.createElement('div'); el.className = 'host';
-  el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span></div><div class="hk"></div></div><div class="hb"></div></div>
+  el.innerHTML = `<div class="hh"><div><div class="hn"><span class="sw"></span><span class="nm"></span><span class="sdot" hidden></span></div><div class="hk"></div></div><div class="hb"></div></div>
     <canvas class="grid"></canvas><div class="offline" hidden></div>
     <div class="hm"><span>RAM <b class="mu"></b></span><span class="mp"></span></div><div class="bar"><i></i></div>
     <div class="hm"><span>load <b class="ld"></b></span><span>containers <b class="dk"></b></span><span>routes <b class="rt"></b></span></div><div class="gpu" hidden></div>`;
@@ -381,16 +379,15 @@ function drawGrid(c, t) {
 }
 function updateHosts(d) {
   d.hosts.forEach((h, i) => {
-    const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || (REPLAY && h.state === 'stale'));
+    const c = card(h, i), el = c.el, up = h.cores && h.cores.length && (h.state === 'up' || h.state === 'stale');
+    const sd = el.querySelector('.sdot'); sd.hidden = !h._held;   // numbers held from the last good sample: a small marker only
+    if (h._held) sd.title = 'no fresh sample' + (h._t ? ' · last good ' + FV.hms(FV.toClient(h._t)) : '') + (h.error ? ' · ' + h.error : '');
     el.className = 'host ' + (/EPYC/.test(h.kind) ? 'bigc ' : 'smallc ') + (up ? '' : h.state);
     setText(el.querySelector('.hk'), h.kind + ' · ' + ((d.regions[h.region] || {}).label || '') + (h.alias ? ' · ' + h.alias : ''));
     el.querySelector('.offline').hidden = !!up; c.cv.hidden = !up;
     if (!up) {
-      const lg = FV && h.t ? ' · last good ' + FV.hms(FV.toClient(h.t)) : '';
-      const off = el.querySelector('.offline');
-      setText(off, h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' + lg : h.state === 'stale' ? 'STALE' + lg : 'CONNECTING');
-      off.title = h.error || ''; off.classList.toggle('bad', h.state === 'down' || h.state === 'stale');
-      setHTML(el.querySelector('.hb'), '<small>' + (h.state === 'pending' ? 'soon' : h.state === 'stale' ? 'no new sample' : 'offline') + '</small>');
+      setText(el.querySelector('.offline'), h.state === 'pending' ? 'COMING ONLINE' : h.state === 'down' ? 'UNREACHABLE' : 'CONNECTING');
+      setHTML(el.querySelector('.hb'), '<small>' + (h.state === 'pending' ? 'soon' : 'offline') + '</small>');
       for (const s of ['.mu', '.mp', '.ld', '.dk']) el.querySelector(s).textContent = '-';
       setText(el.querySelector('.rt'), h.routes); el.querySelector('.bar i').style.width = '0';
       return;
@@ -470,7 +467,7 @@ function drawTanks(t) {
   const hs = D.hosts, n = hs.length, gap = Math.min(14, w / n * .18), tw = (w - gap * (n - 1)) / n;
   const labH = 30, TH = h - labH - 4, SEG = 16, sg = 2, segH = (TH - sg * (SEG - 1)) / SEG;
   hs.forEach((hst, k) => {
-    const x = k * (tw + gap), up = hst.mem_total != null && (hst.state === 'up' || (REPLAY && hst.state === 'stale'));
+    const x = k * (tw + gap), up = hst.state === 'up' || hst.state === 'stale';
     const frac = up && hst.mem_total ? hst.mem_used / hst.mem_total : 0;
     tankLvl[k] = tankLvl[k] == null ? frac : tankLvl[k] + (frac - tankLvl[k]) * 0.05;
     const lv = tankLvl[k], hc = HOSTCOL[k % HOSTCOL.length];
@@ -487,7 +484,7 @@ function drawTanks(t) {
     if (!up) {
       g.fillStyle = hst.state === 'pending' ? rgba('#5ee7ff', .5 + .3 * Math.sin(t / 500)) : '#4a5678';
       g.font = '600 9px ui-monospace,Menlo,monospace'; g.textAlign = 'center';
-      g.fillText(hst.state === 'pending' ? 'COMING' : hst.state === 'stale' ? 'STALE' : 'OFFLINE', x + tw / 2, TH / 2 - 4);
+      g.fillText(hst.state === 'pending' ? 'COMING' : 'OFFLINE', x + tw / 2, TH / 2 - 4);
       if (hst.state === 'pending') g.fillText('ONLINE', x + tw / 2, TH / 2 + 8);
     }
     // labels
@@ -582,10 +579,24 @@ function updateLoop(d) {
 
 // ---- data
 let lastT = 0;
-let fleetT = null, feedErr = null;   // client epoch of the newest fleet sample shown; live-feed connection error
+let fleetT = null;   // client epoch of the newest fleet sample shown
+const lastHost = {};
+function holdHosts(d) {   // the server sends no numbers for a dead host: keep showing its last good values, untouched
+  let add = null;
+  for (const h of d.hosts) {
+    if (h.cores && h.cores.length) { lastHost[h.label] = h; continue; }
+    const p = lastHost[h.label]; if (!p) continue;
+    for (const f of ['cores', 'mem_total', 'mem_used', 'load', 'docker', 'gpu']) h[f] = p[f];
+    h._held = true; h._t = h.t; h.state = 'up';
+    add = add || {cores: 0, busy: 0, mem_total: 0, mem_used: 0, docker: 0};
+    add.cores += h.cores.length; add.busy += h.cores.reduce((a, b) => a + b, 0) / 100;
+    add.mem_total += h.mem_total || 0; add.mem_used += h.mem_used || 0; add.docker += h.docker || 0;
+  }
+  if (add) { const T = d.totals; for (const k in add) T[k] = Math.round((T[k] + add[k]) * 10) / 10; }
+}
 function onData(d) {
   d = relabel(d);
-  if (FV) { fleetT = FV.payload(d, ['host:', 'jobs'], 'fleet'); feedErr = null; FV.clear('feed'); }
+  if (FV) { fleetT = FV.payload(d, ['jobs'], 'fleet'); FV.synced(fleetT); FV.ok('feed-conn'); holdHosts(d); }
   if (d.delta) { for (const r of d.history) if (!HIST.length || r[0] > HIST[HIST.length - 1][0]) HIST.push(r); }
   else HIST = d.history.filter(r => r.length >= 6);
   while (HIST.length && HIST[0][0] < d.t - 3700) HIST.shift();
@@ -607,31 +618,20 @@ function onData(d) {
 let es = null;
 function connect() {
   const get = FV ? FV.getJSON('/api/fleet' + Q, 8000) : fetch('/api/fleet' + Q).then(r => r.ok ? r.json() : null);
-  get.then(d => d && !d.warming && onData(d)).catch(e => { feedErr = 'fleet snapshot: ' + e.message; }).finally(() => {
+  get.then(d => d && !d.warming && onData(d)).catch(() => {})   /* counted by the stream's onerror that follows */.finally(() => {
     es = new EventSource('/api/stream' + Q);
     es.onmessage = e => { try { onData(JSON.parse(e.data)); } catch (x) { console.error(x); } };
-    es.onerror = () => { es.close(); feedErr = 'live feed: connection to the fleet server lost (retrying)'; feedCheck(); setTimeout(connect, 4000); };
+    es.onerror = () => { es.close(); if (FV) FV.fail('feed-conn', 'live feed: connection to the fleet server lost (retrying)', fleetT); setTimeout(connect, 4000); };
   });
 }
-function feedCheck() {   // the live feed: a lost connection, or no new sample for ~2 poll intervals
+function feedCheck() {   // no new sample for more than ~2 poll intervals (the server's own clock, via sent_at)
   if (!FV) return;
   const poll = (D && D.poll) || 5, age = fleetT == null ? null : Date.now() / 1000 - fleetT;
-  if (feedErr) FV.issue('feed', feedErr + (fleetT ? ` (last sample ${FV.hms(fleetT)})` : ''), fleetT);
-  else if (age != null && age > 2 * poll + 2) FV.issue('feed', `live feed: no new fleet sample for ${Math.round(age)}s (expected every ${poll}s)`, fleetT);
-  else if (age == null && performance.now() > 15000) FV.issue('feed', 'live feed: no data received from the fleet server');
-  else FV.clear('feed');
+  if (age != null && age > 2 * poll + 2) FV.issue('feed-age', `live feed: no new fleet sample for ${Math.round(age)}s (expected every ${poll}s)`, fleetT);
+  else if (age == null && performance.now() > 20000) FV.issue('feed-age', 'live feed: no data received from the fleet server');
+  else FV.clear('feed-age');
 }
-if (FV) {
-  setInterval(feedCheck, 1000);
-  const fleetEls = ['cpuPanel', 'hostsBig', 'hostsSmall', 'ramPanel', 'closepanel', 'loopPanel', 'c24Panel'].map($);
-  FV.panel('fleet', fleetEls, ['feed']);
-  FV.panel('closure', ['closepanel', 'loopPanel', 'c24Panel'].map($), ['fleet:jobs', 'verdicts']);
-  FV.panel('jobs', [$('jobsPanel')], ['jobs-fetch', 'fleet:jobs', 'feed']);
-  FV.panel('md', [$('stmd')], ['jobs:loop_status']);
-  FV.panel('elements', [$('elPanel')], ['el-fetch', 'el:elements']);
-  const poll = () => (D && D.poll) || 5;
-  for (const e of document.querySelectorAll('.fv-age[data-age="fleet"]')) FV.stamp(e, () => fleetT, 1.5 * poll() + 1, 2 * poll() + 2);
-}
+if (FV) { FV.anchor($('live')); setInterval(feedCheck, 1000); }
 if (!REPLAY) connect();
 
 // ---- verdict feed (internal view): every terminal verdict, newest first
@@ -644,9 +644,9 @@ function loadVerdicts(v) {   // skips the render when the payload is unchanged
   if (REPLAY) { const d = rpVerdicts(), h = d.length + '|' + (d[0] ? d[0].t : 0) + '|' + (d.length ? d[d.length - 1].t : 0); if (h === vHash) return; vHash = h; VD = d; renderVerdicts(); return; }
   vFetchT = Date.now();
   (FV ? FV.getJSON('/api/verdicts', 10000) : fetch('/api/verdicts').then(r => r.ok ? r.json() : null)).then(d => {
-    if (FV) { FV.clear('verdicts'); FV.payload(d, [], 'verdicts'); }
+    if (FV) FV.ok('verdicts');
     if (d == null) return; const h = d.v + '|' + d.verdicts.length + '|' + (d.verdicts[0] ? d.verdicts[0].t : 0); if (h === vHash) return; vHash = h; VD = relabel(d.verdicts); renderVerdicts();
-  }).catch(e => { VV = null; if (FV) FV.issue('verdicts', 'verdict feed: ' + e.message); });
+  }).catch(e => { VV = null; if (FV) FV.fail('verdicts', 'verdict feed: ' + e.message); });
 }
 function renderVerdicts() {
   lsw('vf', VF);
@@ -745,18 +745,17 @@ function renderJobs() {
 function jobAges() {   // age cells and the status-file age, in place
   const now = NOW();
   for (const e of $('jBody').querySelectorAll('td.ag')) setText(e, dur(e.dataset.s ? now - e.dataset.s : 0));
-  const st = (J && J.status) || {}; if (!FV) setText($('mdAge'), st.mtime ? 'written ' + ago(st.mtime) : 'not found');
+  const st = (J && J.status) || {}; setText($('mdAge'), st.mtime ? 'written ' + ago(st.mtime) : 'not found');
 }
 function pollJobs() {
   if (SAFE) return;
   (FV ? FV.getJSON('/api/jobs', 8000) : fetch('/api/jobs').then(r => r.ok ? r.json() : null)).then(d => {
     if (d == null) return;
-    if (FV) { jobsT = FV.payload(d, ['loop_status'], 'jobs'); FV.clear('jobs-fetch'); mdT = d.status && d.status.mtime ? FV.toClient(d.status.mtime) : null; }
+    if (FV) { jobsT = FV.payload(d, ['loop_status'], 'jobs'); FV.ok('jobs-fetch'); }
     const x = JSON.stringify([d.jobs, d.status]); if (x === jHash) { jobAges(); return; } jHash = x; J = relabel(d); if ($('jobsPanel').hidden) $('jobsPanel').hidden = false; renderJobs();
-  }).catch(e => { if (FV) FV.issue('jobs-fetch', 'job table: ' + e.message + (jobsT ? ` (last good ${FV.hms(jobsT)})` : ''), jobsT); }).finally(() => setTimeout(pollJobs, 10000));
+  }).catch(e => { if (FV) FV.fail('jobs-fetch', 'job table: ' + e.message + (jobsT ? ` (last good ${FV.hms(jobsT)})` : ''), jobsT); }).finally(() => setTimeout(pollJobs, 10000));
 }
-let jobsT = null, mdT = null;
-if (FV) { FV.stamp($('jobsAge'), () => jobsT, 25, 40); FV.stamp($('mdAge'), () => mdT, 120, 180, 'written '); }
+let jobsT = null;
 $('fHost').onchange = e => { F.host = e.target.value; renderJobs(); };
 $('fTgt').onchange = e => { F.tgt = e.target.value; renderJobs(); };
 $('fGrp').onchange = e => { F.grp = e.target.checked; renderJobs(); };
@@ -838,13 +837,12 @@ function renderElements() {
 function pollElements() {
   (FV ? FV.getJSON('/api/elements' + Q, 15000) : fetch('/api/elements' + Q).then(r => r.ok ? r.json() : null)).then(d => {
     if (d == null) return;
-    if (FV) { FV.payload(d, ['elements'], 'el'); FV.clear('el-fetch'); elFetchT = Date.now() / 1000; }
-    if (!d.t) return; elT = FV ? FV.toClient(d.t) : d.t;
+    if (FV) { FV.payload(d, ['elements'], 'el'); FV.ok('el-fetch'); elFetchT = Date.now() / 1000; }
+    if (!d.t) return;
     const h = d.v + '|' + d.t; if (h === eHash) return; eHash = h; ED = relabel(d); renderElements();
-  }).catch(e => { if (FV) FV.issue('el-fetch', 'element table: ' + e.message + (elFetchT ? ` (last good ${FV.hms(elFetchT)})` : ''), elFetchT); }).finally(() => setTimeout(pollElements, 60000));
+  }).catch(e => { elBad = true; if (FV) FV.fail('el-fetch', 'element table: ' + e.message + (elFetchT ? ` (last good ${FV.hms(elFetchT)})` : ''), elFetchT); }).finally(() => { setTimeout(pollElements, elBad ? 15000 : 60000); elBad = false; });   // retry sooner after a failure
 }
-let elT = null, elFetchT = null;
-if (FV) FV.stamp($('elAge'), () => elT, 180, 600);
+let elFetchT = null, elBad = false;
 $('eTgt').onchange = e => { EF.tgt = e.target.value; renderElements(); };
 $('eGrp').onchange = e => { EF.grp = e.target.checked; renderElements(); };
 $('eTxt').oninput = e => { EF.txt = e.target.value; renderElements(); };
@@ -944,10 +942,10 @@ function frame(t) {
   for (const c of cards.values()) drawGrid(c, t);
   drawTanks(t);
   if (t - lastArea > 66) { drawRamArea(t); lastArea = t; }   // area chart at ~15 fps
-  const age = NOW() - lastT, bad = FV && FV.has('feed');
-  $('live').classList.toggle('stale', !lastT || age > 30 || bad);
+  const age = NOW() - lastT;
+  $('live').classList.toggle('stale', !lastT || age > 30);
   if (REPLAY) { rpTick(t); return; }
-  setText($('clock'), bad ? 'STALE · data from ' + FV.hms(fleetT || 0) : lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting');
+  setText($('clock'), lastT ? 'LIVE · ' + new Date().toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}) : 'connecting');
 }
 requestAnimationFrame(frame);
 })();

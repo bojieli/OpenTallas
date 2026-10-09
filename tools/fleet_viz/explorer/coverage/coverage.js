@@ -245,20 +245,17 @@ function drawer() {
 function render() { writeHash(); cards(); streams(); filters(); renderTable(); drawer(); }
 // staleness guard (fv_stale.js): a failed / timed-out fetch, or a flagged source, raises the red banner and hatches the panels
 const FV = window.FVStale || null;
-let covOK = null, elT = null, visibleAt = Date.now() / 1000;
+let covOK = null, visibleAt = Date.now() / 1000;
 const getCov = async (u, ms) => {
   if (FV) return FV.getJSON(u, ms);
   const r = await fetch(u, { cache: 'no-store' }); const m = await r.json(); if (!r.ok) throw new Error(m.error || r.status); return m;
 };
 function fresh(m) {
   if (!FV) return;
-  FV.payload(m, ['elements', 'coverage'], 'src'); covOK = Date.now() / 1000;
-  const e = m.fresh && m.fresh.sources && m.fresh.sources.elements;
-  if (e && e.t) elT = FV.toClient(e.t);
+  FV.payload(m, ['elements', 'coverage'], 'src'); covOK = Date.now() / 1000; FV.synced(covOK);
 }
 if (FV) {
-  FV.panel('coverage', [...document.querySelectorAll('main > section'), $('drawer')], ['cov', 'cov-ver', 'cov-late', 'src:elements', 'src:coverage']);
-  FV.stamp($('fvAge'), () => elT, 180, 600, 'element status updated ');
+  FV.anchor($('covLinks'));   // one small 'stale · last sync' label; the matrix keeps its last good data untouched
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { visibleAt = Date.now() / 1000; load(); } });
   setInterval(() => {   // the 20 s version poll went quiet
     const n = Date.now() / 1000;
@@ -270,20 +267,21 @@ async function load(force) {
   try {
     let m;
     try { m = await getCov('/api/coverage', 30000); }
-    catch (e) { if (FV) FV.issue('cov', 'coverage data: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); throw e; }
-    if (m.error && !m.rows) { if (FV) FV.issue('cov', 'coverage data: ' + m.error, covOK); throw new Error(m.error); }
-    if (FV) FV.clear('cov');
+    catch (e) { if (FV) FV.fail('cov', 'coverage data: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); throw e; }
+    if (m.error && !m.rows) { if (FV) FV.fail('cov', 'coverage data: ' + m.error, covOK); throw new Error(m.error); }
+    if (FV) FV.ok('cov');
     fresh(m);
     const first = !M;
     M = m; V = m.v;
     if (first) ownerless();
     else ownerless();
     render();
-    $('status').replaceChildren('source ', h('b', {}, m.source), ` · matrix v ${m.v} loaded ${m.loaded} · element status as of ${elT ? new Date(elT * 1000).toLocaleTimeString() : new Date(m.live_t * 1000).toLocaleTimeString()} · `,
+    $('status').replaceChildren('source ', h('b', {}, m.source), ` · matrix v ${m.v} loaded ${m.loaded} · element status ${new Date(m.live_t * 1000).toLocaleTimeString()} · `,
       `${m.rows.length} rows, ${Object.values(m.targets).reduce((a, x) => a + x.nodes, 0)} ledger nodes · refreshes on every ledger change`,
       m.error ? h('span', { class: 'err' }, ' · ' + m.error) : '');
   } catch (e) {
-    $('status').replaceChildren(h('span', { class: 'err' }, 'coverage: ' + e.message));
+    if (M) setTimeout(load, 15000);   // retry sooner: the label clears on the next good sync
+    if (!M || !FV) $('status').replaceChildren(h('span', { class: 'err' }, 'coverage: ' + e.message));   // loaded data stays as it was; the stale label says why
   }
 }
 readHash();
@@ -296,10 +294,12 @@ setInterval(async () => {
   tick++;
   try {
     const d = await getCov('/api/coverage/version', 10000);
-    if (FV) FV.clear('cov-ver');
+    const was = FV && (FV.has('cov') || FV.has('cov-ver'));
+    if (FV) FV.ok('cov-ver');
+    if (was) return load();   // recovered: resync the matrix now
     fresh(d);
     const v = d.v;
     if (v && v !== V) return load();
-  } catch (e) { if (FV) FV.issue('cov-ver', 'coverage feed: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); }
+  } catch (e) { if (FV) FV.fail('cov-ver', 'coverage feed: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); }
   if (tick % 3 === 0) load();
 }, 20000);

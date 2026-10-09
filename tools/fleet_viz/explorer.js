@@ -40,12 +40,16 @@ function ago(t){ if (!t) return ''; const s = Date.now() / 1000 - t; return s < 
 
 /* ------------------------------------------------------------------ meta */
 const FV = window.FVStale || null;   // staleness guard (fv_stale.js)
-let metaOK = null, metaT = null, visibleAt = Date.now() / 1000;
+let metaOK = null, visibleAt = Date.now() / 1000;
 async function loadMeta(){
   let m;
   try { m = FV ? await FV.getJSON('/api/explorer/meta?' + QS, 20000) : await getJSON('/api/explorer/meta?' + QS); }
-  catch (e){ if (FV) FV.issue('meta', 'explorer data: ' + e.message + (metaOK ? ` (last good ${FV.hms(metaOK)})` : ''), metaOK); throw e; }
-  if (FV){ FV.clear('meta'); FV.payload(m, ['elements', 'explorer'], 'src'); metaOK = Date.now() / 1000; if (m.t) metaT = FV.toClient(m.t); }
+  catch (e){
+    if (FV) FV.fail('meta', 'explorer data: ' + e.message + (metaOK ? ` (last good ${FV.hms(metaOK)})` : ''), metaOK);
+    if (S.meta) setTimeout(() => { if (!document.hidden) loadMeta().catch(() => {}); }, 15000);   // retry sooner: the label clears on the next good sync
+    throw e;
+  }
+  if (FV){ FV.ok('meta'); FV.payload(m, ['elements', 'explorer'], 'src'); metaOK = Date.now() / 1000; FV.synced(metaOK); }
   if (m.warming){ $('busy').textContent = 'Explorer is warming up (first element scan)…'; setTimeout(loadMeta, 3000); return; }
   const first = !S.meta; S.meta = m;
   S.elByName = new Map(m.elements.map(e => [e.element, e]));
@@ -702,9 +706,8 @@ measure();
 loadMeta().catch(e => { $('busy').textContent = 'Explorer failed to load: ' + e.message; });
 setInterval(() => { if (!document.hidden) loadMeta().catch(() => {}); }, 60000);
 if (FV){
-  // every view that shows closure status goes grey and hatched while its data is stale
-  FV.panel('explorer', [$('center'), $('left'), $('right')], ['meta', 'meta-late', 'src:elements', 'src:explorer']);
-  FV.stamp($('fvAge'), () => metaT, 120, 300, 'status ');
+  // one small 'stale · last sync' label in the top bar; the map, tree and cards keep their last good data untouched
+  FV.anchor($('safeb'));
   document.addEventListener('visibilitychange', () => { if (!document.hidden){ visibleAt = Date.now() / 1000; loadMeta().catch(() => {}); } });
   setInterval(() => {   // the 60 s refresh itself went quiet (timer stalled, or every retry hung)
     const n = Date.now() / 1000;
