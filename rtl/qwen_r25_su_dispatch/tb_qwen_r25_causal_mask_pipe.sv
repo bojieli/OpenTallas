@@ -71,7 +71,7 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73, CONTEXT_CODE_COPY=0)
     end
    end
    if(fault||!out_v||out_live!==expected||out_row0!==block_id*32||out_owner!==in_owner)
-    $fatal(1,"full p4 mask/owner mismatch group%0d",block_id);
+    $fatal(1,"full p4 mask/owner mismatch group%0d fault%0b valid%0b live%032h expected%032h row%0d owner%h expected_owner%h pctx1%h seat3%h",block_id,fault,out_v,out_live,expected,out_row0,out_owner,in_owner,dut.enabled.pctx[1],dut.enabled.seat[3]);
    held=out_live;
    repeat(3)begin @(negedge clk);if(out_live!==held||!out_v)$fatal(1,"held frame changed");end
    out_rdy=1;@(negedge clk);out_rdy=0;
