@@ -4,7 +4,7 @@
 // alternate. One active transaction/PC preserves untagged physical wd identity
 // even when the PHY scheduler reorders other requests. No cross-PC serialization.
 // Queued packets use six SECDED72 words; metadata parity fails closed.
-module ot_s81_native_pc_mux #(parameter integer ENABLE=0)(
+module ot_s81_native_pc_mux #(parameter integer ENABLE=0, parameter [431:0] QUEUE_INJECT=0)(
  input wire ck,rst_n,ctrl_live,
  input wire[4*341-1:0] src_rq,output reg[3:0] src_rk,
  output reg[340:0] rq,input wire rk,wd,
@@ -25,7 +25,7 @@ module ot_s81_native_pc_mux #(parameter integer ENABLE=0)(
    assign padded[s]={44'd0,src_rq[s*341+1+:340]};
    for(b=0;b<6;b=b+1)begin:g_ecc
     ot_s81_secded_enc72 enc(padded[s][b*64+:64],encoded[s][b*72+:72]);
-    ot_s81_secded_dec72 dec(queue[s][rp[s]][b*72+:72],decoded[s][b*64+:64],qce[s][b],que[s][b]);
+    ot_s81_secded_dec72 dec(queue[s][rp[s]][b*72+:72]^QUEUE_INJECT[b*72+:72],decoded[s][b*64+:64],qce[s][b],que[s][b]);
    end
   end
   reg busy,active_we,meta_parity,live_seen;
