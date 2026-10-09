@@ -6,7 +6,7 @@ if [[ -e "$out/terminal.json" || -e "$out/positive.log" ]]; then
     echo 'immutable gate already exists' >&2;exit 73
 fi
 python3 tools/dsrom_hc_mean_capture_vectors.py --out "$out/synthetic"
-sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
+sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
  rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv
