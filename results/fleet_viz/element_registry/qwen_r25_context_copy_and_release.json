@@ -5,33 +5,111 @@
       "element": "ot_qwen_r25_causal_mask",
       "target": "HBM accelerator",
       "owner": "Codex:qwen_hbm_unify/stage_harness",
-      "recorded_at": "2026-10-09T08:45:00Z",
-      "source": {"commit": "bd5c628ab", "paths": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv", "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_timing.sv"]},
-      "implementation": {"status": "implemented", "evidence": ["Opt-in CONTEXT_CODE_COPY defaults off; unchanged protected context codeword copied, occupancy cleared with linear SECDED codeword XOR; no extra cycle, bit or boundary."]},
-      "model": {"status": "modeled", "evidence": ["tools/qwen_r25_su_dispatch_model.py; same full shape capacity8224 OWNER_W74, 200x200um slot; no rate credit"]},
-      "exactness": {
-        "positive": {"status": "running", "evidence": ["ot-agidock128 guard4GiB PID4142900 /srv/opentallas-scratch/codex/qwen-r25-mask/context-copy-bd5c628ab; actual flat successor OWNER_W74"]},
-        "negative": {"status": "running", "evidence": ["same gate: held output, full p4, 23552 byte ECC cases and actual transient/output data-bit CE/UE"]}
+      "recorded_at": "2026-10-09T08:41:43Z",
+      "source": {
+        "commit": "bd5c628ab",
+        "paths": [
+          "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv",
+          "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_timing.sv"
+        ]
       },
-      "physical": {"status": "pending", "evidence": ["Code-copy successor route awaits elaboration; legacy73 pipelined route failed setup -0.211558ns with clean hold/DRC: results/rtl/qwen_r25_su_stage_20261009/causal_mask_pipe_route_legacy73/failed.json at23a8fb0d5; actual owner74 source8cc78 route PID2814289 preserved"]},
-      "dependencies": ["actual producer/consumer timing budget pending parent", "context-copy exact gate and physical measurement pending"],
-      "integration": {"status": "pending", "evidence": ["Existing sourcee14241bee protected-data exact gate PASS at23a8fb0d5 results/rtl/qwen_r25_su_stage_20261009/protected_mask_data/verdict.json; no native full-flow qualification"]}
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "Opt-in CONTEXT_CODE_COPY defaults off; unchanged protected context codeword copied, occupancy cleared with linear SECDED codeword XOR; no extra cycle, bit or boundary."
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/qwen_r25_su_dispatch_model.py; same full shape capacity8224 OWNER_W74, 200x200um slot; no rate credit"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "running",
+          "evidence": [
+            "ot-agidock128 guard4GiB PID4142900 /srv/opentallas-scratch/codex/qwen-r25-mask/context-copy-bd5c628ab; actual flat successor OWNER_W74"
+          ]
+        },
+        "negative": {
+          "status": "running",
+          "evidence": [
+            "same gate: held output, full p4, 23552 byte ECC cases and actual transient/output data-bit CE/UE"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "Code-copy successor route awaits elaboration; legacy73 pipelined route failed setup -0.211558ns with clean hold/DRC: results/rtl/qwen_r25_su_stage_20261009/causal_mask_pipe_route_legacy73/failed.json at23a8fb0d5; actual owner74 source8cc78 route PID2814289 preserved"
+        ]
+      },
+      "dependencies": [
+        "actual producer/consumer timing budget pending parent",
+        "context-copy exact gate and physical measurement pending"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "Existing sourcee14241bee protected-data exact gate PASS at23a8fb0d5 results/rtl/qwen_r25_su_stage_20261009/protected_mask_data/verdict.json; no native full-flow qualification"
+        ]
+      }
     },
     {
       "element": "ot_qwen_r25_su_dispatch",
       "target": "HBM accelerator",
       "owner": "Codex:qwen_hbm_unify/stage_harness",
-      "recorded_at": "2026-10-09T08:45:00Z",
-      "source": {"commit": "a2b3b4f53", "paths": ["rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv", "rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_four_quarter.sv"]},
-      "implementation": {"status": "implemented", "evidence": ["Production OWNER_W74 QUERY_RELEASE1 protects each query scratch reuse until checked owner/slot acknowledgement"]},
-      "model": {"status": "modeled", "evidence": ["tools/qwen_r25_su_dispatch_model.py; minimum one serial cycle per query plus real downstream release wait"]},
-      "exactness": {
-        "positive": {"status": "pass", "evidence": ["23a8fb0d5 results/rtl/qwen_r25_su_stage_20261009/query_release_owner74/verdict.json: owner74 p4 tail and held release; arithmetic completions mocked"]},
-        "negative": {"status": "pass", "evidence": ["same receipt: wrong-owner release and foreign completion fenced"]}
+      "recorded_at": "2026-10-09T08:41:43Z",
+      "source": {
+        "commit": "a2b3b4f53",
+        "paths": [
+          "rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch.sv",
+          "rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_four_quarter.sv"
+        ]
       },
-      "physical": {"status": "running", "evidence": ["Legacy73 source6e63856b8 route PID2756283 preserved, standalone zero IO budget TC/BC pathfinding; new production release path not physically qualified"]},
-      "dependencies": ["real TU publication lease drain and capture/visibility release endpoint pending parent", "N256/M64 actual FP service benchmark EPYC4 PID2360296 queued under measured128GiB guard, source5449dfcc4 pluscompiler d522, no frontend started"],
-      "integration": {"status": "pending", "evidence": ["No mock completion or arithmetic-done signal qualifies downstream release; actual typed production consumer must acknowledge after true lease drain"]}
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "Production OWNER_W74 QUERY_RELEASE1 protects each query scratch reuse until checked owner/slot acknowledgement"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/qwen_r25_su_dispatch_model.py; minimum one serial cycle per query plus real downstream release wait"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "23a8fb0d5 results/rtl/qwen_r25_su_stage_20261009/query_release_owner74/verdict.json: owner74 p4 tail and held release; arithmetic completions mocked"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "same receipt: wrong-owner release and foreign completion fenced"
+          ]
+        }
+      },
+      "physical": {
+        "status": "running",
+        "evidence": [
+          "Legacy73 source6e63856b8 route PID2756283 preserved, standalone zero IO budget TC/BC pathfinding; new production release path not physically qualified"
+        ]
+      },
+      "dependencies": [
+        "real TU publication lease drain and capture/visibility release endpoint pending parent",
+        "N256/M64 actual FP service benchmark EPYC4 PID2360296 queued under measured128GiB guard, source5449dfcc4 pluscompiler d522, no frontend started"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "No mock completion or arithmetic-done signal qualifies downstream release; actual typed production consumer must acknowledge after true lease drain"
+        ]
+      }
     }
   ]
 }

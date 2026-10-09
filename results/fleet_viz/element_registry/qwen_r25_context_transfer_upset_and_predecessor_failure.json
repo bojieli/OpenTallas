@@ -5,9 +5,9 @@
       "element": "ot_qwen_r25_causal_mask",
       "target": "HBM accelerator",
       "owner": "Codex:qwen_hbm_unify/stage_harness",
-      "recorded_at": "2026-10-09T08:47:31Z",
+      "recorded_at": "2026-10-09T08:49:35Z",
       "source": {
-        "commit": "0f11ee283",
+        "commit": "51fc41f6c",
         "paths": [
           "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv",
           "rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_timing.sv"
@@ -29,21 +29,21 @@
         "positive": {
           "status": "pass",
           "evidence": [
-            "results/rtl/qwen_r25_su_stage_20261009/context_transfer_gate/verdict.json; actual flattened owner74 fullp4 gate; prior occupancy XOR variant failed and preserved at92af07add"
+            "results/rtl/qwen_r25_su_stage_20261009/context_transfer_data_upset/verdict.json: fullp4 and actual context owner data-bit CE survives codeword transfer; copied double-bit UE fenced"
           ]
         },
         "negative": {
           "status": "pass",
           "evidence": [
-            "results/rtl/qwen_r25_su_stage_20261009/context_transfer_gate/verdict.json; actual flattened owner74 fullp4 gate; prior occupancy XOR variant failed and preserved at92af07add"
+            "results/rtl/qwen_r25_su_stage_20261009/context_transfer_data_upset/verdict.json: fullp4 and actual context owner data-bit CE survives codeword transfer; copied double-bit UE fenced"
           ]
         }
       },
       "physical": {
         "status": "running",
         "evidence": [
-          "ot-agidock128 guarded16GiB PID4147007 /srv/opentallas-scratch/codex/qwen-r25-mask/context-transfer-only/route.log;200x200um,.833333ns TC/BC60/25ps external IO false paths PATHFINDING ONLY; actual admitted/queued status checked by guard",
-          "Legacy73 pipeline failure retained23a8fb0d5 -0.211558ns; original owner74 route2814289 preserved"
+          "Actual unchanged RTL0f11ee283 route running admitted16GiB ot-agidock128 parent4147007 child4147190 /srv/opentallas-scratch/codex/qwen-r25-mask/context-transfer-only; TC/BC60/25ps falsepathIO PATHFINDING ONLY",
+          "Owner74 preceding source8cc78c49f terminalFAILED setup-0.213830ns hold+0.0166126ns area3287um2 DRC0 antenna0 retainedc201f0957 results/rtl/qwen_r25_su_stage_20261009/causal_mask_pipe_route_owner74/failed.json"
         ]
       },
       "dependencies": [
