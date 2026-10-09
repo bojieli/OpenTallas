@@ -38,7 +38,7 @@ M=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256
 SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv"
 D="+define+TU_DUT=ot_hbm_accel_tu_endpoint_psg"; CK="+define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
 build() { n=$1; shift; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
-  --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || echo "BUILD_FAIL $n"; }
+  --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || { echo "BUILD_FAIL $n"; exit 3; }; }
 AR="+define+TU_LOCKSTEP +define+TU_NC=8 +define+TU_NOG=8 +define+TU_BF16=1 +define+TU_GSZPORT=15"; GA="+define+TU_LOCKSTEP +define+TU_NC=1 +define+TU_NOG=96 +define+TU_BF16=0 +define+TU_GSZPORT=15"
 build ar $AR +define+TU_PFMAX=384 $CK; build ga $GA +define+TU_PFMAX=384 $CK; build arblk $AR +define+TU_PFMAX=64 $CK;
 if [ "${DS_ONLY:-0}" != 1 ];then
@@ -66,7 +66,7 @@ xargs -P ${PAR:-16} -I{} bash -c '{}' < $T/cmds.txt
 bad=0; negok=0; neg=0
 for f in $T/run_*.log; do k=$(tail -n 1 $f | cut -d' ' -f2)
   if grep -q "TUDONE .* mismatches=0 faults=0 " $f; then [ $k = neg ] && { echo "MUTANT PASSED: $(tail -n 1 $f)"; bad=$((bad+1)); }
-  else [ $k = neg ] && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -n 1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
+  else [ $k = neg ] && grep -Eq "TUMISMATCH|GROUP_ISOLATION" "$f" && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -n 1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
   [ $k = neg ] && neg=$((neg+1))
 done
 grep -h TUDONE $T/run_*.log | cut -c1-160 > $O/summary.txt
