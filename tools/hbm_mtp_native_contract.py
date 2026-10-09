@@ -118,3 +118,17 @@ def render_rtl(contract, facade='hfd_mtp_native'):
     lines += [',\n'.join(bindings), '    );', '  end endgenerate',
               'endmodule', '`default_nettype wire', '']
     return '\n'.join(lines)
+
+
+def cp_result_model(root=None):
+    contract=stop_model(root)
+    contract.update(schema='opentallas.hbm-mtp-native-cp-result-contract.v1',
+        controller_master='hfd_mtp_x_cp_stop',controller_source='a9f866a26',
+        EXTERNAL_AM=1,actual_core_source='08e4b1bf7')
+    group=contract['groups']['f_cmdproc']
+    group['fields'] += [dict(port='cp_am_v',lsb=179,width=1),dict(port='cp_am_idx',lsb=180,width=17)]
+    group['bits']=197
+    contract['routing']['signal_tracks']+=18
+    contract['latency']['checked_CPRESULT_pin_capture_cycles']=1
+    contract['qualification']='actual additive checked CP-result input; old rawlogit and historical pin views unchanged; fresh context mapping required'
+    return contract
