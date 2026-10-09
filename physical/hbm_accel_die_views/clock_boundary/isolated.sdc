@@ -1,7 +1,7 @@
 # Replace the driver primary clock and its default all-port delays.
-remove_input_delay [all_inputs]
-remove_output_delay [all_outputs]
-remove_clock [all_clocks]
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+delete_clock [all_clocks]
 # Isolated digital-body pathfinding; analog PLL insertion and die reset loads pending.
 create_clock -name stream -period 0.833333333 [get_ports clk_stream]
 create_clock -name serial -period 1.111111111 [get_ports clk_serial]
