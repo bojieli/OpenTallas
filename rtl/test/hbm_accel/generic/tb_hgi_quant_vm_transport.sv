@@ -9,7 +9,7 @@ module tb_hgi_quant_vm_transport;
  reg [272:0] rsp=0;reg provider_fault=0;
  ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.*);
  reg [31:0] vm[0:8191];reg [31:0] expected[0:8191];
- reg pv=0;reg [336:0] held;integer delay_count=0;
+ reg corrupt_tag=0;reg pv=0;reg [336:0] held;integer delay_count=0;
  integer cycles=0,writes=0,acks=0,cases=0,nwords=0,reads=0;
  reg [19:0] current_n;
  wire ref_vo,ref_fault,ref_dec;wire [511:0] ref_y;
@@ -39,7 +39,7 @@ module tb_hgi_quant_vm_transport;
   end
   if(pv)begin
    if(delay_count==0)begin
-    rsp={held[15:0],held[336],256'd0};
+    rsp={held[15:0]^(corrupt_tag?16'h0001:16'h0000),held[336],256'd0};
     if(!held[336])for(integer k=0;k<8;k=k+1)rsp[k*32+:32]=vm[held[335:304]/4+k];
     rsp_v=1;pv=0;
    end else delay_count=delay_count-1;
@@ -79,6 +79,27 @@ module tb_hgi_quant_vm_transport;
    cases=cases+1;nwords=nwords+size;
   end
  endtask
+ task error_record(input integer kind);
+  reg [127:0]h;reg [255:0]a,o;integer begin_cycle;
+  begin
+   while(!ready)@(negedge clk);
+   current_n=32;use_vector=0;rbeat=0;writes=0;acks=0;reads=0;
+   for(integer i=0;i<32;i=i+1)vm[i]=32'h3f800000;
+   if(kind==2)vm[0]=32'h7fc00000;
+   h=0;a=0;h[127:124]=4;h[123:118]=4;h[99:93]=17;
+   a[1:0]=1;a[67:48]=32;a[87:68]=1;o=a;o[47:8]=4096;
+   @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
+   @(negedge clk);cmd=0;begin_cycle=cycles;
+   if(kind==0)begin while(!dut.pending)@(negedge clk);provider_fault=1;
+    @(negedge clk);provider_fault=0;end
+   if(kind==1)corrupt_tag=1;
+   while(!done&&cycles-begin_cycle<200000)@(negedge clk);
+   corrupt_tag=0;
+   if(!done||!fault||!drained||pv||rsp_v)$fatal(1,"FAULT drain/status");
+   if(writes!=0)$fatal(1,"faulted record published");
+   cases=cases+1;
+  end
+ endtask
  initial begin
   repeat(4)@(negedge clk);rst_n=1;
   run(4,32);run(5,64);run(6,16);run(6,48);run(4,2048);
@@ -100,6 +121,9 @@ module tb_hgi_quant_vm_transport;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
    @(negedge clk);cmd=0;if(!done||!fault||req_v)$fatal(1,"invalid shape accepted");
   end
+  error_record(0);error_record(1);error_record(2);
+  @(negedge clk);rst_n=0;repeat(3)@(negedge clk);rst_n=1;
+  if(!ready||req_v||!drained)$fatal(1,"cold reset leftovers");
   $display("PASS QUANT_TRANSPORT cases=%0d words=%0d arbitraryCPstall ACKdelay tail16/48 illegalUE",cases,nwords);$finish;
  end
 endmodule
