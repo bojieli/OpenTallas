@@ -10,7 +10,7 @@
     "ot-epyc4"
   ],
   "threads": 8,
-  "peak_ram_gb": 24,
+  "peak_ram_gb": 16,
   "source": {
     "branch": "codex/hbm-collector-routine-20261009",
     "commit": "SOURCE_PENDING_COMMIT",
@@ -30,7 +30,7 @@
       "clock": "core_clk",
       "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk.sh $CK_SS_MEAN && bash physical/hbm_accel_die_views/common/make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX",
       "threads": 8,
-      "peak_ram_gb": 24
+      "peak_ram_gb": 3
     },
     "route": {
       "cmd": "python3 -c \"from tools.hbm_coll_capture_placement_model import model; import json; print(json.dumps(model()))\" && TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc && HM=0.010 CAPTURE_ADJACENT=1 INTERIOR=1 DIEW=480 DIEH=540 PHALO='4 10' OUT={RUN}/routes CORES=8 PD=0.45 IO_ROUTE_SDC=physical/hbm_accel_die_views/common/io_vclk_${CK_SS_MEAN}.sdc IO_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc bash physical/hbm_collector_routine_20261009/route_port_fanout8.sh {LABEL} port",
@@ -42,7 +42,7 @@
         "orfs"
       ],
       "threads": 8,
-      "peak_ram_gb": 24
+      "peak_ram_gb": 16
     },
     "collect": {
       "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/",
@@ -73,5 +73,5 @@
     "reason": "internal hard sub-block of hfd_coll (no die-level master, no budget sheet): screening IO envelope 0.2 T + io_vclk at the calibrated insertion, as the HBM contract blocks"
   },
   "no_bench_reason": "UnchangedRTL (gitdiffda3emptyfor3sourcefiles), preserve actual3270capture placement positive+wrongCLKnegative from results/physical/hbm_coll_capture_20261009/receipt.json; no newRTLmechanism or numericalcontract.",
-  "reservation_state": "PROVISIONAL baseline24GiB claim, measured fleet peak required before submit"
+  "reservation_state": "Measured identicalinventory baselineDRT11.918GiB/captureDRT11.506GiB; proposedroute16GiB (+34percent over worst) accounts addedphysicalfanoutbuffers andcurrentflowholdrepair, not perprocesscap; cal3GiB vs2.334observed. Hostmeasuredguard decidesadmission."
 }

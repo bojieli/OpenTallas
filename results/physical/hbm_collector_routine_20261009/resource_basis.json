@@ -1,0 +1,15 @@
+{
+  "host": "ot-pve1",
+  "original_DRT_peak_KiB": 12497012,
+  "capture_DRT_peak_KiB": 12064880,
+  "original_cal_GP_peak_KiB": 2446804,
+  "capture_cal_GP_peak_KiB": 2373332,
+  "route_reservation_GiB": 16,
+  "cal_reservation_GiB": 3,
+  "reservation_not_cap": true,
+  "model_scope": "unchangedfull18SRAMcollectiveport; physicalfanoutbufferrepaironly, no replicatedwideengine/storagegrowth",
+  "route_allowance": "~34percent above11.918GiB measuredsamefullinventory, accommodates additionalcontrolbuffers andcurrentholdrepair; observedpeak not exactfutureprediction",
+  "current_headroom": "fleetadmissionmustmeasureatlaunch",
+  "source_gate": "sameoriginalRTL/captureplacementpositiveandwrongCLKnegative",
+  "duplicates": "no active da3/946, Claudeotherport2rows preserved"
+}
