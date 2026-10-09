@@ -48,25 +48,26 @@ module tb_hfd_loader_kport;
  function [36:0] adr(input integer lane, input integer j);
   adr = {2'((j + lane) % 4), 35'(((j * 8 + lane) * 32) % 65536)};
  endfunction
- integer ph, j, d, done_n, cycles=0;
- integer jj [0:1]; reg [1:0] pend;
+ integer ph, j, d, done_n=0, cycles=0;
+ integer jj [0:1]; reg [1:0] pend, acc;
  initial begin
   repeat(4) @(posedge clk); rst_n=1; repeat(16) @(posedge clk);
   for (ph=0; ph<2; ph=ph+1) begin                       // 0: write all, 1: read all back
    jj[0]=0; jj[1]=0; pend=0;
-   while (jj[0] < 64 || jj[1] < 64 || pend != 0) begin
-    @(negedge clk); cycles=cycles+1; if (cycles > 4000000) $fatal(1, "FATAL: liveness");
-    for (d=0; d<2; d=d+1) begin
+   while (jj[0] < 64 || jj[1] < 64 || pend != 0 || req_v != 0) begin
+    @(posedge clk); cycles=cycles+1; if (cycles > 4000000) $fatal(1, "FATAL: liveness");
+    for (d=0; d<2; d=d+1) begin                  // handshakes at this edge (pre-edge values)
      if (rsp_v[d] && rsp_rdy[d]) begin
       if (rsp_tag[d*16 +: 16] !== 16'(jj[d]-1 + d*1024) || rsp_we[d] !== (ph==0) ||
           rsp_data[d*256 +: 256] !== (ph==0 ? 256'd0 : pat((jj[d]-1 + d) % 4, d, jj[d]-1)))
         $fatal(1, "FATAL: lane %0d response mismatch j=%0d tag=%h", d, jj[d]-1, rsp_tag[d*16 +: 16]);
-      pend[d]=0;
+      pend[d]=0; done_n = done_n + 1;
      end
-     if (req_v[d] && req_rdy[d]) begin req_v[d]=0; pend[d]=1; end
+     acc[d] = req_v[d] && req_rdy[d];
     end
-    #1;
+    @(negedge clk);
     for (d=0; d<2; d=d+1) begin
+     if (acc[d]) begin req_v[d]=0; pend[d]=1; end
      rsp_rdy[d] = pend[d] && ($random & 1);
      if (!req_v[d] && !pend[d] && jj[d] < 64) begin
       req_v[d]=1; req_we[d]=(ph==0); req_addr[d*37 +: 37]=adr(d, jj[d]); req_tag[d*16 +: 16]=16'(jj[d] + d*1024);
@@ -76,6 +77,7 @@ module tb_hfd_loader_kport;
    end
   end
   if (fault || placed_bad) $fatal(1, "FATAL: fault=%0d placement errors=%0d", fault, placed_bad);
+  if (done_n != 256) $fatal(1, "FATAL: %0d of 256 transactions completed", done_n);
   $display("PASS HFD-LOADER-KPORT lanes=2 stacks=4 transactions=256 (128 writes / 128 reads) cycles=%0d", cycles);
   $finish;
  end
