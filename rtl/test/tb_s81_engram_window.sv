@@ -42,6 +42,8 @@ module tb_s81_engram_window(input wire clk);
         if(mode==1 || mode==2) begin if(!hfault || hf!=(mode==1?6:5) || seen) $fatal(1,"context negative");end
         else if(mode>=3) begin if(!pfault || pf!=9 || seen) $fatal(1,"receive negative");end
         else if(hfault || pfault || seen!=1) $fatal(1,"transport");
-        $display("ENGRAM_WINDOW %s mode%0d",mode==0?"PASS":"NEG",mode);$finish;
+        if(mode==0) $display("ENGRAM_WINDOW PASS mode0");
+        else $display("ENGRAM_WINDOW NEG mode%0d",mode);
+        $finish;
     end
 endmodule

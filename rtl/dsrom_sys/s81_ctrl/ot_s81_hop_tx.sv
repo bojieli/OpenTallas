@@ -139,7 +139,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     endfunction
 
     wire start_base = (st == S_IDLE) && dq_n != 0 && (go_n != 0 || go) && oq_n < OUT_DEPTH && read_pending == 0;
-    wire start = start_base && (!need_window || wc_match);
+    wire start = start_base && (!need_window || wc_match) && (!WINDOW_CONTEXT || !fault);
     reg  [3:0]  cur_typ;
     reg         push; reg [FLIT-1:0] push_d; reg push_l;
     reg  [11:0] pf_n;                          // pend_flits after this cycle

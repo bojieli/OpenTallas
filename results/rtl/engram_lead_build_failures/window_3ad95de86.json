@@ -1,0 +1,44 @@
+{
+ "schema": "opentallas.engram-native-window-gate.v1",
+ "retained_objects": "/tmp/engram-window-fm4irvf0",
+ "cases": {
+  "0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_WINDOW PASS mode0\n- /srv/opentallas-scratch/claude/engram/lead-r2-3ad95de86/rtl/test/tb_s81_engram_window.sv:45: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_WINDOW  NEG mode1\n- /srv/opentallas-scratch/claude/engram/lead-r2-3ad95de86/rtl/test/tb_s81_engram_window.sv:45: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "2": {
+   "returncode": -6,
+   "stdout": "[0] %Fatal: tb_s81_engram_window.sv:42: Assertion failed in TOP.tb_s81_engram_window: context negative\n%Error: /srv/opentallas-scratch/claude/engram/lead-r2-3ad95de86/rtl/test/tb_s81_engram_window.sv:42: Verilog $stop\nAborting...\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_WINDOW  NEG mode3\n- /srv/opentallas-scratch/claude/engram/lead-r2-3ad95de86/rtl/test/tb_s81_engram_window.sv:45: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": false
+  },
+  "4": {
+   "returncode": 0,
+   "stdout": "ENGRAM_WINDOW  NEG mode4\n- /srv/opentallas-scratch/claude/engram/lead-r2-3ad95de86/rtl/test/tb_s81_engram_window.sv:45: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": false
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "4fde000ba16dce06fd1b4fe414f9510abf0c5ed23f243588953e10b247c17257",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "5c9eee113e08bcd24712fea81a554726a6d22c76afc894d6f176a8534dd0b810",
+  "rtl/test/tb_s81_engram_window.sv": "6f038e847ff3daf3e098f239d146c2f5efce1ac506bc19602398118e94403835",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/engram_window_gate.py": "5daeb03d10352e6b5214a207da5ecb2c68bfe7f6f2f6aa68a487c8dbf2d5c5ed"
+ },
+ "status": "fail"
+}
