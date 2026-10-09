@@ -1,0 +1,1 @@
+{"verdict":"FAIL_COMPILE","host":"ot-epyc4","guard_gib":1,"tool":"iverilog -g2012","error":"matches identifier is a SystemVerilog keyword; lines39/42/44/87 rejected","change":"Renamed identifier match_count before numerical/control execution."}
