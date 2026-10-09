@@ -24,8 +24,8 @@ $ADMIT $P3 -- $H/dietop_run.sh $G grt.tcl 16 $((P3+80)) OT_ITERS=30 OT_TILE_UM=4
 OV=$(awk '/Final congestion report/{f=1} f && /^Total/{print $NF; exit}' $G/grt.log)
 say "full-die GRT exit=$(cat $G/run.exit) overflow=${OV:-none} ($(grep -m1 'Total wirelength' $G/grt.log))"
 for c in tt ff; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
-  ln -f $G/ckpt_grt.odb $G/route.guide $D/
-  cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
+  ln -f $G/ckpt_grt.odb $G/route.guide $G/die_grt.spef $D/
+  cp $R/libs/qfd_elements_$c.lib $D/libs/; [ -f $R/libs/qfd_etm_$c.lib ] && cp $R/libs/qfd_etm_$c.lib $R/libs/views.json $D/libs/; [ -f $R/libs/ot_hbm3e_phy_$c.lib ] && cp $R/libs/ot_hbm3e_phy_$c.lib $D/libs/
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60))
   say "STA $c: $(grep -E '^(wns|tns|worst slack)' $D/grt_$c.log | tr '\n' ' ')"
