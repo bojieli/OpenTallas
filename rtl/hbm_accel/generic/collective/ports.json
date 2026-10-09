@@ -1,6 +1,6 @@
 {
   "module": "ot_hgi_coll_decode",
-  "source": "8d33d3b03",
+  "source": "9ed547523",
   "default_enable": 0,
   "generic_enable": 1,
   "ports": {
@@ -141,5 +141,6 @@
   "open_binding": "ROW_GATHER backend binding and isolation gates remain pending; no fake tieoffs",
   "dispatch_latency_cycles": 2,
   "control_exact_source": "8d33d3b03",
-  "rows_fixture_evidence": "results/rtl/hgi_collective_row_20261009/ingress_8d33"
+  "rows_fixture_evidence": "results/rtl/hgi_collective_row_20261009/ingress_8d33",
+  "manifest_scope": "RTL source9ed547523; currentconfigs/model4e9e838a2; independentfreshgatesrequired"
 }

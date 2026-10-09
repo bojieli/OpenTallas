@@ -1,6 +1,6 @@
 {
   "module": "ot_hgi_coll_row_formatter",
-  "source": "8d33d3b03",
+  "source": "9ed547523",
   "default_enable": 0,
   "ports": {
     "clk": {
@@ -190,5 +190,6 @@
       "must_not_tie": true
     }
   },
-  "integration_pending": "actualreaderownerfilter/routing,writtenknowledge,I-tableproducer,COLLmulticastpayload andCPcompletion; no installedconsumer claim"
+  "integration_pending": "actualreaderownerfilter/routing,writtenknowledge,I-tableproducer,COLLmulticastpayload andCPcompletion; no installedconsumer claim",
+  "manifest_scope": "RTL source9ed547523; currentconfigs/model4e9e838a2; independentfreshgatesrequired"
 }
