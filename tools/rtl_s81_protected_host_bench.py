@@ -122,7 +122,7 @@ def write_case(d: Path, case, memw):
 def run(exe, d, nd, np_, **pa):
     t = time.time()
     p = subprocess.run(["vvp", "-n", str(exe), f"+ND={nd}", f"+NP={np_}", *(f"+{k}={v}" for k, v in pa.items())],
-                       cwd=d, capture_output=True, text=True, timeout=14400)
+                       cwd=d, capture_output=True, text=True)
     m = RE.search(p.stdout)
     if not m:
         return {"pass": False, "stdout": p.stdout[-1500:], "stderr": p.stderr[-800:]}

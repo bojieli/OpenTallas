@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_ingest_afifo",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
+      "source": {
+        "commit": "7abf5cd22",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/protected_cdc_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pendingadmittedremotehostgoldengate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "originalFIFO pointer/controlprotection separateobligation",
+        "legacyhostdescriptor/controlregister protection",
+        "sourceownedphysicalcommitfence"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_rom_host_ingest_protected",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "MutableFIFO payload SECDED successor; originalgoldensourceunchanged, internalenginecontrolprotection notclaimed",
+      "source": {
+        "commit": "7abf5cd22",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implementeddefaultoff; remotequalificationpending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, physicalhosttimingpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/protected_cdc_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pendingadmittedremotehostgoldengate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pendingnewsourcehostroute, preserveprevioushostfail",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "originalFIFO pointer/controlprotection separateobligation",
+        "legacyhostdescriptor/controlregister protection",
+        "sourceownedphysicalcommitfence"
+      ],
+      "integration": {
+        "status": "candidateprepared, notadoptedinnativewrapper",
+        "evidence": []
+      }
+    }
+  ]
+}
