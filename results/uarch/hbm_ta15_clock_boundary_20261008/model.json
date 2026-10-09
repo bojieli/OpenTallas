@@ -6,15 +6,15 @@
   "memory_port_bytes_per_cycle": 0,
   "replica_count": 1,
   "boundary_bits_per_cycle": {
-    "reference_clocks": 2,
+    "reference_clocks": 1,
     "generated_clocks": 4,
-    "reset_intents": 11,
+    "reset_intents": 17,
     "lock_status": 1,
-    "endpoint_resets": 12
+    "endpoint_resets": 17
   },
-  "reset_collar_count": 12,
-  "state_FF_bits": 36,
-  "FF_area_floor_um2": 10.4976,
+  "reset_collar_count": 17,
+  "state_FF_bits": 51,
+  "FF_area_floor_um2": 14.8716,
   "replica_mux_demux_cost": 0,
   "per_collar_assert_inputs": 3,
   "period_ns": {
@@ -33,10 +33,10 @@
   "steady_state_added_data_cycles": 0,
   "latency_contribution": "Three destination edges after each qualified boot intent; no decode data stages. Analog lock-acquisition and boot sequencer latency remain explicit unknown terms.",
   "routing_tracks_needed": {
-    "clocks": 6,
+    "clocks": 5,
     "status": 1,
-    "reset_intents": 11,
-    "endpoint_resets": 12
+    "reset_intents": 17,
+    "endpoint_resets": 17
   },
   "channel_capacity": null,
   "floorplan_slot_fit": false,
