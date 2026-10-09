@@ -1,0 +1,15 @@
+{
+  "positive": "PASS",
+  "missing_bank": {
+    "status": "REJECTED",
+    "reason": "bank inventory mismatch: missing=[('u_hw', 64)] extra=[]"
+  },
+  "globalized_capture": {
+    "status": "REJECTED",
+    "reason": "missing local capture controls u_hw.banked.bank[1].local_slice.s_d[0]$_DFF_P_ roots=[(('u_hw', 0), 's_v')]"
+  },
+  "shared_control_output": {
+    "status": "REJECTED",
+    "reason": "shared or ambiguous control driver u_cap.banked.bank[0].local_slice.s_v"
+  }
+}
