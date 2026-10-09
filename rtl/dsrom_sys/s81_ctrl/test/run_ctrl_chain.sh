@@ -1,6 +1,6 @@
 #!/bin/bash
-# run_ctrl_chain.sh <src root> <out dir>: tb_s81_ctrl_chain (Verilator 5).  Lines: base (PASS), +forge (PASS: the
-# guard drops the forged message, F_SRC), MUT=1 SOURCE ignores STOP (must FAIL), guard mutant NOSRC +forge (must FAIL)
+# run_ctrl_chain.sh <src root> <out>: realcontrolSTOP/nativepayload/CRC gate.
+# Stagebounds aretransparent; rejectedF_SRCauth tests arehistoricalonly.
 set -u
 SRC=$1; OUT=$2; mkdir -p $OUT
 S=$SRC/rtl/dsrom_sys
@@ -12,10 +12,8 @@ bld() {   # <dir> <extra args>
   verilator --binary --timing -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-MULTIDRIVEN -I$S/s81_ctrl --top-module tb_s81_ctrl_chain \
     "$@" --Mdir $B -o tb $FILES > $B/build.log 2>&1 || { echo BUILD_FAIL $B; grep -m10 -i error $B/build.log; exit 1; }
 }
-bld chain_m0 -GMUT=0; bld chain_m1 -GMUT=1; bld chain_nosrc -GMUT=0 -DS81_GUARD_MUTANT_NOSRC
+bld chain_m0 -GMUT=0; bld chain_m1 -GMUT=1
 LOG=$OUT/chain.log; : > $LOG
-echo "# base"            >> $LOG; timeout 600 $OUT/chain_m0/tb          2>&1 | grep -E "TB_S81|^ERR" >> $LOG
-echo "# forge"           >> $LOG; timeout 600 $OUT/chain_m0/tb +forge   2>&1 | grep -E "TB_S81|^ERR" >> $LOG
-echo "# MUT1 (expect FAIL)"  >> $LOG; timeout 600 $OUT/chain_m1/tb      2>&1 | grep -E "TB_S81" >> $LOG
-echo "# NOSRC +forge (expect FAIL)" >> $LOG; timeout 600 $OUT/chain_nosrc/tb +forge 2>&1 | grep -E "TB_S81" >> $LOG
+echo "# base"            >> $LOG; $OUT/chain_m0/tb          2>&1 | grep -E "TB_S81|^ERR" >> $LOG
+echo "# MUT1 (expect FAIL)"  >> $LOG; $OUT/chain_m1/tb      2>&1 | grep -E "TB_S81" >> $LOG
 cat $LOG

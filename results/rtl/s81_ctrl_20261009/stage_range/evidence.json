@@ -1,0 +1,12 @@
+{
+ "schema":"opentallas.s81-stage-range-observer.v1",
+ "status":"PASS_REVIEWED_STATIC_RANGE_FLAG_COMPONENT",
+ "host":"ot-agidock128","admitted_ram_gb":4,
+ "source_pins":"source.sha256","model":"results/rtl/s81_ctrl_20261009/stage_range_prebuild.json",
+ "zero_cycles":true,"header_authorization_hardware":false,"packet_drop_hardware":false,
+ "range_fixture":"All payload/valid/ready/last bitidentical while user64 or position1M sets stickycode6/7; wrongsource3999 passes transparently understaticrouting contract",
+ "actual_three_ctrl_chain":{"base_cycles":5027,"dones":2,"boot_refused":1,"payloads_exact":44,"sideframes_exact":22,"descriptor_errors":0,"completion_errors":0,"controller_faults":0,"CRC_errors":[107,108,39],"replays":[28,28,1]},
+ "actual_STOP_mutant":"IgnoringSTOP givesTIMEOUT400001cycles/dones0/FAIL, unchangedhardwareminimumcontrolbehavior; removed600s externalrunner deadline",
+ "history":"OriginalF_SRC/dropauth/NOSRCtests rejectedbyReview53 and retained in priorcommits, not currentacceptance criteria",
+ "scope":"Minimumcontroltransport/STOP mechanism, not complete2417pair/81stage nativeprogram execution. RVALID/nativeNP8 gates are separate. GenericIO TTroute cannotqualifydiecontext."
+}

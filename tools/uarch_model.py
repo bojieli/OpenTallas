@@ -14099,3 +14099,9 @@ def s81_primary_shared_last_model():
     """Native final shared-LAST add, BF16 once, two actual receive CDC ports."""
     from tools.s81_ctrl.control_transport_model import plain_primary_shared_receive_model
     return plain_primary_shared_receive_model()
+
+
+def s81_stage_range_observer_model():
+    """Reviewed0cycle transparentstage user/1Mposition bounds flag."""
+    from tools.s81_ctrl.control_transport_model import stage_range_observer_model
+    return stage_range_observer_model()
