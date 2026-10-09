@@ -14086,3 +14086,9 @@ def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
     """Unified entry for before-build TA15 digital clock/reset boundary sizing."""
     from tools.hbm_ta15_clock_boundary_model import hbm_ta15_clock_boundary_model as model
     return model(link_ports, stages)
+
+
+def hbm_ta15_clock_reset_data_model():
+    """Opt-in DATA intent successor; explicit startup and CDC obligations."""
+    from tools.hbm_ta15_clock_reset_data_model import model
+    return model()
