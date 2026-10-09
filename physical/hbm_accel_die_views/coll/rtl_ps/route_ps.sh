@@ -24,7 +24,8 @@ if [ "$kind" = port ]; then
   if [ "${INTERIOR:-0}" = 1 ]; then
     interior_args=(--step-tcl POST_MACRO_PLACE=$D/interior_macros.tcl
                    --step-tcl PRE_IO_PLACEMENT=$D/interior_pins.tcl
-                   --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5')
+                   --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
+                   --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   echo "kind=port die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
