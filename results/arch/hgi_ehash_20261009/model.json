@@ -32,18 +32,20 @@
     "measured_area_pending": true
   },
   "latency": {
+    "registered_command_landing": 1,
     "history_window": 1,
     "replay_window_to_shipped_hash": 4,
     "shipped_hash": 12,
     "row_emit": 24,
-    "total_no_backpressure": 41,
+    "total_no_backpressure": 42,
     "original_window_hash": 16,
-    "added_serialization_cycles_per_command": 25,
+    "added_serialization_cycles_per_command": 26,
     "DS_layer_commands_per_token": 2,
-    "DS_two_layer_serial_cycles": 82,
+    "DS_two_layer_serial_cycles": 84,
     "original_all_layer_hash_cycles": 16,
-    "conservative_added_cycles_per_token": 66,
-    "measured_command_to_ready_cycles": 41
+    "conservative_added_cycles_per_token": 68,
+    "predecessor_measured_command_to_ready_cycles": 41,
+    "registered_successor_measurement_pending": true
   },
   "approval_gate": "exact DS lockstep + CF-EHASH + mutant + TT/FF/DRC; no generic-B claim"
 }
