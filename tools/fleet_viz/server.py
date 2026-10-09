@@ -19,7 +19,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer, coverage
+import recorder, elements, explorer, coverage, landing
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads(pathlib.Path(os.environ.get('FLEET_VIZ_HOSTS', HERE / 'fleet_hosts.json')).read_text())
@@ -445,6 +445,9 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
 # /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
 COVERAGE_DIR = HERE / 'explorer' / 'coverage'
 COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
+# /landing/...: the public landing page (landing/index.html + recordings), numbers from committed results at request time
+LANDING_DIR = HERE / 'landing'
+LANDING = landing.Landing(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), log=log)
 
 def with_sent(body):
     """a pre-serialised snapshot plus sent_at: the page measures generated_at against the server's own clock"""
@@ -505,6 +508,13 @@ class H(BaseHTTPRequestHandler):
             else: o = COVERAGE.api()
             if u.path != '/api/coverage/token': o = stamp(o, safe, coverage=COVERAGE.err or '')
             return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/api/landing/numbers':
+            return self.send(200, json.dumps(LANDING.numbers(), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/landing' or u.path.startswith('/landing/'):
+            if u.path == '/landing': return self.redirect('/landing/')
+            rel = u.path[len('/landing'):].lstrip('/') or 'index.html'
+            if rel.endswith('.py') or rel.startswith('recorder'): return self.send(404, b'not found', 'text/plain')
+            return self.static_dir(LANDING_DIR, rel, None)
         if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
             if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
             return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
