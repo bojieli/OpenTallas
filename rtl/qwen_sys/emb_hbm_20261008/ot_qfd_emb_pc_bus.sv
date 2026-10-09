@@ -3,8 +3,11 @@
 // Composite physical vehicle in the existing controller reservation.
 // The KV command and raw landing interfaces remain separate from embedding.
 // PHY must supply the full 288-bit protected codeword (provider still OPEN).
+// KVW (sys-takeover 2026-10-09, default 0): 2 = the KV write side-band provider at the die's write timing: kw_v / kw_d are
+// the per-PC STREAM4 CDC completion entry (h_cv / h_cdata, one edge after the KV WR column col_v && col_we && !col_sr);
+// the port encodes it and presents every WR's 288-b PHY write data on wd two edges after its column.
 module ot_qfd_emb_pc_bus #(
- parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0
+ parameter integer ENABLE=0,PC=0,PHASE=0,SQD=4,S_STARVE=8,TWIN=0,TWIN_ROFF=0,KVW=0
 )(
  input wire clk,rst_n,hclk,hrst_n,
  input wire cmd_v,input wire [31:0] cmd,input wire [2:0] read_credit,
@@ -14,10 +17,11 @@ module ot_qfd_emb_pc_bus #(
  output wire [18:0] row_row,output wire col_v,col_we,col_sr,
  output wire [4:0] col_bank,col_col,output wire busy,
  input wire r_v,input wire [287:0] r_d,output wire [287:0] wd,
+ input wire kw_v,input wire [255:0] kw_d,
  output wire kv_v,output wire [287:0] kv_d,
  output wire fault_core,fault_hbm
 );
- ot_qfd_emb_pc #(.ENABLE(ENABLE),.PC(PC),.PHASE(PHASE),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF)) core(
+ ot_qfd_emb_pc #(.ENABLE(ENABLE),.PC(PC),.PHASE(PHASE),.SQD(SQD),.S_STARVE(S_STARVE),.TWIN(TWIN),.TWIN_ROFF(TWIN_ROFF),.KVW(KVW)) core(
  .clk(clk),
  .rst_n(rst_n),
  .hclk(hclk),
@@ -39,6 +43,8 @@ module ot_qfd_emb_pc_bus #(
  .r_v(r_v),
  .r_d(r_d),
  .wd(wd),
+ .kw_v(kw_v),
+ .kw_d(kw_d),
  .kv_v(kv_v),
  .kv_d(kv_d),
  .fault_core(fault_core),
