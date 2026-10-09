@@ -14,5 +14,7 @@
   "latency_pricing": "1 addeddescriptor settle edge per command, sticky completion/ack/start sequencing; actualdrainlatencymeasuredbench pending",
   "physical_slot_fit": "pending actual synthesis/pin and realportviews; no physicalclosureclaim",
   "group_reduce_mcast": "NA=subgroup2/4/8 arithmetic, receiverallcompiled96owners; sameglobalindices/tree, normal ALL_REDUCEsmallgroups remainisolated",
-  "mcast_all_capture_state_bits": 1
+  "mcast_all_capture_state_bits": 1,
+  "outer_group": "mcast_group_size8bit captured withdescriptor; legal2/4/8/96>=subgroup; result source group\u00d7NA lies in alignedoutergroup; sameindices/tree",
+  "mcast_outer_capture_state_bits": 8
 }
