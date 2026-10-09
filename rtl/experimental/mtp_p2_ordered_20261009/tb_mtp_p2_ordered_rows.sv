@@ -85,6 +85,7 @@ module tb_mtp_p2_ordered_rows;
         1:ie[8:0]=9'd4;
         2:iw[6:0]=1;
         3:ilast[0]=1;
+        4:ish[0]=1;
       endcase
       @(negedge clk);iv=0;
       repeat(3)@(negedge clk);
@@ -107,7 +108,7 @@ module tb_mtp_p2_ordered_rows;
     wait(done);@(negedge clk);
     if(received!=(PRIMARY_SHARED?240:320))$fatal(1,"P2 FAIL receipt count%0d",received);
     checking=0;
-    for(k=0;k<4;k=k+1)negative(k);
+    for(k=0;k<(PRIMARY_SHARED?5:4);k=k+1)negative(k);
     reset_start();send_pair(0,1,0);
     // Duplicate first word of row0 must poison, rather than overwrite silently.
     @(negedge clk);iv=1;ish=0;ilast=0;itag={identity,identity};

@@ -690,7 +690,13 @@
       500
     ],
     "total_slot_mm2": 15.4,
-    "capture_and_join_SRAM256x256_macros": 48
+    "capture_and_join_SRAM256x256_macros": 48,
+    "actual_macro_outline_um": [
+      172.824,
+      41.064
+    ],
+    "actual_macro_area_um2": 7096.844736000001,
+    "capture_and_join_raw_SRAM_area_mm2": 0.34064854732800004
   },
   "ports": {
     "reader_bits_per_cycle": 512,
