@@ -82,6 +82,12 @@ def hbm_write_merge_contract_model():
     return model()
 
 
+def hbm_write_source_pc_contract_model():
+    """Full32-PC source ownership with reordered cross-PC completion."""
+    from hbm_write_merge_model import per_pc_model
+    return per_pc_model()
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Physical constants (sources in-line)
 # ---------------------------------------------------------------------------------------------------------
