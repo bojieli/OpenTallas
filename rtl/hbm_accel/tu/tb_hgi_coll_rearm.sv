@@ -63,7 +63,9 @@ module tb_hgi_coll_rearm #(
     localparam integer IS_REDUCE = (NC > 1);
 `endif
     integer seed, seed0, pf, rank, samecol, npdep = 0;
-    integer duplicate_last=0; integer NA=8, gs=15, cmd=0; reg active=0, dr=0, fa=0; wire sr, done;
+    integer duplicate_last=0; integer NA=8, gs=15, cmd=0;
+    integer mc=0,outer=96,outer_base=0;
+    reg[7:0] cfg_rank=0,cfg_outer=96;reg[15:0]cfg_pf=0;reg[3:0]cfg_gs=15;reg cfg_mc=0; reg active=0, dr=0, fa=0; wire sr, done;
     integer total_commands=45, delayed_credit_observations=0, stall_observations=0;
     real budget, cred;
     string vecdir;
@@ -113,13 +115,13 @@ module tb_hgi_coll_rearm #(
         , .SYNCPHY(1)
 `endif
         )
-      dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+      dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(cfg_rank), .pf(cfg_pf), .go(go),
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
-           .stat_credit_stall(cst),.gsz(4'(gs)),.mcast_all(1'b0),.start_ready(sr),.done_valid(done),.done_ready(dr),.fault_ack(fa));
+           .stat_credit_stall(cst),.gsz(cfg_gs),.mcast_all(cfg_mc),.mcast_group_size(cfg_outer),.start_ready(sr),.done_valid(done),.done_ready(dr),.fault_ack(fa));
 `ifdef TU_LOCKSTEP
     wire [INJ*16-1:0] ref_ii;wire[INJ-1:0]ref_ir;
     wire[NPT-1:0]ref_txv,ref_rxc;wire[NPT*PWT-1:0]ref_txf;
@@ -188,7 +190,7 @@ module tb_hgi_coll_rearm #(
                 m = idx - (OG * NA + J) * ROF;
                 if (t_fres < 0) t_fres = $realtime;
                 t_lres = $realtime; nres = nres + 1;
-                for (integer o = 0; o < NR; o = o + 1) if (o != rank && (gs==15 || o / NA == OG))
+                for (integer o = 0; o < NR; o = o + 1) if (o != rank && (mc || gs==15 || o / NA == OG))
                     sched((o + m) % NPT, ta, {1'b1, 8'hFF, 8'(o / NA), 16'(o * ROF + ((duplicate_last && cmd==2 && m==ROF-1)?0:m)), expw[o * ROF + ((duplicate_last && cmd==2 && m==ROF-1)?0:m)]});
             end else begin                                 // gather segment flit m: every peer's flit m
                 m = idx - rank * pf;
@@ -245,6 +247,9 @@ module tb_hgi_coll_rearm #(
             if (gi < OG * NC * ROF || gi >= (OG + 1) * NC * ROF)
                 $fatal(1,"GROUP_ISOLATION rank=%0d gi=%0d OG=%0d",rank,gi,OG);
 `endif
+            if(gi<outer_base*ROF || gi>=(outer_base+(gs==15?NR:mc?outer:NA))*ROF)
+                $fatal(1,"OUTER_GROUP_LEAK cmd=%0d gi=%0d base=%0d G=%0d S=%0d",cmd,gi,outer_base,outer,NA);
+            if(dfl[i*PWT+FW+16+:8] !== 8'(gi/(NA*ROF)))$fatal(1,"RESULT_SOURCE_FIELD cmd=%0d gi=%0d",cmd,gi);
             want = (IS_REDUCE) ? expw[gi] : part[gi];
             if (gi >= MAXL || seen[gi] || dfl[i*PWT +: FW] !== want) begin
                 mism = mism + 1;
@@ -263,7 +268,7 @@ module tb_hgi_coll_rearm #(
         integer n; n=0;for(integer p=0;p<NPT;p=p+1)n+=eq_f[p].size();return n;
     endfunction
     always @(negedge clk) if(active)begin
-        if(done && (got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF))
+        if(done && (got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+(((gs==15 || mc)?NR:NA)-1)*ROF))
             $fatal(1,"PREMATURE_DONE cmd=%0d got=%0d/%0d tx=%0d/%0d pending_external=%0d rx=%0d",cmd,got,TOT,ndep,pf-OF+ROF,queue_words(),narr);
         if(done && sr)$fatal(1,"DONE start_ready overlap");
         if(cst>0)stall_observations++;
@@ -272,7 +277,19 @@ module tb_hgi_coll_rearm #(
         integer mode, cr_before[0:NPT-1];
         wait(rst_n); repeat(8)@(negedge clk);
         for(cmd=0;cmd<total_commands;cmd=cmd+1)begin
+            mc=0;outer=96;
             mode=cmd<6?(cmd==0?0:cmd-1):4;
+            if(cmd>=6 && cmd<=11)begin
+                mc=1;
+                case(cmd)
+                    6:begin mode=1;outer=4;end
+                    7:begin mode=1;outer=8;end
+                    8:begin mode=2;outer=8;end
+                    9:begin mode=1;outer=96;end
+                    10:begin mode=2;outer=96;end
+                    11:begin mode=3;outer=96;end
+                endcase
+            end
             case(mode)
                 0:begin gs=0;NA=1;pf=8;rank=37+cmd;end
                 1:begin gs=1;NA=2;pf=16;rank=13;end
@@ -280,8 +297,13 @@ module tb_hgi_coll_rearm #(
                 3:begin gs=3;NA=8;pf=32;rank=95;end
                 4:begin gs=15;NA=8;pf=64;rank=(cmd*13)%96;end
             endcase
+            if(mc)case(cmd)
+                6:rank=13;7:rank=29;8:rank=62;9:rank=91;10:rank=95;11:rank=93;
+            endcase
             OF=pf/NA;ROF=OF/2;OG=rank/NA;J=rank%NA;
-            TOT=(gs==15?NR:NA)*ROF;
+            outer_base=gs==15?0:mc?(outer==96?0:(rank/outer)*outer):(rank/NA)*NA;
+            cfg_rank=8'(rank);cfg_pf=16'(pf);cfg_gs=4'(gs);cfg_mc=1'(mc);cfg_outer=8'(outer);
+            TOT=(gs==15?NR:mc?outer:NA)*ROF;
             $readmemh($sformatf("%s/c%0d/part.hex",vecdir,mode),part);
             $readmemh($sformatf("%s/c%0d/expected.hex",vecdir,mode),expw);
             got=0;mism=0;own_ok=0;ndep=0;narr=0;nres=0;npdep=0;
@@ -289,12 +311,14 @@ module tb_hgi_coll_rearm #(
             for(integer i=0;i<MAXL;i=i+1)seen[i]=0;
             wait(sr);repeat(3)@(negedge clk);active=1;go=1;
             @(negedge clk);go=0;
+            // Poison live descriptor inputs after accept: this command must use captured G/S/MC/rank/PF.
+            cfg_rank=95;cfg_pf=8;cfg_gs=0;cfg_mc=!mc;cfg_outer=2;
             if(duplicate_last && cmd==2)begin
                 wait(flt);repeat(12)begin @(negedge clk);if(done)$fatal(1,"duplicate replaced missing result");end
                 $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish; #1; // Yield after Verilator deferred finish before any command continuation.
             end
             wait(done);@(negedge clk);
-            if(got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF)
+            if(got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+(((gs==15 || mc)?NR:NA)-1)*ROF)
                 $fatal(1,"PREMATURE_DONE consuming checker cmd=%0d got=%0d/%0d tx=%0d pending=%0d",cmd,got,TOT,ndep,queue_words());
             if(flt || mism || own_ok!=ROF)$fatal(1,"REARM exact/fault cmd=%0d got=%0d mismatch=%0d fault=%0d own=%0d",cmd,got,mism,flt,own_ok);
             // Done stays sticky, descriptors remain captured, late ingress credits are preserved.
@@ -303,7 +327,7 @@ module tb_hgi_coll_rearm #(
                 if(cr_in[p].size()>0)delayed_credit_observations++;
             end
             repeat(3)begin @(negedge clk);if(!done || sr)$fatal(1,"DONE not sticky");end
-            $display("REARM_COMMAND PASS cmd=%0d gs=%0d rank=%0d pf=%0d got=%0d tx=%0d rx=%0d stall=%0d",cmd,gs,rank,pf,got,ndep,narr,cst);
+            $display("REARM_COMMAND PASS cmd=%0d gs=%0d rank=%0d pf=%0d mc=%0d outer=%0d base=%0d got=%0d tx=%0d rx=%0d stall=%0d",cmd,gs,rank,pf,mc,outer,outer_base,got,ndep,narr,cst);
             // The stub has sent every old scheduled RX before acknowledgment. Credit-only traffic may remain.
             if(queue_words()!=0 || |rxv)$fatal(1,"external old traffic remains at ack");
             active=0;dr=1;@(negedge clk);dr=0;
