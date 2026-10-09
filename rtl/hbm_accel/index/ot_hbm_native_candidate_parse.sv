@@ -2,7 +2,9 @@
 `default_nettype none
 // Actual15-slot TU decoder. Invalid/padding slots remain explicit lv0 records;
 // quarter completion is emitted only with acceptance of the final literal slot.
-module ot_hbm_native_candidate_parse #(parameter integer ENABLE=0)(
+// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
+// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
+module ot_hbm_native_candidate_parse #(parameter integer ENABLE=0,PROTECT=0)(
  input wire clk,por_n,input wire owner_valid,owner_fault,
  input wire [72:0] owner_frame,input wire expected_kind,input wire [7:0] expected_dst,
  input wire flit_v,output wire flit_r,input wire [544:0] flit,
@@ -18,7 +20,7 @@ module ot_hbm_native_candidate_parse #(parameter integer ENABLE=0)(
  reg [544:0] held_n;
  reg [72:0] held_owner_n;
  reg [3:0] slot_n;
- wire coded_ok=(busy_n==~busy)&&(sticky_fault_n==~sticky_fault)&&(held_n==~held)&&(held_owner_n==~held_owner)&&(slot_n==~slot);
+ wire coded_ok=(PROTECT==0)||((busy_n==~busy)&&(sticky_fault_n==~sticky_fault)&&(held_n==~held)&&(held_owner_n==~held_owner)&&(slot_n==~slot));
  wire allowed=ENABLE&&owner_valid&&!owner_fault&&!sticky_fault&&coded_ok;
  wire valid_header=flit_owner==owner_frame&&flit[544]==expected_kind&&
    flit[543:536]==expected_dst&&flit[535:528]<96&&!flit[510];

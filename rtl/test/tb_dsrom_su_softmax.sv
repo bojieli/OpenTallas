@@ -9,6 +9,7 @@ module tb_dsrom_su_softmax;
     parameter integer LPH = 16;
     parameter integer NVMAX = 40;
     parameter integer LTMAX = 6;
+    parameter integer TMO = 20000;          // hbm-forks: the 8K / 2K multipass reference rows need more cycles
     parameter integer LM = 5;
     parameter integer LA = 4;
     parameter integer ELM = 5;
@@ -106,7 +107,7 @@ module tb_dsrom_su_softmax;
                      fault);
             $finish;
         end
-        if (cyc > 20000) begin
+        if (cyc > TMO) begin
             $display("SMX_TIMEOUT");
             $finish;
         end

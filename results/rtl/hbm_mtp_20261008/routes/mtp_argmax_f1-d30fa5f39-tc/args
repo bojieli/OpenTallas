@@ -1,0 +1,1 @@
+ot_dshbm_argmax_m L=197 UTIL=40 PD=0.55 HM=0.025 LB=0 VT=rvt SDCX= --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --param LP=8 --param IW=17 --param FLAT=7 --param FAST=1

@@ -57,6 +57,11 @@ module tb_hbm_accel_tu_endpoint #(
 );
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
     localparam integer MAXL = NR * PFMAX;
+`ifdef TU_REDUCE
+    localparam integer IS_REDUCE = 1;
+`else
+    localparam integer IS_REDUCE = (NC > 1);
+`endif
     integer seed, seed0, pf, rank, samecol, npdep = 0;
     real budget, cred;
     string vecdir;
@@ -78,9 +83,17 @@ module tb_hbm_accel_tu_endpoint #(
         ph0 = (($unsigned($random(seed)) % 1000) / 1000.0);
         ph1 = (($unsigned($random(seed)) % 1000) / 1000.0);
         $readmemh({vecdir, "/part.hex"}, part);
-        if (NC > 1) $readmemh({vecdir, "/expected.hex"}, expw);
+        if (IS_REDUCE) $readmemh({vecdir, "/expected.hex"}, expw);
         OF = pf / NC; ROF = BF16 ? OF / 2 : OF; OG = rank / NC; J = rank % NC;
-        TOT = (NC > 1) ? NR * ROF : (NR - 1) * pf;
+        `ifdef TU_GSZ
+`ifdef TU_MCAST_ALL
+        TOT = NR * ROF;
+`else
+        TOT = NC * ROF;
+`endif
+`else
+        TOT = (IS_REDUCE) ? NR * ROF : (NR - 1) * pf;
+`endif
         $display("TUCFG seed=%0d rank=%0d NC=%0d NOG=%0d PF=%0d INJ=%0d DEL=%0d NPT=%0d RXAW=%0d BUDGET=%0.2f CRED=%0.2f T_CORE=%f T_PHY=%f TOT=%0d",
                  seed0, rank, NC, NOG, pf, INJ, DEL, NPT, RXAW, budget, cred, T_CORE, T_PHY, TOT);
         go_clk = 1;
@@ -109,7 +122,12 @@ module tb_hbm_accel_tu_endpoint #(
     wire [DEL*PWT-1:0] dfl;
     wire flt;
     wire [31:0] cst;
-    `TU_DUT #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+`ifdef TU_GSZ                // hbm-forks: the group-size fork (NC 8 hardware, n = 2^TU_GSZ active); the stub models NC = n
+    localparam integer DNC = 8, DNG = 12;
+`else
+    localparam integer DNC = NC, DNG = NOG;
+`endif
+    `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(DNG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
         .SWCRED(1 << RXAW), .LAT(LAT)
 `ifdef TU_SYNCPHY
@@ -117,9 +135,41 @@ module tb_hbm_accel_tu_endpoint #(
 `endif
         )
       dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+`ifdef TU_GSZPORT
+           .gsz(4'(`TU_GSZPORT)),
+`ifdef TU_MCAST_ALL
+           .mcast_all(1'b1),.mcast_group_size(8'd96),
+`else
+           .mcast_all(1'b0),.mcast_group_size(8'd96),
+`endif
+`endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
            .stat_credit_stall(cst));
+`ifdef TU_LOCKSTEP
+    wire [INJ*16-1:0] ref_ii;wire[INJ-1:0]ref_ir;
+    wire[NPT-1:0]ref_txv,ref_rxc;wire[NPT*PWT-1:0]ref_txf;
+    wire[DEL-1:0]ref_dv;wire[DEL*PWT-1:0]ref_dfl;wire ref_flt;wire[31:0]ref_cst;
+    ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+        .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
+        .SWCRED(1 << RXAW), .LAT(LAT)
+`ifdef TU_SYNCPHY
+        , .SYNCPHY(1)
+`endif
+        )
+      reference (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+
+           .inj_idx(ref_ii), .inj_rd(ref_ir), .inj_data(idata), .ph_tx_v(ref_txv), .ph_tx_flit(ref_txf), .sw_cr_ret(crr),
+           .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(ref_rxc), .del_valid(ref_dv), .del_flit(ref_dfl), .fault(ref_flt),
+           .stat_credit_stall(ref_cst));
+    always @(negedge clk) if(rst_n) begin
+      if({ii,ir,txv,rxc,dv,flt,cst} !== {ref_ii,ref_ir,ref_txv,ref_rxc,ref_dv,ref_flt,ref_cst})
+        $fatal(1,"DS_LOCKSTEP control mismatch");
+      for(integer p=0;p<NPT;p=p+1)if(txv[p] && txf[p*PWT+:PWT]!==ref_txf[p*PWT+:PWT])$fatal(1,"DS_LOCKSTEP TX mismatch");
+      for(integer d=0;d<DEL;d=d+1)if(dv[d] && dfl[d*PWT+:PWT]!==ref_dfl[d*PWT+:PWT])$fatal(1,"DS_LOCKSTEP DEL mismatch");
+    end
+`endif
+
 
     // ---- stub: egress queues per port, credits ------------------------------------------------------------
     real          eq_t [NPT][$];
@@ -160,7 +210,7 @@ module tb_hbm_accel_tu_endpoint #(
                 sl = dst - OG * NC;
                 jp = ((2 * J - sl) % NC + NC) % NC;
                 sched(p, ta, {1'b0, 8'(rank), 8'(jp), 16'(idx), part[(OG * NC + jp) * pf + J * OF + idx]});
-            end else if (NC > 1) begin                     // our result m: every other owner's result m
+            end else if (IS_REDUCE) begin                     // our result m: every other owner's result m
                 m = idx - (OG * NC + J) * ROF;
                 if (t_fres < 0) t_fres = $realtime;
                 t_lres = $realtime; nres = nres + 1;
@@ -202,6 +252,18 @@ module tb_hbm_accel_tu_endpoint #(
         end
     end
 
+`ifdef TU_GSZ
+    always @(negedge clk) if(rst_n && dut.g_on.started && dut.g_on.rptr<dut.g_on.OF)begin
+      reg active_present;active_present=1;
+      for(integer c=0;c<DNC;c=c+1)if(c<dut.g_on.NA && !dut.g_on.pres[c][dut.g_on.rptr])active_present=0;
+      if(active_present && !(|dut.g_on.h_v) && (&dut.g_on.rb_empty) && !dut.g_on.issue)
+        $fatal(1,"PAD_PROGRESS all active contributor operands present but inactivecolumns block issue");
+    end
+    initial begin
+      wait(go_clk); #700;
+      $display("GSZDEBUG rank=%0d gs=%0d started=%0d k=%0d NA=%0d OF=%0d ptr=%0d pres0=%h col=%h rv=%b",rank,dut.gsz,dut.g_on.started,dut.g_on.k,dut.g_on.NA,dut.g_on.OF,dut.g_on.rptr,dut.g_on.pres[0],dut.g_on.col,dut.g_on.r_v);
+    end
+`endif
     // ---- checker ------------------------------------------------------------------------------------------
     integer got = 0, mism = 0, own_ok = 0;
     reg seen [0:MAXL-1];
@@ -211,11 +273,17 @@ module tb_hbm_accel_tu_endpoint #(
             integer gi;
             reg [FW-1:0] want;
             gi = integer'(dfl[i*PWT + FW +: 16]);
-            want = (NC > 1) ? expw[gi] : part[gi];
+`ifdef TU_GSZ
+`ifndef TU_MCAST_ALL
+            if (gi < OG * NC * ROF || gi >= (OG + 1) * NC * ROF)
+                $fatal(1,"GROUP_ISOLATION rank=%0d gi=%0d OG=%0d",rank,gi,OG);
+`endif
+`endif
+            want = (IS_REDUCE) ? expw[gi] : part[gi];
             if (gi >= MAXL || seen[gi] || dfl[i*PWT +: FW] !== want) begin
                 mism = mism + 1;
                 if (mism < 10) $display("TUMISMATCH gi=%0d", gi);
-            end else if (NC > 1 && gi / ROF == rank) own_ok = own_ok + 1;
+            end else if (IS_REDUCE && gi / ROF == rank) own_ok = own_ok + 1;
             if (gi < MAXL) seen[gi] = 1;
             got = got + 1;
             if (got == TOT) t_done = $realtime;

@@ -43,8 +43,27 @@ def protect_list():
     for f in TAKEOVER_LOG.parent.glob("*"):
         if f.is_file() and f.suffix in (".log", ".md", ".txt", ".json") and time.time() - f.stat().st_mtime < 48 * 3600:
             paths.update(PATH_RE.findall(f.read_text(errors="replace")))
+    # near-miss routes the closure loop retains until their block closes (closure_loop.py write_near_miss_retain)
+    try:
+        for row in json.loads((JOBS.parent / "near_miss_retain.json").read_text()).get("jobs", []):
+            paths.update(p for p in (row.get("run"), row.get("orfs_dir")) if p)
+    except (OSError, ValueError):
+        pass
     paths.update(str(p) for p in (ROOT, Path.home() / ".cache", Path.home() / "bin", WORK))
     return sorted(p.rstrip("/.") for p in paths if p.count("/") >= 2)
+
+
+def closed_blocks():
+    """spec blocks with a CLOSED closure-loop job: a near-miss route of such a block is no longer retained"""
+    out = set()
+    for f in JOBS.glob("*.json"):
+        try:
+            d = json.loads(f.read_text())
+        except ValueError:
+            continue
+        if d.get("status") == "CLOSED" and (d.get("spec") or {}).get("block"):
+            out.add(d["spec"]["block"])
+    return sorted(out)
 
 
 def remote(host, script, inp=None, timeout=3600):
@@ -70,6 +89,7 @@ def main():
     hosts = json.loads((ROOT / "tools/closure_loop/hosts.json").read_text())["hosts"]
     prot = "\n".join(protect_list()) + "\n"
     sweep_src = (HERE / "sweep.py").read_text()
+    closed = "\n".join(closed_blocks()) + "\n"
     for h in hosts:
         name = h["name"]
         watch = sorted({h["base"], *h.get("disk_roots", {})})
@@ -88,7 +108,11 @@ def main():
         if rr.returncode:
             log(f"{h['label']} ship failed: {rr.stderr.strip()[-200:]}")
             continue
-        rr = remote(name, script + f"cd {WORK} && SWEEP_SKIP={WORK} SWEEPLOG={WORK}/sweep.log python3 sweep.py "
+        rr = remote(name, f"mkdir -p {WORK} && cat > {WORK}/closed_blocks.txt", inp=closed, timeout=120)
+        if rr.returncode:
+            log(f"{h['label']} closed-block list ship failed: {rr.stderr.strip()[-200:]}")
+            continue
+        rr = remote(name, script + f"cd {WORK} && SWEEP_SKIP={WORK} SWEEP_CLOSED={WORK}/closed_blocks.txt SWEEPLOG={WORK}/sweep.log python3 sweep.py "
                     f"{h['label']} {WORK}/protect.txt {'apply' if apply else 'plan'} {roots} | grep -E '^(TOTAL|DELETED|HOLD_BIG)' | tail -80",
                     inp=prot, timeout=3600)
         for line in rr.stdout.splitlines():

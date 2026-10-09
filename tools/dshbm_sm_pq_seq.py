@@ -38,7 +38,7 @@ SRC = [s for s in MS.SRC if s != "rtl/test/tb_hbm_accel_sm_v_seq.sv"] + [
     "rtl/test/tb_hbm_accel_sm_pq_seq.sv"]
 SMH_SRC = ["rtl/hbm_accel/sm/ot_hbm_accel_stack.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv", "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
            "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
-           "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
+           "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv", "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv"]   # --smh: the hierarchical element (ot_hbm_accel_smh)
 XDEPTH = MS.XDEPTH
 NW = 10
 
@@ -54,6 +54,12 @@ STRESS = [("s bf16 K5120 R1 (G10)", "bf16", 5120, 1, 1), ("s fp4 K2304 R2 (G2)",
           ("s fp8 K1280 R16 (G2)", "fp8", 1280, 16, 1), ("s fp8 K1280 R2 reuse", "fp8", 1280, 2, 0),
           ("s bf16 K5120 R1 (G10) b", "bf16", 5120, 1, 1), ("s fp8 K2304 R2 (G3)", "fp8", 2304, 2, 1),
           ("s fp4 K2304 R2 (G2) b", "fp4", 2304, 2, 1), ("s bf16 K512 R32 (G1) b", "bf16", 512, 32, 1)]
+
+# hbm-forks CF-SM: INT8 (fmt3) ops between DS-format ops (format transitions both ways; rows -128 / 127 / 0)
+INT8SEQ = [("i int8 K4096 R8", "int8", 4096, 8, 1), ("i bf16 K4096 R8", "bf16", 4096, 8, 1),
+           ("i int8 K1024 R32", "int8", 1024, 32, 1), ("i fp8 K2304 R2", "fp8", 2304, 2, 1),
+           ("i int8 K4096 R3", "int8", 4096, 3, 1), ("i fp4 K2304 R2", "fp4", 2304, 2, 1),
+           ("i int8 K512 R16", "int8", 512, 16, 1), ("i bf16 K512 R16", "bf16", 512, 16, 1)]
 
 # directed retire-order hazard (the HAZ = 0 negative must fail on the deeper smh pipeline): a deep-D op (BF16 G10:
 # D = DBF + 4 SLAT = 39) followed at once by a SINGLE-ROW shallow one (block-dot G1: D = 0, 8 lines), whose row
@@ -78,6 +84,9 @@ def seq_ops(name, serial):
     elif base == "stress":
         ops = MS.WARM + STRESS
         dep = [1] + [0] * len(STRESS)
+    elif base == "int8":
+        ops = MS.WARM + INT8SEQ
+        dep = [1] + [0] * len(INT8SEQ)
     elif base == "haz":
         ops = MS.WARM + HAZSEQ
         dep = [1] + [0] * len(HAZSEQ)
@@ -108,7 +117,7 @@ def cmd_run(a):
             foot = g["Gn"] * g["c"]
             rbase, ptr = ptr, (ptr + foot) % XDEPTH
         else:
-            assert resident is not None and resident["fmt"] == {"bf16": 0, "fp8": 1, "fp4": 2}[fmt] and \
+            assert resident is not None and resident["fmt"] == {"bf16": 0, "fp8": 1, "fp4": 2, "int8": 3}[fmt] and \
                 len(resident["X"][0]) == K, (tag, "a reused context needs the same vector, format and K")
             g = MS.gen_op("v41_" + fmt, R, K, a.nc, rng, X=resident["X"])
             assert g["Gn"] == resident["Gn"]
@@ -124,11 +133,14 @@ def cmd_run(a):
                   HAZ=a.haz, G1ASB=a.g1asb)
     if a.req_credit:
         params["REQCR"] = 1
+    if a.int8:
+        params["ENABLE_INT8"] = 1
+        params["PIPE_INT8"] = a.int8_pipe
     bdir = Path(a.workdir) / (f"build_pq_{a.sim}_nc{a.nc}_xb{xb}_haz{a.haz}_g{a.g1asb}" + ("_smh" if a.smh else "")
                               + ("_negflip" if a.neg_flip else "") + ("_muts1w" if a.mut_s1w else "") + ("_mutbf" if a.mut_bfdly else "")
-                              + ("_rc" if a.req_credit else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else ""))
+                              + ("_rc" if a.req_credit else "") + (f"_int8p{a.int8_pipe}" if a.int8 else "") + ("_nobyp" if a.mut_nobyp else "") + ("_movf" if a.mut_reqovf else "") + ("_mleak" if a.mut_reqleak else ""))
     run, cmd = compile_bench(a.sim, params, bdir, a.build_jobs, smh=a.smh, neg=a.neg_flip, mut=a.mut_s1w, mutbf=a.mut_bfdly,
-                             extra_defs=(["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []))
+                             extra_defs=(["-DOT_SMH_MUT_NOBYP"] if a.mut_nobyp else []) + (["-DOT_SMH_MUT_REQOVF"] if a.mut_reqovf else []) + (["-DOT_SMH_MUT_REQLEAK"] if a.mut_reqleak else []))
     with (d / "runtime.log").open("w") as log:
         subprocess.run(run + [f"+DIR={d}", f"+NOPS={len(ops)}"] + (["+REQ_STALLS"] if a.req_stalls else []) + (["+TRACE", f"+TRACE_FROM={a.trace_from}", f"+TRACE_TO={a.trace_to}"] if a.trace else []), check=True, cwd=d,
                        stdout=log,
@@ -235,6 +247,10 @@ def main(argv=None):
                     "bench receiver loses any beat sent without its ready two cycles earlier")
     ap.add_argument("--mut-reqovf", action="store_true", help="REQCR negative control: beats shown without permission")
     ap.add_argument("--mut-reqleak", action="store_true", help="REQCR negative control: one request in 64 popped, never shown")
+    ap.add_argument("--int8", action="store_true", help="--smh: the INT8 front built in (ENABLE_INT8 = 1; DS formats must "
+                    "be cycle-identical to the default build: CF-1)")
+    ap.add_argument("--int8-pipe", type=int, default=1)
+    ap.add_argument("--mut-nobyp", action="store_true", help="--int8 negative control: DS formats through the adapter")
     ap.add_argument("--trace-from", type=int, default=0)
     ap.add_argument("--trace-to", type=int, default=0)
     ap.add_argument("--sim", choices=("verilator", "iverilog"), default="verilator")
@@ -242,7 +258,7 @@ def main(argv=None):
     ap.add_argument("--workdir", default=None)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
-    a.workdir = a.workdir or tempfile.mkdtemp(prefix="smpq_")
+    a.workdir = str(Path(a.workdir or tempfile.mkdtemp(prefix="smpq_")).resolve())   # the run cwd is the case dir
     return cmd_run(a)
 
 

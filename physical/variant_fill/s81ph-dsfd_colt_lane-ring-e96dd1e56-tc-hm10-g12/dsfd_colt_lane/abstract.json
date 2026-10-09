@@ -1,0 +1,66 @@
+{
+  "name": "dsfd_colt_lane",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/routes/s81ph_dsfd_colt_lane_ring_e96dd1e56_tc_hm10_g12/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ],
+  "vt_flavours_added": [
+    "LVT"
+  ],
+  "files": {
+    "dsfd_colt_lane.lef": "862351fd5930c6778f1cc1a7e1ae6ea2af84971161c2637da8f819a70c4e6e4f",
+    "dsfd_colt_lane_ff.lib": "5d3d5fdf78b32381086b31ced91092653e5085e191cd0513b6b68a2bed69acf4",
+    "dsfd_colt_lane_ss.lib": "2a623ceaf18a52abb1d06be9ac8a8fb8a63ee9fdb82bfe7dc32daabf227b77e3"
+  },
+  "ok": true
+}

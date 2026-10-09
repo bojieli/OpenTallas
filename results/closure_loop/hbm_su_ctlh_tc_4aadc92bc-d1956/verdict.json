@@ -1,0 +1,102 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_su_ctlh_tc_4aadc92bc-d1956",
+ "block": "ot_su12_ctl16h",
+ "owner": "Claude:drive-1956",
+ "source_branch": "claude/hbm-blocks-tt-20261007",
+ "record_branch": "codex/closure-record-hbm_su_ctlh_tc_4aadc92bc-d1956",
+ "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_ctlh_tc_4aadc92bc-d1956",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 137.8,
+  "ff_ps": 2.92,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -184.7,
+  "ss_sensitivity_tns_ps": -24406.8,
+  "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_ctlh_tc_4aadc92bc-d1956/routes/hbm_su_ctlh_tc_4aadc92bc_d1956/corner_sta.json.tt.json",
+  "post_sdc": [
+   "physical/hbm_su_c12/signoff_833_fpio.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_su_ctlh_tc_4aadc92bc-d1956/routes/hbm_su_ctlh_tc_4aadc92bc_d1956/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_su_ctlh_tc_4aadc92bc-d1956/routes/hbm_su_ctlh_tc_4aadc92bc_d1956/work/orfs/logs/asap7/opentallas_ot_su12_ctl16h_asap7_su12_hbm_su_ctlh_tc_4aadc92bc_d1956/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "exact SU campaign with the half-rate reducer + controller rule runs on EPYC2 (hbm-su/out/campaign_rh{p0,p1}.json at 876d053c9, same RTL; negative campaign_rhn0 = OT_NEG_RHALF_NOGATE must fault); adoption gated on those",
+ "checks": {},
+ "calibration": null,
+ "cycles_added": null,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T02:20:04-07:00",
+ "job_spec": {
+  "name": "hbm_su_ctlh_tc_4aadc92bc-d1956",
+  "block": "ot_su12_ctl16h",
+  "owner": "Claude:drive-1956",
+  "purpose": "drive-1956 2026-10-08: one-per-block requeue of hbm_su_ctlh_tc_4aadc92bc (old flow, created 10-07T21:45) on the loop's current flow: HM-guard (route-time hold margin auto-reduced on floods), route-time FF hold at io_ref_routed (route-ff-ioref), CALIB-CORNER (calibrate at the route corner, TT-referenced IO SDC), early-fail gates. Stuckscan killed the old run: 5_1_grt hold repair flooded: 58964 endpoints in margin (> 20000), hold WNS now 24.869 ps (start 2.74), 11.5 h in step, old flow without the HM/stall guard. Same RTL, 0 new cycles. Prior purpose: OPTION B (setup repair at TT, hold at FF): SU c12 controller vehicle with the RHALF issue rule (reduction beats retire only in ph=1 cycles; pairs with the half-rate reducer *_c12h). Same recipe as ctl16m770_u26 (round 11: SS +55.30 at 833). IO false-pathed (SU-lane-internal vehicle).",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 60,
+  "source": {
+   "branch": "claude/hbm-blocks-tt-20261007",
+   "commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "IO false-pathed SU-lane-internal vehicle (signoff_833_fpio.sdc): no IO SDC to calibrate; same as ctl16m770_u26"
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_su_c12/signoff_833_fpio.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 PER=0.770 UTIL=26 PD=0.55 bash physical/hbm_su_c12/ctl_route_cl.sh {LABEL}${CL_LABEL_SUFFIX} ot_su12_ctl16h $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [],
+   "post_sdc": [
+    "physical/hbm_su_c12/signoff_833_fpio.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/hbm_su_c12/views/ot_su12_ctl16h_tt"
+   }
+  ],
+  "no_bench_reason": "exact SU campaign with the half-rate reducer + controller rule runs on EPYC2 (hbm-su/out/campaign_rh{p0,p1}.json at 876d053c9, same RTL; negative campaign_rhn0 = OT_NEG_RHALF_NOGATE must fault); adoption gated on those",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

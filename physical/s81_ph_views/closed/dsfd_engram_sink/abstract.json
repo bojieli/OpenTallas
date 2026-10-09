@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_engram_sink",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/engram-sink-pin-e5c627229-tt/routes/engram_sink_pin_e5c627229_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_engram_sink.lef": "a4e521cd2cc478b6d5dddc6c7d9a7abfefacb60da079a0b5ba282c567ee9fae0",
+    "dsfd_engram_sink_ff.lib": "fc10e0ba72a60bf089bd9c57f4472a354c739b4eae46ccdf879cbe8c5f9ebbb1",
+    "dsfd_engram_sink_ss.lib": "0789372b0aeca22140e03c91d1104fc36b2718927728421a5964bcb87eb19916"
+  },
+  "ok": true
+}

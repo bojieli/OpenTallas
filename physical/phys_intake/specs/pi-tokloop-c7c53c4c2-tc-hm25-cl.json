@@ -1,0 +1,78 @@
+{
+ "name": "pi-tokloop-c7c53c4c2-tc-hm25-cl",
+ "block": "ot_hbm_token_loop",
+ "element": "ot_hbm_token_loop",
+ "owner": "Claude:phys-intake",
+ "purpose": "phys-intake 2026-10-09 (owner: start physical work on every 'implementation recorded (no physical job)' element; dual-track '-cl' line). On-die AR/MTP token loop + stop rules + finite host-record FIFO (hbm-system R4 hfd_tloop, APPROVED S1; never queued). Variant: TC route / option B (TT setup, FF hold, DRC 0), HM 25 ps. Exact bench + mutant: physical/phys_intake/bench.sh hbm_token_loop (pos PASS / mutant FAIL on this source).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/phys-intake-20261009",
+  "commit": "c7c53c4c21e03b3c37bc1c8a2ebd890e7e0f8df8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "hbm_token_loop_exact",
+    "cmd": "bash physical/phys_intake/bench.sh hbm_token_loop pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "PHYSINTAKE_hbm_token_loop_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hbm_token_loop_mutant",
+    "cmd": "bash physical/phys_intake/bench.sh hbm_token_loop neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "PHYSINTAKE_hbm_token_loop_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_token_loop --source rtl/hbm_accel/control/ot_hbm_token_loop.sv --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_token_loop --source rtl/hbm_accel/control/ot_hbm_token_loop.sv --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 8,
+   "peak_ram_gb": 12
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (RTL as written)",
+ "merge_target": null
+}

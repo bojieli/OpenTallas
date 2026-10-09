@@ -1,0 +1,43 @@
+{
+ "master": "hfd_cmdproc",
+ "hgi_unit": "cp",
+ "note": "HGI-1 command processor (hgi-takeover 2026-10-09): ot_hgi_cp_die = hbm-forks ot_hgi_cp (config path + v1.0 sequencer) + loader link stations + VM read client + per-unit dispatch credits. One block (no N / S split). Units without a record adapter yet (ux_*) and the legacy SM launch tree (c*), SU (t_su_*), barrier, router and legacy coll config buses are not driven by the HGI CP: they show as ties until hgi-adapters lands the unit adapters. Bench rtl/hbm_accel/generic/tb/tb_hgi_cp_die_seq.sv: all sequencer vectors through the die binding exact.",
+ "instances": [
+  {
+   "name": "cpd",
+   "module": "ot_hgi_cp_die",
+   "file": "rtl/hbm_accel/generic/ot_hgi_cp_die.sv",
+   "params": {
+    "USE_MACRO": 1
+   },
+   "bind": {
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "lcp": "die:f_hgi_loader[0:415]",
+    "cpl": "die:t_hgi_loader[0:514]",
+    "vmq": "die:t_hgi_vmq[0:338]",
+    "vmr": "die:f_hgi_vmr[0:274]",
+    "vmstat": "die:f_hgi_vmstat[0:19]",
+    "coll_rec": "die:t_hgi_coll[0:968]",
+    "coll_ret": "die:f_hgi_coll[0:3]",
+    "quant_rec": "die:t_hgi_quant[0:683]",
+    "quant_ret": "die:f_hgi_quant[0:3]",
+    "cfg_bus": "die:t_hgi_cfg_coll[0:40]",
+    "ux_v": "fold",
+    "ux_rdy": "cfg",
+    "ux_done": "cfg",
+    "ux_fault": "cfg",
+    "wr_quiet": "cfg"
+   }
+  }
+ ],
+ "macros": [
+  "ot_sram_1r1w_256x256_m2_r2c2"
+ ],
+ "kept_out_regs": true,
+ "face_stages": 5,
+ "open_items": [
+  "ux_* (12 units) wait for the hgi-adapters record adapters",
+  "wr_quiet needs the DMA / svc write-visibility signal"
+ ]
+}
