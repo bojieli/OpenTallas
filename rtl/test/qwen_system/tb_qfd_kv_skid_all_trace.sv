@@ -4,7 +4,7 @@ module tb_qfd_kv_skid_all_trace;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,request=0,tok_v=0;
  integer fw,ret,tile,ntiles,total,count,sent,seen,cy,bound,fh,scan,i,t,errors=0,all_sent=0,all_seen=0;
- integer offers[0:1023],pcs[0:1023],seqs[0:1023];
+ integer offers[0:1023],pcs[0:1023],seqs[0:1023],credits_retired=0;
  reg [2047:0] trace_name;
  reg [41:0] fv;reg [33:0] rc;
  reg [518:0] fd[0:41];
@@ -24,6 +24,7 @@ module tb_qfd_kv_skid_all_trace;
    fv<={fv[40:0],grant};rc<={rc[32:0],free_credit};fd[0]<={7'(sent%128),payload};
    for(i=1;i<42;i=i+1)fd[i]<=fd[i-1];
    if(grant)sent=sent+1;
+   if(free_credit)credits_retired=credits_retired+1;
    #1;
    if(tfault||rfault)$fatal(1,"land_fault tile%0d depth%0d",tile,DEPTH);
    if(ce && mask==lm)begin
@@ -42,7 +43,7 @@ module tb_qfd_kv_skid_all_trace;
    scan=$fscanf(fh,"%d %d %d %d\n",tile,count,fw,ret);
    if(scan!=4 || count>1024 || fw>42 || fw<1 || ret>34 || ret<1)$fatal(1,"tile header");
    for(i=0;i<count;i=i+1)begin scan=$fscanf(fh,"%d %d %d\n",offers[i],pcs[i],seqs[i]);if(scan!=3)$fatal(1,"word header");end
-   @(negedge clk);rst_n=0;request=0;tok_v=0;sent=0;seen=0;
+   @(negedge clk);rst_n=0;request=0;tok_v=0;sent=0;seen=0;credits_retired=0;
    repeat(4)@(negedge clk);rst_n=1;
    bound=offers[count-1]+(fw+ret+12)*count+32;
    for(cy=0;cy<bound;cy=cy+1)begin
@@ -53,6 +54,7 @@ module tb_qfd_kv_skid_all_trace;
     end
    end
    if(sent!=count || seen!=count || !drained)$fatal(1,"trace incomplete tile%0d sent%0d seen%0d",tile,sent,seen);
+   if(credits_retired!=count || tx.credits!=DEPTH)$fatal(1,"actual ACK/credit count tile%0d retired%0d",tile,credits_retired);
    all_sent=all_sent+sent;all_seen=all_seen+seen;
   end
   if(all_sent!=total || all_seen!=total)$fatal(1,"total mismatch");
