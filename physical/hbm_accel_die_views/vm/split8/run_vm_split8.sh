@@ -27,7 +27,7 @@ python3 $T/check_vm_tiles.py $O/m2_4/trace_dut.hex $O/m2_8/trace_dut.hex > $O/m2
 b m3 $S/tb_vm_split8.sv "$HALVES" -DSPLIT8 -DMODE=3 -DSEED=1 && (cd $O && ./m3.obj/sim > m3.log 2>&1); grep "VM_PORT_DEPTH" $O/m3.log
 grep -Eq "VM_PORT_DEPTH trace_dut.hex wr= *ONE_DEPTH rd= *ONE_DEPTH" $O/m3.log || { echo "split8 port depth not one-depth"; ok=0; }
 grep -Eq "VM_PORT_DEPTH trace_ref.hex wr= *SKEWED" $O/m3.log && echo "VM_PORT_DEPTH_NEG_DETECTED (monolithic wr skew)" || { echo "port-depth negative not detected"; ok=0; }
-for m in XBUS SEAM; do
+for m in XBUS SEAM SEATP; do   # SEATP: safe-hbm S-D3 root LOAD skips the seat load (must FAIL mode 1)
   b neg_$m $S/tb_vm_split8.sv "$HALVES" -DSPLIT8 -DMODE=1 -DSEED=1 -DMUT_$m && (cd $O && ./neg_$m.obj/sim > neg_$m.log 2>&1); grep VM_TILES $O/neg_$m.log
   grep -q "VM_TILES FAIL" $O/neg_$m.log && echo "VM_SPLIT8_NEG_${m}_DETECTED" || { echo "neg $m not detected"; ok=0; }
 done
