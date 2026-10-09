@@ -36,7 +36,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 import dsrom_wavefront_rtl_campaign as W  # noqa: E402  (array campaign flags, ISA pipeline, images)
 
 A, P, I, V, G, AC, np = W.A, W.P, W.I, W.V, W.G, W.AC, W.np
-BODY2 = lambda L: [list(range(0, 19)), [19], [20], list(range(21, L))]
+BODY2 = lambda L: [list(range(KS[0])), [KS[0]], [KS[1]], list(range(KS[1] + 1, L))]
 KS = (1, 2)
 BAD = 3
 ORDER, CFG = "basic", "cfg_stage2"
@@ -342,9 +342,12 @@ def main():
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--output", type=Path)
     ap.add_argument("--order", default="basic", choices=("basic", "deep"))
+    ap.add_argument("--source-layer", type=int, default=19, choices=(8, 14, 19),
+                    help="First measured stage; 14 exercises ratio2 compressor rollback plus Engram, 19 is original WFC vehicle")
     a, rest = ap.parse_known_args()
     assert set(rest) <= {"--all-unit", "--kv-hbm"}, rest   # appended by the array campaign import
-    global ORDER, CFG
+    global ORDER, CFG, KS
+    KS = (a.source_layer, a.source_layer + 1)
     ORDER, CFG = a.order, ("cfg_stage2" if a.order == "basic" else f"cfg_stage2_{a.order}")
     if a.action == "prepare":
         prepare(a.scratch, a.gold)
