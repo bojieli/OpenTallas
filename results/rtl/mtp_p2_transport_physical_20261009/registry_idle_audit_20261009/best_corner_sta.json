@@ -1,0 +1,87 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl/routes/mtp_p2_transport_92c7dc0aa_tc_a_hm0_cl/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_mtp_p2_ordered_rows_cl\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 770.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_cl",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": -166.78,
+  "tns_ps": -164466.1,
+  "worst_register_d_slack_ps": -166.78,
+  "worst_reg_to_reg_slack_ps": -166.78,
+  "worst_input_to_reg_slack_ps": 19.48,
+  "worst_output_port_slack_ps": -113.9,
+  "violating_d_pins": 2928,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "61f7f011515810897e0b3c40177ba7107bdc8088dd0fa2f12a7c02916d71ba12",
+  "spef_sha256": "64a38e50a26befa3e178c0ad3575161856b79795cf8252aab38ac2c1a32b4016",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "769c404992f12906347795a015201b740032e0b3e96706f131108960e00557ab"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -577.12,
+  "tns_ps": -2507956.9,
+  "worst_register_d_slack_ps": -577.12,
+  "worst_reg_to_reg_slack_ps": -577.12,
+  "worst_input_to_reg_slack_ps": -76.14,
+  "worst_output_port_slack_ps": -506.27,
+  "violating_d_pins": 9185,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "61f7f011515810897e0b3c40177ba7107bdc8088dd0fa2f12a7c02916d71ba12",
+  "spef_sha256": "64a38e50a26befa3e178c0ad3575161856b79795cf8252aab38ac2c1a32b4016",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "769c404992f12906347795a015201b740032e0b3e96706f131108960e00557ab"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": -39.81,
+  "tns_ps": -474.3,
+  "worst_register_d_slack_ps": -6.3,
+  "worst_reg_to_reg_slack_ps": -6.3,
+  "worst_input_to_reg_slack_ps": 16.94,
+  "worst_output_port_slack_ps": -39.81,
+  "violating_d_pins": 11,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "61f7f011515810897e0b3c40177ba7107bdc8088dd0fa2f12a7c02916d71ba12",
+  "spef_sha256": "64a38e50a26befa3e178c0ad3575161856b79795cf8252aab38ac2c1a32b4016",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "769c404992f12906347795a015201b740032e0b3e96706f131108960e00557ab"
+ },
+ "post_sdc": {
+  "physical/mtp_p2_transport/gen/signoff_p2.sdc": "0a7c2300ae0142abfadd3c525c3452bf1c80ffe7b82129ea3e2e48721b2a4e18"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -577.12,
+ "closes_signoff": false
+}

@@ -1,0 +1,90 @@
+{
+ "name": "mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl",
+ "block": "ot_mtp_p2_ordered_rows_general4bank",
+ "owner": "Claude:struct-close",
+ "purpose": "struct-close 2026-10-09 (coordinator: take p2-transport; no live variant): both 92c7dc0aa variants stopped at 4_1_cts hold repair past the buffer cap (24,044 / 23,130 buffers, hold WNS -46.6 / -52.6, 12.4k endpoints in margin) before any setup verdict: the flood rule (HM 0 at route, acceptance FF >= 0 after the post-route mm hold ECO). Same RTL / benches.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-epyc3"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/drive-0158-20261009",
+  "commit": "92c7dc0aa"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "p2cl_exact_conflict",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Irtl/common -s tb_mtp_p2_ordered_rows -DP2_CL -DP2_CONFLICT -Ptb_mtp_p2_ordered_rows.MUT_ORDER=0 -o {RUN}/bench/m0.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows_cl.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv rtl/common/ot_secded.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv && vvp -n {RUN}/bench/m0.vvp | tee {RUN}/bench/m0.log; grep -q 'P2 CONFLICT PASS' {RUN}/bench/m0.log && grep -q '^P2 PASS' {RUN}/bench/m0.log",
+    "expect": "pass",
+    "pass_regex": "^P2 PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "p2cl_neg_mut_order",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -Irtl/common -s tb_mtp_p2_ordered_rows -DP2_CL -Ptb_mtp_p2_ordered_rows.MUT_ORDER=1 -o {RUN}/bench/m1.vvp rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows_cl.sv rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv rtl/common/ot_secded.sv rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv && vvp -n {RUN}/bench/m1.vvp | tee {RUN}/bench/m1.log; grep -q '^P2 PASS' {RUN}/bench/m1.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "cmd": "export HM=0.000; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk"
+  },
+  "route": {
+   "cmd": "export HM=0.000; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/mtp_p2_transport/gen/signoff_p2.sdc physical/mtp_p2_transport/model.json {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "routed_at_TT",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "post_sdc": [
+   "physical/mtp_p2_transport/gen/signoff_p2.sdc"
+  ]
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ActualA/SU clockplan unavailable, own calibrated generic250ps blockIO pathfinding only. RealSRAMclkq singlecycle/noMC; no production topology closure."
+ },
+ "cycles_added": "+2 edges on producer -> SRAM write (station + accept register); drain/read/queue unchanged; ~+2 cycles per P2 transaction (inside the approved +0.2 us/step)",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.0,
+ "route_corner": "TC",
+ "merge_target": null
+}

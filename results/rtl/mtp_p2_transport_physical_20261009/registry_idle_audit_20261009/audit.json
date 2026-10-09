@@ -1,0 +1,230 @@
+{
+ "timestamp_utc": "2026-10-09T14:06:36.941166+00:00",
+ "registry_row": {
+  "element": "ot_mtp_p2_ordered_rows_general4bank",
+  "target": "Other",
+  "variants": [],
+  "category": "needs redesign (no live job)",
+  "via": "",
+  "purpose": "Minimum finite protected P2 component pathfinding: actual12SRAMs,full320flits,general4bankthreeexpert+shared transport",
+  "jobs": 5,
+  "live": 0,
+  "failed": 2,
+  "closed_jobs": 0,
+  "best": {
+   "tt": -166.78,
+   "ff": -39.81,
+   "ss": -577.12,
+   "drc": 0,
+   "job": "mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl",
+   "corner": "TT",
+   "source_commit": "92c7dc0aa"
+  },
+  "area": {
+   "die": 144000,
+   "core": 140788,
+   "util": 0.40266
+  },
+  "revoked": null,
+  "latest": {
+   "t": 1791553446.0,
+   "job": "mtp-p2-transport-8ed8e9762-tt-remote",
+   "status": "EARLY_FAIL_SETUP",
+   "text": "route bulk released (drive-resume disk cleanup, EARLY_FAIL_SETUP; MB before/after 2474 1479); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+  },
+  "closed_t": null,
+  "owner": "Codex:mtp-markov-route-P2",
+  "evidence_history": [],
+  "qualification": null,
+  "superseded": null
+ },
+ "before_owner_report_idle": 51,
+ "after_current_idle": 44,
+ "before_target_live": 0,
+ "after_target_live": 0,
+ "jobs": [
+  {
+   "name": "mtp-p2-transport-8ed8e9762-tt-remote",
+   "status": "EARLY_FAIL_SETUP",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote",
+   "source": {
+    "branch": "codex/mtp-p2-route-20261009",
+    "commit": "8ed8e9762"
+   },
+   "commit_full": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+   "route": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "hold_margin_ns": 0.05,
+   "events": [
+    "2026-10-09T01:55:49-07:00 EARLY_FAIL_SETUP: post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints",
+    "2026-10-09T06:44:06-07:00 route bulk released (drive-resume disk cleanup, EARLY_FAIL_SETUP; MB before/after 2474 1479); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+   ],
+   "benches": {}
+  },
+  {
+   "name": "mtp-p2-transport-92c7dc0aa-tc-a-cl",
+   "status": "EARLY_FAIL_HOLD",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-p2-transport-92c7dc0aa-tc-a-cl",
+   "source": {
+    "branch": "claude/drive-0158-20261009",
+    "commit": "92c7dc0aa"
+   },
+   "commit_full": "92c7dc0aa3ad64d3a787b8354448d18246bbcd7d",
+   "route": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "hold_margin_ns": 0.05,
+   "events": [
+    "2026-10-09T02:55:29-07:00 parallel calibrate launched (calibrate.a1c1) beside route",
+    "2026-10-09T03:21:45-07:00 EARLY_FAIL_HOLD: 4_1_cts hold repair past the buffer cap: 24044 buffers > 23006 (cap 100000, 76688 instances, WNS gain 0.0 ps / 2000 it); hold WNS now -46.6 ps (start -73.65), 9790 it / 24044 buffers, 12398 endpoints in margin, 0.3 h in step, HM guard present"
+   ],
+   "benches": {
+    "bench_p2cl_exact_conflict": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "P2 CONFLICT PASS same-bank lane pairs: lane 0 first, lane 1 held, 320 flits in order\nP2 PASS full320flits exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles1268\nrtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:135: $finish called at 1057512000 (1fs)\n",
+     "track": "parallel"
+    },
+    "bench_p2cl_neg_mut_order": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:55: P2 FAIL identity/order at result0\n       Time: 276471000  Scope: tb_mtp_p2_ordered_rows\n",
+     "track": "parallel"
+    }
+   }
+  },
+  {
+   "name": "mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl",
+   "status": "NEEDS_RTL",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl",
+   "source": {
+    "branch": "claude/drive-0158-20261009",
+    "commit": "92c7dc0aa"
+   },
+   "commit_full": "92c7dc0aa3ad64d3a787b8354448d18246bbcd7d",
+   "route": "export HM=0.000; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "hold_margin_ns": 0.0,
+   "events": [
+    "2026-10-09T05:58:05-07:00 verdict at the ROUTED insertion: TT -166.78 / FF -39.81 -> NOT CLOSED",
+    "2026-10-09T06:01:12-07:00 NEEDS_RTL: TT -166.78 / FF -39.81 ps / DRC 0 (line TT >= +0 / FF >= +0 / DRC 0)"
+   ],
+   "benches": {
+    "bench_p2cl_exact_conflict": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "P2 CONFLICT PASS same-bank lane pairs: lane 0 first, lane 1 held, 320 flits in order\nP2 PASS full320flits exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles1268\nrtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:135: $finish called at 1057512000 (1fs)\n",
+     "track": "parallel"
+    },
+    "bench_p2cl_neg_mut_order": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "",
+     "track": "parallel"
+    }
+   }
+  },
+  {
+   "name": "mtp-p2-transport-92c7dc0aa-tc-b-cl",
+   "status": "EARLY_FAIL_HOLD",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-p2-transport-92c7dc0aa-tc-b-cl",
+   "source": {
+    "branch": "claude/drive-0158-20261009",
+    "commit": "92c7dc0aa"
+   },
+   "commit_full": "92c7dc0aa3ad64d3a787b8354448d18246bbcd7d",
+   "route": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MULTI_VT=lvt; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "hold_margin_ns": 0.05,
+   "events": [
+    "2026-10-09T03:30:32-07:00 parallel calibrate: measured SS 413 / FF 340 vs assumed 413 / 340 (max delta 0 ps)",
+    "2026-10-09T03:54:03-07:00 EARLY_FAIL_HOLD: 4_1_cts hold repair past the buffer cap: 23130 buffers > 23080 (cap 100000, 76933 instances, WNS gain 0.0 ps / 2000 it); hold WNS now -52.6 ps (start -76.34), 10630 it / 23130 buffers, 12535 endpoints in margin, 0.5 h in step, HM guard present"
+   ],
+   "benches": {
+    "bench_p2cl_exact_conflict": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "P2 CONFLICT PASS same-bank lane pairs: lane 0 first, lane 1 held, 320 flits in order\nP2 PASS full320flits exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles1268\nrtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:135: $finish called at 1057512000 (1fs)\n",
+     "track": "parallel"
+    },
+    "bench_p2cl_neg_mut_order": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:55: P2 FAIL identity/order at result0\n       Time: 276471000  Scope: tb_mtp_p2_ordered_rows\n",
+     "track": "parallel"
+    }
+   }
+  },
+  {
+   "name": "mtp-p2-transport-92c7dc0aa-tc-b-hm0-cl",
+   "status": "REFUSED",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/mtp-p2-transport-92c7dc0aa-tc-b-hm0-cl",
+   "source": {
+    "branch": "claude/drive-0158-20261009",
+    "commit": "92c7dc0aa"
+   },
+   "commit_full": "92c7dc0aa3ad64d3a787b8354448d18246bbcd7d",
+   "route": "export HM=0.000; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MULTI_VT=lvt; P2_CL=1 bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+   "hold_margin_ns": 0.0,
+   "events": [
+    "2026-10-09T04:52:33-07:00 calibrated insertion CK_SS_MEAN=413 CK_SS_MIN=379 CK_SS_MAX=453 CK_TT_MEAN=413 CK_TT_MIN=379 CK_TT_MAX=453 CK_FF_MEAN=340 CK_FF_MIN=309 CK_FF_MAX=378 CK_SSLIB_MEAN=533 CK_SSLIB_MIN=495 CK_SSLIB_MAX=575 CK_ROUTE_REF=TT",
+    "2026-10-09T04:53:31-07:00 REFUSED: 3 routes per source commit: ot_mtp_p2_ordered_rows_general4bank@92c7dc0aa already routed by jobs ['mtp-p2-transport-92c7dc0aa-tc-a-cl', 'mtp-p2-transport-92c7dc0aa-tc-b-cl', 'mtp-p2-transport-92c7dc0aa-tc-a-hm0-cl']"
+   ],
+   "benches": {
+    "bench_p2cl_exact_conflict": {
+     "expect": "pass",
+     "rc": 0,
+     "ok": true,
+     "tail": "P2 CONFLICT PASS same-bank lane pairs: lane 0 first, lane 1 held, 320 flits in order\nP2 PASS full320flits exact ID/order/SECDED, wrong-ID/epoch/word/last/duplicate/UE-abort rejected cycles1268\nrtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:135: $finish called at 1057512000 (1fs)\n",
+     "track": "parallel"
+    },
+    "bench_p2cl_neg_mut_order": {
+     "expect": "fail",
+     "rc": 1,
+     "ok": true,
+     "tail": "FATAL: rtl/experimental/mtp_p2_ordered_20261009/tb_mtp_p2_ordered_rows.sv:55: P2 FAIL identity/order at result0\n       Time: 276471000  Scope: tb_mtp_p2_ordered_rows\n",
+     "track": "parallel"
+    }
+   }
+  }
+ ],
+ "eligible_untried_variants": 0,
+ "source": "92c7dc0aa3ad64d3a787b8354448d18246bbcd7d",
+ "rtl": "rtl/experimental/mtp_p2_ordered_20261009/ot_mtp_p2_ordered_rows_cl.sv",
+ "recipe": "physical/mtp_p2_transport/route.sh P2_CL=1",
+ "paths": {
+  "TT": "out_identity[18]$_DFFE_PN0P_ -> enabled.acc_data[1][15]$_DFF_P_ / -166.78ps",
+  "FF": "done$_DFF_PN0_ -> done / -39.81ps",
+  "FF_internal": -6.3
+ },
+ "blockers": [
+  "Confirmed review-0242 B1 rejects general4bank retries; confirmed review-0258 I3 approves selected line only, explicitly forbids general4bank rerun.",
+  "Source92c7dc0aa already consumed three routes: RVT HM50, LVT HM50, RVT HM0; LVT HM0 refused by per-source three-route cap.",
+  "drive-resume DR-3 says family exhausted and requires Claude row-select fanout register (+1); no implemented/source-pinned approved successor located.",
+  "Latest owner takeover: all design streams Claude; no new Codex changes/builds/routes."
+ ],
+ "action": "No launch or registry mutation. Preserve historical general4bank evidence; Claude owns retirement clarification/selected-line continuation.",
+ "hashes": {
+  "tt_full.log": "57c15b04175bc52eb873ba2a0aca174317620b2eef31aeed8446c46c64ec0679",
+  "best_signoff.sdc": "0a7c2300ae0142abfadd3c525c3452bf1c80ffe7b82129ea3e2e48721b2a4e18",
+  "best_calib.json": "d60839ce5cf6517e1c685063b5c8b98ef8a2f5cb7af1aaa9a92a5fa3bd9e5976",
+  "best_recipe.json": "1439e0d1dd6558763cef01b773f9f467a7e386dad9be59aa5779bf88c9fa86ab",
+  "best_mutant.log": "ab3caeb01b1c564c533fc6e29f38c96f2bf90bb62c165ef7ed8ccd698f71c760",
+  "best_corner_sta.json": "db6270dd5e7df6464f9cf66b99fc4ace265c6679d64bcec9c9d84cbecf0cf953",
+  "path_summary.json": "f5eaf1ca6f11a8eae5332e7946f1daacc86aced04fe96707b2eb9500deada029",
+  "ff_full.log": "5adc286123bf247a3d9b919be23a6058d20c0d5b5c7f1113d8aed523a304cd5a",
+  "tt_actual.tcl": "2f0f33b4f03c9a33676f73a9bb9bd082e5da70e4c8092ecaaa441bbd004de608",
+  "best_exact.log": "90d704c4cfb31c7ef0d76191bcd86aba035577815385a17ebc88cd7397505c3c",
+  "ff_actual.tcl": "358713b4e87ebe9b7fe44c4942c79fa8702f9ac74a5387a419f128b28e0eca03",
+  "best_routed_ioref.json": "c14c58e2e600b02112dec153ee51f9b6b33ff0a4d6ff2575627f52e741796411"
+ },
+ "idle_definition": "Exact gaps/registry_gaps.py: open category excluding closed/superseded/cancelled only, live0",
+ "narrow_failure_category_subset_count": 18,
+ "idle_sample_utc": "2026-10-09T14:07:05.862648+00:00"
+}
