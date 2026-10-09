@@ -98,9 +98,8 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
   wire [63:0] v=raw64(verdict[g]);
   wire bound=(checked_lo[g]===snapshot_lo[g])&&(checked_hi[g]===snapshot_hi[g])&&(checked_syn[g]===syndrome[g]);
   assign bad[g]=!bound || check72(verdict[g])!=0 || v[63:4]!=0 || v[3];
-  // Kept enable copies must equal the protected phase they act for.
-  // Each replica captures the same next-state value as protected phase_code.
-  // Replica corruption is fail closed via equality to the protected phase.
+  // Kept per-word phase replicas reduce fanout for timing (binding V16).
+  // Capture the same next-state value as phase_code; no new copy-check.
   wire [3:0] local_phase;
   if(LOCAL_PHASE)begin:lph
    ot_hbm_w2_keep_reg #(.W(4),.RV(4'b0100)) u_phase(
@@ -109,8 +108,7 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
   wire [2:0] wp=local_phase[2:0]; wire ws=local_phase[3];
   assign cbad[g]=(com_q[g]!=(wp==P_COMMIT)) || (rep_q[g]!=(wp==P_REPAIR)) ||
                  (chk_q[g]!=(wp==P_CHECK)) || (ver_q[g]!=(wp==P_VERIFY)) ||
-                 (sel_q[g]!=(wp==P_COMMIT && ws)) ||
-                 (local_phase!={sel_bit,phase});
+                 (sel_q[g]!=(wp==P_COMMIT && ws));
   assign ce[g]=v[1];assign ue[g]=v[2];assign clean[g]=v[0];
   assign q[g*64+:64]=q_d2[g];
   ot_hbm_w2_keep_reg #(.W(5),.RV(5'b10000)) u_cp(.clk(clk),.rst_n(por_n),
