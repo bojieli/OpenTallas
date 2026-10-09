@@ -31,7 +31,12 @@
       "tools/orfs_hold_mm.py",
       "tools/orfs_hold_mm.tcl",
       "results/physical/hbm_coll_capture_20261009/receipt.json",
-      "rtl/hbm_accel/tu/ot_hcoll_port.sv"
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv",
+      "tools/hbm_coll_port_interior_model.py",
+      "tools/hbm_coll_capture_placement_model.py",
+      "physical/hbm_accel_die_views/coll/rtl_ps/interior_pins.tcl",
+      "results/physical/hbm_coll_capture_20261009/gate.log",
+      "results/physical/hbm_coll_capture_20261009/negative.log"
     ]
   },
   "route_hold_corners": "mm",
