@@ -1,0 +1,36 @@
+{
+  "source_commit": "f17c38db37e24e7fbe8baba48462905b0823cc14",
+  "source_sha256": [
+    {
+      "path": "rtl/common/ot_secded.sv",
+      "sha256": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+      "size_bytes": 2943
+    },
+    {
+      "path": "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv",
+      "sha256": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397",
+      "size_bytes": 3077
+    },
+    {
+      "path": "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv",
+      "sha256": "15d214fd25f745a00f0546165c524a860d867149508f1bb88631390c84c56377",
+      "size_bytes": 8870
+    }
+  ],
+  "policy": "Owner Option B relayed by parent: TT setup >= 0 ps, FF hold >= 0 ps, DRC 0; SS sensitivity; 833.333 ps with 60/25 ps uncertainty",
+  "verdict": "FAIL",
+  "tt_setup_ps": -658.36,
+  "tt_internal_setup_ps": -108.74,
+  "ss_setup_sensitivity_ps": -1137.35,
+  "ss_internal_setup_ps": -501.66,
+  "ff_hold_ps": 4.54,
+  "drc": 0,
+  "max_slew_violations": 14,
+  "adoption": "NO ADOPTION",
+  "limitations": [
+    "standalone pathfinding, not actual native TU clock or full-die binding",
+    "route snapshot predates corrected falling-valid packet fault handling; timing diagnosis only",
+    "raw physical.json headline mixes configured corner metrics; exact corner_sta.json is authoritative for TT/SS/FF split",
+    "no settings rescue or new variant launched"
+  ]
+}
