@@ -23,14 +23,6 @@
       },
       "external_jobs": [
         {
-          "name": "qwen-quarter-fullshape-lint",
-          "pid": 1755537,
-          "command_match": "--lint-only -Wno-fatal --top-module ot_qwen_r25_su_quarter",
-          "peak_ram_gb": 128,
-          "owner": "Codex:qwen_hbm_unify",
-          "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
-        },
-        {
           "name": "qwen-fmt3-wide-calibration",
           "pid": 1835875,
           "command_match": "qwen-fmt3-wide-2831b78d5/src/tools/qwen_r25_fmt3_physical.py --wide",
@@ -45,38 +37,6 @@
           "peak_ram_gb": 64,
           "owner": "Codex:qwen_hbm_unify/fmt3",
           "reason": "Owner verified admitted fullshape pipeline calibration; persistent64GiB future inventory until terminal"
-        },
-        {
-          "name": "mtp-ring-dyn-fixed-simulation-positive",
-          "pid": 1855952,
-          "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
-          "peak_ram_gb": 1,
-          "owner": "Codex:mtp_numerical_repair",
-          "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains"
-        },
-        {
-          "name": "mtp-ring-dyn-fixed-simulation-negative",
-          "pid": 1855953,
-          "command_match": "mtp-ring-dyn-successor-aff63db74/src/tools/mtp_exact_wavefront2.py run",
-          "peak_ram_gb": 1,
-          "owner": "Codex:mtp_numerical_repair",
-          "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains"
-        },
-        {
-          "name": "mtp-ring-dyn-same-source19-build-positive",
-          "pid": 1915153,
-          "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
-          "peak_ram_gb": 1,
-          "owner": "Codex:mtp_numerical_repair",
-          "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains"
-        },
-        {
-          "name": "mtp-ring-dyn-same-source19-build-negative",
-          "pid": 1915154,
-          "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
-          "peak_ram_gb": 1,
-          "owner": "Codex:mtp_numerical_repair",
-          "reason": "Compilation completed; actual fixed simulators1930595/1930242 RSS368000/367840KiB. Measured1GiB simulation envelope, no24GiB build growth remains"
         }
       ]
     },
@@ -243,14 +203,6 @@
           "peak_ram_gb": 120,
           "owner": "Codex:hbm_continuation/selector_capture",
           "reason": "Admitted actual6903pin native T1 LA7 MEMV1 READLAT2 EXPOSE1; sourceaa7127b87, inventory77952 override, stablelauncher tracks120GiB futuregrowth"
-        },
-        {
-          "name": "s81-bf-correct-tt-reference-sta",
-          "pid": 2587827,
-          "command_match": "reference_probe.sh",
-          "peak_ram_gb": 40,
-          "owner": "Codex:s81_continuation",
-          "reason": "Actual admitted read-only sameCG0 finalODB/SPEF/actualTT+FF libraries,730ps originalroute clock60/25uncertainty; expected40GiB originalphysicalinventory until terminal, no P&R/restart"
         }
       ]
     },
@@ -273,20 +225,28 @@
       "min_free_ram_gb": 16,
       "external_jobs": [
         {
-          "name": "ha2-owner-opposite-phase-minimum-gate",
-          "pid": 299770,
-          "command_match": "ha2-owner-cx-20261009/run-gate.sh",
-          "peak_ram_gb": 12,
-          "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-          "reason": "Actual admitted fullPF384 NC8 NPT8 INJ2 owner positive/changed-phase mutant minimum; pinnedVerilator5.050 source31f18f89a. Owner fullshape inventory12GiB envelope, soft capacity reservation until terminal"
-        },
-        {
           "name": "s81-bf-input-holdseats-exact-gate",
           "pid": 303289,
           "command_match": "bf_txn_bench.py",
           "peak_ram_gb": 40,
           "owner": "Codex:s81_continuation",
           "reason": "Actual admitted fullshape INPUT_HOLD_SEATS4 CG0 source82a708f5e,8compiler inventory. Frontend1.64GiB observed, peak unmeasured;40GiB original conservative build envelope until phase/terminal evidence"
+        },
+        {
+          "name": "ha2-owner-phase-gate-r3",
+          "pid": 309330,
+          "command_match": "ha2-owner-cx-20261009/run-gate-r3.sh",
+          "peak_ram_gb": 12,
+          "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+          "reason": "Actual verified live fullPF384 owner gate; falling-fast-edge audit successor12GiB expected build inventory, preserve progressing build. No route."
+        },
+        {
+          "name": "ha2-owner-phase-gate-r4",
+          "pid": 310774,
+          "command_match": "ha2-owner-cx-20261009/run-gate-r4.sh",
+          "peak_ram_gb": 12,
+          "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+          "reason": "Actual verified live fullPF384 owner gate; falling-fast-edge audit successor12GiB expected build inventory, preserve progressing build. No route."
         }
       ]
     },
@@ -340,7 +300,8 @@
         "/": 150
       },
       "bench_offload": true,
-      "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet."
+      "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet.",
+      "external_jobs": []
     }
   ]
 }
