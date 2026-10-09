@@ -1,0 +1,28 @@
+{
+ "schema": "opentallas.engram-source-rewind-gate.v1",
+ "retained_objects": "/tmp/engram-source-rewind-51e3zn5p",
+ "qualification": "minimum actual SOURCE event engine, HARDextra2/real SRAM RD_PIPE and released-map64user lead; native594 receive and full program/die integration separately unqualified",
+ "cases": {
+  "0": {
+   "returncode": -6,
+   "stdout": "SOURCE_DIAG cycles10000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles20000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles30000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles40000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles50000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles60000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles70000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles80000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles90000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles100000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles110000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles120000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles130000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles140000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles150000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles160000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles170000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles180000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles190000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\nSOURCE_DIAG cycles200000 windows384 rewinds0 finishes0 highest0-1 phase00 cursor01 st0 kind1 nuok0 next64 rq0 pq0 rnf6 sq0 ready1 rb0 out0\n[0] %Fatal: tb_dsrom_engram_source_rewind.sv:42: Assertion failed in TOP.tb_dsrom_engram_source_rewind: SOURCE rewind drain timeout\n%Error: /srv/opentallas-scratch/engram-source-rewind-r1/rtl/test/tb_dsrom_engram_source_rewind.sv:42: Verilog $stop\nAborting...\n",
+   "stderr": "",
+   "expected_observed": false
+  }
+ },
+ "input_sha256": {
+  "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "9cc2244375e367681486a0c5558ca72fb41380bd7bcb64af6430b696eafe73ee",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "de314478aadc6570cc7b5f20ffd3bef7535e3dc52d39c5911edce5df879ee7c7",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin_protected.sv": "6fcdd90a470af736e61e02244bdc42808b0dd6f816108e1cbf1de927657f7c6e",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v": "44b8c75c3ba788b58405e819914a2966698079e871bd206d339af28cc1e77c59",
+  "rtl/test/tb_dsrom_engram_source_rewind.sv": "9fca71b506b1851fcc9121ac368063bd5d9103647181e89861e04cbf9200d317",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "bf3171a2b4f3cb7560a9ab8bac0a22168acf899106938233b13f5c5404c7132c",
+  "tools/engram_source_rewind_gate.py": "17cd535417e5514bc747090b03c4bbf0fb4db7c84b1636cf136649573208c48b"
+ },
+ "status": "fail"
+}

@@ -56,7 +56,7 @@ module tb_dsrom_engram_source_rewind #(parameter integer DROP_REWIND=0)(input wi
      expected[b*17+:17]=blocked?17'd2:golden[user][pos-b];
     end
     expected_u=user;expected_p=pos;expected_t=tok;expected_dead=death;expected_slot=issue_slot;
-    issue_slot<=!issue_slot;if(pos>highest[user]) highest[user]=pos;
+    issue_slot<=!issue_slot;if(int'(pos)>highest[user]) highest[user]=int'(pos);
    end
    if(ov&&output_ready) begin
     if(ids!==expected || ou!=expected_u || op!=expected_p || ot!=expected_t || od!=expected_dead || os!=expected_slot)
