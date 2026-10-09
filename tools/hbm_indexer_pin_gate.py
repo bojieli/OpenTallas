@@ -43,10 +43,13 @@ def native_pins(m):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out',type=Path,required=True)
+    ap.add_argument('--variant',default='r25iqg',choices=('r25iqg','r25imw','r25imws'))
+    ap.add_argument('--source-commit',required=True)
+    ap.add_argument('--context-out',type=Path)
     args=ap.parse_args()
     historical=F.build(F.R25IQ,geometry_only=True)
     negative=native_pins(historical)
-    selected=F.build(F.R25IQG)
+    selected=F.build(F.variant_arg(args.variant))
     pins=native_pins(selected)
     instances=selected['insts']
     overlaps=[]
@@ -57,11 +60,17 @@ def main():
     outside=[a.name for a in instances if a.x<0 or a.y<0 or a.x+a.w>selected['geo']['W']+1e-6 or a.y+a.h>selected['geo']['H']+1e-6]
     native_buses=[b for b in selected['buses'] if b[1]=='index_native']
     verdict='PASS' if all(x['offtrack_count']==0 for x in pins) and not overlaps and not outside and any(x['offtrack_count'] for x in negative) else 'FAIL'
-    record=dict(schema='opentallas.hbm_native_pin_gate.v1',variant='R25IQG',verdict=verdict,
+    record=dict(schema='opentallas.hbm_native_pin_gate.v1',variant=args.variant,source_commit=args.source_commit,verdict=verdict,
         native_pins=pins,historical_R25IQ_negative=negative,instances=len(instances),
         native_bus_segments=len(native_buses),overlaps=overlaps,outside=outside,
         qualification='Exact native abstract identity and track/bbox gate only; routed timing, legacy pins, service joins and actual clock arrival remain unqualified')
     args.out.write_text(json.dumps(record,indent=1)+'\n')
+    if args.context_out:
+        context=dict(schema='opentallas.hbm_native_die_context.v1',source_commit=args.source_commit,
+            variant=args.variant,geometry=selected['geo'],instances=[vars(a) for a in instances],
+            buses=selected['buses'],paths=selected['paths'],
+            qualification=record['qualification'])
+        args.context_out.write_text(json.dumps(context,indent=1)+'\n')
     print(verdict, 'instances',len(instances),'native_segments',len(native_buses),'native_pins',sum(x['pins'] for x in pins),'offtrack',sum(x['offtrack_count'] for x in pins),'overlaps',len(overlaps),'outside',len(outside))
     if verdict!='PASS': raise SystemExit(1)
 
