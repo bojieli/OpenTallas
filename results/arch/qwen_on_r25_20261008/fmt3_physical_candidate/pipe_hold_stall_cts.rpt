@@ -1,0 +1,24 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=hold repair over 3.0 h
+chunks (wns_ps tns_ps viol_endpoints): {-133.8 -264193.5 11000.0} {-110.1 -106728.5 2645.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+I2R         2115    -110.1  fx_b[1537] -> u_xld/q[1537]$_DFF_P_/D
+R2O            8      -0.5  g_bs[1].u_bod/q[975]$_DFF_P_/QN -> bout_r1[975]
+R2R          522     -77.3  g_h[0].g_rows.g_r0.u_w/q[549]$_DFF_P_/QN -> g_h2[0].g_rows.g_r0.u_w/q[549]$_DFF_P_/D
+top pin groups (class start -> end, bus indices folded):
+   2065    -110.1  I2R fx_b[*] -> u_xld/q[*]$_DFF_P_/D
+    160     -49.7  R2R g_side[*].g_rs[*].g_in.u_a.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/D
+    136     -77.3  R2R g_h[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/D
+    112     -58.8  R2R g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_p.g_p.u_d/q[*]$_DFF_P_/D
+     97     -59.4  R2R g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_a.g_p.u_d/q[*]$_DFF_P_/D
+     47     -28.4  I2R fs_d[*] -> u_sch.u_fd.g_s[*].g_n.u/q[*]$_DFF_P_/D
+      8      -0.5  R2O g_bs[*].u_bod/q[*]$_DFF_P_/QN -> bout_r1[*]
+      8      -3.1  R2R g_side[*].g_rs[*].genblk1.g_x.u_a.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].genblk1.g_x.u_m.g_p.u_d/q[*]$_DFF_P_/D
+      3     -36.8  R2R g_side[*].g_rs[*].g_in.u_a.g_p.u_a/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_m.g_p.u_a/q[*]$_DFF_P_/D
+      2     -19.9  R2R g_h[*].u_t/q[*]$_DFF_P_/QN -> g_h2[*].u_t/q[*]$_DFF_P_/D
+      1      -1.5  R2R g_int8.u_unpack.g_pipe.a_data[*]$_DFFE_PP_/QN -> g_int8.u_unpack.m_data[*]$_DFFE_PP_/D
+      1     -64.4  I2R fr_rl -> u_prl.g_s[*].g_r.u/q$_DFF_PN0_/D
+      1      -5.2  R2R u_dch.head[*]$_DFFE_PP_/QN -> u_bc.g_lookahead.q_base[*][*]$_DFFE_PP_/D
+      1     -16.1  R2R u_issue.rb[*]$_DFFE_PN0P_/QN -> u_issue.rsi_q[*]$_DFFE_PN0P_/D
+      1     -57.3  I2R fx_b[*] -> u_xlv/q$_DFF_PN0_/D
+      1     -28.7  I2R fs_v -> u_sch.u_fv.g_s[*].g_r.u/q$_DFF_PN0_/D
+      1     -25.1  R2R u_sch.head[*]$_DFFE_PP_/QN -> u_issue.g_q[*]$_DFFE_PN0P_/D
