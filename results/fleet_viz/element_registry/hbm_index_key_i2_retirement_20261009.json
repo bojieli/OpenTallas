@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_index_lines",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T10:50:01.475150+00:00",
+      "owner": "hbm_continuation/service_recovery; fleet retirement record",
+      "description": "Confirmed review-0342 retires Codex I2 as separate service striping line. Claude F-1 per-PC stream sole successor; historical exact/negative gates fold into its bench. No hfd_svc/core/legacy or F-1 retirement. Exact canonical/watchqueue inventory empty; all four historical EPYC1 launchers absent.",
+      "source": {
+        "commit": "0285ac83b",
+        "paths": [
+          "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL_PRESERVED"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED",
+          "evidence": [
+            "results/rtl/hbm_index_service_20261008/partial_r1_failure",
+            "results/rtl/hbm_index_service_20261008/partial_r2_artifacts",
+            "results/rtl/hbm_index_service_20261008/partial_fullshape_artifacts",
+            "results/rtl/hbm_index_service_20261008/controller_allocated_artifacts"
+          ]
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED",
+          "evidence": [
+            "results/rtl/hbm_index_service_20261008/partial_r1_failure",
+            "results/rtl/hbm_index_service_20261008/partial_r2_artifacts",
+            "results/rtl/hbm_index_service_20261008/partial_fullshape_artifacts",
+            "results/rtl/hbm_index_service_20261008/controller_allocated_artifacts"
+          ]
+        }
+      },
+      "physical": {
+        "status": "NO_I2_ROUTE_SUBMITTED"
+      },
+      "integration": {
+        "status": "RETIRED_SEPARATE_LINE_F1_SOLE_SUCCESSOR"
+      },
+      "dependencies": []
+    },
+    {
+      "element": "ot_hbm_index_lines_sram",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T10:50:01.475168+00:00",
+      "owner": "hbm_continuation/service_recovery; fleet retirement record",
+      "description": "Confirmed review-0342 retires Codex I2 as separate service striping line. Claude F-1 per-PC stream sole successor; historical exact/negative gates fold into its bench. No hfd_svc/core/legacy or F-1 retirement. Exact canonical/watchqueue inventory empty; all four historical EPYC1 launchers absent.",
+      "source": {
+        "commit": "de36ced2a",
+        "paths": [
+          "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL_PRESERVED"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED",
+          "evidence": [
+            "results/rtl/hbm_index_sram_20261008/partial_r1/summary.json",
+            "results/rtl/hbm_index_sram_20261008/main631_production_r3"
+          ]
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED",
+          "evidence": [
+            "results/rtl/hbm_index_sram_20261008/partial_r1/summary.json",
+            "results/rtl/hbm_index_sram_20261008/main631_production_r3"
+          ]
+        }
+      },
+      "physical": {
+        "status": "NO_I2_ROUTE_SUBMITTED"
+      },
+      "integration": {
+        "status": "RETIRED_SEPARATE_LINE_F1_SOLE_SUCCESSOR"
+      },
+      "dependencies": []
+    }
+  ]
+}

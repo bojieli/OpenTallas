@@ -31,12 +31,18 @@
     ],
     "processes": []
   },
-  "owner_current_inventory": "All I2 gates terminal; no physical route submitted; no future intake/requeues/extensions. Owner read-only final verification in progress.",
+  "owner_current_inventory": "Final owner EPYC1 ps and independent exact command-path scan no matching processes. All gates terminal, no I2 physical route ever submitted; future I2 intake/requeues/extensions stopped.",
   "process_actions": 0,
   "preserved_targets": [
     "Claude F-1 svc per-PC stream",
     "legacy hfd_svc providers",
     "unrelated mtprb dskvwb jobs"
   ],
-  "qualification": "Historical I2 gate PASS/failure evidence retained; not adopted as separate provider."
+  "qualification": "Historical I2 gate PASS/failure evidence retained; not adopted as separate provider.",
+  "historical_launchers_verified_absent": [
+    2683818,
+    2711721,
+    2735251,
+    2737809
+  ]
 }
