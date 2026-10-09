@@ -1,0 +1,67 @@
+{
+  "at": "2026-10-09T11:27:08.681994+00:00",
+  "scope": "Routine approved operational coordination; no daemon tracked edit, restart or main publication",
+  "r5_release": {
+    "job": "ha2_tuhalf_cx_landing-28cabe1fe-tc-cx",
+    "at": "2026-10-09T11:24:19.026153+00:00",
+    "status": "QUEUED",
+    "stage_idx": 2,
+    "old_peak_ram_gb": 40,
+    "new_peak_ram_gb": 48,
+    "spec_sha256": "d519944404d1041e097f724be4411405652f5d104e7aa3137f135e24eebe2a5d",
+    "prior_location": {
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/ha2_tuhalf_cx_landing-28cabe1fe-tc-cx",
+      "source_synced": true,
+      "preserve": "Original synced source retained; no process or output removed"
+    },
+    "hosts": [
+      "ot-epyc4",
+      "ot-epyc1tb",
+      "ot-pve1"
+    ],
+    "before_state": "/home/ubuntu/.local/state/closure_loop/operator_actions/ha2_tuhalf_cx_landing-28cabe1fe-tc-cx.R5-release.before.json",
+    "process_action": "none",
+    "source_unchanged": true
+  },
+  "dr3_phase": {
+    "host": "ot-epyc1tb",
+    "entry": {
+      "name": "hbm-router-dr3-existing-dump",
+      "pid": 3720051,
+      "command_match": "openroad -threads 16 -no_init -exit /rb/run_rb.tcl",
+      "peak_ram_gb": 47,
+      "owner": "Codex:hbm_wiring",
+      "launcher_pid": 3719939,
+      "reason": "Existing immutable R25 grt3 dump; same previous GNUtime peak48401148KiB46.16GiB rounded47. Current subtree31556468KiB and liveHWMsum31708644KiB; only helper clockcollection scalarization02b165495. No RTL/clock/SDC change."
+    },
+    "current_subtree_rss_kib": 31556468,
+    "current_live_hwm_sum_kib": 31708644,
+    "memavailable_kib": 148638612,
+    "at": "2026-10-09T11:25:33.995037+00:00"
+  },
+  "current_phases": [
+    {
+      "job": "w2-c1-fec1faadd-tt25-existing-odb-eco",
+      "host": "ot-epyc4",
+      "launcher": 2905345,
+      "driver": 2905390,
+      "container": "47f572e05e3b",
+      "openroad": 2913728,
+      "rss_hwm_kib": 4845968,
+      "reservation_gib": 32,
+      "basis": "Conservative existing-ODB ECO; measured original DRT26.98GiB, actual repair phase tracked"
+    },
+    {
+      "job": "qfd_io_xfifo_p2-463a4e86b-tc-gray-j6",
+      "host": "ot-epyc4",
+      "launcher": 1421462,
+      "container": "50676f9b1238",
+      "openroad": 1421885,
+      "worker_rss_hwm_kib": 6720456,
+      "container_subtree_rss_kib": 6745908,
+      "reservation_gib": 16,
+      "basis": "Review0400R2 approved conservative >=2x actual historical CTS5.59GiB; not measured DRT"
+    }
+  ]
+}
