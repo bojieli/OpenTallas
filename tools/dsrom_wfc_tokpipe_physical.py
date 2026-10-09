@@ -81,7 +81,10 @@ def main():
  cfg=a.case/'config.mk';s=cfg.read_text().replace('export DESIGN_NAME = ot_rom_pkg_ctrl_wfc\n',f'export DESIGN_NAME = ot_dsrom_wfc_tokpipe_{a.inst}\n')
  s=s.replace('export VERILOG_FILES = ',f'export VERILOG_FILES = /src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_{a.inst}.sv ')
  if os.environ.get('OT_ORFS_CORNER_OVERRIDE')=='TC':
-  s=s.replace('export CORNER = WC\n','export CORNER = TC\n').replace('export CORNERS = WC BC\n','export CORNERS = TC BC\n')
+  # ORFS accepts WC/BC named corners; WC reads actual TT libraries here.
+  s=s.replace('export WC_LIB_FILES = $(WC_NLDM_LIB_FILES)', 'export WC_LIB_FILES = $(TC_NLDM_LIB_FILES)')
+  s=s.replace('_ss.lib', '_tt.lib')
+  s+='\n# TC route: WC alias reads TC stdcell and TT macro liberties\n'
  cfg.write_text(s)
  run=a.case/'run.sh';s=run.read_text().replace('tools/dsrom_wfc_split_physical.py sta',f'tools/dsrom_wfc_tokpipe_physical.py sta --inst {a.inst}').replace('tools/dsrom_wfc_split_physical.py check',f'tools/dsrom_wfc_tokpipe_physical.py check --inst {a.inst}')
  # Calibrate stops atCTS; subsequent route keeps the same pinned source and recipe.
