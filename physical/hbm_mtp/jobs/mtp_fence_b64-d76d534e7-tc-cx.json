@@ -1,0 +1,84 @@
+{
+  "name": "mtp_fence_b64-d76d534e7-tc-cx",
+  "block": "ot_gpu_rf_visibility_fence_p",
+  "owner": "Codex:hbm_continuation/service_recovery",
+  "purpose": "Dual-track -cx actual host_wr_ready to u_hw.s_d fanout fix: speculative empty spare capture and64bit performance banks; original4096b transactions and trueACK semantics, zero addedcycles",
+  "hosts": [
+    "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "source": {
+    "branch": "codex/hbm-fence-cx-20261009",
+    "commit": "d76d534e756927949500353a64c741ad24308ded",
+    "paths": [
+      "rtl/gpu/ot_gpu_rf_visibility_fence.sv",
+      "physical/hbm_mtp",
+      "physical/common_flow",
+      "physical/hbm_accel_die_views/common",
+      "physical/abi3",
+      "tools",
+      "Makefile"
+    ],
+    "extra_paths": [
+      "results/rtl/hbm_rf_fence_cx_20261009/bench_r2_artifacts",
+      "results/rtl/hbm_rf_fence_cx_20261009/bank_audit_fixture"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_gpu_rf_visibility_fence_cx --param BANKED=1 --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_cx.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid_banked_cx.sv   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_mtp/audit/rf_cx_banks.tcl --orfs-var OT_RF_CX_AUDITOR=/src/tools/hbm_rf_fence_cx_bank_audit.py --orfs-var OT_RF_CX_AUDIT_DIR=/work/rf_bank_audit  --die-area 0 0 300 300 --core-area 6 6 294 294  $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl';  OUT={RUN}/routes CORES=16 UTIL=40 PD=0.55 HM=0.025 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_gpu_rf_visibility_fence_cx --param BANKED=1 --source rtl/gpu/ot_gpu_rf_visibility_fence.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv --source physical/hbm_mtp/rtl/ot_gpu_rf_visibility_fence_cx.sv --source physical/hbm_mtp/rtl/ot_hfd_mtp_skid_banked_cx.sv   --step-tcl PRE_GLOBAL_PLACE=physical/hbm_mtp/audit/rf_cx_banks.tcl --orfs-var OT_RF_CX_AUDITOR=/src/tools/hbm_rf_fence_cx_bank_audit.py --orfs-var OT_RF_CX_AUDIT_DIR=/work/rf_bank_audit  --die-area 0 0 300 300 --core-area 6 6 294 294 ",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/ && cp -r {RUN}/routes/{LABEL}/work/orfs/rf_bank_audit {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      },
+      {
+        "name": "mapped_65_banks_each_and_local_capture_controls",
+        "cmd": "python3 tools/hbm_rf_fence_cx_bank_audit.py {RUN}/routes/{LABEL}/work/orfs/rf_bank_audit/mapped_bank_graph.tsv {RUN}/routes/{LABEL}/work/orfs/rf_bank_audit/verdict_reaudit.json"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/common_flow/link_budget_consistent.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hbm_rf_fence_cx_20261009/routes/mtp_fence_b64-d76d534e7-tc-cx"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "W10: READY RECIPE ONLY; Claude phys-intake owns submission and winner selection. No manual route submission. Canonical elementp, distinct physical topcx. Preserve300x300,H1/LB1,HM25,mmFFhold,DRC0,SSsensitivity. Inherited route833ps is stricter than833.333ps ownertarget; signoff60/25 unchanged. Modelaee39 beforeRTL18f9. Actual synthesized bank hierarchy/local enable topology must be inspected before a banking claim; no control-protection/mirror claim. Source estimated40GiB admission fromoriginal full4096 job; no process/time bounds. Z3 mandatory PRE_GLOBAL_PLACE mapped OpenDB audit fails before placement on missing65+65 banks, collapsed390 local control FF outputs, or nonlocal capture cones in16438 payload FFs. Verdict reruns same graph audit; collected graph and actual outcome immutable. FixturePASS is algorithm-only; actualmap remains unmeasured until Claude run. No protection/mirror audit.",
+  "physical_top": "ot_gpu_rf_visibility_fence_cx",
+  "host_require": [
+    "ot-epyc4"
+  ],
+  "no_bench_reason": "Already source-pinned PASS results/rtl/hbm_rf_fence_cx_20261009/bench_r2_artifacts/gate/record.json: testedc70fcb1e5 RTLhashes byte-identical atb12f73311; fourfull4096 write/ACK/fence seeds,4114bitcycleexactskid withstalls/promotion; cap_last drop andspareoverwrite mutants both detected. No duplicate bench needed."
+}
