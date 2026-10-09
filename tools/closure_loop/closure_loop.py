@@ -660,7 +660,7 @@ def submit_check(spec, force=False):
     commit = str((spec.get("source") or {}).get("commit", ""))
     if commit and git_.blob(commit, "") is None and (spec.get("source") or {}).get("branch"):
         gfetch(spec["source"]["branch"], timeout=300)
-    return submit_lint.check(spec, git_, util_db(), force=force)
+    return submit_lint.check(spec, git_, util_db(), force=force, boundary_mode="cache-only")
 
 
 BENCH_PATH_RE = re.compile(r"(?<![\w./$}{-])((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.[A-Za-z0-9]+)\b")

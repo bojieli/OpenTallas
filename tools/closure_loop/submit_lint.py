@@ -605,7 +605,8 @@ def _choose_fix(plan, limit, window, res, force=False):
     return "NONE", "", " | ".join(why)
 
 
-def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
+def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False,
+          *, boundary_mode: str = "cache-only") -> dict:
     """pin-density / utilisation estimate (_pin_check) + the RTL registered-boundary check (rtl_boundary.py, struct-close
     2026-10-09): boundary findings WARN (message + res["rtl_boundary"]) and REFUSE only when spec.registered_io is true"""
     res = _pin_check(spec, git, util_db, force)
@@ -613,17 +614,17 @@ def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False
         return res
     try:
         sys.path.insert(0, str(HERE)); import rtl_boundary  # noqa: E702
-        rb = rtl_boundary.check(spec, git.show)
-    except Exception as ex:  # noqa: BLE001  (the boundary check never blocks intake on its own failure)
-        rb = {"verdict": "SKIP", "message": f"rtl_boundary skipped: {type(ex).__name__}: {str(ex)[:160]}"}
+        rb = rtl_boundary.check(spec, git.show, mode=boundary_mode)
+    except Exception as ex:  # noqa: BLE001
+        rb = {"verdict": "REFUSE", "message": f"rtl_boundary unavailable: {type(ex).__name__}: {str(ex)[:160]}"}
     if rb.get("verdict") == "SKIP":
         return res
     res["rtl_boundary"] = {k: rb.get(k) for k in ("verdict", "message", "in_to_out_bits", "in_to_reg_max",
-                                                  "reg_to_out_max", "levels", "strict")}
+                                                  "reg_to_out_max", "levels", "strict", "cached", "cache_key")}
     if rb["verdict"] == "REFUSE":
         res["verdict"] = "REFUSE"
         res["message"] = (res.get("message", "") + " || " if res.get("verdict") != "SKIP" and res.get("message") else "") \
-            + rb["message"] + " (spec registered_io: true): register the boundary (pin flops / registered outputs) or drop the claim"
+            + rb["message"]
     elif rb["verdict"] == "WARN":
         if res.get("verdict") == "SKIP":
             res["verdict"], res["message"] = "PASS", "pin estimate n/a"
@@ -719,8 +720,10 @@ def main(argv=None):
     c = sub.add_parser("check")
     c.add_argument("file")
     c.add_argument("--repo", default=os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))
+    c.add_argument("--boundary-mode", choices=("cache-only", "probe"), default="cache-only",
+                   help="probe invokes synthesis: use only on an admitted remote compute host")
     a = ap.parse_args(argv)
-    res = check(json.loads(Path(a.file).read_text()), Git(a.repo))
+    res = check(json.loads(Path(a.file).read_text()), Git(a.repo), boundary_mode=a.boundary_mode)
     print(json.dumps(res, indent=1))
     return 3 if res["verdict"] == "REFUSE" else 0
 

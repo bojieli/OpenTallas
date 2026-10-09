@@ -185,7 +185,14 @@ def analyse(netlist: dict, top: str) -> dict:
             "cells": len(mod["cells"]), "ctrl_ports": sorted({in_bits[b] for b in ctrl_ports})[:8]}
 
 
-def check(spec: dict, show, repo: str | None = None) -> dict:
+def check(spec: dict, show, repo: str | None = None, *, mode: str = "cache-only") -> dict:
+    """Consume exact-source proof by default; probe only on an admitted compute host.
+
+    Cache keys retain the source commit, complete recipe and level threshold.
+    The cache importer is responsible for verifying remote proof provenance.
+    """
+    if mode not in ("cache-only", "probe"):
+        raise ValueError(f"unknown RTL boundary mode: {mode}")
     cfg = spec.get("rtl_boundary", {})
     if cfg is False or (isinstance(cfg, dict) and cfg.get("skip")):
         return {"verdict": "SKIP", "message": "rtl_boundary opted out"}
@@ -201,7 +208,8 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
         strict = bool(re.search(r"-c[lx]$", name)) and not waived
     r = recipe(spec, show)
     if not r:
-        return {"verdict": "SKIP", "message": "rtl_boundary: sources / top not readable from the recipe"}
+        return {"verdict": "REFUSE" if mode == "cache-only" else "SKIP",
+                "message": "rtl_boundary: sources / top not readable from the recipe"}
     commit = spec["source"]["commit"]
     import hashlib
     ckey = hashlib.sha256(json.dumps([commit, r, levels], sort_keys=True).encode()).hexdigest()[:24]
@@ -210,8 +218,15 @@ def check(spec: dict, show, repo: str | None = None) -> dict:
     except Exception:  # noqa: BLE001
         cache = {}
     if ckey in cache:
-        res = dict(cache[ckey]); res["cached"] = True
-        return _verdict(res, r, levels, strict)
+        try:
+            res = dict(cache[ckey]); res.update(cached=True, cache_key=ckey)
+            return _verdict(res, r, levels, strict)
+        except (KeyError, TypeError, ValueError) as ex:
+            return {"verdict": "REFUSE", "cache_key": ckey,
+                    "message": f"rtl_boundary: invalid cached proof ({type(ex).__name__}); import verified remote proof"}
+    if mode == "cache-only":
+        return {"verdict": "REFUSE", "cached": False, "cache_key": ckey,
+                "message": f"rtl_boundary: missing source-bound proof {ckey}; run an admitted remote probe and import its proof"}
     with tempfile.TemporaryDirectory(prefix="rtlb_") as td:
         tdp = Path(td)
         files, total = [], 0
@@ -281,6 +296,8 @@ def main(argv=None):
     c = sub.add_parser("check")
     c.add_argument("file")
     c.add_argument("--repo", default=os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))
+    c.add_argument("--boundary-mode", choices=("cache-only", "probe"), default="cache-only",
+                   help="probe invokes synthesis: use only on an admitted remote compute host")
     a = ap.parse_args(argv)
 
     def show(commit, path):
@@ -288,7 +305,7 @@ def main(argv=None):
         return q.stdout if q.returncode == 0 else None
     spec = json.loads(Path(a.file).read_text())
     spec = spec.get("spec", spec)
-    res = check(spec, show, a.repo)
+    res = check(spec, show, a.repo, mode=a.boundary_mode)
     print(json.dumps(res, indent=1))
     return 3 if res["verdict"] == "REFUSE" else 0
 
