@@ -12,6 +12,8 @@ its host (one ssh per host) and diagnoses:
                                       real WNS < -150 ps after 1 h with < 5 ps gained over 2000 it
                EARLY_FAIL_CONGESTION  GRT past extra iteration 20 with the congestion markers not decreasing
                EARLY_FAIL_DRC         DRT past iteration 20 with the violation count not decreasing over K iterations
+  hold_stop  a non-converging hold repair already within hold_nearmiss_ps (-15 ps) with the setup gate clear: NOT an
+             early fail; `closure_loop.py hold-stop` resumes the route from its checkpoint with the hold repair cut
   stalled    old-flow (no OT_HOLD_GUARD) hold repair with hold already >= 0 and WNS frozen for > 3 h (margin chase)
   redundant  the block already CLOSED (a counting, TT-era closure), or a newer descendant commit of the same variant of
              the same block is RUNNING
@@ -91,6 +93,10 @@ GATES = dict(
     hold_real_after_s=3600,      # ... after this long in repair ...
     hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
     hold_deep_dwns=5.0,
+    hold_nearmiss_ps=-15.0,      # drive-resume (coordinator APPROVED 2026-10-09): a non-converging hold repair whose real
+                                 # WNS is already >= this, with the setup gate not firing, is HOLD_STOP (stop the hold
+                                 # repair, resume the route from its checkpoint; the post-route hold ECO fixes the residue),
+                                 # never EARLY_FAIL_HOLD.  qfd_tile_rp1p was killed at -3.6 after 8.7 h, tile_e at -7.8.
     grt_min_iter=20, grt_markers=1000, grt_flat=0.95,
     drt_min_iter=20, drt_k=8, drt_min_viol=100,
     stall_after_s=3 * 3600,
@@ -483,7 +489,14 @@ def hopeless(b, j, now):
     if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
         hv = hold_verdict(hd, b, elapsed, bool(j and insertion_untrusted(j)))
         if hv:
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
+            plan = hold_stop_plan(b)
+            done = {x.get("stage") for x in (j or {}).get("hold_stop_log") or []}
+            if plan and plan["stage"] not in done and not any(v == "EARLY_FAIL_SETUP" for v, _ in out):
+                out.append(("HOLD_STOP", f"{cur[:-8]} near-miss hold stall (WNS {plan['ws']:+.1f} >= "
+                                         f"{GATES['hold_nearmiss_ps']:g} ps, setup gate clear): stop the {plan['stage']} "
+                                         f"hold repair at {plan['buffers']} buffers and continue to route; {hv}"))
+            else:
+                out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
     gi = b.get("grt_iter")
     if cur.startswith("5_1_grt") and gi and gi[0] >= GATES["grt_min_iter"] and len(cg) >= 3:
@@ -581,6 +594,23 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
             return f"real FF hold WNS {ws:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) with no progress: {g:+.2f} ps over " \
                    f"the last {GATES['hold_deep_it']} iterations (< {GATES['hold_deep_dwns']:g}); {ctx}"
     return None
+
+
+def hold_stop_plan(b):
+    """HOLD-STOP plan of a live base whose hold repair is judged non-converging: {stage, buffers, ws} when the real hold
+    WNS is >= hold_nearmiss_ps, else None.  buffers = the buffer count at which the repair first reached (within
+    0.05 ps) its current WNS, +2% and +10 (the replay keeps the converging part, the flat tail is cut)."""
+    cur = (b.get("current") or "")
+    stage = "cts" if cur.startswith("4_1_cts") else "grt" if cur.startswith("5_1_grt") else None
+    hd = b.get("hold") or {}
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    ws = ser[-1][2] if ser else (last[2] if last else None)
+    if stage is None or ws is None or ws >= 0 or ws < GATES["hold_nearmiss_ps"]:
+        return None
+    first = next((p for p in ser if p[2] >= ws - 0.05), None)
+    n = int(first[1] * 1.02) + 10 if first and first[1] else 0
+    return dict(stage=stage, buffers=n, ws=ws)
 
 
 def hold_buf_cap(inst, gain):
@@ -701,6 +731,10 @@ def diagnose(j, o, hist, jobs, closed, now):
     # 2) hopeless (route stage only: calibrate is CTS-only with no repair)
     if b and j.get("stage_key") == "route" and j["status"] == "RUNNING":
         hp = hopeless(b, j, now)
+        if hp and hp[0][0] == "HOLD_STOP":
+            d.update(action="hold_stop", kind="hold_nearmiss", hold_stop=hold_stop_plan(b))
+            d["why"] += [w for _, w in hp]
+            return d
         if hp:
             d.update(action="early_fail", kind="hopeless", verdict=hp[0][0])
             d["why"] += [w for _, w in hp]
@@ -796,6 +830,9 @@ def apply(diags, log):
             cmd = ["early-fail", d["name"], "--verdict", d["verdict"], "--why", why, "--detail", str(det)]
         elif a == "kill_stage":
             cmd = ["kill-stage", d["name"], "--why", why]
+        elif a == "hold_stop":
+            cmd = ["hold-stop", d["name"], "--stage", d["hold_stop"]["stage"], "--buffers",
+                   str(d["hold_stop"]["buffers"]), "--why", why]
         else:
             continue
         r = cl.sh([sys.executable, str(HERE / "closure_loop.py"), *cmd], timeout=900)
@@ -830,7 +867,7 @@ def main():
             print(f"history refresh failed: {ex}", file=sys.stderr)
     diags = scan(a.only, cpu=not a.no_cpu)
     rep = dict(at=cl.now_iso(), gates=GATES, jobs=diags,
-               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "kill_stage", "let_run")})
+               counts={k: sum(1 for d in diags if d["action"] == k) for k in ("cancel", "early_fail", "hold_stop", "kill_stage", "let_run")})
     if a.apply:
         log = []
         rep["applied"] = apply(diags, log)

@@ -1,8 +1,9 @@
 #!/bin/bash
 # Check preserved ORFS checkpoints and dry-run finish before route-only resume.
 # Incomplete earlier stages require a separately reviewed next-stage resume.
+# Optional 3rd arg ALLOW: the one pre-route stage a resume may start at (hold-stop: 4_1_cts, or 5_1_grt).
 set -u
-O=$1; S=$2
+O=$1; S=$2; ALLOW=${3:-}
 fail() { echo "$1" >&2; echo RESUME_OK=0; exit "${2:-1}"; }
 [ -d "$O/results" ] || fail 'Missing checkpoint results directory'
 checkpoint=$(find "$O/results" -type f \( -name '*.odb' -o -name '1_2_yosys.v' \) -print -quit)
@@ -17,4 +18,8 @@ st=$(printf '%s\n' "$out" | grep -oE 'do-[0-9]_[0-9]_[a-z_]+|[0-9]_[0-9]_[a-z_]+
 echo "STAGES_TO_RUN: $st"
 first=$(printf '%s\n' "$st" | tr ' ' '\n' | sed '/^$/d' | sort | head -1)
 echo "RESUME_FROM=$first"
+if [ -n "$ALLOW" ]; then
+  [ "$first" = "$ALLOW" ] && { echo RESUME_OK=1; exit 0; }
+  fail "Dry-run would start at $first, not $ALLOW"
+fi
 case "$first" in 1_*|2_*|3_*|4_*) fail 'Dry-run would execute a pre-route stage';; *) echo RESUME_OK=1;; esac
