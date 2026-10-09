@@ -1,0 +1,306 @@
+{
+ "schema": "opentallas.qwen-kv-die.recut.v1",
+ "date": "2026-10-09",
+ "question": "review-0528 KV1(b): re-cut the near-HBM row engine <-> stack aggregator boundary (16,385 b in / 16,392 b out per engine, 8 engines on one aggregator), bench it, price every added stage",
+ "bench": "rtl/test/qwen_kv_die/bench_run.sh (STACK=c|d|e): one attention layer step through the ROM <-> KV link at the r22k / KV-die stage counts (28 1 5 5 23 22 24), bit-exact vs tools/hdc_golden.py on 7 vectors x VM stall 0 / 1, t = T-1 HBM rows poisoned",
+ "reference": {
+  "run": "p_fence",
+  "variant": {
+   "name": "reference _p (no re-cut)",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv",
+   "eng_in": 16500,
+   "eng_out_leaf": 16393,
+   "what": "q registers in the aggregator (16,384 b broadcast); the aggregator tree takes each 16,384-b leaf from the engine loop"
+  },
+  "status": "start Fri Oct  9 05:34:07 PDT 2026 src=b4617e33b6 kv-die: KV4 write-then-read fence (T-1 request waits on row-merged {t, layer}; lay_* start bus); fence-stall bench cases (mut7/mut8); no-progress exit; reprice/token view report -1.38% per user, 929.9 mm2 pair, ~3.9-reticle interposer",
+  "runs": 14,
+  "exact_all": true,
+  "vectors": [
+   "129_tiny",
+   "1_normal",
+   "2048_wide",
+   "4097_flat",
+   "8191_mixed",
+   "8192_normal",
+   "8192_peaky"
+  ],
+  "step": {
+   "129_tiny": 1263,
+   "1_normal": 943,
+   "2048_wide": 1351,
+   "4097_flat": 1543,
+   "8191_mixed": 1863,
+   "8192_normal": 1863,
+   "8192_peaky": 1863
+  },
+  "step_8192": 1863
+ },
+ "variants": {
+  "c_l4d2": {
+   "name": "re-cut C",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv (tools/qwen_kv_die/stack_c_gen.py)",
+   "what": "q beat broadcast (519 b) into engine q registers; every leaf latched and serialised in LFB beats into an LBD-leaf staging FIFO per engine; the aggregator tree unchanged",
+   "params": "LFB=4,LBD=2",
+   "status": "start Fri Oct  9 05:47:52 PDT 2026 src=f008374722 kv-die: near-HBM stack RE-CUT (stack_c: engine-local q registers fed by a 519-b beat broadcast; leaves latched in the engine and streamed in LFB beats into an LBD-leaf staging FIFO per engine, credit flow) + bench option STACK=c",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 2558,
+    "1_normal": 945,
+    "2048_wide": 2646,
+    "4097_flat": 2838,
+    "8191_mixed": 3102,
+    "8192_normal": 3102,
+    "8192_peaky": 3102
+   },
+   "step_8192": 3102,
+   "delta_cycles_per_layer": 1239,
+   "delta_cycles_per_token": 44604
+  },
+  "c_l2d2": {
+   "name": "re-cut C",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv (tools/qwen_kv_die/stack_c_gen.py)",
+   "what": "q beat broadcast (519 b) into engine q registers; every leaf latched and serialised in LFB beats into an LBD-leaf staging FIFO per engine; the aggregator tree unchanged",
+   "params": "LFB=2,LBD=2",
+   "status": "start Fri Oct  9 05:47:52 PDT 2026 src=f008374722 kv-die: near-HBM stack RE-CUT (stack_c: engine-local q registers fed by a 519-b beat broadcast; leaves latched in the engine and streamed in LFB beats into an LBD-leaf staging FIFO per engine, credit flow) + bench option STACK=c",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 2548,
+    "1_normal": 945,
+    "2048_wide": 2636,
+    "4097_flat": 2828,
+    "8191_mixed": 3092,
+    "8192_normal": 3092,
+    "8192_peaky": 3092
+   },
+   "step_8192": 3092,
+   "delta_cycles_per_layer": 1229,
+   "delta_cycles_per_token": 44244
+  },
+  "c_l4d4": {
+   "name": "re-cut C",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv (tools/qwen_kv_die/stack_c_gen.py)",
+   "what": "q beat broadcast (519 b) into engine q registers; every leaf latched and serialised in LFB beats into an LBD-leaf staging FIFO per engine; the aggregator tree unchanged",
+   "params": "LFB=4,LBD=4",
+   "status": "start Fri Oct  9 05:47:52 PDT 2026 src=f008374722 kv-die: near-HBM stack RE-CUT (stack_c: engine-local q registers fed by a 519-b beat broadcast; leaves latched in the engine and streamed in LFB beats into an LBD-leaf staging FIFO per engine, credit flow) + bench option STACK=c",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 2054,
+    "1_normal": 945,
+    "2048_wide": 2142,
+    "4097_flat": 2334,
+    "8191_mixed": 2598,
+    "8192_normal": 2598,
+    "8192_peaky": 2598
+   },
+   "step_8192": 2598,
+   "delta_cycles_per_layer": 735,
+   "delta_cycles_per_token": 26460
+  },
+  "d_l4n1": {
+   "name": "re-cut D",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv (tools/qwen_kv_die/stack_d_gen.py)",
+   "what": "q beat broadcast; P.V levels 1-3 in the engine on its own 512-lane adder bank (the residue group's 8 slots); one level-3 node a group in LFB beats under ND credits; aggregator tree levels 4-7",
+   "params": "LFB=4,ND=1",
+   "status": "start Fri Oct  9 06:42:37 PDT 2026 src=45b17ecef3 kv-die: near-HBM stack RE-CUT D (P.V levels 1-3 inside each row engine over its residue group; level-3 nodes to the aggregator in LFB beats under ND credits; aggregator tree keeps levels 4-7; q beat broadcast as C) + bench option STACK=d",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 1088,
+    "1_normal": 945,
+    "2048_wide": 1165,
+    "4097_flat": 1421,
+    "8191_mixed": 1789,
+    "8192_normal": 1789,
+    "8192_peaky": 1789
+   },
+   "step_8192": 1789,
+   "delta_cycles_per_layer": -74,
+   "delta_cycles_per_token": -2664
+  },
+  "d_l4n2": {
+   "name": "re-cut D",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv (tools/qwen_kv_die/stack_d_gen.py)",
+   "what": "q beat broadcast; P.V levels 1-3 in the engine on its own 512-lane adder bank (the residue group's 8 slots); one level-3 node a group in LFB beats under ND credits; aggregator tree levels 4-7",
+   "params": "LFB=4,ND=2",
+   "status": "start Fri Oct  9 06:42:37 PDT 2026 src=45b17ecef3 kv-die: near-HBM stack RE-CUT D (P.V levels 1-3 inside each row engine over its residue group; level-3 nodes to the aggregator in LFB beats under ND credits; aggregator tree keeps levels 4-7; q beat broadcast as C) + bench option STACK=d",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 1088,
+    "1_normal": 945,
+    "2048_wide": 1165,
+    "4097_flat": 1421,
+    "8191_mixed": 1789,
+    "8192_normal": 1789,
+    "8192_peaky": 1789
+   },
+   "step_8192": 1789,
+   "delta_cycles_per_layer": -74,
+   "delta_cycles_per_token": -2664
+  },
+  "d_l8n1": {
+   "name": "re-cut D",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv (tools/qwen_kv_die/stack_d_gen.py)",
+   "what": "q beat broadcast; P.V levels 1-3 in the engine on its own 512-lane adder bank (the residue group's 8 slots); one level-3 node a group in LFB beats under ND credits; aggregator tree levels 4-7",
+   "params": "LFB=8,ND=1",
+   "status": "start Fri Oct  9 06:42:37 PDT 2026 src=45b17ecef3 kv-die: near-HBM stack RE-CUT D (P.V levels 1-3 inside each row engine over its residue group; level-3 nodes to the aggregator in LFB beats under ND credits; aggregator tree keeps levels 4-7; q beat broadcast as C) + bench option STACK=d",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 1088,
+    "1_normal": 945,
+    "2048_wide": 1165,
+    "4097_flat": 1421,
+    "8191_mixed": 1793,
+    "8192_normal": 1793,
+    "8192_peaky": 1793
+   },
+   "step_8192": 1793,
+   "delta_cycles_per_layer": -70,
+   "delta_cycles_per_token": -2520
+  },
+  "e_l4n1": {
+   "name": "re-cut E",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv (tools/qwen_kv_die/stack_e_gen.py)",
+   "what": "as D, but levels 1-3 on the lane loop adders (one X word and one output word a lane, one loop pass a level), no extra adder bank",
+   "params": "LFB=4,ND=1",
+   "status": "start Fri Oct  9 06:48:59 PDT 2026 src=c8ce890 224d19c30 archive (rtl tools physical/qwen_kv_die_phy)",
+   "runs": 14,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 1088,
+    "1_normal": 945,
+    "2048_wide": 1165,
+    "4097_flat": 1433,
+    "8191_mixed": 1907,
+    "8192_normal": 1907,
+    "8192_peaky": 1907
+   },
+   "step_8192": 1907,
+   "delta_cycles_per_layer": 44,
+   "delta_cycles_per_token": 1584
+  },
+  "e_l8n1": {
+   "name": "re-cut E",
+   "rtl": "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv (tools/qwen_kv_die/stack_e_gen.py)",
+   "what": "as D, but levels 1-3 on the lane loop adders (one X word and one output word a lane, one loop pass a level), no extra adder bank",
+   "params": "LFB=8,ND=1",
+   "status": "start Fri Oct  9 06:48:59 PDT 2026 src=c8ce890 224d19c30 archive (rtl tools physical/qwen_kv_die_phy)",
+   "runs": 13,
+   "exact_all": true,
+   "vectors": [
+    "129_tiny",
+    "1_normal",
+    "2048_wide",
+    "4097_flat",
+    "8191_mixed",
+    "8192_normal",
+    "8192_peaky"
+   ],
+   "step": {
+    "129_tiny": 1088,
+    "1_normal": 945,
+    "2048_wide": 1165,
+    "4097_flat": 1437,
+    "8191_mixed": 1911,
+    "8192_normal": 1911,
+    "8192_peaky": 1911
+   },
+   "step_8192": 1911,
+   "delta_cycles_per_layer": 48,
+   "delta_cycles_per_token": 1728
+  }
+ },
+ "area": {
+  "method": "yosys synth -flatten + abc, ASAP7 RVT TT liberty (tools/qwen_kv_die/synth/synth_area.sh), cells only",
+  "row_engine_p_um2": 283000,
+  "row_engine_e_um2": 310000,
+  "row_engine_d_um2_composed": 529000,
+  "row_engine_d_composition": "row_engine_e 310 k - E's X / output words (2 x 16,384 flops + select, ~12 k) + D's 512-lane FP32 adder bank (512 x 404.77 = 207 k, ot_hdc_fp32_add_lat LAT 7 measured) + level-0..2 and node registers (4 x 16,384 flops, ~19 k) + operand select (~5 k); the direct synthesis of row_engine_d is running (synth2/reng_d)",
+  "fp32_add_lat7_um2": 404.77,
+  "kv_die_engine_frame_um": [
+   531.36,
+   1998.0
+  ],
+  "per_die": {
+   "engines": 32,
+   "d_minus_e_cells_mm2": 7.0,
+   "kv_die_mm2_d": 192.1,
+   "kv_die_mm2_ref_frames": 172.3
+  }
+ },
+ "adopted": "d_l4n1",
+ "adopted_boundary_bits": {
+  "engine_in_q": 519,
+  "engine_out_node": 4107,
+  "reference_in": 16500,
+  "reference_out_leaf": 16393
+ },
+ "verdict": "ADOPT d_l4n1: exact on every vector, ctx-8192 step 1789 against 1863 for the reference (-74 cycles a layer, -2664 a token); C rejected (slower), E kept as the area-minimal fallback"
+}
