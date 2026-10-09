@@ -1,0 +1,21 @@
+{
+  "base": "ba35177c755a9b4683aadd9b8d9cee3843fb9607",
+  "host": "ot-pve1",
+  "guard_gib": 1,
+  "command": "python3 -m unittest -v test_deferred_record_merge",
+  "tests": 10,
+  "rc": 0,
+  "seconds": 0.048,
+  "preserved_hooks": [
+    "lint_at_submit",
+    "bench_paths_at_submit",
+    "spec_submitted"
+  ],
+  "runtime_action": "none; Claude-only merge/deploy",
+  "initial_bundle_errors": [
+    "missing ssh_transport dependency",
+    "missing source_archive dependency"
+  ],
+  "final_bundle": "currentbase closure_loop plus ssh_transport/source_archive/postroute_recovery/submit_lint and tests",
+  "source_sha256": "f1c21b24bc2f8ef5a7014284ed3b3441af47ec6c57b1554b0866aee83aa9e1d6"
+}
