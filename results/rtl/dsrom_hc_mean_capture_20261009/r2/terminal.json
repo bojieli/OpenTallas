@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS",
+  "source_commit": "32d007ee5",
+  "scope": "actual HC4 eight-lane engine, three full1280-dimension TP4-rank captures, real3 SRAM macros",
+  "logs": {
+    "ALIAS.log": "FATAL: rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:99: mean/identity/order mismatch frame 0 got=be47bb103df03f9dbf493f0bbe31be17bf70bed1be063e09bd9c3dab3e663c31be3b3e263f64bebbbce0bebebe853ec13e863e453ea9be30be383da93dae3f00 expected=3eda3f013e9fbd10be1c3de83fc03c3c3e89be573e3dbf2b3b40be40bd383f2e3e7cbf05bf5d3ea03d793f26bd663e97be433f0fbeb93f0dbf02bee0bf4c3f00\n       Time: 160925000  Scope: tb_hc_mean_capture\n",
+    "CE.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=120\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n",
+    "TREE.log": "FATAL: rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:99: mean/identity/order mismatch frame 0 got=3eda3f013e9fbd10be1c3de83fc03c3c3e89be573e3dbf2b3b40be40bd383f2e3e7cbf05bf5d3ea03d793f26bd663e97be433f0fbeb93f0dbf02bee0bf4c0000 expected=3eda3f013e9fbd10be1c3de83fc03c3c3e89be573e3dbf2b3b40be40bd383f2e3e7cbf05bf5d3ea03d793f26bd663e97be433f0fbeb93f0dbf02bee0bf4c3f00\n       Time: 160925000  Scope: tb_hc_mean_capture\n",
+    "UE.log": "PASS UE retained ownership and delivered no data\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:86: $finish called at 160930000 (1ps)\n",
+    "negative_1.log": "PASS negative command 1 retained prior ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:54: $finish called at 53730000 (1ps)\n",
+    "negative_2.log": "PASS negative beat 2 retained ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:66: $finish called at 610000 (1ps)\n",
+    "negative_3.log": "PASS negative command 3 retained prior ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:54: $finish called at 53730000 (1ps)\n",
+    "negative_4.log": "PASS negative command 4 retained prior ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:54: $finish called at 120000 (1ps)\n",
+    "negative_5.log": "PASS negative beat 5 retained ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:66: $finish called at 280000 (1ps)\n",
+    "positive.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n",
+    "released_rank0.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n",
+    "released_rank1.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n",
+    "released_rank2.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n",
+    "released_rank3.log": "PASS full shape 3x1280 BF16 means 120 flits cycles=16609 CE=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv:77: $finish called at 166090000 (1ps)\n"
+  },
+  "integration_qualified": false,
+  "physical_qualified": false
+}

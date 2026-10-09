@@ -14540,3 +14540,15 @@ def hbm_ta15_clock_boundary_model(link_ports=9, stages=3):
 def hbm_indexer_r25i_physical_model():
     from hbm_indexer_r25i_model import hbm_indexer_r25i_physical_model as impl
     return impl()
+
+
+def dsrom_hc_mean_capture_model():
+    """Mandatory full-rank L37/38/39 INPUT residual means and seed framing."""
+    from tools.dsrom_hc_mean_capture_model import model
+    return model()
+
+
+def dsrom_hc_input_reader_model():
+    """Finite native VM reader; port ownership and H mapping remain explicit."""
+    from tools.dsrom_hc_mean_capture_model import input_reader_model
+    return input_reader_model()
