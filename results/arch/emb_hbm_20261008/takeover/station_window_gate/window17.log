@@ -1,0 +1,2 @@
+PASS station_window4 STAGES=17 writes64 reads64 CE1 UE1 JEDEC0 max_inflight=4 read_sum=16567 read_min=111 read_max=611 credit_sum=25297 total_cycles=6473 core833.333334ps HBM1024ps
+rtl/test/emb_hbm/tb_emb_station_window.sv:69: $finish called at 5393754315 (1fs)
