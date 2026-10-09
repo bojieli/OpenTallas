@@ -21,12 +21,10 @@ module ot_qfd_protected_phy_pc #(parameter integer ENABLE=0, PC=0, ROW0=24427)(
  reg [3:0] st;
  reg wr,emb; reg [18:0] row_q; reg [4:0] bank_q,col_q;
  reg [16:0] sec_q; reg [7:0] lr_q; reg [63:0] id_q;
- reg [287:0] code_q; reg code_parity,meta_parity;
- reg [255:0] data_q,ecc_q; reg ecc_parity;
+ reg [287:0] code_q;
+ reg [255:0] data_q,ecc_q;
  reg [30:0] da,ea; reg [2:0] lane;
  reg [15:0] serial,expected;
- wire meta_bad = meta_parity != ^{wr,emb,row_q,bank_q,col_q,sec_q,lr_q,id_q,da,ea,lane};
- wire write_bad = wr && code_parity != ^code_q;
  function automatic [30:0] address(input [15:0] row,input [4:0] bank,col);
  reg [2:0] hi; reg [4:0] pcraw; begin
  hi=bank[4:2]^row[4:2]; pcraw=5'(PC)^col^{row[1:0],hi};
@@ -46,7 +44,7 @@ module ot_qfd_protected_phy_pc #(parameter integer ENABLE=0, PC=0, ROW0=24427)(
  wire requesting=st==DR||st==ER||st==DW||st==EW||st==FD||st==FE;
  wire waiting=st==DWAIT||st==EWAIT||st==FDWAIT||st==FEWAIT;
  assign q_rdy=ENABLE!=0 && st==IDLE && !fault;
- assign p_v=ENABLE!=0 && requesting && !fault && !meta_bad && !write_bad && !(st==EW && ecc_parity!=^ecc_q);
+ assign p_v=ENABLE!=0 && requesting && !fault;
  assign p_we=st==DW||st==EW;
  assign p_addr=(st==ER||st==EW||st==FE)?ea:da;
  assign p_len=5'd1; assign p_tag=serial;
@@ -55,11 +53,10 @@ module ot_qfd_protected_phy_pc #(parameter integer ENABLE=0, PC=0, ROW0=24427)(
  always @(posedge clk or negedge rst_n) begin : seq
  reg [9:0] j,ej; reg [18:0] erow; reg [30:0] nd,ne; reg [255:0] ec;
  if(!rst_n)begin st<=IDLE;fault<=0;o_v<=0;serial<=1;expected<=0;
- wr<=0;emb<=0;row_q<=0;bank_q<=0;col_q<=0;sec_q<=0;lr_q<=0;id_q<=0;da<=0;ea<=0;lane<=0;meta_parity<=0;code_q<=0;code_parity<=0;ecc_q<=0;ecc_parity<=0;data_q<=0;
+ wr<=0;emb<=0;row_q<=0;bank_q<=0;col_q<=0;sec_q<=0;lr_q<=0;id_q<=0;da<=0;ea<=0;lane<=0;code_q<=0;ecc_q<=0;data_q<=0;
  o_we<=0;o_emb<=0;o_sec<=0;o_lrow<=0;o_id<=0;o_row<=0;o_bank<=0;o_col<=0;o_code<=0;
  end else if(ENABLE!=0)begin
- if(st!=IDLE && st!=DEAD && (meta_bad||write_bad))begin fault<=1;st<=DEAD;o_v<=0;end
- else if(r_v && (!waiting || r_pc!=5'(PC)||r_tag!=expected||r_beat!=0))begin fault<=1;st<=DEAD;o_v<=0;end
+ if(r_v && (!waiting || r_pc!=5'(PC)||r_tag!=expected||r_beat!=0))begin fault<=1;st<=DEAD;o_v<=0;end
  else case(st)
  IDLE:if(q_v&&q_rdy)begin
  if((q_emb && (q_row<ROW0||q_row>=ROW0+149))||(!q_emb&&q_row>=36))begin fault<=1;st<=DEAD;end
@@ -68,18 +65,18 @@ module ot_qfd_protected_phy_pc #(parameter integer ENABLE=0, PC=0, ROW0=24427)(
  if(q_emb)begin erow=19'(ROW0+149)+((q_row-19'(ROW0))>>3);ej={3'(q_row-19'(ROW0)),j[9:3]};end
  else begin erow=19'd64+q_row;ej={3'b0,j[9:3]};end
  nd=address(q_row[15:0],q_bank,q_col);ne=address(erow[15:0],{ej[9:7],ej[1:0]},ej[6:2]);
- wr<=q_we;emb<=q_emb;row_q<=q_row;bank_q<=q_bank;col_q<=q_col;sec_q<=q_sec;lr_q<=q_lrow;id_q<=q_id;code_q<=q_code;code_parity<=^q_code;
- da<=nd;ea<=ne;lane<=j[2:0];meta_parity<=^{q_we,q_emb,q_row,q_bank,q_col,q_sec,q_lrow,q_id,nd,ne,j[2:0]};
+ wr<=q_we;emb<=q_emb;row_q<=q_row;bank_q<=q_bank;col_q<=q_col;sec_q<=q_sec;lr_q<=q_lrow;id_q<=q_id;code_q<=q_code;
+ da<=nd;ea<=ne;lane<=j[2:0];
  st<=q_we?ER:DR;end end
  DR,ER,FD,FE:if(p_v&&p_rdy)begin
  if(serial==16'hffff)begin fault<=1;st<=DEAD;end else begin expected<=serial;serial<=serial+1'b1;
  case(st)DR:st<=DWAIT;ER:st<=EWAIT;FD:st<=FDWAIT;FE:st<=FEWAIT;default:st<=DEAD;endcase end end
  DWAIT:if(r_v&&r_rdy)begin data_q<=r_data;st<=ER;end
  EWAIT:if(r_v&&r_rdy)begin
- if(wr)begin ec=r_data;ec[lane*32+:32]=checks(code_q);ecc_q<=ec;ecc_parity<=^ec;st<=DW;end
+ if(wr)begin ec=r_data;ec[lane*32+:32]=checks(code_q);ecc_q<=ec;st<=DW;end
  else begin o_code<=join_code(data_q,r_data[lane*32+:32]);st<=OUT;end end
  DW:if(p_v&&p_rdy)st<=EW;
- EW:if(ecc_parity!=^ecc_q)begin fault<=1;st<=DEAD;end else if(p_v&&p_rdy)st<=FD;
+ EW:if(p_v&&p_rdy)st<=FD;
  FDWAIT:if(r_v&&r_rdy)begin if(r_data!=payload(code_q))begin fault<=1;st<=DEAD;end else st<=FE;end
  FEWAIT:if(r_v&&r_rdy)begin if(r_data[lane*32+:32]!=checks(code_q))begin fault<=1;st<=DEAD;end else begin o_code<=code_q;st<=OUT;end end
  OUT:begin if(!o_v)begin o_v<=1;o_we<=wr;o_emb<=emb;o_sec<=sec_q;o_lrow<=lr_q;o_id<=id_q;o_row<=row_q;o_bank<=bank_q;o_col<=col_q;end
