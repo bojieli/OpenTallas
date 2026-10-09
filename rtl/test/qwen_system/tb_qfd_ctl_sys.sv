@@ -16,6 +16,9 @@
 // Prints "CTL_RESULT pass=.. steps=.. trace_events=.. trace_bad=.. cq=.. cq_bad=.. turn_min/max=.. ..".
 // ---------------------------------------------------------------------------------------------------------------------
 `include "stab.svh"
+`ifndef PROMPT_SRAM
+`define PROMPT_SRAM 0
+`endif
 module tb_qfd_ctl_sys;
     localparam integer D = 4, NW = 18, AW = 24, NS = 38, EW = 2 + 6 + 2*24, NL = 6;
     localparam integer CLAT = `CL;
@@ -45,7 +48,7 @@ module tb_qfd_ctl_sys;
     wire [D-1:0] c_done, c_drained, c_fault; wire [D*2-1:0] c_done_gen; wire [D*NW-1:0] c_ntok;
     wire [D*32-1:0] c_nval; wire [D*4-1:0] c_fvec;
     wire [31:0] fault_src;
-    ot_qfd_sysctl #(.D(D), .NW(NW), .AW(AW), .NL(NL), .T_LINK(5000), .T_HBM(5000)) dut (
+    ot_qfd_sysctl #(.PROMPT_SRAM(`PROMPT_SRAM), .D(D), .NW(NW), .AW(AW), .NL(NL), .T_LINK(5000), .T_HBM(5000)) dut (
         .clk(clk), .por_n(por_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hF),
