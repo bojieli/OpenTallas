@@ -73,18 +73,19 @@ class ClaudeOwnershipTests(unittest.TestCase):
 
 class MainSourceRecordTests(unittest.TestCase):
     def test_main_source_record_pushes_only_codex_branch_under_claude_policy(self):
-        with tempfile.TemporaryDirectory() as d, patch.object(cl,'STATE',Path(d)):
-            (Path(d)/'main_publish_owner.json').write_text('{"automatic_main_publish":false}')
-            j=dict(name='fixture',host='test',run='/work',commit_full='123abc',spec=dict(block='fixture',owner='test',source=dict(branch='main')))
-            metrics=dict(ss_ps=1,ff_ps=1,drc=0,setup_corner='TT')
-            pushes=[]
-            def shell(args,**kwargs):
-                if 'push' in args:pushes.append(args[-1])
-                return SimpleNamespace(returncode=0,stdout='results/verdict.json\n' if 'diff' in args else '',stderr='')
-            def git(*args,**kwargs):
-                return SimpleNamespace(returncode=0,stdout='abc123\n' if args[0]=='rev-parse' else '',stderr='')
-            def add(path,*args):path.mkdir(parents=True,exist_ok=True)
-            with patch.object(cl,'gfetch'),patch.object(cl,'wt_add',side_effect=add),patch.object(cl,'wt_rm'),patch.object(cl,'sh',side_effect=shell),patch.object(cl,'git',side_effect=git),patch.object(cl,'host_cfg',return_value=dict(label='test')):
-                result=cl.publish(j,metrics)
-            self.assertEqual(pushes,['HEAD:refs/heads/codex/closure-record-fixture'])
-            self.assertEqual(result['record_branch'],'codex/closure-record-fixture')
+        for source_branch in ['main','active-owner-rtl']:
+            with tempfile.TemporaryDirectory() as d, patch.object(cl,'STATE',Path(d)):
+                (Path(d)/'main_publish_owner.json').write_text('{"automatic_main_publish":false}')
+                j=dict(name='fixture',host='test',run='/work',commit_full='123abc',spec=dict(block='fixture',owner='test',source=dict(branch=source_branch)))
+                metrics=dict(ss_ps=1,ff_ps=1,drc=0,setup_corner='TT')
+                pushes=[]
+                def shell(args,**kwargs):
+                    if 'push' in args:pushes.append(args[-1])
+                    return SimpleNamespace(returncode=0,stdout='results/verdict.json\n' if 'diff' in args else '',stderr='')
+                def git(*args,**kwargs):
+                    return SimpleNamespace(returncode=0,stdout='abc123\n' if args[0]=='rev-parse' else '',stderr='')
+                def add(path,*args):path.mkdir(parents=True,exist_ok=True)
+                with patch.object(cl,'gfetch'),patch.object(cl,'wt_add',side_effect=add),patch.object(cl,'wt_rm'),patch.object(cl,'sh',side_effect=shell),patch.object(cl,'git',side_effect=git),patch.object(cl,'host_cfg',return_value=dict(label='test')),patch.object(cl,'notify_claude_record'):
+                    result=cl.publish(j,metrics)
+                self.assertEqual(pushes,['HEAD:refs/heads/codex/closure-record-fixture'])
+                self.assertEqual(result['record_branch'],'codex/closure-record-fixture')

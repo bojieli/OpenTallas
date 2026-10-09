@@ -2006,7 +2006,7 @@ def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
     source_branch, target = spec["source"]["branch"], spec.get("merge_target")
-    branch = f"codex/closure-record-{j['name']}" if source_branch == 'main' and claude_owns_main() else source_branch
+    branch = f"codex/closure-record-{j['name']}" if claude_owns_main() else source_branch
     rec_dir = f"results/closure_loop/{j['name']}"
     tos = [r["to"] for r in spec.get("record", [])] + [rec_dir]
     sparse = ["/" + t.rstrip("/") for t in tos] + ["/tools/closure_loop/"]
@@ -2072,6 +2072,8 @@ def publish(j, metrics):
     if target:
         return merge_record(j, out, sparse, dry)
     out["merge"] = "no merge target"
+    if claude_owns_main():
+        notify_claude_record(j["name"], branch, out["branch_commit"])
     return out
 
 
