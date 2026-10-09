@@ -35,10 +35,12 @@ def main():
             ("negative_prefetch", "tb_hbm_int8_issue", [SOURCES[0], SOURCES[1], SOURCES[4]], ["-DOT_INT8_MUT_PREFETCH"]),
             ("negative_sign", "tb_hbm_int8_line", [SOURCES[0], SOURCES[3]], ["-DOT_INT8_MUT_SIGN"]),
         ]:
-            cmd = ["iverilog", "-g2012", *defines, *([f"-P{top}.PIPE=1"] if args.pipe else []), "-s", top, "-o", str(tmp / name)]
+            cmd = ["iverilog", "-g2012", *defines, *([f"-P{top}.PIPE=1"] if args.pipe and top != "tb_hbm_int8_credit" else []), "-s", top, "-o", str(tmp / name)]
             cmd += [str(ROOT / f) for f in files]
             build = subprocess.run(cmd, capture_output=True, text=True)
+            (args.out / f"{name}_build.log").write_text(build.stdout + build.stderr)
             if build.returncode:
+                (args.out / "verdict.json").write_text(json.dumps(dict(verdict="FAIL",failed_build=name,error=build.stderr,source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in SOURCES}),indent=2)+"\n")
                 raise RuntimeError(build.stderr)
             run = subprocess.run(["vvp", str(tmp / name)], cwd=tmp, capture_output=True, text=True)
             (args.out / f"{name}.log").write_text(run.stdout + run.stderr)
