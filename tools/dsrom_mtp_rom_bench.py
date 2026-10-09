@@ -81,6 +81,18 @@ def cases():
     c["fanp_neg_interleave"] = dict(fanp, tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_INTERLEAVE"],
                                     expect="fail")
     c["fanp_neg_dest"] = dict(fanp, tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_DEST"], expect="fail")
+    # struct-close 2026-10-09: wfc_vmx read register without the vm_re enable (OT_WFCVMX_RQ_FREE)
+    for k in [k for k in c if k.startswith(("s0_", "stg_"))]:
+        d = dict(c[k]); d["defines"] = list(d.get("defines", [])) + ["OT_WFCVMX_RQ_FREE"]
+        c["rqf_" + k] = d
+    # RQFREE 2 (predicted read): every positive bench with the predicted index; negatives: the closed bench mutants,
+    # plus OT_WFCVMX_MUT_PREDOFF (pred starts one off: wrong data must be caught) 
+    for k in [k for k in c if k.startswith(("s0_", "stg_"))]:
+        d = dict(c[k]); d["defines"] = list(d.get("defines", [])) + ["OT_WFCVMX_PRED"]
+        c["prd_" + k] = d
+    c["prd_s0_neg_predoff"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
+    c["prd_stg_neg_predoff"] = dict(c["stg_r1"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF"], expect="fail")
+    c["prd_s0_neg_predoff_nochk"] = dict(c["s0_tr_forced"], defines=["OT_WFCVMX_PRED", "OT_WFCVMX_MUT_PREDOFF", "OT_WFCVMX_MUT_NOPCHK"], expect="fail")
     for k in c:
         c[k].setdefault("expect", "pass")
     return c
