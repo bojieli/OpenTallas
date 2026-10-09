@@ -1,0 +1,14 @@
+{
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/codex/qwen-argmax-gather-20261009",
+  "launcher_pid": 3289281,
+  "positive_rc": 0,
+  "negative_mutant_rc": 1,
+  "cases": 40,
+  "scope": "four real37984-row vocabulary-rank winner packets; full64bit cohort/8bit sequence, arrival orders, finite held credit, zero tie and stale/cohort/rank negative; actual protected link and mutable state integration pending",
+  "files": {
+    "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_argmax_gather.sv": "1a9bdb9ed1b29a424c49edc339bdbf9f7941c093b7a44bf83db7af3985476fef",
+    "rtl/test/qwen_system/tb_qwen_dspark_argmax_gather.sv": "45448f5d5cd3b7b77f41304fd374c5f13ef8d5694308b324bf53a3b181b6a05f",
+    "tools/uarch_qwen_dspark_native_model.py": "92e55e2910ce540080aac6ba271183a4c071bf70cf26f2260791c3847ba97acb"
+  }
+}
