@@ -42,7 +42,7 @@ module ot_hbm_index_lines_sram #(
   for(k=0;k<4;k=k+1)if(pipe_v[k]&&((group_tag_n[k]!==~group_tag[k])||(read_need_n[k]!==~read_need[k])||(read_j_n[k]!==~read_j[k])))control_bad=1;
   can=ENABLE!=0&&active&&!fault&&!control_bad&&(next_line<nlines);
   need=0;rj=0;base_sector=(next_line*136)/32;
-  for(l=0;l<8;l=l+1)if(credits[l]==0)can=0;
+  for(l=0;l<8;l=l+1)if(next_line+l<nlines&&credits[l]==0)can=0;
   for(k=0;k<34;k=k+1)begin
    g=base_sector+k;pc=g%32;j=g/32;bank=j%2;
    if(g<((nlines*136+31)/32))begin
@@ -110,7 +110,7 @@ module ot_hbm_index_lines_sram #(
   assembled=0;output_bad=0;
   for(k=0;k<64;k=k+1)if(read_need[3][k]&&(!dec_v[k]||dec_ue[k]))output_bad=1;
   for(l=0;l<8;l=l+1)begin
-   assembled[l*1099]=1;assembled[l*1099+1+:10]=10'(group_tag[3]+l);
+   assembled[l*1099]=(group_tag[3]+l<nlines);assembled[l*1099+1+:10]=10'(group_tag[3]+l);
    if(group_tag[3]+l<nlines)for(b=0;b<136;b=b+1)begin
     g=(group_tag[3]+l)*136+b;pc=(g/32)%32;j=g/1024;bank=j%2;
     assembled[l*1099+11+b*8+:8]=(ROTATE_REMAP!=0)?rotated_payload[(l*136+b)*8+:8]:decoded[(pc*2+bank)*256+(g%32)*8+:8];
@@ -130,9 +130,9 @@ module ot_hbm_index_lines_sram #(
    for(k=1;k<4;k=k+1)begin group_tag[k]<=group_tag[k-1];group_tag_n[k]<=group_tag_n[k-1];read_need[k]<=read_need[k-1];read_need_n[k]<=read_need_n[k-1];read_j[k]<=read_j[k-1];read_j_n[k]<=read_j_n[k-1];end
    if(control_bad)fault<=1;
    for(l=0;l<8;l=l+1)begin
-    if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
-    credits[l]<=credits[l]+CW'(credit[l])-CW'(can);
-    credits_n[l]<=~(credits[l]+CW'(credit[l])-CW'(can));
+    if(credit[l]&&credits[l]==CRED&&!(can&&(next_line+l<nlines)))fault<=1;
+    credits[l]<=credits[l]+CW'(credit[l])-CW'(can&&(next_line+l<nlines));
+    credits_n[l]<=~(credits[l]+CW'(credit[l])-CW'(can&&(next_line+l<nlines)));
    end
    if(start)begin
     if(active||pipe_v!=0||blocks>342)fault<=1;
