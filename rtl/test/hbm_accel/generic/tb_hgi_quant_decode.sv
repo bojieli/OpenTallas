@@ -21,7 +21,7 @@ module tb_hgi_quant_decode;
  always @(negedge clk) if(rst_n) begin
   if(vo !== (av|rv[13]))$fatal(1,"VALID mismatch");
   if(vo) begin
-   n=n+1;
+   n=n+1; if(av&&rv[13])$fatal(1,"OUTPUT COLLISION n=%0d",n);
    if(y !== (rv[13]?ry[13]:ay) || fault !== (rv[13]?rf[13]:af))$fatal(1,"ARITHMETIC mismatch output %0d",n);
   end
   if(df !== (v&&gen&&!legal))$fatal(1,"DECODE mismatch");
@@ -46,7 +46,7 @@ module tb_hgi_quant_decode;
  end
  end
  @(posedge clk);#0.01;v=0;repeat(40)@(negedge clk);
- if(n<5000||decodes==0)$fatal(1,"COVERAGE");
+ if(n<5000||decodes==0)$fatal(1,"COVERAGE outputs=%0d illegal=%0d",n,decodes);
  $display("CF-QDQ LOCKSTEP PASS outputs=%0d illegal_decode=%0d mutant=%0d",n,decodes,`MUTANT);$finish;
  end
 endmodule
