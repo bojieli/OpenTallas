@@ -189,7 +189,7 @@ module tb_hgi_coll_rearm #(
                 if (t_fres < 0) t_fres = $realtime;
                 t_lres = $realtime; nres = nres + 1;
                 for (integer o = 0; o < NR; o = o + 1) if (o != rank && (gs==15 || o / NA == OG))
-                    sched((o + m) % NPT, ta, {1'b1, 8'hFF, 8'(o / NA), 16'(o * ROF + ((duplicate_last && cmd==1 && m==ROF-1)?0:m)), expw[o * ROF + ((duplicate_last && cmd==1 && m==ROF-1)?0:m)]});
+                    sched((o + m) % NPT, ta, {1'b1, 8'hFF, 8'(o / NA), 16'(o * ROF + ((duplicate_last && cmd==2 && m==ROF-1)?0:m)), expw[o * ROF + ((duplicate_last && cmd==2 && m==ROF-1)?0:m)]});
             end else begin                                 // gather segment flit m: every peer's flit m
                 m = idx - rank * pf;
                 for (integer q = 0; q < NR; q = q + 1) if (q != rank)
@@ -272,9 +272,9 @@ module tb_hgi_coll_rearm #(
         integer mode, cr_before[0:NPT-1];
         wait(rst_n); repeat(8)@(negedge clk);
         for(cmd=0;cmd<total_commands;cmd=cmd+1)begin
-            mode=cmd<5?cmd:4;
+            mode=cmd<6?(cmd==0?0:cmd-1):4;
             case(mode)
-                0:begin gs=0;NA=1;pf=8;rank=37;end
+                0:begin gs=0;NA=1;pf=8;rank=37+cmd;end
                 1:begin gs=1;NA=2;pf=16;rank=13;end
                 2:begin gs=2;NA=4;pf=16;rank=62;end
                 3:begin gs=3;NA=8;pf=32;rank=95;end
@@ -289,7 +289,7 @@ module tb_hgi_coll_rearm #(
             for(integer i=0;i<MAXL;i=i+1)seen[i]=0;
             wait(sr);repeat(3)@(negedge clk);active=1;go=1;
             @(negedge clk);go=0;
-            if(duplicate_last && cmd==1)begin
+            if(duplicate_last && cmd==2)begin
                 wait(flt);repeat(12)begin @(negedge clk);if(done)$fatal(1,"duplicate replaced missing result");end
                 $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish;
             end

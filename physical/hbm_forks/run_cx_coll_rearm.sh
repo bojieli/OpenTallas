@@ -7,6 +7,15 @@ import sys
 from pathlib import Path
 sys.path.insert(0,'tools')
 import ha2_ar_fixture as HF
+import numpy as np, hdc_golden as G
+original_build=HF.build
+def canonical_build(shape,seed):
+    s,parts,z=original_build(shape,seed)
+    if s['NC']==1:
+        # U2: physical NC8 tree pads inactive operands with +0; signed zero canonicalizes.
+        z=G.to_bf16(G.add(parts,np.zeros_like(parts)))
+    return s,parts,z
+HF.build=canonical_build
 for c,(n,pf) in enumerate(((1,8),(2,16),(4,16),(8,32),(8,64))):
     name=f'rearm{c}'
     HF.SHAPES[name]=dict(GS=n,NG=96//n,NC=n,NOG=96//n,E=pf*16,LANES=16,ONESHOT=0,BF16=1)
