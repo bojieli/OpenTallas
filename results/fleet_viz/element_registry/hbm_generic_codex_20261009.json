@@ -337,6 +337,17 @@
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
           "evidence": [],
           "reason": "Arithmetic184 released golden beats verified; shared-core clamp reachability is Claude simulator obligation; actual generic record/VM producer and drain binding unresolved"
+        },
+        "legal_blockset": {
+          "status": "PASS_V1_E4M3_16_ONLY",
+          "evidence": [
+            "results/hgi_generic/quant_v1_blockset_20261009/manifest.json"
+          ],
+          "accepted": 1,
+          "rejected": 255,
+          "outputs": 5410,
+          "decode_faults": 300,
+          "compiled_illegal_block_mutant_exit": 134
         }
       },
       "physical": {
@@ -364,8 +375,7 @@
         "GH7 E4M3 v1 legal block set {16}; latency23 edges normative",
         "VM operand adapter bf4cf8ece passed201 cases10768 words and three runtime mutants; full-shape slot/boundary proof running, no routes",
         "Adapter provisional single stream1.2GHz new master requires physical qualification; existing serial0.9GHz master cannot be directly connected",
-        "Claude GH-d owns generic VM root and SRAM/HBM protection contracts; current VM8 placeholder is not a functional337/273 endpoint",
-        "E4M3 v1 block set {16} binding GH7; all other parameters rejected, exhaustive256-param bench running"
+        "Claude GH-d owns generic VM root and SRAM/HBM protection contracts; current VM8 placeholder is not a functional337/273 endpoint"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -602,7 +612,7 @@
         "paths": [
           "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
         ],
-        "evidence_commit": "d0d4cc685"
+        "evidence_commit": "8c6f2fa0a"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -667,13 +677,16 @@
           "results/hgi_attn_g12_20261009/final_artifacts.json"
         ],
         "electrical": {
-          "status": "NOT_VERIFIED",
-          "evidence": [],
-          "required": [
-            "slew",
-            "capacitance",
-            "clock_leaf_fanout",
-            "power_grid_connectivity"
+          "status": "PASS_TT_FF_SLEW_CAP_FANOUT",
+          "evidence": [
+            "results/hgi_attn_g12_20261009/electrical/receipt.json"
+          ],
+          "max_clock_net_input_fanout": {
+            "120": 16,
+            "140": 15
+          },
+          "remaining": [
+            "power-grid connectivity final audit receipt"
           ]
         },
         "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
@@ -1084,6 +1097,150 @@
         "evidence": [
           "results/arch/hgi_die_integration_20261009/port_delta.json"
         ]
+      }
+    },
+    {
+      "element": "hgi_quant_vm_transport",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_die_integration/quant_vm_transport",
+      "description": "Finite full-record quant VM operand/count/write-ack adapter; real provider binding remains Claude GH-d",
+      "source": {
+        "commit": "bf4cf8ece",
+        "paths": [
+          "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv"
+        ],
+        "exact_evidence_commit": "90fe3ec1e"
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "results/hgi_generic/quant_vm_transport/port_manifest.json"
+        ]
+      },
+      "model": {
+        "status": "MODELED_ACTUAL_PACKET_HANDSHAKES",
+        "evidence": [
+          "tools/uarch_model.py:hgi_quant_vm_transport_model"
+        ],
+        "packed_handshakes_per32words": 8,
+        "strided_handshakes_per32words": 64,
+        "vm_rtt_edges": 4,
+        "core_latency_edges": 23,
+        "clock": "stream1.2 provisional newmaster"
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_201_CASES_10768_WORDS",
+          "evidence": [
+            "results/hgi_generic/quant_vm_transport/90fe3ec1e/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_DROP_EARLY_DONE_CREDIT_MUTANTS",
+          "evidence": [
+            "results/hgi_generic/quant_vm_transport/90fe3ec1e/receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "ARITHMETIC_GOLDENS_BOUND_PROVIDER_AND_ALIAS_POLICY_OPEN",
+          "evidence": [
+            "results/hgi_generic/cf_qdq_891b4b555/manifest.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "SYNTH_COMPLETE_BOUNDARY_AND_SLOT_PENDING_NO_ROUTES",
+        "jobs": [],
+        "corners": {},
+        "measured_synth_area_um2": 29108.0952,
+        "measured_peak_MB": 2003.35,
+        "provisional_slot_um": [
+          1800,
+          600
+        ],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": []
+        },
+        "evidence": []
+      },
+      "dependencies": [
+        "Actual337-bit request273-bit response provider is Claude GH-d; WRITE_ECHO response bit256 is not a fault",
+        "Separate provider_fault must bind actual ECC/UE contract",
+        "Fullshape slot and boundary gates before any route",
+        "Generic stream1.2 physical timing qualification; legacy serial0.9 domain unchanged",
+        "Partialoverlap and overlapping-row alias contract unresolved; multirow/stride/unaligned/broadcast/inplace nonalias shapes exact",
+        "Unit4 opcode4..6 dispatch only; norm/HC sameunit require actual dispatch return arbitration"
+      ],
+      "integration": {
+        "status": "UNBOUND_PROVIDER",
+        "evidence": []
+      }
+    },
+    {
+      "element": "hgi_att_record_adapter_g12",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_attn_g12",
+      "description": "G12 record decode and actual ATT plus row-front-end completion adapter",
+      "source": {
+        "commit": "76bb97ff2",
+        "evidence_commit": "8c6f2fa0a",
+        "paths": [
+          "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_attention_record_adapter_model"
+        ],
+        "replicas": 4,
+        "record_station_edges": 3,
+        "first_row_edges_adapter_plus_leaf": 6
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_18_CASES_1059089_ROWS",
+          "evidence": [
+            "results/hgi_attn_g12_20261009/record/port_manifest.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_FIVE_MUTANTS",
+          "evidence": [
+            "results/hgi_attn_g12_20261009/record/port_manifest.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "EXTERNAL_G12_C_RING_PROVIDER_OPEN",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "BOUNDARY_9_IN_3_OUT_PASS_PAIR_PREPARED_NOT_QUEUED",
+        "jobs": [],
+        "corners": {},
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": []
+        },
+        "evidence": []
+      },
+      "dependencies": [
+        "Real typed rec_pos1_21 and effectiveB/C count32 need upstream descriptor conversion beyond legacy3fae",
+        "Actual ATT done/fault and rows done/fault must bind; done only both real completions",
+        "GH5 no cancellation ports: sticky fault CP halt drained reset only",
+        "Existing selected-ID/gather/formatter actual producer consumer joins open"
+      ],
+      "integration": {
+        "status": "ACTUAL_PRODUCER_CONSUMER_UNBOUND",
+        "evidence": []
       }
     }
   ],

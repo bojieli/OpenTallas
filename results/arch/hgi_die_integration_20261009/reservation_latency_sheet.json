@@ -50,13 +50,13 @@
       "Qwen_command_charge_cycles": 432,
       "physical": "TT142.52/FF12.86/DRC0",
       "pending": [
-        "electrical audit",
         "real gather reader and upstream descriptor count wiring"
-      ]
+      ],
+      "electrical": "PASS TT/FF slew/cap/fanout maxclockinputs15"
     },
     {
       "element": "attention_g12_record_adapter",
-      "source": "d6579854b_SUPERSEDED_GH5",
+      "source": "76bb97ff2",
       "model_hook": "hgi_attention_record_adapter_model",
       "replicas": 4,
       "slot_candidates_um": [
@@ -72,10 +72,11 @@
       "reservation_mm2": null,
       "first_request_edges_adapter_plus_leaf": 6,
       "pending": [
-        "GH5 sticky-fault version replaces cancellation protocol",
+        "Actual typed count21 provider and ATT/gather endpoints remain unbound",
         "slot/boundary/physical",
         "typed count21 provider plus real ATT/rows completion"
-      ]
+      ],
+      "exact_gate": "18cases/1059089rows +5mutants PASS; boundary9/3"
     },
     {
       "element": "quant23_core_and_VM_transport",
