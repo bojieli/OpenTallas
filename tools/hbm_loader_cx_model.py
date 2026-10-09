@@ -19,3 +19,17 @@ def model(nd=2, aw=3):
       arithmetic='Unchanged pipelined CRC folds and data path; transaction-stream/CSR golden comparison mandatory',
       mutable_storage_protection='Inherited FIFO/loader source only; no reliability qualification inferred',
       physical='Standalone pathfinding pending actual clock source, loaded pin budgets and corner timing; no exceptions added')
+
+
+def reset_partition_model(nd=2):
+    m=model(nd=nd)
+    m['schema']='opentallas.loader_cx_local_reset.v1'
+    m['reset_partition']=dict(local_release_buckets_per_loader=5,replicas=5*nd,
+      storage_bits=5*nd,area_floor_um2=5*nd*.2916,
+      source_fanout='Existing per-engine reset synchronizer drives three host and two memory local release leaves instead of the engine endpoint reset pin cloud',
+      endpoint_fanout='One actual retained local leaf per independent sequential process; leaf clock and endpoint clock identical',
+      release_added_destination_cycles=1,release_latency_max_ns=5/3,
+      steady_token_cycles=0,transactions='Source channel FIFOs remain finite and hold descriptors until locally reset control accepts; no payload or numerical changes',
+      required_mapping='Preserve distinct ot_hfd_loader_reset_leaf instances; inspect mapped leaf clocks/reset endpoint groups before physical adoption',
+      physical='Placement/fanout measured path required; added reset FF is not itself signoff')
+    return m
