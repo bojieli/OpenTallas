@@ -1,0 +1,135 @@
+{
+  "schema": "opentallas.qwen-ar-area-sheet.v1",
+  "budget_mm2": 858.0,
+  "grid_outline_mm2": 852.8289654988802,
+  "remaining_after_grid_mm2": 5.171034501119834,
+  "rows": [
+    {
+      "name": "r21b base outline",
+      "area_mm2": 846.792,
+      "basis": "historical actual outline; includes reservations listed below"
+    },
+    {
+      "name": "grid92 column growth",
+      "area_mm2": 6.036965498880136,
+      "basis": "actual snapped outline25999.488x32801.76"
+    },
+    {
+      "name": "embedding stations",
+      "area_mm2": 2.42,
+      "count": 716,
+      "basis": "V19 frame inventory; packing in existing corridors NOT established"
+    },
+    {
+      "name": "skid8 separate frames",
+      "area_mm2": 27.52512,
+      "count": 1536,
+      "basis": "actual cfg160x112; includes pins, not merely cell area"
+    },
+    {
+      "name": "scale ROM macros",
+      "area_mm2": 3.6786949632000003,
+      "count": 480,
+      "basis": "10banks x48ports; actual ot_rom_4096x266_m8 LEF121.824x62.910",
+      "overlap_reservation_mm2": 14.359,
+      "extra_addition_mm2": null
+    },
+    {
+      "name": "CROM frame",
+      "area_mm2": 0.7776,
+      "count": 1,
+      "basis": "777.6x1000 model",
+      "overlap_reservation_mm2": 2.157,
+      "extra_addition_mm2": null
+    },
+    {
+      "name": "SYSCTL frame",
+      "area_mm2": 0.15,
+      "count": 1,
+      "basis": "500x300 model; SRAM included",
+      "overlap_reservation_mm2": 2.157,
+      "shared_reservation_with": "CROM, program and sequencer",
+      "extra_addition_mm2": null
+    },
+    {
+      "name": "host interface",
+      "area_mm2": null,
+      "basis": "source inventory/actual placement required; cannot declare zero"
+    },
+    {
+      "name": "PLL/reset clock producer",
+      "area_mm2": null,
+      "basis": "actual abstract and clock plan required; cannot declare zero"
+    },
+    {
+      "name": "collective frame",
+      "area_mm2": 0.5780865024,
+      "count": 1,
+      "basis": "PR2 cfg760.32square",
+      "overlap_reservation_mm2": 3.6,
+      "extra_addition_mm2": null
+    },
+    {
+      "name": "native128PC frames",
+      "area_mm2": 11.771465564159998,
+      "count": 128,
+      "basis": "reservation247.536x371.52; embedding owner actual slots",
+      "overlap_reservation": "existing controller slots",
+      "extra_addition_mm2": null
+    }
+  ],
+  "skid_variants": [
+    {
+      "depth": 2,
+      "estimated_cell_um2": 4868.1624,
+      "cell_only_floorplan_lower_bound_mm2": 13.595449902545454,
+      "unchanged_pin_frame_mm2": 27.52512,
+      "physical_frame_qualified": false,
+      "trace_latency_measured": false
+    },
+    {
+      "depth": 4,
+      "estimated_cell_um2": 5469.4416,
+      "cell_only_floorplan_lower_bound_mm2": 15.274658722909091,
+      "unchanged_pin_frame_mm2": 27.52512,
+      "physical_frame_qualified": false,
+      "trace_latency_measured": false
+    },
+    {
+      "depth": 8,
+      "estimated_cell_um2": 6672.0,
+      "cell_only_floorplan_lower_bound_mm2": 18.633076363636363,
+      "unchanged_pin_frame_mm2": 27.52512,
+      "physical_frame_qualified": false,
+      "trace_latency_measured": false
+    }
+  ],
+  "no_reuse_known_total_mm2": 882.7740854988801,
+  "no_reuse_over_budget_mm2": 24.77408549888014,
+  "conditional_embedding_rom_removal_mm2": 11.046,
+  "conditional_total_after_embedding_removal_mm2": 871.7280854988801,
+  "conditional_removal_proven": false,
+  "scale_payload": {
+    "code_rows": 20016,
+    "code_capacity": 20480,
+    "scale_rows_per_port": 40392,
+    "scale_capacity_per_port": 40960,
+    "scale_ports": 48,
+    "scale_banks_per_port": 10,
+    "scale_macro_count": 480,
+    "raw_scale_macro_area_mm2": 3.6786949632000003,
+    "available_scale_reservation_mm2": 14.359,
+    "physical_join_complete": false,
+    "hash_evidence": "09432714d"
+  },
+  "adopted": false,
+  "fit_proven": false,
+  "constraints": [
+    "Never add a macro footprint again when packed inside an existing reservation.",
+    "Never subtract a reservation until actual master rectangles and channels fit its replacement.",
+    "1536 independent skid frames do not fit current outline, even with conditional old embedding removal.",
+    "Depth2/4 cell estimates do not demonstrate smaller pin-access frames or shared queue correctness.",
+    "716 stations is historical parallel-bus inventory; new finite trunk/spine alternative must supersede its priced count explicitly.",
+    "Host/PLL and native row/context transport remain unpriced, preventing a final fit claim."
+  ]
+}
