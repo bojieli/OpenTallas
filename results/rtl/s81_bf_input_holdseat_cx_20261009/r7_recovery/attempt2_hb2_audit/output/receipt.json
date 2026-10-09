@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.h7.completed_checkpoint_seat_inventory.v1",
+  "read_only": true,
+  "expected_master": "HB2xp67_ASAP7_75t_R",
+  "expected_count": 6688,
+  "mapped_count": 6688,
+  "baseline_count": 6688,
+  "checkpoint_count": 6688,
+  "mapped_keep_and_dont_touch_count": 6688,
+  "baseline_db_do_not_touch_count": 6688,
+  "checkpoint_db_do_not_touch_count": 6688,
+  "checkpoint_db_protection_api_supported_count": 6688,
+  "all_checkpoint_db_protected": true,
+  "db_protection_changes": [],
+  "discrepancies": {
+    "mapped_missing": [],
+    "mapped_extra": [],
+    "baseline_missing": [],
+    "baseline_extra": [],
+    "checkpoint_missing": [],
+    "checkpoint_extra": [],
+    "wrong_masters": [],
+    "missing_mapped_attributes": [],
+    "db_protection_lost": []
+  },
+  "input_sha256_before": {
+    "/in/1_2_yosys.v": "8a91742bfd1b16cde874cca9cf9b0bcea56e1d364ca2f4f5660aee60b280575e",
+    "/in/1_synth.odb": "93b2c77774056ea30a762dd96a46bbf2c101e97c03b52a5569894b10e672aff7",
+    "/in/3_3_place_gp.odb": "bc2aad38908ac3e254235c74081682d8f4ee0134245cb1c1113a5b4b799c111b"
+  },
+  "input_sha256_after": {
+    "/in/1_2_yosys.v": "8a91742bfd1b16cde874cca9cf9b0bcea56e1d364ca2f4f5660aee60b280575e",
+    "/in/1_synth.odb": "93b2c77774056ea30a762dd96a46bbf2c101e97c03b52a5569894b10e672aff7",
+    "/in/3_3_place_gp.odb": "bc2aad38908ac3e254235c74081682d8f4ee0134245cb1c1113a5b4b799c111b"
+  },
+  "inputs_unchanged": true,
+  "protection_note": "Mapped keep/dont_touch and actual OpenDB protection flags are separate observations. Retained count alone does not establish protection.",
+  "inventory_and_protection_equivalence": true
+}

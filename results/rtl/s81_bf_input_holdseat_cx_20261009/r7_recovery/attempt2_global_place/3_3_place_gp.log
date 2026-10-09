@@ -1,0 +1,1387 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+fp_margin_lint: PASS  util 55.6% (+hold 59.9%), pins 1803, max pin density 8.74 b/um, macros 4, slivers 0, channel worst 0.007
+fp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: S/M5 8.7 b/um
+OT_FP_LINT: 5 s
+[INFO RSZ-0026] Removed 36691 buffers.
+Perform port buffering...
+[WARNING RSZ-0085] Input cfg_a[0] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1663\].u_hb/A
+[WARNING RSZ-0085] Input cfg_a[1] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1664\].u_hb/A
+[WARNING RSZ-0085] Input cfg_a[2] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1665\].u_hb/A
+[WARNING RSZ-0085] Input cfg_a[3] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1666\].u_hb/A
+[WARNING RSZ-0085] Input cfg_a[4] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1667\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[0] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1615\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[10] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1625\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[11] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1626\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[12] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1627\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[13] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1628\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[14] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1629\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[15] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1630\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[16] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1631\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[17] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1632\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[18] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1633\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[19] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1634\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[1] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1616\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[20] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1635\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[21] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1636\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[22] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1637\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[23] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1638\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[24] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1639\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[25] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1640\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[26] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1641\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[27] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1642\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[28] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1643\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[29] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1644\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[2] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1617\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[30] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1645\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[31] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1646\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[32] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1647\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[33] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1648\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[34] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1649\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[35] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1650\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[36] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1651\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[37] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1652\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[38] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1653\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[39] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1654\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[3] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1618\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[40] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1655\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[41] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1656\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[42] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1657\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[43] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1658\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[44] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1659\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[45] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1660\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[46] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1661\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[47] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1662\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[4] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1619\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[5] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1620\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[6] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1621\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[7] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1622\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[8] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1623\].u_hb/A
+[WARNING RSZ-0085] Input cfg_d[9] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1624\].u_hb/A
+[WARNING RSZ-0085] Input cfg_v can't be buffered due to dont-touch fanout g_pin.u_hs_control.g_seat\[0\].g_bit\[3\].u_hb/A
+[WARNING RSZ-0085] Input go can't be buffered due to dont-touch fanout g_pin.u_hs_control.g_seat\[0\].g_bit\[2\].u_hb/A
+[WARNING RSZ-0085] Input go_bf can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1614\].u_hb/A
+[WARNING RSZ-0085] Input xb_b[0] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1060\].u_hb/A
+[WARNING RSZ-0085] Input xb_b[1] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1061\].u_hb/A
+[WARNING RSZ-0085] Input xb_b[2] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1062\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[0] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[0\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1000] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1000\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1001] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1001\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1002] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1002\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1003] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1003\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1004] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1004\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1005] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1005\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1006] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1006\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1007] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1007\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1008] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1008\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1009] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1009\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[100] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[100\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1010] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1010\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1011] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1011\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1012] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1012\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1013] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1013\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1014] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1014\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1015] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1015\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1016] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1016\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1017] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1017\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1018] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1018\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1019] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1019\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[101] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[101\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1020] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1020\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1021] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1021\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1022] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1022\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1023] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1023\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[102] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[102\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[103] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[103\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[104] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[104\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[105] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[105\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[106] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[106\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[107] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[107\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[108] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[108\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[109] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[109\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[10] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[10\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[110] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[110\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[111] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[111\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[112] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[112\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[113] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[113\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[114] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[114\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[115] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[115\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[116] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[116\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[117] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[117\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[118] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[118\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[119] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[119\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[11] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[11\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[120] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[120\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[121] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[121\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[122] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[122\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[123] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[123\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[124] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[124\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[125] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[125\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[126] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[126\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[127] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[127\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[128] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[128\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[129] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[129\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[12] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[12\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[130] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[130\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[131] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[131\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[132] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[132\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[133] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[133\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[134] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[134\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[135] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[135\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[136] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[136\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[137] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[137\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[138] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[138\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[139] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[139\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[13] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[13\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[140] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[140\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[141] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[141\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[142] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[142\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[143] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[143\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[144] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[144\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[145] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[145\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[146] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[146\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[147] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[147\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[148] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[148\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[149] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[149\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[14] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[14\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[150] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[150\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[151] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[151\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[152] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[152\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[153] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[153\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[154] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[154\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[155] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[155\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[156] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[156\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[157] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[157\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[158] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[158\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[159] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[159\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[15] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[15\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[160] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[160\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[161] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[161\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[162] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[162\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[163] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[163\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[164] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[164\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[165] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[165\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[166] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[166\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[167] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[167\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[168] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[168\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[169] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[169\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[16] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[16\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[170] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[170\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[171] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[171\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[172] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[172\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[173] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[173\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[174] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[174\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[175] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[175\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[176] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[176\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[177] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[177\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[178] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[178\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[179] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[179\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[17] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[17\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[180] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[180\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[181] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[181\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[182] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[182\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[183] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[183\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[184] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[184\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[185] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[185\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[186] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[186\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[187] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[187\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[188] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[188\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[189] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[189\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[18] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[18\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[190] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[190\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[191] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[191\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[192] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[192\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[193] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[193\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[194] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[194\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[195] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[195\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[196] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[196\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[197] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[197\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[198] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[198\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[199] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[199\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[19] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[19\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[1] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[1\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[200] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[200\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[201] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[201\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[202] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[202\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[203] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[203\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[204] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[204\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[205] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[205\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[206] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[206\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[207] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[207\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[208] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[208\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[209] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[209\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[20] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[20\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[210] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[210\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[211] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[211\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[212] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[212\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[213] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[213\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[214] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[214\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[215] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[215\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[216] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[216\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[217] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[217\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[218] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[218\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[219] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[219\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[21] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[21\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[220] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[220\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[221] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[221\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[222] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[222\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[223] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[223\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[224] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[224\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[225] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[225\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[226] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[226\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[227] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[227\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[228] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[228\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[229] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[229\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[22] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[22\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[230] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[230\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[231] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[231\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[232] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[232\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[233] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[233\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[234] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[234\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[235] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[235\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[236] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[236\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[237] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[237\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[238] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[238\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[239] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[239\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[23] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[23\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[240] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[240\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[241] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[241\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[242] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[242\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[243] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[243\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[244] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[244\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[245] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[245\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[246] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[246\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[247] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[247\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[248] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[248\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[249] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[249\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[24] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[24\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[250] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[250\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[251] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[251\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[252] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[252\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[253] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[253\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[254] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[254\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[255] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[255\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[256] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[256\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[257] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[257\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[258] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[258\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[259] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[259\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[25] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[25\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[260] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[260\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[261] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[261\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[262] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[262\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[263] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[263\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[264] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[264\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[265] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[265\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[266] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[266\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[267] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[267\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[268] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[268\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[269] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[269\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[26] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[26\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[270] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[270\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[271] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[271\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[272] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[272\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[273] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[273\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[274] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[274\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[275] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[275\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[276] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[276\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[277] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[277\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[278] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[278\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[279] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[279\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[27] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[27\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[280] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[280\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[281] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[281\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[282] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[282\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[283] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[283\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[284] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[284\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[285] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[285\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[286] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[286\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[287] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[287\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[288] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[288\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[289] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[289\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[28] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[28\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[290] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[290\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[291] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[291\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[292] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[292\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[293] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[293\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[294] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[294\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[295] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[295\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[296] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[296\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[297] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[297\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[298] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[298\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[299] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[299\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[29] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[29\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[2] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[2\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[300] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[300\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[301] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[301\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[302] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[302\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[303] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[303\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[304] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[304\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[305] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[305\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[306] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[306\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[307] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[307\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[308] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[308\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[309] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[309\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[30] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[30\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[310] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[310\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[311] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[311\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[312] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[312\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[313] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[313\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[314] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[314\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[315] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[315\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[316] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[316\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[317] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[317\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[318] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[318\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[319] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[319\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[31] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[31\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[320] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[320\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[321] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[321\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[322] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[322\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[323] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[323\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[324] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[324\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[325] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[325\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[326] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[326\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[327] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[327\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[328] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[328\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[329] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[329\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[32] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[32\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[330] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[330\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[331] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[331\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[332] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[332\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[333] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[333\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[334] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[334\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[335] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[335\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[336] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[336\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[337] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[337\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[338] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[338\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[339] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[339\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[33] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[33\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[340] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[340\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[341] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[341\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[342] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[342\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[343] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[343\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[344] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[344\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[345] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[345\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[346] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[346\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[347] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[347\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[348] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[348\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[349] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[349\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[34] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[34\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[350] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[350\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[351] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[351\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[352] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[352\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[353] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[353\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[354] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[354\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[355] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[355\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[356] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[356\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[357] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[357\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[358] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[358\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[359] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[359\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[35] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[35\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[360] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[360\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[361] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[361\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[362] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[362\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[363] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[363\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[364] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[364\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[365] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[365\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[366] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[366\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[367] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[367\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[368] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[368\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[369] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[369\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[36] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[36\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[370] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[370\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[371] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[371\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[372] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[372\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[373] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[373\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[374] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[374\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[375] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[375\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[376] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[376\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[377] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[377\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[378] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[378\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[379] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[379\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[37] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[37\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[380] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[380\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[381] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[381\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[382] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[382\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[383] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[383\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[384] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[384\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[385] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[385\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[386] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[386\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[387] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[387\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[388] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[388\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[389] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[389\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[38] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[38\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[390] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[390\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[391] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[391\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[392] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[392\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[393] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[393\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[394] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[394\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[395] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[395\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[396] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[396\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[397] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[397\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[398] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[398\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[399] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[399\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[39] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[39\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[3] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[3\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[400] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[400\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[401] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[401\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[402] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[402\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[403] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[403\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[404] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[404\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[405] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[405\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[406] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[406\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[407] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[407\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[408] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[408\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[409] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[409\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[40] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[40\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[410] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[410\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[411] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[411\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[412] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[412\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[413] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[413\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[414] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[414\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[415] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[415\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[416] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[416\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[417] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[417\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[418] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[418\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[419] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[419\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[41] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[41\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[420] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[420\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[421] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[421\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[422] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[422\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[423] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[423\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[424] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[424\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[425] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[425\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[426] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[426\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[427] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[427\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[428] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[428\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[429] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[429\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[42] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[42\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[430] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[430\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[431] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[431\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[432] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[432\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[433] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[433\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[434] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[434\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[435] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[435\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[436] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[436\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[437] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[437\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[438] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[438\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[439] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[439\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[43] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[43\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[440] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[440\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[441] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[441\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[442] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[442\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[443] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[443\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[444] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[444\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[445] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[445\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[446] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[446\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[447] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[447\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[448] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[448\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[449] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[449\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[44] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[44\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[450] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[450\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[451] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[451\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[452] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[452\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[453] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[453\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[454] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[454\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[455] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[455\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[456] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[456\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[457] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[457\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[458] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[458\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[459] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[459\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[45] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[45\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[460] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[460\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[461] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[461\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[462] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[462\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[463] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[463\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[464] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[464\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[465] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[465\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[466] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[466\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[467] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[467\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[468] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[468\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[469] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[469\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[46] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[46\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[470] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[470\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[471] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[471\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[472] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[472\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[473] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[473\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[474] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[474\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[475] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[475\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[476] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[476\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[477] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[477\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[478] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[478\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[479] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[479\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[47] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[47\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[480] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[480\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[481] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[481\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[482] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[482\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[483] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[483\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[484] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[484\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[485] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[485\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[486] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[486\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[487] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[487\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[488] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[488\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[489] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[489\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[48] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[48\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[490] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[490\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[491] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[491\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[492] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[492\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[493] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[493\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[494] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[494\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[495] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[495\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[496] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[496\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[497] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[497\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[498] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[498\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[499] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[499\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[49] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[49\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[4] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[4\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[500] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[500\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[501] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[501\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[502] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[502\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[503] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[503\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[504] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[504\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[505] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[505\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[506] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[506\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[507] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[507\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[508] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[508\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[509] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[509\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[50] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[50\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[510] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[510\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[511] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[511\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[512] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[512\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[513] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[513\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[514] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[514\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[515] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[515\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[516] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[516\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[517] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[517\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[518] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[518\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[519] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[519\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[51] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[51\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[520] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[520\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[521] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[521\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[522] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[522\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[523] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[523\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[524] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[524\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[525] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[525\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[526] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[526\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[527] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[527\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[528] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[528\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[529] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[529\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[52] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[52\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[530] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[530\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[531] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[531\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[532] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[532\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[533] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[533\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[534] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[534\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[535] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[535\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[536] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[536\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[537] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[537\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[538] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[538\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[539] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[539\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[53] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[53\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[540] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[540\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[541] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[541\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[542] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[542\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[543] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[543\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[544] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[544\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[545] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[545\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[546] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[546\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[547] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[547\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[548] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[548\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[549] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[549\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[54] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[54\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[550] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[550\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[551] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[551\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[552] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[552\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[553] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[553\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[554] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[554\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[555] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[555\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[556] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[556\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[557] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[557\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[558] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[558\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[559] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[559\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[55] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[55\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[560] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[560\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[561] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[561\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[562] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[562\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[563] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[563\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[564] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[564\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[565] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[565\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[566] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[566\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[567] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[567\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[568] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[568\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[569] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[569\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[56] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[56\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[570] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[570\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[571] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[571\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[572] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[572\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[573] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[573\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[574] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[574\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[575] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[575\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[576] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[576\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[577] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[577\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[578] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[578\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[579] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[579\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[57] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[57\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[580] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[580\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[581] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[581\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[582] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[582\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[583] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[583\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[584] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[584\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[585] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[585\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[586] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[586\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[587] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[587\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[588] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[588\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[589] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[589\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[58] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[58\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[590] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[590\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[591] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[591\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[592] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[592\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[593] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[593\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[594] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[594\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[595] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[595\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[596] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[596\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[597] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[597\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[598] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[598\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[599] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[599\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[59] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[59\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[5] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[5\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[600] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[600\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[601] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[601\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[602] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[602\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[603] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[603\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[604] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[604\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[605] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[605\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[606] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[606\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[607] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[607\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[608] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[608\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[609] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[609\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[60] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[60\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[610] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[610\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[611] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[611\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[612] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[612\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[613] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[613\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[614] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[614\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[615] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[615\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[616] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[616\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[617] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[617\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[618] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[618\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[619] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[619\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[61] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[61\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[620] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[620\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[621] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[621\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[622] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[622\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[623] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[623\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[624] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[624\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[625] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[625\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[626] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[626\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[627] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[627\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[628] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[628\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[629] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[629\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[62] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[62\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[630] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[630\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[631] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[631\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[632] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[632\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[633] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[633\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[634] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[634\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[635] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[635\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[636] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[636\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[637] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[637\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[638] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[638\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[639] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[639\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[63] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[63\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[640] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[640\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[641] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[641\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[642] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[642\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[643] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[643\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[644] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[644\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[645] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[645\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[646] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[646\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[647] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[647\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[648] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[648\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[649] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[649\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[64] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[64\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[650] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[650\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[651] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[651\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[652] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[652\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[653] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[653\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[654] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[654\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[655] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[655\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[656] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[656\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[657] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[657\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[658] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[658\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[659] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[659\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[65] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[65\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[660] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[660\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[661] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[661\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[662] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[662\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[663] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[663\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[664] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[664\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[665] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[665\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[666] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[666\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[667] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[667\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[668] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[668\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[669] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[669\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[66] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[66\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[670] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[670\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[671] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[671\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[672] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[672\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[673] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[673\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[674] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[674\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[675] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[675\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[676] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[676\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[677] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[677\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[678] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[678\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[679] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[679\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[67] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[67\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[680] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[680\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[681] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[681\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[682] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[682\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[683] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[683\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[684] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[684\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[685] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[685\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[686] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[686\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[687] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[687\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[688] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[688\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[689] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[689\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[68] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[68\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[690] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[690\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[691] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[691\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[692] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[692\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[693] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[693\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[694] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[694\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[695] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[695\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[696] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[696\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[697] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[697\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[698] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[698\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[699] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[699\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[69] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[69\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[6] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[6\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[700] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[700\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[701] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[701\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[702] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[702\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[703] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[703\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[704] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[704\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[705] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[705\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[706] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[706\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[707] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[707\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[708] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[708\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[709] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[709\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[70] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[70\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[710] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[710\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[711] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[711\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[712] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[712\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[713] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[713\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[714] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[714\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[715] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[715\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[716] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[716\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[717] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[717\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[718] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[718\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[719] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[719\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[71] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[71\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[720] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[720\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[721] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[721\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[722] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[722\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[723] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[723\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[724] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[724\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[725] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[725\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[726] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[726\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[727] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[727\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[728] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[728\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[729] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[729\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[72] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[72\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[730] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[730\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[731] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[731\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[732] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[732\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[733] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[733\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[734] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[734\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[735] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[735\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[736] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[736\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[737] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[737\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[738] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[738\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[739] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[739\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[73] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[73\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[740] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[740\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[741] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[741\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[742] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[742\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[743] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[743\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[744] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[744\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[745] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[745\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[746] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[746\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[747] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[747\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[748] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[748\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[749] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[749\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[74] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[74\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[750] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[750\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[751] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[751\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[752] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[752\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[753] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[753\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[754] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[754\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[755] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[755\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[756] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[756\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[757] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[757\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[758] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[758\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[759] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[759\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[75] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[75\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[760] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[760\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[761] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[761\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[762] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[762\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[763] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[763\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[764] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[764\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[765] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[765\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[766] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[766\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[767] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[767\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[768] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[768\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[769] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[769\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[76] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[76\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[770] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[770\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[771] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[771\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[772] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[772\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[773] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[773\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[774] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[774\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[775] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[775\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[776] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[776\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[777] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[777\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[778] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[778\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[779] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[779\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[77] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[77\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[780] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[780\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[781] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[781\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[782] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[782\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[783] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[783\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[784] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[784\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[785] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[785\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[786] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[786\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[787] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[787\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[788] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[788\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[789] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[789\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[78] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[78\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[790] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[790\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[791] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[791\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[792] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[792\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[793] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[793\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[794] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[794\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[795] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[795\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[796] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[796\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[797] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[797\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[798] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[798\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[799] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[799\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[79] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[79\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[7] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[7\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[800] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[800\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[801] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[801\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[802] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[802\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[803] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[803\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[804] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[804\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[805] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[805\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[806] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[806\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[807] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[807\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[808] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[808\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[809] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[809\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[80] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[80\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[810] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[810\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[811] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[811\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[812] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[812\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[813] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[813\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[814] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[814\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[815] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[815\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[816] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[816\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[817] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[817\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[818] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[818\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[819] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[819\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[81] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[81\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[820] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[820\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[821] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[821\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[822] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[822\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[823] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[823\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[824] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[824\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[825] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[825\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[826] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[826\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[827] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[827\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[828] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[828\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[829] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[829\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[82] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[82\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[830] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[830\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[831] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[831\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[832] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[832\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[833] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[833\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[834] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[834\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[835] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[835\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[836] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[836\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[837] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[837\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[838] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[838\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[839] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[839\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[83] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[83\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[840] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[840\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[841] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[841\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[842] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[842\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[843] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[843\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[844] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[844\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[845] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[845\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[846] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[846\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[847] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[847\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[848] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[848\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[849] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[849\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[84] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[84\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[850] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[850\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[851] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[851\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[852] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[852\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[853] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[853\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[854] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[854\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[855] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[855\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[856] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[856\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[857] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[857\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[858] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[858\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[859] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[859\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[85] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[85\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[860] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[860\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[861] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[861\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[862] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[862\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[863] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[863\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[864] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[864\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[865] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[865\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[866] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[866\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[867] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[867\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[868] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[868\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[869] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[869\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[86] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[86\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[870] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[870\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[871] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[871\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[872] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[872\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[873] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[873\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[874] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[874\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[875] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[875\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[876] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[876\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[877] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[877\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[878] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[878\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[879] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[879\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[87] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[87\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[880] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[880\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[881] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[881\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[882] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[882\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[883] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[883\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[884] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[884\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[885] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[885\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[886] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[886\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[887] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[887\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[888] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[888\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[889] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[889\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[88] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[88\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[890] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[890\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[891] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[891\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[892] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[892\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[893] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[893\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[894] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[894\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[895] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[895\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[896] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[896\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[897] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[897\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[898] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[898\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[899] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[899\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[89] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[89\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[8] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[8\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[900] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[900\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[901] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[901\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[902] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[902\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[903] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[903\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[904] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[904\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[905] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[905\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[906] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[906\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[907] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[907\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[908] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[908\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[909] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[909\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[90] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[90\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[910] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[910\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[911] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[911\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[912] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[912\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[913] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[913\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[914] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[914\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[915] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[915\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[916] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[916\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[917] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[917\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[918] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[918\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[919] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[919\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[91] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[91\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[920] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[920\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[921] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[921\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[922] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[922\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[923] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[923\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[924] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[924\].u_hb/A
+[WARNING RSZ-0085] Input xb_d[925] can't be buffered due to dont-touch fanout g_pin.u_hs_data.g_seat\[0\].g_bit\[925\].u_hb/A
+[WARNING RSZ-0085] message limit (1000) reached. This message will no longer print.
+[INFO RSZ-0027] Inserted 1 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 128 BUFx2_ASAP7_75t_R output buffers.
+global_placement -density 0.6 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 1000.728 187.920 ) um
+[INFO GPL-0016] Core area:                  185493.992 um^2
+[INFO GPL-0036] Movable instances area:      68972.658 um^2
+[INFO GPL-0037] Total instances area:       101062.888 um^2
+[INFO GPL-0035] Pin density area adjust:      7518.132 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:            526822
+[INFO GPL-0007] Movable instances:              508910
+[INFO GPL-0008] Fixed instances:                 14264
+[INFO GPL-0009] Dummy instances:                  3648
+[INFO GPL-0010] Number of nets:                 511680
+[INFO GPL-0011] Number of pins:                1671638
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 1002.890 190.080 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 1000.728 187.920 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                185493.992 um^2
+[INFO GPL-0017] Fixed instances area:        46652.763 um^2
+[INFO GPL-0018] Movable instances area:      76490.790 um^2
+[INFO GPL-0019] Utilization:                    55.092 %
+[INFO GPL-0020] Standard cells area:         76490.790 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 508910	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.02555975 HPWL: 2759248760
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00689259 HPWL: 1619439489
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00563133 HPWL: 1554780572
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00472136 HPWL: 1486752059
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00164724 HPWL: 1446781579
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00110033 HPWL: 1425702242
+[InitialPlace]  Iter: 7 conjugate gradient residual: 0.00093314 HPWL: 1402069425
+[InitialPlace]  Iter: 8 conjugate gradient residual: 0.00062801 HPWL: 1372693395
+[InitialPlace]  Iter: 9 conjugate gradient residual: 0.00058926 HPWL: 1332767630
+[InitialPlace]  Iter: 10 conjugate gradient residual: 0.00045337 HPWL: 1293729090
+[InitialPlace]  Iter: 11 conjugate gradient residual: 0.00043622 HPWL: 1265770849
+[InitialPlace]  Iter: 12 conjugate gradient residual: 0.00044008 HPWL: 1267228454
+[InitialPlace]  Iter: 13 conjugate gradient residual: 0.00039449 HPWL: 1266104065
+[InitialPlace]  Iter: 14 conjugate gradient residual: 0.00035897 HPWL: 1260107918
+[InitialPlace]  Iter: 15 conjugate gradient residual: 0.00040442 HPWL: 1260356667
+[InitialPlace]  Iter: 16 conjugate gradient residual: 0.00035801 HPWL: 1258103236
+[InitialPlace]  Iter: 17 conjugate gradient residual: 0.00040043 HPWL: 1257081820
+[InitialPlace]  Iter: 18 conjugate gradient residual: 0.00033522 HPWL: 1254479218
+[InitialPlace]  Iter: 19 conjugate gradient residual: 0.00031840 HPWL: 1252687542
+[InitialPlace]  Iter: 20 conjugate gradient residual: 0.00027654 HPWL: 1251103679
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.6000
+[INFO GPL-0024] Movable insts average area:      0.150 um^2
+[INFO GPL-0025] Ideal bin area:                  0.251 um^2
+[INFO GPL-0026] Ideal bin count:                740480
+[INFO GPL-0027] Total bin area:             185493.992 um^2
+[INFO GPL-0028] Bin count (X, Y):        1024 ,    256
+[INFO GPL-0029] Bin size (W * H):       0.975 *  0.726 um
+[INFO GPL-0030] Number of bins:                 262144
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9685 |  6.637301e+05 |   +0.00% |  4.51e-15 |      
+       10 |   0.9572 |  7.530088e+05 |  +13.45% |  7.29e-15 |      
+       20 |   0.9502 |  8.231693e+05 |   +9.32% |  1.18e-14 |      
+       30 |   0.9454 |  8.615473e+05 |   +4.66% |  1.91e-14 |      
+       40 |   0.9418 |  8.816948e+05 |   +2.34% |  3.10e-14 |      
+       50 |   0.9389 |  8.988783e+05 |   +1.95% |  5.05e-14 |      
+       60 |   0.9382 |  9.088388e+05 |   +1.11% |  8.21e-14 |      
+       70 |   0.9382 |  9.101512e+05 |   +0.14% |  1.34e-13 |      
+       80 |   0.9389 |  9.083555e+05 |   -0.20% |  2.18e-13 |      
+       90 |   0.9389 |  9.061685e+05 |   -0.24% |  3.55e-13 |      
+      100 |   0.9386 |  9.036553e+05 |   -0.28% |  5.78e-13 |      
+      110 |   0.9381 |  9.029173e+05 |   -0.08% |  9.41e-13 |      
+      120 |   0.9372 |  9.047708e+05 |   +0.21% |  1.53e-12 |      
+      130 |   0.9361 |  9.085936e+05 |   +0.42% |  2.50e-12 |      
+      140 |   0.9347 |  9.139042e+05 |   +0.58% |  4.06e-12 |      
+      150 |   0.9336 |  9.215213e+05 |   +0.83% |  6.61e-12 |      
+      160 |   0.9323 |  9.329950e+05 |   +1.25% |  1.08e-11 |      
+      170 |   0.9301 |  9.486836e+05 |   +1.68% |  1.75e-11 |      
+      180 |   0.9268 |  9.692687e+05 |   +2.17% |  2.84e-11 |      
+      190 |   0.9218 |  9.973002e+05 |   +2.89% |  4.62e-11 |      
+      200 |   0.9137 |  1.035836e+06 |   +3.86% |  7.49e-11 |      
+      210 |   0.9016 |  1.086980e+06 |   +4.94% |  1.21e-10 |      
+      220 |   0.8849 |  1.153941e+06 |   +6.16% |  1.96e-10 |      
+      230 |   0.8617 |  1.241651e+06 |   +7.60% |  3.17e-10 |      
+      240 |   0.8359 |  1.360554e+06 |   +9.58% |  5.10e-10 |      
+      250 |   0.8064 |  1.523800e+06 |  +12.00% |  8.16e-10 |      
+      260 |   0.7729 |  1.745459e+06 |  +14.55% |  1.30e-09 |      
+      270 |   0.7267 |  2.233451e+06 |  +27.96% |  2.01e-09 |      
+      280 |   0.6973 |  2.533673e+06 |  +13.44% |  3.16e-09 |      
+      290 |   0.6453 |  2.953194e+06 |  +16.56% |  4.93e-09 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 293, overflow: 0.634, keep resizer changes at: 1, HPWL: 3047160272
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    511680
+    final |     +1.0% |     318 |    7466 |          2504 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1967 slew violations.
+[INFO RSZ-0035] Found 1625 fanout violations.
+[INFO RSZ-0036] Found 70 capacitance violations.
+[INFO RSZ-0037] Found 484 long wires.
+[INFO RSZ-0039] Resized 318 instances.
+[INFO RSZ-0038] Inserted 7466 buffers in 2504 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    500052
+    50000 |     +0.1% |     140 |     1570 |    450052
+   100000 |     +0.2% |     537 |     2992 |    400052
+   150000 |     +0.3% |     673 |     3669 |    350052
+   200000 |     +0.4% |    1744 |     5659 |    300052
+   250000 |     +0.2% |    3799 |     8620 |    250052
+   300000 |     +0.3% |    4450 |     9554 |    200052
+   350000 |     +0.3% |    4567 |    10020 |    150052
+   400000 |     +0.3% |    5570 |    11706 |    100052
+   450000 |     +0.4% |    6414 |    13233 |     50052
+   500000 |     +0.4% |    7463 |    14941 |        52
+    final |     +0.4% |    7466 |    14944 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -5.3846905e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 1482.191 um^2 (+1.94%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 14944 (+2.94%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 22410, deleted: 7466
+[INFO GPL-0110] Timing-driven: new target density: 0.6106755
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      300 |   0.6621 |  2.407753e+06 |  -18.47% |  7.77e-09 |      
+      310 |   0.6379 |  2.528771e+06 |   +5.03% |  1.25e-08 |      
+      320 |   0.6178 |  2.536883e+06 |   +0.32% |  2.03e-08 |      
+[INFO GPL-0038] Routability snapshot saved at iter = 327
+      326 |   0.5991 |  2.556337e+06 |          |           |      
+      330 |   0.5836 |  2.597091e+06 |   +2.37% |  3.29e-08 |      
+      340 |   0.5433 |  2.883281e+06 |  +11.02% |  5.21e-08 |      
+      350 |   0.4052 |  5.423439e+06 |  +88.10% |  6.74e-08 |      
+      360 |   0.4628 |  3.877105e+06 |  -28.51% |  1.04e-07 |      
+      370 |   0.3669 |  4.548511e+06 |  +17.32% |  1.54e-07 |      
+      380 |   0.3647 |  3.954494e+06 |  -13.06% |  2.30e-07 |      
+      390 |   0.3413 |  3.987110e+06 |   +0.82% |  3.29e-07 |      
+      400 |   0.3265 |  3.531505e+06 |  -11.43% |  4.75e-07 |      
+[INFO GPL-0040] Routability iteration: 1
+[WARNING GRT-0281] Net clk has a large fanout of 109390 terminals.
+[INFO GPL-0041] Total routing overflow: 1220.5558
+[INFO GPL-0042] Number of overflowed tiles: 8460 (1.44%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.3047
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.1977
+[INFO GPL-0045] Average top 2.0% routing congestion: 1.0980
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.9819
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.2512
+[INFO GPL-0048] Routing congestion (1.2512) lower than previous minimum (1e+30). Updating minimum.
+[INFO GPL-0086] Inflated area:                1990.210 um^2 (+2.55%)
+[INFO GPL-0052] Placement target density:       0.6107
+[INFO GPL-0076] Removing fillers, count: Before: 45090, After: 31920 (-29.21%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 6813.953, After: 4823.623 (-29.21%)
+[INFO GPL-0078] Removed fillers count: 13170, area removed: 1990.198 um^2. Remaining area to be compensated by modifying density: 0.012 um^2
+[INFO GPL-0058] White space area:           138841.228 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      84786.938 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            4823.623 um^2 (-29.21%)
+[INFO GPL-0061] Total non-inflated area:     84786.814 um^2 (-0.00%)
+[INFO GPL-0062] Total inflated area:         86777.024 um^2 (-0.00%)
+[INFO GPL-0063] New Target Density:             0.6107
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      410 |   0.5964 |  2.570935e+06 |  -27.20% |  3.08e-08 |      
+      420 |   0.5585 |  2.687301e+06 |   +4.53% |  4.49e-08 |      
+      430 |   0.5296 |  3.029316e+06 |  +12.73% |  6.46e-08 |      
+      440 |   0.4688 |  3.877549e+06 |  +28.00% |  8.46e-08 |      
+      450 |   0.4791 |  3.061035e+06 |  -21.06% |  1.24e-07 |      
+      460 |   0.3953 |  3.906086e+06 |  +27.61% |  1.68e-07 |      
+      470 |   0.4309 |  3.024791e+06 |  -22.56% |  2.47e-07 |      
+      480 |   0.3458 |  3.640023e+06 |  +20.34% |  3.44e-07 |      
+      490 |   0.3548 |  3.098688e+06 |  -14.87% |  5.07e-07 |      
+      500 |   0.3112 |  3.108097e+06 |   +0.30% |  7.31e-07 |      
+[INFO GPL-0040] Routability iteration: 2
+[INFO GPL-0041] Total routing overflow: 237.0181
+[INFO GPL-0042] Number of overflowed tiles: 2075 (0.35%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0762
+[INFO GPL-0044] Average top 1.0% routing congestion: 1.0090
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9552
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8996
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0426
+[INFO GPL-0048] Routing congestion (1.0426) lower than previous minimum (1.251). Updating minimum.
+[INFO GPL-0086] Inflated area:                 170.984 um^2 (+0.21%)
+[INFO GPL-0052] Placement target density:       0.6107
+[INFO GPL-0076] Removing fillers, count: Before: 31920, After: 30789 (-3.54%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 4823.623, After: 4652.711 (-3.54%)
+[INFO GPL-0078] Removed fillers count: 1131, area removed: 170.912 um^2. Remaining area to be compensated by modifying density: 0.071 um^2
+[INFO GPL-0058] White space area:           138841.228 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      84786.938 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            4652.711 um^2 (-3.54%)
+[INFO GPL-0061] Total non-inflated area:     84786.885 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         84957.869 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.6107
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      510 |   0.5928 |  2.575997e+06 |  -17.12% |  3.20e-08 |      
+      520 |   0.5561 |  2.702307e+06 |   +4.90% |  4.66e-08 |      
+      530 |   0.5259 |  3.088178e+06 |  +14.28% |  6.69e-08 |      
+      540 |   0.4758 |  3.725946e+06 |  +20.65% |  8.82e-08 |      
+      550 |   0.4681 |  3.150978e+06 |  -15.43% |  1.29e-07 |      
+      560 |   0.3995 |  3.819928e+06 |  +21.23% |  1.75e-07 |      
+      570 |   0.4244 |  3.029582e+06 |  -20.69% |  2.58e-07 |      
+      580 |   0.3482 |  3.572368e+06 |  +17.92% |  3.59e-07 |      
+      590 |   0.3480 |  3.139854e+06 |  -12.11% |  5.28e-07 |      
+      600 |   0.3133 |  3.055508e+06 |   -2.69% |  7.62e-07 |      
+[INFO GPL-0040] Routability iteration: 3
+[INFO GPL-0041] Total routing overflow: 171.4121
+[INFO GPL-0042] Number of overflowed tiles: 1758 (0.30%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0504
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9949
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9471
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8954
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0226
+[INFO GPL-0048] Routing congestion (1.0226) lower than previous minimum (1.043). Updating minimum.
+[INFO GPL-0086] Inflated area:                 106.266 um^2 (+0.13%)
+[INFO GPL-0052] Placement target density:       0.6107
+[INFO GPL-0076] Removing fillers, count: Before: 30789, After: 30086 (-2.28%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 4652.711, After: 4546.476 (-2.28%)
+[INFO GPL-0078] Removed fillers count: 703, area removed: 106.235 um^2. Remaining area to be compensated by modifying density: 0.032 um^2
+[INFO GPL-0058] White space area:           138841.228 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      84786.938 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            4546.476 um^2 (-2.28%)
+[INFO GPL-0061] Total non-inflated area:     84786.917 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         84893.184 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.6107
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      610 |   0.5887 |  2.585350e+06 |  -15.39% |  3.32e-08 |      
+      620 |   0.5533 |  2.718639e+06 |   +5.16% |  4.84e-08 |      
+      630 |   0.5210 |  3.181825e+06 |  +17.04% |  6.92e-08 |      
+      640 |   0.4805 |  3.595470e+06 |  +13.00% |  9.22e-08 |      
+      650 |   0.4565 |  3.263196e+06 |   -9.24% |  1.34e-07 |      
+      660 |   0.4037 |  3.733871e+06 |  +14.42% |  1.83e-07 |      
+      670 |   0.4147 |  3.065045e+06 |  -17.91% |  2.69e-07 |      
+      680 |   0.3509 |  3.508032e+06 |  +14.45% |  3.75e-07 |      
+      690 |   0.3383 |  3.196630e+06 |   -8.88% |  5.49e-07 |      
+      700 |   0.3143 |  3.018958e+06 |   -5.56% |  7.97e-07 |      
+[INFO GPL-0040] Routability iteration: 4
+[INFO GPL-0041] Total routing overflow: 142.6614
+[INFO GPL-0042] Number of overflowed tiles: 1644 (0.28%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0393
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9881
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9431
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8937
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0137
+[INFO GPL-0048] Routing congestion (1.0137) lower than previous minimum (1.023). Updating minimum.
+[INFO GPL-0086] Inflated area:                  83.070 um^2 (+0.10%)
+[INFO GPL-0052] Placement target density:       0.6107
+[INFO GPL-0076] Removing fillers, count: Before: 30086, After: 29537 (-1.82%)
+[INFO GPL-0077] Filler area (um^2)     : Before: 4546.476, After: 4463.513 (-1.82%)
+[INFO GPL-0078] Removed fillers count: 549, area removed: 82.963 um^2. Remaining area to be compensated by modifying density: 0.107 um^2
+[INFO GPL-0058] White space area:           138841.228 um^2 (+0.00%)
+[INFO GPL-0059] Movable instances area:      84786.938 um^2 (+0.00%)
+[INFO GPL-0060] Total filler area:            4463.513 um^2 (-1.82%)
+[INFO GPL-0061] Total non-inflated area:     84787.024 um^2 (+0.00%)
+[INFO GPL-0062] Total inflated area:         84870.094 um^2 (+0.00%)
+[INFO GPL-0063] New Target Density:             0.6107
+[INFO GPL-0087] Routability end iteration: increase inflation and revert back to snapshot.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      710 |   0.5842 |  2.593564e+06 |  -14.09% |  3.45e-08 |      
+      720 |   0.5510 |  2.733381e+06 |   +5.39% |  5.03e-08 |      
+      730 |   0.5134 |  3.339011e+06 |  +22.16% |  7.14e-08 |      
+      740 |   0.4883 |  3.433501e+06 |   +2.83% |  9.62e-08 |      
+      750 |   0.4447 |  3.402119e+06 |   -0.91% |  1.38e-07 |      
+      760 |   0.4095 |  3.624215e+06 |   +6.53% |  1.91e-07 |      
+      770 |   0.4031 |  3.161229e+06 |  -12.77% |  2.80e-07 |      
+      780 |   0.3556 |  3.412935e+06 |   +7.96% |  3.93e-07 |      
+      790 |   0.3301 |  3.244540e+06 |   -4.93% |  5.73e-07 |      
+      800 |   0.3122 |  3.012981e+06 |   -7.14% |  8.36e-07 |      
+[INFO GPL-0040] Routability iteration: 5
+[INFO GPL-0041] Total routing overflow: 124.3687
+[INFO GPL-0042] Number of overflowed tiles: 1423 (0.24%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 1.0286
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.9811
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.9398
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.8931
+[INFO GPL-0047] Routability iteration weighted routing congestion: 1.0049
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      810 |   0.2714 |  3.006097e+06 |   -0.23% |  1.22e-06 |      
+      820 |   0.2402 |  2.917040e+06 |   -2.96% |  1.79e-06 |      
+      830 |   0.2148 |  2.829619e+06 |   -3.00% |  2.64e-06 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 839, overflow: 0.195, keep resizer changes at: 1, HPWL: 2774446138
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    526624
+    final |     +0.8% |     359 |    3024 |          1906 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 1677 slew violations.
+[INFO RSZ-0036] Found 12 capacitance violations.
+[INFO RSZ-0037] Found 1262 long wires.
+[INFO RSZ-0039] Resized 359 instances.
+[INFO RSZ-0038] Inserted 3024 buffers in 1906 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |    500052
+    50000 |     -0.1% |    1734 |      467 |    450052
+   100000 |     -0.2% |    3336 |     1419 |    400052
+   150000 |     -0.3% |    4224 |     1898 |    350052
+   200000 |     -0.4% |    6352 |     3544 |    300052
+   250000 |     -0.6% |   10061 |     5930 |    250052
+   300000 |     -0.6% |   11038 |     6825 |    200052
+   350000 |     -0.7% |   11595 |     7311 |    150052
+   400000 |     -0.8% |   13893 |     9364 |    100052
+   450000 |     -0.8% |   15905 |    12062 |     50052
+   500000 |     -0.8% |   17963 |    14766 |        52
+    final |     -0.8% |   17968 |    14772 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -5.329209e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: -138.200 um^2 (-0.17%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -172 (-0.03%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 17796, deleted: 17968
+[INFO GPL-0110] Timing-driven: new target density: 0.6096807
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      840 |   0.1903 |  2.792573e+06 |   -1.31% |  3.88e-06 |      
+      850 |   0.1639 |  2.748860e+06 |   -1.57% |  5.69e-06 |      
+      860 |   0.1431 |  2.683501e+06 |   -2.38% |  8.39e-06 |      
+      870 |   0.1271 |  2.585914e+06 |   -3.64% |  1.24e-05 |      
+      880 |   0.1093 |  2.550084e+06 |   -1.39% |  1.82e-05 |      
+      886 |   0.0995 |  2.538299e+06 |          |  2.39e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 886
+[INFO GPL-1017] Routability mode iteration count: 472
+[INFO GPL-1005] Routability final weighted congestion: 0.9197
+[INFO GPL-1002] Placed Cell Area            80185.3113
+[INFO GPL-1003] Available Free Area         138841.2284
+[INFO GPL-1004] Minimum Feasible Density        0.5600 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.6417
+[INFO GPL-1008]     - For 80% usage of free space: 0.7219
+[INFO GPL-1011] Original area (um^2): 76490.79
+[INFO GPL-1012] Total routability artificial inflation: 2350.53 (+3.07%)
+[INFO GPL-1013] Total timing-driven delta area: 1343.99 (+1.76%)
+[INFO GPL-1014] Final placement area: 80185.31 (+4.83%)
+Took 1438 seconds: global_placement -density 0.6 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Took 30 seconds: estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 102402 um^2 55% utilization.
+write_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/3_3_place_gp.odb
+Elapsed time: 30:08.89[h:]min:sec. CPU time: user 3345.74 sys 24.87 (186%). Peak memory: 7659984KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb         1808           7480 9c05a131e97710f591fe

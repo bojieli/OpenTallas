@@ -1,0 +1,36 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros_v2/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_2_floorplan_macro.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_1_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_1_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO ODB-0303] The initial 688 rows (12722496 sites) were cut with 4 shapes for a total of 1684 rows (10336080 sites).
+[INFO TAP-0004] Inserted 1376 endcaps.
+[INFO TAP-0005] Inserted 10892 tapcells.
+Design area 103611 um^2 56% utilization.
+write_db /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:05.50[h:]min:sec. CPU time: user 5.04 sys 0.43 (99%). Peak memory: 894896KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            5            873 99ae247e0c4b2e3c7490
