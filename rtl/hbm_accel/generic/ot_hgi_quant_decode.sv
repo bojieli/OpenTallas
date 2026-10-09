@@ -19,17 +19,17 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0)(
  .clk(clk),.rst_n(rst_n),.v(take && !e4),.fp4(fp4),.x(x),
  .vo(av),.q(q),.e(exponent),.y(ay),.fault(af));
  ot_hdc_fp4qdq bq(.clk(clk),.rst_n(rst_n),.v(take && e4),.x(x),.vo(bv),.y(by),.fault(bf));
- reg [13:0] valid_pipe,fault_pipe;
- reg [511:0] value_pipe[0:13]; integer i;
+ reg [14:0] valid_pipe,fault_pipe;
+ reg [511:0] value_pipe[0:14]; integer i;
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin valid_pipe<=0; fault_pipe<=0; end
-  else begin valid_pipe<={valid_pipe[12:0],bv}; fault_pipe<={fault_pipe[12:0],bf}; end
+  else begin valid_pipe<={valid_pipe[13:0],bv}; fault_pipe<={fault_pipe[13:0],bf}; end
  end
  always @(posedge clk) begin
   value_pipe[0]<=by;
-  for(i=1;i<14;i=i+1)value_pipe[i]<=value_pipe[i-1];
+  for(i=1;i<15;i=i+1)value_pipe[i]<=value_pipe[i-1];
  end
- assign vo=av|valid_pipe[13];
- assign y=valid_pipe[13] ? value_pipe[13] : ay;
- assign fault=vo && (valid_pipe[13] ? fault_pipe[13] : af);
+ assign vo=av|valid_pipe[14];
+ assign y=valid_pipe[14] ? value_pipe[14] : ay;
+ assign fault=vo && (valid_pipe[14] ? fault_pipe[14] : af);
 endmodule

@@ -12,17 +12,17 @@ module tb_hgi_quant_decode;
  wire take=v&&(!gen||legal);wire e4=gen&&hdr[123:118]==6;
  ot_hfd_actquant_m #(.MR(1),.MLAT(6)) refa(clk,rst_n,take&&!e4,gen ? hdr[123:118]==5 : fp4,x,av,q,e,ay,af);
  ot_hdc_fp4qdq refb(clk,rst_n,take&&e4,x,bv,by,bf);
- reg [13:0] rv=0,rf=0;reg [511:0] ry[0:13];integer i,cyc,n=0,decodes=0;reg [31:0] rnd;
+ reg [14:0] rv=0,rf=0;reg [511:0] ry[0:14];integer i,cyc,n=0,decodes=0;reg [31:0] rnd;
  always @(posedge clk) begin
   if(!rst_n) begin rv<=0;rf<=0;end
-  else begin rv<={rv[12:0],bv};rf<={rf[12:0],bf};end
-  ry[0]<=by;for(i=1;i<14;i=i+1)ry[i]<=ry[i-1];
+  else begin rv<={rv[13:0],bv};rf<={rf[13:0],bf};end
+  ry[0]<=by;for(i=1;i<15;i=i+1)ry[i]<=ry[i-1];
  end
  always @(negedge clk) if(rst_n) begin
-  if(vo !== (av|rv[13]))$fatal(1,"VALID mismatch");
+  if(vo !== (av|rv[14]))$fatal(1,"VALID mismatch");
   if(vo) begin
-   n=n+1; if(av&&rv[13])$fatal(1,"OUTPUT COLLISION n=%0d",n);
-   if(y !== (rv[13]?ry[13]:ay) || fault !== (rv[13]?rf[13]:af))$fatal(1,"ARITHMETIC mismatch output %0d",n);
+   n=n+1; if(av&&rv[14])$fatal(1,"OUTPUT COLLISION n=%0d",n);
+   if(y !== (rv[14]?ry[14]:ay) || fault !== (rv[14]?rf[14]:af))$fatal(1,"ARITHMETIC mismatch output %0d",n);
   end
   if(df !== (v&&gen&&!legal))$fatal(1,"DECODE mismatch");
   if(df)decodes=decodes+1;
