@@ -1,4 +1,4 @@
-# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09)
+# Qwen3-8B ROM: ROM die + KV die interface contract (stream kv-die, 2026-10-09) — v0.9
 
 **Owner decision (2026-10-09 ~04:00 PT).** The Qwen3-8B ROM design becomes a TP4 ROM die + KV die pair per package (option 1a of `results/arch/qwen_tp8_vs_sysdie_20261009/result.json`). KV never crosses the link.
 
@@ -128,3 +128,23 @@ The bench runs one attention layer step:
 The HBM model poisons the t = T-1 rows, so the result is exact only if the K/V that crossed the link are the ones merged. The bench checks the result bit for bit against `tools/hdc_golden.py`, and checks every other class too.
 
 Mutants: an extra link credit, no KV merge, a dropped flit, an early credit, and swapped Q beats.
+
+## 6. Decisions absorbed from review-0327 (binding for every stream building on this contract)
+
+**Class identity is queue identity; bit 10 is not a class bit.**
+- On the link, a word's class is the flit's 3-bit class field, and each class has its own buffers end to end.
+- Inside the KV die, the gateway and landing keep separate SU and HOST queues (J3, integrated SU8/HOST8). The queue a word sits in is its class.
+- No tag bit carries class. In particular, the outer link-tag bit 10 is never decoded as EMB/BOOT. J1 showed that clearing it is unsafe, because sequence ≥ 1,024 uses it.
+- At the ROM end, `x3_tag[10:8]` is a 3-bit class code at a single SU queue, with `tag[5:0]` = beat. It carries no sequence field, so the collision cannot happen.
+- The embedding boot load (RAW / BOOT_WR / BOOT_END) no longer crosses the link. It runs host → `qkd_host` → landing/strip → HBM on the KV die (the HOST8 queue). The SU8 boot queue is not instantiated on r22k.
+
+**J4: the ECC check-bit read is an ordinary scheduled read.**
+- The SECDED check bits of the KV (and embedding) sectors in HBM are fetched by the KV-die controller (`qkd_ctrl`) as an ordinary descriptor read, scheduled with the data rows.
+- There is no new typed request class and no separate provider.
+- Nothing about ECC crosses the link. A KV row is corrected in `qkd_ctrl` before the CDC (Q7, approved). The KVN rows posted from the ROM die are written with their check bits by the same controller write path.
+
+**J2: the hub SRAM chain is a measured fallback for the KV-die hub, not the default.**
+- Its saving is ~92k µm² net per hub, from 4 links × 38,799 → 4,035 µm² std cells against 12 SRAM macros at 46,699 µm².
+- It also adds +3 forwarded-clock edges.
+- The default sizes the KV-die frames (gateway / landing link buffers, `qkd_ahub`) to ≤ 55 % utilisation.
+- Use the fallback only if the KV-die centre column runs out of area. The track-capacity correction applies to all KV-die channel arithmetic: M4/M6 are conservative at 560 tracks, not 641.
