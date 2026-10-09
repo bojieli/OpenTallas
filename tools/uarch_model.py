@@ -14116,4 +14116,9 @@ def qwen_r25_native_launch_contract_model():
     from tools.qwen_r25_native_launch_model import model
     return model()
 
+def qwen_r25_su_quarter_mx1_model():
+    """Plain transient seats, real native arithmetic and protected external VM SRAM."""
+    from tools.qwen_r25_su_quarter_mx1 import model
+    return model()
+
 

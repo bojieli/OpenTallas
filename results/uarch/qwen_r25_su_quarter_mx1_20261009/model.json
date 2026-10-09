@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.qwen.r25.quarter_mx1.v1",
+  "adopted": false,
+  "native": {
+    "N": 256,
+    "M": 64,
+    "quarters": 4,
+    "MACs_per_virtual_edge": 256,
+    "MLAT": 6,
+    "ALAT": 6,
+    "CTL12": 2
+  },
+  "storage": {
+    "transient_seats": 3148,
+    "plain_bits": 201472,
+    "removed_transient_check_bits": 25184,
+    "FF_floor_um2": 58749.2352,
+    "actual_VM_SRAM_payload_protection": "External finite VM SRAM SECDED unchanged; no transient ECC/control mirror added"
+  },
+  "ports": {
+    "read_bytes_per_virtual_edge": 5120,
+    "write_bytes_per_virtual_edge": 2176,
+    "request_bits": 337,
+    "response_bits": 273,
+    "command_bits": 690,
+    "owner_bits": 74
+  },
+  "routing": {
+    "boundary_tracks": 610,
+    "channel_um": 120,
+    "track_capacity": 1166
+  },
+  "replica_cost": {
+    "quarters": 4,
+    "capture_seats_per_quarter": 3148,
+    "read_write_scan_groups": 29
+  },
+  "area": {
+    "capture_slot_um": [
+      1200,
+      1200
+    ],
+    "capture_only_fit": true,
+    "full_native_arithmetic_area": "unqualified; actual lane/SFU/reducer masters required"
+  },
+  "latency": {
+    "additional_cycles": 0,
+    "disabled_scan_edges_per_virtual_edge": 29,
+    "full_program": "actual virtual native edges plus real service ACK/visibility waits; no guessed token rate"
+  },
+  "implementation": "Same exact native arithmetic and finite service calendar, plain64 transient seats instead of SECDED72; no epoch/cohort/lease/release protocol",
+  "gate": "Actual AR N256/M64 finite VM numerical/visibility gate, model-priced component physical intake by Claude"
+}
