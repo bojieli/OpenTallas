@@ -18,7 +18,10 @@ script=work/'synth.ys'
 script.write_text('\n'.join([
  'read_verilog -sv -I'+str(ROOT/'rtl/common')+' '+str(ROOT/src[0])+' '+str(ROOT/src[2])+' '+str(ROOT/src[3]),
  'hierarchy -check -top ot_hbm_index_lines_sram -chparam ENABLE 1 -chparam ROTATE_REMAP '+os.environ.get('ROTATE_REMAP','0'),
- 'synth -top ot_hbm_index_lines_sram -flatten',
+ 'synth -top ot_hbm_index_lines_sram -flatten -run coarse',
+ 'tee -o '+str(work/'coarse_stat.json')+' stat -json',
+ 'write_rtlil '+str(work/'coarse.rtlil'),
+ 'synth -top ot_hbm_index_lines_sram -flatten -run fine:check',
  'dfflibmap -liberty '+str(combined),
  'abc -liberty '+str(combined),
  'clean', 'stat -liberty '+str(combined),

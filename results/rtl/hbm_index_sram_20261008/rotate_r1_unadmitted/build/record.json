@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.hbm_index_sram_gate.v1",
+  "rotate": 1,
+  "source_commit": "2b568bf62",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "2b2d2fbb872d6b9a2c07f0f83eb0b30dc6c6fcaccfd3fe7091287b0c64a41656",
+    "rtl/test/hbm_accel/tb_hbm_index_lines_sram.sv": "86b1d11a8b5de003ae0c7dbebb89e18ad2daf6a887ec130fd7ed48fde1cffd36"
+  },
+  "verdict": "FAIL",
+  "cases": [
+    {
+      "mode": 0,
+      "build_returncode": 1,
+      "runs": [],
+      "gate_passed": false
+    },
+    {
+      "mode": 1,
+      "build_returncode": 1,
+      "runs": [],
+      "gate_passed": false
+    },
+    {
+      "mode": 2,
+      "build_returncode": 1,
+      "runs": [],
+      "gate_passed": false
+    },
+    {
+      "mode": 3,
+      "build_returncode": 1,
+      "runs": [],
+      "gate_passed": false
+    },
+    {
+      "mode": 4,
+      "build_returncode": 1,
+      "runs": [],
+      "gate_passed": false
+    }
+  ],
+  "scope": "native macro ports+capture+SECDED+remap full component; not physical closure"
+}
