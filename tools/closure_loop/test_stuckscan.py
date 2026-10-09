@@ -248,6 +248,17 @@ class DaemonGate(unittest.TestCase):
             cl.early_fail_gate(j, dict(kind="route"))
             p.assert_not_called()
 
+    def test_grt_congestion_crash_is_not_retried(self):
+        j = job(retries_used=0, attempt=1, hosts_tried=["localhost"])
+        st = dict(key="route", kind="route")
+        with patch.object(cl, "preserve_completed_route", return_value=False), \
+                patch.object(cl, "fp_lint_failed", return_value=None), \
+                patch.object(cl, "stage_tail", return_value="x"), \
+                patch.object(cl, "first_error", return_value="[ERROR GRT-0116] Global routing finished with congestion."), \
+                patch.object(cl, "ledger"), patch.object(cl, "experiment"):
+            cl.crash(j, st, None, "rc=1")
+        self.assertEqual((j["status"], j["retries_used"]), ("EARLY_FAIL_CONGESTION", 0))
+
     def test_starting_timeout_is_lost(self):
         j = job(stage_started="2026-10-08T00:00:00-07:00", stage_idx=0, status="RUNNING")
         st = dict(key="route", kind="route")

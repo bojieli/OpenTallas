@@ -1900,6 +1900,13 @@ def crash(j, st, fleet, why):
     if err:
         why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
         why = f"{why}; first error: {err}"
+    if st["kind"] == "route" and "GRT-0116" in (err + tail) and not why.startswith("LOST"):
+        # stuckscan 2026-10-08: GRT gave up with congestion -- deterministic for this floorplan; a retry re-spends the
+        # whole route (hbm_coll_port_big/rows, s81b-vm_bgh-grid: 'retry once on the same host')
+        finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
+               f"EARLY_FAIL_CONGESTION: GRT-0116, not retried (deterministic). Fix the floorplan (util/channels/pins); "
+               f"congestion reports in the route's reports dir.\n{err[:300]}")
+        return
     resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:], first_error=err))
