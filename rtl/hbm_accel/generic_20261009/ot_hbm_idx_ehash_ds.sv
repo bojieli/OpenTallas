@@ -12,10 +12,10 @@ module ot_hbm_idx_ehash_ds #(
  input wire cmd_valid, output wire cmd_ready,
  input wire [2:0] cmd_op,cmd_layer,
  input wire [SW-1:0] cmd_slot,
- input wire [ENG_ID_W-1:0] cmd_cid,
+ input wire [16:0] cmd_cid,
  input wire cmd_first,
- input wire [64*ENG_N-1:0] b_mult,
- input wire [32*ENG_COLS-1:0] b_prime,b_offset,
+ input wire [255:0] b_mult,
+ input wire [767:0] b_prime,b_offset,
  output wire row_valid,input wire row_ready,
  output wire [31:0] row_id, output wire [4:0] row_column,
  output reg done,fault
