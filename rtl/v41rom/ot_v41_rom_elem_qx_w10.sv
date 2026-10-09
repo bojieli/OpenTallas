@@ -188,6 +188,13 @@ module ot_v41_rom_elem_qx_w10 #(
     // the q-element's closed walker / issue / tree / chain fixes); GRADUAL_RNE is passed to the BF16 lanes (mandatory
     // multiplier repair of the BF view).  With QBF = 0 or BF16 = 0 nothing below changes.
     parameter integer QBF = 0,
+    // QZE (BF ICG enable retime, 2026-10-08, default 0 = unchanged; QZ only): the ICG ENA is driven by ze, a register
+    // with no logic in front of the ICG and a single 2-input OR cone, ze(t+1) = go_pin(t) || z(t), instead of by u_z
+    // directly (u_z sits in its deep enable cone, ~100 ps of wire from the root-level ICG: plain BF recut TT -16 on
+    // u_z -> ICG ENA).  ze(t) >= z(t) every cycle: z(t) = go_pin(t-1) || rst_n(t-1) && en(t-1) with every en term
+    // inside cg_en_q(t-1) = z(t-1) (en_r_d(t) <= go || en_r = go_e || drain != 0 <= cg_en; go, en_r, ext_lo <= cg_en_q),
+    // and ze closes at most one cycle after z.  Zero added cycles; one extra gated edge per busy period.
+    parameter integer QZE = 0,
     parameter integer GRADUAL_RNE = 0,
     parameter INSTANCE = ""
 ) (
@@ -427,7 +434,23 @@ module ot_v41_rom_elem_qx_w10 #(
 `endif
         wire z_q;
         ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_z (.clk(clk), .arst_n(rst_n_pin), .d(z_d), .q(z_q));
-        assign cg_en_g = z_q;
+        if (QZE != 0) begin : g_ze
+`ifdef QZE_MUTANT_GO
+            wire ze_d = go_pin;                         // negative control: the gate opens only after each go
+`else
+            wire ze_d = go_pin || z_q;
+`endif
+            wire ze_q;
+            ot_v41_kreg #(.W(1), .AR(1), .RV(1'b1)) u_ze (.clk(clk), .arst_n(rst_n_pin), .d(ze_d), .q(ze_q));
+            assign cg_en_g = ze_q;
+`ifdef QP_CHECK
+            always @(negedge clk) if (rst_n_pin && z_q && !ze_q) begin
+                $display("QZE_CHECK FAIL: retimed gate enable 0 while z = 1 at %t", $time); $fatal(1);
+            end
+`endif
+        end else begin : g_nze
+            assign cg_en_g = z_q;
+        end
 `ifdef QP_CHECK
         always @(negedge clk) if (rst_n_pin && z_q !== cg_en_q) begin
             $display("QZ_CHECK FAIL: registered gate enable %b != cg_en_q %b at %t", z_q, cg_en_q, $time); $fatal(1);

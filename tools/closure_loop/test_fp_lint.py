@@ -100,6 +100,25 @@ class Lint(unittest.TestCase):
         self.assertIn("macro_edge", self.checks(dump(bterms=[m4_pin(f"p{i}", 5 + i) for i in range(40)],
                                                      macros=[wall], masters=masters)))
 
+    def test_bank_distance_follows_direction(self):
+        """safe-hbm Q8/Q9 (hfd_attn_half_lo): a register bank at the N face drives output ports AND, on the same net,
+        the inputs of banks ~150 um inside (root_q -> xp + u_fr / u_mid).  The sinks are exempt; the driver is measured.
+        A true input-pin case (ports drive a far macro's inputs) still fails, and a far DRIVER of output ports fails."""
+        masters = dict(dump()["masters"], B={"n": 3, "w": 20, "h": 20, "type": "BLOCK", "block": True, "top_layer": 4})
+        outs = [[f"x{i}", f"x{i}", "SIGNAL", "OUTPUT", [["M5", [100 + i * 0.192, 199.808, 100.024 + i * 0.192, 200]]]]
+                for i in range(20)]
+        root = {"name": "u_root", "master": "B", "bbox": [95, 175, 115, 195], "status": "FIRM", "halo": None,
+                "pins": [[f"x{i}", 100 + i, 195, "OUTPUT", None] for i in range(20)]}
+        sink = {"name": "u_fr", "master": "B", "bbox": [95, 20, 115, 40], "status": "FIRM", "halo": None,
+                "pins": [[f"x{i}", 100 + i, 40, "INPUT", None] for i in range(20)]}
+        self.assertNotIn("bank_distance", self.checks(dump(bterms=outs, macros=[root, sink], masters=masters)))
+        far_drv = dict(root, name="u_far_drv", bbox=[95, 20, 115, 40])
+        self.assertIn("bank_distance", self.checks(dump(bterms=outs, macros=[far_drv, sink], masters=masters)))
+        ins = [m4_pin(f"k{i}", 10 + i) for i in range(20)]
+        far_in = {"name": "bank", "master": "B", "bbox": [150, 150, 170, 170], "status": "FIRM", "halo": None,
+                  "pins": [[f"k{i}", 150, 160, "INPUT", None] for i in range(20)]}
+        self.assertIn("bank_distance", self.checks(dump(bterms=ins, macros=[far_in], masters=masters)))
+
     def test_channel(self):
         masters = dict(dump()["masters"], B={"n": 2, "w": 90, "h": 200, "type": "BLOCK", "block": True, "top_layer": 7})
         a = {"name": "a", "master": "B", "bbox": [0, 0, 90, 200], "status": "FIRM", "halo": None,

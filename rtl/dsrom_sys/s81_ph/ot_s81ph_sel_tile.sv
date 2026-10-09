@@ -71,7 +71,12 @@ module dsfd_selt_q #(
     parameter integer QIO = 0,               // CLAUDE s81-blocks: 1 = one more register on f_c / f_cr in and t_s / t_o out
                                              // (selt_q flop->pin classes -212 ps; command + status round trip +2 = dsfd_selt_c XDX 1)
     parameter integer DM = 4,                // landing FIFO depth at the control = initial credits
-    parameter integer SAFE = 0               // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
+    parameter integer SAFE = 0,              // 1: 128x256 macros, registered macro outputs, slice MREG 1 (dsfd_selt_q2)
+`ifdef OT_S81PH_SEL_FRPR
+    parameter integer FRPR = 1               // CLAUDE safe-s81 S-B2: SAFE only: frp replicated per width macro (3 copies)
+`else
+    parameter integer FRPR = 0
+`endif
 ) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,        // die reset net (active low)
@@ -115,7 +120,8 @@ module dsfd_selt_q #(
     wire [16*GW-1:0] s_gc, s_gf; wire [16*CB-1:0] s_bc, s_bf;
     wire s_last, s_hfin, s_stopped, s_done2, s_emitted, s_ovf;
     wire m_we, m_re; wire [AW-1:0] m_wa, m_ra; wire [W*EW-1:0] m_wd, m_rd;
-    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2)) u_s (
+    ot_s81ph_native_sel_slice #(.W(W), .IW(IW), .K(K), .AW(AW), .DG(8), .OD(4), .KW(KW), .CB(CB), .CMP_RETIME(CMP_RETIME), .MREG(SAFE), .PIPE2(PIPE2),
+        .FRPN((SAFE != 0 && FRPR != 0) ? 3 : 0), .FRPW(256)) u_s (
         .clk(ck[0]), .rst_n(rst_n), .in_valid(x_v), .in_ready(s_rdy), .in_last(x_last), .in_lv(x_lv), .in_val(x_val),
         .in_idx(x_idx), .c_T(cq[15:0]), .c_Bt(cq[23:16]), .c_fclr(cq[24]), .c_cg(cq[28:25]), .c_fg(cq[32:29]),
         .c_ing(cq[33]), .c_stop(cq[34]), .c_p2(cq[35]), .c_p3(cq[36]), .c_rep(cq[37]), .c_st(cq[53:38]),
@@ -169,7 +175,13 @@ module dsfd_selt_q #(
 endmodule
 
 // SAFE quarter tile master (same ports as dsfd_selt_q)
-module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0, parameter integer PIPE2 = 0, parameter integer QIO = 0) (
+module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0, parameter integer PIPE2 = 0, parameter integer QIO = 0,
+`ifdef OT_S81PH_SEL_FRPR
+    parameter integer FRPR = 1
+`else
+    parameter integer FRPR = 0
+`endif
+) (
     input  wire [0:0]            ck,
     input  wire [0:0]            rst,
     input  wire [514:0]          lane,
@@ -178,7 +190,7 @@ module dsfd_selt_q2 #(parameter integer DM = 4, parameter integer CMP_RETIME = 0
     output wire [`SELT_SB-1:0]   t_s,
     output wire [`SELT_OB-1:0]   t_o
 );
-    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
+    dsfd_selt_q #(.DM(DM), .SAFE(1), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .QIO(QIO), .FRPR(FRPR)) u_q (.ck(ck), .rst(rst), .lane(lane), .f_c(f_c), .f_cr(f_cr), .t_s(t_s), .t_o(t_o));
 endmodule
 
 module dsfd_selt_c #(

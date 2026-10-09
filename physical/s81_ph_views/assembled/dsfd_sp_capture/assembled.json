@@ -128,18 +128,18 @@
  },
  "glue": [
   {
-   "tt_wire_ratio": 0.486,
+   "tt_wire_ratio": 0.745,
    "what": "ctl -> S station (t_k)",
    "launch": "dsfd_capt_ctl.t_k",
    "capture": "dsfd_stnh_512x1.di0",
    "length_um": 281.0,
    "stations": 1,
-   "tt_setup": 234.8,
-   "tt_setup_bal": 252.7,
-   "ss_setup": -202.8,
-   "ss_setup_bal": -104.9,
-   "ff_hold": 193.5,
-   "ff_hold_bal": 147.9
+   "tt_setup": 152.4,
+   "tt_setup_bal": 170.3,
+   "ss_setup": -65.1,
+   "ss_setup_bal": -50.3,
+   "ff_hold": 70.9,
+   "ff_hold_bal": 57.5
   },
   {
    "tt_wire_ratio": 0.696,
@@ -178,22 +178,24 @@
    "stations": 1,
    "tt_setup": 225.0,
    "tt_setup_bal": 207.1,
-   "ss_setup": 34.8,
-   "ss_setup_bal": -63.1,
-   "ff_hold": 21.6,
-   "ff_hold_bal": 67.2
+   "ss_setup": -11.6,
+   "ss_setup_bal": -26.4,
+   "ff_hold": 63.4,
+   "ff_hold_bal": 76.8
   },
   {
-   "tt_wire_ratio": 0.486,
+   "tt_wire_ratio": 0.745,
    "what": "ctl status -> S station (t_sn)",
    "launch": "dsfd_capt_ctl.t_sn",
    "capture": "dsfd_stnh_512x1.di0",
    "length_um": 281.0,
    "stations": 1,
-   "tt_setup": 281.6,
-   "tt_setup_bal": 299.5,
-   "ss_setup": "missing arc (cq None, setup -90.20525)",
-   "ff_hold": "missing arc (cq None, hold 79.6473)"
+   "tt_setup": 199.1,
+   "tt_setup_bal": 217.0,
+   "ss_setup": 45.4,
+   "ss_setup_bal": 60.2,
+   "ff_hold": 71.7,
+   "ff_hold_bal": 58.3
   },
   {
    "tt_wire_ratio": 0.696,
@@ -240,10 +242,10 @@
  ],
  "glue_worst_ps": {
   "tt_setup": 38.1,
-  "ss_setup": -202.8,
+  "ss_setup": -188.1,
   "ff_hold": -86.5,
   "tt_setup_bal": 165.8,
-  "ss_setup_bal": -104.9,
+  "ss_setup_bal": -50.3,
   "ff_hold_bal": 41.4
  }
 }

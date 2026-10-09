@@ -1,0 +1,1243 @@
+{
+ "schema": "opentallas.coverage_ledger.v1",
+ "target": "T1",
+ "title": "Qwen3-8B on the Qwen ROM die (r21b + r21c embedding-in-HBM), TP4, AR only",
+ "date": "2026-10-08 (PT)",
+ "method": "/home/ubuntu/claude-takeover-20261007/coverage/METHOD.md",
+ "repo_head": "132866cd1",
+ "model_reference": {
+  "config": "compiler/models/qwen3-8b/config.json (36 layers, hidden 4,096, 32 q / 8 kv heads, head_dim 128, ffn 12,288, vocab 151,936, rope_theta 1e6, tie_word_embeddings false)",
+  "golden": "tools/hdc_golden.py Model.decode_token_tp",
+  "isa_program": "tools/hdc_program.py --tp 4 (ISA-level, bit-exact with the golden); full-shape program trace results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verify_P8187/optrace/",
+  "rtl_token": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (PASS, 193,955 cycles, layer_x / current_kv / head exact; top ot_qwen_rom_rt_die_w12_stream4_tagged_ar is SIMULATION ONLY with a C++-composed tile fabric and collective; physical_qualification false)"
+ },
+ "token_path": "results/arch/token_path_20261008/qwen_rom.json (218,472 cycles, 5,492.7 tok/s priced candidate; measured 119,310 / apportioned 74,916 / priced 24,246)",
+ "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']); r21c does not exist yet (owner decision 10-08 ~21:00, emb-hbm-impl in progress)",
+ "mtp": "not applicable: AR only by owner decision (results/rtl/qwen_rom_kv_fullbw_20261004/dspark_verdict.json AR_MODE)",
+ "nodes": [
+  {
+   "id": "D01",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Input embedding row fetch (token id -> 4,096 INT8 codes + BF16 row scale)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: x = embed_tokens[token] (W8 contract C1: INT8 codes + one BF16 scale a row)",
+   "hw_element": "r21c (owner 10-08): ot_qfd_emb_gw (hub) + ot_qfd_emb_strip + ot_qfd_emb_pcport + ot_qwen_ctrl_pc_emb + ot_hbm_r14_stream_pc_srow (static-row queue) + ot_qfd_link_far + ot_qwen_die_hub_emb; r21b carried qfd_io_embedding_rom (11.05 mm2 placeholder, full table ~88 mm2)",
+   "die": "r21c: NOT IN ANY RECIPE (no r21c in die_top_lint.QWEN_RECIPES on main 132866cd1); hub + near-HBM strip + controller band of each die",
+   "rtl": "/home/ubuntu/wt-claude-emb-hbm (uncommitted, branch claude/emb-hbm-20261008): rtl/qwen_sys/emb_hbm_20261008/*.sv",
+   "exact_bench": null,
+   "closure": "NONE for the r21c path; the replaced ROM path's elements (qfd_io_emb_root/tap, qfd_embed_*_bank, ingress) are CLOSED TT-era but never assembled into the placeholder",
+   "in_token_path": "embed",
+   "cycles": 7,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_EXACT",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "The 7 measured cycles are a behavioural 1-cycle ROM (EMBED_ROM=1, rtl/hdc/ot_qwen_rt_embed_rom.sv) in results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json. HBM path priced in /home/ubuntu/claude-takeover-20261007/EMB_HBM_FEASIBILITY.md at +248 typical / +567 worst cycles a token (313 / 632 vs ~65 behavioural); not in the 218,472 basis. tb_emb_hbm_e2e was running on ot-epyc2 at audit time (no record). Prerequisite: tagged-port static region (today fault bit 12 for any non-descriptor row).",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "D02",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Embedding dequantisation (INT8 code x BF16 row scale -> FP32 x)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: embed_tokens row as F (deployed W8 dequant)",
+   "hw_element": "qfd_sp_su64_sfu (SU embedding decode: su_asrc / su_tok, moved from the sequencer in the r21f re-cut)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu (spine column M)",
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv; core embed_faults path in rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (EMBED_ROM=1: x from the INT8 ROM, layer_x 144 checks 0 mismatches)",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "embed",
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Inside the 7-cycle embed node; the SU master has no routed result.",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "D03",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Pre-attention RMSNorm (input_layernorm)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: rmsnorm(x, input_layernorm.weight)",
+   "hw_element": "qfd_sp_su64_sfu (ot_hdc_vstream 64 lanes, SFU rsqrt) + constant ROM (norm weights)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (layer_x exact all 36 layers)",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.rmsnorm1",
+   "cycles": 15,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Grade \"apportioned\" (program-order window of the measured 5,282-cycle layer); 540 cycles a token. Constant-ROM read form: see C09.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D04",
+   "phase": "decode",
+   "plane": "data",
+   "function": "QKV projection matvec (1,536 rows a die: q 1,024 + k 256 + v 256)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mv(h, q/k/v_proj rows of the die slice)",
+   "hw_element": "qfd_tile / qfd_tile_e (1,536 ROM tiles: 10 x ot_rom_4096x266_m8 + 2 KV SRAM each)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_* (768 qfd_tile + 768 qfd_tile_e)",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env (ot_qwen_rom_tile_die)",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.qkv",
+   "cycles": 259,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Base 156 apportioned + 103 adders (relays 95 priced, MUL_LAT +1 measured, band integrate +7 priced). Tile closure is not charged: a stage added to the ME path costs ~217 cycles a token per stage. Die STA uses an ASSUMED constant tile view.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D05",
+   "phase": "decode",
+   "plane": "data",
+   "function": "INT8 weight dequant: per-row BF16 scale multiply on every ROM matvec",
+   "model_ref": "W8 contract C1 (signed INT8 x BF16 row scale)",
+   "hw_element": "qfd_port_tiles_0..5(_f1) = ot_qwen_slab_port_group_s14_die (scale ROM + MUL_LAT 7)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_port_tiles_* (12 slabs)",
+   "rtl": "ot_qwen_slab_port_group_s14_die (route r11c)",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "CLOSED slab_s14o_lvt-95725fb69tt TT +0.67 / FF +2.0 ps (ot_qwen_slab_port_group_s14_die; the 12 band slabs are composed from it, the slab itself is not routed)",
+   "in_token_path": "L*.qkv",
+   "cycles": 1,
+   "cycles_source": "measured",
+   "gap": [],
+   "notes": "MUL_LAT 7 measured adder (+1 a ME op; results/rtl/qwen_slab_share_20261005/structural_route_20261005/VERDICT_r11c.json). Applies to all 217 ME ops.",
+   "cycles_scope": "per ME op"
+  },
+  {
+   "id": "D06",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Split-tree reduction of ME partial sums (tree lanes -> band lanes -> tree top -> result serializer -> VM)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: matvec K-split order (hdc_golden matvec(w,x,split))",
+   "hw_element": "qfd_sp_tree_lane x16 / qfd_sp_band_lanes x6 / qfd_sp_tree_top(_b) / qfd_sp_res_ser x6",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_tree_top, sp_band_lanes x6, sp_res_ser x6",
+   "rtl": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv; rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv; rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv; rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv",
+   "exact_bench": "component only: results/rtl/qwen_band_integrate_20261008/record.json bench.spine (lockstep vs ot_qwen_me_spine_h_w12); full token on the banked-VM + result path NOT RUN (qwen_vm_me_20261008/record.json open)",
+   "closure": "FAILED qfd_sp_tree_lane-orfs-8c5eb4914 TT -257.47 (ostn_pf/ps RUNNING); qfd_sp_tree_top flow failure (EARLY_FAIL_SETUP), qfd_sp_tree_top_b first trial RUNNING; qfd_sp_band_lanes cancelled only (FLOORPLAN_MARGIN); qfd_sp_res_ser_tsr RUNNING, no result",
+   "in_token_path": "L*.qkv",
+   "cycles": 7,
+   "cycles_source": "priced",
+   "gap": [
+    "NOT_CLOSED",
+    "NOT_EXACT"
+   ],
+   "notes": "band_integrate +5 + 2 LNK priced (reprice_20261008) = +7 a ME op x 217. The measured token used the monolithic spine; the split composition is exact only per component.",
+   "cycles_scope": "per ME op"
+  },
+  {
+   "id": "D07",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Per-head q/k RMSNorm (q_norm, k_norm)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: rmsnorm(q[i], q_norm), rmsnorm(k[i], k_norm)",
+   "hw_element": "qfd_sp_su64_sfu + constant ROM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.qknorm_rope",
+   "cycles": 101,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Window \"q/k RMSNorm + RoPE + KV append\" (ops 2-10), apportioned; 3,636 cycles a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D08",
+   "phase": "decode",
+   "plane": "data",
+   "function": "RoPE rotation of q and k (theta 1e6, head_dim 128)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: rope(v, cos, sin, half) with rope_tables(position)",
+   "hw_element": "qfd_sp_su64_sfu (mul/add) + constant ROM rows cos/sin[pos] (8,192 x 64 pairs)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu; table: see C09",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.qknorm_rope",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Cycles inside the 101-cycle window. Table row selection is a DYN offset (C23).",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D09",
+   "phase": "decode",
+   "plane": "data",
+   "function": "KV quantisation to FP8 e4m3 (kv_round of k and v)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: kv_round(k[i]), kv_round(v[i])",
+   "hw_element": "qfd_sp_su64_sfu (KV FP8 lanes)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json current_kv 144 checks, 73,728 e4m3 codes, 0 mismatches",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.qknorm_rope",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D10",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Attention scores QK^T over 8,191 keys x 1/sqrt(128)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mul(matvec_il(keys, bf16(q), s_sc), scale)",
+   "hw_element": "qfd_tile KV SRAM slices (wsrc=1) + split tree; KV streamed from HBM into tile slices",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.attn_kv",
+   "cycles": 1361,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "attn_kv window = QK + exp + PV (ops 11-13): 1,361 chained, 2,345 on L0 (cold KV fill); 49,980 a token. near_hbm_compute = false.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D11",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Softmax: row max, exp(s - max), sum Z",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: attend() / softmax()",
+   "hw_element": "qfd_sp_su64_sfu (SFU exp, reducer)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.attn_kv",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Inside attn_kv window.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D12",
+   "phase": "decode",
+   "plane": "data",
+   "function": "P.V with unnormalised e (BF16, K-split over positions)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: attend(sc, vals, s_pv)",
+   "hw_element": "qfd_tile (wsrc=1 PV) + split tree",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.attn_kv",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D13",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Softmax normalise (x 1/Z) + attention-output staging",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: attend() final 1/Z scale",
+   "hw_element": "qfd_sp_su64_sfu (SFU recip) + qfd_sp_vector_memory",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu, sp_vector_memory",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running'); VM RUNNING qfd_sp_vector_memory_bv(-t)-d95c2ebddtt, qfd_vm_bank_checked-c0e96ee6ftt, no result",
+   "in_token_path": "L*.softmax_norm",
+   "cycles": 395,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Apportioned; 14,220 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D14",
+   "phase": "decode",
+   "plane": "data",
+   "function": "O projection matvec (4,096 outputs from the die's 1,024 inputs; row-split partial)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mv(attn, o_proj[:, q_rows])",
+   "hw_element": "qfd_tile",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.o_proj",
+   "cycles": 382,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "13,752 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D15",
+   "phase": "decode",
+   "plane": "data",
+   "function": "TP4 all-reduce #1 of the O partials (rank-order FP32 sum)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: fold(partial)",
+   "hw_element": "qfd_io_collective (ot_rom_oneshot_die_m) + qfd_io_xfifo + qfd_hub + qfd_io_ucie / qfd_io_serdes + PHYs + lfifo / cx stations",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): io_collective, io_xfifo, hub_el, io_ucie, io_serdes, lfifo_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_io_collective.env; rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (ar256 one-stream; layer_x exact)",
+   "closure": "FAILED qfd_io_collective_pr-f5c360282 TT -340.69 / FF -40.1 (pr2 RUNNING); qfd_io_xfifo-load80-e721e27b5 TT -772.09 DRC 3 (p2 RUNNING); qfd_hub_ps-f6e3d8cad FF -38.25 DRC 3 (RUNNING); qfd_link_rx128_o302_hm10-440e36808-tc TT -695.87",
+   "in_token_path": "L*.allreduce1",
+   "cycles": 1121,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED",
+    "MODELLED_ONLY"
+   ],
+   "notes": "1,094 measured + 27 priced link-leg adders; 40,356 a token. The runtime collective is ot_rom_oneshot_die with LAT 339 (C++-composed fabric); PHY latency is from abstracts (vendor / ASSUMED).",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D16",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Residual add #1",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: x = add(x, fold(partial))",
+   "hw_element": "qfd_sp_su64_sfu + VM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.attn_tail",
+   "cycles": 2,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "The attention-tail window keeps 2 cycles once the isolated run's posted-write drain (1,207) is removed (hidden in the chain).",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D17",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Pre-MLP RMSNorm (post_attention_layernorm)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: rmsnorm(x, post_attention_layernorm.weight)",
+   "hw_element": "qfd_sp_su64_sfu + constant ROM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.rmsnorm2",
+   "cycles": 91,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "3,276 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D18",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Gate/up projection matvec (6,144 rows a die)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mv(h, gate_proj[ff], up_proj[ff])",
+   "hw_element": "qfd_tile",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.gate_up",
+   "cycles": 632,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Window includes the SwiGLU SFU op; 22,752 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D19",
+   "phase": "decode",
+   "plane": "data",
+   "function": "SwiGLU: silu(gate) x up",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mul(silu(gate), up)",
+   "hw_element": "qfd_sp_su64_sfu (SFU sigmoid denominator, recip)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.gate_up",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D20",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Down projection matvec (row-split partial)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mv(., down_proj[:, ff])",
+   "hw_element": "qfd_tile",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": "L*.down",
+   "cycles": 370,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "13,320 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D21",
+   "phase": "decode",
+   "plane": "data",
+   "function": "TP4 all-reduce #2 of the down partials",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: fold(partial)",
+   "hw_element": "as D15",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): as D15",
+   "rtl": "as D15",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_io_collective_pr-f5c360282 TT -340.69 / FF -40.1 (pr2 RUNNING); qfd_io_xfifo-load80-e721e27b5 TT -772.09 DRC 3 (p2 RUNNING); qfd_hub_ps-f6e3d8cad FF -38.25 DRC 3 (RUNNING); qfd_link_rx128_o302_hm10-440e36808-tc TT -695.87",
+   "in_token_path": "L*.allreduce2",
+   "cycles": 979,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED",
+    "MODELLED_ONLY"
+   ],
+   "notes": "949 measured + adders; 35,244 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D22",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Residual add #2 + layer output hand-off",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: x = add(x, fold(partial))",
+   "hw_element": "qfd_sp_su64_sfu + qfd_sp_vector_memory",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu, sp_vector_memory",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "L*.residual",
+   "cycles": 246,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "8,856 a token.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "D23",
+   "phase": "decode",
+   "plane": "data",
+   "function": "Final RMSNorm (model.norm)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: rmsnorm(x, model.norm.weight)",
+   "hw_element": "qfd_sp_su64_sfu + constant ROM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_su64_sfu",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json head.xnorm 16,384 FP32 words, 0 mismatches",
+   "closure": "RUNNING qfd_sp_su64_sfu_{ab,bv,ab_s2,bv_s2}-d95c2ebddtt, no result yet (category 'failed, re-running')",
+   "in_token_path": "head.lm_head",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Inside the 3,101-cycle head node.",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "D24",
+   "phase": "decode",
+   "plane": "data",
+   "function": "LM head matvec (151,936 vocab rows over 4 dies = 37,984 a die; untied from the embedding)",
+   "model_ref": "tools/hdc_golden.py Model.decode_token_tp: mv(xf, lm_head[vocab slice])",
+   "hw_element": "qfd_tile (head rows h_*) + qfd_chead_w/e column heads",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): h_*, t_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env; qfd_chead.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json head exact_all_ranks",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING; qfd_chead CLOSED",
+   "in_token_path": "head.lm_head",
+   "cycles": 3101,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Head node 3,101 = 2,998 measured + adders, includes D23, D24, C30.",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "H01",
+   "phase": "host",
+   "plane": "control",
+   "function": "Request in: GENERATE descriptor (SQ ring, doorbell, prompt DMA, EOS ids, max tokens, slot)",
+   "model_ref": "outside the model (serving contract)",
+   "hw_element": "ot_host_if MODE 0 (AXI4-Lite BAR + AXI4 DMA master, NVMe-style SQ/CQ)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): no host master in the recipe (176 masters, none host/PCIe)",
+   "rtl": "rtl/host/ot_host_if.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json (reduced vehicle, TP4: sys_c*p* runs PASS); results/rtl/host_if_campaign.json",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "Full shape: TB-only (C++ host drives tp_token / tp_pos / h_start) per results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md."
+  },
+  {
+   "id": "H02",
+   "phase": "host",
+   "plane": "control",
+   "function": "Token out: one CQ completion a token (phase bit, position, token, cycles), MSI / IRQ",
+   "model_ref": "outside the model",
+   "hw_element": "ot_host_if MODE 0",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/host/ot_host_if.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json check 2 (completions == generated.hex)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "Per-token DMA write + MSI latency is not in the token path."
+  },
+  {
+   "id": "H03",
+   "phase": "host",
+   "plane": "control",
+   "function": "Host physical port (PCIe Gen5 x16 endpoint, or host link on the SerDes)",
+   "model_ref": "outside the model",
+   "hw_element": "none (prefill_ingest model assumes a PCIe Gen5 x16 endpoint on die 0)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": null,
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "modelled",
+   "gap": [
+    "MISSING_HW",
+    "NOT_ON_DIE",
+    "MODELLED_ONLY"
+   ],
+   "notes": "results/arch/prefill_ingest.json qwen_cold.link: \"PCIe Gen5 x16 endpoint on die 0 ... (ARCH_SPEC_QWEN3 R-P1)\", goodput 48.9 GB/s, modelled. No PHY macro, no shoreline in r21b."
+  },
+  {
+   "id": "H04",
+   "phase": "prefill",
+   "plane": "control",
+   "function": "Prefill KV ingest (GPU prefill -> host link -> KV ingest engine -> die HBM, FP8 pack, fenced completion)",
+   "model_ref": "owner requirement (memory kv-lives-in-hbm): GPU prefill, KV ingested into decode HBM",
+   "hw_element": "ot_rom_host_ingest (host link -> CDC -> ot_hdc_kv_ingest on ck/2 -> CDC -> HBM fabric, pacer, completions)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']) (no ingest master)",
+   "rtl": "origin/claude/ingest-20261008 d14c1955c: rtl/hdc/ingest/ot_rom_host_ingest.sv, rtl/hdc/ingest/ot_hdc_kv_ingest.sv",
+   "exact_bench": "origin/claude/ingest-20261008 d14c1955c results/rtl/rom_host_ingest_20261008/bench.json (8 cases PASS, mutants caught); results/rtl/hdc_qwen_ingest_to_token.json (reduced ctx 64: ingest then one token exact)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "modelled",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "MODELLED_ONLY",
+    "NOT_EXACT"
+   ],
+   "notes": "Branch not merged to main. Bench cases are reduced FP32/BF16 + TP4 2x128 geometry; the full-shape 8K FP8 stream map of ot_qwen_rt_kv_stream4_service is not an ingest target in any bench. TTFT priced only in results/arch/prefill_ingest.json (qwen_cold, modelled)."
+  },
+  {
+   "id": "H05",
+   "phase": "prefill",
+   "plane": "control",
+   "function": "Prompt handoff alternative: prompt consumed as decode steps (prompt buffer, fed-back prompt tokens)",
+   "model_ref": "decode_token over prompt positions",
+   "hw_element": "ot_host_if prompt buffer (1R1W SRAM {slot, position})",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/host/ot_host_if.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_PRICED"
+   ],
+   "notes": "Only path to a first token without H04; TTFT = prompt length x 182 us, unpriced."
+  },
+  {
+   "id": "B01",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Layer + LM-head weight images (mask ROM, 1.89 GB a die)",
+   "model_ref": "q/k/v/o/gate/up/down/lm_head INT8 + scales",
+   "hw_element": "qfd_tile ROM macros (ot_rom_4096x266_m8) + port-slab scale ROM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): t_*, sp_port_tiles_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_tile.env",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_tile-load80-e721e27b5 TT -566.95 / FF -90.8 ps (qfd_tile_e TT -567.09 / FF -140.19); live qfd_tile_rp1p-1ee48d600tc, qfd_tile_e_rp1p-1ee48d600tc RUNNING",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "No load needed (mask ROM, no ECC by AGENTS ROM policy). Capacity 2.09 GB vs 1.89 GB needed (COMPLETENESS_AUDIT)."
+  },
+  {
+   "id": "B02",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Embedding table boot load into each die's HBM (623 MB a die) + count/checksum gate before the first token",
+   "model_ref": "embed_tokens (r21c)",
+   "hw_element": "ot_qfd_emb_gw boot gate (BOOT_END expected count/checksum, STATUS words, emb_ready) + ot_qfd_emb_strip BOOT_WR + host RAW stream (ot_rom_host_ingest RAW boot case)",
+   "die": "r21c: not in any recipe; source of the RAW stream needs H03/H04 on the die",
+   "rtl": "/home/ubuntu/wt-claude-emb-hbm (uncommitted, branch claude/emb-hbm-20261008); origin/claude/ingest-20261008 d14c1955c",
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_EXACT",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "Boot time (623 MB x 4 dies over the host link) unpriced; twin copy for REFpb doubles it. Until emb_ready the gateway holds every request (first-token gate)."
+  },
+  {
+   "id": "B03",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Program ROM (64 x 1,024 b) + segment-descriptor ROM (8 x 64 b)",
+   "model_ref": "tools/hdc_program.py --tp program images",
+   "hw_element": "qfd_sp_constants_sequencer (program ROM, descriptor ROM inside the master)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv (ot_qfd_sp_constants_sequencer)",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json; rtl/test/tb_qfd_constants_sequencer.sv (component)",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "B04",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Reset / power-up sequencing (POR -> links trained -> HBM round-trip check -> dies -> ready; soft reset)",
+   "model_ref": "outside the model",
+   "hw_element": "ot_qwen_sys_rst_seq",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/qwen_sys/ot_qwen_sys_rst_seq.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json ctrl_* runs (link_never, hbm_bad) PASS",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED"
+   ],
+   "notes": "Full shape: TB-only (reset at bench cycle 5) per results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md."
+  },
+  {
+   "id": "B05",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Clock generation (0.9 / 1.2 GHz core, HBM CK/2, UCIe / SerDes refs) and distribution",
+   "model_ref": "outside the model",
+   "hw_element": "none: PLL ports only (io_collective pll_serdes/serial/stream/ucie; hub_el pll_r*) on placeholder masters",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): ports on placeholders",
+   "rtl": null,
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "vendor",
+   "gap": [
+    "MISSING_HW",
+    "NOT_ON_DIE"
+   ],
+   "notes": "results/rtl/qwen_repack_20261008/die_top_lint_r21b.json clock_sources. Block clock insertion is measured (closure-loop 6e65086ce), the PLL itself is not an element."
+  },
+  {
+   "id": "B06",
+   "phase": "boot",
+   "plane": "control",
+   "function": "HBM PHY init / training + controller bring-up",
+   "model_ref": "outside the model",
+   "hw_element": "ot_hbm3e_phy x4 (vendor black box) + qfd_ctrl",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): phy_* x4, ctrl_* x4",
+   "rtl": "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json rst_seq HBM round-trip check (reduced, HBM model)",
+   "closure": "NONE (hard macro, assumed boundary timing)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "vendor",
+   "gap": [
+    "MODELLED_ONLY"
+   ],
+   "notes": "Training is the PHY vendor's; only the round-trip check is RTL (reduced)."
+  },
+  {
+   "id": "B07",
+   "phase": "boot",
+   "plane": "control",
+   "function": "Configuration / status / fault registers (CSR: SYS_STATUS, FAULT_STATUS/FIRST/MASK, counters)",
+   "model_ref": "outside the model",
+   "hw_element": "ot_qwen_sys_csr",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/qwen_sys/ot_qwen_sys_csr.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "C01",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Token loop: fed-back token + position counter per user slot (pos+1, token = argmax)",
+   "model_ref": "decode_token(token, position) loop",
+   "hw_element": "ot_host_if slot state (sl_pos, sl_tok) -> ot_qwen_sys_pkg_ctl start {token, position, kv base}",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/host/ot_host_if.sv; rtl/qwen_sys/ot_qwen_sys_pkg_ctl.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json (multi-token, users 1/2/4)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "Full shape: the C++ host (tools/runtime/qwen_baseline_ar_stream4/qwen_rom_rt_w12_stream4_fulltoken.cpp) drives tp_token / tp_pos per stage; results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json is one token at P8191. Turnaround argmax -> next embed request is not a token-path node."
+  },
+  {
+   "id": "C02",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Package controller: start fan-out to 4 dies, done = all dies done AND all KV writes acknowledged, cross-die token/logit agreement, step watchdog",
+   "model_ref": "outside the model",
+   "hw_element": "ot_qwen_sys_pkg_ctl",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/qwen_sys/ot_qwen_sys_pkg_ctl.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "Lives on one die or the package; no slot assigned. Full shape: C++ host barrier."
+  },
+  {
+   "id": "C03",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Per-die TP sequencer: segment issue, collective records tagged {token, position, segment}, argmax gather",
+   "model_ref": "decode_token_tp segment cuts (all-reduce, argmax)",
+   "hw_element": "ot_qwen_tp_seq_w12 inside qfd_sp_constants_sequencer",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer",
+   "rtl": "rtl/rom/ot_qwen_tp_seq_w12.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": "L*.allreduce1",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "W12 sequencer collective tags alias at 256 positions (pinned); the TAG_FULL fix exists only in ot_qwen_tp_seq_sys (reduced) per results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md."
+  },
+  {
+   "id": "C04",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Layer loop / program sequencing: fetch, decode, DYN offsets, issue, barriers, engine clock gate",
+   "model_ref": "program order of hdc_program",
+   "hw_element": "ot_qwen_rom_core_ctrl inside qfd_sp_constants_sequencer",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer",
+   "rtl": "rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv; rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": "L*.rmsnorm1",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Issue gap 1 cycle; its cost is inside every measured window."
+  },
+  {
+   "id": "C05",
+   "phase": "decode",
+   "plane": "control",
+   "function": "KV address generation: per-layer stream descriptor (row, sectors), PC/bank/row map, KV write slot = pos",
+   "model_ref": "cache[L].append / keys[0..pos]",
+   "hw_element": "core DYN (KV write slot) + ot_qwen_rt_kv_stream4_service stream map + qfd_ctrl_shift + qfd_kvc_decode(_map)_pc",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer, kvc_*, ctrl_*",
+   "rtl": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv; rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "NONE for qfd_kvc / qfd_kvc_n (placeholder FIFOs); per-PC decoders CLOSED qfd_kvc_decode_pc-d85c4b6ce-mmq-tt, qfd_kvc_decode_map_pc-970663df7-mmq-tt; CLOSED qfd_ctrl_ready_hbm_00..31-3d5ad2a4ftt (per-PC JEDEC scheduler), qfd_ctrl_shift_hbm_00-3d5ad2a4ftt, qfd_ctrl_protected_oreg_00; die master qfd_ctrl x4 is still a placeholder ('other qfd_ctrl services are separate, unclosed leaves')",
+   "in_token_path": "L0.attn_kv",
+   "cycles": 222,
+   "cycles_source": "priced",
+   "gap": [
+    "NOT_CLOSED",
+    "MODELLED_ONLY"
+   ],
+   "notes": "Per-token KV constants on L0: kv_map_m +54 measured, ctrl SHIFT +144 priced (EXACT_CANDIDATE_PHYSICAL_UNMEASURED), KV crossbar +24 priced (three_machine_compose model). The service itself has no die master: qfd_kvc is a FIFO placeholder.",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "C06",
+   "phase": "decode",
+   "plane": "control",
+   "function": "KV append: write the token's FP8 K/V to HBM, tagged generation-checked write-done, visibility fence, drained before completion",
+   "model_ref": "cache[L].append((kb, vb))",
+   "hw_element": "ot_qwen_rt_kv_stream4_service write-back + ot_hbm_r14_stream_pc WR_EN + qfd_ctrl + qfd_cdc",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): kvc_* (placeholder), ctrl_*, cdc_*",
+   "rtl": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv; rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json current_kv 144 checks 0 mismatches; writeback.drained, cycles_after_head 0",
+   "closure": "NONE for qfd_kvc / qfd_kvc_n (placeholder FIFOs); per-PC decoders CLOSED qfd_kvc_decode_pc-d85c4b6ce-mmq-tt, qfd_kvc_decode_map_pc-970663df7-mmq-tt; CLOSED cdc_eco-hm80-h1-e59973516-tt TT +46.92 / FF +1.21 (qfd_cdc x128, ETM-bound)",
+   "in_token_path": "L*.attn_tail",
+   "cycles": 0,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Posted write-back: hidden in the chained layer (1,207-cycle isolated drain removed from the tail).",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "C07",
+   "phase": "decode",
+   "plane": "control",
+   "function": "KV stream / prefetch: next-layer notice, early-go, REFpb-aware streaming read into the tile slices",
+   "model_ref": "keys/vals of cache[L] for attention",
+   "hw_element": "ot_hbm_r14_stream_pc / _stack (qfd_ctrl_pc_00..31) + qfd_cdc x128 + landing in qfd_tile KV SRAM",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): ctrl_*, cdc_*, t_*",
+   "rtl": "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv; rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "CLOSED qfd_ctrl_ready_hbm_00..31-3d5ad2a4ftt (per-PC JEDEC scheduler), qfd_ctrl_shift_hbm_00-3d5ad2a4ftt, qfd_ctrl_protected_oreg_00; die master qfd_ctrl x4 is still a placeholder ('other qfd_ctrl services are separate, unclosed leaves'); CLOSED cdc_eco-hm80-h1-e59973516-tt TT +46.92 / FF +1.21 (qfd_cdc x128, ETM-bound)",
+   "in_token_path": "L*.kv_prefetch",
+   "cycles": 1362,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Hidden (off the critical path) except L0's cold fill; 0.958 TB/s/stack measured. qfd_ctrl die master is a placeholder around closed per-PC leaves.",
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+  },
+  {
+   "id": "C08",
+   "phase": "decode",
+   "plane": "control",
+   "function": "RoPE position: pos -> constant-ROM cos/sin row (DYN offset)",
+   "model_ref": "rope_tables(position)",
+   "hw_element": "core DYN (ot_qwen_rom_core_ctrl) + constant ROM (C09)",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer",
+   "rtl": "rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json at P8191",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": "L*.qknorm_rope",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Table holds positions 0..8,191 (CROM 1,048,576 words cap); beyond that see C11."
+  },
+  {
+   "id": "C09",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Constant ROM: norm weights (36 x 3 + final), qk-norm weights, 1/sqrt(hd), RoPE cos/sin for 8,192 positions (543,233 x 64 b), 64 lane read ports",
+   "model_ref": "hdc_program constant ROM (tools/hdc_program.py: norm weights; RoPE cos/sin per position)",
+   "hw_element": "NONE as hardware: excluded from ot_qfd_sp_constants_sequencer (\"its 64-port read is an RTL idealisation that needs a banking contract\"); the r21b recipe routes crom_a/crom_q buses to the sequencer reservation",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): area folded into the sp_constants_sequencer reservation (2.16 mm2)",
+   "rtl": null,
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (as an ideal 64-port array)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": "L*.rmsnorm1",
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "MISSING_HW",
+    "NOT_ON_DIE",
+    "NOT_CLOSED",
+    "NOT_PRICED"
+   ],
+   "notes": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv header lines 14-16; results/uarch/qwen_spine_composite_port_inventory_20261007.json constant_table (512 B/cycle, 64 ports, \"host-loaded\"). Every norm and RoPE op reads it: a banked form may add cycles to D03/D07/D08/D17/D23."
+  },
+  {
+   "id": "C10",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Cache-length tracking + causal mask (attend over positions 0..pos; no sliding window)",
+   "model_ref": "attention over cache[L] of length pos+1 (sliding_window null)",
+   "hw_element": "core DYN context length + stream descriptor length",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer",
+   "rtl": "rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": "L*.attn_kv",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "C11",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Context-limit enforcement (P >= 8,192 / CTX_MAX)",
+   "model_ref": "max context 8K target (config max 40,960)",
+   "hw_element": "KV stream map fault (P outside the map) + ot_host_if CTX_MAX admission / ST_LENGTH stop",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): kvc (placeholder); host_if NOT ON DIE",
+   "rtl": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv; rtl/host/ot_host_if.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json (host_if admission)",
+   "closure": "NONE for qfd_kvc / qfd_kvc_n (placeholder FIFOs); per-PC decoders CLOSED qfd_kvc_decode_pc-d85c4b6ce-mmq-tt, qfd_kvc_decode_map_pc-970663df7-mmq-tt",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_EXACT"
+   ],
+   "notes": "No full-shape bench drives P = 8,192."
+  },
+  {
+   "id": "C12",
+   "phase": "decode",
+   "plane": "control",
+   "function": "ME operand / result transport across the die (relays, column stations, landing)",
+   "model_ref": "n/a (physical)",
+   "hw_element": "qfd_rly x9,878, qfd_cst_n/s, qfd_chead_w/e, qfd_lst_*",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): rly_*, cst_*, h_*, lst_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_cst.env etc.",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (as wire-stage parameters)",
+   "closure": "CLOSED qfd_rly_hold10-04ae53163-mmq-tt TT +237.9 / FF +47.55; qfd_cst, qfd_chead, qfd_lst_{c,h,v} CLOSED; ot_qwen_link_fwd_cx_station CLOSED qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+   "in_token_path": "L*.qkv",
+   "cycles": 95,
+   "cycles_source": "priced",
+   "gap": [
+    "MODELLED_ONLY"
+   ],
+   "notes": "die_relays_430um +95 a ME op x 217 = 20,615 cycles a token, priced from relay counts (results/rtl/qwen_rom_die_r17_20261005/relays_r21/relay_token_cost.json), not routed parasitics.",
+   "cycles_scope": "per ME op"
+  },
+  {
+   "id": "C13",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Collective engine + link flow control (credits, x3 / ar staging, credit CDC at the hub)",
+   "model_ref": "fold(partial) protocol",
+   "hw_element": "qfd_io_collective, qfd_io_xfifo, qfd_hub, qfd_link_rx128, ot_qwen_link_fwd_cx_station",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): io_collective, io_xfifo, hub_el, lfifo_*",
+   "rtl": "physical/qwen_die_masters/cfg/qfd_hub.env, qfd_io_xfifo.env, qfd_link_rx128.env",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json seq_equivalence QWEN_AR256 PASS; results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json",
+   "closure": "FAILED qfd_io_collective_pr-f5c360282 TT -340.69 / FF -40.1 (pr2 RUNNING); qfd_io_xfifo-load80-e721e27b5 TT -772.09 DRC 3 (p2 RUNNING); qfd_hub_ps-f6e3d8cad FF -38.25 DRC 3 (RUNNING); qfd_link_rx128_o302_hm10-440e36808-tc TT -695.87",
+   "in_token_path": "L*.allreduce1",
+   "cycles": 27,
+   "cycles_source": "priced",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Link-leg adders 27 a leg x 72 legs priced; credit RTT bench in gaps-design (rate sweep).",
+   "cycles_scope": "per link leg"
+  },
+  {
+   "id": "C14",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Die-to-die PHY (UCIe x64 in package, 112G SerDes x12 across packages) with FEC / retry",
+   "model_ref": "n/a (physical)",
+   "hw_element": "qfd_io_ucie / qfd_io_serdes adapters (sequence-gap fault, credits) + PHY abstracts ot_qfd_ucie_x64_phy / ot_qfd_serdes_112g_x12_phy; retry owned by the vendor D2D adapter / FEC",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): io_ucie, io_serdes",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv; CRC/replay layer rtl/qwen_sys/ot_qwen_d2d_link.sv (reduced top only)",
+   "exact_bench": "rtl/test/tb_qfd_link_adapter.sv (component); results/rtl/qwen_rom_system_rtl_20261003/campaign.json link_flip* / link_break (reduced, d2d_link)",
+   "closure": "CLOSED qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc TT +6.61 / FF +16.92; qfd_io_ucie_adapter-646cf264dtt-vf-lvt TT +45.46 / FF +14.78 (PHYs are abstracts)",
+   "in_token_path": "L*.allreduce1",
+   "cycles": 72,
+   "cycles_source": "priced",
+   "gap": [
+    "MODELLED_ONLY",
+    "NOT_ON_DIE"
+   ],
+   "notes": "serdes PINREG +72 priced (reprice_20261008); PHY latency/area from abstracts, ASSUMED where unpublished. The RTL replay layer is not in the die adapters (deliberately vendor-owned).",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "S01",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Greedy argmax: per-die fold over 37,984 logits + rank-order all-gather (ties to the lower die / row)",
+   "model_ref": "int(np.argmax(logits)) (lowest index on ties)",
+   "hw_element": "argmax fold in ot_qwen_rom_core_ctrl (qfd_sp_constants_sequencer) + ARGMAX segment on qfd_io_collective",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer, io_collective",
+   "rtl": "rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv; rtl/rom/ot_qwen_tp_seq_w12.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json head next_token 18, winning_logit 42282b99, exact_all_ranks",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py); FAILED qfd_io_collective_pr-f5c360282 TT -340.69 / FF -40.1 (pr2 RUNNING); qfd_io_xfifo-load80-e721e27b5 TT -772.09 DRC 3 (p2 RUNNING); qfd_hub_ps-f6e3d8cad FF -38.25 DRC 3 (RUNNING); qfd_link_rx128_o302_hm10-440e36808-tc TT -695.87",
+   "in_token_path": "head.lm_head",
+   "cycles": null,
+   "cycles_source": "measured",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": "Inside the 3,101-cycle head node.",
+   "cycles_scope": "per token"
+  },
+  {
+   "id": "S02",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Stop condition: EOS (two ids), max new tokens, context length; last-token completion",
+   "model_ref": "generation loop stop",
+   "hw_element": "ot_host_if (d_eos / d_last, ST_EOS / ST_LENGTH)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/host/ot_host_if.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json check 2 (last flagged)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED"
+   ],
+   "notes": "Full shape: C++ host."
+  },
+  {
+   "id": "S03",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Non-greedy sampling (temperature / top-k / top-p)",
+   "model_ref": "not used by the greedy headline",
+   "hw_element": "none: ot_host_if rejects non-greedy (ST_SAMPLING)",
+   "die": "none",
+   "rtl": null,
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "MISSING_HW"
+   ],
+   "notes": "Out of the greedy-decode headline scope; listed so the claim is explicit."
+  },
+  {
+   "id": "F01",
+   "phase": "fault",
+   "plane": "control",
+   "function": "KV HBM integrity: tagged {generation, entry} completions, duplicate / stray beat faults",
+   "model_ref": "n/a",
+   "hw_element": "ot_qwen_rt_kv_stream4_service + ot_qwen_hbm_stream4_tagged fault codes",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): kvc (placeholder)",
+   "rtl": "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json kv_p*_tag_flip*, sys_fault_hbm_tag PASS (reduced)",
+   "closure": "NONE for qfd_kvc / qfd_kvc_n (placeholder FIFOs); per-PC decoders CLOSED qfd_kvc_decode_pc-d85c4b6ce-mmq-tt, qfd_kvc_decode_map_pc-970663df7-mmq-tt",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_CLOSED"
+   ],
+   "notes": ""
+  },
+  {
+   "id": "F02",
+   "phase": "fault",
+   "plane": "control",
+   "function": "KV data ECC (SECDED / poison on the stored FP8 KV)",
+   "model_ref": "n/a",
+   "hw_element": "none in the Qwen KV path (controller-side ECC absent; HBM3E on-die ECC is the vendor's)",
+   "die": "none",
+   "rtl": null,
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "MISSING_HW"
+   ],
+   "notes": "No SECDED/poison in rtl/hdc/kv or rtl/model_ready_hbm_r14 for the KV stream; the r21c embedding copy gets SECDED (in-progress RTL)."
+  },
+  {
+   "id": "F03",
+   "phase": "fault",
+   "plane": "control",
+   "function": "Embedding HBM copy: SECDED, poisoned word -> fail closed, boot-check fault (r21c)",
+   "model_ref": "n/a",
+   "hw_element": "ot_qfd_emb_strip / ot_qfd_emb_gw fault paths",
+   "die": "r21c: not in any recipe",
+   "rtl": "/home/ubuntu/wt-claude-emb-hbm (uncommitted, branch claude/emb-hbm-20261008)",
+   "exact_bench": null,
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_EXACT",
+    "NOT_CLOSED"
+   ],
+   "notes": "Bench variants (tb_emb_flip_cases) exist uncommitted; no result yet."
+  },
+  {
+   "id": "F04",
+   "phase": "fault",
+   "plane": "control",
+   "function": "Link faults: sequence gap, overrun, credit overflow, link down",
+   "model_ref": "n/a",
+   "hw_element": "qfd_io_ucie / qfd_io_serdes adapter sticky faults",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): io_ucie, io_serdes",
+   "rtl": "rtl/qwen_sys/missing_masters_20261007/ot_qfd_link_adapter.sv",
+   "exact_bench": "rtl/test/tb_qfd_link_adapter.sv (component)",
+   "closure": "CLOSED qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc TT +6.61 / FF +16.92; qfd_io_ucie_adapter-646cf264dtt-vf-lvt TT +45.46 / FF +14.78 (PHYs are abstracts)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [],
+   "notes": "Retry is vendor-owned (C14)."
+  },
+  {
+   "id": "F05",
+   "phase": "fault",
+   "plane": "control",
+   "function": "Fault aggregation to the host: 24 sticky sources, FAULT_FIRST, IRQ, error completion; step watchdog",
+   "model_ref": "n/a",
+   "hw_element": "ot_qwen_sys_csr + ot_qwen_sys_pkg_ctl WDOG",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b'])",
+   "rtl": "rtl/qwen_sys/ot_qwen_sys_csr.sv; rtl/qwen_sys/ot_qwen_sys_pkg_ctl.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json sys_fault_* PASS (reduced)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_CLOSED"
+   ],
+   "notes": "Full shape: \"missing\" in results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md."
+  },
+  {
+   "id": "F06",
+   "phase": "fault",
+   "plane": "control",
+   "function": "Core / sequencer faults: ME / SU fault, embed decode fault, bad DYN instruction, stray collective record",
+   "model_ref": "n/a",
+   "hw_element": "ot_qwen_rom_core fault (me_fault | su_fault | embed_faults | dyn_tiles_bad_instruction) + sequencer fault",
+   "die": "qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']): sp_constants_sequencer, sp_su64_sfu",
+   "rtl": "rtl/experimental/qwen_decode_pipe_20261004/ot_qwen_rom_core.sv",
+   "exact_bench": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json (sequencer_fault = core_fault = 0 every stage)",
+   "closure": "FAILED qfd_sp_constants_sequencer(_fqh)-6858b69fftc FLOORPLAN_MARGIN, 'needs redesign (no live job)'; core ETM ot_qwen_rom_core_core_p CLOSED core_p_done_io80_h1hm25-c180b0ed1-tt TT +60.44 / FF +14.11 but NOT bound to any die master (tools/qwen_die_etm_map.py)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_CLOSED",
+    "NOT_EXACT"
+   ],
+   "notes": "Stray-record fault (DA3) only in the reduced ot_qwen_tp_seq_sys; no fault-injection bench at full shape."
+  },
+  {
+   "id": "F07",
+   "phase": "fault",
+   "plane": "control",
+   "function": "ROM address-bound check (DA1)",
+   "model_ref": "n/a",
+   "hw_element": "ot_qwen_sys_rom oob (reduced top)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']) (full-shape ROM ports: bound check not verified in this pass)",
+   "rtl": "rtl/qwen_sys/ot_qwen_sys_rom.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE"
+   ],
+   "notes": "ROM carries no ECC by policy; the bound is the only check."
+  },
+  {
+   "id": "M01",
+   "phase": "decode",
+   "plane": "control",
+   "function": "Multi-user KV placement (per-user KV base, slot scheduling) for the claimed 268 users at 8K",
+   "model_ref": "n/a (serving)",
+   "hw_element": "ot_host_if kv_base = slot x KVW (reduced); the full-shape stream map has one user's window (P < 8,192 rows per layer)",
+   "die": "NOT ON qwen_rom r21b (tools/qwen_rom_fulldie_b3r2.py via die_top_lint.QWEN_RECIPES['r21b']) (host_if); stream map single-user",
+   "rtl": "rtl/host/ot_host_if.sv; rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
+   "exact_bench": "results/rtl/qwen_rom_system_rtl_20261003/campaign.json users 2/4 (reduced)",
+   "closure": "NONE (no closure-loop element or job)",
+   "in_token_path": null,
+   "cycles": null,
+   "cycles_source": "none",
+   "gap": [
+    "NOT_ON_DIE",
+    "NOT_EXACT"
+   ],
+   "notes": "Capacity claim: results/arch/prefill_ingest.json qwen_cold.capacity users_at_0p9 268. Per-user rate is the headline; aggregate depends on this."
+  }
+ ]
+}

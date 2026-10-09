@@ -50,7 +50,15 @@ module ot_s81ph_native_sel_slice #(
     // pair-sum cuts in both group-sum trees; status gsum +3 edges, gbin +1, settle counters +2), the sweep bound tsw
     // registered (a stale, lower GC bound keeps a superset), and one register in front of the output FIFO (o0: every
     // room check counts it; mem_rdata -> o0 directly).  Function unchanged; latency only.
-    parameter integer PIPE2 = 0
+    parameter integer PIPE2 = 0,
+    // CLAUDE safe-s81 2026-10-08 (review S-B2, C template): FRPN > 0 = the write-back queue read pointer frp is
+    // REPLICATED, one copy per FRPW-bit write-data slice (the macro data width; dsfd_selt_q2: 3 x 256 b = the three
+    // width macros, each copy shared by its column's two depth banks, which share one write-data register).  Every
+    // copy updates on the same f_pop, so all copies equal frp every cycle (asserted); each slice of mem_wdata selects
+    // fq with its own copy, splitting the frp -> mem_wdata fanout (dossier B2: frp[1] -> mem_wdata[205] -1,427).
+    // 0 cycles.  0 = the original single pointer.
+    parameter integer FRPN = 0,
+    parameter integer FRPW = 256
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -334,10 +342,35 @@ module ot_s81ph_native_sel_slice #(
             wpend <= f_pop;
         end
     end
+    generate if (FRPN == 0) begin : g_frp1
+        always @(posedge clk) mem_wdata <= ing_wr ? pi_line : fq[frp];
+    end else begin : g_frpn
+        localparam integer MW = W * EW;
+        genvar fr;
+        for (fr = 0; fr < FRPN; fr = fr + 1) begin : g_c
+            localparam integer LO = fr * FRPW;
+            localparam integer WS = (fr == FRPN - 1) ? (MW - LO) : FRPW;   // the last copy takes the rest
+            (* keep *) reg [FW-1:0] rp;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rp <= {FW{1'b0}};
+`ifdef S81PH_MUT_FRPR
+                else if (f_pop && fr != 1) rp <= (rp == DG - 1) ? {FW{1'b0}} : rp + 1'b1;   // negative: copy 1 frozen
+`else
+                else if (f_pop) rp <= (rp == DG - 1) ? {FW{1'b0}} : rp + 1'b1;
+`endif
+            always @(posedge clk) mem_wdata[LO +: WS] <= ing_wr ? pi_line[LO +: WS] : fq[rp][LO +: WS];
+`ifndef SYNTHESIS
+`ifndef S81PH_MUT_FRPR
+            always @(posedge clk) if (rst_n && rp != frp) begin
+                $display("FAIL frp replica %0d = %0d != frp %0d", fr, rp, frp); $fatal(1, "FRPR replica mismatch");
+            end
+`endif
+`endif
+        end
+    end endgenerate
     always @(posedge clk) begin
         if (f_push) fq[fwp] <= ps_line;
         mem_waddr <= ing_wr ? head[AW-1:0] : w[AW-1:0];
-        mem_wdata <= ing_wr ? pi_line : fq[frp];
     end
 
     // -- sweep engine ------------------------------------------------------------------------------

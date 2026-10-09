@@ -1327,9 +1327,10 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
+    # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1416,11 +1417,22 @@ def preroute_gate_on(j, kind):
     return kind == "route" and j["spec"].get("preroute_gate", True) is not False
 
 
+# drive-2155 2026-10-08: recipes that run the FLOW-HOLD snapshot's hold_corners_patch.py ({FH}/tools/closure_loop, 164
+# jobs: every hbm view / vm8 recipe) re-copy {FH}/tools/orfs_hold_mm.{py,tcl} over the helpers shipped here ("always
+# refresh").  The FH copy of orfs_hold_mm.py was the pre-guard generation, so those routes ran without the hold-stall
+# guard, the HM guard and MET-FIRST.  ship_fpl refreshes the FH snapshots on the launch host too (tmp + mv: atomic for
+# a concurrent reader).
+FH_DIRS = ("/srv/opentallas-scratch/claude/flowhold/src", "/home/ubuntu/closure-loop-local/flowhold/src")
+
+
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
            f"preroute_gate.py preroute_gate.tcl; do "
-           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
+           f"for fh in {' '.join(FH_DIRS)}; do for f in orfs_hold_mm.py orfs_hold_mm.tcl; do "
+           f"[ -f {run}/cl/$f ] && [ -d $fh/tools ] && ! cmp -s {run}/cl/$f $fh/tools/$f && "
+           f"cp -f {run}/cl/$f $fh/tools/.$f.$$ && mv -f $fh/tools/.$f.$$ $fh/tools/$f; done; done; true; }}\nship_fpl\n"
            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
