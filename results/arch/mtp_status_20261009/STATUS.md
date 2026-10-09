@@ -55,7 +55,7 @@ closure-loop verdict. **Die** = instantiated in a die recipe that is ADOPTED (va
 | spec_state (f3, inside hfd_mtp) | MX-1 APPROVE drained reset | Y: lockstep 64/64 drained, TOKEN_EDGE_FIX 128/128 | inside hfd_mtp | in-protocol exact (reset never mid-run); TOKEN_EDGE_FIX module kept as the unconditional alternative | — | +5 answer cycles |
 | ot_dshbm_dspark_ctl (ctl_f2) | M | Y | **CLOSED** TT +28.49 / FF +10.88 | — | inside hfd_mtp | — |
 | accept (accept_a0) | M | Y | **CLOSED** TT +113.91 / FF +21.46 | — | inside hfd_mtp | — |
-| hgi_mtp_accept18 (generic-die full 18-bit endpoint) | HGI-1 item 4 | Y: positive + width / bonus mutants | 4bffda75f pd48 TT +226.06 / FF +19.78 / **DRC 1**; pd55 TT +229.99 / FF +9.55 / **DRC 1** | both DRC 1 = M5 Metal Spacing rst_n vs clk (adjacent pins in one region) → **pin-separated cfgs queued today** (pinsep-pd48/pd55-f63ddf415) | — | — |
+| hgi_mtp_accept18 (generic-die full 18-bit endpoint) | HGI-1 item 4 | Y: positive + width / bonus mutants | 4bffda75f pd48 TT +226.06 / FF +19.78 / **DRC 1**; pd55 TT +229.99 / FF +9.55 / **DRC 1** | both DRC 1 = M5 Metal Spacing rst_n vs clk (adjacent pins in one region) → pin-separated cfgs → **CLOSED hgi_mtp_accept18-pinsep-pd55-f63ddf415-tc TT +227.68 / FF +21.94 / DRC 0** (record 0281ae8d6) | — | — |
 | argmax_f1 | M | Y | **CLOSED** SS +65.99 / FF +17.62 | — | inside | +1 cycle/row |
 | union_f3 | M | Y | **CLOSED** SS +13.30 / FF +20.87 | — | inside | +1 |
 | scratch_c2 | M | Y | **CLOSED** 6724e9d82 SS +69.04 / FF +12.96 (c4a73b788 FLOORPLAN_MARGIN macro_edge superseded) | — | — | +1 |
@@ -65,7 +65,7 @@ closure-loop verdict. **Die** = instantiated in a die recipe that is ADOPTED (va
 | ot_hbm_accel_dswin_rd | MR-7 | Y | **CLOSED** a SS +265.24, b SS +280.05 | — | no consumer yet | — |
 | native MTP emit queue (ot_hbm_native_mtp_emit_queue) | V23 | Y | **CLOSED** mtpemitq_rb TT +20.99 / FF +7.23 (pi-mtpemitq TT -370 superseded) | — | CP-south (pending) | — |
 | native MTP transaction join | V24 (reject the external epoch increment) | Y component + mutant | none | waits for the fresh CP-south native master (hfd_cmdproc_s_mtp_native_am, 197-bit facade): no closure-loop job exists for it | — | — |
-| CP-south native MTP master MX1 (hfd_cmdproc_s_mtp_native_mx1: epoch-free, drained reset, 197-b CP / 517-b facade, finite-8 emit queue, transaction join) | V23/V24 | Y: gate PASS + 4 mutants (attempt4_mx1/gate.json) | historical epoch am197 run outside the loop: setup -827.8 / hold -401 = reg → output port t_mtp behind ~700 ps clock insertion vs an ideal-clock IO budget (flow artifact); **first loop routes queued: hfd_cmdproc_s_mtp_native_mx1-{hm0,hm15}-6adb6c001-tc** (measured-insertion IO, LB=1) | backend operation translator still unbound | — | — |
+| CP-south native MTP master MX1 (hfd_cmdproc_s_mtp_native_mx1: epoch-free, drained reset, 197-b CP / 517-b facade, finite-8 emit queue, transaction join) | V23/V24 | Y: gate PASS + 4 mutants (attempt4_mx1/gate.json) | historical epoch am197 run outside the loop: setup -827.8 (confirmed: the loop calibrate measured boundary insertion SS/TT mean 797 ps, max 1,037 ps) / hold -401 = reg → output port t_mtp behind ~700 ps clock insertion vs an ideal-clock IO budget (flow artifact); **first loop routes queued: hfd_cmdproc_s_mtp_native_mx1-{hm0,hm15}-6adb6c001-tc** (measured-insertion IO, LB=1) | backend operation translator still unbound | — | — |
 
 ## 4. Exactness
 
