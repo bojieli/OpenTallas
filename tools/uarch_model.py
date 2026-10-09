@@ -15040,7 +15040,9 @@ def hbm_native_mtp_emit_model(depth=8):
 def hgi_quant_decode_model():
     """Owner-approved G8: existing DS arithmetic, generic record dispatch."""
     return dict(element='ot_hgi_quant_decode', replicas=1, macs_per_cycle=0,
-        elements_per_cycle=32, memory_ports=dict(A_bytes_per_cycle=128,O_bytes_per_cycle=64),
+        elements_per_cycle=32, memory_ports=dict(A_native_bytes_per_beat=128,
+            O_native_BF16_bytes_per_beat=64,O_VM_FP32_bytes_per_beat=128,
+            VM_assembly_and_publication="external finite transport: four8word reads/four8word writes; separately priced"),
         boundary_bits=dict(A=1024,O=512,record=128), input_decode_fanout=2,
         max_reduction_inputs=32, output_mux_inputs=2, additional_register_bits=15*(512+2)+23*2,
         ue8m0_latency_edges=23,e4m3_native_latency_edges=8,e4m3_latency_edges=23,
