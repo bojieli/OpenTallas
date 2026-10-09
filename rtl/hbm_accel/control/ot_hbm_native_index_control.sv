@@ -33,6 +33,18 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  localparam integer DW=136;
  localparam [3:0] IDLE=0,WAITPUB=1,KEEP=2,EMITKEEP=3,GAP=4,
                   FRAME=5,STARTGAP=6,START=7,RUN=8,RETIRE=9,FAULT=10;
+ // A guard seat stores a different Boolean function than its primary seat.
+ // Plain complementary FFs can merge into a primary FF plus an inverter.
+ // Each primary single-bit upset changes two expected adjacent-XOR guards.
+ function automatic [DW-1:0] desc_guard(input [DW-1:0] x);
+  desc_guard=~(x^{x[DW-2:0],x[DW-1]});
+ endfunction
+ function automatic [343:0] mask_guard(input [343:0] x);
+  mask_guard=~(x^{x[342:0],x[343]});
+ endfunction
+ function automatic [12:0] ctl_guard(input [12:0] x);
+  ctl_guard=~(x^{x[11:0],x[12]});
+ endfunction
  reg [DW-1:0] desc,desc_n;
  reg [343:0] mask,mask_n;
  // {prefetch_accepted,source_done_seen,index_done_seen,gap2,seen4,state4}
@@ -44,7 +56,7 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  wire [3:0] seen=ctl[7:4];
  wire [1:0] gap=ctl[9:8];
  wire index_seen=ctl[10],source_seen=ctl[11];
- wire coded_ok=(desc_n==~desc)&&(mask_n==~mask)&&(ctl_n==~ctl);
+ wire coded_ok=(desc_n==desc_guard(desc))&&(mask_n==mask_guard(mask))&&(ctl_n==ctl_guard(ctl));
  wire active=state!=IDLE;
  wire lease_ok=owner_valid&&!owner_fault&&allocation_granted&&
                owner_frame==allocation_frame&&(!active||owner_frame==desc[72:0]);
@@ -108,8 +120,8 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  always @(posedge clk or negedge por_n)begin
   if(!por_n)begin desc<=0;desc_n<={DW{1'b1}};mask<=0;mask_n<={344{1'b1}};
    ctl<=0;ctl_n<=13'h1fff;end
-  else begin desc<=next_desc;desc_n<=~next_desc;mask<=next_mask;mask_n<=~next_mask;
-   ctl<=next_ctl;ctl_n<=~next_ctl;end
+  else begin desc<=next_desc;desc_n<=desc_guard(next_desc);mask<=next_mask;mask_n<=mask_guard(next_mask);
+   ctl<=next_ctl;ctl_n<=ctl_guard(next_ctl);end
  end
 endmodule
 `default_nettype wire

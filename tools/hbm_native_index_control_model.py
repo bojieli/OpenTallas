@@ -23,7 +23,10 @@ def model():
             'keep stages add at least24 control edges before query; publication and '
             'consumer drain are actual dependencies, never overlapped by assumption',
         clocks=dict(period_ps=833.333, setup_uncertainty_ps=60, hold_uncertainty_ps=25),
-        mutable_protection='dual-rail descriptor/state; mismatch stops new emission and retains lease',
+        mutable_protection='independent adjacent-XOR encoded guard seats for descriptor,mask,state; '
+            '136+344+13 encode XORs and matching check XORs; a primary singlebit changes two '
+            'expected guard bits, a guard upset mismatches. Actual mapped storage independence '
+            'must be audited before physical reliability qualification. Mismatch failstops and retains lease',
         source='existing ot_hbm_integrated_native_index_sram_join checked publication and query source',
         dependencies=['actual CP retained73 descriptor', 'actual producer publication ACK and drain',
             'PREFETCH opt-in: actual paired key/CKV append WB fence visibility full73 receipt; '
