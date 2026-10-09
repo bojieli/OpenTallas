@@ -14078,6 +14078,19 @@ def ha2_truecredit_protection_model():
 
 
 
+def hbm_indexer_query_gate_model(slices=4):
+    """Default-off ready-loop break: phase-separated query/key contract only."""
+    return dict(scope="prebuild; exact minimum-array control/arithmetic gate required",
+        old_cycle="array_take -> slice_i_valid -> slice_query_ready -> engine_key_ready -> array_take",
+        successor="gate query-valid from external key-valid before slice acceptance; gate external query-ready identically",
+        arithmetic_changes=0, added_latency_cycles=0, added_registers=0,
+        exclusion_gate_inputs=2, query_gate_replicas=slices, query_ready_gate_inputs=2,
+        query_gate_fanout=slices, added_memory_bytes_per_cycle=0,
+        added_boundary_bits_per_cycle=0, area_status="few control gates; require mapped physical confirmation",
+        contract="producer never overlaps query-load and key-valid; ambiguous legacy overlap is refused at query-ready",
+        adoption="parameter SAFE_QUERY_GATE off by default until exact and physical gates pass")
+
+
 def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilisation=0.55,
                                   key_relay_stages=0, line_fifo_aw=4, score_fifo_aw=6,
                                   scorer_height_um=2800):
