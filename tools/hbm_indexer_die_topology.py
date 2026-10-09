@@ -48,7 +48,8 @@ def install(m, fp):
         y=1596.24 if side=='S' else round(g['H']-1596.24-h,6)
         orient={'SW':'R0','SE':'MY','NW':'MX','NE':'R180'}[st]
         scores[st]=add('idx_score_'+st,master,x,y,orient,'hub')
-    sel=add('idx_selector','hfd_idx_sel',14164.416,17169.84,'R0','spine')
+    sel_master='hfd_idx_sel_native_qend' if m['variant'].get('indexer_quarter_end') else 'hfd_idx_sel'
+    sel=add('idx_selector',sel_master,14164.416,17169.84,'R0','spine')
     m['indexer_native']=dict(scores=scores, selector=sel,
         model=hbm_indexer_r25i_physical_model(),
         qualification='OPT_IN_NATIVE_RESERVATION; service joins and whole-die routing not yet qualified')
@@ -126,4 +127,6 @@ def networks(m, fp, buses, paths, chain):
               (score.name,'sc'),[a,(lane,a[1]-80),(lane,exit_y),(b[0],exit_y),b])
     native['unbound_producer_ports']=['fs90','qb1048','qbr1','kin345']
     native['unbound_consumer_ports']=['to612','toc1','co72','coc1','ev2','4xst4']
+    if m['variant'].get('indexer_quarter_end'):
+        native['unbound_consumer_ports'].append('co_quarter_last1')
     native['qualification']='NATIVE_BOUNDARY_TOPOLOGY; source wrapper joins and exact pin routes remain unqualified'

@@ -429,6 +429,8 @@ R25I = dict(R25, native_indexer=True, iv_pin_stn=False,
     split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}},
     split_x_new_port_band={f'{kind}{p}':p for kind in ('ki','kc') for p in range(8)})
 R25IC2 = dict(R25I, indexer_large_slot=True)
+R25IQ = dict(R25I,indexer_quarter_end=True)
+R25IQC2 = dict(R25IQ,indexer_large_slot=True)
 ADOPTED = R25
 
 
@@ -3581,7 +3583,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
