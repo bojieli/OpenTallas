@@ -1,0 +1,12 @@
+{
+  "source_commit": "8685c9cda8cba5e520785419838b6864a5eb7fb2",
+  "job": "dsrom-markov256-pinreg2-8685c9cda-tt-remote",
+  "verdict": "EARLY_FAIL_HOLD",
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -298.0 ps (start -297.97), 7910 it / 14718 buffers, 40044 endpoints in margin, 0.4 h in step, HM guard present",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-pinreg2-8685c9cda-tt-remote",
+  "observed_endpoint": "g_pin.weight_q[63]$_DFF_P_/D",
+  "endpoint_source": "live CTS repair log observation preceding terminal early-fail",
+  "critical_path_collection": "pending remote access; no successor selected",
+  "scope": "Standalone PINREG2 TT pathfinding early hold failure; exact PASS does not establish closure. No clock relaxation, multicycle exception or retry."
+}
