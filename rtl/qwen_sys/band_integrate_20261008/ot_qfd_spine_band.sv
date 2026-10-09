@@ -52,7 +52,8 @@ module ot_qfd_spine_band #(
     parameter integer BMUT = 0,
     parameter integer UMUT = 0,
     parameter integer PBANDF = 1,          // 0: port groups indexed by position, not the band-local group (mutant)
-    parameter integer DMUT = 0             // 1: the tree top's upper control delay without the CLNK relays (mutant)
+    parameter integer DMUT = 0,            // 1: the tree top's upper control delay without the CLNK relays (mutant)
+    parameter integer AMR = 0              // ot_qfd_sp_tree_top AMR (safe-qwen S-D1)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -138,7 +139,7 @@ module ot_qfd_spine_band #(
         .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD(XD), .XVM(XVM), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .SCALE_LAT(SCALE_LAT), .IS(0), .OS(0), .LANDED(LANDED), .MUT(MUT), .BAND(1), .NB(NB), .LNK(LNK),
-        .CLNK((DMUT != 0) ? 0 : CLNK), .UMUT(UMUT)) u_tt (
+        .CLNK((DMUT != 0) ? 0 : CLNK), .UMUT(UMUT), .AMR(AMR)) u_tt (
         .clk(clk), .rst_n(rst_n), .b_pw(u_pw), .b_pv(u_pv), .b_lf(u_lf), .tt_ty(tt_ty), .tt_use(tt_use), .tt_v(tt_v),
         .land_cnt(land_cnt), .go(go), .ready(ready), .idle(idle),
         .i_nout(i_nout), .i_tiles(i_tiles), .i_k(i_k), .i_wsrc(i_wsrc),

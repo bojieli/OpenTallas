@@ -195,7 +195,7 @@ def emit_ctrl(core: str) -> str:
             "(tools/qwen_rom_rt_core_emit_w12.py). The core minus its matrix-engine spine and stream unit.\n" + t)
 
 
-def fq_head(t: str) -> str:
+def fq_head(t: str, module: str = "ot_qwen_rom_core_ctrl", default: int = 0) -> str:
     """safe-qwen S-A6 (2026-10-08): parameter FQ_HEAD (default 0 = unchanged).  FQ_HEAD = 1 cuts the decode path
     fq_rd -> fq[] read mux -> DYN add -> NEXT registers (qfd_sp_constants_sequencer TT -747.5, u_ctrl.fq_rd ->
     me_tiles, ~26 logic levels): the FIFO head is moved into a registered head word hq (refilled when empty or on
@@ -208,8 +208,8 @@ def fq_head(t: str) -> str:
             raise SystemExit(f"fq_head anchor: {old[:60]!r}")
         t = t.replace(old, new, 1)
     # parameter
-    m = re.search(r"(module ot_qwen_rom_core_ctrl #\(\n)", t)
-    one(m.group(1), m.group(1) + "    parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n")
+    m = re.search(r"(module " + module + r" #\(\n)", t)
+    one(m.group(1), m.group(1) + f"    parameter integer FQ_HEAD = {default},   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n")
     one("    wire [INSTR_BITS-1:0] ir = fq[fq_rd]; // FIFO head: the word decode reads",
         "    reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word\n"
         "    reg                   hq_v;\n"
@@ -505,7 +505,8 @@ def emit_seq_master() -> str:
          "    parameter integer SMIN = %d, parameter integer SMAX = %d, parameter integer TCUT = %d," % (P["SMIN"], P["SMAX"], P["TCUT"]),
          "    parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0,",
          "    parameter integer RT = 4,   // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)",
-         "    parameter integer FQ_HEAD = 0   // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)",
+         "    parameter integer FQ_HEAD = 0,  // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)",
+         "    parameter integer MSTN = 0      // safe-qwen S-A6: me_mem_ok input station (the supply signals ready IS edges earlier)",
          ") (", "    input  wire clk,", "    input  wire rst_n,", "    output wire po_me_clk,"]
     L += [f"    input  wire [{w}-1:0] {n}," for n, w in ins]
     L += [f"    output wire [{w}-1:0] {n}," for n, w in outs]
@@ -518,7 +519,16 @@ def emit_seq_master() -> str:
         rst = ", .RESET(1)" if w == "1" else ""
         # MUT on tp_token (drive-1013): the random program image never issues an ME op, so a pi_me_ready flip was invisible
         src = f"{n} ^ (MUT != 0 ? 1 : 0)" if n == "tp_token" else n
-        if n in SEQ_UNSTN:
+        if n == "me_mem_ok":
+            # safe-qwen S-A6 (REVIEW_20261008 addendum): MSTN = 1 stations me_mem_ok (IS edges, no reset: the ICG enable is
+            # forced by !rst_n), cutting the in -> out feedthrough me_mem_ok -> me_clk_en.  Exact only with the supply
+            # signalling ready IS edges earlier: the result serializers' stall budget RS grows by IS (ot_qfd_res_ser RS).
+            L.append(f"    generate if (MSTN != 0) begin : g_mstn")
+            L.append(f"        ot_hdc_delay #(.W({w}), .D(IS)) u_i_{n} (.clk(clk), .rst_n(1'b1), .d({n}), .q(q_{n}));")
+            L.append(f"    end else begin : g_mnstn")
+            L.append(f"        assign q_{n} = {n};   // not stationed (ICG enable path)")
+            L.append(f"    end endgenerate")
+        elif n in SEQ_UNSTN:
             L.append(f"    assign q_{n} = {n};   // not stationed (ICG enable path)")
         else:
             L.append(f"    ot_hdc_delay #(.W({w}), .D(IS){rst}) u_i_{n} (.clk(clk), .rst_n(rst_n), .d({src}), .q(q_{n}));")
@@ -628,7 +638,9 @@ def emit_seq_tb() -> str:
          "// wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles",
          "// earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.",
          "module tb_qfd_constants_sequencer;",
-         "    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0;",
+         "    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0, MSTN = 0;",
+         "    // MMUT = 1 (with MSTN = 1): the bench still presents me_mem_ok IS edges late to the stationed master (double delay): must FAIL",
+         "    parameter integer MMUT = 0;",
          "    localparam integer W = 16, G = %d, AW = 24, NW = %d, PAW = 12, SW = %d, LV = %d, D = %d;" % (P["G"], P["NW"], P["SW"], P["LV"], P["D"]),
          "    localparam integer SMIN = %d, SMAX = %d, TCUT = %d, L = IS + OS;" % (P["SMIN"], P["SMAX"], P["TCUT"]),
          "    reg clk = 0, rst_n = 0;", "    always #0.5 clk = ~clk;"]
@@ -637,10 +649,12 @@ def emit_seq_tb() -> str:
     for n, w in outs:
         L.append(f"    wire [{w}-1:0] m_{n}, r_{n};")
     L.append("    wire m_me_clk, r_me_clk;")
-    mc = [".clk(clk)", ".rst_n(rst_n)", ".po_me_clk(m_me_clk)"] + [f".{n}({n}_m)" if n in SEQ_UNSTN else f".{n}({n})" for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
+    mc = [".clk(clk)", ".rst_n(rst_n)", ".po_me_clk(m_me_clk)"] + [
+        ".me_mem_ok((MSTN != 0 && MMUT == 0) ? me_mem_ok : me_mem_ok_m)" if n == "me_mem_ok" else
+        f".{n}({n}_m)" if n in SEQ_UNSTN else f".{n}({n})" for n, _ in ins] + [f".{n}(m_{n})" for n, _ in outs]
     # me_mem_ok enters the master unstationed: the bench presents it IS edges late so the master stays the reference shifted
     L += ["    wire me_mem_ok_m;", "    ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));"]
-    L.append("    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD)) dut (\n        " + ",\n        ".join(mc) + ");")
+    L.append("    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD), .MSTN(MSTN)) dut (\n        " + ",\n        ".join(mc) + ");")
     # reference, wired like the runtime die
     L += ["    // ---- reference: controller + TP sequencer + stores as the runtime die wires them ----",
           "    wire core_start, core_done, core_fault_w; wire [NW-1:0] core_tok, core_pos, core_ntok; wire [31:0] core_nval;",

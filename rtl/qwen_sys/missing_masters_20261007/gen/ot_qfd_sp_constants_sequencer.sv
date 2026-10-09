@@ -14,7 +14,8 @@ module ot_qfd_sp_constants_sequencer #(
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0,
     parameter integer RT = 4,   // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)
-    parameter integer FQ_HEAD = 0   // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)
+    parameter integer FQ_HEAD = 0,  // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)
+    parameter integer MSTN = 0      // safe-qwen S-A6: me_mem_ok input station (the supply signals ready IS edges earlier)
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -161,7 +162,11 @@ module ot_qfd_sp_constants_sequencer #(
     wire [1-1:0] q_kv_ok;
     ot_hdc_delay #(.W(1), .D(IS), .RESET(1)) u_i_kv_ok (.clk(clk), .rst_n(rst_n), .d(kv_ok), .q(q_kv_ok));
     wire [1-1:0] q_me_mem_ok;
-    assign q_me_mem_ok = me_mem_ok;   // not stationed (ICG enable path)
+    generate if (MSTN != 0) begin : g_mstn
+        ot_hdc_delay #(.W(1), .D(IS)) u_i_me_mem_ok (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(q_me_mem_ok));
+    end else begin : g_mnstn
+        assign q_me_mem_ok = me_mem_ok;   // not stationed (ICG enable path)
+    end endgenerate
     wire [512-1:0] q_vm_rq;
     ot_hdc_delay #(.W(512), .D(IS)) u_i_vm_rq (.clk(clk), .rst_n(rst_n), .d(vm_rq), .q(q_vm_rq));
     wire [1-1:0] q_c_ready;

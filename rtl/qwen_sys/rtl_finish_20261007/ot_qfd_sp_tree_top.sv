@@ -75,7 +75,8 @@ module ot_qfd_sp_tree_top #(
     parameter integer NB = 6,
     parameter integer LNK = 0,
     parameter integer CLNK = 0,
-    parameter integer UMUT = 0            // ot_qfd_band_upper MUT (negative mutant)
+    parameter integer UMUT = 0,           // ot_qfd_band_upper MUT (negative mutant)
+    parameter integer AMR = 0             // ot_qwen_me_spctl_w12 AMR (safe-qwen S-D1: argmax top registered at the accumulator)
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -184,7 +185,7 @@ module ot_qfd_sp_tree_top #(
         .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .XD((BAND != 0) ? XD - CLNK : XD), .XVM(XVM), .ORD(ORD),
         .SCALE_LOCAL(SCALE_LOCAL), .PQ(PQ), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE),
         .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .SCALE_LAT(SCALE_LAT), .LANDED(LANDED),
-        .RX((BAND != 0) ? 5 + 2 * LNK + CLNK : 0), .RXA((BAND != 0) ? 5 + 2 * LNK : 0), .BANDF(BAND)) u_ctl (
+        .RX((BAND != 0) ? 5 + 2 * LNK + CLNK : 0), .RXA((BAND != 0) ? 5 + 2 * LNK : 0), .BANDF(BAND), .AMR(AMR)) u_ctl (
         .clk(clk), .rst_n(rs), .go(go_q), .ready(c_ready), .idle(c_idle), .land_cnt(land_q),
         .i_nout(q_nout), .i_tiles(q_tiles), .i_k(q_k), .i_wsrc(q_wsrc),
         .i_wbase(q_wbase), .i_ts(q_ts), .i_ks(q_ks), .i_js(q_js),
