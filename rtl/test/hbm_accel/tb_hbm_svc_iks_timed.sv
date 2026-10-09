@@ -1,6 +1,6 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_timed #(parameter integer SRAM=0,ROTATE=0);
+module tb_hbm_svc_iks_timed #(parameter integer SRAM=0,ROTATE=0,HOLD_FINAL_CREDITS=0);
 reg clk=0,efck=0,rst_n=0;always #512 clk=~clk;always #416 efck=~efck;
 reg[127:0] ed=0;wire[31:0]kv,krdy,kwe,rv,rrdy;wire[959:0]addr;wire[127:0]len,beat;wire[543:0]tag,rtag;
 wire[8191:0]data_;wire[8791:0]lines;wire done,fault;reg[7:0]credit=0;
@@ -12,6 +12,7 @@ ot_hbm_svc_core #(.IKS(1),.IK_SRAM(SRAM),.IK_SRAM_ROTATE(ROTATE),.E_ST(11),.XST(
 .wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault),.ip_v(1'b0),.ip_d(99'd0),.ip_fault(1'b0),.ip_take(),.wq_source(2'd0),.wq_source_g(),.wq_source_fault(),.wq_source_busy(),.wq_pending());
 ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(1),.CLK_PS(1024)) mem(
 .clk(phy_clk),.rst_n(phy_rst_n),.req_v(kv),.req_rdy(krdy),.req_addr(addr),.req_len(len),.req_tag(tag),.req_we(kwe),.req_wdata(wdata),.req_wstrb(wstrb),.wr_done(wdone),.rsp_v(rv),.rsp_rdy(rrdy),.rsp_tag(rtag),.rsp_beat(beat),.rsp_data(rawdata));
+wire storage_retained=dut.gkvs.idx_busy;
 integer row0=4006;
 function automatic[29:0] kaddr(input integer pc,j);
  integer row,bank,col,bhi,blo,hi5;
@@ -43,11 +44,16 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
    owed[l]=owed[l]+1;
   end
   if(lines[0])begin got=got+8;lastline=$time;end
-  if(t%delay_==0)for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;drained=$time+512;end
+  if(t%delay_==0 && !(HOLD_FINAL_CREDITS!=0 && got==1368))for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;drained=$time+512;end
   if(fault)$fatal(1,"svc fault got=%0d",got);
   fin=done;t=t+1;if(t>2000000)$fatal(1,"protocol timeout got=%0d",got);
  end
  if(got!=1368)$fatal(1,"count got=%0d",got);
+ if(HOLD_FINAL_CREDITS!=0)for(i=0;i<12;i=i+1)begin
+  @(negedge clk);credit=0;
+  if(!storage_retained)$fatal(1,"frame context released with final credit debt");
+  if(fault)$fatal(1,"fault while withholding final credits");
+ end
  // Return every credit, including the final output group. Repetition proves restoration.
  for(i=0;i<200;i=i+1)begin
   @(negedge clk);credit=0;
@@ -55,6 +61,7 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
   if(fault)$fatal(1,"fault during final credit drain");
  end
  credit=0;
+ if(HOLD_FINAL_CREDITS!=0 && storage_retained)$fatal(1,"retained did not clear after all credits returned");
  for(l=0;l<8;l=l+1)if(owed[l]!=0)$fatal(1,"credit debt lane=%0d owed=%0d",l,owed[l]);
  $display("IKS_TIMED rep=%0d phase_ns=%0d credit_delay=%0d lines=%0d bytes=186048 last_line_ns=%0.3f drain_ns=%0.3f logical_tbs=%0.6f",rep_,phase,delay_,got,(lastline-launch)/1000.0,(drained-launch)/1000.0,186048.0/(lastline-launch));
 end

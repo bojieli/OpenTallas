@@ -12,8 +12,8 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
  a.work.mkdir(parents=True,exist_ok=False)
  rec={'schema':'opentallas.hbm_iks_native_sram_production.v1','source_commit':os.environ.get('PINNED_SOURCE_COMMIT') or subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
- 'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC+['tools/hbm_svc_iks_sram_production_gate.py','rtl/common/ot_secded_cols.svh','results/uarch/hbm_index_sram_20261008/prebuild_r2.json']},
- 'scope':'timed request-level controller; actual IK_SRAM1 IK_SRAM_ROTATE1 selector and SECDED, no physical signoff or performance adoption',
+ 'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC+['tools/hbm_svc_iks_sram_production_gate.py','rtl/common/ot_secded_cols.svh','results/uarch/hbm_index_sram_20261008/retention_prebuild.json']},
+ 'scope':'timed request-level controller; actual IK_SRAM1 IK_SRAM_ROTATE1 selector with final-credit frame retention and SECDED, no physical signoff or performance adoption',
  'controller':'ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps',
  'cases':[],'verdict':'INCOMPLETE'}
  a.out.parent.mkdir(parents=True,exist_ok=True)
@@ -27,7 +27,7 @@ def main():
  rec['default_without_sram_dependency_returncode']=cp.returncode;save()
  if cp.returncode:rec['verdict']='DEFAULT_ELAB_FAIL';save();return 1
  with (a.work/'build.log').open('w') as log:
-  cp=subprocess.run([v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','-GSRAM=1','-GROTATE=1','-I'+str(ROOT/'rtl/common'),'--top-module','tb_hbm_svc_iks_timed','--Mdir',str(a.work/'obj')]+[str(ROOT/s) for s in SRC],stdout=log,stderr=subprocess.STDOUT)
+  cp=subprocess.run([v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','-GSRAM=1','-GROTATE=1','-GHOLD_FINAL_CREDITS=1','-I'+str(ROOT/'rtl/common'),'--top-module','tb_hbm_svc_iks_timed','--Mdir',str(a.work/'obj')]+[str(ROOT/s) for s in SRC],stdout=log,stderr=subprocess.STDOUT)
  rec['build_returncode']=cp.returncode;save()
  if cp.returncode:rec['verdict']='BUILD_FAIL';save();return 1
  for phase,delay,mut in [(p,1,0) for p in [0,1300,2700,4100,5500,6900]]+[(4100,23,0),(0,1,1)]:

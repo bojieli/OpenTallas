@@ -23,7 +23,12 @@ module ot_hbm_index_lines_sram #(
  reg[10:0] group_tag[0:3],group_tag_n[0:3];reg[63:0] read_need[0:3],read_need_n[0:3];reg[767:0] read_j[0:3],read_j_n[0:3];
  wire[31:0] write_bad;
 
- assign retained=active;
+ wire[7:0] credit_debt;
+ for(genvar cl=0;cl<8;cl=cl+1)begin : credit_retention
+  assign credit_debt[cl]=credits[cl]<CW'(CRED);
+ end
+ // Frame context remains owned until all downstream line credits return.
+ assign retained=active||(|pipe_v)||(|credit_debt);
  initial begin
   if(DEPTH!=64)$fatal(1,"native bank successor requires DEPTH64");
   if(CRED<1||CRED>64)$fatal(1,"credit shape");
