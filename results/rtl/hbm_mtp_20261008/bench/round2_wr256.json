@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.hfd_mtp.round2_wr256.v1",
+ "param": {
+  "WR": 256,
+  "RLOG": "16h0111"
+ },
+ "source": "camp-628000701/src (main 628000701)",
+ "host": "ot-epyc4",
+ "note": "first attempt SIGTERM rc=143; rerun under admit.sh",
+ "pass_": true,
+ "runs": {
+  "hmf_tr_dspark": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 873451,
+   "line": "DSHBM PASS cmds=1101 steps=15 emitted=16 rows=173 gathers=8864 writes=4753 router=4145 unions=965 union_ids=8955 lines=35820 final=51 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=23 cyc_total=873451 cyc_engine=872131 cyc_markov=39300"
+  },
+  "hmf_tr_forced": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 504900,
+   "line": "DSHBM PASS cmds=672 steps=8 emitted=24 rows=56 gathers=5057 writes=2716 router=2240 unions=640 union_ids=5614 lines=22456 final=48 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=32 cyc_total=504900 cyc_engine=503964 cyc_markov=0"
+  },
+  "hmf_tr_forced_w16": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 596196,
+   "line": "DSHBM PASS cmds=756 steps=10 emitted=32 rows=68 gathers=6134 writes=3298 router=2720 unions=720 union_ids=6522 lines=26088 final=51 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=39 cyc_total=596196 cyc_engine=595115 cyc_markov=0"
+  },
+  "hmx_tr_dspark": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 869500,
+   "line": "DSHBM PASS cmds=1101 steps=15 emitted=16 rows=173 gathers=8864 writes=4753 router=4145 unions=965 union_ids=8955 lines=35820 final=51 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=23 cyc_total=869500 cyc_engine=868180 cyc_markov=39300"
+  },
+  "hmx_tr_forced_w16": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 595326,
+   "line": "DSHBM PASS cmds=756 steps=10 emitted=32 rows=68 gathers=6134 writes=3298 router=2720 unions=720 union_ids=6522 lines=26088 final=51 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=39 cyc_total=595326 cyc_engine=594245 cyc_markov=0"
+  },
+  "mut3": {
+   "verdict": "FAIL",
+   "rc": 1,
+   "cyc_total": 398572,
+   "line": "DSHBM FAIL cmds=588 steps=6 emitted=21 rows=44 gathers=3935 writes=2134 router=1760 unions=560 union_ids=4680 lines=18720 final=0 bad_cmd=1 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=1 bad_final=0 sa_err=0 am_fault=0 n=28 cyc_total=398572 cyc_engine=397755 cyc_markov=0"
+  },
+  "hmx_tr_forced": {
+   "verdict": "PASS",
+   "rc": 0,
+   "cyc_total": 502558,
+   "line": "DSHBM PASS cmds=672 steps=8 emitted=24 rows=56 gathers=5057 writes=2716 router=2240 unions=640 union_ids=5614 lines=22456 final=48 bad_cmd=0 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=32 cyc_total=502558 cyc_engine=501622 cyc_markov=0"
+  },
+  "mut1": {
+   "verdict": "FAIL",
+   "rc": 1,
+   "cyc_total": 167982,
+   "line": "DSHBM FAIL cmds=378 steps=1 emitted=2 rows=14 gathers=1250 writes=679 router=560 unions=360 union_ids=2377 lines=9508 final=0 bad_cmd=1 bad_gather=0 bad_ids=0 bad_union=0 bad_line=0 bad_am=0 bad_emit=0 bad_acc=0 bad_final=0 sa_err=0 am_fault=0 n=10 cyc_total=167982 cyc_engine=167529 cyc_markov=0"
+  }
+ }
+}
