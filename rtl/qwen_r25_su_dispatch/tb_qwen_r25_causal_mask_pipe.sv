@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73);
+module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73, CONTEXT_CODE_COPY=0);
  reg clk=0;always #0.416667 clk=~clk;
  reg rst_n=0,in_v=0,out_rdy=0;
  reg [1:0] in_checked=3;
@@ -9,7 +9,7 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73);
  reg [19:0] in_row0=0;
  wire in_rdy,out_v,fault;wire [OWNER_W-1:0] out_owner;
  wire [19:0] out_row0;wire [83:0] out_valid_lengths;wire [127:0] out_live;
- ot_qwen_r25_causal_mask_pipe #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W)) dut(.*);
+ ot_qwen_r25_causal_mask_pipe #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W),.CONTEXT_CODE_COPY(CONTEXT_CODE_COPY)) dut(.*);
  integer block_id,q,r,checks=0,mutant_leaks=0;
  integer value,a,b,byte_checks=0;reg [12:0] code8;reg [9:0] decoded8;
  reg [127:0] expected,held;

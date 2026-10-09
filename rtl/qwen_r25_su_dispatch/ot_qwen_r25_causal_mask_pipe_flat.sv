@@ -2,7 +2,7 @@
 // Additive two-seat pipeline: comparison plus byte SECDED, then final64 SECDED.
 // Every transient mask byte is protected; golden mask semantics unchanged.
 module ot_qwen_r25_causal_mask_pipe #(
- parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73
+ parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73, CONTEXT_CODE_COPY=0
 )(
  input wire clk,rst_n,
  input wire in_v,output wire in_rdy,input wire [1:0] in_checked,
@@ -139,12 +139,16 @@ module ot_qwen_r25_causal_mask_pipe #(
     for(i=0;i<4;i=i+1)pctx[i]<=encode64(64'd0);
     for(i=0;i<16;i=i+1)pbyte[i]<=enc8(8'd0);
    end else begin
-    if(out_v&&out_rdy)seat[3]<=encode64(d[3]&~(64'd1<<OCC));
+    if(out_v&&out_rdy)seat[3]<=CONTEXT_CODE_COPY ? (seat[3]^encode64(64'd1<<OCC)) : encode64(d[3]&~(64'd1<<OCC));
     if(move_frame)begin
      seat[0]<=encode64(plive[63:0]);seat[1]<=encode64(plive[127:64]);
-     seat[2]<=encode64(pd[0][63:0]);seat[3]<=encode64(pd[1][63:0]);
-     seat[4]<=encode64(pd[2][63:0]);seat[5]<=encode64(pd[3][63:0]);
-     pctx[1]<=encode64(pd[1][63:0]&~(64'd1<<OCC));
+     // Context is already protected and unchanged; copy the entire codeword.
+     // All existing decode/UE fences remain active. A CE is retained and corrected on read.
+     seat[2]<=CONTEXT_CODE_COPY ? pctx[0] : encode64(pd[0][63:0]);
+     seat[3]<=CONTEXT_CODE_COPY ? pctx[1] : encode64(pd[1][63:0]);
+     seat[4]<=CONTEXT_CODE_COPY ? pctx[2] : encode64(pd[2][63:0]);
+     seat[5]<=CONTEXT_CODE_COPY ? pctx[3] : encode64(pd[3][63:0]);
+     pctx[1]<=CONTEXT_CODE_COPY ? (pctx[1]^encode64(64'd1<<OCC)) : encode64(pd[1][63:0]&~(64'd1<<OCC));
     end
     if(in_v&&in_rdy)begin
      if(!shape)pctx[1]<=encode64((64'd1<<FAIL));

@@ -1,5 +1,5 @@
 // Registered standalone pathfinding harness; adds one input and one output cycle.
-module ot_qwen_r25_causal_mask_pipe_timing #(parameter OWNER_W=73)(input wire clk,rst_n,
+module ot_qwen_r25_causal_mask_pipe_timing #(parameter OWNER_W=73, CONTEXT_CODE_COPY=0)(input wire clk,rst_n,
 input wire in_v,
 input wire out_rdy,
 input wire [1:0] in_checked,
@@ -61,7 +61,7 @@ always @(posedge clk or negedge rst_n) begin
  out_live<=out_live_w;
  end
 end
-ot_qwen_r25_causal_mask_pipe #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W)) u(.clk(clk),.rst_n(rst_n),
+ot_qwen_r25_causal_mask_pipe #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W),.CONTEXT_CODE_COPY(CONTEXT_CODE_COPY)) u(.clk(clk),.rst_n(rst_n),
 .in_v(in_v_r),
 .out_rdy(out_rdy_r),
 .in_checked(in_checked_r),
