@@ -22,6 +22,7 @@
 // ---------------------------------------------------------------------------
 module ot_s81_ctrl #(
     parameter integer WINDOW_CONTEXT = 0,
+    parameter integer PROTECT_HISTORY = 0,
     parameter integer ROLE     = 0,          // 0 layer, 1 SOURCE (stage 0), 2 HEAD root
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
@@ -165,7 +166,7 @@ module ot_s81_ctrl #(
         else if(j_v && j_r) window_slot<=!window_slot;
     assign j_r=seq_ready && (!WINDOW_CONTEXT || !SOURCE || producer_ready);
     generate if(WINDOW_CONTEXT && SOURCE) begin:g_window_source
-        ot_dsrom_engram_lead_producer u_lead(.clk(clk),.rst_n(rst_n),
+        ot_dsrom_engram_lead_producer #(.PROTECT_HISTORY(PROTECT_HISTORY)) u_lead(.clk(clk),.rst_n(rst_n),
             .t_v(j_v && j_r),.t_ready(producer_ready),.t_user(j_u),.t_pos(j_p),.t_tok(j_t),
             .t_first(j_p==0),.t_dead(source_token_dead),.t_slot(window_slot),
             .rb_v(eng_rb_v),.rb_user(eng_rb_user),.rb_n(eng_rb_n),.rb_ready(eng_rb_ready),

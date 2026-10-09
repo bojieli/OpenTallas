@@ -87,7 +87,7 @@ def dsrom_engram_protected_idwin_model(users=64):
         decoder_replicas=5, encoder_replicas=3,
         mux_cost='three512:1 protected72-bit history selectors; two64:1 metadata selectors; conditionalwritefanout512',
         correction='SECDED64payload72stored;18history bits and29metadata bits zero-padded, singlecorrected before use; doublefault suppresseswindow and latchesfault',
-        metadata='writepointer3, earliercount4, explicitposition22 protected together; no duplicate unprotectedposition guard',
+        metadata='writepointer3, retainedhistorycount4 max8, explicitposition22 protected together; rewind leaves min(3,newposition) retained entries; no duplicate unprotectedposition guard',
         added_latency_cycles=0,
         latency_qualification='zero additional stages proposed, not physically qualified; native lead remains4capture stages before output',
         replicas=4, replica_home='S0 embedding TP rank',

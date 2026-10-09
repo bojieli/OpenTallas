@@ -2,7 +2,8 @@
 // One bounded token transaction. History changes only on accepted tokens;
 // window/context remains stable through downstream stalls. No token truncation.
 module ot_dsrom_engram_lead_producer #(
-    parameter [16:0] PAD = 17'd2
+    parameter [16:0] PAD = 17'd2,
+    parameter integer PROTECT_HISTORY = 0
 ) (
     input wire clk,rst_n,
     input wire t_v,
@@ -29,21 +30,30 @@ module ot_dsrom_engram_lead_producer #(
     reg [21:0] count [0:63];
     wire accept=t_v && t_ready;
     wire legal=t_user<64 && t_tok<129280 &&
-        ((t_first && t_pos==0) || (!t_first && t_user<64 && {1'b0,t_pos}==count[t_user[5:0]]));
+        (PROTECT_HISTORY || (t_first && t_pos==0) || (!t_first && t_user<64 && {1'b0,t_pos}==count[t_user[5:0]]));
     wire rollback=rb_v && rb_ready;
-    wire rb_legal=rb_user<64 && rb_n>=1 && rb_n<=5 && {19'b0,rb_n}<=count[rb_user[5:0]];
+    wire rb_legal=rb_user<64 && rb_n>=1 && rb_n<=5 && (PROTECT_HISTORY || {19'b0,rb_n}<=count[rb_user[5:0]]);
     assign t_ready=!busy && !out_v && !rb_v && !fault;
     assign rb_ready=!busy && !out_v && !fault;
     wire map_v,map_fault,win_v,win_dead;
     wire [16:0] cid;
     wire [67:0] ids;
-    assign fault=bad | map_fault;
+    wire history_fault;
+    assign fault=bad | map_fault | history_fault;
     ot_dsrom_engram_token_map map(.clk(clk),.rst_n(rst_n),.in_v(accept && legal),
         .in_tok(t_tok),.out_v(map_v),.out_cid(cid),.fault(map_fault));
+    generate if(PROTECT_HISTORY) begin:g_protected
+        ot_dsrom_engram_idwin_protected #(.PAD(PAD)) history(.clk(clk),.rst_n(rst_n),
+            .t_valid(map_v),.t_user(usr[5:0]),.t_cid(cid),.t_pos(pos),.t_first(first),.t_dead(dead),
+            .rb_valid(rollback && rb_legal),.rb_user(rb_user[5:0]),.rb_n(rb_n),
+            .win_valid(win_v),.win_ids(ids),.win_dead(win_dead),.fault(history_fault),.corrected());
+    end else begin:g_historical
+    assign history_fault=0;
     ot_dsrom_engram_idwin #(.PAD(PAD)) history(.clk(clk),.rst_n(rst_n),
         .t_valid(map_v),.t_user(usr[5:0]),.t_cid(cid),.t_first(first),.t_dead(dead),
         .rb_valid(rollback && rb_legal),.rb_user(rb_user[5:0]),.rb_n(rb_n),
         .win_valid(win_v),.win_ids(ids),.win_dead(win_dead));
+    end endgenerate
     integer i;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
@@ -56,12 +66,12 @@ module ot_dsrom_engram_lead_producer #(
                 if(!legal) bad<=1;
                 else begin
                     busy<=1;usr<=t_user;pos<=t_pos;tok<=t_tok;first<=t_first;dead<=t_dead;slot<=t_slot;
-                    count[t_user[5:0]]<={1'b0,t_pos}+22'd1;
+                    if(!PROTECT_HISTORY) count[t_user[5:0]]<={1'b0,t_pos}+22'd1;
                 end
             end
             if(rollback) begin
                 if(!rb_legal) bad<=1;
-                else count[rb_user[5:0]]<=count[rb_user[5:0]]-{19'b0,rb_n};
+                else if(!PROTECT_HISTORY) count[rb_user[5:0]]<=count[rb_user[5:0]]-{19'b0,rb_n};
             end
             if(win_v) begin
                 busy<=0;out_v<=1;out_ids<=ids;out_dead<=win_dead;

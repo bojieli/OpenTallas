@@ -20,7 +20,7 @@ module ot_dsrom_engram_idwin_protected #(
     output reg corrected
 );
     reg [71:0] hist[0:511];
-    reg [71:0] meta[0:63]; // {position22, earliercount4, nextwrite3}
+    reg [71:0] meta[0:63]; // {position22, retainedhistory4 (0..8), nextwrite3}
     wire [63:0] tm,rm,h1,h2,h3;
     wire tc,tu,rc,ru,c1,c2,c3,u1,u2,u3;
     ot_s81_secded_dec72 dt(.c(meta[t_user]),.d(tm),.ce(tc),.ue(tu));
@@ -44,11 +44,12 @@ module ot_dsrom_engram_idwin_protected #(
         !(need1 && (u1 || h1[63:18]!=0 || h1[16:0]>=99092)) &&
         !(need2 && (u2 || h2[63:18]!=0 || h2[16:0]>=99092)) &&
         !(need3 && (u3 || h3[63:18]!=0 || h3[16:0]>=99092));
+    wire [21:0] retained_needed=rewind_position<3?rewind_position:22'd3;
     wire rewind_legal=!ru && rm[63:29]==0 && rb_n>=1 && rb_n<=5 &&
-        rm[28:7]>={19'b0,rb_n};
+        rm[28:7]>={19'b0,rb_n} && {18'b0,rm[6:3]}>={19'b0,rb_n}+retained_needed;
     wire conflict=t_valid && rb_valid && t_user==rb_user;
     wire [71:0] hist_new,tm_new,rm_new;
-    wire [3:0] next_n=n==15?4'd15:n+4'd1;
+    wire [3:0] next_n=n==8?4'd8:n+4'd1;
     wire [21:0] next_position={1'b0,t_pos}+22'd1;
     wire [2:0] next_p=p+3'd1;
     wire [21:0] rewind_position=rm[28:7]-{19'b0,rb_n};
