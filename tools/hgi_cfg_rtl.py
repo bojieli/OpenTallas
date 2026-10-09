@@ -98,13 +98,29 @@ def consts():
     return '\n'.join(L) + '\n'
 
 
+def hw_f2(words, busy=False):
+    """REVIEW_20261009 F-2: the hardware check is the busy interlock and the section-C range check only (magic, version,
+    CRC and reserved bits are the loader's software check, G.hw_check)."""
+    if busy:
+        return 4
+    e = G.hw_check(words)
+    if e == 5:
+        return 5
+    md = G.unpack(words)
+    for k, lim in G.LEGAL.items():
+        v = md[k]
+        if (v not in lim) if isinstance(lim, set) else not (lim[0] <= v <= lim[1]):
+            return 5
+    return 0
+
+
 def cases():
     ds, qw = md_words('ds_v41_flash'), md_words('qwen3_8b')
     assert [ds[w] for w in C_WORDS] == [reset_words()[w] for w in C_WORDS], 'DS section C != reset'
     out = []
 
     def add(name, words, busy=0, expect=None):
-        e = G.hw_check(words, busy=bool(busy)) if expect is None else expect
+        e = hw_f2(words, busy=bool(busy)) if expect is None else expect
         out.append(dict(name=name, words=words, busy=busy, err=e))
     add('ds_load', ds)
     add('qwen_load', qw)
@@ -124,7 +140,8 @@ def cases():
     add('ds_reload', ds)
     add('qwen_reload', qw)
     for c in out:
-        assert c['err'] == G.hw_check(c['words'], busy=bool(c['busy']))
+        assert c['err'] == hw_f2(c['words'], busy=bool(c['busy']))
+        c['sw_err'] = G.hw_check(c['words'], busy=bool(c['busy']))
     # expected active section C after each case (errors keep the previous values)
     act = [reset_words()[w] for w in C_WORDS]
     for c in out:
@@ -149,7 +166,7 @@ def main():
     files[OUT / 'tb/hgi_cfg_cases.mem'] = mem(cs)
     files[OUT / 'tb/hgi_cfg_cases.json'] = json.dumps(dict(
         schema='opentallas.hgi_cfg_cases.v1', spec='results/arch/hbm_generic_iface_20261009/spec.json',
-        record_words=64 + 1 + 9, cases=[dict(name=c['name'], err=c['err'], busy=c['busy'],
+        record_words=64 + 1 + 9, hw_rule='REVIEW_20261009 F-2: busy + range only', cases=[dict(name=c['name'], err=c['err'], loader_sw_err=c['sw_err'], busy=c['busy'],
                                              act=[f'{x:08X}' for x in c['act']]) for c in cs]), indent=1) + '\n'
     if '--check' in sys.argv:
         bad = [str(p) for p, t in files.items() if not p.exists() or p.read_text() != t]

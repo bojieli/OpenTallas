@@ -2,10 +2,12 @@
  "schema": "opentallas.hgi_cfg_cases.v1",
  "spec": "results/arch/hbm_generic_iface_20261009/spec.json",
  "record_words": 74,
+ "hw_rule": "REVIEW_20261009 F-2: busy + range only",
  "cases": [
   {
    "name": "ds_load",
    "err": 0,
+   "loader_sw_err": 0,
    "busy": 0,
    "act": [
     "0001F900",
@@ -22,6 +24,7 @@
   {
    "name": "qwen_load",
    "err": 0,
+   "loader_sw_err": 0,
    "busy": 0,
    "act": [
     "00025180",
@@ -37,7 +40,8 @@
   },
   {
    "name": "bad_magic",
-   "err": 1,
+   "err": 0,
+   "loader_sw_err": 1,
    "busy": 0,
    "act": [
     "00025180",
@@ -53,7 +57,8 @@
   },
   {
    "name": "bad_version",
-   "err": 2,
+   "err": 0,
+   "loader_sw_err": 2,
    "busy": 0,
    "act": [
     "00025180",
@@ -69,7 +74,8 @@
   },
   {
    "name": "bad_nwords",
-   "err": 2,
+   "err": 0,
+   "loader_sw_err": 2,
    "busy": 0,
    "act": [
     "00025180",
@@ -85,7 +91,8 @@
   },
   {
    "name": "bad_crc",
-   "err": 3,
+   "err": 0,
+   "loader_sw_err": 3,
    "busy": 0,
    "act": [
     "00025180",
@@ -102,6 +109,7 @@
   {
    "name": "busy",
    "err": 4,
+   "loader_sw_err": 4,
    "busy": 1,
    "act": [
     "00025180",
@@ -118,6 +126,7 @@
   {
    "name": "rope_rot_5",
    "err": 5,
+   "loader_sw_err": 5,
    "busy": 0,
    "act": [
     "00025180",
@@ -134,6 +143,7 @@
   {
    "name": "norm_d_33",
    "err": 5,
+   "loader_sw_err": 5,
    "busy": 0,
    "act": [
     "00025180",
@@ -150,6 +160,7 @@
   {
    "name": "coll_16",
    "err": 5,
+   "loader_sw_err": 5,
    "busy": 0,
    "act": [
     "00025180",
@@ -166,6 +177,7 @@
   {
    "name": "vocab_0",
    "err": 5,
+   "loader_sw_err": 5,
    "busy": 0,
    "act": [
     "00025180",
@@ -182,6 +194,7 @@
   {
    "name": "emb_0",
    "err": 5,
+   "loader_sw_err": 5,
    "busy": 0,
    "act": [
     "00025180",
@@ -197,12 +210,13 @@
   },
   {
    "name": "reserved_bit",
-   "err": 6,
+   "err": 0,
+   "loader_sw_err": 6,
    "busy": 0,
    "act": [
     "00025180",
     "0000A000",
-    "0000000F",
+    "8000000F",
     "000000E0",
     "00000003",
     "00000007",
@@ -213,7 +227,8 @@
   },
   {
    "name": "reserved_d",
-   "err": 6,
+   "err": 0,
+   "loader_sw_err": 6,
    "busy": 0,
    "act": [
     "00025180",
@@ -230,6 +245,7 @@
   {
    "name": "sw_word_changed",
    "err": 0,
+   "loader_sw_err": 0,
    "busy": 0,
    "act": [
     "00025180",
@@ -246,6 +262,7 @@
   {
    "name": "ds_reload",
    "err": 0,
+   "loader_sw_err": 0,
    "busy": 0,
    "act": [
     "0001F900",
@@ -262,6 +279,7 @@
   {
    "name": "qwen_reload",
    "err": 0,
+   "loader_sw_err": 0,
    "busy": 0,
    "act": [
     "00025180",
