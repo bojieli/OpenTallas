@@ -103,6 +103,26 @@ proc fc_move {inst p} {
   $inst setPlacementStatus PLACED
 }
 
+# OT_FC_THRU_BOW (um, crash-1945 2026-10-08; default off): a pass-through whose input AND output pins sit on the SAME
+# face was laid on the straight pin-to-pin line, i.e. ALONG the face: every stage of every bit landed in the 3..12 um
+# stagger band at the edge (hbm_vm8 halves: ses f_su_SE -> t_su_SE, nen f_w_* -> t_w_*, nes f_s_* -> t_s_*; OT_FC
+# "5769 pass-through, 48472 cells moved"; GRT-0116 hot gcells only at x 686-699 / x 0-12 / y 0-9, 1-17 % average use).
+# With the bow, interior stages move inward along the face normal by H 4f(1-f)(0.75+0.5f), H = min(BOW, |PQ|/2)
+# (asymmetric so no two stage columns of a run share a depth); the pin stages stay at their pins. Cycles unchanged.
+proc fc_thru_bow {P Q} {
+  global fc_x0 fc_y0 fc_x1 fc_y1 fc_dbu
+  if {![info exists ::env(OT_FC_THRU_BOW)] || $::env(OT_FC_THRU_BOW) <= 0} { return {0 0} }
+  set e [expr {2.0*$fc_dbu}]
+  lassign $P px py; lassign $Q qx qy
+  set H [expr {min($::env(OT_FC_THRU_BOW)*$fc_dbu, 0.5*(abs($px-$qx)+abs($py-$qy)))}]
+  if {$px >= $fc_x1-$e && $qx >= $fc_x1-$e} { return [list [expr {-$H}] 0] }
+  if {$px <= $fc_x0+$e && $qx <= $fc_x0+$e} { return [list $H 0] }
+  if {$py >= $fc_y1-$e && $qy >= $fc_y1-$e} { return [list 0 [expr {-$H}]] }
+  if {$py <= $fc_y0+$e && $qy <= $fc_y0+$e} { return [list 0 $H] }
+  return {0 0}
+}
+set fc_nbow 0
+
 # Timing-driven global placement keeps the buffers of its virtual repair (keep_resize_below_overflow), placed along
 # the pre-move routes: qm5_pd55 y[172] -> s0 ran 499 -> 1277 -> 762 um through five such buffers (-415 ps on a
 # 318 um hop).  Remove them first (the walk then sees bare chains); 3_4 repair_design re-buffers the moved nets.
@@ -139,11 +159,15 @@ foreach bt [$fc_blk getBTerms] {
   if {$thru ne ""} {
     # pass-through: every flop of the walk spread evenly from P to the output pin
     set Q [fc_pin $thru]; set m [llength $flops]; set j 0; set grp {}
+    set bow [fc_thru_bow $P $Q]; if {$bow ne {0 0}} { incr fc_nbow }
     foreach c $chain {
       lassign $c i sq
       lappend grp $i
       if {$sq} {
-        set p [fc_lerp $P $Q [expr {$m > 1 ? double($j)/($m-1) : 1.0}]]
+        set f [expr {$m > 1 ? double($j)/($m-1) : 1.0}]
+        set p [fc_lerp $P $Q $f]
+        set h [expr {4.0*$f*(1.0-$f)*(0.75+0.5*$f)}]
+        set p [list [expr {[lindex $p 0]+$h*[lindex $bow 0]}] [expr {[lindex $p 1]+$h*[lindex $bow 1]}]]
         foreach g $grp { fc_move $g $p; set fc_done([$g getName]) 1; incr n_moved }
         set grp {}; incr j
       }
@@ -245,7 +269,7 @@ foreach port [lsort [array names fc_dist]] {
   set l [lsort -real $fc_dist($port)]; set n [llength $l]; set sm 0.0; foreach v $l { set sm [expr {$sm+$v}] }
   puts [format "OT_FC_DIST %s n %d mean %.0f p90 %.0f max %.0f um" $port $n [expr {$sm/$n}] [lindex $l [expr {int(0.9*($n-1))}]] [lindex $l end]]
 }
-puts "OT_FC: face chains N=$fc_n: $n_in input, $n_out output, $n_thru pass-through; $n_moved cells moved ([array size fc_stage] output-chain flops)"
+puts "OT_FC: face chains N=$fc_n: $n_in input, $n_out output, $n_thru pass-through ($fc_nbow same-face bowed); $n_moved cells moved ([array size fc_stage] output-chain flops)"
 # OT_FC_REBUF=1 (CLAUDE hbm-router dv5): timing-driven global placement (virtual: false) has already inserted
 # repair_design buffers along the PRE-move nets; a multi-fanout core -> stage-0 net keeps its buffer tree at the old,
 # pin-clumped positions (dv5_r16h 4_cts: out_ids -> eSW s0, s0 moved to 206 um from the core, still -533 ps through
