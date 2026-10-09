@@ -174,6 +174,24 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                 qualification='layout model only; no service/physical/performance credit')
 
 
+
+def dsrom_engram_flop_read_buffer_model():
+    """Owner V37/X2: returned row staging uses flop arrays, not SRAM."""
+    return dict(schema='opentallas.engram-flop-read-buffer-model.v1',
+        owner_decision='CONFIRMED V37/X2: no SECDED on flop arrays',
+        selected_buffer_bits=6*9*256,historical_protected_bits=6*9*288,
+        removed_storage_bits=6*9*32,removed_encoders72=24,removed_decoders72=24,
+        sequential_area_reduction_mm2_modelled=6*9*32*.2916/1e6,
+        compute_macs_per_cycle=0,communication_bits_per_return=256,
+        return_capture_bytes_per_cycle_max=6*32,output_bytes_per_cycle=32,
+        return_boundary_bits=2*8896,replicas=8,
+        mux='six reserved row buffers; nine256bit atoms per row; existing row/atom selection unchanged',
+        latency_added_cycles=0,tracks_added=0,
+        floorplan='storage and codec removal only; existing read adapter outline unchanged',
+        reliability='HBM payload ECC supplied by memory/controller; table per-row CRC retained; real18bank SRAM prefetch SECDED retained',
+        qualification='model before RTL; plain-buffer canonical full six-row gate pending; historical protected buffer gates preserved')
+
+
 def dsrom_engram_canonical_model(context=1048576, users=64):
     """Preserve physical global-sector XOR map; three bounded row bursts.
 
