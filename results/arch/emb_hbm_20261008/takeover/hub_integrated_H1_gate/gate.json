@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.embedding_hub_integrated_H1_gate.v1",
+  "model_before_RTL_commit": "0b7f9d76e",
+  "approval": "Confirmed review0258 H1; narrow approved routine exception",
+  "prerequisites": [
+    "9df7f9cde model",
+    "84ea6d0ff actualnative2048identity gate"
+  ],
+  "source_sha256": {
+    "tools/emb_hbm_integrated_hub_sources.py": "d85a6d2ed8000346daaaabff0989ecca326cc1238397d035e41a806e9a3aa77e",
+    "rtl/test/emb_hbm/tb_emb_hub_integrated_H1.sv": "7cc51d7a86074ac3fec4df5ab557b3deae465bc7740025c0c11b34254feb75e4",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb_integrated_impl.sv": "0bc11a6929ca6c6228dc8b4e34a81122f7300a986a3bf7dbfc1c6fdf8542b1d8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb_integrated_top.sv": "bfa5cbb5e1d343dcae05ccac5b42f58df911e3bce1397d4427fc76c47a312ce8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+    "results/arch/emb_hbm_20261008/takeover/hub_integrated_H1_model.json": "6d8a2a8ddfdbaf41dc2471f6d3a70f2b9d2083a9c6b5d1f95c008beb34567aeb"
+  },
+  "logs_sha256": {
+    "r3/negative2_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r3/admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r3/top_elab.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r3/run-r3.sh": "91ec54e08ebd8de969a4c0b26093497aeb72cd6d3f5eccdeab98cdbebe77fbef",
+    "r3/negative1_compile.log": "8fee5b0c5c6fb876f7da6879b5bcbfac75a5c2db6277dad7542bf44f9a7b6d7f",
+    "r3/positive.log": "00af006195007a2bd9dcd30ab11959377935fff3d43d1c46da5521823d78dd13",
+    "r3/exits.txt": "d41e6c470e0aef7d41685a0d6101d26f564d8c4d002b8e5f8a8ed8b2e31170d8",
+    "r3/positive_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r3/bench.sv": "e02d515cfbb1eab0ac14e380717e49f8d9eb1ca0b90e6ebf008c397b8e41c529",
+    "r3/negative1.log": "af8488f57535397b51836faf28bac74017151120d295a307a36543873b927b97",
+    "r3/negative2.log": "add78454435a02e2e23285a23127479f6a93c6987f2562426508d66820c4e56a",
+    "r4/admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r4/run-r4.sh": "821032cba6a6241b0d685c211c2134b12e747d31404399a9a794a5d5e1a34b4d",
+    "r4/negative1_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r4/exits.txt": "5e900e742872157c6bea9a5bc174b9860aeaa750a4949180273f5b1bc945c273",
+    "r4/negative1.log": "0691bc0b0900121ee1b109e00f74d2287c9d965437618857784e4b33a786111d"
+  },
+  "host": "ot-pve1",
+  "guard": "/srv/opentallas-scratch/admit.sh",
+  "admission_GiB": 1,
+  "remote_handles": [
+    "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r3",
+    "/srv/opentallas-scratch/codex/emb-hub-integrated-H1-r4"
+  ],
+  "live_jobs": 0,
+  "tool": "IcarusVerilog12.0 stable",
+  "clock_ps": 833.333334,
+  "verdict": "PASS_LOCAL_TX_H1_ONLY",
+  "positive": {
+    "SU_full_outerseq11": 2048,
+    "SU_full510_native_packets_exact": 2048,
+    "actual_native_codec_receiver_decoded_exact": 2048,
+    "high_outerseq_bit10_packets": 1024,
+    "HOST_RAW": 160,
+    "HOST_BOOT_END": 1,
+    "credits_returned_SU": 2048,
+    "credits_returned_HOST": 161,
+    "max_outstanding_SU_HOST": [
+      8,
+      8
+    ],
+    "max_queues_including_pinpending": [
+      8,
+      8
+    ],
+    "max_remote_link_CR_occupancy": 128,
+    "native_stall_cycles": 404,
+    "min_forward_SU_HOST_core_edges": [
+      2,
+      2
+    ],
+    "credit_release": "Same actual registerednative link-send output edge. Independent scoreboard identifies packet from producer goldenheads, never tag10 or DUTcredit to choose source.",
+    "marker_accept_cycle": 750,
+    "actual_bend_cycle": 753,
+    "emb_ready_cycle": 860,
+    "status_replies_required": 4,
+    "HOST_count": 160,
+    "HOST_checksum": "cde8f4eb",
+    "runtime_HOST": "Unconsumed/uncredited",
+    "default_off": "Same unchanged native hub instantiated; linkoutputs/credit/fault/status bit-exact under same traffic",
+    "reset": "Initialcoldreset empties queues/pinpending and initializes credits; no midtransaction runtime resetclaim"
+  },
+  "negative": {
+    "legacy_class_highseq": {
+      "result": "FAIL_AS_REQUIRED",
+      "revision": "r4",
+      "mutation": "Constant force semb=1 only after an actual SU head has outertagbit10=1; emulates legacytag10class on that SU packet. No queue source ID or packet altered.",
+      "observed": "FULL_PACKET_CLASS_TAG_ORDER SUordinal1024 HOSTordinal161 outertag400",
+      "exit": 1
+    },
+    "wrong_source_credit": {
+      "result": "FAIL_AS_REQUIRED",
+      "revision": "r3",
+      "mutation": "Swap exposedSU/HOSTreturnedcredit pulses at scoreboard/producer boundary",
+      "observed": "SOURCE_CREDIT_TRUE_SEND_OWNER",
+      "exit": 1
+    }
+  },
+  "fixture_history": {
+    "r1": "CompileFAIL: test literal32hffffffff adjacent? parsed as hex; preservedbench/logs, no computation proceeded.",
+    "r2": "FAIL nativecodecsequence fixture: after waiting for returnedcredit, SU pulse began atposedge+1 and endednextnegedge before actualcapture. Fixeddriveralignsnewpulseafternegedge. RTLunchanged.",
+    "r3_class_mutant": "Notqualified: Icarus proceduralforce RHS evaluatedonce, failedearlyHOSTordinal0; log/warning preserved. r4constantforce waitsactualhighSUhead andfailsordinal1024.",
+    "positive_final_bench_difference": "Positive r3 bencharchivedwithhash; finaltb differsonly inactiveMODE1mutationfixture; no engine/sourcechange. Creditnegative r3 also unaffected."
+  },
+  "generator_deterministic": true,
+  "original_pinned_bytes_unchanged": true,
+  "state_area": "Source-declared proposedTX9485bits vsnative4743+separatemerger8946=13689; save4204bits. Increment4742bits/1517.44um2flopproxy+800unmeasuredmux/guardproxy. SUbroadcastconstantregs may optimizeaway; no mappedphysicalarea or closure claim.",
+  "latency_price": {
+    "added_forward_over_native": 0,
+    "added_credit_register_over_native": 0,
+    "forward_edges_removed_vs_separate_merger": 2,
+    "credit_register_edges_removed_vs_separate_merger": 1,
+    "fixed_ns_forward_saved": 1.666666668,
+    "marker_actual_delay_edges": 3,
+    "headline_or_rate_claim": false
+  },
+  "receiver_qualification": "This H1 gate uses actual native packet encoder/decoder and full11outertag goldenchecks on emittedlocalTX. Prerequisite84ea6d0ff independently exercises actual native ROLE0/ROLE1 identitybridge all2048 unchanged. H1 does not instantiate embeddingreceive path as identity bridge and does not fix existingtag10receive/farclassification. No package/nativeembedding RXinteropclaim.",
+  "contract_open": [
+    "Receive/farclassbinding remainsH3WAIT",
+    "SOURCE64runtimehostdecoder/sharednativeo_crbinding",
+    "SharedKVdiepackageABI/slot/clock/reset; no new fields invented"
+  ],
+  "policy": "No added auth/epoch/mirrors/TMR/ECC on flopqueues or controls",
+  "physical_closed": false,
+  "route_launched": false,
+  "adoption_scope": "Approved functional local TX fix only; receiver/package/physicalconditions remainopen"
+}
