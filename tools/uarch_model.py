@@ -14084,6 +14084,12 @@ def ha2_truecredit_protection_model():
 
 
 
+def hbm_norm_split_model(**kwargs):
+    """Size the inherited G8/G16 norm hard groups and price exposed hops."""
+    from tools.hbm_norm_split_model import model
+    return model(**kwargs)
+
+
 def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilisation=0.55):
     """Prebuild sizing of eb67c5c57 score/selector wrapper; estimates, no closure credit.
 
