@@ -1,0 +1,7 @@
+PAD group=2 rank=0 rc=1 consuming PASS
+PAD group=2 rank=1 rc=1 consuming PASS
+PAD group=4 rank=0 rc=1 consuming PASS
+PAD group=4 rank=1 rc=1 consuming PASS
+MODE positive rc=0 PASS
+MODE mutant rc=1 PASS
+CX_COLL_REMAINING PASS
