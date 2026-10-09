@@ -116,6 +116,14 @@ def dsrom_engram_canonical_model(context=1048576, users=64):
     record['qualified_component_record']='results/rtl/engram_canonical_read_gate_20261009.json'
     record['read_adapter']['controller_request_credits_used_per_pc_max']=3
     record['read_adapter']['request_credit_depth_actual']=8
+    record['read_adapter']['lease_boundary_bits']=64*5
+    record['read_adapter']['lease_state_bits']=128
+    record['read_adapter']['lease_contract']='opt-in pc_available arbiter grant, pc_want, registered claim/release; hold onePC through all9 row atoms, owner-filtered rd'
+    record['backend_fence']=dict(request_pin_bits=340+64,return_pin_bits=264,credit_pin_bits=1,
+                                  added_request_cycles=1,added_return_cycles=1,
+                                  preboot='exclusive controller phase until all actual writes complete',
+                                  runtime='owner-routed controller returns and real PC lease required; no KV arbitration claim',
+                                  total_register_bits=669,sequential_area_mm2_modelled=669*.2916/1e6)
     record['aperture']='per64PC base/limit in PC-local32B atoms; inverse checked wide before rq.addr30, region inventory pending loader owner'
     record['qualification']='actual32-PC timing-model read gate passed; fullpayload/CRC/boot fence, deployed inventory and physical closure pending; historical len8 API fixtures do not qualify PHY'
     return record

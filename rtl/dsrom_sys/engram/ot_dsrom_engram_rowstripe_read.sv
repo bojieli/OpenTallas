@@ -4,8 +4,11 @@
 // row. Every real controller stream drains every cycle: up to six independent
 // PCs may return simultaneously into the reserved per-row buffers. Generation
 // wrap fails closed and requires reset/fence; it never aliases a stale return.
-module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388)(
+module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388,parameter integer USE_LEASE=0)(
     input wire ck,rst_n,
+    input wire [63:0] pc_available,
+    output wire [63:0] pc_want,pc_held,
+    output reg [63:0] pc_claim,pc_release,
     input wire aperture_valid,
     input wire [64*30-1:0] pc_base,pc_limit,
     input wire hq_valid,output wire hq_ready,
@@ -38,7 +41,9 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
     wire [255:0] decoded[0:5];wire [3:0] corrected[0:5],uncorrectable[0:5];
     wire [30:0] row=hq_atom/9;
     wire [5:0] req_pc=(row%2)*32+(row/2)%32;
-    assign hq_ready=!fault && hq_tag<6 && !active[hq_tag] && !pc_busy[req_pc] && generation[hq_tag]!=(CANONICAL ? 14'h0fff : 14'h3fff);
+    assign hq_ready=!fault && hq_tag<6 && !active[hq_tag] && !pc_busy[req_pc] && generation[hq_tag]!=(CANONICAL ? 14'h0fff : 14'h3fff) && (!USE_LEASE || pc_available[req_pc]);
+    assign pc_want=(hq_valid && hq_tag<6 && !active[hq_tag] && !pc_busy[req_pc] && !fault) ? (64'b1<<req_pc) : 64'd0;
+    assign pc_held=pc_busy;
     genvar p,j,w;
     generate for(p=0;p<64;p=p+1) begin:g_rq
         assign rq[p*341+:341]={256'd0,32'd0,out_tag,out_len,out_addr,1'b0,out_v[p]};
@@ -88,11 +93,11 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
     end
     always @(posedge ck or negedge rst_n) begin
         if(!rst_n) begin
-            active<=0;pc_busy<=0;out_v<=0;out_addr<=0;out_tag<=0;out_len<=0;cap_v<=0;
+            active<=0;pc_busy<=0;pc_claim<=0;pc_release<=0;out_v<=0;out_addr<=0;out_tag<=0;out_len<=0;cap_v<=0;
             hr_valid<=0;hr_tag<=0;hr_idx<=0;hr_data<=0;ce<=0;fault<=0;
             for(t=0;t<6;t=t+1) begin generation[t]<=0;seen[t]<=0;next_atom[t]<=0;pc[t]<=0;local_start[t]<=0;issued[t]<=0;end
         end else begin
-            out_v<=0;ce<=0;
+            out_v<=0;ce<=0;pc_claim<=0;pc_release<=0;
             for(t=0;t<6;t=t+1) begin
                 physical=pc[t];base=(physical/32)*8896;localpc=physical%32;
                 cap_v[t]<=active[t] && rd_q[base+8864+localpc];
@@ -111,7 +116,7 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
                    (APERTURE && (!aperture_valid || pc_base[req_pc*30+:30]>=pc_limit[req_pc*30+:30] || pc_limit[req_pc*30+:30]>MAX_PC_ATOMS || incoming_end[31:30]!=0 || incoming_end>{2'b0,pc_limit[req_pc*30+:30]})) ||
                    (CANONICAL && incoming_global[34:30]!=0)) fault<=1;
                 else begin
-                    active[hq_tag]<=1;pc_busy[req_pc]<=1;pc[hq_tag]<=req_pc;
+                    active[hq_tag]<=1;pc_busy[req_pc]<=1;pc[hq_tag]<=req_pc;pc_claim<=64'b1<<req_pc;
                     generation[hq_tag]<=generation[hq_tag]+1'b1;seen[hq_tag]<=0;next_atom[hq_tag]<=0;
                     local_start[hq_tag]<=incoming_local;
                     if(CANONICAL) issued[hq_tag]<=0;
@@ -130,7 +135,7 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
                 end
             end
             if(hr_valid && hr_ready && hr_idx==8) begin
-                active[hr_tag]<=0;pc_busy[pc[hr_tag]]<=0;
+                active[hr_tag]<=0;pc_busy[pc[hr_tag]]<=0;pc_release<=64'b1<<pc[hr_tag];
             end
             if(!hr_valid || hr_ready) begin
                 hr_valid<=0;
