@@ -1,0 +1,53 @@
+{
+  "route_sdc": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_h2_fixedpins_ca0d6a5a2-tt/route/results/asap7/ha2_owner_banked_h2_fixedpins/base/6_final.sdc",
+  "measured_insertion_SS": [
+    869.84,
+    1073.58
+  ],
+  "measured_insertion_FF": [
+    519.71,
+    657.23
+  ],
+  "SS": {
+    "slack": {
+      "reg2reg_max": -852.84,
+      "reg2reg_min": 55.66,
+      "in2reg_max": -42.1,
+      "in2reg_min": -527.62,
+      "reg2out_max": -265.3,
+      "reg2out_min": 760.59
+    },
+    "worst": {
+      "max": -852.84,
+      "min": -1030.53
+    },
+    "latency_rise": [
+      869.84,
+      1073.58
+    ]
+  },
+  "FF": {
+    "slack": {
+      "reg2reg_max": -47.19,
+      "reg2reg_min": 9.56,
+      "in2reg_max": -304.97,
+      "in2reg_min": -140.79,
+      "reg2out_max": 427.02,
+      "reg2out_min": 219.28
+    },
+    "worst": {
+      "max": -304.97,
+      "min": -540.3
+    },
+    "latency_rise": [
+      519.71,
+      657.23
+    ]
+  },
+  "accept": {
+    "SS_setup_ps": -852.84,
+    "FF_hold_ps": -540.3,
+    "SS_ok": false,
+    "FF_ok": false
+  }
+}

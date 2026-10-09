@@ -1,0 +1,16 @@
+{
+  "failed_source_commit": "ca0d6a5a2f22b6d92151a2a14e7a3b339299d463",
+  "job": "ha2_h2_fixedpins_ca0d6a5a2-tt",
+  "remote_root": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_h2_fixedpins_ca0d6a5a2-tt/route",
+  "scope": "actual full failed INJ2 NC8 PF384 NPT8 owner, eight64x512 SRAM macros",
+  "ff_worst_hold_ps": -540.3,
+  "ss_setup_ps": -852.84,
+  "drc": 0,
+  "ff_path": "g_pf[1].u.mem[1][1786] fast clk -> u_core.pd_p[696] gated gclk",
+  "ss_reverse_path": "u_core.p_r[2] -> g_pf[2].u.cnt[3]",
+  "limitations": [
+    "job label suffix tt does not imply TT signoff: archived signoff.json reports SS and FF only",
+    "generated gated clock/actual CTS must still be qualified, no clock exceptions or constraints rescue introduced",
+    "current native INJ8 endpoint needs separate fullshape binding/gate"
+  ]
+}
