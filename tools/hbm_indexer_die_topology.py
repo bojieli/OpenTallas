@@ -83,7 +83,9 @@ def networks(m, fp, buses, paths, chain):
         # Each service eighth owns a physically distributed output station.
         # Native line storage still gathers all32PCs, per the packed136B ABI.
         for p in range(8):
-            a=fp._cxy(svc,startface,(p+0.5)/8)
+            split=json.loads((fp.ROOT/m['variant']['split_x_masters']).read_text())
+            band=split['bands'][split['parents'][svc.master]['bands'][p]]
+            a=fp._cxy(svc,startface,(band['x0_um']+band['w_um']/2)/svc.w)
             b=point(score,'ik',p*1099,1099)
             gutter=svc.y+svc.h+40 if side=='S' else svc.y-40
             # Only two full line bundles occupy the service gap; five use the

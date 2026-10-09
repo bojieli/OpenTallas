@@ -426,7 +426,8 @@ R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0]
                                                'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
 # Native indexer successors remain opt-in until source joins and physical evidence close.
 R25I = dict(R25, native_indexer=True, iv_pin_stn=False,
-    split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}})
+    split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}},
+    split_x_new_port_band={f'{kind}{p}':p for kind in ('ki','kc') for p in range(8)})
 R25IC2 = dict(R25I, indexer_large_slot=True)
 ADOPTED = R25
 
@@ -1651,9 +1652,12 @@ def apply_splits_x(m, rel):
                     continue
                 o = by_[eps[1 - i][0]] if len(eps) == 2 else None
                 ox = (o.x + o.w / 2) if o is not None else it.x + it.w / 2
-                for bn in sp['parents'][it.master]['bands']:
+                ordered = sp['parents'][it.master]['bands']
+                forced = (m.get('variant') or {}).get('split_x_new_port_band', {}).get(port)
+                eligible = [ordered[forced]] if forced is not None else ordered
+                for bn in eligible:
                     b = sp['bands'][bn]
-                    if it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == sp['parents'][it.master]['bands'][-1]:
+                    if forced is not None or it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == ordered[-1]:
                         xl = min(max(ox - it.x - b['x0_um'], 0.1 * b['w_um']), 0.9 * b['w_um'])
                         extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
                         new_owner[(inst, port)] = bn
