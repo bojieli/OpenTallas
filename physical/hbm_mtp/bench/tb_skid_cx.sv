@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_skid_cx #(parameter integer MUT=0);
- reg clk=0;always #.5 clk=~clk;
+ reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0,in_v=0,out_ready=0;reg[4113:0]in_d=0;
  wire ar,br,av,bv;wire[4113:0]ad,bd;
  ot_hfd_mtp_skid #(.W(4114)) original(.clk(clk),.rst_n(rst_n),.in_v(in_v),.in_ready(ar),.in_d(in_d),.out_v(av),.out_ready(out_ready),.out_d(ad));
