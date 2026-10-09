@@ -1,0 +1,18 @@
+{
+  "in_to_out_bits": 0,
+  "in_to_out_max": -1,
+  "in_to_out_example": [],
+  "in_to_reg_max": 0,
+  "reg_to_out_max": 0,
+  "reg_to_out_example": "ttok[9]",
+  "cells": 3979,
+  "ctrl_ports": [
+    "clk",
+    "rst_n"
+  ],
+  "top": "hgi_mtp_accept18_route",
+  "levels": 16,
+  "strict": true,
+  "verdict": "PASS",
+  "message": "rtl_boundary hgi_mtp_accept18_route: registered boundary (in->reg 0, reg->out 0 levels)"
+}

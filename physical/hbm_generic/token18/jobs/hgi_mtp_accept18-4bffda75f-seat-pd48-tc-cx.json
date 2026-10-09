@@ -1,5 +1,5 @@
 {
-  "name": "hgi_mtp_accept18-0f0bfe35e-pd48-tc-cx",
+  "name": "hgi_mtp_accept18-4bffda75f-seat-pd48-tc-cx",
   "block": "ot_hgi_mtp_accept18",
   "owner": "Codex:generic_token18",
   "purpose": "Owner-approved HGI-1 item4 full18-bitendpoint/currentflow variant; exact benches+genuine mutants gate adoption; no cmdproc design",
@@ -11,10 +11,10 @@
     "ot-agidock128"
   ],
   "threads": 8,
-  "peak_ram_gb": 16,
+  "peak_ram_gb": 4,
   "source": {
     "branch": "codex/hgi-token18-20261009",
-    "commit": "377249427"
+    "commit": "4bffda75f"
   },
   "stages": {
     "bench": [
@@ -65,19 +65,30 @@
   "route_hold_corners": "mm",
   "route_hold_margin_ns": 0.035,
   "route_corner": "TC",
-  "cycles_added": 0,
+  "cycles_added": 1,
   "merge_target": null,
   "record": [
     {
       "from": "{RUN}/record",
-      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_accept18-0f0bfe35e-pd48-tc-cx"
+      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_accept18-4bffda75f-seat-pd48-tc-cx"
     }
   ],
   "admission_evidence": {
-    "status": "SOURCE_ESTIMATE_NOT_MEASURED_REQUIRES_SYNTH_PHASE_CHARACTERIZATION",
-    "claim_gib": 16,
-    "rationale": "No macro, <=180x140um frame/core~23k um2, source token storage <=~1k FF and 18bit comparators/32bit counters. Conservative first-stage reservation only. Own synthesis/phase RSS must be measured before full route intake.",
-    "base_claim40_rejected": true
+    "status": "OWN_PHASE_MEASURED_FULL_ROUTE_CONSERVATIVE_ESTIMATE",
+    "source_measured": "377249427",
+    "claim_gib": 4,
+    "floorplan_peak_kib": 322588,
+    "mapped_cells": 2137,
+    "source_delta": "67 input seat FF; fixed180x140/noSRAM",
+    "rationale": "4GiB >=12x nearest own measured floorplan .308GiB; full-route peak not measured",
+    "evidence": "43b313543"
   },
-  "notes": "PROPOSAL ONLY: fleet owner must qualify source inventory/initial synthesis and reservation before intake. TT>=0FF>=0DRC0;SSsensitivity only. Source377249427 corrects shell cfg source-list quoting; proposal label retained; no old-sourcephysicalclaim."
+  "notes": "Opt-in PINREG1, +1 accept command latency priced757907078; actual108PASS+2mutantsFAIL and boundary0/0 PASS; fullrouteclaim4GiB conservative estimate from ownphase .308GiB, NOTmeasuredDRT. TT>=0FF>=0DRC0. CurrentflowdeclaresWC+BC, TT viaoverlay; noCORNER=TC.",
+  "rtl_boundary": {
+    "source": "4bffda75f",
+    "evidence": "results/rtl/hgi_token18_20261009/accept_seat/rtl_boundary.json",
+    "status": "PASS",
+    "input_to_reg_max": 0,
+    "reg_to_out_max": 0
+  }
 }

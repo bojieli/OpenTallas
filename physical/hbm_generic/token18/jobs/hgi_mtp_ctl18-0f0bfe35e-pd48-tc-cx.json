@@ -79,5 +79,6 @@
     "rationale": "No macro, <=180x140um frame/core~23k um2, source token storage <=~1k FF and 18bit comparators/32bit counters. Conservative first-stage reservation only. Own synthesis/phase RSS must be measured before full route intake.",
     "base_claim40_rejected": true
   },
-  "notes": "PROPOSAL ONLY: fleet owner must qualify source inventory/initial synthesis and reservation before intake. TT>=0FF>=0DRC0;SSsensitivity only. Source377249427 corrects shell cfg source-list quoting; proposal label retained; no old-sourcephysicalclaim."
+  "notes": "PROPOSAL ONLY: fleet owner must qualify source inventory/initial synthesis and reservation before intake. TT>=0FF>=0DRC0;SSsensitivity only. Source377249427 corrects shell cfg source-list quoting; proposal label retained; no old-sourcephysicalclaim. Do not queue this bare-leaf proposal; fullcore successor pending.",
+  "admission_hold": "RETIRED bare control boundary refused; use qualified fullcore TW18/XSEL1 instead"
 }
