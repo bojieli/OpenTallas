@@ -1,0 +1,35 @@
+{
+  "verdict": "FAIL",
+  "adoption": "NO ADOPTION: owner rejected22 bookkeeping parity/poison registers",
+  "policy": "Option B TT setup>=0 FF hold>=0 DRC0, SS sensitivity; uncertainty60/25ps, period833.333ps",
+  "tt_setup_ps": -617.72,
+  "tt_internal_setup_ps": -69.37,
+  "ss_sensitivity_ps": -1082.38,
+  "ss_internal_setup_ps": -487.79,
+  "ff_hold_ps": 8.87,
+  "drc": 0,
+  "slew_violations": 9,
+  "source_commit": "8762679acdf2cedf085104b7479c5444580c3097",
+  "source_sha256": [
+    {
+      "path": "rtl/common/ot_secded.sv",
+      "sha256": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+      "size_bytes": 2943
+    },
+    {
+      "path": "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv",
+      "sha256": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397",
+      "size_bytes": 3077
+    },
+    {
+      "path": "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline_guard.sv",
+      "sha256": "a26ccad17e116e66228d6a94615b55bdc6fc39f40ceddadd17da7c6e78cac6c2",
+      "size_bytes": 12399
+    }
+  ],
+  "limitations": [
+    "guardvariant rejected independently of timing",
+    "snapshot predates final falling-valid packet handling fix",
+    "standalone16macro full545/512 pathfinding, nativeTU clock/reset/credit composition remains open"
+  ]
+}
