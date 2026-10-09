@@ -11,13 +11,15 @@ module tb_dshbm_markov_record_join;
  reg cmd_we=0,cmd_addr=0,db_v=0,install_v=0;reg [63:0] cmd_data=0;
  wire db_ready,cp_cpl;wire [3:0] cp_status;wire launch,cp_done,cp_fault;
  wire [16:0] cp_token;wire cp_result_v;wire [31:0] cp_result_data;
+ wire [31:0] cp_job;wire [3:0] cp_generation;wire [19:0] cp_position;
  wire [31:0] launch_pc;wire [16:0] launch_token;wire [19:0] launch_pos;
  ot_ds_hbm_cmdproc20 #(.ENABLE(1),.NSM(1),.NCMD(2)) cp(
   .clk(clk),.rst_n(rst_n),.cmd_we(cmd_we),.cmd_addr(cmd_addr),.cmd_wdata(cmd_data),
   .db_v(db_v),.db_rdy(db_ready),.db_token(17'd21946),.db_pos(20'd524288),
   .db_job(32'h5171),.db_generation(4'd3),.launch_v(launch),.launch_pc(launch_pc),
   .launch_token(launch_token),.launch_pos(launch_pos),.sm_done(cp_done),.sm_fault(cp_fault),
-  .res_v(cp_result_v),.res_data(cp_result_data),.cpl_v(cp_cpl),.cpl_rdy(1'b1),.cpl_status(cp_status),.cpl_token(cp_token));
+  .res_v(cp_result_v),.res_data(cp_result_data),.cpl_v(cp_cpl),.cpl_rdy(1'b1),.cpl_status(cp_status),.cpl_token(cp_token),
+  .cpl_job(cp_job),.cpl_generation(cp_generation),.cpl_position(cp_position));
  wire run,run_ready,owner_done,owner_done_ready,owner_fault;
  wire [31:0] program_base;wire [32:0] program_limit;wire [15:0] records;
  wire [72:0] launch_owner={launch_pos,launch_token,4'd3,32'h5171};wire [72:0] retained_owner;
@@ -144,6 +146,7 @@ module tb_dshbm_markov_record_join;
 `endif
   end
   release_in<=arrive;
+  if(cp_result_v && returned[89:17]!==retained_owner)$fatal(1,"actual returned winner ownership at acceptance");
   if(rv)begin
    if(!score_accept)$fatal(1,"native pulse score capacity exhausted");
    if(rrow>=43 || seen[rrow])$fatal(1,"native duplicate/out-of-bounds result");
@@ -157,7 +160,7 @@ module tb_dshbm_markov_record_join;
       combined_mismatches!=0 || line_requests!=344 || word_reads!=10 || xbeats!=104 || mismatches!=0 ||
       native_fault || owner_fault || cp_fault || score_cdc_fault || score_fault || rank_fault || return_fault)
     $fatal(1,"actual CP/record/SMH numerical gate failed status=%0d rows=%0d mismatches=%0d",cp_status,rows_seen,mismatches);
-   if(returned[89:17]!==retained_owner)$fatal(1,"actual returned winner ownership");
+   if(cp_job!=32'h5171 || cp_generation!=3 || cp_position!=524288)$fatal(1,"actual CP completion ownership");
    $display("PASS actual CP record SMH released Markov rows43 K256 NC8 storedDLOG LAT3 serial0.9GHz localargmax winner=%0d cycles=%0d",cp_token,cyc);$finish;
   end
  end

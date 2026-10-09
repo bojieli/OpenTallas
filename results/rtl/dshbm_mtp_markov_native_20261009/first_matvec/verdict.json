@@ -1,0 +1,139 @@
+{
+  "status": "PASS",
+  "scope": "actual CP + typed native record + real serial owner + SMH released43x256 Markov matvec only",
+  "source_sha256": {
+    "rtl/test/ot_hdc_prefix_sim.sv": "37f786e97c12bad0b5600b6a305f5d23131b62ac15a5eac9171489b6d18c54be",
+    "rtl/v41rom/ot_v41_bterm.sv": "f682643c486d2bd9f2725f780bec982e3495b02ce52450bec07e7e892b05053b",
+    "rtl/v41rom/ot_v41_bterm2.sv": "7bcef5af5f27d2c8f43f8d185d0a6a3932ec003aa9a10979d166fdd0396154f9",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hdc/ot_hdc_fp32_mul_lat.sv": "0a96f521ec8e826a72697eff37f8d75499f78fc47512512e9cd20242d411f987",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/gpu/ot_gpu_tree.sv": "27c8a4a6494044888b842e32e17871996424188fa5e513d650c47a5f635005db",
+    "rtl/gpu/ot_gpu_issue.sv": "34c2b147515c024dc824420d64622df03cacdf70f356634508bc798dba320cf6",
+    "rtl/gpu/ot_gpu_stack.sv": "62f8942f53e032eccbad5a96705d9d00d54027357b8292cac9b8f4a35d012618",
+    "rtl/gpu/ot_gpu_tc_col.sv": "e81c971fde92e9dda728ab962219998c033da61005f6858c6ff6bfc25d85616f",
+    "rtl/gpu/ot_gpu_bd_col.sv": "9637b23a0e48ae59818d2dc4a0a8e5333a73961c1783f37b82ca79d70a762df5",
+    "rtl/hdc/v41/ot_hdc_blockdot.sv": "9f3632a564d5358c59277ee002eb18200d776bef07b09c9839a029573f905dae",
+    "rtl/gpu/ot_gpu_bulk_copy.sv": "99ea676a25fa560f62f4461ce0da29e6dc44f84b412d486b5c646ce4fa1c7ee4",
+    "rtl/gpu/ot_gpu_sm_v.sv": "2fa17cd4893171850fe87232ccf20f576e58ef663e855b4d069fb8ad61a1460c",
+    "rtl/hdc/ot_hdc_fpu.sv": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+    "rtl/hdc/ot_hdc_fp32_mul_pipe.sv": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv": "efe6d509fb95f78f3553521f521532c8289732a5240e4f05fa8478253fb887c5",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv": "f63863a56f7c8929bf862750c095c2951ba340d4bc3bbb1763e27ec1b8f72427",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv": "7551178adb8ab30e5ff2a03b50ef3d9b0729bac49c9c5e96dec6324c76fd8784",
+    "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2.v": "ba2cbf7634c3951ff68505f012b1d28cf415e161181a89ab620b28d5172a3598",
+    "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv": "84a42f80bc299ad438b0ade37fbe559b5bb8839c5800ed4eebbce4cfa4dc41bd",
+    "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv": "130d2d36763f19e74b5f7ef9e319df94022cca6fd2fa729b1786506a18813635",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv": "3b4bd73fe5db6a29d099658825570e0e4ef6c59354ef4b0edb94f6ac04716d23",
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/hbm_accel/sm/ot_hbm_accel_sm_pq.sv": "ac1cb6f5aa29f597fbeefc8606b9abe47083ffefc6e655cdef851cc914c43274",
+    "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv": "02d3f6bbaa7bf63203b7fedcf4675e5b5f9f3534a5514d37c3c077f22b403f00",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv": "d80f724a91c8dc27ba174c98f0df844c5da8f733cb7508211ef0b2727a7bd8d0",
+    "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv": "6b29aeea8902681e594c27b30cf76c9b09d4c94be44eef7354d7b27b88f3c479",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv": "f74e126dbbbc4fa6053d85821de9a1b9db650a1365901f404b8c2f8afe36970c",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "1fd8122a7ac2f77e92dcd601f1b13d0a4c1899a5ce3bfb3a6a19966c7ea5d7cd",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_seq_ingress.sv": "e82c301542110021daecc1ce6bb5d823a598a303e9673380c1e74933d39f5271",
+    "rtl/hbm_accel/control_20261007/ot_hbm_sm_serial_owner.sv": "4a4d0ca08c4c230059f6817ad29f74e6c83ee5a3caca306d51637dc44f4e0ce5",
+    "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv": "1aae6aeb203d1c755fdedf0ac8082ae054fd223377e8ea3d61ba8b388a69fae5",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_smh_pc_dispatch_mx1.sv": "e8b747009467bf75b389121253f8914289040b0bcf7788bfc36b2aa4c2276de4",
+    "rtl/test/hbm_accel/tb_dshbm_markov_record_join.sv": "064296f72f9ad6a937f6e41d759f2bc41f0a5389ff210fcd17a87d5f2b4c4b27"
+  },
+  "payload": {
+    "schema": "opentallas.native_sm.payload.v1",
+    "nc": 8,
+    "active_columns": 1,
+    "provenance": {
+      "scope": "released full-shape Markov matvec; no stored-DLOG or argmax",
+      "released_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+      "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+      "weights": {
+        "shard": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277/model-00046-of-00048.safetensors",
+        "tensor": "mtp.2.markov_head.head.weight",
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "rows": [
+          0,
+          43
+        ],
+        "file_byte_offset": 71556176,
+        "slice_sha256": "61e908b0762981295c1f510414ee52762e7267ffa19eb8982fb358a1bbf7086e",
+        "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+      },
+      "activation": {
+        "shard": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277/model-00046-of-00048.safetensors",
+        "tensor": "mtp.2.markov_head.embed.weight",
+        "dtype": "BF16",
+        "shape": [
+          129280,
+          256
+        ],
+        "rows": [
+          21946,
+          21947
+        ],
+        "file_byte_offset": 16601168,
+        "slice_sha256": "5f0a69bb44b4e3ba8a75e8f566def14733a5ccc4f80b0ee834d754a409d13fdc",
+        "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+      }
+    },
+    "released_shard_sha256": "e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+    "golden_source_sha256": {
+      "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+      "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009/tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+    },
+    "compiler_source_sha256": "1bf7c8735c89de16102a30304bd75dff9b84361d03d0073cdd713ddafc8af99f",
+    "arithmetic_contract": "chunk8",
+    "shape": {
+      "rows": 43,
+      "K": 256,
+      "die": 0,
+      "sm": 0,
+      "global_first_row": 0
+    },
+    "artifacts": {
+      "seq.hex": {
+        "path": "seq.hex",
+        "sha256": "5c13b09a1a43bcaf39f69afa918acdca2dc3f203553c56b6293d77292361066d"
+      },
+      "lines.hex": {
+        "path": "lines.hex",
+        "sha256": "8acf142b7129377a8bddfd2abe89b214aa05f096fc8135be6f8dd648390c97c8"
+      },
+      "x.hex": {
+        "path": "x.hex",
+        "sha256": "b234762d1f986261547504800f090f5276dcd2eb8ff723649eed2803bdde18f3"
+      }
+    },
+    "numerical_qualified": false,
+    "whole_token_qualified": false,
+    "hardware_installed": false
+  },
+  "runs": [
+    {
+      "name": "positive",
+      "returncode": 0,
+      "log": "positive.log"
+    },
+    {
+      "name": "weight_mutant",
+      "returncode": 1,
+      "log": "weight_mutant.log"
+    }
+  ],
+  "whole_token_qualified": false,
+  "missing": [
+    "stored-DLOG addition",
+    "rank-ordered full129280 argmax",
+    "actual full11kernel installed provider"
+  ],
+  "prefix": "same SAT-proved behavioral prefix stand-in used by retained fullshape SM proof",
+  "physical_qualified": false
+}
