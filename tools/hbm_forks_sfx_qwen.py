@@ -6,9 +6,11 @@ Qwen data: sink = -2^100 for every head (exp(sink - max) underflows to +0 in the
 es), inverse-RoPE tail cos = 1, sin = 0 (re = bf16(a*1 + b*0) = bf16(a): the tail passes).  The expected files are
 written from the QWEN r25 reference (no sink term, no rotation: e = exp(s*scale - max), Z = csum chunk8, o = bf16(pv / Z)),
 NOT from the DS reference, so a PASS proves the engine reproduces the Qwen golden bit for bit with today's RTL.
-Negative: the same cases with sink = 0 (a finite sink) against the Qwen reference must FAIL.
-X2: the SMX event cycles of each run (max, exp, den, normalise) at T = 640 / 128 / 16 per pass; the 8K multipass
-composition (13 x 640-row chunks) is computed from them in the record.
+Negative: the same cases with sink = the head's row max (exp(sink - max) = 1, a live sink) against the Qwen reference
+must FAIL on every case.
+X2: the SMX event cycles of each run (max, exp, den, normalise).  Small cases run on today's engine (NVMAX 40 = 640
+rows); the BIG set (T 8,192 Qwen, 2,048 DS selected rows, 1,024 = one of 8 pairs at 8K, 512 = one aligned pass) runs
+the same RTL with NVMAX 512 (one-pass reference point) -- the multipass cost is composed from these measured points.
 
   python3 tools/hbm_forks_sfx_qwen.py prep --work W      # case dirs W/lph16/<case>, mutant W/lph16m/<case>
   (build: python3 tools/dsrom_su_softmax.py build --work W --lph 16 ; run: this script's `run`)
@@ -43,10 +45,14 @@ def qwen_ref(s_raw, scale, pv):
     return dict(s=s, max=mb, e=e, es=es, den=es, o=o)
 
 
-def cases(seed=20261009):
+SMALL = (640, 640, 128, 16, 640, 128)
+BIG = (8192, 2048, 1024, 512)
+
+
+def cases(seed=20261009, sizes=SMALL):
     rng = np.random.default_rng(seed)
     out = []
-    for k, T in enumerate((640, 640, 128, 16, 640, 128)):
+    for k, T in enumerate(sizes):
         kind = k % 3
         if kind == 0:
             s_raw = rng.normal(0, 4, (H, T)).astype(F)
@@ -62,14 +68,14 @@ def cases(seed=20261009):
 
 
 def cmd_prep(a):
-    w = Path(a.work)
+    w = Path(a.work) / a.set
     meta = []
-    for c in cases():
+    for c in cases(sizes=BIG if a.set == "big" else SMALL):
         ref = qwen_ref(c["s_raw"], c["scale"], c["pv"])
         cos, sin = np.ones(TAIL // 2, F), np.zeros(TAIL // 2, F)
-        for tag, sink in (("", F(-2.0 ** 100)), ("m", F(0.0))):
+        for tag, sink in (("", np.full(H, F(-2.0 ** 100), F)), ("m", np.asarray(ref["max"], F))):
             d = dict(name=c["name"], layer=None, T=c["T"], s_raw=c["s_raw"], scale=c["scale"],
-                     sink=np.full(H, sink, F), pv=c["pv"], cos=cos, sin=sin, ref=ref)
+                     sink=sink, pv=c["pv"], cos=cos, sin=sin, ref=ref)
             S.write_case(w / f"lph16{tag}" / c["name"], d, 16)
         # the DS reference with these data equals the Qwen reference (the identity the D3 decision rests on)
         dsr = S.reference(c["s_raw"], c["scale"], np.full(H, F(-2.0 ** 100), F), c["pv"], cos, sin)
@@ -91,7 +97,7 @@ def run_dir(exe, d):
 
 
 def cmd_run(a):
-    w = Path(a.work)
+    w = Path(a.work) / a.set
     exe = w / "obj_lph16" / "Vtb_dsrom_su_softmax"
     meta = json.loads((w / "lph16" / "cases.json").read_text())["cases"]
     rows, neg = [], []
@@ -107,31 +113,30 @@ def cmd_run(a):
         caught = km is None or any(km[k] != 0 for k in ("err_den", "err_o"))
         neg.append(dict(name=m["name"], caught=caught))
         print(m["name"], "exact" if ok else "MISMATCH", nodes, "mutant caught" if caught else "MUTANT PASSED", flush=True)
-    t640 = [r for r in rows if r["T"] == 640 and r["cycles"]]
-    comp = None
-    if t640:
-        c = t640[0]["cycles"]
-        # 8K multipass composition from the measured 640-row pass: pass 1 = running max over 13 chunks (overlapped with
-        # the QK stream; exposed = one chunk's max tail), pass 2 = 13 chunks of exp + sum streamed back to back (the
-        # carry-in add per chunk), pass 3 = one normalise.  Upper bound if nothing overlaps: 13 x (max + exp) + den +
-        # normalise.
-        comp = dict(chunks=13, measured_640=c,
-                    exposed_estimate=c["max"] + c["den"] + c["normalise"] + 13 * 40,
-                    no_overlap_bound=13 * (c["max"] + c["exp"]) + c["den"] + c["normalise"])
+    comp = {r["T"]: r["cycles"] for r in rows if r["cycles"]}
     verdict = "PASS" if rows and all(r["exact"] for r in rows) and all(n["caught"] for n in neg) else "FAIL"
     rec = dict(schema="opentallas.hbm_forks.sfx_qwen.v1", verdict=verdict, sink=-2.0 ** 100, cos=1, sin=0,
-               rows=rows, mutant_sink0=neg, multipass_8k=comp)
-    (w / "qwen_sink_data.json").write_text(json.dumps(rec, indent=1, default=str) + "\n")
+               rows=rows, mutant_live_sink=neg, cycles_by_T=comp)
+    (w / f"qwen_sink_data_{a.set}.json").write_text(json.dumps(rec, indent=1, default=str) + "\n")
     print("SFX_QWEN", verdict, json.dumps(comp))
     return 0 if verdict == "PASS" else 1
 
 
+def cmd_build(a):
+    w = Path(a.work) / a.set
+    S.nvmax = (lambda lph: 512) if a.set == "big" else S.nvmax
+    ns = argparse.Namespace(work=str(w), lph=16, lm=5, la=4, elm=5, ela=4, add6=0, exp6=0, expns=0, denk=0, margin=0,
+                            safe=0, recut=0, jobs=8, tag="")
+    return S.cmd_build(ns)
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("step", choices=("prep", "run"))
+    ap.add_argument("step", choices=("prep", "build", "run"))
     ap.add_argument("--work", required=True)
+    ap.add_argument("--set", choices=("small", "big"), default="small")
     a = ap.parse_args()
-    return dict(prep=cmd_prep, run=cmd_run)[a.step](a)
+    return dict(prep=cmd_prep, build=cmd_build, run=cmd_run)[a.step](a)
 
 
 if __name__ == "__main__":
