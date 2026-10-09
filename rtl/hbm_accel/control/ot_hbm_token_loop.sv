@@ -31,7 +31,7 @@ module ot_hbm_token_loop #(
   input  wire [TW-1:0] job_eos, input wire job_eos_en, input wire [PW:0] job_maxpos, input wire job_mtp,
   input  wire          host_stop,
   // host: token records (posted)
-  output wire          hr_v, input wire hr_rdy, output wire [73:0] hr_d,
+  output wire          hr_v, input wire hr_rdy, output wire [TW+PW+36:0] hr_d,
   // cmdproc (AR): doorbell out, completion in
   output reg           db_v, input wire db_rdy, output reg [TW-1:0] db_token, output reg [PW-1:0] db_pos,
   output reg [31:0]    db_job,
@@ -51,10 +51,10 @@ module ot_hbm_token_loop #(
   reg stop_req;
   // ---------------------------------------------------------------- host record FIFO
   localparam integer HD = 1 << HQ_AW;
-  reg [73:0] hq [0:HD-1]; reg [HQ_AW:0] hw, hr_;
+  reg [TW+PW+36:0] hq [0:HD-1]; reg [HQ_AW:0] hw, hr_;
   wire hq_full = (hw - hr_) == HD[HQ_AW:0], hq_ne = (hw != hr_);
   assign hr_v = hq_ne; assign hr_d = hq[hr_[HQ_AW-1:0]];
-  reg pv; reg [73:0] pd;                               // one record to push this cycle
+  reg pv; reg [TW+PW+36:0] pd;                               // one record to push this cycle
   always @(posedge clk) if (pv && post_en && !hq_full) hq[hw[HQ_AW-1:0]] <= pd;
   always @(posedge clk or negedge rst_n)
     if (!rst_n) begin hw <= 0; hr_ <= 0; end
