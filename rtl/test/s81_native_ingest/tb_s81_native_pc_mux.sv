@@ -3,7 +3,7 @@ module tb_s81_native_pc_mux;
  reg ck=0;always #0.416667 ck=~ck;
  reg rst_n=0,live=0;reg[1363:0] inq=0;wire[3:0] cr;wire[340:0] rq;
  reg rk=0,wd=0,rv=0;reg[255:0] data=0;reg[16:0] tag=0;reg[3:0] beat=0;
- wire[3:0] sw,srv;wire[1023:0] sd;wire[67:0] st;wire[15:0] sb;wire pending,ce,fault;
+ wire[3:0] sw,srv,sdone;wire[1023:0] sd;wire[67:0] st;wire[15:0] sb;wire pending,ce,fault;
 `ifdef INJECT_SINGLE
  localparam[431:0] INJECT=432'd1;
 `elsif INJECT_DOUBLE
@@ -11,11 +11,11 @@ module tb_s81_native_pc_mux;
 `else
  localparam[431:0] INJECT=0;
 `endif
- ot_s81_native_pc_mux #(.ENABLE(1),.QUEUE_INJECT(INJECT)) dut(ck,rst_n,live,inq,cr,rq,rk,wd,rv,data,tag,beat,sw,srv,sd,st,sb,pending,ce,fault);
+ ot_s81_native_pc_mux #(.ENABLE(1),.QUEUE_INJECT(INJECT)) dut(ck,rst_n,live,inq,cr,rq,rk,wd,rv,data,tag,beat,sw,srv,sdone,sd,st,sb,pending,ce,fault);
  integer credit[0:3],seq[0:3],sent[0:3],retired[0:3];
  integer qtag[0:3][0:8191],qwe[0:3][0:8191],qlen[0:3][0:8191];
  integer w[0:3],r[0:3];integer i,c,n,active_sid=-1,remaining=0,timer=0,credit_delay=0;
- integer issues=0,completions=0,returns=0,corrected=0,prioritychecks=0;
+ integer issues=0,completions=0,done_count=0,returns=0,corrected=0,prioritychecks=0;
  reg active_we;reg[16:0] active_tag;reg[3:0] active_len;reg[31:0] rng=32'h13579117;
  initial begin
   for(i=0;i<4;i=i+1)begin credit[i]=8;seq[i]=0;sent[i]=0;retired[i]=0;w[i]=0;r[i]=0;end
@@ -52,6 +52,10 @@ module tb_s81_native_pc_mux;
    if(fault)$fatal(1,"unexpected native endpoint fault cycle%0d",c);
 `endif
    for(i=0;i<4;i=i+1)begin
+    if(sdone[i])begin
+     if(i!=active_tag[16:15]||!(wd||(rv&&beat==0)))$fatal(1,"wrong or premature source retirement");
+     done_count=done_count+1;
+    end
     if(cr[i])credit[i]=credit[i]+1;
     if(sw[i])begin if(!wd||i!=active_tag[16:15])$fatal(1,"wrong writecompletion source");retired[i]=retired[i]+1;end
     if(srv[i])begin
@@ -62,7 +66,7 @@ module tb_s81_native_pc_mux;
    @(negedge ck);
   end
   for(i=0;i<4;i=i+1)if(sent[i]!=retired[i]||credit[i]!=8)$fatal(1,"source inventory not drained");
-  if(pending||issues!=completions||issues<50||returns==0)$fatal(1,"gate did not exercise/drain full mechanism");
+  if(pending||issues!=completions||done_count!=completions||issues<50||returns==0)$fatal(1,"gate did not exercise/drain full mechanism");
 `ifdef INJECT_SINGLE
   if(corrected==0)$fatal(1,"singlebit correction not exercised");
 `endif
