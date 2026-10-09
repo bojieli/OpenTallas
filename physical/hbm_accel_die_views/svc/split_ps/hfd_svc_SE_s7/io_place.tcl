@@ -1,5 +1,5 @@
 # hfd_svc_SE_s7: every die pin at the generator's position (svc/gen_svc_seg.py, derived master; generator, r16i)
-place_pin -pin_name {ck[0]} -layer M5 -location {431.0040 259.0800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck[0]} -layer M5 -location {98.0280 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ei[0]} -layer M4 -location {469.8960 13.2440} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[1]} -layer M6 -location {469.8960 13.3280} -pin_size {0.1920 0.0320}
 place_pin -pin_name {ei[2]} -layer M4 -location {469.8960 13.4360} -pin_size {0.1920 0.0240}
@@ -3888,7 +3888,7 @@ place_pin -pin_name {q7[40]} -layer M5 -location {426.3480 259.0800} -pin_size {
 place_pin -pin_name {q7[41]} -layer M5 -location {426.5400 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q7[42]} -layer M5 -location {426.7320 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q7[43]} -layer M5 -location {426.9240 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {431.3880 259.0800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M5 -location {98.4120 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {wi[0]} -layer M4 -location {0.0960 1.0120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wi[1]} -layer M6 -location {0.0960 1.1040} -pin_size {0.1920 0.0320}
 place_pin -pin_name {wi[2]} -layer M4 -location {0.0960 1.2040} -pin_size {0.1920 0.0240}

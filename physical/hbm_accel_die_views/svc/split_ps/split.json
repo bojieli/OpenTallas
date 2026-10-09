@@ -415,20 +415,6 @@
        43
       ]
      },
-     "ck": {
-      "parent_port": "ck",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
-     "rst": {
-      "parent_port": "rst",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
      "ks7": {
       "parent_port": "ks7",
       "parent_bits": [
@@ -448,6 +434,20 @@
       "parent_bits": [
        19750,
        22237
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
       ]
      }
     }
@@ -865,20 +865,6 @@
        43
       ]
      },
-     "ck": {
-      "parent_port": "ck",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
-     "rst": {
-      "parent_port": "rst",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
      "ks7": {
       "parent_port": "ks7",
       "parent_bits": [
@@ -899,6 +885,20 @@
        19750,
        22237
       ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
      }
     }
    }
@@ -917,20 +917,6 @@
    ],
    "port_map": {
     "hfd_svc_SE_s0": {
-     "ck": {
-      "parent_port": "ck",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
-     "rst": {
-      "parent_port": "rst",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
      "l0": {
       "parent_port": "lsm12",
       "parent_bits": [
@@ -992,6 +978,20 @@
       "parent_bits": [
        0,
        3625
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
       ]
      }
     },
@@ -1391,20 +1391,6 @@
    ],
    "port_map": {
     "hfd_svc_SE_s0": {
-     "ck": {
-      "parent_port": "ck",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
-     "rst": {
-      "parent_port": "rst",
-      "parent_bits": [
-       0,
-       0
-      ]
-     },
      "l0": {
       "parent_port": "lsm28",
       "parent_bits": [
@@ -1466,6 +1452,20 @@
       "parent_bits": [
        0,
        3625
+      ]
+     },
+     "ck": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
+      ]
+     },
+     "rst": {
+      "parent_port": "<new>",
+      "parent_bits": [
+       0,
+       0
       ]
      }
     },
@@ -2312,16 +2312,6 @@
      "direction": "inout",
      "face": "N"
     },
-    "ck": {
-     "bits": 1,
-     "direction": "input",
-     "face": "N"
-    },
-    "rst": {
-     "bits": 1,
-     "direction": "input",
-     "face": "N"
-    },
     "ks7": {
      "bits": 1102,
      "direction": "output",
@@ -2336,6 +2326,16 @@
      "bits": 2488,
      "direction": "inout",
      "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
     },
     "wi": {
      "bits": 349,
@@ -2354,16 +2354,6 @@
    "w_um": 1017.0,
    "h_um": 259.176,
    "ports": {
-    "ck": {
-     "bits": 1,
-     "direction": "input",
-     "face": "N"
-    },
-    "rst": {
-     "bits": 1,
-     "direction": "input",
-     "face": "N"
-    },
     "l0": {
      "bits": 1102,
      "direction": "output",
@@ -2408,6 +2398,16 @@
      "bits": 3626,
      "direction": "inout",
      "face": "xy"
+    },
+    "ck": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
+    },
+    "rst": {
+     "bits": 1,
+     "direction": "input",
+     "face": "N"
     },
     "eo": {
      "bits": 607,
