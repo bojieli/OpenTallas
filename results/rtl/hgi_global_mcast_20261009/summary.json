@@ -1,0 +1,201 @@
+{
+  "schema": "cx.global-mcast.terminal-summary.v1",
+  "source_commit": "be5fc2a34",
+  "parent_RTL": "916a3915a",
+  "host": "ot-epyc4",
+  "launcher_pid": 2037736,
+  "terminal_rc": 0,
+  "positive_global_runs": 1728,
+  "DS_current_source_lockstep_runs": 12,
+  "consuming_mutants_caught": 36,
+  "terminal_source_gate": true,
+  "physical_closure": false,
+  "gate_scope": "Minimum real switched-tier endpoint, NC8/NOG12 hardware, behavioral exact-rank peer transport. Group-reduce mcast all nine legal G/s tuples with all96 ranks x2 phase seeds; golden contributor rank-order pairtree rounding BF16, signed-zero stress. Stub injects every96rank result, forcing foreignoutergroup drop. Missing-local mutant fails semantically only after all required physical delivery; foreign-consume mutant fails output scope assertion.",
+  "summary": [
+    {
+      "build": "ds",
+      "outer": 96,
+      "kind": "positive",
+      "runs": 12,
+      "latency_ns_min": 993.294,
+      "latency_ns_max": 993.294
+    },
+    {
+      "build": "g2",
+      "outer": 2,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 939.084,
+      "latency_ns_max": 949.092
+    },
+    {
+      "build": "g2",
+      "outer": 4,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 939.084,
+      "latency_ns_max": 949.092
+    },
+    {
+      "build": "g2",
+      "outer": 8,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 940.752,
+      "latency_ns_max": 949.926
+    },
+    {
+      "build": "g2",
+      "outer": 96,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 988.29,
+      "latency_ns_max": 989.124
+    },
+    {
+      "build": "g4",
+      "outer": 4,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 921.57,
+      "latency_ns_max": 930.744
+    },
+    {
+      "build": "g4",
+      "outer": 8,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 922.404,
+      "latency_ns_max": 931.578
+    },
+    {
+      "build": "g4",
+      "outer": 96,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 950.76,
+      "latency_ns_max": 950.76
+    },
+    {
+      "build": "g8",
+      "outer": 8,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 915.732,
+      "latency_ns_max": 924.906
+    },
+    {
+      "build": "g8",
+      "outer": 96,
+      "kind": "positive",
+      "runs": 192,
+      "latency_ns_min": 934.08,
+      "latency_ns_max": 934.08
+    },
+    {
+      "build": "l2",
+      "outer": 2,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "l2",
+      "outer": 4,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "l2",
+      "outer": 8,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "l4",
+      "outer": 4,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "l4",
+      "outer": 8,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "l8",
+      "outer": 8,
+      "kind": "leak",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m2",
+      "outer": 4,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m2",
+      "outer": 8,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m2",
+      "outer": 96,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m4",
+      "outer": 8,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m4",
+      "outer": 96,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    },
+    {
+      "build": "m8",
+      "outer": 96,
+      "kind": "missing",
+      "runs": 3,
+      "latency_ns_min": null,
+      "latency_ns_max": null
+    }
+  ],
+  "artifacts": {
+    "launch.json": "828286dd35468d328673b1ed2fc6967f82a612703f55995c2a2658ad8acaecdc",
+    "terminal.logs.tgz": "bb690ee971ad344f73ae78acfc72ae70ad2d4007c151292282779ae3e77aa076",
+    "attempt1.driver.log": "2226b527588675d7ca8d23867dde452fffee10da2e6e9180c24760bc82c808f1",
+    "attempt2.driver.log": "6252571327590fe608b1990b186682d12b0c6b2dbea56635a4f31e77a88127c6",
+    "attempt2.memory.json": "7fc5725c0efe9b2772428cb88171a419746e84a4c0c1d6546f7e5a367ca99bbd",
+    "attempt1.memory.json": "ad18d77da11d9e09bf302d10e2f7e45d1d2cd559af21d7a41662beef2e90b3c8",
+    "terminal.json": "2980b4e80b8ad734f0a8177b71cca6663fcb6166764a0e01c94b674041da528f"
+  }
+}
