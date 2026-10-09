@@ -62,9 +62,12 @@
       350,
       150
     ],
+    "bank_pathfinding_footprint_mm2": 0.0525,
+    "full70bank_footprint_mm2_if_replicated": 3.675,
+    "full_replica_footprint_status": "3.675mm2 proposal, not mapped/adopted; global mux/relay/cache allocations additional",
     "bank_macro_area_um2": 11674.73088,
     "full_store_slot": "pending die-owner real allocation"
   },
   "publication": "all96 explicit receipts; disabled-empty rank separate receipt; q3 final accepted and all SRAM positive ACKs before enabled rank published",
-  "adoption": "full gate, real provider join, mapped metadata protection, TT/FF DRC0 and contextual budgets required"
+  "adoption": "full gate, real provider join, S2/S4 approved plain finite control, TT/FF DRC0 and contextual budgets required"
 }
