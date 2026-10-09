@@ -1,0 +1,162 @@
+{
+  "part": "rx",
+  "passed": true,
+  "checks": {
+    "f0_r0_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=8 cret=3 stalls=871 credit_stalls=362 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f0_r0_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=1 cret=0 stalls=1738 credit_stalls=753 elapsed=1842 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 19106000 (1ps)\n"
+    },
+    "f0_r0_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=4 cret=7 stalls=1159 credit_stalls=558 elapsed=1170 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 12386000 (1ps)\n"
+    },
+    "f0_r0_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=0 ret=0 crd=16 cret=20 stalls=873 credit_stalls=363 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f7_r7_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=8 cret=3 stalls=885 credit_stalls=355 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f7_r7_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=1 cret=0 stalls=1752 credit_stalls=746 elapsed=1842 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 19106000 (1ps)\n"
+    },
+    "f7_r7_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=4 cret=7 stalls=1173 credit_stalls=551 elapsed=1170 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 12386000 (1ps)\n"
+    },
+    "f7_r7_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=7 ret=7 crd=16 cret=20 stalls=887 credit_stalls=356 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f1_r64_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=8 cret=3 stalls=999 credit_stalls=361 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f1_r64_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=1 cret=0 stalls=1866 credit_stalls=752 elapsed=1842 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 19106000 (1ps)\n"
+    },
+    "f1_r64_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=4 cret=7 stalls=1287 credit_stalls=557 elapsed=1170 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 12386000 (1ps)\n"
+    },
+    "f1_r64_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=1 ret=64 crd=16 cret=20 stalls=1001 credit_stalls=362 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f64_r1_c8_d3": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=8 cret=3 stalls=873 credit_stalls=298 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "f64_r1_c1_d0": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=1 cret=0 stalls=1740 credit_stalls=689 elapsed=1842 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 19106000 (1ps)\n"
+    },
+    "f64_r1_c4_d7": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=4 cret=7 stalls=1161 credit_stalls=494 elapsed=1170 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 12386000 (1ps)\n"
+    },
+    "f64_r1_c16_d20": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=192 injectors=2 width=544 fwd=64 ret=1 crd=16 cret=20 stalls=875 credit_stalls=299 elapsed=948 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 10166000 (1ps)\n"
+    },
+    "wrap_tag8": {
+      "passed": true,
+      "rc": 0,
+      "tail": "PASS_TRUECREDIT_CR rows=640 injectors=2 width=544 fwd=7 ret=64 crd=8 cret=3 stalls=2047 credit_stalls=803 elapsed=1996 credit_drain=64\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:90: $finish called at 20646000 (1ps)\n"
+    },
+    "mut_ignore_reservations": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 1,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=1 rx=0 cycle=73\n       Time: 786000  Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_corrupt_retire_id": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 2,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=1 rx=0 cycle=54\n       Time: 596000  Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_corrupt_forward_id": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 3,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=45\n       Time: 506000  Scope: tb_ha2_truecredit_cr\n"
+    },
+    "mut_misaligned_read_ring": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 4,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:66: TRUECREDIT_DATA row=0 lane=0\n       Time: 2250000  Scope: tb_ha2_truecredit_cr.$ivl_for_loop5.$unm_blk_56\n"
+    },
+    "mut_credit_over_issue": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 5,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:84: TRUECREDIT_CONSUMER_OVF lane=0 cycle=54\n       Time: 596000  Scope: tb_ha2_truecredit_cr.$ivl_for_loop7\n"
+    },
+    "mut_spurious_credit_overflow": {
+      "passed": true,
+      "rc": 1,
+      "mutant": 6,
+      "tail": "FATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr.sv:82: TRUECREDIT_FAULT tx=0 rx=1 cycle=607\n       Time: 6126000  Scope: tb_ha2_truecredit_cr\n"
+    },
+    "reset_flight": {
+      "passed": true,
+      "rc": 0,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=27/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_CR_RESET crd=8 cret=5 fwd=7 ret=7 fresh_rows=192 injectors=2 cycles=1011\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr_reset.sv:94: $finish called at 12956000 (1ps)\n"
+    },
+    "reset_long_flight": {
+      "passed": true,
+      "rc": 0,
+      "tail": "RESET_INTERRUPTION fwd=64 ret=64 issued=87/72 received=43/0 hubquiet=10 fwdquiet=10 retquiet=10\nPASS_TRUECREDIT_CR_RESET crd=8 cret=20 fwd=64 ret=64 fresh_rows=192 injectors=2 cycles=1227\n/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr_reset.sv:94: $finish called at 15836000 (1ps)\n"
+    },
+    "reset_return_pipe_removed": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=27/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr_reset.sv:103: RESET_STALE_RETURN_PIPE\n       Time: 2791000  Scope: tb_ha2_truecredit_cr_reset\n"
+    },
+    "reset_stale_sender_credit": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=27/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr_reset.sv:81: RESET_PROTOCOL_FAULT epoch=1 tx=1 rx=0\n       Time: 2846000  Scope: tb_ha2_truecredit_cr_reset.run_phase\n"
+    },
+    "reset_stale_credit_line": {
+      "passed": true,
+      "rc": 1,
+      "tail": "RESET_INTERRUPTION fwd=7 ret=7 issued=91/72 received=27/0 hubquiet=10 fwdquiet=10 retquiet=10\nFATAL: /srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3/gate/tb_ha2_truecredit_cr_reset.sv:81: RESET_PROTOCOL_FAULT epoch=1 tx=0 rx=1\n       Time: 2876000  Scope: tb_ha2_truecredit_cr_reset.run_phase\n"
+    }
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_parent_quiet_prims.sv": "32efdd4a4e839e965a7efe263ca0fad0c226262373872704b2883ea3b0b0363b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv": "9d6db07d4ed8f086c4b3144f3a3d6a571f580f0b6671d23aaeab0c15ee4b5700",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv": "729cb3a2474725c8c2c81e179030faf8e369770cf0f78683442cb5a7ea980daa",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_ha2_truecredit_receiver_segmented_cx.sv": "9469373486c1205341df58325cc77214c73ae3b481b762c03ba3069975379dea",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_cr.sv": "5bcb0ddfc70a1b7677034d1f6029c4fb37d352cb92603c65e9e9b72b443a9322",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_truecredit_cr_reset.sv": "2ddb9792f4962f1f4f65e20e5e7d1b519a1f55eec619d0e1ba3ba8f8668a6aac",
+    "tools/ha2_truecredit_segmented_cx_gate.py": "f1f6120eeb593da070db97f662393a2277ab4945bbf2ced7acf87b851c51cd5d"
+  }
+}

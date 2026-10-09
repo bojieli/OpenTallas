@@ -1,0 +1,30 @@
+{
+  "source_model": "56a97f0af",
+  "candidate": "ot_ha2_truecredit_receiver_segmented_cx",
+  "default_SEGMENTED": 0,
+  "gate_SEGMENTED": 1,
+  "full_shape": "two544bit lanes,64rows/lane,16bit tags",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/hbm-truecredit-segmented-cx-20261009-r3",
+  "passed": true,
+  "physical_qualified": false,
+  "adopted": false,
+  "baseline_source": "79315a431",
+  "baseline_run": "ha2_tccr_x1_hm10_79315a431",
+  "baseline_TT_slack_ps": -105.72,
+  "baseline_FF_slack_ps": 5.7,
+  "baseline_SS_sensitivity_ps": -377.39,
+  "new_cycle_cost": 1,
+  "protocol_change": "send and return delayed together1edge; existing slot/consumer credit reservations unchanged",
+  "harness_failures": [
+    {
+      "run": "r1",
+      "reason": "bench comment included instance name causing overlystrict count assertion; no RTL verdict"
+    },
+    {
+      "run": "r2",
+      "reason": "bench hierarchical credit-stall monitor needed newgenerate prefix; no RTL verdict"
+    }
+  ],
+  "routes": "not launched; Claude review/intake required",
+  "integration": "parent clock/pin budget and endpoint calendar still unqualified"
+}

@@ -14383,8 +14383,8 @@ def hbm_truecredit_rx_segmented_model():
         credit_roundtrip_added_cycles=1,consumer_credit_depth=8,
         consumer_credit_full_rate='prior loop~7edges +1=8; actual fullshape gate must measure sustained rate',
         composed_token_delta_cycles='1per serial receiver crossing; delayed credits may add measured stalls to existing half-rate endpoint calendar; no invented overlap',
-        baseline_report=dict(host='ot-agidock128',source='79315a431',run='ha2_tccr_x1_hm0_79315a431',
-            corner='TT',start='u_core.g_lane[0].rd_oh[63]',end='u_core.send_data[44]',slack_ps=-93.50),
+        baseline_report=dict(host='ot-agidock128',source='79315a431',run='ha2_tccr_x1_hm10_79315a431',
+            corner='TT',start='u_core.g_lane[0].rd_oh[15]',end='u_core.send_data[42]',slack_ps=-105.72),
         failure='ring selector→large buffer chain→64row read reduction→outputFF',
         closure_policy='Oct8 OptionB TT>=0 FF>=0 DRC0; SS sensitivity, 833.333ps and60/25ps unchanged',
         required_gates=['full2x544 all64rows/wrap/reset/credit saturation positive and read-ring mutant','source-pinned Claude structural review before -cx route','actual pin/clock-budget qualification'])
