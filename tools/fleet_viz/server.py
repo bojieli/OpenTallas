@@ -19,7 +19,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements
+import recorder, elements, explorer
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads((HERE / 'fleet_hosts.json').read_text())
@@ -249,6 +249,7 @@ _SSH = {h['id']: h['ssh'] for h in CFG['hosts']}
 ELEMENTS = elements.Elements(JOBS, os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), HIST_FILE.parent,
                              lambda host: _SSH.get(host, host), CTL,
                              os.environ.get('FLEET_VIZ_ELEMENTS_MD', '/home/ubuntu/claude-takeover-20261007/ELEMENTS.md'), log=log)
+EXPLORER = explorer.Explorer(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), HIST_FILE.parent, JOBS, ELEMENTS, log=log)
 
 def build(safe):
     hosts = []; alias_to_label = {h.cfg['id']: h.cfg['label'] if safe else h.cfg.get('name', h.cfg['id']) for h in HOSTS}
@@ -366,7 +367,18 @@ def ticker():
 
 # ---------------------------------------------------------------- http
 STATIC = {'/': ('index.html', 'text/html; charset=utf-8'), '/index.html': ('index.html', 'text/html; charset=utf-8'),
-          '/replay': ('index.html', 'text/html; charset=utf-8')}
+          '/replay': ('index.html', 'text/html; charset=utf-8'), '/explorer': ('explorer.html', 'text/html; charset=utf-8'),
+          '/explorer.html': ('explorer.html', 'text/html; charset=utf-8'),
+          '/explorer.js': ('explorer.js', 'text/javascript; charset=utf-8'),
+          '/explorer_story.js': ('explorer_story.js', 'text/javascript; charset=utf-8')}
+# /explorer/token/...: mount point for the token-path views (a separate stream ships them into explorer/token/)
+TOKEN_DIR = HERE / 'explorer' / 'token'
+TOKEN_TYPES = {'.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8',
+               '.json': 'application/json', '.svg': 'image/svg+xml', '.png': 'image/png', '.webp': 'image/webp'}
+TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
+                     b'<title>Token path</title><body style="background:#05070d;color:#e8eefc;font:15px system-ui;padding:32px">'
+                     b'<h1 style="font-size:20px">Token path views</h1><p>Not installed yet: the token-path stream mounts its views '
+                     b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -416,6 +428,10 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(dict(v=ver, verdicts=rows), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(ELEMENTS.snapshot(safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
+            return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
+        if u.path.startswith('/api/explorer/'):
+            return self.explorer(u.path[len('/api/explorer/'):], q, safe)
         if u.path == '/api/stream':
             self.send_response(200); self.send_header('Content-Type', 'text/event-stream')
             self.send_header('Cache-Control', 'no-store'); self.send_header('X-Accel-Buffering', 'no'); self.end_headers()
@@ -429,6 +445,43 @@ class H(BaseHTTPRequestHandler):
             except (BrokenPipeError, ConnectionResetError, OSError):
                 return
         self.send(404, b'not found', 'text/plain')
+
+    def token(self, rel):
+        try:
+            p = (TOKEN_DIR / rel).resolve()
+            ok = p.is_relative_to(TOKEN_DIR.resolve()) and p.is_file()
+        except (OSError, ValueError):
+            ok = False
+        if not ok:
+            if rel == 'index.html': return self.send(200, TOKEN_PLACEHOLDER, 'text/html; charset=utf-8')
+            return self.send(404, b'not found', 'text/plain')
+        return self.send(200, p.read_bytes(), TOKEN_TYPES.get(p.suffix, 'application/octet-stream'))
+
+    def explorer(self, what, q, safe):
+        arg = lambda k: q.get(k, [None])[0]
+        js = lambda o, code=200: self.send(code, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
+        if what == 'meta':
+            return js(EXPLORER.api_meta(safe))
+        if what == 'geom':
+            b = EXPLORER.geom_bytes(arg('die') or '', safe)
+            if b is None: return js(dict(error='no geometry for this die yet'), 404)
+            if 'gzip' not in (self.headers.get('Accept-Encoding') or ''):
+                import gzip as _gz
+                return self.send(200, _gz.decompress(b), 'application/json')
+            self.send_response(200); self.send_header('Content-Type', 'application/json'); self.send_header('Content-Encoding', 'gzip')
+            self.send_header('Content-Length', str(len(b))); self.send_header('Cache-Control', 'no-store'); self.end_headers()
+            if self.command != 'HEAD': self.wfile.write(b)
+            return
+        if what == 'card':
+            if safe and arg('element') is not None and arg('master') is None:
+                return js(dict(error='share-safe view: cards open from the map'), 403)
+            return js(EXPLORER.card(element=arg('element'), master=arg('master'), die=arg('die'), safe=safe) if not safe
+                      else EXPLORER.card_safe_by_index(arg('die'), arg('mi')))
+        if what == 'story':
+            c = EXPLORER.story(arg('id') or '')
+            if c and safe: c = {k: v for k, v in c.items() if k not in ('attach', '_file')}
+            return js(c) if c else js(dict(error='no such story'), 404)
+        return js(dict(error='unknown explorer endpoint'), 404)
 
     def log_message(self, *a): pass
 

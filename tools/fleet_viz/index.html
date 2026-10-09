@@ -126,6 +126,9 @@ table.jt{width:100%;border-collapse:collapse;font:11.5px var(--mono);font-varian
 #elTable td.eneg{color:var(--hot)}#elTable td.epos{color:var(--ok)}
 #elTable td.ev{min-width:320px}
 #elTable tr.el td:first-child{border-left:3px solid var(--c)}
+#elTable a.xl{color:inherit;text-decoration:none;border-bottom:1px dotted #5ee7ff88}
+#elTable a.xl:hover{color:#5ee7ff}
+.xnav{font:600 12px ui-monospace,monospace;text-decoration:none;color:#5ee7ff;border:1px solid #1b2540;border-radius:999px;padding:5px 11px;white-space:nowrap;margin-left:auto;margin-right:10px}
 #elTable small{color:var(--faint)}
 @keyframes slidein{from{opacity:0;transform:translateY(-8px)}}
 .tag{font:700 10px var(--mono);padding:3px 7px;border-radius:6px;color:#05070d;letter-spacing:.03em;white-space:nowrap}
@@ -175,6 +178,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <h1><span class="g">OpenTallas</span> compute fleet</h1>
       <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
     </div>
+    <a class="xnav" id="xnav" href="/explorer">Chip Explorer &rarr;</a>
     <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
   </header>
   <div id="rbar" hidden><button id="rPlay">pause</button><span id="rFrom"></span><input type="range" id="rScrub" min="0" max="1" step="1" value="0"><span id="rTo"></span><span class="sp" id="rSpeed"></span><span id="rMsg"></span></div>
@@ -264,6 +268,7 @@ const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
 let RT = 0;   // replay clock (recorded epoch seconds)
 const NOW = () => REPLAY ? RT : Date.now() / 1000;
 const SAFE = RD ? !!RD.safe : qs.get('safe') === '1';
+if (SAFE) { const xn = document.getElementById('xnav'); if (xn) xn.href = '/explorer?safe=1'; }
 const Q = SAFE ? '?safe=1' : '';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
@@ -771,7 +776,7 @@ function renderElements() {
     }
     const b = r.best, lt = r.latest;
     const tip = `best job ${b.job || '-'} (${b.corner || '-'} line)` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
-    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
+    items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}; open its Chip Explorer card"><a class="xl" href="/explorer#element=${encodeURIComponent(r.element)}">${esc(r.element)}</a>${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
       `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
