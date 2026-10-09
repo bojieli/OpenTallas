@@ -33,7 +33,9 @@ def stage_cmd(m, hm):
             f'SDCA="{V}/common/budget_route.sdc" POSTSDC="{V}/common/budget_signoff.sdc {V}/common/budget_ff_guarded.sdc" '
             f'PRECTS="{V}/common/pre_cts_fclk_root_buf.tcl" WSF="0.12" WSFILE="{V}/svc/split_ps/{m}/ws.tcl" SRCS="{srcs}" '
             f'{V}/common/route_view.sh {{LABEL}}${{CL_LABEL_SUFFIX}} {m} {V}/svc/rtl/seg_ps/{m}.sv '
-            f'--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append {V}/svc/sdc_ps/{m}_fwd.sdc $CL_STOP_AFTER')
+            '--orfs-var GPL_ROUTABILITY_DRIVEN=0' + (f' --sdc-append {V}/svc/sdc_ps/{m}_fwd.sdc'
+                                                     if (ROOT / f'{V}/svc/sdc_ps/{m}_fwd.sdc').exists() else '')
+            + ' $CL_STOP_AFTER')
 
 
 def spec(m, commit, hm, tag):
