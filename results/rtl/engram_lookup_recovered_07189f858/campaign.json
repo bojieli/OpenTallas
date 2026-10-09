@@ -1,0 +1,656 @@
+{
+  "claim_boundary": "functional cycle-level Verilator simulation of the window former, the shipped-table hash, the HBM row lookup (address, alignment, CRC) and the row sink against the golden, with a BEHAVIOURAL HBM region and a behavioural TP4 all-gather.  Table CONTENT is synthetic (hdc_v41_engram_shipped.row_bytes); HBM and all-gather latencies are parameters.  No physical result: route specs are drafts awaiting review (review_queue/engram.md).",
+  "dead_tokens": 114,
+  "elements_per_token_checked": 12288,
+  "input_sha256": {
+    "rtl/dsrom_sys/engram/dsfd_engram_lkp.sv": "7dfbdbb9e1c384f825c7ff5440557d75248a519b3ba100f929d5243f16ea13ac",
+    "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+    "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv": "21eeca07b924123cefcafe5112e6793c1693975668fa3508b46d408aec025647",
+    "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv": "b334bf1bf6d561125cfef90707938273760960be271508b4139536cd2e0cde2c",
+    "rtl/hdc/v41/ot_hdc_engram_gather.sv": "2edd7582a38629ebd662f68eff7eb88c5f90d88c689157cbbe2acf5d5a2099ed",
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+    "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+    "rtl/test/tb_dsrom_engram_lookup.sv": "6e4160cb9f704c8c8ac29c689f222dd157321ea8e31e63034a2ac03f39f3372c",
+    "tools/rtl_dsrom_engram_lookup_campaign.py": "6c665c342cf982c272c61ccd4e818ad188cbf5f0c4e9d9213d7851b06b8c4a24"
+  },
+  "modes": {
+    "crc_injection_pipe1": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 91812,
+      "dumps": 560,
+      "dumps_compared": 560,
+      "element_mismatches": 0,
+      "elements_compared": 2949120,
+      "engine_faults": "00010001",
+      "injected_tokens": 40,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 21191,
+          "mean": 18536.1,
+          "min": 444
+        },
+        "layer_14": {
+          "max": 20954,
+          "mean": 18438.5,
+          "min": 462
+        }
+      },
+      "model": {
+        "AGJIT": 40,
+        "AGLAT": 20,
+        "BUB": 30,
+        "CDEL": 100,
+        "ERR": 1,
+        "GAP": 20,
+        "JIT": 200,
+        "LAT": 60,
+        "REORD": 1,
+        "STALL": 20
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 1,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 80,
+      "rewinds": 20,
+      "tokens": 280,
+      "window_errors": 0,
+      "windows": 280,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "crc_injection_stressed": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 120715,
+      "dumps": 740,
+      "dumps_compared": 740,
+      "element_mismatches": 0,
+      "elements_compared": 3895296,
+      "engine_faults": "00010001",
+      "injected_tokens": 53,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 21191,
+          "mean": 19033.2,
+          "min": 449
+        },
+        "layer_14": {
+          "max": 20659,
+          "mean": 18652.2,
+          "min": 456
+        }
+      },
+      "model": {
+        "AGJIT": 40,
+        "AGLAT": 20,
+        "BUB": 30,
+        "CDEL": 100,
+        "ERR": 1,
+        "GAP": 20,
+        "JIT": 200,
+        "LAT": 60,
+        "REORD": 1,
+        "STALL": 20
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 106,
+      "rewinds": 30,
+      "tokens": 370,
+      "window_errors": 0,
+      "windows": 370,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "ideal_hbm_200ns": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 585117,
+      "dumps": 3000,
+      "dumps_compared": 3000,
+      "element_mismatches": 0,
+      "elements_compared": 18432000,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 24983,
+          "mean": 24436.4,
+          "min": 480
+        },
+        "layer_14": {
+          "max": 24983,
+          "mean": 24436.4,
+          "min": 480
+        }
+      },
+      "model": {
+        "LAT": 240
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 119,
+      "tokens": 1500,
+      "window_errors": 0,
+      "windows": 1500,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "ideal_hbm_200ns_core_unwrapped": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 120427,
+      "dumps": 740,
+      "dumps_compared": 740,
+      "element_mismatches": 0,
+      "elements_compared": 4546560,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 20883,
+          "mean": 19047.8,
+          "min": 475
+        },
+        "layer_14": {
+          "max": 20883,
+          "mean": 19047.8,
+          "min": 475
+        }
+      },
+      "model": {
+        "LAT": 240
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 30,
+      "tokens": 370,
+      "window_errors": 0,
+      "windows": 370,
+      "wrapped_element": false,
+      "xrank_errors": 0
+    },
+    "isolated_token_hbm_200ns_allgather_model": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 208009,
+      "dumps": 224,
+      "dumps_compared": 224,
+      "element_mismatches": 0,
+      "elements_compared": 1376256,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 1855,
+          "mean": 1855.0,
+          "min": 1855
+        },
+        "layer_14": {
+          "max": 1855,
+          "mean": 1855.0,
+          "min": 1855
+        }
+      },
+      "model": {
+        "AGLAT": 1426,
+        "LAT": 240,
+        "SPACED": 1
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 8,
+      "tokens": 112,
+      "window_errors": 0,
+      "windows": 112,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "isolated_token_hbm_200ns_local_allgather": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 54009,
+      "dumps": 224,
+      "dumps_compared": 224,
+      "element_mismatches": 0,
+      "elements_compared": 1376256,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 480,
+          "mean": 480.0,
+          "min": 480
+        },
+        "layer_14": {
+          "max": 480,
+          "mean": 480.0,
+          "min": 480
+        }
+      },
+      "model": {
+        "AGLAT": 4,
+        "LAT": 240,
+        "SPACED": 1
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 8,
+      "tokens": 112,
+      "window_errors": 0,
+      "windows": 112,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "isolated_token_pipe1_local_allgather": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 27556,
+      "dumps": 114,
+      "dumps_compared": 114,
+      "element_mismatches": 0,
+      "elements_compared": 700416,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 481,
+          "mean": 481.0,
+          "min": 481
+        },
+        "layer_14": {
+          "max": 481,
+          "mean": 481.0,
+          "min": 481
+        }
+      },
+      "model": {
+        "AGLAT": 4,
+        "LAT": 240,
+        "SPACED": 1
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 1,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 3,
+      "tokens": 57,
+      "window_errors": 0,
+      "windows": 57,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "stressed": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 747457,
+      "dumps": 3000,
+      "dumps_compared": 3000,
+      "element_mismatches": 0,
+      "elements_compared": 18432000,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 31957,
+          "mean": 29626.8,
+          "min": 651
+        },
+        "layer_14": {
+          "max": 32543,
+          "mean": 31066.9,
+          "min": 674
+        }
+      },
+      "model": {
+        "AGJIT": 60,
+        "AGLAT": 20,
+        "BUB": 40,
+        "CDEL": 300,
+        "GAP": 30,
+        "JIT": 400,
+        "LAT": 60,
+        "REORD": 1,
+        "STALL": 30
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 119,
+      "tokens": 1500,
+      "window_errors": 0,
+      "windows": 1500,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "stressed_8_slots_mtp": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 227123,
+      "dumps": 932,
+      "dumps_compared": 932,
+      "element_mismatches": 0,
+      "elements_compared": 5726208,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 31473,
+          "mean": 28816.5,
+          "min": 645
+        },
+        "layer_14": {
+          "max": 31586,
+          "mean": 28815.7,
+          "min": 647
+        }
+      },
+      "model": {
+        "AGJIT": 60,
+        "AGLAT": 20,
+        "BUB": 10,
+        "CDEL": 300,
+        "GAP": 30,
+        "JIT": 400,
+        "LAT": 60,
+        "REORD": 1,
+        "STALL": 30
+      },
+      "nslot": 8,
+      "pass": true,
+      "pipe": 0,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 34,
+      "tokens": 466,
+      "window_errors": 0,
+      "windows": 466,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    },
+    "stressed_pipe1": {
+      "all_dumps_present": true,
+      "bench_pass": true,
+      "cycles": 283124,
+      "dumps": 1128,
+      "dumps_compared": 1128,
+      "element_mismatches": 0,
+      "elements_compared": 6930432,
+      "engine_faults": "00000000",
+      "injected_tokens": 0,
+      "latency_cycles_window_to_slot_ready": {
+        "layer_1": {
+          "max": 32236,
+          "mean": 29624.0,
+          "min": 646
+        },
+        "layer_14": {
+          "max": 32431,
+          "mean": 30071.9,
+          "min": 676
+        }
+      },
+      "model": {
+        "AGJIT": 60,
+        "AGLAT": 20,
+        "BUB": 40,
+        "CDEL": 300,
+        "GAP": 30,
+        "JIT": 400,
+        "LAT": 60,
+        "REORD": 1,
+        "STALL": 30
+      },
+      "nslot": 2,
+      "pass": true,
+      "pipe": 1,
+      "poisoned_as_injected": true,
+      "poisoned_dumps": 0,
+      "rewinds": 36,
+      "tokens": 564,
+      "window_errors": 0,
+      "windows": 564,
+      "wrapped_element": true,
+      "xrank_errors": 0
+    }
+  },
+  "mtp_rewinds": 119,
+  "mutations": [
+    {
+      "caught": false,
+      "control": true,
+      "mutation": "none (control)"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 0,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "row alignment ignored (offset in atom forced 0)"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 594364,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "column offset not subtracted"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 509696,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "neighbouring column read (wrong column of the rank)"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 0,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "rank strap ignored for the column base"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 0,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "scale taken from the atom's first byte"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 1522740,
+        "poisoned_as_injected": true,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "window fed newest first"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 42,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "CRC check disabled"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": false,
+        "bench_pass": false,
+        "element_mismatches": 12284,
+        "poisoned_as_injected": false,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+      "mutation": "credits ignored"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": false,
+        "element_mismatches": 64,
+        "poisoned_as_injected": true,
+        "window_errors": 0,
+        "xrank_errors": 8
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv",
+      "mutation": "slot ready one beat early"
+    },
+    {
+      "caught": false,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": true,
+        "element_mismatches": 0,
+        "poisoned_as_injected": true,
+        "window_errors": 0,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv",
+      "mutation": "row statuses not awaited"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": false,
+        "element_mismatches": 36839,
+        "poisoned_as_injected": true,
+        "window_errors": 4,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+      "mutation": "DEAD history does not block"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": false,
+        "element_mismatches": 225150,
+        "poisoned_as_injected": true,
+        "window_errors": 28,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+      "mutation": "MTP rewind ignored"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": false,
+        "element_mismatches": 28649,
+        "poisoned_as_injected": true,
+        "window_errors": 5,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+      "mutation": "MTP rewind leaves the position count"
+    },
+    {
+      "caught": true,
+      "detail": {
+        "all_dumps_present": true,
+        "bench_pass": false,
+        "element_mismatches": 114609,
+        "poisoned_as_injected": true,
+        "window_errors": 18,
+        "xrank_errors": 0
+      },
+      "file": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+      "mutation": "sequence start not honoured"
+    }
+  ],
+  "rewound_tokens": 310,
+  "rows_per_token": 48,
+  "schema": "opentallas.dsrom-engram-lookup-campaign.v1",
+  "sequence_starts": 47,
+  "status": "fail",
+  "tokens": 1619,
+  "users": 8,
+  "verilator_lint": {
+    "dsfd_engram_lkp": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_dsrom_engram_idwin": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_dsrom_engram_lookup": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_dsrom_engram_lookup -GPIPE=1": {
+      "messages": [],
+      "returncode": 0
+    },
+    "ot_dsrom_engram_rowsink": {
+      "messages": [],
+      "returncode": 0
+    }
+  }
+}
