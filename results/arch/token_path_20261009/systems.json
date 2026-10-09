@@ -21,12 +21,12 @@
   "graph": "qwen_rom.json",
   "per_user": {
    "AR": {
-    "value": 5474.5,
+    "value": 5304.2,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "219,200 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 141329.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [5455.6, 5476.4] (PHY latency best/worst)",
-    "vs_tp4_single_die": -0.0033
+    "note": "226,237 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 148366.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [5286.4, 5306.0] (PHY latency best/worst)",
+    "vs_tp4_single_die": -0.0032
    },
    "MTP": {
     "value": null,
@@ -113,7 +113,7 @@
     "note": "uarch model; UCIe crossing energy (~0.3 MB a token at sub-pJ/bit) is below its resolution"
    },
    "batch1_w": {
-    "value": 626.9,
+    "value": 613.9,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x per-user rate"
@@ -134,7 +134,7 @@
   },
   "efficiency": {
    "per_user_tok_s_per_kw": {
-    "value": 8732.1,
+    "value": 8640.2,
     "unit": "tok/s per kW (batch 1)",
     "grade": "modelled",
     "source": "per-user / batch1_w"
@@ -146,7 +146,7 @@
     "source": "aggregate / saturated_w"
    },
    "j_per_token_batch1": {
-    "value": 0.1145,
+    "value": 0.1157,
     "unit": "J/token",
     "grade": "modelled",
     "source": "batch1_w / per-user"
@@ -165,8 +165,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     10.23,
-     20.09
+     10.56,
+     20.74
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -1073,22 +1073,22 @@
    "target": "Qwen ROM (ROM + KV die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 5474.5,
+   "per_user": 5304.2,
    "aggregate": 25362,
    "dies": 8,
    "stacks": 16,
    "power_w": 2150.1,
-   "tok_s_per_kw_b1": 8732.1,
+   "tok_s_per_kw_b1": 8640.2,
    "capex": [
     56000,
     110000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 4.66,
-   "vs_served_median": 99.5,
+   "vs_gpu_batch1": 4.51,
+   "vs_served_median": 96.4,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 23.8
+   "vs_gpu_same_mode": 23.06
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -1223,7 +1223,7 @@
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 5,474.5 tok/s (-0.33 %); pair 962.4 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 5,304.2 tok/s (-0.32 %); pair 962.4 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -1293,7 +1293,7 @@
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
   "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c53ea9d94285f136",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "f8d499fe74a4eccf",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "a68576b64cf19f65",
   "results/arch/qwen_kv_die_20261009/rom_r22k.json": "1f7d306ec9136948",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",

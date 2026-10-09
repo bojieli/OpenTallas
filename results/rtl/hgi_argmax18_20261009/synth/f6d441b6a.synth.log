@@ -1,0 +1,27 @@
+view=asap7 corner=TT block=ot_hgi_argmax18_m top=ot_hgi_argmax18_m purpose=characterization
+  synth: cells=40040 area=5767.945 um2 seq_area=3120.000 um2 macros=0
+  STATUS: NOT_EVALUATED (no timing-bearing stage ran; nothing to accept or reject)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch2/scratch/codex/hgi-argmax18-f6d441b6a/src/../physical.json
+	Command being timed: "python3 tools/run_abi3_physical.py --view asap7 --top ot_hgi_argmax18_m --stages synth --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --corner TT --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/gpu/ot_gpu_fadd.sv --source physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv --source physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv --source physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv --param LP=8 --param FLAT=7 --param FAST=1 --param GENERIC18=1 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --keep-workdir ../work --output ../physical.json"
+	User time (seconds): 43.50
+	System time (seconds): 1.15
+	Percent of CPU this job got: 115%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:38.55
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 318320
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 279254
+	Voluntary context switches: 144518
+	Involuntary context switches: 3186
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 32856
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -8,7 +8,12 @@
 # rc= / corner_rc=.
 L=$1; JR=$2; shift 2
 STOP=finish; [ "${1:-}" = "--pnr-stop-after" ] && STOP=$2
-J=$JR/jobs/$L; mkdir -p $J
+J=$JR/jobs/$L
+# cont-takeover 2026-10-09: the persistent launcher refuses an existing workdir, so a loop retry (crash retry or the
+# HOLD-STOP resume with OT_HOLD_STOP) crashed at once ("fresh workdir and receipt required"); keep the earlier attempt
+# beside it and start fresh (the retry carries OT_HOLD_STOP, so its CTS hold repair stops at the measured stall point).
+if [ -e $J/receipt.json ]; then n=1; while [ -e $J.prev$n ]; do n=$((n+1)); done; mv $J $J.prev$n; fi
+mkdir -p $J
 WT=$PWD RUN=$L JROOT=$JR STOP=$STOP QX=10 PQ=1 QW=0 QM=${QM:-5} QS=${QS:-3} HM=${HM:-0.025} SM=20 PER=0.833 UNC=0.163 INMAX=0.624 \
   FH=${FH:-192.24} PD=${PD:-0.65} PDH=physical/abi3/dsrom_q_icg_en_adjacent.tcl OT_ORFS_NUM_CORES=${THREADS:-16} \
   CTSA="-sink_clustering_enable -repair_clock_nets -sink_clustering_size 30 -sink_clustering_max_diameter 50 -distance_between_buffers 60 -apply_ndr full -balance_levels" \

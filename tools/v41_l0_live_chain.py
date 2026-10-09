@@ -163,6 +163,7 @@ def prepare(out: Path, pos: int, seed: int):
 
 
 RTL = ["rtl/chip/ot_chip_v41x_die.sv", "rtl/chip/ot_chip_v41x_tile.sv", "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+       "rtl/hdc/v41x/ot_hdc_v41x_dyn_unit.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_att_adapt.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv", "rtl/hdc/v41x/ot_hdc_v41x_attn_staging.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_su_adapt.sv", "rtl/hdc/v41x/ot_hdc_v41x_vec.sv",

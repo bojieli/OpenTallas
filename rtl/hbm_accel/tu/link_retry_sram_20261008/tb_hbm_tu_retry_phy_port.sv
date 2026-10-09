@@ -11,7 +11,15 @@ module tb_hbm_tu_retry_phy_port;
  wire ov,tv,rr,cr,fault,nak;wire[544:0]od,td;
  wire[11:0]ts,ack,retained,ingress;wire[23:0]te,ae;wire[9:0]ap,debt;
  wire tr=!rv||rr;
+`ifdef OT_TU_LINK
+`ifdef OT_TU_LINK_MUT
+ ot_hbm_tu_retry_phy_port_lk #(.ENABLE(1),.MUT_CRED(1)) dut(
+`else
+ ot_hbm_tu_retry_phy_port_lk #(.ENABLE(1)) dut(
+`endif
+`else
  ot_hbm_tu_retry_phy_port #(.ENABLE(1)) dut(
+`endif
  .pclk(pclk),.prst_n(rst),.phy_link_up(up),.phy_session(epoch),.clk(clk),.rst_n(rst),.core_link_up(up),
  .ph_tx_v(iv),.ph_tx_flit(id),.ph_rx_v(ov),.ph_rx_flit(od),.rx_credit(pop),.sw_cr_ret(cr),
  .fec_tx_v(tv),.fec_tx_ready(tr),.fec_tx_data(td),.fec_tx_seq(ts),.fec_tx_session(te),

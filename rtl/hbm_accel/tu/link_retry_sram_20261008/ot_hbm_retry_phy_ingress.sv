@@ -4,7 +4,7 @@
 // returns; an out-of-contract arrival faults rather than overwriting debt.
 // Full-rate protected reads reserve HEAD response slots before issuing.
 module ot_hbm_retry_phy_ingress #(
- parameter W=545,SW=12,EW=16,DEPTH=256,HEAD=8,
+ parameter W=545,SW=12,EW=16,DEPTH=256,HEAD=8,NOEPOCH=0, // NOEPOCH: see ot_hbm_replay_sram (sys-takeover)
  parameter HW=$clog2(HEAD),CW=$clog2(HEAD)+1
 )(
  input wire clk,rst_n,input wire[EW-1:0]session,
@@ -24,7 +24,7 @@ module ot_hbm_retry_phy_ingress #(
  wire pop=out_valid && out_ready;
  wire fetch=!fault && issued!=committed && reserved<HEAD;
  wire ov,ce,ue;wire[W-1:0]rd;wire[SW-1:0]rs;wire[EW-1:0]re;
- ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_memory(
+ ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.NOEPOCH(NOEPOCH)) u_memory(
  .clk(clk),.rst_n(rst_n),.w_valid(push),.w_data(in_data),.w_seq(wseq),.w_session(session),
  .r_valid(fetch),.r_seq(issued),.r_session(session),.o_valid(ov),.o_data(rd),.o_seq(rs),.o_session(re),.o_ce(ce),.o_ue(ue));
  always@(posedge clk or negedge rst_n)begin
@@ -37,7 +37,7 @@ module ot_hbm_retry_phy_ingress #(
  reserved<=reserved+(fetch?1'b1:1'b0)-(pop?1'b1:1'b0);
  hn<=hn+(ov?1'b1:1'b0)-(pop?1'b1:1'b0);
  if(ov)begin
- if(ue || re!=session || hn>=HEAD)fault<=1;
+ if(ue || (!NOEPOCH && re!=session) || hn>=HEAD)fault<=1;
  else begin head[ht]<=rd;ht<=ht+1'b1;end end
  if(in_valid && !in_ready)fault<=1;
  end end

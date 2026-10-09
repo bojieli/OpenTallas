@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_row_formatter;
- parameter integer MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0;
+ parameter integer MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0,MUT_PROGRESS=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,sv=0,iv=0,rr=0,rv=0,ow=0,dr=0,written=1;
  reg [7:0] g=96,b=8,dest=8;reg [20:0] k=0;reg [31:0] id=0,context_rows=1048576;
@@ -8,12 +8,26 @@ module tb_hgi_coll_row_formatter;
  wire sr,ir,req,rspready,ov,done,fault;
  wire [7:0] owner,odest;wire [19:0] localrow,oi;
  wire [15:0] word_,oword;wire [511:0] odata;
- ot_hgi_coll_row_formatter #(.ENABLE(1),.MUT_OWNER(MUT_OWNER),.MUT_ORDER(MUT_ORDER),.MUT_WRITTEN(MUT_WRITTEN),.MUT_ID_BOUND(MUT_ID_BOUND)) dut
+ ot_hgi_coll_row_formatter #(.ENABLE(1),.MUT_OWNER(MUT_OWNER),.MUT_ORDER(MUT_ORDER),.MUT_WRITTEN(MUT_WRITTEN),.MUT_ID_BOUND(MUT_ID_BOUND),.MUT_PROGRESS(MUT_PROGRESS)) dut
  (.clk(clk),.rst_n(rst_n),.start_v(sv),.start_r(sr),.group_size(g),.owner_block(b),.destinations(dest),
  .row_count(k),.row_words(words),.context_rows(context_rows),.id_v(iv),.id_r(ir),.id(id),.read_v(req),.read_r(rr),
  .read_owner(owner),.read_local_row(localrow),.read_word(word_),.response_v(rv),.response_r(rspready),
  .response_data(data),.response_written(written),.out_v(ov),.out_r(ow),.out_data(odata),
  .out_index(oi),.out_word(oword),.out_destinations(odest),.done_v(done),.done_r(dr),.fault(fault));
+`ifdef LOCKSTEP_SOURCE
+ wire bsr,bir,breq,brsp,bov,bdone,bfault;wire [7:0] bowner,bdest;
+ wire [19:0] blocal,bindex;wire [15:0] bword,boutword;wire [511:0] bdata;
+ ot_hgi_coll_row_formatter_baseline #(.ENABLE(1)) baseline
+ (.clk(clk),.rst_n(rst_n),.start_v(sv),.start_r(bsr),.group_size(g),.owner_block(b),.destinations(dest),
+ .row_count(k),.row_words(words),.context_rows(context_rows),.id_v(iv),.id_r(bir),.id(id),.read_v(breq),.read_r(rr),
+ .read_owner(bowner),.read_local_row(blocal),.read_word(bword),.response_v(rv),.response_r(brsp),
+ .response_data(data),.response_written(written),.out_v(bov),.out_r(ow),.out_data(bdata),
+ .out_index(bindex),.out_word(boutword),.out_destinations(bdest),.done_v(bdone),.done_r(dr),.fault(bfault));
+ always @(negedge clk) if(rst_n &&
+  {sr,ir,req,rspready,ov,done,fault,owner,localrow,word_,oi,oword,odata,odest} !==
+  {bsr,bir,breq,brsp,bov,bdone,bfault,bowner,blocal,bword,bindex,boutword,bdata,bdest})
+   $fatal(1,"counter repair public-port cycle lockstep diverged");
+`endif
  integer totalrows=0,totalwords=0,calls=0,cycles=0;
  always @(posedge clk)cycles=cycles+1;
  function [511:0] payload(input integer r,l,w);
@@ -49,6 +63,7 @@ module tb_hgi_coll_row_formatter;
       if(!ov||req||odata!==expected||oi!=i||oword!=j)$fatal(1,"output backpressure changed held payload");
      end
      ow=1;@(negedge clk);ow=0;totalwords=totalwords+1;
+     if(j<W-1 && (ir||done))$fatal(1,"progress mutant retired row before its last word was consumed");
     end
    end
    totalrows=totalrows+1;
@@ -62,7 +77,7 @@ module tb_hgi_coll_row_formatter;
  begin
   @(negedge clk);g=96;b=8;k=1;words=32;dest=8;sv=1;
   @(negedge clk);sv=0;@(negedge clk);id=value;iv=1;
-  @(negedge clk);iv=0;@(negedge clk);
+  @(negedge clk);iv=0;@(negedge clk);if(req || ov)$fatal(1,"U32 rowid/context bound leaked reader request");@(negedge clk);   // PRE edge: the bound fault lands one edge later
   if(!done || !fault || req || ov)$fatal(1,"U32 rowid/context bound leaked reader request");
   dr=1;@(negedge clk);dr=0;
  end
@@ -79,6 +94,7 @@ module tb_hgi_coll_row_formatter;
    call(groups[gg],255,7,2,groups[gg],-1);
    call(groups[gg],8,7,32,groups[gg],3);
   end
+  call(96,8,1,257,96,-1);call(96,8,1,65535,96,-1);
   bad_id(1048576);bad_id(32'h8000000d);
   $display("PASS HGI ROW_GATHER calls=%0d rows=%0d words=%0d cycles=%0d k7/512/2048 G1/2/4/8/96 B8/3/255 payloadorder/written/backpressure",calls,totalrows,totalwords,cycles);$finish;
  end

@@ -14,6 +14,7 @@
 // ---------------------------------------------------------------------------
 module ot_hfd_mtp_core_cp_stop #(
     parameter integer EXTERNAL_AM=0,STOP_EN=0,CNT_W=21,POS_W=20,FORCE_W=23,
+    parameter integer PRL    = 2,      // prompt / forced-token read latency seen by ctl (2 = own pin flops both ways; 4 behind MX1 REGB)
     parameter integer B      = 5,
     parameter integer PMAX   = 8,
     parameter integer TW     = 17,
@@ -203,7 +204,7 @@ module ot_hfd_mtp_core_cp_stop #(
     ot_dshbm_dspark_top_cp_stop #(.EXTERNAL_AM(EXTERNAL_AM),.STOP_EN(STOP_EN),.CNT_W(CNT_W),.POS_W(POS_W),.FORCE_W(FORCE_W),.B(B), .PMAX(PMAX), .TW(TW), .NL(NL), .NST(NST), .MAXPOS(MAXPOS), .W(W), .WR(WR),
         .SR(SR), .TR(TR), .NG(NG), .NSRC(NSRC), .RLOG(RLOG), .CKMAX(CKMAX), .AW(AW), .LP(LP), .FLAT(FLAT),
         .NEXP(NEXP), .KV(KV), .NDEXP(NDEXP), .KD(KD), .RP(RP), .IW(IW), .MUT(MUT), .ACCEPT_LEAF(0),
-        .FAST(FAST), .SPECF(SPECF), .UNF(UNF), .AMF(AMF), .PRL(2), .XSEL(XSEL)) u_top (
+        .FAST(FAST), .SPECF(SPECF), .UNF(UNF), .AMF(AMF), .PRL(PRL), .XSEL(XSEL)) u_top (
         .clk(clk), .rst_n(rn), .start(i_start), .cfg_gamma(i_gamma), .cfg_force(i_force), .cfg_ngen(i_ngen),
         .cfg_plen(i_plen), .p_addr(w_p_addr), .p_tok(i_p_tok), .f_addr(w_f_addr), .f_tok(i_f_tok),
         .e_v(w_e_v), .e_tok(w_e_tok), .e_idx(w_e_idx), .done(w_done),
