@@ -24,3 +24,17 @@ collect the full immutable cause and propose configuration-only calibration
 reference correction; the real route must still use fresh measured TT/FF
 insertion,730ps/833.333ps clocks,60/25ps uncertainty,SM15 setup ECO and the
 already-qualified native RTL/exact bench. No relaxed signoff or new RTL.
+
+Binding confirmed review-0400 R7 now authorizes correction immediately,
+superseding waiting for the provisional seed attempt to terminate. Exact
+calibration seed701.5540326188421ps is the committed actualrouted TT
+PINREG arrival_max_rise mean (original6e8f0b698). Registry807ps is from a
+newer placement-estimated calibration and is not the selected routed receipt.
+Only the calibration command prepends CK_SS_MEAN; route still loads its
+own freshly measured TT/FF calib.env. Original1042 spec retained here.
+Clock730/833.333ps,60/25ps uncertainty,SM15,RTL/exactbench and resources
+stay unchanged. Fleet owns preserved exactattempt retirement and locked
+same-job attempt2 requeue. No duplicate route or source change.
+The corrected preCTS inputmax951.554ps remains above the idealclock setup
+budget: correcting stale reference does not itself qualify preCTS/routed
+setup. Actual phase advance and newmeasured closure are required.
