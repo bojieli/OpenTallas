@@ -1,0 +1,37 @@
+{
+  "source_commit": "1a56ad7b9",
+  "exactness": {
+    "distributed": "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json",
+    "join": "results/rtl/dsrom_hc_mean_capture_20261009/join_r1/terminal.json"
+  },
+  "source_physical": {
+    "host": "ot-epyc1tb",
+    "pid": 429671,
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
+    "stage": "source-route-r3",
+    "phase": "global placement",
+    "peak_ram_gb": 40
+  },
+  "join_physical": {
+    "host": "ot-epyc1tb",
+    "pid": 2473750,
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
+    "stage": "join-route-r1",
+    "phase": "global placement",
+    "peak_ram_gb": 32
+  },
+  "historical_reader_physical": {
+    "host": "ot-agidock128",
+    "pid": 2780058,
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-a6e02b292",
+    "stage": "route-r1",
+    "scope": "historical local-shard pathfinding; actual full-H successor pending"
+  },
+  "retired_unadmitted_source": {
+    "host": "ot-epyc2",
+    "pid": 514091,
+    "guard_pid": 514093,
+    "evidence": "/srv/opentallas-scratch2/codex/dsrom-hc-mean-308a0500e/route-r2.guard-cancel.json",
+    "status": "CANCELLED_BEFORE_ADMISSION"
+  }
+}
