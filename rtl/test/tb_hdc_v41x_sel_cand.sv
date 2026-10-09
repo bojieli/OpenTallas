@@ -25,6 +25,7 @@ module tb_hdc_v41x_sel_cand
     parameter integer K    = 2048;
     parameter integer AW   = 10;
     parameter integer DG   = 8;
+    parameter integer MEMV = 0; // optional actual compiled SRAM model
     parameter integer READLAT = 1;
     parameter integer MEMLAT = READLAT; // independent override for latency negative control
     parameter integer OD   = 4;
@@ -51,6 +52,7 @@ module tb_hdc_v41x_sel_cand
     reg [Q*BL*EW-1:0] raw_rdata, captured_rdata;
     wire [Q*3*(AW+1)-1:0] stats;
     reg  [BL*EW-1:0]   mem [0:Q*(1 << AW) - 1];
+    generate if (MEMV == 0) begin : g_beh_memory
     always @(posedge clk) captured_rdata <= raw_rdata;
     assign mem_rdata = MEMLAT == 2 ? captured_rdata : raw_rdata;
     integer mq;
@@ -60,6 +62,14 @@ module tb_hdc_v41x_sel_cand
             if (mem_re[mq]) raw_rdata[BL*EW*mq +: BL*EW] <= mem[mq * (1 << AW) + mem_raddr[AW*mq +: AW]];
         end
     end
+    end else begin : g_macro_memory
+        for (genvar mg=0; mg<Q; mg=mg+1) begin : qmem
+            hfd_idx_mem #(.W(BL*EW), .AW(AW), .MEMV(1), .READLAT(MEMLAT)) u_mem (
+                .ck(clk), .we(mem_we[mg]), .wa(mem_waddr[AW*mg +: AW]),
+                .wd(mem_wdata[BL*EW*mg +: BL*EW]), .re(mem_re[mg]),
+                .ra(mem_raddr[AW*mg +: AW]), .rd(mem_rdata[BL*EW*mg +: BL*EW]));
+        end
+    end endgenerate
 
     ot_hdc_v41x_sel_cand #(.Q(Q), .SL(SL), .IWP(IW), .K(K), .AW(AW), .DG(DG), .OD(OD), .READLAT(READLAT)) dut (
         .clk(clk), .rst_n(rst_n), .in_valid(in_valid), .in_ready(in_ready), .in_last(in_last),
