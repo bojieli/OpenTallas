@@ -137,7 +137,7 @@ endmodule
 '''.replace('ROWBASE', str(base))
     (out / 'tb.sv').write_text(tb)
     obj = out / 'obj'
-    p = subprocess.run(['verilator', '--binary', '--timing', '-j', str(a.jobs), '-Wno-fatal', '--top-module', 'tb', '--Mdir', str(obj),
+    p = subprocess.run(['verilator', '--binary', '--timing', '-j', str(a.jobs), '-Wno-fatal', *a.vflags.split(), '--top-module', 'tb', '--Mdir', str(obj),
                         *[str(ROOT / s) for s in SRC], str(macro), str(out / 'tb.sv')], capture_output=True, text=True)
     (out / 'compile.log').write_text(p.stdout + p.stderr)
     if p.returncode: print(p.stderr[-3000:]); raise SystemExit(2)
@@ -163,4 +163,5 @@ if __name__ == '__main__':
     ap.add_argument('--nb', type=int, default=85); ap.add_argument('--pinreg', type=int, default=1)
     ap.add_argument('--mutant', type=int, default=0); ap.add_argument('--jobs', type=int, default=8)
     ap.add_argument('--timeout-ns', type=int, default=60000)
+    ap.add_argument('--vflags', default='', help='extra Verilator flags (NB=85: -fno-inline bounds elaboration memory)')
     raise SystemExit(0 if main(ap.parse_args()) else 1)
