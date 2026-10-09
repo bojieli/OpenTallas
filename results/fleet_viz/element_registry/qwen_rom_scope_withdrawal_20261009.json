@@ -1,0 +1,696 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qfd_dspark_drafter_production",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Qwen dedicated5layer drafter/Markov/head/seed program dispatch absent selected die; DSROM P2/Markov ownership does not cover Qwen",
+      "source": {
+        "commit": "146fb7f0e3d9dfd54194170f4f371e3c10b9794b",
+        "paths": [
+          "tools/qwen_rom_dspark_draft_isa.py",
+          "tools/qwen_rom_speculation_recheck.py"
+        ]
+      },
+      "implementation": {
+        "status": "missing",
+        "evidence": [
+          "tools/qwen_rom_dspark_draft_isa.py",
+          "tools/qwen_rom_speculation_recheck.py"
+        ]
+      },
+      "model": {
+        "status": "pending",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qfd_dspark_accept_commit",
+        "qfd_production_stage_traversal"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_accept_commit",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Source-only acceptloader+hostpriority commit exists; selectedphysicaldie lacks native draft/verify cohort identity and accept/commit/drain integration",
+      "source": {
+        "commit": "146fb7f0e3d9dfd54194170f4f371e3c10b9794b",
+        "paths": [
+          "rtl/qwen_sys/combined/ot_qwen_combined_dspark_accept.sv",
+          "rtl/qwen_sys/combined/ot_qwen_rom_combined_dspark_die.sv"
+        ]
+      },
+      "implementation": {
+        "status": "partial",
+        "evidence": [
+          "rtl/qwen_sys/combined/ot_qwen_combined_dspark_accept.sv",
+          "rtl/qwen_sys/combined/ot_qwen_rom_combined_dspark_die.sv"
+        ]
+      },
+      "model": {
+        "status": "pending",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qfd_dspark_drafter_production",
+        "qfd_reset_allcopy_fence"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_cdc_storage_protection",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "NOT REQUIRED: native stream4 CDC lmem/wmem/amem are FLOP arrays; SECDED proposal rejected by confirmedV28. Q5 correctionbeforeCDC remains the rule; no protection RTL/routes adopted.",
+      "source": {
+        "commit": "146fb7f0e3d9dfd54194170f4f371e3c10b9794b",
+        "paths": [
+          "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv"
+        ]
+      },
+      "implementation": {
+        "status": "not_required",
+        "evidence": [
+          "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv: native floparrays/onehotread"
+        ]
+      },
+      "model": {
+        "status": "withdrawn",
+        "evidence": [
+          "Previouslyproposed+44percentstorage/+1edge rejected, not current designcost."
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "not_required",
+          "evidence": []
+        },
+        "negative": {
+          "status": "not_required",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "not_required",
+        "corners": {},
+        "evidence": [
+          "No protectedCDCflop route launched."
+        ]
+      },
+      "dependencies": [],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md V28/X2: SECDED applies SRAM/HBMpayload only."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_biased_amax",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Full37984-row/rank nativealreadybiasedSUlogits argmax64lanes, global18bitvocabIDs, stable64bitcohort; actual0.9GHzserial domain; S7dispatcher/provider/crossdieintegrationOPEN",
+      "source": {
+        "commit": "e96b4354c",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv",
+          "rtl/test/qwen_system/tb_qwen_dspark_biased_amax.sv",
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/amax_exact/run_r2.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/amax_exact/mut_run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_biased_amax-e96b4354c-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias.json",
+          "tools/closure_loop/jobs/qfd_dspark_biased_amax-748ffcbae-pinspread.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        },
+        "qualification": "Config successor after actual packed-pinFLOORPLAN_MARGIN; unchanged outline, clock and IO/density checks. No running/closure claim."
+      },
+      "dependencies": [
+        "qfd_dspark_logit_SU_native_tap",
+        "qfd_dspark_crossdie_argmax"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_w1_bank",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Real full4096row W1 bank8macros, replicate38banks eachrank for released151936x256; rawINT8+BF16scale finite64bitidentity; actualserial0.9GHz",
+      "source": {
+        "commit": "1e16ab97d",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/run_r2.log",
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/tail_run.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/w1_exact/mut_run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_w1_bank-1e16ab97d-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_bank-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
+      },
+      "dependencies": [
+        "qfd_dspark_w1_38bank_mux",
+        "qfd_dspark_w1_native_dequantisation",
+        "qfd_dspark_s7_control"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_s7_control",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Native finite54command S7 dependency control; always7draftpositions even truncate3, 64bitcohort+8bitcompletionsequence, acceptprefix+bonus, positiveallcopycommitfence. Numericalbackends/boundariesunqualified",
+      "source": {
+        "commit": "ce667d01f",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_s7_control.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_s7_control.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/s7_exact/run_r3.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/s7_exact/mut_run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pass",
+        "corners": {
+          "TT": {
+            "setup_ps": 130.52
+          },
+          "FF": {
+            "hold_ps": 5.25
+          },
+          "SS": {
+            "setup_sensitivity_ps": -173.93
+          },
+          "DRC": 0,
+          "period_ps": 1111.111
+        },
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_s7_control-ce667d01f-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json",
+          "results/closure_loop/qfd_dspark_s7_control-ab9c785e9-wc-ttalias/verdict.json",
+          "results/rtl/qwen_native_corner_alias_20261009/qfd_dspark_s7_control-ab9c785e9-wc-ttalias/corner_sta.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        },
+        "qualification": "Current TT>=0/FF>=0/DRC0 policy; SS sensitivity only; isolated controller leaf, actual native numerical backend/controlstate/link integration pending."
+      },
+      "dependencies": [
+        "qfd_production_stage_traversal",
+        "qfd_dspark_feature_exports",
+        "qfd_dspark_draft_field_banks",
+        "qfd_dspark_crossdie_argmax",
+        "qfd_dspark_control_protection",
+        "qfd_reset_allcopy_fence"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_w1_dequant",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Actual64lane INT8*BF16 W1 native conversion to FP32, exact finite products including subnormals/canonicalpositive0, heldidentity, nonfinite/overflow quarantine; numericalall16,777,216 tuples gate running",
+      "source": {
+        "commit": "a090cddb3",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/run_0.log",
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/golden_receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/run_1.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-a090cddb3-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-748ffcbae-pinspread.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        },
+        "qualification": "Config successor after actual packed-pinFLOORPLAN_MARGIN; unchanged outline, clock and IO/density checks. No running/closure claim."
+      },
+      "dependencies": [
+        "qfd_dspark_w1_bank",
+        "qfd_dspark_w1_38bank_mux",
+        "qfd_dspark_s7_control"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_tail_window_positions",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. ReleasedS7 computes7futurepositions eventruncate3; current emitter start+7<=8192 and13bitnativeKVdecoder cannot certify same8Kendpoint or >8191continuation. Needexplicitresident8192+tail7 or slidingwindowglobal/localpositions and finitefencedrollback. No silentTMAXwidening or alias.",
+      "source": {
+        "commit": "b4c0c8050",
+        "paths": [
+          "tools/qwen_rom_dspark_images.py",
+          "rtl/physical/ot_qwen_kvc_decode_map_pc.sv",
+          "rtl/qwen_sys/combined/ot_qwen_rom_combined_dspark_die.sv"
+        ]
+      },
+      "implementation": {
+        "status": "missing",
+        "evidence": []
+      },
+      "model": {
+        "status": "pending",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qfd_dspark_s7_control",
+        "qfd_row_merge_native_fence"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_w1_lookup",
+      "target": "Qwen ROM",
+      "owner": "Codex:review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. One real8macrobank feeding exact64lane dequant under one lease through final converted retirement; fullcohort64+sequence8. Shared38bankmux/broadcast and mutablecontrol protection pending.",
+      "source": {
+        "commit": "70dc3a9ca",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_lookup.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_lookup.sv"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/lookup_exact/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/lookup_exact/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "prepared",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_lookup-748ffcbae-pinspread.json"
+        ],
+        "qualification": "Config successor after actual packed-pinFLOORPLAN_MARGIN; unchanged outline, clock and IO/density checks. No running/closure claim."
+      },
+      "dependencies": [
+        "qfd_dspark_w1_bank",
+        "qfd_dspark_w1_dequant",
+        "qfd_dspark_s7_control"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_transient_kv",
+      "target": "Qwen ROM",
+      "owner": "Codex:review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Two real64x512 SRAMs protect transient payload+cohort/globalposition metadata with SECDED. Duplicated lease/control/output state fails closed in RTL; distinct post-synth copy/comparator inventory, commonmode and allcopy reset/production integration pending.",
+      "source": {
+        "commit": "d2d34e799",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_transient_kv.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_transient_kv.sv"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/transient_exact/receipt.json",
+            "results/rtl/qwen_dspark_native_20261009/transient_protected_exact/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/transient_exact/receipt.json",
+            "results/rtl/qwen_dspark_native_20261009/transient_protected_exact/receipt.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_transient_kv-926cf8fb2-wc-ttalias.json",
+          "Protected-source d2d34e799 successor pending; old926 firsttrial retained."
+        ]
+      },
+      "dependencies": [
+        "qfd_row_merge_native_fence",
+        "qfd_dspark_s7_control",
+        "qfd_dspark_tail_window_positions"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    },
+    {
+      "element": "qfd_dspark_argmax_gather",
+      "target": "Qwen ROM",
+      "owner": "Codex:review_qwen_token_path",
+      "description": "HISTORICAL QROM-MTP, WITHDRAWN by latest owner AR-only scope. Real four-rank vocabulary winner collection with finite source credits, cohort64/sequence8, global rank bounds, registered pair merge and exact lowest-ID signed-zero ties. Protected link/state and production SU binding pending.",
+      "source": {
+        "commit": "bc6dafa13",
+        "paths": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_argmax_gather.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_argmax_gather.sv"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/uarch_qwen_dspark_native_model.py:argmax_gather"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/gather_exact/run.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/gather_exact/mut_run.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pass",
+        "corners": {
+          "TT": {
+            "setup_ps": 210.29
+          },
+          "FF": {
+            "hold_ps": 9.57
+          },
+          "SS": {
+            "setup_sensitivity_ps": -129.18
+          },
+          "DRC": 0,
+          "period_ps": 1111.111
+        },
+        "evidence": [
+          "tools/closure_loop/jobs/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias.json",
+          "results/closure_loop/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias/verdict.json"
+        ],
+        "qualification": "Actual TT/FF/DRC isolatedleaf, currentownerpolicy; protected transport/control integration still pending, SS sensitivity only."
+      },
+      "dependencies": [
+        "qfd_dspark_biased_amax",
+        "qfd_dspark_s7_control",
+        "qfd_actual_collective_547_518"
+      ],
+      "integration": {
+        "status": "withdrawn_by_owner",
+        "evidence": [
+          "Claude confirmed REVIEW_20261009.md Q9/V30: Qwen ROM AR only; preserve source/gates/routes/failures as history, no retarget/renameHBM."
+        ]
+      },
+      "recorded_at": "2026-10-09T09:06:27.100258+00:00",
+      "active_scope": false
+    }
+  ]
+}
