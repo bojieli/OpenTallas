@@ -1,0 +1,74 @@
+{
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  {
+   "check": "pin_density",
+   "msg": "pin density above the 6.0 bits/um/layer target: E/M4 8.7 b/um"
+  },
+  {
+   "check": "pin_pdn",
+   "msg": "517 pin(s) within 1 track of a PDN strap / via stack (column not full: escape tracks remain)"
+  },
+  {
+   "check": "capture",
+   "msg": "1184 macro outputs are captured by a single flop the placer may put far from the pin (qfd_tile rp1 class): anchor them at the pins (rom_cap_at_pins.tcl)"
+  }
+ ],
+ "metrics": {
+  "core_um2": 120839.0,
+  "std_um2": 36222.0,
+  "macro_um2": 23363.1,
+  "flops": 44559,
+  "hold_allow_um2": 3248.4,
+  "util": 0.4931,
+  "util_hold": 0.52,
+  "n_macros": 6,
+  "n_pins": 1803,
+  "pin_density_max": 8.65,
+  "pin_density_at": "E M4 @42.7 um (865 pins / 100 um, 1286 on the face)",
+  "pin_width_illegal": 0,
+  "pin_width_offtable_accessible": 0,
+  "pin_pdn_near": 0,
+  "pin_pdn_near_sparse": 517,
+  "pin_pdn_min_um": {
+   "M4": 0.048
+  },
+  "macro_edge_shadow": 0,
+  "bank_far": 0,
+  "slivers": 0,
+  "channel_worst": {
+   "axis": "y",
+   "at": 59.37,
+   "demand": 607,
+   "cap": 7875.0,
+   "ratio": 0.077
+  },
+  "capture_unanchored": 1184
+ },
+ "thresholds": {
+  "util_max": 0.6,
+  "util_hold_max": 0.65,
+  "hold_buf_per_flop": 1.0,
+  "pin_density_max": 12.0,
+  "pin_density_target": 6.0,
+  "pin_density_window_um": 100.0,
+  "pin_density_min_pins": 1,
+  "pin_pdn_tracks": 1.0,
+  "pin_pdn_fail": 0.0,
+  "pin_width_access_pitches": 1.0,
+  "pin_pdn_full_frac": 0.9,
+  "channel_usable": 0.5,
+  "channel_min_layer": 4,
+  "macro_edge_um": 10.0,
+  "macro_edge_pins": 32,
+  "sliver_um": 12.0,
+  "sliver_min_row_area_um2": 2.0,
+  "sliver_blocked_frac": 0.9,
+  "bank_dist_um": 100.0,
+  "bank_min_pins": 8,
+  "capture_warn_um": 50.0,
+  "capture_warn_count": 256
+ },
+ "dump": "/work/reports/asap7/opentallas_dsfd_selt_q2_asap7_s81ph_s81b_selt_q2_frpr_sq12_3abd84e2c_tc_cal/base/fp_margin_lint_dump.json"
+}

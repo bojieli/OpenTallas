@@ -1,0 +1,72 @@
+{
+  "utc": "2026-10-09T11:44:07.537326+00:00",
+  "supersedes_metadata_only": "Frozen R6 resource_evidence same_tile_macro_family_actual_route stdcell_um2=17461 and3macro/std-ratio statements were mistaken; preserved historical frozen spec remains unchanged. This additive correction is authoritative; no source/constraint/process/settings change.",
+  "original_r6": {
+    "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+    "W": 16,
+    "IW": 20,
+    "K": 512,
+    "AW": 8,
+    "payload_bits": 592,
+    "rows": 256,
+    "physical_storage_bits": 196608,
+    "macro_count": 3,
+    "macro_family": "256x256_m2_r2c2",
+    "macro_area_um2": 21290.534208,
+    "synthesis_stdcell_um2": 30765.841092,
+    "preplacement_stdcell_um2": 31182.7,
+    "flops": 37086,
+    "pins": 1803,
+    "slot_um": [
+      756,
+      159.84
+    ],
+    "fp_lint": "PASS"
+  },
+  "nearest_actual_selector_q2": {
+    "source": "3abd84e2c0faf561e8a1da8238c50799dadf3e03",
+    "W": 16,
+    "IW": 20,
+    "K": 512,
+    "AW": 8,
+    "payload_bits": 592,
+    "rows": 256,
+    "physical_storage_bits": 196608,
+    "macro_count": 6,
+    "macro_family": "128x256_m1_r2c2",
+    "macro_area_um2": 23363.092224,
+    "synthesis_total_area_um2": 61511.99238,
+    "synthesis_stdcell_um2": 38148.900156,
+    "preplacement_stdcell_um2": 36222.0,
+    "flops": 44559,
+    "pins": 1803,
+    "slot_um": [
+      432,
+      280.8
+    ],
+    "differences": "SAFE raw capture,bank mux,PIPE2/CMP/QIO/FRPR; these are not adopted in unchanged R6. Same logical quarter andpin count; comparator/capture successor has more FF andstdarea than originalR6.",
+    "measured_calibration_cts_peak_kib": 4221400,
+    "measured_gp_peak_kib": 4142180,
+    "actual_selector_detailed_route_peak": "UNAVAILABLE"
+  },
+  "different_supplemental_colt_tile": {
+    "source": "e96dd1e56",
+    "macro_count": 2,
+    "macro_family": "256x256_m2_r2c2",
+    "macro_area_um2": 14193.7,
+    "preplacement_stdcell_um2": 2294.3,
+    "reported_final_design_area_um2": 17461,
+    "final_area_kind": "TOTAL including macros, not stdarea",
+    "measured_detailed_route_peak_kib": 11807236,
+    "scope": "Different collective tile; supplemental route-stage memory evidence only. No identical-shape or stdratio1.76 claim."
+  },
+  "reservation_gib": 24,
+  "corrected_reservation_basis": "Conservative approximately6x closest native selector measuredCTS4.026GiB, permitted R2/R6 and explicitly reconfirmed fleet after correction. NOTmeasured originalselectorDRT, not2x same-macroarea/std-ratio scaling, no old40guess or process cap. Actual phaseRSS/HWM continue to be monitored.",
+  "progressing_jobs_preserved": true,
+  "raw_sha256": {
+    "q2_fp_margin_lint.json": "74645043dac1620c1476eb0f8c7243aa94cba0413992a8980ceafafd8ac7ad39",
+    "q2_synth_stat.txt": "8b314489a6558a584473e4db621c81087a7d2aebe768bae89f26e6fb07bc05ba",
+    "r6_fp_margin_lint.json": "897710c2dc31645b523965c11c24e900e5503a4e11ea6c87723e85d79c52ea78",
+    "colt_fp_margin_lint.json": "8190649dfb26a68e6d9e22be5395e4d30a6faf1ba61ebdc687d47a4519c97f38"
+  }
+}
