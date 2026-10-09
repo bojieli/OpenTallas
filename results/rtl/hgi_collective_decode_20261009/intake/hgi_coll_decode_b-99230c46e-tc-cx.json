@@ -1,0 +1,127 @@
+{
+  "name": "hgi_coll_decode_b-99230c46e-tc-cx",
+  "block": "ot_hgi_coll_decode",
+  "owner": "Codex:generic_collective approvedHGI-1",
+  "purpose": "Owner-approved HGI engine decode/listformatter, isolated fullmechanism current-reader protocol fixture exact+mutants pinned; pending die wiring/simulator-normalized conformance. Two current-flow PD55/60 variants, no clock or IO relaxation. TT/FF>=0 DRC0 SS sensitivity. Initial4GiB route RAM conservative source inventory (<10000standardcells,noSRAM), not measured route peak; replace with own phase measurements.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-pve1"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+    "branch": "codex/hgi-collective-20261009",
+    "commit": "99230c46e",
+    "paths": [
+      "rtl/hbm_accel/generic/collective",
+      "tools",
+      "physical/qwen_die_masters",
+      "physical/abi3",
+      "physical/common_flow",
+      "configs",
+      "Makefile"
+    ],
+    "required_files": [
+      "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv",
+      "rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv",
+      "physical/qwen_die_masters/cfg/hgi_coll_decode_b.env",
+      "physical/qwen_die_masters/signoff/hgi_coll_decode_b.sdc",
+      "physical/qwen_die_masters/jobs/route_master.sh",
+      "tools/uarch_model_hgi_collective_decode.py"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "GOLDEN",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/GOLDEN.vvp > {RUN}/bench/GOLDEN.log 2>&1",
+        "expect": "pass",
+        "pass_regex": "PASS HGI",
+        "min_count_regex": "cases=(\\d+)",
+        "logs": [
+          "{RUN}/bench/GOLDEN.log"
+        ],
+        "threads": 1,
+        "peak_ram_gb": 0.1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "MUT_GROUP",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_GROUP=1 -o {RUN}/bench/MUT_GROUP.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_GROUP.vvp > {RUN}/bench/MUT_GROUP.log 2>&1",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "logs": [
+          "{RUN}/bench/MUT_GROUP.log"
+        ],
+        "threads": 1,
+        "peak_ram_gb": 0.1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "MUT_ROW_BLOCK",
+        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_ROW_BLOCK=1 -o {RUN}/bench/MUT_ROW_BLOCK.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_ROW_BLOCK.vvp > {RUN}/bench/MUT_ROW_BLOCK.log 2>&1",
+        "expect": "fail",
+        "fail_regex": "FATAL:",
+        "logs": [
+          "{RUN}/bench/MUT_ROW_BLOCK.log"
+        ],
+        "threads": 1,
+        "peak_ram_gb": 0.1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current route_master directly measures boundary clock arrival afterCTS forTTreference andMMFF; no guessed insertion calibration"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_coll_decode_b {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log",
+        "{RUN}/routes/{LABEL}/sta.log"
+      ],
+      "threads": 8,
+      "peak_ram_gb": 4
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_coll_decode_b.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "session": "mm",
+    "reason": "ExistingapprovedholdECO path; finalTT/FF/DRCrequired"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_collective_decode_20261009/routes/hgi_coll_decode_b-99230c46e-tc-cx"
+    }
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "route_corner": "TC",
+  "cycles_added": 1,
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "Newleaf currentlocal IO90/150 and realrouted reference; finaldie composition/wiring pending, no dieadoption before binding"
+  }
+}
