@@ -1,0 +1,14 @@
+{
+  "source_commit": "42e7e301d",
+  "native_VM_response": "512bits =16 expanded BF16-valued FP32words; low16bits validatedzero",
+  "native_capture_reads_per_rank": 320,
+  "native_raw_bytes_per_rank_capture": 20480,
+  "global_raw_bytes_three_layers_TP4": 245760,
+  "pack_point": "ot_dsrom_hc_input_reader.g_copy.g_select selects upper16bits; two eight-dimension beats from each four-copy row group",
+  "mean_arithmetic": "sequential three FP32 additions, FP32quarter, BF16RNE once",
+  "publication": "ot_dsrom_hc_mean_capture.pack_q concatenates four128bit eight-dimension mean chunks into512bit frame",
+  "packed_mean_bytes_three_layers_TP4": 30720,
+  "MT_SEED5_header_bytes_global": 768,
+  "exact_evidence": "results/rtl/dsrom_hc_mean_capture_20261009/distributed_r5/terminal.json",
+  "native_port_owner_and_runtime_H_lease": "pending; no ordinary SEND_SIDE or free-port claim"
+}
