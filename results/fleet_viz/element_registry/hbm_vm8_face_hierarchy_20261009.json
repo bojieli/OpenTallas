@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hfd_vm_se_n_hier",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T09:13:22.077030+00:00",
+      "owner": "/root/hbm_system",
+      "source": {
+        "commit": "9802048e0",
+        "paths": [
+          "physical/hbm_accel_die_views/vm/face_hierarchy/ot_hbm_vm8_face_relay.sv",
+          "physical/hbm_accel_die_views/vm/face_hierarchy/hfd_vm_se_n_hier.sv",
+          "tools/hbm_vm8_face_hierarchy_model.py"
+        ]
+      },
+      "description": "Actual SE-n fullface relay hierarchy:81fixed128-bit D1 captures and103fixed128-bit D3 launches plus six real SRAM macros; pinned f3 bit-specific latency retained.",
+      "implementation": {
+        "status": "implemented_component_exact",
+        "evidence": [
+          "9802048e0 additive candidate; original split8 modules unchanged"
+        ]
+      },
+      "model": {
+        "status": "priced_provisional_geometry",
+        "evidence": [
+          "tools/hbm_vm8_face_hierarchy_model.py:184fixedfull128-bit leafs,49920declaredFF includingtailpadding;64x64umleaf and1600x1000umparent are provisional, not measured or qualified slotfit"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/hbm_vm8_face_hierarchy_20261009/e49_fullhalf/record.json source9802048e0 bench e49e9aac5:750cycles/5180fullface checks, sixSRAMs perreference/candidate"
+          ]
+        },
+        "negative": {
+          "status": "pass_detected",
+          "evidence": [
+            "Same-source seamD3 mutation fails t_w_wr atcycle11; immutablebad-seam.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending_review_no_route",
+        "evidence": [
+          "No physicaljob. Actual leafCTS/TT/FF andSSsensitivity, pinlegality, forwardedclock arrival andparent slotfit unqualified. Claude review required before route."
+        ]
+      },
+      "dependencies": [
+        "Actual selected die slot and fullpin/clock budgets",
+        "Real full128-bit D1/D3 hardened abstracts then184-instance hierarchical assembly",
+        "WholeVM8 native command/read consumer binding and macro timing"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "One actual fullSE-n half exactness only; not wholeVM8/die/fullAR orMTP closure. Independent NES route and earlier failed SE-n evidence preserved."
+        ]
+      }
+    }
+  ]
+}
