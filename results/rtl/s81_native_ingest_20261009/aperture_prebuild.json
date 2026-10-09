@@ -8,7 +8,7 @@
   "stack_records": 2,
   "stack_payload_bits": 150,
   "stack_storage_bits": 216,
-  "storage_bits": 5106,
+  "storage_bits": 5110,
   "boundary_bits_per_cycle": {
     "install_pc": 67,
     "install_stack": 152,
@@ -23,12 +23,13 @@
   },
   "compute_macs_per_cycle": 0,
   "clock_GHz": 1.2,
-  "area_lower_bound_um2": 1935.5824799999998,
+  "area_lower_bound_um2": 1937.0987999999998,
   "routing": "Published bounds local to backend; measured tracks/slot required; no die route claim",
   "validation": "Capacity rounded DOWN to whole128-global-sector groups; region bounds aligned128 and converted to local atoms; perPC Engram interval must follow all attested mutable regions and end before first RoPE table; exclusive bounds",
   "limitations": [
     "Actual producer must attest all key/window/CKV regions in mutable_reserved_end",
     "No physical usable capacity default; nonzero installed stack record required",
     "Four-stack RoPE coverage not implied by two-stack Engram readiness"
-  ]
+  ],
+  "protected_metadata_bits": 70
 }
