@@ -33,10 +33,10 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  localparam integer DW=136;
  localparam [3:0] IDLE=0,WAITPUB=1,KEEP=2,EMITKEEP=3,GAP=4,
                   FRAME=5,STARTGAP=6,START=7,RUN=8,RETIRE=9,FAULT=10;
- reg [DW-1:0] desc,desc_n;
- reg [343:0] mask,mask_n;
+ reg [DW-1:0] desc;
+ reg [343:0] mask;
  // {prefetch_accepted,source_done_seen,index_done_seen,gap2,seen4,state4}
- reg [12:0] ctl,ctl_n;
+ reg [12:0] ctl;
  reg [DW-1:0] next_desc;
  reg [343:0] next_mask;
  reg [12:0] next_ctl;
@@ -44,11 +44,10 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  wire [3:0] seen=ctl[7:4];
  wire [1:0] gap=ctl[9:8];
  wire index_seen=ctl[10],source_seen=ctl[11];
- wire coded_ok=(desc_n==~desc)&&(mask_n==~mask)&&(ctl_n==~ctl);
  wire active=state!=IDLE;
  wire lease_ok=owner_valid&&!owner_fault&&allocation_granted&&
                owner_frame==allocation_frame&&(!active||owner_frame==desc[72:0]);
- wire enabled=ENABLE&&coded_ok&&state!=FAULT;
+ wire enabled=ENABLE&&state!=FAULT;
  assign command_r=enabled&&state==IDLE&&lease_ok&&selector_idle;
  assign keep_r=enabled&&state==KEEP&&lease_ok&&keep_frame==desc[72:0]&&!seen[keep_quarter];
  assign held_frame=desc[72:0];assign held_rank=desc[79:73];
@@ -64,11 +63,11 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  assign source_start_v=enabled&&state==START&&lease_ok;
  assign retained=ENABLE&&active;
  assign done=enabled&&lease_ok&&state==RETIRE;
- assign fault=ENABLE&&(!coded_ok||state==FAULT);
+ assign fault=ENABLE&&state==FAULT;
  always @* begin
   next_desc=desc;next_mask=mask;next_ctl=ctl;
   if(ENABLE)begin
-   if(!coded_ok||(active&&!lease_ok)||index_event[1]||
+   if((active&&!lease_ok)||index_event[1]||
       (PREFETCH&&active&&key_visible&&key_visibility_frame!=desc[72:0])||
       (PREFETCH&&prefetch_accepted&&(!prefetch_v||prefetch_accepted_frame!=desc[72:0]))) next_ctl[3:0]=FAULT;
    else case(state)
@@ -106,10 +105,8 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
   end
  end
  always @(posedge clk or negedge por_n)begin
-  if(!por_n)begin desc<=0;desc_n<={DW{1'b1}};mask<=0;mask_n<={344{1'b1}};
-   ctl<=0;ctl_n<=13'h1fff;end
-  else begin desc<=next_desc;desc_n<=~next_desc;mask<=next_mask;mask_n<=~next_mask;
-   ctl<=next_ctl;ctl_n<=~next_ctl;end
+  if(!por_n)begin desc<=0;mask<=0;ctl<=0;end
+  else begin desc<=next_desc;mask<=next_mask;ctl<=next_ctl;end
  end
 endmodule
 `default_nettype wire
