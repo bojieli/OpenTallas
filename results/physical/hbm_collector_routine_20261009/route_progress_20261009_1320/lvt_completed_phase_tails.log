@@ -1,0 +1,18 @@
+--------------------------------------------------------------------------
+Design area 78068 um^2 30% utilization.
+write_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_lvt_bbe601a79_tc_routine/base/3_3_place_gp.odb
+Elapsed time: 14:40.70[h:]min:sec. CPU time: user 1547.92 sys 20.89 (178%). Peak memory: 2653116KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb          880           2590 ad86b2b7917300bafb2c
+Instance count before 78585, after 79966
+Pin count before 169807, after 172569
+write_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_lvt_bbe601a79_tc_routine/base/3_4_place_resized.odb
+Elapsed time: 1:21.16[h:]min:sec. CPU time: user 104.76 sys 6.38 (136%). Peak memory: 976592KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb           81            953 a716a31fceb0da3dbe6f
+OT_PREROUTE_GATE: 1.466 s
+write_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_lvt_bbe601a79_tc_routine/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_lvt_bbe601a79_tc_routine/base/3_place.sdc
+Elapsed time: 1:58.60[h:]min:sec. CPU time: user 138.28 sys 6.29 (121%). Peak memory: 1907116KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb          118           1862 e4143dbfdbf6f8f7e766

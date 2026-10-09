@@ -1,0 +1,37 @@
+{
+  "observed_utc": "2026-10-09T13:18:12.445860+00:00",
+  "status": "RUNNING; no final verdict",
+  "claims_gib": {
+    "calibration": 3,
+    "route": 16,
+    "conditional_hold_eco": 32
+  },
+  "claim_basis": "Conservative same-inventory estimates, not measured peaks; ECO future peak unknown",
+  "jobs": [
+    {
+      "name": "fanout8",
+      "source": "c4be41d70",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+      "container": "db9e7881132e",
+      "completed_phases": [
+        "4_1_cts",
+        "5_1_grt"
+      ],
+      "qualification": "pending routed TT>=0, FF>=0, DRC0, independent electrical zeros, current matched IO reference; no port view adoption"
+    },
+    {
+      "name": "lvt",
+      "source": "bbe601a79",
+      "host": "ot-pve1",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+      "container": "1685b9c9680e",
+      "completed_phases": [
+        "3_3_place_gp",
+        "3_4_place_resized",
+        "3_5_place_dp"
+      ],
+      "qualification": "pending routed TT>=0, FF>=0, DRC0, independent electrical zeros, current matched IO reference; no port view adoption"
+    }
+  ]
+}
