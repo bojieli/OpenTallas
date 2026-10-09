@@ -14557,3 +14557,9 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hbm_native_mtp_operation_model():
+    """Full native operation lowering and protected CP command model."""
+    from hbm_native_mtp_operation_model import model
+    return model()
