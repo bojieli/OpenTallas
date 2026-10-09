@@ -304,9 +304,18 @@ def main():
     # bank -> wire -> bank hops (no logic): the measured ASAP7 SS reach is 504 um a stage at 1.2 GHz (261 ps +
     # 1.135 ps/um); r23h shipped 376 um.  The lo row-chain hops (E face -> under quad row 0 -> ROOT on the seam) are ~406
     ap.add_argument('--max-hop', type=float, default=450.0)
+    # hbm-forks 2026-10-09 (coordinator: widen, no lint waiver): extra height of the hi bottom E-W strip, in 2.16-um rows.
+    # The strip + the band above quad row 1 are the only horizontal channel across the quads: the floorplan-margin lint
+    # found 7 cuts short of tracks at 673.92 (x 1658.5: 991 > 940; x 389.9 / 403.1: 1633 > 1590).  The hi outline grows
+    # by the same amount; lo, the seam pins and every x stay as they are.
+    ap.add_argument('--hi-channel-rows', type=int, default=0)
     for k, v in PARAMS.items():
         ap.add_argument(f'--{k}', type=int, default=v)
     a = ap.parse_args()
+    global H_HI, QY_HI
+    H_HI = round(H_HI + 2.16 * a.hi_channel_rows, 3)
+    QY_HI = round(QY_HI + 2.16 * a.hi_channel_rows, 3)
+    assert abs(QY_HI / 0.048 - round(QY_HI / 0.048)) < 1e-6
     lo = place_lo(a)
     P, hops, pins, quads, geo = lo
     npl = check_pins(P, pins)
