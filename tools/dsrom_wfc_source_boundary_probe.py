@@ -57,7 +57,9 @@ def main():
         assert int(actual['modules'][top]['parameter_default_values']['PROMPT_EXTRA'],2) == 2
         macro_sources = [src/s for s in sources if s.endswith('_bb.v')]
         ys = ''.join('read_verilog -lib -sv '+str(s)+'; ' for s in macro_sources)
-        ys += 'read_json '+str(synth_input)+'; hierarchy -top '+top+'; flatten; opt_clean; techmap; opt_clean; write_json '+str(a.out/'generic.json')
+        # Physical hierarchy retention is metadata, not a boundary. Flatten those
+        # actual RTL modules for analysis; retain the real SRAM black boxes.
+        ys += 'read_json '+str(synth_input)+'; hierarchy -top '+top+'; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; opt_clean; techmap; opt_clean; write_json '+str(a.out/'generic.json')
         q = subprocess.run([rb.YOSYS,'-p',ys],text=True,capture_output=True)
         (a.out/'yosys.log').write_text(q.stdout+q.stderr)
         if q.returncode:
