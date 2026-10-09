@@ -86,12 +86,17 @@ def dsh(task):
 def home(path, model_note):
     d = json.load(open(path)); out = []
     for t in d['turns']:
-        tv = [dict(name=r['name'], label=r['name'] + '(' + ', '.join(f'{k}={json.dumps(v)}' for k, v in r['arguments'].items()) + ')',
-                   result=json.dumps(r['result'])[:600], ms=r['ms'], args=r['arguments'], effect=r['result']) for r in t.get('tool_results', [])]
+        lab = lambda r: r['name'] + '(' + ', '.join(f'{k}={json.dumps(v)}' for k, v in r['arguments'].items()) + ')'
+        tv = [dict(name=r['name'], label=lab(r), result=json.dumps(r['result'])[:600], ms=r['ms'], args=r['arguments'], effect=r['result']) for r in t.get('tool_results', [])]
+        tv += [dict(name=r['name'], label=lab(r) + ' rejected by the harness', result=r['error'], ms=0.0, args=r['arguments'], effect={'error': r['error']})
+               for r in t.get('rejected_calls', [])]                     # invalid arguments: never sent to the home
         pre = t.get('new_prompt_tokens') or t['prompt_tokens']
         out.append(dict(prefill_tokens=pre, cached_tokens=t['prompt_tokens'] - pre, output_tokens=t['output_tokens'], reasoning_tokens=t['reasoning_tokens'],
-                        thinking=t['thinking'], text=t['content'], tool_calls=tv, tools_ms=t.get('tool_wall_ms', 0.0)))
-    return dict(kind='home', model=d['model'], model_note=model_note, request=d['request'], system=d['system'], recorded=d['recorded'],
+                        thinking=t['thinking'], text=t['content'], tool_calls=tv, tools_ms=t.get('tool_wall_ms', 0.0), **({'think_capped': bool(t['think_capped'])} if 'think_capped' in t else {})))
+    if callable(model_note): model_note = model_note(d)
+    extra = dict(backend=d['backend'], provider=d.get('provider'), quantization=d.get('quantization'),
+                 thinking_mode=bool((d.get('sampling') or {}).get('enable_thinking')), think_budget=d.get('think_budget')) if 'backend' in d else {}
+    return dict(kind='home', model=d['model'], model_note=model_note, **extra, request=d['request'], system=d['system'], recorded=d['recorded'],
                 initial_state=d['initial_state'], final_state=d['final_state'], steps=out,
                 served_models=sorted({t.get('served_model') for t in d['turns'] if t.get('served_model')}))
 
@@ -99,6 +104,13 @@ def write(name, obj):
     s = json.dumps(obj, ensure_ascii=False, separators=(',', ':'))
     if KEY_RE.search(s) or os.environ.get('DEEPSEEK_API_KEY', '@@none@@')[:12] in s: sys.exit(f'refusing to write {name}: key-like string')
     open(os.path.join(OUT, name), 'w').write(s); print(name, len(s))
+
+def qwen_note(d):
+    think = (d.get('sampling') or {}).get('enable_thinking')
+    mode = f"thinking mode on, budget {d['think_budget']} tokens per turn" if think and d.get('think_budget') else ('thinking mode on' if think else 'thinking mode off')
+    if d.get('backend') == 'openrouter':
+        return f"Qwen3-8B via OpenRouter ({', '.join(d.get('provider') or ['?'])}, quantisation reported: {', '.join(map(str, d.get('quantization') or ['?']))}), {mode}"
+    return f"Qwen3-8B, released weights, BF16, run locally on CPU, {mode}"
 
 os.makedirs(OUT, exist_ok=True)
 TASKS = [('csvstat', 'Add a feature', 'Add a --group-by option to a CSV statistics CLI, with tests and docs.'),
@@ -109,7 +121,7 @@ for task, title, blurb in TASKS:
     if os.path.exists(f'{RAW}/{task}/meta.json'):
         o = dsh(task); o.update(id=task, title=title, blurb=blurb); write(f'agent_{task}.json', o); idx['agent'].append(dict(id=task, title=title, file=f'agent_{task}.json'))
 for f, title, design, note in [('home_ds_trip.json', 'Leaving for a trip · DeepSeek', 'ds', 'DeepSeek API, model deepseek-flash'),
-                               ('home_qwen_bedtime.json', 'Bedtime routine · Qwen3-8B', 'qwen', 'Qwen3-8B, BF16, run locally, thinking mode off')]:
+                               ('home_qwen_bedtime.json', 'Bedtime routine · Qwen3-8B', 'qwen', qwen_note)]:
     if os.path.exists(f'{RAW}/{f}'):
         o = home(f'{RAW}/{f}', note); o.update(id=f[:-5], title=title, design=design); write(f, o); idx['home'].append(dict(id=f[:-5], title=title, design=design, file=f))
 if os.path.exists(f'{RAW}/qwen_long.json'):
