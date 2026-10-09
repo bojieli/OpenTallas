@@ -1,0 +1,27 @@
+{
+  "source": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "job": "hbm_idx_sel_native_qend_aa7127b87_pathfinding",
+  "host": "ot-epyc4",
+  "scope": "isolated fault-free pathfinding synthesis only; route live",
+  "cells": 3327656,
+  "sequential_cells": 567697,
+  "chip_area_um2": 567558.386526,
+  "actual_macros": {
+    "256x256": 12,
+    "1024x256": 4
+  },
+  "macro_area_um2": 134357.38272,
+  "stdcell_area_um2": 433201.003806,
+  "slot_stdcell_capacity_55pct_um2": 576254.848752,
+  "remaining_stdcell_capacity_um2": 143053.844946,
+  "elapsed": "1:33:30.10",
+  "peak_kib": 19663284,
+  "capture_connectivity_placement": "pending real floorplan hook",
+  "mutable_payload_protection": "plain SRAM; local state reliability unqualified; no mirror claim",
+  "verdict": "SYNTH PASS; no physical/timing qualification",
+  "raw_sha256": {
+    "1_2_yosys.log": "f646cc02ebd555b90bcf77b06f8942de9673edc00c2f806afd40ac57e95eb6b3",
+    "mapped_netlist.sha256": "7324aecd2f52bbdb2a847c747a8233fb8aa58ceb2a9624a4de31a39986705121",
+    "synth_stat.txt": "9203a0353f71843d1131b6135820082e784ddb467574f01f6bb7beae2d0ae3d4"
+  }
+}
