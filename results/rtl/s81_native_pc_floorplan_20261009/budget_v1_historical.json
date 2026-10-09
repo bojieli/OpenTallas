@@ -1,0 +1,93 @@
+{
+  "schema": "opentallas.s81-native-pc-floorplan-budget.v1",
+  "source_geometry": "a651d5101",
+  "source_inputs": "fe365cd13",
+  "native_source": "3ba34f388",
+  "adopted": false,
+  "physical_qualified": false,
+  "hashes": {
+    "geometry": "fe961a4926a4f2db303783daf96b235371fdbd2d6d640c229d600a6a66e94ec1",
+    "contract": "f76729ae8b090e728d27942cf0511d9b80fba3ad3ccdaff1c9f91d48671a6c12",
+    "rtl": "4aeb8082a7248f4a2b3616a26b3ce49a953d6de170cb3a23a5580789bdfed49c",
+    "ctrl_lef": "661c7d20012d56b88db90f289361eb4d3feb755c71c30cd3c648ea28d10546bd",
+    "svc_lef": "dcdc11edebde096aab3fd5c249dc2d1ae775339dc33746949c46fd2a51f08dac"
+  },
+  "pin_plan": {
+    "bits": 3111,
+    "groups": 20,
+    "outline_um": [
+      240,
+      480
+    ],
+    "pitch_um": 265.584,
+    "controller_face": "S",
+    "runtime_source0_face": "N",
+    "host_source1_and_rope_source2_face": "W",
+    "engram_source3_face": "E",
+    "ctrl_live_producer": "dsfd_ctrl_pc.co_w[0]",
+    "ctrl_live_leaf_coordinate_um": [
+      0.096,
+      124.908
+    ],
+    "ctrl_live_buffer_corridor_measured": false,
+    "per_face_minimum_pitch_um": 0.096
+  },
+  "row_model": {
+    "pcs": 128,
+    "added_slot_area_mm2": 14.7456,
+    "protected_queue_bits": 1769472,
+    "row_height_added_um": 488.64,
+    "old_band_depth_um": 3041.28,
+    "new_band_depth_um": 3529.92,
+    "old_field_edge_slack_um": 378.0,
+    "minimum_clearance_um": 4.32,
+    "fixed_field_per_side_deficit_um": 114.95999999999998,
+    "minimum_die_height_growth_um": 229.91999999999996,
+    "unchanged_outline_and_field_fits": false,
+    "remedy": "grow die height or explicitly reshape/reprice field; no dropped functional instances"
+  },
+  "corridor_proposal": {
+    "path": "vertical first inside s14W, then reserved new controller/mux band",
+    "historical_anchor_polyline_um": [
+      [
+        13959.936,
+        15372.72
+      ],
+      [
+        13959.936,
+        1331.628
+      ],
+      [
+        7134.912,
+        1331.628
+      ]
+    ],
+    "historical_anchor_length_um": 20866.115999999998,
+    "native_host_source_and_destination_coordinates_pending": true,
+    "request_bits": 290,
+    "reverse_credit_bits": 1,
+    "true_ack_count_bits": 8,
+    "nominal_reach_cap_um": 215,
+    "interior_spacing_um": 195,
+    "endpoint_segment_cap_um": 90,
+    "estimated_stations_per_direction": 108,
+    "register_bits_floor": 32292,
+    "horizontal_track_width_floor_um": 14.352,
+    "initial_host_seats": 8,
+    "boot_sector_rate_upper_bound_per_cycle": 0.03669724770642202,
+    "runtime_pc_added_cycles": {
+      "source_queue_to_controller": 1,
+      "registered_source_return": 1,
+      "host_completion_release": 1
+    },
+    "slot_reservation_before_generic_hops_required": true,
+    "native_pin_positions_clock_context_writeack_binding_pending": true
+  },
+  "limitations": [
+    "analytical proposal only; no native die generation",
+    "historical HOST anchors price a length estimate, not native endpoints",
+    "source1/2/3 aperture and actual writeACK aggregation remain unbound",
+    "routing layer capacity and buffers/CTS remain to measure",
+    "protected queue sizing excludes other sequential state and logic"
+  ]
+}
