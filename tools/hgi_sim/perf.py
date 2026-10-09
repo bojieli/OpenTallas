@@ -1052,7 +1052,7 @@ def table(rows):
                           "tok_s_per_user" in b8 else "") + f" | {busiest if ctx == ctxs[0] else ''} |")
             if tpl:
                 out.append(f"| {r['model']} (native bit-exact records) | | | {ctx:,} | | | {tpl['tp']} | "
-                           f"{tpl['tok_s_per_user']:,.0f} | | template path (validation -1.3 %) |")
+                           f"{tpl['tok_s_per_user']:,.0f} | | template path (error vs the full stream: validation.json) |")
     return "\n".join(out) + "\n"
 
 
