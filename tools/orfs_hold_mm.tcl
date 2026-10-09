@@ -51,11 +51,22 @@ proc ot_mm_sync {} {
   read_sdc $f
   file delete $f
   set_propagated_clock [all_clocks]
+  set ot_mm_ioref_read 0
   if {[info exists ::env(OT_MM_FF_SDC)]} {
     foreach s $::env(OT_MM_FF_SDC) {
       if {![file exists $s]} { puts "OT_HOLD_MM WARNING: FF SDC $s missing: ff mode keeps the route SDC for it"; continue }
+      if {[file tail $s] eq "io_ref_routed.sdc"} { set ot_mm_ioref_read 1 }
       puts "OT_HOLD_MM: ff mode reads $s"; read_sdc $s
     }
+  }
+  # MMFF-IOREF 2026-10-08: the closure loop drops {SRC}/.ot_mm/ff_ioref_last.sdc (a copy of io_ref_routed.sdc; absent
+  # when the spec opts out with route_ff_ioref: false).  It is read LAST, whatever OT_MM_FF_SDC the route command itself
+  # exported: an inline `export OT_MM_FF_SDC=...` in a job's route cmd overrode the loop's appended io_ref_routed.sdc,
+  # so the FF scene timed vclk at the assumed insertion (hbm_quant_ts0spl_tt: vclk FF 373 vs measured 546 -> fake
+  # 4_1_cts hold -334 on 32k endpoints).  Skipped when the list already read an io_ref_routed.sdc.
+  set ot_mm_ioref_file [expr {[info exists ::env(OT_MM_IOREF_FILE)] ? $::env(OT_MM_IOREF_FILE) : "/src/.ot_mm/ff_ioref_last.sdc"}]
+  if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
+    puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
   }
   set_false_path -setup -from [all_clocks]
   set_mode ss
