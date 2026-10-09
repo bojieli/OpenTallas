@@ -86,6 +86,14 @@ module ot_qkvd_kv_wq #(
     wire [13:0]      ht = hid[13:0];
     wire [1:0]       hvg = hid[15:14];
     wire [5:0]       hl = hid[21:16];
+    // the head row's sector -> PC map, as signals (a function call in an NBA LHS index trips Verilator: "Multiple Write
+    // refs on LHS of NBA")
+    wire [4:0]       pcq [0:3];
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_pcq
+        assign pcq[gq] = pc_of(gq[1:0], ht);
+    end endgenerate
+    wire [23:0]      hsec = sec_of(hl, hvg, ht);
     integer q_, p_, s_;
     reg [NPC-1:0]    push;
     reg [3:0]        push_q;
@@ -93,8 +101,8 @@ module ot_qkvd_kv_wq #(
         push = 0; push_q = 0;
         if (!q_empty)
             for (q_ = 0; q_ < 4; q_ = q_ + 1)
-                if (!sent[hs][q_] && room_r[pc_of(q_[1:0], ht)] && !(MUT == 3 && q_ == 0)) begin
-                    push[pc_of(q_[1:0], ht)] = 1'b1; push_q[q_] = 1'b1;
+                if (!sent[hs][q_] && room_r[pcq[q_]] && !(MUT == 3 && q_ == 0)) begin
+                    push[pcq[q_]] = 1'b1; push_q[q_] = 1'b1;
                 end
     end
     always @(posedge clk or negedge rst_n) begin
@@ -130,9 +138,9 @@ module ot_qkvd_kv_wq #(
         if (iv) begin qd[qw[QA-1:0]] <= id; qid[qw[QA-1:0]] <= {il, ivg, it}; end
         for (q_ = 0; q_ < 4; q_ = q_ + 1)
             if (push_q[q_]) begin
-                w_sec[24*pc_of(q_[1:0], ht) +: 24] <= sec_of(hl, hvg, ht);
-                w_data[256*pc_of(q_[1:0], ht) +: 256] <= qd[hs][256*((MUT == 2) ? (q_ ^ 1) : q_) +: 256];
-                w_tag[TAGW*pc_of(q_[1:0], ht) +: TAGW] <= TAGW'({hs, q_[1:0]});
+                w_sec[24*pcq[q_] +: 24] <= hsec;
+                w_data[256*pcq[q_] +: 256] <= qd[hs][256*((MUT == 2) ? (q_ ^ 1) : q_) +: 256];
+                w_tag[TAGW*pcq[q_] +: TAGW] <= TAGW'({hs, q_[1:0]});
             end
     end
 endmodule
