@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.engram-dead-source-gate.v1",
+ "retained_objects": "/tmp/engram-dead-source-2uzowfj4",
+ "qualification": "actual full64-user prompt store and source scheduling; hostcommand software producer and VL embedding arithmetic separately unqualified",
+ "cases": {
+  "0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE PASS users64 prompt256 windows320 all4imageTypes firstDEAD generatedImageRawTEXT stalls feedbackqueue\n- /srv/opentallas-scratch/claude/engram/dead-source-c041129d4/rtl/test/tb_dsrom_engram_dead_source.sv:77: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE NEG mode1 rejected64+launch\n- /srv/opentallas-scratch/claude/engram/dead-source-c041129d4/rtl/test/tb_dsrom_engram_dead_source.sv:73: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE NEG mode2 rejected64+launch\n- /srv/opentallas-scratch/claude/engram/dead-source-c041129d4/rtl/test/tb_dsrom_engram_dead_source.sv:73: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv": "f2bbec9a6d2b9b4aa2277b50ae849868dcb007d4cad2c358ebe35ed51a4f43ac",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "46427f73ed80712101fac2cb94733911ee34c11180e7ad62633154979950bf4f",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "de314478aadc6570cc7b5f20ffd3bef7535e3dc52d39c5911edce5df879ee7c7",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin_protected.sv": "6fcdd90a470af736e61e02244bdc42808b0dd6f816108e1cbf1de927657f7c6e",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "rtl/test/tb_dsrom_engram_dead_source.sv": "42037edf6ad6ca32741050c5a271fc88e1d1717cb018dbee56d4253dcdefd5af",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "9bcc34554677f0257e19d0fef1ce3d473c34b09eae74df6360b7f3ea038c0911",
+  "tools/engram_dead_source_gate.py": "2e62b24de24431459ec07374317708e9b95ba9e7ba830fb908f966757de954f5"
+ },
+ "status": "pass"
+}
