@@ -1,0 +1,72 @@
+{
+  "schema": "opentallas.md6.embed.v1",
+  "scope": "component model; no full-head or physical qualification",
+  "shape": [
+    129280,
+    256
+  ],
+  "dtype": "BF16",
+  "payload_bytes": 66191360,
+  "macs_per_cycle": 0,
+  "compute_intensity_MAC_per_byte": 0,
+  "communication_intensity_bytes_per_lookup": 512,
+  "ports": {
+    "request_bits": 49,
+    "response_bytes_per_cycle": 32,
+    "macro_bytes_per_cycle": 32
+  },
+  "boundary_bits_per_cycle": {
+    "request": 49,
+    "macro_pair_local": 256,
+    "group_to_final": 4096,
+    "response": 293
+  },
+  "macro": {
+    "rows": 4096,
+    "width": 274,
+    "payload_width": 256,
+    "pairs": 253,
+    "count": 506,
+    "clkq_ss_ps": 744.0,
+    "capture_cycles": 2
+  },
+  "hierarchy": {
+    "groups": 16,
+    "banks_per_group": 16,
+    "group_select_mux": 16,
+    "final_select_mux": 16,
+    "address_fanout_max": 32,
+    "replicas": 1
+  },
+  "routing": {
+    "group_boundary_tracks_needed": 4096,
+    "response_tracks_needed": 293,
+    "channel_capacity_tracks": null,
+    "fit": "unproven; requires dedicated slot"
+  },
+  "area": {
+    "macro_area_mm2": 3.9879884,
+    "at_60pct_mm2": 6.646647333333333,
+    "queue_FF_lower_bound_mm2": 0.0006835104,
+    "capture_and_select_FF_lower_bound_mm2": 0.0202898196,
+    "includes_logic": false,
+    "slot_fit": false
+  },
+  "latency": {
+    "request_cycles": 2,
+    "macro_and_capture_cycles": 2,
+    "group_select_cycles": 1,
+    "final_select_cycles": 1,
+    "response_queue_cycles": 1,
+    "first_beat_cycles": 7,
+    "last_beat_cycles": 22,
+    "ns_last": 18.333333333333336,
+    "issue_beats": 16,
+    "queue_depth": 8,
+    "max_reserved": 8,
+    "backpressure": "issue only when issued-minus-consumed < 8"
+  },
+  "enabled_default": false,
+  "ROM_ECC": false,
+  "qualification": "pending exactness and SS/FF contextual timing"
+}
