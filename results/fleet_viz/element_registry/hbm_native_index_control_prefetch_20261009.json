@@ -2,7 +2,7 @@
   "schema_version": 1,
   "records": [
     {
-      "element": "HBM native index dynamic controller",
+      "element": "ot_hbm_native_index_control",
       "target": "HBM accelerator",
       "recorded_at": "2026-10-09T07:43:40.392038+00:00",
       "owner": "/root/hbm_system",
@@ -48,15 +48,13 @@
           "Actual R25I placement/loaded clock/pin SS/FF unqualified; no rate credit"
         ]
       },
-      "dependencies": {
-        "status": "missing_bindings",
-        "evidence": [
+      "dependencies": [
+          "missing_bindings",
           "Actual CP retained full73/layer6/allocatedkeyrow15",
           "Actual pairedappend WB fence visibility receipt held full73",
           "Dedicated K99 protected service descriptor mailbox and accepted receipt CDC",
           "Continuation query credit and actual VM/router consumer joins"
-        ]
-      },
+        ],
       "integration": {
         "status": "incomplete",
         "evidence": [
