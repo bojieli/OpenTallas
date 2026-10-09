@@ -32,9 +32,9 @@ module tb_hbm_native_index_control;
    end
   end
  end
- task edge;begin @(negedge clk);end endtask
+ task tick;begin @(negedge clk);end endtask
  task reset;begin por_n=0;command_v=0;keep_v=0;source_done=0;index_event=0;
-  repeat(3)edge();por_n=1;repeat(2)edge();end endtask
+  repeat(3)tick();por_n=1;repeat(2)tick();end endtask
  initial begin
   reset();owner_valid=1;allocation_granted=1;
   for(fr=0;fr<24;fr=fr+1)begin
@@ -47,28 +47,28 @@ module tb_hbm_native_index_control;
    producer_published=0;producer_drained=0;source_start_r=0;
    returns_drained=0;source_idle=0;selector_idle=1;
    if(!command_r)$fatal(1,"command not admitted");
-   command_v=1;edge();command_v=0;
-   repeat(4)begin if(fs[0])$fatal(1,"missing publication wait");edge();end
+   command_v=1;tick();command_v=0;
+   repeat(4)begin if(fs[0])$fatal(1,"missing publication wait");tick();end
    producer_published=1;producer_drained=1;
    if(command_keep)begin
     for(q=0;q<4;q=q+1)begin
      for(j=0;j<342;j=j+1)expected_mask[q][j]=((j+q+fr)%3)==0;
      keep_quarter=q;keep_bitmap=expected_mask[q];keep_v=1;
-     while(!keep_r)edge();edge();keep_v=0;
+     while(!keep_r)tick();tick();keep_v=0;
     end
    end
-   while(!source_start_v)edge();
-   repeat(3)begin if(!source_start_v||held_frame!==owner_frame)$fatal(1,"start changed under stall");edge();end
-   source_start_r=1;edge();source_start_r=0;selector_idle=0;
-   source_done=1;edge();source_done=0;
-   index_event=1;edge();index_event=0;
-   repeat(4)begin if(done||!retained)$fatal(1,"lost consumer debt");edge();end
+   while(!source_start_v)tick();
+   repeat(3)begin if(!source_start_v||held_frame!==owner_frame)$fatal(1,"start changed under stall");tick();end
+   source_start_r=1;tick();source_start_r=0;selector_idle=0;
+   source_done=1;tick();source_done=0;
+   index_event=1;tick();index_event=0;
+   repeat(4)begin if(done||!retained)$fatal(1,"lost consumer debt");tick();end
    returns_drained=1;source_idle=1;selector_idle=1;
-   while(!done)edge();edge();edge();
+   while(!done)tick();tick();tick();
    if(fault||retained)$fatal(1,"legal frame failed");
   end
   if(frames!=24||masks!=48||starts!=24||retirements!=24)$fatal(1,"missing frame/mask/start/receipt");
-  command_rank=96;command_v=1;edge();command_v=0;edge();
+  command_rank=96;command_v=1;tick();command_v=0;tick();
   if(!fault||fs[0]||source_start_v)$fatal(1,"bad rank not failclosed");
   $display("PASS_NATIVE_INDEX_CONTROL frames=%0d masks=%0d starts=%0d receipts=%0d",frames,masks,starts,retirements);
   $finish;
