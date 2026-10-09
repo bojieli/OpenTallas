@@ -65,7 +65,7 @@ def main():
         print(stage, layer, pos, "PASS" if r["pass_"] else f"FAIL {r.get('fault')} {r.get('failures')}",
               r.get("families"))
         ok &= r["pass_"]
-    for mu in ("rope_adjacent", "kv_swap", "qknorm_bf16"):
+    for mu in ("rope_unpermuted", "kv_swap", "qknorm_bf16"):
         r = QP.run_stage(model, model.ck.cfg, "layer", 0, 63, mutant=mu)
         print("mutant", mu, "fails as required" if not r["pass_"] else "NOT DETECTED",
               sorted({f["family"] for f in r.get("failures", [])})[:4])

@@ -72,6 +72,7 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
+ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
 # EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
@@ -808,6 +809,39 @@ def ingest():
 
 
 # --------------------------------------------------------------------------------------------- host capacity
+# ADMIT-PAUSE (drive-resume 2026-10-09): a host's own admission gate (/srv/opentallas-scratch/admit.sh, used inside many
+# route recipes) refuses every new job while admit.pause_new.json exists (owner, EPYC2 00:25 memory pressure).  The loop
+# did not read it: it kept launching onto EPYC2, the recipe's admit.sh waited forever with 0 CPU and no writes, and
+# stuckscan killed the "hung" stage 51 min later (hbm_sfu_lane_rstr x2).  The loop now treats the file as "host paused".
+ADMIT_PAUSE = "/srv/opentallas-scratch/admit.pause_new.json"
+# STOPPED-WAITERS (drive-resume 2026-10-09): an admission waiter SIGSTOPped by a paused_waiters file (EPYC2 pid 430473,
+# state T from 00:26 to 07:00) never resumes on its own; every probe lists stopped (state T) admit.sh / admit_core.py
+# processes, logs them once per pid and keeps STATE/stopped_waiters.json current (one row per host).
+STOPPED_PROBE = ("ps -eo pid=,stat=,etimes=,args= | awk '$2 ~ /^T/ && /admit(_core)?\\.(sh|py)/ "
+                 "{printf \"OT_STOPPED_WAITER %s %s %ss \", $1, $2, $3; for (i = 4; i <= NF && i < 12; i++) printf \"%s \", $i; print \"\"}'")
+STOPPED_JSON = STATE / "stopped_waiters.json"
+_stopped_seen = set()
+
+
+def report_stopped_waiters(host, rows):
+    """log each stopped admission waiter once (per host/pid) and record the host's current list"""
+    for r in rows:
+        k = (host, r.split()[0])
+        if k not in _stopped_seen:
+            _stopped_seen.add(k)
+            log(f"STOPPED ADMISSION WAITER on {host}: {r[:240]} (state T: SIGSTOPped, it will never admit; "
+                f"resume with kill -CONT or remove it)")
+    try:
+        cur = json.loads(STOPPED_JSON.read_text()) if STOPPED_JSON.exists() else {}
+        cur[host] = dict(at=now_iso(), waiters=rows)
+        STOPPED_JSON.write_text(json.dumps(cur, indent=1))
+    except Exception:  # noqa: BLE001
+        pass
+
+
+PAUSE_PROBE = f"[ -f {ADMIT_PAUSE} ] && echo OT_ADMIT_PAUSED $(head -c 200 {ADMIT_PAUSE} | tr '\\n' ' '); true"
+
+
 class Fleet:
     def __init__(self):
         self.pending = {}      # host -> [(t, threads, ram)]
@@ -860,7 +894,8 @@ print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
             reservation_probe = "; python3 -c " + shlex.quote(probe)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
-mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}""", timeout=40)
+mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}
+{PAUSE_PROBE}; {STOPPED_PROBE}""", timeout=40)
         if r.returncode:
             info = None
         else:
@@ -872,6 +907,13 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return None  # cannot admit without measuring the declared live reservations
             info["external_jobs"] = json.loads(external_line) if external_line else []
             info["external_remaining_gb"] = sum(x["remaining_gb"] for x in info["external_jobs"])
+            paused = next((x[len("OT_ADMIT_PAUSED"):].strip() for x in r.stdout.splitlines() if x.startswith("OT_ADMIT_PAUSED")), None)
+            if paused is not None:
+                info["admit_paused"] = paused[:200] or "admit.pause_new.json"
+            stopped = [x[len("OT_STOPPED_WAITER "):].strip() for x in r.stdout.splitlines() if x.startswith("OT_STOPPED_WAITER ")]
+            if stopped:
+                info["stopped_waiters"] = stopped
+                report_stopped_waiters(host, stopped)
         return info
 
     def own_pending(self, host, job=None):
@@ -895,23 +937,27 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         info = self.probe(host)
         if info is None:
             return False, f"{cfg['label']} unreachable"
+        if info.get("admit_paused"):
+            return False, f"{cfg['label']} admission paused ({ADMIT_PAUSE}: {info['admit_paused']})"
         pt, pr = self.own_pending(host, job)
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
         # OWNER 2026-10-09: NEVER reserve memory for future growth (no reserve_ram_gb, no external-job remaining-peak
         # reservations) -- admit on measured MemAvailable minus own launches of the last few minutes only.
-        res = 0
-        head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
+        # drive-resume 2026-10-09 (coordinator, owner rule): admit iff measured MemAvailable >= the job's own request + a
+        # fixed safety of ADMIT_SAFETY_GB (16).  The earlier check subtracted the declared peaks of every launch AND every
+        # host claim of the last 3 min (waiting jobs re-claim each tick, so it never expired: "EPYC4 MemAvailable 316-224
+        # < 40+57") and added 5 % of host RAM -- both reservations for future growth.  Neither is subtracted any more.
+        head = min(ADMIT_SAFETY_GB, cfg.get("min_free_ram_gb", ADMIT_SAFETY_GB))
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
             if used + threads > cfg["max_loop_threads"]:
                 return False, f"{cfg['label']} loop threads {used}+{threads} > {cfg['max_loop_threads']}"
         if ram <= 2:          # 2026-10-08: collect/export copy files; host-local, so they cannot move -- a 16 GB headroom
             head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
-        if info["mem_gb"] - pr - res < ram + head:
-            return False, (f"{cfg['label']} MemAvailable {info['mem_gb']}-{pr} GB" + (f" - reserve {res}" if res else "")
-                           + f" < {ram}+{head:.0f}")
+        if info["mem_gb"] < ram + head:
+            return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB < {ram}+{head:.0f}"
         if info["disk_gb"] < cfg["min_free_disk_gb"]:
             return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
         for path, floor in disk_roots(cfg).items():   # every other root the host's jobs write (docker /, /tmp, ...)
@@ -1634,10 +1680,10 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -e OT_ABC_NO_DCH -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -e OT_HOLD_STOP -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH "$@"; fi
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH -e OT_HOLD_STOP "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1934,7 +1980,9 @@ def launch_stage(j, st, cmd):
                         rel.append(f)
                 env += f"export OT_MM_FF_SDC={shlex.quote(' '.join(rel))}\n"
     if j.get("resume") and st["kind"] in ("route", "calibrate"):
-        env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
+        env += "export OT_CL_RESUME=1\n"
+    if st["kind"] == "route" and j.get("hold_stop"):    # HOLD-STOP (drive-resume): see hold_stop_resume
+        env += f"export OT_HOLD_STOP={shlex.quote(' '.join(f'{k}:{int(v)}' for k, v in sorted(j['hold_stop'].items())))}\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
             ("BUDGET_SDC", "budget_route.sdc"), ("BUDGET_SDC_SIGNOFF", "budget_signoff.sdc"), ("BUDGET_SDC_FF", "budget_ff.sdc"),
@@ -3005,6 +3053,14 @@ def early_fail_gate(j, st):
     if not hp:
         return
     verdict, why = hp[0][0], "; ".join(w for _, w in hp)
+    if verdict == "HOLD_STOP":
+        plan = stuckscan.hold_stop_plan(b)
+        try:
+            hold_stop_resume(j, plan["stage"], plan["buffers"], why)
+            return
+        except Exception as ex:  # noqa: BLE001  (already stopped once / no checkpoint: early-fail as before)
+            event(j, f"HOLD-STOP not possible ({ex}); early-fail instead")
+            verdict = "EARLY_FAIL_HOLD"
     detail = dict(name=j["name"], verdict=verdict, why=[w for _, w in hp], orfs=b["root"], corner=b.get("corner"),
                   step=(b.get("current") or "")[:-8], setup=stuckscan.gate_metrics(b), hold=b.get("hold"),
                   congestion=b.get("congestion"), drt=(b.get("drt") or [])[-12:], paths=stuckscan.path_classes(b),
@@ -5057,6 +5113,76 @@ def cmd_early_fail(a):
     early_fail_finish(j, a.verdict, a.why, detail)
     save_job(j)
 
+# HOLD-STOP (drive-resume 2026-10-09, coordinator APPROVED): a CTS / GRT hold repair that stalls already within a small
+# margin (real FF hold WNS >= stuckscan.GATES["hold_nearmiss_ps"], -15 ps; setup gate not firing) is NOT early-failed.
+# repair_timing cannot be stopped in-process, so the loop stops the stage and resumes the route from its ORFS checkpoint
+# (OT_CL_RESUME=1, same host / run dir) with OT_HOLD_STOP="<stage>:<buffers>": that stage's hold repair replays up to the
+# buffer count at which the stalled run reached its final WNS, then the flow continues to route; a later GRT hold repair
+# is skipped (grt:0) after a CTS stop, so the flat tail cannot recur there.  The post-route hold ECO repairs the residue.
+# A stage is stopped at most once per job (a second near-miss stall on the same stage early-fails as before).
+HOLD_STOP_ALLOW = {"cts": "4_1_cts", "grt": "5_1_grt"}
+
+
+def hold_stop_resume(j, stage, buffers, why):
+    """stop the job's route stage (if running) and re-queue it as a same-host checkpoint resume with OT_HOLD_STOP"""
+    if stage not in HOLD_STOP_ALLOW:
+        raise ValueError(f"hold-stop stage must be one of {sorted(HOLD_STOP_ALLOW)}")
+    if any(x.get("stage") == stage for x in j.get("hold_stop_log") or []):
+        raise ValueError(f"{j['name']}: its {stage} hold repair was already stopped once")
+    stl = stage_list(j["spec"])
+    if stl[j["stage_idx"]]["kind"] != "route":
+        raise ValueError(f"{j['name']}: stage {stl[j['stage_idx']]['key']} is not a route stage")
+    host, run = j["host"], j["run"]
+    if j["status"] == "RUNNING":
+        kill_own_stage(j)
+        for _ in range(30):
+            r = ssh(host, f"for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c "
+                          f"| grep -q '{run}/' && echo BUSY; done; true", timeout=120)
+            if "BUSY" not in r.stdout:
+                break
+            time.sleep(10)
+    ship_helpers(host, run)
+    r = ssh(host, f"cd {run}/src && python3 {run}/cl/resume_patch.py .", timeout=120)
+    if r.returncode:
+        raise RuntimeError(f"resume patch failed: {(r.stdout + r.stderr)[-400:]}")
+    dm = subst(j["spec"].get("verdict", {}).get("drc_metrics", ""), j)
+    orfs = dm.split("/logs/")[0] if "/logs/" in dm else None
+    if not orfs:
+        raise RuntimeError("hold-stop resume: no ORFS checkpoint path (verdict.drc_metrics)")
+    chk = ssh(host, f"O=$(ls -d {orfs} | tail -1); bash {run}/cl/resume_check.sh $O {run}/src {HOLD_STOP_ALLOW[stage]}",
+              timeout=600)
+    if chk.returncode or not re.search(r"^RESUME_OK=1$", chk.stdout, re.M):
+        raise RuntimeError(f"hold-stop resume check failed rc={chk.returncode}: {(chk.stdout + chk.stderr)[-400:]}")
+    hs = dict(j.get("hold_stop") or {})
+    hs[stage] = int(buffers)
+    if stage == "cts":
+        hs.setdefault("grt", 0)
+    j["hold_stop"] = hs
+    j.setdefault("hold_stop_log", []).append(dict(stage=stage, buffers=int(buffers), why=why[:600], at=now_iso(),
+                                                  attempt=j["attempt"] + 1, prev_status=j["status"]))
+    j["resume"] = dict(from_host=host, to_host=host, run=run, at=now_iso(), kind="hold_stop",
+                       check=chk.stdout.strip()[-400:])
+    j["checkpoint_affinity"] = dict(host=host, run=run)
+    j.pop("early_fail", None)
+    j.update(status="READY", attempt=j["attempt"] + 1, wait=None, errors=[], reason=None)
+    stage_txt = " ".join(f"{k}:{v}" for k, v in sorted(hs.items()))
+    event(j, f"HOLD-STOP {stage}: near-miss hold stall, not early-failed; route resumes from its checkpoint with "
+             f"OT_HOLD_STOP='{stage_txt}' ({why[:300]})")
+    ledger(j, f"HOLD-STOP {stage} ({stage_txt}): {why}")
+    experiment(j, f"running: route resumed from checkpoint, hold repair stopped at {stage}")
+
+
+@locked_job_command
+def cmd_hold_stop(a):
+    """stuckscan / human: stop a near-miss stalled CTS/GRT hold repair and resume the route (hold_stop_resume).  Accepts a
+    RUNNING route or an EARLY_FAIL_HOLD job whose run dir still holds its checkpoint."""
+    j = load_job(a.name)
+    if j["status"] not in ("RUNNING", "EARLY_FAIL_HOLD"):
+        sys.exit(f"{a.name} is {j['status']}: hold-stop needs RUNNING or EARLY_FAIL_HOLD")
+    hold_stop_resume(j, a.stage, a.buffers, a.why)
+    save_job(j)
+    print(f"HOLD-STOP {a.name} {a.stage}:{a.buffers} -> READY (attempt {j['attempt']})")
+
 
 @locked_job_command
 def cmd_kill_stage(a):
@@ -5160,6 +5286,8 @@ def main():
     c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
     ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
     ef.add_argument("--why", required=True); ef.add_argument("--detail")
+    hs = sub.add_parser("hold-stop"); hs.add_argument("name"); hs.add_argument("--stage", required=True, choices=("cts", "grt"))
+    hs.add_argument("--buffers", type=int, required=True); hs.add_argument("--why", required=True)
     ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
     ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
@@ -5193,6 +5321,8 @@ def main():
         cmd_early_fail(a)
     elif a.cmd == "kill-stage":
         cmd_kill_stage(a)
+    elif a.cmd == "hold-stop":
+        cmd_hold_stop(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
     elif a.cmd == "restore-cancelled":
