@@ -21,8 +21,9 @@
 // Cost: +1 cycle on every crossing (+2 per round trip); the prompt / forced-token read loop (t_provider -> provider
 // -> f_provider -> t_mtp) gains 2 cycles: the controller must wait PRL = 4 (hgi_mtp_native default).  REGB=0 is the
 // original unregistered wiring (the 6adb6c001 cycle-exact bench runs it).  MUT (bench mutants, REGB=1 only):
-//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO;
-//   3 CP-result AM ownership from the completion FIFO only (no backend identity level flops).
+//   1 native done not held behind the emit FIFO; 2 host done not held behind the host-record FIFO.
+// The job pin ready also carries a registered admission-open bit: no job is parked in the pin FIFO while admission
+// is closed (the held native done lasts until the drained reset, which would discard it).
 module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter integer REGB=1, parameter integer MUT=0)(
  inout wire [826:0] cSE,cSW,
  input wire [0:0] ck,rst,
@@ -62,8 +63,13 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
    else begin q81<=f_mtp[81];q71<=f_backend[71];q72<=f_backend[72];qam<=f_am[0];end
   always @(posedge c) begin qst<=f_mtp[514+:3];qami<=f_am[1+:17];qid<=f_backend[2+:68];end
   // ---- input channels
-  wire jf_ir,jf_ov;wire [214:0] jf_od;
-  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn),.in_valid(f_host[0]&&rn),.in_ready(jf_ir),.in_data(f_host[1+:215]),
+  // job: the pin ready is the FIFO's AND a registered "admission open" (the core's admit, closed by a push or a
+  // waiting job), so a job is never parked in the pin FIFO while admission is closed (held native done until the
+  // drained reset, which would discard it): one job per admission window, as without the boundary
+  wire jf_ir,jf_ov;wire [214:0] jf_od;reg open_q;
+  wire jf_push=f_host[0]&&rn&&open_q&&jf_ir;
+  always @(posedge c or posedge rm) if (rm) open_q<=1'b0; else open_q<=ho[0]&&!jf_push&&!jf_ov;
+  ot_sc_pfifo #(.W(215),.S(2),.G(32)) jf(.clk(c),.rst_n(rn),.in_valid(f_host[0]&&rn&&open_q),.in_ready(jf_ir),.in_data(f_host[1+:215]),
    .out_valid(jf_ov),.out_ready(ho[0]),.out_data(jf_od));
   wire ef_ir,ef_ov;wire [36:0] ef_od;
   ot_sc_pfifo #(.W(37),.S(2),.G(37)) ef(.clk(c),.rst_n(rn),.in_valid(f_mtp[43]&&rn),.in_ready(ef_ir),.in_data(f_mtp[44+:37]),
@@ -96,8 +102,9 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
   assign ehi={df_ir&&hf_empty,hf_ir};
   assign ami={qami,qam};
   // completion identity: the FIFO head while a completion waits, else the backend identity lines (CP-result
-  // AM ownership compares them during the in-flight command; flopped like the AM pulse, so aligned)
-  wire [67:0] id=(kf_ov||MUT==3)?kf_od[67:0]:qid;
+  // AM ownership compares them during the in-flight command; flopped like the AM pulse, so aligned).  (ot_sc_pfifo's
+  // empty head also tracks its input one cycle late; the explicit flops keep this independent of that detail.)
+  wire [67:0] id=kf_ov?kf_od[67:0]:qid;
   assign bi={q72,q71&&!bf_ov&&!kf_ov,kf_od[68],id,kf_ov,bf_ir};
   hfd_cmdproc_s_mtp_native_mx1_mtp #(.ENABLE_MTP(ENABLE_MTP)) mtp(.ck(c),.rst(rm),
    .f_mtp(mi),.emit_pend(ef_ov),.t_mtp(mo),.f_host(hi),.t_host(ho),.f_provider(f_provider),
@@ -112,7 +119,7 @@ module hfd_cmdproc_s_mtp_native_mx1 #(parameter integer ENABLE_MTP=0, parameter 
     teh_q<={eho[99],eho[78+:21],eho[75+:3]};ab_q<=ab;dr_q<=dr&&fifos_empty;
    end
   assign t_mtp={tm_q[196:140],ef_ir&&rn,tm_q[138:83],cf_ir&&rn,tm_q[81:0]};
-  assign t_host={th_q,jf_ir&&rn};
+  assign t_host={th_q,jf_ir&&rn&&open_q};
   assign t_emit=te_q;assign t_provider=tp_q;
   assign t_emit_host={teh_q[24],teh_q[23:3],teh_q[2:0],df_ov,hf_od,hf_ov};
   assign t_abort=ab_q;assign t_drained=dr_q;

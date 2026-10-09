@@ -2,10 +2,13 @@
 
 R. System bench tb_hbm_native_mtp_mx1_regb_system: the physical top (AR + registered MTP boundary + join + finite-8
    queue) between the generic-die master hgi_mtp_native (PRL 4) and the typed operation backend; two drained-reset
-   jobs, 4 tokens each.  Positive must PASS; every mutant must FAIL:
-     MUT=1 native done not held behind the emit FIFO, MUT=2 host done not held behind the host-record FIFO,
-     MUT=3 CP-result AM ownership from the completion FIFO only, PRL=2 (controller read wait without the 2 boundary
-     cycles), and the backend wrong-completion-job mutant (as in the hgi_mtp_native / MX1 gates).
+   jobs, 4 tokens each.  Positive must PASS; these mutants must FAIL: MUT=2 host done not held behind the
+   host-record FIFO, PRL=2 (controller read wait without the 2 boundary cycles), and the backend wrong-completion-job
+   mutant (as in the hgi_mtp_native / MX1 gates).
+D. Directed pin bench tb_hfd_cmdproc_s_mtp_native_mx1_regb (REGB=1): AM pulses during an in-flight command on the
+   identity lines, 10 tokens with the host stalled + native done right after, owned ACK, drained reset, wrong job.
+   Positive must PASS; MUT=1 (native done not held behind the emit FIFO) and MUT=2 must FAIL.  (The system
+   scenario never backs the emit FIFO up, so MUT 1 is only exercised here.)
 L. The original cycle-exact top bench (tb_hfd_cmdproc_s_mtp_native_mx1, 6adb6c001) on REGB=0: the unregistered
    wiring is unchanged by the refactor (the MTP side moved into hfd_cmdproc_s_mtp_native_mx1_mtp).
 Usage: python3 tools/hbm_mx1_regb_gate.py --work DIR --out results/.../gate.json   (iverilog; run off localhost)
@@ -34,6 +37,7 @@ BACKEND = 'rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend_mx1.sv'
 CMDPROC20 = 'rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20.sv'
 TB_R = 'rtl/test/hbm_accel/tb_hbm_native_mtp_mx1_regb_system.sv'
 TB_L = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_mx1.sv'
+TB_D = 'physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_mx1_regb.sv'
 L_OLD = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1)) dut('
 L_NEW = 'hfd_cmdproc_s_mtp_native_mx1 #(.ENABLE_MTP(1),.REGB(0)) dut('
 MUT_NEEDLE = 'cpl_job=raw[232:201]'
@@ -58,10 +62,15 @@ def main():
     a = ap.parse_args()
     if a.single:
         a.work.mkdir(parents=True, exist_ok=True)
-        params = {'R_system_positive': (), 'R_mutant_done_not_held': ('MUT=1',), 'R_mutant_hostdone_not_held': ('MUT=2',),
-                  'R_mutant_am_fifo_only': ('MUT=3',), 'R_mutant_prl2': ('PRL=2',)}[a.single]
         sysb = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R]]
-        c = run(a.work, a.single, 'tb_hbm_native_mtp_mx1_regb_system', sysb, params)
+        dirb = [ROOT / s for s in TOP + [TB_D]]
+        top, srcs, params = {'R_system_positive': ('tb_hbm_native_mtp_mx1_regb_system', sysb, ()),
+                             'R_mutant_hostdone_not_held': ('tb_hbm_native_mtp_mx1_regb_system', sysb, ('MUT=2',)),
+                             'R_mutant_prl2': ('tb_hbm_native_mtp_mx1_regb_system', sysb, ('PRL=2',)),
+                             'D_pins_positive': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ()),
+                             'D_mutant_done_not_held': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=1',)),
+                             'D_mutant_hostdone_not_held': ('tb_hfd_cmdproc_s_mtp_native_mx1_regb', dirb, ('MUT=2',))}[a.single]
+        c = run(a.work, a.single, top, srcs, params)
         a.out.write_text(json.dumps(c, indent=2) + '\n')
         print(c['output'][-1500:])
         if c.get('phase') == 'compile':
@@ -82,17 +91,20 @@ def main():
     base = [ROOT / s for s in NATIVE + FACADE + TOP + [CMDPROC20]]
     sysb = base + [ROOT / BACKEND, ROOT / TB_R]
     top = 'tb_hbm_native_mtp_mx1_regb_system'
+    dirb = [ROOT / s for s in TOP + [TB_D]]
+    dtop = 'tb_hfd_cmdproc_s_mtp_native_mx1_regb'
     cases = [run(a.work, 'R_system_positive', top, sysb),
-             run(a.work, 'R_mutant_done_not_held', top, sysb, ('MUT=1',)),
              run(a.work, 'R_mutant_hostdone_not_held', top, sysb, ('MUT=2',)),
-             run(a.work, 'R_mutant_am_fifo_only', top, sysb, ('MUT=3',)),
              run(a.work, 'R_mutant_prl2', top, sysb, ('PRL=2',)),
+             run(a.work, 'D_pins_positive', dtop, dirb),
+             run(a.work, 'D_mutant_done_not_held', dtop, dirb, ('MUT=1',)),
+             run(a.work, 'D_mutant_hostdone_not_held', dtop, dirb, ('MUT=2',)),
              run(a.work, 'R_mutant_wrong_job', top, base + [be_mut, ROOT / TB_R]),
              run(a.work, 'L_legacy_regb0_positive', 'tb_hfd_cmdproc_s_mtp_native_mx1', [ROOT / s for s in TOP] + [tb_l])]
     want = {c['case']: (c['returncode'] != 0 and c.get('phase') != 'compile') if 'mutant' in c['case']
             else (c['returncode'] == 0) for c in cases}
     ok = all(want.values())
-    srcs = NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R, TB_L]
+    srcs = NATIVE + FACADE + TOP + [CMDPROC20, BACKEND, TB_R, TB_L, TB_D]
     rec = dict(schema='opentallas.hbm.mx1_regb.gate.v1', verdict='PASS' if ok else 'FAIL', expectations=want, cases=cases,
                source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in srcs},
                scope='MX1 registered MTP boundary in the connected native closed control (real controller hgi_mtp_native PRL 4 '
