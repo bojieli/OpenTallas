@@ -20,7 +20,10 @@ module ot_hbm_idx_ehash_ds #(
  output wire [31:0] row_id, output wire [4:0] row_column,
  output reg done,fault
 );
- localparam IDLE=0,FEED=1,WAIT_HASH=2,EMIT=3,CHECK=4;
+ localparam IDLE=0,FEED=1,WAIT_HASH=2,EMIT=3,CHECK=4,MATCH=5;
+ // MATCH (drive-0849 -633 ps): the 1,792-bit constants compare is registered (cm_q) one edge before CHECK
+ // gates the snapshot / window writes: +1 cycle per EHASH command, same result.
+ reg cm_q;
  reg [2:0] state;
  reg [2:0] q_op,q_layer;reg [SW-1:0] q_slot;
  reg [16:0] q_cid;reg q_first;
@@ -96,11 +99,14 @@ module ot_hbm_idx_ehash_ds #(
     end
    end
    if(cmd_valid&&cmd_ready)begin
-    if(token_begin||accept_valid)fault<=1;else state<=CHECK;
+    if(token_begin||accept_valid)fault<=1;else state<=MATCH;
+   end
+   if(state==MATCH) begin
+    cm_q<=constants_match;state<=CHECK;
    end
    if(state==CHECK) begin
     if(q_op!=4||q_layer>=ENG_LAYERS||q_slot>=NSLOT||
-       (ENABLE_GENERIC&&!constants_match&&MUTANT!=4)||
+       (ENABLE_GENERIC&&!cm_q&&MUTANT!=4)||
        (!seen[q_slot]&&q_slot!=next_slot)||
        (seen[q_slot]&&q_cid!=windows[q_slot][ENG_ID_W-1:0]))fault<=1;
     else begin
