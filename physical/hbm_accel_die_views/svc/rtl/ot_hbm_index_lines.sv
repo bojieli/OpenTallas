@@ -25,7 +25,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
   can=active&&!fault;for(p=0;p<32;p=p+1)used[p]=0;
   for(l=0;l<8;l=l+1)begin
    assembled[l]=0;
-   if(credits[l]==0)can=0;
+   if(line0+l<nlines&&credits[l]==0)can=0;
    if(line0+l<nlines)begin
     
     for(b=0;b<136;b=b+1)begin
@@ -44,7 +44,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
    lines<=0;pop<=0;done<=0;
    for(l=0;l<8;l=l+1)begin
     if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
-    credits[l]<=credits[l]+CW'(credit[l])-CW'(can);
+    credits[l]<=credits[l]+CW'(credit[l])-CW'(can&&(line0+l<nlines));
    end
    if(start)begin
     if(retained||blocks>342)fault<=1;
@@ -63,7 +63,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
     end
    end
    if(can)begin
-    for(l=0;l<8;l=l+1)lines[l*1099+:1099]<={assembled[l],10'(line0+l),1'b1};
+    for(l=0;l<8;l=l+1)if(line0+l<nlines)lines[l*1099+:1099]<={assembled[l],10'(line0+l),1'b1};
     // A boundary sector shared with the next group stays resident.
     for(p=0;p<32;p=p+1)begin
      n=0;
