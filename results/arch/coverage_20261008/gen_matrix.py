@@ -195,6 +195,13 @@ STREAMS = {
 STREAM_LOGS = {'closure-drive': 'drive-*.log', 'owner-decision': None}
 
 def _ids(*xs): return set(xs)
+# ownerless work that is not one ledger node (PLAN.md section 0)
+STRUCTURAL = [
+    dict(id='O1', scope='all targets: token-path re-export (tools/token_path_export.py, unified_composition.py, reprice_20261008.py; qwen_hbm() missing)',
+         rows='every NOT_PRICED / MODELLED_ONLY cell', classes=['NOT_PRICED', 'MODELLED_ONLY'],
+         why='functional owners deliver block cycles, but nobody re-exports the token path (token-path stream STOP 21:10, reprice STOP 18:25); T4 has no view',
+         proposed='new token-path re-export stream on the 15-min drive cadence; qwen-hbm-unify writes qwen_hbm()'),
+]
 # OWN[target] = [(node-id regex, owner, {gap class: owner override})]; first match wins. owner None = ownerless.
 # NOT_CLOSED goes to closure-drive unless the node is new RTL of its functional owner or has no die slot (NOT_ON_DIE /
 # MISSING_HW), in which case the functional owner carries it until the block has a master.
@@ -468,7 +475,7 @@ def build(ledgers, element_set=None, now=None):
                                  nodes=len(ledgers[t]['nodes']) if t in ledgers else 0) for t in TARGETS},
                 gap_classes=GAPS, uncovered_classes=sorted(UNCOVERED),
                 streams={k: dict(scope=v) for k, v in STREAMS.items()},
-                ownerless=ownerless, summary=summ, rows=rows,
+                ownerless=ownerless, ownerless_structural=STRUCTURAL, summary=summ, rows=rows,
                 token_map_note='tp_rows(design, node) in gen_matrix.py maps each token-path operator to rows; the fleet viz applies it live')
 
 def token_maps(designs):

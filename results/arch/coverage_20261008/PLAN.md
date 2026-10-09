@@ -47,17 +47,21 @@ Every other gap in `MATRIX.json` has an owner stream. The gaps below have none. 
 | O6 | T3 D17, D38, D39, D43, D48, D51, S04 | collectives | MODELLED_ONLY | The switch-tail cycles are modelled: 47,700 cycles, 6.8 % of AR. No stream re-measures them | hbm-system (collective) + O1 |
 | O7 | T1 C14, D15, D21; T3 C05, C07, F01; T1 B06; T2 B06 | PHY / switch / HBM PHY | MODELLED_ONLY, NOT_EXACT | These are vendor terms: UCIe / SerDes PHY latency, Tomahawk Ultra, HBM PHY and controller, HBM ECC, and HBM PHY calibration. They are not ours to build, but nobody keeps the citations | O1 (cite the vendor in the views); ds-control for an S81 HBM bring-up bench if one is wanted |
 
-**Owners assigned on paper, not yet working (22:05 PT).** These streams together own 244 gap entries (cell × class, closure included):
+**Owners assigned on paper, not yet working (re-checked 22:15 PT).**
 
-| Stream | Log state | Gap-cells it owns |
+| Stream | Log state | Gap entries it owns |
 |---|---|---|
-| hbm-indexer | no log | T3: 11 |
-| hbm-system | no log | T3: 29 |
-| qwen-hbm-unify | no log | T4: 137 |
+| hbm-system | **no log** | T3: 29 |
 | qwen-system | start line only (21:48) | T1: 33 |
-| ds-control | start line only (21:57) | T2: 34 |
 
-Until these streams log work, their gaps are owned in name only.
+The streams below were listed as not started at 22:05, but have since started:
+- **hbm-indexer** started at 22:04: element synthesis is running on EPYC1.
+- **qwen-hbm-unify** finished a design study at 22:05 (`results/arch/qwen_on_r25_20261008`, on its branch).
+- **ds-control** ran its first bench at 22:08: `ot_s81_stage_seq`, 59/59 PASS.
+- **mtp-die** committed its plan at 22:12 (0544fca2c): HBM r25m / r25sm checks PASS.
+
+Until hbm-system and qwen-system log work, the gaps they own are owned in name only.
+
 
 ---
 
@@ -103,15 +107,15 @@ The "rows with gaps beyond closure" column counts every gap class except NOT_CLO
 | **ingest** | `host.*` and `prefill.*` on all four targets, plus T3 boot loads | 21:40 to 22:00: `ot_rom_host_ingest` bench PASS; die masters `qfd_io_host` / `dsfd_host` (jobs queued); `hfd_host_ingest` with an approved shared HBM write port |
 | **mtp-rom** | T2 `mtp.sequencer`, `mtp.accept`, `mtp.commit`, `mtp.draft_transport` (blocks); WFC shims | 21:43 / 22:00: 5 blocks, benches 23/23, 15 loop jobs queued. Area: layer die +0.079, S0 +0.012, head +0.023, draft +0.124 mm² |
 | **mtp-hbm** | T3 `hfd_mtp` blocks (seed, verify batch, accept, commit, fence, union) | 21:45: accept_a0 CLOSED; hfd_mtp / hfd_mtp_x routes queued; spec_state_f waits on mtp-exact |
-| **mtp-die** | NOT_ON_DIE of all MTP rows (T2 draft / head / seed dies, T3 r25 placement), draft transport pricing, counts | 21:04 start, then only inbound messages (ingest 21:40 / 21:56 / 22:00). No own output yet |
+| **mtp-die** | NOT_ON_DIE of all MTP rows (T2 draft / head / seed dies, T3 r25 placement), draft transport pricing, counts | 22:12: plan + generators 0544fca2c; HBM r25m / r25sm checks PASS (outline unchanged); S81 head / layer1 MTP checks running |
 | **mtp-exact** | NOT_EXACT of the MTP rows (wavefront, rollback, spec_state) | 21:21: ROM MTP cached RTL, wavefront 2-stage and HBM connected top launched on EPYC1 |
 | **mtp-rollback** | T2 `mtp.rollback_dsk`; T3 rollback hardware (P12: ring WR = 136 vs `pos mod 128`) | 21:59 start. Engram (21:57) already handed it the Engram-history rewind port |
 | **engram** | T2 / T3 Engram rows, plus the speculative-history verify and rollback | 21:39: idwin / lookup / rowsink exact (60 tokens). 21:56: hash, wkv, transport and history restore taken; `dsfd_engram_lkp` hardened boundary |
 | **s81-dies** | T2 die slots (reset / PG, embed reader, WFC reservation, verify-batch / visibility slots), rack at 120 stages, scan / head dies, array v2 | 21:27: array v2 scope (`results/arch/array_v2_20261008`); scan die on m221pq fit / spine overflow work |
-| **ds-control** | T2 control plane on S81 dies, EOS / max_seq_len, RoPE boot table, ECC, link_rt / FEC, re-measure of the MODELLED_ONLY terms (idx score / top-k / gather / scores / hc.fn, HBM service) | 21:57 start; scope "T2 gaps (a)–(e)", benches on ot-epyc3 |
-| **hbm-indexer** | T3 indexer: score, top-k, candidates, compressor pooling / key | **no log** |
+| **ds-control** | T2 control plane on S81 dies, EOS / max_seq_len, RoPE boot table, ECC, link_rt / FEC, re-measure of the MODELLED_ONLY terms (idx score / top-k / gather / scores / hc.fn, HBM service) | 21:57 start; 22:08: `ot_s81_stage_seq` with 59 stage programs, bench 59/59 PASS, 0 cycles added |
+| **hbm-indexer** | T3 indexer: score, top-k, candidates, compressor pooling / key | 22:04 start: element-body synthesis on EPYC1 |
 | **hbm-system** | T3 write-back, HC mix / Sinkhorn, RoPE producer, host loop, EOS, PLL / reset / retry, expert steering | **no log** |
-| **qwen-hbm-unify** | everything in T4 except ingest | **no log** |
+| **qwen-hbm-unify** | everything in T4 except ingest | 22:05: design study (`results/arch/qwen_on_r25_20261008`): P-min reopens 0 closed blocks; model estimate ~1,240–1,340 tok/s at TP4 |
 | **closure-drive** | NOT_CLOSED on blocks that have a die master (T1 30, T2 52, T3 45, T4 36 cells) | drive-2140 at 21:54, s81-tail at 22:00, safe-* variants. The 15-minute drive is live |
 
 ---
@@ -212,16 +216,16 @@ T4  **owner decision: which machine is T4** ─► qwen-hbm-unify: SM INT8 decod
 
 | # | Risk | Targets | Why it ranks here | Owner |
 |---|---|---|---|---|
-| 1 | **r25 height**: attention tile (R25A ≈ 26.6 mm) + real indexer + HCP / Sinkhorn + `hfd_mtp` all grow the 1.38 mm-margin hub band | T3, T4 | Can force a re-arranged or wider die for all 96 dies, and re-opens closed blocks. Blocks every T3 closure at its final frame | mtp-die + hbm-indexer / hbm-system (two of the three have no log) |
+| 1 | **r25 height**: attention tile (R25A ≈ 26.6 mm) + real indexer + HCP / Sinkhorn + `hfd_mtp` all grow the 1.38 mm-margin hub band | T3, T4 | Can force a re-arranged or wider die for all 96 dies, and re-opens closed blocks. Blocks every T3 closure at its final frame | mtp-die + hbm-indexer / hbm-system (hbm-system has no log) |
 | 2 | **`qfd_tile` closure inside a 2.1 % (≈ 4 % after r21c) area margin** | T1 | 62.5 % of the die and 50 % of the cycles. Any growth breaks the reticle, and any added stage costs ~217 cycles a token | closure-drive |
 | 3 | **MTP correctness is unproven in RTL**: T3 ring mismatch (rejected row at r overwrites r − 128, still read); T2 compressor open slot / dsk / Engram history; no multi-step campaign terminated | T2, T3 | Both MTP headlines (3.01× / 2.16×) rest on it | mtp-exact, mtp-rollback, engram |
-| 4 | **Both ROM machines have their control plane only on reduced vehicles**: T1 in the C++ host, T2 on the HDC-core array. No full-shape die-parent bench (T1) or S81 system gate (T2) exists | T1, T2 | Blocks "a real chip produces a token". Turnaround cycles are unpriced | qwen-system, ds-control (both just started) |
+| 4 | **Both ROM machines have their control plane only on reduced vehicles**: T1 in the C++ host, T2 on the HDC-core array. No full-shape die-parent bench (T1) or S81 system gate (T2) exists | T1, T2 | Blocks "a real chip produces a token". Turnaround cycles are unpriced | qwen-system (start only), ds-control |
 | 5 | **Engram table dies 36 vs 32–56**, with no recipe; 3.3 kW always-on | T2 | Up to +20 dies and their power and links | engram + s81-dies |
-| 6 | **T4 has no defined machine** | T4 | 63 rows with gaps, 0 covered. The 880.7 tok/s headline is a model | owner decision → qwen-hbm-unify (no log) |
+| 6 | **T4 has no defined machine** | T4 | 63 rows with gaps, 0 covered. The 880.7 tok/s headline is a model | owner decision → qwen-hbm-unify |
 | 7 | **No one re-exports the token path (O1)** | all | NOT_PRICED cannot close; the published numbers drift from the hardware that lands | ownerless |
 | 8 | **Measured-graded cycles that are model terms**: T2 ≥ 38,657 critical (4.7 %); T3 switch tail 6.8 % plus vendor TU 28.7 %; T2 hop PHY 14.9 % | T2, T3 | Publication risk if a reviewer challenges the figures | ds-control (T2 re-measure); O6 / O7 (T3) |
-| 9 | **Draft-die count 52 vs 64**; head dies not re-sized for 1,792 while serving 5 draft sweeps + 6 verify heads a step (12.37 µs entry interval unproven) | T2 | Die count, and the MTP step time | mtp-die (no output yet) |
-| 10 | **Ownership on paper only**: hbm-indexer, hbm-system and qwen-hbm-unify have no log; qwen-system and ds-control have a start line only | T1–T4 | 244 gap entries rest on them | coordinator |
+| 9 | **Draft-die count 52 vs 64**; head dies not re-sized for 1,792 while serving 5 draft sweeps + 6 verify heads a step (12.37 µs entry interval unproven) | T2 | Die count, and the MTP step time | mtp-die |
+| 10 | **Ownership on paper only**: hbm-system has no log; qwen-system has a start line only | T1, T3 | 62 gap entries rest on them, including the T1 control plane and the T3 write path | coordinator |
 
 ---
 
