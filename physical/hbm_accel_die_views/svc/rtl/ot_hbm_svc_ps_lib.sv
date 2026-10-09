@@ -188,14 +188,19 @@ module ot_svs_grp #(parameter integer K = 0) (
   wire [1:0] sel = rr + off;
   wire any = |rdy;
   reg ov, ovb; reg [1087:0] od; reg [9:0] ot; reg [12:0] lt;
+  // hbm-forks 2026-10-09 (route SW_s1 PREROUTE_MARGIN reg2reg -815 ps: rs -> rdy -> rotate / priority -> sel -> the
+  // 8:1 x 1,024-b row mux and the credit-queue write): two stages -- A picks the row (sel, its slot) and frees it,
+  // B reads the picked buffer into the port register one edge later (+1 row cycle; a beat landing in the freed slot
+  // at B's edge is written after B samples it)
+  reg av; reg [1:0] asel; reg aslot; reg anc;
   always @(posedge ck) if (sg_v) lt <= sg_d;
   always @(posedge ck or negedge rn)
     if (!rn) begin
       for (p = 0; p < 4; p = p + 1) begin full[p] <= 2'b00; ws[p] <= 1'b0; rs[p] <= 1'b0;
         for (s = 0; s < 2; s = s + 1) begin cnt[p][s] <= 3'd0; sm[p][s] <= 4'd0; end end
-      rr <= 2'd0; ov <= 1'b0; ovb <= 1'b0;
+      rr <= 2'd0; ov <= 1'b0; ovb <= 1'b0; av <= 1'b0;
     end else begin
-      ov <= any;
+      av <= any; ov <= av;
       if (any) begin rr <= sel + 2'd1; full[sel][rs[sel]] <= 1'b0; rs[sel] <= ~rs[sel]; end
       for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
         if (full[p][ws[p]] && !(any && sel == p && rs[p] == ws[p])) ovb <= 1'b1;
@@ -213,10 +218,11 @@ module ot_svs_grp #(parameter integer K = 0) (
       ix[p][ws[p]] <= sq[p*277+260+3];
       nc[p][ws[p]] <= sq[p*277+260+4];
     end
-    if (any) begin
-      od <= {31'd0, lt, ix[sel][rs[sel]], 5'(4 * K + sel), sm[sel][rs[sel]], 10'd0,
-             b[sel][rs[sel]][3], b[sel][rs[sel]][2], b[sel][rs[sel]][1], b[sel][rs[sel]][0]};
-      ot <= rq[sel][rs[sel]];
+    if (any) begin asel <= sel; aslot <= rs[sel]; anc <= nc[sel][rs[sel]]; end
+    if (av) begin
+      od <= {31'd0, lt, ix[asel][aslot], 5'(4 * K + asel), sm[asel][aslot], 10'd0,
+             b[asel][aslot][3], b[asel][aslot][2], b[asel][aslot][1], b[asel][aslot][0]};
+      ot <= rq[asel][aslot];
     end
   end
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
@@ -225,7 +231,7 @@ module ot_svs_grp #(parameter integer K = 0) (
   // sent is queued, and a returned credit goes to the PC at the head (the consumer returns credits in row order)
   localparam integer QD = 64;
   reg [1:0] pq [0:QD-1]; reg [5:0] qh, qt; reg [6:0] qn;
-  wire push = any && !nc[sel][rs[sel]];
+  wire push = av && !anc;
   reg cf_v; wire c_empty, c_full; wire [2:0] c_fr; wire cd;
   wire c_wck = ~kq[1];
   always @(posedge c_wck or negedge rst) if (!rst) cf_v <= 1'b0; else cf_v <= kq[0];
@@ -234,7 +240,7 @@ module ot_svs_grp #(parameter integer K = 0) (
   wire pop = !c_empty && qn != 0;
   reg [3:0] crq; reg ovq;
   assign ovf = ovb | ovq;
-  always @(posedge ck) if (push) pq[qt] <= sel;
+  always @(posedge ck) if (push) pq[qt] <= asel;
   always @(posedge ck or negedge rn)
     if (!rn) begin qh <= 0; qt <= 0; qn <= 0; crq <= 4'd0; ovq <= 1'b0; end
     else begin
