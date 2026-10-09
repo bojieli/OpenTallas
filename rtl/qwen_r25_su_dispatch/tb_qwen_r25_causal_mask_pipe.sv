@@ -21,11 +21,23 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73, CONTEXT_CODE_COPY=0)
   end
  endtask
  task accept_frame(input integer row0,input integer owner_id);
+  integer wait_cycles;
   begin
    @(negedge clk);in_row0=row0;in_owner={{(OWNER_W-64){1'b1}},64'h123456789abc0000}+owner_id;in_v=1;
-   do @(posedge clk);while(!in_rdy);
+   wait_cycles=0;
+   do begin
+    @(posedge clk);wait_cycles=wait_cycles+1;
+    if(wait_cycles>4)$fatal(1,"empty mask pipeline failed admission row%0d fault%0b",row0,fault);
+   end while(!in_rdy);
    @(negedge clk);in_v=0;
-   if(!fault)begin wait(out_v);@(negedge clk);end
+   if(!fault)begin
+    wait_cycles=0;
+    while(!out_v&&!fault)begin
+     @(negedge clk);wait_cycles=wait_cycles+1;
+     if(wait_cycles>4)$fatal(1,"two-stage mask failed visibility row%0d",row0);
+    end
+    @(negedge clk);
+   end
   end
  endtask
  initial begin
