@@ -74,7 +74,12 @@ def main():
     ok = rec['fits_reticle'] and not ov and not out and all(s['same_x'] and abs(s['ser_gap_um']) < 0.05
                                                             and abs(s['lanes_gap_um']) < 0.05 for s in stacks)
     # pinregion 2026-10-08: every die-master die-face port must match exactly one pin region of its cfg
-    pr = [P.lint(c) for c in sorted(p.stem for p in P.CFG_DIR.glob('*.env') if 'pin-region' in p.read_text())]
+    def _lint(c):
+        try:
+            return P.lint(c)
+        except Exception as exc:          # a cfg the region parser cannot read is a failing cfg, not a crash
+            return dict(cfg=c, ok=False, errors=[f'{type(exc).__name__}: {exc}'], empty_regions=[])
+    pr = [_lint(c) for c in sorted(p.stem for p in P.CFG_DIR.glob('*.env') if 'pin-region' in p.read_text())]
     rec['pin_regions'] = dict(cfgs=len(pr), failing=[dict(cfg=r['cfg'], errors=r['errors'][:8], empty=r['empty_regions'])
                                                        for r in pr if not r['ok']])
     ok = ok and not rec['pin_regions']['failing']

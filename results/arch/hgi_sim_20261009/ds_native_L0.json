@@ -1,0 +1,108 @@
+{
+ "schema": "opentallas.hgi_sim.ds_native.v1",
+ "status": "pass",
+ "generated_utc": "2026-10-09T11:31:08Z",
+ "host": "ot-epyc1tb",
+ "context": 1048576,
+ "position": 1048575,
+ "layers": "0",
+ "results": [
+  {
+   "layer": 0,
+   "kind": "sliding",
+   "verdict": "pass",
+   "fault": null,
+   "regions": [
+    {
+     "region": "L0.attn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "win0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.attn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.ffn_norm",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.router",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.ffn",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "block0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "pre0",
+     "bit_exact": true,
+     "ranks_checked": 96,
+     "first_bad": []
+    },
+    {
+     "region": "L0.experts",
+     "bit_exact": true,
+     "ranks_checked": 96
+    }
+   ],
+   "records_per_die": 105,
+   "image_bytes_die0": 12432,
+   "unit_ops": {
+    "HC.HC_MIX": 2,
+    "SU.VOP": 53,
+    "FUSED.HC_PRE_NORM": 2,
+    "SM.MATVEC": 27,
+    "COLL.ALL_GATHER": 12,
+    "FUSED.QDQ_FP8": 1,
+    "DMA.STORE": 1,
+    "ATT.QK": 1,
+    "ATT.PV": 1,
+    "COLL.GROUP_REDUCE_MCAST": 1,
+    "FUSED.HC_POST": 2,
+    "IDX.SELECT": 1,
+    "DMA.FENCE": 1
+   },
+   "wall_s": 14.0
+  }
+ ],
+ "provisional": [
+  "FUSED.QDQ_FP8 (G8)",
+  "COLL.GROUP_REDUCE_MCAST (G10)",
+  "ALL_GATHER even split (G9)",
+  "indexed descriptors (C3b)",
+  "per-die programs of identical structure (G11)",
+  "window ring read oldest-first from slot 0 (exact at this position; G12 wrap)"
+ ],
+ "wall_s": 15.7,
+ "model_init_sha256": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "source_sha256": {
+  "hgi_sim/ds_native.py": "36ffa4d00df682d7947e4b42746d6608c10e44b111a73419eb2b1da6f02642df",
+  "hgi_sim/machine.py": "683266c066d649b4787e15529a4bc34c1a5bc2e21ad2398eaea347af59625ee1",
+  "hgi_sim/records.py": "288282d672d72c2b04c4df6b74e2f737fc68f45b0255d9fe7692637fa660154f",
+  "hgi_sim/lib.py": "1bc52421ec043256a0005132f460be4dc0842fa7c2af683f47fc51667a3a504e",
+  "w19_hbm_tp96_isa.py": "4a182ac37e82f0c05841d780ee0c99c76b8c20a2a6c8cca2afa62b6d1e68f1c6",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ }
+}

@@ -105,6 +105,10 @@ def main():
                         worst_output_port_slack_ps=ps(g(s, "OT_WS_OUT")), violating_d_pins=g(s, "OT_VIOL_D_PINS"),
                         ioref={m[0]: dict(clock=m[1], mean=float(m[2]), min=float(m[3]), max=float(m[4]), n=int(m[5]), kind=m[6])
                                for m in re.findall(r"^OT_IOREF (\S+) (\S+) mean (\S+) min (\S+) max (\S+) n (\d+) (\S+)", s, re.M)},
+                        # FLOW-FIX-0410: active-edge census of the boundary sinks per real clock (io_ref_routed.sdc)
+                        ioref_edge={m[0]: dict(boundary=int(m[1]), negedge=int(m[2]), noarc=int(m[3]), inverted=int(m[4]))
+                                    for m in re.findall(r"^OT_IOREF_EDGE (\S+) boundary (\d+) negedge (\d+) noarc (\d+) "
+                                                        r"inverted (\d+)", s, re.M)},
                         errors=re.findall(r"\[ERROR[^\n]*|^Error[^\n]*", s, re.M)[:5], rc=r.returncode,
                         tcl_sha256=hashlib.sha256(text.encode()).hexdigest())
     a.out.write_text(json.dumps(res, indent=1))

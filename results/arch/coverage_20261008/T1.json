@@ -36,7 +36,16 @@
     "NOT_PRICED"
    ],
    "notes": "The 7 measured cycles are a behavioural 1-cycle ROM (EMBED_ROM=1, rtl/hdc/ot_qwen_rt_embed_rom.sv) in results/rtl/qwen_plain_ar_stream4_P8191_20261005/terminal.json. HBM path priced in /home/ubuntu/claude-takeover-20261007/EMB_HBM_FEASIBILITY.md at +248 typical / +567 worst cycles a token (313 / 632 vs ~65 behavioural); not in the 218,472 basis. tb_emb_hbm_e2e was running on ot-epyc2 at audit time (no record). Prerequisite: tagged-port static region (today fault bit 12 for any non-descriptor row).",
-   "cycles_scope": "per token"
+   "cycles_scope": "per token",
+   "kv_die_20261009": {
+    "die": "KV die: embedding gateway qkd_embgw + landing strips + controllers; EMBQ / EMBD cross the link (65 words each way a token)",
+    "evidence": "priced 271 cycles typical (results/arch/qwen_kv_die_20261009/reprice.json)",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D02",
@@ -195,7 +204,16 @@
     "NOT_CLOSED"
    ],
    "notes": "",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "ROM die SU (unchanged); the FP8 K / V of the new position cross on KVN (8 words)",
+    "evidence": "exact through the link (bench)",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D10",
@@ -215,7 +233,16 @@
     "NOT_CLOSED"
    ],
    "notes": "attn_kv window = QK + exp + PV (ops 11-13): 1,361 chained, 2,345 on L0 (cold KV fill); 49,980 a token. near_hbm_compute = false.",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die near-HBM attention (row engines + aggregators + hub), q crosses (32 words)",
+    "evidence": "bit-exact through the link (bench.json)",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D11",
@@ -235,7 +262,16 @@
     "NOT_CLOSED"
    ],
    "notes": "Inside attn_kv window.",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die near-HBM attention",
+    "evidence": "bit-exact through the link",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D12",
@@ -255,7 +291,16 @@
     "NOT_CLOSED"
    ],
    "notes": "",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die near-HBM attention",
+    "evidence": "bit-exact through the link",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D13",
@@ -275,7 +320,16 @@
     "NOT_CLOSED"
    ],
    "notes": "Apportioned; 14,220 a token.",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die attention hub (x 1/Z); RES crosses (64 words) into the VM",
+    "evidence": "bit-exact through the link",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "D14",
@@ -560,7 +614,17 @@
     "NOT_ON_DIE",
     "MODELLED_ONLY"
    ],
-   "notes": "results/arch/prefill_ingest.json qwen_cold.link: \"PCIe Gen5 x16 endpoint on die 0 ... (ARCH_SPEC_QWEN3 R-P1)\", goodput 48.9 GB/s, modelled. No PHY macro, no shoreline in r21b."
+   "notes": "results/arch/prefill_ingest.json qwen_cold.link: \"PCIe Gen5 x16 endpoint on die 0 ... (ARCH_SPEC_QWEN3 R-P1)\", goodput 48.9 GB/s, modelled. No PHY macro, no shoreline in r21b.",
+   "kv_die_20261009": {
+    "die": "KV die: qkd_host + 112G SerDes host PHY macro",
+    "evidence": "frame + macro only",
+    "gap": [
+     "NOT_CLOSED",
+     "MODELLED_ONLY"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "H04",
@@ -582,7 +646,17 @@
     "MODELLED_ONLY",
     "NOT_EXACT"
    ],
-   "notes": "Branch not merged to main. Bench cases are reduced FP32/BF16 + TP4 2x128 geometry; the full-shape 8K FP8 stream map of ot_qwen_rt_kv_stream4_service is not an ingest target in any bench. TTFT priced only in results/arch/prefill_ingest.json (qwen_cold, modelled)."
+   "notes": "Branch not merged to main. Bench cases are reduced FP32/BF16 + TP4 2x128 geometry; the full-shape 8K FP8 stream map of ot_qwen_rt_kv_stream4_service is not an ingest target in any bench. TTFT priced only in results/arch/prefill_ingest.json (qwen_cold, modelled).",
+   "kv_die_20261009": {
+    "die": "KV die: ingest straight into HBM through the landings (never crosses)",
+    "evidence": "frame only",
+    "gap": [
+     "NOT_CLOSED",
+     "NOT_EXACT"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "H05",
@@ -643,7 +717,17 @@
     "NOT_CLOSED",
     "NOT_PRICED"
    ],
-   "notes": "Boot time (623 MB x 4 dies over the host link) unpriced; twin copy for REFpb doubles it. Until emb_ready the gateway holds every request (first-token gate)."
+   "notes": "Boot time (623 MB x 4 dies over the host link) unpriced; twin copy for REFpb doubles it. Until emb_ready the gateway holds every request (first-token gate).",
+   "kv_die_20261009": {
+    "die": "KV die: the boot load comes from the host (qkd_host) straight into HBM; it no longer crosses the ROM die",
+    "evidence": "host RAW stream path on the KV die (frames only)",
+    "gap": [
+     "NOT_CLOSED",
+     "NOT_EXACT"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "B03",
@@ -682,7 +766,16 @@
     "NOT_ON_DIE",
     "NOT_CLOSED"
    ],
-   "notes": "Full shape: TB-only (reset at bench cycle 5) per results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md."
+   "notes": "Full shape: TB-only (reset at bench cycle 5) per results/rtl/qwen_rom_system_rtl_20261003/INVENTORY.md.",
+   "kv_die_20261009": {
+    "die": "KV die qkd_pll (reset sequencer) -> rst_fwd -> ROM-die qfd_clkrx synchroniser",
+    "evidence": "frame only",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "B05",
@@ -702,7 +795,16 @@
     "MISSING_HW",
     "NOT_ON_DIE"
    ],
-   "notes": "results/rtl/qwen_repack_20261008/die_top_lint_r21b.json clock_sources. Block clock insertion is measured (closure-loop 6e65086ce), the PLL itself is not an element."
+   "notes": "results/rtl/qwen_repack_20261008/die_top_lint_r21b.json clock_sources. Block clock insertion is measured (closure-loop 6e65086ce), the PLL itself is not an element.",
+   "kv_die_20261009": {
+    "die": "KV die qkd_pll (PLL frame, forwarded clock to the ROM die)",
+    "evidence": "vendor PLL abstract still missing",
+    "gap": [
+     "MISSING_HW"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "B06",
@@ -783,7 +885,17 @@
     "NOT_CLOSED",
     "NOT_PRICED"
    ],
-   "notes": "Lives on one die or the package; no slot assigned. Full shape: C++ host barrier."
+   "notes": "Lives on one die or the package; no slot assigned. Full shape: C++ host barrier.",
+   "kv_die_20261009": {
+    "die": "host words reach the ROM-die sequencer as HCTL; TOKEN words go back as CTL",
+    "evidence": "link classes exact",
+    "gap": [
+     "NOT_ON_DIE",
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "C03",
@@ -842,7 +954,17 @@
     "MODELLED_ONLY"
    ],
    "notes": "Per-token KV constants on L0: kv_map_m +54 measured, ctrl SHIFT +144 priced (EXACT_CANDIDATE_PHYSICAL_UNMEASURED), KV crossbar +24 priced (three_machine_compose model). The service itself has no die master: qfd_kvc is a FIFO placeholder.",
-   "cycles_scope": "per token"
+   "cycles_scope": "per token",
+   "kv_die_20261009": {
+    "die": "KV die (landing / controllers)",
+    "evidence": "unchanged",
+    "gap": [
+     "NOT_CLOSED",
+     "MODELLED_ONLY"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "C06",
@@ -862,7 +984,16 @@
     "NOT_CLOSED"
    ],
    "notes": "Posted write-back: hidden in the chained layer (1,207-cycle isolated drain removed from the tail).",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die: KVN rows posted by qkd_seq to the landings (write queue) and merged for t = T-1",
+    "evidence": "merge exact in the bench (poisoned HBM rows)",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "C07",
@@ -882,7 +1013,16 @@
     "NOT_CLOSED"
    ],
    "notes": "Hidden (off the critical path) except L0's cold fill; 0.958 TB/s/stack measured. qfd_ctrl die master is a placeholder around closed per-PC leaves.",
-   "cycles_scope": "per layer (chained L1..L35; x36 a token)"
+   "cycles_scope": "per layer (chained L1..L35; x36 a token)",
+   "kv_die_20261009": {
+    "die": "KV die: no cross-layer prefetch needed (near-HBM attention streams its own KV)",
+    "evidence": "L0 cold penalty removed in the re-price",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "C08",
@@ -1023,7 +1163,17 @@
     "NOT_ON_DIE"
    ],
    "notes": "serdes PINREG +72 priced (reprice_20261008); PHY latency/area from abstracts, ASSUMED where unpublished. The RTL replay layer is not in the die adapters (deliberately vendor-owned).",
-   "cycles_scope": "per token"
+   "cycles_scope": "per token",
+   "kv_die_20261009": {
+    "die": "NEW crossing: UCIe-A x64 between the ROM die and its KV die (ot_qkvd_ucie_x64_phy, our ot_qkvd_d2d ends); the package UCIe / SerDes of the collective unchanged",
+    "evidence": "link RTL exact + mutants (bench.json)",
+    "gap": [
+     "NOT_CLOSED",
+     "MODELLED_ONLY"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "S01",
@@ -1101,7 +1251,16 @@
    "gap": [
     "NOT_CLOSED"
    ],
-   "notes": ""
+   "notes": "",
+   "kv_die_20261009": {
+    "die": "KV die (unchanged path)",
+    "evidence": "J4: check bits read as an ordinary scheduled read",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "F02",
@@ -1120,7 +1279,16 @@
    "gap": [
     "MISSING_HW"
    ],
-   "notes": "No SECDED/poison in rtl/hdc/kv or rtl/model_ready_hbm_r14 for the KV stream; the r21c embedding copy gets SECDED (in-progress RTL)."
+   "notes": "No SECDED/poison in rtl/hdc/kv or rtl/model_ready_hbm_r14 for the KV stream; the r21c embedding copy gets SECDED (in-progress RTL).",
+   "kv_die_20261009": {
+    "die": "KV die controllers: SECDED check bits as an ordinary scheduled read, corrected before the CDC (Q7)",
+    "evidence": "policy settled (CONTRACT.md section 6); RTL owed",
+    "gap": [
+     "MISSING_HW"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "F03",
@@ -1141,7 +1309,16 @@
     "NOT_EXACT",
     "NOT_CLOSED"
    ],
-   "notes": "Bench variants (tb_emb_flip_cases) exist uncommitted; no result yet."
+   "notes": "Bench variants (tb_emb_flip_cases) exist uncommitted; no result yet.",
+   "kv_die_20261009": {
+    "die": "KV die (gateway + strips)",
+    "evidence": "unchanged RTL, new placement",
+    "gap": [
+     "NOT_CLOSED"
+    ],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "F04",
@@ -1158,7 +1335,14 @@
    "cycles": null,
    "cycles_source": "none",
    "gap": [],
-   "notes": "Retry is vendor-owned (C14)."
+   "notes": "Retry is vendor-owned (C14).",
+   "kv_die_20261009": {
+    "die": "ROM / KV link ends: sequence error, overrun, credit overflow, class range (sticky, registered)",
+    "evidence": "mutants caught (bench.json)",
+    "gap": [],
+    "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+    "source": "f2323fd3b"
+   }
   },
   {
    "id": "F05",
@@ -1239,5 +1423,29 @@
    ],
    "notes": "Capacity claim: results/arch/prefill_ingest.json qwen_cold.capacity users_at_0p9 268. Per-user rate is the headline; aggregate depends on this."
   }
- ]
+ ],
+ "kv_die_20261009": {
+  "decision": "OWNER 2026-10-09 ~04:00 PT option 1a: ROM die (r22k) + KV die pair",
+  "rom_die_mm2": 757.576,
+  "kv_die_mm2": 172.297,
+  "token_typical": {
+   "phy_latency": 5,
+   "adapter_plus_phy": 11,
+   "layer_step_measured": 1855,
+   "rom_stage_correction": 0,
+   "layer_step": 1855,
+   "layer_cycles": 6053.0,
+   "layer_delta_vs_tp4": 99.0,
+   "embed_cycles": 271,
+   "l0_extra": 222,
+   "token_cycles": 221538.0,
+   "tok_s": 5416.7,
+   "vs_tp4": -0.0138,
+   "vs_sysdie_1a_model": -0.0091,
+   "bench_exact": true
+  },
+  "contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+  "reprice": "results/arch/qwen_kv_die_20261009/reprice.json",
+  "note": "additive: the r21b/r21c fields above are the pre-decision record and are kept"
+ }
 }

@@ -606,6 +606,34 @@ def _choose_fix(plan, limit, window, res, force=False):
 
 
 def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
+    """pin-density / utilisation estimate (_pin_check) + the RTL registered-boundary check (rtl_boundary.py, struct-close
+    2026-10-09): boundary findings WARN (message + res["rtl_boundary"]) and REFUSE only when spec.registered_io is true"""
+    res = _pin_check(spec, git, util_db, force)
+    if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
+        return res
+    try:
+        sys.path.insert(0, str(HERE)); import rtl_boundary  # noqa: E702
+        rb = rtl_boundary.check(spec, git.show)
+    except Exception as ex:  # noqa: BLE001  (the boundary check never blocks intake on its own failure)
+        rb = {"verdict": "SKIP", "message": f"rtl_boundary skipped: {type(ex).__name__}: {str(ex)[:160]}"}
+    if rb.get("verdict") == "SKIP":
+        return res
+    res["rtl_boundary"] = {k: rb.get(k) for k in ("verdict", "message", "in_to_out_bits", "in_to_reg_max",
+                                                  "reg_to_out_max", "levels", "strict")}
+    if rb["verdict"] == "REFUSE":
+        res["verdict"] = "REFUSE"
+        res["message"] = (res.get("message", "") + " || " if res.get("verdict") != "SKIP" and res.get("message") else "") \
+            + rb["message"] + " (spec registered_io: true): register the boundary (pin flops / registered outputs) or drop the claim"
+    elif rb["verdict"] == "WARN":
+        if res.get("verdict") == "SKIP":
+            res["verdict"], res["message"] = "PASS", "pin estimate n/a"
+        res["message"] = res.get("message", "") + " || WARN " + rb["message"]
+    elif res.get("verdict") == "SKIP":
+        res["verdict"], res["message"] = "PASS", "pin estimate n/a || " + rb["message"]
+    return res
+
+
+def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False) -> dict:
     """{"verdict": PASS|FIX|REFUSE|SKIP, "message", "est", "fix", "fix_env", "est_fix", "util_est", ...}
     force: apply the first fix that passes even when the estimate passes as configured (a MEASURED failure)"""
     if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
