@@ -111,12 +111,10 @@ ot_hgi_mtp_ctl18 #(.GENERIC18(1)) u (
 .tw_pos(tw_pos),
 .tw_tok(tw_tok),
 .step_v(step_v),
-.// a step committed (acc_a / g valid)(// a step committed (acc_a / g valid)),
 .step_a(step_a),
 .step_g(step_g),
 .steps(steps),
 .cyc_total(cyc_total),
 .cyc_engine(cyc_engine),
-.// cycles a command was outstanding at the engine(// cycles a command was outstanding at the engine),
-.cyc_markov      // cycles inside MARKOV commands (serial draft tail)(cyc_markov      // cycles inside MARKOV commands (serial draft tail)));
+.cyc_markov(cyc_markov));
 endmodule
