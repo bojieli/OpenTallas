@@ -1,0 +1,1536 @@
+{
+ "schema": "opentallas.hgi_mtp_die_check.v1",
+ "verdict": "PASS",
+ "variant": "r25gm (R25G + mtp_master hgi_native)",
+ "build": "network_probe (R25G retiled SM grid: full build unqualified)",
+ "default_on_now": false,
+ "buses": {
+  "hb_cmdproc_mtp": {
+   "bits": 197,
+   "ends": [
+    [
+     "hb_cmdproc_mx1",
+     "t_mtp"
+    ],
+    [
+     "hb_mtp",
+     "f_cmdproc"
+    ]
+   ]
+  },
+  "hb_mtp_cmdproc": {
+   "bits": 517,
+   "ends": [
+    [
+     "hb_mtp",
+     "t_cmdproc"
+    ],
+    [
+     "hb_cmdproc_mx1",
+     "f_mtp"
+    ]
+   ]
+  },
+  "hb_router_mtp": {
+   "bits": 59,
+   "ends": [
+    [
+     "hb_router",
+     "t_mtp"
+    ],
+    [
+     "hb_mtp",
+     "f_router"
+    ]
+   ]
+  },
+  "hb_mtp_router": {
+   "bits": 58,
+   "ends": [
+    [
+     "hb_mtp",
+     "t_router"
+    ],
+    [
+     "hb_router",
+     "f_mtp"
+    ]
+   ]
+  },
+  "hb_mtp_coll": {
+   "bits": 19,
+   "ends": [
+    [
+     "hb_mtp",
+     "t_coll"
+    ],
+    [
+     "hb_coll",
+     "f_mtp"
+    ]
+   ]
+  },
+  "hb_coll_mtp": {
+   "bits": 1,
+   "ends": [
+    [
+     "hb_coll",
+     "t_mtp"
+    ],
+    [
+     "hb_mtp",
+     "f_coll"
+    ]
+   ]
+  },
+  "hgi_argmax_cmd": {
+   "bits": 683,
+   "ends": [
+    [
+     "hb_cmdproc_mx1",
+     "t_hgi_argmax"
+    ],
+    [
+     "hb_mtp",
+     "f_hgi_cmdproc"
+    ]
+   ]
+  },
+  "hgi_argmax_ret": {
+   "bits": 3,
+   "ends": [
+    [
+     "hb_mtp",
+     "t_hgi_cmdproc"
+    ],
+    [
+     "hb_cmdproc_mx1",
+     "f_hgi_argmax"
+    ]
+   ]
+  },
+  "hb_su_red_mtp_am": {
+   "bits": 523,
+   "ends": [
+    [
+     "hb_su_red",
+     "t_am_stream"
+    ],
+    [
+     "hb_mtp",
+     "f_am_stream"
+    ]
+   ]
+  },
+  "hb_mtp_vm_am": {
+   "bits": 53,
+   "ends": [
+    [
+     "hb_mtp",
+     "t_am_o"
+    ],
+    [
+     "hb_vm_se",
+     "f_am_o"
+    ]
+   ]
+  }
+ },
+ "signal_bits": 2113,
+ "r25g_hfd_mtp_bits": 1317,
+ "unbound_mx1_endpoints": {
+  "f_host": {
+   "bits": 216,
+   "direction": "input"
+  },
+  "t_host": {
+   "bits": 5,
+   "direction": "output"
+  },
+  "f_provider": {
+   "bits": 179,
+   "direction": "input"
+  },
+  "f_backend": {
+   "bits": 73,
+   "direction": "input"
+  },
+  "t_backend": {
+   "bits": 271,
+   "direction": "output"
+  },
+  "t_emit": {
+   "bits": 38,
+   "direction": "output"
+  },
+  "t_provider": {
+   "bits": 43,
+   "direction": "output"
+  },
+  "f_emit_host": {
+   "bits": 2,
+   "direction": "input"
+  },
+  "t_emit_host": {
+   "bits": 100,
+   "direction": "output"
+  },
+  "t_abort": {
+   "bits": 1,
+   "direction": "output"
+  },
+  "f_am": {
+   "bits": 18,
+   "direction": "input"
+  },
+  "t_drained": {
+   "bits": 1,
+   "direction": "output"
+  }
+ },
+ "unbound_owner": {
+  "f_am": "ot_hgi_seq CTL.AMAX (VM A[0] per verify row, cp_vocab-checked) -> MX1 f_am",
+  "backend": "generic backend translator: t_backend eng_cmd 201 -> ot_hgi_seq doorbell {token, pos, job, gen, entry verify/draft, ncol} + per-slot TOKEN DYN; CTL.END/AMAX completions -> f_backend (job/gen/sequence echo, drained)",
+  "host": "host doorbell / emit path (f_host, t_host, t_emit_host, f_emit_host, t_drained, t_abort)",
+  "provider": "prompt / forced token reads and spec-state requests (f_provider, t_provider, t_emit)"
+ },
+ "peer_pins_required_on_closed_views": [
+  "hb_coll.f_mtp",
+  "hb_coll.t_mtp",
+  "hb_router.f_mtp",
+  "hb_router.t_mtp",
+  "hb_su_red.t_am_stream",
+  "hb_vm_se.f_am_o"
+ ],
+ "rtl_port_obligations": [
+  "hb_cmdproc_mx1.t_hgi_argmax (683 b): hgi dispatch ECO port on the CP south band RTL (hfd_cmdproc_s_mtp_native_mx1 has none yet; hgi-takeover pin plan only)",
+  "hb_mtp.f_hgi_cmdproc (683 b): ARGMAX unit wrapper in the slot (hgi-takeover)",
+  "hb_mtp.t_hgi_cmdproc (3 b): ARGMAX unit wrapper in the slot (hgi-takeover)",
+  "hb_cmdproc_mx1.f_hgi_argmax (3 b): hgi dispatch ECO port on the CP south band RTL (hfd_cmdproc_s_mtp_native_mx1 has none yet; hgi-takeover pin plan only)",
+  "hb_mtp.f_am_stream (523 b): ARGMAX unit wrapper in the slot (hgi-takeover)",
+  "hb_mtp.t_am_o (53 b): ARGMAX unit wrapper in the slot (hgi-takeover)"
+ ],
+ "checks": [
+  {
+   "check": "hb_cmdproc_mtp:hb_cmdproc_mx1.t_mtp",
+   "ok": true,
+   "detail": {
+    "bus_bits": 197,
+    "rtl_bits": 197
+   }
+  },
+  {
+   "check": "hb_cmdproc_mtp:hb_mtp.f_cmdproc",
+   "ok": true,
+   "detail": {
+    "bus_bits": 197,
+    "rtl_bits": 197
+   }
+  },
+  {
+   "check": "hb_mtp_cmdproc:hb_mtp.t_cmdproc",
+   "ok": true,
+   "detail": {
+    "bus_bits": 517,
+    "rtl_bits": 517
+   }
+  },
+  {
+   "check": "hb_mtp_cmdproc:hb_cmdproc_mx1.f_mtp",
+   "ok": true,
+   "detail": {
+    "bus_bits": 517,
+    "rtl_bits": 517
+   }
+  },
+  {
+   "check": "hb_router_mtp:hb_mtp.f_router",
+   "ok": true,
+   "detail": {
+    "bus_bits": 59,
+    "rtl_bits": 59
+   }
+  },
+  {
+   "check": "hb_mtp_router:hb_mtp.t_router",
+   "ok": true,
+   "detail": {
+    "bus_bits": 58,
+    "rtl_bits": 58
+   }
+  },
+  {
+   "check": "hb_mtp_coll:hb_mtp.t_coll",
+   "ok": true,
+   "detail": {
+    "bus_bits": 19,
+    "rtl_bits": 19
+   }
+  },
+  {
+   "check": "hb_coll_mtp:hb_mtp.f_coll",
+   "ok": true,
+   "detail": {
+    "bus_bits": 1,
+    "rtl_bits": 1
+   }
+  },
+  {
+   "check": "mx1 ports.json t_mtp",
+   "ok": true,
+   "detail": {
+    "record": 197,
+    "rtl": 197
+   }
+  },
+  {
+   "check": "mx1 ports.json f_mtp",
+   "ok": true,
+   "detail": {
+    "record": 517,
+    "rtl": 517
+   }
+  },
+  {
+   "check": "mx1 ports.json f_am",
+   "ok": true,
+   "detail": {
+    "record": 18,
+    "rtl": 18
+   }
+  },
+  {
+   "check": "contract f_cmdproc.start contiguous",
+   "ok": true,
+   "detail": {
+    "port": "start",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_gamma contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_gamma",
+    "lsb": 1,
+    "width": 4
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_force contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_force",
+    "lsb": 5,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_ngen contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_ngen",
+    "lsb": 6,
+    "width": 21
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_plen contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_plen",
+    "lsb": 27,
+    "width": 21
+   }
+  },
+  {
+   "check": "contract f_cmdproc.p_tok contiguous",
+   "ok": true,
+   "detail": {
+    "port": "p_tok",
+    "lsb": 48,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract f_cmdproc.f_tok contiguous",
+   "ok": true,
+   "detail": {
+    "port": "f_tok",
+    "lsb": 65,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cmd_ready contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_ready",
+    "lsb": 82,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.eng_done contiguous",
+   "ok": true,
+   "detail": {
+    "port": "eng_done",
+    "lsb": 83,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.sr_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sr_v",
+    "lsb": 84,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.sr_kind contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sr_kind",
+    "lsb": 85,
+    "width": 4
+   }
+  },
+  {
+   "check": "contract f_cmdproc.sr_idx contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sr_idx",
+    "lsb": 89,
+    "width": 16
+   }
+  },
+  {
+   "check": "contract f_cmdproc.sr_pos contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sr_pos",
+    "lsb": 105,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract f_cmdproc.u_clr contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_clr",
+    "lsb": 137,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.u_flush contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_flush",
+    "lsb": 138,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.e_ready contiguous",
+   "ok": true,
+   "detail": {
+    "port": "e_ready",
+    "lsb": 139,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_eos_en contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_eos_en",
+    "lsb": 140,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_eos contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_eos",
+    "lsb": 141,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cfg_maxpos contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cfg_maxpos",
+    "lsb": 158,
+    "width": 21
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cp_am_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cp_am_v",
+    "lsb": 179,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_cmdproc.cp_am_idx contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cp_am_idx",
+    "lsb": 180,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract f_cmdproc width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 197,
+    "rtl": 197
+   }
+  },
+  {
+   "check": "contract t_cmdproc.p_addr contiguous",
+   "ok": true,
+   "detail": {
+    "port": "p_addr",
+    "lsb": 0,
+    "width": 20
+   }
+  },
+  {
+   "check": "contract t_cmdproc.f_addr contiguous",
+   "ok": true,
+   "detail": {
+    "port": "f_addr",
+    "lsb": 20,
+    "width": 23
+   }
+  },
+  {
+   "check": "contract t_cmdproc.e_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "e_v",
+    "lsb": 43,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.e_tok contiguous",
+   "ok": true,
+   "detail": {
+    "port": "e_tok",
+    "lsb": 44,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract t_cmdproc.e_idx contiguous",
+   "ok": true,
+   "detail": {
+    "port": "e_idx",
+    "lsb": 61,
+    "width": 20
+   }
+  },
+  {
+   "check": "contract t_cmdproc.done contiguous",
+   "ok": true,
+   "detail": {
+    "port": "done",
+    "lsb": 81,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_v",
+    "lsb": 82,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_op contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_op",
+    "lsb": 83,
+    "width": 4
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_idx contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_idx",
+    "lsb": 87,
+    "width": 8
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_ncol contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_ncol",
+    "lsb": 95,
+    "width": 4
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_pos contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_pos",
+    "lsb": 99,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_tok1 contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_tok1",
+    "lsb": 131,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cmd_toks contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cmd_toks",
+    "lsb": 148,
+    "width": 136
+   }
+  },
+  {
+   "check": "contract t_cmdproc.am_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "am_v",
+    "lsb": 284,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.am_idx contiguous",
+   "ok": true,
+   "detail": {
+    "port": "am_idx",
+    "lsb": 285,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract t_cmdproc.am_fault contiguous",
+   "ok": true,
+   "detail": {
+    "port": "am_fault",
+    "lsb": 302,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sr_ready contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sr_ready",
+    "lsb": 303,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_v",
+    "lsb": 304,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_addr contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_addr",
+    "lsb": 305,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_tok contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_tok",
+    "lsb": 337,
+    "width": 17
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_pad contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_pad",
+    "lsb": 354,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_last contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_last",
+    "lsb": 355,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.sa_err contiguous",
+   "ok": true,
+   "detail": {
+    "port": "sa_err",
+    "lsb": 356,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.n_committed contiguous",
+   "ok": true,
+   "detail": {
+    "port": "n_committed",
+    "lsb": 357,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.step_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "step_v",
+    "lsb": 389,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_cmdproc.step_a contiguous",
+   "ok": true,
+   "detail": {
+    "port": "step_a",
+    "lsb": 390,
+    "width": 3
+   }
+  },
+  {
+   "check": "contract t_cmdproc.step_g contiguous",
+   "ok": true,
+   "detail": {
+    "port": "step_g",
+    "lsb": 393,
+    "width": 4
+   }
+  },
+  {
+   "check": "contract t_cmdproc.steps contiguous",
+   "ok": true,
+   "detail": {
+    "port": "steps",
+    "lsb": 397,
+    "width": 21
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cyc_total contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cyc_total",
+    "lsb": 418,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cyc_engine contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cyc_engine",
+    "lsb": 450,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.cyc_markov contiguous",
+   "ok": true,
+   "detail": {
+    "port": "cyc_markov",
+    "lsb": 482,
+    "width": 32
+   }
+  },
+  {
+   "check": "contract t_cmdproc.stop_status contiguous",
+   "ok": true,
+   "detail": {
+    "port": "stop_status",
+    "lsb": 514,
+    "width": 3
+   }
+  },
+  {
+   "check": "contract t_cmdproc width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 517,
+    "rtl": 517
+   }
+  },
+  {
+   "check": "contract f_router.x_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "x_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_router.x_draft contiguous",
+   "ok": true,
+   "detail": {
+    "port": "x_draft",
+    "lsb": 1,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_router.x_ids contiguous",
+   "ok": true,
+   "detail": {
+    "port": "x_ids",
+    "lsb": 2,
+    "width": 54
+   }
+  },
+  {
+   "check": "contract f_router.x_col contiguous",
+   "ok": true,
+   "detail": {
+    "port": "x_col",
+    "lsb": 56,
+    "width": 3
+   }
+  },
+  {
+   "check": "contract f_router width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 59,
+    "rtl": 59
+   }
+  },
+  {
+   "check": "contract t_router.t_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "t_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_router.t_ids contiguous",
+   "ok": true,
+   "detail": {
+    "port": "t_ids",
+    "lsb": 1,
+    "width": 54
+   }
+  },
+  {
+   "check": "contract t_router.t_col contiguous",
+   "ok": true,
+   "detail": {
+    "port": "t_col",
+    "lsb": 55,
+    "width": 3
+   }
+  },
+  {
+   "check": "contract t_router width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 58,
+    "rtl": 58
+   }
+  },
+  {
+   "check": "contract t_coll.u_v contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_coll.u_id contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_id",
+    "lsb": 1,
+    "width": 9
+   }
+  },
+  {
+   "check": "contract t_coll.u_mask contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_mask",
+    "lsb": 10,
+    "width": 8
+   }
+  },
+  {
+   "check": "contract t_coll.u_last contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_last",
+    "lsb": 18,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract t_coll width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 19,
+    "rtl": 19
+   }
+  },
+  {
+   "check": "contract f_coll.u_ready contiguous",
+   "ok": true,
+   "detail": {
+    "port": "u_ready",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "contract f_coll width = facade port",
+   "ok": true,
+   "detail": {
+    "contract": 1,
+    "rtl": 1
+   }
+  },
+  {
+   "check": "facade binds start",
+   "ok": true,
+   "detail": {
+    "port": "start",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cfg_gamma",
+   "ok": true,
+   "detail": {
+    "port": "cfg_gamma",
+    "lsb": 1,
+    "width": 4
+   }
+  },
+  {
+   "check": "facade binds cfg_force",
+   "ok": true,
+   "detail": {
+    "port": "cfg_force",
+    "lsb": 5,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cfg_ngen",
+   "ok": true,
+   "detail": {
+    "port": "cfg_ngen",
+    "lsb": 6,
+    "width": 21
+   }
+  },
+  {
+   "check": "facade binds cfg_plen",
+   "ok": true,
+   "detail": {
+    "port": "cfg_plen",
+    "lsb": 27,
+    "width": 21
+   }
+  },
+  {
+   "check": "facade binds p_tok",
+   "ok": true,
+   "detail": {
+    "port": "p_tok",
+    "lsb": 48,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds f_tok",
+   "ok": true,
+   "detail": {
+    "port": "f_tok",
+    "lsb": 65,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds cmd_ready",
+   "ok": true,
+   "detail": {
+    "port": "cmd_ready",
+    "lsb": 82,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds eng_done",
+   "ok": true,
+   "detail": {
+    "port": "eng_done",
+    "lsb": 83,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sr_v",
+   "ok": true,
+   "detail": {
+    "port": "sr_v",
+    "lsb": 84,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sr_kind",
+   "ok": true,
+   "detail": {
+    "port": "sr_kind",
+    "lsb": 85,
+    "width": 4
+   }
+  },
+  {
+   "check": "facade binds sr_idx",
+   "ok": true,
+   "detail": {
+    "port": "sr_idx",
+    "lsb": 89,
+    "width": 16
+   }
+  },
+  {
+   "check": "facade binds sr_pos",
+   "ok": true,
+   "detail": {
+    "port": "sr_pos",
+    "lsb": 105,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds u_clr",
+   "ok": true,
+   "detail": {
+    "port": "u_clr",
+    "lsb": 137,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds u_flush",
+   "ok": true,
+   "detail": {
+    "port": "u_flush",
+    "lsb": 138,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds e_ready",
+   "ok": true,
+   "detail": {
+    "port": "e_ready",
+    "lsb": 139,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cfg_eos_en",
+   "ok": true,
+   "detail": {
+    "port": "cfg_eos_en",
+    "lsb": 140,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cfg_eos",
+   "ok": true,
+   "detail": {
+    "port": "cfg_eos",
+    "lsb": 141,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds cfg_maxpos",
+   "ok": true,
+   "detail": {
+    "port": "cfg_maxpos",
+    "lsb": 158,
+    "width": 21
+   }
+  },
+  {
+   "check": "facade binds cp_am_v",
+   "ok": true,
+   "detail": {
+    "port": "cp_am_v",
+    "lsb": 179,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cp_am_idx",
+   "ok": true,
+   "detail": {
+    "port": "cp_am_idx",
+    "lsb": 180,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds p_addr",
+   "ok": true,
+   "detail": {
+    "port": "p_addr",
+    "lsb": 0,
+    "width": 20
+   }
+  },
+  {
+   "check": "facade binds f_addr",
+   "ok": true,
+   "detail": {
+    "port": "f_addr",
+    "lsb": 20,
+    "width": 23
+   }
+  },
+  {
+   "check": "facade binds e_v",
+   "ok": true,
+   "detail": {
+    "port": "e_v",
+    "lsb": 43,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds e_tok",
+   "ok": true,
+   "detail": {
+    "port": "e_tok",
+    "lsb": 44,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds e_idx",
+   "ok": true,
+   "detail": {
+    "port": "e_idx",
+    "lsb": 61,
+    "width": 20
+   }
+  },
+  {
+   "check": "facade binds done",
+   "ok": true,
+   "detail": {
+    "port": "done",
+    "lsb": 81,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cmd_v",
+   "ok": true,
+   "detail": {
+    "port": "cmd_v",
+    "lsb": 82,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds cmd_op",
+   "ok": true,
+   "detail": {
+    "port": "cmd_op",
+    "lsb": 83,
+    "width": 4
+   }
+  },
+  {
+   "check": "facade binds cmd_idx",
+   "ok": true,
+   "detail": {
+    "port": "cmd_idx",
+    "lsb": 87,
+    "width": 8
+   }
+  },
+  {
+   "check": "facade binds cmd_ncol",
+   "ok": true,
+   "detail": {
+    "port": "cmd_ncol",
+    "lsb": 95,
+    "width": 4
+   }
+  },
+  {
+   "check": "facade binds cmd_pos",
+   "ok": true,
+   "detail": {
+    "port": "cmd_pos",
+    "lsb": 99,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds cmd_tok1",
+   "ok": true,
+   "detail": {
+    "port": "cmd_tok1",
+    "lsb": 131,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds cmd_toks",
+   "ok": true,
+   "detail": {
+    "port": "cmd_toks",
+    "lsb": 148,
+    "width": 136
+   }
+  },
+  {
+   "check": "facade binds am_v",
+   "ok": true,
+   "detail": {
+    "port": "am_v",
+    "lsb": 284,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds am_idx",
+   "ok": true,
+   "detail": {
+    "port": "am_idx",
+    "lsb": 285,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds am_fault",
+   "ok": true,
+   "detail": {
+    "port": "am_fault",
+    "lsb": 302,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sr_ready",
+   "ok": true,
+   "detail": {
+    "port": "sr_ready",
+    "lsb": 303,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sa_v",
+   "ok": true,
+   "detail": {
+    "port": "sa_v",
+    "lsb": 304,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sa_addr",
+   "ok": true,
+   "detail": {
+    "port": "sa_addr",
+    "lsb": 305,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds sa_tok",
+   "ok": true,
+   "detail": {
+    "port": "sa_tok",
+    "lsb": 337,
+    "width": 17
+   }
+  },
+  {
+   "check": "facade binds sa_pad",
+   "ok": true,
+   "detail": {
+    "port": "sa_pad",
+    "lsb": 354,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sa_last",
+   "ok": true,
+   "detail": {
+    "port": "sa_last",
+    "lsb": 355,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds sa_err",
+   "ok": true,
+   "detail": {
+    "port": "sa_err",
+    "lsb": 356,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds n_committed",
+   "ok": true,
+   "detail": {
+    "port": "n_committed",
+    "lsb": 357,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds step_v",
+   "ok": true,
+   "detail": {
+    "port": "step_v",
+    "lsb": 389,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds step_a",
+   "ok": true,
+   "detail": {
+    "port": "step_a",
+    "lsb": 390,
+    "width": 3
+   }
+  },
+  {
+   "check": "facade binds step_g",
+   "ok": true,
+   "detail": {
+    "port": "step_g",
+    "lsb": 393,
+    "width": 4
+   }
+  },
+  {
+   "check": "facade binds steps",
+   "ok": true,
+   "detail": {
+    "port": "steps",
+    "lsb": 397,
+    "width": 21
+   }
+  },
+  {
+   "check": "facade binds cyc_total",
+   "ok": true,
+   "detail": {
+    "port": "cyc_total",
+    "lsb": 418,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds cyc_engine",
+   "ok": true,
+   "detail": {
+    "port": "cyc_engine",
+    "lsb": 450,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds cyc_markov",
+   "ok": true,
+   "detail": {
+    "port": "cyc_markov",
+    "lsb": 482,
+    "width": 32
+   }
+  },
+  {
+   "check": "facade binds stop_status",
+   "ok": true,
+   "detail": {
+    "port": "stop_status",
+    "lsb": 514,
+    "width": 3
+   }
+  },
+  {
+   "check": "facade binds x_v",
+   "ok": true,
+   "detail": {
+    "port": "x_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds x_draft",
+   "ok": true,
+   "detail": {
+    "port": "x_draft",
+    "lsb": 1,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds x_ids",
+   "ok": true,
+   "detail": {
+    "port": "x_ids",
+    "lsb": 2,
+    "width": 54
+   }
+  },
+  {
+   "check": "facade binds x_col",
+   "ok": true,
+   "detail": {
+    "port": "x_col",
+    "lsb": 56,
+    "width": 3
+   }
+  },
+  {
+   "check": "facade binds t_v",
+   "ok": true,
+   "detail": {
+    "port": "t_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds t_ids",
+   "ok": true,
+   "detail": {
+    "port": "t_ids",
+    "lsb": 1,
+    "width": 54
+   }
+  },
+  {
+   "check": "facade binds t_col",
+   "ok": true,
+   "detail": {
+    "port": "t_col",
+    "lsb": 55,
+    "width": 3
+   }
+  },
+  {
+   "check": "facade binds u_v",
+   "ok": true,
+   "detail": {
+    "port": "u_v",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds u_id",
+   "ok": true,
+   "detail": {
+    "port": "u_id",
+    "lsb": 1,
+    "width": 9
+   }
+  },
+  {
+   "check": "facade binds u_mask",
+   "ok": true,
+   "detail": {
+    "port": "u_mask",
+    "lsb": 10,
+    "width": 8
+   }
+  },
+  {
+   "check": "facade binds u_last",
+   "ok": true,
+   "detail": {
+    "port": "u_last",
+    "lsb": 18,
+    "width": 1
+   }
+  },
+  {
+   "check": "facade binds u_ready",
+   "ok": true,
+   "detail": {
+    "port": "u_ready",
+    "lsb": 0,
+    "width": 1
+   }
+  },
+  {
+   "check": "slot master",
+   "ok": true,
+   "detail": "hgi_mtp_native"
+  },
+  {
+   "check": "slot fits controller + ARGMAX unit",
+   "ok": true,
+   "detail": {
+    "slot_um2": 93723,
+    "controller_at_45pct_um2": 25804,
+    "argmax_outline_um2": 25200
+   }
+  }
+ ],
+ "failed": []
+}
