@@ -424,6 +424,9 @@ R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0]
             # command port pair; the cmdproc stream adds them (re-route of hfd_cmdproc_s, mtp-hbm / cmdproc owner)
             split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 320, 'S', 'M5', 0.30, 2),
                                                'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
+# Native indexer successors remain opt-in until source joins and physical evidence close.
+R25I = dict(R25, native_indexer=True)
+R25IC2 = dict(R25I, indexer_large_slot=True)
 ADOPTED = R25
 
 
@@ -734,6 +737,10 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     if variant.get('r5a_sidebands'):
         from hbm_r5a_parent_allocation import allocate
         allocate(m)
+    if variant.get('native_indexer'):
+        from hbm_indexer_die_topology import install
+        import sys
+        install(m, sys.modules[__name__])
     if geometry_only:
         m['buses'], m['paths'] = [], {}
         m['geometry_only'] = True
@@ -3537,7 +3544,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
