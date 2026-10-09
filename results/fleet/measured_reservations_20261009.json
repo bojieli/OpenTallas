@@ -121,5 +121,25 @@
     299770
   ],
   "terminal_proof": "Ring14/15/19/20 allindependentPIDmissing; BFreferenceTT+FFexit0/PIDmissing; bothretrydriversmissing/ownerterminal; historical terminal identities previously audited.",
-  "policy": "No process caps/restarts. Docker enginePID identity permits scheduler subtracting actualengineRSS alreadycounted in MemAvailable. Phase refresh required; no claimed peak for unmeasured futurephase. RestoresEPYC2enabled128/1076 ascurrentownerrequires; localhost stays0."
+  "policy": "No process caps/restarts. Docker enginePID identity permits scheduler subtracting actualengineRSS alreadycounted in MemAvailable. Phase refresh required; no claimed peak for unmeasured futurephase. RestoresEPYC2enabled128/1076 ascurrentownerrequires; localhost stays0.",
+  "subsequent_phase_updates": [
+    {
+      "host": "ot-epyc3",
+      "old_engine": 2708519,
+      "new_engine": 3726300,
+      "peak_ram_gb": 3.2,
+      "evidence": "Owner actualGP959612KiB HWM, samecalGP2381132KiB/calCTS3156988KiB; no newestimatedpeak."
+    },
+    {
+      "host": "ot-pve1",
+      "verified_terminal": [
+        309330,
+        310774,
+        313584,
+        313849,
+        313586
+      ],
+      "evidence": "Independentpsreturnednoidentities, ownerallgate terminal expectedresults. Allthree3.1 claimsreleased."
+    }
+  ]
 }

@@ -33,11 +33,11 @@
     },
     {
      "name": "qwen-fmt3-pipe-calibration",
-     "pid": 2708519,
+     "pid": 3726300,
      "command_match": "openroad",
      "peak_ram_gb": 3.2,
      "owner": "Codex:qwen_hbm_unify/fmt3",
-     "reason": "Pipe currentfloorplanHWM1011520KiB; samepipe completedcalCTS3156988KiB pluslauncher89272KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+     "reason": "Pipe source77 actualGP worker3726300 HWM959612KiB, samecalGP2381132KiB/calCTS3156988KiB pluslauncher; measured3.2GiB phase envelope unchanged.",
      "launcher_pid": 1855945
     }
    ]
@@ -197,32 +197,6 @@
      "owner": "Codex:s81_continuation",
      "reason": "Owner subsequent actual8-waycompiler PG303265 observed4755964KiB4.535GiB, later4197660KiB; rounded4.6GiB current measured envelope. Immutable local phase sample /tmp/bf-cx-mutant-phase-rss.log; driver303289 remains advancing, no imposed cap.",
      "launcher_pid": 303289
-    },
-    {
-     "name": "ha2-owner-phase-gate-r3",
-     "pid": 309330,
-     "command_match": "ha2-owner-cx-20261009/run-gate-r3.sh",
-     "peak_ram_gb": 3.1,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "HA2 phase-mutant r3 liveindividualHWMsum3161936KiB3.015GiB rounded3.1GiB; samevehiclepositive completedGNUtime2.48GiB4workers343.91s evidence4fa8ec6cc.",
-     "launcher_pid": 309330
-    },
-    {
-     "name": "ha2-owner-phase-gate-r4",
-     "pid": 310774,
-     "command_match": "ha2-owner-cx-20261009/run-gate-r4.sh",
-     "peak_ram_gb": 3.1,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "HA2 phase-mutant r4 measuredwholePG2632268KiB2.51GiB; SAME r3 compilerHWMsum3.015GiB rounds3.1GiB.",
-     "launcher_pid": 310774
-    },
-    {
-     "name": "ha2-owner-baseline-r4",
-     "pid": 313584,
-     "command_match": "ha2-owner-cx-20261009/run-baseline-r4.sh",
-     "peak_ram_gb": 3.1,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "Verified actualbaseline-r4 launcher; samefullPF384 owner fourworker sibling r3 measuredindividualHWMsum3161936KiB3.015GiB rounded3.1GiB."
     }
    ]
   },
