@@ -1,0 +1,611 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hgi_coll_decode",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_collective",
+      "description": "hgi coll decode",
+      "source": {
+        "commit": "497929409",
+        "paths": [
+          "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_collective_decode_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_CONTROL_16651",
+          "evidence": [
+            "results/rtl/hgi_collective_decode_20261009/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_TWO_MUTANTS_DETECTED",
+          "evidence": [
+            "results/rtl/hgi_collective_decode_20261009/receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "real record dispatcher and static group/rank source",
+        "ROW_GATHER row backend must consume owner/count/destinations",
+        "PSG endpoint isolation gates separate"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_coll_endpoint_psg",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_collective/collective_endpoint",
+      "description": "hgi coll endpoint psg",
+      "source": {
+        "commit": "292b4fb50",
+        "paths": [
+          "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv"
+        ]
+      },
+      "model": {
+        "status": "PENDING_FULL_DIE_SLOT_PRICE",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "PENDING_NEW_GROUP_ISOLATION_GATE",
+          "evidence": []
+        },
+        "negative": {
+          "status": "PENDING_REPAIRED_SOURCE_MUTANTS",
+          "evidence": []
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "bind active gsz (0/1/2/3 or F), do not strap F for generic claim",
+        "isolation error found in prior HF5 proof, repaired endpoint gate running",
+        "two PS/core variants from viable current port macro view"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_idx_topk",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_index_decode",
+      "description": "hgi idx topk",
+      "source": {
+        "commit": "0858a3066",
+        "paths": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
+          "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
+          "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_generic_topk_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_11A6_LIMITED_EXPANDED_GATE_RUNNING",
+          "evidence": [
+            "results/rtl/hgi_topk_20261009/11a6e367f-receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_MUTANT_11A6_EXPANDED_MUTANT_PENDING",
+          "evidence": [
+            "results/rtl/hgi_topk_20261009/11a6e367f-receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "SYNTHESIS_RUNNING_NO_ROUTE_SUBMISSION",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "full K2048 physical slot for174080 state bits/2048comparators",
+        "resolved descriptors and output stream consumers",
+        "normative param25 bits; stable golden score/id/value ordering"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_idx_ehash",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_index_decode/ehash",
+      "description": "hgi idx ehash",
+      "source": {
+        "commit": "b1b158263",
+        "paths": [
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "results/arch/hgi_ehash_20261009/model.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_DS_COMPONENT_10_REQUESTS_240_IDS",
+          "evidence": [
+            "results/rtl/hgi_ehash_20261009/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_FOUR_MUTANTS_DETECTED",
+          "evidence": [
+            "results/rtl/hgi_ehash_20261009/receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "dynamic B descriptor path unresolved; existing DS hash proof only",
+        "normative simulator CF-EHASH pin and output descriptor mapping"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_quant_decode",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_quant_decode",
+      "description": "hgi quant decode",
+      "source": {
+        "commit": "b827340df",
+        "paths": [
+          "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+          "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+          "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_quant_decode_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_148_BOUNDARIES_5409_LOCKSTEP_FINAL184_REPIN_PENDING",
+          "evidence": [
+            "results/hgi_generic/quant_decode_20261009/manifest.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_SCALE_FORMAT_MUTANTS_FINAL_SOURCE_REPIN_PENDING",
+          "evidence": [
+            "results/hgi_generic/quant_decode_20261009/manifest.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "TWO_ROUTE_SPECS_PREPARING_NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "real valid/header/mode/fault/retire consumers replacing old quant tie/fold topology",
+        "23 actual edges, E4 native8+15 alignment",
+        "E4 param16-only coverage must match normative legal block set",
+        "final184vector receipt/source pin being collected"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_mtp_accept18",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_token18",
+      "description": "hgi mtp accept18",
+      "source": {
+        "commit": "6a63e3229",
+        "paths": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_token18_contract_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_108",
+          "evidence": [
+            "results/rtl/hgi_token18_20261009/accept/positive.log",
+            "results/rtl/hgi_token18_20261009/accept/trunc_mut.log",
+            "results/rtl/hgi_token18_20261009/accept/bonus_mut.log"
+          ]
+        },
+        "negative": {
+          "status": "PASS_TRUNCATION_BONUS_MUTANTS",
+          "evidence": [
+            "results/rtl/hgi_token18_20261009/accept/positive.log",
+            "results/rtl/hgi_token18_20261009/accept/trunc_mut.log",
+            "results/rtl/hgi_token18_20261009/accept/bonus_mut.log"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "every token consumer carries bit17",
+        "normative simulator CF-MTP vectors",
+        "production ctl/argmax binding"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_mtp_ctl18",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_token18",
+      "description": "hgi mtp ctl18",
+      "source": {
+        "commit": "11f1f5722",
+        "paths": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_token18_contract_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PENDING_VERILATOR_EXACT_GATE",
+          "evidence": []
+        },
+        "negative": {
+          "status": "PENDING_SOURCE_MATCHED_MUTANTS",
+          "evidence": []
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "host token/history/command/completion widths updated together",
+        "source c644518bf port manifest",
+        "Icarus suspicion preserved; no positive claim until real gate"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_argmax18_value",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_token18/argmax18",
+      "description": "hgi argmax18 value",
+      "source": {
+        "commit": "3e3f1cd55",
+        "paths": [
+          "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_token18_contract_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PENDING_EXPANDED_WINNING_VALUE_GATE",
+          "evidence": []
+        },
+        "negative": {
+          "status": "PENDING_VALUE_MUTANTS",
+          "evidence": []
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "real winning FP32 value to O[0] and18bit token to O[1]",
+        "stable tie/signed-zero/NaN golden contract",
+        "module path provisional until child port manifest pinned"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_att_row_sources_g12",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_attn_g12",
+      "description": "hgi att row sources g12",
+      "source": {
+        "commit": "799f13777",
+        "paths": [
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/uarch_model.py:hgi_attention_row_sources_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_139_CASES_31107_ROWS",
+          "evidence": [
+            "results/hgi_attn_g12_20261009/golden.a4.log",
+            "results/hgi_attn_g12_20261009/source.a4.sha256",
+            "results/hgi_attn_g12_20261009/rtl_boundary.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_THREE_MUTANTS_DETECTED",
+          "evidence": [
+            "results/hgi_attn_g12_20261009/golden.a4.log",
+            "results/hgi_attn_g12_20261009/source.a4.sha256",
+            "results/hgi_attn_g12_20261009/rtl_boundary.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "QUEUED",
+        "jobs": [
+          "hgi-att-g12-120-799f13777-tc-cx",
+          "hgi-att-g12-140-799f13777-tc-cx"
+        ],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "Claude descriptor adapter and existing DS9-sector gather row request binding",
+        "4stack replicas/384 state bound; actual3edge command latency",
+        "external normative simulator CF-ATT vectors",
+        "queued12:58:37UTC schema and pinlintPASS;8GiB inventory estimate, not measured P&R peak"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_die_integration",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_die_integration",
+      "description": "hgi die integration",
+      "source": {
+        "commit": "fd9459c57",
+        "paths": [
+          "tools/hgi_die_integration_check.py",
+          "tools/die_top_lint.py"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "tools/hgi_die_integration_check.py",
+          "tools/die_top_lint.py"
+        ]
+      },
+      "model": {
+        "status": "PARTIAL_NO_COMPLETE_FIT_CLAIM",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "INCOMPLETE_EXISTING_QUANT_REACHABILITY_FAILURE",
+          "evidence": [
+            "results/arch/hgi_die_integration_20261009/baseline.json",
+            "results/arch/hgi_die_integration_20261009/die_lint_preflight.json"
+          ]
+        },
+        "negative": {
+          "status": "FAIL_CLOSED_NEGATIVE_BASELINE",
+          "evidence": [
+            "results/arch/hgi_die_integration_20261009/baseline.json",
+            "results/arch/hgi_die_integration_20261009/die_lint_preflight.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NO_GENERIC_DIE_PHYSICAL_SUBMISSION",
+        "jobs": [],
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "real new port consumers and producers must be wired; no implicit constants/cfg/folds/truncation",
+        "Claude R25G geometry preserved; reservations missing for TOPK, generic paths, PLL/host/KV andINT8 growth",
+        "strict wrapper regeneration and die_top_lint + remote elaboration/connectivity before adoption"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    }
+  ]
+}

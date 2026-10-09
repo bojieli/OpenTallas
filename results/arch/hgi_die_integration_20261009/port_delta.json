@@ -5,17 +5,160 @@
   "generator_owner_coordination": "/home/ubuntu/claude-takeover-20261007/hbm-forks.log",
   "evidence_scope": "Port requirements reported by implementation owners; source pins, real wrappers, model sizing, strict tie-off checks, die lint and physical gates are not yet complete.",
   "blocks": [
-    {"owner":"generic_collective","module":"ot_hgi_coll_decode","command_inputs":{"coll_group_size":8,"die_id":8,"cmd_v":1,"hdr":128,"selected_count":20},"response_outputs":{"cmd_r":1,"backend_v":1,"backend_op":6,"backend_gsz":4,"backend_group_size":8,"backend_rank":8,"backend_group":8,"backend_subgroup":8,"backend_owner_block":8,"backend_destinations":8,"backend_row_count":20,"error_v":1},"response_inputs":{"backend_r":1,"error_r":1},"latency_delta_edges":1,"integration_gap":"Connect record dispatcher and real group/row gather consumers; endpoint PSG is not a record decoder."},
-    {"owner":"generic_quant_decode","module":"ot_hgi_quant_decode","command_inputs":{"generic_enable":1,"legacy_fp4":1,"v":1,"header":128,"x":1024},"response_outputs":{"vo":1,"fault":1,"decode_fault":1,"y":512},"latency_edges":22,"integration_gap":"Current quant wrapper ties valid=1, toggles format, folds valid/fault; replace with real command and completion nets. Quant no-backpressure execution must be priced against VM/dispatch handshake."},
-    {"owner":"generic_token18","modules":["ot_hgi_mtp_ctl18","ot_hgi_mtp_accept18"],"widened_ports":{"p_tok":18,"f_tok":18,"e_tok":18,"cmd_tok1":18,"am_idx":18,"tw_tok":18,"cmd_toks":144},"integration_gap":"Widen host, argmax, engine operand, history write and completion consumers together; never pad/truncate bit17."},
-    {"owner":"generic_attn_g12","source_commit":"3836210a0","module":"ot_hgi_att_row_sources","command_inputs":{"cmd_v":1,"ring":1,"pos1":20,"b_n":20,"b_m":20,"c_n":20},"selected_inputs":{"c_id_v":1,"c_id":32},"row_outputs":{"row_v":1,"row_source":1,"row_index":20,"row_ordinal":21,"row_last":1},"status_outputs":{"busy":1,"done":1,"fault":1},"first_request_edges":2,"replicas_proposed":4,"slot_proposed_um":[120,120],"integration_gap":"Bind descriptor adapter and existing DS 9-sector gather row request; do not use withdrawn indexed-PS hardware."},
-    {"owner":"generic_index_decode","source_commit":"11a6e367f","module":"ot_hgi_idx_topk","params":{"ENABLE":1,"MAX_K":2048},"command_inputs":{"unit":4,"op":6,"param":16,"n":32,"m":32,"values":1},"candidate_stream":{"score":32},"output_stream":{"id":32,"score":32,"row":32,"last":1,"values_valid":1},"latency_model":"m*(n+k+3)","model_commit":"071773aa8","integration_gap":"Full K2048 state174080bits/2048comparators requires independently admitted slot; current SELECT/router cannot substitute for generic TOPK."}
+    {
+      "owner": "generic_collective",
+      "module": "ot_hgi_coll_decode",
+      "command_inputs": {
+        "coll_group_size": 8,
+        "die_id": 8,
+        "cmd_v": 1,
+        "hdr": 128,
+        "selected_count": 20
+      },
+      "response_outputs": {
+        "cmd_r": 1,
+        "backend_v": 1,
+        "backend_op": 6,
+        "backend_gsz": 4,
+        "backend_group_size": 8,
+        "backend_rank": 8,
+        "backend_group": 8,
+        "backend_subgroup": 8,
+        "backend_owner_block": 8,
+        "backend_destinations": 8,
+        "backend_row_count": 20,
+        "error_v": 1
+      },
+      "response_inputs": {
+        "backend_r": 1,
+        "error_r": 1
+      },
+      "latency_delta_edges": 1,
+      "integration_gap": "Connect record dispatcher and real group/row gather consumers; endpoint PSG is not a record decoder."
+    },
+    {
+      "owner": "generic_quant_decode",
+      "module": "ot_hgi_quant_decode",
+      "command_inputs": {
+        "generic_enable": 1,
+        "legacy_fp4": 1,
+        "v": 1,
+        "header": 128,
+        "x": 1024
+      },
+      "response_outputs": {
+        "vo": 1,
+        "fault": 1,
+        "decode_fault": 1,
+        "y": 512
+      },
+      "latency_edges": 23,
+      "integration_gap": "Current quant wrapper ties valid=1, toggles format, folds valid/fault; replace with real command and completion nets. Quant no-backpressure execution must be priced against VM/dispatch handshake.",
+      "source_commit": "b827340df"
+    },
+    {
+      "owner": "generic_token18",
+      "modules": [
+        "ot_hgi_mtp_ctl18",
+        "ot_hgi_mtp_accept18"
+      ],
+      "widened_ports": {
+        "p_tok": 18,
+        "f_tok": 18,
+        "e_tok": 18,
+        "cmd_tok1": 18,
+        "am_idx": 18,
+        "tw_tok": 18,
+        "cmd_toks": 144
+      },
+      "integration_gap": "Widen host, argmax, engine operand, history write and completion consumers together; never pad/truncate bit17."
+    },
+    {
+      "owner": "generic_attn_g12",
+      "source_commit": "799f13777",
+      "module": "ot_hgi_att_row_sources_p",
+      "command_inputs": {
+        "cmd_v": 1,
+        "ring": 1,
+        "pos1": 20,
+        "b_n": 20,
+        "b_m": 20,
+        "c_n": 20
+      },
+      "selected_inputs": {
+        "c_id_v": 1,
+        "c_id": 32
+      },
+      "row_outputs": {
+        "row_v": 1,
+        "row_source": 1,
+        "row_index": 20,
+        "row_ordinal": 21,
+        "row_last": 1
+      },
+      "status_outputs": {
+        "busy": 1,
+        "done": 1,
+        "fault": 1
+      },
+      "first_request_edges": 3,
+      "replicas_proposed": 4,
+      "slot_proposed_um": [
+        120,
+        120
+      ],
+      "integration_gap": "Bind descriptor adapter and existing DS 9-sector gather row request; do not use withdrawn indexed-PS hardware."
+    },
+    {
+      "owner": "generic_index_decode",
+      "source_commit": "0858a3066",
+      "module": "ot_hgi_idx_topk",
+      "params": {
+        "ENABLE": 1,
+        "MAX_K": 2048
+      },
+      "command_inputs": {
+        "unit": 4,
+        "op": 6,
+        "param": 25,
+        "n": 32,
+        "m": 32,
+        "values": 1
+      },
+      "candidate_stream": {
+        "score": 32
+      },
+      "output_stream": {
+        "id": 32,
+        "score": 32,
+        "row": 32,
+        "last": 1,
+        "values_valid": 1
+      },
+      "latency_model": "m*(n+k+3)",
+      "model_commit": "071773aa8",
+      "integration_gap": "Full K2048 state174080bits/2048comparators requires independently admitted slot; current SELECT/router cannot substitute for generic TOPK."
+    }
   ],
   "physical_obligations": {
-    "reticle_axes_mm": [33,26],
-    "claude_r25g_outline_mm": [31.734288,25.16184],
-    "claude_r25g_outline_area_mm2":798.49,
-    "not_yet_reserved":["KV writeback slot","host ingest slot","PLL","generic config and record dispatch nets","TOPK K2048 state","new generic decode wrappers","INT8 row-pair tile growth"],
-    "adoption_gate":"full source-pinned model including every reservation; strict wrapper bindings and die connectivity clean; golden+mutant gates; TT>=0/FF>=0/DRC0, electrical clean"
+    "reticle_axes_mm": [
+      33,
+      26
+    ],
+    "claude_r25g_outline_mm": [
+      31.734288,
+      25.16184
+    ],
+    "claude_r25g_outline_area_mm2": 798.49,
+    "not_yet_reserved": [
+      "KV writeback slot",
+      "host ingest slot",
+      "PLL",
+      "generic config and record dispatch nets",
+      "TOPK K2048 state",
+      "new generic decode wrappers",
+      "INT8 row-pair tile growth"
+    ],
+    "adoption_gate": "full source-pinned model including every reservation; strict wrapper bindings and die connectivity clean; golden+mutant gates; TT>=0/FF>=0/DRC0, electrical clean"
   }
 }
