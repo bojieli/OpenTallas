@@ -1,6 +1,6 @@
 {
-  "name": "hgi_mtp_accept18-2059e926e-pd48-tc-cx",
-  "block": "ot_hgi_mtp_accept18",
+  "name": "hgi_mtp_ctl18-0f0bfe35e-pd55-tc-cx",
+  "block": "ot_hgi_mtp_ctl18",
   "owner": "Codex:generic_token18",
   "purpose": "Owner-approved HGI-1 item4 full18-bitendpoint/currentflow variant; exact benches+genuine mutants gate adoption; no cmdproc design",
   "hosts": [
@@ -14,33 +14,33 @@
   "peak_ram_gb": 16,
   "source": {
     "branch": "codex/hgi-token18-20261009",
-    "commit": "2059e926e"
+    "commit": "0f0bfe35e"
   },
   "stages": {
     "bench": [
       {
-        "name": "accept_positive",
+        "name": "ctl_DS_lockstep",
         "expect": "pass",
         "threads": 2,
-        "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_positive 0; rc=$?; cat {RUN}/bench/accept_positive/run.log; exit $rc",
-        "pass_regex": "HGI_ACCEPT18 PASS"
+        "peak_ram_gb": 2,
+        "cmd": "bash physical/hbm_generic/token18/run_ctl_bench.sh {RUN}/bench/ctl_DS_lockstep 0 0; rc=$?; cat {RUN}/bench/ctl_DS_lockstep/run.log; exit $rc",
+        "pass_regex": "mismatches=0"
       },
       {
-        "name": "accept_width_mutant",
-        "expect": "fail",
+        "name": "ctl_highbit_lockstep",
+        "expect": "pass",
         "threads": 2,
-        "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_width_mutant 1; rc=$?; cat {RUN}/bench/accept_width_mutant/run.log; exit $rc",
-        "fail_regex": "FATAL:"
+        "peak_ram_gb": 2,
+        "cmd": "bash physical/hbm_generic/token18/run_ctl_bench.sh {RUN}/bench/ctl_highbit_lockstep 0 1; rc=$?; cat {RUN}/bench/ctl_highbit_lockstep/run.log; exit $rc",
+        "pass_regex": "mismatches=0"
       },
       {
-        "name": "accept_bonus_mutant",
+        "name": "ctl_rollback_mutant",
         "expect": "fail",
         "threads": 2,
-        "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_bonus_mutant 2; rc=$?; cat {RUN}/bench/accept_bonus_mutant/run.log; exit $rc",
-        "fail_regex": "FATAL:"
+        "peak_ram_gb": 2,
+        "cmd": "bash physical/hbm_generic/token18/run_ctl_bench.sh {RUN}/bench/ctl_rollback_mutant 1 1; rc=$?; cat {RUN}/bench/ctl_rollback_mutant/run.log; exit $rc",
+        "fail_regex": "LOCKSTEP_TERMINAL_FAIL"
       }
     ],
     "calibrate": {
@@ -48,7 +48,7 @@
       "reason": "Current route_master recomputes true corner reference at every route phase"
     },
     "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm; SRC={SRC} PD=0.48 HM=0.035 NC=8 bash physical/qwen_die_masters/jobs/route_master.sh hgi_mtp_accept18 {LABEL} {RUN}/routes",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm; SRC={SRC} PD=0.55 HM=0.025 NC=8 bash physical/qwen_die_masters/jobs/route_master.sh hgi_mtp_ctl18 {LABEL} {RUN}/routes",
       "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
       "logs": [
         "{RUN}/routes/{LABEL}/flow.log"
@@ -63,14 +63,14 @@
     "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
   },
   "route_hold_corners": "mm",
-  "route_hold_margin_ns": 0.035,
+  "route_hold_margin_ns": 0.025,
   "route_corner": "TC",
   "cycles_added": 0,
   "merge_target": null,
   "record": [
     {
       "from": "{RUN}/record",
-      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_accept18-2059e926e-pd48-tc-cx"
+      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_ctl18-0f0bfe35e-pd55-tc-cx"
     }
   ],
   "admission_evidence": {
