@@ -4,7 +4,11 @@
 // alternate. One active transaction/PC preserves untagged physical wd identity
 // even when the PHY scheduler reorders other requests. No cross-PC serialization.
 // Flop queue payload/control has no ECC, parity, TMR or mirrors (confirmed review53).
-module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0] QUEUE_INJECT=0)(
+// PICK=1 (sys-takeover 2026-10-09, opt-in; pcmux_plain_b TT -204 / SS -646 = count -> arbitration -> 340-b 4x8:1 head mux
+// -> rq / queue write enable, 23-29 levels): the arbitration result is registered (stage A), the chosen head is
+// fetched into a pick register (stage B, may run while the previous transaction is busy), and the launch uses the
+// pick register.  +2 edges on an idle-port request, hidden behind a busy transaction otherwise.
+module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0] QUEUE_INJECT=0, parameter integer PICK=0)(
  input wire ck,rst_n,ctrl_live,
  input wire[4*341-1:0] src_rq,output reg[3:0] src_rk,
  output reg[340:0] rq,input wire rk,wd,
@@ -35,10 +39,13 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
    end
   end
   wire ready=!fault&&ctrl_live&&live_seen;
-  wire launch=ready&&!busy&&credits!=0&&chosen>=0;
-  
-  wire[339:0] head=(chosen>=0)?(queue[chosen][rp[chosen]]^QUEUE_INJECT):340'd0;
+  reg pv,cho_v;reg[1:0] pch,cho_q;reg[339:0] phd;
+  wire[1:0] sel=PICK?pch:chosen[1:0];
+  wire[339:0] head0=(chosen>=0)?(queue[chosen][rp[chosen]]^QUEUE_INJECT):340'd0;
+  wire[339:0] head=PICK?phd:head0;
+  wire launch=ready&&!busy&&credits!=0&&(PICK?pv:(chosen>=0));
   wire pop=launch&&head[34:31]!=0;
+  wire pick=PICK&&ready&&!pv&&cho_v&&count[cho_q]!=0;
   assign pending=busy||rq[0]||count[0]!=0||count[1]!=0||count[2]!=0||count[3]!=0;
   reg next_busy,next_we;reg[1:0] next_owner,next_rr;reg[16:0] next_tag;reg[3:0] next_len,next_credit;reg[15:0] next_seen;
   reg[2:0] nw,nr;reg[3:0] nc;reg push;
@@ -48,7 +55,13 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
     credits<=0;live_seen<=0;rq<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;
     src_rdata<=0;src_rtag<=0;src_rbeat<=0;ce<=0;fault<=0;
     for(i=0;i<4;i=i+1)begin wp[i]<=0;rp[i]<=0;count[i]<=0;end
+    pv<=0;cho_v<=0;cho_q<=0;pch<=0;
    end else begin
+    if(PICK)begin
+     cho_v<=(chosen>=0);cho_q<=chosen[1:0];
+     if(pick)begin pv<=1;pch<=cho_q;phd<=queue[cho_q][rp[cho_q]]^QUEUE_INJECT;end
+     if(pop)pv<=0;
+    end
     rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;ce<=0;
     next_busy=busy;next_we=active_we;next_owner=owner;next_tag=tag;next_len=len;next_seen=seen;next_credit=credits;next_rr=rr;
     if(ctrl_live&&!live_seen)begin live_seen<=1;next_credit=8;end
@@ -60,16 +73,16 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
      for(i=0;i<4;i=i+1)begin
       push=src_rq[i*341];nw=wp[i];nr=rp[i];nc=count[i];
       if(push)begin
-       if(count[i]==8&&!(pop&&chosen==i))fault<=1;
+       if(count[i]==8&&!(pop&&sel==i))fault<=1;
        else begin queue[i][wp[i]]<=src_rq[i*341+1+:340];nw=wp[i]+1'b1;nc=nc+1'b1;end
       end
-      if(pop&&chosen==i)begin nr=rp[i]+1'b1;nc=nc-1'b1;src_rk[i]<=1;end
+      if(pop&&sel==i)begin nr=rp[i]+1'b1;nc=nc-1'b1;src_rk[i]<=1;end
       wp[i]<=nw;rp[i]<=nr;count[i]<=nc;
      end
      if(pop)begin
-      rq<={head,1'b1};next_busy=1;next_we=head[0];next_owner=chosen[1:0];next_tag=head[51:35];next_len=head[34:31];next_seen=0;
+      rq<={head,1'b1};next_busy=1;next_we=head[0];if(PICK)next_owner=sel;else next_owner=chosen[1:0];next_tag=head[51:35];next_len=head[34:31];next_seen=0;
       next_credit=next_credit-1'b1;ce<=0;
-      if(chosen!=0)next_rr=(chosen==3)?0:chosen;
+      if(sel!=0)next_rr=(sel==3)?0:sel;
      end
      if(wd)begin
       if(!busy||!active_we)fault<=1;

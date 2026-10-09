@@ -23,7 +23,7 @@ ING=$L/ot_hbm_retry_phy_ingress.sv; D=()
 [[ $mode == negdup ]] && D=(-DOT_HBM_RETRY_MUT_DUPLICATE)
 iverilog -g2012 -I rtl/common "${D[@]}" -s tb_hbm_tu_retry_phy_port -o "$W/s.vvp" rtl/common/ot_secded.sv $L/ot_hbm_replay_sram.sv \
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v $L/ot_hbm_link_retry_sram.sv \
-  $L/ot_hbm_retry_pop_cdc.sv $ING $L/ot_hbm_tu_retry_port.sv $L/ot_hbm_tu_retry_phy_port.sv "$W/tb.sv" >"$W/build.log" 2>&1 || { cat "$W/build.log" | head; echo TURS_BENCH_ERROR; exit 2; }
+  $L/ot_hbm_retry_pop_cdc.sv $ING $L/ot_hbm_tu_retry_port.sv ${TURS_PORT_SRC:-$L/ot_hbm_tu_retry_phy_port.sv} "$W/tb.sv" >"$W/build.log" 2>&1 || { cat "$W/build.log" | head; echo TURS_BENCH_ERROR; exit 2; }
 vvp -n "$W/s.vvp" >"$W/run.log" 2>&1; grep -E "^PASS|FATAL" "$W/run.log" | head -8
 if [[ $mode == pos ]]; then grep -q '^PASS_ALL' "$W/run.log" && ! grep -qi fatal "$W/run.log" && { echo TU_RETRY_STRIP_PASS; exit 0; }; echo TU_RETRY_STRIP_FAIL; exit 1; fi
 grep -qi fatal "$W/run.log" && { echo TU_RETRY_STRIP_NEG_DETECTED; exit 1; }; echo TU_RETRY_STRIP_NEG_MISSED; exit 0

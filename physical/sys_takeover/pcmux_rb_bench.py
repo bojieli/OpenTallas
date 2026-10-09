@@ -4,7 +4,7 @@ wrapper ot_s81_native_pc_mux_plain_rb.sv.  Every input crosses one pin flop, so 
 against the previous cycle's driven rv / wd / data / tag / beat (+1 cycle, the priced boundary cost); every value,
 order, credit and drain check is unchanged.
     python3 physical/sys_takeover/pcmux_rb_bench.py pos|neg WORKDIR      (neg: Codex's wrong-source mutant in the core)"""
-import pathlib, subprocess, sys
+import os, pathlib, subprocess, sys
 mode, w = sys.argv[1], pathlib.Path(sys.argv[2]); w.mkdir(parents=True, exist_ok=True)
 t = pathlib.Path("rtl/test/s81_native_ingest/tb_s81_native_pc_mux_plain.sv").read_text()
 R = [("if(i!=active_tag[16:15]||!(wd||(rv&&beat==0)))", "if(i!=active_tag[16:15]||!(p_wd||(p_rv&&p_beat==0)))"),
@@ -20,11 +20,13 @@ for a, b in R:
     t = t.replace(a, b)
 (w / "tb.sv").write_text(t)
 rb = pathlib.Path("physical/sys_takeover/ot_s81_native_pc_mux_plain_rb.sv").read_text()
+PICK = os.environ.get("PCMUX_PICK") == "1"     # sys-takeover: the PICK=1 pipelined arbitration
 if mode == "neg":
-    assert rb.count("next_owner=chosen[1:0]") == 1
-    rb = rb.replace("next_owner=chosen[1:0]", "next_owner=0")
+    a = "if(PICK)next_owner=sel;" if PICK else "next_owner=chosen[1:0]"
+    assert rb.count(a) == 1, a
+    rb = rb.replace(a, "if(PICK)next_owner=0;" if PICK else "next_owner=0")
 (w / "dut.sv").write_text(rb)
-b = subprocess.run(["iverilog", "-g2012", "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
+b = subprocess.run(["iverilog", "-g2012", *(["-DPCMUX_PICK"] if PICK else []), "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
                    capture_output=True, text=True)
 if b.returncode: print(b.stdout + b.stderr); print("PCMUX_RB_BENCH_ERROR build"); sys.exit(2)
 r = subprocess.run(["vvp", "-n", str(w / "sim")], capture_output=True, text=True)
