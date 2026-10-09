@@ -12,7 +12,11 @@ def bench(wrong_three=False,unsafe_pq_start=False):
  s=B.TB.replace('gold[0:1]','gold[0:1],partgold[0:7],roots[0:7],jl[0:1],jr[0:1]').replace('cfg[0:24]','cfg[0:99]')
  s=s.replace('wire busy,fault;', 'wire busy,fault,walking,bank_free,sh_free;').replace('.go_tag(2\'d0),', '.go_tag(2\'d0),.walking(walking),.bank_free(bank_free),.sh_free(sh_free),')
  s=s.replace('if(rst_n && fault)$fatal(1,"element fault");', 'if(rst_n && fault)begin $display("SEED_QS5F_PROVENANCE cyc=%0d pq_fault=%b ffault=%b bk_fault=%b go=%b walking=%b sh_free=%b bank_free=%b",cyc,dut.u_e.pq_fault,dut.u_e.ffault,dut.u_e.bk_fault,go,walking,sh_free,bank_free);$fatal(1,"element fault");end ')
- s=s.replace('integer cyc=0,', '''integer phase=0,phase_hits=0,join_start=0,join_end=0;reg jv=0;reg[31:0]ja=0,jb=0,jout;wire jvo;wire[31:0]jy;wire[1:0]je;
+ s=s.replace('integer cyc=0,', '''integer issued=0,issue_streak=0,max_issue_streak=0;
+ always @(posedge clk)if(rst_n)begin
+ if(dut.u_e.issue)begin issued<=issued+1;issue_streak<=issue_streak+1;if(issue_streak+1>max_issue_streak)max_issue_streak<=issue_streak+1;end else issue_streak<=0;
+ end
+ integer phase=0,phase_hits=0,join_start=0,join_end=0;reg jv=0;reg[31:0]ja=0,jb=0,jout;wire jvo;wire[31:0]jy;wire[1:0]je;
  ot_v41_fadd joiner(.clk(clk),.rst_n(rst_n),.valid_in(jv),.a(ja),.b(jb),.y(jy),.err(je),.valid_out(jvo));
  task automatic add_join(input[31:0]a,b,output[31:0]y);
  @(negedge clk);ja=a;jb=b;jv=1;@(negedge clk);jv=0;wait(jvo);#0.01;if(je)$fatal(1,"join fault");y=jy;@(negedge clk);endtask
@@ -34,6 +38,8 @@ def bench(wrong_three=False,unsafe_pq_start=False):
  add_join(roots[j],roots[2+j],jl[j]);add_join(roots[4+j],roots[6+j],jr[j]);add_join(jl[j],jr[j],jout);
  if(jout!==gold[j])$fatal(1,"global root got %h want %h",jout,gold[j]);end
  join_end=cyc;
+ if(issued!=480)$fatal(1,"wrong ROM read count %0d",issued);
+ $display("SEED_QS5F_READS issues=%0d rowbank_reads=%0d payload_bytes=%0d MACs=%0d max_issue_streak=%0d",issued,2*issued,64*issued,64*issued,max_issue_streak);
 '''
  s=s[:start]+loop+s[stop:];s=s.replace('if(ny!=2)','if(ny!=8)')
  if not unsafe_pq_start:
