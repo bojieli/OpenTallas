@@ -1,7 +1,7 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 module tb_qfd_native_cmd_plain;
  parameter integer MUT_DRAIN=0;
- reg clk=0;always #5 clk=~clk;
+ reg clk=0;always #512 clk=~clk;
  reg rst_n=0,desc_v=0,go_v=0,wr_v=0,window_retired=0,write_quiet=1,transport_quiet=1,cmd_credit_return=0;
  reg [18:0] desc_row=0;reg [10:0] desc_n=1024;reg [4:0] wr_bank=0,wr_col=0;reg [2:0] read_release=0;
  wire desc_take,go_take,wr_take,cmd_v,fault;wire[31:0]cmd;wire[2:0]read_credit;
@@ -43,9 +43,9 @@ module tb_qfd_native_cmd_plain;
   wr_v=0;read_release=0;repeat(5)step;cmd_credit_return=0;repeat(3)step;
   // Causal window fence: retirement alone cannot replace context.
   window_retired=1;step;window_retired=0;write_quiet=0;desc_v=1;desc_row=19'h7123;
-  repeat(4)begin if(desc_take)$fatal(1,"descriptor crossed live writes");step;end
+  repeat(4)begin #1;if(desc_take)$fatal(1,"descriptor crossed live writes");step;end
   write_quiet=1;transport_quiet=0;
-  repeat(4)begin if(desc_take)$fatal(1,"descriptor crossed transport tail");step;end
+  repeat(4)begin #1;if(desc_take)$fatal(1,"descriptor crossed transport tail");step;end
   transport_quiet=1;step;desc_v=0;go_v=1;step;go_v=0;repeat(5)step;
   if(received!=sent)$fatal(1,"pending native command lost");
   $display("PASS nativecmd positive commands%0d full32bank/col, finite8slots, DESC/GO pulse order, causal fence, readcredits",checks);
