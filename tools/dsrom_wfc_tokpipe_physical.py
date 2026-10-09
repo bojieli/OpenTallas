@@ -3,7 +3,7 @@
 
 Run remotely through measured admission. No old source/view is changed.
 """
-import argparse,json,subprocess
+import argparse,json,subprocess,os
 from pathlib import Path
 import dsrom_wfc_split_physical as L
 ROOT=Path(__file__).resolve().parents[1]
@@ -80,6 +80,8 @@ def main():
  L.cmd_prep(argparse.Namespace(inst=a.inst,case=a.case,src=a.src,knob=[f'{k}={v}' for k,v in basis['params'].items()],util=50,density=.50,lb_addon=.20,orfs_var=basis['orfs_var'],die_skew=150,link_hold_pad=0,link_hold_abs_min=basis.get('link_hold_abs_min_ps'),route_period=770,ideal_io=False,io_lat=None,cores=a.cores,need=a.need))
  cfg=a.case/'config.mk';s=cfg.read_text().replace('export DESIGN_NAME = ot_rom_pkg_ctrl_wfc\n',f'export DESIGN_NAME = ot_dsrom_wfc_tokpipe_{a.inst}\n')
  s=s.replace('export VERILOG_FILES = ',f'export VERILOG_FILES = /src/rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_{a.inst}.sv ')
+ if os.environ.get('OT_ORFS_CORNER_OVERRIDE')=='TC':
+  s=s.replace('export CORNER = WC\n','export CORNER = TC\n').replace('export CORNERS = WC BC\n','export CORNERS = TC BC\n')
  cfg.write_text(s)
  run=a.case/'run.sh';s=run.read_text().replace('tools/dsrom_wfc_split_physical.py sta',f'tools/dsrom_wfc_tokpipe_physical.py sta --inst {a.inst}').replace('tools/dsrom_wfc_split_physical.py check',f'tools/dsrom_wfc_tokpipe_physical.py check --inst {a.inst}')
  # Calibrate stops atCTS; subsequent route keeps the same pinned source and recipe.
