@@ -1,0 +1,83 @@
+{
+  "name": "hgi_mtp_accept18-2059e926e-pd48-tc-cx",
+  "block": "ot_hgi_mtp_accept18",
+  "owner": "Codex:generic_token18",
+  "purpose": "Owner-approved HGI-1 item4 full18-bitendpoint/currentflow variant; exact benches+genuine mutants gate adoption; no cmdproc design",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc3",
+    "ot-epyc2",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/hgi-token18-20261009",
+    "commit": "2059e926e"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "accept_positive",
+        "expect": "pass",
+        "threads": 2,
+        "peak_ram_gb": 1,
+        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_positive 0; rc=$?; cat {RUN}/bench/accept_positive/run.log; exit $rc",
+        "pass_regex": "HGI_ACCEPT18 PASS"
+      },
+      {
+        "name": "accept_width_mutant",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 1,
+        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_width_mutant 1; rc=$?; cat {RUN}/bench/accept_width_mutant/run.log; exit $rc",
+        "fail_regex": "FATAL:"
+      },
+      {
+        "name": "accept_bonus_mutant",
+        "expect": "fail",
+        "threads": 2,
+        "peak_ram_gb": 1,
+        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_bonus_mutant 2; rc=$?; cat {RUN}/bench/accept_bonus_mutant/run.log; exit $rc",
+        "fail_regex": "FATAL:"
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current route_master recomputes true corner reference at every route phase"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm; SRC={SRC} PD=0.48 HM=0.035 NC=8 bash physical/qwen_die_masters/jobs/route_master.sh hgi_mtp_accept18 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "merge_target": null,
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_token18_20261009/routes/hgi_mtp_accept18-2059e926e-pd48-tc-cx"
+    }
+  ],
+  "admission_evidence": {
+    "status": "SOURCE_ESTIMATE_NOT_MEASURED_REQUIRES_SYNTH_PHASE_CHARACTERIZATION",
+    "claim_gib": 16,
+    "rationale": "No macro, <=180x140um frame/core~23k um2, source token storage <=~1k FF and 18bit comparators/32bit counters. Conservative first-stage reservation only. Own synthesis/phase RSS must be measured before full route intake.",
+    "base_claim40_rejected": true
+  },
+  "notes": "PROPOSAL ONLY: fleet owner must qualify source inventory/initial synthesis and reservation before intake. TT>=0FF>=0DRC0;SSsensitivity only."
+}
