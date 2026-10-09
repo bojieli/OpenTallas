@@ -14080,5 +14080,8 @@ def ha2_truecredit_protection_model():
 
 def qwen_r25_su_dispatch_contract_model():
     """Full p4 finite-window consumer and four-quarter native dispatch sizing."""
-    from qwen_r25_su_dispatch_model import model
+    try:
+        from tools.qwen_r25_su_dispatch_model import model
+    except ModuleNotFoundError:
+        from qwen_r25_su_dispatch_model import model
     return model()
