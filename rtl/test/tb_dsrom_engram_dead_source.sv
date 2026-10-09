@@ -1,6 +1,8 @@
 `timescale 1ns/1ps
 module tb_dsrom_engram_dead_source(input wire clk);
-    reg rst_n=0,cv=0;reg [1:0] co=0;reg [7:0] cu=0;reg [20:0] cp=0,ct=0;reg [2:0] ctype=7;
+    reg rst_n=0,cv=0;reg [63:0] command_word=0;
+    wire [1:0] co;wire [7:0] cu;wire [20:0] cp,ct;wire [2:0] ctype;
+    ot_s81_source_command_decode decoder(.word(command_word),.op(co),.tag(),.user(cu),.pos(cp),.token(ct),.token_type(ctype));
     wire cr,active,hf,pf,lf,cplv;wire [91:0] cpl;wire [7:0] users,done,tu,pru;wire [20:0] plen,glen,eos,prp,prq,tp,ti;
     wire [21:0] maxl;wire eosen,prre,tv;
     wire [2:0] prtype,jtype;wire jv,jr;wire [11:0] ju;wire [20:0] jp,jt;
@@ -9,6 +11,7 @@ module tb_dsrom_engram_dead_source(input wire clk);
     integer cy=0,mode=0,seen=0,errors=0,qw=0,qr=0,i,j,u,n;reg queue_phase=0;
     integer qage[0:511];reg [11:0] qu[0:511];reg [20:0] qp[0:511];
     reg [16:0] cmap[0:129279];reg [8191:0] dir;reg [67:0] want;reg blocked;
+    reg [63:0] command_mem[0:257];reg [8191:0] command_path;
     wire lr=(cy%11)>3;
     assign jr=lready && (cy%13)>3;
     ot_s81_host_cq #(.TOKEN_TYPES(1),.MAXU(64),.PMAX(8),.NW(21),.CQ_DEPTH(512)) h(
@@ -38,7 +41,8 @@ module tb_dsrom_engram_dead_source(input wire clk);
     endfunction
     task step;begin @(negedge clk);end endtask
     task command(input integer op,input integer usr,input integer position,input integer token,input integer tt);
-        begin while(!cr) step();co=op;cu=usr;cp=position;ct=token;ctype=tt;cv=1;step();cv=0;end
+        begin while(!cr) step();command_word={1'b0,3'(tt),21'(token),21'(position),8'(usr),8'd1,2'(op)};
+            if(mode==3 && op==1) command_word[63]=1;cv=1;step();cv=0;end
     endtask
     always @(posedge clk) begin
         cy<=cy+1;if(cy>20000) $fatal(1,"timeout seen%0d done%0d",seen,done);
@@ -67,9 +71,14 @@ module tb_dsrom_engram_dead_source(input wire clk);
         if(!$value$plusargs("OT_ROM_DIR=%s",dir)) $fatal(1,"images");$readmemh({dir,"/expected.hex"},cmap);
         if(!$value$plusargs("MODE=%d",mode)) mode=0;
         repeat(4) step();rst_n=1;step();
-        for(u=0;u<64;u=u+1) for(n=0;n<(mode?1:4);n=n+1)
-            command(1,u,n,mode==2?22:raw(u,n),mode==1?4:mode==2?0:typ(u,n));
-        command(2,64,mode?1:4,mode?1:2,7);
+        if(mode==0) begin
+            if(!$value$plusargs("COMMANDS=%s",command_path)) $fatal(1,"prepared SOURCE commands");
+            $readmemh(command_path,command_mem);
+            for(i=0;i<258;i=i+1) begin while(!cr) step();command_word=command_mem[i];cv=1;step();cv=0;end
+        end else begin
+            for(u=0;u<64;u=u+1) command(1,u,0,mode==2?22:raw(u,0),mode==1?4:mode==2?0:typ(u,0));
+            command(2,64,1,1,7);
+        end
         if(mode) begin repeat(30) step();if(active || seen || errors!=65) $fatal(1,"typed prompt negative errors%0d",errors);$display("ENGRAM_DEAD_SOURCE NEG mode%0d rejected64+launch",mode);$finish;end
         queue_phase=1;
         while(done!=64 || active) step();repeat(12) step();
