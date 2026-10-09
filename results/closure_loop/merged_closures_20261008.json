@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 196,
+  "closed": 198,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 116
+  "merged": 118
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -18,7 +18,8 @@
   "hfd_mcast_r6b sttt (cc34880fa) record kept beside main's at physical/hbm_accel_die_views/stations/hfd_mcast_r6b/route_cl_sttt.",
   "hfd_index_q_b1 and qfd_lst_c_split: main's records kept (setup-triage copy revoked / identical numbers).",
   "Revoked records (revoked_closures.json) that arrived with branch tips restored to main's files in bb320341a.",
-  "multivt LVT routes: record commits cherry-picked only (overlay commits not merged)."
+  "multivt LVT routes: record commits cherry-picked only (overlay commits not merged).",
+  "merge-1658: cdc_eco-hm80-h1-e59973516-tt + s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt merged; qfd_cdc live view stays cdc_hm25."
  ],
  "ready_to_merge": [
   {
@@ -2613,6 +2614,38 @@
    "status": "merged",
    "adopted": "NOT adopted (record only): closes like a0 but costs 2/7/18 (+3 per root add level over a0)",
    "cycles_added": "n/a (not adopted)"
+  },
+  {
+   "job": "cdc_eco-hm80-h1-e59973516-tt",
+   "closed": "2026-10-08 16:50 PT (closure loop, CLOSED, EPYC3)",
+   "closed_by": "closure loop (TT/SS +46.92 / FF +1.21 / DRC 0 at 833.333)",
+   "branch": "claude/h1-reroute-cdc-20261008",
+   "source_commit": "e59973516",
+   "record_commit": "35032e230",
+   "bench_ok": true,
+   "bench_note": "no bench: RTL unchanged from m1j CDC (exact bench record results/rtl/qwen_stream4_cdc_20261005/r11)",
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "5a0ce0fd5",
+   "status": "merged",
+   "adopted": "NOT adopted as the live qfd_cdc view: main's cdc_hm25 view (SS +43.12 / FF +4.95) kept; eco views at physical/qwen_die_masters/views/qfd_cdc_eco_h1. Source SDC conflicts resolved to main (H1 already on main)."
+  },
+  {
+   "job": "s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt",
+   "closed": "2026-10-08 (closure loop, CLOSED, EPYC4)",
+   "closed_by": "closure loop (SS +39.36 / FF +12.98 / DRC 0 at 833.333)",
+   "branch": "claude/s81-die-timing-20261008",
+   "source_commit": "df2ff7a97",
+   "record_commit": "39552afe6",
+   "bench_ok": true,
+   "bench_note": "bench_exact_cap_tiled CAPT_BENCH PASS; mutant bench_neg_bf16_trunc FAILs as expected",
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "46a24a9d8",
+   "status": "merged",
+   "adopted": "closed view physical/s81_ph_views/closed/dsfd_capt_ctl (branch tip incl. f9c674c0e, d1731f77f die-STA/generator commits)"
   }
  ]
 }
