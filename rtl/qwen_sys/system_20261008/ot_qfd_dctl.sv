@@ -30,6 +30,11 @@ module ot_qfd_dctl #(
     parameter integer VOCAB  = 151936,
     parameter integer WDOG   = 1 << 20,       // cycles a stage may take
     parameter integer ST_GAP = 2,
+    // WDQ (struct-close 2026-10-09, drive-0849 / coordinator: ICUT sequencer compact outline -525 = u_dctl.q_start -> u_dctl.wd,
+    // ~1 ns: the start-busy priority + state case + 32-bit increment + the wd >= WDOG compare in one stage): WDQ = 1 moves the
+    // watchdog to its own always block (no q_start priority; its value is unused once the step faults to S_DONE and is
+    // cleared at the next h_start) and replaces wd >= WDOG by a register updated with wd (exact).  0 cycles.
+    parameter integer WDQ    = 0,
     // stage table: per stage {prog[1:0], layer[5:0], code_base[AW-1:0], scale_base[AW-1:0]} (NS entries, entry 0 low)
     parameter [NS*(2+6+2*AW)-1:0] STAB = '0
 ) (
@@ -96,6 +101,17 @@ module ot_qfd_dctl #(
 
     reg [2:0]  st;
     reg [31:0] wd;
+    // WDQ: the watchdog counter and its expiry flag, outside the start-busy priority (see the parameter)
+    reg [31:0] wdq; reg wd_ge;
+    wire wd_clr = (st == S_LOAD && gap + 1 >= ST_GAP) ||
+                  (st == S_WAIT && !fault_in && !wd_ge && q_done && st_prog != 2'd2 && s_n != NS);
+    wire wd_cnt = (st == S_ARM) || (st == S_WAIT);
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin wdq <= 0; wd_ge <= 1'b0; end
+        else if (WDQ != 0) begin
+            if (wd_clr) begin wdq <= 0; wd_ge <= 1'b0; end
+            else if (wd_cnt) begin wdq <= wdq + 1; wd_ge <= (wdq + 1 >= WDOG); end
+        end
     reg [1:0]  gap;
     wire       fault_in = q_sf || q_cf || q_lf;
     always @(posedge clk or negedge rst_n) begin
@@ -136,7 +152,7 @@ module ot_qfd_dctl #(
                 S_WAIT: begin
                     wd <= wd + 1;
                     if (fault_in) begin d_fault <= 1'b1; d_fault_code <= q_sf ? 4'd1 : q_cf ? 4'd2 : 4'd3; st <= S_DONE; d_done <= 1'b1; end
-                    else if (wd >= WDOG) begin d_fault <= 1'b1; d_fault_code <= 4'd4; st <= S_DONE; d_done <= 1'b1; end
+                    else if ((WDQ != 0) ? wd_ge : (wd >= WDOG)) begin d_fault <= 1'b1; d_fault_code <= 4'd4; st <= S_DONE; d_done <= 1'b1; end
                     else if (q_done) begin
                         if (st_prog == 2'd2) begin
                             d_next_token <= q_ntok; d_next_val <= q_nval;

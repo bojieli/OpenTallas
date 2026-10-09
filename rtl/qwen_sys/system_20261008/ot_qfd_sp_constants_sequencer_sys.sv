@@ -9,6 +9,7 @@ module ot_qfd_sp_constants_sequencer_sys #(
     parameter integer RT = 4,   // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)
     parameter integer FQ_HEAD = 1,  // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)
     parameter integer MSTN = 1,     // safe-qwen S-A6: me_mem_ok input station (the supply signals ready IS edges earlier)
+    parameter integer WDQ = `ifdef OT_DCTL_WDQ 1 `else 0 `endif,   // struct-close: ot_qfd_dctl WDQ (registered watchdog)
     parameter integer ICUT = 0      // struct-close (REVIEW Q3 + A6 re-cut): registered fault term + registered issue readiness (ot_qwen_rom_core_ctrl ICUT)
 ) (
     input wire d_start,
@@ -217,7 +218,7 @@ begin sys_descriptor_valid=(bank==0 && addr<1) || (bank==1 && addr<3) || (bank==
     ot_hdc_delay #(.W(6), .D(IS)) u_i_stage (.clk(clk),.rst_n(rst_n),.d(stage),.q(q_stage));
     ot_hdc_delay #(.W(AW), .D(IS)) u_i_code (.clk(clk),.rst_n(rst_n),.d(st_code),.q(q_st_code));
     ot_hdc_delay #(.W(AW), .D(IS)) u_i_scale (.clk(clk),.rst_n(rst_n),.d(st_scale),.q(q_st_scale));
-    ot_qfd_dctl #(.NW(NW),.AW(AW),.NS(38),.WDOG(WDOG),.STAB(SYS_STAB)) u_dctl (
+    ot_qfd_dctl #(.NW(NW),.AW(AW),.NS(38),.WDOG(WDOG),.STAB(SYS_STAB),.WDQ(WDQ)) u_dctl (
         .clk(clk),.rst_n(rst_n),.d_start(d_start && SYS_ENABLE != 0),
         .d_token(d_token),.d_pos(d_pos),.d_gen(d_gen),.d_done(d_done),.d_done_gen(d_done_gen),
         .d_next_token(d_next_token),.d_next_val(d_next_val),.d_drained(d_drained),
