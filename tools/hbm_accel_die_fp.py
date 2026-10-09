@@ -842,6 +842,28 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         m['child_reservations'] = allocations(m)
     if variant.get('split_masters'):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
+    if variant.get('native_indexer'):
+        # Allocate the already-qualified wide station A/B footprints first;
+        # native relays must not occupy a required B-half landing region.
+        for role_ in variant.get('split_stations', ()):
+            split_station(m, role_)
+        from hbm_indexer_die_topology import networks
+        import sys
+        old_names={i.name for i in m['insts']}
+        _,native_chain=_router(m,m['buses'],m['paths'])
+        networks(m,sys.modules[__name__],m['buses'],m['paths'],native_chain)
+        # Existing split clock leaves remain intact. Extend the unique domain
+        # roots only with newly allocated native relay endpoints.
+        for i in m['insts']:
+            if i.name in old_names:
+                continue
+            d=m.get('clocked',{}).get(i.name)
+            if d:
+                bus=next(b for b in m['buses'] if b[0]==f'clk_{d}')
+                bus[3].append((i.name,'ck'))
+            d=d or m.get('fwd_dom',{}).get(i.name,'stream')
+            bus=next(b for b in m['buses'] if b[0]==f'rst_{d}')
+            bus[3].append((i.name,'rst'))
     if variant.get('split_x_masters'):
         apply_splits_x(m, variant['split_x_masters'])
     fixv = ['hfd_barrier'] if variant.get('barrier_low') else []
@@ -857,7 +879,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         split_vm8(m)
     if variant.get('attn_split'):       # r25s: attention tiles as two half-tile die blocks (default off)
         split_attn(m, variant['attn_split'])
-    for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
+    for role_ in (() if variant.get('native_indexer') else variant.get('split_stations', ())):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
         rf = ROOT / 'physical/hbm_accel_die_views/relay_ends.json'   # the budget's pin-to-pin list (authoritative)
@@ -1856,7 +1878,8 @@ def _router(m, B, P):
     insts = m['insts']
     g = m['geo']
     faces = m['stn_faces']
-    n_wp = [0]
+    n_wp = [max([int(q.group(1)) for it in insts
+                 if (q := re.match(r'^w(\d+)_',it.name))]+[0])]
     pf = m['variant'].get('port_fix')
     fwd_on = m['variant'].get('fwd')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
@@ -2531,10 +2554,6 @@ def buses(m):
             B[i0] = (b0[0], b0[1], b0[2], [(ps.name, 'b')] + b0[3][1:])
             B.append((f'iv_{st}_p', 'hub', 512, [b0[3][0], (ps.name, 'a')]))
             P[f'index_vm_{st}'] = [f'iv_{st}_p'] + P[f'index_vm_{st}']
-    if V.get('native_indexer'):
-        from hbm_indexer_die_topology import networks
-        import sys
-        networks(m, sys.modules[__name__], B, P, chain)
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)
