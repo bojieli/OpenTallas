@@ -1,0 +1,36 @@
+[554000] %Fatal: tb.sv:24: Assertion failed in tb_mtp_seed.unnamedblk2: seed row 0 got 40adfe04 want 411f9b26
+%Error: /srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/run/tb.sv:24: Verilog $stop
+Aborting...
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/src/tools/dsrom_mtp_seed_qelem.py", line 81, in <module>
+    if __name__=='__main__':main()
+                            ~~~~^^
+  File "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/src/tools/dsrom_mtp_seed_qelem.py", line 80, in main
+    if run.returncode or 'MTP_SEED PASS' not in run.stdout:raise RuntimeError('seed exact gate failed')
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: seed exact gate failed
+Command exited with non-zero status 1
+	Command being timed: "python3 tools/dsrom_mtp_seed_qelem.py --snapshot /srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/snapshot --ref /srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/ref --work /srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/run --qx 9 --jobs 12"
+	User time (seconds): 34.99
+	System time (seconds): 2.33
+	Percent of CPU this job got: 353%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.55
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 316396
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 9
+	Minor (reclaiming a frame) page faults: 1176319
+	Voluntary context switches: 571
+	Involuntary context switches: 765
+	Swaps: 0
+	File system inputs: 2752
+	File system outputs: 386392
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

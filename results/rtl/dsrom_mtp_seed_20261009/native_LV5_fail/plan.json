@@ -1,0 +1,60 @@
+{
+ "K": 15360,
+ "rows": 2,
+ "activation_blocks": 480,
+ "quantisers": 2,
+ "activation_port_bytes_per_cycle": 256,
+ "weight_words_per_macro": 480,
+ "units": 30,
+ "subblocks": 4,
+ "phase": {
+  "index": 0,
+  "bf": false,
+  "K": 15360,
+  "nbeat": 480,
+  "sbase": 0,
+  "nrows": 2,
+  "fmt_fp32": [
+   true,
+   false
+  ],
+  "rsplit": 0,
+  "t_read": 480,
+  "t_phase_model": 480,
+  "matrices": [
+   {
+    "name": "mtp.0.main_proj",
+    "fmt": "fp8",
+    "rows": [
+     0,
+     2
+    ],
+    "cols": [
+     0,
+     15360
+    ],
+    "off": 0,
+    "split": 1,
+    "segment_elems": [
+     15360
+    ]
+   }
+  ],
+  "segments_per_pair_max": 1
+ },
+ "qx": 9,
+ "field_descriptor_K_limit": 8191,
+ "whole_field_qualified": false,
+ "MACs_per_issue_cycle": 64,
+ "issued_weight_bytes_per_cycle": 64,
+ "weight_boundary_bits_per_cycle": 548,
+ "activation_boundary_bits_per_cycle": 2048,
+ "rom_carrier_bits": 274,
+ "weight_payload_bits": 256,
+ "UE8M0_bits": 8,
+ "unused_carrier_bits": 10,
+ "source_headers": {
+  "model-00044-of-00048.safetensors": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e"
+ },
+ "input_sha256": "a0e83618ddfe0440301700d6410d54b1bbba6193356b75a7d54c0aa1fa260493"
+}

@@ -1,0 +1,30 @@
+{
+ "verdict": "FAIL",
+ "scope": "Actual released MTP0 main_proj rows0,1, fullK15360; golden L37/38/39 HC4 means; actual2activationquantisers; QX9 NB2 LV5",
+ "source_commit": "059696cc9",
+ "diagnostic_commit": "7a105e870",
+ "host": "ot-epyc3",
+ "run": "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9",
+ "pinned_engine_RTL_unchanged": true,
+ "activation_quant_all480_blocks_exact": true,
+ "provenance": {
+  "cycle": 662,
+  "issued_at_first_root": 353,
+  "chunk8_nodes": 32,
+  "final": 0,
+  "element_fault_cycle": 665
+ },
+ "constraint": {
+  "native_tree_LV": 5,
+  "capacity_FP8_chunk8_nodes": 32,
+  "required_FP8_chunk8_nodes": 60
+ },
+ "latency_qualified": false,
+ "source_model_fallback_commit": "7a105e870",
+ "artifacts_sha256": {
+  "plan.json": "aab5fcc7190e2889faee14c4432eb5b6902067aca7a6286c95466f44e0af0bb0",
+  "job.log": "804ec2be7601c94328637e90f64915f55bf4fb76c11e35c8c8c9ce9752161cfb",
+  "diagnostic_job.log": "9ba865b183e9f6cc751ee9f6e0bd3395c7a14206a0a66418a7193b56b7d1478a",
+  "sim.log": "9d2ba9e43f74bd4857e1158c7f542926ef467dac5b40ba5237ec6291d995fbe4"
+ }
+}
