@@ -14924,3 +14924,9 @@ def qwen_protected_phy_parallel_pair_model():
     """Two outstanding real DATA/ECC reads; boot-only serialized write fallback."""
     from tools.qwen_protected_phy_pair_model import model
     return model()
+
+
+def qwen_protected_phy_bank_pair_model():
+    """Parallel DATA/check reads with statically distinct banks, same capacity."""
+    from tools.qwen_protected_phy_bank_map import model
+    return model()
