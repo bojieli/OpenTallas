@@ -38,7 +38,7 @@ def s81_bf_input_holdseat_model(seats=4, replicas=338):
     """Full-rate BF input hold seats; physical delay qualification is mandatory."""
     if seats < 1:
         raise ValueError('hold-seat count must be positive')
-    bits = 1672  # RTL capture bundle; selected RECUT removes 20 unused exponent bits
+    bits = 1672  # RTL capture bundle; routed selected RECUT retains 1652 input flops
     return dict(schema='opentallas.s81-bf-input-holdseat.v1', opt_in_default=False,
                 input_bits=bits, observed_routed_input_flops=1652,
                 replicas=replicas, hold_cells_per_input=seats,
