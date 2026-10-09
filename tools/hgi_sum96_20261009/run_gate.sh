@@ -3,7 +3,7 @@ set -uo pipefail
 cd "$(dirname "$0")/../.."
 python3 tools/hgi_sum96_20261009/make_vectors.py gate || exit $?
 cd gate
-common=(../rtl/hdc/ot_hdc_prefix.sv ../rtl/hdc/ot_hdc_fp32_add_lat.sv ../rtl/hbm_accel/generic_sum96_20261009/ot_hgi_sum96_final_tree.sv ../rtl/hbm_accel/generic_sum96_20261009/tb_sum96_final_tree.sv)
+common=(../rtl/hdc/ot_hdc_fastfp.sv ../rtl/hdc/ot_hdc_prefix.sv ../rtl/hdc/ot_hdc_fp32_add_lat.sv ../rtl/hbm_accel/generic_sum96_20261009/ot_hgi_sum96_final_tree.sv ../rtl/hbm_accel/generic_sum96_20261009/tb_sum96_final_tree.sv)
 for mode in positive wrongtree drop;do
  defs=();if [ "$mode" = wrongtree ];then defs=(-DMUTANT_TREE);fi
  if [ "$mode" = drop ];then defs=(-DMUTANT_DROP);fi
