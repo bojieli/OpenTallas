@@ -16,6 +16,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [127:0] ch=header;
  reg busy,bad,pending,pending_write;
  reg seat_v;reg [336:0] seat;
+ reg response_v;reg [272:0] response;
  reg [127:0] header;
  reg [19:0] n,m,read_row,read_col,write_row,write_col;
  reg [39:0] launched,returned,finished;
@@ -69,9 +70,9 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  end
  wire [31:0] write_mask=burst_write?32'hffffffff:(32'hf<<(write_addr[2:0]*4));
  assign req=seat;
- assign rsp_r=ENABLE&&rst_n&&pending;
- wire take_req=req_v&&req_r,take_rsp=rsp_v&&rsp_r;
- wire reply_ok=rsp[272:257]==pending_tag && rsp[256]==pending_write;
+ assign rsp_r=ENABLE&&rst_n&&pending&&!response_v;
+ wire take_req=req_v&&req_r,take_rsp=response_v;
+ wire reply_ok=response[272:257]==pending_tag && response[256]==pending_write;
  wire last_read=(read_part+pending_step==32 || read_col+pending_step==n);
  wire last_write=(write_part+pending_step==32 || write_col+pending_step==n);
  wire reserve_read=take_req&&!req[336]&&read_part==0;
@@ -80,7 +81,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   a<=0;o<=0;validating<=0;busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;header<=0;n<=0;m<=0;
+   a<=0;o<=0;validating<=0;busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;response_v<=0;response<=0;header<=0;n<=0;m<=0;
    abase<=0;obase<=0;read_row<=0;read_col<=0;write_row<=0;write_col<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    seat_step<=0;pending_step<=0;seat_lane<=0;pending_lane<=0;launched<=0;returned<=0;finished<=0;
@@ -88,6 +89,8 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
    x<=0;launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;
   end else begin
    done<=0;launch<=0;
+   if(rsp_v&&rsp_r)begin response_v<=1;response<=rsp;end
+   if(take_rsp)response_v<=0;
    if(ready&&cmd[0])begin
     a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
     n<=ca[67:48];m<=ca[87:68];abase<=ca[39:8];obase<=co[39:8];
@@ -125,8 +128,8 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
         write_row<=write_row+1;write_col<=0;write_rowbase<=write_rowbase+ws;write_addr<=write_rowbase+ws;
        end else begin write_col<=write_col+pending_step;write_addr<=write_addr+pending_step*wi;end
       end else begin
-       if(pending_step==8)x[read_part*32+:256]<=rsp[255:0];
-       else x[read_part*32+:32]<=rsp[pending_lane*32+:32];
+       if(pending_step==8)x[read_part*32+:256]<=response[255:0];
+       else x[read_part*32+:32]<=response[pending_lane*32+:32];
        if(read_col+pending_step==n)begin
         read_row<=read_row+1;read_col<=0;read_rowbase<=read_rowbase+rs;read_addr<=read_rowbase+rs;
        end else begin read_col<=read_col+pending_step;read_addr<=read_addr+pending_step*ri;end
