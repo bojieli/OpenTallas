@@ -8,7 +8,7 @@
   "ot-epyc4"
  ],
  "threads": 16,
- "peak_ram_gb": 60,
+ "peak_ram_gb": 39.0,
  "source": {
   "branch": "codex/s81-bf-inhold-cx-20261009",
   "commit": "c674dadfd6eea63850ca61d7fb5470ca5bc55add"
@@ -20,14 +20,15 @@
    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
    "clock": "core_clk",
    "threads": 16,
-   "peak_ram_gb": 60
+   "peak_ram_gb": 6.4
   },
   "route": {
    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL} --hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15",
    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
    "logs": [
     "{RUN}/routes/{LABEL}/run.log"
-   ]
+   ],
+   "peak_ram_gb": 39.0
   },
   "collect": {
    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
@@ -71,5 +72,5 @@
   "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
  },
  "calibrate_parallel": false,
- "admission_evidence": "Inherited same-shape CG0 envelope60GiB is NOT asserted measured. Fleet must replace with measured same-vehicle physical peak before Claude watches/registers this spec. Exactgate peak observed wholePG4.535GiB is unrelated to physical peak."
+ "admission_evidence": "Measured identical native BF CG0 source6e8f0b698 predecessor phase logs committed results/rtl/s81_bf_input_holdseat_cx_20261009/predecessor_physical_peaks.log: route5_2 peak40862104KiB=38.969GiB (39.0 recorded); calibration3_3 max6608904KiB=6.303GiB (6.4 recorded). These are predecessor measured phase peaks, not newcandidate peak claims or RSS caps; fleet monitors actual candidate growth and updates claims without restarting progressing work. Only6688HB2/~488um2 added, sameoutline/4ROM. Memory-only measured host admission and hostreserve still required."
 }

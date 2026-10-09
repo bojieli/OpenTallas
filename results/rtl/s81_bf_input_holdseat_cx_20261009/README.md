@@ -67,3 +67,11 @@ headline833.333ps,60/25ps uncertainty and actualTT/FF I/O policy remain
 unchanged. New CTS topology must receive fresh actual-corner insertion
 calibration. Intake request submitted to Claude through shared phys-intake;
 no physical route has been self-submitted and no closure/adoption claimed.
+
+Physical admission evidence is the actual same-native-CG0 predecessor's
+32 phase peak records (`predecessor_physical_peaks.log`, bounded read on
+EPYC2). DRT40862104KiB=38.969GiB; calibration maximum6608904KiB=6.303GiB.
+Prepared H7 recipe records route39.0GiB/calibration6.4GiB instead of the
+inherited speculative60GiB. These are measured predecessor envelopes,
+not new-candidate peak claims or RSS caps; actual candidate phase growth
+must update fleet admission without restarting progressing work.
