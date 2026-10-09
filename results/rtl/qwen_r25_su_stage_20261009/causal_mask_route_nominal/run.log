@@ -1,0 +1,8 @@
+view=asap7 corner=TT block=ot_qwen_r25_causal_mask_timing top=ot_qwen_r25_causal_mask_timing purpose=characterization
+  synth: cells=11145 area=1518.233 um2 seq_area=329.800 um2 macros=0
+  sta:   WNS=-1.5098 ns TNS=-459.8013 ns Fmax=426.78 MHz met=False
+  pnr:   wirelength=175465 um vias=203779 DRC=0 antenna_nets=0 Fmax=879.07 MHz
+  drv:   max_slew=0 max_cap=0 max_fanout=0
+  sdc:   set_max_fanout 32 [current_design]
+  STATUS: NOT_MET (did not meet in: static_timing, place_and_route)  <-- failed engineering acceptance
+  wrote /srv/opentallas-scratch/codex/qwen-r25-mask/flat/src/../route.json
