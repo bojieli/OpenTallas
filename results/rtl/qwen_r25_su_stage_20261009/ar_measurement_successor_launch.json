@@ -1,0 +1,25 @@
+{
+  "status": "queued_measured_admission",
+  "source_pin": "89a8ac363",
+  "quarter_source": "f806d8316",
+  "host": "ot-epyc4",
+  "launcher_pid": 2626636,
+  "reservation_gib": 128,
+  "workers": 8,
+  "remote": "/srv/opentallas-scratch/codex/qwen-r25-quarter-ar/89a8ac363",
+  "cases": ["RMS4096", "softmax8192/cap8224", "RMS actual reply stalls3", "actual foreign reply fence", "sign-corrupted actual RMS gain must fail original golden"],
+  "metrics": ["program master clock cycles", "native virtual edges", "reads", "writes", "write visibility reads", "transactions"],
+  "old_guard_retirement": {
+    "launcher_pid": 2563271,
+    "guard_pid": 2563273,
+    "no_compute_child_verified": true,
+    "source_pin": "cdb620aef",
+    "reason": "Complete the required physical-clock cycle measurement and arithmetic-negative predicate before any frontend starts. Same native arithmetic source; no progressing build or objects restarted.",
+    "preserved_remote": "/srv/opentallas-scratch/codex/qwen-r25-quarter-ar/cdb620aef",
+    "preserved_receipt": "unstarted_measurement_successor.log",
+    "actual_exit_code": null
+  },
+  "no_deadline_or_process_memory_cap": true,
+  "no_numerical_PASS_claim": true,
+  "no_physical_submission": true
+}
