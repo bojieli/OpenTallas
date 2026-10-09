@@ -1148,7 +1148,7 @@ def cmd_block(a):
         if a.piece == "front_c":
             macros = [SRAM_R]
             mw, mh = 96.552, 69.66
-            ch = 120.0
+            ch = float(g.get("front_channel_um", 120.0))
             xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
             y0 = qd(h / 2 - 2.5 * (mh + 4.32))
             tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",
@@ -1160,7 +1160,27 @@ def cmd_block(a):
                    f"  else {{ place_macro -macro_name [$ot_inst getName] -location [list {xr} $y] -orientation R0 }}",
                    "  incr ot_n", "}", "puts \"ot macro_place: $ot_n ring macros\""]
         sdc = sdc_strip(a.piece, a.lat, lat_ff=a.lat_ff, period=a.period, skew=a.skew, die_skew=a.die_skew)
-        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + STRIP_HOPS[a.piece])
+        hops = STRIP_HOPS[a.piece]
+        if g.get("front_channel_um", 120.0) != 120.0:
+            if a.piece == "front_c":
+                shift = w - 432.0
+                channel = float(g["front_channel_um"])
+                def widen_hop(match):
+                    prefix, xlo, xhi, suffix = match.groups()
+                    xlo, xhi = float(xlo), float(xhi)
+                    if "g_bs" in prefix and "1" in prefix or "g_h" in prefix and ("2" in prefix or "3" in prefix):
+                        xlo += shift; xhi += shift
+                    elif xlo >= 152 and xhi <= 272:
+                        xlo = w / 2 + (xlo - 212) * channel / 120
+                        xhi = w / 2 + (xhi - 212) * channel / 120
+                    elif "u_prd" in prefix:
+                        xhi += shift
+                    return f"{prefix} {xlo:g} {xhi:g}{suffix}"
+                hops = re.sub(r"^(ot_place \{[^\n]*?\}) ([0-9.]+) ([0-9.]+)( [0-9.]+ [0-9.]+)$", widen_hop, hops, flags=re.M)
+                # Converter register stations beside skid/issue, in the enlarged
+                # macro corridor. Pin-facing register placement remains literal.
+                hops += f"ot_place {{^g_int8\\.}} {w/2-channel/2:g} {w/2+channel/2:g} 100 140\n"
+        (work / "hops.tcl").write_text(HOPS[:HOPS.index("ot_pin_place_auto {.*} 14")] + hops)
         extra["POST_TAPCELL_TCL"] = "/work/hops.tcl"
     else:
         pos, die, hcore = floorplan(g)
@@ -1171,7 +1191,7 @@ def cmd_block(a):
         mw, mh = 96.552, 69.66
         # the 2 x 5 ring macros: slice mb in row mb, group 0 left (MY: pins on its right edge) and group 1 right (R0:
         # pins on its left edge), both facing a central channel where the bulk copy's queue and control sit
-        ch = 120.0
+        ch = float(g.get("front_channel_um", 120.0))
         xl, xr = qd(w / 2 - ch / 2 - mw), q(w / 2 + ch / 2)
         y0 = qd(h / 2 - 2.5 * (mh + 4.32))
         tcl = ["set ot_n 0", "foreach ot_inst [[ord::get_db_block] getInsts] {",

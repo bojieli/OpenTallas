@@ -80,6 +80,26 @@ def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
     }
 
 
+def qwen_r25_fmt3_wide_model():
+    """Structural fallback, not admitted until full-die slot/reticle check."""
+    base=qwen_r25_int8_unpack_model()
+    base.update(front_width_um=570.24, front_c_footprint_um=[570.24,518.4],
+        central_channel_um=240.0, routing_channel_capacity=5000,
+        routing_fit="2176/5000=43.52% adapter buses; all other traffic and DRC remain route gates",
+        element_outline_um=[3214.08,1131.84], previous_element_outline_um=[3075.84,1131.84],
+        additional_front_area_mm2_die=32*138.24*1114.56/1e6,
+        additional_element_area_mm2_die=32*138.24*1131.84/1e6,
+        additional_wire_length_um=138.24,
+        additional_wire_cycles=0,
+        wire_cycle_status="no new relay credit; same RTL must meet833ps; added relay needs priced RTL candidate",
+        neighbouring_masters="new front_n/front_s pin views required; preserve previous views",
+        die_admission="BLOCKED until physicalhierarchy owner checks actual r25 sm_wh=(3214.08,1131.84), legaloutline and clocks",
+        provisional_die_width_growth_um=829.44,
+        provisional_die_area_growth_mm2=829.44*24622/1e6,
+        full_die_cost_status="provisional, not a measured or adopted headline")
+    return base
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
