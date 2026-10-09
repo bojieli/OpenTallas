@@ -290,7 +290,8 @@ def ds_rom(E, wall):
                        f"blend_owner6.json); draft dies / seed not built (hatched in the graph), Markov head modelled")),
         bf_variants=dict(
             decision="owner BF decision 2026-10-09 21:30 PT pending; HALF_PHL is the accepted closure path (headline)",
-            half_phl=dict(AR=mv["half_phl"]["AR_tok_s"], MTP=mv["half_phl"]["MTP_tok_s"], stages=half["stages"],
+            half_phl=dict(AR=mv["half_phl"]["AR_tok_s"], MTP=mv["half_phl"].get("MTP_tok_s_charged", mv["half_phl"]["MTP_tok_s"]),
+                          MTP_composed=mv["half_phl"]["MTP_tok_s"], stages=half["stages"],
                           dies=rk["dies"], grade="derived", source=f"{REPRICE} ds_rom after.half_phl"),
             full_rate_shared98=dict(AR=mv["full_rate_shared98"]["AR_tok_s"], MTP=mv["full_rate_shared98"]["MTP_tok_s"],
                                     stages=full["stages"], dies=rk_f["dies"], stacks=rk_f["stacks"] + add_st,
@@ -674,6 +675,21 @@ def write_doc(S):
     DOC.write_text(txt)
 
 
+def mtp_charge_changes():
+    """the MTP block charges (tools/mtp_step_charges.py -> token_path_export.apply_mtp_charges), one change line"""
+    out = []
+    for key, name in (("ds_rom", "DS ROM"), ("hbm_ds", "HBM DS")):
+        c = tp(f"{key}_mtp.json").get("mtp_charges")
+        if c:
+            out.append(f"{name} {c['MTP_tok_s_composed']:,} -> {tp(f'{key}_mtp.json')['totals']['tok_s_published']:,} tok/s "
+                       f"(+{c['critical_cycles']:,.0f} cycles a step)")
+    if not out:
+        return []
+    return [dict(item="MTP block cycles charged", effect="; ".join(out) + " (WFC kit, P2 selected path, sequencer, Markov floor, "
+                 "hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
+                 grade="measured", source="results/arch/mtp_step_20261009 (tools/mtp_step_charges.py)")]
+
+
 def build_systems():
     E = econ_inputs()
     wall = J(RACK)["power"]["wall_factor"]
@@ -702,6 +718,7 @@ def build_systems():
              "published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; "
              "open: SM multi-slot issue G18, CTL.TOKX)", grade="modelled", source=HQD),
         dict(item="BF decision", effect="pending 21:30 PT; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants", grade="derived", source=REPRICE),
+        *mtp_charge_changes(),
         dict(item="replica-fold / keep fixes", effect="0 cycles (synthesis attribute only: (* keep *) copies survive opt_merge)",
              grade="measured", source="main 0d3958d56, 816a3bec0, 54e3f8f9c"),
         dict(item="GPU baselines", effect="DS: SGLang V4.1-Flash 4 x GB300 + DSpark 873.6 (was V4-Pro 383.7); Qwen: B200 + DFlash 1,175; "

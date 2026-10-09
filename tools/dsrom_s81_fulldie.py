@@ -3631,6 +3631,11 @@ PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 
 FACE_PIN_INSET = 0.0           # --face-pin-inset: generated face pins 0.048 um inside the outline (abutment EOL)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
+# OT_S81_HOP_R_CC (cont-takeover 2026-10-09, default unset = 410): common-clock hop reach for the frame / column relays.
+# Option-B sign-off is TT setup (SS a sensitivity); the TT wire reach exceeds the SS 504 um, so a longer hop cap trades a
+# few longer relay segments (timed by the die STA on GRT parasitics) for fewer relays in the 100 %-packed frame cfg bands
+# (m221pq_r4c GEN_FAIL rt_0_8a_y1: no legal relay box within 400 um of the driver).
+HOP_R_CC = float(os.environ.get('OT_S81_HOP_R_CC', HOP_R_CC))
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
 MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 8 / OFFSET 3 / guards 0,6 / CREDITS 16
                                 #   (campaign d8 config): stream-trunk drift 386 ps > 300 ps; +1 cycle per crossing

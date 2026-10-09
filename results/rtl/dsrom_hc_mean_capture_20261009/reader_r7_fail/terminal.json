@@ -1,0 +1,8 @@
+{
+  "verdict": "FAIL",
+  "source_commit": "c6f1f1b02",
+  "scope": "full-H reader ECC_PIPE encoder/decode plus source and join",
+  "failure": "encoder valid sampled unknown through forward-declared bad_bf16 generate predicate; reader stalled in EWAIT",
+  "evidence": "reader.log",
+  "successor": "42e7e301d moves predicate declaration before generate; fresh pinned gate required"
+}

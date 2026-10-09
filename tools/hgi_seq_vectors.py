@@ -260,48 +260,33 @@ class Ref:
 # programs
 # ---------------------------------------------------------------------------------------------------------------------
 def qwen_program():
-    """the hbm-sim compiler's Qwen3-8B token program (TP4, P = 8,192) re-encoded in v1.0; returns (words, recs, g, md)"""
+    """the hbm-sim compiler's Qwen3-8B token program (TP4, P = 8,192), encoded by the simulator itself (HGI-1 current
+    design, tools/hgi_sim/records.py); returns (words, recs, g, md)"""
     from hgi_sim import qwen_compiler as QC
     from hgi_sim import records as SR
     cfg = json.loads((ROOT / G.MODELS['qwen3_8b']['cfg']).read_text())
-    md_hex = ROOT / 'results/arch/hbm_generic_iface_20261009/md_qwen3_8b.hex'
-    md = G.unpack([int(x, 16) for x in md_hex.read_text().split()])
+    md = QC.qwen_params(cfg)
     g = QC.Geometry(cfg, 8192)
     recs = QC.program(g, md, cfg['num_hidden_layers'], parts=('embed', 'layers', 'head'))
-    words = []
-    for r in recs:
-        descs = {}
-        for k, d in r.desc.items():
-            bc = d.istride == SR.ISTRIDE_BCAST
-            idx = d.dyn_sel == 31
-            assert not idx, 'the Qwen program has no indexed descriptor'
-            descs[k] = mdesc(space=SPACE[d.space], fmt=FMT[{'FP8': 'FP8E4M3', 'FP4': 'FP4E2M1'}.get(d.fmt, d.fmt)],
-                             ibcast=int(bc), base=d.base, n=d.n, m=d.m, stride=d.stride, istride=0 if bc else d.istride,
-                             lstride=d.lstride, dyn_sel=d.dyn_sel, dyn_mul=d.dyn_mul, n_sel=d.n_sel)
-        param = 0 if r.unit == 'SU' else r.param
-        words += record(header(r.unit, r.op, wait=r.wait, pred=['ALWAYS', 'POS0', 'NOT_POS0', 'LAST_ITER'].index(r.pred),
-                               slot=r.slot, param=param, imm_a=r.imm_a, imm_b=r.imm_b),
-                        sut=None if r.sut is None else put(r.sut, {n: (l, w) for n, l, w in G.D_SUT_LAYOUT}),
-                        descs=descs)
+    b = SR.encode_program(recs)
+    words = [int.from_bytes(b[q:q + 16], 'little') for q in range(0, len(b), 16)]
     return words, recs, g, md
 
 
 def sim_check(words, entry, trace, recs, pos, token, rank):
-    """every effective base / n the reference dispatches equals the hbm-sim Machine.eff of the same v0.9 record"""
+    """every effective base / n the reference dispatches equals the hbm-sim Machine.eff of the same record"""
     from hgi_sim import machine as M
-    import numpy as np  # noqa: F401
+    from hgi_sim import records as SR
     die = M.Die(rank, None)
-    die.dyn[:8] = [0, pos, pos + 1, token, 0, rank, 0, pos]
     mach = M.Machine([die])
-    # map record word index -> v0.9 record
     idx, wi = {}, entry
     for r in recs:
         idx[wi] = r
-        wi += 1 + (2 if r.sut is not None else 0) + 2 * len(r.desc)
+        wi += SR.rec_bytes(r) // 16
     n = 0
     for d in trace:
         r = idx[d['rec']]
-        die.dyn[4] = d['L']
+        die.dyn[:9] = [0, pos, pos + 1, token, d['L'], rank, r.slot, pos + r.slot, d['L1']]
         for j, nm in enumerate(OPND):
             if nm in r.desc:
                 base, nn, *_ = mach.eff(r.desc[nm], die, d['L'])
