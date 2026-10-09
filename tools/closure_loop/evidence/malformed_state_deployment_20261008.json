@@ -1,0 +1,8 @@
+{
+  "at": "2026-10-08T22:53:48.128737-07:00",
+  "path": "/home/ubuntu/wt-codex-closure-daemon-20261007l/tools/closure_loop/closure_loop.py",
+  "before_sha256": "ea0699a6322284aed9fc12d0edcd9da7bdea718105dae082d25896ae568185cd",
+  "after_sha256": "838b506970ec60d6f8a5880476f430c87aa0728b18ad6177c24c8403225a51fb",
+  "source_commit": "1b2191e1a",
+  "change": "Only tested all_jobs malformed state guard + hashlib import; retained newer deployed flow snapshot helpers; existing KillMode=process preserves local wrappers."
+}
