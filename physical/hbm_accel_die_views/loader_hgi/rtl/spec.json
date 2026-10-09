@@ -1,21 +1,14 @@
 {
  "master": "hfd_loader",
- "note": "ot_hfd_loader_host_m (ENABLE 1, ND 2): ot_hbm_accel_loader_host with every CRC-32 fold pipelined (make_loader_m.py; the unchanged host: tapeout_hbm_loader_20261004 clock_r2_final not_met, host SS -3,672 ps at 1.0 ns; ld3 -4,229 ps at the store CRC); exact vs the unchanged host (tb_loader_m_equiv.sv). Host AXI-lite slave s_*, host master h_* and DMA h_dma_* on the host link (rx 243 of 256 b used, rest of the DMA inputs on the cfg chain; tx 176 of 256 b); request slot 0 -> cmdproc program-store word t_cmdproc[72:0]; clk_host and clk_mem both on the die clock; memory AXI m_* and rsp_* have no die net (cfg chain / folded). HALF RATE (views agent 2026-10-06, 30c5fa080 SS -863): ot_hfd_loader_half SHARED 1 = the core on ck/2 with handshake gating.",
+ "hgi_unit": "cp",
+ "note": "HGI loader (hgi-takeover 2026-10-09): ot_hfd_loader_hgi = 37-bit half-rate loader core (ot_hfd_loader_half37) + the host CP window (ot_hgi_loader_cp) + the memory port to the four stack services (ot_hfd_loader_kport; lane 0 loader, lane 1 CP record-ring fetch); stack index (address bits 36:35) 0..3 = SW, SE, NW, NE. Host link binding as the legacy loader wrapper; the host-memory AXI master m_* stays as in the legacy wrapper (TA-14 host link).",
  "instances": [
   {
    "name": "ld",
-   "module": "ot_hfd_loader_half",
-   "file": "physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_half.sv",
-   "params": {
-    "ENABLE": 1,
-    "ND": 2,
-    "SHARED": 1
-   },
+   "module": "ot_hfd_loader_hgi",
+   "file": "rtl/hbm_accel/generic/loader/ot_hfd_loader_hgi.sv",
+   "params": {},
    "bind": {
-    "clk_host": "clk",
-    "clk_mem": "clk",
-    "rst_host_n": "rst_n",
-    "rst_mem_n": "rst_n",
     "s_awvalid": "die:h[256:257]",
     "s_awready": "die:h[0:1]",
     "s_awaddr": "die:h[257:269]",
@@ -87,60 +80,17 @@
     "m_bvalid": "cfg",
     "m_bready": "fold",
     "m_bresp": "cfg",
-    "req_v": "open",
-    "req_rdy": "cfg",
-    "req_we": "fold",
-    "req_addr": "open",
-    "req_wdata": "open",
-    "req_wstrb": "fold",
-    "req_tag": "fold",
-    "rsp_v": "cfg",
-    "rsp_rdy": "fold",
-    "rsp_we": "cfg",
-    "rsp_tag": "cfg",
-    "rsp_data": "cfg",
     "irq": "fold",
-    "fault": "fold"
+    "fault": "fold",
+    "clk": "clk",
+    "rst_n": "rst_n",
+    "lcp": "die:t_hgi_cp[0:415]",
+    "cpl": "die:f_hgi_cp[0:514]",
+    "lq": "die:qSW[0:346]+qSE[0:346]+qNW[0:346]+qNE[0:346]",
+    "lr": "die:rSW[0:293]+rSE[0:293]+rNW[0:293]+rNE[0:293]"
    }
   }
  ],
- "extra_out": [
-  [
-   "t_cmdproc",
-   0,
-   1,
-   "w_ld_req_v[0]"
-  ],
-  [
-   "t_cmdproc",
-   1,
-   9,
-   "w_ld_req_addr[7:0]"
-  ],
-  [
-   "t_cmdproc",
-   9,
-   73,
-   "w_ld_req_wdata[63:0]"
-  ]
- ],
  "kept_out_regs": true,
- "face_stages": 5,
- "share_tree": {
-  "min": 3,
-  "fanout": 4
- },
- "port_stages": {
-  "t_cmdproc": 2,
-  "h": 2
- },
- "port_stages_basis": {
-  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
-  "d_um": {
-   "t_cmdproc": 522,
-   "h": 385
-  },
-  "source": "ldm3_pd55 3_3_place_gp core endpoint -> pin, max over bits (face_chain_place.tcl OT_FC_REPORT)"
- },
- "replaced_when_hgi": "cp"
+ "face_stages": 5
 }

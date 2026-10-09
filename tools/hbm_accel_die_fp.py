@@ -2491,7 +2491,8 @@ def buses(m):
     else:
         hl_ = [('cmdproc', 'coll', 64)]
     hgi_q = 'quant' in (V.get('hgi_dispatch') or [])      # hgi-takeover: the hgi quant unit reads / writes VM by packets
-    hl_ += [('loader', 'cmdproc', 341), ('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
+    hgi_cp_ = 'cp' in (V.get('hgi_dispatch') or [])    # hgi-takeover: the loader <-> CP link replaces the program-store bus
+    hl_ += ([] if hgi_cp_ else [('loader', 'cmdproc', 341)]) + [('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
             ('vm', 'router', 512)] + ([] if hgi_q else [('vm', 'quant', 1024)]) + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]

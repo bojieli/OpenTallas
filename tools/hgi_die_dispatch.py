@@ -26,9 +26,11 @@ RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 CFG_UNITS = {'coll'}
 CFG_BITS = 40
 # units that are VM packet clients of ot_hgi_vm_unit (hfd_vm): {v, req 337} up, {v, rsp 273} down; one outstanding
-VM_CLIENTS = ['quant']
+VM_CLIENTS = ['cp', 'quant']      # 'cp' = the command processor's VM reads (ot_hgi_cp_die vr_*)
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
-HGI_VM_SLOT = (1399.656, 950.4)        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
+HGI_VM_SLOT = (1399.656, 950.4)
+LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
+LCP_BITS, CPL_BITS = 415, 514           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
 
 def fields(unit):
@@ -50,7 +52,7 @@ def layout(fs):
 
 def model(hub, units, reach_um=504.0):
     rows = []
-    for u in units:
+    for u in [x for x in units if x in UNITS]:
         code, blk, desc, _ = UNITS[u]
         if blk not in hub:
             raise ValueError(f'hgi_dispatch: hub block {blk} for unit {u} not on this die')
@@ -78,7 +80,7 @@ CP_PINS = {'coll': ('hfd_cmdproc_n', 'N', 'M5', 0.25), 'quant': ('hfd_cmdproc_n'
 def split_extra_ports(units):
     """split_extra_ports entries for hfd_cmdproc (merge into the variant before build)."""
     out = {}
-    for u in units:
+    for u in [x for x in units if x in UNITS]:
         band, face, layer, frac = CP_PINS[u]
         cbits = layout(fields(u))[1]
         out[f't_hgi_{u}'] = (band, cbits, face, layer, frac, 2)
@@ -96,6 +98,14 @@ def variant(base, units):
     ex = {k: dict(x) for k, x in (base.get('split_extra_ports') or {}).items()}
     ex.setdefault('hfd_cmdproc', {}).update(split_extra_ports(units))
     v['split_extra_ports'] = ex
+    if 'cp' in units:
+        # hgi-takeover die gap 4: ONE command-processor block (ot_hgi_cp_die) instead of the legacy N / S split; the
+        # loader <-> CP link (lcp 415 / cpl 514) replaces the legacy program-store bus; the loader memory lanes carry
+        # the native service protocol (lq 346 / lr 293 per stack, ot_hfd_loader_kport)
+        v['split_masters'] = {k: x for k, x in (base.get('split_masters') or {}).items() if k != 'hfd_cmdproc'}
+        v['split_extra_ports'] = {k: x for k, x in v['split_extra_ports'].items() if k != 'hfd_cmdproc'}
+        v['ld_mem'] = LD_MEM_HGI
+        v['split_x_new_ports'] = dict(base.get('split_x_new_ports') or {}, lq=LD_MEM_HGI[0], lr=LD_MEM_HGI[1])
     if any(u in VM_CLIENTS for u in units):
         # the HGI-1 VM (ot_hgi_vm_unit: 1 MiB, 64 ECC macros 0.79 mm2) gets its own low spine slot under the loader;
         # the legacy hfd_vm tiles keep the x multicast root and the SU / router feeds
@@ -135,13 +145,17 @@ def install(m, buses, paths, units):
     if vm_cl and 'hgi_vm' in hub:
         vm = hub['hgi_vm'].name
         for u in vm_cl:
-            peer = hub[UNITS[u][1]].name
+            peer = hub['cmdproc'].name if u == 'cp' else hub[UNITS[u][1]].name
             for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, 't_hgi_vmq'), (vm, f'f_hgi_{u}')]),
                                     (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
                 buses.append((name, 'hub', bits, eps)); paths[name] = [name]
         buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
         paths['hgi_vmstat'] = ['hgi_vmstat']
         rec['vm_clients'] = vm_cl
+    if 'cp' in units and 'loader' in hub:
+        ld = hub['loader'].name
+        buses.append(('hgi_lcp', 'hub', LCP_BITS, [(ld, 't_hgi_cp'), (cp, 'f_hgi_loader')])); paths['hgi_lcp'] = ['hgi_lcp']
+        buses.append(('hgi_cpl', 'hub', CPL_BITS, [(cp, 't_hgi_loader'), (ld, 'f_hgi_cp')])); paths['hgi_cpl'] = ['hgi_cpl']
     m['hgi_dispatch'] = rec
     m['notes'].append('HGI normative dispatch buses (hgi_dispatch): declared; per-unit wrappers bind them before adoption.')
     return rec
