@@ -40,7 +40,12 @@ module ot_s81_stage_guard #(
     output reg  [31:0]     st_msgs,
     output reg  [31:0]     st_flits
 );
-`include "ot_s81_hdr.svh"
+// S81 header (ot_s81_hdr.svh, inlined so synthesis needs no include path)
+localparam integer SH_DEST = 0, SH_SRC = 12, SH_TYPE = 24, SH_LEN = 28, SH_USER = 40, SH_POS = 52, SH_IDX = 73,
+                   SH_VAL = 94, SH_TOK = 126, SH_ADDR = 147, SH_STOP = 163, SH_EOSEN = 164, SH_EOS = 165,
+                   SH_MAXL = 186, SH_END = 208;
+localparam integer SH_IDW = 12, SH_LENW = 12, SH_UW = 12, SH_NW = 21, SH_MLW = 22;
+localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     localparam [3:0] F_DEST = 1, F_SRC = 2, F_TYPE = 3, F_LEN = 4, F_FRAME = 5, F_USER = 6, F_POS = 7;
     localparam integer UB = (MAXU > 1) ? $clog2(MAXU) : 1;
     reg        in_msg;
