@@ -1385,7 +1385,7 @@
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T16:38:25-07:00",
+   "measured_at": "2026-10-08T18:00:52-07:00",
    "ss": {
     "mean": 711,
     "min": 681,
@@ -1393,8 +1393,8 @@
    },
    "ff": {
     "mean": 400,
-    "min": 382,
-    "max": 456,
+    "min": 381,
+    "max": 457,
     "n": 3963,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1422,9 +1422,9 @@
     "job": "hbm_svc_SE_s0_tt_c10b5fc9a"
    },
    "tt": {
-    "mean": 500,
+    "mean": 499,
     "min": 479,
-    "max": 559,
+    "max": 560,
     "n": 3963,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2641,21 +2641,21 @@
    "budget": null
   },
   "ot_dsrom_su_swiglu_lane": {
-   "job": "s81-swiglu-esum-435a62a41-hm10-tt",
+   "job": "s81-swiglu-esum-435a62a41-hm25-tt",
    "source_commit": "435a62a418d536d0d25f8420469c9a4bd3518889",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm10-tt",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T17:32:23-07:00",
+   "measured_at": "2026-10-08T17:56:28-07:00",
    "ss": {
     "mean": 429,
     "min": 412,
     "max": 442
    },
    "ff": {
-    "mean": 237,
-    "min": 228,
+    "mean": 238,
+    "min": 230,
     "max": 249,
     "n": 163,
     "kind": "boundary",
@@ -2679,8 +2679,8 @@
     "job": "s81-swiglu-esum-435a62a41-hm10-tt"
    },
    "tt": {
-    "mean": 294,
-    "min": 285,
+    "mean": 295,
+    "min": 286,
     "max": 306,
     "n": 163,
     "kind": "boundary",
@@ -5186,5 +5186,5 @@
    }
   }
  },
- "updated": "2026-10-08T17:52:41-07:00"
+ "updated": "2026-10-08T18:00:52-07:00"
 }
