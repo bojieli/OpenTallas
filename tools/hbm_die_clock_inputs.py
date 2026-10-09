@@ -73,6 +73,7 @@ def write_sdc(m,path):
     if not m.get('external_clock_inputs'):
         raise ValueError('no external source contract')
     text='''# Candidate external clock input contract. External generation is assumed, not measured.
+set_cmd_units -time ns
 # Serial and stream retain the specified 3:4 rational relationship.
 create_clock -name clk_stream -period 0.833333333 [get_ports clk_stream]
 create_generated_clock -name clk_serial -source [get_ports clk_stream] -multiply_by 3 -divide_by 4 [get_ports clk_serial]

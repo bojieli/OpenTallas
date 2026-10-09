@@ -1,0 +1,250 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+OT_CORNER ff
+OT_WS -1.9424815922430838e-11
+OT_TNS -6.130373292334568e-11
+[WARNING STA-1010] No common period was found between clocks hbm and aon.
+Startpoint: pll_lock (input port clocked by aon)
+Endpoint: collars.phy[0].release_reset.release_pipe[0]$_DFF_PN0_
+          (removal check against rising-edge clock hbm)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock aon (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00 ^ input external delay
+   0.00   25.00 ^ pll_lock (in)
+  13.81   38.81 ^ input81/Y (BUFx2_ASAP7_75t_R)
+  21.68   60.49 ^ _165_/Y (AND3x4_ASAP7_75t_R)
+   0.68   61.17 ^ collars.phy[0].release_reset.release_pipe[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          61.17   data arrival time
+
+   0.00    0.00   clock hbm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_hbm (in)
+  18.50   18.50 ^ clkbuf_0_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+  17.10   35.60 ^ clkbuf_1_0__f_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+   0.08   35.68 ^ collars.phy[0].release_reset.release_pipe[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   60.68   clock uncertainty
+   0.00   60.68   clock reconvergence pessimism
+  19.92   80.60   library removal time
+          80.60   data required time
+---------------------------------------------------------
+          80.60   data required time
+         -61.17   data arrival time
+---------------------------------------------------------
+         -19.42   slack (VIOLATED)
+
+
+Startpoint: phy_ready[1] (input port clocked by aon)
+Endpoint: sequence_control.status_meta[3]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by aon)
+Path Group: aon
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock aon (rise edge)
+   0.00    0.00   clock network delay (propagated)
+  25.00   25.00 v input external delay
+   0.00   25.00 v phy_ready[1] (in)
+  11.65   36.65 v hold292/Y (BUFx2_ASAP7_75t_R)
+  13.70   50.36 v hold212/Y (BUFx2_ASAP7_75t_R)
+  13.71   64.06 v hold293/Y (BUFx2_ASAP7_75t_R)
+  12.80   76.86 v input78/Y (BUFx2_ASAP7_75t_R)
+  12.04   88.91 v hold213/Y (BUFx2_ASAP7_75t_R)
+   0.04   88.95 v sequence_control.status_meta[3]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          88.95   data arrival time
+
+   0.00    0.00   clock aon (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ aon_clk (in)
+  19.26   19.26 ^ clkbuf_0_aon_clk/Y (BUFx24_ASAP7_75t_R)
+  22.82   42.08 ^ clkbuf_2_2__f_aon_clk/Y (BUFx24_ASAP7_75t_R)
+   1.09   43.17 ^ sequence_control.status_meta[3]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   68.17   clock uncertainty
+   0.00   68.17   clock reconvergence pessimism
+  12.04   80.21   library hold time
+          80.21   data required time
+---------------------------------------------------------
+          80.21   data required time
+         -88.95   data arrival time
+---------------------------------------------------------
+           8.74   slack (MET)
+
+
+Startpoint: collars.phy[0].release_reset.release_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by hbm)
+Endpoint: collars.phy[0].release_reset.release_pipe[2]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by hbm)
+Path Group: hbm
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock hbm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_hbm (in)
+  17.78   17.78 ^ clkbuf_0_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+  16.77   34.55 ^ clkbuf_1_1__f_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+   0.08   34.64 ^ collars.phy[0].release_reset.release_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  36.48   71.12 ^ collars.phy[0].release_reset.release_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  13.65   84.77 ^ hold245/Y (BUFx2_ASAP7_75t_R)
+   4.73   89.50 v _116_/Y (INVx1_ASAP7_75t_R)
+   0.07   89.56 v collars.phy[0].release_reset.release_pipe[2]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          89.56   data arrival time
+
+   0.00    0.00   clock hbm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_hbm (in)
+  18.50   18.50 ^ clkbuf_0_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+  17.10   35.60 ^ clkbuf_1_0__f_clk_hbm/Y (BUFx24_ASAP7_75t_R)
+   0.18   35.78 ^ collars.phy[0].release_reset.release_pipe[2]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   60.78   clock uncertainty
+  -0.72   60.06   clock reconvergence pessimism
+  11.00   71.07   library hold time
+          71.07   data required time
+---------------------------------------------------------
+          71.07   data required time
+         -89.56   data arrival time
+---------------------------------------------------------
+          18.50   slack (MET)
+
+
+Startpoint: collars.link[7].release_reset.release_pipe[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by link)
+Endpoint: collars.link[7].release_reset.release_pipe[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by link)
+Path Group: link
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock link (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_link (in)
+  17.66   17.66 ^ clkbuf_0_clk_link/Y (BUFx24_ASAP7_75t_R)
+  16.87   34.53 ^ clkbuf_1_1__f_clk_link/Y (BUFx24_ASAP7_75t_R)
+   0.11   34.64 ^ collars.link[7].release_reset.release_pipe[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  36.17   70.81 ^ collars.link[7].release_reset.release_pipe[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  13.38   84.18 ^ hold227/Y (BUFx2_ASAP7_75t_R)
+   4.47   88.66 v _120_/Y (INVx1_ASAP7_75t_R)
+   0.05   88.71 v collars.link[7].release_reset.release_pipe[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          88.71   data arrival time
+
+   0.00    0.00   clock link (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_link (in)
+  18.36   18.36 ^ clkbuf_0_clk_link/Y (BUFx24_ASAP7_75t_R)
+  16.97   35.33 ^ clkbuf_1_0__f_clk_link/Y (BUFx24_ASAP7_75t_R)
+   0.15   35.48 ^ collars.link[7].release_reset.release_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   60.48   clock uncertainty
+  -0.70   59.78   clock reconvergence pessimism
+  11.04   70.82   library hold time
+          70.82   data required time
+---------------------------------------------------------
+          70.82   data required time
+         -88.71   data arrival time
+---------------------------------------------------------
+          17.89   slack (MET)
+
+
+Startpoint: collars.coll_serial.release_pipe[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by serial)
+Endpoint: collars.coll_serial.release_pipe[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by serial)
+Path Group: serial
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock serial (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_serial (in)
+  17.90   17.90 ^ clkbuf_0_clk_serial/Y (BUFx24_ASAP7_75t_R)
+  17.10   35.01 ^ clkbuf_1_0__f_clk_serial/Y (BUFx24_ASAP7_75t_R)
+   0.22   35.23 ^ collars.coll_serial.release_pipe[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  36.21   71.43 ^ collars.coll_serial.release_pipe[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  13.33   84.76 ^ hold223/Y (BUFx2_ASAP7_75t_R)
+   4.41   89.17 v _110_/Y (INVx1_ASAP7_75t_R)
+   0.02   89.19 v collars.coll_serial.release_pipe[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          89.19   data arrival time
+
+   0.00    0.00   clock serial (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_serial (in)
+  18.61   18.61 ^ clkbuf_0_clk_serial/Y (BUFx24_ASAP7_75t_R)
+  17.17   35.78 ^ clkbuf_1_1__f_clk_serial/Y (BUFx24_ASAP7_75t_R)
+   0.17   35.95 ^ collars.coll_serial.release_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   60.95   clock uncertainty
+  -0.71   60.24   clock reconvergence pessimism
+  11.13   71.37   library hold time
+          71.37   data required time
+---------------------------------------------------------
+          71.37   data required time
+         -89.19   data arrival time
+---------------------------------------------------------
+          17.82   slack (MET)
+
+
+Startpoint: collars.coll_stream.release_pipe[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by stream)
+Endpoint: collars.coll_stream.release_pipe[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by stream)
+Path Group: stream
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock stream (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_stream (in)
+  17.77   17.77 ^ clkbuf_0_clk_stream/Y (BUFx24_ASAP7_75t_R)
+  16.93   34.70 ^ clkbuf_1_1__f_clk_stream/Y (BUFx24_ASAP7_75t_R)
+   0.42   35.12 ^ collars.coll_stream.release_pipe[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  36.27   71.39 ^ collars.coll_stream.release_pipe[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  13.34   84.73 ^ hold226/Y (BUFx2_ASAP7_75t_R)
+   4.45   89.18 v _121_/Y (INVx1_ASAP7_75t_R)
+   0.03   89.21 v collars.coll_stream.release_pipe[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          89.21   data arrival time
+
+   0.00    0.00   clock stream (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_stream (in)
+  18.48   18.48 ^ clkbuf_0_clk_stream/Y (BUFx24_ASAP7_75t_R)
+  17.23   35.71 ^ clkbuf_1_1__f_clk_stream/Y (BUFx24_ASAP7_75t_R)
+   0.47   36.18 ^ collars.coll_stream.release_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  25.00   61.18   clock uncertainty
+  -1.01   60.17   clock reconvergence pessimism
+  11.15   71.32   library hold time
+          71.32   data required time
+---------------------------------------------------------
+          71.32   data required time
+         -89.21   data arrival time
+---------------------------------------------------------
+          17.89   slack (MET)
+
+
+OT_VIOL_D_PINS 0
+OT_WS_REG_D 8.738621
+OT_WS_OUT 114.440796
+[WARNING STA-1010] No common period was found between clocks hbm and aon.
+OT_WS_R2R 16.366089
+[WARNING STA-1010] No common period was found between clocks hbm and aon.
+OT_WS_I2R -19.424816

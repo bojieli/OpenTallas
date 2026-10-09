@@ -86,6 +86,28 @@
    "physical": {"status": "not yet routed full91FF composition;51FF collar failed physical receipt applies only to that body", "corners": {}},
    "dependencies": ["actual platform POR and AON clock", "all four PHY and nine link readiness sources", "BIST completion and fatal fault providers"],
    "integration": {"status": "RTL implemented and minimum production gate PASS; real die source binding pending"}
+  },
+  {
+   "element": "TA15 full production digital body with AON readiness",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "source": {"commit": "3af950580", "paths": ["rtl/hbm_accel/control/ot_hbm_production_clock_ready_aon.sv", "tools/hbm_ta15_ready_aon_route.sh"]},
+   "implementation": {"status": "optin actual91FF boot composition; AON ready comes from existing synchronizer/state with immediate raw POR/lock/fatal veto"},
+   "model": {"status": "priced3d1c5f3cc before build; no added FF or token cycles; provisional AON3000ps plus actual four domain periods", "evidence": ["tools/hbm_production_clock_control_model.py"]},
+   "exactness": {
+    "positive": {"status": "PASS stopped serial readiness plus immediate raw POR/PLL-lock revocation", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/ready_aon3af950580/exact.log"]}
+   },
+   "physical": {
+    "status": "TERMINAL NOT_MET; standalone pathfinding, no clock/reset signoff",
+    "corners": {"TT_setup_ps": -215.27, "SS_sensitivity_ps": -309.82, "FF_hold_ps": -17.72, "DRC": 0},
+    "ready_output": {"TT_setup_ps": 485.403595, "SS_setup_ps": 393.241974, "FF_hold_ps": 93.149918},
+    "classification": "Actual source fix removes foreign-clock collar path on ready output. Remaining violations are AON-state to destination RESETN recovery and first AON ready-meta CDC sampling. No recovery/removal exception applied.",
+    "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/ready_aon3af950580/corner_sta.json", "results/uarch/hbm_ta15_clock_boundary_20261008/ready_aon3af950580/physical.json", "results/uarch/hbm_ta15_clock_boundary_20261008/ready_aon3af950580/w18_sta_tt.log"],
+    "prior_full_body_failure": "results/uarch/hbm_ta15_clock_boundary_20261008/production_body2147df89c/corner_sta.json",
+    "remote_objects": "ot-epyc1tb:/srv/opentallas-scratch/codex/hbm-ta15-ready-aon/run-r1; all own producer/driver tasks terminal"
+   },
+   "dependencies": ["actual analog PLL/source phase and lock contract", "actual PHY4/link9/BIST readiness providers", "technology asynchronous reset and metastability qualification", "real die load/CTS and first-stage CDC obligations"],
+   "integration": {"status": "production blackbox wrapper and full boot body implemented; actual collective/provider die binding remains unqualified"}
   }
  ]
 }
