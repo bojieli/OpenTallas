@@ -11,6 +11,8 @@ def install(m, fp):
     from hbm_indexer_r25i_model import hbm_indexer_r25i_physical_model
     root = fp.ROOT / 'physical/hbm_accel_die_views/index/native'
     master = 'hfd_idx_score_native_c2' if m['variant'].get('indexer_large_slot') else 'hfd_idx_score_native'
+    if m['variant'].get('indexer_mirror_grid'):
+        master = 'hfd_idx_score_native_grid_c2' if m['variant'].get('indexer_large_slot') else 'hfd_idx_score_native_grid'
     scores = {}
     fixed = m.setdefault('fixed_ports', {})
     def add(name, mn, x, y, orient, kind):
@@ -23,7 +25,11 @@ def install(m, fp):
             for pn, port in rec['ports'].items():
                 ps = port['pins']; first, last = ps[0], ps[-1]
                 x0,y0=(first[2]+first[4])/2,(first[3]+first[5])/2
-                if pn in ('ck','rst'):
+                if k == 1:
+                    # Die assembly must retain the bit identity and exact access
+                    # rectangles used to harden this native master.
+                    spec[pn]=('rects',[(p[0],p[1],tuple(p[2:])) for p in ps])
+                elif pn in ('ck','rst'):
                     spec[pn]=('area', 'M7', x0,y0,0.064,0.288)
                 else:
                     face=port['face']; along0=y0 if face in 'WE' else x0
@@ -45,7 +51,8 @@ def install(m, fp):
     for st,group in m['groups'].items():
         side,half=st
         x=10732.608 if half=='W' else 16994.88
-        y=1596.24 if side=='S' else round(g['H']-1596.24-h,6)
+        core_h=h-0.024 if m['variant'].get('indexer_mirror_grid') else h
+        y=1596.24 if side=='S' else round(g['H']-1596.24-core_h,6)
         orient={'SW':'R0','SE':'MY','NW':'MX','NE':'R180'}[st]
         scores[st]=add('idx_score_'+st,master,x,y,orient,'hub')
     sel_master='hfd_idx_sel_native_qend' if m['variant'].get('indexer_quarter_end') else 'hfd_idx_sel'

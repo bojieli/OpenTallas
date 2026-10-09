@@ -82,6 +82,8 @@ def main():
     candidates = [
         ('hfd_idx_score_native', 2000.16, 3000.24, SCORE_PORTS, 4, dict(L=16, FA=6, CRED=128, FWD=0)),
         ('hfd_idx_score_native_c2', 2000.16, 3402.0, SCORE_PORTS, 4, dict(L=16, FA=6, CRED=128, FWD=0)),
+        ('hfd_idx_score_native_grid', 2000.16, 3000.264, SCORE_PORTS, 4, dict(L=16, FA=6, CRED=128, FWD=0)),
+        ('hfd_idx_score_native_grid_c2', 2000.16, 3402.024, SCORE_PORTS, 4, dict(L=16, FA=6, CRED=128, FWD=0)),
         ('hfd_idx_sel', 1399.656, 844.56, SEL_PORTS, 1, dict(T=1, LA=7, MEMV=1, READLAT=2)),
         ('hfd_idx_sel_native_qend', 1399.656, 844.56,
          dict(SEL_PORTS, co_quarter_last=(1, 'output', 'E')), 1,

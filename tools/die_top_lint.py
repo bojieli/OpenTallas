@@ -381,6 +381,8 @@ def real_blocks(die, m=None):
         for mn,filename,prm in (
             ('hfd_idx_score_native','hfd_idx_score_native.sv',{}),
             ('hfd_idx_score_native_c2','hfd_idx_score_native.sv',{}),
+            ('hfd_idx_score_native_grid','hfd_idx_score_native.sv',{}),
+            ('hfd_idx_score_native_grid_c2','hfd_idx_score_native.sv',{}),
             ('hfd_idx_sel_native_qend','hfd_idx_sel_native_qend.sv',{}),
             ('hfd_idx_sel','hfd_idx_sel.sv',dict(T=1,LA=7,MEMV=1,READLAT=2))):
             pm=parse_module(directory+filename,mn,prm)
