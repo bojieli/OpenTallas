@@ -35,7 +35,12 @@ STATE = Path(os.path.expanduser("~/.local/state/exactness"))
 REMOTE = "/srv/opentallas-scratch/claude/exactness"
 ARCHIVE = ["rtl", "tools", "physical/asap7_memory_macros", "physical/hbm_accel_macros",
            "compiler/models/qwen3-reduced-v1", "compiler/models/deepseek-v4.1-flash-reduced-v2",
-           ":(glob)results/abi3/*reference_oracle*", "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4", "AGENTS.md"]
+           ":(glob)results/abi3/*reference_oracle*", "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4", "AGENTS.md",
+           # mtp-exact benches: the closed HBM control-plane successors, the failed spec_state f3 source, tau records
+           "results/rtl/hbm_accel_fmax_inventory_20261004/ctl_takeover_20261005/source_set",
+           "results/rtl/ctl_spec_seed8_fix_20261005/original",
+           "results/speculative/third_party_acceptance_20261004/acceptance.json",
+           "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"]
 # bench-tool fixes overlaid on every staged commit (tool code only): the tile ROM accessor regex that a76724a9c's
 # BAW generate scope broke on main
 TOOL_OVERLAY = ["tools/qwen_rom_rt_rm_access.py"]
