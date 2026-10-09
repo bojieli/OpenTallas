@@ -1,7 +1,7 @@
 """Path-informed collective capture partitioning before RTL (-cx)."""
 def model():
     n=4;word=546;slices=(word+31)//32
-    added=(slices-5)*n*8+(slices*32-word)*n*2
+    added=(slices-5)*n*8+(slices*32-word)*n*2+n*slices*32
     return dict(schema='opentallas.qwen-collective-cx.v1',default_off=True,
       arithmetic='unchanged rank-order16lane binary32 ADD_LAT7 fold',macs_per_cycle=0,
       fp32_adds_per_cycle=48,memory_ports=[dict(read_bytes_per_cycle=n*word/8,
