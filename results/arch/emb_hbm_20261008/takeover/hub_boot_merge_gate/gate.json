@@ -1,0 +1,101 @@
+{
+  "schema": "opentallas.embedding_hub_boot_merge_gate.v1",
+  "model_before_RTL_commit": "b61002427",
+  "sources_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_hub_boot_merge.sv": "3e18538380d4551b7194d72aa0a9bde368c2631b1832daf07cef6801e3fc5d82",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb_boot_top.sv": "915ecd9a97edb8f7298b6a209fe9425dedcd8f5d96e0bdae7e5b68e6d8ce228c",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/test/emb_hbm/tb_emb_hub_boot_merge.sv": "6a2e1ec1a64dbe4bf162ec071d696c74172f9125b920f54f7ac03305fcce545b",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "78647c1f198bac6e2816e08274d16b766de72660c5b22b768b52ae9e2140d149",
+    "physical/rom_host_ingest/rtl/qfd_io_host.sv": "b5269d3fa6a92bcbec750acf2ffec220e9e21373dc93b3f601330554181908b1",
+    "results/arch/emb_hbm_20261008/takeover/hub_boot_merge_model.json": "a37a30841ed1e02ff816dc73e125e19ab0358b332b7b48167fe79b0b8781316e"
+  },
+  "logs_sha256": {
+    "top_elab.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive.log": "9fdc8fff8f5ea153d0bea8e1ba2db5c16434942cc36a91cb7031c6679e750bc3",
+    "exits.txt": "c37466457d971ab1e0b4b88b65523f9567a5ea46423c8f76c370c04535f92f8f",
+    "negative_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative.log": "0148df58b44c9931cae85b755d77a62faf6a015567a697d64df473ff0f678b02",
+    "run.sh": "b31d92fe4f1e86337515fd621d079af6a91c602fd3c9cc66d2ecaa050478264c"
+  },
+  "host": "ot-pve1",
+  "remote_workdir": "/srv/opentallas-scratch/codex/emb-hub-boot-merge-gate",
+  "admission_peak_GiB": 1,
+  "tool": "IcarusVerilog12.0 stable",
+  "verdict": "PASS",
+  "actual_blocks": [
+    "native ot_qwen_die_hub_emb CR128 OD8 XS8 ARC4 AD8 RQD32",
+    "native embeddinggateway",
+    "additive nativeport BOOT/SU merger",
+    "additive hubtop elaboration"
+  ],
+  "sources": "NativeSUx3 and nativehost o_v/we/addr/d interface contracts driven synthetically with real8prepaid producer credits. Fullhostingest engine/nativeSU execution not simulated.",
+  "traffic": {
+    "RAW_sectors": 160,
+    "SU_packets": 32,
+    "BOOT_END": 1,
+    "returned_host_credit": 161,
+    "returned_SU_credit": 32,
+    "checksum": "39ce6255",
+    "max_remote_receive_FIFO": 128,
+    "max_owner_FIFO": 8,
+    "max_SU_outstanding": 3,
+    "max_host_outstanding": 8,
+    "max_SU_input_FIFO": 1,
+    "max_host_input_FIFO": 1,
+    "actual_hub_stall_cycles": 33
+  },
+  "logical_visibility": {
+    "marker_input_accept_cycle": 372,
+    "actual_hub_bend_cycle": 376,
+    "emb_ready_cycle": 481,
+    "rule": "No ready before realhub BOOT_END send and four orderedremote STATUS count/checksum replies. Remote mock endpoints consume their orderedCR128 queues; STATUS only after eachlinkBOOT_ENDisconsumed.",
+    "scope": "Logicalorderedconsumption/count/checksum, not HBMwritecommit/PHYqualification."
+  },
+  "credit_checks": [
+    "Nativehubx3 retirement maps through captured ownerFIFO to exactproducer",
+    "Sourcecredit never returned on mergerinputqueue dequeue",
+    "Sourceandhub outstanding<=8, ownercredit conservation checked",
+    "Default-off exactly bypasses historicSU x3 path",
+    "Runtimeaddr31=0 exposedseparatevalid, no bootaccept/credit orqueueconsumption"
+  ],
+  "latency_price": {
+    "minimum_added_SUforward_edges": 2,
+    "minimum_added_SUforward_ns": 1.666666668,
+    "additional_source_credit_register_edges": 1,
+    "marker_accept_to_native_bend_measured_edges": 4,
+    "existing_hub_capture_and_skid_edges": 2,
+    "single_user_composition": "Per-tokenSUx3traffic count and fullphysicalbranch RTT requireparentmodel composition; noheadlinecredit."
+  },
+  "state_inventory": {
+    "payload_FIFO_bits": 8368,
+    "merged_output_payload_bits": 523,
+    "owner_FIFO_bits": 8,
+    "single_control_bits": 47,
+    "total_declared_bits": 8946,
+    "flop_proxy_um2": 2862.7200000000003,
+    "planning_note": "Model39control-bitproxy gains8 actualper-source prepaidcredit counters; +2.56um\u00b2 proxy, same proposedframe. Realtechnologyarea/slots stillOPEN."
+  },
+  "negative": {
+    "mutation": "RAWpacketdata bit0 between merger and nativehub",
+    "expected": "FAIL nativehub packet/link order link0 ordinal1",
+    "exit_code": 1
+  },
+  "default_parameters": {
+    "merger_ENABLE": 0,
+    "wrapper_BOOT_MERGE": 0
+  },
+  "policy": "Noauth/epoch/leases/mirrors/TMR/ECC transientflops; originalHBMpayloadprotection unchanged",
+  "runtime_KV_writer_and_shared_native_host_credit_binding": "OPEN,parent-owned; host_boot_credit must not directlyreplace sharedhosto_cr for mixedruntime/BOOT traffic. Nofullhostcompletion claim.",
+  "period_ps": 833.333334,
+  "original_sources_modified": false,
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0
+}
