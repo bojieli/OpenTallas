@@ -4,7 +4,7 @@
 // supplied by that reader's row-valid knowledge. All errors terminate the call
 // with fault completion and suppress output for the offending word.
 module ot_hgi_coll_row_formatter #(
- parameter integer ENABLE=0,MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0
+ parameter integer ENABLE=0,MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0,MUT_PROGRESS=0
 )(
  input wire clk,rst_n,
  input wire start_v,output wire start_r,
@@ -121,7 +121,7 @@ module ot_hgi_coll_row_formatter #(
      end else step<=step-1;
     end
     REQUEST:begin
-     word_next<=inc_word(read_word);word_last<=(read_word==word_limit);
+     word_next<=inc_word(read_word);word_last<=MUT_PROGRESS?1'b1:(read_word==word_limit);
      if(read_r)state<=RESPONSE;
     end
     RESPONSE:if(response_v)begin
