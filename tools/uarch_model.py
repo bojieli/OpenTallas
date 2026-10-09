@@ -14156,3 +14156,33 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
+
+
+def hbm_control_robustness_model():
+    """HBM reset sequencer and SRAM/transport fault aggregation before build."""
+    from tools.hbm_control_robustness_model import model
+    return model()
+
+
+def hbm_write_source_transport_model():
+    """Source bits stay with accepted write until its actual PC completion."""
+    from tools.hbm_write_source_transport_model import model
+    return model()
+
+
+def dsrom_markov_row_model(**kwargs):
+    """Released256-term DSpark second dot and separate logit add; no rate credit."""
+    from dsrom_markov_model import model
+    return model(**kwargs)
+
+
+def qwen_embedding_hbm_closure_model(strip_side_um=600.0):
+    """Price the static-row HBM successor, including measured serial latency and pin-fit obligations."""
+    from tools.qwen_embedding_hbm_model import model
+    return model(strip_side_um=strip_side_um)
+
+
+def hbm_coll_port_interior_model():
+    """Full-shape SRAM port placement successor; no closure credit."""
+    from tools.hbm_coll_port_interior_model import model
+    return model()
