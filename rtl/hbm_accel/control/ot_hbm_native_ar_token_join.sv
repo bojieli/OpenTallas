@@ -14,6 +14,7 @@ module ot_hbm_native_ar_token_join #(
  input wire [127:0] cmd_wdata,
  output wire [31:0] launch_v,output wire [63:0] launch_pc,
  output wire [2*TW-1:0] launch_token,output wire [2*PW-1:0] launch_pos,
+ output wire [2*(TW+PW+36)-1:0] launch_owner,
  input wire [31:0] sm_done,sm_fault,res_v,input wire [1023:0] res_data,
  output wire busy,output wire [2:0] last_status,
  output wire [31:0] st_tokens,st_hq_stall,output wire identity_fault
@@ -46,6 +47,8 @@ module ot_hbm_native_ar_token_join #(
   .mtp_v(1'b0),.mtp_n(3'b0),.mtp_tok({6*TW{1'b0}}),
   .busy(busy),.last_status(last_status),.st_tokens(st_tokens),.st_hq_stall(st_hq_stall));
  generate for(genvar k=0;k<2;k=k+1) begin:g_half
+  // Actual producer identity: job32, generation4, TOKEN17/18, position20.
+  assign launch_owner[k*(TW+PW+36)+:(TW+PW+36)] = {launch_pos[k*PW+:PW],launch_token[k*TW+:TW],cp_gen[k*4+:4],cp_job[k*32+:32]};
   if(QWEN) begin:g_qwen
    ot_qwen_r25_cmdproc18 #(.ENABLE(ENABLE),.NSM(16),.NCMD(NCMD),.TW(TW),.PW(PW)) u_cp(
     .clk(clk),.rst_n(rst_n && !external_fault),.cmd_we(cmd_we[k] && !busy),
