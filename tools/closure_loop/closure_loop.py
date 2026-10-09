@@ -451,7 +451,7 @@ def locked_job_command(fn):
 
 
 class JobState(dict):
-    """A job dict that remembers the file version it was read from (mtime_ns + raw text; never serialised).
+    """A job dict that remembers the file version it was read from (raw text + mtime_ns; never serialised).
 
     STALE-SAVE 2026-10-09 (flow-fix-0410): a worker that loaded a job, ran a long step (bench relaunch, verdict) and
     then saved it overwrote a hand edit made meanwhile: pi-ta15prod hm10/hm25 went back to a ~45-min-old snapshot
@@ -536,8 +536,10 @@ def save_job(j):
                 j.update(current)
                 _stamp(j, cur_mtime, cur_raw)
                 return
-            known = getattr(j, "cl_mtime", None)
-            if isinstance(j, JobState) and known is not None and known != cur_mtime:
+            # version check on the exact text read (every save rewrites "updated"); mtime_ns alone is not enough:
+            # ext4 stamps with the coarse kernel clock, so two writes a few ms apart can share one mtime
+            known = getattr(j, "cl_raw", None)
+            if isinstance(j, JobState) and known is not None and known != cur_raw:
                 merged = _merge_newer(j, current, cur_mtime)
                 if merged is None:
                     j.clear()
