@@ -381,11 +381,11 @@
     "NJOB": 60
    },
    "defines": [],
-   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45",
    "got": "pass",
    "verdict": "OK",
    "log_lines": [
-    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0",
+    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45",
     "MTP_STG_CYC start_mean=14.50 start_max=17 done_mean=98.67 done_max=113 link_in_mean=13.37 link_in_max=238 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
    ]
   },
@@ -398,11 +398,11 @@
     "VMNAT": 1
    },
    "defines": [],
-   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0 core_user_mismatch_at_start=27",
    "got": "pass",
    "verdict": "OK",
    "log_lines": [
-    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0",
+    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0 core_user_mismatch_at_start=27",
     "MTP_STG_CYC start_mean=15.00 start_max=15 done_mean=79.00 done_max=79 link_in_mean=12.38 link_in_max=208 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
    ]
   },
@@ -415,11 +415,11 @@
     "LAG": 1
    },
    "defines": [],
-   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0",
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0 core_user_mismatch_at_start=27",
    "got": "pass",
    "verdict": "OK",
    "log_lines": [
-    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0",
+    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0 core_user_mismatch_at_start=27",
     "MTP_STG_CYC start_mean=15.32 start_max=17 done_mean=102.78 done_max=119 link_in_mean=13.72 link_in_max=246 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
    ]
   },
@@ -432,11 +432,11 @@
     "VMSLOW": 1
    },
    "defines": [],
-   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1",
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1 core_user_mismatch_at_start=43",
    "got": "pass",
    "verdict": "OK",
    "log_lines": [
-    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1",
+    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1 core_user_mismatch_at_start=43",
     "MTP_STG_CYC start_mean=231.15 start_max=524 done_mean=101.02 done_max=120 link_in_mean=54.36 link_in_max=648 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
    ]
   },
@@ -553,7 +553,6 @@
    ]
   }
  ],
- "rtl_commit": "e1c20dfb6ed52eefc6a83f5fa3cf5d9771d2a2ec",
- "tool": "tools/dsrom_mtp_rom_bench.py run (Icarus Verilog 11, -g2012)",
- "note": "23 cases: 12 positive PASS, 11 negative mutants FAIL as required; S0 = closed SOURCE WFC (r22 src_u55 params) + dsfd_wfc_tok/lnk/vmx + dsfd_mtp_seq on the reduced V4.1 golden generate_spec traces; STAGE = closed STAGE WFC (r11 stg_u50) + lnk + vmx"
+ "rtl_commit": "4a69a35c42c576db1e7c299a229d632c4dcd2c15",
+ "tool": "tools/dsrom_mtp_rom_bench.py run (Icarus Verilog 11, -g2012)"
 }
