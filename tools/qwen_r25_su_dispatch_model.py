@@ -12,18 +12,18 @@ def model():
     rom_bits = depth * (banks*native+metadata)
     rom_macros = banks*math.ceil(native/274)+math.ceil(metadata/274)
     dff_um2=.2916
-    mask_ff=4*32+4*21+21+1+1
+    mask_ff=6*72
     command_bits=banks*(native+73+12+2+1)
     return dict(schema='opentallas.qwen_r25_su_dispatch_model.v1',default_off=True,
         models=['Qwen3-8B HBM'],replicas_per_die=1,quarters=4,
         mathematical_shape=dict(query_positions=[8191,8192,8193,8194],
             valid_lengths=[8192,8193,8194,8195],kv_capacity_rows=8224,rows_per_group=32),
         mask=dict(MACs_per_cycle=0,comparisons_per_cycle=128,compute_intensity=0,
-            memory_bytes_per_cycle=0,input_bits_per_cycle=102,output_bits_per_cycle=130,
+            memory_bytes_per_cycle=0,input_bits_per_cycle=179,output_bits_per_cycle=308,
             ff=mask_ff,ff_area_um2=mask_ff*dff_um2,comparator_bits=128*21,
             estimated_total_area_um2=10000,proposed_slot_um=[200,200],
             fit_at_55pct_utilization=10000<=200*200*.55,
-            routing_tracks_needed=232,routing_tracks_capacity=math.floor(.7*(200/.048+200/.064)),
+            routing_tracks_needed=487,routing_tracks_capacity=math.floor(.7*(200/.048+200/.064)),
             replica_mux_demux='four query comparison trees; registered output; output fanout one per consumer',
             max_control_fanout=32,added_latency_cycles=1,period_ps=1000/1.2),
         dispatcher=dict(MACs_per_cycle=0,compute_intensity=0,rom_bits=rom_bits,
