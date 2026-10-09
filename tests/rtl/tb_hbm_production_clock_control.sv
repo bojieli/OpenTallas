@@ -28,7 +28,7 @@ module tb;
  always @(posedge ready) if(!cmd_reset_stream_n || !cmd_reset_serial_n || !(&phy_reset_n) || !(&link_reset_n))
   $fatal(1,"acceptance before actual destination release");
  initial begin
-  #0.1;por_n=1;power_good=1;
+  #0.1;por_n=0; #3;por_n=1;power_good=1;
   wait(state==2); phy_ready=15;
   wait(state==3); links_ready=511;
   wait(state==4); force dut.clk_serial=0; bist_pass=1;bist_done=1;
