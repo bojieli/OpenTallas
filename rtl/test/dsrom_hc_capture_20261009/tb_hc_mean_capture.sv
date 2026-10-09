@@ -140,7 +140,7 @@ module tb_hc_mean_capture;
             cmd_valid=1;
             @(negedge clk);cmd_valid=0;
             if(((bad==4||bad==10) && phase==0)||((bad==1||bad==3)&&phase==1)) begin
-                repeat(5) @(negedge clk);
+                repeat(IS?400:5) @(negedge clk);  // IN_SKID: the core takes the command after draining the skidded beats
                 if(!fault||out_valid||((bad==1||bad==3)&&!busy)) $fatal(1,"bad command escaped");
                 $display("PASS negative command %0d retained prior ownership",bad);$finish;
             end

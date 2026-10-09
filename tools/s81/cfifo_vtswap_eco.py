@@ -24,16 +24,15 @@ LIBS = ["AO_{v}_{c}_nldm_211120.lib.gz", "INVBUF_{v}_{c}_nldm_220122.lib.gz",
 P = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 
 
-def head(corner, odb):
+def head(corner, odb, add_lvt_lef=False):
     c = {"tt": "TT", "ff": "FF"}[corner]
     s = [f"read_lef {P}/lef/asap7_tech_1x_201209.lef",
-         f"read_lef {P}/lef/asap7sc7p5t_28_R_1x_220121a.lef",
-         f"read_lef {P}/lef/asap7sc7p5t_28_L_1x_220121a.lef"]
+         f"read_lef {P}/lef/asap7sc7p5t_28_R_1x_220121a.lef"]
     for v in ("RVT", "LVT"):
         for l in LIBS:
             s.append(f"read_liberty {P}/lib/NLDM/asap7sc7p5t_" + l.format(v=v, c=c))
     base = "/work/results/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_colck_a6ca75fbe_tt_srcfix/base"
-    s += [f"read_db {odb}", f"read_sdc {base}/6_final.sdc", f"read_spef {base}/6_final.spef",
+    s += [f"read_db {odb}"] + ([f"read_lef {P}/lef/asap7sc7p5t_28_L_1x_220121a.lef"] if add_lvt_lef else []) + [f"read_sdc {base}/6_final.sdc", f"read_spef {base}/6_final.spef",
           "set_propagated_clock [all_clocks]",
           "read_sdc /src/physical/s81_die_views/common/signoff_unc60.sdc",
           "read_sdc /meas/app0_io_ref_routed.sdc", f'puts "OT_CORNER {corner}"']
@@ -103,7 +102,7 @@ def main():
     out = a.bundle / f"vtswap_{a.tag}"
     out.mkdir(exist_ok=True)
     base = "/work/results/asap7/opentallas_dsfd_cfifo_asap7_s81g_s81_dsfd_cfifo_colck_a6ca75fbe_tt_srcfix/base/6_final.odb"
-    (out / "eco_tt.tcl").write_text(head("tt", base) + f"set MARGIN {a.margin_ps}\n" + SWAP + "exit\n")
+    (out / "eco_tt.tcl").write_text(head("tt", base, True) + f"set MARGIN {a.margin_ps}\n" + SWAP + "exit\n")
     (out / "chk_ff.tcl").write_text(head("ff", "/out/6_final_vtswap.odb") + FFCHK + "exit\n")
     (out / "chk_tt.tcl").write_text(head("tt", "/out/6_final_vtswap.odb") + TTCHK + "exit\n")
     print(out)
