@@ -25,6 +25,10 @@ proc ot_ir_arr {p} {
   foreach {- x} [regexp -all -inline {\sr\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($v eq "" || $x > $v)} { set v $x } }
   return $v
 }
+if {[ot_ir_multi] && ![info exists ::ot_ioref_scene]} {
+  # a run whose own orfs_hold_mm.tcl predates ::ot_ioref_scene: its hold scene is named BC (orfs_hold_mm) or ff (hold_eco)
+  foreach ot_ir_n {BC ff} { if {![catch {sta::find_scene $ot_ir_n} ot_ir_o] && $ot_ir_o ne "" && $ot_ir_o ne "NULL"} { set ::ot_ioref_scene $ot_ir_n; break } }
+}
 if {[ot_ir_multi]} {
   if {[info exists ::ot_ioref_scene]} { puts "OT_IOREF multi-scene session: arrivals of scene $::ot_ioref_scene" } else {
     puts "OT_IOREF WARNING: multi-scene session without ::ot_ioref_scene: arrivals of the command scene" }
