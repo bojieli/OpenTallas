@@ -10,6 +10,11 @@ module tb_hc_mean_capture;
 `else
     localparam integer MC=0;
 `endif
+`ifdef HC_IN_SKID
+    localparam integer IS=1;
+`else
+    localparam integer IS=0;
+`endif
 `ifdef HC_PLAIN_ROWS
     localparam integer PR=1;
 `else
@@ -53,7 +58,7 @@ module tb_hc_mean_capture;
     wire [3:0] source_epoch;wire [1:0] source_capture;wire [5:0] source_frame;
     wire source_last,source_ce;
     assign busy=source_busy|join_busy;assign fault=source_fault|join_fault;
-    ot_dsrom_hc_seed_join #(.ECC_PIPE(EP),.MACRO_CAP(MC),.READ_INJECT(INJ)) joiner(.clk(clk),.rst_n(rst_n),
+    ot_dsrom_hc_seed_join #(.ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.READ_INJECT(INJ)) joiner(.clk(clk),.rst_n(rst_n),
       .in_valid(source_valid),.in_ready(source_ready),.in_data(source_data),
       .in_user(source_user),.in_position(source_position),.in_epoch(source_epoch),
       .in_capture(source_capture),.in_frame(source_frame),.in_last(source_last),
@@ -74,7 +79,7 @@ module tb_hc_mean_capture;
       .req_valid(req_valid),.req_ready(req_ready),.req_row(req_row),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_fault(1'b0),
       .mean_valid(miv),.mean_ready(mir),.mean_beat(mib),.mean_residuals(mid),.busy(rb),.fault(rf));
-    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),
+    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),
 `ifdef HC_DISTRIBUTED
       .SINGLE_CAPTURE(1),.READ_INJECT(72'd0)) u(
       .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
@@ -106,13 +111,13 @@ module tb_hc_mean_capture;
     end
 `else
 `ifdef HC_DISTRIBUTED
-    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.SINGLE_CAPTURE(1)) u(
+    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.SINGLE_CAPTURE(1)) u(
       .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
       .out_user(source_user),.out_position(source_position),.out_epoch(source_epoch),
       .out_capture(source_capture),.out_frame(source_frame),.out_last(source_last),
       .out_corrected(source_ce),.busy(source_busy),.fault(source_fault),.*);
 `else
-    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
+    ot_dsrom_hc_mean_capture #(.ECC_PIPE(EP),.MACRO_CAP(MC),.IN_SKID(IS),.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
 `endif
 `endif
     string idir;

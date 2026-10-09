@@ -16,6 +16,9 @@ module ot_dsrom_hc_mean_capture #(
     // = rd_out -> overall-parity tree); +1 cycle per frame read.  Write: the encoded word is registered at STORE and the
     // macro writes it at WCOMMIT (same address registers, which only change after WCOMMIT): 0 cycles.
     parameter integer MACRO_CAP=0,
+    // IN_SKID (cont-takeover 2026-10-09, default off): registered cmd and residual-beat input boundaries via two
+    // ot_dsrom_hc_skid, +1 cycle per command and per beat; the command / beat checks then start at flops.
+    parameter integer IN_SKID=0,
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -40,6 +43,19 @@ module ot_dsrom_hc_mean_capture #(
     output reg capture_done, output wire [1:0] capture_done_capture,
     output wire busy, output reg fault
 );
+    wire x_cmd_valid,x_cmd_ready,x_in_valid,x_in_ready;wire [1:0] x_cmd_capture;wire [USER_W-1:0] x_cmd_user;
+    wire [POS_W-1:0] x_cmd_position;wire [EPOCH_W-1:0] x_cmd_epoch;wire [7:0] x_in_beat;wire [511:0] x_in_residuals;
+    generate if(IN_SKID) begin:g_skid
+        ot_dsrom_hc_skid #(.W(2+USER_W+POS_W+EPOCH_W)) u_cmd(.clk(clk),.rst_n(rst_n),.i_valid(cmd_valid),.i_ready(cmd_ready),
+            .i_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),
+            .o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}));
+        ot_dsrom_hc_skid #(.W(8+512)) u_in(.clk(clk),.rst_n(rst_n),.i_valid(in_valid),.i_ready(in_ready),
+            .i_data({in_beat,in_residuals}),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}));
+    end else begin:g_direct
+        assign x_cmd_valid=cmd_valid;assign cmd_ready=x_cmd_ready;assign x_cmd_capture=cmd_capture;assign x_cmd_user=cmd_user;
+        assign x_cmd_position=cmd_position;assign x_cmd_epoch=cmd_epoch;
+        assign x_in_valid=in_valid;assign in_ready=x_in_ready;assign x_in_beat=in_beat;assign x_in_residuals=in_residuals;
+    end endgenerate
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
                      STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12;
     reg [3:0] state;
@@ -117,8 +133,8 @@ module ot_dsrom_hc_mean_capture #(
     assign read_code=bank_data[575:0];
     assign busy=owned;
     assign capture_done_capture=capture_q;
-    assign cmd_ready=state==CMD&&!fault;
-    assign in_ready=state==LOAD&&!fault;
+    assign x_cmd_ready=state==CMD&&!fault;
+    assign x_in_ready=state==LOAD&&!fault;
     assign out_valid=state==RHOLD&&!fault&&!(|dec_ue);
     assign out_user=user_q;
     assign out_position=position_q;
@@ -141,22 +157,22 @@ module ot_dsrom_hc_mean_capture #(
         end else if(!fault) begin
             capture_done<=0;
             case(state)
-                CMD: if(cmd_valid) begin
-                    if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || (owned &&
-                       (cmd_user!=user_q || cmd_position!=position_q || cmd_epoch!=epoch_q ||
-                        captured[cmd_capture]))) fault<=1;
+                CMD: if(x_cmd_valid) begin
+                    if(x_cmd_capture>2 || x_cmd_position>=MAX_CONTEXT || (owned &&
+                       (x_cmd_user!=user_q || x_cmd_position!=position_q || x_cmd_epoch!=epoch_q ||
+                        captured[x_cmd_capture]))) fault<=1;
                     else begin
-                        owned<=1;user_q<=cmd_user;position_q<=cmd_position;epoch_q<=cmd_epoch;
-                        capture_q<=cmd_capture;beat_q<=0;frame_q<=0;part<=0;
+                        owned<=1;user_q<=x_cmd_user;position_q<=x_cmd_position;epoch_q<=x_cmd_epoch;
+                        capture_q<=x_cmd_capture;beat_q<=0;frame_q<=0;part<=0;
                         state<=LOAD;
                     end
                 end
-                LOAD: if(in_valid) begin
-                    if(in_beat!=beat_q) fault<=1;
+                LOAD: if(x_in_valid) begin
+                    if(x_in_beat!=beat_q) fault<=1;
                     else begin
                         for(lane=0;lane<8;lane=lane+1)
-                            acc[32*lane+:32]<={in_residuals[16*lane+:16],16'd0};
-                        h1<=in_residuals[128+:128];h2<=in_residuals[256+:128];h3<=in_residuals[384+:128];
+                            acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
+                        h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
                         add_step<=0;state<=AISS;
                     end
                 end
