@@ -14076,3 +14076,7 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+def qwen_embedding_hbm_closure_model(strip_side_um=600.0):
+    """Price the static-row HBM successor, including measured serial latency and pin-fit obligations."""
+    from tools.qwen_embedding_hbm_model import model
+    return model(strip_side_um=strip_side_um)
