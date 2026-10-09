@@ -4080,8 +4080,8 @@ def eco_install_cmd(j):
         for f in ("6_final.odb", "6_final.spef", "6_final.v"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
-    if he.get("reexport"):
-        lines.append(he["reexport"])
+    if isinstance(he.get("reexport"), str) and he["reexport"].strip():   # drive-0849: a spec with reexport: true (bool)
+        lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
         W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
         macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
