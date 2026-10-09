@@ -1,0 +1,154 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "sp-ta15rs-006e20771-tc-hm10-cl",
+ "block": "ot_hbm_clock_reset_collars_rs",
+ "owner": "Claude:strip-protect",
+ "source_branch": "claude/strip-protect-20261009",
+ "record_branch": "codex/closure-record-sp-ta15rs-006e20771-tc-hm10-cl",
+ "source_commit": "006e20771365a930ec06714fb9d447418784f522",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 275.92,
+  "ff_ps": 10.94,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": 224.62,
+  "ss_sensitivity_tns_ps": 0.0,
+  "corner_sta_tt": "/srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl/routes/sp_ta15rs_006e20771_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/strip_protect/ta15_collars_rs.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl/routes/sp_ta15rs_006e20771_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl/routes/sp_ta15rs_006e20771_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_hbm_clock_reset_collars_rs_asap7_mtp_sp_ta15rs_006e20771_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_ta15_rs_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "run0 rc=0 STRIP_EQUIV_ARMED\nPASS clock/reset boundary: 17 endpoints, 3-edge release, async lock/POR assertion, stopped clocks, boot isolation\n/srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl/bench_src_a1/tests/rtl/tb_hbm_clock_reset_boundary.sv:75: $finish called at 54010000 (1fs)\nSTRIP_ta15_rs_PASS\n",
+   "track": "parallel"
+  },
+  "bench_ta15_rs_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "run0 rc=1        Time: 419000  Scope: tb.oracle[5]\nFATAL: /srv/opentallas-data/claude/closure-loop/sp-ta15rs-006e20771-tc-hm10-cl/bench_src_a1/tests/rtl/tb_hbm_clock_reset_boundary.sv:45: endpoint 4 got 1 expected 0 edge 0\n       Time: 419000  Scope: tb.oracle[4]\nSTRIP_ta15_rs_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T02:46:13-07:00",
+ "job_spec": {
+  "name": "sp-ta15rs-006e20771-tc-hm10-cl",
+  "block": "ot_hbm_clock_reset_collars_rs",
+  "element": "TA15 digital clock reset collars",
+  "owner": "Claude:strip-protect",
+  "purpose": "strip-protect 2026-10-09 ('-cl' line). TA15 collars, standard reset structure: per-endpoint 2-flop synchroniser (async assert / sync deassert, the only flops on a raw async input) + 1 registered tree stage reset by the SYNCHRONISED reset (recovery/removal timed in the destination clock) driving the port; AON inputs on a virtual clock aon_v, only false path = raw assert edge, raw deassert into the synchroniser bounded 500/0 ps. Same 3-edge release. Fixes r4 TT -179 (cross-clock recovery at a 1.35 ps LCM edge). review_queue/strip-protect.md. Variant: TC route / option B (TT setup, FF hold, DRC 0), mm hold HM 10 ps. Exact bench + mutant: physical/strip_protect/bench.py ta15_rs (lock-step vs the original + the committed functional golden; the mutant must FAIL).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 4,
+  "peak_ram_gb": 12,
+  "source": {
+   "branch": "claude/strip-protect-20261009",
+   "commit": "006e20771365a930ec06714fb9d447418784f522",
+   "paths": [
+    "tools",
+    "rtl",
+    "physical",
+    "Makefile",
+    "tests"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "ta15_rs_exact",
+     "cmd": "python3 physical/strip_protect/bench.py ta15_rs pos {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "STRIP_ta15_rs_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "ta15_rs_mutant",
+     "cmd": "python3 physical/strip_protect/bench.py ta15_rs neg {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "STRIP_ta15_rs_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=4 UTIL=40 PD=0.55 HM=0.010 LB=0 SDCX=physical/strip_protect/ta15_collars_rs.sdc bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_clock_reset_collars_rs --source rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv --param LINK_PORTS=9 --clock-port clk_stream --die-area 0 0 100.224 99.36 --core-area 1.08 1.08 99.144 98.28",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "enabled": false,
+    "reason": "multi-clock block (second clock / virtual AON clock defined in its own SDC): no single core_clk insertion to calibrate; block-internal closure at the generic IO budget first"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/strip_protect/ta15_collars_rs.sdc",
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+   ],
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 0,
+  "notes": "cycles added: 0 (protection stripped; TA15: same 3-edge release)",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
