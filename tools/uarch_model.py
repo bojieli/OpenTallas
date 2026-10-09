@@ -235,6 +235,22 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hgi_collective_row_formatter_model(**kwargs):
+    from uarch_model_hgi_collective_decode import row_formatter_model
+    return row_formatter_model(**kwargs)
+
+
+def hgi_collective_endpoint_model():
+    from uarch_model_hgi_collective_decode import endpoint_model
+    return endpoint_model()
+
+
+def hgi_collective_decode_model():
+    """Approved HGI-1 G10/G14 dispatcher sizing, one real endpoint per die."""
+    from uarch_model_hgi_collective_decode import model
+    return model()
+
+
 def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
     """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
 
