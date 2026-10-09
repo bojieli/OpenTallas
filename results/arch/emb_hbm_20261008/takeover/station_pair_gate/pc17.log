@@ -1,0 +1,2 @@
+PASS station_pc STAGES=17 writes64 reads64 CE1 UE1 JEDEC0 max_inflight=1 read_sum=7278 read_min=100 read_max=400 credit_sum=9953 total_cycles=12002 core833.333334ps HBM1024ps
+rtl/test/emb_hbm/tb_emb_station_pc.sv:66: $finish called at 10001258001 (1fs)
