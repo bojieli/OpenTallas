@@ -80,7 +80,12 @@ module ot_qfd_res_ser #(
     // RDS = 2: two registered levels, t1: the 8 slot rows of burst d_p (64:1), t2: the slot t1_s (8:1).  0 cycles: the
     // row / mask ride t1 / t2 beside the slot-memory read anyway.  Safe: burst d_p cannot be rewritten within 2 edges
     // (rok keeps n + RS + 2 <= DB, so wp never reaches a burst still being sent).
-    parameter integer RDS = `ifdef OT_QFD_RES_RDS `OT_QFD_RES_RDS `else 0 `endif
+    parameter integer RDS = `ifdef OT_QFD_RES_RDS `OT_QFD_RES_RDS `else 0 `endif,
+    // CRQ (fill-5 2026-10-09; 0 = unchanged): the merge credit return o_cr is captured in a pin flop before the credit
+    // counter (tsr42r1/r2 submit lint: input->register 19 gate levels, o_cr -> cr +/- 1 ripple -> cr / fault).  A credit
+    // becomes usable one edge later; the sender only gets more conservative (cr never exceeds the merge FIFO's free
+    // entries), so no beat changes order or content.  0 data cycles; +1 edge on the credit return loop.
+    parameter integer CRQ = `ifdef OT_QFD_RES_CRQ 1 `else 0 `endif
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -135,6 +140,9 @@ module ot_qfd_res_ser #(
         for (j = NS - 1; j >= 0; j = j - 1) if (hm[j]) pick = j;
         more = |(hm & ~({{(NS-1){1'b0}}, 1'b1} << pick));
     end
+    reg o_cr_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) o_cr_q <= 1'b0; else o_cr_q <= o_cr;
+    wire cr_in = (CRQ != 0) ? o_cr_q : o_cr;
     wire can = (n != 0) && (cr != 0);
     wire pop = can && !more;
     reg            d_v, d_nul, d_end;
@@ -155,9 +163,9 @@ module ot_qfd_res_ser #(
             end
             if (c_v) wp <= wp + 1'b1;
             n <= n + (c_v ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
-            cr <= cr + (o_cr ? 1'b1 : 1'b0) - (can ? 1'b1 : 1'b0);
+            cr <= cr + (cr_in ? 1'b1 : 1'b0) - (can ? 1'b1 : 1'b0);
             rok <= ({1'b0, n} + (c_v ? 1 : 0) + RS + 2) <= DB;
-            if ((c_v && n == DB) || (c_v && hi_bad) || (o_cr && cr == CRB[LC-1:0])) fault <= 1'b1;
+            if ((c_v && n == DB) || (c_v && hi_bad) || (cr_in && cr == CRB[LC-1:0])) fault <= 1'b1;
         end
     end
     always @(posedge clk) begin
