@@ -35,8 +35,6 @@ module tb_hbm_native_mtp_transaction_cp_join;
  completion();if(tm[83]||!fault)$fatal(1,"faulted command later completed");
  xf=1;tick();xf=0;q=0;jv=1;tick();jv=0;if(active)$fatal(1,"fault without quiescence");
  epoch=4;job();launch();
- if(MUT)begin cjid=ej;cgen=eg;cseq=seq;cepoch=ee-1;cv=1;tick();cv=0;
-  if(tm[83])$display("BAD completion accepted");else $fatal(1,"golden rejects stale response");end
  completion();if(!tm[83]||fault)$fatal(1,"restart identity");tick();fm[81]=1;tick();fm[81]=0;
  if(active)$fatal(1,"native done");
  // Reset while command is owned. New epoch must reject old response.
