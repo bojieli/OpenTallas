@@ -26,6 +26,7 @@
 // and writes.  One beat a cycle: 192 beats a token in 192 cycles.
 // ---------------------------------------------------------------------------
 module ot_dsrom_engram_rowsink #(
+    parameter integer PIN_CAPTURE = 0, // opt-in reserved pin capture + four-entry source queues
     parameter integer NSRC  = 4,
     parameter integer NC    = 24,
     parameter integer NSLOT = 2,
@@ -61,23 +62,58 @@ module ot_dsrom_engram_rowsink #(
     localparam integer EW  = 5 + 3 + SLW + BW;
 
     // ---- per-source skid (1 entry) ----------------------------------------------------
-    reg  [NSRC-1:0] sv;
-    reg  [EW-1:0]   sd [0:NSRC-1];
+    wire [NSRC-1:0] sv;
+    wire [EW-1:0] sd [0:NSRC-1];
     wire [NSRC-1:0] take;
     integer i;
     genvar gs;
     generate
         for (gs = 0; gs < NSRC; gs = gs + 1) begin : g_src
-            wire acc = in_valid[gs] && in_ready[gs];
-            always @(posedge clk or negedge rst_n) begin
-                if (!rst_n) begin sv[gs] <= 1'b0; in_ready[gs] <= 1'b0; end
-                else begin
-                    sv[gs] <= (sv[gs] && !take[gs]) || acc;
-                    in_ready[gs] <= !((sv[gs] && !take[gs]) || acc);
+            if (!PIN_CAPTURE) begin:g_legacy
+                reg valid_q;
+                reg [EW-1:0] data_q;
+                wire acc = in_valid[gs] && in_ready[gs];
+                assign sv[gs]=valid_q;
+                assign sd[gs]=data_q;
+                always @(posedge clk or negedge rst_n) begin
+                    if (!rst_n) begin valid_q <= 0; in_ready[gs] <= 0; end
+                    else begin
+                        valid_q <= (valid_q && !take[gs]) || acc;
+                        in_ready[gs] <= !((valid_q && !take[gs]) || acc);
+                    end
+                end
+                always @(posedge clk) if (acc)
+                    data_q <= {in_col[5*gs +: 5], in_beat[3*gs +: 3], in_slot[SLW*gs +: SLW], in_data[BW*gs +: BW]};
+            end else begin:g_pin
+                reg accepted_q;
+                reg [EW-1:0] pin_data;
+                reg [EW-1:0] fifo [0:3];
+                reg [1:0] rp,wp;
+                reg [2:0] count;
+                assign sv[gs]=(count!=0);
+                assign sd[gs]=fifo[rp];
+                // Every payload pin has an unconditional capture. Only one
+                // valid flop loads the acceptance gate; no wide input enable.
+                always @(posedge clk)
+                    pin_data <= {in_col[5*gs +: 5], in_beat[3*gs +: 3], in_slot[SLW*gs +: SLW], in_data[BW*gs +: BW]};
+                always @(posedge clk or negedge rst_n) begin
+                    if(!rst_n) begin accepted_q<=0;in_ready[gs]<=0;rp<=0;wp<=0;count<=0;end
+                    else begin
+                        accepted_q<=in_valid[gs] && in_ready[gs];
+                        // count + accepted_q already reserves the captured
+                        // beat. Two spare entries reserve current acceptance
+                        // and the acceptance under next cycle's ready.
+                        in_ready[gs]<=({1'b0,count}+accepted_q<=2);
+                        case({accepted_q,take[gs]})
+                            2'b10:count<=count+1'b1;
+                            2'b01:count<=count-1'b1;
+                            default:count<=count;
+                        endcase
+                        if(accepted_q) begin fifo[wp]<=pin_data;wp<=wp+1'b1;end
+                        if(take[gs]) rp<=rp+1'b1;
+                    end
                 end
             end
-            always @(posedge clk) if (acc)
-                sd[gs] <= {in_col[5*gs +: 5], in_beat[3*gs +: 3], in_slot[SLW*gs +: SLW], in_data[BW*gs +: BW]};
         end
     endgenerate
 

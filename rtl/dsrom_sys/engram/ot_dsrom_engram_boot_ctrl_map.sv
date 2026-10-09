@@ -6,7 +6,7 @@
 // not a completion: each PC owns eight request credits but only one is used.
 // Request mapping: stack=global_atom[0], PC=global_atom[5:1],
 // PC-local atom=global_atom>>6. No controller/PHY or route qualification claim.
-module ot_dsrom_engram_boot_ctrl_map (
+module ot_dsrom_engram_boot_ctrl_map #(parameter integer ROWSTRIPE=0) (
     input wire ck, rst_n,
     input wire [1:0] i_v,
     input wire [28:0] i_atom, // already stack-stripped
@@ -42,7 +42,7 @@ module ot_dsrom_engram_boot_ctrl_map (
     reg [5:0] incoming_pc;
     always @(*) begin
         launch=-1;ret_sw=-1;ret_se=-1;
-        incoming_pc={iv_q[1],ia_q[4:0]};
+        incoming_pc=(iv_q[1] ? 32 : 0)+(ROWSTRIPE ? ((ia_q/9)%32) : ia_q[4:0]);
         for(j=7;j>=0;j=j-1) begin
             if(state[j]==1 && !busy[pc[j]]) launch=j;
             if(state[j]==3 && !pc[j][5]) ret_sw=j;
@@ -68,7 +68,7 @@ module ot_dsrom_engram_boot_ctrl_map (
                 if(iv_q!=0) begin
                     if(iv_q==3 || state[it_q]!=0) fault<=1;
                     else begin
-                        state[it_q]<=1;pc[it_q]<=incoming_pc;atom[it_q]<=ia_q[28:5];data[it_q]<=id_q;
+                        state[it_q]<=1;pc[it_q]<=incoming_pc;atom[it_q]<=ROWSTRIPE ? ((ia_q/9)/32)*9+ia_q%9 : ia_q[28:5];data[it_q]<=id_q;
                     end
                 end
                 if(launch>=0) begin
