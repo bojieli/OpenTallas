@@ -21,7 +21,7 @@
 // Flow control: an input FIFO of OCRED entries (= ot_rom_host_ingest's OCRED die-fabric credits); one credit (i_cr)
 // returns per entry popped.  The checksum pipeline is 2 registers deep (CRC-32 over 288 bits, then the sum).
 // Faults (sticky, first code): 1 static sector outside every boot table (or a table this die does not need), 2 marker
-// checksum / count mismatch, 3 marker over an incomplete table, 4 input FIFO overflow (credits violated).
+// checksum / count mismatch, 3 marker over an incomplete table, 4 input FIFO overflow (credits violated), 5 static read rejected.
 // MUT (bench negative controls): 1 = the marker is accepted without the checksum compare.
 // Boot cost (full scale, 1M positions): 2 tables x 8 x 2^20 sectors x 32 B = 512 MiB per die (128 MiB a stack), at
 // the die face's 1 sector / cycle = 38.4 GB/s: 14.0 ms per die, all dies in parallel.  Off the token path.
@@ -87,18 +87,24 @@ module ot_s81_boot_seq #(
     wire [PB-1:0] h_pos = h_e[PB+2:3];
     wire [1:0]   h_s    = h_e[2:1];
     wire         h_j    = h_e[0];
-    // ---- marker handling: wait for the checksum pipeline to drain ----
+    // w_rdy transfers ownership to an ordered write service: subsequently accepted
+    // reads must observe accepted writes. If the service does not provide that
+    // ordering, its adapter must withhold w_rdy until the write is committed.
+    // ---- marker handling: wait for both checksum and stack writes to drain ----
     reg  [1:0]   mk_wait;                                  // marker popped, cycles until the sum is final
     reg  [63:0]  mk_d;
     reg          a_v; reg [30:0] a_e; reg [255:0] a_d;     // checksum stage A
     reg          b_v; reg [31:0] b_crc;                    // stage B
     reg  [31:0]  sum, cnt; reg [31:0] cnt_k [0:1];
+    // Ordered sectors within each table make the completion count a coverage proof.
+    wire         h_order = h_e[PB+2:0] == cnt_k[h_kind];
     wire         w_free = !w_v[h_s] || w_rdy[h_s];
-    wire         pop = (h_mark && mk_wait == 0 && !a_v && !b_v) ||
-                       (h_stat && (!h_inr || w_free)) ||
-                       (h_kv && kv_rdy);
-    assign kv_v = h_kv; assign kv_we = h_we; assign kv_a = h_a[30:0]; assign kv_d = h_d;
-    assign boot_ok = ((table_present & NEED) == NEED);
+    wire         pop = (mk_wait == 0) &&
+                       ((h_mark && !a_v && !b_v && !(|w_v)) ||
+                        (h_stat && (!h_we || !h_inr || w_free)) ||
+                        (h_kv && kv_rdy));
+    assign kv_v = h_kv && (mk_wait == 0); assign kv_we = h_we; assign kv_a = h_a[30:0]; assign kv_d = h_d;
+    assign boot_ok = !fault && ((table_present & NEED) == NEED);
 
     function automatic [31:0] crc_sector(input [30:0] e, input [255:0] d);
         reg [287:0] m; reg [31:0] c; integer i;
@@ -134,7 +140,8 @@ module ot_s81_boot_seq #(
             // static sector
             a_v <= 1'b0;
             if (pop && h_stat) begin
-                if (!h_inr) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd1; end
+                if (!h_we) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd5; end
+                else if (!h_inr || !h_order) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd1; end
                 else begin
                     w_v[h_s] <= 1'b1;
                     w_a[h_s*HAW +: HAW] <= base_of(h_kind, h_s) + {{(HAW-PB-1){1'b0}}, h_pos, h_j};

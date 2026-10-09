@@ -89,7 +89,7 @@ module tb_s81_boot_secded;
         repeat (20) @(posedge ck);
         if (badsum || shrt) begin
             $display("TB_S81_BOOT_SECDED neg=%s boot_ok=%0d fault=%0d code=%0d %s", badsum ? "badsum" : "short", boot_ok, bfault, bfc,
-                     (!boot_ok && bfault && bfc == 2 && tp == 0) ? "PASS" : "FAIL");
+                     (!boot_ok && bfault && bfc == (shrt ? 1 : 2) && tp == 0) ? "PASS" : "FAIL");
             $finish;
         end
         // phase 2: inject errors into the stored copy, read every table sector back through the decoder
