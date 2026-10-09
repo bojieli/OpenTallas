@@ -51,10 +51,13 @@ set_load 4 [all_outputs]
     cmd=['python3','tools/run_abi3_physical.py','--view','asap7','--top',part['top']]
     for source in sources:cmd+=['--source',source]
     w,h=part['width_um'],part['height_um']
+    # struct-close 2026-10-09 (fill-5 F5-1): HA2_CORE_INSET (um, default 1.08) keeps the automatically placed macros off
+    # the pin faces (fp-lint macro_edge >= 10 um); the macro halo does not act against the core boundary.
+    ci=float(os.environ.get('HA2_CORE_INSET','1.08'))
     cmd+=['--clock-period-ns','0.833333','--clock-uncertainty-ns','0.06',
           '--clock-uncertainty-hold-ns','0.025','--orfs-corner','WC','--hold-corners','WC,BC',
           '--io-delay-fraction','0.2','--sdc-append',str(sdc),'--stages','pnr' if part.get('macros') else 'synth,pnr',
-          '--die-area','0','0',str(w),str(h),'--core-area','1.08','1.08',str(w-1.08),str(h-1.08),
+          '--die-area','0','0',str(w),str(h),'--core-area',str(ci),str(ci),str(round(w-ci,3)),str(round(h-ci,3)),
           '--place-density','0.55','--hold-margin-ns',os.environ.get('HA2_HM','0.015'),'--orfs-var','ADDER_MAP_FILE=',
           '--step-tcl',f'POST_IO_PLACEMENT=physical/ha2_truecredit_20261007/{a.part}_pins_signal_only.tcl',
           '--purpose','signoff_target','--nickname-tag',f'ha2_tc{a.variant}_rx',
