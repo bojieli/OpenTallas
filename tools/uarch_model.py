@@ -14188,3 +14188,18 @@ def hbm_dskv_shadow_sram_model(*, utilisation=0.55, macro_capture_cycles=1):
             upper_added_cycles_per_token_8_index_layers=8*3*(read_cycles+write_cycles+5),
             upper_added_ns_per_token_1p2GHz=8*3*(read_cycles+write_cycles+5)/1.2,
             note='full key golden mapping unchanged; stalls add actual consumer delay'))
+
+
+def hbm_dskv_shadow_sram_hub_model(*, RI_AW=5, utilisation=.55):
+    """Full R3 route vehicle includes FIFO, assembler, storage, mapper and credits."""
+    storage=hbm_dskv_shadow_sram_model(utilisation=utilisation)
+    ff_payload=(1<<RI_AW)*257+4352+4352+259+4*292+3*256
+    return dict(storage=storage, replicas_per_die=1,
+        payload_FF_inventory=ff_payload,
+        control_and_sidecar_FF_upper_estimate=3000,
+        FF_total_upper_estimate=ff_payload+3000,
+        boundary_bits=dict(ri=258,ri_credit=1,sector_links=4*292,
+            service_count_returns=4*16,die_identity=7,visibility_counts=33),
+        floorplan_status='two real macros plus measured full hub logic required; no fit/closure claim',
+        latency=storage['latency'],
+        adoption='full hub SS/FF timing/DRC and golden row/shadow/credit/fence gate pending')
