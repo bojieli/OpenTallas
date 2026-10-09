@@ -100,7 +100,11 @@ module tb_s81_seed_packet;
      if(normal_d!==normal_word(normal_received)||normal_l!=(normal_received==1))$fatal(1,"ordinary packet altered");
      normal_received=normal_received+1;
     end
-    ot_dsrom_hc_seed_join #(.READ_INJECT(INJ)) joiner(.clk(clk),.rst_n(rst_n),
+    ot_dsrom_hc_seed_join #(
+`ifdef HC_ECC_PIPE
+      .ECC_PIPE(1),
+`endif
+      .READ_INJECT(INJ)) joiner(.clk(clk),.rst_n(rst_n),
       .in_valid(seed_v),.in_ready(seed_r),.in_data(seed_d),
       .in_user(seed_u),.in_position(seed_p),.in_epoch(seed_e),
       .in_capture(seed_c),.in_frame(seed_f),.in_last(seed_l),
@@ -121,7 +125,11 @@ module tb_s81_seed_packet;
       .req_valid(req_valid),.req_ready(req_ready),.req_row(req_row),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_fault(1'b0),
       .mean_valid(miv),.mean_ready(mir),.mean_beat(mib),.mean_residuals(mid),.busy(rb),.fault(rf));
-    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),
+    ot_dsrom_hc_mean_capture #(
+`ifdef HC_ECC_PIPE
+      .ECC_PIPE(1),
+`endif
+      .MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),
 `ifdef HC_DISTRIBUTED
       .SINGLE_CAPTURE(1),.READ_INJECT(72'd0)) u(
       .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
@@ -153,13 +161,21 @@ module tb_s81_seed_packet;
     end
 `else
 `ifdef HC_DISTRIBUTED
-    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.SINGLE_CAPTURE(1)) u(
+    ot_dsrom_hc_mean_capture #(
+`ifdef HC_ECC_PIPE
+      .ECC_PIPE(1),
+`endif
+      .MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.SINGLE_CAPTURE(1)) u(
       .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
       .out_user(source_user),.out_position(source_position),.out_epoch(source_epoch),
       .out_capture(source_capture),.out_frame(source_frame),.out_last(source_last),
       .out_corrected(source_ce),.busy(source_busy),.fault(source_fault),.*);
 `else
-    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
+    ot_dsrom_hc_mean_capture #(
+`ifdef HC_ECC_PIPE
+      .ECC_PIPE(1),
+`endif
+      .MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
 `endif
 `endif
     string idir;
