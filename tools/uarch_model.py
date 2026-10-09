@@ -426,6 +426,12 @@ def hbm_ha2_relay_tx_physical_model():
     from ha2_relay_tx_physical_model import model
     return model()
 
+def hbm_ha2_owner_cx_model(**kwargs):
+    """Opposite-phase FIFO landing, REVIEW53 actual FF failure successor."""
+    from tools.hbm_ha2_owner_cx_model import model
+    return model(**kwargs)
+
+
 def hbm_ha2_fixedpin_model():
     """Physical-only full-shape HA2 half-rate boundary relocation; no latency credit."""
     from hbm_ha2_fixedpin_model import model

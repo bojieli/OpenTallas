@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""REVIEW53: model before opposite-phase HA2 FIFO landing implementation."""
+def model(injectors=2, ports=8, columns=8, pfmax=384, lanes=16, depth=8):
+    fw=32*lanes
+    peer=ports*(fw+33)
+    own=injectors*(fw+16)
+    payload=peer+own
+    valid=ports+injectors
+    config=1+1+8+16
+    return dict(targets={'Qwen3-8B ROM':False,'DeepSeek-V4.1 ROM':False,
+        'Qwen3-8B HBM':True,'DeepSeek-V4.1 HBM':True},
+        predecessor_source='ca0d6a5a2f22b6d92151a2a14e7a3b339299d463',
+        predecessor_actual_FF_hold_ps=-540.30,
+        predecessor_hold_path='fast g_pf[1].u.mem[1][1786] -> gated u_core.pd_p[696]',
+        predecessor_actual_SS_setup_ps=-852.84,
+        predecessor_setup_path='gated u_core.p_r[2] -> fast g_pf[2].u.cnt[3]',
+        shape=dict(NC=columns,PFMAX=pfmax,NPT=ports,INJ=injectors,
+            LANES=lanes,FW=fw,PWT=fw+33,FD=depth),
+        macs_per_cycle=0,fp32_adds_per_core_issue=(columns-1)*lanes,
+        core_issue_interval_fast_edges=2,
+        fp32_adds_per_fast_edge_peak=(columns-1)*lanes/2,
+        memory_macros=columns,memory_macro='ot_sram_1r1w_64x512_m1_r2c2',
+        memory_macro_area_um2=13323.4658,
+        memory_macro_total_area_um2=columns*13323.4658,
+        memory_bytes_per_core_edge=dict(operand_write_peak=columns*fw/8,
+            operand_read_peak=columns*fw/8),
+        memory_bytes_per_fast_edge_mean=dict(operand_write_peak=columns*fw/16,
+            operand_read_peak=columns*fw/16),
+        boundary_bits=dict(peer_pins=ports*(fw+33),own_pins=injectors*(fw+32),
+            landing_payload=payload,landing_valid=valid,landing_config=config),
+        landing_replicas=ports+injectors,
+        existing_FIFO_entries_per_port=depth,
+        additional_reserved_head_slots_per_port=1,
+        added_payload_FF=payload,added_valid_FF=valid,added_config_FF=config,
+        added_ICG_enable_FF=1,
+        FF_area_floor_um2=(payload+valid+config+1)*.2916,
+        core_gate_frequency_GHz=.6,master_frequency_GHz=1.2,
+        core_and_landing_opposite_phase=True,
+        clock_gate_area_and_routing='One actual opposite-phase negedge-enable/AND gate; CTS calibration and extracted setup/hold required.',
+        new_mux_demux='No extra payload mux; existing FIFO-head mux retained before landing FF.',
+        control_fanout='One per-port landed valid drives existing pop/count; existing core-ready drives landing valid only.',
+        routing_tracks_required=payload+valid+config,
+        routing_capacity_um='Needs physical seat placement and channel audit; no capacity assertion yet.',
+        floorplan_slot_um=[840,480],additional_die_area_um2=0,
+        single_record_visibility_added_fast_edges_min=0,
+        single_record_visibility_added_fast_edges_max=2,
+        frame_composition='PF384/NC8 ->48 operand slots ->24 BF16 result packets. The landing may shift the critical final-input visibility by0..2 fast edges; core arithmetic/reduction order and one-per-two-edge service remain unchanged. Existing arrival, read/tree/output, physical wire and true-credit latencies remain baseline; actual end-to-end delta must be measured against full-shape predecessor.',
+        minimum_gate='Full PF384 NC8 NPT8 INJ2 owner vs golden; INJ8 separately where actual native parent selects it; same-phase landing mutant must fail.',
+        default_enabled=False,physical_qualified=False,die_binding_qualified=False,
+        new_control_integrity_checks=False,new_leases=False,new_reset_epochs=False)
