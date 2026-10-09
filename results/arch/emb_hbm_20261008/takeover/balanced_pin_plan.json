@@ -1,0 +1,105 @@
+{
+  "schema": "opentallas.embedding_balanced_pin_plan.v1",
+  "status": "analytical_config_repair_not_routed",
+  "prior_failures": "terminal_routes_20261009 preserves Tcl-regexp failures; old pin-density failures preserved",
+  "shapes_unchanged": true,
+  "placement": "one regex region per physical face; sorted pins alternate two layers over whole face",
+  "group_max": 1,
+  "variants": [
+    {
+      "cfg": "qfd_emb_strip_bus92",
+      "width_um": 92.016,
+      "height_um": 2000.16,
+      "faces": [
+        {
+          "face": "left",
+          "port_bits": 8320,
+          "layers": [
+            "M4",
+            "M6"
+          ],
+          "nominal_same_layer_spacing_um": 0.4808076923076923,
+          "nominal_bits_per_um_per_layer": 2.079833613310935
+        },
+        {
+          "face": "right",
+          "port_bits": 9216,
+          "layers": [
+            "M4",
+            "M6"
+          ],
+          "nominal_same_layer_spacing_um": 0.4340625,
+          "nominal_bits_per_um_per_layer": 2.3038156947444204
+        },
+        {
+          "face": "bottom",
+          "port_bits": 1050,
+          "layers": [
+            "M5",
+            "M7"
+          ],
+          "nominal_same_layer_spacing_um": 0.17526857142857144,
+          "nominal_bits_per_um_per_layer": 5.7055294731351065
+        },
+        {
+          "face": "top",
+          "port_bits": 75,
+          "layers": [
+            "M5",
+            "M7"
+          ],
+          "nominal_same_layer_spacing_um": 2.45376,
+          "nominal_bits_per_um_per_layer": 0.40753781950965046
+        }
+      ]
+    },
+    {
+      "cfg": "qfd_emb_far92",
+      "width_um": 92.016,
+      "height_um": 1401.84,
+      "faces": [
+        {
+          "face": "left",
+          "port_bits": 532,
+          "layers": [
+            "M4",
+            "M6"
+          ],
+          "nominal_same_layer_spacing_um": 5.270075187969924,
+          "nominal_bits_per_um_per_layer": 0.18975061347942704
+        },
+        {
+          "face": "right",
+          "port_bits": 528,
+          "layers": [
+            "M4",
+            "M6"
+          ],
+          "nominal_same_layer_spacing_um": 5.31,
+          "nominal_bits_per_um_per_layer": 0.18832391713747648
+        },
+        {
+          "face": "bottom",
+          "port_bits": 1050,
+          "layers": [
+            "M5",
+            "M7"
+          ],
+          "nominal_same_layer_spacing_um": 0.17526857142857144,
+          "nominal_bits_per_um_per_layer": 5.7055294731351065
+        },
+        {
+          "face": "top",
+          "port_bits": 1050,
+          "layers": [
+            "M5",
+            "M7"
+          ],
+          "nominal_same_layer_spacing_um": 0.17526857142857144,
+          "nominal_bits_per_um_per_layer": 5.7055294731351065
+        }
+      ]
+    }
+  ],
+  "required_validation": "Claude offline actual ODB pin lint and physical intake before route; no timing/DRC closure claimed"
+}
