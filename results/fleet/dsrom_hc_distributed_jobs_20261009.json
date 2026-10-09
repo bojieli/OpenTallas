@@ -9,7 +9,7 @@
     "pid": 429671,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "source-route-r3",
-    "phase": "clock tree synthesis",
+    "phase": "global routing",
     "peak_ram_gb": 40
   },
   "join_physical": {
@@ -17,7 +17,7 @@
     "pid": 2473750,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "join-route-r1",
-    "phase": "global routing",
+    "phase": "detailed routing",
     "peak_ram_gb": 32
   },
   "historical_reader_physical": {
@@ -41,8 +41,31 @@
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-c1a0df220",
     "stage": "route-r2",
     "source_commit": "c1a0df220",
-    "phase": "waiting for measured resource admission",
+    "phase": "admitted; global placement",
     "peak_ram_gb": 24,
     "scope": "actual full-H copy stride320/rank offset80; characterization; native VM ownership still pending"
+  },
+  "ecc_pipeline_successors": {
+    "source_commit": "c5dfa5e7f",
+    "host": "ot-epyc1tb",
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f",
+    "source": {
+      "stage": "source-route-r4",
+      "pid": 4058991,
+      "peak_ram_gb": 40,
+      "phase": "admitted; synthesis"
+    },
+    "join": {
+      "stage": "join-route-r2",
+      "pid": 4058992,
+      "peak_ram_gb": 32,
+      "phase": "admitted; synthesis"
+    },
+    "exactness": {
+      "host": "ot-agidock128",
+      "pid": 2831553,
+      "root": "/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f",
+      "phase": "component positive passed16931cycles; CE/UE/protocol/fullreleased/distributed/join gates progressing"
+    }
   }
 }
