@@ -10,7 +10,11 @@ EXTRA={'f_host':(224,'input',100.032),'t_host':(5,'output',330.048),
        'f_mtp':(517,'input',450.048),'t_emit':(38,'output',600.192),
        't_provider':(43,'output',610.176),'f_emit_host':(2,'input',625.152),
        't_emit_host':(108,'output',640.128),'t_abort':(1,'output',632.064)}
-def make(root,out):
+def make(root,out,am=False):
+    global MASTER,EXTRA
+    if am:
+        MASTER='hfd_cmdproc_s_mtp_native_am';EXTRA=copy.deepcopy(EXTRA)
+        EXTRA['t_mtp']=(197,'output',400.128);EXTRA['f_am']=(18,'input',620.160)
     src=root/'physical/hbm_accel_die_views/cmdproc/split'
     record=copy.deepcopy(json.loads((src/'hfd_cmdproc_s/ports.json').read_text()))
     record.update(master=MASTER,note='fresh CPsouth AR+nativeMTP composite; old closed artifacts unchanged',physical_qualified=False)
@@ -25,7 +29,7 @@ def make(root,out):
     split=json.loads((src/'split.json').read_text());south=split['bands'].pop('hfd_cmdproc_s')
     split['bands'][MASTER]=south
     split['bands']['hfd_cmdproc_n']['source_port_record']='physical/hbm_accel_die_views/cmdproc/split/hfd_cmdproc_n/ports.json'
-    south['source_port_record']='physical/hbm_cp_mtp_native/collar/'+MASTER+'/ports.json'
+    south['source_port_record']='physical/hbm_cp_mtp_native/'+('collar_am197/' if am else 'collar/')+MASTER+'/ports.json'
     for name,(bits,direction,_) in EXTRA.items():
         if name in ('f_mtp','t_mtp'):south['parent_ports'].append(name)
         else:south['new_ports'][name]=dict(bits=bits,direction=direction,edge='bottom',role='actual native transaction endpoint; external producer binding required')
@@ -41,5 +45,5 @@ def make(root,out):
     (out/MASTER/'io_place.tcl').write_text('\n'.join(lines)+'\n')
     (out/'endpoint_obligations.json').write_text(json.dumps(dict(master=MASTER,required_endpoints={k:dict(bits=v[0],direction=v[1]) for k,v in EXTRA.items()},source_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),old_closed_LEF_unchanged=True,north_unchanged=True,backend_translation_resolved=False,physical_qualified=False),indent=2)+'\n')
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--root',required=True,type=Path);p.add_argument('--out',required=True,type=Path);a=p.parse_args();make(a.root,a.out)
+    p=argparse.ArgumentParser();p.add_argument('--root',required=True,type=Path);p.add_argument('--out',required=True,type=Path);p.add_argument('--am',action='store_true');a=p.parse_args();make(a.root,a.out,a.am)
 if __name__=='__main__':main()

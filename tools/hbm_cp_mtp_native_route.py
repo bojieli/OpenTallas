@@ -10,11 +10,13 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--job-root',required=True,type=Path);p.add_argument('--gate',required=True,type=Path);p.add_argument('--prepare-only',action='store_true');a=p.parse_args()
     gate=json.loads(a.gate.read_text());assert gate['verdict']=='PASS'
     for name,h in gate['source_sha256'].items():assert digest(ROOT/name)==h,name
-    model=MODEL.model();assert model['model_ready_for_build']
+    am=gate.get('native_CP_to_MTP_bits')==197
+    model=MODEL.model(am);assert model['model_ready_for_build']
     job=a.job_root.resolve();job.mkdir(parents=True,exist_ok=False)
-    collar='physical/hbm_cp_mtp_native/collar/hfd_cmdproc_s_mtp_native/io_place.tcl'
-    sources=[s for s in GATE.SOURCES if not s.endswith('tb_hfd_cmdproc_s_mtp_native.sv') and not 'asap7_memory_macros' in s]
-    argv=['python3','tools/run_abi3_physical.py','--view','asap7','--top','hfd_cmdproc_s_mtp_native',
+    master=model['master'];folder='collar_am197' if am else 'collar'
+    collar='physical/hbm_cp_mtp_native/'+folder+'/'+master+'/io_place.tcl'
+    sources=[s for s in gate['source_sha256'] if not s.startswith('physical/hbm_cp_mtp_native/rtl/tb_') and not 'asap7_memory_macros' in s]
+    argv=['python3','tools/run_abi3_physical.py','--view','asap7','--top',master,
         '--param','ENABLE_MTP=1','--clock-port','ck','--clock-period-ns','0.833',
         '--clock-uncertainty-ns','0.06','--clock-uncertainty-hold-ns','0.025',
         '--orfs-corner','WC','--hold-corners','WC,BC','--io-delay-fraction','0.2',
@@ -33,7 +35,7 @@ def main():
         '--nickname-tag','cp_s_mtp_native_candidate','--synth-timeout-seconds','unlimited',
         '--flow-timeout-seconds','unlimited','--keep-workdir',str(job/'work'),'--output',str(job/'physical.json')]
     for s in sources:argv+=['--source',s]
-    pins=ROOT/'physical/hbm_cp_mtp_native/collar/hfd_cmdproc_s_mtp_native/ports.json'
+    pins=ROOT/'physical/hbm_cp_mtp_native'/folder/master/'ports.json'
     record=dict(schema='opentallas.hbm.cp-mtp-native-route.v1',argv=argv,model=model,
         sources=gate['source_sha256'],gate_sha256=digest(a.gate),pin_record_sha256=digest(pins),
         io_tcl_sha256=digest(ROOT/collar),fresh_master=True,old_closed_LEF_used=False,
