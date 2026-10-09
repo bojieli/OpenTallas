@@ -1,0 +1,194 @@
+{
+ "name": "hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+ "spec": {
+  "name": "hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+  "block": "hfd_loader",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 (drive-0212 0443 (2)): L-DIV B v3. B v2 early-failed FF hold -18,672 / SS setup -133,668 at 4_1_cts: CTS-0040 'Net was not found for ckd' (root = an inverter after the divider QN) -> no ckd tree, 50k sinks on one net. Not an SDC multicycle artefact: re-STA of the B 3_place.odb with the v2 SDC (ideal clocks) worst hold +3.2 ps, the only multicycle (rst_s setup 2 / hold 1) is matched. Fix: RTL ckd = ~ckd_q (root = the QN pin, no inverter) + hfd_loader_div_v3.sdc (generated clock on that QN). LDM_DIV PASS + both negatives detected. The calibrate (CTS-only) stage is the check that CTS now builds the ckd tree.",
+  "hosts": [
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 60,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "d74d0faa7ff49d0f86e2e5cc940dece03f185d2d",
+   "extra_paths": [
+    "results/uarch/hbm_current_target_portmap_20261005",
+    "results/rtl/hbm_accel_die_floorplan_20261005",
+    "results/rtl/die_top_lint_20261006",
+    "results/rtl/dshbm_matched_reference_20261005",
+    "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_ldm_div",
+     "cmd": "bash physical/hbm_accel_die_views/loader/rtl/run_ldm_div.sh {RUN}/bench 2>&1 | grep -v Aborted | tee {RUN}/bench.txt; grep -q 'LDM_DIV PASS' {RUN}/bench.txt",
+     "expect": "pass",
+     "pass_regex": "LDM_DIV PASS",
+     "threads": 8,
+     "peak_ram_gb": 16
+    },
+    {
+     "name": "neg_xdata_and_foh",
+     "cmd": "grep -q 'neg_xdata detected' {RUN}/bench.txt && grep -q 'neg_foh detected' {RUN}/bench.txt && echo LDM_NEG_FAIL && exit 1; exit 0",
+     "expect": "fail",
+     "fail_regex": "LDM_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.45\" CORES=\"12\" NEED=\"60\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc\" FCP=\"5\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hdc/ot_hdc_prefix.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_host_m.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_div.sv rtl/lib/ot_reset_sync.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_m.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_store_m.sv rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv rtl/gpu_sys/ot_gpu_cdc_fifo.sv rtl/link/ot_link_afifo.sv rtl/common/ot_fwd_link_stage.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_loader physical/hbm_accel_die_views/loader/rtl/hfd_loader_div.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_hfd_rsync\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl --sdc-append physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/hbm_accel_die_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 12,
+    "peak_ram_gb": 60
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.45\" CORES=\"12\" NEED=\"60\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc\" FCP=\"5\" PRECTS=\"physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hdc/ot_hdc_prefix.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_host_m.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_div.sv rtl/lib/ot_reset_sync.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_m.sv physical/hbm_accel_die_views/loader/rtl/ot_hfd_store_m.sv rtl/hbm_accel/loader/ot_hbm_accel_dma64.sv rtl/gpu_sys/ot_gpu_cdc_fifo.sv rtl/link/ot_link_afifo.sv rtl/common/ot_fwd_link_stage.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_loader physical/hbm_accel_die_views/loader/rtl/hfd_loader_div.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1 ot_hfd_rsync\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER --sdc-append physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_loader.lef {RUN}/routes/{NAME}/view/hfd_loader_ss.lib {RUN}/routes/{NAME}/view/hfd_loader_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+    },
+    {
+     "name": "loader_div_clock_applied",
+     "cmd": "grep -rqs 'OT_LOADER_DIV generated clock ckd' {RUN}/routes/{NAME}/ --include=*.log"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/hbm_accel_die_views/common/io_min/io_min_hfd_loader.sdc",
+    "physical/hbm_accel_die_views/loader/sdc/hfd_loader_div.sdc"
+   ]
+  },
+  "cycles_added": 0,
+  "budget": {
+   "enabled": false,
+   "reason": "same IO recipe as the benched loader routes (io_vclk_m at the calibrated CK_SS_MEAN + vclk_corner_true + io_min); the half-rate core adds a multicycle SDC, not an IO change"
+  },
+  "cycles_note": "off the per-token path (boot / weight load); loader engines at ck/2 = 19.2 GB/s per die, 2x the 9.6 GB/s host link",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.025,
+  "merge_target": null
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_loader_ldiv_B_v3-d74d0faa7-cl.json",
+ "created": "2026-10-09T04:52:26-07:00",
+ "status": "RUNNING",
+ "stage_idx": 2,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {
+  "bench_exact_ldm_div": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "us1=20 status2=0 status3=5 mismatches=0\nsep seed 3 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1370 dma_writes=5480 status0=60 status1=20 status2=0 status3=5 mismatches=0\nshared seed 1 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1360 dma_writes=5440 status0=60 status1=20 status2=0 status3=5 mismatches=0\nshared seed 2 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1330 dma_writes=5320 status0=60 status1=20 status2=0 status3=5 mismatches=0\nneg_xdata seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0\nneg_xdata detected\nneg_foh seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0\nneg_foh detected\nLDM_DIV PASS\n",
+   "track": "parallel"
+  },
+  "bench_neg_xdata_and_foh": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "LDM_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "hosts_tried": [
+  "ot-epyc2",
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T04:52:26-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_loader_ldiv_B_v3-d74d0faa7-cl.json",
+  "2026-10-09T04:52:27-07:00 benches run in parallel with calibrate/route (2 benches; spec bench_first opts out)",
+  "2026-10-09T04:53:35-07:00 source d74d0faa7ff4 synced to ot-epyc2:/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/src",
+  "2026-10-09T04:54:33-07:00 bench track: launched bench_exact_ldm_div (bench_exact_ldm_div.a1b1) beside None",
+  "2026-10-09T04:54:33-07:00 no same-variant measured insertion (block value from another variant (hbm_loader_ldiv_A_v2sdc-4a12f4d5d-cl)): calibrate first (CTS-only), route after",
+  "2026-10-09T04:54:39-07:00 launched calibrate (attempt 1) on ot-epyc2",
+  "2026-10-09T04:59:36-07:00 bench track: bench_exact_ldm_div PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+  "2026-10-09T04:59:41-07:00 bench track: launched bench_neg_xdata_and_foh (bench_neg_xdata_and_foh.a1b1) beside calibrate",
+  "2026-10-09T04:59:54-07:00 bench track: bench_neg_xdata_and_foh FAIL as expected (rc=1) ",
+  "2026-10-09T06:38:01-07:00 stage calibrate.a1 killed by stuckscan (stuckscan: no write for 98 min and 0.0 cores busy: hung (the loop retries the stage once)); the loop retries it once",
+  "2026-10-09T06:38:34-07:00 calibrate crashed (LOST: stage wrapper gone without an rc file); resource-related -> retry once on EPYC4",
+  "2026-10-09T06:40:10-07:00 source d74d0faa7ff4 synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/src",
+  "2026-10-09T06:40:26-07:00 no same-variant measured insertion (block value from another variant (hbm_loader_ldiv_A_v2sdc-4a12f4d5d-cl)): calibrate first (CTS-only), route after",
+  "2026-10-09T06:40:32-07:00 launched calibrate (attempt 2) on ot-epyc4"
+ ],
+ "updated": "2026-10-09T06:56:34-07:00",
+ "bench_par": true,
+ "btrack": {
+  "bench_exact_ldm_div": {
+   "state": "done",
+   "tag": "bench_exact_ldm_div.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+   "n": 1,
+   "started": "2026-10-09T04:54:33-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/bench_src_a1"
+  },
+  "bench_neg_xdata_and_foh": {
+   "state": "done",
+   "tag": "bench_neg_xdata_and_foh.a1b1",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+   "n": 1,
+   "started": "2026-10-09T04:59:41-07:00",
+   "stage_source": "/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/bench_src_a1"
+  }
+ },
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+ "source_synced": true,
+ "commit_full": "d74d0faa7ff49d0f86e2e5cc940dece03f185d2d",
+ "reason": null,
+ "bench_location": {
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+  "attempt": 1
+ },
+ "bwait": null,
+ "stage_key": "calibrate",
+ "stage_tag": "calibrate.a2",
+ "stage_started": "2026-10-09T06:40:32-07:00",
+ "wd_checked": 1791552507.3691473,
+ "bench_work": {
+  "bench_exact_ldm_div": "WARN: pass log has no count line (set min_count_regex)"
+ },
+ "stuck_kill": {
+  "at": "2026-10-09T06:38:01-07:00",
+  "why": "stuckscan: no write for 98 min and 0.0 cores busy: hung (the loop retries the stage once)",
+  "tag": "calibrate.a1"
+ },
+ "unreachable": 0,
+ "crashes": [
+  {
+   "stage": "calibrate",
+   "host": "ot-epyc2",
+   "attempt": 1,
+   "why": "LOST: stage wrapper gone without an rc file",
+   "resource": true,
+   "tail": "hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added\nhold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)\n",
+   "first_error": ""
+  }
+ ]
+}
