@@ -30,6 +30,7 @@
 // wait for.  b / 96 = ((b >> 5) * 2731) >> 13 (exact for b >> 5 < 4096, i.e. any 20-bit position).
 module ot_hbm_accel_dskv_wb_sram #(
   parameter integer ENABLE = 0,
+  parameter integer NLAYERS = 40,
   parameter integer MUT_MERGE = 0, // bench-only negative control; production always0
   parameter integer STACK = 0,
   parameter integer KEY_CONTIGUOUS = 0,      // opt-in indexer quarter placement: 342 whole blocks/stack
@@ -61,6 +62,11 @@ module ot_hbm_accel_dskv_wb_sram #(
     reg [3:0] st, st_n; reg ctl_fault;
     wire state_bad=(st != ~st_n) || (st>S_KEY_EMIT);
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
+    reg [7:0] shadow_initialized;
+    wire descriptor_bad=(die>=96)||(row_kind==3)||
+      ((row_kind==0)&&(row_slot>=NLAYERS))||
+      ((row_kind!=0)&&(row_slot>=8))||
+      ((row_kind==2)&&!shadow_initialized[row_slot[2:0]]);
     reg [2:0] preload_slot;
     reg [4:0] preload_sector;
     reg [255:0] merged;
@@ -128,18 +134,24 @@ module ot_hbm_accel_dskv_wb_sram #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
         st <= S_IDLE; st_n<=~S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; position<=0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; ctl_fault<=0; preload_slot<=0; preload_sector<=0; merged<=0;
+        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; ctl_fault<=0; shadow_initialized<=0; preload_slot<=0; preload_sector<=0; merged<=0;
       end else begin
         if(state_bad)ctl_fault<=1;
         ack <= ack + 16'(ack_n);
         if (wq_v && wq_r) iss <= iss + 1'b1;
         case (st)
           S_IDLE: begin
-            if (sh_v && sh_r) begin dat<=sh_data; preload_slot<=sh_slot; preload_sector<=0; st<=S_PRE_REQ; st_n<=~S_PRE_REQ; end
+            if (sh_v && sh_r) begin
+              if(die>=96)ctl_fault<=1;
+              else begin dat<=sh_data; preload_slot<=sh_slot; preload_sector<=0; st<=S_PRE_REQ; st_n<=~S_PRE_REQ; end
+            end
             else if (row_v && row_r) begin
+              if(descriptor_bad)ctl_fault<=1;
+              else begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
               position<=pos; n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
               st <= S_MAP; st_n<=~S_MAP;
+              end
             end
           end
           S_MAP: begin
@@ -157,7 +169,9 @@ module ot_hbm_accel_dskv_wb_sram #(
           end
           S_PRE_REQ:if(mem_req_r)begin st<=S_PRE_RSP; st_n<=~S_PRE_RSP; end
           S_PRE_RSP:if(mem_rsp_v)begin
-            if(preload_sector==16)begin st<=S_IDLE; st_n<=~S_IDLE; end
+            if(preload_sector==16)begin
+              if(!mem_rsp_poison)shadow_initialized[preload_slot]<=1;
+              st<=S_IDLE; st_n<=~S_IDLE; end
             else begin preload_sector<=preload_sector+1;st<=S_PRE_REQ; st_n<=~S_PRE_REQ;end
           end
           S_KEY_REQ:if(mem_req_r)begin st<=S_KEY_RSP; st_n<=~S_KEY_RSP; end
