@@ -3,6 +3,19 @@
  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_idle-39113d2d0-x/cl/eco/pass1/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_coll_idle_tx\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\nset_i",
  "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries) on the same 6_final odb/sdc/spef (closure-loop TT re-STA 2026-10-07 20:27 PDT, ot-epyc1tb run dir corner_sta.json.tt.json)",
+  "worst_slack_ps": 234.52,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 466.792267,
+  "worst_input_to_reg_slack_ps": 401.341614,
+  "worst_output_port_slack_ps": 234.522598,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tcl_sha256": "bb3cbfee3199ece0a4532265ba23e02149cccb0326efd308a6ff065fec9efe25"
+ },
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
@@ -53,6 +66,7 @@
   ]
  },
  "tool_sha256": "2b3eeee6c4543a5bfbb4cdd9b3342120251dedeb2b191ffbe6ae98cf5bc904f9",
- "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
- "closes_signoff": true
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "closes_signoff": true,
+ "ss_sensitivity": 137.51
 }
