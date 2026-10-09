@@ -1120,22 +1120,22 @@
    }
   },
   "hfd_svc_SE_s3": {
-   "job": "hbm_svc_SE_s3_e8b5132fb_r18b",
-   "source_commit": "e8b5132fb5b889e7bd03c7b673920e3a8cd33f40",
+   "job": "hbm_svc_SE_s3_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_e8b5132fb_r18b",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T19:08:20-07:00",
+   "measured_at": "2026-10-08T20:14:10-07:00",
    "ss": {
     "mean": 939,
     "min": 880,
     "max": 1312
    },
    "ff": {
-    "mean": 524,
-    "min": 485,
-    "max": 748,
+    "mean": 513,
+    "min": 478,
+    "max": 744,
     "n": 6665,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1163,13 +1163,14 @@
     "job": "hbm_svc_SE_s3_tt_c10b5fc9a"
    },
    "tt": {
-    "mean": 655,
-    "min": 611,
-    "max": 914,
+    "mean": 639,
+    "min": 599,
+    "max": 908,
     "n": 6665,
     "kind": "boundary",
     "clock": "core_clk"
-   }
+   },
+   "variant": "hfd_svc_SE_s3|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append CORES=8 GPL_ROUTABILITY_DRIVEN=0 HM=0.035 IOF=0.2 MAXL=M7 NEED=40 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv WSF=0.12 WSFILE=physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s3/ws.tcl"
   },
   "hfd_hc": {
    "job": "hbm_hc_quarter_01353018a-tt",
@@ -4755,66 +4756,120 @@
    "budget": null
   },
   "dsfd_m2l_vr_68x11__hr_W1": {
-   "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25",
-   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25",
+   "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W1-a1f23fa0b-mm",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:06:42-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T20:08:20-07:00",
    "ss": {
     "mean": 290,
     "min": 278,
     "max": 302
    },
    "ff": {
-    "mean": 178,
-    "min": 170,
-    "max": 187
+    "mean": 168,
+    "min": 158,
+    "max": 190,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 793,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 290,
+     "min": 278,
+     "max": 302
+    },
+    "ff": {
+     "mean": 178,
+     "min": 170,
+     "max": 187
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 208,
+    "min": 196,
+    "max": 232,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "variant": "dsfd_m2l_vr_68x11__hr_W1|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv"
   },
   "dsfd_m2l_vr_68x11__hr_W3": {
-   "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25",
-   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25",
+   "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:06:42-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T20:05:57-07:00",
    "ss": {
     "mean": 278,
     "min": 264,
     "max": 299
    },
    "ff": {
-    "mean": 169,
-    "min": 160,
-    "max": 184
+    "mean": 161,
+    "min": 153,
+    "max": 175,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 793,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 278,
+     "min": 264,
+     "max": 299
+    },
+    "ff": {
+     "mean": 169,
+     "min": 160,
+     "max": 184
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 201,
+    "min": 191,
+    "max": 216,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "variant": "dsfd_m2l_vr_68x11__hr_W3|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv"
   },
   "dsfd_m2l_vr_68x11__hr_W2": {
-   "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25",
-   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25",
+   "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W2-a1f23fa0b-mm",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T20:01:50-07:00",
+   "measured_at": "2026-10-08T20:11:36-07:00",
    "ss": {
     "mean": 290,
     "min": 278,
     "max": 302
    },
    "ff": {
-    "mean": 166,
+    "mean": 167,
     "min": 157,
-    "max": 189,
+    "max": 190,
     "n": 793,
     "kind": "boundary",
     "clock": "core_clk"
@@ -4837,9 +4892,9 @@
     "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25"
    },
    "tt": {
-    "mean": 206,
-    "min": 196,
-    "max": 231,
+    "mean": 207,
+    "min": 195,
+    "max": 232,
     "n": 793,
     "kind": "boundary",
     "clock": "core_clk"
@@ -5370,25 +5425,25 @@
    "budget": null
   }
  },
- "updated": "2026-10-08T20:01:50-07:00",
+ "updated": "2026-10-08T20:14:10-07:00",
  "variants": {
   "dsfd_m2l_vr_68x11__hr_W2|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
-   "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25",
-   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25",
+   "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W2-a1f23fa0b-mm",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T20:01:50-07:00",
+   "measured_at": "2026-10-08T20:11:36-07:00",
    "ss": {
     "mean": 290,
     "min": 278,
     "max": 302
    },
    "ff": {
-    "mean": 166,
+    "mean": 167,
     "min": 157,
-    "max": 189,
+    "max": 190,
     "n": 793,
     "kind": "boundary",
     "clock": "core_clk"
@@ -5411,15 +5466,169 @@
     "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25"
    },
    "tt": {
-    "mean": 206,
-    "min": 196,
-    "max": 231,
+    "mean": 207,
+    "min": 195,
+    "max": 232,
     "n": 793,
     "kind": "boundary",
     "clock": "core_clk"
    },
    "variant": "dsfd_m2l_vr_68x11__hr_W2|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
    "block": "dsfd_m2l_vr_68x11__hr_W2"
+  },
+  "dsfd_m2l_vr_68x11__hr_W3|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
+   "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T20:05:57-07:00",
+   "ss": {
+    "mean": 278,
+    "min": 264,
+    "max": 299
+   },
+   "ff": {
+    "mean": 161,
+    "min": 153,
+    "max": 175,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "route_ref": "SS",
+   "boundary_n": 793,
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 278,
+     "min": 264,
+     "max": 299
+    },
+    "ff": {
+     "mean": 169,
+     "min": 160,
+     "max": 184
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 201,
+    "min": 191,
+    "max": 216,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "variant": "dsfd_m2l_vr_68x11__hr_W3|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
+   "block": "dsfd_m2l_vr_68x11__hr_W3"
+  },
+  "dsfd_m2l_vr_68x11__hr_W1|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
+   "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm",
+   "source_commit": "a1f23fa0bd7f006f8b217c9d4fbb0dec171f89d3",
+   "host": "ot-pve1",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-W1-a1f23fa0b-mm",
+   "clock": "core_clk",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T20:08:20-07:00",
+   "ss": {
+    "mean": 290,
+    "min": 278,
+    "max": 302
+   },
+   "ff": {
+    "mean": 168,
+    "min": 158,
+    "max": 190,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "route_ref": "SS",
+   "boundary_n": 793,
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 290,
+     "min": 278,
+     "max": 302
+    },
+    "ff": {
+     "mean": 178,
+     "min": 170,
+     "max": 187
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 208,
+    "min": 196,
+    "max": 232,
+    "n": 793,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "variant": "dsfd_m2l_vr_68x11__hr_W1|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
+   "block": "dsfd_m2l_vr_68x11__hr_W1"
+  },
+  "hfd_svc_SE_s3|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append CORES=8 GPL_ROUTABILITY_DRIVEN=0 HM=0.035 IOF=0.2 MAXL=M7 NEED=40 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv WSF=0.12 WSFILE=physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s3/ws.tcl": {
+   "job": "hbm_svc_SE_s3_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s3_tc_4aadc92bc",
+   "clock": "core_clk",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T20:14:10-07:00",
+   "ss": {
+    "mean": 939,
+    "min": 880,
+    "max": 1312
+   },
+   "ff": {
+    "mean": 513,
+    "min": 478,
+    "max": 744,
+    "n": 6665,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "boundary_n": 6665,
+   "budget": {
+    "measured_ss": 939.0,
+    "ok": true,
+    "reasons": [],
+    "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it"
+   },
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 939,
+     "min": 880,
+     "max": 1312
+    },
+    "ff": {
+     "mean": 579,
+     "min": 531,
+     "max": 852
+    },
+    "parasitics": "placement-estimated",
+    "job": "hbm_svc_SE_s3_tt_c10b5fc9a"
+   },
+   "tt": {
+    "mean": 639,
+    "min": 599,
+    "max": 908,
+    "n": 6665,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "variant": "hfd_svc_SE_s3|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var GPL_ROUTABILITY_DRIVEN=0 --sdc-append CORES=8 GPL_ROUTABILITY_DRIVEN=0 HM=0.035 IOF=0.2 MAXL=M7 NEED=40 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc PRECTS=physical/hbm_accel_die_views/common/pre_cts_fclk_root_buf.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_seg_lib.sv WSF=0.12 WSFILE=physical/hbm_accel_die_views/svc/split/hfd_svc_SE_s3/ws.tcl",
+   "block": "hfd_svc_SE_s3"
   }
  }
 }
