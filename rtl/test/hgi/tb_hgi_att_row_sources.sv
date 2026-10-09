@@ -10,10 +10,9 @@ module tb_hgi_att_row_sources;
     reg lv=0,ls=0,ll=0; reg [19:0] li=0; reg [20:0] lo=0;
     wire lr,lrv,lrs,lrl; wire [19:0] lri; wire [20:0] lro;
     integer tests=0, rows=0, cycle=0;
-    ot_hgi_att_row_sources #(.ENABLE_G12(1),.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE)) dut(
+    ot_hgi_att_row_sources_p #(.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE)) dut(
         .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_r(cmd_r),.ring(ring),.pos1(pos1),.b_n(b_n),.b_m(b_m),.c_n(c_n),
-        .c_id_v(c_id_v),.c_id_r(c_id_r),.c_id(c_id),.legacy_v(1'b0),.legacy_r(),.legacy_source(1'b0),.legacy_last(1'b0),
-        .legacy_row(20'b0),.legacy_ordinal(21'b0),.row_v(row_v),.row_r(row_r),.row_source(row_source),.row_last(row_last),
+        .c_id_v(c_id_v),.c_id_r(c_id_r),.c_id(c_id),.row_v(row_v),.row_r(row_r),.row_source(row_source),.row_last(row_last),
         .row_index(row_index),.row_ordinal(row_ordinal),.busy(busy),.done(done),.fault(fault));
     ot_hgi_att_row_sources legacy(.clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_r(),.ring(ring),.pos1(pos1),.b_n(b_n),.b_m(b_m),.c_n(c_n),
         .c_id_v(c_id_v),.c_id_r(),.c_id(c_id),.legacy_v(lv),.legacy_r(lr),.legacy_source(ls),.legacy_last(ll),
