@@ -3813,7 +3813,7 @@ def _hop_fix(m, P):
                 # of its length inside the corridors (its stations may only sit there); the horizontal-first default
                 # drove the 20.9 mm scan hw_SW host chain along y=15373 through packed field frames (station 5/55 trap).
                 alt = [a, (a[0], b[1]), b]
-                if _corr_frac(alt, cor) > _corr_frac(path, cor) + 1e-9:
+                if _corr_frac(alt, list(cor.values())) > _corr_frac(path, list(cor.values())) + 1e-9:
                     path = alt
                     rec['path_pick']['vfirst'] = rec['path_pick'].get('vfirst', 0) + 1
             Lp = _poly_len(path)
@@ -5396,7 +5396,7 @@ def apply_options(a):
     assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
-    HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, 410.0
+    HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(os.environ.get('OT_S81_HOP_R_CC', 410.0))
     if a.fwd_pitch:            # every hop on the die at or under the pitch
         HOP_R_FWD = HOP_R_CC = float(a.fwd_pitch)
     global REV, HEAD_DIES
