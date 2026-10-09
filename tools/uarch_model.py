@@ -14101,3 +14101,8 @@ def hbm_index_global_order_scan_model():
     """Canonical static ID scan with actual sparse protected rank heads."""
     from tools.hbm_index_global_order_model import model
     return model(static_scan=True)
+
+def hbm_vm8_face_hierarchy_model():
+    """Real bounded face relay banks instead of a single flat VM8 clock tree."""
+    from tools.hbm_vm8_face_hierarchy_model import model
+    return model()
