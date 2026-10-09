@@ -70,7 +70,7 @@ def master(block, known):
     return b
 
 def ts(s):
-    try: return datetime.datetime.fromisoformat(s).timestamp()
+    try: return datetime.datetime.fromisoformat(s.replace('Z', '+00:00')).timestamp()
     except Exception: return 0.0
 
 def _f(x):
