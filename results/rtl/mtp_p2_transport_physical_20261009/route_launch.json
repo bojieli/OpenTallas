@@ -1,0 +1,20 @@
+{
+  "source_commit": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+  "job": "mtp-p2-transport-8ed8e9762-tt-remote",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote",
+  "stage_tag": "route.a1",
+  "route_pid": 2674955,
+  "process_confirmed_live": "ps PID2674955 elapsed94s STAT Ss bash cl/run.sh route.a1",
+  "observed_utc": "2026-10-09T08:41:47.798344+00:00",
+  "events": [
+    "2026-10-09T01:38:43-07:00 calibrate done (rc=0)",
+    "2026-10-09T01:38:44-07:00 calibrated insertion CK_SS_MEAN=384 CK_SS_MIN=358 CK_SS_MAX=435 CK_TT_MEAN=384 CK_TT_MIN=358 CK_TT_MAX=435 CK_FF_MEAN=317 CK_FF_MIN=292 CK_FF_MAX=364 CK_SSLIB_MEAN=493 CK_SSLIB_MIN=466 CK_SSLIB_MAX=549 CK_ROUTE_REF=TT",
+    "2026-10-09T01:39:48-07:00 launched route (attempt 1) on ot-epyc1tb"
+  ],
+  "calibrated_TT_FF_insertion_ps": [
+    384,
+    317
+  ],
+  "scope": "Source-pinned admitted remote route of general four-bank P2 component; no terminal closure, production topology or consumer arithmetic claim."
+}
