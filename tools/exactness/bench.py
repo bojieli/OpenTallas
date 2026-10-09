@@ -201,7 +201,8 @@ def s81_token(work):
 MTPX = S / "claude/exactness/fixtures/mtp_exact"
 V5050 = dict(os.environ, PATH=os.path.expanduser("~/.local/opentallas-tools/verilator-5.050/bin") + ":" +
              os.environ.get("PATH", ""))      # the pinned Verilator (5.032 hits an internal V3Delayed error on the array bench)
-MTPX_ROM = ("img_gold4_forced_g5_n12", "img_oracle8_forced_g5_n12", "img_spread6_forced_g5_n12", "img_gold4_dspark_g5_n12")
+MTPX_ROM = ("img_gold4_forced_g5_n12", "img_oracle3_forced_g5_n12", "img_oracle5_forced_g5_n12", "img_gold4_dspark_g5_n12")
+# accept lengths: gold4 forced 3,1,3,1; oracle3 forced 2,5,2; oracle5 forced 4,3,1; gold4 dspark 0 x 11: every 0 .. 5
 
 
 def mtp_rom(work):

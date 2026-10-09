@@ -39,6 +39,7 @@ A, P, I, V, G, AC, np = W.A, W.P, W.I, W.V, W.G, W.AC, W.np
 BODY2 = lambda L: [list(range(0, 19)), [19], [20], list(range(21, L))]
 KS = (1, 2)
 BAD = 3
+ORDER, CFG = "basic", "cfg_stage2"
 WFC = ROOT / "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv"
 WFC_SHA = "d47c17591d61d42d300d928820ebd15d78079a44851b8f6d48ec6243ed92f7d8"
 # the closed stg r11 element's knobs (results/rtl/dsrom_wfc_split_20261006/stage/stage_w1_r11.json)
@@ -94,7 +95,15 @@ def prepare(scratch: Path, gold_from: Path):
         seq = [s["input"] for s in W.golden(model, A.prompts(W.PLEN)[0], W.STEPS, W.PLEN)]
         (scratch / "golden_seq.json").write_text(json.dumps(seq) + "\n")
     bad = (seq[BAD] + 1) % plan.vocab
-    jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, BAD), (seq[3], 3), (seq[4], 4)]
+    if ORDER == "deep":
+        # MR-5 worst case: the rejected position's successors are already in the pipeline (issued on the corrupted
+        # context) when the rejection lands; they are squashed and re-issued after the corrected position
+        jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, BAD), (seq[4], 4), (seq[5], 5), (seq[3], 3), (seq[4], 4),
+                (seq[5], 5)]
+        clean_n = 6
+    else:
+        jobs = [(seq[0], 0), (seq[1], 1), (seq[2], 2), (bad, BAD), (seq[3], 3), (seq[4], 4)]
+        clean_n = 5
 
     def replay(order, capture):
         pipe = A.Pipeline(plan, progs, base)
@@ -118,12 +127,12 @@ def prepare(scratch: Path, gold_from: Path):
         return inj, exo, [(pipe.pk[k].kv.copy(), pipe.pk[k].vm[plan.pb:plan.pb + A.PS].copy()) for k in KS]
 
     inj, exo, st = replay(jobs, True)
-    _, _, st_clean = replay([(seq[p], p) for p in range(5)], False)
+    _, _, st_clean = replay([(seq[p], p) for p in range(clean_n)], False)
     same = all(np.array_equal(G.bits(a[0]), G.bits(b[0])) and np.array_equal(G.bits(a[1]), G.bits(b[1]))
                for a, b in zip(st, st_clean))
     if not same:
         raise RuntimeError("2-stage ISA: squash + re-issue does not restore the clean state")
-    img = scratch / "cfg_stage2"
+    img = scratch / CFG
     img.mkdir(parents=True, exist_ok=True)
     sectors, firsts = P.qe_hbm_image(lay)
     for i, k in enumerate(KS):
@@ -143,13 +152,15 @@ def prepare(scratch: Path, gold_from: Path):
     (img / "expect_logits.hex").write_text(P.hexwords([0] * (2 * W.SMAX * plan.vocab), 32))
     svh = AC.config_svh(_Stages(plan, KS), lay, "p2p").replace("NPR = 2", "NPR = 1")
     (scratch / "stage2_cfg.svh").write_text(svh)
+    prep_name = "prepare_stage2.json" if ORDER == "basic" else f"prepare_stage2_{ORDER}.json"
     prep = dict(schema="opentallas.rtl.mtp_exact_wavefront2_prepare.v1", layers=[plan.body[k] for k in KS],
                 packages=list(KS), hop_words=r0["txw"], rxw=r0["rxw"], txw=r1["txw"],
                 jobs=[(int(t), p) for t, p in jobs], corrupted_position=BAD, corrupted_token=bad,
                 clean_token=seq[BAD], isa_squash_reissue_state_equals_clean_both_stages=same,
                 program_instructions=[len(progs[k]) for k in KS], prepare_seconds=round(time.time() - t0, 1),
                 input_sha256={str(p_.relative_to(ROOT)): sha(p_) for p_ in [*W.sources(), Path(__file__)]})
-    (scratch / "prepare_stage2.json").write_text(json.dumps(prep, indent=1) + "\n")
+    prep["order"] = ORDER
+    (scratch / prep_name).write_text(json.dumps(prep, indent=1) + "\n")
     print(json.dumps({x: prep[x] for x in ("layers", "rxw", "txw", "jobs",
                                            "isa_squash_reissue_state_equals_clean_both_stages")}))
     return prep
@@ -216,7 +227,7 @@ def ctrl_copy(run: Path) -> Path:
 
 
 def run(scratch: Path, wave: int, ctrl: str, jobs: int):
-    tag = f"stage2_{ctrl}_w{wave}"
+    tag = f"stage2_{ctrl}_w{wave}" + ("" if ORDER == "basic" else f"_{ORDER}")
     obj = scratch / f"obj_{tag}"
     obj.mkdir(parents=True, exist_ok=True)
     (obj / "v41_array_cfg.svh").write_text((scratch / "stage2_cfg.svh").read_text())
@@ -242,11 +253,12 @@ def run(scratch: Path, wave: int, ctrl: str, jobs: int):
     if r.returncode:
         raise SystemExit(f"build failed: {obj / 'build.log'}")
     bsec = time.time() - t0
-    n_out = len(json.loads((scratch / "prepare_stage2.json").read_text())["jobs"])
+    pn = "prepare_stage2.json" if ORDER == "basic" else f"prepare_stage2_{ORDER}.json"
+    n_out = len(json.loads((scratch / pn).read_text())["jobs"])
     log = scratch / f"out_{tag}.txt"
     t0 = time.time()
     with open(log, "w") as fh:
-        rc = subprocess.run(["stdbuf", "-oL", str(obj / "Vtb_dsrom_wavefront_array"), f"+DIR={scratch / 'cfg_stage2'}",
+        rc = subprocess.run(["stdbuf", "-oL", str(obj / "Vtb_dsrom_wavefront_array"), f"+DIR={scratch / CFG}",
                              f"+ROMS={scratch / 'roms'}", "+NUSERS=1", f"+NOUT={n_out}", "+HB=1000000"],
                             stdout=fh, stderr=subprocess.STDOUT).returncode
     (scratch / f"run_{tag}.json").write_text(json.dumps(dict(rc=rc, build_seconds=round(bsec, 1),
@@ -303,6 +315,11 @@ def record(scratch: Path, output: Path):
                        and w1.get("state_mismatch") == 0 and w1.get("overlapping_job_pairs", 0) > 0
                        and (not w0 or not w0.get("passed")))
     res["negative_control_wave0_detected"] = (not w0.get("passed")) if w0 else None
+    deep = res["runs"].get("stage2_wfc_w1_deep")
+    if deep is not None:      # MR-5: squashed successors already in flight, re-issued after the corrected position
+        res["mr5_deep_order_exact"] = bool(deep.get("passed") and deep.get("out_mismatch") == 0
+                                            and deep.get("state_mismatch") == 0)
+        res["pass"] = res["pass"] and res["mr5_deep_order_exact"]
     output.write_text(json.dumps(res, indent=1) + "\n")
     print("pass" if res["pass"] else "FAIL", {k: (v.get("passed"), v.get("total_cycles")) for k, v in res["runs"].items()})
     return 0 if res["pass"] else 1
@@ -317,8 +334,11 @@ def main():
     ap.add_argument("--ctrl", default="wfc", choices=("wfc", "wf"))
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--output", type=Path)
+    ap.add_argument("--order", default="basic", choices=("basic", "deep"))
     a, rest = ap.parse_known_args()
     assert set(rest) <= {"--all-unit", "--kv-hbm"}, rest   # appended by the array campaign import
+    global ORDER, CFG
+    ORDER, CFG = a.order, ("cfg_stage2" if a.order == "basic" else f"cfg_stage2_{a.order}")
     if a.action == "prepare":
         prepare(a.scratch, a.gold)
         return 0
