@@ -14545,3 +14545,9 @@ def hbm_indexer_r25i_physical_model():
 def qwen_q5_landing_model():
     from uarch_qwen_q5_landing_model import model
     return model()
+
+
+def qwen_r25_su_dispatch_contract_model():
+    """Full p4 finite-window consumer and four-quarter native dispatch sizing."""
+    from qwen_r25_su_dispatch_model import model
+    return model()
