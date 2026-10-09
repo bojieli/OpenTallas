@@ -52,7 +52,7 @@ module tb_qfd_native_cmd_provider;
   reset;monitor=0;desc_n=1025;desc_v=1;step;if(!fault)$fatal(1,"oversized descriptor escaped");
   reset;monitor=0;desc_v=0;go_v=1;step;if(!fault)$fatal(1,"GO without descriptor escaped");
   reset;monitor=0;go_v=0;cmd_credit_return=1;step;if(!fault)$fatal(1,"duplicate native credit escaped");
-  reset;monitor=0;force dut.credits[1]=7;step;if(!fault||cmd_v)$fatal(1,"mutable credit disagreement escaped");release dut.credits[1];
+  reset;monitor=0;dut.credits[1]=7;step;if(!fault||cmd_v)$fatal(1,"mutable credit disagreement escaped");
   reset;monitor=0;window_retired=1;step;if(!fault)$fatal(1,"retirement without issued GO escaped");
   $display("PASS nativecmd negatives zero/oversizedDESC orphanGO duplicatecredit mutableupset premature-retire failclosed");$finish;
  end
