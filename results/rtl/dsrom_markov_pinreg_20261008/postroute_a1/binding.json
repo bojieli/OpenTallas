@@ -1,0 +1,30 @@
+{
+ "status": "PNR_COMPLETE_FINAL_CORNER_ANALYSIS_LIVE",
+ "source_commit": "38f22c6d8fceb38f9d78a7905b51d541cf6f04b6",
+ "job": "dsrom-markov256-pinreg-38f22c6d8-tt-remote",
+ "host": "ot-agidock128",
+ "DRC": 0,
+ "route_report_period_ps": 770,
+ "uncertainty_setup_ps": 60,
+ "uncertainty_hold_ps": 25,
+ "worst_setup": {
+  "start": "in_valid",
+  "end": "g_pin.embed_q[240]$_DFFE_PP_",
+  "raw_slack_ps": -301.37,
+  "actual_virtual_insertion_ps": 629.41,
+  "actual_input_delay_ps": 487
+ },
+ "captured_weight_path": {
+  "start": "g_pin.weight_q[75]$_DFFE_PP_",
+  "end": "g_mul[4].u_mul.s1_e[8]$_DFF_P_",
+  "raw_slack_ps": -42.33
+ },
+ "hold_report": {
+  "start": "g_chunk[1].g_add[4].g_delay.q[0][418]$_DFF_P_",
+  "end": "g_chunk[1].g_add[4].g_delay.q[0][450]$_DFF_P_",
+  "raw_slack_ps": 0.2
+ },
+ "final_TT_833_setup": "pending source-pinned final corner analysis",
+ "final_FF_hold": "pending",
+ "scope": "Raw TT-overlay route report at770, no terminal corner acceptance claim. Existing postroute analysis preserved."
+}
