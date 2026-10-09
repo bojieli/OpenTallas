@@ -1,0 +1,132 @@
+{
+  "captured_utc": "2026-10-09T09:43:50.983889+00:00",
+  "host": "ot-epyc4",
+  "source": "3a6f720d4",
+  "run": "/srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/run_t1",
+  "root_pid": 952687,
+  "rows": [
+    {
+      "pid": 952687,
+      "ppid": 952685,
+      "command": "/usr/bin/verilator_bin --binary --timing -O2 -j 32 --output-split 20000 --output-split-cfuncs 20000 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN --top-module tb_hfd_idx_die -GLEG=24 -GT=1 -Mdir obj /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hbm_accel/index/ot_hbm_accel_index_query.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/v41/ot_hdc_actquant.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_delay.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_fpu.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/proto/ot_fp32_add_rne_pipe.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hdc/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv /srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4/src/physical/hbm_accel_die_views/index/tb/tb_hfd_idx_die.sv ",
+      "memory": {
+        "VmSize": "128234884 kB",
+        "VmHWM": "127169512 kB",
+        "VmRSS": "126226832 kB"
+      }
+    },
+    {
+      "pid": 2313014,
+      "ppid": 952687,
+      "command": "sh -c -- make -C obj -f Vtb_hfd_idx_die.mk -j 32 ",
+      "memory": {
+        "VmSize": "2888 kB",
+        "VmHWM": "2060 kB",
+        "VmRSS": "2060 kB"
+      }
+    },
+    {
+      "pid": 2313015,
+      "ppid": 2313014,
+      "command": "make -C obj -f Vtb_hfd_idx_die.mk -j 32 ",
+      "memory": {
+        "VmSize": "57344 kB",
+        "VmHWM": "52260 kB",
+        "VmRSS": "52260 kB"
+      }
+    },
+    {
+      "pid": 2313739,
+      "ppid": 2313015,
+      "command": "g++ -Os -I. -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -DVL_TIME_CONTEXT -fcoroutines -include Vtb_hfd_idx_die__pch.h.fast -c -o Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.o Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp ",
+      "memory": {
+        "VmSize": "7708 kB",
+        "VmHWM": "3308 kB",
+        "VmRSS": "3308 kB"
+      }
+    },
+    {
+      "pid": 2313744,
+      "ppid": 2313739,
+      "command": "/usr/libexec/gcc/x86_64-linux-gnu/15/cc1plus -quiet -I . -I /usr/share/verilator/include -I /usr/share/verilator/include/vltstd -imultiarch x86_64-linux-gnu -MMD Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.d -MQ Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.o -D_GNU_SOURCE -D VM_COVERAGE=0 -D VM_SC=0 -D VM_TIMING=1 -D VM_TRACE=0 -D VM_TRACE_FST=0 -D VM_TRACE_VCD=0 -D VL_TIME_CONTEXT -include Vtb_hfd_idx_die__pch.h.fast Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp -D_FORTIFY_SOURCE=3 -quiet -dumpbase Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -Os -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable -faligned-new=1 -fcf-protection=none -fcoroutines -fasynchronous-unwind-tables -fstack-protector-strong -Wformat -Wformat-security -fstack-clash-protection -fzero-init-padding-bits=all -Wbidi-chars=any -o /tmp/ccykNE3p.s ",
+      "memory": {
+        "VmSize": "6121828 kB",
+        "VmHWM": "5888316 kB",
+        "VmRSS": "5609264 kB"
+      }
+    }
+  ],
+  "totalRSS_KiB": 131893724,
+  "inventory": {
+    "*.cpp": {
+      "count": 9805,
+      "bytes": 8538144393,
+      "largest": [
+        [
+          180841184,
+          "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp"
+        ],
+        [
+          180838087,
+          "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0__Slow.cpp"
+        ],
+        [
+          37273839,
+          "Vtb_hfd_idx_die___024root__DepSet_hc4f0c148__0__Slow.cpp"
+        ],
+        [
+          37273694,
+          "Vtb_hfd_idx_die___024root__DepSet_hc4f0c148__1__Slow.cpp"
+        ]
+      ]
+    },
+    "*.o": {
+      "count": 9807,
+      "bytes": 1034891512,
+      "largest": [
+        [
+          30807936,
+          "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0__Slow.o"
+        ],
+        [
+          11467704,
+          "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__35.o"
+        ],
+        [
+          7397904,
+          "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__3__Slow.o"
+        ],
+        [
+          6467920,
+          "Vtb_hfd_idx_die__Syms.o"
+        ]
+      ]
+    },
+    "*.a": {
+      "count": 0,
+      "bytes": 0,
+      "largest": []
+    },
+    "*.gch": {
+      "count": 2,
+      "bytes": 819659035,
+      "largest": [
+        [
+          410445749,
+          "Vtb_hfd_idx_die__pch.h.fast.gch"
+        ],
+        [
+          409213286,
+          "Vtb_hfd_idx_die__pch.h.slow.gch"
+        ]
+      ]
+    }
+  },
+  "missing_generated_objects": [
+    {
+      "bytes": 180841184,
+      "name": "Vtb_hfd_idx_die___024root__DepSet_hce74e5b7__0.cpp"
+    }
+  ],
+  "scope": "Measured live compile-tail inventory; no terminal/exactness verdict, no imposed resource cap; fleet controls phase reservation"
+}
