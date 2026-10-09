@@ -132,6 +132,8 @@ class ReliabilityTests(unittest.TestCase):
                      reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
         second = dict(first, name="available", benches={})
         stage = dict(key="bench_exact", expect="pass")
+        for x in (first, second):   # STALE-SAVE 2026-10-09: the re-judgment re-reads the job file under its lock
+            cl.save_job(copy.deepcopy(x))
         with patch.object(cl, "stage_list", return_value=[stage]), \
              patch.object(cl, "bench_outcome", side_effect=[RuntimeError("unreadable"), True]), \
              patch.object(cl, "save_job") as save, patch.object(cl, "log"), \
@@ -139,9 +141,9 @@ class ReliabilityTests(unittest.TestCase):
             cl.reevaluate_benches([first, second])
         self.assertEqual(first["status"], "NEEDS_RTL")
         self.assertNotIn("fix_requeued", first)
-        self.assertEqual(second["status"], "READY")
-        self.assertEqual(second["stage_idx"], 1)
-        save.assert_called_once_with(second)
+        save.assert_called_once()
+        saved = save.call_args.args[0]
+        self.assertEqual((saved["name"], saved["status"], saved["stage_idx"]), ("available", "READY", 1))
 
     def test_cancel_survives_stale_save_and_new_worker(self):
         stale = copy.deepcopy(self.j)

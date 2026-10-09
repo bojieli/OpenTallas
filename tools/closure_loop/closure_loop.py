@@ -450,26 +450,109 @@ def locked_job_command(fn):
     return command
 
 
+class JobState(dict):
+    """A job dict that remembers the file version it was read from (mtime_ns + raw text; never serialised).
+
+    STALE-SAVE 2026-10-09 (flow-fix-0410): a worker that loaded a job, ran a long step (bench relaunch, verdict) and
+    then saved it overwrote a hand edit made meanwhile: pi-ta15prod hm10/hm25 went back to a ~45-min-old snapshot
+    twice (03:00:51 and earlier; drive-0212.log).  Hand edits do not take the job flock, so the lock alone cannot
+    prevent it.  save_job now does read-modify-write against the version this dict was read from."""
+    __slots__ = ("cl_mtime", "cl_raw")
+
+
+def _stamp(j, mtime, raw):
+    if not isinstance(j, JobState):
+        return j
+    j.cl_mtime, j.cl_raw = mtime, raw
+    return j
+
+
+def _read_state(p):
+    """(mtime_ns, raw) with the stat taken BEFORE the read: a change racing the read looks newer, never older."""
+    st = p.stat()
+    return st.st_mtime_ns, p.read_text()
+
+
 def load_job(name):
-    return json.loads(jpath(name).read_text())
+    mtime, raw = _read_state(jpath(name))
+    return _stamp(JobState(json.loads(raw)), mtime, raw)
+
+
+STALE_SAVE_LOG = "stale_save.log"
+
+
+def _stale_log(name, line):
+    try:
+        with open(STATE / STALE_SAVE_LOG, "a") as f:
+            f.write(f"{now_iso()} {name} {line}\n")
+    except OSError:
+        pass
+    log(f"STALE-SAVE {name}: {line}")
+
+
+def _merge_newer(j, current, cur_mtime):
+    """The file changed since j was read.  Returns the dict to write, or None to refuse (j then becomes the file).
+
+    Three-way merge on top-level keys against the version j was read from: the keys this writer changed are applied
+    over the newer file when the external writer changed none of them; any overlap (or no known base) refuses."""
+    base = None
+    raw = getattr(j, "cl_raw", None)
+    if raw is not None:
+        try:
+            base = json.loads(raw)
+        except ValueError:
+            base = None
+    ignore = {"updated"}
+    if base is None:
+        _stale_log(j["name"], f"REFUSED: file changed (mtime {cur_mtime}) and this copy has no base version; kept the file")
+        return None
+    mine = {k for k in set(base) | set(j) if k not in ignore and base.get(k) != j.get(k)}
+    theirs = {k for k in set(base) | set(current) if k not in ignore and base.get(k) != current.get(k)}
+    if mine & theirs:
+        _stale_log(j["name"], f"REFUSED: newer file (mtime {cur_mtime}) changed {sorted(theirs)}; this writer changed "
+                              f"{sorted(mine)} from an older version; kept the file, dropped this save")
+        return None
+    merged = dict(current)
+    for k in mine:
+        if k in j:
+            merged[k] = j[k]
+        else:
+            merged.pop(k, None)
+    if mine:
+        _stale_log(j["name"], f"MERGED: newer file changed {sorted(theirs)}; applied this writer's {sorted(mine)} on top")
+    return merged
 
 
 def save_job(j):
     with job_lock(j["name"]):
         p = jpath(j["name"])
-        # Auto-requeue/ingest may have taken their snapshot before cancel.  CANCELLED
-        # is absorbing: another attempt needs a new job name, never a stale save.
         if p.exists():
-            current = load_job(j["name"])
+            cur_mtime, cur_raw = _read_state(p)
+            current = json.loads(cur_raw)
+            # Auto-requeue/ingest may have taken their snapshot before cancel.  CANCELLED
+            # is absorbing: another attempt needs a new job name, never a stale save.
             if current["status"] == "CANCELLED" and j["status"] != "CANCELLED":
                 j.clear()
                 j.update(current)
+                _stamp(j, cur_mtime, cur_raw)
                 return
+            known = getattr(j, "cl_mtime", None)
+            if isinstance(j, JobState) and known is not None and known != cur_mtime:
+                merged = _merge_newer(j, current, cur_mtime)
+                if merged is None:
+                    j.clear()
+                    j.update(current)
+                    _stamp(j, cur_mtime, cur_raw)
+                    return
+                j.clear()
+                j.update(merged)
         j["updated"] = now_iso()
         p.parent.mkdir(parents=True, exist_ok=True)
         tmp = p.with_suffix(".tmp")
-        tmp.write_text(json.dumps(j, indent=1) + "\n")
+        raw = json.dumps(j, indent=1) + "\n"
+        tmp.write_text(raw)
         os.replace(tmp, p)
+        _stamp(j, p.stat().st_mtime_ns, raw)
 
 
 _STATE_READ_WARNINGS = set()
@@ -485,8 +568,8 @@ def all_jobs():
     for p in sorted((STATE / "jobs").glob("*.json")):
         raw = None
         try:
-            raw = p.read_text()
-            j = json.loads(raw)
+            mtime, raw = _read_state(p)
+            j = _stamp(JobState(json.loads(raw)), mtime, raw) if raw.lstrip().startswith("{") else json.loads(raw)
             if not isinstance(j, dict) or not isinstance(j.get("spec"), dict) or \
                     j.get("name") != p.stem or not isinstance(j.get("status"), str) or not j["status"]:
                 raise ValueError("job state requires matching name, nonempty status and object spec")
@@ -3887,14 +3970,20 @@ def reevaluate_benches(jobs):
     """Fix bench-regex-multiline (2026-10-06): bench verdicts were taken on 20 log lines without re.M.  Re-judge every
     job that stopped on a bench verdict with the fixed rule; a bench that now passes resumes the job at the next stage."""
     fid = "bench-log-retry-20261007"  # was bench-regex-multiline-20261006; re-judge once more with the retried log fetch
-    for j in jobs:
+
+    def eligible(j):
         m = BENCH_RE.match(j.get("reason") or "")
-        if j["status"] not in ("NEEDS_RTL", "NEEDS_HUMAN") or not m or fid in j.get("fix_requeued", []):
+        return m if j["status"] in ("NEEDS_RTL", "NEEDS_HUMAN") and m and fid not in j.get("fix_requeued", []) else None
+    for j in jobs:
+        m = eligible(j)
+        if not m:
             continue
         stl = stage_list(j["spec"])
         idx = next((i for i, x in enumerate(stl) if x["key"] == m.group(1)), None)
         if idx is None or not j.get("stage_tag", "").startswith(m.group(1) + "."):
-            save_job(j)
+            # STALE-SAVE 2026-10-09: this branch used to save_job(j) with no change -- a rewrite of the snapshot the
+            # recovery pass took at its start (minutes to ~45 min earlier, behind slow historical log reads): it
+            # reverted pi-ta15prod's hand re-entry twice.  Nothing to write.
             continue
         st = stl[idx]
         try:
@@ -3904,16 +3993,26 @@ def reevaluate_benches(jobs):
             # independent recovery passes. Do not consume this retry until read.
             log(f"[{j['name']}] bench re-judgment deferred: {exc}")
             continue
-        j.setdefault("fix_requeued", []).append(fid)
-        if correct:
-            j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
-            j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
-            event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
-            ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid}")
-            experiment(j, f"running: resumed after {fid}")
-        else:
-            event(j, f"{st['key']} re-judged under {fid}: verdict stands")
-        save_job(j)
+        with job_lock(j["name"]):
+            # read-modify-write: act on the CURRENT file, and only if it is still the same bench verdict
+            fresh = load_job(j["name"])
+            if eligible(fresh) is None or fresh.get("reason") != j.get("reason") or fresh.get("stage_tag") != j.get("stage_tag"):
+                continue
+            j = fresh
+            reevaluate_bench_apply(j, st, idx, m, fid, correct)
+
+
+def reevaluate_bench_apply(j, st, idx, m, fid, correct):
+    j.setdefault("fix_requeued", []).append(fid)
+    if correct:
+        j["benches"][st["key"]] = dict(expect=st["expect"], rc=int(m.group(3)), ok=True, rejudged=fid)
+        j["status"], j["stage_idx"], j["reason"] = "READY", idx + 1, None
+        event(j, f"{st['key']} re-judged {('PASS' if st['expect'] == 'pass' else 'FAIL as expected')} under {fid}; resumed")
+        ledger(j, f"REQUEUED automatically: {st['key']} re-judged correct under loop fix {fid}")
+        experiment(j, f"running: resumed after {fid}")
+    else:
+        event(j, f"{st['key']} re-judged under {fid}: verdict stands")
+    save_job(j)
 
 
 def requeue_toolchain(jobs):
