@@ -7,6 +7,8 @@ module tb_qwen_r25_su_quarter_service #(parameter OWNER_W=74);
  wire [689:0] cmd_word;wire [OWNER_W-1:0] cmd_owner;
  wire [11:0] cmd_pc;wire [1:0] cmd_query;
  reg launch_v=0;wire launch_rdy,finished_v,dispatch_fault;
+ reg query_finished_rdy=0;wire query_finished_v;
+ wire [OWNER_W-1:0] query_finished_owner;wire [1:0] query_finished_query;
  wire rom_v,rom_out_rdy;wire [11:0] rom_pc;
  wire [3:0] all_cmd_v;wire [2759:0] all_cmd_words;
  wire [19:0] cmd_position;wire [20:0] cmd_valid_length;
@@ -23,7 +25,7 @@ module tb_qwen_r25_su_quarter_service #(parameter OWNER_W=74);
  integer start_pc=0,nops=4,queries=1,position=8191,nchecks=1024,stall=0,negative=0;
  integer i,j,p,q,byte_index,word_index,delay_count=0,checks=0,transactions=0;
 
- ot_qwen_r25_su_dispatch #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W)) u_dispatch(
+ ot_qwen_r25_su_dispatch #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W),.QUERY_RELEASE(1)) u_dispatch(
   .clk(clk),.rst_n(rst_n),.launch_v(launch_v),.launch_rdy(launch_rdy),.launch_checked(2'b11),
   .launch_owner({20'(position),18'd151935,4'ha,32'h12345678}),.launch_pc(12'(start_pc)),
   .launch_count(13'(nops)),.launch_position(20'(position)),.launch_queries(3'(queries)),
@@ -37,6 +39,8 @@ module tb_qwen_r25_su_quarter_service #(parameter OWNER_W=74);
   .cmd_position(cmd_position),.cmd_valid_length(cmd_valid_length),
   .done_v({3'd0,done_v}),.done_owner({{(3*OWNER_W){1'b0}},done_owner}),
   .done_pc({36'd0,done_pc}),.done_query({6'd0,done_query}),
+  .query_finished_v(query_finished_v),.query_finished_rdy(query_finished_rdy),
+  .query_finished_owner(query_finished_owner),.query_finished_query(query_finished_query),
   .finished_v(finished_v),.finished_rdy(1'b0),.fault(dispatch_fault));
  always @(negedge clk)rom_out_v=rom_out_rdy;
  reg pending=0;reg [272:0] held_response;reg [255:0] sector;
@@ -97,10 +101,14 @@ module tb_qwen_r25_su_quarter_service #(parameter OWNER_W=74);
    $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
   end
   for(q=0;q<queries;q=q+1)begin
-   wait(cmd_query>q||finished_v||fault||dispatch_fault);
+   wait(query_finished_v||fault||dispatch_fault);
    if(fault||dispatch_fault)$fatal(1,"actual quarter/dispatch fault PC%0d",cmd_pc);
+   if(query_finished_query!=q||query_finished_owner!==cmd_owner)$fatal(1,"query release identity");
    check_result(q);
+   repeat(3)begin @(negedge clk);if(!query_finished_v||query_finished_query!=q||rom_v||cmd_v)$fatal(1,"unreleased scratch reused");end
+   query_finished_rdy=1;@(negedge clk);query_finished_rdy=0;
   end
+  wait(finished_v||fault||dispatch_fault);
   if(!finished_v)$fatal(1,"native dispatcher did not finish");
   if(reads==0||writes==0||visibility_reads!=writes||transactions!=reads+writes+visibility_reads)
    $fatal(1,"actual memory mechanism vacuous or visibility count wrong");

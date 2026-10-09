@@ -14,6 +14,8 @@ module ot_qwen_r25_su_four_quarter #(
  input wire rom_valid,rom_window,input wire [19:0] rom_row0,input wire [15:0] rom_rows,
  output wire [3:0] req_v,input wire [3:0] req_rdy,output wire [1347:0] req,
  input wire [3:0] rsp_v,output wire [3:0] rsp_rdy,input wire [1091:0] rsp,
+ output wire query_finished_v,input wire query_finished_rdy,
+ output wire [OWNER_W-1:0] query_finished_owner,output wire [1:0] query_finished_query,
  output wire finished_v,input wire finished_rdy,output wire fault,
  output wire [127:0] virtual_edges,reads,writes,visibility_reads
 );
@@ -25,7 +27,7 @@ module ot_qwen_r25_su_four_quarter #(
  assign fault=dispatcher_fault||(|qfault);
  assign launch_rdy=dispatcher_rdy&&!fault&&!warm_abort;
  assign finished_v=dispatcher_finished&&!fault&&!warm_abort;
- ot_qwen_r25_su_dispatch #(.ENABLE(ENABLE),.CAPACITY(CAPACITY),.OWNER_W(OWNER_W)) u_dispatch(
+ ot_qwen_r25_su_dispatch #(.ENABLE(ENABLE),.CAPACITY(CAPACITY),.OWNER_W(OWNER_W),.QUERY_RELEASE(1)) u_dispatch(
   .clk(clk),.rst_n(rst_n),.launch_v(launch_v&&!fault&&!warm_abort),.launch_rdy(dispatcher_rdy),
   .launch_checked(launch_checked),.launch_owner(launch_owner),.launch_pc(launch_pc),
   .launch_count(launch_count),.launch_position(launch_position),.launch_queries(launch_queries),
@@ -36,6 +38,8 @@ module ot_qwen_r25_su_four_quarter #(
   .cmd_words(cmd_words),.cmd_owner(cmd_owner),.cmd_pc(cmd_pc),.cmd_query(cmd_query),
   .cmd_position(cmd_position),.cmd_valid_length(cmd_valid_length),
   .done_v(done_v),.done_owner(done_owner),.done_pc(done_pc),.done_query(done_query),
+  .query_finished_v(query_finished_v),.query_finished_rdy(query_finished_rdy&&!fault&&!warm_abort),
+  .query_finished_owner(query_finished_owner),.query_finished_query(query_finished_query),
   .finished_v(dispatcher_finished),.finished_rdy(finished_rdy&&!fault&&!warm_abort),.fault(dispatcher_fault));
  for(genvar q=0;q<4;q=q+1)begin:quarters
   ot_qwen_r25_su_quarter #(.ENABLE(ENABLE),.N(256),.M(64),.QID(q),.OWNER_W(OWNER_W)) u_quarter(

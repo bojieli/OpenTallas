@@ -4,7 +4,7 @@
 // compiled words; no arithmetic rewriting occurs in this dispatcher. Immutable
 // ROM requires validity/bounds but no ECC. Mutable command/state seats use SECDED.
 module ot_qwen_r25_su_dispatch #(
- parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73
+ parameter integer ENABLE=0, CAPACITY=8224, OWNER_W=73, QUERY_RELEASE=0
 )(
  input wire clk,rst_n,
  input wire launch_v,output wire launch_rdy,input wire [1:0] launch_checked,
@@ -22,6 +22,8 @@ module ot_qwen_r25_su_dispatch #(
  output wire [19:0] cmd_position,output wire [20:0] cmd_valid_length,
  input wire [3:0] done_v,input wire [4*OWNER_W-1:0] done_owner,
  input wire [47:0] done_pc,input wire [7:0] done_query,
+ output wire query_finished_v,input wire query_finished_rdy,
+ output wire [OWNER_W-1:0] query_finished_owner,output wire [1:0] query_finished_query,
  output wire finished_v,input wire finished_rdy,output wire fault
 );
 
@@ -64,10 +66,11 @@ module ot_qwen_r25_su_dispatch #(
   assign launch_rdy=0;assign rom_v=0;assign rom_pc=0;assign rom_out_rdy=0;
   assign cmd_v=0;assign cmd_words=0;assign cmd_owner=0;assign cmd_pc=0;
   assign cmd_query=0;assign cmd_position=0;assign cmd_valid_length=0;
+  assign query_finished_v=0;assign query_finished_owner=0;assign query_finished_query=0;
   assign finished_v=0;assign fault=0;
  end else begin:enabled
   localparam integer HI=OWNER_W-64;
-  localparam IDLE=0,REQUEST=1,RECEIVE=2,EXEC=3,FINISH=4,FAILED=5;
+  localparam IDLE=0,REQUEST=1,RECEIVE=2,EXEC=3,FINISH=4,FAILED=5,QWAIT=6;
   // state: phase3 issued4 returned4 active4 pc12 base12 remaining13 slot2 nq3.
   reg [71:0] state,owner_lo,context_seat;
   reg [71:0] words[0:43];
@@ -91,6 +94,8 @@ module ot_qwen_r25_su_dispatch #(
   assign cmd_owner={x[HI-1:0],od[63:0]};assign cmd_pc=pc;assign cmd_query=slot;
   assign cmd_position=position+slot;
   assign cmd_valid_length={1'b0,position}+slot+21'd1;
+  assign query_finished_v=phase==QWAIT&&!fault;
+  assign query_finished_owner=cmd_owner;assign query_finished_query=slot;
   assign finished_v=phase==FINISH&&!fault;
   for(genvar q=0;q<4;q=q+1)begin:quarter_words
    wire [703:0] payload;
@@ -137,11 +142,18 @@ module ot_qwen_r25_su_dispatch #(
       next_s[14:3]=0;
       if(remaining>1)begin
        next_s[26:15]=pc+1;next_s[51:39]=remaining-1;next_s[2:0]=REQUEST;
-      end else if({1'b0,slot}+1<nq)begin
+      end else if(QUERY_RELEASE)next_s[2:0]=QWAIT;
+      else if({1'b0,slot}+1<nq)begin
        next_s[53:52]=slot+1;next_s[26:15]=base;
        next_s[51:39]=original_count;next_s[2:0]=REQUEST;
       end else next_s[2:0]=FINISH;
      end
+    end
+    QWAIT:if(query_finished_v&&query_finished_rdy)begin
+     if({1'b0,slot}+1<nq)begin
+      next_s[53:52]=slot+1;next_s[26:15]=base;
+      next_s[51:39]=original_count;next_s[2:0]=REQUEST;
+     end else next_s[2:0]=FINISH;
     end
     FINISH:if(finished_rdy)next_s=0;
     default:invalid=1;
