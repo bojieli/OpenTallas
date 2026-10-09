@@ -15035,3 +15035,13 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hgi_die_record_transport_model(hub, units=('coll', 'quant')):
+    """HGI-1 per-unit record ports and physical lower bounds.
+
+    Uses actual placed hub slots. Generic relay/FIFO adapters and full reticle
+    reservations must qualify before this graph becomes a physical design.
+    """
+    from hgi_die_record_ports import transport_model
+    return transport_model(hub, units)

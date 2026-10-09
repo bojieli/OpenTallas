@@ -49,7 +49,8 @@ def transport_model(hub, units, reach_um=504.0):
 def install(model, buses, paths, units):
     """Declare actual source ABI fields; no static ties, local cfg shifts or folds."""
     hub = model['hub']
-    record = transport_model(hub, units)
+    from uarch_model import hgi_die_record_transport_model
+    record = hgi_die_record_transport_model(hub, units)
     names = {b[0] for b in buses}
     for row in record['units']:
         unit = row['unit']
