@@ -10,6 +10,7 @@ module ot_dsrom_hc_mean_capture #(
     parameter integer USER_W=10, POS_W=21, EPOCH_W=4,
     parameter integer ADD_LAT=7, MUL_LAT=7,
     parameter integer MAX_CONTEXT=1048576,
+    parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
@@ -106,7 +107,7 @@ module ot_dsrom_hc_mean_capture #(
     assign out_epoch=epoch_q;
     assign out_capture=read_capture;
     assign out_frame=read_frame;
-    assign out_last=read_capture==2&&read_frame==39;
+    assign out_last=(SINGLE_CAPTURE || read_capture==2)&&read_frame==39;
     assign out_corrected=out_valid&&(|enc_ce);
     integer lane;
     always @(posedge clk or negedge rst_n) begin
@@ -162,8 +163,8 @@ module ot_dsrom_hc_mean_capture #(
                     if(frame_q==39) begin
                         capture_done<=1;
                         captured[capture_q]<=1;
-                        if((captured|(3'b001<<capture_q))==3'b111) begin
-                            read_capture<=0;read_frame<=0;state<=RREQ;
+                        if(SINGLE_CAPTURE || (captured|(3'b001<<capture_q))==3'b111) begin
+                            read_capture<=SINGLE_CAPTURE?capture_q:2'd0;read_frame<=0;state<=RREQ;
                         end else state<=CMD;
                     end else begin frame_q<=frame_q+1'b1;beat_q<=beat_q+1'b1;state<=LOAD;end
                 end
@@ -175,7 +176,7 @@ module ot_dsrom_hc_mean_capture #(
                     else if(out_ready) begin
                         if(read_frame==39) begin
                             read_frame<=0;
-                            if(read_capture==2) begin owned<=0;captured<=0;state<=CMD;end
+                            if(SINGLE_CAPTURE || read_capture==2) begin owned<=0;captured<=0;state<=CMD;end
                             else begin read_capture<=read_capture+1'b1;state<=RREQ;end
                         end else begin read_frame<=read_frame+1'b1;state<=RREQ;end
                     end

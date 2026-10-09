@@ -9,8 +9,9 @@ sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv
  physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv
  rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_input_reader.sv
+ rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_seed_join.sv
  rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv)
-iverilog -g2012 -s tb_hc_mean_capture -DHC_VM_READER -o "$out/reader.vvp" "${sources[@]}" >"$out/elaborate.log" 2>&1
+iverilog -g2012 -s tb_hc_mean_capture -DHC_VM_READER -DHC_DISTRIBUTED -o "$out/reader.vvp" "${sources[@]}" >"$out/elaborate.log" 2>&1
 python3 tools/dsrom_hc_mean_capture_vectors.py --out "$out/synthetic"
 vvp "$out/reader.vvp" +vectors="$out/synthetic" >"$out/reader.log" 2>&1
 for bad in 6 7 8 10;do

@@ -32,6 +32,18 @@ module tb_hc_mean_capture;
 `endif
     reg [511:0] inputs[0:479],expected[0:119];
     integer rank=0;
+`ifdef HC_DISTRIBUTED
+    wire source_valid,source_ready,source_busy,source_fault,join_busy,join_fault;
+    wire [511:0] source_data;wire [9:0] source_user;wire [20:0] source_position;
+    wire [3:0] source_epoch;wire [1:0] source_capture;wire [5:0] source_frame;
+    wire source_last,source_ce;
+    assign busy=source_busy|join_busy;assign fault=source_fault|join_fault;
+    ot_dsrom_hc_seed_join #(.READ_INJECT(INJ)) joiner(.clk(clk),.rst_n(rst_n),
+      .in_valid(source_valid),.in_ready(source_ready),.in_data(source_data),
+      .in_user(source_user),.in_position(source_position),.in_epoch(source_epoch),
+      .in_capture(source_capture),.in_frame(source_frame),.in_last(source_last),
+      .busy(join_busy),.fault(join_fault),.*);
+`endif
 `ifdef HC_VM_READER
     wire mcv,mcr,miv,mir;wire [1:0] mcc;wire [9:0] mcu;wire [20:0] mcp;
     wire [3:0] mce;wire [7:0] mib;wire [511:0] mid;
@@ -47,7 +59,16 @@ module tb_hc_mean_capture;
       .req_valid(req_valid),.req_ready(req_ready),.req_row(req_row),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_fault(1'b0),
       .mean_valid(miv),.mean_ready(mir),.mean_beat(mib),.mean_residuals(mid),.busy(rb),.fault(rf));
-    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(
+    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),
+`ifdef HC_DISTRIBUTED
+      .SINGLE_CAPTURE(1),.READ_INJECT(72'd0)) u(
+      .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
+      .out_user(source_user),.out_position(source_position),.out_epoch(source_epoch),
+      .out_capture(source_capture),.out_frame(source_frame),.out_last(source_last),
+      .out_corrected(source_ce),.busy(source_busy),.fault(source_fault),
+`else
+      .READ_INJECT(INJ)) u(
+`endif
       .cmd_valid(mcv),.cmd_ready(mcr),.cmd_capture(mcc),.cmd_user(mcu),.cmd_position(mcp),.cmd_epoch(mce),
       .in_valid(miv),.in_ready(mir),.in_beat(mib),.in_residuals(mid),.*);
     always @(negedge clk) begin
@@ -69,7 +90,15 @@ module tb_hc_mean_capture;
         pending=1;delay_q=cycles%9+1;
     end
 `else
+`ifdef HC_DISTRIBUTED
+    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.SINGLE_CAPTURE(1)) u(
+      .out_valid(source_valid),.out_ready(source_ready),.out_data(source_data),
+      .out_user(source_user),.out_position(source_position),.out_epoch(source_epoch),
+      .out_capture(source_capture),.out_frame(source_frame),.out_last(source_last),
+      .out_corrected(source_ce),.busy(source_busy),.fault(source_fault),.*);
+`else
     ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
+`endif
 `endif
     string idir;
     integer bad=0,phase,cap,beat,nout=0,cycles=0,corrected=0;
