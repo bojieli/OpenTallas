@@ -395,9 +395,13 @@ D_RETIRED = ["rope_half 42.0", "rope_rot_log2 42.1-3", "norm_d_units 43.0-5", "n
              "sfx_sink_off 44.0", "sfx_multipass 44.1", "glu_out_bf16 45.0", "glu_clamp_off 45.1",
              "glu_routew_off 45.2", "coll_head_rows 46.8-25", "kv_dense 47.0", "emb_int8 48.0", "emb_row_bytes 48.1-16"]
 D_UNITS = UNITS + ["RSV12", "RSV13", "RSV14", "RSV15"]          # C3a: codes 12-15 reserved
+# Unit presence per die.  r25 (the generic HBM die) has fixed-function SMs and NO OTG-1/SIMT kernel memory
+# (hbm-forks.log 10-09 03:29): SIMT is an OPTIONAL unit, encoding kept for dies that have one.
+D_OPTIONAL_UNITS = {"SIMT": "absent on r25; a record to an absent unit faults (completion status 3)"}
 D_OPS = {k: list(v) for k, v in OPS.items()}
 D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
 D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
+D_OPS["IDX"] = ["INDEX_Q", "INDEX_SCORES", "TOPK", "SELECT"]      # C1 REQUIRED: TOPK is the generic top-k
 D_UOP_FIELDS = [  # (name, lsb, width): C3a wait 16, C2 opnd 7 (A,B,C,D,O,R,I)
     ("imm_b", 0, 32), ("imm_a", 32, 32), ("param", 64, 25), ("slot", 89, 3), ("tmpl", 92, 1),
     ("opnd", 93, 7), ("pred", 100, 2), ("wait", 102, 16), ("op", 118, 6), ("unit", 124, 4),
@@ -406,10 +410,15 @@ D_OPND = ["A", "B", "C", "D", "O", "R", "I"]
 D_MDESC_FIELDS = [  # G3 ibcast; C4/GDN-6 6-bit DYN codes and a second loop stride
     ("space", 0, 2), ("fmt", 2, 3), ("ibcast", 5, 1), ("base", 8, 40), ("n", 48, 20), ("m", 68, 20),
     ("stride", 88, 32), ("istride", 120, 16), ("lstride", 136, 32), ("dyn_sel", 168, 6), ("dyn_mul", 174, 27),
-    ("n_sel", 201, 6), ("l1stride", 207, 32),
+    ("n_sel", 201, 6), ("l1stride", 207, 32), ("indexed", 6, 1),
 ]
+# C3b REQUIRED (promoted): indexed descriptor.  indexed=1 replaces the DYN term by an id read from the vector memory:
+#   base_eff = base + L*lstride + L1*l1stride + U32(VM[I_eff + L]) * dyn_mul        (dyn_sel ignored)
+#   n_sel = 63 (N_FROM_VM): n = U32(VM[I_eff + I.stride + L])                        (second row of the I table)
+# I_eff = the record's I descriptor effective base (a VM U32 table written by IDX.TOPK or an SU op; order it by `wait`).
+NSEL_FROM_VM = 63
 D_DYN = ["ZERO", "POS", "POS1", "TOKEN", "L", "RANK", "SLOT", "POS_SLOT", "L1", "WIN_N0", "WIN_START0", "WIN_N1",
-         "WIN_START1", "CHUNK_START", "CHUNK_N", "POS_SLOT1"]          # 16-63: DS FULL_DYN selectors, in order
+         "WIN_START1", "CHUNK_START", "CHUNK_N", "POS_SLOT1"]          # 16-62: DS FULL_DYN selectors; 63 = N_FROM_VM
 D_SUT_LAYOUT = []
 _o = 0
 for _n, _w in SUT_FIELDS:                                         # G1: packed from bit 0 in list order
@@ -417,7 +426,7 @@ for _n, _w in SUT_FIELDS:                                         # G1: packed f
     _o += _w
 D_PARAM = {
     "CTL.LOOP": "[15:0] count, [16] level (0 inner L, 1 outer L1)",
-    "CTL.END": "A present: token = A[0]; A absent: token = latest SIMT RESULT payload (G7); status 2 if none",
+    "CTL.END": "token = A[0] (A required on r25: the ARGMAX / COLL.ARGMAX_MERGE output in VM); A-absent form (latest SIMT RESULT) only on dies with SIMT",
     "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
     "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
     "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
@@ -425,7 +434,9 @@ D_PARAM = {
     "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
     "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (0 = ids already global)",
     "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1; mask = B.n_sel (POS1 or POS_SLOT1)",
-    "SIMT.RUN": "[13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
+    "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
+    "IDX.TOPK": "REQUIRED (C1). [11:0] k (1..2048); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score, ties lowest index; R (optional) = the k values",
+    "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
     "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
 }
@@ -434,6 +445,9 @@ D_PARAM = {
 def d_spec_json():
     return dict(
         schema="opentallas.hbm_generic_iface.v1.0-draft", status="PROPOSED, pending owner approval",
+        r25_facts=dict(simt="absent: fixed-function SMs, no kernel memory (hbm-forks.log 10-09 03:29)",
+                       ds_program="native unit ops only (hbm-sim lowering), no SIMT.RUN"),
+        required_v1_0=["C3b indexed descriptors (MDESC indexed, n_sel N_FROM_VM)", "C1 generic IDX.TOPK"],
         version="1.0-draft", base="v0.9 (results/arch/hbm_generic_iface_20261009/spec.json)",
         doc="docs/HBM_GENERIC_INTERFACE.md section 10.5", magic=hex(MAGIC), md_words=NWORDS,
         md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y, reset=D_RESET.get(n),
@@ -442,13 +456,15 @@ def d_spec_json():
         reserved_words=dict(section_b_moved_to_manifest="2-31", mtp_D4="49, 53-55", window_C4="50-52"),
         retired_never_reuse=D_RETIRED, errors=ERR, fmt=FMT,
         uop=dict(bits=128, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_UOP_FIELDS], units=D_UNITS,
+                 optional_units=D_OPTIONAL_UNITS,
                  ops=D_OPS, op_code="index in ops[unit]", wait_bit="bit u = unit code u", pred=PRED,
                  opnd_order=D_OPND, param=D_PARAM,
                  record="header(16 B) + [SUT 32 B if tmpl] + one MDESC (32 B) per set opnd bit, in A,B,C,D,O,R,I order",
                  same_unit_order="a unit starts a record only after the previous record of the same unit has made its writes visible to that unit"),
         mdesc=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_MDESC_FIELDS], space=SPACE,
-                   dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(48)],
-                   address="base + L*lstride + L1*l1stride + DYN[dyn_sel]*dyn_mul",
+                   dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(47)] + ["N_FROM_VM"],
+                   address="base + L*lstride + L1*l1stride + (indexed ? U32(VM[I_eff+L]) : DYN[dyn_sel])*dyn_mul",
+                   indexed="C3b REQUIRED: id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L)",
                    istride="0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"),
         sut=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_SUT_LAYOUT],
                  semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (C5)"),

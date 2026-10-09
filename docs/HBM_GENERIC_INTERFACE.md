@@ -992,7 +992,12 @@ The v1.0 draft (§10.5) proposes a resolution for all four.
 - the simulator's gaps G1–G7 and GDN-1 to GDN-6 (`tools/hgi_sim/records.py` `SPEC_GAPS`, hbm-sim.log);
 - the owner's decision that **linear attention is in scope through software**.
 
-**What it leaves out:** C4 (window/chunk) and C6 (group sizes) are encoded but are hardware items. C3b and C11–C14 stay deferred.
+**What it leaves out:** C4 (window/chunk) and C6 (group sizes) are encoded but are hardware items. C11–C14 stay deferred.
+
+**r25 has no SIMT engine** (confirmed, hbm-forks.log 10-09 03:29): its SMs are fixed-function matvec elements with no kernel memory. The draft therefore:
+- makes `SIMT` an **optional unit, absent on r25**. Its encoding is kept for dies that have one; a record sent to an absent unit faults with completion status 3;
+- **replaces §7.1 ("DS via `SIMT.RUN`")** with DS lowered entirely to native unit ops (§10.5.4; the hbm-sim stream is doing that lowering);
+- **promotes C3b (indexed descriptors) and C1's generic top-k to REQUIRED in v1.0.** Without a kernel engine, they are the only way to express non-DS MoE routing and expert fetch by id.
 
 #### 10.5.1 Summary of changes
 
@@ -1007,15 +1012,17 @@ The v1.0 draft (§10.5) proposes a resolution for all four.
 | 7 | G3, GDN-3 | `istride` 0 means 1, so no broadcast | MDESC bit 5 **`ibcast`** = inner stride 0 (per-row scalar broadcast: softmax max and normaliser, row scales, per-head gates). | 0 |
 | 8 | C1, G4 | `FUSED.SOFTMAX` used but not defined | `FUSED.SOFTMAX`: A = scores, B = sink row as data (−2¹⁰⁰ = no sink, per D3), O, `param[0]` multipass, `imm_a` = scale. `IDX.TOPK_LOCAL` is documented as a generic top-k (n and k from descriptors, lowest-index ties, sorted ids out). | 0 |
 | 9 | G6 | "640-row chunks with carry-in" | The multipass carry is the **streaming csum8 binary-counter state**: the denominator equals the golden's csum8 tree exactly. The SU 3-pass fallback stays bound until CF-SFX proves the fused unit equal. | 0 (a fork requirement) |
-| 10 | G7 | `CTL.END` requires A | `CTL.END` with A absent: token = the latest SIMT `RESULT` payload (today's CP rule; status 2 if there is none). DS kernel-posted tokens need no extra record. | 0 |
+| 10 | G7 | `CTL.END` requires A; DS posts its token as a SIMT `RESULT` | **No SIMT on r25**, so `CTL.END` always reads A: the `ARGMAX.LOCAL` / `COLL.ARGMAX_MERGE` output in VM, which is DS's native head path. The A-absent form (latest SIMT `RESULT`) exists only on dies with a SIMT unit. | 0 |
 | 11 | C7 | `kv_dense` mode | Opcode distinction. `DMA.STORE` is the generic linear append (dense KV, GDN state); `DMA.KVWB_DS` is the DS native window ring. The cache-length mask is the attention B descriptor's `n_sel` = POS1, or the new POS_SLOT1 per verify slot. | 0 |
 | 12 | C7 | `coll_head_rows`, `emb_*` modes | `ARGMAX.LOCAL` `imm_a` = id offset multiplier (global id = local + DYN[RANK]·imm_a). The embedding is a `DMA.LOAD` whose descriptor gives the row (TOKEN · row bytes, `fmt` INT8 or BF16), plus an SU dequant. | 0 |
 | 13 | C7 | `norm_d_units`, `sfx_multipass` global | per-op: `ROW_NORM` `param[5:0]` d_units, `[13:6]` seg; `SOFTMAX` `param[0]`. | 0 |
 | 14 | GDN-6 | one loop level | a second loop level: `CTL.LOOP param[16]` = level, DYN code L1, MDESC `l1stride`. Effective base = base + L·lstride + L1·l1stride + DYN·dyn_mul. | sequencer only |
-| 15 | C4 (reserve) | DYN 8–31 = DS | DYN is 6 bits. Generic codes 0–15 (adds L1, WIN_N0/1, WIN_START0/1, CHUNK_START, CHUNK_N, POS_SLOT1); DS FULL_DYN selectors move to 16–63 in their order. Window parameters reserved in words 50–52. | encoding now; window logic when a windowed model is scheduled |
+| 15 | C4 (reserve) | DYN 8–31 = DS | DYN is 6 bits. Generic codes 0–15 (adds L1, WIN_N0/1, WIN_START0/1, CHUNK_START, CHUNK_N, POS_SLOT1); DS FULL_DYN selectors move to 16–62 in their order; 63 = N_FROM_VM (C3b). Window parameters reserved in words 50–52. | encoding now; window logic when a windowed model is scheduled |
 | 16 | C8 | section B (words 4–31) in the descriptor | Moved to a versioned **model manifest** (JSON, one row per layer: mixer kind, heads, window, RoPE span and pairing-in-weights, compress ratio, Engram, FFN kind, norm). Words 2–31 are reserved. Words 32–39 = sha256 of the manifest. | 0 |
 | 17 | C9 | `derive()` mis-derives | Moot for the removed fields. `cp_vocab` legal ≤ 2¹⁸ − 1. Group sizes {1, 2, 4, 8, 16, 32, 64, 96} (the C6 legal set; the hardware table is H6's). | 0 / tiny |
-| 18 | V0 | `SIMT.RUN` informal | ABI pinned (§10.5.4). | verification |
+| 18 | V0 | `SIMT.RUN` as the official escape | V0 is answered: r25 has **no** OTG-1 engine. `SIMT` is an optional unit (code 11), absent on r25. The ABI of §10.5.4 applies only to dies that have one. | 0 |
+| 18a | **C3b, promoted, REQUIRED** | deferred ("future, not now") | **Indexed descriptor.** MDESC bit 6 `indexed`: base = base + L·lstride + L1·l1stride + **U32(VM[I + L])**·dyn_mul (replaces the DYN term). `n_sel` = 63 (N_FROM_VM): n = U32(VM[I + I.stride + L]), the second row of the I table. I is the record's I descriptor, a VM table of U32 written by `IDX.TOPK` or an SU op and ordered by `wait`. | **small, new RTL**: one VM read a record in the unit dispatcher (H10). No closed block reopens. |
+| 18b | **C1 top-k, REQUIRED** | `IDX.TOPK_LOCAL` DS-only | **`IDX.TOPK`**, generic: per outer row of A (m rows of n scores), O = the k ids (U32) sorted by descending score with lowest-index ties; R (optional) = the k values; `param[11:0]` = k (1–2,048). It is the existing DS selector (router top-6, index top-512) exposed generically. | 0 (existing engine; dispatcher decode) |
 | 19 | editorial | implicit | op code = index in `ops[unit]`; same-unit order: a unit starts a record only after the previous record of the same unit has made its writes visible to that unit. | 0 |
 
 Rule 1 (reset = DS) still holds. The three remaining fields reset to DS, and DS records carry DS's own descriptor values (FP8 output formats, sink rows, clamp 10.0, route weights, D5120).
@@ -1024,7 +1031,7 @@ Rule 1 (reset = DS) still holds. The three remaining fields reset to DS, and DS 
 
 | Bits | Field | Meaning |
 |---|---|---|
-| 127:124 | `unit` | 0 CTL, 1 SM, 2 SU, 3 SFU, 4 FUSED, 5 ATT, 6 COLL, 7 ARGMAX, 8 DMA, 9 IDX, 10 HC, 11 SIMT, 12–15 reserved |
+| 127:124 | `unit` | 0 CTL, 1 SM, 2 SU, 3 SFU, 4 FUSED, 5 ATT, 6 COLL, 7 ARGMAX, 8 DMA, 9 IDX, 10 HC, 11 SIMT (**optional; absent on r25**), 12–15 reserved |
 | 123:118 | `op` | index in `ops[unit]` |
 | 117:102 | `wait` | drain mask, bit u = unit u |
 | 101:100 | `pred` | as v0.9 |
@@ -1041,6 +1048,7 @@ Rule 1 (reset = DS) still holds. The three remaining fields reset to DS, and DS 
 | 1:0 | `space` |
 | 4:2 | `fmt` |
 | 5 | **`ibcast`** |
+| 6 | **`indexed`** (C3b) |
 | 47:8 | `base` |
 | 67:48 | `n` |
 | 87:68 | `m` |
@@ -1049,10 +1057,10 @@ Rule 1 (reset = DS) still holds. The three remaining fields reset to DS, and DS 
 | 167:136 | `lstride` |
 | 173:168 | `dyn_sel` (6 bits) |
 | 200:174 | `dyn_mul` |
-| 206:201 | `n_sel` (6 bits) |
+| 206:201 | `n_sel` (6 bits; 63 = N_FROM_VM) |
 | 238:207 | **`l1stride`** |
 
-Bits 7:6 and 255:239 are reserved.
+Bit 7 and bits 255:239 are reserved.
 
 #### 10.5.3 Model descriptor, draft
 
@@ -1072,16 +1080,53 @@ Bits 7:6 and 255:239 are reserved.
 
 The CP's checks and error codes are unchanged. A retired bit that is set now gives E_RESERVED. The encoder's negative cases cover this, a group size of 12 (E_RANGE) and a vocabulary of 2¹⁸.
 
-#### 10.5.4 `SIMT.RUN` ABI (V0)
+#### 10.5.4 DS lowered to native unit ops (replaces §7.1); `SIMT` optional
 
-- **Arguments:**
-  - `param[13:0]` = entry PC (instruction memory 2¹⁴ × 64-bit words); `imm_a` = SM mask.
-  - Uniform registers: UR0 token, UR1 position, UR2 SM id, UR3 die id (as today), UR4 = `imm_b`.
-  - UR5 onward = the effective bases of the present descriptors, in `opnd` order (at most 7, up to UR11). UR15 stays the stride register.
-- **Completion:** the kernel's done and fault signals; its `RESULT` payload feeds `CTL.END` with A absent (G7).
-- **Installation:** kernels are installed into the instruction memory through `hfd_loader` at model load (load-sequence step 1). The image manifest lists entry PCs.
-- **Exactness:** the arithmetic library has an OTG-1 entry (`tools/gpu_sys/isa.py` semantics), so the golden can bind a kernel.
-- **Open verification (owner of H10-SM):** confirm that the r25 die's SM elements execute OTG-1. If they do not, the tier-K escape collapses and C3b (indexed descriptors) moves forward.
+**Replaces §7.1.** DS's program on r25 is a record stream of native unit ops only:
+
+| DS work | Records |
+|---|---|
+| matvecs | `SM.MATVEC` (FP8 / FP4 block-dot, BF16) |
+| hc_pre_norm, q_norm_kv_row, hc_post | `FUSED.*` |
+| SwiGLU | `SFU.GLU` |
+| RoPE, attend, router activation, route, moe_sum | SU templates |
+| attention tiles | `ATT.QK` / `ATT.PV` |
+| index_q / index_scores / select | `IDX.INDEX_Q`, `IDX.INDEX_SCORES`, `IDX.SELECT` |
+| index top-k, router top-6 | `IDX.TOPK` |
+| HC mixes | `HC.HC_MIX` |
+| gathers and merges | `COLL.*` |
+| window and compressed rows, KV write-back | `DMA.LOAD`, `DMA.KVWB_DS` |
+| expert fetch by id | `SM.MATVEC` with an **indexed** B descriptor over the `IDX.TOPK` ids (C3b), `CTL.LOOP` over the 6 experts |
+| head | `ARGMAX.LOCAL`, `COLL.ARGMAX_MERGE` |
+| token emission | `CTL.END` reading A |
+
+**Acceptance is unchanged:** identical tokens and per-unit outputs against the existing DS evidence (`hdc_golden_v41`, chunk8). The OTG-1 kernels of the GPU-organised ablation (`tools/gpu_sys`) remain history and ablation evidence, not the r25 program.
+
+**`SIMT` (unit 11) is optional.** A die that has a kernel engine keeps this ABI:
+- `param[13:0]` = entry PC; `imm_a` = SM mask;
+- UR0 token, UR1 position, UR2 SM id, UR3 die id, UR4 = `imm_b`, UR5 onward = the present descriptors' effective bases in `opnd` order;
+- kernels installed through the loader;
+- `RESULT` feeds `CTL.END` with A absent.
+
+On r25 the unit is absent, and the sequencer faults any record sent to it.
+
+**Coverage after removing tier K (review §1, re-graded).** Every K cell of the generality review becomes T or F, or is listed as not expressible:
+
+| Former K cell | Now | How |
+|---|---|---|
+| MoE top-k selection: Mixtral 2 of 8, Qwen3-MoE 8 of 128, DS-V3/R1 8 of 256, Kimi-K2 8 of 384, GLM-4.5 8 of 160, GPT-OSS 4 of 32/128, Llama-4 1 of 16/128 | **F** | `IDX.TOPK` (Llama-4 top-1 also `ARGMAX.LOCAL`) |
+| Router score functions (softmax, sigmoid, sqrt-softplus), bias, normalised top-k weights, routed scaling | **T** | SU templates; the per-id weight gather uses the I operand |
+| Group-limited routing (DS-V3/R1: 8 groups, top-4 groups, top-8 within) | **T + F** | `IDX.TOPK` k = 2 per group row (m = 8 rows) → SU gather-sum (group score) → `IDX.TOPK` k = 4 → indexed `DMA.LOAD` of the 4 selected groups' 32 scores and ids (C3b, `CTL.LOOP` over 4) → `IDX.TOPK` k = 8 over 128 → SU gather of the global ids |
+| Expert weight fetch by id (all MoE models) | **F** | `SM.MATVEC` with an indexed B descriptor (C3b), looped over k; up/gate/down per expert. The expert's scales come from the same id. |
+| Variable expert count or ragged ranges | **F** | `n_sel` = N_FROM_VM (C3b) |
+| Exact-erf GELU (NeoX) | **T** | polynomial SU template under its own golden, quality-gated |
+| Softplus (SSM, GDN) | **T** | SU template (as the GDN lowering) |
+
+**Still not expressible on r25** (no kernel engine, and outside the record model):
+- data-dependent **control flow**: branching on a computed value, a variable loop trip count chosen at run time beyond `n` from VM, early exit or dynamic layer skipping. None of the reviewed models needs it at batch-1 decode;
+- **expert-parallel all-to-all** with token-dependent destinations. It is avoided by TP-sharding experts; at batch 1 it is never needed;
+- **non-greedy sampling** on the die (top-p, temperature with an RNG). Sampling stays on the host, or is greedy;
+- the capacity limits of Table 9-1, which are unchanged: Gemma-3's vocabulary (C11), 10M context (C11), and sliding windows until C4 hardware.
 
 #### 10.5.5 Linear attention through software (owner decision)
 
@@ -1108,7 +1153,9 @@ Manifest mixer kind `gated_deltanet` carries: heads (k, v), head dims, conv kern
   - **CF-BCAST:** `ibcast` per-row scalar, plus a mutant that reads inner stride 1.
   - **CF-OFMT:** `ROW_NORM` FP32 / BF16 / FP8 in one program.
   - **CF-SFX2:** csum8 carry equality, T = 640, 641, 1,280 and 8,192.
-  - **CF-END2:** a SIMT-posted token.
+  - **CF-IDXD:** an indexed descriptor (C3b): id table from `IDX.TOPK`, `n` from VM, a stale-table mutant (missing `wait`) that must fail, and an out-of-range id that faults.
+  - **CF-TOPK:** `IDX.TOPK` k ∈ {1, 2, 6, 8, 512}, per-row (m > 1), lowest-index ties, and NaN fail-closed.
+  - **CF-SIMT-ABSENT:** a record to unit 11 on r25 faults with status 3.
   - **CF-LOOP2:** two-level loop, `l1stride` and L1.
   - **CF-GDN:** state round trip in the transposed layout, conv-ring wrap, per-head loop, and a GQA-map mutant.
   - **CF-0:** retired-bit negatives.
@@ -1123,10 +1170,12 @@ Manifest mixer kind `gated_deltanet` carries: heads (k, v), head dims, conv kern
   - `istride` 0xFFFF → `ibcast`;
   - `CTL.END` without A.
 - **Golden:** `qwen_r25` takes the permuted-RoPE summation order (C5). This is allowed because that golden is new; the quality run covers it.
+- **Required hardware added by this revision:** the indexed-descriptor VM read in the unit dispatchers (H10, new RTL), and the `IDX.TOPK` dispatcher decode over the existing selector. Both are in the v1.0 critical set, because non-DS MoE has no other route on r25.
 - **Owner decisions needed:**
   1. approve or amend the draft as a whole;
   2. C5 in particular, which cancels H2;
-  3. the GDN + MTP snapshot question, if linear-attention models will run with MTP.
+  3. the GDN + MTP snapshot question, if linear-attention models will run with MTP;
+  4. C3b and the generic top-k as REQUIRED v1.0 items (promoted because r25 has no SIMT).
 
 ---
 
