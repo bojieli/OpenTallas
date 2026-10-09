@@ -9,7 +9,7 @@
     "pid": 429671,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "source-route-r3",
-    "phase": "global placement",
+    "phase": "clock tree synthesis",
     "peak_ram_gb": 40
   },
   "join_physical": {
@@ -17,7 +17,7 @@
     "pid": 2473750,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "join-route-r1",
-    "phase": "global placement",
+    "phase": "global routing",
     "peak_ram_gb": 32
   },
   "historical_reader_physical": {
@@ -33,5 +33,16 @@
     "guard_pid": 514093,
     "evidence": "/srv/opentallas-scratch2/codex/dsrom-hc-mean-308a0500e/route-r2.guard-cancel.json",
     "status": "CANCELLED_BEFORE_ADMISSION"
+  },
+  "reader_physical": {
+    "host": "ot-epyc1tb",
+    "pid": 4005302,
+    "guard_pid": 4005315,
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-c1a0df220",
+    "stage": "route-r2",
+    "source_commit": "c1a0df220",
+    "phase": "waiting for measured resource admission",
+    "peak_ram_gb": 24,
+    "scope": "actual full-H copy stride320/rank offset80; characterization; native VM ownership still pending"
   }
 }
