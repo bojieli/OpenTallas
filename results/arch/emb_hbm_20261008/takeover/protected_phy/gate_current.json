@@ -1,0 +1,42 @@
+{
+  "schema": "opentallas.qwen.protected_phy.component_gate.v2",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_pc.sv": "cf14979c4e5248bf1fcc623010167fcc407856fe9025f58d714e0be01bb564cb",
+    "bench/emb_hbm_20261008/tb_qfd_protected_phy.sv": "0194acc981285b21d16070f1cd8d9fd21057518d1eb0adb61f1c63324ed7220a",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688"
+  },
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_gates_r5.sh",
+  "positive": "PASS64WR+64RD plusrealphysicaldata1bitCE and2bitUE",
+  "default_off": "PASS",
+  "tag16_rollover": "PASS ordinary modulo16 tags withoneoutstanding read, noepoch oridentityprotection",
+  "negative_expected_FAIL": [
+    "wrong returnedtag",
+    "wrong returnedPC",
+    "datareadback visibility mismatch",
+    "calleroutside logicaldataregions"
+  ],
+  "payload_format": "fourSECDED72 words bijectivelysplit into256data and32checkbits packed8checks/sidecarsector",
+  "metadata": "actualissue sector17/lrow8/row19/bank5/col5/class captured; ID64 removed perV31; native m_p2l issuebinding OPEN",
+  "source_address_contract": "ot_hdc_hbm_model NPC32 AW31 ROW_SHIFT15 inversepermutation explicitlytestedtargetPC7",
+  "historical_failures": [
+    "r1 QD8 vsPC_RDY0 LENMAX16 neverready; terminaltimeoutanddiagnostic preserved"
+  ],
+  "historical_success": "r2 beforetag-wrap correction preserved",
+  "physical_qualified": false,
+  "native_JEDEC_binding": false,
+  "gate_backing_store": "actualmodelMEM_WORDS65521 modulo backing; sparse fixture only, no fullmemorycapacityclaim",
+  "protection_scope": "HBMpayloadSECDED only; transientphase/tag/metadata registersplain",
+  "integration_open": [
+    "nativecontroller sidecartransactions mustnot advance logicaldescriptorcount",
+    "solePCwriteowner serializedRMW",
+    "physicalrequestarbiter for32PCstack",
+    "nativegenerator/bootloader bind staticregionmap",
+    "actualnativeissue m_p2l sectorcapture",
+    "realPHY/controller andincontext SS/FF closure"
+  ],
+  "current_gate": "r5",
+  "region_map": "static_region_map.json; no aperturehardware/audit/attestation"
+}

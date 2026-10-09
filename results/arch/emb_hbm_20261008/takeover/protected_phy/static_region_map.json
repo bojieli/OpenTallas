@@ -1,0 +1,37 @@
+{
+  "schema": "opentallas.qwen.protected_phy.static_regions.v1",
+  "rows": [
+    {
+      "name": "native_KV_payload",
+      "first_row": 0,
+      "last_row": 35,
+      "sectors_per_PC_row": 1024
+    },
+    {
+      "name": "native_KV_check_payload",
+      "first_row": 64,
+      "last_row": 99,
+      "sectors_per_PC_row": 128
+    },
+    {
+      "name": "embedding_payload",
+      "first_row": 24427,
+      "last_row": 24575,
+      "sectors_per_PC_row": 1024
+    },
+    {
+      "name": "embedding_check_payload",
+      "first_row": 24576,
+      "last_row": 24594,
+      "sectors_per_PC_row": 1024
+    }
+  ],
+  "stacks": 4,
+  "PCs_per_stack": 32,
+  "physical_burst_bytes": 32,
+  "check_payload_fraction": 0.125,
+  "embedding_row_padding_bytes": 1572864.0,
+  "ECC_sector_order": "j={bank[4:2],col[4:0],bank[1:0]}; each sector packs8successive32bit check fields",
+  "integration": "nativegenerator and bootloader must use this exactstaticmap; providerprototype implements same mapping",
+  "native_JEDEC_binding": false
+}
