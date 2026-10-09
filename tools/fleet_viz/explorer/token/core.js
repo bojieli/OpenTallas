@@ -1,6 +1,8 @@
 // Token-path views: shared helpers (data access, palette, formatting, tooltip, element links, replay clock).
 // Data: opentallas.token_path.v1 records written by tools/token_path_export.py (main).
 
+import { GAPS, COL, covClasses, covLevel } from '/explorer/coverage/gaps.js';
+
 export const CLK = 1.2e9;
 
 // Categorical slots (dataviz reference palette, dark steps) in fixed order; classes past eight fall to neutral greys
@@ -123,6 +125,18 @@ export function detail(data, n, { links = true } = {}) {
     rows.push(h('div', { class: 'tp-hw tp-hw-' + n.hw.status }, n.hw.status === 'none' ? '▨ ' + (n.flag || 'NOT BUILT') : n.hw.status === 'partial' ? '◌ block closed, not integrated' : '■ built'));
     rows.push(h('div', { class: 'tp-note' }, n.hw.note + (n.hw.evidence ? ' [' + n.hw.evidence + ']' : '')));
   }
+  if (n.cov && n.cov.rows.length) {
+    const lv = covLevel(n);
+    const box = h('div', { class: 'tp-cov' + (lv ? ' tp-cov-' + lv : '') },
+      h('div', { class: 'tp-dm' }, lv === 'uncovered' ? 'COVERAGE: no hardware on a die for ' : lv === 'gap' ? 'COVERAGE: gaps in ' : 'coverage: ', `${n.cov.target} rows`));
+    for (const r of n.cov.rows) {
+      box.append(h('div', { class: 'tp-covr' }, h('a', { class: 'tp-el', href: `/explorer/coverage/#t=${n.cov.target}&q=${encodeURIComponent(r.fid)}&cell=${encodeURIComponent(r.fid + '@' + n.cov.target)}` }, r.fid), ' ',
+        r.gaps.length ? [...new Map(r.gaps.map((g) => [g.cls, g])).values()].map((g) => h('span', { class: 'tp-gc', style: `background:${GAPS[g.cls]?.color || '#888'}`, title: `${GAPS[g.cls]?.label || g.cls} · owner ${g.owner || 'NONE'}` }, GAPS[g.cls]?.tag || g.cls))
+          : h('span', { class: 'tp-dm' }, 'covered'),
+        r.owner ? h('span', { class: 'tp-dm' }, ' · ' + r.owner) : null));
+    }
+    rows.push(box);
+  }
   if (n.adders && n.adders.length) {
     const t = h('div', { class: 'tp-add' }, h('div', { class: 'tp-dm' }, `base ${fmtCyc(n.base_cycles)} + priced adders:`));
     for (const [it, cy] of n.adders) t.append(h('div', {}, `${cy >= 0 ? '+' : ''}${cy} ${it}`));
@@ -219,8 +233,14 @@ export const CSS = `
 .tp-hw-none{color:#ffd0d0;background:repeating-linear-gradient(45deg,#5a1f2a 0 4px,#2a0f16 4px 8px);border:1px solid #e66767}
 .tp-hw-partial{color:#e8eefc;border:1px dashed #c3cbe0}
 .tp-hw-built{color:#7ee08a;border:1px solid #1b2540}
+.tp-cov{margin-top:6px;border:1px solid #1b2540;border-radius:7px;padding:4px 7px}
+.tp-cov-uncovered{border-color:#ff4fa3}.tp-cov-gap{border-color:#ffc857}
+.tp-covr{margin-top:3px;font:11px ui-monospace,Menlo,monospace;color:#c3cbe0;display:flex;flex-wrap:wrap;gap:3px;align-items:center}
+.tp-gc{font:700 9.5px ui-monospace,Menlo,monospace;color:#05070d;border-radius:4px;padding:0 4px}
 .tp-badge{font:700 9.5px ui-monospace,Menlo,monospace;fill:#ffd0d0!important;letter-spacing:.04em}
 `;
+
+export { GAPS, COL, covClasses, covLevel };
 
 export function injectCSS(id, text) {
   if (document.getElementById(id)) return;

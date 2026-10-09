@@ -687,7 +687,7 @@ function pickRes(r){
 }
 
 /* ------------------------------------------------------------------ boot */
-if (SAFE){ $('safeb').hidden = false; $('back').href = '/?safe=1'; }
+if (SAFE){ $('safeb').hidden = false; $('back').href = '/?safe=1'; if ($('covl')) $('covl').hidden = true; }
 new ResizeObserver(resize).observe($('center'));
 window.addEventListener('hashchange', () => { const h = hash();
   if (h.die && h.die !== S.die && !h.element && !h.master && S.dieById && S.dieById.has(h.die)){ setDie(h.die, false); return; }

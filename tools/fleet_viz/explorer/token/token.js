@@ -4,6 +4,7 @@ import { P, h, CSS, injectCSS, Clock, fmtCyc, fmtUs, fmtPct, GRADE, detail, CRIT
 import { mountFlow } from './flow.js';
 import { mountGantt } from './gantt.js';
 import { DieReplay } from './overlay.js';
+import { attachCoverage, coverageVersion, COV, saveCov, GAPS, COL, covLevel } from '/explorer/coverage/gaps.js';
 
 export const DESIGNS = [
   { id: 'qwen_rom', label: 'Qwen ROM', die: 'qwen_r21b' },
@@ -58,6 +59,11 @@ const T_CSS = `
 .tp-x .acc div{background:#0b1020;border:1px solid #1b2540;border-radius:9px;padding:6px 9px;font:11px ui-monospace,Menlo,monospace;color:#8a97b8}
 .tp-x .acc b{display:block;color:#e8eefc;font:700 15px Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
 .tp-x .arnote{border:1px dashed #2a3a63;border-radius:9px;padding:7px 10px;font-size:12px;color:#c3cbe0;margin-top:8px;line-height:1.4}
+.tp-x .covctl{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:8px;font:11.5px ui-monospace,Menlo,monospace;color:#8a97b8}
+.tp-x .covctl button{background:#0b1020;color:#c3cbe0;border:1px solid #1b2540;border-radius:999px;padding:2px 8px;font:600 11px ui-monospace,Menlo,monospace;cursor:pointer}
+.tp-x .covctl button[aria-pressed=true]{color:#e8eefc;background:#10204a}
+.tp-x .covctl a{color:${CRIT}}
+.tp-x .covsum{margin-top:6px;font:12px ui-monospace,Menlo,monospace;color:#8a97b8}.tp-x .covsum b{font-weight:700}
 .tp-x .hatchsw{background:repeating-linear-gradient(45deg,#e66767 0 2px,#2a0f16 2px 5px)!important}
 `;
 
@@ -85,7 +91,8 @@ export async function mountTokenExplorer(el, opts = {}) {
   el.replaceChildren(root);
   let views = [];
 
-  async function render() {
+  let covV = null, covErr = null, covPending = false;
+  async function render(keepT = null) {
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
     clock.pause();
     const arData = cache[state.design] ||= await loadRecord(o.base + state.design + '.json');
@@ -93,6 +100,11 @@ export async function mountTokenExplorer(el, opts = {}) {
     if (state.mode === 'mtp' && !mtpInfo.available) state.mode = 'ar';
     const data = state.mode === 'mtp' ? (cache[state.design + '_mtp'] ||= await loadRecord(o.base + mtpInfo.file)) : arData;
     const mtp = state.mode === 'mtp';
+    // coverage: map every operator onto the coverage rows of its target (live from the ledgers; /api/coverage/token)
+    const covKey = state.design + (mtp ? '_mtp' : '');
+    if (!data._cov || data._cov.v !== covV) {
+      try { const c = await attachCoverage(data, covKey); covV = c.v; covErr = null; } catch (e) { covErr = e.message; }
+    }
     const p = P(data);
     if (state.group && !p.groups[state.group]) state.group = null;
     o.onState && o.onState({ ...state });
@@ -125,7 +137,8 @@ export async function mountTokenExplorer(el, opts = {}) {
       h('div', { class: 'kv', style: 'margin-top:3px' }, 'source: ', hd.source),
       h('div', { class: 'grade', role: 'img', 'aria-label': 'cycles by provenance' },
         ...gpos.map(([k, v]) => h('div', { style: `flex:${v / gsum};background:${GRADE_COL[k] || '#888'}`, title: `${GRADE[k] || k}: ${fmtCyc(v)}` }))),
-      h('div', { class: 'gl' }, ...grades.map(([k, v]) => h('span', {}, h('i', { style: `background:${GRADE_COL[k] || '#888'}` }), `${GRADE[k] || k} ${fmtCyc(v)} (${fmtPct(Math.abs(v) / tt.cycles)})`))));
+      h('div', { class: 'gl' }, ...grades.map(([k, v]) => h('span', {}, h('i', { style: `background:${GRADE_COL[k] || '#888'}` }), `${GRADE[k] || k} ${fmtCyc(v)} (${fmtPct(Math.abs(v) / tt.cycles)})`))),
+      covSummary(data, covErr));
     // controls
     const slider = h('input', { type: 'range', min: 0, max: 1000, value: 0, 'aria-label': 'replay position' });
     const tread = h('span', {});
@@ -146,6 +159,14 @@ export async function mountTokenExplorer(el, opts = {}) {
       h('span', {}, h('i', { style: `background:none;border:2px solid ${CRIT}` }), 'critical path'),
       ...(mtp ? [h('span', {}, h('i', { class: 'hatchsw' }), 'not built (no closed hardware)'), h('span', {}, h('i', { style: 'background:none;border:1.5px dashed #c3cbe0' }), 'block closed, not integrated'),
         ...Object.entries(PHASE).map(([k, v]) => h('span', {}, h('i', { style: `background:${v.color};height:4px;vertical-align:2px` }), v.label))] : []));
+    const covCtl = h('div', { class: 'covctl', role: 'group', 'aria-label': 'coverage overlay' },
+      h('label', {}, h('input', { type: 'checkbox', ...(COV.on ? { checked: '' } : {}), onchange: (e) => { COV.on = e.target.checked; saveCov(); rerender(); } }), ' coverage gaps'),
+      h('span', {}, h('i', { style: `display:inline-block;width:10px;height:10px;border-radius:50%;border:2px solid ${COL.uncovered};vertical-align:-2px;margin-right:4px` }), 'no HW on a die'),
+      h('span', {}, h('i', { style: `display:inline-block;width:10px;height:10px;border-radius:50%;border:2px dashed ${COL.gap};vertical-align:-2px;margin-right:4px` }), 'other gap'),
+      ...Object.entries(GAPS).map(([k, g]) => h('button', { 'aria-pressed': String(COV.classes.has(k)), title: g.label, style: COV.classes.has(k) ? `border-color:${g.color}` : '',
+        onclick: () => { COV.classes.has(k) ? COV.classes.delete(k) : COV.classes.add(k); saveCov(); rerender(); } }, g.tag)),
+      data._cov ? h('a', { href: `/explorer/coverage/#t=${data._cov.target}` }, `${data._cov.target} matrix →`) : null);
+    legend.append(covCtl);
     // panels
     const flowP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, g ? `Operators of ${g.label}` : mtp ? 'Flow graph of one MTP step: draft → verify → accept' : 'Flow graph by stage'), crumb), h('div', { class: 'fl' }), legend);
     const ganttP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Timeline by element class'), h('span', {}, 'critical chain = cyan line · dbl-click to seek')), h('div', { class: 'gn' }));
@@ -176,10 +197,30 @@ export async function mountTokenExplorer(el, opts = {}) {
         gsrc.startsWith('/api/') ? ['die map: ', h('a', { class: 'tp-el', href: `/explorer#die=${dd.die}` }, geo.label || dd.die)] : `die map: ${geo.source || gsrc} (snapshot)`,
         off.length ? ` · not on this die: ${off.map((c) => c.label).join(', ')}` : ''));
     } else dieBox.replaceChildren(h('div', { class: 'kv' }, gurls.length ? 'no die geometry: ' + gerr.join('; ') : 'no die geometry mounted'));
-    clock.seek(t0);
+    clock.seek(keepT != null && keepT >= t0 && keepT <= t1 ? keepT : t0);
   }
+  function rerender() { return render(clock.t); }
   await render();
+  // the ledgers change under the view: re-map when /api/coverage/version moves (deferred while the replay plays)
+  clock.on(() => { if (covPending && !clock.playing) { covPending = false; rerender(); } });
+  setInterval(async () => {
+    try {
+      const v = await coverageVersion();
+      if (v && covV && v !== covV) { covV = v; for (const k in cache) if (cache[k]) cache[k]._cov = null; if (clock.playing) covPending = true; else rerender(); }
+    } catch (e) { /* server restart */ }
+  }, 30000);
   return { clock, show(design, group = null, mode = state.mode) { state.design = design; state.group = group; state.mode = mode; return render(); }, state };
+}
+
+/** banner line: critical cycles on operators whose coverage rows have gaps (under the current overlay filter) */
+function covSummary(data, err) {
+  if (err) return h('div', { class: 'covsum' }, 'coverage: ', err);
+  if (!data._cov) return null;
+  let u = 0, g = 0, t = 0;
+  for (const n of data.nodes) { if (!n.critical) continue; t += n.cycles; const lv = covLevel(n); if (lv === 'uncovered') u += n.cycles; else if (lv === 'gap') g += n.cycles; }
+  return h('div', { class: 'covsum' }, `coverage (${data._cov.target}, live from the ledgers): `,
+    h('b', { style: `color:${COL.uncovered}` }, `${fmtPct(u / t)} no HW on a die`), ' · ', h('b', { style: `color:${COL.gap}` }, `${fmtPct(g / t)} other gaps`),
+    ` of the critical cycles · ${COV.on ? 'overlay on' : 'overlay off'}`);
 }
 
 function shareTables(data, p, open) {

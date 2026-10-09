@@ -2,7 +2,7 @@
 // and an animated token pulse driven by a shared Clock.
 //   token scope: one box per stage/layer group (width ∝ cycles, filled by the element-class split), serpentine rows;
 //   group scope: the group's operators as a layered DAG (circle area ∝ cycles), critical chain on the centre row.
-import { P, svg, h, tip, detail, fmtCyc, fmtPct, CRIT, critAt, injectCSS, CSS, reducedMotion, PHASE, groupHw, hatch } from './core.js';
+import { P, svg, h, tip, detail, fmtCyc, fmtPct, CRIT, critAt, injectCSS, CSS, reducedMotion, PHASE, groupHw, hatch, COL, covLevel, covClasses, GAPS } from './core.js';
 
 const FLOW_CSS = `
 .tp-flow{position:relative;overflow-x:auto;overflow-y:hidden;border-radius:10px}
@@ -27,6 +27,9 @@ const FLOW_CSS = `
 .tp-flow .rowlab{fill:#4a5678!important}
 .tp-flow .gbox.hwp .frame{stroke-dasharray:4 3;stroke:#c3cbe0;stroke-opacity:.9}
 .tp-flow .nd.hwp circle.ring{stroke-dasharray:3 2;stroke:#c3cbe0}
+.tp-flow .gbox.cov-uncovered .frame{stroke:#ff4fa3;stroke-opacity:.9;stroke-width:1.5}
+.tp-flow .covring{fill:none;stroke-width:2.5}
+.tp-flow .covbadge{font:700 9px ui-monospace,Menlo,monospace}
 .tp-flow .phlab{font-weight:700!important;letter-spacing:.08em}
 `;
 
@@ -110,6 +113,14 @@ function tokenLevel(root, data, p, W, onDrill) {
     }
     if (hs === 'partial') gg.classList.add('hwp');
     svg('rect', { x: x0 - 1, y: y - 1, width: w + 2, height: BH + 2, rx: 4, class: 'frame' }, gg);
+    const gc = groupCov(data, g.id);
+    if (gc.any) {
+      // coverage strip under the box: pink = operators with no hardware on a die, amber = other gaps (filter in the legend)
+      const yy = y + BH + 2;
+      if (gc.u > 0) svg('rect', { x: x0, y: yy, width: Math.max(2, w * gc.u), height: 4, rx: 1, fill: COL.uncovered }, gg);
+      if (gc.g > 0) svg('rect', { x: x0 + w * gc.u, y: yy, width: Math.max(2, w * gc.g), height: 4, rx: 1, fill: COL.gap }, gg);
+      if (gc.u > 0) gg.classList.add('cov-uncovered');
+    }
     if (ph && g.phase) {
       svg('rect', { x: x0, y: y - 6, width: w, height: 3, rx: 1.5, fill: PHASE[g.phase]?.color || '#888' }, gg);
       const prevG = G[G.indexOf(g) - 1];
@@ -149,6 +160,20 @@ function tokenLevel(root, data, p, W, onDrill) {
   };
 }
 
+/** critical-cycle share of a group's operators by coverage level (uncovered / gap) under the current overlay filter */
+function groupCov(data, gid) {
+  const ns = (P(data).byGroup[gid] || []).filter((n) => n.critical);
+  let u = 0, g = 0, t = 0;
+  const cls = new Set();
+  for (const n of ns) {
+    t += n.cycles;
+    const lv = covLevel(n);
+    if (lv === 'uncovered') u += n.cycles; else if (lv === 'gap') g += n.cycles;
+    if (lv) covClasses(n).forEach((c) => cls.add(c));
+  }
+  return { u: t ? u / t : 0, g: t ? g / t : 0, cls: [...cls], any: !!(u || g) };
+}
+
 function shortLabel(g) { return g.label.replace(/^Stage (\d+): /, 'S$1 ').replace(/^Layer /, 'L'); }
 function clip(s, n) { return s.length > n ? s.slice(0, Math.max(1, n - 1)) + '…' : s; }
 
@@ -162,6 +187,10 @@ function groupTip(data, g) {
   const hs = groupHw(data, g.id);
   if (hs && hs !== 'built') d.append(h('div', { class: 'tp-hw tp-hw-' + hs }, hs === 'none' ? '▨ NOT BUILT: no closed hardware element' : '◌ includes operators whose block is closed but not integrated'));
   if (g.phase) d.append(h('div', { class: 'tp-dm' }, 'MTP phase: ' + (PHASE[g.phase]?.label || g.phase)));
+  const gc = groupCov(data, g.id);
+  if (gc.any) d.append(h('div', { class: 'tp-cov ' + (gc.u ? 'tp-cov-uncovered' : 'tp-cov-gap') }, h('div', { class: 'tp-dm' },
+    `coverage: ${fmtPct(gc.u)} of the critical cycles on operators with no hardware on a die, ${fmtPct(gc.g)} with other gaps`),
+    h('div', { class: 'tp-covr' }, ...gc.cls.map((c) => h('span', { class: 'tp-gc', style: `background:${GAPS[c].color}` }, GAPS[c].tag)))));
   d.append(t, h('div', { class: 'tp-dm' }, 'click to open the operators'));
   return d;
 }
@@ -228,6 +257,12 @@ function drill(root, data, p, gid, W, onSelect) {
     svg('circle', { cx: x, cy: y, r, fill: p.cls[n.cls]?.color || '#888', class: 'body' }, g);
     if (n.hw?.status === 'none') svg('circle', { cx: x, cy: y, r, fill: hatchUrl, 'pointer-events': 'none' }, g);
     svg('circle', { cx: x, cy: y, r: r + 2.5, class: 'ring', fill: 'none', stroke: n.critical ? CRIT : 'none' }, g);
+    const lv = covLevel(n);
+    if (lv) {
+      svg('circle', { cx: x, cy: y, r: r + 6, class: 'covring', stroke: lv === 'uncovered' ? COL.uncovered : COL.gap, 'stroke-dasharray': lv === 'uncovered' ? '' : '4 3' }, g);
+      const b = svg('text', { x: x + r + 4, y: y - r - 2, class: 'covbadge', style: `fill:${lv === 'uncovered' ? COL.uncovered : COL.gap}` }, g);
+      b.textContent = covClasses(n).map((c) => GAPS[c].tag).join(' ');
+    }
     if (n.critical) {
       const t = svg('text', { x, y: y + (Number(rank[n.id]) % 2 ? -R - 8 : R + 16), 'text-anchor': 'middle' }, g);
       t.textContent = clip(n.op.replace(/^attn\.|^ffn\./, ''), 12);

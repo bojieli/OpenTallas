@@ -19,7 +19,7 @@ headers) or from a non-loopback address are always served share-safe.
 import collections, datetime, json, os, signal, pathlib, re, subprocess, sys, threading, time
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs
-import recorder, elements, explorer
+import recorder, elements, explorer, coverage
 
 HERE = pathlib.Path(__file__).resolve().parent
 CFG = json.loads((HERE / 'fleet_hosts.json').read_text())
@@ -379,6 +379,9 @@ TOKEN_PLACEHOLDER = (b'<!doctype html><meta charset="utf-8"><meta name="viewport
                      b'<title>Token path</title><body style="background:#05070d;color:#e8eefc;font:15px system-ui;padding:32px">'
                      b'<h1 style="font-size:20px">Token path views</h1><p>Not installed yet: the token-path stream mounts its views '
                      b'here (tools/fleet_viz/explorer/token/).</p><p><a style="color:#5ee7ff" href="/explorer">&larr; Chip Explorer</a></p>')
+# /explorer/coverage/...: the coverage matrix view (results/arch/coverage_20261008 ledgers, joined with /api/elements)
+COVERAGE_DIR = HERE / 'explorer' / 'coverage'
+COVERAGE = coverage.Coverage(os.environ.get('FLEET_VIZ_REPO', '/home/ubuntu/OpenTallas'), ELEMENTS, TOKEN_DIR, log=log)
 
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
@@ -428,6 +431,15 @@ class H(BaseHTTPRequestHandler):
             return self.send(200, json.dumps(dict(v=ver, verdicts=rows), separators=(',', ':')).encode(), 'application/json')
         if u.path == '/api/elements':
             return self.send(200, json.dumps(ELEMENTS.snapshot(safe), separators=(',', ':')).encode(), 'application/json')
+        if u.path in ('/api/coverage', '/api/coverage/version', '/api/coverage/token'):
+            if safe: return self.send(403, b'{"safe":true,"error":"coverage is not part of the share-safe view"}', 'application/json')
+            if u.path == '/api/coverage/version': o = COVERAGE.version()
+            elif u.path == '/api/coverage/token': o = COVERAGE.token(q.get('design', [''])[0])
+            else: o = COVERAGE.api()
+            return self.send(200, json.dumps(o, separators=(',', ':')).encode(), 'application/json')
+        if u.path == '/explorer/coverage' or u.path.startswith('/explorer/coverage/'):
+            if u.path == '/explorer/coverage': return self.redirect('/explorer/coverage/')
+            return self.static_dir(COVERAGE_DIR, u.path[len('/explorer/coverage'):].lstrip('/') or 'index.html', None)
         if u.path == '/explorer/token' or u.path.startswith('/explorer/token/'):
             return self.token(u.path[len('/explorer/token'):].lstrip('/') or 'index.html')
         if u.path.startswith('/api/explorer/'):
@@ -445,6 +457,20 @@ class H(BaseHTTPRequestHandler):
             except (BrokenPipeError, ConnectionResetError, OSError):
                 return
         self.send(404, b'not found', 'text/plain')
+
+    def redirect(self, loc):
+        self.send_response(302); self.send_header('Location', loc); self.send_header('Content-Length', '0'); self.end_headers()
+
+    def static_dir(self, base, rel, placeholder):
+        try:
+            p = (base / rel).resolve()
+            ok = p.is_relative_to(base.resolve()) and p.is_file()
+        except (OSError, ValueError):
+            ok = False
+        if not ok:
+            if placeholder is not None and rel == 'index.html': return self.send(200, placeholder, 'text/html; charset=utf-8')
+            return self.send(404, b'not found', 'text/plain')
+        return self.send(200, p.read_bytes(), TOKEN_TYPES.get(p.suffix, 'application/octet-stream'))
 
     def token(self, rel):
         try:

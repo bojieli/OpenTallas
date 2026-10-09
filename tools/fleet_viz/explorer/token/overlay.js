@@ -2,7 +2,7 @@
 // (which instances are active, which links carry data), and a small canvas player (DieReplay) that replays them.
 // The events are independent of the renderer: a die map that draws its own geometry only needs overlayEvents()
 // and activeAt(); DieReplay is the reference renderer used by the standalone harness.
-import { P, instancesOf, elementsOf, CRIT, h, tip, detail, injectCSS, CSS, fmtCyc } from './core.js';
+import { P, instancesOf, elementsOf, CRIT, h, tip, detail, injectCSS, CSS, fmtCyc , COL, covLevel, covClasses, GAPS } from './core.js';
 
 /**
  * Normalise a die geometry to {w, h, inst: [{name, kind, x, y, w, h, master}]} (DEF microns, y up). Accepts
@@ -72,7 +72,8 @@ export function overlayEvents(data, geometry, { range = null, group = null } = {
     idxOf[n.id] = idx;
     return { t0: n.start, t1: Math.max(n.end, n.start + span * 0.002), node: n.id, label: n.label, cls: n.cls,
              color: p.cls[n.cls]?.color, critical: n.critical, idx, instances: idx.map((i) => G.inst[i].name),
-             phase: n.phase || null, hw: n.hw?.status || null, notBuilt };
+             phase: n.phase || null, hw: n.hw?.status || null, notBuilt,
+             cov: covLevel(n), covCls: covClasses(n), covRows: n.cov ? n.cov.rows : [] };
   });
   const centroid = (idx) => {
     if (!idx || !idx.length) return null;
@@ -158,6 +159,13 @@ export class DieReplay {
       const f = Math.min(1, Math.max(0, (t - l.t0) / Math.max(1e-9, l.t1 - l.t0)));
       c.fillStyle = '#fff'; c.beginPath(); c.arc(ax + (bx - ax) * f, ay + (by - ay) * f, 3.5, 0, 6.3); c.fill();
     }
+    // coverage: outline the instances of gap operators (pink = no hardware on a die, amber = other gaps)
+    for (const e of events) {
+      if (!e.cov || !e.idx.length) continue;
+      c.strokeStyle = e.cov === 'uncovered' ? COL.uncovered : COL.gap; c.lineWidth = e.critical ? 2 : 1; c.setLineDash(e.cov === 'uncovered' ? [] : [3, 2]);
+      for (const i of e.idx.slice(0, 400)) { const [x, y, w, hh] = this.rect(this.G.inst[i]); c.strokeRect(x - 1, y - 1, w + 2, hh + 2); }
+      c.setLineDash([]);
+    }
     const cur = events.filter((e) => e.critical).pop();
     if (cur && cur.notBuilt) {
       // not built: hatch the die and badge it (the operator runs on hardware that does not exist yet)
@@ -170,6 +178,22 @@ export class DieReplay {
       c.fillStyle = '#2a0f16'; c.strokeStyle = '#e66767'; c.lineWidth = 1.5;
       c.fillRect(8, 8, tw, 24); c.strokeRect(8, 8, tw, 24);
       c.fillStyle = '#ffd0d0'; c.fillText(msg.length > 60 ? msg.slice(0, 59) + '…' : msg, 16, 25);
+    }
+    if (cur && cur.cov) {
+      // coverage badge (beside NOT BUILT when both apply): the running operator's rows have gaps on this target
+      const col = cur.cov === 'uncovered' ? COL.uncovered : COL.gap;
+      const fns = [...new Set(cur.covRows.filter((r) => r.gaps.some((g) => cur.covCls.includes(g.cls))).map((r) => r.fid))];
+      const msg = (cur.cov === 'uncovered' ? 'NO HW ON DIE: ' : 'GAP: ') + cur.covCls.map((k) => GAPS[k].tag).join(' ') + ' · ' + fns.join(', ');
+      c.font = '700 12px ui-monospace,Menlo,monospace';
+      const tw = Math.min(this.cw - 16, c.measureText(msg).width + 16), y0 = cur.notBuilt ? 38 : 8;
+      c.fillStyle = '#05070dee'; c.strokeStyle = col; c.lineWidth = 1.5;
+      c.fillRect(8, y0, tw, 22); c.strokeRect(8, y0, tw, 22);
+      c.fillStyle = col; c.fillText(msg.length > 70 ? msg.slice(0, 69) + '…' : msg, 16, y0 + 15);
+      if (!cur.idx.length && !cur.notBuilt) {
+        c.save(); c.globalAlpha = 0.35; c.strokeStyle = col; c.lineWidth = 2;
+        for (let x = -this.ch; x < this.cw; x += 18) { c.beginPath(); c.moveTo(x, this.ch); c.lineTo(x + this.ch, 0); c.stroke(); }
+        c.restore();
+      }
     }
     this.cap.textContent = cur ? `${Math.round(t).toLocaleString()} cyc · ${cur.phase ? cur.phase.toUpperCase() + ' · ' : ''}${cur.label} · ` +
       (cur.notBuilt ? 'not built (no die / closed element)' : `${cur.idx.length} instances lit${cur.hw === 'partial' ? ' (block closed, not integrated)' : ''}`) +

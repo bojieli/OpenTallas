@@ -179,6 +179,7 @@ footer{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:v
       <div class="sub">Chip-design place-and-route, synthesis and RTL simulation, live</div>
     </div>
     <a class="xnav" id="xnav" href="/explorer">Chip Explorer &rarr;</a>
+    <a class="xnav" id="covnav" href="/explorer/coverage/" style="margin-left:0">Coverage &rarr;</a>
     <div class="live" id="live"><span class="dot"></span><span id="clock">connecting</span></div>
   </header>
   <div id="rbar" hidden><button id="rPlay">pause</button><span id="rFrom"></span><input type="range" id="rScrub" min="0" max="1" step="1" value="0"><span id="rTo"></span><span class="sp" id="rSpeed"></span><span id="rMsg"></span></div>
@@ -268,7 +269,7 @@ const REPLAY = !!RD || location.pathname.replace(/\/+$/, '') === '/replay';
 let RT = 0;   // replay clock (recorded epoch seconds)
 const NOW = () => REPLAY ? RT : Date.now() / 1000;
 const SAFE = RD ? !!RD.safe : qs.get('safe') === '1';
-if (SAFE) { const xn = document.getElementById('xnav'); if (xn) xn.href = '/explorer?safe=1'; }
+if (SAFE) { const xn = document.getElementById('xnav'); if (xn) xn.href = '/explorer?safe=1'; const cn = document.getElementById('covnav'); if (cn) cn.hidden = true; }
 const Q = SAFE ? '?safe=1' : '';
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'})[c]);
 const ls = k => { try { return JSON.parse(localStorage.getItem('fv3.' + k)); } catch (e) { return null; } };
