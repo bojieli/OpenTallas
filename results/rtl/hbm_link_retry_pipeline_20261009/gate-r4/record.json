@@ -1,0 +1,29 @@
+{
+  "source_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_replay_sram.sv": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397",
+    "rtl/hbm_accel/tu/link_retry_pipeline_20261009/ot_hbm_link_retry_pipeline.sv": "15d214fd25f745a00f0546165c524a860d867149508f1bb88631390c84c56377",
+    "rtl/hbm_accel/tu/link_retry_pipeline_20261009/tb_hbm_link_retry_pipeline.sv": "10bcd02e0df733a95973fd85f0c948174648a03faa6876d97f6aea416d568ae1"
+  },
+  "gates": [
+    {
+      "name": "positive",
+      "negative_control": false,
+      "pass_gate": true,
+      "build_exit": 0,
+      "run_exit": 0
+    },
+    {
+      "name": "duplicate_mutant",
+      "negative_control": true,
+      "pass_gate": true,
+      "build_exit": 0,
+      "run_exit": 1
+    }
+  ],
+  "exactness_gate": "PASS",
+  "physical_qualified": false,
+  "die_integrated": false
+}
