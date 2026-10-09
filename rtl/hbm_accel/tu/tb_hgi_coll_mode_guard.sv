@@ -4,7 +4,7 @@ module tb_hgi_coll_mode_guard;
  reg rst_n=0,go=0; reg[3:0]gsz=0;
  wire[1:0]ir;wire[7:0]txv,rxc;wire[31:0]ii;wire[4359:0]txf;wire[3:0]dv;wire[2179:0]dfl;wire fault;wire[31:0]st;
  ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1),.NC(8),.NOG(12),.PFMAX(16)) dut(
- .clk(clk),.rst_n(rst_n),.pclk(clk),.prst_n(rst_n),.rank(8'd0),.pf(16'd16),.gsz(gsz),.go(go),
+ .clk(clk),.rst_n(rst_n),.pclk(clk),.prst_n(rst_n),.rank(8'd0),.pf(16'd16),.mcast_all(1'b0),.gsz(gsz),.go(go),
  .inj_idx(ii),.inj_rd(ir),.inj_data(1024'd0),.ph_tx_v(txv),.ph_tx_flit(txf),.sw_cr_ret(8'd0),
  .ph_rx_v(8'd0),.ph_rx_flit(4360'd0),.rx_credit(rxc),.del_valid(dv),.del_flit(dfl),.fault(fault),.stat_credit_stall(st));
  initial begin

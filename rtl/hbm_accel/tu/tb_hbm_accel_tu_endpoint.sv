@@ -86,7 +86,11 @@ module tb_hbm_accel_tu_endpoint #(
         if (IS_REDUCE) $readmemh({vecdir, "/expected.hex"}, expw);
         OF = pf / NC; ROF = BF16 ? OF / 2 : OF; OG = rank / NC; J = rank % NC;
         `ifdef TU_GSZ
+`ifdef TU_MCAST_ALL
+        TOT = NR * ROF;
+`else
         TOT = NC * ROF;
+`endif
 `else
         TOT = (IS_REDUCE) ? NR * ROF : (NR - 1) * pf;
 `endif
@@ -133,6 +137,11 @@ module tb_hbm_accel_tu_endpoint #(
       dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
+`ifdef TU_MCAST_ALL
+           .mcast_all(1'b1),
+`else
+           .mcast_all(1'b0),
+`endif
 `endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
@@ -259,8 +268,10 @@ module tb_hbm_accel_tu_endpoint #(
             reg [FW-1:0] want;
             gi = integer'(dfl[i*PWT + FW +: 16]);
 `ifdef TU_GSZ
+`ifndef TU_MCAST_ALL
             if (gi < OG * NC * ROF || gi >= (OG + 1) * NC * ROF)
                 $fatal(1,"GROUP_ISOLATION rank=%0d gi=%0d OG=%0d",rank,gi,OG);
+`endif
 `endif
             want = (IS_REDUCE) ? expw[gi] : part[gi];
             if (gi >= MAXL || seen[gi] || dfl[i*PWT +: FW] !== want) begin
