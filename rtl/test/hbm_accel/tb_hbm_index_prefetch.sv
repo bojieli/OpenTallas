@@ -17,6 +17,8 @@ module tb_hbm_index_prefetch #(parameter MUT=0);
  ot_hbm_index_prefetch_sink sink(.clk(hc),.rst_n(rst_n),.rq_w(rq_in),.rq_epoch(rq_epoch),
   .ip_v(ip_v),.ip_d(ip_d),.ip_take(ip_take),.fault(sink_fault),.rc_w(rc_raw),.rc_epoch(rc_epoch),.rc_release(rc_release));
  integer accepted=0,receipts=0,t=0,rep;time sent,actual_take,returned;
+ reg correction_seen=0;
+ always@(posedge sc)if(source.ce||sink.ce)correction_seen=1;
  always@(posedge hc)if(rst_n&&ip_take)begin
   if(ip_d!==req_d)$fatal(1,"decoded descriptor mismatch");
   accepted=accepted+1;actual_take=$time;
@@ -26,14 +28,16 @@ module tb_hbm_index_prefetch #(parameter MUT=0);
   for(rep=0;rep<2;rep=rep+1)begin
    @(negedge sc);req_d={73'(73'h12ab34001200345678+((MUT==8)?0:rep)),15'(8006+rep*8),9'd342,2'd2};
    req_v=1;admit=0;sent=$time;
+   if(MUT==9)begin repeat(2)@(negedge sc);force source.pending_bar=99'd0;end
    repeat(70)@(negedge hc);
    if(accepted!=rep)$fatal(1,"receipt before actual admission");
    if(receipt_v)$fatal(1,"fake receipt before actual admission");
+   if(MUT==10)force sink.pending_bar=99'd0;
    admit=1;t=0;
-   if(MUT==3||MUT==5||MUT==6||MUT==7||(MUT==8&&rep==1))begin
+   if(MUT==3||MUT==5||MUT==6||MUT==7||MUT==9||MUT==10||(MUT==8&&rep==1))begin
     while(!source_fault)begin @(negedge sc);t=t+1;if(t>3000)$fatal(1,"expected fault missing");end
     if(receipt_v)$fatal(1,"fault fabricated receipt");
-    if((MUT==3||MUT==8)&&accepted!=rep)$fatal(1,"poison admitted descriptor");
+    if((MUT==3||MUT==8||MUT==9||MUT==10)&&accepted!=rep)$fatal(1,"poison admitted descriptor");
     if(req_r)$fatal(1,"fault released descriptor debt");
     $display("PASS_HBM_INDEX_PREFETCH_FAULT mut=%0d accepted=%0d receipts=%0d",MUT,accepted,receipts);$finish;
    end
@@ -54,6 +58,7 @@ module tb_hbm_index_prefetch #(parameter MUT=0);
    $display("PREFETCH_MAILBOX rep=%0d sent_ps=%0t accepted_ps=%0t receipt_ps=%0t accepted_to_receipt_ps=%0t",rep,sent,actual_take,returned,returned-actual_take);
   end
   if(accepted!=2||receipts!=2)$fatal(1,"transaction count");
+  if((MUT==1||MUT==2||MUT==4)&&!correction_seen)$fatal(1,"missing correction witness");
   $display("PASS_HBM_INDEX_PREFETCH mut=%0d",MUT);$finish;
  end
 endmodule
