@@ -40,7 +40,17 @@
    "ram_gb": 1133,
    "disk_roots": {
     "/": 100
-   }
+   },
+   "external_jobs": [
+    {
+     "name": "hbm-hc64-physical",
+     "pid": 2938696,
+     "command_match": "hc-row-shard-r2/physical_private64/run.sh",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
+    }
+   ]
   },
   {
    "name": "ot-epyc2",
