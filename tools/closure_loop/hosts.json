@@ -20,7 +20,17 @@
    "disk_roots": {
     "/": 100,
     "/srv/opentallas-scratch": 200
-   }
+   },
+   "external_jobs": [
+    {
+     "name": "qwen-quarter-fullshape-lint",
+     "pid": 1755537,
+     "command_match": "--lint-only -Wno-fatal --top-module ot_qwen_r25_su_quarter",
+     "peak_ram_gb": 128,
+     "owner": "Codex:qwen_hbm_unify",
+     "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
+    }
+   ]
   },
   {
    "name": "ot-epyc1tb",
