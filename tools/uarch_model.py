@@ -14096,3 +14096,8 @@ def hbm_index_global_order_model():
     """Actual TP96 candidate packets and finite canonical gather before build."""
     from tools.hbm_index_global_order_model import model
     return model()
+
+def hbm_index_global_order_scan_model():
+    """Canonical static ID scan with actual sparse protected rank heads."""
+    from tools.hbm_index_global_order_model import model
+    return model(static_scan=True)

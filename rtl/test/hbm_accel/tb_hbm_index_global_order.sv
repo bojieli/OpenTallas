@@ -1,15 +1,15 @@
 `timescale 1ps/1fs
-module tb_hbm_index_global_order;
+module tb_hbm_index_global_order #(parameter integer SCAN_CASE=0);
  reg clk=0;always #416.667 clk=~clk;
  reg por_n=0,start=0,publication_complete=0,owner_valid=0;
- reg [72:0] start_frame=73'h123456789ab,owner_frame=73'h123456789ab;
+ reg [72:0] start_frame={20'hfffff,53'h123456789ab},owner_frame={20'hfffff,53'h123456789ab};
  wire start_r,read_v;reg read_r=0;
  wire [72:0] read_frame;wire [6:0] read_rank;wire [16:0] read_ordinal;
  reg rsp_v=0;wire rsp_r;reg [72:0] rsp_frame=0;reg [6:0] rsp_rank=0;
  reg [16:0] rsp_ordinal=0;reg [33:0] rsp_tuple=0;reg rsp_last=0,rsp_empty=0;
  wire out_v;reg out_r=0;wire [33:0] out_tuple;wire [72:0] out_frame;
  wire [6:0] out_rank;wire retained,done,fault;
- ot_hbm_index_global_order #(.ENABLE(1)) dut(.*);
+ ot_hbm_index_global_order #(.ENABLE(1),.STATIC_SCAN(SCAN_CASE)) dut(.*);
  integer cycle=0,received=0,requests=0,id,local_ord,expected_reads=0;
  reg pending=0;integer delay_count=0;reg [6:0] p_rank;reg [16:0] p_ord;
  reg [33:0] stalled_tuple;reg stalled=0;
