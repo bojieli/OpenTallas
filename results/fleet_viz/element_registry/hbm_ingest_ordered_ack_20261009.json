@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_write_source_ordered",
+      "target": "DeepSeek HBM",
+      "owner": "ingest",
+      "description": "Functional accepted source ordinal ACKprefix; no leases/apertures/protectedflops",
+      "source": {
+        "commit": "e4a9a67fa",
+        "paths": [
+          "rtl/hbm_accel/ingest/ot_hbm_write_source_ordered.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff",
+        "evidence": [
+          "rtl/hbm_accel/ingest/ot_hbm_write_source_ordered.sv"
+        ]
+      },
+      "model": {
+        "status": "priced full32PCdepth8 before RTL;255cycleworstprefixdrain,0ratecredit",
+        "evidence": [
+          "tools/hbm_ingest_ack_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending admittedfullshape",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending aggregateACKmutant",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "consuming svc integration pending Claudeintake; no newstandalonejob",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "sameCDC source+payload identity",
+        "actualPC writeaccept andphysicalWD",
+        "mtp_die perstacknativewritejoin"
+      ],
+      "integration": {
+        "status": "coordinating hbm_system/mtp_die actual service source",
+        "evidence": []
+      }
+    }
+  ]
+}
