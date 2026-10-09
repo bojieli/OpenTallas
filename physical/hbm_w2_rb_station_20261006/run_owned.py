@@ -30,6 +30,7 @@ p.add_argument('--min-ff', type=int, default=20000)
 p.add_argument('--threads', type=int, default=16)
 p.add_argument('--tag', default='tk_W2_rb')
 p.add_argument('--half', action='store_true', help='half-rate shell top')
+p.add_argument('--phase-seat', action='store_true', help='localphase and real kept hold/reset delay seats')
 p.add_argument('--safe', action='store_true', help='SAFE=1 station (registered permission decision)')
 p.add_argument('--post-route-ff-hold', action='store_true',
                help='SS-only setup optimization at CTS/GRT; strict FF hold repair/signoff remains required after route')
@@ -110,7 +111,7 @@ def endpoint(block, work, case):
                 basis='exact rb station host map, attributes/kept hierarchy and physical ties retained')
 
 
-def pins(regions):
+def pins(regions, exhaustive=False, die_area_um=None):
     pat = {'^(clk_sm|por_n|release_held|in_.*|release_.*)$': 'clk_sm por_n release_held in_* release_*',
            '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$': 'fclk_o out_* ACK_* fault drained paused'}
     return '\n'.join('set_io_pin_constraint -region '+r['edge']+':* -pin_names {'+pat[r['regex']]+'}' for r in regions)+'\n'
@@ -126,6 +127,7 @@ argv = ['--view', 'asap7', '--top', 'ot_hbm_native_frame_station_rb_half' if a.h
         '--source', rel+'/station_rb_static.sv',
         *(['--source', HQ] if a.half else []),
         '--param', 'ENABLE=1', '--param', f'NO={a.no}', *([] if a.half else ['--param', 'REL_REG=1', '--param', f'SAFE={int(a.safe)}']),
+        *(['--param','LOCAL_PHASE=1','--param','HOLD_SEAT=1','--param','RESET_SEAT=1'] if a.phase_seat else []),
         '--clock-port', 'clk_sm', '--clock-period-ns', f'{a.period_ps/1000:.6f}',
         '--clock-uncertainty-ns', '0.06', '--clock-uncertainty-hold-ns', '0.025',
         '--orfs-corner', 'WC', '--hold-corners', ('WC' if a.post_route_ff_hold else 'WC,BC'), '--hold-margin-ns', str(a.hold_margin_ns),

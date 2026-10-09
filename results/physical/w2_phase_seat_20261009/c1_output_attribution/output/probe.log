@@ -1,0 +1,134 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+ATTR_WS 4.873640380154143e-11
+ATTR_TNS 0.0
+ATTR_OUTPUT_COUNT 4929 NEGATIVE_PROPERTY_COUNT 1
+ATTR_NEGATIVE_PORT_BEGIN name=fclk_o property_slack_max=-1679.797241
+ATTR_PORT_OBJECT _d0904d8693600000_p_Port
+ATTR_CONSTRAINED_PATH_COUNT 0
+No paths found.
+ATTR_UNCONSTRAINED_DIAGNOSTIC
+No paths found.
+ATTR_NEGATIVE_PORT_END
+ATTR_ACTUAL_OUTPUT_PATHS
+Startpoint: _280566_ (rising edge-triggered flip-flop clocked by clk_sm)
+Endpoint: paused (output port clocked by clk_sm)
+Path Group: clk_sm
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_sm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_sm (in)
+  47.04   47.04 ^ wire17215/Y (BUFx16f_ASAP7_75t_R)
+  52.10   99.14 ^ clkbuf_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.32  127.46 ^ clkbuf_1_1_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.25  155.71 ^ clkbuf_1_1_1_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.80  184.51 ^ clkbuf_2_3_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  30.69  215.20 ^ clkbuf_3_7_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  31.49  246.69 ^ clkbuf_4_14_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  33.83  280.52 ^ clkbuf_5_28_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  35.41  315.93 ^ clkbuf_7_112__f_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  35.96  351.89 ^ clkbuf_leaf_929_clk_sm/Y (BUFx24_ASAP7_75t_R)
+   1.31  353.20 ^ _280566_/CLK (DFFHQNx1_ASAP7_75t_R)
+ 102.46  455.66 ^ _280566_/QN (DFFHQNx1_ASAP7_75t_R)
+  42.39  498.05 v _154786_/Y (INVx1_ASAP7_75t_R)
+  34.23  532.28 v output8407/Y (BUFx2_ASAP7_75t_R)
+   3.31  535.59 v paused (out)
+         535.59   data arrival time
+
+ 833.33  833.33   clock clk_sm (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+-189.01  584.33   output external delay
+         584.33   data required time
+---------------------------------------------------------
+         584.33   data required time
+        -535.59   data arrival time
+---------------------------------------------------------
+          48.74   slack (MET)
+
+
+Startpoint: held.pinfl.u_grp/_3_
+            (rising edge-triggered flip-flop clocked by clk_sm)
+Endpoint: in_r (output port clocked by clk_sm)
+Path Group: clk_sm
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock clk_sm (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ clk_sm (in)
+  47.04   47.04 ^ wire17215/Y (BUFx16f_ASAP7_75t_R)
+  52.10   99.14 ^ clkbuf_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.32  127.46 ^ clkbuf_1_1_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.25  155.71 ^ clkbuf_1_1_1_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  28.29  184.00 ^ clkbuf_2_2_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  30.49  214.49 ^ clkbuf_3_5_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  30.11  244.60 ^ clkbuf_4_11_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  32.37  276.97 ^ clkbuf_5_22_0_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  35.82  312.79 ^ clkbuf_7_91__f_clk_sm/Y (BUFx24_ASAP7_75t_R)
+  37.51  350.30 ^ clkbuf_leaf_1061_clk_sm/Y (BUFx24_ASAP7_75t_R)
+   1.47  351.77 ^ held.pinfl.u_grp/_3_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ 112.39  464.17 ^ held.pinfl.u_grp/_3_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  32.74  496.91 v held.pinfl.u_grp/_2_/Y (INVx1_ASAP7_75t_R)
+  31.56  528.46 v output3748/Y (BUFx2_ASAP7_75t_R)
+   0.93  529.40 v in_r (out)
+         529.40   data arrival time
+
+ 833.33  833.33   clock clk_sm (rise edge)
+   0.00  833.33   clock network delay (propagated)
+ -60.00  773.33   clock uncertainty
+   0.00  773.33   clock reconvergence pessimism
+-189.01  584.33   output external delay
+         584.33   data required time
+---------------------------------------------------------
+         584.33   data required time
+        -529.40   data arrival time
+---------------------------------------------------------
+          54.93   slack (MET)
+
+
+ATTR_CLOCKS
+Error: probe.tcl, 42 invalid command name "report_clocks"
+Command exited with non-zero status 1
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /probe/probe.tcl"
+	User time (seconds): 52.61
+	System time (seconds): 1.19
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:53.81
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3033728
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 750809
+	Voluntary context switches: 1
+	Involuntary context switches: 97
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

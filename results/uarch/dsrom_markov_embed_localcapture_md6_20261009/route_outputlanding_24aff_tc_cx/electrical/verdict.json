@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "source_binding": {
+    "passed": true,
+    "RTL_sha256": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+    "checked_beats": 160,
+    "genuine_mutant_rejected": true,
+    "mapped_prerequisite": "b4bcf4837bea665912f5870bac2f83ecd8eca5f547aa5feaf3f1bdd00a9b2d5a"
+  },
+  "returncode": 0,
+  "TC_electrical_violations": 0,
+  "captures": 512.0,
+  "max_actual_q_to_D_manhattan_um": 13.839,
+  "clock_leaves": 47.0,
+  "max_clock_leaf_inputs": 12.0,
+  "scope": "actual final TT electrical/directcapture/CTSleaf acceptance; setup/hold/DRC independently required",
+  "actual_row_orientation_mismatch": 0.0,
+  "VDD_VSS_power_grid_connected": true,
+  "all_258_outputs_have_explicit_unchanged_load_3_898": true
+}

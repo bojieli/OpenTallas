@@ -1,0 +1,251 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "md6_lookup_localcapture-statussep-b8c3158d8-tc",
+ "block": "ot_dsrom_markov_embed_localcapture_pair",
+ "owner": "Claude:mtp-lead (took over mtp_rom_embed_port)",
+ "source_branch": "codex/md6-head-binding-20261009",
+ "record_branch": "codex/closure-record-md6_lookup_localcapture-statussep-b8c3158d8-tc",
+ "source_commit": "b8c3158d8a8757baf46c4bba65beb3a7dced202e",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-statussep-b8c3158d8-tc",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 62.27,
+  "ff_ps": 23.13,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -185.74,
+  "ss_sensitivity_tns_ps": -21346.7,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-statussep-b8c3158d8-tc/routes/md6_lookup_localcapture_statussep_b8c3158d8_tc/corner_sta.json",
+  "post_sdc": [
+   "physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-statussep-b8c3158d8-tc/routes/md6_lookup_localcapture_statussep_b8c3158d8_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/md6_lookup_localcapture-statussep-b8c3158d8-tc/routes/md6_lookup_localcapture_statussep_b8c3158d8_tc/work/orfs/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_statussep_b8c3158d8_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {},
+ "no_bench_reason": "Same qualified RTL SHA086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d as clean88557c82 gate160actualreleasedbeats: goldenPASS,genuinepayloadbitmutantFAIL; sourcebinding helper requires this exact hash and receipts beforecal/route and againatverdict. Gatef6b11ded4/sourcepin, routinef59 placement/coreunchanged, prerequisite0462b4fdb actualmapped512anchors/offlinefp_lintPASS. No duplicate expensivefull253 simulation. Routine c2PGorientationonly; same160beats golden+genuine mutant exactRTLhash086a45; prerequisite pg_fix_c2 binds correctedanchorSHA099383fe andactualVDD/VSS/row/directqD/fplint.",
+ "checks": {
+  "TC_electrical_CTSleaf16_directlocal512captures_PG_actualrow": {
+   "ok": true,
+   "out": "lock_leaves\": 47.0, \"max_clock_leaf_inputs\": 12.0, \"scope\": \"actual final TT electrical/directcapture/CTSleaf acceptance; setup/hold/DRC independently required\", \"actual_row_orientation_mismatch\": 0.0, \"VDD_VSS_power_grid_connected\": true, \"all_258_outputs_have_explicit_unchanged_load_3_898\": true}\n"
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 517,
+    "mean": 269.1,
+    "min": 202.7,
+    "max": 327.0
+   },
+   "all": {
+    "n": 519,
+    "mean": 268.9,
+    "min": 202.7,
+    "max": 327.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 517,
+    "mean": 182.3,
+    "min": 121.7,
+    "max": 234.0
+   },
+   "all": {
+    "n": 519,
+    "mean": 182.1,
+    "min": 121.7,
+    "max": 234.0
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 215,
+   "CK_SS_ALL_MEAN": 215,
+   "CK_SS_MIN": 152,
+   "CK_SS_ALL_MIN": 152,
+   "CK_SS_MAX": 269,
+   "CK_SS_ALL_MAX": 269,
+   "CK_TT_MEAN": 215,
+   "CK_TT_ALL_MEAN": 215,
+   "CK_TT_MIN": 152,
+   "CK_TT_ALL_MIN": 152,
+   "CK_TT_MAX": 269,
+   "CK_TT_ALL_MAX": 269,
+   "CK_FF_MEAN": 182,
+   "CK_FF_ALL_MEAN": 182,
+   "CK_FF_MIN": 122,
+   "CK_FF_ALL_MIN": 122,
+   "CK_FF_MAX": 234,
+   "CK_FF_ALL_MAX": 234,
+   "CK_SSLIB_MEAN": 269,
+   "CK_SSLIB_MIN": 203,
+   "CK_SSLIB_MAX": 327,
+   "CK_SSLIB_ALL_MEAN": 269,
+   "CK_SSLIB_ALL_MIN": 203,
+   "CK_SSLIB_ALL_MAX": 327,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "0 beyond previouslypricedPP+1capturecycle; releasedminimumlookup412cycles unchanged,512captureFF+phaseFF priced; no newinterface or fullheadclaim.",
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T08:01:13-07:00",
+ "job_spec": {
+  "name": "md6_lookup_localcapture-statussep-b8c3158d8-tc",
+  "block": "ot_dsrom_markov_embed_localcapture_pair",
+  "owner": "Claude:mtp-lead (took over mtp_rom_embed_port)",
+  "purpose": "mtp-lead 2026-10-09: MD6 lookup pair output landing with the two status output landing rows separated (b8c3158d8): outputlanding-24affff33 died at DPL-0033 from adjacent valid/fault output-buffer bboxes (attempt1/2 logs). Fixes the 30 captured_data output-slew violations of ctsphase/pgfix by landing flops at the pins. Same RTL/gates.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 4,
+  "source": {
+   "branch": "codex/md6-head-binding-20261009",
+   "commit": "b8c3158d8",
+   "extra_paths": [
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009"
+   ],
+   "required_files": [
+    "tools/run_abi3_physical.py",
+    "tools/orfs_hold_mm.py",
+    "tools/orfs_hold_mm.tcl",
+    "tools/orfs_allcorner_spef.py",
+    "tools/fp_margin_lint.py",
+    "tools/fp_margin_lint.tcl",
+    "tools/preroute_gate.tcl",
+    "tools/dsrom_markov_lookup_intake_check.py",
+    "tools/w18/corner_sta.py",
+    "tools/w18/export_view.py",
+    "physical/dsrom_markov_lookup_localcapture/route.sh",
+    "physical/dsrom_markov_lookup_localcapture/macro_place.tcl",
+    "physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl",
+    "physical/dsrom_markov_lookup_localcapture/sliver_block.tcl",
+    "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+    "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8.lef",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_tt.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib",
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+    "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/gate_r1/verdict.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/capture_anchor_audit.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/intake_offline_r3/offline_fp_lint.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/pg_fix_c2/verdict.json",
+    "physical/dsrom_markov_lookup_localcapture/electrical_env.tcl",
+    "physical/dsrom_markov_lookup_localcapture/pre_global_place.tcl",
+    "physical/dsrom_markov_lookup_localcapture/pre_repair.tcl",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/electrical_load_repair/preflight.log",
+    "physical/dsrom_markov_lookup_localcapture/pre_cts.tcl",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/cts_protection_preflight/check.log",
+    "physical/dsrom_markov_lookup_localcapture/output_anchor.tcl",
+    "tools/uarch_model_dsrom_markov_embed_localcapture.py",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/output_landing_preflight/mapped_receipt.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/output_landing_preflight/mapped_audit.log",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/output_landing_preflight/fp_lint.json",
+    "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/output_landing_preflight/geometry.log"
+   ]
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "set -e; python3 tools/dsrom_markov_lookup_intake_check.py; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC=physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc; CORES=8 bash physical/dsrom_markov_lookup_localcapture/route.sh pair {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 2
+   },
+   "route": {
+    "cmd": "set -e; python3 tools/dsrom_markov_lookup_intake_check.py; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC=physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc; CORES=8 bash physical/dsrom_markov_lookup_localcapture/route.sh pair {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 4
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp -r {RUN}/electrical {RUN}/record/electrical && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "TC_electrical_CTSleaf16_directlocal512captures_PG_actualrow",
+     "cmd": "python3 tools/dsrom_markov_lookup_intake_check.py --orfs {RUN}/routes/{LABEL}/work/orfs --out {RUN}/electrical"
+    }
+   ],
+   "post_sdc": [
+    "physical/dsrom_markov_lookup_localcapture/gen/signoff_pair.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+   ]
+  },
+  "hold_eco": {
+   "enabled": true,
+   "session": "mm",
+   "allow_fresh_grt": false,
+   "reason": "Owner explicitly requires electricalfix first,thenFFholdECO. Existingflow hold_only requires allindependentchecksPASS beforelaunch; noECO ifTCelectrical/CTS/directqD/PGfails. TTsetupacceptance0/FFhold0/DRC0;SSsetupreportedonly. Existingmeasuredphaseadmission required.",
+   "hold_margin_ps": 18,
+   "setup_margin_ps": 40,
+   "setup_filter_ps": 40,
+   "resistance_aware": true,
+   "hold_cells": true,
+   "keep_clock": 1
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "New pair has no die budget sheet; existing explicit250psboundary/50pssenderhold with freshly sequentially calibrated TT/FFclockinsertion.190x155 modeledandactualofflinefit; full253groupselect/broadcastnotqualified."
+  },
+  "no_bench_reason": "Same qualified RTL SHA086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d as clean88557c82 gate160actualreleasedbeats: goldenPASS,genuinepayloadbitmutantFAIL; sourcebinding helper requires this exact hash and receipts beforecal/route and againatverdict. Gatef6b11ded4/sourcepin, routinef59 placement/coreunchanged, prerequisite0462b4fdb actualmapped512anchors/offlinefp_lintPASS. No duplicate expensivefull253 simulation. Routine c2PGorientationonly; same160beats golden+genuine mutant exactRTLhash086a45; prerequisite pg_fix_c2 binds correctedanchorSHA099383fe andactualVDD/VSS/row/directqD/fplint.",
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/uarch/dsrom_markov_embed_localcapture_md6_20261009/route_outputlanding_24aff_tc_cx"
+   }
+  ],
+  "cycles_added": "0 beyond previouslypricedPP+1capturecycle; releasedminimumlookup412cycles unchanged,512captureFF+phaseFF priced; no newinterface or fullheadclaim.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.035,
+  "calibrate_parallel": false,
+  "admission_evidence": "Actual identical two4096x274macro predecessor f6869fa pair_physical_r1: cal/place3_3 peak740144KiB=.706GiB,CTS620860KiB=.592GiB; route5_2 peak3765040KiB=3.591GiB,report1945564KiB=1.855GiB. Current512capture(+256FF) sourcefloorplanSTOP8d5 measured321988KiB=.307GiB. Claims1GiBcal/4GiBroute reserve modest topology growth, not RSS/time caps.8cores same predecessor. Fleet must use current measuredheadroom/diskguard and update observed claims without restartingprogressingwork. No localhostcompute. Actual SAME190x155/258selectedstrongdrivers native3_3 placement peak1005704KiB=.959GiB onPVE1; calibration claim2GiB allows CTS/report headroom from measured current shape, route4GiB retains measured samepair3.591GiB precedent. Reservations only, no process RSS/time caps."
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
