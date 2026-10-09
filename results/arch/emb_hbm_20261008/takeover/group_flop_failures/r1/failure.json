@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.embedding_group_flop_gate_failure.v1",
+  "verdict": "FAIL",
+  "node_sha256": "9d13aba037e446ca3677857cbf5c7b00f57171f58de3b0f64e0d969aa7ee0dfb",
+  "bench_sha256": "5607f96c7a238da8d1bafbb09b8a7d3ebad4a5e0fab719c87171406a504722f2",
+  "logs_sha256": {
+    "base0.log": "6ebd1b3905ca8275661428a4204b0a1187dd158b6cfb739afa5e54c39ff59627",
+    "base0_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reason": "Final test check preceded actual delayed ACK drain. No RTL change; corrected driver cleanup only."
+}

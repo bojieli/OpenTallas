@@ -1,0 +1,11 @@
+{
+  "schema": "opentallas.embedding_group_flop_gate_failure.v1",
+  "verdict": "FAIL",
+  "node_sha256": "9d13aba037e446ca3677857cbf5c7b00f57171f58de3b0f64e0d969aa7ee0dfb",
+  "bench_sha256": "2a83a7a47dd83692bb801f53d453a81663a846bad7b119402984a97bfa668108",
+  "logs_sha256": {
+    "base0.log": "39cb30b1dec8d1f1c034ae91cdccad9cac4baa9f6c9ed80c92d7296d5331e9d0",
+    "base0_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "reason": "Diagnostic confirms fault0/FIFO8/commands4/upcredits8/downcredits5/pendingACK2; three real ACKs unfinished. Test now waits actual drain."
+}

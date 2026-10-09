@@ -1,0 +1,1304 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv; hierarchy -top ot_qfd_emb_group_node -chparam ENABLE 1 -chparam PCBASE 16; proc; memory_map; opt; stat' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_emb_group_node'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+Parameter \ENABLE = 1
+Parameter \PCBASE = 16
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_qfd_emb_group_node'.
+Parameter \ENABLE = 1
+Parameter \PCBASE = 16
+Generating RTLIL representation for module `$paramod$c7e86fe4f5baa2f4f95e0f4d3823145790b99535\ot_qfd_emb_group_node'.
+Warning: Replacing memory \enabled.mem with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103
+Warning: Replacing memory \enabled.outstanding with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:93
+Warning: Replacing memory \enabled.used with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:92
+Warning: Replacing memory \enabled.wp with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103, rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:92
+Warning: Replacing memory \enabled.rp with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:92
+Warning: Replacing memory \enabled.packet with list of registers. See rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:64
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_qfd_emb_group_node
+
+3.2. Analyzing design hierarchy..
+Top module:  \ot_qfd_emb_group_node
+Removing unused module `$paramod$c7e86fe4f5baa2f4f95e0f4d3823145790b99535\ot_qfd_emb_group_node'.
+Removed 1 unused modules.
+
+4. Executing PROC pass (convert processes to netlists).
+
+4.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+4.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 72 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42 in module ot_qfd_emb_group_node.
+Marked 11 switch rules as full_case in process $proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327 in module ot_qfd_emb_group_node.
+Removed a total of 0 dead cases.
+
+4.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 77 assignments to connections.
+
+4.4. Executing PROC_INIT pass (extract init attributes).
+
+4.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+
+4.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+<suppressed ~102 debug messages>
+
+4.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+     1/81: $17\enabled.protocol_bad[0:0]
+     2/81: $9\enabled.overflow_bad[0:0]
+     3/81: $8\enabled.overflow_bad[0:0]
+     4/81: $7\enabled.overflow_bad[0:0]
+     5/81: $6\enabled.overflow_bad[0:0]
+     6/81: $5\enabled.overflow_bad[0:0]
+     7/81: $4\enabled.overflow_bad[0:0]
+     8/81: $3\enabled.overflow_bad[0:0]
+     9/81: $2\enabled.overflow_bad[0:0]
+    10/81: $1\enabled.overflow_bad[0:0]
+    11/81: $1$mem2reg_rd$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:81$19_DATA[264:0]$256
+    12/81: $1$mem2reg_rd$\enabled.rp$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:81$29_DATA[2:0]$253
+    13/81: $9\enabled.have[0:0]
+    14/81: $9\enabled.selected[31:0]
+    15/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$18_DATA[3:0]$247
+    16/81: $9\enabled.idx[31:0]
+    17/81: $8\enabled.have[0:0]
+    18/81: $8\enabled.selected[31:0]
+    19/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$17_DATA[3:0]$238
+    20/81: $8\enabled.idx[31:0]
+    21/81: $7\enabled.have[0:0]
+    22/81: $7\enabled.selected[31:0]
+    23/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$16_DATA[3:0]$229
+    24/81: $7\enabled.idx[31:0]
+    25/81: $6\enabled.have[0:0]
+    26/81: $6\enabled.selected[31:0]
+    27/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$15_DATA[3:0]$220
+    28/81: $6\enabled.idx[31:0]
+    29/81: $5\enabled.have[0:0]
+    30/81: $5\enabled.selected[31:0]
+    31/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$14_DATA[3:0]$211
+    32/81: $5\enabled.idx[31:0]
+    33/81: $4\enabled.have[0:0]
+    34/81: $4\enabled.selected[31:0]
+    35/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$13_DATA[3:0]$202
+    36/81: $4\enabled.idx[31:0]
+    37/81: $3\enabled.have[0:0]
+    38/81: $3\enabled.selected[31:0]
+    39/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$12_DATA[3:0]$193
+    40/81: $3\enabled.idx[31:0]
+    41/81: $2\enabled.have[0:0]
+    42/81: $2\enabled.selected[31:0]
+    43/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$11_DATA[3:0]$184
+    44/81: $2\enabled.idx[31:0]
+    45/81: $1\enabled.have[0:0]
+    46/81: $1\enabled.selected[31:0]
+    47/81: $1$mem2reg_rd$\enabled.used$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:79$10_DATA[3:0]$175
+    48/81: $1\enabled.idx[31:0]
+    49/81: $16\enabled.protocol_bad[0:0]
+    50/81: $15\enabled.protocol_bad[0:0]
+    51/81: $17\enabled.range_bad[0:0]
+    52/81: $14\enabled.protocol_bad[0:0]
+    53/81: $13\enabled.protocol_bad[0:0]
+    54/81: $16\enabled.range_bad[0:0]
+    55/81: $12\enabled.protocol_bad[0:0]
+    56/81: $11\enabled.protocol_bad[0:0]
+    57/81: $15\enabled.range_bad[0:0]
+    58/81: $10\enabled.protocol_bad[0:0]
+    59/81: $9\enabled.protocol_bad[0:0]
+    60/81: $14\enabled.range_bad[0:0]
+    61/81: $8\enabled.protocol_bad[0:0]
+    62/81: $7\enabled.protocol_bad[0:0]
+    63/81: $13\enabled.range_bad[0:0]
+    64/81: $6\enabled.protocol_bad[0:0]
+    65/81: $5\enabled.protocol_bad[0:0]
+    66/81: $12\enabled.range_bad[0:0]
+    67/81: $4\enabled.protocol_bad[0:0]
+    68/81: $3\enabled.protocol_bad[0:0]
+    69/81: $11\enabled.range_bad[0:0]
+    70/81: $2\enabled.protocol_bad[0:0]
+    71/81: $1\enabled.protocol_bad[0:0]
+    72/81: $10\enabled.range_bad[0:0]
+    73/81: $9\enabled.range_bad[0:0]
+    74/81: $8\enabled.range_bad[0:0]
+    75/81: $7\enabled.range_bad[0:0]
+    76/81: $6\enabled.range_bad[0:0]
+    77/81: $5\enabled.range_bad[0:0]
+    78/81: $4\enabled.range_bad[0:0]
+    79/81: $3\enabled.range_bad[0:0]
+    80/81: $2\enabled.range_bad[0:0]
+    81/81: $1\enabled.range_bad[0:0]
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+     1/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_ADDR[6:0]$502
+     2/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_DATA[264:0]$503
+     3/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_ADDR[6:0]$491
+     4/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_DATA[264:0]$492
+     5/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_ADDR[6:0]$480
+     6/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_DATA[264:0]$481
+     7/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_ADDR[6:0]$469
+     8/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_DATA[264:0]$470
+     9/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_ADDR[6:0]$458
+    10/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_DATA[264:0]$459
+    11/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_ADDR[6:0]$447
+    12/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_DATA[264:0]$448
+    13/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_ADDR[6:0]$436
+    14/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_DATA[264:0]$437
+    15/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_ADDR[6:0]$425
+    16/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_DATA[264:0]$426
+    17/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_ADDR[6:0]$414
+    18/170: $3$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_DATA[264:0]$415
+    19/170: $2\enabled.q[31:0]
+    20/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_DATA[264:0]$391
+    21/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_ADDR[6:0]$390
+    22/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_DATA[264:0]$389
+    23/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_ADDR[6:0]$388
+    24/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_DATA[264:0]$387
+    25/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_ADDR[6:0]$386
+    26/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_DATA[264:0]$385
+    27/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_ADDR[6:0]$384
+    28/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_DATA[264:0]$383
+    29/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_ADDR[6:0]$382
+    30/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_DATA[264:0]$381
+    31/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_ADDR[6:0]$380
+    32/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_DATA[264:0]$379
+    33/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_ADDR[6:0]$378
+    34/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_DATA[264:0]$377
+    35/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_ADDR[6:0]$376
+    36/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_DATA[264:0]$375
+    37/170: $2$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_ADDR[6:0]$374
+    38/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_DATA[264:0]$364
+    39/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_ADDR[6:0]$363
+    40/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_DATA[264:0]$362
+    41/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_ADDR[6:0]$361
+    42/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_DATA[264:0]$360
+    43/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_ADDR[6:0]$359
+    44/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_DATA[264:0]$358
+    45/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_ADDR[6:0]$357
+    46/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_DATA[264:0]$356
+    47/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_ADDR[6:0]$355
+    48/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_DATA[264:0]$354
+    49/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_ADDR[6:0]$353
+    50/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_DATA[264:0]$352
+    51/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_ADDR[6:0]$351
+    52/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_DATA[264:0]$350
+    53/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_ADDR[6:0]$349
+    54/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_DATA[264:0]$348
+    55/170: $1$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_ADDR[6:0]$347
+    56/170: $1\enabled.q[31:0]
+    57/170: $0\enabled.up_credit[0:0]
+    58/170: $0\enabled.out_valid[0:0]
+    59/170: $0\enabled.trunk[349:0]
+    60/170: $0\enabled.mem[71][264:0]
+    61/170: $0\enabled.mem[70][264:0]
+    62/170: $0\enabled.mem[69][264:0]
+    63/170: $0\enabled.mem[68][264:0]
+    64/170: $0\enabled.mem[67][264:0]
+    65/170: $0\enabled.mem[66][264:0]
+    66/170: $0\enabled.mem[65][264:0]
+    67/170: $0\enabled.mem[64][264:0]
+    68/170: $0\enabled.mem[63][264:0]
+    69/170: $0\enabled.mem[62][264:0]
+    70/170: $0\enabled.mem[61][264:0]
+    71/170: $0\enabled.mem[60][264:0]
+    72/170: $0\enabled.mem[59][264:0]
+    73/170: $0\enabled.mem[58][264:0]
+    74/170: $0\enabled.mem[57][264:0]
+    75/170: $0\enabled.mem[56][264:0]
+    76/170: $0\enabled.mem[55][264:0]
+    77/170: $0\enabled.mem[54][264:0]
+    78/170: $0\enabled.mem[53][264:0]
+    79/170: $0\enabled.mem[52][264:0]
+    80/170: $0\enabled.mem[51][264:0]
+    81/170: $0\enabled.mem[50][264:0]
+    82/170: $0\enabled.mem[49][264:0]
+    83/170: $0\enabled.mem[48][264:0]
+    84/170: $0\enabled.mem[47][264:0]
+    85/170: $0\enabled.mem[46][264:0]
+    86/170: $0\enabled.mem[45][264:0]
+    87/170: $0\enabled.mem[44][264:0]
+    88/170: $0\enabled.mem[43][264:0]
+    89/170: $0\enabled.mem[42][264:0]
+    90/170: $0\enabled.mem[41][264:0]
+    91/170: $0\enabled.mem[40][264:0]
+    92/170: $0\enabled.mem[39][264:0]
+    93/170: $0\enabled.mem[38][264:0]
+    94/170: $0\enabled.mem[37][264:0]
+    95/170: $0\enabled.mem[36][264:0]
+    96/170: $0\enabled.mem[35][264:0]
+    97/170: $0\enabled.mem[34][264:0]
+    98/170: $0\enabled.mem[33][264:0]
+    99/170: $0\enabled.mem[32][264:0]
+   100/170: $0\enabled.mem[31][264:0]
+   101/170: $0\enabled.mem[30][264:0]
+   102/170: $0\enabled.mem[29][264:0]
+   103/170: $0\enabled.mem[28][264:0]
+   104/170: $0\enabled.mem[27][264:0]
+   105/170: $0\enabled.mem[26][264:0]
+   106/170: $0\enabled.mem[25][264:0]
+   107/170: $0\enabled.mem[24][264:0]
+   108/170: $0\enabled.mem[23][264:0]
+   109/170: $0\enabled.mem[22][264:0]
+   110/170: $0\enabled.mem[21][264:0]
+   111/170: $0\enabled.mem[20][264:0]
+   112/170: $0\enabled.mem[19][264:0]
+   113/170: $0\enabled.mem[18][264:0]
+   114/170: $0\enabled.mem[17][264:0]
+   115/170: $0\enabled.mem[16][264:0]
+   116/170: $0\enabled.mem[15][264:0]
+   117/170: $0\enabled.mem[14][264:0]
+   118/170: $0\enabled.mem[13][264:0]
+   119/170: $0\enabled.mem[12][264:0]
+   120/170: $0\enabled.mem[11][264:0]
+   121/170: $0\enabled.mem[10][264:0]
+   122/170: $0\enabled.mem[9][264:0]
+   123/170: $0\enabled.mem[8][264:0]
+   124/170: $0\enabled.mem[7][264:0]
+   125/170: $0\enabled.mem[6][264:0]
+   126/170: $0\enabled.mem[5][264:0]
+   127/170: $0\enabled.mem[4][264:0]
+   128/170: $0\enabled.mem[3][264:0]
+   129/170: $0\enabled.mem[2][264:0]
+   130/170: $0\enabled.mem[1][264:0]
+   131/170: $0\enabled.mem[0][264:0]
+   132/170: $0\enabled.outstanding[7][2:0]
+   133/170: $0\enabled.outstanding[6][2:0]
+   134/170: $0\enabled.outstanding[5][2:0]
+   135/170: $0\enabled.outstanding[4][2:0]
+   136/170: $0\enabled.outstanding[3][2:0]
+   137/170: $0\enabled.outstanding[2][2:0]
+   138/170: $0\enabled.outstanding[1][2:0]
+   139/170: $0\enabled.outstanding[0][2:0]
+   140/170: $0\enabled.used[8][3:0]
+   141/170: $0\enabled.used[7][3:0]
+   142/170: $0\enabled.used[6][3:0]
+   143/170: $0\enabled.used[5][3:0]
+   144/170: $0\enabled.used[4][3:0]
+   145/170: $0\enabled.used[3][3:0]
+   146/170: $0\enabled.used[2][3:0]
+   147/170: $0\enabled.used[1][3:0]
+   148/170: $0\enabled.used[0][3:0]
+   149/170: $0\enabled.wp[8][2:0]
+   150/170: $0\enabled.wp[7][2:0]
+   151/170: $0\enabled.wp[6][2:0]
+   152/170: $0\enabled.wp[5][2:0]
+   153/170: $0\enabled.wp[4][2:0]
+   154/170: $0\enabled.wp[3][2:0]
+   155/170: $0\enabled.wp[2][2:0]
+   156/170: $0\enabled.wp[1][2:0]
+   157/170: $0\enabled.wp[0][2:0]
+   158/170: $0\enabled.rp[8][2:0]
+   159/170: $0\enabled.rp[7][2:0]
+   160/170: $0\enabled.rp[6][2:0]
+   161/170: $0\enabled.rp[5][2:0]
+   162/170: $0\enabled.rp[4][2:0]
+   163/170: $0\enabled.rp[3][2:0]
+   164/170: $0\enabled.rp[2][2:0]
+   165/170: $0\enabled.rp[1][2:0]
+   166/170: $0\enabled.rp[0][2:0]
+   167/170: $0\enabled.sticky_fault[0:0]
+   168/170: $0\enabled.out_data[264:0]
+   169/170: $0\enabled.rr[3:0]
+   170/170: $0\enabled.credits[3:0]
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:37$513'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:39$514'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:41$515'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:43$516'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:45$517'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:47$518'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:49$519'.
+Creating decoders for process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:51$520'.
+
+4.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.incoming' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.range_bad' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.protocol_bad' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.overflow_bad' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.have' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.tentative' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.pop' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.head' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.selected' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.idx' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.n' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[0]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[1]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[2]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[3]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[4]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[5]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[6]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[7]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.packet[8]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[0]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:37$513'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[1]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:39$514'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[2]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:41$515'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[3]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:43$516'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[4]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:45$517'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[5]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:47$518'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[6]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:49$519'.
+No latch inferred for signal `\ot_qfd_emb_group_node.\enabled.returns[7]' from process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:51$520'.
+
+4.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.trunk' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27719' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.credits' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27724' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rr' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27729' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.out_data' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27734' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.out_valid' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27739' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.up_credit' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27744' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.sticky_fault' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27749' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.q' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27754' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[0]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27759' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[1]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27764' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[2]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27769' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[3]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27774' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[4]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27779' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[5]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27784' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[6]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27789' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[7]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27794' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.rp[8]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27799' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[0]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27804' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[1]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27809' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[2]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27814' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[3]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27819' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[4]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27824' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[5]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27829' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[6]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27834' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[7]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27839' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.wp[8]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27844' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[0]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27849' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[1]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27854' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[2]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27859' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[3]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27864' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[4]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27869' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[5]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27874' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[6]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27879' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[7]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27884' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.used[8]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27889' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[0]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27894' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[1]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27899' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[2]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27904' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[3]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27909' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[4]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27914' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[5]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27919' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[6]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27924' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.outstanding[7]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$27929' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[0]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27936' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[1]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27943' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[2]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27950' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[3]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27957' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[4]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27964' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[5]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27971' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[6]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27978' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[7]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27985' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[8]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27992' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[9]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$27999' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[10]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28006' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[11]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28013' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[12]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28020' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[13]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28027' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[14]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28034' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[15]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28041' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[16]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28048' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[17]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28055' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[18]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28062' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[19]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28069' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[20]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28076' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[21]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28083' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[22]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28090' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[23]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28097' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[24]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28104' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[25]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28111' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[26]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28118' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[27]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28125' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[28]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28132' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[29]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28139' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[30]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28146' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[31]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28153' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[32]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28160' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[33]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28167' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[34]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28174' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[35]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28181' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[36]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28188' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[37]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28195' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[38]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28202' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[39]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28209' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[40]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28216' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[41]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28223' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[42]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28230' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[43]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28237' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[44]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28244' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[45]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28251' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[46]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28258' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[47]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28265' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[48]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28272' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[49]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28279' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[50]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28286' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[51]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28293' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[52]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28300' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[53]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28307' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[54]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28314' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[55]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28321' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[56]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28328' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[57]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28335' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[58]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28342' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[59]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28349' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[60]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28356' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[61]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28363' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[62]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28370' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[63]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28377' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[64]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28384' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[65]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28391' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[66]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28398' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[67]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28405' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[68]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28412' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[69]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28419' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[70]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28426' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.\enabled.mem[71]' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $dff cell `$procdff$28433' with positive edge clock.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28438' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$20_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28443' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28448' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$21_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28453' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28458' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$22_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28463' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28468' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$23_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28473' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28478' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$24_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28483' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28488' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$25_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28493' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28498' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$26_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28503' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28508' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$27_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28513' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_ADDR' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28518' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_emb_group_node.$mem2reg_wr$\enabled.mem$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$28_DATA' using process `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+  created $adff cell `$procdff$28523' with positive edge clock and positive level reset.
+
+4.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+4.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Found and cleaned up 72 empty switches in `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:62$42'.
+Found and cleaned up 30 empty switches in `\ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:89$327'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:37$513'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:39$514'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:41$515'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:43$516'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:45$517'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:47$518'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:49$519'.
+Removing empty process `ot_qfd_emb_group_node.$proc$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:51$520'.
+Cleaned up 102 empty switches.
+
+4.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_emb_group_node.
+<suppressed ~310 debug messages>
+
+5. Executing MEMORY_MAP pass (converting memories to logic and flip-flops).
+
+6. Executing OPT pass (performing simple optimizations).
+
+6.1. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_emb_group_node.
+<suppressed ~4 debug messages>
+
+6.2. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_emb_group_node'.
+Computing hashes of 3087 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+Computing hashes of 2914 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+<suppressed ~519 debug messages>
+Removed a total of 173 cells.
+
+6.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_emb_group_node..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+    dead port 1/2 on $mux $procmux$1078.
+    dead port 2/2 on $mux $procmux$1078.
+    dead port 1/2 on $mux $procmux$1075.
+    dead port 2/2 on $mux $procmux$1075.
+    dead port 1/2 on $mux $procmux$1072.
+    dead port 2/2 on $mux $procmux$1072.
+    dead port 1/2 on $mux $procmux$1069.
+    dead port 2/2 on $mux $procmux$1069.
+    dead port 1/2 on $mux $procmux$1066.
+    dead port 2/2 on $mux $procmux$1066.
+    dead port 1/2 on $mux $procmux$1063.
+    dead port 2/2 on $mux $procmux$1063.
+    dead port 1/2 on $mux $procmux$1060.
+    dead port 2/2 on $mux $procmux$1060.
+    dead port 1/2 on $mux $procmux$1057.
+    dead port 2/2 on $mux $procmux$1057.
+    dead port 1/2 on $mux $procmux$1054.
+    dead port 2/2 on $mux $procmux$1054.
+    dead port 1/2 on $mux $procmux$1051.
+    dead port 2/2 on $mux $procmux$1051.
+    dead port 1/2 on $mux $procmux$1048.
+    dead port 2/2 on $mux $procmux$1048.
+    dead port 1/2 on $mux $procmux$1045.
+    dead port 2/2 on $mux $procmux$1045.
+    dead port 1/2 on $mux $procmux$1042.
+    dead port 2/2 on $mux $procmux$1042.
+    dead port 1/2 on $mux $procmux$1039.
+    dead port 2/2 on $mux $procmux$1039.
+    dead port 1/2 on $mux $procmux$1036.
+    dead port 2/2 on $mux $procmux$1036.
+    dead port 1/2 on $mux $procmux$1033.
+    dead port 2/2 on $mux $procmux$1033.
+    dead port 1/2 on $mux $procmux$1030.
+    dead port 2/2 on $mux $procmux$1030.
+    dead port 1/2 on $mux $procmux$1027.
+    dead port 2/2 on $mux $procmux$1027.
+    dead port 1/2 on $mux $procmux$1021.
+    dead port 2/2 on $mux $procmux$1021.
+    dead port 1/2 on $mux $procmux$1019.
+    dead port 2/2 on $mux $procmux$1019.
+    dead port 1/2 on $mux $procmux$1015.
+    dead port 2/2 on $mux $procmux$1015.
+    dead port 1/2 on $mux $procmux$1013.
+    dead port 2/2 on $mux $procmux$1013.
+    dead port 1/2 on $mux $procmux$1009.
+    dead port 2/2 on $mux $procmux$1009.
+    dead port 1/2 on $mux $procmux$1007.
+    dead port 2/2 on $mux $procmux$1007.
+    dead port 1/2 on $mux $procmux$1003.
+    dead port 2/2 on $mux $procmux$1003.
+    dead port 1/2 on $mux $procmux$1001.
+    dead port 2/2 on $mux $procmux$1001.
+    dead port 1/2 on $mux $procmux$997.
+    dead port 2/2 on $mux $procmux$997.
+    dead port 1/2 on $mux $procmux$995.
+    dead port 2/2 on $mux $procmux$995.
+    dead port 1/2 on $mux $procmux$991.
+    dead port 2/2 on $mux $procmux$991.
+    dead port 1/2 on $mux $procmux$989.
+    dead port 2/2 on $mux $procmux$989.
+    dead port 1/2 on $mux $procmux$985.
+    dead port 2/2 on $mux $procmux$985.
+    dead port 1/2 on $mux $procmux$983.
+    dead port 2/2 on $mux $procmux$983.
+    dead port 1/2 on $mux $procmux$979.
+    dead port 2/2 on $mux $procmux$979.
+    dead port 1/2 on $mux $procmux$977.
+    dead port 2/2 on $mux $procmux$977.
+    dead port 1/2 on $mux $procmux$973.
+    dead port 2/2 on $mux $procmux$973.
+    dead port 1/2 on $mux $procmux$971.
+    dead port 2/2 on $mux $procmux$971.
+    dead port 1/2 on $mux $procmux$967.
+    dead port 2/2 on $mux $procmux$967.
+    dead port 1/2 on $mux $procmux$965.
+    dead port 2/2 on $mux $procmux$965.
+    dead port 1/2 on $mux $procmux$961.
+    dead port 2/2 on $mux $procmux$961.
+    dead port 1/2 on $mux $procmux$959.
+    dead port 2/2 on $mux $procmux$959.
+    dead port 1/2 on $mux $procmux$955.
+    dead port 2/2 on $mux $procmux$955.
+    dead port 1/2 on $mux $procmux$953.
+    dead port 2/2 on $mux $procmux$953.
+    dead port 1/2 on $mux $procmux$949.
+    dead port 2/2 on $mux $procmux$949.
+    dead port 1/2 on $mux $procmux$947.
+    dead port 2/2 on $mux $procmux$947.
+    dead port 1/2 on $mux $procmux$943.
+    dead port 2/2 on $mux $procmux$943.
+    dead port 1/2 on $mux $procmux$941.
+    dead port 2/2 on $mux $procmux$941.
+    dead port 1/2 on $mux $procmux$937.
+    dead port 2/2 on $mux $procmux$937.
+    dead port 1/2 on $mux $procmux$935.
+    dead port 2/2 on $mux $procmux$935.
+    dead port 1/2 on $mux $procmux$931.
+    dead port 2/2 on $mux $procmux$931.
+    dead port 1/2 on $mux $procmux$929.
+    dead port 2/2 on $mux $procmux$929.
+    dead port 1/2 on $mux $procmux$925.
+    dead port 2/2 on $mux $procmux$925.
+    dead port 1/2 on $mux $procmux$923.
+    dead port 2/2 on $mux $procmux$923.
+    dead port 1/2 on $mux $procmux$919.
+    dead port 2/2 on $mux $procmux$919.
+    dead port 1/2 on $mux $procmux$917.
+    dead port 2/2 on $mux $procmux$917.
+Removed 108 multiplexer ports.
+<suppressed ~9243 debug messages>
+
+6.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_emb_group_node.
+Performed a total of 0 changes.
+
+6.5. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_emb_group_node'.
+Computing hashes of 2860 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+Removed a total of 0 cells.
+
+6.6. Executing OPT_DFF pass (perform DFF optimizations).
+Adding EN signal on $procdff$28426 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1191_Y, Q = \enabled.mem[70]).
+Adding EN signal on $procdff$27992 ($dff) from module ot_qfd_emb_group_node (D = $procmux$22302_Y, Q = \enabled.mem[8]).
+Adding EN signal on $procdff$28174 ($dff) from module ot_qfd_emb_group_node (D = $procmux$9237_Y, Q = \enabled.mem[34]).
+Adding EN signal on $procdff$27999 ($dff) from module ot_qfd_emb_group_node (D = $procmux$21687_Y, Q = \enabled.mem[9]).
+Adding EN signal on $procdff$28384 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1722_Y, Q = \enabled.mem[64]).
+Adding EN signal on $procdff$28006 ($dff) from module ot_qfd_emb_group_node (D = $procmux$21081_Y, Q = \enabled.mem[10]).
+Adding EN signal on $procdff$28013 ($dff) from module ot_qfd_emb_group_node (D = $procmux$20484_Y, Q = \enabled.mem[11]).
+Adding EN signal on $procdff$28181 ($dff) from module ot_qfd_emb_group_node (D = $procmux$8856_Y, Q = \enabled.mem[35]).
+Adding EN signal on $procdff$28244 ($dff) from module ot_qfd_emb_group_node (D = $procmux$5832_Y, Q = \enabled.mem[44]).
+Adding EN signal on $procdff$28020 ($dff) from module ot_qfd_emb_group_node (D = $procmux$19896_Y, Q = \enabled.mem[12]).
+Adding EN signal on $procdff$28272 ($dff) from module ot_qfd_emb_group_node (D = $procmux$4722_Y, Q = \enabled.mem[48]).
+Adding EN signal on $procdff$28027 ($dff) from module ot_qfd_emb_group_node (D = $procmux$19317_Y, Q = \enabled.mem[13]).
+Adding EN signal on $procdff$28391 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1611_Y, Q = \enabled.mem[65]).
+Adding EN signal on $procdff$28034 ($dff) from module ot_qfd_emb_group_node (D = $procmux$18747_Y, Q = \enabled.mem[14]).
+Adding EN signal on $procdff$28188 ($dff) from module ot_qfd_emb_group_node (D = $procmux$8484_Y, Q = \enabled.mem[36]).
+Adding EN signal on $procdff$27894 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$395_Y, Q = \enabled.outstanding[0]).
+Adding EN signal on $procdff$28132 ($dff) from module ot_qfd_emb_group_node (D = $procmux$11712_Y, Q = \enabled.mem[28]).
+Adding EN signal on $procdff$27899 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$397_Y, Q = \enabled.outstanding[1]).
+Adding EN signal on $procdff$28356 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2256_Y, Q = \enabled.mem[60]).
+Adding EN signal on $procdff$27904 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$399_Y, Q = \enabled.outstanding[2]).
+Adding EN signal on $procdff$27909 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$401_Y, Q = \enabled.outstanding[3]).
+Adding EN signal on $procdff$28139 ($dff) from module ot_qfd_emb_group_node (D = $procmux$11277_Y, Q = \enabled.mem[29]).
+Adding EN signal on $procdff$27914 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$403_Y, Q = \enabled.outstanding[4]).
+Adding EN signal on $procdff$28419 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1257_Y, Q = \enabled.mem[69]).
+Adding EN signal on $procdff$27919 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$405_Y, Q = \enabled.outstanding[5]).
+Adding EN signal on $procdff$28363 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2109_Y, Q = \enabled.mem[61]).
+Adding EN signal on $procdff$27924 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$407_Y, Q = \enabled.outstanding[6]).
+Adding EN signal on $procdff$28146 ($dff) from module ot_qfd_emb_group_node (D = $procmux$10851_Y, Q = \enabled.mem[30]).
+Adding EN signal on $procdff$28230 ($dff) from module ot_qfd_emb_group_node (D = $procmux$6441_Y, Q = \enabled.mem[42]).
+Adding EN signal on $procdff$27929 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:100$409_Y, Q = \enabled.outstanding[7]).
+Adding EN signal on $procdff$28265 ($dff) from module ot_qfd_emb_group_node (D = $procmux$4986_Y, Q = \enabled.mem[47]).
+Adding EN signal on $procdff$27936 ($dff) from module ot_qfd_emb_group_node (D = $procmux$27546_Y, Q = \enabled.mem[0]).
+Adding EN signal on $procdff$28153 ($dff) from module ot_qfd_emb_group_node (D = $procmux$10434_Y, Q = \enabled.mem[31]).
+Adding EN signal on $procdff$27943 ($dff) from module ot_qfd_emb_group_node (D = $procmux$26859_Y, Q = \enabled.mem[1]).
+Adding EN signal on $procdff$28370 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1971_Y, Q = \enabled.mem[62]).
+Adding EN signal on $procdff$27950 ($dff) from module ot_qfd_emb_group_node (D = $procmux$26181_Y, Q = \enabled.mem[2]).
+Adding EN signal on $procdff$27957 ($dff) from module ot_qfd_emb_group_node (D = $procmux$25512_Y, Q = \enabled.mem[3]).
+Adding EN signal on $procdff$28160 ($dff) from module ot_qfd_emb_group_node (D = $procmux$10026_Y, Q = \enabled.mem[32]).
+Adding EN signal on $procdff$28237 ($dff) from module ot_qfd_emb_group_node (D = $procmux$6132_Y, Q = \enabled.mem[43]).
+Adding EN signal on $procdff$27964 ($dff) from module ot_qfd_emb_group_node (D = $procmux$24852_Y, Q = \enabled.mem[4]).
+Adding EN signal on $procdff$27971 ($dff) from module ot_qfd_emb_group_node (D = $procmux$24201_Y, Q = \enabled.mem[5]).
+Adding EN signal on $procdff$28377 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1842_Y, Q = \enabled.mem[63]).
+Adding EN signal on $procdff$27978 ($dff) from module ot_qfd_emb_group_node (D = $procmux$23559_Y, Q = \enabled.mem[6]).
+Adding EN signal on $procdff$28167 ($dff) from module ot_qfd_emb_group_node (D = $procmux$9627_Y, Q = \enabled.mem[33]).
+Adding EN signal on $procdff$27985 ($dff) from module ot_qfd_emb_group_node (D = $procmux$22926_Y, Q = \enabled.mem[7]).
+Adding EN signal on $procdff$28293 ($dff) from module ot_qfd_emb_group_node (D = $procmux$3984_Y, Q = \enabled.mem[51]).
+Adding EN signal on $procdff$27724 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:99$393_Y, Q = \enabled.credits).
+Adding EN signal on $procdff$28041 ($dff) from module ot_qfd_emb_group_node (D = $procmux$18186_Y, Q = \enabled.mem[15]).
+Adding EN signal on $procdff$27729 ($adff) from module ot_qfd_emb_group_node (D = $ternary$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:109$512_Y [3:0], Q = \enabled.rr).
+Adding EN signal on $procdff$27734 ($adff) from module ot_qfd_emb_group_node (D = \enabled.head, Q = \enabled.out_data).
+Adding EN signal on $procdff$28048 ($dff) from module ot_qfd_emb_group_node (D = $procmux$17634_Y, Q = \enabled.mem[16]).
+Adding EN signal on $procdff$28195 ($dff) from module ot_qfd_emb_group_node (D = $procmux$8121_Y, Q = \enabled.mem[37]).
+Adding EN signal on $procdff$28300 ($dff) from module ot_qfd_emb_group_node (D = $procmux$3756_Y, Q = \enabled.mem[52]).
+Adding EN signal on $procdff$27749 ($adff) from module ot_qfd_emb_group_node (D = 1'1, Q = \enabled.sticky_fault).
+Adding EN signal on $procdff$28055 ($dff) from module ot_qfd_emb_group_node (D = $procmux$17091_Y, Q = \enabled.mem[17]).
+Adding EN signal on $procdff$27754 ($adff) from module ot_qfd_emb_group_node (D = 9, Q = \enabled.q).
+Adding EN signal on $procdff$28398 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1509_Y, Q = \enabled.mem[66]).
+Adding EN signal on $procdff$27759 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$420_Y, Q = \enabled.rp[0]).
+Adding EN signal on $procdff$28307 ($dff) from module ot_qfd_emb_group_node (D = $procmux$3537_Y, Q = \enabled.mem[53]).
+Adding EN signal on $procdff$27764 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$431_Y, Q = \enabled.rp[1]).
+Adding EN signal on $procdff$28062 ($dff) from module ot_qfd_emb_group_node (D = $procmux$16557_Y, Q = \enabled.mem[18]).
+Adding EN signal on $procdff$28433 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1134_Y, Q = \enabled.mem[71]).
+Adding EN signal on $procdff$27769 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$442_Y, Q = \enabled.rp[2]).
+Adding EN signal on $procdff$27774 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$453_Y, Q = \enabled.rp[3]).
+Adding EN signal on $procdff$28069 ($dff) from module ot_qfd_emb_group_node (D = $procmux$16032_Y, Q = \enabled.mem[19]).
+Adding EN signal on $procdff$27779 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$464_Y, Q = \enabled.rp[4]).
+Adding EN signal on $procdff$28202 ($dff) from module ot_qfd_emb_group_node (D = $procmux$7767_Y, Q = \enabled.mem[38]).
+Adding EN signal on $procdff$28314 ($dff) from module ot_qfd_emb_group_node (D = $procmux$3327_Y, Q = \enabled.mem[54]).
+Adding EN signal on $procdff$27784 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$475_Y, Q = \enabled.rp[5]).
+Adding EN signal on $procdff$28251 ($dff) from module ot_qfd_emb_group_node (D = $procmux$5541_Y, Q = \enabled.mem[45]).
+Adding EN signal on $procdff$27789 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$486_Y, Q = \enabled.rp[6]).
+Adding EN signal on $procdff$28076 ($dff) from module ot_qfd_emb_group_node (D = $procmux$15516_Y, Q = \enabled.mem[20]).
+Adding EN signal on $procdff$28286 ($dff) from module ot_qfd_emb_group_node (D = $procmux$4221_Y, Q = \enabled.mem[50]).
+Adding EN signal on $procdff$27794 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$497_Y, Q = \enabled.rp[7]).
+Adding EN signal on $procdff$27799 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:104$508_Y, Q = \enabled.rp[8]).
+Adding EN signal on $procdff$28321 ($dff) from module ot_qfd_emb_group_node (D = $procmux$3126_Y, Q = \enabled.mem[55]).
+Adding EN signal on $procdff$27804 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$417_Y, Q = \enabled.wp[0]).
+Adding EN signal on $procdff$28083 ($dff) from module ot_qfd_emb_group_node (D = $procmux$15009_Y, Q = \enabled.mem[21]).
+Adding EN signal on $procdff$27809 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$428_Y, Q = \enabled.wp[1]).
+Adding EN signal on $procdff$28405 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1416_Y, Q = \enabled.mem[67]).
+Adding EN signal on $procdff$27814 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$439_Y, Q = \enabled.wp[2]).
+Adding EN signal on $procdff$28090 ($dff) from module ot_qfd_emb_group_node (D = $procmux$14511_Y, Q = \enabled.mem[22]).
+Adding EN signal on $procdff$27819 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$450_Y, Q = \enabled.wp[3]).
+Adding EN signal on $procdff$28209 ($dff) from module ot_qfd_emb_group_node (D = $procmux$7422_Y, Q = \enabled.mem[39]).
+Adding EN signal on $procdff$28328 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2934_Y, Q = \enabled.mem[56]).
+Adding EN signal on $procdff$27824 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$461_Y, Q = \enabled.wp[4]).
+Adding EN signal on $procdff$27829 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$472_Y, Q = \enabled.wp[5]).
+Adding EN signal on $procdff$28097 ($dff) from module ot_qfd_emb_group_node (D = $procmux$14022_Y, Q = \enabled.mem[23]).
+Adding EN signal on $procdff$27834 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$483_Y, Q = \enabled.wp[6]).
+Adding EN signal on $procdff$27839 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$494_Y, Q = \enabled.wp[7]).
+Adding EN signal on $procdff$28335 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2751_Y, Q = \enabled.mem[57]).
+Adding EN signal on $procdff$27844 ($adff) from module ot_qfd_emb_group_node (D = $add$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:103$505_Y, Q = \enabled.wp[8]).
+Adding EN signal on $procdff$28104 ($dff) from module ot_qfd_emb_group_node (D = $procmux$13542_Y, Q = \enabled.mem[24]).
+Adding EN signal on $procdff$28216 ($dff) from module ot_qfd_emb_group_node (D = $procmux$7086_Y, Q = \enabled.mem[40]).
+Adding EN signal on $procdff$27849 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$413_Y, Q = \enabled.used[0]).
+Adding EN signal on $procdff$27854 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$424_Y, Q = \enabled.used[1]).
+Adding EN signal on $procdff$28111 ($dff) from module ot_qfd_emb_group_node (D = $procmux$13071_Y, Q = \enabled.mem[25]).
+Adding EN signal on $procdff$27859 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$435_Y, Q = \enabled.used[2]).
+Adding EN signal on $procdff$28258 ($dff) from module ot_qfd_emb_group_node (D = $procmux$5259_Y, Q = \enabled.mem[46]).
+Adding EN signal on $procdff$28342 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2577_Y, Q = \enabled.mem[58]).
+Adding EN signal on $procdff$27864 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$446_Y, Q = \enabled.used[3]).
+Adding EN signal on $procdff$28412 ($dff) from module ot_qfd_emb_group_node (D = $procmux$1332_Y, Q = \enabled.mem[68]).
+Adding EN signal on $procdff$27869 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$457_Y, Q = \enabled.used[4]).
+Adding EN signal on $procdff$28118 ($dff) from module ot_qfd_emb_group_node (D = $procmux$12609_Y, Q = \enabled.mem[26]).
+Adding EN signal on $procdff$28279 ($dff) from module ot_qfd_emb_group_node (D = $procmux$4467_Y, Q = \enabled.mem[49]).
+Adding EN signal on $procdff$27874 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$468_Y, Q = \enabled.used[5]).
+Adding EN signal on $procdff$27879 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$479_Y, Q = \enabled.used[6]).
+Adding EN signal on $procdff$28349 ($dff) from module ot_qfd_emb_group_node (D = $procmux$2412_Y, Q = \enabled.mem[59]).
+Adding EN signal on $procdff$27884 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$490_Y, Q = \enabled.used[7]).
+Adding EN signal on $procdff$28125 ($dff) from module ot_qfd_emb_group_node (D = $procmux$12156_Y, Q = \enabled.mem[27]).
+Adding EN signal on $procdff$28223 ($dff) from module ot_qfd_emb_group_node (D = $procmux$6759_Y, Q = \enabled.mem[41]).
+Adding EN signal on $procdff$27889 ($adff) from module ot_qfd_emb_group_node (D = $sub$rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv:102$501_Y, Q = \enabled.used[8]).
+Setting constant 1-bit at position 0 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 1 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 2 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 3 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 4 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 5 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 6 on $procdff$28448 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 1 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 2 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 3 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 4 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 5 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 6 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 7 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 8 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 9 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 10 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 11 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 12 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 13 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 14 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 15 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 16 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 17 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 18 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 19 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 20 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 21 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 22 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 23 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 24 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 25 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 26 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 27 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 28 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 29 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 30 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 0-bit at position 31 on $auto$ff.cc:337:slice$28669 ($adffe) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 0 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 1 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 2 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 3 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 4 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 5 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 6 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 7 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 8 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 9 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 10 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 11 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 12 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 13 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 14 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 15 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 16 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 17 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 18 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 19 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 20 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 21 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 22 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 23 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 24 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 25 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 26 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 27 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 28 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 29 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 30 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 31 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 32 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 33 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 34 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 35 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 36 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 37 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 38 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 39 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 40 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 41 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 42 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 43 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 44 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 45 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 46 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 47 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 48 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 49 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 50 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 51 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 52 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 53 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 54 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 55 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 56 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 57 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 58 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 59 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 60 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 61 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 62 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 63 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 64 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 65 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 66 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 67 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 68 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 69 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 70 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 71 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 72 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 73 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 74 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 75 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 76 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 77 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 78 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 79 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 80 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 81 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 82 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 83 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 84 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 85 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 86 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 87 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 88 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 89 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 90 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 91 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 92 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 93 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 94 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 95 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 96 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 97 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 98 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 99 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 100 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 101 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 102 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 103 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 104 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 105 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 106 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 107 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 108 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 109 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 110 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 111 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 112 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 113 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 114 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 115 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 116 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 117 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 118 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 119 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 120 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 121 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 122 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 123 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 124 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 125 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 126 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 127 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 128 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 129 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 130 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 131 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 132 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 133 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 134 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 135 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 136 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 137 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 138 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 139 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 140 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 141 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 142 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 143 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 144 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 145 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 146 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 147 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 148 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 149 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 150 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 151 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 152 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 153 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 154 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 155 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 156 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 157 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 158 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 159 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 160 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 161 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 162 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 163 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 164 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 165 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 166 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 167 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 168 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 169 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 170 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 171 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 172 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 173 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 174 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 175 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 176 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 177 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 178 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 179 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 180 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 181 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 182 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 183 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 184 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 185 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 186 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 187 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 188 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 189 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 190 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 191 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 192 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 193 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 194 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 195 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 196 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 197 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 198 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 199 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 200 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 201 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 202 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 203 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 204 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 205 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 206 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 207 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 208 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 209 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 210 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 211 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 212 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 213 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 214 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 215 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 216 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 217 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 218 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 219 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 220 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 221 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 222 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 223 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 224 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 225 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 226 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 227 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 228 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 229 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 230 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 231 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 232 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 233 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 234 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 235 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 236 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 237 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 238 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 239 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 240 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 241 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 242 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 243 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 244 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 245 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 246 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 247 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 248 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 249 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 250 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 251 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 252 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 253 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 254 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 255 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 256 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 257 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 258 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 259 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 260 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 261 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 262 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 263 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+Setting constant 1-bit at position 264 on $procdff$28453 ($adff) from module ot_qfd_emb_group_node.
+
+6.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_emb_group_node..
+Removed 207 unused cells and 1843 unused wires.
+<suppressed ~210 debug messages>
+
+6.8. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_emb_group_node.
+<suppressed ~192 debug messages>
+
+6.9. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_emb_group_node..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8916 debug messages>
+
+6.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_emb_group_node.
+Performed a total of 0 changes.
+
+6.12. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_emb_group_node'.
+Computing hashes of 2549 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+Computing hashes of 2477 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+<suppressed ~216 debug messages>
+Removed a total of 72 cells.
+
+6.13. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_emb_group_node..
+Removed 0 unused cells and 264 unused wires.
+<suppressed ~1 debug messages>
+
+6.15. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_emb_group_node.
+
+6.16. Rerunning OPT passes. (Maybe there is more to do..)
+
+6.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+Running muxtree optimizer on module \ot_qfd_emb_group_node..
+  Creating internal representation of mux trees.
+  Evaluating internal representation of mux trees.
+  Analyzing evaluation results.
+Removed 0 multiplexer ports.
+<suppressed ~8904 debug messages>
+
+6.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+  Optimizing cells in module \ot_qfd_emb_group_node.
+Performed a total of 0 changes.
+
+6.19. Executing OPT_MERGE pass (detect identical cells).
+Finding identical cells in module `\ot_qfd_emb_group_node'.
+Computing hashes of 2477 cells of `\ot_qfd_emb_group_node'.
+Finding duplicate cells in `\ot_qfd_emb_group_node'.
+Removed a total of 0 cells.
+
+6.20. Executing OPT_DFF pass (perform DFF optimizations).
+
+6.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_emb_group_node..
+
+6.22. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_emb_group_node.
+
+6.23. Finished fast OPT passes. (There is nothing left to do.)
+
+7. Printing statistics.
+
+=== ot_qfd_emb_group_node ===
+
+        +----------Local Count, excluding submodules.
+        | 
+     2512 wires
+   342606 wire bits
+      168 public wires
+    30314 public wire bits
+       25 ports
+     5621 port bits
+     2477 cells
+       54   $add
+        3   $adff
+       39   $adffe
+       72   $dffe
+      752   $eq
+        9   $ge
+       19   $gt
+       99   $logic_and
+       61   $logic_not
+       13   $logic_or
+        9   $lt
+     1253   $mux
+        9   $ne
+        8   $or
+       11   $pmux
+       20   $reduce_and
+       10   $reduce_bool
+       36   $sub
+
+Warnings: 6 unique messages, 6 total
+End of script. Logfile hash: a22a27bff1, time: 27.91s, user: 26.52s, system: 1.40s, MEM: 346.94 MB peak
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+Time spent: 36% 3x opt_dff (10 sec), 21% 3x opt_clean (5 sec), ...

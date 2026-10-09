@@ -1,0 +1,112 @@
+{
+  "schema": "opentallas.embedding_distributed_flop_node_gate.v1",
+  "model_before_RTL_commit": "96bfccc2f",
+  "owner_review": "REVIEW_20261009.md V20/X2",
+  "source_sha256": {
+    "tools/emb_hbm_group_sources.py": "f4ddd09c71f80f0c3a80110e470599e8ca5f1d94bd717ad4bde5f6c6f5a363fb",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv": "9d13aba037e446ca3677857cbf5c7b00f57171f58de3b0f64e0d969aa7ee0dfb",
+    "rtl/test/emb_hbm/tb_emb_group_node.sv": "1ea4c741ddd812e9b8fd2f2623b8f7490ff8916a0766c1d37c5c8e4bced07ecb",
+    "results/arch/emb_hbm_20261008/takeover/distributed_PC_flop_node_model.json": "17241479fdaf46f2c32ed37d60ea7109b1ec781a06c40253ef33e4e1c4bcb1c1"
+  },
+  "positive_and_guard2_3_bench_sha256": "3528799a250e959f9ebf154ea109b86a11a496065d90b04af4bd068cb8398184",
+  "positive_source_note": "The final bench differs only by bypassing its own zero-credit assertion in deliberately-invalid MODE4; positive cases and other guards were already terminal. No RTL change between runs.",
+  "logs_sha256": {
+    "mode2_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "base8.log": "f30aeee48cb6e401488a798f69bd03c400e908d9cd77925373a7b53061c7a452",
+    "base8_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "exits.txt": "c37466457d971ab1e0b4b88b65523f9567a5ea46423c8f76c370c04535f92f8f",
+    "negative_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "run_fault_tail.sh": "97067714f1a5480870a8a125389eeeb1e47d5bcd2b970a06f085a85a1406ffb6",
+    "base24_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "base16_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "mode4_r4_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative.log": "d6116535bed9323a781f35c43ede17c4468bee08027770783f5d0578ed613b10",
+    "mode4_r4.log": "b293e860d36c8dd7474ae1f2e90ff2925c56cc3236b2c1f0eff85dc073b99544",
+    "base0.log": "b7afade2b62dc3f019d7f0b76162a899ca63d12a4323d0eafa872abfa2a546ec",
+    "base16.log": "84fb6752ced170f563c832fad9b7875cffa9f09ebb4c9e4c60c4059dfb5a1d35",
+    "mode3_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "base0_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "flop_mapping.log": "e2aa625849dfc4c22ae53b2cfb6ff8f76ce9aec6a902bd7558c88eb906f68778",
+    "mode3.log": "e3e99afdff4181f4799268382d156da5ff9a4aa93bfec0917db8d27650743f8f",
+    "mode2.log": "c359f3bc401ba3264963ecf30cba420c9951163e389f9ecd459204454eb21059",
+    "base24.log": "fad325252185ac52dff0b541aa88c10e1a6c649a4f7037842dbc6d10ed5a9608",
+    "run.sh": "e32bf1946f21950e8aeed9b5e4858fe933a3813d3d59a3540c209e8b4837762a"
+  },
+  "tool": "IcarusVerilog12.0 stable; Yosys0.68",
+  "host": "ot-pve1",
+  "admission_peak_GiB": 1,
+  "verdict": "PASS",
+  "positive_PCBASE": [
+    0,
+    8,
+    16,
+    24
+  ],
+  "packets_per_variant": 80,
+  "local_packets": 64,
+  "upstream_packets": 16,
+  "checks": [
+    "all265 tagged packet bits and exact per-source order",
+    "full350bit registeredtrunk and exact8localcmd288 mapping",
+    "actual8prepaid downstreamcredits",
+    "upstreamcredit iff actualtransitqueue retirement",
+    "full8slots each9queues, no pending ninth entry",
+    "sourcecommand credits4 spent/replenished from realreplyevents",
+    "originalHBM CE/UEflags preserved without reinterpretation",
+    "defaultENABLE0 zero outputs andresetflush"
+  ],
+  "measurements": {
+    "max_FIFO_occupancy": 8,
+    "max_PC_commands_outstanding": 4,
+    "max_RR_service_wait_edges": 9,
+    "downstream_credit_stall_cycles": 10,
+    "ingress_to_sink_min_core_edges": 2,
+    "ingress_to_sink_max_core_edges": 76,
+    "reply_service_events_per_edge": 1,
+    "meaning": "Two-capture-edge minimum. Maximum includes measured nine-source serialization and explicit delayedcredits. Synthetic4responses/PC stress is stronger than released serializedfetch\u22642responses/PC; no batchthroughput claim."
+  },
+  "guards": {
+    "ninth_FIFO_entry": "PASS: fault, retained8slots, no invented upstreamcredit",
+    "raw_PC_credit_at_zero_outstanding": "PASS: fault and releasewithheld",
+    "fifth_PC_command": "PASS: actualwindow4 guard"
+  },
+  "negative": {
+    "mutation": "stored rawflop localqueue0 packet bit0 flipped",
+    "expected": "FAIL tagged packet/data/order src0 ordinal0",
+    "exit_code": 1,
+    "meaning": "Functional exactness negative; flopFIFO has no ECC and makes no bit-upset correction claim."
+  },
+  "flop_mapping": {
+    "command": "hierarchy ENABLE1 PCBASE16; proc; memory_map; opt; stat",
+    "remaining_memory_macros": 0,
+    "storage": "generic$dffe flop cells, noECC/TMR logic",
+    "elapsed_seconds": 27.91,
+    "peak_MB": 346.94,
+    "source_log": "flop_mapping.log",
+    "physical_technology_mapping": "OPEN: parent-owned approved physical intake"
+  },
+  "state_inventory": {
+    "FIFO_payload_bits": 19080,
+    "registered_trunk_bits": 350,
+    "transient_output_bits": 265,
+    "single_control_bits": 123,
+    "source_total_bits": 19818,
+    "flop_proxy_um2": 6341.76,
+    "model_note": "Planningmodel allowed125 control bits; exactsource uses123, a2bit conservativeoverestimate. No mirror/ECC transientstate."
+  },
+  "serialization_price": "Model96bfccc2f: 32code/64code+credit events vs16enginepairwords =>+16/+48sharedserviceedges lowerbounds (13.333/40ns) plusactualnodehops andcredit/RRstalls; full4group/enginecomposition OPEN.",
+  "period_ps": 833.333334,
+  "original_sources_modified": false,
+  "no_auth_epoch_lease_control_mirrors": true,
+  "no_FIFO_or_transient_ECC": true,
+  "physical_closed": false,
+  "full_die_bound": false,
+  "adopted": false,
+  "headline_credit": 0,
+  "preserved_failure_paths": [
+    "results/arch/emb_hbm_20261008/takeover/group_flop_failures/r1",
+    "results/arch/emb_hbm_20261008/takeover/group_flop_failures/r2",
+    "results/arch/emb_hbm_20261008/takeover/group_flop_failures/r3"
+  ],
+  "queue_move": "Corrected EPYC4 gate remainedonlyinwaitingadmit_core; canceledwaitingguard andmovedtoPVE1actualguard,96GiBavailable/12GiBreserve. No progressingjob interrupted."
+}
