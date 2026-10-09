@@ -2,6 +2,9 @@
 # core_clk (ck, the die clock) comes from run_abi3_physical; clk_i = the ingest core clock = ck / 2 (own root);
 # clk_h = the host link user clock (1 GHz).  The three domains cross only through Gray-pointer async FIFOs and a
 # toggle-qualified static CSR, so they are asynchronous groups.  Host-face IO is timed against clk_h at 20 %.
+# clk_period is set by the run_abi3_physical SDC but not where the mm-hold CTS step re-sources this file (strip-protect 2026-10-09):
+# fall back to core_clk's period, else the route period 770 ps (route.sh PER 0.770).
+if {![info exists clk_period]} { if {[llength [get_clocks -quiet core_clk]]} { set clk_period [get_property [get_clocks core_clk] period] } else { set clk_period 770 } }
 create_clock -name clk_i -period [expr $clk_period * 2] [get_ports clk_i]
 create_clock -name clk_h -period 1000 [get_ports clk_h]
 set_clock_uncertainty -setup 60 [get_clocks {clk_i clk_h}]
