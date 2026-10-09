@@ -1,0 +1,60 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-E5-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_E5_a1f23fa0b_mm_vf_hm25/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design dsfd_m2l_vr_68x10__hr_E5\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_",
+ "sdc_name": "6_final.sdc",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -167.88,
+  "tns_ps": -874.8,
+  "worst_register_d_slack_ps": -154.117325,
+  "worst_reg_to_reg_slack_ps": -27.62,
+  "worst_input_to_reg_slack_ps": 150.31,
+  "worst_output_port_slack_ps": -167.877319,
+  "violating_d_pins": 15,
+  "errors": [],
+  "odb_sha256": "1be7e2d5b062914ff3d2ac9fadc65b2c29f4a68203dea62c3c900827b84e6011",
+  "spef_sha256": "7160cafbf0b57adbac9a059d9e36bcfdecbfc2f241b27bae106d98327a37f8db",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "b85d99868c337b0452747e34efc7039b04c08eaf6f6c4f72567addbc3a59a25c"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 6.84,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 17.27149,
+  "worst_reg_to_reg_slack_ps": 20.22,
+  "worst_input_to_reg_slack_ps": 17.27,
+  "worst_output_port_slack_ps": 6.840056,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "1be7e2d5b062914ff3d2ac9fadc65b2c29f4a68203dea62c3c900827b84e6011",
+  "spef_sha256": "7160cafbf0b57adbac9a059d9e36bcfdecbfc2f241b27bae106d98327a37f8db",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "b85d99868c337b0452747e34efc7039b04c08eaf6f6c4f72567addbc3a59a25c"
+ },
+ "post_sdc": {
+  "physical/s81_die_views/common/signoff_unc60.sdc": "084839634254b31fa134cf109a587ffbd01bde5058eeb467d72166ac7d04bf97"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "2e5a97c1fa683d2e37618606895758fe31e53a820915b1e6015e99178b1916b3",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": false
+}
