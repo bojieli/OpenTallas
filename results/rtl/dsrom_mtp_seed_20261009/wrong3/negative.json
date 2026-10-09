@@ -1,0 +1,20 @@
+{
+ "verdict": "FAIL_AS_REQUIRED",
+ "negative": "three 5120-term segments change golden60-leaf tree padded64",
+ "source_commit": "67ee6c34c",
+ "host": "ot-epyc3",
+ "actual_row0_FP32": "411f9b25",
+ "golden_row0_FP32": "411f9b26",
+ "difference_ULP": 1,
+ "actual_collector": "real native3subtrees and real LAT8FP32joins",
+ "aggregate_build_RSS_peak_KB": 2703216,
+ "reservation_GiB": 6,
+ "worker_pid": 1792821,
+ "admission": "measured hostheadroom5% and wholeprocessgroup RSS sampled200ms",
+ "artifacts_sha256": {
+  "plan.json": "b949f46865497c646de4f145998e6f009f0867851f6a48cec2f8b357b9ec3d58",
+  "wrong3_67ee6c34c_aggregate_RSS.tsv": "0320ebed8f5e36faed7d372767b7cb2e6806d958806a8514c1861f04a594a22a",
+  "wrong3_67ee6c34c_job.log": "8b4045cf9be01b5aa1cc46e5289f2af2cf44c8139a6297b669fadd911bd3f1ce",
+  "sim.log": "33e83036fb99962976db6111b162487719d6f358c19046c1513ac378b55f093f"
+ }
+}
