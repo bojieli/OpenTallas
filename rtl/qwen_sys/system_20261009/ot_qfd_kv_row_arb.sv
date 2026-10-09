@@ -42,12 +42,12 @@ module ot_qfd_kv_row_arb #(
  reg [63:0] grants;reg [31:0] reserved;
  reg [2:0] launch_v;reg [842:0] launch_data;
  reg [31:0] claimed;reg [6:0] word[0:31];reg [3:0] seen[0:31];
- integer i,j,p,half,start,n,col;reg [11:0] dst;
+ integer i,j,p,half,start,n,col;reg [11:0] dst,other_dst;
  reg [10:0] tile;reg [6:0] loc;reg [1:0] sel;reg [3:0] quarter;
  reg [255:0] data;reg eligible,invalid;
  always @* begin
   grants=0;reserved=0;launch_v=0;launch_data=0;claimed=0;n=0;invalid=0;
-  dst=0;tile=0;loc=0;sel=0;quarter=0;data=0;eligible=0;col=0;p=0;half=0;
+  dst=0;other_dst=0;tile=0;loc=0;sel=0;quarter=0;data=0;eligible=0;col=0;p=0;half=0;
   for(j=0;j<32;j=j+1)begin word[j]=0;seen[j]=0;end
   start=(rr-STACK*32)&127;if(start>=32)start=0;
   for(i=0;i<32;i=i+1)begin
@@ -60,6 +60,8 @@ module ot_qfd_kv_row_arb #(
     quarter=h_isk[p]?((h_tail[p]&&h_tail_lanes[p*4+:4]==0)?4'd0:(4'b0011<<sel)):(4'b0001<<sel);
     eligible=h_v[p]&&h_need[p*2+half]&&!dst[11]&&dst[10:9]==STACK&&dst[8:5]==ROW;
     if(h_v[p]&&h_need[p*2+half]&&(dst[11]||dst[10:9]!=STACK|| (h_isk[p]&&(half!=0||sel[0]))))invalid=1;
+    other_dst=place(half?h_tile0[p*11+:11]:h_tile1[p*11+:11]);
+    if(MUT_V_ATOMIC!=0&&h_need[p*2+:2]==2'b11&&other_dst[8:5]!=ROW)eligible=0;
     if(eligible)begin
      if(!claimed[col])begin claimed[col]=1;word[col]=loc;seen[col]=0;end
      if(word[col]==loc)begin
