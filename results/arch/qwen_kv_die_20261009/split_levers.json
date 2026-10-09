@@ -1,0 +1,70 @@
+{
+ "schema": "opentallas.qwen-split-levers.v1",
+ "date": "2026-10-09",
+ "vehicle": "token-exact's L0-L2 chain at P8191 (tools/qwen_missing/partition_token.py, src 4dc3e0062 + the go-queue overlay 1289ebc36), exact = 12/12 layer X + 12/12 current K/V",
+ "reference": {
+  "base": {
+   "L0": 6044,
+   "L1": 5282,
+   "source": "results/rtl/token_exact_20261009/qwen_rom/L3_base.json"
+  },
+  "current_s22ml7": {
+   "L0": 6151,
+   "L1": 5480,
+   "source": "results/rtl/token_exact_20261009/qwen_rom/L3_s22ml7.json"
+  }
+ },
+ "runs": {
+  "s22ml7gq2": {
+   "L0": 6164,
+   "L1": 5502,
+   "exact": true,
+   "vs_current_L1": 22,
+   "vs_base_L1": 220
+  },
+  "s22ml7gq4": {
+   "L0": 6164,
+   "L1": 5502,
+   "exact": true,
+   "vs_current_L1": 22,
+   "vs_base_L1": 220
+  },
+  "s11ml7": {
+   "L0": 6125,
+   "L1": 5437,
+   "exact": true,
+   "vs_current_L1": -43,
+   "vs_base_L1": 155
+  },
+  "s11ml4": {
+   "L0": 6101,
+   "L1": 5389,
+   "exact": true,
+   "vs_current_L1": -91,
+   "vs_base_L1": 107
+  },
+  "s21ml7": {
+   "L0": 6138,
+   "L1": 5459,
+   "exact": true,
+   "vs_current_L1": -21,
+   "vs_base_L1": 177
+  },
+  "s12ml7": {
+   "L0": 6138,
+   "L1": 5458,
+   "exact": true,
+   "vs_current_L1": -22,
+   "vs_base_L1": 176
+  }
+ },
+ "sources": "ot-epyc1tb /srv/opentallas-scratch/claude/kv-die/split_{gq,sens}/L3_*/result.json",
+ "findings": [
+  "GO QUEUES (gq 2 and 4): exact but SLOWER, +22 cycles a layer (5,502 vs 5,480): the 4-edge RT mask is not the binding cost; every SU->SU issue in the layer is a dependent op (the go travels DCU, the status DUC, whatever the queue), and the queue adds a pop-count return before idle is visible. REJECTED (measured slower).",
+  "KV13 interleaving: 0 of 6 same-unit issues have an independent op to move (split_interleave.json).",
+  "Station sensitivity: one station (DCU or DUC) = ~21.5 cycles a layer (s21 / s12 -21, s11 -43 vs s22).  The 4 stations of the current split = ~86 of the +198.",
+  "SU memory latency: ML 4 -> 7 = +48 a layer (s11ml4 5,389 vs s11ml7 5,437), ~16 a layer per ML edge; ML 7 = ~112 of the +198.  The SU memory latency is the larger share.",
+  "Stations are at the registered-boundary minimum (OS + IS each way); the remaining lever is the SU memory latency: ML 7 applies to EVERY SU memory (the abutted VM answers too) because the stream unit has one ML for all ports; only the far constant ROM needs it."
+ ],
+ "next": "per-port SU memory latency (VM at its abutted latency, constant ROM operands prefetched or the constant ROM moved beside the SU) -- RTL change in ot_hdc_vstream_rt, benched on the same chain"
+}
