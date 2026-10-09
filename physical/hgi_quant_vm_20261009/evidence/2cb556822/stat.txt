@@ -1,0 +1,59 @@
+
+22. Printing statistics.
+
+=== ot_hgi_quant_vm_transport ===
+
+        +----------Local Count, excluding submodules.
+        |        +-Local Area, excluding submodules.
+        |        | 
+   206612        - wires
+   206612        - wire bits
+    45253        - public wires
+    45253        - public wire bits
+     2030        - ports
+     2030        - port bits
+   200951 2.91E+04 cells
+     9249  809.103   AND2x2_ASAP7_75t_R
+     2282  199.629   AND3x1_ASAP7_75t_R
+     2168  221.266   AND4x1_ASAP7_75t_R
+      596   69.517   AND5x1_ASAP7_75t_R
+        3      0.7   AO211x2_ASAP7_75t_R
+    29694  2.6E+03   AO21x1_ASAP7_75t_R
+      896  130.637   AO221x1_ASAP7_75t_R
+      255   44.615   AO222x2_ASAP7_75t_R
+     1584  207.852   AO22x1_ASAP7_75t_R
+        3      0.7   AO31x2_ASAP7_75t_R
+      693   80.832   AO32x1_ASAP7_75t_R
+        9    1.312   AO33x2_ASAP7_75t_R
+      109   19.071   AOI211x1_ASAP7_75t_R
+     1569  183.008   AOI21x1_ASAP7_75t_R
+       33    6.736   AOI221x1_ASAP7_75t_R
+      627   91.417   AOI22x1_ASAP7_75t_R
+       54    3.937   BUFx2_ASAP7_75t_R
+     2282  865.061   DFFASRHQNx1_ASAP7_75t_R
+    50490 1.47E+04   DFFHQNx1_ASAP7_75t_R
+    33556 1.47E+03   INVx1_ASAP7_75t_R
+     3848  504.935   MAJx2_ASAP7_75t_R
+     4616  403.808   NAND2x1_ASAP7_75t_R
+      135   21.651   NAND3x1_ASAP7_75t_R
+    22555 1.97E+03   NOR2x1_ASAP7_75t_R
+       84   13.472   NOR3x1_ASAP7_75t_R
+     2705  315.511   OA211x2_ASAP7_75t_R
+     4393   448.35   OA21x2_ASAP7_75t_R
+        2    0.467   OA221x2_ASAP7_75t_R
+     3645  637.729   OA222x2_ASAP7_75t_R
+     2528  368.582   OA22x2_ASAP7_75t_R
+       10    2.187   OA31x2_ASAP7_75t_R
+       16    2.333   OA33x2_ASAP7_75t_R
+     2260  263.606   OAI21x1_ASAP7_75t_R
+     1079  157.318   OAI22x1_ASAP7_75t_R
+     3177  277.924   OR2x2_ASAP7_75t_R
+     1836  160.613   OR3x1_ASAP7_75t_R
+      634   64.706   OR4x1_ASAP7_75t_R
+      402   46.889   OR5x1_ASAP7_75t_R
+     7574 1.21E+03   XNOR2x2_ASAP7_75t_R
+     3300  529.254   XOR2x2_ASAP7_75t_R
+
+   Chip area for module '\ot_hgi_quant_vm_transport': 29130.810840
+     of which used for sequential elements: 15587.944560 (53.51%)
+

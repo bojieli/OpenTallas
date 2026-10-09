@@ -178,11 +178,23 @@ class Density(unittest.TestCase):
 
     def test_pass_and_tracks_and_balance(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"))
-        self.assertEqual(S.check(spec(), g)["verdict"], "PASS")              # 2-track slots: 10.4 b/um
+        self.assertEqual(S.check(spec(fp_lint={"set": {"ppl_group_max": 0}}), g)["verdict"], "PASS")              # 2-track slots: 10.4 b/um
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
         env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
         r = S.check(spec(cmd_env=env), g)
         self.assertEqual(r["verdict"], "PASS", r)                            # uniform over 518 um: ~2 b/um/layer
+
+    def test_big_ordered_group_takes_pin_balance(self):
+        # drive-0849: a > 200-pin ordered group passes the density estimate but falls back in PPL (PPL-0107)
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"))
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "FIX", r)
+        self.assertEqual(r["fix"], "pin_balance")
+        self.assertIn("PPL-0107", r["message"])
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
+        self.assertEqual(S.check(spec(cmd_env=env), g)["verdict"], "PASS")    # already chunked: no rule
+        g2 = git_for(cfg("--pin-region '^i_a(\\[|$)=left'"))
+        self.assertEqual(S.check(spec(), g2)["verdict"], "PASS")             # small group: no rule
 
     def test_env_settings_read(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
@@ -202,7 +214,7 @@ class Density(unittest.TestCase):
 
     def test_threshold_override_and_warn_only(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
-        self.assertEqual(S.check(spec(fp_lint={"set": {"pin_density_max": 25}}), g)["verdict"], "PASS")
+        self.assertEqual(S.check(spec(fp_lint={"set": {"pin_density_max": 25, "ppl_group_max": 0}}), g)["verdict"], "PASS")
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", fh=60))
         r = S.check(spec(fp_lint={"warn_only": True}), g)
         self.assertEqual(r["verdict"], "PASS")                              # warn_only never refuses
@@ -210,7 +222,7 @@ class Density(unittest.TestCase):
 
     def test_util_from_same_synthesis_input(self):
         def spec(**kw):
-            return globals()["spec"](fp_lint={"set": {"pin_density_max": 1000}}, **kw)
+            return globals()["spec"](fp_lint={"set": {"pin_density_max": 1000, "ppl_group_max": 0}}, **kw)
         g = git_for(cfg("--pin-region '^(clk|rst_n|i_\\w+|o_\\w+|fault)(\\[|$)=left'", fw=300, fh=300))
         reason = "util: utilisation 70.0% > 60% (std 60000 + macro 0 um2 in 85000 um2): grow the outline to <= 55-60%"
         key, rec = S.util_record(spec(), reason, g, "old")

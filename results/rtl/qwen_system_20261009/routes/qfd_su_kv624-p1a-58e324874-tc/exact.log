@@ -1,0 +1,3 @@
+PASS KV624 vectors512 active_lane_codes17096 all256codes K/V sparse/full masks; off-grid fail-closed
+PASS KV624 nonrepresentable address fail-closed
+rtl/test/qwen_system/tb_qfd_su_kv624.sv:47: $finish called at 25760000 (1ps)

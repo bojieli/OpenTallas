@@ -143,6 +143,19 @@ def mtpemit(mode, w):
         print("RB_mtp_emit_queue_BENCH_ERROR positive"); return 2
     if c[1]["mutant"] == 1 and c[1]["returncode"] != 0: print("RB_mtp_emit_queue_NEG_FAIL"); return 1
     print("RB_mtp_emit_queue_BENCH_ERROR mutant escaped"); return 2
+def gorder_fast_tb(n):
+    t = sp_tb("gorder_tb", n); a = ".STATIC_SCAN(SCAN_CASE))"; assert a in t
+    return t.replace(a, ".STATIC_SCAN(SCAN_CASE),.FAST(1))")
+# sys-takeover 2026-10-09: FAST=1 (shadow ordinal[rank], one-hot rank, digit-sum id%96), same bench / mutant
+CASES["global_order_fast"] = dict(CASES["global_order"], tb=lambda: gorder_fast_tb(12288))
+CASES["global_order_scan_fast"] = dict(CASES["global_order"], tb=lambda: gorder_fast_tb(4096),
+     params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
+def gorder_fast2_tb(n):
+    t = sp_tb("gorder_tb", n); a = ".STATIC_SCAN(SCAN_CASE))"; assert a in t
+    return t.replace(a, ".STATIC_SCAN(SCAN_CASE),.FAST(2))")
+CASES["global_order_fast2"] = dict(CASES["global_order"], tb=lambda: gorder_fast2_tb(12288))
+CASES["global_order_scan_fast2"] = dict(CASES["global_order"], tb=lambda: gorder_fast2_tb(4096),
+     params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
 CASES["global_order_scan"] = dict(CASES["global_order"], tb=lambda: sp_tb("gorder_tb", 4096),
      params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
 def cvp_tb():

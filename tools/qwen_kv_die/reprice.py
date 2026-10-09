@@ -26,6 +26,12 @@ CLOCK = 1.2e9
 # the KV-die critical relay stages the bench was built for (bench_run.sh QX / RX / KVL at the 172.3 mm2 plan); a later
 # plan's difference is charged one cycle a stage
 BENCH_KV = dict(seq_to_astk=27, hub_to_astk=4, astk_to_hub=4, hub_to_seq=21, seq_to_land=23)
+# token-exact (results/rtl/token_exact_20261009): the ROM die's SPLIT structure (sequencer / tree top / SU across the
+# die-master boundary: DCU = DUC = 2 pin stations each way + latency compensation, SU lane memory latency 7), measured
+# in RTL on a chained L0-L2 vehicle against the base die on the same harness.  The TP4 basis and the KV-die bench both
+# lack it, so it is ADDED (measured deltas, not modelled).
+SPLIT_BASE = 'results/rtl/token_exact_20261009/qwen_rom/L3_base.json'
+SPLIT_CUR = 'results/rtl/token_exact_20261009/qwen_rom/L3_s22ml7.json'
 EMB = dict(port_fifo=7, dram_typ=71, dram_worst_extra=79 + 240, crossing=3, ingest=64,
            source='/home/ubuntu/claude-takeover-20261007/EMB_HBM_FEASIBILITY.md option 1 table (tagged-port FIFO, '
                   'DRAM row conflict, response crossing, 4 KiB ingest on eq; worst: AQ_STARVE + REFpb)')
@@ -48,6 +54,10 @@ def main():
     bench = json.loads(a.bench.read_text())
     kv = json.loads(a.kv.read_text())
     rom = json.loads(a.rom.read_text())
+    sb = json.loads((ROOT / SPLIT_BASE).read_text())['stage_cycles']
+    sc_ = json.loads((ROOT / SPLIT_CUR).read_text())['stage_cycles']
+    split_l0, split_lk = sc_['L0'] - sb['L0'], sc_['L1'] - sb['L1']
+    split_token = split_l0 + 35 * split_lk
     cs = kv['critical_stages']
     rs = rom['crossing_bus_stages']
     rom_q, rom_res = rs['x3'] + 1, rs['attn_ret'] + 1                 # + the registered endpoint port
@@ -81,13 +91,15 @@ def main():
                + rom_eq + EMB['ingest'])
         if case == 'worst':
             emb += EMB['dram_worst_extra']
-        token = emb + 36 * layer + 222 + 3101.0 + 36
+        token = emb + 36 * layer + 222 + 3101.0 + 36 + split_token
+        tp4_same = tp4['token_cycles'] + split_token          # the single-die TP4 on the same split structure
         out['cases'][case] = dict(
             phy_latency=b['params']['PHY_LAT'], adapter_plus_phy=link, layer_step_measured=step,
             rom_stage_correction=adj - kv_adj, kv_stage_correction=kv_adj, layer_step=step_adj, layer_cycles=layer,
             layer_delta_vs_tp4=layer - tp4['layer_cycles'], embed_cycles=emb, l0_extra=222,
             token_cycles=round(token, 1), tok_s=round(CLOCK / token, 1),
-            vs_tp4=round(tp4['token_cycles'] / token - 1, 4),
+            split_station_cycles=split_token, vs_tp4_published=round(tp4['token_cycles'] / token - 1, 4),
+            vs_tp4=round(tp4_same / token - 1, 4), tp4_same_structure_tok_s=round(CLOCK / tp4_same, 1),
             vs_sysdie_1a_model=round(out['basis']['sysdie_1a_central']['token_cycles'] / token - 1, 4),
             bench_exact=b['exact_all'])
     c = out['cases'].get('typical') or next(iter(out['cases'].values()))
@@ -104,9 +116,19 @@ def main():
         interposer_mm=[29.0, 114.0], interposer_reticles=round(29.0 * 114.0 / 858.0, 1),
         status=kv.get('frame_status', 'row engines sized from synthesis (re-cut D); stack aggregators / landings / '
                'centre blocks: see frames.json (review-0528 item 4)'))
+    out['split_structure'] = dict(
+        source=[SPLIT_BASE, SPLIT_CUR], l0_delta=split_l0, layer_delta=split_lk, token_delta=split_token,
+        note='measured in RTL by stream token-exact (L0-L2 chained, exact): +%d on L0, +%d on every later layer. '
+             'It is a ROM-die cost (stations / compensation / SU ML 7), present with or without the KV die, so the '
+             'KV-die decision is judged against the TP4 die on the same structure (vs_tp4); vs_tp4_published compares '
+             'with the published TP4 basis, which predates the split. Bound: the SU-ML share (ML 4 -> 7 = +48 a layer) '
+             'may partly fall on SU ops of the removed tile softmax_norm; it is charged in full here.' % (split_l0, split_lk))
     out['per_user_cost'] = dict(vs_tp4=c['vs_tp4'], vs_tp4_pct=round(100 * c['vs_tp4'], 2),
-                                statement=f"{round(100 * c['vs_tp4'], 2)} % per user against TP4 r21c "
-                                          f"({c['tok_s']} vs {tp4['tok_s']} tok/s), for a "
+                                vs_tp4_published_pct=round(100 * c['vs_tp4_published'], 2),
+                                statement=f"{round(100 * c['vs_tp4'], 2)} % per user against TP4 on the same split "
+                                          f"structure ({c['tok_s']} vs {c['tp4_same_structure_tok_s']} tok/s; "
+                                          f"{round(100 * c['vs_tp4_published'], 2)} % against the published TP4 "
+                                          f"{tp4['tok_s']}), for a "
                                           f"{round(rom['die_mm2'] + kvp, 1)} mm2 die pair on a ~"
                                           f"{round(29.0 * 114.0 / 858.0, 1)}-reticle interposer")
     out['notes'] = [
