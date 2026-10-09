@@ -643,7 +643,8 @@ def lint_at_submit(j):
         return
     if v == "PASS":
         event(j, f"submit lint PASS (estimate {res.get('est')} b/um, limit {res.get('limit')}"
-                 + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")")
+                 + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")"
+                 + (f"; {res['rtl_boundary']['verdict']} {res['rtl_boundary']['message'][:400]}" if res.get("rtl_boundary") else ""))
     elif v == "FIX":
         j["spec_submitted"] = j["spec"]
         j["spec"] = submit_lint.apply_fix(j["spec"], res, now_iso())
@@ -652,7 +653,8 @@ def lint_at_submit(j):
         ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
     elif v == "REFUSE":
         j["status"] = "REFUSED"
-        j["reason"] = f"SUBMIT_LINT FLOORPLAN_MARGIN: {res['message']}"[:1500]
+        kind = "RTL_BOUNDARY" if (res.get("rtl_boundary") or {}).get("verdict") == "REFUSE" else "FLOORPLAN_MARGIN"
+        j["reason"] = f"SUBMIT_LINT {kind}: {res['message']}"[:1500]
         j["submit_lint"] = res
         event(j, j["reason"])
         ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
