@@ -98,9 +98,9 @@ foreach bt [$block getBTerms] {
   puts "SR_IMMUTABLE_GEOMETRY_METADATA_EXPORTED_NOT_LEGALITY"
   exit
  }
- # Microns:150 sites horizontally,23 rows vertically.
- set rc [catch {detailed_placement -max_displacement {8.10 6.21}} err]
- write_db /probe/sr-displacement-8p10x6p21-release181.odb
+ # Public API accepts integer microns only:8x6 is strictly inside8.10x6.21 approved gate.
+ set rc [catch {detailed_placement -max_displacement {8 6}} err]
+ write_db /probe/sr-displacement-8x6-release181-r2.odb
 }
 if {[info exists ::env(OT_SR_WRONG_MOVEMENT)]} {
  set name [lindex [lsort [dict keys $released]] 0]
