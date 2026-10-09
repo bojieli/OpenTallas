@@ -13,6 +13,12 @@ ot_hbm_svc_core #(.IKS(1),.IK_SRAM(SRAM),.IK_SRAM_ROTATE(ROTATE),.E_ST(11),.XST(
 ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(1),.CLK_PS(1024)) mem(
 .clk(phy_clk),.rst_n(phy_rst_n),.req_v(kv),.req_rdy(krdy),.req_addr(addr),.req_len(len),.req_tag(tag),.req_we(kwe),.req_wdata(wdata),.req_wstrb(wstrb),.wr_done(wdone),.rsp_v(rv),.rsp_rdy(rrdy),.rsp_tag(rtag),.rsp_beat(beat),.rsp_data(rawdata));
 wire storage_retained=dut.gkvs.idx_busy;
+wire native_issue;
+generate if(SRAM!=0)begin : native_probe
+ assign native_issue=dut.gkvs.gi.gsram.idx_lines.can;
+end else begin : legacy_probe
+ assign native_issue=0;
+end endgenerate
 integer row0=4006;
 function automatic[29:0] kaddr(input integer pc,j);
  integer row,bank,col,bhi,blo,hi5;
@@ -47,7 +53,7 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
   end
   if(lines[0])begin got=got+nactive;lastline=$time;end
   if(t%delay_==0 && !(HOLD_FINAL_CREDITS!=0 && got==BLOCKS*4))for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;drained=$time+512;end
-  if(SURPLUS_UNUSED!=0 && !surplus_injected && dut.gkvs.gi.gsram.idx_lines.can)begin
+  if(SURPLUS_UNUSED!=0 && !surplus_injected && native_issue)begin
    credit[7]=1;surplus_injected=1;$display("UNUSED_CREDIT_INJECT");
   end
   if(fault)$fatal(1,"svc fault got=%0d",got);
