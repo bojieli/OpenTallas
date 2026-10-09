@@ -5,8 +5,8 @@ SRC=['rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv','rtl/hdc/ot_hdc_prefix.
 p=argparse.ArgumentParser();p.add_argument('--work',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
 if a.out.exists():raise SystemExit('immutable fresh evidence path required')
 cases=[]
-for kind in (0,1,2):
- for m in (0,1):
+for kind,m in [(k,m) for k in (0,1,2) for m in (0,1)]+[(2,2)]:
+ if True:
   exe=a.work/f'k{kind}m{m}.vvp';b=subprocess.run(['iverilog','-g2012','-s','tb_dshbm_dspark_ctl_stop',f'-Ptb_dshbm_dspark_ctl_stop.KIND={kind}',f'-Ptb_dshbm_dspark_ctl_stop.MUT={m}','-o',str(exe),*[str(ROOT/s) for s in SRC]],capture_output=True,text=True)
   if b.returncode:raise RuntimeError(b.stderr)
   r=subprocess.run(['vvp',str(exe)],capture_output=True,text=True);cases.append(dict(kind=kind,mutant=m,returncode=r.returncode,output=r.stdout))

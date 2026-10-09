@@ -155,7 +155,7 @@ module ot_dshbm_dspark_ctl_stop #(
             .a(fbase), .b({{(FW-4){1'b0}}, j}), .cin(1'b0), .s(f_addr), .cout());
     end endgenerate
     wire [31:0] q = n - 1;
-    wire [31:0] context_limit = STOP_EN ? {{(31-PW){1'b0}},cfg_maxpos} : MAXPOS;
+    wire [31:0] context_limit = (STOP_EN && MUT!=2) ? {{(31-PW){1'b0}},cfg_maxpos} : MAXPOS;
     wire [31:0] room = (context_limit >= 2 && context_limit - 2 > q) ? context_limit - 2 - q : 0;
     wire [3:0]  g_new = (room < cfg_gamma) ? room[3:0] : cfg_gamma;
     task issue(input [3:0] op, input [7:0] idx, input [3:0] ncol, input [31:0] pos, input [TW-1:0] t1,

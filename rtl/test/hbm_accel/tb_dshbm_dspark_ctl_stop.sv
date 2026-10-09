@@ -30,6 +30,7 @@ module tb_dshbm_dspark_ctl_stop #(parameter KIND=0,MUT=0);
    seen=seen+1;
   end
   if(cmd_v) begin
+   if(cmd_op==0 && cmd_pos+cmd_ncol>(KIND==2?5:1048576))$fatal(1,"verify outside job context");
    if(eng_state!=0)$fatal(1,"duplicate command");cmds=cmds+1;
    if(cmd_op==1) begin eng_state=1;row=0;rows=cmd_ncol;headpass=headpass+1;end
    else eng_state=2;
