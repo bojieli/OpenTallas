@@ -1,0 +1,18 @@
+{
+  "verdict": "PASS_INSTALL_PROTOCOL",
+  "cases": [
+    "253 actual graph operations; six distinct CP32 maps and actual42 native ROM slots",
+    "missing ME/service/weights/KV families remain failclosed",
+    "actual map pin protocol holds every descriptor through backpressure and deasserts map_v on final receipt",
+    "TOKEN17 descriptor rejected",
+    "ROM boundary overflow rejected",
+    "unchecked immutable metadata rejected",
+    "native consumer mismatch rejected",
+    "conflicting repeated family rejected"
+  ],
+  "actual_registry_operations": 253,
+  "actual_RTL_gate": "f3fa10397 separate actual launcher control gate",
+  "actual_CP_interceptor_bound": false,
+  "actual_VM_lease_bound": false,
+  "full_decode_executable": false
+}

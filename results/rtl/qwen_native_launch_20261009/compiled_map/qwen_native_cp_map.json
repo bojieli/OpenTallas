@@ -1,0 +1,2296 @@
+{
+  "schema": "opentallas.qwen.native_cp_map.v1",
+  "assignment_source_sha256": "772faca9403cccbf982ed94474ad1921352a50a02190e2ed684301da0c7d88a0",
+  "CP_prefix": 1398079488,
+  "CP_namespace_mask": 4294901760,
+  "owner_bits": 74,
+  "launcher": "ot_qwen_r25_cp_native_launch",
+  "map_install_pins": [
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 0,
+      "map_cp_pc": 1398079488,
+      "map_rom_pc": 0,
+      "map_count": 4
+    },
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 1,
+      "map_cp_pc": 1398079489,
+      "map_rom_pc": 4,
+      "map_count": 6
+    },
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 2,
+      "map_cp_pc": 1398079490,
+      "map_rom_pc": 10,
+      "map_count": 6
+    },
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 3,
+      "map_cp_pc": 1398079491,
+      "map_rom_pc": 16,
+      "map_count": 1
+    },
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 4,
+      "map_cp_pc": 1398079492,
+      "map_rom_pc": 17,
+      "map_count": 2
+    },
+    {
+      "map_v": 1,
+      "map_checked": 3,
+      "map_slot": 5,
+      "map_cp_pc": 1398079493,
+      "map_rom_pc": 19,
+      "map_count": 23
+    }
+  ],
+  "descriptors": {
+    "prenorm": {
+      "ROM_PC": 0,
+      "ROM_count": 4,
+      "ROM_metadata": [
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        4260607557632
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    },
+    "qknorm": {
+      "ROM_PC": 4,
+      "ROM_count": 6,
+      "ROM_metadata": [
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        2611340115968,
+        2611340115968,
+        2611340115968
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    },
+    "rope": {
+      "ROM_PC": 10,
+      "ROM_count": 6,
+      "ROM_metadata": [
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        2611340115968,
+        2611340115968
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    },
+    "round_q": {
+      "ROM_PC": 16,
+      "ROM_count": 1,
+      "ROM_metadata": [
+        4260607557632
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    },
+    "softmax": {
+      "ROM_PC": 19,
+      "ROM_count": 23,
+      "ROM_metadata": [
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        4329327036416,
+        4329461254144,
+        4329595471872,
+        4329729689600,
+        4329863905312,
+        4260607557632,
+        4329327036416,
+        4329461254144,
+        4329595471872,
+        4329729689600,
+        4329863905312,
+        4260607557632,
+        4260607557632,
+        4260607557632,
+        4329327036416,
+        4329461254144,
+        4329595471872,
+        4329729689600,
+        4329863905312
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    },
+    "swiglu": {
+      "ROM_PC": 17,
+      "ROM_count": 2,
+      "ROM_metadata": [
+        4260607557632,
+        4260607557632
+      ],
+      "ROM_sha256": {
+        "Q0": "93391e629208b5ae9d4c848d93680482cb6787a486034bcd18f6b10f0776daf0",
+        "Q1": "157fc1fc90cd349830ccd6ad44cbcc72698ed4f4de03af9ce92589a94015351b",
+        "Q2": "8afd980c19453336a8eacb69a05b75c6a523e10b604c539f0cffd3260d926745",
+        "Q3": "bb5fa89f86db2cf557825825744bb0397fb4956d64bb83e66ec2b360633a0fc8",
+        "META": "6b86363cf22ad4c487defab1b6aeb44055f084f197f022e368ac318d7e8658a2"
+      },
+      "source_pins": {
+        "dispatcher": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_dispatch.sv",
+          "sha256": "db20ca7b46f6e8aee671973768624129e0e90ca92575cd7d483ba8c7e270c49f"
+        },
+        "provider": {
+          "path": "/srv/opentallas-scratch/codex/qwen-native-bridge-20261009/rtl/ot_qwen_r25_su_program_rom.sv",
+          "sha256": "0c14d7dde52014b6c889ecca60f3b2cf212206780bdd3c7210a11cab0f5adde3"
+        }
+      }
+    }
+  },
+  "operations": [
+    {
+      "id": 1,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 4,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 5,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 6,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 10,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 17,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 20,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 25,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 28,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 29,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 30,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 34,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 41,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 44,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 49,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 52,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 53,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 54,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 58,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 65,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 68,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 73,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 76,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 77,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 78,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 82,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 89,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 92,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 97,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 100,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 101,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 102,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 106,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 113,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 116,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 121,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 124,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 125,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 126,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 130,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 137,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 140,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 145,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 148,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 149,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 150,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 154,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 161,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 164,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 169,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 172,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 173,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 174,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 178,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 185,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 188,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 193,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 196,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 197,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 198,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 202,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 209,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 212,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 217,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 220,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 221,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 222,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 226,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 233,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 236,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 241,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 244,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 245,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 246,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 250,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 257,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 260,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 265,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 268,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 269,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 270,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 274,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 281,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 284,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 289,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 292,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 293,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 294,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 298,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 305,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 308,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 313,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 316,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 317,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 318,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 322,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 329,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 332,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 337,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 340,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 341,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 342,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 346,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 353,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 356,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 361,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 364,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 365,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 366,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 370,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 377,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 380,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 385,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 388,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 389,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 390,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 394,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 401,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 404,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 409,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 412,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 413,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 414,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 418,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 425,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 428,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 433,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 436,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 437,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 438,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 442,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 449,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 452,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 457,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 460,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 461,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 462,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 466,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 473,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 476,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 481,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 484,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 485,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 486,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 490,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 497,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 500,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 505,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 508,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 509,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 510,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 514,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 521,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 524,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 529,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 532,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 533,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 534,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 538,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 545,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 548,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 553,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 556,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 557,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 558,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 562,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 569,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 572,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 577,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 580,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 581,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 582,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 586,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 593,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 596,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 601,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 604,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 605,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 606,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 610,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 617,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 620,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 625,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 628,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 629,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 630,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 634,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 641,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 644,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 649,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 652,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 653,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 654,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 658,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 665,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 668,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 673,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 676,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 677,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 678,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 682,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 689,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 692,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 697,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 700,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 701,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 702,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 706,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 713,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 716,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 721,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 724,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 725,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 726,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 730,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 737,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 740,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 745,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 748,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 749,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 750,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 754,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 761,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 764,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 769,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 772,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 773,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 774,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 778,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 785,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 788,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 793,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 796,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 797,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 798,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 802,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 809,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 812,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 817,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 820,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 821,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 822,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 826,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 833,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 836,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 841,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 844,
+      "kernel": "qknorm",
+      "CP_PC": 1398079489,
+      "command_word": 2305825418425729025,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 845,
+      "kernel": "rope",
+      "CP_PC": 1398079490,
+      "command_word": 2305825418425729026,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 846,
+      "kernel": "round_q",
+      "CP_PC": 1398079491,
+      "command_word": 2305825418425729027,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 850,
+      "kernel": "softmax",
+      "CP_PC": 1398079493,
+      "command_word": 2305825418425729029,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 857,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 860,
+      "kernel": "swiglu",
+      "CP_PC": 1398079492,
+      "command_word": 2305825418425729028,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    },
+    {
+      "id": 865,
+      "kernel": "prenorm",
+      "CP_PC": 1398079488,
+      "command_word": 2305825418425729024,
+      "requires_native_interceptor": true,
+      "CP_halves": "coalesce matching north/south invocation; complete original masks"
+    }
+  ],
+  "resolved_operations": 253,
+  "unresolved_kernel_families": [
+    "all_reduce_down",
+    "all_reduce_o",
+    "argmax_gather",
+    "argmax_local",
+    "argmax_merge",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "embedding",
+    "gu",
+    "head",
+    "head_scale",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "pv_normalize",
+    "qkv",
+    "residual",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv"
+  ],
+  "actual_interceptor_bound": false,
+  "actual_VM_lease_bound": false,
+  "full_decode_executable": false,
+  "adopted": false,
+  "requirement": "Install after cold reset through real map_v/map_rdy; source-assigned CP namespace requires actual two-half interception before SM dispatch. No native ROM PC is passed as an SM instruction PC."
+}
