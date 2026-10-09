@@ -11,6 +11,8 @@ if [ -d "$M" ] && [ -n "$(find "$M" -mindepth 1 -maxdepth 1 -print -quit)" ]; th
   echo "Refusing to overwrite existing die evidence: $M" >&2; exit 2
 fi
 mkdir -p "$M"; M=$(readlink -f "$M"); cd "$S"
+CLOCK_FLAGS=()
+[ "${OT_S81_CLOCK_FAMILIES:-0}" = 1 ] && CLOCK_FLAGS+=(--s81-local-families)
 export OT_S81_Q_LEF=physical/s81_die_views/q_elem_qs5f/q_elem.lef.gz
 A="$(python3 tools/s81/s81_dies_recipe.py opts $NAME)"; echo "$A" > $M/options.txt
 AK=$(echo "$A" | sed "s/--die $KIND//")
@@ -23,14 +25,14 @@ C=$M/clock; mkdir -p $C
 ( /srv/opentallas-scratch/admit.sh 40 -- python3 tools/budgets/extract_die.py --src $S --die s81r8_$KIND --s81-opts "$AK" --out $C/model.json.gz > $C/extract.log 2>&1 || { st CLOCK_EXTRACT_FAIL; exit 1; }
   clock_pids=()
   for g in htop hreg region; do
-    python3 tools/budgets/clock_plan.py emit --die-model $C/model.json.gz --group $g --name ${NAME}_$g --out $C/$g > $C/emit_$g.log 2>&1
+    python3 tools/budgets/clock_plan.py emit "${CLOCK_FLAGS[@]}" --die-model $C/model.json.gz --group $g --name ${NAME}_$g --out $C/$g > $C/emit_$g.log 2>&1
     (cd $C/$g && /srv/opentallas-scratch/admit.sh 24 -- bash run.sh > run.out 2>&1) &
     clock_pids+=("$!")
   done
   for clock_pid in "${clock_pids[@]}"; do
     wait "$clock_pid" || { st CLOCK_CTS_FAIL; exit 1; }
   done
-  python3 tools/budgets/clock_plan.py record --die-model $C/model.json.gz --case $C/htop --case $C/hreg --case $C/region --out $C/plan.json > $C/record.log 2>&1 || { st CLOCK_RECORD_FAIL; exit 1; }
+  python3 tools/budgets/clock_plan.py record "${CLOCK_FLAGS[@]}" --die-model $C/model.json.gz --case $C/htop --case $C/hreg --case $C/region --out $C/plan.json > $C/record.log 2>&1 || { st CLOCK_RECORD_FAIL; exit 1; }
   gzip -kf $C/plan.json
   st "CLOCK_PLAN $(test -f $C/plan.json.gz && echo done || echo failed)"
   CP=$C/plan.json.gz; [ -s "$CP" ] || { st CLOCK_PLAN_MISSING; exit 1; }

@@ -76,6 +76,10 @@ def recipes():
     scan = _sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8)
     hb = _head_base()
     return {
+        'head631': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '631', '--mtp-seq', '--mtp-links', '5'],
+                       role='head die, released Markov K256 storage (631 pairs + 85 bundles), 12 dies',
+                       note='storage sizing: results/arch/mtp_die_reprice_20261009/model.json (4465e65ad); '
+                            '120 added pairs versus historical headp2; native loader, timing and functional binding remain unqualified'),
         'scan': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer'],
                      role='scan die (4 HBM3E stacks), 32 of the rack: q-only flavour',
                      note='the 1,792 mapping homes every scan service on a q stage (half_dedicated stage_map '
@@ -90,7 +94,7 @@ def recipes():
         'head14': dict(opts=hb + ['--die', 'head', '--head-dies', '14'], role='head die, current content, 14 dies',
                        note='structural option: the 12-die content over 14 dies'),
         'headp2': dict(opts=hb + ['--die', 'head', '--head-dies', '12', '--pairs', '511'],
-                       role='head die, mtp-die P2 content (511 pairs + 85 bundles), 12 dies',
+                       role='historical head die, reduced Markov storage (511 pairs + 85 bundles), 12 dies',
                        note='PLACEHOLDER content from the uncommitted mtp-die plan; MTP sequencer + 5 SerDes pending '
                             'its --mtp-seq / --mtp-links flags'),
     }
