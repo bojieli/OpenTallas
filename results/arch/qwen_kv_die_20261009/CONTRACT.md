@@ -126,10 +126,12 @@ The relay stage counts, each including the registered endpoint, are:
 | KV die: `qkd_seq` → farthest landing (KVN rows) | 24 |
 | KV die: gateway ↔ farthest landing | 25 |
 
-**Measured (`bench.json`, ctx 8192).** The attention layer step, from the first ROM-face word to the last RES word at the VM, takes:
-- **1,855 cycles** typical;
-- 1,853 best;
-- 1,867 worst.
+**Measured (`bench.json`, ctx 8192; v1.1: re-cut D stack + KV4 fence).** The attention layer step, from the first ROM-face word to the last RES word at the VM, takes:
+- **1,789 cycles** typical;
+- 1,787 best;
+- 1,801 worst.
+
+(v1.0, abutted engine faces and no fence: 1,855 / 1,853 / 1,867; with the fence 1,863. Re-cut variants: `recut.json`.)
 
 That step contains:
 - the KVN wait (8 words) before the attention starts;
@@ -138,7 +140,7 @@ That step contains:
 
 It replaces the 1,756 cycles of tile attention plus softmax_norm.
 
-Per token, the embedding row takes 287 cycles typical and 614 worst. The token is 221,538 cycles = 5,416.7 tok/s (`reprice.json`).
+Per token, the embedding row takes 273 cycles typical. The token is 219,200 cycles = 5,474.5 tok/s, −0.33 % per user against TP4 (`reprice.json`; v1.0: 221,538 = 5,416.7).
 
 ## 5. RTL and bench
 
