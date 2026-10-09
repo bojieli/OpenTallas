@@ -7,4 +7,4 @@ opt
 check -assert
 select -assert-count 6688 t:HB2xp67_ASAP7_75t_R
 stat
-puts "BF_HOLDSEAT_TECH_PASS bits=1672 seats=4 masters=6688"
+log BF_HOLDSEAT_TECH_PASS bits=1672 seats=4 masters=6688
