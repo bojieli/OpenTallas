@@ -24,7 +24,7 @@ def model(depth=8, local_columns=32, dff_um2=0.2916):
         boundary_bits_per_cycle=dict(landing=word_bits+1,token=word_bits+1,
             output=word_bits+1,return_credit=1),
         routing=dict(required_tracks_per_face=word_bits+4,
-            face_capacity_tracks=int(min(slot)/.048),pin_layers=['M4','M6'],
+            face_capacity_tracks=2*int(min(slot)/.096),pin_layers=['M4','M6'],minimum_pin_spacing_tracks=2,
             credit_return_per_row_bits=32,return_is_registered=True),
         replicas_cost=dict(storage_bits=ff*1536,read_mux=f'{depth}:1 x {word_bits}',
             write_demux=f'{depth} local enables',token_fanout=1,

@@ -11,7 +11,7 @@ def model(dff_um2=.2916):
         payload_bytes_per_cycle=64,
         boundary_bits_per_cycle=dict(su_internal=3648,kv_packet=624,fault=1),
         routing=dict(required_internal_input_tracks=3648,required_output_tracks=625,
-            face_capacity_tracks=2*int(384/.048),input_face='N',output_face='S',pin_layers=['M4','M6']),
+            face_capacity_tracks=2*int(384/.096),input_face='N',output_face='S',pin_layers=['M4','M6'],minimum_pin_spacing_tracks=2),
         replicas_cost=dict(state_bits=state,encode64='64 independent exact on-grid32-to8 codecs',
             address_check='two32-lane fixed-stride checks',data_mux='two32-way local address-base selects',
             fanout='base per32lanes; registered packet boundary'),
