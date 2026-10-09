@@ -1,0 +1,25 @@
+{
+  "utc": "2026-10-09T11:24:38.395481+00:00",
+  "job": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "host": "ot-epyc4",
+  "synthesis": "PASS",
+  "mapped_total_area_um2": 52056.3753,
+  "actual_macro_count": 3,
+  "macro_family": "ot_sram_1r1w_256x256_m2_r2c2",
+  "macro_area_um2": 21290.534208,
+  "stdcell_area_um2": 30765.841092,
+  "sequential_area_um2": 11553.65856,
+  "slot_stdcell_capacity_um2": 54751.6781856,
+  "elapsed": "5:13.99",
+  "time_v_peak_kib": 1532396,
+  "next_phase": "2_1_floorplan",
+  "next_engine_pid": 2917531,
+  "next_engine_rss_hwm_kib": 1252148,
+  "preplacement_worst": "crd[2]/SETN recovery, WNS -30498.545ps; wireload model, no routed verdict or constraint change",
+  "protection_scope": "historical direct SRAM fault-free pathfinding only; READLAT2/SECDED not adopted",
+  "raw_sha256": {
+    "yosys.log": "cf250b24a3140dfe94a5bf9f39327dbac158e47b8b8ea7816e91893be4e17ae8",
+    "synth_stat.txt": "cdb6e13b1dca8f0530d33a3656e3742999de42a284035010c5bc5d9cd5c1edce"
+  }
+}
