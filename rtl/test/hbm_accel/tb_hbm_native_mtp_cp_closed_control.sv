@@ -12,7 +12,8 @@ module tb_hbm_native_mtp_cp_closed_control;
  reg hr=0,dr=0;integer received=0,cycles=0,headpass=0,headrow=0,target=0,k,t;
  wire [31:0] lv;wire [63:0] pc;wire [33:0] tok;wire [39:0] pos;wire [145:0] owner;
  reg [31:0] sd=0,rv=0,q=0;reg [63:0] qp=0;reg [1023:0] rd=0;reg [16:0] winner=0;
- wire [178:0] ownedprovider={provider[178:140],er,provider[138:0]};
+ wire [16:0] forced_token=17'd100+fm[20+:23];
+ wire [178:0] ownedprovider={provider[178:140],er,provider[138:82],forced_token,provider[64:0]};
  hfd_mtp_native_cp_stop #(.ENABLE(1)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),.f_su_red(523'b0),.f_router(59'b0),.f_coll(1'b1));
  ot_hbm_native_mtp_transaction_cp_join #(.ENABLE(1)) guard(
  .clk(clk),.rst_n(rst_n),.external_fault(qfault),.backend_quiescent(1'b1),
@@ -35,7 +36,7 @@ module tb_hbm_native_mtp_cp_closed_control;
   q<=lv;qp<=pc;sd<=q;rv<=0;rd<=0;
   if(qp[31:0]==500)begin rv<=q;for(k=0;k<32;k=k+1)rd[k*32+:32]<=winner;end
   if(hv&&hr)begin
-   if(hd!=={8'h83,4'hb,32'h12345678,20'(received),17'((received==0)?7:99+received)})$fatal(1,"composed emittedtoken/identity");received=received+1;
+   if(hd!=={8'h83,4'hb,32'h12345678,20'(received),17'((received==0)?7:99+received)})$fatal(1,"composed emittedtoken/identity idx=%0d token=%0d expected=%0d",received,hd[16:0],(received==0)?7:99+received);received=received+1;
   end
   if(gfault||qfault||gif||bcf)$fatal(1,"composed control fault");
   if(cycles>50000)$fatal(1,"finite controlinventory992launch watchdog");
