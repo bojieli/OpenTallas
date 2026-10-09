@@ -1,0 +1,14 @@
+{
+ "verdict":"PASS",
+ "source_commit":"c70fcb1e5",
+ "RTL_source_commit":"18f9f734c22f18e93fd8be1fee9bebe67aa5300a",
+ "positive":"Four full4096 RF write/ACK/fence event-stream seeds vs original fence; cycle-exact4114bit reference skid comparison",
+ "skid_coverage":"empty spare with no input, output stalled, simultaneous output pop/input push, spare promotion",
+ "negative":"Dropped final capture marker and forced spare overwrite both detected",
+ "extra_cycles":0,
+ "canonical_element":"ot_gpu_rf_visibility_fence_p",
+ "variant":"cx64",
+ "bank_topology_mapped":false,
+ "physical_adoption":false,
+ "control_protection_claim":false
+}
