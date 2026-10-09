@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qfd_q5_ar_native_credit16",
+      "target": "Qwen ROM",
+      "owner": "Codex:review_qwen_token_path",
+      "description": "Actual AR pulsepush nativeCDC LCRED16 binding. Wrapper previously omitted exposedLCRED forwarding and used default6. Actual MARGIN1/RSEL1/RNG10 interface and full64/16/64 storage vehicle. No QROM MTP.",
+      "source": {
+        "commit": "19892fbc3",
+        "paths": [
+          "rtl/qwen_sys/q5_20261009/ot_qfd_stream4_cdc_ecc_pc.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/qwen_sys/q5_20261009/ot_qfd_stream4_cdc_ecc_pc.sv"
+        ]
+      },
+      "model": {
+        "status": "modeled",
+        "evidence": [
+          "tools/uarch_qwen_q5_landing_model.py:native_AR_landing"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_q5_20261009/ar_credit16_exact/run_0.log"
+          ]
+        },
+        "negative": {
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_q5_20261009/ar_credit16_exact/run_1.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": [
+          "New actualLCRED16 native wrapper route requires Claude structural review; no route submitted. Existing isolated Q5 landing route remains separate."
+        ]
+      },
+      "dependencies": [
+        "qfd_q5_landing_ecc",
+        "qfd_row_merge_native_fence"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": [
+          "qwen_system confirmed16shared reserved decode/head slots and max1realretirement/Vdrop peredge; nativeproductionadapter binding and mutableCDCstorageSECDED pending."
+        ]
+      }
+    }
+  ]
+}

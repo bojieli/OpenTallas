@@ -1,0 +1,26 @@
+{
+  "source": "19892fbc3",
+  "host": "ot-epyc3",
+  "launcher": 1884865,
+  "guard": "/srv/opentallas-scratch/admit.sh 2",
+  "run": "/srv/opentallas-scratch/codex/qwen-ar-credit16-19892fbc3",
+  "parameters": {
+    "TAGW": 9,
+    "LD": 64,
+    "WB": 16,
+    "AD": 64,
+    "MARGIN": 1,
+    "RSEL": 1,
+    "RNG": 10,
+    "LCRED": 16
+  },
+  "clock_periods_ps": {
+    "core": 833.332,
+    "HBM": 1024
+  },
+  "positive_rc": 0,
+  "negative_mutant_rc": 1,
+  "positive": "17native returnedwords;16accepted with exactsector/row/payload before anyretirement,17th requiresactualsinglepop",
+  "negative": "6credit variant fails actualburst assertion with delivered6 before retirement",
+  "qualification": "Native parameter/finitecredit behavioral gate only. MutableCDCstorageSECDED and productionadapter/contextphysical gates remain pending."
+}
