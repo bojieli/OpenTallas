@@ -22,3 +22,12 @@ The old network probe uses historical logical tree associations and original
 SM3 result-pin offsets. Actual widened pin coordinates, owner reservations,
 registered relay endpoints, clock delivery, and the composed latency remain
 separate obligations. Geometry legality alone does not prove those contracts.
+
+The completed historical-anchor network probe has 588 instances, 32 result-pin
+reservations, 943 buses and 250 paths, with zero overlaps or outside instances.
+Its worst planned weight, activation, result and control paths respectively
+contain 20, 74, 59 and 56 registered stages at the generator's selected budget.
+These pathfinding counts are explicitly unqualified for widened actual pins.
+The adopted-R25 comparison probe is queued behind the host's explicit admission
+pause; no latency delta or successor adoption is inferred without that comparison
+and the widened physical endpoint bindings.

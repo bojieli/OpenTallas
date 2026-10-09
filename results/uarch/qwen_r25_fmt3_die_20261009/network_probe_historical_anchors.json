@@ -1,0 +1,96 @@
+{
+  "legality": {
+    "instances": 588,
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": [],
+    "reserved_regions": 32,
+    "reserved_overlaps": 0,
+    "reserved_overlap_examples": []
+  },
+  "path_bounds": {
+    "weight": {
+      "paths": 32,
+      "max_um": 7030.8,
+      "max_stages_430": 20,
+      "max_stages_504": 16,
+      "worst": "weight_sm11",
+      "what": "HBM -> SM weight stream (stream service -> SM d face)"
+    },
+    "xbcast": {
+      "paths": 32,
+      "max_um": 28804.4,
+      "max_stages_430": 74,
+      "max_stages_504": 65,
+      "worst": "xbcast_sm14",
+      "what": "VM root -> SM activation multicast (x face)"
+    },
+    "result": {
+      "paths": 32,
+      "max_um": 22272.9,
+      "max_stages_430": 59,
+      "max_stages_504": 49,
+      "worst": "result_sm4",
+      "what": "SM -> SU result gather"
+    },
+    "control": {
+      "paths": 32,
+      "max_um": 20812.9,
+      "max_stages_430": 56,
+      "max_stages_504": 51,
+      "worst": "control_sm24",
+      "what": "cmdproc / issue -> SM control (start/op, arrive/release)"
+    },
+    "expert_req": {
+      "paths": 4,
+      "max_um": 21074.3,
+      "max_stages_430": 56,
+      "max_stages_504": 51,
+      "worst": "expert_req_NW",
+      "what": "router -> stream service (expert-fetch descriptor)"
+    },
+    "kv": {
+      "paths": 4,
+      "max_um": 8620.0,
+      "max_stages_430": 30,
+      "max_stages_504": 27,
+      "worst": "kv_NW",
+      "what": "stream service -> attention tiles (KV rows)"
+    },
+    "ik": {
+      "paths": 4,
+      "max_um": 10080.9,
+      "max_stages_430": 29,
+      "max_stages_504": 24,
+      "worst": "ik_NW",
+      "what": "stream service -> index (index keys)"
+    },
+    "attn_q": {
+      "paths": 4,
+      "max_um": 12015.6,
+      "max_stages_430": 38,
+      "max_stages_504": 35,
+      "worst": "attn_q_NW",
+      "what": "VM -> attention tiles (query operand, r15 attn_rtl: chain + packet hops to the farthest tile)"
+    },
+    "link": {
+      "paths": 9,
+      "max_um": 9742.5,
+      "max_stages_430": 26,
+      "max_stages_504": 24,
+      "worst": "link_lk_S2",
+      "what": "collective endpoint -> SerDes macro"
+    },
+    "host": {
+      "paths": 1,
+      "max_um": 21431.1,
+      "max_stages_430": 54,
+      "max_stages_504": 53,
+      "worst": "host",
+      "what": "loader -> host link"
+    }
+  },
+  "path_count": 250,
+  "bus_count": 943
+}
