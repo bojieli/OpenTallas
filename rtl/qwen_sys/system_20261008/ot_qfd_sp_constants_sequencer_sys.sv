@@ -198,6 +198,12 @@ begin sys_descriptor = 0; case ({bank,addr})
 8'd66: sys_descriptor = 64'h0000001a00000000;
 8'd128: sys_descriptor = (DIE_RANK == 0 ? 64'h0000000000000002 : DIE_RANK == 1 ? 64'h9460000000000002 : DIE_RANK == 2 ? 64'h28c0000000040002 : 64'hbd20000000040002);
 default: sys_descriptor = 0; endcase end endfunction
+function automatic sys_program_valid(input [1:0] bank,input [11:0] addr);
+// Controller fetch may prefetch past END. Logical padding is a valid zero END word;
+// it is constant-folded and consumes no additional mutable or ROM storage.
+begin sys_program_valid=(bank<3 && addr<64); end endfunction
+function automatic sys_descriptor_valid(input [1:0] bank,input [5:0] addr);
+begin sys_descriptor_valid=(bank==0 && addr<1) || (bank==1 && addr<3) || (bank==2 && addr<1); end endfunction
     wire h_start;
     wire [NW-1:0] tp_token, tp_pos;
     wire [1:0] st_prog;
@@ -492,13 +498,19 @@ default: sys_descriptor = 0; endcase end endfunction
     wire prog_re; wire [11:0] prog_addr, prog_base; reg [1023:0] prog_q;
     wire desc_re; wire [5:0] desc_addr; reg [63:0] desc_q;
     wire [11:0] prog_a = prog_base + prog_addr;
+    reg template_fault;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n) template_fault<=0;
+        else if((prog_re && !sys_program_valid(q_st_prog,prog_a)) ||
+                (desc_re && !sys_descriptor_valid(q_st_prog,desc_addr))) template_fault<=1;
+    end
     always @(posedge clk) begin
         if (prog_re) prog_q <= sys_program(q_st_prog, prog_a);
         if (desc_re) desc_q <= sys_descriptor(q_st_prog, desc_addr);
     end
     wire wrom_re_w;
     assign b_rom_fault = wrom_re_w;
-    assign b_core_fault = core_fault_w;
+    assign b_core_fault = core_fault_w || template_fault;
     ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
@@ -682,7 +694,7 @@ default: sys_descriptor = 0; endcase end endfunction
         // (core_tok_w: the token the controller latches at its embedding-scale read)
         .next_token(b_seq_ntok), .next_val(b_seq_nval), .fault(b_s_fault), .coll_busy(b_coll_busy),
         .core_start(core_start), .core_token(core_tok_w), .core_pos(core_pos), .core_done(core_done),
-        .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w), .prog_base(prog_base),
+        .core_next_token(core_ntok), .core_next_val(core_nval), .core_fault(core_fault_w || template_fault), .prog_base(prog_base),
         .desc_re(desc_re), .desc_addr(desc_addr), .desc_q(desc_q), .vm_re(b_vm_re), .vm_raddr(b_vm_raddr),
         .vm_rq(q_vm_rq), .vm_we(b_vm_we), .vm_waddr(b_vm_waddr), .vm_wdata(b_vm_wdata), .c_valid(b_c_valid),
         .c_ready(q_c_ready), .c_data(b_c_data), .c_last(b_c_last), .c_mode(b_c_mode), .c_tag(b_c_tag),

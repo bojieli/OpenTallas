@@ -54,3 +54,9 @@ begin sys_descriptor = 0; case ({bank,addr})
 8'd66: sys_descriptor = 64'h0000001a00000000;
 8'd128: sys_descriptor = (DIE_RANK == 0 ? 64'h0000000000000002 : DIE_RANK == 1 ? 64'h9460000000000002 : DIE_RANK == 2 ? 64'h28c0000000040002 : 64'hbd20000000040002);
 default: sys_descriptor = 0; endcase end endfunction
+function automatic sys_program_valid(input [1:0] bank,input [11:0] addr);
+// Controller fetch may prefetch past END. Logical padding is a valid zero END word;
+// it is constant-folded and consumes no additional mutable or ROM storage.
+begin sys_program_valid=(bank<3 && addr<64); end endfunction
+function automatic sys_descriptor_valid(input [1:0] bank,input [5:0] addr);
+begin sys_descriptor_valid=(bank==0 && addr<1) || (bank==1 && addr<3) || (bank==2 && addr<1); end endfunction
