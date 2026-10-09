@@ -2284,6 +2284,17 @@ def main(argv=None):
         return 0
     if a.generic_contract is not None and (a.mode != 'lint' or a.die != 'hbm'):
         ap.error('--generic-contract applies only to lint --die hbm')
+    if a.mode == 'lint' and a.die == 'hbm':
+        # GH11: R25/R25G may not bypass functional-binding admission. Inspect
+        # the selector without building the die (which can invoke synthesis).
+        selector = a.variant.lower()
+        generic_required = not selector or selector == 'adopted' or selector.startswith('r25')
+        if selector.startswith('{'):
+            selected = json.loads(a.variant)
+            generic_required = str(selected.get('base', '')).lower().startswith('r25') or any(
+                selected.get(key) for key in ('hgi_record_units', 'hgi_mtp_generic18', 'generic_hbm'))
+        if generic_required and a.generic_contract is None:
+            ap.error('R25/R25G HBM lint requires --generic-contract; functional bindings must be audited before die build')
     if a.mode == 'lint':
         generic = None
         if a.generic_contract is not None:

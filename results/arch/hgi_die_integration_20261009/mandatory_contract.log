@@ -1,0 +1,8 @@
+usage: die_top_lint.py [-h] [--top TOP]
+                       [--die {s81_layer,s81_head,hbm,qwen_rom,qwen_kv,rom,s81r8_layer,s81r8_layer1,s81r8_head}]
+                       [--qwen-recipe {r17b,r18,r19,r20c,r20f1,r20g,r21,r22,r21v,r21f,r21m,r21b,r21bt,r21c,r22k}]
+                       [--qwen-ref QWEN_REF] [--top-fix] [--s81-opts S81_OPTS]
+                       [--tag TAG] [--variant VARIANT] [--out OUT]
+                       [--generic-contract GENERIC_CONTRACT]
+                       {lint,abstracts,vlsum}
+die_top_lint.py: error: R25/R25G HBM lint requires --generic-contract; functional bindings must be audited before die build

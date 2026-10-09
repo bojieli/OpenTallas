@@ -1,0 +1,176 @@
+{
+  "schema": "opentallas.hgi_die_reservation_latency.v1",
+  "status": "INCOMPLETE_DO_NOT_ADOPT",
+  "scope": "Combined source-pinned reservation ledger; unknown entries are unresolved costs, never zero or fit claims",
+  "entries": [
+    {
+      "element": "token18_fullcore",
+      "source": "6de65ee0e",
+      "model_hook": "hgi_token18_fullcore_model + hgi_mtp_die_contract_model",
+      "replicas": 1,
+      "slot_um": [
+        466.56,
+        200.88
+      ],
+      "reservation_mm2": 0.0937225728,
+      "signal_bits": 1297,
+      "added_data_edges_vs_qualified_fullcore": 0,
+      "reset_release_edges": 2,
+      "pending": [
+        "fullcore exact replay",
+        "actual whole wrapper boundary",
+        "matching SPECF0 physical views",
+        "real CP/history/argmax producer joins"
+      ]
+    },
+    {
+      "element": "argmax_value32_token18",
+      "source": "3e3f1cd55",
+      "replicas": null,
+      "reservation_mm2": null,
+      "added_edges": null,
+      "pending": [
+        "latest winning-value port manifest",
+        "actual model and variant physical fit"
+      ]
+    },
+    {
+      "element": "attention_g12_count21_leaf140",
+      "source": "187a8471c",
+      "evidence_source": "d0d4cc685",
+      "model_hook": "hgi_attention_row_sources_model",
+      "replicas": 4,
+      "slot_um": [
+        140,
+        140
+      ],
+      "reservation_mm2": 0.0784,
+      "first_request_edges": 3,
+      "DS_command_charge_cycles": 240,
+      "Qwen_command_charge_cycles": 432,
+      "physical": "TT142.52/FF12.86/DRC0",
+      "pending": [
+        "electrical audit",
+        "real gather reader and upstream descriptor count wiring"
+      ]
+    },
+    {
+      "element": "attention_g12_record_adapter",
+      "source": "d6579854b_SUPERSEDED_GH5",
+      "model_hook": "hgi_attention_record_adapter_model",
+      "replicas": 4,
+      "slot_candidates_um": [
+        [
+          320,
+          320
+        ],
+        [
+          360,
+          360
+        ]
+      ],
+      "reservation_mm2": null,
+      "first_request_edges_adapter_plus_leaf": 6,
+      "pending": [
+        "GH5 sticky-fault version replaces cancellation protocol",
+        "slot/boundary/physical",
+        "typed count21 provider plus real ATT/rows completion"
+      ]
+    },
+    {
+      "element": "quant23_core_and_VM_transport",
+      "source": "bf4cf8ece",
+      "core_source": "7c0dd09fa",
+      "model_hook": "hgi_quant_decode_model + hgi_quant_vm_transport_model",
+      "replicas": 1,
+      "slot_um": [
+        1800,
+        600
+      ],
+      "reservation_mm2": 1.08,
+      "measured_synth_area_um2": 29108.0952,
+      "core_latency_edges": 23,
+      "descriptor_capture_validation_edges": 2,
+      "packed_sector_handshakes_per32_words": 8,
+      "strided_sector_handshakes_per32_words": 64,
+      "vm_rtt_model_edges": 4,
+      "queue_bits": 16384,
+      "clock": "stream1.2GHz provisional new master; old serial0.9 unchanged",
+      "pending": [
+        "physical boundary and slot fit",
+        "route TT/FF closure",
+        "genericVM root/provider and SECDED contract Claude GH-d",
+        "partial overlap alias semantics",
+        "actual VM RTT and sustainable input bandwidth"
+      ]
+    },
+    {
+      "element": "TOPK_K2048",
+      "source": "33a768ee2",
+      "model_hook": "hgi_generic_topk_model",
+      "replicas": null,
+      "reservation_mm2": null,
+      "state_bits": 174080,
+      "comparators": 2048,
+      "latency_formula": "m*(n+k+3)",
+      "pending": [
+        "actual fullshape synth slot/physical",
+        "legacy DS native SELECT remains separate",
+        "compiler route/order binding"
+      ]
+    },
+    {
+      "element": "KV_writeback",
+      "source": null,
+      "reservation_mm2": null,
+      "added_edges": null,
+      "pending": [
+        "Claude current generic fork inventory/source/area/latency"
+      ]
+    },
+    {
+      "element": "host_and_PLL",
+      "source": null,
+      "reservation_mm2": null,
+      "added_edges": null,
+      "pending": [
+        "Claude current generic die geometry allocation/source"
+      ]
+    },
+    {
+      "element": "INT8_front_and_layout",
+      "source": null,
+      "reservation_mm2": null,
+      "added_edges": null,
+      "pending": [
+        "Claude hbm-forks current model/source/area/latency"
+      ]
+    },
+    {
+      "element": "collective_payload_endpoint",
+      "source": "916a3915a",
+      "payload_codec_source": "2f7865e3b",
+      "model_hook": "hgi_collective_endpoint_model",
+      "replicas": 1,
+      "port_view_um": [
+        480,
+        540
+      ],
+      "port_replicas": 8,
+      "port_only_area_mm2": 2.0736,
+      "old_slot_area_mm2": 1.9656,
+      "reservation_mm2": null,
+      "pending": [
+        "full core plus21SRAM+112adders and corridors",
+        "latest18SRAM port views exceed old slot",
+        "connected payload SECDED CE/UE exact gates",
+        "group rearm/global mcast exact and actualcompletion",
+        "hierarchical physical views"
+      ]
+    }
+  ],
+  "reservation_total_mm2": null,
+  "reticle_fit": null,
+  "token_latency_total_cycles": null,
+  "reason": "Missing source/area/latency entries and real producer/clock/physical qualification prevent a combined fit or single-user rate claim"
+}

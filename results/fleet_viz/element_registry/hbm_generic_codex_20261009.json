@@ -26,7 +26,7 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_CONTROL_16651",
+          "status": "PASS_COMPONENT_CONTROL_16654",
           "evidence": [
             "results/rtl/hgi_collective_decode_20261009/receipt.json"
           ]
@@ -68,7 +68,8 @@
         "real record dispatcher and static group/rank source",
         "ROW_GATHER row backend must consume owner/count/destinations",
         "PSG endpoint isolation gates separate",
-        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open"
+        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open",
+        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -83,7 +84,7 @@
       "owner": "generic_collective/collective_endpoint",
       "description": "hgi coll endpoint psg",
       "source": {
-        "commit": "292b4fb50",
+        "commit": "916a3915a",
         "paths": [
           "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv"
         ]
@@ -133,7 +134,11 @@
       "dependencies": [
         "bind active gsz (0/1/2/3 or F), do not strap F for generic claim",
         "isolation error found in prior HF5 proof, repaired endpoint gate running",
-        "two PS/core variants from viable current port macro view"
+        "two PS/core variants from viable current port macro view",
+        "Typed ports gsz4, mcast_all1, mcast_group_size8, start_ready/done_valid/done_ready/fault_ack; REARM1 required for generic programming",
+        "Op4 gsz=log2(subgroup), mcast_all=1, outer membership mcast_group_size=backend_group_size; global die rank required",
+        "PAYLOAD_ECC default-off connected SRAM fix 2f7865e3b running macro-array and FIFO CE/UE gates; adoption not qualified",
+        "18 SRAM port view 480x540 times8 alone exceeds old collective slot; full core plus corridors/ports area not yet fitted"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -331,7 +336,7 @@
         "simulator_conformance": {
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
           "evidence": [],
-          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+          "reason": "Arithmetic184 released golden beats verified; shared-core clamp reachability is Claude simulator obligation; actual generic record/VM producer and drain binding unresolved"
         }
       },
       "physical": {
@@ -355,7 +360,12 @@
         "real valid/header/mode/fault/retire consumers replacing old quant tie/fold topology",
         "23 actual edges, E4 native8+15 alignment",
         "E4 param16-only coverage must match normative legal block set",
-        "strict boundary PASS inreg10/regout2; mapped fullshape area pending, no cell-fit claim"
+        "strict boundary PASS inreg10/regout2; mapped fullshape area pending, no cell-fit claim",
+        "GH7 E4M3 v1 legal block set {16}; latency23 edges normative",
+        "VM operand adapter bf4cf8ece passed201 cases10768 words and three runtime mutants; full-shape slot/boundary proof running, no routes",
+        "Adapter provisional single stream1.2GHz new master requires physical qualification; existing serial0.9GHz master cannot be directly connected",
+        "Claude GH-d owns generic VM root and SRAM/HBM protection contracts; current VM8 placeholder is not a functional337/273 endpoint",
+        "E4M3 v1 block set {16} binding GH7; all other parameters rejected, exhaustive256-param bench running"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -591,7 +601,8 @@
         "commit": "187a8471c",
         "paths": [
           "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
-        ]
+        ],
+        "evidence_commit": "d0d4cc685"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -603,7 +614,12 @@
         "status": "MODELED",
         "evidence": [
           "tools/uarch_model.py:hgi_attention_row_sources_model"
-        ]
+        ],
+        "token_charge": {
+          "DS_cycles": 240,
+          "Qwen_cycles": 432,
+          "scope": "leaf command overhead only; record adapter and existing engine costs additional"
+        }
       },
       "exactness": {
         "positive": {
@@ -627,13 +643,29 @@
         }
       },
       "physical": {
-        "status": "QUEUED_CORRECTED21BIT_SOURCE",
+        "status": "CLOSED_COMPONENT_VARIANTS_140_SELECTED_BY_GH5",
         "jobs": [
           "hgi-att-g12-120-187a8471c-tc-cx",
           "hgi-att-g12-140-187a8471c-tc-cx"
         ],
-        "corners": {},
-        "evidence": [],
+        "corners": {
+          "120": {
+            "TT_setup_ps": 149.19,
+            "FF_hold_ps": 1.02,
+            "DRC": 0,
+            "SS_sensitivity_ps": -91.43
+          },
+          "140": {
+            "TT_setup_ps": 142.52,
+            "FF_hold_ps": 12.86,
+            "DRC": 0,
+            "SS_sensitivity_ps": -169.56
+          }
+        },
+        "evidence": [
+          "physical/hbm_generic_views/g12_140/view.json",
+          "results/hgi_attn_g12_20261009/final_artifacts.json"
+        ],
         "electrical": {
           "status": "NOT_VERIFIED",
           "evidence": [],
@@ -653,14 +685,18 @@
           "reason": "799f counts20bits could not represent exclusive1M endpoint",
           "status": "OLD799_PAIR_ADMINISTRATIVELY_CANCELLED_BEFORE_ANY_WORKER"
         },
-        "queued_at_utc": "2026-10-09T13:08:36Z"
+        "queued_at_utc": "2026-10-09T13:08:36Z",
+        "selected_macro": "ot_hgi_att_row_sources_p",
+        "selected_view": "physical/hbm_generic_views/g12_140"
       },
       "dependencies": [
         "Claude descriptor adapter and existing DS9-sector gather row request binding",
         "4stack replicas/384 state bound; actual3edge command latency",
         "external normative simulator CF-ATT vectors",
         "POS1/counts21bit full1M corrected exact gate; old799f pair held, not eligible for route",
-        "actual corrected intake13:08:36Z: schema/pinlint and remote boundary cache PASS; no local synth fallback"
+        "actual corrected intake13:08:36Z: schema/pinlint and remote boundary cache PASS; no local synth fallback",
+        "GH5 selects immutable 140um leaf; record adapter removes cancellation protocol: sticky fault, CP halt and drained reset only",
+        "Record adapter plus leaf first row 6 edges; actual ATT done and row done required; upstream normative header/count conversion and selected-ID gather binding unresolved"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -675,7 +711,7 @@
       "owner": "generic_die_integration",
       "description": "hgi die integration",
       "source": {
-        "commit": "d307a4f15",
+        "commit": "d7cdfd630",
         "paths": [
           "tools/hgi_die_integration_check.py",
           "tools/die_top_lint.py",
@@ -740,7 +776,9 @@
         "real new port consumers and producers must be wired; no implicit constants/cfg/folds/truncation",
         "Claude R25G geometry preserved; reservations missing for TOPK, generic paths, PLL/host/KV andINT8 growth",
         "strict wrapper regeneration and die_top_lint + remote elaboration/connectivity before adoption",
-        "actual sequencer3fae record ABI matched1409command/3return; this does not establish relay/finite-flow or real consumers"
+        "actual sequencer3fae record ABI matched1409command/3return; this does not establish relay/finite-flow or real consumers",
+        "GH11 mandatory generic contract audit for R25/R25G die lint before build",
+        "One combined reservation/latency sheet must account for token18/value32/count21/quant23/TOPK/KV writeback/host PLL/INT8; geometry reconciled by Claude forks"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -820,7 +858,8 @@
         "actual result store/multicast consumer",
         "normative simulator vector ABI and DS payload/isolation gate",
         "boundary lint running; no physical job claimed",
-        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open"
+        "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open",
+        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -909,7 +948,7 @@
       "owner": "generic_index_decode/native_index512",
       "description": "Normative unit9/op3 native DS SELECT candidate endpoint, original index512 mechanism",
       "source": {
-        "commit": "9d5f3c86c",
+        "commit": "eb7c136f4",
         "paths": [
           "rtl/hbm_accel/generic_20261009/ot_hgi_idx_native_ds_dispatch.sv"
         ]
@@ -928,7 +967,7 @@
         "positive": {
           "status": "PASS_COMPONENT_NATIVE_MEMORY_PROTOCOL_AND_CYCLE_LOCKSTEP",
           "evidence": [
-            "results/rtl/hgi_native_index512_20261009/attempt2/receipt.json"
+            "results/rtl/hgi_native_index512_20261009/attempt3_833ps/receipt.json"
           ],
           "receipt_commit": "b003e54bd"
         },
@@ -965,7 +1004,8 @@
         "K512balanced871/unbalanced2637; K2048select1366=3185; K1=667, unchanged native references",
         "behavioral synchronous1R1W SRAM proof only, physical macro capture qualification remains open",
         "cmd_unit9/op3 must be held through drain, no tieoffs",
-        "no duplicate existing native candidate routes"
+        "no duplicate existing native candidate routes",
+        "Actual latest exact bench 833.333ps; no SDF/P&R qualification, behavioral SRAM only"
       ],
       "integration": {
         "status": "INCOMPLETE",
