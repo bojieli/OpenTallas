@@ -12,6 +12,7 @@ module tb_hc_mean_capture;
     wire [511:0] out_data;
     wire [9:0] out_user;wire [20:0] out_position;wire [3:0] out_epoch;
     wire [1:0] out_capture;wire [5:0] out_frame;
+    wire capture_done;wire [1:0] capture_done_capture;
 `ifdef HC_MUT_TREE
     localparam integer MT=1;
 `else
@@ -29,8 +30,44 @@ module tb_hc_mean_capture;
 `else
     localparam [71:0] INJ=72'd0;
 `endif
-    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
     reg [511:0] inputs[0:479],expected[0:119];
+`ifdef HC_VM_READER
+    wire mcv,mcr,miv,mir;wire [1:0] mcc;wire [9:0] mcu;wire [20:0] mcp;
+    wire [3:0] mce;wire [7:0] mib;wire [511:0] mid;
+    wire req_valid;wire [13:0] req_row;wire rb,rf;
+    reg req_ready=0,rsp_valid=0;reg [511:0] rsp_data=0;
+    reg pending=0;integer delay_q=0,copy_vm,row_vm,i_vm;
+    reg [511:0] response_q;
+    ot_dsrom_hc_input_reader reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
+      .cmd_capture(cmd_capture),.cmd_user(cmd_user),.cmd_position(cmd_position),.cmd_epoch(cmd_epoch),
+      .cmd_h_row(14'd512),.cmd_region_rows(15'd320),
+      .mean_cmd_valid(mcv),.mean_cmd_ready(mcr),.mean_cmd_capture(mcc),.mean_cmd_user(mcu),
+      .mean_cmd_position(mcp),.mean_cmd_epoch(mce),
+      .req_valid(req_valid),.req_ready(req_ready),.req_row(req_row),
+      .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_fault(1'b0),
+      .mean_valid(miv),.mean_ready(mir),.mean_beat(mib),.mean_residuals(mid),.busy(rb),.fault(rf));
+    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(
+      .cmd_valid(mcv),.cmd_ready(mcr),.cmd_capture(mcc),.cmd_user(mcu),.cmd_position(mcp),.cmd_epoch(mce),
+      .in_valid(miv),.in_ready(mir),.in_beat(mib),.in_residuals(mid),.*);
+    always @(negedge clk) begin
+        req_ready=cycles%5!=0&&!pending;
+        rsp_valid=0;
+        if(pending) begin
+            if(delay_q==0) begin rsp_valid=1;rsp_data=response_q;pending=0;end
+            else delay_q=delay_q-1;
+        end
+        if(rf) $fatal(1,"native H reader fault");
+    end
+    always @(posedge clk) if(req_valid&&req_ready) begin
+        if(req_row<512 || req_row>=832 || pending) $fatal(1,"native read bounds/ownership");
+        copy_vm=(req_row-512)/80;row_vm=(req_row-512)%80;
+        for(i_vm=0;i_vm<16;i_vm=i_vm+1)
+            response_q[32*i_vm+:32]={inputs[cmd_capture*160+row_vm*2+i_vm/8][128*copy_vm+16*(i_vm%8)+:16],16'd0};
+        pending=1;delay_q=cycles%9+1;
+    end
+`else
+    ot_dsrom_hc_mean_capture #(.MUT_TREE(MT),.MUT_LAYER_ALIAS(MA),.READ_INJECT(INJ)) u(.*);
+`endif
     string idir;
     integer bad=0,phase,cap,beat,nout=0,cycles=0,corrected=0;
     reg [511:0] held;reg stalled=0;
@@ -54,6 +91,10 @@ module tb_hc_mean_capture;
                 $display("PASS negative command %0d retained prior ownership",bad);$finish;
             end
             for(beat=0;beat<160;beat=beat+1) begin
+`ifdef HC_VM_READER
+                @(negedge clk);while(rb) @(negedge clk);
+                beat=159;
+`else
                 while(!in_ready) @(negedge clk);
                 in_beat=(bad==2 && beat==1)?3:beat;
                 in_residuals=inputs[cap*160+beat];
@@ -65,6 +106,7 @@ module tb_hc_mean_capture;
                     if(!fault||out_valid||!busy) $fatal(1,"bad beat escaped");
                     $display("PASS negative beat %0d retained ownership",bad);$finish;
                 end
+`endif
             end
         end
         while(nout<120) @(negedge clk);

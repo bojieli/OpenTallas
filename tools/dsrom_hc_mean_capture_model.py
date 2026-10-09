@@ -43,3 +43,23 @@ def model():
                                     'layer37/38/39 stage dispatch', 'seed QX delivery',
                                     'exact released h_in gate', 'negative controls',
                                     'contextual physical closure']}}
+
+def input_reader_model():
+    return {'schema':'opentallas.dsrom.hc-input-reader.v1',
+        'shape':{'copies':4,'TP4_rank_dimensions':1280,'words_per_VM_row':16,
+                 'rows_per_copy':80,'read_requests_per_capture':320},
+        'native_port':{'read_slots_required':1,'outstanding_reads':1,
+                       'qualification':'existing reserved/shared NP8 slot; owner arbiter and compiler mapping pending'},
+        'MACs_per_cycle':0,'compute_intensity':0,
+        'ports_bytes_per_cycle':{'VM_read':64,'mean_input':64},
+        'boundary_bits_per_cycle':{'VM_request':16,'VM_response':514,'mean_input':521},
+        'replicas':{'per_TP4_group':4,'protected_hold_register_bits':2304},
+        'mux_demux':'four response buffers, two contiguous8-dimension halves',
+        'fanout':{'clock_protected_bits':2304,'response_selection':4},
+        'routing':{'input_tracks':560,'output_tracks':560,'capacity_per_face':1200},
+        'area':{'planning_cells_um2':10000,'slot_um':[500,400],'slot_fit_planning':True},
+        'latency':{'unoverlapped_control_cycles_upper_per_capture':2240,
+                   'actual_VM_wait_cycles':'sum of320 admitted request-to-real-rvalid waits',
+                   'input_reader_cycles_not_in_capture_cost':True},
+        'integration':{'adopted':False,'default_enabled':False,
+                       'pending':['actual H TP-rank row mapping','native port owner arbitration','exactness','physical closure']}}

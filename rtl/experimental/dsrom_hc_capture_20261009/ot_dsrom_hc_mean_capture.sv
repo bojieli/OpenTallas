@@ -29,6 +29,7 @@ module ot_dsrom_hc_mean_capture #(
     output wire [1:0] out_capture,
     output wire [5:0] out_frame,
     output wire out_last, output wire out_corrected,
+    output reg capture_done, output wire [1:0] capture_done_capture,
     output wire busy, output reg fault
 );
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
@@ -95,6 +96,7 @@ module ot_dsrom_hc_mean_capture #(
     end endgenerate
     assign read_code=bank_data[575:0];
     assign busy=owned;
+    assign capture_done_capture=capture_q;
     assign cmd_ready=state==CMD&&!fault;
     assign in_ready=state==LOAD&&!fault;
     assign out_valid=state==RHOLD&&!fault&&!(|dec_ue);
@@ -108,12 +110,13 @@ module ot_dsrom_hc_mean_capture #(
     integer lane;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
-            state<=CMD;owned<=0;fault<=0;captured<=0;
+            state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;
             user_q<=0;position_q<=0;epoch_q<=0;capture_q<=0;
             beat_q<=0;frame_q<=0;part<=0;add_step<=0;
             read_capture<=0;read_frame<=0;held_code<=0;
             h1<=0;h2<=0;h3<=0;acc<=0;pack_q<=0;
         end else if(!fault) begin
+            capture_done<=0;
             case(state)
                 CMD: if(cmd_valid) begin
                     if(cmd_capture>2 || (owned &&
@@ -156,6 +159,7 @@ module ot_dsrom_hc_mean_capture #(
                 WCOMMIT: begin
                     part<=0;
                     if(frame_q==39) begin
+                        capture_done<=1;
                         captured[capture_q]<=1;
                         if((captured|(3'b001<<capture_q))==3'b111) begin
                             read_capture<=0;read_frame<=0;state<=RREQ;
