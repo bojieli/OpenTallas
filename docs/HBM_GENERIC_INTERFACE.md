@@ -125,12 +125,12 @@ Every engine is addressed by a 4-bit **unit code** in the record header. Codes 1
 | 1 | SM | Matrix-vector product: streams weight rows from HBM against an activation vector. The weight format is chosen per operation (BF16, FP8 block, FP4 block, INT8). 32 SMs per die. | `hfd_sm`, `smh_front_*`, tiles |
 | 2 | SU | The programmable vector pipeline. A 256-bit *SU template* configures its stages (multiply, add, special function, reduce, round). Exact fallbacks run here. | `hfd_su` lanes, `su_red`, `su_full` |
 | 3 | SFU | The fused SwiGLU chain | `hfd_sfu` |
-| 4 | FUSED | Fused fast paths: the norm engine, the DS hyper-connection norms and the softmax unit | `norm_engine_view`, `ot_dsrom_su_softmax` |
+| 4 | FUSED | Fused fast paths: the norm engine, the DS hyper-connection norms, the softmax unit and the block quantiser (FP8/FP4 quantise-dequantise) | `norm_engine_view`, `ot_dsrom_su_softmax`, `hfd_quant` |
 | 5 | ATT | Attention tiles: QK scores and PV products over FP8/BF16 KV rows in HBM | `hfd_attn_half_*` |
-| 6 | COLL | Cross-die collectives: all-reduce, all-gather, top-k merge, argmax merge | `hfd_coll` |
+| 6 | COLL | Cross-die collectives: all-reduce, all-gather, top-k merge, argmax merge, sub-group reduce with multicast, row gather from owner dies | `hfd_coll` |
 | 7 | ARGMAX | Local argmax over a logit shard | `ot_dshbm_argmax_m` |
 | 8 | DMA | Row moves between HBM and VM, the KV append, the DS KV write-back and the HBM write fence | svc, `hfd_loader`, kvwb |
-| 9 | IDX | Generic top-k selection, and the DS indexer engines | DS selector and indexer |
+| 9 | IDX | Generic top-k selection, the DS indexer engines and the Engram hash | DS selector, indexer, `ot_hdc_engram_hash` |
 | 10 | HC | DeepSeek hyper-connection mix | `hfd_hc` |
 | 11 | SIMT | **Optional; absent on r25.** Launches a general-purpose SIMT kernel on dies that have a kernel engine. | — |
 | 12–15 | — | Reserved | — |
@@ -160,7 +160,13 @@ For one token, data moves in a fixed pattern:
 
 ### 2.6 Die groups and SPMD execution
 
-A model runs on a **group** of dies that split each layer's matrices between them (tensor parallelism, TP): Qwen3-8B uses 4 dies, DeepSeek-V4.1-Flash 96. Every die of a group runs the **same program** (single program, multiple data, SPMD). Where a die needs its own slice of a table, the program addresses it with the DYN value `RANK` (§3.3).
+A model runs on a **group** of dies that split each layer's matrices between them (tensor parallelism, TP): Qwen3-8B uses 4 dies, DeepSeek-V4.1-Flash 96. Every die runs a program of the **same structure** (single program, multiple data, SPMD):
+
+- Each die has its own program image in its own HBM. The images of a group must be identical record for record in unit, operation, operand slots and the order of collectives. They may differ in descriptor values and immediates, and a record that a rank does not run is replaced by `CTL.NOP`, so the collectives of every die still line up.
+- Where a die's slice is a uniform function of its rank, one image serves every die and addresses the slice with the DYN value `RANK` (§3.3). Where it is not, for example an even split of n rows over G dies when G does not divide n (rank r owns rows ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1), the compiler writes the rank's own constants into that rank's image.
+- The descriptor's `image_base` is a die-local address, so one model descriptor serves every die.
+
+Qwen3-8B uses one image for all four dies. DS uses 96 images of identical structure. Per-die images need no hardware: the CP of each die already fetches from its own HBM.
 
 Groups are **aligned** blocks of die ids. A die's rank is `die_id mod group_size`, its group is `die_id div group_size`, and reductions combine contributions in rank order. Legal group sizes are 1, 2, 4 and 8 (on the collective engine's 8-input reduction tree, with inactive inputs presented as +0) and 96 (the DS configuration and the reset value).
 
@@ -193,7 +199,7 @@ The seven operand slots have fixed roles:
 | R | A reduction result (one value per outer row), for templates and operations that reduce. |
 | I | An id table in VM used for gathers and for indexed addressing (§3.3). |
 
-A record is therefore 16 to 272 bytes long. Because each record carries its own addresses, counts and formats, one SU template can serve every layer, and two consecutive records may use the same engine in different ways.
+A record is therefore 16 to 272 bytes long. Programs are per die but share one structure (§2.6). Because each record carries its own addresses, counts and formats, one SU template can serve every layer, and two consecutive records may use the same engine in different ways.
 
 ### 3.3 Addressing
 
@@ -578,12 +584,12 @@ Bit 7 and bits 255:239 are reserved.
 |---|---|
 | SU | The template's sources map to A, B, C, D; the element result to O; the reduction result to R; a gather index table to I. |
 | SM | A = activation (VM or STREAM); B = weights (HBM, possibly indexed); O = result (VM or STREAM); I = id table when B is indexed. |
-| FUSED | A = input; B = gain (norms) or sink row (softmax); O = output, whose `fmt` is the output format. |
+| FUSED | A = input; B = gain (norms) or sink row (softmax); O = output, whose `fmt` is the output format. QDQ: A = values, O = the quantised-dequantised values. |
 | SFU | A = gate, B = up, C = route weight, O = output. |
-| ATT | A = queries or probabilities (VM); B = K or V rows (HBM, `n_sel` = POS1 or POS_SLOT1); O = scores or PV. |
+| ATT | A = queries or probabilities (VM); B = K or V rows (HBM, `n_sel` = POS1 or POS_SLOT1), optionally a ring; C (optional) = a second row source whose rows follow B's; O = scores or PV. |
 | DMA | A = source, O = destination; I = id table for an indexed source. |
-| IDX | A = scores (m rows of n); O = selected ids (U32); R = selected values (optional). |
-| COLL | A = local contribution, O = result. |
+| IDX | TOPK: A = scores (m rows of n); O = selected ids (U32); R = selected values (optional). EHASH: B = hash constants; O = row ids (U32). |
+| COLL | A = local contribution (ROW_GATHER: this die's row store), O = result; I = the selected row ids (ROW_GATHER). |
 | ARGMAX | A = logits (VM or STREAM), O = {value, id}. |
 | CTL | `CTL.END`: A = the U32 token. |
 
@@ -597,12 +603,12 @@ Operation codes are the index of each operation in its unit's list in `spec.json
 | SM | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
 | SU | VOP | — (the template carries the configuration) | `Machine.su1` (R-ARITH chunk8) |
 | SFU | GLU | `imm_a` = clamp limit (FLT_MAX disables) | The fused SwiGLU chain; output format = O `fmt` |
-| FUSED | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX | ROW_NORM: `[5:0]` d_units, `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. |
-| ATT | QK, PV | `[3:0]` head lanes used; `[7:4]` 64-element slices per head − 1 | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order |
-| COLL | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE | — | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. |
+| FUSED | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX, QDQ_FP8, QDQ_FP4_E8M0, QDQ_FP4_E4M3 | ROW_NORM: `[5:0]` d_units, `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. QDQ: quantise each 32-element block and dequantise it again, exactly as the DS activation quantiser does: QDQ_FP8 to FP8E4M3 with a UE8M0 (power-of-two) block scale; QDQ_FP4_E8M0 to FP4E2M1 with a UE8M0 block scale; QDQ_FP4_E4M3 to FP4E2M1 with an FP8E4M3 scale per block of `param[7:0]` elements (DS 16). The SU cannot form the exact power-of-two scale (⌈log2⌉ of the block maximum), so these are engine operations. |
+| ATT | QK, PV | `[3:0]` head lanes used; `[7:4]` 64-element slices per head − 1; `[8]` ring | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order. Rows are B's n rows, then C's rows when C is present (scores and PV run over the concatenation, B first). With `ring` = 1, B is a ring of `B.m` slots (a power of two): the first row read is slot (POS1 − n) mod `B.m` and reading wraps at `B.m`, so the rows arrive oldest first. |
+| COLL | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE, GROUP_REDUCE_MCAST, ROW_GATHER | GROUP_REDUCE_MCAST: `[7:0]` sub-group size s. ROW_GATHER: `[7:0]` owner block B; `imm_a` = row count when I has no count row; `imm_b` = destination ranks | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. ALL_GATHER: rank r contributes elements ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1 of A (n = A.n, G = group size) and every rank receives all n. GROUP_REDUCE_MCAST: each aligned sub-group of s ranks (s = 2, 4 or 8) reduces A in the rank-order pairwise tree, and each sub-group's result is multicast to every rank of the group; O holds the sub-groups' results in sub-group order, in format O `fmt`. ROW_GATHER: row i of the selection is owned by rank (i div B) mod G, which stores it at local row (i div (B·G))·B + i mod B of A; every destination rank 0 … `imm_b` − 1 receives the selected rows in list order in O. |
 | ARGMAX | LOCAL | `imm_a` = id offset multiplier | numpy argmax: lowest index on ties; NaN flag reported; global id = local id + RANK · `imm_a` |
 | DMA | LOAD, STORE, FENCE, KVWB_DS | — | LOAD/STORE: HBM ↔ VM row moves, including the linear KV append, recurrent state and the indexed row stream (§3.3). FENCE: makes the DMA unit's writes visible. KVWB_DS: the DS window-ring KV write-back. |
-| IDX | INDEX_Q, INDEX_SCORES, TOPK, SELECT | TOPK: `[11:0]` k (1 … 2,048) | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index; R (optional) = the k values; NaN fails closed. The others are the DS indexer engines. |
+| IDX | INDEX_Q, INDEX_SCORES, TOPK, SELECT, EHASH | TOPK: `[11:0]` k (1 … 2,048). EHASH: `[2:0]` Engram layer index | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index; R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. INDEX_Q, INDEX_SCORES and SELECT are the DS indexer engines. |
 | HC | HC_MIX | — | The DS hyper-connection mix |
 | SIMT | RUN | `[13:0]` entry PC; `imm_a` = SM mask | Optional unit, absent on r25 (§2.3) |
 
@@ -681,18 +687,22 @@ The manifest (`schema` = `opentallas.hgi_model_manifest.v1`) has three parts:
 
 ### 7.1 DeepSeek-V4.1-Flash: native unit operations
 
-DS runs on r25 as a record stream of native unit operations only:
+DS runs on r25 as a record stream of native unit operations only, one image per die (96 images of identical structure, §2.6). The simulator runs a full DS token at 1M context this way on 96 simulated dies, bit-exact against the released-checkpoint golden: all 40 layers and the head, 4,526 records per die per token.
 
 | DS work | Records |
 |---|---|
-| Matrix-vector products | `SM.MATVEC` (FP8 or FP4 block-dot, BF16) |
+| Matrix-vector products | `SM.MATVEC` (FP8 or FP4 block-dot, BF16); each die's rows by its own even-split constants |
+| Activation, window-row, index-key and compressed-row quantisation | `FUSED.QDQ_FP8`, `FUSED.QDQ_FP4_E8M0`, `FUSED.QDQ_FP4_E4M3` |
+| Buffer all-gathers | `COLL.ALL_GATHER` (even-split segments) |
+| Grouped output projection | One `SM.MATVEC` per o-group as a K-split over its 8 head dies, then `COLL.GROUP_REDUCE_MCAST` (s = 8, BF16 out), which replaces the o all-gather |
 | hc_pre_norm, q_norm_kv_row, hc_post | `FUSED.*` |
 | SwiGLU | `SFU.GLU` (FP8 out, clamp 10.0, route weights as C) |
 | RoPE, attend, router activation, route, MoE sum | SU templates |
-| Attention tiles | `ATT.QK`, `ATT.PV` |
+| Attention tiles | `ATT.QK`, `ATT.PV` over the window ring (B, `ring` = 1) followed by the selected compressed rows (C); SU templates for the max, exp-sum, sink term and normalisation |
 | Indexer query, scores and select | `IDX.INDEX_Q`, `IDX.INDEX_SCORES`, `IDX.SELECT` |
 | Index top-k (512 of the candidates) and router top-6 | `IDX.TOPK` |
-| Selected KV rows | Indexed stream `DMA.LOAD` over the `IDX.TOPK` positions (§3.3) |
+| Selected compressed KV rows | `COLL.TOPK_MERGE` of the dies' local selections, then `COLL.ROW_GATHER` from the owner dies (compressed rows and index keys are sharded by position in blocks of 8: block j lives on rank j mod 96) into each head die's HBM; the indexed stream `DMA.LOAD` (§3.3) serves rows held locally |
+| Engram rows | `IDX.EHASH` per Engram layer, then indexed `DMA.LOAD`s of the codes and scales and an SU decode |
 | Window and compressed rows, KV write-back | `DMA.LOAD`, `DMA.KVWB_DS` |
 | Expert fetch by id | `SM.MATVEC` with an indexed B descriptor over the `IDX.TOPK` ids, in a `CTL.LOOP` over the 6 experts |
 | HC mixes | `HC.HC_MIX` |
@@ -700,6 +710,18 @@ DS runs on r25 as a record stream of native unit operations only:
 | Head and token | `ARGMAX.LOCAL`, `COLL.ARGMAX_MERGE`, `CTL.END` reading A |
 
 The acceptance test is identical tokens and per-unit outputs against the existing DS evidence (`hdc_golden_v41`, chunk8).
+
+**What the DS lowering needs beyond the generic set.** Most items map onto DS engines the die already carries:
+
+| Item | Interface | Hardware or compiler |
+|---|---|---|
+| Block quantise-dequantise | `FUSED.QDQ_*` | Existing DS activation quantiser behind the FUSED dispatcher; dispatcher decode only |
+| Uneven all-gather segments | The ALL_GATHER segment rule (§6.7) | None: it states the DS collective's split rule |
+| o-group reduce with multicast | `COLL.GROUP_REDUCE_MCAST` | Existing DS o-group reduce on the collective (tree tap at log2 s); dispatcher decode |
+| Rank-dependent rows and skipped records | Per-die images of identical structure (§2.6) | Compiler only |
+| Window ring plus selected rows in one attention | ATT C operand and `ring` flag | **Small hardware:** the ATT row-fetch front end takes a second row list and wraps a power-of-two ring counter |
+| Engram hash ids | `IDX.EHASH` | Existing DS Engram hash engine behind IDX. Until it is wired, the host writes the ids into an HBM table before the doorbell and a `DMA.LOAD` stages them; the rest of the program is identical |
+| Selected compressed rows from owner dies | `COLL.ROW_GATHER` | The DS row-gather collective; dispatcher decode of the owner rule |
 
 ### 7.2 Qwen3-8B: the 28 families
 
@@ -785,13 +807,16 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | CF-0 | Configuration path | DS descriptor load causes no change; each error code with the active values kept; a doorbell before any load runs DS; commit while busy refused; settle hold-off | Qwen descriptor load and read-back; reserved-bit, group 12, group 16 and vocabulary 2¹⁸ negatives |
 | CF-1 | DS equivalence | A block with its active registers at reset and DS per-operation values is equivalent to its DS predecessor: formal equivalence where the block is small, otherwise byte-identical replay of the committed DS vectors **and** identical cycle counts | — |
 | CF-SM | `smh_front_c` format 3 | Formats 0–2 identical; latency bypass-matched | Format 3 output equals format 0 on the BF16-widened image; INT8 rows of −128, 127, 0 |
+| CF-QDQ | Block quantiser | DS act-quant vectors (FP8 UE8M0, FP4 UE8M0, FP4 E4M3 block 16) | All-zero, maximum and subnormal blocks; mutant: a scale off by one power of two |
 | CF-CP | CP | 17-bit DS token set | Ids 131,071, 131,072, 151,935; position 2²⁰ − 1; range refusal at `cp_vocab` and `cp_ctx_max`; a record to an absent unit faults with status 3 |
 | CF-ROPE | RoPE | Adjacent 64-tail vectors | Permuted-weight 128-dim RoPE against the golden; mutant: unpermuted weights must fail |
 | CF-NORM | Norm engine | D5120, HC and FP8 vectors | D4096 BF16; seg 128 QK-norm (32 + 8 heads); FP32, BF16 and FP8 outputs in one program; mutant: an unpadded tail |
 | CF-SFX | Softmax | Sink vectors | 8 heads × 8,192 rows multipass against the golden's chunk order; T = 1, 640, 641, 1,280, 8,192; csum8 carry equality; global maximum across all tile pairs; sink −2¹⁰⁰ equals no sink |
 | CF-GLU | SwiGLU | FP8, clamp and route-weight vectors | BF16 out, clamp FLT_MAX, route 1.0 by broadcast, 3,072 per die |
-| CF-COLL | Collective | TP-96 vectors | Groups 1, 2, 4, 8 at every rank (all-reduce of 256 words and ARGMAX_MERGE ties); a −0 contributor; pad mutant; group isolation; 16, 32, 64 rejected |
+| CF-COLL | Collective | TP-96 vectors; ALL_GATHER with G not dividing n; GROUP_REDUCE_MCAST s = 8, BF16 out; ROW_GATHER k = 7, 512, 2,048 across owner dies, list order, an unwritten row faults | Groups 1, 2, 4, 8 at every rank (all-reduce of 256 words and ARGMAX_MERGE ties); a −0 contributor; pad mutant; group isolation; 16, 32, 64 rejected |
 | CF-ARG | Argmax | 17-bit ids | Id 151,935; lowest-index tie; NaN flag; `imm_a` id offset |
+| CF-ATT | Attention row sources | Window ring with wrap at every phase (first row = slot (POS1 − n) mod m) followed by k selected rows; mutant: ring read from slot 0 | Single B source, `n_sel` = POS1 |
+| CF-EHASH | Engram hash | Ids of every Engram layer against the golden's hashes over a token sequence; history restored by ACCEPT after a rejected draft | — |
 | CF-KV | KV paths | `DMA.KVWB_DS` ring, selected-row and ingest vectors | Linear append at pos; fence-before-read negative; mask at len − 1, len, len + 1 |
 | CF-EMB | Embedding | BF16 rows | Row 151,935; INT8 plus scale dequantisation |
 | CF-SVC | KV striping | DS index-key sweep | Qwen 8K dense sweep at ≥ 90 % of die bandwidth |
@@ -800,7 +825,7 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | CF-TOPK | Top-k | Router top-6, index top-512 | k ∈ {1, 2, 6, 8, 512}; m > 1 rows; lowest-index ties; NaN fail-closed |
 | CF-LOOP2 | Sequencer loops | — | Two-level loop with `l1stride` and L1 |
 | CF-GDN | Linear attention | — | State round trip in the transposed layout; convolution-ring wrap; per-head loop; GQA-map mutant |
-| CF-PROG | Sequencer | DS program: same tokens and buffers as today | Qwen layer and head records against the simulator, with `wait`, STREAM, LOOP and FENCE negatives |
+| CF-PROG | Sequencer | DS program: 96 per-die images of identical structure (a structure-mismatch negative must fail), same tokens and buffers as today | Qwen layer and head records against the simulator, with `wait`, STREAM, LOOP and FENCE negatives |
 
 ---
 
@@ -934,8 +959,11 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | **MDESC** | Memory descriptor: the 256-bit operand description in a record. |
 | **MTP** | Multi-token prediction (speculative decoding with draft and verify passes). |
 | **OTG-1** | The SIMT instruction set of the GPU-organised ablation's kernels (`tools/gpu_sys`). |
+| **o-group** | DS's group of 8 head dies that share one output-projection reduction. |
+| **Owner die** | The die that stores a sharded row: for DS compressed rows and index keys, block j of 8 rows lives on rank j mod 96. |
 | **PC** | HBM pseudo-channel; a die's KV sweeps stripe over all 32. |
 | **POS, POS1** | The token's position, and position + 1 (the number of valid KV rows). |
+| **QDQ** | Quantise-dequantise: round a block of values to a low-precision format with a shared scale and convert back, as the golden does. |
 | **Quasi-static** | Changed only while the die is idle, so it can be treated as a constant for timing. |
 | **r25** | The current revision of the HBM accelerator die. |
 | **Rank** | A die's index within its collective group: `die_id mod group_size`. |
@@ -978,6 +1006,10 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | `FUSED.SOFTMAX` with the sink as data | A sink of −2¹⁰⁰ is proved bit-identical to no sink, so no sink mode bit is needed. The multipass carry is the csum8 state, so the fused unit can equal the golden exactly. |
 | `IDX.TOPK` and indexed descriptors are required | r25 has no kernel engine. Without them, MoE routing, expert fetch by id and DS selected-row reads have no route. The top-k engine already exists; the new logic is one VM read per record in the unit dispatchers. |
 | SIMT optional, DS lowered to native unit operations | r25's SMs are fixed-function. DS needs no kernel engine when its work is expressed as native records. |
+| Per-die program images of identical structure, not rank masks | Uneven splits and rank-specific skips are compile-time facts. Writing them into each die's image costs no hardware, while a rank-mask predicate would add header bits and sequencer logic for the same effect. |
+| Block quantise-dequantise, sub-group reduce and row gather as engine operations | DS needs them bit-exact; the SU cannot form an exact power-of-two block scale, and the collective already implements the reduce and gather. Exposing them costs dispatcher decode only. |
+| Attention over two row sources with a ring | DS attends over its window ring plus the selected compressed rows in one softmax; a second row list and a ring wrap in the ATT front end are the smallest way to keep that one pass. |
+| Engram ids on the die | The DS Engram hash engine already keeps the token history and restores it on MTP accept. Host-written ids would add a host step to every token. |
 | Two loop levels and 6-bit DYN codes | Per-head replay for linear attention without unrolling; room for window, chunk and verify-slot codes next to the DS selectors. |
 | Per-layer manifest instead of geometry in the descriptor | Software needs per-layer detail; hardware needs none of it. A manifest can describe heterogeneous layers and grows without touching hardware. |
 | Collective groups 1, 2, 4, 8 and 96 | Groups up to 8 are free on the existing 8-input reduction tree; 96 is DS. Sizes 16–64 cost about nine times the reduction datapath, so they are defined but rejected until a model needs them. |
