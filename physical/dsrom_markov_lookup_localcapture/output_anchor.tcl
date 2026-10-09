@@ -17,7 +17,7 @@ foreach port [$ob getBTerms] {
     } else {lappend other_ports [list [lindex $xy 2] $port]}
 }
 if {[llength $data_ports]!=256 || [llength $other_ports]!=2} {error "unexpected output landing shape"}
-set rank 0;set count 0;set used [dict create];set max_distance 0.0
+set rank 0;set top_rank 0;set count 0;set used [dict create];set max_distance 0.0
 foreach record [concat [lsort -integer -index 0 $data_ports] $other_ports] {
     lassign $record py port
     set xy [$port getFirstPinLocation];set px [lindex $xy 1]
@@ -33,7 +33,8 @@ foreach record [concat [lsort -integer -index 0 $data_ports] $other_ports] {
         incr rank
     } else {
         set x [expr {$ox+round(($px-$w/2.0-$ox)/double($op))*$op}]
-        set y [expr {$oy+floor(([$oc yMax]-$oh-$oy)/double($oh))*$oh}]
+        set y [expr {$oy+floor(([$oc yMax]-$oh*(1+2*$top_rank)-$oy)/double($oh))*$oh}]
+        incr top_rank
     }
     set rows {}
     foreach row [$ob getRows] {
@@ -43,7 +44,13 @@ foreach record [concat [lsort -integer -index 0 $data_ports] $other_ports] {
     if {[llength $rows]!=1} {error "output buffer has no unique containing row"}
     set key "$x,$y"
     if {[dict exists $used $key]} {error "output buffer landing collision"}
-    dict set used $key 1
+    dict for {prior box} $used {
+        lassign $box bx by bw
+        if {$y==$by && $x<$bx+$bw+2*$op && $x+$w+2*$op>$bx} {
+            error "output buffer landing overlap/padding collision"
+        }
+    }
+    dict set used $key [list $x $y $w]
     unset_dont_touch [get_cells [$cell getName]]
     $cell setPlacementStatus PLACED
     place_inst -name [$cell getName] -location [list [expr {$x/double($ou)}] [expr {$y/double($ou)}]] \
