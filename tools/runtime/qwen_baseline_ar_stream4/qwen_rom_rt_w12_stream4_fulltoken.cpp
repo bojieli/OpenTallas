@@ -329,7 +329,7 @@ static void preload_slices_ideal(Fabric& f, const std::vector<uint8_t>& codes, i
 
 int main(int argc, char** argv) {
     if (argc < 5 || strcmp(argv[1], "--stages")) {
-        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR] [--max-cycles N]\n", argv[0]);
+        fprintf(stderr, "usage: %s --stages FILE OUTDIR PRELOAD --pos P --token T [--kv-dir DIR] [--max-cycles N] [--stop-after S]\n", argv[0]);
         return 2;
     }
     const std::string dir = argv[3], preload = argv[4];
@@ -339,6 +339,8 @@ int main(int argc, char** argv) {
     if(out_error || !std::filesystem::is_directory(dir,out_error) || out_error)
         fatal("cannot create/check output directory");
     long max_cycles = 0; // uncapped by default; no guessed runtime deadline
+    long stop_after = -1; // token-exact 10-09: end the run after stage index S retires (layer chain at the target
+                          // position), drain the posted write-back and read back the current K/V of stages 0..S
     int POS = 0, TOKEN = 0;
     bool kv_ideal = false, early_go = false, posted_wb = false;
     std::string kv_dir, embed_bin;
@@ -348,6 +350,7 @@ int main(int argc, char** argv) {
         else if (k == "--token") TOKEN = atoi(argv[i + 1]);
         else if (k == "--kv-dir") kv_dir = argv[i + 1];
         else if (k == "--max-cycles") max_cycles = atol(argv[i + 1]);
+        else if (k == "--stop-after") stop_after = atol(argv[i + 1]);
         else if (k == "--embed-bin") embed_bin = argv[i + 1];
         else if (k == "--kv-ideal") kv_ideal = atoi(argv[i + 1]) != 0;
         else if (k == "--early-go") early_go = atoi(argv[i + 1]) != 0;
@@ -506,6 +509,7 @@ int main(int argc, char** argv) {
     long progress_every = getenv("RT_PROGRESS") ? atol(getenv("RT_PROGRESS")) : 4096;
     bool stage_done = false, next_stage = false, done_armed = true, draining = false;
     uint32_t final_cyc = 0;
+    size_t last_stage = stages.size() - 1;
     size_t cur = 0; long stage_start = 7, busy0[D] = {};
     uint32_t prev_stat[D][12] = {};
     auto tstart = std::chrono::steady_clock::now();
@@ -579,7 +583,7 @@ int main(int argc, char** argv) {
                         fclose(norm);
                     }
                 }
-                if (cur + 1 == stages.size()) { draining = true; final_cyc = cyc; }
+                if (cur + 1 == stages.size() || (stop_after >= 0 && long(cur) == stop_after)) { draining = true; final_cyc = cyc; last_stage = cur; }
                 else next_stage = true;
             }
             if (max_cycles>0 && cyc > max_cycles) { printf("timeout cyc=%u\n", cyc); return 3; }
@@ -588,7 +592,7 @@ int main(int argc, char** argv) {
                 for (int d = 0; d < D; d++) busy |= die[d]->kv_wb_busy;
                 if (!busy) { // actual ACK debt only: elapsed time cannot authorize readback
                     printf("WRITEBACK drained=%d after %u cycles past the last stage\n", int(!busy), cyc - final_cyc);
-                    for (size_t sx = 0; sx < stages.size(); sx++)
+                    for (size_t sx = 0; sx <= last_stage; sx++)
                         for (int d = 0; d < D; d++) {
                             Vdie& v = *die[d];
                             FILE* fp = nullptr;
@@ -614,7 +618,7 @@ int main(int argc, char** argv) {
                     struct rusage ru; getrusage(RUSAGE_SELF, &ru);
                     double sec = std::chrono::duration<double>(std::chrono::steady_clock::now() - tstart).count();
                     printf("QWEN_ROM_STREAM4_PLAIN_AR_FULLTOKEN DONE stages=%zu cycles=%u edges=%ld settle_max=%d wall_s=%.1f RSS_KiB=%ld threads=%d kv_ideal=%d early_go=%d posted_wb=%d\n",
-                           stages.size(), final_cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal), int(early_go), int(posted_wb));
+                           last_stage + 1, final_cyc, edges, max_settle, sec, ru.ru_maxrss, threads, int(kv_ideal), int(early_go), int(posted_wb));
                     fflush(stdout); // completion survives redirected/buffered logs
                     return busy ? 4 : 0;
                 }

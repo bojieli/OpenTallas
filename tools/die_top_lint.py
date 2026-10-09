@@ -453,6 +453,15 @@ def real_blocks_kv():
     return out
 
 
+GLUE_CASE = [None]      # s81-gen 2026-10-09: the glue RTL of THIS case (written by run_lint from the built die)
+
+
+def _glue_path():
+    """the case's own generated glue RTL when run_lint wrote one, else the committed r8 / r9 glue file (that file is
+    built from the default die options and lacks recipe masters: --host / layer1e station widths, relay face variants)"""
+    return GLUE_CASE[0] or S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/')
+
+
 def real_blocks_r8(die):
     """S81 r8 (S81-DIE): q element, cfg ROM, PHY, links by their RTL / bb ports (r8 binding); the cfg sequencer
     (hand RTL) and every generated glue master (results/.../r8/dsfd_glue.sv) by their own port lists."""
@@ -490,7 +499,7 @@ def real_blocks_r8(die):
                             params=prm, ports=pm['ports'], binding=rp[mst])
     for mst in sorted(used):
         if S.is_glue(mst) or mst == 'ot_s81_cfg7_seq':
-            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/')
+            f = S.CFG7_RTL if mst == 'ot_s81_cfg7_seq' else _glue_path()
             pm = parse_module(f, mst)
             out[mst] = dict(module=mst, file=f, kind='glue RTL (S81-DIE)', params={}, ports=pm['ports'],
                             binding={p: (_bus(p, w) if w > 1 or True else [p]) for p, (d, w) in pm['ports'].items()})
@@ -2222,6 +2231,12 @@ def hbm_wrapper_ledgers(masters, root=None, generate=None):
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
+    GLUE_CASE[0] = None
+    if R8_ACTIVE[0]:
+        out.mkdir(parents=True, exist_ok=True)
+        gp_ = (out / f'{die}{tag}_glue.sv').resolve()
+        gp_.write_text(S.glue_rtl(m))
+        GLUE_CASE[0] = str(gp_)
     real = real_blocks(die, m)
     CUR_M['_by'] = {it.name: it for it in m['insts']}
     CUR_M['_real'] = real
@@ -2235,7 +2250,7 @@ def run_lint(die, out, top_fix=False, tag=''):
     out.mkdir(parents=True, exist_ok=True)
     top = f'{die}{tag}_lint_top' + ('_fix' if top_fix else '')
     em = emit_verilog(die, m, real, pw, out, top)
-    extra = (S.GLUE_RTL.replace('/r8/', f'/{S.out_rev()}/'), S.CFG7_RTL) if R8_ACTIVE[0] else ()
+    extra = (_glue_path(), S.CFG7_RTL) if R8_ACTIVE[0] else ()
     files, unresolved = rtl_closure([v['module'] for v in real.values() if not v['file'].endswith('_bb.v')], extra)
     bb = sorted({rb['file'] for rb in real.values() if rb['file'].endswith('_bb.v')})
     if R8_ACTIVE[0]:
@@ -2291,7 +2306,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
-    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1',
+    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
                                                               'r21c', 'r22k'])

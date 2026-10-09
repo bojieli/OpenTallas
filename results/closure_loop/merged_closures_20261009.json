@@ -470,8 +470,8 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 42,
-   "merged": 42,
+   "closed": 44,
+   "merged": 44,
    "record_only": 8
   },
   "notes": [
@@ -1070,6 +1070,34 @@
     "record_merged_sha": "ba168633d338d7b67d72dd895cb559b63ed64e4c",
     "source_merged_sha": "e7371ba65c16cba69d670c0c87f5956aa0b5e029",
     "note": "merge 10b28cd17; hgi_coll_decode_b.env now the pin-anchor config (electrically clean decode_b closure; supersedes the 7c38 config kept earlier) (added by coordinator, second batch)"
+   },
+   {
+    "job": "qfd_su_kv624-p1a-58e324874-tc",
+    "closed": "2026-10-09T08:50:27-07:00",
+    "branch": "claude/sys-takeover-20261009",
+    "source_commit": "58e324874fc213a0a161c0fdb2bdbcd3cd05d7a0",
+    "record_commit": "8b9604476",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +66.76 / FF +0.76 ps DRC 0; SS sensitivity -263.93 ps",
+    "status": "merged",
+    "record_merged_sha": "f8d3a9de4c9c24199eb238fa33521119835e983b",
+    "source_merged_sha": "55ae4117407c5c450dc3ba72ba3d5604c7067a3e",
+    "note": "cherry-pick 58e324874 only (claude/sys-takeover-20261009 carries other unclosed opt-in work: gorder FAST, HC reader/mean, TU retry NOEPOCH, collvmpub PUBFIX, engram CRCMAT, s81 pc mux plain, emb hub outlines - not taken); PIPE=0 default; record adds views/qfd_su_kv624 (coordinator batch 3)"
+   },
+   {
+    "job": "qfd_hbm_ecc_provider_b-11dbd8935-tc",
+    "closed": "2026-10-09T08:45:53-07:00",
+    "branch": "claude/sys-takeover-ecc-20261009",
+    "source_commit": "11dbd893505c7a45df3a33fffa4594100bfb47fc",
+    "record_commit": "88f8248a5",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +26.39 / FF +4.72 ps DRC 0; SS sensitivity -175.60 ps",
+    "status": "merged",
+    "record_merged_sha": "0101b70c600c218efc985ba9925c8437573ab0d7",
+    "source_merged_sha": "8d9eff44abf566c39d2b2413a168233d6a8da9a5",
+    "note": "cherry-pick 11dbd8935 only (claude/sys-takeover-ecc-20261009); KVW=0 default. Record RELOCATED: its spec (cloned from qfd_emb_pcport-f42e102ca-tc) published over the live views/qfd_emb_pcport (116.64->150.12 um, new kw_v/kw_d pins) and over the f42e102ca evidence dir; merged to views/qfd_emb_pcport_kvw and results/rtl/emb_hbm_closure_20261008/qfd_hbm_ecc_provider_b-11dbd8935-tc instead; die adoption of KVW=1 not made here (coordinator batch 3)"
    }
   ]
  }

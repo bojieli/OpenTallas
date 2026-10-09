@@ -22,7 +22,7 @@ TOP=ot_dsrom_markov_head_driver
 args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv
  --source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv
  --source physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v
- --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 --macro-place-halo 3 3
+ --macro-view ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8 --macro-place-halo ${MHALO:-3} ${MHALO:-3}
  --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv
  --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_dsrom_bmul3.sv
  --param ENABLE=1 --param CACHE_PINREG=${CACHE_PINREG:-0} --param VALID_ROWS=32 --param PINREG=${PINREG:-1} --param CUT=511 --param SPLIT9=1 --param MUTANT_FOLD=0
