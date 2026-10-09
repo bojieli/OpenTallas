@@ -1,8 +1,8 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 module tb_hgi_idx_topk;
  parameter MUTANT=0;
  parameter EARLY_MUTANT=0;
- reg clk=0;always #0.4166665 clk=~clk;
+ reg clk=0;always #416.6665 clk=~clk;
  reg rst_n=0,cv=0,iv=0,ready=1,values_enable=1;
  reg [3:0] unit_id=9;reg [5:0] op=2;
  reg [24:0] param_k;reg [31:0] n,m,score;
@@ -41,7 +41,7 @@ module tb_hgi_idx_topk;
     @(negedge clk);iv=0;while(!ir)@(negedge clk);iv=1;score=scores[t];
    end
    @(negedge clk);iv=0;ready=0;
-   wait(ov);
+   wait(ov);@(negedge clk);
    if(ri==0)begin
     cv=1;op=63;n=0;m=0;param_k=0;
     repeat(3)begin @(negedge clk);if(cr||done)$fatal(1,"early_completion or commandcredit busy");end

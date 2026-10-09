@@ -11,5 +11,5 @@ if a.early_mutant:cmd+=['-Ptb_hgi_idx_topk.EARLY_MUTANT=1']
 q=subprocess.run(cmd+[str(s) for s in src],capture_output=True,text=True);(o/'compile.log').write_text(q.stdout+q.stderr)
 if q.returncode:print('HGI_TOPK BUILD_FAIL');sys.exit(2)
 q=subprocess.run(['vvp',str(o/'gate.vvp')],capture_output=True,text=True);(o/'run.log').write_text(q.stdout+q.stderr)
-print(q.stdout+q.stderr,end='');(o/'receipt.json').write_text(json.dumps(dict(compile_rc=0,run_rc=q.returncode,mutant=a.mutant))+'\n')
+print(q.stdout+q.stderr,end='');(o/'receipt.json').write_text(json.dumps(dict(compile_rc=0,run_rc=q.returncode,mutant=a.mutant,early_mutant=a.early_mutant))+'\n')
 sys.exit(q.returncode)
