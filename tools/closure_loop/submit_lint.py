@@ -64,6 +64,29 @@ ENV_KEYS = ("PIN_H", "PIN_V", "PIN_MIN_TRACKS", "OT_PIN_GROUP_MAX", "OT_PIN_BALA
 SYNTH_ENV_RE = re.compile(r"\b(OT_ABC_\w+|OT_SYNTH_\w+|OT_MULTI_VT|OT_KEEP_\w+)=('[^']*'|\"[^\"]*\"|[^\s;]+)")
 MASTER_RE = re.compile(r"(?:physical/qwen_die_masters/jobs/)?route_master\.sh\s+([A-Za-z0-9_.-]+)")
 CFG_DIR = "physical/qwen_die_masters/cfg"
+# drive-0212 2026-10-09: an IO-placer setting only acts when the job's SOURCE COMMIT's flow reads it.  OT_PIN_GROUP_MAX /
+# OT_PIN_BALANCE_H/V entered tools/run_abi3_physical.py at dde873a8e (2026-10-08 23:39) and route_master.sh never read
+# PIN_MIN_TRACKS before main; 12 of the 15 lint-at-submit pin_balance requeues ran on older sources, the env was
+# silently ignored and two re-failed at the IDENTICAL density (sys-08ef6a8a8-ls E/M4 20.8 @819, kv624-a732a1d76-ls
+# N/M5 20.8 @1).  Each key -> (file at the source commit, marker that file must contain for the key to take effect).
+FLOW_SUPPORT = {
+    "PIN_H": ("physical/qwen_die_masters/jobs/route_master.sh", "IO_PLACER_H"),
+    "PIN_V": ("physical/qwen_die_masters/jobs/route_master.sh", "IO_PLACER_V"),
+    "PIN_MIN_TRACKS": ("physical/qwen_die_masters/jobs/route_master.sh", "PIN_MIN_TRACKS"),
+    "OT_PIN_GROUP_MAX": ("tools/run_abi3_physical.py", "OT_PIN_GROUP_MAX"),
+    "OT_PIN_BALANCE_H": ("tools/run_abi3_physical.py", "OT_PIN_BALANCE_H"),
+    "OT_PIN_BALANCE_V": ("tools/run_abi3_physical.py", "OT_PIN_BALANCE_V"),
+}
+
+
+def flow_support(git, commit: str) -> dict:
+    """{env key: True when the source commit's flow reads it} (a missing file reads nothing)"""
+    cache, out = {}, {}
+    for k, (path, marker) in FLOW_SUPPORT.items():
+        if path not in cache:
+            cache[path] = git.show(commit, path) or ""
+        out[k] = marker in cache[path]
+    return out
 
 
 # ------------------------------------------------------------------------------------- constant expressions (SV)
@@ -413,17 +436,25 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
                 if best > grp:
                     grp, gwhy = best, f"group {r['regex']} {r['n']} pins" + (f" (chunks {group_max})" if group_max else "")
         if balance:
-            # run_abi3_physical OT_PIN_BALANCE: each region's pins uniformly over its span, layer alternating per chunk;
-            # regions sharing a face are taken to overlap (their densities add)
-            bal = 0.0
+            # run_abi3_physical OT_PIN_BALANCE: each region's pins uniformly over its span, layer alternating per chunk.
+            # drive-0212: the densities add only where regions OVERLAP along the edge; summing every region of a face
+            # refused qfd_hub_ps-dde873a8e-tc-bal32 at 26.3 b/um (six disjoint right:lo-hi ranges), measured 8.0, CLOSED.
+            # The estimate is the densest 100 um window over the piecewise-uniform pin line.
+            segs = []
             for r in regs:
                 if not r["n"]:
                     continue
-                span = (r["range_um"][1] - r["range_um"][0]) if r.get("range_um") else length[edge]
-                bal += r["n"] / (len(ls) * max(span, window))
-                if span / r["n"] < max(PITCH.get(lay, 0.048) for lay in ls):
-                    nofit.append(f"balanced {r['regex']} {r['n']} pins at {span / r['n']:.3f} um spacing < the layer pitch")
-            avg = max(avg, bal)
+                lo, hi = r["range_um"] if r.get("range_um") else (0.0, length[edge])
+                span = hi - lo
+                if span <= 0 or span / r["n"] < max(PITCH.get(lay, 0.048) for lay in ls):
+                    nofit.append(f"balanced {r['regex']} {r['n']} pins at {max(span, 0) / r['n']:.3f} um spacing "
+                                 f"< the layer pitch")
+                    continue
+                segs.append((lo, hi, r["n"] / span))
+            starts = {x for lo, hi, _ in segs for x in (lo, hi - window)}
+            peak = max((sum(rate * max(0.0, min(hi, a + window) - max(lo, a)) for lo, hi, rate in segs)
+                        for a in starts), default=0.0)
+            avg = max(avg, peak / (len(ls) * window))
         est = max(grp, avg)
         why = gwhy if grp >= avg else f"{total:.0f} pins over {length[edge]:.0f} um x {len(ls)} layer(s)"
         out[edge] = {"est": round(est, 2), "layers": ls, "why": why, "pins": round(total), "nofit": nofit}
@@ -501,6 +532,10 @@ def master_plan(spec: dict, git: Git) -> dict:
         rx = re.compile(r["regex"])
         r["n"] = sum(1 for b in bits if rx.search(b))
     matched = sum(1 for b in bits if any(re.search(r["regex"], b) for r in regs))
+    # a setting the source's flow does not read is ignored by the flow, so the estimate ignores it too
+    flow = flow_support(git, commit)
+    cfg = {k: v for k, v in cfg.items() if k not in flow or flow[k]}
+    env = {k: v for k, v in env.items() if k not in flow or flow[k]}
     # route_master sources the cfg AFTER the environment: a variable the cfg sets wins over the command's
     layers = {k: cfg.get(k) or env.get(k) or DEFAULT[k] for k in ("PIN_H", "PIN_V")}
     synth_env = sorted(f"{a}={b}" for a, b in SYNTH_ENV_RE.findall(cmd))
@@ -513,6 +548,7 @@ def master_plan(spec: dict, git: Git) -> dict:
             "tracks": float(cfg.get("PIN_MIN_TRACKS") or env.get("PIN_MIN_TRACKS") or 1),
             "group_max": int(env.get("OT_PIN_GROUP_MAX") or 0),
             "balance": bool(env.get("OT_PIN_BALANCE_H") and env.get("OT_PIN_BALANCE_V") and env.get("OT_PIN_GROUP_MAX")),
+            "flow": flow, "commit": commit,
             "synth_key": key, "core_um2": round((fw - 2 * CORE_INSET) * (fh - 2 * CORE_INSET), 1)}
 
 
@@ -523,6 +559,11 @@ def _choose_fix(plan, limit, window, res, force=False):
     cur_bal = plan["balance"]
     for fx in FIXES:
         env = fx["env"]
+        unread = [k for k in env if not plan.get("flow", {}).get(k, True)]
+        if unread:
+            why.append(f"{fx['name']}: the source {str(plan.get('commit'))[:9]} flow does not read "
+                       f"{','.join(unread)} (OT_PIN_* since dde873a8e; rebase the source)")
+            continue
         if fx["name"] == "pin_balance":
             if cur_bal:
                 why.append("pin_balance already set")

@@ -54,8 +54,15 @@ def spec(cmd_env="", name="t", **kw):
     return s
 
 
-def git_for(cfgtext, name="t"):
-    return FakeGit({f"physical/qwen_die_masters/cfg/{name}.env": cfgtext, "rtl/t.sv": RTL})
+FLOW_NEW = {"physical/qwen_die_masters/jobs/route_master.sh": "IO_PLACER_H IO_PLACER_V PIN_MIN_TRACKS",
+            "tools/run_abi3_physical.py": "OT_PIN_GROUP_MAX OT_PIN_BALANCE_H OT_PIN_BALANCE_V"}
+FLOW_PRE_DDE = {"physical/qwen_die_masters/jobs/route_master.sh": "IO_PLACER_H IO_PLACER_V",  # be5b56d78..08ef6a8a8
+                "tools/run_abi3_physical.py": "set_io_pin_constraint -group -order"}
+
+
+def git_for(cfgtext, name="t", flow=None):
+    return FakeGit({f"physical/qwen_die_masters/cfg/{name}.env": cfgtext, "rtl/t.sv": RTL,
+                    **(FLOW_NEW if flow is None else flow)})
 
 
 class Expr(unittest.TestCase):
@@ -102,6 +109,38 @@ class Density(unittest.TestCase):
         self.assertEqual(s2["submit_lint"]["applied"], "pin_balance")
         self.assertEqual(s2["submit_lint"]["env"]["OT_PIN_GROUP_MAX"], "32")
         self.assertNotIn("submit_lint", spec())
+
+    def test_fix_the_source_flow_does_not_read(self):
+        # drive-0212: sys-08ef6a8a8-ls / kv624-a732a1d76-ls ran pin_balance on a source predating dde873a8e and
+        # re-failed at the identical density.  A fix the source's flow does not read is never applied: REFUSE.
+        g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"), flow=FLOW_PRE_DDE)
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("pin_balance: the source abcdef1 flow does not read OT_PIN_GROUP_MAX", r["message"])
+        self.assertIn("pin_tracks2_spread: the source abcdef1 flow does not read PIN_MIN_TRACKS", r["message"])
+        # balance already in the command but unread by the flow: the estimate ignores it (as the flow does)
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' "
+        self.assertEqual(S.check(spec(cmd_env=env), g)["verdict"], "REFUSE")
+        self.assertEqual(S.check(spec(cmd_env=env), git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'")))
+                         ["verdict"], "PASS")
+        # a cfg PIN_MIN_TRACKS=2 the flow does not read gives no slot relief
+        g2 = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"),
+                     flow=FLOW_PRE_DDE)
+        self.assertEqual(S.check(spec(), g2)["verdict"], "REFUSE")
+
+    def test_balanced_disjoint_ranges_do_not_add(self):
+        # drive-0212: qfd_hub_ps-dde873a8e-tc-bal32 (six disjoint right:lo-hi ranges, balanced) was estimated at
+        # 26.3 b/um by summing every region of the face; measured 8.0, CLOSED.  Only overlapping ranges add.
+        env = "OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7' PIN_H='M4 M6' PIN_V='M5 M7' "
+        pins = ("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left:0-250' "
+                "--pin-region '^i_data\\[[0-9]*[13579]\\]$=left:260-510'")
+        r = S.check(spec(cmd_env=env), git_for(cfg(pins)))
+        self.assertEqual(r["verdict"], "PASS", r)
+        self.assertLess(r["est"]["W"], 6)                                   # 2048 pins / 250 um x 100 um / 2 layers ~ 4.1
+        over = ("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left:0-150' "
+                "--pin-region '^i_data\\[[0-9]*[13579]\\]$=left:0-150'")
+        r2 = S.check(spec(cmd_env=env), git_for(cfg(over)))                # same range: 4096 / 150 um / 2 ~ 13.7
+        self.assertEqual(r2["verdict"], "REFUSE", r2)
 
     def test_refused_when_no_fix_fits(self):
         # 2048 pins on a 60 um face: balanced spacing 0.029 um < pitch, two-track group needs 197 um

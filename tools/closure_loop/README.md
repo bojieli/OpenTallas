@@ -74,7 +74,10 @@ least T/(layers x max(L, 100 um))).  Fails as configured -> the first APPROVED a
 inline on the `bash ...route_master.sh` invocation and are recorded in `spec.submit_lint` (submitted spec kept in
 `spec_submitted`); no fix passes -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." saying why each fix does not.  Utilisation
 is estimated only from an earlier FLOORPLAN_MARGIN util measurement of the same synthesis input (STATE/submit_lint_util.json).
-`"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
+A setting counts only when the job's SOURCE COMMIT's flow reads it (drive-0212: OT_PIN_GROUP_MAX / OT_PIN_BALANCE_* exist in
+run_abi3_physical.py since dde873a8e, PIN_MIN_TRACKS in route_master.sh since main; on an older source the fix is not
+applied and the job is REFUSED "rebase the source").  Balanced regions add only where their ranges overlap (densest 100 um
+window).  `"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
 FLOORPLAN_MARGIN jobs without a live successor.
 
 ## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
