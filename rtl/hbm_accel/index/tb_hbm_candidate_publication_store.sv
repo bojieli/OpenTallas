@@ -1,5 +1,5 @@
 `timescale 1ps/1fs
-module tb_hbm_candidate_publication_store;
+module tb_hbm_candidate_publication_store #(parameter integer MUT_SLOT=0);
  reg clk=0;always #416.5 clk=~clk;
  reg por_n=0,start=0,owner_valid=1,retire=0,consumer_retained=0;
  reg[73:0] frame={1'b1,73'h2f123456789abcde};
@@ -7,7 +7,7 @@ module tb_hbm_candidate_publication_store;
  reg flit_v=0,empty_v=0,read_v=0,rsp_r=0;
  reg[544:0] flit=0;reg[6:0] empty_rank=0,read_rank=0;reg[16:0] read_ordinal=0;
  wire[73:0] rsp_frame;wire[6:0] rsp_rank;wire[16:0] rsp_ordinal;wire[33:0] rsp_tuple;wire rsp_last,rsp_empty,rsp_ce;
- ot_hbm_candidate_publication_store #(.ENABLE(1),.OWNER_W(74)) dut(
+ ot_hbm_candidate_publication_store #(.ENABLE(1),.OWNER_W(74),.MUT_SLOT(MUT_SLOT)) dut(
  .clk(clk),.por_n(por_n),.start(start),.start_frame(frame),.start_r(start_r),.owner_valid(owner_valid),.owner_frame(frame),
  .retire(retire),.consumer_retained(consumer_retained),.flit_v(flit_v),.flit_r(flit_r),.flit(flit),.flit_owner(frame),
  .expected_kind(1'b1),.expected_dst(8'd3),.empty_v(empty_v),.empty_r(empty_r),.empty_rank(empty_rank),.empty_frame(frame),

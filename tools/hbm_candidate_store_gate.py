@@ -27,6 +27,17 @@ def main():
    rec['cases'].append(dict(mode=mode,returncode=r.returncode,pass_marker='CANDIDATE_PASS'in log,max_rss_kib=int(rss[1])if rss else None))
   positive=(a.work/'mode0.log').read_text()
   if all(c['returncode']==0 and c['pass_marker']for c in rec['cases'])and'full_flits=8832 literal_reads=132480'in positive:rec['verdict']='PASS'
+ if result.returncode==0:
+  mutant=a.work/'mutant.vvp'
+  mcmd=cmd.copy();mcmd[mcmd.index(str(a.work/'gate.vvp'))]=str(mutant)
+  mcmd.insert(mcmd.index('-s'),'-Ptb_hbm_candidate_publication_store.MUT_SLOT=1')
+  with(a.work/'mutant_build.log').open('w')as f:mb=subprocess.run(mcmd,stdout=f,stderr=subprocess.STDOUT)
+  rec['mutant_build_returncode']=mb.returncode
+  if mb.returncode==0:
+   with(a.work/'mutant.log').open('w')as f:mr=subprocess.run(['vvp',str(mutant),'+mode=0'],stdout=f,stderr=subprocess.STDOUT)
+   log=(a.work/'mutant.log').read_text();rec['mutant']=dict(returncode=mr.returncode,rejected='provider mismatch'in log)
+   if mr.returncode==0 or not rec['mutant']['rejected']:rec['verdict']='FAIL'
+  else:rec['verdict']='FAIL'
  rec['inputs_unchanged']=hashes=={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest()for s in SOURCES}
  if not rec['inputs_unchanged']:rec['verdict']='FAIL'
  with(a.work/'record.json').open('x')as f:json.dump(rec,f,indent=2);f.write('\n')

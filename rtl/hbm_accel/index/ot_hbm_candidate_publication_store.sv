@@ -3,7 +3,7 @@
 // Literal15-slot storage; rank extent advances ONLY positive macro completion.
 // Rank publication requires its actual final quarter packet, not elapsed time.
 module ot_hbm_candidate_publication_store #(
- parameter integer ENABLE=0,OWNER_W=73
+ parameter integer ENABLE=0,OWNER_W=73,MUT_SLOT=0
 )(
  input wire clk,por_n,start,input wire[OWNER_W-1:0] start_frame,
  output wire start_r,input wire owner_valid,input wire[OWNER_W-1:0] owner_frame,
@@ -108,7 +108,7 @@ module ot_hbm_candidate_publication_store #(
  RREQ:if(br[bank_q])begin st<=RWAIT;end
  RWAIT:if(bv[bank_q])begin
  if(bp[bank_q]||bw[bank_q])failed<=1;
- else begin tuple_q<=bd[bank_q][34*slot_q+:34];ce_q<=bc[bank_q];st<=RESPONSE;end
+ else begin tuple_q<=bd[bank_q][34*((int'(slot_q)+MUT_SLOT)%15)+:34];ce_q<=bc[bank_q];st<=RESPONSE;end
  end
  RESPONSE:if(rsp_r)begin st<=READY;end
  default:failed<=1;
