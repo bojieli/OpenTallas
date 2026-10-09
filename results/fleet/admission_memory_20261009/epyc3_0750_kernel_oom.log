@@ -1,0 +1,1112 @@
+Oct 09 07:49:31 known-grouse kernel: nvme 0000:a3:00.0: Using 64-bit DMA addresses
+Oct 09 07:49:49 known-grouse kernel: nvme2n1: I/O Cmd(0x2) @ LBA 5274943616, 128 blocks, I/O Error (sct 0x0 / sc 0xf) MORE 
+Oct 09 07:49:49 known-grouse kernel: I/O error, dev nvme2n1, sector 5274943616 op 0x0:(READ) flags 0x80700 phys_seg 5 prio class 2
+Oct 09 07:50:00 known-grouse kernel: openroad invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+Oct 09 07:50:00 known-grouse kernel: CPU: 7 UID: 0 PID: 1681763 Comm: openroad Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+Oct 09 07:50:00 known-grouse kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 09 07:50:00 known-grouse kernel: Call Trace:
+Oct 09 07:50:00 known-grouse kernel:  <TASK>
+Oct 09 07:50:00 known-grouse kernel:  show_stack+0x49/0x60
+Oct 09 07:50:00 known-grouse kernel:  dump_stack_lvl+0x5f/0x90
+Oct 09 07:50:00 known-grouse kernel:  dump_stack+0x10/0x18
+Oct 09 07:50:00 known-grouse kernel:  dump_header+0x48/0x1c7
+Oct 09 07:50:00 known-grouse kernel:  oom_kill_process.cold+0x8/0xac
+Oct 09 07:50:00 known-grouse kernel:  out_of_memory+0xff/0x2b0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_pages_may_oom+0x10a/0x1d0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_pages_slowpath.constprop.0+0x3e0/0x9b0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_frozen_pages_noprof+0x327/0x360
+Oct 09 07:50:00 known-grouse kernel:  alloc_pages_mpol+0x88/0x1b0
+Oct 09 07:50:00 known-grouse kernel:  folio_alloc_noprof+0x62/0x100
+Oct 09 07:50:00 known-grouse kernel:  filemap_alloc_folio_noprof+0x61/0x80
+Oct 09 07:50:00 known-grouse kernel:  __filemap_get_folio_mpol+0x201/0x340
+Oct 09 07:50:00 known-grouse kernel:  filemap_fault+0x112/0xce0
+Oct 09 07:50:00 known-grouse kernel:  ? filemap_map_pages+0x2f8/0x440
+Oct 09 07:50:00 known-grouse kernel:  __do_fault+0x3c/0x1e0
+Oct 09 07:50:00 known-grouse kernel:  do_read_fault+0x12f/0x280
+Oct 09 07:50:00 known-grouse kernel:  ? reweight_entity+0x2bd/0x340
+Oct 09 07:50:00 known-grouse kernel:  do_fault+0x16c/0x2a0
+Oct 09 07:50:00 known-grouse kernel:  ? pte_offset_map_rw_nolock+0x20/0xa0
+Oct 09 07:50:00 known-grouse kernel:  handle_pte_fault+0x141/0x1f0
+Oct 09 07:50:00 known-grouse kernel:  __handle_mm_fault+0x493/0x720
+Oct 09 07:50:00 known-grouse kernel:  handle_mm_fault+0xee/0x2e0
+Oct 09 07:50:00 known-grouse kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 09 07:50:00 known-grouse kernel:  exc_page_fault+0x83/0x1e0
+Oct 09 07:50:00 known-grouse kernel:  asm_exc_page_fault+0x27/0x30
+Oct 09 07:50:00 known-grouse kernel: RIP: 0033:0x61f5d367f6c0
+Oct 09 07:50:00 known-grouse kernel: Code: Unable to access opcode bytes at 0x61f5d367f696.
+Oct 09 07:50:00 known-grouse kernel: RSP: 002b:000070266ccc3fe8 EFLAGS: 00010287
+Oct 09 07:50:00 known-grouse kernel: RAX: 000070266ccc4058 RBX: 000070260d2654a0 RCX: 000070266ccc4058
+Oct 09 07:50:00 known-grouse kernel: RDX: 000070266ccc40a0 RSI: 000070260d2654a0 RDI: 000070266ccc4060
+Oct 09 07:50:00 known-grouse kernel: RBP: 000070266ccc4190 R08: 000000000000f960 R09: 000000000000f960
+Oct 09 07:50:00 known-grouse kernel: R10: 000000000002ccf4 R11: 000000000002ccf4 R12: 000070266ccc40a0
+Oct 09 07:50:00 known-grouse kernel: R13: 000070266ccc4060 R14: 000070260d265c50 R15: 000070266ccc4058
+Oct 09 07:50:00 known-grouse kernel:  </TASK>
+Oct 09 07:50:00 known-grouse kernel: Mem-Info:
+Oct 09 07:50:00 known-grouse kernel: active_anon:132818545 inactive_anon:159026999 isolated_anon:0
+                                      active_file:0 inactive_file:8147 isolated_file:0
+                                      unevictable:3020 dirty:0 writeback:0
+                                      slab_reclaimable:1482219 slab_unreclaimable:702133
+                                      mapped:2472 shmem:2261428 pagetables:595725
+                                      sec_pagetables:11701 bounce:0
+                                      kernel_misc_reclaimable:0
+                                      free:670283 free_pcp:3 free_cma:57015
+Oct 09 07:50:00 known-grouse kernel: Node 0 active_anon:531274180kB inactive_anon:636107996kB active_file:0kB inactive_file:32588kB unevictable:12080kB isolated(anon):0kB isolated(file):0kB mapped:9888kB dirty:0kB writeback:0kB shmem:9045712kB shmem_thp:0kB shmem_pmdmapped:0kB anon_thp:0kB kernel_stack:90704kB pagetables:2382900kB sec_pagetables:46804kB all_unreclaimable? yes Balloon:0kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA free:11264kB boost:0kB min:0kB low:12kB high:24kB reserved_highatomic:0KB free_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB zspages:0kB present:15996kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 2372 1160242 1160242 1160242
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA32 free:2423460kB boost:0kB min:256kB low:2408kB high:4560kB reserved_highatomic:0KB free_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB zspages:0kB present:2495900kB managed:2429604kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:229376kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 0 1157869 1157869 1157869
+Oct 09 07:50:00 known-grouse kernel: Node 0 Normal free:246408kB boost:147456kB min:280508kB low:1389356kB high:2498204kB reserved_highatomic:0KB free_highatomic:0KB active_anon:531272208kB inactive_anon:636109968kB active_file:0kB inactive_file:32588kB unevictable:12080kB writepending:0kB zspages:0kB present:1205024448kB managed:1185658416kB mlocked:9008kB bounce:0kB free_pcp:16kB local_pcp:0kB free_cma:0kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 0 0 0 0
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 1*1024kB (U) 1*2048kB (M) 2*4096kB (M) = 11264kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA32: 5*4kB (UM) 4*8kB (M) 5*16kB (M) 5*32kB (M) 8*64kB (M) 5*128kB (M) 3*256kB (M) 5*512kB (M) 6*1024kB (M) 6*2048kB (UM) 586*4096kB (MC) = 2423460kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 Normal: 864*4kB (UMEC) 340*8kB (UME) 244*16kB (UME) 141*32kB (UME) 1931*64kB (UM) 691*128kB (UME) 44*256kB (UE) 1*512kB (U) 0*1024kB 0*2048kB 0*4096kB = 238400kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+Oct 09 07:50:00 known-grouse kernel: 2271151 total pagecache pages
+Oct 09 07:50:00 known-grouse kernel: 3035 pages in swap cache
+Oct 09 07:50:00 known-grouse kernel: Free swap  = 20kB
+Oct 09 07:50:00 known-grouse kernel: Total swap = 8388604kB
+Oct 09 07:50:00 known-grouse kernel: 301884086 pages RAM
+Oct 09 07:50:00 known-grouse kernel: 0 pages HighMem/MovableOnly
+Oct 09 07:50:00 known-grouse kernel: 4858241 pages reserved
+Oct 09 07:50:00 known-grouse kernel: 0 pages cma reserved
+Oct 09 07:50:00 known-grouse kernel: 0 pages hwpoisoned
+Oct 09 07:50:00 known-grouse kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 09 07:50:00 known-grouse kernel: Tasks state (memory values in pages):
+Oct 09 07:50:00 known-grouse kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 09 07:50:00 known-grouse kernel: [   2061]     0  2061    69864     2255      518     1737         0    90112        0         -1000 multipathd
+Oct 09 07:50:00 known-grouse kernel: [   2413]     0  2413      974      622       74      548         0    53248       17             0 mdadm
+Oct 09 07:50:00 known-grouse kernel: [   3018]     0  3018     1867      695       61      634         0    57344        0             0 cron
+Oct 09 07:50:00 known-grouse kernel: [   3019]   995  3019     2415     1222      354      868         0    57344      100          -900 dbus-daemon
+Oct 09 07:50:00 known-grouse kernel: [   3028]     0  3028    11854     3667     2795      872         0   131072     1126             0 networkd-dispat
+Oct 09 07:50:00 known-grouse kernel: [   3030]   983  3030    77080     1600      625      975         0   110592       21             0 polkitd
+Oct 09 07:50:00 known-grouse kernel: [   3037]     0  3037     5205     1352      622      730         0    77824      334             0 systemd-logind
+Oct 09 07:50:00 known-grouse kernel: [   3079]     0  3079     2122      673       46      627         0    57344        0             0 agetty
+Oct 09 07:50:00 known-grouse kernel: [   3096]     0  3096    31616     3482     2588      894         0   155648     1066             0 unattended-upgr
+Oct 09 07:50:00 known-grouse kernel: [   3142]   100  3142    55137     1278      451      827         0    86016       30             0 rsyslogd
+Oct 09 07:50:00 known-grouse kernel: [   3153]     0  3153    79468     1222      370      852         0   122880      194             0 ModemManager
+Oct 09 07:50:00 known-grouse kernel: [   3255]     0  3255      722      489       30      459         0    45056        0             0 chronyd-starter
+Oct 09 07:50:00 known-grouse kernel: [   3279]   988  3279     5106      885      194      691         0    73728        1             0 chronyd
+Oct 09 07:50:00 known-grouse kernel: [   3281]   988  3281     3024      528      158      370         0    69632        3             0 chronyd
+Oct 09 07:50:00 known-grouse kernel: [   5660]     0  5660     2570     1032      224      808         0    53248       56             0 smartd
+Oct 09 07:50:00 known-grouse kernel: [   8377]     0  8377  2020516    15434    14954      475         5  1257472     1231          -999 containerd
+Oct 09 07:50:00 known-grouse kernel: [   9323]     0  9323  3042696    21504    20790      714         0  1900544     1984          -500 dockerd
+Oct 09 07:50:00 known-grouse kernel: [  44166]  1000 44166     6355     1858     1103      755         0    94208      258           100 systemd
+Oct 09 07:50:00 known-grouse kernel: [  44168]  1000 44168     5754      474      234      240         0    86016      269           100 (sd-pam)
+Oct 09 07:50:00 known-grouse kernel: [ 379482]     0 379482   136042     1607      639      968         0   163840      180             0 udisksd
+Oct 09 07:50:00 known-grouse kernel: [ 379483]     0 379483     2686      855      301      554         0    61440        0         -1000 sshd
+Oct 09 07:50:00 known-grouse kernel: [ 379492]     0 379492    49506     1008      301      705         2   421888     1104          -250 systemd-journal
+Oct 09 07:50:00 known-grouse kernel: [ 379493]   989 379493     5711     1136      458      678         0    90112      238             0 systemd-resolve
+Oct 09 07:50:00 known-grouse kernel: [ 379506]     0 379506    11367     2958     2163      795         0   114688      354         -1000 systemd-udevd
+Oct 09 07:50:00 known-grouse kernel: [ 379515]   998 379515     6450     1453      561      892         0    94208       78             0 systemd-network
+Oct 09 07:50:00 known-grouse kernel: [ 463179]  1000 463179     1986      538       47      491         0    61440       21             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3559728]  1000 3559728     1986      535       44      491         0    57344       28             0 memguard.sh
+Oct 09 07:50:00 known-grouse kernel: [2671042]  1000 2671042     1986      501       11      490         0    57344       56             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2674045]  1000 2674045    11972     8785     8159      626         0   139264      405             0 vvp
+Oct 09 07:50:00 known-grouse kernel: [2674046]  1000 2674046     4450      734       35      699         0    77824      305             0 tail
+Oct 09 07:50:00 known-grouse kernel: [ 562981]  1000 562981     1986      522       31      491         0    53248       36             0 queue_r22.sh
+Oct 09 07:50:00 known-grouse kernel: [ 583904]  1000 583904     1986      561       70      491         0    61440        0             0 dietop_run.sh
+Oct 09 07:50:00 known-grouse kernel: [1862989]     0 1862989     4567     1251      480      771         0    77824        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1863169]  1000 1863169     6254     2515     2073      442         0    90112       88             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [2019994]     0 2019994   124986     3012     2099      913         0   274432        0             0 fwupd
+Oct 09 07:50:00 known-grouse kernel: [3503103]  1000 3503103     1986      534       43      491         0    53248       26             0 mk_regions_r3.s
+Oct 09 07:50:00 known-grouse kernel: [3255181]  1000 3255181     1986      539       48      491         0    61440       20             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255206]  1000 3255206     1986      540       49      491         0    49152       26             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255458]  1000 3255458     1986      546       55      491         0    57344       19             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255468]  1000 3255468   923954     3315     2840      475         0   487424        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3255558]     0 3255558   308468      845      843        2         0   114688       84          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3255631]     0 3255631     1093        7        5        2         0    53248       67             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255772]     0 3255772      899       20       18        2         0    53248      171             0 make
+Oct 09 07:50:00 known-grouse kernel: [3398206]     0 3398206    69260     4463     3483      980         0   167936     1408             0 tuned
+Oct 09 07:50:00 known-grouse kernel: [3607003]  1000 3607003     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607008]  1000 3607008     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607029]  1000 3607029     1986      564       73      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607031]  1000 3607031   979317     3400     2925      475         0   512000        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3607054]     0 3607054   308468      858      856        2         0   110592       64          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3607079]     0 3607079     1093        7        5        2         0    53248       66             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607128]     0 3607128      903       12       10        2         0    45056      176             0 make
+Oct 09 07:50:00 known-grouse kernel: [3614963]  1000 3614963     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614968]  1000 3614968     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614976]  1000 3614976     1986      564       73      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614978]  1000 3614978   960820     3355     2880      475         0   499712        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3614995]     0 3614995   308532      864      862        2         0   114688       80          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3615020]     0 3615020     1093        7        5        2         0    45056       67             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3615075]     0 3615075      903       10        8        2         0    49152      177             0 make
+Oct 09 07:50:00 known-grouse kernel: [4059045]     0 4059045      902       17       15        2         0    53248      161             0 make
+Oct 09 07:50:00 known-grouse kernel: [4059251]     0 4059251     1137       36       34        2         0    49152       88             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4059275]     0 4059275     1170       37       37        0         0    49152       87             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4059380]     0 4059380     4247      223      217        6         0    81920     1138             0 python3
+Oct 09 07:50:00 known-grouse kernel: [4059385]     0 4059385  2149236  1608710  1608469      241         0 14041088    50483             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3284190]     0 3284190     4568     1284      475      809         0    81920        3             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [3284395]  1000 3284395     4709      955      545      410         0    81920       86             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [3982361]     0 3982361      902       25       23        2         0    53248      152             0 make
+Oct 09 07:50:00 known-grouse kernel: [3982559]     0 3982559     1137       32       30        2         0    53248       91             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3982565]     0 3982565     1169       28       28        0         0    53248       95             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3982632]     0 3982632     4247      216      208        8         0    77824     1147             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3982649]     0 3982649  1936797  1348965  1348816      149         0 11964416    62486             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4014979]     0 4014979      904       19       17        2         0    49152      161             0 make
+Oct 09 07:50:00 known-grouse kernel: [4015522]     0 4015522     1137       35       33        2         0    49152       88             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4015536]     0 4015536     1169       28       28        0         0    49152       96             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4015648]     0 4015648     4247      206      201        5         0    73728     1155             0 python3
+Oct 09 07:50:00 known-grouse kernel: [4015732]     0 4015732  1936697  1309533  1309389      144         0 11968512   102677             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1085189]  1000 1085189     1986      512       22      490         0    57344       50             0 start_region.sh
+Oct 09 07:50:00 known-grouse kernel: [1085190]  1000 1085190     1986      535       44      491         0    57344       28             0 start_region.sh
+Oct 09 07:50:00 known-grouse kernel: [3573152]  1000 3573152     1986      327       72      255         0    57344        0             0 dietop_run.sh
+Oct 09 07:50:00 known-grouse kernel: [3573155]  1000 3573155   997750     3370     2895      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3573179]     0 3573179   308468      986      984        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3573230]     0 3573230     1093        7        5        2         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3573536]     0 3573536      699        3        1        2         0    45056       21             0 time
+Oct 09 07:50:00 known-grouse kernel: [3573537]     0 3573537 34491871 32942803 32942615      188         0 273821696  1142901             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3648604]  1000 3648604     1986      511       20      491         0    53248       49             0 run_case.sh
+Oct 09 07:50:00 known-grouse kernel: [3648609]  1000 3648609   923890     2869     2394      475         0   483328      375             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3648628]     0 3648628   308468      936      934        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3648652]     0 3648652     1093       15        7        8         0    49152       66             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3648713]     0 3648713      699        9        2        7         0    49152       21             0 time
+Oct 09 07:50:00 known-grouse kernel: [3648717]     0 3648717 10776873  9880262  9879985      277         0 84185088   494948             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4074937]  1000 4074937     1986      560       69      491         0    57344        0             0 run_case.sh
+Oct 09 07:50:00 known-grouse kernel: [4074960]  1000 4074960   997814     3372     2897      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [4075035]     0 4075035   308468      921      919        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [4075119]     0 4075119     1093       10        2        8         0    45056       71             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4075348]     0 4075348      699        8        1        7         0    49152       23             0 time
+Oct 09 07:50:00 known-grouse kernel: [4075349]     0 4075349 12275269 11508944 11508665      279         0 94560256   147845             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2509549]  1000 2509549     2139      972       97      875         0    57344        0           200 dbus-daemon
+Oct 09 07:50:00 known-grouse kernel: [4026633]  1000 4026633     1986      559       68      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026671]  1000 4026671     1986      564       74      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026795]  1000 4026795     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026806]  1000 4026806    20152    15187    14540      647         0   200704        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 711499]  1000 711499     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711505]  1000 711505     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711521]  1000 711521     1986      562       71      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711523]  1000 711523    20151    15202    14541      661         0   204800        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1207351]  1000 1207351  1034744     3381     2906      475         0   544768        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1207371]     0 1207371   308468      932      930        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1207394]     0 1207394     1093       16        8        8         0    49152       65             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1207613]     0 1207613      892      139      131        8         0    49152       47             0 make
+Oct 09 07:50:00 known-grouse kernel: [1319413]  1000 1319413  1034808     3463     2988      475         0   548864        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1319430]     0 1319430   308468      911      909        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1319453]     0 1319453     1093       14        6        8         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1319733]     0 1319733      893      144      136        8         0    49152       43             0 make
+Oct 09 07:50:00 known-grouse kernel: [1324209]  1000 1324209     1986      561       70      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324214]  1000 1324214     1986      565       74      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324217]  1000 1324217     1986      563       72      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324219]  1000 1324219    20170    15210    14561      649         0   200704        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2452017]  1000 2452017   979253     3412     2937      475         0   516096        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2452038]     0 2452038   308468      938      936        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2452062]     0 2452062     1093       14        6        8         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2452161]     0 2452161      893      143      135        8         0    53248       48             0 make
+Oct 09 07:50:00 known-grouse kernel: [1773747]     0 1773747      899       53       45        8         0    53248      127             0 make
+Oct 09 07:50:00 known-grouse kernel: [1774013]     0 1774013     1136       44       36        8         0    57344       83             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1774023]     0 1774023     1136       58       52        6         0    53248       70             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1774158]     0 1774158     4245      217      207       10         0    77824     1146             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1774177]     0 1774177  2691198  2502161  2501832      329         0 20701184     6666             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2293671]     0 2293671      900       45       37        8         0    49152      135             0 make
+Oct 09 07:50:00 known-grouse kernel: [2293690]     0 2293690     1136       81       73        8         0    49152       47             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2293692]     0 2293692     1136       95       89        6         0    49152       33             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2293711]     0 2293711     4245      250      240       10         0    73728     1114             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2293712]     0 2293712  2679386  2492174  2491781      393         0 20590592     5632             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2927362]     0 2927362      901       38       30        8         0    45056      142             0 make
+Oct 09 07:50:00 known-grouse kernel: [2927378]     0 2927378     1136       38       30        8         0    49152       90             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2927380]     0 2927380     1136       53       47        6         0    49152       76             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2927399]     0 2927399     4245      993      981       12         0    81920      372             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2927400]     0 2927400  2099422  1903261  1902906      355         0 15839232        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4049489]  1000 4049489     1986      566       75      491         0    57344        0             0 dietop_region.s
+Oct 09 07:50:00 known-grouse kernel: [4049499]  1000 4049499   997878     3389     2914      475         0   528384        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [4049518]     0 4049518   308468      907      905        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [4049542]     0 4049542     1093       80       72        8         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4049678]     0 4049678      699       31       24        7         0    45056        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [4049691]     0 4049691 11383289 11022793 11022579      214         0 88977408        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4102889]  1000 4102889     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4102894]  1000 4102894     1986      565       74      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4102898]  1000 4102898     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 833857]  1000 833857  1034808     3434     2959      475         0   552960        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 833874]     0 833874   308468      923      921        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 833898]     0 833898  5022579  4694257  4694087      170         0 38264832     8895             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 837654]  1000 837654     1986      559       68      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 837660]  1000 837660     1986      565       74      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 837674]  1000 837674     2019      602      111      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838536]  1000 838536     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838541]  1000 838541     1986      566       75      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838546]  1000 838546     2019      603      112      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842617]  1000 842617     1986      559       69      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842622]  1000 842622     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842626]  1000 842626     2019      603      112      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 858291]  1000 858291  1016119     3402     2928      474         0   540672        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 858311]     0 858311   308468      912      910        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 858336]     0 858336 11838890 11555480 11555250      230         0 93290496        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 859720]  1000 859720  1071546     3375     2900      475         0   561152        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 859742]     0 859742   308468      939      937        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 859767]     0 859767 14124912 13854755 13854495      260         0 111742976        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 868591]  1000 868591   942387     3318     2843      475         0   499712        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 868607]     0 868607   308404      956      954        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 868633]     0 868633 14289839 14048187 14048072      115         0 113238016        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 874423]  1000 874423     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 874428]  1000 874428     1986      565       75      490         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 874432]  1000 874432     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876272]  1000 876272     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876277]  1000 876277     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876281]  1000 876281     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 881592]  1000 881592  1034808     3419     2944      475         0   552960        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 881615]     0 881615   308404      945      943        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 881639]     0 881639  9158592  8916789  8916545      244         0 72126464        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 882741]  1000 882741   997942     3392     2917      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 882761]     0 882761   308404      941      939        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 882911]     0 882911  5031102  4761380  4761220      160         0 38723584        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 981566]  1000 981566     1986      282       66      216         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 981567]  1000 981567     1986      564       73      491         0    61440        0             0 chain.sh
+Oct 09 07:50:00 known-grouse kernel: [1004640]  1000 1004640     1986      560       70      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004645]  1000 1004645     1986      571       80      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004664]  1000 1004664     2148      715      225      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004675]  1000 1004675    15723    10701    10046      655         0   163840        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1039268]  1000 1039268  1016375     3371     2896      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1039287]     0 1039287   308468      965      963        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1039310]     0 1039310     1093       81       74        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1039393]     0 1039393      893      187      180        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1042774]  1000 1042774     1986      557       68      489         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057360]  1000 1057360     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057367]  1000 1057367     2019      575       84      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057398]  1000 1057398     1986      564       73      491         0    61440        0             0 route_sub.sh
+Oct 09 07:50:00 known-grouse kernel: [1057401]  1000 1057401     2148      713      222      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057447]  1000 1057447    11083     6056     5383      673         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1062814]  1000 1062814   942515     3421     2946      475         0   516096        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1062831]     0 1062831   308468      971      969        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1062878]     0 1062878     1093       80       73        7         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1062918]     0 1062918      930      204      197        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2330901]     0 2330901      894      190      183        7         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2330917]     0 2330917     1172      140      133        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2330919]     0 2330919     1172      141      136        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2330935]     0 2330935     4253     1380     1369       11         0    73728        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2330937]     0 2330937  2059708  1611304  1610996      308         0 13496320        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2524265]  1000 2524265     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524270]  1000 2524270     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524330]  1000 2524330     2019      576       85      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524337]  1000 2524337    11192     6153     5494      659         0   131072        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2524919]  1000 2524919   979509     3368     2893      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2524937]     0 2524937   308468      904      902        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2524961]     0 2524961     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2525170]     0 2525170      913      192      185        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2525957]     0 2525957      902      182      175        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2526005]     0 2526005     1136      125      118        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2526011]     0 2526011     1136      126      121        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2526069]     0 2526069     4244     1359     1352        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2526070]     0 2526070  6971245  6796137  6795963      174         0 55091200        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2532085]     0 2532085      905      184      177        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2532101]     0 2532101     1137      128      121        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2532103]     0 2532103     1170      128      123        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2532122]     0 2532122     4247     1360     1353        7         0    69632        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2532123]     0 2532123  3075812  2438252  2438130      122         0 20213760        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2571647]  1000 2571647     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571652]  1000 2571652     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571659]  1000 2571659     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571663]  1000 2571663    19596    14637    13983      654         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2642105]  1000 2642105     1986      282       66      216         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2642106]  1000 2642106    70586    64711    64031      680         0   618496        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2647075]  1000 2647075  1053193     3375     2900      475         0   561152        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2647092]     0 2647092   308404      896      894        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2647117]     0 2647117     1093       81       74        7         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2647357]     0 2647357      897      198      191        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1520810]  1000 1520810     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520815]  1000 1520815     1986      571       80      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520835]  1000 1520835     2019      574       83      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520837]  1000 1520837    34985    30011    29364      647         0   315392        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1614238]  1000 1614238  1071610     3415     2940      475         0   573440        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1614262]     0 1614262   308404      867      865        2         0   106496        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1614284]     0 1614284     1093       80       73        7         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1614565]     0 1614565      895      189      182        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2102855]  1000 2102855     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2102860]  1000 2102860     1986      563       72      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2102864]  1000 2102864     2019      601      110      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2643961]  1000 2643961     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2643966]  1000 2643966     1986      569       79      490         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2648075]  1000 2648075     2019      586       95      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2648081]  1000 2648081    10519     5491     4842      649         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2649974]  1000 2649974     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2649988]  1000 2649988     1986      568       77      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2650009]  1000 2650009     2019      585       94      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2650037]  1000 2650037    10518     5484     4837      647         0   131072        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3637287]  1000 3637287   961012     3371     2896      475         0   512000        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3637517]     0 3637517   308468      867      865        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3637742]     0 3637742  1779859  1662600  1662280      320         0 13807616        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3679364]  1000 3679364     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679370]  1000 3679370     1986      566       75      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679401]  1000 3679401     2019      585       94      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679407]  1000 3679407    10512     5349     4691      658         0   118784        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3969848]  1000 3969848     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3969863]  1000 3969863     2019      579       88      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3973753]  1000 3973753     1986      566       75      491         0    61440        0             0 route_sub.sh
+Oct 09 07:50:00 known-grouse kernel: [3973756]  1000 3973756     2148      715      224      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3973768]  1000 3973768    11511     6467     5812      655         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 312117]  1000 312117   997687     3390     2915      475         0   528384        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 313610]     0 313610   308468      889      887        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 316080]     0 316080     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 320502]     0 320502      897      197      190        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 901322]  1000 901322     1986      284       68      216         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 901325]  1000 901325     1986      567       76      491         0    57344        0             0 mk_chain5.sh
+Oct 09 07:50:00 known-grouse kernel: [ 911746]     0 911746      901      181      174        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 911762]     0 911762     1136      124      117        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 911764]     0 911764     1136      126      121        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 911783]     0 911783     4242     1389     1381        8         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 911784]     0 911784  3021467  2827932  2827639      293         0 23277568        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2001576]  1000 2001576     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001581]  1000 2001581     1986      566       76      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001599]  1000 2001599     1986      570       79      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001604]  1000 2001604    27292    22297    21671      626         0   253952        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2008292]  1000 2008292   942643     3303     2828      475         0   495616        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2008311]     0 2008311   308468      869      867        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2008334]     0 2008334     1093       80       73        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2008370]     0 2008370      909      202      195        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2011722]  1000 2011722  1016375     3374     2899      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2011742]     0 2011742   308404      874      872        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2011765]     0 2011765     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2011803]     0 2011803      909      201      194        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021075]  1000 2021075     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021085]  1000 2021085     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021124]  1000 2021124     2019      584       93      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021130]  1000 2021130    10518     5308     4650      658         0   122880        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2021680]  1000 2021680   887088     3290     2815      475         0   466944        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2021704]     0 2021704   308484      899      897        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2021726]     0 2021726     1093       80       73        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021769]     0 2021769      894      187      180        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021810]     0 2021810      909      189      182        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021827]     0 2021827     1170      132      125        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021829]     0 2021829     1170      133      128        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021850]     0 2021850     4249     1368     1361        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2021851]     0 2021851  2130557  1901949  1901677      272         0 15822848        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2046951]  1000 2046951     1986      561       70      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046956]  1000 2046956     2019      571       80      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046974]  1000 2046974     2148      716      225      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046985]  1000 2046985    10502     5413     4772      641         0   118784        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2067229]  1000 2067229   905585     3261     2787      474         0   483328        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2067247]     0 2067247   308340      869      867        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2067272]     0 2067272     1093       79       72        7         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2067509]     0 2067509      904      192      185        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2073835]     0 2073835      911      190      183        7         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2073851]     0 2073851     1173      145      138        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2073853]     0 2073853     1173      145      140        5         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2073872]     0 2073872     4255     1385     1378        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2073873]     0 2073873  1053362   826902   826665      237         0  7151616        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2088535]  1000 2088535   960820     3267     2792      475         0   507904        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2088553]     0 2088553   308404      857      855        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2088576]     0 2088576     1093       80       73        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2088780]     0 2088780      908      199      192        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2106155]  1000 2106155     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106160]  1000 2106160     1986      566       75      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106179]  1000 2106179     1986      572       81      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106184]  1000 2106184    21581    16617    15958      659         0   208896        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2118337]     0 2118337      907      186      179        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2118355]     0 2118355     1137      128      121        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2118357]     0 2118357     1170      129      124        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2118372]     0 2118372     4247     1366     1359        7         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2118373]     0 2118373  1888680  1446016  1445892      124         0 12193792        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2207128]  1000 2207128     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207138]  1000 2207138     1986      569       78      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207172]  1000 2207172     2019      584       93      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207178]  1000 2207178    32292    27289    26630      659         0   290816        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2207535]  1000 2207535  6079798  2862397  2861697      700         0 23908352        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [2212142]  1000 2212142     1986      560       70      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212147]  1000 2212147     1986      570       79      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212172]  1000 2212172     2019      584       93      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212178]  1000 2212178    32419    27419    26761      658         0   299008        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2212223]  1000 2212223  6081097  2866640  2865942      698         0 23941120        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [3496874]  1000 3496874   831597     3262     2787      475         0   446464        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3496898]     0 3496898   308404      867      865        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3496921]     0 3496921     1093       81       74        7         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3497133]     0 3497133      888      187      180        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 355911]  1000 355911     1986      573       83      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460268]  1000 460268     1986      561       70      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460273]  1000 460273     1986      571       80      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460299]  1000 460299     1986      569       78      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460303]  1000 460303    19587    14610    13981      629         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 507719]  1000 507719     1986      282       66      216         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 507721]  1000 507721     1986      573       82      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 517902]  1000 517902 14403404 11012438 11011647      790         1 90656768        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517903]  1000 517903 14328736 10930655 10929860      795         1 90075136        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517904]  1000 517904 14112201 10732560 10731732      827         1 88444928        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517905]  1000 517905 14173024 10747646 10746867      778         1 88584192        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517906]  1000 517906 14162509 10747282 10746484      797         1 88571904        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 552738]  1000 552738   554590     3091     2616      475         0   299008        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 552757]     0 552757   308404      890      888        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 552781]     0 552781     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 553064]     0 553064      903      203      196        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 581004]  1000 581004     1986      565       74      491         0    57344        0             0 dietop_grt_sta.
+Oct 09 07:50:00 known-grouse kernel: [1593351]  1000 1593351   536093     3080     2605      475         0   290816        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1593370]     0 1593370   308468      879      877        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1593393]     0 1593393     1093       80       73        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1593475]     0 1593475      699       31       24        7         0    53248        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [1593484]     0 1593484 15792766 14605987 14605893       94         0 118136832        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1596438]     0 1596438     4566     1247      476      771         0    77824        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1596796]  1000 1596796     5081     1398      988      410         0    81920        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1602278]  1000 1602278     1986      558       67      491         0    61440        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1602280]  1000 1602280     5270     1879     1253      626         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1632560]     0 1632560      909      187      180        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1632576]     0 1632576     1170      132      125        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1632578]     0 1632578     1170      133      128        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1632597]     0 1632597     4250     1372     1362       10         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1632598]     0 1632598  2570132  2349869  2349621      248         0 19398656        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1632992]  1000 1632992     1986      556       65      491         0    57344        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1632994]  1000 1632994     5270     1862     1250      612         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1644243]     0 1644243      910      191      184        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1644368]     0 1644368     1170      132      125        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1644373]     0 1644373     1170      134      129        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1644437]     0 1644437     4250     1368     1361        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1644450]     0 1644450  2570041  2342987  2342761      226         0 19374080        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1660652]     0 1660652      907      187      180        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1660668]     0 1660668     1137      130      123        7         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1660670]     0 1660670     1170      129      124        5         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1660689]     0 1660689     4247     1362     1355        7         0    69632        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1660691]     0 1660691 10265175  9991178  9990977      201         0 80769024        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1673083]  1000 1673083   628450     3076     2601      475         0   335872        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1673099]     0 1673099   308468      908      906        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1673128]     0 1673128     1093       82       75        7         0    40960        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1673231]     0 1673231      874      166      159        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1673598]     0 1673598      868      166      159        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1673614]     0 1673614     1135      122      115        7         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1673620]     0 1673620     4241     1356     1349        7         0    73728        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1673621]     0 1673621  6717499  3041310  3041299       11         0 25432064        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [1680153]  1000 1680153     5864     2176     1547      629         0    86016        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1680852]     0 1680852      897      176      169        7         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1680879]     0 1680879     1136      123      116        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1680881]     0 1680881     1136      125      120        5         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1680900]     0 1680900     4243     1361     1352        9         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1680901]     0 1680901  8246716  8049323  8049111      212         0 65114112        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1681087]  1000 1681087     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681092]  1000 1681092     2018      578       88      490         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681136]  1000 1681136     2148      716      225      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681147]  1000 1681147    10508     5255     4616      639         0   122880        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1682091]     0 1682091      908      189      182        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1682107]     0 1682107     1136      127      120        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1682109]     0 1682109     1136      128      123        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1682128]     0 1682128     4245     1360     1353        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1682129]     0 1682129  7240630  6962256  6962060      196         0 56487936        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1687953]     0 1687953      913      192      185        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1687970]     0 1687970     1173      141      134        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1687972]     0 1687972     1173      141      136        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1687995]     0 1687995     4254     1380     1371        9         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1687996]     0 1687996  1910525  1651193  1650924      269         0 13803520        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1688178]  1000 1688178     1986      557       66      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1688181]  1000 1688181     5270     1898     1251      647         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1690941]  1000 1690941     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1690946]  1000 1690946     2019      576       85      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1690989]  1000 1690989     2148      715      224      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1691000]  1000 1691000    12121     7104     6450      654         0   135168        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1697414]  1000 1697414     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697419]  1000 1697419     2019      578       87      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697464]  1000 1697464     2019      573       82      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697473]  1000 1697473    20460    15541    14842      699         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1700801]  1000 1700801   610081     3140     2667      473         0   339968        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1700826]     0 1700826   308404      835      833        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1700851]     0 1700851     1093       79       72        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1701145]     0 1701145      893      188      181        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1733840]  1000 1733840     1986      561       70      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733845]  1000 1733845     2019      579       88      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733888]  1000 1733888     2019      575       84      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733897]  1000 1733897    12252     7347     6668      679         0   139264        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1750979]  1000 1750979      695      419       24      395         0    49152        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [1755535]  1000 1755535     4679     2405     1790      615         0    69632        0             0 verilator
+Oct 09 07:50:00 known-grouse kernel: [1755537]  1000 1755537 23567108 23562573 23561939      634         0 188944384        0             0 verilator_bin
+Oct 09 07:50:00 known-grouse kernel: [1756598]  1000 1756598   591648     3143     2668      475         0   327680        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1756620]     0 1756620   308404      875      873        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1756646]     0 1756646     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1756927]     0 1756927      900      188      181        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1758156]     0 1758156      906      183      176        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1758175]     0 1758175     1172      139      132        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1758177]     0 1758177     1172      140      135        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1758220]     0 1758220     4252     1409     1400        9         0    86016        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1758223]     0 1758223  1062900   674515   674264      251         0  5988352        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1774412]  1000 1774412     1986      555       64      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1774414]  1000 1774414     5173     1888     1241      647         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1782086]  1000 1782086   610017     3074     2599      475         0   319488        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1782105]     0 1782105   308468      850      848        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1782128]     0 1782128     1093       82       75        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1782411]     0 1782411      899      170      163        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1784791]     0 1784791      897      169      162        7         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1784934]     0 1784934     1136      125      118        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1784940]     0 1784940     4243     1360     1350       10         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1784941]     0 1784941  1679943   307376   307360       16         0  2981888        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [1786707]  1000 1786707   278306   269809   269160      649         0  2273280        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1792821]  1000 1792821     1986      556       65      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1792823]  1000 1792823     5176     1890     1245      645         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1793578]     0 1793578   559248   521350   521336       14         0  4325376        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1794725]  1000 1794725   573167     3068     2593      475         0   307200        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1794743]     0 1794743   308468      862      860        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1794765]     0 1794765     1093       81       74        7         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1794956]     0 1794956      891      173      166        7         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795437]     0 1795437      896      170      163        7         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795453]     0 1795453     1136      125      118        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795455]     0 1795455     1136      126      121        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795482]     0 1795482     4244     1364     1352       12         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1795483]     0 1795483   636517   154646   154396      250         0  1794048        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1795863]     0 1795863      902      180      173        7         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795879]     0 1795879     1136      125      118        7         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795881]     0 1795881     1136      127      122        5         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795892]     0 1795892     4244     1358     1351        7         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1795893]     0 1795893   707586   398318   398085      233         0  3768320        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1799965]  1000 1799965   387383   349611   348963      648         0  2920448        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1800683]  1000 1800683     1986      556       65      491         0    61440        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1800685]  1000 1800685     5176     1886     1243      643         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1802759]  1000 1802759     4413     1028      316      712         0    73728        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1802866]  1000 1802866     4413     1050      315      735         0    77824        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1802887]  1000 1802887     4413     1045      315      730         0    73728        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1803475]  1000 1803475     4413     1028      316      712         0    77824        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-6fd2181ad2e8010465424d46635a57d7bd64eabc13455c0216f615237defbf19.scope,mems_allowed=0,global_oom,task_memcg=/user.slice/user-1000.slice/user@1000.service/session.slice/dbus.service,task=dbus-daemon,pid=2509549,uid=1000
+Oct 09 07:50:00 known-grouse kernel: Out of memory: Killed process 2509549 (dbus-daemon) total-vm:8556kB, anon-rss:388kB, file-rss:3500kB, shmem-rss:0kB, UID:1000 pgtables:56kB oom_score_adj:200
+Oct 09 07:50:00 known-grouse kernel: openroad invoked oom-killer: gfp_mask=0x140cca(GFP_HIGHUSER_MOVABLE|__GFP_COMP), order=0, oom_score_adj=0
+Oct 09 07:50:00 known-grouse kernel: CPU: 102 UID: 0 PID: 1685046 Comm: openroad Not tainted 7.0.0-34-generic #34-Ubuntu PREEMPT(lazy) 
+Oct 09 07:50:00 known-grouse kernel: Hardware name: Supermicro AS -1116CS-TN/H14SHM, BIOS 2.0 03/23/2026
+Oct 09 07:50:00 known-grouse kernel: Call Trace:
+Oct 09 07:50:00 known-grouse kernel:  <TASK>
+Oct 09 07:50:00 known-grouse kernel:  show_stack+0x49/0x60
+Oct 09 07:50:00 known-grouse kernel:  dump_stack_lvl+0x5f/0x90
+Oct 09 07:50:00 known-grouse kernel:  dump_stack+0x10/0x18
+Oct 09 07:50:00 known-grouse kernel:  dump_header+0x48/0x1c7
+Oct 09 07:50:00 known-grouse kernel:  oom_kill_process.cold+0x8/0xac
+Oct 09 07:50:00 known-grouse kernel:  out_of_memory+0xff/0x2b0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_pages_may_oom+0x10a/0x1d0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_pages_slowpath.constprop.0+0x3e0/0x9b0
+Oct 09 07:50:00 known-grouse kernel:  __alloc_frozen_pages_noprof+0x327/0x360
+Oct 09 07:50:00 known-grouse kernel:  alloc_pages_mpol+0x88/0x1b0
+Oct 09 07:50:00 known-grouse kernel:  folio_alloc_noprof+0x62/0x100
+Oct 09 07:50:00 known-grouse kernel:  filemap_alloc_folio_noprof+0x61/0x80
+Oct 09 07:50:00 known-grouse kernel:  __filemap_get_folio_mpol+0x201/0x340
+Oct 09 07:50:00 known-grouse kernel:  filemap_fault+0x112/0xce0
+Oct 09 07:50:00 known-grouse kernel:  ? filemap_map_pages+0x2f8/0x440
+Oct 09 07:50:00 known-grouse kernel:  __do_fault+0x3c/0x1e0
+Oct 09 07:50:00 known-grouse kernel:  do_read_fault+0x12f/0x280
+Oct 09 07:50:00 known-grouse kernel:  ? reweight_entity+0x2bd/0x340
+Oct 09 07:50:00 known-grouse kernel:  do_fault+0x16c/0x2a0
+Oct 09 07:50:00 known-grouse kernel:  ? pte_offset_map_rw_nolock+0x20/0xa0
+Oct 09 07:50:00 known-grouse kernel:  handle_pte_fault+0x141/0x1f0
+Oct 09 07:50:00 known-grouse kernel:  __handle_mm_fault+0x493/0x720
+Oct 09 07:50:00 known-grouse kernel:  handle_mm_fault+0xee/0x2e0
+Oct 09 07:50:00 known-grouse kernel:  do_user_addr_fault+0x2ee/0x830
+Oct 09 07:50:00 known-grouse kernel:  exc_page_fault+0x83/0x1e0
+Oct 09 07:50:00 known-grouse kernel:  asm_exc_page_fault+0x27/0x30
+Oct 09 07:50:00 known-grouse kernel: RIP: 0033:0x5ee5c49b40a0
+Oct 09 07:50:00 known-grouse kernel: Code: Unable to access opcode bytes at 0x5ee5c49b4076.
+Oct 09 07:50:00 known-grouse kernel: RSP: 002b:00007dc3fc776360 EFLAGS: 00010297
+Oct 09 07:50:00 known-grouse kernel: RAX: 000000000000012e RBX: 000000000000008f RCX: 00000000000002a5
+Oct 09 07:50:00 known-grouse kernel: RDX: 00000000000002ae RSI: 00000000000001be RDI: 0000000000000007
+Oct 09 07:50:00 known-grouse kernel: RBP: 00000000000000b1 R08: 000000000000012e R09: 0000000000000001
+Oct 09 07:50:00 known-grouse kernel: R10: 0000000000015cae R11: 000000000000012f R12: 00005ee7b1b6c930
+Oct 09 07:50:00 known-grouse kernel: R13: 0000000000000090 R14: 000000000000012e R15: 0000000000000001
+Oct 09 07:50:00 known-grouse kernel:  </TASK>
+Oct 09 07:50:00 known-grouse kernel: Mem-Info:
+Oct 09 07:50:00 known-grouse kernel: active_anon:122767059 inactive_anon:169078732 isolated_anon:0
+                                      active_file:0 inactive_file:7107 isolated_file:0
+                                      unevictable:3020 dirty:0 writeback:0
+                                      slab_reclaimable:1482219 slab_unreclaimable:702133
+                                      mapped:2394 shmem:2261428 pagetables:595706
+                                      sec_pagetables:11701 bounce:0
+                                      kernel_misc_reclaimable:0
+                                      free:671226 free_pcp:0 free_cma:57064
+Oct 09 07:50:00 known-grouse kernel: Node 0 active_anon:491068236kB inactive_anon:676314928kB active_file:0kB inactive_file:28428kB unevictable:12080kB isolated(anon):0kB isolated(file):0kB mapped:9576kB dirty:0kB writeback:0kB shmem:9045712kB shmem_thp:0kB shmem_pmdmapped:0kB anon_thp:0kB kernel_stack:90704kB pagetables:2382824kB sec_pagetables:46804kB all_unreclaimable? yes Balloon:0kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA free:11264kB boost:0kB min:0kB low:12kB high:24kB reserved_highatomic:0KB free_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB zspages:0kB present:15996kB managed:15360kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 2372 1160242 1160242 1160242
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA32 free:2423460kB boost:0kB min:256kB low:2408kB high:4560kB reserved_highatomic:0KB free_highatomic:0KB active_anon:0kB inactive_anon:0kB active_file:0kB inactive_file:0kB unevictable:0kB writepending:0kB zspages:0kB present:2495900kB managed:2429604kB mlocked:0kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:229376kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 0 1157869 1157869 1157869
+Oct 09 07:50:00 known-grouse kernel: Node 0 Normal free:250180kB boost:147456kB min:280508kB low:1389356kB high:2498204kB reserved_highatomic:0KB free_highatomic:0KB active_anon:491068236kB inactive_anon:676314928kB active_file:0kB inactive_file:28428kB unevictable:12080kB writepending:0kB zspages:0kB present:1205024448kB managed:1185658416kB mlocked:9008kB bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
+Oct 09 07:50:00 known-grouse kernel: lowmem_reserve[]: 0 0 0 0 0
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32kB 0*64kB 0*128kB 0*256kB 0*512kB 1*1024kB (U) 1*2048kB (M) 2*4096kB (M) = 11264kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 DMA32: 5*4kB (UM) 4*8kB (M) 5*16kB (M) 5*32kB (M) 8*64kB (M) 5*128kB (M) 3*256kB (M) 5*512kB (M) 6*1024kB (M) 6*2048kB (UM) 586*4096kB (MC) = 2423460kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 Normal: 1759*4kB (UMEC) 426*8kB (UMEC) 275*16kB (UMEC) 149*32kB (UMEC) 1945*64kB (UM) 692*128kB (UME) 44*256kB (UE) 1*512kB (U) 0*1024kB 0*2048kB 0*4096kB = 244444kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=1048576kB
+Oct 09 07:50:00 known-grouse kernel: Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+Oct 09 07:50:00 known-grouse kernel: 2270254 total pagecache pages
+Oct 09 07:50:00 known-grouse kernel: 3035 pages in swap cache
+Oct 09 07:50:00 known-grouse kernel: Free swap  = 20kB
+Oct 09 07:50:00 known-grouse kernel: Total swap = 8388604kB
+Oct 09 07:50:00 known-grouse kernel: 301884086 pages RAM
+Oct 09 07:50:00 known-grouse kernel: 0 pages HighMem/MovableOnly
+Oct 09 07:50:00 known-grouse kernel: 4858241 pages reserved
+Oct 09 07:50:00 known-grouse kernel: 0 pages cma reserved
+Oct 09 07:50:00 known-grouse kernel: 0 pages hwpoisoned
+Oct 09 07:50:00 known-grouse kernel: Memory cgroup min protection 0kB -- low protection 0kB
+Oct 09 07:50:00 known-grouse kernel: Tasks state (memory values in pages):
+Oct 09 07:50:00 known-grouse kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name
+Oct 09 07:50:00 known-grouse kernel: [   2061]     0  2061    69864     2255      518     1737         0    90112        0         -1000 multipathd
+Oct 09 07:50:00 known-grouse kernel: [   2413]     0  2413      974      622       74      548         0    53248       17             0 mdadm
+Oct 09 07:50:00 known-grouse kernel: [   3018]     0  3018     1867      695       61      634         0    57344        0             0 cron
+Oct 09 07:50:00 known-grouse kernel: [   3019]   995  3019     2415     1222      354      868         0    57344      100          -900 dbus-daemon
+Oct 09 07:50:00 known-grouse kernel: [   3028]     0  3028    11854     3667     2795      872         0   131072     1126             0 networkd-dispat
+Oct 09 07:50:00 known-grouse kernel: [   3030]   983  3030    77080     1600      625      975         0   110592       21             0 polkitd
+Oct 09 07:50:00 known-grouse kernel: [   3037]     0  3037     5205     1352      622      730         0    77824      334             0 systemd-logind
+Oct 09 07:50:00 known-grouse kernel: [   3079]     0  3079     2122      673       46      627         0    57344        0             0 agetty
+Oct 09 07:50:00 known-grouse kernel: [   3096]     0  3096    31616     3482     2588      894         0   155648     1066             0 unattended-upgr
+Oct 09 07:50:00 known-grouse kernel: [   3142]   100  3142    55137     1278      451      827         0    86016       30             0 rsyslogd
+Oct 09 07:50:00 known-grouse kernel: [   3153]     0  3153    79468     1222      370      852         0   122880      194             0 ModemManager
+Oct 09 07:50:00 known-grouse kernel: [   3255]     0  3255      722      489       30      459         0    45056        0             0 chronyd-starter
+Oct 09 07:50:00 known-grouse kernel: [   3279]   988  3279     5106      885      194      691         0    73728        1             0 chronyd
+Oct 09 07:50:00 known-grouse kernel: [   3281]   988  3281     3024      528      158      370         0    69632        3             0 chronyd
+Oct 09 07:50:00 known-grouse kernel: [   5660]     0  5660     2570     1032      224      808         0    53248       56             0 smartd
+Oct 09 07:50:00 known-grouse kernel: [   8377]     0  8377  2020516    15434    14954      475         5  1257472     1231          -999 containerd
+Oct 09 07:50:00 known-grouse kernel: [   9323]     0  9323  3042696    21504    20790      714         0  1900544     1984          -500 dockerd
+Oct 09 07:50:00 known-grouse kernel: [  44166]  1000 44166     6355     1858     1103      755         0    94208      258           100 systemd
+Oct 09 07:50:00 known-grouse kernel: [  44168]  1000 44168     5754      474      234      240         0    86016      269           100 (sd-pam)
+Oct 09 07:50:00 known-grouse kernel: [ 379482]     0 379482   136042     1607      639      968         0   163840      180             0 udisksd
+Oct 09 07:50:00 known-grouse kernel: [ 379483]     0 379483     2686      855      301      554         0    61440        0         -1000 sshd
+Oct 09 07:50:00 known-grouse kernel: [ 379492]     0 379492    49506     1008      301      705         2   421888     1104          -250 systemd-journal
+Oct 09 07:50:00 known-grouse kernel: [ 379493]   989 379493     5711     1136      458      678         0    90112      238             0 systemd-resolve
+Oct 09 07:50:00 known-grouse kernel: [ 379506]     0 379506    11367     2958     2163      795         0   114688      354         -1000 systemd-udevd
+Oct 09 07:50:00 known-grouse kernel: [ 379515]   998 379515     6450     1453      561      892         0    94208       78             0 systemd-network
+Oct 09 07:50:00 known-grouse kernel: [ 463179]  1000 463179     1986      538       47      491         0    61440       21             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3559728]  1000 3559728     1986      535       44      491         0    57344       28             0 memguard.sh
+Oct 09 07:50:00 known-grouse kernel: [2671042]  1000 2671042     1986      501       11      490         0    57344       56             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2674045]  1000 2674045    11972     8748     8159      589         0   139264      405             0 vvp
+Oct 09 07:50:00 known-grouse kernel: [2674046]  1000 2674046     4450      734       35      699         0    77824      305             0 tail
+Oct 09 07:50:00 known-grouse kernel: [ 562981]  1000 562981     1986      522       31      491         0    53248       36             0 queue_r22.sh
+Oct 09 07:50:00 known-grouse kernel: [ 583904]  1000 583904     1986      561       70      491         0    61440        0             0 dietop_run.sh
+Oct 09 07:50:00 known-grouse kernel: [1862989]     0 1862989     4567     1251      480      771         0    77824        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1863169]  1000 1863169     6254     2515     2073      442         0    90112       88             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [2019994]     0 2019994   124986     3012     2099      913         0   274432        0             0 fwupd
+Oct 09 07:50:00 known-grouse kernel: [3503103]  1000 3503103     1986      534       43      491         0    53248       26             0 mk_regions_r3.s
+Oct 09 07:50:00 known-grouse kernel: [3255181]  1000 3255181     1986      539       48      491         0    61440       20             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255206]  1000 3255206     1986      540       49      491         0    49152       26             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255458]  1000 3255458     1986      546       55      491         0    57344       19             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255468]  1000 3255468   923954     3315     2840      475         0   487424        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3255558]     0 3255558   308468      845      843        2         0   114688       84          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3255631]     0 3255631     1093        7        5        2         0    53248       67             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3255772]     0 3255772      899       20       18        2         0    53248      171             0 make
+Oct 09 07:50:00 known-grouse kernel: [3398206]     0 3398206    69260     4430     3483      947         0   167936     1408             0 tuned
+Oct 09 07:50:00 known-grouse kernel: [3607003]  1000 3607003     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607008]  1000 3607008     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607029]  1000 3607029     1986      564       73      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607031]  1000 3607031   979317     3400     2925      475         0   512000        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3607054]     0 3607054   308468      858      856        2         0   110592       64          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3607079]     0 3607079     1093        7        5        2         0    53248       66             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3607128]     0 3607128      903       12       10        2         0    45056      176             0 make
+Oct 09 07:50:00 known-grouse kernel: [3614963]  1000 3614963     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614968]  1000 3614968     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614976]  1000 3614976     1986      564       73      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3614978]  1000 3614978   960820     3355     2880      475         0   499712        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3614995]     0 3614995   308532      864      862        2         0   114688       80          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3615020]     0 3615020     1093        7        5        2         0    45056       67             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3615075]     0 3615075      903       10        8        2         0    49152      177             0 make
+Oct 09 07:50:00 known-grouse kernel: [4059045]     0 4059045      902       17       15        2         0    53248      161             0 make
+Oct 09 07:50:00 known-grouse kernel: [4059251]     0 4059251     1137       36       34        2         0    49152       88             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4059275]     0 4059275     1170       37       37        0         0    49152       87             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4059380]     0 4059380     4247      219      217        2         0    81920     1138             0 python3
+Oct 09 07:50:00 known-grouse kernel: [4059385]     0 4059385  2149236  1608471  1608469        2         0 14041088    50483             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3284190]     0 3284190     4568     1284      475      809         0    81920        3             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [3284395]  1000 3284395     4709      955      545      410         0    81920       86             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [3982361]     0 3982361      902       25       23        2         0    53248      152             0 make
+Oct 09 07:50:00 known-grouse kernel: [3982559]     0 3982559     1137       32       30        2         0    53248       91             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3982565]     0 3982565     1169       28       28        0         0    53248       95             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3982632]     0 3982632     4247      210      208        2         0    77824     1147             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3982649]     0 3982649  1936797  1348818  1348816        2         0 11964416    62486             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4014979]     0 4014979      904       19       17        2         0    49152      161             0 make
+Oct 09 07:50:00 known-grouse kernel: [4015522]     0 4015522     1137       35       33        2         0    49152       88             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4015536]     0 4015536     1169       28       28        0         0    49152       96             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4015648]     0 4015648     4247      203      201        2         0    73728     1155             0 python3
+Oct 09 07:50:00 known-grouse kernel: [4015732]     0 4015732  1936697  1309391  1309389        2         0 11968512   102677             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1085189]  1000 1085189     1986      512       22      490         0    57344       50             0 start_region.sh
+Oct 09 07:50:00 known-grouse kernel: [1085190]  1000 1085190     1986      535       44      491         0    57344       28             0 start_region.sh
+Oct 09 07:50:00 known-grouse kernel: [3573152]  1000 3573152     1986      327       72      255         0    57344        0             0 dietop_run.sh
+Oct 09 07:50:00 known-grouse kernel: [3573155]  1000 3573155   997750     3370     2895      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3573179]     0 3573179   308468      986      984        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3573230]     0 3573230     1093        7        5        2         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3573536]     0 3573536      699        3        1        2         0    45056       21             0 time
+Oct 09 07:50:00 known-grouse kernel: [3573537]     0 3573537 34491871 32942617 32942615        2         0 273821696  1142901             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3648604]  1000 3648604     1986      511       20      491         0    53248       49             0 run_case.sh
+Oct 09 07:50:00 known-grouse kernel: [3648609]  1000 3648609   923890     2869     2394      475         0   483328      375             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3648628]     0 3648628   308468      936      934        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3648652]     0 3648652     1093        9        7        2         0    49152       66             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3648713]     0 3648713      699        4        2        2         0    49152       21             0 time
+Oct 09 07:50:00 known-grouse kernel: [3648717]     0 3648717 10776873  9879987  9879985        2         0 84185088   494948             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4074937]  1000 4074937     1986      560       69      491         0    57344        0             0 run_case.sh
+Oct 09 07:50:00 known-grouse kernel: [4074960]  1000 4074960   997814     3372     2897      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [4075035]     0 4075035   308468      921      919        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [4075119]     0 4075119     1093        4        2        2         0    45056       71             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4075348]     0 4075348      699        3        1        2         0    49152       23             0 time
+Oct 09 07:50:00 known-grouse kernel: [4075349]     0 4075349 12275269 11508667 11508665        2         0 94560256   147845             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4026633]  1000 4026633     1986      559       68      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026671]  1000 4026671     1986      564       74      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026795]  1000 4026795     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4026806]  1000 4026806    20152    15187    14540      647         0   200704        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 711499]  1000 711499     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711505]  1000 711505     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711521]  1000 711521     1986      562       71      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 711523]  1000 711523    20151    15200    14541      659         0   204800        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1207351]  1000 1207351  1034744     3381     2906      475         0   544768        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1207371]     0 1207371   308468      932      930        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1207394]     0 1207394     1093       10        8        2         0    49152       65             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1207613]     0 1207613      892      133      131        2         0    49152       47             0 make
+Oct 09 07:50:00 known-grouse kernel: [1319413]  1000 1319413  1034808     3463     2988      475         0   548864        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1319430]     0 1319430   308468      911      909        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1319453]     0 1319453     1093        8        6        2         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1319733]     0 1319733      893      138      136        2         0    49152       43             0 make
+Oct 09 07:50:00 known-grouse kernel: [1324209]  1000 1324209     1986      561       70      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324214]  1000 1324214     1986      565       74      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324217]  1000 1324217     1986      563       72      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1324219]  1000 1324219    20170    15208    14561      647         0   200704        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2452017]  1000 2452017   979253     3412     2937      475         0   516096        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2452038]     0 2452038   308468      938      936        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2452062]     0 2452062     1093        8        6        2         0    45056       68             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2452161]     0 2452161      893      137      135        2         0    53248       48             0 make
+Oct 09 07:50:00 known-grouse kernel: [1773747]     0 1773747      899       47       45        2         0    53248      127             0 make
+Oct 09 07:50:00 known-grouse kernel: [1774013]     0 1774013     1136       38       36        2         0    57344       83             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1774023]     0 1774023     1136       52       52        0         0    53248       70             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1774158]     0 1774158     4245      209      207        2         0    77824     1146             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1774177]     0 1774177  2691198  2501834  2501832        2         0 20701184     6666             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2293671]     0 2293671      900       39       37        2         0    49152      135             0 make
+Oct 09 07:50:00 known-grouse kernel: [2293690]     0 2293690     1136       75       73        2         0    49152       47             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2293692]     0 2293692     1136       89       89        0         0    49152       33             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2293711]     0 2293711     4245      242      240        2         0    73728     1114             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2293712]     0 2293712  2679386  2491783  2491781        2         0 20590592     5632             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2927362]     0 2927362      901       32       30        2         0    45056      142             0 make
+Oct 09 07:50:00 known-grouse kernel: [2927378]     0 2927378     1136       32       30        2         0    49152       90             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2927380]     0 2927380     1136       47       47        0         0    49152       76             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2927399]     0 2927399     4245      983      981        2         0    81920      372             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2927400]     0 2927400  2099422  1902908  1902906        2         0 15839232        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4049489]  1000 4049489     1986      566       75      491         0    57344        0             0 dietop_region.s
+Oct 09 07:50:00 known-grouse kernel: [4049499]  1000 4049499   997878     3389     2914      475         0   528384        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [4049518]     0 4049518   308468      907      905        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [4049542]     0 4049542     1093       74       72        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4049678]     0 4049678      699       26       24        2         0    45056        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [4049691]     0 4049691 11383289 11022581 11022579        2         0 88977408        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [4102889]  1000 4102889     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4102894]  1000 4102894     1986      565       74      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [4102898]  1000 4102898     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 833857]  1000 833857  1034808     3434     2959      475         0   552960        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 833874]     0 833874   308468      923      921        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 833898]     0 833898  5022579  4694089  4694087        2         0 38264832     8895             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 837654]  1000 837654     1986      559       68      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 837660]  1000 837660     1986      565       74      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 837674]  1000 837674     2019      602      111      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838536]  1000 838536     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838541]  1000 838541     1986      566       75      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 838546]  1000 838546     2019      603      112      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842617]  1000 842617     1986      559       69      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842622]  1000 842622     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 842626]  1000 842626     2019      603      112      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 858291]  1000 858291  1016119     3402     2928      474         0   540672        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 858311]     0 858311   308468      912      910        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 858336]     0 858336 11838890 11555252 11555250        2         0 93290496        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 859720]  1000 859720  1071546     3375     2900      475         0   561152        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 859742]     0 859742   308468      939      937        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 859767]     0 859767 14124912 13854497 13854495        2         0 111742976        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 868591]  1000 868591   942387     3318     2843      475         0   499712        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 868607]     0 868607   308404      956      954        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 868633]     0 868633 14289839 14048074 14048072        2         0 113238016        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 874423]  1000 874423     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 874428]  1000 874428     1986      565       75      490         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 874432]  1000 874432     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876272]  1000 876272     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876277]  1000 876277     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 876281]  1000 876281     2019      602      111      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 881592]  1000 881592  1034808     3419     2944      475         0   552960        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 881615]     0 881615   308404      945      943        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 881639]     0 881639  9158592  8916547  8916545        2         0 72126464        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 882741]  1000 882741   997942     3392     2917      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 882761]     0 882761   308404      941      939        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 882911]     0 882911  5031102  4761222  4761220        2         0 38723584        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [ 981566]  1000 981566     1986      282       66      216         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 981567]  1000 981567     1986      564       73      491         0    61440        0             0 chain.sh
+Oct 09 07:50:00 known-grouse kernel: [1004640]  1000 1004640     1986      560       70      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004645]  1000 1004645     1986      571       80      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004664]  1000 1004664     2148      715      225      490         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1004675]  1000 1004675    15723    10701    10046      655         0   163840        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1039268]  1000 1039268  1016375     3371     2896      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1039287]     0 1039287   308468      965      963        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1039310]     0 1039310     1093       76       74        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1039393]     0 1039393      893      182      180        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1042774]  1000 1042774     1986      557       68      489         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057360]  1000 1057360     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057367]  1000 1057367     2019      575       84      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057398]  1000 1057398     1986      564       73      491         0    61440        0             0 route_sub.sh
+Oct 09 07:50:00 known-grouse kernel: [1057401]  1000 1057401     2148      713      222      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1057447]  1000 1057447    11083     6024     5383      641         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1062814]  1000 1062814   942515     3421     2946      475         0   516096        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1062831]     0 1062831   308468      971      969        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1062878]     0 1062878     1093       75       73        2         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1062918]     0 1062918      930      199      197        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2330901]     0 2330901      894      185      183        2         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2330917]     0 2330917     1172      135      133        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2330919]     0 2330919     1172      136      136        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2330935]     0 2330935     4253     1371     1369        2         0    73728        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2330937]     0 2330937  2059708  1610998  1610996        2         0 13496320        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2524265]  1000 2524265     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524270]  1000 2524270     1986      568       77      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524330]  1000 2524330     2019      576       85      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2524337]  1000 2524337    11192     6153     5494      659         0   131072        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2524919]  1000 2524919   979509     3368     2893      475         0   524288        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2524937]     0 2524937   308468      904      902        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2524961]     0 2524961     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2525170]     0 2525170      913      187      185        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2525957]     0 2525957      902      177      175        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2526005]     0 2526005     1136      120      118        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2526011]     0 2526011     1136      121      121        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2526069]     0 2526069     4244     1354     1352        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2526070]     0 2526070  6971245  6795965  6795963        2         0 55091200        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2532085]     0 2532085      905      179      177        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2532101]     0 2532101     1137      123      121        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2532103]     0 2532103     1170      123      123        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2532122]     0 2532122     4247     1355     1353        2         0    69632        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2532123]     0 2532123  3075812  2438132  2438130        2         0 20213760        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2571647]  1000 2571647     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571652]  1000 2571652     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571659]  1000 2571659     1986      566       75      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2571663]  1000 2571663    19596    14637    13983      654         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2642105]  1000 2642105     1986      282       66      216         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2642106]  1000 2642106    70586    64657    64031      626         0   618496        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2647075]  1000 2647075  1053193     3375     2900      475         0   561152        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2647092]     0 2647092   308404      896      894        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2647117]     0 2647117     1093       76       74        2         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2647357]     0 2647357      897      193      191        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1520810]  1000 1520810     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520815]  1000 1520815     1986      571       80      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520835]  1000 1520835     2019      574       83      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1520837]  1000 1520837    34985    30011    29364      647         0   315392        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1614238]  1000 1614238  1071610     3415     2940      475         0   573440        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1614262]     0 1614262   308404      867      865        2         0   106496        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1614284]     0 1614284     1093       75       73        2         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1614565]     0 1614565      895      184      182        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2102855]  1000 2102855     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2102860]  1000 2102860     1986      563       72      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2102864]  1000 2102864     2019      601      110      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2643961]  1000 2643961     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2643966]  1000 2643966     1986      569       79      490         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2648075]  1000 2648075     2019      586       95      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2648081]  1000 2648081    10519     5489     4842      647         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2649974]  1000 2649974     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2649988]  1000 2649988     1986      568       77      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2650009]  1000 2650009     2019      585       94      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2650037]  1000 2650037    10518     5484     4837      647         0   131072        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3637287]  1000 3637287   961012     3371     2896      475         0   512000        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3637517]     0 3637517   308468      867      865        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3637742]     0 3637742  1779859  1662282  1662280        2         0 13807616        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [3679364]  1000 3679364     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679370]  1000 3679370     1986      566       75      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679401]  1000 3679401     2019      585       94      491         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3679407]  1000 3679407    10512     5349     4691      658         0   118784        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [3969848]  1000 3969848     1986      561       70      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3969863]  1000 3969863     2019      579       88      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3973753]  1000 3973753     1986      566       75      491         0    61440        0             0 route_sub.sh
+Oct 09 07:50:00 known-grouse kernel: [3973756]  1000 3973756     2148      715      224      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3973768]  1000 3973768    11511     6467     5812      655         0   126976        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 312117]  1000 312117   997687     3390     2915      475         0   528384        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 313610]     0 313610   308468      889      887        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 316080]     0 316080     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 320502]     0 320502      897      192      190        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 901322]  1000 901322     1986      284       68      216         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 901325]  1000 901325     1986      567       76      491         0    57344        0             0 mk_chain5.sh
+Oct 09 07:50:00 known-grouse kernel: [ 911746]     0 911746      901      176      174        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 911762]     0 911762     1136      119      117        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 911764]     0 911764     1136      121      121        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 911783]     0 911783     4242     1383     1381        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 911784]     0 911784  3021467  2827641  2827639        2         0 23277568        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2001576]  1000 2001576     1986      560       69      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001581]  1000 2001581     1986      566       76      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001599]  1000 2001599     1986      570       79      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2001604]  1000 2001604    27292    22297    21671      626         0   253952        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2008292]  1000 2008292   942643     3303     2828      475         0   495616        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2008311]     0 2008311   308468      869      867        2         0   118784        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2008334]     0 2008334     1093       75       73        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2008370]     0 2008370      909      197      195        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2011722]  1000 2011722  1016375     3374     2899      475         0   532480        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2011742]     0 2011742   308404      874      872        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2011765]     0 2011765     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2011803]     0 2011803      909      196      194        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021075]  1000 2021075     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021085]  1000 2021085     1986      565       74      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021124]  1000 2021124     2019      584       93      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021130]  1000 2021130    10518     5308     4650      658         0   122880        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2021680]  1000 2021680   887088     3290     2815      475         0   466944        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2021704]     0 2021704   308484      899      897        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2021726]     0 2021726     1093       75       73        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021769]     0 2021769      894      182      180        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021810]     0 2021810      909      184      182        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2021827]     0 2021827     1170      127      125        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021829]     0 2021829     1170      128      128        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2021850]     0 2021850     4249     1363     1361        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2021851]     0 2021851  2130557  1901679  1901677        2         0 15822848        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2046951]  1000 2046951     1986      561       70      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046956]  1000 2046956     2019      571       80      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046974]  1000 2046974     2148      716      225      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2046985]  1000 2046985    10502     5413     4772      641         0   118784        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2067229]  1000 2067229   905585     3261     2787      474         0   483328        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2067247]     0 2067247   308340      869      867        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2067272]     0 2067272     1093       74       72        2         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2067509]     0 2067509      904      187      185        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2073835]     0 2073835      911      185      183        2         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2073851]     0 2073851     1173      140      138        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2073853]     0 2073853     1173      140      140        0         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2073872]     0 2073872     4255     1380     1378        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2073873]     0 2073873  1053362   826667   826665        2         0  7151616        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2088535]  1000 2088535   960820     3267     2792      475         0   507904        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [2088553]     0 2088553   308404      857      855        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [2088576]     0 2088576     1093       75       73        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2088780]     0 2088780      908      194      192        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2106155]  1000 2106155     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106160]  1000 2106160     1986      566       75      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106179]  1000 2106179     1986      572       81      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2106184]  1000 2106184    21581    16617    15958      659         0   208896        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2118337]     0 2118337      907      181      179        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [2118355]     0 2118355     1137      123      121        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2118357]     0 2118357     1170      124      124        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2118372]     0 2118372     4247     1361     1359        2         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2118373]     0 2118373  1888680  1445894  1445892        2         0 12193792        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [2207128]  1000 2207128     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207138]  1000 2207138     1986      569       78      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207172]  1000 2207172     2019      584       93      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2207178]  1000 2207178    32292    27289    26630      659         0   290816        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2207535]  1000 2207535  6079798  2862396  2861697      699         0 23908352        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [2212142]  1000 2212142     1986      560       70      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212147]  1000 2212147     1986      570       79      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212172]  1000 2212172     2019      584       93      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [2212178]  1000 2212178    32419    27419    26761      658         0   299008        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [2212223]  1000 2212223  6081097  2866639  2865942      697         0 23941120        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [3496874]  1000 3496874   831597     3262     2787      475         0   446464        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [3496898]     0 3496898   308404      867      865        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [3496921]     0 3496921     1093       76       74        2         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [3497133]     0 3497133      888      182      180        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 355911]  1000 355911     1986      573       83      490         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460268]  1000 460268     1986      561       70      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460273]  1000 460273     1986      571       80      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460299]  1000 460299     1986      569       78      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 460303]  1000 460303    19587    14608    13981      627         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [ 507719]  1000 507719     1986      282       66      216         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 507721]  1000 507721     1986      573       82      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 517902]  1000 517902 14403404 11012355 11011647      707         1 90656768        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517903]  1000 517903 14328736 10930574 10929860      713         1 90075136        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517904]  1000 517904 14112201 10732469 10731732      736         1 88444928        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517905]  1000 517905 14173024 10747585 10746867      717         1 88584192        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 517906]  1000 517906 14162509 10747214 10746484      729         1 88571904        0             0 python
+Oct 09 07:50:00 known-grouse kernel: [ 552738]  1000 552738   554590     3091     2616      475         0   299008        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [ 552757]     0 552757   308404      890      888        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [ 552781]     0 552781     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [ 553064]     0 553064      903      198      196        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [ 581004]  1000 581004     1986      565       74      491         0    57344        0             0 dietop_grt_sta.
+Oct 09 07:50:00 known-grouse kernel: [1593351]  1000 1593351   536093     3080     2605      475         0   290816        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1593370]     0 1593370   308468      879      877        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1593393]     0 1593393     1093       75       73        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1593475]     0 1593475      699       26       24        2         0    53248        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [1593484]     0 1593484 15792766 14605895 14605893        2         0 118136832        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1596438]     0 1596438     4566     1247      476      771         0    77824        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1596796]  1000 1596796     5081     1398      988      410         0    81920        0             0 sshd-session
+Oct 09 07:50:00 known-grouse kernel: [1602278]  1000 1602278     1986      558       67      491         0    61440        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1602280]  1000 1602280     5270     1877     1253      624         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1632560]     0 1632560      909      182      180        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1632576]     0 1632576     1170      127      125        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1632578]     0 1632578     1170      128      128        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1632597]     0 1632597     4250     1364     1362        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1632598]     0 1632598  2570132  2349623  2349621        2         0 19398656        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1632992]  1000 1632992     1986      556       65      491         0    57344        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1632994]  1000 1632994     5270     1860     1250      610         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1644243]     0 1644243      910      186      184        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1644368]     0 1644368     1170      127      125        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1644373]     0 1644373     1170      129      129        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1644437]     0 1644437     4250     1363     1361        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1644450]     0 1644450  2570041  2342763  2342761        2         0 19374080        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1660652]     0 1660652      907      182      180        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1660668]     0 1660668     1137      125      123        2         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1660670]     0 1660670     1170      124      124        0         0    45056        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1660689]     0 1660689     4247     1357     1355        2         0    69632        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1660691]     0 1660691 10265175  9990979  9990977        2         0 80769024        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1673083]  1000 1673083   628450     3076     2601      475         0   335872        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1673099]     0 1673099   308468      908      906        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1673128]     0 1673128     1093       77       75        2         0    40960        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1673231]     0 1673231      874      161      159        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1673598]     0 1673598      868      161      159        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1673614]     0 1673614     1135      117      115        2         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1673620]     0 1673620     4241     1351     1349        2         0    73728        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1673621]     0 1673621  6717499  3041301  3041299        2         0 25432064        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [1680153]  1000 1680153     5864     2174     1547      627         0    86016        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1680852]     0 1680852      897      171      169        2         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1680879]     0 1680879     1136      118      116        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1680881]     0 1680881     1136      120      120        0         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1680900]     0 1680900     4243     1354     1352        2         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1680901]     0 1680901  8246716  8049113  8049111        2         0 65114112        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1681087]  1000 1681087     1986      560       69      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681092]  1000 1681092     2018      578       88      490         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681136]  1000 1681136     2148      716      225      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1681147]  1000 1681147    10508     5255     4616      639         0   122880        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1682091]     0 1682091      908      184      182        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1682107]     0 1682107     1136      122      120        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1682109]     0 1682109     1136      123      123        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1682128]     0 1682128     4245     1355     1353        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1682129]     0 1682129  7240630  6962062  6962060        2         0 56487936        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1687953]     0 1687953      913      187      185        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1687970]     0 1687970     1173      136      134        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1687972]     0 1687972     1173      136      136        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1687995]     0 1687995     4254     1373     1371        2         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1687996]     0 1687996  1910525  1650926  1650924        2         0 13803520        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1688178]  1000 1688178     1986      557       66      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1688181]  1000 1688181     5270     1898     1251      647         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1690941]  1000 1690941     1986      559       68      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1690946]  1000 1690946     2019      576       85      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1690989]  1000 1690989     2148      715      224      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1691000]  1000 1691000    12121     7104     6450      654         0   135168        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1697414]  1000 1697414     1986      560       69      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697419]  1000 1697419     2019      578       87      491         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697464]  1000 1697464     2019      573       82      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1697473]  1000 1697473    20460    15489    14842      647         0   196608        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1700801]  1000 1700801   610081     3140     2667      473         0   339968        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1700826]     0 1700826   308404      835      833        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1700851]     0 1700851     1093       74       72        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1701145]     0 1701145      893      183      181        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1733840]  1000 1733840     1986      561       70      491         0    57344        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733845]  1000 1733845     2019      579       88      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733888]  1000 1733888     2019      575       84      491         0    61440        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1733897]  1000 1733897    12252     7315     6668      647         0   139264        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1750979]  1000 1750979      695      419       24      395         0    49152        0             0 time
+Oct 09 07:50:00 known-grouse kernel: [1755535]  1000 1755535     4679     2405     1790      615         0    69632        0             0 verilator
+Oct 09 07:50:00 known-grouse kernel: [1755537]  1000 1755537 23567108 23562512 23561939      573         0 188944384        0             0 verilator_bin
+Oct 09 07:50:00 known-grouse kernel: [1756598]  1000 1756598   591648     3143     2668      475         0   327680        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1756620]     0 1756620   308404      875      873        2         0   110592        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1756646]     0 1756646     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1756927]     0 1756927      900      183      181        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1758156]     0 1758156      906      178      176        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1758175]     0 1758175     1172      134      132        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1758177]     0 1758177     1172      135      135        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1758220]     0 1758220     4252     1402     1400        2         0    86016        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1758223]     0 1758223  1062900   674266   674264        2         0  5988352        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1774412]  1000 1774412     1986      555       64      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1774414]  1000 1774414     5173     1888     1241      647         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1782086]  1000 1782086   610017     3074     2599      475         0   319488        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1782105]     0 1782105   308468      850      848        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1782128]     0 1782128     1093       77       75        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1782411]     0 1782411      899      165      163        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1784791]     0 1784791      897      164      162        2         0    45056        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1784934]     0 1784934     1136      120      118        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1784940]     0 1784940     4243     1352     1350        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1784941]     0 1784941  1679943   307362   307360        2         0  2981888        0             0 yosys
+Oct 09 07:50:00 known-grouse kernel: [1786707]  1000 1786707   278306   269808   269160      648         0  2273280        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1792821]  1000 1792821     1986      556       65      491         0    53248        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1792823]  1000 1792823     5176     1888     1245      643         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1793578]     0 1793578   559248   521338   521336        2         0  4325376        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1794725]  1000 1794725   573167     3068     2593      475         0   307200        0             0 docker
+Oct 09 07:50:00 known-grouse kernel: [1794743]     0 1794743   308468      862      860        2         0   114688        0          -998 containerd-shim
+Oct 09 07:50:00 known-grouse kernel: [1794765]     0 1794765     1093       76       74        2         0    53248        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1794956]     0 1794956      891      168      166        2         0    57344        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795437]     0 1795437      896      165      163        2         0    49152        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795453]     0 1795453     1136      120      118        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795455]     0 1795455     1136      121      121        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795482]     0 1795482     4244     1354     1352        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1795483]     0 1795483   636517   154398   154396        2         0  1794048        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1795863]     0 1795863      902      175      173        2         0    53248        0             0 make
+Oct 09 07:50:00 known-grouse kernel: [1795879]     0 1795879     1136      120      118        2         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795881]     0 1795881     1136      122      122        0         0    49152        0             0 bash
+Oct 09 07:50:00 known-grouse kernel: [1795892]     0 1795892     4244     1353     1351        2         0    77824        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1795893]     0 1795893   707586   398087   398085        2         0  3768320        0             0 openroad
+Oct 09 07:50:00 known-grouse kernel: [1799965]  1000 1799965   387383   349610   348963      647         0  2920448        0             0 yosys-abc
+Oct 09 07:50:00 known-grouse kernel: [1800683]  1000 1800683     1986      556       65      491         0    61440        0             0 admit.sh
+Oct 09 07:50:00 known-grouse kernel: [1800685]  1000 1800685     5176     1886     1243      643         0    81920        0             0 python3
+Oct 09 07:50:00 known-grouse kernel: [1802759]  1000 1802759     4413     1028      316      712         0    73728        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1802866]  1000 1802866     4413     1050      315      735         0    77824        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1802887]  1000 1802887     4413     1045      315      730         0    73728        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: [1803475]  1000 1803475     4413     1028      316      712         0    77824        0             0 sleep
+Oct 09 07:50:00 known-grouse kernel: oom-kill:constraint=CONSTRAINT_NONE,nodemask=(null),cpuset=docker-c7179685fa5d1596a3116efdf75909785ff789f1a3b76261a62c181ac843719b.scope,mems_allowed=0,global_oom,task_memcg=/system.slice/docker-b6b9ab3da04b77c1752aa9dd6102838ce440b4f4986e937abb5452b6edbcc51f.scope,task=openroad,pid=3573537,uid=0
+Oct 09 07:50:00 known-grouse kernel: Out of memory: Killed process 3573537 (openroad) total-vm:137967484kB, anon-rss:131770460kB, file-rss:8kB, shmem-rss:0kB, UID:0 pgtables:267404kB oom_score_adj:0
+Oct 09 07:50:11 known-grouse kernel: oom_reaper: reaped process 3573537 (openroad), now anon-rss:0kB, file-rss:0kB, shmem-rss:0kB
+Oct 09 07:50:12 known-grouse kernel: docker0: port 19(vethe64125d) entered disabled state
+Oct 09 07:50:12 known-grouse kernel: veth8f193a0: renamed from eth0
+Oct 09 07:50:12 known-grouse kernel: docker0: port 19(vethe64125d) entered disabled state
+Oct 09 07:50:12 known-grouse kernel: vethe64125d (unregistering): left allmulticast mode
+Oct 09 07:50:12 known-grouse kernel: vethe64125d (unregistering): left promiscuous mode
+Oct 09 07:50:12 known-grouse kernel: docker0: port 19(vethe64125d) entered disabled state
+Oct 09 07:50:20 known-grouse kernel: docker0: port 4(veth6a4b23a) entered blocking state
+Oct 09 07:50:20 known-grouse kernel: docker0: port 4(veth6a4b23a) entered disabled state
+Oct 09 07:50:20 known-grouse kernel: veth6a4b23a: entered allmulticast mode
+Oct 09 07:50:20 known-grouse kernel: veth6a4b23a: entered promiscuous mode
+Oct 09 07:50:20 known-grouse kernel: eth0: renamed from vethccc10e4
+Oct 09 07:50:20 known-grouse kernel: docker0: port 4(veth6a4b23a) entered blocking state
+Oct 09 07:50:20 known-grouse kernel: docker0: port 4(veth6a4b23a) entered forwarding state
