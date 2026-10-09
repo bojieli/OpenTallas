@@ -52,6 +52,7 @@ module ot_hbm_accel_issue_pq #(
     input  wire                  rdone,
     output reg                   busy,
     output wire                  iss_v,
+    output wire                  iss_line_end,
     output wire                  iss_row_ok,
     output wire [$clog2(IL)-1:0] iss_slot,
     output wire [$clog2(RMAX):0] iss_row,
@@ -144,6 +145,9 @@ module ot_hbm_accel_issue_pq #(
     // PQ: the op's last issue (the cycle `issuing` falls)
     wire        op_end = adv && last_si && last_t && (gs_q || last_g) && lw_q;
     assign iss_v = adv;
+    // Last REAL input beat; padded row slots may follow before op_end.
+    assign iss_line_end = adv && row_ok && last_t && (gs_q || last_g) &&
+        (gs_q ? (wb + si + 1 == items_q) : (row_now + 1 == rows_q));
     assign iss_row_ok = row_ok;
     assign iss_slot = row_now[SW-1:0];
     assign iss_row = row_now;

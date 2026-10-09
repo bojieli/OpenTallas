@@ -35,6 +35,36 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import arch_budget_v41 as A  # noqa: E402
 
+def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
+    """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
+
+    G1 source: results/arch/qwen_on_r25_20261008/PLAN.md. Each SM front
+    consumes 128 INT8 codes in two beats of 64 exact BF16 values. Existing
+    BF16 MAC/reduction order is unchanged. Added register applies to all formats
+    in the enabled master; default legacy master has no added cycle.
+    """
+    return {
+        "status": "proposal_not_physically_qualified", "replicas": replicas,
+        "macs_per_cycle": 0, "compute_intensity": "conversion only",
+        "input_bytes_per_cycle_average": 64, "input_burst_bytes": 136,
+        "output_bytes_per_cycle": 136, "useful_output_bytes_per_cycle": 128,
+        "input_boundary_bits": 1088, "output_boundary_bits": 1088,
+        "conversion_lanes": 64, "held_high_codes_bits": 512,
+        "output_register_bits": 1088, "control_register_bits": 2,
+        "half_mux_inputs_per_lane": 2, "half_control_fanout": 64,
+        "estimated_area_mm2_die": 0.1,
+        "floorplan_slot": "existing open smh_front_c strip; fit unverified",
+        "routing_tracks_needed": 2176,
+        "routing_channel_capacity": None,
+        "routing_fit": "must measure in admitted context route",
+        "added_latency_cycles_per_dependent_sm_op": 1,
+        "added_token_cycles": dependent_sm_ops,
+        "added_token_ns_at_1p2ghz": dependent_sm_ops / 1.2,
+        "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
+        "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0",
+    }
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
