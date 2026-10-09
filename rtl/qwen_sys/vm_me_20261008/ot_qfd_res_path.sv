@@ -174,7 +174,8 @@ module ot_qfd_res_ser #(
     // ---- slot memories (one edge registered read), capture beside each, then the beat ----
     wire [NS*512-1:0] mq;
     reg  [NS*512-1:0] cap;
-    reg  t1_v, t1_nul, t1_end, t2_v, t2_nul, t2_end;
+    reg  t1_v, t1_nul, t1_end, t2_v, t2_nul, t2_end, t3_v, t3_nul, t3_end;
+    reg  [LS-1:0] t3_s; reg [RW-1:0] t3_row; reg [W-1:0] t3_mask;
     reg  [LS-1:0] t1_s, t2_s;
     reg  [RW-1:0] t1_row, t2_row;
     reg  [W-1:0]  t1_mask, t2_mask;
@@ -186,15 +187,40 @@ module ot_qfd_res_ser #(
         always @(posedge clk) if (t1_v && !t1_nul && t1_s == g) cap[g*512 +: 512] <= mq[g*512 +: 512];
     end endgenerate
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin t1_v <= 1'b0; t2_v <= 1'b0; o_v <= 1'b0; end
-        else begin t1_v <= d_v; t2_v <= t1_v; o_v <= t2_v; end
+        if (!rst_n) begin t1_v <= 1'b0; t2_v <= 1'b0; t3_v <= 1'b0; o_v <= 1'b0; end
+        else begin t1_v <= d_v; t2_v <= t1_v; t3_v <= t2_v; o_v <= (TSR == 2) ? t3_v : t2_v; end
     end
     always @(posedge clk) begin
         t1_nul <= d_nul; t1_end <= d_end; t1_s <= d_s; t1_row <= d_row; t1_mask <= d_mask;
         t2_nul <= t1_nul; t2_end <= t1_end; t2_s <= t1_s; t2_row <= t1_row; t2_mask <= t1_mask;
-        o_nul <= t2_nul; o_end <= t2_end; o_row <= t2_row; o_mask <= t2_nul ? {W{1'b0}} : t2_mask;
+        t3_nul <= t2_nul; t3_end <= t2_end; t3_s <= t2_s; t3_row <= t2_row; t3_mask <= t2_mask;
+        if (TSR == 2) begin o_nul <= t3_nul; o_end <= t3_end; o_row <= t3_row; o_mask <= t3_nul ? {W{1'b0}} : t3_mask; end
+        else begin o_nul <= t2_nul; o_end <= t2_end; o_row <= t2_row; o_mask <= t2_nul ? {W{1'b0}} : t2_mask; end
     end
-    generate if (TSR == 0) begin : g_od
+    // TSR = 2 (struct-close 2026-10-09, "-cl"): the 8:1 x 512 slot select becomes two registered levels: pair pre-select
+    // pm[k] = cap of slot 2k / 2k+1 (one 2:1 per bit, next to the pair's capture flops, select = t2_s[0] from per-64-bit
+    // kept copies), then o_data = pm[t3_s[2:1]] (4:1).  tsr41m-ci10 (core inset 10.8) failed post-place TT -1,035 on
+    // g_odr.g_sl[4].u_c/q -> o_data[267]: one 8:1 level gathering 8 slot capture banks over the 777.6 um block
+    // (wire 642 ps).  +1 cycle on the result beat (o_v / o_* move with it); credits unchanged.
+    generate if (TSR == 2) begin : g_od2
+        initial if (NS != 8) $error("ot_qfd_res_ser TSR=2: NS == 8");
+        reg [W*32-1:0] pm [0:3];
+        genvar k2, pr;
+        for (k2 = 0; k2 < W * 32 / 64; k2 = k2 + 1) begin : g_sl2
+            wire [2:0] sk;
+            (* keep_hierarchy *) ot_qfd_rs_sel3 u_c (.clk(clk), .d(t1_s), .q(sk));     // = t2_s, per 64-bit slice
+            wire [2:0] sk3;
+            (* keep_hierarchy *) ot_qfd_rs_sel3 u_c3 (.clk(clk), .d(sk), .q(sk3));     // = t3_s
+            for (pr = 0; pr < 4; pr = pr + 1) begin : g_pr
+`ifndef OT_QFD_RES_MUT_PAIR
+                always @(posedge clk) pm[pr][k2*64 +: 64] <= sk[0] ? cap[(2*pr+1)*512 + k2*64 +: 64] : cap[(2*pr)*512 + k2*64 +: 64];
+`else           // mutant: the pair pre-select takes the wrong half
+                always @(posedge clk) pm[pr][k2*64 +: 64] <= sk[0] ? cap[(2*pr)*512 + k2*64 +: 64] : cap[(2*pr+1)*512 + k2*64 +: 64];
+`endif
+            end
+            always @(posedge clk) o_data[k2*64 +: 64] <= pm[sk3[2:1]][k2*64 +: 64];
+        end
+    end else if (TSR == 0) begin : g_od
         always @(posedge clk) o_data <= cap[t2_s*512 +: 512];
     end else begin : g_odr
         initial if (NS > 8) $error("ot_qfd_res_ser TSR=1: NS <= 8 (3-bit select leaves)");
