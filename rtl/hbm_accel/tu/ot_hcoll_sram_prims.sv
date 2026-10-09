@@ -62,7 +62,11 @@ module ot_hcoll_payload_codec #(parameter integer W=545, parameter integer ECC=0
         for (p=1;p<=71;p=p+1)
           if ((p & (1<<k)) != 0) syndrome[k]=syndrome[k]^code[p-1];
       if (syndrome!=0) begin
-        if (overall && syndrome<=71) begin c[syndrome-1]=~c[syndrome-1]; corrected=1; end
+        if (overall && syndrome<=71) begin
+`ifndef OT_COLL_MUT_ECC_NO_CORRECT
+          c[syndrome-1]=~c[syndrome-1];
+`endif
+          corrected=1; end
         else ue=1;
       end else if (overall) begin c[71]=~c[71]; corrected=1; end
       data='0; j=0;
@@ -80,7 +84,12 @@ module ot_hcoll_payload_codec #(parameter integer W=545, parameter integer ECC=0
             wire [65:0] result=decode64(sampled[c*72+:72]);
             assign code[c*72+:72]=encode64(padded[c*64+:64]);
             assign unpacked[c*64+:64]=result[63:0];
-            assign cs[c]=result[64]; assign us[c]=result[65];
+            assign cs[c]=result[64]; assign us[c]=
+`ifdef OT_COLL_MUT_ECC_UE_PUBLISH
+            1'b0;
+`else
+            result[65];
+`endif
         end
         assign decoded=unpacked[W-1:0]; assign ce=|cs; assign ue=|us;
     end else begin : g_raw
