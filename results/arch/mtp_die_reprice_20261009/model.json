@@ -184,6 +184,92 @@
     },
     "qualification": "proposed structural budget; exactness and routed timing required"
   },
+  "exact_P2_expert_transport": {
+    "schema": "opentallas.dsrom.mtp-p2-transport.v1",
+    "adopted": false,
+    "source": "tools/hdc_golden_v41.py dspark expert sum; released width5120 TP4",
+    "arithmetic": "FP32 zero then each expert FP32 output in sorted expert-id order, then shared FP32, then BF16",
+    "shape": {
+      "rows_parallel": 5,
+      "ranks": 4,
+      "packages": 20,
+      "stages": 3,
+      "selected_experts_per_row": 3,
+      "rank_output_values": 1280
+    },
+    "MACs_per_cycle_unchanged": true,
+    "compute_intensity_unchanged": true,
+    "ports": {
+      "UCIe_bits_per_cycle": 512,
+      "UCIe_bytes_per_cycle": 64,
+      "primary_request_BF16_vector_bytes": 10240,
+      "per_expert_return_FP32_bytes": 5120,
+      "per_expert_return_flits": 80
+    },
+    "boundaries": {
+      "individual_expert_payload_bits_per_cycle": 512,
+      "identity_header_bits": "actual transaction, position and expert-id format required"
+    },
+    "replicas": {
+      "A_die": 20,
+      "B_die": 20,
+      "UCIe_pairs": 20
+    },
+    "mux_demux_fanout": {
+      "A_sorted_expert_merge_inputs": 3,
+      "B_return_selection_inputs": 3,
+      "A_adder_order": "must stall until next golden expert arrives; no B pre-sum"
+    },
+    "storage": {
+      "A_individual_expert_row_bytes_upper": 15360,
+      "B_pending_expert_row_bytes_upper": 15360,
+      "pair_row_buffer_bytes_upper": 30720,
+      "array_row_buffer_bytes_upper": 614400,
+      "actual_minimum_FIFO_implementation_required": true
+    },
+    "routing": {
+      "tracks": 512,
+      "channel_capacity": null
+    },
+    "area": {
+      "buffer_macro_inventory": null,
+      "finite_merge_cell_area": null,
+      "floorplan_slot_fit": false
+    },
+    "stages": [
+      {
+        "stage": 0,
+        "B_experts": 0,
+        "B_return_flits": 0
+      },
+      {
+        "stage": 1,
+        "B_experts": 3,
+        "B_return_flits": 240
+      },
+      {
+        "stage": 2,
+        "B_experts_range": [
+          0,
+          3
+        ],
+        "B_return_flits_upper": 240
+      }
+    ],
+    "latency": {
+      "clock_GHz": 1.2,
+      "old_summed_return_flits": 80,
+      "stage1_additional_return_flits": 160,
+      "stage2_additional_return_flits_upper": 160,
+      "stage1_extra_serialization_us": 0.13333333333333333,
+      "stage2_extra_serialization_us_upper": 0.13333333333333333,
+      "critical_row_extra_serialization_us_upper": 0.26666666666666666,
+      "multiply_by_5_parallel_rows": false,
+      "headers_endpoint_credit_and_ordering_stalls_unmeasured": true,
+      "historical_P2_point2us_budget_qualified": false
+    },
+    "qualification": "model-before-build; full-shape output ordering and finite transport gates required"
+  },
   "main_hidden_transport": {
     "hidden_dimension": 5120,
     "captures": 3,
@@ -361,6 +447,7 @@
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
     "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
     "tools/dsrom_head_input_staging_model.py": "7e340a91444cf61a987a1b11cea17d9dc17648732bf96997f007779470f13963",
-    "tools/uarch_model.py": "0aebf0b2b3cfb12ae74ed4514b1b07e3e5b779feb877efe581710423c22a911c"
+    "tools/dsrom_mtp_p2_transport_model.py": "ba92f2f7abd0b476ccd4fba4b6f3da25fcef4a9b56011e97ca232387c415d504",
+    "tools/uarch_model.py": "5e90e8269d690d9b6490c3db4fad15f992f6c8d3665a132dc1b6b365676de090"
   }
 }

@@ -14307,3 +14307,9 @@ def dsrom_head_input_staging_model(**kwargs):
     """Aligned hbglue-to-A input transport; proposed stages require routed qualification."""
     from dsrom_head_input_staging_model import model
     return model(**kwargs)
+
+
+def dsrom_mtp_p2_transport_model():
+    """Individual expert FP32 returns preserve the released golden sum order."""
+    from dsrom_mtp_p2_transport_model import model
+    return model()
