@@ -1,0 +1,23 @@
+{
+ "schema":"opentallas.candidate_bank_pathfinding_recipe.v1",
+ "owner":"candidate_store",
+ "scope":"STANDALONE PATHFINDING, no die-context closure/adoption claim",
+ "routing_owner":"Claude phys-intake; review required before submission",
+ "top":"hfd_candidate_sram_bank",
+ "sources":["rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv","rtl/hbm_accel/service/ot_hbm_accel_r5a_ecc_pkg.sv","rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv","physical/hbm_candidate_store_pathfinding/rtl/hfd_candidate_sram_bank.sv"],
+ "macro_blackbox":"physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+ "macro_directory":"physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+ "expected_macro_count":3,
+ "expected_macro_instances":["bank.g_macro[0].u_sram","bank.g_macro[1].u_sram","bank.g_macro[2].u_sram"],
+ "outline_um":[350,150],
+ "macro_locations_um":[[14,10],[117,10],[220,10]],
+ "clock":"clk",
+ "period_ns":0.833,
+ "setup_uncertainty_ns":0.060,
+ "hold_uncertainty_ns":0.025,
+ "corners":{"setup":"TT","hold":"FF","sensitivity":"SS"},
+ "boundary_budgets":"phys-intake must explicitly select standalone pathfinding budgets; no actual die boundary sheet allocated",
+ "model":"results/uarch/hbm_candidate_store_20261009.json",
+ "exact_gate":"tools/hbm_candidate_store_gate.py",
+ "full_store_mapping":"70banks,210macros; full hierarchical bank buses/mux placement is separate, no flat full-array P&R requested"
+}
