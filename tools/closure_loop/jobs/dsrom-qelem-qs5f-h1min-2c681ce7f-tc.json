@@ -20,11 +20,15 @@
     ]
   },
   "stages": {
-    "bench": {
-      "cmd": "python3 tools/dsrom_qelem_cl/verify_recovered_qs5_gate.py --source . --receipt results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json",
-      "threads": 1,
-      "peak_ram_gb": 1
-    },
+    "bench": [
+      {
+        "cmd": "python3 tools/dsrom_qelem_cl/verify_recovered_qs5_gate.py --source . --receipt results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "name": "qs5_source_bound",
+        "expect": "pass"
+      }
+    ],
     "calibrate": {
       "cmd": "export OT_NATIVE_Q_H1_INPUT=1; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1_input.sdc'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
       "base": "{RUN}/routes/jobs/{LABEL}_cal/work/orfs/results/asap7/*/base",
@@ -91,5 +95,6 @@
     "ot-epyc3",
     "ot-epyc4",
     "ot-pve1"
-  ]
+  ],
+  "no_bench_reason": "Pure clock-reference reroute of byte-identical QS5f RTL: source-bound qx10qs5_recovery_gate.json PASS12775002cycles fivepositives/threemutants caught;37actualRTL/source hashes verified on retained source. No new numerical or queue mechanism; positive bench rebinds this immutable evidence to actual archived source."
 }
