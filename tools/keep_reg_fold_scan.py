@@ -21,6 +21,7 @@ YOSYS = "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys"
 KEEP_RE = re.compile(r'\(\*\s*keep\s*(?:=\s*"?(?:1|true|yes)"?)?\s*\*\)\s*(?:reg|logic)\b')
 MOD_RE = re.compile(r"^\s*module\s+(\w+)", re.M)
 HOOK = ROOT / "physical/common_flow/ot_keep_regs.tcl"
+TIMEOUT_S = 900
 
 
 def candidates():
@@ -69,8 +70,15 @@ def run_one(image, rel, top):
         res = {"file": rel, "module": top}
         for k, s in scripts.items():
             Path(d, f"{k}.ys").write_text("\n".join(s) + "\n")
-            r = subprocess.run(["docker", "run", "--rm", "-v", f"{ROOT}:/src:ro", "-v", f"{d}:/t", image,
-                                YOSYS, "-q", "-s", f"/t/{k}.ys"], capture_output=True, text=True, timeout=3600)
+            cname = f"krfs_{os.getpid()}_{abs(hash((rel, top, k)))}"
+            try:
+                r = subprocess.run(["docker", "run", "--rm", "--name", cname, "-v", f"{ROOT}:/src:ro", "-v", f"{d}:/t",
+                                    image, YOSYS, "-q", "-s", f"/t/{k}.ys"], capture_output=True, text=True,
+                                   timeout=TIMEOUT_S)
+            except subprocess.TimeoutExpired:
+                subprocess.run(["docker", "kill", cname], capture_output=True)
+                res["error"] = f"{k}: timeout {TIMEOUT_S} s (memory-array module; elaborate it in its routed context)"
+                return res
             jp = Path(d, f"{k}.json")
             if r.returncode or not jp.exists():
                 err = [l for l in (r.stdout + r.stderr).splitlines() if "ERROR" in l][:2]
@@ -91,8 +99,13 @@ def main():
     a = ap.parse_args()
     files = a.files or candidates()
     work = [(f, m) for f in files for m in keep_modules((ROOT / f).read_text(errors="replace"))]
-    with ThreadPoolExecutor(a.jobs) as ex:
-        rows = list(ex.map(lambda fm: run_one(a.image, *fm), work))
+    rows = []
+    part = a.output.with_suffix(".partial.jsonl")
+    with ThreadPoolExecutor(a.jobs) as ex, open(part, "w") as pf:
+        for r in ex.map(lambda fm: run_one(a.image, *fm), work):
+            rows.append(r)
+            pf.write(json.dumps(r) + "\n")
+            pf.flush()
     rows.sort(key=lambda r: (-r.get("folded", -1), r["file"], r["module"]))
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip()
     a.output.write_text(json.dumps(dict(schema="opentallas.keep_reg_fold_scan.v1", source_commit=head,
