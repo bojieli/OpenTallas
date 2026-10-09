@@ -14563,3 +14563,9 @@ def hbm_native_mtp_operation_model():
     """Full native operation lowering and protected CP command model."""
     from hbm_native_mtp_operation_model import model
     return model()
+
+
+def hbm_native_mtp_cp_result_model():
+    """Registered native checked CPRESULT producer model."""
+    from hbm_native_mtp_cp_result_model import model
+    return model()

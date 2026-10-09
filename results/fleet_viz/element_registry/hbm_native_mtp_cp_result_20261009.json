@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hbm_native_mtp_cp_result_top",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Additive197/517 native checked CPRESULT producer with full17-bit token and registered native input, old179 source preserved",
+      "source": {
+        "commit": "08e4b1bf7",
+        "paths": [
+          "rtl/hbm_accel/control/ot_dshbm_dspark_top_cp_stop.sv",
+          "rtl/hbm_accel/control/ot_hfd_mtp_core_cp_stop.sv",
+          "rtl/hbm_accel/control/hfd_mtp_x_cp_stop.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_dshbm_dspark_top_cp_stop.sv",
+          "rtl/hbm_accel/control/ot_hfd_mtp_core_cp_stop.sv",
+          "rtl/hbm_accel/control/hfd_mtp_x_cp_stop.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_cp_result_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_result_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_STALE_WINNER_AND_COMPLETION_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/transaction_cp_r3_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_NEW197_FACADE",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual owned pairedCPRESULT producer",
+        "new197/517 facade/model/clock qualification",
+        "rawlogit path must be inactive for CPRESULT producer",
+        "fullshape sourcekernel images",
+        "protectedcontrollerstate qualification"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": []
+      }
+    },
+    {
+      "element": "hbm_native_mtp_owned_cp_result_guard",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Additive197/517 native checked CPRESULT producer with full17-bit token and registered native input, old179 source preserved",
+      "source": {
+        "commit": "a9f866a26",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_cp_result_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/transaction_cp_r3_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_STALE_WINNER_AND_COMPLETION_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/transaction_cp_r3_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_NEW197_FACADE",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual owned pairedCPRESULT producer",
+        "new197/517 facade/model/clock qualification",
+        "rawlogit path must be inactive for CPRESULT producer",
+        "fullshape sourcekernel images",
+        "protectedcontrollerstate qualification"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": []
+      }
+    }
+  ]
+}
