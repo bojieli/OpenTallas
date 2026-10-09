@@ -19,5 +19,5 @@ $ADMIT python3 tools/run_abi3_physical.py --view asap7 --top $top $srcargs \
   --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited ${EXTRA:-} "$@" \
   --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
 echo "rc=$?" > $W/exit
-python3 tools/w18/corner_sta.py --post-sdc $D/sdc/hing_clocks_div${DIV:-2}.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
+python3 tools/w18/corner_sta.py --post-sdc physical/s81_native_ingest/host_post_div2.sdc --orfs-dir $W/work/orfs --output $W/corner_sta.json > $W/corner.log 2>&1
 echo "corner_rc=$?" >> $W/exit
