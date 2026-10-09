@@ -15035,3 +15035,41 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hgi_token18_contract_model():
+    """HGI-1 token endpoints: size before build; estimated area, zero new cycles.
+
+    Wrapper on the released FAST1/PRL2 DS control. Acceptance uses the plain
+    NSLOT8 leaf, not the historical protected/leased accept implementation.
+    """
+    tw, slots = 18, 8
+    accept_inputs = 2 + 4 + 3 * tw + 3 * 3
+    accept_outputs = 2 * slots * tw + 2 + 3 + 4 + tw
+    extra_accept_ff = 2 * slots + 1  # one widened bit per slot + bonus
+    return dict(schema='opentallas.hgi_token18.v1', default_off=True,
+        model_scope=['DeepSeek-V4.1 HBM', 'Qwen3-8B HBM AR'],
+        qwen_rom_mtp=False, replicas_per_die=1, MACs_per_cycle=0,
+        memory_ports_bytes_per_cycle=0, memory_storage='none',
+        accept=dict(input_bits=accept_inputs, output_bits=accept_outputs,
+                    slot_count=slots, storage_bits=2*slots*tw+tw,
+                    extra_ff_vs_17=extra_accept_ff,
+                    latency_cycles=1, added_cycles_vs_DS17=0,
+                    comparators=slots-1, comparator_width=tw,
+                    mux_inputs=slots, mux_width=tw),
+        control=dict(qualified_FAST=1, qualified_PRL=2, token_width=tw,
+                     token_ports=['p_tok','f_tok','e_tok','cmd_tok1','am_idx','tw_tok'],
+                     operand_bus_bits=slots*tw, added_cycles_vs_DS17=0,
+                     added_boundary_bits=6+slots),
+        routing=dict(assumed_slot_um=[466.56,200.88],
+                     two_layer_pitch_um=.064, reserve_fraction=.30,
+                     channel_tracks=int(2*200.88/.064*.70),
+                     accept_boundary_tracks=accept_inputs+accept_outputs,
+                     extra_control_boundary_tracks=6+slots),
+        area=dict(estimated_accept_widening_um2=extra_accept_ff*DFF_UM2,
+                  slot_area_um2=466.56*200.88,
+                  estimate_only=True, route_required=True),
+        latency=dict(token_added_cycles=0, accept_cycles=1,
+                     control_read_wait_cycles=2),
+        fanout=dict(replica_mux_demux=0, token_bit_max_accept_compare_fanout=1),
+        exact_gate='DS17 lockstep + upper-bit mismatch + accept lengths0..7 + true mutants')
