@@ -63,7 +63,23 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                 table_bytes_per_token_per_rank=6*288, read_bytes_per_cycle_per_pc=32,
                 boundary_bits_per_pc=341, concurrent_rows_per_rank=6,
                 return_obligation='64 PC identity streams, finite tagged buffering and simultaneous stalls exact gate',
-                added_decode_cycles=0, qualification='layout model only; no service/physical/performance credit')
+                added_decode_cycles=0,
+                read_adapter=dict(
+                    reserved_rows=6, atoms_per_row=9, controller_pc_endpoints=64,
+                    protected_buffer_bits=6*9*288, return_pin_bits=64*278,
+                    return_mux_2to1_equivalents=6*278*63,
+                    buffer_area_sequential_mm2=6*9*288*.2916/1e6,
+                    pin_area_sequential_mm2=64*278*.2916/1e6,
+                    mux_area_mm2_modelled=6*278*63*.056/1e6,
+                    area_basis='FF0.2916um2 and MUX2 0.056um2 assumptions, SECDED/route overhead pending',
+                    protection='four72-bit SECDED words per captured256-bit atom, nine atom identity bits per row',
+                    transaction='14-bit generation plus original3-bit row tag; one outstanding row per PC',
+                    return_capture_cycles=2, output_capture_cycles=1,
+                    added_row_latency_cycles=3, emitted_atoms_per_cycle=1,
+                    simultaneous_return_atoms_per_cycle=6,
+                    fanout='six64:1 PC response selectors, six SECDED encoders/decoders, six9:1 protected atom selectors',
+                    qualification='sizing before service RTL; generation wrap requires drain/fence; no physical credit'),
+                qualification='layout model only; no service/physical/performance credit')
 
 
 def dsrom_engram_sink_pincapture_model():
