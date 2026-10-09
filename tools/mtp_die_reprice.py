@@ -37,10 +37,36 @@ def released_markov():
     return tensors, sources
 
 
+def released_seed():
+    index_path = HEADERS + '/model.safetensors.index.json'
+    index = read(index_path)['weight_map']
+    tensors, sources = {}, {index_path}
+    shapes = {'weight': ('mtp.0.main_proj.weight', [5120,15360], 'F8_E4M3', 1),
+              'scale': ('mtp.0.main_proj.scale', [160,480], 'F8_E8M0', 1),
+              'norm': ('mtp.0.main_norm.weight', [5120], 'BF16', 2)}
+    for part, (name, shape, dtype, width) in shapes.items():
+        source = HEADERS + '/headers/' + index[name] + '.header.json'
+        sources.add(source)
+        row = read(source)[name]
+        assert row['shape'] == shape and row['dtype'] == dtype
+        size = row['data_offsets'][1] - row['data_offsets'][0]
+        assert size == math.prod(shape) * width
+        tensors[part] = dict(tensor=name, shape=shape, dtype=dtype, bytes=size, header=source)
+    return tensors, sources
+
+
 def compose():
     old = read(OLD)
     tensors, sources = released_markov()
+    seed, seed_sources = released_seed()
+    sources.update(seed_sources)
     sources.add(OLD)
+    placement_path = 'results/rtl/dsrom_recovery_20261004/draft/placement.json'
+    sources.add(placement_path)
+    placement = read(placement_path)
+    for part in seed.values():
+        prior = next(t for t in placement['tensors'] if t['tensor'] == part['tensor'])
+        assert prior['slices'] is None, 'seed now allocated: remove additive missing-seed assumption'
     source_pair_bytes = 4 * 4096 * 32
     successor_pair_bytes = 2 * 4096 * 32
     heads = old['ds_rom_array']['die_counts']['proposed']['head']
@@ -51,10 +77,16 @@ def compose():
     new_markov = math.ceil(embedded / source_pair_bytes) + math.ceil(head / source_pair_bytes / heads)
     historical = old['ds_rom_array']['reconciliation']['head_content_pairs_per_die_after']
     new_pairs = historical - historical_markov + new_markov
+    head_bundles = math.ceil(129280 / (128 * heads))
+    physical_engines = head_bundles * 4
+    logical_engines = math.ceil(math.ceil(129280 / heads) / 32)
+    seed_bytes = sum(t['bytes'] for t in seed.values())
+    seed_pairs_per_rank = math.ceil(math.ceil(seed_bytes / 4) / source_pair_bytes)
     return dict(
         schema='opentallas.mtp_die_reprice.v1',
         status='STORAGE_SIZED_TIMING_AND_RTL_INCOMPLETE',
         released_markov=tensors,
+        released_seed=seed,
         storage=dict(head_dies=heads, allocation_pair_bytes=source_pair_bytes,
                      allocation_pair_ROM4096_macros=4,
                      historical_reduced_K=32, released_K=256,
@@ -70,6 +102,42 @@ def compose():
                      successor_element_pair_ROM4096_macros=2,
                      successor_embed_pairs_per_head=math.ceil(embedded / successor_pair_bytes),
                      successor_head_pairs_per_head=math.ceil(head / successor_pair_bytes / heads)),
+        seed_allocation=dict(previous_primary_block_pairs=282,
+                             original_seed_slices=None,
+                             original_seed_counted_in_primary_capacity=False,
+                             bytes_global=seed_bytes, bytes_per_TP4_rank=math.ceil(seed_bytes/4),
+                             additional_storage_pairs_per_primary_rank_lower_bound=seed_pairs_per_rank,
+                             primary_block_plus_seed_pairs_lower_bound=282+seed_pairs_per_rank,
+                             head_dense_storage_with_seed_pairs_lower_bound=new_pairs+seed_pairs_per_rank,
+                             qualification='payload bound; bank/port allocation and main_proj RTL timing required'),
+        markov_ports=dict(logical_minimum_row_engines=logical_engines,
+                          actual_head_bundles=head_bundles, actual_A_elements=physical_engines,
+                          row_engines=physical_engines, weight_ROM4096_macros=2*physical_engines,
+                          weight_macro_outline_um=[125.28,62.91],
+                          raw_weight_macro_area_mm2=2*physical_engines*125.28*62.91/1e6,
+                          weight_read_bytes_per_cycle_per_engine=32,
+                          aggregate_weight_read_bytes_per_cycle=32*physical_engines,
+                          staged_embedding_bytes_per_engine=512,
+                          replicated_embedding_bytes=512*physical_engines,
+                          embedding_broadcast_bits_per_beat=256, embedding_broadcast_beats=16,
+                          local_weight_words_per_macro=256, macro_used_fraction=256/4096,
+                          row_launch_interval_cycles=256,
+                          measured_component_cycles_after_first_beat=177,
+                          integrated_join_cycles=None,
+                          reason_two_macros='real SS macro clkq needs two-edge capture; alternating banks preserve q',
+                          row_engine_route_area_mm2=None,
+                          physical_slot_fit=False),
+        main_hidden_transport=dict(hidden_dimension=5120, captures=3, bytes_per_value=2,
+                                   global_bytes_per_position=30720,
+                                   bytes_per_TP4_rank_per_position=7680,
+                                   link_bits=512, link_bytes_per_cycle=64,
+                                   global_flits_if_single_lane=480,
+                                   flits_per_rank_with_TP4_lanes=120,
+                                   flits_per_capture_per_rank=40,
+                                   rank_lane_tail_us=120/1200,
+                                   rank_lane_occupancy_pct_of_historical_II=100*(120/1200)/old['budget']['ds_rom']['II_us'],
+                                   RTL_capture_and_identity_qualified=False,
+                                   note='SEND_HIDDEN sends ordinary core output; independent HC-mean capture and typed forwarding absent'),
         latency=dict(historical_budget=old['budget']['ds_rom'],
                      historical_budget_qualification='reduced Markov32, cannot support released Markov256 claims',
                      adopted_full_shape_MTP_tok_s=None,
@@ -88,8 +156,11 @@ def compose():
                                         estimated_gross_utilization=38438/81881.28,
                                         added_cycles=0,
                                         status='sized_from_prior_cells_route_pending')),
-        loader=dict(historical_svc_bits=[904,624], native_svc_bits=[678,550],
+        loader=dict(historical_svc_bits=[904,624], native_svc_bits=[688,550],
+                    native_address_bits=37, physical_stacks=4,
                     external_host_AXI_bits=[226,74], additional_host_DMA_write_data_bits=64,
+                    host_minimum_out_bits=404, host_minimum_in_bits=381,
+                    host_physical_bits_with_forwarded_clocks=787,
                     status='protocol endpoint RTL and revised chain area remain required'),
         inputs={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sorted(sources)},
     )
