@@ -26,6 +26,8 @@ def bind():
  assert hashlib.sha256((ROOT/'physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl').read_bytes()).hexdigest()==pg['capture_anchor_sha256']
  return dict(passed=True,RTL_sha256=SHA,checked_beats=160,genuine_mutant_rejected=True,mapped_prerequisite=anchor['anchored_ODB_sha256'])
 AUDIT=r'''
+foreach ot_port [all_outputs] {puts "OT_I16_OUTPUT [get_full_name $ot_port]"}
+write_sdc /receipt/effective.sdc
 puts OT_I16_ELECTRICAL_BEGIN
 report_check_types -max_slew -max_cap -max_fanout -violators
 puts OT_I16_ELECTRICAL_END
@@ -94,10 +96,15 @@ def routed(orfs,out):
  section=log.split('OT_I16_ELECTRICAL_BEGIN')[-1].split('OT_I16_ELECTRICAL_END')[0]
  violations=section.count('(VIOLATED)')
  caps=number('OT_I16_CAPTURES');dist=number('OT_I16_CAPTURE_DISTANCE');leaves=number('OT_I16_CLOCK_LEAVES');fan=number('OT_I16_CLOCK_LEAF_MAX')
+ effective=(out/'effective.sdc').read_text() if (out/'effective.sdc').exists() else ''
+ outputs=set(re.findall(r'^OT_I16_OUTPUT (.+)$',log,re.M))
+ portloads={p:float(v) for v,p in re.findall(r'^set_load -pin_load ([0-9.]+) \[get_ports \{(.+)\}\]$',effective,re.M)}
+ explicit_load=len(outputs)==258 and set(portloads)==outputs and all(v==3.898 for v in portloads.values())
  row_mismatch=number('OT_I16_ROW_MISMATCH');pg=all(marker in log for marker in ('OT_I16_PG_VDD_PASS','OT_I16_PG_VSS_PASS'))
- passed=run.returncode==0 and 'OT_I16_ELECTRICAL_END' in log and violations==0 and caps==512 and dist is not None and dist<=20 and row_mismatch==0 and pg and leaves is not None and leaves>0 and fan is not None and fan<=16
+ passed=run.returncode==0 and explicit_load and 'OT_I16_ELECTRICAL_END' in log and violations==0 and caps==512 and dist is not None and dist<=20 and row_mismatch==0 and pg and leaves is not None and leaves>0 and fan is not None and fan<=16
  rec=dict(passed=passed,source_binding=bound,returncode=run.returncode,TC_electrical_violations=violations,captures=caps,max_actual_q_to_D_manhattan_um=dist,clock_leaves=leaves,max_clock_leaf_inputs=fan,scope='actual final TT electrical/directcapture/CTSleaf acceptance; setup/hold/DRC independently required')
  rec.update(actual_row_orientation_mismatch=row_mismatch,VDD_VSS_power_grid_connected=pg)
+ rec.update(all_258_outputs_have_explicit_unchanged_load_3_898=explicit_load)
  (out/'verdict.json').write_text(json.dumps(rec,indent=2));print(json.dumps(rec));return passed
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--orfs',type=Path);p.add_argument('--out',type=Path);a=p.parse_args()
