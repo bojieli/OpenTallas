@@ -54,7 +54,14 @@ module ot_s81ph_coll_core #(
     // cycle-identical to DEPTH 1024 (the w15b depth) at every S81 payload at CHB 1 and CHB 251 (AR 320 705 cycles):
     // the credit window no longer binds; the link rate (0.764 records / cycle) does.
     parameter integer EDEPTH = 512,
-    parameter integer EMACRO = 1
+    parameter integer EMACRO = 1,
+    // CLAUDE safe-s81 2026-10-08 (review S-D4): 1 = output-queue push pipelined (+1 cycle on t_vm): the packer's
+    // word and push are registered once, and the push register is REPLICATED per 256-b slice of the 2,099-b queue
+    // (one ot_s81ph_rfifo per slice, each written by its own replica), so the engine valid_out no longer fans out
+    // into 4 x 2,099 queue write enables in the cycle it arrives (dossier D: valid_out -> u_oq.m[2][480] -1,600).
+    // room2 stays safe with one push in flight: room2(t) => n(t) <= D-2, so the in-flight push and this cycle's
+    // push both fit.  Status (hv / room / room2) is taken from slice 0; the other slices are identical replicas.
+    parameter integer OQPIPE = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -302,8 +309,39 @@ module ot_s81ph_coll_core #(
     // header [51:1] (bit 0 = valid at the pin)
     wire [2099:1] b_word = {b_d, rank, fv_flt, fault, b_cr, pk_emit ? pk_err : 1'b0, in_gat && !pk_emit,
                             pt_push ? ep_ol[3 + pt_l] : 1'b0, b_last, b_mask, pt_push ? pt_l : 3'd0, b_type};
-    ot_s81ph_rfifo #(.W(2099), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(oq_push), .wd(b_word),
-        .pop(oq_hv && ts[0]), .hv(oq_hv), .hd(oq_hd), .room(), .room2(oq_room2), .fault(oq_flt));
+    generate if (OQPIPE == 0) begin : g_oq0
+        ot_s81ph_rfifo #(.W(2099), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(oq_push), .wd(b_word),
+            .pop(oq_hv && ts[0]), .hv(oq_hv), .hd(oq_hd), .room(), .room2(oq_room2), .fault(oq_flt));
+    end else begin : g_oqp
+        localparam integer OSW = 256, ONS = (2099 + OSW - 1) / OSW;     // 9 queue slices (the last one 51 b)
+        reg  [2099:1]  wq;                                              // registered packer word
+        reg  [ONS-1:0] pq;                                              // registered push, one replica per slice
+        wire [ONS-1:0] s_hv, s_r2, s_flt;
+        always @(posedge clk) wq <= b_word;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) pq <= {ONS{1'b0}};
+            else pq <= {ONS{oq_push}};
+        for (j = 0; j < ONS; j = j + 1) begin : g_s
+            localparam integer LO = j * OSW, WS = ((2099 - LO) < OSW) ? (2099 - LO) : OSW;
+            wire ps;
+`ifdef OT_S81PH_MUT_OQPIPE_SLICE
+            if (j == ONS - 2) begin : g_mut                              // negative control: one slice drops its push
+                reg dly; always @(posedge clk or negedge rst_n) if (!rst_n) dly <= 1'b0; else dly <= pq[j];
+                assign ps = pq[j] && dly;
+            end else begin : g_ok
+                assign ps = pq[j];
+            end
+`else
+            assign ps = pq[j];
+`endif
+            ot_s81ph_rfifo #(.W(WS), .D(4)) u_oq (.clk(clk), .rst_n(rst_n), .push(ps), .wd(wq[1 + LO +: WS]),
+                .pop(s_hv[0] && ts[0]), .hv(s_hv[j]), .hd(oq_hd[1 + LO +: WS]), .room(), .room2(s_r2[j]),
+                .fault(s_flt[j]));
+        end
+        assign oq_hv = s_hv[0];
+        assign oq_room2 = s_r2[0];
+        assign oq_flt = |s_flt;
+    end endgenerate
     always @(posedge clk or negedge rst_n)
         if (!rst_n) t_vm <= 0;
         else t_vm <= (oq_hv && ts[0]) ? {oq_hd, 1'b1} : 2100'd0;
