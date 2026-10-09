@@ -64,11 +64,20 @@ def main():
         for c in ("ss", "ff"):
             mv_lib[c] += f"read_liberty /mv{i}/{d.name}_{c}.lib\n"
     rec["macro_views"] = [str(d) for d in a.macro_view]
+    # MULTI-VT: an odb with LVT/SLVT cells exports with those libraries/LEFs too (detection: tools/w18/corner_sta.py)
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent / "w18"))
+    from corner_sta import extra_vts, _VT_TAG  # noqa: E402
+    vts = extra_vts(base / "6_final.odb")
+    if vts:
+        rec["vt_flavours_added"] = vts
+    vt_lefs = "".join(f"\nread_lef {PLAT}/lef/asap7sc7p5t_28_{_VT_TAG[v]}_1x_220121a.lef" for v in vts)
     for c in ("ss", "ff"):
-        libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{x}" for x in LIBS[c]) + "\n" + mv_lib[c] + mv_lef
+        libs = "\n".join(f"read_liberty {PLAT}/lib/NLDM/{x}" for x in
+                         LIBS[c] + [y.replace("_RVT_", f"_{v}_") for v in vts for y in LIBS[c]]) + "\n" + mv_lib[c] + mv_lef
         lef = f"write_abstract_lef /out/{a.name}.lef\n" if c == "ss" else ""
         tcl = f"""read_lef {PLAT}/lef/asap7_tech_1x_201209.lef
-read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef
+read_lef {PLAT}/lef/asap7sc7p5t_28_R_1x_220121a.lef{vt_lefs}
 {libs}
 read_db /in/{rel}/6_final.odb
 read_sdc {"/interface.sdc" if a.interface_sdc is not None else f"/in/{rel}/6_final.sdc"}
