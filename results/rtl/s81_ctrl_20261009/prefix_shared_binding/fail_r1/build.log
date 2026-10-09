@@ -1,0 +1,36 @@
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv:30: sorry: constant selects in always_* processes are not currently supported (all bits will be included).
+/srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_prefix_shared_binding.sv:52: error: port ``i_clk'' is not a port of completion.
+/srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_prefix_shared_binding.sv:52: error: port ``o_clk'' is not a port of completion.
+/srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_prefix_shared_binding.sv:52: error: port ``rst_n'' is not a port of completion.
+3 error(s) during elaboration.
+Command exited with non-zero status 3
+	Command being timed: "iverilog -g2012 -DBINDING_DUT -I/srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/rtl/common -s tb_s81_prefix_shared_path -o base.vvp /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/ot_mtp_p2_ordered_rows.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/ot_mtp_p2_prefix.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/ot_mtp_p2_prefix_native.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/ot_mtp_p2_prefix_path.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/ot_v41_fadd.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/rtl/common/ot_prefix.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/rtl/common/ot_secded.sv /srv/opentallas-scratch/mtp-die-prefixpath1fc92139a/rtl/model/hbm_pc40_native_sim_20261003/ot_sram_1r1w_128x256_m1_r2c2_sim.sv /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/hdc/ot_hdc_fastfp.sv /srv/opentallas-scratch/codex/ds-control/coll-native-src/rtl/hdc/ot_hdc_prefix.sv /srv/opentallas-scratch/codex/ds-control/ot_hdc_fp32_add_lat.sv /srv/opentallas-scratch/codex/ds-control/adapter-src/rtl/lib/ot_reset_sync.sv /srv/opentallas-scratch/codex/ds-control/adapter-src/rtl/lib/ot_async_fifo.sv /srv/opentallas-scratch/codex/ds-control/adapter-src/rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv /srv/opentallas-scratch/codex/ds-control/ot_s81_secded.sv /srv/opentallas-scratch/codex/ds-control/ot_sram_1r1w_256x256_m2_r2c2.v /srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_dsrom_mtp_shared_secded_pipe.sv /srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_primary_shared_last.sv /srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_shared_publisher_plain.sv /srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/tb_s81_prefix_shared_path.sv /srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-b9d46c237/ot_s81_prefix_shared_binding.sv"
+	User time (seconds): 4.98
+	System time (seconds): 0.22
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.20
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 321844
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 79451
+	Voluntary context switches: 16
+	Involuntary context switches: 8
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 3

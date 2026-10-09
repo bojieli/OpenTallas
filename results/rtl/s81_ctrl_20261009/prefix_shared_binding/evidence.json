@@ -1,0 +1,19 @@
+{
+ "status":"ATOMIC_NATIVE_CONTEXT_BINDING_MINIMUM_GATE_PASS",
+ "source_commit":"71ce3c586",
+ "bench_commit":"9468b5c82",
+ "model_before_rtl":"0e7b81bde",
+ "top":"ot_s81_prefix_shared_binding",
+ "enabled_default":false,
+ "remote":"ot-agidock128:/srv/opentallas-scratch/codex/ds-control/prefix-shared-binding-r2",
+ "admission_gib":2,
+ "shape":"One1280-value rank,80frames; actual12SRAMprefix+3SRAMsharedpublisher+native594bitinputCDC+16LAT3primarysharedLAST; real1bit reversecompletionCDC",
+ "command":"Native opaqueidentity74+sortedexpertIDs27, atomicprefix/sharedstart; oneownedcommand retained until actual80th primaryoutlast handshake returns to streamingdomain",
+ "numerical":"All1280outputvalues exact; same-source premature-prefix-rounding mutant FAIL3f800000 vs3f810000",
+ "cycles":{"stream":5480,"serial":4110,"first_output_stream":4835,"prefix_last_stream":5455,"shared_last_stream":5275},
+ "binding_cost_measured":"Completion return adds5stream or4serial cycles in this stalled minimum fixture versus direct316d8e20c; not independent rate credit or contextual timing",
+ "preserved_failure":"fail_r1 compilation exit3 from wrong completionprimitive namedports; sourceb9d46c237. Corrected actualports and synchronized commonreset release71ce3c586; failurelog retained",
+ "other_dependency_gates":"Freshcurrent594CDC reset+roundmutant98841b460; plainsharedSRAMCE80/UE85f5ba5bf",
+ "production_pending":["Actual A/Markov dispatch identity namespace and callers","E3 numericVMbase/staticwrite-visible fence/read1capture","Production GU/fullreleased1280contributions","Actual serial SU/main_norm output sink","Real clockarrival/outline/corridor and SSFF"],
+ "physical_claim":null
+}
