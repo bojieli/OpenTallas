@@ -4,8 +4,11 @@ Our rates: the newest results/arch/token_path_<date>/ export (one token's, or on
 so tok/s = 1 / latency is a PER-USER rate), cross-referenced to the newest results/arch/reprice_<date>/reprice.json.
 GPU rates: results/external/registry.json (third-party; owner rule: cite the registry, never re-research).
 GPU prefill: the third-party prefill citations carried in results/arch/prefill_ingest.json (the registry holds none).
-Aggregate rates: no aggregate was recomputed for the 2026-10-08 design points; the newest committed aggregates
-(2026-09-28, earlier design points) are returned flagged stale=True with their own per-user rate for context.
+Aggregate rates, power, dies / stacks, cost: the export's systems.json (tools/token_path_systems.py, from the
+2026-10-09 export on) when present -- every number graded measured / derived / modelled / assumed / third-party with
+its source; it is also returned whole as out['systems'] (incl. the HBM generic die's Qwen3-8B row). Where systems.json
+composes no aggregate (the HBM accelerator), or for an older export without it, the newest committed aggregates
+(2026-09-28, earlier design points) are returned flagged stale=True.
 """
 import json, os, subprocess, threading
 from pathlib import Path
@@ -27,7 +30,7 @@ class Landing:
 
     def numbers(self):
         tp = self._latest('token_path_2*', 'index.json'); rp = self._latest('reprice_2*', 'reprice.json')
-        files = [tp / f for f in ('qwen_rom.json', 'ds_rom.json', 'ds_rom_mtp.json', 'hbm_ds.json', 'hbm_ds_mtp.json')] + [
+        files = [tp / f for f in ('qwen_rom.json', 'ds_rom.json', 'ds_rom_mtp.json', 'hbm_ds.json', 'hbm_ds_mtp.json', 'systems.json')] + [
             rp / 'reprice.json', self.repo / 'results/external/registry.json', self.repo / 'results/arch/prefill_ingest.json',
             self.repo / 'results/arch/v41_lanes.json', self.repo / 'results/arch/qwen3_budget.json'] + sorted((self.repo / 'results/arch').glob('qwen_tp8_vs_sysdie_*/result.json'))
         key = tuple((str(f), f.stat().st_mtime) for f in files if f.is_file())
@@ -119,4 +122,37 @@ class Landing:
                                      date=self._date('results/arch/prefill_ingest.json')['date'], title=pre['lmsys_gb200_dsv3']['what'], url=pre['lmsys_gb200_dsv3']['url'],
                                      label='DeepSeek-V3/R1 prefill per GB200 GPU, 2,000-token inputs (FP8 attention, NVFP4 MoE)'))),
         )
+        sp = tp / 'systems.json'
+        if sp.is_file():
+            self._systems(out, J(sp), rel(sp), rep_date)
         return out
+
+    def _systems(self, out, S, src, rep_date):
+        """aggregates / power / dies / cost from the export's systems.json (graded, sourced); HBM aggregate stays stale"""
+        commit = self._date(src)['commit']
+        def sysv(o, field, **kw):
+            if o is None or o.get('value') is None or isinstance(o.get('value'), list):
+                return None
+            return dict(value=o['value'], source=src, field=field, date=S.get('date') or rep_date, commit=commit, stale=False,
+                        grade=o.get('grade'), basis=o.get('source'), note=o.get('note'), **kw)
+        D = {d['id']: d for d in out['designs']}
+        q = S['qwen_rom']
+        qa = sysv(q['aggregate'], 'qwen_rom.aggregate')
+        if qa:
+            old = D['qwen_rom'].get('aggregate') or {}
+            for k in ('users_to_saturate', 'kv_capacity_users', 'binding', 'label'):
+                if k in old:
+                    qa[k] = old[k]
+            D['qwen_rom']['aggregate'] = qa
+        d = S['ds_rom']
+        for key, mode in (('aggregate', 'AR'), ('aggregate_mtp', 'MTP')):
+            a = sysv(d['aggregate'][mode], f'ds_rom.aggregate.{mode}')
+            if a:
+                D['ds_rom'][key] = a
+        hb = {t['id']: t for t in S['hbm']['targets']}
+        for did, blk in (('qwen_rom', q), ('ds_rom', d), ('hbm_ds', hb.get('hbm_ds'))):
+            if blk and did in D:
+                D[did]['system'] = dict(dies=blk.get('dies'), power=blk.get('power'), efficiency=blk.get('efficiency'),
+                                        cost=blk.get('cost'), source=src)
+        out['systems'] = S
+        out['generated_from']['systems'] = src
