@@ -34,6 +34,7 @@ def model(wide=False):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--source-commit',required=True)
+    p.add_argument('--generate-only',action='store_true',help='emit candidate and inspect source hooks without compute')
     p.add_argument('--wide',action='store_true',help='570.24um strip and 240um central corridor; separate candidate')
     a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     state={'source_commit':a.source_commit,'phase':'model','policy':'SS>=15ps FF>=15ps DRC0;833ps60/25uncertainty'}
@@ -88,6 +89,8 @@ def main():
         expected=([570.24,518.4] if a.wide else m['front_c_footprint_um'])
         assert geometry['die']==expected,(geometry['die'],expected)
         state.update(phase='exact_gates',geometry=geometry);save()
+        if a.generate_only:
+            state.update(phase='generated');save();return
         cmd([sys.executable,ROOT/'tools/qwen_r25_int8_gate.py','--out',out/'adapter_gate'],out/'adapter_gate.log',env)
         cmd([sys.executable,ROOT/'tools/test_qwen_r25_int8_image.py','--out',out/'image_gate'],out/'image_gate.log',env)
         state['phase']='calibration';save()
