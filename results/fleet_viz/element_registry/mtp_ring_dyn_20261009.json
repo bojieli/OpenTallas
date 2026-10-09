@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsrom_one_position_compressor_ring_dyn",
+      "target": "DeepSeek-V4.1 ROM",
+      "owner": "mtp_numerical_repair",
+      "description": "Default-off DYN25/26 address repair for the one-position wavefront core with eight compressor records",
+      "source": {
+        "commit": "aff63db74",
+        "paths": ["rtl/hdc/v41x/ot_hdc_core_v41x.sv", "tools/mtp_exact_wavefront2.py"]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF_FIRST_ADDRESS_FAULT_PROVED",
+        "evidence": ["rtl/hdc/v41x/ot_hdc_core_v41x.sv", "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json"]
+      },
+      "model": {
+        "status": "MODELED_FIVE_NONCONSTANT_STATE_BITS_ZERO_ADDED_CYCLES",
+        "evidence": ["physical/mtp_ring_dyn/model.json", "tools/uarch_model.py"]
+      },
+      "exactness": {
+        "positive": {"status": "RUNNING_ORIGINAL_DEEP_18_JOB_GATE", "evidence": []},
+        "negative": {"status": "RUNNING_WAVE0_CONTROL_ORIGINAL_FAILURE_PRESERVED", "evidence": ["results/rtl/hbm_token_fifo_reservation_20261009/legacy_mtp_ring14_verdict.json"]}
+      },
+      "physical": {"status": "AWAITING_CLAUDE_STRUCTURAL_REVIEW", "corners": {}, "evidence": []},
+      "dependencies": [
+        "Terminal bit-exact original campaign14 successor and campaign15 WAVE0 negative",
+        "Actual production single-position ring consumer binding",
+        "Claude structural review before routing",
+        "Contextual sequencer physical qualification with unchanged clocks and boundary obligations"
+      ],
+      "integration": {"status": "SOURCE_BRANCH_PUSHED_CLAUDE_MAIN_REVIEW_PENDING", "evidence": []}
+    }
+  ]
+}
