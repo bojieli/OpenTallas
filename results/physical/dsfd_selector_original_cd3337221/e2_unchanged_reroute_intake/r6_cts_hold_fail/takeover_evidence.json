@@ -1,0 +1,56 @@
+{
+  "status": "OWNER_TAKEOVER_STOPPED_NO_NEW_VARIANTS",
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "scope": "Evidence only. No RTL/config edits or queued variants. Historical 380 draft remains DO NOT MERGE SOURCE.",
+  "reports": {
+    "calibration_4_cts_final.rpt": "d1f063021a2d7a4c5d2eff90e991770ddebfef45b4c18da60c8fd88069feed25",
+    "route_3_detailed_place.rpt": "3be3df628023ea528ceef19e1ea04f77e3393c4362b9b506d9a4812ec579aae5"
+  },
+  "report_provenance": "Own completed R6 calibration CTS report and own failed route pre-CTS detailed-placement report. Failed-route CTS never completed; no failed-route CTS ODB or final path report claim.",
+  "observations": {
+    "calibration_ff_path": "g_cst[0].q[666] -> g_cst[1].q[330], one OAI22, clock capture-minus-launch109.73ps, hold -81.02ps",
+    "failed_route": "active-edge helper present; automatic cluster32 diameter72um; repair hold_margin50ps; 28240 endpoints within margin; canonical EARLY_FAIL_HOLD"
+  },
+  "pending_unselected_ideas": "Before takeover, cluster16/diameter36um and HM0 repair-only target were communicated as potential unchanged-RTL remedies. Neither implemented, queued, measured nor adopted. Claude owns selection.",
+  "registry_before": {
+    "at": "2026-10-09T14:07:22.031993+00:00",
+    "open": 119,
+    "idle": 41,
+    "owned": [
+      {
+        "element": "dsfd_selt_q",
+        "target": "DeepSeek ROM",
+        "variants": [],
+        "category": "needs redesign (no live job)",
+        "via": "",
+        "purpose": "selector quarter tile (lane decode + unchanged sel slice + 3 SRAM), replicated x4 (2 R0 + 2 MY); replaces sel_m1 (-3300 post-CTS, 4.8 ns insertion over the 5.3 mm slab, GRT OOM)",
+        "jobs": 7,
+        "live": 0,
+        "failed": 1,
+        "closed_jobs": 0,
+        "best": {
+          "tt": -297.84,
+          "ff": -13.34,
+          "ss": -434.67,
+          "drc": 0,
+          "job": "s81ph-dsfd_selt_q-cd3337221-b",
+          "corner": "SS",
+          "source_commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac"
+        },
+        "area": null,
+        "revoked": null,
+        "latest": {
+          "t": 1791553085.0,
+          "job": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+          "status": "EARLY_FAIL_HOLD",
+          "text": "EARLY_FAIL_HOLD: stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present"
+        },
+        "closed_t": null,
+        "owner": "Codex:selector_capture routine R6; Claude confirmed review0400 intake",
+        "evidence_history": [],
+        "qualification": null,
+        "superseded": null
+      }
+    ]
+  }
+}
