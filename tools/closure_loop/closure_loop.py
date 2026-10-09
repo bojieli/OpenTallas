@@ -1898,6 +1898,95 @@ def setup_sensitivity_text(metrics):
     return f"; SS sensitivity {value:+.2f} ps" if isinstance(value, (int, float)) else ""
 
 
+def defer_record_merge(j, out, sparse, dry=False):
+    """Keep the source-branch record durable while the owner's main window is held."""
+    if dry or j['spec'].get('merge_target') != 'main' or not (STATE / 'main_integration_hold.json').exists():
+        return False
+    pending = STATE / 'deferred_record_merges'
+    pending.mkdir(parents=True, exist_ok=True)
+    record = dict(job=dict(name=j['name'], spec=dict(block=j['spec']['block'],
+                  source=dict(branch=j['spec']['source']['branch']), merge_target='main')),
+                  out=dict(out), sparse=sparse, queued_at=now_iso())
+    path = pending / (j['name'] + '.json')
+    tmp = path.with_suffix('.tmp')
+    tmp.write_text(json.dumps(record, indent=1) + '\n')
+    tmp.replace(path)
+    out['merge'] = 'DEFERRED main merge: owner integration window; record committed on source branch'
+    return True
+
+
+def merge_record(j, out, sparse, dry=False):
+    spec = j['spec']
+    branch, target = j['spec']['source']['branch'], j['spec'].get('merge_target')
+    mwt = STATE / 'git' / (j['name'] + '-merge')
+    for attempt in range(4):
+        if defer_record_merge(j, out, sparse, dry):
+            return out
+        gfetch(target, timeout=600)
+        wt_add(mwt, f"origin/{target}", sparse)
+        mref = out["branch_commit"]
+        if not dry:
+            gfetch(branch, timeout=600)
+        m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
+                "merge", "--no-ff", "--no-edit", "-m",
+                f"Merge {branch} into {target} (closure-loop {j['name']}: {spec['block']} CLOSED)\n\n"
+                f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", mref], timeout=1800)
+        if m.returncode:
+            conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
+            sh(["git", "-C", str(mwt), "merge", "--abort"], timeout=300)
+            wt_rm(mwt)
+            out["merge"] = f"CONFLICT ({len(conf)} files: {', '.join(conf[:6])})"
+            return out
+        out["merge_commit"] = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
+        if dry:
+            out["merge"] = f"dry-run merged locally {out['merge_commit'][:9]} (not pushed)"
+            break
+        if defer_record_merge(j, out, sparse, dry):
+            wt_rm(mwt)
+            return out
+        p = sh(["git", "-C", str(mwt), "push", "-q", "origin", f"HEAD:refs/heads/{target}"], timeout=900)
+        if p.returncode == 0:
+            out["merge"] = f"merged into {target} {out['merge_commit'][:9]}"
+            break
+        log(f"[{j['name']}] push to {target} rejected (attempt {attempt}): {p.stderr[-300:]}")
+        wt_rm(mwt)
+    else:
+        out["merge"] = f"PUSH-RACE: could not push the merge into {target}"
+    wt_rm(mwt)
+    return out
+
+
+def retry_deferred_record_merges():
+    if (STATE / 'main_integration_hold.json').exists():
+        return
+    for path in sorted((STATE / 'deferred_record_merges').glob('*.json')):
+        if (STATE / 'main_integration_hold.json').exists():
+            break
+        try:
+            record = json.loads(path.read_text())
+            with PUBLISH_LOCK:
+                out = merge_record(record['job'], record['out'], record['sparse'])
+            if out.get('merge', '').startswith('merged into '):
+                with job_lock(record['job']['name']):
+                    j = load_job(record['job']['name'])
+                    j['publish'] = out
+                    event(j, 'Deferred record ' + out['merge'])
+                    save_job(j)
+                path.unlink()
+        except Exception:
+            log('deferred record merge retry error:\n' + traceback.format_exc())
+
+
+_DEFERRED_MERGE_FUTURE = None
+_DEFERRED_MERGE_POOL = ThreadPoolExecutor(max_workers=1)
+
+
+def schedule_deferred_record_merges():
+    global _DEFERRED_MERGE_FUTURE
+    if _DEFERRED_MERGE_FUTURE is None or _DEFERRED_MERGE_FUTURE.done():
+        _DEFERRED_MERGE_FUTURE = _DEFERRED_MERGE_POOL.submit(retry_deferred_record_merges)
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
@@ -1959,37 +2048,8 @@ def publish(j, metrics):
         raise RuntimeError(f"could not push the record to {branch}")
     wt_rm(cwt)
     if target:
-        for attempt in range(4):
-            gfetch(target, timeout=600)
-            wt_add(mwt, f"origin/{target}", sparse)
-            mref = out["branch_commit"] if dry else f"origin/{branch}"
-            if not dry:
-                gfetch(branch, timeout=600)
-            m = sh(["git", "-C", str(mwt), "-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me",
-                    "merge", "--no-ff", "--no-edit", "-m",
-                    f"Merge {branch} into {target} (closure-loop {j['name']}: {spec['block']} CLOSED)\n\n"
-                    f"Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>", mref], timeout=1800)
-            if m.returncode:
-                conf = sh(["git", "-C", str(mwt), "diff", "--name-only", "--diff-filter=U"], timeout=120).stdout.split()
-                sh(["git", "-C", str(mwt), "merge", "--abort"], timeout=300)
-                wt_rm(mwt)
-                out["merge"] = f"CONFLICT ({len(conf)} files: {', '.join(conf[:6])})"
-                return out
-            out["merge_commit"] = git("rev-parse", "HEAD", cwd=mwt).stdout.strip()
-            if dry:
-                out["merge"] = f"dry-run merged locally {out['merge_commit'][:9]} (not pushed)"
-                break
-            p = sh(["git", "-C", str(mwt), "push", "-q", "origin", f"HEAD:refs/heads/{target}"], timeout=900)
-            if p.returncode == 0:
-                out["merge"] = f"merged into {target} {out['merge_commit'][:9]}"
-                break
-            log(f"[{j['name']}] push to {target} rejected (attempt {attempt}): {p.stderr[-300:]}")
-            wt_rm(mwt)
-        else:
-            out["merge"] = f"PUSH-RACE: could not push the merge into {target}"
-        wt_rm(mwt)
-    else:
-        out["merge"] = "no merge target"
+        return merge_record(j, out, sparse, dry)
+    out["merge"] = "no merge target"
     return out
 
 
@@ -4158,6 +4218,7 @@ def cmd_daemon(a):
             publish_measured()
         except Exception:  # noqa: BLE001
             log("publish_measured error:\n" + traceback.format_exc())
+        schedule_deferred_record_merges()
         (STATE / "heartbeat").write_text(now_iso() + "\n")
         time.sleep(max(5, a.interval - (time.time() - t0)))
 
