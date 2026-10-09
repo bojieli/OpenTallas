@@ -28,9 +28,29 @@ def norm_program(heads, dim, x=0, gain=8192, scalar=16384, y=32768):
                dst=I.DST_VM,obase=y,oso=dim,osi=1)]
 
 
-def softmax_program(round_before_sum=False):
+def softmax_program(round_before_sum=False, blocked=False):
     # 8 Q heads x8192 rows. Two arrays fit the campaign's2^18-wordVM.
     # BF16 exp are attention PV operands, NOT probabilities divided by Z.
+    if blocked:
+        x,e,p,mp,mx,zp,z,t1,t2=0,65536,131072,196608,196672,196688,196752,196768,196800
+        ops=[op(nout=64,nin=1024,abase=x,aso=1024,asi=1,
+                red=I.RED_MAX,rbase=mp,rso=1),
+             op(nout=8,nin=8,abase=mp,aso=8,asi=1,
+                red=I.RED_MAX,rbase=mx,rso=1)]
+        for head in range(8):
+            ops.append(op(nout=8,nin=1024,abase=x+head*8192,aso=1024,asi=1,
+                bbase=mx+head,ad=I.AD_NEGB,sfu=I.SFU_EXP,
+                red=I.RED_SUM,rbase=zp+head*8,rso=1,
+                rnd=int(round_before_sum),dst=I.DST_VM,obase=e+head*8192,oso=1024,osi=1))
+        # Eight block sums combine pairwise, matching the global csum tree.
+        # RED_SUM on eight sums would use a sequential chunk and change order.
+        for src,dst,width in ((zp,t1,4),(t1,t2,2),(t2,z,1)):
+            ops.append(op(nout=8,nin=width,abase=src,aso=2*width,asi=2,
+                cbase=src+1,cso=2*width,csi=2,ad=I.AD_C,
+                dst=I.DST_VM,obase=dst,oso=width,osi=1))
+        ops.append(op(nout=8,nin=8192,abase=e,aso=8192,asi=1,rnd=1,
+                      dst=I.DST_VM,obase=p,oso=8192,osi=1))
+        return ops
     x,e,p,mx,z = 0,65536,131072,196608,196616
     return [op(nout=8,nin=8192,abase=x,aso=8192,asi=1,
                red=I.RED_MAX,rbase=mx,rso=1),
@@ -47,7 +67,7 @@ def swiglu_program():
                dst=I.DST_VM,obase=8192,osi=1)]
 
 
-def reference(stage, mutant=False, return_case=False):
+def reference(stage, mutant=False, return_case=False, blocked=False):
     rng = np.random.default_rng(8191)
     mem = C.Mem(np.zeros(1<<C.VMA,np.uint32),np.zeros(1<<C.KVA,np.uint32),
                 np.zeros((1<<C.CRA,2),np.uint32),np.zeros(1<<C.WRA,np.uint16))
@@ -62,9 +82,9 @@ def reference(stage, mutant=False, return_case=False):
         checks=[(32768,C.fbits(want).reshape(-1))]
     elif stage=='softmax':
         x=rng.uniform(-15,15,(8,8192)).astype(np.float32)
-        mem.vm[:x.size]=C.fbits(x).reshape(-1);ops=softmax_program(mutant)
+        mem.vm[:x.size]=C.fbits(x).reshape(-1);ops=softmax_program(mutant,blocked=blocked)
         e=G.exp(G.add(x,G.neg(x.max(axis=1)[:,None])))
-        checks=[(196616,C.fbits(V.csum(e))),
+        checks=[(196752 if blocked else 196616,C.fbits(V.csum(e))),
                 (131072,C.fbits(G.to_bf16(e)).reshape(-1))]
     elif stage=='swiglu':
         g=rng.uniform(-10,10,3072).astype(np.float32)
@@ -97,6 +117,7 @@ def main():
     ap.add_argument('--out',type=Path)
     ap.add_argument('--n',type=int,default=64)
     ap.add_argument('--m',type=int,default=16)
+    ap.add_argument('--blocked-softmax',action='store_true',help='1024-row partials with exact pairwise combination for small-lane mechanism bench')
     a=ap.parse_args()
     records=[]
     if a.exe:
@@ -110,10 +131,11 @@ def main():
         old=C.run_case
         C.run_case=lambda exe,d,nops,x=None:old(exe,d,nops,x,timeout=None)
     for stage,mutant in [(s,m) for s in ('rmsnorm','qknorm','softmax','swiglu') for m in (False,True)]:
-        rec=reference(stage,mutant)
+        rec=reference(stage,mutant,blocked=a.blocked_softmax)
         rec['negative']=mutant
+        rec['blocked_softmax']=a.blocked_softmax and stage=='softmax'
         if a.exe:
-            mem,ops,checks=reference(stage,mutant,return_case=True)
+            mem,ops,checks=reference(stage,mutant,return_case=True,blocked=a.blocked_softmax)
             compare,trace,_,_=C.run_program(a.exe,a.out/(stage+('_mutant' if mutant else '')),mem,ops,a.n,a.m,chain=False)
             got=trace['vm'];assert got is not None
             rec.update(rtl_compare=compare,n=a.n,m=a.m,fp=a.fp,
