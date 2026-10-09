@@ -15,7 +15,8 @@
 // Latency: one repack edge in front of the SU path (record accept E0 -> repacked E1 -> SU station E2 -> unit E3).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_sfu_record #(
-    parameter integer MUT_SWAP = 0         // mutant: up (B) and route weight (C) swapped
+    parameter integer MUT_SWAP = 0,        // mutant: up (B) and route weight (C) swapped
+    parameter integer LEGACY = 1           // as ot_hgi_su_record (0: the routed adapter, records only)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -49,7 +50,7 @@ module ot_hgi_sfu_record #(
                        ({255'd0, rec_o[4:2] == 3'd1} << 35) | (256'd1 << 36) | ({224'd0, rec_hdr[63:32]} << 110);
     // SU header: unit 2, op 0, opnd {O, C, B, A} = 0b0010111, tmpl 1
     wire [127:0] hdr = {4'd2, 6'd0, 16'd0, 2'd0, 7'b0010111, 1'b1, 92'd0};
-    assign rec_rdy = hgi_en && !p_v && !f_pend && !f_halt && !s_halted;
+    assign rec_rdy = (LEGACY ? hgi_en : 1'b1) && !p_v && !f_pend && !f_halt && !s_halted;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin p_v <= 1'b0; f_pend <= 1'b0; f_halt <= 1'b0; p_hdr <= 0; p_sut <= 0; p_a <= 0; p_b <= 0;
                           p_c <= 0; p_o <= 0; p_n <= 0; end
@@ -72,7 +73,7 @@ module ot_hgi_sfu_record #(
     assign rec_fault = s_fault | f_pulse;
     assign rec_done  = s_done;
     assign halted    = s_halted | f_halt;
-    ot_hgi_su_record u_su (.clk(clk), .rst_n(rst_n), .hgi_en(hgi_en), .rec_v(p_v), .rec_rdy(s_rdy), .rec_hdr(p_hdr),
+    ot_hgi_su_record #(.LEGACY(LEGACY)) u_su (.clk(clk), .rst_n(rst_n), .hgi_en(hgi_en), .rec_v(p_v), .rec_rdy(s_rdy), .rec_hdr(p_hdr),
         .rec_sut(p_sut), .rec_a(p_a), .rec_b(p_b), .rec_c(p_c), .rec_d(256'd0), .rec_o(p_o), .rec_r(256'd0),
         .rec_i(256'd0), .rec_n_a(p_n), .rec_done(s_done), .rec_fault(s_fault), .halted(s_halted), .drained(s_drained), .lg_v(lg_v),
         .lg_rdy(lg_rdy), .lg_w(lg_w), .op_v(op_v), .op_rdy(op_rdy), .op_w(op_w), .su_idle(su_idle), .su_fault(su_fault));

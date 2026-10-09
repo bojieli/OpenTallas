@@ -34,7 +34,8 @@
 module ot_hgi_sm_record #(
     parameter integer NSM = 32,
     parameter integer MUT_ROWS = 0,       // mutant: an even floor split (M >> 5 rows a SM) instead of the ceil blocks
-    parameter integer MUT_EARLY = 0       // mutant: retire when the SMs start
+    parameter integer MUT_EARLY = 0,      // mutant: retire when the SMs start
+    parameter integer LEGACY = 1          // 1: static legacy pass-through mux; 0: the routed adapter (records only)
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -89,7 +90,8 @@ module ot_hgi_sm_record #(
     reg in_xd, in_xf, in_pd, in_pf;
     always @(posedge clk) begin in_xd <= x_done; in_xf <= x_fault; in_pd <= pub_done; in_pf <= pub_fault; end
     assign halted = halt_q;
-    assign rec_rdy = hgi_en && !raw_v && !busy && !halt_q;
+    wire   hen = LEGACY ? hgi_en : 1'b1;
+    assign rec_rdy = hen && !raw_v && !busy && !halt_q;
 
     // ---- decode (from the raw station)
     wire [6:0]  opnd = hdr_q[99:93];
@@ -130,8 +132,8 @@ module ot_hgi_sm_record #(
             cmd_h[s*CW +: CW] = {rel[s], dl_s[s*24 +: 24], dbase_s[s*32 +: 32], d_pend[s] & go_ok, 7'd0, fmt_r, 1'b1,
                                  g_r, 16'd8, rows_s[s*13 +: 13], st_pend[s] & go_ok};
     end
-    assign sm_cmd = hgi_en ? cmd_h : lg_cmd;
-    assign lg_ret = hgi_en ? {NSM*4{1'b0}} : sm_ret;
+    assign sm_cmd = hen ? cmd_h : lg_cmd;
+    assign lg_ret = hen ? {NSM*4{1'b0}} : sm_ret;
 
     reg all_arr;
     always @* begin

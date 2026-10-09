@@ -23,11 +23,15 @@
 //   completion); a unit fault seen while the op runs retires it with rec_fault and halts (sticky until rst_n).
 // Latency: record accept edge E0 -> decoded word registered E1 -> op_v; the unit accepts at E2 (2 edges); retire
 //   1 edge after the unit's idle.  DS lockstep identity: hgi_en = 0 (static strap) connects the legacy op port
-//   (lg_*) straight to the unit port, combinationally (no added flop): the DS control path is cycle-identical.
+//   (lg_*) straight to the unit port, combinationally (no added flop): the DS control path is cycle-identical.  The
+//   routed adapter is LEGACY = 0 (registered boundary); the static strap mux sits in front of the unit wrapper's pin
+//   register on the die (0 cycles).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_su_record #(
     parameter integer MUT_ISTRIDE = 0,     // mutant: Xsi = istride (no 0 -> 1, no ibcast)
-    parameter integer MUT_EARLY = 0        // mutant: retire on the unit's accept, not on its completion
+    parameter integer MUT_EARLY = 0,       // mutant: retire on the unit's accept, not on its completion
+    parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
+                                           //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -82,10 +86,11 @@ module ot_hgi_su_record #(
 
     assign halted  = halt_q;
     assign drained = !raw_v && !dec_v && !exec;
-    assign rec_rdy = hgi_en && !raw_v && !dec_v && !halt_q;
-    assign op_v    = hgi_en ? (dec_v && !nop_q && !bad_q && !exec && !halt_q) : lg_v;
-    assign op_w    = hgi_en ? w_q : lg_w;
-    assign lg_rdy  = !hgi_en && op_rdy;
+    wire   hen     = LEGACY ? hgi_en : 1'b1;
+    assign rec_rdy = hen && !raw_v && !dec_v && !halt_q;
+    assign op_v    = hen ? (dec_v && !nop_q && !bad_q && !exec && !halt_q) : lg_v;
+    assign op_w    = hen ? w_q : lg_w;
+    assign lg_rdy  = !hen && op_rdy;
 
     // ---- decode (combinational from the raw station)
     wire [6:0] opnd = hdr_q[99:93];
@@ -150,7 +155,7 @@ module ot_hgi_su_record #(
                 dec_v <= 1'b0;
                 if (bad_q) begin rec_fault <= 1'b1; halt_q <= 1'b1; end else rec_done <= 1'b1;
             end
-            if (op_v && op_rdy && hgi_en) begin                // the unit took the op
+            if (op_v && op_rdy && hen) begin                // the unit took the op
                 dec_v <= 1'b0; exec <= 1'b1; exec_ph <= 2'd0; el_seen <= 1'b0;
                 if (MUT_EARLY) begin rec_done <= 1'b1; exec <= 1'b0; end
             end else if (exec) begin
