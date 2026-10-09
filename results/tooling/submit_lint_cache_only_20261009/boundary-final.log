@@ -1,0 +1,46 @@
+boundary_yosys=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
+Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)
+test_cl_spec_refused_by_default (test_rtl_boundary.Boundary.test_cl_spec_refused_by_default) ... ok
+test_comb_path_refused_when_registered_io (test_rtl_boundary.Boundary.test_comb_path_refused_when_registered_io) ... ok
+test_comb_path_warns (test_rtl_boundary.Boundary.test_comb_path_warns) ... ok
+test_registered_passes (test_rtl_boundary.Boundary.test_registered_passes) ... ok
+test_remote_probe_then_metadata_cache_only (test_rtl_boundary.Boundary.test_remote_probe_then_metadata_cache_only) ... ok
+test_submit_lint_refuses_and_warns (test_rtl_boundary.Boundary.test_submit_lint_refuses_and_warns) ... ok
+test_submit_missing_proof_refuses_without_probe (test_rtl_boundary.Boundary.test_submit_missing_proof_refuses_without_probe) ... ok
+test_unreadable_recipe_skips (test_rtl_boundary.Boundary.test_unreadable_recipe_skips) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.090s
+
+OK
+	Command being timed: "python3 -m unittest discover -s tools -p test_rtl_boundary.py -v"
+	User time (seconds): 0.13
+	System time (seconds): 0.05
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 28400
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8086
+	Voluntary context switches: 10
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+3d414360759412f61115888caaadf56e9497420164b342c643e0c0b8e00e1ac9  tools/closure_loop.py
+5eb8f313696a29148a13364c885e6f0b5039e13dad01238812237782d783e06e  tools/postroute_recovery.py
+7cd400c84973983e4ca263463b641ebe737a637ea3570e098efcbf5dcdf3705a  tools/rtl_boundary.py
+b74efd0b1fc161d9b1ff45ce027ec973ff1b4b9c45c4c573eb69366ee32008b4  tools/source_archive.py
+404447f1bf068d5afaeb21e1b329e026c6507b660e6161e7004220a360db7b4d  tools/ssh_transport.py
+3fd331c5630c34d47e85c5371fc607bf824c8086e96e1f33500a2aa23ae77bec  tools/submit_lint.py
+544b1cd7245ddccbd171ab9b868a30b2be6b97758bc3d90829b010450e93ee9c  tools/test_rtl_boundary.py
+78cafd9aba0a18c2b49b13199271515628dcfb5f9c679c6192994891c21b19de  tools/test_submit_lint.py

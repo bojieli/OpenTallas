@@ -1,0 +1,46 @@
+test_submit_lint (unittest.loader._FailedTest.test_submit_lint) ... ERROR
+
+======================================================================
+ERROR: test_submit_lint (unittest.loader._FailedTest.test_submit_lint)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_submit_lint
+Traceback (most recent call last):
+  File "/usr/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/usr/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/codex/submit-lint-cache-only/3f2d7736c/tools/test_submit_lint.py", line 12, in <module>
+    import closure_loop as cl  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'closure_loop'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
+Command exited with non-zero status 1
+	Command being timed: "python3 -m unittest discover -s tools -p test_submit_lint.py -v"
+	User time (seconds): 0.06
+	System time (seconds): 0.02
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.08
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 23104
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3838
+	Voluntary context switches: 2
+	Involuntary context switches: 0
+	Swaps: 0
+	File system inputs: 48
+	File system outputs: 64
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

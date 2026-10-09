@@ -1,0 +1,34 @@
+{
+  "verdict": "PASS",
+  "source_commit": "0846c8db7924dbf610665e5b06fe1cb14e8ffb22",
+  "base_origin_main": "6c38e5a14cb8ea0352da8fdaa3a8ceff78f07fd5",
+  "host": "ot-agidock128",
+  "scratch": "/srv/opentallas-scratch/codex/submit-lint-cache-only/3f2d7736c",
+  "admission": "/srv/opentallas-scratch/admit.sh 1 -- <test command>",
+  "measured_before": {"mem_available_mib": 83212, "disk_available_gib": 314, "load_1_5_15": [5.52, 9.15, 14.48]},
+  "yosys": "0.68 git38e001a6f",
+  "boundary_tests": {"count": 8, "peak_rss_kib": 28400, "log": "boundary-final.log"},
+  "submit_lint_tests": {"count": 20, "peak_rss_kib": 47008, "log": "submit-final.log"},
+  "coverage": [
+    "real admitted remote synthesis probe of registered and combinational fixtures",
+    "exact-key valid cached proof consumed without any subprocess",
+    "changed source commit, recipe parameter, or levels refuses without any subprocess",
+    "missing and malformed cached proof refuses without any subprocess",
+    "submit_lint default refuses absent proof independent of registered_io",
+    "existing pin-density fixes, refusals, utilisation estimates and intake handling"
+  ],
+  "source_sha256": {
+    "tools/closure_loop/rtl_boundary.py": "7cd400c84973983e4ca263463b641ebe737a637ea3570e098efcbf5dcdf3705a",
+    "tools/closure_loop/submit_lint.py": "3fd331c5630c34d47e85c5371fc607bf824c8086e96e1f33500a2aa23ae77bec",
+    "tools/closure_loop/closure_loop.py": "3d414360759412f61115888caaadf56e9497420164b342c643e0c0b8e00e1ac9",
+    "tools/closure_loop/test_rtl_boundary.py": "544b1cd7245ddccbd171ab9b868a30b2be6b97758bc3d90829b010450e93ee9c",
+    "tools/closure_loop/test_submit_lint.py": "78cafd9aba0a18c2b49b13199271515628dcfb5f9c679c6192994891c21b19de"
+  },
+  "preserved_failures": {
+    "submit.log": "First staging attempt omitted closure_loop.py dependency; ImportError, not a source failure. Preserved unchanged.",
+    "boundary.log": "Initial source 3f2d7736c eight-test PASS before documentation/pin fixture isolation update."
+  },
+  "deployment": "NOT DEPLOYED: Claude owns merge and daemon rollout",
+  "cache_provenance": "Existing source/recipe/levels key unchanged. Fleet importer verifies admitted remote provenance and atomically imports only its expected key. No operational cache edited by this branch.",
+  "limitations": "Explicit probe mode invokes Yosys and must run only through remote measured admission. Existing spec optouts and remote probe SKIP behavior are unchanged; no new optout or global PASS was introduced."
+}

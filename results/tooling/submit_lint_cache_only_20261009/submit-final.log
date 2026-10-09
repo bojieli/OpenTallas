@@ -1,0 +1,48 @@
+test_balanced_disjoint_ranges_do_not_add (test_submit_lint.Density.test_balanced_disjoint_ranges_do_not_add) ... ok
+test_big_group_balanced (test_submit_lint.Density.test_big_group_balanced) ... ok
+test_env_settings_read (test_submit_lint.Density.test_env_settings_read) ... ok
+test_fix_the_source_flow_does_not_read (test_submit_lint.Density.test_fix_the_source_flow_does_not_read) ... ok
+test_force_applies_fix_to_measured_failure (test_submit_lint.Density.test_force_applies_fix_to_measured_failure) ... ok
+test_pass_and_tracks_and_balance (test_submit_lint.Density.test_pass_and_tracks_and_balance) ... ok
+test_refused_when_no_fix_fits (test_submit_lint.Density.test_refused_when_no_fix_fits) ... ok
+test_second_fix_and_cfg_block (test_submit_lint.Density.test_second_fix_and_cfg_block) ... ok
+test_skips (test_submit_lint.Density.test_skips) ... ok
+test_threshold_override_and_warn_only (test_submit_lint.Density.test_threshold_override_and_warn_only) ... ok
+test_util_from_same_synthesis_input (test_submit_lint.Density.test_util_from_same_synthesis_input) ... ok
+test_eval (test_submit_lint.Expr.test_eval) ... ok
+test_ports (test_submit_lint.Expr.test_ports) ... ok
+test_unmodelled_port_type (test_submit_lint.Expr.test_unmodelled_port_type) ... ok
+test_error_never_blocks (test_submit_lint.LoopWiring.test_error_never_blocks) ... ok
+test_refused (test_submit_lint.LoopWiring.test_refused) ... ok
+test_release_route_key (test_submit_lint.LoopWiring.test_release_route_key) ... ok
+test_spread_recorded (test_submit_lint.LoopWiring.test_spread_recorded) ... ok
+test_util_db_roundtrip (test_submit_lint.LoopWiring.test_util_db_roundtrip) ... ok
+test_validate_refuses (test_submit_lint.LoopWiring.test_validate_refuses) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.189s
+
+OK
+	Command being timed: "python3 -m unittest discover -s tools -p test*lint.py -v"
+	User time (seconds): 0.31
+	System time (seconds): 0.06
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.37
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 47008
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 13203
+	Voluntary context switches: 156
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1144
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
