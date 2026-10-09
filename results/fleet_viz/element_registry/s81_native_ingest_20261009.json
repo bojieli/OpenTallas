@@ -3,7 +3,7 @@
   "records": [
     {
       "element": "ot_s81_native_pc_mux",
-      "target": "DeepSeek-V4.1 ROM S81",
+      "target": "DeepSeek ROM",
       "owner": "ingest",
       "description": "Actual341-bit perPC controller client arbitration, protected queues and true source-owned completion",
       "source": {
@@ -57,7 +57,7 @@
     },
     {
       "element": "ot_s81_ingest_visibility_fence",
-      "target": "DeepSeek-V4.1 ROM S81",
+      "target": "DeepSeek ROM",
       "owner": "ingest",
       "description": "Actual host ABI with source-owned physical visibility fence, finite protected completion/credit state",
       "source": {
@@ -110,7 +110,7 @@
     },
     {
       "element": "dsfd_host_native",
-      "target": "DeepSeek-V4.1 ROM S81",
+      "target": "DeepSeek ROM",
       "owner": "ingest",
       "description": "Actual host ABI with source-owned physical visibility fence, finite protected completion/credit state",
       "source": {
@@ -159,11 +159,11 @@
     },
     {
       "element": "ot_s81_host_dispatch",
-      "target": "DeepSeek-V4.1 ROM S81",
+      "target": "DeepSeek ROM",
       "owner": "ingest",
       "description": "Actual host290-bit class dispatch with protected sharedcredit debt",
       "source": {
-        "commit": "PENDING_IMPLEMENTATION_COMMIT",
+        "commit": "d61d74519",
         "paths": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv"
         ]
