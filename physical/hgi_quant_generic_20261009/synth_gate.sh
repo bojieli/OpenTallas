@@ -12,7 +12,7 @@ from pathlib import Path
 srcs=sys.argv[1].split();out=Path(sys.argv[2])
 (out/'source_sha256.json').write_text(json.dumps({p:hashlib.sha256(Path(p).read_bytes()).hexdigest() for p in srcs},indent=2)+'\n')
 (out/'boundary.ys').write_text('read_verilog -sv -DSYNTHESIS '+ ' '.join(srcs)+'; hierarchy -check -top ot_hgi_quant_decode; proc; flatten; opt_clean; techmap; opt_clean; write_json '+str(out/'boundary.json')+'\n')
-(out/'config.mk').write_text('export PLATFORM = asap7\nexport DESIGN_NAME = ot_hgi_quant_decode\nexport VERILOG_FILES = '+ ' '.join('/src/'+p for p in srcs)+'\nexport SDC_FILE = /src/physical/qwen_die_masters/die_p770.sdc\nexport DIE_AREA = 0 0 1800 600\nexport CORE_AREA = 2.16 2.16 1797.84 597.84\nexport PLACE_DENSITY = 0.50\nexport ADDER_MAP_FILE =\nexport NUM_CORES = 12\nexport SYNTH_HIERARCHICAL = 0\nexport SYNTH_MEMORY_MAX_BITS = 999999999\n')
+(out/'config.mk').write_text('export PLATFORM = asap7\nexport DESIGN_NAME = ot_hgi_quant_decode\nexport VERILOG_FILES = '+ ' '.join('/src/'+p for p in srcs)+'\nexport SDC_FILE = /src/physical/qwen_die_masters/die_p770.sdc\nexport DIE_AREA = 0 0 1800 600\nexport CORE_AREA = 2.16 2.16 1797.84 597.84\nexport PLACE_DENSITY = 0.50\nexport ADDER_MAP_FILE =\nexport NUM_CORES = 12\nexport SYNTH_HIERARCHICAL = 0\n')
 PY
 /usr/bin/time -v /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -s "$out/boundary.ys" > "$out/boundary.log" 2>&1
 python3 - "$out" <<'PY'
