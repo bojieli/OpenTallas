@@ -1,0 +1,10 @@
+{
+  "verdict": "PASS",
+  "qualified_source": "934d12a9b",
+  "cases": 11,
+  "scope": "Finite protected two-clock descriptor and full73 receipt mechanism with delayed stub admission; actual service integration qualified separately.",
+  "raw_time_unit": "Raw %t values are femtoseconds despite at_ps labels; divide by1000 to obtain picoseconds.",
+  "accepted_to_receipt_ns": [5.23, 5.415],
+  "fault_cases": "descriptor UE, receipt UE, future/old receipt, duplicate frame, source/sink retained-state mirror faults retain debt and never acknowledge",
+  "physical_adoption": false
+}

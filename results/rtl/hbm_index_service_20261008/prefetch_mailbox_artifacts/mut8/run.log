@@ -1,0 +1,3 @@
+PREFETCH_MAILBOX rep=0 sent_ps=9163000 accepted_ps=80384000 receipt_ps=85799000 accepted_to_receipt_ps=5415000
+PASS_HBM_INDEX_PREFETCH_FAULT mut=8 accepted=1 receipts=1
+/srv/opentallas-scratch/codex/hbm-service-striped-20261008/prefetch-mailbox-r1/rtl/test/hbm_accel/tb_hbm_index_prefetch.sv:42: $finish called at 192512000 (1fs)

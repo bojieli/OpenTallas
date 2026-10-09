@@ -1,0 +1,94 @@
+{
+  "schema": "opentallas.hbm_index_prefetch_gate.v1",
+  "source_commit": "934d12a9b",
+  "inputs_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "rtl/hbm_accel/service/ot_hbm_index_prefetch.sv": "2557328e78d23e8f69301984fdba42792d92d3dedb930e2916dba07d53316d10",
+    "rtl/test/hbm_accel/tb_hbm_index_prefetch.sv": "6a80afbecb2a9b31a3d2c36c030e4623c82d43f026525e1f8ea24076b7dbc65f",
+    "tools/hbm_index_prefetch_bench.py": "725ee1d35148360b2daff53cdead4678316a369e31d92ad2c2bbd597709d59bb",
+    "tools/hbm_index_prefetch_model.py": "c5a3485d2a08ab7eb43c76114512f2487ce3ff62298258d94ec36f7a631a8249"
+  },
+  "scope": "finite two-clock mailbox; stub delays admission, actual service join remains separately required",
+  "cases": [
+    {
+      "mutation": 0,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "3acc4db640fce87a121e33fdbf60e52a604573c51be59083839679dccde70eb7"
+    },
+    {
+      "mutation": 1,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "0fa50e7b5fd377c2548ad5beaeb3d211a2cf84e09bf97fea66c5d72cdda92ac2"
+    },
+    {
+      "mutation": 2,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "0203c7fc9dd715e96b435bd02701e55c2804c44017f2a913a4c725d474c518c1"
+    },
+    {
+      "mutation": 3,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "668a04d02742a029fa327df12127458a2abdf5c0c31cc9fac2bff4be8a10f1f2"
+    },
+    {
+      "mutation": 4,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "7579db1491faeb47927940d81038674fb3089c405601d325751ce40075f6b469"
+    },
+    {
+      "mutation": 5,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "e92e5357575fcc1683a7529636907a4d6a43420680a1794a95a42af9d204a35f"
+    },
+    {
+      "mutation": 6,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "359555daff4f6d50fdf5a6772966830c840bda42f3a850b6d4c174951a25ce41"
+    },
+    {
+      "mutation": 7,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "cb2a2a33aaa9d4f2b91425dde691888fffc1227be9d603940a331915b121de6a"
+    },
+    {
+      "mutation": 8,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "553ec26223282d12498bf30b5dafb9457547ac1d55c96f72a9f5c71c8b958732"
+    },
+    {
+      "mutation": 9,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "310a8e0c600f968ec798932461898144fe23c140569be9be416f5d5c2b2824be"
+    },
+    {
+      "mutation": 10,
+      "build_exit": 0,
+      "run_exit": 0,
+      "passed": true,
+      "raw_sha256": "44c34431f9c45ed0fc28261727eef5f743461fe09cf5603836ca09fb389ad451"
+    }
+  ],
+  "verdict": "PASS",
+  "adopted": false
+}
