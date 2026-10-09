@@ -36,6 +36,7 @@ module ot_s81_ctrl #(
     parameter integer SIDE_USH = 6,
     parameter integer NOPS     = 128,
     parameter integer NENG     = 12,
+    parameter integer USE_VM_RVALID = 0, OUT_DEPTH = 4,
     parameter integer QD       = 8,
     parameter integer ENG_HOP  = 7,
     parameter integer SRC_LO   = 0, SRC_HI = 0, SRC2_LO = 4095, SRC2_HI = 0, GRP_LO = 4095, GRP_HI = 0,
@@ -82,6 +83,7 @@ module ot_s81_ctrl #(
     output wire                  vm_re,
     output wire [VWA-1:0]        vm_raddr,
     input  wire [FLIT-1:0]       vm_rq,
+    input wire vm_rvalid,
     // HEAD: the head root's argmax of the step
     input  wire                  am_v,
     input  wire [NW-1:0]         am_pos,
@@ -183,12 +185,12 @@ module ot_s81_ctrl #(
         if (!rst_n) begin rh_v <= 1'b0; rh_tok <= 0; rh_val <= 0; rh_stop <= 1'b0; end
         else if (r_v) begin rh_v <= 1'b1; rh_tok <= r_tok; rh_val <= r_val; rh_stop <= r_stop; end
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
-        .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .QD(QD)) u_hop (
+        .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
         .go(hop_go || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
         .res_val(r_v ? r_val : rh_val), .res_stop(r_v ? r_stop : rh_stop),
         .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
-        .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
+        .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rvalid(vm_rvalid),
         .out_valid(out_valid), .out_ready(out_ready), .out_data(out_data), .out_last(out_last),
         .fault(h_f), .fault_code(h_fc), .st_msgs(h_msgs));
     genvar e;

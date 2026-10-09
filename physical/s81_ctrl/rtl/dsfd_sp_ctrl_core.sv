@@ -6,7 +6,7 @@
 // review_queue/ds-control.md): +1 inbound message (skid), +1 outbound message (skid), +1 hop_go pin flop, +1 VM write.
 // Wrappers: dsfd_sp_ctrl (layer die, ROLE 0), dsfd_sp_ctrl_src (stage-0 die: host queue + boot gate, ROLE 1),
 // dsfd_sp_ctrl_h (head-root die: sampler stop, ROLE 2).
-module dsfd_sp_ctrl_core #(parameter integer ROLE = 0, parameter integer MY_ID = 0,
+module dsfd_sp_ctrl_core #(parameter integer USE_VM_RVALID=0, OUT_DEPTH=4, ROLE = 0, parameter integer MY_ID = 0,
                            parameter integer SRC_LO = 0, SRC_HI = 0, parameter [15:0] TYPE_MASK = 16'h000A) (
     input  wire          ck,
     input  wire          rs,
@@ -17,7 +17,7 @@ module dsfd_sp_ctrl_core #(parameter integer ROLE = 0, parameter integer MY_ID =
     output wire [11:0]   cv, output wire [12*84-1:0] cd, input wire [11:0] dv, input wire [12*8-1:0] dt,
     input  wire          hop_go,
     output reg           vwe, output reg [13:0] vwa, output reg [511:0] vwd,
-    output wire          vre, output wire [13:0] vra, input wire [511:0] vrq,
+    output wire          vre, output wire [13:0] vra, input wire [511:0] vrq, input wire vrv,
     input  wire          am_v, input wire [20:0] am_pos, input wire [20:0] am_tok, input wire [31:0] am_val,
     input  wire          boot_ok,
     input  wire          hc_v, output wire hc_r, input wire [1:0] hc_op, input wire [7:0] hc_tag, input wire [7:0] hc_user,
@@ -44,14 +44,14 @@ module dsfd_sp_ctrl_core #(parameter integer ROLE = 0, parameter integer MY_ID =
         .in_data({hc_op, hc_tag, hc_user, hc_pos, hc_tok}), .out_valid(sh_v), .out_ready(sh_r), .out_data(sh_d), .overflow(x4), .underflow(x5));
     wire c_vwe; wire [13:0] c_vwa; wire [511:0] c_vwd;
     wire f; wire [15:0] fv; wire s; wire [15:0] sn; wire [31:0] j0, t0;
-    ot_s81_ctrl #(.ROLE(ROLE), .MY_ID(MY_ID), .NW(21), .MAXU(64), .VWA(14), .XW(640), .RXB(0), .TXB(2048), .SIDE_TXB(4096),
+    ot_s81_ctrl #(.USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .ROLE(ROLE), .MY_ID(MY_ID), .NW(21), .MAXU(64), .VWA(14), .XW(640), .RXB(0), .TXB(2048), .SIDE_TXB(4096),
         .SIDE_BASE(8192), .SIDE_USH(6), .NOPS(128), .NENG(12), .QD(8), .SRC_LO(SRC_LO), .SRC_HI(SRC_HI),
         .TYPE_MASK(TYPE_MASK), .LEN_SIDE_MAX(64)) u (
         .clk(ck), .rst_n(rs), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len), .cfg_users_static(cu_q),
         .in_valid(si_v), .in_ready(si_r), .in_data(si_d[511:0]), .in_last(si_d[512]),
         .out_valid(c_ov), .out_ready(so_r), .out_data(c_od), .out_last(c_ol),
         .cmd_v(cv), .cmd_d(cd), .dn_v(dv), .dn_tag(dt), .hop_go(hg_q),
-        .vm_we(c_vwe), .vm_waddr(c_vwa), .vm_wdata(c_vwd), .vm_re(vre), .vm_raddr(vra), .vm_rq(vrq),
+        .vm_we(c_vwe), .vm_waddr(c_vwa), .vm_wdata(c_vwd), .vm_re(vre), .vm_raddr(vra), .vm_rq(vrq), .vm_rvalid(vrv),
         .am_v(am_v_q), .am_pos(amp_q), .am_tok(amt_q), .am_val(amv_q), .boot_ok(bo_q),
         .hc_valid(sh_v), .hc_ready(sh_r), .hc_op(sh_d[59:58]), .hc_tag(sh_d[57:50]), .hc_user(sh_d[49:42]),
         .hc_pos(sh_d[41:21]), .hc_token(sh_d[20:0]), .cpl_valid(cpl_v), .cpl_ready(cpl_r), .cpl_data(cpl_d),
