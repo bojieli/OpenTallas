@@ -1,0 +1,59 @@
+{
+  "endpoint": {
+    "legacy": "5159113a0",
+    "current": "89380f9f7"
+  },
+  "runs": {
+    "10d737": {
+      "source": "10d737a07",
+      "positive": "PASS 45 commands",
+      "runner_failure": "rc127 missing rg",
+      "duplicate": "diagnostic fault1/done0; spurious post-finish coverage failure"
+    },
+    "eb8ec": {
+      "source": "eb8eced24",
+      "positive": "PASS 45 commands",
+      "duplicate": "diagnostic fault1/done0; Verilator finish jumps out of command loop to final coverage"
+    },
+    "38b9": {
+      "source": "38b9ce954",
+      "positive": "PASS 45 commands",
+      "mutant": "PREMATURE_DONE consuming assertion FAIL got0/4 tx0",
+      "duplicate": "diagnostic only"
+    },
+    "5c50": {
+      "source": "5c50a0c0b",
+      "positive": "PASS 45 commands including directed negative-zero fixture",
+      "duplicate": "diagnostic only; finalcoverage still not separate"
+    }
+  },
+  "successor": {
+    "source": "c033a2258",
+    "driver_pid": 1077494,
+    "host": "ot-epyc3",
+    "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-c033",
+    "status": "actual live; authoritative final gate pending"
+  },
+  "sha256": {
+    "38b9/driver.log": "d0a107ec1087d8e09b9522d387602882bc92fc0721c1baf3a2302704622f104e",
+    "38b9/out/premature_done.log": "ef515d7695585a19bafb50bb9cfd0743b8bcf08faf27484270f0a0edbcec1415",
+    "38b9/out/positive.log": "578511c130b4eccebcb7da0db884fa7982cb15186d60a70486c44aea7ed31afb",
+    "38b9/out/verdict.txt": "c52e83e9c2b76d87551cfb2848fe3ed4e4ec15e1b64119a4c2b2c79e04c211e7",
+    "38b9/out/duplicate.log": "6142e3fae4a79fa4e9c6ba63108d77b5c47dd2d7c699b722e45ec2f709115dfd",
+    "5c50/driver.log": "3dffbbc1b35b37e558b402a5d952ed2a5ece792790561b8859459fddcacbde6d",
+    "5c50/out/premature_done.log": "ef515d7695585a19bafb50bb9cfd0743b8bcf08faf27484270f0a0edbcec1415",
+    "5c50/out/positive.log": "0348d87e3cdb60d7b96b4c5bccf72e9b5d1b1fd250437282b2c3e54d3c4be9c2",
+    "5c50/out/verdict.txt": "c52e83e9c2b76d87551cfb2848fe3ed4e4ec15e1b64119a4c2b2c79e04c211e7",
+    "5c50/out/duplicate.log": "4a5c67ee513690c9ba0b2de336c3b525ab988227f37becab2b5b92bb18661e63",
+    "eb8ec/driver.log": "bf684e65fa85d7d05b8ffe12bd1b50477590700191509133b53a512052f7aa80",
+    "eb8ec/out/premature_done.log": "dac34f5f3981c036600ff348ad75b48ee1a6d63cb7b003ade2d84e15daaaf9c1",
+    "eb8ec/out/positive.log": "2786ea5484a8f366571b762db574b96fa9b933f9a7f31c879252d26240c73f43",
+    "eb8ec/out/verdict.txt": "d98dcc7eab4fe94b1c4711cd47ed48ea2204a7477d71bf9f4802d22d81d8c97e",
+    "eb8ec/out/duplicate.log": "a52980f71a5dd173e9402d5eb36fbbacd97999855485f67a0950ba29cc65dec0",
+    "10d737/driver.log": "ffc4f5e608ccd73915fc6a128750c01bbbb7495f7c2a07cae377f6f88f73c44b",
+    "10d737/resume.log": "6048bdd378370dce3b3bfe7660c6a45555bd80b3cfe6240d5e29ae772d7e0163",
+    "10d737/out/premature_done.log": "dac34f5f3981c036600ff348ad75b48ee1a6d63cb7b003ade2d84e15daaaf9c1",
+    "10d737/out/positive.log": "1f3e311555d8bf9652b30d4c3f3b0f0ec7c31955e3f5647d8bd9a59611df501d",
+    "10d737/out/duplicate.log": "7c67190669fd09c14884650ea53c81654534d64852f7e3626a4488bfe1b0ed73"
+  }
+}

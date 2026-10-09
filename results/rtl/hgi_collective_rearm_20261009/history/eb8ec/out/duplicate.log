@@ -1,0 +1,11 @@
+REARM_COMMAND PASS cmd=0 gs=0 rank=37 pf=8 got=4 tx=4 rx=0 stall=0
+REARM_COMMAND PASS cmd=1 gs=0 rank=38 pf=8 got=4 tx=4 rx=0 stall=0
+TUMISMATCH gi=48
+REARM_DUPLICATE PASS missing_result_not_completed fault=1 got=8/8
+- rtl/hbm_accel/tu/tb_hgi_coll_rearm.sv:294: Verilog $finish
+[441000] %Fatal: tb_hgi_coll_rearm.sv:313: Assertion failed in tb_hgi_coll_rearm.commands: credit-delay/stall coverage missing
+REARM PASS commands=45 delayed_credit=12 stalls=0 reset_count=1 external_quiescence=stub_contract
+- rtl/hbm_accel/tu/tb_hgi_coll_rearm.sv:315: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 441ns; walltime 0.063 s; speed 7.053 us/s
+- Verilator: cpu 0.063 s on 1 threads; allocated 14 MB

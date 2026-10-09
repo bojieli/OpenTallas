@@ -1,0 +1,50 @@
+REARM_COMMAND PASS cmd=0 gs=0 rank=37 pf=8 got=4 tx=4 rx=0 stall=0
+REARM_COMMAND PASS cmd=1 gs=0 rank=38 pf=8 got=4 tx=4 rx=0 stall=0
+REARM_COMMAND PASS cmd=2 gs=1 rank=13 pf=16 got=8 tx=12 rx=12 stall=0
+REARM_COMMAND PASS cmd=3 gs=2 rank=62 pf=16 got=8 tx=14 rx=18 stall=0
+REARM_COMMAND PASS cmd=4 gs=3 rank=95 pf=32 got=16 tx=30 rx=42 stall=0
+REARM_COMMAND PASS cmd=5 gs=15 rank=65 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=6 gs=15 rank=78 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=7 gs=15 rank=91 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=8 gs=15 rank=8 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=9 gs=15 rank=21 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=10 gs=15 rank=34 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=11 gs=15 rank=47 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=12 gs=15 rank=60 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=13 gs=15 rank=73 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=14 gs=15 rank=86 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=15 gs=15 rank=3 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=16 gs=15 rank=16 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=17 gs=15 rank=29 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=18 gs=15 rank=42 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=19 gs=15 rank=55 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=20 gs=15 rank=68 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=21 gs=15 rank=81 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=22 gs=15 rank=94 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=23 gs=15 rank=11 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=24 gs=15 rank=24 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=25 gs=15 rank=37 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=26 gs=15 rank=50 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=27 gs=15 rank=63 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=28 gs=15 rank=76 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=29 gs=15 rank=89 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=30 gs=15 rank=6 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=31 gs=15 rank=19 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=32 gs=15 rank=32 pf=64 got=384 tx=60 rx=436 stall=0
+REARM_COMMAND PASS cmd=33 gs=15 rank=45 pf=64 got=384 tx=60 rx=436 stall=49794
+REARM_COMMAND PASS cmd=34 gs=15 rank=58 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=35 gs=15 rank=71 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=36 gs=15 rank=84 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=37 gs=15 rank=1 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=38 gs=15 rank=14 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=39 gs=15 rank=27 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=40 gs=15 rank=40 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=41 gs=15 rank=53 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=42 gs=15 rank=66 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=43 gs=15 rank=79 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM_COMMAND PASS cmd=44 gs=15 rank=92 pf=64 got=384 tx=60 rx=436 stall=50293
+REARM PASS commands=45 delayed_credit=356 stalls=53932 reset_count=1 external_quiescence=stub_contract
+- rtl/hbm_accel/tu/tb_hgi_coll_rearm.sv:315: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 54us; walltime 6.484 s; speed 8.272 us/s
+- Verilator: cpu 6.484 s on 1 threads; allocated 14 MB
