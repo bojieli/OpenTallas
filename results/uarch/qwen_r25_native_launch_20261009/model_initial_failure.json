@@ -1,0 +1,1 @@
+{"verdict":"FAIL_MODEL_EXECUTION","host":"ot-epyc4","guard_gib":1,"error":"SyntaxError: keyword argument repeated: replicas","cause":"Model output used duplicate replicas keyword; renamed detailed comparator cost field before RTL implementation."}

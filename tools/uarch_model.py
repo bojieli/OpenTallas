@@ -14111,4 +14111,9 @@ def qwen_r25_su_quarter_contract_model():
     from tools.qwen_r25_su_quarter_model import model
     return model()
 
+def qwen_r25_native_launch_contract_model():
+    """Explicit checked CP entry to actual native ROM invocation."""
+    from tools.qwen_r25_native_launch_model import model
+    return model()
+
 
