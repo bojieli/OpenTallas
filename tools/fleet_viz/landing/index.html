@@ -42,8 +42,8 @@
 <section class="demo" id="agent"><div class="wrap">
   <div class="shead">
     <p class="eyebrow">Demo A · <b>DeepSeek-V4.1 Flash</b> · coding agent</p>
-    <h2>The same agent session, replayed on two machines</h2>
-    <p class="lede">These are real recordings: the DeepSeek Harness (<span class="mono">dsh</span>) working in a scratch repo through the DeepSeek API. We replay every step twice. Prefill and tool times are identical on both sides: prefill at a published GPU rate (it stays on the GPU), tools at their measured wall time. Only decode changes. The left side runs at the best published GPU per-user rate, the right at the DS ROM array's analytical per-user MTP rate.</p>
+    <h2>The same agent session, replayed three ways</h2>
+    <p class="lede">These are real recordings: the DeepSeek Harness (<span class="mono">dsh</span>) working in a scratch repo through the DeepSeek API. We replay every step three times. Prefill and tool times are identical in every lane: prefill at a published GPU rate (it stays on the GPU), tools at their measured wall time. Only decode changes. The lanes run at the DS ROM array's analytical per-user MTP rate, the best published GPU per-user rate at batch 1, and the median served speed on OpenRouter today.</p>
   </div>
   <div class="controls">
     <div class="seg" id="aTabs" role="group" aria-label="Recorded session"></div>
@@ -52,9 +52,10 @@
     <div class="seg" id="aSpeed" role="group" aria-label="Playback speed"><button type="button" data-s="1" aria-pressed="true">1× real time</button><button type="button" data-s="2" aria-pressed="false">2×</button><button type="button" data-s="4" aria-pressed="false">4×</button></div>
   </div>
   <p class="task" id="aTask">Loading the recorded session…</p>
-  <div class="lanes">
-    <div class="lane gpu" id="aGpu"><div class="lhead"><div class="who"><b>Best GPU</b><span id="aGpuRate">—</span></div><div class="clock" id="aGpuClock">0.0 s<small>wall clock</small></div></div><div class="term" id="aGpuTerm" tabindex="0" aria-label="GPU replay transcript"></div></div>
+  <div class="lanes three">
     <div class="lane chip" id="aChip"><div class="lhead"><div class="who"><b>DS ROM array</b><span id="aChipRate">—</span></div><div class="clock" id="aChipClock">0.0 s<small>wall clock</small></div></div><div class="term" id="aChipTerm" tabindex="0" aria-label="DS ROM replay transcript"></div></div>
+    <div class="lane gpu" id="aGpu"><div class="lhead"><div class="who"><b>Best GPU, batch 1</b><span id="aGpuRate">—</span></div><div class="clock" id="aGpuClock">0.0 s<small>wall clock</small></div></div><div class="term" id="aGpuTerm" tabindex="0" aria-label="GPU replay transcript"></div></div>
+    <div class="lane or" id="aOr"><div class="lhead"><div class="who"><b>OpenRouter today</b><span id="aOrRate">—</span></div><div class="clock" id="aOrClock">0.0 s<small>wall clock</small></div></div><div class="term" id="aOrTerm" tabindex="0" aria-label="OpenRouter replay transcript"></div></div>
   </div>
   <div class="tl" id="aTl"></div>
   <div class="legend" style="margin-top:10px"><span style="--c:var(--prefill)">prefill (on GPU, both sides)</span><span style="--c:var(--decode)">decode (reasoning + output)</span><span style="--c:var(--tools)">tools (measured wall time)</span></div>
@@ -68,8 +69,8 @@
 <section class="demo" id="answer"><div class="wrap">
   <div class="shead">
     <p class="eyebrow">Demo B · <b>Qwen3-8B</b> · one long answer</p>
-    <h2>A 2,000-token answer, side by side</h2>
-    <p class="lede">The same answer, token for token, streamed at each machine's per-user rate. Prefill is identical on both sides and decode makes the difference. The text came from a real Qwen3-8B run on our own machine; only the pacing is modelled.</p>
+    <h2>A 2,000-token answer, three ways</h2>
+    <p class="lede">The same answer, token for token, streamed at three per-user rates: our chip, the best published GPU at batch 1, and what OpenRouter serves today. Prefill is identical in every lane and decode makes the difference. The text came from a real Qwen3-8B run on our own machine; only the pacing is modelled.</p>
   </div>
   <div class="controls">
     <button class="play" id="bPlay" type="button"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg><span>Play</span></button>
@@ -77,9 +78,10 @@
     <div class="seg" id="bSpeed" role="group" aria-label="Playback speed"><button type="button" data-s="1" aria-pressed="false">1× real time</button><button type="button" data-s="0.25" aria-pressed="true">¼× slow motion</button><button type="button" data-s="0.1" aria-pressed="false">1/10×</button></div>
   </div>
   <p class="task" id="bTask">Loading…</p>
-  <div class="lanes">
-    <div class="lane gpu" id="bGpu"><div class="watch"><span class="t" id="bGpuT">0.000</span><div class="meta"><b>Best GPU</b><span id="bGpuRate">—</span></div></div><div class="prog"><i id="bGpuP"></i></div><div class="reader" id="bGpuText" tabindex="0" aria-label="GPU stream"></div></div>
+  <div class="lanes three">
     <div class="lane chip" id="bChip"><div class="watch"><span class="t" id="bChipT">0.000</span><div class="meta"><b>Qwen ROM</b><span id="bChipRate">—</span></div></div><div class="prog"><i id="bChipP"></i></div><div class="reader" id="bChipText" tabindex="0" aria-label="Qwen ROM stream"></div></div>
+    <div class="lane gpu" id="bGpu"><div class="watch"><span class="t" id="bGpuT">0.000</span><div class="meta"><b>Best GPU, batch 1</b><span id="bGpuRate">—</span></div></div><div class="prog"><i id="bGpuP"></i></div><div class="reader" id="bGpuText" tabindex="0" aria-label="Best GPU, batch 1 stream"></div></div>
+    <div class="lane or" id="bOr"><div class="watch"><span class="t" id="bOrT">0.000</span><div class="meta"><b>OpenRouter today</b><span id="bOrRate">—</span></div></div><div class="prog"><i id="bOrP"></i></div><div class="reader" id="bOrText" tabindex="0" aria-label="OpenRouter today stream"></div></div>
   </div>
   <div class="results">
     <div class="card"><p class="eyebrow">Finish time (real time, s)</p><div class="big num" id="bBig">—</div><p class="sub" id="bBigSub"></p></div>
@@ -92,7 +94,7 @@
   <div class="shead">
     <p class="eyebrow">Demo C · <b>home hub</b> · personal assistant</p>
     <h2>A house that answers before you reach the stairs</h2>
-    <p class="lede">A language model as the hub of a home: it reasons about a spoken request, calls device tools and answers. The traces are real model runs against a mock home whose devices answer with typical radio and cloud latencies. Below, the same trace plays on a GPU and on our chip. Prefill and device times are the same on both sides; only decode differs.</p>
+    <p class="lede">A language model as the hub of a home: it reasons about a spoken request, calls device tools and answers. The traces are real model runs against a mock home whose devices answer with typical radio and cloud latencies. Below, the same trace plays on our chip, on the best published GPU at batch 1, and at today's OpenRouter speed. Prefill and device times are the same in every lane; only decode differs.</p>
   </div>
   <div class="controls">
     <div class="seg" id="cTabs" role="group" aria-label="Home scenario"></div>
@@ -101,9 +103,10 @@
     <div class="seg" id="cSpeed" role="group" aria-label="Playback speed"><button type="button" data-s="1" aria-pressed="true">1× real time</button><button type="button" data-s="0.5" aria-pressed="false">½×</button></div>
   </div>
   <p class="task" id="cTask">Loading…</p>
-  <div class="homes">
-    <div class="lane gpu" id="cGpu"><div class="lhead"><div class="who"><b>GPU hub</b><span id="cGpuRate">—</span></div><div class="clock" id="cGpuClock">0.0 s<small>time to done</small></div></div><svg class="plan" id="cGpuPlan" viewBox="0 0 420 270" role="img" aria-label="Floor plan, GPU replay"></svg><div class="ticker" id="cGpuTick"></div><div class="say" id="cGpuSay"><span class="who">assistant</span>…</div></div>
-    <div class="lane chip" id="cChip"><div class="lhead"><div class="who"><b id="cChipName">Our chip</b><span id="cChipRate">—</span></div><div class="clock" id="cChipClock">0.0 s<small>time to done</small></div></div><svg class="plan" id="cChipPlan" viewBox="0 0 420 270" role="img" aria-label="Floor plan, chip replay"></svg><div class="ticker" id="cChipTick"></div><div class="say" id="cChipSay"><span class="who">assistant</span>…</div></div>
+  <div class="homes three">
+    <div class="lane chip" id="cChip"><div class="lhead"><div class="who"><b id="cChipName">Our chip</b><span id="cChipRate">—</span></div><div class="clock" id="cChipClock">0.0 s<small>time to done</small></div></div><svg class="plan" id="cChipPlan" viewBox="0 0 420 270" role="img" aria-label="Floor plan, Our chip replay"></svg><div class="ticker" id="cChipTick"></div><div class="say" id="cChipSay"><span class="who">assistant</span>…</div></div>
+    <div class="lane gpu" id="cGpu"><div class="lhead"><div class="who"><b id="cGpuName">GPU hub, batch 1</b><span id="cGpuRate">—</span></div><div class="clock" id="cGpuClock">0.0 s<small>time to done</small></div></div><svg class="plan" id="cGpuPlan" viewBox="0 0 420 270" role="img" aria-label="Floor plan, GPU hub, batch 1 replay"></svg><div class="ticker" id="cGpuTick"></div><div class="say" id="cGpuSay"><span class="who">assistant</span>…</div></div>
+    <div class="lane or" id="cOr"><div class="lhead"><div class="who"><b id="cOrName">OpenRouter today</b><span id="cOrRate">—</span></div><div class="clock" id="cOrClock">0.0 s<small>time to done</small></div></div><svg class="plan" id="cOrPlan" viewBox="0 0 420 270" role="img" aria-label="Floor plan, OpenRouter today replay"></svg><div class="ticker" id="cOrTick"></div><div class="say" id="cOrSay"><span class="who">assistant</span>…</div></div>
   </div>
   <div class="tl" id="cTl"></div>
   <div class="legend" style="margin-top:10px"><span style="--c:var(--prefill)">prefill</span><span style="--c:var(--decode)">decode (thinking + answer)</span><span style="--c:var(--tools)">device calls (measured)</span><span style="--c:var(--warn)">1 s: the point where a reply stops feeling instant</span></div>
@@ -122,6 +125,13 @@
   </div>
   <div class="tablebox"><table class="nums" id="numsTable"><thead><tr><th>Machine</th><th>Model · context · mode</th><th>Per user, tok/s</th><th>Aggregate, tok/s</th><th>Status</th></tr></thead><tbody><tr><td colspan="5">Loading…</td></tr></tbody></table></div>
   <p class="note" id="numsNote"></p>
+  <div class="card chartcard" style="margin-top:22px">
+    <div class="chead"><div><p class="eyebrow">Speed per user as users share a machine</p><h3 id="chTitle">DeepSeek-V4.1 Flash</h3></div>
+      <div class="seg" id="chTabs" role="group" aria-label="Model"><button type="button" data-m="ds" aria-pressed="true">DeepSeek-V4.1 Flash</button><button type="button" data-m="qwen" aria-pressed="false">Qwen3-8B</button></div></div>
+    <div class="chartbox"><svg id="chart" viewBox="0 0 760 360" role="img" aria-labelledby="chTitle"></svg><div class="tip" id="chTip" hidden></div></div>
+    <div class="legend" id="chLegend"></div>
+    <p class="note" id="chNote"></p>
+  </div>
   <div class="method">
     <p><b>Replay model.</b> Each recorded model call becomes prefill, then decode, then the call's tools. Prefill uses the uncached prompt tokens the API reported, at a published GPU prefill rate, on both sides. Decode uses every generated token (reasoning, text and tool-call JSON) at the side's per-user rate. Tools use their measured wall time. Harness overhead between steps is left out on both sides.</p>
     <p><b>What is not modelled.</b> The KV handoff from the prefill GPU to the chip is not charged. It is a few milliseconds per turn at these prompt sizes (<span class="mono">results/arch/prefill_ingest.json</span>). The chip rates are measured at the designs' target context (8K for Qwen, about 1M for DeepSeek), which is longer than these sessions, so they are conservative for short contexts. Token counts come from the model the API served (<span class="mono" id="servedModel">deepseek-flash</span>).</p>

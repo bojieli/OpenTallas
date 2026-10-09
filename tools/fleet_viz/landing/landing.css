@@ -4,7 +4,7 @@
   --bg: #0c0f14; --bg2: #11151c; --panel: #151a23; --line: #232a36; --line2: #2e3746;
   --fg: #e7eaf0; --fg2: #a9b1c0; --fg3: #737d8f;
   --chip: #e8925a; --chip-dim: rgba(232,146,90,.14); --gpu: #9aa6c7; --gpu-dim: rgba(154,166,199,.12);
-  --prefill: #6f8fe8; --decode: #e8925a; --tools: #74b49a; --warn: #e6c463; --bad: #e5737a; --good: #74c69d;
+  --or: #8d93a0; --s-chip: #c9773f; --s-gpu: #5a82d6; --prefill: #6f8fe8; --decode: #e8925a; --tools: #74b49a; --warn: #e6c463; --bad: #e5737a; --good: #74c69d;
   --term: #0a0d12; --term-fg: #d8dde7;
   --f-display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
@@ -15,13 +15,13 @@
   --bg: #f2f4f7; --bg2: #e9edf2; --panel: #ffffff; --line: #d9dee6; --line2: #c6cdd8;
   --fg: #141922; --fg2: #4a5466; --fg3: #6f7889;
   --chip: #b45a1f; --chip-dim: rgba(180,90,31,.10); --gpu: #55607f; --gpu-dim: rgba(85,96,127,.10);
-  --prefill: #3d63cf; --decode: #c2621f; --tools: #2f8a68; --warn: #a77d07; --bad: #c0414a; --good: #2b8a5c;
+  --or: #6b7280; --s-chip: #b45a1f; --s-gpu: #3d63cf; --prefill: #3d63cf; --decode: #c2621f; --tools: #2f8a68; --warn: #a77d07; --bad: #c0414a; --good: #2b8a5c;
   --term: #10141b; --term-fg: #d8dde7; color-scheme: light; } }
 :root[data-theme="light"] {
   --bg: #f2f4f7; --bg2: #e9edf2; --panel: #ffffff; --line: #d9dee6; --line2: #c6cdd8;
   --fg: #141922; --fg2: #4a5466; --fg3: #6f7889;
   --chip: #b45a1f; --chip-dim: rgba(180,90,31,.10); --gpu: #55607f; --gpu-dim: rgba(85,96,127,.10);
-  --prefill: #3d63cf; --decode: #c2621f; --tools: #2f8a68; --warn: #a77d07; --bad: #c0414a; --good: #2b8a5c;
+  --or: #6b7280; --s-chip: #b45a1f; --s-gpu: #3d63cf; --prefill: #3d63cf; --decode: #c2621f; --tools: #2f8a68; --warn: #a77d07; --bad: #c0414a; --good: #2b8a5c;
   --term: #10141b; --term-fg: #d8dde7; color-scheme: light; }
 
 * { box-sizing: border-box; }
@@ -67,7 +67,7 @@ p { margin: 0; }
   border-radius: var(--r); background: color-mix(in srgb, var(--warn) 7%, transparent); font-size: 14px; color: var(--fg2); max-width: 66ch; }
 .notbuilt b { color: var(--fg); }
 .notbuilt .tag { font: 700 11px/1 var(--f-mono); letter-spacing: .1em; color: var(--warn); border: 1px solid var(--warn); border-radius: 4px; padding: 5px 6px; height: fit-content; }
-.die { position: relative; aspect-ratio: 1 / 1; width: 100%; max-width: 100%; border-radius: 14px; overflow: hidden; border: 1px solid var(--line2);
+.die { position: relative; aspect-ratio: 1 / 1; width: 100%; max-width: 100%; border-radius: 0; border: 1px solid var(--line2);
   background: radial-gradient(120% 90% at 30% 20%, color-mix(in srgb, var(--chip) 10%, var(--bg2)), var(--bg2)); }
 .die canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .die .cap { position: absolute; left: 12px; bottom: 10px; right: 12px; font: 500 11px/1.4 var(--f-mono); color: var(--fg3); display: flex; justify-content: space-between; gap: 8px; }
@@ -226,3 +226,29 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 .method p { font-size: 14px; color: var(--fg2); }
 .method p b { color: var(--fg); }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+
+/* three lanes */
+.lanes.three, .homes.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 1080px) { .lanes.three, .homes.three { grid-template-columns: 1fr; } .lanes.three .term { height: 300px; } .lanes.three .reader { height: 300px; } }
+.lane.or .who b, .lane.or .watch .t, .tlrow.or .nm { color: var(--or); }
+.lane.or .prog i { background: var(--or); }
+.lane.or { border-style: dashed; }
+.lanes.three .clock { font-size: 22px; }
+.lanes.three .watch .t { font-size: clamp(34px, 3.6vw, 52px); }
+/* chart */
+.chartcard { padding: 18px; }
+.chead { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; justify-content: space-between; margin-bottom: 8px; }
+.chartbox { position: relative; overflow-x: auto; }
+#chart { width: 100%; min-width: 520px; height: auto; display: block; }
+#chart .grid { stroke: var(--line); stroke-width: 1; }
+#chart .ax { fill: var(--fg3); font: 11px var(--f-mono); }
+#chart .axt { fill: var(--fg2); font: 600 11.5px var(--f-body); }
+#chart .lab { font: 600 11.5px var(--f-body); fill: var(--fg); }
+#chart .labs { font: 11px var(--f-body); fill: var(--fg2); }
+.tip { position: absolute; pointer-events: none; background: var(--panel); border: 1px solid var(--line2); border-radius: 8px; padding: 8px 10px; font: 12px/1.45 var(--f-body); color: var(--fg); box-shadow: 0 6px 20px rgba(0,0,0,.25); max-width: 260px; }
+.tip b { font-family: var(--f-mono); }
+
+.watch { flex-wrap: wrap; }
+.watch .meta { min-width: 0; flex: 1 1 180px; overflow-wrap: anywhere; }
+.lanes.three .watch { flex-direction: column; align-items: stretch; gap: 6px; }
+.lanes.three .watch .meta { margin-left: 0; text-align: left; flex: none; }

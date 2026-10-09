@@ -25,7 +25,7 @@ const die = (() => {
   const cv = $('dieCanvas'), ctx = cv.getContext('2d'); let W = 0, H = 0, C = {}, t0 = performance.now();
   const N = 6, layers = 36, sub = 4;
   function palette() { const cs = getComputedStyle(document.documentElement); C = { chip: cs.getPropertyValue('--chip').trim(), line: cs.getPropertyValue('--line2').trim(), fg3: cs.getPropertyValue('--fg3').trim(), bg: cs.getPropertyValue('--bg2').trim(), prefill: cs.getPropertyValue('--prefill').trim() }; draw(performance.now()); }
-  function size() { const r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1); W = r.width; H = r.height; cv.width = Math.round(W * d); cv.height = Math.round(H * d); ctx.setTransform(d, 0, 0, d, 0, 0); }
+  function size() { const r = cv.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1), w = Math.round(r.width * d), h = Math.round(r.height * d); W = r.width; H = r.height; if (cv.width !== w || cv.height !== h) { cv.width = w; cv.height = h; } ctx.setTransform(d, 0, 0, d, 0, 0); }
   function order(i) { const row = Math.floor(i / N), col = i % N; return [row % 2 ? N - 1 - col : col, row]; }  // serpentine, like a pipelined layer chain
   function draw(now) {
     if (!W) return;
@@ -172,31 +172,44 @@ function agentPane(term, rec, tl, sideName) {
   return { reset, render };
 }
 
+/* the three lanes: our chip, best published GPU at batch 1, OpenRouter median served speed */
+function sides(N, model) {
+  const ds = model === 'ds', D = N.designs.find((d) => d.id === (ds ? 'ds_rom' : 'qwen_rom')), G = ds ? N.gpu.ds : N.gpu.qwen;
+  const chip = ds ? D.per_user_mtp : D.per_user;
+  return [
+    { k: 'Chip', cls: 'chip', name: ds ? 'DS ROM array' : 'Qwen ROM', short: ds ? 'DS ROM' : 'Qwen ROM', rate: chip.value,
+      label: `${fmt(chip.value, 1)} tok/s per user · analytical${ds ? ' · MTP τ 4.159' : ''} · ${shortSrc(chip.source)} · ${chip.date}` },
+    { k: 'Gpu', cls: 'gpu', name: 'Best GPU, batch 1', short: 'Best GPU', rate: G.per_user.value,
+      label: `${fmt(G.per_user.value, G.per_user.value < 1000 ? 1 : 0)} tok/s per user · third-party · ${G.per_user.label}` },
+    { k: 'Or', cls: 'or', name: 'OpenRouter today', short: 'OpenRouter', rate: G.served.value,
+      label: `${fmt(G.served.value, 1)} tok/s · ${G.served.label} · snapshot ${G.served.date}, includes network and load` },
+  ];
+}
 const A = { recs: {}, cur: null };
 function setupA(N, idx) {
-  const gpuR = N.gpu.ds.per_user.value, chipR = N.designs.find((d) => d.id === 'ds_rom').per_user_mtp.value, preR = N.gpu.ds.prefill.value;
-  $('aGpuRate').textContent = `${fmt(gpuR, 1)} tok/s per user · third-party · ${N.gpu.ds.per_user.label}`;
-  $('aChipRate').textContent = `${fmt(chipR, 1)} tok/s per user · analytical · MTP τ 4.159 · ${shortSrc(N.designs.find((d) => d.id === 'ds_rom').per_user_mtp.source)} · ${N.designs.find((d) => d.id === 'ds_rom').per_user_mtp.date}`;
-  const P = player($('aPlay'), $('aReset'), $('aSpeed'), (t) => frameA(t), { observe: $('aGpu') });
+  const S = sides(N, 'ds'), preR = N.gpu.ds.prefill.value;
+  S.forEach((x) => { $('a' + x.k + 'Rate').textContent = x.label; });
+  const P = player($('aPlay'), $('aReset'), $('aSpeed'), (t) => frameA(t), { observe: $('aChip') });
   A.P = P;
   async function pick(it) {
     const rec = A.recs[it.id] || (A.recs[it.id] = await J('recordings/' + it.file));
-    const tg = segments(rec.steps, gpuR, preR), tc = segments(rec.steps, chipR, preR);
-    A.cur = { rec, tg, tc, gp: agentPane($('aGpuTerm'), rec, tg, 'GPU'), cp: agentPane($('aChipTerm'), rec, tc, 'DS ROM') };
-    A.bars = tlRows($('aTl'), [{ name: 'Best GPU', cls: 'gpu', tl: tg }, { name: 'DS ROM', cls: 'chip', tl: tc }]);
+    const L = S.map((x) => { const tl = segments(rec.steps, x.rate, preR); return { ...x, tl, pane: agentPane($('a' + x.k + 'Term'), rec, tl, x.short) }; });
+    A.cur = { rec, L };
+    A.bars = tlRows($('aTl'), L.map((x) => ({ name: x.short, cls: x.cls, tl: x.tl })));
     $('aTask').innerHTML = `<b>${esc(rec.title)}.</b> ${esc(rec.blurb)} Task given to the agent: “${esc(rec.task)}” <span class="src">recorded ${new Date(rec.recorded * 1000).toISOString().slice(0, 16).replace('T', ' ')} UTC · ${esc(rec.harness)} · API served <b>${esc(rec.model_served.join(', '))}</b> · ${rec.steps.length} model calls, ${rec.steps.reduce((a, s) => a + s.tool_calls.length, 0)} tool calls</span>`;
-    $('aBig').innerHTML = `${fmtS(tc.total)} s <small>vs ${fmtS(tg.total)} s on the GPU</small>`;
-    $('aBigSub').textContent = `The session finishes ${(tg.total / tc.total).toFixed(1)}× sooner end to end. ${fmt(rec.steps.reduce((a, s) => a + s.output_tokens, 0))} generated tokens (${fmt(rec.steps.reduce((a, s) => a + s.reasoning_tokens, 0))} of them reasoning), ${fmt(rec.steps.reduce((a, s) => a + s.prefill_tokens, 0))} prefilled prompt tokens.`;
-    splitBars($('aSplit'), [{ name: 'GPU', cls: 'gpu', tl: tg }, { name: 'DS ROM', cls: 'chip', tl: tc }]);
-    $('aAmdahl').textContent = `Decode drops from ${fmtS(tg.decode)} s to ${fmtS(tc.decode)} s (${(tg.decode / tc.decode).toFixed(1)}×). Prefill (${fmtS(tg.prefill)} s) and tools (${fmtS(tg.tools)} s) are the same on both sides, so the end-to-end gain is ${(tg.total / tc.total).toFixed(1)}×. This is Amdahl's law: the faster decode gets, the more the measured tool time dominates.`;
-    P.total = Math.max(tg.total, tc.total); P.ready = true; P.restart();
+    const [c, g, o] = L.map((x) => x.tl);
+    $('aBig').innerHTML = `${fmtS(c.total)} s <small>vs ${fmtS(g.total)} s best GPU · ${fmtS(o.total)} s OpenRouter</small>`;
+    $('aBigSub').textContent = `The session finishes ${(g.total / c.total).toFixed(1)}× sooner than on the best published GPU and ${(o.total / c.total).toFixed(1)}× sooner than at today's median OpenRouter speed. ${fmt(rec.steps.reduce((a, s) => a + s.output_tokens, 0))} generated tokens (${fmt(rec.steps.reduce((a, s) => a + s.reasoning_tokens, 0))} of them reasoning), ${fmt(rec.steps.reduce((a, s) => a + s.prefill_tokens, 0))} prefilled prompt tokens.`;
+    splitBars($('aSplit'), L.map((x) => ({ name: x.short, cls: x.cls, tl: x.tl })));
+    $('aAmdahl').textContent = `Decode takes ${fmtS(c.decode)} s on our chip, ${fmtS(g.decode)} s on the best GPU and ${fmtS(o.decode)} s at OpenRouter speed. Prefill (${fmtS(c.prefill)} s) and tools (${fmtS(c.tools)} s) are the same in every lane, so the end-to-end gain over the best GPU is ${(g.total / c.total).toFixed(1)}× while decode alone is ${(g.decode / c.decode).toFixed(1)}×. This is Amdahl's law: the faster decode gets, the more the measured tool time dominates.`;
+    P.total = Math.max(...L.map((x) => x.tl.total)); P.ready = true; P.restart();
   }
   tabs($('aTabs'), idx.agent, (it) => { pick(it).then(() => { A.P.auto = false; A.P.set(true); }); });
-  $('aNote').innerHTML = `GPU decode: ${fmt(gpuR, 1)} tok/s, <span class="mono">${esc(N.gpu.ds.per_user.field)}</span> in <span class="mono">results/external/registry.json</span> (${esc(N.gpu.ds.per_user.title)}). This is the best published per-user DeepSeek-V4-family figure in the registry. It is measured on the larger V4-Pro, and no batch-1 V4.1-Flash GPU figure is published (V4-Flash on 4 × H200: ${fmt(N.gpu.ds.per_user_flash.value)} tok/s). Chip decode: ${fmt(chipR, 1)} tok/s, <span class="mono">${esc(N.designs.find((d) => d.id === 'ds_rom').per_user_mtp.source)}</span> · <span class="mono">headline.tok_s</span>, i.e. τ 4.159 accepted tokens per 955.7 µs MTP step at 1M context (${esc(N.designs.find((d) => d.id === 'ds_rom').per_user_mtp.status)}). Prefill on both sides: ${fmt(preR)} tok/s, <span class="mono">${esc(N.gpu.ds.prefill.source)} · ${esc(N.gpu.ds.prefill.field)}</span> (${esc(N.gpu.ds.prefill.label)}).`;
+  const G = N.gpu.ds, D = N.designs.find((d) => d.id === 'ds_rom').per_user_mtp;
+  $('aNote').innerHTML = `<b>Best GPU</b>: ${fmt(G.per_user.value, 2)} tok/s, <span class="mono">${esc(G.per_user.field)}</span> in <span class="mono">results/external/registry.json</span> (${esc(G.per_user.title)}). It is the best published batch-1 DeepSeek-V4.1 Flash figure we found. Its accept length is simulated at 5.5, above the τ 4.159 our chip is priced at, so it favours the GPU. Other published per-user points: V4.1 Flash on B200 TP4 at concurrency 1, ${fmt(G.per_user_b200.value, 1)} tok/s; V4-Flash on 4 × H200, ${fmt(G.per_user_flash.value)} tok/s. <b>OpenRouter</b>: median P50 of 30 providers, ${fmt(G.served.value, 1)} tok/s (best standard-routed ${fmt(G.served_best.value)} tok/s), <span class="mono">${esc(G.served.field)}</span>. It is a 2026-10-09 snapshot that includes network, queueing and provider load. <b>Our chip</b>: ${fmt(D.value, 1)} tok/s, <span class="mono">${esc(D.source)} · headline.tok_s</span>, i.e. τ 4.159 accepted tokens per 955.7 µs MTP step at 1M context (${esc(D.status)}). <b>Prefill</b> in every lane: ${fmt(preR)} tok/s, <span class="mono">${esc(N.gpu.ds.prefill.source)} · ${esc(N.gpu.ds.prefill.field)}</span> (${esc(N.gpu.ds.prefill.label)}).`;
   return pick(idx.agent[0]);
 }
-function frameA(t) { if (!A.cur) return; const c = A.cur; if (t === 0) { c.gp.reset(); c.cp.reset(); } c.gp.render(t); c.cp.render(t); A.bars.set(t);
-  clockSet($('aGpuClock'), $('aGpu'), t, c.tg.total, 'wall clock'); clockSet($('aChipClock'), $('aChip'), t, c.tc.total, 'wall clock'); }
+function frameA(t) { if (!A.cur) return; A.cur.L.forEach((x) => { if (t === 0) x.pane.reset(); x.pane.render(t); clockSet($('a' + x.k + 'Clock'), $('a' + x.k), t, x.tl.total, 'wall clock'); }); A.bars.set(t); }
 function clockSet(clock, lane, t, total, word) {
   const v = Math.min(t, total), done = t >= total - 1e-9 && t > 0; const s = `${v.toFixed(1)} s<small>${done ? 'done' : word}</small>`;
   if (clock._s !== s) { clock.innerHTML = s; clock._s = s; } lane.classList.toggle('done', done);
@@ -216,7 +229,7 @@ function streamPane(box, text) {
   let full = 0, partial = null, lastC = -1;
   function reset() { box.innerHTML = ''; full = 0; partial = null; lastC = -1; }
   function render(c) {
-    if (c === lastC) return; if (c < lastC) reset(); lastC = c; const st = stick(box);
+    if (c === lastC) return; if (c < lastC) reset(); lastC = c; const st = stick(box); if (c > 0) { const ph = box.querySelector('.ph'); if (ph) ph.remove(); }
     while (full < lines.length && lines[full].e < c) { if (partial) { partial.remove(); partial = null; } const L = lines[full]; if (L.text.trim()) { const m = mdLine(L.text); box.append(el(m.tag, m.cls, m.html)); } full++; }
     if (full < lines.length && c > lines[full].s) { const L = lines[full], m = mdLine(L.text.slice(0, c - L.s)); if (!partial || partial.tagName.toLowerCase() !== m.tag) { if (partial) partial.remove(); partial = el(m.tag, m.cls); box.append(partial); } partial.className = (m.cls ? m.cls + ' ' : '') + 'cursor'; partial.innerHTML = m.html; }
     else if (partial) { partial.remove(); partial = null; }
@@ -226,28 +239,27 @@ function streamPane(box, text) {
 }
 const B = {};
 function setupB(N, q) {
-  const gpuR = N.gpu.qwen.per_user.value, chipR = N.designs.find((d) => d.id === 'qwen_rom').per_user.value, preR = N.gpu.qwen.prefill.value;
-  const pre = q.prompt_tokens / preR, n = q.output_tokens, tg = pre + n / gpuR, tc = pre + n / chipR;
+  const S = sides(N, 'qwen'), preR = N.gpu.qwen.prefill.value, pre = q.prompt_tokens / preR, n = q.output_tokens;
   const cum = []; let o = 0; q.pieces.forEach((p) => { o += p.length; cum.push(o); });
-  const gp = streamPane($('bGpuText'), q.text), cp = streamPane($('bChipText'), q.text);
-  $('bGpuRate').textContent = `${fmt(gpuR)} tok/s per user · third-party`; $('bChipRate').textContent = `${fmt(chipR, 1)} tok/s per user · analytical`;
-  $('bTask').innerHTML = `<b>Prompt:</b> “${esc(q.prompt)}” <span class="src">${fmt(q.prompt_tokens)} prompt tokens → ${fmt(n)} output tokens · generated by ${esc(q.model)} (${esc(q.dtype)}, thinking off) on our own machine, ${esc(q.recorded)}; the text is real model output, only the pacing is modelled</span>`;
-  $('bBig').innerHTML = `${tc.toFixed(2)} s <small>vs ${tg.toFixed(2)} s on the GPU</small>`;
-  $('bBigSub').textContent = `${(tg / tc).toFixed(1)}× sooner. Both sides start streaming after the same ${(pre * 1000).toFixed(1)} ms prefill.`;
-  splitBars($('bSplit'), [{ name: 'GPU', cls: 'gpu', tl: { prefill: pre, decode: n / gpuR, tools: 0, total: tg } }, { name: 'Qwen ROM', cls: 'chip', tl: { prefill: pre, decode: n / chipR, tools: 0, total: tc } }]);
-  $('bNoteIn').textContent = `Decode: ${fmt(n)} tokens at ${fmt(gpuR)} vs ${fmt(chipR, 1)} tok/s. Without speculative decoding the same B200 runs ${fmt(N.gpu.qwen.per_user_ar.value)} tok/s, which would take ${(pre + n / N.gpu.qwen.per_user_ar.value).toFixed(1)} s.`;
-  const qr = N.designs.find((d) => d.id === 'qwen_rom').per_user;
-  $('bNote').innerHTML = `GPU: ${fmt(gpuR)} tok/s, <span class="mono">${esc(N.gpu.qwen.per_user.field)}</span> in <span class="mono">results/external/registry.json</span> (${esc(N.gpu.qwen.per_user.label)}). This is the best published Qwen3-8B per-user figure in the registry; its MATH-500 acceptance (τ 8.01) is favourable to the GPU. Qwen ROM: ${fmt(chipR, 1)} tok/s, <span class="mono">${esc(qr.source)} · ${esc(qr.field)}</span> (${esc(qr.mode)}, ${esc(qr.status)}, ${esc(qr.date)}). Prefill: ${fmt(preR)} tok/s, <span class="mono">${esc(N.gpu.qwen.prefill.source)} · ${esc(N.gpu.qwen.prefill.field)}</span>. Recording note: the local GPU was unavailable, so the text was generated on CPU with the same weights. Generation speed plays no part in the replay.`;
+  const L = S.map((x) => ({ ...x, T: pre + n / x.rate, pane: streamPane($('b' + x.k + 'Text'), q.text) }));
+  L.forEach((x) => { $('b' + x.k + 'Rate').textContent = x.label; });
+  $('bTask').innerHTML = `<b>Prompt:</b> “${esc(q.prompt)}” <span class="src">${fmt(q.prompt_tokens)} prompt tokens → ${fmt(n)} output tokens · generated by ${esc(q.model)} (${esc(q.dtype)}, thinking off) on our own machine's CPU, ${esc(q.recorded)}. The text is real model output; only the pacing is modelled.</span>`;
+  const [c, g, r] = L;
+  $('bBig').innerHTML = `${c.T.toFixed(2)} s <small>vs ${g.T.toFixed(2)} s best GPU · ${r.T.toFixed(1)} s OpenRouter</small>`;
+  $('bBigSub').textContent = `${(g.T / c.T).toFixed(1)}× sooner than the best published GPU and ${(r.T / c.T).toFixed(0)}× sooner than today's OpenRouter speed. Every lane starts streaming after the same ${(pre * 1000).toFixed(1)} ms prefill.`;
+  splitBars($('bSplit'), L.map((x) => ({ name: x.short, cls: x.cls, tl: { prefill: pre, decode: n / x.rate, tools: 0, total: x.T } })));
+  $('bNoteIn').textContent = `Decode: ${fmt(n)} tokens at ${fmt(c.rate, 1)}, ${fmt(g.rate)} and ${fmt(r.rate)} tok/s. Without speculative decoding the same B200 runs ${fmt(N.gpu.qwen.per_user_ar.value)} tok/s, which would take ${(pre + n / N.gpu.qwen.per_user_ar.value).toFixed(1)} s.`;
+  const qr = N.designs.find((d) => d.id === 'qwen_rom').per_user, G = N.gpu.qwen;
+  $('bNote').innerHTML = `<b>Best GPU</b>: ${fmt(G.per_user.value)} tok/s, <span class="mono">${esc(G.per_user.field)}</span> in <span class="mono">results/external/registry.json</span> (${esc(G.per_user.label)}). It is the best published Qwen3-8B per-user figure in the registry; its MATH-500 acceptance (τ 8.01) favours the GPU. <b>OpenRouter</b>: ${fmt(G.served.value)} tok/s, ${esc(G.served.label)}, snapshot ${esc(G.served.date)}, including network and load. <b>Qwen ROM</b>: ${fmt(qr.value, 1)} tok/s, <span class="mono">${esc(qr.source)} · ${esc(qr.field)}</span> (${esc(qr.mode)}, ${esc(qr.status)}, ${esc(qr.date)}). <b>Prefill</b>: ${fmt(preR)} tok/s, <span class="mono">${esc(G.prefill.source)} · ${esc(G.prefill.field)}</span>. The local GPU needs a reset, so the text was generated on CPU with the same released weights. Generation speed plays no part in the replay.`;
   const P = player($('bPlay'), $('bReset'), $('bSpeed'), (t) => {
-    const side = (pane, T, rate, lane, tEl, pEl) => {
-      const k = t <= pre ? 0 : Math.min(n, Math.floor((t - pre) * rate)); pane.render(k ? cum[k - 1] : 0);
-      const v = Math.min(t, T), s = v.toFixed(3); if (tEl._s !== s) { tEl.textContent = s; tEl._s = s; }
-      pEl.style.transform = `scaleX(${clamp01(t / T)})`; lane.classList.toggle('done', t >= T && t > 0);
-    };
-    side(gp, tg, gpuR, $('bGpu'), $('bGpuT'), $('bGpuP')); side(cp, tc, chipR, $('bChip'), $('bChipT'), $('bChipP'));
-  }, { observe: $('bGpu') });
-  P.total = tg; P.ready = true; P.restart(); B.P = P;
-  [$('bGpuText'), $('bChipText')].forEach((b) => { if (!b.childElementCount) b.append(el('p', '', '<span style="color:var(--fg3)">▶ Play to stream the answer.</span>')); });
+    L.forEach((x) => {
+      const k = t <= pre ? 0 : Math.min(n, Math.floor((t - pre) * x.rate)); x.pane.render(k ? cum[k - 1] : 0);
+      const tEl = $('b' + x.k + 'T'), v = Math.min(t, x.T), s2 = v.toFixed(v < 100 ? 3 : 1); if (tEl._s !== s2) { tEl.textContent = s2; tEl._s = s2; }
+      $('b' + x.k + 'P').style.transform = `scaleX(${clamp01(t / x.T)})`; $('b' + x.k).classList.toggle('done', t >= x.T && t > 0);
+    });
+  }, { observe: $('bChip') });
+  P.total = Math.max(...L.map((x) => x.T)); P.ready = true; P.restart(); B.P = P;
+  L.forEach((x) => { const b = $('b' + x.k + 'Text'); if (!b.childElementCount) b.append(el('p', 'ph', '<span style="color:var(--fg3)">▶ Play to stream the answer.</span>')); });
 }
 
 /* ---------- Demo C: home hub ---------- */
@@ -338,46 +350,110 @@ function homePane(svg, tick, say, rec, tl) {
 const C = { recs: {} };
 function setupC(N, idx) {
   if (!idx.home.length) { $('cTask').textContent = 'No home recording installed yet.'; return; }
-  const P = player($('cPlay'), $('cReset'), $('cSpeed'), (t) => frameC(t), { observe: $('cGpu') }); C.P = P;
+  const P = player($('cPlay'), $('cReset'), $('cSpeed'), (t) => frameC(t), { observe: $('cChip') }); C.P = P;
   async function pick(it) {
     const rec = C.recs[it.id] || (C.recs[it.id] = await J('recordings/' + it.file));
-    const qwen = it.design === 'qwen', d = N.designs.find((x) => x.id === (qwen ? 'qwen_rom' : 'ds_rom'));
-    const chipR = qwen ? d.per_user.value : d.per_user_mtp.value, gpuR = qwen ? N.gpu.qwen.per_user.value : N.gpu.ds.per_user.value, preR = qwen ? N.gpu.qwen.prefill.value : N.gpu.ds.prefill.value;
-    const tg = segments(rec.steps, gpuR, preR), tc = segments(rec.steps, chipR, preR);
-    $('cChipName').textContent = qwen ? 'Qwen ROM hub' : 'DS ROM array';
-    $('cGpuRate').textContent = `${fmt(gpuR, 1)} tok/s per user · third-party`; $('cChipRate').textContent = `${fmt(chipR, 1)} tok/s per user · analytical${qwen ? '' : ' · MTP'}`;
-    C.cur = { rec, tg, tc, g: homePane($('cGpuPlan'), $('cGpuTick'), $('cGpuSay'), rec, tg), c: homePane($('cChipPlan'), $('cChipTick'), $('cChipSay'), rec, tc) };
-    C.bars = tlRows($('cTl'), [{ name: 'GPU hub', cls: 'gpu', tl: tg }, { name: qwen ? 'Qwen ROM' : 'DS ROM', cls: 'chip', tl: tc }], { thresh: 1, min: 1.2 });
+    const qwen = it.design === 'qwen', S = sides(N, qwen ? 'qwen' : 'ds'), preR = qwen ? N.gpu.qwen.prefill.value : N.gpu.ds.prefill.value;
+    const L = S.map((x) => { const tl = segments(rec.steps, x.rate, preR); return { ...x, tl, pane: homePane($('c' + x.k + 'Plan'), $('c' + x.k + 'Tick'), $('c' + x.k + 'Say'), rec, tl) }; });
+    L.forEach((x) => { $('c' + x.k + 'Rate').textContent = x.label; $('c' + x.k + 'Name').textContent = x.k === 'Chip' ? (qwen ? 'Qwen ROM hub' : 'DS ROM array') : x.name; });
+    C.cur = { rec, L };
+    C.bars = tlRows($('cTl'), L.map((x) => ({ name: x.short, cls: x.cls, tl: x.tl })), { thresh: 1, min: 1.2 });
     const nTools = rec.steps.reduce((a, s) => a + s.tool_calls.length, 0), out = rec.steps.reduce((a, s) => a + s.output_tokens, 0), rs = rec.steps.reduce((a, s) => a + s.reasoning_tokens, 0);
     $('cTask').innerHTML = `<b>“${esc(rec.request)}”</b> <span class="src">${esc(rec.model_note)}${rec.served_models && rec.served_models.length ? ' (served: ' + esc(rec.served_models.join(', ')) + ')' : ''} · recorded ${esc(rec.recorded)} · ${rec.steps.length} model calls, ${nTools} device calls, ${fmt(out)} generated tokens (${fmt(rs)} thinking)</span>`;
-    $('cBig').innerHTML = `${fmtS(tc.total)} s <small>vs ${fmtS(tg.total)} s on the GPU</small>`;
-    $('cBigSub').textContent = `First device moves at ${fmtS(C.cur.c.firstAction)} s vs ${fmtS(C.cur.g.firstAction)} s. Device calls take ${fmtS(tg.tools)} s on both sides. They are measured and run in parallel where the model asked for it.`;
-    $('cWhy').textContent = `In this trace decode is ${Math.round(100 * tg.decode / tg.total)}% of the GPU's time to done and ${Math.round(100 * tc.decode / tc.total)}% of the chip's.`;
-    $('cNote').innerHTML = `The mock home answers each device call after a latency drawn from a typical range per device class (lock motor with confirmation 1.0–1.5 s, cloud thermostat 0.55–0.85 s, Zigbee lights 0.2–0.3 s). These latencies are modelled, and the replay uses the wall times we measured. ${qwen ? 'The Qwen trace ran on CPU with the released Qwen3-8B weights (BF16), because the local GPU was unavailable. Only token counts and text are used.' : 'The DeepSeek trace ran through the DeepSeek API (OpenAI-compatible tool calling); the API reported the reasoning-token counts.'} Rates as in the demos above.`;
-    P.total = Math.max(tg.total, tc.total); P.ready = true; P.restart();
+    const [c, g, o] = L;
+    $('cBig').innerHTML = `${fmtS(c.tl.total)} s <small>vs ${fmtS(g.tl.total)} s best GPU · ${fmtS(o.tl.total)} s OpenRouter</small>`;
+    $('cBigSub').textContent = `First device moves at ${fmtS(c.pane.firstAction)} s on our chip, ${fmtS(g.pane.firstAction)} s on the best GPU and ${fmtS(o.pane.firstAction)} s at OpenRouter speed. Device calls take ${fmtS(c.tl.tools)} s in every lane; they are measured, and run in parallel where the model asked for it.`;
+    $('cWhy').textContent = `In this trace decode is ${Math.round(100 * c.tl.decode / c.tl.total)}% of the chip's time to done, ${Math.round(100 * g.tl.decode / g.tl.total)}% of the best GPU's and ${Math.round(100 * o.tl.decode / o.tl.total)}% at OpenRouter speed.`;
+    const wrong = qwen && rec.steps.some((s) => s.tool_calls.some((t) => t.name === 'set_alarm')) && !rec.steps.some((s) => s.tool_calls.some((t) => t.name === 'get_calendar'));
+    $('cNote').innerHTML = (wrong ? '<b>This trace gets the alarm wrong.</b> Without thinking, Qwen3-8B never read the calendar and set the alarm for 22:41 instead of 07:30 (45 minutes before the 08:15 standup). We show the run as recorded. Getting this right takes reasoning tokens, and fast decode is what makes those affordable. ' : '') +
+      `The mock home answers each device call after a latency drawn from a typical range per device class (lock motor with confirmation 1.0–1.5 s, cloud thermostat 0.55–0.85 s, Zigbee lights 0.2–0.3 s). These latencies are modelled, and the replay uses the wall times we measured. ${qwen ? 'The Qwen trace ran on CPU with the released Qwen3-8B weights (BF16), because the local GPU needs a reset. It ran in non-thinking mode. Two thinking-mode attempts deliberated for 1,024 and then 3,000 tokens without making a single tool call, and were cut off (at about 1 tok/s on CPU, that is 20 minutes per turn). Only token counts and text are used.' : 'The DeepSeek trace ran through the DeepSeek API (OpenAI-compatible tool calling); the API reported the reasoning-token counts.'} Rates as in the demos above.`;
+    P.total = Math.max(...L.map((x) => x.tl.total)); P.ready = true; P.restart();
   }
   tabs($('cTabs'), idx.home, (it) => pick(it).then(() => { C.P.auto = false; C.P.set(true); }));
   return pick(idx.home[0]);
 }
-function frameC(t) { if (!C.cur) return; C.cur.g.render(t); C.cur.c.render(t); C.bars.set(t); clockSet($('cGpuClock'), $('cGpu'), t, C.cur.tg.total, 'time to done'); clockSet($('cChipClock'), $('cChip'), t, C.cur.tc.total, 'time to done'); }
+function frameC(t) { if (!C.cur) return; C.cur.L.forEach((x) => { x.pane.render(t); clockSet($('c' + x.k + 'Clock'), $('c' + x.k), t, x.tl.total, 'time to done'); }); C.bars.set(t); }
 
 /* ---------- numbers table + hero ---------- */
 function numbers(N) {
   const D = Object.fromEntries(N.designs.map((d) => [d.id, d])), G = N.gpu;
   const ref = (o) => o ? `<div class="src">${o.stale ? '' : (o.source === 'results/external/registry.json' ? 'third-party · ' : 'analytical · ')}${esc(shortSrc(o.source))} · ${esc(o.field)}${o.date ? ' · ' + esc(o.date) : ''}</div>` : '';
-  const v = (o, d = 1) => o ? `${fmt(o.value, o.value > 10000 ? 0 : d)}${o.stale ? '<span class="stale" title="' + esc(o.note) + '">STALE</span>' : ''}${ref(o)}${o.stale ? `<div class="src">${esc(o.note)}</div>` : ''}` : '<span style="color:var(--fg3)">not in the registry</span>';
+  const v = (o, d = 1) => o ? `${fmt(o.value, o.value > 10000 ? 0 : d)}${o.stale ? '<span class="stale" title="' + esc(o.note) + '">STALE</span>' : ''}${ref(o)}${o.note ? `<div class="src">${esc(o.note)}</div>` : ''}` : '<span style="color:var(--fg3)">not in the registry</span>';
   const pair = (a, b) => `${fmt(a.value, 1)} / ${fmt(b.value, 1)}${ref(a)}${ref(b)}`;
+  const cap = D.ds_rom.capacity;
+  const capCell = `≤ ${fmt(cap.ar_agg_bound, 0)} / ≤ ${fmt(cap.mtp_agg_bound, 0)}<span class="stale" style="color:var(--fg2);border-color:var(--line2)" title="${esc(cap.rule)}">DERIVED</span><div class="src">per instance: 1/II and τ/(6·II), II ${cap.II_us} µs · ${esc(shortSrc(cap.source))} · ${esc(cap.field)} · ${esc(cap.date)}</div><div class="src">full per-user rate up to about ${cap.ar_users} users (AR) or ${cap.mtp_users} (MTP) per instance; an upper bound, not a committed aggregate</div><div style="margin-top:8px">${v(D.ds_rom.aggregate_mtp)}</div>`;
   const rows = [
-    ['ours', 'Qwen ROM', 'Qwen3-8B · 8K · AR', v(D.qwen_rom.per_user), v(D.qwen_rom.aggregate), D.qwen_rom.per_user.status],
-    ['ours', 'DS ROM array', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.ds_rom.per_user, D.ds_rom.per_user_mtp), v(D.ds_rom.aggregate) + '<br>' + v(D.ds_rom.aggregate_mtp), D.ds_rom.per_user_mtp.status],
+    ['ours', 'Qwen ROM', 'Qwen3-8B · 8K · AR', v(D.qwen_rom.per_user), v(D.qwen_rom.aggregate, 0), D.qwen_rom.per_user.status],
+    ['ours', 'DS ROM array', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.ds_rom.per_user, D.ds_rom.per_user_mtp), capCell, D.ds_rom.per_user_mtp.status],
     ['ours', 'HBM accelerator', 'DeepSeek-V4.1 Flash · 1M · AR / MTP', pair(D.hbm_ds.per_user, D.hbm_ds.per_user_mtp), v(D.hbm_ds.aggregate) + '<br>' + v(D.hbm_ds.aggregate_mtp), D.hbm_ds.per_user_mtp.status],
     ['gpu', 'Best GPU · Qwen3-8B', esc(G.qwen.per_user.label), v(G.qwen.per_user, 0) + `<div class="src">no speculation: ${fmt(G.qwen.per_user_ar.value)} tok/s</div>`, v(null), 'published, third-party'],
-    ['gpu', 'Best GPU · DeepSeek', esc(G.ds.per_user.label), v(G.ds.per_user) + `<div class="src">V4-Flash, 4 × H200: ${fmt(G.ds.per_user_flash.value)} tok/s</div>`, v(G.ds.aggregate, 0) + `<div class="src">${esc(G.ds.aggregate.label)}</div>`, 'published, third-party'],
+    ['gpu', 'Best GPU · DeepSeek-V4.1 Flash', esc(G.ds.per_user.label), v(G.ds.per_user, 2) + `<div class="src">B200 TP4, concurrency 1: ${fmt(G.ds.per_user_b200.value, 1)} · V4-Pro on 8 × B300: ${fmt(G.ds.per_user_pro.value, 1)} · V4-Flash on 4 × H200: ${fmt(G.ds.per_user_flash.value)}</div>`, v(G.ds.aggregate, 0) + `<div class="src">${esc(G.ds.aggregate.label)}</div>`, 'published, third-party'],
+    ['or', 'OpenRouter · Qwen3-8B', 'served today, one provider', v(G.qwen.served, 0), v(null), 'snapshot 2026-10-09, includes network and load'],
+    ['or', 'OpenRouter · DeepSeek-V4.1 Flash', 'served today, median of 30 providers', v(G.ds.served, 1) + `<div class="src">best standard-routed provider: ${fmt(G.ds.served_best.value)}</div>`, v(null), 'snapshot 2026-10-09, includes network and load'],
   ];
-  $('numsTable').tBodies[0].innerHTML = rows.map(([c, m, mm, pu, ag, st]) => `<tr class="${c}"><td><b>${esc(m)}</b><div style="margin-top:4px">${c === 'ours' ? '<span class="tag-a">analytical</span>' : '<span class="tag-g">third-party</span>'}</div></td><td>${mm}</td><td class="v">${pu}</td><td class="v${/STALE|not in/.test(ag) ? ' dim' : ''}">${ag}</td><td style="font-size:13px;color:var(--fg2)">${esc(st)}</td></tr>`).join('');
-  $('numsNote').innerHTML = `Read from <span class="mono">${esc(N.generated_from.token_path)}</span> and <span class="mono">${esc(N.generated_from.reprice)}</span> (repriced ${esc(N.generated_from.reprice_date)}), and <span class="mono">results/external/registry.json</span> (${esc(N.generated_from.registry_date)}). Aggregates have not been recomputed for the 2026-10-08 design points. The newest committed aggregates belong to earlier designs and are marked STALE.`;
-  const hs = (id, ours, gpu, src) => { $(id).innerHTML = `${fmt(ours.value, 0)}<small>tok/s</small>`; $(id + '-s').innerHTML = `${(ours.value / gpu.value).toFixed(1)}× the best published GPU (${fmt(gpu.value, gpu.value < 1000 ? 1 : 0)})<br>analytical · ${esc(shortSrc(ours.source))} · ${esc(ours.date)}`; };
+  $('numsTable').tBodies[0].innerHTML = rows.map(([c, m, mm, pu, ag, st]) => `<tr class="${c}"><td><b>${esc(m)}</b><div style="margin-top:4px">${c === 'ours' ? '<span class="tag-a">analytical</span>' : c === 'gpu' ? '<span class="tag-g">third-party</span>' : '<span class="tag-g">served snapshot</span>'}</div></td><td>${mm}</td><td class="v">${pu}</td><td class="v${/^(<span|≤)/.test(ag) || /STALE/.test(ag.slice(0, 200)) ? ' dim' : ''}">${ag}</td><td style="font-size:13px;color:var(--fg2)">${esc(st)}</td></tr>`).join('');
+  $('numsNote').innerHTML = `Read from <span class="mono">${esc(N.generated_from.token_path)}</span> and <span class="mono">${esc(N.generated_from.reprice)}</span> (repriced ${esc(N.generated_from.reprice_date)}), <span class="mono">${esc(D.qwen_rom.aggregate.source)}</span>, and <span class="mono">results/external/registry.json</span>. The DS ROM and HBM aggregates have not been recomputed for the 2026-10-08 design points. The DS ROM bound is derived on this page from the committed pipeline interval. The HBM figures are the newest committed aggregates, from earlier designs, and are marked STALE.`;
+  const hs = (id, ours, gpu) => { $(id).innerHTML = `${fmt(ours.value, 0)}<small>tok/s</small>`; $(id + '-s').innerHTML = `${(ours.value / gpu.value).toFixed(1)}× the best published GPU at batch 1 (${fmt(gpu.value, 0)})<br>analytical · ${esc(shortSrc(ours.source))} · ${esc(ours.date)}`; };
   hs('hs-qwen', D.qwen_rom.per_user, G.qwen.per_user); hs('hs-ds', D.ds_rom.per_user_mtp, G.ds.per_user); hs('hs-hbm', D.hbm_ds.per_user_mtp, G.ds.per_user);
+  chart(N, 'ds');
+  $('chTabs').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; $('chTabs').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); chart(N, b.dataset.m); });
+}
+
+/* per-user tok/s vs concurrent users, log-log */
+function chart(N, m) {
+  const svg = $('chart'), tip = $('chTip'), NS = 'http://www.w3.org/2000/svg';
+  const mk = (t, a, p = svg) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); p.append(e); return e; };
+  svg.innerHTML = ''; tip.hidden = true;
+  const W = 760, H = 360, l = 64, r = 150, t = 18, b = 46, X0 = 1, X1 = 128, Y0 = 30, Y1 = 10000;
+  const x = (u) => l + (Math.log(u / X0) / Math.log(X1 / X0)) * (W - l - r), y = (v) => t + (1 - Math.log(v / Y0) / Math.log(Y1 / Y0)) * (H - t - b);
+  [100, 1000, 10000].forEach((v) => { mk('line', { class: 'grid', x1: l, x2: W - r, y1: y(v), y2: y(v) }); const tx = mk('text', { class: 'ax', x: l - 8, y: y(v) + 4, 'text-anchor': 'end' }); tx.textContent = fmt(v); });
+  [1, 2, 4, 8, 16, 32, 64, 128].forEach((u) => { const tx = mk('text', { class: 'ax', x: x(u), y: H - b + 18, 'text-anchor': 'middle' }); tx.textContent = u; });
+  const xt = mk('text', { class: 'axt', x: (l + W - r) / 2, y: H - 8, 'text-anchor': 'middle' }); xt.textContent = 'concurrent users on one machine instance (log)';
+  const yt = mk('text', { class: 'axt', x: 14, y: (t + H - b) / 2, 'text-anchor': 'middle', transform: `rotate(-90 14 ${(t + H - b) / 2})` }); yt.textContent = 'tok/s per user (log)';
+  const pts = []; // hover targets
+  const path = (arr, stroke, dash) => mk('path', { d: arr.map((p, i) => (i ? 'L' : 'M') + x(p[0]).toFixed(1) + ' ' + y(p[1]).toFixed(1)).join(' '), fill: 'none', style: `stroke:${stroke};stroke-width:2${dash ? ';stroke-dasharray:' + dash : ''}`, 'stroke-linejoin': 'round' });
+  const dot = (u, v, fill, txt, hollow) => { mk('circle', { cx: x(u), cy: y(v), r: 4.5, style: hollow ? `fill:var(--panel);stroke:${fill};stroke-width:2` : `fill:${fill};stroke:var(--panel);stroke-width:2` }); pts.push({ u, v, txt }); };
+  const lab = (u, v, txt, sub, color, dy = 0) => { const a = mk('text', { class: 'lab', x: x(u) + 8, y: y(v) + dy, style: `fill:var(--fg)` }); a.textContent = txt; if (sub) { const c = mk('text', { class: 'labs', x: x(u) + 8, y: y(v) + dy + 14 }); c.textContent = sub; } };
+  const ds = m === 'ds', D = N.designs.find((d) => d.id === (ds ? 'ds_rom' : 'qwen_rom')), G = ds ? N.gpu.ds : N.gpu.qwen;
+  const R = ds ? D.per_user_mtp.value : D.per_user.value, Agg = ds ? D.capacity.mtp_agg_bound : D.aggregate.value, sat = Agg / R;
+  // our chip, one instance
+  const one = []; for (let u = 1; u <= X1; u *= 1.08) one.push([u, Math.min(R, Agg / u)]); one.push([X1, Math.min(R, Agg / X1)]);
+  path(one.filter((p) => p[0] <= sat + 1e-9).concat([[sat, R]]), 'var(--s-chip)');
+  path(one.filter((p) => p[0] >= sat), 'var(--s-chip)', '6 5');
+  path([[sat, R], [X1, R]], 'var(--s-chip)', '2 4');
+  dot(1, R, 'var(--s-chip)', `${ds ? 'DS ROM array (MTP)' : 'Qwen ROM'}: ${fmt(R, 1)} tok/s per user, analytical`);
+  dot(sat, R, 'var(--s-chip)', `one instance saturates near ${sat.toFixed(1)} users (${fmt(Agg, 0)} tok/s aggregate${ds ? ', derived upper bound' : ', modelled ceiling'})`, true);
+  lab(X1, R, ds ? 'DS ROM, more instances' : 'Qwen ROM, more instances', `one per ~${sat.toFixed(1)} users`, 'var(--s-chip)', -14);
+  lab(X1, Agg / X1, 'one instance', 'past its capacity', 'var(--s-chip)', 4);
+  // GPU
+  if (ds && G.curve) {
+    const c = G.curve.points.filter((p) => p.c <= X1);
+    path(c.map((p) => [p.c, p.per_user]), 'var(--s-gpu)');
+    c.forEach((p) => dot(p.c, p.per_user, 'var(--s-gpu)', `B200 TP4, ${p.c} concurrent: ${fmt(p.per_user, 1)} tok/s per user (p90), ${fmt(p.per_gpu, 0)} tok/s per GPU`));
+    lab(1, c[0].per_user, 'GPU, B200 × 4, by concurrency', 'V4.1 Flash, InferenceX, p90', 'var(--s-gpu)', 30);
+    dot(1, G.per_user.value, 'var(--s-gpu)', `GB300 × 4, batch 1: ${fmt(G.per_user.value, 2)} tok/s (SGLang + DSpark, simulated accept 5.5)`, true);
+    lab(1, G.per_user.value, 'GB300 × 4, batch 1', '', 'var(--s-gpu)', -8);
+  } else {
+    dot(1, G.per_user.value, 'var(--s-gpu)', `B200 + DFlash, concurrency 1: ${fmt(G.per_user.value)} tok/s (MATH-500)`);
+    dot(1, G.per_user_ar.value, 'var(--s-gpu)', `B200, concurrency 1, no speculation: ${fmt(G.per_user_ar.value)} tok/s`, true);
+    lab(1, G.per_user.value, 'B200 + DFlash', '', 'var(--s-gpu)', 4); lab(1, G.per_user_ar.value, 'B200, plain', '', 'var(--s-gpu)', 4);
+  }
+  // OpenRouter reference
+  mk('line', { x1: l, x2: W - r, y1: y(G.served.value), y2: y(G.served.value), style: 'stroke:var(--or);stroke-width:1.5;stroke-dasharray:4 4' });
+  { const a = mk('text', { class: 'labs', x: l + 6, y: y(G.served.value) - 6 }); a.textContent = `OpenRouter today, median served ${fmt(G.served.value, ds ? 1 : 0)} tok/s (concurrency unknown)`; }
+  $('chTitle').textContent = ds ? 'DeepSeek-V4.1 Flash' : 'Qwen3-8B';
+  $('chLegend').innerHTML = `<span style="--c:var(--s-chip)">${ds ? 'DS ROM array, MTP' : 'Qwen ROM'} (analytical)</span><span style="--c:var(--s-gpu)">GPU (third-party)</span><span style="--c:var(--or)">OpenRouter median served speed (snapshot)</span>`;
+  $('chNote').innerHTML = ds
+    ? `Our chip keeps its per-user rate until one instance's pipeline is full, then you add instances. The capacity is <b>derived on this page</b> from the committed stage interval (II ${D.capacity.II_us} µs, <span class="mono">${esc(D.capacity.source)} · ${esc(D.capacity.field)}</span>): at most τ/(6·II) = ${fmt(D.capacity.mtp_agg_bound, 0)} tok/s per instance. That is an upper bound that ignores draft-die and collective contention. GPU curve: <span class="mono">${esc(G.curve.field)}</span> (${esc(G.curve.label)}, ${esc(G.curve.date)}). The GPU instance is 4 B200s; ours is the full ROM array.`
+    : `Qwen ROM: ${fmt(D.aggregate.value, 0)} tok/s per instance (${esc(D.aggregate.label)}), bound by ${esc(D.aggregate.binding)}, so full per-user rate up to about ${D.aggregate.users_to_saturate} users, <span class="mono">${esc(D.aggregate.source)} · ${esc(D.aggregate.field)}</span> (${esc(D.aggregate.date)}). The registry has no published Qwen3-8B per-user-versus-concurrency curve for a GPU, so only the concurrency-1 points are shown.`;
+  svg.onpointermove = (e) => {
+    const bb = svg.getBoundingClientRect(), sx = (e.clientX - bb.left) * W / bb.width, sy = (e.clientY - bb.top) * H / bb.height;
+    let best = null, bd = 1e9; pts.forEach((p) => { const d = Math.hypot(x(p.u) - sx, y(p.v) - sy); if (d < bd) { bd = d; best = p; } });
+    if (!best || bd > 24) { tip.hidden = true; return; }
+    tip.hidden = false; tip.innerHTML = esc(best.txt); const box = svg.parentElement.getBoundingClientRect();
+    tip.style.left = Math.min(box.width - 270, Math.max(0, e.clientX - box.left + 12 + svg.parentElement.scrollLeft)) + 'px'; tip.style.top = (e.clientY - box.top + 12) + 'px';
+  };
+  svg.onpointerleave = () => { tip.hidden = true; };
 }
 
 /* ---------- boot ---------- */

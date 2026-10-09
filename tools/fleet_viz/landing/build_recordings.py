@@ -101,15 +101,15 @@ def write(name, obj):
     open(os.path.join(OUT, name), 'w').write(s); print(name, len(s))
 
 os.makedirs(OUT, exist_ok=True)
-TASKS = [('splitwise', 'Fix a failing test', 'A money-splitting library loses cents. The agent finds the rounding bug and fixes it.'),
-         ('csvstat', 'Add a feature', 'Add a --group-by option to a CSV statistics CLI, with tests and docs.'),
+TASKS = [('csvstat', 'Add a feature', 'Add a --group-by option to a CSV statistics CLI, with tests and docs.'),
+         ('splitwise', 'Fix a failing test', 'A money-splitting library loses cents. The agent finds the rounding bug and fixes it.'),
          ('ratelimit', 'Hunt three bugs', 'A token-bucket rate limiter lets bursts through. The agent fixes three bugs.')]
 idx = dict(agent=[], home=[], long=None)
 for task, title, blurb in TASKS:
     if os.path.exists(f'{RAW}/{task}/meta.json'):
         o = dsh(task); o.update(id=task, title=title, blurb=blurb); write(f'agent_{task}.json', o); idx['agent'].append(dict(id=task, title=title, file=f'agent_{task}.json'))
-for f, title, design, note in [('home_qwen_bedtime.json', 'Bedtime routine', 'qwen', 'Qwen3-8B, BF16, run locally'),
-                               ('home_ds_trip.json', 'Leaving for a trip', 'ds', 'DeepSeek API, model deepseek-flash')]:
+for f, title, design, note in [('home_ds_trip.json', 'Leaving for a trip · DeepSeek', 'ds', 'DeepSeek API, model deepseek-flash'),
+                               ('home_qwen_bedtime.json', 'Bedtime routine · Qwen3-8B', 'qwen', 'Qwen3-8B, BF16, run locally, thinking mode off')]:
     if os.path.exists(f'{RAW}/{f}'):
         o = home(f'{RAW}/{f}', note); o.update(id=f[:-5], title=title, design=design); write(f, o); idx['home'].append(dict(id=f[:-5], title=title, design=design, file=f))
 if os.path.exists(f'{RAW}/qwen_long.json'):

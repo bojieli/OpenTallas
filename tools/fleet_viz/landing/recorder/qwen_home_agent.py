@@ -5,6 +5,7 @@ from home_tools import TOOLS, SYSTEM, run_calls
 from transformers import AutoTokenizer, AutoModelForCausalLM
 out_path, port, request = sys.argv[1], int(sys.argv[2]), sys.argv[3]
 torch.set_num_threads(int(sys.argv[4]) if len(sys.argv) > 4 else 10); torch.manual_seed(0)
+THINK = len(sys.argv) > 5 and sys.argv[5] == 'think'
 srv = subprocess.Popen([sys.executable, '/home/ubuntu/landing-scratch/tools/home_server.py', str(port)]); time.sleep(1)
 P = '/home/ubuntu/.cache/huggingface/hub/models--Qwen--Qwen3-8B/snapshots/b968826d9c46dd6066d109eabc6255188de91218'
 tok = AutoTokenizer.from_pretrained(P); m = AutoModelForCausalLM.from_pretrained(P, dtype=torch.bfloat16).eval()
@@ -12,10 +13,10 @@ initial = json.loads(__import__('urllib.request').request.urlopen(f'http://127.0
 msgs = [{'role': 'system', 'content': SYSTEM}, {'role': 'user', 'content': request}]
 turns = []; prev_prompt = 0
 for step in range(8):
-    ids = tok.apply_chat_template(msgs, tools=[t['function'] for t in TOOLS], add_generation_prompt=True, enable_thinking=True, return_tensors='pt')
+    ids = tok.apply_chat_template(msgs, tools=[t['function'] for t in TOOLS], add_generation_prompt=True, enable_thinking=THINK, return_tensors='pt')
     t0 = time.time()
     with torch.no_grad():
-        o = m.generate(ids, attention_mask=torch.ones_like(ids), max_new_tokens=1024, do_sample=True, temperature=0.6, top_p=0.95, top_k=20)
+        o = m.generate(ids, attention_mask=torch.ones_like(ids), max_new_tokens=int(sys.argv[6]) if len(sys.argv) > 6 else 700, do_sample=True, temperature=0.6, top_p=0.95, top_k=20)
     gen = o[0, ids.shape[1]:].tolist(); gen_s = time.time() - t0
     raw = tok.decode(gen, skip_special_tokens=False).replace('<|im_end|>', '').replace('<|endoftext|>', '')
     think = ''; body = raw
@@ -37,6 +38,6 @@ for step in range(8):
 final = json.loads(__import__('urllib.request').request.urlopen(f'http://127.0.0.1:{port}/').read())
 srv.terminate()
 json.dump(dict(model='Qwen/Qwen3-8B', revision='b968826d9c46dd6066d109eabc6255188de91218', dtype='bfloat16',
-               device='cpu (local RTX PRO 6000 in GPU-requires-reset state)', sampling=dict(temperature=0.6, top_p=0.95, top_k=20, seed=0, enable_thinking=True),
+               device='cpu (local RTX PRO 6000 in GPU-requires-reset state)', sampling=dict(temperature=0.6, top_p=0.95, top_k=20, seed=0, enable_thinking=THINK),
                system=SYSTEM, request=request, tools=[t['function']['name'] for t in TOOLS], initial_state=initial, final_state=final, turns=turns,
                recorded=time.strftime('%Y-%m-%d %H:%M %Z')), open(out_path, 'w'), indent=1)
