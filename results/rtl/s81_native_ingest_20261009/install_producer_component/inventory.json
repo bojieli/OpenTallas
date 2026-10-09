@@ -1,0 +1,572 @@
+{
+  "schema": "opentallas.s81-native-install.v1",
+  "ND": 1,
+  "NS": 4,
+  "source": "same golden descriptor factory and installed allocation records",
+  "stacks": [
+    {
+      "id": 0,
+      "name": "SW",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500,
+      "mutable_regions": [
+        {
+          "kind": "KEY",
+          "base": 0,
+          "end": 35651584,
+          "sector_count": 35651584,
+          "users": 64,
+          "per_user_sectors": 557056,
+          "global_units": "32B sectors"
+        },
+        {
+          "kind": "CKV",
+          "base": 35651584,
+          "end": 186646528,
+          "sector_count": 150994944,
+          "users": 64,
+          "per_user_sectors": 2359296,
+          "global_units": "32B sectors"
+        },
+        {
+          "kind": "WINDOW",
+          "base": 186646528,
+          "end": 186785792,
+          "sector_count": 139264,
+          "users": 64,
+          "per_user_sectors": 2176,
+          "global_units": "32B sectors"
+        }
+      ],
+      "mutable_reserved_end": 186785792,
+      "host_base": 0,
+      "host_limit": 186785792,
+      "engram_home": true,
+      "plain_base": 618808832,
+      "yarn_base": 620905984,
+      "rope_span": 2097152,
+      "installed_end": 623003136,
+      "remaining_sectors": 9809364
+    },
+    {
+      "id": 1,
+      "name": "SE",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500,
+      "mutable_regions": [
+        {
+          "kind": "KEY",
+          "base": 0,
+          "end": 35651584,
+          "sector_count": 35651584,
+          "users": 64,
+          "per_user_sectors": 557056,
+          "global_units": "32B sectors"
+        },
+        {
+          "kind": "CKV",
+          "base": 35651584,
+          "end": 186646528,
+          "sector_count": 150994944,
+          "users": 64,
+          "per_user_sectors": 2359296,
+          "global_units": "32B sectors"
+        }
+      ],
+      "mutable_reserved_end": 186646528,
+      "host_base": 268435456,
+      "host_limit": 455081984,
+      "engram_home": true,
+      "plain_base": 618669568,
+      "yarn_base": 620766720,
+      "rope_span": 2097152,
+      "installed_end": 622863872,
+      "remaining_sectors": 9948628
+    },
+    {
+      "id": 2,
+      "name": "NW",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500,
+      "mutable_regions": [
+        {
+          "kind": "KEY",
+          "base": 0,
+          "end": 35651584,
+          "sector_count": 35651584,
+          "users": 64,
+          "per_user_sectors": 557056,
+          "global_units": "32B sectors"
+        },
+        {
+          "kind": "CKV",
+          "base": 35651584,
+          "end": 186646528,
+          "sector_count": 150994944,
+          "users": 64,
+          "per_user_sectors": 2359296,
+          "global_units": "32B sectors"
+        }
+      ],
+      "mutable_reserved_end": 186646528,
+      "host_base": 536870912,
+      "host_limit": 723517440,
+      "engram_home": false,
+      "plain_base": 186646528,
+      "yarn_base": 188743680,
+      "rope_span": 2097152,
+      "installed_end": 190840832,
+      "remaining_sectors": 441971668
+    },
+    {
+      "id": 3,
+      "name": "NE",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500,
+      "mutable_regions": [
+        {
+          "kind": "KEY",
+          "base": 0,
+          "end": 35651584,
+          "sector_count": 35651584,
+          "users": 64,
+          "per_user_sectors": 557056,
+          "global_units": "32B sectors"
+        },
+        {
+          "kind": "CKV",
+          "base": 35651584,
+          "end": 186646528,
+          "sector_count": 150994944,
+          "users": 64,
+          "per_user_sectors": 2359296,
+          "global_units": "32B sectors"
+        }
+      ],
+      "mutable_reserved_end": 186646528,
+      "host_base": 805306368,
+      "host_limit": 991952896,
+      "engram_home": false,
+      "plain_base": 186646528,
+      "yarn_base": 188743680,
+      "rope_span": 2097152,
+      "installed_end": 190840832,
+      "remaining_sectors": 441971668
+    }
+  ],
+  "engram_home_stack_ids": [
+    0,
+    1
+  ],
+  "aperture_stack_writes": [
+    {
+      "stack_sel": 0,
+      "usable": 632812500,
+      "rsv": 186785792,
+      "plain": 618808832,
+      "yarn": 620905984,
+      "span": 2097152
+    },
+    {
+      "stack_sel": 1,
+      "usable": 632812500,
+      "rsv": 186646528,
+      "plain": 618669568,
+      "yarn": 620766720,
+      "span": 2097152
+    }
+  ],
+  "aperture_pc_writes": [
+    {
+      "pc": 0,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 1,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 2,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 3,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 4,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 5,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 6,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 7,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 8,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 9,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 10,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 11,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 12,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 13,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 14,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 15,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 16,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 17,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 18,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 19,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 20,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 21,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 22,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 23,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 24,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 25,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 26,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 27,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 28,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 29,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 30,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 31,
+      "base": 5837056,
+      "limit": 19337776,
+      "physical_stack_id": 0
+    },
+    {
+      "pc": 32,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 33,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 34,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 35,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 36,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 37,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 38,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 39,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 40,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 41,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 42,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 43,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 44,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 45,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 46,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 47,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 48,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 49,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 50,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 51,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 52,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 53,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 54,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 55,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 56,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 57,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 58,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 59,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 60,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 61,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 62,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    },
+    {
+      "pc": 63,
+      "base": 5832704,
+      "limit": 19333424,
+      "physical_stack_id": 1
+    }
+  ],
+  "commit_after_records": true,
+  "production_reader_binding_verified": false,
+  "adopted": false,
+  "config_sha256": "53420818dc91a7ff82d791497331b832f33c04db4e52132a7d242ff93121b7ae",
+  "producer_sha256": "b11adc03c9205dda928462e866b0e9dd07b25f6003b3746733863ca608630547",
+  "descriptor_count": 5888,
+  "descriptors_sha256": "37c77b0d2f305905b2efd6ff0412f35ac6d807e3475ad73b87fd7c738b80c74f"
+}
