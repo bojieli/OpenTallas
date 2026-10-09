@@ -23,3 +23,11 @@ Clock730ps, headline833.333ps,60/25ps uncertainty, CG0/SEATS4/SM15,
 Actual SDC verification, fresh CTS TT/FF measurement and route handle are
 pending; no routed closure claimed. Original work remains at remote
 routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal.attempt1_R7_preserved.
+
+Actual generated a2 1_synth.sdc now verified: clock730/setup60/hold25ps,
+inputmin701.6/max951.6ps, outputmin-751.6/max-451.6ps. SHA256
+ dceb877326b53453e5144be76f0ef2c89b7b7cc481005a227373a31ea1ebd85f.
+The tiny rounding follows the unchanged native io() serializer policy.
+Synthesis completed; floorplan3752156/container7c472581e5de/PG3749687
+now runs with provisional WNS-416.905ps (14 earlyresizes), not a routed
+verdict. Fresh CTS measurement and actualroutehandle remain pending.
