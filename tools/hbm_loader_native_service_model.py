@@ -1,6 +1,47 @@
 #!/usr/bin/env python3
 """Finite endpoint sizing before RTL. No routing or production admission credit."""
 import json
+import math
+
+
+def dispatcher_model(pc_x, *, landing_x, landing_y, station_y=50.0,
+                     max_wire_span_um=100.0, channel_capacity_tracks=None):
+    """Size one reserved request/reply walk from an actual selected landing.
+
+    Coordinates are mandatory caller inputs from the selected die port inventory.
+    No historical landing or generic interface budget is silently substituted.
+    """
+    if len(pc_x) != 32 or len(set(pc_x)) != 32:
+        raise ValueError('actual 32 distinct PC station coordinates required')
+    if max_wire_span_um <= 0:
+        raise ValueError('positive physical relay span required')
+    order = sorted(range(32), key=lambda p: pc_x[p])
+    root_pc = min(order, key=lambda p: abs(pc_x[p]-landing_x))
+    root_index = order.index(root_pc)
+    ingress = math.ceil((abs(pc_x[root_pc]-landing_x)
+                         + abs(station_y-landing_y))/max_wire_span_um)
+    edges = [math.ceil((pc_x[b]-pc_x[a])/max_wire_span_um)
+             for a, b in zip(order, order[1:])]
+    hops = {}
+    for i, p in enumerate(order):
+        lo, hi = sorted((root_index, i))
+        hops[str(p)] = ingress + sum(edges[lo:hi])
+    stages = ingress + sum(edges)
+    return dict(scope='registered native read transport model; not physical admission',
+        landing_um=[landing_x, landing_y], station_y_um=station_y,
+        maximum_wire_span_um=max_wire_span_um, root_PC=root_pc,
+        request_bits_including_valid=52, reply_bits_including_valid=282,
+        request_slots=1, reply_slots_reserved=1, MACs_per_cycle=0,
+        memory_bytes_per_transaction=32, normal_K_added_cycles=0,
+        physical_relay_stages=stages, relay_payload_FF=334*stages,
+        native_request_hops_by_PC=hops,
+        native_transport_round_trip_cycles_by_PC={p:2*h for p,h in hops.items()},
+        tracks_required_before_existing_occupancy=334,
+        channel_capacity_tracks=channel_capacity_tracks,
+        routing_admitted=False, slot_fit='requires existing service cell/macro occupancy',
+        protocol='Root reserves reply capacity before accepting; one-shot registered packet stops at selected PC held descriptor; lease admission drains normal debt; return has reserved capacity, no long ready chain',
+        writes='Independent actual source2 WB transport and physical completion ledger; this read corridor gives no write routing credit',
+        token_latency_credit=False, adopted=False)
 
 def model():
     return dict(scope='native loader sector endpoint; explicit external address translation and real service completion required',
