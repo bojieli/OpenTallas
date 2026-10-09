@@ -42,6 +42,9 @@ module ot_s81_bf_native #(
     // uniformly, so cfg/go/stream alignment is unchanged) and busy/fault launched from a flop (+1); pv..ppos are
     // already element output flops. Block boundary is then register-to-register for the die IO budget.
     parameter integer PINREG = 0,
+    // Default-off physical noninverting HB2 seats before existing pin capture.
+    // No new edge, cycle or throughput change. Requires measured delay/fit.
+    parameter integer INPUT_HOLD_SEATS = 0,
     // HALF (BF SAFE variant B, 2026-10-07, default 0; requires PINREG): the UNCHANGED element runs at half rate on
     // hclk = clk gated every other cycle (ot_hdc_cg latch + AND, enable = ph toggling on clk), so every element flop and
     // every pin-capture flop launches and captures only on gated edges: element-internal paths get two clk periods
@@ -159,6 +162,13 @@ module ot_s81_bf_native #(
     wire [1023:0] xb_d_i;
     wire busy_e, fault_e;
     if (PINREG != 0) begin : g_pin
+        wire [3:0] hs_control;
+        wire [1667:0] hs_data;
+        ot_s81_bf_input_holdseat #(.W(4), .SEATS(INPUT_HOLD_SEATS)) u_hs_control (
+            .a({cfg_v, go, xs_v, xb_v}), .y(hs_control));
+        ot_s81_bf_input_holdseat #(.W(1668), .SEATS(INPUT_HOLD_SEATS)) u_hs_data (
+            .a({cfg_a, cfg_d, go_bf, xs_p, xs_b, xs_sv, xs_q0, xs_e0,
+                xs_q1, xs_e1, xs_pos, xb_pos, xb_b, xb_sv, xb_u, xb_d}), .y(hs_data));
         reg r_cfg_v, r_go, r_xs_v, r_xb_v, r_busy, r_fault;
         reg [4:0] r_cfg_a;
         reg [47:0] r_cfg_d;
@@ -181,24 +191,11 @@ module ot_s81_bf_native #(
             else begin r_busy <= busy_e; r_fault <= fault_e; end
         always @(posedge pclk or negedge rst_n)
             if (!rst_n) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
-            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end
+            else {r_cfg_v, r_go, r_xs_v, r_xb_v} <= hs_control;
         always @(posedge pclk) begin
-            r_cfg_a <= cfg_a;
-            r_cfg_d <= cfg_d;
-            r_go_bf <= go_bf;
-            r_xs_p <= xs_p;
-            r_xs_b <= xs_b;
-            r_xs_sv <= xs_sv;
-            r_xs_q0 <= xs_q0;
-            r_xs_e0 <= xs_e0;
-            r_xs_q1 <= xs_q1;
-            r_xs_e1 <= xs_e1;
-            r_xs_pos <= xs_pos;
-            r_xb_pos <= xb_pos;
-            r_xb_b <= xb_b;
-            r_xb_sv <= xb_sv;
-            r_xb_u <= xb_u;
-            r_xb_d <= xb_d;
+            {r_cfg_a, r_cfg_d, r_go_bf, r_xs_p, r_xs_b, r_xs_sv,
+             r_xs_q0, r_xs_e0, r_xs_q1, r_xs_e1, r_xs_pos, r_xb_pos,
+             r_xb_b, r_xb_sv, r_xb_u, r_xb_d} <= hs_data;
         end
         assign cfg_v_i = r_cfg_v;
         assign cfg_a_i = r_cfg_a;
@@ -315,4 +312,34 @@ module ot_s81_bf_native #(
             .fault(fault_e)
         );
     end
+endmodule
+
+// Technology binding is explicit so synthesis cannot erase the hold seats.
+// The simulation contract is bit identity; delay is measured with real liberty.
+module ot_s81_bf_input_holdseat #(
+    parameter integer W = 1,
+    parameter integer SEATS = 0
+) (input wire [W-1:0] a, output wire [W-1:0] y);
+    wire [W-1:0] seat [0:SEATS];
+    assign seat[0] = a;
+    for (genvar s = 0; s < SEATS; s = s + 1) begin : g_seat
+        for (genvar b = 0; b < W; b = b + 1) begin : g_bit
+`ifdef SYNTHESIS
+            (* keep = 1, dont_touch = 1 *)
+            HB2xp67_ASAP7_75t_R u_hb (.A(seat[s][b]), .Y(seat[s+1][b]));
+`else
+            assign seat[s+1][b] = seat[s][b];
+`endif
+        end
+    end
+`ifdef BF_INPUT_SEAT_MUTANT
+    if (SEATS > 0 && W > 16) begin : g_mutant
+        // Flip the first BF16 lane sign, proving the enabled data mechanism is observed.
+        assign y = seat[SEATS] ^ ({{(W-16){1'b0}}, 16'h8000});
+    end else begin : g_mutant_bypass
+        assign y = seat[SEATS];
+    end
+`else
+    assign y = seat[SEATS];
+`endif
 endmodule
