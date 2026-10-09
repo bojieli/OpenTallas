@@ -15,15 +15,27 @@
 # names its scene in ::ot_ioref_scene (ot_mm_sync: BC); arrivals are then read with report_arrival -scene (the max of
 # the rise arrivals, = arrival_max_rise of a single-corner session).  A single-scene session is unchanged.
 proc ot_ir_multi {} { expr {![catch {sta::multi_scene} m] && $m} }
+# STRUCT-CLOSE 2026-10-09 (PROPOSED, flow owner to adopt): the insertion of a sink is its ACTIVE-edge arrival.  A sink
+# behind an odd number of inversions (ot_fwd_link_stage on fck = ~ck, negedge flops: every common-clock station) has its
+# pin RISE driven by the source FALL edge, so arrival_max_rise = T/2 + tree: dsfd_hstnh_515 read "vclk mean 603.1" for a
+# ~190 ps tree and its CTS hold repair chased FF -384.7 on all 515 outputs (RSZ-0060).  The smaller of the max-rise and
+# max-fall arrivals is the tree delay for both senses (a non-inverted sink's fall is >= T/2 later, so it is unchanged).
+proc ot_ir_minrf {r f} {
+  set ok {}
+  foreach v [list $r $f] { if {$v ne "" && [string is double -strict $v]} { lappend ok $v } }
+  if {![llength $ok]} { return "" }
+  return [lindex [lsort -real $ok] 0]
+}
 proc ot_ir_arr {p} {
-  if {![ot_ir_multi]} { return [get_property $p arrival_max_rise] }
+  if {![ot_ir_multi]} { return [ot_ir_minrf [get_property $p arrival_max_rise] [get_property $p arrival_max_fall]] }
   set sc [expr {[info exists ::ot_ioref_scene] ? [list -scene $::ot_ioref_scene] : {}}]
   sta::redirect_string_begin
   catch {report_arrival {*}$sc -digits 4 $p}
   set r [sta::redirect_string_end]
-  set v ""
-  foreach {- x} [regexp -all -inline {\sr\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($v eq "" || $x > $v)} { set v $x } }
-  return $v
+  set vr ""; set vf ""
+  foreach {- x} [regexp -all -inline {\sr\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($vr eq "" || $x > $vr)} { set vr $x } }
+  foreach {- x} [regexp -all -inline {\sf\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($vf eq "" || $x > $vf)} { set vf $x } }
+  return [ot_ir_minrf $vr $vf]
 }
 if {[ot_ir_multi] && ![info exists ::ot_ioref_scene]} {
   # a run whose own orfs_hold_mm.tcl predates ::ot_ioref_scene: its hold scene is named BC (orfs_hold_mm) or ff (hold_eco)
