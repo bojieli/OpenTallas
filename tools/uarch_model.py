@@ -35,6 +35,41 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import arch_budget_v41 as A  # noqa: E402
 
+def hbm_link_retry_model(payload_bits=551, seq_bits=12, session_bits=16,
+                         ports=8, rtt_cycles=None, depth=None):
+    """RQ-HS7 go-back-N sizing. RTT must include real relay/FEC/ACK path.
+
+    An unspecified physical RTT cannot qualify replay capacity or rate.
+    Storage includes the full unchanged TU record and transaction sequence.
+    SRAM macro and SECDED read pipeline are integration obligations.
+    """
+    if min(payload_bits, seq_bits, session_bits, ports) < 1:
+        raise ValueError("positive dimensions required")
+    if rtt_cycles is not None and rtt_cycles < 1:
+        raise ValueError("positive RTT required")
+    required = None if rtt_cycles is None else 2*rtt_cycles
+    if depth is None and required is not None:
+        depth = 1 << (required-1).bit_length()
+    if depth is not None and (depth < 2 or depth & (depth-1) or depth >= 2**(seq_bits-1)):
+        raise ValueError("power-of-two replay depth below half sequence space required")
+    return dict(candidate="HBM_LINK_RETRY", default_enabled=False,
+        payload_bits=payload_bits, sequence_bits=seq_bits, session_bits=session_bits,
+        replicas=ports, macs_per_cycle=0, compute_intensity=0,
+        communication_bits_per_cycle=payload_bits,
+        memory_write_bits_per_cycle=payload_bits, memory_read_bits_per_cycle=payload_bits,
+        forward_bits_per_cycle=payload_bits+seq_bits+session_bits,
+        reverse_bits_per_cycle=seq_bits+session_bits+1,
+        replay_depth=depth, required_replay_depth=required, rtt_cycles=rtt_cycles,
+        replay_payload_bits_per_die=None if depth is None else ports*depth*payload_bits,
+        routing_tracks_needed=payload_bits+2*seq_bits+2*session_bits+1,
+        channel_capacity=None, floorplan_slot_fit=None, area_um2=None,
+        fault_free_added_cycles=0, replay_mux_inputs=2, descriptor_fanout=ports,
+        capacity_qualified=required is not None and depth is not None and depth>=required,
+        physical_qualified=False, sram_secded_integrated=False,
+        composed_token_latency_added_cycles=0,
+        adoption="OPEN: physical RTT, protected SRAM, die ports, SS/FF route required")
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
