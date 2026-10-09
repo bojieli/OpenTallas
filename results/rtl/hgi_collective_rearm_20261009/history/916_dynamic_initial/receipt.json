@@ -1,0 +1,48 @@
+{
+  "status": "PASS",
+  "bench_source": "185729c16",
+  "endpoint_source": "916a3915a",
+  "host": "ot-epyc3",
+  "run": "/srv/opentallas-scratch/codex/hgi-rearm-bench-1857",
+  "driver_pid": 1091227,
+  "driver_rc": 0,
+  "shape": "NC8,NOG12,TP96,REARM1,pclk=clk",
+  "commands": 45,
+  "dynamic_mcast_tuples": [
+    [
+      4,
+      2
+    ],
+    [
+      8,
+      2
+    ],
+    [
+      8,
+      4
+    ],
+    [
+      96,
+      2
+    ],
+    [
+      96,
+      4
+    ],
+    [
+      96,
+      8
+    ]
+  ],
+  "mcast_noise": "all96producerresults; outsideoutergroups filtered",
+  "descriptor_capture": "rank/PF/S/G/MC poisoned on edge after accepted go; model retains command descriptor",
+  "mutant": "OT_COLL_MUT_PREMATURE_DONE expectedFAILrc1",
+  "duplicate": "expected sticky fault/done0,clean diagnosticrc0",
+  "sha256": {
+    "driver.log": "0401af5a34c9976266ba1d72805d30a87394ab9f0cdb88eb5041b5f100209b5a",
+    "out/premature_done.log": "51e87378954bfc7ec8365edd4ac1cb279b253e069c67ebcc2783ee41b2645440",
+    "out/positive.log": "75bb0586075acf7af3251181bb8f4bebec56f68afd2de4d858fdd9fc7d1a99ce",
+    "out/verdict.txt": "c52e83e9c2b76d87551cfb2848fe3ed4e4ec15e1b64119a4c2b2c79e04c211e7",
+    "out/duplicate.log": "5628458d303344b69097c98395236a208951d7f4fd3f12a717c76ee2a042eb49"
+  }
+}
