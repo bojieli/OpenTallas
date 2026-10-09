@@ -1,5 +1,5 @@
 {
-  "name": "hgi_argmax18-37c24d8a4-u35-tc-cx",
+  "name": "hgi_argmax18-4d3c77846-pd55-tc-cx",
   "block": "ot_hgi_argmax18_m",
   "owner": "Codex:generic_token18/argmax18",
   "purpose": "Owner-approved HGI-1 CF-ARG width18 + row-bound rank*imm_a offset; qualified FAST1 native leaf; DS default off. Two physical alternatives.",
@@ -13,7 +13,7 @@
   "peak_ram_gb": 40,
   "source": {
     "branch": "codex/hgi-argmax18-20261009",
-    "commit": "20945784e"
+    "commit": "4d3c77846"
   },
   "stages": {
     "bench": [
@@ -55,14 +55,14 @@
       }
     ],
     "calibrate": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
       "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
       "clock": "core_clk",
       "threads": 16,
       "peak_ram_gb": 40
     },
     "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.48 HM=0.035 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL} {RUN}/routes",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; PD=0.55 HM=0.025 bash physical/qwen_die_masters/jobs/route_master.sh hgi_argmax18 {LABEL} {RUN}/routes",
       "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
       "logs": [
         "{RUN}/routes/{LABEL}/flow.log"
@@ -85,12 +85,12 @@
   "record": [
     {
       "from": "{RUN}/record",
-      "to": "results/rtl/hgi_argmax18_20261009/u35"
+      "to": "results/rtl/hgi_argmax18_20261009/u40"
     }
   ],
   "merge_target": null,
   "route_hold_corners": "mm",
-  "route_hold_margin_ns": 0.035,
+  "route_hold_margin_ns": 0.025,
   "route_corner": "TC",
   "cycles_added": 0,
   "notes": "PROPOSAL: inherited40GiB is not a measured claim; fleet must replace with nearest measured argmax phase before intake. CF simulator vectors still to pin. No added valid/output cycles."
