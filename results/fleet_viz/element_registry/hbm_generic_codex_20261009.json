@@ -581,7 +581,7 @@
       "owner": "generic_attn_g12",
       "description": "hgi att row sources g12",
       "source": {
-        "commit": "7eea061a8",
+        "commit": "187a8471c",
         "paths": [
           "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
         ]
@@ -600,20 +600,18 @@
       },
       "exactness": {
         "positive": {
-          "status": "PRIOR799_COMPONENT_PASS_CORRECTED21BIT_GATE_RUNNING",
+          "status": "PASS_COMPONENT_142_CASES_1081866_ROWS_1894250_CYCLES_FULL_1M",
           "evidence": [
-            "results/hgi_attn_g12_20261009/golden.a4.log",
-            "results/hgi_attn_g12_20261009/source.a4.sha256",
-            "results/hgi_attn_g12_20261009/rtl_boundary.json"
-          ]
+            "results/hgi_attn_g12_20261009/exact_gate.a6.json"
+          ],
+          "receipt_commit": "75ef0dccf"
         },
         "negative": {
-          "status": "PRIOR799_MUTANTS_PASS_CORRECTED21BIT_MUTANTS_RUNNING",
+          "status": "PASS_FOUR_COMPILED_MUTANTS",
           "evidence": [
-            "results/hgi_attn_g12_20261009/golden.a4.log",
-            "results/hgi_attn_g12_20261009/source.a4.sha256",
-            "results/hgi_attn_g12_20261009/rtl_boundary.json"
-          ]
+            "results/hgi_attn_g12_20261009/exact_gate.a6.json"
+          ],
+          "receipt_commit": "75ef0dccf"
         },
         "simulator_conformance": {
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
@@ -622,11 +620,8 @@
         }
       },
       "physical": {
-        "status": "HELD_BEFORE_LAUNCH_799F_COUNT_TRUNCATION",
-        "jobs": [
-          "hgi-att-g12-120-799f13777-tc-cx",
-          "hgi-att-g12-140-799f13777-tc-cx"
-        ],
+        "status": "CORRECTED21BIT_PAIR_PROPOSED_INTAKE_PENDING",
+        "jobs": [],
         "corners": {},
         "evidence": [],
         "electrical": {
@@ -639,14 +634,25 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "history": {
+          "held_unstarted_job_ids": [
+            "hgi-att-g12-120-799f13777-tc-cx",
+            "hgi-att-g12-140-799f13777-tc-cx"
+          ],
+          "reason": "799f counts20bits could not represent exclusive1M endpoint"
+        },
+        "proposed_jobs": [
+          "hgi-att-g12-120-187a8471c-tc-cx",
+          "hgi-att-g12-140-187a8471c-tc-cx"
+        ]
       },
       "dependencies": [
         "Claude descriptor adapter and existing DS9-sector gather row request binding",
         "4stack replicas/384 state bound; actual3edge command latency",
         "external normative simulator CF-ATT vectors",
-        "queued12:58:37UTC schema and pinlintPASS;8GiB inventory estimate, not measured P&R peak",
-        "POS1/counts21bit full1M corrected exact gate; old799f pair held, not eligible for route"
+        "POS1/counts21bit full1M corrected exact gate; old799f pair held, not eligible for route",
+        "actual corrected-pair intake receipt not yet collected; no real running route claimed"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -661,14 +667,16 @@
       "owner": "generic_die_integration",
       "description": "hgi die integration",
       "source": {
-        "commit": "fd9459c57",
+        "commit": "d307a4f15",
         "paths": [
           "tools/hgi_die_integration_check.py",
-          "tools/die_top_lint.py"
+          "tools/die_top_lint.py",
+          "tools/hbm_accel_die_fp.py",
+          "tools/hgi_die_record_ports.py"
         ]
       },
       "implementation": {
-        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "status": "OPT_IN_RECORD_PORT_GRAPH_ADAPTERS_INCOMPLETE",
         "evidence": [
           "tools/hgi_die_integration_check.py",
           "tools/die_top_lint.py"
@@ -677,7 +685,8 @@
       "model": {
         "status": "PARTIAL_NO_COMPLETE_FIT_CLAIM",
         "evidence": [
-          "results/arch/hgi_die_integration_20261009/port_delta.json"
+          "results/arch/hgi_die_integration_20261009/port_delta.json",
+          "tools/uarch_model.py:hgi_die_record_transport_model"
         ]
       },
       "exactness": {
@@ -685,7 +694,8 @@
           "status": "INCOMPLETE_EXISTING_QUANT_REACHABILITY_FAILURE",
           "evidence": [
             "results/arch/hgi_die_integration_20261009/baseline.json",
-            "results/arch/hgi_die_integration_20261009/die_lint_preflight.json"
+            "results/arch/hgi_die_integration_20261009/die_lint_preflight.json",
+            "results/arch/hgi_die_integration_20261009/record_abi_check.json"
           ]
         },
         "negative": {
@@ -721,7 +731,8 @@
       "dependencies": [
         "real new port consumers and producers must be wired; no implicit constants/cfg/folds/truncation",
         "Claude R25G geometry preserved; reservations missing for TOPK, generic paths, PLL/host/KV andINT8 growth",
-        "strict wrapper regeneration and die_top_lint + remote elaboration/connectivity before adoption"
+        "strict wrapper regeneration and die_top_lint + remote elaboration/connectivity before adoption",
+        "actual sequencer3fae record ABI matched1409command/3return; this does not establish relay/finite-flow or real consumers"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -811,7 +822,7 @@
       "owner": "generic_index_decode",
       "description": "Normative IDX SELECT bypass to unchanged DS native parallel K6 mechanism",
       "source": {
-        "commit": "d2086a9af",
+        "commit": "2f0a34dee",
         "paths": [
           "rtl/hbm_accel/generic_20261009/ot_hgi_idx_ds_dispatch.sv"
         ]
@@ -828,12 +839,18 @@
       },
       "exactness": {
         "positive": {
-          "status": "DS_NATIVE_CYCLE_LOCKSTEP_RUNNING",
-          "evidence": []
+          "status": "PASS_COMPONENT_DS_CYCLE_LOCKSTEP_12_VECTORS",
+          "evidence": [
+            "results/rtl/hgi_topk_20261009/ds-2f0a34dee-receipt.json"
+          ],
+          "receipt_commit": "e442d85c4"
         },
         "negative": {
-          "status": "DROP_LAST_MUTANT_RUNNING",
-          "evidence": []
+          "status": "PASS_COMPILED_DROP_LAST_MUTANT_AT_CYCLE73",
+          "evidence": [
+            "results/rtl/hgi_topk_20261009/ds-2f0a34dee-receipt.json"
+          ],
+          "receipt_commit": "e442d85c4"
         },
         "simulator_conformance": {
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
@@ -862,7 +879,8 @@
         "actual normative cmd unit9/op3 transport",
         "native N384/P16/K6 retains DS default ordering/cycles",
         "generic op2 is a distinct module and never silently replaces DS SELECT",
-        "source-matched DS lockstep and mutant gate pending"
+        "source-matched DS lockstep and mutant gate pending",
+        "original DS index512/candidate bypass remains outside this wrapper; no full CF1 path claim"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -871,5 +889,6 @@
         ]
       }
     }
-  ]
+  ],
+  "collected_at_utc": "2026-10-09T13:09:24.091378+00:00"
 }

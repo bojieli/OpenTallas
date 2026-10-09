@@ -1,0 +1,18 @@
+{
+  "scope": "actual committed sequencer header vs declared transport layout; not engine binding, die connectivity, timing or finite-flow evidence",
+  "source_commit": "3fae1571db02c46fe9fa1c7630065af0ee8bf42f",
+  "source_sha256": "8e5e890a665f461c85b3a45b51fa1114bd1150346ba69e4b773272d4cb03bf6b",
+  "transport_sha256": "d85194a3e1570dc0b19e01dcfa1a33fbb112da69834dc617837563d7d753451c",
+  "checks": {
+    "command_width": true,
+    "header": true,
+    "sut": true,
+    "descriptors": true,
+    "unit_flags": true,
+    "known_unit_codes": true,
+    "return_width": true
+  },
+  "command_bits": 1409,
+  "return_bits": 3,
+  "verdict": "PASS"
+}
