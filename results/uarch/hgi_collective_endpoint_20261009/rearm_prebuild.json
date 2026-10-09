@@ -4,7 +4,7 @@
   "completion_ack_extra_edges": 2,
   "new_register_bits_NC8_NOG12_PFMAX64": 512,
   "new_registers": "result-seen384 bits,6x16 event counters,rank8/pf16/gsz4 +pending/done/error bits",
-  "new_interface": "start_ready,done_valid outputs; done_ready,fault_ack inputs",
+  "new_interface": "start_ready,done_valid outputs; done_ready,fault_ack inputs; mcast_all1bit input maps validatedop4 subgroup toglobal96delivery",
   "arithmetic_pipeline_change": false,
   "credit_reset": false,
   "fifo_reset": false,
@@ -12,5 +12,7 @@
   "clock_contract": "productionpclk=clk for coreRXacceptedcounter; REARMuse permittedonlyclock-equivalent productionvehicle",
   "checks": "unique resultindices, deliveredcount, producedown count,physicalTXcount,RXaccepted-pop pendingzero andvisiblecoreempty/pipelineinactive",
   "latency_pricing": "1 addeddescriptor settle edge per command, sticky completion/ack/start sequencing; actualdrainlatencymeasuredbench pending",
-  "physical_slot_fit": "pending actual synthesis/pin and realportviews; no physicalclosureclaim"
+  "physical_slot_fit": "pending actual synthesis/pin and realportviews; no physicalclosureclaim",
+  "group_reduce_mcast": "NA=subgroup2/4/8 arithmetic, receiverallcompiled96owners; sameglobalindices/tree, normal ALL_REDUCEsmallgroups remainisolated",
+  "mcast_all_capture_state_bits": 1
 }
