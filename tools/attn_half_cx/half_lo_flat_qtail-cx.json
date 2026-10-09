@@ -1,0 +1,74 @@
+{
+  "name": "hbm_attn_half_lo_flatqt_a9b1ec196_tc-cx",
+  "block": "hfd_attn_half_lo",
+  "owner": "Codex:hbm_system/expert_steering",
+  "purpose": "Independent -cx structural successor, actual resetcarry q38 and soft-tail clock slew. FLAT_QTAIL1 exposes same195FF/5cycles as actual leafFFs; no newmacro, protectedcopies or checks. Full583bit exact gate594660bitchecks and resetloss/earlytail mutants pass. Physical clocks/TTFF/setuphold/DRC actual route only; no adoption untilreview.",
+  "hosts": [
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc2"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 90,
+  "source": {
+    "branch": "codex/attn-half-cx-20261009",
+    "commit": "a9b1ec196"
+  },
+  "stages": {
+    "calibrate": {
+      "enabled": false,
+      "reason": "tile IO false-pathed: every face pin is a pipeline-bank register (pin bank) and the die stations carry the budget; no IO SDC to calibrate (as dt1/dt2)"
+    },
+    "route": {
+      "cmd": "bash $(ls -d /srv/opentallas-scratch2/scratch/claude/ttviews/ttv_install.sh /srv/opentallas-scratch/claude/ttviews/ttv_install.sh 2>/dev/null | head -1) {SRC} ot_attn_tile_m6h1q=physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q ot_attn_tile_m6h1q=physical/hbm_attn_tile_r/quad_b_cts/ot_attn_tile_m6h1q ot_attn_bank_sn544=physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544 ot_attn_bank_ew544=physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544 && TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/hbm_attn_tile_r/signoff_833_int.sdc' OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=16 TOP=hfd_attn_half_lo DH=814.32 PARAMS=\"FLAT_QTAIL=1 NK=4 NC=2 NR=3 PMID=2 NFR=3 NLL=3\" SLIVER=20 HALO=2 PADG=4 PADD=2 HM=0.030 PD=0.40 CTSA=\"-sink_clustering_enable -repair_clock_nets -distance_between_buffers 150\" bash physical/hbm_attn_tile_r/half/route_half_cl.sh {LABEL} --orfs-var \"GLOBAL_ROUTE_ARGS=-congestion_iterations 30 -allow_congestion\"",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/view && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name hfd_attn_half_lo --out {RUN}/record/view --macro-view physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q --macro-view physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544 --macro-view physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544 && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    },
+    "bench": [
+      {
+        "name": "full583_qtail_exact_and_negatives",
+        "cmd": "python3 tools/attn_half_cx/gate.py --out {RUN}/bench_qtail",
+        "expect": "pass",
+        "pass_regex": "\"verdict\": \"PASS\"",
+        "threads": 1,
+        "peak_ram_gb": 2
+      }
+    ]
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_attn_tile_r/signoff_833_int.sdc"
+    ],
+    "macros": [
+      "physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q",
+      "physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544",
+      "physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544"
+    ]
+  },
+  "record": [
+    {
+      "to": "results/physical/attn_half_cx_20261009/flat_qtail/routed",
+      "from": "{RUN}/record"
+    }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.03,
+  "route_corner": "TC",
+  "no_bench_reason": null,
+  "bench_first": true
+}
