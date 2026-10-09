@@ -1,0 +1,82 @@
+{
+  "name": "mtprb-hist-ring-p-190e09324-tc",
+  "block": "ot_mtp_hist_ring_p",
+  "owner": "Codex:mtp-rollback",
+  "purpose": "Registered pin requests + streamed decrementing address + registered bank/tag read. Full TR16/TW17/PW32/NG4; +2 first-read and +1 write/commit visibility cycles. Original failures preserved.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 16,
+  "source": {
+    "branch": "codex/mtp-hist-physical",
+    "commit": "190e093241ae23ef8e00c33d14e4410523f4d47c"
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "hist_fullshape_positive_and_negative",
+        "cmd": "python3 tools/mtp_hist_pipeline_bench.py --out {RUN}/bench --record {RUN}/bench/exact.json",
+        "expect": "pass",
+        "pass_regex": "\"exact\": true",
+        "threads": 4,
+        "peak_ram_gb": 4
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=30 PD=0.45 HM=0.01 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_mtp_hist_ring_p --source rtl/mtp/rollback/ot_mtp_hist_ring_p.sv $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 16,
+      "peak_ram_gb": 16
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=16 UTIL=30 PD=0.45 HM=0.01 LB=0 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_mtp_hist_ring_p --source rtl/mtp/rollback/ot_mtp_hist_ring_p.sv",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+    ]
+  },
+  "record": [
+    {
+      "to": "results/rtl/mtp_hist_pipeline_20261009/route/mtprb-hist-ring-p-190e09324-tc",
+      "from": "{RUN}/record"
+    },
+    {
+      "to": "results/rtl/mtp_hist_pipeline_20261009/route/mtprb-hist-ring-p-190e09324-tc/exact.json",
+      "from": "{RUN}/bench/exact.json"
+    }
+  ],
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 2,
+  "no_bench_reason": "One aggregate pass stage proves both full-shaped positive and append-history negative in tools/mtp_hist_pipeline_bench.py; its exact field requires each expected verdict including FAIL.",
+  "host_require": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc4"
+  ]
+}
