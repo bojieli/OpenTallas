@@ -70,7 +70,7 @@ module tb_rom_host_ingest #(
     reg  [255:0] i_rd;
     wire         fault;
     reg[7:0] host_ack_n=0;reg[127:0] ack_delay=0;integer acknowledged=0;reg wrote;
-    ot_s81_host_native_plain #(.ENABLE(1), .FENCE(FENCE),(.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV_EN(QKV_EN), .RMW_EN(RMW_EN), .HFA(HFA),
+    ot_s81_host_native_plain #(.ENABLE(1), .FENCE(FENCE),.AW(AW), .HDMAX(HDMAX), .KVHMAX(KVHMAX), .QKV_EN(QKV_EN), .RMW_EN(RMW_EN), .HFA(HFA),
                          .OCRED(OCRED), .MUT(MUT)) dut (
         .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(t_v), .t_d(t_d),
         .t_cr(t_cr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
