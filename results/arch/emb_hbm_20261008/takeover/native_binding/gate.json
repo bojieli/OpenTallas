@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.embedding.native_binding_gate.v1",
+  "model_before_RTL": "eec5a55ad",
+  "source": "3e14918ae",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc_native.sv": "ad8cdc305a47c5eb730e9a3b25fe7821981c1c27665fde2c52f22a080663d3df",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_typed_pc.sv": "5015eca034f5c830a6ce8b43d0ad3a8fa97dacf892d931631b05eb46d75dd962",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc.sv": "be273f59525261fe3387424965e12237647559d43698ba0cc41e357ce000d1a5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv": "a203e503786573378a44b3471f252b68a7370a9e9566d598c6b6e229be637fda",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+    "rtl/qwen_sys/system_20261009/ot_qfd_native_cmd_plain.sv": "0fbbc30f24ba2d15c01edd880df0e4dea0cb1b7d84d8da4a2eefc65155e8fa09",
+    "rtl/test/emb_hbm/tb_emb_pc_native.sv": "c0d91a7afffee560a94816cc3dc7d9402d8c66bdf046e3aedff79a2720a9b657",
+    "bench/emb_hbm_20261008/tb_qfd_protected_phy_typed.sv": "b33e28e9af52a74f56d1f4824dc4dcbcb241d66d96b5a65e3afac76b98ec9103"
+  },
+  "placement_owner": "KVdie/package inTP4ROM system; latestownerretarget",
+  "cross_die_contract_bound": false,
+  "contract_publication": "CONTRACT.md andkv-die.log notyetvisible atgate completion; no guessedfields",
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_emb_native_bind_r4.sh",
+  "clocks_ps": {
+    "core": 833.333334,
+    "HBM": 1024
+  },
+  "passed": [
+    "nativeprovider generatedactualDESC/GO cmd32 intoactualot_qfd_emb_pc",
+    "64embeddingstaticWR +64embeddingstaticRD +64nativeclassRD exactprotectedreturns",
+    "actualkv_v consumption\u2192read_release\u2192registerednative read_credit recycle",
+    "independentonePCJEDEC checker0violations",
+    "defaultoff simulationquiet andhierarchyelaboration",
+    "typed256PHY all32banks/bank-disjoint/DATA-ECCpairing/physicalCEUE/stalls/OOO exact",
+    "actualtypedrequestrole/address observation"
+  ],
+  "negative_expected_FAIL": [
+    "typedrolebitflip"
+  ],
+  "scope": "onePC component; nativeDESCtarget24427 usesbootwrittenfixturetoexercisenativecmd/creditmechanism; notproductionKVallocatorbinding",
+  "raw288_provider": "tb_emb_dram_pc assumed288store; doesnot establishphysicalHBMECCsource forcomposite",
+  "typed_provider": "realot_hdc_hbm_model256 source; separate fromcomposite/raw288 fixture integration",
+  "external_owners_open": [
+    "DESC30/GO/WRbankcol",
+    "window_retired/write_quiet/transport_quiet",
+    "actualread_release consumers",
+    "nativeDATA/SIDECAR32PCarbiter andactualissue metadata",
+    "realprotectedHBM288producer bridge",
+    "nativeKVwritepayload/tag/truecompletionledger",
+    "KVdieclock/reset/host/PLL contracts"
+  ],
+  "added_wrapper_register_bits": 0,
+  "provider_state_bits": 76,
+  "provider_command_capture_hclk_edges": 1,
+  "provider_credit_capture_hclk_edges": 1,
+  "geometry_claim": "historical247.536x370.44 regressionframe only; KVdie placement unqualified",
+  "PHY_role": "actualphaseER/EW/FE sidecar;FD/FE fence; acceptedembeddingclass; actualp_addr inverse row/bank/col wires",
+  "no_adoption_reason": "nativeproductionowners/typedphysicalbridge andKVdie placement open; W5zero-latency condition stillUNMET frombank_pair_service_trace",
+  "native32PC_bound": false,
+  "physical_qualified": false,
+  "adopted": false,
+  "historical_failures": [
+    "r1 compileomittedot_reset_sync dependency",
+    "r2 recipereplacementr1\u2192r2 erroneouslychangedr14filename tor24; preserved"
+  ]
+}
