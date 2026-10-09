@@ -109,6 +109,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
     input  wire                 pclk,            // this die's PHY (serializer) clock
     input  wire                 prst_n,
     input  wire [7:0]           rank,
+    input  wire                 mcast_all, // validated GROUP_REDUCE_MCAST within compiled TP96 group
     input  wire [3:0]           gsz,      // static: 4'hF legacy (DS, reset), 0..3 = log2 group size
     input  wire [15:0]          pf,              // flits per contributor this collective (runtime)
     input  wire                 go,
@@ -139,15 +140,16 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
-        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz;
+        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast;
         reg pending_start, completed;
         wire active_desc = REARM && (started || pending_start || completed);
         wire [7:0] eff_rank = active_desc ? run_rank : rank;
         wire [15:0] eff_pf = active_desc ? run_pf : pf;
         wire [3:0] eff_gsz = active_desc ? run_gsz : gsz;
+        wire ALL_DEST = active_desc ? run_mcast : mcast_all;
         wire [31:0] RANK = {24'b0, eff_rank};
         wire LEG = (eff_gsz == 4'hF);
-        wire MODE_OK = LEG || ((eff_gsz <= 3) && ((32'd1 << eff_gsz) <= NC));
+        wire MODE_OK = (LEG || ((eff_gsz <= 3) && ((32'd1 << eff_gsz) <= NC))) && (!ALL_DEST || (!LEG && eff_gsz >= 1 && eff_gsz <= 3));
         wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << eff_gsz) : 1);
         wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && (({16'd0,eff_pf} % REQ_NA) == 0) &&
                          (({16'd0,eff_pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,eff_pf} / REQ_NA) % 2 == 0));
@@ -185,10 +187,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
         assign done_valid = REARM && completed;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;end
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;run_mcast<=0;end
             else if (REARM) begin
                 if (go && start_ready && ACCEPT_MODE) begin
-                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;pending_start<=1;
+                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;run_mcast<=mcast_all;pending_start<=1;
                 end else if(pending_start) pending_start<=0;
             end
         reg [INJ*16-1:0] r_idx;
@@ -382,7 +384,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             // Small static groups must not consume another group's multicast result.
             // Consume/drop its receive-buffer entry so credits keep moving; LEG preserves DS global assembly.
             for (integer p = 0; p < NPT; p = p + 1)
-                if (!LEG && !rb_empty[p] && rb_head[p][PWT-1] && rb_head[p][FW+16 +: 8] != 8'(OG)) rb_pop[p] = 1'b1;
+                if (!LEG && !ALL_DEST && !rb_empty[p] && rb_head[p][PWT-1] && rb_head[p][FW+16 +: 8] != 8'(OG)) rb_pop[p] = 1'b1;
             // delivery: the first DEL ready sources in the rotated order (drot, drot+1, ...) take lanes 0, 1, ...;
             // written as constant-index one-hot selects (lane of source s = ready sources ahead of it)
             for (integer s = 0; s <= NPT; s = s + 1) begin
@@ -390,7 +392,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
 `ifdef OT_COLL_MUT_GROUP_ISOLATION
                     1'b1);
 `else
-                    (LEG || rb_head[s % NPT][FW+16 +: 8] == 8'(OG)));
+                    (LEG || ALL_DEST || rb_head[s % NPT][FW+16 +: 8] == 8'(OG)));
 `endif
                 pos[s] = 4'((s + (NPT + 1) - drot) % (NPT + 1));
             end
@@ -503,7 +505,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         integer ntx, nrx, npop, ndel;
         reg [RMX-1:0] seen_next;
         reg bad_result;
-        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : (LEG ? NOG*NC : NA)*ROF;
+        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : ((LEG || ALL_DEST) ? NOG*NC : NA)*ROF;
         wire [31:0] expected_tx = (NC==1) ? PF : PF-OF+ROF;
         always @* begin
             ntx=0;nrx=0;npop=0;ndel=0;seen_next=result_seen;bad_result=0;
@@ -516,7 +518,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
                 else if(seen_next[gi])bad_result=1;
                 else begin
                     seen_next[gi]=1;
-                    if(NC>1 && ((!LEG && (gi<OG*NA*ROF || gi>=(OG+1)*NA*ROF)) || (LEG && gi>=expected_delivery)))bad_result=1;
+                    if(NC>1 && ((!LEG && !ALL_DEST && (gi<OG*NA*ROF || gi>=(OG+1)*NA*ROF)) || ((LEG || ALL_DEST) && gi>=expected_delivery)))bad_result=1;
                 end
             end
         end

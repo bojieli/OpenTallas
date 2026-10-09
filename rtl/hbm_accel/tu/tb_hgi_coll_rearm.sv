@@ -119,7 +119,7 @@ module tb_hgi_coll_rearm #(
 `endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
-           .stat_credit_stall(cst),.gsz(4'(gs)),.start_ready(sr),.done_valid(done),.done_ready(dr),.fault_ack(fa));
+           .stat_credit_stall(cst),.gsz(4'(gs)),.mcast_all(1'b0),.start_ready(sr),.done_valid(done),.done_ready(dr),.fault_ack(fa));
 `ifdef TU_LOCKSTEP
     wire [INJ*16-1:0] ref_ii;wire[INJ-1:0]ref_ir;
     wire[NPT-1:0]ref_txv,ref_rxc;wire[NPT*PWT-1:0]ref_txf;
@@ -294,6 +294,8 @@ module tb_hgi_coll_rearm #(
                 $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish;disable commands;
             end
             wait(done);@(negedge clk);
+            if(got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF)
+                $fatal(1,"PREMATURE_DONE consuming checker cmd=%0d got=%0d/%0d tx=%0d pending=%0d",cmd,got,TOT,ndep,queue_words());
             if(flt || mism || own_ok!=ROF)$fatal(1,"REARM exact/fault cmd=%0d got=%0d mismatch=%0d fault=%0d own=%0d",cmd,got,mism,flt,own_ok);
             // Done stays sticky, descriptors remain captured, late ingress credits are preserved.
             for(integer p=0;p<NPT;p=p+1)begin
