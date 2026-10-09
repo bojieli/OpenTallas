@@ -45,7 +45,7 @@ def drop_cells(lib, cells):
 def rebalance(a, K, vr):
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from die_sta import balance_latency, measured_insertion, closed_libs
+    from die_sta import balance_latency, measured_insertion, co_delay
     pm = {m.group(2).lstrip('\\'): m.group(1) for m in
           re.finditer(r'^\s*(\w+)\s+(\\?\S+)\s*\(', (a.out / 'die.v').read_text(), re.M)}
     rows, lat = {}, {}
@@ -76,10 +76,18 @@ def rebalance(a, K, vr):
             f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
         t = (a.out / f'sta_{c}.tcl').read_text().replace('set_clock_uncertainty -hold 75.0 ', 'set_clock_uncertainty -hold 50.0 ')
         roots = dict(re.findall(r'create_clock -name (ck_col_\d+) .*?\{(\S+)/co ', t))
+        cod = {}
         def _src(mm):
             r_ = roots.get(mm.group(2))
             k_ = next((x for x in (f'{r_}/ck', f'{r_}/ck[0]') if x in lat), None) if r_ else None
-            return f'set_clock_latency -source {lat[k_][ci]:.1f} [get_clocks {mm.group(2)}]' if k_ else mm.group(0)
+            if not k_:
+                return mm.group(0)
+            mst = pin_master[k_]
+            if mst not in cod:
+                lp = K['masters'].get(mst, {}).get('libs', {}).get(c, '').split(' ')[0]
+                cod[mst] = co_delay(vr / lp if lp else None)
+                K.setdefault('column_root_co_ps', {})[c] = round(cod[mst], 1)
+            return f'set_clock_latency -source {lat[k_][ci] + cod[mst]:.1f} [get_clocks {mm.group(2)}]'
         t = re.sub(r'set_clock_latency -source ([-\d.]+) \[get_clocks (ck_col_\d+)\]', _src, t)
         (a.out / f'sta_{c}.tcl').write_text(t)
     K['hold_uncertainty_ps'] = 50.0

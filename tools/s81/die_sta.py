@@ -101,6 +101,14 @@ def arcs_insertion(mst, view, mi, libpath=None):
     return [0.0, 0.0, 0.0]
 
 
+def co_delay(lib):
+    """the cfifo's ck -> co clock pass (rising, smallest load) from its view lib: the column clock root arrives that
+    much after the cfifo ck pin (0 when the lib has no co arc, e.g. an interim cfifo)"""
+    t = Path(lib).read_text(errors='ignore') if lib and Path(lib).exists() else ''
+    m = re.search(r'pin\("?co\[0\]"?\)\s*\{.*?cell_rise\([^)]*\)\s*\{[^}]*?values\("\s*([\d.]+)', t, re.S)
+    return float(m.group(1)) if m else 0.0
+
+
 def balance_latency(lat, pin_master, masters, mi, libs=None, group=None):
     """in place: lat[pin] = planned [ss, ff, tt] arrival -> pin latency so that every flop arrives at plan + D
     (D = the deepest in-arc insertion per corner within the pin's clock tree: the trunk, or one column tree, which
@@ -306,8 +314,11 @@ def main():
             for n_, pin, per in srcs:
                 if n_.startswith('ck_col_'):
                     root = pin.split('/')[0] + '/ck[0]' if pin.split('/')[0] + '/ck[0]' in lat else pin.split('/')[0] + '/ck'
-                    if root in lat:      # the balanced cfifo pin latency (the column tree pads below it)
-                        T.append(f'set_clock_latency -source {lat[root][ci]:.1f} [get_clocks {n_}]')
+                    if root in lat:      # balanced cfifo pin latency + its ck -> co pass (the column tree hangs off co)
+                        cf_ = by[pin.split('/')[0]].master
+                        cod = co_delay(cls_[corner][cf_][0] if cf_ in cls_[corner] else None)
+                        rec.setdefault('column_root_co_ps', {})[corner] = round(cod, 1)
+                        T.append(f'set_clock_latency -source {lat[root][ci] + cod:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
               'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
