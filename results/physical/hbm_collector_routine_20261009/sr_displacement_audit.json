@@ -1,0 +1,34 @@
+{
+  "original_source": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+  "odb": "hbm_coll_sr3_acdfa3ab1_tc_cal/base/3_5_place_dp-failed.odb",
+  "read_only_audit": {
+    "resolved": 5006,
+    "offsite_in_edge_spacing_list": 0,
+    "status": "all PLACED",
+    "peak_KiB": 3548656,
+    "earlier_missing_name_diagnostic": "r1-namelookup preserved; literal escaped instance names required"
+  },
+  "private_probe": {
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "OpenROAD_pid": 1753201,
+    "guard_GiB": 32,
+    "basis": "actual earlier DPL23695444KiB; conservative phase estimate, no hard cap",
+    "required_pin_anchor_count": 12161,
+    "limit_microns": [
+      30,
+      23
+    ],
+    "actual_runtime_limit_sites_rows": [
+      555,
+      85
+    ],
+    "adoption_budget_microns": [
+      8.1,
+      6.21
+    ],
+    "adoption": "NONE, diagnostic sensitivity; runtime units corrected and disclosed; preserve current job",
+    "next": "actual displacement and pin anchor verification; sequential bounded follow-up only after terminal",
+    "output": "/srv/opentallas-scratch2/scratch/codex/hbm-collector-sr-dpl-inspect-20261009/sr-displacement-30x23.odb"
+  }
+}
