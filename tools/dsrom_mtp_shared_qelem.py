@@ -26,13 +26,11 @@ def bench(raw_negative=False):
  always @(posedge clk)if(rst_n)begin
  if(dut.u_e.issue)issued<=issued+1;
  for(integer j=0;j<2;j++)if(rv[j])begin
- if(re[j] || rf[j] || {bf_return[j*16+:16],16'd0}!==rounded_gold[j])
+ if(re[j] || rf[j] || ($test$plusargs("RAW_ROOT_MUT") ? raw_return[j*32+:32] : {bf_return[j*16+:16],16'd0})!==rounded_gold[j])
  $fatal(1,"shared rounded contribution mismatch row%0d",j);
  round_last<=cyc;end
  if(|rv)nr<=nr+rv[0]+rv[1];end
 '''
-    if raw_negative:
-        extra=extra.replace("{bf_return[j*16+:16],16'd0}!==rounded_gold[j]", "raw_return[j*32+:32]!==rounded_gold[j]")
     s=s.replace('integer cyc=0,',extra+'\n integer cyc=0,')
     s=s.replace('$readmemh({dir,"/x.hex"},x);','$readmemh({dir,"/rounded.hex"},rounded_gold);$readmemh({dir,"/x.hex"},x);')
     s=s.replace('if(ny!=2)', 'if(nr!=2 || issued!=72)$fatal(1,"round/read count nr=%0d issued=%0d",nr,issued);if(ny!=2)')
@@ -61,9 +59,13 @@ def main():
     tb=a.work/'tb.sv';tb.write_text(bench(a.raw_negative).replace('QXV','10').replace('NBTS',str(ph['nbeat'])))
     sources=list(dict.fromkeys(F.RTL+F.QRTL+F.ROMS));run=subprocess.run([os.environ.get('OT_VERILATOR',F.VERILATOR),'--binary','--timing','-Wno-fatal','--top-module','tb_mtp_seed','--Mdir',str(a.work/'obj'),'-j',str(a.jobs),str(tb)]+list(map(str,sources)),text=True,capture_output=True);(a.work/'build.log').write_text(run.stdout+run.stderr)
     if run.returncode:raise RuntimeError('build failed')
-    run=subprocess.run([str(a.work/'obj/Vtb_mtp_seed'),f'+DATA={a.work}',f'+OT_ROM_DIR={a.work}'],text=True,capture_output=True);(a.work/'sim.log').write_text(run.stdout+run.stderr);print(run.stdout)
+    command=[str(a.work/'obj/Vtb_mtp_seed'),f'+DATA={a.work}',f'+OT_ROM_DIR={a.work}']
+    run=subprocess.run(command+(['+RAW_ROOT_MUT'] if a.raw_negative else []),text=True,capture_output=True);(a.work/'sim.log').write_text(run.stdout+run.stderr);print(run.stdout)
     if a.raw_negative:
         if run.returncode and 'shared rounded contribution mismatch' in run.stdout:print('SHARED_RAW_ROOT FAIL_AS_REQUIRED');return
         raise RuntimeError('missing-rounding mutant escaped')
     if run.returncode or 'MTP_SHARED_Q PASS' not in run.stdout:raise RuntimeError('shared native gate failed')
+    mutant=subprocess.run(command+['+RAW_ROOT_MUT'],text=True,capture_output=True);(a.work/'raw_negative.log').write_text(mutant.stdout+mutant.stderr)
+    if not mutant.returncode or 'shared rounded contribution mismatch' not in mutant.stdout:raise RuntimeError('missing-rounding mutant escaped')
+    print('SHARED_RAW_ROOT FAIL_AS_REQUIRED (same compiled minimum vehicle)')
 if __name__=='__main__':main()
