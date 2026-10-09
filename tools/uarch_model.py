@@ -14688,3 +14688,70 @@ def s81_control_transport_model(**kwargs):
     """Real native queue/CDC, control lane and HC/seed adapters before build."""
     from tools.s81_ctrl.control_transport_model import model
     return model(**kwargs)
+
+
+def dsrom_hc_seed_join_model():
+    """Protected head join of three independently placed input-layer means."""
+    from tools.dsrom_hc_mean_capture_model import seed_join_model
+    return seed_join_model()
+
+
+def qwen_r25_su_quarter_contract_model():
+    """Real N256/M64 c12 quarters and finite native service calendar."""
+    from tools.qwen_r25_su_quarter_model import model
+    return model()
+
+
+def hbm_production_clock_control_model():
+    from hbm_production_clock_control_model import model
+    return model()
+
+
+def hbm_indexer_service_transport_model():
+    from hbm_indexer_r25i_model import hbm_indexer_service_transport_model as impl
+    return impl()
+
+
+def hbm_coll_capture_placement_model():
+    """Same full collective port with measured legal direct SRAM captures."""
+    from tools.hbm_coll_capture_placement_model import model
+    return model()
+
+
+def dsrom_mtp_seed_qs5f_candidate():
+    """Before-build sizing for minimum seed gate on exact selected native QS5f.
+
+    Parent baseline aligned experiment is historical QX9; this candidate has
+    exact pinnedfa27 source/params and does not inherit a closedphysical view.
+    """
+    return dict(adopted=False,source_commit='fa27bd60819f9bf61483d5605a02837fe6a34088',
+        native_master='ot_v41_rom_elem_q_qxpq_w10',NB=2,MTP=1,EARLY=1,FAST=1,PP=1,
+        QTIMING_FIX=1,QPIPE=1,QP_XS=1,QP_CAP=0,QP_P1=1,QP_CSAM=10,QZ=1,QZ_NS=8,QZ_NE=4,QY=1,QX=10,PQ=1,QW=0,QM=5,QS=5,
+        native_physical_closed=False,known_physical_FF_hold_ps=-111.3,
+        element_scope='one native NB2 pair, two releasedrows fullK15360, four sequentialaligned phases and LAT8actualFP32joins',
+        segment_K=[4096,4096,4096,3072],MACs=30720,MACs_per_issue_cycle=64,
+        weight_bytes_per_issue_cycle=64,ROM_boundary_bits_per_issue_cycle=548,
+        activation=dict(quantisers=2,blocks32=480,words_per_cycle=64,VM_bytes_per_cycle=256,buffer_bytes=15960),
+        collector=dict(root_storage_bits=256,FP32_add_operations=6,adder_instances=1,adder_LAT=8,minimum_serial_join_cycles=48),
+        partial_phase_fmt_fp32=[True,True],final_projection_rounding='BF16 once after balanced full root, before main_norm',
+        config_cycles=100,phase_quiet_fence_cycles=128,measured_complete_column_cycles=None,
+        PQ_shadow_replay=dict(words_per_phase=17,phases=4,QM5_read_stages=2,
+            input_pipeline_fence_cycles=6,post_replay_settle_fence_cycles=6,
+            go_condition='registered sh_free && !walking, then settle fence',
+            load_condition='registered bank_free && sh_free',
+            replay_latency_overlap='none in this minimum serial bench; actual status wait is included in measured complete cycles'),
+        latency_contribution='measure actualselectedminimum; wholematrix, HCmean, main_norm, rankgather and6position sharing remainunqualified',
+        storage=dict(logical8192x32B_rowbanks_per_rank=75,nativeNB2pairs_per_rank=38,physical4096macros_per_rank=152),
+        qualification=dict(whole_field_descriptor=False,parallel_engine_count=False,six_positions=False,new_collector_physical_closed=False))
+
+
+def hbm_index_global_order_model():
+    """Actual TP96 candidate packets and finite canonical gather before build."""
+    from tools.hbm_index_global_order_model import model
+    return model()
+
+
+def hbm_index_global_order_scan_model():
+    """Canonical static ID scan with actual sparse protected rank heads."""
+    from tools.hbm_index_global_order_model import model
+    return model(static_scan=True)
