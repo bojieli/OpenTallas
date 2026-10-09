@@ -9,13 +9,13 @@ module ot_s81_native_pc_mux #(parameter integer ENABLE=0, parameter [431:0] QUEU
  input wire[4*341-1:0] src_rq,output reg[3:0] src_rk,
  output reg[340:0] rq,input wire rk,wd,
  input wire rv,input wire[255:0] r_data,input wire[16:0] r_tag,input wire[3:0] r_beat,
- output reg[3:0] src_wd,src_rv,output reg[4*256-1:0] src_rdata,
+ output reg[3:0] src_wd,src_rv,src_done,output reg[4*256-1:0] src_rdata,
  output reg[4*17-1:0] src_rtag,output reg[4*4-1:0] src_rbeat,
  output wire pending,output reg ce,fault
 );
  generate if(!ENABLE)begin:g_off
   assign pending=0;
-  always @(*)begin src_rk=0;rq=0;src_wd=0;src_rv=0;src_rdata=0;src_rtag=0;src_rbeat=0;ce=0;fault=0;end
+  always @(*)begin src_rk=0;rq=0;src_wd=0;src_rv=0;src_done=0;src_rdata=0;src_rtag=0;src_rbeat=0;ce=0;fault=0;end
  end else begin:g_on
   reg[431:0] queue[0:3][0:7];reg[2:0] wp[0:3],rp[0:3];reg[3:0] count[0:3];reg ptr_parity[0:3];
   wire[383:0] padded[0:3],decoded[0:3];wire[431:0] encoded[0:3];
@@ -56,11 +56,11 @@ module ot_s81_native_pc_mux #(parameter integer ENABLE=0, parameter [431:0] QUEU
   always @(posedge ck or negedge rst_n)begin
    if(!rst_n)begin
     busy<=0;active_we<=0;owner<=0;rr<=0;tag<=0;len<=0;seen<=0;meta_parity<=0;
-    credits<=0;credit_parity<=0;live_seen<=0;rq<=0;src_rk<=0;src_wd<=0;src_rv<=0;
+    credits<=0;credit_parity<=0;live_seen<=0;rq<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;
     src_rdata<=0;src_rtag<=0;src_rbeat<=0;ce<=0;fault<=0;
     for(i=0;i<4;i=i+1)begin wp[i]<=0;rp[i]<=0;count[i]<=0;ptr_parity[i]<=0;end
    end else begin
-    rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;ce<=0;
+    rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;ce<=0;
     next_busy=busy;next_we=active_we;next_owner=owner;next_tag=tag;next_len=len;next_seen=seen;next_credit=credits;next_rr=rr;
     if(ctrl_live&&!live_seen)begin live_seen<=1;next_credit=8;end
     if(meta_bad||credit_bad||ptr_bad||(launch&&(selected_bad||head[34:31]==0)))fault<=1;
@@ -84,7 +84,7 @@ module ot_s81_native_pc_mux #(parameter integer ENABLE=0, parameter [431:0] QUEU
      end
      if(wd)begin
       if(!busy||!active_we)fault<=1;
-      else begin src_wd[owner]<=1;next_busy=0;end
+      else begin src_wd[owner]<=1;src_done[owner]<=1;next_busy=0;end
      end
      if(rv)begin
       if(!busy||active_we||r_tag!=tag||r_beat>=len||seen[r_beat])fault<=1;
@@ -92,13 +92,13 @@ module ot_s81_native_pc_mux #(parameter integer ENABLE=0, parameter [431:0] QUEU
        src_rv[owner]<=1;src_rdata[owner*256+:256]<=r_data;
        src_rtag[owner*17+:17]<=r_tag;src_rbeat[owner*4+:4]<=r_beat;
        next_seen[r_beat]=1;
-       if(next_seen==((16'h1<<len)-1))next_busy=0;
+       if(next_seen==((16'h1<<len)-1))begin src_done[owner]<=1;next_busy=0;end
       end
      end
     end else if(|{src_rq[0],src_rq[341],src_rq[682],src_rq[1023]})fault<=1;
     busy<=next_busy;active_we<=next_we;owner<=next_owner;tag<=next_tag;len<=next_len;seen<=next_seen;credits<=next_credit;rr<=next_rr;
     meta_parity<=^{next_busy,next_we,next_owner,next_tag,next_len,next_seen};credit_parity<=^next_credit;
-    if(fault||meta_bad||ptr_bad||credit_bad)begin rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;end
+    if(fault||meta_bad||ptr_bad||credit_bad)begin rq[0]<=0;src_rk<=0;src_wd<=0;src_rv<=0;src_done<=0;end
    end
   end
  end endgenerate
