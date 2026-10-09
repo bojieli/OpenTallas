@@ -39,11 +39,25 @@
         }
       },
       "physical": {
-        "status": "prepared",
-        "corners": {},
+        "status": "pass",
+        "corners": {
+          "TT": {
+            "setup_ps": 210.29
+          },
+          "FF": {
+            "hold_ps": 9.57
+          },
+          "SS": {
+            "setup_sensitivity_ps": -129.18
+          },
+          "DRC": 0,
+          "period_ps": 1111.111
+        },
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias.json",
+          "results/closure_loop/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias/verdict.json"
+        ],
+        "qualification": "Actual TT/FF/DRC isolatedleaf, currentownerpolicy; protected transport/control integration still pending, SS sensitivity only."
       },
       "dependencies": [
         "qfd_dspark_biased_amax",
