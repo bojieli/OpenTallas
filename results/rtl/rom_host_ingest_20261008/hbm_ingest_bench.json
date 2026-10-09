@@ -1,0 +1,110 @@
+{
+ "dut": "physical/rom_host_ingest/rtl/hfd_host_ingest.sv",
+ "git_head": "f8e4595429d29a442987f7d044ec880548c30dba",
+ "golden": "tools/hbm_accel_dskv_wb.py (sector_addr, owner_k)",
+ "input_sha256": {
+  "physical/rom_host_ingest/rtl/hfd_host_ingest.sv": "5f1f24d32f3b3797a6adf21e2762ec76660cdfef4a8070ba04d293a5029bce5f",
+  "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv": "34ca5c2e478736d738a256f0269736de741ffa8b07db95c7fd73babfb0c0fc06",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a72e50fbeb1376b52b0156d7b8b822957380b991ca7c8ec5c578a39b28241e71",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv": "06b6c4a4c0dd39d69ce85f8c96ad00cd6b7d71d8c207c919d3df4989bef53391",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/link/ot_link_afifo.sv": "1cc1f57c423f6052c7d8798c77cfa050eecd01630a29b12c98319ae6febb1613",
+  "rtl/test/tb_hbm_host_ingest.sv": "90380b015f494510ad9b09cea0813807802a782697dba0d163c0a7e8e0d370dd",
+  "tools/hbm_accel_dskv_wb.py": "126ba11c5a90707354334c32c54244519c071d321bd5768478bc0d3f3195d5c6",
+  "tools/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
+  "tools/rtl_hbm_host_ingest_bench.py": "9b5bb28701a0d1d3e17b6eee5a539d1f609a71d087cf93d92840f19c6ae08435"
+ },
+ "meta": {
+  "die": 5,
+  "expected_sectors": 3030,
+  "positions": 4652,
+  "slots": [
+   {
+    "groups": 4652,
+    "key_blocks": 7,
+    "owned_rows": 52,
+    "partial_last_block": true,
+    "ratio": 1,
+    "slot": 3
+   },
+   {
+    "groups": 2326,
+    "key_blocks": 3,
+    "owned_rows": 24,
+    "partial_last_block": false,
+    "ratio": 2,
+    "slot": 1
+   }
+  ],
+  "window_layer": 20
+ },
+ "mutations": {
+  "window_ring_slot_plus_one": {
+   "detected": true,
+   "wrong_or_missing": 2176
+  }
+ },
+ "pass": true,
+ "runs": [
+  {
+   "ck_cycles": 6546,
+   "duplicate_conflicts": 0,
+   "expected": 3030,
+   "extra": 0,
+   "fault": 0,
+   "fault_words": 0,
+   "fenced": 5,
+   "fenced_done": 5,
+   "missing": 0,
+   "pass": true,
+   "plusargs": {},
+   "timeout": false,
+   "wall_s": 1.9,
+   "writes": 3030,
+   "wrong_data": 0
+  },
+  {
+   "ck_cycles": 6630,
+   "duplicate_conflicts": 0,
+   "expected": 3030,
+   "extra": 0,
+   "fault": 0,
+   "fault_words": 0,
+   "fenced": 5,
+   "fenced_done": 5,
+   "missing": 0,
+   "pass": true,
+   "plusargs": {
+    "SEED": 3,
+    "WQSTALL": 50
+   },
+   "timeout": false,
+   "wall_s": 1.3,
+   "writes": 3030,
+   "wrong_data": 0
+  },
+  {
+   "ck_cycles": 15162,
+   "duplicate_conflicts": 0,
+   "expected": 3030,
+   "extra": 0,
+   "fault": 0,
+   "fault_words": 0,
+   "fenced": 5,
+   "fenced_done": 5,
+   "missing": 0,
+   "pass": true,
+   "plusargs": {
+    "SEED": 7,
+    "WQSTALL": 80
+   },
+   "timeout": false,
+   "wall_s": 2.2,
+   "writes": 3030,
+   "wrong_data": 0
+  }
+ ],
+ "schema": "opentallas.rtl-hbm-host-ingest.v1",
+ "tool": "tools/rtl_hbm_host_ingest_bench.py"
+}
