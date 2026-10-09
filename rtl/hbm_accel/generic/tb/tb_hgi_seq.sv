@@ -30,6 +30,7 @@ module tb_hgi_seq;
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0;
     reg [159:0] md_d; reg [17:0] vocab; reg [20:0] ctxmax; reg [7:0] rank;
+    integer cyc = 0, cyc0 = 0, cdiff = -1; always @(posedge clk) cyc <= cyc + 1;
     reg db_v = 0; reg [17:0] db_token; reg [19:0] db_pos; wire db_rdy;
     wire f_req_v; reg f_req_rdy = 0; wire [39:0] f_req_addr; reg f_rsp_v = 0; reg [255:0] f_rsp_data;
     wire vr_v; reg vr_rdy = 0; wire [17:0] vr_addr; reg vr_rsp_v = 0; reg [31:0] vr_rsp_data;
@@ -235,6 +236,7 @@ module tb_hgi_seq;
             @(negedge clk); while (!db_rdy) @(negedge clk);
             db_ncol = cfg[c*12 + 11][11:8];
             db_token = cfg[c*12 + 1]; db_pos = cfg[c*12 + 2]; db_v = 1; @(negedge clk); db_v = 0;
+            cyc0 = cyc;
             nbeat = 0;
             t = 0; while ((!cpl_v || cpl_tokx) && t < 400000) begin
                 if (cpl_v && cpl_tokx) begin       // a CTL.TOKX beat: {token, pos + i - 1, status 0}
@@ -250,8 +252,14 @@ module tb_hgi_seq;
                          cpl_status, cfg[c*12 + 8], nd - n0, cfg[c*12 + 6]); fails = fails + 1;
             end else if (nbeat !== cfg[c*12 + 11][4:0]) begin
                 $display("FAIL case %0d: TOKX beats %0d/%0d", c, nbeat, cfg[c*12 + 11][4:0]); fails = fails + 1;
-            end else $display("SEQ case %0d: %0d dispatches, token %0d status %0d, %0d cycles", c, nd - n0, cpl_token,
+            end else if (cdiff >= 0 && (cyc - cyc0) - cpl_cycles !== cdiff) begin   // cpl_cycles: a constant offset from the bench's count
+                $display("FAIL case %0d: cpl_cycles %0d vs %0d bench cycles (offset %0d)", c, cpl_cycles, cyc - cyc0, cdiff);
+                fails = fails + 1;
+            end else begin
+                if (cdiff < 0) cdiff = (cyc - cyc0) - cpl_cycles;
+                $display("SEQ case %0d: %0d dispatches, token %0d status %0d, %0d cycles", c, nd - n0, cpl_token,
                               cpl_status, cpl_cycles);
+            end
             repeat ($urandom % 3) @(negedge clk);
             cpl_rdy = 1; @(negedge clk); cpl_rdy = 0;
             t = 0; while (busy && t < 2000) begin @(negedge clk); t = t + 1; end
