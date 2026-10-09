@@ -6,8 +6,10 @@
 // Checked per segment: every out beat (quarter, lane valids, indices, -inf flags, last) in order, the selected count,
 // the overflow / replay count, no fault; at most one vd word every PACE cycles.  Directed fail-closed cases: k
 // mismatch, orphan beat, qslot collision -> FAULT word with the right bit.  Mutants: +define+OT_S81PH_MUT1/2/3.
-module tb_s81ph_sel;
-    localparam integer Q = 4, W = 16, IW = 20, K = 512, AW = 8, EW = 37, PACE = 2;
+module tb_s81ph_sel #(parameter integer READLAT = 1, STATIC_MAP = 0, PACE = 2,
+    parameter integer SEARCH_PIPE = 0, parameter integer CMP_RETIME = 0,
+    parameter integer PIPE2 = 0, parameter integer MRG_PIPE = 0, parameter integer RQPIPE = 0, parameter integer SLAT = 0);
+    localparam integer Q = 4, W = 16, IW = 20, K = 512, AW = 8, EW = 37;
     reg clk = 0, rst_n = 0;
     always #0.4166 clk = ~clk;
     integer cyc = 0;
@@ -33,7 +35,7 @@ module tb_s81ph_sel;
     // ---------------- DUT
     reg  [514:0] d_in [0:Q-1];      // index = input lane (0 SW, 1 SE, 2 NW, 3 NE)
     wire [513:0] vd; wire vf;
-    dsfd_bk_selector u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
+    dsfd_bk_selector #(.READLAT(READLAT), .STATIC_MAP(STATIC_MAP), .PACE(PACE), .CMP_RETIME(CMP_RETIME), .PIPE2(PIPE2), .MRG_PIPE(MRG_PIPE), .RQPIPE(RQPIPE), .SLAT(SLAT), .SEARCH_PIPE(SEARCH_PIPE)) u_dut (.ck(clk), .iNE(d_in[3]), .iNW(d_in[2]), .iSE(d_in[1]), .iSW(d_in[0]), .rst(rst_n),
         .vd(vd), .vf(vf));
 
     // ---------------- segment description
@@ -63,7 +65,7 @@ module tb_s81ph_sel;
         for (int q = 0; q < Q; q++) it[q].delete();
         // random permutation lane -> slot
         for (int s = 0; s < Q; s++) p[s] = s;
-        for (int s = Q - 1; s > 0; s--) begin int j = $urandom % (s + 1); int t = p[s]; p[s] = p[j]; p[j] = t; end
+        for (int s = Q - 1; STATIC_MAP == 0 && s > 0; s--) begin int j = $urandom % (s + 1); int t = p[s]; p[s] = p[j]; p[j] = t; end
         for (int s = 0; s < Q; s++) perm[s] = p[s];
         seg_k = k; seg_tag = $urandom % 256;
         pos = $urandom % 64;
@@ -74,7 +76,7 @@ module tb_s81ph_sel;
                 item_t e; e.reb = 0; e.pos = pos; e.lv = 0; e.val = 0; e.last = 1; it[q].push_back(e);
             end else for (int b = 0; b < nb; b++) begin
                 item_t e;
-                if (allow_reb && b > 0 && $urandom % 20 == 0) begin
+                if (STATIC_MAP == 0 && allow_reb && b > 0 && $urandom % 20 == 0) begin
                     item_t r; pos = pos + 1 + ($urandom % 300); r.reb = 1; r.pos = pos; r.lv = 0; r.val = 0; r.last = 0;
                     it[q].push_back(r);
                 end
@@ -84,7 +86,7 @@ module tb_s81ph_sel;
                 it[q].push_back(e);
                 pos = pos + 16;
             end
-            pos = pos + ($urandom % 40);
+            if (STATIC_MAP == 0) pos = pos + ($urandom % 40);
         end
     endtask
 
@@ -246,10 +248,11 @@ module tb_s81ph_sel;
         repeat (2) @(posedge clk);
     endtask
 
-    task automatic fault_case(string name, int bit_, bit bad_k, bit orphan, bit coll);
+    task automatic fault_case(string name, int bit_, bit bad_k, bit orphan, bit coll, bit wrong_map = 0);
         bit seen = 0; int t;
         dw.delete();
         make_seg(0, 200, 64, 0, 0);
+        if (wrong_map) begin perm[0]=1; perm[1]=0; end
         bub_pct = 0;
         drive_dut(bad_k, orphan, coll);
         for (t = 0; t < 400 && !seen; t++) begin
@@ -295,6 +298,7 @@ module tb_s81ph_sel;
         fault_case("k_mismatch", 13, 1, 0, 0);
         fault_case("orphan_beat", 11, 0, 1, 0);
         fault_case("qslot_collision", 12, 0, 0, 1);
+        if (STATIC_MAP != 0) fault_case("wrong_static_map", 12, 0, 0, 0, 1);
         if (pace_err) begin errors++; $display("FAIL pace: %0d vd words closer than %0d cycles", pace_err, PACE); end
         $display("RESULT %s segments %0d out_beats %0d replays %0d errors %0d tail_minus_ref max %0d mean %0d ref_holds %0d",
                  errors == 0 ? "PASS" : "FAIL", segs, beats_total, reps_total, errors, lat_max, lat_sum / segs, ref_holds);
