@@ -54,7 +54,7 @@ reader_plain|reader_ecc)
     vvp $W/p.vvp $V > $W/p.log 2>&1; grep -q '^PASS full shape' $W/p.log || { tail $W/p.log; nok positive; }
     for rk in 1 2 3; do vvp $W/p.vvp $V +rank=$rk > $W/rk$rk.log 2>&1; grep -q '^PASS full shape' $W/rk$rk.log || { tail $W/rk$rk.log; nok "rank $rk"; }; done
     grep -h PASS $W/p.log; ok
-  else mutate $R $W/mut.sv "decoded[c][256*half_q+32*l+16+:16]" "decoded[c][256*half_q+32*l+:16]"   # wrong BF16 half of each word
+  else mutate $R $W/mut.sv "half_q?decoded[c][256+32*l+16+:16]" "half_q?decoded[c][256+32*l+:16]"   # wrong BF16 half of each word
     ivl tb_hc_mean_capture $W/n.vvp $DEF $COMMON $FP $MC $W/mut.sv $T/tb_hc_mean_capture.sv; vvp $W/n.vvp $V > $W/n.log 2>&1
     grep -qE 'mismatch|fault|fatal|FATAL' $W/n.log && ! grep -q '^PASS full shape' $W/n.log && bad; tail $W/n.log; nok "mutant escaped"; fi ;;
 *) nok "unknown case $E" ;;

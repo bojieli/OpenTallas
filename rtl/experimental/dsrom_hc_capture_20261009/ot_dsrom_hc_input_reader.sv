@@ -113,7 +113,7 @@ module ot_dsrom_hc_input_reader #(
             end
         end
         for(l=0;l<8;l=l+1) begin:g_select
-            assign mean_residuals[128*c+16*l+:16]=decoded[c][256*half_q+32*l+16+:16];
+            assign mean_residuals[128*c+16*l+:16]=half_q?decoded[c][256+32*l+16+:16]:decoded[c][32*l+16+:16];  // explicit 2:1 (was a variable part-select)
         end
     end endgenerate
     wire [14:0] end_row={1'b0,x_cmd_h_row}+15'd1280;
