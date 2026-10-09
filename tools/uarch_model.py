@@ -14618,3 +14618,9 @@ def s81_native_ingest_contract_model():
     """Actual host sector and perPC source-owned native controller service."""
     from s81_native_ingest_model import model
     return model()
+
+
+def hbm_ingest_ordered_ack_model():
+    """Source-owned accepted-order visibility prefix for the existing stack join."""
+    from hbm_ingest_ack_model import model
+    return model()
