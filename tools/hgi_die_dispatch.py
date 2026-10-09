@@ -28,7 +28,7 @@ CFG_BITS = 40
 # units that are VM packet clients of ot_hgi_vm_unit (hfd_vm): {v, req 337} up, {v, rsp 273} down; one outstanding
 VM_CLIENTS = ['cp', 'quant', 'idx']      # 'cp' = the command processor's VM reads (ot_hgi_cp_die vr_*)
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
-HGI_VM_SLOT = (1399.656, 712.8)        # 64 x 174.7 x 70.5 um macros: 8 x 8 = 1,398 x 564 um + logic
+HGI_VM_SLOT = (1399.656, 885.6)        # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
 LCP_BITS, CPL_BITS = 415, 514           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
