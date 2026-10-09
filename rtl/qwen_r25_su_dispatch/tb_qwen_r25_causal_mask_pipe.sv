@@ -11,6 +11,7 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73);
  wire [19:0] out_row0;wire [83:0] out_valid_lengths;wire [127:0] out_live;
  ot_qwen_r25_causal_mask_pipe #(.ENABLE(1),.CAPACITY(8224),.OWNER_W(OWNER_W)) dut(.*);
  integer block_id,q,r,checks=0,mutant_leaks=0;
+ integer value,a,b,byte_checks=0;reg [12:0] code8;reg [9:0] decoded8;
  reg [127:0] expected,held;
  task reset;
   begin
@@ -29,6 +30,23 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73);
  endtask
  initial begin
   reset();
+  // Independent corruption oracle: all bytes, all single and double bit flips.
+  for(value=0;value<256;value=value+1)begin
+   code8=dut.enabled.enc8(value[7:0]);decoded8=dut.enabled.dec8(code8);
+   if(decoded8!=={2'b00,value[7:0]})$fatal(1,"SECDED8 clean byte");
+   byte_checks=byte_checks+1;
+   for(a=0;a<13;a=a+1)begin
+    decoded8=dut.enabled.dec8(code8^(13'd1<<a));
+    if(decoded8!=={2'b01,value[7:0]})$fatal(1,"SECDED8 single bit");
+    byte_checks=byte_checks+1;
+    for(b=a+1;b<13;b=b+1)begin
+     decoded8=dut.enabled.dec8(code8^(13'd1<<a)^(13'd1<<b));
+     if(!decoded8[9]||decoded8[8])$fatal(1,"SECDED8 double bit");
+     byte_checks=byte_checks+1;
+    end
+   end
+  end
+  $display("PASS_SECDED8_EXHAUSTIVE checks%0d",byte_checks);
   for(block_id=0;block_id<257;block_id=block_id+1)begin
    accept_frame(block_id*32,block_id);
    expected=0;
