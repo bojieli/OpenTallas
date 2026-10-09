@@ -784,6 +784,8 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return flow(j, bits, (bits + 1) // 2 if (TOP_FIX or V.get('link_rtl')) else min(512, bits))
     if cls == 'clock_trunk':
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
+    if cls.startswith('strap:'):        # per-instance constant strap: driven by the die top (assign), the block reads it
+        return [(0, bits, 'in')]
     if cls == 'reset_tree':
         return [(0, bits, 'out' if port.startswith('por') else 'in')]
     if cls in ('loader_mem', 'loader_rsp'):
@@ -1485,6 +1487,8 @@ def emit_verilog(die, m, real, ports_w, out_dir, top):
         V.append(f'  wire [{bits - 1}:0] n_{bid};')
         if cls == 'top_in':
             V.append(f'  assign n_{bid} = {bid};')
+        elif cls.startswith('strap:'):      # a per-instance constant strap (e.g. hfd_su qid): driven by the die top
+            V.append(f"  assign n_{bid} = {bits}'d{int(cls[6:])};")
     nfl = 0
     for it in m['insts']:
         mst = it.master

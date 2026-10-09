@@ -69,6 +69,8 @@ module ot_hgi_argmax_record #(
             msk[j] = ({sec, 3'b000} + j >= a_base) && ({sec, 3'b000} + j < w_end);
     end
     // engine / VM inputs land in flops (registered boundary): the response and the result are used one edge later
+    reg [522:0] as_q; reg sl_pend;
+    always @(posedge clk) as_q <= am_stream;
     reg [273:0] vr; reg eo_v, eo_nan, eo_f, eo_rf; reg [17:0] eo_idx; reg [31:0] eo_val;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin vr <= 274'd0; eo_v <= 1'b0; end
@@ -77,25 +79,27 @@ module ot_hgi_argmax_record #(
     wire [39:0] wa = wr_n[0] ? (o_base + {24'd0, o_is}) : o_base;         // word address of the write in flight
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; halt_q <= 1'b0; ret <= 3'b001; raw_v <= 1'b0; rq <= 683'd0; nan_flag <= 1'b0; vmq <= 338'd0; stream_m <= 1'b0;
+            busy <= 1'b0; halt_q <= 1'b0; ret <= 3'b001; raw_v <= 1'b0; rq <= 683'd0; sl_pend <= 1'b0; nan_flag <= 1'b0; vmq <= 338'd0; stream_m <= 1'b0;
             e_in_v <= 1'b0; e_in_last <= 1'b0; e_bias_en <= 1'b0; e_mask <= 8'd0; e_vals <= 256'd0; e_bias <= 256'd0;
             e_rank <= 7'd0; e_imm <= 18'd0; rd_pend <= 1'b0; rd_done_all <= 1'b0; got_out <= 1'b0; wr_phase <= 1'b0;
             wr_pend <= 1'b0; wr_n <= 2'd0; hdr <= 0; dA <= 0; dO <= 0; nA <= 0; sec <= 0; sec_last <= 0; w_end <= 0;
             res_val <= 0; res_id <= 0;
         end else begin
             ret[2:1] <= 2'b00; vmq[337] <= 1'b0; e_in_v <= 1'b0; e_in_last <= 1'b0;
-            if (rec[0] && ret[0]) begin ret[0] <= 1'b0; raw_v <= 1'b1; rq <= rec; end      // E0 accept (ready = idle)
+            rq <= rec;                                                          // pin flops (no enable from rec[0])
+            if (rec[0] && ret[0]) begin ret[0] <= 1'b0; raw_v <= 1'b1; end        // E0 accept (ready = idle)
             if (raw_v) begin                                                     // E1 decode
                 raw_v <= 1'b0;
                 if (bad) begin ret[2] <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; hdr <= rh; dA <= rA; dO <= rO; nA <= rnA; stream_m <= (rA[1:0] == 2'd2);
                     e_rank <= cfg_rank[6:0]; e_imm <= rh[49:32];
-                    w_end <= rA[47:8] + {19'd0, rnA}; sec <= rA[47:11]; sec_last <= (rA[47:8] + {19'd0, rnA} - 40'd1) >> 3;
+                    w_end <= rA[47:8] + {19'd0, rnA}; sec <= rA[47:11]; sl_pend <= 1'b1;
                     rd_pend <= 1'b0; rd_done_all <= 1'b0; got_out <= 1'b0; wr_phase <= 1'b0; wr_pend <= 1'b0; wr_n <= 2'd0;
                 end
             end
-            if (busy && !stream_m && !rd_done_all && !rd_pend) begin              // read request: sector sec
+            if (sl_pend) begin sl_pend <= 1'b0; sec_last <= (w_end - 40'd1) >> 3; end     // E2: the last sector
+            if (busy && !stream_m && !rd_done_all && !rd_pend && !sl_pend) begin              // read request: sector sec
                 vmq <= {1'b1, 1'b0, sec[26:0], 5'd0, 256'd0, 32'd0, 16'h7A00}; rd_pend <= 1'b1;
             end
             if (busy && rd_pend && vr[273] && !vr[256]) begin                  // read response: one engine beat
@@ -103,10 +107,10 @@ module ot_hgi_argmax_record #(
                 e_in_last <= (sec == sec_last);
                 if (sec == sec_last) rd_done_all <= 1'b1; else sec <= sec + 35'd1;
             end
-            if (busy && stream_m && !rd_done_all && am_stream[0]) begin           // STREAM beats from su_red
-                e_in_v <= 1'b1; e_in_last <= am_stream[1]; e_mask <= am_stream[9:2]; e_vals <= am_stream[265:10];
-                e_bias <= am_stream[521:266]; e_bias_en <= am_stream[522];
-                if (am_stream[1]) rd_done_all <= 1'b1;
+            if (busy && stream_m && !rd_done_all && as_q[0]) begin                // STREAM beats from su_red (pin flops)
+                e_in_v <= 1'b1; e_in_last <= as_q[1]; e_mask <= as_q[9:2]; e_vals <= as_q[265:10];
+                e_bias <= as_q[521:266]; e_bias_en <= as_q[522];
+                if (as_q[1]) rd_done_all <= 1'b1;
             end
             if (busy && eo_v && !got_out) begin
                 got_out <= 1'b1; res_val <= eo_val;

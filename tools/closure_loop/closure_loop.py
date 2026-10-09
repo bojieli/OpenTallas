@@ -72,6 +72,8 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
+LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
@@ -129,6 +131,13 @@ SETUP_LIB = "TT"
 VTSWAP_TT_FLOOR = -45.0
 VTSWAP_TARGETS = (10.0, 5.0)
 VTSWAP_CAP_PCT = 2.0
+# COMBO ECO (drive-0849 2026-10-09, coordinator-approved): a route that misses BOTH thinly -- TT in [COMBO_TT_FLOOR, 0) AND FF
+# in [COMBO_FF_FLOOR, 0), DRC 0, checks/benches clean -- gets neither the VT-swap ECO (needs FF >= 0) nor the hold ECO (needs
+# TT >= 0).  It runs vtswap_eco.sh (RVT->LVT on TT paths, <= VTSWAP_CAP_PCT % LVT) and then hold_eco.sh stacked on the
+# VT-swap result (ECO_RB_DB=6_final.odb) as ONE ECO stage; the hold-ECO completion path judges / installs / re-verdicts it.
+# (The manual /tmp/sc/combo_eco.py launches, made automatic.)  spec hold_eco.combo: false turns it off.
+COMBO_TT_FLOOR = -45.0
+COMBO_FF_FLOOR = -30.0
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -958,9 +967,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
         if info["mem_gb"] < ram + head:
             return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB < {ram}+{head:.0f}"
-        if info["disk_gb"] < cfg["min_free_disk_gb"]:
-            return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
+        # drive-0849 2026-10-09 (coordinator): a light stage (bench / collect / export: ram <= LIGHT_STAGE_RAM_GB) writes a few
+        # GB at most; the 200 GB run-root floor held EPYC4's benches + collects for > 1 h at 192-197 GB free while 250 GB
+        # of RAM sat idle.  Light stages keep only LIGHT_DISK_FLOOR_GB; routes / calibrates / ECOs keep the full floor.
+        dfloor = cfg["min_free_disk_gb"] if ram > LIGHT_STAGE_RAM_GB else min(cfg["min_free_disk_gb"], LIGHT_DISK_FLOOR_GB)
+        if info["disk_gb"] < dfloor:
+            return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {dfloor}"
         for path, floor in disk_roots(cfg).items():   # every other root the host's jobs write (docker /, /tmp, ...)
+            if ram <= LIGHT_STAGE_RAM_GB:
+                floor = min(floor, LIGHT_DISK_FLOOR_GB)
             free = info.get("roots_gb", {}).get(path)
             if free is not None and free < floor:
                 return False, f"{cfg['label']} {path} has {free} GB free < {floor}"
@@ -3844,6 +3859,8 @@ def do_verdict(j, fleet, stl):
         return
     if vtswap_eligible(j, m, failed, benches_ok) and start_vtswap_eco(j, fleet, m):
         return
+    if combo_eligible(j, m, failed, benches_ok) and start_combo_eco(j, fleet, m):
+        return
     if not summarize_failure(j, fleet, m):
         text = failure_text(j)
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
@@ -3969,6 +3986,71 @@ def start_vtswap_eco(j, fleet, m):
     return True
 
 
+def combo_eligible(j, m, failed=(), benches_ok=True):
+    """a thin TT AND thin FF miss: TT in [COMBO_TT_FLOOR, 0), FF in [COMBO_FF_FLOOR, 0), DRC 0, no failed check / bench /
+    metric error, no installed ECO, no combo ECO tried yet, not turned off by the spec (hold_eco.enabled / combo false)"""
+    he = j["spec"].get("hold_eco") or {}
+    e = j.get("eco") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if he.get("enabled", True) is False or he.get("combo", True) is False:
+        return False
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    if not (COMBO_TT_FLOOR <= tt < SS_MIN and COMBO_FF_FLOOR <= ff < FF_MIN and m.get("drc") == 0):
+        return False
+    if failed or not benches_ok or m.get("errors") or e.get("installed") or j.get("eco_stack"):
+        return False
+    return not any((x or {}).get("kind") == "combo" for x in [*(j.get("eco_history") or []), e])
+
+
+def start_combo_eco(j, fleet, m):
+    """launch vtswap_eco.sh then hold_eco.sh stacked on its result as the job's ECO stage (tag hold_eco.aN, status ECO);
+    the hold-ECO completion path reads {out}/result.json, installs and re-verdicts it unchanged"""
+    rb, ob = eco_paths(j, m)
+    if not rb:
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"combo ECO waiting for capacity: {why}")
+        return True            # stays at the verdict stage; the next tick retries
+    he, v = j["spec"].get("hold_eco") or {}, j["spec"].get("verdict", {})
+    e = j.get("eco") or {}
+    if e:
+        j.setdefault("eco_history", []).append(e)
+        j["attempt"] += 1
+    post = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    pq = " ".join(shlex.quote(p) for p in post)
+    n = len(j.get("eco_history") or []) + 1
+    outv, out = f"{j['run']}/cl/eco-combo{n}-vt", f"{j['run']}/cl/eco-combo{n}"
+    sdcn = shlex.quote(m.get("sdc_name") or "6_final.sdc")
+    mac = shlex.quote(" ".join(v.get("macros", [])))
+    cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
+    blk = j["spec"]["block"]
+    venv = (f"TARGET=10 CAP_PCT={cap:g} DRC0=1 ACC_SS={SS_MIN:g} ACC_FF={COMBO_FF_FLOOR:g} SETUP_LIB={SETUP_LIB} SDC_NAME={sdcn} "
+            f"THREADS=8 MACROS={mac} ORFS_W18=")
+    if m.get("setup_post_sdc"):
+        venv += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    henv = (f"ECO_SESSION=mm ALLOW_FRESH_GRT=0 HM=12 SM=40 FILT=40 PASSES=1 RESAWARE=1 HOLDCELLS=1 ACC_SS={SS_MIN:g} "
+            f"ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} KEEPCLK=0 BUF=30 MACROS={mac} THREADS=8 SDC_NAME={sdcn} ECO_RB_DB=6_final.odb")
+    cmd = (f"{venv} bash {{CL}}/vtswap_eco.sh {rb} {ob} {outv} {blk} {pq}; "
+           f"VB=$(ls -d {outv}/orfs/results/asap7/*/base | head -1); test -f $VB/6_final.odb || {{ echo COMBO: no vtswap base; exit 3; }}; "
+           f"[ -f $VB/{sdcn} ] || cp {ob}/{sdcn} $VB/; "
+           f"{henv} bash {{CL}}/hold_eco.sh $VB $VB {out} {blk} {pq}")
+    ship_helpers(j["host"], j["run"])
+    tt, ff = m["ss_ps"], m["ff_ps"]
+    j["eco"] = dict(tried=True, kind="combo", rb=rb, ob=ob, combo_vtswap=outv, out=out, post_sdc=post,
+                    sdc_name=m.get("sdc_name") or "6_final.sdc", setup_post_sdc=list(m.get("setup_post_sdc") or []),
+                    pre=dict(ss_ps=tt, ff_ps=ff), started=now_iso(), lvt_cap_pct=cap, auto=True)
+    launch_stage(j, dict(key="hold_eco", kind="hold_eco", threads=8, ram=16), cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"thin TT AND FF miss ({setup_corner_label(m)} {tt:+.2f} / FF {ff:+.2f} / DRC 0): post-route COMBO ECO "
+             f"(VT-swap <= {cap:g} % LVT, then hold ECO HM 12 stacked on it, no re-route) on {rb}/6_final.odb; out {out}")
+    ledger(j, f"COMBO ECO launched (loop): TT {tt:+.2f} / FF {ff:+.2f}, LVT cap {cap:g} %")
+    experiment(j, "running: post-route combo (VT-swap + hold) ECO")
+    return True
+
+
 def eco_output(j):
     return (j.get("eco") or {}).get("out", f"{j['run']}/cl/eco")
 
@@ -4013,6 +4095,10 @@ def start_hold_eco(j, fleet, m):
           f"PASSES={he.get('passes', 2)} RESAWARE={int(he.get('resistance_aware', True))} HOLDCELLS={int(he.get('hold_cells', True))} " \
           f"ACC_SS={SS_MIN} ACC_FF={FF_MIN} SETUP_LIB={SETUP_LIB} KEEPCLK={he.get('keep_clock', 0)} BUF={he.get('max_buffer_percent', 30)} " \
           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} THREADS=8"
+    if he.get("repair_drv"):
+        # mtp-lead 2026-10-09: opt-in DRV repair inside the ECO (hold_eco.tcl OT_REPAIR_DRV); default off
+        env += f" REPAIR_DRV=1 DRV_SLEW_MARGIN={float(he.get('drv_slew_margin', 30)):g} " \
+               f"DRV_CAP_MARGIN={float(he.get('drv_cap_margin', 20)):g} DRV_MAX_WIRE={float(he.get('drv_max_wire_um', 0)):g}"
     post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
     baked = baked_post_sdcs(j, m, [p for p in v.get("post_sdc", []) if p not in post_sdcs])
     if baked:
@@ -4068,8 +4154,8 @@ def eco_install_cmd(j):
         for f in ("6_final.odb", "6_final.spef", "6_final.v"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
-    if he.get("reexport"):
-        lines.append(he["reexport"])
+    if isinstance(he.get("reexport"), str) and he["reexport"].strip():   # drive-0849: a spec with reexport: true (bool)
+        lines.append(he["reexport"])                                      # crashed join(); non-str -> the default re-export
     else:
         W = "/".join(rb.split("/")[:-6])     # <route>/work/orfs/results/asap7/<d>/base -> <route>
         macs = " ".join(f"--macro-view {x}" for x in j["spec"]["verdict"].get("macros", []))
@@ -4631,6 +4717,230 @@ def release_bulk(jobs):
             save_job(j)
 
 
+# DEEP RELEASE (disk-1210 2026-10-09): EPYC1 sat at 183 GB free with a 1.6 TB closure-loop tree although every terminal
+# job had been bulk-released: BULK_RELEASE_SH keeps 5_2_route.odb, every eco pass's 6_final.*, the src snapshot (~1.3 GB
+# per job) and bench builds (Verilator .gch/obj ~1 GB per bench), and it never touched CLOSED jobs or plain failures.
+# Owner rule: CLOSED + recorded on main keeps 6_final.{odb,def,v,sdc,spef} of the accepted ORFS dir (metrics.orfs_dir)
+# and of the route tree plus logs/reports; a terminal failure older than DEEP_RELEASE_AGE_H loses the ORFS 1_-5_
+# intermediates, objects/, the src snapshot and bench builds, keeping 6_final.* and logs/reports; a near miss on an
+# open element (near_miss()) keeps 5_2_route.odb, 6_final.*, objects/ and src (re-STA / ECO inputs) and loses only the
+# 1_-4_/fill/gds intermediates and bench builds.  Every path a committed receipt on origin/main names is kept whole
+# (files, source trees) or keeps its 6_final.* (generic ORFS dirs).  A src snapshot goes only when its SOURCE_COMMIT is
+# the job's commit and that commit is in REPO (re-creatable by git archive).
+DEEP_RELEASE_AGE_H = 6.0
+DEEP_RELEASE_PER_TICK = 4
+DEEP_RELEASE_FAIL = {"NEEDS_RTL", "NEEDS_HUMAN", "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", "CANCELLED", "REFUSED", "INVALID",
+                     *EARLY_FAIL}
+DEEP_RELEASE_REFS_TTL_S = 3600
+_DEEP_CACHE = {}
+DEEP_RELEASE_PY = r'''
+import json, os, shutil, stat, sys
+a = json.loads(os.environ["OT_DR"])
+R, mode = a["run"].rstrip("/"), a["mode"]
+FINAL = {"6_final.odb", "6_final.def", "6_final.v", "6_final.sdc", "6_final.spef"}
+BULK = (".odb", ".def", ".spef", ".v", ".gds", ".guide", ".odb.gz", ".def.gz", ".gds.gz", ".pre_eco")
+GENERIC = {"orfs", "work", "base", "routes", "cl", "eco", "eco-r2", "eco-r3", "pass1", "pass2", "pass3", "route",
+           "results", "logs", "reports", "asap7"}
+KEEP_TEXT = (".log", ".json", ".txt", ".rpt", ".rc", ".pid", ".sdc", ".tcl", ".sh", ".env", ".csv", ".md", ".yaml",
+             ".yml", ".sv", ".v", ".svh", ".vh", ".f")
+if not os.path.isdir(R):
+    print("DEEP_FREED 0 (no run dir)"); sys.exit(0)
+for p in os.listdir("/proc"):
+    if not p.isdigit():
+        continue
+    try:
+        cwd = os.readlink("/proc/%s/cwd" % p)
+        argv = open("/proc/%s/cmdline" % p, "rb").read().decode(errors="replace")
+    except OSError:
+        continue
+    if cwd == R or cwd.startswith(R + "/") or (R + "/") in argv or argv.endswith(R) or (R + "\0") in argv:
+        print("LIVE pid", p); sys.exit(3)
+refs = [r.rstrip("/") for r in a.get("refs") or []]
+hard = [r for r in refs if os.path.basename(r) not in GENERIC and r != R]
+soft = [r for r in refs if r not in hard and r != R]
+finals = [x.rstrip("/") for x in a.get("final_dirs") or []]
+prot = lambda p: any(p == r or p.startswith(r + "/") for r in hard)
+anc = lambda p: any(r.startswith(p + "/") for r in hard)
+APPLY = not a.get("dry")
+freed = 0
+def blocks(p):
+    try:
+        st = os.lstat(p)
+        return st.st_blocks * 512 if stat.S_ISREG(st.st_mode) else 0
+    except OSError:
+        return 0
+def rm_tree(p):
+    b = sum(blocks(os.path.join(dp, f)) for dp, dn, fn in os.walk(p) for f in fn)
+    if APPLY:
+        shutil.rmtree(p, ignore_errors=True)
+    return b
+def rm_file(p):
+    b = blocks(p)
+    if APPLY:
+        try:
+            os.unlink(p)
+        except OSError:
+            return 0
+    return b
+src_ok = False
+try:
+    src_ok = bool(a.get("src_commit")) and open(os.path.join(R, "src", "SOURCE_COMMIT")).read().strip() == a["src_commit"]
+except OSError:
+    pass
+for top in sorted(os.listdir(R)):
+    tp = os.path.join(R, top)
+    if not os.path.isdir(tp) or os.path.islink(tp) or prot(tp) or anc(tp):
+        continue
+    if top == "src" and mode in ("closed", "fail") and src_ok:
+        freed += rm_tree(tp)
+    elif top.startswith("bench_src"):
+        freed += rm_tree(tp)
+for dp, dn, fn in os.walk(R):
+    if prot(dp) or dp == R + "/src" or dp.startswith(R + "/src/"):
+        dn[:] = []
+        continue
+    if "/orfs" in dp and mode != "nearmiss":
+        for x in [x for x in dn if x == "objects"]:
+            p = os.path.join(dp, x)
+            if not prot(p) and not anc(p):
+                freed += rm_tree(p)
+                dn.remove(x)
+    verilator = any(f.startswith("V") and f.endswith(".mk") for f in fn)
+    for f in fn:
+        p = os.path.join(dp, f)
+        if prot(p) or os.path.islink(p):
+            continue
+        if verilator:
+            if not f.endswith(KEEP_TEXT):
+                freed += rm_file(p)
+            continue
+        if f.endswith((".gch", ".o", ".a", ".so")) and "/orfs" not in dp:
+            freed += rm_file(p)
+            continue
+        if "/orfs" not in dp or not (f.endswith(BULK) or ".odb." in f):
+            continue
+        if f in FINAL and (mode != "closed" or "/routes/" in dp or any(dp.startswith(x + "/") for x in finals + soft)):
+            continue
+        if f == "5_2_route.odb" and mode == "nearmiss":
+            continue
+        freed += rm_file(p)
+print("DEEP_FREED %d" % (freed // 2 ** 20))
+'''
+
+
+def _terminal_age_h(j, now=None):
+    """hours since the job's last real event (release / retention bookkeeping does not count)"""
+    t = j.get("updated") or j.get("created")
+    for e in reversed(j.get("events") or []):
+        if not re.search(r"bulk release|route bulk released|near-miss|deep release|disk-1210", e[:160]):
+            t = e[:25]
+            break
+    try:
+        return ((now or time.time()) - dt.datetime.fromisoformat(t).timestamp()) / 3600
+    except Exception:  # noqa: BLE001
+        return 0.0
+
+
+def _main_evidence():
+    """(origin/main sha, tree file list, merged-closure records text, receipt-referenced scratch paths), cached by sha
+    (refs refreshed at most every DEEP_RELEASE_REFS_TTL_S: the git grep costs ~20 s)"""
+    g = lambda *a: subprocess.run(["git", "-C", str(REPO), *a], capture_output=True, text=True, timeout=600)
+    sha = g("rev-parse", "origin/main").stdout.strip()
+    if not sha:
+        return None
+    c = _DEEP_CACHE
+    if c.get("sha") != sha:
+        recs = "".join(g("show", f"{sha}:{p}").stdout for p in g("ls-tree", "--name-only", sha, "results/closure_loop/").stdout.split()
+                       if "merged_closures" in p)
+        c.update(sha=sha, files=g("ls-tree", "-r", "--name-only", sha).stdout, recs=recs)
+    if c.get("refs_sha") != sha and time.time() - c.get("refs_t", 0) > DEEP_RELEASE_REFS_TTL_S or "refs" not in c:
+        out = g("grep", "-h", "-o", "-I", "-E", r"/srv/[A-Za-z0-9_./+-]+", sha).stdout
+        c.update(refs=sorted({x.split(":", 1)[-1].rstrip("/.") for x in out.split()}), refs_sha=sha, refs_t=time.time())
+    return c
+
+
+def closure_on_main(j, ev):
+    """a CLOSED job whose record reached origin/main: its record commit is an ancestor, a merged_closures record or a
+    main tree path names it"""
+    for e in reversed(j.get("events") or []):
+        m = re.search(r"CLOSED:.*record (\S+) ([0-9a-f]{7,40})", e)
+        if m:
+            if subprocess.run(["git", "-C", str(REPO), "merge-base", "--is-ancestor", m.group(2), ev["sha"]],
+                              capture_output=True, timeout=120).returncode == 0:
+                return True
+            break
+    return j["name"] in ev["files"] or j["name"] in ev["recs"]
+
+
+def deep_release_mode(j, closed, ev, now=None):
+    """closed | fail | nearmiss | None (keep) for one job (DEEP RELEASE)"""
+    if j.get("deep_released") or not j.get("host") or not j.get("run") or j["status"] not in TERMINAL:
+        return None
+    if _terminal_age_h(j, now) < DEEP_RELEASE_AGE_H:
+        return None
+    if j["status"] == "CLOSED":
+        if closure_counts(j):
+            return "closed" if closure_on_main(j, ev) else None
+        return "fail"                                   # revoked closure: a failure on its element
+    if j["status"] not in DEEP_RELEASE_FAIL:
+        return None
+    if near_miss(j, closed) or (j.get("near_miss_retained") and j["spec"].get("block") not in closed):
+        return "nearmiss"
+    return "fail"
+
+
+def release_deep(jobs, now=None):
+    """DEEP RELEASE of up to DEEP_RELEASE_PER_TICK terminal jobs (see DEEP_RELEASE_PY)"""
+    closed = closed_blocks(jobs)
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    cand = [x for x in jobs if x.get("host") in hosts and not x.get("deep_released") and x["status"] in TERMINAL
+            and _terminal_age_h(x, now) >= DEEP_RELEASE_AGE_H]
+    if not cand:
+        return 0
+    ev = _main_evidence()
+    if not ev:
+        return 0
+    n = 0
+    for x in cand:
+        if n >= DEEP_RELEASE_PER_TICK:
+            break
+        mode = deep_release_mode(x, closed, ev, now)
+        if not mode:
+            continue
+        run = x["run"].rstrip("/")
+        if any(y["status"] not in TERMINAL or _terminal_age_h(y, now) < DEEP_RELEASE_AGE_H
+               for y in shared.get((x["host"], run), [])):
+            continue                                    # a sibling job still uses the run dir
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if mode != deep_release_mode(j, closed, ev, now):
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if commit and subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                         capture_output=True, timeout=60).returncode != 0:
+                commit = ""
+            arg = dict(run=run, mode=mode, src_commit=commit, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       final_dirs=[(j.get("metrics") or {}).get("orfs_dir")] if mode == "closed" and (j.get("metrics") or {}).get("orfs_dir") else [])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            if r.returncode == 3:
+                event(j, f"deep release skipped: live process ({r.stdout.strip()[:120]})")
+                continue
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode != 0 or not m:
+                continue                                # host unreachable / error: retried next tick
+            j["deep_released"] = dict(at=now_iso(), mode=mode, freed_mb=int(m.group(1)))
+            kept = {"closed": "6_final.{odb,def,v,sdc,spef} of the accepted ORFS dir + route tree",
+                    "fail": "6_final.*", "nearmiss": "5_2_route.odb, 6_final.*, objects/, src"}[mode]
+            event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
+            save_job(j)
+    return n
+
+
 def tick(fleet):
     try:
         ingest()
@@ -4650,6 +4960,10 @@ def tick(fleet):
         release_bulk(all_jobs())
     except Exception:  # noqa: BLE001
         log("release_bulk error:\n" + traceback.format_exc())
+    try:
+        release_deep(all_jobs())
+    except Exception:  # noqa: BLE001
+        log("release_deep error:\n" + traceback.format_exc())
     for req in sorted((STATE / "migrate_requests").glob("*.json")) if (STATE / "migrate_requests").exists() else []:
         try:
             rq = json.loads(req.read_text())

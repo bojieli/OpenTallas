@@ -50,7 +50,14 @@ QUARTERS = {
                C2=3, G=8, L=2, PIPE=5,
                # r23 coordinator decision 2026-10-07: end port bands for the S-face / N-face buses (2.8 mm from the
                # centre band): their face chains end at the far-end group of the south / north chains
-               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0)),
+               end={'r': 'S', 'f_su_ns': 'N', 't_su_ns': 'N'}, lane_wh=(79.92, 162.0),
+               # coll inject ownership (hgi-takeover 2026-10-09, coll/rtl/spec.json ep.inj_data): f_coll carries the
+               # endpoint's {inj_rd[1:0], inj_idx[2 x 16], ...} at bits 579:546; inject flit i (lane h: inj_idx[16h+15:16h])
+               # is owned by quarter i mod 4 (SW 0, NW 1, SE 2, NE 3, the 2-bit strap qid tied by the die top); t_coll
+               # half h (512 bits) is the AND of the envelope's result with own_h = inj_rd[h] & (inj_idx_h[1:0] == qid),
+               # so a non-owner drives ZERO and hfd_coll's OR of the four quarters is the owner's data
+               inj_gate=dict(out='t_coll', ctl='f_coll', rd=578, idx=546, lanes=2, strap='qid',
+                             strap_pins=[('qid[0]', 1406.04, 4450.716), ('qid[1]', 1406.04, 4450.812)])),
     'sfu': dict(master='hfd_sfu', lane='ot_su12_sfu', src=SU_PHYS, params={}, per_lane=['vi_q', 'rd_q', 'side_y'],
                 C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48)),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 7, 'AL': 6},
@@ -182,7 +189,23 @@ class Plan:
     def slot(self, j, t):
         return (j * self.LO + t) % self.WC
 
-    def model(self, din_bits):
+    def model(self, din_bits, qid=None):
+        o = self.model_raw(din_bits)
+        ig = self.q.get('inj_gate')
+        if not ig or qid is None:
+            return o
+        d = self.split(din_bits, self.din)
+        c = d[ig['ctl']]
+        off = dict(zip([p for p, _ in self.dout], _offs(self.dout)))[ig['out']]
+        hw = dict(self.dout)[ig['out']] // ig['lanes']
+        for h in range(ig['lanes']):
+            idx = c[ig['idx'] + 16 * h] | c[ig['idx'] + 16 * h + 1] << 1
+            if not (c[ig['rd'] + h] and idx == qid):
+                for b in range(off + h * hw, off + (h + 1) * hw):
+                    o[b] = 0
+        return o
+
+    def model_raw(self, din_bits):
         acc = [[0] * self.WC for _ in range(self.K)]
         d = self.split(din_bits, self.din)
         for side in ('S', 'N'):                  # end-band inputs enter the far-end accumulator of their side's chains
@@ -241,7 +264,8 @@ def emit_rtl(P, neg=False):
           '`timescale 1ns/1ps', f'module {m} (']
     decl = []
     cports = [(c, 1) for c in P.cks] if nck else [('ck', 1)]
-    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)]):
+    ig = q.get('inj_gate')
+    for p_, w in sorted([(p_, w) for p_, w in P.din] + cports + [('rst', 1)] + ([(ig['strap'], 2)] if ig else [])):
         decl.append(f'    input  wire [{w - 1}:0] {p_}')
     for p_, w in P.dout:
         decl.append(f'    output wire [{w - 1}:0] {p_}')
@@ -341,6 +365,24 @@ def emit_rtl(P, neg=False):
             srcs[p_] = '{' + ', '.join(f'bc_{ks[tt % len(ks)]}_{P.G - 1}[{(tt // len(ks)) % P.LB}]'
                                        for tt in reversed(range(t, t + w))) + '}'
             t += w
+    if ig:
+        cq = f"{ig['ctl']}_i{P.dp[ig['ctl']] - 1}"            # the control port at the band (its last input stage)
+        hw = dict(P.dout)[ig['out']] // ig['lanes']
+        NR = hw // 32                                         # owner-flag replicas: fanout 32 each (no 512-wide net)
+        L_ += ['    // coll inject ownership gate (see the generator\'s QUARTERS su inj_gate): quarter qid drives t_coll half h',
+               '    // only when it owns inject flit inj_idx_h (inj_idx_h mod 4 == qid and inj_rd[h]); every other quarter drives 0',
+               f"    (* keep *) reg [1:0] qid_q;  always @(posedge {ck(band_y)}) qid_q <= {ig['strap']};"]
+        for h in range(ig['lanes']):
+            own = f"{cq}[{ig['rd'] + h}] & ({cq}[{ig['idx'] + 16 * h + 1}:{ig['idx'] + 16 * h}] == qid_q)"
+            L_.append('`ifdef OT_HFD_SU_MUT_NOGATE')
+            L_.append(f"    wire own_{h} = 1'b1;                       // NEGATIVE CONTROL: every quarter drives")
+            L_.append('`else')
+            L_.append(f'    wire own_{h} = {own};')
+            L_.append('`endif')
+            L_.append(f'    (* keep *) reg [{NR - 1}:0] own_r{h};  always @(posedge {ck(band_y)}) own_r{h} <= {{{NR}{{own_{h}}}}};')
+        msk = ', '.join(f'{{32{{own_r{h}[{r}]}}}}' for h in reversed(range(ig['lanes'])) for r in reversed(range(NR)))
+        L_.append(f"    wire [{dict(P.dout)[ig['out']] - 1}:0] {ig['out']}_own = {{{msk}}};")
+        srcs[ig['out']] = f"({srcs[ig['out']]} & {ig['out']}_own)"
     for p_, w in P.dout:
         D = P.dp[p_]
         py, ty = P.pin_y.get(p_, band_y), P.tgt_y.get(p_, band_y)
@@ -379,12 +421,26 @@ def emit_stub(P):
 def emit_tb(P, nvec, seed, out):
     rnd = random.Random(seed)
     vin, vout = [], []
-    for _ in range(nvec):
+    ig = P.q.get('inj_gate')
+    if ig:
+        nvec = max(nvec, 8)
+        coff = dict(zip([p for p, _ in P.din], _offs(P.din)))[ig['ctl']]
+    for v in range(nvec):
         d = [rnd.getrandbits(1) for _ in range(P.WI)]
+        if ig:          # inject beats: rd pattern and flit indices cycling through every owner on both lanes
+            rd = [3, 1, 2, 3, 0, 3, 3, 3][v % 8]
+            for h in range(ig['lanes']):
+                d[coff + ig['rd'] + h] = (rd >> h) & 1
+                i_ = (v + 3 * h) % 4
+                d[coff + ig['idx'] + 16 * h], d[coff + ig['idx'] + 16 * h + 1] = i_ & 1, i_ >> 1
         vin.append(d)
         vout.append(P.model(d))
     (out / 'tb_in.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WI + 3) // 4}x}' for d in vin) + '\n')
     (out / 'tb_out.mem').write_text('\n'.join(f'{int(vec(d), 2):0{(P.WO + 3) // 4}x}' for d in vout) + '\n')
+    if ig:
+        for qd in range(4):
+            (out / f'tb_out_q{qd}.mem').write_text('\n'.join(f'{int(vec(P.model(d, qd)), 2):0{(P.WO + 3) // 4}x}'
+                                                            for d in vin) + '\n')
     q = P.q
     m = q['master']
     hold = 2 * P.G + 2 * P.DMAX + 14
@@ -402,9 +458,10 @@ module tb;
     reg [{P.WI - 1}:0] vin [0:{nvec - 1}];
     reg [{P.WO - 1}:0] vout [0:{nvec - 1}];
     integer v, c, bad, lat, first;
-    {m} dut({cks}, .rst(rst), {ports});
+    parameter integer QID = 0;
+    {m} dut({cks}, .rst(rst), {ports}{(", ." + ig['strap'] + "(QID[1:0])") if ig else ''});
     initial begin
-        $readmemh("tb_in.mem", vin); $readmemh("tb_out.mem", vout);
+        $readmemh("tb_in.mem", vin); {'$readmemh($sformatf("tb_out_q%0d.mem", QID), vout);' if ig else '$readmemh("tb_out.mem", vout);'}
         bad = 0; lat = 0;
         din = 0; repeat (6) @(posedge clk); rst = 0;
         for (v = 0; v < {nvec}; v = v + 1) begin
@@ -416,7 +473,7 @@ module tb;
             if (dout !== vout[v]) begin bad = bad + 1; $display("MISMATCH vec %0d", v); end
             if (first > lat) lat = first;
         end
-        $display("OT_RESULT vectors={nvec} mismatches=%0d settle_cycles=%0d", bad, lat + 1);
+        $display("OT_RESULT vectors={nvec} qid=%0d mismatches=%0d settle_cycles=%0d", QID, bad, lat + 1);
         if (bad != 0) $fatal(1, "FAIL");
         $finish;
     end
@@ -537,6 +594,10 @@ def main():
                 lane_per_lane_bits=P.LP, lane_out_bits=P.LO, acc_bits_per_chain=P.WC,
                 face_stages=P.dp, flops=dict(boundary=sum(w * P.dp[p] for p, w in P.din + P.dout) + 2, broadcast=P.K * P.G * (P.LB + 1), accumulate=P.K * P.G * P.WC,
                                                                      lane_output_stage=P.N * P.LO))
+    if q.get('inj_gate'):            # the strap pins (not die-view ports yet): appended to the route's io_place.tcl
+        (out / 'strap_pins.tcl').write_text('# tools/hbm_hub_quarter_gen.py: inject-ownership strap pins (qid, tied per quarter by the die top)\n' +
+            ''.join(f'place_pin -pin_name {{{n}}} -layer M4 -location {{{x:.4f} {y:.4f}}} -pin_size {{0.1920 0.0240}}\n'
+                    for n, x, y in q['inj_gate']['strap_pins']))
     (out / 'plan.json').write_text(json.dumps(info, indent=1) + '\n')
     (out / 'face_stages.tcl').write_text('# tools/hbm_hub_quarter_gen.py: die port -> face chain depth (common/face_chain_place.tcl)\n' +
         ''.join(f'set fc_ps({p}) {P.dp[p]}\n' for p, _ in P.dout) + ''.join(f'set fc_psi({p}) {P.dp[p]}\n' for p, _ in P.din))

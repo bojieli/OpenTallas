@@ -30,6 +30,7 @@
 module ot_hgi_su_record #(
     parameter integer MUT_ISTRIDE = 0,     // mutant: Xsi = istride (no 0 -> 1, no ibcast)
     parameter integer MUT_EARLY = 0,       // mutant: retire on the unit's accept, not on its completion
+    parameter integer GLU = 0,             // 1: the SFU form (unit 3 SFU.GLU decoded as its one vec op; ot_hgi_sfu_record)
     parameter integer LEGACY = 1           // 1: the static legacy pass-through mux (die wrapper / bench); 0: the routed
                                            //    adapter alone (records only, every output from a register; hgi_en unused)
 ) (
@@ -93,15 +94,23 @@ module ot_hgi_su_record #(
     assign lg_rdy  = !hen && op_rdy;
 
     // ---- decode (combinational from the raw station)
-    wire [6:0] opnd = hdr_q[99:93];
+    // SFU.GLU as the vec op (GLU = 1): A = gate (a_min L), C = up (record B, c_clip L), B = route weight (record C);
+    // SUT: a_min, c_clip, SFU SILU, E1 MULC, E2 MULB, rnd if O BF16, dst VM, imm3 = imm_a (L)
+    wire [255:0] glu_sut = (256'd1 << 14) | (256'd1 << 15) | (256'd5 << 27) | (256'd1 << 30) | (256'd1 << 33) |
+                           ({255'd0, o_q[4:2] == 3'd1} << 35) | (256'd1 << 36) | ({224'd0, hdr_q[63:32]} << 110);
+    wire [6:0]  ropnd = hdr_q[99:93];
+    wire        glu_bad = GLU && ((hdr_q[127:124] != 4'd3) || (hdr_q[123:118] != 6'd0) || hdr_q[92] ||
+                                  ((ropnd & 7'b0010111) != 7'b0010111) || (o_q[4:2] != 3'd0 && o_q[4:2] != 3'd1));
+    wire [6:0] opnd = GLU ? 7'b0010111 : ropnd;
+    wire [255:0] sut_e = GLU ? glu_sut : sut_q;
     wire pa = opnd[0], pb = opnd[1], pc = opnd[2], pd = opnd[3], po = opnd[4], pr = opnd[5], pi = opnd[6];
-    wire [1:0] a_src = sut_q[1:0], a_ind = sut_q[3:2], b_src = sut_q[5:4], c_src = sut_q[8:7], d_src = sut_q[11:10];
-    wire       b_half = sut_q[6], c_pair = sut_q[9], a_rnd = sut_q[12], a_relu = sut_q[13], a_min = sut_q[14],
-               c_clip = sut_q[15];
-    wire [2:0] m1 = sut_q[18:16], qm = sut_q[23:21], ad = sut_q[26:24], sfu = sut_q[29:27], e1 = sut_q[32:30];
-    wire [1:0] m2 = sut_q[20:19], e2 = sut_q[34:33], dst = sut_q[37:36], red = sut_q[39:38], su_vec = sut_q[44:43];
-    wire       rnd = sut_q[35], red_sq = sut_q[40], red_whole = sut_q[41], red_rnd = sut_q[42], red_tree = sut_q[45];
-    wire [31:0] imm1 = sut_q[77:46], imm2 = sut_q[109:78], imm3 = sut_q[141:110];
+    wire [1:0] a_src = sut_e[1:0], a_ind = sut_e[3:2], b_src = sut_e[5:4], c_src = sut_e[8:7], d_src = sut_e[11:10];
+    wire       b_half = sut_e[6], c_pair = sut_e[9], a_rnd = sut_e[12], a_relu = sut_e[13], a_min = sut_e[14],
+               c_clip = sut_e[15];
+    wire [2:0] m1 = sut_e[18:16], qm = sut_e[23:21], ad = sut_e[26:24], sfu = sut_e[29:27], e1 = sut_e[32:30];
+    wire [1:0] m2 = sut_e[20:19], e2 = sut_e[34:33], dst = sut_e[37:36], red = sut_e[39:38], su_vec = sut_e[44:43];
+    wire       rnd = sut_e[35], red_sq = sut_e[40], red_whole = sut_e[41], red_rnd = sut_e[42], red_tree = sut_e[45];
+    wire [31:0] imm1 = sut_e[77:46], imm2 = sut_e[109:78], imm3 = sut_e[141:110];
     wire use_b = (m1 == M1_AB) || (m1 == M1_DIVB) || (m1 == M1_MAXB) || (ad == AD_NEGB) || (e2 == E2_MULB);
     wire use_c = !c_pair && ((m2 == M2_C) || (qm != 3'd0) || (ad == AD_Q) || (ad == AD_C) || (e1 == E1_MULC) ||
                               (e1 == E1_ADDC));      // c_pair: C is A's pair element, not an operand
@@ -111,7 +120,7 @@ module ot_hgi_su_record #(
         isi = MUT_ISTRIDE ? {8'd0, d[135:120]} : (d[5] ? 24'd0 : (d[135:120] == 16'd0) ? 24'd1 : {8'd0, d[135:120]});
     endfunction
     wire [19:0] nout = a_q[87:68];
-    wire bad = (hdr_q[127:124] != 4'd2) || (hdr_q[123:118] != 6'd0) || !hdr_q[92] || (|sut_q[255:142]) ||
+    wire bad = glu_bad || (!GLU && ((hdr_q[127:124] != 4'd2) || (hdr_q[123:118] != 6'd0) || !hdr_q[92])) || (|sut_e[255:142]) ||
                (su_vec != 2'd0) || !pa ||
                not_vm(pa, a_q) || not_vm(pb, b_q) || not_vm(pc, c_q) || not_vm(pd, d_q) || not_vm(po, o_q) ||
                not_vm(pr, r_q) || not_vm(pi, i_q) ||
@@ -143,10 +152,11 @@ module ot_hgi_su_record #(
             o_q <= 256'd0; r_q <= 256'd0; i_q <= 256'd0; na_q <= 21'd0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            if (rec_v && rec_rdy) begin
-                raw_v <= 1'b1; hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= rec_b; c_q <= rec_c;
-                d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
-            end
+            // pin flops: the record bus lands unconditionally (no enable fanout from the rec_v pin); raw_v marks the
+            // accepted record, decoded at the next edge
+            hdr_q <= rec_hdr; sut_q <= rec_sut; a_q <= rec_a; b_q <= GLU ? rec_c : rec_b; c_q <= GLU ? rec_b : rec_c;
+            d_q <= rec_d; o_q <= rec_o; r_q <= rec_r; i_q <= rec_i; na_q <= rec_n_a;
+            if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (raw_v) begin                                  // E1: the decoded word
                 raw_v <= 1'b0; dec_v <= 1'b1; w_q <= w_dec; nop_q <= nop; bad_q <= bad;
             end

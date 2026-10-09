@@ -33,13 +33,16 @@ CTRL_NETS = ("st", "nx_v", "d_unit", "me_wsrc", "kv_gate", "su_ready", "su_idle"
 
 BASE_EMIT = F.EMIT.emit          # the unpatched core emitter (F.EMIT and P.EMIT are the same module object)
 SPLIT_RTL = ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv"
-STN = dict(dcu=0, duc=0, comp=1, su_ml=0)
+STN = dict(dcu=0, duc=0, comp=1, su_ml=0, gq=0)
 
 
 def part_core(text: str) -> str:
     core = BASE_EMIT(text)
     part = P.emit_part(core, **STN).replace("module ot_qwen_rom_core_part #(", "module ot_qwen_rom_core #(", 1)
-    return P.emit_ctrl(core) + "\n" + part + "\n" + SPLIT_RTL.read_text()
+    out = P.emit_ctrl(core) + "\n" + part + "\n" + SPLIT_RTL.read_text()
+    if STN.get("gq"):
+        out += "\n" + (ROOT / "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_gq.sv").read_text()
+    return out
 
 
 def main():
@@ -56,12 +59,14 @@ def main():
     ap.add_argument("--comp", type=int, default=1, help="1: split-exact compensation; 0: stations only (negative)")
     ap.add_argument("--su-ml", type=int, default=0, help="qwen-rtl-finish: SU lane memory latency ML (the re-cut SU "
                     "master's far constant ROM: IS + OS + CRX)")
+    ap.add_argument("--gq", type=int, default=0, help="kv-die: unit-side go queues of GQ entries (ot_qfd_split_gq.sv); "
+                    "0 = the issue shell of ot_qfd_split_exact.sv")
     ap.add_argument("--max-cycles", type=int, default=0, help="L0 cycle guard (default: the harness's; stations "
                     "add issue gaps)")
     a = ap.parse_args()
     if a.max_cycles:
         F.L0_MAX_CYCLES = a.max_cycles
-    STN.update(dcu=a.dcu, duc=a.duc, comp=a.comp, su_ml=a.su_ml)
+    STN.update(dcu=a.dcu, duc=a.duc, comp=a.comp, su_ml=a.su_ml, gq=a.gq)
     bld = a.build.resolve()
     if a.phase == "run":
         sys.exit(F.run(bld, a.work.resolve(), a.stages, a.threads))
