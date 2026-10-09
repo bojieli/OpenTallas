@@ -69,6 +69,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--out", type=Path, required=True)
     p.add_argument("--seed", type=int, default=20261009)
+    p.add_argument("--source-commit", help="Pinned git-archive commit for a minimal remote bundle")
     args = p.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     root = Path(__file__).resolve().parents[1]
@@ -76,7 +77,7 @@ def main():
                 "input": "32xFP32/1024b", "output": "32xBF16/512b",
                 "seed": args.seed, "numpy": np.__version__,
                 "python": platform.python_version(), "modes": {},
-                "source_commit": subprocess.check_output(
+                "source_commit": args.source_commit or subprocess.check_output(
                     ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
                 "sources": {str(f.relative_to(root)): sha(f) for f in [
                     Path(__file__).resolve(), root / "tools/hdc_golden_v41.py",
