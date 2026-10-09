@@ -2,7 +2,7 @@
 "schema": "opentallas.rebudget.links.v1",
 "die": "s81_glue",
 "desc": "S81-PH slab-internal tile hops (tools/s81/assemble_views.py glue model)",
-"built_at": "2026-10-08T20:53:58-07:00",
+"built_at": "2026-10-08T21:21:20-07:00",
 "links": [
 {
 "snd_inst": "dsfd_ctrl:dsfd_ctrl_pc",
@@ -302,6 +302,33 @@
 }
 },
 {
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "od_ev",
+"rcv_inst": "dsfd_svc:dsfd_svcio_od",
+"rcv_master": "dsfd_svcio_od",
+"rcv_bus": "od_v",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> IO hub (od valid)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 81.1,
+"dskew": 0.0,
+"C": 602.2,
+"S_kit": 154.7,
+"R_kit": 298.7
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 135.8,
+"h_kit": -53.9
+}
+},
+{
 "snd_inst": "dsfd_svc:dsfd_svcio_od",
 "snd_master": "dsfd_svcio_od",
 "snd_bus": "od_r",
@@ -353,6 +380,33 @@
 "H": -45.2,
 "smin_kit": 124.9,
 "h_kit": 2.4
+}
+},
+{
+"snd_inst": "dsfd_svc:dsfd_svc_stn",
+"snd_master": "dsfd_svc_stn",
+"snd_bus": "a0_ev",
+"rcv_inst": "dsfd_svc:dsfd_svcio_ad",
+"rcv_master": "dsfd_svcio_ad",
+"rcv_bus": "a0_v",
+"slab": "dsfd_svc",
+"src": "S81-PH slab glue (assembled-view analytic model)",
+"what": "last station -> IO hub (a0 valid)",
+"length_um": 43.2,
+"tt": {
+"T": 833.333,
+"W": 81.1,
+"dskew": 0.0,
+"C": 602.2,
+"S_kit": 153.6,
+"R_kit": 212.3
+},
+"ff": {
+"W": 4.8,
+"dskew": 0.0,
+"H": -45.2,
+"smin_kit": 137.9,
+"h_kit": -26.5
 }
 },
 {

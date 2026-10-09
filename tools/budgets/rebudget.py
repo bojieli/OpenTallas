@@ -586,6 +586,60 @@ def closed_masters(jobs, links_views):
     return c
 
 
+def view_overrides(jobs, views, links):
+    """S81-TAIL 2026-10-08: a die master the S81 kit still models with an INTERIM view (no routed timing) gets its REAL
+    model from a committed routed die view (physical/s81_die_views/views/<m>/<m>_{tt,ff}.lib, a CLOSED loop job of the
+    block) without a kit rebuild: its side of every die link is re-read from that view's ETM arcs, in the die-link
+    convention (the link's C / H were computed with no in-arc insertion for the interim side, so the side's need is the
+    arc minus the view's own insertion: S = clk->q - ins, R = setup + ins, smin = min clk->q - min ins, h = hold - min ins).
+    Marks the master 'closed_view' in views; returns {master: lib dir}.  (dsfd_hstnh_515 g_hco_SW -> bk_collector cSW:
+    the colt_lane c_in re-derivation was blocked only by the interim station.)"""
+    try:
+        from s81 import assemble_views as AV
+    except Exception:  # noqa: BLE001
+        return {}
+    closed_jobs = {j['spec'].get('block') for j in jobs.values() if j['status'] == 'CLOSED'}
+    vroot = ROOT / 'physical/s81_die_views/views'
+    out = {}
+    for m, v in list(views.items()):
+        if v not in (None, 'interim', 'none') or m not in closed_jobs:
+            continue
+        if not all((vroot / m / f'{m}_{c}.lib').exists() for c in ('tt', 'ff')):
+            continue
+        L = {c: AV.Lib(vroot / m / f'{m}_{c}.lib') for c in ('tt', 'ff')}
+
+        def ins(c, kind):
+            t = (vroot / m / f'{m}_{c}.lib').read_text()
+            r = re.search(kind + r'_clock_tree_path;\s*cell_rise\(scalar\)\s*\{\s*values\("([\d.]+)', t)
+            return float(r.group(1)) if r else 0.0
+        it, ifm = ins('tt', 'max'), ins('ff', 'min')
+        n = 0
+        for l_ in links:
+            if l_.get('slab') or (l_.get('tt') or {}).get('fwd'):
+                continue
+            tt, ff = l_.get('tt') or {}, l_.get('ff') or {}
+            if l_.get('snd_master') == m:
+                cq, cqf = AV.arc_of(L['tt'], l_['snd_bus'], 'cq', 'tt'), AV.arc_of(L['ff'], l_['snd_bus'], 'cq', 'ff')
+                if cq is not None and tt:
+                    tt['S_kit_interim'], tt['S_kit'] = tt.get('S_kit'), round(cq - it, 1)
+                if cqf is not None and ff:
+                    ff['smin_kit_interim'], ff['smin_kit'] = ff.get('smin_kit'), round(cqf - ifm, 1)
+            elif l_.get('rcv_master') == m:
+                su, ho = AV.arc_of(L['tt'], l_['rcv_bus'], 'su', 'tt'), AV.arc_of(L['ff'], l_['rcv_bus'], 'ho', 'ff')
+                if su is not None and tt:
+                    tt['R_kit_interim'], tt['R_kit'] = tt.get('R_kit'), round(su + it, 1)
+                if ho is not None and ff:
+                    ff['h_kit_interim'], ff['h_kit'] = ff.get('h_kit'), round(ho - ifm, 1)
+            else:
+                continue
+            l_['view_override'] = f'{m}: routed die view {vroot.relative_to(ROOT)}/{m} (ins TT {it} / FF min {ifm})'
+            n += 1
+        views[m] = 'closed_view'
+        out[m] = dict(dir=str((vroot / m).relative_to(ROOT)), links=n, ins_tt=it, ins_ff_min=ifm)
+        print(f'view override: {m} interim -> routed die view ({n} links re-read)')
+    return out
+
+
 def cmd_derive(a):
     jobs = load_jobs()
     links = load_links()
@@ -598,7 +652,8 @@ def cmd_derive(a):
         d = json.loads(f.read_text())
         if not d.get('error'):
             needs[d['job']] = d
-    closed = closed_masters(jobs, views)
+    vov = view_overrides(jobs, views, links)
+    closed = closed_masters(jobs, views) | set(vov)
     rb = f'budget_rb{a.rb}'
     od = OUT / rb
     (od / 'sdc').mkdir(parents=True, exist_ok=True)
@@ -773,7 +828,7 @@ def cmd_derive(a):
                 rule='split proportional to need (setup), equal margin share (hold); a master port = min over its links; '
                      'a short link touching a CLOSED block keeps its old budget (owner rule 4)'),
                 link_files=[f.name for f in sorted(OUT.glob('links_*.json'))], links_total=len(links),
-                links_rederived=n_links, jobs=per_job)
+                links_rederived=n_links, view_overrides=vov, jobs=per_job)
     (od / 'summary.json').write_text(json.dumps(summ, indent=1) + '\n')
     cur = OUT / 'current.json'
     c = json.loads(cur.read_text()) if cur.exists() else dict(blocks={})

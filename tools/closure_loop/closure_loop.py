@@ -1265,10 +1265,12 @@ def corner_sta_compat(j, host, run, full):
 
 
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
-           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
+           "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl")
+           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py",
+           *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                          "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1327,9 +1329,10 @@ for e in ${PATH//:/ }; do
       mkdir -p "$OT_FP_LINT_DIR"; shift
       # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
       exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
-        -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+        -e OT_ABC_NO_DCH -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
-    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
+    # ABC-NODCH (drive-2155): a recipe exporting OT_ABC_NO_DCH=1 gets &synch2 for &dch (tools/orfs_hold_mm.py)
+    if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 -e OT_ABC_NO_DCH "$@"; fi
     exec "$e/docker" "$@"
   fi
 done
@@ -1416,11 +1419,43 @@ def preroute_gate_on(j, kind):
     return kind == "route" and j["spec"].get("preroute_gate", True) is not False
 
 
+# drive-2155 2026-10-08: recipes that run the FLOW-HOLD snapshot's hold_corners_patch.py ({FH}/tools/closure_loop, 164
+# jobs: every hbm view / vm8 recipe) re-copy {FH}/tools/orfs_hold_mm.{py,tcl} over the helpers shipped here ("always
+# refresh").  The FH copy of orfs_hold_mm.py was the pre-guard generation, so those routes ran without the hold-stall
+# guard, the HM guard and MET-FIRST.  The FH h1_patch.py / hold_corners_patch.py those recipes run were stale too (no
+# h1-audit families: fh_quad / head ioreg / BF / hbglue / attn_tile_r kept the receiver hold term; no TC / CTS-only
+# calibrate code).  ship_fpl refreshes the FH snapshots on the launch host (tmp + mv: atomic for a concurrent reader).
+FH_DIRS = ("/srv/opentallas-scratch/claude/flowhold/src", "/home/ubuntu/closure-loop-local/flowhold/src")
+FH_FILES = (("orfs_hold_mm.py", "tools"), ("orfs_hold_mm.tcl", "tools"), ("h1_patch.py", "tools/closure_loop"),
+            ("hold_corners_patch.py", "tools/closure_loop"))
+# drive-2155 2026-10-09: the TT-batch overlay snapshot (26f14af32, 635 jobs) has the same failure: tt_overlay.py force-copies
+# its physical/common_flow files over the job's source, so even new-commit routes got link_budget_consistent.sdc WITHOUT
+# the rebudget hook (budget_rb never applied) and cg_pushdown.tcl without the BF HALF_PHL exclusion, plus a pre-audit
+# h1_patch.py.  Every main-vs-snapshot difference is an additive flow fix already on main, so the same refresh applies.
+TTB_DIRS = ("/srv/opentallas-scratch/claude/ttbatch/26f14af32", "/home/ubuntu/closure-loop-local/ttbatch/26f14af32")
+TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/closure_loop"),
+             *((n, "physical/common_flow") for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
+                                                    "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
+SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
+
+
+def snapshot_refresh_sh(run):
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    out = ""
+    for dirs, files in SNAPSHOT_REFRESH:
+        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
+                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
+                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
+                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+    return out
+
+
 def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
     env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
            f"preroute_gate.py preroute_gate.tcl; do "
-           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; "
+           f"{snapshot_refresh_sh(run)}true; }}\nship_fpl\n"
            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
     if lint:
         env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "

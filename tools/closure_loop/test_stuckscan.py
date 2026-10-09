@@ -192,6 +192,43 @@ class ProbeAndGates(unittest.TestCase):
         self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
         self.assertIn("buffer cap", d["why"][0])
 
+    def test_hold_met_never_early_fails(self):
+        # drive-2155: hbm_su_ctlh vf-lvt was EARLY_FAIL_HOLD at real hold WNS +4.4 ps (65,681 buffers > 0.3 x 192,064
+        # instances) while it only padded toward the HM-AUTO margin.  Real hold met: never a verdict, buffers or stall.
+        rows = "\n".join(f"{100 * k:9d} |       0 | {4000 * k:7d} |            0 |    +6.1% | {4.0 + 0.001 * k:7.3f} |   0.000 | "
+                         f"u.x$_DFF_P_/D" for k in range(30))
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 60364 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["action"], "let_run")
+        hd = dict(series=[[0, 0, -16.2], [3860, 7720, 0.05], [32810, 65621, 4.39]], guard=True, found=[60364])
+        with patch.object(ss, "place_instances", return_value=192064):
+            self.assertIsNone(ss.hold_verdict(hd, {}, 9000))
+
+    def test_flat_wns_with_falling_tns_is_not_a_stall(self):
+        # drive-2155: hbm_su_full d2056 (WNS -18.6 flat, TNS -30.8k -> -2.9k) and selt_c vf-lvt (TNS -12.7k -> -18) were
+        # killed as "not converging": one stubborn worst endpoint, the rest still repairing
+        rows = "\n".join(f"{100 * k:9d} |       0 | {200 * k:7d} |            0 |    +6.1% | {-18.6:7.3f} | "
+                         f"{-30000 + 700 * k:10.3f} | u.x$_DFF_P_/D" for k in range(40))
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["action"], "let_run")
+        # WNS and TNS both flat: stall
+        rows = "\n".join(f"{100 * k:9d} |       0 | {200 * k:7d} |            0 |    +6.1% | {-18.6:7.3f} | "
+                         f"{-3000 + k * 0.1:10.3f} | u.x$_DFF_P_/D" for k in range(40))
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("TNS", d["why"][0])
+
+    def test_hold_buffer_cap_rises_while_improving(self):
+        # 192k instances: plain cap 57.6k; real WNS < 0 but gaining >= 5 ps / 2000 it -> cap 100k (0.6 x 192k > 100k)
+        self.assertAlmostEqual(ss.hold_buf_cap(192064, None), 0.30 * 192064)
+        self.assertEqual(ss.hold_buf_cap(192064, 12.0), 100000)
+        self.assertEqual(ss.hold_buf_cap(40000, 12.0), 60000)       # raised floor
+        self.assertEqual(ss.hold_buf_cap(40000, 0.5), 20000)
+        improving = dict(series=[[0, 0, -60.0], [1000, 30000, -40.0], [3000, 65000, -20.0]], guard=True)
+        flat = dict(series=[[0, 0, -60.0], [1000, 30000, -21.0], [3000, 65000, -20.0]], guard=True)
+        with patch.object(ss, "place_instances", return_value=192064):
+            self.assertIsNone(ss.hold_verdict(improving, {}, 3600))
+            self.assertIn("buffer cap", ss.hold_verdict(flat, {}, 3600))
+
     def test_hold_deep_needs_no_progress(self):
         ages = {"1_2_yosys.log": 4 * 3600, "3_5_place_dp.log": 3 * 3600, "4_1_cts.log": 2 * 3600}
         # -200 ps but gaining 10 ps per 2000 iterations: keep
