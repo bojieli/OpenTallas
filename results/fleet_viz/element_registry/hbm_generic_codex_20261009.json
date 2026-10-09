@@ -47,7 +47,18 @@
         "status": "NOT_SUBMITTED",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "real record dispatcher and static group/rank source",
@@ -101,7 +112,18 @@
         "status": "NOT_SUBMITTED",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "bind active gsz (0/1/2/3 or F), do not strap F for generic claim",
@@ -121,7 +143,7 @@
       "owner": "generic_index_decode",
       "description": "hgi idx topk",
       "source": {
-        "commit": "0858a3066",
+        "commit": "33a768ee2",
         "paths": [
           "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
           "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv"
@@ -142,15 +164,15 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_11A6_LIMITED_EXPANDED_GATE_RUNNING",
+          "status": "PASS_COMPONENT_FULL_K2048_EXPANDED_GATE",
           "evidence": [
-            "results/rtl/hgi_topk_20261009/11a6e367f-receipt.json"
+            "results/rtl/hgi_topk_20261009/fb2efd543-receipt.json"
           ]
         },
         "negative": {
-          "status": "PASS_MUTANT_11A6_EXPANDED_MUTANT_PENDING",
+          "status": "PASS_COMPILED_RUNTIME_MUTANT",
           "evidence": [
-            "results/rtl/hgi_topk_20261009/11a6e367f-receipt.json"
+            "results/rtl/hgi_topk_20261009/fb2efd543-receipt.json"
           ]
         },
         "simulator_conformance": {
@@ -160,15 +182,27 @@
         }
       },
       "physical": {
-        "status": "SYNTHESIS_RUNNING_NO_ROUTE_SUBMISSION",
+        "status": "PAIR_PROPOSALS_PENDING_FULLSHAPE_SLOT_AND_ADMISSION",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "full K2048 physical slot for174080 state bits/2048comparators",
         "resolved descriptors and output stream consumers",
-        "normative param25 bits; stable golden score/id/value ordering"
+        "normative param25 bits; stable golden score/id/value ordering",
+        "DS default MUST dispatch/bypass existing native parallel K6 SELECT; exact DS cycle lockstep required before adoption"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -183,7 +217,7 @@
       "owner": "generic_index_decode/ehash",
       "description": "hgi idx ehash",
       "source": {
-        "commit": "b1b158263",
+        "commit": "35a3215c0",
         "paths": [
           "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
         ]
@@ -220,14 +254,29 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
-        "jobs": [],
+        "status": "QUEUED_PARTIAL_DS_HISTORY_ONLY",
+        "jobs": [
+          "hgi-ehash-ds-a-27186ef49-tc-cx",
+          "hgi-ehash-ds-b-27186ef49-tc-cx"
+        ],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "dynamic B descriptor path unresolved; existing DS hash proof only",
-        "normative simulator CF-EHASH pin and output descriptor mapping"
+        "normative simulator CF-EHASH pin and output descriptor mapping",
+        "dynamic B descriptor and normative CF conformance unresolved; queued DS-history variants cannot establish generic completeness"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -284,7 +333,18 @@
         "status": "SYNTHESIS_RUNNING_PAIR_SLOT_FIT_PENDING_NO_ROUTE_SUBMISSION",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "real valid/header/mode/fault/retire consumers replacing old quant tie/fold topology",
@@ -349,7 +409,18 @@
         "status": "NOT_SUBMITTED",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "every token consumer carries bit17",
@@ -405,7 +476,18 @@
         "status": "NOT_SUBMITTED",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "host token/history/command/completion widths updated together",
@@ -461,7 +543,18 @@
         "status": "NOT_SUBMITTED",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "real winning FP32 value to O[0] and18bit token to O[1]",
@@ -528,7 +621,18 @@
           "hgi-att-g12-140-799f13777-tc-cx"
         ],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "Claude descriptor adapter and existing DS9-sector gather row request binding",
@@ -594,7 +698,18 @@
         "status": "NO_GENERIC_DIE_PHYSICAL_SUBMISSION",
         "jobs": [],
         "corners": {},
-        "evidence": []
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
       },
       "dependencies": [
         "real new port consumers and producers must be wired; no implicit constants/cfg/folds/truncation",
