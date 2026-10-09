@@ -29,6 +29,7 @@
 module ot_s81ph_colt_fifo #(
     parameter integer W     = 512,
     parameter integer DEPTH = 256,           // 256 (2 x ot_sram_1r1w_256x256_m2_r2c2)
+    parameter integer RING = 0,
     parameter integer OBD   = 4
 ) (
     input  wire          clk,
@@ -77,6 +78,7 @@ module ot_s81ph_colt_fifo #(
             oc <= oc + (f3 ? 1'b1 : 1'b0) - (dpop ? 1'b1 : 1'b0);
             if (push && cnt == DEPTH) ovf <= 1'b1;
         end
+    generate if (!RING) begin : g_shift
     integer e;
     always @(posedge clk)
         for (e = 0; e < OBD; e = e + 1) begin
@@ -85,12 +87,35 @@ module ot_s81ph_colt_fifo #(
                 else if (e + 1 < OBD) ob[e] <= ob[(e + 1) % OBD];
             end else if (f3 && e == oc) ob[e] <= rq_r;
         end
-    assign hv = oc != 0;
     assign head = ob[0];
+    end else begin : g_ring
+        localparam integer PW = (OBD > 1) ? $clog2(OBD) : 1;
+        reg [PW-1:0] hr, tr;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin hr <= 0; tr <= 0; end
+            else begin
+                if (dpop) hr <= (hr == OBD-1) ? 0 : hr + 1'b1;
+                if (f3) tr <= (tr == OBD-1) ? 0 : tr + 1'b1;
+            end
+        always @(posedge clk) if (f3) begin
+`ifdef OT_S81PH_COLT_MUT_RING
+            ob[(tr + 1) % OBD] <= rq_r;
+`else
+            ob[tr] <= rq_r;
+`endif
+        end
+        assign head = ob[hr];
+    end endgenerate
+    assign hv = oc != 0;
 endmodule
 
 module dsfd_colt_lane #(
     parameter integer DEPTH = 256,
+`ifdef OT_S81PH_COLT_RING
+    parameter integer RING = 1,
+`else
+    parameter integer RING = 0,
+`endif
     parameter integer DM    = 8              // merger landing FIFO depth = initial credits
 ) (
     input  wire [0:0]   ck,
@@ -152,7 +177,7 @@ module dsfd_colt_lane #(
     always @(posedge ck[0]) pd <= d;
     wire hv, ovf; wire [511:0] head;
     reg  pop;
-    ot_s81ph_colt_fifo #(.W(512), .DEPTH(DEPTH)) u_q (.clk(ck[0]), .rst_n(rst_n), .push(push), .wdata(pd),
+    ot_s81ph_colt_fifo #(.W(512), .DEPTH(DEPTH), .RING(RING)) u_q (.clk(ck[0]), .rst_n(rst_n), .push(push), .wdata(pd),
         .pop(pop), .hv(hv), .head(head), .ovf(ovf));
     // ---- frame sender: starts a frame only when it is complete in the FIFO, then sends its words under credits
     localparam integer FW = $clog2(DEPTH + 1);
