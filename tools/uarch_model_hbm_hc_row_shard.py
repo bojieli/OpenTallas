@@ -51,5 +51,14 @@ def private_operand_model():
       "activation_read_latency_cycles":3,
       "command_activation_lease_bits":16,
       "external_operand_boundary_tracks_min":45+270+284,
-      "model_scope":"privateFNandBF16flatoperandlanding; remotegateandfull64macrocontextpending"})
+      "mtp_verification_positions":6,
+      "mtp_uncached_whole_row_fetches_per_die_bodypass":120,
+      "mtp_uncached_weight_bytes_per_die_bodypass":9830400,
+      "mtp_fn_reuse_credit":False,
+      "physical_macro_count":64,
+      "actual_selected_R25I_slot_um":[14163.552,6650.64,15563.552,8050.64],
+      "SU_full_centroid_distance_um_proxy":9429.352,
+      "row_collective_centroid_distance_um_proxy":4959.36,
+      "transport_latency_status":"actual BF16 producer pins, pipelined stations and CDC pending; no overlap credit",
+      "model_scope":"privateFNandBF16flatoperandlanding; fullshapeRTLpass; actualclockcontextpending"})
     return row
