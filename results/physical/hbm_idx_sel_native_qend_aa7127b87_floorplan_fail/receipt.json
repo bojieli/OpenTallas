@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.physical.failure.v1",
+  "job": "hbm_idx_sel_native_qend_aa7127b87_pathfinding",
+  "source": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "host": "ot-epyc4",
+  "stage": "calibrate/2_1_floorplan",
+  "verdict": "FAIL",
+  "failure": "PPL-0061 generated IO pin ck[0] absent; mapped top declares scalar ck",
+  "rc": 4,
+  "elapsed": "2:30:58.13",
+  "reported_peak_kib": 14203044,
+  "observed_process_hwm_kib": 14254780,
+  "wrapper745294": "absent",
+  "driver745361": "absent",
+  "engine2558538": "absent",
+  "capture_hook_reached": false,
+  "routed_STA_reached": false,
+  "constraints_changed": false,
+  "clock_period_ps": 833.333,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "scope": "fault-free isolated pathfinding; no capture placement or physical qualification",
+  "sha256": {
+    "io_place.tcl": "bb2a60cb02c375cda09ef1354dcf79412476b3b78ca6c00a2f5fd7f503fe86d6",
+    "2_1_floorplan.log": "6bd48d5169c0d08a14473580bf785c8abc3feebe20a515d29c45a42b9c64dbe0",
+    "calibrate.a1.rc": "7de1555df0c2700329e815b93b32c571c3ea54dc967b89e81ab73b9972b72d1d"
+  }
+}
