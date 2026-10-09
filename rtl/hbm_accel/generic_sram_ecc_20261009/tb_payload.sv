@@ -4,7 +4,7 @@ module tb_payload;
  reg rst_n=0,v=0;reg[544:0] din='0;
  wire ev,rv,ce,ue,drop;wire[544:0] ed,rd;
  ot_hcoll_sdelay #(.W(545),.D(6),.PAYLOAD_ECC(1)) dut(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(ev),.d_out(ed),.ecc_ce(ce),.ecc_ue(ue),.ecc_drop(drop));
- ot_hcoll_sdelay #(.W(545),.D(6)) refraw(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(rv),.d_out(rd));
+ ot_hcoll_sdelay #(.W(545),.D(7)) refraw(.clk(clk),.rst_n(rst_n),.v_in(v),.d_in(din),.v_out(rv),.d_out(rd));
  integer checks=0, cycles=0;
  task flip(input integer bitno,input integer addr);
  begin

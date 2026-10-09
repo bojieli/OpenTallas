@@ -140,11 +140,22 @@ module ot_hcoll_sdelay #(
     always @(posedge clk) begin d_p <= encoded; q <= rd; end
     ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(vs[D-3]), .r_addr(cnt - 7'(D - 3)), .rd(rd),
         .w_ce(vs[0]), .w_addr(cnt), .wd(d_p));
-    assign v_out = vs[D-1] && !ue;
-    assign ecc_ce = vs[D-1] && ce;
-    assign ecc_ue = vs[D-1] && ue;
-    assign ecc_drop = ecc_ue;
-    assign d_out = decoded;
+    // hgi-takeover (439ceed6b route: TT -246 on u_wtx q -> SECDED decode -> drop -> the port's credit counter): with
+    // PAYLOAD_ECC the decoded word and its valid / ce / ue are registered (latency D + 1); without ECC unchanged (D).
+    generate if (PAYLOAD_ECC != 0) begin : g_reg
+        reg vo, ceo, ueo; reg [W-1:0] dq;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin vo <= 1'b0; ceo <= 1'b0; ueo <= 1'b0; end
+            else begin vo <= vs[D-1] && !ue; ceo <= vs[D-1] && ce; ueo <= vs[D-1] && ue; end
+        always @(posedge clk) dq <= decoded;
+        assign v_out = vo; assign ecc_ce = ceo; assign ecc_ue = ueo; assign ecc_drop = ueo; assign d_out = dq;
+    end else begin : g_comb
+        assign v_out = vs[D-1] && !ue;
+        assign ecc_ce = vs[D-1] && ce;
+        assign ecc_ue = vs[D-1] && ue;
+        assign ecc_drop = ecc_ue;
+        assign d_out = decoded;
+    end endgenerate
 endmodule
 
 // Plain shift-register delay (no read mux) for short / narrow lines; same ports and latency as ot_ha2_delay.
