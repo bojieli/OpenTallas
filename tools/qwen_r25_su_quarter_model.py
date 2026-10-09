@@ -6,6 +6,7 @@ import math
 def model():
     n,m,q=256,64,4
     reads,writes=5*n,2*n+n//8
+    groups=math.ceil(reads/64)+math.ceil(writes/64)
     capture_bits=(reads*2+writes)*72
     command_bits=11*72+3*72
     return dict(schema='opentallas.qwen_r25_su_quarter.v1', adopted=False,
@@ -36,6 +37,13 @@ def model():
             enabled_write_additional_edges='actual write ACK + actual visibility read + comparison',
             latency_per_program='sum measured virtual edges and enabled reads/writes/visibility reads; never assign fixed service delay or token rate before real measurement',
             duplicated_full_reduction_quarters=q),
+        enable_group_successor=dict(default_off=True,adopted=False,
+            protected_mask_groups=groups,extra_protected_bits=groups*72,
+            extra_ff_floor_um2=groups*72*.2916,priority_width=64,
+            disabled_scan_master_edges_per_virtual_edge=groups,
+            additional_snapshot_master_edges=0,
+            mechanism='Protected enable maps skip inactive64-seat groups; enabled read/write seat order remains increasing and all actual service/visibility waits remain',
+            gate='Compare real arithmetic and service receipts with GROUP_SKIP0, stalled/fault/identity controls; SS/FF context before adoption'),
         physical=dict(arithmetic_area='reuse source-matched real c12 lane/reducer masters; no light/XOR envelope credit',
             capture_slot_um=[1200,1200],capture_fit_at_55pct=(capture_bits+command_bits)*.2916<=1200*1200*.55,
             service_routing_tracks=610,proposed_service_corridor_um=120,

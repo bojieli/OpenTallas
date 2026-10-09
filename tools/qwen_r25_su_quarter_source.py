@@ -12,7 +12,7 @@ HEADER = r'''`timescale 1ns/1ps
 // Default off. Serial virtual edges retain the native fixed operand calendar;
 // a native edge occurs only after all captured requests and publications finish.
 module ot_qwen_r25_su_quarter #(
- parameter integer ENABLE=0,N=256,M=64,QID=0
+ parameter integer ENABLE=0,N=256,M=64,QID=0,GROUP_SKIP=0
 )(
  input wire clk,rst_n,warm_abort,
  input wire cmd_v,output wire cmd_rdy,input wire [689:0] cmd_word,
@@ -32,11 +32,13 @@ module ot_qwen_r25_su_quarter #(
  localparam integer AW=24,NR=N/8,LV=7,BCAST_STAGES=5,RET_STAGES=6,MLAT=6,ALAT=6;
  `include "tb_hdc_v41x_vec_fields.svh"
  localparam integer RN=5*N,WN=2*N+NR;
+ localparam integer RG=(RN+63)/64,WG=(WN+63)/64;
  localparam IDLE=0,SNAP0=1,SNAP1=2,STEP=3,READ_SELECT=4,READ_DECODE=5,READ_HEAD=6,
   RREQ=7,RWAIT=8,RENC0=9,RENC1=10,WRITE_SELECT=11,WRITE_DECODE=12,WRITE_HEAD=13,
   WREQ=14,WWAIT=15,FREQ=16,FWAIT=17,FRAME_DONE=18,COMPLETE=19,FAILED=20;
  reg [71:0] control,identity,owner_low,word_chunks[0:10];
  reg [71:0] read_meta[0:RN-1],reply_words[0:RN-1],write_meta[0:WN-1];
+ reg [71:0] read_enable_groups[0:RG-1],write_enable_groups[0:WG-1];
  reg [71:0] head;
  reg [31:0] response_word,vcount,rcount,wcount,fcount;
  wire [65:0] cd=decode64(control),id=decode64(identity),od=decode64(owner_low);
@@ -50,7 +52,10 @@ module ot_qwen_r25_su_quarter #(
   assign padded_word[k*64+:64]=d[63:0];assign word_ue[k]=d[65];
  end
  wire [PW-1:0] w=padded_word[689:0];
- wire bad=sticky||cd[65]||id[65]||od[65]||hd[65]||(|word_ue);
+ wire [65:0] rmask=decode64(read_enable_groups[cursor>>6]);
+ wire [65:0] wmask=decode64(write_enable_groups[cursor>>6]);
+ wire mask_ue=GROUP_SKIP&&((state==READ_SELECT&&rmask[65])||(state==WRITE_SELECT&&wmask[65]));
+ wire bad=sticky||cd[65]||id[65]||od[65]||hd[65]||(|word_ue)||mask_ue;
  wire engine_rst_n=rst_n&&!bad;
  wire engine_clk;
  ot_hdc_cg u_gate(.clk(clk),.en(!engine_rst_n||state==STEP),.gclk(engine_clk));
@@ -102,6 +107,20 @@ FOOTER = r'''
  assign done_pc=ident[20:9];assign done_query=ident[22:21];
  assign fault=bad||state==FAILED;
  assign virtual_edges=vcount;assign reads=rcount;assign writes=wcount;assign visibility_reads=fcount;
+ wire [RG*64-1:0] read_enable_bits={{(RG*64-RN){1'b0}},rd_re,vi_re};
+ wire [WG*64-1:0] write_enable_bits={{(WG*64-WN){1'b0}},res_we,kv_we,vm_we};
+ reg rfound,wfound;reg [12:0] rnext,wnext;integer b;
+ always @* begin
+  rfound=0;wfound=0;rnext=cursor;wnext=cursor;
+  for(b=0;b<64;b=b+1)begin
+   if(!rfound&&b>=cursor[5:0]&&rmask[b]&&({cursor[12:6],6'd0}+b)<RN)begin
+    rfound=1;rnext={cursor[12:6],6'd0}+b;
+   end
+   if(!wfound&&b>=cursor[5:0]&&wmask[b]&&({cursor[12:6],6'd0}+b)<WN)begin
+    wfound=1;wnext={cursor[12:6],6'd0}+b;
+   end
+  end
+ end
  reg [63:0] next_c;integer i;
  always @* begin
   next_c=c;
@@ -120,7 +139,12 @@ FOOTER = r'''
    SNAP0:next_c[4:0]=SNAP1;
    SNAP1:next_c[4:0]=STEP;
    STEP:begin if(go&&ready)next_c[20]=1;next_c[17:5]=0;next_c[4:0]=READ_SELECT;end
-   READ_SELECT:begin next_c[19:18]=0;next_c[4:0]=READ_DECODE;end
+   READ_SELECT:begin
+    next_c[19:18]=0;
+    if(!GROUP_SKIP||rfound)begin next_c[17:5]=GROUP_SKIP?rnext:cursor;next_c[4:0]=READ_DECODE;end
+    else if(({cursor[12:6],6'd0}+64)>=RN)begin next_c[17:5]=0;next_c[4:0]=WRITE_SELECT;end
+    else next_c[17:5]={cursor[12:6],6'd0}+64;
+   end
    READ_DECODE:if(age==2)next_c[4:0]=READ_HEAD;else next_c[19:18]=age+1;
    READ_HEAD:if(hd[65]||hr[63:48]!=cursor)begin next_c[37]=1;next_c[4:0]=FAILED;end
     else if(hr[26])next_c[4:0]=RREQ;
@@ -131,7 +155,12 @@ FOOTER = r'''
    RENC0:next_c[4:0]=RENC1;
    RENC1:if(cursor==RN-1)begin next_c[17:5]=0;next_c[4:0]=WRITE_SELECT;end
     else begin next_c[17:5]=cursor+1;next_c[4:0]=READ_SELECT;end
-   WRITE_SELECT:begin next_c[19:18]=0;next_c[4:0]=WRITE_DECODE;end
+   WRITE_SELECT:begin
+    next_c[19:18]=0;
+    if(!GROUP_SKIP||wfound)begin next_c[17:5]=GROUP_SKIP?wnext:cursor;next_c[4:0]=WRITE_DECODE;end
+    else if(({cursor[12:6],6'd0}+64)>=WN)next_c[4:0]=FRAME_DONE;
+    else next_c[17:5]={cursor[12:6],6'd0}+64;
+   end
    WRITE_DECODE:if(age==2)next_c[4:0]=WRITE_HEAD;else next_c[19:18]=age+1;
    WRITE_HEAD:if(hd[65])begin next_c[37]=1;next_c[4:0]=FAILED;end
     else if(hr[58])next_c[4:0]=WREQ;
@@ -161,6 +190,8 @@ FOOTER = r'''
     read_meta[i]<=encode64({16'(i),48'd0});reply_words[i]<=encode64({16'd0,16'(i),32'd0});
    end
    for(i=0;i<WN;i=i+1)write_meta[i]<=encode64(0);
+   for(i=0;i<RG;i=i+1)read_enable_groups[i]<=encode64(0);
+   for(i=0;i<WG;i=i+1)write_enable_groups[i]<=encode64(0);
   end else begin
    control<=encode64(next_c);
    if(state==IDLE&&cmd_v&&cmd_rdy)begin
@@ -170,6 +201,8 @@ FOOTER = r'''
    end
    if(!bad)case(state)
     SNAP1:begin
+     for(i=0;i<RG;i=i+1)read_enable_groups[i]<=encode64(read_enable_bits[i*64+:64]);
+     for(i=0;i<WG;i=i+1)write_enable_groups[i]<=encode64(write_enable_bits[i*64+:64]);
      for(i=0;i<N;i=i+1)read_meta[i]<=encode64({16'(i),21'd0,vi_re[i],2'd0,vi_addr[i*AW+:AW]});
      for(i=0;i<4*N;i=i+1)read_meta[N+i]<=encode64({16'(N+i),21'd0,rd_re[i],rd_src[i*2+:2],rd_addr[i*AW+:AW]});
      for(i=0;i<N;i=i+1)begin
@@ -179,10 +212,10 @@ FOOTER = r'''
      for(i=0;i<NR;i=i+1)write_meta[2*N+i]<=encode64({5'd0,res_we[i],2'd0,res_addr[i*AW+:AW],res_data[i*32+:32]});
     end
     STEP:vcount<=vcount+1;
-    READ_SELECT:head<=read_meta[cursor];
+    READ_SELECT:if(!GROUP_SKIP||rfound)head<=read_meta[GROUP_SKIP?rnext:cursor];
     RWAIT:if(rsp_v&&rsp_rdy)begin response_word<=read_result;rcount<=rcount+1;end
     RENC1:reply_words[cursor]<=encode64({16'd0,16'(cursor),response_word});
-    WRITE_SELECT:head<=write_meta[cursor];
+    WRITE_SELECT:if(!GROUP_SKIP||wfound)head<=write_meta[GROUP_SKIP?wnext:cursor];
     WWAIT:if(rsp_v&&rsp_rdy)wcount<=wcount+1;
     FWAIT:if(rsp_v&&rsp_rdy)fcount<=fcount+1;
     default:;
