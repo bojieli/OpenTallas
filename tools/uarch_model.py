@@ -14111,3 +14111,8 @@ def hbm_key_quant_producer_model():
     """Final real FP4 key arithmetic and finite68-byte append landing."""
     from tools.hbm_key_quant_producer_model import model
     return model()
+
+def hbm_owner_key_projection_model():
+    """Full128x512 goldenchunk8 projection with explicit finiteprovider gap."""
+    from tools.hbm_owner_key_projection_model import model
+    return model()
