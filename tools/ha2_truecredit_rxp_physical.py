@@ -63,7 +63,7 @@ set_load 4 [all_outputs]
     if a.cts_only:cmd+=['--pnr-stop-after','cts']
     # safe-hbm 2026-10-08: SRAM-queue variant s carries two 64x512 1R1W macros per lane
     for m in part.get('macros',[]):cmd+=['--macro-view',f'{m}=physical/asap7_memory_macros/{m}']
-    if part.get('macros'):cmd+=['--macro-place-halo','2','2']
+    if part.get('macros'):cmd+=['--macro-place-halo',*os.environ.get('HA2_HALO','2 2').split()]
     record=dict(part=a.part,command=cmd,source_manifest=manifest,model=model,
                 route_virtual_clock_insertion_ps=insertion,parent_qualified=False,adopted=False)
     (run/'launch.json').write_text(json.dumps(record,indent=2)+'\n')
