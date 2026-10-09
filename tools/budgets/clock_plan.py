@@ -53,7 +53,7 @@ def plan_groups(d):
     return trees, groups
 
 
-S81_LOCAL_FAMILIES = False    # opt-in measured SELECT/COLLECT band trunk sharing
+S81_LOCAL_FAMILIES = False    # opt-in measured SELECT/COLLECT/GATHER trunk sharing
 
 
 def s81_clock_family(inst):
@@ -61,6 +61,8 @@ def s81_clock_family(inst):
         return "SELECT"
     if inst == "bk_collector" or inst.startswith(("xsco_", "hco_")):
         return "COLLECT"
+    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_")):
+        return "GATHER"
     return None
 
 
@@ -231,8 +233,8 @@ def clock_nets(d, trees, groups, group):
             for r, sl in regs.items():
                 rect = r.split(':', 1)[1] if ':' in r else r
                 fk = re.sub(r'^(G[NS][EW])[we]$', r'\1', rect.split('.')[0])
-                if d.get('die', '').startswith('s81') and fk not in ('SELECT', 'COLLECT'):
-                    fk = rect  # retain existing tree roots outside the two local band families
+                if d.get('die', '').startswith('s81') and fk not in ('SELECT', 'COLLECT', 'GATHER'):
+                    fk = rect  # retain existing tree roots outside the local functional families
                 fam[fk] += [(r, p) for p in sl]
             for fk, l in fam.items():
                 xs, ys = [p[2] for _, p in l], [p[3] for _, p in l]
