@@ -143,6 +143,19 @@ def rsync():
             "  wire rn = rst_s[1];\n")
 
 
+def rsync_regions(regions):
+    # safe-hbm 2026-10-08 (REVIEW_20261008 C3, S-C3): hfd_index_q_b2 failed TT -192.9 on rst_s[1] -> u_r3.gn.rv[1]
+    # (one synchroniser's release net across the band).  The synchroniser is replicated per region: every region
+    # gets its own 2-flop rst_s from the raw rst pin (asynchronous assert, release 2 edges after rst rises exactly as
+    # the shared one), placed beside the flops it releases.  0 cycles; every flop is released on the same edge.
+    t = "  wire c = ck[0];\n"
+    for r in regions:
+        t += (f"  reg [1:0] rst_s_{r};\n"
+              f"  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_{r} <= 2'b00; else rst_s_{r} <= {{rst_s_{r}[0], 1'b1}};\n"
+              f"  wire rn_{r} = rst_s_{r}[1];\n")
+    return t
+
+
 def pipe(name, w, n, vin, din, qv, q):
     return (f"  wire {qv}; wire [{w-1}:0] {q};\n"
             f"  ot_svc_vpipe #(.W({w}), .N({n})) {name} (.ck(c), .rst_n(rn), .v({vin}), .d({din}), .qv({qv}), .q({q}));\n")
@@ -196,11 +209,13 @@ endmodule
     body = "  wire [3:0] sv, ne; wire [527:0] sd [0:3], fd [0:3]; wire [1:0] lv; wire [527:0] ld [0:1];\n" \
            "  reg [1:0] last; wire [3:0] take;\n"
     for r, (p, n) in enumerate(rows):
-        body += f"  ot_svc_vpipe #(.W(528), .N({n})) u_r{r} (.ck(c), .rst_n(rn), .v({p}[0]), .d({p}[528:1]), .qv(sv[{r}]), .q(sd[{r}]));\n"
-    body += """  genvar g;
+        body += f"  ot_svc_vpipe #(.W(528), .N({n})) u_r{r} (.ck(c), .rst_n(rn_r{r}), .v({p}[0]), .d({p}[528:1]), .qv(sv[{r}]), .q(sd[{r}]));\n"
+    body += """  wire [3:0] rn_f = {rn_r3, rn_r2, rn_r1, rn_r0};   // each row's FIFO shares its row's synchroniser
+  wire [1:0] rn_l = {rn_l1, rn_l0};
+  genvar g;
   generate for (g = 0; g < 4; g = g + 1) begin : gr
     wire rdy_;
-    ot_svc_fifo #(.W(528), .AW(2), .AF(0)) u_f (.ck(c), .rst_n(rn), .we(sv[g]), .wd(sd[g]), .rdy(rdy_),
+    ot_svc_fifo #(.W(528), .AW(2), .AF(0)) u_f (.ck(c), .rst_n(rn_f[g]), .we(sv[g]), .wd(sd[g]), .rdy(rdy_),
       .re(take[g]), .rd(fd[g]), .ne(ne[g]));
   end endgenerate
   generate for (g = 0; g < 2; g = g + 1) begin : gl
@@ -211,6 +226,7 @@ endmodule
     // -17 over the wire): both FIFO heads and the pick are registered first (hq / pq), the pick mux runs the next
     // cycle, and the lane leaves through a 2-stage pin chain (u_o): +3 cycles on each t_su row, transaction-exact
     reg vq, pq, v; reg [527:0] hq0, hq1, d;
+    wire rn = rn_l[g];
     always @(posedge c or negedge rn)
       if (!rn) begin vq <= 1'b0; v <= 1'b0; last[g] <= 1'b1; end
       else begin vq <= ne[2*g] || ne[2*g+1]; v <= vq; if (ne[2*g] || ne[2*g+1]) last[g] <= pick1; end
@@ -223,7 +239,7 @@ endmodule
     input wire [528:0] a0i, input wire [528:0] a1, input wire [528:0] a2i, input wire [528:0] a3i,
     input wire [0:0] ck, input wire [0:0] rst, input wire [512:0] kin, output wire [512:0] kout,
     output wire [1057:0] t_su);
-{rsync()}{pipe('u_kp', 512, st['b2.kp'], 'kin[0]', 'kin[512:1]', 'kpv', 'kpq')}  assign kout = {{kpq, kpv}};
+{rsync_regions(['kp', 'r0', 'r1', 'r2', 'r3', 'l0', 'l1'])}{pipe('u_kp', 512, st['b2.kp'], 'kin[0]', 'kin[512:1]', 'kpv', 'kpq').replace('.rst_n(rn)', '.rst_n(rn_kp)')}  assign kout = {{kpq, kpv}};
 {body}endmodule
 `default_nettype wire
 """

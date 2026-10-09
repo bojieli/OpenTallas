@@ -8,22 +8,42 @@ module hfd_index_q_b2 (
     input wire [0:0] ck, input wire [0:0] rst, input wire [512:0] kin, output wire [512:0] kout,
     output wire [1057:0] t_su);
   wire c = ck[0];
-  reg [1:0] rst_s;
-  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
-  wire rn = rst_s[1];
+  reg [1:0] rst_s_kp;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_kp <= 2'b00; else rst_s_kp <= {rst_s_kp[0], 1'b1};
+  wire rn_kp = rst_s_kp[1];
+  reg [1:0] rst_s_r0;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_r0 <= 2'b00; else rst_s_r0 <= {rst_s_r0[0], 1'b1};
+  wire rn_r0 = rst_s_r0[1];
+  reg [1:0] rst_s_r1;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_r1 <= 2'b00; else rst_s_r1 <= {rst_s_r1[0], 1'b1};
+  wire rn_r1 = rst_s_r1[1];
+  reg [1:0] rst_s_r2;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_r2 <= 2'b00; else rst_s_r2 <= {rst_s_r2[0], 1'b1};
+  wire rn_r2 = rst_s_r2[1];
+  reg [1:0] rst_s_r3;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_r3 <= 2'b00; else rst_s_r3 <= {rst_s_r3[0], 1'b1};
+  wire rn_r3 = rst_s_r3[1];
+  reg [1:0] rst_s_l0;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_l0 <= 2'b00; else rst_s_l0 <= {rst_s_l0[0], 1'b1};
+  wire rn_l0 = rst_s_l0[1];
+  reg [1:0] rst_s_l1;
+  always @(posedge c or negedge rst[0]) if (!rst[0]) rst_s_l1 <= 2'b00; else rst_s_l1 <= {rst_s_l1[0], 1'b1};
+  wire rn_l1 = rst_s_l1[1];
   wire kpv; wire [511:0] kpq;
-  ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
+  ot_svc_vpipe #(.W(512), .N(4)) u_kp (.ck(c), .rst_n(rn_kp), .v(kin[0]), .d(kin[512:1]), .qv(kpv), .q(kpq));
   assign kout = {kpq, kpv};
   wire [3:0] sv, ne; wire [527:0] sd [0:3], fd [0:3]; wire [1:0] lv; wire [527:0] ld [0:1];
   reg [1:0] last; wire [3:0] take;
-  ot_svc_vpipe #(.W(528), .N(4)) u_r0 (.ck(c), .rst_n(rn), .v(a0i[0]), .d(a0i[528:1]), .qv(sv[0]), .q(sd[0]));
-  ot_svc_vpipe #(.W(528), .N(4)) u_r1 (.ck(c), .rst_n(rn), .v(a1[0]), .d(a1[528:1]), .qv(sv[1]), .q(sd[1]));
-  ot_svc_vpipe #(.W(528), .N(1)) u_r2 (.ck(c), .rst_n(rn), .v(a2i[0]), .d(a2i[528:1]), .qv(sv[2]), .q(sd[2]));
-  ot_svc_vpipe #(.W(528), .N(2)) u_r3 (.ck(c), .rst_n(rn), .v(a3i[0]), .d(a3i[528:1]), .qv(sv[3]), .q(sd[3]));
+  ot_svc_vpipe #(.W(528), .N(4)) u_r0 (.ck(c), .rst_n(rn_r0), .v(a0i[0]), .d(a0i[528:1]), .qv(sv[0]), .q(sd[0]));
+  ot_svc_vpipe #(.W(528), .N(4)) u_r1 (.ck(c), .rst_n(rn_r1), .v(a1[0]), .d(a1[528:1]), .qv(sv[1]), .q(sd[1]));
+  ot_svc_vpipe #(.W(528), .N(1)) u_r2 (.ck(c), .rst_n(rn_r2), .v(a2i[0]), .d(a2i[528:1]), .qv(sv[2]), .q(sd[2]));
+  ot_svc_vpipe #(.W(528), .N(2)) u_r3 (.ck(c), .rst_n(rn_r3), .v(a3i[0]), .d(a3i[528:1]), .qv(sv[3]), .q(sd[3]));
+  wire [3:0] rn_f = {rn_r3, rn_r2, rn_r1, rn_r0};   // each row's FIFO shares its row's synchroniser
+  wire [1:0] rn_l = {rn_l1, rn_l0};
   genvar g;
   generate for (g = 0; g < 4; g = g + 1) begin : gr
     wire rdy_;
-    ot_svc_fifo #(.W(528), .AW(2), .AF(0)) u_f (.ck(c), .rst_n(rn), .we(sv[g]), .wd(sd[g]), .rdy(rdy_),
+    ot_svc_fifo #(.W(528), .AW(2), .AF(0)) u_f (.ck(c), .rst_n(rn_f[g]), .we(sv[g]), .wd(sd[g]), .rdy(rdy_),
       .re(take[g]), .rd(fd[g]), .ne(ne[g]));
   end endgenerate
   generate for (g = 0; g < 2; g = g + 1) begin : gl
@@ -34,6 +54,7 @@ module hfd_index_q_b2 (
     // -17 over the wire): both FIFO heads and the pick are registered first (hq / pq), the pick mux runs the next
     // cycle, and the lane leaves through a 2-stage pin chain (u_o): +3 cycles on each t_su row, transaction-exact
     reg vq, pq, v; reg [527:0] hq0, hq1, d;
+    wire rn = rn_l[g];
     always @(posedge c or negedge rn)
       if (!rn) begin vq <= 1'b0; v <= 1'b0; last[g] <= 1'b1; end
       else begin vq <= ne[2*g] || ne[2*g+1]; v <= vq; if (ne[2*g] || ne[2*g+1]) last[g] <= pick1; end
