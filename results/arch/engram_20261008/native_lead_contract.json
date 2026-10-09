@@ -24,7 +24,7 @@
  "context_dispatch": "native_win_v pulse with native_win_slot/user/pos/tok/ids68/dead; receiver must retain identified window until native lookup consumes slot",
  "producer_flow": "one inflight accepted rawtoken; stage readiness gated; resultheld through stall; fourcapture cycles; sixcycles minimumissue",
  "first": "actualSOURCE jobposition0 explicitly resets window; received downstream HIDDEN never re-forms window",
- "dead_metadata": "Opt-in SOURCE_WORD1/TOKEN_TYPES1 decodes software-produced64bit SOURCE words. Signed released TEXT=-1 encodes7; image types0..3 encode DEAD. Default generated tokens remain TEXT even when rawtoken129264. New unprotected word gate pending.",
+ "dead_metadata": "Opt-in SOURCE_WORD1/TOKEN_TYPES1 decodes software-produced64bit SOURCE words. Signed released TEXT=-1 encodes7; image types0..3 encode DEAD. Default generated tokens remain TEXT even when rawtoken129264. Actual unprotected word gate PASS:64users256prompt320windows including4image types, firstDEAD, generatedraw129264TEXT, stalls and3negative classes.",
  "rewind": "eng_rb_v/user12/n3; accept only no inflight or held window, count>=n, n1..5; source commit sequencer must fence matching actual history rewind",
  "lookup_nodes": [
   "L1.eng.lookup",
@@ -37,14 +37,16 @@
  "qualified_records": [
   "results/rtl/engram_lead_gate_20261009.json",
   "results/rtl/engram_window_gate_20261009.json",
-  "results/rtl/engram_hbm_backend_gate_20261009.json"
+  "results/rtl/engram_hbm_backend_gate_20261009.json",
+  "results/rtl/engram_source_word_gate_20261009.json",
+  "results/rtl/engram_native_typed_elab_gate_20261009.json"
  ],
  "remaining_qualification": [
   "native lookup program/descriptor and sixrow publication aggregation",
-  "software-produced SOURCE word exact gate",
   "commit/rewind sequencer wiring",
   "one static generator region map and bench assertions",
-  "optionB physical views and generator binding"
+  "optionB physical views and generator binding",
+  "actual system software command delivery and VL embedding arithmetic"
  ],
  "performance_adoption": false,
  "owner_supersession": "Confirmed V37 rejects PROTECT_HISTORY flop SECDED; keep unprotected lead. V40 rejects installed aperture/lease hardware. Preserve all previous exact experiment evidence."

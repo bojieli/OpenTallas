@@ -1,0 +1,47 @@
+{
+ "schema": "opentallas.engram-plain-read-gate.v1",
+ "boundary": "six reserved rows, actual two32PC timing-model vehicles, count semantics, all4burst start offsets, perbeatPC/edge/bounds, stalls and plain flop staging; fixture region conditional; no physical/die qualification",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "623d2c8027cf90d6ed444aecfd8ffeae2b265b689ffa68096a120ad2cbf71762",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+  "rtl/test/tb_dsrom_engram_canonical_read.sv": "bfadc625de4451208a4ae855c7ba9a6d81f8ab57b84fc5e32e18247067c9335d",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "80b08dbf65df18ee48dffe412858449b01c9b7a552a4fef7c6dde7bf57749513",
+  "tools/engram_plain_read_gate.py": "10cf01ccb8ace2e8073a29029d6289c1dd5e7e7a09b2b66c456e16d8f85148f8"
+ },
+ "cases": {
+  "inject0_mode0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_READ PASS rows=6 requests=18 atoms=54 lengths=1:4 actual_PHY=1 inject=0 cycles=208\n- /srv/opentallas-scratch/engram-plain-read-0bb150f2d/rtl/test/tb_dsrom_engram_canonical_read.sv:92: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "inject0_mode1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_READ NEG mode=1 caught\n- /srv/opentallas-scratch/engram-plain-read-0bb150f2d/rtl/test/tb_dsrom_engram_canonical_read.sv:58: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "inject0_mode2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_READ NEG mode=2 caught\n- /srv/opentallas-scratch/engram-plain-read-0bb150f2d/rtl/test/tb_dsrom_engram_canonical_read.sv:58: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "inject0_mode3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_READ NEG mode=3 caught\n- /srv/opentallas-scratch/engram-plain-read-0bb150f2d/rtl/test/tb_dsrom_engram_canonical_read.sv:58: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "inject0_mode4": {
+   "returncode": 0,
+   "stdout": "ENGRAM_CANONICAL_READ NEG mode=4 caught\n- /srv/opentallas-scratch/engram-plain-read-0bb150f2d/rtl/test/tb_dsrom_engram_canonical_read.sv:58: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "retained_objects": "/tmp/engram-canonical-read-8epc9w41",
+ "status": "pass"
+}

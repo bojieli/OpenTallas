@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.engram-native-elab.v1",
+ "retained_objects": "/tmp/engram-native-elab-xdxn8c54",
+ "qualification": "actual64user SOURCE/layer/head controller elaboration; no whole-array simulation or numerical/physical adoption claim",
+ "cases": {
+  "1": {
+   "returncode": 0,
+   "log_sha256": "c9e011e332189360b446add36dfcd5164f3fb9d8874f66bafbd522e0952d2381"
+  },
+  "0": {
+   "returncode": 0,
+   "log_sha256": "ad04da4a26c467769009e885ada33cc8405db397a00360c2657b6e3b04d999b6"
+  },
+  "2": {
+   "returncode": 0,
+   "log_sha256": "47e4474595d3a552053f2d8d529975b943840d6f9f0b59fcd282bc2f4e9f2620"
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv": "a29d1c056d311a988e9939424f3b0558add6e4f7c45aeac679bbde741e3174fc",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "2af867faa15385fc168ca9f383e681ae982bbce32131fb456b631275c14a2cb7",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv": "f2bbec9a6d2b9b4aa2277b50ae849868dcb007d4cad2c358ebe35ed51a4f43ac",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "46427f73ed80712101fac2cb94733911ee34c11180e7ad62633154979950bf4f",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_source_command_decode.sv": "73fc0984dd3109fc224edf072cc882977e006d05101556ed61ed313adee80951",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv": "5b79131e49bc5ec6f62c9bca05ea443680fc99e21b68687280d248bbae25065e",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "8bd4679e04687735f967bd06a8c92e7bfc1d3fdedb0c9a10699b5409ab38878f",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv": "e0e4aa5a37b07c4d00aa7dd1c95dc035e637d3e4d8ddaeaf74f9248d0b0b2a4c",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "de314478aadc6570cc7b5f20ffd3bef7535e3dc52d39c5911edce5df879ee7c7",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin_protected.sv": "6fcdd90a470af736e61e02244bdc42808b0dd6f816108e1cbf1de927657f7c6e",
+  "rtl/dsrom_sys/ot_dsrom_stall_export.sv": "1008978333b07a3dff572c668dc5e7edb41d243f8501a5c9353500dbe46dc7cc",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "tools/engram_native_elab_gate.py": "4224dca8154e05298ba6066cfe9318daaf03c004817007806b490d3e423d7d3e"
+ },
+ "status": "pass"
+}

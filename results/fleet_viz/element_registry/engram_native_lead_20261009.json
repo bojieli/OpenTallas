@@ -29,18 +29,21 @@
    },
    "exactness": {
     "positive": {
-     "status": "PASS released129280map,64users,1089windows,stalls,DEAD,rollback,reset andnativeHIDDEN",
+     "status": "PASS released129280map,64users,1089windows,stalls,DEAD,rollback,reset andnativeHIDDEN; actual software SOURCE word typed64user256prompt320windows PASS",
      "evidence": [
       "results/rtl/engram_lead_gate_20261009.json",
       "results/rtl/engram_window_gate_20261009.json",
-      "results/rtl/engram_native_elab_gate_20261009.json"
+      "results/rtl/engram_native_elab_gate_20261009.json",
+      "results/rtl/engram_source_word_gate_20261009.json",
+      "results/rtl/engram_native_typed_elab_gate_20261009.json"
      ]
     },
     "negative": {
      "status": "PASS rawtoken/user/position/rewind/context/range gates; protected fault experiment preserved as rejected history",
      "evidence": [
       "results/rtl/engram_lead_gate_20261009.json",
-      "results/rtl/engram_window_gate_20261009.json"
+      "results/rtl/engram_window_gate_20261009.json",
+      "results/rtl/engram_source_word_gate_20261009.json"
      ]
     }
    },
@@ -57,7 +60,7 @@
     "failure": "ROM centroid distances174.7/127.8/121.3/104.0um exceed100um; live rows in10um macro slivers"
    },
    "dependencies": [
-    "actual software-produced SOURCE typed PROMPT exact gate",
+    "actual system software command delivery and VL embedding arithmetic qualification",
     "actual commit/rewind source binding",
     "native lookup slotpublication aggregation",
     "one static generator HBM region map and bench assertions",
@@ -67,7 +70,10 @@
     "status": "actual native source/layer/head controller elaboration PASS; descriptor completion/native installed die unqualified; defaultoff",
     "evidence": [
      "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv",
-     "results/rtl/engram_native_elab_gate_20261009.json"
+     "results/rtl/engram_native_elab_gate_20261009.json",
+     "rtl/dsrom_sys/s81_ctrl/ot_s81_source_command_decode.sv",
+     "tools/engram_source_prompt.py",
+     "results/rtl/engram_native_typed_elab_gate_20261009.json"
     ]
    },
    "owner_decision": {
