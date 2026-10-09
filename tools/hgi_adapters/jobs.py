@@ -27,17 +27,24 @@ UNITS = {
     'sm': ('ot_hgi_sm_record', [f'{A}/ot_hgi_sm_record.sv'], (620, 620), (760, 560),
            'rtl/hbm_accel/generic/adapters/tb/run_sm.sh (HGI_SM: 223 records on 32 stub SMs; MUT_ROWS / MUT_EARLY FAIL)'),
     'att': ('ot_hgi_att_issue', [f'{A}/ot_hgi_att_issue.sv'], (260, 260), (340, 220),
-            'rtl/hbm_accel/generic/adapters/tb/run_att.sh (HGI_ATT)'),
+            'run_small.sh att (HGI_ATT: 43 CF-ATT + 144 Qwen + 38 DS 16-lane records; MUT_LANES FAIL)'),
     'dma': ('ot_hgi_dma_record', [f'{A}/ot_hgi_dma_record.sv'], (260, 260), (340, 220),
-            'rtl/hbm_accel/generic/adapters/tb/run_dma.sh (HGI_DMA)'),
+            'run_small.sh dma (HGI_DMA: CF-EMB / CF-IDXD / CF-KV + 257 Qwen + DS KVWB; MUT_SLOT / MUT_EARLY FAIL)'),
+    'argmax': ('ot_hgi_argmax_record', [f'{A}/ot_hgi_argmax_record.sv'], (260, 260), (340, 220),
+               'run_small.sh argmax (HGI_ARGMAX: CF-ARG x 2 + Qwen head + 40 random rows on the real argmax18 engine and '
+               'the real HGI VM; MUT_OFFSET FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),
-           'rtl/hbm_accel/generic/adapters/tb/run_hc.sh (HGI_HC)'),
+           'run_small.sh hc (HGI_HC: DS HC_MIX shapes; MUT_NF FAIL)'),
 }
+
+
+NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record'}     # no legacy pass-through parameter
 
 
 def route(top, srcs, die, hm, pd):
     w, h = die
-    args = ' '.join(f'--source {s}' for s in srcs) + (f" --param LEGACY=0 --clock-port clk --die-area 0 0 {w} {h} "
+    par = '' if top in NOLEG else ' --param LEGACY=0'
+    args = ' '.join(f'--source {s}' for s in srcs) + (f"{par} --clock-port clk --die-area 0 0 {w} {h} "
                                                      f"--core-area 10.8 10.8 {w - 10.8:.1f} {h - 10.8:.1f}")
 
     def cmd(cal):

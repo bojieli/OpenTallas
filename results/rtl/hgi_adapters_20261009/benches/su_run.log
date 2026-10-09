@@ -1,0 +1,6 @@
+DATA case 0: 1 dispatches, 1024 VM words checked, issued 1
+DATA case 1: 12 dispatches, 204 VM words checked, issued 13
+DATA case 2: 1 dispatches, 64 VM words checked, issued 14
+DATA case 3: 1 dispatches, 1280 VM words checked, issued 15
+summary: data cases 4 (records + lockstep, 2556 compared cycles), field records 78, negatives 17 refused
+HGI_SU PASS
