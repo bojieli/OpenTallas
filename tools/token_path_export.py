@@ -767,7 +767,7 @@ def ds_engram_nodes(d):
         st, prev = 0.0, None
         for k, cls, cyc, note in steps:
             nid = f"E{L}.{k}"
-            n = d.add(nid, nid, grp, cls, cyc, src("modelled", ENGRAM, f"timeline_cycles.L{L}", note=note), op=k,
+            n = d.add(nid, nid, grp, cls, cyc, src("modelled", ENGRAM, f"timeline_cycles.L{L}", note=note), op=f"eng.{k}",
                       elements=DSC[cls]["elements"], instances=DSC[cls]["instances"], start=st, deps=[prev] if prev else [],
                       critical=False, kind="parallel")
             n["layer"] = L

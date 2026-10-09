@@ -82,7 +82,9 @@ MUTATIONS = [
     (LOOKUP, "rank strap ignored for the column base", "assign cbs_c[ABW*gc +: ABW] = CB[ABW-1:0];",
      "assign cbs_c[ABW*gc +: ABW] = col_base(gc / 4, 0, gj);"),
     (LOOKUP, "scale taken from the atom's first byte", "e2_scale <= e1_a8s[7:0];", "e2_scale <= e1_a8[7:0];"),
-    (LOOKUP, "hash history not reset per window", ".in_first(hfeed && fcnt == 2'd0)", ".in_first(1'b0)"),
+    # (the hash unit's in_first is redundant here: 4 feeds overwrite its 3-deep history -- an equivalent mutant)
+    (LOOKUP, "window fed newest first", "wire [ENG_ID_W-1:0] hcid = ids[ENG_ID_W*(3 - fcnt) +: ENG_ID_W];",
+     "wire [ENG_ID_W-1:0] hcid = ids[ENG_ID_W*fcnt +: ENG_ID_W];"),
     (LOOKUP, "CRC check disabled", "st_bad <= (crc_byte(crc, e3_scale) != e3_exp);", "st_bad <= 1'b0;"),
     (LOOKUP, "credits ignored", "if ((acc_n - rel_n[r]) >= NSLOT[CW-1:0]) credit_ok = 1'b0;", "credit_ok = 1'b1;"),
     (SINK, "slot ready one beat early", "assign rdy[gt] = (cnt[gt] == TOT[TW-1:0]) &&",
