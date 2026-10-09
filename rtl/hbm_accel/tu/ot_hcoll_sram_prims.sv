@@ -41,30 +41,37 @@ module ot_hcoll_payload_codec #(parameter integer W=545, parameter integer ECC=0
     output wire ce, output wire ue
 );
   function automatic logic [71:0] encode64(input logic [63:0] data);
-    logic [71:0] c; integer p, k, j;
+    logic [71:0] c; logic [70:0] mask; integer p, k, j;
     begin
       c='0; j=0;
       for (p=1;p<=71;p=p+1)
         if ((p & (p-1)) != 0) begin c[p-1]=data[j]; j=j+1; end
-      for (k=0;k<7;k=k+1)
+      // Same qualified Hamming equations, expressed as balanced reduction XORs.
+      for (k=0;k<7;k=k+1) begin
+        mask='0;
         for (p=1;p<=71;p=p+1)
-          if ((p & (1<<k)) != 0 && p!=(1<<k)) c[(1<<k)-1]=c[(1<<k)-1]^c[p-1];
+          if ((p & (1<<k)) != 0 && p!=(1<<k)) mask[p-1]=1'b1;
+        c[(1<<k)-1]=^(c[70:0]&mask);
+      end
       c[71]=^c[70:0]; encode64=c;
     end
   endfunction
   // {uncorrectable, corrected, data64}; overall parity is bit71.
   function automatic logic [65:0] decode64(input logic [71:0] code);
     logic [71:0] c; logic [6:0] syndrome; logic overall, ue, corrected;
-    logic [63:0] data; integer p,k,j;
+    logic [63:0] data; logic [70:0] mask; integer p,k,j;
     begin
       c=code; syndrome='0; overall=^code; ue=0; corrected=0;
-      for (k=0;k<7;k=k+1)
+      for (k=0;k<7;k=k+1) begin
+        mask='0;
         for (p=1;p<=71;p=p+1)
-          if ((p & (1<<k)) != 0) syndrome[k]=syndrome[k]^code[p-1];
+          if ((p & (1<<k)) != 0) mask[p-1]=1'b1;
+        syndrome[k]=^(code[70:0]&mask);
+      end
       if (syndrome!=0) begin
         if (overall && syndrome<=71) begin
 `ifndef OT_COLL_MUT_ECC_NO_CORRECT
-          c[syndrome-1]=~c[syndrome-1];
+          for(p=1;p<=71;p=p+1) if(syndrome==p) c[p-1]=~c[p-1];
 `endif
           corrected=1; end
         else ue=1;

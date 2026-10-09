@@ -37,8 +37,8 @@ module ot_hcoll_port #(
     output wire [PWT-1:0] rb_d,
     input  wire           rb_cr,
     output reg            stall,
-    output wire           ecc_ce,
-    output wire [1:0]     rx_ecc_drop,
+    output reg            ecc_ce,
+    output reg [1:0]      rx_ecc_drop,
     output reg            fault
 );
     // ---- input flops ----
@@ -50,9 +50,10 @@ module ot_hcoll_port #(
     always @(posedge clk) rxf_p <= ph_rx_flit;
     // ---- transmit queues + arbiter + switch-ingress credit ----
     wire [4:0] ce, ue, drop;
-    assign ecc_ce=|ce;
     // Two independent RX stores can retire corrupt words in the same cycle.
-    assign rx_ecc_drop={1'b0,drop[3]}+{1'b0,drop[4]};
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n)begin ecc_ce<=0;rx_ecc_drop<=0;end
+        else begin ecc_ce<=|ce;rx_ecc_drop<={1'b0,drop[3]}+{1'b0,drop[4]};end
     wire qp_empty, qr_empty, qp_ovf, qr_ovf;
     wire [PWT-1:0] qp_head, qr_head;
     wire [QAW:0] c0, c1;

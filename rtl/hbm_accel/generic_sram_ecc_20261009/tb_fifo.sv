@@ -6,6 +6,15 @@ module tb_fifo;
  ot_hcoll_sfifo #(.W(545),.AW(8),.PAYLOAD_ECC(1)) dut(.clk(clk),.rst_n(rst_n),.push(push),.din(din),.pop(pop),.empty(ee),.dout(ed),.ovf(eov),.count(ec),.ecc_ce(ce),.ecc_ue(ue),.ecc_drop(drop));
  ot_hcoll_sfifo #(.W(545),.AW(8)) refraw(.clk(clk),.rst_n(rst_n),.push(push),.din(din),.pop(pop),.empty(re),.dout(rd),.ovf(rov),.count(rc));
  integer checks=0;
+ always @(negedge clk)if(rst_n)begin
+  for(integer c=0;c<9;c=c+1)begin
+   if(dut.encoded[c*72+:72]!==ot_gpu_w6_secded_pkg::encode64(dut.codec.g_ecc.padded[c*64+:64]))$fatal(1,"canonical encode mismatch");
+
+  end
+ end
+ for(genvar c=0;c<9;c=c+1)begin:g_reference
+  always @(negedge clk)if(rst_n && dut.codec.g_ecc.g_c[c].result!==ot_gpu_w6_secded_pkg::decode64(dut.sampled[c*72+:72]))$fatal(1,"canonical decode mismatch");
+ end
  task flip(input integer b);
  begin case(b/256)
  0:dut.g_bk[0].u_m.g_m[0].u_sram.arr[0][b%256]=~dut.g_bk[0].u_m.g_m[0].u_sram.arr[0][b%256];
