@@ -2,8 +2,8 @@
   "name": "qwen-fmt3-nominal-route",
   "pid": 3669250,
   "command_match": "global_route.tcl",
-  "peak_ram_gb": 4.0,
+  "peak_ram_gb": 5.8,
   "launcher_pid": 3549079,
   "owner": "Codex:qwen_hbm_unify/fmt3",
-  "reason": "Actual nominal GRT3669250 HWM/RSS4133888KiB3.942GiB plusdriver23064KiB=3.965GiB rounded4.0GiB; congestioniteration1/30. Measured ongoingphase, not DRT guess."
+  "reason": "Actual nominal GRT3669250 HWM6046876KiB plusdriver23064KiB roundedup0.1GiB=5.8; ongoingphase measured, not DRT guess."
 }

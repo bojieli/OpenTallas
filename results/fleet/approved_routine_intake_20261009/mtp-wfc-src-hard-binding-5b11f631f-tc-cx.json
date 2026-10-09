@@ -1,0 +1,24 @@
+{
+  "at": "2026-10-09T12:28:41.200639+00:00",
+  "name": "mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+  "watch": "/tmp/claude-review-20261003/closure_jobs/mtp-wfc-src-hard-binding-5b11f631f-tc-cx.json",
+  "sha256": "6f268eb100154a199b11d580a7447bd47a05ec18769c525b5ce11d6c74a66a97",
+  "source": {
+    "branch": "codex/mtp-tokpipe-verdict-20261009",
+    "commit": "5b11f631f",
+    "extra_paths": [
+      "results/rtl/dshbm_dspark_rtl_20261003/traces"
+    ],
+    "required_files": [
+      "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+      "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv",
+      "physical/dsrom_wfc_tokpipe/src_basis.json",
+      "tools/dsrom_wfc_source_scope_check.py"
+    ]
+  },
+  "bench_first": true,
+  "registered_io": true,
+  "preflight": "Current normalvalidator schemaOK; submitlintSKIP(no route_master pinplan estimate), not a registeredIO PASS or waiver. Actualparam2 elaboration/netlist/all10+negative/physicalchecks required before adoption.",
+  "resources": "32GiB conservative sameprovider20.697GiB predecessorDRT+74metadataFF context, not measured32.",
+  "old_source": "9f NEEDS_RTL realTCslew/FFfail retained; no repair or retarget."
+}

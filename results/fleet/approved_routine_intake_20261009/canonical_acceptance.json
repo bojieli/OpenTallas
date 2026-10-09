@@ -1,0 +1,42 @@
+[
+  {
+    "name": "hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx",
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx",
+    "stage_tag": "calibrate.a1",
+    "source": "5931d5864b059e46ce195ab07f2d8d8064f9d2bc"
+  },
+  {
+    "name": "hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+    "stage_tag": "route.a1",
+    "source": "c4be41d70"
+  },
+  {
+    "name": "hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+    "status": "RUNNING",
+    "host": "ot-pve1",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+    "stage_tag": "calibrate.a1",
+    "source": "bbe601a79"
+  },
+  {
+    "name": "hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine-r2",
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine-r2",
+    "stage_tag": "calibrate.a1",
+    "source": "e0c39fc90"
+  },
+  {
+    "name": "mtp-wfc-src-hard-binding-5b11f631f-tc-cx",
+    "status": "QUEUED",
+    "host": null,
+    "run": null,
+    "stage_tag": null,
+    "source": "5b11f631f"
+  }
+]

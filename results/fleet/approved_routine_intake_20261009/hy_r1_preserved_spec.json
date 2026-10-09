@@ -1,0 +1,94 @@
+{
+  "name": "hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine",
+  "block": "hfd_coll",
+  "owner": "Codex:hbm_system routinecollector0457",
+  "purpose": "Existing approved HY6f2cc51ae RTL unchanged; literal hard4x6um placement halo around48RX SRAMs addresses actualRX6 narrowchannel legalization18edgespacing/1padding thenOpenROADbadoptionalaccess. OriginalnominalPD55 preserved; lowerPD45experiment was maskedbyLB_ADDON.05 andnotnewdensity. Full48actualODBpositive/wrongmasternegativePASS. Currentflowhelperbytes clonedaba41e7b4, no newRTL/architecture/pin/clock/outline.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-pve1",
+    "ot-agidock128",
+    "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 98,
+  "source": {
+    "branch": "codex/hbm-collector-dpl-20261009",
+    "commit": "e0c39fc90",
+    "extra_paths": [
+      "results/uarch/hbm_current_target_portmap_20261005",
+      "results/rtl/hbm_accel_die_floorplan_20261005",
+      "results/rtl/die_top_lint_20261006",
+      "results/rtl/dshbm_matched_reference_20261005",
+      "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+    ],
+    "required_files": [
+      "physical/hbm_accel_die_views/coll/rtl_hy/hfd_coll.sv",
+      "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_hy.sv",
+      "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+      "physical/hbm_accel_die_views/coll/routine_20261009/rx_macro_blockages.tcl",
+      "physical/hbm_accel_die_views/common/route_view.sh",
+      "physical/hbm_accel_die_views/common/face_chain_place.tcl",
+      "tools/run_abi3_physical.py",
+      "tools/hbm_die_views.py",
+      "tools/w18/corner_sta.py",
+      "tools/closure_loop/hold_corners_patch.py",
+      "tools/closure_loop/h1_patch.py"
+    ]
+  },
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 {SRC}/tools/closure_loop/hold_corners_patch.py {SRC} && python3 {SRC}/tools/closure_loop/h1_patch.py {SRC} && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"96\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc\" FCP=\"5\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" MACROS=\"ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2\" HALO=\"4 6\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_hy.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/link/ot_link_afifo.sv rtl/common/ot_fwd_link_stage.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_coll physical/hbm_accel_die_views/coll/rtl_hy/hfd_coll.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl --step-tcl POST_MACRO_PLACE=physical/hbm_accel_die_views/coll/routine_20261009/rx_macro_blockages.tcl --clock-port refclk $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/hbm_accel_die_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 16,
+      "peak_ram_gb": 32
+    },
+    "route": {
+      "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 {SRC}/tools/closure_loop/hold_corners_patch.py {SRC} && python3 {SRC}/tools/closure_loop/h1_patch.py {SRC} && SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"96\" PER=\"0.833\" IOF=\"0.2\" MAXL=\"M7\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc\" FCP=\"5\" CTSA=\"-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none\" PDN=\"physical/hbm_accel_die_views/vm/pdn_vm.tcl\" MACROS=\"ot_sram_1r1w_128x256_m1_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2\" HALO=\"4 6\" SRCS=\"physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_hy.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/link/ot_link_afifo.sv rtl/common/ot_fwd_link_stage.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_coll physical/hbm_accel_die_views/coll/rtl_hy/hfd_coll.sv --orfs-var \"SYNTH_KEEP_MODULES=ot_hfd_oreg1 ot_hfd_oreg2 ot_hfd_oreg3 ot_hfd_oreg4 ot_hfd_oreg5 ot_hfd_sink1\" --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl --step-tcl POST_MACRO_PLACE=physical/hbm_accel_die_views/coll/routine_20261009/rx_macro_blockages.tcl --clock-port refclk $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ],
+      "peak_ram_gb": 98
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_coll.lef {RUN}/routes/{NAME}/view/hfd_coll_ss.lib {RUN}/routes/{NAME}/view/hfd_coll_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+      "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+      "physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/hbm_collector_routine_20261009/hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine"
+    }
+  ],
+  "cycles_added": "transaction-exact (35/35, mutants m1-m7 FAIL); vs _sr: -3..-10 core cycles on every run (flop queues 1-edge push->head vs 5); vs the flop endpoint: AR ~+5..+14, gathers ~0..+11 (sr +15..+17 / +7..+14)",
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "same IO recipe as the benched hfd_coll wrapper route (io_vclk_m at the calibrated CK_SS_MEAN + vclk_corner_true + io_min): 13 forwarded-clock outputs / 9 inputs are not in the sheet SDC"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "no_bench_reason": "Physical-only blockage/currentflow retry. HYendpoint andhfd_coll RTL byteidentical6f2cc51ae9b764704a6f36863fb817f83861b3eb; originalcanonicalbench35/35PASS andm1..m7FAIL retainedatEPYC1 originalrun; sourcepinnedmetadata/rawfailedlogs results/physical/hbm_collector_routine_20261009/record.json. Actualfull48ODBblockagehookPASS/wrongmasterFAIL, halo-positive.log/halo-wrongmaster.log. No redundantarithmeticrerun.",
+  "resource_evidence": {
+    "completed_stage_peak_KB": 25528524,
+    "initial_phase_claim_GiB": 32,
+    "claim_scope": "conservative phase-derived above24.35GiB measuredcompletedGPL; notmeasuredCTS/DRT",
+    "future_phase_peak": "UNKNOWN; fleetmonitor/increaseclaimfrommeasurements before advancing capacitylimited phases",
+    "full_route_claim_GiB": 98,
+    "route_claim_basis": "Owner instructed ceil(4*25528524KiB/1048576)=98GiB conservative phase-derived estimate, not measuredDRT or inherited96; no hardprocesscap; monitorRSS/HWM atphasechanges"
+  }
+}

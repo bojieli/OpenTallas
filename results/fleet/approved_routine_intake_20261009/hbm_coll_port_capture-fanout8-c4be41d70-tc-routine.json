@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-09T12:14:53.928343+00:00",
+  "name": "hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+  "watch": "/tmp/claude-review-20261003/closure_jobs/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine.json",
+  "sha256": "63c54a53a7187869874947b55020d9e1f05d65581c6981ffb7a57c3c7ac74c82",
+  "source": {
+    "branch": "codex/hbm-collector-routine-20261009",
+    "commit": "c4be41d70",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical",
+      "results/physical/hbm_coll_capture_20261009",
+      "results/physical/hbm_collector_routine_20261009"
+    ],
+    "required_files": [
+      "physical/hbm_collector_routine_20261009/route_port_fanout8.sh",
+      "physical/hbm_accel_die_views/coll/rtl_ps/interior_macros.tcl",
+      "physical/hbm_accel_die_views/coll/rtl_ps/capture_adjacent_place.tcl",
+      "tools/closure_loop/tt_overlay.py",
+      "tools/closure_loop/hold_corners_patch.py",
+      "tools/closure_loop/h1_patch.py",
+      "tools/orfs_hold_mm.py",
+      "tools/orfs_hold_mm.tcl",
+      "results/physical/hbm_coll_capture_20261009/receipt.json",
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv"
+    ]
+  },
+  "resource_basis": "Explicit conservative same-inventory route16/cal3 above measured da3DRT11.918/cal2.333GiB; not measured16. No external duplicateclaim.",
+  "proof": "Owner runtime schemaPASS +10 requiredfile hashes ee230dfbf; currenthelpers pinned in source, no external TT/FH snapshot."
+}
