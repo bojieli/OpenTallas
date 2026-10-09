@@ -57,3 +57,29 @@ def model(root=None):
         latency=dict(facade_added_cycles=0,
             controller_registered_pin_and_skid_cycles='existing ot_hfd_mtp_core contract'),
         qualification='port coverage exact; endpoint producers and real pin views still require integration')
+
+
+def render_rtl(contract):
+    lines = ['`timescale 1ns/1ps', '`default_nettype none',
+        '// Default-off wiring facade. Physical x-master closure does not qualify these bus pins.',
+        'module hfd_mtp_native #(parameter integer ENABLE=0) (',
+        '  input wire clk, input wire rst_n,']
+    declarations = []
+    for name, group in contract['groups'].items():
+        width = group['bits']
+        direction = 'input' if group['direction'] == 'input' else 'output'
+        declarations.append(f'  {direction} wire [{width-1}:0] {name}')
+    lines.append(',\n'.join(declarations))
+    lines += [');', '  generate if (ENABLE == 0) begin: off']
+    for name, group in contract['groups'].items():
+        if group['direction'] == 'output':
+            lines.append(f"    assign {name} = '0;")
+    lines += ['  end else begin: on', '    hfd_mtp_x core (', '      .clk(clk), .rst_n(rst_n),']
+    bindings = []
+    for name, group in contract['groups'].items():
+        for field in group['fields']:
+            port, lsb, width = field['port'], field['lsb'], field['width']
+            bindings.append(f'      .{port}({name}[{lsb} +: {width}])')
+    lines += [',\n'.join(bindings), '    );', '  end endgenerate',
+              'endmodule', '`default_nettype wire', '']
+    return '\n'.join(lines)
