@@ -73,7 +73,12 @@ def main():
  L.CTRL='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv'
  if a.cmd=='sta':
   L.WF.corner_sta=corner_sta
-  return L.cmd_sta(argparse.Namespace(case=a.case,macros=a.inst=='src'))
+  result=L.cmd_sta(argparse.Namespace(case=a.case,macros=a.inst=='src'))
+  if a.inst=='src':
+   # Actual TC electrical signoff is independent of SS sensitivity.
+   drv=L.drv_check(a.case.resolve(),True,corners=('TT',))
+   (a.case/'wf_drv_TT.json').write_text(json.dumps(drv,indent=1)+'\n')
+  return result
  if a.cmd=='check':return L.cmd_check(argparse.Namespace(case=a.case))
  # Size before route: retained full-shape basis, same macro count and registered
  # interfaces; SOURCE metadata +1cycle, current-user STAGE tuple +0cycles.
@@ -94,5 +99,5 @@ def main():
  s=s.replace('finish\" > $W/flow.log','${WFC_TARGET:-finish}\" > $W/flow.log')
  s=s.replace('cd $S && python3', 'if [[ "${WFC_TARGET:-finish}" != "finish" ]]; then exit 0; fi\ncd $S && python3',1)
  run.write_text(s)
- print(json.dumps(dict(master=f'ot_dsrom_wfc_tokpipe_{a.inst}',basis=f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json',source_cycles_added=1 if a.inst=='src' else 0,registered_boundary_unchanged=True)))
+ print(json.dumps(dict(master=f'ot_dsrom_wfc_tokpipe_{a.inst}',basis=f'physical/dsrom_wfc_tokpipe/{a.inst}_basis.json',source_cycles_added=1+basis['params'].get('PROMPT_EXTRA',0) if a.inst=='src' else 0,registered_boundary_unchanged=True)))
 if __name__=='__main__':main()
