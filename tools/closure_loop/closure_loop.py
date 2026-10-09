@@ -73,7 +73,7 @@ PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10
 # EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
 EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC")
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
-            "FLOORPLAN_MARGIN", *EARLY_FAIL}
+            "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
@@ -1147,7 +1147,8 @@ def corner_sta_compat(j, host, run, full):
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl")
+           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
+           "../preroute_gate.py", "../preroute_gate.tcl")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1204,7 +1205,9 @@ for e in ${PATH//:/ }; do
     if [ "${1:-}" = run ] && [ -n "${OT_FP_LINT_DIR:-}" ]; then
       # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
       mkdir -p "$OT_FP_LINT_DIR"; shift
-      exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+      # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
+      exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+        -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
     fi
     if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
     exec "$e/docker" "$@"
@@ -1244,19 +1247,37 @@ def route_ref(j):
 # flow, and crash() / cal_track() finish the job with verdict FLOORPLAN_MARGIN (no retry, no route spent).
 # Spec "fp_lint": false opts out; {"set": {"util_max": 0.62, ...}} overrides thresholds (tools/fp_margin_lint.py
 # THRESHOLDS); {"warn_only": true} reports without failing.
-def fp_lint_env(j, t):
-    cfg = j["spec"].get("fp_lint", True)
-    if cfg is False:
-        return ""
+def gate_args(cfg):
     cfg = cfg if isinstance(cfg, dict) else {}
     args = " ".join(f"--set {k}={v}" for k, v in (cfg.get("set") or {}).items())
     if cfg.get("warn_only"):
         args += " --warn-only"
+    return args.strip()
+
+
+# PREROUTE-GATE (owner 2026-10-08): the pre-route timing gate (tools/preroute_gate.tcl/.py) runs at ORFS POST
+# DETAIL_PLACE of a ROUTE stage (never a calibrate) and stops a variant whose placed design is far from closing before
+# CTS / GRT / DRT are spent.  The owner allows it only because it is fast: measured 2026-10-08 on the fleet's finished
+# routes (preroute-gate.log), the in-flow cost is the path dump alone (timing is already updated by report_metrics), a
+# few seconds against routes of hours.  On by default; spec "preroute_gate": false opts out; {"set": {"ws_ps": ...,
+# "count": ...}} overrides thresholds (tools/preroute_gate.py THRESHOLDS, calibrated to never reject an eventual closure).
+def preroute_gate_on(j, kind):
+    return kind == "route" and j["spec"].get("preroute_gate", True) is not False
+
+
+def fp_lint_env(j, t, lint=True, prg=False):
     run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
-    return (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl; do "
-            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
-            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\n"
-            f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} OT_FP_LINT_ARGS={shlex.quote(args.strip())}\n")
+    env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
+           f"preroute_gate.py preroute_gate.tcl; do "
+           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
+    if lint:
+        env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
+                f"OT_FP_LINT_ARGS={shlex.quote(gate_args(j['spec'].get('fp_lint', True)))}\n")
+    if prg:
+        env += (f"export OT_PREROUTE_GATE=1 "
+                f"OT_PREROUTE_GATE_ARGS={shlex.quote(gate_args(j['spec'].get('preroute_gate', True)))}\n")
+    return env
 
 
 def fp_lint_failed(host, run, tag):
@@ -1266,6 +1287,26 @@ def fp_lint_failed(host, run, tag):
     except Exception:  # noqa: BLE001
         return None
     return r.stdout.strip() if r.returncode == 0 and "FLOORPLAN_MARGIN" in (r.stdout or "") else None
+
+
+def preroute_failed(host, run, tag):
+    """the pre-route gate's FAIL text for stage tag (None: no gate failure, or the host could not be read)"""
+    try:
+        r = ssh(host, f"cat {run}/cl/fplint/{tag}/PREROUTE_FAIL 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return None
+    return r.stdout.strip() if r.returncode == 0 and "PREROUTE_MARGIN" in (r.stdout or "") else None
+
+
+def preroute_finish(j, tag, text):
+    reasons = next((l[len("PREROUTE_MARGIN: "):] for l in text.splitlines() if l.startswith("PREROUTE_MARGIN: ")), text)
+    kill_own_stage(j)
+    finish(j, "PREROUTE_MARGIN", reasons[:600],
+           f"PREROUTE_MARGIN ({tag}): the placed design failed the pre-route timing gate (no CTS/route spent; report "
+           f"{j['run']}/cl/fplint/{tag}/preroute_gate.json)\n" +
+           "\n".join(l for l in text.splitlines() if l.startswith("preroute_gate:"))[:1500] +
+           "\nFIX: the placed slack is far beyond what routing has ever recovered: pipeline / restructure the worst "
+           "paths (REDESIGN_RULES); spec preroute_gate:false opts out, {\"set\": {\"ws_ps\": ...}} overrides")
 
 
 def fp_lint_finish(j, tag, text):
@@ -1295,9 +1336,11 @@ def launch_stage(j, st, cmd):
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
-    if st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False:
+    fpl = st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False
+    prg = preroute_gate_on(j, st["kind"])
+    if fpl or prg:
         ship_helpers(j["host"], j["run"])
-        env += fp_lint_env(j, t)
+        env += fp_lint_env(j, t, lint=fpl, prg=prg)
     if st["kind"] == "calibrate":
         # UNSTICK (owner 2026-10-08): calibrate measures clock insertion only.  No CTS timing/hold repair
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
@@ -1885,6 +1928,11 @@ def crash(j, st, fleet, why):
         txt = fp_lint_failed(j["host"], j["run"], j["stage_tag"])
         if txt:
             fp_lint_finish(j, j["stage_tag"], txt)
+            return
+    if st["kind"] == "route" and j.get("stage_tag") and j.get("host"):
+        txt = preroute_failed(j["host"], j["run"], j["stage_tag"])
+        if txt:
+            preroute_finish(j, j["stage_tag"], txt)
             return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
@@ -3838,8 +3886,9 @@ def cmd_validate(a):
 @locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", *EARLY_FAIL):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / EARLY_FAIL_* jobs can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", *EARLY_FAIL):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / EARLY_FAIL_* jobs "
+                 f"can be retried")
     if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
