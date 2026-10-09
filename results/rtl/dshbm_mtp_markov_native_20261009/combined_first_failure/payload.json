@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.native_sm.payload.v1",
+  "nc": 8,
+  "active_columns": 1,
+  "provenance": {
+    "scope": "released full-shape Markov matvec; no stored-DLOG or argmax",
+    "released_revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+    "index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "weights": {
+      "shard": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277/model-00046-of-00048.safetensors",
+      "tensor": "mtp.2.markov_head.head.weight",
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        256
+      ],
+      "rows": [
+        0,
+        43
+      ],
+      "file_byte_offset": 71556176,
+      "slice_sha256": "61e908b0762981295c1f510414ee52762e7267ffa19eb8982fb358a1bbf7086e",
+      "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    },
+    "activation": {
+      "shard": "/srv/opentallas-scratch/claude/md6-checkpoint-dba1be0a40aa45a94ad051997016db3960a90277/model-00046-of-00048.safetensors",
+      "tensor": "mtp.2.markov_head.embed.weight",
+      "dtype": "BF16",
+      "shape": [
+        129280,
+        256
+      ],
+      "rows": [
+        21946,
+        21947
+      ],
+      "file_byte_offset": 16601168,
+      "slice_sha256": "5f0a69bb44b4e3ba8a75e8f566def14733a5ccc4f80b0ee834d754a409d13fdc",
+      "header_sha256": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e"
+    }
+  },
+  "released_shard_sha256": "e625902027b9d23d416f8818c665fab4704e0b96dc1bc778321601b700475a9d",
+  "golden_source_sha256": {
+    "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009/tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009/tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "compiler_source_sha256": "6436c1974e0bc23d909087765cf73eb55ed98174e45b5af7af35ce52a8b0599b",
+  "stored_logit_fixture": {
+    "path": "/srv/opentallas-scratch/claude/md6-bundle-source/input/head_ref.npz",
+    "sha256": "9b3502ec63d2931d20fb0f8d1dd30f35299898a0b8c82bb9baad15ff5e9f4a49",
+    "scope": "golden/backbone fixture validated by native head component; not native DHEAD production capture",
+    "logits_slice_sha256": "f17e4537ac03f9e90ccbf63eed46fb46601f877e47fd4189e432bfd4197fa49d"
+  },
+  "arithmetic_contract": "chunk8",
+  "shape": {
+    "rows": 43,
+    "K": 256,
+    "die": 0,
+    "sm": 0,
+    "global_first_row": 0
+  },
+  "artifacts": {
+    "seq.hex": {
+      "path": "seq.hex",
+      "sha256": "5c13b09a1a43bcaf39f69afa918acdca2dc3f203553c56b6293d77292361066d"
+    },
+    "dlog.hex": {
+      "path": "dlog.hex",
+      "sha256": "dc5401b51dc1652c6f4233894201e3c79e4a78d5c0d97b62ea0f00a896c47824"
+    },
+    "combined.hex": {
+      "path": "combined.hex",
+      "sha256": "db52cf250f2d2a905d2bad002629ebfbb021a81acf70a2ca81d4b242109b5481"
+    },
+    "x.hex": {
+      "path": "x.hex",
+      "sha256": "b234762d1f986261547504800f090f5276dcd2eb8ff723649eed2803bdde18f3"
+    },
+    "winner.hex": {
+      "path": "winner.hex",
+      "sha256": "18c1771eee299f39d82be3b731468fffcff429dc950147309164b5d428b675b3"
+    },
+    "lines.hex": {
+      "path": "lines.hex",
+      "sha256": "8acf142b7129377a8bddfd2abe89b214aa05f096fc8135be6f8dd648390c97c8"
+    },
+    "gold.hex": {
+      "path": "gold.hex",
+      "sha256": "adbae511ef6d28ebb72dafa03c1bddf2fa3e411e9da6c72ee4e28e2cd443ef35"
+    }
+  },
+  "numerical_qualified": false,
+  "whole_token_qualified": false,
+  "hardware_installed": false
+}

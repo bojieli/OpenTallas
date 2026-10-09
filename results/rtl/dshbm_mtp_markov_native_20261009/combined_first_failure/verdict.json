@@ -1,0 +1,18 @@
+{
+  "status": "FAIL",
+  "source_commit": "fa93b525f",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/codex/dshbm-native-markov-20261009/exact-r2",
+  "scope": "Actual CP, typed record dispatcher, native serial owner, real SMH43x256 Markov, source-pinned nonzero stored-logit fixture, actual0.9GHz LAT3 add, local43-row argmax",
+  "failure": "Bench sampled return-queue owner after the actual winner had already been accepted and the FIFO read pointer had advanced",
+  "evidence": "positive.log; fatal occurs after CP status0, expected local winner, all43 Markov and combined scores,344 weight reads,10 record reads and104 X beats passed the preceding checks",
+  "correction_commit": "bed86e821",
+  "correction": "Bench checks owner at actual return acceptance, then real CP completion job/generation/position at completion",
+  "correction_rerun": "NOT_RUN; latest owner assigns new programs/interfaces/builds exclusively to Claude hbm-sim",
+  "combined_weight_mutant": "NOT_RUN because positive gate failed first",
+  "earlier_matvec_weight_mutant": "PASS_EXPECTED_FAILURE: first_matvec/weight_mutant.log contains43 numerical mismatches",
+  "production_native_DHEAD_capture": false,
+  "full129280_rank_argmax": false,
+  "production_eleven_kernel_installation": false,
+  "physical_qualification": false
+}

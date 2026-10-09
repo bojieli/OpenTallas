@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_hbm_native_mtp_smh_pc_dispatch_mx1",
+      "target": "HBM accelerator",
+      "owner": "Claude:hbm-sim takeover from Codex:review_hbm_token_path",
+      "description": "Default-off source-installed single-kernel PC32 to actual ten-word native SM program owner, retained real DS owner73/token17/position20",
+      "source": {"commit": "fa93b525f", "paths": ["rtl/hbm_accel/control/ot_hbm_native_mtp_smh_pc_dispatch_mx1.sv", "tools/dshbm_mtp_record_dispatch_model.py", "tools/dshbm_markov_native_image.py"]},
+      "implementation": {"status": "implemented", "evidence": ["Actual native owner run plus genuine SM arrive/publication completion, no SIMT64 or native690 reinterpretation; source-released Markov43x256 image generated with verified shard/index hashes"]},
+      "model": {"status": "modeled", "evidence": ["tools/uarch_model.py dshbm_mtp_native_record_dispatch_model,191 flop bits per SM,3 bridge cycles,32 replicas"]},
+      "exactness": {"positive": {"status": "partial", "evidence": ["results/rtl/dshbm_mtp_markov_native_20261009/first_matvec/verdict.json: actual CP/SMH650cycle component PASS; selected combined gate pending bench correction"]}, "negative": {"status": "partial", "evidence": ["first_matvec/weight_mutant.log: all43 numerical mismatches caught; current combined mutant not run"]}},
+      "physical": {"status": "not_submitted", "corners": {}, "evidence": ["Claude approval/intake needed; no actual clock-arrival or slot qualification"]},
+      "dependencies": ["Actual selected SRAM/HBM allocation and protected program/provider", "Remaining10 production kernels and dedicated operator call map", "Full installed32SM runtime"],
+      "integration": {"status": "incomplete", "evidence": ["Minimum standalone source-component only; local byte-offset0 fixture is not a selected production PC/address grant"]}
+    },
+    {
+      "element": "ot_hbm_native_mtp_score_join_mx1",
+      "target": "HBM accelerator",
+      "owner": "Claude:hbm-sim takeover from Codex:review_hbm_token_path",
+      "description": "Default-off owned nonzero stored-DLOG request/response plus actual LAT3 FP32 Markov addition at0.9GHz",
+      "source": {"commit": "fa93b525f", "paths": ["rtl/hbm_accel/control/ot_hbm_native_mtp_score_join_mx1.sv", "tools/dshbm_mtp_score_join_model.py"]},
+      "implementation": {"status": "implemented", "evidence": ["Actual owner/index response matching and held finite output; no control ECC/mirrors/epochs"]},
+      "model": {"status": "modeled", "evidence": ["tools/uarch_model.py dshbm_mtp_native_score_join_model,190 join flop bits plus real FP32 add;1.2GHz to0.9GHz existing finite CDC64 W122 explicitly priced"]},
+      "exactness": {"positive": {"status": "pending", "evidence": ["combined_first_failure/verdict.json: all43 combined scores matched, final bench late-identity sampling failed; bed86e821 correction has not run"]}, "negative": {"status": "pending", "evidence": ["Combined weight/response mutants not run; original matvec-only numerical mutant history retained"]}},
+      "physical": {"status": "not_submitted", "corners": {}, "evidence": ["No actual slot/domain-clock-arrival or provider closure"]},
+      "dependencies": ["Actual native DHEAD publication/capture", "Protected mutable stored-logit provider and real clocks", "Selected finite source/result reservation"],
+      "integration": {"status": "incomplete", "evidence": ["Source head_ref fixture verified by native head component; explicitly not production native DHEAD capture"]}
+    },
+    {
+      "element": "ot_hbm_native_mtp_rank_argmax_mx1",
+      "target": "HBM accelerator",
+      "owner": "Claude:hbm-sim takeover from Codex:review_hbm_token_path",
+      "description": "Default-off finite rank-ordered FP32 winner merge, actual lower global token on ties, explicit empty ranks, no fabricated scores",
+      "source": {"commit": "fa93b525f", "paths": ["rtl/hbm_accel/control/ot_hbm_native_mtp_rank_argmax_mx1.sv", "tools/dshbm_mtp_rank_argmax_model.py"]},
+      "implementation": {"status": "implemented", "evidence": ["Held winner, real owner/rank/index checks, finite score rejection, explicit missing/duplicate rank quarantine"]},
+      "model": {"status": "modeled", "evidence": ["tools/uarch_model.py dshbm_mtp_native_rank_argmax_model,150 flop bits; SM43 rows then32SM/die and96die merge costs explicit"]},
+      "exactness": {"positive": {"status": "pending", "evidence": ["combined_first_failure/verdict.json: local43-row winner matched source golden before late bench check failed; full129280 rank merge not gated"]}, "negative": {"status": "pending", "evidence": ["Full-fanin missing/duplicate rank, wrong owner, tie and numerical negative gates pending"]}},
+      "physical": {"status": "not_submitted", "corners": {}, "evidence": ["No source-selected global transport/clock/pin closure"]},
+      "dependencies": ["Actual full partition/rank topology", "Actual summed DLOG+Markov scores", "Real CPRESULT union/broadcast completion"],
+      "integration": {"status": "incomplete", "evidence": ["Only local43-row fixture exercised; no full129280-token winner or full-token qualification"]}
+    }
+  ]
+}
