@@ -1,0 +1,65 @@
+{
+ "schema": "opentallas.hbm_system.rope_table.v1",
+ "input_sha256": {
+  "rtl/hbm_accel/control/ot_hbm_rope_table.sv": "ff8808277119bef2281b6d05f1d49fbb6606db9b71e9f7b5242f775d6223d70d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+  "rtl/test/hbm_accel/tb_hbm_rope_table.sv": "147ac6b3b7d1e9418ad7a42794148482cca9138a926faae2db2dee44ebe9dcd4",
+  "tools/hbm_rope_table_bench.py": "f9adf75bdc030a2f31273b6c8e50ecccdf9c1c340ebd634755183165550f52d9"
+ },
+ "golden": "tools/hdc_golden_v41.py rope_freqs/rope_cs, compiler/models/deepseek-v4.1-flash/inference_config.json",
+ "runs": [
+  {
+   "steps": 40,
+   "mismatches": 0,
+   "stall_cycles": 0,
+   "case": "cadence_400",
+   "start": 38298,
+   "cadence_cycles": 400,
+   "mut": 0,
+   "verdict": "PASS"
+  },
+  {
+   "steps": 40,
+   "mismatches": 0,
+   "stall_cycles": 0,
+   "case": "cadence_400_hi",
+   "start": 262084,
+   "cadence_cycles": 400,
+   "mut": 0,
+   "verdict": "PASS"
+  },
+  {
+   "steps": 20,
+   "mismatches": 0,
+   "stall_cycles": 0,
+   "case": "pos0_edge",
+   "start": 1,
+   "cadence_cycles": 300,
+   "mut": 0,
+   "verdict": "PASS"
+  },
+  {
+   "steps": 30,
+   "mismatches": 0,
+   "stall_cycles": 4518,
+   "case": "back_to_back",
+   "start": 5945,
+   "cadence_cycles": 0,
+   "mut": 0,
+   "verdict": "PASS"
+  },
+  {
+   "steps": 10,
+   "mismatches": 40,
+   "stall_cycles": 0,
+   "case": "neg_mut1",
+   "start": 5000,
+   "cadence_cycles": 400,
+   "mut": 1,
+   "verdict": "FAIL"
+  }
+ ],
+ "verdict": "PASS",
+ "table_bytes_per_die": 536870912,
+ "fetch_per_step": "3 entries x 8 sectors = 768 B (6 reads of 4 sectors)"
+}

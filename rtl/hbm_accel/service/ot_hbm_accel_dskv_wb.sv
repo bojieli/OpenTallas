@@ -30,6 +30,7 @@
 module ot_hbm_accel_dskv_wb #(
   parameter integer ENABLE = 0,
   parameter integer STACK = 0,
+  parameter integer ALL_STACKS = 0,           // 1 (hfd hub write-back unit, 2026-10-08): emit every stack's sectors, wq_stk says which
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
   parameter integer SLOT_ROWS = 2
 )(
@@ -42,11 +43,12 @@ module ot_hbm_accel_dskv_wb #(
   input  wire          sh_v, input wire [2:0] sh_slot, input wire [4351:0] sh_data,
   output wire          wq_v, output wire [4:0] wq_pc, output wire [4:0] wq_bank, output wire [18:0] wq_row,
   output wire [4:0]    wq_col, output wire [255:0] wq_data, input wire wq_r,
+  output wire [1:0]    wq_stk,
   input  wire [5:0]    ack_n,
   output wire [15:0]   issued, output wire [15:0] acked, output wire fence_ok
 );
   generate if (!ENABLE) begin : off
-    assign row_r = 0; assign wq_v = 0; assign wq_pc = 0; assign wq_bank = 0; assign wq_row = 0; assign wq_col = 0;
+    assign row_r = 0; assign wq_v = 0; assign wq_stk = 0; assign wq_pc = 0; assign wq_bank = 0; assign wq_row = 0; assign wq_col = 0;
     assign wq_data = 0; assign issued = 0; assign acked = 0; assign fence_ok = 0;
   end else begin : on
     localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2;
@@ -72,7 +74,8 @@ module ot_hbm_accel_dskv_wb #(
         for (integer y = 0; y < 32; y = y + 1) sdat[8*y +: 8] = shadow[slot[2:0]][32 * ksec + y];
       end else sdat = dat[256 * t +: 256];
     end
-    wire on_stack = (pcg[6:5] == 2'(STACK));
+    wire on_stack = ALL_STACKS ? 1'b1 : (pcg[6:5] == 2'(STACK));
+    assign wq_stk = pcg[6:5];
     wire emit = (st == S_EMIT) && on_stack;
     assign wq_v = emit; assign wq_pc = pcg[4:0]; assign wq_bank = {jj[9:7], jj[1:0]}; assign wq_row = wrow_a;
     assign wq_col = jj[6:2]; assign wq_data = sdat;
