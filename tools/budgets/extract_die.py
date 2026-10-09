@@ -15,6 +15,9 @@ one uniform, compact die model that tools/budgets/{clock_plan,budget_sheet}.py r
 
   python3 tools/budgets/extract_die.py --src SRC --die s81r8_layer --s81-opts "--rev r9 --cc-reach-um 215 --vch-interleave" --out X.json.gz
   python3 tools/budgets/extract_die.py --src SRC --die hbm --out X.json.gz
+  python3 tools/budgets/extract_die.py --src SRC --die qwen_rom --qwen-recipe r21b --out X.json.gz
+      (die-gaps 2026-10-08: the Qwen ROM die; regions = the generator's decision-C clock_regions, ports = the
+       generated face anchors (Qwen masters are Q.Master abstracts; ETM-bound masters keep the generator's pins))
 """
 import argparse
 import gzip
@@ -45,6 +48,7 @@ def main():
     ap.add_argument('--die', required=True)
     ap.add_argument('--s81-opts', default='')
     ap.add_argument('--hbm-variant', default='')
+    ap.add_argument('--qwen-recipe', default='r21b')
     ap.add_argument('--out', required=True, type=Path)
     a = ap.parse_args()
     src = a.src.resolve()
@@ -54,6 +58,8 @@ def main():
     L.S81_OPTS = a.s81_opts
     if a.hbm_variant:
         L.VARIANT = a.hbm_variant
+    if a.die == 'qwen_rom':
+        L.QWEN_RECIPE = a.qwen_recipe
     m, pw, M, tool = L.build(a.die)
     by = {it.name: it for it in m['insts']}
     try:
@@ -76,6 +82,8 @@ def main():
                 except Exception:  # noqa: BLE001
                     nodir += 1
             out.append([inst, port, d])
+        if a.die == 'qwen_rom' and cls == 'clock_trunk' and bid.startswith('fck_'):
+            cls = 'fclk'       # Qwen link-hop forwarded clocks (relay chain fck_*): travel with their data, not CTS trees
         buses.append([bid, cls, bits, out])
     ports = {}
     for name, Mx in M.items():
@@ -84,6 +92,8 @@ def main():
             ports[name] = {p: [round(v, 3) for v in xy] for p, xy in pp.items() if xy}
     # real LEF masters: centre of each die port's pin group (generator real-port maps)
     try:
+        if a.die == 'qwen_rom':
+            raise LookupError('qwen_rom: generated face anchors only')
         if a.die == 'hbm':
             L.H._init_real()
             files, rp = dict(L.H.REAL), L.H.real_ports(m)
@@ -101,9 +111,14 @@ def main():
                 if xs:
                     d[port] = [round(sum((r[0] + r[2]) / 2 for r in xs) / len(xs), 3),
                                round(sum((r[1] + r[3]) / 2 for r in xs) / len(xs), 3)]
+    except LookupError:
+        pass
     except Exception as e:  # noqa: BLE001
         print('real port anchors failed:', repr(e), file=sys.stderr)
-    if a.die == 'hbm':
+    if a.die == 'qwen_rom':
+        regions = [dict(name=r['name'], kind=r.get('kind', 'region'), rect=r['rect']) for r in m.get('clock_regions', [])]
+        die_wh = [m['die']['w'], m['die']['h']]
+    elif a.die == 'hbm':
         H = L.H
         regions = H.clock_regions(m)
         die_wh = [m['geo']['W'], m['geo']['H']]
@@ -113,11 +128,12 @@ def main():
         regions += [dict(name=r['name'], kind=r.get('kind', 'region'), rect=r['rect']) for r in m.get('regions', [])]
         die_wh = list(S.DIE)
     rec = dict(schema='opentallas.budgets.die_model.v1', die=a.die, tool=tool, s81_opts=a.s81_opts,
+               qwen_recipe=a.qwen_recipe if a.die == 'qwen_rom' else None,
                source_commit=(src / 'SOURCE_COMMIT').read_text().strip() if (src / 'SOURCE_COMMIT').exists() else None,
                outline_um=die_wh, regions=regions,
                insts=[[it.name, it.master, it.kind, getattr(it, 'region', ''), getattr(it, 'domain', ''), round(it.x, 3),
                        round(it.y, 3), round(it.w, 3), round(it.h, 3), it.orient] for it in m['insts']],
-               buses=buses, ports=ports, fclk_buses=sorted(m.get('fclk', {})),
+               buses=buses, ports=ports, fclk_buses=sorted(m.get('fclk', {})) or sorted(b[0] for b in buses if b[1] == 'fclk'),
                pin_stage_buses=sorted(m.get('pin_stage_buses', [])),
                relay_rule=bool(a.die == 'hbm' and (m.get('variant') or {}).get('relay_all')),
                budget_stages=bool(a.die == 'hbm' and (m.get('variant') or {}).get('budget_stages')),

@@ -443,6 +443,75 @@ def real_views(index_path):
     return out
 
 
+PLACEHOLDER_LIB_MASTERS = ('hfd_hc', 'hfd_sfu', 'hfd_su')
+# PLACEHOLDER interface timing (die-gaps 2026-10-08): the hub quarters have no view yet, so the r25 die STA left every
+# path into / out of them untimed (22 'view clocks missing' incl. their ck0..ck7).  Each gets a boundary-registered
+# interface Liberty with the die-relay recipe constants (tools/hbm_die_relays.relay_libs: flop at the face, insertion
+# + clk->Q on outputs, setup / hold on inputs) so its die wires are timed; the report classes them placeholder.
+PH_C = dict(ss=dict(ins_min=70.0, ins_max=90.0, ckq=60.0, r=0.30, setup=30.0, hold=15.0, tr=12.0, v=0.63, t=100.0),
+            ff=dict(ins_min=40.0, ins_max=55.0, ckq=30.0, r=0.15, setup=15.0, hold=10.0, tr=6.0, v=0.77, t=0.0),
+            tt=dict(ins_min=55.0, ins_max=72.0, ckq=45.0, r=0.22, setup=22.0, hold=12.0, tr=9.0, v=0.70, t=25.0))
+
+
+def placeholder_libs(m, work, libs):
+    """write <master>_{ss,ff,tt}.lib for the PLACEHOLDER_LIB_MASTERS present without a lib; returns their names"""
+    want = sorted({it.master for it in m['insts'] if it.master in PLACEHOLDER_LIB_MASTERS and it.master not in libs})
+    if not want:
+        return []
+    lef = '\n'.join(p.read_text() for p in sorted(work.glob('*.lef')))
+    insts = {it.name: it.master for it in m['insts']}
+    drv = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        if eps and eps[0][0] in insts:
+            drv[insts[eps[0][0]]].add(eps[0][1].split('@', 1)[0])
+    caps = [1.44, 5.76, 23.04, 92.16, 368.64]
+    out = []
+    for n in want:
+        mm = re.search(rf'^MACRO {n}\n(.*?)^END {n}$', lef, re.S | re.M)
+        if not mm:
+            continue
+        width = defaultdict(int)
+        for pn in re.findall(r'^  PIN (\S+)$', mm.group(1), re.M):
+            b, _, i = pn.partition('[')
+            width[b] = max(width[b], int(i.rstrip(']')) + 1 if i else 1)
+        clocks = sorted(b for b in width if re.fullmatch(r'ck\d*|clk', b))
+        if not clocks:
+            continue
+        ref = clocks[0]
+        for corner, c in PH_C.items():
+            dl = ', '.join(f'{c["ins_max"] + c["ckq"] + c["r"] * x:.2f}' for x in caps)
+            tr = ', '.join(f'{c["tr"] + 0.5 * c["r"] * x:.2f}' for x in caps)
+            L_ = [f'library ({n}_ph_{corner}) {{', '  delay_model : table_lookup;', '  time_unit : "1ps";',
+                  '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+                  '  leakage_power_unit : "1pW";', '  capacitive_load_unit (1,fF);',
+                  f'  nom_process : 1.0; nom_temperature : {c["t"]}; nom_voltage : {c["v"]};',
+                  '  input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;',
+                  '  output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;',
+                  '  slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;',
+                  '  slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;',
+                  '  lu_table_template (ld) { variable_1 : total_output_net_capacitance; index_1 ("'
+                  + ', '.join(f'{x:.2f}' for x in caps) + '"); }']
+            for w in sorted(set(width.values())):
+                L_.append(f'  type (pb{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; }}')
+            L_ += [f'  cell ({n}) {{', '    area : 1.0;', '    is_macro_cell : true;']
+            for b, w in sorted(width.items()):
+                if b in clocks:
+                    L_.append(f'    bus ({b}) {{ bus_type : pb{w}; direction : input; clock : true; capacitance : 5.0; }}')
+                elif b in drv[n]:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : output;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : rising_edge; cell_rise (ld) {{ values ("{dl}"); }} cell_fall (ld) {{ values ("{dl}"); }} rise_transition (ld) {{ values ("{tr}"); }} fall_transition (ld) {{ values ("{tr}"); }} }}',
+                           '    }']
+                else:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : input; capacitance : 0.6;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : setup_rising; rise_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} }}',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : hold_rising; rise_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} }}',
+                           '    }']
+            L_ += ['  }', '}']
+            (work / f'{n}_{corner}.lib').write_text('\n'.join(L_) + '\n')
+        out.append(n)
+    return out
+
+
 def sta_tcl(m, work, index):
     """die-context STA (owner addendum 2026-10-06: a block counts as closed only after die-context STA with the real
     abstract): the real-abstract die placement (case real, k = 1) with every indexed view that has SS / FF Liberty,
@@ -479,6 +548,9 @@ def sta_tcl(m, work, index):
                     continue
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
+    for n in placeholder_libs(m, work, libs):
+        lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+        libs[n] = dict(placeholder=True)
     if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
         lib_lines += ['read_liberty -corner ss /work/hfd_rly_ss.lib', 'read_liberty -corner ff /work/hfd_rly_ff.lib']
         for n in m['relay_masters']:

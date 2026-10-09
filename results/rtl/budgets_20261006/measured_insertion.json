@@ -2416,22 +2416,22 @@
    }
   },
   "ot_s81_bf_native": {
-   "job": "bfh2_recutcgl50_hm10_8db5411e3",
+   "job": "bfh2_recutcgl35_hm0_8db5411e3",
    "source_commit": "8db5411e3c3630da5fd722fbac2bbb6be5d1593d",
-   "host": "ot-epyc2",
-   "run": "/srv/opentallas-data/claude/closure-loop/bfh2_recutcgl50_hm10_8db5411e3",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/bfh2_recutcgl35_hm0_8db5411e3",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T18:21:44-07:00",
+   "measured_at": "2026-10-08T18:26:43-07:00",
    "ss": {
-    "mean": 1121,
-    "min": 1107,
-    "max": 1173
+    "mean": 1155,
+    "min": 1133,
+    "max": 1210
    },
    "ff": {
-    "mean": 692,
-    "min": 680,
-    "max": 738
+    "mean": 702,
+    "min": 681,
+    "max": 745
    },
    "boundary_n": 1780,
    "budget": null
@@ -5186,5 +5186,5 @@
    }
   }
  },
- "updated": "2026-10-08T18:21:44-07:00"
+ "updated": "2026-10-08T18:26:43-07:00"
 }

@@ -48,8 +48,6 @@ STATIC = {
                           grt_overflow=0, sta_tt_wns_ps=50.84, sta_ff_wns_ps=-5.64,
                           sta_ff_note='FF -5.64 only on ASSUMED qfd_tile views', ir_worst_mv=29.43,
                           source='results/rtl/qwen_dietop_20261007/record.json (commit 660b49c8f)'),
-        'clock_plan': dict(status='missing', note='no Qwen die CTS validation: tools/budgets/extract_die.py supports '
-                                                  'hbm + s81 only (die-evidence.log 14:20 PT)'),
     },
     'hbm': {
         'ir': dict(status='done (stale placement)', placement='r23 (not r25)', windows_pass='125/125 load windows',
@@ -331,12 +329,16 @@ CC_NOTE = ('clock context: {0} view clock pins bound, {1} missing; paths of mast
 def probe_hbm():
     R = f'{SCR}/die-evidence/hbm_r25'
     G = f'{R}/grt2'
-    man = json.loads(_read(f'{G}/manifest.json') or '{}')
+    # die-gaps 2026-10-08: grt3 = the r25 case regenerated with the view-clock mapping fix (hub quarters ck0..ck7 +
+    # placeholder interface libs, SerDes / host PHY 'clk'); its sta_pad supersedes grt2/sta_pad (22 clocks missing)
+    G3 = f'{R}/grt3'
+    GS = G3 if _exists(f'{G3}/run_grt_sta_only.tcl') else G
+    man = json.loads(_read(f'{GS}/manifest.json') or '{}')
     real = set(man.get('real_views', {}))
     tt_fb = json.loads(_read(f'{G}/tt_fallback.json') or '[]')
     cls = lambda m: 'real' if m in real else ('relay' if re.search(r'_rly_?\d', m) else 'placeholder')
-    inst2m = netlist_masters(f'{G}/die.v')
-    out = dict(run=R, status_log=_read(f'{R}/STATUS.log').strip().splitlines()[-3:])
+    inst2m = netlist_masters(f'{GS}/die.v')
+    out = dict(run=R, sta_case=GS, status_log=_read(f'{R}/STATUS.log').strip().splitlines()[-3:])
     out['views'] = dict(real_views=len(real), real_views_ss_as_tt=tt_fb,
                         classes='real = manifest real_views (routed abstracts + libs); relay = hfd_rly_* die relays; '
                                 'placeholder = analytic / interim masters')
@@ -344,7 +346,7 @@ def probe_hbm():
     g = grt_overflow(f'{G}/grt_sta.log')
     out['grt'] = g
     sta = {}
-    P = f'{G}/sta_pad'
+    P = f'{GS}/sta_pad'
     for c, chk in (('tt', 'setup'), ('ff', 'hold'), ('ss', 'setup (sensitivity)')):
         log = _read(f'{P}/sta.log')
         w = re.findall(rf'OT_WNS corner={c} pads=(\w+) ns=(\S+) tns_ns=(\S+)', log)
@@ -380,7 +382,9 @@ def probe_hbm():
                     prior[c]['clock_context'] = CC_NOTE.format(*cc[-1])
         out['sta_prior_r25_grt'] = prior
     out['clock_plan'] = clock_summary(f'{R}/clock/plan.json')
-    out['regions'] = [guided_region(d) for d in sorted(glob.glob(f'{G}/regiong_*'))]
+    rg = sorted(glob.glob(f'{G}/regiong_*'))
+    # a re-staged window (regiong_<name>2: fixed guide layers / re-picked window) supersedes its first attempt
+    out['regions'] = [guided_region(d) for d in rg if not _exists(d + '2')]
     return out
 
 
@@ -429,8 +433,10 @@ def probe_s81():
     sta['ss'] = dict(status='done', check='setup (sensitivity)',
                      all=dict(wns_ps=float(w.group(1)), tns_ps=float(w.group(2))) if w else None)
     out['sta'] = sta
-    out['clock_plan'] = clock_summary(f'{run}/clock/plan.json' if _exists(f'{run}/clock/plan.json')
-                                      else f'{B}/m221pq_r3/clock/plan.json')
+    # die-gaps 2026-10-08: clock_v2 = r3 options re-validated after the ctrl 'cks' entry moved under svc 'ck'
+    cps = [f'{run}/clock_v2/plan.json', f'{run}/clock/plan.json', f'{B}/m221pq_r3/clock_v2/plan.json',
+           f'{B}/m221pq_r3/clock/plan.json']
+    out['clock_plan'] = clock_summary(next((p for p in cps if _exists(p)), cps[-1]))
     irr = f'{B}/m221pq/ir/ir_record.json'
     if _exists(irr):
         d = json.loads(_read(irr))
@@ -466,6 +472,20 @@ def probe_s81():
                          caveat='crop keeps whole nets inside the box and turns every cut net into a boundary port at '
                                 'its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly '
                                 'inside the box (timing delta unmeasurable there)'))
+    # die-gaps 2026-10-08: m221pq_r3fx = r3 options + --face-pin-inset (abutted node-stack EOL fix), same windows
+    for d in sorted(glob.glob(f'{B}/m221pq_r3fx/regions/region_*')):
+        rj = f'{d}/region.json'
+        nm = re.sub(r'^region_', '', os.path.basename(d)) + ' (r3fx face-pin-inset)'
+        if not _exists(rj):
+            regs.append(dict(region=nm, status='pending (DRT running)' if not _exists(f'{d}/run.end') else 'failed', dir=d))
+            continue
+        j = json.loads(_read(rj))
+        regs.append(dict(region=nm, status='done', dir=d, box_um=j.get('box_um'),
+                         drt=dict(final_drc=j['drt'].get('final_drc'), iterations=j['drt'].get('iterations')),
+                         wirelength=j.get('wirelength')))
+    cls_ = _read(f'{B}/m221pq_r3/regions/drc_classes.json')
+    if cls_:
+        out['region_drc_classes'] = json.loads(cls_)
     out['regions'] = regs
     return out
 
@@ -501,6 +521,10 @@ def probe_qwen():
     out['sta'] = sta
     jt = _read(f'{R}/ir/judged.txt').strip()
     out['ir'] = dict(status='done', judged=jt.splitlines()[-8:]) if jt else dict(status='pending', dir=f'{R}/ir')
+    out['clock_plan'] = clock_summary(f'{R}/clock/plan.json')
+    if out['clock_plan']['status'] == 'pending':
+        out['clock_plan']['note'] = ('armed: clock-only CTS (tools/budgets, extract_die --die qwen_rom --qwen-recipe '
+                                     'r21b) after the r21b PDN/placement step (r21b/clock/STATUS.log)')
     regs = [guided_region(d) for d in sorted(glob.glob(f'{R}/regions/gw_*'))]
     out['regions'] = regs or [dict(region='gw_col/io/spine/vmsu', status='pending', planned='gw_col / gw_io / gw_spine / gw_vmsu guided windows '
                                                              'cut from the overflow-0 r21b GRT (chain step 6)')]
@@ -646,6 +670,8 @@ def readme(rep):
                 L.append(f"- {kk}: {x.get('status')}. {x.get('note') or x.get('caveat') or ''}")
         if k == 's81' and d.get('r4'):
             L.append(f"- r4 (relay fix): {d['r4']['status']}.")
+        if d.get('region_drc_classes'):
+            L.append(f"- Region DRC classification: {d['region_drc_classes'].get('summary')}")
         L.append('')
     L += ['## Refresh', '', '`python3 tools/die_evidence_report.py` (ssh to ot-epyc1tb and ot-epyc3; ~5-10 min, the S81',
           'endpoint reports are ~350 MB per corner). Re-run in the 15-min closure drive whenever a die chain lands.', '']

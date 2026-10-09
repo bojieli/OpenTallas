@@ -66,7 +66,7 @@ def cut():
         tg = block.findTrackGrid(layers[n])
         grids[n] = sorted(tg.getGridY() if hdir[n] else tg.getGridX())
     stats = dict(guided=0, projected=0, nets=0, guides_kept=0, guides_clipped=0, guides_dropped=0, no_track=0,
-                 track_blocked=0, guides_floating=0, nets_bbox_guide=0)
+                 track_blocked=0, guides_floating=0, nets_bbox_guide=0, guides_lifted=0)
     used = {}
     # ON-TRACK ACCESS CHECK (2026-10-08, gw_cong DRT-0255 at x 10,599.552 = the region box grown to a kept macro: the
     # boundary pin sat on that macro's OBS, so the maze router had no way out).  A boundary pin goes only on a track
@@ -165,6 +165,10 @@ def cut():
         return (ln, *r)
 
     lvl = {n: l.getRoutingLevel() for n, l in layers.items()}
+    MIN_LVL, MAX_LVL = lvl['M4'], lvl['M9']          # the region routes M4-M9 (drt_tcl / sta set_routing_layers)
+
+    def low_same_dir(ln):
+        return 'M4' if hdir[ln] == hdir['M4'] else 'M5'
     TOUCH = um(2.0)
 
     def connected_guides(net, boxes, pins):
@@ -208,7 +212,7 @@ def cut():
         by0 = max(y0, min(r[1] for r in allr) - TOUCH)
         bx1 = min(x1, max(r[2] for r in allr) + TOUCH)
         by1 = min(y1, max(r[3] for r in allr) + TOUCH)
-        return [(ln, bx0, by0, bx1, by1) for ln in sorted(layers, key=lambda v: lvl[v]) if 1 <= lvl[ln] <= 9]
+        return [(ln, bx0, by0, bx1, by1) for ln in sorted(layers, key=lambda v: lvl[v]) if MIN_LVL <= lvl[ln] <= MAX_LVL]
 
     def inside(r):
         return r.xMin() >= x0 and r.xMax() <= x1 and r.yMin() >= y0 and r.yMax() <= y1
@@ -235,6 +239,19 @@ def cut():
             for g in guides:
                 r = g.getBox()
                 ln = g.getLayer().getName()
+                if lvl.get(ln, 99) < MIN_LVL:
+                    # die-gaps 2026-10-08 (HBM r25 hub DRT-0155: a die guide of n_clk_serial on M3, below the region's
+                    # M4-M9 routing range): a guide below M4 is lifted to the lowest allowed layer of its direction
+                    # (M2 -> M4, M3 -> M5) plus M4 so the lifted box still touches the net's M4 guides; DRT reaches
+                    # the M1-M3 pins through its via access.
+                    ln = low_same_dir(ln)
+                    stats['guides_lifted'] += 1
+                    if ln != 'M4' and overlaps(r):
+                        kept_boxes.append(('M4', max(r.xMin(), x0), max(r.yMin(), y0), min(r.xMax(), x1),
+                                           min(r.yMax(), y1)))
+                elif lvl.get(ln, 0) > MAX_LVL:
+                    ln = 'M9'
+                    stats['guides_lifted'] += 1
                 if inside(r):
                     kept_boxes.append((ln, r.xMin(), r.yMin(), r.xMax(), r.yMax()))
                     stats['guides_kept'] += 1

@@ -1045,6 +1045,21 @@ def pin_rects(mst, k, wmap):
                     y0 = mst.h - depth
             bounded.append((nm, ly, (x0, y0, x1, y1)))
         rects = bounded
+    if FACE_PIN_INSET:
+        # --face-pin-inset (die-gaps 2026-10-08): face pins start FACE_PIN_INSET inside the outline.  Abutted masters
+        # (field node stacks: 0.024 um SHAVE gap) put a lower N-face pin and an upper S-face pin of DIFFERENT nets on
+        # one M5 track tip to tip 0.024 um apart, under the ASAP7 M5 LEF58_EOLKEEPOUT 0.025: m221pq_r3 region DRT kept
+        # 1,275 fixed-shape EolKeepOut violations (bfcol 1,119 / pqstrip 156) that no iteration can repair.  Inset
+        # only where the pin layer lies above the master's OBS (the router reaches the pin over the macro).
+        ins = []
+        for nm, ly, (x0, y0, x1, y1) in rects:
+            spec = rest.ports.get(nm.rsplit('[', 1)[0])
+            if spec and spec[0] == 'face' and int(ly[1:]) > mst.obs_top:
+                d_ = FACE_PIN_INSET
+                x0, x1, y0, y1 = {'W': (x0 + d_, x1 + d_, y0, y1), 'E': (x0 - d_, x1 - d_, y0, y1),
+                                  'S': (x0, x1, y0 + d_, y1 + d_), 'N': (x0, x1, y0 - d_, y1 - d_)}[spec[2]]
+            ins.append((nm, ly, (x0, y0, x1, y1)))
+        rects = ins
     return out + rects
 
 
@@ -3381,6 +3396,7 @@ PQ_RCNT = 192                   #   row counts in (12 RWB x 16)
 PQ_ROMS = 3                     #   2 phase + 1 stream ot_rom_4096x72 (real cfg-ROM LEF) at the core's E end
 M2L_UM2_PER_BIT = 33.0           #   d8g1 meso end block outline per lane bit at ~55 % util (measured 16.5-18.4 cells)
 PQ_ROOT_W = 17460e-12 * 2.0e6   #   root power: est. area 17,460 um2 at the 2.0 W/mm2 field peak density (budget)
+FACE_PIN_INSET = 0.0           # --face-pin-inset: generated face pins 0.048 um inside the outline (abutment EOL)
 GEOMETRY_FIX = False            # --geometry-fix: canonical station outlines and bounded bundled pin depth
 HOP_R_CC = 410.0                # common-clock reach (budget sheet reach 411-491 um at 833.333 ps SS)
 HOP_R_FWD = 430.56              # forwarded hop = the station pitch (routed stations: SS +78..+84 at the 440 um hop budget)
@@ -4588,7 +4604,13 @@ def _faces_r8(m, Mx, it, ports):
         else:
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
         _lay(Mx, 'N', P_(['rd']), 'M5')
-        _lay(Mx, 'N', P_(['ckh', 'cks', 'rst']), 'M5', start=60.0)
+        _lay(Mx, 'N', P_(['ckh', 'rst']), 'M5', start=60.0)
+        # die-gaps 2026-10-08: the stream-side clock entry sits at the face end under the stream peer's (dsfd_svc) clock
+        # entry (svc 'ck' is laid toward the clk_stream root at the same end), so the hbm_read interface ctrl -> svc is
+        # one clock region; at the west end (60 um) the two entries were 8.4 mm apart in two regions and the plan's
+        # inter-region skew bound was 197.2 ps > 150 (m221pq_r3 clock plan).
+        east = _peer_pos(m, it, 'cks', 'N') > Mx.w / 2       # the end the svc 'ck' takes (same net, same peer sort)
+        _lay(Mx, 'N', P_(['cks']), 'M5', start=(Mx.w - 62.0) if east else 2.0)
     else:   # hub slabs, band blocks, services: each port on the face toward its peers, ordered by peer position
         faces = defaultdict(list)
         for p_ in sorted(ports):
@@ -4997,6 +5019,9 @@ def die_options(ap):
                     'inside the HC column, face to face (default off: a VCH-edge lane)')
     ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
                     'k16 pin depth; default off pending geometry and physical gates')
+    ap.add_argument('--face-pin-inset', action='store_true', help='die-gaps 2026-10-08: generated face pins start '
+                    '0.048 um inside the outline (abutted node stacks put different-net M5 pins tip to tip under the '
+                    'EOL keepout); default off for reproducing r3/r4')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
@@ -5013,6 +5038,8 @@ def apply_options(a):
     set_cc_reach(a.cc_reach_um)
     global VCH_INTERLEAVE, LINK_FIX, HC_XFACE, GEOMETRY_FIX
     GEOMETRY_FIX = bool(getattr(a, 'geometry_fix', False))
+    global FACE_PIN_INSET
+    FACE_PIN_INSET = 0.048 if getattr(a, 'face_pin_inset', False) else 0.0
     VCH_INTERLEAVE = bool(a.vch_interleave)
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
