@@ -1,0 +1,12 @@
+{
+ "status":"NATIVE_COMMAND_TABLE_PASS_DISPATCH_BLOCKED",
+ "native_contract_source":"e5c627229",
+ "remote":"ot-agidock128:/srv/opentallas-scratch/codex/ds-control/dsc-engram-schema",
+ "admission_gib":1,
+ "scope":"Actual dsfd_engram_lkp named win_v1/win_ids68/cfg_layer1/cfg_rank2 signals for L1.eng.lookup and L14.eng.lookup; no genericarg or token truncation",
+ "checks":"Full68bit payload including highbit; layers0/1 rank3; width/rank/negative/missing context bounds; atomic unknownjob rejection",
+ "dispatch_eligible":false,
+ "pending":"Common four-rank accepted sequence, sink publication/owned completion and in-order per-rank consumer retirement, actual DEAD eng.gate mask, static runtime service physical binding",
+ "rtl_changes":false,
+ "physical_claim":null
+}

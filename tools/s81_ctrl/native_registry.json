@@ -1,7 +1,35 @@
 {
   "schema": "opentallas.s81-native-descriptor-registry.v1",
-  "status": "PARTIAL_HC_CAPTURE_NATIVE_COMMAND_SCHEMA_ONLY",
+  "status": "PARTIAL_HC_AND_ENGRAM_NATIVE_COMMAND_SCHEMAS_ONLY",
   "schemas": {
+    "engram_lookup": {
+      "engine": 10,
+      "status": "OWNER_NATIVE_CONTRACT",
+      "endpoint": "dsfd_engram_lkp",
+      "integration_ready": false,
+      "source_commit": "e5c627229",
+      "evidence": [
+        {"path":"rtl/dsrom_sys/engram/dsfd_engram_lkp.sv","sha256":"7dfbdbb9e1c384f825c7ff5440557d75248a519b3ba100f929d5243f16ea13ac"},
+        {"path":"rtl/dsrom_sys/engram/dsfd_engram_sink.sv","sha256":"d16851d7fd67fe0baba783a50774ba7f296f2d84f6b1b64ee6226155a181d1dd"}
+      ],
+      "acceptance": "win_v pulse only with one of two actual window credits; one common accepted sequence across four TP ranks",
+      "completion": "Held sink rdy[slot] after192 committed payload writes plus24 statuses; perr[slot] is failure. Return once per accepted slot, retain until actual consumer retirement.",
+      "retirement": "Sink rel_v/rel_slot retires its held slot; lookup rel[3:0] contains one in-order retirement pulse per TP rank, broadcast to every lookup. It is not an eight-slot bitmap.",
+      "dead_semantics": "Run actual PAD2 window lookup and normal publication. Carry dead context to actual eng.gate mask; never fabricate a zero row or immediate completion.",
+      "integration_required": [
+        "native_win slot/user/position/token/ids/dead held against accepted job",
+        "common accepted window sequence and per-rank ordered retirement producer",
+        "actual global sink publication to owned job completion mapping",
+        "actual eng.gate DEAD mask and consumer retirement binding",
+        "static native HBM runtime service routing and actual physical endpoints"
+      ],
+      "signals": {
+        "win_v":{"width":1,"fields":[{"name":"value","lsb":0,"width":1,"allowed":[1]}]},
+        "win_ids":{"width":68,"fields":[{"name":"value","lsb":0,"width":68}]},
+        "cfg_layer":{"width":1,"fields":[{"name":"value","lsb":0,"width":1,"allowed":[0,1]}]},
+        "cfg_rank":{"width":2,"fields":[{"name":"value","lsb":0,"width":2,"allowed":[0,1,2,3]}]}
+      }
+    },
     "hc_input_capture": {
       "engine": 2,
       "status": "OWNER_NATIVE_CONTRACT",
@@ -84,6 +112,20 @@
     }
   },
   "jobs": {
+    "L1.eng.lookup": {
+      "schema":"engram_lookup",
+      "signals": {
+        "win_v":{"value":1},"win_ids":{"value":{"ref":"win_ids"}},
+        "cfg_layer":{"value":0},"cfg_rank":{"value":{"ref":"rank"}}
+      }
+    },
+    "L14.eng.lookup": {
+      "schema":"engram_lookup",
+      "signals": {
+        "win_v":{"value":1},"win_ids":{"value":{"ref":"win_ids"}},
+        "cfg_layer":{"value":1},"cfg_rank":{"value":{"ref":"rank"}}
+      }
+    },
     "L37.mtp.input_hc_capture": {
       "schema": "hc_input_capture",
       "signals": {
@@ -168,7 +210,7 @@
     "hop7": "Internal native hop engine; authorization specialization, tx/rx and actual VM return adapter exist. Stage-specific source/destination/address mapping remains an explicit compiler dependency.",
     "head8": "Native A/Markov start,row0,transaction,x256,Broot32 requires actual selected per-die root/Broot/epoch fence. Existing standalone component has no generic arg24 or VM descriptor contract.",
     "emb9": "Released-checkpoint embedding native producer/schema and physical input ownership pending.",
-    "eng10": "Native lookup win_ids68 window producer, two window credits, six rows/rank status and collective slot publication/retirement. Cannot translate token21 or generic arg24 into compressed four-ID window. Runtime service ownership mux/die binding pending.",
+    "eng10": "Named L1/L14 command schemas use actual compressed win_ids68 supplied by released map/window producer; no token truncation or arg24 interpretation. Common sequence, global publication/consumer retirement, DEAD gate mask and static service binding remain explicit dispatch blockers.",
     "spare11": "No production engine; unsupported commands must fail closed."
   }
 }
