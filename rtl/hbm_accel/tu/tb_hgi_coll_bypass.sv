@@ -11,7 +11,7 @@ module tb_hgi_coll_bypass;
     parameter integer MUT_MULTI = 0;
     localparam integer NC = 8, NOG = 12, PFMAX = 64, LANES = 16, NPT = 8, INJ = 2, DEL = 4, RXAW = 8;
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
-    integer gn, rank, pf, pf2, seed, base, lat, dupe, peer;
+    integer gn, rank, pf, pf2, seed, base, lat, dupe, peer, die;
     reg [FW-1:0] part [0:NR*PFMAX-1];
     reg clk = 0, rst_n = 0, go = 0, done_ready = 0;
     always #0.4166665 clk = ~clk;
@@ -32,7 +32,7 @@ module tb_hgi_coll_bypass;
     always @* begin
         injq = 0;
         for (integer i = 0; i < INJ; i = i + 1) begin
-            injq[(integer'(ii[16*i +: 16]) % 4) * INJ * FW + i * FW +: FW] = idata[FW*i +: FW];
+            if (ir[i]) injq[(integer'(ii[16*i +: 16]) % 4) * INJ * FW + i * FW +: FW] = idata[FW*i +: FW];
             if (multi != 0 && ir[i] && ii[16*i +: 16] == 2) injq[((2 + 1) % 4) * INJ * FW + i * FW +: FW] = {16{32'h1}};
         end
     end
@@ -132,7 +132,7 @@ module tb_hgi_coll_bypass;
             @(negedge clk); while (!start_ready) @(negedge clk);
 `ifdef BYP_REC
             begin reg [127:0] h; h = 0; h[127:124] = 4'd6; h[123:118] = 6'd1; h[99:93] = 7'b0010001;
-                rec = {8'(rank), 21'd0, 21'(pf * 16), 21'(pf * 16), 256'd0, md(3'd0, 40'h2000, 20'(pf * 16)),
+                rec = {8'(die), 21'd0, 21'(pf * 16), 21'(pf * 16), 256'd0, md(3'd0, 40'h2000, 20'(pf * 16)),
                        md(3'd0, 40'h1000, 20'(pf * 16)), h, 1'b1}; end
             @(negedge clk); rec[0] = 0;
             if (pf2 == 0) $fatal(1, "unused");
@@ -169,6 +169,7 @@ module tb_hgi_coll_bypass;
     initial begin
         if (!$value$plusargs("GN=%d", gn)) gn = 8;
         if (!$value$plusargs("RANK=%d", rank)) rank = 3;
+        if (!$value$plusargs("DIE=%d", die)) die = rank; else rank = die % 96;   // record mode: die id; endpoint rank = die mod 96
         if (!$value$plusargs("PF=%d", pf2)) pf2 = 16;
         if (!$value$plusargs("SEED=%d", seed)) seed = 1;
         if (!$value$plusargs("LAT=%d", lat)) lat = 40;

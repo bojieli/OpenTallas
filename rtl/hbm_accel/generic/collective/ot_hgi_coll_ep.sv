@@ -51,11 +51,19 @@ module ot_hgi_coll_ep #(
     wire rf_sv, rf_dr; wire [7:0] rf_g, rf_b, rf_d; wire [20:0] rf_rows; wire [15:0] rf_words; wire [31:0] rf_ctx;
     wire start_ready, done_valid, done_ready;
     // SU-quarter inject OR (ownership contract: flit i is quarter i mod 4's, the other three drive 0) and the review-1149
-    // multi-driver flag: two or more non-zero quarters in one cycle sets a sticky fault (cleared by rst_n only).  The
+    // multi-driver flag: two or more non-zero quarters on one inject lane in a cycle sets a sticky fault (cleared by rst_n only).  The
     // data path is the plain OR (zero cycles); the flag is a parallel OR-reduce per quarter into one flop.
     wire [INJ*FW-1:0] inj_data = inj_q[0 +: INJ*FW] | inj_q[INJ*FW +: INJ*FW] | inj_q[2*INJ*FW +: INJ*FW] | inj_q[3*INJ*FW +: INJ*FW];
-    wire [3:0] q_nz = {|inj_q[3*INJ*FW +: INJ*FW], |inj_q[2*INJ*FW +: INJ*FW], |inj_q[INJ*FW +: INJ*FW], |inj_q[0 +: INJ*FW]};
-    wire multi = (q_nz[0] & q_nz[1]) | (q_nz[0] & q_nz[2]) | (q_nz[0] & q_nz[3]) | (q_nz[1] & q_nz[2]) | (q_nz[1] & q_nz[3]) | (q_nz[2] & q_nz[3]);
+    // per inject lane h: the quarters driving a non-zero word on lane h (each quarter drives only the lanes it owns)
+    reg multi;
+    always @* begin : mdet
+        reg [3:0] nz;
+        multi = 1'b0;
+        for (integer h = 0; h < INJ; h = h + 1) begin
+            for (integer q = 0; q < 4; q = q + 1) nz[q] = |inj_q[q*INJ*FW + h*FW +: FW];
+            if ((nz[0] & nz[1]) | (nz[0] & nz[2]) | (nz[0] & nz[3]) | (nz[1] & nz[2]) | (nz[1] & nz[3]) | (nz[2] & nz[3])) multi = 1'b1;
+        end
+    end
     reg multi_err;
     always @(posedge clk or negedge rst_n) if (!rst_n) multi_err <= 1'b0; else if (multi && MUT_MULTI == 0) multi_err <= 1'b1;
     wire ep_fault;
