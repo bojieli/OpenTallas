@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.dsrom.wfc-prompt-pipe.v1",
+  "adopted": false,
+  "default_enabled": false,
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": {
+    "token_entry": 5.375
+  },
+  "boundary_bits_per_cycle": {
+    "request": 36,
+    "response": 22
+  },
+  "routing_tracks": {
+    "request": 144,
+    "response": 88
+  },
+  "replicas": {
+    "S0_token_store": 1,
+    "source_return_tag": 1
+  },
+  "mechanism": "Capture selected table entry and request tag, compare one cycle later; SOURCE return metadata delayed identically",
+  "area": {
+    "measured_r2_cell_um2": 7145,
+    "added_register_bits_upper": 100,
+    "added_cell_um2_allowance": 200,
+    "outline_um": [
+      120,
+      120
+    ],
+    "core_um": [
+      119.04,
+      119.04
+    ],
+    "cell_fill_upper": 0.5183295440585616,
+    "slot_fits_under_60_percent": true
+  },
+  "latency": {
+    "prompt_response_added_cycles": 1,
+    "S0_issue_added_cycles_upper": 1,
+    "per_token_latency_added_ns_upper": 0.8333333333333334
+  },
+  "historical_failure": "r1 TT=-478.67ps; r2 token outline utilisation61.9%; failures preserved",
+  "qualification": "Exact SOURCE+token-store binding and new TT/FF routes required; old views do not qualify successor"
+}

@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def dsrom_wfc_prompt_pipe_model():
+    """Approved DR5 SOURCE/token read extra cycle, physical margin and ownership."""
+    from dsrom_wfc_prompt_pipe_model import model
+    return model()
