@@ -800,7 +800,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
-        res = cfg.get("reserve_ram_gb", 0) + info.get("external_remaining_gb", 0)
+        # OWNER 2026-10-09: NEVER reserve memory for future growth (no reserve_ram_gb, no external-job remaining-peak
+        # reservations) -- admit on measured MemAvailable minus own launches of the last few minutes only.
+        res = 0
         head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
@@ -897,7 +899,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return -9e9
             pt, pr = self.own_pending(h)
             fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
-            fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
+            fr = (info["mem_gb"] - pr - ram) / cfg.get("ram_gb", 1133)
             # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
             # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
             return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
