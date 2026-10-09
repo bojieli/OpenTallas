@@ -1,0 +1,37 @@
+{
+ "rb": "budget_rb2",
+ "updated": "2026-10-08T21:21:59-07:00",
+ "source": "results/arch/rebudget_20261008",
+ "blocks": {
+  "dsfd_l2r_vr_512x1__hq_SW": {
+   "rb": "budget_rb2",
+   "job": "s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt",
+   "sdc": "/home/ubuntu/.local/state/closure_loop/rebudget/budget_rb2/s81-hend-m221pq-hq-SW-pinreg-m5w-dbcaa2606-tt.sdc",
+   "worst_pred_setup": 67.3
+  },
+  "dsfd_colt_lane": {
+   "rb": "budget_rb2",
+   "job": "s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10",
+   "sdc": "/home/ubuntu/.local/state/closure_loop/rebudget/budget_rb2/s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10.sdc",
+   "worst_pred_setup": 48.6
+  },
+  "dsfd_ctrl_pc": {
+   "rb": "budget_rb2",
+   "job": "s81ph-dsfd_ctrl_pc-e87322073-lbc",
+   "sdc": "/home/ubuntu/.local/state/closure_loop/rebudget/budget_rb2/s81ph-dsfd_ctrl_pc-e87322073-lbc.sdc",
+   "worst_pred_setup": 92.0
+  },
+  "dsfd_svcio_od": {
+   "rb": "budget_rb2",
+   "job": "s81ph-dsfd_svcio_od-e87322073-lbc",
+   "sdc": "/home/ubuntu/.local/state/closure_loop/rebudget/budget_rb2/s81ph-dsfd_svcio_od-e87322073-lbc.sdc",
+   "worst_pred_setup": 39.2
+  },
+  "dsfd_svcio_q": {
+   "rb": "budget_rb2",
+   "job": "s81ph-dsfd_svcio_q-orph2-a75cb556b-ostg-lvt-tc-hm25",
+   "sdc": "/home/ubuntu/.local/state/closure_loop/rebudget/budget_rb2/s81ph-dsfd_svcio_q-orph2-a75cb556b-ostg-lvt-tc-hm25.sdc",
+   "worst_pred_setup": 151.7
+  }
+ }
+}
