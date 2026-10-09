@@ -39,13 +39,14 @@ def model():
             'above macro count is payload only, protection and source ledger cost additional',
         register_bits=ff, FF_area_floor_um2=ff*.2916,
         replicas=1, mux_cost='96 protected head seats, rank-selected refill; no arithmetic score mux',
-        fanout_cost='held owner73 and source-rank bounds; tournament registered by level',
+        fanout_cost='held owner73 and source-rank bounds; tournament registered by level; '
+            '17bit literal block-ID modulo96 ownership check on each response',
         routing_tracks_required=2*(34+7+17+73), channel_capacity_tracks=None,
         slot_fit=False, area_and_clock_context='selected R25I endpoint placement must supply actual budgets',
         latency_cycles=dict(head_initialization='96*(actual read round trip plus acceptance)',
             select_levels=7, tuple_emit_capture=1,
-            per_tuple_minimum=8, refill_round_trip='actual TU publication SRAM/relay delay additive',
-            full_valid_1m_comparison_minimum=8*131072),
+            per_tuple_minimum=9, refill_round_trip='actual TU publication SRAM/relay delay additive',
+            full_valid_1m_comparison_minimum=9*131072),
         single_user_composition='query and score -> native candidate publication -> real '
             'allgather and positive write ACK -> seven-level global-ID merge -> '
             'native global top2048 selector -> real keep-mask publication; no free overlap',
