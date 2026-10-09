@@ -2954,7 +2954,8 @@ def build_r8(variant=None):
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
         # capture buses at the VM face); the slab grows to the layer die's VM outline so its face spreads them
         centre_area['vm'] = VM_FACE_MM2
-    if WFC_HARD and DIE_KIND in ('layer', 'layer1'):
+    wfc_die = WFC_HARD and DIE_KIND in ('layer', 'layer1') and not DRAFT_SIDE
+    if wfc_die:
         # MTP-DIE: the bound WFC slab (real master dsfd_wfc) on every layer-class die, after the capture (its
         # core_start / done / result endpoint), next to the collective (stage link in / out) and one slab from the VM
         if 'wfc' in centre:
@@ -2964,7 +2965,14 @@ def build_r8(variant=None):
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
-    if (WFC_HARD and DIE_KIND in ('layer', 'layer1')) or (MTP_SEQ and DIE_KIND == 'head'):
+    if DRAFT_SIDE == 'A':
+        # MD-2 P2 (mtp-draftdie 2026-10-09): the selected-path transport (ot_mtp_p2_prefix_path: PRIMARY_SHARED1
+        # 9-SRAM ordered transport + 3-SRAM 16-lane A-prefix + native publisher) on the A die of every draft row
+        # package, between the capture (unused on a draft die: no pipeline stage) and the collective (board link
+        # from the primary head die + the in-package UCIe from die B): it sums the row's experts in id order
+        centre.insert(centre.index('collective'), 'p2')
+        centre_area['p2'] = P2_SLAB_MM2
+    if wfc_die or (MTP_SEQ and DIE_KIND == 'head'):
         # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
         # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
         centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
@@ -2983,6 +2991,10 @@ def build_r8(variant=None):
             notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
                          'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
                          % (WFC_SLAB_H, centre_area[n]))
+        elif n == 'p2':
+            slab('p2', centre_area[n], x_sp, yy, cw, master='dsfd_p2')
+            notes.append('MD-2 --draft A: dsfd_p2 = ot_mtp_p2_prefix_path (selected P2 path, 12 SRAMs) %.4f mm2 '
+                         '(the larger first-route outline %s um)' % (centre_area[n], P2_OUTLINE_UM))
         elif n == 'mtp':
             slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq')
             notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
@@ -3086,6 +3098,12 @@ def build_r8(variant=None):
                    elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
     if BF_EXPLICIT_IDS is not None:
         variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
+    variant.update(wfc_hard=bool(wfc_die), mtp_seq=(MTP_SEQ_MM2 if MTP_SEQ and DIE_KIND == 'head' else None),
+                   mtp_links=MTP_LINKS if DIE_KIND == 'head' else 0, draft=DRAFT_SIDE)
+    if DRAFT_SIDE:
+        variant['role'] = ('MD-2 P2 draft die %s (40 = 5 row packages x 4 ranks x A/B; layer1 recipe): %s'
+                           % (DRAFT_SIDE, DRAFT_CONTENT[DRAFT_SIDE]))
+        variant['draft_image'] = dict(DRAFT_IMAGE, side=DRAFT_SIDE)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -3463,6 +3481,7 @@ def buses_r8(m):
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
             (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
+            (P2_BUSES if 'p2' in hub else ()) + \
             ((('collective', 'host', 514, 't_host', 'f_collective'),
               ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
@@ -3598,6 +3617,32 @@ def _ctrl_native_buses(m, bus):
         bus('stage_ctrl_' + port, 'stage_ctrl', spec['bits'], eps)
 
 
+# MD-2 P2 draft die A (mtp-draftdie 2026-10-09): dsfd_p2 = ot_mtp_p2_prefix_path (rtl/experimental/
+# mtp_p2_ordered_20261009) ports, bus = data + valid (+ the ready back on the reverse bus):
+#   collective -> p2  start (identity 74 + ids 27 + v) 102 + lane 1 = die B expert output over the in-package UCIe
+#                     (identity 74 + expert 9 + shared 1 + last 1 + word 7 + data 512 + v 1 = 605) + abort 1
+#                     + out_r (the primary link's return credit) 1                                         709
+#   vm -> p2          lane 0 = this die's expert output                                                    605
+#   p2 -> collective  ret_row to the primary (data 512 + identity 74 + word 7 + last 1 + v 1 = 595) + start_r 1
+#                     + lane-1 ready 1 + done / fault / corrected 3                                        600
+#   p2 -> vm          lane-0 ready                                                                           1
+P2_BUSES = (('collective', 'p2', 709, 't_p2', 'f_collective'), ('vm', 'p2', 605, 't_p2', 'f_vm'),
+            ('p2', 'collective', 600, 't_collective', 'f_p2'), ('p2', 'vm', 1, 't_vm', 'f_p2'))
+P2_OUTLINE_UM = (560.0, 460.0)  # the larger of the two first P2 routes (mtp-p2-path-{a 500x420, b 560x460}-91473d972)
+P2_SLAB_MM2 = P2_OUTLINE_UM[0] * P2_OUTLINE_UM[1] / 1e6
+DRAFT_SIDE = None               # --draft A|B (MD-2 P2 draft die; None = a stage die)
+DRAFT_CONTENT = dict(A='mtp.0 experts 0..127 + mtp.2 experts 0..63 (rank-k row quarter), P2 expert sum in id order',
+                     B='mtp.1 experts 0..127 + mtp.2 experts 64..127 (rank-k row quarter), outputs to die A over UCIe')
+DRAFT_IMAGE = dict(tool='tools/dsrom_mtp_draft_images.py', layout='rowpack whole-superrow (dsrom_mtp_p2_rowpack)',
+                   storage_pairs=1792, words_per_die=13762560, words_capacity=1792 * 8192, fill=0.9375,
+                   images_per_side=4, note='8 distinct images (side x rank) serve the 40 dies (5 row replicas)')
+# MTP defaults (mtp-lead 2026-10-09).  MTP_SEQ_DEFAULT: the head-die sequencer is ON (dsfd_mtp_seq CLOSED c67a71fe5
+# SS +52.37 / FF +5.76).  WFC_HARD_DEFAULT: OFF until the WFC kit is complete: HARD wfc_tok CLOSED, STG tokpipe CLOSED,
+# SOURCE HARD partner mtp-wfc-src-hard-binding-5b11f631f-tc-cx still routing.  FLIP: set WFC_HARD_DEFAULT = True
+# when that job is CLOSED (TT >= 0 / FF >= 0 / DRC 0) -- the only change needed; then regenerate the layer1 / scan
+# die records (tools/s81/s81_dies_recipe.py) and the m221pq die evidence chain.
+WFC_HARD_DEFAULT = False
+MTP_SEQ_DEFAULT = True
 WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
                                 #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
                                 #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
@@ -5289,10 +5334,18 @@ def die_options(ap):
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
                     'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
-    ap.add_argument('--wfc-hard', action='store_true', help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every '
-                    'layer-class die (layer and layer1) instead of the scan-die-only soft reservation; default off')
-    ap.add_argument('--mtp-seq', action='store_true', help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) '
-                    'between capture and collective, wired; default off')
+    ap.add_argument('--wfc-hard', action=argparse.BooleanOptionalAction, default=None,
+                    help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every layer-class STAGE die (layer and layer1; '
+                    'not draft dies) instead of the scan-die-only soft reservation; default WFC_HARD_DEFAULT (off '
+                    'until the SOURCE HARD partner closes)')
+    ap.add_argument('--mtp-seq', action=argparse.BooleanOptionalAction, default=None,
+                    help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) between capture and collective, '
+                    'wired; default MTP_SEQ_DEFAULT (ON since mtp-lead 2026-10-09: dsfd_mtp_seq CLOSED c67a71fe5); '
+                    '--no-mtp-seq reproduces the pre-MTP head dies')
+    ap.add_argument('--draft', choices=['A', 'B'], help='MD-2 P2 draft die (40 dies = 5 row packages x 4 ranks x '
+                    'A/B): the layer1 recipe with the draft ROM image of side A or B '
+                    '(tools/dsrom_mtp_draft_images.py); side A also carries the P2 selected-path transport slab '
+                    '(dsfd_p2 = ot_mtp_p2_prefix_path) between capture and collective; no WFC (not a pipeline stage)')
     ap.add_argument('--ctrl-slab', action='store_true', help='S81 native stage controller slab beside collective; requires complete --ctrl-bindings; default off')
     ap.add_argument('--ctrl-role', choices=['layer', 'source', 'head'], default='layer')
     ap.add_argument('--ctrl-bindings', type=Path, help='native control-plane endpoint manifest, audited before build')
@@ -5337,6 +5390,17 @@ def apply_options(a):
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
     global PQ_PLACE, FIELD_MARGIN
+    # MTP-DIE option binding (0544fca2c; dropped by a later merge, which made --wfc-hard / --mtp-seq / --mtp-links
+    # silent no-ops: restored by mtp-draftdie 2026-10-09, test_s81_mtp_options_bind guards it)
+    global WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS, DRAFT_SIDE
+    ws, ms = getattr(a, 'wfc_hard', None), getattr(a, 'mtp_seq', None)
+    WFC_HARD = WFC_HARD_DEFAULT if ws is None else bool(ws)
+    MTP_SEQ = MTP_SEQ_DEFAULT if ms is None else bool(ms)
+    MTP_SEQ_MM2 = getattr(a, 'mtp_seq_mm2', None) or 0.15
+    MTP_LINKS = int(getattr(a, 'mtp_links', 0) or 0)
+    DRAFT_SIDE = getattr(a, 'draft', None)
+    if DRAFT_SIDE:
+        assert a.gen == 'r8' and a.die == 'layer1', '--draft: the MD-2 draft die is the r8 layer1 recipe'
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
@@ -5484,6 +5548,10 @@ def main(argv=None):
                     cases[d.name] = Q.record_a(d)
                 elif man.get('case') == 'b':
                     v_ = man.get('variant', {})
+                    # MTP homes replay from the case's own variant (a case without the keys predates them: off)
+                    globals().update(WFC_HARD=bool(v_.get('wfc_hard')), MTP_SEQ=v_.get('mtp_seq') is not None,
+                                     MTP_SEQ_MM2=v_.get('mtp_seq') or 0.15, MTP_LINKS=int(v_.get('mtp_links') or 0),
+                                     DRAFT_SIDE=v_.get('draft'))
                     configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                     if v_.get('gen') == 'r8':
                         REV = v_.get('rev', 'r8')
