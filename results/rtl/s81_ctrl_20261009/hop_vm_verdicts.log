@@ -1,0 +1,5 @@
+TB_S81_HOP_VM qd=4 relay=0 stall=0 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=15 completion_cycles=655 maxpending=12 PASS
+TB_S81_HOP_VM qd=4 relay=8 stall=0 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=23 completion_cycles=663 maxpending=20 PASS
+TB_S81_HOP_VM qd=4 relay=8 stall=1 mut=0 native_bits=512 payload=640 beats=641 done=1 errors=0 faults=000 first_payload_cycles=27 completion_cycles=1197 maxpending=20 PASS
+TB_S81_HOP_VM qd=4 relay=8 stall=0 mut=1 native_bits=512 payload=640 beats=641 done=1 errors=640 faults=000 first_payload_cycles=23 completion_cycles=663 maxpending=20 FAIL
+TB_S81_HOP_VM qd=4 relay=0 stall=0 mut=2 native_bits=512 payload=640 beats=1 done=0 errors=1 faults=000 first_payload_cycles=0 completion_cycles=0 maxpending=32 FAIL
