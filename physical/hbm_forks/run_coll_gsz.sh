@@ -24,7 +24,7 @@ def nb(shape, seed):                    # + -0 contributors (review-0427 HF-5): 
         q = [parts[og * nc + j].copy() for j in range(nc)]
         while len(q) > 1:
             q = [G.add(q[i], q[i + 1]) for i in range(0, len(q), 2)]
-        zr[og] = q[0]
+        zr[og] = G.to_bf16(q[0]) if s['BF16'] else q[0]
     return s, parts, zr
 import os
 if os.environ.get('NEGZ', '1') == '1':

@@ -241,7 +241,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         integer rptr;
         reg  [NC-1:0] col;
 `ifdef OT_COLL_MUT_GSZ_PAD
-        always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (NC > 1 && rptr < OF) ? (pres[c][rptr] || c >= NA) : 1'b0;
+        always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (NC > 1 && rptr < OF) ? pres[c][rptr] : 1'b0;  // NEGATIVE: no pad
 `else
         always @* for (integer c = 0; c < NC; c = c + 1) col[c] = (NC > 1 && rptr < OF) ? (pres[c][rptr] || c >= NA) : 1'b0;
 `endif
@@ -257,11 +257,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         for (genvar c = 0; c < NC; c = c + 1) begin : g_col
             reg [FW-1:0] slot [0:OFMX-1];
             always @(posedge clk) if (NC > 1 && cw_v[c]) slot[cw_fl[c]] <= cw_d[c];
-`ifdef OT_COLL_MUT_GSZ_PAD
-            assign opsel[c] = slot[rptr < OF ? rptr : 0];                       // NEGATIVE CONTROL: stale, not +0
-`else
             assign opsel[c] = (c >= NA) ? {FW{1'b0}} : slot[rptr < OF ? rptr : 0];   // inactive columns: +0
-`endif
         end
         for (genvar c = 0; c < NC; c = c + 1) begin : g_l0
             assign lvl[0][c] = opsel[c];
