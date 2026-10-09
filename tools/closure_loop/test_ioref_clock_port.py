@@ -21,7 +21,7 @@ class IorefClockPort(unittest.TestCase):
         self.assertIn("get_ports -quiet $sn", blk[:600])
 
     def test_before_the_arrival_measurement(self):
-        self.assertLess(self.t.index("unset_input_delay -clock"), self.t.index("arrival_max_rise"))
+        self.assertLess(self.t.index("unset_input_delay -clock"), self.t.index("set ot_ir_ins [dict create]"))
         self.assertLess(self.t.index("set ot_ir_real {}"), self.t.index("unset_input_delay -clock"))
 
 
