@@ -44,7 +44,7 @@ module tb_hbm_native_mtp_transaction_cp_join;
  epoch=6;job();launch();cjid=ej;cgen=eg;cseq=seq;cepoch=5;cv=1;tick();cv=0;
  if(!fault||!idfault||tm[83])$fatal(1,"reset stale response");
  xf=1;tick();xf=0;epoch=7;job();launch();
- cjid=ej;cgen=eg;cseq=seq;cepoch=ee-1;cpav=1;tick();
+ cjid=ej;cgen=eg;cseq=seq;cepoch=ee-1;cpav=1;#1;if(tm[179])$fatal(1,"stale AM forwarded before pin capture");tick();
  if(tm[179]||!fault||!idfault)$fatal(1,"stale AM accepted");
  $display("PASS full201 command, owned TOKEN17 AM197, backpressure, fault, reset epoch");$finish;
  end
