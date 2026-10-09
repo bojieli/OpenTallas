@@ -84,5 +84,19 @@ class IorefGate(unittest.TestCase):
         self.assertIn("IO-reference insertion", hp[0][1])
 
 
+    def test_real_clock_port_at_zero_latency(self):
+        # retry545_cl2: the output is constrained on core_clk itself, propagated latency 0 at the port
+        rpt = RPT.replace("(output port clocked by ot_lb_v_core_clk)", "(output port clocked by core_clk)").replace(
+            "                       1039.79 1872.79   clock network delay (ideal)",
+            "                          0.00  833.00   clock network delay (propagated)")
+        with tempfile.TemporaryDirectory() as t:
+            f = Path(t) / "r.rpt"
+            f.write_text(rpt)
+            p = NS["worst_paths"](str(f))[0]
+        self.assertEqual(p["vlat_capture"], 0.0)
+        r = ss.ioref_rejudge(dict(worst=dict(paths=[p]), period=833.333), dict(calibration=dict(env=dict(CK_SS_MEAN=973))))
+        self.assertAlmostEqual(r["paths"][0]["ioref_ps"], -491.92 + 973, places=1)
+
+
 if __name__ == "__main__":
     unittest.main()
