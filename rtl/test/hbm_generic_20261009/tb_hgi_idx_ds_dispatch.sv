@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hgi_idx_ds_dispatch;
  parameter MUTANT=0;
- reg clk=0;always #.4166665 clk=~clk;
+ reg clk=0;always #0.4166665 clk=~clk;
  reg rst_n=0,cv=0,iv=0,last=0;reg[3:0]unit_id=9;reg[5:0]op=3;reg[511:0]vals;
  wire cr,error,ready,ov,done,bv;wire[53:0]ids,bids;
  ot_hgi_idx_ds_dispatch #(.MUTANT_DROP_LAST(MUTANT)) dut(.clk(clk),.rst_n(rst_n),
