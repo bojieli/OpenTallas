@@ -1079,53 +1079,32 @@
    }
   },
   "hfd_quant": {
-   "job": "hbm_quant_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_tc_4aadc92bc",
+   "job": "hbm_quant_ts0spl_tt_61b786448-mmff",
+   "source_commit": "61b786448ff97db1df76cded598aa9985ebef45a",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_quant_ts0spl_tt_61b786448-mmff",
    "clock": "core_clk",
-   "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T20:57:30-07:00",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T21:11:50-07:00",
    "ss": {
-    "mean": 776,
-    "min": 699,
-    "max": 1214
+    "mean": 740,
+    "min": 663,
+    "max": 1252
    },
    "ff": {
-    "mean": 373,
-    "min": 338,
-    "max": 639,
-    "n": 3072,
-    "kind": "boundary",
-    "clock": "core_clk"
+    "mean": 515,
+    "min": 442,
+    "max": 888
    },
    "tt": {
-    "mean": 447,
-    "min": 409,
-    "max": 758,
-    "n": 3072,
-    "kind": "boundary",
-    "clock": "core_clk"
+    "mean": 603,
+    "min": 527,
+    "max": 1034
    },
    "route_ref": "TT",
    "boundary_n": 3072,
    "budget": null,
-   "variant": "hfd_quant|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var --step-tcl CORES=12 CTSA=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none FCP=5 HM=0.030 IOF=0.2 MAXL=M7 NEED=60 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv SYNTH_KEEP_MODULES=ot_hfd_oreg1",
-   "grade": "routed",
-   "calibrate": {
-    "ss": {
-     "mean": 776,
-     "min": 699,
-     "max": 1214
-    },
-    "ff": {
-     "mean": 546,
-     "min": 480,
-     "max": 856
-    },
-    "parasitics": "placement-estimated",
-    "job": "hbm_quant_ts0spl_tt_61b786448-d1956"
-   }
+   "variant": "hfd_quant|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var --step-tcl CORES=12 CTSA=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none FCP=5 HM=0.030 IOF=0.2 MAXL=M7 NEED=60 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv SYNTH_KEEP_MODULES=ot_hfd_oreg1"
   },
   "hfd_svc_SE_s3": {
    "job": "hbm_svc_SE_s3_tt_c10b5fc9a",
@@ -3006,25 +2985,32 @@
    }
   },
   "ot_hbm_native_frame_station_rb_NO2_SAFE": {
-   "job": "w2-rb-safe-no2-c09f9b505-lbpin",
-   "source_commit": "f3f224f359c330f71502ad8c2a676cedf2c35237",
+   "job": "w2-rb-safe-no2-stpin-hm0-fec1faadd-tc",
+   "source_commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-c09f9b505-lbpin",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc",
    "clock": "clk_sm",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T10:26:52-07:00",
+   "measured_at": "2026-10-08T21:15:56-07:00",
    "ss": {
     "mean": 545,
     "min": 533,
-    "max": 568
+    "max": 566
    },
    "ff": {
-    "mean": 352,
+    "mean": 351,
     "min": 342,
     "max": 370
    },
+   "tt": {
+    "mean": 425,
+    "min": 415,
+    "max": 444
+   },
+   "route_ref": "TT",
    "boundary_n": 7832,
-   "budget": null
+   "budget": null,
+   "variant": "ot_hbm_native_frame_station_rb_NO2_SAFE|physical/hbm_w2_rb_station_20261006/run_owned.py|--core-height 160 --core-width 440 --no 2 --period-ps 730 --place-density 0.40 --run --safe --tag tk_W2_safe --threads 16 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl OT_ORFS_CORNER_OVERRIDE=TC"
   },
   "ot_hbm_native_frame_station_rb_NO3_SAFE": {
    "job": "w2-rb-safe-no3-c09f9b505-lbpin",
@@ -3269,32 +3255,32 @@
    "budget": null
   },
   "ot_su12_full": {
-   "job": "hbm_su_full_r24fslot_tt_c10b5fc9a-d1956",
-   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_full_r24fslot_tt_c10b5fc9a-d1956",
+   "job": "hbm_su_full_tc_39942de77-hm10-d2056",
+   "source_commit": "39942de7702c24fb645a00457c40888795894f34",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_su_full_tc_39942de77-hm10-d2056",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T20:38:12-07:00",
+   "measured_at": "2026-10-08T21:19:57-07:00",
    "ss": {
-    "mean": 732,
-    "min": 712,
-    "max": 747
+    "mean": 625,
+    "min": 606,
+    "max": 661
    },
    "ff": {
-    "mean": 468,
-    "min": 453,
-    "max": 480
+    "mean": 397,
+    "min": 384,
+    "max": 432
    },
    "tt": {
-    "mean": 569,
-    "min": 552,
-    "max": 582
+    "mean": 484,
+    "min": 469,
+    "max": 519
    },
    "route_ref": "TT",
    "boundary_n": 950,
    "budget": null,
-   "variant": "ot_su12_full|physical/hbm_su_c12/red_route_cl.sh|CORES=16 DIE=400.008 401.736 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt"
+   "variant": "ot_su12_full|physical/hbm_su_c12/red_route_cl.sh|CORES=16 DIE=346.008 347.736 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt"
   },
   "hfd_vm_sw": {
    "job": "hbm_vm_sw_d51dc71a2-tt",
@@ -4140,13 +4126,13 @@
    "budget": null
   },
   "ot_ha2_truecredit_rx_phys": {
-   "job": "ha2_tcrxp_hm10_398750b79",
+   "job": "ha2_tcrxp_hm50b_398750b79",
    "source_commit": "398750b797558380ffc224005f8297520d4b2782",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/ha2_tcrxp_hm10_398750b79",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/ha2_tcrxp_hm50b_398750b79",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T21:06:33-07:00",
+   "measured_at": "2026-10-08T21:18:13-07:00",
    "ss": {
     "mean": 905,
     "min": 885,
@@ -4676,21 +4662,49 @@
    "host": "ot-epyc4",
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-E5-a1f23fa0b-mm-vf-hm25",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:03:36-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T21:13:53-07:00",
    "ss": {
     "mean": 285,
     "min": 269,
     "max": 296
    },
    "ff": {
-    "mean": 174,
-    "min": 162,
-    "max": 183
+    "mean": 166,
+    "min": 157,
+    "max": 174,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 721,
-   "budget": null
+   "budget": null,
+   "variant": "dsfd_m2l_vr_68x10__hr_E5|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
+   "backfilled": true,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 285,
+     "min": 269,
+     "max": 296
+    },
+    "ff": {
+     "mean": 174,
+     "min": 162,
+     "max": 183
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-E5-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 206,
+    "min": 196,
+    "max": 215,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "dsfd_m2l_vr_68x10__hr_E0": {
    "job": "s81-hend-m221pq-hr-E0-a1f23fa0b-mm-vf-hm25",
@@ -4698,21 +4712,49 @@
    "host": "ot-agidock128",
    "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-E0-a1f23fa0b-mm-vf-hm25",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:04:31-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T21:12:38-07:00",
    "ss": {
     "mean": 278,
     "min": 263,
     "max": 289
    },
    "ff": {
-    "mean": 169,
-    "min": 158,
-    "max": 180
+    "mean": 159,
+    "min": 146,
+    "max": 172,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 721,
-   "budget": null
+   "budget": null,
+   "variant": "dsfd_m2l_vr_68x10__hr_E0|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
+   "backfilled": true,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 278,
+     "min": 263,
+     "max": 289
+    },
+    "ff": {
+     "mean": 169,
+     "min": 158,
+     "max": 180
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-E0-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 198,
+    "min": 184,
+    "max": 211,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "dsfd_m2l_vr_68x11__hr_E2": {
    "job": "s81-hend-m221pq-hr-E2-a1f23fa0b-mm-vf-hm25",
@@ -5630,7 +5672,7 @@
    "variant": "ot_su12_sfu|physical/hbm_accel_die_views/su/route_lane.sh|--param DENR=1 --param DRING=3 --param GSH=1 --param KIMM=1 CORES=12 CP=0.77 HM=0.035 KEEP=ot_hdc_fp32_mul_f12_l6 ot_hdc_fp32_add_f12_l6x ot_dsrom_fdiv_f12 ot_hdc_fsqrt_c12 NEED=24 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl OT_ORFS_CORNER_OVERRIDE=TC R={RUN} SRCS=rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv rtl/hdc/v41x/ot_hdc_v41x_vec_side_c12.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_c12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/v41x/ot_dsrom_su_add6.sv rtl/hdc/v41x/ot_dsrom_su_f12.sv rtl/hdc/v41/ot_hdc_fsqrt_c12.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv"
   }
  },
- "updated": "2026-10-08T21:07:55-07:00",
+ "updated": "2026-10-08T21:19:57-07:00",
  "variants": {
   "dsfd_m2l_vr_68x11__hr_W2|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
    "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm",
@@ -5989,53 +6031,32 @@
    "block": "dsfd_m2l_vr_68x11__hr_E4"
   },
   "hfd_quant|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var --step-tcl CORES=12 CTSA=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none FCP=5 HM=0.030 IOF=0.2 MAXL=M7 NEED=60 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv SYNTH_KEEP_MODULES=ot_hfd_oreg1": {
-   "job": "hbm_quant_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_tc_4aadc92bc",
+   "job": "hbm_quant_ts0spl_tt_61b786448-mmff",
+   "source_commit": "61b786448ff97db1df76cded598aa9985ebef45a",
+   "host": "ot-epyc1tb",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_quant_ts0spl_tt_61b786448-mmff",
    "clock": "core_clk",
-   "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T20:57:30-07:00",
+   "parasitics": "placement-estimated",
+   "measured_at": "2026-10-08T21:11:50-07:00",
    "ss": {
-    "mean": 776,
-    "min": 699,
-    "max": 1214
+    "mean": 740,
+    "min": 663,
+    "max": 1252
    },
    "ff": {
-    "mean": 373,
-    "min": 338,
-    "max": 639,
-    "n": 3072,
-    "kind": "boundary",
-    "clock": "core_clk"
+    "mean": 515,
+    "min": 442,
+    "max": 888
    },
    "tt": {
-    "mean": 447,
-    "min": 409,
-    "max": 758,
-    "n": 3072,
-    "kind": "boundary",
-    "clock": "core_clk"
+    "mean": 603,
+    "min": 527,
+    "max": 1034
    },
    "route_ref": "TT",
    "boundary_n": 3072,
    "budget": null,
    "variant": "hfd_quant|physical/hbm_accel_die_views/common/route_view.sh|--orfs-var --step-tcl CORES=12 CTSA=-sink_clustering_enable -repair_clock_nets -balance_levels -sink_clustering_size 40 -sink_clustering_max_diameter 60 -distance_between_buffers 100 -apply_ndr none FCP=5 HM=0.030 IOF=0.2 MAXL=M7 NEED=60 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.55 PER=0.833 POSTSDC=physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl SDCA=physical/hbm_accel_die_views/common/budget_route.sdc SRCS=physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat_f12.sv rtl/hdc/ot_hdc_fp32_f12.sv rtl/hdc/ot_hdc_prefix.sv SYNTH_KEEP_MODULES=ot_hfd_oreg1",
-   "grade": "routed",
-   "calibrate": {
-    "ss": {
-     "mean": 776,
-     "min": 699,
-     "max": 1214
-    },
-    "ff": {
-     "mean": 546,
-     "min": 480,
-     "max": 856
-    },
-    "parasitics": "placement-estimated",
-    "job": "hbm_quant_ts0spl_tt_61b786448-d1956"
-   },
    "block": "hfd_quant"
   },
   "dsfd_m2l_vr_68x11__hr_W4|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
@@ -8269,13 +8290,13 @@
    "backfilled": true
   },
   "ot_ha2_truecredit_rx_phys|tools/ha2_truecredit_rxp_physical.py|--run --threads 8 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC": {
-   "job": "ha2_tcrxp_hm10_398750b79",
+   "job": "ha2_tcrxp_hm50b_398750b79",
    "source_commit": "398750b797558380ffc224005f8297520d4b2782",
-   "host": "ot-agidock128",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/ha2_tcrxp_hm10_398750b79",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/ha2_tcrxp_hm50b_398750b79",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T21:06:33-07:00",
+   "measured_at": "2026-10-08T21:18:13-07:00",
    "ss": {
     "mean": 905,
     "min": 885,
@@ -12522,13 +12543,13 @@
    "backfilled": true
   },
   "ot_su12_full|physical/hbm_su_c12/red_route_cl.sh|CORES=16 DIE=346.008 347.736 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt": {
-   "job": "hbm_su_full_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-pve1",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_su_full_tc_4aadc92bc",
+   "job": "hbm_su_full_tc_39942de77-hm10-d2056",
+   "source_commit": "39942de7702c24fb645a00457c40888795894f34",
+   "host": "ot-epyc2",
+   "run": "/srv/opentallas-data/claude/closure-loop/hbm_su_full_tc_39942de77-hm10-d2056",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T08:59:38-07:00",
+   "measured_at": "2026-10-08T21:19:57-07:00",
    "ss": {
     "mean": 625,
     "min": 606,
@@ -12539,12 +12560,16 @@
     "min": 384,
     "max": 432
    },
-   "route_ref": "SS",
+   "tt": {
+    "mean": 484,
+    "min": 469,
+    "max": 519
+   },
+   "route_ref": "TT",
    "boundary_n": 950,
    "budget": null,
    "variant": "ot_su12_full|physical/hbm_su_c12/red_route_cl.sh|CORES=16 DIE=346.008 347.736 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl OT_ORFS_CORNER_OVERRIDE=TC PD=0.5 PER=0.770 SRCF=physical/hbm_su_c12/su_full_sources.txt",
-   "block": "ot_su12_full",
-   "backfilled": true
+   "block": "ot_su12_full"
   },
   "ot_hdc_v41x_vred_slice64_c12s|physical/hbm_su_c12/red_route_cl.sh|CORES=16 PD=0.55 PER=0.730": {
    "job": "hbm_su_red_slice_6f2d14e36_c-mm",
@@ -16364,24 +16389,50 @@
    "host": "ot-agidock128",
    "run": "/srv/opentallas-scratch/claude/closure-loop/s81-hend-m221pq-hr-E0-a1f23fa0b-mm-vf-hm25",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:04:31-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T21:12:38-07:00",
    "ss": {
     "mean": 278,
     "min": 263,
     "max": 289
    },
    "ff": {
-    "mean": 169,
-    "min": 158,
-    "max": 180
+    "mean": 159,
+    "min": 146,
+    "max": 172,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 721,
    "budget": null,
    "variant": "dsfd_m2l_vr_68x10__hr_E0|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
-   "block": "dsfd_m2l_vr_68x10__hr_E0",
-   "backfilled": true
+   "backfilled": true,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 278,
+     "min": 263,
+     "max": 289
+    },
+    "ff": {
+     "mean": 169,
+     "min": 158,
+     "max": 180
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-E0-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 198,
+    "min": 184,
+    "max": 211,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "block": "dsfd_m2l_vr_68x10__hr_E0"
   },
   "dsfd_m2l_vr_68x11__hr_E1|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
    "job": "s81-hend-m221pq-hr-E1-a1f23fa0b-mm-vf-hm25",
@@ -16490,24 +16541,50 @@
    "host": "ot-epyc4",
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-E5-a1f23fa0b-mm-vf-hm25",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:03:36-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T21:13:53-07:00",
    "ss": {
     "mean": 285,
     "min": 269,
     "max": 296
    },
    "ff": {
-    "mean": 174,
-    "min": 162,
-    "max": 183
+    "mean": 166,
+    "min": 157,
+    "max": 174,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "route_ref": "SS",
    "boundary_n": 721,
    "budget": null,
    "variant": "dsfd_m2l_vr_68x10__hr_E5|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv",
-   "block": "dsfd_m2l_vr_68x10__hr_E5",
-   "backfilled": true
+   "backfilled": true,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 285,
+     "min": 269,
+     "max": 296
+    },
+    "ff": {
+     "mean": 174,
+     "min": 162,
+     "max": 183
+    },
+    "parasitics": "placement-estimated",
+    "job": "s81-hend-m221pq-hr-E5-a1f23fa0b-mm-vf-hm25"
+   },
+   "tt": {
+    "mean": 206,
+    "min": 196,
+    "max": 215,
+    "n": 721,
+    "kind": "boundary",
+    "clock": "core_clk"
+   },
+   "block": "dsfd_m2l_vr_68x10__hr_E5"
   },
   "dsfd_m2l_vr_68x10__hr_W5|make_sdc_hend.sh,physical/s81_die_views/glue/route.sh|CLK=ck CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv HEND_KIND=m2l PD=0.45 POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl SDCGEN=make_sdc_hend.sh SRCS=rtl/common/ot_ratio_cdc_fifo.sv": {
    "job": "s81-hend-m221pq-hr-W5-a1f23fa0b-mm",
@@ -20087,29 +20164,33 @@
    "backfilled": true
   },
   "ot_hbm_native_frame_station_rb_NO2_SAFE|physical/hbm_w2_rb_station_20261006/run_owned.py|--core-height 160 --core-width 440 --no 2 --period-ps 730 --place-density 0.40 --run --safe --tag tk_W2_safe --threads 16 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl OT_ORFS_CORNER_OVERRIDE=TC": {
-   "job": "w2-rb-safe-no2-c09f9b505-lbpin-tt",
-   "source_commit": "f3f224f359c330f71502ad8c2a676cedf2c35237",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-c09f9b505-lbpin-tt",
+   "job": "w2-rb-safe-no2-stpin-hm0-fec1faadd-tc",
+   "source_commit": "fec1faadd784e94926256e0d726ea32b6d6d9714",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/w2-rb-safe-no2-stpin-hm0-fec1faadd-tc",
    "clock": "clk_sm",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T01:38:50-07:00",
+   "measured_at": "2026-10-08T21:15:56-07:00",
    "ss": {
     "mean": 545,
     "min": 533,
-    "max": 568
+    "max": 566
    },
    "ff": {
-    "mean": 352,
+    "mean": 351,
     "min": 342,
     "max": 370
    },
-   "route_ref": "SS",
+   "tt": {
+    "mean": 425,
+    "min": 415,
+    "max": 444
+   },
+   "route_ref": "TT",
    "boundary_n": 7832,
    "budget": null,
    "variant": "ot_hbm_native_frame_station_rb_NO2_SAFE|physical/hbm_w2_rb_station_20261006/run_owned.py|--core-height 160 --core-width 440 --no 2 --period-ps 730 --place-density 0.40 --run --safe --tag tk_W2_safe --threads 16 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl OT_ORFS_CORNER_OVERRIDE=TC",
-   "block": "ot_hbm_native_frame_station_rb_NO2_SAFE",
-   "backfilled": true
+   "block": "ot_hbm_native_frame_station_rb_NO2_SAFE"
   },
   "ot_hbm_native_frame_station_rb_NO2_SAFE|physical/hbm_w2_rb_station_20261006/run_owned.py|--core-height 160 --core-width 440 --no 2 --period-ps 730 --place-density 0.40 --run --safe --tag tk_W2_safe --threads 16 OT_CTS_FIX_HOOKS=physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl": {
    "job": "w2-rb-safe-no2-c09f9b505-lbpin",
