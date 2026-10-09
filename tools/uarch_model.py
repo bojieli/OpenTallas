@@ -33,6 +33,37 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
+
+def dsrom_engram_boot_dispatch_model():
+    """Class-11 mutable-HBM boot dispatch; implemented separately from RoPE.
+
+    Eight credits bound sector storage and outstanding controller tags. Boot
+    runs before token admission, so its pipelines add no decode cycles. This
+    sizing establishes no physical qualification or controller completion credit.
+    """
+    depth = 8
+    # Slot storage, four count/fingerprint registers, input pin flops,
+    # output pin flops, credit/status state.
+    state_bits = depth * (256 + 30 + 2) + 4 * 32 + 297 + 290 + 9
+    return dict(schema='opentallas.engram-boot-dispatch-model.v1', replicas=8,
+                macs_per_cycle=0, input_bytes_per_cycle=32,
+                output_bytes_per_cycle=32, completion_bytes_per_cycle=1,
+                input_boundary_bits=32 + 256 + 1,
+                two_stack_output_bits=2 * (29 + 256 + 3 + 1),
+                completion_boundary_bits=2 * (3 + 1),
+                storage_bits=state_bits, depth=depth,
+                selection='8-entry tagged queue; 8:1 sector/address mux and priority allocator',
+                area_cell_mm2_modelled=state_bits * .2916 / 1e6,
+                area_basis='ASAP7 sequential cell 0.2916um2; combinational/routing overhead unqualified',
+                floorplan_slot_um=[324, 216],
+                channel_tracks_needed=2 * (29 + 256 + 3 + 1),
+                channel_tracks_capacity_modelled=int(324 / .048),
+                channel_basis='0.048um contract pin lattice; metal/routing must validate',
+                serial_latency_cycles=2, single_user_decode_added_cycles=0,
+                composed_latency='preboot only: pin capture, registered dispatch, controller completion drain, publish',
+                address_contract='class11, 30-bit local atom; stack=atom[0], stack_atom=atom>>1',
+                status='sized for minimal exact RTL; no physical or controller qualification')
+
 import arch_budget_v41 as A  # noqa: E402
 
 def qwen_spine_credit_contract_model():

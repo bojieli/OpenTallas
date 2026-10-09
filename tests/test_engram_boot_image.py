@@ -38,7 +38,7 @@ def test_raw_walk_across_unaligned_rows_and_columns(monkeypatch):
             atom = addr & ~B.BOOT_ATOM
             remaining = (desc >> 144) & 0xffffff
             tag = (desc >> 8) & 255
-        else:
+        elif cls == 2:
             assert cls == 2 and remaining
             for start in (0, 32):
                 if remaining:
@@ -48,6 +48,18 @@ def test_raw_walk_across_unaligned_rows_and_columns(monkeypatch):
                     remaining -= 1
             if not remaining:
                 completions.append(tag)
+        else:
+            assert cls == 0 and not remaining
+            csr = int.from_bytes(data, "little")
+            assert csr & 255 == 2
+            assert (csr >> 128) & 3 == 3
+            assert (csr >> 64) & 0xffffffff == len(image)
+            expected_xor = 0
+            for address, sector in image.items():
+                expected_xor ^= address
+                for start in range(0, 32, 4):
+                    expected_xor ^= int.from_bytes(sector[start:start + 4], "little")
+            assert (csr >> 96) & 0xffffffff == expected_xor
     actual = b"".join(image[n] for n in range(len(image)))
     expected = b"".join(b"".join(B.packed_row(row) for row in col).ljust(
         (len(col) * 264 + 31) // 32 * 32, b"\0") for col in columns)

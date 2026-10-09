@@ -78,10 +78,11 @@ module tb_rom_host_ingest #(
     integer hcred = 1 << HFA, di = 0, pi = 0, pleft = 0, csr_done = 0, hcyc = 0;
     integer dones = 0, fwords = 0, tag_err = 0, exp_tag_i = 0, hup = 0;
     reg [31:0] rnd_h;
-    integer bootend, bcount, mark_sent = 0;
+    integer bootend, bcount, breg, mark_sent = 0;
     initial begin
         if (!$value$plusargs("BOOTEND=%d", bootend)) bootend = 0;
         if (!$value$plusargs("BCOUNT=%d", bcount)) bcount = 0;
+        if (!$value$plusargs("BREG=%d", breg)) breg = 0;
     end
     wire host_done = csr_done && di == nd && pleft == 0 && (bootend == 0 || mark_sent);
     always @(posedge clk_h) begin
@@ -95,7 +96,7 @@ module tb_rom_host_ingest #(
                 if (!csr_done) begin
                     h_cls <= 2'd0; h_d <= {448'd0, 23'd0, share[8:0], 32'd0}; csr_done <= 1;
                 end else if (di == nd && pleft == 0) begin
-                    h_cls <= 2'd0; h_d <= {384'd0, 32'h1234abcd, bcount[31:0], 56'd0, 8'd2}; mark_sent <= 1;
+                    h_cls <= 2'd0; h_d <= {382'd0, breg[1:0], 32'h1234abcd, bcount[31:0], 56'd0, 8'd2}; mark_sent <= 1;
                 end else if (pleft > 0) begin
                     h_cls <= 2'd2; h_d <= pmem[pi]; pi <= pi + 1; pleft <= pleft - 1;
                 end else begin
@@ -138,7 +139,7 @@ module tb_rom_host_ingest #(
             if (fq_a[fr % OCRED] >= MEMW && fq_a[fr % OCRED] != 32'hFFFFFFFF) oob <= oob + 1;
             else if (fq_we[fr % OCRED] && fq_a[fr % OCRED] == 32'hFFFFFFFF) begin
                 marks <= marks + 1;
-                if (fq_d[fr % OCRED][63:0] != {32'h1234abcd, bcount[31:0]} || sectors != bcount) mark_bad <= mark_bad + 1;
+                if (fq_d[fr % OCRED][65:0] != {breg[1:0], 32'h1234abcd, bcount[31:0]} || sectors != bcount) mark_bad <= mark_bad + 1;
             end else if (fq_we[fr % OCRED]) begin hbm[fq_a[fr % OCRED]] <= fq_d[fr % OCRED]; sectors <= sectors + 1; end
             else begin
                 rq_d[rq_w % 256] <= hbm[fq_a[fr % OCRED]]; rq_t[rq_w % 256] <= ccyc + LAT; rq_w <= rq_w + 1;

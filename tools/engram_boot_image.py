@@ -89,15 +89,22 @@ def raw_descriptor(atom: int, nbytes: int, tag: int) -> int:
 
 
 def host_records(columns: Iterable[tuple[BinaryIO, int]]) -> Iterator[tuple[int, bytes]]:
-    atom, tag = 0, 0
+    atom, tag, fingerprint = 0, 0, 0
     for stream, rows in columns:
         for chunk in column_chunks(stream, rows):
             desc = raw_descriptor(atom, len(chunk), tag)
             yield 1, desc.to_bytes(64, "little")
             for start in range(0, len(chunk), 64):
                 yield 2, chunk[start:start + 64].ljust(64, b"\0")
+            for start in range(0, len(chunk), 32):
+                fingerprint ^= atom + start // 32
+                for word in range(start, start + 32, 4):
+                    fingerprint ^= int.from_bytes(chunk[word:word + 4], "little")
             atom += len(chunk) // ATOM_BYTES
             tag += 1
+    # BOOT_END CSR index2: expected count, fingerprint, explicit region class.
+    marker = 2 | ((atom | (fingerprint << 32) | (3 << 64)) << 64)
+    yield 0, marker.to_bytes(64, "little")
 
 
 def main() -> int:
