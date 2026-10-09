@@ -1,0 +1,14 @@
+{
+ "job":"hbm_loader_ldiv_B_v3-d74d0faa7-cl",
+ "owner":"Claude:struct-close",
+ "source_commit":"d74d0faa7ff49d0f86e2e5cc940dece03f185d2d",
+ "evidence_base_origin_main":"6c38e5a14cb8ea0352da8fdaa3a8ceff78f07fd5",
+ "original":{"host":"ot-epyc2","run":"/srv/opentallas-data/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl","tag":"calibrate.a1","pid":3030744,"rc_present":false,"daemon_failure":"LOST: stage wrapper gone without an rc file","stuckscan_event":"2026-10-09T06:38:01-07:00","retry_event":"2026-10-09T06:38:34-07:00","oom_proven":false,"diagnostic_limits":"No surviving PID/container or recorded kernel OOM entry found. No resource failure mechanism inferred from elapsed time. Original route run.log empty; wrapper log contains only two hold-corner patch notices."},
+ "bench":{"host":"ot-epyc2","exact_rc":0,"positive_runs":5,"descriptors_per_run":85,"mismatches_each":0,"dma_writes":[5440,5320,5480,5440,5320],"negative_xdata_runtime_rc":134,"negative_foh_runtime_rc":134,"negative_meta_stage_rc":1,"warning":"Daemon count-regex missing; raw LDM_EQUIV lines contain descriptor/write/status counts. Bench proves transaction equivalence excluding CYCLES CSR, not physical generated-clock closure."},
+ "retry":{"host":"ot-epyc4","run":"/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl","tag":"calibrate.a2","wrapper_pid":2107222,"container":"f3c23cac604b863e13b9917a5a1c0449a1db7595b1c6c0e053b0d2a48f4d19ca","status_at_record":"RUNNING actual synthesis/ABC","oom_killed":false,"oom_events":0,"oom_kill_events":0},
+ "source_sha256":{"physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_div.sv":"e7c83ef55d8b3480c444912f4365f70824f3231ec9d9da5165a2d847b799aa17","physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc":"ded27d0b61676ce63eedc9b61790ed332e364f29d1c78271409017b77c817076"},
+ "inventory":{"threads":12,"calibrate_reserved_ram_gb":60,"bench_exact_reserved_ram_gb":16,"retry_launch_available_mib":368492,"retry_launch_free_disk_gib":468},
+ "actions":"Read-only inspection and evidence collection. Existing locked canonical daemon retry reused; no duplicate launch, no process termination, no source/recipe/daemon/main edits.",
+ "verdict":"ORIGINAL_LOST_RETRY_RUNNING",
+ "remaining":"Collect same-source calibration, callbacks and eventual route verdict. No closure claim."
+}

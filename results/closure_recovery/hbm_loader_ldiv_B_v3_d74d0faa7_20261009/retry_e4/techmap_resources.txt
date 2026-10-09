@@ -1,0 +1,13 @@
+e7c83ef55d8b3480c444912f4365f70824f3231ec9d9da5165a2d847b799aa17  /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/src/physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_div.sv
+ded27d0b61676ce63eedc9b61790ed332e364f29d1c78271409017b77c817076  /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_loader_ldiv_B_v3-d74d0faa7-cl/src/physical/hbm_accel_die_views/loader/sdc/hfd_loader_div_v3.sdc
+low 0
+high 0
+max 0
+oom 0
+oom_kill 0
+oom_group_kill 0
+sock_throttled 0
+2388025344
+2108223             2108217             0.0                 11508               /usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_hfd_loader_asap7_hv_hbm_loader_ldiv_B_v3_d74d0faa7_cl_cal/base/1_2_yosys.log --append --tee -- /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+2108224             2108223             41.6                1918696             /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl
+2126861             2108224             99.9                318820              /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc -s

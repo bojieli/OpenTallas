@@ -1,0 +1,15 @@
+               total        used        free      shared  buff/cache   available
+Mem:         1160257      791764       71479        3655      307789      368492
+Swap:           8191        7146        1045
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/nvme3n1    2.9T  2.4T  468G  84% /srv/opentallas-scratch2
+2107222
+running OOMKilled=false Pid=2107750
+0::/system.slice/docker-f3c23cac604b863e13b9917a5a1c0449a1db7595b1c6c0e053b0d2a48f4d19ca.scope
+low 0
+high 0
+max 0
+oom 0
+oom_kill 0
+oom_group_kill 0
+sock_throttled 0

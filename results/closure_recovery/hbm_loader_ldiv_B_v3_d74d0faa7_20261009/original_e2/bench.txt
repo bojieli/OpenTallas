@@ -1,0 +1,10 @@
+sep seed 1 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1360 dma_writes=5440 status0=60 status1=20 status2=0 status3=5 mismatches=0
+sep seed 2 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1330 dma_writes=5320 status0=60 status1=20 status2=0 status3=5 mismatches=0
+sep seed 3 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1370 dma_writes=5480 status0=60 status1=20 status2=0 status3=5 mismatches=0
+shared seed 1 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1360 dma_writes=5440 status0=60 status1=20 status2=0 status3=5 mismatches=0
+shared seed 2 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1330 dma_writes=5320 status0=60 status1=20 status2=0 status3=5 mismatches=0
+neg_xdata seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0
+neg_xdata detected
+neg_foh seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0
+neg_foh detected
+LDM_DIV PASS
