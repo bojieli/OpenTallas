@@ -1,0 +1,26 @@
+progress cyc=2000 ops=34 writes=1008 idle r/m/a=000
+FAIL result write event 0 differs
+FAIL result write event 2 differs
+FAIL result write event 4 differs
+FAIL result write event 6 differs
+FAIL result write event 8 differs
+FAIL result write event 10 differs
+FAIL result write event 12 differs
+FAIL result write event 14 differs
+FAIL result write event 16 differs
+FAIL result write event 18 differs
+FAIL result write event 20 differs
+FAIL result write event 22 differs
+FAIL result write event 24 differs
+FAIL result write event 26 differs
+FAIL result write event 28 differs
+FAIL result write event 30 differs
+FAIL result write event 32 differs
+FAIL result write event 34 differs
+FAIL result write event 36 differs
+FAIL result write event 38 differs
+FAIL errors=512 writes=1424
+- /srv/opentallas-scratch/codex/qwen-tile-cx-integration/src/rtl/test/tb_qwen_me_partition_w12.sv:385: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 147.801 s; speed 34.090 ns/s
+- Verilator: cpu 147.784 s on 1 threads; alloced 651 MB
