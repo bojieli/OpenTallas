@@ -14561,3 +14561,8 @@ def qwen_collective_cx_model():
 def qwen_ar_actual_area_sheet():
     from qwen_system.area_sheet import model
     return model()
+
+
+def qwen_native_cmd_plain_model():
+    from uarch_model_qwen_native_cmd_plain import model
+    return model()
