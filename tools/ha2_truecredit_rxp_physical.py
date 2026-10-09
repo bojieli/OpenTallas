@@ -15,7 +15,7 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--part',default='rx',choices=['rx'])
     # credit-ready 2026-10-08: c = ot_ha2_truecredit_rx_c_phys (CREDIT=1 receiver_ready = credit pulses), same pins/SDC
-    p.add_argument('--variant',default='p',choices=['p','c'])
+    p.add_argument('--variant',default='p',choices=['p','c','s'])
     p.add_argument('--run',required=True,type=Path)
     p.add_argument('--threads',type=int,default=8)
     p.add_argument('--cts-only',action='store_true')
@@ -24,6 +24,7 @@ def main():
     run=a.run.resolve();run.mkdir(parents=True,exist_ok=False)
     model=json.loads((HERE/'model.json').read_text());part=model['parts'][a.part]
     part=dict(part,top=f'ot_ha2_truecredit_rx_{a.variant}_phys')
+    if a.variant=='s':part['macros']=['ot_sram_1r1w_64x512_m1_r2c2']
     manifest=dict(variant=f'rx_{a.variant}',sources=(HERE/f'rx_{a.variant}_sources.txt').read_text().splitlines())
     # hbm-blocks 2026-10-07: the CTS-only calibration run has no measurement yet; vclk latency 0 there made CTS repair
     # an input hold of -(insertion) on every data pin (rx/tx d7a64a321: hold -583, setup -1,281, 73,998 violators) and
@@ -54,12 +55,15 @@ set_load 4 [all_outputs]
           '--clock-uncertainty-hold-ns','0.025','--orfs-corner','WC','--hold-corners','WC,BC',
           '--io-delay-fraction','0.2','--sdc-append',str(sdc),'--stages','synth,pnr',
           '--die-area','0','0',str(w),str(h),'--core-area','1.08','1.08',str(w-1.08),str(h-1.08),
-          '--place-density','0.55','--hold-margin-ns','0.015','--orfs-var','ADDER_MAP_FILE=',
+          '--place-density','0.55','--hold-margin-ns',os.environ.get('HA2_HM','0.015'),'--orfs-var','ADDER_MAP_FILE=',
           '--step-tcl',f'POST_IO_PLACEMENT=physical/ha2_truecredit_20261007/{a.part}_pins_signal_only.tcl',
           '--purpose','signoff_target','--nickname-tag',f'ha2_tc{a.variant}_rx',
           '--synth-timeout-seconds','unlimited','--flow-timeout-seconds','unlimited',
           '--keep-workdir',str(run/'work'),'--output',str(run/'physical.json')]
     if a.cts_only:cmd+=['--pnr-stop-after','cts']
+    # safe-hbm 2026-10-08: SRAM-queue variant s carries two 64x512 1R1W macros per lane
+    for m in part.get('macros',[]):cmd+=['--macro-view',f'{m}=physical/asap7_memory_macros/{m}']
+    if part.get('macros'):cmd+=['--macro-place-halo','2','2']
     record=dict(part=a.part,command=cmd,source_manifest=manifest,model=model,
                 route_virtual_clock_insertion_ps=insertion,parent_qualified=False,adopted=False)
     (run/'launch.json').write_text(json.dumps(record,indent=2)+'\n')
@@ -75,6 +79,7 @@ set_load 4 [all_outputs]
     cmd=['python3','tools/w18/corner_sta.py','--orfs-dir',str(run/'work/orfs'),
          '--post-sdc','physical/ha2_truecredit_20261007/screening_signoff.sdc',
          '--post-sdc',f'physical/ha2_truecredit_20261007/{a.part}_check_pins_signal_only.tcl',
+         *[x for m in part.get('macros',[]) for x in ('--macro',f'physical/asap7_memory_macros/{m}')],
          '--output',str(run/'corner_sta.json')]
     with (run/'corner.log').open('w') as log:
         sta=subprocess.run(cmd,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT)
