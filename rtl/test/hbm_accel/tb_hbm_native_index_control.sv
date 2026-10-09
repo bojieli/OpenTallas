@@ -46,7 +46,7 @@ module tb_hbm_native_index_control;
                 owner_frame[72:53],owner_frame[35:32],owner_frame[31:0],1'b1};
    producer_published=0;producer_drained=0;source_start_r=0;
    returns_drained=0;source_idle=0;selector_idle=1;
-   if(!command_r)$fatal(1,"command not admitted");
+   tick();if(!command_r)$fatal(1,"command not admitted");
    command_v=1;tick();command_v=0;
    repeat(4)begin if(fs[0])$fatal(1,"missing publication wait");tick();end
    producer_published=1;producer_drained=1;
