@@ -24,7 +24,7 @@ HOOK = ROOT / "physical/common_flow/ot_keep_regs.tcl"
 
 
 def candidates():
-    out = subprocess.run(["git", "grep", "-l", "-E", KEEP_RE.pattern, "--", "rtl", "physical"], cwd=ROOT,
+    out = subprocess.run(["git", "grep", "-l", "-P", KEEP_RE.pattern, "--", "rtl", "physical"], cwd=ROOT,
                          capture_output=True, text=True).stdout.split()
     return [f for f in out if f.endswith((".v", ".sv"))]
 
