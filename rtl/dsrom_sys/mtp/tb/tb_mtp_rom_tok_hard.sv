@@ -14,7 +14,7 @@ module tb_mtp_rom_tok_hard;
     integer valid[0:127],prompt[0:127],pos[0:127],ep[0:127],tok[0:127];
     integer pv[0:3],pk[0:3],pt[0:3],reads=0,hits=0,stale=0,invalids=0,idle=0;
     integer i,j,u,b,k,ix,pass;
-    task config(input integer sel, usr, p, val);
+    task cwrite(input integer sel, usr, p, val);
         begin @(negedge clk); c_we=1;c_sel=sel;c_user=usr;c_pos=p;c_val=val;
             @(negedge clk);c_we=0;end
     endtask
@@ -38,9 +38,9 @@ module tb_mtp_rom_tok_hard;
     initial begin
         for(i=0;i<128;i=i+1)begin valid[i]=0;prompt[i]=0;pos[i]=0;ep[i]=0;tok[i]=0;end
         for(i=0;i<4;i=i+1)begin pv[i]=0;pk[i]=0;pt[i]=0;end
-        config(0,0,0,8);config(1,0,0,16);config(2,0,0,200);
+        cwrite(0,0,0,8);cwrite(1,0,0,16);cwrite(2,0,0,200);
         for(u=0;u<8;u=u+1)for(k=0;k<16;k=k+1)begin
-            config(3,u,k,1000+u*16+k);ix=u*16+k;valid[ix]=1;prompt[ix]=1;pos[ix]=k;tok[ix]=1000+ix;
+            cwrite(3,u,k,1000+u*16+k);ix=u*16+k;valid[ix]=1;prompt[ix]=1;pos[ix]=k;tok[ix]=1000+ix;
         end
         @(negedge clk);rn=1;
         repeat(3)@(posedge clk);
