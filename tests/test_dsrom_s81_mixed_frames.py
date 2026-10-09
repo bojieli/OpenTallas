@@ -121,3 +121,21 @@ def test_unbound_functional_pin_check_flags_a_missing_q_net():
         m['insts'].append(It('s0', 'ot_s81_cfg7_seq', 'seq'))
         ub = F.unbound_functional_pins(m)
         assert (qn, 'go_tag') not in ub and (qn, 'sh_free') not in ub and (qn, 'bank_free') not in ub
+
+
+def test_fine_cross_lattice_finds_gap_between_coarse_rows():
+    # Packed-frame rescue must search the gap the block-height-spaced rows skip,
+    # without accepting an overlap or a point outside either timing reach.
+    p = F.Placer(dict(insts=[]))
+    p.occ.add((-100, -100, 100, 0))
+    p.occ.add((-100, 14, 100, 100))
+    args = dict(cx=0, cy=0, w=10, h=10, allowed=[(-100, -100, 100, 100)],
+                prev=(0, 0), reach=20, nxt=(0, 20), nreach=20, span=30, rows=20)
+    assert p.near(**args) is None
+    spot = p.near(**args, cross_step=2.16)
+    assert spot is not None
+    x, y = spot
+    assert p.occ.free((x, y, x + 10, y + 10), 0.432)
+    assert F._mh((x + 5, y + 5), args['prev']) <= 20
+    assert F._mh((x + 5, y + 5), args['nxt']) <= 20
+    assert p.near(**dict(args, nreach=1), cross_step=2.16) is None
