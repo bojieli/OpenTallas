@@ -1558,7 +1558,8 @@ def apply_splits(m, specs, lattice=None):
         # to the block): {parent: {port: (band, bits, face, layer, fraction along the face, pitch in tracks)}}
         extra = (m.get('variant') or {}).get('split_extra_ports', {}).get(parent, {})
         for bn, b in bands:
-            recs[bn] = json.loads((ROOT / rel).parent.joinpath(bn, 'ports.json').read_text())
+            record_path = ROOT / b['source_port_record'] if b.get('source_port_record') else (ROOT / rel).parent.joinpath(bn, 'ports.json')
+            recs[bn] = json.loads(record_path.read_text())
             spec, order = _split_spec(recs[bn]['ports'])
             for pn_, (bn_, bits_, face_, layer_, frac_, pitch_) in extra.items():
                 if bn_ == bn:

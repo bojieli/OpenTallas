@@ -1,10 +1,5 @@
-#!/bin/bash
-# run_ldm_div.sh <outdir> (stream ingest 2026-10-08, L-DIV): transaction-level exactness of ot_hfd_loader_div (the unchanged
-# ot_hfd_loader_host_m on clk_host / 2 behind async-FIFO channel crossings, no clock gating) against the unchanged
-# ot_hbm_accel_loader_host (tb_loader_cx_equiv.sv: MREQ / DMA write streams and every CSR except CYCLES): separate host
-# (1.0 ns) / memory (0.833 ns) clocks, core 2.0 ns (seeds 1 2 3), and one die clock for both faces (SHARED 1, seeds 1 2);
-# negatives (must FAIL): a face-channel data mutant (s_w data bit 0 flipped in the crossing) and a core mutation (load fold
-# ring direction).  Prints LDM_CX PASS / LDM_CX FAIL.  Needs Verilator 5 (--binary --timing).
+# Driver for full ND2 golden equivalence with phase-offset independent 600MHz core.
+# Two face-clock configurations plus payload and arithmetic mutants. No wall-time limit.
 set -u
 O=$1; NPROG=${NPROG:-40}; mkdir -p $O
 L=physical/hbm_accel_die_views/loader/rtl
