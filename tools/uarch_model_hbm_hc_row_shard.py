@@ -34,3 +34,67 @@ def sram_model():
       "physical_status":"macro instances present; views and SS/FF qualification pending",
       "added_latency_measurement":"pending full-shape successor gate"})
     return row
+
+def private_operand_model():
+    row=sram_model()
+    row.update({"independent_activation_supply":True,
+      "service_clock_hz":976562500,
+      "producer_stream_clock_hz":1200000000,
+      "serial_operand_clock_hz":900000000,
+      "clock_source_basis":"current die external clock contract: HBM1.024ns; streaming5/6ns; serial10/9ns; actual CDC binding pending",
+      "activation_payload_dtype":"BF16 copiedbitwise at existing golden rounding boundary",
+      "activation_input_bits":256,"activation_input_beat_bits":11,"activation_transaction_bits":16,
+      "activation_input_forward_boundary_bits":284,
+      "activation_live_bytes":40960,"activation_live_bytes_per_die_body_token":819200,"activation_prefetch_beats":1280,
+      "activation_prefetch_cycles_min":1280,"activation_prefetch_us_at900MHz":1.422222222,
+      "activation_code":"16pairs/bank/word,each32data+7SECDED,bits624packedacross3macros",
+      "activation_macro_count":24,"activation_reserved_bytes_including_checks":98304,
+      "total_operand_macro_count":64,"total_operand_reserved_bytes":262144,
+      "total_macro_area_um2":249060.92544,
+      "external_x_read_bus_bits":0,"internal_x_read_bus_bits":4096,
+      "activation_read_latency_cycles":3,
+      "command_activation_lease_bits":16,
+      "external_operand_boundary_tracks_min":45+270+285,
+      "activation_forward_bits":284,"activation_ready_return_bits":1,
+      "command_forward_bits":84,"command_ready_return_bits":1,
+      "result_forward_bits":55,"result_ready_return_bits":1,
+      "all_external_signal_tracks_min":45+270+285+85+56,
+      "data_supply_bytes_per_cycle_FN":32,"data_supply_bytes_per_cycle_X":32,
+      "SRAM_internal_read_bytes_per_cycle_FN":1024,"SRAM_internal_read_bytes_per_cycle_X":512,
+      "snapshot_replica_count_per_die":1,
+      "snapshot_input_selection":"one admitted lease, tagged finite transaction; upstream producer mux unbound",
+      "FN_tag_scope":"10-bit bank/word within one active row window; reused next command",
+      "FN_epoch_fence":"actual outer service must bind base and lease, quiesce previous transaction before reuse; pending integration gate",
+      "measured_component_cycles_per_row_finite_fixture":4009,
+      "measured_component_row_us_at900MHz":4009/900,
+      "fixture_supply_overlap":"independent test producers only; production overlap unqualified",
+      "serialized_X_supply_extra_cycles_per_row_min":1280,
+      "serialized_X_supply_extra_us_body_min":80*1280/900,
+      "serialized_W_X_body_us_lower_envelope":80*(4009+1280)/900,
+      "body_serial_sublayers":80,
+      "body_HC_us_without_interstage_prefetch_at_fixture_cadence":80*4009/900,
+      "per_die_HC_occupied_us_body_at_fixture_cadence":20*4009/900,
+      "latency_composition_basis":"80 dependent body stages;24 whole rows/stage on distinct owners; no interstage overlap or actual producer service cadence credit",
+      "mtp_verification_positions":6,
+      "mtp_uncached_whole_row_fetches_per_die_bodypass":120,
+      "mtp_uncached_weight_bytes_per_die_bodypass":9830400,
+      "mtp_fn_reuse_credit":False,
+      "physical_macro_count":64,
+      "actual_selected_R25I_slot_um":[14163.552,6650.64,15563.552,8050.64],
+      "SU_full_centroid_distance_um_proxy":9429.352,
+      "row_collective_centroid_distance_um_proxy":4959.36,
+      "transport_latency_status":"actual BF16 producer pins, pipelined stations and CDC pending; no overlap credit",
+      "model_scope":"privateFNandBF16flatoperandlanding; fullshapeRTLpass; actualclockcontextpending"})
+    return row
+
+def epoch_operand_model():
+    row=private_operand_model()
+    row.update({"FN_epoch_enable_default":False,"FN_epoch_command_lease_bits":16,
+      "FN_request_boundary_bits":61,"FN_response_boundary_bits":286,
+      "all_external_signal_tracks_min":773,"FN_epoch_control_state_bits":16,
+      "FN_epoch_check":"16-bit equality before sector acceptance and write pipeline; stale/wrong epoch faults without commit",
+      "FN_epoch_added_functional_cycles":0,
+      "physical_scope":"new leased port layout and comparator not qualified; prior40/64 jobs immutable",
+      "FN_epoch_fence":"full command lease checked locally before commit; native service transport and lease reuse lifetime binding pending",
+      "exact_gate":"PASS K20480 W32 realFP baseline4009cycles; WRONGFN/LATEFN bothcommitted0"})
+    return row

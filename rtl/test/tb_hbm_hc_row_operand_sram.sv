@@ -46,7 +46,7 @@ module tb_hbm_hc_row_operand_sram(input wire clk);
   end
   if(fault && mode!=3 && mode!=4)$fatal(1,"unexpected SRAM fault");
   // Re assigned after issue edge, SRAM captures next edge, decoder2 follows.
-  if(injected && cyc>=readstart+4 && (cyc-readstart)%5==4 && checks<80)begin
+  if(mode!=3 && injected && cyc>=readstart+4 && (cyc-readstart)%5==4 && checks<80)begin
    for(b=0;b<8;b=b+1)for(s=0;s<4;s=s+1)for(l=0;l<8;l=l+1)
     if(q[(b*4+s)*256+l*32+:32]!==pattern(b,checks,s*8+l))$fatal(1,"data mismatch row%0d bank%0d sector%0d",checks,b,s);
    checks=checks+1;

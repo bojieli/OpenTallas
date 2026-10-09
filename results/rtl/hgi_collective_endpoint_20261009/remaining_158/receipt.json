@@ -1,0 +1,28 @@
+{
+  "source_commit": "158cff53c",
+  "endpoint_commit": "3208d76a3",
+  "host": "ot-epyc3",
+  "launcher_pid": 1133011,
+  "verdict": "PASS",
+  "pad_consuming_mutants": 4,
+  "raw_reserved_codes": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+  ],
+  "oversized_group1_rejected": true,
+  "mode_guard_consuming_mutants": 1,
+  "driver_exit": 0,
+  "gnu_time_maxrss_kib": 1369240,
+  "resource_caveat": "GNU-time process measurement, not whole-descendant peak; admitted8GiB serial-j4.",
+  "fixture_source": "57814c941",
+  "scope": "Remaining mechanisms only. No duplicate broad positive sweep; combines with source578 campaign and separately source916 multicast/rearm proof, not blanket cycle-equivalence of changed source."
+}

@@ -6,6 +6,15 @@
 module ot_dsrom_hc_seed_join #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,MAX_CONTEXT=1048576,
     parameter integer ECC_PIPE=0,
+    // MACRO_CAP (cont-takeover 2026-10-09, default off, needs ECC_PIPE): the SECDED pipe decodes the REGISTERED macro
+    // capture (held_code, taken at RCAP) instead of the raw SRAM rd_out: no logic between a macro output and its
+    // first flop (owner rule; eccpipe join r2 TT -42.7 ps = rd_out -> overall-parity XOR tree).  +1 cycle per frame read.
+    parameter integer MACRO_CAP=0,
+    // IN_SKID (cont-takeover 2026-10-09, default off): registered input boundary via ot_dsrom_hc_skid, +1 cycle per frame
+    // arrival; the arrival checks (45 gate levels from the pins) then start at flops.
+    parameter integer IN_SKID=0,
+    // OUT_SKID (cont-takeover 2026-10-09, default off): registered output boundary, +1 cycle per output frame.
+    parameter integer OUT_SKID=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -19,6 +28,32 @@ module ot_dsrom_hc_seed_join #(
     output wire [5:0] out_frame,output wire out_last,output wire out_corrected,
     output wire busy,output reg fault
 );
+    // OUT_SKID: registered output boundary (ot_dsrom_hc_skid): outputs straight from flops, out_ready lands in a flop.
+    wire y_out_valid,y_out_ready,y_out_last,y_out_corrected;wire [511:0] y_out_data;wire [USER_W-1:0] y_out_user;
+    wire [POS_W-1:0] y_out_position;wire [EPOCH_W-1:0] y_out_epoch;wire [1:0] y_out_capture;wire [5:0] y_out_frame;
+    generate if(OUT_SKID) begin:g_oskid
+        ot_dsrom_hc_skid #(.W(512+USER_W+POS_W+EPOCH_W+2+6+2)) u_out(.clk(clk),.rst_n(rst_n),
+            .i_valid(y_out_valid),.i_ready(y_out_ready),
+            .i_data({y_out_data,y_out_user,y_out_position,y_out_epoch,y_out_capture,y_out_frame,y_out_last,y_out_corrected}),
+            .o_valid(out_valid),.o_ready(out_ready),
+            .o_data({out_data,out_user,out_position,out_epoch,out_capture,out_frame,out_last,out_corrected}));
+    end else begin:g_odirect
+        assign out_valid=y_out_valid;assign y_out_ready=out_ready;assign out_data=y_out_data;assign out_user=y_out_user;
+        assign out_position=y_out_position;assign out_epoch=y_out_epoch;assign out_capture=y_out_capture;
+        assign out_frame=y_out_frame;assign out_last=y_out_last;assign out_corrected=y_out_corrected;
+    end endgenerate
+    wire x_in_valid,x_in_ready,x_in_last;wire [511:0] x_in_data;wire [USER_W-1:0] x_in_user;
+    wire [POS_W-1:0] x_in_position;wire [EPOCH_W-1:0] x_in_epoch;wire [1:0] x_in_capture;wire [5:0] x_in_frame;
+    generate if(IN_SKID) begin:g_skid
+        ot_dsrom_hc_skid #(.W(512+USER_W+POS_W+EPOCH_W+2+6+1)) u_in(.clk(clk),.rst_n(rst_n),.i_valid(in_valid),.i_ready(in_ready),
+            .i_data({in_data,in_user,in_position,in_epoch,in_capture,in_frame,in_last}),
+            .o_valid(x_in_valid),.o_ready(x_in_ready),
+            .o_data({x_in_data,x_in_user,x_in_position,x_in_epoch,x_in_capture,x_in_frame,x_in_last}));
+    end else begin:g_direct
+        assign x_in_valid=in_valid;assign in_ready=x_in_ready;assign x_in_data=in_data;assign x_in_user=in_user;
+        assign x_in_position=in_position;assign x_in_epoch=in_epoch;assign x_in_capture=in_capture;
+        assign x_in_frame=in_frame;assign x_in_last=in_last;
+    end endgenerate
     localparam [2:0] ARRIVE=0,COMMIT=1,READ=2,RWAIT=3,RCAP=4,HOLD=5,RECC=6;
     reg [2:0] state;
     reg owned;
@@ -31,27 +66,28 @@ module ot_dsrom_hc_seed_join #(
     reg [575:0] wd_q,held_code;
     reg [1:0] rcapture;
     reg [5:0] rframe;
-    wire bad=in_capture>2 || in_frame>=40 || in_position>=MAX_CONTEXT ||
-        (in_last!=(in_frame==39)) ||
-        (owned && (in_user!=user_q || in_position!=position_q || in_epoch!=epoch_q)) ||
-        (in_capture<=2 && (complete[in_capture] || in_frame!=next_frame[in_capture]));
-    wire fire=in_valid&&in_ready;
+    reg mc_go;
+    wire bad=x_in_capture>2 || x_in_frame>=40 || x_in_position>=MAX_CONTEXT ||
+        (x_in_last!=(x_in_frame==39)) ||
+        (owned && (x_in_user!=user_q || x_in_position!=position_q || x_in_epoch!=epoch_q)) ||
+        (x_in_capture<=2 && (complete[x_in_capture] || x_in_frame!=next_frame[x_in_capture]));
+    wire fire=x_in_valid&&x_in_ready;
     wire [575:0] encoded;
     wire [767:0] memory_q;
     wire [7:0] ce,ue,decode_valid;
     wire [7:0] ra={6'd0,rcapture}*8'd40+{2'd0,rframe};
     genvar l,b;
     generate for(l=0;l<8;l=l+1) begin:g_code
-        ot_s81_secded_enc72 e(.d(in_data[64*l+:64]),.c(encoded[72*l+:72]));
+        ot_s81_secded_enc72 e(.d(x_in_data[64*l+:64]),.c(encoded[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
-                .valid_in(state==RCAP&&!fault),
-                .c(memory_q[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-                .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+                .valid_in(MACRO_CAP?mc_go:(state==RCAP&&!fault)),
+                .c((MACRO_CAP?held_code[72*l+:72]:memory_q[72*l+:72])^(l==0?READ_INJECT:72'd0)),
+                .valid_out(decode_valid[l]),.d(y_out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
         end else begin:g_comb
             assign decode_valid[l]=1'b0;
             ot_s81_secded_dec72 d(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-                .d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+                .d(y_out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
         end
     end
     for(b=0;b<3;b=b+1) begin:g_sram
@@ -62,13 +98,15 @@ module ot_dsrom_hc_seed_join #(
             .wd_in(banks[256*b+:256]),.w_mask_in({256{1'b1}}),
             .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
     end endgenerate
-    assign in_ready=state==ARRIVE&&!fault;
-    assign out_valid=state==HOLD&&!fault&&!(|ue);
-    assign out_user=user_q;assign out_position=position_q;assign out_epoch=epoch_q;
-    assign out_capture=rcapture;assign out_frame=rframe;
-    assign out_last=rcapture==2&&rframe==39;assign out_corrected=out_valid&&(|ce);
+    assign x_in_ready=state==ARRIVE&&!fault;
+    assign y_out_valid=state==HOLD&&!fault&&!(|ue);
+    assign y_out_user=user_q;assign y_out_position=position_q;assign y_out_epoch=epoch_q;
+    assign y_out_capture=rcapture;assign y_out_frame=rframe;
+    assign y_out_last=rcapture==2&&rframe==39;assign y_out_corrected=y_out_valid&&(|ce);
     assign busy=owned;
     integer k;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RCAP && !fault;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=ARRIVE;owned<=0;fault<=0;complete<=0;
@@ -79,10 +117,10 @@ module ot_dsrom_hc_seed_join #(
                 ARRIVE: if(fire) begin
                     if(bad) fault<=1;
                     else begin
-                        owned<=1;user_q<=in_user;position_q<=in_position;epoch_q<=in_epoch;
-                        wa_q<={6'd0,in_capture}*8'd40+{2'd0,in_frame};wd_q<=encoded;
-                        next_frame[in_capture]<=in_frame+1'b1;
-                        if(in_frame==39) complete[in_capture]<=1;
+                        owned<=1;user_q<=x_in_user;position_q<=x_in_position;epoch_q<=x_in_epoch;
+                        wa_q<={6'd0,x_in_capture}*8'd40+{2'd0,x_in_frame};wd_q<=encoded;
+                        next_frame[x_in_capture]<=x_in_frame+1'b1;
+                        if(x_in_frame==39) complete[x_in_capture]<=1;
                         state<=COMMIT;
                     end
                 end
@@ -93,7 +131,7 @@ module ot_dsrom_hc_seed_join #(
                 RCAP: begin held_code<=memory_q[575:0];state<=ECC_PIPE?RECC:HOLD;end
                 RECC: if(&decode_valid) state<=HOLD;
                 HOLD: if(|ue) fault<=1;
-                    else if(out_ready) begin
+                    else if(y_out_ready) begin
                         if(rframe==39) begin
                             rframe<=0;
                             if(rcapture==2) begin
