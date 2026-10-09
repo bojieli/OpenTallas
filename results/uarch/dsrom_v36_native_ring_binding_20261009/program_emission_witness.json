@@ -1,0 +1,140 @@
+{
+  "schema": "opentallas.v36.real-compiler-ring8-witness.v1",
+  "status": "PASS_COMPILER_EMISSION_WITNESS_ONLY",
+  "programs": [
+    {
+      "stage": 0,
+      "instructions": 140,
+      "file": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74-v5050/wf2/cfg_stage2_deep/prog_stage00.hex",
+      "sha256": "f7efd7946bd58d8cb10171a021895b2f7c2e7e65cc59787f54a5ef2aac700699"
+    },
+    {
+      "stage": 1,
+      "instructions": 105,
+      "file": "/srv/opentallas-scratch/codex/mtp-ring-dyn-successor-aff63db74-v5050/wf2/cfg_stage2_deep/prog_stage01.hex",
+      "sha256": "c881ac91d0d950be00170ec7c7570f8c5e7cafdff540785c9a9936a3a848afb8"
+    }
+  ],
+  "consumers": [
+    {
+      "stage": 0,
+      "PC": 36,
+      "unit": 1,
+      "pred": 0,
+      "selectors": {
+        "me_d_obase": 25
+      },
+      "literal_output_base": 1770
+    },
+    {
+      "stage": 0,
+      "PC": 37,
+      "unit": 2,
+      "pred": 1,
+      "selectors": {
+        "a_d": 26,
+        "b_d": 26
+      },
+      "literal_output_base": 16128
+    },
+    {
+      "stage": 0,
+      "PC": 38,
+      "unit": 2,
+      "pred": 1,
+      "selectors": {
+        "a_d": 26
+      },
+      "literal_output_base": 16160
+    },
+    {
+      "stage": 0,
+      "PC": 41,
+      "unit": 2,
+      "pred": 1,
+      "selectors": {
+        "a_d": 26,
+        "c_d": 26
+      },
+      "literal_output_base": 16320
+    }
+  ],
+  "ISA": {
+    "bits": 1536,
+    "profile": "reduced",
+    "dyn_slots": {
+      "SLOTW8": 25,
+      "SLOTP8": 26
+    },
+    "selector_fields": {
+      "me_d_obase": [
+        216,
+        5
+      ],
+      "a_d": [
+        504,
+        5
+      ],
+      "b_d": [
+        609,
+        5
+      ],
+      "c_d": [
+        689,
+        5
+      ]
+    }
+  },
+  "compiler": {
+    "layout": "P.Layout(model, rollback_ring=True) via ORDER=deep",
+    "prepare_sha256": "f936156e0a669cbbcebbef7aca868c8238dd01dbac460afbffc24e77078ba035",
+    "order": "deep",
+    "ring_records": 8,
+    "source_sha256": {
+      "hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+      "hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+      "mtp_exact_wavefront2.py": "1c85e16d5a13bf6835294268d8403ac50f88d0ad2350a19e195063412972957a"
+    },
+    "prepare_record_tool_sha256": "36d6d8bd92d3aca839e0366ebbc3ec8c7772fb7a0a0827ca77821f8e7e331633",
+    "prepared_source_is_not_assumed_equal_to_later_gate_tool": true
+  },
+  "selected_native_candidate": {
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_capture_parent/selection.json": "cced5f0d9a89edc2f103170a18a569e7a67b9a4ad7fdbbd86d184fc9182a4a5c",
+      "rtl/dsrom_sys/s81_capture_parent/sources.f": "1a700a9a69914539ff592a3c1669c13a87487b059a160606aceab4a80938dc75",
+      "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv": "f982ac8faf83763458f310d2794795aaa7d4b4479b4f4151120b5a3060738cc7",
+      "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+      "tools/dsrom_s81_system_sources.py": "4e8937477805484e55151be188893254d5719b1d46112f3a312d5f4c1017e2ee",
+      "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+      "tools/hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+      "tools/hdc_replay_v41.py": "8f76e9a8995b99befe7c82a18dfaa7a067b492d9b435f6a1f355d8584116659b",
+      "tools/v41_fullshape_isa.py": "5d3e4dae0100b400a4ab7972b9090f5472a4d19237863c235b96187ffe633b09",
+      "tools/v41_fullshape_program_bind.py": "56fccd6e6daf22d4627e1e8e201ccab86f74195bc033d7676a6dcc69ffac90ab",
+      "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp": "49e2ccac189f1bd487b7e10e6a770ceee7ef69e6e1857ccd67b1f161de042e78",
+      "results/host/s81_native_head_capture_terminal_20261004/terminal.json": "6151e27ed8c3780c999f1bd6ab9cae60cad04a58b4fec9fcba02784745033d40",
+      "results/host/s81_head_capture_binding_fix_20261004/terminal.json": "a55a7bb48e8619633f29c1a3d80efb71974201428ca15a413ab0a27af0201bad"
+    },
+    "static_sources_file": "rtl/dsrom_sys/s81_capture_parent/sources.f",
+    "literal_parameters": {
+      "NSLOT": 1,
+      "FULL_SHAPE": 0,
+      "INSTR_BITS": 1536
+    },
+    "parameter_scope": "candidate reduced ISA matches explicit core defaults; no actual compiled native hierarchy",
+    "current_core_initializes_DYN25_26_at_NSLOT1": false,
+    "candidate_consumer_requires_qualified_targeted_port": true
+  },
+  "storage": {
+    "reduced_record_elements": 64,
+    "ring_records": 8,
+    "payload_bytes_per_compressor": 2048,
+    "delta_from_two_records_bytes_per_compressor": 1536,
+    "original_prepare_delta_bytes_per_package": 6144,
+    "fullshape_record_stride_bound": false
+  },
+  "physical_context_bound": false,
+  "actual_native_compiled_provider": false,
+  "production_program_or_runtime_qualification": false,
+  "new_RTL": false,
+  "new_routes": false
+}
