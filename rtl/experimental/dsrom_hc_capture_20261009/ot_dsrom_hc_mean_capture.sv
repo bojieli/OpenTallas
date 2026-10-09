@@ -9,6 +9,7 @@
 module ot_dsrom_hc_mean_capture #(
     parameter integer USER_W=10, POS_W=21, EPOCH_W=4,
     parameter integer ADD_LAT=7, MUL_LAT=7,
+    parameter integer MAX_CONTEXT=1048576,
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
@@ -119,7 +120,7 @@ module ot_dsrom_hc_mean_capture #(
             capture_done<=0;
             case(state)
                 CMD: if(cmd_valid) begin
-                    if(cmd_capture>2 || (owned &&
+                    if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || (owned &&
                        (cmd_user!=user_q || cmd_position!=position_q || cmd_epoch!=epoch_q ||
                         captured[cmd_capture]))) fault<=1;
                     else begin

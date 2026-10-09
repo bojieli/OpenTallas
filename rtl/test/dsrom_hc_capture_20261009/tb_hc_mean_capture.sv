@@ -85,13 +85,14 @@ module tb_hc_mean_capture;
             cap=(phase==0)?2:(phase==1)?0:1;
             @(negedge clk);while(!cmd_ready) @(negedge clk);
             cmd_capture=(bad==4 && phase==0)?3:cap;
+            if(bad==10) cmd_position=21'd1048576;
             if(bad==1 && phase==1) cmd_epoch=12;
             if(bad==3 && phase==1) cmd_capture=2;
             cmd_valid=1;
             @(negedge clk);cmd_valid=0;
-            if((bad==4 && phase==0)||((bad==1||bad==3)&&phase==1)) begin
+            if(((bad==4||bad==10) && phase==0)||((bad==1||bad==3)&&phase==1)) begin
                 repeat(5) @(negedge clk);
-                if(!fault||out_valid||!busy && bad!=4) $fatal(1,"bad command escaped");
+                if(!fault||out_valid||((bad==1||bad==3)&&!busy)) $fatal(1,"bad command escaped");
                 $display("PASS negative command %0d retained prior ownership",bad);$finish;
             end
             for(beat=0;beat<160;beat=beat+1) begin

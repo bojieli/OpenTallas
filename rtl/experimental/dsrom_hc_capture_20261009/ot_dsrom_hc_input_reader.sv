@@ -8,6 +8,7 @@
 // Four protected row registers are reused for two eight-dimension beats.
 module ot_dsrom_hc_input_reader #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,
+    parameter integer MAX_CONTEXT=1048576,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -86,7 +87,7 @@ module ot_dsrom_hc_input_reader #(
             if(rsp_fault || (rsp_valid&&state!=WAIT)) fault<=1;
             else case(state)
                 IDLE: if(cmd_valid) begin
-                    if(cmd_capture>2 || cmd_region_rows<1280 || end_row>16384) fault<=1;
+                    if(cmd_capture>2 || cmd_position>=MAX_CONTEXT || cmd_region_rows<1280 || end_row>16384) fault<=1;
                     else begin capture_q<=cmd_capture;user_q<=cmd_user;
                         position_q<=cmd_position;epoch_q<=cmd_epoch;base_q<=cmd_h_row;rank_q<=cmd_rank;
                         row_q<=0;copy_q<=0;half_q<=0;state<=MCMD;end

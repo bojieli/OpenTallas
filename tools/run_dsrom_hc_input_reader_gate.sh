@@ -13,7 +13,7 @@ sources=(rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv
 iverilog -g2012 -s tb_hc_mean_capture -DHC_VM_READER -o "$out/reader.vvp" "${sources[@]}" >"$out/elaborate.log" 2>&1
 python3 tools/dsrom_hc_mean_capture_vectors.py --out "$out/synthetic"
 vvp "$out/reader.vvp" +vectors="$out/synthetic" >"$out/reader.log" 2>&1
-for bad in 6 7 8;do
+for bad in 6 7 8 10;do
  if vvp "$out/reader.vvp" +vectors="$out/synthetic" +bad="$bad" >"$out/negative_$bad.log" 2>&1;then
   echo "bad native H read $bad escaped" >&2;exit 1
  fi
