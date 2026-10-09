@@ -34,11 +34,11 @@ module ot_hbm_native_ar_token_join #(
   cp_token[TW-1:0]!=cp_token[2*TW-1:TW]);
  wire [3:0] status=identity_fault?4'd3:(cp_status[3:0]!=0?cp_status[3:0]:cp_status[7:4]);
  wire jr;
- assign job_rdy=ENABLE && jr;
+ assign job_rdy=ENABLE && jr && !external_fault;
  assign db_rdy=&cp_db_rdy;
  ot_hbm_token_loop #(.TW(TW),.PW(PW),.EXTERNAL_FAULT_EN(1)) u_loop(
   .clk(clk),.rst_n(rst_n),.post_en(post_en),.external_fault(external_fault),
-  .job_v(ENABLE && job_v),.job_rdy(jr),.job_id(job_id),.job_tok(job_tok),.job_pos(job_pos),
+  .job_v(ENABLE && job_v && !external_fault),.job_rdy(jr),.job_id(job_id),.job_tok(job_tok),.job_pos(job_pos),
   .job_ngen(job_ngen),.job_eos(job_eos),.job_eos_en(job_eos_en),.job_maxpos(job_maxpos),.job_mtp(1'b0),
   .host_stop(host_stop),.hr_v(hr_v),.hr_rdy(hr_rdy),.hr_d(hr_d),
   .db_v(db_v),.db_rdy(db_rdy),.db_token(db_token),.db_pos(db_pos),.db_job(db_job),
