@@ -13,6 +13,8 @@ module ot_dsrom_hc_seed_join #(
     // IN_SKID (cont-takeover 2026-10-09, default off): registered input boundary via ot_dsrom_hc_skid, +1 cycle per frame
     // arrival; the arrival checks (45 gate levels from the pins) then start at flops.
     parameter integer IN_SKID=0,
+    // OUT_SKID (cont-takeover 2026-10-09, default off): registered output boundary, +1 cycle per output frame.
+    parameter integer OUT_SKID=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -26,6 +28,20 @@ module ot_dsrom_hc_seed_join #(
     output wire [5:0] out_frame,output wire out_last,output wire out_corrected,
     output wire busy,output reg fault
 );
+    // OUT_SKID: registered output boundary (ot_dsrom_hc_skid): outputs straight from flops, out_ready lands in a flop.
+    wire y_out_valid,y_out_ready,y_out_last,y_out_corrected;wire [511:0] y_out_data;wire [USER_W-1:0] y_out_user;
+    wire [POS_W-1:0] y_out_position;wire [EPOCH_W-1:0] y_out_epoch;wire [1:0] y_out_capture;wire [5:0] y_out_frame;
+    generate if(OUT_SKID) begin:g_oskid
+        ot_dsrom_hc_skid #(.W(512+USER_W+POS_W+EPOCH_W+2+6+2)) u_out(.clk(clk),.rst_n(rst_n),
+            .i_valid(y_out_valid),.i_ready(y_out_ready),
+            .i_data({y_out_data,y_out_user,y_out_position,y_out_epoch,y_out_capture,y_out_frame,y_out_last,y_out_corrected}),
+            .o_valid(out_valid),.o_ready(out_ready),
+            .o_data({out_data,out_user,out_position,out_epoch,out_capture,out_frame,out_last,out_corrected}));
+    end else begin:g_odirect
+        assign out_valid=y_out_valid;assign y_out_ready=out_ready;assign out_data=y_out_data;assign out_user=y_out_user;
+        assign out_position=y_out_position;assign out_epoch=y_out_epoch;assign out_capture=y_out_capture;
+        assign out_frame=y_out_frame;assign out_last=y_out_last;assign out_corrected=y_out_corrected;
+    end endgenerate
     wire x_in_valid,x_in_ready,x_in_last;wire [511:0] x_in_data;wire [USER_W-1:0] x_in_user;
     wire [POS_W-1:0] x_in_position;wire [EPOCH_W-1:0] x_in_epoch;wire [1:0] x_in_capture;wire [5:0] x_in_frame;
     generate if(IN_SKID) begin:g_skid
@@ -67,11 +83,11 @@ module ot_dsrom_hc_seed_join #(
             ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
                 .valid_in(MACRO_CAP?mc_go:(state==RCAP&&!fault)),
                 .c((MACRO_CAP?held_code[72*l+:72]:memory_q[72*l+:72])^(l==0?READ_INJECT:72'd0)),
-                .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+                .valid_out(decode_valid[l]),.d(y_out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
         end else begin:g_comb
             assign decode_valid[l]=1'b0;
             ot_s81_secded_dec72 d(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-                .d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+                .d(y_out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
         end
     end
     for(b=0;b<3;b=b+1) begin:g_sram
@@ -83,10 +99,10 @@ module ot_dsrom_hc_seed_join #(
             .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
     end endgenerate
     assign x_in_ready=state==ARRIVE&&!fault;
-    assign out_valid=state==HOLD&&!fault&&!(|ue);
-    assign out_user=user_q;assign out_position=position_q;assign out_epoch=epoch_q;
-    assign out_capture=rcapture;assign out_frame=rframe;
-    assign out_last=rcapture==2&&rframe==39;assign out_corrected=out_valid&&(|ce);
+    assign y_out_valid=state==HOLD&&!fault&&!(|ue);
+    assign y_out_user=user_q;assign y_out_position=position_q;assign y_out_epoch=epoch_q;
+    assign y_out_capture=rcapture;assign y_out_frame=rframe;
+    assign y_out_last=rcapture==2&&rframe==39;assign y_out_corrected=y_out_valid&&(|ce);
     assign busy=owned;
     integer k;
     always @(posedge clk or negedge rst_n)
@@ -115,7 +131,7 @@ module ot_dsrom_hc_seed_join #(
                 RCAP: begin held_code<=memory_q[575:0];state<=ECC_PIPE?RECC:HOLD;end
                 RECC: if(&decode_valid) state<=HOLD;
                 HOLD: if(|ue) fault<=1;
-                    else if(out_ready) begin
+                    else if(y_out_ready) begin
                         if(rframe==39) begin
                             rframe<=0;
                             if(rcapture==2) begin
