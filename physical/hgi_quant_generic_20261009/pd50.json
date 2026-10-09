@@ -1,0 +1,83 @@
+{
+  "name": "hgi_quant_pd50-397461f5f-tc-cx",
+  "block": "ot_hgi_quant_decode",
+  "owner": "Codex:generic_quant_decode/quant_physical_pair",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 60,
+  "source": {
+    "branch": "codex/hgi-quant-physical-20261009",
+    "commit": "397461f5f"
+  },
+  "purpose": "Owner-approved HGI-1 G8 full32-lane/128-bit record quant decode; SATFINITE opt-in E4M3 corrected fork; all ports live. Physical-only density variant. Standalone boundary contract is provisional and explicitly not legacyhfd_quant die budget match. No adoption until generic die integration budget approved. Parent exact lockstep/CF-QDQ/mutants must pass before fleet intake.",
+  "registered_io": true,
+  "rtl_boundary": {
+    "levels": 16
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "ds_lockstep_and_mutant",
+        "cmd": "bash tools/hgi_quant_decode_bench.sh {RUN}/bench_ds",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16
+      },
+      {
+        "name": "ds_mutant_rejected",
+        "cmd": "test -s {RUN}/bench_ds/mutant.rc && test $(cat {RUN}/bench_ds/mutant.rc) != 0 && grep -q 'ARITHMETIC mismatch' {RUN}/bench_ds/mutant.log && exit 1; exit 0",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "cf_qdq_and_mutant",
+        "cmd": "bash tools/hgi_quant_vector_bench.sh {RUN}/bench_cf",
+        "expect": "pass",
+        "threads": 8,
+        "peak_ram_gb": 16
+      },
+      {
+        "name": "cf_scale_mutant_rejected",
+        "cmd": "test -s {RUN}/bench_cf/mutant.rc && test $(cat {RUN}/bench_cf/mutant.rc) != 0 && grep -q 'CF-QDQ golden mismatch' {RUN}/bench_cf/mutant.log && exit 1; exit 0",
+        "expect": "fail",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL} {RUN}/routes $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "threads": 12,
+      "peak_ram_gb": 60
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL} {RUN}/routes $CL_STOP_AFTER",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
+      "logs": [
+        "{RUN}/routes/{NAME}/flow.log"
+      ]
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc"
+    ]
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "New fullgeneric128-bit record/control interface absent from legacyhfd_quant budget. Explicit standalone route_master allinter150ps measuredTT reference/H1 boundary80fF load150ps transition used for pathfinding. Genericdie integration must supply and approve finalbudget before adoption."
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "cycles_added": 0,
+  "cycles_note": "nativeG8 23edges II1; densityvariants noadditionaledges; illegalrecord decode_fault registered1edge"
+}
