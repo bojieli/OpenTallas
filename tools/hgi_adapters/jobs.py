@@ -39,12 +39,16 @@ UNITS = {
     'mover': ('ot_hgi_dma_mover', ['rtl/hbm_accel/generic/peers/ot_hgi_dma_mover.sv'], (300, 300), (400, 240),
               'run_small.sh mover (HGI_MOVER: DMA adapter + mover on the real HGI VM + kport HBM model: CF-IDXD / CF-KV x 3 '
               'exact + 60 random LOAD / STORE over every format; MUT_RNE FAIL)'),
+    'xload': ('ot_hgi_sm_xload', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv'], (520, 520), (640, 420),
+              'run_small.sh sm_e2e (HGI_SM_E2E: record -> adapter -> x-load -> 2 real smh -> publication -> real VM; MUT_T FAIL)'),
+    'pub': ('ot_hgi_sm_pub', ['rtl/hbm_accel/generic/peers/ot_hgi_sm_pub.sv'], (700, 700), (860, 560),
+            'run_small.sh sm_e2e (HGI_SM_E2E; MUT_ROW FAIL)'),
     'hc': ('ot_hgi_hc_record', [f'{A}/ot_hgi_hc_record.sv'], (200, 200), (260, 180),
            'run_small.sh hc (HGI_HC: DS HC_MIX shapes; MUT_NF FAIL)'),
 }
 
 
-NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover'}     # no legacy pass-through parameter
+NOLEG = {'ot_hgi_att_issue', 'ot_hgi_argmax_record', 'ot_hgi_fused_record', 'ot_hgi_dma_mover', 'ot_hgi_sm_xload', 'ot_hgi_sm_pub'}     # no legacy pass-through parameter
 
 
 def route(top, srcs, die, hm, pd):
