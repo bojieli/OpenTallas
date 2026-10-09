@@ -35,8 +35,8 @@ module tb_hbm_hc_flat_operand_sram(input wire clk);
   if(|ue)begin ues=ues+1;if(q[(3*16+6)*32+:32]===0)poison_seen=1;end
   if(fault)begin
    if(mode==3&&ues>0&&poison_seen)begin $display("HC_FLAT_PASS UE_POISON");$finish;end
-   if(mode==4||mode==5)begin $display("HC_FLAT_PASS protocol_reject mode=%0d",mode);$finish;end
-   $fatal(1,"unexpectedflatfault mode%0d",mode);
+   else if(mode==4||mode==5)begin $display("HC_FLAT_PASS protocol_reject mode=%0d",mode);$finish;end
+   else $fatal(1,"unexpectedflatfault mode%0d",mode);
   end
   if(mode!=3&&injected&&cyc>=readstart+4&&(cyc-readstart)%5==4&&checks<80)begin
    for(b=0;b<8;b=b+1)for(l=0;l<32;l=l+1)
