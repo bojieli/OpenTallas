@@ -1,0 +1,12 @@
+{
+  "source_commit": "84984110a",
+  "bench_commit": "6ce7a0798",
+  "host": "ot-agidock128",
+  "remote": "/srv/opentallas-scratch/codex/s81-retirement-84984110a",
+  "verdict": "PASS238issues/238physicalcompletions/238validatedsrc_done/307reverseorderedreadbeats",
+  "scope": "Actual ownedwrite/allreadbeat retirement export; source producer and physical pin route integration remain unbound",
+  "sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv": "be22ec6cc0d1ae9533b7cceb6c86a33b76a2db859794b5b2426eea8641fc432f",
+    "rtl/test/s81_native_ingest/tb_s81_native_pc_mux.sv": "c8b1a092312865aa5dee8973c3ac7eedc15c6fe5577d4bd21e2e192868e3b904"
+  }
+}
