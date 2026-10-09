@@ -14,17 +14,20 @@ module ot_hbm_index_prefetch_source (
  localparam IDLE=0,ENCODE=1,SEND=2,WAIT=3,DECODE=4,RECEIPT=5;
  reg[2:0]state,state_bar;
  reg[98:0]pending,pending_bar;
+ reg armed,armed_bar;
  reg[1:0]seen_receipt;
  (* async_reg="true" *) reg[1:0]rs1,rs2;
  (* async_reg="true" *) reg fs1,fs2;
  task automatic next_state(input[2:0]s);begin state<=s;state_bar<=~s;end endtask
  ot_secded_enc #(.K(99),.R(8)) enc(.clk(clk),.d(pending),.q(rq_w));
- wire decode_v=state==WAIT && rs2[0]!=seen_receipt[0] && (^rs2)==1'b1 && !fault;
+ wire healthy=state==~state_bar && pending==~pending_bar &&
+  (^rq_epoch)==1'b1 && (^rc_release)==1'b1 && (^seen_receipt)==1'b1 && armed!=armed_bar;
+ wire decode_v=state==WAIT && rs2[0]!=seen_receipt[0] && (^rs2)==1'b1 && !fault&&healthy;
  wire ov,ce,ue;wire[72:0]frame;
  ot_secded_dec #(.K(73),.R(8)) dec(.clk(clk),.rst_n(rst_n),.v(decode_v),.w(rc_w),
   .ov(ov),.d(frame),.ce(ce),.ue(ue),.n_ce(),.n_ue());
- assign req_r=state==IDLE&&!fault;
- assign receipt_v=state==RECEIPT&&!fault;
+ assign req_r=state==IDLE&&!fault&&healthy&&armed&&!fs2;
+ assign receipt_v=state==RECEIPT&&!fault&&healthy&&!fs2;
  assign receipt_frame=pending[98:26];
  always@(posedge clk or negedge rst_n)
   if(!rst_n)begin rs1<=2'b10;rs2<=2'b10;fs1<=0;fs2<=0;end
@@ -32,12 +35,12 @@ module ot_hbm_index_prefetch_source (
  always@(posedge clk or negedge rst_n)
   if(!rst_n)begin
    next_state(IDLE);pending<=0;pending_bar<=~99'd0;
-   rq_epoch<=2'b10;rc_release<=2'b10;seen_receipt<=2'b10;fault<=0;
+   rq_epoch<=2'b10;rc_release<=2'b10;seen_receipt<=2'b10;fault<=0;armed<=1;armed_bar<=0;
   end else begin
-   if(state!=~state_bar || pending!=~pending_bar || (^rq_epoch)!=1'b1 ||
-      (^rc_release)!=1'b1 || fs2)fault<=1;
-   if(!fault&&!fs2)case(state)
-    IDLE:if(req_v&&req_r)begin pending<=req_d;pending_bar<=~req_d;next_state(ENCODE);end
+   if(!healthy||fs2)fault<=1;
+   if(!req_v)begin armed<=1;armed_bar<=0;end
+   if(!fault&&!fs2&&healthy)case(state)
+    IDLE:if(req_v&&req_r)begin pending<=req_d;pending_bar<=~req_d;armed<=0;armed_bar<=1;next_state(ENCODE);end
     ENCODE:next_state(SEND); // encoder captures the newly retained descriptor
     SEND:begin rq_epoch<={rq_epoch[0],~rq_epoch[0]};next_state(WAIT);end
     WAIT:if(decode_v)begin seen_receipt<=rs2;next_state(DECODE);end
@@ -65,12 +68,14 @@ module ot_hbm_index_prefetch_sink (
  reg[1:0]seen_request;
  (* async_reg="true" *) reg[1:0]qs1,qs2,as1,as2;
  task automatic next_state(input[2:0]s);begin state<=s;state_bar<=~s;end endtask
- wire decode_v=state==IDLE && qs2[0]!=seen_request[0] && (^qs2)==1'b1&&!fault;
+ wire healthy=state==~state_bar && pending==~pending_bar && last_frame==~last_frame_bar &&
+  last_valid!=last_valid_bar && (^rc_epoch)==1'b1 && (^seen_request)==1'b1;
+ wire decode_v=state==IDLE && qs2[0]!=seen_request[0] && (^qs2)==1'b1&&!fault&&healthy;
  wire ov,ce,ue;wire[98:0]decoded;
  ot_secded_dec #(.K(99),.R(8)) dec(.clk(clk),.rst_n(rst_n),.v(decode_v),.w(rq_w),
   .ov(ov),.d(decoded),.ce(ce),.ue(ue),.n_ce(),.n_ue());
  ot_secded_enc #(.K(73),.R(8)) enc(.clk(clk),.d(pending[98:26]),.q(rc_w));
- assign ip_v=state==ADMIT&&!fault;
+ assign ip_v=state==ADMIT&&!fault&&healthy;
  assign ip_d=pending;
  always@(posedge clk or negedge rst_n)
   if(!rst_n)begin qs1<=2'b10;qs2<=2'b10;as1<=2'b10;as2<=2'b10;end
@@ -81,9 +86,8 @@ module ot_hbm_index_prefetch_sink (
    last_frame<=0;last_frame_bar<=~73'd0;last_valid<=0;last_valid_bar<=1;
    seen_request<=2'b10;rc_epoch<=2'b10;fault<=0;
   end else begin
-   if(state!=~state_bar || pending!=~pending_bar || last_frame!=~last_frame_bar ||
-      last_valid==last_valid_bar || (^rc_epoch)!=1'b1)fault<=1;
-   if(!fault)case(state)
+   if(!healthy)fault<=1;
+   if(!fault&&healthy)case(state)
     IDLE:if(decode_v)begin seen_request<=qs2;next_state(DECODE);end
     DECODE:if(ov)begin
      if(ue || decoded[1:0]!=2'd2 || decoded[10:2]==0 || decoded[10:2]>9'd342 ||
