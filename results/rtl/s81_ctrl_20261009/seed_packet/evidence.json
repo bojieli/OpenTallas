@@ -1,0 +1,20 @@
+{
+ "schema":"opentallas.s81-seed-packet.component.v1",
+ "status":"PASS_COMPONENT_NOT_PHYSICAL_ADOPTION",
+ "host":"ot-agidock128", "admitted_ram_gb":2,
+ "remote_run":"/srv/opentallas-scratch/codex/ds-control/seed-packet-test-v2",
+ "rtl_sha256":"002494701b98fdf64d07a69e87b258ec0c82d34b0cfff2e929001fb2e2dfa985",
+ "bench_sha256":"d8bec67a4fb49d0b76294615a50911b1c33ffe34ae57cd3ff11fb509a8928469",
+ "native_source_sha256":"c70bdc51eaf92120f8404353fd423d4308d2432bb2a80f92dad63c9fd4485909",
+ "protected_join_sha256":"90a881c3452e3dff965f51b7a735aed8436cea65c948ea3629ca0e89dad97d88",
+ "secded_sha256":"5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+ "golden_input_sha256":"4f6541d8070cf6835ed442036c3767f5e8a1b9ca8684cb1d488d929688c26def",
+ "golden_expected_sha256":"2481ab5b333c0e8edf1fd6d20229df7eaf645869dda7fcc2a75a53dc44cf16b5",
+ "prebuild_model":"results/rtl/s81_ctrl_20261009/control_transport_unified_prebuild.json",
+ "full_shape":{"captures":3,"dimensions_per_rank":1280,"protected_payload_frames":120,"header_frames":3,"cycles":17103,"ordinary_frames_exact":2},
+ "protocol":{"type":5,"payload_frames_per_capture":40,"native_lane_bits":553,"header_capture_lsb":208,"header_epoch_lsb":210,"fixture_src_ids":[55,66,77],"fixture_dest_id":500},
+ "negative_gates":{"bad1.log":"forged source rejected","bad2.log":"capture3 rejected","bad3.log":"early last rejected","bad4.log":"mismatched epoch rejected by actual protected join; no output published"},
+ "replay":{"crc_errors":10,"replays":1,"cycles":17103,"exact_frames":120},
+ "remaining":["Actual L37/38/39 physical stage_join source/destination authentication map","Production reset/abort propagation","ECC_PIPE1 source/join successor qualification","Actual GFMT1/EPPIPE2 lane composition and contextual SS/FF route"],
+ "scope":"One actual proximal mean producer is reused for three captures; actual protected three-SRAM join. CT logical transport is not PHY timing evidence. No complete-token timing credit."
+}
