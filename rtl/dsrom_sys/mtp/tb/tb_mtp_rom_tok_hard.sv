@@ -1,16 +1,25 @@
 `timescale 1ns/1ps
 // Full 8-user x 16-slot lookup, 4-edge pipeline; writes are fenced before reads.
 module tb_mtp_rom_tok_hard;
+    parameter integer LOOKUP = 2; // 0 original,1 r3,2 HARD
+    localparam integer EDGES = LOOKUP==0 ? 1 : LOOKUP==1 ? 2 : 4;
     reg clk=0; always #1 clk=~clk;
     reg rn=0, c_we=0, dw_v=0, pr_re=0;
     reg [1:0] c_sel=0; reg [9:0] c_user=0, pr_user=0;
     reg [20:0] c_pos=0,c_val=0,pr_pos=0; reg [3:0] pr_blk=0;
     reg [511:0] dw_d=0;
     wire [9:0] cu; wire [20:0] cp,cg,q; wire qk,ft;
-    ot_dsrom_wfc_tok_r3 #(.HARD_READ(1)) dut(
+    generate if (LOOKUP==0) begin : baseline
+    ot_dsrom_wfc_tok dut(
         .clk(clk),.rst_n(rn),.c_we(c_we),.c_sel(c_sel),.c_user(c_user),.c_pos(c_pos),.c_val(c_val),
         .cfg_users(cu),.cfg_prompt_len(cp),.cfg_gen_len(cg),.dw_v(dw_v),.dw_d(dw_d),
         .pr_re(pr_re),.pr_user(pr_user),.pr_pos(pr_pos),.pr_blk(pr_blk),.pr_q(q),.pr_qk(qk),.fault(ft));
+    end else begin : successor
+    ot_dsrom_wfc_tok_r3 #(.HARD_READ(LOOKUP==2)) dut(
+        .clk(clk),.rst_n(rn),.c_we(c_we),.c_sel(c_sel),.c_user(c_user),.c_pos(c_pos),.c_val(c_val),
+        .cfg_users(cu),.cfg_prompt_len(cp),.cfg_gen_len(cg),.dw_v(dw_v),.dw_d(dw_d),
+        .pr_re(pr_re),.pr_user(pr_user),.pr_pos(pr_pos),.pr_blk(pr_blk),.pr_q(q),.pr_qk(qk),.fault(ft));
+    end endgenerate
     integer valid[0:127],prompt[0:127],pos[0:127],ep[0:127],tok[0:127];
     integer pv[0:3],pk[0:3],pt[0:3],reads=0,hits=0,stale=0,invalids=0,idle=0;
     integer i,j,u,b,k,ix,pass;
@@ -28,10 +37,10 @@ module tb_mtp_rom_tok_hard;
             for(t=3;t>0;t=t-1)begin pv[t]=pv[t-1];pk[t]=pk[t-1];pt[t]=pt[t-1];end
             pv[0]=ena;pk[0]=known;pt[0]=value;
             @(posedge clk);#0.1;
-            if(pv[3])begin
-                if(qk!==pk[3][0] || (pk[3] && q!==pt[3][20:0]))begin
-                    $display("MTP_TOK_HARD FAIL read=%0d got=%b/%0d expected=%0d/%0d",reads,qk,q,pk[3],pt[3]);$finish;end
-                reads=reads+1;if(pk[3])hits=hits+1;
+            if(pv[EDGES-1])begin
+                if(qk!==pk[EDGES-1][0] || (pk[EDGES-1] && q!==pt[EDGES-1][20:0]))begin
+                    $display("MTP_TOK_HARD FAIL read=%0d got=%b/%0d expected=%0d/%0d",reads,qk,q,pk[EDGES-1],pt[EDGES-1]);$finish;end
+                reads=reads+1;if(pk[EDGES-1])hits=hits+1;
             end
         end
     endtask
@@ -70,7 +79,7 @@ module tb_mtp_rom_tok_hard;
             repeat(4)tick(0,0,0,0);
         end
         if(ft || hits<200 || reads<600 || stale!=120)begin $display("MTP_TOK_HARD FAIL coverage/fault");$finish;end
-        $display("MTP_TOK_HARD PASS reads=%0d hits=%0d stale=%0d invalid_users=%0d bubbles=%0d latency_edges=4 II=1",reads,hits,stale,invalids,idle);
+        $display("MTP_TOK_HARD PASS reads=%0d hits=%0d stale=%0d invalid_users=%0d bubbles=%0d latency_edges=%0d II=1",reads,hits,stale,invalids,idle,EDGES);
         $finish;
     end
 endmodule

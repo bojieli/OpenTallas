@@ -7,9 +7,9 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args()
     if __import__('socket').gethostname()=='opentallas-codex':raise RuntimeError('remote only')
     a.out.mkdir(parents=True,exist_ok=True)
-    sources=['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv','rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv']
+    sources=['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv','rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv','rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv']
     records=[]
-    for name,defs,want in [('exact',[],'PASS'),('epoch_mutant',['-DOT_WFCTOK_MUT_NOEPOCH'],'FAIL')]:
+    for name,defs,want in [('original',['-Ptb_mtp_rom_tok_hard.LOOKUP=0'],'PASS'),('r3',['-Ptb_mtp_rom_tok_hard.LOOKUP=1'],'PASS'),('exact',[],'PASS'),('epoch_mutant',['-DOT_WFCTOK_MUT_NOEPOCH'],'FAIL')]:
         d=a.out/name;d.mkdir(exist_ok=True)
         cmd=['iverilog','-g2012','-s','tb_mtp_rom_tok_hard','-o',str(d/'sim.vvp')]+defs+[str(ROOT/s) for s in sources]
         r=subprocess.run(cmd,capture_output=True,text=True);(d/'build.log').write_text(r.stdout+r.stderr)
