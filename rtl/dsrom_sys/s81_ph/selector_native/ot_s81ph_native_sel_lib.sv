@@ -199,7 +199,13 @@ module ot_s81ph_native_sel_hist #(
             ot_s81ph_native_sel_popc #(.N(W), .OW(HW)) u_pc (.x(x), .y(h2_d[HW*gb +: HW]));
         end
     endgenerate
-    always @(posedge clk) h2 <= h2_d;
+    // HPIPE 2 (sys-takeover): h2 holds zero when no beat updates the bins (v1 && !x_clr is exactly v2's next value), so
+    // hbin adds every edge without the v2 enable; same values
+`ifdef S81PH_MUT_HPIPE2_MASK
+    always @(posedge clk) h2 <= h2_d;                                   // mutant: counts not masked
+`else
+    always @(posedge clk) h2 <= (HPIPE >= 2 && !(v1 && !x_clr)) ? {256*HW{1'b0}} : h2_d;
+`endif
 
     reg  [256*CB-1:0] hbin;
     wire [256*CB-1:0] hbin_d;
@@ -212,7 +218,7 @@ module ot_s81ph_native_sel_hist #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) hbin <= {256*CB{1'b0}};
         else if (x_clr) hbin <= {256*CB{1'b0}};
-        else if (v2) hbin <= hbin_d;
+        else if (HPIPE >= 2 || v2) hbin <= hbin_d;
     end
 
     // group sums: 4-bin sums, then 16-bin sums

@@ -58,7 +58,13 @@ module ot_s81ph_native_sel_slice #(
     // fq with its own copy, splitting the frp -> mem_wdata fanout (dossier B2: frp[1] -> mem_wdata[205] -1,427).
     // 0 cycles.  0 = the original single pointer.
     parameter integer FRPN = 0,
-    parameter integer FRPW = 256
+    parameter integer FRPW = 256,
+    // sys-takeover 2026-10-09 (selt_q-hm0cts16-b TT -132.45, with PIPE2): PIPE3 1 (needs PIPE2) = (a) o0_d loads EVERY
+    // edge from a select that uses only flops ({tq_last, mem_rdata} on an emit token, the end marker in P_EM, else
+    // {d_fin_push, pend}); o0_v alone marks a push (sw_st -> d_mid / d_fin -> o_push_c -> 593-bit o0_d enable, 17 lv);
+    // (b) histograms HPIPE 2: the bin counts h2 are zeroed when no beat updates them and hbin adds every edge (no
+    // v2 enable over the 2,816 bin flops; v2 -> hbin 18 lv).  Same values every edge; 0 cycles.
+    parameter integer PIPE3 = 0
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
@@ -296,11 +302,11 @@ module ot_s81ph_native_sel_slice #(
     wire p2m = (sw_k == K_P2) && (sw_st != SW_IDLE);
     wire sw_start;                                   // a sweep starts on this edge
     wire hc_busy, hf_busy;
-    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hc (
+    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE((PIPE3 != 0) ? 2 : PIPE2)) u_hc (
         .clk(clk), .rst_n(rst_n), .clr(seg_clr), .i_v(i1_v), .i_en(i1_s), .i_dg(hi_digits(i1_k)),
         .gsel(r_cg), .gsum(s_gc), .gbin(s_bc), .busy(hc_busy));
     wire f_clr = seg_clr || r_fclr || (sw_start && p2q);
-    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE(PIPE2)) u_hf (
+    ot_s81ph_native_sel_hist #(.W(W), .CB(CB), .HPIPE((PIPE3 != 0) ? 2 : PIPE2)) u_hf (
         .clk(clk), .rst_n(rst_n), .clr(f_clr), .i_v(p2m ? r1_v : i1_v), .i_en(p2m ? p2_en : i1_fm),
         .i_dg(p2m ? p2_dg : lo_digits(i1_k)), .gsel(r_fg), .gsum(s_gf), .gbin(s_bf), .busy(hf_busy));
     function automatic [W*8-1:0] hi_digits(input [W*16-1:0] k);
@@ -568,7 +574,13 @@ module ot_s81ph_native_sel_slice #(
         if (!rst_n) o0_v <= 1'b0;
         else if (seg_clr) o0_v <= 1'b0;
         else o0_v <= o_push_c;
-    always @(posedge clk) if (o_push_c) o0_d <= o_in_c;
+    wire [EW*W:0]  o_in_f   = (tq_v && tq_em) ? {tq_last, mem_rdata} : (ph == P_EM) ? {1'b1, {W*EW{1'b0}}} :
+                              {d_fin_push, pend};
+`ifdef S81PH_MUT_PIPE3_SEL
+    always @(posedge clk) o0_d <= (tq_v && tq_em) ? {tq_last, mem_rdata} : {d_fin_push, pend};   // mutant: no end marker
+`else
+    always @(posedge clk) if (PIPE3 != 0 || o_push_c) o0_d <= (PIPE3 != 0) ? o_in_f : o_in_c;
+`endif
     wire           o_push = (PIPE2 != 0) ? o0_v : o_push_c;
     wire [EW*W:0]  o_in   = (PIPE2 != 0) ? o0_d : o_in_c;
     wire           o_pop  = (ocnt != 0) && out_ready;
