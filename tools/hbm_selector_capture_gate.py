@@ -19,7 +19,7 @@ def main():
     # Execute the authoritative unified-model function before elaboration.
     node = next(n for n in ast.parse((ROOT/'tools/uarch_model.py').read_text()).body
                 if isinstance(n, ast.FunctionDef) and n.name == 'hbm_index_selector_capture_model')
-    ns = {}; exec(compile(ast.Module(body=[node], type_ignores=[]), 'uarch_model.py', 'exec'), ns)
+    ns = {'ROOT': ROOT, 'json': json}; exec(compile(ast.Module(body=[node], type_ignores=[]), 'uarch_model.py', 'exec'), ns)
     model = ns[node.name](2)
     (out/'model.json').write_text(json.dumps(model, indent=2)+'\n')
     sources = list(dict.fromkeys(C.RTL + [S.TB, C.TB, S.HARNESS, C.HARNESS,
