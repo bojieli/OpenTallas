@@ -52,6 +52,7 @@ module ot_hbm_accel_smh #(
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,         // leaves (rows) per hardened tile
+    parameter integer ENABLE_INT8 = 0, // opt-in fmt3; enabled front adds one registered cycle
     parameter integer REQCR = 1         // 1 (production): request port with ready latency 2 (req_ready captured raw;
                                         // see front_s); 0: the m3b same-cycle port (bench comparison only)
 ) (
@@ -125,7 +126,7 @@ module ot_hbm_accel_smh #(
     // so synthesis keeps their module names as the macro masters; any other configuration passes its parameters
     localparam integer DEF   = (SUB == 4 && LBS == 2 && LSB == 16 && NC == 8 && IL == 8 && RMAX == 4096 && LEV == 4
                                 && XD == 128 && MAX_OUT == 512 && TCK == 1 && PIO == 2 && HAZ == 1 && NOUT == 4
-                                && RPT == 2 && REQCR == 1) ? 1 : 0;
+                                && RPT == 2 && REQCR == 1 && ENABLE_INT8 == 0) ? 1 : 0;
     initial if (SUB % RPT != 0) $fatal(1, "ot_hbm_accel_smh: SUB must be a multiple of RPT");
     wire [SUB*RBW-1:0] f_rl, f_rr;
     wire [NP*BBW-1:0]  f_bl, f_br;
@@ -171,7 +172,7 @@ module ot_hbm_accel_smh #(
             .bout_r0(f_br[0 +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
             .fi_row0(n_row0), .fi_pbz(n_pbz));
         ot_hbm_accel_smh_front_c #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .RMAX(RMAX), .XD(XD),
-                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT)) u_fc (
+                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT), .ENABLE_INT8(ENABLE_INT8)) u_fc (
             .clk(clk), .rst_n(rst_n), .rout_l1(f_rl[RBW +: RBW]), .rout_r1(f_rr[RBW +: RBW]),
             .rout_l2(f_rl[2*RBW +: RBW]), .rout_r2(f_rr[2*RBW +: RBW]), .bout_l1(f_bl[BBW +: BBW]),
             .bout_r1(f_br[BBW +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
@@ -945,6 +946,7 @@ module ot_hbm_accel_smh_front_n #(
 endmodule
 
 module ot_hbm_accel_smh_front_c #(
+    parameter integer ENABLE_INT8 = 0,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -1004,6 +1006,8 @@ module ot_hbm_accel_smh_front_c #(
     localparam integer NSL   = (1088 + 31) / 32;
     initial if (SUB != 4 || RPT != 2) $fatal(1, "ot_hbm_accel_smh_front_c: the three-strip front assumes SUB 4, RPT 2");
 
+    initial if (ENABLE_INT8 && LSB != 16)
+        $fatal(1, "fmt3 adapter requires the production 64 BF16 lanes");
     // ---------------- face halves of the channels and chains ----------------
     wire          h_start, h_pop;
     wire [OPX-1:0] h_opx;
@@ -1016,6 +1020,15 @@ module ot_hbm_accel_smh_front_c #(
     wire [7:0]  h_g    = h_op[3 +: 8];
     wire        h_gs   = h_op[2];
     wire [1:0]  h_fmt  = h_op[1:0];
+`ifndef SYNTHESIS
+    // The packed image contains pairs of real issue beats; padding slots do
+    // not consume data. Reject an incomplete pair rather than leak a half into
+    // the next operation. Production Qwen op_c is always even.
+    always @(posedge clk)
+        if (rst_n && ENABLE_INT8 && h_pop && h_fmt == 2'd3 &&
+            h_rows[0] && h_c[0] && h_g[0])
+            $fatal(1, "fmt3 needs an even count of real issue beats");
+`endif
     wire h_rsp_v; wire [9:0] h_rsp_tag; wire [1087:0] h_rsp_data;
     // response: stages 3 and 4 of m2's four (the north-face landing, then beside the ring)
     ot_hbm_accel_smv_chain #(.W(1), .D(2), .RST(1)) u_prv (.clk(clk), .rst_n(rst_n), .d(fp_v), .q(h_rsp_v));
@@ -1064,6 +1077,25 @@ module ot_hbm_accel_smh_front_c #(
     always @(posedge clk or negedge rst_n)
         if (!rst_n) xb_q <= {XW{1'b0}};
         else if (h_pop) xb_q <= h_xb;
+    wire issue_w_valid, issue_w_ready, issue_line_end;
+    wire [1087:0] issue_w_data;
+    generate if (ENABLE_INT8) begin : g_int8
+        wire unpack_ready;
+        reg input_open;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) input_open <= 1'b0;
+            else if (h_pop) input_open <= 1'b1;
+            else if (issue_line_end) input_open <= 1'b0;
+        wire demand = input_open && !issue_line_end;
+        assign w_ready = unpack_ready && demand;
+        ot_hbm_accel_int8_line u_unpack (.clk(clk), .rst_n(rst_n),
+            .int8_mode(fmt_q == 2'd3), .s_valid(w_valid && demand), .s_ready(unpack_ready), .s_data(w_data),
+            .m_valid(issue_w_valid), .m_ready(issue_w_ready), .m_data(issue_w_data));
+    end else begin : g_no_int8
+        assign issue_w_valid = w_valid;
+        assign w_ready = issue_w_ready;
+        assign issue_w_data = w_data;
+    end endgenerate
     // the unpack's format select (m2, unchanged): launch register, 4 copies, NFC copies, 2 x NFMT replicas
     localparam integer NFR = 2 * NFMT;
     localparam integer NFC = (NFR + 7) / 8;
@@ -1104,10 +1136,10 @@ module ot_hbm_accel_smh_front_c #(
 `endif
     ot_hbm_accel_issue_pq #(.IL(IL), .RMAX(RMAX), .XDEPTH(XD), .NOUT(NOUT), .HAZ(HAZ), .DBF(DBFX)) u_issue (
         .clk(clk), .rst_n(rst_n), .start_v(h_start), .launch(h_pop), .op_rows(h_rows), .op_c(h_c), .op_g(h_g),
-        .op_gs(h_gs), .op_bf(h_fmt == 2'd0),
-        .w_valid(w_valid), .x_rdy(1'b1), .w_ready(w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
+        .op_gs(h_gs), .op_bf(h_fmt == 2'd0 || (ENABLE_INT8 && h_fmt == 2'd3)),
+        .w_valid(issue_w_valid), .x_rdy(1'b1), .w_ready(issue_w_ready), .rdone(sv), .busy(h_busy), .iss_v(adv),
         .iss_row_ok(row_ok), .iss_slot(si), .iss_row(row_now), .iss_first(i_first), .iss_last(i_last),
-        .iss_glast(i_glast), .iss_rev_end(), .xa(xa), .arrive(h_arrive), .release_in(h_release),
+        .iss_glast(i_glast), .iss_line_end(issue_line_end), .iss_rev_end(), .xa(xa), .arrive(h_arrive), .release_in(h_release),
         .released(h_released), .hz_wait());
     // barrier outputs: launched at the north face (front_n lands them and launches them at its pins)
     ot_hbm_accel_smv_chain #(.W(3), .D(1), .RST(1)) u_pbz (.clk(clk), .rst_n(rst_n),
@@ -1126,9 +1158,9 @@ module ot_hbm_accel_smh_front_c #(
         else s1_cv <= {adv && row_ok, i_first, i_last};
     always @(posedge clk) begin
 `ifdef OT_SMH_MUT_S1W
-        s1_w <= w_data ^ 1088'd8;               // negative-control mutant only (bench: --mut-s1w); never defined in a build
+        s1_w <= issue_w_data ^ 1088'd8;               // negative-control mutant only (bench: --mut-s1w); never defined in a build
 `else
-        s1_w <= w_data;
+        s1_w <= issue_w_data;
 `endif
         s1_ct <= {row_now[RW-1:0], i_glast, si, xa + xb_q};
     end
@@ -1205,7 +1237,7 @@ module ot_hbm_accel_smh_front_c #(
             end
             assign un[LBS*266 +: LSB*16] = lw[sp*LSB*16 +: LSB*16];
             localparam integer RC = sd * NFMT + (SUB * LBS * 8 + sp) % NFMT;
-            wire bf_op = (fmt_r[2*RC +: 2] == 2'd0);
+            wire bf_op = (fmt_r[2*RC +: 2] == 2'd0) || (ENABLE_INT8 && fmt_r[2*RC +: 2] == 2'd3);
             wire fp4_op = (fmt_r[2*RC +: 2] == 2'd2);
             wire [S1W-1:0] c1 = s1c2[CI*S1W +: S1W];
             wire s1_v = c1[S1W-1], s1_first = c1[S1W-2], s1_last = c1[S1W-3];
