@@ -8,8 +8,50 @@
 # routed FF mean ~307 -> output-port-only hold -43).  Only the insertion-reference virtual clocks (vclk*, ot_lb_v_*,
 # nbr_clk) move; window clocks with explicit min/max source latency (io_clk, io_ci/io_co) are kept.  Virtual clock -> real clock: ot_lb_v_<name> / a name match, else
 # the only real clock with register sinks, else core_clk for vclk*, else the dominant one (>= 4x the register sinks of any other); otherwise left unchanged (OT_IOREF skip).  Prints one OT_IOREF line per clock.
+# MMFF-INSERTION 2026-10-08: in a MULTI-SCENE session (orfs_hold_mm.tcl: WC = TT/SS libs + BC = FF libs in one STA)
+# `get_property <pin> arrival_max_rise` is the max over ALL scenes = the TT/SS arrival, not this mode's corner: the
+# route-time FF scene set vclk 1.2x too late (hbm_vm8_nws_s2_hm25 4_1_cts: mm 455.7 = TT-only 455.7, FF-only 380.2 =
+# calibrate 380) -> FF output hold over-repaired / input hold under-repaired by ~75 ps on every mm route.  The caller
+# names its scene in ::ot_ioref_scene (ot_mm_sync: BC); arrivals are then read with report_arrival -scene (the max of
+# the rise arrivals, = arrival_max_rise of a single-corner session).  A single-scene session is unchanged.
+proc ot_ir_multi {} { expr {![catch {sta::multi_scene} m] && $m} }
+proc ot_ir_arr {p} {
+  if {![ot_ir_multi]} { return [get_property $p arrival_max_rise] }
+  set sc [expr {[info exists ::ot_ioref_scene] ? [list -scene $::ot_ioref_scene] : {}}]
+  sta::redirect_string_begin
+  catch {report_arrival {*}$sc -digits 4 $p}
+  set r [sta::redirect_string_end]
+  set v ""
+  foreach {- x} [regexp -all -inline {\sr\s+\S+:(\S+)} $r] { if {[string is double -strict $x] && ($v eq "" || $x > $v)} { set v $x } }
+  return $v
+}
+if {[ot_ir_multi] && ![info exists ::ot_ioref_scene]} {
+  # a run whose own orfs_hold_mm.tcl predates ::ot_ioref_scene: its hold scene is named BC (orfs_hold_mm) or ff (hold_eco)
+  foreach ot_ir_n {BC ff} { if {![catch {sta::find_scene $ot_ir_n} ot_ir_o] && $ot_ir_o ne "" && $ot_ir_o ne "NULL"} { set ::ot_ioref_scene $ot_ir_n; break } }
+}
+if {[ot_ir_multi]} {
+  if {[info exists ::ot_ioref_scene]} { puts "OT_IOREF multi-scene session: arrivals of scene $::ot_ioref_scene" } else {
+    puts "OT_IOREF WARNING: multi-scene session without ::ot_ioref_scene: arrivals of the command scene" }
+}
 set ot_ir_real {}
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
+# S81-TAIL 2026-10-08: a data input delay on a REAL clock's source port (route SDCs that budget every non-core input,
+# e.g. s81ph dsfd_ctrl_pc: set_input_delay 316.7 -clock vclk on ckh[0] = hbm_clk) makes the register clock pins of
+# that clock carry a DATA arrival (vclk latency + input delay + tree), and arrival_max_rise below returns it instead
+# of the clock arrival: hbm_clk measured 796 TT / 752 FF vs the real tree 226 / 188 -> fake i2r TT -556 / out FF -487.
+# A clock source port times no data, so its input delays are dropped before the measurement.
+foreach cn $ot_ir_real {
+  foreach s [get_property [get_clocks $cn] sources] {
+    set sn [get_full_name $s]
+    if {![llength [get_ports -quiet $sn]]} continue
+    # unset_input_delay without -clock only drops clock-less delays: one call per reference clock and edge
+    foreach ot_ir_c [all_clocks] {
+      unset_input_delay -clock $ot_ir_c [get_ports $sn]; unset_input_delay -clock $ot_ir_c -clock_fall [get_ports $sn]
+    }
+    unset_input_delay [get_ports $sn]
+    puts "OT_IOREF clock-port $sn ($cn): data input delays dropped"
+  }
+}
 set ot_ir_bnd [dict create]
 set ot_ir_din [all_inputs -no_clocks]
 if {[llength $ot_ir_din]} {
@@ -25,7 +67,7 @@ set ot_ir_nreg [dict create]
 foreach cn $ot_ir_real {
   set b {}; set a {}
   foreach p [all_registers -clock_pins -clock [get_clocks $cn]] {
-    set v [get_property $p arrival_max_rise]
+    set v [ot_ir_arr $p]
     if {$v eq "" || $v eq "INF" || $v eq "-INF"} continue
     lappend a $v
     if {[dict exists $ot_ir_bnd [regsub {/[^/]+$} [get_full_name $p] {}]]} { lappend b $v }

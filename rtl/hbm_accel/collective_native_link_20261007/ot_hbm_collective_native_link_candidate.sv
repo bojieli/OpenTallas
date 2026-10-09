@@ -15,6 +15,10 @@ module ot_hbm_collective_native_link_candidate #(
     parameter integer SLOTREG = 1,
     parameter integer OWNER_BANKED_HALF = 0, // default off; sender/receiver credits
     parameter integer OWNER_TRUE_CREDIT = 0, TC_FWD = 7, TC_RET = 7, // internal candidate; actual physical hops unqualified
+    // credit-ready (2026-10-08, default 0 = same-cycle receiver_ready): OWNER_RX_CREDIT=1 (needs OWNER_TRUE_CREDIT and
+    // OWNER_BANKED_HALF) uses ot_ha2_truecredit_receiver_p CREDIT=1 and the half owner's H_CREDIT pulses (OWNER_RX_CRD
+    // credits = the half owner's injector FIFO depth FD=8).
+    parameter integer OWNER_RX_CREDIT = 0, OWNER_RX_CRD = 8,
     parameter integer OWNER_HUB_QAW = 6,
     parameter integer NC     = 8,
     parameter integer NOG    = 8,
@@ -177,11 +181,20 @@ module ot_hbm_collective_native_link_candidate #(
                 .v_out(backv[i]),.d_out(backtag[i*TW+:TW]),.quiet());
             end
           end
+          if(OWNER_RX_CREDIT!=0)begin:g_rx_credit
+            // credit-ready: pipelined receiver, owner_h_r = registered credit-return pulses from the half owner
+            ot_ha2_truecredit_receiver_p #(.W(HW),.INJ(INJ),.AW(OWNER_HUB_QAW),.TAGW(TW),.CREDIT(1),.CRD(OWNER_RX_CRD)) u_rx
+             (.clk(clk),.rst_n(rst_n),.arrival_v(rxv),.arrival_data(rxdata),.arrival_tag(rxtag),
+              .receiver_ready(owner_h_r),.send_v(h_v),.send_data(h_d),.return_v(rv),.return_tag(rtag),
+              .quiet(rq),.fault(rf));
+          end else begin:g_rx_ready
           ot_ha2_truecredit_receiver #(.W(HW),.INJ(INJ),.AW(OWNER_HUB_QAW),.TAGW(TW)) u_rx
            (.clk(clk),.rst_n(rst_n),.arrival_v(rxv),.arrival_data(rxdata),.arrival_tag(rxtag),
             .receiver_ready(owner_h_r),.send_v(h_v),.send_data(h_d),.return_v(rv),.return_tag(rtag),
             .quiet(rq),.fault(rf));
+          end
           assign hub_sender_quiet=tq&&rq;assign hub_sender_fault=tf||rf;
+          initial if(OWNER_RX_CREDIT!=0 && OWNER_RX_CRD>8)$fatal(1,"HA2 rx credits exceed the half owner FIFO (FD=8)");
         end else if(OWNER_BANKED_HALF && NC>1)begin:g_hub_credit
           initial if((1<<OWNER_HUB_QAW)<HUBW+2)$fatal(1,"HA2 hub credits do not cover flight");
           ot_ha2_hub_credit_sender #(.W(32+FW),.INJ(INJ),.AW(OWNER_HUB_QAW)) u_sender
@@ -366,7 +379,7 @@ module ot_hbm_collective_native_link_candidate #(
             .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(owner_issue),.quiet(owner_quiet));
         end else if(NC>1)begin:g_half_owner
             ot_ha2_tu_owner_banked_half #(.NC(NC),.PFMAX(PFMAX),.LANES(LANES),.BF16(BF16),
-              .INJ(INJ),.NPT(NPT),.LAT(LAT)) u_owner
+              .INJ(INJ),.NPT(NPT),.LAT(LAT),.H_CREDIT((OWNER_RX_CREDIT!=0&&OWNER_TRUE_CREDIT!=0)?1:0)) u_owner
             (.clk(clk),.rst_n(rst_n),.active(context_bound&&CONTRIB&&!context_fault),.arm(arm),.rank(RANK[7:0]),.pf(PF[15:0]),
              .h_v(h_v),.h_d(h_d),.h_r(owner_h_r),.p_v(partial_v),.p_flit(partial_flit),.p_r(owner_p_r),
              .r_v(r_v),.r_m(r_m),.r_d(r_d),.dupe(dupe),.issue_o(owner_issue),.quiet(owner_quiet));

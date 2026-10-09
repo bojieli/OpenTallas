@@ -137,8 +137,9 @@ def generate(e,case):
                 clock='ck',edge='rising',evidence_grade='composition declaration only; Q3 RTL/physical receiver absent')
         elif n=='bad':
             ad=ports(tiles,'dsfd_svcio_ad');assert ad['fi']['bits']==p['bits'] and ad['fi']['dir']=='input'
-            assert '.fi(bad_od)' in tiles
-            p['adjacent_endpoint']=dict(master='dsfd_svcio_ad',instance='u_io.u_ad',port='fi',clock='ck',edge='rising',evidence_grade='tiled RTL composition')
+            assert '.fi(bad_fi)' in tiles and 'dsfd_svcio_fstn u_fs (.ck(ck), .d(bad_od), .q(bad_fi))' in tiles
+            # s81-die-2 RQ-2: bad -> fault station u_fs (FSTN 1) -> u_ad.fi
+            p['adjacent_endpoint']=dict(master='dsfd_svcio_fstn',instance='u_io.u_fs',port='d',clock='ck',edge='rising',then=dict(master='dsfd_svcio_ad',instance='u_io.u_ad',port='fi'),evidence_grade='tiled RTL composition')
         else:p['adjacent_endpoint']=None
     assert 'ot_fwd_clk_inv u_of (.a(ck[0]), .y(of[0]))' in tiles
     # Cross-check all literal widths with physical pin inventory; directions are

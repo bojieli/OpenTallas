@@ -4,7 +4,7 @@
 // wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles
 // earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.
 module tb_qfd_constants_sequencer;
-    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4;
+    parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0;
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, PAW = 12, SW = 64, LV = 7, D = 4;
     localparam integer SMIN = 7, SMAX = 11, TCUT = 7, L = IS + OS;
     reg clk = 0, rst_n = 0;
@@ -140,7 +140,7 @@ module tb_qfd_constants_sequencer;
     wire m_me_clk, r_me_clk;
     wire me_mem_ok_m;
     ot_hdc_delay #(.W(1), .D(IS)) u_mmo (.clk(clk), .rst_n(1'b1), .d(me_mem_ok), .q(me_mem_ok_m));
-    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT)) dut (
+    ot_qfd_sp_constants_sequencer #(.IS(IS), .OS(OS), .MUT(MUT), .RT(RT), .FQ_HEAD(FQ_HEAD)) dut (
         .clk(clk),
         .rst_n(rst_n),
         .po_me_clk(m_me_clk),
@@ -300,7 +300,7 @@ module tb_qfd_constants_sequencer;
     always @(posedge clk) if (res_re_w) rtok_l <= rcore_tok_w;
     assign rme_go_w = r_po_me_go; assign rsu_go_w = r_po_su_go; assign rme_amax_w = r_po_me_i_amax;
     assign rsu_sfu_w = r_po_su_i_sfu; assign rme_en_w = r_me_clk_en; assign r_su_tok = rtok_l;
-    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT)) ref_core (
+    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD)) ref_core (
         .clk(clk),
         .rst_n(rst_n),
         .start(core_start),

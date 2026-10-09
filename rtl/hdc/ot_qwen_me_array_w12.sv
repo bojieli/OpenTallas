@@ -47,6 +47,7 @@ module ot_qwen_me_array_w12 #(
     parameter integer ROM_PIPE = 0,       // ot_qwen_rom_tile_logic_w12 ROM_PIPE / ROM_ARELAY / LRST (tiles' memories ROM_ARELAY + 2 later)
     parameter integer ROM_ARELAY = 1,
     parameter integer ROM_MUT = 0,
+    parameter integer ROM_CAP2 = 0,       // ot_qwen_rom_tile_logic_w12 ROM_CAP2 (safe-qwen S-A1): memories one more cycle later
     parameter integer BAW = 12,
     parameter integer LRST = 0,
     parameter integer SCALE_LOCAL = 0,    // port-local scale ROM (ot_qwen_w12_matvec_part SCALE_LOCAL)
@@ -110,7 +111,7 @@ module ot_qwen_me_array_w12 #(
     localparam integer LT  = $clog2(TG);
     localparam integer NXC = 1 << SMAX;
     localparam integer NXL = NXC / TG;
-    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2) : 0;
+    localparam integer RXA = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2) : 0;
     localparam integer XD  = BD + (TCUT - LT) * NWS + TWS + MEM_EXTRA + RXA;
     localparam integer NPT = GT >> TCUT;                  // tree words into the top
     localparam integer IBW = 3 * NW + 13 * AW + 13;       // the i_* fields
@@ -200,7 +201,7 @@ module ot_qwen_me_array_w12 #(
             end
             wire [TG*W*32-1:0] kvq = t_kv_q[t*TG*W*32 +: TG*W*32];
             ot_qwen_rom_tile_logic_w12 #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN),
-                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .LRST(LRST), .BAW(BAW),
+                .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .LRST(LRST), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
                 .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),

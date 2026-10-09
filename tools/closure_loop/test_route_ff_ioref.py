@@ -124,5 +124,54 @@ class FfSceneReadsIorefLast(unittest.TestCase):
         self.assertNotIn("ff_ioref_last.sdc", self.sync(["a.sdc"], with_file=False))
 
 
+SHIM_STUBS = r"""
+proc set_mode {m} {}
+proc write_sdc {args} {}
+proc set_propagated_clock {args} {}
+proc all_clocks {} { return {} }
+proc set_false_path {args} {}
+proc estimate_parasitics {args} {}
+proc unset_path_exceptions {args} {}
+proc find_timing_paths {args} { return {} }
+proc get_pins {args} { return [list [lindex $args end]] }
+proc get_ports {args} { return {} }
+proc get_property {args} { return "ALLSCENES" }
+proc report_clock_latency {args} { puts "RCL $args" }
+proc report_arrival {args} { puts "(c ^) r 10.0:12.5 f ---:---"; puts "(c v) r 11.0:14.0 f 1:2" }
+namespace eval sta { proc redirect_string_begin {} { rename ::puts ::ot_rp; proc ::puts {s} { append ::ot_rb $s "\n" } ; set ::ot_rb "" }
+                     proc redirect_string_end {} { rename ::puts {}; rename ::ot_rp ::puts; return $::ot_rb } }
+proc read_sdc {f} { puts "IN [get_property p arrival_max_rise] [get_property -object_type pin p arrival_min_rise] [get_property p name] [info exists ::ot_ioref_scene]"; report_clock_latency -clocks c }
+source [lindex $argv 0]
+set ::ot_mm_active 1
+set ::ot_mm_stage 3_place.sdc
+set ::env(RESULTS_DIR) [lindex $argv 1]
+ot_mm_sync
+puts "OUT [get_property p arrival_max_rise] [info exists ::ot_ioref_scene]"
+report_clock_latency -clocks c
+"""
+
+
+@unittest.skipUnless(shutil.which("tclsh"), "tclsh missing")
+class FfSceneArrivalsAreBc(unittest.TestCase):
+    """MMFF-INSERTION: while the FF SDCs are read, pin arrivals / clock latency come from scene BC only"""
+
+    def test_shim(self):
+        d = tempfile.mkdtemp()
+        try:
+            Path(d, "a.sdc").write_text("")
+            Path(d, "t.tcl").write_text(SHIM_STUBS)
+            env = dict(os.environ, OT_MM_FF_SDC=str(Path(d, "a.sdc")), OT_MM_IOREF_FILE=str(Path(d, "none.sdc")))
+            out = subprocess.run(["tclsh", str(Path(d, "t.tcl")), str(Path(__file__).parent.parent / "orfs_hold_mm.tcl"), d],
+                                 env=env, capture_output=True, text=True, timeout=60)
+            self.assertEqual(out.returncode, 0, out.stderr)
+            o = out.stdout.splitlines()
+            self.assertIn("IN 14.0 10.0 ALLSCENES 1", o)            # max/min of the BC rise arrivals; other props pass through
+            self.assertIn("RCL -clocks c -scenes BC", o)
+            self.assertIn("OUT ALLSCENES 0", o)                    # restored after the sync
+            self.assertEqual(o[-1], "RCL -clocks c")
+        finally:
+            shutil.rmtree(d)
+
+
 if __name__ == "__main__":
     unittest.main()

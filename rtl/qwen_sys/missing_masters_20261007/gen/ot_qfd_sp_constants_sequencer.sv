@@ -13,7 +13,8 @@ module ot_qfd_sp_constants_sequencer #(
     parameter integer PAW = 12, parameter integer SW = 64, parameter integer LV = 7, parameter integer D = 4,
     parameter integer SMIN = 7, parameter integer SMAX = 11, parameter integer TCUT = 7,
     parameter integer IS = 1, parameter integer OS = 1, parameter integer MUT = 0,
-    parameter integer RT = 4    // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)
+    parameter integer RT = 4,   // engine / unit edges from a go to post-accept status (DCU + DUC, ot_qfd_issue_shell)
+    parameter integer FQ_HEAD = 0   // safe-qwen S-A6: the controller's registered FIFO head word (+1 edge when dry)
 ) (
     input  wire clk,
     input  wire rst_n,
@@ -436,7 +437,7 @@ module ot_qfd_sp_constants_sequencer #(
     wire wrom_re_w;
     assign b_rom_fault = wrom_re_w;
     assign b_core_fault = core_fault_w;
-    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT)) u_ctrl (
+    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD)) u_ctrl (
         .clk(clk),
         .rst_n(rs),
         .start(core_start),

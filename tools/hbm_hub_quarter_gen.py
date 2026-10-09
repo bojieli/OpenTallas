@@ -55,6 +55,13 @@ QUARTERS = {
                 C2=1, G=8, L=1, PIPE=1, lane_wh=(159.84, 330.48)),
     'hc': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane', src=HC_RTL, params={'ML': 7, 'AL': 6},
                per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1, lane_wh=(85.32, 115.02)),
+    # safe-hbm 2026-10-08 (REVIEW_20261008 C1, S-C1): the HC quarter around the PIN-REGISTERED lane
+    # (ot_dsrom_su_hcpost_lane_pr: a flop at every lane input pin, +1 cycle) with each lane (and its output capture lq)
+    # clocked by the clock of the broadcast bank that launches into it (lane clock entry matched to the bc launch), and
+    # every broadcast relay hop (band -> first bank, bank -> bank, bank -> its lanes) checked <= HOP (480 um).
+    'hcp': dict(master='hfd_hc', lane='ot_dsrom_su_hcpost_lane_pr', src='rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv',
+                params={'ML': 7, 'AL': 6}, per_lane=['r0', 'r1', 'r2', 'r3', 'y'], C2=1, G=11, L=2, PIPE=1,
+                lane_wh=(85.32, 115.02), lane_ck_bank=True, bc_hop_check=True),
 }
 
 
@@ -267,7 +274,7 @@ def emit_rtl(P, neg=False):
             L_.append(f'    (* keep *) reg [{P.LB}:0] bc_{k}_{g};  always @(posedge {ck(gy[(k, g)])}) bc_{k}_{g} <= {src};')
     for j, k, g, s_, i in P.lanes():
         b = f'bc_{k}_{g}'
-        lc = ck(P.lane_y.get(j, band_y))
+        lc = ck(gy[(k, g)]) if q.get('lane_ck_bank') else ck(P.lane_y.get(j, band_y))
         conns = [f'.clk({lc})', f'.rst_n(~{b}[{P.LB}])']
         bi = 0
         pi = 0
@@ -502,6 +509,25 @@ def main():
     if a.lane_size:                      # placement first: the multi-ck wrapper clocks each register by its segment
         tcl, fp = emit_place(P, a.lane_size[0], a.lane_size[1], pj['w_um'], pj['h_um'], two_sided=a.two_sided)
         P.lane_y = {r[0]: r[2] + a.lane_size[1] / 2 for r in fp['lanes']}
+    if q.get('bc_hop_check') and a.lane_size:
+        # broadcast relay hops (Manhattan, um): band -> first group bank, bank -> next bank, bank -> farthest lane pin
+        # edge of its group (banks sit in the channel between the two columns, at the group's mean lane y)
+        cols = fp.get('column_x', [[0, 0]])[0]
+        chx = (cols[0] + a.lane_size[0] + cols[1]) / 2 if len(cols) > 1 else cols[0]
+        gyy = {}
+        for j, k, g, s_, i in P.lanes():
+            gyy.setdefault((k, g), []).append(P.lane_y.get(j, P.H / 2))
+        hops = []
+        for k in range(P.K):
+            prev = P.H / 2
+            for g in range(P.G):
+                y = sum(gyy[(k, g)]) / len(gyy[(k, g)])
+                hops.append(abs(y - prev))
+                prev = y
+                hops.append(max(abs(yy - y) for yy in gyy[(k, g)]) + abs(chx - (cols[0] + a.lane_size[0])))
+        info_hop = max(hops)
+        print(f'bc relay max hop {info_hop:.1f} um (limit {HOP})', file=sys.stderr)
+        assert info_hop <= HOP, f'broadcast relay hop {info_hop:.1f} um > {HOP} um'
     (out / f'{m}.sv').write_text(emit_rtl(P))
     (out / f'{m}_neg.sv').write_text(emit_rtl(P, neg=True))
     (out / f'{q["lane"]}_simstub.sv').write_text(emit_stub(P))
