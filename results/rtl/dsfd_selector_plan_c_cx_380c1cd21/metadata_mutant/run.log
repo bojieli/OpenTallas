@@ -1,0 +1,496 @@
+cyc 0
+FAIL uniform_k512 beat 0 lane 0 idx 2359 ref 38
+FAIL uniform_k512 beat 0 lane 1 idx 1418 ref 68
+FAIL uniform_k512 beat 0 lane 2 idx 1427 ref 76
+FAIL uniform_k512 beat 0 lane 3 idx 1441 ref 88
+FAIL uniform_k512 beat 0 lane 4 idx 1452 ref 97
+FAIL uniform_k512 beat 0 lane 5 idx 1469 ref 100
+FAIL uniform_k512 beat 0 lane 6 idx 1476 ref 101
+FAIL uniform_k512 beat 0 lane 7 idx 1478 ref 109
+FAIL uniform_k512 beat 0 lane 8 idx 158 ref 119
+FAIL uniform_k512 beat 8: lv 000f/ffff q 0/0 last 0/0
+FAIL uniform_k512 beat 17: lv ffff/ffff q 0/0 last 1/0
+FAIL uniform_k512 beat 18: lv 0000/0007 q 1/0 last 1/1
+FAIL uniform_k512 beat 19: lv ffff/0000 q 2/1 last 0/1
+FAIL uniform_k512 beat 27: lv 007f/ffff q 2/2 last 0/0
+FAIL uniform_k512 beat 29: lv ffff/ffff q 2/2 last 1/0
+FAIL uniform_k512 beat 30: lv ffff/0fff q 3/2 last 0/1
+FAIL uniform_k512 beat 32: lv 000f/ffff q 3/3 last 1/0
+FAIL uniform_k512: 33 IDX words, ref 35 beats (per q 19 1 11 4, lastq 4)
+   ref q0 b0 lv ffff idx0 38 last 0
+   ref q0 b1 lv ffff idx0 205 last 0
+   ref q0 b2 lv ffff idx0 365 last 0
+   ref q0 b18 lv 0007 idx0 2350 last 1
+   ref q1 b0 lv 0000 idx0 0 last 1
+   ref q2 b0 lv ffff idx0 2365 last 0
+   ref q2 b1 lv ffff idx0 2429 last 0
+   ref q2 b2 lv ffff idx0 2555 last 0
+   ref q2 b10 lv 0fff idx0 3490 last 1
+   ref q3 b0 lv ffff idx0 3620 last 0
+   ref q3 b1 lv ffff idx0 3728 last 0
+   ref q3 b2 lv ffff idx0 3851 last 0
+   ref q3 b3 lv 0001 idx0 3973 last 1
+   dut q0 lv ffff idx0 2359 last 0
+   dut q0 lv ffff idx0 100 last 0
+   dut q0 lv ffff idx0 283 last 0
+   dut q0 lv ffff idx0 450 last 0
+   dut q0 lv ffff idx0 556 last 0
+   dut q0 lv ffff idx0 624 last 0
+   dut q0 lv ffff idx0 765 last 0
+   dut q0 lv ffff idx0 896 last 0
+   dut q0 lv 000f idx0 2324 last 0
+   dut q0 lv ffff idx0 988 last 0
+   dut q0 lv ffff idx0 1158 last 0
+   dut q0 lv ffff idx0 1260 last 0
+   dut q0 lv ffff idx0 1493 last 0
+   dut q0 lv ffff idx0 1591 last 0
+   dut q0 lv ffff idx0 1778 last 0
+   dut q0 lv ffff idx0 1935 last 0
+   dut q0 lv ffff idx0 2034 last 0
+   dut q0 lv ffff idx0 2151 last 1
+   dut q1 lv 0000 idx0 0 last 1
+   dut q2 lv ffff idx0 3496 last 0
+   dut q2 lv ffff idx0 2378 last 0
+   dut q2 lv ffff idx0 2459 last 0
+   dut q2 lv ffff idx0 2570 last 0
+   dut q2 lv ffff idx0 2686 last 0
+   dut q2 lv ffff idx0 2779 last 0
+   dut q2 lv ffff idx0 2984 last 0
+   dut q2 lv ffff idx0 3082 last 0
+   dut q2 lv 007f idx0 3465 last 0
+   dut q2 lv ffff idx0 3179 last 0
+   dut q2 lv ffff idx0 3326 last 1
+   dut q3 lv ffff idx0 3851 last 0
+   dut q3 lv ffff idx0 3973 last 0
+   dut q3 lv 000f idx0 3721 last 1
+FAIL uniform_k512: DONE count 479 ref 495
+seg 0 uniform_k512 k 512 sel 495 beats 35 reps 0 tail_slab_minus_ref 156 cyc 492
+FAIL ties beat 8: lv 0001/ffff q 0/0 last 0/0
+FAIL ties beat 12: lv ffff/07ff q 0/0 last 0/1
+FAIL ties beat 13: lv ffff/ffff q 0/1 last 1/0
+FAIL ties beat 19: lv 1fff/0001 q 1/1 last 1/1
+FAIL ties beat 20: lv ffff/0000 q 2/2 last 0/1
+FAIL ties beat 21: lv 03ff/0000 q 2/3 last 1/1
+FAIL ties: extra IDX word
+FAIL ties: DONE count 341 ref 300
+seg 1 ties k 300 sel 300 beats 22 reps 0 tail_slab_minus_ref 139 cyc 874
+FAIL neginf beat 8: lv 0fff/ffff q 0/0 last 0/0
+FAIL neginf beat 14: lv ffff/001f q 0/0 last 1/1
+FAIL neginf beat 15: lv 007f/001f q 1/1 last 1/1
+FAIL neginf beat 24: lv 01ff/ffff q 2/2 last 0/0
+FAIL neginf beat 27: lv ffff/0fff q 2/2 last 1/1
+FAIL neginf beat 32: lv 3fff/ffff q 3/3 last 1/0
+FAIL neginf: 33 IDX words, ref 34 beats (per q 15 1 12 6, lastq 4)
+   ref q0 b0 lv ffff idx0 29 last 0
+   ref q0 b1 lv ffff idx0 175 last 0
+   ref q0 b2 lv ffff idx0 324 last 0
+   ref q0 b14 lv 001f idx0 1887 last 1
+   ref q1 b0 lv 001f idx0 1988 last 1
+   ref q2 b0 lv ffff idx0 2028 last 0
+   ref q2 b1 lv ffff idx0 2148 last 0
+   ref q2 b2 lv ffff idx0 2304 last 0
+   ref q2 b11 lv 0fff idx0 3522 last 1
+   ref q3 b0 lv ffff idx0 3657 last 0
+   ref q3 b1 lv ffff idx0 3791 last 0
+   ref q3 b2 lv ffff idx0 3957 last 0
+   ref q3 b5 lv 03ff idx0 4466 last 1
+   dut q0 lv ffff idx0 1919 last 0
+   dut q0 lv ffff idx0 1148 last 0
+   dut q0 lv ffff idx0 152 last 0
+   dut q0 lv ffff idx0 300 last 0
+   dut q0 lv ffff idx0 438 last 0
+   dut q0 lv ffff idx0 597 last 0
+   dut q0 lv ffff idx0 691 last 0
+   dut q0 lv ffff idx0 842 last 0
+   dut q0 lv 0fff idx0 1755 last 0
+   dut q0 lv ffff idx0 978 last 0
+   dut q0 lv ffff idx0 1093 last 0
+   dut q0 lv ffff idx0 1229 last 0
+   dut q0 lv ffff idx0 1412 last 0
+   dut q0 lv ffff idx0 1530 last 0
+   dut q0 lv ffff idx0 1639 last 1
+   dut q1 lv 007f idx0 2013 last 1
+   dut q2 lv ffff idx0 3572 last 0
+   dut q2 lv ffff idx0 3340 last 0
+   dut q2 lv ffff idx0 2029 last 0
+   dut q2 lv ffff idx0 2214 last 0
+   dut q2 lv ffff idx0 2339 last 0
+   dut q2 lv ffff idx0 2554 last 0
+   dut q2 lv ffff idx0 2650 last 0
+   dut q2 lv ffff idx0 2762 last 0
+   dut q2 lv 01ff idx0 3452 last 0
+   dut q2 lv ffff idx0 2945 last 0
+   dut q2 lv ffff idx0 3078 last 0
+   dut q2 lv ffff idx0 3197 last 1
+   dut q3 lv ffff idx0 4123 last 0
+   dut q3 lv ffff idx0 3744 last 0
+   dut q3 lv ffff idx0 3868 last 0
+   dut q3 lv ffff idx0 4039 last 0
+   dut q3 lv 3fff idx0 4272 last 1
+FAIL neginf: DONE count 506 ref 502
+seg 2 neginf k 512 sel 502 beats 34 reps 0 tail_slab_minus_ref 167 cyc 1344
+seg 3 k_gt_n k 512 sel 63 beats 6 reps 0 tail_slab_minus_ref 106 cyc 1560
+FAIL tiny beat 2: lv 000f/001f q 2/2 last 1/1
+FAIL tiny: DONE count 6 ref 7
+seg 4 tiny k 7 sel 7 beats 4 reps 0 tail_slab_minus_ref 106 cyc 1772
+FAIL normal_12k beat 8: lv ffff/7fff q 0/0 last 0/1
+FAIL normal_12k beat 9: lv 001f/ffff q 0/1 last 1/0
+FAIL normal_12k beat 13: lv ffff/07ff q 1/1 last 0/1
+FAIL normal_12k beat 14: lv 0003/ffff q 1/2 last 1/0
+FAIL normal_12k beat 23: lv 0fff/ffff q 2/2 last 0/0
+FAIL normal_12k beat 24: lv ffff/007f q 2/2 last 0/1
+FAIL normal_12k beat 25: lv ffff/ffff q 2/3 last 1/0
+FAIL normal_12k beat 32: lv ffff/7fff q 3/3 last 0/1
+FAIL normal_12k: extra IDX word
+FAIL normal_12k: DONE count 515 ref 512
+seg 5 normal_12k k 512 sel 512 beats 33 reps 0 tail_slab_minus_ref 164 cyc 2738
+FAIL ascending_overflow beat 11: lv 1fff/ffff q 3/3 last 0/0
+FAIL ascending_overflow: DONE count 509 ref 512
+seg 6 ascending_overflow k 512 sel 512 beats 35 reps 2 tail_slab_minus_ref 161 cyc 14380
+seg 7 all_equal_overflow k 300 sel 300 beats 22 reps 2 tail_slab_minus_ref 148 cyc 19146
+FAIL rand0 beat 3: lv 3fff/ffff q 0/0 last 1/0
+FAIL rand0 beat 4: lv ffff/001f q 1/0 last 0/1
+FAIL rand0 beat 8: lv 0001/ffff q 1/1 last 1/0
+FAIL rand0 beat 9: lv ffff/01ff q 2/1 last 0/1
+FAIL rand0 beat 15: lv 0fff/ffff q 2/2 last 1/0
+FAIL rand0 beat 16: lv ffff/ffff q 3/2 last 0/0
+FAIL rand0 beat 17: lv ffff/000f q 3/2 last 0/1
+FAIL rand0 beat 23: lv 003f/ffff q 3/3 last 1/0
+FAIL rand0: 24 IDX words, ref 26 beats (per q 5 5 8 8, lastq 4)
+   ref q0 b0 lv ffff idx0 60 last 0
+   ref q0 b1 lv ffff idx0 232 last 0
+   ref q0 b2 lv ffff idx0 537 last 0
+   ref q0 b4 lv 001f idx0 1094 last 1
+   ref q1 b0 lv ffff idx0 1202 last 0
+   ref q1 b1 lv ffff idx0 1503 last 0
+   ref q1 b2 lv ffff idx0 1836 last 0
+   ref q1 b4 lv 01ff idx0 2325 last 1
+   ref q2 b0 lv ffff idx0 2507 last 0
+   ref q2 b1 lv ffff idx0 2825 last 0
+   ref q2 b2 lv ffff idx0 3010 last 0
+   ref q2 b7 lv 000f idx0 4029 last 1
+   ref q3 b0 lv ffff idx0 4112 last 0
+   ref q3 b1 lv ffff idx0 4275 last 0
+   ref q3 b2 lv ffff idx0 4525 last 0
+   ref q3 b7 lv 3fff idx0 5601 last 1
+   dut q0 lv ffff idx0 1076 last 0
+   dut q0 lv ffff idx0 182 last 0
+   dut q0 lv ffff idx0 383 last 0
+   dut q0 lv 3fff idx0 702 last 1
+   dut q1 lv ffff idx0 2460 last 0
+   dut q1 lv ffff idx0 1253 last 0
+   dut q1 lv ffff idx0 1622 last 0
+   dut q1 lv ffff idx0 1951 last 0
+   dut q1 lv 0001 idx0 2288 last 1
+   dut q2 lv ffff idx0 4052 last 0
+   dut q2 lv ffff idx0 2679 last 0
+   dut q2 lv ffff idx0 2971 last 0
+   dut q2 lv ffff idx0 3145 last 0
+   dut q2 lv ffff idx0 3315 last 0
+   dut q2 lv ffff idx0 3543 last 0
+   dut q2 lv 0fff idx0 3788 last 1
+   dut q3 lv ffff idx0 5747 last 0
+   dut q3 lv ffff idx0 5501 last 0
+   dut q3 lv ffff idx0 4244 last 0
+   dut q3 lv ffff idx0 4431 last 0
+   dut q3 lv ffff idx0 4668 last 0
+   dut q3 lv ffff idx0 4837 last 0
+   dut q3 lv ffff idx0 5147 last 0
+   dut q3 lv 003f idx0 5347 last 1
+FAIL rand0: DONE count 353 ref 354
+seg 8 rand0 k 384 sel 354 beats 26 reps 0 tail_slab_minus_ref 157 cyc 19536
+FAIL rand1 beat 9: lv 01ff/ffff q 0/0 last 0/0
+FAIL rand1 beat 13: lv ffff/007f q 0/0 last 0/1
+FAIL rand1 beat 14: lv ffff/ffff q 0/1 last 1/0
+FAIL rand1 beat 21: lv ffff/7fff q 1/1 last 0/1
+FAIL rand1 beat 22: lv ffff/ffff q 1/2 last 0/0
+FAIL rand1 beat 23: lv 00ff/ffff q 1/2 last 1/0
+FAIL rand1 beat 24: lv ffff/1fff q 2/2 last 0/1
+FAIL rand1 beat 25: lv ffff/0000 q 2/3 last 0/1
+FAIL rand1: extra IDX word
+FAIL rand1: DONE count 423 ref 387
+seg 9 rand1 k 387 sel 387 beats 26 reps 0 tail_slab_minus_ref 149 cyc 19966
+cyc 20000
+FAIL rand2 beat 9: lv 007f/03ff q 1/1 last 1/1
+FAIL rand2 beat 17: lv ffff/7fff q 2/2 last 0/1
+FAIL rand2 beat 18: lv 0003/0000 q 2/3 last 0/1
+FAIL rand2: extra IDX word
+FAIL rand2: DONE count 289 ref 265
+seg 10 rand2 k 265 sel 265 beats 19 reps 0 tail_slab_minus_ref 102 cyc 20420
+FAIL rand3 beat 11: lv 003f/ffff q 3/3 last 0/0
+FAIL rand3 beat 16: lv ffff/003f q 3/3 last 1/1
+seg 11 rand3 k 214 sel 214 beats 17 reps 0 tail_slab_minus_ref 122 cyc 20768
+FAIL rand4 beat 3: lv 7fff/3fff q 3/3 last 1/1
+FAIL rand4: DONE count 15 ref 14
+seg 12 rand4 k 14 sel 14 beats 4 reps 0 tail_slab_minus_ref 108 cyc 21100
+FAIL rand5 beat 22: lv ffff/0001 q 3/3 last 1/1
+FAIL rand5: DONE count 320 ref 305
+seg 13 rand5 k 305 sel 305 beats 23 reps 0 tail_slab_minus_ref 175 cyc 21878
+FAIL rand6 beat 8: lv 3fff/ffff q 0/0 last 0/0
+FAIL rand6 beat 20: lv ffff/ffff q 0/0 last 1/0
+FAIL rand6 beat 21: lv 7fff/001f q 1/0 last 1/1
+FAIL rand6 beat 22: lv 01ff/0000 q 2/1 last 1/1
+FAIL rand6 beat 23: lv 0001/0000 q 3/2 last 1/1
+FAIL rand6: 24 IDX words, ref 25 beats (per q 22 1 1 1, lastq 4)
+   ref q0 b0 lv ffff idx0 22 last 0
+   ref q0 b1 lv ffff idx0 107 last 0
+   ref q0 b2 lv ffff idx0 158 last 0
+   ref q0 b21 lv 001f idx0 2236 last 1
+   ref q1 b0 lv 0000 idx0 0 last 1
+   ref q2 b0 lv 0000 idx0 0 last 1
+   ref q3 b0 lv 0000 idx0 0 last 1
+   dut q0 lv ffff idx0 2228 last 0
+   dut q0 lv ffff idx0 272 last 0
+   dut q0 lv ffff idx0 1616 last 0
+   dut q0 lv ffff idx0 105 last 0
+   dut q0 lv ffff idx0 153 last 0
+   dut q0 lv ffff idx0 242 last 0
+   dut q0 lv ffff idx0 378 last 0
+   dut q0 lv ffff idx0 492 last 0
+   dut q0 lv 3fff idx0 2129 last 0
+   dut q0 lv ffff idx0 623 last 0
+   dut q0 lv ffff idx0 743 last 0
+   dut q0 lv ffff idx0 869 last 0
+   dut q0 lv ffff idx0 947 last 0
+   dut q0 lv ffff idx0 1059 last 0
+   dut q0 lv ffff idx0 1183 last 0
+   dut q0 lv ffff idx0 1274 last 0
+   dut q0 lv ffff idx0 1386 last 0
+   dut q0 lv ffff idx0 1646 last 0
+   dut q0 lv ffff idx0 1727 last 0
+   dut q0 lv ffff idx0 1791 last 0
+   dut q0 lv ffff idx0 1959 last 1
+   dut q1 lv 7fff idx0 5195 last 1
+   dut q2 lv 01ff idx0 10385 last 1
+   dut q3 lv 0001 idx0 18169 last 1
+FAIL rand6: DONE count 359 ref 341
+seg 14 rand6 k 341 sel 341 beats 25 reps 0 tail_slab_minus_ref 132 cyc 22306
+FAIL rand7 beat 6: lv 0001/000f q 0/0 last 1/1
+FAIL rand7 beat 12: lv ffff/ffff q 2/2 last 1/0
+FAIL rand7 beat 13: lv ffff/0001 q 3/2 last 0/1
+FAIL rand7 beat 21: lv 003f/ffff q 3/3 last 0/0
+FAIL rand7 beat 24: lv ffff/ffff q 3/3 last 1/0
+FAIL rand7: 25 IDX words, ref 26 beats (per q 7 1 6 12, lastq 4)
+   ref q0 b0 lv ffff idx0 4 last 0
+   ref q0 b1 lv ffff idx0 32 last 0
+   ref q0 b2 lv ffff idx0 111 last 0
+   ref q0 b6 lv 000f idx0 320 last 1
+   ref q1 b0 lv 0000 idx0 0 last 1
+   ref q2 b0 lv ffff idx0 341 last 0
+   ref q2 b1 lv ffff idx0 376 last 0
+   ref q2 b2 lv ffff idx0 435 last 0
+   ref q2 b5 lv 0001 idx0 623 last 1
+   ref q3 b0 lv ffff idx0 645 last 0
+   ref q3 b1 lv ffff idx0 686 last 0
+   ref q3 b2 lv ffff idx0 720 last 0
+   ref q3 b11 lv 003f idx0 1211 last 1
+   dut q0 lv ffff idx0 339 last 0
+   dut q0 lv ffff idx0 31 last 0
+   dut q0 lv ffff idx0 11 last 0
+   dut q0 lv ffff idx0 108 last 0
+   dut q0 lv ffff idx0 200 last 0
+   dut q0 lv ffff idx0 262 last 0
+   dut q0 lv 0001 idx0 305 last 1
+   dut q1 lv 0000 idx0 0 last 1
+   dut q2 lv ffff idx0 574 last 0
+   dut q2 lv ffff idx0 5222 last 0
+   dut q2 lv ffff idx0 362 last 0
+   dut q2 lv ffff idx0 440 last 0
+   dut q2 lv ffff idx0 525 last 1
+   dut q3 lv ffff idx0 1228 last 0
+   dut q3 lv ffff idx0 661 last 0
+   dut q3 lv ffff idx0 694 last 0
+   dut q3 lv ffff idx0 738 last 0
+   dut q3 lv ffff idx0 771 last 0
+   dut q3 lv ffff idx0 804 last 0
+   dut q3 lv ffff idx0 881 last 0
+   dut q3 lv ffff idx0 921 last 0
+   dut q3 lv 003f idx0 1209 last 0
+   dut q3 lv ffff idx0 955 last 0
+   dut q3 lv ffff idx0 1050 last 0
+   dut q3 lv ffff idx0 1126 last 1
+FAIL rand7: DONE count 359 ref 357
+seg 15 rand7 k 363 sel 357 beats 26 reps 0 tail_slab_minus_ref 143 cyc 22636
+FAIL rand8 beat 7: lv ffff/7fff q 0/0 last 1/1
+FAIL rand8 beat 13: lv 00ff/000f q 1/1 last 1/1
+FAIL rand8 beat 22: lv 07ff/ffff q 2/2 last 0/0
+FAIL rand8 beat 23: lv ffff/0007 q 2/2 last 1/1
+FAIL rand8 beat 27: lv 0001/07ff q 3/3 last 1/1
+FAIL rand8: DONE count 420 ref 417
+seg 16 rand8 k 417 sel 417 beats 28 reps 0 tail_slab_minus_ref 141 cyc 22938
+FAIL rand9 beat 3: lv 0001/00ff q 1/1 last 1/1
+FAIL rand9 beat 8: lv 3fff/ffff q 2/2 last 1/0
+FAIL rand9 beat 9: lv ffff/0003 q 3/2 last 0/1
+FAIL rand9 beat 12: lv 0003/ffff q 3/3 last 1/0
+FAIL rand9: 13 IDX words, ref 14 beats (per q 2 2 6 4, lastq 4)
+   ref q0 b0 lv ffff idx0 43 last 0
+   ref q0 b1 lv 0001 idx0 134 last 1
+   ref q1 b0 lv ffff idx0 169 last 0
+   ref q1 b1 lv 00ff idx0 296 last 1
+   ref q2 b0 lv ffff idx0 334 last 0
+   ref q2 b1 lv ffff idx0 414 last 0
+   ref q2 b2 lv ffff idx0 490 last 0
+   ref q2 b5 lv 0003 idx0 769 last 1
+   ref q3 b0 lv ffff idx0 808 last 0
+   ref q3 b1 lv ffff idx0 901 last 0
+   ref q3 b2 lv ffff idx0 984 last 0
+   ref q3 b3 lv 003f idx0 1105 last 1
+   dut q0 lv ffff idx0 134 last 0
+   dut q0 lv 0001 idx0 102 last 1
+   dut q1 lv ffff idx0 324 last 0
+   dut q1 lv 0001 idx0 288 last 1
+   dut q2 lv ffff idx0 387 last 0
+   dut q2 lv ffff idx0 412 last 0
+   dut q2 lv ffff idx0 489 last 0
+   dut q2 lv ffff idx0 603 last 0
+   dut q2 lv 3fff idx0 681 last 1
+   dut q3 lv ffff idx0 1112 last 0
+   dut q3 lv ffff idx0 825 last 0
+   dut q3 lv ffff idx0 935 last 0
+   dut q3 lv 0003 idx0 1029 last 1
+FAIL rand9: DONE count 162 ref 171
+seg 17 rand9 k 177 sel 171 beats 14 reps 0 tail_slab_minus_ref 120 cyc 23220
+FAIL rand10 beat 4: lv ffff/ffff q 3/3 last 0/1
+FAIL rand10: extra IDX word
+FAIL rand10: DONE count 38 ref 32
+seg 18 rand10 k 32 sel 32 beats 5 reps 0 tail_slab_minus_ref 165 cyc 23686
+FAIL rand11 beat 7: lv 000f/007f q 0/0 last 1/1
+FAIL rand11 beat 10: lv 0003/0001 q 1/1 last 1/1
+FAIL rand11 beat 15: lv 000f/ffff q 2/2 last 1/1
+FAIL rand11 beat 19: lv 0001/0fff q 3/3 last 1/1
+FAIL rand11: DONE count 267 ref 292
+seg 19 rand11 k 292 sel 292 beats 20 reps 0 tail_slab_minus_ref 140 cyc 24014
+FAIL rand12 beat 11: lv 007f/ffff q 3/3 last 0/0
+FAIL rand12 beat 33: lv ffff/ffff q 3/3 last 0/1
+FAIL rand12: extra IDX word
+FAIL rand12: DONE count 519 ref 496
+seg 20 rand12 k 496 sel 496 beats 34 reps 0 tail_slab_minus_ref 192 cyc 24768
+FAIL rand13 beat 9: lv 003f/ffff q 1/1 last 0/0
+FAIL rand13 beat 15: lv ffff/03ff q 1/1 last 1/1
+FAIL rand13 beat 24: lv 07ff/ffff q 2/2 last 0/0
+FAIL rand13 beat 33: lv ffff/003f q 2/2 last 1/1
+FAIL rand13: DONE count 513 ref 512
+seg 21 rand13 k 512 sel 512 beats 35 reps 0 tail_slab_minus_ref 174 cyc 25286
+FAIL rand14 beat 0: lv ffff/7fff q 0/0 last 0/1
+FAIL rand14 beat 1: lv 0007/ffff q 0/1 last 1/0
+FAIL rand14 beat 10: lv 07ff/ffff q 1/1 last 0/0
+FAIL rand14 beat 13: lv ffff/07ff q 1/1 last 0/1
+FAIL rand14 beat 14: lv ffff/ffff q 1/2 last 1/0
+FAIL rand14 beat 23: lv 0003/ffff q 2/2 last 0/0
+FAIL rand14 beat 26: lv ffff/0001 q 2/2 last 0/1
+FAIL rand14 beat 27: lv ffff/ffff q 2/3 last 1/0
+FAIL rand14 beat 29: lv 1fff/0001 q 3/3 last 1/1
+FAIL rand14: DONE count 445 ref 444
+seg 22 rand14 k 444 sel 444 beats 30 reps 0 tail_slab_minus_ref 166 cyc 25708
+FAIL rand15 beat 9: lv 00ff/3fff q 0/0 last 1/1
+FAIL rand15 beat 13: lv ffff/7fff q 1/1 last 0/1
+FAIL rand15 beat 14: lv 003f/ffff q 1/2 last 1/0
+FAIL rand15 beat 21: lv ffff/3fff q 2/2 last 0/1
+FAIL rand15 beat 22: lv ffff/ffff q 2/3 last 1/0
+FAIL rand15 beat 23: lv ffff/0007 q 3/3 last 0/1
+FAIL rand15: extra IDX word
+FAIL rand15: DONE count 368 ref 366
+seg 23 rand15 k 366 sel 366 beats 24 reps 0 tail_slab_minus_ref 144 cyc 26174
+FAIL rand16 beat 11: lv 001f/ffff q 3/3 last 0/0
+FAIL rand16 beat 20: lv ffff/0001 q 3/3 last 1/1
+FAIL rand16: DONE count 277 ref 273
+seg 24 rand16 k 273 sel 273 beats 21 reps 0 tail_slab_minus_ref 156 cyc 26880
+FAIL rand17 beat 3: lv 07ff/1fff q 0/0 last 1/1
+FAIL rand17 beat 9: lv 03ff/01ff q 1/1 last 1/1
+FAIL rand17 beat 11: lv 0003/000f q 2/2 last 1/1
+FAIL rand17 beat 15: lv 0003/0007 q 3/3 last 1/1
+FAIL rand17: DONE count 217 ref 221
+seg 25 rand17 k 221 sel 221 beats 16 reps 0 tail_slab_minus_ref 116 cyc 27264
+FAIL rand18 beat 3: lv 000f/0001 q 0/0 last 1/1
+FAIL rand18 beat 8: lv ffff/03ff q 1/1 last 0/1
+FAIL rand18 beat 9: lv 01ff/ffff q 1/2 last 1/0
+FAIL rand18 beat 14: lv ffff/0001 q 2/2 last 0/1
+FAIL rand18 beat 15: lv 00ff/ffff q 2/3 last 1/0
+FAIL rand18 beat 18: lv ffff/07ff q 3/3 last 0/1
+FAIL rand18: extra IDX word
+FAIL rand18: DONE count 282 ref 263
+seg 26 rand18 k 263 sel 263 beats 19 reps 0 tail_slab_minus_ref 132 cyc 27526
+FAIL rand19 beat 1: lv 0007/ffff q 0/0 last 1/0
+FAIL rand19 beat 2: lv ffff/0003 q 1/0 last 0/1
+FAIL rand19 beat 6: lv 07ff/ffff q 1/1 last 1/0
+FAIL rand19 beat 7: lv ffff/ffff q 2/1 last 0/0
+FAIL rand19 beat 8: lv ffff/003f q 2/1 last 0/1
+FAIL rand19 beat 10: lv ffff/ffff q 2/2 last 1/0
+FAIL rand19 beat 11: lv ffff/ffff q 3/2 last 0/0
+FAIL rand19 beat 12: lv ffff/ffff q 3/2 last 0/0
+FAIL rand19 beat 13: lv ffff/01ff q 3/2 last 0/1
+FAIL rand19 beat 19: lv 03ff/ffff q 3/3 last 1/0
+FAIL rand19: 20 IDX words, ref 23 beats (per q 3 6 5 9, lastq 4)
+   ref q0 b0 lv ffff idx0 188 last 0
+   ref q0 b1 lv ffff idx0 569 last 0
+   ref q0 b2 lv 0003 idx0 1212 last 1
+   ref q1 b0 lv ffff idx0 1246 last 0
+   ref q1 b1 lv ffff idx0 1837 last 0
+   ref q1 b2 lv ffff idx0 2500 last 0
+   ref q1 b5 lv 003f idx0 4300 last 1
+   ref q2 b0 lv ffff idx0 4494 last 0
+   ref q2 b1 lv ffff idx0 4967 last 0
+   ref q2 b2 lv ffff idx0 5623 last 0
+   ref q2 b4 lv 01ff idx0 6779 last 1
+   ref q3 b0 lv ffff idx0 7171 last 0
+   ref q3 b1 lv ffff idx0 7789 last 0
+   ref q3 b2 lv ffff idx0 8161 last 0
+   ref q3 b8 lv 3fff idx0 11699 last 1
+   dut q0 lv ffff idx0 282 last 0
+   dut q0 lv 0007 idx0 609 last 1
+   dut q1 lv ffff idx0 1792 last 0
+   dut q1 lv ffff idx0 2476 last 0
+   dut q1 lv ffff idx0 3343 last 0
+   dut q1 lv ffff idx0 4246 last 0
+   dut q1 lv 07ff idx0 3871 last 1
+   dut q2 lv ffff idx0 4956 last 0
+   dut q2 lv ffff idx0 5444 last 0
+   dut q2 lv ffff idx0 6509 last 0
+   dut q2 lv ffff idx0 6937 last 1
+   dut q3 lv ffff idx0 11980 last 0
+   dut q3 lv ffff idx0 10879 last 0
+   dut q3 lv ffff idx0 10344 last 0
+   dut q3 lv ffff idx0 10106 last 0
+   dut q3 lv ffff idx0 8892 last 0
+   dut q3 lv ffff idx0 7623 last 0
+   dut q3 lv ffff idx0 7981 last 0
+   dut q3 lv ffff idx0 8393 last 0
+   dut q3 lv 03ff idx0 11626 last 1
+FAIL rand19: DONE count 296 ref 289
+seg 27 rand19 k 335 sel 289 beats 23 reps 0 tail_slab_minus_ref 135 cyc 28100
+FAIL rand20 beat 21: lv ffff/0003 q 3/3 last 1/1
+FAIL rand20: DONE count 304 ref 290
+seg 28 rand20 k 290 sel 290 beats 22 reps 2 tail_slab_minus_ref 171 cyc 29704
+FAIL rand21 beat 6: lv 0001/000f q 0/0 last 1/1
+FAIL rand21 beat 15: lv 03ff/ffff q 1/1 last 0/0
+FAIL rand21 beat 20: lv ffff/0fff q 1/1 last 1/1
+FAIL rand21 beat 25: lv 01ff/07ff q 3/3 last 1/1
+FAIL rand21: DONE count 372 ref 379
+seg 29 rand21 k 379 sel 379 beats 26 reps 0 tail_slab_minus_ref 119 cyc 30236
+FAIL rand22 beat 2: lv 000f/ffff q 0/0 last 1/1
+FAIL rand22 beat 4: lv 007f/3fff q 1/1 last 1/1
+FAIL rand22 beat 6: lv ffff/03ff q 2/2 last 0/1
+FAIL rand22 beat 7: lv 0003/ffff q 2/3 last 1/0
+FAIL rand22 beat 8: lv ffff/001f q 3/3 last 0/1
+FAIL rand22: extra IDX word
+FAIL rand22: DONE count 111 ref 125
+seg 30 rand22 k 125 sel 125 beats 9 reps 0 tail_slab_minus_ref 107 cyc 30474
+FAIL rand23 beat 0: lv ffff/0000 q 0/0 last 1/1
+FAIL rand23 beat 1: lv ffff/000f q 1/1 last 0/1
+FAIL rand23 beat 2: lv 03ff/ffff q 1/2 last 1/0
+FAIL rand23 beat 11: lv 0003/003f q 2/2 last 0/1
+FAIL rand23 beat 12: lv ffff/ffff q 2/3 last 1/0
+FAIL rand23 beat 21: lv 001f/ffff q 3/3 last 0/0
+FAIL rand23 beat 25: lv ffff/001f q 3/3 last 0/1
+FAIL rand23: extra IDX word
+FAIL rand23: DONE count 401 ref 367
+seg 31 rand23 k 367 sel 367 beats 26 reps 0 tail_slab_minus_ref 158 cyc 30784
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+fault case wrong_static_map: FAULT bit 12    seen
+RESULT FAIL segments 32 out_beats 709 replays 6 errors 9469 tail_minus_ref max 192 mean 142 ref_holds 19
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv:305: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 26us; walltime 64.604 s; speed 401.612 ns/s
+- Verilator: cpu 64.602 s on 1 threads; alloced 518 MB

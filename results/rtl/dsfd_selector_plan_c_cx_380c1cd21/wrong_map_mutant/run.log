@@ -1,0 +1,43 @@
+cyc 0
+seg 0 uniform_k512 k 512 sel 512 beats 35 reps 0 tail_slab_minus_ref 164 cyc 500
+seg 1 ties k 300 sel 300 beats 22 reps 0 tail_slab_minus_ref 141 cyc 884
+seg 2 neginf k 512 sel 512 beats 34 reps 0 tail_slab_minus_ref 175 cyc 1362
+seg 3 k_gt_n k 512 sel 63 beats 6 reps 0 tail_slab_minus_ref 108 cyc 1580
+seg 4 tiny k 7 sel 7 beats 4 reps 0 tail_slab_minus_ref 108 cyc 1794
+seg 5 normal_12k k 512 sel 512 beats 33 reps 0 tail_slab_minus_ref 164 cyc 2760
+seg 6 ascending_overflow k 512 sel 512 beats 35 reps 2 tail_slab_minus_ref 161 cyc 14402
+seg 7 all_equal_overflow k 300 sel 300 beats 22 reps 2 tail_slab_minus_ref 148 cyc 19168
+seg 8 rand0 k 384 sel 384 beats 26 reps 0 tail_slab_minus_ref 161 cyc 19562
+seg 9 rand1 k 387 sel 387 beats 26 reps 0 tail_slab_minus_ref 147 cyc 19990
+cyc 20000
+seg 10 rand2 k 265 sel 265 beats 19 reps 0 tail_slab_minus_ref 102 cyc 20444
+seg 11 rand3 k 214 sel 214 beats 17 reps 0 tail_slab_minus_ref 126 cyc 20796
+seg 12 rand4 k 14 sel 14 beats 4 reps 0 tail_slab_minus_ref 110 cyc 21130
+seg 13 rand5 k 305 sel 305 beats 23 reps 0 tail_slab_minus_ref 197 cyc 21930
+seg 14 rand6 k 341 sel 341 beats 25 reps 0 tail_slab_minus_ref 144 cyc 22370
+seg 15 rand7 k 363 sel 363 beats 26 reps 0 tail_slab_minus_ref 147 cyc 22704
+seg 16 rand8 k 417 sel 417 beats 28 reps 0 tail_slab_minus_ref 143 cyc 23008
+seg 17 rand9 k 177 sel 177 beats 14 reps 0 tail_slab_minus_ref 124 cyc 23294
+seg 18 rand10 k 32 sel 32 beats 5 reps 0 tail_slab_minus_ref 163 cyc 23758
+seg 19 rand11 k 292 sel 292 beats 20 reps 0 tail_slab_minus_ref 142 cyc 24088
+seg 20 rand12 k 496 sel 496 beats 34 reps 0 tail_slab_minus_ref 190 cyc 24840
+seg 21 rand13 k 512 sel 512 beats 35 reps 0 tail_slab_minus_ref 178 cyc 25362
+seg 22 rand14 k 444 sel 444 beats 30 reps 0 tail_slab_minus_ref 168 cyc 25786
+seg 23 rand15 k 366 sel 366 beats 24 reps 0 tail_slab_minus_ref 146 cyc 26254
+seg 24 rand16 k 273 sel 273 beats 21 reps 0 tail_slab_minus_ref 156 cyc 26960
+seg 25 rand17 k 221 sel 221 beats 16 reps 0 tail_slab_minus_ref 120 cyc 27348
+seg 26 rand18 k 263 sel 263 beats 19 reps 0 tail_slab_minus_ref 132 cyc 27610
+seg 27 rand19 k 335 sel 335 beats 23 reps 0 tail_slab_minus_ref 143 cyc 28192
+seg 28 rand20 k 290 sel 290 beats 22 reps 2 tail_slab_minus_ref 171 cyc 29796
+seg 29 rand21 k 379 sel 379 beats 26 reps 0 tail_slab_minus_ref 121 cyc 30330
+seg 30 rand22 k 125 sel 125 beats 9 reps 0 tail_slab_minus_ref 109 cyc 30570
+seg 31 rand23 k 367 sel 367 beats 26 reps 0 tail_slab_minus_ref 160 cyc 30882
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12 MISSING
+fault case wrong_static_map: FAULT bit 12 MISSING
+RESULT FAIL segments 32 out_beats 709 replays 6 errors 2 tail_minus_ref max 197 mean 145 ref_holds 19
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv:305: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 27us; walltime 66.864 s; speed 399.148 ns/s
+- Verilator: cpu 66.865 s on 1 threads; alloced 518 MB

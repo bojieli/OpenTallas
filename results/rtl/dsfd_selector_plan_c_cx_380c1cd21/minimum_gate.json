@@ -1,0 +1,55 @@
+{
+  "source": "380c1cd21",
+  "scope": "historical unselected Plan C draft; functional exactness only; not a current TT physical fix",
+  "original_path_source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "original_path_receipt": "results/physical/dsfd_selector_original_cd3337221",
+  "current_physical_selection": "pending valid original IO rejudge/ES10 classification; no route",
+  "gates": {
+    "positive": {
+      "result": "RESULT PASS segments 32 out_beats 709 replays 6 errors 0 tail_minus_ref max 197 mean 145 ref_holds 19",
+      "first_failure": null,
+      "files_sha256": {
+        "build.log": "460d627770735799b5162c33aafe7f8c159a3048cfe8031567957e14b9fba4ee",
+        "run.log": "708e258002cf16eb006dbceea44b484d7d191a499e1fbee1690042d987ec831a"
+      }
+    },
+    "raw_mutant": {
+      "result": "RESULT FAIL segments 32 out_beats 622 replays 4 errors 2037 tail_minus_ref max 161 mean 77 ref_holds 36",
+      "first_failure": "FAIL uniform_k512 beat 0: lv 0000/ffff q 0/0 last 1/0",
+      "files_sha256": {
+        "build.log": "c254ed9afae3fa5a9c47048b1a4792504d3316a17e0a99640b8719865683409a",
+        "run.log": "ed825f0b1edf06534f12ce2b9a56f56e74d6599b84d1fdfb4499d21505056fae",
+        "launch.log": "58ca14baa6c4c80b180bef75974e2140db872c075c399c0486e3bcb48cfa5f13"
+      }
+    },
+    "metadata_mutant": {
+      "result": "RESULT FAIL segments 32 out_beats 709 replays 6 errors 9469 tail_minus_ref max 192 mean 142 ref_holds 19",
+      "first_failure": "FAIL uniform_k512 beat 0 lane 0 idx 2359 ref 38",
+      "files_sha256": {
+        "build.log": "374f7220fef166d258678ad711b68c0438ed65df2ed956db0a4f47fd8a325d38",
+        "run.log": "a827487ca3ac61f2aa45a99396e4134ba760318025daaf9c1cd0fdb263106ee2",
+        "launch.log": "0193efdb4e988ffcbfbe6111a586643914d3678b6c55395e197f934839ca8f9e"
+      }
+    },
+    "wrong_map_mutant": {
+      "result": "RESULT FAIL segments 32 out_beats 709 replays 6 errors 2 tail_minus_ref max 197 mean 145 ref_holds 19",
+      "first_failure": null,
+      "files_sha256": {
+        "build.log": "82fd69014cb7704e11dd08becb90af858560d5e7a4ba4e241ca84f90bb6238d5",
+        "run.log": "4f98a3c7d0f41df3fd63121792a9262e1c516f99cc2ec2cbbd67767db625213f",
+        "launch.log": "a88f61e0596083253fc28a178e3cee188275d6e93be4c92b481cc96b2f47a2d8"
+      }
+    },
+    "stalled": {
+      "result": "RESULT PASS segments 32 out_beats 614 replays 4 errors 0 tail_minus_ref max 345 mean 210 ref_holds 11",
+      "first_failure": null,
+      "files_sha256": {
+        "build.log": "1ade2cb0a3ac9dadda9b368ce883b1e7da13a136b483eed20d04a983fb519038",
+        "run.log": "2c4ffdda29d10939dbd50d51817f0bab24eee4290ec25a7331b6ffd4c5dbcc3f",
+        "launch.log": "1a83ec26a936c6a169e9ae5b69c695bf36dbfb248f1e39d3c8df0a156995695b"
+      }
+    }
+  },
+  "clock": "functional bench inherited #0.4166ns halfperiod; no timing/adoption claim",
+  "payload_sram": "plain; SECDED adoption dependency"
+}
