@@ -8,28 +8,57 @@
       "description": "Default-off DYN25/26 address repair for the one-position wavefront core with eight compressor records",
       "source": {
         "commit": "aff63db74",
-        "paths": ["rtl/hdc/v41x/ot_hdc_core_v41x.sv", "tools/mtp_exact_wavefront2.py"]
+        "paths": [
+          "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+          "tools/mtp_exact_wavefront2.py"
+        ]
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF_FIRST_ADDRESS_FAULT_PROVED",
-        "evidence": ["rtl/hdc/v41x/ot_hdc_core_v41x.sv", "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json"]
+        "evidence": [
+          "rtl/hdc/v41x/ot_hdc_core_v41x.sv",
+          "results/rtl/mtp_ring_dyn_20261009/address_fault_proof.json"
+        ]
       },
       "model": {
         "status": "MODELED_FIVE_NONCONSTANT_STATE_BITS_ZERO_ADDED_CYCLES",
-        "evidence": ["physical/mtp_ring_dyn/model.json", "tools/uarch_model.py"]
+        "evidence": [
+          "physical/mtp_ring_dyn/model.json",
+          "tools/uarch_model.py"
+        ]
       },
       "exactness": {
-        "positive": {"status": "RUNNING_ORIGINAL_DEEP_18_JOB_GATE", "evidence": []},
-        "negative": {"status": "RUNNING_WAVE0_CONTROL_ORIGINAL_FAILURE_PRESERVED", "evidence": ["results/rtl/hbm_token_fifo_reservation_20261009/legacy_mtp_ring14_verdict.json"]}
+        "positive": {
+          "status": "CAMPAIGN14_FULL_18_JOB_PASS_CAMPAIGN19_QUEUED_SAME_SOURCE",
+          "evidence": [
+            "results/rtl/mtp_ring_dyn_20261009/campaign14_terminal.json"
+          ]
+        },
+        "negative": {
+          "status": "RUNNING_WAVE0_CONTROL_ORIGINAL_FAILURE_PRESERVED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/legacy_mtp_ring14_verdict.json"
+          ]
+        }
       },
-      "physical": {"status": "AWAITING_CLAUDE_STRUCTURAL_REVIEW", "corners": {}, "evidence": []},
+      "physical": {
+        "status": "RIDES_CONSUMING_SEQUENCER_CONTEXT_PENDING_NO_STANDALONE_ROUTE",
+        "corners": {},
+        "evidence": [
+          "physical/mtp_ring_dyn/model.json"
+        ]
+      },
       "dependencies": [
-        "Terminal bit-exact original campaign14 successor and campaign15 WAVE0 negative",
+        "All four same-source gates: campaign14 positive PASS,15 WAVE0 protocol FAIL,19 positive PASS,20 WAVE0 protocol FAIL",
         "Actual production single-position ring consumer binding",
-        "Claude structural review before routing",
-        "Contextual sequencer physical qualification with unchanged clocks and boundary obligations"
+        "Contextual sequencer SS setup and FF hold qualification with unchanged clocks and boundary obligations",
+        "Claude central integration before live registry publication"
       ],
-      "integration": {"status": "SOURCE_BRANCH_PUSHED_CLAUDE_MAIN_REVIEW_PENDING", "evidence": []}
+      "integration": {
+        "status": "SOURCE_BRANCH_PUSHED_CLAUDE_MAIN_REVIEW_PENDING",
+        "evidence": []
+      },
+      "recorded_at": "2026-10-09T09:14:00Z"
     }
   ]
 }
