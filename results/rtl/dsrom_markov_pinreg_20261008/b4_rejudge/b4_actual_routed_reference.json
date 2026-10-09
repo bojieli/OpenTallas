@@ -1,0 +1,33 @@
+{
+ "inserted": [],
+ "replaced": {
+  "physical/dsrom_markov/gen/signoff_markov256.sdc": "/srv/opentallas-scratch/codex/markov-p1-b4-rejudge-20261009/evidence/actual_routed_reference.sdc"
+ },
+ "appended": [],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": 21.0,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 21.0,
+  "worst_input_to_reg_slack_ps": 67.38,
+  "worst_output_port_slack_ps": 208.59,
+  "violating_d_pins": "0",
+  "ioref": {},
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "347e96dbf05db7b58609dad7c407bb46135f55f9c4629f21791658cabb683a7b"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -12.51,
+  "tns_ps": -2565.66,
+  "worst_reg_to_reg_slack_ps": -12.51,
+  "worst_input_to_reg_slack_ps": 2.54,
+  "worst_output_port_slack_ps": 17.13,
+  "violating_d_pins": "2314",
+  "ioref": {},
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "504c7910f7c2955a38f7cd99a815ce702b94049a61c7afd0668e24742286fa47"
+ }
+}
