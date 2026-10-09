@@ -18,6 +18,7 @@ def model():
       invalid='misaligned/unmapped address or partial write strobe faults before acceptance; malformed/unsolicited service completion faults without loader success',
       address_mapping='external owner supplies actual byte-address→stack/PC/sector translator; endpoint never truncates native address',
       write_visibility='service response for write must originate physical k_wr_done after accepted write; request acceptance is never completion',
+      production_read_lease=dict(physical_PCs=32,normal_read_beat_capacity=64,normal_write_capacity=8,read_debt_bits=7,write_debt_bits=4,native_lease_bits=2,native_address_bits=30,native_tag_bits=16,normal_request_added_cycles=0,native_request_capture_cycles=1,native_reply_capture_cycles=1,PC_write_collision="native admission waits externally proven pending WB drain plus accepted write debt0; native lease blocks normal K issue on its PC",native_response_bits=256+16+4+1,per_PC_flops=7+4+2+1+30+16+256,physical_status="requires slot placement and actual wire channel admission"),
       read_lease=dict(outstanding_per_PC=1,beat_mask_bits=16,saved_normal_tag_bits=17,native_tag_bits=16,stages=1,normal_path_added_cycles=0,normal_priority="normal valid or existing lease blocks native admission",same_PC_write_arbitration="must compose with physical WB arbiter"),
       adoption=False,physical_admitted=False)
 if __name__=='__main__': print(json.dumps(model(),indent=2))
