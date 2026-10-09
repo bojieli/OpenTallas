@@ -1,0 +1,65 @@
+{
+  "schema": "opentallas.embedding_kv_native_seq_namespace_gate.v1",
+  "proposal_commit": "9df7f9cde",
+  "host": "ot-pve1",
+  "remote_admission_GiB": 1,
+  "remote_guard": "/srv/opentallas-scratch/admit.sh",
+  "remote_workdir": "/srv/opentallas-scratch/codex/emb-kv-seq-namespace",
+  "tool": "IcarusVerilog12.0 stable",
+  "bench_derived_from": "rtl/test/tb_qwen_kvc_write_bridge.sv",
+  "source_sha256": {
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/physical/ot_qwen_die_hub_identity.sv": "d67f20db959dc1803de8cc82be1c7206407352e634802303060e10d5ebf76409",
+    "rtl/physical/ot_qwen_kvc_hub_cdc.sv": "d20b1d35c98d7a2e1924515175aec56e2f83061bc1d330c0a116f9b79b9a044c",
+    "rtl/physical/ot_qwen_kvc_packet_codec_parallel.sv": "ccdcc4099b221a32a257fdd1f37a4b353a86a7978f0c9579c9fb1a59e77cdeb8",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge.sv": "35a9465a04707ea71d7cbc66842af2f046f193832ac5ca968ec91c69058969f6",
+    "rtl/test/emb_hbm/tb_emb_kv_seq_namespace.sv": "3b259849e3b17101794a71b5d9dbb37604085af56b91308fe1c10c1bdb65aefe",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge_cancel.sv": "005f74bb0f2f422dabb3b8681e9923e431be324d86a3336623542c87f6a33d0f",
+    "rtl/physical/ot_qwen_kvc_write_link_bridge_fenced.sv": "2850b3c802fba70921389f45c9191bb151d04b0a073f7b78bd871c49186a6aa5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb"
+  },
+  "logs_sha256": {
+    "admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive.log": "693040c02e5b1f0f484d18bee3df71f1cec9723b43b84d4b44e98543b6c688c5",
+    "negative_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative.log": "4d8644ad99e0a9078ef220e77a38f2521ecb159691b1f4d9260ab5c9b6153dec",
+    "run.sh": "4d72f3317906e334fa9a1d37d07582893691aadc104fdd8da8771ae68b54594a"
+  },
+  "verdict": "PASS_NATIVE_FULL2048; OUTER_TAG_ONLY_NORMALIZATION_REJECTED",
+  "vehicle": "Actual native base write_link_bridge ROLE0/ROLE1, native parallel encode/decode, native CDCs and native identity hubs. HOPS0 minimum endpoint mechanism, no replicated array, no new integrated hub RTL. Existing historical modules kept unchanged; their legacy epoch/CRC predicates are not newly adopted KV-die policy.",
+  "clocks_ps": {
+    "local_source": 1111.112,
+    "hub_A_B": 833.334,
+    "local_ledger": 1024,
+    "hub_B_phase": 123
+  },
+  "actual_positive": {
+    "tx_sequences": 2048,
+    "decoded_full510_exact": 2048,
+    "golden_ledger_payload_sec_tag_exact": 2048,
+    "native_completions": 2048,
+    "outer_high_tags": 1024,
+    "returned_native_identity_preserved": true,
+    "faults": 0
+  },
+  "negative": {
+    "mutation": "Clear only outertag bit10 on request x3 link input; native512 payload unchanged.",
+    "actual_native_receiver_rejects": true,
+    "log": "PASS_EXPECTED_OUTER_NORMALIZATION_REJECTION kind=1 c=0 s=1 completed=1019",
+    "source_bound_cause": "Native bridge identity_tag==dec_seq[10:0] cannot hold for normalized outertag and native payload seq>=1024. first mutated sequence is1024, but exact first fault edge/seq not instrumented; completion1019 reflects five requests in flight, not transaction index of fault.",
+    "negative_status": "Intended normalization compatibility claim FAIL; harness PASS because the existing receiver correctly faults."
+  },
+  "namespace_collision": "Actual source exports2048 exact outerseq values including1024 withbit10=1. Source inspection of emb hub transmit/receive predicates proves those collide with EMB class. This gate does not instantiate emb hub and does not claim tested nativeemb interoperability.",
+  "other_bridge_variants": "Cancel/fenced receivers have the same full11 identity equality by source inspection; not simulated in this minimum gate.",
+  "contracts_open": [
+    "Reviewed producer/receiver outerclass normalization, if adopted; current normalization as-is unsafe",
+    "SOURCE64 runtime host decode/sharednativecredit",
+    "Separate KV-die CONTRACT/package wires; no new fields guessed"
+  ],
+  "adopted": false,
+  "physical_claim": false,
+  "integrated_hub_RTL_built": false
+}
