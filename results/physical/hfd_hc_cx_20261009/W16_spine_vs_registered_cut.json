@@ -52,7 +52,7 @@
     },
     "coherent_zero_skew_margin_with_measured_data_ps": -27.35666700000013,
     "coherent_required_data_delay_for_15ps_margin_ps": 741.963333,
-    "coherent_limit": "No analytic positive margin at retained measured data delay; CTS must reduce skew AND hold-repair/wire delay. No guaranteed closure.",
+    "coherent_limit": "This budget assumes zero gather skew at the chosen period. Real CTS skew, hold-repair/wire delay and macro capture are still unqualified; no guaranteed closure.",
     "registered_cuts": {
       "bank_clocks_by_chain": [
         [
@@ -161,7 +161,7 @@
     },
     "coherent_zero_skew_margin_with_measured_data_ps": 250.42111099999977,
     "coherent_required_data_delay_for_15ps_margin_ps": 1019.741111,
-    "coherent_limit": "No analytic positive margin at retained measured data delay; CTS must reduce skew AND hold-repair/wire delay. No guaranteed closure.",
+    "coherent_limit": "This budget assumes zero gather skew at the chosen period. Real CTS skew, hold-repair/wire delay and macro capture are still unqualified; no guaranteed closure.",
     "registered_cuts": {
       "bank_clocks_by_chain": [
         [

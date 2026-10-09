@@ -74,7 +74,7 @@ def compare_registered_cut(plan, floorplan, bank_clocks, period_ps=833.333333):
         'coherent_spine': spine,
         'coherent_zero_skew_margin_with_measured_data_ps': period_ps - data_ps - setup_ps - uncertainty_ps,
         'coherent_required_data_delay_for_15ps_margin_ps': period_ps - setup_ps - uncertainty_ps - 15,
-        'coherent_limit': 'No analytic positive margin at retained measured data delay; CTS must reduce skew AND hold-repair/wire delay. No guaranteed closure.',
+        'coherent_limit': 'This budget assumes zero gather skew at the chosen period. Real CTS skew, hold-repair/wire delay and macro capture are still unqualified; no guaranteed closure.',
         'registered_cuts': {
             'bank_clocks_by_chain': bank_clocks,
             'crossings_by_chain': transitions,
