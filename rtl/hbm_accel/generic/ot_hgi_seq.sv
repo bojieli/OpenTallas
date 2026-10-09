@@ -288,8 +288,22 @@ module ot_hgi_seq #(
     integer k;
     wire [15:0] u_acc = u_v & u_rdy;
     assign db_rdy = (st == S_IDLE) && !hold_r;
-    assign cpl_v = (st == S_CPL) || (st == S_TKB);
-    assign cpl_tokx = (st == S_TKB);
+    // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
+    // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
+    reg cpl_v_q, cpl_tokx_q;
+    wire cpl_hs = cpl_v_q & cpl_rdy;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cpl_v_q <= 1'b0; cpl_tokx_q <= 1'b0; end
+        else begin
+            cpl_v_q <= ((st == S_CPL) || (st == S_TKB)) && !cpl_hs;
+            cpl_tokx_q <= (st == S_TKB) && !cpl_hs;
+        end
+    assign cpl_v = cpl_v_q;
+    assign cpl_tokx = cpl_tokx_q;
+    // dispatch acceptance registered (route TT -441: u_rdy -> |u_acc -> state / u_v): a valid bit clears on its own
+    // ready (one gate), the FSM leaves S_DISP on the registered accept (+1 cycle a dispatch)
+    reg acc_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) acc_q <= 1'b0; else acc_q <= |u_acc;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
     wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
     wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
@@ -363,6 +377,7 @@ module ot_hgi_seq #(
             cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
+            u_v <= u_v & ~u_rdy;                               // accepted valid bits drop (FSM writes below override)
             for (k = 0; k < 16; k = k + 1)                     // +1 / -1 precomputed from flops: u_rdy only selects
                 if (u_acc[k] && !u_done_r[k]) outst[k] <= outst[k] + 8'd1;
                 else if (!u_acc[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
@@ -560,7 +575,7 @@ module ot_hgi_seq #(
                         end
                     end
                     endcase
-                S_DISP: if (|u_acc) begin u_v <= 16'd0; st <= S_ADV; end   // accepted: the ring advances next cycle
+                S_DISP: if (acc_q) st <= S_ADV;                   // accepted (registered): the ring advances next
                 S_ADV: begin advance(rlen); st <= S_DEC; end
                 S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin advance(rlen); st <= S_DEC; end
                 S_ENDRD: begin
@@ -588,7 +603,7 @@ module ot_hgi_seq #(
                         end
                     end
                 end
-                S_TKB: if (cpl_rdy) begin
+                S_TKB: if (cpl_hs) begin
                     tk_pos <= tk_pos + 20'd1;
                     if (tk_i == tk_n) begin advance(rlen); st <= S_DEC; end
                     else begin
@@ -600,7 +615,7 @@ module ot_hgi_seq #(
 `endif
                     end
                 end
-                S_CPL: if (cpl_rdy) st <= S_IDLE;
+                S_CPL: if (cpl_hs) st <= S_IDLE;
                 default: st <= S_IDLE;
             endcase
         end
