@@ -8,7 +8,7 @@
 // Four protected row registers are reused for two eight-dimension beats.
 module ot_dsrom_hc_input_reader #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,
-    parameter integer MAX_CONTEXT=1048576,
+    parameter integer MAX_CONTEXT=1048576, ECC_PIPE=0,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -31,8 +31,8 @@ module ot_dsrom_hc_input_reader #(
     output wire [7:0] mean_beat,output wire [511:0] mean_residuals,
     output wire busy,output reg fault
 );
-    localparam [2:0] IDLE=0,MCMD=1,REQ=2,WAIT=3,SEND=4;
-    reg [2:0] state;
+    localparam [3:0] IDLE=0,MCMD=1,REQ=2,WAIT=3,SEND=4,DECODE=5,DWAIT=6,EWAIT=7;
+    reg [3:0] state;
     reg [1:0] capture_q,copy_q;
     reg [USER_W-1:0] user_q;
     reg [POS_W-1:0] position_q;
@@ -43,17 +43,34 @@ module ot_dsrom_hc_input_reader #(
     reg half_q;
     reg [575:0] rows[0:3];
     wire [575:0] rsp_encoded;
+    wire [7:0] encode_valid;
     wire [511:0] decoded[0:3];
-    wire [31:0] ue;
+    wire [31:0] ue,decode_valid;
     wire [31:0] ce_unused;
     genvar c,l;
     generate for(l=0;l<8;l=l+1) begin:g_encode
-        ot_s81_secded_enc72 e(.d(rsp_data[64*l+:64]),.c(rsp_encoded[72*l+:72]));
+        if(ECC_PIPE) begin:g_pipe
+            ot_dsrom_hc_secded_encode_pipe e(.clk(clk),.rst_n(rst_n),
+                .valid_in(state==WAIT&&rsp_valid&&!rsp_fault&&!bad_bf16&&!fault),
+                .d(rsp_data[64*l+:64]),.c(rsp_encoded[72*l+:72]),.valid_out(encode_valid[l]));
+        end else begin:g_comb
+            assign encode_valid[l]=1'b0;
+            ot_s81_secded_enc72 e(.d(rsp_data[64*l+:64]),.c(rsp_encoded[72*l+:72]));
+        end
     end
     for(c=0;c<4;c=c+1) begin:g_copy
         for(l=0;l<8;l=l+1) begin:g_decode
-            ot_s81_secded_dec72 d(.c(rows[c][72*l+:72]^(c==0&&l==0?HOLD_INJECT:72'd0)),
-                .d(decoded[c][64*l+:64]),.ce(ce_unused[8*c+l]),.ue(ue[8*c+l]));
+            if(ECC_PIPE) begin:g_pipe
+                ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
+                    .valid_in(state==DECODE&&!fault),
+                    .c(rows[c][72*l+:72]^(c==0&&l==0?HOLD_INJECT:72'd0)),
+                    .valid_out(decode_valid[8*c+l]),.d(decoded[c][64*l+:64]),
+                    .ce(ce_unused[8*c+l]),.ue(ue[8*c+l]));
+            end else begin:g_comb
+                assign decode_valid[8*c+l]=1'b0;
+                ot_s81_secded_dec72 d(.c(rows[c][72*l+:72]^(c==0&&l==0?HOLD_INJECT:72'd0)),
+                    .d(decoded[c][64*l+:64]),.ce(ce_unused[8*c+l]),.ue(ue[8*c+l]));
+            end
         end
         for(l=0;l<8;l=l+1) begin:g_select
             assign mean_residuals[128*c+16*l+:16]=decoded[c][256*half_q+32*l+16+:16];
@@ -96,12 +113,20 @@ module ot_dsrom_hc_input_reader #(
                 REQ: if(req_ready) state<=WAIT;
                 WAIT: if(rsp_valid) begin
                     if(bad_bf16) fault<=1;
+                    else if(ECC_PIPE) state<=EWAIT;
                     else begin
                         rows[copy_q]<=rsp_encoded;
-                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=SEND;end
+                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=ECC_PIPE?DECODE:SEND;end
                         else begin copy_q<=copy_q+1'b1;state<=REQ;end
                     end
                 end
+                EWAIT: if(&encode_valid) begin
+                    rows[copy_q]<=rsp_encoded;
+                    if(copy_q==3) begin copy_q<=0;half_q<=0;state<=DECODE;end
+                    else begin copy_q<=copy_q+1'b1;state<=REQ;end
+                end
+                DECODE: state<=DWAIT;
+                DWAIT: if(&decode_valid) state<=SEND;
                 SEND: if(|ue) fault<=1;
                     else if(mean_ready) begin
                         if(!half_q) half_q<=1;
