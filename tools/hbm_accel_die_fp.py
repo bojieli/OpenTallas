@@ -440,6 +440,8 @@ R25IMW = dict(R25IQG, native_mtp_wb=True,
     spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
     spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
         mtp='stream_1p2', kvwb='stream_1p2'))
+R25IMWS = dict(R25IMW, native_mtp_stop=True,
+    spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
 ADOPTED = R25
 
 
@@ -758,6 +760,9 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     if variant.get('native_mtp_wb'):
         from hbm_mtp_wb_die_model import model as native_model
         m['mtp_wb_native'] = native_model(ROOT)
+        if variant.get('native_mtp_stop'):
+            from hbm_mtp_native_contract import stop_model
+            m['mtp_wb_native']['MTP'] = stop_model(ROOT)
         m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
     if geometry_only:
         m['buses'], m['paths'] = [], {}
@@ -2430,7 +2435,8 @@ def buses(m):
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
         if V.get('native_mtp_wb'):
-            from hbm_mtp_native_contract import model as native_contract
+            from hbm_mtp_native_contract import model, stop_model
+            native_contract = stop_model if V.get('native_mtp_stop') else model
             contract = native_contract(ROOT)
             for name, group in contract['groups'].items():
                 peer_ = name[2:]
@@ -3605,7 +3611,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
