@@ -1,5 +1,5 @@
 {
-  "source_rtl_commit": "9599e7337",
+  "source_rtl_commit": "b827340df",
   "top": "ot_hgi_quant_decode",
   "full_shape": {
     "lanes": 32,
@@ -45,5 +45,10 @@
   "area_status": "1.08mm2 floorplan envelope only; synthesized area and fit pending",
   "io_contract": "standalone existing route_master 833.333ps signoff,60/25uncertainty,166.667ps outside boundary +150ps inter-region,measured clock reference,H1 hold; output80fF,input150ps; all ports timed. This is not an hfd_quant die-budget match; generic record boundary approval required before adoption",
   "legacy_memory_claim_gib": 60,
-  "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak"
+  "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak",
+  "exact_lockstep_bench_source": "4819023e0",
+  "vector_bench_source": "a1e6e53a7",
+  "boundary_vectors_source": "c852a6d6e",
+  "e4m3_added_edges": 15,
+  "boundary_lint_status": "local submit_lint implicitly invoked Yosys before discovered; not used as remote admission evidence; remote pinned repeat required"
 }
