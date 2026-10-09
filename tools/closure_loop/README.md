@@ -147,6 +147,9 @@ overrides, `--param K=V`, other `--flags`; hold margin, paths and labels exclude
 on an assumed insertion ONLY from the same variant (old block entries count when the measuring job's JSON gives the same
 key); otherwise the job calibrates first (CTS-only) and routes on the measurement. bfh_halfphl_a730 had started on
 bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured 1546 / 875.
+At daemon start `backfill_variants()` adds every job's calibrate measurement taken before the table existed
+(newest per variant; existing variant entries are never replaced), so a re-route of an older variant (e.g.
+bfh2_recut_lvt, SS 951 / FF 556) starts on its own value instead of calibrating again.
 
 ## Hold margin and automatic hold ECO (2026-10-06)
 - Jobs created from 2026-10-07 04:17 get `HM=0.010` (10 ps; coordinator: 35 ps + the 50 ps FF IO hold uncertainty
