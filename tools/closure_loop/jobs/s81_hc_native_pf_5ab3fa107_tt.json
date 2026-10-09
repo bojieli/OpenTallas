@@ -1,0 +1,21 @@
+{
+ "name":"s81_hc_native_pf_5ab3fa107_tt",
+ "block":"dsfd_sp_hc_cmd_bridge_pf","owner":"Codex:ds_control",
+ "purpose":"Standalone native HC command bridge TT pathfinding; explicit fixture opcode mask23/24/25 and176 real pinbits. Generic20%IO reference has no production interface adoption credit.",
+ "hosts":["ot-agidock128","ot-epyc1tb","ot-epyc2","ot-epyc3"],
+ "host_require":["ot-agidock128","ot-epyc1tb","ot-epyc2","ot-epyc3"],
+ "threads":4,"peak_ram_gb":4,
+ "source":{"branch":"codex/ds-control-resume-20261009","commit":"5ab3fa107",
+  "extra_paths":["results/rtl/s81_ctrl_20261009"],
+  "required_files":["physical/s81_ctrl/rtl/dsfd_sp_hc_cmd_bridge_pf.sv","physical/s81_ctrl/route_hc_bridge_pf.sh","rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv","results/rtl/s81_ctrl_20261009/hc_pathfinding_prebuild.json"]},
+ "no_bench_reason":"Same native RTL and OP_MASK23/24/25 as full actual3capture/1280dimension gate8e2fdc943; results/rtl/s81_ctrl_20261009/hc_bridge_authorization_evidence.json pins actual producer, committed completion and orphan/identity/capture/unauthorized negatives. Fixture adds only transparent named pins. Measured176genericcells/56flops and18MiB RSS in hc_synth_inventory.log.",
+ "stages":{
+  "calibrate":{"enabled":false,"reason":"Standalone TT characterization only: clk port explicit, .833ns/60pssetup/25pshold uncertainty; generic20%IO, no insertion-derived die budget or hardened-interface qualification claimed."},
+  "route":{"cmd":"SRC={SRC} CORES=4 bash physical/s81_ctrl/route_hc_bridge_pf.sh {RUN}/routes/{NAME}","logs":["{RUN}/routes/{NAME}/run.log"],"needs":["orfs"]},
+  "collect":{"cmd":"mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/physical.json {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/"}
+ },
+ "verdict":{"corner_sta":"{RUN}/routes/{NAME}/corner_sta.json","drc_metrics":"{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json"},
+ "cycles_added":1,"route_corner":"TC","route_hold_corners":"TC,BC","route_hold_margin_ns":0.025,
+ "merge_target":null,"budget":{"enabled":false,"reason":"Explicit TT pathfinding-only generic20%IO fixture; actual per-die registered relay/credit budget and floorplan clocks remain pending."},
+ "notes":"4GiB is first-route capacity reservation grounded in actual176cells/56flops/no memories and18MiB synthesis RSS; no address-space/time cap. Record actual route peak. No SS/FF contextual signoff or headline adoption."
+}
