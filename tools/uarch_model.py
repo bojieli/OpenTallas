@@ -34,6 +34,30 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def s81_bf_input_holdseat_model(seats=4, replicas=338):
+    """Full-rate BF input hold seats; physical delay qualification is mandatory."""
+    if seats < 1:
+        raise ValueError('hold-seat count must be positive')
+    bits = 1652
+    return dict(schema='opentallas.s81-bf-input-holdseat.v1', opt_in_default=False,
+                input_bits=bits, replicas=replicas, hold_cells_per_input=seats,
+                master='HB2xp67_ASAP7_75t_R', cell_width_um=.27, cell_height_um=.27,
+                element_added_cell_area_mm2=bits*seats*.27*.27/1e6,
+                die_added_cell_area_mm2=replicas*bits*seats*.27*.27/1e6,
+                capture_rate_beats_per_cycle=1, added_cycles=0,
+                added_macs_per_cycle=0, added_memory_bytes_per_cycle=0,
+                boundary_bits_per_cycle=bits, added_boundary_bits_per_cycle=0,
+                added_mux_inputs=0, added_fanout=0,
+                minimum_hold_delay_needed_ps=72.7+15,
+                measured_correct_reference_tt_input_setup_spare_ps=470,
+                input_hold_seat_area_um2=seats*.27*.27,
+                hold_seat_linear_width_um=seats*.27,
+                local_connections=bits*seats,
+                routing_tracks_needed=bits, routing_channel_capacity='actual per-face placement required',
+                latency_composition='unchanged PINREG+RECUT element latency and initiation interval',
+                qualification='candidate; real FF delay, TT setup, capture-row fit and routed closure unmeasured')
+
+
 def dsrom_engram_lead_model(users=64):
     """Released tokenizer map and lead-window path, priced before implementation."""
     return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
