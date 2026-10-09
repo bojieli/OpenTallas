@@ -1,0 +1,42 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/engram/window-979434fba/tools/engram_window_gate.py", line 19, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/srv/opentallas-scratch/claude/engram/window-979434fba/tools/engram_window_gate.py", line 14, in main
+    if b.returncode:raise RuntimeError(b.stderr[-3000:])
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: RXW(1)) rx(
+      |                                                             ^~
+                     /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv:92:31: ... Location of port declaration
+   92 |     output reg  [NW-1:0]      tok_pos,
+      |                               ^~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/test/tb_s81_engram_window.sv:17:61: Cell has missing pin: 'tok_id'
+   17 |     ot_s81_pkg_ctrl #(.WINDOW_CONTEXT(1),.MAXU(64),.RXW(1)) rx(
+      |                                                             ^~
+                     /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv:93:31: ... Location of port declaration
+   93 |     output reg  [NW-1:0]      tok_id,
+      |                               ^~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/test/tb_s81_engram_window.sv:17:61: Cell has missing pin: 'tok_stop'
+   17 |     ot_s81_pkg_ctrl #(.WINDOW_CONTEXT(1),.MAXU(64),.RXW(1)) rx(
+      |                                                             ^~
+                     /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv:94:31: ... Location of port declaration
+   94 |     output reg                tok_stop,
+      |                               ^~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/test/tb_s81_engram_window.sv:17:61: Cell has missing pin: 'users_done'
+   17 |     ot_s81_pkg_ctrl #(.WINDOW_CONTEXT(1),.MAXU(64),.RXW(1)) rx(
+      |                                                             ^~
+                     /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv:95:31: ... Location of port declaration
+   95 |     output reg  [7:0]         users_done,
+      |                               ^~~~~~~~~~
+%Warning-PINMISSING: /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/test/tb_s81_engram_window.sv:17:61: Cell has missing pin: 'st_jobs_done'
+   17 |     ot_s81_pkg_ctrl #(.WINDOW_CONTEXT(1),.MAXU(64),.RXW(1)) rx(
+      |                                                             ^~
+                     /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv:96:31: ... Location of port declaration
+   96 |     output reg  [31:0]        st_jobs_done,
+      |                               ^~~~~~~~~~~~
+%Error-NEEDTIMINGOPT: /srv/opentallas-scratch/claude/engram/window-979434fba/rtl/test/tb_s81_engram_window.sv:24:21: Use --timing or --no-timing to specify how event controls should be handled
+                                                                                                                   : ... note: In instance 'tb_s81_engram_window'
+   24 |     task step;begin @(negedge clk);end endtask
+      |                     ^
+%Error: Exiting due to 1 error(s)
+

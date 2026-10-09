@@ -19,6 +19,7 @@
 // message type, 4 RESULT go without res_v.
 // ---------------------------------------------------------------------------
 module ot_s81_hop_tx #(
+    parameter integer WINDOW_CONTEXT = 0,
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
     parameter integer NW       = 21,
@@ -38,6 +39,11 @@ module ot_s81_hop_tx #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input wire win_ctx_v, win_ctx_slot,
+    input wire [11:0] win_ctx_user,
+    input wire [20:0] win_ctx_pos, win_ctx_tok,
+    input wire [67:0] win_ctx_ids,
+    input wire win_ctx_dead,
     input  wire               cmd_v,
     input  wire [CMDW-1:0]    cmd_d,
     output reg                dn_v,
@@ -84,6 +90,11 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     wire [3:0]      h_typ  = h_arg[3:0];
     wire [11:0]     h_dst  = h_arg[15:4];
     wire [7:0]      h_sl   = h_arg[23:16];
+    reg [1:0] wc_valid;
+    reg [123:0] wc [0:1]; // user12,pos21,tok21,ids68,dead1 + reserved1
+    wire wc_match = wc_valid[h_slot] && wc[h_slot][123:112]==12'(h_user) &&
+        wc[h_slot][111:91]==h_pos && wc[h_slot][90:70]==h_tok;
+    wire need_window = WINDOW_CONTEXT && h_typ==MT_HIDDEN;
 
     // Return-valid mode reserves a queue slot for each issued VM read until the
     // actual ordered response arrives. OUT_DEPTH includes all buffered and
@@ -139,6 +150,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
             read_w <= 0; read_r <= 0; read_pending <= 0; read_last <= 0;
             vm_re <= 1'b0; vm_raddr <= 0; dn_v <= 1'b0; dn_tag <= 0;
             fault <= 1'b0; fault_code <= 0; st_msgs <= 0;
+            wc_valid<=0;wc[0]<=0;wc[1]<=0;
         end else begin
             dn_v <= 1'b0;
             vm_re <= 1'b0;
@@ -171,6 +183,10 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                     case (h_typ)
                         MT_HIDDEN: begin
                             push_d = hdr(MT_HIDDEN, h_dst, 12'(XW), h_user, h_pos, 0, 0, h_tok, 0, 1'b0);
+                            if(WINDOW_CONTEXT) begin
+                                push_d[208 +:68]=wc[h_slot][69:2];
+                                push_d[276]=1;push_d[277]=wc[h_slot][1];wc_valid[h_slot]<=0;
+                            end
                             nw <= 12'(XW); st <= S_DATA; pf_n = 12'(XW) + 1'b1;
                         end
                         MT_SIDE: begin

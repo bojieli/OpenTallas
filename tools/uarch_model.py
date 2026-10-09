@@ -34,6 +34,39 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def dsrom_engram_lead_model(users=64):
+    """Released tokenizer map and lead-window path, priced before implementation."""
+    return dict(schema='opentallas.engram-lead-model.v1', opt_in_default=False,
+        vocab_size=129280, compressed_vocab_size=99092, id_bits=17,
+        map_source='results/uarch/h4_c0_ds_external_source_provenance_20261003/r1/payloads/fbc8c3ec76fc1143_L01_token_map.npy',
+        map_sha256='fbc8c3ec76fc11430b854fb2ff267fdf923b5ff2d4f869e3c0433d8edc6479b1',
+        checkpoint_revision='dba1be0a40aa45a94ad051997016db3960a90277',
+        macro='ot_rom_4096x72_m8', map_entries_per_word=4,
+        map_words=32320, map_macros=8, macro_physical_bytes=294912,
+        map_logical_bytes=274720, rom_ecc=False,
+        map_area_mm2=8*38.016*62.910/1e6,
+        replicas=4, replica_home='S0 embedding TP ranks, one independent map/window per rank',
+        macs_per_cycle=0, map_read_bytes_per_cycle=9, useful_map_bytes_per_cycle=17/8,
+        map_input_bits_per_cycle=21, map_output_bits_per_cycle=17,
+        map_latency_cycles=2, idwin_latency_cycles=1, lead_capture_cycles=1, lead_added_cycles=4,
+        rollback_position_guard_bits=users*22,
+        producer_inflight_entries=1, producer_context_bits=58,
+        producer_output_hold_bits=124, token_issue_minimum_cycles=6,
+        history_users=users, history_depth=8,
+        history_bits=users*(8*18+7),
+        lead_context_slots=2, lead_context_bits=2*(68+1+1+12+21+21),
+        header_first_bit=208, header_window_bits=68, header_valid_bit=276, header_dead_bit=277,
+        header_added_flits=0, header_added_bits_per_token=70,
+        header_total_bits=278, existing_link_bits_per_cycle=512,
+        routing_tracks_added=70, routing_capacity_qualification='same512-bit lead flit; local70-bit context routes pending actual physical views',
+        mux_cost='registered8:1 macro-word selection then4:1 seventeen-bit lane selection; bounded two-slot context',
+        fanout='source rank sends existing HIDDEN lead to stages; window copied intact to fourTP Engram homes at L1 and L14',
+        floorplan_slot_fit='eight existing38.016x62.910um macros =0.0191327mm2 per source rank; placement pending',
+        protection='fault-free no-ECC ROM; mutable history protection remains existing qualification gap',
+        negative_contract='rawtoken<129280, cid<99092, user<64, first explicitly supplied, rewind1..5 and no conflicting inflight same-user token',
+        qualification='source-pinned released map; exact producer/transport and SS/FF physical gates required before adoption')
+
+
 def dsrom_engram_rowstripe_model(context=1048576, users=64):
     """Opt-in whole-row PC placement; historical atom-striped layout retained.
 
@@ -66,6 +99,9 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                 added_decode_cycles=0,
                 read_adapter=dict(
                     reserved_rows=6, atoms_per_row=9, controller_pc_endpoints=64,
+                    lookup_credit_request_queue_entries=8, request_queue_bits=8*34+35+10,
+                    request_queue_added_capture_cycles=2,
+                    request_queue_credit_return='when accepted into reserved controller row; not controller rk',
                     protected_buffer_bits=6*9*288, return_pin_bits=64*278,
                     return_mux_2to1_equivalents=6*278*63,
                     buffer_area_sequential_mm2=6*9*288*.2916/1e6,
@@ -80,6 +116,50 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                     fanout='six64:1 PC response selectors, six SECDED encoders/decoders, six9:1 protected atom selectors',
                     qualification='sizing before service RTL; generation wrap requires drain/fence; no physical credit'),
                 qualification='layout model only; no service/physical/performance credit')
+
+
+def dsrom_engram_canonical_model(context=1048576, users=64):
+    """Preserve physical global-sector XOR map; three bounded row bursts.
+
+    The preceding PC-local len8 fixture is historical API evidence only. The
+    actual model interprets req_len as sector count; boot writes require len1.
+    """
+    record=dsrom_engram_rowstripe_model(context, users)
+    record['schema']='opentallas.engram-canonical-rowstripe-model.v1'
+    record['pc_map']='pc_of(s)=((s>>2)^(s>>7)^(s>>12))&31'
+    record['inverse_map']='t=pc_local_atom>>2; s=(t<<7)|(((pc^t^(t>>5))&31)<<2)|(pc_local_atom&3)'
+    record['read_request']='three same-PC bursts with actual counts [4-a%4,4,1+a%4], tag={generation12,row3,burst2}'
+    record['boot_request']='one sector write with actual len1, global stack sector from canonical inverse'
+    record['requests_per_rank_token']=18
+    record['request_boundary_bits_per_rank_token']=18*341
+    record['historical_api_fixture_requests_per_rank_token']=6
+    record['added_issue_cycles_vs_single_burst']=12
+    record['added_request_queue_cycles']=2
+    record['added_return_capture_cycles']=3
+    record['read_adapter']['transaction']='generation12,row3,burst2; three requests per reserved row, one row per PC, bounds on each burst/beat'
+    record['read_adapter']['requests_per_reserved_row']=3
+    record['read_adapter']['post_rtl_state_bits']=35859
+    record['read_adapter']['post_rtl_sequential_area_mm2_modelled']=35859*.2916/1e6
+    record['read_adapter']['post_rtl_capture_stage_bits']=6*(256+17+4+1)
+    record['read_adapter']['post_rtl_control_and_output_bits']=847
+    record['read_adapter']['protected_buffer_overhead_bits']=6*9*(288-256)
+    record['configuration_boundary_bits']=64*30*2+1
+    record['maximum_pc_local_usable_atoms']=19775388
+    record['capacity_guard']='attested base<exclusive limit<=19775388; 31/35-bit end/inverse arithmetic before rq.addr30'
+    record['qualified_component_record']='results/rtl/engram_canonical_read_gate_20261009.json'
+    record['read_adapter']['controller_request_credits_used_per_pc_max']=3
+    record['read_adapter']['request_credit_depth_actual']=8
+    record['read_adapter']['lease_boundary_bits']=64*5
+    record['read_adapter']['lease_state_bits']=128
+    record['read_adapter']['lease_contract']='opt-in pc_available arbiter grant, pc_want, registered claim/release; hold onePC through all9 row atoms, owner-filtered rd'
+    record['backend_fence']=dict(request_pin_bits=340+64,return_pin_bits=264,credit_pin_bits=1,
+                                  added_request_cycles=1,added_return_cycles=1,
+                                  preboot='exclusive controller phase until all actual writes complete',
+                                  runtime='owner-routed controller returns and real PC lease required; no KV arbitration claim',
+                                  total_register_bits=669,sequential_area_mm2_modelled=669*.2916/1e6)
+    record['aperture']='per64PC base/limit in PC-local32B atoms; inverse checked wide before rq.addr30, region inventory pending loader owner'
+    record['qualification']='actual32-PC timing-model read gate passed; fullpayload/CRC/boot fence, deployed inventory and physical closure pending; historical len8 API fixtures do not qualify PHY'
+    return record
 
 
 def dsrom_engram_sink_pincapture_model():

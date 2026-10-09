@@ -22,6 +22,7 @@
 import ot_hdc_engram_tables_shipped_pkg::*;
 
 module dsfd_engram_lkp #(
+    parameter integer ROWSTRIPE = 0,
     parameter integer PIPE    = 0,
     parameter integer NSLOT   = 8,
     parameter integer HQ_CRED = 8,
@@ -109,7 +110,7 @@ module dsfd_engram_lkp #(
     // previous transfer has left (one transfer a cycle at most, every credit counted before it is spent)
     wire e_hqr = (hq_n != 8'd0);
     wire e_or  = (o_n != 8'd0);
-    ot_dsrom_engram_lookup #(.NR(4), .CPR(6), .NSLOT(NSLOT), .ABW(36), .PIPE(PIPE)) u_e (
+    ot_dsrom_engram_lookup #(.ROWSTRIPE(ROWSTRIPE), .NR(4), .CPR(6), .NSLOT(NSLOT), .ABW(36), .PIPE(PIPE)) u_e (
         .clk(ck), .rst_n(rst_n), .cfg_layer(cl_q), .cfg_rank(cr_q),
         .win_valid(wn != 2'd0), .win_ready(e_wrdy), .win_ids(wf[wh]), .rel_valid(rel_q),
         .hq_valid(e_hqv), .hq_ready(e_hqr), .hq_atom(e_hqa), .hq_len(), .hq_tag(e_hqt),
