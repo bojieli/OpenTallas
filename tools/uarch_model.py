@@ -14918,3 +14918,9 @@ def qwen_embedding_boot_crc_model(crc_pipe=0):
     """Price optional boot-only affineCRC pipeline, preserving decode latency."""
     from tools.qwen_boot_crc_model import model
     return model(crc_pipe=crc_pipe)
+
+
+def qwen_protected_phy_parallel_pair_model():
+    """Two outstanding real DATA/ECC reads; boot-only serialized write fallback."""
+    from tools.qwen_protected_phy_pair_model import model
+    return model()
