@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.embedding_hub_boot_merge_model.v1",
+  "model_before_RTL": true,
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/hdc/ingest/ot_rom_host_ingest.sv": "78647c1f198bac6e2816e08274d16b766de72660c5b22b768b52ae9e2140d149",
+    "physical/rom_host_ingest/rtl/qfd_io_host.sv": "b5269d3fa6a92bcbec750acf2ffec220e9e21373dc93b3f601330554181908b1"
+  },
+  "default_ENABLE": 0,
+  "clock_ps": 833.333334,
+  "MAC_per_cycle": 0,
+  "ports_bits": {
+    "SU_packet": 523,
+    "native_host_sector_payload": 289,
+    "hub_packet": 523,
+    "each_returned_credit": 1
+  },
+  "memory_bytes_per_cycle": {
+    "SU_FIFO_write": 65.375,
+    "host_FIFO_write": 65.375,
+    "merged_FIFO_read": 65.375
+  },
+  "replicas": 1,
+  "mux_demux": "2input packet queues; SUhead priority, host uses remaining actualhubcredits; ownerFIFO routesactualin-orderhubretirement credit",
+  "finite_flow": {
+    "SU_prepaid_input_slots": 8,
+    "host_BOOT_prepaid_input_slots": 8,
+    "hub_XS_prepaid_slots": 8,
+    "owner_FIFO_depth": 8,
+    "credit_policy": "Sourcecredits returnedonlywhenactualnativehubx3_cr retirescorrespondingownerFIFOhead. InputFIFO dequeue grants no sourcecredit; no invented credit/pending ninth slot."
+  },
+  "native_host_predicates": {
+    "RAW": "o_v && o_we && o_addr[31], except allonesBOOT_END; nonmarkerbits30:25zero andE25<E_END",
+    "BOOT_END": "o_v && o_we && o_addr==32hffffffff; data63:0 carries{checksum32,count32}",
+    "runtimeKV": "addr31=0 explicitlyunconsumed bybootmerger, exposedseparatevalid; existingKVwriterandsharedhosto_cr physicalbindingOPEN"
+  },
+  "packet_layout": {
+    "RAW": "x3data512={231zero,hostdata256,E25}; tag11=0x500",
+    "BOOT_END": "x3data512={448zero,hostdata63:0}; tag11=0x600",
+    "SU": "nativefull523packet unchanged"
+  },
+  "ordering": "PerproducerFIFO preservesRAW\u2192BOOT_END order. Nativehubcredits returnatactuallinksend. Nativegatewaybend_v snoopsactualBOOT_ENDsend; emb_ready requiresfourSTATUSsum exactcount/checksum, notmarkeracceptance.",
+  "state_bits": {
+    "input_payload_FIFOs": 8368,
+    "registered_merged_payload": 523,
+    "owner_FIFO_bits": 8,
+    "single_pointer_count_credit_control_proxy": 39,
+    "total_proxy": 8938
+  },
+  "area": {
+    "flop_proxy_um2": 2860.16,
+    "mux_guard_proxy_um2": 800,
+    "proposed_separate_frame_um": [
+      92.016,
+      200.88
+    ],
+    "frame_area_um2": 18484.17408,
+    "slot_fit": "OPEN: parent mayintegrateinsiderehardenedhub orbindseparaterealframe; nozeroareaassumption"
+  },
+  "routing": {
+    "proposed_side_capacity_tracks": 3138,
+    "largest_SUorhub_packet_pins": 524,
+    "all_IO_tracks_sum_proxy": 1346,
+    "actual_pin_clock_last100um": "OPEN"
+  },
+  "latency": {
+    "minimum_added_forward_core_edges": 2,
+    "minimum_added_forward_ns": 1.666666668,
+    "registered_source_credit_route_edges": 1,
+    "host_wait": "SUpriority maystarvehostundercontinuousSU; boot/inferencephaseandactualstalls mustbecomposed",
+    "boot_visibility": "Measurethroughactualhub/gateway; BOOT_ENDaccepted is notready",
+    "headline_credit": 0
+  },
+  "policy": "plain flop queues/control; noECC/TMR/auth/epoch/mirrors",
+  "runtime_host_completion_claim": false,
+  "physical_closed": false,
+  "adopted": false
+}
