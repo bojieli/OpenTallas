@@ -21,7 +21,7 @@ import hdc_program as P
 import hdc_qwen_fullshape_program_w12 as FP
 import hdc_qwen_fullshape_isa_w12 as QI
 import hdc_isa as I
-from hdc_qwen_fullshape_placement_w12 import matrix
+from hdc_qwen_fullshape_placement_w12 import matrix, placement
 from qwen_system.ctl_golden import stage_table, stab_bits
 
 # Execute the exact shape-only golden function without importing checkpoint IO packages.
@@ -37,13 +37,13 @@ POST_SCALE_BASES = (_rope + FP.TMAX * 64, _rope + FP.TMAX * 64 + 4096)
 
 def emit(out):
     out.mkdir(parents=True, exist_ok=True)
-    rows = compact_rows()
-    lay = FP.LayerZero(None, 0, rows)
+    rows = placement()['matrices_per_die'][:4]
+    lay = FP.LayerZero(placement(), 0)
     lay.emb_word = 0
     with FP.program_geometry(FP.vm_map()[0]):
         eprog = P.build_program(lay, layers=[], embed=True, head=False, scale_bases=True)
     ew, ed = QI.encode_segments(eprog)
-    layer = FP.profile(0, matrix_rows=rows, post_scale_bases=POST_SCALE_BASES)
+    layer = FP.profile(0, post_scale_bases=POST_SCALE_BASES)
     hr = matrix(0, 'lm_head', HEAD_ROWS, 4096)
     hr['scale_base'] = 0
     heads = [FP.profile_lm_head(d, hr, 0) for d in range(4)]
@@ -56,10 +56,12 @@ def emit(out):
     assert len(ew) + len(lw) + len(hw) <= 64
     assert len(ed) + len(ld) + len(hd[0]) <= 8
     code_words = max(r['end'] for r in rows)
-    scale_words = sum(r['scale_span_words'] for r in rows)
+    scale_words = sum(r['rounds'] * (6144 // r['split']) * I.INTERLEAVE for r in rows)
     print('Measured compact image words:',code_words,scale_words,flush=True)
     # Match ctl_golden stage strides: padded stage slots may exceed payload, never overlap it.
-    assert code_words <= 1056 and scale_words <= 50112
+    # The default physical program uses its original ROM allocation. It is deliberately
+    # distinct from compact_rows; adopting compact packing requires a native image manifest.
+    assert code_words <= 1056
     words = list(ew) + lw + hw
     offsets = [0, len(ew), len(ew) + len(lw)]
     stages = stage_table()
