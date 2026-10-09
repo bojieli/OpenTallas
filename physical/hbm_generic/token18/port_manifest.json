@@ -49,8 +49,10 @@
       ],
       "new_cycles": 0,
       "bench": "rtl/test/hbm_generic/tb_hgi_ctl18_lockstep.sv",
-      "gate": "pending (Icaruszero-time suspected; Verilatorrunactive)",
-      "simulator_vectors": "pendingprovider"
+      "gate": "Verilator: DS low+high each200runs/161669cycles/1699steps/2352emits/0mismatches; compiled rollback MUT1 FATAL expectedrc134",
+      "simulator_vectors": "pendingprovider",
+      "remote": "ot-epyc4:/srv/opentallas-scratch2/scratch/codex/hgi-token18-11f",
+      "receipt": "results/rtl/hgi_token18_20261009/control"
     }
   },
   "route_jobs": [],
