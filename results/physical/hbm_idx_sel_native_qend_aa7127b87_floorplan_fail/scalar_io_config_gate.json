@@ -1,0 +1,28 @@
+{
+  "verdict": "PASS",
+  "check": "all6903 corrected IO labels exactly match actual source-pinned mapped top port declarations; all rectangles/layers unchanged",
+  "scalar_ports": [
+    "ck",
+    "rst",
+    "qbr",
+    "toc",
+    "coc",
+    "co_quarter_last"
+  ],
+  "changed_lines": 6,
+  "native_record_unchanged": true,
+  "source": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "clock_period_ps": 833.333,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "raw_failure_preserved": "062d10c3a",
+  "sha256": {
+    "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail/mapped_top_ports.v.txt": "a36503ffc0e1705c6919bea6fc1e3059000b20416f33d872d4390570bdd8895e",
+    "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail/io_place.tcl": "bb2a60cb02c375cda09ef1354dcf79412476b3b78ca6c00a2f5fd7f503fe86d6",
+    "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail/corrected_io_place.tcl": "32cb25790a30c42f02d7f57b3937a7198ee9dcfcfb26ec73a02dd161eeae0d3c",
+    "physical/hbm_accel_die_views/index/native/hfd_idx_sel_native_qend/ports.json": "d78a0405e4e8cdfb0feeec4cf9e213e78117e81a2b495ec1738e82830be69a53",
+    "tools/hbm_die_views.py": "11d60a8e3a72d0d4ff40a26e29f6defbb83c87300702ce24bd6aa7c3e5ad7e67"
+  }
+}

@@ -174,6 +174,15 @@ def io_tcl(rec):
           f"{rec['generator']['round']})"]
     for p in sorted(rec['ports']):
         for nm, layer, x0, y0, x1, y1 in rec['ports'][p]['pins']:
+            # The native qend wrapper declares its one-bit ports as scalars.
+            # Its immutable physical record numbers every pin, including bit 0.
+            # Translate only the Tcl label; retain the physical record/rectangle.
+            if (rec.get('schema') == 'opentallas.hbm_native_indexer_ports.v1'
+                    and rec['master'] == 'hfd_idx_sel_native_qend'
+                    and rec['ports'][p]['bits'] == 1):
+                if nm != f'{p}[0]':
+                    raise ValueError(f'unexpected native scalar pin: {nm}')
+                nm = p
             L_.append(f'place_pin -pin_name {{{nm}}} -layer {layer} -location {{{(x0 + x1) / 2:.4f} {(y0 + y1) / 2:.4f}}} '
                       f'-pin_size {{{x1 - x0:.4f} {y1 - y0:.4f}}}')
     return '\n'.join(L_) + '\n'
