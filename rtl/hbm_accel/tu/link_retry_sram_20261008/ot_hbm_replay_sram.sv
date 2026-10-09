@@ -10,9 +10,12 @@ module ot_hbm_replay_sram #(
  // MUXREG=1 (sys-takeover 2026-10-09, opt-in): the bank-select mux of the captured words gets its own register before
  // the SECDED syndrome (collvmpub b2 -> u_dec.s1 path); +1 read edge (response edge5).
  parameter MUXREG=0,
+ // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
+ // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
+ parameter NOEPOCH=0,
  parameter AW=$clog2(DEPTH), NB=DEPTH/128,
  parameter BW=NB>1?$clog2(NB):1,
- parameter RW=W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
+ parameter RW=NOEPOCH?W:W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
 )(
  input wire clk,rst_n,
  input wire w_valid,input wire[W-1:0] w_data,
@@ -22,7 +25,9 @@ module ot_hbm_replay_sram #(
  output wire[SW-1:0] o_seq,output wire[EW-1:0] o_session,
  output wire o_ce,o_ue
 );
- wire[NC*256-1:0] record_in={{(NC*256-RW){1'b0}},w_session,w_seq,w_data};
+ wire[NC*256-1:0] record_in;
+ if(NOEPOCH) begin:g_rec_plain assign record_in={{(NC*256-W){1'b0}},w_data}; end
+ else begin:g_rec_full assign record_in={{(NC*256-RW){1'b0}},w_session,w_seq,w_data}; end
  wire[CW-1:0] encoded;
  for(genvar c=0;c<NC;c=c+1) begin:g_enc
   ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(record_in[c*256+:256]),.q(encoded[c*266+:266]));
@@ -69,7 +74,7 @@ module ot_hbm_replay_sram #(
  wire[EW-1:0] stored_epoch=corrected[W+SW+:EW];
  assign o_valid=&valid;
  wire[SW-1:0] seq_o=MUXREG?seqp[5]:seqp[4];wire[EW-1:0] ep_o=MUXREG?ep[5]:ep[4];
- assign o_ue=o_valid && ((|ue) || stored_seq!=seq_o || stored_epoch!=ep_o);
+ assign o_ue=o_valid && ((|ue) || (!NOEPOCH && (stored_seq!=seq_o || stored_epoch!=ep_o)));
  assign o_ce=o_valid && |ce;
  assign o_data=o_ue ? {W{1'b0}}:corrected[W-1:0];
  assign o_seq=seq_o;assign o_session=ep_o;

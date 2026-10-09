@@ -7,7 +7,10 @@
 // Session changes on coordinated link reset; old-session frames are dropped.
 module ot_hbm_tu_retry_port #(
  parameter ENABLE=0, W=545, SW=12, EW=16, DEPTH=512, CAPACITY=256,
- parameter CW=$clog2(CAPACITY)+2, TIMEOUT=2048, MAX_RETRY=8
+ parameter CW=$clog2(CAPACITY)+2, TIMEOUT=2048, MAX_RETRY=8,
+ // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
+ // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
+ parameter NOEPOCH=0
 )(
  input wire clk,rst_n,link_up,input wire[EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire[W-1:0] in_data,
@@ -29,7 +32,7 @@ module ot_hbm_tu_retry_port #(
  reg[CW-1:0] credits,pop_seen,pop_total,rx_owned;
  reg credit_fault;
  wire[CW-1:0] pop_delta=fb_pop-pop_seen;
- wire fb_current=fb_valid && fb_good && fb_session==session;
+ wire fb_current=fb_valid && fb_good && (NOEPOCH || fb_session==session);
  wire pop_advance=fb_current && pop_delta!=0 && !pop_delta[CW-1];
  wire[CW-1:0] tx_owned=CAPACITY-credits;
  wire return_ok=pop_advance && pop_delta<=tx_owned;
@@ -47,7 +50,7 @@ module ot_hbm_tu_retry_port #(
  assign rx_debt=ENABLE ? rx_owned:0;
  assign ack_pop=pop_total;
  assign fault=credit_fault || core_fault;
- ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY)) u_retry(
+ ot_hbm_link_retry_sram #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH),.TIMEOUT(TIMEOUT),.MAX_RETRY(MAX_RETRY),.NOEPOCH(NOEPOCH)) u_retry(
  .clk(clk),.rst_n(run),.session(session),.in_valid(in_valid && allow_new && !credit_fault),.in_ready(core_ready),.in_data(in_data),
  .tx_valid(core_tv),.tx_ready(tx_ready && run && !credit_fault),.tx_data(tx_data),.tx_seq(tx_seq),.tx_session(tx_session),
  .rx_valid(rx_valid && run && !credit_fault),.rx_ready(core_rr),.rx_ue(rx_ue),.rx_data(rx_data),.rx_seq(rx_seq),.rx_session(rx_session),

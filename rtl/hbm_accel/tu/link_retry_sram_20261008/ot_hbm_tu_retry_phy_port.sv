@@ -5,7 +5,10 @@
 // Bridge outputs are actual core credit pulses, not same-cycle ready proxies.
 module ot_hbm_tu_retry_phy_port #(
  parameter ENABLE=0,W=545,SW=12,EW=24,CW=10,CAPACITY=256,
- parameter TIMEOUT=2048
+ parameter TIMEOUT=2048,
+ // NOEPOCH=1 (sys-takeover 2026-10-09, opt-in; review S4/S5): no session/epoch identity and no sequence in the stored
+ // record or its checks; SECDED covers the replay payload only.  Go-back-N sequence numbers on the link are unchanged.
+ parameter NOEPOCH=0
 )(
  input wire pclk,prst_n,phy_link_up,input wire[EW-1:0]phy_session,
  input wire clk,rst_n,core_link_up,
@@ -30,7 +33,7 @@ module ot_hbm_tu_retry_phy_port #(
  ot_hbm_retry_pop_cdc #(.CAPACITY(CAPACITY),.CW(CW)) u_rx_pop_cdc(
  .s_clk(clk),.s_rst_n(core_run),.s_pop(rx_credit),.d_clk(pclk),.d_rst_n(phy_run),.d_pop(local_pop),.fault(local_cdc_fault),.pending());
  wire iq_valid,iq_ready,iq_fault;wire[W-1:0]iq_data;
- ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY)) u_ingress(
+ ot_hbm_retry_phy_ingress #(.W(W),.EW(EW),.DEPTH(CAPACITY),.NOEPOCH(NOEPOCH)) u_ingress(
  .clk(pclk),.rst_n(phy_run),.session(phy_session),.in_valid(ph_tx_v && phy_run),.in_data(ph_tx_flit),.in_ready(),
  .out_valid(iq_valid),.out_ready(iq_ready),.out_data(iq_data),.fault(iq_fault),.debt(ingress_debt));
  wire port_fault;wire[CW-1:0]available;
@@ -38,7 +41,7 @@ module ot_hbm_tu_retry_phy_port #(
  assign fec_tx_v=raw_tx_v && !fault;
  assign ph_rx_v=raw_rx_v && !fault;
  assign fec_rx_ready=raw_rx_ready && !fault;
- ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT)) u_port(
+ ot_hbm_tu_retry_port #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CAPACITY(CAPACITY),.CW(CW),.TIMEOUT(TIMEOUT),.NOEPOCH(NOEPOCH)) u_port(
  .clk(pclk),.rst_n(prst_n),.link_up(phy_link_up),.session(phy_session),
  .in_valid(iq_valid),.in_ready(iq_ready),.in_data(iq_data),
  .tx_valid(raw_tx_v),.tx_ready(fec_tx_ready && !fault),.tx_data(fec_tx_data),.tx_seq(fec_tx_seq),.tx_session(fec_tx_session),
@@ -53,7 +56,7 @@ module ot_hbm_tu_retry_phy_port #(
  reg[CW-1:0]return_seen,return_pending;
  reg return_fault;
  wire[CW-1:0]delta=fb_pop-return_seen;
- wire return_new=fb_valid && fb_good && fb_session==phy_session && delta!=0 && !delta[CW-1];
+ wire return_new=fb_valid && fb_good && (NOEPOCH || fb_session==phy_session) && delta!=0 && !delta[CW-1];
  wire return_emit=return_pending!=0 && !port_fault && !return_fault;
  always@(posedge pclk or negedge phy_run)begin
  if(!phy_run)begin return_seen<=0;return_pending<=0;return_fault<=0;end
