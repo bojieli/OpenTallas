@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_evidence_report.v1",
- "date": "2026-10-08 18:03 PDT",
+ "date": "2026-10-08 18:50 PDT",
  "basis": "BRIEF.md owner steer 2026-10-07 (academic validation) + option B (TT setup / FF hold)",
  "tool": "tools/die_evidence_report.py",
  "dies": {
@@ -65,6 +65,11 @@
     "status": "pending",
     "dir": "/srv/opentallas-scratch/claude/qwen-die-r20/r21b/ir"
    },
+   "clock_plan": {
+    "status": "pending",
+    "plan": "/srv/opentallas-scratch/claude/qwen-die-r20/r21b/clock/plan.json",
+    "note": "armed: clock-only CTS (tools/budgets, extract_die --die qwen_rom --qwen-recipe r21b) after the r21b PDN/placement step (r21b/clock/STATUS.log)"
+   },
    "regions": [
     {
      "region": "gw_col/io/spine/vmsu",
@@ -72,7 +77,7 @@
      "planned": "gw_col / gw_io / gw_spine / gw_vmsu guided windows cut from the overflow-0 r21b GRT (chain step 6)"
     }
    ],
-   "probe_s": 2.9,
+   "probe_s": 2.5,
    "prior_r21": {
     "status": "superseded",
     "die": "r21 (821.3 mm2, pre-repack; NOT the adopted die)",
@@ -82,20 +87,17 @@
     "sta_ff_note": "FF -5.64 only on ASSUMED qfd_tile views",
     "ir_worst_mv": 29.43,
     "source": "results/rtl/qwen_dietop_20261007/record.json (commit 660b49c8f)"
-   },
-   "clock_plan": {
-    "status": "missing",
-    "note": "no Qwen die CTS validation: tools/budgets/extract_die.py supports hbm + s81 only (die-evidence.log 14:20 PT)"
    }
   },
   "hbm": {
    "name": "HBM accelerator die r25",
    "host": "ot-epyc1tb",
    "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25",
+   "sta_case": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3",
    "status_log": [
-    "2026-10-08 16:45:11 PDT STA-only (no pads): ",
-    "2026-10-08 17:33:07 PDT region hub (guided): 2026-10-08 17:33:07 PDT compare: {\"region\": \"regiong_hub\", \"drt\": {\"iterations_logged\": 0, \"violations_by_iter\": [], \"final_violations\": null, \"done\": true}, \"slack_ps\": {}}",
-    "2026-10-08 17:51:11 PDT region ioedge (guided): 2026-10-08 17:51:11 PDT compare: {\"region\": \"regiong_ioedge\", \"drt\": {\"iterations_logged\": 0, \"violations_by_iter\": [], \"final_violations\": null, \"done\": true}, \"slack_ps\": {}}"
+    "2026-10-08 18:38:00 PDT die-gaps start src=/srv/opentallas-scratch/claude/die-evidence/src_dg_83e16fb96",
+    "2026-10-08 18:38:00 PDT STA with pads:  | ",
+    "2026-10-08 18:43:22 PDT grt3 case ready: placeholder libs 3/3 | {\"planned_sinks\": 291, \"relay_sinks\": 1852, \"relays_without_domain\": 0}"
    ],
    "views": {
     "real_views": 52,
@@ -145,17 +147,17 @@
     "tt": {
      "status": "pending",
      "check": "setup",
-     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
+     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
     },
     "ff": {
      "status": "pending",
      "check": "hold",
-     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
+     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
     },
     "ss": {
      "status": "pending",
      "check": "setup (sensitivity)",
-     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
+     "run": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)"
     }
    },
    "sta_prior_r25_grt": {
@@ -262,33 +264,28 @@
      },
      "drt": {
       "final_violations": 0,
-      "logged": 1
+      "logged": 2
      },
      "status": "pending (detail route running or queued)"
     },
     {
      "region": "chain",
      "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_chain",
-     "status": "pending"
-    },
-    {
-     "region": "hub",
-     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_hub",
      "window_um": [
-      14163.552,
-      11600.0,
-      15700.0,
-      13119.816
+      11513.232,
+      6607.44,
+      13500.0,
+      12137.016
      ],
-     "area_mm2": 2.335,
-     "kept_instances": 31,
+     "area_mm2": 10.986,
+     "kept_instances": 12,
      "boundary": {
-      "nets": 52074,
-      "guided_pins": 26135,
-      "projected_pins": 7588,
-      "no_track": 19672,
-      "unpinned_crossing_frac": 0.378,
-      "intruders_as_obstructions": 6,
+      "nets": 18718,
+      "guided_pins": 657,
+      "projected_pins": 16420,
+      "no_track": 16559,
+      "unpinned_crossing_frac": 0.885,
+      "intruders_as_obstructions": 40,
       "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
      },
      "drt": {
@@ -299,34 +296,17 @@
      "failure": "DRT-0155: Guide in net n_clk_serial[0] uses layer M3 (6) that is outside the allowed routing range [M4 (8), M9 (18)] with via access on [M1 (2)]."
     },
     {
-     "region": "ioedge",
-     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_ioedge",
-     "window_um": [
-      13500.0,
-      0.0,
-      15000.0,
-      1500.0
-     ],
-     "area_mm2": 2.25,
-     "kept_instances": 0,
-     "boundary": {
-      "nets": 0,
-      "guided_pins": 0,
-      "projected_pins": 0,
-      "no_track": 0,
-      "unpinned_crossing_frac": null,
-      "intruders_as_obstructions": 1,
-      "caveat": "no_track crossings found no free track at the window edge: those wires end short of the edge, so DRT under-counts edge demand by about this fraction"
-     },
-     "drt": {
-      "final_violations": null,
-      "logged": 0
-     },
-     "status": "failed",
-     "failure": "GRT-0094: Design with no nets. (window cut kept 0 instances / 0 nets: the window misses the IO edge it targets)"
+     "region": "hub2",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_hub2",
+     "status": "pending"
+    },
+    {
+     "region": "ioedge2",
+     "dir": "/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/regiong_ioedge2",
+     "status": "pending"
     }
    ],
-   "probe_s": 6.2,
+   "probe_s": 4.8,
    "ir": {
     "status": "done (stale placement)",
     "placement": "r23 (not r25)",
@@ -506,12 +486,12 @@
    },
    "clock_plan": {
     "status": "done",
-    "plan": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/clock/plan.json",
-    "source_commit": "64ee6dfb3",
-    "regions": 167,
-    "synchronous_pairs": 69979,
-    "max_intra_skew_ss_ps": 58.5,
-    "max_inter_skew_ss_ps": 197.2,
+    "plan": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/clock_v3_4500/plan.json",
+    "source_commit": "a1f23fa0b+tt+dg(83e16fb96 dsrom_s81_fulldie)",
+    "regions": 168,
+    "synchronous_pairs": 69984,
+    "max_intra_skew_ss_ps": 52.2,
+    "max_inter_skew_ss_ps": 82.1,
     "policy": {
      "inter_ps": 150.0,
      "intra_default_ps": 90.0,
@@ -520,18 +500,8 @@
      "hold_io_ps": 50.0
     },
     "violations_intra": 0,
-    "violations_inter": 1,
-    "violation_rows": [
-     {
-      "skew_ps": 197.2,
-      "nominal_ps": 2.0,
-      "a": "ctrl_SW/cks",
-      "b": "svc_SW/ck",
-      "ra": "clk_stream:svc_SW.0",
-      "rb": "clk_stream:die.0.0.1.0.0.1",
-      "cls": "hbm_read"
-     }
-    ],
+    "violations_inter": 0,
+    "violation_rows": [],
     "trees": 131
    },
    "ir": {
@@ -565,6 +535,147 @@
      }
     },
     "caveat": "judged inside the window interior (one bump pitch from each window edge: the die continues); edge cells exceed 35 mV by construction of the window cut"
+   },
+   "region_drc_classes": {
+    "bfcol": {
+     "total": 1120,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "inner"
+       ],
+       1119,
+       [
+        [
+         "net:n_nf_0_19[0] net:n_rt_0_19a[38]",
+         13325.66,
+         5391.34
+        ],
+        [
+         "net:n_nf_0_19[0] net:n_rt_0_19a[38]",
+         13325.69,
+         5391.34
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Short",
+        "M5",
+        "net",
+        "inner"
+       ],
+       1,
+       [
+        [
+         "net:n_aSW_d9[301] net:n_aSW_d9[492]",
+         13490.11,
+         4157.78
+        ]
+       ]
+      ]
+     ]
+    },
+    "pqstrip": {
+     "total": 156,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "inner"
+       ],
+       116,
+       [
+        [
+         "net:n_rt_24_1a[0] net:n_rt_24_1a[11]",
+         9752.35,
+         10303.18
+        ],
+        [
+         "net:n_rt_24_1b[0] net:n_rt_24_1b[49]",
+         9752.35,
+         10380.94
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       40,
+       [
+        [
+         "net:n_rt_24_1b[39] net:n_rt_24_3a[1]",
+         9756.1,
+         10380.94
+        ],
+        [
+         "net:n_rt_24_1b[39] net:n_rt_24_3a[1]",
+         9756.12,
+         10380.94
+        ]
+       ]
+      ]
+     ]
+    },
+    "spine": {
+     "total": 4,
+     "classes": [
+      [
+       [
+        "interior",
+        "Lef58EolKeepOut",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       3,
+       [
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ],
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ]
+       ]
+      ],
+      [
+       [
+        "interior",
+        "Short",
+        "M5",
+        "net",
+        "portnet"
+       ],
+       1,
+       [
+        [
+         "net:n_xWup_d3[103] net:n_xWup_d3[430]",
+         13543.92,
+         13383.3
+        ]
+       ]
+      ]
+     ]
+    },
+    "summary": "m221pq_r3 bfcol 1,129 / pqstrip 158 / spine 4: 0 window artefacts (no violation within 10 um of a window edge). 1,275 (bfcol 1,119, pqstrip 156) = fixed-shape M5 Lef58EolKeepOut between DIFFERENT-net face pins of abutted field-node masters (dsfd_node_* stacks, 0.024 um SHAVE gap < 0.025 EOL keepout): real, generator -> fixed by dsrom_s81_fulldie --face-pin-inset (re-validated in m221pq_r3fx regions). 5 (bfcol 1 Short, spine 3 EolKeepOut + 1 Short) = router wire vs pin tip at 1-track-pitch station faces (dsfd_stnv_1026x1 / _566x1, every M5 track a pin): real pin-access density residue; parse misses ~13 of 1,291.",
+    "method": "drt_drc.rpt bbox vs window box (edge distance) + srcs; locations probed in region_drt.odb (abutting instance pairs)"
    },
    "regions": [
     {
@@ -711,7 +822,7 @@
      "caveat": "crop keeps whole nets inside the box and turns every cut net into a boundary port at its GRT crossing; WNS = inf means no constrained flop-to-flop path lies wholly inside the box (timing delta unmeasurable there)"
     }
    ],
-   "probe_s": 16.9
+   "probe_s": 16.8
   }
  }
 }

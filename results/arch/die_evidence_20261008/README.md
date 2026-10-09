@@ -1,4 +1,4 @@
-# Die-level evidence (2026-10-08 18:03 PDT)
+# Die-level evidence (2026-10-08 18:50 PDT)
 
 Academic-validation evidence per die (owner steer 2026-10-07): full-die global route, die STA on global-route
 parasitics (option B: setup at TT 833.333 ps, hold at FF), the CTS-validated clock plan, IR, and detail route of
@@ -16,9 +16,9 @@ from below (a) and the top-N path report gives a listed real-only path (b). Slac
 
 | Die | GRT overflow | TT setup WNS real / real+relay / all | FF hold WNS real / real+relay / all | Clock plan (CTS) | IR | Real-view share (inst / area) |
 |---|---|---|---|---|---|---|
-| Qwen3-8B ROM die r21b | pending | pending / pending / pending | pending / pending / pending | missing | pending | 85.6% / 12.0% |
+| Qwen3-8B ROM die r21b | pending | pending / pending / pending | pending / pending / pending | pending | pending | 85.6% / 12.0% |
 | HBM accelerator die r25 | 0 (1028.6 m) | pending / pending / pending | pending / pending / pending | 44 regions, intra <= 56.7, inter <= 66.9 ps, 0+0 viol | 33.26 mV / 35 (r23 (not r25)) | 19.3% / 68.3% |
-| DeepSeek-V4.1 ROM die S81 (m221pq) | 0 (1446.1 m) | >= -100.9 / -244.2 / -244.2 | >= -50.9 / -323.7 / -323.7 | 167 regions, intra <= 58.5, inter <= 197.2 ps, 0+1 viol | 25.5-30.94 mV interior / 35 (4 windows) | 25.0% / 17.1% |
+| DeepSeek-V4.1 ROM die S81 (m221pq) | 0 (1446.1 m) | >= -100.9 / -244.2 / -244.2 | >= -50.9 / -323.7 / -323.7 | 168 regions, intra <= 52.2, inter <= 82.1 ps, 0+0 viol | 25.5-30.94 mV interior / 35 (4 windows) | 25.0% / 17.1% |
 
 ## Per die
 
@@ -32,7 +32,7 @@ View share: placeholder 1,726 inst (13.1%), 600.8 mm2 (87.9%); real 11,321 inst 
 - STA FF: pending (/srv/opentallas-scratch/claude/qwen-die-r20/dietop_r21/sta_r21b_ff).
 - Prior (superseded) run: {"status": "superseded", "die": "r21 (821.3 mm2, pre-repack; NOT the adopted die)", "grt_overflow": 0, "sta_tt_wns_ps": 50.84, "sta_ff_wns_ps": -5.64, "sta_ff_note": "FF -5.64 only on ASSUMED qfd_tile views", "ir_worst_mv": 29.43, "source": "results/rtl/qwen_dietop_20261007/record.json (commit 660b49c8f)"}
 - Region gw_col/io/spine/vmsu: pending.
-- clock_plan: missing. no Qwen die CTS validation: tools/budgets/extract_die.py supports hbm + s81 only (die-evidence.log 14:20 PT)
+- clock_plan: pending. armed: clock-only CTS (tools/budgets, extract_die --die qwen_rom --qwen-recipe r21b) after the r21b PDN/placement step (r21b/clock/STATUS.log)
 - ir: pending. 
 
 ### HBM accelerator die r25
@@ -41,17 +41,17 @@ chain /srv/opentallas-scratch/claude/die-evidence/hbm_r25/STATUS.log (current vi
 
 View share: placeholder 97 inst (4.0%), 138.4 mm2 (31.5%); real 465 inst (19.3%), 300.3 mm2 (68.3%); relay 1,852 inst (76.7%), 0.8 mm2 (0.2%).
 
-- STA TT: pending (/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)).
-- STA FF: pending (/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt2/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)).
+- STA TT: pending (/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)).
+- STA FF: pending (/srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/sta_pad/sta.log (re-runs the full-die GRT in-session, then raw and rule-H1-padded STA per corner)).
 - Prior (superseded) run: {"status": "superseded (pending sta_pad replaces it)", "run": "/srv/opentallas-scratch/claude/hbm-die/r25_grt", "views": "2026-10-07 22:29 PT kit: interim SM / attn_tile views, 22 view clocks missing, no hold pads; endpoints classed with the CURRENT r25 real-view set, so SM / attn_tile paths count as real here although this kit had them interim"}
   - TT: all -7573.7 ps; real -2752.1 (110590 viol); real+relay -7573.7; placeholder-touching none failing (0 viol).
     clock context: 2492 view clock pins bound, 22 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)
   - FF: all -1335.0 ps; real -20.2 (97 viol); real+relay -125.8; placeholder-touching none failing (0 viol).
     clock context: 2492 view clock pins bound, 22 missing; paths of masters whose clock is missing are untimed, so the placeholder error bar cannot see them (the all-paths WNS is optimistic by that much)
 - Region attn: pending (detail route running or queued); boundary: 16% of 19,951 crossings unpinned (no free track).
-- Region chain: pending.
-- Region hub: failed; boundary: 38% of 52,074 crossings unpinned (no free track) -- DRT-0155: Guide in net n_clk_serial[0] uses layer M3 (6) that is outside the allowed routing range [M4 (8), M9 (18)] with via access on [M1 (2)]..
-- Region ioedge: failed -- GRT-0094: Design with no nets. (window cut kept 0 instances / 0 nets: the window misses the IO edge it targets).
+- Region chain: failed; boundary: 88% of 18,718 crossings unpinned (no free track) -- DRT-0155: Guide in net n_clk_serial[0] uses layer M3 (6) that is outside the allowed routing range [M4 (8), M9 (18)] with via access on [M1 (2)]..
+- Region hub2: pending.
+- Region ioedge2: pending.
 - ir: done (stale placement). 18 no-load windows (4 PSM segfaults, all no-load row 10); r25 IR not re-run
 
 ### DeepSeek-V4.1 ROM die S81 (m221pq)
@@ -66,9 +66,9 @@ View share: placeholder 12,407 inst (22.1%), 334.8 mm2 (80.8%); real 14,039 inst
 - Region ioedge: pending (DRT running).
 - Region pqstrip: done; DRT final violations 158; WL DRT/GRT total 0.9942 (median 0.9931, p95 1.0002, 18,827 nets); 10,013 boundary ports.
 - Region spine: done; DRT final violations 4; WL DRT/GRT total 0.9947 (median 0.9939, p95 1.0011, 60,065 nets); slack DRT-GRT ss +54.2, tt +53.5, ff +0.0 ps; 18,998 boundary ports.
-- Clock plan violation: ctrl_SW/cks -> svc_SW/ck (hbm_read) skew 197.2 ps between regions clk_stream:svc_SW.0 and clk_stream:die.0.0.1.0.0.1 (inter-region budget 150.0 ps).
 - ir: done. judged inside the window interior (one bump pitch from each window edge: the die continues); edge cells exceed 35 mV by construction of the window cut
 - r4 (relay fix): pending.
+- Region DRC classification: m221pq_r3 bfcol 1,129 / pqstrip 158 / spine 4: 0 window artefacts (no violation within 10 um of a window edge). 1,275 (bfcol 1,119, pqstrip 156) = fixed-shape M5 Lef58EolKeepOut between DIFFERENT-net face pins of abutted field-node masters (dsfd_node_* stacks, 0.024 um SHAVE gap < 0.025 EOL keepout): real, generator -> fixed by dsrom_s81_fulldie --face-pin-inset (re-validated in m221pq_r3fx regions). 5 (bfcol 1 Short, spine 3 EolKeepOut + 1 Short) = router wire vs pin tip at 1-track-pitch station faces (dsfd_stnv_1026x1 / _566x1, every M5 track a pin): real pin-access density residue; parse misses ~13 of 1,291.
 
 ## Refresh
 
