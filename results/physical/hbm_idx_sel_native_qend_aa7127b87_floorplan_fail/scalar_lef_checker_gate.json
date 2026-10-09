@@ -1,0 +1,79 @@
+{
+  "verdict": "PASS",
+  "scope": "checker mechanism on actual immutable6903native generated pin inventory and actual mapped top names; not routedLEF/STA evidence",
+  "source_baseline": "aa7127b87",
+  "positive": {
+    "master": "hfd_idx_sel_native_qend",
+    "lef": "actual-native-inventory-checker-fixture",
+    "macro": "hfd_idx_sel_native_qend",
+    "size_view": [
+      1399.656,
+      844.56
+    ],
+    "size_gen": [
+      1399.656,
+      844.56
+    ],
+    "gen_pins": 6903,
+    "view_pins": 6903,
+    "missing": 0,
+    "extra": 0,
+    "die_top_io_pins": [],
+    "moved": 0,
+    "wrong_layer": 0,
+    "wrong_face": 0,
+    "wrong_face_examples": [],
+    "missing_examples": [],
+    "extra_examples": [],
+    "moved_examples": [],
+    "wrong_layer_examples": [],
+    "pg_pins": {},
+    "obs_layers": [],
+    "obs_above_generator": [],
+    "positions": "exact",
+    "problems": [],
+    "verdict": "MATCH"
+  },
+  "negative_controls": [
+    {
+      "tag": "wrong_layer",
+      "verdict": "MISMATCH",
+      "problems": [
+        "pins: 0 missing, 0 extra, 0 wrong face, 1 wrong layer"
+      ]
+    },
+    {
+      "tag": "moved_rect",
+      "verdict": "MISMATCH",
+      "problems": [
+        "1 pins off the generator position (same face)"
+      ]
+    },
+    {
+      "tag": "missing_pin",
+      "verdict": "MISMATCH",
+      "problems": [
+        "pins: 1 missing, 0 extra, 0 wrong face, 0 wrong layer"
+      ]
+    },
+    {
+      "tag": "extra_pin",
+      "verdict": "MISMATCH",
+      "problems": [
+        "pins: 0 missing, 1 extra, 0 wrong face, 0 wrong layer"
+      ]
+    }
+  ],
+  "io_tcl_unchanged": true,
+  "native_record_unchanged": true,
+  "other_masters_unchanged": true,
+  "six_scalar_ports": [
+    "ck",
+    "rst",
+    "qbr",
+    "toc",
+    "coc",
+    "co_quarter_last"
+  ],
+  "source_sha256": "df597223b7db15f06b41cbb96363c8c5b14b8faa608c71e3aea7b2a8342f7b6b"
+}
