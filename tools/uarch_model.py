@@ -15035,3 +15035,21 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hgi_quant_decode_model():
+    """Owner-approved G8: existing DS arithmetic, generic record dispatch."""
+    return dict(element='ot_hgi_quant_decode', replicas=1, macs_per_cycle=0,
+        elements_per_cycle=32, memory_ports=dict(A_bytes_per_cycle=128,O_bytes_per_cycle=64),
+        boundary_bits=dict(A=1024,O=512,record=128), input_decode_fanout=2,
+        max_reduction_inputs=32, output_mux_inputs=2, additional_register_bits=14*(512+2)+22*2,
+        ue8m0_latency_edges=22,e4m3_native_latency_edges=8,e4m3_latency_edges=22,
+        e4m3_added_edges_per_record=14, ds_token_added_edges_upper_bound=40*14,
+        ds_token_reference_cycles=461646, ds_token_added_fraction_upper_bound=560/461646,
+        ds_default='legacy fp4 input selects unchanged margin core with generic_enable=0',
+        provisional_slot_um=[1800,600], provisional_area_mm2=1.08,
+        slot_basis='historical quant reservation 0.502mm2 plus second existing DS fp4 engine and alignment flops; measurement required',
+        two_layer_pin_spread=True, tracks_required_per_face=1024,
+        tracks_capacity_basis='route fp_lint must verify actual M4/M5 pitch/channel, no assumed pass',
+        new_numerical_format=False, performance_gain_claim=None,
+        adoption='mandatory approved interface conformance; TT>=0 FF>=0 DRC0 exact+mutant')
