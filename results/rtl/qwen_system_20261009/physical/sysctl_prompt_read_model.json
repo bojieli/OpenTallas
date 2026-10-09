@@ -9,27 +9,27 @@
     "prompt_write": 32
   },
   "boundaries_bits_cycle": {
-    "prompt_internal_capture": 256,
+    "prompt_internal_capture": 192,
     "prompt_response": 18,
     "external_delta": 0
   },
   "routing": {
-    "new_capture_tracks": 256,
+    "new_capture_tracks": 192,
     "outline_um": [
       500,
       300
     ],
     "capacity_tracks": 5000,
-    "placement_contract": "256 macro-output capture DFFs located at real SRAM output pins; read lane3 and valid1 retimed with capture"
+    "placement_contract": "192 used SRAMoutput capture DFFs at realmacro pins;24ECC bits for each of8slots. Unused8bits/slot carry no mutabletokenstate; lane3/valid1 aligned."
   },
   "multiplexers": "Existing8:1 24bit codeword mux moves after256bit SRAM capture; no new read mux or memory replication",
-  "fanout": "Each256bit SRAM output has exactlyone capture sink; capture-to-codeword/ECC/host operates independently nextcycle",
+  "fanout": "Each192used SRAMoutput has onecapture sink;64unused bits disconnected, capture-to-codeword/ECC/host nextcycle",
   "area": {
     "outline_um2": 150000,
-    "added_flop_bits": 260,
+    "added_flop_bits": 196,
     "flop_cell_area_um2_assumed_upper": 0.6,
-    "added_cell_um2_upper": 156,
-    "added_placement_um2_upper_at_55pct": 284,
+    "added_cell_um2_upper": 118,
+    "added_placement_um2_upper_at_55pct": 215,
     "capture_reservation_um2": 1000,
     "same_sram_area_um2": 12314.20968,
     "slot_fit_assumed": true
@@ -41,6 +41,6 @@
     "conditional_host_wait": "InsertI_PB_WAIT onlywhenPROMPT_READ_STATION andpos<prompt_len; generationusesfeedbacktoken withnoSRAMread",
     "composition": "Prompting addsoneedge pervalidprompt token; steady-state autoregressive decode addszeroedges. Existing boundary stationmeasured+1turnaround remains."
   },
-  "correctness": "Retimedfull256bit row+lane+valid; ECCdecode/fault remainsbeforeI_GO/packageaccept; originalunwrittenread gate unchanged. Defaultoff derivative preservesoriginal52sourcebyteidentical",
+  "correctness": "Retimedcomplete eight24bit SECDED codewords+lane+valid; ECCdecode/fault remainsbeforeI_GO/packageaccept; unwrittenread gate unchanged; defaultoff derivative preservesoriginal52sourcebyteidentical",
   "physical": "pending remote admitted exact/component and route; no closureclaim"
 }

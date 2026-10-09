@@ -16,14 +16,22 @@ def emit():
     s = replace_one(s, 'module ot_qfd_prompt_sram #(parameter integer MUT=0)',
                     'module ot_qfd_prompt_sram_pb2 #(parameter integer READ_STATION=0, MUT=0)')
     s = replace_one(s, ' wire [18:0] dec=decode(rd[lane*32+:24]);', ''' // Capture every physical SRAM output before lane selection and ECC. These
- // 256 direct DFF sinks are placed at the macro pins by the physical kit.
+ // 192 used codeword DFF sinks are placed at the macro pins by the physical kit.
  wire [255:0] read_word; wire [2:0] read_lane; wire read_valid;
  generate if(READ_STATION!=0) begin:g_read_station
-  reg [255:0] cap; reg [2:0] cap_lane; reg cap_valid;
-  always @(posedge clk) begin cap<=rd; cap_lane<=lane; end
+  reg [191:0] cap; reg [2:0] cap_lane; reg cap_valid;
+  integer cc;
+  genvar cl;
+  always @(posedge clk) begin
+   for(cc=0;cc<8;cc=cc+1) cap[cc*24+:24]<=rd[cc*32+:24];
+   cap_lane<=lane;
+  end
   always @(posedge clk or negedge rst_n)
    if(!rst_n) cap_valid<=0; else cap_valid<=valid;
-  assign read_word=cap; assign read_lane=cap_lane; assign read_valid=cap_valid;
+  for(cl=0;cl<8;cl=cl+1) begin:g_cap_word
+   assign read_word[cl*32+:32]={8'b0,cap[cl*24+:24]};
+  end
+  assign read_lane=cap_lane; assign read_valid=cap_valid;
  end else begin:g_read_bypass
   assign read_word=rd; assign read_lane=lane; assign read_valid=valid;
  end endgenerate
@@ -72,7 +80,7 @@ def emit():
     s = replace_one(s, '// UE appears immediately on q; sticky fault captures on following edge.\n    @(posedge clk);#1;if(q!==0) bad=bad+1;',
                     '// Row capture is one edge later; sticky UE follows the matching valid.\n    repeat(2) begin @(posedge clk);#1;end\n    if(q!==0) bad=bad+1;')
     (ROOT / 'rtl/test/qwen_system/tb_qfd_prompt_sram_pb2_fault.sv').write_text(s)
-    print('SYSCTL_PROMPT_READ_EMIT_PASS additive_sources=6 capture_bits=256 prompt_edges=1 decode_edges=0')
+    print('SYSCTL_PROMPT_READ_EMIT_PASS additive_sources=6 capture_bits=192 prompt_edges=1 decode_edges=0')
 
 
 if __name__ == '__main__':
