@@ -10,7 +10,8 @@
     "ot_hgi_mtp_accept18": {
       "source": "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv",
       "params": {
-        "GENERIC18": 1
+        "GENERIC18": 1,
+        "PINREG": 1
       },
       "base": "rtl/hdc/ot_hdc_accept.sv NSLOT8 NW18",
       "tokens": [
@@ -21,9 +22,9 @@
         "stok144",
         "ttok144"
       ],
-      "new_cycles": 0,
+      "new_cycles": 1,
       "bench": "rtl/test/hbm_generic/tb_hgi_accept18.sv",
-      "gate": "108PASS+truncationmutantFAIL+bonusmutantFAIL",
+      "gate": "PINREG1 108PASS+truncation/bonus mutantsFAIL; rtl_boundary0/0PASS",
       "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
       "simulator_vectors": "pendingprovider"
     },
@@ -52,7 +53,29 @@
       "gate": "Verilator: DS low+high each200runs/161669cycles/1699steps/2352emits/0mismatches; compiled rollback MUT1 FATAL expectedrc134",
       "simulator_vectors": "pendingprovider",
       "remote": "ot-epyc4:/srv/opentallas-scratch2/scratch/codex/hgi-token18-11f",
-      "receipt": "results/rtl/hgi_token18_20261009/control"
+      "receipt": "results/rtl/hgi_token18_20261009/control",
+      "physical_route_status": "retired bare leaf; use fullcore registered endpoint"
+    },
+    "ot_hgi_mtp_core18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv",
+      "base": "physical/hbm_mtp/rtl/ot_hfd_mtp_core.sv",
+      "params": {
+        "GENERIC18": 1,
+        "TW": 18,
+        "XSEL": 1,
+        "SPECF": 0,
+        "WR": 256,
+        "W": 128,
+        "SR": 10,
+        "MAXPOS": 1048576,
+        "NL": 40,
+        "PRL": 2
+      },
+      "ports": "same hfd_mtp_x except p_tok/f_tok/e_tok/cmd_tok1/am_idx/sa_tok18 and cmd_toks144",
+      "new_cycles_vs_qualified_fullcore": 0,
+      "new_cycles_vs_bare_controller": 4,
+      "gate": "matching fullcore TW18 XSEL1 traces/rollback mutant and boundary pending",
+      "exact_state_warning": "039ca63d6 recipe is SPECF0; physical hfd_mtp_x SPECF1 evidence cannot substitute"
     }
   },
   "route_jobs": [],
