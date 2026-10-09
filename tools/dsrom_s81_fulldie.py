@@ -2183,6 +2183,11 @@ SSTN_WH = (172.8, 30.24)            # wide and short: the 564-b stream pins spre
 CF_WH = (850.176, 47.52)
 CF_WH_V2 = (432.0, 95.04)        # --cfifo-v2: same area, 2:1 squarer (the 850 x 47.5 slab had 671 ps CTS insertion)
 CFIFO_V2 = False
+CFIFO_COLCK = False                 # --cfifo-colck (s81-die-2 2026-10-08): the cfifo's column side (read port, x-lane /
+                                    # cc output flops, st / ri capture, rd launch, rsync) is clocked from cr, a sink of
+                                    # its own column tree (co -> tree -> cr), not from ck: sta_v6 FF class 70k < -100 was
+                                    # xa/xb launched at ck (min 161 ps) into the first column relays at co + tree (~450 ps);
+                                    # TT class cf* ri capture (column -> cfifo) moves onto the same tree.  0 cycles.
 RSTG_WH = (38.88, 34.56)
 NVR = RET                           # NV5 draft-head result word back into its lm-head pair
 SEQ_XL, SSTN_X, R_CFGX = 326.16, 365.04, 37.152
@@ -2195,7 +2200,8 @@ HEND_PINREG = True
 # the cfg band (ELEM_DY) + the element frame + 4.32; SLOTS8 = the slots per column that fit the field height between
 # the bands with a >= FIELD_MARGIN gap each side; PAIRS = pairs (elements) per die (configure(pairs=...)).
 ELEM_FRAME_H = 157.68
-FIELD_MARGIN = 216.0
+FIELD_MARGIN = FIELD_MARGIN_DEFAULT = 216.0
+PQ_FIELD_MARGIN = 108.0       # --pq-place minimum field <-> band gap (see configure: the PQ root row)
 SLOT_H8, SLOTS8 = SLOT_H, SLOTS
 Q_ELEM_FRAME_H = None             # opt-in independent q frame, BF remains ELEM_FRAME_H
 SU_AREA_MM2 = None                # optional current-leaf SU reservation, not a hard macro
@@ -2907,7 +2913,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -2974,7 +2980,7 @@ def buses_r8(m):
             continue
         cf = f'cf{r}'
         nb = f['bundles']
-        col_ck, col_rs = [(cf, 'co')], [(cf, 'rs')]
+        col_ck, col_rs = [(cf, 'co')] + ([(cf, 'cr')] if CFIFO_COLCK else []), [(cf, 'rs')]
         for b in range(nb):
             gn = f'g{r}_{b}'
             el = [f'{gn}b'] + [f'{gn}a{q}' for q in range(4)]
@@ -3014,7 +3020,7 @@ def buses_r8(m):
         for p, kind, s, ln in elems:
             slot_elems[s].append((p, kind, ln))
         nvslots = {s + 1: p for p, kind, s, ln in elems if kind == 'NV'}
-        col_ck = [(cf, 'co')]
+        col_ck = [(cf, 'co')] + ([(cf, 'cr')] if CFIFO_COLCK else [])
         col_rs = [(cf, 'rs')]
         # stations
         for s in range(last + 1):
@@ -3612,7 +3618,7 @@ def _hop_fix(m, P):
                             rec['pad_fallback']['nxt_die'] = rec['pad_fallback'].get('nxt_die', 0) + 1
                             break
                 if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
-                    rec['nxt_relaxed'] = rec.get('nxt_relaxed', 0) + 1
+                    rec['pad_fallback']['nxt_relaxed'] = rec['pad_fallback'].get('nxt_relaxed', 0) + 1   # (an int in rec broke the summary)
                     for PAD in (2.16, 1.08, 0.0):
                         for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
@@ -3622,7 +3628,17 @@ def _hop_fix(m, P):
                                 break
                         if pl:
                             break
-                assert pl, (bid, e, k)
+                    # s81-die-2 2026-10-08: the legacy chain also has the whole-die fallbacks (PQ frame_out, pin relay);
+                    # without them a packed frame failed under --nxt-reach where legacy passed (es_12_y0, adopted PQ row)
+                    if pl is None and ((reg is not None and not fwd and PQ_PLACE) or (PIN_RELAY and reg is None)):
+                        for span, rows in ((300.0, 30), (1200.0, 120)):
+                            pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                        reach=R - 10.0, span=span, rows=rows)
+                            if pl:
+                                pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                                rec['pad_fallback']['relaxed_die'] = rec['pad_fallback'].get('relaxed_die', 0) + 1
+                                break
+                assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
                     it = P.add(Inst(nm, stn_master([bits], horiz), pl[0], pl[1], w_, h_,
@@ -4552,7 +4568,7 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'S', P_(['rf', 'rd']), 'M5', start=c1 - 30.0)
         _lay(Mx, 'N', P_(['xa', 'xb', 'cc', 'st']), 'M5', start=c0 - 15.0)
         _lay(Mx, 'N', P_(['ri']), 'M5', start=c1 - 2.0)
-        _lay(Mx, 'N', P_(['co', 'rs']), 'M5', start=c0 + 60.0)
+        _lay(Mx, 'N', P_(['co', 'cr', 'rs']), 'M5', start=c0 + 60.0)
         _lay(Mx, 'W', P_(['ck', 'rst']), 'M4')
     elif kind == 'seq':
         _lay(Mx, 'W', P_([f'q{j}' for j in range(7)] + ['a'] + [f'ce{j}' for j in range(7)]), 'M4', gap=0.0)
@@ -4761,28 +4777,29 @@ def glue_rtl(m):
             body.append('    reg [65:0] r; always @(posedge ck[0]) r <= i;')
             body.append('    assign o = {r[65:1], r[0] & rs[0]};')
         elif mst == 'dsfd_cfifo' and CFIFO_V2:
-            body += [_sync('rsync', 'ck[0]', 'rst[0]'),
+            rk = 'cr[0]' if CFIFO_COLCK else 'ck[0]'       # column-side clock (--cfifo-colck: the column tree's return)
+            body += [_sync('rsync', rk, 'rst[0]'),
                      '    // CFIFO_V2 (S81-RERUN fail-fast, cfifo e654bb52a SS -252 / FF -21): every input captured at its pin,',
                      '    // every data output from a flop, the overrun check in the write domain (sticky, synchronised)',
                      '    assign co = ck;          // column clock-tree root (option C region root)',
                      '    assign rs = rsync;',
                      '    reg [565:0] xi; always @(posedge xf[0]) xi <= xd;',
-                     '    reg [1:0] sti; always @(posedge ck[0]) sti <= st;',
+                     f'    reg [1:0] sti; always @(posedge {rk}) sti <= st;',
                      '    wire xv, wl, rl, wf, rf_, wr; wire [563:0] xq;',
                      f'    ot_meso_fifo #(.W(564), .ENABLE(1\'b1){MESO_P()}) u_x (.wclk(xf[0]), .wrst_n(xi[0]), .w_v(xi[1]), .w_rdy(wr), '
-                     '.w_d(xi[565:2]), .rclk(ck[0]), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
+                     f'.w_d(xi[565:2]), .rclk({rk}), .rrst_n(rsync), .r_v(xv), .r_rdy(1\'b1), .r_d(xq), .w_live(wl), '
                      '.r_live(rl), .w_fault(wf), .r_fault(rf_));',
                      '    reg wov; always @(posedge xf[0]) if (!xi[0]) wov <= 1\'b0; else if (xi[1] & ~wr) wov <= 1\'b1;',
-                     '    reg [1:0] wov_s; always @(posedge ck[0]) wov_s <= {wov_s[0], wov};',
+                     f'    reg [1:0] wov_s; always @(posedge {rk}) wov_s <= {{wov_s[0], wov}};',
                      '    // lane stream {x0 283 | x1 266 | cc 15}; xs_v, go and cfg_go qualified by the FIFO valid, registered',
                      '    reg [282:0] xa_r; reg [265:0] xb_r; reg [14:0] cc_r;',
-                     '    always @(posedge ck[0]) begin xa_r <= {xq[282] & xv, xq[281:0]}; xb_r <= xq[548:283];',
+                     f'    always @(posedge {rk}) begin xa_r <= {{xq[282] & xv, xq[281:0]}}; xb_r <= xq[548:283];',
                      '        cc_r <= {xq[563:551], xq[550] & xv, xq[549] & xv}; end',
                      '    assign xa = xa_r; assign xb = xb_r; assign cc = cc_r;',
                      '    reg [67:0] rr; reg flt;',
-                     '    always @(posedge ck[0] or negedge rsync) if (!rsync) begin rr <= 68\'d0; flt <= 1\'b0; end',
+                     f'    always @(posedge {rk} or negedge rsync) if (!rsync) begin rr <= 68\'d0; flt <= 1\'b0; end',
                      '        else begin rr <= {sti[1] | flt, sti[0] | ~rl, ri}; flt <= flt | wf | rf_ | wov_s[1]; end',
-                     '    assign rf = ck;',
+                     f'    assign rf = {rk[:2]};          // forwarded with rd (the clock that launches it)',
                      '    assign rd = {rr, rr[0], rsync};   // {status, root word, valid = root o_v, rst_n}']
         elif mst == 'dsfd_cfifo':
             body += [_sync('rsync', 'ck[0]', 'rst[0]'),
@@ -4985,6 +5002,8 @@ def die_options(ap):
     ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
                     'face; layer die value 2.6599; default off)')
+    ap.add_argument('--cfifo-colck', action='store_true', help='with --cfifo-v2: the cfifo column side clocked from its '
+                    'own column tree (pin cr); fixes the FF xa/xb -> first relay hold class (sta_v6)')
     ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
@@ -5023,8 +5042,15 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
-    global PQ_PLACE
+    global PQ_PLACE, FIELD_MARGIN
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    if getattr(a, 'field_margin', None) is not None:
+        FIELD_MARGIN = float(a.field_margin)     # explicit, every gen (a leftover --pq-place margin must not leak)
+    else:
+        # s81-die-2 2026-10-08: the adopted PQ root (211.68 tall, row 241.92 vs 164.16) takes 6 x 77.76 um from the field;
+        # at the 216 um minimum gap the mixed221 frame lost its 9th slot by 0.35 um a tier ("mixed slots exceed field
+        # height").  Under --pq-place the minimum gap is PQ_FIELD_MARGIN; the field stays centred (actual gap ~215 um).
+        FIELD_MARGIN = PQ_FIELD_MARGIN if PQ_PLACE else FIELD_MARGIN_DEFAULT
     if PQ_PLACE:
         assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
             '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
@@ -5039,6 +5065,9 @@ def apply_options(a):
     HOP_FIX, HOP_PLAN, MESO_D8 = bool(a.hop_fix), None, bool(a.meso_d8)
     global FWD_REACH, HOP_R_FWD, HOP_R_CC, CFIFO_V2, CF_WH
     CFIFO_V2 = bool(a.cfifo_v2)
+    global CFIFO_COLCK
+    CFIFO_COLCK = bool(getattr(a, 'cfifo_colck', False))
+    assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
     HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, 410.0
