@@ -1525,5 +1525,26 @@
     "adoption_scope": "EVIDENCE_NOT_ADOPTED"
    }
   ]
+ },
+ "drive_0849": {
+  "stream": "drive-0849",
+  "generated": "2026-10-09 PT",
+  "scope": "coordinator 15:20 named closures",
+  "counts": {
+   "closed": 9,
+   "merged": 9,
+   "record_only": 6
+  },
+  "jobs": {
+   "hcreader-plain300-lk-b678636a2-tc-cl": "ADOPTED (credit-relay version); source on main; record 961fd8c83",
+   "hbm_smh_front_s_dsk-8e93e5a83-tc-hm25-cl": "ADOPTED; source on main; record 099d847ef",
+   "hbm_smh_front_s_dsk-8e93e5a83-tc-hm75-cl": "record only (hm25 adopted); d2bb92c8e",
+   "hgi_adp_att_b-74c999141-tc-cl": "record already on main",
+   "hgi_adp_mover_a-58682fb1f-tc-cl": "ot_hgi_dma_mover.sv from 58682fb1f only; record 62f38b56d",
+   "hgi_adp_mover_b-58682fb1f-tc-cl": "same source; record 9a237f4cf",
+   "hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0": "ADOPTED (coordinator 15:2x): live physical/hbm_accel_die_views/router/ view swapped to this closure (lef/ss/ff libs, corner_sta, calib, check, route_args; view.json status closed + closure block); same LEF SIZE 1399.66 x 326.28 and 2118/2118 pins MATCH; old hfd_router_tt.lib left (not part of view.json)",
+   "hbm_sfu_lane_ring3_aa5dd28d5": "source on main; record cae03da69 (view su/lane/ot_su12_sfu_ring3)",
+   "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl": "wfc_vmx RQFREE 2 RTL + prd bench cases from c39e235bb only; record 82204e4f3"
+  }
  }
 }
