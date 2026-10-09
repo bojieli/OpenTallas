@@ -14552,3 +14552,12 @@ def qwen_native_cmd_provider_model():
 def qwen_pc_head_owner_model():
     from uarch_model_qwen_pc_head import model
     return model()
+
+
+def qwen_collective_cx_model():
+    from uarch_model_qwen_collective_cx import model
+    return model()
+
+def qwen_ar_actual_area_sheet():
+    from qwen_system.area_sheet import model
+    return model()
