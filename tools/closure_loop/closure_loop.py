@@ -72,6 +72,8 @@ EXPERIMENT = Path("/home/ubuntu/opentallas-monitor/experiment.py")
 OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
+LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
@@ -958,9 +960,15 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
             head = min(head, 2)   # left PVE1 jobs stuck at collect for 20 min with 13 GB free
         if info["mem_gb"] < ram + head:
             return False, f"{cfg['label']} MemAvailable {info['mem_gb']} GB < {ram}+{head:.0f}"
-        if info["disk_gb"] < cfg["min_free_disk_gb"]:
-            return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {cfg['min_free_disk_gb']}"
+        # drive-0849 2026-10-09 (coordinator): a light stage (bench / collect / export: ram <= LIGHT_STAGE_RAM_GB) writes a few
+        # GB at most; the 200 GB run-root floor held EPYC4's benches + collects for > 1 h at 192-197 GB free while 250 GB
+        # of RAM sat idle.  Light stages keep only LIGHT_DISK_FLOOR_GB; routes / calibrates / ECOs keep the full floor.
+        dfloor = cfg["min_free_disk_gb"] if ram > LIGHT_STAGE_RAM_GB else min(cfg["min_free_disk_gb"], LIGHT_DISK_FLOOR_GB)
+        if info["disk_gb"] < dfloor:
+            return False, f"{cfg['label']} run root has {info['disk_gb']} GB free < {dfloor}"
         for path, floor in disk_roots(cfg).items():   # every other root the host's jobs write (docker /, /tmp, ...)
+            if ram <= LIGHT_STAGE_RAM_GB:
+                floor = min(floor, LIGHT_DISK_FLOOR_GB)
             free = info.get("roots_gb", {}).get(path)
             if free is not None and free < floor:
                 return False, f"{cfg['label']} {path} has {free} GB free < {floor}"
