@@ -19,8 +19,12 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
  ot_hbm_native_index_control #(.ENABLE(1),.PREFETCH(PREFETCH_CASE)) dut(.*);
  integer fr,q,j,frames=0,masks=0,starts=0,retirements=0;
  reg [89:0] expected_fs;reg [341:0] expected_mask[0:3];
- reg bad_prefetch;
- initial bad_prefetch=$test$plusargs("BAD_PREFETCH");
+ reg bad_prefetch,bad_blocks,primary_upset,guard_upset,mask_upset,control_upset;
+ initial begin
+  bad_prefetch=$test$plusargs("BAD_PREFETCH");bad_blocks=$test$plusargs("BAD_BLOCKS");
+  primary_upset=$test$plusargs("PRIMARY_UPSET");guard_upset=$test$plusargs("GUARD_UPSET");
+  mask_upset=$test$plusargs("MASK_UPSET");control_upset=$test$plusargs("CONTROL_UPSET");
+ end
  always @(posedge clk)begin
   if(por_n)begin
    if(fs[0])begin
@@ -50,12 +54,24 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
    command_rank=(fr==23)?95:7'(fr);command_ndie=14'(400+fr);
    command_k=512;command_cand=fr[1];command_keep=fr[0];
    command_stack_blocks=(fr==23)?342:9'(1+fr);
+   if(bad_blocks)command_stack_blocks=343;
    expected_fs={command_keep,command_cand,command_k,command_ndie,command_rank,
                 owner_frame[72:53],owner_frame[35:32],owner_frame[31:0],1'b1};
    producer_published=0;producer_drained=0;source_start_r=0;key_visible=0;
    returns_drained=0;source_idle=0;selector_idle=1;
    tick();if(!command_r)$fatal(1,"command not admitted");
    command_v=1;tick();command_v=0;
+   if(bad_blocks)begin tick();if(!fault||fs[0]||source_start_v)$fatal(1,"bad block count accepted");
+    $display("EXPECTED_BLOCK_BOUNDS_REJECT");$finish;end
+   if(primary_upset||guard_upset||mask_upset||control_upset)begin
+    if(primary_upset)dut.desc[7]=~dut.desc[7];
+    if(guard_upset)dut.desc_n[7]=~dut.desc_n[7];
+    if(mask_upset)dut.mask[23]=~dut.mask[23];
+    if(control_upset)dut.ctl[3]=~dut.ctl[3];
+    #1;if(!fault||fs[0]||source_start_v)$fatal(1,"mutable upset escaped failstop");
+    tick();tick();if(!fault)$fatal(1,"mutable upset not retained");
+    $display("EXPECTED_MUTABLE_UPSET_REJECT");$finish;
+   end
    repeat(4)begin if(fs[0])$fatal(1,"missing publication wait");tick();end
    if(PREFETCH_CASE)begin
     key_visibility_frame=owner_frame;key_visible=1;
