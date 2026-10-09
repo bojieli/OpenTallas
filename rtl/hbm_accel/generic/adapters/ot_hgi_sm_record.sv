@@ -139,7 +139,8 @@ module ot_hgi_sm_record #(
     reg  [NSM*45-1:0] sqs; reg [NSM*31-1:0] slq; reg [NSM*17-1:0] sq;
     reg  [NSM-1:0]    act;
     reg  [NSM*13-1:0] rows_s; reg [NSM*32-1:0] dbase_s; reg [NSM*24-1:0] dl_s;
-    reg  [1:0]  fld_ph;
+    reg  [19:0] q_sh, m_sh;
+    reg  [1:0]  fld_ph; reg fb; reg [NSM*20-1:0] rdf; reg [NSM*31-1:0] ldf;
     reg         go_ok, xs_done, started, pub_sent, x_sent;
     reg  [NSM-1:0] st_pend, d_pend, arr_want, arr_seen;
     reg  [NSM-1:0] rel;                  // release_in a SM (the adapter echoes arrive at retire)
@@ -155,6 +156,11 @@ module ot_hgi_sm_record #(
             d_n[s]  = d_pend[s] && !(cmd_h[s*CW + 48] && sm_ret[s*4 + 1]);
         end
     end
+    integer s2;
+    always @(posedge clk)                                    // datapath flops: no reset tree (start / d_valid are gated
+        for (s2 = 0; s2 < NSM; s2 = s2 + 1)                  //  by the registered reset rst_i, synchronously)
+            cmd_h[s2*CW +: CW] <= {rel[s2], dl_s[s2*24 +: 24], dbase_s[s2*32 +: 32], d_n[s2] & go_ok & rst_i, 7'd0,
+                                   fmt_r, 1'b1, g_r, 16'd8, rows_s[s2*13 +: 13], st_n[s2] & go_ok & rst_i};
     assign sm_cmd = hen ? cmd_h : lg_cmd;
     assign lg_ret = hen ? {NSM*4{1'b0}} : sm_ret;
 
@@ -171,7 +177,7 @@ module ot_hgi_sm_record #(
 
     always @(posedge clk or negedge rst_i) begin
         if (!rst_i) begin
-            cmd_h <= 0; raw_v <= 1'b0; s1_v <= 1'b0; rdy_r <= 1'b0; bad1 <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; dv_chk <= 1'b0; dv_k <= 6'd0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
+            fb <= 1'b0; raw_v <= 1'b0; s1_v <= 1'b0; rdy_r <= 1'b0; bad1 <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; dv_chk <= 1'b0; dv_k <= 6'd0; rec_done <= 1'b0; rec_fault <= 1'b0; prod_v <= 1'b0;
             x_v <= 1'b0; pub_v <= 1'b0; go_ok <= 1'b0; xs_done <= 1'b0; started <= 1'b0; pub_sent <= 1'b0;
             x_sent <= 1'b0; st_pend <= 0; d_pend <= 0; arr_want <= 0; arr_seen <= 0; rel <= 0; act <= 0; fld_ph <= 0;
             dig <= 0; hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; nb_q <= 0; dec_ok <= 1'b0;
@@ -194,7 +200,7 @@ module ot_hgi_sm_record #(
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end
                 else begin
                     busy <= 1'b1; xs_done <= 1'b0; started <= 1'b0; go_ok <= 1'b0; fld_ph <= 2'd0;
-                    q_r <= {4'd0, q1}; g_r <= g1; lpr_r <= lpr1; lby_r <= lb1; dv_n <= b1[47:8]; dv_q <= 40'd0; dv_r <= 9'd0; dv_k <= 6'd20; dv_chk <= 1'b1; m_r <= b1[87:68];
+                    q_r <= {4'd0, q1}; q_sh <= {4'd0, q1}; m_sh <= b1[87:68]; g_r <= g1; lpr_r <= lpr1; lby_r <= lb1; dv_n <= b1[47:8]; dv_q <= 40'd0; dv_r <= 9'd0; dv_k <= 6'd20; dv_chk <= 1'b1; m_r <= b1[87:68];
                     base_r <= b1[47:8]; str_r <= b1[119:88]; fmt_r <= pf1;
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
                     x_v <= 1'b1; x_base <= a1[47:8]; x_n <= na1; x_p <= pp1; x_stride <= a1[119:88];
@@ -209,9 +215,10 @@ module ot_hgi_sm_record #(
             // products: Q is 13 b = 4 radix-16 digits, high digit first; M * LPR by 5 digits of M
             if (busy && dig != 3'd0) begin
                 dig <= dig - 3'd1;
-                qs <= (qs << 4) + str_r * q_r[4*(dig - 1) +: 4];
-                lq <= (lq << 4) + lpr_r * q_r[4*(dig - 1) +: 4];
-                ml <= (ml << 4) + lpr_r * m_r[4*(dig - 1) +: 4];
+                qs <= (qs << 4) + str_r * q_sh[19:16];           // top digit of a shifting copy: no indexed select
+                lq <= (lq << 4) + lpr_r * q_sh[19:16];
+                ml <= (ml << 4) + lpr_r * m_sh[19:16];
+                q_sh <= q_sh << 4; m_sh <= m_sh << 4;
                 if (dig == 3'd1) prod_v <= 1'b1;
             end
             if (busy && in_pd) pd_seen <= 1'b1;
@@ -232,16 +239,21 @@ module ot_hgi_sm_record #(
                 end
                 fld_ph <= 2'd1;
             end
-            if (fld_ph == 2'd1) begin
+            if (fld_ph == 2'd1 && !fb) begin                    // per-SM fields, stage A: the differences
                 for (s = 0; s < NSM; s = s + 1) begin
                     act[s] <= ({3'd0, m_r} > {3'd0, sq[s*17 +: 17]});
-                    rows_s[s*13 +: 13] <= ({3'd0, m_r} > {3'd0, sq[s*17 +: 17]}) ?
-                        ((({3'd0, m_r} - sq[s*17 +: 17]) > {3'd0, q_r}) ? q_r[12:0] : (m_r - sq[s*17 +: 17])) : 13'd0;
-                    dl_s[s*24 +: 24] <= ({3'd0, m_r} > {3'd0, sq[s*17 +: 17]}) ?
-                        (((ml - slq[s*31 +: 31]) > {7'd0, lq}) ? lq : (ml - slq[s*31 +: 31])) : 24'd0;
+                    rdf[s*20 +: 20] <= m_r - sq[s*17 +: 17];
+                    ldf[s*31 +: 31] <= ml - slq[s*31 +: 31];
                     dbase_s[s*32 +: 32] <= dv_q[31:0] + {1'b0, slq[s*31 +: 31]};
                 end
-                fld_ph <= 2'd2;
+                fb <= 1'b1;
+            end
+            if (fld_ph == 2'd1 && fb) begin                     // stage B: clamp to Q / Q LPR
+                for (s = 0; s < NSM; s = s + 1) begin
+                    rows_s[s*13 +: 13] <= act[s] ? ((rdf[s*20 +: 20] > q_r) ? q_r[12:0] : rdf[s*20 +: 13]) : 13'd0;
+                    dl_s[s*24 +: 24] <= act[s] ? ((ldf[s*31 +: 31] > {7'd0, lq}) ? lq : ldf[s*31 +: 24]) : 24'd0;
+                end
+                fb <= 1'b0; fld_ph <= 2'd2;
             end
             if (fld_ph == 2'd2) begin
                 fld_ph <= 2'd3; st_pend <= act; d_pend <= act; arr_want <= act;
@@ -250,9 +262,6 @@ module ot_hgi_sm_record #(
             if (fld_ph == 2'd3 && xs_done && !started) begin go_ok <= 1'b1; started <= 1'b1;
                 if (MUT_EARLY) begin rec_done <= 1'b1; busy <= 1'b0; fld_ph <= 2'd0; prod_v <= 1'b0; end
             end
-            for (s = 0; s < NSM; s = s + 1)
-                cmd_h[s*CW +: CW] <= {rel[s], dl_s[s*24 +: 24], dbase_s[s*32 +: 32], d_n[s] & go_ok, 7'd0, fmt_r, 1'b1,
-                                      g_r, 16'd8, rows_s[s*13 +: 13], st_n[s] & go_ok};
             if (go_ok) begin
                 for (s = 0; s < NSM; s = s + 1) begin
                     if (st_pend[s] && cmd_h[s*CW] && sm_ret[s*4 + 0]) st_pend[s] <= 1'b0;

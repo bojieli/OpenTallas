@@ -21,13 +21,14 @@ module tb_hgi_sm_e2e;
     always #1 clk = ~clk;
     reg [937:0] recm [0:NREC-1]; reg [191:0] casem [0:NCASE-1];
     reg [63:0] vmim [0:NVMI-1]; reg [63:0] vmem [0:NVME-1]; reg [1119:0] linem [0:NLINE-1];
-    reg [1087:0] lmem [int];
+    reg [1087:0] lmem [0:LSPAN-1]; reg lhas [0:LSPAN-1];
     reg [8*256-1:0] dir; integer i;
     initial begin
         if (!$value$plusargs("DIR=%s", dir)) dir = ".";
         $readmemh({dir, "/e2e_rec.mem"}, recm); $readmemh({dir, "/e2e_case.mem"}, casem);
         $readmemh({dir, "/e2e_vmi.mem"}, vmim); $readmemh({dir, "/e2e_vme.mem"}, vmem); $readmemh({dir, "/e2e_lines.mem"}, linem);
-        for (i = 0; i < NLINE; i = i + 1) lmem[linem[i][1119:1088]] = linem[i][1087:0];
+        for (i = 0; i < LSPAN; i = i + 1) lhas[i] = 1'b0;
+        for (i = 0; i < NLINE; i = i + 1) begin lmem[linem[i][1119:1088] - LBASE] = linem[i][1087:0]; lhas[linem[i][1119:1088] - LBASE] = 1'b1; end
     end
     integer errors = 0, cyc = 0;
     always @(posedge clk) cyc <= cyc + 1;
@@ -73,10 +74,10 @@ module tb_hgi_sm_e2e;
             rsp_v <= 1'b0;
             if (req_v) begin
                 qa[qtl % 256] = req_addr; qt[qtl % 256] = req_tag; qc[qtl % 256] = cyc + 6; qtl = qtl + 1;
-                if (!lmem.exists(req_addr)) begin $display("ERR SM %0d read an unwritten line %0d", s, req_addr); errors = errors + 1; end
+                if (req_addr < LBASE || req_addr >= LBASE + LSPAN || !lhas[req_addr - LBASE]) begin $display("ERR SM %0d read an unwritten line %0d", s, req_addr); errors = errors + 1; end
             end
             if (qh != qtl && qc[qh % 256] <= cyc) begin
-                rsp_v <= 1'b1; rsp_tag <= qt[qh % 256]; rsp_data <= lmem.exists(qa[qh % 256]) ? lmem[qa[qh % 256]] : 1088'd0;
+                rsp_v <= 1'b1; rsp_tag <= qt[qh % 256]; rsp_data <= (qa[qh % 256] >= LBASE && qa[qh % 256] < LBASE + LSPAN) ? lmem[qa[qh % 256] - LBASE] : 1088'd0;
                 qh = qh + 1;
             end
             if (rst_n && fault_s) begin $display("ERR SM %0d fault", s); errors = errors + 1; end

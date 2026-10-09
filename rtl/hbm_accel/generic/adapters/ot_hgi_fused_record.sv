@@ -58,10 +58,11 @@ module ot_hgi_fused_record #(
     input  wire          q_done,
     input  wire          q_fault
 );
-    localparam [3:0] S_LD = 12;
+    localparam [3:0] S_LD = 12, S_G1 = 13, S_G2 = 14, S_G3 = 15;
+    localparam [4:0] S_G4 = 16;
     localparam [3:0] S_IDLE = 0, S_DEC = 1, S_MV = 2, S_MVW = 3, S_OP1 = 4, S_OP2 = 5, S_OP3 = 6, S_WSU = 7, S_NE = 8,
                      S_NEW = 9, S_Q = 10, S_HALT = 11;
-    reg [3:0] st;
+    reg [4:0] st;
     reg [127:0] hdr; reg [255:0] dA, dB, dC, dO; reg [20:0] nA, nB, nO;
     reg [127:0] p_hdr; reg [255:0] p_a, p_b, p_c, p_o; reg [20:0] p_na, p_nb, p_no;      // pin flops
     always @(posedge clk) begin p_hdr <= rec_hdr; p_a <= rec_a; p_b <= rec_b; p_c <= rec_c; p_o <= rec_o;
@@ -74,23 +75,20 @@ module ot_hgi_fused_record #(
     // ---- ROW_NORM geometry
     wire [5:0]  op  = hdr[123:118];
     wire [7:0]  seg = hdr[77:70];                         // param [13:6]
-    wire [39:0] tot = nA * {20'd0, dA[87:68]};            // A elements (m rows of n)
-    wire [20:0] d   = (seg == 8'd0 || MUT_SEG) ? tot[20:0] : {13'd0, seg};
-    reg  [15:0] nseg;                                     // tot / d (d = seg | tot): by shift when seg is a power of 2
-    wire        d_pow2 = (d != 21'd0) && ((d & (d - 21'd1)) == 21'd0);
-    reg  [4:0]  lg_d; integer i;
-    always @* begin lg_d = 5'd0; for (i = 0; i < 21; i = i + 1) if (d[i]) lg_d = i[4:0]; end
-    always @* nseg = (seg == 8'd0 || MUT_SEG) ? 16'd1 : (tot >> lg_d);
-    wire        seg_ok = (seg == 8'd0 || MUT_SEG) ? 1'b1 : (d_pow2 && ((tot & ({19'd0, d} - 40'd1)) == 40'd0));
+    // geometry over registered stages (S_G1 multiply, S_G2 d / log2 d, S_G3 segments / constants): no long path
+    reg  [39:0] tot; reg [19:0] m_sh; reg [2:0] gdig;    // tot = A.n x A.m (radix-16 Horner over A.m, 5 edges)
+    reg  [20:0] d; reg [4:0] lg_d; reg d_pow2; reg [15:0] nseg; reg seg_ok;
+    wire [20:0] d_c = (seg == 8'd0 || MUT_SEG) ? tot[20:0] : {13'd0, seg};
+    reg  [4:0]  lg_c; integer i;
+    always @* begin lg_c = 5'd0; for (i = 0; i < 21; i = i + 1) if (d_c[i]) lg_c = i[4:0]; end
     wire        a_contig = (dA[1:0] == 2'd1) && !dA[5] && (dA[135:120] <= 16'd1) && (dA[87:68] == 20'd1 || dA[119:88] == {11'd0, nA});
     wire        o_contig = (dO[1:0] == 2'd1) && !dO[5] && (dO[135:120] <= 16'd1) && (dO[87:68] == dA[87:68]) &&
                            (dO[87:68] == 20'd1 || dO[119:88] == {11'd0, nA}) && (nO == nA);
     wire        rn_ok = a_contig && o_contig && (dB[1:0] == 2'd0) && (dB[4:2] == 3'd1) && !dB[5] && (dB[135:120] <= 16'd1) &&
                         (nB == d) && seg_ok && (d != 21'd0) && (d < 21'd65536) && (|tot[39:16] == 1'b0 || seg != 8'd0);
-    // binary32 of d and of 1/d (d a power of two)
+    // binary32 of d and of 1/d (d a power of two), registered at S_G3
     wire [43:0] dm = {23'd0, d} << (5'd23 - lg_d);
-    wire [31:0] f_d = {1'b0, 8'd127 + {3'd0, lg_d}, dm[22:0]};
-    wire [31:0] f_inv = {1'b0, 8'd127 - {3'd0, lg_d}, 23'd0};
+    reg  [31:0] f_d, f_inv; reg [17:0] s1_b, s2_b;
     // ---- the internal SU path
     reg s_v; reg [127:0] s_hdr; reg [255:0] s_sut, s_a, s_b, s_c, s_o, s_r; reg [20:0] s_n;
     wire s_rdy, s_done, s_fault, s_halt, s_drained;
@@ -106,7 +104,7 @@ module ot_hgi_fused_record #(
         suh = {4'd2, 6'd0, 16'd0, 2'd0, opnd, 1'b1, 92'd0};
     endfunction
     reg  [17:0] scr_q; always @(posedge clk) scr_q <= cfg_scratch;      // static strap, registered
-    wire [17:0] g_b = scr_q, s1_b = scr_q + d[17:0], s2_b = s1_b + nseg[15:0];
+    wire [17:0] g_b = scr_q;
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -122,7 +120,19 @@ module ot_hgi_fused_record #(
             case (st)
                 S_IDLE: if (rec_v) st <= S_LD;
                 S_LD: begin hdr <= p_hdr; dA <= p_a; dB <= p_b; dC <= p_c; dO <= p_o; nA <= p_na; nB <= p_nb; nO <= p_no;
-                            st <= S_DEC; end
+                            tot <= 40'd0; m_sh <= p_a[87:68]; gdig <= 3'd5; st <= S_G1; end
+                S_G1: begin                                   // tot = n x m, a radix-16 digit of m an edge
+                    tot <= (tot << 4) + nA * m_sh[19:16]; m_sh <= m_sh << 4; gdig <= gdig - 3'd1;
+                    if (gdig == 3'd1) st <= S_G2;
+                end
+                S_G2: begin d <= d_c; lg_d <= lg_c; d_pow2 <= (d_c != 21'd0) && ((d_c & (d_c - 21'd1)) == 21'd0); st <= S_G3; end
+                S_G3: begin
+                    nseg <= (seg == 8'd0 || MUT_SEG) ? 16'd1 : (tot >> lg_d);
+                    seg_ok <= (seg == 8'd0 || MUT_SEG) ? 1'b1 : (d_pow2 && ((tot & ({19'd0, d} - 40'd1)) == 40'd0));
+                    f_d <= {1'b0, 8'd127 + {3'd0, lg_d}, dm[22:0]}; f_inv <= {1'b0, 8'd127 - {3'd0, lg_d}, 23'd0};
+                    s1_b <= scr_q + d[17:0]; st <= S_G4;
+                end
+                S_G4: begin s2_b <= s1_b + nseg; st <= S_DEC; end
                 S_DEC: begin
                     if (hdr[127:124] != 4'd4 || op > 6'd6 || op == 6'd3) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (op == 6'd1) begin

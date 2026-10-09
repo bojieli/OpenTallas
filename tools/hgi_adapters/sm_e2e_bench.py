@@ -71,7 +71,8 @@ def main():
     (out / 'e2e_lines.mem').write_text(''.join(f'{a:08X}' + C.hexw(w, 1088) + '\n' for a, w in sorted(lines.items())))
     (out / 'e2e_sizes.svh').write_text(f'localparam integer NCASE = {len(cases)};\nlocalparam integer NREC = {len(recs)};\n'
                                        f'localparam integer NVMI = {len(vmi)};\nlocalparam integer NVME = {len(vme)};\n'
-                                       f'localparam integer NLINE = {len(lines)};\n')
+                                       f'localparam integer NLINE = {len(lines)};\n'
+                                       f'localparam integer LBASE = {min(lines)};\nlocalparam integer LSPAN = {max(lines) - min(lines) + 1};\n')
     print(f"{len(cases)} cases, {len(lines)} weight lines, {len(vmi)} x words, {len(vme)} result words")
 
 
