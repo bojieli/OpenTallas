@@ -34,3 +34,22 @@ def sram_model():
       "physical_status":"macro instances present; views and SS/FF qualification pending",
       "added_latency_measurement":"pending full-shape successor gate"})
     return row
+
+def private_operand_model():
+    row=sram_model()
+    row.update({"independent_activation_supply":True,
+      "activation_payload_dtype":"BF16 copiedbitwise at existing golden rounding boundary",
+      "activation_input_bits":256,"activation_input_beat_bits":11,"activation_transaction_bits":16,
+      "activation_input_forward_boundary_bits":284,
+      "activation_live_bytes":40960,"activation_prefetch_beats":1280,
+      "activation_prefetch_cycles_min":1280,"activation_prefetch_us_at900MHz":1.422222222,
+      "activation_code":"16pairs/bank/word,each32data+7SECDED,bits624packedacross3macros",
+      "activation_macro_count":24,"activation_reserved_bytes_including_checks":98304,
+      "total_operand_macro_count":64,"total_operand_reserved_bytes":262144,
+      "total_macro_area_um2":249060.92544,
+      "external_x_read_bus_bits":0,"internal_x_read_bus_bits":4096,
+      "activation_read_latency_cycles":3,
+      "command_activation_lease_bits":16,
+      "external_operand_boundary_tracks_min":45+270+284,
+      "model_scope":"privateFNandBF16flatoperandlanding; remotegateandfull64macrocontextpending"})
+    return row
