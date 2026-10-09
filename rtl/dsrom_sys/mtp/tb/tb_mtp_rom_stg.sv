@@ -153,6 +153,9 @@ module tb_mtp_rom_stg;
                 m_u = lo_d[HDR_USER +: 8]; m_p = lo_d[HDR_POS +: NW]; m_t = lo_d[HDR_TOK +: NW]; m_k = 0;
                 if (m_t != mix(m_u, m_p) % 129280) begin $display("MTP_STG FAIL: outbound token / user / pos"); $finish; end
             end else begin
+                if(lo_d[FLIT] !== (m_k==TXW-1)) begin
+                    $display("MTP_STG FAIL: last flag word=%0d",m_k); $finish;
+                end
                 if (lo_d[FLIT-1:0] !== word(2, 0, m_p, m_t, m_k)) begin
                     $display("MTP_STG FAIL: outbound word %0d of (u%0d p%0d) (staging / prefetch)", m_k, m_u, m_p); $finish; end
                 m_k = m_k + 1;
@@ -184,9 +187,6 @@ module tb_mtp_rom_stg;
         if((u_wfc.rd_inflight+u_wfc.rd_pre+u_wfc.rd_extra[0]+u_wfc.rd_extra[1])>peak_debt)
             peak_debt=u_wfc.rd_inflight+u_wfc.rd_pre+u_wfc.rd_extra[0]+u_wfc.rd_extra[1];
         if(lo_v&&!lo_r) stalls=stalls+1;
-        if(lo_v&&lo_r&&m_k>=0 && lo_d[FLIT] !== (m_k==TXW-1)) begin
-            $display("MTP_STG FAIL: last flag word=%0d",m_k); $finish;
-        end
     end
     integer i;
     initial begin
