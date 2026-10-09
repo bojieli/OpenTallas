@@ -1,0 +1,162 @@
+{
+  "at": "2026-10-09T11:30:56.119813+00:00",
+  "scope": "Explicit owner stop qfd_hub_fr family; CLOSED qfd_hub_ps bal32 sole successor excluded",
+  "rows": [
+    {
+      "name": "qfd_hub_fr-b3af3a9ed",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_fr-b3af3a9ed",
+      "stage_tag": null,
+      "block": "qfd_hub_fr",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "b3af3a9ed26c1df9c672376485afa93758f8b596"
+      },
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_hub_fr_w648-5718fabd6-mm-tt-d1956",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_fr_w648-5718fabd6-mm-tt-d1956",
+      "stage_tag": "route.a1",
+      "block": "qfd_hub_fr_w648",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -28.1 ps (start -56.96), 3930 it / 8987 buffers, 304926 endpoints in margin, 3.1 h in step, HM guard present"
+    },
+    {
+      "name": "qfd_hub_fr_w648-5718fabd6-mm-tt",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_fr_w648-5718fabd6-mm-tt",
+      "stage_tag": "route.a1",
+      "block": "qfd_hub_fr_w648",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 304926 endpoints in margin (> 20000), hold WNS now -28.058 ps (start -56.96), 15.8 h in step, old flow without the HM/stall guard"
+    },
+    {
+      "name": "qfd_hub_fr-32c8ac189-mm",
+      "status": "CANCELLED",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_fr-32c8ac189-mm",
+      "stage_tag": "route.a1",
+      "block": "qfd_hub_fr",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "32c8ac189378a4abada8a8482dce9d441d849142"
+      },
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_hub_fr_w648-b3af3a9ed",
+      "status": "CANCELLED",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_fr_w648-b3af3a9ed",
+      "stage_tag": null,
+      "block": "qfd_hub_fr_w648",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "b3af3a9ed26c1df9c672376485afa93758f8b596"
+      },
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_hub_fr-5718fabd6-mm",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_fr-5718fabd6-mm",
+      "stage_tag": "route.a2",
+      "block": "qfd_hub_fr",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 304615 endpoints in margin (> 20000), hold WNS now -1.018 ps (start -34.23), 8.3 h in step, HM guard present"
+    },
+    {
+      "name": "qfd_hub_fr_w648-5718fabd6-mm",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_fr_w648-5718fabd6-mm",
+      "stage_tag": "route.a2",
+      "block": "qfd_hub_fr_w648",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 304926 endpoints in margin (> 20000), hold WNS now -28.058 ps (start -56.96), 9.1 h in step, HM guard present"
+    },
+    {
+      "name": "qfd_hub_fr-5718fabd6-mm-tt-d1956",
+      "status": "FLOORPLAN_MARGIN",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_fr-5718fabd6-mm-tt-d1956",
+      "stage_tag": "route.a1",
+      "block": "qfd_hub_fr",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "util: utilisation 68.0% > 60% (std 211172 + macro 0 um2 in 310561 um2): grow the outline to <= 55-60%"
+    },
+    {
+      "name": "qfd_hub_fr_w648-32c8ac189-mm",
+      "status": "CANCELLED",
+      "host": "ot-epyc3",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_fr_w648-32c8ac189-mm",
+      "stage_tag": null,
+      "block": "qfd_hub_fr_w648",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "32c8ac189378a4abada8a8482dce9d441d849142"
+      },
+      "reason": "cancelled by a human"
+    },
+    {
+      "name": "qfd_hub_fr-5718fabd6-mm-tt",
+      "status": "EARLY_FAIL_HOLD",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_fr-5718fabd6-mm-tt",
+      "stage_tag": "route.a1",
+      "block": "qfd_hub_fr",
+      "source": {
+        "branch": "claude/qwen-contracts-20261007",
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04"
+      },
+      "reason": "stuckscan: 4_1_cts hold repair flooded: 304615 endpoints in margin (> 20000), hold WNS now -1.018 ps (start -34.23), 15.1 h in step, old flow without the HM/stall guard"
+    }
+  ],
+  "remote_checks": [
+    {
+      "host": "ot-epyc1tb",
+      "rc": 0,
+      "result": {
+        "live": [],
+        "containers": []
+      }
+    },
+    {
+      "host": "ot-epyc2",
+      "rc": 0,
+      "result": {
+        "live": [],
+        "containers": []
+      }
+    },
+    {
+      "host": "ot-epyc3",
+      "rc": 0,
+      "result": {
+        "live": [],
+        "containers": []
+      }
+    }
+  ]
+}

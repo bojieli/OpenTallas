@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qfd_hub_fr",
+      "target": "Qwen ROM",
+      "owner": "fleet_closure; explicit owner retirement",
+      "recorded_at": "2026-10-09T11:31:55.510815+00:00",
+      "description": "FR line retired; CLOSED PS balanced32 sole successor; all historical evidence preserved",
+      "source": {
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04",
+        "paths": [
+          "results/fleet/qwen_hub_fr_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_hub_fr_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "OWNER_RETIRED_PS_BAL32_SUCCESSOR"
+      },
+      "dependencies": [
+        "qfd_hub_ps"
+      ]
+    },
+    {
+      "element": "qfd_hub_fr_w648",
+      "target": "Qwen ROM",
+      "owner": "fleet_closure; explicit owner retirement",
+      "recorded_at": "2026-10-09T11:31:55.510815+00:00",
+      "description": "FR line retired; CLOSED PS balanced32 sole successor; all historical evidence preserved",
+      "source": {
+        "commit": "5718fabd633c7904a90113cfdbcf867eb1cf5c04",
+        "paths": [
+          "results/fleet/qwen_hub_fr_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE"
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_hub_fr_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "OWNER_RETIRED_PS_BAL32_SUCCESSOR"
+      },
+      "dependencies": [
+        "qfd_hub_ps"
+      ]
+    }
+  ]
+}
