@@ -1,0 +1,82 @@
+{
+  "targets": {
+    "Qwen3-8B ROM": false,
+    "DeepSeek-V4.1 ROM": false,
+    "Qwen3-8B HBM": true,
+    "DeepSeek-V4.1 HBM": true
+  },
+  "predecessor_source": "ca0d6a5a2f22b6d92151a2a14e7a3b339299d463",
+  "predecessor_actual_FF_hold_ps": -540.3,
+  "predecessor_hold_path": "fast g_pf[1].u.mem[1][1786] -> gated u_core.pd_p[696]",
+  "predecessor_actual_SS_setup_ps": -852.84,
+  "predecessor_setup_path": "gated u_core.p_r[2] -> fast g_pf[2].u.cnt[3]",
+  "shape": {
+    "NC": 8,
+    "PFMAX": 384,
+    "NPT": 8,
+    "INJ": 2,
+    "LANES": 16,
+    "FW": 512,
+    "PWT": 545,
+    "FD": 8
+  },
+  "macs_per_cycle": 0,
+  "fp32_adds_per_core_issue": 112,
+  "core_issue_interval_fast_edges": 2,
+  "fp32_adds_per_fast_edge_peak": 56.0,
+  "memory_macros": 8,
+  "memory_macro": "ot_sram_1r1w_64x512_m1_r2c2",
+  "memory_macro_area_um2": 13323.4658,
+  "memory_macro_total_area_um2": 106587.7264,
+  "memory_bytes_per_core_edge": {
+    "operand_write_peak": 512.0,
+    "operand_read_peak": 512.0
+  },
+  "memory_bytes_per_fast_edge_mean": {
+    "operand_write_peak": 256.0,
+    "operand_read_peak": 256.0
+  },
+  "boundary_bits": {
+    "peer_pins": 4360,
+    "own_pins": 1088,
+    "landing_payload": 5416,
+    "landing_valid": 10,
+    "landing_config": 26
+  },
+  "landing_replicas": 10,
+  "existing_FIFO_entries_per_port": 8,
+  "additional_reserved_head_slots_per_port": 1,
+  "added_payload_FF": 5416,
+  "added_valid_FF": 10,
+  "added_config_FF": 26,
+  "added_ICG_enable_FF": 1,
+  "FF_area_floor_um2": 1590.0948,
+  "core_gate_frequency_GHz": 0.6,
+  "master_frequency_GHz": 1.2,
+  "core_and_landing_opposite_phase": true,
+  "landing_edge": "Fast falling edge immediately before the consuming half-rate core rising edge; initial positive-edge candidate is failure history and has an uncut same-edge FIFO-to-landing hold crossing.",
+  "nominal_FIFO_to_landing_setup_ps": 416.666667,
+  "nominal_landing_to_core_setup_ps": 416.666667,
+  "clock_gate_area_and_routing": "One inverted-fast-clock enable/AND gate plus clock inversion; enable sampled at fast rising edge. Actual clock/gate characterization, CTS and extracted TT setup/FF hold are required for both half-cycle crossings.",
+  "new_mux_demux": "No extra payload mux; existing FIFO-head mux retained before landing FF.",
+  "control_fanout": "One per-port landed valid drives existing pop/count; existing core-ready drives landing valid only.",
+  "routing_tracks_required": 5452,
+  "routing_capacity_um": "Needs physical seat placement and channel audit; no capacity assertion yet.",
+  "floorplan_slot_um": [
+    840,
+    480
+  ],
+  "additional_die_area_um2": 0,
+  "single_record_visibility_added_fast_edges_min": 0,
+  "single_record_visibility_added_fast_edges_max": 2,
+  "arm_visibility_added_fast_edges_max": 2,
+  "arm_flow": "Existing sticky arm retained until its landed offer reaches the consuming core phase; no added state. Existing BLKN hold-off starts on that consumption and can add up to two fast edges to arm/start visibility.",
+  "frame_composition": "PF384/NC8 ->48 operand slots ->24 BF16 result packets. The landing may shift the critical final-input visibility by0..2 fast edges; core arithmetic/reduction order and one-per-two-edge service remain unchanged. Existing arrival, read/tree/output, physical wire and true-credit latencies remain baseline; actual end-to-end delta must be measured against full-shape predecessor.",
+  "minimum_gate": "Full PF384 NC8 NPT8 INJ2 owner vs golden; INJ8 separately where actual native parent selects it; same-phase landing mutant must fail.",
+  "default_enabled": false,
+  "physical_qualified": false,
+  "die_binding_qualified": false,
+  "new_control_integrity_checks": false,
+  "new_leases": false,
+  "new_reset_epochs": false
+}
