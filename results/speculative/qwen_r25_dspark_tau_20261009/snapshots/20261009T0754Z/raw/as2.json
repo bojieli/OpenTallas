@@ -1,0 +1,159 @@
+{
+ "schema": "opentallas.qwen-rom-dspark-tau.v1",
+ "target": "Qwen/Qwen3-8B@b968826d9c46dd6066d109eabc6255188de91218",
+ "draft": "deepseek-ai/dspark_qwen3_8b_block7@03326e5043815da1f81b109078b2889737c26017",
+ "deepspec": "deepseek-ai/DeepSpec@005e03b81cec38b7da6399833d609ee89a2587f2",
+ "tool_sha256": "37b8d3e1e9f06aa9798ce4332f84fb1daebbfbe786842b7c2eed4670a0068372",
+ "max_new_tokens": 512,
+ "mode": "non-thinking chat template, greedy",
+ "compute_dtype": "float32",
+ "drafter_keys": "bf16 = the released BF16 weights; w8 = quantize_w8 dequantised",
+ "samples": [
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-29",
+   "thinking": false,
+   "prompt_index": 24,
+   "prompt_tokens": 451,
+   "generated": 125,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 2.9761904761904763,
+   "tau_bf16_S7_B4": 4.0,
+   "tau_bf16_S7_B5": 4.96,
+   "tau_bf16_S7_B6": 5.904761904761905,
+   "tau_bf16_S7_B7": 6.578947368421052,
+   "tau_bf16_S7_B8": 7.75,
+   "tau_bf16_S3_B4": 4.0,
+   "tau_bf16_S1_B2": 2.0,
+   "seconds": 1421.3
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-83",
+   "thinking": false,
+   "prompt_index": 25,
+   "prompt_tokens": 246,
+   "generated": 51,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 3.0,
+   "tau_bf16_S7_B4": 3.923076923076923,
+   "tau_bf16_S7_B5": 5.0,
+   "tau_bf16_S7_B6": 5.666666666666667,
+   "tau_bf16_S7_B7": 6.375,
+   "tau_bf16_S7_B8": 7.285714285714286,
+   "tau_bf16_S3_B4": 3.923076923076923,
+   "tau_bf16_S1_B2": 1.9615384615384615,
+   "seconds": 693.0
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-51",
+   "thinking": false,
+   "prompt_index": 26,
+   "prompt_tokens": 226,
+   "generated": 58,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 3.0,
+   "tau_bf16_S7_B4": 3.8666666666666667,
+   "tau_bf16_S7_B5": 4.833333333333333,
+   "tau_bf16_S7_B6": 5.8,
+   "tau_bf16_S7_B7": 6.444444444444445,
+   "tau_bf16_S7_B8": 7.25,
+   "tau_bf16_S3_B4": 3.8666666666666667,
+   "tau_bf16_S1_B2": 1.9655172413793103,
+   "seconds": 605.1
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-33",
+   "thinking": false,
+   "prompt_index": 27,
+   "prompt_tokens": 275,
+   "generated": 107,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 2.8157894736842106,
+   "tau_bf16_S7_B4": 3.689655172413793,
+   "tau_bf16_S7_B5": 4.608695652173913,
+   "tau_bf16_S7_B6": 5.35,
+   "tau_bf16_S7_B7": 5.631578947368421,
+   "tau_bf16_S7_B8": 5.944444444444445,
+   "tau_bf16_S3_B4": 3.689655172413793,
+   "tau_bf16_S1_B2": 1.962962962962963,
+   "seconds": 1113.0
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-55",
+   "thinking": false,
+   "prompt_index": 28,
+   "prompt_tokens": 310,
+   "generated": 51,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 3.0,
+   "tau_bf16_S7_B4": 3.923076923076923,
+   "tau_bf16_S7_B5": 5.0,
+   "tau_bf16_S7_B6": 5.666666666666667,
+   "tau_bf16_S7_B7": 6.375,
+   "tau_bf16_S7_B8": 7.285714285714286,
+   "tau_bf16_S3_B4": 3.923076923076923,
+   "tau_bf16_S1_B2": 2.0,
+   "seconds": 741.3
+  },
+  {
+   "class": "assistant_fc",
+   "workload": "agentic_json_mode",
+   "prompt_id": "json-mode-eval-27",
+   "thinking": false,
+   "prompt_index": 29,
+   "prompt_tokens": 504,
+   "generated": 276,
+   "fast_path_equals_reference_at_first_step": true,
+   "tau_bf16_S7_B2": 2.0,
+   "tau_bf16_S7_B3": 2.967741935483871,
+   "tau_bf16_S7_B4": 4.0,
+   "tau_bf16_S7_B5": 5.0,
+   "tau_bf16_S7_B6": 5.978260869565218,
+   "tau_bf16_S7_B7": 6.9,
+   "tau_bf16_S7_B8": 7.885714285714286,
+   "tau_bf16_S3_B4": 3.942857142857143,
+   "tau_bf16_S1_B2": 2.0,
+   "seconds": 3438.1
+  }
+ ],
+ "fp32_greedy_check": null,
+ "device": "cpu",
+ "prompts_jsonl": {
+  "path": "src/prompts.jsonl.gz",
+  "sha256": "d95ec25641b4629d47c40c95ad9895673f97bbee7f4d45474bb3d8542a558ffd",
+  "class_map": {
+   "chat": [
+    "chat_mt_bench"
+   ],
+   "reasoning": [
+    "reasoning_math500"
+   ],
+   "coding": [
+    "reasoning_humaneval"
+   ],
+   "agentic": [
+    "agentic_swe_agent",
+    "agentic_tau_bench",
+    "agentic_mind2web"
+   ],
+   "assistant_fc": [
+    "agentic_bfcl",
+    "agentic_json_mode"
+   ]
+  }
+ }
+}
