@@ -3,7 +3,7 @@ module tb_hgi_att_row_sources;
     parameter integer MUT_RING_ZERO=0, MUT_DROP_C=0, MUT_C_REVERSE=0;
     reg clk=0; always #416.6665 clk=~clk;
     reg rst_n=0,cmd_v=0,ring=0;
-    reg [19:0] pos1=0,b_n=0,b_m=0,c_n=0;
+    reg [20:0] pos1=0,b_n=0,b_m=0,c_n=0;
     wire cmd_r,c_id_r,row_v,row_source,row_last,busy,done,fault;
     reg c_id_v=0,row_r=0; reg [31:0] c_id=0;
     wire [19:0] row_index; wire [20:0] row_ordinal;
@@ -69,7 +69,9 @@ module tb_hgi_att_row_sources;
             #1;if({lrv,lrs,lrl,lri,lro,lr}!=={lv,ls,ll,li,lo,row_r}) $fatal(1,"legacy lockstep changed");
         end
         lv=0;
-        run_case(0,8192,8192,0,0); // full Qwen 8K single B source
+        run_case(0,8192,8192,0,0);
+        run_case(0,1048576,1048576,0,0); // effective DYN count includes the 1M endpoint
+        run_case(1,1048576,128,128,2048); // POS1 must not truncate at ring wrap // full Qwen 8K single B source
         for(phase=0;phase<128;phase=phase+1) run_case(1,4096+phase,128,128,17);
         run_case(1,8191,128,128,2048); // full DS selected rows + window
         run_case(1,128,128,128,0);

@@ -6,7 +6,7 @@ module ot_hgi_att_row_sources_p #(
 )(
     input wire clk,rst_n,cmd_v,ring,
     output wire cmd_r,
-    input wire [19:0] pos1,b_n,b_m,c_n,
+    input wire [20:0] pos1,b_n,b_m,c_n,
     input wire c_id_v,output wire c_id_r,input wire [31:0] c_id,
     output wire row_v,input wire row_r,
     output wire row_source,row_last,
@@ -17,7 +17,7 @@ module ot_hgi_att_row_sources_p #(
     // Command station and two-word selected-ID FIFO: every data input lands
     // in a flop, and returned ready never depends combinationally on row_r.
     reg command_full, ring_q;
-    reg [19:0] pos1_q,b_n_q,b_m_q,c_n_q;
+    reg [20:0] pos1_q,b_n_q,b_m_q,c_n_q;
     reg [31:0] id_fifo [0:1];
     reg wr_ptr,rd_ptr; reg [1:0] id_count;
     wire inner_cmd_r,inner_id_r,inner_busy;

@@ -10,7 +10,7 @@ module ot_hgi_att_row_sources #(
     input wire clk, rst_n,
     input wire cmd_v, output wire cmd_r,
     input wire ring,
-    input wire [19:0] pos1, b_n, b_m, c_n,
+    input wire [20:0] pos1, b_n, b_m, c_n,
     input wire c_id_v, output wire c_id_r, input wire [31:0] c_id,
     input wire legacy_v, output wire legacy_r,
     input wire legacy_source, legacy_last,
@@ -36,11 +36,13 @@ module ot_hgi_att_row_sources #(
         assign fault=1'b0;
     end else begin : g_g12
         reg active, valid_q, source_q, last_q, done_q, fault_q;
-        reg [19:0] b_left, c_left, next_b, mask_q, index_q;
+        reg [20:0] b_left, c_left;
+        reg [19:0] next_b, mask_q, index_q;
         reg [20:0] ordinal, ordinal_q;
         wire room=!valid_q || row_r;
         wire c_phase=(b_left==0) && (c_left!=0);
-        wire bad_ring=ring && ((b_m==0) || ((b_m & (b_m-1'b1))!=0) || (b_n>b_m) || (b_n>pos1));
+        wire bad_count=(pos1>21'h100000) || (b_n>21'h100000) || (c_n>21'h100000);
+        wire bad_ring=ring && ((b_m==0) || (b_m>21'h100000) || ((b_m & (b_m-1'b1))!=0) || (b_n>b_m) || (b_n>pos1));
         assign cmd_r=!active && !valid_q;
         assign c_id_r=active && c_phase && room;
         assign legacy_r=1'b0;
@@ -64,11 +66,11 @@ module ot_hgi_att_row_sources #(
                     if (last_q) begin active<=0; done_q<=1; end
                 end
                 if (cmd_v && cmd_r) begin
-                    if (bad_ring) begin fault_q<=1; done_q<=1; end
+                    if (bad_ring || bad_count) begin fault_q<=1; done_q<=1; end
                     else if ((b_n==0) && ((c_n==0) || MUT_DROP_C)) done_q<=1;
                     else begin
                         active<=1; b_left<=b_n;
-                        c_left<=MUT_DROP_C ? 20'b0 : c_n;
+                        c_left<=MUT_DROP_C ? 21'b0 : c_n;
                         next_b<=ring ? (MUT_RING_ZERO ? 20'b0 : ((pos1-b_n)&(b_m-1'b1))) : 20'b0;
                         mask_q<=ring ? (b_m-1'b1) : 20'hfffff;
                         ordinal<=0;

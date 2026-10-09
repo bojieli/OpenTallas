@@ -15041,9 +15041,9 @@ def hgi_attention_row_sources_model():
     """HGI-1 G12 ordered-row frontend; arithmetic and gather engines unchanged."""
     return dict(schema='hgi.att-row-sources.v1', enable_default=False,
         model_before_build=True, MACs_per_cycle=0, arithmetic_order='B then C; existing tile chunk8/tree unchanged',
-        full_shape=dict(Qwen_rows=8192, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
+        full_shape=dict(Qwen_rows=8192, maximum_linear_rows=1048576, effective_count_bits=21, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
         replicas=4, placement='one frontend per HBM stack, upstream of existing gather reader',
-        ports=dict(command_bits=81, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
+        ports=dict(command_bits=85, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
                    selected_ID_bytes_per_cycle=4, HBM_payload_bytes_per_cycle=0),
         boundary_bits_per_cycle=43, mux_cost='one B/C row-index mux; no payload mux',
         fanout='local command registers only, 4 independent replicas',
