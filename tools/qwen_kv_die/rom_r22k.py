@@ -143,6 +143,13 @@ def surgery(v, m):
     if SPINE_RELAY_CH_WM:
         W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
         rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
+    if SPINE_RELAY_CH or SPINE_RELAY_CH_WM:
+        # the spine relay channels (centres) for the generator's vertical spine paths (b3r2 poly_of, opt-in here)
+        sp = [i for i in insts if i.kind == 'spine_block']
+        xs = sorted({round(i.x, 1) for i in sp})
+        cols = [x for x in xs if sum(1 for i in sp if abs(i.x - x) < 1.0) >= 2]
+        v.SPINE_CHANNEL_X = [round((a_ + g['cw'] + b_) / 2, 3) for a_, b_ in zip(cols, cols[1:])]
+        rec['spine_channel_x'] = v.SPINE_CHANNEL_X
     H = m['die']['h']
     m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
     m['r22k'] = rec

@@ -183,6 +183,7 @@ class Ref:
         if self.token >= self.vocab or self.pos >= self.ctxmax:
             return [], (0, 3)
         out, i, stack, Lc = [], self.entry, [], [0, 0]
+        self.toks = []
         try:
             while True:
                 h = self.w[i]
@@ -237,7 +238,18 @@ class Ref:
                         tok = self.vmr(field(e, MD, 'base'))
                         st = 3 if (tok >> 18) or tok >= self.vocab else 0
                         return out, (tok & 0x3FFFF, st)
-                    elif name in ('TOKX', 'AMAX', 'ACCEPT'):
+                    elif name == 'TOKX':           # Q-MTP-1: k committed tokens (1..16) from VM[A_eff ..] onto the completion
+                        if 'A' not in descs or field(descs['A'], MD, 'space') != 1:
+                            raise Fault('TOKX without a VM A')
+                        e, k = self.eff(descs['A'], slot, L, L1, ieff, idesc)
+                        b0 = field(e, MD, 'base')
+                        if not 1 <= k <= 16 or b0 + k > (1 << 18):
+                            raise Fault('TOKX count out of range')
+                        toks = [self.vmr(b0 + q) for q in range(k)]
+                        if any((t >> 18) or t >= self.vocab for t in toks):
+                            raise Fault('TOKX token out of range')
+                        self.toks = toks
+                    elif name in ('AMAX', 'ACCEPT'):
                         raise Fault('reserved CTL op')
                     i += rlen
                     continue
@@ -253,6 +265,7 @@ class Ref:
                 i += rlen
         except Fault as f:
             self.fault = str(f)
+            self.toks = []
             return out, (0, 3)
 
 
@@ -260,48 +273,33 @@ class Ref:
 # programs
 # ---------------------------------------------------------------------------------------------------------------------
 def qwen_program():
-    """the hbm-sim compiler's Qwen3-8B token program (TP4, P = 8,192) re-encoded in v1.0; returns (words, recs, g, md)"""
+    """the hbm-sim compiler's Qwen3-8B token program (TP4, P = 8,192), encoded by the simulator itself (HGI-1 current
+    design, tools/hgi_sim/records.py); returns (words, recs, g, md)"""
     from hgi_sim import qwen_compiler as QC
     from hgi_sim import records as SR
     cfg = json.loads((ROOT / G.MODELS['qwen3_8b']['cfg']).read_text())
-    md_hex = ROOT / 'results/arch/hbm_generic_iface_20261009/md_qwen3_8b.hex'
-    md = G.unpack([int(x, 16) for x in md_hex.read_text().split()])
+    md = QC.qwen_params(cfg)
     g = QC.Geometry(cfg, 8192)
     recs = QC.program(g, md, cfg['num_hidden_layers'], parts=('embed', 'layers', 'head'))
-    words = []
-    for r in recs:
-        descs = {}
-        for k, d in r.desc.items():
-            bc = d.istride == SR.ISTRIDE_BCAST
-            idx = d.dyn_sel == 31
-            assert not idx, 'the Qwen program has no indexed descriptor'
-            descs[k] = mdesc(space=SPACE[d.space], fmt=FMT[{'FP8': 'FP8E4M3', 'FP4': 'FP4E2M1'}.get(d.fmt, d.fmt)],
-                             ibcast=int(bc), base=d.base, n=d.n, m=d.m, stride=d.stride, istride=0 if bc else d.istride,
-                             lstride=d.lstride, dyn_sel=d.dyn_sel, dyn_mul=d.dyn_mul, n_sel=d.n_sel)
-        param = 0 if r.unit == 'SU' else r.param
-        words += record(header(r.unit, r.op, wait=r.wait, pred=['ALWAYS', 'POS0', 'NOT_POS0', 'LAST_ITER'].index(r.pred),
-                               slot=r.slot, param=param, imm_a=r.imm_a, imm_b=r.imm_b),
-                        sut=None if r.sut is None else put(r.sut, {n: (l, w) for n, l, w in G.D_SUT_LAYOUT}),
-                        descs=descs)
+    b = SR.encode_program(recs)
+    words = [int.from_bytes(b[q:q + 16], 'little') for q in range(0, len(b), 16)]
     return words, recs, g, md
 
 
 def sim_check(words, entry, trace, recs, pos, token, rank):
-    """every effective base / n the reference dispatches equals the hbm-sim Machine.eff of the same v0.9 record"""
+    """every effective base / n the reference dispatches equals the hbm-sim Machine.eff of the same record"""
     from hgi_sim import machine as M
-    import numpy as np  # noqa: F401
+    from hgi_sim import records as SR
     die = M.Die(rank, None)
-    die.dyn[:8] = [0, pos, pos + 1, token, 0, rank, 0, pos]
     mach = M.Machine([die])
-    # map record word index -> v0.9 record
     idx, wi = {}, entry
     for r in recs:
         idx[wi] = r
-        wi += 1 + (2 if r.sut is not None else 0) + 2 * len(r.desc)
+        wi += SR.rec_bytes(r) // 16
     n = 0
     for d in trace:
         r = idx[d['rec']]
-        die.dyn[4] = d['L']
+        die.dyn[:9] = [0, pos, pos + 1, token, d['L'], rank, r.slot, pos + r.slot, d['L1']]
         for j, nm in enumerate(OPND):
             if nm in r.desc:
                 base, nn, *_ = mach.eff(r.desc[nm], die, d['L'])
@@ -380,7 +378,16 @@ def fault_programs():
     P['simt_absent'] = ok + record(header('SIMT', 'RUN', param=5)) + end
     P['rsv_unit13'] = ok + record(header(13, 0)) + end
     P['op_range'] = ok + record(header('SM', 1)) + end
-    P['ctl_tokx'] = ok + record(header('CTL', 'TOKX')) + end
+    P['ctl_amax'] = ok + record(header('CTL', 'AMAX')) + end
+    tk = lambda base, n, **kw: record(header('CTL', 'TOKX', wait=0xFFFE, **kw), descs=dict(A=mdesc(space=1, fmt=5, base=base, n=n)))  # noqa: E731
+    P['tokx_16'] = ok + tk(0x8100, 16) + end
+    P['tokx_3_dyn'] = ok + record(header('CTL', 'TOKX', wait=0xFFFE, slot=3), descs=dict(
+        A=mdesc(space=1, fmt=5, base=0x8100, n=0, n_sel=DYN['SLOT']))) + end
+    P['tokx_twice'] = ok + tk(0x8100, 16) + tk(0x8105, 2) + end
+    P['tokx_17'] = ok + tk(0x8100, 17) + end
+    P['tokx_0'] = ok + tk(0x8100, 0) + end
+    P['tokx_vocab'] = ok + tk(0x8110, 2) + end
+    P['tokx_no_A'] = ok + record(header('CTL', 'TOKX')) + end
     P['dyn_rsv9'] = ok + record(header('DMA', 'LOAD'), descs=dict(
         A=mdesc(space=0, base=0, n=4, dyn_sel=9, dyn_mul=1), O=mdesc(space=1, n=4))) + end
     P['dyn_rsv41'] = ok + record(header('DMA', 'LOAD'), descs=dict(
@@ -417,6 +424,8 @@ def main():
     rng = random.Random(20261009)
     words, cases, meta = [], [], {}
     VM0 = {0x8001: 4242, 0x8002: 151936, 0x8003: 151935, 0xF100: 1 << 21, 0xF000: 3}
+    VM0.update({0x8100 + q: 1000 * q + 7 for q in range(16)})
+    VM0.update({0x8110: 5, 0x8111: 151936})
 
     def add_prog(name, w):
         meta[name] = (len(words), len(w))
@@ -473,7 +482,7 @@ def main():
                 vmw.append((len(dst) // 11 + k, a, v))
         c = dict(name=name, entry=entry, token=tok, pos=pos, rank=rank, vocab=lim['vocab'], ctxmax=lim['ctxmax'],
                  ndisp=len(tr), cpl=cpl, fault_at=fault_at, first=len(dst) // 11, vmw=vmw,
-                 fault=getattr(ref, 'fault', None))
+                 fault=getattr(ref, 'fault', None), toks=list(ref.toks) if cpl[1] == 0 else [])
         for d in tr:
             meta_w = d['unit'] | d['L'] << 4 | d['L1'] << 20 | (d['pos1'] & M21) << 36 | (d['pslot1'] & M21) << 57
             dst += [meta_w, d['hdr'], d['sut']] + d['eff'] + [sum((n & M21) << (21 * j) for j, n in enumerate(d['n']))]
@@ -488,7 +497,17 @@ def main():
         cfg = []
         for c in cs:
             cfg.append(' '.join(f'{v:08X}' for v in (c['entry'], c['token'], c['pos'], c['rank'], c['vocab'], c['ctxmax'],
-                                                    c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'], 0)))
+                                                    c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'],
+                                                    len(c['toks']))))
+        mds = []
+        for c in cs:     # the case's model descriptor (CP mode: loaded through the CFG window + CFG_COMMIT)
+            mds += G.d_pack(dict(magic=G.MAGIC, ver_minor=G.D_VERSION[1], ver_major=G.D_VERSION[0], n_words=G.NWORDS,
+                                 cp_vocab=c['vocab'], cp_ctx_max=c['ctxmax'],
+                                 coll_group_size=96 if c['vocab'] == 129280 else 4, entry_ar=c['entry'],
+                                 image_base=0x10, image_pages=1))
+        (T / f'hgi_seq_md{tag}.mem').write_text('\n'.join(f'{x:08X}' for x in mds) + '\n')
+        (T / f'hgi_seq_toks{tag}.mem').write_text('\n'.join(' '.join(f'{x:08X}' for x in (c['toks'] + [0] * 16)[:16])
+                                                           for c in cs) + '\n')
         (T / f'hgi_seq_cfg{tag}.mem').write_text('\n'.join(cfg) + '\n')
         vmw = [w for c in cs for w in c['vmw']]
         (T / f'hgi_seq_vmw{tag}.mem').write_text('\n'.join(f'{k:08X}{a:08X}{v:08X}' for k, a, v in vmw) + '\n')

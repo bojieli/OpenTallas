@@ -1,0 +1,35 @@
+{
+  "source_commit": "ba96ec982",
+  "input_sha256": {
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "84c226dbae480586fe1daff1752de86199293853f3398f75b7ee84f613fc85fe",
+    "rtl/test/hbm_accel/tb_hbm_index_partial.sv": "b08c59881f0450fb1756d5701f4e8e3a3dd6466b9c8faeb9221af071235803e5"
+  },
+  "scope": "actual behavioral assembler final partial-group valid and real credit debt; no physical adoption",
+  "cases": [
+    {
+      "blocks": 2,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "spurious_line_observed": false,
+      "raw_sha256": "f044a05b3397e7398fb74c89656ccad031fa7e1c08fa4b176a9622da776e86c4"
+    },
+    {
+      "blocks": 1,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "spurious_line_observed": false,
+      "raw_sha256": "d27be3855efdbbcbd92565ba29bb650f37b6c6ad4dbc0047967741f6e01f3fd2"
+    },
+    {
+      "blocks": 3,
+      "build_exit": 0,
+      "passed": true,
+      "run_exit": 0,
+      "spurious_line_observed": false,
+      "raw_sha256": "cfa9f616d2f34960a9d148831a42cd2de02f29fdbdff9694b53d36e71abcd551"
+    }
+  ],
+  "verdict": "PASS"
+}

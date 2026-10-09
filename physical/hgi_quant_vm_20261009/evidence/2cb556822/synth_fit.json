@@ -1,0 +1,41 @@
+{
+  "source": "2cb556822",
+  "RTL": "a63e77167",
+  "host": "ot-epyc3",
+  "driver": 1162559,
+  "driver_terminal": true,
+  "rc": 0,
+  "corner": "TTsizing only, no physicaltimingclaim",
+  "cells": 200951,
+  "area_um2": 29130.81084,
+  "sequential_um2": 15587.94456,
+  "outline_um": [
+    1800,
+    275.6
+  ],
+  "core_area_um2": 487132.0704000001,
+  "utilisation_percent": 5.980064259797088,
+  "fit_pd50": true,
+  "fit_pd55": true,
+  "peak_RSS_KiB": 2094780,
+  "peak_scope": "GNUtime maximumprocessRSS notwholePGsum",
+  "admission": {
+    "baseline_job": "hbm_quant_e7c2e5b06-tt",
+    "baseline_CTS_peak_KiB": 3462408,
+    "baseline_DRT_peak_KiB": 18642752,
+    "adapter_cells": 200951,
+    "adapter_area_um2": 29130.81084,
+    "adapter_outline_um": [
+      1800,
+      275.6
+    ],
+    "synth_source": "2cb556822",
+    "formula": "actual baseline phasepeak *max(actualcellratio,actualarearatio)*outlinearea ratio*1.10 growth;roundconservatively next4GiB",
+    "scale": 1.9483617768447237,
+    "estimate_GiB": {
+      "calibrate": 8,
+      "route": 36
+    },
+    "status": "measuredsibling-derived estimate,notmeasuredadapterphysicalphase/notcap"
+  }
+}

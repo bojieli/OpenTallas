@@ -435,7 +435,11 @@ def real_blocks_kv():
     import qwen_rom_fulldie as QF
     out['ot_hbm3e_phy'] = dict(module='ot_hbm3e_phy', file=QPHY_BB, kind='hard macro black box (v2 E/W PHY)', params={},
                                ports=parse_module(QPHY_BB, 'ot_hbm3e_phy')['ports'],
-                               binding=dict(dfi=[pn for pn, _ in QF.phy_pins()], clk=['clk'], rst_n=['rst_n']))
+                               # the die's dfi bus carries the 9,207 signal pins; clk / rst_n are their own die ports
+                               # (die-evidence-2: with them inside dfi the bus was 2 pins short and 8 rsp_data bits had
+                               # no die net)
+                               binding=dict(dfi=[pn for pn, _ in QF.phy_pins() if pn not in ('clk', 'rst_n')],
+                                            clk=['clk'], rst_n=['rst_n']))
     h, c = CDC_LAYOUT['h'], CDC_LAYOUT['c']
     ho = [p for p in h if p.split('[')[0] in ('h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag', 'h_fault')]
     co = [p for p in c if p.startswith('l_')]
@@ -630,7 +634,12 @@ def build(die, top_fix=False):
     else:
         # --top-fix: the 2026-10-06 lint tops of r14b (generator untouched then); default: the generator's variant
         # (r15 fixes every TF in the generator itself)
-        m = H.build(dict(H.R14B, row1_flip=False) if top_fix else H.variant_arg(VARIANT))
+        v_ = dict(H.R14B, row1_flip=False) if top_fix else H.variant_arg(VARIANT)
+        # die-evidence-2 (2026-10-09): a retiled-SM variant (R25G: the fmt3 3x3 SM grid) only builds as a NETWORK
+        # PROBE -- its SM network paths / latency are not qualified by the generator.  The die model is then labelled
+        # (m['network_probe']) and every record built on it carries that label; geometry and nets are the generator's.
+        probe = bool(v_ and v_.get('sm_physical_grid'))
+        m = H.build(v_, network_probe=probe) if probe else H.build(v_)
         if top_fix:
             fix_clock_nets(m, die)
             fix_hbm_links(m)
@@ -768,6 +777,13 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
     if cls == 'reset_tree':
         return [(0, bits, 'out' if port.startswith('por') else 'in')]
+    if cls in ('loader_mem', 'loader_rsp'):
+        # die-evidence-2 2026-10-09 (r25m RQ-ING-4, in R25G): the loader <-> stream-service memory chains.  A real
+        # (split-view) endpoint gives its RTL directions and the peer takes the complement; with no real endpoint the
+        # bus is classed by its source (endpoint 0 drives the request / response word)
+        if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
+            return 'complement'
+        return [(0, bits, 'out' if j == 0 else 'in')]
     raise KeyError(f'no direction rule for HBM class {cls} ({bid})')
 
 
@@ -1327,8 +1343,17 @@ def interfaces(die, m, pw):
                      die=sum(n - n // 2 for p, n in die.items() if p.startswith('llk_'))),
         clocks=dict(rtl='clk / rst_n / pclk / prst_n', die=sorted(p for p in die if p.startswith(('pll', 'por')))),
         unmatched_die_ports=sorted(p for p in die if not p.startswith(('t_su', 'f_su', 'f_cmdproc', 't_cmdproc', 'llk_',
-                                                                        'pll', 'por'))),
+                                                                        'pll', 'por', 'f_hgi_cmdproc', 't_hgi_cmdproc',
+                                                                        'f_hgi_cfg'))),
     )
+    if 'coll' in (V.get('hgi_dispatch') or []):
+        # hgi-takeover: the HGI-1 record pins are bound by the rtl_hgi die view (ot_hgi_coll_record inside hfd_coll)
+        hv = parse_module('physical/hbm_accel_die_views/coll/rtl_hgi/hfd_coll.sv', 'hfd_coll')['ports']
+        for pn_ in ('f_hgi_cmdproc', 't_hgi_cmdproc', 'f_hgi_cfg'):
+            rows[f'hgi_{pn_}'] = dict(rtl=hv[pn_][1] if pn_ in hv else None, die=die.get(pn_))
+        rows['hgi_view_ports_without_die_net'] = sorted(p for p in hv if p not in die and p not in ('refclk', 'por'))
+    elif any(p.startswith(('f_hgi', 't_hgi')) for p in die):
+        rows['unmatched_die_ports'] += sorted(p for p in die if p.startswith(('f_hgi', 't_hgi')))
     for k_, r in rows.items():
         if isinstance(r, dict) and 'die' in r and isinstance(r['die'], int):
             r['match'] = r['die'] >= r['rtl'] if k_.startswith('link') else r['die'] == r['rtl']
@@ -1336,7 +1361,7 @@ def interfaces(die, m, pw):
     rows['clocks']['match'] = bool(rows['clocks']['die'])
     out['hfd_coll'] = dict(rtl='ot_hbm_accel_tu_endpoint', links=nl, checks=rows,
                            pass_=all(r.get('match', True) for r in rows.values() if isinstance(r, dict))
-                           and not rows['unmatched_die_ports'])
+                           and not rows['unmatched_die_ports'] and not rows.get('hgi_view_ports_without_die_net'))
     at = parse_module('rtl/hbm_accel/ot_attn_tile_registered_parent.sv', 'ot_attn_tile_registered_parent')['ports']
     aw = {p: d_w[1] for p, d_w in at.items()}
     tdie = {p: n for (ms, p), n in pw.items() if ms == 'hfd_attn_tile'}
@@ -2160,9 +2185,17 @@ def hbm_wrapper_ledgers(masters, root=None, generate=None):
         W.V._MODEL.clear()
         generate = W.gen
     rows = []
+    try:   # hgi-takeover: a spec with 'hgi_unit' applies only when that unit is in hgi_dispatch; 'replaced_when_hgi' the reverse
+        hgi_units = set((H.variant_arg(VARIANT) or {}).get('hgi_dispatch') or [])
+    except Exception:  # noqa: BLE001
+        hgi_units = set()
     for path in sorted((root / 'physical/hbm_accel_die_views').glob('*/rtl/spec*.json')):
         spec = json.loads(path.read_text())
         if spec.get('master') not in masters:
+            continue
+        if spec.get('hgi_unit') and spec['hgi_unit'] not in hgi_units:
+            continue
+        if spec.get('replaced_when_hgi') and spec['replaced_when_hgi'] in hgi_units:
             continue
         row = dict(master=spec['master'], spec=str(path.relative_to(root)),
                    spec_sha256=hashlib.sha256(path.read_bytes()).hexdigest())

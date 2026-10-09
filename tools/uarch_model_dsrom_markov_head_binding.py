@@ -4,7 +4,7 @@ import json,math
 
 def model():
     r=math.ceil(129280/12);a=4*math.ceil(r/128);macros=2*a
-    return dict(schema='opentallas.md6.head-binding.v1',enabled_default=False,adopted=False,PINREG_default=0,CACHE_PINREG_default=0,CACHE_PINREG_candidate=1,cache_added_payload_FF=512,cache_added_enable_FF=256,cache_added_control_FF=7,PINREG_candidates=[1,2],PINREG_added_FF=513,unconditional_PINREG2_switching_energy="unmeasured; no energy credit",
+    return dict(schema='opentallas.md6.head-binding.v1',enabled_default=False,adopted=False,PINREG_default=0,CACHE_PINREG_default=0,LOOKUP_PP_default=0,LOOKUP_PP_expected_added_cycles=1,CACHE_PINREG_candidate=1,cache_added_payload_FF=512,cache_added_enable_FF=256,cache_added_control_FF=7,PINREG_candidates=[1,2],PINREG_added_FF=513,unconditional_PINREG2_switching_energy="unmeasured; no energy credit",
       shape=dict(vocab=129280,shards=12,assignment_status='proposed 12-shard capacity; semantic row manifest pending',max_rows_per_shard=r,A_elements_per_shard=a,rows_per_A=32,padded_rows_per_shard=a*32-r,K=256),
       MACs_per_cycle=dict(per_A=16,per_shard=16*a),compute_intensity_MAC_per_weight_byte=.5,
       ports_bytes_per_cycle=dict(local_weight_pair=32,staged_embedding_lane=32,head_logit=.125,joined_logit=.125),
