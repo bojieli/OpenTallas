@@ -3,6 +3,12 @@ def model():
     return {
         'schema': 'opentallas.dsrom.hc-mean-capture.v1',
         'source': 'tools/hdc_golden_v41.py:main_hidden_part; input residuals L37,L38,L39',
+        'capture_jobs': [{'id':f'L{layer}.mtp.input_hc_capture','layer':layer,
+                          'capture':capture,'rank_replicas':4,
+                          'ordering':'after this layer Engram, before attn hc_pre or H overwrite',
+                          'source_program':'tools/hdc_program_v41.py Program.position_body/mh_capture',
+                          'whole_token_DAG_binding':'pending'}
+                         for capture,layer in enumerate((37,38,39))],
         'shape': {'hidden': 5120, 'HC': 4, 'TP': 4, 'rank_dimensions': 1280,
                   'captures': 3, 'lanes': 8, 'input_beats_per_capture': 160,
                   'output_flits_per_capture': 40, 'output_flits_per_rank': 120},
@@ -47,7 +53,10 @@ def model():
 def input_reader_model():
     return {'schema':'opentallas.dsrom.hc-input-reader.v1',
         'shape':{'copies':4,'TP4_rank_dimensions':1280,'words_per_VM_row':16,
-                 'rows_per_copy':80,'read_requests_per_capture':320},
+                 'rows_read_per_copy_per_rank':80,'read_requests_per_capture':320,
+                 'resident_H_dimensions_per_copy':5120,'resident_H_VM_rows':1280,
+                 'resident_copy_stride_rows':320,'TP4_rank_offset_rows':80,
+                 'address_source':'tools/hdc_replay_v41.py ShapeLayout H=hc*dim even tp_exact=True'},
         'native_port':{'read_slots_required':1,'outstanding_reads':1,
                        'qualification':'existing reserved/shared NP8 slot; owner arbiter and compiler mapping pending'},
         'MACs_per_cycle':0,'compute_intensity':0,

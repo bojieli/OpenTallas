@@ -31,6 +31,7 @@ module tb_hc_mean_capture;
     localparam [71:0] INJ=72'd0;
 `endif
     reg [511:0] inputs[0:479],expected[0:119];
+    integer rank=0;
 `ifdef HC_VM_READER
     wire mcv,mcr,miv,mir;wire [1:0] mcc;wire [9:0] mcu;wire [20:0] mcp;
     wire [3:0] mce;wire [7:0] mib;wire [511:0] mid;
@@ -40,7 +41,7 @@ module tb_hc_mean_capture;
     reg [511:0] response_q;
     ot_dsrom_hc_input_reader reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
       .cmd_capture(cmd_capture),.cmd_user(cmd_user),.cmd_position(cmd_position),.cmd_epoch(cmd_epoch),
-      .cmd_h_row(14'd512),.cmd_region_rows(15'd320),
+      .cmd_h_row(bad==7?14'd16300:14'd512),.cmd_rank(rank[1:0]),.cmd_region_rows(bad==8?15'd319:15'd1280),
       .mean_cmd_valid(mcv),.mean_cmd_ready(mcr),.mean_cmd_capture(mcc),.mean_cmd_user(mcu),
       .mean_cmd_position(mcp),.mean_cmd_epoch(mce),
       .req_valid(req_valid),.req_ready(req_ready),.req_row(req_row),
@@ -59,10 +60,12 @@ module tb_hc_mean_capture;
         if(rf) $fatal(1,"native H reader fault");
     end
     always @(posedge clk) if(req_valid&&req_ready) begin
-        if(req_row<512 || req_row>=832 || pending) $fatal(1,"native read bounds/ownership");
-        copy_vm=(req_row-512)/80;row_vm=(req_row-512)%80;
+        if(req_row<512 || req_row>=1792 || pending) $fatal(1,"native read bounds/ownership");
+        copy_vm=(req_row-512)/320;row_vm=(req_row-512)%320-rank*80;
+        if(row_vm<0||row_vm>=80) $fatal(1,"native read rank selection");
         for(i_vm=0;i_vm<16;i_vm=i_vm+1)
             response_q[32*i_vm+:32]={inputs[cmd_capture*160+row_vm*2+i_vm/8][128*copy_vm+16*(i_vm%8)+:16],16'd0};
+        if(bad==6) response_q[0]=1;
         pending=1;delay_q=cycles%9+1;
     end
 `else
@@ -73,6 +76,7 @@ module tb_hc_mean_capture;
     reg [511:0] held;reg stalled=0;
     initial begin
         if(!$value$plusargs("vectors=%s",idir)) $fatal(1,"missing vectors");
+        if($value$plusargs("rank=%d",rank)) begin end
         if($value$plusargs("bad=%d",bad)) begin end
         $readmemh({idir,"/input.hex"},inputs);
         $readmemh({idir,"/expected.hex"},expected);

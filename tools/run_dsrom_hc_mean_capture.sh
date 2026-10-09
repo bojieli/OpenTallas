@@ -34,7 +34,7 @@ if [[ -n ${HC_RELEASED_ROOT:-} ]]; then
     for rank in 0 1 2 3; do
         python3 tools/dsrom_hc_mean_capture_vectors.py --out "$out/released_rank$rank" --rank "$rank" --released-root "$HC_RELEASED_ROOT"
         vvp "$out/base.vvp" +vectors="$out/released_rank$rank" >"$out/released_rank$rank.log" 2>&1
-        vvp "$out/reader.vvp" +vectors="$out/released_rank$rank" >"$out/reader_released_rank$rank.log" 2>&1
+        vvp "$out/reader.vvp" +vectors="$out/released_rank$rank" +rank="$rank" >"$out/reader_released_rank$rank.log" 2>&1
     done
 fi
 python3 - "$out" <<'PY'
