@@ -98,8 +98,13 @@ module ot_hgi_seq #(
     // quasi-static, retire / fault pulses and VM read data one cycle later: the drain mask only waits longer)
     reg [159:0] md_d_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
     reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
+    // reset: asynchronous assert, synchronous release through two flops (route: rst_n recovery -89 ps, fanout ~3k);
+    // every other register resets on rn
+    reg [1:0] rs_q;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rs_q <= 2'b00; else rs_q <= {rs_q[0], 1'b1};
+    wire rn = rs_q[1];
+    always @(posedge clk or negedge rn)
+        if (!rn) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
         else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; f_rsp_v_r <= f_rsp_v; end
     always @(posedge clk) begin
         md_d_r <= md_d; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data; f_rsp_data_r <= f_rsp_data;
@@ -114,7 +119,8 @@ module ot_hgi_seq #(
                        M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
-                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15;
+                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15,
+                     S_HQ = 5'd16;     // header pre-evaluation (registered decision flags)
     reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
@@ -147,6 +153,7 @@ module ot_hgi_seq #(
     wire [127:0] rd_word = rd_hi ? rd_sec[255:128] : rd_sec[127:0];
     // ------------------------------------------------------------------ the current record
     reg  [127:0] h;
+    reg hq_recbad, hq_bad, hq_skip, hq_ctl, hq_noa, clr_q; reg [4:0] hq_rlen;
     wire [3:0]  h_unit = h[H_UNIT +: 4];
     wire [5:0]  h_op   = h[H_OP +: 6];
     wire [15:0] h_wait = h[H_WAIT +: 16];
@@ -196,7 +203,7 @@ module ot_hgi_seq #(
 `endif
     endfunction
     reg busy_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) busy_q <= 1'b0; else busy_q <= (st != S_IDLE) || (busy_u != 16'd0);
+    always @(posedge clk or negedge rn) if (!rn) busy_q <= 1'b0; else busy_q <= (st != S_IDLE) || (busy_u != 16'd0);
     assign busy = busy_q;          // registered output (config E_BUSY: one cycle late is harmless)
     // ------------------------------------------------------------------ DYN
     // DS full-shape selectors: a free-running 4-stage registered bank from (pos, the record's slot, rank) -- the
@@ -287,13 +294,19 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ main FSM
     integer k;
     wire [15:0] u_acc = u_v & u_rdy;
-    assign db_rdy = (st == S_IDLE) && !hold_r;
+    // doorbell ready leaves a flop (route: st decode -> db_rdy -64 ps); it implies st == S_IDLE (IDLE is left only on
+    // the doorbell handshake) and folds hold one edge earlier than hold_r did (never later)
+    reg db_rdy_q;
+    always @(posedge clk or negedge rn)
+        if (!rn) db_rdy_q <= 1'b0;
+        else db_rdy_q <= (st == S_IDLE) && !hold_r && !hold && !(db_v && db_rdy_q);
+    assign db_rdy = db_rdy_q;
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
     reg cpl_v_q, cpl_tokx_q;
     wire cpl_hs = cpl_v_q & cpl_rdy;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cpl_v_q <= 1'b0; cpl_tokx_q <= 1'b0; end
+    always @(posedge clk or negedge rn)
+        if (!rn) begin cpl_v_q <= 1'b0; cpl_tokx_q <= 1'b0; end
         else begin
             cpl_v_q <= ((st == S_CPL) || (st == S_TKB)) && !cpl_hs;
             cpl_tokx_q <= (st == S_TKB) && !cpl_hs;
@@ -303,13 +316,13 @@ module ot_hgi_seq #(
     // dispatch acceptance registered (route TT -441: u_rdy -> |u_acc -> state / u_v): a valid bit clears on its own
     // ready (one gate), the FSM leaves S_DISP on the registered accept (+1 cycle a dispatch)
     reg acc_q;
-    always @(posedge clk or negedge rst_n) if (!rst_n) acc_q <= 1'b0; else acc_q <= |u_acc;
+    always @(posedge clk or negedge rn) if (!rn) acc_q <= 1'b0; else acc_q <= |u_acc;
     // the FSM's dispatch register u_vr is set / cleared from flops only; u_tk marks a valid already taken (u_rdy enters
     // one OR gate), so u_v = u_vr & ~u_tk drops on the accepting edge
     // (u_vr is cleared when the FSM leaves S_DISP, so u_tk is clear again before the next dispatch sets u_vr)
     reg [15:0] u_vr, u_tk;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) u_tk <= 16'd0;
+    always @(posedge clk or negedge rn)
+        if (!rn) u_tk <= 16'd0;
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
@@ -322,8 +335,8 @@ module ot_hgi_seq #(
     assign f_req_addr = rqf[rqh];
     wire       rq_push = fetching && (rqn != 2'd2) && (inflight < NOS) && (used + 2 <= RW);
     wire       rq_pop = f_req_v && f_req_rdy;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin rqh <= 1'b0; rqn <= 2'd0; end
+    always @(posedge clk or negedge rn)
+        if (!rn) begin rqh <= 1'b0; rqn <= 2'd0; end
         else begin
             if (rq_push) rqf[rqh ^ (rqn != 2'd0)] <= faddr;
             if (rq_pop) rqh <= ~rqh;
@@ -378,9 +391,9 @@ module ot_hgi_seq #(
         begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
               vr_v <= 1'b0; end
     endtask
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            st <= S_IDLE; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
+            st <= S_IDLE; clr_q <= 1'b0; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 3'd0; m3v <= 1'b0;
             cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
@@ -390,6 +403,12 @@ module ot_hgi_seq #(
                 else if (!u_acc[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
             if (st != S_IDLE && st != S_CPL) cpl_cycles <= cpl_cycles + 32'd1;
             inflight <= fl_after;
+            // the record's operand registers clear one edge after the header is accepted (a single-flop enable); the
+            // first operand word lands two edges after its read issue (rpipe), so nothing writes them on this edge
+            if (clr_q) begin
+                clr_q <= 1'b0; d_sut <= 256'd0; d_desc <= 1792'd0; d_n <= 147'd0;
+                for (k = 0; k < 7; k = k + 1) dr[k] <= 256'd0;
+            end
             if (dv_cnt != 3'd4) dv_cnt <= dv_cnt + 3'd1;
             // ---- fetch requests (valid held until ready)
             if (rq_push) faddr <= faddr + 40'd32;
@@ -403,7 +422,7 @@ module ot_hgi_seq #(
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
                 st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_vr <= 0; vr_v <= 1'b0; fetching <= 1'b0;
             end else case (st)
-                S_IDLE: if (db_v && !hold_r) begin
+                S_IDLE: if (db_v && db_rdy_q) begin
                     token <= db_token; pos <= db_pos; cpl_job <= db_job; cpl_gen <= db_gen; cpl_pos <= db_pos;
                     db_entry_q <= db_entry;
                     cpl_cycles <= 0; depth <= 0; Lc <= 0; L1c <= 0; cpl_token <= 0; cpl_status <= 0; st <= S_DB;
@@ -421,18 +440,29 @@ module ot_hgi_seq #(
                 end
                 S_DEC: if (avail != 0) begin rd_ptr <= rp; st <= S_H1; end
                 S_H1: st <= S_H2;                                      // the sector read (registered address)
-                S_H2: begin h <= rd_word; st <= S_RDW; wk <= 5'd0; dv_cnt <= 3'd0;
+                S_H2: begin h <= rd_word; st <= S_HQ; wk <= 5'd0; dv_cnt <= 3'd0;
 `ifdef SEQ_DEBUG
                     $display("SEQDBG t=%0t rp=%0d wp=%0d frp=%0d hdr=%h", $time, rp, wp, frp, rd_word);
 `endif
                 end
+                // ---- header pre-evaluation: the decision flags leave flops (route TT -466: h -> header checks ->
+                // the d_desc / dr / d_sut clear enables); h, rp, frp, depth, pos and the loop flags are stable here
+                S_HQ: begin
+                    hq_recbad <= (depth != 2'd0 && rec_end > RW - 2);
+                    hq_bad <= (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)} ||
+                               (h_unit == 4'd9 && (h_op == 6'd1 || h_op == 6'd3)));   // IDX ops 1 / 3 reserved (HGI-1 6.7)
+                    hq_skip <= !pred_ok;
+                    hq_ctl <= is_ctl && h_op != 6'd3 && h_op != 6'd5;
+                    hq_noa <= is_ctl && !h_opnd[0];
+                    hq_rlen <= rlen;
+                    st <= S_RDW;
+                end
                 S_RDW: if (wk == 5'd0) begin                           // ---- evaluate the header
-                    if (depth != 2'd0 && rec_end > RW - 2) fault3;
-                    else if (avail < {{(RB-4){1'b0}}, rlen}) ;          // wait for the record's words
-                    else if (h_unit >= 4'd11 || h_op >= {2'd0, nops(h_unit)} ||
-                             (h_unit == 4'd9 && (h_op == 6'd1 || h_op == 6'd3))) fault3;   // IDX ops 1 / 3 reserved (HGI-1 6.7)
-                    else if (!pred_ok) begin advance(rlen); st <= S_DEC; end
-                    else if (is_ctl && h_op != 6'd3 && h_op != 6'd5) begin
+                    if (hq_recbad) fault3;
+                    else if (avail < {{(RB-4){1'b0}}, hq_rlen}) ;       // wait for the record's words
+                    else if (hq_bad) fault3;
+                    else if (hq_skip) begin advance(rlen); st <= S_DEC; end
+                    else if (hq_ctl) begin
                         case (h_op)
                             6'd0: begin advance(rlen); st <= S_DEC; end                       // NOP
                             6'd1: if (h_param[15:0] == 16'd0 || depth == 2'd2 ||
@@ -458,12 +488,11 @@ module ot_hgi_seq #(
                             6'd4: st <= S_DRAIN;                                              // FENCE
                             default: fault3;                                                  // AMAX ACCEPT (reserved)
                         endcase
-                    end else if (is_ctl && !h_opnd[0]) fault3;                               // END / TOKX need A
+                    end else if (hq_noa) fault3;                                             // END / TOKX need A
                     else begin
                         is_end <= is_ctl && h_op == 6'd3; is_tokx <= is_ctl && h_op == 6'd5;
-                        d_sut <= 256'd0;
-                        for (k = 0; k < 7; k = k + 1) dr[k] <= 256'd0;
-                        d_desc <= 1792'd0; d_n <= 147'd0; pend_x <= 7'd0; pend_n <= 7'd0; have_i <= h_opnd[6];
+                        clr_q <= 1'b1;                                 // d_sut / dr / d_desc / d_n clear next edge
+                        pend_x <= 7'd0; pend_n <= 7'd0; have_i <= h_opnd[6];
                         wk <= 5'd1;
                     end
                 end else begin                                         // ---- read words 1 .. rlen-1
