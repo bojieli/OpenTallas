@@ -214,7 +214,7 @@ class Elements:
         self.area_path = self.state / 'element_area.json'
         try: self.area = json.loads(self.area_path.read_text())
         except Exception: self.area = {}
-        self.lock = threading.Lock(); self.data = dict(t=0, rows=[], summary={}, cats=CATS, targets=TARGETS); self.ver = 0
+        self.err = None; self.lock = threading.Lock(); self.data = dict(t=0, rows=[], summary={}, cats=CATS, targets=TARGETS); self.ver = 0
         self.md_t = 0
         threading.Thread(target=self.run, daemon=True, name='elements').start()
         threading.Thread(target=self.area_loop, daemon=True, name='elements-area').start()
@@ -475,10 +475,11 @@ class Elements:
             try:
                 d = self.compute()
                 with self.lock:
-                    self.data = d; self.ver += 1
+                    self.data = d; self.ver += 1; self.err = None
                 if time.time() - self.md_t >= self.md_period:
                     self.md_t = time.time(); self.write_md(d)
             except Exception as e:
+                self.err = '%s: %s' % (type(e).__name__, e)   # served as a freshness flag; the last good table stays, marked stale
                 self.log('elements: %s' % e)
             time.sleep(self.period)
 

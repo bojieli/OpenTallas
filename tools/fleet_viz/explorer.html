@@ -194,6 +194,7 @@ table.t tr.cl:hover{background:#121a30}
   <div class="search"><input type="search" id="q" placeholder="Search element, master, alias or instance" autocomplete="off" aria-label="Search"><div id="sres" hidden></div></div>
   <a class="back" id="tokenl" href="/explorer/token/">Token path &rarr;</a>
   <a class="back" id="covl" href="/explorer/coverage/">Coverage &rarr;</a>
+  <span class="fv-age" id="fvAge" title="age of the closure status shown"></span>
   <span class="safe" id="safeb" hidden title="share-safe view: names are replaced by decoded aliases">SAFE VIEW</span>
 </div>
 <div class="layout">
@@ -215,6 +216,7 @@ table.t tr.cl:hover{background:#121a30}
 </div>
 <div id="tip" hidden></div>
 <div id="story" hidden><div class="in"><button class="btn x" type="button" id="storyX">Close</button><div id="storyC"></div></div></div>
+<script src="/fv_stale.js"></script>
 <script src="/explorer_story.js"></script>
 <script src="/explorer.js"></script>
 </body>

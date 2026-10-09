@@ -16,6 +16,7 @@
   <nav class="links"><a class="nav" href="/explorer">Chip Explorer</a><a class="nav" href="/explorer/token/">Token path</a></nav>
 </header>
 <main>
+  <div class="status"><span class="fv-age" id="fvAge"></span></div>
   <div id="status" class="status" role="status" aria-live="polite">loading…</div>
   <section id="cards" class="cards" aria-label="Targets"></section>
   <section id="ownerless" class="panel warn" aria-label="Ownerless gaps"></section>
@@ -28,6 +29,7 @@
   </section>
 </main>
 <aside id="drawer" class="drawer" hidden aria-label="Cell detail"><button class="x" id="dx" aria-label="Close">×</button><div id="dbody"></div></aside>
+<script src="/fv_stale.js"></script>
 <script type="module" src="./coverage.js"></script>
 </body>
 </html>

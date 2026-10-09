@@ -39,8 +39,13 @@ function when(t){ if (!t) return '—'; const d = new Date(t * 1000); return d.t
 function ago(t){ if (!t) return ''; const s = Date.now() / 1000 - t; return s < 90 ? Math.round(s) + ' s ago' : s < 5400 ? Math.round(s / 60) + ' min ago' : s < 172800 ? (s / 3600).toFixed(1) + ' h ago' : Math.round(s / 86400) + ' d ago'; }
 
 /* ------------------------------------------------------------------ meta */
+const FV = window.FVStale || null;   // staleness guard (fv_stale.js)
+let metaOK = null, metaT = null, visibleAt = Date.now() / 1000;
 async function loadMeta(){
-  const m = await getJSON('/api/explorer/meta?' + QS);
+  let m;
+  try { m = FV ? await FV.getJSON('/api/explorer/meta?' + QS, 20000) : await getJSON('/api/explorer/meta?' + QS); }
+  catch (e){ if (FV) FV.issue('meta', 'explorer data: ' + e.message + (metaOK ? ` (last good ${FV.hms(metaOK)})` : ''), metaOK); throw e; }
+  if (FV){ FV.clear('meta'); FV.payload(m, ['elements', 'explorer'], 'src'); metaOK = Date.now() / 1000; if (m.t) metaT = FV.toClient(m.t); }
   if (m.warming){ $('busy').textContent = 'Explorer is warming up (first element scan)…'; setTimeout(loadMeta, 3000); return; }
   const first = !S.meta; S.meta = m;
   S.elByName = new Map(m.elements.map(e => [e.element, e]));
@@ -696,4 +701,15 @@ window.addEventListener('hashchange', () => { const h = hash();
 measure();
 loadMeta().catch(e => { $('busy').textContent = 'Explorer failed to load: ' + e.message; });
 setInterval(() => { if (!document.hidden) loadMeta().catch(() => {}); }, 60000);
+if (FV){
+  // every view that shows closure status goes grey and hatched while its data is stale
+  FV.panel('explorer', [$('center'), $('left'), $('right')], ['meta', 'meta-late', 'src:elements', 'src:explorer']);
+  FV.stamp($('fvAge'), () => metaT, 120, 300, 'status ');
+  document.addEventListener('visibilitychange', () => { if (!document.hidden){ visibleAt = Date.now() / 1000; loadMeta().catch(() => {}); } });
+  setInterval(() => {   // the 60 s refresh itself went quiet (timer stalled, or every retry hung)
+    const n = Date.now() / 1000;
+    if (document.hidden || n - visibleAt < 25 || metaOK == null) return;
+    if (n - metaOK > 2 * 60 + 15) FV.issue('meta-late', `explorer data: no successful refresh for ${Math.round(n - metaOK)}s`, metaOK); else FV.clear('meta-late');
+  }, 5000);
+}
 })();

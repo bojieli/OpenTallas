@@ -3,7 +3,7 @@
 set -euo pipefail
 src=$(cd "$(dirname "$0")" && pwd); dst=$HOME/.local/share/fleet-viz
 mkdir -p "$dst" "$HOME/.config/systemd/user"
-cp "$src"/{server.py,agent.py,recorder.py,elements.py,export_replay.py,index.html,fleet_hosts.json} "$dst"/
+cp "$src"/{server.py,agent.py,recorder.py,elements.py,export_replay.py,index.html,fv_stale.js,fleet_hosts.json} "$dst"/
 cp "$src"/{coverage.py,explorer.py,explorer_geom.py,explorer.html,explorer.js,explorer_story.js,explorer_dies.json,explorer_names.json,explorer_compose.json,stories_import.py} "$dst"/
 mkdir -p "$dst/stories" "$dst/explorer"
 cp "$src"/stories/*.json "$dst/stories/"

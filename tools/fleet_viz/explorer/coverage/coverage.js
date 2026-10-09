@@ -243,17 +243,43 @@ function drawer() {
 
 // ------------------------------------------------------------------ load / refresh
 function render() { writeHash(); cards(); streams(); filters(); renderTable(); drawer(); }
+// staleness guard (fv_stale.js): a failed / timed-out fetch, or a flagged source, raises the red banner and hatches the panels
+const FV = window.FVStale || null;
+let covOK = null, elT = null, visibleAt = Date.now() / 1000;
+const getCov = async (u, ms) => {
+  if (FV) return FV.getJSON(u, ms);
+  const r = await fetch(u, { cache: 'no-store' }); const m = await r.json(); if (!r.ok) throw new Error(m.error || r.status); return m;
+};
+function fresh(m) {
+  if (!FV) return;
+  FV.payload(m, ['elements', 'coverage'], 'src'); covOK = Date.now() / 1000;
+  const e = m.fresh && m.fresh.sources && m.fresh.sources.elements;
+  if (e && e.t) elT = FV.toClient(e.t);
+}
+if (FV) {
+  FV.panel('coverage', [...document.querySelectorAll('main > section'), $('drawer')], ['cov', 'cov-ver', 'cov-late', 'src:elements', 'src:coverage']);
+  FV.stamp($('fvAge'), () => elT, 180, 600, 'element status updated ');
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { visibleAt = Date.now() / 1000; load(); } });
+  setInterval(() => {   // the 20 s version poll went quiet
+    const n = Date.now() / 1000;
+    if (document.hidden || n - visibleAt < 25 || covOK == null) return;
+    if (n - covOK > 2 * 20 + 10) FV.issue('cov-late', `coverage data: no successful refresh for ${Math.round(n - covOK)}s`, covOK); else FV.clear('cov-late');
+  }, 5000);
+}
 async function load(force) {
   try {
-    const r = await fetch('/api/coverage', { cache: 'no-store' });
-    const m = await r.json();
-    if (!r.ok || m.error && !m.rows) throw new Error(m.error || r.status);
+    let m;
+    try { m = await getCov('/api/coverage', 30000); }
+    catch (e) { if (FV) FV.issue('cov', 'coverage data: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); throw e; }
+    if (m.error && !m.rows) { if (FV) FV.issue('cov', 'coverage data: ' + m.error, covOK); throw new Error(m.error); }
+    if (FV) FV.clear('cov');
+    fresh(m);
     const first = !M;
     M = m; V = m.v;
     if (first) ownerless();
     else ownerless();
     render();
-    $('status').replaceChildren('source ', h('b', {}, m.source), ` · matrix v ${m.v} loaded ${m.loaded} · element status ${new Date(m.live_t * 1000).toLocaleTimeString()} · `,
+    $('status').replaceChildren('source ', h('b', {}, m.source), ` · matrix v ${m.v} loaded ${m.loaded} · element status as of ${elT ? new Date(elT * 1000).toLocaleTimeString() : new Date(m.live_t * 1000).toLocaleTimeString()} · `,
       `${m.rows.length} rows, ${Object.values(m.targets).reduce((a, x) => a + x.nodes, 0)} ledger nodes · refreshes on every ledger change`,
       m.error ? h('span', { class: 'err' }, ' · ' + m.error) : '');
   } catch (e) {
@@ -269,9 +295,11 @@ let tick = 0;
 setInterval(async () => {
   tick++;
   try {
-    const r = await fetch('/api/coverage/version', { cache: 'no-store' });
-    const v = (await r.json()).v;
+    const d = await getCov('/api/coverage/version', 10000);
+    if (FV) FV.clear('cov-ver');
+    fresh(d);
+    const v = d.v;
     if (v && v !== V) return load();
-  } catch (e) { /* server restarting */ }
+  } catch (e) { if (FV) FV.issue('cov-ver', 'coverage feed: ' + e.message + (covOK ? ` (last good ${FV.hms(covOK)})` : ''), covOK); }
   if (tick % 3 === 0) load();
 }, 20000);

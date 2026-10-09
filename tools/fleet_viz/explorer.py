@@ -82,7 +82,7 @@ class Explorer:
                 self.export_err[d['id']] = 'recipe commit: %s' % e; continue
             self.want[d['id']] = key
             c = self.load_geom(d['id'])
-            if (c is None or c['key'] != key) and self.exporting is None:
+            if (c is None or c['key'] != key) and self.exporting is None and not os.environ.get('FLEET_VIZ_NO_EXPORT'):   # off in test instances
                 self.export(d['id'], key)
 
     def export(self, die_id, key):
