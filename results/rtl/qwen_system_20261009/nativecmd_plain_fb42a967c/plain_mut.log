@@ -1,0 +1,3 @@
+PASS nativecmd positive commands73 full32bank/col, finite8slots, DESC/GO pulse order, causal fence, readcredits
+PASS nativecmd negatives zero/oversizedDESC orphanGO duplicatecredit premature-retire failclosed
+rtl/tb_qfd_native_cmd_plain.sv:57: $finish called at 1300000 (1ps)
