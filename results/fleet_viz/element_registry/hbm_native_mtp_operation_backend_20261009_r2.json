@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hbm_native_mtp_operation_backend",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Full201 native6-operation lowering onto two actual16SM CP halves, sourceordered11kernel entries",
+      "source": {
+        "commit": "283eeb96c",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_operation_model.py",
+          "tools/hbm_native_mtp_operation_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_14VECTORS",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_INVALID_MISSING_UE_REJECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_FRESH_CP_SOUTH_BINDING",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "fullshape sourceproduced elevenkernel images/linkedPCs",
+        "actual32SM done/results/resetquiescence",
+        "fullcontrollerstate protection",
+        "fresh CPsouth backend+guard+queue integration"
+      ],
+      "integration": {
+        "status": "PASS_MINIMUM_CONTROL_PRODUCTION_KERNELS_PENDING",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_r4_verdict.json"
+        ]
+      }
+    },
+    {
+      "element": "hbm_native_mtp_protected_cmdproc20",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Additive real CP successor with SECDED command memory and fetch/execute storage",
+      "source": {
+        "commit": "283eeb96c",
+        "paths": [
+          "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20_protected.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/gpu_sys/ds_hbm_full20/ot_ds_hbm_cmdproc20_protected.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "evidence": [
+          "tools/hbm_native_mtp_operation_model.py",
+          "tools/hbm_native_mtp_operation_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_14VECTORS",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_INVALID_MISSING_UE_REJECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "PENDING_FRESH_CP_SOUTH_BINDING",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "fullshape sourceproduced elevenkernel images/linkedPCs",
+        "actual32SM done/results/resetquiescence",
+        "fullcontrollerstate protection",
+        "fresh CPsouth backend+guard+queue integration"
+      ],
+      "integration": {
+        "status": "PASS_MINIMUM_CONTROL_PRODUCTION_KERNELS_PENDING",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_r4_verdict.json"
+        ]
+      }
+    }
+  ]
+}

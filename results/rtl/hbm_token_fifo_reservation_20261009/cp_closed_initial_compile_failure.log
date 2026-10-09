@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/tools/hbm_native_mtp_cp_closed_gate.py", line 9, in <module>
+    if b.returncode:raise RuntimeError(b.stderr)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:7: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:1: error: Syntax error in variable list.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:19: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:19: error: Invalid port connection expression.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: syntax error
+/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/rtl/test/hbm_accel/tb_hbm_native_mtp_cp_closed_control.sv:47: Syntax in assignment statement l-value.
+
