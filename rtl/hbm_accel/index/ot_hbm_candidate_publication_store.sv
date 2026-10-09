@@ -68,65 +68,65 @@ reg[0:0] ce_q_n;
  always @(posedge clk or negedge por_n)begin
  if(!por_n)begin
  st<=IDLE;st_n<=~IDLE;live<=0;live_n<=1;frame<=0;frame_n<=~{OWNER_W{1'b0}};
- published<=0;published_n<=~96'd0;failed<=0;failed_n<=~(0);rank_q<=0;rank_q_n<=~(0);bank_q<=0;bank_q_n<=~(0);address_q<=0;address_q_n<=~(0);slot_q<=0;slot_q_n<=~(0);
- ordinal_q<=0;ordinal_q_n<=~(0);payload_q<=0;payload_q_n<=~(0);final_q<=0;final_q_n<=~(0);tuple_q<=0;tuple_q_n<=~(0);last_q<=0;last_q_n<=~(0);empty_q<=0;empty_q_n<=~(0);ce_q<=0;ce_q_n<=~(0);
+ published<=0;published_n<=~96'd0;begin failed<=0;failed_n<=~(0); endbegin rank_q<=0;rank_q_n<=~(0); endbank_q<=0;bank_q_n<=~(0);begin address_q<=0;address_q_n<=~(0); endslot_q<=0;slot_q_n<=~(0);
+ begin ordinal_q<=0;ordinal_q_n<=~(0); endpayload_q<=0;payload_q_n<=~(0);begin final_q<=0;final_q_n<=~(0); endtuple_q<=0;tuple_q_n<=~(0);begin last_q<=0;last_q_n<=~(0); endempty_q<=0;empty_q_n<=~(0);begin ce_q<=0;ce_q_n<=~(0); end
  for(integer r=0;r<96;r=r+1)begin count[r]<=0;count_n[r]<=~7'd0;quarter[r]<=0;quarter_n[r]<=3;beat[r]<=0;beat_n[r]<=31;end
  end else if(ENABLE)begin
- if(!control_ok||(|bf)||(live&&!lease_ok))failed<=1;failed_n<=~(1);
+ if(!control_ok||(|bf)||(live&&!lease_ok))begin failed<=1;failed_n<=~(1); end
  if(retire&&live)begin
- if(st!=READY||consumer_retained||!publication_complete)failed<=1;failed_n<=~(1);
+ if(st!=READY||consumer_retained||!publication_complete)begin failed<=1;failed_n<=~(1); end
  else begin live<=0;live_n<=1;st<=IDLE;st_n<=~IDLE;end
  end else if(safe)case(st)
  IDLE:if(start&&start_r)begin
- if(!owner_valid||start_frame!=owner_frame)failed<=1;failed_n<=~(1);
+ if(!owner_valid||start_frame!=owner_frame)begin failed<=1;failed_n<=~(1); end
  else begin live<=1;live_n<=0;frame<=start_frame;frame_n<=~start_frame;published<=0;published_n<=~96'd0;
  for(integer r=0;r<96;r=r+1)begin count[r]<=0;count_n[r]<=~7'd0;quarter[r]<=0;quarter_n[r]<=3;beat[r]<=0;beat_n[r]<=31;end
  st<=READY;st_n<=~READY;end
  end
  READY:begin
  if(flit_v&&flit_r)begin
- if(flit_owner!=frame||flit[544]!=expected_kind||flit[543:536]!=expected_dst||flit[535:528]>=96||flit[510])failed<=1;failed_n<=~(1);
- else if(published[flit[535:528]]||flit[527:526]!=quarter[flit[535:528]]||flit[525:512]!=beat[flit[535:528]]||beat[flit[535:528]]>=23||count[flit[535:528]]>=92)failed<=1;failed_n<=~(1);
+ if(flit_owner!=frame||flit[544]!=expected_kind||flit[543:536]!=expected_dst||flit[535:528]>=96||flit[510])begin failed<=1;failed_n<=~(1); end
+ else if(published[flit[535:528]]||flit[527:526]!=quarter[flit[535:528]]||flit[525:512]!=beat[flit[535:528]]||beat[flit[535:528]]>=23||count[flit[535:528]]>=92)begin failed<=1;failed_n<=~(1); end
  else begin
- rank_q<=flit[535:528];rank_q_n<=~(flit[535:528]);payload_q<=flit[511:0];payload_q_n<=~(flit[511:0]);final_q<=flit[511];final_q_n<=~(flit[511]);
- a=int'(flit[535:528])*92+int'(count[flit[535:528]]);bank_q<=7'(a>>7);bank_q_n<=~(7'(a>>7));address_q<=7'(a);address_q_n<=~(7'(a));
+ begin rank_q<=flit[535:528];rank_q_n<=~(flit[535:528]); endpayload_q<=flit[511:0];payload_q_n<=~(flit[511:0]);begin final_q<=flit[511];final_q_n<=~(flit[511]); end
+ a=int'(flit[535:528])*92+int'(count[flit[535:528]]);begin bank_q<=7'(a>>7);bank_q_n<=~(7'(a>>7)); endaddress_q<=7'(a);address_q_n<=~(7'(a));
  st<=WREQ;st_n<=~WREQ;end
  end else if(empty_v&&empty_r)begin
- if(empty_frame!=frame||empty_rank>=96)failed<=1;failed_n<=~(1);
- else if(published[empty_rank]||count[empty_rank]!=0)failed<=1;failed_n<=~(1);
+ if(empty_frame!=frame||empty_rank>=96)begin failed<=1;failed_n<=~(1); end
+ else if(published[empty_rank]||count[empty_rank]!=0)begin failed<=1;failed_n<=~(1); end
  else begin published[empty_rank]<=1;published_n[empty_rank]<=0;end
  end else if(read_v&&read_r)begin
- if(read_frame!=frame||read_rank>=96)failed<=1;failed_n<=~(1);
- else if(count[read_rank]!=0&&read_ordinal>=17'(count[read_rank])*15)failed<=1;failed_n<=~(1);
- else if(count[read_rank]==0&&read_ordinal!=0)failed<=1;failed_n<=~(1);
+ if(read_frame!=frame||read_rank>=96)begin failed<=1;failed_n<=~(1); end
+ else if(count[read_rank]!=0&&read_ordinal>=17'(count[read_rank])*15)begin failed<=1;failed_n<=~(1); end
+ else if(count[read_rank]==0&&read_ordinal!=0)begin failed<=1;failed_n<=~(1); end
  else begin
- rank_q<=read_rank;rank_q_n<=~(read_rank);ordinal_q<=read_ordinal;ordinal_q_n<=~(read_ordinal);empty_q<=count[read_rank]==0;empty_q_n<=~(count[read_rank]==0);ce_q<=0;ce_q_n<=~(0);
- last_q<=count[read_rank]==0||read_ordinal+1==17'(count[read_rank])*15;last_q_n<=~(count[read_rank]==0||read_ordinal+1==17'(count[read_rank])*15);
- if(count[read_rank]==0)begin tuple_q<=0;tuple_q_n<=~(0);st<=RESPONSE;st_n<=~RESPONSE;end
- else begin a=int'(read_rank)*92+int'(read_ordinal)/15;bank_q<=7'(a>>7);bank_q_n<=~(7'(a>>7));address_q<=7'(a);address_q_n<=~(7'(a));slot_q<=4'(read_ordinal%15);slot_q_n<=~(4'(read_ordinal%15));st<=RREQ;st_n<=~RREQ;end
+ begin rank_q<=read_rank;rank_q_n<=~(read_rank); endordinal_q<=read_ordinal;ordinal_q_n<=~(read_ordinal);begin empty_q<=count[read_rank]==0;empty_q_n<=~(count[read_rank]==0); endce_q<=0;ce_q_n<=~(0);
+ begin last_q<=count[read_rank]==0||read_ordinal+1==17'(count[read_rank])*15;last_q_n<=~(count[read_rank]==0||read_ordinal+1==17'(count[read_rank])*15); end
+ if(count[read_rank]==0)begin begin tuple_q<=0;tuple_q_n<=~(0); endst<=RESPONSE;st_n<=~RESPONSE;end
+ else begin a=int'(read_rank)*92+int'(read_ordinal)/15;begin bank_q<=7'(a>>7);bank_q_n<=~(7'(a>>7)); endaddress_q<=7'(a);address_q_n<=~(7'(a));begin slot_q<=4'(read_ordinal%15);slot_q_n<=~(4'(read_ordinal%15)); endst<=RREQ;st_n<=~RREQ;end
  end
  end
  end
  WREQ:if(br[bank_q])begin st<=WWAIT;st_n<=~WWAIT;end
  WWAIT:if(bv[bank_q])begin
- if(bp[bank_q]||!bw[bank_q])failed<=1;failed_n<=~(1);
+ if(bp[bank_q]||!bw[bank_q])begin failed<=1;failed_n<=~(1); end
  else begin
  count[rank_q]<=count[rank_q]+1'b1;count_n[rank_q]<=~(count[rank_q]+1'b1);
  if(final_q)begin beat[rank_q]<=0;beat_n[rank_q]<=31;
  if(quarter[rank_q]==3)begin published[rank_q]<=1;published_n[rank_q]<=0;end
  else begin quarter[rank_q]<=quarter[rank_q]+1'b1;quarter_n[rank_q]<=~(quarter[rank_q]+1'b1);end
- end else if(beat[rank_q]==22)failed<=1;failed_n<=~(1);
+ end else if(beat[rank_q]==22)begin failed<=1;failed_n<=~(1); end
  else begin beat[rank_q]<=beat[rank_q]+1'b1;beat_n[rank_q]<=~(beat[rank_q]+1'b1);end
  st<=READY;st_n<=~READY;
  end
  end
  RREQ:if(br[bank_q])begin st<=RWAIT;st_n<=~RWAIT;end
  RWAIT:if(bv[bank_q])begin
- if(bp[bank_q]||bw[bank_q])failed<=1;failed_n<=~(1);
- else begin tuple_q<=bd[bank_q][34*slot_q+:34];tuple_q_n<=~(bd[bank_q][34*slot_q+:34]);ce_q<=bc[bank_q];ce_q_n<=~(bc[bank_q]);st<=RESPONSE;st_n<=~RESPONSE;end
+ if(bp[bank_q]||bw[bank_q])begin failed<=1;failed_n<=~(1); end
+ else begin begin tuple_q<=bd[bank_q][34*slot_q+:34];tuple_q_n<=~(bd[bank_q][34*slot_q+:34]); endce_q<=bc[bank_q];ce_q_n<=~(bc[bank_q]);st<=RESPONSE;st_n<=~RESPONSE;end
  end
  RESPONSE:if(rsp_r)begin st<=READY;st_n<=~READY;end
- default:failed<=1;failed_n<=~(1);
+ default:begin failed<=1;failed_n<=~(1); end
  endcase
  end
  end
