@@ -36,6 +36,15 @@
     "overlapping_same_row_anchor_intervals": 4560,
     "peak_KiB": 2280776,
     "elapsed_seconds": 10.27,
-    "finding": "Literal failed-ODB anchors already overlap. Freezing these seats makes legalization infeasible independent of movement/density. Actual pin/anchor contract must distinguish illegal saved seats from required geometric constraints. No canonical SR requeue."
+    "finding": "4560 raw-origin intervals include mirrored-origin artifacts; preserved history only. Use transformed physical bbox successor.",
+    "status": "SUPERSEDED_FOR_PHYSICAL_OVERLAP_COUNT"
+  },
+  "read_only_anchor_bbox_audit": {
+    "anchor_count": 12161,
+    "physical_same_row_overlapping_intervals": 181,
+    "peak_KiB": 2286884,
+    "elapsed_seconds": 10.63,
+    "geometry": "actual transformed dbInst.getBBox xMin/xMax/yMin",
+    "finding": "181 real required-anchor overlaps in frozen failed database. Exact literal fixed coordinates remain infeasible, independent of move limit/density."
   }
 }
