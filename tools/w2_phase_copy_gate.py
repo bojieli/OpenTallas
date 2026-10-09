@@ -14,10 +14,10 @@ integer k;
 initial begin
 repeat(2)@(negedge clk);por_n=1;
 for(k=0;k<40&&!normal;k=k+1)@(negedge clk);
-if(!normal||fault||q!==0)$fatal(1,"boot");
+if(normal!==1'b1||fault!==1'b0||q!==0)$fatal(1,"boot");
 force dut.word[16].lph.u_phase.q=4'b1010;
 for(k=0;k<6&&!fault;k=k+1)@(negedge clk);
-if(!fault||normal)$fatal(1,"unchecked phase selection replica escaped");
+if(fault!==1'b1||normal!==1'b0)$fatal(1,"unchecked phase selection replica escaped");
 $display("PASS full37word localphase selection upset");$finish;
 end
 initial begin #5000;$fatal(1,"timeout");end

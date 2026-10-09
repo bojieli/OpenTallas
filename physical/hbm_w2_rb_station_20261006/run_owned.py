@@ -111,7 +111,7 @@ def endpoint(block, work, case):
                 basis='exact rb station host map, attributes/kept hierarchy and physical ties retained')
 
 
-def pins(regions):
+def pins(regions, exhaustive=False, die_area_um=None):
     pat = {'^(clk_sm|por_n|release_held|in_.*|release_.*)$': 'clk_sm por_n release_held in_* release_*',
            '^(fclk_o|out_.*|ACK_.*|fault|drained|paused)$': 'fclk_o out_* ACK_* fault drained paused'}
     return '\n'.join('set_io_pin_constraint -region '+r['edge']+':* -pin_names {'+pat[r['regex']]+'}' for r in regions)+'\n'

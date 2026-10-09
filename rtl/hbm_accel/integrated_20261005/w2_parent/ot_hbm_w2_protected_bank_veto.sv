@@ -83,6 +83,10 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  wire [WORDS-1:0] same,bad,cbad,ce,ue,clean,input_bad;
  wire [71:0] snap[0:WORDS-1];
  wire [7:0] syn[0:WORDS-1];
+ // Declare shared drivers before the generate scope: otherwise implicit
+ // one-bit local nets can shadow the next-state signals in Verilog.
+ wire freeze=failed || failed==failed_n || f2 || fatal;
+ reg [2:0] phase_next;reg sel_next;
  for(genvar g=0;g<WORDS;g=g+1)begin:word
   wire [63:0] hi=raw64(snapshot_hi[g]);
   wire [63:0] status=raw64(syndrome[g]);
@@ -137,7 +141,6 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
   assign m_clean=s_clean;assign m_ph=s_ph;assign m_ctlbad=s_ctlbad;
   for(genvar w=0;w<WORDS;w=w+1)begin:qm assign q_m[w]=d1_seat[w];end
  end endgenerate
- wire freeze=failed || failed==failed_n || f2 || fatal;
  assign fault=failed || failed==failed_n || f2;
  assign normal=n2 && phase==P_EVAL && !failed && failed_n && !fatal;
  assign repairing=!fault && !normal;
@@ -147,7 +150,6 @@ module ot_hbm_w2_protected_bank_veto_on #(parameter integer WORDS=1, STAGE=1, DI
  wire d_check=settled && !same2;
  wire d_repair=settled && same2 && ce2;
  assign d_commit=settled && same2 && !ce2 && normal && load;
- reg [2:0] phase_next;reg sel_next;
  always @*begin
   phase_next=phase;sel_next=(phase==P_COMMIT||phase==P_PCOMMIT)&&sel_bit;
   if(!freeze)case(phase)
