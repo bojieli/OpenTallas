@@ -326,6 +326,12 @@ class Elements:
                         raise ValueError('record requires source.paths')
                     if record.get('target') not in TARGETS:
                         raise ValueError('record requires canonical target')
+                    for field in ('recorded_at', 'owner', 'description'):
+                        if field in record and not isinstance(record[field], str):
+                            raise ValueError('%s must be a string' % field)
+                    if 'dependencies' in record and (not isinstance(record['dependencies'], list) or
+                            not all(isinstance(x, str) for x in record['dependencies'])):
+                        raise ValueError('dependencies must be a list of strings')
                     for field in ('implementation', 'model', 'exactness', 'physical', 'integration'):
                         if field in record and not isinstance(record[field], dict):
                             raise ValueError('%s must be an object' % field)
