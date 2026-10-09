@@ -7,7 +7,7 @@
       "owner": "candidate_store",
       "description": "Actual SECDED native candidate payload bank",
       "source": {
-        "commit": "a54dd9b39",
+        "commit": "136b04259",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
         ]
@@ -26,16 +26,22 @@
       },
       "exactness": {
         "positive": {
-          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
-          "evidence": []
+          "status": "PASS actual full-depth128writes/128reads512b with3realSRAMmacros",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/bank_v18/record.json",
+            "results/rtl/hbm_candidate_store_20261009/bank_v18/run0.log"
+          ]
         },
         "negative": {
-          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
-          "evidence": []
+          "status": "PASS gate sensitivity: same-source MUT_PAYLOAD1 wrong transport after128writes fails firstread with EXIT1",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/bank_v18/record.json",
+            "results/rtl/hbm_candidate_store_20261009/bank_v18/run1.log"
+          ]
         }
       },
       "physical": {
-        "status": "Claude phys-intake exclusive; standalone full-depth bank recipe prepared, no route submitted",
+        "status": "V18 authorized standalone bank route after proven gate; READY handed to Claude phys-intake, no queuehandle yet",
         "corners": {},
         "evidence": [
           "physical/hbm_candidate_store_pathfinding/recipe.json"
