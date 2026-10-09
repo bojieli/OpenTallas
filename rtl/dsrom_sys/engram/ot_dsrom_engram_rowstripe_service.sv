@@ -3,7 +3,8 @@
 // holds the lookup's advertised eight credits, including its one pin capture
 // in flight. A credit returns only when the read adapter reserves a row/PC.
 // This service and boot_path need an explicit phase/ownership mux before ctrl.
-module ot_dsrom_engram_rowstripe_service (
+module ot_dsrom_engram_rowstripe_service #(parameter integer CANONICAL=0,parameter integer APERTURE=0) (
+    input wire [64*30-1:0] pc_base,pc_limit,
     input wire ck,rst_n,input wire hq_v,input wire [30:0] hq_atom,input wire [2:0] hq_tag,
     output reg hq_cred,output wire [64*341-1:0] rq,input wire [2*8896-1:0] rd,
     output wire hr_v,output wire [2:0] hr_tag,output wire [3:0] hr_idx,output wire [255:0] hr_d,
@@ -30,7 +31,7 @@ module ot_dsrom_engram_rowstripe_service (
             end
         end
     end
-    ot_dsrom_engram_rowstripe_read u_read(.ck(ck),.rst_n(rst_n),
+    ot_dsrom_engram_rowstripe_read #(.CANONICAL(CANONICAL),.APERTURE(APERTURE)) u_read(.ck(ck),.rst_n(rst_n),.pc_base(pc_base),.pc_limit(pc_limit),
         .hq_valid(count!=0&&!queue_fault),.hq_ready(ready),.hq_atom(fifo[rp][33:3]),.hq_len(4'd9),.hq_tag(fifo[rp][2:0]),
         .rq(rq),.rd(rd),.hr_valid(hr_v),.hr_ready(1'b1),.hr_tag(hr_tag),.hr_idx(hr_idx),.hr_data(hr_d),.ce(),.fault(read_fault));
     assign fault=queue_fault|read_fault;
