@@ -42,7 +42,8 @@ foreach i [$ws_blk getInsts] {
 # hbm-forks 2026-10-09: a one-stage chain's register drives the module output directly and synthesis names it after
 # that output (<chain>.q[*], <chain>.qv): those chains were never fenced (svc PS: the W/E cross-bus input stage of
 # c_sd / c_dd / c_wd chains sat at the destination unit, routed TT -47 .. -84 ps from the face pin).  Treat them as
-# the stage after the highest st[] stage of the chain (stage 0 when the chain has none).
+# the chain's LAST stage: N - 1 with N from its rv[] / st[] names (rv is one vector, every bit kept), stage 0 when the
+# chain has no other register (N = 1, rv itself renamed qv).
 array set ws_q {}
 foreach i [$ws_blk getInsts] {
   set n [string map {"\\" ""} [$i getName]]
@@ -51,7 +52,7 @@ foreach i [$ws_blk getInsts] {
   }
 }
 foreach c [array names ws_q] {
-  set k [expr {[info exists ws_n($c)] ? $ws_n($c) : 0}]
+  set k [expr {[info exists ws_n($c)] ? $ws_n($c) - 1 : 0}]
   foreach i $ws_q($c) { lappend ws_st($c,$k) $i; set ws_chain([$i getName]) $c }
   set ws_n($c) [expr {$k + 1}]
 }
