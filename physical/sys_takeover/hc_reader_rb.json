@@ -1,0 +1,7 @@
+{"src": "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_input_reader.sv", "module": "ot_dsrom_hc_input_reader",
+ "core": "ot_dsrom_hc_input_reader_core", "clk": "clk", "reset": "rst_n",
+ "why": "sys-takeover 2026-10-09: hcreader_plain_a-586d1bb3f TT -737 = rsp_data pin -> bad_bf16 OR -> 2,048-flop row-capture enable (input->reg) and half_q -> 512-b mean_residuals mux -> pin (reg->out). Registered boundary: cmd / mean_cmd / req / mean handshakes through pin FIFOs, every other input and output flopped (+1 / +1).",
+ "in_hs": [{"v": "cmd_valid", "r": "cmd_ready", "data": ["cmd_capture", "cmd_user", "cmd_position", "cmd_epoch", "cmd_h_row", "cmd_rank", "cmd_region_rows"]}],
+ "out_hs": [{"v": "mean_cmd_valid", "r": "mean_cmd_ready", "data": ["mean_cmd_capture", "mean_cmd_user", "mean_cmd_position", "mean_cmd_epoch"]},
+            {"v": "req_valid", "r": "req_ready", "data": ["req_row"]},
+            {"v": "mean_valid", "r": "mean_ready", "data": ["mean_beat", "mean_residuals"]}]}
