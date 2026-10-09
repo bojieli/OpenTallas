@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.qwen.protected_phy.component_gate.v1",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_pc.sv": "e62e88b4e33ac2ebb720e101f36ce946b7cbdd9c07f857b4a2cff6c979644ef5",
+    "bench/emb_hbm_20261008/tb_qfd_protected_phy.sv": "d6c1fed099e572bb4c46d5df0be260428d020ca52273fefa6820b87c97c912b1",
+    "rtl/hdc/kv/ot_hdc_hbm_model.sv": "d19116e6485266aef997ae52c82a46421267f5de9bb6d0b380d7348b30ffd57d",
+    "rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv": "4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+    "physical/asap7_memory_macros_v2_ew/ot_hbm3e_phy/ot_hbm3e_phy_bb.v": "6c50696a532d19c9264bcc6451ceae271969bdcc57fb0d4d68d672126f30b688"
+  },
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_gates_r3.sh",
+  "positive": "PASS 64WR +64RD",
+  "default_off": "PASS",
+  "tag16_rollover": "PASS ordinary modulo16 tags withoneoutstanding read, noepoch oridentityprotection",
+  "negative_expected_FAIL": [
+    "wrong returnedtag",
+    "wrong returnedPC",
+    "datareadback visibility mismatch",
+    "calleroutside logicaldataregions"
+  ],
+  "payload_format": "fourSECDED72 words bijectivelysplit into256data and32checkbits packed8checks/sidecarsector",
+  "metadata": "capturescalleractualissue row/bank/col/class/sector17/lrow8/ID64; actual native issue m_p2l binding OPEN",
+  "source_address_contract": "ot_hdc_hbm_model NPC32 AW31 ROW_SHIFT15 inversepermutation explicitlytestedtargetPC7",
+  "historical_failures": [
+    "r1 QD8 vsPC_RDY0 LENMAX16 neverready; terminaltimeoutanddiagnostic preserved"
+  ],
+  "historical_success": "r2 beforetag-wrap correction preserved",
+  "physical_qualified": false,
+  "native_JEDEC_binding": false,
+  "allocator_exclusion_qualified": false,
+  "gate_backing_store": "actualmodelMEM_WORDS65521 modulo backing; sparse fixture only, no fullmemorycapacityclaim",
+  "protection_scope": "HBMpayloadSECDED only; transientphase/tag/metadata registersplain",
+  "integration_open": [
+    "native physicalsidecarcommands distinctfromlogicalcount",
+    "solePCwriteowner serialization",
+    "physicalrequestarbiter32PC stack",
+    "allocator/host/bootwriter exclusion for reservedsidecarrows",
+    "nativeactualsector m_p2l capture",
+    "realPHY/controller timing plusSS/FF contextualroute"
+  ]
+}
