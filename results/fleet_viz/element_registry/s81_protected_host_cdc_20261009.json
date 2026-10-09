@@ -26,12 +26,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pendingadmittedremotehostgoldengate",
-          "evidence": []
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_fifo_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending",
-          "evidence": []
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_fifo_component/receipt.json"
+          ]
         }
       },
       "physical": {
@@ -74,12 +78,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pendingadmittedremotehostgoldengate",
-          "evidence": []
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending",
-          "evidence": []
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/protected_host_component/receipt.json"
+          ]
         }
       },
       "physical": {
@@ -122,12 +130,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pendingadmittedremotehostgoldengate",
-          "evidence": []
+          "status": "PASS minimum component",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/aperture_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending",
-          "evidence": []
+          "status": "PASS required fault/mutant detected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/aperture_component/receipt.json"
+          ]
         }
       },
       "physical": {
