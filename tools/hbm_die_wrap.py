@@ -277,6 +277,7 @@ def gen(spec, strict=True):
                     n = sum(parse_rng(x)[2] - parse_rng(x)[1] for x in b[4:].split('+'))
                     srcs = srcs[::-1]
                     if n < rw:
+                        rtl_ties.append((inst['name'], rp, 'die_input_zero_padding', rw - n))
                         srcs = [f"{rw - n}'d0"] + srcs
                     assert n <= rw, (inst['name'], rp, n, rw)
                     body.append(f'    assign {w} = {{{", ".join(srcs)}}};')
@@ -287,6 +288,11 @@ def gen(spec, strict=True):
                     pass
                 else:
                   for b1 in (b if isinstance(b, list) else [b]):
+                    mapped = sum(hi - lo for _, lo, hi in (parse_rng(x) for x in b1[4:].split('+')))
+                    if mapped < rw:
+                        rtl_ties.append((inst['name'], rp, 'die_output_truncation', rw - mapped))
+                    elif mapped > rw:
+                        errors.append(f'{inst["name"]}.{rp}: die output bind has {mapped} bits for a {rw}-bit RTL port')
                     off = 0
                     for part in b1[4:].split('+'):
                         port, lo, hi = parse_rng(part)
