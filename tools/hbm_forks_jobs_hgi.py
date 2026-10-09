@@ -44,7 +44,7 @@ def mtp_route(top, hm, args, macro, threads=8, ram=24):
 def seq_bench():
     b = (f"cd {G}/tb && iverilog -g2012 -DSEQ_MACRO -I. -o /tmp/seq_{{NAME}}_$$.vvp -s tb_hgi_seq tb_hgi_seq.sv ../ot_hgi_seq.sv "
          "../../../../physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v {D} && "
-         "vvp -n /tmp/seq_{{NAME}}_$$.vvp | tail -3")
+         "vvp -n /tmp/seq_{NAME}_$$.vvp | tail -3")
     return [dict(name='seq_exact', cmd=b.replace('{D}', ''), expect='pass', pass_regex='HGI_SEQ PASS', threads=1, peak_ram_gb=4),
             dict(name='seq_mut_wait', cmd=b.replace('{D}', '-DOT_HGI_SEQ_MUT_WAIT'), expect='fail', fail_regex='HGI_SEQ FAIL',
                  threads=1, peak_ram_gb=4)]
@@ -70,9 +70,9 @@ def specs(commit):
                 f"--source {G}/ot_hgi_cmdproc.sv --clock-port clk "
                 f"--macro-view ot_sram_2rw_512x64_m4_r2c2={M2RW} --macro-place-halo 6 6 "
                 "--die-area 0 0 420 420 --core-area 10.8 10.8 409.2 409.2")
-        bench = [dict(name='cmdproc_exact', cmd='bash physical/hbm_forks/run_bench.sh cmdproc /tmp/cp_{NAME}', expect='pass',
+        bench = [dict(name='cmdproc_exact', cmd='bash physical/hbm_forks/run_bench.sh cmdproc out_cp', expect='pass',
                       pass_regex='HGI_CMDPROC PASS', threads=1, peak_ram_gb=4),
-                 dict(name='cmdproc_mut_range', cmd='MUT=OT_HGI_MUT_RANGE bash physical/hbm_forks/run_bench.sh cmdproc /tmp/cpm_{NAME}',
+                 dict(name='cmdproc_mut_range', cmd='MUT=OT_HGI_MUT_RANGE bash physical/hbm_forks/run_bench.sh cmdproc out_cpm',
                       expect='fail', fail_regex='HGI_CMDPROC FAIL', threads=1, peak_ram_gb=4)]
         out.append(dict(name=f'hgi_cmdproc-{c9}-tc-{tag}-cl', block='ot_hgi_cmdproc', **common(commit),
                         purpose='hbm-forks item 4: cmdproc config path (busy/settle interlock + range checks, F-2) + '
@@ -143,7 +143,9 @@ def specs(commit):
                                      post_sdc=[], macros=['physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2']),
                         budget=dict(enabled=False, reason='new fork; route-time consistent die-link budget via link_budget_hook'),
                         route_hold_margin_ns=float(hm)))
+    sfx = '-cl2' if '--cl2' in sys.argv else '-cl'
     for s in out:
+        s['name'] = s['name'][:-3] + sfx
         s.setdefault('verdict', dict(corner_sta='{RUN}/routes/{LABEL}/corner_sta.json',
                                      drc_metrics='{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json',
                                      checks=CHK, post_sdc=POST))
