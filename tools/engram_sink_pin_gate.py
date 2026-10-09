@@ -3,7 +3,7 @@
 import hashlib,json,subprocess,tempfile
 from pathlib import Path
 R=Path(__file__).resolve().parents[1]
-paths=[R/'rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv',R/'rtl/dsrom_sys/engram/dsfd_engram_sink.sv',R/'rtl/hdc/v41/ot_hdc_engram_gather.sv',R/'rtl/test/tb_dsrom_engram_sink_pin.sv']
+paths=[R/'rtl/dsrom_sys/engram/ot_dsrom_engram_rowsink.sv',R/'rtl/dsrom_sys/engram/dsfd_engram_sink.sv',R/'rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv',R/'rtl/hdc/v41/ot_hdc_engram_gather.sv',R/'rtl/test/tb_dsrom_engram_sink_pin.sv']
 out=R/'results/rtl/engram_sink_pin_gate_20261009.json'
 def main():
     if out.exists():raise FileExistsError(out)

@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/engram/pin-row-successor/tools/engram_sink_pin_gate.py", line 26, in <module>
+    if __name__=='__main__':raise SystemExit(main())
+                                             ~~~~^^
+  File "/srv/opentallas-scratch/claude/engram/pin-row-successor/tools/engram_sink_pin_gate.py", line 20, in main
+    if b.returncode:raise RuntimeError(b.stderr)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: /srv/opentallas-scratch/claude/engram/pin-row-successor/rtl/hdc/v41/ot_hdc_engram_gather.sv:53: syntax error
+I give up.
+
