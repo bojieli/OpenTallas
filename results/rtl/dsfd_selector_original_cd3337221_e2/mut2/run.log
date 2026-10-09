@@ -1,0 +1,376 @@
+cyc 0
+FAIL uniform_k512 beat 0 lane 0 idx 6428 ref 28
+FAIL uniform_k512 beat 0 lane 1 idx 6437 ref 41
+FAIL uniform_k512 beat 0 lane 2 idx 6508 ref 42
+FAIL uniform_k512 beat 0 lane 3 idx 6509 ref 48
+FAIL uniform_k512 beat 0 lane 4 idx 6510 ref 57
+FAIL uniform_k512 beat 0 lane 5 idx 6683 ref 108
+FAIL uniform_k512 beat 0 lane 6 idx 6700 ref 144
+FAIL uniform_k512 beat 0 lane 7 idx 6704 ref 147
+FAIL uniform_k512 beat 0 lane 8 idx 6726 ref 150
+FAIL uniform_k512 beat 7: lv 003f/ffff q 0/0 last 1/0
+FAIL uniform_k512 beat 8: lv ffff/ffff q 1/0 last 0/0
+FAIL uniform_k512 beat 9: lv ffff/07ff q 1/0 last 0/1
+FAIL uniform_k512 beat 15: lv 1fff/ffff q 1/1 last 1/0
+FAIL uniform_k512 beat 16: lv ffff/ffff q 2/1 last 0/0
+FAIL uniform_k512 beat 17: lv ffff/0003 q 2/1 last 0/1
+FAIL uniform_k512 beat 23: lv 0003/ffff q 2/2 last 1/0
+FAIL uniform_k512 beat 24: lv ffff/ffff q 3/2 last 0/0
+FAIL uniform_k512 beat 25: lv ffff/1fff q 3/2 last 0/1
+FAIL uniform_k512 beat 33: lv 07ff/003f q 3/3 last 1/1
+seg 0 uniform_k512 k 512 sel 512 beats 34 reps 0 tail_slab_minus_ref 123 cyc 408
+FAIL ties beat 4: lv 00ff/01ff q 0/0 last 1/1
+FAIL ties beat 5: lv ffff/01ff q 1/1 last 0/1
+FAIL ties beat 6: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 7: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 8: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 9: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 10: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 11: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 12: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 13: lv ffff/ffff q 1/2 last 0/0
+FAIL ties beat 14: lv 0003/ffff q 1/2 last 1/0
+FAIL ties beat 15: lv 01ff/0003 q 2/2 last 1/1
+FAIL ties beat 20: lv 01ff/00ff q 3/3 last 1/1
+seg 1 ties k 300 sel 300 beats 21 reps 0 tail_slab_minus_ref 110 cyc 778
+FAIL neginf beat 2: lv 007f/ffff q 0/0 last 1/0
+FAIL neginf beat 3: lv ffff/ffff q 1/0 last 0/0
+FAIL neginf beat 4: lv ffff/ffff q 1/0 last 0/0
+FAIL neginf beat 5: lv ffff/ffff q 1/0 last 0/0
+FAIL neginf beat 6: lv ffff/00ff q 1/0 last 0/1
+FAIL neginf beat 9: lv 00ff/007f q 1/1 last 1/1
+seg 2 neginf k 512 sel 512 beats 34 reps 0 tail_slab_minus_ref 124 cyc 1164
+FAIL k_gt_n beat 1: lv 01ff/ffff q 0/0 last 1/0
+FAIL k_gt_n beat 2: lv ffff/ffff q 1/0 last 0/1
+FAIL k_gt_n beat 4: lv ffff/01ff q 1/1 last 1/1
+seg 3 k_gt_n k 512 sel 81 beats 7 reps 0 tail_slab_minus_ref 67 cyc 1342
+FAIL tiny beat 2: lv 007f/0000 q 2/2 last 1/1
+FAIL tiny beat 3: lv 0000/007f q 3/3 last 1/1
+seg 4 tiny k 7 sel 7 beats 4 reps 0 tail_slab_minus_ref 66 cyc 1514
+FAIL normal_12k beat 8: lv ffff/07ff q 0/0 last 0/1
+FAIL normal_12k beat 9: lv ffff/ffff q 0/1 last 0/0
+FAIL normal_12k beat 10: lv ffff/ffff q 0/1 last 0/0
+FAIL normal_12k beat 11: lv ffff/ffff q 0/1 last 1/0
+FAIL normal_12k beat 20: lv 07ff/ffff q 1/1 last 1/1
+FAIL normal_12k beat 25: lv 3fff/ffff q 2/2 last 1/0
+FAIL normal_12k beat 26: lv ffff/ffff q 3/2 last 0/0
+FAIL normal_12k beat 27: lv ffff/007f q 3/2 last 0/1
+FAIL normal_12k beat 32: lv 007f/3fff q 3/3 last 1/1
+seg 5 normal_12k k 512 sel 512 beats 33 reps 0 tail_slab_minus_ref 142 cyc 2338
+FAIL ascending_overflow beat 1: lv ffff/0000 q 1/1 last 0/1
+FAIL ascending_overflow beat 2: lv ffff/0000 q 1/2 last 0/1
+FAIL ascending_overflow beat 3: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 4: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 5: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 6: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 7: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 8: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 9: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 10: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 11: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 12: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 13: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 14: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 15: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 16: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 17: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 18: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 19: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 20: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 21: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 22: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 23: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 24: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 25: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 26: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 27: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 28: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 29: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 30: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 31: lv ffff/ffff q 1/3 last 0/0
+FAIL ascending_overflow beat 32: lv ffff/ffff q 1/3 last 1/0
+FAIL ascending_overflow beat 33: lv 0000/ffff q 2/3 last 1/0
+FAIL ascending_overflow beat 34: lv 0000/ffff q 3/3 last 1/1
+seg 6 ascending_overflow k 512 sel 512 beats 35 reps 2 tail_slab_minus_ref 169 cyc 12186
+FAIL all_equal_overflow beat 0: lv 0000/ffff q 0/0 last 1/0
+FAIL all_equal_overflow beat 1: lv 0000/ffff q 1/0 last 1/0
+FAIL all_equal_overflow beat 2: lv 0000/ffff q 2/0 last 1/0
+FAIL all_equal_overflow beat 3: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 4: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 5: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 6: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 7: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 8: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 9: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 10: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 11: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 12: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 13: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 14: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 15: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 16: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 17: lv ffff/ffff q 3/0 last 0/0
+FAIL all_equal_overflow beat 18: lv ffff/0fff q 3/0 last 0/1
+FAIL all_equal_overflow beat 19: lv ffff/0000 q 3/1 last 0/1
+FAIL all_equal_overflow beat 20: lv ffff/0000 q 3/2 last 0/1
+FAIL all_equal_overflow beat 21: lv 0fff/0000 q 3/3 last 1/1
+seg 7 all_equal_overflow k 300 sel 300 beats 22 reps 2 tail_slab_minus_ref 278 cyc 16826
+seg 8 rand0 k 30 sel 30 beats 5 reps 0 tail_slab_minus_ref 63 cyc 17268
+FAIL rand1 beat 1: lv ffff/0001 q 0/0 last 0/1
+FAIL rand1 beat 2: lv ffff/ffff q 0/1 last 0/0
+FAIL rand1 beat 3: lv ffff/ffff q 0/1 last 0/0
+FAIL rand1 beat 4: lv ffff/003f q 0/1 last 0/1
+FAIL rand1 beat 5: lv ffff/ffff q 0/2 last 0/0
+FAIL rand1 beat 6: lv 0003/ffff q 0/2 last 1/0
+FAIL rand1 beat 7: lv ffff/ffff q 1/2 last 0/0
+FAIL rand1 beat 8: lv ffff/0fff q 1/2 last 0/1
+FAIL rand1 beat 9: lv ffff/ffff q 1/3 last 0/0
+FAIL rand1 beat 10: lv 0fff/ffff q 1/3 last 1/0
+FAIL rand1 beat 11: lv ffff/ffff q 2/3 last 0/0
+FAIL rand1 beat 12: lv ffff/ffff q 2/3 last 0/0
+FAIL rand1 beat 13: lv 003f/ffff q 2/3 last 1/0
+FAIL rand1 beat 15: lv 0001/0003 q 3/3 last 1/1
+seg 9 rand1 k 213 sel 213 beats 16 reps 0 tail_slab_minus_ref 80 cyc 17690
+FAIL rand2 beat 0: lv 0000/ffff q 0/0 last 1/0
+FAIL rand2 beat 1: lv 0000/ffff q 1/0 last 1/0
+FAIL rand2 beat 2: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 3: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 4: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 5: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 6: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 7: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 8: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 9: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 10: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 11: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 12: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 13: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 14: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 15: lv ffff/ffff q 2/0 last 0/0
+FAIL rand2 beat 16: lv ffff/007f q 2/0 last 0/1
+FAIL rand2 beat 17: lv ffff/0000 q 2/1 last 0/1
+FAIL rand2 beat 18: lv 007f/0000 q 2/2 last 1/1
+seg 10 rand2 k 263 sel 263 beats 20 reps 0 tail_slab_minus_ref 107 cyc 18198
+FAIL rand3 beat 5: lv ffff/03ff q 0/0 last 0/1
+FAIL rand3 beat 6: lv ffff/ffff q 0/1 last 0/0
+FAIL rand3 beat 7: lv ffff/ffff q 0/1 last 0/0
+FAIL rand3 beat 8: lv 07ff/ffff q 0/1 last 1/0
+FAIL rand3 beat 14: lv 03ff/07ff q 1/1 last 1/1
+FAIL rand3 beat 17: lv 3fff/ffff q 2/2 last 1/0
+FAIL rand3 beat 18: lv ffff/ffff q 3/2 last 0/0
+FAIL rand3 beat 19: lv ffff/ffff q 3/2 last 0/0
+FAIL rand3 beat 20: lv ffff/ffff q 3/2 last 0/0
+FAIL rand3 beat 21: lv ffff/ffff q 3/2 last 0/0
+FAIL rand3 beat 22: lv ffff/01ff q 3/2 last 0/1
+FAIL rand3 beat 25: lv 01ff/3fff q 3/3 last 1/1
+seg 11 rand3 k 396 sel 396 beats 26 reps 0 tail_slab_minus_ref 102 cyc 18560
+FAIL rand4 beat 1: lv 1fff/0fff q 1/1 last 1/1
+FAIL rand4 beat 2: lv 0fff/1fff q 2/2 last 1/1
+seg 12 rand4 k 65 sel 65 beats 6 reps 0 tail_slab_minus_ref 67 cyc 18924
+FAIL rand5 beat 0: lv 001f/ffff q 0/0 last 1/0
+FAIL rand5 beat 1: lv ffff/ffff q 1/0 last 0/0
+FAIL rand5 beat 2: lv ffff/ffff q 1/0 last 0/0
+FAIL rand5 beat 3: lv ffff/ffff q 1/0 last 0/1
+FAIL rand5 beat 4: lv 0001/001f q 1/1 last 1/1
+FAIL rand5 beat 10: lv ffff/0001 q 3/3 last 1/1
+seg 13 rand5 k 144 sel 144 beats 11 reps 0 tail_slab_minus_ref 73 cyc 19180
+FAIL rand6 beat 0: lv ffff/ffff q 0/0 last 0/1
+FAIL rand6 beat 1: lv ffff/ffff q 0/1 last 0/0
+FAIL rand6 beat 2: lv ffff/ffff q 0/1 last 0/0
+FAIL rand6 beat 3: lv 0003/ffff q 0/1 last 1/0
+FAIL rand6 beat 4: lv ffff/ffff q 1/1 last 1/0
+FAIL rand6 beat 5: lv ffff/0003 q 2/1 last 0/1
+FAIL rand6 beat 6: lv ffff/ffff q 2/2 last 0/0
+FAIL rand6 beat 7: lv ffff/ffff q 2/2 last 0/0
+FAIL rand6 beat 8: lv ffff/ffff q 2/2 last 0/0
+FAIL rand6 beat 9: lv 0003/0003 q 2/2 last 1/1
+seg 14 rand6 k 175 sel 175 beats 13 reps 0 tail_slab_minus_ref 75 cyc 19376
+FAIL rand7 beat 4: lv 00ff/ffff q 0/0 last 1/0
+FAIL rand7 beat 5: lv ffff/ffff q 1/0 last 0/0
+FAIL rand7 beat 6: lv ffff/ffff q 1/0 last 0/0
+FAIL rand7 beat 7: lv ffff/01ff q 1/0 last 0/1
+FAIL rand7 beat 11: lv 07ff/ffff q 1/1 last 1/0
+FAIL rand7 beat 12: lv ffff/00ff q 2/1 last 0/1
+FAIL rand7 beat 14: lv 0001/ffff q 2/2 last 1/0
+FAIL rand7 beat 15: lv ffff/0001 q 3/2 last 0/1
+FAIL rand7 beat 22: lv 01ff/07ff q 3/3 last 1/1
+seg 15 rand7 k 333 sel 333 beats 23 reps 0 tail_slab_minus_ref 103 cyc 19704
+cyc 20000
+seg 16 rand8 k 493 sel 493 beats 34 reps 0 tail_slab_minus_ref 110 cyc 20358
+FAIL rand9 beat 1: lv ffff/00ff q 0/0 last 0/1
+FAIL rand9 beat 2: lv ffff/007f q 0/1 last 0/1
+FAIL rand9 beat 3: lv ffff/ffff q 0/2 last 0/0
+FAIL rand9 beat 4: lv ffff/ffff q 0/2 last 0/0
+FAIL rand9 beat 5: lv ffff/ffff q 0/2 last 0/1
+FAIL rand9 beat 6: lv 001f/ffff q 0/3 last 1/0
+FAIL rand9 beat 7: lv 007f/ffff q 1/3 last 1/0
+FAIL rand9 beat 8: lv ffff/ffff q 2/3 last 0/0
+FAIL rand9 beat 9: lv ffff/ffff q 2/3 last 0/0
+FAIL rand9 beat 10: lv ffff/ffff q 2/3 last 1/0
+FAIL rand9 beat 12: lv 00ff/001f q 3/3 last 1/1
+seg 17 rand9 k 180 sel 180 beats 13 reps 0 tail_slab_minus_ref 67 cyc 20602
+FAIL rand10 beat 1: lv 0fff/ffff q 0/0 last 1/0
+FAIL rand10 beat 2: lv ffff/ffff q 1/0 last 0/0
+FAIL rand10 beat 3: lv ffff/ffff q 1/0 last 0/0
+FAIL rand10 beat 4: lv 003f/ffff q 1/0 last 1/0
+FAIL rand10 beat 5: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 6: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 7: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 8: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 9: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 10: lv ffff/ffff q 2/0 last 0/0
+FAIL rand10 beat 11: lv ffff/003f q 2/0 last 0/1
+FAIL rand10 beat 12: lv ffff/ffff q 2/1 last 0/0
+FAIL rand10 beat 13: lv ffff/ffff q 2/1 last 0/0
+FAIL rand10 beat 14: lv ffff/003f q 2/1 last 0/1
+FAIL rand10 beat 16: lv 003f/ffff q 2/2 last 1/0
+FAIL rand10 beat 17: lv ffff/1fff q 3/2 last 0/1
+FAIL rand10 beat 19: lv 1fff/0fff q 3/3 last 1/1
+seg 18 rand10 k 293 sel 293 beats 20 reps 0 tail_slab_minus_ref 113 cyc 21046
+FAIL rand11 beat 0: lv ffff/ffff q 0/0 last 0/0
+FAIL rand11 beat 1: lv ffff/ffff q 0/0 last 0/0
+FAIL rand11 beat 2: lv ffff/0003 q 0/0 last 0/1
+FAIL rand11 beat 3: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 4: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 5: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 6: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 7: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 8: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 9: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 10: lv ffff/ffff q 0/1 last 0/0
+FAIL rand11 beat 11: lv 03ff/0003 q 0/1 last 1/1
+FAIL rand11 beat 12: lv ffff/ffff q 1/2 last 0/0
+FAIL rand11 beat 13: lv ffff/ffff q 1/2 last 0/0
+FAIL rand11 beat 14: lv ffff/ffff q 1/2 last 0/0
+FAIL rand11 beat 15: lv 0001/0001 q 1/2 last 1/1
+FAIL rand11 beat 16: lv ffff/ffff q 2/3 last 0/0
+FAIL rand11 beat 17: lv ffff/ffff q 2/3 last 0/0
+FAIL rand11 beat 18: lv 0003/ffff q 2/3 last 1/0
+FAIL rand11 beat 27: lv 0003/03ff q 3/3 last 1/1
+seg 19 rand11 k 399 sel 399 beats 28 reps 0 tail_slab_minus_ref 109 cyc 21404
+FAIL rand12 beat 0: lv ffff/0001 q 0/0 last 0/1
+FAIL rand12 beat 1: lv 001f/ffff q 0/1 last 1/0
+FAIL rand12 beat 2: lv 7fff/ffff q 1/1 last 1/0
+FAIL rand12 beat 3: lv 0001/ffff q 2/1 last 1/0
+FAIL rand12 beat 4: lv ffff/ffff q 3/1 last 0/0
+FAIL rand12 beat 5: lv ffff/ffff q 3/1 last 0/0
+FAIL rand12 beat 6: lv ffff/ffff q 3/1 last 0/0
+FAIL rand12 beat 7: lv ffff/1fff q 3/1 last 0/1
+FAIL rand12 beat 8: lv ffff/7fff q 3/2 last 0/1
+FAIL rand12 beat 10: lv 1fff/001f q 3/3 last 1/1
+seg 20 rand12 k 146 sel 146 beats 11 reps 0 tail_slab_minus_ref 87 cyc 21844
+FAIL rand13 beat 0: lv ffff/003f q 0/0 last 0/1
+FAIL rand13 beat 1: lv 0003/ffff q 0/1 last 1/0
+FAIL rand13 beat 2: lv 003f/ffff q 1/1 last 1/0
+FAIL rand13 beat 3: lv 1fff/ffff q 2/1 last 1/0
+FAIL rand13 beat 4: lv ffff/ffff q 3/1 last 0/0
+FAIL rand13 beat 5: lv ffff/00ff q 3/1 last 0/1
+FAIL rand13 beat 6: lv ffff/1fff q 3/2 last 0/1
+FAIL rand13 beat 8: lv 00ff/0003 q 3/3 last 1/1
+seg 21 rand13 k 109 sel 109 beats 9 reps 0 tail_slab_minus_ref 59 cyc 22204
+FAIL rand14 beat 0: lv 0000/ffff q 0/0 last 1/0
+FAIL rand14 beat 1: lv ffff/ffff q 1/0 last 0/0
+FAIL rand14 beat 2: lv ffff/ffff q 1/0 last 0/0
+FAIL rand14 beat 3: lv 01ff/ffff q 1/0 last 1/0
+FAIL rand14 beat 4: lv 0000/ffff q 2/0 last 1/0
+FAIL rand14 beat 5: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 6: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 7: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 8: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 9: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 10: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 11: lv ffff/ffff q 3/0 last 0/0
+FAIL rand14 beat 12: lv ffff/003f q 3/0 last 0/1
+FAIL rand14 beat 13: lv ffff/0000 q 3/1 last 0/1
+FAIL rand14 beat 14: lv ffff/0000 q 3/2 last 0/1
+FAIL rand14 beat 17: lv 003f/01ff q 3/3 last 1/1
+seg 22 rand14 k 239 sel 239 beats 18 reps 0 tail_slab_minus_ref 95 cyc 22604
+FAIL rand15 beat 0: lv ffff/1fff q 0/0 last 0/1
+FAIL rand15 beat 1: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 2: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 3: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 4: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 5: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 6: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 7: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 8: lv ffff/ffff q 0/1 last 0/0
+FAIL rand15 beat 9: lv 1fff/ffff q 0/1 last 1/0
+FAIL rand15 beat 10: lv ffff/1fff q 1/1 last 0/1
+FAIL rand15 beat 11: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 12: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 13: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 14: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 15: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 16: lv ffff/ffff q 1/2 last 0/0
+FAIL rand15 beat 17: lv 0007/ffff q 1/2 last 1/0
+FAIL rand15 beat 18: lv 1fff/ffff q 2/2 last 1/0
+FAIL rand15 beat 19: lv ffff/01ff q 3/2 last 0/1
+FAIL rand15 beat 27: lv 01ff/0007 q 3/3 last 1/1
+seg 23 rand15 k 422 sel 422 beats 28 reps 0 tail_slab_minus_ref 99 cyc 23058
+FAIL rand16 beat 0: lv 0003/01ff q 0/0 last 1/1
+FAIL rand16 beat 1: lv ffff/0007 q 1/1 last 1/1
+FAIL rand16 beat 2: lv 0007/ffff q 2/2 last 1/1
+FAIL rand16 beat 3: lv 01ff/0003 q 3/3 last 1/1
+seg 24 rand16 k 30 sel 30 beats 4 reps 0 tail_slab_minus_ref 83 cyc 23580
+FAIL rand17 beat 0: lv 3fff/ffff q 0/0 last 1/0
+FAIL rand17 beat 1: lv ffff/1fff q 1/0 last 0/1
+FAIL rand17 beat 2: lv 1fff/3fff q 1/1 last 1/1
+seg 25 rand17 k 91 sel 91 beats 7 reps 0 tail_slab_minus_ref 65 cyc 23948
+FAIL rand18 beat 2: lv 1fff/ffff q 0/0 last 1/0
+FAIL rand18 beat 3: lv 0000/ffff q 1/0 last 1/0
+FAIL rand18 beat 4: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 5: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 6: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 7: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 8: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 9: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 10: lv ffff/ffff q 2/0 last 0/0
+FAIL rand18 beat 11: lv ffff/000f q 2/0 last 0/1
+FAIL rand18 beat 12: lv ffff/ffff q 2/1 last 0/0
+FAIL rand18 beat 13: lv ffff/ffff q 2/1 last 0/0
+FAIL rand18 beat 14: lv ffff/000f q 2/1 last 0/1
+FAIL rand18 beat 15: lv 000f/ffff q 2/2 last 1/0
+FAIL rand18 beat 16: lv ffff/ffff q 3/2 last 0/0
+FAIL rand18 beat 17: lv ffff/1fff q 3/2 last 0/1
+FAIL rand18 beat 18: lv 000f/0000 q 3/3 last 1/1
+seg 26 rand18 k 261 sel 261 beats 19 reps 0 tail_slab_minus_ref 93 cyc 24338
+FAIL rand19 beat 5: lv 0007/001f q 2/2 last 1/1
+FAIL rand19 beat 8: lv 001f/0007 q 3/3 last 1/1
+seg 27 rand19 k 92 sel 92 beats 9 reps 0 tail_slab_minus_ref 58 cyc 24670
+FAIL rand20 beat 4: lv ffff/0000 q 2/2 last 0/1
+FAIL rand20 beat 5: lv 01ff/ffff q 2/3 last 1/0
+FAIL rand20 beat 6: lv 0000/01ff q 3/3 last 1/1
+seg 28 rand20 k 83 sel 83 beats 7 reps 0 tail_slab_minus_ref 43 cyc 25182
+FAIL rand21 beat 0: lv 007f/ffff q 0/0 last 1/0
+FAIL rand21 beat 1: lv ffff/03ff q 1/0 last 0/1
+FAIL rand21 beat 2: lv 03ff/ffff q 1/1 last 1/0
+FAIL rand21 beat 3: lv ffff/ffff q 2/1 last 0/0
+FAIL rand21 beat 4: lv ffff/ffff q 2/1 last 0/0
+FAIL rand21 beat 5: lv ffff/ffff q 2/1 last 0/0
+FAIL rand21 beat 6: lv ffff/ffff q 2/1 last 0/0
+FAIL rand21 beat 7: lv ffff/007f q 2/1 last 0/1
+FAIL rand21 beat 8: lv 0007/ffff q 2/2 last 1/0
+FAIL rand21 beat 9: lv ffff/ffff q 3/2 last 0/0
+FAIL rand21 beat 10: lv ffff/ffff q 3/2 last 0/0
+FAIL rand21 beat 11: lv ffff/ffff q 3/2 last 0/0
+FAIL rand21 beat 12: lv ffff/ffff q 3/2 last 0/0
+FAIL rand21 beat 13: lv ffff/0007 q 3/2 last 0/1
+seg 29 rand21 k 203 sel 203 beats 15 reps 0 tail_slab_minus_ref 93 cyc 25518
+FAIL rand22 beat 2: lv 7fff/ffff q 0/0 last 1/0
+FAIL rand22 beat 3: lv ffff/07ff q 1/0 last 0/1
+FAIL rand22 beat 4: lv ffff/07ff q 1/1 last 0/1
+FAIL rand22 beat 5: lv ffff/ffff q 1/2 last 0/0
+FAIL rand22 beat 6: lv 07ff/ffff q 1/2 last 1/0
+FAIL rand22 beat 7: lv 07ff/7fff q 2/2 last 1/1
+seg 30 rand22 k 141 sel 141 beats 10 reps 0 tail_slab_minus_ref 67 cyc 25872
+FAIL rand23 beat 16: lv 0000/001f q 1/1 last 1/1
+FAIL rand23 beat 17: lv 001f/0000 q 2/2 last 1/1
+seg 31 rand23 k 255 sel 255 beats 19 reps 0 tail_slab_minus_ref 73 cyc 26276
+fault case k_mismatch: FAULT bit 13    seen
+fault case orphan_beat: FAULT bit 11    seen
+fault case qslot_collision: FAULT bit 12    seen
+RESULT FAIL segments 32 out_beats 561 replays 4 errors 6659 tail_minus_ref max 278 mean 95 ref_holds 11
+- rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv:301: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 22us; walltime 19.453 s; speed 1.135 us/s
+- Verilator: cpu 19.456 s on 1 threads; alloced 514 MB

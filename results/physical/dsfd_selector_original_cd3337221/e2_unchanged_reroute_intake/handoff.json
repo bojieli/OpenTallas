@@ -71,10 +71,11 @@
       }
     },
     "raw_historical_gate_logs_available": false,
-    "fresh_exact_and_mutant": "PENDING Claude intake; source/hash contract is ready, not a new PASS claim",
+    "fresh_exact_and_mutant": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json",
     "negative_define": "OT_S81PH_MUT2",
     "negative_mechanism": "disable controller qslot-to-tile search, causing true output index/order mismatch",
-    "negative_source_sha256": "97d053572bf7ed0b8bdc93350fc6ca443c5d89012e59e035470e445bd4a353eb"
+    "negative_source_sha256": "97d053572bf7ed0b8bdc93350fc6ca443c5d89012e59e035470e445bd4a353eb",
+    "fresh_gate_verdict": "PASS"
   },
   "physical_failures_preserved": {
     "TT_ps": -297.84,
@@ -86,5 +87,11 @@
   },
   "current_rebudget": "budget_rb2; no dsfd_selt_q override, no assumed budget relief",
   "reliability_scope": "fault-free SRAM payload pathfinding; no SECDED or READLAT2 qualification; those successors remain separate",
-  "resource_evidence": "No measured original route-phase peak recovered; historical40GiB is not an admissible measured claim. No launch by Codex."
+  "resource_evidence": {
+    "minimum_exact_gate_measured_whole_pg_peak_kib": 6028840,
+    "minimum_exact_gate_time_v_peak_kib": 1742768,
+    "minimum_mutant_gate_time_v_peak_kib": 1743192,
+    "physical_route_phase_peak": "UNAVAILABLE; do not use gate peak as route peak",
+    "historical_route40GiB": "declaration only, not measured"
+  }
 }

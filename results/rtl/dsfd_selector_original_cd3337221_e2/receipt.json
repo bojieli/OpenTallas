@@ -1,0 +1,32 @@
+{
+  "utc": "2026-10-09T10:14:03.833413+00:00",
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "host": "ot-agidock128",
+  "remote_run": "/srv/opentallas-scratch/codex/dsfd-selt-q-cd333-e2",
+  "pgid": 2147694,
+  "guard": "/srv/opentallas-scratch/admit.sh 8 -- bash run.sh",
+  "guard_8GiB": "initial inventory estimate approved by root/fleet; not a measured peak or process cap",
+  "host_memavailable_before_kib": 57892788,
+  "host_diskfree_before_kib": 403219584,
+  "actual_whole_pg_peak_rss_kib": 6028840,
+  "positive": "RESULT PASS segments 32 out_beats 561 replays 4 errors 0 tail_minus_ref max 240 mean 91 ref_holds 11",
+  "positive_rc": 0,
+  "negative": "RESULT FAIL segments 32 out_beats 561 replays 4 errors 6659 tail_minus_ref max 278 mean 95 ref_holds 11",
+  "negative_rc": 1,
+  "negative_define": "OT_S81PH_MUT2",
+  "gate": "PASS positive exact + genuine negative rejected",
+  "source_verification": "9/9 immutable SHA match,127633bytes",
+  "latency_scope": "unchanged baseline; no new architecture cycles; reported tails vs golden, not diecontext rate",
+  "physical_scope": "fault-free SRAM pathfinding only; no raw capture/SECDED/static map adoption",
+  "raw_sha256": {
+    "mut2.time.txt": "1286408e1c28a236f6c800855ff3a1f59f65015d08dcc8be6559621c74e07505",
+    "source_verification.json": "5d791bf6ede59ef5e9e419992d7344dc33797bb9184771dbf3705eb3d175211a",
+    "positive.time.txt": "7d5846e931ea33431e5ef1b45a5c02fbacba46ceb7a2411293a1af509d801359",
+    "pg_memory.json": "7b7065f6eaa283a3ef9960184baf2036bff42934a3a00e81828b52aa6356cb02",
+    "terminal.txt": "07bcdb2b57b6fb536f3d95da55036ec4897920a4d3087a1a33e677b5ca01bdaa",
+    "positive/build.log": "bb276a8b5ccd33edd76c6da330d3f9b07cc71fb61d7e6941a688d887130acf05",
+    "positive/run.log": "49a77b948854854fc6e112e5845216506c70d0a853117ca5b440280c46032ab5",
+    "mut2/build.log": "57f2e2a6e1a9d27763d6689fefa5499ec337acf2455a81cb2606af20abdc0eb7",
+    "mut2/run.log": "44eaf368ea29b943cec1b470d5d203c3a2e5d800f374a11856af592eb85c1825"
+  }
+}

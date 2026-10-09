@@ -32,7 +32,7 @@
         "cmd": "bash {INTAKE}/unchanged_exact_gate.sh {RUN}/bench t1",
         "expect": "pass",
         "threads": 8,
-        "peak_ram_gb": null
+        "peak_ram_gb": 5.749549865722656
       },
       {
         "name": "neg_mut2_qslot",
@@ -40,7 +40,7 @@
         "expect": "fail",
         "fail_regex": "SELT_BENCH FAIL",
         "threads": 8,
-        "peak_ram_gb": null
+        "peak_ram_gb": 5.749549865722656
       }
     ],
     "calibrate": {
@@ -96,10 +96,10 @@
   "intake_only": true,
   "not_executable_until": [
     "Claude resolves {INTAKE} immutable wrapper location and validates source archive inventory",
-    "Fresh unchanged-source exact and MUT2 negative gates produce raw receipts before physical launch",
     "Actual phase/sibling memory evidence and measured host admission replace null resource declarations",
     "Current frozen flow kit identity and rb2 hashes recorded at submission",
     "Current macro margin lint: gap10.776um needs approved existing source-pinned hard sliver blockage hook or other approved flow remedy; preserve original placement/RTL",
     "Fresh TT calibration/reference plus current H1/MM FF hold machinery; no old SS-reference reuse"
-  ]
+  ],
+  "gate_evidence": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json"
 }
