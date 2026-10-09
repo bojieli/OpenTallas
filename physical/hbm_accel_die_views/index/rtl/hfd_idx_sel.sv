@@ -29,6 +29,7 @@ module hfd_idx_sel #(
   parameter integer T = 1,           // scorer blocks a stack (1: one hfd_idx_score L16; 4: four column taps L4)
   parameter integer LA = 6,          // score landing FIFO address bits (depth 64 = the scorer's CRED)
   parameter integer OCRED = 8,       // output credits (the VM landing depth) on to / co
+  parameter integer READLAT = 1,     // opt-in macro output capture: 2
   parameter integer MEMV = 0,        // line memories: 0 behavioural, 1 SRAM macros (hfd_idx_mem)
   parameter integer L = 16 / T,      // lanes a scorer block
   parameter integer SW = 38 * L + 2  // score beat width a scorer block
@@ -164,7 +165,7 @@ module hfd_idx_sel #(
   wire [Q-1:0] o_v, o_last, o_r; wire [Q*W-1:0] o_lv, o_ninf; wire [Q*W*16-1:0] o_val; wire [Q*W*IW-1:0] o_idx;
   wire [Q-1:0] m_we, m_re; wire [Q*8-1:0] m_wa, m_ra; wire [Q*W*(17+IW)-1:0] m_wd, m_rd;
   wire rep, ovf, sel_busy; wire [Q*3*9-1:0] sel_stats;
-  ot_hdc_v41x_sel #(.Q(Q), .W(W), .IW(IW), .K(512), .AW(8)) u_topk (
+  ot_hdc_v41x_sel #(.Q(Q), .W(W), .IW(IW), .K(512), .AW(8), .READLAT(READLAT)) u_topk (
     .clk(ck), .rst_n(rn), .in_valid(fire), .in_ready(sel_ready), .in_last(f_last), .in_lv(f_lv), .in_val(f_val),
     .in_idx(f_idx), .in_k(kk),
     .out_valid(o_v), .out_ready(o_r), .out_last(o_last), .out_lv(o_lv), .out_val(o_val), .out_idx(o_idx),
@@ -172,14 +173,14 @@ module hfd_idx_sel #(
     .mem_we(m_we), .mem_waddr(m_wa), .mem_wdata(m_wd), .mem_re(m_re), .mem_raddr(m_ra), .mem_rdata(m_rd),
     .rep_req(rep), .ovf(ovf), .busy(sel_busy), .stats(sel_stats));
   generate for (gq = 0; gq < Q; gq = gq + 1) begin : gm
-    hfd_idx_mem #(.W(W*(17+IW)), .AW(8), .MEMV(MEMV)) u_m (.ck(ck), .we(m_we[gq]), .wa(m_wa[8*gq +: 8]),
+    hfd_idx_mem #(.W(W*(17+IW)), .AW(8), .MEMV(MEMV), .READLAT(READLAT)) u_m (.ck(ck), .we(m_we[gq]), .wa(m_wa[8*gq +: 8]),
       .wd(m_wd[W*(17+IW)*gq +: W*(17+IW)]), .re(m_re[gq]), .ra(m_ra[8*gq +: 8]), .rd(m_rd[W*(17+IW)*gq +: W*(17+IW)]));
   end endgenerate
   // ------------------------------------------------------------------ layer-20 candidates (unchanged wrapper)
   wire [Q-1:0] c_v, c_last, c_r; wire [Q*2-1:0] c_lv; wire [Q*2*16-1:0] c_val; wire [Q*2*17-1:0] c_blk;
   wire [Q-1:0] cm_we, cm_re; wire [Q*10-1:0] cm_wa, cm_ra; wire [Q*2*34-1:0] cm_wd, cm_rd;
   wire crep, covf, cand_busy; wire [Q*3*11-1:0] cand_stats;
-  ot_hbm_accel_index_candidate #(.ENABLE(1)) u_cand (
+  ot_hbm_accel_index_candidate #(.ENABLE(1), .READLAT(READLAT)) u_cand (
     .clk(ck), .rst_n(rn), .held_valid(active && !fault && cand_en),
     .held_job(job), .held_gen(gen), .held_pos(pos), .held_rank(rank),
     .out_job(), .out_gen(), .out_pos(), .out_rank(),
@@ -189,7 +190,7 @@ module hfd_idx_sel #(
     .mem_we(cm_we), .mem_waddr(cm_wa), .mem_wdata(cm_wd), .mem_re(cm_re), .mem_raddr(cm_ra), .mem_rdata(cm_rd),
     .rep_req(crep), .ovf(covf), .busy(cand_busy), .stats(cand_stats));
   generate for (gq = 0; gq < Q; gq = gq + 1) begin : gc
-    hfd_idx_mem #(.W(68), .AW(10), .MEMV(MEMV)) u_m (.ck(ck), .we(cm_we[gq]), .wa(cm_wa[10*gq +: 10]), .wd(cm_wd[68*gq +: 68]),
+    hfd_idx_mem #(.W(68), .AW(10), .MEMV(MEMV), .READLAT(READLAT)) u_m (.ck(ck), .we(cm_we[gq]), .wa(cm_wa[10*gq +: 10]), .wd(cm_wd[68*gq +: 68]),
       .re(cm_re[gq]), .ra(cm_ra[10*gq +: 10]), .rd(cm_rd[68*gq +: 68]));
   end endgenerate
   // ------------------------------------------------------------------ output serialisers (quarter order), credits

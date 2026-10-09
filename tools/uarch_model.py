@@ -14126,3 +14126,30 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
+
+
+def hbm_index_selector_capture_model(read_latency=2):
+    """Opt-in macro capture: unchanged issue width, finite existing reservations.
+
+    One capture stage isolates 405/545 ps TT macro clk->q from selector mux.
+    Each sweep adds one drain cycle; finite reservation recycling can add
+    stalls. Use measured stage deltas before publishing a token rate.
+    """
+    if read_latency not in (1, 2):
+        raise ValueError("selector read latency must be 1 or 2")
+    extra = read_latency - 1
+    return dict(read_latency_cycles=read_latency, extra_cycles_per_sweep=extra,
+        token_extra_cycles_formula="sum(measured_selector_cycle_deltas per token stage)",
+        additional_credit_recycle_cycles=extra,
+        nominal_drain_cycles_formula="(gc_sweeps + pass2_sweeps + pass3_sweeps + emit_sweeps) * extra_cycles_per_sweep",
+        token_gain_claim=False, macs_per_cycle=0, replicas=4,
+        memory=dict(topk_bytes_per_cycle=74, candidate_bytes_per_cycle=8.5,
+                    topk_bits_per_cycle=592, candidate_bits_per_cycle=68),
+        capture_payload_bits=4*(592+68)*extra, capture_metadata_bits=4*4*2*extra,
+        mux_demux_added=0, cross_boundary_bits_added=0, routing_tracks_added=0,
+        reservations=dict(gc_lines=8, output_beats=4,
+                          policy="issue counts outstanding until pack exit/output enqueue; capture included"),
+        area=dict(capture_flops=4*(592+68+8)*extra,
+                  floorplan_fit="requires real mapped area and pins; not physically qualified"),
+        latency_clock_ns=0.8333333333333334,
+        physical_status="candidate; macro output must terminate at capture D pins")
