@@ -19,7 +19,7 @@ def model(k=256, vocab=129280, sk=11):
                      embed_head_pairs=math.ceil(vocab*k*2/(8192*32))),
         area=dict(product_delay_bits=2*sum(range(8))*sk*32,
                   floorplan_slot='new dedicated engine; no existing closed view qualifies it'),
-        latency=dict(first_beat_to_join_cycles_upper=latency,last_beat_to_join_cycles_upper=latency,
+        latency=dict(first_beat_to_join_cycles_upper=words+latency,last_beat_to_join_cycles_upper=latency,
                      words_per_row=words,minimum_transaction_II_upper=words+latency+2,
                      five_sweeps_compute_ratio=k/5120,previous_reduced_ratio=32/4096,
                      claimed_54_6ns_budget_met=False),

@@ -97,9 +97,10 @@ module ot_dsrom_markov_row #(
    if(fire) count<=count+1'b1;
    if((pv[5] && |pf) || |bad_chunk || |bad_tree || (jv && je!=0)) fault<=1;
    if(jv) begin
-    if(!busy || count!=WORDS || out_valid) fault<=1;
-    out_valid<=1;out_bits<=jd;
+    if(!busy || count!=WORDS || out_valid || je!=0 || fault) begin fault<=1;out_valid<=0;end
+    else begin out_valid<=1;out_bits<=jd;end
    end
+   if(fault) out_valid<=0;
    if(out_valid && out_ready) begin out_valid<=0;busy<=0;end
   end
  end
