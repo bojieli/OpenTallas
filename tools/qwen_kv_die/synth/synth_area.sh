@@ -11,7 +11,7 @@ L=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
   [ "$BB" != "-" ] && for b in ${BB//,/ }; do echo "blackbox $b"; done
   [ "$PRM" != "-" ] && for kv in ${PRM//,/ }; do echo "chparam -set ${kv%%=*} ${kv#*=} $TOP"; done
   echo "hierarchy -check -top $TOP"
-  echo "synth -top $TOP -flatten"
+  echo "synth -top $TOP -flatten ${NOSHARE:+-noshare}"
   echo "dfflibmap -liberty /tmp/lib/seq.lib"
   echo "abc -liberty /tmp/lib/all.lib"
   echo "opt_clean"
