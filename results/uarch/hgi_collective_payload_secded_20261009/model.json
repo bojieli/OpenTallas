@@ -7,6 +7,61 @@
   "core_macros": 21,
   "total_macros": 165,
   "macro_area_um2": 3891.57696,
+  "payload_arrays": 55,
+  "encoded_bits_per_array": 648,
+  "additional_write_and_raw_capture_flops": 10510,
+  "added_physical_credit_debt_bits": 80,
+  "added_payload_fault_bits": 1,
+  "register_area_mm2": "mapped synthesis gate; no invented cell area",
+  "encoder_instances": 47,
+  "decoder_instances": 47,
+  "core_inventory": [
+    {
+      "store": "u_h",
+      "replicas": 2,
+      "W": 544,
+      "macros_each": 3
+    },
+    {
+      "store": "u_d",
+      "replicas": 4,
+      "W": 545,
+      "macros_each": 3
+    },
+    {
+      "store": "u_dqo",
+      "replicas": 1,
+      "W": 545,
+      "macros_each": 3
+    }
+  ],
+  "port_inventory": [
+    {
+      "store": "u_qp",
+      "W": 545,
+      "macros": 3
+    },
+    {
+      "store": "u_qr",
+      "W": 545,
+      "macros": 3
+    },
+    {
+      "store": "u_wtx",
+      "W": 545,
+      "macros": 3
+    },
+    {
+      "store": "u_wrx",
+      "W": 545,
+      "macros": 3
+    },
+    {
+      "store": "u_rb",
+      "W": 545,
+      "macros": 6
+    }
+  ],
   "macro_total_area_mm2": 0.6421101983999999,
   "macro_outline_um": [
     94.824,
