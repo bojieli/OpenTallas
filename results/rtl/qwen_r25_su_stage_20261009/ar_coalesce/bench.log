@@ -1,0 +1,5 @@
+PASS_QWEN_AR_CP_COALESCE cases14 native_entries6 owner74 original_masks staggered stalled_request real_completion no_fabricated_done negatives
+- rtl/qwen_r25_su_dispatch/tb_qwen_r25_cp_su_coalesce.sv:75: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 135ns; walltime 0.005 s; speed 17.476 us/s
+- Verilator: cpu 0.008 s on 1 threads; alloced 505 MB

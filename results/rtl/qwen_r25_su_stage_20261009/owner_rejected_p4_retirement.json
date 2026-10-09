@@ -1,0 +1,29 @@
+{
+  "status": "canceled_owner_rejected_scope",
+  "authority": "Root explicit disposition: cancel only confirmed p4/context-copy route and queued p4 gate; keep real AR N256/M64 and legacy AR dispatcher",
+  "route": {
+    "source_commit": "0f11ee283",
+    "host": "ot-agidock128",
+    "driver_pid": 4147190,
+    "launcher_pid": 4147007,
+    "container": "9713cafdfcb763e0e896cbdcf88218acbc2ae135480fa06934a25abf70815f43",
+    "verified_mounts": ["/srv/opentallas-scratch/codex/qwen-r25-mask/context-transfer-only/src", "/srv/opentallas-scratch/codex/qwen-r25-mask/context-transfer-only/work/orfs"],
+    "preserved_remote": "/srv/opentallas-scratch/codex/qwen-r25-mask/context-transfer-only",
+    "preserved_files": ["canceled_checkpoint", "pre_cancel.log", "canceled_source.sha256", "src", "work"],
+    "termination": "Exact container killed, then SIGTERM to exact driver/launcher; all confirmed absent",
+    "actual_exit_code": null
+  },
+  "unstarted_gate": {
+    "host": "ot-epyc4",
+    "launcher_pid": 2360296,
+    "guard_pid": 2360298,
+    "no_compute_child_verified": true,
+    "preserved_remote": "/srv/opentallas-scratch/codex/qwen-r25-quarter-service/a2b3b4f53",
+    "preserved_files": ["p4_queued_canceled.log", "src", "runner.log"],
+    "termination": "SIGTERM to guard and launcher only; both confirmed absent",
+    "actual_exit_code": null
+  },
+  "historical_pass_and_failure_evidence_overwritten": false,
+  "legacy_AR_dispatcher_pid_2756283_preserved": true,
+  "reason": "Owner rejects Qwen p4 before tau and extra transient protection/control protocols; this is explicit scope retirement, not a time or resource cap."
+}

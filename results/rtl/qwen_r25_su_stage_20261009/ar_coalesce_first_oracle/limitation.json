@@ -1,0 +1,6 @@
+{
+  "status": "test_oracle_failure",
+  "source_commit": "8924f499c",
+  "explanation": "Oracle incorrectly required all ordinary SM completion bits to be suppressed while only the captured native masks should be suppressed. Production coalescer70e717e3b unchanged; corrected oracle5705d8182 passes14 cases.",
+  "evidence": ["failed.log"]
+}

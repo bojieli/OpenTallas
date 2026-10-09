@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "source_commit": "5705d8182",
+  "RTL_commit": "70e717e3b",
+  "host": "ot-agidock128",
+  "admission_gib": 4,
+  "cases": 14,
+  "scope": "Actual AR two-half CP namespace coalescer control; native provider readiness and completion driven by testbench, no numerical claim",
+  "positive": ["ordinary SM launch and completion passthrough", "six source-assigned native entries", "staggered halves", "full owner74 including TOKEN18/POS20 high bits", "held native request under five cycles of backpressure", "one request and original32 completion masks only on native completion"],
+  "negative": ["full owner mismatch", "entry mismatch", "unknown reserved entry", "duplicate half", "early completion", "wrong owner completion", "actual native fault fanback", "pending native masks cannot complete from SMdone"],
+  "evidence": ["bench.log"],
+  "added_control_mirrors": false,
+  "added_lease_epoch_cohort": false,
+  "physical_qualified": false,
+  "actual_CP_ROM_SU_path_bound": false
+}
