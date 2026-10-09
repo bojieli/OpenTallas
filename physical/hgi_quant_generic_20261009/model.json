@@ -34,15 +34,22 @@
       "M4",
       "M6"
     ],
-    "worst_face_bits_per_um_per_layer": 0.9142857142857143,
     "channel_capacity_source": "standard ASAP7 route_master M2-M7; actual congestion validated in routing",
     "track_cost": {
       "input_tracks_per_vertical_layer": 512,
       "output_tracks_per_vertical_layer": 256,
       "header_tracks_per_horizontal_layer": 64
-    }
+    },
+    "average_face_bits_per_um_per_layer": 0.9142857142857143,
+    "submit_lint_local_peak_bits_per_um_per_layer": {
+      "W": 7.82,
+      "E": 5.12,
+      "N": 0.08,
+      "S": 1.28
+    },
+    "density_note": "Average face load is not the local maximum. The actual flow orders each assigned pin region on one layer; measured submit estimate localpeak7.82 remains below12. Runtimepin/floorplanlint still mandatory."
   },
-  "area_status": "1.08mm2 floorplan envelope only; synthesized area and fit pending",
+  "area_status": "Mapped FF sizing18541.0944um2 and actual pd50TTsynthesis18509.99526um2; provisional1.08mm2floorplan intentionallynot an adopted die-area claim",
   "io_contract": "standalone existing route_master 833.333ps signoff,60/25uncertainty,166.667ps outside boundary +150ps inter-region,measured clock reference,H1 hold; output80fF,input150ps; all ports timed. This is not an hfd_quant die-budget match; generic record boundary approval required before adoption",
   "legacy_memory_claim_gib": 60,
   "memory_claim_status": "conservative inherited nearest quant envelope; not a measured new G8 peak"
