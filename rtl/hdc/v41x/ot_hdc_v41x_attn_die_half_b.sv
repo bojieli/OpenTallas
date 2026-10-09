@@ -18,6 +18,7 @@
 // Lock-stepped against hfd_attn_tile_b by rtl/test/tb_hfd_attn_half_b.sv (physical/hbm_attn_tile_r/half/run_lockh.sh).
 // ---------------------------------------------------------------------------
 module hfd_attn_half_lo #(
+    parameter integer FLAT_QTAIL = 0, // opt-in leaf-FF reset/query tail, +0cycles
     parameter integer NK = 4,
     parameter integer NC = 2,
     parameter integer NR = 3,
@@ -41,7 +42,7 @@ module hfd_attn_half_lo #(
     wire [1040:0] k_s; wire [582:0] q_s; wire [PK-1:0] ci_s, ri_s;
     ot_attn_bpipe #(.W(1041), .N(1 + NK)) u_pk (.clk(clk), .d(k), .q(k_s));
     ot_attn_bpipe #(.W(544), .N(1 + NK), .EW0(1)) u_pq (.clk(clk), .d(q[543:0]), .q(q_s[543:0]));
-    ot_attn_fpipe #(.W(39), .N(1 + NK)) u_pqx (.clk(clk), .d({rst[0], q[581:544]}), .q(q_s[582:544]));
+    ot_attn_half_qtail #(.N(1 + NK), .FLAT(FLAT_QTAIL)) u_pqx (.clk(clk), .d({rst[0], q[581:544]}), .q(q_s[582:544]));
     ot_attn_bpipe #(.W(PK),   .N(1 + NC)) u_pc (.clk(clk), .d(ci), .q(ci_s));
     ot_attn_bpipe #(.W(PK),   .N(1 + NR), .EW0(1)) u_pr (.clk(clk), .d(ri), .q(ri_s));
     wire [PW-1:0] pk = {q_s[582], k_s[1037:0], q_s[579:0]} | {1'b0, ci_s} | {1'b0, ri_s};
@@ -140,4 +141,24 @@ module hfd_attn_half_hi #(
     wire loc_v = loc_r[RW-1], chn_v = chn_r[RW-1];
     wire [RW-1:0] mrg = loc_v ? {loc_r[RW-1:16], loc_r[15:0] | {16{chn_v}}} : chn_r;
     ot_attn_bpipe #(.W(RW), .N(1), .EW0(1), .EWN(1)) u_oo (.clk(clk), .d(mrg), .q(o));
+endmodule
+
+// Keep arithmetic/data and the original five reset/query stages unchanged.
+// The opt-in branch has no kept rp_reg hierarchy: physical timing and clock
+// repair see actual leaf FFs rather than per-stage module ports.
+module ot_attn_half_qtail #(parameter integer N=5,FLAT=0)(
+ input wire clk,input wire [38:0] d,output wire [38:0] q);
+ generate if(FLAT)begin:g_flat
+  if(N==0)begin:g0 assign q=d;end
+  else begin:gn
+   reg [38:0] st[0:N-1];
+   always @(posedge clk)begin
+    st[0]<=d;
+    for(integer j=1;j<N;j=j+1)st[j]<=st[j-1];
+   end
+   assign q=st[N-1];
+  end
+ end else begin:g_legacy
+  ot_attn_fpipe #(.W(39),.N(N)) u_tail(.clk(clk),.d(d),.q(q));
+ end endgenerate
 endmodule
