@@ -54,6 +54,9 @@ class RegistryTest(unittest.TestCase):
             invalid = model.compute()
             self.assertEqual(len(invalid['sources']['registry_errors']), 2)
             self.assertEqual(len(invalid['rows'][0]['evidence_history']), 2)
+            later = dict(row, recorded_at='2026-10-08T18:01:00-07:00', integration=dict(status='newer'))
+            (registry / 'c.json').write_text(json.dumps(dict(schema_version=1, records=[later])))
+            self.assertEqual(model.compute()['rows'][0]['qualification']['integration']['status'], 'newer')
             model.md_period = 600; model.md_path = model.repo / 'ELEMENTS.md'; model.log = print
             model.write_md(model.compute())
             self.assertIn('exact +PASS / -PASS', model.md_path.read_text())
