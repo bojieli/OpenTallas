@@ -3748,7 +3748,8 @@ def _bank_nets(m):
             B[i] = (bid, cls, bits, eps + add)
 
 
-PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') in ('1', '2')
+PATH_PICK_Z = os.environ.get('OT_S81_PATH_PICK', '0') == '2'
 
 
 def _corr_frac(path, rects, step=20.0):
@@ -3812,10 +3813,22 @@ def _hop_fix(m, P):
                 # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1): a die-level hop takes the L orientation that runs more
                 # of its length inside the corridors (its stations may only sit there); the horizontal-first default
                 # drove the 20.9 mm scan hw_SW host chain along y=15373 through packed field frames (station 5/55 trap).
-                alt = [a, (a[0], b[1]), b]
-                if _corr_frac(alt, list(cor.values())) > _corr_frac(path, list(cor.values())) + 1e-9:
-                    path = alt
-                    rec['path_pick']['vfirst'] = rec['path_pick'].get('vfirst', 0) + 1
+                cr = list(cor.values())
+                cands = [(_corr_frac(path, cr), 0, path), (_corr_frac([a, (a[0], b[1]), b], cr), 1, [a, (a[0], b[1]), b])]
+                if PATH_PICK_Z:
+                    # OT_S81_PATH_PICK=2: also Z paths whose middle leg runs along a horizontal corridor centre line
+                    # between the two ends (scan hw_SW: both L shapes end in the packed bottom band at y=1331)
+                    for r_ in cr:
+                        if (r_[2] - r_[0]) > (r_[3] - r_[1]):
+                            ym = (r_[1] + r_[3]) / 2
+                            if min(a[1], b[1]) - 1e-6 <= ym <= max(a[1], b[1]) + 1e-6:
+                                z = [a, (a[0], ym), (b[0], ym), b]
+                                cands.append((_corr_frac(z, cr), 2, z))
+                best = max(cands, key=lambda c: (round(c[0], 6), -c[1]))
+                if best[1]:
+                    path = best[2]
+                    k_ = 'vfirst' if best[1] == 1 else 'zpath'
+                    rec['path_pick'][k_] = rec['path_pick'].get(k_, 0) + 1
             Lp = _poly_len(path)
             # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
             # segment) at each non-glue end, the span between them at the reach as before
