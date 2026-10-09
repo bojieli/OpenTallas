@@ -61,7 +61,8 @@ module ot_hbm_kvwb_hub_sram #(
   reg [1:0] h_kind; reg [5:0] h_slot; reg h_r2, h_sh; reg [19:0] h_pos;
   reg [4:0] nb, bi;
   reg [4351:0] buf_;
-  wire row_r,sh_r,wb_fault;
+  wire row_r,sh_r,wb_fault,wb_fence;
+  assign fence_ok=wb_fence&&(ast==A_HDR)&&!rne&&!rv_q&&!ri_v&&!row_v&&!sh_v&&!map_fault;
   reg row_v, sh_v; reg [19:0] cur_pos;
   assign r_pop = rne && ((ast == A_HDR) || (ast == A_DAT));
   wire [4:0] nb_of = (rh[1:0] == 2'd1 && !rh[29]) ? 5'd9 : (rh[1:0] == 2'd2 && !rh[29]) ? 5'd3 : 5'd17;
@@ -101,7 +102,7 @@ module ot_hbm_kvwb_hub_sram #(
     .row_v(row_v), .row_kind(h_kind), .row_slot(h_slot), .row_r2(h_r2), .row_data(buf_), .row_r(row_r),
     .sh_r(sh_r),.fault(wb_fault),.sh_v(sh_v), .sh_slot(h_slot[2:0]), .sh_data(buf_),
     .wq_v(wq_v), .wq_pc(wq_pc), .wq_bank(wq_bank), .wq_row(wq_row), .wq_col(wq_col), .wq_data(wq_data), .wq_r(wq_r),
-    .wq_stk(wq_stk), .ack_n(ack_n), .issued(issued), .acked(acked), .fence_ok(fence_ok));
+    .wq_stk(wq_stk), .ack_n(ack_n), .issued(issued), .acked(acked), .fence_ok(wb_fence));
   wire [29:0] s_addr; wire s_fault;
   ot_hbm_kport_map u_map (.pc(wq_pc), .bank(wq_bank), .row(wq_row), .col(wq_col), .s(s_addr), .fault(s_fault));
 
