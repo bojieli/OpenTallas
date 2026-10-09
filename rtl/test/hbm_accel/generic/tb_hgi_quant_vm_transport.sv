@@ -47,6 +47,8 @@ module tb_hgi_quant_vm_transport;
  end
  always @(posedge clk)begin
   if(rsp_v&&rsp_r)begin if(rsp[256])acks=acks+1;#0.01;rsp_v=0;end
+ end
+ always @(posedge clk)begin
   if(ref_vo&&!use_vector)begin
    for(integer k=0;k<32;k=k+1)
     if(rbeat*32+k<current_n)expected[4096+rbeat*32+k]={ref_y[k*16+:16],16'd0};
