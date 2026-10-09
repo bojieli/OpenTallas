@@ -444,7 +444,7 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
+        "status": "NEEDS_RTL_ORIGINAL_DRC1_PINFIX_PAIR_PREPARED_ONLY",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -458,13 +458,15 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "DRC_original": 1
       },
       "dependencies": [
         "every token consumer carries bit17",
         "normative simulator CF-MTP vectors",
         "production ctl/argmax binding",
-        "bareleaf boundary failure repaired withPINREG1 +1edge; newmodel/exact/boundarysource awaiting final pin before pair intake"
+        "bareleaf boundary failure repaired withPINREG1 +1edge; newmodel/exact/boundarysource awaiting final pin before pair intake",
+        "Owner takeover token branch5d3b4e7e: original timing/electrical pass butspacingDRC1;52d6df pinfix pair preparedNOTcanonicalqueued"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -618,7 +620,8 @@
         "real winning FP32 value to O[0] and18bit token to O[1]",
         "stable tie/signed-zero/NaN golden contract",
         "module path provisional until child port manifest pinned",
-        "No actual HBM ARGMAX_MERGE value32/id18 compare or VMresultstore consumer installed; must build/bind, cannot feed sum-onlyPSG or legacyROMNaNfault chain"
+        "No actual HBM ARGMAX_MERGE value32/id18 compare or VMresultstore consumer installed; must build/bind, cannot feed sum-onlyPSG or legacyROMNaNfault chain",
+        "Normativeimm_a32 versus physicalcfg_imm_a18 highbits adapter sequencing/range semantics unresolved; cannot truncate highbits. Claude takeover owns actualscoreconsumer"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -1073,7 +1076,8 @@
         "commit": "6de65ee0e",
         "paths": [
           "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv"
-        ]
+        ],
+        "handoff_evidence_commit": "5d3b4e7efd531a3c98948fe16ed03ecd1517ba88"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -1114,7 +1118,7 @@
         }
       },
       "physical": {
-        "status": "FULL_BOUNDARY_AND_FACADE_PASS_CORE_PAIR_REQUESTED_NOT_CONFIRMED",
+        "status": "TAKEOVER_CORE_PAIR_PREPARED_ONLY_NOT_CANONICAL_QUEUED",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -1159,18 +1163,20 @@
       "owner": "generic_die_integration/quant_vm_transport",
       "description": "Finite full-record quant VM operand/count/write-ack adapter; real provider binding remains Claude GH-d",
       "source": {
-        "commit": "bf4cf8ece",
+        "commit": "a63e77167",
         "paths": [
           "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv"
         ],
         "exact_evidence_commit": "90fe3ec1e",
-        "repair_candidate": "a63e77167"
+        "repair_candidate": "a63e77167",
+        "evidence_commit": "f71022804550ca36a39e0082181db0603621a487"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
         "evidence": [
           "results/hgi_generic/quant_vm_transport/port_manifest.json"
-        ]
+        ],
+        "takeover": "Claude owns all extensions/integration; route drafts unsubmitted"
       },
       "model": {
         "status": "MODELED_ACTUAL_PACKET_HANDSHAKES",
@@ -1185,13 +1191,13 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_458_CASES_10768_WORDS_INCLUDING256PARAM_DOMAIN",
+          "status": "PASS_458_CASES_10768_WORDS",
           "evidence": [
             "results/hgi_generic/quant_vm_transport/90fe3ec1e/receipt.json"
           ]
         },
         "negative": {
-          "status": "PASS_DROP_EARLY_DONE_CREDIT_MUTANTS",
+          "status": "PASS_THREE_COMPILED_MUTANTS_EXIT134",
           "evidence": [
             "results/hgi_generic/quant_vm_transport/90fe3ec1e/receipt.json"
           ]
@@ -1204,14 +1210,14 @@
         }
       },
       "physical": {
-        "status": "REPAIR_BOUNDARY_PASS12_4_CURRENT_FIT_RUNNING_NO_ROUTE",
+        "status": "OWNER_TAKEOVER_STOPPED_NO_ROUTES_FULLSHAPE_SYNTH_BOUNDARY_PASS",
         "jobs": [],
         "corners": {},
-        "measured_synth_area_um2": 29108.0952,
+        "measured_synth_area_um2": 29130.81084,
         "measured_peak_MB": 2003.35,
         "provisional_slot_um": [
           1800,
-          600
+          275.6
         ],
         "electrical": {
           "status": "NOT_VERIFIED",
@@ -1223,7 +1229,8 @@
           "output_levels": 4,
           "input_to_output_paths": 0,
           "source": "a63e77167"
-        }
+        },
+        "measured_synth_cells": 200951
       },
       "dependencies": [
         "Actual337-bit request273-bit response provider is Claude GH-d; WRITE_ECHO response bit256 is not a fault",
@@ -1310,5 +1317,10 @@
       }
     }
   ],
-  "collected_at_utc": "2026-10-09T13:30:33.726662+00:00"
+  "collected_at_utc": "2026-10-09T13:30:33.726662+00:00",
+  "takeover": {
+    "owner": "Claude",
+    "status": "Codex design/build/route submission stopped; live jobs preserved",
+    "all_proposals_require_coordinator_action": true
+  }
 }

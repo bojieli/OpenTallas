@@ -83,16 +83,16 @@
     },
     {
       "element": "quant23_core_and_VM_transport",
-      "source": "bf4cf8ece_FAILED_BOUNDARY_46",
+      "source": "a63e77167",
       "core_source": "7c0dd09fa",
       "model_hook": "hgi_quant_decode_model + hgi_quant_vm_transport_model",
       "replicas": 1,
       "slot_um": [
         1800,
-        600
+        275.6
       ],
-      "reservation_mm2": 1.08,
-      "measured_synth_area_um2": 29108.0952,
+      "reservation_mm2": 0.49608,
+      "measured_synth_area_um2": 29130.81084,
       "core_latency_edges": 23,
       "descriptor_capture_validation_edges": 2,
       "packed_sector_handshakes_per32_words": 8,
@@ -105,9 +105,7 @@
         "route TT/FF closure",
         "genericVM root/provider and SECDED contract Claude GH-d",
         "partial overlap alias semantics",
-        "actual VM RTT and sustainable input bandwidth",
-        "Real response-seat repair exact/boundary and source-rebound fullshape physical fit",
-        "Constant-lane assembly replaces variable-LHS prioritychain inputboundary30 successor; currentexact/boundary reruns pending"
+        "actual VM RTT and sustainable input bandwidth"
       ],
       "repair_source": "a63e77167",
       "repair_added_flops": 274,
@@ -121,7 +119,11 @@
         275.6
       ],
       "candidate_tight_reservation_mm2": 0.49608,
-      "candidate_tight_fit": "GEOMETRIC_OUTLINE_ONLY_HALO_PIN_BOUNDARY_ROUTE_PENDING"
+      "candidate_tight_fit": "GEOMETRIC_OUTLINE_ONLY_HALO_PIN_BOUNDARY_ROUTE_PENDING",
+      "evidence_source": "f71022804550ca36a39e0082181db0603621a487",
+      "boundary": "PASS12input/4output/0I->O",
+      "exact": "458cases10768words plus3 compiled mutants FAIL134",
+      "physical": "NO_ROUTE_SUBMITTED_OWNER_TAKEOVER"
     },
     {
       "element": "TOPK_K2048",
