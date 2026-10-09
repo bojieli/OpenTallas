@@ -1,0 +1,51 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-pinreg-38f22c6d8-tt-remote/cl/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -28.62,
+  "tns_ps": -5000.33,
+  "worst_reg_to_reg_slack_ps": 21.0,
+  "worst_input_to_reg_slack_ps": -28.62,
+  "worst_output_port_slack_ps": 304.59,
+  "violating_d_pins": "427",
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 561.0,
+    "min": 532.8,
+    "max": 576.5,
+    "n": 585,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "e02c96a5c2de5a5abcbfb3408d0d859b05267e3aaed0ef94c1c7be16470d5145"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -66.87,
+  "tns_ps": -3986.35,
+  "worst_reg_to_reg_slack_ps": -12.51,
+  "worst_input_to_reg_slack_ps": 86.54,
+  "worst_output_port_slack_ps": -66.87,
+  "violating_d_pins": "2314",
+  "ioref": {
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 462.0,
+    "min": 435.3,
+    "max": 476.9,
+    "n": 585,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "8cd4432b27d763e121d7005fe273af5c0301a564b4d6cdba1e87b1deb3e67e45"
+ }
+}

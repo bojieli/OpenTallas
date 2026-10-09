@@ -1,0 +1,40 @@
+{
+ "status": "ADMITTED_RUNNING",
+ "review": "REVIEW_20261009.md confirmed0242 B4 +H1-H17confirmed0258 read",
+ "host": "ot-pve1",
+ "root": "/srv/opentallas-scratch/codex/markov-p1-b4-rejudge-20261009",
+ "PythonPID": 320398,
+ "initial_TT_OpenROADPID": 320448,
+ "source": "38f22c6d8",
+ "terminal_evidence": "45e29a281",
+ "RTL_unchanged": true,
+ "added_cycles": 0,
+ "guard_GiB": 17,
+ "guard_basis": "same-object post-routeSTA6_report.log measuredPeak16946080KB=16.16GiB roundedup17GiB; helperPython~16MiB",
+ "MemAvailable_MiB": 109401,
+ "disk_available": "1.4TB",
+ "reference_rule": {
+  "inputmax": "TTboundarymean+250",
+  "inputmin": "FFboundarymean",
+  "outputmax": "250-TTboundarymean",
+  "outputmin": "-(FFboundarymean+50)",
+  "generic_budget250_retained": true,
+  "sender_hold50_retained": true,
+  "old_calibration": {
+   "TT": 657,
+   "FF": 546
+  },
+  "actual_routed": {
+   "TT": 561,
+   "FF": 462
+  },
+  "actual_reference_source": "original routed_ioref.a1.json"
+ },
+ "original_objects": {
+  "odb": "29909e4275962ff0b142951a458e7a522d6e4e3aa3241540a67a8c1d1dcc4031",
+  "spef": "877b7ac4306653ac6d7ceebd32c08846b38866d3ca378673cab5e4c751c213f0",
+  "sdc": "194af7306a1b8816f04e02cc06baf8c9635bdd467d5f884d263a891c4f56c5d6"
+ },
+ "timing_gain_claimed": false,
+ "pending": "ActualTT/FFrejudge, then minimum approvedholdECO/LVT onlyifstillneeded"
+}
