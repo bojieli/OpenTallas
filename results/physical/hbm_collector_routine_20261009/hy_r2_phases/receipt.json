@@ -1,0 +1,41 @@
+{
+  "job": "hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine-r2",
+  "source": "e0c39fc90",
+  "host": "ot-epyc4",
+  "status": "INTERMEDIATE_PHASES_COMPLETE_NOT_CLOSURE",
+  "phase_admission_gib": {
+    "calibration": 32,
+    "full_route": 98
+  },
+  "admission_basis": "Owner-approved conservative phase-derived estimate; full DRT still unknown; no hard process cap.",
+  "completed": {
+    "floorplan": {
+      "rc": 0,
+      "elapsed": "1:01:37.93",
+      "reported_peak_kib": 7116112,
+      "sampled_proc_hwm_kib": 7165572
+    },
+    "macro_place": {
+      "rc": 0,
+      "elapsed": "1:39.78",
+      "reported_peak_kib": 8312688,
+      "actual_rx_hard_halo_count": 48,
+      "site_dbu": [
+        54,
+        270
+      ],
+      "halo_um": [
+        4,
+        6
+      ]
+    }
+  },
+  "raw_sha256": {
+    "2_2_floorplan_macro.log": "dd6d2de67fd1dbb61b03688953f749d90ee03e583603118560b5629e813ddde7",
+    "2_1_floorplan.log": "001aae006142a9a6ddd34a2c0ae23f7680d621f7227955e1ca3de63d1abdd6fb"
+  },
+  "limitations": [
+    "Calibration not terminal",
+    "No setup/hold/route adoption verdict"
+  ]
+}

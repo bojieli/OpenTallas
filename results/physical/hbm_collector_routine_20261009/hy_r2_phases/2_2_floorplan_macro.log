@@ -1,0 +1,99 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_1_floorplan.odb
+read_sdc -mode ss /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_1_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_1_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.2404999977350235, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.1899999976158142
+rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 6 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2404999977350235
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (1399.66, 1403.98),  Floorplan Area: (0.00, 0.54) (1399.63, 1403.19)
+	Number of std cell instances: 1610736
+	Area of std cell instances: 228991.66
+	Number of macros: 48
+	Macros to be placed: 48
+	Area of macros: 186795.69
+	Base halo (L, B, R, T): (4.00, 6.00, 4.00, 6.00)
+	Area of macros with halos: 202791.96
+	Area of std cell instances + Area of macros: 415787.35
+	Floorplan area: 1963185.41
+	Design Utilization: 0.21
+	Floorplan Utilization: 0.13
+	Manufacturing Grid: 1
+
+[WARNING MPL-0055] Couldn't find a solution for the specified utilization. The utilization was adjusted to 0.33009967.
+[INFO MPL-0500] Runtime: 72.99s
+Took 73 seconds: rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 6 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2404999977350235
+source /work/hooks/post_macro_place_rx_macro_blockages.tcl
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 1296756 405270 1399626 458730
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 1296756 323190 1399626 376380
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 1296756 240840 1399626 294300
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 1296756 446310 1399626 499770
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 1296756 364230 1399626 417690
+RX_HARD_HALO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 1296756 282150 1399626 335340
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 1193940 340200 1296810 393660
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 1193940 258120 1296810 311310
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 1193940 134730 1296810 188190
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 1193940 217080 1296810 270270
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 1193940 299160 1296810 352350
+RX_HARD_HALO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 1193940 175770 1296810 229230
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 105732 1109430 208602 1162890
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 105732 1232820 208602 1286010
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 105732 1314900 208602 1368360
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 105732 1150470 208602 1203930
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 105732 1191780 208602 1244970
+RX_HARD_HALO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 105732 1273860 208602 1327050
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 1193940 1123470 1296810 1176930
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 1091124 1123470 1193994 1176930
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 1296756 1123470 1399626 1176930
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 1091124 1164510 1193994 1217970
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 1193940 1164510 1296810 1217970
+RX_HARD_HALO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 1296756 1164510 1399626 1217970
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 1091124 134730 1193994 188190
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 988308 175770 1091178 229230
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 1091124 217080 1193994 270270
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 988308 217080 1091178 270270
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 988308 134730 1091178 188190
+RX_HARD_HALO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 1091124 175770 1193994 229230
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 208548 1109430 311418 1162620
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 208548 1232820 311418 1286010
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 208548 1314900 311418 1368090
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 208548 1150470 311418 1203930
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 208548 1191510 311418 1244970
+RX_HARD_HALO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 208548 1273860 311418 1327050
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 1296756 540 1399626 47790
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 1296756 117720 1399626 170910
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 1296756 199800 1399626 253260
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 1296756 76680 1399626 129870
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 1296756 35640 1399626 88830
+RX_HARD_HALO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 1296756 158760 1399626 212220
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram 514944 1355940 617814 1403190
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram 206442 1355940 309366 1403190
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram 617760 1355940 720630 1403190
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram 309312 1355940 412182 1403190
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram 412128 1355940 514998 1403190
+RX_HARD_HALO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram 103626 1355940 206496 1403190
+RX_HARD_HALO_COMPLETE count48 site=54,270 halo_um=4,6
+Design area 415787 um^2 21% utilization.
+write_db /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_2_floorplan_macro.odb
+Elapsed time: 1:39.78[h:]min:sec. CPU time: user 414.21 sys 3.25 (418%). Peak memory: 8312688KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb           99           8117 a9d33f5545989f490463
