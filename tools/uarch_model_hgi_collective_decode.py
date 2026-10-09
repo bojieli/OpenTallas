@@ -40,7 +40,7 @@ def row_formatter_model(k=2048,row_words=32):
       output_bits=560,routing_tracks_needed=1133,routing_channel_capacity=6250,
       channel_basis='300um /0.048um one-layer pitch estimate',slot_um=[600,240],
       area_estimate_um2=12000,area_fraction_estimate=12000/144000,
-      mux_inputs=2,max_control_fanout=32,held_payload_register_bits=512,progress_lookahead_register_bits=38,
+      mux_inputs=2,max_control_fanout=32,held_payload_register_bits=512,progress_lookahead_register_bits=75,
       structural_repair='precompute word/index next and terminal flags in existing REQUEST/MAP states; narrow B8/G96 quotient to12-bit /3 and residue',
       observed_failed_path=dict(source='7c38e6508',start='read_word[0]',end='read_word[15]',cell_ps=934.8,wire_ps=243.4,fanout=12,TT_signoff_slack_ps=-430),
       schedule_added_cycles=0,physical_gain_not_yet_measured=True,
