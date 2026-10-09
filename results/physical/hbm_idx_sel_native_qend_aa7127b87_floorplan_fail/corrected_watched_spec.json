@@ -1,0 +1,119 @@
+{
+  "name": "hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx",
+  "block": "hfd_idx_sel_native_qend",
+  "owner": "Codex:selector_capture; Claude routine0457 item3",
+  "status": "READY isolated pathfinding; not die closure",
+  "purpose": "Approved existing aa7127 nativeqend same-RTL scalar IO configuration correction only; no new design. Preserve original PPL0061 failure062d10. All6903 mapped-port labels gatePASS3f2cc25b7; pinblob/coordinates/clock unchanged. Isolated fault-free pathfinding, no SRAM SECDED or diecontext qualification.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 76,
+  "source": {
+    "branch": "codex/hbm-selector-capture-20261009",
+    "commit": "5931d5864b059e46ce195ab07f2d8d8064f9d2bc",
+    "paths": [
+      "tools",
+      "rtl/hdc",
+      "rtl/hbm_accel/index",
+      "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+      "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "physical/abi3",
+      "physical/common_flow",
+      "physical/hbm_accel_die_views/common",
+      "physical/hbm_accel_die_views/index",
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+      "configs/pdk",
+      "Makefile"
+    ],
+    "extra_paths": [
+      "results/rtl/hbm_selector_capture_macro_20261009_r2",
+      "results/rtl/hbm_selector_native_qend_aa7127b87",
+      "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail",
+      "results/physical/hbm_idx_sel_native_qend_aa7127b87_synth"
+    ]
+  },
+  "no_bench_reason": "Committed full-shape macro component gate at results/rtl/hbm_selector_capture_macro_20261009_r2/exact/gate.json: baseline/captured golden PASS; selector and candidate latency-mismatch controls rejected; native wrapper T1 MEMV1 READLAT2 elaboration PASS. LA7 native elaboration separately passed remotely; deep-credit connected qualification remains owned by hbm_continuation. Quarter-last opt-in sideband is registered with candidate valid; parent owns TU quarter-flush exact gate. Static wrapper parameters and exact native pin inventory source-pinned; old cap failure preserved at results/physical/hbm_idx_sel_capture_la7_e43_inventory_fail. SameRTL identity3f2 versusaa7127 proven in corrected_intake_source_proof5931; no numerical or architecture changes. Sourcepinned actualcomponentgolden andnegative metadata mutants retained.",
+  "stages": {
+    "calibrate": {
+      "cmd": "export OPENTALLAS_ORFS_IMAGE='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh ${CK_SS_MEAN:-770} >/dev/null && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"76\" PER=\"0.833333333333\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel_native_qend physical/hbm_accel_die_views/index/rtl/hfd_idx_sel_native_qend.sv --orfs-var SYNTH_MEMORY_MAX_BITS=77952 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN",
+      "threads": 16,
+      "peak_ram_gb": 76
+    },
+    "route": {
+      "cmd": "export OPENTALLAS_ORFS_IMAGE='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh ${CK_SS_MEAN:-770} >/dev/null && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"76\" PER=\"0.833333333333\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel_native_qend physical/hbm_accel_die_views/index/rtl/hfd_idx_sel_native_qend.sv --orfs-var SYNTH_MEMORY_MAX_BITS=77952 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+      "logs": [
+        "{RUN}/routes/{NAME}/run.log"
+      ],
+      "peak_ram_gb": 76
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "macros": [
+      "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+      "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+    ],
+    "checks": [
+      {
+        "name": "native_LEF_matches",
+        "cmd": "python3 -c \"import json,sys;sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict']!='MATCH')\""
+      }
+    ]
+  },
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "route_hold_margin_ns": 0.025,
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "Explicit isolated PATHFINDING using calibrated common virtual-clock IO scripts, authorized by hbm_wiring 2026-10-09; actual die insertion/neighbor min-max budgets await R25I paths and TA15 roots."
+  },
+  "qualification": {
+    "in_context": false,
+    "policy": "TT setup>=0, FF hold>=0, DRC0; SS sensitivity, unchanged833.333ps period and60/25ps uncertainty"
+  },
+  "record": [
+    {
+      "from": "{RUN}/routes/{NAME}/view",
+      "to": "physical/hbm_accel_die_views/index/native_qend_pathfinding/view"
+    },
+    {
+      "from": "{RUN}/routes/{NAME}/corner_sta.json",
+      "to": "results/physical/hbm_idx_sel_native_qend_pathfinding/corner_sta.json"
+    }
+  ],
+  "inventory": {
+    "largest_inferred_bank_bits": 77952,
+    "source": "terminal Yosys source-e43 full T1/LA7 table:128 rows x609 bits",
+    "synth_memory_max_bits": 77952,
+    "failed_default": 65536
+  },
+  "host_require": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "route_ref": "TT",
+  "rebudget": true,
+  "resource_evidence": {
+    "reservation_gib": 76,
+    "claim_type": "root-authorized conservative same-shape phase-derived estimate; NOT measured DRT or comparable route",
+    "derivation": "ceil(4*19663284/1048576)=76GiB",
+    "actual_same_shape_synthesis_peak_kib": 19663284,
+    "actual_same_shape_floorplan_peak_kib": 14203044,
+    "raw_synthesis_receipt": "results/physical/hbm_idx_sel_native_qend_aa7127b87_synth/receipt.json",
+    "raw_floorplan_receipt": "results/physical/hbm_idx_sel_native_qend_aa7127b87_floorplan_fail/receipt.json",
+    "authorization": "root routine0457 scalar configuration requeue; explicit76GiB decision20261009",
+    "limitations": "No measured DRT or verified comparable3.328M-cell16-SRAM route. Fourfold routing/extraction/timing inventory allowance estimate, not measured requirement. Original120 declaration remains history.",
+    "admission": "fresh remote actualguard/headroom; no hard cap or duplicate external future claim; monitorphaseRSS/HWM and adjust on measuredgrowth"
+  }
+}
