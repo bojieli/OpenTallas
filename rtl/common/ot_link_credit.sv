@@ -30,21 +30,39 @@ module ot_link_credit_tx #(parameter integer W=8, CRED=8)(
     always @(posedge clk) if (send) l_data <= i_data;
 endmodule
 
-module ot_link_credit_rx #(parameter integer W=8, DEPTH=8)(
+// OREG=1: the landing FIFO drains into a two-entry output skid, so o_valid / o_data leave flops (no FIFO read
+// mux in front of the consumer's logic: HC join -lk TT -107 = rp -> 8:1 landing mux -> SECDED encode -> wd_q).  The
+// credit is returned when a beat leaves the FIFO; the skid adds 2 slots beyond DEPTH and 1 cycle of latency.
+module ot_link_credit_rx #(parameter integer W=8, DEPTH=8, OREG=0)(
     input wire clk, rst_n,
     input wire l_valid, input wire [W-1:0] l_data, output reg l_credit,
     output wire o_valid, input wire o_ready, output wire [W-1:0] o_data,
     output reg fault
 );
+    wire f_valid, f_ready; wire [W-1:0] f_data;
+    generate if (OREG) begin : g_oreg
+        reg v0, v1; reg [W-1:0] d0, d1;
+        assign f_ready = !v1; assign o_valid = v0; assign o_data = d0;
+        wire push = f_valid && !v1, take = v0 && o_ready;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin v0 <= 1'b0; v1 <= 1'b0; end
+            else if (take) begin if (v1) v1 <= 1'b0; else v0 <= push; end
+            else if (push) begin if (!v0) v0 <= 1'b1; else v1 <= 1'b1; end
+        always @(posedge clk)
+            if (take) begin if (v1) d0 <= d1; else if (push) d0 <= f_data; end
+            else if (push) begin if (!v0) d0 <= f_data; else d1 <= f_data; end
+    end else begin : g_direct
+        assign o_valid = f_valid; assign f_ready = o_ready; assign o_data = f_data;
+    end endgenerate
     localparam integer AW = (DEPTH > 1) ? $clog2(DEPTH) : 1, CW = $clog2(DEPTH + 1);
     reg v_q;
     reg [W-1:0] d_q;
     reg [W-1:0] mem [0:DEPTH-1];
     reg [AW-1:0] wp, rp;
     reg [CW-1:0] n;
-    assign o_valid = n != 0;
-    assign o_data = mem[rp];
-    wire pop = o_valid && o_ready;
+    assign f_valid = n != 0;
+    assign f_data = mem[rp];
+    wire pop = f_valid && f_ready;
     wire full = n == CW'(DEPTH);
     wire wr = v_q && (!full || pop);
     always @(posedge clk or negedge rst_n)

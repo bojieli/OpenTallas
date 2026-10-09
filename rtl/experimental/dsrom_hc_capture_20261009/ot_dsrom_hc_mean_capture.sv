@@ -27,6 +27,7 @@ module ot_dsrom_hc_mean_capture #(
     // OUT_SKID.  LINK_DEPTH = landing depth = sender credits (>= the link round trip for full rate).  Landing overflow
     // is a fault.
     parameter integer LINK_CREDIT=0, LINK_DEPTH=8,
+    parameter integer LINK_OREG=1, // landing receivers drive the core from flops (ot_link_credit_rx OREG)
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -71,8 +72,8 @@ module ot_dsrom_hc_mean_capture #(
     wire x_cmd_valid,x_cmd_ready,x_in_valid,x_in_ready;wire [1:0] x_cmd_capture;wire [USER_W-1:0] x_cmd_user;
     wire [POS_W-1:0] x_cmd_position;wire [EPOCH_W-1:0] x_cmd_epoch;wire [7:0] x_in_beat;wire [511:0] x_in_residuals;
     generate if(LINK_CREDIT) begin:g_skid_link
-        ot_link_credit_rx #(.W(2+USER_W+POS_W+EPOCH_W),.DEPTH(LINK_DEPTH)) u_cmd_l(.clk(clk),.rst_n(rst_n),.l_valid(cmd_valid),.l_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.l_credit(cmd_ready),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),.o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}),.fault(lf[0]));
-        ot_link_credit_rx #(.W(8+512),.DEPTH(LINK_DEPTH)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_beat,in_residuals}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}),.fault(lf[1]));
+        ot_link_credit_rx #(.W(2+USER_W+POS_W+EPOCH_W),.DEPTH(LINK_DEPTH),.OREG(LINK_OREG)) u_cmd_l(.clk(clk),.rst_n(rst_n),.l_valid(cmd_valid),.l_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.l_credit(cmd_ready),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),.o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}),.fault(lf[0]));
+        ot_link_credit_rx #(.W(8+512),.DEPTH(LINK_DEPTH),.OREG(LINK_OREG)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_beat,in_residuals}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}),.fault(lf[1]));
     end else if(IN_SKID) begin:g_skid
         assign lf=2'b0;
         ot_dsrom_hc_skid #(.W(2+USER_W+POS_W+EPOCH_W)) u_cmd(.clk(clk),.rst_n(rst_n),.i_valid(cmd_valid),.i_ready(cmd_ready),
@@ -177,13 +178,25 @@ module ot_dsrom_hc_mean_capture #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
     always @(posedge clk) if(state==STORE) wcode_q<=write_code;
+    // cont-takeover: the wide data registers (acc, h1..h3, pack_q, held_code: 2,500 flops) carry no reset -- validity is the
+    // state machine's -- so rst_n no longer drives an async-reset recovery tree (mean -lb0 input->reg -52, join -13).
+    // Same write conditions as before (the state machine's, gated by !fault).
+    wire dwr=!fault && !link_fault;
+    always @(posedge clk) if(dwr) begin
+        if(state==LOAD && x_in_valid && x_in_beat==beat_q) begin
+            for(lane=0;lane<8;lane=lane+1) acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
+            h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
+        end
+        if(state==AWAIT && (&av) && !(|ae)) acc<=ay;
+        if(state==MWAIT && (&mv) && !(|me)) pack_q[128*part+:128]<=mean_bf16;
+        if(state==RDECODE) held_code<=read_code;
+    end
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;
             user_q<=0;position_q<=0;epoch_q<=0;capture_q<=0;
             beat_q<=0;frame_q<=0;part<=0;add_step<=0;
-            read_capture<=0;read_frame<=0;held_code<=0;
-            h1<=0;h2<=0;h3<=0;acc<=0;pack_q<=0;
+            read_capture<=0;read_frame<=0;
         end else if(link_fault) fault<=1;
         else if(!fault) begin
             capture_done<=0;
@@ -201,9 +214,6 @@ module ot_dsrom_hc_mean_capture #(
                 LOAD: if(x_in_valid) begin
                     if(x_in_beat!=beat_q) fault<=1;
                     else begin
-                        for(lane=0;lane<8;lane=lane+1)
-                            acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
-                        h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
                         add_step<=0;state<=AISS;
                     end
                 end
@@ -211,7 +221,6 @@ module ot_dsrom_hc_mean_capture #(
                 AWAIT: if(&av) begin
                     if(|ae) fault<=1;
                     else begin
-                        acc<=ay;
                         if(add_step==2) state<=MISS;
                         else begin add_step<=add_step+1'b1;state<=AISS;end
                     end
@@ -220,7 +229,6 @@ module ot_dsrom_hc_mean_capture #(
                 MWAIT: if(&mv) begin
                     if(|me) fault<=1;
                     else begin
-                        pack_q[128*part+:128]<=mean_bf16;
                         if(part==3) state<=STORE;
                         else begin part<=part+1'b1;beat_q<=beat_q+1'b1;state<=LOAD;end
                     end
@@ -238,7 +246,7 @@ module ot_dsrom_hc_mean_capture #(
                 end
                 RREQ: state<=RWAIT;
                 RWAIT: state<=RDECODE;
-                RDECODE: begin held_code<=read_code;state<=ECC_PIPE?RECC:RHOLD;end
+                RDECODE: state<=ECC_PIPE?RECC:RHOLD;
                 RECC: if(&decode_valid) state<=RHOLD;
                 RHOLD: begin
                     if(|dec_ue) fault<=1;
