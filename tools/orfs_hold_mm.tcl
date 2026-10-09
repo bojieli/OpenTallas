@@ -152,6 +152,7 @@ proc ot_mm_ws {check scene} {
 # unchanged; a combined call runs setup exactly as before, then hold in chunks of OT_HOLD_CHUNK iterations (default 1000)
 # and stops when a chunk improves hold TNS by < OT_HOLD_MIN_GAIN_PCT % (default 2) and WNS by < 1 ps, when hold is
 # already >= 0 and a chunk gains < 1 ps (chasing the margin only), or after OT_HOLD_MAX_HOURS (default 3) of hold repair.
+# After an HM-AUTO flood reduction the hold repair first runs at HM 0 and stops once real hold is met (MET-FIRST below).
 # A stall with hold < 0 writes REPORTS_DIR/ot_hold_stall_<stage>.rpt (path classes, pin groups) and logs OT_HOLD_STALL:
 # the closure loop reports it as NEEDS_RTL with that window instead of crawling.  OT_HOLD_GUARD=0 restores the old call.
 proc ot_hold_guard_on {} { expr {![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0"} }
@@ -284,11 +285,29 @@ proc ot_repair_timing {rt_args} {
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
   log_cmd repair_timing {*}$rt_args -setup
+  set hm_asked $hm
   set rt_args [ot_hm_guard $rt_args]
   set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
     return [log_cmd repair_timing {*}$rt_args -hold]
+  }
+  # MET-FIRST on a margin flood (drive-2155 2026-10-08, OWNER: the hold margin is a design target, HM 0 allowed; a route
+  # whose real FF hold is met stops repairing).  repair_timing's hold pass visits EVERY endpoint inside the margin in one
+  # call (-max_iterations does not bound it), so after an HM-AUTO flood reduction (worst + floor) the call still pads all
+  # of them: hbm_su_ctlh vf-lvt met real hold at 7.7k buffers, then spent 2.3 h / 58k more buffers on 60k endpoints for
+  # +4.4 ps.  When the guard flagged a flood, repair at HM 0 (real violations only) and stop once met.  Disable with
+  # OT_HOLD_FLOOD_MET_FIRST=0.
+  if {$hm < $hm_asked && [ot_env_num OT_HOLD_FLOOD_MET_FIRST 1] != 0 && $i >= 0} {
+    if {[lindex $prev 0] < 0} {
+      puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (met-first at HM 0 after a margin flood; asked $hm_asked, auto $hm)"
+      log_cmd repair_timing {*}[lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] 0.0] -hold
+      set prev [ot_hold_stats]
+    }
+    if {[lindex $prev 0] >= 0} {
+      puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
+      return
+    }
   }
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
   puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it)"

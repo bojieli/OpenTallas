@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_ctrl_pc",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_ctrl_pc-s81tail-0b6058a98-tc-hm25/routes/s81ph_dsfd_ctrl_pc_s81tail_0b6058a98_tc_hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_ctrl_pc.lef": "0f7d504b61cb33d7639c79f7dd486499e4dbdf6ec1c2bfc1c53b997b7a7b293f",
+    "dsfd_ctrl_pc_ff.lib": "34b47cca6bea70d3ef46e7d5726732f16aa9f044d1cf8e5f314ff5cfd1dc84aa",
+    "dsfd_ctrl_pc_ss.lib": "c49710db8fde8666c5a5764630246821bb826a3ef2b336b974b6d1778043c846"
+  },
+  "ok": true
+}
