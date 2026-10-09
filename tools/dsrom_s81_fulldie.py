@@ -3748,6 +3748,22 @@ def _bank_nets(m):
             B[i] = (bid, cls, bits, eps + add)
 
 
+PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+
+
+def _corr_frac(path, rects, step=20.0):
+    tot = ins = 0
+    for (x0, y0), (x1, y1) in zip(path, path[1:]):
+        L = abs(x1 - x0) + abs(y1 - y0)
+        k = max(1, int(L // step))
+        for i in range(k + 1):
+            t = i / k
+            x, y = x0 + (x1 - x0) * t, y0 + (y1 - y0) * t
+            tot += 1
+            ins += any(a - 1e-6 <= x <= c + 1e-6 and b - 1e-6 <= y <= d + 1e-6 for a, b, c, d in rects)
+    return ins / tot if tot else 0.0
+
+
 def _hop_fix(m, P):
     """pass 2 of --hop-fix: on every planned hop, stations at equal spacing on the anchor-to-anchor L path.
     Field (column) common-clock buses: column relays (dsfd_rly, column clock / reset); hub common-clock buses: hub
@@ -3792,6 +3808,14 @@ def _hop_fix(m, P):
                     continue
                 fdrv = B[fi_][3][0]
             path = [a, (b[0], a[1]), b]
+            if PATH_PICK and reg is None:
+                # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1): a die-level hop takes the L orientation that runs more
+                # of its length inside the corridors (its stations may only sit there); the horizontal-first default
+                # drove the 20.9 mm scan hw_SW host chain along y=15373 through packed field frames (station 5/55 trap).
+                alt = [a, (a[0], b[1]), b]
+                if _corr_frac(alt, cor) > _corr_frac(path, cor) + 1e-9:
+                    path = alt
+                    rec['path_pick']['vfirst'] = rec['path_pick'].get('vfirst', 0) + 1
             Lp = _poly_len(path)
             # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
             # segment) at each non-glue end, the span between them at the reach as before
