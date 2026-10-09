@@ -45,8 +45,13 @@ def replay(model, seq, rollback_ring=True, successors=5):
     reissue_offset = successors + 1
     clean_out, clean_state = isa_replay(plan, progs, base, clean_jobs)
     deep_out, deep_state = isa_replay(plan, progs, base, jobs)
+    golden_state = model.new_state()
+    golden_exact = []
+    for pos, token in enumerate(seq):
+        logits = model.decode_token(int(token), pos, golden_state)
+        golden_exact.append(clean_out[pos][1] == [int(x) for x in G.bits(logits)])
     same = lambda a, b: bool(np.array_equal(G.bits(a), G.bits(b)))
-    return dict(compressor_records=lay.ring, jobs=[(int(t), p) for t, p in jobs],
+    return dict(compressor_records=lay.ring, clean_sequence_golden_logits_exact=golden_exact, jobs=[(int(t), p) for t, p in jobs],
                 corrected_positions=list(range(3, len(seq))),
                 corrected_logits_exact=[clean_out[p][1] == deep_out[p + reissue_offset][1] for p in range(3, len(seq))],
                 final_raw_kv_equal=[same(a[0], b[0]) for a, b in zip(clean_state, deep_state)],
@@ -57,7 +62,7 @@ def replay(model, seq, rollback_ring=True, successors=5):
                                             for a, b in zip(clean_state, deep_state)],
                 program_instructions=[len(p) for p in progs],
                 persistent_region_elements=sum(n for _, n in lay.vm_persist),
-                compressor_ring_extra_bytes=3 * (lay.ring - 2) * 64 * 4,
+                compressor_ring_extra_bytes=len(model.kv_src) * (lay.ring - 2) * 64 * 4,
                 compressor_ring_added_isa_instructions=0,
                 compressor_ring_added_arithmetic_cycles=0,
                 physical_storage_qualification=False)
@@ -85,7 +90,7 @@ def main():
                               for p in [Path(__file__), Path(P.__file__), Path(A.__file__), Path(I.__file__), Path(V.__file__), Path(G.__file__)]},
                checkpoint_sha256=hashlib.sha256(V.CHECKPOINT.read_bytes()).hexdigest(),
                config_sha256=hashlib.sha256(V.CONFIG.read_bytes()).hexdigest())
-    rec['exact'] = all(rec['corrected_logits_exact']) and all(rec['final_raw_kv_equal']) and all(rec['final_raw_persistent_vm_equal'])
+    rec['exact'] = all(rec['clean_sequence_golden_logits_exact']) and all(rec['corrected_logits_exact']) and all(rec['final_raw_kv_equal']) and all(rec['final_raw_persistent_vm_equal'])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(rec, indent=2) + '\n')
     print(json.dumps(rec), flush=True)
