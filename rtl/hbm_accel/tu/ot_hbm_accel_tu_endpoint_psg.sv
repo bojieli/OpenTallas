@@ -143,6 +143,16 @@ module ot_hbm_accel_tu_endpoint_psg #(
         assign ecc_ce=1'b0; assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
         assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
+        wire [NPT-1:0] port_ce;
+        wire [1:0] rx_drop[0:NPT-1];
+        wire [INJ-1:0] h_ce,h_ue,h_drop;
+        wire [DEL-1:0] d_ce,d_ue,d_drop;
+        wire dq_ce,dq_ue,dq_drop;
+        reg payload_error;
+        wire ue_now=(|h_ue)|(|d_ue)|dq_ue;
+        assign ecc_ce=(|port_ce)|(|h_ce)|(|d_ce)|dq_ce;
+        always @(posedge clk or negedge rst_n)
+          if(!rst_n)payload_error<=1'b0; else if(ue_now)payload_error<=1'b1;
         reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz; reg run_mcast; reg[7:0]run_outer;
         reg pending_start, completed, started;
         reg [15:0] rx_pending;
@@ -253,16 +263,6 @@ module ot_hbm_accel_tu_endpoint_psg #(
         reg  [PWT-1:0] ld_q [0:NPT-1];
         reg  [31:0] cstall;
         reg  [NPT-1:0] rb_pop;
-        wire [NPT-1:0] port_ce;
-        wire [1:0] rx_drop[0:NPT-1];
-        wire [INJ-1:0] h_ce,h_ue,h_drop;
-        wire [DEL-1:0] d_ce,d_ue,d_drop;
-        wire dq_ce,dq_ue,dq_drop;
-        reg payload_error;
-        wire ue_now=(|h_ue)|(|d_ue)|dq_ue;
-        assign ecc_ce=(|port_ce)|(|h_ce)|(|d_ce)|dq_ce;
-        always @(posedge clk or negedge rst_n)
-          if(!rst_n)payload_error<=1'b0; else if(ue_now)payload_error<=1'b1;
         wire [NPT-1:0] rb_empty, rb_ovf, pstall, pfault, s_rbv;
         wire [PWT-1:0] rb_head [0:NPT-1];
         wire [PWT-1:0] s_rbd [0:NPT-1];
