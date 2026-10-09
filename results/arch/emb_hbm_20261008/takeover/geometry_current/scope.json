@@ -1,0 +1,12 @@
+{
+  "verdict": "PARTIAL_FAIL_PRESERVED",
+  "source": "source_sha256 in result.json",
+  "positive": [
+    "default emb_hbm=False generator",
+    "emb_hbm=True generator"
+  ],
+  "negative": "92.256 request snaps to92.448 and breaches26mm;96.768 also breaches",
+  "interfaces_bound": false,
+  "next": "lattice92.016 by2000.16 helper successor; actual bus engine needs new route",
+  "admission": "AGIdock actual4GiB guard; container Python3.10 with pinned scipy1.15.3/numpy2.2.6; dependency failures retained"
+}

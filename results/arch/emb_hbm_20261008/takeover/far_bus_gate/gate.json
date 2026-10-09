@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.embedding_hbm_far_bus_gate.v1",
+  "model_before_RTL_commit": "61c447b2e",
+  "tool": "Icarus Verilog 12.0 stable",
+  "host": "ot-epyc1tb",
+  "remote_workdir": "/srv/opentallas-scratch/codex/emb-far-bus-gate",
+  "admission_peak_GiB": 1,
+  "source_sha256": {
+    "tools/emb_hbm_far_port_sources.py": "a48b4bd6e234bf2ac7741725252f6af356c3b013fa8528e8c8921c9c607c57e4",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far.sv": "e01c3c70c23d4d8ba17dfa2119475e90a0b70fbad1fe10346a9e6911d8c5eef0",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_link_far_bus.sv": "76e5a3c7b6e630fb2ff28a01d3359db0707c7d8b7d94a54c3c868cf683261082",
+    "rtl/test/emb_hbm/tb_emb_far_bus.sv": "32619cbd4ae117c56c0b790663dd4663d12fa04d742509a830be3a88b2cc8fb8",
+    "results/arch/emb_hbm_20261008/takeover/far_bus_binding_model.json": "d03cb4ef7bc5e0a2aab8ce435f237ee5b427237b29305716d0a29262f1a517a6"
+  },
+  "logs_sha256": {
+    "positive.log": "24f8f538a3ea568d82c40b088265b7f027005ba83e52633fe3d8f3a4804abed0",
+    "exits.txt": "c37466457d971ab1e0b4b88b65523f9567a5ea46423c8f76c370c04535f92f8f",
+    "negative_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "positive_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "negative.log": "3c7697de209715b75abae30eb80b6115ed8d94aecbc09df989241d16dfd2dd19",
+    "run.sh": "2173f8bbae2b47404f41d23af37e189bcf4c1b436230430a3c2fa0547c07960b"
+  },
+  "verdict": "PASS",
+  "positive": {
+    "native_output_equivalence": true,
+    "default_off": true,
+    "engine_transmitted": 64,
+    "KV_transmitted": 64,
+    "engine_received": 64,
+    "KV_received": 64,
+    "simultaneous_engine_KV_source_cycles": 64,
+    "engine_credits_returned": 64,
+    "KV_credits_returned": 64,
+    "class_order_and_data_exact": true,
+    "fault": 0
+  },
+  "negative": {
+    "mutation": "embedding transmit data bit0 toggled before wrapper while native receives original",
+    "exit_code": 1,
+    "expected_result": "FAIL far native-output equivalence"
+  },
+  "period_ps": {
+    "ck": 833.333334,
+    "lclk": 833.333334,
+    "phase": 100
+  },
+  "finite_flow": {
+    "CR": 128,
+    "OD": 8,
+    "AD": 8,
+    "TQ_each_class": 4,
+    "ECR": 4,
+    "KCR": 4,
+    "hub_source_packets": 128,
+    "hub_initial_tx_credits": 128,
+    "source_pacing": "One packet each class every8localcycles; hub receive one word every4forwardedcycles. Class credit pulses return one cycle after valid. All128TXwords consume original128 hub credits; no invented replenishment."
+  },
+  "original_RTL_modified": false,
+  "wrapper_added_registers": 0,
+  "wrapper_added_cycles": 0,
+  "physical_ECC_provider": "OPEN",
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0,
+  "scope": "Minimum full-depth one-far-endpoint gate. Native queues/CDC, simultaneous class traffic and preserved class order/data. No timing, route, die, raw-PHY ECC-provider or adoption claim."
+}
