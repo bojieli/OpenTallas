@@ -33,6 +33,9 @@ if [ "$kind" = port ]; then
                    --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
                    --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
+  if [ "${CAPTURE_ADJACENT:-0}" = 1 ]; then
+    interior_args+=(--step-tcl PRE_GLOBAL_PLACE=$D/capture_adjacent_place.tcl)
+  fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   SL=${SLICE:-ot_hcoll_port}; SLSRC=""; [ $SL = ot_hcoll_port2 ] && SLSRC="--source rtl/hbm_accel/tu/ot_hcoll_port2.sv"
   echo "kind=port slice=$SL mpt=${MPT:-} pintop=${PINTOP:-} pinbot=${PINBOT:-} die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
