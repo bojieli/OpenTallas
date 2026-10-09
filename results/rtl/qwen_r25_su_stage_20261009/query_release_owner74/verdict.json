@@ -1,0 +1,12 @@
+{
+  "status": "pass",
+  "source_commit": "a2b3b4f53",
+  "host": "ot-agidock128",
+  "admission_gib": 4,
+  "scope": "OWNER_W74 QUERY_RELEASE1 dispatcher control; arithmetic completion mocked",
+  "positive": "Four queries preserve TOKEN18 and owner74, tail NIN0/1/2/3, and hold scratch reuse and ROM fetch until checked consumer acknowledgement after three held cycles.",
+  "negative": "Wrong-owner query-release acknowledgement fences dispatch; foreign completion also rejected.",
+  "evidence": ["positive.log", "negative.log"],
+  "production_consumer_bound": false,
+  "limitation": "Real TU publication lease drain and downstream capture/visibility must provide the release; mock control proof does not establish that integration."
+}

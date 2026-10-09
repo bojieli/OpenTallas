@@ -1,0 +1,20 @@
+{
+  "status": "failed_timing",
+  "source_commit": "d08f44301",
+  "host": "ot-agidock128",
+  "launcher_pid": 2799411,
+  "admission_gib": 16,
+  "owner_width": 73,
+  "scope": "TT standalone pathfinding, external IO false paths, registered timing harness adds two cycles; protected mask pipeline adds one internal cycle",
+  "setup_wns_ns": -0.211558,
+  "hold_wns_ns": 0.0123366,
+  "area_um2": 3293.58,
+  "drc_errors": 0,
+  "antenna_errors": 0,
+  "clock_period_ns": 0.833333,
+  "uncertainty_setup_ns": 0.060,
+  "uncertainty_hold_ns": 0.025,
+  "evidence": ["failed.json", "run.log"],
+  "retained_remote_workdir": "/srv/opentallas-scratch/codex/qwen-r25-mask/pipe-route-d08f44301/work",
+  "adopted": false
+}

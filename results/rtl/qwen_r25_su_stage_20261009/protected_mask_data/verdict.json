@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "source_commit": "e14241bee",
+  "host": "ot-agidock128",
+  "admission_gib": 4,
+  "owner_width": 74,
+  "capacity": 8224,
+  "query_positions": [8191, 8192, 8193, 8194],
+  "valid_lengths": [8192, 8193, 8194, 8195],
+  "comparison_count": 32896,
+  "secded8_exhaustive_cases": 23552,
+  "positive": "Actual flattened pipelined mask, every byte value and every single-bit correction, full p4 causal comparisons, held full owner and output.",
+  "negative": "Every SECDED8 double-bit rejection; real transient-byte and final-output data-bit CE/UE injection; shared-limit mutant leaks six rows; truncated index, unchecked owner and capacity violations rejected.",
+  "evidence": ["bench.log"],
+  "physical_qualification": false
+}
