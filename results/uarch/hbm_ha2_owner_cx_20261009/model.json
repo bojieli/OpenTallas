@@ -41,8 +41,13 @@
     "own_pins": 1088,
     "landing_payload": 5416,
     "landing_valid": 10,
-    "landing_config": 26
+    "landing_config": 26,
+    "result_payload": 512,
+    "result_index": 16,
+    "result_valid": 1,
+    "result_status": 3
   },
+  "BF16_result_packet_interval_fast_edges": 4,
   "landing_replicas": 10,
   "existing_FIFO_entries_per_port": 8,
   "additional_reserved_head_slots_per_port": 1,
