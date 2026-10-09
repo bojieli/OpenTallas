@@ -14153,7 +14153,7 @@ def hbm_indexer_r25i_physical_model():
             score_per_die=score_extra * 0.2916),
         native_slots=dict(score_primary_um=[2000.16, 3000.24],
             score_parallel_fallback_um=[2000.16, 3402.0],
-            selector_um=[1399.656, 777.6],
+            selector_um=[1399.656, 844.56],
             placement='four side-band scorers; selector above SU-full in the spine'),
         routing_capacity=dict(track_pitch_um=0.048, key_lines_per_stack=8,
             key_tracks=8 * 1099, preferred_key_corridors=dict(
