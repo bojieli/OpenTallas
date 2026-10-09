@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import concurrent.futures as cf
+import hashlib
 import json
 import re
 import subprocess
@@ -30,6 +31,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 M = "rtl/dsrom_sys/mtp"
 TRACES = "results/rtl/dshbm_dspark_rtl_20261003/traces"
+FIXTURES = ROOT / "rtl/test/mtp_rom_fixtures"
 COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/ot_dsrom_mtp_seq.sv", f"{M}/ot_dsrom_wfc_tok.sv", f"{M}/ot_dsrom_wfc_lnk.sv",
           f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
           "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
@@ -46,6 +48,17 @@ def trace_hex(cfg: Path, out: Path):
     out.write_text("".join(f"{x:08x}\n" for x in w))
     return dict(trace=str(cfg.relative_to(ROOT)), plen=d["plen"], ngen=d["ngen"], passes=len(d["steps"]),
                 drafter=d["drafter"], accepted=[s["accepted"] for s in d["steps"]])
+
+
+def trace_cfg(name: str) -> Path:
+    """Keep golden bytes available when remote archives omit bulk results."""
+    filename = f"{name}.cfg.json"
+    original = ROOT / TRACES / filename
+    cfg = original if original.is_file() else FIXTURES / filename
+    binding = json.loads((FIXTURES / "manifest.json").read_text())["files"][filename]
+    if hashlib.sha256(cfg.read_bytes()).hexdigest() != binding["sha256"]:
+        raise ValueError(f"golden trace differs from pinned fixture: {cfg}")
+    return cfg
 
 
 def cases():
@@ -84,7 +97,7 @@ def run_case(name, spec, out: Path):
     d.mkdir(parents=True, exist_ok=True)
     rec = dict(case=name, expect=spec["expect"], params=spec.get("params", {}), defines=spec.get("defines", []))
     if "trace" in spec:
-        rec["trace"] = trace_hex(ROOT / TRACES / f"{spec['trace']}.cfg.json", d / "trace.hex")
+        rec["trace"] = trace_hex(trace_cfg(spec["trace"]), d / "trace.hex")
     srcs = [str(ROOT / s) for s in COMMON] + [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
     cmd = ["iverilog", "-g2012", "-s", spec["tb"], "-o", str(d / "sim.vvp")]
     cmd += [f"-D{x}" for x in spec.get("defines", [])]
