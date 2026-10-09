@@ -665,6 +665,229 @@
       "binding_status": "UNBOUND_COMBINED_DISPATCH_AND_VM",
       "functional_ties_allowed": false,
       "width_truncation_allowed": false
+    },
+    {
+      "source_commit": "aaeae2872",
+      "path": "results/arch/hgi_ehash_20261009/ports.json",
+      "sha256": "d2d4cccbf717b37986e25eba4aebd9d710476f100cf3fb32785a8fd7efa6100f",
+      "manifest": {
+        "schema": "opentallas.hgi-ehash-port-manifest.v1",
+        "branch": "codex/hgi-ehash-20261009",
+        "commit": "95f75fa1e",
+        "module": "ot_hbm_idx_ehash_ds",
+        "parameters": {
+          "ENABLE_GENERIC": 0,
+          "NSLOT": 8,
+          "MUTANT": 0
+        },
+        "clock": "clk",
+        "ports": {
+          "token_begin": "clear per-step seen flags only, preserve committed history",
+          "accept_valid/accept_slot": "restore selected accepted slot after command drains",
+          "cmd_valid/cmd_ready": "ready-valid operation; IDX opcode4; 3bit layer index",
+          "cmd_slot": "3bit speculative slot, first appearances in slot order",
+          "cmd_cid": "17bit compressed DS token id, requires caller compressed map",
+          "cmd_first": "sequence boundary resets window pad",
+          "b_mult": "4x64 typed validation constants, not serializedABI",
+          "b_prime/b_offset": "24x32 each, ngrammajorheadminor, not serializedABI",
+          "row_valid/row_ready/row_id/row_column": "24 U32 selectedlayer row ids in listorder",
+          "done/fault": "registered completion/sticky malformed request"
+        },
+        "blocked_generic_contract": "dynamic B encoding and hbm-sim CF-EHASH vectors",
+        "latency_command_to_ready": 42,
+        "conservative_added_DS_cycles_per_token": 68,
+        "status": "registered successor exact+mutants pass; genuine remote boundary check live, oldroutesheld",
+        "clock_period_ps": 833.333,
+        "command_control_exclusion": "cmd_valid must not coincide with token_begin or accept_valid; collisions fail closed",
+        "source_commit": "95f75fa1e",
+        "explicit_widths": {
+          "clk": 1,
+          "rst_n": 1,
+          "token_begin": 1,
+          "accept_valid": 1,
+          "accept_slot": 3,
+          "cmd_valid": 1,
+          "cmd_ready": 1,
+          "cmd_op": 3,
+          "cmd_layer": 3,
+          "cmd_slot": 3,
+          "cmd_cid": 17,
+          "cmd_first": 1,
+          "b_mult": 256,
+          "b_prime": 768,
+          "b_offset": 768,
+          "row_valid": 1,
+          "row_ready": 1,
+          "row_id": 32,
+          "row_column": 5,
+          "done": 1,
+          "fault": 1
+        },
+        "unit_dispatch": "Unit9 combined IDX dispatch and VM write binding not implemented by this leaf",
+        "compressed_map_obligation": "cmd_cid is released-map compressed id; raw18bit token must not be truncated directly to17bits"
+      },
+      "producer_required": "Releasedcompressed18\u219217tokenmap; real CP ACCEPT/tokenbegin and unit9/op4 dispatch; Btuple provider",
+      "consumer_required": "VM U32 I table writer with Odescriptor addresses and actualwriteACK",
+      "binding_status": "REAL_PEER_JOIN_PENDING",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false
+    },
+    {
+      "source_commit": "d0da28e90",
+      "path": "physical/hbm_generic/argmax18/port_manifest.json",
+      "sha256": "3e145877fe8622029c3f7c72ccc53a26c777ec505fe6feb91dd8907118ae1ffe",
+      "manifest": {
+        "module": "ot_hgi_argmax18_m",
+        "parameters": {
+          "LP": 8,
+          "FLAT": 7,
+          "FAST": 1,
+          "GENERIC18": 0
+        },
+        "inputs": {
+          "clk": 1,
+          "rst_n": 1,
+          "in_v": 1,
+          "in_last": 1,
+          "in_bias_en": 1,
+          "in_mask": 8,
+          "in_vals": 256,
+          "in_bias": 256,
+          "cfg_rank": 7,
+          "cfg_imm_a": 18
+        },
+        "outputs": {
+          "out_v": 1,
+          "out_idx": 18,
+          "out_nan": 1,
+          "fault": 1,
+          "out_range_fault": 1,
+          "out_value": 32
+        },
+        "configuration": "Captured on first accepted beat, held through row; decode and descriptor bounds remain sequencer-owned.",
+        "generic18": "Enable GENERIC18=1 to support local ids >=131072 and rank*imm_a global offsets. Exact winning FP32 bits including NaN payload and signed zero.",
+        "default": "Native IW17, no offset arithmetic, zeroextend id; DS leaf arithmetic and latency preserved."
+      },
+      "producer_required": "Actual VM/STREAM logitbeats, masks,bias,rank7,imm_a18 andunit7recordadapter",
+      "consumer_required": "Missing HBM ARGMAX_MERGE value32/id18 compare and actualVMresultstore",
+      "binding_status": "REAL_PEER_JOIN_PENDING",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false
+    },
+    {
+      "source_commit": "adeec0b5b",
+      "path": "physical/hbm_generic/token18/port_manifest.json",
+      "sha256": "e8024f545a5d56004cb15c23712bd0c9d69521e126366b4fc3721a31d946f9a7",
+      "manifest": {
+        "schema": "opentallas.hgi_token18.ports.v1",
+        "source": "77f87268c fullcore/pins; bbd709a32 acceptpinfix; 84d4ba0ca facadebench",
+        "model_commit": "416766277",
+        "model": "tools/uarch_model.py:hgi_token18_contract_model",
+        "legacy_default": "GENERIC18=0,TW17",
+        "approved_mode": "GENERIC18=1,TW18",
+        "cmdproc_owned_by": "Claude",
+        "endpoints": {
+          "ot_hgi_mtp_accept18": {
+            "source": "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv",
+            "params": {
+              "GENERIC18": 1,
+              "PINREG": 1
+            },
+            "base": "rtl/hdc/ot_hdc_accept.sv NSLOT8 NW18",
+            "tokens": [
+              "start_tok18",
+              "tokx_tok18",
+              "amax_tok18",
+              "bonus18",
+              "stok144",
+              "ttok144"
+            ],
+            "new_cycles": 1,
+            "bench": "rtl/test/hbm_generic/tb_hgi_accept18.sv",
+            "gate": "PINREG1 108PASS+truncation/bonus mutantsFAIL; rtl_boundary0/0PASS",
+            "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
+            "simulator_vectors": "pendingprovider",
+            "model": "757907078 tools/uarch_model.py:hgi_token18_accept_seat_model",
+            "route_status": "original both TT>=0/FF>=0/electrical0/DRC1: bbd709a32 receipts; pinfix52d6df55b fleetintake requested"
+          },
+          "ot_hgi_mtp_ctl18": {
+            "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
+            "params": {
+              "GENERIC18": 1,
+              "TW": 18,
+              "B": 5,
+              "PMAX": 8,
+              "NL": 40,
+              "MAXPOS": 1048576
+            },
+            "base": "physical/hbm_mtp/rtl/ot_dshbm_dspark_ctl_m.sv FAST1 PRL2 ACCEPT_LEAF0",
+            "tokens": [
+              "p_tok18",
+              "f_tok18",
+              "e_tok18",
+              "cmd_tok1_18",
+              "cmd_toks144",
+              "am_idx18",
+              "tw_tok18"
+            ],
+            "new_cycles": 0,
+            "bench": "rtl/test/hbm_generic/tb_hgi_ctl18_lockstep.sv",
+            "gate": "Verilator: DS low+high each200runs/161669cycles/1699steps/2352emits/0mismatches; compiled rollback MUT1 FATAL expectedrc134",
+            "simulator_vectors": "pendingprovider",
+            "remote": "ot-epyc4:/srv/opentallas-scratch2/scratch/codex/hgi-token18-11f",
+            "receipt": "results/rtl/hgi_token18_20261009/control",
+            "physical_route_status": "retired bare leaf; use fullcore registered endpoint"
+          },
+          "ot_hgi_mtp_core18": {
+            "source": "rtl/hbm_accel/generic/ot_hgi_mtp_core18.sv",
+            "base": "physical/hbm_mtp/rtl/ot_hfd_mtp_core.sv",
+            "params": {
+              "GENERIC18": 1,
+              "TW": 18,
+              "XSEL": 1,
+              "SPECF": 0,
+              "WR": 256,
+              "W": 128,
+              "SR": 10,
+              "MAXPOS": 1048576,
+              "NL": 40,
+              "PRL": 2
+            },
+            "ports": "same hfd_mtp_x except p_tok/f_tok/e_tok/cmd_tok1/am_idx/sa_tok18 and cmd_toks144",
+            "new_cycles_vs_qualified_fullcore": 0,
+            "new_cycles_vs_bare_controller": 4,
+            "gate": "SPECF0 matchingforcedTW18/XSEL1 positive livePID1984091; rollbackMUT1 terminalFAIL COMMAND#378pos10vs9,rc1",
+            "exact_state_warning": "039ca63d6 recipe is SPECF0; physical hfd_mtp_x SPECF1 evidence cannot substitute",
+            "route_status": "owninitialsynth/floorplanE4source77driver2005401live;2routevariantsnotyetqueued",
+            "model": "a28dcab37 tools/uarch_model.py:hgi_token18_fullcore_model"
+          }
+        },
+        "route_jobs": [],
+        "routes": "notqueued,noP&Rclosureclaim",
+        "die_facade": {
+          "source": "d7cdfd630",
+          "data_boundary_bits": 1297,
+          "cmdproc_in": 131,
+          "cmdproc_out": 506,
+          "reset_release_extra_cycles": 2,
+          "gate": "8588af822 actualproductionshape port/reset mechanism PASS220cycles62commands; genuine width17/resetbypass mutants build0/sim1. Numericalvectors, CPproducer, realwinningvalueconsumer still pending"
+        },
+        "fullcore_registered_boundary": {
+          "source": "77f87268c",
+          "evidence": "2d23c2ffd",
+          "strict": "PASS",
+          "input_to_output_bits": 0,
+          "input_to_register_levels": 3,
+          "register_to_output_levels": 0,
+          "actual_unmapped_cells": 914655,
+          "actual_peak_kib": 3416432
+        }
+      },
+      "producer_required": "Claude cmdproc18bit actual fullnativeCPgroup131 and qualified history/index peers",
+      "consumer_required": "Fullcore outputs nativeCP506 and realUNION controls; O0score32 consumer independent",
+      "binding_status": "REAL_PEER_JOIN_PENDING",
+      "functional_ties_allowed": false,
+      "width_truncation_allowed": false
     }
   ]
 }

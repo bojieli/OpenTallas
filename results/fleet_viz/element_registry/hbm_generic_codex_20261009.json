@@ -7,7 +7,7 @@
       "owner": "generic_collective",
       "description": "hgi coll decode",
       "source": {
-        "commit": "7c38e6508",
+        "commit": "d261d43c7",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
         ],
@@ -45,15 +45,15 @@
         }
       },
       "physical": {
-        "status": "TIMING_CLOSED_BLOCKED_FIVE_ELECTRICAL_VIOLATIONS",
+        "status": "QUEUED_PINANCHOR_REPAIR",
         "jobs": [
-          "hgi_coll_decode_a-7c38e6508-tc-cx",
-          "hgi_coll_decode_b-7c38e6508-tc-cx"
+          "hgi_coll_decode_a_pinanchor-d261d43c7-tc-cx",
+          "hgi_coll_decode_b_pinanchor-d261d43c7-tc-cx"
         ],
         "corners": {},
         "evidence": [],
         "electrical": {
-          "status": "FAIL_FIVE_SLEW",
+          "status": "NEW_VARIANT_UNVERIFIED_OLD_FIVE_SLEW_FAILURES_PRESERVED",
           "evidence": [],
           "required": [
             "slew",
@@ -63,7 +63,12 @@
           ]
         },
         "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
-        "host": "ot-agidock128"
+        "host": "ot-agidock128",
+        "failed_history_jobs": [
+          "hgi_coll_decode_a-7c38e6508-tc-cx",
+          "hgi_coll_decode_b-7c38e6508-tc-cx"
+        ],
+        "intake_receipt": "/home/ubuntu/.local/state/closure_loop/operator_actions/generic_verified_intake_1358"
       },
       "dependencies": [
         "real record dispatcher and static group/rank source",
@@ -232,10 +237,11 @@
       "owner": "generic_index_decode/ehash",
       "description": "hgi idx ehash",
       "source": {
-        "commit": "35a3215c0",
+        "commit": "95f75fa1e",
         "paths": [
           "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
-        ]
+        ],
+        "manifest_commit": "aaeae2872"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -269,11 +275,8 @@
         }
       },
       "physical": {
-        "status": "QUEUED_PARTIAL_DS_HISTORY_ONLY",
-        "jobs": [
-          "hgi-ehash-ds-a-27186ef49-tc-cx",
-          "hgi-ehash-ds-b-27186ef49-tc-cx"
-        ],
+        "status": "FRESH_DSFIXED_LEAF_PAIR_INTAKE_PENDING",
+        "jobs": [],
         "corners": {},
         "evidence": [],
         "electrical": {
@@ -286,12 +289,17 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "history_jobs": [
+          "hgi-ehash-ds-a-27186ef49-tc-cx",
+          "hgi-ehash-ds-b-27186ef49-tc-cx"
+        ]
       },
       "dependencies": [
         "dynamic B descriptor path unresolved; existing DS hash proof only",
         "normative simulator CF-EHASH pin and output descriptor mapping",
-        "dynamic B descriptor and normative CF conformance unresolved; queued DS-history variants cannot establish generic completeness"
+        "dynamic B descriptor and normative CF conformance unresolved; queued DS-history variants cannot establish generic completeness",
+        "ENABLE_GENERIC1 validatesBtuple equalsreleasedDSconstants; dynamicB/CF notimplemented. Raw18token must releasedcompressmap tocid17; no truncation"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -546,10 +554,11 @@
       "owner": "generic_token18/argmax18",
       "description": "hgi argmax18 value",
       "source": {
-        "commit": "3e3f1cd55",
+        "commit": "f6d441b6ae5ec8f6e79cfd46290a086103fed4b8",
         "paths": [
           "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv"
-        ]
+        ],
+        "evidence_commit": "d0da28e90"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -561,7 +570,9 @@
         "status": "MODELED",
         "evidence": [
           "tools/uarch_model.py:hgi_token18_contract_model"
-        ]
+        ],
+        "latency_edges": 13,
+        "extra_edges": 0
       },
       "exactness": {
         "positive": {
@@ -579,9 +590,11 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
+        "status": "PD48_HOLD_FAIL_PD55_CTS_HM5_INTAKE_PENDING",
         "jobs": [],
-        "corners": {},
+        "corners": {
+          "PD48_FF_hold_ps": -2.225
+        },
         "evidence": [],
         "electrical": {
           "status": "NOT_VERIFIED",
@@ -593,12 +606,19 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "measured_mapped_area_um2": 5767.945,
+        "boundary": {
+          "input_levels": 12,
+          "output_levels": 1,
+          "input_to_output_paths": 0
+        }
       },
       "dependencies": [
         "real winning FP32 value to O[0] and18bit token to O[1]",
         "stable tie/signed-zero/NaN golden contract",
-        "module path provisional until child port manifest pinned"
+        "module path provisional until child port manifest pinned",
+        "No actual HBM ARGMAX_MERGE value32/id18 compare or VMresultstore consumer installed; must build/bind, cannot feed sum-onlyPSG or legacyROMNaNfault chain"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -812,7 +832,7 @@
       "owner": "generic_collective",
       "description": "Record-controlled ordered row gather formatter, existing reader protocol, default off",
       "source": {
-        "commit": "7c38e6508",
+        "commit": "c0c8382da",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
         ],
@@ -851,14 +871,11 @@
         }
       },
       "physical": {
-        "status": "EARLY_FAIL_SETUP_TT_MINUS430",
+        "status": "QUEUED_COUNTER_REPAIR",
         "jobs": [
-          "hgi_coll_row_formatter_a-7c38e6508-tc-cx",
-          "hgi_coll_row_formatter_b-7c38e6508-tc-cx"
+          "hgi_coll_row_formatter_counter_a-c0c8382da-tc-cx",
+          "hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx"
         ],
-        "corners": {
-          "TT_setup_ps": -430
-        },
         "evidence": [],
         "electrical": {
           "status": "NOT_VERIFIED",
@@ -871,7 +888,16 @@
           ]
         },
         "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
-        "host": "ot-agidock128"
+        "host": "ot-agidock128",
+        "failed_history_jobs": [
+          "hgi_coll_row_formatter_a-7c38e6508-tc-cx",
+          "hgi_coll_row_formatter_b-7c38e6508-tc-cx"
+        ],
+        "historical_corners": {
+          "TT_setup_ps": -430
+        },
+        "corners": {},
+        "intake_receipt": "/home/ubuntu/.local/state/closure_loop/operator_actions/generic_verified_intake_1358"
       },
       "dependencies": [
         "real decoder ROW_GATHER metadata to start",
@@ -1079,10 +1105,16 @@
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
           "evidence": [],
           "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        },
+        "facade_port_reset": {
+          "status": "PASS_ACTUAL_FULLPARAM_220_CYCLES_62_COMMANDS_TWO_RESETS",
+          "positive_receipt": "8588af822",
+          "bench": "84d4ba0ca",
+          "mutants": "width17/resetbypass bothbuild0/sim1"
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED_BOUNDARY_AND_GATE_PENDING",
+        "status": "FULL_BOUNDARY_AND_FACADE_PASS_CORE_PAIR_REQUESTED_NOT_CONFIRMED",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -1098,7 +1130,13 @@
         },
         "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
         "measured_floorplan_area_um2": 10400.5,
-        "evidence_commit": "e75645e28"
+        "evidence_commit": "e75645e28",
+        "boundary": {
+          "input_levels": 3,
+          "output_levels": 0,
+          "input_to_output_paths": 0,
+          "evidence_commit": "2d23c2ffd"
+        }
       },
       "dependencies": [
         "fullcore0newedges vs qualifiedfullcore,4edges vs barectl; resetfacade2releaseedges",
@@ -1126,7 +1164,7 @@
           "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv"
         ],
         "exact_evidence_commit": "90fe3ec1e",
-        "repair_candidate": "bd5e792c7"
+        "repair_candidate": "a63e77167"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -1147,7 +1185,7 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_201_CASES_10768_WORDS",
+          "status": "PASS_458_CASES_10768_WORDS_INCLUDING256PARAM_DOMAIN",
           "evidence": [
             "results/hgi_generic/quant_vm_transport/90fe3ec1e/receipt.json"
           ]
@@ -1166,7 +1204,7 @@
         }
       },
       "physical": {
-        "status": "FAILED46_PRESERVED_RESPONSE_SEAT_REPAIR_GATES_RUNNING_NO_ROUTE",
+        "status": "REPAIR_BOUNDARY_PASS12_4_CURRENT_FIT_RUNNING_NO_ROUTE",
         "jobs": [],
         "corners": {},
         "measured_synth_area_um2": 29108.0952,
@@ -1181,10 +1219,10 @@
         },
         "evidence": [],
         "boundary": {
-          "input_to_register_levels": 46,
-          "register_to_output_levels": 4,
+          "input_levels": 12,
+          "output_levels": 4,
           "input_to_output_paths": 0,
-          "limit_input_levels": 16
+          "source": "a63e77167"
         }
       },
       "dependencies": [
@@ -1195,7 +1233,8 @@
         "Partialoverlap and overlapping-row alias contract unresolved; multirow/stride/unaligned/broadcast/inplace nonalias shapes exact",
         "Unit4 opcode4..6 dispatch only; norm/HC sameunit require actual dispatch return arbitration",
         "Actual raw-input arithmetic boundary needs registered capture structural fix; owner tracing/repricing/rebenching, no waiver",
-        "Repair adds273-bit responsepacket+valid seat:274flops and1edge persector; exact/boundary reruns remote on pinnedbd5e792c7, actualfit pending source rebinding"
+        "Repair adds273-bit responsepacket+valid seat:274flops and1edge persector; exact/boundary reruns remote on pinnedbd5e792c7, actualfit pending source rebinding",
+        "Proposedtight1800x275.6 fitsunchangedgenerator1814.376x276.456 geometrically, actualsourcefit andpin/halo/rail mapping pending before2routes"
       ],
       "integration": {
         "status": "UNBOUND_PROVIDER",
