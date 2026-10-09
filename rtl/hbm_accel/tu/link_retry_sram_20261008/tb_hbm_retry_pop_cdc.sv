@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hbm_retry_pop_cdc;
- reg sc=0,dc=0;always#4.166667 sc=~sc;
- initial begin#1.7;forever#4.166667 dc=~dc;end
+ reg sc=0,dc=0;always#0.416667 sc=~sc;
+ initial begin#0.17;forever#0.416667 dc=~dc;end
  reg sr=0,dr=0,pop=0;wire op,flt;wire[9:0]pending;
  ot_hbm_retry_pop_cdc dut(.s_clk(sc),.s_rst_n(sr),.s_pop(pop),.d_clk(dc),.d_rst_n(dr),.d_pop(op),.fault(flt),.pending(pending));
  integer sent=0,seen=0,i;
