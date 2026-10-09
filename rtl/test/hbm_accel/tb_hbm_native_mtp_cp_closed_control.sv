@@ -4,19 +4,19 @@
 module tb_hbm_native_mtp_cp_closed_control;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,jv=0,iv=0;reg [3:0] ik=0;reg [63:0] ipc=0;
- wire [516:0] fm;wire [196:0] tm;reg [178:0] config=0,provider=0;
+ wire [516:0] fm;wire [196:0] tm;reg [178:0] cfg=0,provider=0;
  wire gjr,qjr;wire accepted=jv&&gjr&&qjr;
  wire bv,br,bcv,bcr,bcf,bam;wire [16:0] bai;
  wire [200:0] bc;wire [31:0] bj,bs,cj,cs;wire [3:0] bg,cg;wire [7:0] be,ce;
  wire active,inflight,gif,gfault,qfault,er,hv,hdv;wire [80:0] hd;wire [20:0] ac;wire [2:0] hs;
- reg hr=0,dr=0;integer received=0,cycles=0,headpass=0,headrow=0,target=0,k;
+ reg hr=0,dr=0;integer received=0,cycles=0,headpass=0,headrow=0,target=0,k,t;
  wire [31:0] lv;wire [63:0] pc;wire [33:0] tok;wire [39:0] pos;wire [145:0] owner;
  reg [31:0] sd=0,rv=0,q=0;reg [63:0] qp=0;reg [1023:0] rd=0;reg [16:0] winner=0;
  wire [178:0] ownedprovider={provider[178:140],er,provider[138:0]};
  hfd_mtp_native_cp_stop #(.ENABLE(1)) native(.clk(clk),.rst_n(rst_n),.f_cmdproc(tm),.t_cmdproc(fm),.f_su_red(523'b0),.f_router(59'b0),.f_coll(1'b1));
  ot_hbm_native_mtp_transaction_cp_join #(.ENABLE(1)) guard(
  .clk(clk),.rst_n(rst_n),.external_fault(qfault),.backend_quiescent(1'b1),
- .job_v(jv&&qjr),.job_rdy(gjr),.job_id(32'h12345678),.job_generation(4'hb),.job_epoch(8'h83),.job_config(config),.provider_controls(ownedprovider),.f_mtp(fm),.t_mtp(tm),
+ .job_v(jv&&qjr),.job_rdy(gjr),.job_id(32'h12345678),.job_generation(4'hb),.job_epoch(8'h83),.job_cfg(cfg),.provider_controls(ownedprovider),.f_mtp(fm),.t_mtp(tm),
  .eng_cmd_v(bv),.eng_cmd_rdy(br),.eng_cmd(bc),.eng_job(bj),.eng_generation(bg),.eng_sequence(bs),.eng_epoch(be),
  .cp_am_v(bam),.cp_am_idx(bai),.eng_cpl_v(bcv),.eng_cpl_rdy(bcr),.eng_cpl_job(cj),.eng_cpl_generation(cg),.eng_cpl_sequence(cs),.eng_cpl_epoch(ce),.eng_cpl_fault(bcf),
  .active(active),.inflight(inflight),.identity_fault(gif),.fault(gfault));
@@ -42,9 +42,9 @@ module tb_hbm_native_mtp_cp_closed_control;
  end
  initial begin
  @(negedge clk);rst_n=1;
- for(k=0;k<11;k=k+1)begin iv=1;ik=k;ipc={32'(100*(k+1)+1),32'(100*(k+1))};@(negedge clk);end
+ for(t=0;t<11;t=t+1)begin iv=1;ik=t;ipc={32'(100*(t+1)+1),32'(100*(t+1))};@(negedge clk);end
  iv=0;repeat(5)@(negedge clk);
- config[1+:4]=5;config[5]=1;config[6+:21]=20;config[27+:21]=2;config[140]=1;config[141+:17]=102;config[158+:21]=1048576;
+ cfg[1+:4]=5;cfg[5]=1;cfg[6+:21]=20;cfg[27+:21]=2;cfg[140]=1;cfg[141+:17]=102;cfg[158+:21]=1048576;
  provider[48+:17]=5;provider[65+:17]=100;
  jv=1;wait(accepted);@(negedge clk);jv=0;
  wait(hdv);@(negedge clk);
