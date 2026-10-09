@@ -105,6 +105,14 @@
      "peak_ram_gb": 24,
      "owner": "Codex:hbm_system/link_retry",
      "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT4.24GiB"
+    },
+    {
+     "name": "hbm-index-selector-la7-calibration",
+     "pid": 360589,
+     "command_match": "hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/cl/run.sh",
+     "peak_ram_gb": 120,
+     "owner": "Codex:hbm_continuation/selector_capture",
+     "reason": "Active fullshape T1 LA7 MEMV1 READLAT2 calibration; stablelauncher preserves120GiB declared futurepeak until terminal; liveYosys OPT phase"
     }
    ],
    "paused_admission_previous": {
