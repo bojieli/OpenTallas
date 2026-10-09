@@ -1,0 +1,34 @@
+{
+  "source": "b0139ca07",
+  "scope": "geometry-validator selftest only; original failedODB remains illegal",
+  "input_source": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+  "positive": "PASS_NOT_LEGALITY",
+  "wrong_movement": "EXPECTED_FAIL",
+  "mutation_dx_DBU": 8154,
+  "limit_dx_DBU": 8100,
+  "anchors": 12161,
+  "released_right_contacts": 181,
+  "fixed_legal_anchors": 11980,
+  "positive_pin_distance_max_um": 38.604,
+  "peak_KiB": {
+    "metadata": 4470952,
+    "positive": 4970292,
+    "negative": 4969172
+  },
+  "host": "ot-epyc4",
+  "prior_loader_failures": [
+    "r1 ORD-0047 populated DB",
+    "r2 ODB-0001 missing logger after ord::clear"
+  ],
+  "implementation": "fresh-process immutable geometry metadata, candidateDB read once",
+  "adoption": false,
+  "canonical_SR_intake": "BLOCKED until actual legality/pin/movement gates PASS",
+  "evidence_sha256": {
+    "sr-geometry-selftest-positive.log": "04f35f60385e6f2cc66f7798863b2f3e3387257d5bd8185c76b7d56c32ec4e96",
+    "sr-geometry-selftest-metadata.log": "f50a1dd155628f2f1954892b9f2349e0b5fa98159ccad37e7c24296cd38e07f9",
+    "sr-geometry-selftest-guard-r3.log": "b2d4cae515b2d9636052519ae02cfa824f318a4f92411d5783d4482c98e5f32d",
+    "sr-geometry-selftest-r2-odb0001.log": "e0106220d795af97818d79739287816487827af0583934ca95da9f3ac64b3512",
+    "sr-geometry-selftest-wrongmovement.log": "727a7a6ccde42425a39dc51b89e72f10d5d58f8ab039f0022e7dcd2f458e0448",
+    "sr-geometry-selftest-r1-ord0047.log": "94264ac98512eea34917b8a9b1ed54a526ecea4b24dcce753483ca6df17cf450"
+  }
+}
