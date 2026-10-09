@@ -1,0 +1,17 @@
+{
+ "verdict":"PASS",
+ "source_commit":"47e056c77",
+ "controller_source":"13b343feb",
+ "positive_controller_frames":6,
+ "lines_per_frame":1368,
+ "negative":"Injected byte rejected by actual data checker",
+ "early_next_frame_frames":2,
+ "early_next_frame_held_credit_cycles":16,
+ "qualified":"Actual dynamic controller matching full73 key visibility, dedicated protected mailbox actual core admission/full73 receipt, coded finite two-clock line path, actual eight FA6 input FIFOs, and retirement through final returned credits",
+ "receipt_ready":"Controller prefetch_v; actual receipt unmasked into controller identity check",
+ "block_scope":"Full1M component gate342 blocks perstack only; dynamic allocated block successor qualified separately",
+ "query_producer":"Publication and drain are test actors with300/1000ns sensitivity holds; actual projection/gather/RoPE window remains unbound",
+ "completion_scope":"FIFO consumption supplies component done events; scorer arithmetic and selector retirement are outside this minimum gate",
+ "physical_adoption":false,
+ "prior_raw_bandwidth90_failure_preserved":true
+}
