@@ -34,7 +34,7 @@ module ot_hbm_native_mtp_operation_backend #(parameter integer ENABLE=0)(
  assign cpl_job=raw[232:201];assign cpl_generation=raw[236:233];
  assign cpl_sequence=raw[268:237];assign cpl_epoch=raw[276:269];
  wire [3:0] op=held[3:0];wire [7:0] idx=held[11:4];wire [3:0] ncol=held[15:12];
- wire [31:0] pos=held[47:16];wire [16:0] tok1=held[64:48];wire [135:0] toks=held[200:65];
+ wire [31:0] pos=held[47:16];wire [16:0] tok1=held[64:48];wire [135:0] toks=held[200:65];wire [16:0] held_noise=raw[293:277];
  wire [3:0] iop=cmd[3:0];wire [7:0] iidx=cmd[11:4];wire [3:0] inc=cmd[15:12];wire [31:0] ipos=cmd[47:16];
  wire [32:0] vend={1'b0,ipos}+inc;
  wire [32:0] dend={1'b0,ipos}+6;
@@ -66,7 +66,7 @@ module ot_hbm_native_mtp_operation_backend #(parameter integer ENABLE=0)(
     if(cursor<first_group)begin
      column=cursor/stride;part=cursor%stride;
      if(part==0)begin kind=0;token=8+column;position=40+idx;end
-     else if(idx==0 && part==1)begin kind=6;token=(column==0)?tok1:noise_token;position=0;end
+     else if(idx==0 && part==1)begin kind=6;token=(column==0)?tok1:held_noise;position=0;end
      else if(part==stride-1)begin kind=1;token=8+column;position=0;end
      else begin kind=7;token=column;position=pos+1+column;end
     end else begin
@@ -106,7 +106,7 @@ module ot_hbm_native_mtp_operation_backend #(parameter integer ENABLE=0)(
    .cpl_v(cp_valid[k]),.cpl_rdy(state==WAIT && both_valid),.cpl_token(cp_token[k*17+:17]),.cpl_status(cp_status[k*4+:4]),.cpl_cycles(),.st_kernels(),.st_busy());
  end endgenerate
  integer a;
- wire [319:0] incoming={43'b0,cmd_epoch,cmd_sequence,cmd_generation,cmd_job,cmd};
+ wire [319:0] incoming={26'b0,noise_token,cmd_epoch,cmd_sequence,cmd_generation,cmd_job,cmd};
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    state<=IDLE;cursor<=0;total<=0;template_valid<=0;template_invalid<=11'h7ff;

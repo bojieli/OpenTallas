@@ -100,7 +100,7 @@ end else begin : g_on
             launch_v <= {NSM{1'b0}};
             if (st != S_IDLE) begin st_busy <= st_busy + 1; cpl_cycles <= cpl_cycles + 1; end
             for (i = 0; i < NSM; i = i + 1)
-                if (res_v[i]) begin have_res <= 1'b1; res_q <= res_data[i*32 +: 32]; end
+                if (st==S_WAIT && waiting[i] && res_v[i]) begin have_res <= 1'b1; res_q <= res_data[i*32 +: 32]; end
             case (st)
                 S_IDLE: if (db_v) begin
                     if ({1'b0,db_pos} >= CONTEXT_POSITIONS) begin
