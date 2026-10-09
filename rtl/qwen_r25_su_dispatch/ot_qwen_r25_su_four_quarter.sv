@@ -15,6 +15,8 @@ module ot_qwen_r25_su_four_quarter #(
  output wire [3:0] req_v,input wire [3:0] req_rdy,output wire [1347:0] req,
  input wire [3:0] rsp_v,output wire [3:0] rsp_rdy,input wire [1091:0] rsp,
  output wire query_finished_v,input wire query_finished_rdy,
+ input wire [1:0] query_release_checked,input wire [OWNER_W-1:0] query_release_owner,
+ input wire [1:0] query_release_query,
  output wire [OWNER_W-1:0] query_finished_owner,output wire [1:0] query_finished_query,
  output wire finished_v,input wire finished_rdy,output wire fault,
  output wire [127:0] virtual_edges,reads,writes,visibility_reads
@@ -23,7 +25,8 @@ module ot_qwen_r25_su_four_quarter #(
  wire [2759:0] cmd_words;wire [OWNER_W-1:0] cmd_owner;wire [11:0] cmd_pc;
  wire [1:0] cmd_query;wire [19:0] cmd_position;wire [20:0] cmd_valid_length;
  wire [4*OWNER_W-1:0] done_owner;wire [47:0] done_pc;wire [7:0] done_query;
- wire dispatcher_fault,dispatcher_rdy,dispatcher_finished;
+ wire dispatcher_fault,dispatcher_rdy,dispatcher_finished,dispatcher_query_finished;
+ assign query_finished_v=dispatcher_query_finished&&!fault&&!warm_abort;
  assign fault=dispatcher_fault||(|qfault);
  assign launch_rdy=dispatcher_rdy&&!fault&&!warm_abort;
  assign finished_v=dispatcher_finished&&!fault&&!warm_abort;
@@ -38,7 +41,9 @@ module ot_qwen_r25_su_four_quarter #(
   .cmd_words(cmd_words),.cmd_owner(cmd_owner),.cmd_pc(cmd_pc),.cmd_query(cmd_query),
   .cmd_position(cmd_position),.cmd_valid_length(cmd_valid_length),
   .done_v(done_v),.done_owner(done_owner),.done_pc(done_pc),.done_query(done_query),
-  .query_finished_v(query_finished_v),.query_finished_rdy(query_finished_rdy&&!fault&&!warm_abort),
+  .query_finished_v(dispatcher_query_finished),.query_finished_rdy(query_finished_rdy&&!fault&&!warm_abort),
+  .query_release_checked(query_release_checked),.query_release_owner(query_release_owner),
+  .query_release_query(query_release_query),
   .query_finished_owner(query_finished_owner),.query_finished_query(query_finished_query),
   .finished_v(dispatcher_finished),.finished_rdy(finished_rdy&&!fault&&!warm_abort),.fault(dispatcher_fault));
  for(genvar q=0;q<4;q=q+1)begin:quarters

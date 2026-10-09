@@ -40,6 +40,7 @@ module tb_qwen_r25_su_quarter_service #(parameter OWNER_W=74);
   .done_v({3'd0,done_v}),.done_owner({{(3*OWNER_W){1'b0}},done_owner}),
   .done_pc({36'd0,done_pc}),.done_query({6'd0,done_query}),
   .query_finished_v(query_finished_v),.query_finished_rdy(query_finished_rdy),
+  .query_release_checked(2'b11),.query_release_owner(cmd_owner),.query_release_query(cmd_query),
   .query_finished_owner(query_finished_owner),.query_finished_query(query_finished_query),
   .finished_v(finished_v),.finished_rdy(1'b0),.fault(dispatch_fault));
  always @(negedge clk)rom_out_v=rom_out_rdy;

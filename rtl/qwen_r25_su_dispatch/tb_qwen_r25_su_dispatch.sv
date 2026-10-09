@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_qwen_r25_su_dispatch #(parameter OWNER_W=74);
+module tb_qwen_r25_su_dispatch #(parameter OWNER_W=74,QUERY_RELEASE=1,NEG_RELEASE=0);
  reg clk=0;always #0.555556 clk=~clk;
  reg rst_n=0,launch_v=0;wire launch_rdy;
  reg [1:0] launch_checked=3;reg [OWNER_W-1:0] launch_owner={20'd8191,18'd151935,4'ha,32'h12345678};
@@ -15,13 +15,26 @@ module tb_qwen_r25_su_dispatch #(parameter OWNER_W=74);
  reg [3:0] done_v=0;reg [4*OWNER_W-1:0] done_owner=0;
  reg [47:0] done_pc=0;reg [7:0] done_query=0;
  wire finished_v,fault;reg finished_rdy=0;
- ot_qwen_r25_su_dispatch #(.ENABLE(1),.OWNER_W(OWNER_W)) dut(.*);
+ wire query_finished_v;reg query_finished_rdy=0;
+ wire [OWNER_W-1:0] query_finished_owner;wire [1:0] query_finished_query;
+ reg [1:0] query_release_checked=3,query_release_query=0;
+ reg [OWNER_W-1:0] query_release_owner=0;
+ integer release_hold=0,releases=0;
+ ot_qwen_r25_su_dispatch #(.ENABLE(1),.OWNER_W(OWNER_W),.QUERY_RELEASE(QUERY_RELEASE)) dut(.*);
  integer q,seen=0,fetches=0,cycles=0;
  always @(negedge clk)if(rst_n)begin
   cycles=cycles+1;if(cycles>200)$fatal(1,"functional deadlock");
   rom_out_v=rom_out_rdy;rom_out_pc=rom_pc;
   if(rom_v)fetches=fetches+1;
-  done_v=0;
+  done_v=0;query_finished_rdy=0;
+  if(query_finished_v)begin
+   if(query_finished_owner!==launch_owner||query_finished_query!==cmd_query||rom_v||(|cmd_v))$fatal(1,"query buffer replaced before release");
+   release_hold=release_hold+1;
+   if(release_hold==3)begin
+    query_release_owner=NEG_RELEASE?(launch_owner^1):launch_owner;
+    query_release_query=cmd_query;query_finished_rdy=1;releases=releases+1;
+   end
+  end else release_hold=0;
   if(|cmd_v)begin
    if(cmd_owner!=launch_owner||cmd_pc!=17||cmd_query==0||cmd_position!=8191+cmd_query||cmd_valid_length!=8192+cmd_query)$fatal(1,"identity/length");
    for(q=0;q<4;q=q+1)begin
@@ -34,7 +47,9 @@ module tb_qwen_r25_su_dispatch #(parameter OWNER_W=74);
  initial begin
   repeat(3)@(posedge clk);@(negedge clk);rst_n=1;launch_v=1;
   @(negedge clk);launch_v=0;
-  wait(finished_v);if(fault||seen!=3||fetches!=4)$fatal(1,"p4 schedule");
+  if(NEG_RELEASE)begin wait(fault);if(finished_v||releases!=1)$fatal(1,"foreign query release admitted");
+   $display("PASS_QWEN_DISPATCH_OWNER74_FOREIGN_QUERY_RELEASE_FENCE");$finish;end
+  wait(finished_v);if(fault||seen!=3||fetches!=4||(QUERY_RELEASE&&releases!=4))$fatal(1,"p4 schedule");
   repeat(3)@(negedge clk);if(!finished_v)$fatal(1,"completion not held");
   // Foreign late completion must fence even while finished is held.
   #0.02;done_v=1;done_owner=0;@(posedge clk);#0.01;

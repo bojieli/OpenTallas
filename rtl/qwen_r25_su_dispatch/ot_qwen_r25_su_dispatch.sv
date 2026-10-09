@@ -22,6 +22,8 @@ module ot_qwen_r25_su_dispatch #(
  input wire [3:0] done_v,input wire [4*OWNER_W-1:0] done_owner,
  input wire [47:0] done_pc,input wire [7:0] done_query,
  output wire query_finished_v,input wire query_finished_rdy,
+ input wire [1:0] query_release_checked,input wire [OWNER_W-1:0] query_release_owner,
+ input wire [1:0] query_release_query,
  output wire [OWNER_W-1:0] query_finished_owner,output wire [1:0] query_finished_query,
  output wire finished_v,input wire finished_rdy,output wire fault
 );
@@ -114,7 +116,8 @@ module ot_qwen_r25_su_dispatch #(
      end
     end
     QWAIT:if(query_finished_v&&query_finished_rdy)begin
-     if({1'b0,slot}+1<nq)begin
+     if(query_release_checked!=3||query_release_owner!=cmd_owner||query_release_query!=slot)invalid=1;
+     else if({1'b0,slot}+1<nq)begin
       next_s[53:52]=slot+1;next_s[26:15]=base;
       next_s[51:39]=original_count;next_s[2:0]=REQUEST;
      end else next_s[2:0]=FINISH;
