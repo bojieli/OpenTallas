@@ -30,8 +30,8 @@ report_checks -path_delay max -group_path_count 8 -format full_clock_expanded -d
 report_checks -path_delay min -group_path_count 8 -format full_clock_expanded -digits 2
 # Include async reset recovery/removal alongside ordinary data paths; never false-path resets.
 report_check_types -recovery -removal -violators -digits 2
-report_checks -from [get_ports rst_n] -path_delay max -group_path_count 4 -format full_clock_expanded -digits 2
-report_checks -from [get_ports rst_n] -path_delay min -group_path_count 4 -format full_clock_expanded -digits 2
+report_checks -from [get_ports por_n] -path_delay max -group_path_count 4 -format full_clock_expanded -digits 2
+report_checks -from [get_ports por_n] -path_delay min -group_path_count 4 -format full_clock_expanded -digits 2
 '''
 (out/'sta.tcl').write_text(tcl)
 def sta(corner,filename,sdcp):
