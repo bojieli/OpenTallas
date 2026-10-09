@@ -24,12 +24,15 @@ lab=$1; master=$2; topsrc=$3; shift 3
 W=$OUT/$lab; mkdir -p $W; cd $SRC
 export OT_ORFS_NUM_CORES=${CORES:-16} NUM_CORES=${CORES:-16} OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
 python3 tools/hbm_die_views.py ${VARIANT:+--variant $VARIANT} ports --master $master --out $W/ports > $W/ports.log 2>&1 || { echo "rc=ports" > $W/exit; exit 1; }
+# safe-hbm R-Q3: OUTLINE="W H" re-outlines the view (tools/hbm_view_outline.py: pins kept on their faces / order /
+# pitch, centred); default unchanged.  The LEF check against the die generator then reports the new size.
+[ -n "${OUTLINE:-}" ] && { python3 tools/hbm_view_outline.py $W/ports $master $OUTLINE >> $W/ports.log 2>&1 || { echo "rc=outline" > $W/exit; exit 1; }; }
 read DW DH < <(python3 -c "import json;d=json.load(open('$W/ports/$master/ports.json'));print(d['w_um'],d['h_um'])")
 mkdir -p $SRC/.views/$lab; cp $W/ports/$master/io_place.tcl $SRC/.views/$lab/io_place.tcl
 srcargs="--source $topsrc"; for s in ${SRCS:-}; do srcargs="$srcargs --source $s"; done
 mvargs=""; for mv in ${MACROS:-}; do mvargs="$mvargs --macro-view $mv"; done
 PS=${POSTSYN:-physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl}; [ "$PS" = none ] && PS=
-echo "SRC=$SRC master=$master top=$topsrc DW=$DW DH=$DH PD=${PD:-0.55} POSTSYN=$PS FCP=${FCP:-} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} PER=${PER:-0.833} IOF=${IOF:-0.2} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
+echo "SRC=$SRC master=$master top=$topsrc OUTLINE=${OUTLINE:-} DW=$DW DH=$DH PD=${PD:-0.55} POSTSYN=$PS FCP=${FCP:-} MAXL=${MAXL:-M7} SRCS=${SRCS:-} MACROS=${MACROS:-} CTSA=${CTSA:-} PER=${PER:-0.833} IOF=${IOF:-0.2} WSF=${WSF:-} SDCA=${SDCA:-} $*" > $W/args
 cat SOURCE_COMMIT > $W/SOURCE_COMMIT
 /srv/opentallas-scratch/admit.sh ${NEED:-24} -- python3 tools/run_abi3_physical.py --view asap7 --top $master $srcargs $mvargs \
   ${MACROS:+--macro-place-halo ${HALO:-5 5}} \
