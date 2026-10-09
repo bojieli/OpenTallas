@@ -14912,3 +14912,9 @@ def qwen_protected_phy_sidecar_model():
     """Price real256-bit HBM accesses and explicit write visibility, never free ECC sideband."""
     from tools.qwen_protected_phy_model import model
     return model()
+
+
+def qwen_embedding_boot_crc_model(crc_pipe=0):
+    """Price optional boot-only affineCRC pipeline, preserving decode latency."""
+    from tools.qwen_boot_crc_model import model
+    return model(crc_pipe=crc_pipe)

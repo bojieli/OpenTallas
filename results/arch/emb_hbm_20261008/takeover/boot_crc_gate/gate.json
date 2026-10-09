@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.embedding_boot_crc.gate.v1",
+  "model_source_commit": "797e8a427",
+  "RTL_source_commit": "aefec3c40 plus buswrapper/currentenginegate",
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_boot_crc.sv": "13278916e283e09eb704b7aff1ca0da59291e0f7bb598bab132d37fde5478317",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip_crc.sv": "2f474a6a1d37a01964d515a95b5db4b7f9b52625e47bf88695921b79d0200cf7",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip_bus_crc.sv": "70f83620dda117a5074d00c60960990165580c80a0e031351f78e0b45f1f69ae",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv": "51e5289c6cad293096a52a1d73eb1645a37f349dc383fcf2417e36394067d3b5",
+    "bench/emb_hbm_20261008/tb_qfd_emb_boot_crc.sv": "5e0d56b9f758f1c7cbd1076b0de4dd3e704092596575e5421e5b30293b637d40",
+    "bench/emb_hbm_20261008/tb_qfd_emb_strip_crc.sv": "93840c7dd6008254ecdf42a0b16ab4ce514664c6ccb9829a400f5c784bd29612",
+    "tools/emb_boot_crc_sources.py": "f1918702b4e9d37156ad0b3e145750bd81e4d4554705f65caa984a894c4ecf86"
+  },
+  "clock_period_ps": 833.333334,
+  "host": "ot-agidock128",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run_emb_boot_crc_r2.sh",
+  "passed": [
+    "256 CRC messages exact against independentlygeneratedPythonzlib",
+    "bubbles andback-to-back accept atone/cycle",
+    "32bitmodularsum exact",
+    "thirdedge checksumcommit adds2edges",
+    "BOOT_END waitsactualCRCpipelinevaliddrain",
+    "mutantonebit result expectedFAIL",
+    "originalengine vsCRC_PIPE0 allbootcommand/status/state bit/cycleexact",
+    "CRC_PIPE1 unchangedbootwritecommands andgolden256checksum",
+    "TWIN0 andTWIN1 count/checksum onlogicalwrite only",
+    "actual32PC bus successor ENABLE1 CRC_PIPE1 hierarchyelaboration"
+  ],
+  "minimum_engine_scope": "bootcommands only; no wholearray ordiestimulation, no newdecode/mechanism claim",
+  "unchanged_originals": [
+    "ot_qfd_emb_pkg.sv",
+    "ot_qfd_emb_strip.sv"
+  ],
+  "historical_run": "r1 fixtureusedposedge driver; r2 usesnegedge stimulus toremove schedulingrace; both results preserved",
+  "physical_closed": false,
+  "adopted": false,
+  "default_parameter": "CRC_PIPE=0",
+  "physical_obligations": [
+    "newClaude review beforeP&R",
+    "samegrid92/bus92 geometry only",
+    "measure stage1 affineXOR +stage2 XOR +existingstage3 add timing",
+    "actualoldCRCnetworkremoved andcell/CTS/routing area delta"
+  ],
+  "write_visibility": "allf coversoriginalcommandcreditdrain only; durablephysicalwrite visibility requiresseparateprotectedPHYprovider fences"
+}

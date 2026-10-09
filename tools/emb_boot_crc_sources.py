@@ -59,3 +59,5 @@ if __name__=='__main__':
     d=ROOT/'rtl/qwen_sys/emb_hbm_20261008'
     (d/'ot_qfd_emb_boot_crc.sv').write_text(generated())
     (d/'ot_qfd_emb_strip_crc.sv').write_text(successor())
+    bus=(d/'ot_qfd_emb_strip_bus.sv').read_text().replace('module ot_qfd_emb_strip_bus #(', 'module ot_qfd_emb_strip_bus_crc #(').replace('parameter integer ENABLE=0,', 'parameter integer CRC_PIPE=0,CRC_MUT=0,ENABLE=0,').replace('ot_qfd_emb_strip #(', 'ot_qfd_emb_strip_crc #(.CRC_PIPE(CRC_PIPE),.CRC_MUT(CRC_MUT),')
+    (d/'ot_qfd_emb_strip_bus_crc.sv').write_text(bus)
