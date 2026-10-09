@@ -1,0 +1,18 @@
+{
+  "source_commit": "308a0500e",
+  "bench": {
+    "host": "ot-agidock128",
+    "pid": 2776045,
+    "root": "/srv/opentallas-scratch/codex-dsrom-hc-capture-308a0500e",
+    "stage": "gate-r3",
+    "peak_ram_gb": 4
+  },
+  "physical": {
+    "host": "ot-epyc2",
+    "pid": 514091,
+    "root": "/srv/opentallas-scratch2/codex/dsrom-hc-mean-308a0500e",
+    "stage": "route-r2",
+    "peak_ram_gb": 40,
+    "qualification": "characterization only; parent IO and clock budget pending"
+  }
+}
