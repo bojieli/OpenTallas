@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """CLAUDE S81-PH coll v2: pin plans of the collective tiles + the slab composition.
 
-dsfd_sp_collective (1015.176 x 1369.416) -> 4 x dsfd_coll_lane_w (W column, lanes 0..3), 4 x dsfd_coll_lane_e
-(E column, lanes 4..7), dsfd_coll_core (centre column) inside the slab outline; dsfd_coll_ck (PLL + reset
+dsfd_sp_collective (1015.176 x 1369.416) -> 4 x dsfd_coll_lane_w (W column, lanes 0..3), 4 x dsfd_coll_lane_w mirrored MY
+(E column, lanes 4..7; retired separate E master retained only as a historical pin plan), dsfd_coll_core (centre column) inside the slab outline; dsfd_coll_ck (PLL + reset
 sequencer) is a separate small hard block placed by the die next to the slab.  Lane <-> core pins face each other
 at the same y (pin-to-pin hops across a 0.192-um gap); lane die pins (rx / tx / tf) on the slab's W / E edges.
 Generator conventions (on-track: M4 horizontal / M5 vertical, offset 0.012, pitch 0.048; pin 0.024 x 0.192).
@@ -94,6 +94,7 @@ def main():
     global LW, SW, CONTRACT, COMPOSITION
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--lane-width', type=float, default=LW)
+    ap.add_argument('--legacy-east-master', action='store_true', help='historical separate E master; default uses W mirrored MY')
     ap.add_argument('--contract', default=CONTRACT)
     ap.add_argument('--composition', default=COMPOSITION)
     args = ap.parse_args()
@@ -116,8 +117,14 @@ def main():
                 f'interface on the {core_face} face at y {Y_CORE}+ (registered 2-slot skids); 4 instances R0')
         for k in range(4):
             lane = k if side == 'w' else 4 + k
-            comp.append(dict(inst=f'g_lane[{lane}].g_{side}.u_l', master=pl.m, xy=[r4(x0), r4(k * LH)], orient='R0',
+            comp.append(dict(inst=f'g_lane[{lane}].g_{side}.u_l', master=('dsfd_coll_lane_w' if side == 'e' and not args.legacy_east_master else pl.m),
+                             xy=[r4(x0), r4(k * LH)], orient=('MY' if side == 'e' and not args.legacy_east_master else 'R0'),
                              lane=['W0', 'W1', 'W2', 'W3', 'E0', 'E1', 'E2', 'E3'][lane], ch_b=int(lane not in (0, 4))))
+            if side == 'e' and not args.legacy_east_master:
+                comp[-1]['control_pin_xy_um'] = {
+                    nm.split('[')[0]: [r4(x0 + LW - (xlo+xhi)/2), r4(k*LH + (ylo+yhi)/2)]
+                    for nm, ly, xlo, ylo, xhi, yhi in pl.pins
+                    if nm.split('[')[0] in ('ck', 'rs', 'chb')}
     pc = Plan('dsfd_coll_core', CW, CH)
     for k in range(8):
         lane_core_group(pc, 'W' if k < 4 else 'E', (k % 4) * LH + Y_CORE, k=k)
@@ -135,7 +142,7 @@ def main():
     for i, p in enumerate(('pll_stream', 'pll_serial', 'pll_hbm', 'rst_stream', 'rst_serial', 'rst_hbm')):
         pk.bus(p, 1, 'output', 'E', 'M4', 96.0 + 2.4 * i)
     pk.emit('collective clock tile: die PLL (ot_s81_pll_bb hard macro) + reset sequencer; placed by the die next to the slab')
-    rec = dict(schema='opentallas.s81_ph.composition.v1', slab='dsfd_sp_collective', slab_um=[SW, SH],
+    rec = dict(reuse_east_w_my=not args.legacy_east_master, lane_rtl_defines=['OT_S81PH_GBX_FMT1', 'OT_S81PH_EP_PIPE2'], final_physical_signoff='unverified until current routed-reference and die-context checks pass', schema='opentallas.s81_ph.composition.v1', slab='dsfd_sp_collective', slab_um=[SW, SH],
                source='rtl/dsrom_sys/s81_ph/dsfd_sp_collective.sv (default = tiled: the exact composition netlist; bench '
                       'rtl/dsrom_sys/s81_ph/coll/run_coll_bench.sh)',
                instances=comp, outside_slab=[dict(inst='u_ck', master='dsfd_coll_ck', um=[KW, KH],

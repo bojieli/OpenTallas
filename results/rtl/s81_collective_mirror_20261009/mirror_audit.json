@@ -1,0 +1,125 @@
+{
+  "schema": "opentallas.s81_collective_mirror.v1",
+  "decision_source": "Claude CRITICAL_PATH.md 2026-10-08 15:15 PT and orphans.log 15:10 PT",
+  "superseded_master": "dsfd_coll_lane_e",
+  "replacement_master": "dsfd_coll_lane_w",
+  "east_orientation": "MY",
+  "instances": 4,
+  "geometry_verdict": "PASS",
+  "matching_data_and_forwarded_clock_pins": 2141,
+  "control_pin_relocations": {
+    "ck[0]": {
+      "old_e": [
+        "M5",
+        168.0,
+        340.008,
+        168.024,
+        340.2
+      ],
+      "w_my": [
+        "M5",
+        177.576,
+        340.008,
+        177.6,
+        340.2
+      ],
+      "shift_x_um": 9.576
+    },
+    "rs[0]": {
+      "old_e": [
+        "M5",
+        172.8,
+        340.008,
+        172.824,
+        340.2
+      ],
+      "w_my": [
+        "M5",
+        172.776,
+        340.008,
+        172.8,
+        340.2
+      ],
+      "shift_x_um": -0.024
+    },
+    "chb[0]": {
+      "old_e": [
+        "M5",
+        177.6,
+        340.008,
+        177.624,
+        340.2
+      ],
+      "w_my": [
+        "M5",
+        167.976,
+        340.008,
+        168.0,
+        340.2
+      ],
+      "shift_x_um": -9.624
+    }
+  },
+  "rtl_native_interface_equivalence": "PASS: E and W top wrappers identical after module-name replacement; FB69, lo/li553, rx515, tx512, widths unchanged",
+  "selected_variant": {
+    "GFMT": 1,
+    "EPPIPE": 2,
+    "both_ends": "same FMT1 gearbox in pinned TP4 positive/negative bench"
+  },
+  "clock_arcs": {
+    "ss": {
+      "file_sha256": "707cf807a91cf934e030651b2d7889b4c60620b9e71199635d56253452200994",
+      "related_pins": [
+        "ck[0]"
+      ],
+      "clock_tree_minmax_arcs": 2
+    },
+    "tt": {
+      "file_sha256": "dc87a0f2fba01e6639219990896d3a88cc58421836a543584b0be8160c9b071d",
+      "related_pins": [
+        "ck[0]"
+      ],
+      "clock_tree_minmax_arcs": 2
+    },
+    "ff": {
+      "file_sha256": "5d3158ad5e6e3becdefabcca04bc6e38363a870bbf95fb9db08ec10fabdb6fb5",
+      "related_pins": [
+        "ck[0]"
+      ],
+      "clock_tree_minmax_arcs": 2
+    }
+  },
+  "clock_arrival_policy": "No added logical cycles or internal insertion; use mirrored W ck pin actual coordinate and W measured routed corner insertion. Die clock wiring must use relocated control endpoints. CTS calibration alone does not prove final insertion.",
+  "latency_added_cycles": 0,
+  "area_added_um2": 0,
+  "w_historical_metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/work/orfs/logs/asap7/opentallas_dsfd_coll_lane_w_asap7_s81ph_s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/base/5_2_route.json"
+    ],
+    "ff_ps": 11.88,
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/work/orfs",
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc"
+    ],
+    "ss_sensitivity_ps": -374.21,
+    "ss_sensitivity_tns_ps": -272339.1,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch/claude/closure-loop/s81b-coll_lane_ww-fmt1-mm2-9ac26e269-tt/routes/s81b_coll_lane_ww_fmt1_mm2_9ac26e269_tt/corner_sta.json.tt.json",
+    "ss_ps": 17.91,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0
+  },
+  "w_historical_failed_checks": [
+    "ttb_routed_at_TC"
+  ],
+  "final_physical_signoff": "UNVERIFIED: historical W record bypassed failed TC-provenance check; current routed-reference remeasurement and die-context routing remain required",
+  "source_hashes": {
+    "inputs/w/ports.json": "fe81f5a57de1e1310447aef7bbb9e526a4f83db2e49b626d90595f111a1874e5",
+    "inputs/e/ports.json": "a0d74bc3d19a88ec4d0e78ba4c5df7a6971019ea8a503713b68fd55b428d09d3",
+    "inputs/ot_s81ph_coll_lane.sv": "e3db302b1d219899f39ab560d02b8ba0095ce1328793715c17e1b289fef2e793"
+  }
+}
