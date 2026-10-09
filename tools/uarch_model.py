@@ -94,6 +94,9 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         macro_count=macro_count,macro_area_um2=macro_area,
         SRAM_area_um2=macro_count*macro_area,slot_reservation_um2=macro_count*macro_area/0.55,
         decoder_logic_area_um2=None,slot_fit=None,physical_qualified=False,
+        pathfinding_slots_um=dict(compact=[470,340],wide_corridor=[690,460]),
+        pathfinding_macro_pitch_um=dict(compact=[112,75],wide_corridor=[160,110]),
+        wide_corridor_added_die_area_um2_per_port=690*460-470*340,
         macs_per_cycle=0,write_records_per_cycle=1,read_records_per_cycle=1,
         write_encoded_bits_per_cycle=coded_bits,read_encoded_bits_per_cycle=coded_bits,
         routing_tracks_needed=2*record_bits+2*math.ceil(math.log2(depth))+2,
@@ -129,6 +132,26 @@ def hbm_link_landing_credit_model(capacity=256, payload_bits=545, seq_bits=12,
         routing_tracks_needed=payload_bits+2*seq_bits+2*session_bits+1+cw,
         channel_capacity=None,slot_fit=None,actual_TU_RX_FIFO_bound=False,
         physical_qualified=False,adoptable=False)
+
+
+def hbm_retry_pop_cdc_model(capacity=256, source_period_ns=5/6,
+                           destination_period_ns=5/6):
+    """Real Gray event counter across independent core/PHY clocks.
+
+    Source advances by at most ONE per edge; destination emits individual
+    pops from bounded retained event debt. It never samples an atomic binary
+    multi-bit bus directly. Both domains reset before session admission.
+    """
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_RETRY_POP_CDC",capacity=capacity,counter_bits=cw,
+        macs_per_cycle=0,memory_ports=0,source_event_per_cycle=1,
+        Gray_crossing_bits=cw,synchronizer_stages=2,registered_source_bits=2*cw,
+        destination_state_bits=3*cw,source_period_ns=source_period_ns,
+        destination_period_ns=destination_period_ns,
+        first_event_latency_ns_bound=3*destination_period_ns,
+        steady_events_per_cycle=1,retained_event_debt=capacity,
+        area_um2=None,floorplan_slot_fit=None,routing_tracks_needed=cw,
+        channel_capacity=None,actual_clock_reset_bound=False,physical_qualified=False)
 
 
 def qwen_spine_credit_contract_model():
