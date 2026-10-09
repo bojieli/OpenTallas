@@ -12,4 +12,8 @@ elif [ "$mut" = 2 ]; then
   leaf="$out/leaf_mut.sv"
 fi
 /usr/bin/time -v iverilog -g2012 -s tb_hgi_accept18 -o "$out/sim.vvp" "$leaf" rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv rtl/test/hbm_generic/tb_hgi_accept18.sv > "$out/build.log" 2>&1
+set +e
 /usr/bin/time -v vvp "$out/sim.vvp" > "$out/run.log" 2>&1
+rc=$?
+cat "$out/run.log"
+exit "$rc"
