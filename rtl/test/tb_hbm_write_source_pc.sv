@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 module tb_hbm_write_source_pc;
  reg ck=0;always #0.416667 ck=~ck;reg rst_n=0;
- reg[31:0] iv=0,dv=0;reg[1:0] source=0;wire[31:0] ready;
+ reg[31:0] iv=0,dv=0;reg[1:0] source=0;wire[31:0] ready,busy;
  wire[17:0] ack;wire fault;
- ot_hbm_write_source_pc dut(ck,rst_n,iv,source,ready,dv,ack,fault);
+ ot_hbm_write_source_pc dut(.ck(ck),.rst_n(rst_n),.issue_v(iv),.issue_source(source),.issue_rdy(ready),.busy_pc(busy),.done_v(dv),.ack_n(ack),.fault(fault));
  integer q[0:31][0:4095];integer w[0:31],r[0:31];integer total=0,retired=0;
  reg[31:0] rng=32'hA9712365;reg[5:0] a[0:2];reg[17:0] expected;
  integer pc,i,c;
@@ -23,6 +23,7 @@ module tb_hbm_write_source_pc;
   repeat(5)@(negedge ck);rst_n=1;
   // Fill all32 PCs to exact8-source-slot capacity with every source.
   for(c=0;c<8;c=c+1)begin iv=32'hffffffff;dv=0;source=c%3;tick();end
+  if(busy!=32'hffffffff)$fatal(1,"livePC write inventory absent");
   if(ready!=0)$fatal(1,"capacity not enforced");
   // Retire in reversePC order; burst32 physical completions in onecycle too.
   iv=0;
@@ -42,6 +43,7 @@ module tb_hbm_write_source_pc;
    dv=0;for(pc=0;pc<32;pc=pc+1)if(w[pc]!=r[pc])dv[pc]=1;
    tick();
   end
+  if(busy!=0)$fatal(1,"livePC inventory not drained");
   if(total!=retired)$fatal(1,"ledger failed drain %0d/%0d",retired,total);
   // Unexpectedcompletion must stickyfault without any sourceACK.
   iv=0;dv=1;@(posedge ck);#0.1;

@@ -7,6 +7,7 @@ module ot_hbm_write_source_pc #(parameter integer DEPTH=8)(
  input wire ck,rst_n,
  input wire [31:0] issue_v,input wire[1:0] issue_source,
  output wire[31:0] issue_rdy,
+ output wire[31:0] busy_pc,
  input wire[31:0] done_v,
  output reg[17:0] ack_n,output reg fault
 );
@@ -17,6 +18,7 @@ module ot_hbm_write_source_pc #(parameter integer DEPTH=8)(
  genvar p;
  generate for(p=0;p<32;p=p+1)begin:g_ready
   assign issue_rdy[p]=(count[p]<DEPTH)&&!fault;
+  assign busy_pc[p]=count[p]!=0;
  end endgenerate
  always @(*)begin
   a0=0;a1=0;a2=0;bad=0;
