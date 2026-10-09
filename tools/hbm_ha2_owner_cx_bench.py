@@ -16,8 +16,11 @@ out = Path(a.out).resolve()
 out.mkdir(parents=True, exist_ok=False)
 fl = root / "rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.f"
 sources = [root / x for x in fl.read_text().splitlines() if x.strip()]
+commit_file = root / ".source_commit"
+commit = commit_file.read_text().strip() if commit_file.exists() else subprocess.check_output(
+    ["git", "rev-parse", "HEAD"], cwd=root, text=True).strip()
 record = {
-    "source_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=root, text=True).strip(),
+    "source_commit": commit,
     "source_sha256": {str(x.relative_to(root)): hashlib.sha256(x.read_bytes()).hexdigest() for x in sources},
     "shape": {"NC": 8, "PFMAX": 384, "NPT": 8, "INJ": 2, "LANES": 16, "FD": 8},
     "fast_period_ps": 833.333334,
