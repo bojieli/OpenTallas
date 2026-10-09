@@ -12,7 +12,11 @@
   "peak_ram_gb": 60,
   "source": {
     "branch": "codex/hgi-quant-decode-20261009",
-    "commit": "66e64aa19"
+    "commit": "66e64aa19",
+    "extra_paths": [
+      "results/hgi_generic/cf_qdq_891b4b555",
+      "results/hgi_generic/quant_decode_20261009"
+    ]
   },
   "purpose": "Owner-approved HGI-1 G8 full32-lane/128-bit record quant decode; SATFINITE opt-in E4M3 corrected fork; all ports live. Physical-only density variant. Standalone boundary contract is provisional and explicitly not legacyhfd_quant die budget match. No adoption until generic die integration budget approved. Parent exact lockstep/CF-QDQ/mutants must pass before fleet intake.",
   "registered_io": true,
@@ -26,7 +30,7 @@
         "cmd": "bash tools/hgi_quant_decode_bench.sh {RUN}/bench_ds",
         "expect": "pass",
         "threads": 8,
-        "peak_ram_gb": 16
+        "peak_ram_gb": 2
       },
       {
         "name": "ds_mutant_rejected",
@@ -40,7 +44,7 @@
         "cmd": "bash tools/hgi_quant_vector_bench.sh {RUN}/bench_cf +VECTORS=results/hgi_generic/cf_qdq_891b4b555 +N8=49 +N4=49 +N4E=86",
         "expect": "pass",
         "threads": 8,
-        "peak_ram_gb": 16
+        "peak_ram_gb": 2
       },
       {
         "name": "cf_scale_mutant_rejected",
