@@ -3249,7 +3249,7 @@ def requeue_hold_only(jobs):
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
             event(j, "hold ECO re-run: helpers shipped; clock wires re-routed (DRT-0206 with kept clock wires); buffer cap 30 %")
             save_job(j)
-    busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL or x["status"] == "CLOSED"}
+    busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL} | closed_blocks(jobs)
     for j in jobs:
         m = j.get("metrics") or {}
         if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, j.get("failed_checks") or []):
@@ -3520,9 +3520,56 @@ echo FREED $before $(du -sm "$R" 2>/dev/null | cut -f1)
 """
 
 
+
+REVOKED_JSON = Path(os.environ.get("CL_REVOKED", str(Path.home() / "claude-takeover-20261007/revoked_closures.json")))
+OPTB_STATUS_GLOB = "results/closure_loop/option_b_status_*/status.json"
+OPTB_DECISION = "2026-10-07T20:45"   # owner option B: setup judged at TT; SS-era closures of revoked blocks lapse
+
+
+def _closed_at(j):
+    ev = [e for e in j.get("events") or [] if " CLOSED" in e[:40] or "CLOSED:" in e[:40]]
+    return (ev[-1] if ev else (j.get("updated") or ""))[:16]
+
+
+def revoked_closures():
+    """(revoked job names, option-B revoked blocks): the two sources of closures that no longer count."""
+    names, blocks = set(), set()
+    try:
+        names |= set(json.loads(REVOKED_JSON.read_text()))
+    except Exception:  # noqa: BLE001
+        pass
+    for p in sorted(REPO.glob(OPTB_STATUS_GLOB))[-1:]:
+        try:
+            d = json.loads(p.read_text()).get("revoked_previously_closed") or {}
+            blocks |= {b["block"] for b in d.get("blocks", [])}
+            names |= {b["job"] for b in d.get("blocks", []) if b.get("job")}
+        except Exception:  # noqa: BLE001
+            pass
+    return names, blocks
+
+
+def closure_counts(j, revoked=None):
+    """A CLOSED job counts as its block's closure unless revoked (2026-10-08: dsfd_svcio_q's re-routes were bulk-released
+    against a revoked closure). An option-B-revoked block's closure counts only if judged at TT (tt_ps, or closed after
+    the option-B decision)."""
+    if j.get("status") != "CLOSED":
+        return False
+    names, blocks = revoked if revoked is not None else revoked_closures()
+    if j["name"] in names:
+        return False
+    if j["spec"].get("block") in blocks:
+        return "tt_ps" in (j.get("metrics") or {}) or _closed_at(j) >= OPTB_DECISION
+    return True
+
+
+def closed_blocks(jobs):
+    rv = revoked_closures()
+    return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
+
+
 def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk."""
-    closed = {x["spec"].get("block") for x in jobs if x["status"] == "CLOSED"}
+    closed = closed_blocks(jobs)
     n = 0
     for x in jobs:
         if n >= BULK_RELEASE_PER_TICK:
@@ -3638,7 +3685,7 @@ def recover_jobs():
         try:
             jobs = all_jobs()
             live_blocks = {j["spec"].get("block") for j in jobs
-                           if j["status"] not in TERMINAL or j["status"] == "CLOSED"}
+                           if j["status"] not in TERMINAL} | closed_blocks(jobs)
             # Automatic migration of historical failures must not revive a
             # superseded route alongside an active or closed replacement.
             recover([j for j in jobs if j["status"] not in TERMINAL
