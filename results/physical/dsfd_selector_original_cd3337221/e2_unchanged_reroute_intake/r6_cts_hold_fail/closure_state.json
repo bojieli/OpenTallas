@@ -1,0 +1,388 @@
+{
+ "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+ "spec": {
+  "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "block": "dsfd_selt_q",
+  "owner": "Codex:selector_capture routine R6; Claude confirmed review0400 intake",
+  "purpose": "CONFIRMED R6 unchanged cd333 base diagnostic reroute: currentbudget_rb2 TTroute_ref/H1/MM FF hold/DRC, SS sensitivity. Real3macro direct SRAM baseline only; no READLAT2/static map/PIPE2/SEARCH_PIPE/380draft adoption; preserve all prior failures.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "codex/dsfd-selt-q-cx-20261009",
+   "commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+   "paths": [
+    "rtl/common",
+    "rtl/hdc/v41x",
+    "rtl/dsrom_sys/s81_ph",
+    "physical/abi3",
+    "physical/s81_ph_views",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+    "tools",
+    "configs",
+    "Makefile"
+   ],
+   "required_files": [
+    "rtl/common/ot_fwd_link_stage.sv",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+    "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv",
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv",
+    "physical/s81_ph_views/tiles/place_macros_tile.tcl",
+    "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json",
+    "physical/s81_ph_views/specs/dsfd_selt_q.json",
+    "physical/s81_ph_views/common/route_view.sh",
+    "physical/s81_ph_views/common/make_io_vclk_margin.sh",
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "tools/run_abi3_physical.py"
+   ]
+  },
+  "stages": {
+   "calibrate": {
+    "cmd": "python3 -c 'import base64,pathlib,hashlib; b=base64.b64decode('\"'\"'IyBTODEtUEggdGlsZSBjb3B5IChkcml2ZS0yMTI1IDIwMjYtMTAtMDgsIHRlbXBsYXRlIEYpOiBmcm9tIHBoeXNpY2FsL2hibV9hdHRuX3RpbGVfci9kaWVfdGlsZS9zbGl2ZXJfYmxvY2sudGNsLCBzb3VyY2VkIGFzIGEgUE9TVF9QRE4gc3RlcCBob29rCiMgKHJvdXRlX3ZpZXcuc2ggZXh0cmEgYXJnIC0tc3RlcC10Y2wgUE9TVF9QRE49Li4uKTsgb3Rfc2xpdmVyX3VtIGRlZmF1bHRzIHRvIDEyLjAuICBkc2ZkX2NvbHRfbGFuZTogdV9xLmdfbVswXS51X20gfCBnX21bMV0udV9tIGdhcCAxMC43OCB1bS4KIyBTbGl2ZXIgYmxvY2thZ2VzIGZvciB0aGUgYmFuay1idWlsdCBIQk0gYXR0ZW50aW9uIGRpZSB0aWxlIChhcHBlbmRlZCB0byB0aGUgUE9TVF9QRE4gaG9vayBieSByb3V0ZV9kdF9jbC5zaCB3aGVuCiMgU0xJVkVSIGlzIHNldDsgcm91dGVfZHRfY2wuc2ggcHJlcGVuZHMgInNldCBvdF9zbGl2ZXJfdW0gPHVtPiIpLgojIFJvb3QgY2F1c2UgKGF0dG4tdGlsZS0yLCAyMDI2LTEwLTA4KTogdGhlIHBpbi1iYW5rIHN0YWNrcyBzaXQgMS41LTMuNiB1bSBhcGFydCAobWFjcm8gZWRnZSB0byBlZGdlKS4gIFdpdGggdGhlIDEgdW0KIyByb3cgaGFsbyBlYWNoIGdhcCBsZWF2ZXMgYSAyLTUgcm93IHN0cmlwIG9mIGxlZ2FsIHNpdGVzIGJldHdlZW4gdHdvIGJhbmtzLiAgR2xvYmFsIHBsYWNlbWVudCBhbmQgcmVwYWlyX2Rlc2lnbidzCiMgd2lyZSBidWZmZXJzIHBpbGUgY2VsbHMgaW50byB0aG9zZSBzdHJpcHMgKHIyM2g6IDMwIEJVRngqIGF0IHggMTExMy0xMTM5IC8geSA4MDcuMyBiZXR3ZWVuIGJhbmtzIDc5NC4xOC04MDYuMDYgYW5kCiMgODA5LjMwLTgyMS4xODsgcjIzaHE6IDExMiBjZWxscyBhdCB4IDg1MC05MjUgLyB5IDU1MS4zIGJldHdlZW4gYmFua3MgNTM4LjIwLTU1MC4wOCBhbmQgNTUzLjQyLTU2NS4zMCwgcGx1cyAyIGNlbGxzIGluCiMgYSAyLjQ0IHVtIHZlcnRpY2FsIGdhcCBhdCB4IDk0MikgYW5kIHRoZSBkZXRhaWwgcGxhY2VyIGNhbm5vdCBsZWdhbGlzZSB0aGVtIC0+IERQTC0wMDMzLgojIEZpeDogYSBoYXJkIHBsYWNlbWVudCBibG9ja2FnZSBvdmVyIGV2ZXJ5IG1hY3JvLXRvLW1hY3JvIGdhcCBuYXJyb3dlciB0aGFuIG90X3NsaXZlcl91bSwgb3ZlciB0aGUgcGFpcidzIGZhY2luZwojIG92ZXJsYXAgZXh0ZW5kZWQgYnkgb3Rfc2xpdmVyX3VtIG9uIGVhY2ggc2lkZSAoY2F0Y2hlcyBzdGFnZ2VyZWQgcGFpcnMpLiAgUm91dGluZyBpcyB1bnRvdWNoZWQ6IG9ubHkgc3RkLWNlbGwKIyBwbGFjZW1lbnQgbGVhdmVzIHRoZSBzbGl2ZXJzOyB0aGUgY2VsbHMgbGFuZCBpbiB0aGUgb3BlbiBmbG9vciBuZXh0IHRvIHRoZSBzdGFjay4KaWYgeyFbaW5mbyBleGlzdHMgb3Rfc2xpdmVyX3VtXX0geyBzZXQgb3Rfc2xpdmVyX3VtIDEyLjAgfQpzZXQgb3RfYmxrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IG90X2RidSBbJG90X2JsayBnZXREYlVuaXRzUGVyTWljcm9uXQpzZXQgb3RfdCBbZXhwciB7aW50KCRvdF9zbGl2ZXJfdW0gKiAkb3RfZGJ1KX1dCnNldCBvdF9kaWUgWyRvdF9ibGsgZ2V0RGllQXJlYV0Kc2V0IG90X2JicyB7fQpmb3JlYWNoIG90X2kgWyRvdF9ibGsgZ2V0SW5zdHNdIHsKICBpZiB7IVtbJG90X2kgZ2V0TWFzdGVyXSBpc0Jsb2NrXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIGxhcHBlbmQgb3RfYmJzIFtsaXN0IFskYiB4TWluXSBbJGIgeU1pbl0gWyRiIHhNYXhdIFskYiB5TWF4XV0KfQpzZXQgb3RfbmIgMApzZXQgb3RfcmVjdHMge30Kc2V0IG90X2FyZWEgMC4wCnNldCBvdF9uIFtsbGVuZ3RoICRvdF9iYnNdCmZvciB7c2V0IGkgMH0geyRpIDwgJG90X259IHtpbmNyIGl9IHsKICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkaV0gYXgwIGF5MCBheDEgYXkxCiAgZm9yIHtzZXQgaiBbZXhwciB7JGkgKyAxfV19IHskaiA8ICRvdF9ufSB7aW5jciBqfSB7CiAgICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkal0gYngwIGJ5MCBieDEgYnkxCiAgICBzZXQgb3ggW2V4cHIge21pbigkYXgxLCAkYngxKSAtIG1heCgkYXgwLCAkYngwKX1dCiAgICBzZXQgb3kgW2V4cHIge21pbigkYXkxLCAkYnkxKSAtIG1heCgkYXkwLCAkYnkwKX1dCiAgICBzZXQgciB7fQogICAgaWYgeyRveCA+IC0kb3RfdCAmJiAkb3kgPCAwICYmIC0kb3kgPCAkb3RfdH0gewogICAgICAjIHZlcnRpY2FsIGdhcCAoc3RhY2tlZCBiYW5rcyk6IGJsb2NrIHRoZSBnYXAgcm93cyBvdmVyIHRoZSB4IG92ZXJsYXAgd2lkZW5lZCBieSBUCiAgICAgIHNldCByIFtsaXN0IFtleHByIHttYXgobWF4KCRheDAsICRieDApIC0gJG90X3QsIFskb3RfZGllIHhNaW5dKX1dIFtleHByIHttaW4oJGF5MSwgJGJ5MSl9XSBcCiAgICAgICAgICAgICAgICAgIFtleHByIHttaW4obWluKCRheDEsICRieDEpICsgJG90X3QsIFskb3RfZGllIHhNYXhdKX1dIFtleHByIHttYXgoJGF5MCwgJGJ5MCl9XV0KICAgIH0gZWxzZWlmIHskb3kgPiAtJG90X3QgJiYgJG94IDwgMCAmJiAtJG94IDwgJG90X3R9IHsKICAgICAgc2V0IHIgW2xpc3QgW2V4cHIge21pbigkYXgxLCAkYngxKX1dIFtleHByIHttYXgobWF4KCRheTAsICRieTApIC0gJG90X3QsIFskb3RfZGllIHlNaW5dKX1dIFwKICAgICAgICAgICAgICAgICAgW2V4cHIge21heCgkYXgwLCAkYngwKX1dIFtleHByIHttaW4obWluKCRheTEsICRieTEpICsgJG90X3QsIFskb3RfZGllIHlNYXhdKX1dXQogICAgfQogICAgaWYgeyRyIGVxIHt9fSB7Y29udGludWV9CiAgICBsYXNzaWduICRyIHgwIHkwIHgxIHkxCiAgICBpZiB7JHgxIDw9ICR4MCB8fCAkeTEgPD0gJHkwfSB7Y29udGludWV9CiAgICBvZGI6OmRiQmxvY2thZ2VfY3JlYXRlICRvdF9ibGsgJHgwICR5MCAkeDEgJHkxCiAgICBsYXBwZW5kIG90X3JlY3RzIFtsaXN0ICR4MCAkeTAgJHgxICR5MV0KICAgIGluY3Igb3RfbmIKICAgIHNldCBvdF9hcmVhIFtleHByIHskb3RfYXJlYSArICgkeDEgLSAkeDApIC8gZG91YmxlKCRvdF9kYnUpICogKCR5MSAtICR5MCkgLyBkb3VibGUoJG90X2RidSl9XQogIH0KfQojIHRhcGNlbGwgLyBlbmRjYXAgaW5zdGFuY2VzIChmaXhlZCwgcGh5c2ljYWwgb25seSkgaW5zaWRlIGEgYmxvY2tlZCBzbGl2ZXIgd291bGQgZmFpbCBjaGVja19wbGFjZW1lbnQncyAicGxhY2VkIGluCiMgcm93cyIgdGVzdDsgbm8gbG9naWMgY2FuIHNpdCBpbiB0aGUgc2xpdmVyLCBzbyBpdHMgdGFwcyBhbmQgcm93LWVuZCBjYXBzIGdvIHdpdGggaXQuCnNldCBvdF9ybSAwCmZvcmVhY2ggb3RfaSBbJG90X2JsayBnZXRJbnN0c10gewogIHNldCBvdF90eSBbWyRvdF9pIGdldE1hc3Rlcl0gZ2V0VHlwZV0KICBpZiB7IVtzdHJpbmcgbWF0Y2ggIkNPUkVfV0VMTFRBUCIgJG90X3R5XSAmJiAhW3N0cmluZyBtYXRjaCAiRU5EQ0FQKiIgJG90X3R5XSAmJiBcCiAgICAgICFbc3RyaW5nIG1hdGNoICJUQVBfKiIgWyRvdF9pIGdldE5hbWVdXSAmJiAhW3N0cmluZyBtYXRjaCAiUEhZX0VER0VfKiIgWyRvdF9pIGdldE5hbWVdXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIHNldCBjeDAgWyRiIHhNaW5dOyBzZXQgY3kwIFskYiB5TWluXTsgc2V0IGN4MSBbJGIgeE1heF07IHNldCBjeTEgWyRiIHlNYXhdCiAgZm9yZWFjaCBvdF9yICRvdF9yZWN0cyB7CiAgICBsYXNzaWduICRvdF9yIHgwIHkwIHgxIHkxCiAgICBpZiB7JGN4MCA8ICR4MSAmJiAkY3gxID4gJHgwICYmICRjeTAgPCAkeTEgJiYgJGN5MSA+ICR5MH0geyBvZGI6OmRiSW5zdF9kZXN0cm95ICRvdF9pOyBpbmNyIG90X3JtOyBicmVhayB9CiAgfQp9CnB1dHMgIk9UX1NMSVZFUl9QSFlTX1JFTU9WRUQgJG90X3JtIgpwdXRzIFtmb3JtYXQgIk9UX1NMSVZFUl9CTE9DS0FHRVMgJWQgKGdhcCA8ICUuMWYgdW0sICUuMWYgdW1eMikiICRvdF9uYiAkb3Rfc2xpdmVyX3VtICRvdF9hcmVhXQo='\"'\"'); assert hashlib.sha256(b).hexdigest()=='\"'\"'155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4'\"'\"'; pathlib.Path('\"'\"'physical/s81_ph_views/tiles/sliver_block.tcl'\"'\"').write_bytes(b)'\nHM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 16,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "python3 -c 'import base64,pathlib,hashlib; b=base64.b64decode('\"'\"'IyBTODEtUEggdGlsZSBjb3B5IChkcml2ZS0yMTI1IDIwMjYtMTAtMDgsIHRlbXBsYXRlIEYpOiBmcm9tIHBoeXNpY2FsL2hibV9hdHRuX3RpbGVfci9kaWVfdGlsZS9zbGl2ZXJfYmxvY2sudGNsLCBzb3VyY2VkIGFzIGEgUE9TVF9QRE4gc3RlcCBob29rCiMgKHJvdXRlX3ZpZXcuc2ggZXh0cmEgYXJnIC0tc3RlcC10Y2wgUE9TVF9QRE49Li4uKTsgb3Rfc2xpdmVyX3VtIGRlZmF1bHRzIHRvIDEyLjAuICBkc2ZkX2NvbHRfbGFuZTogdV9xLmdfbVswXS51X20gfCBnX21bMV0udV9tIGdhcCAxMC43OCB1bS4KIyBTbGl2ZXIgYmxvY2thZ2VzIGZvciB0aGUgYmFuay1idWlsdCBIQk0gYXR0ZW50aW9uIGRpZSB0aWxlIChhcHBlbmRlZCB0byB0aGUgUE9TVF9QRE4gaG9vayBieSByb3V0ZV9kdF9jbC5zaCB3aGVuCiMgU0xJVkVSIGlzIHNldDsgcm91dGVfZHRfY2wuc2ggcHJlcGVuZHMgInNldCBvdF9zbGl2ZXJfdW0gPHVtPiIpLgojIFJvb3QgY2F1c2UgKGF0dG4tdGlsZS0yLCAyMDI2LTEwLTA4KTogdGhlIHBpbi1iYW5rIHN0YWNrcyBzaXQgMS41LTMuNiB1bSBhcGFydCAobWFjcm8gZWRnZSB0byBlZGdlKS4gIFdpdGggdGhlIDEgdW0KIyByb3cgaGFsbyBlYWNoIGdhcCBsZWF2ZXMgYSAyLTUgcm93IHN0cmlwIG9mIGxlZ2FsIHNpdGVzIGJldHdlZW4gdHdvIGJhbmtzLiAgR2xvYmFsIHBsYWNlbWVudCBhbmQgcmVwYWlyX2Rlc2lnbidzCiMgd2lyZSBidWZmZXJzIHBpbGUgY2VsbHMgaW50byB0aG9zZSBzdHJpcHMgKHIyM2g6IDMwIEJVRngqIGF0IHggMTExMy0xMTM5IC8geSA4MDcuMyBiZXR3ZWVuIGJhbmtzIDc5NC4xOC04MDYuMDYgYW5kCiMgODA5LjMwLTgyMS4xODsgcjIzaHE6IDExMiBjZWxscyBhdCB4IDg1MC05MjUgLyB5IDU1MS4zIGJldHdlZW4gYmFua3MgNTM4LjIwLTU1MC4wOCBhbmQgNTUzLjQyLTU2NS4zMCwgcGx1cyAyIGNlbGxzIGluCiMgYSAyLjQ0IHVtIHZlcnRpY2FsIGdhcCBhdCB4IDk0MikgYW5kIHRoZSBkZXRhaWwgcGxhY2VyIGNhbm5vdCBsZWdhbGlzZSB0aGVtIC0+IERQTC0wMDMzLgojIEZpeDogYSBoYXJkIHBsYWNlbWVudCBibG9ja2FnZSBvdmVyIGV2ZXJ5IG1hY3JvLXRvLW1hY3JvIGdhcCBuYXJyb3dlciB0aGFuIG90X3NsaXZlcl91bSwgb3ZlciB0aGUgcGFpcidzIGZhY2luZwojIG92ZXJsYXAgZXh0ZW5kZWQgYnkgb3Rfc2xpdmVyX3VtIG9uIGVhY2ggc2lkZSAoY2F0Y2hlcyBzdGFnZ2VyZWQgcGFpcnMpLiAgUm91dGluZyBpcyB1bnRvdWNoZWQ6IG9ubHkgc3RkLWNlbGwKIyBwbGFjZW1lbnQgbGVhdmVzIHRoZSBzbGl2ZXJzOyB0aGUgY2VsbHMgbGFuZCBpbiB0aGUgb3BlbiBmbG9vciBuZXh0IHRvIHRoZSBzdGFjay4KaWYgeyFbaW5mbyBleGlzdHMgb3Rfc2xpdmVyX3VtXX0geyBzZXQgb3Rfc2xpdmVyX3VtIDEyLjAgfQpzZXQgb3RfYmxrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IG90X2RidSBbJG90X2JsayBnZXREYlVuaXRzUGVyTWljcm9uXQpzZXQgb3RfdCBbZXhwciB7aW50KCRvdF9zbGl2ZXJfdW0gKiAkb3RfZGJ1KX1dCnNldCBvdF9kaWUgWyRvdF9ibGsgZ2V0RGllQXJlYV0Kc2V0IG90X2JicyB7fQpmb3JlYWNoIG90X2kgWyRvdF9ibGsgZ2V0SW5zdHNdIHsKICBpZiB7IVtbJG90X2kgZ2V0TWFzdGVyXSBpc0Jsb2NrXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIGxhcHBlbmQgb3RfYmJzIFtsaXN0IFskYiB4TWluXSBbJGIgeU1pbl0gWyRiIHhNYXhdIFskYiB5TWF4XV0KfQpzZXQgb3RfbmIgMApzZXQgb3RfcmVjdHMge30Kc2V0IG90X2FyZWEgMC4wCnNldCBvdF9uIFtsbGVuZ3RoICRvdF9iYnNdCmZvciB7c2V0IGkgMH0geyRpIDwgJG90X259IHtpbmNyIGl9IHsKICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkaV0gYXgwIGF5MCBheDEgYXkxCiAgZm9yIHtzZXQgaiBbZXhwciB7JGkgKyAxfV19IHskaiA8ICRvdF9ufSB7aW5jciBqfSB7CiAgICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkal0gYngwIGJ5MCBieDEgYnkxCiAgICBzZXQgb3ggW2V4cHIge21pbigkYXgxLCAkYngxKSAtIG1heCgkYXgwLCAkYngwKX1dCiAgICBzZXQgb3kgW2V4cHIge21pbigkYXkxLCAkYnkxKSAtIG1heCgkYXkwLCAkYnkwKX1dCiAgICBzZXQgciB7fQogICAgaWYgeyRveCA+IC0kb3RfdCAmJiAkb3kgPCAwICYmIC0kb3kgPCAkb3RfdH0gewogICAgICAjIHZlcnRpY2FsIGdhcCAoc3RhY2tlZCBiYW5rcyk6IGJsb2NrIHRoZSBnYXAgcm93cyBvdmVyIHRoZSB4IG92ZXJsYXAgd2lkZW5lZCBieSBUCiAgICAgIHNldCByIFtsaXN0IFtleHByIHttYXgobWF4KCRheDAsICRieDApIC0gJG90X3QsIFskb3RfZGllIHhNaW5dKX1dIFtleHByIHttaW4oJGF5MSwgJGJ5MSl9XSBcCiAgICAgICAgICAgICAgICAgIFtleHByIHttaW4obWluKCRheDEsICRieDEpICsgJG90X3QsIFskb3RfZGllIHhNYXhdKX1dIFtleHByIHttYXgoJGF5MCwgJGJ5MCl9XV0KICAgIH0gZWxzZWlmIHskb3kgPiAtJG90X3QgJiYgJG94IDwgMCAmJiAtJG94IDwgJG90X3R9IHsKICAgICAgc2V0IHIgW2xpc3QgW2V4cHIge21pbigkYXgxLCAkYngxKX1dIFtleHByIHttYXgobWF4KCRheTAsICRieTApIC0gJG90X3QsIFskb3RfZGllIHlNaW5dKX1dIFwKICAgICAgICAgICAgICAgICAgW2V4cHIge21heCgkYXgwLCAkYngwKX1dIFtleHByIHttaW4obWluKCRheTEsICRieTEpICsgJG90X3QsIFskb3RfZGllIHlNYXhdKX1dXQogICAgfQogICAgaWYgeyRyIGVxIHt9fSB7Y29udGludWV9CiAgICBsYXNzaWduICRyIHgwIHkwIHgxIHkxCiAgICBpZiB7JHgxIDw9ICR4MCB8fCAkeTEgPD0gJHkwfSB7Y29udGludWV9CiAgICBvZGI6OmRiQmxvY2thZ2VfY3JlYXRlICRvdF9ibGsgJHgwICR5MCAkeDEgJHkxCiAgICBsYXBwZW5kIG90X3JlY3RzIFtsaXN0ICR4MCAkeTAgJHgxICR5MV0KICAgIGluY3Igb3RfbmIKICAgIHNldCBvdF9hcmVhIFtleHByIHskb3RfYXJlYSArICgkeDEgLSAkeDApIC8gZG91YmxlKCRvdF9kYnUpICogKCR5MSAtICR5MCkgLyBkb3VibGUoJG90X2RidSl9XQogIH0KfQojIHRhcGNlbGwgLyBlbmRjYXAgaW5zdGFuY2VzIChmaXhlZCwgcGh5c2ljYWwgb25seSkgaW5zaWRlIGEgYmxvY2tlZCBzbGl2ZXIgd291bGQgZmFpbCBjaGVja19wbGFjZW1lbnQncyAicGxhY2VkIGluCiMgcm93cyIgdGVzdDsgbm8gbG9naWMgY2FuIHNpdCBpbiB0aGUgc2xpdmVyLCBzbyBpdHMgdGFwcyBhbmQgcm93LWVuZCBjYXBzIGdvIHdpdGggaXQuCnNldCBvdF9ybSAwCmZvcmVhY2ggb3RfaSBbJG90X2JsayBnZXRJbnN0c10gewogIHNldCBvdF90eSBbWyRvdF9pIGdldE1hc3Rlcl0gZ2V0VHlwZV0KICBpZiB7IVtzdHJpbmcgbWF0Y2ggIkNPUkVfV0VMTFRBUCIgJG90X3R5XSAmJiAhW3N0cmluZyBtYXRjaCAiRU5EQ0FQKiIgJG90X3R5XSAmJiBcCiAgICAgICFbc3RyaW5nIG1hdGNoICJUQVBfKiIgWyRvdF9pIGdldE5hbWVdXSAmJiAhW3N0cmluZyBtYXRjaCAiUEhZX0VER0VfKiIgWyRvdF9pIGdldE5hbWVdXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIHNldCBjeDAgWyRiIHhNaW5dOyBzZXQgY3kwIFskYiB5TWluXTsgc2V0IGN4MSBbJGIgeE1heF07IHNldCBjeTEgWyRiIHlNYXhdCiAgZm9yZWFjaCBvdF9yICRvdF9yZWN0cyB7CiAgICBsYXNzaWduICRvdF9yIHgwIHkwIHgxIHkxCiAgICBpZiB7JGN4MCA8ICR4MSAmJiAkY3gxID4gJHgwICYmICRjeTAgPCAkeTEgJiYgJGN5MSA+ICR5MH0geyBvZGI6OmRiSW5zdF9kZXN0cm95ICRvdF9pOyBpbmNyIG90X3JtOyBicmVhayB9CiAgfQp9CnB1dHMgIk9UX1NMSVZFUl9QSFlTX1JFTU9WRUQgJG90X3JtIgpwdXRzIFtmb3JtYXQgIk9UX1NMSVZFUl9CTE9DS0FHRVMgJWQgKGdhcCA8ICUuMWYgdW0sICUuMWYgdW1eMikiICRvdF9uYiAkb3Rfc2xpdmVyX3VtICRvdF9hcmVhXQo='\"'\"'); assert hashlib.sha256(b).hexdigest()=='\"'\"'155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4'\"'\"'; pathlib.Path('\"'\"'physical/s81_ph_views/tiles/sliver_block.tcl'\"'\"').write_bytes(b)'\nSDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ],
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc"
+   ],
+   "macros": [
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/dsfd_selector_original_cd3337221_r6/record"
+   }
+  ],
+  "cycles_added": 20,
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_ref": "TT",
+  "gate_evidence": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json",
+  "no_bench_reason": "Pure physical reroute of unchanged cd333 RTL; fresh full minimum original exact32segments561beats4replays0errors and OT_S81PH_MUT2 FAIL6659 numerical/ordererrors. Evidence commit9b2120c0e, results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json SHA256e6a2d2b10a46336de543677ac5bea67cd988696c99b65f8b4aeecebe33532c0e. Nine source SHA matchcd333; rawpositive/mutant/build/run/time/wholePG receipts retained. No repeated gate needed.",
+  "fresh_gate_binding": {
+   "evidence_commit": "9b2120c0e",
+   "receipt_path": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json",
+   "receipt_sha256": "e6a2d2b10a46336de543677ac5bea67cd988696c99b65f8b4aeecebe33532c0e",
+   "physical_source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+   "positive": "RESULT PASS segments 32 out_beats 561 replays 4 errors 0 tail_minus_ref max 240 mean 91 ref_holds 11",
+   "negative": "RESULT FAIL segments 32 out_beats 561 replays 4 errors 6659 tail_minus_ref max 278 mean 95 ref_holds 11",
+   "source_verification_sha256": "5d791bf6ede59ef5e9e419992d7344dc33797bb9184771dbf3705eb3d175211a"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "rebudget": true,
+  "budget": {
+   "enabled": false,
+   "reason": "R6 unchanged base current shared IO budgeting: currentbudget_rb2 has no dsfd_selt_q per-block override. Retain approved consistent die-link split, measure own TT route reference, rejudge under currentrebudget/H1/MM; do not fabricate a diecontext budget sheet."
+  },
+  "flow_only_overlay": {
+   "approved_review": "CONFIRMED0400 R6",
+   "sliver_hook_commit": "d045744932eb5a6e24ddb24fcc3048f40e8de06a",
+   "sliver_hook_path": "physical/s81_ph_views/tiles/sliver_block.tcl",
+   "sha256": "155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4",
+   "step": "POST_PDN",
+   "macro_gap_um": 10.776,
+   "gap_threshold_um": 12,
+   "hardware_and_macro_placement": "unchanged",
+   "clock_period_ps": 833.333,
+   "uncertainty_ps": [
+    60,
+    25
+   ],
+   "route_ref": "TT",
+   "rebudget_expected": "budget_rb2/no dsfd_selt_q override; snapshot actual currentstate on submission"
+  },
+  "host_require": [
+   "ot-epyc4",
+   "ot-epyc1tb",
+   "ot-pve1"
+  ],
+  "resource_evidence": {
+   "reservation_gib": 24,
+   "claim_type": "conservative phase capacity reservation derived from actual sibling measurements;24 is not itself measured",
+   "closest_selector": {
+    "job": "s81b-selt_q2-frpr-sq12-3abd84e2c-tc",
+    "source": "3abd84e2c0faf561e8a1da8238c50799dadf3e03",
+    "host": "ot-epyc4",
+    "completed_calibration_cts_peak_kib": 4221400,
+    "completed_gp_peak_kib": 4142180,
+    "raw_log": "resource_basis/q2_frpr_4_1_cts.log",
+    "comparison": "Same native selector quarter W16/IW20/K512/AW8/EW37/256 rows and592-bit payload. q2 SAFE uses6x128x256 capture+bank mux with PIPE2/CMP/QIO/FRPR, original uses3x256x256 direct SRAM. Logical raw storage196608bits each; same total slot area121305.6 vsoriginal120839.04um2; extra q2 pipeline FFs are not adopted."
+   },
+   "same_tile_macro_family_actual_route": {
+    "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
+    "source": "e96dd1e56",
+    "host": "ot-epyc4",
+    "completed_detailed_route_peak_kib": 11807236,
+    "raw_log": "resource_basis/colt_lane_5_2_route.log",
+    "stdcell_um2": 17461,
+    "comparison": "S81 native tile/macro family completed route; supplemental actual route-stage calibration, not claim identical selector complexity. Original selector slot55% stdcell capacity54,751.6781856um2 vs measured colt17,461um2; capacity is a geometric ceiling, not actual selector cellarea. Claim is conservative, not proven original DRT peak."
+   },
+   "derivation": "24GiB >2x actual sibling detailed-route11.2603GiB and >2x closest selector CTS4.026GiB. Conservative headroom for unmeasured original selector detailed route; replace with actual phase data once it runs. Never represent old40GiB declaration or gate5.75GiB as route measurement.",
+   "raw_sha256": {
+    "colt_lane_5_2_route.log": "3b7d39e616117c7754b80212426e703d99eee7b514f3b47bb12a1a3c8fbcc852",
+    "q2_frpr_4_1_cts.log": "9ceccfc851621fd1b4d8bf2d9b6c12daea37ae09c80e0de1bdd575b5cf4f3ce6"
+   },
+   "admission": "Actual host guard plus current external/recent remaining reservations; remote host_require excludeslocalhost; no address-space/file/time caps."
+  }
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx.json",
+ "created": "2026-10-09T04:15:10-07:00",
+ "status": "EARLY_FAIL_HOLD",
+ "stage_idx": 1,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T04:15:10-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx.json",
+  "2026-10-09T04:15:10-07:00 submit lint PASS (estimate None b/um, limit None); PASS rtl_boundary dsfd_selt_q: registered boundary (in->reg 0, reg->out 0 levels)",
+  "2026-10-09T04:15:35-07:00 source cd33372216bc synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx/src",
+  "2026-10-09T04:16:11-07:00 no same-variant measured insertion (block value from another variant (s81b-selt_q-pipe2-36b7a0452-tt)): calibrate first (CTS-only), route after",
+  "2026-10-09T04:16:18-07:00 launched calibrate (attempt 1) on ot-epyc4",
+  "2026-10-09T05:04:48-07:00 calibrate done (rc=0)",
+  "2026-10-09T05:04:48-07:00 calibrated insertion CK_SS_MEAN=623 CK_SS_MIN=597 CK_SS_MAX=695 CK_TT_MEAN=623 CK_TT_MIN=597 CK_TT_MAX=695 CK_FF_MEAN=512 CK_FF_MIN=487 CK_FF_MAX=582 CK_SSLIB_MEAN=805 CK_SSLIB_MIN=776 CK_SSLIB_MAX=878 CK_ROUTE_REF=TT",
+  "2026-10-09T05:05:51-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-09T06:38:05-07:00 EARLY_FAIL_HOLD: stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present"
+ ],
+ "updated": "2026-10-09T06:38:05-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+ "source_synced": true,
+ "commit_full": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+ "source_archive": {
+  "commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "paths": [
+   "rtl/common",
+   "rtl/hdc/v41x",
+   "rtl/dsrom_sys/s81_ph",
+   "physical/abi3",
+   "physical/s81_ph_views",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "tools",
+   "configs",
+   "Makefile"
+  ],
+  "required_sha256": {
+   "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "c7624c6f573a6623db6e840d15ef1fe4376e6bd1ead7e8e23dc6215e5d52e850",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "d78042403f6e7bb267c993ffc0a8b0c014a48c923e73b454c68ca7faf263d30e",
+   "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "497f3079a4f70d07b7b9668ff44a1facdcaef61e3ea2e09ee1726c3be1aa0d0c",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv": "9aa9edcdef3ae8995957bc0b71094863688293b026d9b1309c6569b6c2c6c402",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv": "97d053572bf7ed0b8bdc93350fc6ca443c5d89012e59e035470e445bd4a353eb",
+   "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv": "fdae86b95d6d167c8b087f24c2643e5c92dc2233a311857d9b229a2432682449",
+   "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv": "fcaeddee7f6201aec6ee69381389eea1f13bca8146ba4e543987648f23477a39",
+   "physical/s81_ph_views/tiles/place_macros_tile.tcl": "76615638ccd0441e8b607761ad41347f9e9e4e08bd07f1d0da885d8f6f35dfcc",
+   "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json": "c06b32150b8cdd472d5b8984671513b8389b1a38817e4cac56948565bcebc63e",
+   "physical/s81_ph_views/specs/dsfd_selt_q.json": "1b8ae36816e084c944cbbdad8d18c926ac9ddac775c219beed0e793e7f981098",
+   "physical/s81_ph_views/common/route_view.sh": "54f46cce1c5e9eccde84eb2094009c7f64f6d85d6ce7ea8e89a0207a925e0867",
+   "physical/s81_ph_views/common/make_io_vclk_margin.sh": "2ed4064632f7fbf5b78dfa597a2541889a7ef6c009bc2f5aca9133f70d663c7c",
+   "physical/s81_ph_views/common/signoff_unc60.sdc": "eab76ad437d5efaea7deaa12ee092a61e455390435be7b39ca89b1b29d728f6f",
+   "tools/run_abi3_physical.py": "967d58e05b8b07cf7ef695012f4cac82dc3b282fe3126b7a3cee1b01f96052b3"
+  },
+  "archive_sha256": "6ec83eda945e34bc0b2b1847d60d6f5776d8bbaf63121e7252f9f7e65d05e65f",
+  "scope": "Declared source inventory only; run candidate preparation and target runtime checks separately",
+  "runtime_files_pending": []
+ },
+ "reason": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present",
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-09T05:05:51-07:00",
+ "wd_checked": 1791551970.9468067,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1576,
+    "mean": 804.9,
+    "min": 775.8,
+    "max": 877.9
+   },
+   "all": {
+    "n": 37086,
+    "mean": 801.5,
+    "min": 752.6,
+    "max": 891.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1576,
+    "mean": 512.0,
+    "min": 487.3,
+    "max": 582.2
+   },
+   "all": {
+    "n": 37086,
+    "mean": 510.0,
+    "min": 469.6,
+    "max": 594.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 623,
+   "CK_SS_ALL_MEAN": 621,
+   "CK_SS_MIN": 597,
+   "CK_SS_ALL_MIN": 577,
+   "CK_SS_MAX": 695,
+   "CK_SS_ALL_MAX": 708,
+   "CK_TT_MEAN": 623,
+   "CK_TT_ALL_MEAN": 621,
+   "CK_TT_MIN": 597,
+   "CK_TT_ALL_MIN": 577,
+   "CK_TT_MAX": 695,
+   "CK_TT_ALL_MAX": 708,
+   "CK_FF_MEAN": 512,
+   "CK_FF_ALL_MEAN": 510,
+   "CK_FF_MIN": 487,
+   "CK_FF_ALL_MIN": 470,
+   "CK_FF_MAX": 582,
+   "CK_FF_ALL_MAX": 595,
+   "CK_SSLIB_MEAN": 805,
+   "CK_SSLIB_MIN": 776,
+   "CK_SSLIB_MAX": 878,
+   "CK_SSLIB_ALL_MEAN": 802,
+   "CK_SSLIB_ALL_MIN": 753,
+   "CK_SSLIB_ALL_MAX": 892,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ef_checked": 1791552208.4627018,
+ "early_fail": {
+  "verdict": "EARLY_FAIL_HOLD",
+  "why": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present",
+  "at": "2026-10-09T06:38:05-07:00",
+  "detail": {
+   "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+   "host": "ot-epyc4",
+   "status": "RUNNING",
+   "stage": "route",
+   "block": "dsfd_selt_q",
+   "owner": "Codex:selector_capture routine R6; Claude confirmed review0400 intake",
+   "action": "early_fail",
+   "why": [
+    "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present"
+   ],
+   "fresh_min": 0.0,
+   "cpu_cores": 1.0,
+   "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx/routes/s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx/work/orfs",
+   "step": "4_1_cts",
+   "step_h": 0.95,
+   "corner": "TT",
+   "setup": {
+    "stage": "place",
+    "ws": -140.7,
+    "raw_ws": -140.7,
+    "period": 833.3,
+    "count": 1206,
+    "tns": -34636.8
+   },
+   "hold": {
+    "found": [
+     28240
+    ],
+    "cur_last": [
+     "4100",
+     9265,
+     -60.904,
+     -9492.978
+    ],
+    "dwns_1000": 0.0,
+    "guard": true,
+    "sync": [
+     [
+      "-142.99",
+      "-79.62"
+     ]
+    ]
+   },
+   "expected_h": 1.69,
+   "kind": "hopeless",
+   "verdict": "EARLY_FAIL_HOLD",
+   "paths": [
+    {
+     "cls": "reg->reg",
+     "slack_ps": -140.65,
+     "group": "core_clk",
+     "dominated": "logic",
+     "wire_ps": 71.5,
+     "cell_ps": 760.5,
+     "max_fanout": 6,
+     "start": "u_s.u_hf.hbin[235]$_DFFE_PN0P_",
+     "end": "u_s.u_hf.gs1[76]$_DFF_P_",
+     "check": "rising edge-triggered flip-flop clocked by core_clk"
+    },
+    {
+     "cls": "reg->out",
+     "slack_ps": -99.62,
+     "group": "vclk",
+     "dominated": "logic",
+     "wire_ps": 128.1,
+     "cell_ps": 365.2,
+     "max_fanout": 1,
+     "start": "oq[325]$_DFF_PN0_",
+     "end": "t_o[325]",
+     "check": "output port clocked by vclk"
+    },
+    {
+     "cls": "input->reg",
+     "slack_ps": 237.99,
+     "group": "asynchronous",
+     "dominated": "logic",
+     "wire_ps": 71.5,
+     "cell_ps": 103.2,
+     "max_fanout": 2,
+     "start": "rst[0]",
+     "end": "rst_s[1]$_DFF_PN0_",
+     "check": "recovery check against rising-edge clock core_clk"
+    }
+   ]
+  }
+ }
+}

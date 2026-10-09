@@ -1,0 +1,58 @@
+{
+  "verdict": "EARLY_FAIL_HOLD",
+  "reason": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.2% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -60.9 ps (start -79.62), 4100 it / 9265 buffers, 28240 endpoints in margin, 1.0 h in step, HM guard present",
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "job": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "host": "ot-epyc4",
+  "last_actual_wns_ps": -60.904,
+  "period_ps": 833.333,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "route_reference": "TT",
+  "calibrated_TT_ps": {
+    "mean": 623,
+    "min": 597,
+    "max": 695
+  },
+  "calibrated_FF_ps": {
+    "mean": 512,
+    "min": 487,
+    "max": 582
+  },
+  "actual_CTS_FF_boundary_reference_ps": {
+    "mean": 510.4,
+    "min": 479.1,
+    "max": 564.6,
+    "sinks": 1576
+  },
+  "actual_active_edge_census": {
+    "boundary": 1576,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+  },
+  "active_edge_helper_already_applied": true,
+  "helper_commit": "86e16760df51bade985cd58b92613cfc78ef9fba",
+  "cache_version_commit": "66895de5ff176615a6d819180c27bd0bbadafd38",
+  "corrected_requeue": "not submitted: no demonstrated stale active-edge reference gap; actual further remedy needs coordinator selection",
+  "known_terminal_processes": [
+    564441,
+    564498,
+    1765176
+  ],
+  "observed_CTS_process_hwm_kib": 3084868,
+  "completed_CTS_time_v_peak": "unavailable; killed early for nonconvergence",
+  "DRT_reached": false,
+  "no_RTL_or_constraint_change": true,
+  "scope": "unchanged baseline diagnostic; no READLAT2/protection/SS closure adoption",
+  "sha256": {
+    "3_place.sdc": "0266ece3b0c0d46cccda0394b504540921212014b98d18a72dccb37ffb10834b",
+    "config.mk": "266882839dd7020c6ca8cb5a38d94cdee6f742d6a69a4c472f1df768a582d088",
+    "io_ref_routed.sdc": "8fe09b5f519a8a386633fb0143007ca2b16fc34e957c077cff0eaa3e047d9508",
+    "ck_insertion.py": "f54325429869202e5192c56a0198fb1b5229a775fc174751c95e0039edba1257",
+    "closure_state.json": "be4c42b6abc67d5be04cf811c4f89b550289534ef76e625d263289d7c5955fbb",
+    "4_1_cts.log": "75399dd06780d54444f965b8429a9a638da98c8a388e4ec1c1a963261fdd0949"
+  }
+}
