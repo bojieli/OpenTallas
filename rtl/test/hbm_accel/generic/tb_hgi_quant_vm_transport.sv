@@ -10,7 +10,8 @@ module tb_hgi_quant_vm_transport;
  ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.*);
  reg [31:0] vm[0:8191];reg [31:0] expected[0:8191];
  reg corrupt_tag=0;reg pv=0;reg [336:0] held;integer delay_count=0;
- integer dest_base=4096;
+ integer dest_base=4096,layout_rows=1,layout_ostride=1,layout_wstride=0,published_words=0;
+ reg layout_mode=0;
  integer cycles=0,writes=0,acks=0,cases=0,nwords=0,reads=0;
  reg [19:0] current_n;
  wire ref_vo,ref_fault,ref_dec;wire [511:0] ref_y;
@@ -28,8 +29,9 @@ module tb_hgi_quant_vm_transport;
    held=req;pv=1;delay_count=2+cycles%13;
    if(req[336])begin
     writes=writes+1;
-    for(integer k=0;k<8;k=k+1)begin
-     if(req[335:304]/4+k>=dest_base+current_n)$fatal(1,"tail neighbor overwrite");
+    for(integer k=0;k<8;k=k+1)if(|req[16+k*4+:4])begin
+     published_words=published_words+1;
+     if(!layout_mode && req[335:304]/4+k>=dest_base+current_n)$fatal(1,"tail neighbor overwrite");
      if(req[303:48]>>k*32!==expected[req[335:304]/4+k])begin
       // Compare32bits only, preserve true lane extraction.
       if(req[48+k*32+:32]!==expected[req[335:304]/4+k])$fatal(1,"WRITE mismatch cases=%0d vector=%0d n=%0d addr=%0d lane=%0d actual=%h expected=%h head=%0d tail=%0d queued=%0d reserved=%0d",cases,use_vector,current_n,req[335:304]/4,k,req[48+k*32+:32],expected[req[335:304]/4+k],dut.head,dut.tail,dut.queued,dut.reserved);
@@ -52,7 +54,7 @@ module tb_hgi_quant_vm_transport;
  always @(posedge clk)begin
   if(ref_vo&&!use_vector)begin
    for(integer k=0;k<32;k=k+1)
-    if(rbeat*32+k<current_n)expected[dest_base+rbeat*32+k]={ref_y[k*16+:16],16'd0};
+    if((rbeat%((current_n+31)/32))*32+k<current_n)expected[dest_base+(rbeat/((current_n+31)/32))*layout_wstride+((rbeat%((current_n+31)/32))*32+k)*layout_ostride]={ref_y[k*16+:16],16'd0};
    rbeat=rbeat+1;
   end
  end
@@ -60,7 +62,7 @@ module tb_hgi_quant_vm_transport;
   reg [127:0] h;reg [255:0] a,o;integer start_cycle;
   begin
    while(!ready)@(negedge clk);
-   current_n=size;rbeat=0;writes=0;acks=0;reads=0;
+   current_n=size;rbeat=0;writes=0;acks=0;reads=0;published_words=0;layout_mode=0;layout_rows=1;layout_ostride=1;layout_wstride=0;
    for(integer i=0;i<8192;i=i+1)begin vm[i]=32'hdeadbeef;expected[i]=32'hbadbad00;end
    for(integer i=0;i<size;i=i+1)vm[i]=32'h3f800000+((i/32%64)<<23)+((i%8)<<19);
    if(use_vector)for(integer i=0;i<size;i=i+1)begin
@@ -78,6 +80,27 @@ module tb_hgi_quant_vm_transport;
    if(writes!=size/8||acks!=size/8)$fatal(1,"EARLY_DONE actualACK accounting");
    if(vm[dest_base+size]!==32'hdeadbeef)$fatal(1,"TAIL clobber");
    cases=cases+1;nwords=nwords+size;
+  end
+ endtask
+ task run_layout(input integer op,width,rows,ist,ost,rs,ws,ib,ob,bcast);
+  reg [127:0]h;reg[255:0]a,o;integer begin_cycle;
+  begin
+   while(!ready)@(negedge clk);
+   current_n=width;layout_rows=rows;layout_ostride=ost;layout_wstride=ws;dest_base=ob;layout_mode=1;
+   use_vector=0;rbeat=0;writes=0;acks=0;reads=0;published_words=0;
+   for(integer i=0;i<8192;i=i+1)begin vm[i]=32'hdeadbeef;expected[i]=32'hbadbad00;end
+   for(integer row=0;row<rows;row=row+1)
+    for(integer col=0;col<width;col=col+1)vm[ib+row*rs+col*(bcast?0:ist)]=32'h3f800000+((row*4+col/32)<<23)+(col%8<<19);
+   h=0;a=0;o=0;h[127:124]=4;h[123:118]=op;h[99:93]=17;if(op==6)h[71:64]=16;
+   a[1:0]=1;a[47:8]=ib;a[67:48]=width;a[87:68]=rows;a[119:88]=rs;a[135:120]=ist;a[5]=bcast;
+   o=a;o[47:8]=ob;o[119:88]=ws;o[135:120]=ost;o[5]=0;
+   @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
+   @(negedge clk);cmd=0;begin_cycle=cycles;
+   while(!done&&cycles-begin_cycle<500000)@(negedge clk);
+   if(!done||fault)$fatal(1,"MULTIROW/STRIDE status");
+   if(published_words!=width*rows||acks!=writes)$fatal(1,"MULTIROW/STRIDE actualACK count");
+   cases=cases+1;nwords=nwords+width*rows;
+   dest_base=4096;layout_mode=0;layout_rows=1;layout_ostride=1;layout_wstride=0;
   end
  endtask
  task error_record(input integer kind);
@@ -115,6 +138,11 @@ module tb_hgi_quant_vm_transport;
    for(integer i=0;i<86;i=i+1)begin vx=gie[i];vy=goe[i];run(6,32);end
    vx=gie[0];vy=goe[0];run(6,16);use_vector=0;
   end
+  run_layout(4,32,3,2,3,128,160,3,4099,0);
+  run_layout(5,64,2,1,1,96,128,5,4101,0);
+  run_layout(6,48,3,3,2,160,128,1,4097,0);
+  run_layout(6,16,2,1,1,32,32,3,4099,1);
+  run_layout(4,32,3,2,2,96,96,3,3,0);
   // Illegal partialUEblock must fault with zero VM requests.
   while(!ready)@(negedge clk);
   begin reg [127:0]h;reg[255:0]a,o;
