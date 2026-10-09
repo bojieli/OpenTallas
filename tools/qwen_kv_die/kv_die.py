@@ -316,19 +316,19 @@ def _relays(m):
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
     rocc = {}
 
-    def free(x, y, w, h, gap=2.16):
-        # a 2.16 um keep-out around every frame: the die placer snaps origins to the row / track lattice
-        x, y, w, h = x - gap, y - gap, w + 2 * gap, h + 2 * gap
-        if x < 0 or y < 0 or x + w > Wd or y + h > Hd:
+    def free(x, y, w, h, gap=4.32, bgap=21.6):
+        # keep-outs: 4.32 um to other relays, 21.6 um to block frames (the die placer snaps every origin to its
+        # master's legal track / row lattice: a 16 k-pin row engine moved 15.1 um, so a relay must not hug a block)
+        if x - gap < 0 or y - gap < 0 or x + w + gap > Wd or y + h + gap > Hd:
             return False
-        for gx in range(int(x // G) - 1, int((x + w) // G) + 2):
-            for gy in range(int(y // G) - 1, int((y + h) // G) + 2):
+        for gx in range(int((x - bgap) // G) - 1, int((x + w + bgap) // G) + 2):
+            for gy in range(int((y - bgap) // G) - 1, int((y + h + bgap) // G) + 2):
                 for q in rocc.get((gx, gy), ()):
-                    if q[0] < x + w and x < q[2] and q[1] < y + h and y < q[3]:
+                    if q[0] < x + w + gap and x - gap < q[2] and q[1] < y + h + gap and y - gap < q[3]:
                         return False
                 for n in owner.get((gx, gy), ()):
                     it = by[n]
-                    if it.x < x + w and x < it.x + it.w and it.y < y + h and y < it.y + it.h:
+                    if it.x < x + w + bgap and x - bgap < it.x + it.w and it.y < y + h + bgap and y - bgap < it.y + it.h:
                         return False
         return True
 

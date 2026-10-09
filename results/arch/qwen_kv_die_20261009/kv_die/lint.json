@@ -3,12 +3,12 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "a4d9aa64ab266b6cfe449748c034173e3c144522604b8b8ca3ea15c18858029b",
+ "generator_sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "a4d9aa64ab266b6cfe449748c034173e3c144522604b8b8ca3ea15c18858029b",
-  "tree_head": "9a665a8b31e0e1f55fa39c4d2025072027f28150",
-  "file_commit": "3f521547823a57b7597a929fac60076fbc1d10d3"
+  "sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
+  "tree_head": "0760d842a25352ffe11ea36941bdf6cce5a6c5a5",
+  "file_commit": "d1356214c9c03d72ac86f2eb432e62f0c3fcadbe"
  },
  "qwen_source": null,
  "qwen_recipe": null,
@@ -16,12 +16,12 @@
  "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
  "variant": null,
  "census": {
-  "instances": 888,
-  "buses": 1419,
-  "net_bits": 1623859,
+  "instances": 892,
+  "buses": 1423,
+  "net_bits": 1626474,
   "masters": 23,
   "real_instances": 134,
-  "placeholder_instances": 754
+  "placeholder_instances": 758
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -156,7 +156,7 @@
    "master": "qkd_rly_1025",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 72
+   "instances": 73
   },
   {
    "master": "qkd_rly_1048",
@@ -186,7 +186,7 @@
    "master": "qkd_rly_530",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 248
+   "instances": 251
   },
   {
    "master": "qkd_rly_534",
@@ -293,7 +293,7 @@
     "bits": 8200,
     "examples": [
      "reng_WS_4.rs face N peer 2124 um behind (krs_WS_4__r2)",
-     "reng_WS_5.rs face N peer 2094 um behind (krs_WS_5__r7)",
+     "reng_WS_5.rs face N peer 2353 um behind (krs_WS_5__r7)",
      "reng_WN_4.rs face N peer 2129 um behind (krs_WN_4__r2)"
     ]
    },
@@ -313,11 +313,11 @@
     "master": "qkd_rly_1",
     "port": "a",
     "orient": "R0",
-    "endpoints": 135,
-    "bits": 135,
+    "endpoints": 137,
+    "bits": 137,
     "examples": [
-     "rly_hs_0.a face W peer 693 um behind (hs)",
-     "rly_hs_1.a face W peer 96 um behind (hs__r1)",
+     "rly_hs_0.a face W peer 649 um behind (hs)",
+     "rly_hs_1.a face W peer 52 um behind (hs__r1)",
      "rly_hs_2.a face W peer 52 um behind (hs__r2)"
     ]
    },
@@ -325,36 +325,36 @@
     "master": "qkd_rly_1",
     "port": "b",
     "orient": "R0",
-    "endpoints": 134,
-    "bits": 134,
+    "endpoints": 136,
+    "bits": 136,
     "examples": [
-     "rly_hs_0.b face E peer 96 um behind (hs__r1)",
+     "rly_hs_0.b face E peer 52 um behind (hs__r1)",
      "rly_hs_1.b face E peer 52 um behind (hs__r2)",
-     "rly_hs_3.b face E peer 52 um behind (hs__r4)"
+     "rly_hs_2.b face E peer 52 um behind (hs__r3)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "a",
     "orient": "R0",
-    "endpoints": 45,
-    "bits": 46125,
+    "endpoints": 47,
+    "bits": 48175,
     "examples": [
      "rly_krs_WS_5_4.a face W peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_5.a face W peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)"
+     "rly_krs_WS_5_6.a face W peer 96 um behind (krs_WS_5__r6)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "b",
     "orient": "R0",
-    "endpoints": 45,
-    "bits": 46125,
+    "endpoints": 47,
+    "bits": 48175,
     "examples": [
      "rly_krs_WS_5_3.b face E peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_4.b face E peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)"
+     "rly_krs_WS_5_5.b face E peer 96 um behind (krs_WS_5__r6)"
     ]
    },
    {
@@ -378,7 +378,7 @@
     "examples": [
      "rly_kvn_WS_0.b face E peer 571 um behind (kvn_WS__r1)",
      "rly_kvn_WS_1.b face E peer 571 um behind (kvn_WS__r2)",
-     "rly_kvn_WS_2.b face E peer 182 um behind (kvn_WS__r3)"
+     "rly_kvn_WS_2.b face E peer 139 um behind (kvn_WS__r3)"
     ]
    },
    {
@@ -457,8 +457,8 @@
     "master": "qkd_rly_530",
     "port": "a",
     "orient": "R0",
-    "endpoints": 213,
-    "bits": 112890,
+    "endpoints": 218,
+    "bits": 115540,
     "examples": [
      "rly_emf_WS_0.a face W peer 284 um behind (emf_WS)",
      "rly_emf_WS_1.a face W peer 52 um behind (emf_WS__r1)",
@@ -469,8 +469,8 @@
     "master": "qkd_rly_530",
     "port": "b",
     "orient": "R0",
-    "endpoints": 211,
-    "bits": 111830,
+    "endpoints": 216,
+    "bits": 114480,
     "examples": [
      "rly_emf_WS_0.b face E peer 52 um behind (emf_WS__r1)",
      "rly_emf_WS_1.b face E peer 52 um behind (emf_WS__r2)",
@@ -1304,7 +1304,7 @@
   "far_side_relays": 0,
   "reach_examples": [],
   "far_side_examples": [],
-  "slivers": 393,
+  "slivers": 329,
   "sliver_examples": [
    [
     "cdc_WN_0",
