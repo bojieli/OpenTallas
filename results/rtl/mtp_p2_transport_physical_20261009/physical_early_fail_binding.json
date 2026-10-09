@@ -1,0 +1,29 @@
+{
+  "source_commit": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+  "job": "mtp-p2-transport-8ed8e9762-tt-remote",
+  "host": "ot-epyc1tb",
+  "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote",
+  "verdict": "EARLY_FAIL_SETUP",
+  "reason": "post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints",
+  "stage": "post-place beforeCTS",
+  "scope": "General4bank historical P2 component failure. Actual floorplanmarginPASS remains; no TT/FF/DRC closure, selectedtopology or consumer/arithmetic qualification.",
+  "critical_paths": {
+    "input_setup": {
+      "start": "in_expert[7]",
+      "end": "enabled.banks[0].codes[0].enc.q[68]$_DFF_P_",
+      "raw_slack_ps": -1002.36,
+      "period_ps": 770,
+      "input_max_ps": 634,
+      "clock": "ideal beforeCTS",
+      "input_delay_basis": "measuredTT384+generic250; no finalCTS setup verdict"
+    },
+    "reg2reg_setup": {
+      "start": "enabled.ids_copy[16]$_DFFE_PN0P_",
+      "end": "enabled.banks[0].codes[0].enc.q[68]$_DFF_P_",
+      "raw_slack_ps": -495.45,
+      "period_ps": 770,
+      "mechanism": "descriptor/identity selection and broad bufferfanout before SECDED encoder XOR parity chain",
+      "claim": "ActualpreCTS path failure; SRAM SECDED stays, no consumer arithmetic/newtopology claim"
+    }
+  }
+}

@@ -1,0 +1,261 @@
+{
+ "name": "mtp-p2-transport-8ed8e9762-tt-remote",
+ "spec": {
+  "name": "mtp-p2-transport-8ed8e9762-tt-remote",
+  "block": "ot_mtp_p2_ordered_rows_general4bank",
+  "owner": "Codex:mtp-markov-route-P2",
+  "purpose": "Minimum finite protected P2 component pathfinding: actual12SRAMs,full320flits,general4bankthreeexpert+shared transport. Selected3expert-routed-prefixA-to-primary-sharedlast topology/facade and actualSECDEDconsumer/FP32arithmetic are separate unqualified obligations. Calibrated250ps IO; TT>=0 FF>=0 DRC0 SSsensitivity only; no dieclosure claim.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "host_require": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "codex/mtp-p2-route-20261009",
+   "commit": "8ed8e9762"
+  },
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/mtp_p2_transport/route.sh p2 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes/{LABEL}_cal $CL_STOP_AFTER --orfs-var SKIP_CTS_REPAIR_TIMING=1",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; bash physical/mtp_p2_transport/route.sh p2 {LABEL} {RUN}/routes/{LABEL}",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/*.lef {RUN}/routes/{LABEL}/view/*.lib {RUN}/routes/{LABEL}/view/export.json {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp physical/mtp_p2_transport/gen/signoff_p2.sdc physical/mtp_p2_transport/model.json {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "routed_at_TT",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "macros": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+   ],
+   "post_sdc": [
+    "physical/mtp_p2_transport/gen/signoff_p2.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/mtp_p2_transport/closed/general4bank"
+   }
+  ],
+  "no_bench_reason": "Source-pinned source9f6265320 full320flit exact transport gate/all6 negatives and MUT_ORDER1 failure committed3da502cc4 results/rtl/mtp_p2_ordered_20261009/receipt.json. Successor6d45de7ec only fixes default-off continuous constants; enabled logic unchanged. No proof rerun: this change adds sized400x360 physical recipe/12 macroplacement only.",
+  "budget": {
+   "enabled": false,
+   "reason": "ActualA/SU clockplan unavailable, own calibrated generic250ps blockIO pathfinding only. RealSRAMclkq singlecycle/noMC; no production topology closure."
+  },
+  "cycles_added": "No transportRTLchange; encoder1 SRAMread1 protectedoutputqueue, full320flits receipt729cycles includes test stalls; consumerdecode2cycles belongs to separate integration.",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "merge_target": null
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/mtp-p2-transport-8ed8e9762-tt-remote.json",
+ "created": "2026-10-09T01:07:18-07:00",
+ "status": "EARLY_FAIL_SETUP",
+ "stage_idx": 1,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc4",
+  "ot-epyc1tb"
+ ],
+ "events": [
+  "2026-10-09T01:07:18-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/mtp-p2-transport-8ed8e9762-tt-remote.json",
+  "2026-10-09T01:07:52-07:00 source 8ed8e9762d1e synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/src",
+  "2026-10-09T01:08:19-07:00 calibrate waiting for capacity: EPYC4 MemAvailable 331-16 GB - reserve 249.61705780029297 < 24+57",
+  "2026-10-09T01:10:22-07:00 calibrate cannot start on EPYC4 (EPYC4 MemAvailable 327-16 GB - reserve 249.61705780029297 < 24+57); moving to EPYC1",
+  "2026-10-09T01:12:45-07:00 source 8ed8e9762d1e synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/src",
+  "2026-10-09T01:15:24-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+  "2026-10-09T01:23:41-07:00 ot-epyc1tb unreachable while polling calibrate (will keep polling)",
+  "2026-10-09T01:24:42-07:00 ot-epyc1tb reachable again; calibrate still running",
+  "2026-10-09T01:38:43-07:00 calibrate done (rc=0)",
+  "2026-10-09T01:38:44-07:00 calibrated insertion CK_SS_MEAN=384 CK_SS_MIN=358 CK_SS_MAX=435 CK_TT_MEAN=384 CK_TT_MIN=358 CK_TT_MAX=435 CK_FF_MEAN=317 CK_FF_MIN=292 CK_FF_MAX=364 CK_SSLIB_MEAN=493 CK_SSLIB_MIN=466 CK_SSLIB_MAX=549 CK_ROUTE_REF=TT",
+  "2026-10-09T01:39:48-07:00 launched route (attempt 1) on ot-epyc1tb",
+  "2026-10-09T01:55:49-07:00 EARLY_FAIL_SETUP: post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints"
+ ],
+ "updated": "2026-10-09T01:55:49-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote",
+ "source_synced": true,
+ "commit_full": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+ "reason": "post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints",
+ "stage_key": "route",
+ "stage_tag": "route.a1",
+ "stage_started": "2026-10-09T01:39:48-07:00",
+ "wd_checked": 1791535544.4628398,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 2894,
+    "mean": 493.3,
+    "min": 465.7,
+    "max": 548.9
+   },
+   "all": {
+    "n": 7235,
+    "mean": 492.8,
+    "min": 463.3,
+    "max": 549.1
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 3009,
+    "mean": 317.1,
+    "min": 291.9,
+    "max": 364.3
+   },
+   "all": {
+    "n": 7235,
+    "mean": 314.9,
+    "min": 289.3,
+    "max": 364.3
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 384,
+   "CK_SS_ALL_MEAN": 383,
+   "CK_SS_MIN": 358,
+   "CK_SS_ALL_MIN": 356,
+   "CK_SS_MAX": 435,
+   "CK_SS_ALL_MAX": 435,
+   "CK_TT_MEAN": 384,
+   "CK_TT_ALL_MEAN": 383,
+   "CK_TT_MIN": 358,
+   "CK_TT_ALL_MIN": 356,
+   "CK_TT_MAX": 435,
+   "CK_TT_ALL_MAX": 435,
+   "CK_FF_MEAN": 317,
+   "CK_FF_ALL_MEAN": 315,
+   "CK_FF_MIN": 292,
+   "CK_FF_ALL_MIN": 289,
+   "CK_FF_MAX": 364,
+   "CK_FF_ALL_MAX": 364,
+   "CK_SSLIB_MEAN": 493,
+   "CK_SSLIB_MIN": 466,
+   "CK_SSLIB_MAX": 549,
+   "CK_SSLIB_ALL_MEAN": 493,
+   "CK_SSLIB_ALL_MIN": 463,
+   "CK_SSLIB_ALL_MAX": 549,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "ef_checked": 1791536145.6098878,
+ "early_fail": {
+  "verdict": "EARLY_FAIL_SETUP",
+  "why": "post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints",
+  "at": "2026-10-09T01:55:49-07:00",
+  "detail": {
+   "name": "mtp-p2-transport-8ed8e9762-tt-remote",
+   "verdict": "EARLY_FAIL_SETUP",
+   "why": [
+    "post-place TT setup WNS -939.0 ps at 833.333 (route-period -1002.4 at 770), 6920 failing endpoints, TNS -1996610.0; gate WNS < -900 with > 2000 endpoints"
+   ],
+   "orfs": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/routes/mtp_p2_transport_8ed8e9762_tt_remote/work/orfs",
+   "corner": "TT",
+   "step": "4_1_cts",
+   "setup": {
+    "stage": "place",
+    "ws": -939.027,
+    "raw_ws": -1002.36,
+    "period": 770.0,
+    "count": 6920,
+    "tns": -1996610.0
+   },
+   "hold": {
+    "found": [],
+    "guard": false,
+    "hm_auto": [],
+    "sync": [
+     [
+      "-983.60",
+      "-57.56"
+     ]
+    ],
+    "stall": false,
+    "chunks": []
+   },
+   "congestion": [],
+   "drt": [],
+   "paths": [
+    {
+     "cls": "input->reg",
+     "slack_ps": -1002.36,
+     "group": "core_clk",
+     "dominated": "logic",
+     "wire_ps": 149.2,
+     "cell_ps": 908.3,
+     "max_fanout": 16,
+     "start": "in_expert[7]",
+     "end": "enabled.banks[0].codes[0].enc.q[68]$_DFF_P_",
+     "check": "rising edge-triggered flip-flop clocked by core_clk"
+    }
+   ],
+   "block": "ot_mtp_p2_ordered_rows_general4bank",
+   "owner": "Codex:mtp-markov-route-P2",
+   "gates": {
+    "setup_cts_ws_ps": -400.0,
+    "setup_cts_count": 500,
+    "setup_tns_ps": -1000000.0,
+    "setup_place_ws_ps": -900.0,
+    "setup_place_count": 2000,
+    "hold_buf_cap": 100000,
+    "hold_buf_frac": 0.3,
+    "hold_buf_min": 20000,
+    "hold_buf_improve_dwns": 5.0,
+    "hold_buf_improve_frac": 0.6,
+    "hold_buf_improve_min": 60000,
+    "hold_stall_it": 2000,
+    "hold_stall_dwns": 1.0,
+    "hold_stall_tns_pct": 2.0,
+    "hold_real_ws_ps": -150.0,
+    "hold_real_after_s": 3600,
+    "hold_deep_it": 2000,
+    "hold_deep_dwns": 5.0,
+    "grt_min_iter": 20,
+    "grt_markers": 1000,
+    "grt_flat": 0.95,
+    "drt_min_iter": 20,
+    "drt_k": 8,
+    "drt_min_viol": 100,
+    "stall_after_s": 10800
+   }
+  }
+ }
+}
