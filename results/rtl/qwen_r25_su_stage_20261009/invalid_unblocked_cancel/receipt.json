@@ -1,0 +1,14 @@
+{
+  "status": "CANCELED_INVALID_LAYOUT",
+  "pid": 3486195,
+  "cancel_signal": "SIGTERM",
+  "reason": "N64M16 LV6 cannot represent unblocked8192-row reductions; independently passing blocked full tensor successor exists",
+  "source_commit": "9b98cc512",
+  "stdout_scope": "best-effort final pipe snapshot; prior trace captured inside Python communicate was not exported by legacy runner",
+  "stdout_snapshot_bytes": 0,
+  "signal_sent_utc": "2026-10-09T06:52:16Z",
+  "terminal_verified": true,
+  "terminal_observation": "child3486195 and parent3451698 absent; parent run.log ends AssertionError after canceled child produced no memory dump",
+  "actual_child_exit_code": null,
+  "exit_code_limit": "legacy campaign run_case discarded subprocess returncode; SIGTERM delivered and terminal disappearance verified; do not infer a captured exit code"
+}
