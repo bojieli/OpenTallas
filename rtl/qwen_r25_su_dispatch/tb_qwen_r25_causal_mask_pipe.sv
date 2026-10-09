@@ -65,13 +65,20 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73);
    out_rdy=1;@(negedge clk);out_rdy=0;
   end
   if(mutant_leaks!=6)$fatal(1,"shared latest-query limit negative control vacuous");
+  // A real transient byte error must be corrected or fence the held frame.
+  accept_frame(8192,299);held=out_live;
+  @(negedge clk);dut.enabled.pbyte[0]=dut.enabled.pbyte[0]^13'd4;
+  #0.01;if(fault||out_live!==held||!out_v)$fatal(1,"transient data CE");
+  dut.enabled.pbyte[0]=dut.enabled.pbyte[0]^13'd8;
+  #0.01;if(!fault||out_v||in_rdy)$fatal(1,"transient data UE admitted");
+  reset();
   // Correctable mutable-mask upset preserves every output bit.
   accept_frame(8192,300);
   held=out_live;
-  @(negedge clk);dut.enabled.seat[0]=dut.enabled.seat[0]^72'd1;
+  @(negedge clk);dut.enabled.seat[0]=dut.enabled.seat[0]^72'd4;
   #0.01;if(fault||out_live!==held||!out_v)$fatal(1,"CE correction lost exact mask");
   // Two independent bit flips must suppress visibility and fence the frame.
-  dut.enabled.seat[0]=dut.enabled.seat[0]^72'd2;
+  dut.enabled.seat[0]=dut.enabled.seat[0]^72'd8;
   #0.01;if(!fault||out_v||in_rdy)$fatal(1,"UE mask admitted");
   reset();in_query_positions[39:20]=20'd0;
   accept_frame(8192,301);
