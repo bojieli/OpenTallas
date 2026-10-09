@@ -14,7 +14,7 @@
   "peak_ram_gb": 4,
   "source": {
     "branch": "codex/hgi-token18-20261009",
-    "commit": "4bffda75f"
+    "commit": "f4babd572"
   },
   "stages": {
     "bench": [
@@ -23,7 +23,7 @@
         "expect": "pass",
         "threads": 2,
         "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_positive 0; rc=$?; cat {RUN}/bench/accept_positive/run.log; exit $rc",
+        "cmd": "set +e; bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_positive 0; rc=$?; cat {RUN}/bench/accept_positive/run.log; exit $rc",
         "pass_regex": "HGI_ACCEPT18 PASS"
       },
       {
@@ -31,7 +31,7 @@
         "expect": "fail",
         "threads": 2,
         "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_width_mutant 1; rc=$?; cat {RUN}/bench/accept_width_mutant/run.log; exit $rc",
+        "cmd": "set +e; bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_width_mutant 1; rc=$?; cat {RUN}/bench/accept_width_mutant/run.log; exit $rc",
         "fail_regex": "FATAL:"
       },
       {
@@ -39,7 +39,7 @@
         "expect": "fail",
         "threads": 2,
         "peak_ram_gb": 1,
-        "cmd": "bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_bonus_mutant 2; rc=$?; cat {RUN}/bench/accept_bonus_mutant/run.log; exit $rc",
+        "cmd": "set +e; bash physical/hbm_generic/token18/run_accept_bench.sh {RUN}/bench/accept_bonus_mutant 2; rc=$?; cat {RUN}/bench/accept_bonus_mutant/run.log; exit $rc",
         "fail_regex": "FATAL:"
       }
     ],
@@ -83,7 +83,7 @@
     "rationale": "4GiB >=12x nearest own measured floorplan .308GiB; full-route peak not measured",
     "evidence": "43b313543"
   },
-  "notes": "Opt-in PINREG1, +1 accept command latency priced757907078; actual108PASS+2mutantsFAIL and boundary0/0 PASS; fullrouteclaim4GiB conservative estimate from ownphase .308GiB, NOTmeasuredDRT. TT>=0FF>=0DRC0. CurrentflowdeclaresWC+BC, TT viaoverlay; noCORNER=TC.",
+  "notes": "Opt-in PINREG1, +1 accept command latency priced757907078; actual108PASS+2mutantsFAIL and boundary0/0 PASS; fullrouteclaim4GiB conservative estimate from ownphase .308GiB, NOTmeasuredDRT. TT>=0FF>=0DRC0. CurrentflowdeclaresWC+BC, TT viaoverlay; noCORNER=TC. Bench-output-only sourcef4babd572; RTL/core/pins4bff unchanged. Explicit set+e retains FATALstdout beforeexpectedmutantreturn.",
   "rtl_boundary": {
     "source": "4bffda75f",
     "evidence": "results/rtl/hgi_token18_20261009/accept_seat/rtl_boundary.json",
