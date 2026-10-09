@@ -1,0 +1,558 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "s0_tr_dspark",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_dspark.cfg.json",
+    "plen": 8,
+    "ngen": 16,
+    "passes": 15,
+    "drafter": "dspark",
+    "accepted": [
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0,
+     0
+    ]
+   },
+   "result": "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=16 steps_closed=32 accepted=0 seeds=28 dh=120 draft_flits=28 issues=164 rejects=28 squashed=120 hidden=166 s0_starts=166 cycles=67045",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=16 steps_closed=32 accepted=0 seeds=28 dh=120 draft_flits=28 issues=164 rejects=28 squashed=120 hidden=166 s0_starts=166 cycles=67045",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.00 rows_to_dh1=8.00 dh_result_to_next=8.00 last_dh_to_draft_flit=197.04 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_tr_forced",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41423",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41423",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.00 rows_to_dh1=8.00 dh_result_to_next=8.00 last_dh_to_draft_flit=51.64 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_tr_forced_w16",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced_w16.cfg.json",
+    "plen": 8,
+    "ngen": 32,
+    "passes": 10,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   "result": "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=32 steps_closed=22 accepted=42 seeds=20 dh=96 draft_flits=20 issues=130 rejects=16 squashed=54 hidden=132 s0_starts=132 cycles=51569",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=32 steps_closed=22 accepted=42 seeds=20 dh=96 draft_flits=20 issues=130 rejects=16 squashed=54 hidden=132 s0_starts=132 cycles=51569",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.00 rows_to_dh1=8.00 dh_result_to_next=8.00 last_dh_to_draft_flit=67.85 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_hash_u3",
+   "expect": "pass",
+   "params": {
+    "MODE": 1,
+    "NUSR": 3,
+    "NGEN_H": 48,
+    "RHO": 70,
+    "SEED": 3
+   },
+   "defines": [],
+   "result": "MTP_S0 PASS mode=1 users=3 (ar 0) plen=5 ngen=48 steps_closed=52 accepted=92 seeds=49 dh=238 draft_flits=49 issues=299 rejects=39 squashed=146 hidden=302 s0_starts=302 cycles=89899",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=1 users=3 (ar 0) plen=5 ngen=48 steps_closed=52 accepted=92 seeds=49 dh=238 draft_flits=49 issues=299 rejects=39 squashed=146 hidden=302 s0_starts=302 cycles=89899",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.33 rows_to_dh1=8.06 dh_result_to_next=8.02 last_dh_to_draft_flit=230.96 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_hash_u4_ar1",
+   "expect": "pass",
+   "params": {
+    "MODE": 1,
+    "NUSR": 4,
+    "SEQ_MAXU": 3,
+    "NGEN_H": 30,
+    "RHO": 85,
+    "SEED": 11
+   },
+   "defines": [],
+   "result": "MTP_S0 PASS mode=1 users=4 (ar 1) plen=5 ngen=30 steps_closed=27 accepted=63 seeds=23 dh=110 draft_flits=23 issues=179 rejects=12 squashed=47 hidden=183 s0_starts=183 cycles=106947",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=1 users=4 (ar 1) plen=5 ngen=30 steps_closed=27 accepted=63 seeds=23 dh=110 draft_flits=23 issues=179 rejects=12 squashed=47 hidden=183 s0_starts=183 cycles=106947",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.04 rows_to_dh1=8.04 dh_result_to_next=8.00 last_dh_to_draft_flit=74.22 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_hash_u1_fast",
+   "expect": "pass",
+   "params": {
+    "MODE": 1,
+    "NUSR": 1,
+    "NGEN_H": 60,
+    "RHO": 95,
+    "SEED": 5,
+    "T_DRAFT": 120,
+    "T_HEAD": 8
+   },
+   "defines": [],
+   "result": "MTP_S0 PASS mode=1 users=1 (ar 0) plen=5 ngen=60 steps_closed=11 accepted=49 seeds=10 dh=49 draft_flits=10 issues=63 rejects=0 squashed=0 hidden=64 s0_starts=64 cycles=46533",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 PASS mode=1 users=1 (ar 0) plen=5 ngen=60 steps_closed=11 accepted=49 seeds=10 dh=49 draft_flits=10 issues=63 rejects=0 squashed=0 hidden=64 s0_starts=64 cycles=46533",
+    "MTP_S0_CYC seq_forward_min=8 seed_after_close=8.00 rows_to_dh1=8.00 dh_result_to_next=8.00 last_dh_to_draft_flit=14.40 (fast cycles, bench adapters included: +2 in, +1 out)"
+   ]
+  },
+  {
+   "case": "s0_neg_off1",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_MTPSEQ_MUT_OFF1"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: u0 step 1 closed at 9 a 0, golden anchor 8 a 1 (g 5)",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: u0 step 1 closed at 9 a 0, golden anchor 8 a 1 (g 5)"
+   ]
+  },
+  {
+   "case": "s0_neg_noepoch",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_MTPSEQ_MUT_NOEPOCH"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: u0 step stalled 10001 cycles (autoregressive fallback or hang)",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: u0 step stalled 10001 cycles (autoregressive fallback or hang)"
+   ]
+  },
+  {
+   "case": "s0_neg_nohold",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_MTPSEQ_MUT_NOHOLD"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: fault wfc 0 lnk 0 tok 0 vmx 0 seq 1",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: fault wfc 0 lnk 0 tok 0 vmx 0 seq 1"
+   ]
+  },
+  {
+   "case": "s0_neg_prev",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_MTPSEQ_MUT_PREV"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: draft-head step u0 j2 prev 3118",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: draft-head step u0 j2 prev 3118"
+   ]
+  },
+  {
+   "case": "s0_neg_draft2wfc",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_WFCLNK_MUT_DRAFT2WFC"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: fault wfc 1 lnk 0 tok 0 vmx 0 seq 0",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: fault wfc 1 lnk 0 tok 0 vmx 0 seq 0"
+   ]
+  },
+  {
+   "case": "s0_neg_doneearly",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_WFCVMX_MUT_DONEEARLY"
+   ],
+   "trace": {
+    "trace": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: HIDDEN payload word 0 of (u0, p0, t0) (VM / staging transport) got xxxxxxxxxxxxxxxx exp 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009580056e98da8738 at 136",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_S0 FAIL: HIDDEN payload word 0 of (u0, p0, t0) (VM / staging transport) got xxxxxxxxxxxxxxxx exp 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009580056e98da8738 at 136"
+   ]
+  },
+  {
+   "case": "stg_r1",
+   "expect": "pass",
+   "params": {
+    "SEED": 1,
+    "NJOB": 60
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=17433 vmslow=0 core_user_mismatch_at_start=45",
+    "MTP_STG_CYC start_mean=14.50 start_max=17 done_mean=98.67 done_max=113 link_in_mean=13.37 link_in_max=238 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
+   ]
+  },
+  {
+   "case": "stg_vmnat",
+   "expect": "pass",
+   "params": {
+    "SEED": 4,
+    "NJOB": 40,
+    "VMNAT": 1
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0 core_user_mismatch_at_start=27",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0 core_user_mismatch_at_start=27",
+    "MTP_STG_CYC start_mean=15.00 start_max=15 done_mean=79.00 done_max=79 link_in_mean=12.38 link_in_max=208 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
+   ]
+  },
+  {
+   "case": "stg_lag1",
+   "expect": "pass",
+   "params": {
+    "SEED": 6,
+    "NJOB": 40,
+    "LAG": 1
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0 core_user_mismatch_at_start=27",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG PASS jobs=40 starts=40 out=40 cycles=12015 vmslow=0 core_user_mismatch_at_start=27",
+    "MTP_STG_CYC start_mean=15.32 start_max=17 done_mean=102.78 done_max=119 link_in_mean=13.72 link_in_max=246 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
+   ]
+  },
+  {
+   "case": "stg_r2_slowvm",
+   "expect": "pass",
+   "params": {
+    "SEED": 2,
+    "NJOB": 60,
+    "VMSLOW": 1
+   },
+   "defines": [],
+   "result": "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1 core_user_mismatch_at_start=43",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG PASS jobs=60 starts=60 out=60 cycles=69343 vmslow=1 core_user_mismatch_at_start=43",
+    "MTP_STG_CYC start_mean=231.15 start_max=524 done_mean=101.02 done_max=120 link_in_mean=54.36 link_in_max=648 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)"
+   ]
+  },
+  {
+   "case": "stg_neg_startearly",
+   "expect": "fail",
+   "params": {
+    "SEED": 2,
+    "NJOB": 40,
+    "VMSLOW": 1
+   },
+   "defines": [
+    "OT_WFCVMX_MUT_STARTEARLY"
+   ],
+   "result": "MTP_STG FAIL: RX word 38 of (p0, t11475) not in the VM at start (write / start order)",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG FAIL: RX word 38 of (p0, t11475) not in the VM at start (write / start order)"
+   ]
+  },
+  {
+   "case": "stg_neg_nocred",
+   "expect": "fail",
+   "params": {
+    "SEED": 2,
+    "NJOB": 40,
+    "VMSLOW": 1
+   },
+   "defines": [
+    "OT_WFCLNK_MUT_NOCRED"
+   ],
+   "result": "MTP_STG FAIL: fault wfc 0 lnk 0 vmx 1",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_STG FAIL: fault wfc 0 lnk 0 vmx 1"
+   ]
+  },
+  {
+   "case": "tok_r1",
+   "expect": "pass",
+   "params": {
+    "SEED": 1
+   },
+   "defines": [],
+   "result": "MTP_TOK PASS reads=39999 known=11888 draft_hits=4426",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_TOK PASS reads=39999 known=11888 draft_hits=4426"
+   ]
+  },
+  {
+   "case": "tok_neg_noepoch",
+   "expect": "fail",
+   "params": {
+    "SEED": 1
+   },
+   "defines": [
+    "OT_WFCTOK_MUT_NOEPOCH"
+   ],
+   "result": "MTP_TOK FAIL: read 18 got qk 1 q 5967, expected 0 0",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_TOK FAIL: read 18 got qk 1 q 5967, expected 0 0"
+   ]
+  },
+  {
+   "case": "fan_r1",
+   "expect": "pass",
+   "params": {
+    "SEED": 1
+   },
+   "defines": [],
+   "result": "MTP_FAN PASS down=400 up=1000 cycles=4899",
+   "got": "pass",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_FAN PASS down=400 up=1000 cycles=4899"
+   ]
+  },
+  {
+   "case": "fan_neg_interleave",
+   "expect": "fail",
+   "params": {
+    "SEED": 1
+   },
+   "defines": [
+    "OT_DRFFAN_MUT_INTERLEAVE"
+   ],
+   "result": "MTP_FAN FAIL: up flit s2 m0 k0 inside s0 m0 k2 (interleave / corrupt)",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_FAN FAIL: up flit s2 m0 k0 inside s0 m0 k2 (interleave / corrupt)"
+   ]
+  },
+  {
+   "case": "fan_neg_dest",
+   "expect": "fail",
+   "params": {
+    "SEED": 1
+   },
+   "defines": [
+    "OT_DRFFAN_MUT_DEST"
+   ],
+   "result": "MTP_FAN FAIL: port 2 message 0 flit 0",
+   "got": "fail",
+   "verdict": "OK",
+   "log_lines": [
+    "MTP_FAN FAIL: port 2 message 0 flit 0"
+   ]
+  }
+ ],
+ "rtl_commit": "4a69a35c42c576db1e7c299a229d632c4dcd2c15",
+ "tool": "tools/dsrom_mtp_rom_bench.py run (Icarus Verilog 11, -g2012)"
+}
