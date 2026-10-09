@@ -124,6 +124,8 @@ def surgery(v, m):
     for k in list(g):
         if k.startswith('x_') and isinstance(g[k], (int, float)):
             g[k] = round(g[k] - dx, 4)
+    old_col_x = m['col_x']
+    m['col_x'] = lambda c, f=old_col_x: f(c) - dx
     g['x_wband'] = 0.0
     g['x_eband'] = W
     g['r22k_dx_um'] = dx

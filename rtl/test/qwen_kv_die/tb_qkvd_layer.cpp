@@ -5,7 +5,8 @@
 //   ./Vtb <vector dir> [stall=0] [hbm_latency=16] [bytes_per_cycle=750] [max_cycles=400000]
 // HBM: per-engine in-order request queues, a BPC-byte/cycle token bucket per stack, fixed latency; the rows of the
 // new position t = T-1 come back POISONED (0xA5): the K / V crossed on KVN must be merged by the KV-die sequencer.
-// stall=1: the ROM-side RES consumer withholds its credits for 300 cycles (back-pressure through both dies).
+// stall=1: the ROM-side RES consumer withholds its credits for 300 cycles from the first RES word (back-pressure
+// through both dies: the RES words pile up in the ROM end, the link and the KV end).
 #include "Vot_qkvd_layer_tb.h"
 #include "verilated.h"
 #include <cstdio>
@@ -116,7 +117,7 @@ int main(int argc, char** argv) {
                                                         eaq.pop_front(); eac--; top->ea_v = 1; }
         }
         top->ar_cr = 0;
-        if (res_owed > 0 && !(STALL && now >= 400 && now < 700)) { top->ar_cr = 1; res_owed--; }
+        if (res_owed > 0 && !(STALL && res_first >= 0 && now >= res_first && now < res_first + 300)) { top->ar_cr = 1; res_owed--; }
         top->dh_cr = dh_owed > 0; if (dh_owed > 0) dh_owed--;
         top->emb_req_cr = gwreq_ret > 0; if (gwreq_ret > 0) gwreq_ret--;
         // ---- host words ----
