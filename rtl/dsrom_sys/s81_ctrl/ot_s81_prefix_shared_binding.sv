@@ -28,6 +28,7 @@ module ot_s81_prefix_shared_binding #(parameter integer ENABLE=0)(
  wire shared_cmd_ready,sv,sr,sl,sfault;
  wire[511:0] sd;wire[73:0] st;wire[6:0] sw;
  wire serial_done,serial_busy,serial_fault,return_done,done_space;wire[0:0] done_data;
+ wire completion_s_rst,completion_d_rst;
  assign start_ready=!owned&&prefix_ready&&shared_cmd_ready&&!fault;
  wire fire=start_valid&&start_ready;
  assign busy=owned;assign done=return_done;assign fault=prefix_fault||sfault||serial_fault_stream;
@@ -49,8 +50,11 @@ module ot_s81_prefix_shared_binding #(parameter integer ENABLE=0)(
  .s_word(sw),.s_last(sl),.out_valid(out_valid),.out_ready(out_ready),.out_data(out_data),
  .out_tag(out_identity),.out_word(out_word),.out_last(out_last),
  .context_done(serial_done),.busy(serial_busy),.fault(serial_fault));
- ot_s81_pulse_cdc #(.W(1),.QD(8)) completion(.i_clk(serial_clk),.o_clk(stream_clk),
- .rst_n(rst_n),.i_v(serial_done),.i_d(1'b1),.i_accept(done_space),
+ ot_reset_sync rs(.clk(serial_clk),.async_rst_n(rst_n),.sync_rst_n(completion_s_rst));
+ ot_reset_sync rd(.clk(stream_clk),.async_rst_n(rst_n),.sync_rst_n(completion_d_rst));
+ ot_s81_pulse_cdc #(.W(1),.QD(8)) completion(.s_clk(serial_clk),.d_clk(stream_clk),
+ .s_rst_n(completion_s_rst),.d_rst_n(completion_d_rst),.fault(),
+ .i_v(serial_done),.i_d(1'b1),.i_accept(done_space),
  .o_v(return_done),.o_r(1'b1),.o_d(done_data));
  always @(posedge stream_clk or negedge rst_n)begin
  if(!rst_n)begin owned<=0;serial_fault_meta<=0;serial_fault_stream<=0;end
