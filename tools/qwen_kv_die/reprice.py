@@ -23,6 +23,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BASIS = 'results/arch/qwen_tp8_vs_sysdie_20261009/result.json'
 CLOCK = 1.2e9
+# the KV-die critical relay stages the bench was built for (bench_run.sh QX / RX / KVL at the 172.3 mm2 plan); a later
+# plan's difference is charged one cycle a stage
+BENCH_KV = dict(seq_to_astk=27, hub_to_astk=4, astk_to_hub=4, hub_to_seq=21, seq_to_land=23)
+# token-exact (results/rtl/token_exact_20261009): the ROM die's SPLIT structure (sequencer / tree top / SU across the
+# die-master boundary: DCU = DUC = 2 pin stations each way + latency compensation, SU lane memory latency 7), measured
+# in RTL on a chained L0-L2 vehicle against the base die on the same harness.  The TP4 basis and the KV-die bench both
+# lack it, so it is ADDED (measured deltas, not modelled).
+SPLIT_BASE = 'results/rtl/token_exact_20261009/qwen_rom/L3_base.json'
+SPLIT_CUR = 'results/rtl/token_exact_20261009/qwen_rom/L3_s22ml7.json'
 EMB = dict(port_fifo=7, dram_typ=71, dram_worst_extra=79 + 240, crossing=3, ingest=64,
            source='/home/ubuntu/claude-takeover-20261007/EMB_HBM_FEASIBILITY.md option 1 table (tagged-port FIFO, '
                   'DRAM row conflict, response crossing, 4 KiB ingest on eq; worst: AQ_STARVE + REFpb)')
@@ -45,6 +54,10 @@ def main():
     bench = json.loads(a.bench.read_text())
     kv = json.loads(a.kv.read_text())
     rom = json.loads(a.rom.read_text())
+    sb = json.loads((ROOT / SPLIT_BASE).read_text())['stage_cycles']
+    sc_ = json.loads((ROOT / SPLIT_CUR).read_text())['stage_cycles']
+    split_l0, split_lk = sc_['L0'] - sb['L0'], sc_['L1'] - sb['L1']
+    split_token = split_l0 + 35 * split_lk
     cs = kv['critical_stages']
     rs = rom['crossing_bus_stages']
     rom_q, rom_res = rs['x3'] + 1, rs['attn_ret'] + 1                 # + the registered endpoint port
@@ -66,6 +79,11 @@ def main():
     for case, b in bench['cases'].items():
         step = b['layer_step_8192']
         adj = (rom_q - b['params']['ROM_ST']) + (rom_res - b['params']['ROM_ST'])
+        kvnow = dict(seq_to_astk=max(cs['seq_to_astk'].values()), hub_to_astk=max(cs['hub_to_astk'].values()),
+                     astk_to_hub=max(cs['astk_to_hub'].values()), hub_to_seq=cs['hub_to_seq'],
+                     seq_to_land=max(cs['seq_to_land'].values()))
+        kv_adj = sum(kvnow[k] - BENCH_KV[k] for k in BENCH_KV)
+        adj += kv_adj
         step_adj = step + adj
         layer = tp4['layer_cycles'] - rows['attn_kv'] - rows['softmax_norm'] + step_adj
         link = b['adapter_plus_phy']
@@ -73,13 +91,15 @@ def main():
                + rom_eq + EMB['ingest'])
         if case == 'worst':
             emb += EMB['dram_worst_extra']
-        token = emb + 36 * layer + 222 + 3101.0 + 36
+        token = emb + 36 * layer + 222 + 3101.0 + 36 + split_token
+        tp4_same = tp4['token_cycles'] + split_token          # the single-die TP4 on the same split structure
         out['cases'][case] = dict(
             phy_latency=b['params']['PHY_LAT'], adapter_plus_phy=link, layer_step_measured=step,
-            rom_stage_correction=adj, layer_step=step_adj, layer_cycles=layer,
+            rom_stage_correction=adj - kv_adj, kv_stage_correction=kv_adj, layer_step=step_adj, layer_cycles=layer,
             layer_delta_vs_tp4=layer - tp4['layer_cycles'], embed_cycles=emb, l0_extra=222,
             token_cycles=round(token, 1), tok_s=round(CLOCK / token, 1),
-            vs_tp4=round(tp4['token_cycles'] / token - 1, 4),
+            split_station_cycles=split_token, vs_tp4_published=round(tp4['token_cycles'] / token - 1, 4),
+            vs_tp4=round(tp4_same / token - 1, 4), tp4_same_structure_tok_s=round(CLOCK / tp4_same, 1),
             vs_sysdie_1a_model=round(out['basis']['sysdie_1a_central']['token_cycles'] / token - 1, 4),
             bench_exact=b['exact_all'])
     c = out['cases'].get('typical') or next(iter(out['cases'].values()))
@@ -88,16 +108,42 @@ def main():
         range_tok_s=[min(x['tok_s'] for x in out['cases'].values()), max(x['tok_s'] for x in out['cases'].values())],
         status='priced candidate: the attention layer step is MEASURED through the link RTL (bit-exact), the relay stages '
                'come from the r22k / KV-die placements; the near-HBM attention elements are not closed physically')
+    kvp = kv['die_mm2']
+    out['silicon'] = dict(
+        rom_die_mm2=rom['die_mm2'], kv_die_mm2=kvp, pair_mm2=round(rom['die_mm2'] + kvp, 1),
+        vs_r21c_die_mm2=round(rom['die_mm2'] + kvp - rom['r21c_die_mm2'], 1),
+        package='2 ROM dies (N-N facing) + 2 KV dies (one off each ROM die S edge) + 8 HBM3E stacks beside the KV dies',
+        interposer_mm=[29.0, 114.0], interposer_reticles=round(29.0 * 114.0 / 858.0, 1),
+        status=kv.get('frame_status', 'row engines sized from synthesis (re-cut D); stack aggregators / landings / '
+               'centre blocks: see frames.json (review-0528 item 4)'))
+    out['split_structure'] = dict(
+        source=[SPLIT_BASE, SPLIT_CUR], l0_delta=split_l0, layer_delta=split_lk, token_delta=split_token,
+        note='measured in RTL by stream token-exact (L0-L2 chained, exact): +%d on L0, +%d on every later layer. '
+             'It is a ROM-die cost (stations / compensation / SU ML 7), present with or without the KV die, so the '
+             'KV-die decision is judged against the TP4 die on the same structure (vs_tp4); vs_tp4_published compares '
+             'with the published TP4 basis, which predates the split. Bound: the SU-ML share (ML 4 -> 7 = +48 a layer) '
+             'may partly fall on SU ops of the removed tile softmax_norm; it is charged in full here.' % (split_l0, split_lk))
+    out['per_user_cost'] = dict(vs_tp4=c['vs_tp4'], vs_tp4_pct=round(100 * c['vs_tp4'], 2),
+                                vs_tp4_published_pct=round(100 * c['vs_tp4_published'], 2),
+                                statement=f"{round(100 * c['vs_tp4'], 2)} % per user against TP4 on the same split "
+                                          f"structure ({c['tok_s']} vs {c['tp4_same_structure_tok_s']} tok/s; "
+                                          f"{round(100 * c['vs_tp4_published'], 2)} % against the published TP4 "
+                                          f"{tp4['tok_s']}), for a "
+                                          f"{round(rom['die_mm2'] + kvp, 1)} mm2 die pair on a ~"
+                                          f"{round(29.0 * 114.0 / 858.0, 1)}-reticle interposer")
     out['notes'] = [
         'The decision record priced option 1a at 219,522 cycles assuming the TILE attention (1,756 cycles a layer) stays '
         'and only 2 x 14-cycle crossings are added.  Moving attention to the KV die means NEAR-HBM attention (row engines '
         'beside the HBM PHYs: KV never crosses), whose measured step is the layer_step here.',
         'L0 cold KV-prefetch (762) is removed: each layer\'s near-HBM attention streams its own 4 MiB a die inside its '
         'step (the bench HBM model: 750 B a cycle a stack, 16-cycle latency); the per-token KV constants (+222) stay.',
-        'The row-engine <-> aggregator interface (16.5 k / 16.8 k bits) is abutted in the KV-die floorplan; if the '
-        're-cut adds pipeline stages on the q broadcast or the leaf path, each stage adds ~1-2 cycles a layer.']
+        'Re-cut D (recut.json, adopted): the engine <-> aggregator words are 519 b in (q beat broadcast) and 4,106 b out '
+        '(level-3 node beats); P.V levels 1-3 run in each engine, so the measured step is SHORTER than the abutted '
+        'reference (-74 cycles a layer at ctx 8192); the KV4 write-then-read fence is in the bench (+8 against run5).']
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(out, indent=1) + '\n')
+    out['headline'].update(per_user_cost_pct=out['per_user_cost']['vs_tp4_pct'], pair_mm2=out['silicon']['pair_mm2'],
+                           interposer_reticles=out['silicon']['interposer_reticles'])
     print(json.dumps(out['headline']))
     for k, v in out['cases'].items():
         print(k, v['layer_cycles'], v['token_cycles'], v['tok_s'], v['vs_tp4'])

@@ -48,7 +48,7 @@ def main():
     ap.add_argument("--variant", choices=("part", "base"), default="part")
     ap.add_argument("--build", type=Path, required=True)
     ap.add_argument("--work", type=Path)
-    ap.add_argument("--stages", choices=("L0", "full"), default="L0")
+    ap.add_argument("--stages", choices=("L0", "L3", "full"), default="L0")
     ap.add_argument("--threads", type=int, default=16)
     ap.add_argument("--jobs", type=int, default=16)
     ap.add_argument("--dcu", type=int, default=0, help="ctrl -> unit pin stations (sequencer OS + unit IS)")

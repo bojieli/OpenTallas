@@ -1,0 +1,39 @@
+FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:
+ Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb            3            313 28f754851b3214b7680d
+2_1_floorplan             .sdc                             b582dd4aa18af2f9881a
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
+read_liberty -corner WC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
+read_liberty -corner WC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ss.lib
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty -corner BC /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty -corner BC /src/physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_ff.lib
+read_db /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /src/physical/dsrom_markov_lookup_localcapture/macro_place.tcl
+MD6_LOCALCAP bank=0 origin=15.984,10.8 direct_captures=256
+MD6_LOCALCAP bank=1 origin=15.984,82.08 direct_captures=256
+rtl_macro_placer -max_num_level 2 -halo_width 3 -halo_height 3 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.55
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+[INFO MPL-0062] Found fixed macro m0.
+[INFO MPL-0062] Found fixed macro m1.
+[ERROR MPL-0050] Found fixed non-macro instance cap0\[0\]$_DFF_P_ inside the macro placement area.
+Error: macro_place.tcl, 6 MPL-0050
+
+Elapsed time: 0:03.63[h:]min:sec. CPU time: user 3.44 sys 0.13 (98%). Peak memory: 300188KB.
+Elapsed time: 0:03.80[h:]min:sec. CPU time: user 3.61 sys 0.20 (100%). Peak memory: 321496KB.
+Elapsed time: 0:03.85[h:]min:sec. CPU time: user 3.69 sys 0.15 (99%). Peak memory: 301472KB.
+make[1]: *** [Makefile:456: do-2_2_floorplan_macro] Error 1
+make: *** [Makefile:456: /work/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_z7_cd9_floorplan/base/2_2_floorplan_macro.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/md6-z7-intake-cd9e0b5e0/floorplan_r1/physical.json

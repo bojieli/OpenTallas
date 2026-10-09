@@ -12,7 +12,11 @@ set -uo pipefail
 CFG=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 D=/src/physical/qwen_die_masters
+# struct-close 2026-10-09 (fill-5 F5-5): a PD / NC exported by the job overrides the cfg's (the cfg used to overwrite them
+# silently: hgi_mtp_accept18 gave the same route at PD 0.40 / 0.44 / 0.48).
+OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
 source physical/qwen_die_masters/cfg/$CFG.env
+[ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
 # drive-1143: a macro view lives only inside the ORFS image, so run_abi3_physical refuses host synth with
 # --macro-view / --memory-macro ("run --stages pnr"); any cfg naming one routes with STAGES=pnr.
 case " ${EXTRA[*]:-} " in *" --macro-view "*|*" --memory-macro "*) STAGES=pnr;; esac
