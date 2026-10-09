@@ -80,7 +80,12 @@ module ot_qfd_res_ser #(
     // RDS = 2: two registered levels, t1: the 8 slot rows of burst d_p (64:1), t2: the slot t1_s (8:1).  0 cycles: the
     // row / mask ride t1 / t2 beside the slot-memory read anyway.  Safe: burst d_p cannot be rewritten within 2 edges
     // (rok keeps n + RS + 2 <= DB, so wp never reaches a burst still being sent).
-    parameter integer RDS = `ifdef OT_QFD_RES_RDS `OT_QFD_RES_RDS `else 0 `endif
+    parameter integer RDS = `ifdef OT_QFD_RES_RDS `OT_QFD_RES_RDS `else 0 `endif,
+    // IPIN (struct-close 2026-10-09; 0 = unchanged): r2q EF -1135 = i_data -> c_data, 1.15 ns of pure wire (the capture
+    // register sits at the slot macros).  IPIN = 1 puts a PIN register stage on the whole burst interface (me_en, i_ov,
+    // i_we, i_addr, i_mask, i_data): +1 edge on capture, and the stall budget grows by one (rok uses RS + 1) so a burst
+    // still in the pin stage when rok falls is covered.
+    parameter integer IPIN = `ifdef OT_QFD_RES_IPIN 1 `else 0 `endif
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -111,12 +116,26 @@ module ot_qfd_res_ser #(
     reg  [NS*AW-1:0]  c_addr;
     reg  [NS*W-1:0]   c_mask;
     reg  [NS*W*32-1:0] c_data;
+    // IPIN pin stage (see the parameter)
+    wire me_en_p, i_ov_p; wire [NS-1:0] i_we_p; wire [NS*AW-1:0] i_addr_p; wire [NS*W-1:0] i_mask_p; wire [NS*W*32-1:0] i_data_p;
+    generate if (IPIN != 0) begin : g_ipin
+        reg pe, po; reg [NS-1:0] pw; reg [NS*AW-1:0] pa; reg [NS*W-1:0] pm; reg [NS*W*32-1:0] pd;
+        always @(posedge clk or negedge rst_n) if (!rst_n) begin pe <= 1'b0; po <= 1'b0; end else begin pe <= me_en; po <= i_ov; end
+        always @(posedge clk) begin pw <= i_we; pa <= i_addr; pm <= i_mask; pd <= i_data; end
+`ifndef OT_QFD_RES_MUT_IPIN
+        assign me_en_p = pe; assign i_ov_p = po;
+`else
+        assign me_en_p = me_en; assign i_ov_p = i_ov;   // mutant: the valid / enable skip the pin stage (data one beat late)
+`endif assign i_we_p = pw; assign i_addr_p = pa; assign i_mask_p = pm; assign i_data_p = pd;
+    end else begin : g_idir
+        assign me_en_p = me_en; assign i_ov_p = i_ov; assign i_we_p = i_we; assign i_addr_p = i_addr; assign i_mask_p = i_mask; assign i_data_p = i_data;
+    end endgenerate
 `ifndef OT_QFD_RES_MUT_CVNOEN
-    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= me_en && i_ov;
-`else   // struct-close mutant for MEC: the burst valid ignores me_en (a paused engine's held burst is taken again)
-    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= i_ov;
+    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= me_en_p && i_ov_p;
+`else   // struct-close mutant for MEC: the burst valid ignores me_en_p (a paused engine's held burst is taken again)
+    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= i_ov_p;
 `endif
-    always @(posedge clk) if (me_en || MEC != 0) begin c_we <= i_we & {NS{i_ov}}; c_addr <= i_addr; c_mask <= i_mask; c_data <= i_data; end
+    always @(posedge clk) if (me_en_p || MEC != 0) begin c_we <= i_we_p & {NS{i_ov_p}}; c_addr <= i_addr_p; c_mask <= i_mask_p; c_data <= i_data_p; end
     // ---- store: slot s of burst wp ----
     reg  [NS-1:0]  hdr [0:DB-1];
     reg  [RW-1:0]  srow [0:NS*DB-1];
@@ -156,7 +175,7 @@ module ot_qfd_res_ser #(
             if (c_v) wp <= wp + 1'b1;
             n <= n + (c_v ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
             cr <= cr + (o_cr ? 1'b1 : 1'b0) - (can ? 1'b1 : 1'b0);
-            rok <= ({1'b0, n} + (c_v ? 1 : 0) + RS + 2) <= DB;
+            rok <= ({1'b0, n} + (c_v ? 1 : 0) + RS + IPIN + 2) <= DB;
             if ((c_v && n == DB) || (c_v && hi_bad) || (o_cr && cr == CRB[LC-1:0])) fault <= 1'b1;
         end
     end
