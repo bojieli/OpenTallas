@@ -1,0 +1,17 @@
+{
+  "source": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc",
+  "verdict": "FLOORPLAN_MARGIN",
+  "reason": "util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%",
+  "actual_stdcell_um2": 221043,
+  "actual_core_um2": 316730,
+  "actual_utilization_pct": 69.8,
+  "historical_frame_um": [
+    567.216,
+    567.216
+  ],
+  "core_area_required_um2_at_60pct": 368405.0,
+  "core_area_required_um2_at_55pct": 401896.3636363636,
+  "minimum_additional_core_area_um2_at_55pct": 85166.36363636359,
+  "timing_closed": false,
+  "next": "actual existing hub/oldembedding rectangle fit and source partition model before structural review; no duplicate route"
+}

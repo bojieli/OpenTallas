@@ -1,0 +1,293 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T09:08:35.499549+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 193524.225,
+    "block": "ot_qwen_die_hub_emb_top",
+    "cells": 1328502,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "ck",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_gw.sv",
+        "sha256": "a4712483972547ed365b3a865861d69badc6db5b58d9e2f66365b0e875272e14",
+        "size_bytes": 12396
+      },
+      {
+        "path": "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qwen_die_hub_emb.sv",
+        "sha256": "fa28137c05dd6c500440cdd647e3a6850a10301dd7faae8e59c6e42f408add3f",
+        "size_bytes": 18851
+      },
+      {
+        "path": "rtl/physical/ot_qwen_die_cdc_ch.sv",
+        "sha256": "9438932cffd450fbe3298a444e611067eee6b2b472cc991c8e5e9e2c4143eeb6",
+        "size_bytes": 5756
+      },
+      {
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "sha256": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+        "size_bytes": 5928
+      },
+      {
+        "path": "rtl/lib/ot_reset_sync.sv",
+        "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "size_bytes": 811
+      }
+    ],
+    "top": "ot_qwen_die_hub_emb_top"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\npentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n3_2_place_iop             .odb           14           3046 580e71bf0f00e710d862\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place\nRunning global_place.tcl, stage 3_3_place_gp\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz\nread_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib\nread_db /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb\nTook 6 seconds: read_db /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb\nread_sdc -mode ss /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc\nread_sdc -mode ff /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc\nOT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl\nfp_margin_lint: FAIL  util 69.8% (+hold 77.0%), pins 5826, max pin density 12.0 b/um, macros 0, slivers 0, channel worst None\nfp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: E/M4 12.0 b/um\nfp_margin_lint: FAIL util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%\nFLOORPLAN_MARGIN: util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%\nchild process exited abnormally\nOT_FP_LINT: 14 s\nError: global_place.tcl, 5 FLOORPLAN_MARGIN: floorplan margin lint failed before global placement (see /work/reports/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/fp_margin_lint.json)\n\nElapsed time: 1:02.30[h:]min:sec. CPU time: user 58.77 sys 3.53 (99%). Peak memory: 4277736KB.\nElapsed time: 1:19:03.95[h:]min:sec. CPU time: user 4970.84 sys 254.75 (110%). Peak memory: 7355108KB.\nElapsed time: 0:15.00[h:]min:sec. CPU time: user 12.50 sys 2.49 (99%). Peak memory: 3004668KB.\nElapsed time: 0:11.49[h:]min:sec. CPU time: user 9.49 sys 1.98 (99%). Peak memory: 1989256KB.\nElapsed time: 0:30.43[h:]min:sec. CPU time: user 27.95 sys 2.48 (99%). Peak memory: 3109388KB.\nElapsed time: 6:53.61[h:]min:sec. CPU time: user 1983.32 sys 7.22 (481%). Peak memory: 5442812KB.\nElapsed time: 0:14.98[h:]min:sec. CPU time: user 12.27 sys 2.72 (99%). Peak memory: 3119864KB.\nElapsed time: 0:24.46[h:]min:sec. CPU time: user 20.93 sys 3.53 (99%). Peak memory: 4280088KB.\nmake[1]: *** [Makefile:499: do-3_3_place_gp] Error 1\nmake: *** [Makefile:499: /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_3_place_gp.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:09:43.645421+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_die_hub_emb_top",
+      "--source",
+      "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_gw.sv",
+      "--source",
+      "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qwen_die_hub_emb.sv",
+      "--source",
+      "rtl/physical/ot_qwen_die_cdc_ch.sv",
+      "--source",
+      "rtl/lib/ot_async_fifo.sv",
+      "--source",
+      "rtl/lib/ot_reset_sync.sv",
+      "--die-area",
+      "0",
+      "0",
+      "567.216",
+      "567.216",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "565.056",
+      "565.056",
+      "--pin-region",
+      "^l2_(i|o)(\\[|$)=right:5.4-84.4",
+      "--pin-region",
+      "^x3_(v|d|tag|cr)(\\[|$)=right:87.1-163.4",
+      "--pin-region",
+      "^ar_(v|d|cr)(\\[|$)=right:166.1-242.3",
+      "--pin-region",
+      "^l3_(i|o)(\\[|$)=right:245.0-324.0",
+      "--pin-region",
+      "^l0_(i|o)(\\[|$)=right:326.7-439.7",
+      "--pin-region",
+      "^l1_(i|o)(\\[|$)=right:442.4-555.4",
+      "--pin-region",
+      "^(ea_v|ea_kind|ea_addr|ea_cr)(\\[|$)=left:20-80",
+      "--pin-region",
+      "^(eq_v|eq_d)(\\[|$)=left:300-560",
+      "--pin-region",
+      "^(ck|fck0|fck1|fck2|fck3|rst_n|fault|fault_cause.*|emb_ready|emb_fault|emb_fault_code.*)$=top:136.1-408.4",
+      "--pin-regions-exhaustive",
+      "--orfs-var",
+      "SYNTH_MEMORY_MAX_BITS=66944",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--clock-port",
+      "ck",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.05",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "NUM_CORES=16",
+      "--orfs-var",
+      "SDC_FILE=/src/physical/qwen_die_masters/mc/qfd_hub_emb/plain.sdc",
+      "--orfs-var",
+      "QDM_SDC_DIR=/src/physical/qwen_die_masters/mc/qfd_hub_emb",
+      "--orfs-var",
+      "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks",
+      "--step-tcl",
+      "PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl",
+      "--step-tcl",
+      "POST_CTS=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl",
+      "--orfs-var",
+      "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75",
+      "--orfs-var",
+      "OT_IO_SKEW=90",
+      "--orfs-var",
+      "OT_IO_HOLD_SKEW=50",
+      "--orfs-var",
+      "OT_REF_GLOB=*ard_q*",
+      "--orfs-var",
+      "OT_IO_INTER=*",
+      "--orfs-var",
+      "OT_IO_SKEW_INTER=150",
+      "--slew-margin-percent",
+      "30",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "qdm_qfd_hub_emb_975fdada2_tc",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/routes/qfd_hub_emb_975fdada2_tc/work",
+      "--force",
+      "--output",
+      "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/routes/qfd_hub_emb_975fdada2_tc/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "bb298f5dc56bb1e81c3a6e48a11069713d6573cdf009cecd7ee1e4f054ee160a",
+      "tree": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/src"
+    },
+    "orfs_num_cores": 16,
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 770.0,
+    "cell_area_um2": 193524.225,
+    "cell_count": 1328502,
+    "cell_types_used": 38,
+    "chip_area_um2": 193519.231919,
+    "combinational_cell_count": 1012818,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "0cb154f933c97e475bdaddf99211c81730531831f4a1195d861db2cfe7477931",
+      "raw_netlist_sha256": "0cb154f933c97e475bdaddf99211c81730531831f4a1195d861db2cfe7477931",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 92270.0,
+    "sequential_cell_count": 315684,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

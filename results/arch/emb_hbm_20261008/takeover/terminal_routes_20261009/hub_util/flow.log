@@ -1,0 +1,45 @@
+OT_ORFS_CORNER_OVERRIDE=TC: corner WC reads the TT liberties (std cells + macro _tt.lib)
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/qwen_die_masters/signoff/qfd_hub_emb.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+pentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb           14           3046 580e71bf0f00e710d862
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_db /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb
+Took 6 seconds: read_db /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+fp_margin_lint: FAIL  util 69.8% (+hold 77.0%), pins 5826, max pin density 12.0 b/um, macros 0, slivers 0, channel worst None
+fp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: E/M4 12.0 b/um
+fp_margin_lint: FAIL util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%
+FLOORPLAN_MARGIN: util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%
+child process exited abnormally
+OT_FP_LINT: 14 s
+Error: global_place.tcl, 5 FLOORPLAN_MARGIN: floorplan margin lint failed before global placement (see /work/reports/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/fp_margin_lint.json)
+
+Elapsed time: 1:02.30[h:]min:sec. CPU time: user 58.77 sys 3.53 (99%). Peak memory: 4277736KB.
+Elapsed time: 1:19:03.95[h:]min:sec. CPU time: user 4970.84 sys 254.75 (110%). Peak memory: 7355108KB.
+Elapsed time: 0:15.00[h:]min:sec. CPU time: user 12.50 sys 2.49 (99%). Peak memory: 3004668KB.
+Elapsed time: 0:11.49[h:]min:sec. CPU time: user 9.49 sys 1.98 (99%). Peak memory: 1989256KB.
+Elapsed time: 0:30.43[h:]min:sec. CPU time: user 27.95 sys 2.48 (99%). Peak memory: 3109388KB.
+Elapsed time: 6:53.61[h:]min:sec. CPU time: user 1983.32 sys 7.22 (481%). Peak memory: 5442812KB.
+Elapsed time: 0:14.98[h:]min:sec. CPU time: user 12.27 sys 2.72 (99%). Peak memory: 3119864KB.
+Elapsed time: 0:24.46[h:]min:sec. CPU time: user 20.93 sys 3.53 (99%). Peak memory: 4280088KB.
+make[1]: *** [Makefile:499: do-3_3_place_gp] Error 1
+make: *** [Makefile:499: /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_975fdada2_tc/base/3_3_place_gp.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-975fdada2-tc/routes/qfd_hub_emb_975fdada2_tc/physical.json
