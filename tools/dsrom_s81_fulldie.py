@@ -3169,6 +3169,12 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    if 'eng' in m['hub']:
+        # layer1e: the SE service slot around eng_SE is free (no svc_SE): its stations / pin relays stand there and climb
+        # into stripS (l1e check: the last VM -> eng hop had no box near eng_SE, 1,181.5 um segment)
+        e_ = m['hub']['eng']
+        cor['engS'] = (e_.x - (PHY_W - e_.w) / 2 + 4.32, e_.y,
+                       e_.x + e_.w + (PHY_W - e_.w) / 2 - 4.32, g['band_depth'] + 4.32)
     for t, c in enumerate(g['ch_y']):
         cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
     return cor
