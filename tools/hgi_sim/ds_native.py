@@ -99,7 +99,8 @@ class Layout:
                  TOK=8, eg_rows=6144, eg_kv=25600, EGW=HC * D, EGID=32, EGC=6144, EGS=192, SSH=8, RH=8, SSK=8,
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
-                 LR=512, IK=128, CK=512, ROPE2=64, logits=1352)
+                 LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
+                 IWS=32, SELT=1024, CANDM=4096)   # G18: frame outputs / merge tables (rows: ids | values)
 
     def __init__(self):
         self.vm, cur = {}, 0
@@ -113,6 +114,9 @@ class Layout:
             cur += n
         assert cur <= MC.VM_WORDS, cur
         self.end = cur
+        # the layer-20 candidate table [ids | values] (2 x 2,048) lives in zpart: zpart is dead between the indexer
+        # frame and wo_a; its hazards use the region name zpart (ordered against every zpart use)
+        self.vm["CANDT"] = self.vm["zpart"]
 
     def V(self, name, n, off=0, m=1, stride=0, istride=0, fmt="FP32", ibcast=0):
         return MDesc(space="VM", fmt=fmt, base=self.vm[name] + off, n=n, m=m, stride=stride, istride=istride,
@@ -164,6 +168,12 @@ class Lower:
         self.ent = {}
         self.cur_op = None
         self.bufn = dict(qa=1280, kvraw=512, gsc=384, y=D, yf=D, iq=4096, iwr=32, eg_rows=6144, eg_kv=25600)
+
+    @staticmethod
+    def owned_keys(rank, n):
+        """Keys < n owned by `rank` (blocks of KEY_BLOCK round robin over TP ranks): count, owned blocks."""
+        blocks = np.arange(rank, -(-n // W.KEY_BLOCK), TP)
+        return int(np.minimum(n - blocks * W.KEY_BLOCK, W.KEY_BLOCK).clip(0).sum()), len(blocks)
 
     def W(self, key, rows, cols, fmt, n_experts=1):
         if key not in self.ent:
@@ -221,10 +231,13 @@ class Lower:
             self.bufn[out] = n
             ooff = 0 if out in ("q", "q_own", "logits", "KIN") else r0          # die-local outputs
             desc = dict(A=x_desc, B=bd, O=V(out, max(r1 - r0, 1), off=ooff, fmt=out_fmt))
+            if self.fuse and out == "logits":         # the LM head streams into the argmax unit (STREAM 2)
+                desc["O"] = MDesc(space="STREAM", fmt=out_fmt, base=2, n=max(r1 - r0, 1))
             if expert_slot is not None:
                 desc["I"] = U32V(lay.vm["rid"] + expert_slot, 1)
             add(Rec("SM", "MATVEC", param=fp, desc=desc,
-                    tag=tag or op["tag"], family="mv." + op["fn"]), rd or [], [out], run and r1 > r0)
+                    tag=tag or op["tag"], family="mv." + op["fn"]), rd or [],
+                [] if desc["O"].space == "STREAM" else [out], run and r1 > r0)
 
         for op in ops:
             self.cur_op = op
@@ -335,8 +348,9 @@ class Lower:
                            ad=I.AD_C, rnd=int(e == m.k_exp), dst=I.DST_VM)
                 elif fn == "argmax_local":
                     r0, r1 = head_rows(rank)
-                    add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=V("logits", r1 - r0), O=V("TOK", 2)),
-                            tag="argmax_local", family="argmax"), ["logits"], ["TOK"])
+                    src_ = MDesc(space="STREAM", fmt="FP32", base=2, n=r1 - r0) if self.fuse else V("logits", r1 - r0)
+                    add(Rec("ARGMAX", "LOCAL", imm_a=HEAD_ROWS, desc=dict(A=src_, O=V("TOK", 2)),
+                            tag="argmax_local", family="argmax"), [] if self.fuse else ["logits"], ["TOK"])
                 elif fn == "engram_fetch":
                     self.engram_fetch(add, su, L)
                 elif fn == "engram_mix":
@@ -344,18 +358,53 @@ class Lower:
                 elif fn == "compressor":
                     self.compressor(add, su, L, op, run=rank in op["ranks"])
                 elif fn == "index_q":
-                    add(Rec("IDX", "INDEX_Q", imm_b=L, desc=dict(A=V("iq", 4096), B=V("iwr", 32)), tag=op["tag"],
-                            family="indexer"), ["iq", "iwr"], ["IDXQ"])
+                    # G18: RoPE (yarn table at POS, adjacent pairs, in place on each of the ih head rows) and the
+                    # head-weight scale are SU records; the indexer frame reads the results
+                    assert m.ratio[L] > 0
+                    ih, ihd = m.ih, m.ihd
+                    su("index_q.rope", "indexer", dict(
+                        A=V("iq", 64, off=ihd - 64, m=ih, stride=ihd), B=V("ROPE", 64, m=ih, stride=0),
+                        D=V("ROPE", 64, off=32, m=ih, stride=0), O=V("iq", 64, off=ihd - 64, m=ih, stride=ihd)),
+                        ["iq", "ROPE"], ["iq"], c_pair=1, b_half=1, m1=I.M1_AB, qm=I.QM_ALT_NP, ad=I.AD_Q, rnd=1,
+                        dst=I.DST_VM)
+                    self.iq_op = self.cur_op.get("id")
+                    su("index_q.w_scale", "indexer", dict(A=V("iwr", ih), O=V("IWS", ih)), ["iwr"], ["IWS"],
+                       m1=I.M1_AIMM, imm1=f32u(m.index_w_scale), rnd=1, dst=I.DST_VM)
                 elif fn == "index_scores":
-                    add(Rec("IDX", "INDEX_SCORES", param=op["src"], imm_a=op["n"], imm_b=L, tag=op["tag"],
-                            family="indexer"), ["IDXQ", "kvstore"], ["IDXS"])
-                elif fn == "topk_local":                # the DS indexer engine's own buffers (G16)
-                    add(Rec("IDX", "TOPK", param=op["k"], imm_b=L, tag=op["tag"], family="indexer"),
-                        ["IDXS"], ["IDXT"])
-                elif fn in ("cand_local", "cand_apply", "cand_mask"):
-                    sub = {"cand_local": 1, "cand_apply": 2, "cand_mask": 3}[fn]
-                    add(Rec("IDX", "SELECT", param=sub, imm_a=op.get("n", 0), imm_b=L, tag=op["tag"],
-                            family="candidates"), ["IDXS", "CAND"], ["IDXS", "CAND"])
+                    # G18: ONE IDX.INDEX frame = query quantiser + scores + (layer-20 candidate pass) + (keep mask)
+                    # + local top-k; the w19 ops cand_local / cand_mask / topk_local are part of it
+                    n = op["n"]
+                    assert op["src"] == m.kv_of[L]
+                    nr, nbr = self.owned_keys(rank, n)
+                    assert nr > 0
+                    kk = min(m.topk, n)
+                    kr = min(kk, nr)
+                    cand_en, keep_en = int(L == m.cand_src), int(0 <= m.cand_src < L)
+                    desc = dict(A=V("iq", m.ih * m.ihd), B=V("IWS", m.ih), O=U32V(lay.vm["SELT"], kr),
+                                R=V("SELT", kr, off=512))
+                    rd, wr = ["iq", "IWS", "kvstore"], ["SELT"]
+                    if cand_en:
+                        nb = -(-n // m.cand_b)
+                        kc = min(m.cand_k, nb, nbr)
+                        assert kc <= 2048
+                        desc["D"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDT"], n=kc, m=2, stride=2048)
+                        wr.append("zpart")
+                    if keep_en:
+                        nb20 = -(-((self.pos + 1) // m.ratio[m.cand_src]) // m.cand_b)
+                        desc["C"] = MDesc(space="VM", fmt="U32", base=lay.vm["CANDM"], n=min(m.cand_k, nb20), m=2,
+                                          stride=2048)
+                        rd.append("CANDM")
+                    add(Rec("IDX", "INDEX", param=kk | (cand_en << 12) | (keep_en << 13), imm_a=n, imm_b=L,
+                            desc=desc, tag="index frame (G18)", family="indexer"), rd, wr)
+                    self.frame_rec, self.frame_n = b.recs[-1], n
+                    if self.frame_rec.src is not None:     # timing: the frame also runs the query quantiser of index_q
+                        self.frame_rec.src = (self.frame_rec.src[0], self.frame_rec.src[1], [self.iq_op])
+                elif fn in ("topk_local", "cand_local", "cand_apply", "cand_mask"):
+                    # part of the IDX.INDEX frame (timing: priced with it)
+                    fr = getattr(self, "frame_rec", None)
+                    if fr is not None and fr.src is not None:
+                        fr.src = (fr.src[0], fr.src[1], list(fr.src[2] if len(fr.src) > 2 else []) +
+                                  [self.cur_op.get("id")])
                 else:
                     raise NotImplementedError(f"DS native lowering of {fn}")
             elif k == "mv":
@@ -411,11 +460,18 @@ class Lower:
                     add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=V("TOK", 2), O=MDesc(space="VM", fmt="U32",
                                                                                      base=lay.vm["TOK"] + 4, n=1)),
                             tag=op["tag"], family="argmax"), ["TOK"], ["TOK"])
-                else:
-                    desc = dict(O=U32V(lay.vm["SELIDX"], op["k"])) if what == "sel" else {}
-                    add(Rec("COLL", "TOPK_MERGE", param=0 if what == "sel" else 1, imm_a=op["k"], tag=op["tag"],
-                            desc=desc, family="indexer" if what == "sel" else "candidates"), ["IDXT", "CAND"],
-                        ["SELIDX", "CAND"])
+                elif what == "sel":           # G18: from VM (A = local values, B = local ids), O ascending ids
+                    n = self.frame_n
+                    kr = min(min(m.topk, n), self.owned_keys(rank, n)[0])
+                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="indexer", desc=dict(
+                        A=V("SELT", kr, off=512), B=U32V(lay.vm["SELT"], kr), O=U32V(lay.vm["SELIDX"], op["k"]))),
+                        ["SELT"], ["SELIDX"])
+                else:                         # the layer-20 candidate merge: O = block ids ascending, R = values
+                    n = self.frame_n
+                    kc = min(m.cand_k, -(-n // m.cand_b), self.owned_keys(rank, n)[1])
+                    add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
+                        A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
+                        R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
             elif k == "kv_gather":
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
                 add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK, imm_a=kk, imm_b=HEADS, desc=dict(
@@ -754,44 +810,26 @@ def ds_units(m, man, golib):
     def vm_to_rk(M, die, desc, name):
         rk_of(die).put(name, M.read(desc, die, 0))
 
-    def index_q(M, r, L):
+    def index_frame(M, r, L):
+        """IDX.INDEX (G18) = the generic unit (machine.u_idx_index) on the golden key store"""
+        M.index_keys = lambda die, layer, ids: np.asarray(golib.st.ik[m.kv_of[layer]][ids], dtype=F)
+        MC.u_idx_index(M, r, L)
         for die in M.dies:
-            vm_to_rk(M, die, r.desc["A"], "iq")
-            vm_to_rk(M, die, r.desc["B"], "iwr")
-            golib.f_index_q(rk_of(die), dict(layer=r.imm_b, fn="index_q"))
-
-    def index_scores(M, r, L):
-        for die in M.dies:
-            golib.f_index_scores(rk_of(die), dict(layer=r.imm_b, fn="index_scores", n=r.imm_a, src=r.param))
-
-    def topk(M, r, L):
-        if "A" in r.desc:                                 # generic IDX.TOPK (the router top-6)
-            return MC.u_idx_topk(M, r, L)
-        for die in M.dies:                                # the DS index top-k on the indexer engine's buffers (G16)
-            golib.f_topk_local(rk_of(die), dict(layer=r.imm_b, fn="topk_local", k=r.param & 0xFFF))
-
-    def select_any(M, r, L):
-        sub = r.param & 0xFF
-        fn = {1: golib.f_cand_local, 2: golib.f_cand_apply, 3: golib.f_cand_mask}[sub]
-        for die in M.dies:
-            fn(rk_of(die), dict(layer=r.imm_b, n=r.imm_a))
+            idx, v = die.index_last
+            rk_of(die).put("is_i", idx.astype(np.int64), n=len(idx))
+            rk_of(die).put("is_v", v, n=len(v))
 
     def topk_merge(M, r, L):
-        what = "sel" if r.param == 0 else "cand"
-        rks = [rk_of(d) for d in M.dies]
-        v = np.concatenate([rk.get(f"{what}_v") for rk in rks])
-        i = np.concatenate([rk.get(f"{what}_i") for rk in rks]).astype(np.int64)
-        order = np.lexsort((i, -v.astype(np.float64)))[:r.imm_a]
-        for rk in rks:
-            rk.put(f"{what}_mv", v[order].astype(np.float64), n=len(order))
-            rk.put(f"{what}_mi", i[order], n=len(order))
-            if what == "sel":
-                ss = np.sort(i[order])
-                rk.put("sel", ss, n=len(ss))
-        if what == "sel" and "O" in r.desc:               # the selection as a U32 id table in VM (ROW_GATHER's I)
-            ss = np.sort(i[order]).astype(np.uint32)
+        """COLL.TOPK_MERGE (G18) = the generic unit (machine.u_coll_topk_merge), reading VM"""
+        MC.u_coll_topk_merge(M, r, L)
+        if "R" not in r.desc:                                  # (the checker's view of the index selection)
             for d in M.dies:
-                d.vm[M.vm_addrs(r.desc["O"], d, L)] = ss
+                rd = M.rec_of(d, r)
+                ob, on, _, _, _ = M.eff(rd.desc["O"], d, L)
+                rk_of(d).put("sel", d.vm[ob:ob + on].astype(np.int64), n=on)
+
+    def topk(M, r, L):
+        return MC.u_idx_topk(M, r, L)
 
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
@@ -830,10 +868,10 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX_Q"): index_q, ("IDX", "INDEX_SCORES"): index_scores, ("IDX", "TOPK"): topk,
+    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
-              ("FUSED", "HC_POST"): hc_post, ("IDX", "SELECT"): select_any})
+              ("FUSED", "HC_POST"): hc_post})
     return U
 
 
@@ -858,9 +896,11 @@ def schedule_layer(rank_recs, ops, L):
     for i, r in enumerate(rank_recs[0]):
         x = _c.copy(r)
         x.src_key = None if not r.src else f"{r.src[0]}:{r.src[1]}"
+        x.src_extra = [f"{r.src[0]}:{e}" for e in r.src[2]] if r.src and len(r.src) > 2 else []
         # hazards = the union over ranks (a record that is CTL.NOP here may run on another rank)
-        x.reads = sorted({n for rr in rank_recs for n in getattr(rr[i], "reads", ())})
-        x.writes = sorted({n for rr in rank_recs for n in getattr(rr[i], "writes", ())})
+        x.hz_reads = sorted({n for rr in rank_recs for n in getattr(rr[i], "reads", ())})     # legality
+        x.hz_writes = sorted({n for rr in rank_recs for n in getattr(rr[i], "writes", ())})
+        x.reads, x.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))   # rank 0's own
         r0.append(x)
     opd = {f"{L}:{o.get('id')}": o for o in ops}
     cf = NativeCost(opd, r0)
@@ -984,17 +1024,28 @@ def main():
                     g = st.n[s_]
                     st.ckv[s_][g], st.ik[s_][g] = z[f"ckv{s_}"], z[f"ik{s_}"]
                     st.n[s_] = g + 1
+                    own_, loc_ = ck_local(g)              # and into its owner die's row store
+                    ck_regs[own_].reshape(len(SOURCES), -1, 512)[SOURCES.index(s_), loc_] = z[f"ckv{s_}"]
                     st.slots[s_] = {}
         if "sel" in carry:
             for d in dies:
                 d.rk.put("sel", np.array(carry["sel"], dtype=np.int64))
                 ss = np.array(carry["sel"], dtype=np.uint32)
                 d.vm[lay.vm["SELIDX"]:lay.vm["SELIDX"] + len(ss)] = ss
-        if "cand_file" in carry:
+        if "cand_file" in carry:                    # the layer-20 keep table into VM (G18: C of later frames)
             cand = np.load(a.refs / carry["cand_file"])["cand"]
             nb = -(-len(cand) // W.KEY_BLOCK)
+            kept = np.array([b_ for b_ in range(nb) if cand[b_ * W.KEY_BLOCK]], dtype=np.uint32)
+            nb20 = -(-((pos + 1) // m.ratio[m.cand_src]) // m.cand_b)
+            cnt = min(m.cand_k, nb20)
+            ids_ = np.zeros(cnt, np.uint32)
+            vals_ = np.full(cnt, -np.inf, F)
+            ids_[:min(cnt, len(kept))] = kept[:cnt]
+            vals_[:min(cnt, len(kept))] = 0.0
             for d in dies:
-                d.rk.cand = {int(b_): bool(cand[b_ * W.KEY_BLOCK]) for b_ in range(d.rank, nb, TP)}
+                b0 = lay.vm["CANDM"]
+                d.vm[b0:b0 + cnt] = ids_
+                d.vm[b0 + 2048:b0 + 2048 + cnt] = vals_.view(np.uint32)
     for d in dies:
         d.vm[lay.vm["h"]:lay.vm["h"] + HC * D] = np.asarray(h0, F).reshape(-1).view(np.uint32)
         d.vm[lay.vm["PRE"]:lay.vm["PRE"] + 4] = np.asarray(pre0, F).view(np.uint32)
@@ -1037,6 +1088,7 @@ def main():
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
         Mach = MC.Machine(dies, units)
+        Mach.row_gather_stats = []
         snaps = {}
         watch = {"attn_norm": ("x", D), "kv_row_qdq": ("win_new", 512), "attn_out_gather.y": ("y", D),
                  "ffn_norm": ("x", D), "route.scores_bias": ("router", 384), "ffn_out_gather.yf": ("yf", D),
@@ -1077,7 +1129,8 @@ def main():
             lg = np.zeros(129280, dtype=F)
             for d in dies:
                 r0, r1 = head_rows(d.rank)
-                lg[r0:r1] = d.vm[lay.vm["logits"]:lay.vm["logits"] + (r1 - r0)].view(F)
+                lg[r0:r1] = (d.stream_seen[2] if 2 in d.stream_seen else
+                             d.vm[lay.vm["logits"]:lay.vm["logits"] + (r1 - r0)].view(F))
             tok = int(dies[0].vm[lay.vm["TOK"] + 4]) if fault is None else -1
             ok = fault is None and tok == ref["next_token"] and W.LC.digest(lg) == ref["logits_sha256"]
             results.append(dict(layer="head", verdict="pass" if ok else "fail", fault=fault, next_token=tok,
@@ -1131,7 +1184,7 @@ def main():
             fams[f"{r_.unit}.{r_.op}"] = fams.get(f"{r_.unit}.{r_.op}", 0) + 1
         results.append(dict(layer=L, kind=js["kind"], verdict="pass" if ok else "fail", fault=fault, regions=regs,
                             records_per_die=len(progs[0]), image_bytes_all_dies=nbytes, unit_ops=fams,
-                            schedule=sched_info,
+                            schedule=sched_info, row_gather=Mach.row_gather_stats,
                             wall_s=round(time.time() - tl, 1)))
         print(f"L{L:02d} {js['kind']:28s} {'PASS' if ok else 'FAIL'} records {len(progs[0])} "
               f"{time.time() - tl:.0f} s fault {fault} bad {[x['region'] for x in regs if not x['bit_exact']]}",

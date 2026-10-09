@@ -421,14 +421,14 @@ class Em:
             ix = m["idx"]
             self.mv_split("QAN" if m["q_lora"] else "H", m["q_lora"] or H, ix["heads"] * ix["dim"], "IQ", "index_q")
             nkeys = -(-ctx // tp)
-            self.add(Rec("IDX", "INDEX_SCORES", imm_a=nkeys, desc=dict(
+            k = min(ix["topk"], ctx)
+            kl = min(k, nkeys, 2048)
+            # G18: one IDX.INDEX frame (query quantiser, scores over the die's keys, local top-k); the key store is
+            # the engine's (timing: B describes the keys streamed), O / R the local selection in VM
+            self.add(Rec("IDX", "INDEX", param=kl, imm_a=nkeys, desc=dict(
                 A=self.V("IQ", ix["heads"] * ix["dim"]), B=MDesc(space="HBM", fmt="FP8E4M3", base=1 << 31,
                                                                   n=ix["dim"], m=nkeys, stride=ix["dim"]),
-                O=self.V("IS", nkeys))), ["IQ", "KV"], ["IS"], "index_scores")
-            k = min(ix["topk"], ctx)
-            self.add(Rec("IDX", "TOPK", param=min(k, 2048), desc=dict(A=self.V("IS", nkeys),
-                                                                      O=self.V("IDS", min(k, nkeys), fmt="U32"))),
-                     ["IS"], ["IDS"], "index_topk")
+                O=self.V("IDS", kl, fmt="U32"), R=self.V("ISV", kl))), ["IQ", "KV"], ["IDS", "ISV"], "index_frame")
             self.coll("TOPK_MERGE", 2 * k, "IDS", "SEL", "index_merge")
             P = k + (m.get("window") or 0)
         else:
@@ -505,10 +505,15 @@ class Em:
         H, tp = self.H, self.tp
         hr = -(-V // tp)
         self.norm("X", H, "H", "prenorm.final")
-        self.mv("H", H, hr, "LRAW", "head")
-        self.su("LRAW", hr, "LOG", "head_scale", m1=I.M1_AB)
-        self.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=self.V("LOG", hr), O=self.V("AMX", 2))), ["LOG"],
-                 ["AMX"], "argmax")
+        # the logits stream: head matvec -> STREAM 0 -> row scale (SU) -> STREAM 1 -> ARGMAX (no VM round trip)
+        code, fmt = SMFMT[self.wfmt]
+        S0 = MDesc(space="STREAM", fmt="FP32", base=0, n=hr)
+        S1 = MDesc(space="STREAM", fmt="FP32", base=1, n=hr)
+        self.add(Rec("SM", "MATVEC", param=code | ((min(self.batch, 8) - 1) << 2), desc=dict(
+            A=self.V("H", H), B=self.W(H, max(hr, 1), fmt), O=S0)), ["H"], [], "head")
+        self.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(A=S0, B=self.V("LSCL", hr), O=S1)),
+                 ["LSCL"], [], "head_scale")
+        self.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=S1, O=self.V("AMX", 2))), [], ["AMX"], "argmax")
         if tp > 1:
             self.add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=self.V("AMX", 2), O=self.V("TOK", 1, fmt="U32"))),
                      ["AMX"], ["TOK"], "argmax_merge")
@@ -593,12 +598,13 @@ class PerfCost:
                 return c, gr, how
             return coll_cycles(op, n * es * b, self.tp)
         if u == "IDX":
-            if op == "INDEX_SCORES":
+            if op == "INDEX":
                 d = r.desc["B"]
                 nb = d.n * d.m
                 rate = 16 * 4                         # keys a cycle a die: ot_hbm_accel_index_stack 16 / stack x 4
                 c = T.first_access() + max(nb / T.cv("hbm", "bytes_per_cycle"), d.m / rate)
-                return c * b, "measured_rate", f"index scores over {d.m} keys"
+                c += 20 + d.m / 16                    # the frame's local top-k over the scores
+                return c * b, "measured_rate", f"index frame over {d.m} keys"
             if op == "TOPK":
                 n = r.desc["A"].n
                 return (20 + n / 16) * b, "estimate", f"top-k over {n}"
@@ -852,6 +858,7 @@ def ds41_simulate(detail=True):
                 r, _ = decode_one(bytes.fromhex(x["hex"]), 0)
                 r.tag, r.family, r.reads, r.writes = x["tag"], x["family"], x["reads"], x["writes"]
                 r.src_key = None if not x["src"] else f"{x['src'][0]}:{x['src'][1]}"
+                r.src_extra = [f"{x['src'][0]}:{e}" for e in x["src"][2]] if x["src"] and len(x["src"]) > 2 else []
                 one.append(r)
             sh = Counter((r.src_key, r.unit) for r in one if r.src_key)
             for r in one:                    # an op's price splits over its records within ONE layer instance

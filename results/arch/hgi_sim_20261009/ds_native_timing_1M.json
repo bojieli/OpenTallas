@@ -1,588 +1,376 @@
 {
  "schema": "opentallas.hgi_sim.ds_native_timing.v1",
  "position": 1048575,
- "generated_utc": "2026-10-09T14:12:20Z",
+ "generated_utc": "2026-10-09T22:57:49Z",
  "grade": "pathfinding: walk-priced engine records (measured adapters), SU per record by the measured-depth model, CP entries estimates (calibration.json)",
- "program_source": "ds_native_rank0_program.json",
- "program_sha256": "984932fb7238d023c2dbf5d2109a332fe405305444b6d546ce3c275b7024e30f",
+ "program_source": "ds_rank0_program.json",
+ "program_sha256": "e134aff48310fdcd95d588914e66475e74f5a61f8e10bba0763a9811ae7e8456",
  "result": {
   "program": {
    "rank": 0,
-   "records": 4526,
-   "image_bytes": 552320,
-   "image_sha256": "2c1a484f4b43ef91af9e760cd2ace7dcb0a0b807b2de7295841e7afcf8647f7d",
+   "records": 3952,
+   "image_bytes": 470912,
+   "image_sha256": "e57dd959bbdd42d390f7c4f4ee4d9031f7af720b3e25977375c065e1aba938a1",
    "unit_ops": {
-    "SU.VOP": 2142,
+    "SU.VOP": 1356,
     "SM.MATVEC": 1095,
     "COLL.ALL_GATHER": 504,
-    "CTL.NOP": 117,
-    "DMA.LOAD": 98,
+    "DMA.LOAD": 340,
+    "CTL.NOP": 109,
     "FUSED.HC_PRE_NORM": 81,
     "HC.HC_MIX": 80,
     "FUSED.HC_POST": 80,
-    "IDX.TOPK": 48,
     "FUSED.QDQ_FP8": 40,
     "DMA.KVWB_DS": 40,
     "ATT.QK": 40,
     "ATT.PV": 40,
     "COLL.GROUP_REDUCE_MCAST": 40,
+    "IDX.TOPK": 40,
     "DMA.FENCE": 40,
     "COLL.TOPK_MERGE": 9,
-    "IDX.INDEX_Q": 8,
-    "IDX.INDEX_SCORES": 8,
+    "IDX.INDEX": 8,
     "COLL.ROW_GATHER": 8,
-    "IDX.SELECT": 6,
     "ARGMAX.LOCAL": 1,
     "COLL.ARGMAX_MERGE": 1
    }
   },
   "S0": {
-   "total_cycles": 543320.3,
-   "us": 452.767,
-   "tok_s": 2208.6,
-   "records_executed": 4526,
+   "total_cycles": 524565.2,
+   "us": 437.138,
+   "tok_s": 2287.6,
+   "records_executed": 3952,
    "cp_busy_cycles": 0.0,
    "n_races": 0,
    "races": [],
    "per_unit": {
-    "HC": {
-     "busy": 92800.6,
-     "idle_true_dep": 440865.2,
-     "idle_issue": 0.0,
-     "records": 80
-    },
-    "SU": {
-     "busy": 210674.0,
-     "idle_true_dep": 326531.6,
-     "idle_issue": 0.0,
-     "records": 2142
-    },
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 467436.5,
+     "idle_true_dep": 448804.2,
      "idle_issue": 0.0,
      "records": 201
     },
     "SM": {
-     "busy": 142328.1,
-     "idle_true_dep": 400084.0,
+     "busy": 103744.2,
+     "idle_true_dep": 420035.7,
      "idle_issue": 0.0,
      "records": 1095
     },
     "COLL": {
-     "busy": 255268.8,
-     "idle_true_dep": 288051.5,
+     "busy": 259473.0,
+     "idle_true_dep": 265092.2,
      "idle_issue": 0.0,
      "records": 562
     },
-    "DMA": {
-     "busy": 14996.1,
-     "idle_true_dep": 524765.4,
+    "SU": {
+     "busy": 134404.0,
+     "idle_true_dep": 384248.3,
      "idle_issue": 0.0,
-     "records": 178
+     "records": 1356
+    },
+    "DMA": {
+     "busy": 41826.9,
+     "idle_true_dep": 499302.1,
+     "idle_issue": 0.0,
+     "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 502882.2,
+     "idle_true_dep": 484884.4,
+     "idle_issue": 0.0,
+     "records": 80
+    },
+    "HC": {
+     "busy": 92800.6,
+     "idle_true_dep": 422747.4,
      "idle_issue": 0.0,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 516181.0,
+     "idle_true_dep": 498063.1,
      "idle_issue": 0.0,
-     "records": 70
+     "records": 48
     },
     "CTL": {
      "busy": 0.0,
      "idle_true_dep": 0.0,
      "idle_issue": 0.0,
-     "records": 117
+     "records": 109
     },
     "ARGMAX": {
-     "busy": 142.7,
-     "idle_true_dep": 542412.2,
-     "idle_issue": 0.0,
+     "busy": 3626.0,
+     "idle_true_dep": 0.0,
+     "idle_issue": 520173.8,
      "records": 1
     }
    },
    "family_unit_cycles": {
     "all_gather": 166033.6,
-    "mv.linear_q": 112138.3,
     "hc_mixes": 99120.6,
-    "attend": 59087.5,
+    "mv.linear_q": 73554.3,
+    "attend": 58447.6,
     "all_reduce": 53037.6,
     "hc_pre_norm": 52595.9,
-    "swiglu": 50680.0,
-    "route": 40520.3,
-    "indexer": 28368.3,
+    "route": 46459.8,
+    "indexer": 29760.3,
     "hc_post": 20213.8,
-    "q_norm": 17520.0,
-    "kv_norm": 16920.0,
-    "moe_sum": 16800.0,
+    "q_norm": 19345.2,
+    "kv_norm": 18723.1,
+    "kv_gather": 18191.4,
     "mv.wo_a_part": 15759.8,
     "mv.mv": 14184.0,
-    "kv_gather": 13987.2,
     "router_act": 13560.0,
-    "engram": 13146.1,
-    "kv_rope": 7200.0,
-    "q_rope": 7200.0,
-    "attend.inv_rope": 7200.0,
+    "engram": 13247.8,
+    "moe_sum": 9600.0,
+    "swiglu": 7240.0,
+    "kv_rope": 6563.2,
+    "argmax": 4391.4,
+    "expert_fetch": 3840.0,
     "q_norm_kv_row": 3360.0,
-    "expert_fetch": 2400.0,
-    "argmax": 908.1,
-    "candidates": 424.0,
+    "q_rope": 2400.0,
+    "attend.inv_rope": 2400.0,
     "mv.linear_bf16": 246.0,
     "compressor": 0.0,
     "cmp.norm": 0.0,
     "cmp.k_norm": 0.0,
-    "cmp.k_rope": 0.0
+    "cmp.k_rope": 0.0,
+    "cmp.lat_rope": 0.0
    }
   },
   "S1": {
-   "total_cycles": 746119.1,
-   "us": 621.766,
-   "tok_s": 1608.3,
-   "records_executed": 4526,
+   "total_cycles": 559532.7,
+   "us": 466.277,
+   "tok_s": 2144.6,
+   "records_executed": 3952,
    "cp_busy_cycles": 0.0,
    "n_races": 0,
    "races": [],
    "per_unit": {
-    "HC": {
-     "busy": 92800.6,
-     "idle_true_dep": 639808.6,
-     "idle_issue": 0.0,
-     "records": 80
-    },
-    "SU": {
-     "busy": 210674.0,
-     "idle_true_dep": 463277.9,
-     "idle_issue": 67003.8,
-     "records": 2142
-    },
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 620754.0,
-     "idle_issue": 49481.3,
+     "idle_true_dep": 482703.7,
+     "idle_issue": 1068.0,
      "records": 201
     },
     "SM": {
-     "busy": 142328.1,
-     "idle_true_dep": 479766.6,
-     "idle_issue": 123116.3,
+     "busy": 103744.2,
+     "idle_true_dep": 419368.6,
+     "idle_issue": 35634.6,
      "records": 1095
     },
     "COLL": {
-     "busy": 255268.8,
-     "idle_true_dep": 393981.0,
-     "idle_issue": 96869.3,
+     "busy": 259473.0,
+     "idle_true_dep": 292010.8,
+     "idle_issue": 8049.0,
      "records": 562
     },
+    "SU": {
+     "busy": 134404.0,
+     "idle_true_dep": 396478.9,
+     "idle_issue": 22736.9,
+     "records": 1356
+    },
     "DMA": {
-     "busy": 14996.1,
-     "idle_true_dep": 699651.9,
-     "idle_issue": 14269.9,
-     "records": 178
+     "busy": 41769.1,
+     "idle_true_dep": 34662.7,
+     "idle_issue": 479666.4,
+     "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 701825.6,
-     "idle_issue": 0.0,
+     "idle_true_dep": 518025.1,
+     "idle_issue": 1364.0,
+     "records": 80
+    },
+    "HC": {
+     "busy": 92800.6,
+     "idle_true_dep": 255593.6,
+     "idle_issue": 205041.2,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 716284.4,
+     "idle_true_dep": 532567.9,
      "idle_issue": 0.0,
-     "records": 70
+     "records": 48
     },
     "CTL": {
      "busy": 0.0,
      "idle_true_dep": 0.0,
      "idle_issue": 0.0,
-     "records": 117
+     "records": 109
     },
     "ARGMAX": {
-     "busy": 142.7,
-     "idle_true_dep": 745211.0,
-     "idle_issue": 0.0,
+     "busy": 3626.0,
+     "idle_true_dep": 0.0,
+     "idle_issue": 555141.3,
      "records": 1
     }
    },
    "family_unit_cycles": {
     "all_gather": 166033.6,
-    "mv.linear_q": 112138.3,
     "hc_mixes": 99120.6,
-    "attend": 59087.5,
+    "mv.linear_q": 73554.3,
+    "attend": 58447.6,
     "all_reduce": 53037.6,
     "hc_pre_norm": 52595.9,
-    "swiglu": 50680.0,
-    "route": 40520.3,
-    "indexer": 28368.3,
+    "route": 46459.8,
+    "indexer": 29760.3,
     "hc_post": 20213.8,
-    "q_norm": 17520.0,
-    "kv_norm": 16920.0,
-    "moe_sum": 16800.0,
+    "q_norm": 19304.7,
+    "kv_norm": 18705.9,
+    "kv_gather": 18191.4,
     "mv.wo_a_part": 15759.8,
     "mv.mv": 14184.0,
-    "kv_gather": 13987.2,
     "router_act": 13560.0,
-    "engram": 13146.1,
-    "kv_rope": 7200.0,
-    "q_rope": 7200.0,
-    "attend.inv_rope": 7200.0,
+    "engram": 13247.8,
+    "moe_sum": 9600.0,
+    "swiglu": 7240.0,
+    "kv_rope": 6563.2,
+    "argmax": 4391.4,
+    "expert_fetch": 3840.0,
     "q_norm_kv_row": 3360.0,
-    "expert_fetch": 2400.0,
-    "argmax": 908.1,
-    "candidates": 424.0,
+    "q_rope": 2400.0,
+    "attend.inv_rope": 2400.0,
     "mv.linear_bf16": 246.0,
     "compressor": 0.0,
     "cmp.norm": 0.0,
     "cmp.k_norm": 0.0,
-    "cmp.k_rope": 0.0
+    "cmp.k_rope": 0.0,
+    "cmp.lat_rope": 0.0
    }
   },
   "S2": {
-   "total_cycles": 723731.1,
-   "us": 603.109,
-   "tok_s": 1658.1,
-   "records_executed": 4526,
-   "cp_busy_cycles": 24049.0,
+   "total_cycles": 550388.2,
+   "us": 458.657,
+   "tok_s": 2180.3,
+   "records_executed": 3952,
+   "cp_busy_cycles": 20644.0,
    "n_races": 0,
    "races": [],
    "per_unit": {
-    "HC": {
-     "busy": 92800.6,
-     "idle_true_dep": 617504.6,
-     "idle_issue": 2078.0,
-     "records": 80
-    },
-    "SU": {
-     "busy": 210674.0,
-     "idle_true_dep": 342935.3,
-     "idle_issue": 164724.8,
-     "records": 2142
-    },
     "FUSED": {
      "busy": 71369.7,
-     "idle_true_dep": 595377.1,
-     "idle_issue": 52398.3,
+     "idle_true_dep": 472041.1,
+     "idle_issue": 2553.0,
      "records": 201
     },
     "SM": {
-     "busy": 142328.1,
-     "idle_true_dep": 499485.7,
-     "idle_issue": 80961.3,
+     "busy": 103744.2,
+     "idle_true_dep": 428686.3,
+     "idle_issue": 17163.3,
      "records": 1095
     },
     "COLL": {
-     "busy": 255268.8,
-     "idle_true_dep": 399865.7,
-     "idle_issue": 68596.6,
+     "busy": 259473.0,
+     "idle_true_dep": 283103.6,
+     "idle_issue": 7811.6,
      "records": 562
     },
+    "SU": {
+     "busy": 134404.0,
+     "idle_true_dep": 372379.7,
+     "idle_issue": 37664.3,
+     "records": 1356
+    },
     "DMA": {
-     "busy": 14996.1,
-     "idle_true_dep": 333600.5,
-     "idle_issue": 374860.4,
-     "records": 178
+     "busy": 40329.1,
+     "idle_true_dep": 38568.0,
+     "idle_issue": 483236.6,
+     "records": 420
     },
     "ATT": {
      "busy": 26363.5,
-     "idle_true_dep": 679511.6,
-     "idle_issue": 1920.0,
+     "idle_true_dep": 508405.5,
+     "idle_issue": 1856.0,
+     "records": 80
+    },
+    "HC": {
+     "busy": 92800.6,
+     "idle_true_dep": 183322.0,
+     "idle_issue": 268241.3,
      "records": 80
     },
     "IDX": {
      "busy": 18667.6,
-     "idle_true_dep": 693819.4,
-     "idle_issue": 1201.0,
-     "records": 70
+     "idle_true_dep": 522269.3,
+     "idle_issue": 1392.0,
+     "records": 48
     },
     "CTL": {
      "busy": 0.0,
      "idle_true_dep": 0.0,
-     "idle_issue": 647719.1,
-     "records": 117
+     "idle_issue": 489382.5,
+     "records": 109
     },
     "ARGMAX": {
-     "busy": 142.7,
-     "idle_true_dep": 722775.0,
-     "idle_issue": 24.0,
+     "busy": 3626.0,
+     "idle_true_dep": 0.0,
+     "idle_issue": 545987.8,
      "records": 1
     }
    },
    "family_unit_cycles": {
     "all_gather": 166033.6,
-    "mv.linear_q": 112138.3,
     "hc_mixes": 99120.6,
-    "attend": 59087.5,
+    "mv.linear_q": 73554.3,
+    "attend": 58447.6,
     "all_reduce": 53037.6,
     "hc_pre_norm": 52595.9,
-    "swiglu": 50680.0,
-    "route": 40520.3,
-    "indexer": 28368.3,
+    "route": 46459.8,
+    "indexer": 29760.3,
     "hc_post": 20213.8,
-    "q_norm": 17520.0,
-    "kv_norm": 16920.0,
-    "moe_sum": 16800.0,
+    "q_norm": 19304.7,
+    "kv_norm": 18705.9,
+    "kv_gather": 18191.4,
     "mv.wo_a_part": 15759.8,
     "mv.mv": 14184.0,
-    "kv_gather": 13987.2,
     "router_act": 13560.0,
-    "engram": 13146.1,
-    "kv_rope": 7200.0,
-    "q_rope": 7200.0,
-    "attend.inv_rope": 7200.0,
+    "engram": 13247.8,
+    "moe_sum": 9600.0,
+    "swiglu": 7240.0,
+    "kv_rope": 6563.2,
+    "argmax": 4391.4,
     "q_norm_kv_row": 3360.0,
+    "q_rope": 2400.0,
+    "attend.inv_rope": 2400.0,
     "expert_fetch": 2400.0,
-    "argmax": 908.1,
-    "candidates": 424.0,
     "mv.linear_bf16": 246.0,
     "compressor": 0.0,
     "cmp.norm": 0.0,
     "cmp.k_norm": 0.0,
-    "cmp.k_rope": 0.0
+    "cmp.k_rope": 0.0,
+    "cmp.lat_rope": 0.0
    }
   },
   "variants": {
-   "S2_no_wires": 691898.0,
-   "S2_list_scheduled": 762394.6,
-   "S2_list_scheduled_races": 6,
-   "S2_list_scheduled_no_wires": 734974.6
+   "S2_no_wires": 528193.6,
+   "S2_list_scheduled": 608632.7,
+   "S2_list_scheduled_races": 0,
+   "S2_list_scheduled_no_wires": 587531.7
   },
-  "su_record_cycles_sum": 210674,
+  "su_record_cycles_sum": 134404.0,
   "compare": {
    "published_walk_us": 460.05,
    "ds_hgi_walk_op_stream_S2_cycles": 544648,
    "ds_hgi_list_scheduled_cycles": 461646,
-   "native_S2_vs_walk_op_S2_pct": 32.88,
-   "native_list_vs_walk_op_list_pct": 65.15
+   "native_S2_vs_walk_op_S2_pct": 1.05,
+   "native_list_vs_walk_op_list_pct": 31.84
   },
   "critical_path_S2_tail": [
-   {
-    "tag": "router gate",
-    "L": 0,
-    "unit": "SM",
-    "start": 711898.6,
-    "end": 712144.6,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "router_act",
-    "L": 0,
-    "unit": "SU",
-    "start": 712168.6,
-    "end": 712507.6,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "router_gather.gsc",
-    "L": 0,
-    "unit": "COLL",
-    "start": 712531.6,
-    "end": 713297.0,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "route.scores_bias",
-    "L": 0,
-    "unit": "SU",
-    "start": 713321.0,
-    "end": 713381.0,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "route.top6",
-    "L": 0,
-    "unit": "IDX",
-    "start": 713405.0,
-    "end": 713688.0,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "route.gather0",
-    "L": 0,
-    "unit": "SU",
-    "start": 713740.0,
-    "end": 713800.0,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "route.gather1",
-    "L": 0,
-    "unit": "SU",
-    "start": 713800.0,
-    "end": 713860.0
-   },
-   {
-    "tag": "route.gather2",
-    "L": 0,
-    "unit": "SU",
-    "start": 713860.0,
-    "end": 713920.0
-   },
-   {
-    "tag": "route.gather3",
-    "L": 0,
-    "unit": "SU",
-    "start": 713920.0,
-    "end": 713980.0
-   },
-   {
-    "tag": "route.gather4",
-    "L": 0,
-    "unit": "SU",
-    "start": 713980.0,
-    "end": 714040.0
-   },
-   {
-    "tag": "route.gather5",
-    "L": 0,
-    "unit": "SU",
-    "start": 714040.0,
-    "end": 714100.0
-   },
-   {
-    "tag": "route.total",
-    "L": 0,
-    "unit": "SU",
-    "start": 714100.0,
-    "end": 714215.0
-   },
-   {
-    "tag": "route.den",
-    "L": 0,
-    "unit": "SU",
-    "start": 714215.0,
-    "end": 714275.0
-   },
-   {
-    "tag": "route.weights",
-    "L": 0,
-    "unit": "SU",
-    "start": 714275.0,
-    "end": 714350.0
-   },
-   {
-    "tag": "swiglu.s0",
-    "L": 0,
-    "unit": "SU",
-    "start": 714350.0,
-    "end": 714531.0
-   },
-   {
-    "tag": "expert_intermediate_gather.s0",
-    "L": 0,
-    "unit": "COLL",
-    "start": 715714.0,
-    "end": 715840.2,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "expert slot 0 w2",
-    "L": 0,
-    "unit": "SM",
-    "start": 716621.5,
-    "end": 716784.5,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "moe_sum.0",
-    "L": 0,
-    "unit": "SU",
-    "start": 717016.5,
-    "end": 717076.5,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "moe_sum.1",
-    "L": 0,
-    "unit": "SU",
-    "start": 717076.5,
-    "end": 717136.5
-   },
-   {
-    "tag": "moe_sum.2",
-    "L": 0,
-    "unit": "SU",
-    "start": 717136.5,
-    "end": 717196.5
-   },
-   {
-    "tag": "moe_sum.3",
-    "L": 0,
-    "unit": "SU",
-    "start": 717196.5,
-    "end": 717256.5
-   },
-   {
-    "tag": "moe_sum.4",
-    "L": 0,
-    "unit": "SU",
-    "start": 717256.5,
-    "end": 717316.5
-   },
-   {
-    "tag": "moe_sum.5",
-    "L": 0,
-    "unit": "SU",
-    "start": 717316.5,
-    "end": 717376.5
-   },
-   {
-    "tag": "moe_sum.6",
-    "L": 0,
-    "unit": "SU",
-    "start": 717376.5,
-    "end": 717436.5
-   },
-   {
-    "tag": "ffn_out_gather.yf",
-    "L": 0,
-    "unit": "COLL",
-    "start": 717460.5,
-    "end": 718249.0,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "hc_post ffn",
-    "L": 0,
-    "unit": "FUSED",
-    "start": 718273.0,
-    "end": 718495.7,
-    "bound_by": "dispatch"
-   },
-   {
-    "tag": "final hc_pre + norm",
-    "L": 0,
-    "unit": "FUSED",
-    "start": 718495.7,
-    "end": 719145.0
-   },
-   {
-    "tag": "LM head",
-    "L": 0,
-    "unit": "SM",
-    "start": 719169.0,
-    "end": 722775.0,
-    "bound_by": "dispatch"
-   },
    {
     "tag": "argmax_local",
     "L": 0,
     "unit": "ARGMAX",
-    "start": 722799.0,
-    "end": 722941.7,
-    "bound_by": "dispatch"
+    "start": 545987.8,
+    "end": 549613.8
    },
    {
     "tag": "argmax merge",
     "L": 0,
     "unit": "COLL",
-    "start": 722965.7,
-    "end": 723731.1,
-    "bound_by": "dispatch"
+    "start": 549622.8,
+    "end": 550388.2
    }
   ]
  },
@@ -646,6 +434,78 @@
    "value": 28,
    "grade": "estimate",
    "source": "C3b: dispatcher reads the U32 index word from the VM (cmdproc -> hub 12 + VM read 4 + back 12) before the address arithmetic"
+  },
+  "dispatch_edges": {
+   "value": {
+    "FUSED.QDQ": 11,
+    "COLL": 4,
+    "ARGMAX": 5,
+    "IDX": 17
+   },
+   "grade": "derived",
+   "source": "hgi-takeover 07:50 (R25G normative seq v1.0 dispatch buses, tools/hgi_die_dispatch.py on claude/hgi-die-20261009 f98724333, a relay every 504 um): cmdproc -> quant 11 edges (5.08 mm), coll 4 (1.62 mm), argmax / MTP slot 5 (2.44 mm), indexer 17 (8.08 mm); {ready, done, fault} return the same. One cycle a relay edge; the units not listed keep dispatch_wire / retire_wire"
+  }
+ },
+ "run_source": "/tmp/claude-1000/fuse/r4/ds_full.json",
+ "row_gather_bypass": {
+  "rule": "owner read padded to the max owned count + one exact gather pass (perf.coll_cycles ALL_GATHER, measured TU endpoint model) + head HBM write",
+  "layers": {
+   "2": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 13,
+    "mean_owned": 5.333
+   },
+   "8": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 13,
+    "mean_owned": 5.333
+   },
+   "14": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 9,
+    "mean_owned": 5.333
+   },
+   "20": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 12,
+    "mean_owned": 5.333
+   },
+   "24": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 12,
+    "mean_owned": 5.333
+   },
+   "28": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 18,
+    "mean_owned": 5.333
+   },
+   "32": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 12,
+    "mean_owned": 5.333
+   },
+   "36": {
+    "tag": "selected compressed-KV rows to the head dies",
+    "k": 512,
+    "G": 96,
+    "max_owned": 14,
+    "mean_owned": 5.333
+   }
   }
  }
 }

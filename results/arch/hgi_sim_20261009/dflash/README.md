@@ -48,7 +48,9 @@ Runs:
 
 ## Timing at 8K (`dflash_timing.json`, 1.2 GHz)
 
-AR uses the same cost model: 1,261,770 cycles, **951.0 tok/s**. One-beat INT8 would give 922,645 cycles, 1,300.6 tok/s, but it is rejected (NO_FIT).
+AR uses the same cost model: 1,258,136 cycles, **953.8 tok/s**. One-beat INT8 would give 919,011 cycles, 1,305.8 tok/s, but it is rejected (NO_FIT).
+
+Since 2026-10-09 (hbm-fuse) every LM head streams its logits: matvec → STREAM 0 → SU row scale → STREAM 1 → one `ARGMAX.LOCAL` per slot, so the logits never touch VM. A VM-read argmax costs about 38k cycles per 37,984 logits (hgi-adapters' measurement), which would add 1.13 M cycles to the block-16 step. The SM slot count travels on the x-load and result-publication commands (hgi-adapters), so the shared-weight `spec` rows are the hardware; the re-issue rows are kept for reference only.
 
 The τ values:
 
@@ -57,24 +59,23 @@ The τ values:
 
 | Block | SM slots | INT8 issue | Step cycles | tok/s at published τ | tok/s at measured τ (cycle-wt / workload-mean) |
 |---:|---|---|---:|---:|---:|
-| 16 | shared (spec) | two-beat | 5,359,384 | **1,793.5** (8.01) | 818.6 / 1,043.8 |
-| 16 | shared (spec) | one-beat (NO_FIT) | 4,519,583 | 2,126.8 | 970.7 / 1,237.8 |
-| 8 | shared (spec) | two-beat | 2,679,956 | **2,500.4** (5.584, anchored) | 1,475.7 / 1,678.2 |
-| 8 | shared (spec) | one-beat (NO_FIT) | 2,260,055 | 2,964.9 | 1,749.9 / 1,990.0 |
-| 16 | re-issue per slot (RTL as is) | two-beat | 20,767,685 | 462.8 | — |
-| 8 | re-issue per slot (RTL as is) | two-beat | 10,346,122 | 647.6 | — |
+| 16 | shared (spec) | two-beat | 5,364,526 | **1,791.8** (8.01) | 817.8 / 1,042.9 |
+| 16 | shared (spec) | one-beat (NO_FIT) | 4,524,725 | 2,124.3 | 969.6 / 1,236.4 |
+| 8 | shared (spec) | two-beat | 2,682,538 | **2,497.9** (5.584, anchored) | 1,474.2 / 1,676.5 |
+| 8 | shared (spec) | one-beat (NO_FIT) | 2,262,637 | 2,961.5 | 1,747.8 / 1,987.7 |
+| 16 | re-issue per slot (not the hardware) | two-beat | 20,772,827 | 462.7 | — |
+| 8 | re-issue per slot (not the hardware) | two-beat | 10,348,705 | 647.5 | — |
 
-The block-16 step costs 4.25 AR tokens; the block-8 step costs 2.12. The weight stream is shared across slots, so these extra costs are the ones that grow with B (unit busy, block 16):
+The block-16 step costs 4.26 AR tokens; the block-8 step costs 2.13. The weight stream is shared across slots, so these extra costs are the ones that grow with B (unit busy, block 16):
 
 - the SU softmax over B × 8,192 scores per head: 0.80 M;
-- the two LM-head passes, each in 4-slot pieces because VM holds 4 × 37,984 logits: 0.61 M;
+- the two LM-head passes, each in 4-slot pieces (sized when VM held 4 × 37,984 logits; the logits now stream, so 8-slot pieces are a further lever): about 0.6 M;
 - per-slot RMSNorm records: 0.20 M;
 - B-wide all-reduces: 0.45 M.
 
 Software levers that would cut these costs, none of them applied:
 
 - binding `FUSED.SOFTMAX` once CF-SFX passes;
-- argmax on the LM-head STREAM with the row scale applied in place;
 - ROW_NORM over m rows.
 
 GPU like for like (DFlash Table 3, one B200, c = 1): AR 230 tok/s; DFlash 1,175 tok/s at τ 8.01. On the generic die at the same published τ:

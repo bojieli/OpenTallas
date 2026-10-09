@@ -456,17 +456,21 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
             A=V(g, "X", H), B=MDesc(space="HBM", fmt="BF16", base=T + g.tables["norm"], n=H),
             O=MDesc(space="VM", fmt="BF16", base=g.vm["H"], n=H)), tag="prenorm.final", family="prenorm"),
             ["X"], ["H"])
-        b.add(Rec("SM", "MATVEC", param=3, desc=dict(
-            A=V(g, "H", H), B=MDesc(space="HBM", fmt="INT8", base=HB, n=H, m=hr, stride=H), O=V(g, "LRAW", hr)),
-            tag="head", family="head"), ["H"], ["LRAW"])
+        # the logits never touch VM (hgi-adapters 10:5x: a VM-read argmax costs ~38k cycles): head matvec ->
+        # STREAM 0 (SM -> SU lanes) -> row scale on the SU -> STREAM 1 (SU -> argmax) -> ARGMAX.LOCAL; the FIFOs'
+        # credits order the three records (no wait bits between them)
+        S0 = MDesc(space="STREAM", fmt="FP32", base=0, n=hr)
+        S1 = MDesc(space="STREAM", fmt="FP32", base=1, n=hr)
         b.add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="BF16", base=HB + al(hr * H), n=hr),
                                            O=V(g, "LSCL", hr)), tag="head_scale.load", family="head_scale"),
               [], ["LSCL"])
+        b.add(Rec("SM", "MATVEC", param=3, desc=dict(
+            A=V(g, "H", H), B=MDesc(space="HBM", fmt="INT8", base=HB, n=H, m=hr, stride=H), O=S0),
+            tag="head", family="head"), ["H"], [])
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(
-            A=V(g, "LRAW", hr), B=V(g, "LSCL", hr), O=V(g, "LOG", hr)), tag="head_scale", family="head_scale"),
-            ["LRAW", "LSCL"], ["LOG"])
-        b.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=V(g, "LOG", hr), O=V(g, "AMX", 2))),
-              ["LOG"], ["AMX"]).family = "argmax_local"
+            A=S0, B=V(g, "LSCL", hr), O=S1), tag="head_scale", family="head_scale"), ["LSCL"], [])
+        b.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=S1, O=V(g, "AMX", 2))),
+              [], ["AMX"]).family = "argmax_local"
         b.add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=V(g, "AMX", 2), O=MDesc(space="VM", fmt="U32",
                                                                               base=g.vm["TOK"], n=1)),
                   tag="argmax_merge", family="argmax_merge"), ["AMX"], ["TOK"])

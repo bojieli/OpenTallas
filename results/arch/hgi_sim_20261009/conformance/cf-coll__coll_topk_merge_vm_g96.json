@@ -1,0 +1,1894 @@
+{
+ "id": "coll_topk_merge_vm_g96",
+ "row": "CF-COLL",
+ "mode": "DS",
+ "what": "COLL.TOPK_MERGE from VM (G18): A = 8 local values, B = their ids on each of 96 ranks; the top 32 by descending value, ties to the lowest id (a 3-way tie, a -inf rank); O = ids ascending, R = their values",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "0000000020000000000000600600806001000000000008001000000000000000000000000000000000000000000000001540000000000800100000000000000000000000000000000000000000000000150001000000200010000000000000000000000000000000000000000000000001000200000020001000000000000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "000000002000000000000060060080600100000000000800100000000000000000000000000000000000000000000000154000000000080010000000000000000000000000000000000000000000000015000100000020001000000000000000000000000000000000000000000000000100020000002000100000000000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "COLL",
+   "op": "TOPK_MERGE",
+   "param": 0,
+   "imm_a": 32,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 8,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "B": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 64,
+     "n": 8,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 256,
+     "n": 32,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 512,
+     "n": 32,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk_merge",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "3ff963be214c1a3f832d6abd57f19abf12ae4d3fe6ce37be85779e3ead65093f"
+    ],
+    [
+     64,
+     "00000000070000000e000000150000001c000000230000002a00000031000000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 1,
+   "vm_in": [
+    [
+     0,
+     "7a2d85bfbfb89b3f4dcda73b0cb4a63b79ce993fe462543ff179ea3d33f4843d"
+    ],
+    [
+     64,
+     "e8030000ef030000f6030000fd030000040400000b0400001204000019040000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 2,
+   "vm_in": [
+    [
+     0,
+     "e873c4bd310c8abf71053d3ef2da4e3f53c31f3f19939e3f2388cabe968eddbe"
+    ],
+    [
+     64,
+     "d0070000d7070000de070000e5070000ec070000f3070000fa07000001080000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 3,
+   "vm_in": [
+    [
+     0,
+     "48a98e40da34053f4d5eb53e6e622c40363c263f01551e3f1c08c9bf313a873f"
+    ],
+    [
+     64,
+     "b80b0000bf0b0000c60b0000cd0b0000d40b0000db0b0000e20b0000e90b0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 4,
+   "vm_in": [
+    [
+     0,
+     "d0bd623faf95943f01eec1be0d9c0f3e48bca83f3c22323fb4ac43bf2428023f"
+    ],
+    [
+     64,
+     "a00f0000a70f0000ae0f0000b50f0000bc0f0000c30f0000ca0f0000d10f0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 5,
+   "vm_in": [
+    [
+     0,
+     "dce0d93fcf66173db78f883faa088dbe1def9e3e3f66903f1ea2483fb8fecd3f"
+    ],
+    [
+     64,
+     "881300008f130000961300009d130000a4130000ab130000b2130000b9130000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 6,
+   "vm_in": [
+    [
+     0,
+     "0cc0cf3e5c00bcbe0b15163e212fb2be5af154bf136bb4bf7a29ac3fb3efb03b"
+    ],
+    [
+     64,
+     "70170000771700007e170000851700008c170000931700009a170000a1170000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 7,
+   "vm_in": [
+    [
+     0,
+     "07f2283ff6a5bbbf646bda3eed471a3fecb946bec49384bfae074d3f299e09bf"
+    ],
+    [
+     64,
+     "581b00005f1b0000661b00006d1b0000741b00007b1b0000821b0000891b0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 8,
+   "vm_in": [
+    [
+     0,
+     "76a905409bb77abf7271c3bf0efbc93f4f54b33dc8995a3ea3c49d3ebfd1c83f"
+    ],
+    [
+     64,
+     "401f0000471f00004e1f0000551f00005c1f0000631f00006a1f0000711f0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 9,
+   "vm_in": [
+    [
+     0,
+     "4f95383ff5b9a63ffe6d8ebf2d2f373f14c2a0bfab66953e16cdf0be256641bf"
+    ],
+    [
+     64,
+     "282300002f230000362300003d230000442300004b2300005223000059230000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 10,
+   "vm_in": [
+    [
+     0,
+     "000080ff000080ff000080ff000080ff000080ff000080ff000080ff000080ff"
+    ],
+    [
+     64,
+     "10270000172700001e270000252700002c270000332700003a27000041270000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 11,
+   "vm_in": [
+    [
+     0,
+     "1b8f113e00558fbfb223e53f41efecbdab1a15bf1eef0ac095b52ebfea93c23e"
+    ],
+    [
+     64,
+     "f82a0000ff2a0000062b00000d2b0000142b00001b2b0000222b0000292b0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 12,
+   "vm_in": [
+    [
+     0,
+     "a64851bfebec423f8543fd3e8a5fc33eb2684dbfb5a40d40701e603f5c50a3be"
+    ],
+    [
+     64,
+     "e02e0000e72e0000ee2e0000f52e0000fc2e0000032f00000a2f0000112f0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 13,
+   "vm_in": [
+    [
+     0,
+     "2d91013e7a8f293fbef3d03b442386bef0c998bffab0bbbebf49513ee26fd13e"
+    ],
+    [
+     64,
+     "c8320000cf320000d6320000dd320000e4320000eb320000f2320000f9320000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 14,
+   "vm_in": [
+    [
+     0,
+     "4c57393e68e79e3e5f4707bf8a7eb7bef450be3ab3c7d23fe4357fbffe5519c0"
+    ],
+    [
+     64,
+     "b0360000b7360000be360000c5360000cc360000d3360000da360000e1360000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 15,
+   "vm_in": [
+    [
+     0,
+     "296dbc3ff12dc8bf23bd9f3e63bf423f122676bee686a33ebe75ae3f22eb6bbe"
+    ],
+    [
+     64,
+     "983a00009f3a0000a63a0000ad3a0000b43a0000bb3a0000c23a0000c93a0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 16,
+   "vm_in": [
+    [
+     0,
+     "cf0f20bff7eaf73f39f4dcbded0ee03f9c7ee43e1fddaebf0f4baf3f938b53be"
+    ],
+    [
+     64,
+     "803e0000873e00008e3e0000953e00009c3e0000a33e0000aa3e0000b13e0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 17,
+   "vm_in": [
+    [
+     0,
+     "5432a23e857bd0bf0d14024051dd3a3f30fc213fe30d83bd5521413e17372a3f"
+    ],
+    [
+     64,
+     "684200006f420000764200007d420000844200008b4200009242000099420000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 18,
+   "vm_in": [
+    [
+     0,
+     "36e5083f37d95e3ee8f2ab3fa41b89be07fb6bbf9178033f58c4673f4d6b5dbe"
+    ],
+    [
+     64,
+     "50460000574600005e460000654600006c460000734600007a46000081460000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 19,
+   "vm_in": [
+    [
+     0,
+     "bd31cabf42d09cbf4f52c4bf95c974be0556ed3f9d1ced3fa59f9a3f16751fbe"
+    ],
+    [
+     64,
+     "384a00003f4a0000464a00004d4a0000544a00005b4a0000624a0000694a0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 20,
+   "vm_in": [
+    [
+     0,
+     "eea3adbf107c13c01161fe3ef4c408c0cb3a2f40dd3679bea66f483fb80d263e"
+    ],
+    [
+     64,
+     "204e0000274e00002e4e0000354e00003c4e0000434e00004a4e0000514e0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 21,
+   "vm_in": [
+    [
+     0,
+     "10f0c33d4ee8873f563ac53e7c6ba3bff43d3a40cc5f18bf46b4febfff000f40"
+    ],
+    [
+     64,
+     "085200000f520000165200001d520000245200002b5200003252000039520000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 22,
+   "vm_in": [
+    [
+     0,
+     "785332bff1f1cabe772dc1bda4608bbe5dd6173e9c8a86bfb26a5f3f638c88be"
+    ],
+    [
+     64,
+     "f0550000f7550000fe550000055600000c560000135600001a56000021560000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 23,
+   "vm_in": [
+    [
+     0,
+     "123ade3d719f44bd5676463ffeee09c0822ed43c59179d3f2e8f87bf1eb59abe"
+    ],
+    [
+     64,
+     "d8590000df590000e6590000ed590000f4590000fb590000025a0000095a0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 24,
+   "vm_in": [
+    [
+     0,
+     "2d087b3fb050b43e6203c8bee100a3bf099d013f55f52cbfa69c07bf2a4b423f"
+    ],
+    [
+     64,
+     "c05d0000c75d0000ce5d0000d55d0000dc5d0000e35d0000ea5d0000f15d0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 25,
+   "vm_in": [
+    [
+     0,
+     "a4c9bd3e55700fbe5dab22bedb51983f4e84d4bf6fcdb83de12530bf6b0b7d3e"
+    ],
+    [
+     64,
+     "a8610000af610000b6610000bd610000c4610000cb610000d2610000d9610000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 26,
+   "vm_in": [
+    [
+     0,
+     "722af4be130c12bf04d72ebf4f7801401f3a7cbf2bc37d3d9331543fb45671be"
+    ],
+    [
+     64,
+     "90650000976500009e650000a5650000ac650000b3650000ba650000c1650000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 27,
+   "vm_in": [
+    [
+     0,
+     "f58222be99133b3fb50c0d40ee7f013f1a77ef3eb38a4ebd1dcea93f162d663e"
+    ],
+    [
+     64,
+     "786900007f690000866900008d690000946900009b690000a2690000a9690000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 28,
+   "vm_in": [
+    [
+     0,
+     "a52594bfe7b8c23f69da093fe306d7be997c86be173e4d3fcabd25bfe7e6c43e"
+    ],
+    [
+     64,
+     "606d0000676d00006e6d0000756d00007c6d0000836d00008a6d0000916d0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 29,
+   "vm_in": [
+    [
+     0,
+     "dcf6763fcf1f303f24801c3f036355bff5fb533fdfcaa3bfe61bddbed60934bf"
+    ],
+    [
+     64,
+     "487100004f710000567100005d710000647100006b7100007271000079710000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 30,
+   "vm_in": [
+    [
+     0,
+     "b44a3e3f6283d73f5273a8bf1d7403bf464594bfa177c0bf68f14cbdc40ecdbe"
+    ],
+    [
+     64,
+     "30750000377500003e750000457500004c750000537500005a75000061750000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 31,
+   "vm_in": [
+    [
+     0,
+     "376cc4bf5cfedf3e2ed60d3e8b1a9fbeab2cab3f49b6b1bf541c123f6d3ead3f"
+    ],
+    [
+     64,
+     "187900001f790000267900002d790000347900003b7900004279000049790000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 32,
+   "vm_in": [
+    [
+     0,
+     "9429a43e9da4ea3f87aad2bf0f2a00bf9153a33e6fa4453f89fc89bfcb72113d"
+    ],
+    [
+     64,
+     "007d0000077d00000e7d0000157d00001c7d0000237d00002a7d0000317d0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 33,
+   "vm_in": [
+    [
+     0,
+     "3210083f571cdb3e91e84cbf431fbd3ecfe204c0aa1e81bf812342bf09da13bf"
+    ],
+    [
+     64,
+     "e8800000ef800000f6800000fd800000048100000b8100001281000019810000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 34,
+   "vm_in": [
+    [
+     0,
+     "3da3fbbf199988be408116be2ca1d73ec52bb23fccd0a2bf0ce21a3f702136be"
+    ],
+    [
+     64,
+     "d0840000d7840000de840000e5840000ec840000f3840000fa84000001850000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 35,
+   "vm_in": [
+    [
+     0,
+     "7f11b3beac643c3f0586f53dc44c6fbef80a13bf2b8856bfb108e8be3666cdbb"
+    ],
+    [
+     64,
+     "b8880000bf880000c6880000cd880000d4880000db880000e2880000e9880000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 36,
+   "vm_in": [
+    [
+     0,
+     "356012c0b2cdaabedbc6883ed72ca3bebce520bff62baf3d6962723f4790013e"
+    ],
+    [
+     64,
+     "a08c0000a78c0000ae8c0000b58c0000bc8c0000c38c0000ca8c0000d18c0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 37,
+   "vm_in": [
+    [
+     0,
+     "6a7e63beabe80040cca4203f64aa273ff744edbf588471be70c19b3fd4fd943f"
+    ],
+    [
+     64,
+     "889000008f900000969000009d900000a4900000ab900000b2900000b9900000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 38,
+   "vm_in": [
+    [
+     0,
+     "11cb8cbee1d498beb13e33bf5975283e4a89b6be1e6ffbbe819c993fcdf993bf"
+    ],
+    [
+     64,
+     "70940000779400007e940000859400008c940000939400009a940000a1940000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 39,
+   "vm_in": [
+    [
+     0,
+     "7571fb3e89ecb9bfc88c9abe404df73e19d486bed7d4f23e02e2dfbd4e470c3f"
+    ],
+    [
+     64,
+     "589800005f980000669800006d980000749800007b9800008298000089980000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 40,
+   "vm_in": [
+    [
+     0,
+     "5ebec53fce7156bf53e8cd3f60e89dbf1d8b74bf2b4679bf7f8f44bf854ca83e"
+    ],
+    [
+     64,
+     "409c0000479c00004e9c0000559c00005c9c0000639c00006a9c0000719c0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 41,
+   "vm_in": [
+    [
+     0,
+     "d2f3bd3f1f3ab33f84a8a8bf6297e7bfecf4cc3f91bfb03f158ef43e5e508e3e"
+    ],
+    [
+     64,
+     "28a000002fa0000036a000003da0000044a000004ba0000052a0000059a00000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 42,
+   "vm_in": [
+    [
+     0,
+     "57ddcabf5383bdbf45f019c0add1b13fa863e4bf03959b3e6171813fb889603e"
+    ],
+    [
+     64,
+     "10a4000017a400001ea4000025a400002ca4000033a400003aa4000041a40000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 43,
+   "vm_in": [
+    [
+     0,
+     "f9f7ccbf6d8cae3e9fbb9c3f90525d40e1cb8cbc8481823fdb3675be8aa3653f"
+    ],
+    [
+     64,
+     "f8a70000ffa7000006a800000da8000014a800001ba8000022a8000029a80000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 44,
+   "vm_in": [
+    [
+     0,
+     "9ebd663f423ae2be164e80bec5478dbc0da1c8beae5a4e3eb99a6abe07581bbf"
+    ],
+    [
+     64,
+     "e0ab0000e7ab0000eeab0000f5ab0000fcab000003ac00000aac000011ac0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 45,
+   "vm_in": [
+    [
+     0,
+     "f63e293fa35351bfa834ea3f2e77223f115d40beea12af3f431f363ff5e52ebe"
+    ],
+    [
+     64,
+     "c8af0000cfaf0000d6af0000ddaf0000e4af0000ebaf0000f2af0000f9af0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 46,
+   "vm_in": [
+    [
+     0,
+     "985b9bbe6f8828be820cebbf4bb9c43f4745983f9270bd3eb57fa63ed700d13e"
+    ],
+    [
+     64,
+     "b0b30000b7b30000beb30000c5b30000ccb30000d3b30000dab30000e1b30000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 47,
+   "vm_in": [
+    [
+     0,
+     "cf08e3bf3e4df73fd839823f6a5eb43e96e477bf1d952fbe81008c3fb155b8bf"
+    ],
+    [
+     64,
+     "98b700009fb70000a6b70000adb70000b4b70000bbb70000c2b70000c9b70000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 48,
+   "vm_in": [
+    [
+     0,
+     "b8b7bcbec2111fbe130e133ed1ef9e3fd366283e36e1b0bf52eea5bf8ed5643f"
+    ],
+    [
+     64,
+     "80bb000087bb00008ebb000095bb00009cbb0000a3bb0000aabb0000b1bb0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 49,
+   "vm_in": [
+    [
+     0,
+     "10e8093ff515793f7a52953e73090dbf316b5a3f68ec793fbc6d14bebbec06be"
+    ],
+    [
+     64,
+     "68bf00006fbf000076bf00007dbf000084bf00008bbf000092bf000099bf0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 50,
+   "vm_in": [
+    [
+     0,
+     "2f44193e3785113f48a98e40470608c0d4228c3f0f48a33fd27e08bf735237bd"
+    ],
+    [
+     64,
+     "50c3000057c300005ec3000065c300006cc3000073c300007ac3000081c30000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 51,
+   "vm_in": [
+    [
+     0,
+     "34a1823eb81e213fe649a0bf9cf8df3e1621dabd37e515bf9ad342be8f5b16bf"
+    ],
+    [
+     64,
+     "38c700003fc7000046c700004dc7000054c700005bc7000062c7000069c70000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 52,
+   "vm_in": [
+    [
+     0,
+     "e177903f38ab97bfc9d5a7be0e40743fdf00b4be31edfe3f84e932bfaa489c3f"
+    ],
+    [
+     64,
+     "20cb000027cb00002ecb000035cb00003ccb000043cb00004acb000051cb0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 53,
+   "vm_in": [
+    [
+     0,
+     "d8cac83ec041103ec3e9703efc08363fbd643e3e078ea53ff32a48bf4f6fb2bf"
+    ],
+    [
+     64,
+     "08cf00000fcf000016cf00001dcf000024cf00002bcf000032cf000039cf0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 54,
+   "vm_in": [
+    [
+     0,
+     "d610353eba03b53ebcc2e63f85eb5bbed66885bfe80ce8bf52595fbf15bfb83d"
+    ],
+    [
+     64,
+     "f0d20000f7d20000fed2000005d300000cd3000013d300001ad3000021d30000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 55,
+   "vm_in": [
+    [
+     0,
+     "98bf02bbb4b5f6bf0514a13ffcf0dc3ed41976bc032c1a3ff60666bfe1b8aebf"
+    ],
+    [
+     64,
+     "d8d60000dfd60000e6d60000edd60000f4d60000fbd6000002d7000009d70000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 56,
+   "vm_in": [
+    [
+     0,
+     "e1377dbfa39b10bffdbc23bfe48f0c3f4c9bd83fea2f1fc09bba0a3f6c0432be"
+    ],
+    [
+     64,
+     "c0da0000c7da0000ceda0000d5da0000dcda0000e3da0000eada0000f1da0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 57,
+   "vm_in": [
+    [
+     0,
+     "35dd463ff572403ff3c69dbf0ebb32be12c103bffb91d4bf4ae9f53ec57f10bf"
+    ],
+    [
+     64,
+     "a8de0000afde0000b6de0000bdde0000c4de0000cbde0000d2de0000d9de0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 58,
+   "vm_in": [
+    [
+     0,
+     "f833b3bdcf9da03e7d6ba23e8ace9f3f9c1769bdba0e8fbe16280c3f907a3d3e"
+    ],
+    [
+     64,
+     "90e2000097e200009ee20000a5e20000ace20000b3e20000bae20000c1e20000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 59,
+   "vm_in": [
+    [
+     0,
+     "bafd093fdc33a2bf587d42be1d3381bf1e30ce3d74fdee3f411df7bc3b985f3f"
+    ],
+    [
+     64,
+     "78e600007fe6000086e600008de6000094e600009be60000a2e60000a9e60000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 60,
+   "vm_in": [
+    [
+     0,
+     "e7633bbb975b1ec0260072bff1307c3fcaf55fbf5b7e323ebc031d3f2fa2a13e"
+    ],
+    [
+     64,
+     "60ea000067ea00006eea000075ea00007cea000083ea00008aea000091ea0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 61,
+   "vm_in": [
+    [
+     0,
+     "a0da8abe591792bfa780d2bebd2bdf3fde1d104004eb98bf786e2dbac3340ebf"
+    ],
+    [
+     64,
+     "48ee00004fee000056ee00005dee000064ee00006bee000072ee000079ee0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 62,
+   "vm_in": [
+    [
+     0,
+     "e51e053f85a4803ef5a496bf5096ef3fbb260d40845e16407cae4a3f0ee4c33f"
+    ],
+    [
+     64,
+     "30f2000037f200003ef2000045f200004cf2000053f200005af2000061f20000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 63,
+   "vm_in": [
+    [
+     0,
+     "6e2e4e3fd4f92a3f8fd9d03ebd31a13f8d2b163f9d47303fb339153fdf763c40"
+    ],
+    [
+     64,
+     "18f600001ff6000026f600002df6000034f600003bf6000042f6000049f60000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 64,
+   "vm_in": [
+    [
+     0,
+     "7d12df3f55a92dbf22a9e83ec0a984be9451cebfa2884d3bcf0ae4bf52cd5d3e"
+    ],
+    [
+     64,
+     "00fa000007fa00000efa000015fa00001cfa000023fa00002afa000031fa0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 65,
+   "vm_in": [
+    [
+     0,
+     "2e3923bfba4c9abfcb2f3e3f1af8d8be8bf57d3f69e2fa3e23be873eec40bf3c"
+    ],
+    [
+     64,
+     "e8fd0000effd0000f6fd0000fdfd000004fe00000bfe000012fe000019fe0000"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 66,
+   "vm_in": [
+    [
+     0,
+     "5a6be63e9a5a07c0a932e23e692f2b3f3106c4be576d9e3fb8cc793e956c5d3e"
+    ],
+    [
+     64,
+     "d0010100d7010100de010100e5010100ec010100f3010100fa01010001020100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 67,
+   "vm_in": [
+    [
+     0,
+     "14dc8a3f59efaebee7a9b63f3d88cebfd291023f4c6b9c3e344b2b3fee0460bf"
+    ],
+    [
+     64,
+     "b8050100bf050100c6050100cd050100d4050100db050100e2050100e9050100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 68,
+   "vm_in": [
+    [
+     0,
+     "fc0abdbe387e66bf983aa33f5e2079be92bfa03f1314bd3ef18a1dbfd03f87bf"
+    ],
+    [
+     64,
+     "a0090100a7090100ae090100b5090100bc090100c3090100ca090100d1090100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 69,
+   "vm_in": [
+    [
+     0,
+     "5ad7a13e2e7eb4be5e67003fb723da3f2c4193bf2c1481bfecfcf23eb96ba93d"
+    ],
+    [
+     64,
+     "880d01008f0d0100960d01009d0d0100a40d0100ab0d0100b20d0100b90d0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 70,
+   "vm_in": [
+    [
+     0,
+     "6ba31cbf9208c23efda713bf2bb55cbf1b2fd23e6777db3f18eb01bf723c083f"
+    ],
+    [
+     64,
+     "70110100771101007e110100851101008c110100931101009a110100a1110100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 71,
+   "vm_in": [
+    [
+     0,
+     "bfccf93e1f8e3f3fd0822c3f25f997be0ffcaa3fba95203df54349bf3f418dbe"
+    ],
+    [
+     64,
+     "581501005f150100661501006d150100741501007b1501008215010089150100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 72,
+   "vm_in": [
+    [
+     0,
+     "b931cebf986febbc24c9af3febf089bfac90be3fc17396bf42d32dbf25f5d03f"
+    ],
+    [
+     64,
+     "40190100471901004e190100551901005c190100631901006a19010071190100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 73,
+   "vm_in": [
+    [
+     0,
+     "eeb1ca3eb40bd0bf66e17a3f2efd153f6244b4be7622743f8c5252c09a668e3e"
+    ],
+    [
+     64,
+     "281d01002f1d0100361d01003d1d0100441d01004b1d0100521d0100591d0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 74,
+   "vm_in": [
+    [
+     0,
+     "d5ea8b3e413a204066bbdfbf79b5dd3f0774603f4ea9c4bfebd996bf679c753f"
+    ],
+    [
+     64,
+     "10210100172101001e210100252101002c210100332101003a21010041210100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 75,
+   "vm_in": [
+    [
+     0,
+     "b5a2acbcc91bb13f2ac80c3f2499ffbd6a4d31bdc8d30340987c4c3e7312323e"
+    ],
+    [
+     64,
+     "f8240100ff240100062501000d250100142501001b2501002225010029250100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 76,
+   "vm_in": [
+    [
+     0,
+     "acb900408bc51c3ed51f343e3165253d36a0d2be7013bbbc3990ecbd5645fa3d"
+    ],
+    [
+     64,
+     "e0280100e7280100ee280100f5280100fc280100032901000a29010011290100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 77,
+   "vm_in": [
+    [
+     0,
+     "11ff383ec683d83e2344953f6adfa6bfa9a47b3f48a98e40fe6fe6bb8f14df3e"
+    ],
+    [
+     64,
+     "c82c0100cf2c0100d62c0100dd2c0100e42c0100eb2c0100f22c0100f92c0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 78,
+   "vm_in": [
+    [
+     0,
+     "def825bf122682bf9860113eb2a8c83eb54826beb6b9b9bf3c113ebf5290313e"
+    ],
+    [
+     64,
+     "b0300100b7300100be300100c5300100cc300100d3300100da300100e1300100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 79,
+   "vm_in": [
+    [
+     0,
+     "9b31553f3f7308bf478dbc3f74ca3a3cd6415f3e6d09d33f49d313bf718cae3f"
+    ],
+    [
+     64,
+     "983401009f340100a6340100ad340100b4340100bb340100c2340100c9340100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 80,
+   "vm_in": [
+    [
+     0,
+     "cde8a2bdda88873d49358d3fe830cfbd7272f93d49e2ce3fa5944cbf339130bf"
+    ],
+    [
+     64,
+     "80380100873801008e380100953801009c380100a3380100aa380100b1380100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 81,
+   "vm_in": [
+    [
+     0,
+     "a204b4bf2426f9bffb0d873efed8ffbe02fd89bf836d56be96a9b93ff90b5abf"
+    ],
+    [
+     64,
+     "683c01006f3c0100763c01007d3c0100843c01008b3c0100923c0100993c0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 82,
+   "vm_in": [
+    [
+     0,
+     "7b741abd11c5413f4bb3593f9df802bf1933083f07252a3ff1d992bf20c5afbf"
+    ],
+    [
+     64,
+     "50400100574001005e400100654001006c400100734001007a40010081400100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 83,
+   "vm_in": [
+    [
+     0,
+     "b7d31bc0ed4aa13f5c4fd7bd854601bf0823913e3edf393fd11d99bf241023bf"
+    ],
+    [
+     64,
+     "384401003f440100464401004d440100544401005b4401006244010069440100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 84,
+   "vm_in": [
+    [
+     0,
+     "678af33e6704d03d83ae1d3fc49ab7bed49f6abf9a66d83e29eb2bc0047a8ebf"
+    ],
+    [
+     64,
+     "20480100274801002e480100354801003c480100434801004a48010051480100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 85,
+   "vm_in": [
+    [
+     0,
+     "a6a7843e483819be25da0abfcd5cf43eb588f73fde684abe855b1abf1c87573e"
+    ],
+    [
+     64,
+     "084c01000f4c0100164c01001d4c0100244c01002b4c0100324c0100394c0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 86,
+   "vm_in": [
+    [
+     0,
+     "a19400be97c6aabf2526953fab46ad3f577a07bef83ed23d173fb13f3d1b6abf"
+    ],
+    [
+     64,
+     "f04f0100f74f0100fe4f0100055001000c500100135001001a50010021500100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 87,
+   "vm_in": [
+    [
+     0,
+     "e3748d3e8ba11ebf7aaf913fd74d25bf6cb71bbf263dde3d3a5418bf7bc4023f"
+    ],
+    [
+     64,
+     "d8530100df530100e6530100ed530100f4530100fb5301000254010009540100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 88,
+   "vm_in": [
+    [
+     0,
+     "bc53123f772f1540a676edbff9af283eacda9cbf0e66c63dd3ad68bdb8d82bbf"
+    ],
+    [
+     64,
+     "c0570100c7570100ce570100d5570100dc570100e3570100ea570100f1570100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 89,
+   "vm_in": [
+    [
+     0,
+     "1dc2d6bea1bb703d8ccf9b3fb279e5bfb61796be891d423e79db013f31b4e93e"
+    ],
+    [
+     64,
+     "a85b0100af5b0100b65b0100bd5b0100c45b0100cb5b0100d25b0100d95b0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 90,
+   "vm_in": [
+    [
+     0,
+     "986013bec2f9a7bf86b67b3fe617be3f74fdee3f22ef02bd1cbd1440f1b8193f"
+    ],
+    [
+     64,
+     "905f0100975f01009e5f0100a55f0100ac5f0100b35f0100ba5f0100c15f0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 91,
+   "vm_in": [
+    [
+     0,
+     "cf53a33f7e87f23f336e75bfec88973f7570c1bf04a2243facf6d53f6441933e"
+    ],
+    [
+     64,
+     "786301007f630100866301008d630100946301009b630100a2630100a9630100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 92,
+   "vm_in": [
+    [
+     0,
+     "928ef83fb13808bffd716cbfddcc5f3ed9d7b2bffcedf93fa167cfbfed4b9e3e"
+    ],
+    [
+     64,
+     "60670100676701006e670100756701007c670100836701008a67010091670100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 93,
+   "vm_in": [
+    [
+     0,
+     "43dc903ff59d70be57e3b63f4e9ead3ff03c123fcf356cbecb15a5be5ef557be"
+    ],
+    [
+     64,
+     "486b01004f6b0100566b01005d6b0100646b01006b6b0100726b0100796b0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 94,
+   "vm_in": [
+    [
+     0,
+     "1540c43e411cb2bd42bbe5be7ee5e4be1e45b83e5328493fe23c3fbf2e3b2b3f"
+    ],
+    [
+     64,
+     "306f0100376f01003e6f0100456f01004c6f0100536f01005a6f0100616f0100"
+    ]
+   ],
+   "hbm_in": []
+  },
+  {
+   "rank": 95,
+   "vm_in": [
+    [
+     0,
+     "de13803f18998fbf4725343ffbd7ca3d5ceb833e8c0582bfdce41c3f611904c0"
+    ],
+    [
+     64,
+     "187301001f730100267301002d730100347301003b7301004273010049730100"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      256,
+      "b80b0000cd0b0000401f0000032f0000873e0000764200003c4e00002452000039520000a5650000866900008f9000000da800009fb700005ec3000043cb00009be6000064ee000045f200004cf2000053f2000049f60000172101001b250100e0280100eb2c0100244c0100c7570100ba5f01007f6301006067010083670100"
+     ],
+     [
+      512,
+      "48a98e406e622c4076a90540b5a40d40f7eaf73f0d140240cb3a2f40f43d3a40ff000f404f780140b50c0d40abe8004090525d403e4df73f48a98e4031edfe3f74fdee3fde1d10405096ef3fbb260d40845e1640df763c40413a2040c8d30340acb9004048a98e40b588f73f772f15401cbd14407e87f23f928ef83ffcedf93f"
+     ]
+    ],
+    "hbm_out": []
+   },
+   {
+    "rank": 1,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 2,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 3,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 4,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 5,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 6,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 7,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 8,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 9,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 10,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 11,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 12,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 13,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 14,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 15,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 16,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 17,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 18,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 19,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 20,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 21,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 22,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 23,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 24,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 25,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 26,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 27,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 28,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 29,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 30,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 31,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 32,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 33,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 34,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 35,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 36,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 37,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 38,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 39,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 40,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 41,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 42,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 43,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 44,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 45,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 46,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 47,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 48,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 49,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 50,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 51,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 52,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 53,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 54,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 55,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 56,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 57,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 58,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 59,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 60,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 61,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 62,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 63,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 64,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 65,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 66,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 67,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 68,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 69,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 70,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 71,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 72,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 73,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 74,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 75,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 76,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 77,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 78,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 79,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 80,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 81,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 82,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 83,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 84,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 85,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 86,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 87,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 88,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 89,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 90,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 91,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 92,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 93,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 94,
+    "same_as_rank": 0
+   },
+   {
+    "rank": 95,
+    "same_as_rank": 0
+   }
+  ],
+  "outputs_sha256": "7dce4468e5a103ada6f94d8692280af6f8384789da42c588dabec305708e8bf0"
+ },
+ "mutants": [
+  {
+   "name": "ties_high_id",
+   "defect": "ties resolved to the highest id",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "70004799522f247d79490be82dae5f126034279f4c1e396889f2b1e4374113ee"
+  },
+  {
+   "name": "score_order",
+   "defect": "O in descending value order instead of ascending id",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "deda62ce46be5398f27b196a9c2cb6249a92d774ab39fea6bfa27115f773bc4c"
+  }
+ ]
+}
