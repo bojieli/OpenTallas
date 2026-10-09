@@ -1,0 +1,15 @@
+{
+  "schema": "opentallas.hbm_index_service.lookahead_before_bench.v1",
+  "source_base": "05dea6a07",
+  "status": "PREBUILD_NOT_ADOPTED",
+  "hypothesis": "The current 60-beat in-flight ceiling limits controller advance visibility even after return-slot stalls are removed. Measure 124-beat visibility without changing physical addresses, refresh timing, or ordering identity.",
+  "candidate": {"KNO": 31, "IK_DEPTH": 128, "maximum_inflight_beats_per_PC": 124, "counter_bits": 7, "default_KNO": 15, "default_IK_DEPTH": 64},
+  "ports": {"PCs": 32, "return_bytes_per_PC_cycle": 32, "line_bits_per_stack_cycle": 8792, "credit_bits": 8, "line_credits_per_port": 64},
+  "replicas_per_die": 4,
+  "controller": {"request_queue_beats_per_PC": 64, "return_queue_beats_per_PC": 32, "refresh_rules_unchanged": true},
+  "area": {"additional_counter_FF": 0, "additional_data_macros_vs_depth128": 0, "additional_mux_demux_vs_depth128": 0, "storage_price": "depth128_before_rtl.json; prior optional adoption rejected", "physical_fit": "UNQUALIFIED"},
+  "latency": {"added_functional_cycles": 0, "measurement": "14 full342block descriptors plus corrupt-data negative; descriptor-to-last-line and exact final credits", "token_composition": "8 index layers; full token699175.7 streaming cycles before savings; no overlap credited"},
+  "diagnostics": ["actual PHY request backpressure", "return-slot stalls", "scheduled head column in future", "return head timestamp in future", "controller return queue full", "head bank currently refreshing"],
+  "admission": {"remote_only": true, "estimated_GiB": 8, "prior_actual_maxRSS_KiB": 528084, "build_workers": 4},
+  "adopted": false
+}

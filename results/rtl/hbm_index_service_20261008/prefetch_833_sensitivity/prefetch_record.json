@@ -1,0 +1,228 @@
+{
+  "schema": "opentallas.hbm_iks_prefetch_fifo.v1",
+  "source_commit": "21440378c",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "c5087709e681bd4a89a16e5dab19ecdc3e2e91069ef7e1063816ac51b1d856ca",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "2a6a6129d82b5067f2ae27dd62e3be07d3b58da63d7ced07277a90dfb77d9745",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv": "2243d49fd196fbf55ad4711255ade75424e4a8f9b932be1cfa1ca02ce21e4ac0",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv": "1aba712d05d74017226f2ae72873432d38a9acc50a59f3a231be94986b0c3a60",
+    "tools/hbm_svc_iks_prefetch_bench.py": "823496d30eeed072265ad5ef0a58d68f438d423dd9b1304092b7c5e2b309ab07",
+    "results/rtl/hbm_index_service_20261008/binding_before_bench.json": "ac536ee8c47961a69b8dc23355032a3df964d359f25b55563c1c84338323ee49"
+  },
+  "scope": "actual timed service to actual8xFA6 scorer landingFIFO,24relaystages bothdirections, heldquery sensitivities only; behavioral mutable storage, no physical adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 PULL0 BATCH0 MEM_MODE1 QD64 TCK833ps BURST1024ps",
+  "query_window_bound": false,
+  "sector_reservation_depth": 64,
+  "maximum_inflight_read_requests": 15,
+  "cases": [
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 0,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay0_mut0.log",
+      "raw_sha256": "8c467295e44c1b9e476d8478a14bcb0481ea98cd06c886cd060173fd4b7a772b",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 1,
+          "last_line_ns": 455.234,
+          "exposed_after_query_ns": 455.234
+        },
+        {
+          "rep": 1,
+          "max_fifo": 1,
+          "last_line_ns": 439.407,
+          "exposed_after_query_ns": 439.407
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 100,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay100_mut0.log",
+      "raw_sha256": "c89a8c81c50f979285f271b092e297b777bc1475796df8c06db975d7214e6108",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 1,
+          "last_line_ns": 455.234,
+          "exposed_after_query_ns": 355.234
+        },
+        {
+          "rep": 1,
+          "max_fifo": 1,
+          "last_line_ns": 439.407,
+          "exposed_after_query_ns": 339.407
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 300,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay300_mut0.log",
+      "raw_sha256": "98af8978aa56ba2e2399b6badc3ff20631c37a5bb3f760dac3544131a1bf6d1b",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 64,
+          "last_line_ns": 507.713,
+          "exposed_after_query_ns": 207.713
+        },
+        {
+          "rep": 1,
+          "max_fifo": 64,
+          "last_line_ns": 476.059,
+          "exposed_after_query_ns": 176.059
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 1000,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay1000_mut0.log",
+      "raw_sha256": "9c4b01664b1df57dec7af02657cf5810ff0a28228942ec2d099713ad9ba0851b",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 64,
+          "last_line_ns": 1145.791,
+          "exposed_after_query_ns": 145.791
+        },
+        {
+          "rep": 1,
+          "max_fifo": 64,
+          "last_line_ns": 1143.292,
+          "exposed_after_query_ns": 143.292
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "query_hold_ns": 300,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay300_mut0.log",
+      "raw_sha256": "1d34ba0b4a797617980dcda17cf40d7335e4fa180d0bb72549527a2723e709bc",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 64,
+          "last_line_ns": 599.343,
+          "exposed_after_query_ns": 299.343
+        },
+        {
+          "rep": 1,
+          "max_fifo": 64,
+          "last_line_ns": 442.739,
+          "exposed_after_query_ns": 142.739
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "query_hold_ns": 1000,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay1000_mut0.log",
+      "raw_sha256": "de15316c0e3ef5d7f9493ed7a50c18de2ca798bdbd95bc7c5e65f074cd8455f7",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 64,
+          "last_line_ns": 1143.292,
+          "exposed_after_query_ns": 143.292
+        },
+        {
+          "rep": 1,
+          "max_fifo": 64,
+          "last_line_ns": 1142.459,
+          "exposed_after_query_ns": 142.459
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 6900,
+      "query_hold_ns": 300,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase6900_delay300_mut0.log",
+      "raw_sha256": "1b00c440d8d58db1bad40277119e2a33b57fe3407968a144e25dab224a95d9f8",
+      "rows": [
+        {
+          "rep": 0,
+          "max_fifo": 64,
+          "last_line_ns": 442.739,
+          "exposed_after_query_ns": 142.739
+        },
+        {
+          "rep": 1,
+          "max_fifo": 1,
+          "last_line_ns": 878.398,
+          "exposed_after_query_ns": 578.398
+        }
+      ],
+      "diagnostics": [],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "query_hold_ns": 300,
+      "mut": 1,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 1,
+      "raw_log": "phase0_delay300_mut1.log",
+      "raw_sha256": "5742136a10bb28a144be48ccc61274750a6eac592c73ce160d173ab49552217a",
+      "rows": [],
+      "diagnostics": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_returncode": 0
+}

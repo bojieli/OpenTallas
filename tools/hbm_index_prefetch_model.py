@@ -1,0 +1,26 @@
+"""Dedicated protected descriptor admission; default off until exact qualification."""
+
+
+def model():
+    return dict(schema='opentallas.hbm_index_prefetch.v1', default_enabled=False,
+        descriptors_per_stack=1, replicas_per_die=4, MACs_per_cycle=0,
+        logical_descriptor_bits=99, descriptor_SECDED_check_bits=8,
+        frame_identity_bits=73, receipt_SECDED_check_bits=8,
+        forward_boundary_bits=107+2, reverse_boundary_bits=81+2+1,
+        source_receipt_release_boundary_bits=2,
+        mutable_storage='one retained encoded descriptor and one retained encoded receipt; complemented local control and duplicate-last-frame rejection; no unbounded request or receipt queue',
+        FF_upper_prebuild=1500, sequential_area_upper_um2=1500*.2916,
+        combinational_area_um2=None, physical_slot_fit=False,
+        codecs='existing K99/R8 descriptor and K73/R8 receipt; data/identity corrected before acceptance, UE retains debt and fails closed',
+        latency=dict(descriptor_encoder_cycles=1, descriptor_decoder_cycles=2,
+            receipt_encoder_cycles=1, receipt_decoder_cycles=2,
+            request_sync_cycles=2, receipt_sync_cycles=2, release_sync_cycles=2,
+            actual_control_capture_cycles='measure minimum component gate',
+            physical_relay_cycles=None,
+            composition='pairedappend physical WB fence precedes descriptor admission; query may start only after matching actual acceptance receipt; 8 index layers, no overlap credited before producer window is measured'),
+        portal='dedicated decoded kind2 arbitration into existing stream engine; legacy E portal unchanged',
+        routing='109 forward,84 reverse,2 release tracks plus clock/reset before relay shielding; capacity and loadedclock unqualified',
+        exact_gate_required=['held source valid enqueues once', 'actual acceptance delayed by service busy',
+            'full73 frame match', 'single data/check correction', 'double error poison',
+            'old/future receipt rejection', 'duplicate previously accepted descriptor rejection'],
+        adopted=False)
