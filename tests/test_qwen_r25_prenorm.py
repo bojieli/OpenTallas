@@ -75,7 +75,7 @@ class PrenormGraphTest(unittest.TestCase):
             self.assertTrue(np.array_equal(calls[0][0].numpy().view(np.uint32), norm.view(np.uint32)))
             weights = calls[0][1]
             codes = weights["q"].t().numpy().astype(np.float32)
-            expected = V.mul(V.csum(V.mul(codes[None], G.to_bf16(norm)[:, None])), weights["s"].numpy().reshape(1, -1))
+            expected = V.mul(V.csum(V.mul(codes[None], G.to_bf16(norm)[:, None])), weights["s"].float().numpy().reshape(1, -1))
             got = actual_mv(calls[0][0], weights).numpy()
             self.assertTrue(np.array_equal(got.view(np.uint32), expected.view(np.uint32)))
             after_mv_mutant = Q.mul(actual_mv(torch.from_numpy(initial), weights), Q.rstd_g(torch.from_numpy(initial), model.eps)[:, None]).numpy()
