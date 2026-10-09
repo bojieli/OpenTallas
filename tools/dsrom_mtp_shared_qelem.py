@@ -39,7 +39,7 @@ def bench(raw_negative=False):
     return s
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--sample',type=Path,required=True);p.add_argument('--config',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--jobs',type=int,default=12);p.add_argument('--raw-negative',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--sample',type=Path,required=True);p.add_argument('--config',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--jobs',type=int,default=12);p.add_argument('--raw-negative',action='store_true');p.add_argument('--reuse-binary',type=Path);p.add_argument('--reuse-tb',type=Path);p.add_argument('--reuse-source',type=Path);a=p.parse_args()
     a.work.mkdir(parents=True,exist_ok=True);G.set_arith('chunk8');ck=A.Ckpt(a.snapshot)
     sample=np.load(a.sample)['h_in'][0];assert sample.shape==(5120,)
     sample=G.to_bf16(sample);config=json.loads(a.config.read_text());limit=G.F(config.get('text_config',config)['swiglu_limit'])
@@ -54,13 +54,27 @@ def main():
         for parity in (0,1):
             f=a.work/f'seed{"b" if mb else ""}_{parity}.viamap.hex';A.viamap({k//2:v for k,v in fld.words[mb].items() if k%2==parity},f);f.write_text(''.join(f.read_text().splitlines(keepends=True)[:512]))
     def hx(n,vs,w):(a.work/n).write_text(''.join(f'{int(v):0{w}x}\n' for v in vs))
-    codes=A.x_codes(xq);hx('x.hex',G.bits(x),8);hx('gold.hex',acc,8);hx('rounded.hex',bf<<16,8);hx('cfg.hex',fld.cfg[0][0],12);hx('stream.hex',fld.stream,12);hx('q.hex',[int.from_bytes(codes[k:k+32].tobytes(),'little') for k in range(0,2304,32)],64);hx('e.hex',xe.astype(int)&1023,3)
+    codes=A.x_codes(xq)
+    # The legacy array fixture encoder canonicalizes zero. The real quantizer
+    # and golden both retain the sign of a negative value rounded to zero.
+    codes[(xq==0)&np.signbit(xq)]=0x80
+    hx('x.hex',G.bits(x),8);hx('gold.hex',acc,8);hx('rounded.hex',bf<<16,8);hx('cfg.hex',fld.cfg[0][0],12);hx('stream.hex',fld.stream,12);hx('q.hex',[int.from_bytes(codes[k:k+32].tobytes(),'little') for k in range(0,2304,32)],64);hx('e.hex',xe.astype(int)&1023,3)
     meta=model();meta.update(phase=ph,source_headers=ck.pins,config_sha256=hashlib.sha256(a.config.read_bytes()).hexdigest(),sample_sha256=hashlib.sha256(a.sample.read_bytes()).hexdigest(),GU_sha256=hashlib.sha256(G.bits(x).tobytes()).hexdigest(),raw_roots=acc.tolist(),rounded_widened_roots=(bf<<16).tolist(),swiglu_limit=float(limit))
     (a.work/'plan.json').write_text(json.dumps(meta,indent=2)+'\n')
     tb=a.work/'tb.sv';tb.write_text(bench(a.raw_negative).replace('QXV','10').replace('NBTS',str(ph['nbeat'])))
-    sources=list(dict.fromkeys(F.RTL+F.QRTL+F.ROMS));run=subprocess.run([os.environ.get('OT_VERILATOR',F.VERILATOR),'--binary','--timing','-Wno-fatal','--top-module','tb_mtp_seed','--Mdir',str(a.work/'obj'),'-j',str(a.jobs),str(tb)]+list(map(str,sources)),text=True,capture_output=True);(a.work/'build.log').write_text(run.stdout+run.stderr)
-    if run.returncode:raise RuntimeError('build failed')
-    command=[str(a.work/'obj/Vtb_mtp_seed'),f'+DATA={a.work}',f'+OT_ROM_DIR={a.work}']
+    sources=list(dict.fromkeys(F.RTL+F.QRTL+F.ROMS))
+    sourcehash={str(f.relative_to(B.ROOT)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sources}
+    if a.reuse_binary:
+        assert a.reuse_tb and a.reuse_source,'reuse requires exact prior TB and source inventory'
+        assert tb.read_bytes()==a.reuse_tb.read_bytes(),'testbench changed; cannot reuse binary'
+        for relative,h in sourcehash.items():assert hashlib.sha256((a.reuse_source/relative).read_bytes()).hexdigest()==h,relative
+        binary=a.reuse_binary.resolve()
+    else:
+        run=subprocess.run([os.environ.get('OT_VERILATOR',F.VERILATOR),'--binary','--timing','-Wno-fatal','--top-module','tb_mtp_seed','--Mdir',str(a.work/'obj'),'-j',str(a.jobs),str(tb)]+list(map(str,sources)),text=True,capture_output=True);(a.work/'build.log').write_text(run.stdout+run.stderr)
+        if run.returncode:raise RuntimeError('build failed')
+        binary=(a.work/'obj/Vtb_mtp_seed').resolve()
+    (a.work/'binary_receipt.json').write_text(json.dumps(dict(reused=bool(a.reuse_binary),binary=str(binary),binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),testbench_sha256=hashlib.sha256(tb.read_bytes()).hexdigest(),RTL_sha256=sourcehash),indent=2)+'\n')
+    command=[str(binary),f'+DATA={a.work}',f'+OT_ROM_DIR={a.work}']
     run=subprocess.run(command+(['+RAW_ROOT_MUT'] if a.raw_negative else []),text=True,capture_output=True);(a.work/'sim.log').write_text(run.stdout+run.stderr);print(run.stdout)
     if a.raw_negative:
         if run.returncode and 'shared rounded contribution mismatch' in run.stdout:print('SHARED_RAW_ROOT FAIL_AS_REQUIRED');return
