@@ -17,7 +17,7 @@ def viamap(path,words):
         physical[a//8]|=expanded<<(a%8)
     path.write_text(''.join(f'{r:0548x}\n' for r in physical))
 def packed(row):return sum(int(x)<<(16*l) for l,x in enumerate(row))
-def main(out,pinreg=1,cache_pinreg=0):
+def main(out):
     out.mkdir(parents=True,exist_ok=False);images=out/'images';images.mkdir()
     (out/'model.json').write_text(json.dumps(model(),indent=2)+'\n')
     inp=ROOT/'input';receipt=json.loads((inp/'released_inputs.json').read_text())
@@ -61,7 +61,7 @@ module tb #(parameter MUTANT=0);
  reg[16:0]d_i=TOKEN,row0=ROW0;reg[31:0]transaction=32'h12345;
  reg[255:0]x=0;reg b_v=0;reg[31:0]b_d=0;wire head_go,root_valid,joined_valid,done,fault,best_valid;
  wire[31:0]root_bits,joined_bits,best_bits;wire[16:0]joined_row,best_row;
- ot_dsrom_markov_head_lookup_A #(.ENABLE(1),.PINREG(PINREG_VALUE),.CACHE_PINREG(CACHE_PINREG_VALUE),.MUTANT_FOLD(MUTANT))dut(.*);
+ ot_dsrom_markov_head_lookup_A #(.ENABLE(1),.PINREG(1),.MUTANT_FOLD(MUTANT))dut(.*);
  reg[255:0]xm[0:255];reg[31:0]roots[0:31],bm[0:31],gold[0:31];
  integer cyc=0,g0=-1,nroot=0,njoin=0,first_tail=-1,last_tail=-1,highwater=0,head_cycle[0:31];
  reg[8*1024-1:0]dir;
@@ -94,7 +94,7 @@ module tb #(parameter MUTANT=0);
  end
  initial begin #30000;$fatal(1,"timeout");end
 endmodule
-'''.replace('CACHE_PINREG_VALUE',str(cache_pinreg)).replace('PINREG_VALUE',str(pinreg)).replace('TOKEN',str(token)).replace('ROW0',str(r0)).replace('BESTROW',str(r0+best)).replace('BESTBITS',f"32'h{int(logits.view(np.uint32)[best]):08x}"))
+'''.replace('TOKEN',str(token)).replace('ROW0',str(r0)).replace('BESTROW',str(r0+best)).replace('BESTBITS',f"32'h{int(logits.view(np.uint32)[best]):08x}"))
     sources=['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/v41rom/ot_dsrom_head_elem.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv']
     results=[]
     for mutant in (0,1):
@@ -107,7 +107,7 @@ endmodule
         results.append(dict(mutant=mutant,exit=p.returncode,passed=p.returncode==0 and 'PASS actualAroot' in p.stdout))
         if (not mutant and not results[-1]['passed']) or (mutant and p.returncode==0):break
     success=len(results)==2 and results[0]['passed'] and results[1]['exit']!=0
-    record=dict(passed=success,PINREG=pinreg,CACHE_PINREG=cache_pinreg,scope='one actual32-row A, real tokenlookup, fullK256 Markov dot, separatejoin, localargmax; not fullshard/die closure',released=receipt,results=results,nonzero_markov_rows=int(np.count_nonzero(mk)),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},macro_model_patch=['744ps SSclkq'],physical_qualified=False)
+    record=dict(passed=success,scope='one actual32-row A, real tokenlookup, fullK256 Markov dot, separatejoin, localargmax; not fullshard/die closure',released=receipt,results=results,nonzero_markov_rows=int(np.count_nonzero(mk)),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},macro_model_patch=['744ps SSclkq'],physical_qualified=False)
     (out/'verdict.json').write_text(json.dumps(record,indent=2)+'\n');return success
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1,2],default=1);ap.add_argument('--cache-pinreg',type=int,choices=[0,1],default=0);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.pinreg,a.cache_pinreg) else 1)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve()) else 1)

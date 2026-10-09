@@ -1,0 +1,230 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:30: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                              ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.032
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:39: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:48: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:57: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:66: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:75: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:84: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:93: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:34:102: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                             : ... note: In instance 'tb.dut.successor.head'
+   34 |     parameter integer SK = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9,
+      |                                                                                                      ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:65:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'IOREG' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb.dut.successor.head'
+   65 |     generate if (IOREG) begin : g_pin
+      |              ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:267:9: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SAFE' generates 32 bits.
+                                                                                                           : ... note: In instance 'tb.dut.successor.head'
+  267 |         if (SAFE) begin : g_safe_cmp
+      |         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:24: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:31: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:38: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:45: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:52: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:59: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:66: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:73: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:13:80: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   13 |  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
+      |                                                                                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:42:11: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PINREG' generates 32 bits.
+                                                                                                                                        : ... note: In instance 'tb.dut.successor.driver.dot'
+   42 |  generate if(PINREG) begin:g_pin
+      |           ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:35: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:44: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:53: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                     ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:62: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:71: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:80: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:89: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:98: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:32:107: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 1 bits.
+                                                                                                      : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+   32 |     parameter integer LATENCY = 1 + CUT[0] + CUT[1] + CUT[2] + CUT[3] + CUT[4] + CUT[5] + CUT[6] + CUT[7] + CUT[8] + SPLIT9
+      |                                                                                                           ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:191:5: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                    : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+  191 |     if (SPLIT9) begin : g_cy_copy
+      |     ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:204:5: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                    : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+  204 |     if (SPLIT9) begin : g_s9
+      |     ^~
+%Warning-WIDTHCONCAT: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/macro_ss.v:34:38: Unsized numbers/parameters not allowed in concatenations.
+                                                                                                  : ... note: In instance 'tb.dut.successor.driver.weights.m1'
+   34 |             $readmemh({rom_dir, "/", INSTANCE, ".viamap.hex"}, arr);
+      |                                      ^~~~~~~~
+%Warning-WIDTHCONCAT: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/macro_ss.v:34:36: Unsized numbers/parameters not allowed in concatenations.
+                                                                                                  : ... note: In instance 'tb.dut.successor.driver.weights.m1'
+   34 |             $readmemh({rom_dir, "/", INSTANCE, ".viamap.hex"}, arr);
+      |                                    ^
+%Warning-WIDTHCONCAT: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/macro_ss.v:34:46: Unsized numbers/parameters not allowed in replications.
+                                                                                                  : ... note: In instance 'tb.dut.successor.driver.weights.m1'
+   34 |             $readmemh({rom_dir, "/", INSTANCE, ".viamap.hex"}, arr);
+      |                                              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_v41_fadd.sv:188:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'SPLIT9' generates 32 bits.
+                                                                                                     : ... note: In instance 'tb.dut.successor.driver.dot.u_join'
+  188 |     initial if (SPLIT9 && !CUT[8]) $fatal(1, "SPLIT9 needs CUT[8] (the round carry copies sit in the u_c8 stage)");
+      |                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_bmul3.sv:25:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                                                                        : ... note: In instance 'tb.dut.successor.driver.dot.g_mul[15].u_mul'
+   25 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:34:45: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+   34 |  assign in_ready=busy && !out_valid && count<WORDS && !fault;
+      |                                             ^
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:112:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'MUTANT_FOLD' generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+  112 |   .valid_in(tv[LV]),.a(MUTANT_FOLD ? 32'b0 : head),.b(td[LV]),.y(jd),.valid_out(jv),.err(je));
+      |                                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:121:22: Operator NEQ expects 32 bits on the LHS, but LHS's VARREF 'count' generates 5 bits.
+                                                                                                                                          : ... note: In instance 'tb.dut.successor.driver.dot'
+  121 |     if(!busy || count!=WORDS || out_valid || je!=0 || fault) begin fault<=1;out_valid<=0;end
+      |                      ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:129:18: Logical operator LOGOR expects 1 bit on the RHS, but RHS's MODDIVS generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+  129 |  initial if(K<16 || K%16 || (WORDS & (WORDS-1))) $fatal(1,"K must be16 times a power of two");
+      |                  ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv:129:26: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                                                                                                         : ... note: In instance 'tb.dut.successor.driver.dot'
+  129 |  initial if(K<16 || K%16 || (WORDS & (WORDS-1))) $fatal(1,"K must be16 times a power of two");
+      |                          ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:89:22: Bit extraction of array[15:0] requires 4 bit index, not 5 bits.
+                                                                                                                                           : ... note: In instance 'tb.dut.successor.driver'
+   89 |     else begin vector[embed_next]<=embed_data;embed_next<=embed_next+1;
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:88:40: Operator NEQ expects 5 bits on the LHS, but LHS's VARREF 'embed_beat' generates 4 bits.
+                                                                                                                                            : ... note: In instance 'tb.dut.successor.driver'
+   88 |     if(embed_id!=identity || embed_beat!=embed_next || embed_last!=(embed_next==15))fault<=1;
+      |                                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:104:59: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tb.dut.successor.driver'
+  104 |      joined_valid<=1;joined_bits<=mk_bits;joined_row<=base+active_row;completed<=completed+1;active<=0;
+      |                                                           ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:106:62: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tb.dut.successor.driver'
+  106 |       have<=1;best_key<=key;best_bits<=mk_bits;best_row<=base+active_row;
+      |                                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv:105:50: Operator ADD expects 17 bits on the RHS, but RHS's VARREF 'active_row' generates 5 bits.
+                                                                                                                                             : ... note: In instance 'tb.dut.successor.driver'
+  105 |      if(!have||key>best_key||(key==best_key&&base+active_row<best_row))begin
+      |                                                  ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:89:55: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'a' generates 14 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   89 |             else if (run) begin a <= a + 14'd1; if (a == NPHYS - 1) run <= 1'b0; end
+      |                                                       ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:92:32: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'a' generates 14 bits.
+                                                                                                            : ... note: In instance 'tb.dut.successor.head'
+   92 |     wire lane0_live = run && a < NW;        
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:106:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'a' generates 14 bits.
+                                                                                                             : ... note: In instance 'tb.dut.successor.head'
+  106 |     wire last = a == NPHYS - 1;
+      |                   ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/v41rom/ot_dsrom_head_elem.sv:285:25: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 7 bits.
+                                                                                                             : ... note: In instance 'tb.dut.successor.head'
+  285 |                 if (cnt == ROWS - 1) done <= 1'b1;
+      |                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv:51:59: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                                                                                                : ... note: In instance 'tb.dut.lookup.port'
+   51 |     for(b=0;b<16;b=b+1) if(g*16+b<253 && bank_pipe[2][3:0]==b)
+      |                                                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/tb.sv:20:33: Bit extraction of array[31:0] requires 5 bit index, not 6 bits.
+                                                                                            : ... note: In instance 'tb'
+   20 |   if(dut.successor.hv)head_cycle[dut.successor.driver.emitted]=cyc;
+      |                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/tb.sv:21:49: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's VARXREF 'hn' generates 2 bits.
+                                                                                             : ... note: In instance 'tb'
+   21 |   if(dut.successor.driver.hn>highwater)highwater=dut.successor.driver.hn;
+      |                                                 ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/tb.sv:21:29: Operator GT expects 32 bits on the LHS, but LHS's VARXREF 'hn' generates 2 bits.
+                                                                                             : ... note: In instance 'tb'
+   21 |   if(dut.successor.driver.hn>highwater)highwater=dut.successor.driver.hn;
+      |                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/tb.sv:23:44: Operator NEQCASE expects 32 bits on the LHS, but LHS's VARREF 'joined_row' generates 17 bits.
+                                                                                             : ... note: In instance 'tb'
+   23 |    if(joined_bits!==gold[njoin]||joined_row!==21920+njoin)$fatal(1,"postMarkov mismatch row%0d got%h gold%h",njoin,joined_bits,gold[njoin]);
+      |                                            ^~~
+%Error: Internal Error: /srv/opentallas-data/claude/md6-head-binding-r1/evidence_r4/macro_ss.v:33:67: ../V3Number.cpp:2542: Number operation called with non-string argument: '64'h0"
+                                                                                                    : ... note: In instance 'tb.dut.lookup.banks[252].m1'
+   33 |         if ($value$plusargs("OT_ROM_DIR=%s", rom_dir) && INSTANCE != "")
+      |                                                                   ^~
