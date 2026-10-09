@@ -51,6 +51,7 @@ LOCAL_UNIT = {"hc_mixes": ("HC", "HC_MIX"), "hc_pre_norm": ("FUSED", "HC_PRE_NOR
               "argmax_local": ("ARGMAX", "LOCAL"), "engram_fetch": ("DMA", "LOAD")}
 SUB = {"route": 0, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
 TP = 96
+C3B = [False]
 
 
 class VMAlloc:
@@ -103,11 +104,14 @@ def lower(prog, die=0):
                 rows = max(1, r1 - r0)
                 x = op["x"]
                 xin = "ea" if x.startswith("ea") and x[2:].isdigit() else x
+                bdesc = H(fmt, op["k"], rows)
+                slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
+                if slot and op["w"][0] < 6 and C3B[0]:      # routed expert: indexed descriptor on the router id word
+                    bdesc.dyn_sel, bdesc.lstride, bdesc.dyn_mul = 31, vm("route_ids", 8) + op["w"][0], 1 << 20
                 r = Rec("SM", "MATVEC", param=fp, desc=dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304),
-                                                            B=H(fmt, op["k"], rows), O=V(op["out"], op["n"])),
+                                                            B=bdesc, O=V(op["out"], op["n"])),
                         tag=op["tag"], family="mv." + op["fn"])
                 r.src = src
-                slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
                 b.add(r, [xin] + (["expert_w"] if slot else []), [op["out"]])
             elif k == "local":
                 fn = op["fn"]
@@ -248,6 +252,13 @@ def main():
     variants["S2_compiler_reordered"] = sro["total_cycles"]
     variants["S2_compiler_reordered_races"] = len(sro["races"])
     variants["SX_compiler_reordered"] = T.schedule(ro, POSV, "SX", **kw)["total_cycles"]
+    C3B[0] = True
+    recs_c3b = lower(prog)
+    s_c3b = T.schedule(recs_c3b, POSV, "S2", **kw)
+    ls_c3b = T.schedule(T.list_schedule(recs_c3b, POSV, **kw), POSV, "S2", **kw)
+    variants["S2_with_C3b_indexed_expert_descriptors"] = s_c3b["total_cycles"]
+    variants["S2_list_scheduled_with_C3b"] = ls_c3b["total_cycles"]
+    C3B[0] = False
     ls = T.list_schedule(recs, POSV, **kw)
     sls = T.schedule(ls, POSV, "S2", **kw)
     variants["S2_compiler_list_scheduled"] = sls["total_cycles"]

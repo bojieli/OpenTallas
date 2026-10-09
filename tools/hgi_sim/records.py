@@ -24,7 +24,7 @@ import hbm_generic_iface as HGI  # noqa: E402
 
 OPND = ("A", "B", "C", "O")
 # PROVISIONAL op codes the DS native lowering needs and v0.9 lacks (appended after the spec's ops; gaps G8, G10)
-PROVISIONAL_OPS = {"FUSED": ["QDQ_FP8"], "COLL": ["GROUP_REDUCE_MCAST"]}
+PROVISIONAL_OPS = {"FUSED": ["QDQ_FP8", "QDQ_FP4_E8M0", "QDQ_FP4_E4M3"], "COLL": ["GROUP_REDUCE_MCAST", "ROW_GATHER"]}
 OPS_X = {u: list(v) + PROVISIONAL_OPS.get(u, []) for u, v in HGI.OPS.items()}
 EXTRA = ("D", "R")                 # SU.VOP param bits 0, 1 (provisional)
 ISTRIDE_BCAST = 0xFFFF

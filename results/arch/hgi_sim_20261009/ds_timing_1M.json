@@ -2,13 +2,13 @@
  "schema": "opentallas.hgi_sim.ds_timing.v0",
  "spec": "HGI-1 v0.9 (024fa2af1)",
  "position": 1048575,
- "generated_utc": "2026-10-09T11:00:08Z",
+ "generated_utc": "2026-10-09T11:54:50Z",
  "grade": "unit costs = the DS composition's (measured / measured_tu_budget / modelled rows as there); CP entries estimates (calibration.json)",
  "result": {
   "program": {
    "records": 2254,
    "image_bytes": 222144,
-   "image_sha256": "d3ac34860013debf3f5abebdd443dd8ca6e37d170cd83fe6b297af69f1aa02c1"
+   "image_sha256": "793f4f1de77980f5773402bb343f23798fca1077bce0dbf40de88c5ad02e9fde"
   },
   "published_walk_us": 460.053,
   "published_walk_cycles": 552064.0,
@@ -428,12 +428,90 @@
     "cand_local": 424.0
    }
   },
+  "list_scheduled_program": {
+   "records": 2254,
+   "image_sha256": "6e44f27e8e184730bb055d89fb95cec713c3d08680e573e30ebf35a5b66e4351",
+   "per_unit": {
+    "FUSED": {
+     "busy": 70409.7,
+     "idle_true_dep": 381866.1,
+     "idle_issue": 3638.0,
+     "records": 161
+    },
+    "HC": {
+     "busy": 92800.6,
+     "idle_true_dep": 333115.3,
+     "idle_issue": 28091.3,
+     "records": 80
+    },
+    "DMA": {
+     "busy": 6254.9,
+     "idle_true_dep": 447283.5,
+     "idle_issue": 1172.0,
+     "records": 42
+    },
+    "COLL": {
+     "busy": 255268.8,
+     "idle_true_dep": 196348.2,
+     "idle_issue": 10029.0,
+     "records": 270
+    },
+    "SM": {
+     "busy": 110896.0,
+     "idle_true_dep": 303969.8,
+     "idle_issue": 45048.9,
+     "records": 1103
+    },
+    "SU": {
+     "busy": 56586.7,
+     "idle_true_dep": 391753.2,
+     "idle_issue": 11728.1,
+     "records": 206
+    },
+    "ATT": {
+     "busy": 26363.5,
+     "idle_true_dep": 418171.2,
+     "idle_issue": 4114.1,
+     "records": 40
+    },
+    "IDX": {
+     "busy": 18667.6,
+     "idle_true_dep": 434706.4,
+     "idle_issue": 1156.0,
+     "records": 70
+    },
+    "SFU": {
+     "busy": 7093.4,
+     "idle_true_dep": 436665.3,
+     "idle_issue": 11697.0,
+     "records": 280
+    },
+    "ARGMAX": {
+     "busy": 142.7,
+     "idle_true_dep": 459543.7,
+     "idle_issue": 396.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 0.0,
+     "idle_issue": 460107.4,
+     "records": 1
+    }
+   }
+  },
   "cp_fix_variants": {
    "S2_no_wires": 514125.7,
    "SX_skip_ahead": 513051.5,
    "S2_compiler_reordered": 518737.2,
    "S2_compiler_reordered_races": 0,
-   "SX_compiler_reordered": 513051.5
+   "SX_compiler_reordered": 513051.5,
+   "S2_with_C3b_indexed_expert_descriptors": 544647.7,
+   "S2_list_scheduled_with_C3b": 461646.0,
+   "S2_compiler_list_scheduled": 461646.0,
+   "S2_compiler_list_scheduled_races": 0,
+   "S2_compiler_list_scheduled_no_wires": 444296.8,
+   "S0_dataflow": 493300.2
   },
   "overheads": {
    "drain_wait_vs_dataflow_cycles": 57760.4,
@@ -501,6 +579,11 @@
    "value": 4,
    "grade": "estimate",
    "source": "per-unit record queue"
+  },
+  "indexed_read": {
+   "value": 28,
+   "grade": "estimate",
+   "source": "C3b: dispatcher reads the U32 index word from the VM (cmdproc -> hub 12 + VM read 4 + back 12) before the address arithmetic"
   }
  }
 }

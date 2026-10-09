@@ -2,7 +2,7 @@
  "schema": "opentallas.hgi_sim.qwen_timing.v0",
  "spec": "HGI-1 v0.9 (024fa2af1)",
  "position": 8191,
- "generated_utc": "2026-10-09T11:01:12Z",
+ "generated_utc": "2026-10-09T11:54:53Z",
  "grade": "pathfinding: unit entries are mostly estimates (calibration.json); not a published rate",
  "calibration": {
   "schema": "opentallas.hgi_sim.calibration.v0",
@@ -63,6 +63,11 @@
     "value": 4,
     "grade": "estimate",
     "source": "per-unit record queue"
+   },
+   "indexed_read": {
+    "value": 28,
+    "grade": "estimate",
+    "source": "C3b: dispatcher reads the U32 index word from the VM (cmdproc -> hub 12 + VM read 4 + back 12) before the address arithmetic"
    }
   },
   "hbm": {
@@ -192,8 +197,8 @@
    ]
   },
   "S0": {
-   "total_cycles": 1085867.0,
-   "tok_s": 1105.1,
+   "total_cycles": 1241693.1,
+   "tok_s": 966.4,
    "records_executed": 1163,
    "cp_busy_cycles": 0.0,
    "dispatch_held_by_wait_mask": 0.0,
@@ -202,93 +207,93 @@
    "n_races": 0,
    "per_unit": {
     "DMA": {
-     "busy": 28386.5,
-     "idle_true_dep": 990204.3,
+     "busy": 20098.5,
+     "idle_true_dep": 1138486.8,
      "idle_issue": 0.0,
      "records": 256
     },
     "SU": {
      "busy": 48256.0,
-     "idle_true_dep": 1034630.0,
+     "idle_true_dep": 1190456.1,
      "idle_issue": 0.0,
      "records": 362
     },
     "FUSED": {
      "busy": 21775.0,
-     "idle_true_dep": 999163.5,
+     "idle_true_dep": 1140525.1,
      "idle_issue": 0.0,
      "records": 145
     },
     "SM": {
-     "busy": 810208.8,
-     "idle_true_dep": 272580.1,
+     "busy": 974155.0,
+     "idle_true_dep": 264460.1,
      "idle_issue": 0.0,
      "records": 145
     },
     "ATT": {
-     "busy": 103122.1,
-     "idle_true_dep": 896570.1,
+     "busy": 95058.1,
+     "idle_true_dep": 1042342.0,
      "idle_issue": 0.0,
      "records": 144
     },
     "COLL": {
      "busy": 97786.0,
-     "idle_true_dep": 988080.0,
+     "idle_true_dep": 1143906.1,
      "idle_issue": 0.0,
      "records": 73
     },
     "SFU": {
      "busy": 2160.0,
-     "idle_true_dep": 1011786.6,
+     "idle_true_dep": 1152061.1,
      "idle_issue": 0.0,
      "records": 36
     },
     "ARGMAX": {
      "busy": 2394.0,
-     "idle_true_dep": 1082886.0,
+     "idle_true_dep": 1238712.1,
      "idle_issue": 0.0,
      "records": 1
     },
     "CTL": {
      "busy": 1.0,
-     "idle_true_dep": 1085866.0,
+     "idle_true_dep": 1241692.1,
      "idle_issue": 0.0,
      "records": 1
     }
    },
    "family_unit_cycles": {
-    "gu": 373347.8,
-    "down": 194539.9,
-    "qkv": 105136.0,
-    "o": 75334.6,
-    "head": 61850.5,
-    "attention_pv": 51561.1,
-    "attention_qk": 51561.1,
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
     "all_reduce_o": 48600.0,
     "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
     "softmax": 31860.0,
     "prenorm": 12775.0,
     "qknorm": 9000.0,
-    "row_scale_gu": 8239.7,
-    "row_scale_o": 8121.1,
-    "row_scale_down": 8121.1,
-    "row_scale_qkv": 7990.9,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
     "pv_normalize": 2808.0,
     "argmax_local": 2394.0,
-    "rope": 2356.3,
+    "rope": 2300.3,
     "round_q": 2160.0,
     "kv_append": 2160.0,
     "kv_fence": 2160.0,
     "swiglu": 2160.0,
     "argmax_merge": 586.0,
-    "embedding": 384.3,
-    "head_scale": 281.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
     "end": 1.0
    }
   },
   "S1": {
-   "total_cycles": 1085867.0,
-   "tok_s": 1105.1,
+   "total_cycles": 1241693.1,
+   "tok_s": 966.4,
    "records_executed": 1163,
    "cp_busy_cycles": 0.0,
    "dispatch_held_by_wait_mask": 0.0,
@@ -297,609 +302,609 @@
    "n_races": 0,
    "per_unit": {
     "DMA": {
-     "busy": 28386.5,
-     "idle_true_dep": 850686.2,
-     "idle_issue": 144216.4,
+     "busy": 20098.5,
+     "idle_true_dep": 1007032.7,
+     "idle_issue": 137295.5,
      "records": 256
     },
     "SU": {
      "busy": 48256.0,
-     "idle_true_dep": 1034630.0,
+     "idle_true_dep": 1190456.1,
      "idle_issue": 0.0,
      "records": 362
     },
     "FUSED": {
      "busy": 21775.0,
-     "idle_true_dep": 999163.5,
+     "idle_true_dep": 1140525.1,
      "idle_issue": 0.0,
      "records": 145
     },
     "SM": {
-     "busy": 810208.8,
-     "idle_true_dep": 272580.1,
+     "busy": 974155.0,
+     "idle_true_dep": 264460.1,
      "idle_issue": 0.0,
      "records": 145
     },
     "ATT": {
-     "busy": 103122.1,
-     "idle_true_dep": 896570.1,
+     "busy": 95058.1,
+     "idle_true_dep": 1042342.0,
      "idle_issue": 0.0,
      "records": 144
     },
     "COLL": {
      "busy": 97786.0,
-     "idle_true_dep": 988080.0,
+     "idle_true_dep": 1143906.1,
      "idle_issue": 0.0,
      "records": 73
     },
     "SFU": {
      "busy": 2160.0,
-     "idle_true_dep": 1011786.6,
+     "idle_true_dep": 1152061.1,
      "idle_issue": 0.0,
      "records": 36
     },
     "ARGMAX": {
      "busy": 2394.0,
-     "idle_true_dep": 1082886.0,
+     "idle_true_dep": 1238712.1,
      "idle_issue": 0.0,
      "records": 1
     },
     "CTL": {
      "busy": 1.0,
-     "idle_true_dep": 1085866.0,
+     "idle_true_dep": 1241692.1,
      "idle_issue": 0.0,
      "records": 1
     }
    },
    "family_unit_cycles": {
-    "gu": 373347.8,
-    "down": 194539.9,
-    "qkv": 105136.0,
-    "o": 75334.6,
-    "head": 61850.5,
-    "attention_pv": 51561.1,
-    "attention_qk": 51561.1,
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
     "all_reduce_o": 48600.0,
     "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
     "softmax": 31860.0,
     "prenorm": 12775.0,
     "qknorm": 9000.0,
-    "row_scale_gu": 8239.7,
-    "row_scale_o": 8121.1,
-    "row_scale_down": 8121.1,
-    "row_scale_qkv": 7990.9,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
     "pv_normalize": 2808.0,
     "argmax_local": 2394.0,
-    "rope": 2356.3,
+    "rope": 2300.3,
     "round_q": 2160.0,
     "kv_append": 2160.0,
     "kv_fence": 2160.0,
     "swiglu": 2160.0,
     "argmax_merge": 586.0,
-    "embedding": 384.3,
-    "head_scale": 281.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
     "end": 1.0
    }
   },
   "S2": {
-   "total_cycles": 1105944.0,
-   "tok_s": 1085.0,
+   "total_cycles": 1261770.1,
+   "tok_s": 951.0,
    "records_executed": 1163,
    "cp_busy_cycles": 5809.0,
-   "dispatch_held_by_wait_mask": 1104594.0,
-   "dispatch_held_by_hol_or_queue": 6820059.1,
+   "dispatch_held_by_wait_mask": 1260420.1,
+   "dispatch_held_by_hol_or_queue": 7709094.8,
    "races": [],
    "n_races": 0,
    "per_unit": {
     "DMA": {
-     "busy": 28386.5,
-     "idle_true_dep": 576317.5,
-     "idle_issue": 438429.8,
+     "busy": 20098.5,
+     "idle_true_dep": 683785.7,
+     "idle_issue": 480499.2,
      "records": 256
     },
     "SU": {
      "busy": 48256.0,
-     "idle_true_dep": 1048539.0,
+     "idle_true_dep": 1204365.1,
      "idle_issue": 6096.0,
      "records": 362
     },
     "FUSED": {
      "busy": 21775.0,
-     "idle_true_dep": 1016504.5,
+     "idle_true_dep": 1157866.1,
      "idle_issue": 2616.0,
      "records": 145
     },
     "SM": {
-     "busy": 810208.8,
-     "idle_true_dep": 289081.1,
+     "busy": 974155.0,
+     "idle_true_dep": 280961.1,
      "idle_issue": 3480.0,
      "records": 145
     },
     "ATT": {
-     "busy": 103122.1,
-     "idle_true_dep": 911199.1,
+     "busy": 95058.1,
+     "idle_true_dep": 1056971.0,
      "idle_issue": 5040.0,
      "records": 144
     },
     "COLL": {
      "busy": 97786.0,
-     "idle_true_dep": 1006381.0,
+     "idle_true_dep": 1162207.1,
      "idle_issue": 1752.0,
      "records": 73
     },
     "SFU": {
      "busy": 2160.0,
-     "idle_true_dep": 1030783.6,
+     "idle_true_dep": 1171058.1,
      "idle_issue": 864.0,
      "records": 36
     },
     "ARGMAX": {
      "busy": 2394.0,
-     "idle_true_dep": 1102891.0,
+     "idle_true_dep": 1258717.1,
      "idle_issue": 24.0,
      "records": 1
     },
     "CTL": {
      "busy": 1.0,
-     "idle_true_dep": 1105919.0,
+     "idle_true_dep": 1261745.1,
      "idle_issue": 24.0,
      "records": 1
     }
    },
    "family_unit_cycles": {
-    "gu": 373347.8,
-    "down": 194539.9,
-    "qkv": 105136.0,
-    "o": 75334.6,
-    "head": 61850.5,
-    "attention_qk": 51561.1,
-    "attention_pv": 51561.1,
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
     "all_reduce_o": 48600.0,
     "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
     "softmax": 31860.0,
     "prenorm": 12775.0,
     "qknorm": 9000.0,
-    "row_scale_gu": 8239.7,
-    "row_scale_down": 8121.1,
-    "row_scale_o": 8121.1,
-    "row_scale_qkv": 7990.9,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
     "pv_normalize": 2808.0,
     "argmax_local": 2394.0,
-    "rope": 2356.3,
+    "rope": 2300.3,
     "round_q": 2160.0,
     "kv_append": 2160.0,
     "kv_fence": 2160.0,
     "swiglu": 2160.0,
     "argmax_merge": 586.0,
-    "embedding": 384.3,
-    "head_scale": 281.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
     "end": 1.0
    }
   },
   "S3": {
-   "total_cycles": 1105780.0,
-   "tok_s": 1085.2,
+   "total_cycles": 1261606.1,
+   "tok_s": 951.2,
    "records_executed": 1163,
    "cp_busy_cycles": 5809.0,
-   "dispatch_held_by_wait_mask": 1104594.0,
-   "dispatch_held_by_hol_or_queue": 6820059.1,
+   "dispatch_held_by_wait_mask": 1260420.1,
+   "dispatch_held_by_hol_or_queue": 7709094.8,
    "races": [],
    "n_races": 0,
    "per_unit": {
     "DMA": {
-     "busy": 28386.5,
-     "idle_true_dep": 576317.5,
-     "idle_issue": 438265.8,
+     "busy": 20098.5,
+     "idle_true_dep": 683785.7,
+     "idle_issue": 480335.2,
      "records": 256
     },
     "SU": {
      "busy": 48256.0,
-     "idle_true_dep": 1048375.0,
+     "idle_true_dep": 1204201.1,
      "idle_issue": 6096.0,
      "records": 362
     },
     "FUSED": {
      "busy": 21775.0,
-     "idle_true_dep": 1016340.5,
+     "idle_true_dep": 1157702.1,
      "idle_issue": 2616.0,
      "records": 145
     },
     "SM": {
-     "busy": 810208.8,
-     "idle_true_dep": 288917.1,
+     "busy": 974155.0,
+     "idle_true_dep": 280797.1,
      "idle_issue": 3480.0,
      "records": 145
     },
     "ATT": {
-     "busy": 103122.1,
-     "idle_true_dep": 911035.1,
+     "busy": 95058.1,
+     "idle_true_dep": 1056807.0,
      "idle_issue": 5040.0,
      "records": 144
     },
     "COLL": {
      "busy": 97786.0,
-     "idle_true_dep": 1006217.0,
+     "idle_true_dep": 1162043.1,
      "idle_issue": 1752.0,
      "records": 73
     },
     "SFU": {
      "busy": 2160.0,
-     "idle_true_dep": 1030619.6,
+     "idle_true_dep": 1170894.1,
      "idle_issue": 864.0,
      "records": 36
     },
     "ARGMAX": {
      "busy": 2394.0,
-     "idle_true_dep": 1102727.0,
+     "idle_true_dep": 1258553.1,
      "idle_issue": 24.0,
      "records": 1
     },
     "CTL": {
      "busy": 1.0,
-     "idle_true_dep": 1105755.0,
+     "idle_true_dep": 1261581.1,
      "idle_issue": 24.0,
      "records": 1
     }
    },
    "family_unit_cycles": {
-    "gu": 373347.8,
-    "down": 194539.9,
-    "qkv": 105136.0,
-    "o": 75334.6,
-    "head": 61850.5,
-    "attention_qk": 51561.1,
-    "attention_pv": 51561.1,
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
     "all_reduce_o": 48600.0,
     "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
     "softmax": 31860.0,
     "prenorm": 12775.0,
     "qknorm": 9000.0,
-    "row_scale_gu": 8239.7,
-    "row_scale_down": 8121.1,
-    "row_scale_o": 8121.1,
-    "row_scale_qkv": 7990.9,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
     "pv_normalize": 2808.0,
     "argmax_local": 2394.0,
-    "rope": 2356.3,
+    "rope": 2300.3,
     "round_q": 2160.0,
     "kv_append": 2160.0,
     "kv_fence": 2160.0,
     "swiglu": 2160.0,
     "argmax_merge": 586.0,
-    "embedding": 384.3,
-    "head_scale": 281.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
     "end": 1.0
    }
   },
   "cp_fix_variants": {
-   "S2_no_wires": 1088484.0,
-   "SX_skip_ahead": 1105944.0,
-   "S2_compiler_reordered": 1109821.4,
+   "S2_no_wires": 1244310.1,
+   "SX_skip_ahead": 1261770.1,
+   "S2_compiler_reordered": 1263631.6,
    "S2_compiler_reordered_races": 0,
-   "SX_compiler_reordered": 1109785.4
+   "SX_compiler_reordered": 1263595.6
   },
   "overheads": {
    "drain_wait_vs_dataflow_cycles": 0.0,
    "drain_wait_pct": 0.0,
    "cp_issue_hol_cycles": 20077.0,
-   "cp_issue_hol_pct": 1.82,
+   "cp_issue_hol_pct": 1.59,
    "cp_fetch_decode_cycles": 164.0,
    "cp_fetch_decode_pct": 0.01,
-   "hol_and_drain_vs_dataflow_pct": 1.82
+   "hol_and_drain_vs_dataflow_pct": 1.59
   },
   "critical_path_S2_tail": [
    {
     "tag": "all_reduce_o",
     "L": 34,
     "unit": "COLL",
-    "start": 992707.6,
-    "end": 994057.6,
+    "start": 1126789.6,
+    "end": 1128139.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_o+residual",
     "L": 34,
     "unit": "SU",
-    "start": 994081.6,
-    "end": 994144.6,
+    "start": 1128163.6,
+    "end": 1128226.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "prenorm.ffn",
     "L": 34,
     "unit": "FUSED",
-    "start": 994168.6,
-    "end": 994343.6,
+    "start": 1128250.6,
+    "end": 1128425.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "gu",
     "L": 34,
     "unit": "SM",
-    "start": 994367.6,
-    "end": 1004738.4,
+    "start": 1128449.6,
+    "end": 1141084.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_gu",
     "L": 34,
     "unit": "SU",
-    "start": 1004762.4,
-    "end": 1004827.4,
+    "start": 1141108.6,
+    "end": 1141173.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "swiglu",
     "L": 34,
     "unit": "SFU",
-    "start": 1004851.4,
-    "end": 1004911.4,
+    "start": 1141197.6,
+    "end": 1141257.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "down",
     "L": 34,
     "unit": "SM",
-    "start": 1004935.4,
-    "end": 1010339.2,
+    "start": 1141281.6,
+    "end": 1147772.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "all_reduce_down",
     "L": 34,
     "unit": "COLL",
-    "start": 1010363.2,
-    "end": 1011713.2,
+    "start": 1147796.6,
+    "end": 1149146.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_down+residual",
     "L": 34,
     "unit": "SU",
-    "start": 1011737.2,
-    "end": 1011800.2,
+    "start": 1149170.6,
+    "end": 1149233.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "prenorm.attn",
     "L": 35,
     "unit": "FUSED",
-    "start": 1011824.2,
-    "end": 1011999.2,
+    "start": 1149257.6,
+    "end": 1149432.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "qkv",
     "L": 35,
     "unit": "SM",
-    "start": 1012023.2,
-    "end": 1014943.7,
+    "start": 1149456.6,
+    "end": 1152875.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_qkv",
     "L": 35,
     "unit": "SU",
-    "start": 1014967.7,
-    "end": 1015028.7,
+    "start": 1152899.6,
+    "end": 1152960.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "qknorm.q",
     "L": 35,
     "unit": "FUSED",
-    "start": 1015052.7,
-    "end": 1015177.7,
+    "start": 1152984.6,
+    "end": 1153109.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "qknorm.k",
     "L": 35,
     "unit": "FUSED",
-    "start": 1015177.7,
-    "end": 1015302.7
+    "start": 1153109.6,
+    "end": 1153234.6
    },
    {
     "tag": "rope",
     "L": 35,
     "unit": "SU",
-    "start": 1015326.7,
-    "end": 1015387.7,
+    "start": 1153258.6,
+    "end": 1153319.6,
     "bound_by": "dispatch"
    },
    {
     "tag": "round_q",
     "L": 35,
     "unit": "SU",
-    "start": 1015387.7,
-    "end": 1015447.7
+    "start": 1153319.6,
+    "end": 1153379.6
    },
    {
     "tag": "attention_qk.kv0",
     "L": 35,
     "unit": "ATT",
-    "start": 1015563.7,
-    "end": 1016279.8,
+    "start": 1153495.6,
+    "end": 1154155.7,
     "bound_by": "dispatch"
    },
    {
     "tag": "attention_qk.kv1",
     "L": 35,
     "unit": "ATT",
-    "start": 1016279.8,
-    "end": 1016995.9
+    "start": 1154155.7,
+    "end": 1154815.9
    },
    {
     "tag": "softmax.max",
     "L": 35,
     "unit": "SU",
-    "start": 1017019.9,
-    "end": 1017257.9,
+    "start": 1154839.9,
+    "end": 1155077.9,
     "bound_by": "dispatch"
    },
    {
     "tag": "softmax.exp_sum",
     "L": 35,
     "unit": "SU",
-    "start": 1017257.9,
-    "end": 1017781.9
+    "start": 1155077.9,
+    "end": 1155601.9
    },
    {
     "tag": "softmax.bf16_p",
     "L": 35,
     "unit": "SU",
-    "start": 1017781.9,
-    "end": 1017904.9
+    "start": 1155601.9,
+    "end": 1155724.9
    },
    {
     "tag": "attention_pv.kv0",
     "L": 35,
     "unit": "ATT",
-    "start": 1017928.9,
-    "end": 1018645.1,
+    "start": 1155748.9,
+    "end": 1156409.0,
     "bound_by": "dispatch"
    },
    {
     "tag": "attention_pv.kv1",
     "L": 35,
     "unit": "ATT",
-    "start": 1018645.1,
-    "end": 1019361.2
+    "start": 1156409.0,
+    "end": 1157069.1
    },
    {
     "tag": "pv_normalize",
     "L": 35,
     "unit": "SU",
-    "start": 1019385.2,
-    "end": 1019463.2,
+    "start": 1157093.1,
+    "end": 1157171.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "o",
     "L": 35,
     "unit": "SM",
-    "start": 1019487.2,
-    "end": 1021579.8,
+    "start": 1157195.1,
+    "end": 1159590.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "all_reduce_o",
     "L": 35,
     "unit": "COLL",
-    "start": 1021603.8,
-    "end": 1022953.8,
+    "start": 1159614.1,
+    "end": 1160964.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_o+residual",
     "L": 35,
     "unit": "SU",
-    "start": 1022977.8,
-    "end": 1023040.8,
+    "start": 1160988.1,
+    "end": 1161051.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "prenorm.ffn",
     "L": 35,
     "unit": "FUSED",
-    "start": 1023064.8,
-    "end": 1023239.8,
+    "start": 1161075.1,
+    "end": 1161250.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "gu",
     "L": 35,
     "unit": "SM",
-    "start": 1023263.8,
-    "end": 1033634.6,
+    "start": 1161274.1,
+    "end": 1173909.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_gu",
     "L": 35,
     "unit": "SU",
-    "start": 1033658.6,
-    "end": 1033723.6,
+    "start": 1173933.1,
+    "end": 1173998.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "swiglu",
     "L": 35,
     "unit": "SFU",
-    "start": 1033747.6,
-    "end": 1033807.6,
+    "start": 1174022.1,
+    "end": 1174082.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "down",
     "L": 35,
     "unit": "SM",
-    "start": 1033831.6,
-    "end": 1039235.5,
+    "start": 1174106.1,
+    "end": 1180597.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "all_reduce_down",
     "L": 35,
     "unit": "COLL",
-    "start": 1039259.5,
-    "end": 1040609.5,
+    "start": 1180621.1,
+    "end": 1181971.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "row_scale_down+residual",
     "L": 35,
     "unit": "SU",
-    "start": 1040633.5,
-    "end": 1040696.5,
+    "start": 1181995.1,
+    "end": 1182058.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "prenorm.final",
     "L": 0,
     "unit": "FUSED",
-    "start": 1040720.5,
-    "end": 1040895.5,
+    "start": 1182082.1,
+    "end": 1182257.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "head",
     "L": 0,
     "unit": "SM",
-    "start": 1040919.5,
-    "end": 1102770.0,
+    "start": 1182281.1,
+    "end": 1258596.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "head_scale",
     "L": 0,
     "unit": "SU",
-    "start": 1102794.0,
-    "end": 1102891.0,
+    "start": 1258620.1,
+    "end": 1258717.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "argmax_local",
     "L": 0,
     "unit": "ARGMAX",
-    "start": 1102915.0,
-    "end": 1105309.0,
+    "start": 1258741.1,
+    "end": 1261135.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "argmax_merge",
     "L": 0,
     "unit": "COLL",
-    "start": 1105333.0,
-    "end": 1105919.0,
+    "start": 1261159.1,
+    "end": 1261745.1,
     "bound_by": "dispatch"
    },
    {
     "tag": "end",
     "L": 0,
     "unit": "CTL",
-    "start": 1105943.0,
-    "end": 1105944.0,
+    "start": 1261769.1,
+    "end": 1261770.1,
     "bound_by": "dispatch"
    }
   ]

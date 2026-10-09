@@ -126,7 +126,10 @@ class Dyn:
 
 
 def eff(d, dyn, L):
-    base = d.base + L * d.lstride + dyn.v[d.dyn_sel] * d.dyn_mul
+    if d.dyn_sel == 31:                       # C3b indexed descriptor: timing uses index 0 (values are not modelled)
+        base = d.base
+    else:
+        base = d.base + L * d.lstride + dyn.v[d.dyn_sel] * d.dyn_mul
     n = dyn.v[d.n_sel] if d.n_sel else d.n
     ist = 0 if d.istride == ISTRIDE_BCAST else (d.istride or 1)
     return base, n, d.m, d.stride, ist
@@ -160,6 +163,9 @@ def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
+    for d in r.desc.values():
+        if d.dyn_sel == 31:                   # the index word the dispatcher reads
+            reads.append(("VM", d.lstride, d.lstride + 1))
     for kind, iv in getattr(r, "implicit", ()):
         (writes if kind == "w" else reads).append(iv)
     for k, d in r.desc.items():
@@ -383,6 +389,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
             nch = (1 if r.sut is not None else 0) + len(r.descs_in_order())
             dcyc = 0.0 if mode in ("S1",) else cpc["decode_header"]["value"] + nch * cpc["decode_per_chunk"]["value"]
             alat = 0.0 if mode in ("S1",) else cpc["addr_latency"]["value"]
+            nidx = sum(1 for d in r.desc.values() if d.dyn_sel == 31)
             f_r = fetch_ready(i, k, L)
             dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2", "SX") else (dec_t + dcyc)
             ready = dec_t + alat
@@ -392,6 +399,12 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                     wt = max(wt, outstanding_end[un] + rwire)
             q = unit_starts[u]
             qt = q[-qd] if len(q) >= qd else 0.0
+            if nidx:
+                # C3b: the dispatcher reads the index word only after its producer retired (the wait is satisfied)
+                ivs = [("VM", d.lstride, d.lstride + 1) for d in r.desc.values() if d.dyn_sel == 31]
+                prod = max([end[j] + rwire for j in deps[i]
+                            if any(overlap(w_, iv) for w_ in fps[j][1] for iv in ivs)] + [0.0])
+                ready = max(ready, prod + cpc["indexed_read"]["value"] * nidx)
             if mode == "S1":
                 # per-unit sequencers, drain semantics: wait for every unit that produced an input to drain
                 wt = max([outstanding_end[recs[ex[j][0]].unit] for j in deps[i]] + [0.0])
