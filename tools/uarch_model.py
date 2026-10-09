@@ -89,6 +89,51 @@ def dsrom_engram_boot_dispatch_model():
 
 import arch_budget_v41 as A  # noqa: E402
 
+def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
+    """Opt-in fmt3 proposal; area/routing are estimates until SS/FF qualification.
+
+    G1 source: results/arch/qwen_on_r25_20261008/PLAN.md. Each SM front
+    consumes 128 INT8 codes in two beats of 64 exact BF16 values. Existing
+    BF16 MAC/reduction order is unchanged. Added register applies to all formats
+    in the enabled master; default legacy master has no added cycle.
+    """
+    return {
+        "status": "proposal_not_physically_qualified", "replicas": replicas,
+        "macs_per_cycle": 0, "compute_intensity": "conversion only",
+        "input_bytes_per_cycle_average": 64, "input_burst_bytes": 136,
+        "output_bytes_per_cycle": 136, "useful_output_bytes_per_cycle": 128,
+        "input_boundary_bits": 1088, "output_boundary_bits": 1088,
+        "conversion_lanes": 64, "held_high_codes_bits": 512,
+        "output_register_bits": 1088, "control_register_bits": 2,
+        "half_mux_inputs_per_lane": 2, "half_control_fanout": 64,
+        "estimated_area_mm2_die": 0.1,
+        "floorplan_slot": "existing open smh_front_c strip; fit unverified",
+        "routing_tracks_needed": 2176,
+        "routing_channel_capacity": 2500,
+        "routing_capacity_basis": "120um central channel / 0.048um track pitch on one layer; other traffic shares it",
+        "routing_fit": "analytic 2176/2500=87.04% for adapter boundary buses alone; detailed routing remains a gate",
+        "front_c_footprint_um": [432.0, 518.4],
+        "front_c_slot_area_mm2": 0.2239488,
+        "adapter_estimated_area_mm2_per_slot": 0.1 / replicas,
+        "adapter_area_fraction_of_slot": (0.1 / replicas) / 0.2239488,
+        "target_utilization": 0.55,
+        "internal_clock_period_ps": 833,
+        "setup_uncertainty_ps": 60,
+        "hold_uncertainty_ps": 25,
+        "boundary_external_setup_ps": 300,
+        "boundary_region_skew_budget_ps": 90,
+        "local_boundary_setup_budget_ps": 833 - 60 - 300 - 90,
+        "clock_plan": "balanced element region; per-corner neighbour insertion from CTS calibration; validate routed insertion",
+        "hold_budget": "input min30ps; sender output min0ps (50ps-50ps H1); correct FF scene",
+        "qualification_policy": "SS>=15ps FF>=15ps DRC0 at833ps; legacy corner tool TT verdict ignored",
+        "added_latency_cycles_per_dependent_sm_op": 1,
+        "added_token_cycles": dependent_sm_ops,
+        "added_token_ns_at_1p2ghz": dependent_sm_ops / 1.2,
+        "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
+        "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0",
+    }
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
