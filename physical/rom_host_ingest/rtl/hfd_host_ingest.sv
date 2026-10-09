@@ -4,7 +4,12 @@
 // (linear ingest sectors -> the DS-V4.1 decode KV layout of ot_hbm_accel_dskv_wb, on the stack write-request port format
 // wq_*).  The wq_* port shares the die's HBM write fabric with the per-token write-back (decode first) and the loader
 // (mtp-die wiring); eop_v / eop_d carry the BOOT_END marker (loader boot check).  Clocks as ot_rom_host_ingest.
-module hfd_host_ingest #(parameter integer IQ = 4) (
+// COMPLETION FENCE (reviewer 2026-10-08, required before adoption): a descriptor's completion word (it carries the
+// engine's cumulative sector count at done) is held in the die domain until the write fabric has ACKed that many posted
+// ingest writes (ack_n: ACKs returned this ck cycle by the per-stack write merge); only then does it go to the host and
+// pulse slot_done_v / slot_done_tag (ck) for the decode scheduler, so decode can never read a slot whose writes are still
+// in flight.  Fault words pass at once.  FENCE 0 (bench mutant, must FAIL) releases completions without waiting.
+module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -24,22 +29,70 @@ module hfd_host_ingest #(parameter integer IQ = 4) (
     output wire [4:0]    wq_col,
     output wire [255:0]  wq_data,
     input  wire          wq_r,
+    input  wire [5:0]    ack_n,
+    output reg           slot_done_v,
+    output reg  [7:0]    slot_done_tag,
     output wire          eop_v,
     output wire [63:0]   eop_d,
     output wire          fault
 );
     wire o_v, o_we, o_cr, f_hi, f_x;
+    wire u_tv, u_tcr;
+    wire [63:0] u_td;
     wire [31:0] o_addr;
     wire [255:0] o_d;
     wire rn_c;
     ot_reset_sync u_rs (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(rn_c));
     ot_rom_host_ingest #(.KVHMAX(1), .HDMAX(16), .QKV_EN(0), .RMW_EN(0), .OCRED(IQ)) u_hi (
-        .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(t_v), .t_d(t_d),
-        .t_cr(t_cr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
+        .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(u_tv), .t_d(u_td),
+        .t_cr(u_tcr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .i_rv(1'b0), .i_rd(256'd0), .fault(f_hi));
     ot_hbm_ingest_xlat #(.IQ(IQ)) u_x (
         .ck(ck), .rst_n(rn_c), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .wq_v(wq_v), .wq_stack(wq_stack), .wq_pc(wq_pc), .wq_bank(wq_bank), .wq_row(wq_row), .wq_col(wq_col),
         .wq_data(wq_data), .wq_r(wq_r), .eop_v(eop_v), .eop_d(eop_d), .fault(f_x));
     assign fault = f_hi | f_x;
+
+    // ---- completion fence ---------------------------------------------------------------------------------------
+    wire rn_h;
+    ot_reset_sync u_rsh (.clk(clk_h), .async_rst_n(rst_n), .sync_rst_n(rn_h));
+    // clk_h -> ck: the block's completion words (credit to the block: one per word the die side pops)
+    wire       a_full, a_empty, a_ovf; wire [3:0] a_freed, a_cnt; wire [63:0] a_head;
+    reg        a_pop;
+    ot_link_afifo #(.W(64), .AW(3)) u_ca (.wclk(clk_h), .wrst_n(rn_h), .wr(u_tv), .wdata(u_td), .wfull(a_full),
+        .wfreed(a_freed), .ovf(a_ovf), .rclk(ck), .rrst_n(rn_c), .rd(a_pop), .rempty(a_empty), .rdata(a_head), .rcount(a_cnt));
+    reg [4:0] ucr_pend;
+    reg       ucr_q;
+    always @(posedge clk_h or negedge rn_h)
+        if (!rn_h) begin ucr_pend <= 0; ucr_q <= 1'b0; end
+        else begin ucr_q <= ucr_pend != 0; ucr_pend <= ucr_pend + a_freed - (ucr_pend != 0 ? 5'd1 : 5'd0); end
+    assign u_tcr = ucr_q;
+    // ck: ACK count, release when acked >= the word's sector count (fault words at once)
+    reg  [31:0] acked;
+    wire        is_done = a_head[63:56] == 8'h01;
+    wire        b_full;
+    always @(*) a_pop = !a_empty && !b_full && (!is_done || FENCE == 0 || acked >= a_head[31:0]);
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) begin acked <= 0; slot_done_v <= 1'b0; slot_done_tag <= 0; end
+        else begin
+            acked <= acked + ack_n;
+            slot_done_v <= a_pop && is_done;
+            if (a_pop && is_done) slot_done_tag <= a_head[47:40];
+        end
+    // ck -> clk_h: released words to the host (host credits TCRED 4, pin flops)
+    wire       b_empty, b_ovf; wire [3:0] b_freed, b_cnt; wire [63:0] b_head;
+    reg  [2:0] hcr; reg hcr_q; reg tv_q; reg [63:0] td_q;
+    wire       b_pop = !b_empty && hcr != 0;
+    ot_link_afifo #(.W(64), .AW(3)) u_cb (.wclk(ck), .wrst_n(rn_c), .wr(a_pop), .wdata(a_head), .wfull(b_full),
+        .wfreed(b_freed), .ovf(b_ovf), .rclk(clk_h), .rrst_n(rn_h), .rd(b_pop), .rempty(b_empty), .rdata(b_head), .rcount(b_cnt));
+    always @(posedge clk_h or negedge rn_h)
+        if (!rn_h) begin hcr <= 3'd4; hcr_q <= 1'b0; tv_q <= 1'b0; td_q <= 0; end
+        else begin
+            hcr_q <= t_cr;
+            hcr <= hcr + (hcr_q ? 3'd1 : 3'd0) - (b_pop ? 3'd1 : 3'd0);
+            tv_q <= b_pop;
+            if (b_pop) td_q <= b_head;
+        end
+    assign t_v = tv_q;
+    assign t_d = td_q;
 endmodule

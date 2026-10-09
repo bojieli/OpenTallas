@@ -37,7 +37,7 @@ RTL = [ROOT / p for p in ("rtl/lib/ot_reset_sync.sv", "rtl/link/ot_link_afifo.sv
                           "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv", "physical/rom_host_ingest/rtl/hfd_host_ingest.sv")]
 TB = ROOT / "rtl/test/tb_hbm_host_ingest.sv"
 RE = re.compile(r"HHING descs=(\d+) beats=(\d+)/(\d+) writes=(\d+) dones=(\d+)/(\d+) fault_words=(\d+) fault=(\d+) "
-                r"ck_cycles=(\d+) timeout=(\d+)")
+                r"ck_cycles=(\d+) timeout=(\d+) landed=(\d+) stale=(\d+) fence_stall=(\d+) slot_dones=(\d+)")
 
 
 def sha(p):
@@ -45,10 +45,11 @@ def sha(p):
 
 
 def case(rng, die=5, P=4652, win_layer=20, slots=((3, False), (1, True))):
-    descs, beats, nb, exp = [], [], [], {}
+    descs, beats, nb, exp, cnt = [], [], [], {}, []
 
     def add(d, payload):
         b = R.beats_of(payload)
+        cnt.append(len(exp))
         descs.append(d)
         beats.extend(b)
         nb.append(len(b))
@@ -98,12 +99,15 @@ def case(rng, die=5, P=4652, win_layer=20, slots=((3, False), (1, True))):
         meta["slots"].append(dict(slot=slot, ratio=2 if r2 else 1, groups=G, owned_rows=len(own), key_blocks=nblk,
                                   partial_last_block=len(keys) % 8 != 0))
     meta["expected_sectors"] = len(exp)
-    return dict(descs=descs, beats=beats, nb=nb, exp=exp, meta=meta)
+    # cumulative sectors once descriptor i is complete (descriptor i's sectors are added after add(i) is called)
+    cum = cnt[1:] + [len(exp)]
+    return dict(descs=descs, beats=beats, nb=nb, exp=exp, cum=cum, meta=meta)
 
 
-def build(work: Path, tag, nd, np_, srcs):
+def build(work: Path, tag, nd, np_, srcs, fence=1):
     exe = work / f"hh_{tag}.vvp"
     subprocess.run(["iverilog", "-g2012", "-o", str(exe), "-s", "tb_hbm_host_ingest", f"-Ptb_hbm_host_ingest.ND={nd}",
+                    f"-Ptb_hbm_host_ingest.FENCE={fence}",
                     f"-Ptb_hbm_host_ingest.NP={np_}", *map(str, srcs), str(TB)], check=True, capture_output=True, text=True)
     return exe
 
@@ -113,6 +117,7 @@ def write_case(d: Path, c):
     (d / "desc.mem").write_text("".join(f"{x:064x}\n" for x in c["descs"]))
     (d / "pay.mem").write_text("".join(f"{x:0128x}\n" for x in c["beats"]))
     (d / "nb.mem").write_text("".join(f"{x:08x}\n" for x in c["nb"]))
+    (d / "cum.mem").write_text("".join(f"{x:08x}\n" for x in c["cum"]))
 
 
 def run(exe, d, c, **pa):
@@ -122,7 +127,7 @@ def run(exe, d, c, **pa):
     m = RE.search(p.stdout)
     if not m:
         return {"pass": False, "stdout": p.stdout[-1200:], "stderr": p.stderr[-600:]}
-    descs, beats, npay, writes, dones, nf, fw, fault, cyc, tmo = map(int, m.groups())
+    descs, beats, npay, writes, dones, nf, fw, fault, cyc, tmo, landed, stale, fstall, sdones = map(int, m.groups())
     got, dup_conflict = {}, 0
     for ln in (d / "wq.txt").read_text().splitlines():
         s, pc, bk, rw, cl, hx = ln.split()
@@ -136,10 +141,11 @@ def run(exe, d, c, **pa):
     extra = sum(1 for k in got if k not in exp)
     wrong = sum(1 for k in exp if k in got and got[k] != exp[k])
     ok = (missing == extra == wrong == dup_conflict == 0 and writes == len(exp) and dones == nf and fw == 0
-          and fault == 0 and tmo == 0 and beats == npay)
+          and fault == 0 and tmo == 0 and beats == npay and stale == 0 and sdones == nf and landed == writes)
     return {"pass": ok, "writes": writes, "expected": len(exp), "missing": missing, "extra": extra, "wrong_data": wrong,
             "duplicate_conflicts": dup_conflict, "fenced_done": dones, "fenced": nf, "fault_words": fw, "fault": fault,
-            "ck_cycles": cyc, "timeout": bool(tmo), "plusargs": pa, "wall_s": round(time.time() - t, 1)}
+            "ck_cycles": cyc, "timeout": bool(tmo), "landed": landed, "stale_slot_reads": stale,
+            "fence_stall_ck_cycles": fstall, "slot_dones": sdones, "plusargs": pa, "wall_s": round(time.time() - t, 1)}
 
 
 def main():
@@ -157,11 +163,13 @@ def main():
            "dut": "physical/rom_host_ingest/rtl/hfd_host_ingest.sv", "golden": "tools/hbm_accel_dskv_wb.py (sector_addr, owner_k)",
            "meta": c["meta"], "runs": [], "mutations": {}}
     ok = True
-    for pa in ({}, {"WQSTALL": 50, "SEED": 3}, {"WQSTALL": 80, "SEED": 7}):
+    for pa in ({}, {"WQSTALL": 50, "SEED": 3}, {"WQSTALL": 80, "SEED": 7},
+               {"ACKDLY": 3000, "ACKJ": 2000, "SEED": 11}, {"ACKDLY": 800, "ACKJ": 400, "WQSTALL": 30, "SEED": 13}):
         r = run(exe, d, c, **pa)
         rec["runs"].append(r)
         ok &= r["pass"]
-        print("run", pa, {k: r.get(k) for k in ("pass", "writes", "expected", "missing", "extra", "wrong_data", "ck_cycles")},
+        print("run", pa, {k: r.get(k) for k in ("pass", "writes", "expected", "missing", "wrong_data", "stale_slot_reads",
+                                                 "fence_stall_ck_cycles", "ck_cycles")},
               flush=True)
     # mutant: window ring slot off by one in the translator
     src = (ROOT / "rtl/hdc/ingest/ot_hbm_ingest_xlat.sv").read_text()
@@ -175,6 +183,14 @@ def main():
     rec["mutations"]["window_ring_slot_plus_one"] = dict(detected=not r["pass"], wrong_or_missing=r.get("missing", 0) + r.get("wrong_data", 0))
     ok &= not r["pass"]
     print("mutant window_ring_slot_plus_one", "detected" if not r["pass"] else "NOT DETECTED", flush=True)
+    # fence mutant: completions released without waiting for the ACKs; with delayed ACKs decode reads stale slots
+    exe_f = build(args.work, "nofence", len(c["descs"]), len(c["beats"]), RTL, fence=0)
+    r = run(exe_f, d, c, ACKDLY=3000, ACKJ=2000, SEED=11)
+    det = not r["pass"] and r.get("stale_slot_reads", 0) > 0
+    rec["mutations"]["completion_fence_removed"] = dict(detected=det, stale_slot_reads=r.get("stale_slot_reads"),
+                                                        fence_stall_ck_cycles=r.get("fence_stall_ck_cycles"))
+    ok &= det
+    print("mutant completion_fence_removed", "detected" if det else "NOT DETECTED", r.get("stale_slot_reads"), flush=True)
     rec["pass"] = bool(ok)
     rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in RTL + [TB, Path(__file__), ROOT / "tools/hbm_accel_dskv_wb.py",
                                                                             ROOT / "tools/kv_ingest_ref.py"]}
