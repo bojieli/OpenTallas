@@ -54,14 +54,14 @@
       }
     ],
     "calibrate": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
       "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
       "clock": "core_clk",
       "threads": 12,
       "peak_ram_gb": 10
     },
     "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
       "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
       "logs": [
         "{RUN}/routes/{NAME}/flow.log"
@@ -82,8 +82,8 @@
   },
   "route_hold_corners": "mm",
   "route_hold_margin_ns": 0.01,
-  "cycles_added": 0,
-  "cycles_note": "nativeG8 23edges II1; densityvariants noadditionaledges; illegalrecord decode_fault registered1edge",
+  "cycles_added": 15,
+  "cycles_note": "E4M3 native8edges aligned by15edges to23edges; DSnative23edges unchanged; physicaldensityvariant adds0edges; illegaldecode_fault1edge",
   "bench_memory_basis": "95eba5a81 actual five whole-PG samples max1002060KiB;2GiB conservative admissionenvelope for sequential8workerbuilds,not a cap/routepeak",
   "route_memory_basis": {
     "nearest_job": "hbm_quant_e7c2e5b06-tt",
