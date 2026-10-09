@@ -30,6 +30,7 @@
 // wait for.  b / 96 = ((b >> 5) * 2731) >> 13 (exact for b >> 5 < 4096, i.e. any 20-bit position).
 module ot_hbm_accel_dskv_wb_sram #(
   parameter integer ENABLE = 0,
+  parameter integer MUT_MERGE = 0, // bench-only negative control; production always0
   parameter integer STACK = 0,
   parameter integer KEY_CONTIGUOUS = 0,      // opt-in indexer quarter placement: 342 whole blocks/stack
   parameter integer ALL_STACKS = 0,           // 1 (hfd hub write-back unit, 2026-10-08): emit every stack's sectors, wq_stk says which
@@ -57,7 +58,8 @@ module ot_hbm_accel_dskv_wb_sram #(
   end else begin : on
     localparam [3:0] S_IDLE=0,S_MAP=1,S_EMIT=2,S_PRE_REQ=3,S_PRE_RSP=4,
       S_KEY_REQ=5,S_KEY_RSP=6,S_KEY_WRITE=7,S_KEY_WACK=8,S_KEY_EMIT=9;
-    reg [3:0] st;
+    reg [3:0] st, st_n; reg ctl_fault;
+    wire state_bad=(st != ~st_n) || (st>S_KEY_EMIT);
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
     reg [2:0] preload_slot;
     reg [4:0] preload_sector;
@@ -66,22 +68,22 @@ module ot_hbm_accel_dskv_wb_sram #(
     wire [255:0] mem_rsp_data;
     wire preload = st==S_PRE_REQ || st==S_PRE_RSP;
     wire mem_write = st==S_PRE_REQ || st==S_KEY_WRITE;
-    wire mem_req_v=st==S_PRE_REQ || st==S_KEY_REQ || st==S_KEY_WRITE;
+    wire mem_req_v=(st==S_PRE_REQ || st==S_KEY_REQ || st==S_KEY_WRITE)&&!state_bad&&!ctl_fault;
     wire mem_rsp_r=st==S_PRE_RSP || st==S_KEY_RSP || st==S_KEY_WACK;
     ot_hbm_accel_dskv_shadow_sram #(.ENABLE(1)) shadow_store(
       .clk(clk),.rst_n(rst_n),.req_v(mem_req_v),.req_r(mem_req_r),.req_write(mem_write),
       .req_slot(preload?preload_slot:slot[2:0]),.req_sector(preload?preload_sector:ksec),
       .req_data(preload?dat[256*preload_sector+:256]:merged),
       .rsp_v(mem_rsp_v),.rsp_r(mem_rsp_r),.rsp_data(mem_rsp_data),.rsp_poison(mem_rsp_poison),.fault(mem_fault));
-    assign sh_r=(st==S_IDLE)&&!mem_fault;
-    assign fault=mem_fault;
+    assign sh_r=(st==S_IDLE)&&!mem_fault&&!ctl_fault&&!state_bad;
+    assign fault=mem_fault||ctl_fault||state_bad;
     reg [255:0] merge_calc;
     always @* begin
       merge_calc=mem_rsp_data;
       for(integer y=0;y<32;y=y+1)
         if((32*int'(ksec)+y >= 68*int'(n[2:0])) &&
            (32*int'(ksec)+y < 68*int'(n[2:0])+68))
-          merge_calc[8*y+:8]=dat[8*(32*int'(ksec)+y-68*int'(n[2:0]))+:8];
+          merge_calc[8*y+:8]=dat[8*((32*int'(ksec)+y-68*int'(n[2:0])+MUT_MERGE)%68)+:8];
     end
     reg [19:0] position; reg [19:0] n; reg [16:0] b; reg [13:0] k; reg own;
     reg [20:0] s0;            // first die-local sector (window: PC index with j = t)
@@ -110,12 +112,12 @@ module ot_hbm_accel_dskv_wb_sram #(
     end
     wire on_stack = ALL_STACKS ? 1'b1 : (pcg[6:5] == 2'(STACK));
     assign wq_stk = pcg[6:5];
-    wire emit = ((st==S_EMIT)||(st==S_KEY_EMIT)) && on_stack && !mem_fault;
+    wire emit = ((st==S_EMIT)||(st==S_KEY_EMIT)) && on_stack && !mem_fault&&!ctl_fault&&!state_bad;
     assign wq_v = emit; assign wq_pc = pcg[4:0]; assign wq_bank = {jj[9:7], jj[1:0]}; assign wq_row = wrow_a;
     assign wq_col = jj[6:2]; assign wq_data = sdat;
-    assign row_r = (st == S_IDLE) && !sh_v && !mem_fault;
+    assign row_r = (st == S_IDLE) && !sh_v && !mem_fault&&!ctl_fault&&!state_bad;
     assign issued = iss; assign acked = ack;
-    assign fence_ok = (st == S_IDLE) && !row_v && !sh_v && iss == ack && !mem_fault;
+    assign fence_ok = (st == S_IDLE) && !row_v && !sh_v && iss == ack && !mem_fault&&!ctl_fault&&!state_bad;
     // b / 96 = (b >> 5) / 3
     wire [19:0] n_in = row_r2 ? {1'b0, pos[19:1]} : pos;
     wire [16:0] b_in = n_in[19:3];
@@ -125,53 +127,54 @@ module ot_hbm_accel_dskv_wb_sram #(
     wire [13:0] k_in = {q_in, n_in[2:0]};
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
-        st <= S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; position<=0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; preload_slot<=0; preload_sector<=0; merged<=0;
+        st <= S_IDLE; st_n<=~S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; position<=0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
+        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; ctl_fault<=0; preload_slot<=0; preload_sector<=0; merged<=0;
       end else begin
+        if(state_bad)ctl_fault<=1;
         ack <= ack + 16'(ack_n);
         if (wq_v && wq_r) iss <= iss + 1'b1;
         case (st)
           S_IDLE: begin
-            if (sh_v && sh_r) begin dat<=sh_data; preload_slot<=sh_slot; preload_sector<=0; st<=S_PRE_REQ; end
-            else if (row_v) begin
+            if (sh_v && sh_r) begin dat<=sh_data; preload_slot<=sh_slot; preload_sector<=0; st<=S_PRE_REQ; st_n<=~S_PRE_REQ; end
+            else if (row_v && row_r) begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
               position<=pos; n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
-              st <= S_MAP;
+              st <= S_MAP; st_n<=~S_MAP;
             end
           end
           S_MAP: begin
             t <= 0;
             kb_s <= 17'(k >> 3) * 17'd17;
             case (kind)
-              2'd0: begin s0 <= 0; ns <= 5'd17; st <= S_EMIT; end
-              2'd1: begin s0 <= 21'(k) * 21'd9; ns <= 5'd9; st <= own ? S_EMIT : S_IDLE; end
+              2'd0: begin s0 <= 0; ns <= 5'd17; st <= S_EMIT; st_n<=~S_EMIT; end
+              2'd1: begin s0 <= 21'(k) * 21'd9; ns <= 5'd9; st<=own?S_EMIT:S_IDLE; st_n<=~(own?S_EMIT:S_IDLE); end
               default: begin
                 s0 <= (21'(k) * 21'd68) >> 5;
                 ns <= 5'((((21'(k) * 21'd68) + 21'd67) >> 5) - ((21'(k) * 21'd68) >> 5) + 21'd1);
-                st <= own ? S_KEY_REQ : S_IDLE;
+                st<=own?S_KEY_REQ:S_IDLE; st_n<=~(own?S_KEY_REQ:S_IDLE);
               end
             endcase
           end
-          S_PRE_REQ:if(mem_req_r)st<=S_PRE_RSP;
+          S_PRE_REQ:if(mem_req_r)begin st<=S_PRE_RSP; st_n<=~S_PRE_RSP; end
           S_PRE_RSP:if(mem_rsp_v)begin
-            if(preload_sector==16)st<=S_IDLE;
-            else begin preload_sector<=preload_sector+1;st<=S_PRE_REQ;end
+            if(preload_sector==16)begin st<=S_IDLE; st_n<=~S_IDLE; end
+            else begin preload_sector<=preload_sector+1;st<=S_PRE_REQ; st_n<=~S_PRE_REQ;end
           end
-          S_KEY_REQ:if(mem_req_r)st<=S_KEY_RSP;
-          S_KEY_RSP:if(mem_rsp_v)begin merged<=merge_calc;st<=S_KEY_WRITE;end
-          S_KEY_WRITE:if(mem_req_r)st<=S_KEY_WACK;
-          S_KEY_WACK:if(mem_rsp_v)st<=S_KEY_EMIT;
+          S_KEY_REQ:if(mem_req_r)begin st<=S_KEY_RSP; st_n<=~S_KEY_RSP; end
+          S_KEY_RSP:if(mem_rsp_v)begin merged<=merge_calc;st<=S_KEY_WRITE; st_n<=~S_KEY_WRITE;end
+          S_KEY_WRITE:if(mem_req_r)begin st<=S_KEY_WACK; st_n<=~S_KEY_WACK; end
+          S_KEY_WACK:if(mem_rsp_v)begin st<=S_KEY_EMIT; st_n<=~S_KEY_EMIT; end
           S_KEY_EMIT:if(!on_stack||wq_r)begin
-            if(t==ns-1)st<=S_IDLE;else st<=S_KEY_REQ;
+            if(t==ns-1)begin st<=S_IDLE; st_n<=~S_IDLE; end else begin st<=S_KEY_REQ; st_n<=~S_KEY_REQ; end
             t<=t+1;
           end
           S_EMIT: begin                       // S_EMIT: one sector a cycle (off-stack sectors skip)
             if (!on_stack || wq_r) begin
-              if (t == ns - 5'd1) st <= S_IDLE;
+              if (t == ns - 5'd1) begin st <= S_IDLE; st_n<=~S_IDLE; end
               t <= t + 1'b1;
             end
           end
-          default: st<=S_IDLE;
+          default: begin ctl_fault<=1; st<=S_IDLE; st_n<=~S_IDLE; end
         endcase
       end
   end endgenerate
