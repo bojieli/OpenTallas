@@ -132,6 +132,29 @@ def specs(commit):
                                              'physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544',
                                              'physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544']),
                         route_hold_margin_ns=float(hm_a)))
+        # ---- attention half_hi (review-1149 e): unchanged RTL, its own outline / parameters (attn-split's sl20p line)
+        rcmd_hi = (rcmd.replace('TOP=hfd_attn_half_lo', 'TOP=hfd_attn_half_hi').replace('DH=814.32', 'DH=673.92')
+                   .replace('PARAMS="NK=4 NC=2 NR=3 PMID=2 NFR=3 NLL=3" SLIVER=12', 'PARAMS="PMID=2 NFC=2 NL=8 NLL=3 NI=6" SLIVER=20 HALO=2 PADG=4 PADD=2'))
+        out.append(dict(name=f'hgi_attn_half_hi_ps-{c9}-tc-{tag}-cl', block='hfd_attn_half_hi', **common(commit, ram=96, threads=16),
+                        purpose='hbm-forks item 3 (review-1149 e): closure pair of hfd_attn_half_hi on the half_ps pin plan (the hi '
+                                'half has no PS port: hi outline DH 673.92, hi parameters, attn-split sl20p sliver / halo / pads). TC, HM ' + hm_a,
+                        stages=dict(bench=[], calibrate=dict(enabled=False, reason='tile IO false-pathed: every face pin is '
+                                                             'a pin-bank register (as the half-tile lines)'),
+                                    route=dict(cmd=rcmd_hi, ok="grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+                                               logs=['{RUN}/routes/{LABEL}/run.log']),
+                                    collect=dict(cmd='mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json '
+                                                     '{RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/')),
+                        budget=dict(enabled=False, reason='tile IO false-pathed: every face pin is a pin-bank register '
+                                    '(the half-tile line convention, signoff_833_int.sdc); the die stations carry the budget'),
+                        no_bench_reason='ldk lockstep bench (physical/hbm_forks/run_attn_ldk.sh: CF-1 roles 0-4 at ldk 0, '
+                                        'ldk 1, mutant FAIL) PASS at 43dbec73e on the same RTL; re-run in parallel',
+                        verdict=dict(corner_sta='{RUN}/routes/{LABEL}/corner_sta.json',
+                                     drc_metrics='{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json',
+                                     checks=CHK, post_sdc=['physical/hbm_attn_tile_r/signoff_833_int.sdc'],
+                                     macros=['physical/hbm_attn_tile_r/quad_b/ot_attn_tile_m6h1q',
+                                             'physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544',
+                                             'physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544']),
+                        route_hold_margin_ns=float(hm_a)))
         # ---- SM INT8 front (front_c, wide fmt3 strip)
         geom = 'results/arch/qwen_on_r25_20261008/fmt3_physical_candidate/wide_geometry.json'
         fc = lambda cal: (TT + "python3 tools/hbm_accel_smh_physical.py block --piece front_c --variant one "  # noqa: E731
