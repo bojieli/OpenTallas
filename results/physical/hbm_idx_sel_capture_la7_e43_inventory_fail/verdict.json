@@ -1,0 +1,32 @@
+{
+  "schema": "opentallas.hbm_selector_capture.physical_inventory_failure.v1",
+  "verdict": "FAIL_BUILD_INVENTORY",
+  "source_commit": "e43dd9bc19c4302677a82dfa12ca257e7deb172e",
+  "host": "ot-epyc2",
+  "isolated_pathfinding": true,
+  "timing_verdict": null,
+  "reason": "ORFS default SYNTH_MEMORY_MAX_BITS65536 rejected actual LA7 128x609=77952-bit landing bank",
+  "actual_largest_bank_bits": 77952,
+  "required_successor_orfs_var": "SYNTH_MEMORY_MAX_BITS=77952",
+  "observed_synthesis_peak_kib": 12245288,
+  "elapsed": "15:56.36",
+  "synthesized_inferred_memories": 13,
+  "source_inventory": {
+    "score_banks": 4,
+    "score_depth": 128,
+    "score_width": 609,
+    "candidate_queue_banks": 4,
+    "candidate_queue_depth": 8,
+    "candidate_queue_width": 68,
+    "query_depth": 4,
+    "query_width": 1047,
+    "topk_queue_banks": 4,
+    "topk_queue_depth": 8,
+    "topk_queue_width": 592
+  },
+  "logs": {
+    "1_2_yosys.log": "419019296d9bb03181775d96774ba500de29d24715b5dc229a5c249574cde0a9",
+    "calibrate.a1.log": "9c774a6037b479b0fe578b03abf32c5281def71c9477394f1e4c2c30385745f4",
+    "closure_state.json": "2784a0cbaf26a6d240c1dd8db0ac3b327695412217dece56b2d06aef27b797f6"
+  }
+}

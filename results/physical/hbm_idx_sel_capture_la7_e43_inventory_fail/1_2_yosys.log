@@ -1,0 +1,1155 @@
+Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)
+Using ABC speed script.
+Extracting clock period from SDC file: /work/results/asap7/opentallas_hfd_idx_sel_asap7_hv_hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding_cal/base/clock_period.txt
+Setting clock period to 833.333
+1. Executing RTLIL frontend.
+Warning: Selection "ot_sram_1r1w_256x256_m2_r2c2" did not match any module.
+Warning: Selection "ot_sram_1r1w_1024x256_m2_r2c2" did not match any module.
+2. Executing HIERARCHY pass (managing design hierarchy).
+2.1. Analyzing design hierarchy..
+2.2. Analyzing design hierarchy..
+3. Executing SYNTH pass.
+3.1. Executing HIERARCHY pass (managing design hierarchy).
+3.1.1. Analyzing design hierarchy..
+3.1.2. Analyzing design hierarchy..
+3.2. Executing PROC pass (convert processes to netlists).
+3.2.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+3.2.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+3.2.4. Executing PROC_INIT pass (extract init attributes).
+3.2.5. Executing PROC_ARST pass (detect async resets in processes).
+3.2.6. Executing PROC_ROM pass (convert switches to ROMs).
+3.2.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+3.2.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+3.2.9. Executing PROC_DFF pass (convert process syncs to FFs).
+3.2.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+3.2.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+3.2.12. Executing OPT_EXPR pass (perform const folding).
+3.3. Executing CHECK pass (checking for obvious problems).
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$139228 ($dff)
+    port Q[1] of cell $procdff$139228 ($dff)
+    port Q[2] of cell $procdff$139228 ($dff)
+    port Q[3] of cell $procdff$139228 ($dff)
+    port Q[5] of cell $procdff$139228 ($dff)
+    port Q[6] of cell $procdff$139228 ($dff)
+    port Q[7] of cell $procdff$139228 ($dff)
+    port Q[8] of cell $procdff$139228 ($dff)
+    port Q[9] of cell $procdff$139228 ($dff)
+    port Q[10] of cell $procdff$139228 ($dff)
+    port Q[11] of cell $procdff$139228 ($dff)
+    port Q[12] of cell $procdff$139228 ($dff)
+    port Q[13] of cell $procdff$139228 ($dff)
+    port Q[14] of cell $procdff$139228 ($dff)
+    port Q[15] of cell $procdff$139228 ($dff)
+    port Q[16] of cell $procdff$139228 ($dff)
+    port Q[17] of cell $procdff$139228 ($dff)
+    port Q[18] of cell $procdff$139228 ($dff)
+    port Q[19] of cell $procdff$139228 ($dff)
+    port Q[20] of cell $procdff$139228 ($dff)
+    port Q[21] of cell $procdff$139228 ($dff)
+    port Q[22] of cell $procdff$139228 ($dff)
+    port Q[23] of cell $procdff$139228 ($dff)
+    port Q[24] of cell $procdff$139228 ($dff)
+    port Q[25] of cell $procdff$139228 ($dff)
+    port Q[26] of cell $procdff$139228 ($dff)
+    port Q[27] of cell $procdff$139228 ($dff)
+    port Q[28] of cell $procdff$139228 ($dff)
+    port Q[29] of cell $procdff$139228 ($dff)
+    port Q[30] of cell $procdff$139228 ($dff)
+    port Q[31] of cell $procdff$139228 ($dff)
+    port Q[0] of cell $procdff$139198 ($dff)
+    port Q[1] of cell $procdff$139198 ($dff)
+    port Q[2] of cell $procdff$139198 ($dff)
+    port Q[3] of cell $procdff$139198 ($dff)
+    port Q[5] of cell $procdff$139198 ($dff)
+    port Q[6] of cell $procdff$139198 ($dff)
+    port Q[7] of cell $procdff$139198 ($dff)
+    port Q[8] of cell $procdff$139198 ($dff)
+    port Q[9] of cell $procdff$139198 ($dff)
+    port Q[10] of cell $procdff$139198 ($dff)
+    port Q[11] of cell $procdff$139198 ($dff)
+    port Q[12] of cell $procdff$139198 ($dff)
+    port Q[13] of cell $procdff$139198 ($dff)
+    port Q[14] of cell $procdff$139198 ($dff)
+    port Q[15] of cell $procdff$139198 ($dff)
+    port Q[16] of cell $procdff$139198 ($dff)
+    port Q[17] of cell $procdff$139198 ($dff)
+    port Q[18] of cell $procdff$139198 ($dff)
+    port Q[19] of cell $procdff$139198 ($dff)
+    port Q[20] of cell $procdff$139198 ($dff)
+    port Q[21] of cell $procdff$139198 ($dff)
+    port Q[22] of cell $procdff$139198 ($dff)
+    port Q[23] of cell $procdff$139198 ($dff)
+    port Q[24] of cell $procdff$139198 ($dff)
+    port Q[25] of cell $procdff$139198 ($dff)
+    port Q[26] of cell $procdff$139198 ($dff)
+    port Q[27] of cell $procdff$139198 ($dff)
+    port Q[28] of cell $procdff$139198 ($dff)
+    port Q[29] of cell $procdff$139198 ($dff)
+    port Q[30] of cell $procdff$139198 ($dff)
+    port Q[31] of cell $procdff$139198 ($dff)
+    port Q[0] of cell $procdff$139197 ($dff)
+    port Q[1] of cell $procdff$139197 ($dff)
+    port Q[3] of cell $procdff$139197 ($dff)
+    port Q[4] of cell $procdff$139197 ($dff)
+    port Q[5] of cell $procdff$139197 ($dff)
+    port Q[6] of cell $procdff$139197 ($dff)
+    port Q[7] of cell $procdff$139197 ($dff)
+    port Q[8] of cell $procdff$139197 ($dff)
+    port Q[9] of cell $procdff$139197 ($dff)
+    port Q[10] of cell $procdff$139197 ($dff)
+    port Q[11] of cell $procdff$139197 ($dff)
+    port Q[12] of cell $procdff$139197 ($dff)
+    port Q[13] of cell $procdff$139197 ($dff)
+    port Q[14] of cell $procdff$139197 ($dff)
+    port Q[15] of cell $procdff$139197 ($dff)
+    port Q[16] of cell $procdff$139197 ($dff)
+    port Q[17] of cell $procdff$139197 ($dff)
+    port Q[18] of cell $procdff$139197 ($dff)
+    port Q[19] of cell $procdff$139197 ($dff)
+    port Q[20] of cell $procdff$139197 ($dff)
+    port Q[21] of cell $procdff$139197 ($dff)
+    port Q[22] of cell $procdff$139197 ($dff)
+    port Q[23] of cell $procdff$139197 ($dff)
+    port Q[24] of cell $procdff$139197 ($dff)
+    port Q[25] of cell $procdff$139197 ($dff)
+    port Q[26] of cell $procdff$139197 ($dff)
+    port Q[27] of cell $procdff$139197 ($dff)
+    port Q[28] of cell $procdff$139197 ($dff)
+    port Q[29] of cell $procdff$139197 ($dff)
+    port Q[30] of cell $procdff$139197 ($dff)
+    port Q[31] of cell $procdff$139197 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[4] of cell $procdff$139228 ($dff)
+    port Q[4] of cell $procdff$139198 ($dff)
+    port Q[2] of cell $procdff$139197 ($dff)
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$139275 ($dff)
+    port Q[1] of cell $procdff$139275 ($dff)
+    port Q[2] of cell $procdff$139275 ($dff)
+    port Q[3] of cell $procdff$139275 ($dff)
+    port Q[5] of cell $procdff$139275 ($dff)
+    port Q[6] of cell $procdff$139275 ($dff)
+    port Q[7] of cell $procdff$139275 ($dff)
+    port Q[8] of cell $procdff$139275 ($dff)
+    port Q[9] of cell $procdff$139275 ($dff)
+    port Q[10] of cell $procdff$139275 ($dff)
+    port Q[11] of cell $procdff$139275 ($dff)
+    port Q[12] of cell $procdff$139275 ($dff)
+    port Q[13] of cell $procdff$139275 ($dff)
+    port Q[14] of cell $procdff$139275 ($dff)
+    port Q[15] of cell $procdff$139275 ($dff)
+    port Q[16] of cell $procdff$139275 ($dff)
+    port Q[17] of cell $procdff$139275 ($dff)
+    port Q[18] of cell $procdff$139275 ($dff)
+    port Q[19] of cell $procdff$139275 ($dff)
+    port Q[20] of cell $procdff$139275 ($dff)
+    port Q[21] of cell $procdff$139275 ($dff)
+    port Q[22] of cell $procdff$139275 ($dff)
+    port Q[23] of cell $procdff$139275 ($dff)
+    port Q[24] of cell $procdff$139275 ($dff)
+    port Q[25] of cell $procdff$139275 ($dff)
+    port Q[26] of cell $procdff$139275 ($dff)
+    port Q[27] of cell $procdff$139275 ($dff)
+    port Q[28] of cell $procdff$139275 ($dff)
+    port Q[29] of cell $procdff$139275 ($dff)
+    port Q[30] of cell $procdff$139275 ($dff)
+    port Q[31] of cell $procdff$139275 ($dff)
+    port Q[0] of cell $procdff$139245 ($dff)
+    port Q[1] of cell $procdff$139245 ($dff)
+    port Q[2] of cell $procdff$139245 ($dff)
+    port Q[3] of cell $procdff$139245 ($dff)
+    port Q[5] of cell $procdff$139245 ($dff)
+    port Q[6] of cell $procdff$139245 ($dff)
+    port Q[7] of cell $procdff$139245 ($dff)
+    port Q[8] of cell $procdff$139245 ($dff)
+    port Q[9] of cell $procdff$139245 ($dff)
+    port Q[10] of cell $procdff$139245 ($dff)
+    port Q[11] of cell $procdff$139245 ($dff)
+    port Q[12] of cell $procdff$139245 ($dff)
+    port Q[13] of cell $procdff$139245 ($dff)
+    port Q[14] of cell $procdff$139245 ($dff)
+    port Q[15] of cell $procdff$139245 ($dff)
+    port Q[16] of cell $procdff$139245 ($dff)
+    port Q[17] of cell $procdff$139245 ($dff)
+    port Q[18] of cell $procdff$139245 ($dff)
+    port Q[19] of cell $procdff$139245 ($dff)
+    port Q[20] of cell $procdff$139245 ($dff)
+    port Q[21] of cell $procdff$139245 ($dff)
+    port Q[22] of cell $procdff$139245 ($dff)
+    port Q[23] of cell $procdff$139245 ($dff)
+    port Q[24] of cell $procdff$139245 ($dff)
+    port Q[25] of cell $procdff$139245 ($dff)
+    port Q[26] of cell $procdff$139245 ($dff)
+    port Q[27] of cell $procdff$139245 ($dff)
+    port Q[28] of cell $procdff$139245 ($dff)
+    port Q[29] of cell $procdff$139245 ($dff)
+    port Q[30] of cell $procdff$139245 ($dff)
+    port Q[31] of cell $procdff$139245 ($dff)
+    port Q[0] of cell $procdff$139244 ($dff)
+    port Q[1] of cell $procdff$139244 ($dff)
+    port Q[3] of cell $procdff$139244 ($dff)
+    port Q[4] of cell $procdff$139244 ($dff)
+    port Q[5] of cell $procdff$139244 ($dff)
+    port Q[6] of cell $procdff$139244 ($dff)
+    port Q[7] of cell $procdff$139244 ($dff)
+    port Q[8] of cell $procdff$139244 ($dff)
+    port Q[9] of cell $procdff$139244 ($dff)
+    port Q[10] of cell $procdff$139244 ($dff)
+    port Q[11] of cell $procdff$139244 ($dff)
+    port Q[12] of cell $procdff$139244 ($dff)
+    port Q[13] of cell $procdff$139244 ($dff)
+    port Q[14] of cell $procdff$139244 ($dff)
+    port Q[15] of cell $procdff$139244 ($dff)
+    port Q[16] of cell $procdff$139244 ($dff)
+    port Q[17] of cell $procdff$139244 ($dff)
+    port Q[18] of cell $procdff$139244 ($dff)
+    port Q[19] of cell $procdff$139244 ($dff)
+    port Q[20] of cell $procdff$139244 ($dff)
+    port Q[21] of cell $procdff$139244 ($dff)
+    port Q[22] of cell $procdff$139244 ($dff)
+    port Q[23] of cell $procdff$139244 ($dff)
+    port Q[24] of cell $procdff$139244 ($dff)
+    port Q[25] of cell $procdff$139244 ($dff)
+    port Q[26] of cell $procdff$139244 ($dff)
+    port Q[27] of cell $procdff$139244 ($dff)
+    port Q[28] of cell $procdff$139244 ($dff)
+    port Q[29] of cell $procdff$139244 ($dff)
+    port Q[30] of cell $procdff$139244 ($dff)
+    port Q[31] of cell $procdff$139244 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[4] of cell $procdff$139275 ($dff)
+    port Q[4] of cell $procdff$139245 ($dff)
+    port Q[2] of cell $procdff$139244 ($dff)
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$139634 ($dff)
+    port Q[1] of cell $procdff$139634 ($dff)
+    port Q[2] of cell $procdff$139634 ($dff)
+    port Q[3] of cell $procdff$139634 ($dff)
+    port Q[5] of cell $procdff$139634 ($dff)
+    port Q[6] of cell $procdff$139634 ($dff)
+    port Q[7] of cell $procdff$139634 ($dff)
+    port Q[8] of cell $procdff$139634 ($dff)
+    port Q[9] of cell $procdff$139634 ($dff)
+    port Q[10] of cell $procdff$139634 ($dff)
+    port Q[11] of cell $procdff$139634 ($dff)
+    port Q[12] of cell $procdff$139634 ($dff)
+    port Q[13] of cell $procdff$139634 ($dff)
+    port Q[14] of cell $procdff$139634 ($dff)
+    port Q[15] of cell $procdff$139634 ($dff)
+    port Q[16] of cell $procdff$139634 ($dff)
+    port Q[17] of cell $procdff$139634 ($dff)
+    port Q[18] of cell $procdff$139634 ($dff)
+    port Q[19] of cell $procdff$139634 ($dff)
+    port Q[20] of cell $procdff$139634 ($dff)
+    port Q[21] of cell $procdff$139634 ($dff)
+    port Q[22] of cell $procdff$139634 ($dff)
+    port Q[23] of cell $procdff$139634 ($dff)
+    port Q[24] of cell $procdff$139634 ($dff)
+    port Q[25] of cell $procdff$139634 ($dff)
+    port Q[26] of cell $procdff$139634 ($dff)
+    port Q[27] of cell $procdff$139634 ($dff)
+    port Q[28] of cell $procdff$139634 ($dff)
+    port Q[29] of cell $procdff$139634 ($dff)
+    port Q[30] of cell $procdff$139634 ($dff)
+    port Q[31] of cell $procdff$139634 ($dff)
+    port Q[0] of cell $procdff$139604 ($dff)
+    port Q[1] of cell $procdff$139604 ($dff)
+    port Q[2] of cell $procdff$139604 ($dff)
+    port Q[3] of cell $procdff$139604 ($dff)
+    port Q[5] of cell $procdff$139604 ($dff)
+    port Q[6] of cell $procdff$139604 ($dff)
+    port Q[7] of cell $procdff$139604 ($dff)
+    port Q[8] of cell $procdff$139604 ($dff)
+    port Q[9] of cell $procdff$139604 ($dff)
+    port Q[10] of cell $procdff$139604 ($dff)
+    port Q[11] of cell $procdff$139604 ($dff)
+    port Q[12] of cell $procdff$139604 ($dff)
+    port Q[13] of cell $procdff$139604 ($dff)
+    port Q[14] of cell $procdff$139604 ($dff)
+    port Q[15] of cell $procdff$139604 ($dff)
+    port Q[16] of cell $procdff$139604 ($dff)
+    port Q[17] of cell $procdff$139604 ($dff)
+    port Q[18] of cell $procdff$139604 ($dff)
+    port Q[19] of cell $procdff$139604 ($dff)
+    port Q[20] of cell $procdff$139604 ($dff)
+    port Q[21] of cell $procdff$139604 ($dff)
+    port Q[22] of cell $procdff$139604 ($dff)
+    port Q[23] of cell $procdff$139604 ($dff)
+    port Q[24] of cell $procdff$139604 ($dff)
+    port Q[25] of cell $procdff$139604 ($dff)
+    port Q[26] of cell $procdff$139604 ($dff)
+    port Q[27] of cell $procdff$139604 ($dff)
+    port Q[28] of cell $procdff$139604 ($dff)
+    port Q[29] of cell $procdff$139604 ($dff)
+    port Q[30] of cell $procdff$139604 ($dff)
+    port Q[31] of cell $procdff$139604 ($dff)
+    port Q[0] of cell $procdff$139603 ($dff)
+    port Q[1] of cell $procdff$139603 ($dff)
+    port Q[3] of cell $procdff$139603 ($dff)
+    port Q[4] of cell $procdff$139603 ($dff)
+    port Q[5] of cell $procdff$139603 ($dff)
+    port Q[6] of cell $procdff$139603 ($dff)
+    port Q[7] of cell $procdff$139603 ($dff)
+    port Q[8] of cell $procdff$139603 ($dff)
+    port Q[9] of cell $procdff$139603 ($dff)
+    port Q[10] of cell $procdff$139603 ($dff)
+    port Q[11] of cell $procdff$139603 ($dff)
+    port Q[12] of cell $procdff$139603 ($dff)
+    port Q[13] of cell $procdff$139603 ($dff)
+    port Q[14] of cell $procdff$139603 ($dff)
+    port Q[15] of cell $procdff$139603 ($dff)
+    port Q[16] of cell $procdff$139603 ($dff)
+    port Q[17] of cell $procdff$139603 ($dff)
+    port Q[18] of cell $procdff$139603 ($dff)
+    port Q[19] of cell $procdff$139603 ($dff)
+    port Q[20] of cell $procdff$139603 ($dff)
+    port Q[21] of cell $procdff$139603 ($dff)
+    port Q[22] of cell $procdff$139603 ($dff)
+    port Q[23] of cell $procdff$139603 ($dff)
+    port Q[24] of cell $procdff$139603 ($dff)
+    port Q[25] of cell $procdff$139603 ($dff)
+    port Q[26] of cell $procdff$139603 ($dff)
+    port Q[27] of cell $procdff$139603 ($dff)
+    port Q[28] of cell $procdff$139603 ($dff)
+    port Q[29] of cell $procdff$139603 ($dff)
+    port Q[30] of cell $procdff$139603 ($dff)
+    port Q[31] of cell $procdff$139603 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[4] of cell $procdff$139634 ($dff)
+    port Q[4] of cell $procdff$139604 ($dff)
+    port Q[2] of cell $procdff$139603 ($dff)
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$139681 ($dff)
+    port Q[1] of cell $procdff$139681 ($dff)
+    port Q[2] of cell $procdff$139681 ($dff)
+    port Q[3] of cell $procdff$139681 ($dff)
+    port Q[5] of cell $procdff$139681 ($dff)
+    port Q[6] of cell $procdff$139681 ($dff)
+    port Q[7] of cell $procdff$139681 ($dff)
+    port Q[8] of cell $procdff$139681 ($dff)
+    port Q[9] of cell $procdff$139681 ($dff)
+    port Q[10] of cell $procdff$139681 ($dff)
+    port Q[11] of cell $procdff$139681 ($dff)
+    port Q[12] of cell $procdff$139681 ($dff)
+    port Q[13] of cell $procdff$139681 ($dff)
+    port Q[14] of cell $procdff$139681 ($dff)
+    port Q[15] of cell $procdff$139681 ($dff)
+    port Q[16] of cell $procdff$139681 ($dff)
+    port Q[17] of cell $procdff$139681 ($dff)
+    port Q[18] of cell $procdff$139681 ($dff)
+    port Q[19] of cell $procdff$139681 ($dff)
+    port Q[20] of cell $procdff$139681 ($dff)
+    port Q[21] of cell $procdff$139681 ($dff)
+    port Q[22] of cell $procdff$139681 ($dff)
+    port Q[23] of cell $procdff$139681 ($dff)
+    port Q[24] of cell $procdff$139681 ($dff)
+    port Q[25] of cell $procdff$139681 ($dff)
+    port Q[26] of cell $procdff$139681 ($dff)
+    port Q[27] of cell $procdff$139681 ($dff)
+    port Q[28] of cell $procdff$139681 ($dff)
+    port Q[29] of cell $procdff$139681 ($dff)
+    port Q[30] of cell $procdff$139681 ($dff)
+    port Q[31] of cell $procdff$139681 ($dff)
+    port Q[0] of cell $procdff$139651 ($dff)
+    port Q[1] of cell $procdff$139651 ($dff)
+    port Q[2] of cell $procdff$139651 ($dff)
+    port Q[3] of cell $procdff$139651 ($dff)
+    port Q[5] of cell $procdff$139651 ($dff)
+    port Q[6] of cell $procdff$139651 ($dff)
+    port Q[7] of cell $procdff$139651 ($dff)
+    port Q[8] of cell $procdff$139651 ($dff)
+    port Q[9] of cell $procdff$139651 ($dff)
+    port Q[10] of cell $procdff$139651 ($dff)
+    port Q[11] of cell $procdff$139651 ($dff)
+    port Q[12] of cell $procdff$139651 ($dff)
+    port Q[13] of cell $procdff$139651 ($dff)
+    port Q[14] of cell $procdff$139651 ($dff)
+    port Q[15] of cell $procdff$139651 ($dff)
+    port Q[16] of cell $procdff$139651 ($dff)
+    port Q[17] of cell $procdff$139651 ($dff)
+    port Q[18] of cell $procdff$139651 ($dff)
+    port Q[19] of cell $procdff$139651 ($dff)
+    port Q[20] of cell $procdff$139651 ($dff)
+    port Q[21] of cell $procdff$139651 ($dff)
+    port Q[22] of cell $procdff$139651 ($dff)
+    port Q[23] of cell $procdff$139651 ($dff)
+    port Q[24] of cell $procdff$139651 ($dff)
+    port Q[25] of cell $procdff$139651 ($dff)
+    port Q[26] of cell $procdff$139651 ($dff)
+    port Q[27] of cell $procdff$139651 ($dff)
+    port Q[28] of cell $procdff$139651 ($dff)
+    port Q[29] of cell $procdff$139651 ($dff)
+    port Q[30] of cell $procdff$139651 ($dff)
+    port Q[31] of cell $procdff$139651 ($dff)
+    port Q[0] of cell $procdff$139650 ($dff)
+    port Q[1] of cell $procdff$139650 ($dff)
+    port Q[3] of cell $procdff$139650 ($dff)
+    port Q[4] of cell $procdff$139650 ($dff)
+    port Q[5] of cell $procdff$139650 ($dff)
+    port Q[6] of cell $procdff$139650 ($dff)
+    port Q[7] of cell $procdff$139650 ($dff)
+    port Q[8] of cell $procdff$139650 ($dff)
+    port Q[9] of cell $procdff$139650 ($dff)
+    port Q[10] of cell $procdff$139650 ($dff)
+    port Q[11] of cell $procdff$139650 ($dff)
+    port Q[12] of cell $procdff$139650 ($dff)
+    port Q[13] of cell $procdff$139650 ($dff)
+    port Q[14] of cell $procdff$139650 ($dff)
+    port Q[15] of cell $procdff$139650 ($dff)
+    port Q[16] of cell $procdff$139650 ($dff)
+    port Q[17] of cell $procdff$139650 ($dff)
+    port Q[18] of cell $procdff$139650 ($dff)
+    port Q[19] of cell $procdff$139650 ($dff)
+    port Q[20] of cell $procdff$139650 ($dff)
+    port Q[21] of cell $procdff$139650 ($dff)
+    port Q[22] of cell $procdff$139650 ($dff)
+    port Q[23] of cell $procdff$139650 ($dff)
+    port Q[24] of cell $procdff$139650 ($dff)
+    port Q[25] of cell $procdff$139650 ($dff)
+    port Q[26] of cell $procdff$139650 ($dff)
+    port Q[27] of cell $procdff$139650 ($dff)
+    port Q[28] of cell $procdff$139650 ($dff)
+    port Q[29] of cell $procdff$139650 ($dff)
+    port Q[30] of cell $procdff$139650 ($dff)
+    port Q[31] of cell $procdff$139650 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[4] of cell $procdff$139681 ($dff)
+    port Q[4] of cell $procdff$139651 ($dff)
+    port Q[2] of cell $procdff$139650 ($dff)
+Warning: Drivers conflicting with a constant 1'0 driver:
+    port Q[0] of cell $procdff$140678 ($dff)
+    port Q[1] of cell $procdff$140678 ($dff)
+    port Q[2] of cell $procdff$140678 ($dff)
+    port Q[3] of cell $procdff$140678 ($dff)
+    port Q[5] of cell $procdff$140678 ($dff)
+    port Q[6] of cell $procdff$140678 ($dff)
+    port Q[7] of cell $procdff$140678 ($dff)
+    port Q[8] of cell $procdff$140678 ($dff)
+    port Q[9] of cell $procdff$140678 ($dff)
+    port Q[10] of cell $procdff$140678 ($dff)
+    port Q[11] of cell $procdff$140678 ($dff)
+    port Q[12] of cell $procdff$140678 ($dff)
+    port Q[13] of cell $procdff$140678 ($dff)
+    port Q[14] of cell $procdff$140678 ($dff)
+    port Q[15] of cell $procdff$140678 ($dff)
+    port Q[16] of cell $procdff$140678 ($dff)
+    port Q[17] of cell $procdff$140678 ($dff)
+    port Q[18] of cell $procdff$140678 ($dff)
+    port Q[19] of cell $procdff$140678 ($dff)
+    port Q[20] of cell $procdff$140678 ($dff)
+    port Q[21] of cell $procdff$140678 ($dff)
+    port Q[22] of cell $procdff$140678 ($dff)
+    port Q[23] of cell $procdff$140678 ($dff)
+    port Q[24] of cell $procdff$140678 ($dff)
+    port Q[25] of cell $procdff$140678 ($dff)
+    port Q[26] of cell $procdff$140678 ($dff)
+    port Q[27] of cell $procdff$140678 ($dff)
+    port Q[28] of cell $procdff$140678 ($dff)
+    port Q[29] of cell $procdff$140678 ($dff)
+    port Q[30] of cell $procdff$140678 ($dff)
+    port Q[31] of cell $procdff$140678 ($dff)
+    port Q[0] of cell $procdff$140650 ($dff)
+    port Q[1] of cell $procdff$140650 ($dff)
+    port Q[2] of cell $procdff$140650 ($dff)
+    port Q[3] of cell $procdff$140650 ($dff)
+    port Q[5] of cell $procdff$140650 ($dff)
+    port Q[6] of cell $procdff$140650 ($dff)
+    port Q[7] of cell $procdff$140650 ($dff)
+    port Q[8] of cell $procdff$140650 ($dff)
+    port Q[9] of cell $procdff$140650 ($dff)
+    port Q[10] of cell $procdff$140650 ($dff)
+    port Q[11] of cell $procdff$140650 ($dff)
+    port Q[12] of cell $procdff$140650 ($dff)
+    port Q[13] of cell $procdff$140650 ($dff)
+    port Q[14] of cell $procdff$140650 ($dff)
+    port Q[15] of cell $procdff$140650 ($dff)
+    port Q[16] of cell $procdff$140650 ($dff)
+    port Q[17] of cell $procdff$140650 ($dff)
+    port Q[18] of cell $procdff$140650 ($dff)
+    port Q[19] of cell $procdff$140650 ($dff)
+    port Q[20] of cell $procdff$140650 ($dff)
+    port Q[21] of cell $procdff$140650 ($dff)
+    port Q[22] of cell $procdff$140650 ($dff)
+    port Q[23] of cell $procdff$140650 ($dff)
+    port Q[24] of cell $procdff$140650 ($dff)
+    port Q[25] of cell $procdff$140650 ($dff)
+    port Q[26] of cell $procdff$140650 ($dff)
+    port Q[27] of cell $procdff$140650 ($dff)
+    port Q[28] of cell $procdff$140650 ($dff)
+    port Q[29] of cell $procdff$140650 ($dff)
+    port Q[30] of cell $procdff$140650 ($dff)
+    port Q[31] of cell $procdff$140650 ($dff)
+    port Q[0] of cell $procdff$140512 ($dff)
+    port Q[1] of cell $procdff$140512 ($dff)
+    port Q[2] of cell $procdff$140512 ($dff)
+    port Q[3] of cell $procdff$140512 ($dff)
+    port Q[5] of cell $procdff$140512 ($dff)
+    port Q[6] of cell $procdff$140512 ($dff)
+    port Q[7] of cell $procdff$140512 ($dff)
+    port Q[8] of cell $procdff$140512 ($dff)
+    port Q[9] of cell $procdff$140512 ($dff)
+    port Q[10] of cell $procdff$140512 ($dff)
+    port Q[11] of cell $procdff$140512 ($dff)
+    port Q[12] of cell $procdff$140512 ($dff)
+    port Q[13] of cell $procdff$140512 ($dff)
+    port Q[14] of cell $procdff$140512 ($dff)
+    port Q[15] of cell $procdff$140512 ($dff)
+    port Q[16] of cell $procdff$140512 ($dff)
+    port Q[17] of cell $procdff$140512 ($dff)
+    port Q[18] of cell $procdff$140512 ($dff)
+    port Q[19] of cell $procdff$140512 ($dff)
+    port Q[20] of cell $procdff$140512 ($dff)
+    port Q[21] of cell $procdff$140512 ($dff)
+    port Q[22] of cell $procdff$140512 ($dff)
+    port Q[23] of cell $procdff$140512 ($dff)
+    port Q[24] of cell $procdff$140512 ($dff)
+    port Q[25] of cell $procdff$140512 ($dff)
+    port Q[26] of cell $procdff$140512 ($dff)
+    port Q[27] of cell $procdff$140512 ($dff)
+    port Q[28] of cell $procdff$140512 ($dff)
+    port Q[29] of cell $procdff$140512 ($dff)
+    port Q[30] of cell $procdff$140512 ($dff)
+    port Q[31] of cell $procdff$140512 ($dff)
+    port Q[0] of cell $procdff$140434 ($dff)
+    port Q[1] of cell $procdff$140434 ($dff)
+    port Q[2] of cell $procdff$140434 ($dff)
+    port Q[3] of cell $procdff$140434 ($dff)
+    port Q[5] of cell $procdff$140434 ($dff)
+    port Q[6] of cell $procdff$140434 ($dff)
+    port Q[7] of cell $procdff$140434 ($dff)
+    port Q[8] of cell $procdff$140434 ($dff)
+    port Q[9] of cell $procdff$140434 ($dff)
+    port Q[10] of cell $procdff$140434 ($dff)
+    port Q[11] of cell $procdff$140434 ($dff)
+    port Q[12] of cell $procdff$140434 ($dff)
+    port Q[13] of cell $procdff$140434 ($dff)
+    port Q[14] of cell $procdff$140434 ($dff)
+    port Q[15] of cell $procdff$140434 ($dff)
+    port Q[16] of cell $procdff$140434 ($dff)
+    port Q[17] of cell $procdff$140434 ($dff)
+    port Q[18] of cell $procdff$140434 ($dff)
+    port Q[19] of cell $procdff$140434 ($dff)
+    port Q[20] of cell $procdff$140434 ($dff)
+    port Q[21] of cell $procdff$140434 ($dff)
+    port Q[22] of cell $procdff$140434 ($dff)
+    port Q[23] of cell $procdff$140434 ($dff)
+    port Q[24] of cell $procdff$140434 ($dff)
+    port Q[25] of cell $procdff$140434 ($dff)
+    port Q[26] of cell $procdff$140434 ($dff)
+    port Q[27] of cell $procdff$140434 ($dff)
+    port Q[28] of cell $procdff$140434 ($dff)
+    port Q[29] of cell $procdff$140434 ($dff)
+    port Q[30] of cell $procdff$140434 ($dff)
+    port Q[31] of cell $procdff$140434 ($dff)
+    port Q[0] of cell $procdff$140414 ($dff)
+    port Q[1] of cell $procdff$140414 ($dff)
+    port Q[2] of cell $procdff$140414 ($dff)
+    port Q[3] of cell $procdff$140414 ($dff)
+    port Q[5] of cell $procdff$140414 ($dff)
+    port Q[6] of cell $procdff$140414 ($dff)
+    port Q[7] of cell $procdff$140414 ($dff)
+    port Q[8] of cell $procdff$140414 ($dff)
+    port Q[9] of cell $procdff$140414 ($dff)
+    port Q[10] of cell $procdff$140414 ($dff)
+    port Q[11] of cell $procdff$140414 ($dff)
+    port Q[12] of cell $procdff$140414 ($dff)
+    port Q[13] of cell $procdff$140414 ($dff)
+    port Q[14] of cell $procdff$140414 ($dff)
+    port Q[15] of cell $procdff$140414 ($dff)
+    port Q[16] of cell $procdff$140414 ($dff)
+    port Q[17] of cell $procdff$140414 ($dff)
+    port Q[18] of cell $procdff$140414 ($dff)
+    port Q[19] of cell $procdff$140414 ($dff)
+    port Q[20] of cell $procdff$140414 ($dff)
+    port Q[21] of cell $procdff$140414 ($dff)
+    port Q[22] of cell $procdff$140414 ($dff)
+    port Q[23] of cell $procdff$140414 ($dff)
+    port Q[24] of cell $procdff$140414 ($dff)
+    port Q[25] of cell $procdff$140414 ($dff)
+    port Q[26] of cell $procdff$140414 ($dff)
+    port Q[27] of cell $procdff$140414 ($dff)
+    port Q[28] of cell $procdff$140414 ($dff)
+    port Q[29] of cell $procdff$140414 ($dff)
+    port Q[30] of cell $procdff$140414 ($dff)
+    port Q[31] of cell $procdff$140414 ($dff)
+Warning: Drivers conflicting with a constant 1'1 driver:
+    port Q[4] of cell $procdff$140678 ($dff)
+    port Q[4] of cell $procdff$140650 ($dff)
+    port Q[4] of cell $procdff$140512 ($dff)
+    port Q[4] of cell $procdff$140434 ($dff)
+    port Q[4] of cell $procdff$140414 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [31]:
+    port Q[31] of cell $procdff$141745 ($dff)
+    port Q[31] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [30]:
+    port Q[30] of cell $procdff$141745 ($dff)
+    port Q[30] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [29]:
+    port Q[29] of cell $procdff$141745 ($dff)
+    port Q[29] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [28]:
+    port Q[28] of cell $procdff$141745 ($dff)
+    port Q[28] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [27]:
+    port Q[27] of cell $procdff$141745 ($dff)
+    port Q[27] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [26]:
+    port Q[26] of cell $procdff$141745 ($dff)
+    port Q[26] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [25]:
+    port Q[25] of cell $procdff$141745 ($dff)
+    port Q[25] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [24]:
+    port Q[24] of cell $procdff$141745 ($dff)
+    port Q[24] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [23]:
+    port Q[23] of cell $procdff$141745 ($dff)
+    port Q[23] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [22]:
+    port Q[22] of cell $procdff$141745 ($dff)
+    port Q[22] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [21]:
+    port Q[21] of cell $procdff$141745 ($dff)
+    port Q[21] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [20]:
+    port Q[20] of cell $procdff$141745 ($dff)
+    port Q[20] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [19]:
+    port Q[19] of cell $procdff$141745 ($dff)
+    port Q[19] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [18]:
+    port Q[18] of cell $procdff$141745 ($dff)
+    port Q[18] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [17]:
+    port Q[17] of cell $procdff$141745 ($dff)
+    port Q[17] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [16]:
+    port Q[16] of cell $procdff$141745 ($dff)
+    port Q[16] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [15]:
+    port Q[15] of cell $procdff$141745 ($dff)
+    port Q[15] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [14]:
+    port Q[14] of cell $procdff$141745 ($dff)
+    port Q[14] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [13]:
+    port Q[13] of cell $procdff$141745 ($dff)
+    port Q[13] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [12]:
+    port Q[12] of cell $procdff$141745 ($dff)
+    port Q[12] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [11]:
+    port Q[11] of cell $procdff$141745 ($dff)
+    port Q[11] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [10]:
+    port Q[10] of cell $procdff$141745 ($dff)
+    port Q[10] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [9]:
+    port Q[9] of cell $procdff$141745 ($dff)
+    port Q[9] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [8]:
+    port Q[8] of cell $procdff$141745 ($dff)
+    port Q[8] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [7]:
+    port Q[7] of cell $procdff$141745 ($dff)
+    port Q[7] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [6]:
+    port Q[6] of cell $procdff$141745 ($dff)
+    port Q[6] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [5]:
+    port Q[5] of cell $procdff$141745 ($dff)
+    port Q[5] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [4]:
+    port Q[4] of cell $procdff$141745 ($dff)
+    port Q[4] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [3]:
+    port Q[3] of cell $procdff$141745 ($dff)
+    port Q[3] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [2]:
+    port Q[2] of cell $procdff$141745 ($dff)
+    port Q[2] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [1]:
+    port Q[1] of cell $procdff$141745 ($dff)
+    port Q[1] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\gi [0]:
+    port Q[0] of cell $procdff$141745 ($dff)
+    port Q[0] of cell $procdff$141731 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [31]:
+    port Q[31] of cell $procdff$141579 ($dff)
+    port Q[31] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [30]:
+    port Q[30] of cell $procdff$141579 ($dff)
+    port Q[30] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [29]:
+    port Q[29] of cell $procdff$141579 ($dff)
+    port Q[29] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [28]:
+    port Q[28] of cell $procdff$141579 ($dff)
+    port Q[28] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [27]:
+    port Q[27] of cell $procdff$141579 ($dff)
+    port Q[27] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [26]:
+    port Q[26] of cell $procdff$141579 ($dff)
+    port Q[26] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [25]:
+    port Q[25] of cell $procdff$141579 ($dff)
+    port Q[25] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [24]:
+    port Q[24] of cell $procdff$141579 ($dff)
+    port Q[24] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [23]:
+    port Q[23] of cell $procdff$141579 ($dff)
+    port Q[23] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [22]:
+    port Q[22] of cell $procdff$141579 ($dff)
+    port Q[22] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [21]:
+    port Q[21] of cell $procdff$141579 ($dff)
+    port Q[21] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [20]:
+    port Q[20] of cell $procdff$141579 ($dff)
+    port Q[20] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [19]:
+    port Q[19] of cell $procdff$141579 ($dff)
+    port Q[19] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [18]:
+    port Q[18] of cell $procdff$141579 ($dff)
+    port Q[18] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [17]:
+    port Q[17] of cell $procdff$141579 ($dff)
+    port Q[17] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [16]:
+    port Q[16] of cell $procdff$141579 ($dff)
+    port Q[16] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [15]:
+    port Q[15] of cell $procdff$141579 ($dff)
+    port Q[15] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [14]:
+    port Q[14] of cell $procdff$141579 ($dff)
+    port Q[14] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [13]:
+    port Q[13] of cell $procdff$141579 ($dff)
+    port Q[13] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [12]:
+    port Q[12] of cell $procdff$141579 ($dff)
+    port Q[12] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [11]:
+    port Q[11] of cell $procdff$141579 ($dff)
+    port Q[11] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [10]:
+    port Q[10] of cell $procdff$141579 ($dff)
+    port Q[10] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [9]:
+    port Q[9] of cell $procdff$141579 ($dff)
+    port Q[9] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [8]:
+    port Q[8] of cell $procdff$141579 ($dff)
+    port Q[8] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [7]:
+    port Q[7] of cell $procdff$141579 ($dff)
+    port Q[7] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [6]:
+    port Q[6] of cell $procdff$141579 ($dff)
+    port Q[6] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [5]:
+    port Q[5] of cell $procdff$141579 ($dff)
+    port Q[5] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [4]:
+    port Q[4] of cell $procdff$141579 ($dff)
+    port Q[4] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [3]:
+    port Q[3] of cell $procdff$141579 ($dff)
+    port Q[3] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [2]:
+    port Q[2] of cell $procdff$141579 ($dff)
+    port Q[2] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [1]:
+    port Q[1] of cell $procdff$141579 ($dff)
+    port Q[1] of cell $procdff$141496 ($dff)
+Warning: multiple conflicting drivers for hfd_idx_sel.\g [0]:
+    port Q[0] of cell $procdff$141579 ($dff)
+    port Q[0] of cell $procdff$141496 ($dff)
+3.4. Executing FLATTEN pass (flatten design).
+3.5. Executing OPT_EXPR pass (perform const folding).
+3.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.7. Executing CHECK pass (checking for obvious problems).
+3.8. Executing OPT pass (performing simple optimizations).
+3.8.1. Executing OPT_EXPR pass (perform const folding).
+3.8.2. Executing OPT_MERGE pass (detect identical cells).
+3.8.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.5. Executing OPT_MERGE pass (detect identical cells).
+3.8.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.8. Executing OPT_EXPR pass (perform const folding).
+3.8.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.12. Executing OPT_MERGE pass (detect identical cells).
+3.8.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.15. Executing OPT_EXPR pass (perform const folding).
+3.8.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.19. Executing OPT_MERGE pass (detect identical cells).
+3.8.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.22. Executing OPT_EXPR pass (perform const folding).
+3.8.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.26. Executing OPT_MERGE pass (detect identical cells).
+3.8.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.29. Executing OPT_EXPR pass (perform const folding).
+3.8.30. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.33. Executing OPT_MERGE pass (detect identical cells).
+3.8.34. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.36. Executing OPT_EXPR pass (perform const folding).
+3.8.37. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.40. Executing OPT_MERGE pass (detect identical cells).
+3.8.41. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.43. Executing OPT_EXPR pass (perform const folding).
+3.8.44. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.47. Executing OPT_MERGE pass (detect identical cells).
+3.8.48. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.50. Executing OPT_EXPR pass (perform const folding).
+3.8.51. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.54. Executing OPT_MERGE pass (detect identical cells).
+3.8.55. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.57. Executing OPT_EXPR pass (perform const folding).
+3.8.58. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.61. Executing OPT_MERGE pass (detect identical cells).
+3.8.62. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.63. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.64. Executing OPT_EXPR pass (perform const folding).
+3.8.65. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.66. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.67. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.68. Executing OPT_MERGE pass (detect identical cells).
+3.8.69. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.70. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.71. Executing OPT_EXPR pass (perform const folding).
+3.8.72. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.73. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.74. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.75. Executing OPT_MERGE pass (detect identical cells).
+3.8.76. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.77. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.78. Executing OPT_EXPR pass (perform const folding).
+3.8.79. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.80. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.81. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.82. Executing OPT_MERGE pass (detect identical cells).
+3.8.83. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.84. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.85. Executing OPT_EXPR pass (perform const folding).
+3.8.86. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.87. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.88. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.89. Executing OPT_MERGE pass (detect identical cells).
+3.8.90. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.91. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.92. Executing OPT_EXPR pass (perform const folding).
+3.8.93. Rerunning OPT passes. (Maybe there is more to do..)
+3.8.94. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.8.95. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.8.96. Executing OPT_MERGE pass (detect identical cells).
+3.8.97. Executing OPT_DFF pass (perform DFF optimizations).
+3.8.98. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.8.99. Executing OPT_EXPR pass (perform const folding).
+3.8.100. Finished fast OPT passes. (There is nothing left to do.)
+3.9. Executing FSM pass (extract and optimize FSM).
+3.9.1. Executing FSM_DETECT pass (finding FSMs in design).
+3.9.2. Executing FSM_EXTRACT pass (extracting FSM from design).
+3.9.3. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.4. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.9.5. Executing FSM_OPT pass (simple optimizations of FSMs).
+3.9.6. Executing FSM_RECODE pass (re-assigning FSM state encoding).
+3.9.7. Executing FSM_INFO pass (dumping all available information on FSM cells).
+3.9.8. Executing FSM_MAP pass (mapping FSMs to basic logic).
+3.10. Executing OPT pass (performing simple optimizations).
+3.10.1. Executing OPT_EXPR pass (perform const folding).
+3.10.2. Executing OPT_MERGE pass (detect identical cells).
+3.10.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.5. Executing OPT_MERGE pass (detect identical cells).
+3.10.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.8. Executing OPT_EXPR pass (perform const folding).
+3.10.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.12. Executing OPT_MERGE pass (detect identical cells).
+3.10.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.15. Executing OPT_EXPR pass (perform const folding).
+3.10.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.19. Executing OPT_MERGE pass (detect identical cells).
+3.10.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.22. Executing OPT_EXPR pass (perform const folding).
+3.10.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.26. Executing OPT_MERGE pass (detect identical cells).
+3.10.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.29. Executing OPT_EXPR pass (perform const folding).
+3.10.30. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.33. Executing OPT_MERGE pass (detect identical cells).
+3.10.34. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.36. Executing OPT_EXPR pass (perform const folding).
+3.10.37. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.40. Executing OPT_MERGE pass (detect identical cells).
+3.10.41. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.43. Executing OPT_EXPR pass (perform const folding).
+3.10.44. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.47. Executing OPT_MERGE pass (detect identical cells).
+3.10.48. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.50. Executing OPT_EXPR pass (perform const folding).
+3.10.51. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.54. Executing OPT_MERGE pass (detect identical cells).
+3.10.55. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.57. Executing OPT_EXPR pass (perform const folding).
+3.10.58. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.61. Executing OPT_MERGE pass (detect identical cells).
+3.10.62. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.63. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.64. Executing OPT_EXPR pass (perform const folding).
+3.10.65. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.66. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.67. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.68. Executing OPT_MERGE pass (detect identical cells).
+3.10.69. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.70. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.71. Executing OPT_EXPR pass (perform const folding).
+3.10.72. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.73. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.74. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.75. Executing OPT_MERGE pass (detect identical cells).
+3.10.76. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.77. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.78. Executing OPT_EXPR pass (perform const folding).
+3.10.79. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.80. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.81. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.82. Executing OPT_MERGE pass (detect identical cells).
+3.10.83. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.84. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.85. Executing OPT_EXPR pass (perform const folding).
+3.10.86. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.87. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.88. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.89. Executing OPT_MERGE pass (detect identical cells).
+3.10.90. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.91. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.92. Executing OPT_EXPR pass (perform const folding).
+3.10.93. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.94. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.95. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.96. Executing OPT_MERGE pass (detect identical cells).
+3.10.97. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.98. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.99. Executing OPT_EXPR pass (perform const folding).
+3.10.100. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.101. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.102. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.103. Executing OPT_MERGE pass (detect identical cells).
+3.10.104. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.105. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.106. Executing OPT_EXPR pass (perform const folding).
+3.10.107. Rerunning OPT passes. (Maybe there is more to do..)
+3.10.108. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.10.109. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.10.110. Executing OPT_MERGE pass (detect identical cells).
+3.10.111. Executing OPT_DFF pass (perform DFF optimizations).
+3.10.112. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.10.113. Executing OPT_EXPR pass (perform const folding).
+3.10.114. Finished fast OPT passes. (There is nothing left to do.)
+3.11. Executing WREDUCE pass (reducing word size of cells).
+3.12. Executing PEEPOPT pass (run peephole optimizers).
+3.13. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.14. Executing ALUMACC pass (create $alu and $macc cells).
+3.15. Executing SHARE pass (SAT-based resource sharing).
+3.16. Executing OPT pass (performing simple optimizations).
+3.16.1. Executing OPT_EXPR pass (perform const folding).
+3.16.2. Executing OPT_MERGE pass (detect identical cells).
+3.16.3. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.4. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.5. Executing OPT_MERGE pass (detect identical cells).
+3.16.6. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.7. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.8. Executing OPT_EXPR pass (perform const folding).
+3.16.9. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.10. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.11. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.12. Executing OPT_MERGE pass (detect identical cells).
+3.16.13. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.14. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.15. Executing OPT_EXPR pass (perform const folding).
+3.16.16. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.17. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.18. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.19. Executing OPT_MERGE pass (detect identical cells).
+3.16.20. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.21. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.22. Executing OPT_EXPR pass (perform const folding).
+3.16.23. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.24. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.25. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.26. Executing OPT_MERGE pass (detect identical cells).
+3.16.27. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.28. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.29. Executing OPT_EXPR pass (perform const folding).
+3.16.30. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.31. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.32. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.33. Executing OPT_MERGE pass (detect identical cells).
+3.16.34. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.35. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.36. Executing OPT_EXPR pass (perform const folding).
+3.16.37. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.38. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.39. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.40. Executing OPT_MERGE pass (detect identical cells).
+3.16.41. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.42. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.43. Executing OPT_EXPR pass (perform const folding).
+3.16.44. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.45. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.46. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.47. Executing OPT_MERGE pass (detect identical cells).
+3.16.48. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.49. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.50. Executing OPT_EXPR pass (perform const folding).
+3.16.51. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.52. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.53. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.54. Executing OPT_MERGE pass (detect identical cells).
+3.16.55. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.56. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.57. Executing OPT_EXPR pass (perform const folding).
+3.16.58. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.59. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.60. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.61. Executing OPT_MERGE pass (detect identical cells).
+3.16.62. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.63. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.64. Executing OPT_EXPR pass (perform const folding).
+3.16.65. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.66. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.67. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.68. Executing OPT_MERGE pass (detect identical cells).
+3.16.69. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.70. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.71. Executing OPT_EXPR pass (perform const folding).
+3.16.72. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.73. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.74. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.75. Executing OPT_MERGE pass (detect identical cells).
+3.16.76. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.77. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.78. Executing OPT_EXPR pass (perform const folding).
+3.16.79. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.80. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.81. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.82. Executing OPT_MERGE pass (detect identical cells).
+3.16.83. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.84. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.85. Executing OPT_EXPR pass (perform const folding).
+3.16.86. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.87. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.88. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.89. Executing OPT_MERGE pass (detect identical cells).
+3.16.90. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.91. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.92. Executing OPT_EXPR pass (perform const folding).
+3.16.93. Rerunning OPT passes. (Maybe there is more to do..)
+3.16.94. Executing OPT_MUXTREE pass (detect dead branches in mux trees).
+3.16.95. Executing OPT_REDUCE pass (consolidate $*mux and $reduce_* inputs).
+3.16.96. Executing OPT_MERGE pass (detect identical cells).
+3.16.97. Executing OPT_DFF pass (perform DFF optimizations).
+3.16.98. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.16.99. Executing OPT_EXPR pass (perform const folding).
+3.16.100. Finished fast OPT passes. (There is nothing left to do.)
+3.17. Executing MEMORY pass.
+3.17.1. Executing OPT_MEM pass (optimize memories).
+3.17.2. Executing OPT_MEM_PRIORITY pass (removing unnecessary memory write priority relations).
+3.17.3. Executing OPT_MEM_FEEDBACK pass (finding memory read-to-write feedback paths).
+3.17.4. Executing MEMORY_BMUX2ROM pass (converting muxes to ROMs).
+3.17.5. Executing MEMORY_DFF pass (merging $dff cells to $memrd).
+3.17.6. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.7. Executing MEMORY_SHARE pass (consolidating $memrd/$memwr cells).
+3.17.8. Executing OPT_MEM_WIDEN pass (optimize memories where all ports are wide).
+3.17.9. Executing OPT_CLEAN pass (remove unused cells and wires).
+3.17.10. Executing MEMORY_COLLECT pass (generating $mem cells).
+3.18. Executing OPT_CLEAN pass (remove unused cells and wires).
+ERROR: TCL interpreter returned an error: Source files actually used in the design:
+ /src/rtl/hdc/v41/ot_hdc_actquant.sv
+ /src/rtl/hbm_accel/index/ot_hbm_accel_index_query.sv
+ /src/physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv
+ /src/rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv
+ /src/rtl/hdc/v41x/ot_hdc_v41x_sel.sv
+ /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv
+ /src/rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv
+ /src/physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv
+Memories found in the design:
+ Rows | Width |   Bits | Module               | Instances                                                                       
+---------------------------------------------------------------------------------------------------------------------------------
+  128 |   609 |      0 | hfd_idx_sel          |                                                                                 
+  128 |   609 |      0 | hfd_idx_sel          |                                                                                 
+  128 |   609 |      0 | hfd_idx_sel          |                                                                                 
+  128 |   609 |      0 | hfd_idx_sel          |                                                                                 
+    8 |    68 |      0 | hfd_idx_sel          |                                                                                 
+    8 |    68 |      0 | hfd_idx_sel          |                                                                                 
+    8 |    68 |      0 | hfd_idx_sel          |                                                                                 
+    8 |    68 |      0 | hfd_idx_sel          |                                                                                 
+    4 |  1047 |      0 | hfd_idx_sel          |                                                                                 
+    8 |   592 |      0 | hfd_idx_sel          |                                                                                 
+    8 |   592 |      0 | hfd_idx_sel          |                                                                                 
+    8 |   592 |      0 | hfd_idx_sel          |                                                                                 
+    8 |   592 |      0 | hfd_idx_sel          |                                                                                 
+
+Summary:
+- Total inferred memories: 13
+- Largest single memory instance: 77952 bits (module hfd_idx_sel)
+- Total inferred memory bits (all instances): 0
+- SYNTH_MEMORY_MAX_BITS: 65536
+- Status: FAIL
+Error: Synthesized memory size 65536 exceeds SYNTH_MEMORY_MAX_BITS
+Elapsed time: 15:56.36[h:]min:sec. CPU time: user 1187.50 sys 30.68 (127%). Peak memory: 12245288KB.

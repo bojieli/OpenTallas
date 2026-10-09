@@ -1,0 +1,135 @@
+{
+ "name": "hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding",
+ "spec": {
+  "name": "hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding",
+  "block": "hfd_idx_sel",
+  "owner": "Codex:selector_capture",
+  "status": "READY isolated pathfinding; not die closure",
+  "purpose": "Full native T1/LA7 READLAT2 MEMV1 selector hardening against authoritative 10a697299 pins; isolate macro capture. Die neighbor/TA15 insertion budgets pending; no in-context qualification claim.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc4",
+   "ot-epyc1tb",
+   "ot-epyc3"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 120,
+  "source": {
+   "branch": "codex/hbm-selector-capture-20261009",
+   "commit": "e43dd9bc1",
+   "paths": [
+    "tools",
+    "rtl/hdc",
+    "rtl/hbm_accel/index",
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv",
+    "rtl/proto/ot_fp32_add_rne_pipe.sv",
+    "physical/abi3",
+    "physical/common_flow",
+    "physical/hbm_accel_die_views/common",
+    "physical/hbm_accel_die_views/index",
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+    "configs/pdk",
+    "Makefile"
+   ],
+   "extra_paths": [
+    "results/rtl/hbm_selector_capture_macro_20261009_r2"
+   ]
+  },
+  "no_bench_reason": "Committed full-shape macro component gate at results/rtl/hbm_selector_capture_macro_20261009_r2/exact/gate.json: baseline/captured golden PASS; selector and candidate latency-mismatch controls rejected; native wrapper T1 MEMV1 READLAT2 elaboration PASS. LA7 native elaboration separately passed remotely; deep-credit connected qualification remains owned by hbm_continuation.",
+  "stages": {
+   "calibrate": {
+    "cmd": "export OPENTALLAS_ORFS_IMAGE='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh ${CK_SS_MEAN:-770} >/dev/null && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"120\" PER=\"0.833333333333\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv --param T=1 --param LA=7 --param MEMV=1 --param READLAT=2 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh $CK_SS_MEAN",
+    "threads": 16,
+    "peak_ram_gb": 120
+   },
+   "route": {
+    "cmd": "export OPENTALLAS_ORFS_IMAGE='openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC} && bash physical/hbm_accel_die_views/common/make_io_vclk_margin.sh ${CK_SS_MEAN:-770} >/dev/null && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"120\" PER=\"0.833333333333\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/io_vclk_m_${CK_SS_MEAN:-770}.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/signoff_unc60.sdc physical/hbm_accel_die_views/common/vclk_corner_true.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv --param T=1 --param LA=7 --param MEMV=1 --param READLAT=2 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl --orfs-var SKIP_CTS_REPAIR_TIMING=1 --step-tcl POST_CTS=physical/hbm_accel_die_views/common/post_cts_vclk.tcl $CL_STOP_AFTER",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+    "logs": [
+     "{RUN}/routes/{NAME}/run.log"
+    ]
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "macros": [
+    "physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+   ],
+   "checks": [
+    {
+     "name": "native_LEF_matches",
+     "cmd": "python3 -c \"import json,sys;sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict']!='MATCH')\""
+    }
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "route_hold_margin_ns": 0.025,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "Explicit isolated PATHFINDING using calibrated common virtual-clock IO scripts, authorized by hbm_wiring 2026-10-09; actual die insertion/neighbor min-max budgets await R25I paths and TA15 roots."
+  },
+  "qualification": {
+   "in_context": false,
+   "policy": "TT setup>=0, FF hold>=0, DRC0; SS sensitivity, unchanged833.333ps period and60/25ps uncertainty"
+  },
+  "record": [
+   {
+    "from": "{RUN}/routes/{NAME}/view",
+    "to": "physical/hbm_accel_die_views/index/capture_la7_pathfinding/view"
+   },
+   {
+    "from": "{RUN}/routes/{NAME}/corner_sta.json",
+    "to": "results/physical/hbm_idx_sel_capture_la7_pathfinding/corner_sta.json"
+   }
+  ]
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding.json",
+ "created": "2026-10-09T00:13:45-07:00",
+ "status": "NEEDS_HUMAN",
+ "stage_idx": 0,
+ "attempt": 1,
+ "retries_used": 0,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc2"
+ ],
+ "events": [
+  "2026-10-09T00:13:45-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding.json",
+  "2026-10-09T00:14:01-07:00 source e43dd9bc19c4 synced to ot-epyc2:/srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/src",
+  "2026-10-09T00:14:59-07:00 launched calibrate (attempt 1) on ot-epyc2",
+  "2026-10-09T00:34:26-07:00 NEEDS_HUMAN: calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop"
+ ],
+ "updated": "2026-10-09T00:34:26-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc2",
+ "run": "/srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding",
+ "source_synced": true,
+ "commit_full": "e43dd9bc19c4302677a82dfa12ca257e7deb172e",
+ "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+ "stage_key": "calibrate",
+ "stage_tag": "calibrate.a1",
+ "stage_started": "2026-10-09T00:14:59-07:00",
+ "wd_checked": 1791530108.808842,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "crashes": [
+  {
+   "stage": "calibrate",
+   "host": "ot-epyc2",
+   "attempt": 1,
+   "why": "rc=4",
+   "resource": false,
+   "cls": "synth_or_place",
+   "tail": "hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added\nhold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)\ntt_overlay: OK run_abi3_physical 5f176f642ca2: corner block v2 (WC reads TT) replaced a rename block; OT_CTS_FIX_HOOKS function replaced (context fallback); SMH: generator has no WC_LIB_FILES line (predates corner libs; not patched); h1_patch: 0 files rewritten under /srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/src\ncalibrate: no 4_1_cts.odb under /srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/routes/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding_cal/work/orfs/results/asap7/opentallas_hfd_idx_sel_asap7_hv_hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding_cal/base\nCALIBRATE_FAIL class=synth_or_place detail=ERROR: TCL interpreter returned an error: Source files actually used in the design:\n"
+  }
+ ]
+}

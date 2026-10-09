@@ -1,0 +1,5 @@
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm); calibrate CTS-only (no repair) added
+hold_corners_patch: already supports OT_ROUTE_HOLD_CORNERS (hook-aware, mm)
+tt_overlay: OK run_abi3_physical 5f176f642ca2: corner block v2 (WC reads TT) replaced a rename block; OT_CTS_FIX_HOOKS function replaced (context fallback); SMH: generator has no WC_LIB_FILES line (predates corner libs; not patched); h1_patch: 0 files rewritten under /srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/src
+calibrate: no 4_1_cts.odb under /srv/opentallas-data/claude/closure-loop/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/routes/hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding_cal/work/orfs/results/asap7/opentallas_hfd_idx_sel_asap7_hv_hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding_cal/base
+CALIBRATE_FAIL class=synth_or_place detail=ERROR: TCL interpreter returned an error: Source files actually used in the design:
