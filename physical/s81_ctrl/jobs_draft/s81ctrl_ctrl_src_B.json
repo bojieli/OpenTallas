@@ -15,7 +15,7 @@
   "route_hold_margin_ns": 0.01,
   "source": {
     "branch": "codex/ds-control-resume-20261009",
-    "commit": "bb00a9338",
+    "commit": "1aebede73",
     "extra_paths": [
       "results/rtl/s81_ctrl_20261009"
     ],
@@ -68,5 +68,5 @@
     "enabled": false,
     "reason": "Explicit generic20%IO TT pathfinding, no nativefloorplan budget/SSFFcontext adoption."
   },
-  "notes": "Realbase+STOPmutant source-pinned atbb00a9338. Exactreceipt reused acrosssix sameRTL variants; no repeated expensivecompile. Model actualcore/diefit remainsrequired, not old0.15mm2estimate.48GiB firstfullcontroller routecapacityreservation is unmeasured; inventory/actualpeak mustbe recorded byClaudeintake. No process/address-space/time caps."
+  "notes": "Realbase+STOPmutant source-pinned atbb00a9338. Exactreceipt reused acrosssix sameRTL variants; no repeated expensivecompile. Model actualcore/diefit remainsrequired, not old0.15mm2estimate.48GiB firstfullcontroller routecapacityreservation is unmeasured; inventory/actualpeak mustbe recorded byClaudeintake. No process/address-space/time caps. Snapshot1aebede73 includesnominal.833ns TT characterization route.sh; guard/chain RTL unchangedfrombb00a9338."
 }
