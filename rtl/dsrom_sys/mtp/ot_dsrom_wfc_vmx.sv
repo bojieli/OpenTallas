@@ -105,8 +105,8 @@ module ot_dsrom_wfc_vmx #(
     always @(posedge fclk) begin
         if (!frst_n) begin pq_n <= 0; pq_r <= 0; pq_w <= 0; end
         else begin
-            if (pw_v) pq[pq_w] <= {1'b0, {(PW - 1 - VWA - FLIT){1'b0}}, pw_a, pw_d};
-            if (ps_v) pq[pw_v ? pq_w + 1'b1 : pq_w] <= {1'b1, {(PW - 1 - SP){1'b0}}, ps_d};
+            if (pw_v) pq[pq_w] <= PW'({pw_a, pw_d});                          // kind 0 (MSB) = write
+            if (ps_v) pq[pw_v ? pq_w + 1'b1 : pq_w] <= PW'(ps_d) | (PW'(1) << (PW - 1));   // kind 1 = start
             pq_w <= pq_w + npush;
             if (pq_pop) pq_r <= pq_r + 1'b1;
             pq_n <= pq_n + npush - (pq_pop ? 1'b1 : 1'b0);
@@ -115,8 +115,9 @@ module ot_dsrom_wfc_vmx #(
     // core_done: a level; dropped on the WFC's core_start (one gate from the pin), set by the DONE marker
     wire r_v; wire [RW-1:0] r_d;
     wire r_done = r_v && r_d[RW-1];
-    reg [SD-1:0] got;                              // staging words written since the last start
-    reg [FLIT-1:0] stg [0:(SD > 0 ? SD : 1)-1];
+    localparam integer SDP = 1 << IB;              // staging entries rounded to a power of two (every index in range)
+    reg [SDP-1:0] got;                             // staging words written since the last start
+    reg [FLIT-1:0] stg [0:SDP-1];
     reg fault_f;
     always @(posedge fclk) begin
         if (!frst_n) begin core_done <= 1'b0; got <= 0; fault_f <= 1'b0; end
@@ -130,7 +131,7 @@ module ot_dsrom_wfc_vmx #(
                 core_done <= 1'b1;
                 core_next_token <= r_d[32 +: NW]; core_next_val <= r_d[31:0];
 `ifndef OT_WFCVMX_MUT_DONEEARLY
-                if (got != {SD{1'b1}}) fault_f <= 1'b1;
+                if (got[SD-1:0] != {SD{1'b1}}) fault_f <= 1'b1;
 `endif
             end
             if (pq_n == PRE[PB:0] && npush != 0) fault_f <= 1'b1;      // credit / capacity violated
@@ -179,8 +180,16 @@ module ot_dsrom_wfc_vmx #(
     // outbound prefetch after k_done
     reg pf; reg [IB-1:0] pf_i, pf_n; reg [NW-1:0] pf_tok; reg [31:0] pf_val; reg pf_dn;
     reg [RW-1:0] rq [0:RQ-1]; reg [$clog2(RQ):0] rq_n, r_out; reg [$clog2(RQ)-1:0] rq_r, rq_w;
-    wire [VWA-1:0] pf_a = (pf_i < XWORDS) ? TXB[VWA-1:0] + pf_i : SIDE_TXB[VWA-1:0] + (pf_i - XWORDS[IB-1:0]);
-    assign sr_valid = pf && pf_i < SD && (rq_n + r_out) < RQ;
+    // read address: no compare when there is no SIDE region (the ORFS ABC flow asserts in &dch on the redundant
+    // pf_i < XWORDS / pf_i < SD pair, aigDup.c:602; the issue-done state is a flop instead of a compare)
+    reg pf_all;                                     // every outbound word's read issued
+    wire [VWA-1:0] pf_a;
+    generate if (SIDE_WORDS == 0) begin : g_pfa_tx
+        assign pf_a = TXB[VWA-1:0] + pf_i;
+    end else begin : g_pfa_side
+        assign pf_a = (pf_i < XWORDS) ? TXB[VWA-1:0] + pf_i : SIDE_TXB[VWA-1:0] + (pf_i - XWORDS[IB-1:0]);
+    end endgenerate
+    assign sr_valid = pf && !pf_all && (rq_n + r_out) < RQ;
     assign sr_addr = pf_a;
     wire sr_fire = sr_valid && sr_ready;
     assign q_v = rq_n != 0;
@@ -191,7 +200,7 @@ module ot_dsrom_wfc_vmx #(
         k_start <= 1'b0;
         if (!srst_n) begin
             wout <= 0; busy <= 1'b0; pf <= 1'b0; rq_n <= 0; r_out <= 0; rq_r <= 0; rq_w <= 0; wcnt_s <= 0;
-            fault_s <= 1'b0; pf_dn <= 1'b0;
+            fault_s <= 1'b0; pf_dn <= 1'b0; pf_all <= 1'b1;
         end else begin
             wout <= wout + (sw_fire ? 1'b1 : 1'b0) - (sw_ack ? 1'b1 : 1'b0);
             if (sw_fire) wcnt_s <= wcnt_s + 1'b1;
@@ -203,9 +212,9 @@ module ot_dsrom_wfc_vmx #(
             if (k_done) begin
                 if (!busy || pf) fault_s <= 1'b1;
                 busy <= 1'b0; pf <= 1'b1; pf_i <= 0; pf_n <= 0; pf_tok <= k_next_token; pf_val <= k_next_val;
-                pf_dn <= 1'b0;
+                pf_dn <= 1'b0; pf_all <= 1'b0;
             end
-            if (sr_fire) pf_i <= pf_i + 1'b1;
+            if (sr_fire) begin pf_i <= pf_i + 1'b1; if (pf_i == SD - 1) pf_all <= 1'b1; end
             // response queue: data words in order, then the DONE marker
             begin : rqq
                 reg push_d, push_m;
@@ -216,10 +225,10 @@ module ot_dsrom_wfc_vmx #(
                 push_m = pf && !pf_dn && pf_n == SD && !sr_rv;
 `endif
                 if (sr_rv) begin
-                    rq[rq_w] <= {1'b0, {(RW - 1 - IB - FLIT){1'b0}}, pf_n, sr_rq};
+                    rq[rq_w] <= RW'({pf_n, sr_rq});                              // data word (MSB 0)
                     pf_n <= pf_n + 1'b1;
                 end else if (push_m) begin
-                    rq[rq_w] <= {1'b1, {(RW - 1 - NW - 32){1'b0}}, pf_tok, pf_val};
+                    rq[rq_w] <= RW'({pf_tok, pf_val}) | (RW'(1) << (RW - 1));     // DONE marker (MSB 1)
                     pf_dn <= 1'b1;
                 end
                 if (pf && (pf_dn || push_m) && (sr_rv ? pf_n + 1'b1 : pf_n) == SD) pf <= 1'b0;
