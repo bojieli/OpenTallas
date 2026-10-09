@@ -27,6 +27,7 @@ module ot_dsrom_hc_mean_capture #(
     // OUT_SKID.  LINK_DEPTH = landing depth = sender credits (>= the link round trip for full rate).  Landing overflow
     // is a fault.
     parameter integer LINK_CREDIT=0, LINK_DEPTH=8,
+    parameter integer LINK_OREG=1, // landing receivers drive the core from flops (ot_link_credit_rx OREG)
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -71,8 +72,8 @@ module ot_dsrom_hc_mean_capture #(
     wire x_cmd_valid,x_cmd_ready,x_in_valid,x_in_ready;wire [1:0] x_cmd_capture;wire [USER_W-1:0] x_cmd_user;
     wire [POS_W-1:0] x_cmd_position;wire [EPOCH_W-1:0] x_cmd_epoch;wire [7:0] x_in_beat;wire [511:0] x_in_residuals;
     generate if(LINK_CREDIT) begin:g_skid_link
-        ot_link_credit_rx #(.W(2+USER_W+POS_W+EPOCH_W),.DEPTH(LINK_DEPTH)) u_cmd_l(.clk(clk),.rst_n(rst_n),.l_valid(cmd_valid),.l_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.l_credit(cmd_ready),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),.o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}),.fault(lf[0]));
-        ot_link_credit_rx #(.W(8+512),.DEPTH(LINK_DEPTH)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_beat,in_residuals}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}),.fault(lf[1]));
+        ot_link_credit_rx #(.W(2+USER_W+POS_W+EPOCH_W),.DEPTH(LINK_DEPTH),.OREG(LINK_OREG)) u_cmd_l(.clk(clk),.rst_n(rst_n),.l_valid(cmd_valid),.l_data({cmd_capture,cmd_user,cmd_position,cmd_epoch}),.l_credit(cmd_ready),.o_valid(x_cmd_valid),.o_ready(x_cmd_ready),.o_data({x_cmd_capture,x_cmd_user,x_cmd_position,x_cmd_epoch}),.fault(lf[0]));
+        ot_link_credit_rx #(.W(8+512),.DEPTH(LINK_DEPTH),.OREG(LINK_OREG)) u_in_l(.clk(clk),.rst_n(rst_n),.l_valid(in_valid),.l_data({in_beat,in_residuals}),.l_credit(in_ready),.o_valid(x_in_valid),.o_ready(x_in_ready),.o_data({x_in_beat,x_in_residuals}),.fault(lf[1]));
     end else if(IN_SKID) begin:g_skid
         assign lf=2'b0;
         ot_dsrom_hc_skid #(.W(2+USER_W+POS_W+EPOCH_W)) u_cmd(.clk(clk),.rst_n(rst_n),.i_valid(cmd_valid),.i_ready(cmd_ready),
