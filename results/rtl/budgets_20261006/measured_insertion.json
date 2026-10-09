@@ -3704,22 +3704,22 @@
    "budget": null
   },
   "hfd_sfu": {
-   "job": "hbm_sfu_quarter_r24p_pinko_8de4473c4-tc-pd40-hm25",
+   "job": "hbm_sfu_quarter_r24p_pinko_8de4473c4-tc-pd45-hm50",
    "source_commit": "8de4473c44698d281b91669f63d5e23f39d71da0",
-   "host": "localhost",
-   "run": "/home/ubuntu/closure-loop-local/hbm_sfu_quarter_r24p_pinko_8de4473c4-tc-pd40-hm25",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_sfu_quarter_r24p_pinko_8de4473c4-tc-pd45-hm50",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T16:23:26-07:00",
+   "measured_at": "2026-10-08T17:52:41-07:00",
    "ss": {
-    "mean": 1257,
-    "min": 1201,
-    "max": 1436
+    "mean": 1262,
+    "min": 1216,
+    "max": 1430
    },
    "ff": {
-    "mean": 814,
-    "min": 769,
-    "max": 948
+    "mean": 810,
+    "min": 774,
+    "max": 936
    },
    "boundary_n": 4096,
    "budget": null
@@ -5186,5 +5186,5 @@
    }
   }
  },
- "updated": "2026-10-08T17:38:28-07:00"
+ "updated": "2026-10-08T17:52:41-07:00"
 }
