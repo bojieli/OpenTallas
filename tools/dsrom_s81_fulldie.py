@@ -1349,7 +1349,10 @@ SS_REACH_UM = 504.0
 def margin_lint(m):
     import fp_margin_lint as FPL
     # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
-    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+    # s81-gen 2026-10-09: data buses only.  Clock trunks / resets / column clock trees fan out from sp_collective (the
+    # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
+    data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
+    return FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
                           edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
 
 
@@ -3184,6 +3187,12 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
+    if 'eng' in m['hub']:
+        # layer1e: the SE service slot around eng_SE is free (no svc_SE): its stations / pin relays stand there and climb
+        # into stripS (l1e check: the last VM -> eng hop had no box near eng_SE, 1,181.5 um segment)
+        e_ = m['hub']['eng']
+        cor['engS'] = (e_.x - (PHY_W - e_.w) / 2 + 4.32, e_.y,
+                       e_.x + e_.w + (PHY_W - e_.w) / 2 - 4.32, g['band_depth'] + 4.32)
     for t, c in enumerate(g['ch_y']):
         cor[f'ch{t}'] = (g['x_lw'] + LINK_COL + 4.32, c + 4.32, g['x_le'] - 4.32, c + chh(t) - 4.32 - CF_WH[1] - 2.16)
     return cor
