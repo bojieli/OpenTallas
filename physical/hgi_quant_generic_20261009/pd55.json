@@ -67,6 +67,9 @@
         "{RUN}/routes/{NAME}/flow.log"
       ],
       "peak_ram_gb": 48
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
     }
   },
   "verdict": {
@@ -112,5 +115,15 @@
     },
     "status": "Estimates derived from measured sibling phase peaks, not measured G8 peaks or hard caps"
   },
-  "corner_scene_audit": "cfg contains noCORNER assignment; current route_master --orfs-corner ${CORNER:-WC}, holdcornersWC,BC. OT_ORFS_CORNER_OVERRIDE=TC overlaysWC_LIB_FILESwithTT liberties withoutTCscene rename. ActualgeneratedconfigWC/BC+60/25+833.333 mandatorypostlaunch."
+  "corner_scene_audit": "cfg contains noCORNER assignment; current route_master --orfs-corner ${CORNER:-WC}, holdcornersWC,BC. OT_ORFS_CORNER_OVERRIDE=TC overlaysWC_LIB_FILESwithTT liberties withoutTCscene rename. ActualgeneratedconfigWC/BC+60/25+833.333 mandatorypostlaunch.",
+  "hold_eco": {
+    "reexport": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "physical/hgi_quant_generic_20261009/results/pd55"
+    }
+  ],
+  "merge_target": null
 }
