@@ -1,0 +1,61 @@
+{
+  "source_commit": "c99c73326",
+  "target_status": "OWNER_RETRACTION_STOP_NEW_DESIGN_CLAUDE_ONLY",
+  "host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch/claude/emb-hub-sram-r1",
+  "guard": "/srv/opentallas-scratch/admit.sh 1 -- bash run.sh; separate complete-channel gate admit1",
+  "scope": "Minimum component only, no full-hub/die simulation, no physical closure or KV-die placement claim",
+  "cases": {
+    "positive": {
+      "returncode": 0,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/positive.log"
+    },
+    "overflow": {
+      "returncode": 0,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/overflow.log"
+    },
+    "ue": {
+      "returncode": 0,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/ue.log"
+    },
+    "payload_mutant": {
+      "returncode": 1,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/payload_mutant.log"
+    },
+    "early_credit_mutant": {
+      "returncode": 1,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/early_credit_mutant.log"
+    },
+    "channel": {
+      "returncode": 0,
+      "log": "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/logs/channel.log"
+    }
+  },
+  "positive_results": {
+    "ingress_words": 513,
+    "capacity": 128,
+    "peak_pending": 2,
+    "CE_tag_lane_corrected": 1,
+    "UE_prefix_accepted": 11,
+    "channel_words": 512,
+    "default_off": "bit/cycle exact against original",
+    "clocks_ps": 833.333334,
+    "clock_phase_ps": 100,
+    "measured_added_first_word_edges": 3,
+    "reset_wrap_stall_fence": "PASS"
+  },
+  "negative_controls": {
+    "early_credit": "Expected FAIL cycle136 before AFaccept",
+    "valid_ECC_stored_payload_mutant": "Expected FAIL first golden row"
+  },
+  "source_sha256": {
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_hub_sram_ingress.sv": "5557b4457242a26d46fa163fc22ad1660ff0308d361358c620a8912f2b07c351",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_cdc_ch_sram.sv": "b1923fb59fb804fe99bd02ac48c4be46c58de27167e57b0aceb74397d39bb849",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb_sram.sv": "43e8e584c1e535e62a5cca5ecb38035b227deba7892ee2a572aec14e658ed171",
+    "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/tb_ingress.sv": "ddd5177b959bc647c018c6ae4d06323d7a560ddf8a492c6edbf8921868433277",
+    "results/arch/emb_hbm_20261008/takeover/hub_sram_gate/tb_channel.sv": "0ab94b461131b897ed284ae6125e217eb73c64d96382b4e8aea6f7a56e12d2c4",
+    "tools/emb_hub_sram_sources.py": "11fefb0b12a1c112a480f17b2d31c67303f9e35d99efe4b195974c30ff54a4c2"
+  },
+  "mapped_area": "Progressing remote admit4; preserved, not yet a verdict",
+  "physical_escape": "Not qualified. Actual tech LEF M4pitch48nm/M6pitch64nm; model641 capacity assumed both48nm and is overstated. Conservative actualsumM4/M6 per41.04umedge=320+240=560, still arithmetic>=410; no actual via/ODB/fp_lint proof. Historical station573 figure similarly warrants coordinator review; no new design performed."
+}
