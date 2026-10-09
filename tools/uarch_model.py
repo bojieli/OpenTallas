@@ -14091,3 +14091,8 @@ def hbm_native_index_control_model():
     """Dynamic frame metadata and retained native source lease, before build."""
     from tools.hbm_native_index_control_model import model
     return model()
+
+def hbm_index_global_order_model():
+    """Actual TP96 candidate packets and finite canonical gather before build."""
+    from tools.hbm_index_global_order_model import model
+    return model()
