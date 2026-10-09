@@ -6,7 +6,8 @@ module tb_s81_primary_shared_last;
  wire source_clk=stream_clk;
 `else
  wire source_clk=clk;
-`endifreg rst_n=0;
+`endif
+ reg rst_n=0;
  reg p_valid=0,s_valid=0,out_ready=0;wire p_ready,s_ready;
  reg[511:0] p_data=0,s_data=0;reg[73:0] p_tag=0,s_tag=0;
  reg[6:0] p_word=0,s_word=0;reg p_last=0,s_last=0;
