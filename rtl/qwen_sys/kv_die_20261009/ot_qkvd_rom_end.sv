@@ -10,8 +10,7 @@
 //        RQD = 32 credits, the gateway's ABI)
 //   eq   link EMBD -> SU: posted (the SU's embedding face always accepts, the r21c ABI)
 //   dc   sequencer CTL words (ATTN / TOKEN / CSR_RSP) + valid, credit back;  dh  HCTL words -> sequencer, credit back
-//   pll_fwd / rst_fwd   the KV-die PLL clock and reset bumps beside the macro, buffered out to the clock root
-//                       (qfd_clkrx); package bumps (pll_fwd_pad, rst_fwd_pad) are not die nets
+//   (the forwarded KV-die PLL clock and reset arrive through their own bump cell, qfd_ckbump, straight to qfd_clkrx)
 // Every face input is captured at the pin, every output launched from a flop.  Contract:
 // results/arch/qwen_kv_die_20261009/CONTRACT.md.
 // ---------------------------------------------------------------------------------------------------------------------
@@ -52,15 +51,9 @@ module ot_qkvd_rom_end #(
     output wire [FW-1:0] tx_flit,
     input  wire          rx_v,
     input  wire [FW-1:0] rx_flit,
-    input  wire          pll_fwd_pad,
-    input  wire          rst_fwd_pad,
-    output wire          pll_fwd_o,
-    output wire          rst_fwd_o,
     output reg           fault,
     output reg  [7:0]    fault_cause
 );
-    assign pll_fwd_o = pll_fwd_pad;               // bump -> clock-root trunk (CTS buffers it)
-    assign rst_fwd_o = rst_fwd_pad;               // async reset, synchronised at qfd_clkrx
     // ---- input capture ----
     reg          xv, ev, dv;
     reg [522:0]  xd;

@@ -47,6 +47,7 @@ module ot_qkvd_kv_seq #(
     // near-HBM attention
     output reg               a_start,
     output reg  [13:0]       a_T,
+    output wire [5:0]        a_layer,          // layer index (with start / T to the aggregators and the landings)
     output reg               a_q_valid,
     output reg  [5:0]        a_q_beat,
     output reg  [511:0]      a_q_data,
@@ -57,6 +58,8 @@ module ot_qkvd_kv_seq #(
     input  wire              a_hub_fault,      // attention hub fault
     input  wire [3:0]        a_stk_fault,      // stack aggregator faults
     input  wire [3:0]        m_fault,          // KV merge faults (one per landing)
+    input  wire              d2d_fault,        // KV end of the link (ot_qkvd_kv_end) sticky fault + cause
+    input  wire [4:0]        d2d_cause,
     // KV write (posted to the four landings: their KV merges keep the rows, the HBM write queue stores them)
     output reg               kvw_v,
     output reg  [1:0]        kvw_vg,
@@ -78,8 +81,8 @@ module ot_qkvd_kv_seq #(
     output wire              tok_v,
     output wire [W-1:0]      tok_d,
     input  wire              tok_cr,
-    output reg               fault,
-    output reg  [7:0]        fault_cause
+    output reg               fault,            // to the host interface (status), sticky
+    output reg  [8:0]        fault_cause
 );
     // ---- boundary capture of the adapter RX face and the attention / row ports ----
     reg  [3:0]     cv;
@@ -126,6 +129,7 @@ module ot_qkvd_kv_seq #(
     localparam [2:0] S_IDLE = 3'd0, S_KV = 3'd1, S_ST = 3'd2, S_Q = 3'd3, S_RUN = 3'd4;
     reg [2:0]   st;
     reg [5:0]   layer;
+    assign a_layer = layer;
     reg [3:0]   kv_n;
     reg [5:0]   q_n;
     reg [6:0]   r_n;
@@ -133,7 +137,9 @@ module ot_qkvd_kv_seq #(
     reg [2:0]   kw_n;                       // KV rows posted
     reg [7:0]   kwc;
     reg         kw_go;
-    reg f_res, f_ord, f_row, f_pend, f_kw, f_ib;
+    reg f_res, f_ord, f_row, f_pend, f_kw, f_ib, f_d2d;
+    reg dfq;
+    always @(posedge clk or negedge rst_n) if (!rst_n) dfq <= 1'b0; else dfq <= d2d_fault;
     wire [W-1:0] ctl_w = ib_head[0*W +: W];
     wire [W-1:0] q_w   = ib_head[1*W +: W];
     wire [W-1:0] kv_w  = ib_head[2*W +: W];
@@ -164,7 +170,7 @@ module ot_qkvd_kv_seq #(
             st <= S_IDLE; layer <= 0; kv_n <= 0; q_n <= 0; r_n <= 0; a_start <= 1'b0; a_T <= 14'd0; a_q_valid <= 1'b0;
             c_cr <= 4'd0; uc0 <= 8'(UC0); rs_v <= 1'b0; tk_in_v <= 1'b0; tk_c <= 3'd4;
             kw_n <= 3'd4; kwc <= 8'(KWC); kw_go <= 1'b0; kvw_v <= 1'b0;
-            f_res <= 1'b0; f_ord <= 1'b0; f_kw <= 1'b0; f_ib <= 1'b0; f_row <= 1'b0; f_pend <= 1'b0; fault <= 1'b0; fault_cause <= 8'd0;
+            f_res <= 1'b0; f_ord <= 1'b0; f_kw <= 1'b0; f_ib <= 1'b0; f_row <= 1'b0; f_pend <= 1'b0; f_d2d <= 1'b0; fault <= 1'b0; fault_cause <= 9'd0;
         end else begin
             c_cr <= {eq_cr, ib_pop[2:0]};
             a_start <= 1'b0;
@@ -202,9 +208,10 @@ module ot_qkvd_kv_seq #(
             kwc <= kwc - (kw_go ? 8'd1 : 8'd0) + (kwq ? 8'd1 : 8'd0);
             if (|(ib_full[2:0] & cv[2:0] & ~ib_pop[2:0])) f_ib <= 1'b1;
             if (kwq && kwc == 8'(KWC)) f_kw <= 1'b1;
-            fault_cause <= {tk_f, hc_f, ed_f, eq_f, f_kw | f_row | f_pend, f_ord, f_res, f_ib};
+            if (dfq) f_d2d <= 1'b1;
+            fault_cause <= {f_d2d, tk_f, hc_f, ed_f, eq_f, f_kw | f_row | f_pend, f_ord, f_res, f_ib};
             f_row <= f_row | |m_fault; f_pend <= f_pend | a_hub_fault | |a_stk_fault;
-            fault <= |{tk_f, hc_f, ed_f, eq_f, f_kw, f_row, f_pend, f_ord, f_res, f_ib};
+            fault <= |{f_d2d, tk_f, hc_f, ed_f, eq_f, f_kw, f_row, f_pend, f_ord, f_res, f_ib};
         end
     end
 endmodule

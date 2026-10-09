@@ -3,12 +3,12 @@
  "die": "qwen_kv",
  "top_fix": false,
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
+ "generator_sha256": "f8e03c8e0a70eb5e7633b756ce8bc1898a640e92c3926be0619a83166102df40",
  "generator_tag": {
   "file": "tools/qwen_kv_die/kv_die.py",
-  "sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
-  "tree_head": "0760d842a25352ffe11ea36941bdf6cce5a6c5a5",
-  "file_commit": "d1356214c9c03d72ac86f2eb432e62f0c3fcadbe"
+  "sha256": "f8e03c8e0a70eb5e7633b756ce8bc1898a640e92c3926be0619a83166102df40",
+  "tree_head": "135e277ecf3e8c3c827a0fc8b603966cda9d3f4e",
+  "file_commit": "b4617e33b6989e575c2df7c0e3fc728eafbfa381"
  },
  "qwen_source": null,
  "qwen_recipe": null,
@@ -16,12 +16,12 @@
  "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
  "variant": null,
  "census": {
-  "instances": 892,
-  "buses": 1423,
-  "net_bits": 1626474,
-  "masters": 23,
+  "instances": 988,
+  "buses": 1524,
+  "net_bits": 751784,
+  "masters": 26,
   "real_instances": 134,
-  "placeholder_instances": 758
+  "placeholder_instances": 854
  },
  "real_blocks": {
   "ot_hbm3e_phy": {
@@ -105,6 +105,12 @@
    "instances": 128
   },
   {
+   "master": "qkd_ckbump",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qkd_ctrl",
    "view": "placeholder",
    "clock": "clock_trunk",
@@ -150,31 +156,43 @@
    "master": "qkd_rly_1",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 153
+   "instances": 156
+  },
+  {
+   "master": "qkd_rly_10",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 43
   },
   {
    "master": "qkd_rly_1025",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 73
+   "instances": 88
   },
   {
    "master": "qkd_rly_1048",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 51
+   "instances": 54
   },
   {
    "master": "qkd_rly_16",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 72
+   "instances": 85
+  },
+  {
+   "master": "qkd_rly_21",
+   "view": "placeholder",
+   "clock": "NO_CLOCK",
+   "instances": 4
   },
   {
    "master": "qkd_rly_36",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 16
+   "instances": 18
   },
   {
    "master": "qkd_rly_520",
@@ -186,19 +204,19 @@
    "master": "qkd_rly_530",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 251
+   "instances": 260
   },
   {
-   "master": "qkd_rly_534",
+   "master": "qkd_rly_540",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 55
+   "instances": 56
   },
   {
    "master": "qkd_rly_563",
    "view": "placeholder",
    "clock": "NO_CLOCK",
-   "instances": 16
+   "instances": 18
   },
   {
    "master": "qkd_seq",
@@ -228,9 +246,8 @@
    "pll_c",
    "pll_fwd"
   ],
-  "d2d_kv": [
-   "ck",
-   "pll_fwd_i"
+  "ckb_kv": [
+   "pll_ck"
   ]
  },
  "reset": [],
@@ -246,8 +263,8 @@
     "endpoints": 2,
     "bits": 72,
     "examples": [
-     "astk_WN.am face N peer 8260 um behind (am_WN__r4)",
-     "astk_EN.am face N peer 8260 um behind (am_EN__r4)"
+     "astk_WN.am face N peer 8389 um behind (am_WN__r4)",
+     "astk_EN.am face N peer 8044 um behind (am_EN__r5)"
     ]
    },
    {
@@ -257,8 +274,8 @@
     "endpoints": 2,
     "bits": 1126,
     "examples": [
-     "astk_WN.ap face N peer 8086 um behind (ap_WN)",
-     "astk_EN.ap face N peer 8043 um behind (ap_EN)"
+     "astk_WN.ap face N peer 8043 um behind (ap_WN)",
+     "astk_EN.ap face N peer 8086 um behind (ap_EN)"
     ]
    },
    {
@@ -270,7 +287,7 @@
     "examples": [
      "reng_WS_4.rq face N peer 2039 um behind (krq_WS_4)",
      "reng_WS_5.rq face N peer 2441 um behind (krq_WS_5)",
-     "reng_WN_4.rq face N peer 2043 um behind (krq_WN_4)"
+     "reng_WN_4.rq face N peer 2086 um behind (krq_WN_4)"
     ]
    },
    {
@@ -292,9 +309,9 @@
     "endpoints": 8,
     "bits": 8200,
     "examples": [
-     "reng_WS_4.rs face N peer 2124 um behind (krs_WS_4__r2)",
-     "reng_WS_5.rs face N peer 2353 um behind (krs_WS_5__r7)",
-     "reng_WN_4.rs face N peer 2129 um behind (krs_WN_4__r2)"
+     "reng_WS_4.rs face N peer 2081 um behind (krs_WS_4__r3)",
+     "reng_WS_5.rs face N peer 2137 um behind (krs_WS_5__r8)",
+     "reng_WN_4.rs face N peer 2085 um behind (krs_WN_4__r3)"
     ]
    },
    {
@@ -313,58 +330,82 @@
     "master": "qkd_rly_1",
     "port": "a",
     "orient": "R0",
-    "endpoints": 137,
-    "bits": 137,
+    "endpoints": 135,
+    "bits": 135,
     "examples": [
-     "rly_hs_0.a face W peer 649 um behind (hs)",
-     "rly_hs_1.a face W peer 52 um behind (hs__r1)",
-     "rly_hs_2.a face W peer 52 um behind (hs__r2)"
+     "rly_hs_0.a face W peer 665 um behind (hs)",
+     "rly_hs_1.a face W peer 96 um behind (hs__r1)",
+     "rly_hs_2.a face W peer 96 um behind (hs__r2)"
     ]
    },
    {
     "master": "qkd_rly_1",
     "port": "b",
     "orient": "R0",
-    "endpoints": 136,
-    "bits": 136,
+    "endpoints": 134,
+    "bits": 134,
     "examples": [
-     "rly_hs_0.b face E peer 52 um behind (hs__r1)",
-     "rly_hs_1.b face E peer 52 um behind (hs__r2)",
+     "rly_hs_0.b face E peer 96 um behind (hs__r1)",
+     "rly_hs_1.b face E peer 96 um behind (hs__r2)",
      "rly_hs_2.b face E peer 52 um behind (hs__r3)"
+    ]
+   },
+   {
+    "master": "qkd_rly_10",
+    "port": "a",
+    "orient": "R0",
+    "endpoints": 42,
+    "bits": 420,
+    "examples": [
+     "rly_kst_0.a face W peer 623 um behind (kst)",
+     "rly_kst_1.a face W peer 96 um behind (kst__r1)",
+     "rly_kst_2.a face W peer 52 um behind (kst__r2)"
+    ]
+   },
+   {
+    "master": "qkd_rly_10",
+    "port": "b",
+    "orient": "R0",
+    "endpoints": 41,
+    "bits": 410,
+    "examples": [
+     "rly_kst_0.b face E peer 96 um behind (kst__r1)",
+     "rly_kst_1.b face E peer 52 um behind (kst__r2)",
+     "rly_kst_2.b face E peer 52 um behind (kst__r3)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "a",
     "orient": "R0",
-    "endpoints": 47,
-    "bits": 48175,
+    "endpoints": 55,
+    "bits": 56375,
     "examples": [
-     "rly_krs_WS_5_4.a face W peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_5.a face W peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_6.a face W peer 96 um behind (krs_WS_5__r6)"
+     "rly_krs_WS_5_6.a face W peer 52 um behind (krs_WS_5__r6)",
+     "rly_krs_WS_5_7.a face W peer 52 um behind (krs_WS_5__r7)"
     ]
    },
    {
     "master": "qkd_rly_1025",
     "port": "b",
     "orient": "R0",
-    "endpoints": 47,
-    "bits": 48175,
+    "endpoints": 55,
+    "bits": 56375,
     "examples": [
-     "rly_krs_WS_5_3.b face E peer 52 um behind (krs_WS_5__r4)",
      "rly_krs_WS_5_4.b face E peer 52 um behind (krs_WS_5__r5)",
-     "rly_krs_WS_5_5.b face E peer 96 um behind (krs_WS_5__r6)"
+     "rly_krs_WS_5_5.b face E peer 52 um behind (krs_WS_5__r6)",
+     "rly_krs_WS_5_6.b face E peer 52 um behind (krs_WS_5__r7)"
     ]
    },
    {
     "master": "qkd_rly_1048",
     "port": "a",
     "orient": "R0",
-    "endpoints": 44,
-    "bits": 46112,
+    "endpoints": 46,
+    "bits": 48208,
     "examples": [
-     "rly_kvn_WS_0.a face W peer 521 um behind (kvn_WS)",
+     "rly_kvn_WS_0.a face W peer 496 um behind (kvn_WS)",
      "rly_kvn_WS_1.a face W peer 571 um behind (kvn_WS__r1)",
      "rly_kvn_WS_2.a face W peer 571 um behind (kvn_WS__r2)"
     ]
@@ -373,22 +414,22 @@
     "master": "qkd_rly_1048",
     "port": "b",
     "orient": "R0",
-    "endpoints": 44,
-    "bits": 46112,
+    "endpoints": 46,
+    "bits": 48208,
     "examples": [
      "rly_kvn_WS_0.b face E peer 571 um behind (kvn_WS__r1)",
      "rly_kvn_WS_1.b face E peer 571 um behind (kvn_WS__r2)",
-     "rly_kvn_WS_2.b face E peer 139 um behind (kvn_WS__r3)"
+     "rly_kvn_WS_2.b face E peer 571 um behind (kvn_WS__r3)"
     ]
    },
    {
     "master": "qkd_rly_16",
     "port": "a",
     "orient": "R0",
-    "endpoints": 48,
-    "bits": 768,
+    "endpoints": 55,
+    "bits": 880,
     "examples": [
-     "rly_krq_WS_4_0.a face W peer 819 um behind (krq_WS_4)",
+     "rly_krq_WS_4_0.a face W peer 1008 um behind (krq_WS_4)",
      "rly_krq_WS_4_1.a face W peer 571 um behind (krq_WS_4__r1)",
      "rly_krq_WS_5_1.a face W peer 52 um behind (krq_WS_5__r1)"
     ]
@@ -397,23 +438,45 @@
     "master": "qkd_rly_16",
     "port": "b",
     "orient": "R0",
-    "endpoints": 48,
-    "bits": 768,
+    "endpoints": 55,
+    "bits": 880,
     "examples": [
      "rly_krq_WS_4_0.b face E peer 571 um behind (krq_WS_4__r1)",
-     "rly_krq_WS_4_1.b face E peer 298 um behind (krq_WS_4__r2)",
+     "rly_krq_WS_4_1.b face E peer 514 um behind (krq_WS_4__r2)",
      "rly_krq_WS_5_0.b face E peer 52 um behind (krq_WS_5__r1)"
+    ]
+   },
+   {
+    "master": "qkd_rly_21",
+    "port": "a",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 42,
+    "examples": [
+     "rly_lt_WS_0.a face W peer 871 um behind (lt_WS)",
+     "rly_lt_WN_0.a face W peer 871 um behind (lt_WN)"
+    ]
+   },
+   {
+    "master": "qkd_rly_21",
+    "port": "b",
+    "orient": "R0",
+    "endpoints": 2,
+    "bits": 42,
+    "examples": [
+     "rly_lt_WS_0.b face E peer 253 um behind (lt_WS__r1)",
+     "rly_lt_WN_0.b face E peer 253 um behind (lt_WN__r1)"
     ]
    },
    {
     "master": "qkd_rly_36",
     "port": "a",
     "orient": "R0",
-    "endpoints": 14,
-    "bits": 504,
+    "endpoints": 12,
+    "bits": 432,
     "examples": [
-     "rly_am_WS_0.a face W peer 457 um behind (am_WS)",
-     "rly_am_WS_1.a face W peer 96 um behind (am_WS__r1)",
+     "rly_am_WS_0.a face W peer 517 um behind (am_WS)",
+     "rly_am_WS_1.a face W peer 182 um behind (am_WS__r1)",
      "rly_am_WS_2.a face W peer 96 um behind (am_WS__r2)"
     ]
    },
@@ -421,10 +484,10 @@
     "master": "qkd_rly_36",
     "port": "b",
     "orient": "R0",
-    "endpoints": 14,
-    "bits": 504,
+    "endpoints": 12,
+    "bits": 432,
     "examples": [
-     "rly_am_WS_0.b face E peer 96 um behind (am_WS__r1)",
+     "rly_am_WS_0.b face E peer 182 um behind (am_WS__r1)",
      "rly_am_WS_1.b face E peer 96 um behind (am_WS__r2)",
      "rly_am_WS_2.b face E peer 96 um behind (am_WS__r3)"
     ]
@@ -436,9 +499,9 @@
     "endpoints": 20,
     "bits": 10400,
     "examples": [
-     "rly_ares_0.a face W peer 171 um behind (ares)",
-     "rly_ares_1.a face W peer 96 um behind (ares__r1)",
-     "rly_ares_2.a face W peer 96 um behind (ares__r2)"
+     "rly_ares_0.a face W peer 102 um behind (ares)",
+     "rly_ares_1.a face W peer 52 um behind (ares__r1)",
+     "rly_ares_2.a face W peer 52 um behind (ares__r2)"
     ]
    },
    {
@@ -448,8 +511,8 @@
     "endpoints": 19,
     "bits": 9880,
     "examples": [
-     "rly_ares_0.b face E peer 96 um behind (ares__r1)",
-     "rly_ares_1.b face E peer 96 um behind (ares__r2)",
+     "rly_ares_0.b face E peer 52 um behind (ares__r1)",
+     "rly_ares_1.b face E peer 52 um behind (ares__r2)",
      "rly_ares_2.b face E peer 52 um behind (ares__r3)"
     ]
    },
@@ -457,11 +520,11 @@
     "master": "qkd_rly_530",
     "port": "a",
     "orient": "R0",
-    "endpoints": 218,
-    "bits": 115540,
+    "endpoints": 222,
+    "bits": 117660,
     "examples": [
-     "rly_emf_WS_0.a face W peer 284 um behind (emf_WS)",
-     "rly_emf_WS_1.a face W peer 52 um behind (emf_WS__r1)",
+     "rly_emf_WS_0.a face W peer 452 um behind (emf_WS)",
+     "rly_emf_WS_1.a face W peer 96 um behind (emf_WS__r1)",
      "rly_emf_WS_2.a face W peer 52 um behind (emf_WS__r2)"
     ]
    },
@@ -469,34 +532,34 @@
     "master": "qkd_rly_530",
     "port": "b",
     "orient": "R0",
-    "endpoints": 216,
-    "bits": 114480,
+    "endpoints": 220,
+    "bits": 116600,
     "examples": [
-     "rly_emf_WS_0.b face E peer 52 um behind (emf_WS__r1)",
+     "rly_emf_WS_0.b face E peer 96 um behind (emf_WS__r1)",
      "rly_emf_WS_1.b face E peer 52 um behind (emf_WS__r2)",
      "rly_emf_WS_2.b face E peer 52 um behind (emf_WS__r3)"
     ]
    },
    {
-    "master": "qkd_rly_534",
+    "master": "qkd_rly_540",
     "port": "a",
     "orient": "R0",
     "endpoints": 50,
-    "bits": 26700,
+    "bits": 27000,
     "examples": [
-     "rly_aq_WS_0.a face W peer 286 um behind (aq_WS)",
-     "rly_aq_WS_1.a face W peer 52 um behind (aq_WS__r1)",
+     "rly_aq_WS_0.a face W peer 261 um behind (aq_WS)",
+     "rly_aq_WS_1.a face W peer 96 um behind (aq_WS__r1)",
      "rly_aq_WS_2.a face W peer 52 um behind (aq_WS__r2)"
     ]
    },
    {
-    "master": "qkd_rly_534",
+    "master": "qkd_rly_540",
     "port": "b",
     "orient": "R0",
     "endpoints": 50,
-    "bits": 26700,
+    "bits": 27000,
     "examples": [
-     "rly_aq_WS_0.b face E peer 52 um behind (aq_WS__r1)",
+     "rly_aq_WS_0.b face E peer 96 um behind (aq_WS__r1)",
      "rly_aq_WS_1.b face E peer 52 um behind (aq_WS__r2)",
      "rly_aq_WS_2.b face E peer 52 um behind (aq_WS__r3)"
     ]
@@ -505,24 +568,24 @@
     "master": "qkd_rly_563",
     "port": "a",
     "orient": "R0",
-    "endpoints": 14,
-    "bits": 7882,
+    "endpoints": 12,
+    "bits": 6756,
     "examples": [
-     "rly_ap_WS_1.a face W peer 96 um behind (ap_WS__r1)",
-     "rly_ap_WS_2.a face W peer 52 um behind (ap_WS__r2)",
-     "rly_ap_WS_3.a face W peer 52 um behind (ap_WS__r3)"
+     "rly_ap_WS_2.a face W peer 96 um behind (ap_WS__r2)",
+     "rly_ap_WS_3.a face W peer 52 um behind (ap_WS__r3)",
+     "rly_ap_WN_2.a face W peer 52 um behind (ap_WN__r2)"
     ]
    },
    {
     "master": "qkd_rly_563",
     "port": "b",
     "orient": "R0",
-    "endpoints": 14,
-    "bits": 7882,
+    "endpoints": 12,
+    "bits": 6756,
     "examples": [
-     "rly_ap_WS_0.b face E peer 96 um behind (ap_WS__r1)",
-     "rly_ap_WS_1.b face E peer 52 um behind (ap_WS__r2)",
-     "rly_ap_WS_2.b face E peer 52 um behind (ap_WS__r3)"
+     "rly_ap_WS_1.b face E peer 96 um behind (ap_WS__r2)",
+     "rly_ap_WS_2.b face E peer 52 um behind (ap_WS__r3)",
+     "rly_ap_WN_1.b face E peer 52 um behind (ap_WN__r2)"
     ]
    }
   ],
@@ -616,15 +679,26 @@
     "bits": 9207
    },
    {
+    "bus": "host_fdi",
+    "cls": "d2d_fdi",
+    "inst": "serdes_host",
+    "master": "ot_qfd_serdes_112g_x12_phy",
+    "port": "fdi",
+    "face": "N",
+    "span_um": 400.1,
+    "peer_manhattan_um": 2.6,
+    "bits": 2085
+   },
+   {
     "bus": "el_WS_0",
     "cls": "stack_local",
     "inst": "reng_WS_0",
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_0",
@@ -633,9 +707,9 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_1",
@@ -644,9 +718,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_1",
@@ -655,9 +729,9 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_2",
@@ -666,9 +740,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_2",
@@ -677,9 +751,9 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_3",
@@ -688,9 +762,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_3",
@@ -699,9 +773,9 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_4",
@@ -710,9 +784,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_4",
@@ -721,9 +795,9 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_5",
@@ -732,9 +806,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_5",
@@ -743,9 +817,9 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_6",
@@ -754,9 +828,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_6",
@@ -765,9 +839,9 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_7",
@@ -776,9 +850,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WS_7",
@@ -787,9 +861,9 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_0",
@@ -798,9 +872,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_0",
@@ -809,9 +883,9 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_1",
@@ -820,9 +894,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_1",
@@ -831,9 +905,9 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_2",
@@ -842,9 +916,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_2",
@@ -853,9 +927,9 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_3",
@@ -864,9 +938,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_3",
@@ -875,9 +949,9 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_4",
@@ -886,9 +960,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_4",
@@ -897,9 +971,9 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_5",
@@ -908,9 +982,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_5",
@@ -919,9 +993,9 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_6",
@@ -930,9 +1004,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_6",
@@ -941,9 +1015,9 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_7",
@@ -952,9 +1026,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_WN_7",
@@ -963,9 +1037,9 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_0",
@@ -974,9 +1048,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_0",
@@ -985,9 +1059,9 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_1",
@@ -996,9 +1070,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_1",
@@ -1007,9 +1081,9 @@
     "master": "qkd_astk",
     "port": "e1i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_2",
@@ -1018,9 +1092,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_2",
@@ -1029,9 +1103,9 @@
     "master": "qkd_astk",
     "port": "e2i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_3",
@@ -1040,9 +1114,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_3",
@@ -1051,9 +1125,9 @@
     "master": "qkd_astk",
     "port": "e3i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_4",
@@ -1062,9 +1136,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_4",
@@ -1073,9 +1147,9 @@
     "master": "qkd_astk",
     "port": "e4i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_5",
@@ -1084,9 +1158,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_5",
@@ -1095,9 +1169,9 @@
     "master": "qkd_astk",
     "port": "e5i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_6",
@@ -1106,9 +1180,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_6",
@@ -1117,9 +1191,9 @@
     "master": "qkd_astk",
     "port": "e6i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_7",
@@ -1128,9 +1202,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_ES_7",
@@ -1139,9 +1213,9 @@
     "master": "qkd_astk",
     "port": "e7i",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_EN_0",
@@ -1150,9 +1224,9 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_EN_0",
@@ -1161,9 +1235,9 @@
     "master": "qkd_astk",
     "port": "e0i",
     "face": "W",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.6,
-    "bits": 16808
+    "bits": 4521
    },
    {
     "bus": "el_EN_1",
@@ -1172,23 +1246,12 @@
     "master": "qkd_reng",
     "port": "so",
     "face": "E",
-    "span_um": 1075.6,
+    "span_um": 289.3,
     "peer_manhattan_um": 0.7,
-    "bits": 16808
-   },
-   {
-    "bus": "el_EN_1",
-    "cls": "stack_local",
-    "inst": "astk_EN",
-    "master": "qkd_astk",
-    "port": "e1i",
-    "face": "W",
-    "span_um": 1075.6,
-    "peer_manhattan_um": 0.7,
-    "bits": 16808
+    "bits": 4521
    }
   ],
-  "pin_spread_count": 137,
+  "pin_spread_count": 73,
   "abut_without_channel": []
  },
  "meso_forwarded_gap": {
@@ -1214,9 +1277,9 @@
     "buses": 13,
     "bits": 13
    },
-   "spine_local|region": {
-    "buses": 143,
-    "bits": 60093
+   "reset|region": {
+    "buses": 1,
+    "bits": 1
    },
    "d2d_fdi|region": {
     "buses": 1,
@@ -1226,9 +1289,13 @@
     "buses": 2,
     "bits": 3710
    },
+   "spine_local|region": {
+    "buses": 153,
+    "bits": 60334
+   },
    "stack_local|region": {
     "buses": 64,
-    "bits": 1065856
+    "bits": 164960
    },
    "kvn|region": {
     "buses": 38,
@@ -1250,6 +1317,11 @@
   }
  },
  "block_shape": {
+  "qkd_ckbump": {
+   "in_bits": 1,
+   "out_bits": 0,
+   "shape": "sink: no output net"
+  },
   "qkd_pll": {
    "in_bits": 0,
    "out_bits": 6,
@@ -1298,13 +1370,34 @@
   }
  },
  "margin_lint": {
-  "chains": 73,
+  "chains": 78,
   "reach_um": 504.0,
   "reach_violations": 0,
-  "far_side_relays": 0,
+  "far_side_relays": 4,
   "reach_examples": [],
-  "far_side_examples": [],
-  "slivers": 329,
+  "far_side_examples": [
+   {
+    "chain": "astk_EN->land_EN",
+    "relay": "rly_lt_EN_0",
+    "back_um": 3231.1
+   },
+   {
+    "chain": "astk_WN->land_WN",
+    "relay": "rly_lt_WN_0",
+    "back_um": 3200.0
+   },
+   {
+    "chain": "astk_WS->land_WS",
+    "relay": "rly_lt_WS_0",
+    "back_um": 3195.7
+   },
+   {
+    "chain": "astk_ES->land_ES",
+    "relay": "rly_lt_ES_0",
+    "back_um": 3183.6
+   }
+  ],
+  "slivers": 337,
   "sliver_examples": [
    [
     "cdc_WN_0",
@@ -1407,13 +1500,13 @@
     0.43
    ]
   ],
-  "verdict": "PASS"
+  "verdict": "FAIL"
  },
  "abstract_ports_without_net": {},
  "top_fixes": {},
  "verilog": {
   "top": "qwen_kv_lint_top",
-  "stubs": 19,
+  "stubs": 22,
   "nc_wires": 8,
   "filelist": "qwen_kv_lint_top.f",
   "rtl_files": 2,
