@@ -8,7 +8,7 @@ module tb_dsrom_engram_prefetch #(
     reg [511:0] data=0;
     wire pending,ov,ce,ue,fault;
     wire [511:0] out;
-    integer n,read_count=0;
+    integer n,read_count=0,cycles=0,first_request=-1,first_response=-1,last_response=-1;
     function [10:0] sparse(input integer j);
         sparse=((j/192)<<8)|(j%192);
     endfunction
@@ -22,13 +22,24 @@ module tb_dsrom_engram_prefetch #(
     ot_dsrom_engram_prefetch #(.READ_INJECT(INJECT)) dut(
         .ck(ck),.rst_n(rst_n),.wr_v(wv),.wr_addr(wa),.wr_data(data),.wr_pending(pending),
         .rd_v(rv),.rd_addr(ra),.out_v(ov),.out_data(out),.out_ce(ce),.out_ue(ue),.fault(fault));
-    always @(negedge ck) if(rst_n&&ov) begin
+    always @(negedge ck) if(rst_n) begin
+        cycles=cycles+1;
+        if(rv&&first_request<0) first_request=cycles;
+        if(ov) begin
+        if(first_response<0) first_response=cycles;
+        last_response=cycles;
         if(INJECT==0 || INJECT==1) begin
-            if(out!==value(read_count)) $fatal(1,"prefetch payload mismatch row%0d",read_count);
+            if(out!==value(read_count)) begin
+                $display("PREFETCH_MISMATCH got=%h expected=%h code=%h group=%d",out,value(read_count),dut.read_code,dut.rg_q);
+                $fatal(1,"prefetch payload mismatch row%0d",read_count);
+            end
             if(ce!==(INJECT==1)||ue) $fatal(1,"prefetch correction flags wrong");
         end else if(!ue) $fatal(1,"prefetch double error not rejected");
         read_count=read_count+1;
+        end
     end
+    always @(negedge ck) if(wv&&wa==0)
+        $display("PREFETCH_FIRST_WRITE payload=%h encoded=%h",data[63:0],dut.encoded[71:0]);
     initial begin
         repeat(3) @(posedge ck);#1;rst_n=1;
         for(n=0;n<1536;n=n+1) begin
@@ -49,6 +60,7 @@ module tb_dsrom_engram_prefetch #(
         @(posedge ck);#1;wv=0;
         repeat(3) @(posedge ck);
         if(!fault) $fatal(1,"address bound not rejected");
-        $display("ENGRAM_PREFETCH PASS words=1536 slots=8 banks=18 inject=%0d bounds=1",INJECT);$finish;
+        if(first_response-first_request!=2 || last_response-first_response!=1535) $fatal(1,"prefetch latency/rate mismatch");
+        $display("ENGRAM_PREFETCH PASS words=1536 slots=8 banks=18 inject=%0d bounds=1 read_latency=2 sustained=1",INJECT);$finish;
     end
 endmodule
