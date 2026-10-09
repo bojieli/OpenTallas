@@ -24,6 +24,7 @@ def model():
             token_composition='8 index layers; old one-PC kind2 path remains unqualified against full-stack price'),
         write_mapping=dict(default_off=True,window_CKV_unchanged=True,arithmetic_unchanged=True,
             shadow_sector_index='retain die-global block-relative offset; placement affects addresses only'),
+        line_transport=json.loads((ROOT/'results/rtl/hbm_index_service_20261008/line_cdc_before_rtl.json').read_text()),
         collector=dict(sector_boundary_bits_per_PC=269,central_cut_PCs=16,
             central_cut_payload_bits=4304,reverse_pop_bits=32,
             legacy_band_height_um=259,M4_cross_pin_pitch_um=.096,
