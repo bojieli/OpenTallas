@@ -1,0 +1,16 @@
+{
+  "host": "ot-epyc1tb",
+  "launcher": 3865175,
+  "stage": "hold_eco.a2",
+  "docker_client": 3876060,
+  "effective_constraints": "Verified emitted mode_ss/mode_ff/eff_ss/eff_ff/merged SDC clocks 833ps and exact source-specific region/die150 union; original source/objects remain preserved until successful installation.",
+  "source_sta_recovery": {
+    "launcher": 3921792,
+    "python": 3921796,
+    "docker_client": 151905,
+    "phase": "serial corner STA, FF",
+    "guard_gib": 6,
+    "original_source": "9f7a7f35e",
+    "route_restarted": false
+  }
+}
