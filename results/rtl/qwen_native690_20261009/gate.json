@@ -1,0 +1,213 @@
+{
+  "status": "PASS_COMPILED_NATIVE_WORD_REFERENCE_AND_LAYOUT",
+  "N": 256,
+  "M": 64,
+  "quarters": 4,
+  "actual_quarter_RTL": false,
+  "slots": 42,
+  "cases": [
+    {
+      "stage": "rmsnorm4096",
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 16
+    },
+    {
+      "stage": "rmsnorm4096",
+      "negative": true,
+      "mismatches": 4084,
+      "nonfinite": false,
+      "quarter_instructions": 16
+    },
+    {
+      "stage": "qknorm128",
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 18
+    },
+    {
+      "stage": "qknorm128",
+      "negative": true,
+      "mismatches": 1280,
+      "nonfinite": false,
+      "quarter_instructions": 18
+    },
+    {
+      "stage": "rope128",
+      "position": 8191,
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8191,
+      "negative": true,
+      "mismatches": 1268,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8192,
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8192,
+      "negative": true,
+      "mismatches": 1266,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8193,
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8193,
+      "negative": true,
+      "mismatches": 1271,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8194,
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "rope128",
+      "position": 8194,
+      "negative": true,
+      "mismatches": 1272,
+      "nonfinite": false,
+      "quarter_instructions": 24
+    },
+    {
+      "stage": "swiglu3072",
+      "negative": false,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 8
+    },
+    {
+      "stage": "swiglu3072",
+      "negative": true,
+      "mismatches": 3072,
+      "nonfinite": false,
+      "quarter_instructions": 8
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8192,
+      "negative": null,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 80
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8192,
+      "negative": "round_before_sum",
+      "mismatches": 8,
+      "nonfinite": false,
+      "quarter_instructions": 80
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8192,
+      "negative": "unmasked_tail",
+      "mismatches": 65544,
+      "nonfinite": true,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8193,
+      "negative": null,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8193,
+      "negative": "round_before_sum",
+      "mismatches": 8,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8193,
+      "negative": "unmasked_tail",
+      "mismatches": 65552,
+      "nonfinite": true,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8194,
+      "negative": null,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8194,
+      "negative": "round_before_sum",
+      "mismatches": 8,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8194,
+      "negative": "unmasked_tail",
+      "mismatches": 65560,
+      "nonfinite": true,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8195,
+      "negative": null,
+      "mismatches": 0,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8195,
+      "negative": "round_before_sum",
+      "mismatches": 8,
+      "nonfinite": false,
+      "quarter_instructions": 92
+    },
+    {
+      "stage": "softmax8x8224",
+      "valid_length": 8195,
+      "negative": "unmasked_tail",
+      "mismatches": 65568,
+      "nonfinite": true,
+      "quarter_instructions": 92
+    }
+  ],
+  "peak_rss_kib": 56176
+}

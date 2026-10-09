@@ -20,7 +20,7 @@ def execute(C,mem,banks,metadata,stage,valid=8192,mutation=None):
     for pc in range(stage['pc'],stage['pc']+stage['count']):
         meta=metadata[pc];assert meta>>41==1
         mask=(meta>>37)&15;window=(meta>>36)&1;row0=(meta>>16)&((1<<20)-1);rows=meta&65535
-        if window and row0>=valid:continue
+        if window and row0>=valid and mutation!='unmasked_tail':continue
         for q in range(4):
             if not (mask>>q)&1:continue
             f=decode(C,banks[q][pc])
@@ -30,7 +30,15 @@ def execute(C,mem,banks,metadata,stage,valid=8192,mutation=None):
             if mutation=='missing_gain' and f['e1']==C.I.E1_MULC:f['e1']=C.I.E1_BYP
             if mutation=='wrong_rope_sign' and f['qm']==C.I.QM_POS:f['qm']=C.I.QM_NEG
             if mutation=='wrong_silu' and f['sfu']==C.I.SFU_SILU:f['sfu']=C.I.SFU_SIGM
-            if C.layout(f,256,64)['bad']:raise AssertionError('clipped instruction exceeds real quarter layout')
+            lay=C.layout(f,256,64)
+            if lay['bad']:raise AssertionError('clipped instruction exceeds real quarter layout')
+            if mutation is None and f['red']==C.I.RED_SUM:
+                out,finite,_=C.elements(f,mem)
+                values=C.G.mul(out,out) if f['redsq'] else out
+                segments=values.reshape(f['nout'],f['nin'])
+                for sg in segments:
+                    if C.unit_sum(sg,lay['S'],lay['vw'])!=C.fbits(C.V.csum(sg)):
+                        raise AssertionError('actual N256/M64 reducer tree changed chunk8 order')
             ok,*_=C.ref_op(f,mem);fault|=not ok;ops+=1
     return dict(nonfinite=fault,quarter_instructions=ops)
 

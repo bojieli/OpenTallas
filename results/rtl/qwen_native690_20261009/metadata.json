@@ -1,0 +1,19 @@
+{
+  "source_sha256": {
+    "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/qwen_r25_native690_fixture.py": "0a9ebbe485a5fbb53928a6c85a18bfa54cdc40fab76e8d0ab3a405414106c14c",
+    "tools/qwen_r25_su_stage.py": "c1b2e5f10f6c1d33b21525d663325c808c7481d7c3b2a0b3d8fcaa9f9423943a",
+    "tools/qwen_r25_su_programs.py": "00d16746d661fd7db47d3be67aa0100866992253f5e30082e49bbc8b2846e011",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/qwen_r25_native690.py": "f0142096d4680c865d7ef236febd8d7b5fa9054409c59d7f1466404b22b85e23",
+    "tools/qwen_r25_native690_gate.py": "e53329626bd2506d573bfc1060144b61ee3f6b276d329da597d35233ec0fb7cb",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "python": "3.14.4 (main, Aug 20 2026, 10:41:58) [GCC 15.2.0]",
+  "numpy": "2.3.5",
+  "host": "EPYC4",
+  "admission": "admit.sh 1",
+  "fixtures_checked": 20,
+  "actual_quarter_RTL": false
+}
