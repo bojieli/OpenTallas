@@ -25,20 +25,21 @@ reg command_v=0,key_visible=0,producer_published=0,producer_drained=0;
 reg[72:0]command_frame=0;reg[14:0]command_row=0;
 wire command_r,control_prefetch_v,control_start_v,control_done,control_fault,control_retained;
 wire[72:0]control_frame;wire[14:0]control_row;wire[5:0]control_layer;wire[13:0]control_ndie;
+wire[8:0]control_stack_blocks;
 wire[89:0]control_fs;wire[344:0]control_kin;wire[6:0]control_rank;
 reg control_done_seen=0;integer held_credit_witness=0;
 wire request_v=CONTROL?control_prefetch_v:portal_req_v;
-wire[98:0]request_d=CONTROL?{control_frame,control_row,9'd342,2'd2}:portal_req_d;
+wire[98:0]request_d=CONTROL?{control_frame,control_row,control_stack_blocks,2'd2}:portal_req_d;
 wire receipt_r=CONTROL?control_prefetch_v:portal_receipt_r;
 ot_hbm_native_index_control #(.ENABLE(CONTROL),.PREFETCH(1)) actual_control(
  .clk(efck),.por_n(rst_n),.owner_valid(1'b1),.owner_fault(1'b0),.allocation_granted(1'b1),
  .owner_frame(command_frame),.allocation_frame(command_frame),.producer_published(producer_published),
  .producer_drained(producer_drained),.selector_idle(1'b1),.command_v(command_v),.command_r(command_r),
  .command_frame(command_frame),.command_rank(7'd17),.command_ndie(14'd2736),.command_k(10'd512),
- .command_cand(1'b0),.command_keep(1'b0),.command_layer(6'(rep_)),.command_key_row0(command_row),
+ .command_cand(1'b0),.command_keep(1'b0),.command_layer(6'(rep_)),.command_key_row0(command_row),.command_stack_blocks(9'd342),
  .key_visible(key_visible),.key_visibility_frame(command_frame),.prefetch_v(control_prefetch_v),
  .prefetch_accepted(portal_receipt_v&&receipt_r),.prefetch_accepted_frame(portal_receipt_frame),
- .held_layer(control_layer),.held_key_row0(control_row),.held_ndie(control_ndie),
+ .held_layer(control_layer),.held_key_row0(control_row),.held_ndie(control_ndie),.held_stack_blocks(control_stack_blocks),
  .keep_v(1'b0),.keep_r(),.keep_frame(73'd0),.keep_quarter(2'd0),.keep_bitmap(342'd0),
  .fs(control_fs),.kin(control_kin),.source_start_v(control_start_v),.source_start_r(1'b1),
  .held_frame(control_frame),.held_rank(control_rank),.source_done(got==1368),

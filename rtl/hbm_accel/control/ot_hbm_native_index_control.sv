@@ -13,12 +13,14 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  input wire [13:0] command_ndie,input wire [9:0] command_k,
  input wire command_cand,command_keep,
  input wire [5:0] command_layer,input wire [14:0] command_key_row0,
+ input wire [8:0] command_stack_blocks,
  // Actual paired append completion/fence receipt, independent of query values.
  input wire key_visible,input wire [72:0] key_visibility_frame,
  output wire prefetch_v,input wire prefetch_accepted,
  input wire [72:0] prefetch_accepted_frame,
  output wire [5:0] held_layer,output wire [14:0] held_key_row0,
  output wire [13:0] held_ndie,
+ output wire [8:0] held_stack_blocks,
  input wire keep_v,output wire keep_r,input wire [72:0] keep_frame,
  input wire [1:0] keep_quarter,input wire [341:0] keep_bitmap,
  output wire [89:0] fs,output wire [344:0] kin,
@@ -28,7 +30,7 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  input wire returns_drained,source_idle,
  output wire retained,output wire done,output wire fault
 );
- localparam integer DW=127;
+ localparam integer DW=136;
  localparam [3:0] IDLE=0,WAITPUB=1,KEEP=2,EMITKEEP=3,GAP=4,
                   FRAME=5,STARTGAP=6,START=7,RUN=8,RETIRE=9,FAULT=10;
  reg [DW-1:0] desc,desc_n;
@@ -52,6 +54,7 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
  assign held_frame=desc[72:0];assign held_rank=desc[79:73];
  assign held_layer=desc[126:121];assign held_key_row0=desc[120:106];
  assign held_ndie=desc[93:80];
+ assign held_stack_blocks=desc[135:127];
  assign prefetch_v=enabled&&PREFETCH&&lease_ok&&active&&state!=RETIRE&&
                    !ctl[12]&&key_visible&&key_visibility_frame==desc[72:0];
  assign fs=(enabled&&lease_ok&&state==FRAME)?
@@ -71,8 +74,9 @@ module ot_hbm_native_index_control #(parameter integer ENABLE=0,PREFETCH=0)(
    else case(state)
     IDLE:if(command_v&&command_r)begin
      if(command_frame!=owner_frame||command_rank>=96||command_ndie>10944||
-        command_k==0||command_k>512||(PREFETCH&&(command_layer>=40||command_key_row0>32085)))next_ctl[3:0]=FAULT;
-     else begin next_desc={command_layer,command_key_row0,command_keep,command_cand,command_k,command_ndie,
+        command_k==0||command_k>512||(PREFETCH&&(command_layer>=40||command_key_row0>32085||
+        command_stack_blocks==0||command_stack_blocks>342)))next_ctl[3:0]=FAULT;
+     else begin next_desc={command_stack_blocks,command_layer,command_key_row0,command_keep,command_cand,command_k,command_ndie,
                           command_rank,command_frame};next_ctl=WAITPUB;end
     end
     WAITPUB:if(producer_published&&producer_drained&&(!PREFETCH||ctl[12]))
