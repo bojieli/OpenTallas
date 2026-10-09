@@ -21,6 +21,7 @@
 // Engram) are die nets cmd_* / dn_* to their slabs.  Program memory is loaded through pw_* (the die's cfg path).
 // ---------------------------------------------------------------------------
 module ot_s81_ctrl #(
+    parameter integer WINDOW_CONTEXT = 0,
     parameter integer ROLE     = 0,          // 0 layer, 1 SOURCE (stage 0), 2 HEAD root
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
@@ -55,6 +56,15 @@ module ot_s81_ctrl #(
 ) (
     input  wire                  clk,
     input  wire                  rst_n,
+    input wire source_token_dead,
+    input wire eng_rb_v,
+    input wire [11:0] eng_rb_user,
+    input wire [2:0] eng_rb_n,
+    output wire eng_rb_ready,
+    output wire native_win_v,native_win_slot,native_win_dead,
+    output wire [67:0] native_win_ids,
+    output wire [11:0] native_win_user,
+    output wire [20:0] native_win_pos,native_win_tok,
     // cfg path: program memory and static configuration
     input  wire                  pw_v,
     input  wire [OPW-1:0]        pw_a,
@@ -146,15 +156,38 @@ module ot_s81_ctrl #(
         assign hq_act = 1'b0; assign st_tokens = 0;
     end endgenerate
     // ---- package controller ----
-    wire j_v, j_r, j_done; wire [11:0] j_u; wire [NW-1:0] j_p, j_t;
+    wire j_v, j_r, j_done, seq_ready; wire [11:0] j_u; wire [NW-1:0] j_p, j_t;
+    wire jw_v,jw_dead;wire [67:0] jw_ids;
+    wire producer_ready,producer_fault;
+    reg window_slot;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) window_slot<=0;
+        else if(j_v && j_r) window_slot<=!window_slot;
+    assign j_r=seq_ready && (!WINDOW_CONTEXT || !SOURCE || producer_ready);
+    generate if(WINDOW_CONTEXT && SOURCE) begin:g_window_source
+        ot_dsrom_engram_lead_producer u_lead(.clk(clk),.rst_n(rst_n),
+            .t_v(j_v && j_r),.t_ready(producer_ready),.t_user(j_u),.t_pos(j_p),.t_tok(j_t),
+            .t_first(j_p==0),.t_dead(source_token_dead),.t_slot(window_slot),
+            .rb_v(eng_rb_v),.rb_user(eng_rb_user),.rb_n(eng_rb_n),.rb_ready(eng_rb_ready),
+            .out_v(native_win_v),.out_ready(1'b1),.out_ids(native_win_ids),.out_dead(native_win_dead),
+            .out_slot(native_win_slot),.out_user(native_win_user),.out_pos(native_win_pos),.out_tok(native_win_tok),
+            .fault(producer_fault));
+    end else begin:g_window_received
+        assign producer_ready=1;assign producer_fault=0;assign eng_rb_ready=0;
+        assign native_win_v=WINDOW_CONTEXT && j_v && j_r && jw_v;
+        assign native_win_slot=window_slot;assign native_win_dead=jw_dead;
+        assign native_win_ids=jw_ids;assign native_win_user=j_u;
+        assign native_win_pos=j_p;assign native_win_tok=j_t;
+    end endgenerate
     wire run_eosen; wire [NW-1:0] run_eos; wire [NW:0] run_maxl;
     wire p_f; wire [3:0] p_fc; wire [31:0] p_jd;
     ot_s81_pkg_ctrl #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .MAXU(MAXU), .VWA(VWA), .RXB(RXB), .RXW(XW),
-        .SOURCE(SOURCE), .SIDE_USH(SIDE_USH), .SIDE_BASE(SIDE_BASE), .MUT(MUT)) u_pkg (
+        .WINDOW_CONTEXT(WINDOW_CONTEXT),.SOURCE(SOURCE), .SIDE_USH(SIDE_USH), .SIDE_BASE(SIDE_BASE), .MUT(MUT)) u_pkg (
         .clk(clk), .rst_n(rst_n), .cfg_users(cfg_users), .cfg_prompt_len(cfg_plen), .cfg_gen_len(cfg_glen),
         .cfg_max_len(cfg_maxl), .cfg_eos_en(cfg_eos_en), .cfg_eos_id(cfg_eos_id), .boot_ok(SOURCE ? boot_ok : 1'b1),
         .in_valid(g_v), .in_ready(g_r), .in_data(g_d), .in_last(g_l),
         .job_v(j_v), .job_rdy(j_r), .job_user(j_u), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
+        .job_win_v(jw_v),.job_win_ids(jw_ids),.job_win_dead(jw_dead),
         .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
         .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata),
         .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(pr_q),
@@ -165,7 +198,7 @@ module ot_s81_ctrl #(
     wire s_busy, s_f; wire [3:0] s_fc; wire [31:0] s_cmds, s_cs;
     ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .ARGW(ARGW), .USER_W(SUW), .NW(NW), .QD(QD)) u_seq (
         .clk(clk), .rst_n(rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
-        .job_v(j_v), .job_rdy(j_r), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
+        .job_v(j_v && j_r), .job_rdy(seq_ready), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .cmd_v(s_cv), .cmd_d(s_cd), .dn_v(s_dv), .dn_tag(s_dt), .busy(s_busy), .fault(s_f), .fault_code(s_fc),
         .st_jobs(st_jobs), .st_cmds(s_cmds), .st_credit_stall(s_cs));
     // ---- hop port ----
@@ -187,6 +220,8 @@ module ot_s81_ctrl #(
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
         .SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
+        .win_ctx_v(native_win_v),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
+        .win_ctx_pos(native_win_pos),.win_ctx_tok(native_win_tok),.win_ctx_ids(native_win_ids),.win_ctx_dead(native_win_dead),
         .go(hop_go || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
         .res_val(r_v ? r_val : rh_val), .res_stop(r_v ? r_stop : rh_stop),
         .run_eosen(run_eosen), .run_eos(run_eos), .run_maxl(run_maxl),
@@ -214,6 +249,6 @@ module ot_s81_ctrl #(
         .stuck(stuck), .stuck_snap(snap), .stuck_cycle(scyc), .idle_run(idle_run), .idle_max(idle_max),
         .trace_valid(tv), .trace_ready(1'b1), .trace_data(tdat), .trace_drops(tdrop));
     assign stuck_snap = snap;
-    assign fault = s_f || h_f || p_f || g_f || hq_f;
-    assign fault_vec = {s_fc, h_fc, p_fc, g_fc};
+    assign fault = s_f || h_f || p_f || g_f || hq_f || producer_fault;
+    assign fault_vec = {s_fc, h_fc, producer_fault ? 4'd10 : p_fc, g_fc};
 endmodule
