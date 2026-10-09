@@ -14627,3 +14627,38 @@ def s81_native_ingest_contract_model():
     """Actual host sector and perPC source-owned native controller service."""
     from s81_native_ingest_model import model
     return model()
+
+
+def qwen_dspark_native_model():
+    from uarch_qwen_dspark_native_model import model
+    return model()
+
+
+def dsrom_hc_mean_capture_model():
+    """Mandatory full-rank L37/38/39 INPUT residual means and seed framing."""
+    from tools.dsrom_hc_mean_capture_model import model
+    return model()
+
+
+def dsrom_hc_input_reader_model():
+    """Finite native VM reader; port ownership and H mapping remain explicit."""
+    from tools.dsrom_hc_mean_capture_model import input_reader_model
+    return input_reader_model()
+
+
+def hbm_native_token_join_model(qwen=False):
+    """Native Qwen/DeepSeek real two-half AR token runtime; qualification pending."""
+    from hbm_native_token_join_model import model
+    return model(qwen=qwen)
+
+
+def hbm_native_mtp_stop_model(tw=17):
+    """Full-context native MTP stop/ready successor with composed ACK cycles."""
+    from hbm_native_mtp_stop_model import model
+    return model(tw=tw)
+
+
+def s81_control_transport_model(**kwargs):
+    """Real native queue/CDC, control lane and HC/seed adapters before build."""
+    from tools.s81_ctrl.control_transport_model import model
+    return model(**kwargs)
