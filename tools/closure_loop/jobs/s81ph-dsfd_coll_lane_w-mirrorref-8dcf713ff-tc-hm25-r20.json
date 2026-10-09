@@ -1,8 +1,8 @@
 {
-  "name": "s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25",
+  "name": "s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25-r20",
   "block": "dsfd_coll_lane_w",
   "owner": "Codex:s81-slab-continuation",
-  "purpose": "Approved W/MY collective implementation at both W and retired E positions. Current routed-reference re-STA refutes historical W closure: TT17.91,FF-25.67 on505 input holds (TT398.4ps/FF322.4ps boundary clocks). Fresh TC calibration/route with current per-corner MMFF reference and HM25. Same native GFMT1/EPPIPE2 hardware,345.6x340.2 footprint,10SRAM macros,zero new cycles. Global localhost admission disabled by owner.",
+  "purpose": "Approved W/MY collective implementation at both W and retired E positions. Current routed-reference re-STA refutes historical W closure: TT17.91,FF-25.67 on505 input holds (TT398.4ps/FF322.4ps boundary clocks). Fresh TC calibration/route with current per-corner MMFF reference and HM25. Same native GFMT1/EPPIPE2 hardware,345.6x340.2 footprint,10SRAM macros,zero new cycles. Global localhost admission disabled by owner. Resource correction: actual W detailed-route5_2_route.log peak14,533,068KB;20GB reservation (no address-spacecap), calibration8GB from same WCTS vehicle. Prior8GB job cancelled before stage launch; immutable historical state retained.",
   "hosts": [
     "ot-epyc1tb",
     "ot-epyc2",
@@ -10,7 +10,7 @@
     "ot-agidock128"
   ],
   "threads": 16,
-  "peak_ram_gb": 8,
+  "peak_ram_gb": 20,
   "source": {
     "branch": "codex/s81-collective-mirror-20261009",
     "commit": "8dcf713ff",
@@ -29,7 +29,7 @@
       "peak_ram_gb": 8
     },
     "route": {
-      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.025 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=8 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt; python3 tools/closure_loop/tt_overlay.py {SRC}; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.025 OT_MM_FF_SDC=\"physical/s81_ph_views/common/signoff_unc60.sdc\" SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=20 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_w rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv --param GFMT=1 --param EPPIPE=2 $CL_STOP_AFTER",
       "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
       "logs": [
         "{RUN}/routes/{NAME}/run.log"
@@ -76,7 +76,7 @@
   "record": [
     {
       "from": "{RUN}/record",
-      "to": "physical/variant_fill/s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25/dsfd_coll_lane_w"
+      "to": "physical/variant_fill/s81ph-dsfd_coll_lane_w-mirrorref-8dcf713ff-tc-hm25-r20/dsfd_coll_lane_w"
     }
   ],
   "cycles_added": 0,
@@ -93,7 +93,5 @@
     "ot-epyc2",
     "ot-epyc3",
     "ot-agidock128"
-  ],
-  "enabled": false,
-  "disabled_reason": "Owner admission correction: W detailed-route measured14,533,068KB, exceeds initial8GB estimate; cancelled before any stage launch. Superseded by-r20 reservation20GB."
+  ]
 }
