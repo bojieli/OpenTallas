@@ -1,0 +1,65 @@
+{
+ "all_ok": false,
+ "cases": [
+  {
+   "case": "s0_tr_forced",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "rtl/test/mtp_rom_fixtures/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "",
+   "got": "nolog",
+   "verdict": "UNEXPECTED"
+  },
+  {
+   "case": "s0_neg_doneearly",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_WFCVMX_MUT_DONEEARLY"
+   ],
+   "trace": {
+    "trace": "rtl/test/mtp_rom_fixtures/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "",
+   "got": "nolog",
+   "verdict": "UNEXPECTED"
+  }
+ ]
+}

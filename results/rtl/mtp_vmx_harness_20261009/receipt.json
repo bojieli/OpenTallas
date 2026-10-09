@@ -1,0 +1,12 @@
+{
+  "source_commit": "aea8f3f06e21f0e0ab1f4ade515c9a6913c44d12",
+  "fixture_manifest": "rtl/test/mtp_rom_fixtures/manifest.json",
+  "host": "ot-pve1",
+  "run": "/srv/opentallas-scratch/codex/mtp-vmx-harness-aea8f3f06",
+  "launcher_pid": 288126,
+  "admission": "actualadmit.sh4GiB->vvpPID288138 observed; fleet_closure measured97.7GiB hostavailable; noresultsdirectory inarchive",
+  "verdict": "PASS positive + actual doneearly negative FAIL asrequired",
+  "observed_utc": "2026-10-09T09:13:53.019769+00:00",
+  "RTL_changed": false,
+  "scope": "Fixes missing golden fixture harness rc1 on o248 candidates; no physical closure/adoption. Firstrelativeout failure retained, EPYC2/3neverstartedguards preserved then rehomed."
+}

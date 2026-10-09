@@ -1,0 +1,65 @@
+{
+ "all_ok": true,
+ "cases": [
+  {
+   "case": "s0_tr_forced",
+   "expect": "pass",
+   "params": {
+    "MODE": 0,
+    "NUSR": 2
+   },
+   "defines": [],
+   "trace": {
+    "trace": "rtl/test/mtp_rom_fixtures/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41423",
+   "got": "pass",
+   "verdict": "OK"
+  },
+  {
+   "case": "s0_neg_doneearly",
+   "expect": "fail",
+   "params": {
+    "MODE": 0,
+    "NUSR": 1
+   },
+   "defines": [
+    "OT_WFCVMX_MUT_DONEEARLY"
+   ],
+   "trace": {
+    "trace": "rtl/test/mtp_rom_fixtures/tr_forced.cfg.json",
+    "plen": 8,
+    "ngen": 24,
+    "passes": 8,
+    "drafter": "forced",
+    "accepted": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5,
+     0,
+     1
+    ]
+   },
+   "result": "MTP_S0 FAIL: HIDDEN payload word 0 of (u0, p0, t0) (VM / staging transport) got xxxxxxxxxxxxxxxx exp 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000009580056e98da8738 at 136",
+   "got": "fail",
+   "verdict": "OK"
+  }
+ ]
+}
