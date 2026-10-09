@@ -19,6 +19,8 @@ module ot_qkvd_layer_tb #(
     parameter integer ROM_ST = 24,
     parameter integer KV_ST  = 12,
     parameter integer PHY_LAT = 5,
+    parameter integer QX     = 0,      // KV die: extra stages seq -> stack aggregators beyond LINK (placement)
+    parameter integer RX     = 0,      // KV die: stages attention hub -> seq (placement)
     parameter integer MUT    = 0,
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
@@ -158,10 +160,19 @@ module ot_qkvd_layer_tb #(
         .emb_q_d(emb_q_d), .emb_q_cr(emb_q_cr), .hc_v(hc_v), .hc_d(hc_d), .hc_cr(hc_cr), .tok_v(tok_v),
         .tok_d(tok_d), .tok_cr(tok_cr), .fault(faults[2]), .fault_cause(seq_fc));
     wire [4:0] af;
+    // KV-die wires seq -> aggregators (QX stages beyond the LINK the attention bench applies) and hub -> seq (RX)
+    wire          x_start, x_qv, h_ov, h_og;
+    wire [13:0]   x_T;
+    wire [5:0]    x_qb, h_ob;
+    wire [511:0]  x_qd, h_od;
+    ot_hdc_delay #(.W(2), .D(QX), .RESET(1)) u_qxv (.clk(clk), .rst_n(rst_n), .d({a_start, a_qv}), .q({x_start, x_qv}));
+    ot_hdc_delay #(.W(14 + 6 + 512), .D(QX)) u_qxd (.clk(clk), .rst_n(rst_n), .d({a_T, a_qb, a_qd}), .q({x_T, x_qb, x_qd}));
+    ot_hdc_delay #(.W(1), .D(RX), .RESET(1)) u_rxv (.clk(clk), .rst_n(rst_n), .d(h_ov), .q(a_ov));
+    ot_hdc_delay #(.W(1 + 6 + 512), .D(RX)) u_rxd (.clk(clk), .rst_n(rst_n), .d({h_og, h_ob, h_od}), .q({a_og, a_ob, a_od}));
     ot_qwen_nearhbm_attn_die_tb #(.HD(HD), .R(R), .LINK(LINK), .SCALE(SCALE)) u_attn (
-        .clk(clk), .rst_n(rst_n), .start(a_start), .T(a_T), .q_valid(a_qv), .q_beat(a_qb), .q_data(a_qd),
+        .clk(clk), .rst_n(rst_n), .start(x_start), .T(x_T), .q_valid(x_qv), .q_beat(x_qb), .q_data(x_qd),
         .req_valid(req_valid), .req_v(req_v), .req_g(req_g), .req_t(req_t), .rsp_valid(e_rv), .rsp_data(e_rd),
-        .out_valid(a_ov), .out_g(a_og), .out_beat(a_ob), .out_data(a_od), .fault(af), .ev_stack(), .ev_hub());
+        .out_valid(h_ov), .out_g(h_og), .out_beat(h_ob), .out_data(h_od), .fault(af), .ev_stack(), .ev_hub());
     assign faults[3] = |af;
     assign a_start_o = a_start;
     assign a_out_valid_o = a_ov;
