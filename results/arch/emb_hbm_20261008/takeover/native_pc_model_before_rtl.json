@@ -1,0 +1,54 @@
+{
+  "schema": "opentallas.embedding.native_pc_binding.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "domain_period_ps": {
+    "core": 833.333333,
+    "HBM": 1024
+  },
+  "MACs_per_cycle": 0,
+  "replicas_per_stack": 32,
+  "stacks": 4,
+  "composition": "qualifiedot_qfd_native_cmd_plain provider drives actualot_qfd_emb_pc cmd32/read_credit3/cmd_credit at hclk",
+  "provider_register_bits_including_fault": 76,
+  "provider_flop_area_proxy_um2": 24.32,
+  "existing_slot_um": [
+    247.536,
+    370.44
+  ],
+  "geometry_change": false,
+  "area": "existingcontroller1889.319+pcport1367.926+CDC1397.76um2 proxies plusprovider24.32; contextualCTS/routing area notqualified",
+  "added_hclk_command_edges": 1,
+  "added_hclk_read_credit_edges": 1,
+  "new_wrapper_register_bits": 0,
+  "memory_port_bytes_per_cycle": {
+    "command": 4,
+    "embedding_write": 32,
+    "protected_PHY_return": 36
+  },
+  "boundary_bits": {
+    "desc_row": 19,
+    "desc_n": 11,
+    "GO": 1,
+    "WR_bank_col": 10,
+    "external_owner_fences": 3,
+    "read_release": 3,
+    "actual_command": 32,
+    "actual_read_credit": 3,
+    "actual_command_return": 1
+  },
+  "fanout": "eachplainprovider onlyonePCcontroller; no sharednativecommandbroadcast",
+  "routing_tracks": "existingPCframe two-layercontract unchanged; newnativeinput/ownerpins must be actualrouted",
+  "latency": "nativecommand registeredoneHBMedge/readcredit registeredoneHBMedge; exactembeddingCDC/controller timing remainsexistingmodel",
+  "owner_inputs": [
+    "qualifiedDESC30/GO/WRbankcol",
+    "window_retired",
+    "write_quiet",
+    "transport_quiet",
+    "read_release"
+  ],
+  "ownership_open": true,
+  "native32PC_bound": false,
+  "physical_qualified": false,
+  "protection": "no transientflop/controlECC/ID64; existingHBMpayloadcode suppliedbyseparateprovider"
+}

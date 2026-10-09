@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.embedding.typed_phy_binding.v1",
+  "default_enabled": false,
+  "MACs_per_cycle": 0,
+  "domain_period_ps": 1024,
+  "added_register_bits": 0,
+  "added_cycles": 0,
+  "physical_request_fields": {
+    "valid": 1,
+    "ready": 1,
+    "write": 1,
+    "row": 19,
+    "bank": 5,
+    "col": 5,
+    "sidecar": 1,
+    "embedding": 1,
+    "readback_fence": 1,
+    "tag": 16,
+    "data": 256
+  },
+  "replaced_API_fields": {
+    "addr": 31,
+    "len": 5
+  },
+  "memory_port_bytes_per_cycle": {
+    "physical_payload": 32
+  },
+  "role_authority": "actualrequestphase ER/EW/FE issidecar, FD/FE isreadbackfence; embeddingclass fromacceptedrequestcapture",
+  "address_authority": "inverseot_hdc_hbm_modelNPC32 permutation appliedtoactualsourcephysicalp_addr; row19 zeroextendsactualrow16",
+  "fanout": "wire-onlylocaltypedboundary; nativeSROW32PCarbiterownedqwen_system",
+  "routing_tracks": "requestboundary307bits inclready vs311oldAPI; no geometrychange",
+  "area": "wirealias only; physicalpin/buffer/netdelta requiresactualnativeintegration",
+  "physical_qualified": false,
+  "native_JEDEC_bound": false,
+  "adopted": false
+}

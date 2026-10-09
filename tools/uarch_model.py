@@ -14936,3 +14936,13 @@ def qwen_embedding_hub_sram_model():
     """Price four 128x523 ingress buffers using actual SRAM views and finite credit latency."""
     from tools.qwen_embedding_hub_sram_model import model
     return model()
+
+
+def qwen_embedding_native_pc_binding_model():
+    from tools.qwen_embedding_native_binding_model import native_pc_model
+    return native_pc_model()
+
+
+def qwen_embedding_typed_phy_binding_model():
+    from tools.qwen_embedding_native_binding_model import typed_phy_model
+    return typed_phy_model()

@@ -1,0 +1,32 @@
+"""Plain native command/typed PHY request wiring, no additional state or invented owner."""
+def native_pc_model():
+    return dict(schema='opentallas.embedding.native_pc_binding.v1',default_enabled=False,adopted=False,
+        domain_period_ps=dict(core=833.333333,HBM=1024),MACs_per_cycle=0,
+        replicas_per_stack=32,stacks=4,
+        composition='qualifiedot_qfd_native_cmd_plain provider drives actualot_qfd_emb_pc cmd32/read_credit3/cmd_credit at hclk',
+        provider_register_bits_including_fault=76,provider_flop_area_proxy_um2=76*.32,
+        existing_slot_um=[247.536,370.44],geometry_change=False,
+        area='existingcontroller1889.319+pcport1367.926+CDC1397.76um2 proxies plusprovider24.32; contextualCTS/routing area notqualified',
+        added_hclk_command_edges=1,added_hclk_read_credit_edges=1,
+        new_wrapper_register_bits=0,
+        memory_port_bytes_per_cycle=dict(command=4,embedding_write=32,protected_PHY_return=36),
+        boundary_bits=dict(desc_row=19,desc_n=11,GO=1,WR_bank_col=10,external_owner_fences=3,read_release=3,actual_command=32,actual_read_credit=3,actual_command_return=1),
+        fanout='eachplainprovider onlyonePCcontroller; no sharednativecommandbroadcast',
+        routing_tracks='existingPCframe two-layercontract unchanged; newnativeinput/ownerpins must be actualrouted',
+        latency='nativecommand registeredoneHBMedge/readcredit registeredoneHBMedge; exactembeddingCDC/controller timing remainsexistingmodel',
+        owner_inputs=['qualifiedDESC30/GO/WRbankcol','window_retired','write_quiet','transport_quiet','read_release'],
+        ownership_open=True,native32PC_bound=False,physical_qualified=False,
+        protection='no transientflop/controlECC/ID64; existingHBMpayloadcode suppliedbyseparateprovider')
+
+def typed_phy_model():
+    return dict(schema='opentallas.embedding.typed_phy_binding.v1',default_enabled=False,
+        MACs_per_cycle=0,domain_period_ps=1024,added_register_bits=0,added_cycles=0,
+        physical_request_fields=dict(valid=1,ready=1,write=1,row=19,bank=5,col=5,sidecar=1,embedding=1,readback_fence=1,tag=16,data=256),
+        replaced_API_fields=dict(addr=31,len=5),
+        memory_port_bytes_per_cycle=dict(physical_payload=32),
+        role_authority='actualrequestphase ER/EW/FE issidecar, FD/FE isreadbackfence; embeddingclass fromacceptedrequestcapture',
+        address_authority='inverseot_hdc_hbm_modelNPC32 permutation appliedtoactualsourcephysicalp_addr; row19 zeroextendsactualrow16',
+        fanout='wire-onlylocaltypedboundary; nativeSROW32PCarbiterownedqwen_system',
+        routing_tracks='requestboundary307bits inclready vs311oldAPI; no geometrychange',
+        area='wirealias only; physicalpin/buffer/netdelta requiresactualnativeintegration',
+        physical_qualified=False,native_JEDEC_bound=False,adopted=False)
