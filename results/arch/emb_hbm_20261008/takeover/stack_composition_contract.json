@@ -23,13 +23,17 @@
   "default_ENABLE": 0,
   "mutable_flow": "All originalleafqueues/credits unchanged. Nativeproviderprepaid8FIFO maybind later. Noadditionalcapacityorprotectioninvented.",
   "elaboration": {
-    "status": "WAITING_ADMISSION",
+    "status": "PASS",
     "host": "ot-agidock128",
     "root": "/srv/opentallas-scratch/codex/emb-stack-elaboration",
     "guard_peak_GiB": 4,
     "observer_PID": 2843971,
     "source_script": "run.sh inremoteroot hashes actualsources beforecompile",
-    "scope": "32-PCrealhierarchy elaboration only; no wholearraysimulation"
+    "scope": "32-PCrealhierarchy elaboration only; no wholearraysimulation",
+    "enabled_exit": 0,
+    "default_exit": 0,
+    "evidence": "stack_elaboration/source_sha256.txt +exits.txt +enabled.log +disabled.log",
+    "no_simulation": true
   },
   "physical_binding": false,
   "die_binding": false,
