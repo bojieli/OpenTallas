@@ -62,6 +62,8 @@ foreach inst [$block getInsts] {
  dict set all_orig [$inst getName] [$inst getOrigin]
  if {[[$inst getMaster] isBlock]} {dict set macro_orig [$inst getName] [list [$inst getOrigin] [$inst getOrient]]}
 }
+set die [$block getDieArea];set core [$block getCoreArea]
+set outline_orig [list [$die xMin] [$die yMin] [$die xMax] [$die yMax] [$core xMin] [$core yMin] [$core xMax] [$core yMax]]
 set bt_orig [dict create]
 foreach bt [$block getBTerms] {
  set geom {}
@@ -92,6 +94,9 @@ if {[info exists ::env(OT_SR_CHECK_ONLY_ODB)]} {
  # Retain private output even if existing legalizer reports failure.
  write_db /probe/sr-displacement-8p10x6p21-release181.odb
 }
+set die [$block getDieArea];set core [$block getCoreArea]
+if {$outline_orig ne [list [$die xMin] [$die yMin] [$die xMax] [$die yMax] [$core xMin] [$core yMin] [$core xMax] [$core yMax]]} {error "Source outline changed"}
+if {[llength [$block getInsts]] != [dict size $all_orig]} {error "Source instance inventory changed"}
 set btmap [dict create]
 foreach bt [$block getBTerms] {dict set btmap [$bt getName] $bt}
 set bad 0;set maxdx 0;set maxdy 0;set maxpin 0
