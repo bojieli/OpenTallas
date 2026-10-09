@@ -132,3 +132,36 @@ def primary_shared_receive_cdc_model():
     result['latency_cycles']['no_stall80flit_context_lower_bound']+=8
     result['token_contribution_us_lower_bound']=93/900
     return result
+
+
+def static_vm_read_share_model():
+    result=vm_read_share_model()
+    result['schema']='opentallas.uarch.s81-static-vm-read-share.v1'
+    result['storage_bits_per_replica']=dict(hop_rows=448,hc_row=14,response_owners=64,
+                                           counter_pointer_control_upper_bound=64,total=590)
+    result['area_slot_fit']='590ordinaryFIFO/controlbits perreplica; no complementaryrow/owner or lease/auth hardware. ActualstaticNP8map/otherproducerschedule required.'
+    result['reset_contract']='CommonresetwithnativeVM; realproducercredits and completedresponsecount provide flowcontrol; no resetepoch hardware added'
+    return result
+
+
+def plain_primary_shared_receive_model():
+    result=primary_shared_receive_cdc_model()
+    result['schema']='opentallas.uarch.s81-primary-shared-plain-cdc.v1'
+    result['storage_bits']=dict(queues=14256,queue_control=33,metadata_pipeline=246,
+        context_and_control_upper_bound=192,receive_cdc=19008,total_without_native_adders=33735)
+    result['receive_cdc'].update(protected_frame_bits=None,native_frame_bits=594,
+        storage_bits=19008,mutable_metadata='Actualnative74context+word7/last only; no complementarymetadata or protectedflopFIFO hardware')
+    result['area_slot_fit']='PlainFIFO8/native594CDC33735FFbits plus16nativeLAT3adders; selectedSRAMproducerpayload retainsSECDED, noECC/duplication added to arithmeticflops'
+    return result
+
+
+def stage_range_observer_model():
+    return dict(schema='opentallas.uarch.s81-stage-range-observer.v1',
+        enabled_default=True,macs_per_cycle=0, latency_cycles=0,
+        storage_bits=6, boundary_bits_per_cycle=dict(input=514,output=514),
+        replicas='One peractualcontroller stage endpoint; no peruserpositionhistory',
+        area_slot_fit='6ordinarycontrolbits plususer/MAXU and1Mpositioncomparators; noauth/drop path, no ready/valid addedlogic',
+        routing_tracks_required=514, available_tracks=None,
+        clock_ghz=1.2, token_contribution_cycles=0,
+        static_contract='Faultfree staticsource/destcompiler/link routing; stageobserver onlystickyuser/positionbounds flag. Payloadpassing continuesunchanged.',
+        adoption='Ownerreview approved0cycle stagebounds observer; actualcontroller route/context stillneeded')

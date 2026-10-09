@@ -14085,8 +14085,8 @@ def s81_control_transport_model(**kwargs):
 
 def s81_vm_read_share_model(**kwargs):
     """Size finite sharing of existing native NP8 slot1; no invented slots."""
-    from tools.s81_ctrl.control_transport_model import vm_read_share_model
-    return vm_read_share_model(**kwargs)
+    from tools.s81_ctrl.control_transport_model import static_vm_read_share_model
+    return static_vm_read_share_model()
 
 
 def s81_runtime_pc_lease_model(**kwargs):
@@ -14097,5 +14097,5 @@ def s81_runtime_pc_lease_model(**kwargs):
 
 def s81_primary_shared_last_model():
     """Native final shared-LAST add, BF16 once, two actual receive CDC ports."""
-    from tools.s81_ctrl.control_transport_model import primary_shared_receive_cdc_model
-    return primary_shared_receive_cdc_model()
+    from tools.s81_ctrl.control_transport_model import plain_primary_shared_receive_model
+    return plain_primary_shared_receive_model()

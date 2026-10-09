@@ -48,10 +48,6 @@ module tb_s81_vm_read_share;
     block_rsp=1;
     for(i=0;i<33;i=i+1)begin hop_re=1;hop_row=i;@(negedge clk);end
     hop_re=0;
-   end else if(bad==3||bad==4)begin
-    hop_re=1;hop_row=0;@(negedge clk);hop_re=0;
-    if(bad==3)dut.g_share.share.hop_rows[dut.g_share.share.hp][27]=!dut.g_share.share.hop_rows[dut.g_share.share.hp][27];
-    else begin repeat(2)@(negedge clk);dut.g_share.share.owners[dut.g_share.share.op][1]=dut.g_share.share.owners[dut.g_share.share.op][0];end
    end else begin
     // Every physical rank's320actual Hrows; full1280rows overall. Hop640rows
     // overlap, with real OUT_DEPTH32 ownership and sporadic offer bubbles.

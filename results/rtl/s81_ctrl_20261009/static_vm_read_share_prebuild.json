@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.uarch.s81-static-vm-read-share.v1",
+  "status": "PREBUILD_SIZED_PHYSICAL_SLOT_OWNERS_PENDING",
+  "enabled_default": false,
+  "replicas": 12,
+  "macs_per_cycle": 0,
+  "storage_bits_per_replica": {
+    "hop_rows": 448,
+    "hc_row": 14,
+    "response_owners": 64,
+    "counter_pointer_control_upper_bound": 64,
+    "total": 590
+  },
+  "memory_bytes_per_cycle": {
+    "native_read1": 64,
+    "native_write0_existing": 64
+  },
+  "boundary_bits_per_cycle": {
+    "native_read_row": 15,
+    "native_response": 513,
+    "hc_request": 16,
+    "hc_response": 513,
+    "hop_request": 15,
+    "hop_response": 513
+  },
+  "replicas_mux_fanout": "One2client address mux; actual owner FIFO demux returns;12proximal source replicas subject to selected placement.",
+  "routing_tracks_required": 1085,
+  "available_tracks": null,
+  "area_slot_fit": "590ordinaryFIFO/controlbits perreplica; no complementaryrow/owner or lease/auth hardware. ActualstaticNP8map/otherproducerschedule required.",
+  "outstanding": {
+    "hop": 32,
+    "hc": 1,
+    "total": 33,
+    "response_owner_capacity": 64
+  },
+  "native_port_contract": "One read issue/cycle on EXISTING read1; write0 unchanged. Others2..7 unowned here. NativeVM bank queue overflow remains actual schedule fault.",
+  "latency_cycles": {
+    "request_enqueue": 1,
+    "native_return_observed": 10,
+    "hc_pending_wait_max_existing_hop": 1,
+    "hop_queue_max_under_adversarial_requests": 32,
+    "hc_single_capture_reads": 320,
+    "hc_single_capture_read_floor": 3840
+  },
+  "token_contribution": "Component cycles compose with real mean-source schedule;12sources overlap only if actual Hrestore leases and placement allow it.",
+  "reset_contract": "CommonresetwithnativeVM; realproducercredits and completedresponsecount provide flowcontrol; no resetepoch hardware added",
+  "other_slot_owners": null,
+  "adoption": "Native response order and actual slot1 owner reservation must be qualified; not a full-token or SS/FF claim"
+}

@@ -8,4 +8,4 @@ S=("$SRC/rtl/dsrom_sys/s81_ctrl/ot_s81_vm_adapter.sv"
  "$SRC/physical/asap7_memory_macros/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v")
 sha256sum "${S[@]}" > "$OUT/source.sha256"
 iverilog -g2012 -s tb_s81_vm_read_share -o "$OUT/base.vvp" "${S[@]}" > "$OUT/build.log" 2>&1
-for bad in 0 1 2 3 4;do vvp "$OUT/base.vvp" +bad=$bad > "$OUT/bad$bad.log" 2>&1;done
+for bad in 0 1 2;do vvp "$OUT/base.vvp" +bad=$bad > "$OUT/bad$bad.log" 2>&1;done
