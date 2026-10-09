@@ -223,12 +223,23 @@
       "UCIe_bits_per_cycle": 512,
       "UCIe_bytes_per_cycle": 64,
       "primary_request_BF16_vector_bytes": 10240,
+      "GU_local_BF16_values": 576,
+      "GU_full_BF16_values": 2304,
+      "GU_local_BF16_bytes": 1152,
+      "GU_full_BF16_bytes": 4608,
+      "GU_TP4_allgather_received_bytes_per_rank": 3456,
       "per_expert_return_FP32_bytes": 5120,
       "per_expert_return_flits": 80
     },
     "boundaries": {
       "individual_expert_payload_bits_per_cycle": 512,
-      "identity_header_bits": "actual transaction, position and expert-id format required"
+      "identity_bits": 74,
+      "selected_expert_bits": 27,
+      "word_index_bits": 7,
+      "A_B_input_lanes": 2,
+      "merger_input_bits_per_lane": 606,
+      "protected_output_bits": 671,
+      "identity_header_bits": "74 transaction bits plus9 expert/7 word/shared/last; exact link framing required"
     },
     "replicas": {
       "A_die": 20,
@@ -242,9 +253,25 @@
     },
     "storage": {
       "A_individual_expert_row_bytes_upper": 15360,
+      "A_shared_last_row_bytes": 5120,
+      "A_total_buffered_rows": 4,
+      "A_protected_row_payload_bytes": 20480,
       "B_pending_expert_row_bytes_upper": 15360,
-      "pair_row_buffer_bytes_upper": 30720,
-      "array_row_buffer_bytes_upper": 614400,
+      "pair_row_buffer_bytes_upper": 35840,
+      "array_row_buffer_bytes_upper": 716800,
+      "protection": {
+        "code": "8 SECDED72 slices per512-bit flit",
+        "protected_flit_bits": 576,
+        "SRAM_bits_per_word": 768,
+        "SRAM_words": 128,
+        "live_words_per_row": 80,
+        "SRAM_master": "ot_sram_1r1w_128x256_m1_r2c2",
+        "SRAM_macros_per_row": 3,
+        "A_SRAM_macros": 12,
+        "B_pending_SRAM_macros": 9,
+        "metadata_and_flow_state": "duplicate control state with mismatch fault; immutable identity",
+        "output_consumer": "must decode/correct SECDED and abort UE before arithmetic"
+      },
       "actual_minimum_FIFO_implementation_required": true
     },
     "routing": {
@@ -252,9 +279,44 @@
       "channel_capacity": null
     },
     "area": {
-      "buffer_macro_inventory": null,
+      "A_buffer_macro_inventory": 12,
+      "B_pending_buffer_macro_inventory": 9,
+      "macro_outline_um": [
+        94.824,
+        41.04
+      ],
+      "A_raw_SRAM_area_um2": 46698.92352,
+      "B_raw_SRAM_area_um2": 35024.192639999994,
+      "A_candidate_slot_um": [
+        400,
+        360
+      ],
+      "protected_output_FIFO_words": 8,
+      "protected_output_FIFO_bits": 4608,
+      "output_FIFO_FF_cell_floor_um2": 1343.6928,
       "finite_merge_cell_area": null,
       "floorplan_slot_fit": false
+    },
+    "ordered_consumer": {
+      "initial_accumulator": "FP32 +0",
+      "receipt_order": [
+        "expert0",
+        "expert1",
+        "expert2",
+        "shared"
+      ],
+      "selected_experts": "strict ascending IDs, three distinct receipts",
+      "shared_source": "among97 excluded primary headers; actual packed producer still absent",
+      "output_distribution": "disjoint1280 FP32 rows/rank; output gather, no output allreduce",
+      "GU_distribution": "TP4 allgather2304 weighted BF16 terms on chosen A/B side before W2",
+      "rejects": [
+        "duplicate",
+        "wrong expert",
+        "wrong transaction identity",
+        "wrong word or last",
+        "missing shared"
+      ],
+      "arithmetic_RTL_binding_qualified": false
     },
     "stages": [
       {
@@ -284,6 +346,11 @@
       "stage1_extra_serialization_us": 0.13333333333333333,
       "stage2_extra_serialization_us_upper": 0.13333333333333333,
       "critical_row_extra_serialization_us_upper": 0.26666666666666666,
+      "ordered_expert_plus_shared_flits": 320,
+      "protected_buffer_encoder_cycles": 1,
+      "SRAM_read_cycles": 1,
+      "consumer_SECDED_decode_cycles": 2,
+      "per_complete_row_drain_lower_bound_cycles": 323,
       "multiply_by_5_parallel_rows": false,
       "headers_endpoint_credit_and_ordering_stalls_unmeasured": true,
       "historical_P2_point2us_budget_qualified": false
@@ -472,7 +539,7 @@
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
     "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621",
     "tools/dsrom_head_input_staging_model.py": "7e340a91444cf61a987a1b11cea17d9dc17648732bf96997f007779470f13963",
-    "tools/dsrom_mtp_p2_transport_model.py": "ba92f2f7abd0b476ccd4fba4b6f3da25fcef4a9b56011e97ca232387c415d504",
-    "tools/uarch_model.py": "5e90e8269d690d9b6490c3db4fad15f992f6c8d3665a132dc1b6b365676de090"
+    "tools/dsrom_mtp_p2_transport_model.py": "dceee8cf6ef6f5f1e88c0663b9a173c40f4c846f815875c6a84ebb3404c7dcc6",
+    "tools/uarch_model.py": "94facb05e0b60dbfd964ed1d300a8eb2ff719446e1318120af87fb77688ff6b2"
   }
 }
