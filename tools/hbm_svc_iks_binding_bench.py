@@ -9,12 +9,13 @@ SRC=['rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv','rtl/hbm_accel/service/ot_
 'physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv','physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv',
 'rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv','rtl/test/hbm_accel/tb_hbm_svc_iks_binding.sv']
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--ref-mode',type=int,default=3);ap.add_argument('--pull',type=int,default=0);ap.add_argument('--batch',type=int,default=0);a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--ref-mode',type=int,default=3);ap.add_argument('--pull',type=int,default=0);ap.add_argument('--batch',type=int,default=0);ap.add_argument('--depth',type=int,default=64);a=ap.parse_args()
  a.work.mkdir(parents=True,exist_ok=False)
  rec={'schema':'opentallas.hbm_iks_timed.v1','source_commit':os.environ.get('PINNED_SOURCE_COMMIT') or subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
  'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC+['tools/hbm_svc_iks_binding_bench.py','results/rtl/hbm_index_service_20261008/binding_before_bench.json']},
  'scope':'timed request-level controller; behavioral return SRAM, no physical signoff or performance adoption',
- 'controller':'ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps',
+ 'controller':f'ot_hdc_v41x_idx_hbm NPC32 REFPB{a.ref_mode} PULL{a.pull} BATCH{a.batch} MEM_MODE1 QD64 TCK1024ps',
+ 'sector_reservation_depth':a.depth,
  'cases':[],'verdict':'INCOMPLETE'}
  a.out.parent.mkdir(parents=True,exist_ok=True)
  def save():a.out.write_text(json.dumps(rec,indent=2)+'\n')
@@ -23,7 +24,7 @@ def main():
  v=os.environ.get('VERILATOR',str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
  rec['simulator']=subprocess.check_output([v,'--version'],text=True).strip()
  with (a.work/'build.log').open('w') as log:
-  cp=subprocess.run([v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','--top-module','tb_hbm_svc_iks_binding',f'-GREF_MODE={a.ref_mode}',f'-GPULL={a.pull}',f'-GBATCH={a.batch}','--Mdir',str(a.work/'obj')]+[str(ROOT/s) for s in SRC],stdout=log,stderr=subprocess.STDOUT)
+  cp=subprocess.run([v,'--binary','--timing','-Wno-fatal','-Wno-WIDTH','-j','4','-O2','--top-module','tb_hbm_svc_iks_binding',f'-GREF_MODE={a.ref_mode}',f'-GPULL={a.pull}',f'-GBATCH={a.batch}',f'-GKEY_DEPTH={a.depth}','--Mdir',str(a.work/'obj')]+[str(ROOT/s) for s in SRC],stdout=log,stderr=subprocess.STDOUT)
  rec['build_returncode']=cp.returncode;save()
  if cp.returncode:rec['verdict']='BUILD_FAIL';save();return 1
  for phase,delay,mut in [(p,1,0) for p in [0,1300,2700,4100,5500,6900]]+[(4100,23,0),(0,1,1)]:

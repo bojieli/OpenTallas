@@ -1,0 +1,246 @@
+{
+  "schema": "opentallas.hbm_iks_timed.v1",
+  "source_commit": "1820e59a2",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "c5087709e681bd4a89a16e5dab19ecdc3e2e91069ef7e1063816ac51b1d856ca",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "2a6a6129d82b5067f2ae27dd62e3be07d3b58da63d7ced07277a90dfb77d9745",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_binding.sv": "0d513083c89dd4d4a402b2c0a3e75962521848b91886204602e6872bd479207e",
+    "tools/hbm_svc_iks_binding_bench.py": "c5442a3b5a4c222868fd98f43fd06a6f9e145904dea38a99cd79a6653c7cf1d7",
+    "results/rtl/hbm_index_service_20261008/binding_before_bench.json": "ac536ee8c47961a69b8dc23355032a3df964d359f25b55563c1c84338323ee49"
+  },
+  "scope": "timed request-level controller; behavioral return SRAM, no physical signoff or performance adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 PULL0 BATCH0 MEM_MODE1 QD64 TCK1024ps",
+  "sector_reservation_depth": 128,
+  "cases": [
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay1_mut0.log",
+      "raw_sha256": "f99483d6c3e5ff354a1f7a248788dc93e78b9f00b62cd73b7c59029f3a9f4aa5",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 448.512,
+          "drain_ns": 449.024,
+          "logical_tbs": 0.414812
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 401.792,
+          "drain_ns": 402.304,
+          "logical_tbs": 0.463046
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=48 queued_integral=249221 queued_head_in_REFpb=1047",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=60 queued_integral=286606 queued_head_in_REFpb=1072"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 1300,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase1300_delay1_mut0.log",
+      "raw_sha256": "12a18c089cc3a1c91f2c75ed2d0e40b4740a35d1bdbe3b544d008bab86aedf86",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 279.616,
+          "drain_ns": 280.128,
+          "logical_tbs": 0.66537
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 310.656,
+          "drain_ns": 311.168,
+          "logical_tbs": 0.598888
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=56 queued_integral=204746 queued_head_in_REFpb=0",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=60 queued_integral=258028 queued_head_in_REFpb=0"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 2700,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase2700_delay1_mut0.log",
+      "raw_sha256": "fa96ecb7ab29c5f40f14c51a77ecc131c49ea3816daec72941c3725fe1ca81e1",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 278.144,
+          "drain_ns": 278.656,
+          "logical_tbs": 0.668891
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 309.824,
+          "drain_ns": 310.336,
+          "logical_tbs": 0.600496
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=58 queued_integral=204943 queued_head_in_REFpb=0",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=60 queued_integral=258423 queued_head_in_REFpb=0"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay1_mut0.log",
+      "raw_sha256": "57b2fef47184631ae0fd4f410c73925afd419b06fb5134940709d9e9b5d573e7",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 474.112,
+          "drain_ns": 474.624,
+          "logical_tbs": 0.392414
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 289.984,
+          "drain_ns": 290.496,
+          "logical_tbs": 0.64158
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=462 max_queued=60 queued_integral=367623 queued_head_in_REFpb=3399",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=57 queued_integral=213422 queued_head_in_REFpb=0"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 5500,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase5500_delay1_mut0.log",
+      "raw_sha256": "624a4273a4750965167bcafe2ab54c029c33cc936561f7a464dd8631627b21dd",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 278.08,
+          "drain_ns": 278.592,
+          "logical_tbs": 0.669045
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 309.76,
+          "drain_ns": 310.272,
+          "logical_tbs": 0.60062
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=57 queued_integral=204936 queued_head_in_REFpb=0",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=60 queued_integral=258369 queued_head_in_REFpb=0"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 6900,
+      "credit_delay": 1,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase6900_delay1_mut0.log",
+      "raw_sha256": "409e9df408e5e3d6ddc1a9cbc5e76b26d705da2428684cd65d90e699a87b3b77",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 278.656,
+          "drain_ns": 279.168,
+          "logical_tbs": 0.667662
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 843.008,
+          "drain_ns": 843.52,
+          "logical_tbs": 0.220695
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=58 queued_integral=205170 queued_head_in_REFpb=0",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=10174 max_queued=60 queued_integral=497574 queued_head_in_REFpb=6092"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 23,
+      "mut": 0,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay23_mut0.log",
+      "raw_sha256": "7a0942db0a52400471f288f31f566ce10981ff9cddfcd0a3cf43e1f25e054037",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 2688.0,
+          "drain_ns": 2754.048,
+          "logical_tbs": 0.069214
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 2617.28,
+          "drain_ns": 2683.328,
+          "logical_tbs": 0.071084
+        }
+      ],
+      "diagnostics": [
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=462 max_queued=60 queued_integral=367623 queued_head_in_REFpb=3399",
+        "IKS_BINDING refmode=3 pull=0 batch=0 req_beats=5888 rsp_beats=5888 req_stall=0 slot_stall=0 max_queued=57 queued_integral=213315 queued_head_in_REFpb=0"
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 1,
+      "ref_mode": 3,
+      "pull": 0,
+      "batch": 0,
+      "returncode": 1,
+      "raw_log": "phase0_delay1_mut1.log",
+      "raw_sha256": "46b34364b496dcb2a5138f77f07359768655a79c41f6787be6731a9e378ab518",
+      "rows": [],
+      "diagnostics": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "build_returncode": 0
+}
