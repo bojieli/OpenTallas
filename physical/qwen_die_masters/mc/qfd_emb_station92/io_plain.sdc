@@ -1,0 +1,5 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 166.667 -clock clk [get_ports {cmd_i[*] ret_i[*]}]
+set_output_delay 166.667 -clock clk [get_ports {cmd_o[*] ret_o[*]}]
+set_false_path -from [get_ports {rst_n}]

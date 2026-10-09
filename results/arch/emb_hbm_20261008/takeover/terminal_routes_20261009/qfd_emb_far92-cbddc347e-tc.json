@@ -1,0 +1,131 @@
+{
+ "name": "qfd_emb_far92-cbddc347e-tc",
+ "spec": {
+  "name": "qfd_emb_far92-cbddc347e-tc",
+  "block": "qfd_emb_far92",
+  "owner": "Codex:embedding-hbm",
+  "purpose": "Actual far endpoint/class split and original finite128credit ingress,8async/8output,4TXperclass queues. Two implemented833.333ps clocks (forwarded/local), genuineCDC cross max773.333/min0 signoff;92.016x1401.84 separate shorelinecolumnslot pendingoccupancygate. Model82116databits+256control; no newcycleswrapper; simultaneousKV+embedding minimumgatePASS. TTsetup>=0/FFhold>=0/DRC0,SSsensitivity. NoECCprovider orfull-dieclaim.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "codex/emb-hbm-takeover-20261008",
+   "commit": "cbddc347ea187383809ae9aa3efc9a6e361429bd"
+  },
+  "no_bench_reason": "Committed takeover/far_bus_gate/gate.json actual833.333334ps clocks100psphase:64TX/64RX perKVandembeddingclass, nativeequivalence, defaultoffPASS; transmitdata bitmutation expectedFAIL. Original far/CDC unchanged. Source model takeover/far_bus_binding_model.json beforeRTL.",
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+   },
+   "route": {
+    "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_emb_far92.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_emb_far92 {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_emb_far92 --out {RUN}/record/views/qfd_emb_far92 --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_emb_far92.sdc"
+   ],
+   "checks": [
+    {
+     "name": "owner_TT_FF_nonnegative",
+     "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+    },
+    {
+     "name": "route_WC_scene_reads_TT",
+     "cmd": "grep -q 'corner WC reads the TT' {RUN}/routes/{LABEL}/flow.log"
+    }
+   ],
+   "macros": []
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/emb_hbm_closure_20261008/qfd_emb_far92-cbddc347e-tc"
+   }
+  ],
+  "cycles_added": "Wirewrapper0registers/0cycles; existingendpointqueuesalreadyinoriginal128PCmeasurement. ActuallongverticalPCrelays canrequire18segmentsminimumoneway; scopependingactualpinbinding. Noheadlinecredit.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_emb_far92-cbddc347e-tc.json",
+ "created": "2026-10-09T01:19:28-07:00",
+ "status": "NEEDS_HUMAN",
+ "stage_idx": 0,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc4"
+ ],
+ "events": [
+  "2026-10-09T01:19:28-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_emb_far92-cbddc347e-tc.json",
+  "2026-10-09T01:21:32-07:00 source cbddc347ea18 synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_far92-cbddc347e-tc/src",
+  "2026-10-09T01:21:48-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-09T01:38:47-07:00 route crashed (rc=1 ok-check failed;; first error: qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]) -> retry once on the same host",
+  "2026-10-09T01:39:46-07:00 launched route (attempt 2) on ot-epyc4",
+  "2026-10-09T01:54:38-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]; resource=False)"
+ ],
+ "updated": "2026-10-09T01:54:38-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-epyc4",
+ "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_far92-cbddc347e-tc",
+ "source_synced": true,
+ "commit_full": "cbddc347ea187383809ae9aa3efc9a6e361429bd",
+ "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]; resource=False)",
+ "stage_key": "route",
+ "stage_tag": "route.a2",
+ "stage_started": "2026-10-09T01:39:46-07:00",
+ "wd_checked": 1791536013.9463112,
+ "ef_checked": 1791536013.946318,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "crashes": [
+  {
+   "stage": "route",
+   "host": "ot-epyc4",
+   "attempt": 1,
+   "why": "rc=1 ok-check failed;; first error: qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]",
+   "resource": false,
+   "tail": "    8.45e-03 |         1.04e-01\n        M9 |        8.90e-03 |         9.28e-02\n       Pad |        0.00e+00 |         0.00e+00\n------------------------------------------------\n\n   Layer   | Via Resistance \n           |         (kohm) \n----------------------------\n        V1 |       1.72e-02 \n        V2 |       1.72e-02 \n        V3 |       1.72e-02 \n        V4 |       1.18e-02 \n        V5 |       1.18e-02 \n        V6 |       8.20e-03 \n        V7 |       8.20e-03 \n        V8 |       6.30e-03 \n        V9 |       6.30e-03 \n----------------------------\nReport metrics stage 2, floorplan final...\n\n==========================================================================\nfloorplan final report_design_area\n--------------------------------------------------------------------------\nDesign area 55913 um^2 46% utilization.\nsource /work/io_constraints.tcl\nError: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced\n\nElapsed time: 0:15.49[h:]min:sec. CPU time: user 14.90 sys 0.59 (99%). Peak memory: 1288740KB.\nElapsed time: 9:58.13[h:]min:sec. CPU time: user 629.76 sys 37.17 (111%). Peak memory: 2029872KB.\nmake[1]: *** [Makefile:450: do-2_1_floorplan] Error 1\nmake: *** [Makefile:450: /work/results/asap7/opentallas_ot_qfd_link_far_bus_asap7_qdm_qfd_emb_far92_cbddc347e_tc/base/2_1_floorplan.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_far92-cbddc347e-tc/routes/qfd_emb_far92_cbddc347e_tc/physical.json\n",
+   "first_error": "qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]"
+  },
+  {
+   "stage": "route",
+   "host": "ot-epyc4",
+   "attempt": 2,
+   "why": "rc=1 ok-check failed;; first error: qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]",
+   "resource": false,
+   "tail": "    8.45e-03 |         1.04e-01\n        M9 |        8.90e-03 |         9.28e-02\n       Pad |        0.00e+00 |         0.00e+00\n------------------------------------------------\n\n   Layer   | Via Resistance \n           |         (kohm) \n----------------------------\n        V1 |       1.72e-02 \n        V2 |       1.72e-02 \n        V3 |       1.72e-02 \n        V4 |       1.18e-02 \n        V5 |       1.18e-02 \n        V6 |       8.20e-03 \n        V7 |       8.20e-03 \n        V8 |       6.30e-03 \n        V9 |       6.30e-03 \n----------------------------\nReport metrics stage 2, floorplan final...\n\n==========================================================================\nfloorplan final report_design_area\n--------------------------------------------------------------------------\nDesign area 55913 um^2 46% utilization.\nsource /work/io_constraints.tcl\nError: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced\n\nElapsed time: 0:12.34[h:]min:sec. CPU time: user 11.87 sys 0.47 (99%). Peak memory: 1288488KB.\nElapsed time: 8:45.24[h:]min:sec. CPU time: user 555.92 sys 50.50 (115%). Peak memory: 2024440KB.\nmake[1]: *** [Makefile:450: do-2_1_floorplan] Error 1\nmake: *** [Makefile:450: /work/results/asap7/opentallas_ot_qfd_link_far_bus_asap7_qdm_qfd_emb_far92_cbddc347e_tc/base/2_1_floorplan.odb] Error 2\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_emb_far92-cbddc347e-tc/routes/qfd_emb_far92_cbddc347e_tc/physical.json\n",
+   "first_error": "qfd_emb_far92_cbddc347e_tc/flow.log: Error: floorplan.tcl, 169 couldn't compile regular expression pattern: brackets [] not balanced [step do-2_1_floorplan]"
+  }
+ ]
+}
