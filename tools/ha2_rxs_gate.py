@@ -52,10 +52,18 @@ def icarus(out, top, name, params, files):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--out', type=Path, required=True)
+    p.add_argument('--neg', type=int, help='run only mutant N of the mechanism bench (loop expect=fail stage): exit 1 and '
+                   'print HA2_RXS_NEG_DETECTED when the bench catches it, exit 0 when it does not')
     a = p.parse_args()
     out = a.out.resolve()
     out.mkdir(parents=True, exist_ok=False)
     tb, tbr = private_tb(out, TB), private_tb(out, TBR)
+    if a.neg is not None:
+        rc, text = icarus(out, 'tb_ha2_truecredit_cr', f'neg{a.neg}', dict(MUTANT=a.neg), LIBS+[tb])
+        caught = rc != 0 and any(k in text for k in ('TRUECREDIT_FAULT', 'TRUECREDIT_DATA', 'TRUECREDIT_CONSUMER_OVF',
+                                                      'TRUECREDIT_TIMEOUT'))
+        print(f'HA2_RXS_NEG_DETECTED mutant={a.neg}' if caught else f'HA2_RXS_NEG_MISSED mutant={a.neg}')
+        return 1 if caught else 0
     checks = {}
     cases = [(f'f{f}_r{r}_c{c}_d{d}', dict(FWD=f, RET=r, CRD=c, CRET=d))
              for (f, r), (c, d) in itertools.product([(0, 0), (7, 7), (1, 64), (64, 1)], [(8, 3), (1, 0), (4, 7), (16, 20)])]

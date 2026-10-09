@@ -321,20 +321,21 @@ module ot_hbm_norm_split_core #(
                 // per-group replicas of the broadcast flops (same D, same edge, same reset as the shared ones)
                 reg r_go, r_inv, r_wlv; reg [7:0] r_wli; reg [127:0] r_pre; reg r_rbv; reg [31:0] r_rbd;
 `ifdef OT_NSPLIT_REP_MUT
-                reg [31:0] r_rbd_late;
-                always @(posedge clk) r_rbd_late <= rbw[31:0];
+                reg r_inv_late;
+                always @(posedge clk) r_inv_late <= r_inv;
 `endif
                 always @(posedge clk) begin
                     r_go <= go; r_inv <= in_v; r_wlv <= wl_v; r_wli <= wl_i; r_pre <= pre;
-`ifdef OT_NSPLIT_REP_MUT
-                    // NEGATIVE CONTROL: group 1's rstd replica loads one edge late (a replica off the shared timing)
-                    if (g != 1) r_rbd <= rbw[31:0]; else r_rbd <= r_rbd_late;
-`else
                     r_rbd <= rbw[31:0];
-`endif
                 end
                 always @(posedge clk or negedge rstn) if (!rstn) r_rbv <= 1'b0; else r_rbv <= rbw[32];
-                assign b_go = r_go; assign b_inv = r_inv; assign b_wlv = r_wlv; assign b_wli = r_wli;
+`ifdef OT_NSPLIT_REP_MUT
+                // NEGATIVE CONTROL: group 1's in_v replica is one edge late (a replica off the shared timing)
+                wire inv_m = (g == 1) ? r_inv_late : r_inv;
+`else
+                wire inv_m = r_inv;
+`endif
+                assign b_go = r_go; assign b_inv = inv_m; assign b_wlv = r_wlv; assign b_wli = r_wli;
                 assign b_pre = r_pre; assign b_rbv = r_rbv; assign b_rbd = r_rbd;
             end else begin : g_shr
                 assign b_go = go_c; assign b_inv = in_v_c; assign b_wlv = wl_v_c; assign b_wli = wl_i_c;
