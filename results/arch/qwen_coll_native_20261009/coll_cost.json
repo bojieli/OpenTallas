@@ -159,5 +159,47 @@
    }
   },
   "cost": "engine IB 4 -> 8 (+4 x ~600-b input words in qfd_io_collective), sq receive buffer 4 -> 8 and its async FIFO 8 -> 16 slots (546 b), sequencer landing 4 -> 8 (516 b): ~ +9k flops"
+ },
+ "measured_per_size": {
+  "note": "all at 1.2 GHz both sides (die plan), cycles @1.2 GHz; benches tb_qfd_coll_native (port + engine + UCIe ring) and tb_qfd_seq_coll_native (generated sequencer + real vector memory + port + engine, VM read -> send -> sum -> VM write-back), claude/sys-takeover-coll2-seq-b-20261009 f36de09df",
+  "rows": [
+   {
+    "case": "engine alone (no port), AR 256 words",
+    "cycles": 296
+   },
+   {
+    "case": "engine alone, argmax all-gather 1 word",
+    "cycles": 24
+   },
+   {
+    "case": "native port CR4/IB4/LCR4, AR 256",
+    "cycles": 436
+   },
+   {
+    "case": "native port CR8/IB8/LCR8 (adopted), AR 256",
+    "cycles": 318
+   },
+   {
+    "case": "native port adopted, 2 x AR 256 (one layer)",
+    "cycles": 584
+   },
+   {
+    "case": "native port adopted, argmax 1 word",
+    "cycles": 38
+   },
+   {
+    "case": "native port adopted, 2 x 320 words (the earlier 1,121 figure was this at a 0.9 GHz sequencer and 4/4/4 credits)",
+    "cycles": null
+   },
+   {
+    "case": "full sequencer step: AR 256 + ARGMAX (VM read .. VM write-back)",
+    "cycles": 425
+   },
+   {
+    "case": "full sequencer step: AR 40 (address wrap) + ARGMAX",
+    "cycles": 167
+   }
+  ],
+  "reconciliation": "The 1,121-cycle figure was 2 x 320-word messages (640 words) at a 0.9 GHz sequencer clock with 4/4/4 credits; the Qwen all-reduce is one 256-word message. The token path keeps the measured AR windows (1,094 / 949 cycles of the full single-clock system RTL, which include the barrier and op fetch) and adds the native port delta +22 / AR (318 - 296) and +14 argmax (38 - 24); the full-sequencer step (425 = AR 256 + ARGMAX) sits inside those windows."
  }
 }
