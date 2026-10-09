@@ -65,7 +65,7 @@ module ot_hbm_link_retry_pipeline #(
  wire cap_good=(^{cap_seq,cap_base,cap_sent,cap_v,cap_nak})==cap_parity;
  wire arithmetic_good=(^delta_pipe)==delta_parity&&(^window_pipe)==window_parity;
  wire classified_good=(ack_progress!=ack_inv)&&(invalid_ack!=invalid_inv)&&(fresh_nak!=nak_inv);
- wire packet_poison=(txv&&!tx_good)||(rxv&&!rx_good);
+ wire packet_poison=!tx_good||!rx_good;
  wire rd_v,rd_ce,rd_ue;wire [W-1:0] rd_data;
  wire [SW-1:0] rd_seq;wire [EW-1:0] rd_epoch;
  wire [SW-1:0] rx_delta=rx_seq-expected;

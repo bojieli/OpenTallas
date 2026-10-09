@@ -65,7 +65,7 @@ module ot_hbm_link_retry_pipeline_guard #(
  wire cap_good=(^{cap_seq,cap_base,cap_sent,cap_v,cap_nak})==cap_parity;
  wire arithmetic_good=(^delta_pipe)==delta_parity&&(^window_pipe)==window_parity;
  wire classified_good=(ack_progress!=ack_inv)&&(invalid_ack!=invalid_inv)&&(fresh_nak!=nak_inv);
- wire packet_poison=(txv&&!tx_good)||(rxv&&!rx_good);
+ wire packet_poison=!tx_good||!rx_good;
 
  (* keep="true" *) reg phase_par,base_par,next_seq_par,sent_seq_par,cursor_par,expected_par,debt_pipe_par,full_pipe_par,fault_r_par,replaying_par,nak_pending_par,nak_seen_par,last_nak_par,retries_par,timer_par,attempts_par,timeout_pending_par,read_pending_par,read_target_par,read_generation_par,generation_par,write_guard_par;
  wire state_poison=

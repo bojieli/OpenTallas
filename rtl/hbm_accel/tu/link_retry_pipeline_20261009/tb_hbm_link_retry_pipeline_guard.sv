@@ -109,6 +109,13 @@ module tb_hbm_link_retry_pipeline_guard;
  dut.g_on.next_seq[0]=~dut.g_on.next_seq[0];#0.01;
  if(!fault||tv||ir)$fatal(1,"admission counter poison");tick;
  $display("PASS inherited mutable bookkeeping corruption detect/poison");
+ reset_link;epoch=11;tr=0;offer(0);wait4;
+ dut.g_on.txv=0;#0.01;
+ if(!fault||tv||ir)$fatal(1,"TX valid falling-bit corruption was not detected");
+ reset_link;epoch=12;ordy=0;rv=1;re=12;rs=0;rd=payload(0);tick;
+ @(negedge clk);rv=0;dut.g_on.rxv=0;#0.01;
+ if(!fault||ov)$fatal(1,"RX valid falling-bit corruption was not detected");
+ $display("PASS falling-valid stage corruption detect/poison");
  $display("PASS_ALL");$finish;
  end
  initial begin #1000000;$fatal(1,"watchdog");end
