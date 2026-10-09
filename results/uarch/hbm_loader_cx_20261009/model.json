@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.loader_cx.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "source_core": "ot_hfd_loader_host_m unchanged",
+  "ND": 2,
+  "ADDR_W": 32,
+  "scope": "Historical full loader envelope structural alternative; not selected ND1/ADDR37 native facade",
+  "clocks_ns": {
+    "host": 0.8333333333333334,
+    "memory": 0.8333333333333334,
+    "core": 1.6666666666666667
+  },
+  "actual_clock_requirement": "External real PLL/clock-distribution core clock; no latch gate, generated divider or timing-only slowdown",
+  "MACs_per_cycle": 0,
+  "replicas": {
+    "core": 1,
+    "channels": 24
+  },
+  "FIFO_depth": 8,
+  "payload_bits": 15736,
+  "pointer_and_sync_bits_upper": 1152,
+  "FIFO_DFF_area_floor_um2": 4588.6176000000005,
+  "boundary_bits_per_cycle": {
+    "core_payload_sum": 1967,
+    "native_request": 674,
+    "native_response": 546
+  },
+  "mux_demux": "Same finite Gray-pointer channels as approved divider adapter; no new arbitration or replicas",
+  "memory_bytes_per_core_cycle": 64,
+  "per_die_payload_GBps": 19.2,
+  "tracks": {
+    "extra_clock_pins": 1,
+    "host_memory_channels": "existing faces; exact pin load and slot must be measured"
+  },
+  "area": "Existing loader slot retained as candidate; full mapped core plus channel storage fit requires measured synthesis",
+  "latency": {
+    "channel_visibility_destination_edges": "2..3",
+    "round_trip_slow_edges": "4..6 plus core service",
+    "steady_token_cycles": 0
+  },
+  "arithmetic": "Unchanged pipelined CRC folds and data path; transaction-stream/CSR golden comparison mandatory",
+  "mutable_storage_protection": "Inherited FIFO/loader source only; no reliability qualification inferred",
+  "physical": "Standalone pathfinding pending actual clock source, loaded pin budgets and corner timing; no exceptions added"
+}

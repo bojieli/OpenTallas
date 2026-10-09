@@ -1,0 +1,9 @@
+sep seed 1 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1360 dma_writes=5440 status0=60 status1=20 status2=0 status3=5 mismatches=0
+shared seed 2 rc=0 LDM_EQUIV descriptors=85 mreq_writes=1330 dma_writes=5320 status0=60 status1=20 status2=0 status3=5 mismatches=0
+physical/hbm_accel_die_views/loader/rtl/run_ldm_cx.sh: line 12: 4173058 Aborted                    (core dumped) $O/$n.$s.obj/sim > $O/$n.$s.log 2>&1
+neg_xdata seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0
+neg_xdata detected
+physical/hbm_accel_die_views/loader/rtl/run_ldm_cx.sh: line 12: 4173657 Aborted                    (core dumped) $O/$n.$s.obj/sim > $O/$n.$s.log 2>&1
+neg_foh seed 1 rc=134 LDM_EQUIV TIMEOUT a.done=1 b.done=0
+neg_foh detected
+LDM_CX PASS
