@@ -10,7 +10,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--kind',choices=['dot','array'],default='dot');ap.add_argument('--libdir',type=Path,required=True);ap.add_argument('--source-commit',required=True);ap.add_argument('--elaborate-only',action='store_true');a=ap.parse_args();w=a.work.resolve();w.mkdir(parents=True,exist_ok=True)
  (w/'prebuild_model.json').write_text(json.dumps(model(a.kind),indent=2)+'\n')
  libs=sorted(a.libdir.glob('*_RVT_TT_*.lib'));seq=next(x for x in libs if '_SEQ_'in x.name)
- top='ot_hdc_v41x_q4dot_l'if a.kind=='dot'else'ot_hdc_v41x_idx_score_array_l'
+ top='ot_hdc_v41x_q4dot_l'if a.kind=='dot'else'ot_hdc_v41x_idx_array_l'
  params='-chparam QL 5'if a.kind=='dot'else'-chparam NS 1 -chparam NK 4 -chparam IW 20 -chparam FPL 7 -chparam FML 5 -chparam QL 5 -chparam SAFE_QUERY_GATE 1'
  la=' '.join('-liberty '+str(x)for x in libs)
  flow=f"read_verilog -sv -DSYNTHESIS {' '.join(str(ROOT/x)for x in SRC)}; hierarchy -top {top} {params}; synth -noshare -top {top}; dfflibmap -liberty {seq}; abc -D 833 {la}; opt_clean; stat -json {la}"

@@ -1,0 +1,65 @@
+
+-- Executing script file `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/array/flow.ys' --
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_idx_chunk_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_idx_tail_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_idx_engine_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_idx_score_slice_l'.
+Warning: Replacing memory \meta with list of registers. See /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv:488
+Generating RTLIL representation for module `\ot_hdc_v41x_idx_array_l'.
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_q4dot_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_bmul_l'.
+Generating RTLIL representation for module `\ot_hdc_v41x_faddl'.
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_v41x_csa'.
+Generating RTLIL representation for module `\ot_hdc_v41x_q4dot'.
+Generating RTLIL representation for module `\ot_hdc_v41x_bf16'.
+Generating RTLIL representation for module `\ot_hdc_v41x_bmul'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_delay.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_delay.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_delay'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_fastfp.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_fastfp.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksa'.
+Generating RTLIL representation for module `\ot_hdc_lzc32'.
+Generating RTLIL representation for module `\ot_hdc_mul24_rows'.
+Generating RTLIL representation for module `\ot_hdc_mul24_sum'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_fast'.
+Generating RTLIL representation for module `\ot_hdc_fp32_mul_fast'.
+Generating RTLIL representation for module `\ot_hdc_qadd'.
+Generating RTLIL representation for module `\ot_hdc_qmul'.
+Successfully finished Verilog frontend.
+
+6. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_fp32_add_lat.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat'.
+Generating RTLIL representation for module `\ot_hdc_w11_cut'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4i'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat3'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat4'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat5'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat6'.
+Generating RTLIL representation for module `\ot_hdc_fp32_add_lat7'.
+Successfully finished Verilog frontend.
+
+7. Executing Verilog-2005 frontend: /srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_prefix.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/codex/hbm-indexer-hier-elab-78c467ea5/src/rtl/hdc/ot_hdc_prefix.sv' to AST representation.
+Generating RTLIL representation for module `\ot_hdc_ksadd_k'.
+Generating RTLIL representation for module `\ot_hdc_inc_k'.
+Successfully finished Verilog frontend.
+
+8. Executing HIERARCHY pass (managing design hierarchy).
+ERROR: Module `ot_hdc_v41x_idx_score_array_l' not found!
