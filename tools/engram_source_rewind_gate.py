@@ -18,5 +18,6 @@ def main():
   r=subprocess.run([str(obj/f'V{top}'),f'+OT_ROM_DIR={images}'],capture_output=True,text=True)
   ok=(r.returncode!=0 and 'SOURCE rewind window mismatch' in r.stdout) if drop else r.returncode==0 and 'ENGRAM_SOURCE_REWIND PASS' in r.stdout
   rec['cases'][str(drop)]=dict(returncode=r.returncode,stdout=r.stdout,stderr=r.stderr,expected_observed=ok)
+  if not ok:break
  rec['status']='pass' if all(v['expected_observed'] for v in rec['cases'].values()) else 'fail';out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(rec,indent=1)+'\n');print(rec['status']);return int(rec['status']!='pass')
 if __name__=='__main__':raise SystemExit(main())

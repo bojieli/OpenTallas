@@ -37,7 +37,9 @@ module tb_dsrom_engram_source_rewind #(parameter integer DROP_REWIND=0)(input wi
   responses[0]<={1'b1,prompt(request[9:0],request[30:10])};
   for(k=1;k<5;k=k+1) responses[k]<=responses[k-1];
   if(rst_n) begin
-   cycles=cycles+1;if(cycles>200000) $fatal(1,"SOURCE rewind drain timeout");
+   cycles=cycles+1;
+   if(cycles%10000==0) $display("SOURCE_DIAG cycles%0d windows%0d rewinds%0d finishes%0d highest0%0d phase0%0d cursor0%0d st%0d kind%0d nuok%0d next%0d rq%0d pq%0d rnf%0d sq%0d ready%0d rb%0d out%0d",cycles,windows,rewinds,finishes,highest[0],phase[0],cursor[0],scheduler.st,scheduler.kind,scheduler.nu_ok,scheduler.next_u,scheduler.rq_n,scheduler.pq_n,scheduler.r_wnf,scheduler.r_wsq,ready,rb_v,ov);
+   if(cycles>200000) $fatal(1,"SOURCE rewind drain timeout");
    if(fault||source_fault) $fatal(1,"actual SOURCE/lead fault");
    if(held && (!rb_v||rb_user!=held_u||rb_n!=held_n)) $fatal(1,"held SOURCE rewind context changed");
    held=rb_v&&!rb_ready;if(held) begin held_u=rb_user;held_n=rb_n;waits=waits+1;end
