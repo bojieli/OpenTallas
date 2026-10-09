@@ -14291,7 +14291,7 @@ def hbm_collective_native_publication_endpoint_model():
         additional_protected_landing_queues=8,additional_landing_macros=24,
         publication=hbm_collective_vm_publication_model(),
         injector_response_edges=4,added_request_to_hub_capture_edges=5,
-        injector_metadata_pipeline_register_bits=2*5*(32+1+1),
+        injector_metadata_pipeline_register_bits=2*5*(32+1+1+1),
         geometric_WSTG=22,protected_flight_instances=16,
         geometric_flight_flit_seats=16*22,
         geometric_flight_payload_bits=16*22*545,

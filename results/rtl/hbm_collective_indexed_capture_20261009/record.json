@@ -1,0 +1,17 @@
+{
+  "exactness_gate": "PASS",
+  "negative_control": "PASS_EXPECTED_QID_FAILURE",
+  "full_FP32_words": 4096,
+  "flits": 256,
+  "injector_lanes": 2,
+  "SRAM_response_edges": 4,
+  "hub_capture_edges": 5,
+  "qualification": "ACTUAL_NATIVE_CAPTURE_LEAF_WITH_REAL_PUBLICATION_SRAM",
+  "physical_qualified": false,
+  "full_native_endpoint_qualified": false,
+  "source_sha256": {
+    "ot_hbm_collective_indexed_capture.sv": "19d68377cf402758ca7de4d77ad14c25bf7766d1c9ffebf153d45f4dcd7f5106",
+    "tb_hbm_collective_vm_publication.sv": "94c2235cd54612d3537e13140ff06cfd08d04cd402487ca035f7f6292be52f25",
+    "ot_hbm_collective_vm_publication.sv": "c18c71cb07f6a2695b67283da6e524c222bde4f7cff6c50e8991edd48cfbda8a"
+  }
+}

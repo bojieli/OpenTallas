@@ -38,11 +38,25 @@ module tb_hbm_collective_vm_publication;
  if(rspv[q]&&rspr[q])begin provider_busy=0;rspv[q]<=0;end
  end
  end
- integer issued=0,seen=0;reg reading=0;
+ integer issued=0,seen=0,captured=0;
+ reg[31:0] ordinal=0;wire[1:0] cv,cf;wire[1087:0] cp;
+ for(genvar l=0;l<2;l=l+1)begin:g_capture
+ ot_hbm_collective_indexed_capture u_capture(.clk(clk),.rst_n(rst),.request_valid(injrd[l]),
+ .ordinal(ordinal[16*l+:16]),.index(idx[16*l+:16]),.response_valid(injv[l]),.response_fault(fault),
+ .response_data(data[512*l+:512]),.capture_valid(cv[l]),.capture_packet(cp[544*l+:544]),.pending(),.fault(cf[l]));
+ end
+ always@(posedge clk)if(reading&&rst)begin
+ for(integer l=0;l<2;l=l+1)if(cv[l])begin
+ if(cp[544*l+528+:16]!=captured || cp[544*l+512+:16]!=expected_idx[captured] || cp[544*l+:512]!==flit(expected_idx[captured]))$fatal(1,"native indexed capture ownership");
+ if(cycles-expected_cycle[captured]!=5)$fatal(1,"native hub capture latency");
+ captured=captured+1;end
+ if(|cf)$fatal(1,"native indexed capture fault");
+ end
+ reg reading=0;
  integer expected_idx[0:255],expected_cycle[0:255];
  always@(negedge clk)if(reading)begin
  injrd=issued<256?2'b11:0;
- for(integer l=0;l<2;l=l+1)idx[16*l+:16]=(((4+(issued+l)%8)%8)*32+(issued+l)/8);
+ for(integer l=0;l<2;l=l+1)begin ordinal[16*l+:16]=issued+l;idx[16*l+:16]=(((4+(issued+l)%8)%8)*32+(issued+l)/8);end
  end
  always@(posedge clk)if(reading&&rst)begin
  for(integer l=0;l<2;l=l+1)begin
@@ -67,10 +81,10 @@ module tb_hbm_collective_vm_publication;
  if(!published||fault||sectors!=512)$fatal(1,"full4096 actual VM publication");
  $display("PASS fourquarter4096 FP32512 matched VM sectors, held requests/responses and write visibility");
  reading=1;
- for(i=0;i<400&&seen<256;i=i+1)tick;
+ for(i=0;i<400&&captured<256;i=i+1)tick;
  reading=0;injrd=0;repeat(8)tick;
- if(issued!=256||seen!=256||fault)$fatal(1,"full256 flit injector read completion");
- $display("PASS both512bit injector lanes rotate all256 flits in golden order, actual4edge SECDED SRAM capture");
+ if(issued!=256||seen!=256||captured!=256||fault)$fatal(1,"full256 flit injector read completion");
+ $display("PASS both512bit injector lanes rotate all256 flits in golden order, actual4edge SECDED SRAM response and5edge native hub capture");
  @(negedge clk);release_lease=1;tick;@(negedge clk);release_lease=0;tick;
  if(!quiet||published)$fatal(1,"lease release did not quiesce");
  epoch=2;@(negedge clk);sv=1;tick;@(negedge clk);sv=0;
