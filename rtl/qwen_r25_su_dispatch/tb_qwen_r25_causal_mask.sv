@@ -52,7 +52,7 @@ module tb_qwen_r25_causal_mask;
   @(negedge clk);dut.enabled.seat[0]=dut.enabled.seat[0]^72'd1;
   #0.01;if(fault||out_live!==held||!out_v)$fatal(1,"CE correction lost exact mask");
   // Two independent bit flips must suppress visibility and fence the frame.
-  dut.enabled.seat[0]=dut.enabled.seat[0]^72'd6;
+  dut.enabled.seat[0]=dut.enabled.seat[0]^72'd2;
   #0.01;if(!fault||out_v||in_rdy)$fatal(1,"UE mask admitted");
   reset();in_query_positions[39:20]=20'd0;
   accept_frame(8192,301);
