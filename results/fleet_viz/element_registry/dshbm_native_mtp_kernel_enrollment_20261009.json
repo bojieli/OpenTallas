@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "records": [{
+    "element": "DS-HBM native MTP production kernel enrollment",
+    "target": "HBM accelerator",
+    "owner": "Codex:review_hbm_token_path",
+    "description": "Source-produced full-shape SRAM64 linker for all11 MX1 operation kernels; actual production compiler/image and native numerical binding remain missing",
+    "source": {
+      "commit": "cf6c6046d",
+      "paths": ["tools/dshbm_mtp_kernel_enroll.py", "tools/dshbm_mtp_kernel_model.py", "results/rtl/dshbm_mtp_kernel_enroll_20261009/source_audit.json"]
+    },
+    "implementation": {"status": "partial", "evidence": ["Exact32SM source-image linking and native64-bit PC install events implemented; zero selected production kernels enrolled"]},
+    "model": {"status": "modeled", "evidence": ["tools/uarch_model.py dshbm_mtp_kernel_enrollment_model; actual lowered launch counts and retained minimum full-shape SM receipts, full token latency unknown"]},
+    "exactness": {
+      "positive": {"status": "partial", "evidence": ["results/rtl/dshbm_mtp_kernel_enroll_20261009/verdict.json source-linker fixture PASS; production numerical binding unqualified"]},
+      "negative": {"status": "partial", "evidence": ["Reduced hidden/token16, missing/duplicate SM and mutated payload source rejected; real numerical operand mutant pending"]}
+    },
+    "physical": {"status": "not_submitted", "corners": {}, "evidence": ["Software enrollment only; no new RTL route or prior physical credit"]},
+    "dependencies": ["Full-shape source kernel generator and actual HBM/SRAM layout", "Actual32SM installed image provider with SRAM payload SECDED", "DS native690 operator mapping and dedicated compressor/key/attention/collective joins"],
+    "integration": {"status": "incomplete", "evidence": ["Partial compiler payloads emit zero install events; loader acknowledgement and actual native CP numerical gate remain missing"]}
+  }]
+}
