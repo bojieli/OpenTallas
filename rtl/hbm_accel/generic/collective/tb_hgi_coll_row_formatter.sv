@@ -1,16 +1,16 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_row_formatter;
- parameter integer MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0;
+ parameter integer MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,sv=0,iv=0,rr=0,rv=0,ow=0,dr=0,written=1;
- reg [7:0] g=96,b=8,dest=8;reg [19:0] k=0,id=0;
+ reg [7:0] g=96,b=8,dest=8;reg [20:0] k=0;reg [31:0] id=0,context_rows=1048576;
  reg [15:0] words=0;reg [511:0] data=0;
  wire sr,ir,req,rspready,ov,done,fault;
  wire [7:0] owner,odest;wire [19:0] localrow,oi;
  wire [15:0] word_,oword;wire [511:0] odata;
- ot_hgi_coll_row_formatter #(.ENABLE(1),.MUT_OWNER(MUT_OWNER),.MUT_ORDER(MUT_ORDER),.MUT_WRITTEN(MUT_WRITTEN)) dut
+ ot_hgi_coll_row_formatter #(.ENABLE(1),.MUT_OWNER(MUT_OWNER),.MUT_ORDER(MUT_ORDER),.MUT_WRITTEN(MUT_WRITTEN),.MUT_ID_BOUND(MUT_ID_BOUND)) dut
  (.clk(clk),.rst_n(rst_n),.start_v(sv),.start_r(sr),.group_size(g),.owner_block(b),.destinations(dest),
- .row_count(k),.row_words(words),.id_v(iv),.id_r(ir),.id(id),.read_v(req),.read_r(rr),
+ .row_count(k),.row_words(words),.context_rows(context_rows),.id_v(iv),.id_r(ir),.id(id),.read_v(req),.read_r(rr),
  .read_owner(owner),.read_local_row(localrow),.read_word(word_),.response_v(rv),.response_r(rspready),
  .response_data(data),.response_written(written),.out_v(ov),.out_r(ow),.out_data(odata),
  .out_index(oi),.out_word(oword),.out_destinations(odest),.done_v(done),.done_r(dr),.fault(fault));
@@ -58,6 +58,15 @@ module tb_hgi_coll_row_formatter;
   dr=1;@(negedge clk);dr=0;calls=calls+1;
  end
  endtask
+ task bad_id;input integer value;
+ begin
+  @(negedge clk);g=96;b=8;k=1;words=32;dest=8;sv=1;
+  @(negedge clk);sv=0;@(negedge clk);id=value;iv=1;
+  @(negedge clk);iv=0;@(negedge clk);
+  if(!done || !fault || req || ov)$fatal(1,"U32 rowid/context bound leaked reader request");
+  dr=1;@(negedge clk);dr=0;
+ end
+ endtask
  integer gg;reg [7:0] groups[0:4];
  initial begin
   groups[0]=1;groups[1]=2;groups[2]=4;groups[3]=8;groups[4]=96;
@@ -70,6 +79,7 @@ module tb_hgi_coll_row_formatter;
    call(groups[gg],255,7,2,groups[gg],-1);
    call(groups[gg],8,7,32,groups[gg],3);
   end
+  bad_id(1048576);bad_id(32'h8000000d);
   $display("PASS HGI ROW_GATHER calls=%0d rows=%0d words=%0d cycles=%0d k7/512/2048 G1/2/4/8/96 B8/3/255 payloadorder/written/backpressure",calls,totalrows,totalwords,cycles);$finish;
  end
 endmodule

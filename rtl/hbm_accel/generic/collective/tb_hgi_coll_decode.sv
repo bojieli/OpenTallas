@@ -4,13 +4,13 @@ module tb_hgi_coll_decode;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cmd_v=0,br=0,er=0;
  reg [7:0] g=96,die=0;
- reg [127:0] hdr=0;reg [19:0] count=0;
+ reg [127:0] hdr=0;reg [31:0] count=0;reg count_valid=0;
  wire cr,bv,ev;wire [5:0] op;wire [3:0] gsz;
  wire [7:0] bg,rank,group_id,subgroup,block_size,dest;
- wire [19:0] rows;
+ wire [20:0] rows;
  ot_hgi_coll_decode #(.ENABLE(1),.MUT_GROUP(MUT_GROUP),.MUT_ROW_BLOCK(MUT_ROW_BLOCK)) d
  (.clk(clk),.rst_n(rst_n),.coll_group_size(g),.die_id(die),.cmd_v(cmd_v),.cmd_r(cr),
- .hdr(hdr),.selected_count(count),.backend_v(bv),.backend_r(br),.backend_op(op),
+ .hdr(hdr),.selected_count(count),.selected_count_valid(count_valid),.backend_v(bv),.backend_r(br),.backend_op(op),
  .backend_gsz(gsz),.backend_group_size(bg),.backend_rank(rank),.backend_group(group_id),
  .backend_subgroup(subgroup),.backend_owner_block(block_size),.backend_destinations(dest),
  .backend_row_count(rows),.error_v(ev),.error_r(er));
@@ -19,7 +19,7 @@ module tb_hgi_coll_decode;
  task issue;
   input integer group_size,dieid,operation,p,ia,ib,ct,expect_error;
   begin
-   @(negedge clk);g=group_size;die=dieid;count=ct;
+   @(negedge clk);g=group_size;die=dieid;count=ct;count_valid=(ct!=0);
    hdr=0;hdr[127:124]=6;hdr[123:118]=operation;
    hdr[99:93]=(operation==5)?7'h51:7'h11;
    hdr[88:64]=p;hdr[63:32]=ia;hdr[31:0]=ib;cmd_v=1;
@@ -68,7 +68,8 @@ module tb_hgi_coll_decode;
   issue(0,0,0,0,0,0,0,1);issue(96,0,63,0,0,0,0,1);
   issue(96,0,4,3,0,0,0,1);issue(96,0,5,0,7,8,0,1);
   issue(96,0,5,8,7,0,0,1);issue(96,0,5,8,7,97,0,1);
-  issue(96,0,5,8,0,8,0,1);issue(96,0,5,8,1048576,8,0,1);
+  issue(96,0,5,8,0,8,0,1);issue(96,0,5,8,1048576,8,0,0);issue(96,0,5,8,1048577,8,0,1);
+  issue(96,0,5,8,7,8,1048576,0);issue(96,0,5,8,7,8,1048577,1);
   $display("PASS HGI-COLL decode cases=%0d DSreset96 allgroups/allranks k7/512/2048 hold/isolation/reserved",cases);$finish;
  end
 endmodule

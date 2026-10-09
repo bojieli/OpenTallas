@@ -4,13 +4,13 @@
 // supplied by that reader's row-valid knowledge. All errors terminate the call
 // with fault completion and suppress output for the offending word.
 module ot_hgi_coll_row_formatter #(
- parameter integer ENABLE=0,MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0
+ parameter integer ENABLE=0,MUT_OWNER=0,MUT_ORDER=0,MUT_WRITTEN=0,MUT_ID_BOUND=0
 )(
  input wire clk,rst_n,
  input wire start_v,output wire start_r,
  input wire [7:0] group_size,owner_block,destinations,
- input wire [19:0] row_count,input wire [15:0] row_words,
- input wire id_v,output wire id_r,input wire [19:0] id,
+ input wire [20:0] row_count,input wire [15:0] row_words,input wire [31:0] context_rows,
+ input wire id_v,output wire id_r,input wire [31:0] id,
  output wire read_v,input wire read_r,
  output reg [7:0] read_owner,output reg [19:0] read_local_row,
  output reg [15:0] read_word,
@@ -23,7 +23,8 @@ module ot_hgi_coll_row_formatter #(
 );
  localparam IDLE=0,IDS=1,MAP=2,DIVB=3,DIVG=4,REQUEST=5,RESPONSE=6,OUTPUT=7,DONE=8,CHECK=9;
  reg [3:0] state;
- reg [7:0] G,B;reg [19:0] K,index_,saved_id;
+ reg [7:0] G,B;reg [20:0] K;reg [19:0] index_;reg [31:0] saved_raw,context_q;
+ wire [19:0] saved_id=saved_raw[19:0];
  reg [15:0] words;
  reg [19:0] dividend,quotient,qblock,remainder_b;
  reg [20:0] rem_;reg [4:0] step;
@@ -41,7 +42,7 @@ module ot_hgi_coll_row_formatter #(
  assign done_v=(ENABLE!=0 && state==DONE);
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   state<=IDLE;G<=96;B<=8;K<=0;index_<=0;saved_id<=0;words<=0;
+   state<=IDLE;G<=96;B<=8;K<=0;index_<=0;saved_raw<=0;context_q<=0;words<=0;
    read_owner<=0;read_local_row<=0;read_word<=0;out_data<=0;
    out_index<=0;out_word<=0;out_destinations<=0;fault<=0;
    dividend<=0;quotient<=0;qblock<=0;remainder_b<=0;rem_<=0;step<=0;
@@ -49,14 +50,16 @@ module ot_hgi_coll_row_formatter #(
    case(state)
     IDLE:if(start_v)begin
      fault<=0;G<=group_size;B<=owner_block;K<=row_count;words<=row_words;
-     out_destinations<=destinations;index_<=0;state<=CHECK;
+     out_destinations<=destinations;context_q<=context_rows;index_<=0;state<=CHECK;
     end
     CHECK:begin
-     if(!good_g || B==0 || out_destinations==0 || out_destinations>G || K==0 || words==0)begin fault<=1;state<=DONE;end
+     if(!good_g || B==0 || out_destinations==0 || out_destinations>G || K==0 || K>21'd1048576 || context_q==0 || context_q>32'd1048576 || words==0)begin fault<=1;state<=DONE;end
      else state<=IDS;
     end
-    IDS:if(id_v)begin saved_id<=id;read_word<=0;state<=MAP;end
+    IDS:if(id_v)begin saved_raw<=id;read_word<=0;state<=MAP;end
     MAP:begin
+     if(!MUT_ID_BOUND && (saved_raw>=context_q || |saved_raw[31:20]))begin fault<=1;state<=DONE;end
+     else begin
      // DS block8: compile-time constant divides for all admitted groups.
      // Generic non-eight blocks use exact iterative division below.
      if(B==8)begin
@@ -74,6 +77,7 @@ module ot_hgi_coll_row_formatter #(
       if(G==1 || G==2 || G==4 || G==8 || G==96)state<=REQUEST;
      end else begin dividend<=saved_id;quotient<=0;rem_<=0;step<=19;state<=DIVB;end
     end
+     end
     DIVB:begin
      dividend<={dividend[18:0],1'b0};quotient<=nextquot;rem_<=nextrem;
      if(step==0)begin

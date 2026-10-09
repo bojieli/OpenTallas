@@ -11,16 +11,16 @@ module ot_hgi_coll_decode #(
  input wire [7:0] coll_group_size, die_id,
  input wire cmd_v, output wire cmd_r,
  input wire [127:0] hdr,
- input wire [19:0] selected_count,
+ input wire [31:0] selected_count,input wire selected_count_valid,
  output reg backend_v, input wire backend_r,
  output reg [5:0] backend_op,
  output reg [3:0] backend_gsz,
  output reg [7:0] backend_group_size,backend_rank,backend_group,
  output reg [7:0] backend_subgroup,backend_owner_block,backend_destinations,
- output reg [19:0] backend_row_count,
+ output reg [20:0] backend_row_count,
  output reg error_v, input wire error_r
 );
- reg pending;reg [127:0] hdr_q;reg [7:0] group_q,die_q;reg [19:0] count_q;
+ reg pending;reg [127:0] hdr_q;reg [7:0] group_q,die_q;reg [31:0] count_q;reg count_valid_q;
  wire [5:0] op=hdr_q[123:118];
  wire [7:0] param_lo=hdr_q[71:64];
  wire [31:0] imm_a=hdr_q[63:32],imm_b=hdr_q[31:0];
@@ -48,11 +48,11 @@ module ot_hgi_coll_decode #(
  wire reduce_bad=(op==4 && (!subgroup_ok || hdr_q[88:72]!=0));
  wire gather_bad=(op==5 && (!operands[6] || param_lo==0 || hdr_q[88:72]!=0 ||
                    imm_b==0 || imm_b>group_q ||
-                   (count_q==0 && (imm_a==0 || imm_a>32'hfffff))));
+                   (count_valid_q ? (count_q==0 || count_q>32'd1048576) : (imm_a==0 || imm_a>32'd1048576))));
  assign cmd_r=(ENABLE!=0) && !pending && !backend_v && !error_v;
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-   backend_v<=0;error_v<=0;pending<=0;hdr_q<=0;group_q<=96;die_q<=0;count_q<=0;backend_op<=0;backend_gsz<=4'hf;
+   backend_v<=0;error_v<=0;pending<=0;hdr_q<=0;group_q<=96;die_q<=0;count_q<=0;count_valid_q<=0;backend_op<=0;backend_gsz<=4'hf;
    backend_group_size<=96;backend_rank<=0;backend_group<=0;
    backend_subgroup<=0;backend_owner_block<=0;backend_destinations<=0;
    backend_row_count<=0;
@@ -60,7 +60,7 @@ module ot_hgi_coll_decode #(
    if(backend_v && backend_r) backend_v<=0;
    if(error_v && error_r) error_v<=0;
    if(cmd_v && cmd_r) begin
-    pending<=1;hdr_q<=hdr;group_q<=coll_group_size;die_q<=die_id;count_q<=selected_count;
+    pending<=1;hdr_q<=hdr;group_q<=coll_group_size;die_q<=die_id;count_q<=selected_count;count_valid_q<=selected_count_valid;
    end
    if(pending)begin
     pending<=0;
@@ -72,7 +72,7 @@ module ot_hgi_coll_decode #(
      backend_subgroup<=(op==4)?param_lo:0;
      backend_owner_block<=(op==5)?(MUT_ROW_BLOCK?1:param_lo):0;
      backend_destinations<=(op==5)?imm_b[7:0]:group_q;
-     backend_row_count<=(op==5)?((count_q!=0)?count_q:imm_a[19:0]):0;
+     backend_row_count<=(op==5)?(count_valid_q?count_q[20:0]:imm_a[20:0]):0;
     end
    end
   end
