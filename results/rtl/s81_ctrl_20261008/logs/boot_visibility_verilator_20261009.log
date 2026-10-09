@@ -1,0 +1,5 @@
+TB_S81_BOOT_VISIBILITY held_last_write=checked static_read=checked out_of_order=checked errors=0 PASS
+- /srv/opentallas-scratch/codex/ds-control/boot-fixed/tb_s81_boot_visibility.sv:36: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 187ns; walltime 0.004 s; speed 37.522 us/s
+- Verilator: cpu 0.005 s on 1 threads; alloced 1017 MB

@@ -1,0 +1,36 @@
+{
+  "status": "PASS",
+  "scope": "boot component ordered write visibility, not die closure",
+  "source_parent": "c0b441078",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv": "273b5c1cfd9c819bedae9a04b00a091e4ddfc3c45c594e93b063f5fa45cadcb8",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_visibility.sv": "1cbb37426befca1911703ca73512c1dbf3861f3c31e871f78acc3dffdfe50cbb"
+  },
+  "simulators": [
+    "Verilator 5.032 on ot-epyc3",
+    "Icarus Verilog on localhost"
+  ],
+  "checks": [
+    "stalled final stack prevents table publication and marker retirement",
+    "static read fails closed before HBM write",
+    "out-of-order sector fails closed before HBM write",
+    "1024 golden RoPE sectors exact through SECDED, exhaustive SRAM errors handled",
+    "bad checksum rejected code2",
+    "short table rejected at first address discontinuity code1"
+  ],
+  "model": {
+    "token_latency_added_cycles": 0,
+    "stream_width_change_bits": 0,
+    "storage_added_bits": 0,
+    "replica_count_change": 0,
+    "boot_cost": "One cycle blocks the next input while finalizing each BOOT_END; pending write stall is necessarily honored until ordered visibility handoff. Boot remains off token path.",
+    "hardware": "One table-sector versus existing-count comparator, 4-bit pending-write reduction, existing fault/status gating. No added pipeline, macro, or array."
+  },
+  "interface": "w_rdy transfers ownership to an ordered write service whose subsequently accepted reads observe accepted writes; adapters without this guarantee must defer w_rdy to physical completion.",
+  "logs": [
+    "logs/boot_drained_base_20261009.log",
+    "logs/boot_visibility_iverilog_20261009.log",
+    "logs/boot_visibility_verilator_20261009.log"
+  ]
+}
