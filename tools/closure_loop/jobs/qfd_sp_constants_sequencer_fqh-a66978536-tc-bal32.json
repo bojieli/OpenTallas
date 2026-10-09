@@ -1,0 +1,102 @@
+{
+ "name": "qfd_sp_constants_sequencer_fqh-a66978536-tc-bal32",
+ "block": "qfd_sp_constants_sequencer",
+ "owner": "Codex:qwen-block-closure",
+ "purpose": "Approved geometry-only repair: actual full-shape pin-map gate 3635 pins PASS, no overlap/duplicate/outside original face, within12bits/um/layer. Uniform coordinates on original full-face region alternating32-pin M4/M6 or M5/M7. RTL byte-identical942f13c8a, inherited positive/negative exactness and A6 token gate preserved; no latency/frame delta. Previous failure preserved qfd_sp_constants_sequencer_fqh-942f13c8atc. safe-qwen 2026-10-08 (REVIEW_20261008, binding): S-A6 (partial, see REVIEW_QUEUE): FQ_HEAD=1 -- the controller's FIFO head is a registered word hq, so decode reads a flop (cuts u_ctrl.fq_rd -> fq[] mux -> DYN add -> me_tiles, post-CTS TT -747.5); po_me_clk false-pathed as the clock output it is (route + sign-off SDC).  The me_mem_ok -> me_clk_en station is NOT included (not exact inside this block: the supply would have to promise service one edge earlier) -- REVIEW_QUEUE.md | current flow: TC route (OT_ORFS_CORNER_OVERRIDE=TC, tt_overlay, CTS fix hooks), mm route hold repair at HM 10 with the HM guard, route-time FF hold at io_ref_routed (route-ff-ioref), early-fail gates; Qwen IO referenced in-run to the block's own propagated clock (io_ref_skew.sdc: the same variant's insertion; no calibrate) | SQ-9 requeue (reviewer ~22:20): same RTL, two-layer pin spread PIN_H='M4 M6' / PIN_V='M5 M7' (the previous route stopped at FLOORPLAN_MARGIN, 20.5-20.8 b/um on M4), 0 cycles",
+ "hosts": [
+  "ot-epyc4",
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "codex/qwen-hub-pin-groups-20261008",
+  "commit": "a66978536dd9aaf28beb9b9d2593c99d5b95016f"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "seq_exact",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/qwen_missing/emit_partition.py --check && iverilog -g2012 -s tb_qfd_constants_sequencer -Ptb_qfd_constants_sequencer.FQ_HEAD=1  -o {RUN}/bench/seq_exact rtl/test/tb_qfd_constants_sequencer.sv rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv rtl/qwen_sys/missing_masters_20261007/gen/ot_qwen_rom_core_ctrl.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/rom/ot_qwen_tp_seq_w12.sv rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv && vvp -n {RUN}/bench/seq_exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "^PASS qfd_constants_sequencer",
+    "timeout_s": 1800
+   },
+   {
+    "name": "seq_mutant",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/qwen_missing/emit_partition.py --check && iverilog -g2012 -s tb_qfd_constants_sequencer -Ptb_qfd_constants_sequencer.FQ_HEAD=1 -Ptb_qfd_constants_sequencer.MUT=1 -o {RUN}/bench/seq_mutant rtl/test/tb_qfd_constants_sequencer.sv rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv rtl/qwen_sys/missing_masters_20261007/gen/ot_qwen_rom_core_ctrl.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv rtl/rom/ot_qwen_tp_seq_w12.sv rtl/hdc/ot_hdc_dyn_ttiles.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv && vvp -n {RUN}/bench/seq_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "^FAIL qfd_constants_sequencer",
+    "timeout_s": 1800
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+  },
+  "route": {
+   "cmd": "export OT_PIN_GROUP_MAX=32 OT_PIN_BALANCE_H='M4 M6' OT_PIN_BALANCE_V='M5 M7'; export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_fqh.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_sp_constants_sequencer_fqh {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_sp_constants_sequencer --post-sdc physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_sp_constants_sequencer > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_sp_constants_sequencer_fqh.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+  "session": "mm"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_pin_balance_candidates/qfd_sp_constants_sequencer_fqh-a66978536-tc-bal32/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_hub_pin_groups_20261008/qfd_sp_constants_sequencer_fqh-a66978536-tc-bal32"
+  }
+ ],
+ "cycles_added": "+1 edge from FIFO to NEXT only when the instruction FIFO ran dry (program start / fetch bubble); a held FIFO loads back to back.  Transaction check FQ_HEAD=1 vs 0 (20,000 cycles, random program): 58 decoded words and 29 SU ops identical, in order",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC"
+}
