@@ -82,7 +82,9 @@ def variant(base, units):
     """base variant dict + hgi_dispatch + the cmdproc ECO pins."""
     v = dict(base, hgi_dispatch=list(units))
     ex = {k: dict(x) for k, x in (base.get('split_extra_ports') or {}).items()}
-    ex.setdefault('hfd_cmdproc', {}).update(split_extra_ports(units))
+    alias = base.get('cp_band_alias') or {}     # mtp-lead: a replaced CP band (e.g. the MX1 south view) keeps the plan
+    ex.setdefault('hfd_cmdproc', {}).update({k: (alias.get(t[0], t[0]),) + tuple(t[1:])
+                                             for k, t in split_extra_ports(units).items()})
     v['split_extra_ports'] = ex
     return v
 
