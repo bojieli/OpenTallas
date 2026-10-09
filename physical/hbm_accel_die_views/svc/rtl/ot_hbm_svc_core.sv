@@ -134,6 +134,9 @@ module ot_hbm_svc_core #(
   parameter integer IK_CRED = 64, // production scorer FA6: line credits independent of64sector slots/PC
   parameter integer IK_DEPTH = 64, // opt-in return retention; default retains measured64-slot implementation
   parameter integer IKS = 0, // opt-in kind2 stripe: blocks chd[69:61], row0 chd[16:2], all32PCs
+  parameter integer IK_SRAM = 0, // opt-in protected native SRAM return store; DEPTH64 only
+  parameter integer IK_SRAM_ROTATE = 0, // opt-in structured gather remap, same bytes and pipeline
+  parameter integer IK_PREFETCH = 0, // dedicated already-protected decoded99 descriptor portal
 
   parameter integer KNO = 15              // 4-sector reads outstanding per PC (60 of the controller's 64 queued beats)
 )(
@@ -157,7 +160,9 @@ module ot_hbm_svc_core #(
   input wire [1:0] wq_source, output wire [31:0] wq_source_g, output wire wq_source_fault, output wire [NPC-1:0] wq_source_busy, output wire wq_pending,
   // KVS = 1: per-PC KV stream lanes (launched on ck, forwarded with fclk) and the stream-complete pulse
   output wire [NPC*269-1:0] kvs, output wire kvs_done,
-  input wire [7:0] ik_credit, output wire [8791:0] ik_lines, output wire ik_done,ik_fault
+  input wire [7:0] ik_credit, output wire [8791:0] ik_lines, output wire ik_done,ik_fault,
+  input wire ip_v, input wire [98:0] ip_d, input wire ip_fault,
+  output wire ip_take
 );
   genvar i, p;
   // ---------------------------------------------------------------- clock / reset
@@ -178,7 +183,16 @@ module ot_hbm_svc_core #(
   wire [NPC*30-1:0] s_addr;            // KVS: PC p's next stream read address
   wire [NPC*10-1:0] s_jt;              // KVS: its j >> 2 (carried in the read's tag)
   wire index_stream;
-  wire c_kvs;                          // KVS: the stream descriptor is taken
+  wire c_kvs, c_kvs_legacy, c_index_prefetch;
+  wire index_data_fault;
+  reg index_portal_fault;
+  always @(posedge ck or negedge rn)
+    if (!rn) index_portal_fault <= 1'b0;
+    else if ((IK_PREFETCH != 0) && (ip_fault || (ip_v &&
+      (ip_d[1:0] != 2'd2 || ip_d[10:2] == 0 || ip_d[10:2] > 9'd342))))
+      index_portal_fault <= 1'b1;
+  assign ik_fault = index_data_fault || index_portal_fault;
+  assign ip_take = c_index_prefetch;
   reg rdy_q; always @(posedge ck or negedge rn) if (!rn) rdy_q <= 1'b0; else rdy_q <= 1'b1;
   // MARGIN: PHY control inputs land in raw capture flops at the pin; all gating happens after them
   reg [NPC-1:0] k_rdy_q, kr_v_q; reg w_rdy_q; reg [7:0] w_room_q, wr_v_q; reg rdy_q2;
@@ -273,7 +287,7 @@ module ot_hbm_svc_core #(
   // ---------------------------------------------------------------- K port: one request register per PC
   wire c_kv = (KVS == 0) && chv && (c_kind == 2'd1) && !pc_busy[KV_PC] && !wreq[KV_PC];
   wire c_ik = (IKS == 0) && chv && (c_kind == 2'd2) && !pc_busy[IK_PC] && !wreq[IK_PC];
-  assign c_take = w_issue || c_kv || c_kvs || c_ik || (chv && (c_kind == 2'd3));    // kind 3: reserved, dropped
+  assign c_take = w_issue || c_kv || c_kvs_legacy || c_ik || (chv && (c_kind == 2'd3));
   generate for (i = 0; i < NSM; i = i + 1) begin : gd       // SM i: round robin over its four PCs
     localparam integer B = SM_PC0[i*5 +: 5];
     wire [3:0] fr;
@@ -500,7 +514,14 @@ module ot_hbm_svc_core #(
     reg [8:0] blocks; reg [14:0] row0; reg [11:0] nsec; reg [NPC-1:0] mask; reg dn;
     wire [11:0] nsec4 = (nsec + 12'd3) & ~12'd3;     // reads are 4 sectors; a partial last group reads pad sectors
     wire [NPC-1:0] pdone;
-    assign c_kvs = chv && (((KVS != 0) && (c_kind == 2'd1)) || ((IKS != 0) && (c_kind == 2'd2))) && !act && !dn && !idx_busy;
+    assign c_kvs_legacy = chv && (((KVS != 0) && (c_kind == 2'd1)) || ((IKS != 0) && (c_kind == 2'd2))) && !act && !dn && !idx_busy;
+    assign c_index_prefetch = (IK_PREFETCH != 0) && (IKS != 0) && ip_v &&
+      ip_d[1:0] == 2'd2 && ip_d[10:2] != 0 && ip_d[10:2] <= 9'd342 &&
+      !ip_fault && !ik_fault && !chv && !cpend && !cv && !act && !dn && !idx_busy;
+    assign c_kvs = c_kvs_legacy || c_index_prefetch;
+    wire launch_idx = c_index_prefetch || c_kind == 2'd2;
+    wire [8:0] launch_blocks = c_index_prefetch ? ip_d[10:2] : chd[69:61];
+    wire [14:0] launch_row = c_index_prefetch ? ip_d[25:11] : chd[16:2];
     wire [NPC*269-1:0] sectors;wire [63:0] idx_pop;
     wire [31:0] idx_v;wire [383:0] idx_j;wire [8191:0] idx_data;
     for(genvar ip=0;ip<32;ip=ip+1)begin
@@ -513,16 +534,16 @@ module ot_hbm_svc_core #(
       .blocks(chd[69:61]),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
       .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(ik_fault),.retained(idx_busy));
     end else begin : gni
-      assign ik_lines=0;assign ik_done=0;assign ik_fault=0;assign idx_busy=0;assign idx_pop=0;
+      assign ik_lines=0;assign ik_done=0;assign index_data_fault=0;assign idx_busy=0;assign idx_pop=0;
     end
     always @(posedge ck or negedge rn)
       if (!rn) begin act <= 1'b0; dn <= 1'b0; idx <= 1'b0; blocks <= 0; end
       else begin
         dn <= 1'b0;
-        if (c_kvs) begin act <= 1'b1; idx <= c_kind==2'd2; blocks <= chd[69:61]; end
+        if (c_kvs) begin act <= 1'b1; idx <= launch_idx; blocks <= launch_blocks; end
         else if (act && &pdone) begin act <= 1'b0; dn <= 1'b1; end
       end
-    always @(posedge ck) if (c_kvs) begin row0 <= chd[16:2]; nsec <= (c_kind==2'd2) ? 12'((17*chd[69:61]+31)/32) : chd[28:17]; mask <= (c_kind==2'd2) ? {NPC{1'b1}} : chd[60:29]; end
+    always @(posedge ck) if (c_kvs) begin row0 <= launch_row; nsec <= launch_idx ? 12'((17*launch_blocks+31)/32) : chd[28:17]; mask <= launch_idx ? {NPC{1'b1}} : chd[60:29]; end
     assign kvs_done = dn;
     for (p = 0; p < NPC; p = p + 1) begin : gs
       reg [11:0] jn;          // reads requested x 4
@@ -565,8 +586,9 @@ module ot_hbm_svc_core #(
     end
   end else begin : gnkvs
     assign sreq = {NPC{1'b0}}; assign s_addr = {NPC*30{1'b0}}; assign s_jt = {NPC*10{1'b0}}; assign c_kvs = 1'b0;
+    assign c_kvs_legacy=0; assign c_index_prefetch=0;
     assign kvs = {NPC*269{1'b0}}; assign kvs_done = 1'b0;
-    assign ik_lines=0;assign ik_done=0;assign ik_fault=0;assign index_stream=0;
+    assign ik_lines=0;assign ik_done=0;assign index_data_fault=0;assign index_stream=0;
   end endgenerate
 endmodule
 `default_nettype wire

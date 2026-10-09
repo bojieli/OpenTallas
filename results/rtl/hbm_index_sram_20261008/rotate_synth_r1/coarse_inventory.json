@@ -1,0 +1,22 @@
+{
+  "register_bits": {
+    "$dff": 42688,
+    "$dffe": 23768,
+    "$adff": 13396,
+    "$adffe": 42
+  },
+  "total_register_bits": 79894,
+  "sidecar_memories": 64,
+  "sidecar_bits": 20480,
+  "selection_output_bits": {
+    "$mux": 380583,
+    "$shift": 65920,
+    "$shiftx": 66,
+    "$pmux": 2176
+  },
+  "source_commit": "859068da1",
+  "native_macro_count": 64,
+  "native_macro_area_mm2": 0.24906092544,
+  "register_plus_sidecar_dff_area_lower_bound_mm2": 0.029269058400000002,
+  "scope": "Coarse RTL inventory only. Combinational gates/clock/placement/routing unpriced; mapping still live, no terminal area verdict."
+}

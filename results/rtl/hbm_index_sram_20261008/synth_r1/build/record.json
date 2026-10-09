@@ -1,0 +1,19 @@
+{
+  "source_commit": "1cfd75bbc",
+  "source_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "ae114bfda8f2ea931074e8c30131ba389ac29c4f72f3618f1858ef7da4e88ddb"
+  },
+  "library_sha256": {
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+    "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038"
+  },
+  "area_scope": "TT mapped standardcells only; add64 native macros; no clock tree, placement, wires or signoff",
+  "returncode": -9,
+  "verdict": "FAIL"
+}

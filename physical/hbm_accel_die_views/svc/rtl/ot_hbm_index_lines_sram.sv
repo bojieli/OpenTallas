@@ -5,7 +5,7 @@
 // Credits are reserved at read issue, slots returned only after explicit capture.
 // Check sidecars are FF arrays (32x10 per bank), protected with their data word.
 module ot_hbm_index_lines_sram #(
- parameter integer ENABLE=0,DEPTH=64,CRED=64,
+ parameter integer ENABLE=0,DEPTH=64,CRED=64,ROTATE_REMAP=0,
  parameter integer MUT_DATA=0,MUT_CHECK=0,MUT_DOUBLE=0,MUT_SCOREBOARD=0
 )(input wire clk,rst_n,start,input wire[8:0] blocks,
  input wire[31:0] sector_v,input wire[383:0] sector_j,input wire[8191:0] sector_data,
@@ -75,6 +75,29 @@ module ot_hbm_index_lines_sram #(
     .ov(dec_v[ID]),.d(decoded[ID*256+:256]),.ce(corrected[ID]),.ue(dec_ue[ID]),.n_ce(),.n_ue());
   end
  end endgenerate
+ // Four even-word barrel stages replace independent byte-wide bank selectors.
+ wire[4:0] first_pc=group_tag[3][6:2];
+ wire[11:0] base_j=(group_tag[3]*17)>>7;
+ wire[8191:0] primary[0:4],alternate[0:4];
+ wire[8703:0] rotated_payload={alternate[4][511:0],primary[4]};
+ generate if(ROTATE_REMAP!=0)begin: rotate_remap
+  for(genvar rp=0;rp<32;rp=rp+1)begin: choose_bank
+   wire first_bank=base_j[0]^(rp<first_pc);
+   assign primary[0][rp*256+:256]=first_bank?decoded[(rp*2+1)*256+:256]:decoded[(rp*2)*256+:256];
+   assign alternate[0][rp*256+:256]=first_bank?decoded[(rp*2)*256+:256]:decoded[(rp*2+1)*256+:256];
+  end
+  for(genvar stage=0;stage<4;stage=stage+1)begin: barrel
+   for(genvar word_=0;word_<32;word_=word_+1)begin: word_mux
+    localparam integer SOURCE=(word_+(1<<(stage+1)))%32;
+    assign primary[stage+1][word_*256+:256]=first_pc[stage+1]?primary[stage][SOURCE*256+:256]:primary[stage][word_*256+:256];
+    assign alternate[stage+1][word_*256+:256]=first_pc[stage+1]?alternate[stage][SOURCE*256+:256]:alternate[stage][word_*256+:256];
+   end
+  end
+ end else begin: no_rotate
+  for(genvar stage=0;stage<5;stage=stage+1)begin: zero
+   assign primary[stage]=0;assign alternate[stage]=0;
+  end
+ end endgenerate
  reg[8791:0] assembled;reg output_bad;
  always @*begin: remap_comb
   integer k,l,b,g,pc,j,bank;
@@ -85,7 +108,7 @@ module ot_hbm_index_lines_sram #(
    assembled[l*1099]=1;assembled[l*1099+1+:10]=10'(group_tag[3]+l);
    if(group_tag[3]+l<nlines)for(b=0;b<136;b=b+1)begin
     g=(group_tag[3]+l)*136+b;pc=(g/32)%32;j=g/1024;bank=j%2;
-    assembled[l*1099+11+b*8+:8]=decoded[(pc*2+bank)*256+(g%32)*8+:8];
+    assembled[l*1099+11+b*8+:8]=(ROTATE_REMAP!=0)?rotated_payload[(l*136+b)*8+:8]:decoded[(pc*2+bank)*256+(g%32)*8+:8];
    end
   end
  end
