@@ -1,0 +1,188 @@
+{
+  "module": "ot_hgi_coll_row_formatter",
+  "source": "8d33d3b03",
+  "default_enable": 0,
+  "ports": {
+    "clk": {
+      "width": 1,
+      "direction": "in",
+      "binding": "COLL clock",
+      "must_not_tie": true
+    },
+    "rst_n": {
+      "width": 1,
+      "direction": "in",
+      "binding": "COLL reset",
+      "must_not_tie": true
+    },
+    "start_v": {
+      "width": 1,
+      "direction": "in",
+      "binding": "decodedop5launch",
+      "must_not_tie": true
+    },
+    "start_r": {
+      "width": 1,
+      "direction": "out",
+      "binding": "op5engineaccept",
+      "must_not_tie": true
+    },
+    "group_size": {
+      "width": 8,
+      "direction": "in",
+      "binding": "decodedstaticgroup",
+      "must_not_tie": true
+    },
+    "owner_block": {
+      "width": 8,
+      "direction": "in",
+      "binding": "op5paramB",
+      "must_not_tie": true
+    },
+    "destinations": {
+      "width": 8,
+      "direction": "in",
+      "binding": "op5imm_b",
+      "must_not_tie": true
+    },
+    "row_count": {
+      "width": 20,
+      "direction": "in",
+      "binding": "op5k count",
+      "must_not_tie": true
+    },
+    "row_words": {
+      "width": 16,
+      "direction": "in",
+      "binding": "A/Odescriptorrow width in512bitbeats",
+      "must_not_tie": true
+    },
+    "id_v": {
+      "width": 1,
+      "direction": "in",
+      "binding": "I-tableproducer valid",
+      "must_not_tie": true
+    },
+    "id_r": {
+      "width": 1,
+      "direction": "out",
+      "binding": "I-tableproducerready",
+      "must_not_tie": true
+    },
+    "id": {
+      "width": 20,
+      "direction": "in",
+      "binding": "selected U32rowidentifier afterboundcheck",
+      "must_not_tie": true
+    },
+    "read_v": {
+      "width": 1,
+      "direction": "out",
+      "binding": "currentreaderownedrowrequest valid",
+      "must_not_tie": true
+    },
+    "read_r": {
+      "width": 1,
+      "direction": "in",
+      "binding": "currentreaderready",
+      "must_not_tie": true
+    },
+    "read_owner": {
+      "width": 8,
+      "direction": "out",
+      "binding": "requiredowner rank routing/filter",
+      "must_not_tie": true
+    },
+    "read_local_row": {
+      "width": 20,
+      "direction": "out",
+      "binding": "ownerlocalrow index",
+      "must_not_tie": true
+    },
+    "read_word": {
+      "width": 16,
+      "direction": "out",
+      "binding": "wordinside selectedrow",
+      "must_not_tie": true
+    },
+    "response_v": {
+      "width": 1,
+      "direction": "in",
+      "binding": "currentreaderresponsevalid",
+      "must_not_tie": true
+    },
+    "response_r": {
+      "width": 1,
+      "direction": "out",
+      "binding": "currentreaderresponseack",
+      "must_not_tie": true
+    },
+    "response_data": {
+      "width": 512,
+      "direction": "in",
+      "binding": "actualcurrentreaderpayload",
+      "must_not_tie": true
+    },
+    "response_written": {
+      "width": 1,
+      "direction": "in",
+      "binding": "actualcurrentreaderrow-validknowledge",
+      "must_not_tie": true
+    },
+    "out_v": {
+      "width": 1,
+      "direction": "out",
+      "binding": "COLLgather/resultconsumer valid",
+      "must_not_tie": true
+    },
+    "out_r": {
+      "width": 1,
+      "direction": "in",
+      "binding": "COLLgather/resultconsumerready",
+      "must_not_tie": true
+    },
+    "out_data": {
+      "width": 512,
+      "direction": "out",
+      "binding": "heldpayload",
+      "must_not_tie": true
+    },
+    "out_index": {
+      "width": 20,
+      "direction": "out",
+      "binding": "selectedlistindex",
+      "must_not_tie": true
+    },
+    "out_word": {
+      "width": 16,
+      "direction": "out",
+      "binding": "wordinside selectedrow",
+      "must_not_tie": true
+    },
+    "out_destinations": {
+      "width": 8,
+      "direction": "out",
+      "binding": "recipientranks0..n-1",
+      "must_not_tie": true
+    },
+    "done_v": {
+      "width": 1,
+      "direction": "out",
+      "binding": "CPenginecompletion valid",
+      "must_not_tie": true
+    },
+    "done_r": {
+      "width": 1,
+      "direction": "in",
+      "binding": "CPenginecompletion ack",
+      "must_not_tie": true
+    },
+    "fault": {
+      "width": 1,
+      "direction": "out",
+      "binding": "invalidcommand/unwrittenrowcompletion fault",
+      "must_not_tie": true
+    }
+  },
+  "integration_pending": "actualreaderownerfilter/routing,writtenknowledge,I-tableproducer,COLLmulticastpayload andCPcompletion; no installedconsumer claim"
+}
