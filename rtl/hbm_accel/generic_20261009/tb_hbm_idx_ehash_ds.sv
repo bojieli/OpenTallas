@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 import ot_hdc_engram_tables_shipped_pkg::*;
 module tb_hbm_idx_ehash_ds;
- parameter integer MUTANT=0;
+ parameter integer MUTANT=0, GENERIC=1;
  reg clk=0;always #416.6665 clk=~clk;
  reg rst_n=0,token_begin=0,accept_valid=0,cmd_valid=0,cmd_first=0,row_ready=1;
  reg [2:0] accept_slot=0,cmd_op=4,cmd_layer=0,cmd_slot=0;
@@ -9,7 +9,7 @@ module tb_hbm_idx_ehash_ds;
  reg [255:0] b_mult;
  reg [767:0] b_prime,b_offset;
  wire cmd_ready,row_valid,done,fault;wire[31:0]row_id;wire[4:0]row_column;
- ot_hbm_idx_ehash_ds #(.ENABLE_GENERIC(1),.MUTANT(MUTANT))dut(.*);
+ ot_hbm_idx_ehash_ds #(.ENABLE_GENERIC(GENERIC),.MUTANT(MUTANT))dut(.*);
  reg[16:0]hist[0:2];reg[16:0]snap[0:7][0:2];reg[16:0]win[0:7][0:3];
  reg[7:0]seen=0;integer cases=0,beats=0,cycle=0; always @(posedge clk)cycle=cycle+1;
  task automatic begin_token;
@@ -49,7 +49,7 @@ module tb_hbm_idx_ehash_ds;
   send(0,0,779,0);send(0,1,779,0);
   begin_token();send(0,1,412,0);send(0,0,412,0);
   // A changed dynamic B must fail closed; mutant 4 ignores this requirement.
-  @(negedge clk);cmd_layer=0;cmd_slot=0;cmd_cid=412;b_mult[63:0]=b_mult[63:0]^1;cmd_valid=1;
+  @(negedge clk);cmd_layer=0;cmd_slot=0;cmd_cid=412;if(GENERIC)b_mult[63:0]=b_mult[63:0]^1;else cmd_op=7;cmd_valid=1;
   @(negedge clk);cmd_valid=0;@(negedge clk);
   if(!fault)$fatal(1,"EHASH B mismatch was not rejected");
   $display("PASS EHASH DS LOCKSTEP HISTORY ACCEPT %0d cases %0d row ids",cases,beats);$finish;
