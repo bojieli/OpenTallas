@@ -178,13 +178,25 @@ module ot_dsrom_hc_mean_capture #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
     always @(posedge clk) if(state==STORE) wcode_q<=write_code;
+    // cont-takeover: the wide data registers (acc, h1..h3, pack_q, held_code: 2,500 flops) carry no reset -- validity is the
+    // state machine's -- so rst_n no longer drives an async-reset recovery tree (mean -lb0 input->reg -52, join -13).
+    // Same write conditions as before (the state machine's, gated by !fault).
+    wire dwr=!fault && !link_fault;
+    always @(posedge clk) if(dwr) begin
+        if(state==LOAD && x_in_valid && x_in_beat==beat_q) begin
+            for(lane=0;lane<8;lane=lane+1) acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
+            h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
+        end
+        if(state==AWAIT && (&av) && !(|ae)) acc<=ay;
+        if(state==MWAIT && (&mv) && !(|me)) pack_q[128*part+:128]<=mean_bf16;
+        if(state==RDECODE) held_code<=read_code;
+    end
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;
             user_q<=0;position_q<=0;epoch_q<=0;capture_q<=0;
             beat_q<=0;frame_q<=0;part<=0;add_step<=0;
-            read_capture<=0;read_frame<=0;held_code<=0;
-            h1<=0;h2<=0;h3<=0;acc<=0;pack_q<=0;
+            read_capture<=0;read_frame<=0;
         end else if(link_fault) fault<=1;
         else if(!fault) begin
             capture_done<=0;
@@ -202,9 +214,6 @@ module ot_dsrom_hc_mean_capture #(
                 LOAD: if(x_in_valid) begin
                     if(x_in_beat!=beat_q) fault<=1;
                     else begin
-                        for(lane=0;lane<8;lane=lane+1)
-                            acc[32*lane+:32]<={x_in_residuals[16*lane+:16],16'd0};
-                        h1<=x_in_residuals[128+:128];h2<=x_in_residuals[256+:128];h3<=x_in_residuals[384+:128];
                         add_step<=0;state<=AISS;
                     end
                 end
@@ -212,7 +221,6 @@ module ot_dsrom_hc_mean_capture #(
                 AWAIT: if(&av) begin
                     if(|ae) fault<=1;
                     else begin
-                        acc<=ay;
                         if(add_step==2) state<=MISS;
                         else begin add_step<=add_step+1'b1;state<=AISS;end
                     end
@@ -221,7 +229,6 @@ module ot_dsrom_hc_mean_capture #(
                 MWAIT: if(&mv) begin
                     if(|me) fault<=1;
                     else begin
-                        pack_q[128*part+:128]<=mean_bf16;
                         if(part==3) state<=STORE;
                         else begin part<=part+1'b1;beat_q<=beat_q+1'b1;state<=LOAD;end
                     end
@@ -239,7 +246,7 @@ module ot_dsrom_hc_mean_capture #(
                 end
                 RREQ: state<=RWAIT;
                 RWAIT: state<=RDECODE;
-                RDECODE: begin held_code<=read_code;state<=ECC_PIPE?RECC:RHOLD;end
+                RDECODE: state<=ECC_PIPE?RECC:RHOLD;
                 RECC: if(&decode_valid) state<=RHOLD;
                 RHOLD: begin
                     if(|dec_ue) fault<=1;
