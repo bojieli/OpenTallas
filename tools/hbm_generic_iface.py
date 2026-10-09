@@ -134,7 +134,7 @@ D_PARAM = {
     "SM.MATVEC": "[1:0] fmt (0 BF16, 1 FP8 blk, 2 FP4 blk, 3 INT8), [4:2] positions-1",
     "SU.VOP": "operands = the template's slots, flagged in opnd (A,B,C,D,O,R,I)",
     "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
-    "FUSED.ROW_NORM": "[5:0] d_units (32|40), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
+    "FUSED.ROW_NORM": "[5:0] d_units (width/128: 32|40 prenorm; 8|2 Qwen TP4 QK-norm), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
     "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
     "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (DS 1347: uniform 1,347-row head shards; Qwen3-8B 37984) (G17)",
     "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
@@ -187,7 +187,7 @@ def d_spec_json():
         mdesc=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_MDESC_FIELDS], space=SPACE,
                    dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(47)] + ["N_FROM_VM"],
                    address="base + L*lstride + L1*l1stride + (indexed ? U32(VM[I_eff+L]) : DYN[dyn_sel])*dyn_mul",
-                   indexed="id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L)",
+                   indexed="id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L); id bounds software-owned: hardware checks only the 40-bit HBM / VM range, the simulator faults out-of-region accesses",
                    istride="0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"),
         sut=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_SUT_LAYOUT],
                  semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (RoPE pairing is in the weights)"),

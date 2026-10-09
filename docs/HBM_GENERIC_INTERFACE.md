@@ -206,7 +206,7 @@ This is the only address arithmetic the hardware performs on the program's behal
 
 - **`L` and `L1`**, the counters of the inner and outer loops (`CTL.LOOP`, §3.4). With `lstride` set to the per-layer size of a weight block, one record addresses every layer's weights. With `l1stride` set to the per-head size of a state block, one record serves every local head.
 - **DYN values**, small per-token integers the CP computes when the doorbell arrives. `POS` (the token's position) addresses the RoPE row and the KV append slot; `TOKEN` addresses the embedding row; `RANK` addresses a die's shard; `POS1 = pos + 1` is the number of valid KV rows. Each verify column (*slot*) has its own DYN bank. §6.8 lists every code.
-- **Indexed ids.** When the descriptor's `indexed` bit is set, the id comes from row 0 of the record's I table in VM, entry L. The I table is typically written by `IDX.TOPK` (the selected experts or KV positions) and ordered before its readers by a wait bit.
+- **Indexed ids.** When the descriptor's `indexed` bit is set, the id comes from row 0 of the record's I table in VM, entry L. The I table is typically written by `IDX.TOPK` (the selected experts or KV positions) and ordered before its readers by a wait bit. Id bounds are software-owned: the compiler guarantees that every indexed id lands in a placed region; the hardware checks only that the effective address fits the 40-bit HBM space (or the VM); the simulator faults any out-of-region access as a compiler-bug detector.
 
 **Dynamic counts.** When `n_sel` is non-zero, `n = DYN[n_sel]`. Attention uses `n_sel = POS1` to read exactly the `pos + 1` valid KV rows, and that count is also the causal mask. The special code `n_sel = 63` (N_FROM_VM) takes `n` from row 1 of the I table: U32(VM[I + I.stride + L]).
 
@@ -279,8 +279,8 @@ This section traces the program for one Qwen3-8B token on one die of a 4-die gro
 | 6 | `SM.MATVEC` | A: VM 4,096; B: HBM `Wb`, m = 1,536 rows of n = 4,096, INT8, `lstride` = layer; O: VM 8,192 | fmt = 3 (INT8) | FUSED | qkv |
 | 7 | `DMA.LOAD` | A: HBM qkv scales, BF16, n = 1,536; O: VM 156,672 | — | — | row_scale_qkv |
 | 8 | `SU.VOP` | A: VM 8,192; B: VM 156,672; O: VM 9,728 | M1 = A·B | SM, DMA | row_scale_qkv |
-| 9 | `FUSED.ROW_NORM` | A: VM 9,728, 8 heads × 128; B: q-norm gain; O: VM 11,264, **FP32** | seg = 128 | SU | QK-norm |
-| 10 | `FUSED.ROW_NORM` | A: VM 10,752, 2 heads × 128; B: k-norm gain; O: VM 12,288, FP32 | seg = 128 | — | QK-norm |
+| 9 | `FUSED.ROW_NORM` | A: VM 9,728, 8 heads × 128; B: q-norm gain; O: VM 11,264, **FP32** | d_units = 8, seg = 128 | SU | QK-norm |
+| 10 | `FUSED.ROW_NORM` | A: VM 10,752, 2 heads × 128; B: k-norm gain; O: VM 12,288, FP32 | d_units = 2, seg = 128 | — | QK-norm |
 | 11 | `SU.VOP` | A: VM 11,264, m = 10 heads of n = 128; B: cos row (stride 0); D: sin row (stride 0); O: VM 12,800 | `c_pair`, QM alternating sign, AD = +Q, M1 = A·B | FUSED | RoPE |
 | 12 | `SU.VOP` | A: VM 12,800, n = 1,024; O: VM 14,080 | `rnd` (BF16 queries) | — | roundQ |
 | 13 | `DMA.STORE` | A: rotated K rows, m = 2 of n = 128; O: HBM `KVb` K planes, FP8, `stride` = 2 MiB, `lstride` = 4 MiB, `dyn_sel` = POS, `dyn_mul` = 128 | — | SU | kv_append |
@@ -448,7 +448,7 @@ Every other model-dependent setting is carried by the operation that needs it, n
 
 | Setting | Where it lives | DS value | Qwen3-8B value |
 |---|---|---|---|
-| Norm width | `FUSED.ROW_NORM` `param[5:0]` d_units (32 or 40; width / 128). The 4,096 tree is the 5,120 tree with a +0-padded tail, which is exact. | 40 | 32 |
+| Norm width | `FUSED.ROW_NORM` `param[5:0]` d_units (width / 128: 32 or 40 for the prenorms; 8 and 2 for the Qwen3-8B TP4 QK-norms, 8 query and 2 key heads of 128). The 4,096 tree is the 5,120 tree with a +0-padded tail, which is exact. | 40 | 32 (prenorm), 8 / 2 (QK-norm) |
 | Norm segment | `FUSED.ROW_NORM` `param[13:6]` (0 or 128) | 0 | 0 (prenorm), 128 (QK-norm) |
 | Norm, GLU and softmax output format | The O descriptor's `fmt` (FP8, BF16 or FP32 for norms; FP8 or BF16 for GLU) | FP8 | BF16 (prenorm, GLU), FP32 (QK-norm) |
 | Hyper-connection pre-mix | The opcode: `FUSED.HC_PRE_NORM` versus `FUSED.ROW_NORM` | HC_PRE_NORM | ROW_NORM |
@@ -893,7 +893,7 @@ HGI-1 is generic because model variation lives in programs and per-operation ope
 | VM | 262,144 FP32 words (1 MiB) | Single-pass softmax for heads × rows up to about 200K words |
 | Softmax chunk | 640 rows per pass | Longer rows use multipass (rate only) |
 | ATT tile | ≤ 16 head lanes; head_dim ≤ 1,024 in multiples of 64; FP8/BF16 rows | head_dim 96 pads to 128; FP32 operands go through the SU |
-| Norm engine | d_units 32 or 40; seg 0 or 128 | Other widths run as templates |
+| Norm engine | d_units 32, 40, 8 or 2; seg 0 or 128 | Other widths run as templates |
 | SFU codes | 8 of 8 used | No tanh, erf, log or softplus code: templates instead |
 | Units | 12 defined, codes 12–15 reserved | Up to four new engines without a format change |
 | Top-k | k ≤ 2,048 | — |
