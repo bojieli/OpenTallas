@@ -30,7 +30,8 @@ if [ "$kind" = port ]; then
   if [ "${INTERIOR:-0}" = 1 ]; then
     interior_args=(--step-tcl POST_MACRO_PLACE=$D/interior_macros.tcl
                    --step-tcl PRE_IO_PLACEMENT=$D/interior_pins.tcl
-                   --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5')
+                   --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5'
+                   --orfs-var 'PLACE_PINS_ARGS=-min_distance 4 -min_distance_in_tracks')
   fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   SL=${SLICE:-ot_hcoll_port}; SLSRC=""; [ $SL = ot_hcoll_port2 ] && SLSRC="--source rtl/hbm_accel/tu/ot_hcoll_port2.sv"
