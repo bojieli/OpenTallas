@@ -33,6 +33,7 @@ UNC_S, UNC_H, SKEW_INTRA = 60.0, 50.0, 90.0    # glue: signoff 60 + intra-region
 _SVC = json.loads((ROOT / 'physical/s81_ph_views/svc/composition.json').read_text())
 SVC_HOP = max(abs(a[0] - b[0]) + abs(a[1] - b[1]) for c in _SVC['station_chains'] for a, b in zip(c['xy'], c['xy'][1:]))
 SVC_HUB = 43.2     # the first station abuts the IO hub (composition: x = hub x - station width)
+SVC_FAULT = _SVC['io_hub_fault']  # IO hub od bad -> fault station u_fs -> ad fi (composition, RQ-2; direct 652 um)
 CAP_S = 562.0 / 2  # capture ctl <-> group S hop with one common-clock station (KST 1)
 WIRE_SS, WIRE_FF_CREDIT, RCV = 1.135, 0.112, 41.0   # tools/budgets/common.py (receiver repeater 41)
 STN = 'dsfd_stnh_512x1'
@@ -67,7 +68,10 @@ SLABS = {
               ('dsfd_svcio_od', 'od_r', 'dsfd_svc_stn', 'od_er', SVC_HUB, 0, 'IO hub ready -> station (od)'),
               ('dsfd_svc_stn', 'a0_ed', 'dsfd_svcio_ad', 'a0_d', SVC_HUB, 0, 'last station -> IO hub (a0)'),
               ('dsfd_svcio_ad', 'a0_r', 'dsfd_svc_stn', 'a0_er', SVC_HUB, 0, 'IO hub ready -> station (a0)'),
-              ('dsfd_svcio_od', 'bad', 'dsfd_svcio_ad', 'fi', 430.0, 0, 'u_od.bad -> u_ad.fi (fault)')]),
+              # s81-die-2 2026-10-08: the IO-hub fault hop (assumed 430 um: TT_bal -34.7; composition 652 um) through one common-clock station at
+              # its midpoint (ot_s81ph_svc_io_t FSTN 1, u_fs): fault +1 cycle (status only)
+              ('dsfd_svcio_od', 'bad', STN, 'di0', SVC_FAULT['bad_to_station_um'], 1, 'u_od.bad -> fault station u_fs'),
+              (STN, 'do0', 'dsfd_svcio_ad', 'fi', SVC_FAULT['station_to_fi_um'], 1, 'fault station u_fs -> u_ad.fi')]),
     'dsfd_sp_capture': dict(
         clocks={'ck': ['ck', 'ckv']},
         ports={'f_gather': [('dsfd_capt_g2', ['f_row']), ('dsfd_capt_ctl', ['f_ctl'])],
