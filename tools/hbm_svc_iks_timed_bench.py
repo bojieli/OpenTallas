@@ -11,7 +11,7 @@ SRC=['rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv','rtl/hbm_accel/service/ot_
 def main():
  ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
  a.work.mkdir(parents=True,exist_ok=False)
- rec={'schema':'opentallas.hbm_iks_timed.v1','source_commit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
+ rec={'schema':'opentallas.hbm_iks_timed.v1','source_commit':os.environ.get('PINNED_SOURCE_COMMIT') or subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
  'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC+['tools/hbm_svc_iks_timed_bench.py','results/uarch/hbm_iks_timed_refpb_20261008/prebuild.json']},
  'scope':'timed request-level controller; behavioral return SRAM, no physical signoff or performance adoption',
  'controller':'ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps',
