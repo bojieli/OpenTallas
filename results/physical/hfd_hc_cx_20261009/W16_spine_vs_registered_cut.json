@@ -1,0 +1,221 @@
+{
+  "source_clock_binding": "Historical833.333ps quarter versus candidate actual serial1111.111ps contract; exact forwarded-root correspondence requested from hbm_clock_boundary, unqualified until supplied.",
+  "historical_833ps": {
+    "authority": "W16 compare coherent roots against registered gather cuts before route selection",
+    "measured_basis": "C1 79315a431 existing CTS max path acc_0_8[471] to acc_0_7[471], estimated parasitics, TT overlay",
+    "measured_launch_to_D_ps": 784.3200000000002,
+    "measured_route_period_ps": 770,
+    "measured_route_setup_uncertainty_ps": 123,
+    "measured_path_launch_minus_capture_clock_ps": 300.80999999999995,
+    "measured_worst_setup_skew_summary_ps": 669.48,
+    "signoff_uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "design_margin_ps": 15,
+    "coherent_spine": {
+      "scope": "PHYSICAL ENVELOPE, not numeric HC or a token-path implementation",
+      "enable_default": false,
+      "clock_mapping": "south gather clk2, north gather clk6; source/arithmetic clocks unchanged",
+      "clock_roots": 2,
+      "clock_sinks_per_root": 8152,
+      "gather_clock_spine_um_per_half": 2764.788,
+      "clock_max_geometric_reach_um_from_quarter_half_root": 1657.782,
+      "clock_extra_signal_tracks_lower_bound": 2,
+      "clock_buffer_area": "must be measured by CTS; no zero-cost clock claim",
+      "clock_insertion_latency": "CTS measured, not fixed at zero or assumed equal to old banks",
+      "macro_output_to_capture_crossings": 2992,
+      "macro_capture_budget": "real pin-registered lane clk-to-Q plus phase/skew and setup/hold; PENDING",
+      "face_budget": "unchanged actual die I/O delays and 60/25ps signoff uncertainty; PENDING qualification",
+      "port_boundary_bits": 2048,
+      "replica_count": 88,
+      "result_bits_per_lane_per_cycle": 34,
+      "result_gather_bits_per_cycle": 2992,
+      "accumulator_bits_per_cycle": 1024,
+      "memory_port_bytes_per_cycle": 0,
+      "macs_per_cycle": "unchanged real C1 lanes; quarter mapping is not an arithmetic workload",
+      "data_mux_demux_change": 0,
+      "additional_data_flops": 0,
+      "logical_latency_cycles_added": 0,
+      "envelope_gather_chain_cycles": 14,
+      "envelope_gather_chain_ns": 11.666666661999999,
+      "token_latency_change": "0 added pipeline stages; phase-sensitive edge alignment and production composition unqualified",
+      "outline_um": [
+        550.776,
+        5529.576
+      ],
+      "channel_um": 358.992,
+      "signal_tracks_per_layer_at_048um_pitch": 7479,
+      "routing_fit": "existing data topology; clock buffer/spine competition must be measured",
+      "physical_status": "UNQUALIFIED; TT>=0 FF>=0 DRC0 required, SS sensitivity reported",
+      "actual_producer_contract": "unavailable for this envelope; phase-varied mapping gate is scoped evidence"
+    },
+    "coherent_zero_skew_margin_with_measured_data_ps": -27.35666700000013,
+    "coherent_required_data_delay_for_15ps_margin_ps": 741.963333,
+    "coherent_limit": "No analytic positive margin at retained measured data delay; CTS must reduce skew AND hold-repair/wire delay. No guaranteed closure.",
+    "registered_cuts": {
+      "bank_clocks_by_chain": [
+        [
+          "clk3",
+          "clk3",
+          "clk2",
+          "clk2",
+          "clk2",
+          "clk1",
+          "clk1",
+          "clk1",
+          "clk0",
+          "clk0",
+          "clk0"
+        ],
+        [
+          "clk4",
+          "clk4",
+          "clk5",
+          "clk5",
+          "clk5",
+          "clk6",
+          "clk6",
+          "clk6",
+          "clk7",
+          "clk7",
+          "clk7"
+        ]
+      ],
+      "crossings_by_chain": [
+        3,
+        3
+      ],
+      "cut_registers": 3072,
+      "added_cycles_per_chain_lower_bound": [
+        3,
+        3
+      ],
+      "added_chain_ns_lower_bound": [
+        2.499999999,
+        2.499999999
+      ],
+      "additional_data_tracks_per_crossing": 512,
+      "cut_register_area": "3072 real mapped FF minimum; area from actual library required before RTL selection",
+      "clock_fanout_increase": 3072,
+      "ordinary_one_edge_cut": "Each leg remains single-cycle; no guaranteed margin from register count alone. Actual placement and inherited skew must be budgeted.",
+      "two_edge_budget_margin_at_retained_path_ps": 505.1566660000001,
+      "two_edge_transport_requirement": "A real registered hold/enable captures on the second edge, producer held stable, and all same-frame lane partials delayed together. Not implemented or supplied by current folded envelope.",
+      "two_edge_steady_rate_upper_bound_fraction": 0.5,
+      "single_extra_edge_claim": "Three bank crossings per half, so minimum +3 chain edges; +1 total is unsupported for this topology.",
+      "native_frame_and_lane_alignment": "unbound; extra FIFO/alignment state cannot be omitted from a production model",
+      "hold_margin": "actual FF capture checks still required; setup slack does not prove hold"
+    },
+    "selection": "No production selection or route authorization from this comparison. Coherent candidate gate preserved; source review must choose experiment with explicit remaining budgets.",
+    "token_composition": "Neither physical envelope has a native token/frame producer; no token-rate gain credit."
+  },
+  "serial_900MHz_unbound_roots": {
+    "authority": "W16 compare coherent roots against registered gather cuts before route selection",
+    "measured_basis": "C1 79315a431 existing CTS max path acc_0_8[471] to acc_0_7[471], estimated parasitics, TT overlay",
+    "measured_launch_to_D_ps": 784.3200000000002,
+    "measured_route_period_ps": 770,
+    "measured_route_setup_uncertainty_ps": 123,
+    "measured_path_launch_minus_capture_clock_ps": 300.80999999999995,
+    "measured_worst_setup_skew_summary_ps": 669.48,
+    "signoff_uncertainty_ps": {
+      "setup": 60,
+      "hold": 25
+    },
+    "design_margin_ps": 15,
+    "coherent_spine": {
+      "scope": "PHYSICAL ENVELOPE, not numeric HC or a token-path implementation",
+      "enable_default": false,
+      "clock_mapping": "south gather clk2, north gather clk6; source/arithmetic clocks unchanged",
+      "clock_roots": 2,
+      "clock_sinks_per_root": 8152,
+      "gather_clock_spine_um_per_half": 2764.788,
+      "clock_max_geometric_reach_um_from_quarter_half_root": 1657.782,
+      "clock_extra_signal_tracks_lower_bound": 2,
+      "clock_buffer_area": "must be measured by CTS; no zero-cost clock claim",
+      "clock_insertion_latency": "CTS measured, not fixed at zero or assumed equal to old banks",
+      "macro_output_to_capture_crossings": 2992,
+      "macro_capture_budget": "real pin-registered lane clk-to-Q plus phase/skew and setup/hold; PENDING",
+      "face_budget": "unchanged actual die I/O delays and 60/25ps signoff uncertainty; PENDING qualification",
+      "port_boundary_bits": 2048,
+      "replica_count": 88,
+      "result_bits_per_lane_per_cycle": 34,
+      "result_gather_bits_per_cycle": 2992,
+      "accumulator_bits_per_cycle": 1024,
+      "memory_port_bytes_per_cycle": 0,
+      "macs_per_cycle": "unchanged real C1 lanes; quarter mapping is not an arithmetic workload",
+      "data_mux_demux_change": 0,
+      "additional_data_flops": 0,
+      "logical_latency_cycles_added": 0,
+      "envelope_gather_chain_cycles": 14,
+      "envelope_gather_chain_ns": 15.555555553999998,
+      "token_latency_change": "0 added pipeline stages; phase-sensitive edge alignment and production composition unqualified",
+      "outline_um": [
+        550.776,
+        5529.576
+      ],
+      "channel_um": 358.992,
+      "signal_tracks_per_layer_at_048um_pitch": 7479,
+      "routing_fit": "existing data topology; clock buffer/spine competition must be measured",
+      "physical_status": "UNQUALIFIED; TT>=0 FF>=0 DRC0 required, SS sensitivity reported",
+      "actual_producer_contract": "unavailable for this envelope; phase-varied mapping gate is scoped evidence"
+    },
+    "coherent_zero_skew_margin_with_measured_data_ps": 250.42111099999977,
+    "coherent_required_data_delay_for_15ps_margin_ps": 1019.741111,
+    "coherent_limit": "No analytic positive margin at retained measured data delay; CTS must reduce skew AND hold-repair/wire delay. No guaranteed closure.",
+    "registered_cuts": {
+      "bank_clocks_by_chain": [
+        [
+          "clk3",
+          "clk3",
+          "clk2",
+          "clk2",
+          "clk2",
+          "clk1",
+          "clk1",
+          "clk1",
+          "clk0",
+          "clk0",
+          "clk0"
+        ],
+        [
+          "clk4",
+          "clk4",
+          "clk5",
+          "clk5",
+          "clk5",
+          "clk6",
+          "clk6",
+          "clk6",
+          "clk7",
+          "clk7",
+          "clk7"
+        ]
+      ],
+      "crossings_by_chain": [
+        3,
+        3
+      ],
+      "cut_registers": 3072,
+      "added_cycles_per_chain_lower_bound": [
+        3,
+        3
+      ],
+      "added_chain_ns_lower_bound": [
+        3.3333333329999997,
+        3.3333333329999997
+      ],
+      "additional_data_tracks_per_crossing": 512,
+      "cut_register_area": "3072 real mapped FF minimum; area from actual library required before RTL selection",
+      "clock_fanout_increase": 3072,
+      "ordinary_one_edge_cut": "Each leg remains single-cycle; no guaranteed margin from register count alone. Actual placement and inherited skew must be budgeted.",
+      "two_edge_budget_margin_at_retained_path_ps": 1060.7122219999999,
+      "two_edge_transport_requirement": "A real registered hold/enable captures on the second edge, producer held stable, and all same-frame lane partials delayed together. Not implemented or supplied by current folded envelope.",
+      "two_edge_steady_rate_upper_bound_fraction": 0.5,
+      "single_extra_edge_claim": "Three bank crossings per half, so minimum +3 chain edges; +1 total is unsupported for this topology.",
+      "native_frame_and_lane_alignment": "unbound; extra FIFO/alignment state cannot be omitted from a production model",
+      "hold_margin": "actual FF capture checks still required; setup slack does not prove hold"
+    },
+    "selection": "No production selection or route authorization from this comparison. Coherent candidate gate preserved; source review must choose experiment with explicit remaining budgets.",
+    "token_composition": "Neither physical envelope has a native token/frame producer; no token-rate gain credit."
+  }
+}
