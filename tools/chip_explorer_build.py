@@ -345,6 +345,18 @@ D['dies'] = dict(
                'stages', 'measured', QPS),
     ),
 )
+# kv-die 2026-10-09 (OWNER DECISION ~04:00 PT, option 1a): the ROM die + KV die pair
+KVD = 'results/arch/qwen_kv_die_20261009'
+if 'qwen_kvdie' in geo and (R / KVD / 'rom_r22k.json').exists():
+    kvr, kvk, kvp = J(R / KVD / 'rom_r22k.json'), J(R / KVD / 'kv_die/plan.json'), J(R / KVD / 'reprice.json')
+    D['dies']['qwen_kvdie'] = dict(
+        title='Qwen3-8B ROM die (r22k) + KV die',
+        geo=gwrap('qwen_kvdie', 'analytical', KVD + ' (tools/qwen_kv_die/explorer_geo.py: rom_r22k_insts.json + tools/qwen_kv_die/kv_die.py build)',
+                  note='generator floorplans (abstract frames), not placed or routed; die GRT / STA queued (kv-die.log)'),
+        area=V(kvr['die_mm2'], 'mm2', 'analytical', KVD + '/rom_r22k.json die_mm2 (ROM die; KV die %.1f mm2 in kv_die/plan.json)' % kvk['die_mm2']),
+        kv_area=V(kvk['die_mm2'], 'mm2', 'analytical', KVD + '/kv_die/plan.json die_mm2'),
+        rate=V(kvp['headline']['tok_s'], 'tok/s', 'analytical', KVD + '/reprice.json headline (attention layer step measured through the link RTL)'),
+    )
 
 # ---------------------------------------------------------------- block catalogue: per die, per group
 INV = HINV

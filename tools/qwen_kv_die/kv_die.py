@@ -44,7 +44,7 @@ SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
 FRAMES = dict(qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
-RELAY_TARGET = 380.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
+RELAY_TARGET = 360.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
 GRID = 43.2                     # relay routing grid (um)
 CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
@@ -516,8 +516,11 @@ def masters(m, k=1, port_bits=None):
     return M
 
 
+_BASE_PORT_WIDTHS = F.port_widths
+
+
 def port_widths(m, k=1):
-    return F.port_widths(m, k)
+    return _BASE_PORT_WIDTHS(m, k)
 
 
 def record(m):
@@ -565,13 +568,34 @@ def check(m):
     return dict(overlaps=len(bad), overlap_examples=bad[:10], outside=len(out), outside_examples=out[:10])
 
 
+def case(m, work):
+    """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
+    phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
+    generator's writer with this die's masters and port widths."""
+    saved = F.masters, F.port_widths
+    F.masters, F.port_widths = masters, port_widths
+    try:
+        man = F.case_real(m, work)
+    finally:
+        F.masters, F.port_widths = saved
+    run = (work / 'run.tcl').read_text()
+    (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
+    man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
+    (work / 'manifest.json').write_text(json.dumps(man, indent=1))
+    return man
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser()
-    ap.add_argument('mode', choices=['plan'])
+    ap.add_argument('mode', choices=['plan', 'case'])
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--r', type=int, default=R)
     a = ap.parse_args(argv)
     m = build(a.r)
+    if a.mode == 'case':
+        m['buses'] = [(bid, cls, bits, eps) for bid, cls, bits, eps in m['buses']]
+        print(json.dumps(case(m, a.out)))
+        return 0
     rec = record(m)
     rec['legality'] = check(m)
     M = masters(m, 1)
