@@ -1,0 +1,20 @@
+{
+  "before": {
+    "name": "qwen-fmt3-wide-calibration",
+    "pid": 3685092,
+    "command_match": "openroad",
+    "peak_ram_gb": 3.2,
+    "owner": "Codex:qwen_hbm_unify/fmt3",
+    "reason": "Wide currentCTS HWM2930680KiB; samewide calCTS3126784KiB/samepipe calCTS3156988KiB pluslauncher90852KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+    "launcher_pid": 1835875
+  },
+  "after": {
+    "name": "qwen-fmt3-wide-calibration",
+    "pid": 1074920,
+    "command_match": "global_route.tcl",
+    "peak_ram_gb": 3.5,
+    "owner": "Codex:qwen_hbm_unify/fmt3",
+    "reason": "Wide completed CTS observed HWM3562184KiB plus driver55252KiB; current GRT1074920 HWM3142724KiB. Preserve measured previous peak rounded3.5GiB as sibling phase bound; no restart or process cap.",
+    "launcher_pid": 1835875
+  }
+}
