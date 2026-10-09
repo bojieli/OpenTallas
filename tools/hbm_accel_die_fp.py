@@ -463,7 +463,7 @@ def _vmerge(*vs):
 
 R25SPS = dict(R25S, split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
               attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True)
-R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True))
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_exact=True))   # router_exact: hgi-takeover die gap 1e
 ADOPTED = R25
 
 
@@ -2510,7 +2510,10 @@ def buses(m):
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
         hl_ += [('vm', f'su_{q}', 2048), (f'su_{q}', 'vm', 2048), (f'su_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'hc_{q}', 1024),
                 (f'su_{q}', 'coll', 1024), ('coll', f'su_{q}', 580 if crtl else 1024), ('quant', f'su_{q}', 512),
-                ('cmdproc', f'su_{q}', 64), (f'su_{q}', 'router', 256)]
+                ('cmdproc', f'su_{q}', 64)] + ([] if V.get('router_exact') and q != 'SW' else
+                                               [(f'su_{q}', 'router', 2 if V.get('router_exact') else 256)])
+        # router_exact (hgi-takeover 2026-10-09, die gap 1e): the router RTL takes only in_valid / in_last from the SU (SW);
+        # the other quarters' 256 b and SW's 254 spare bits carried nothing (wrapper ledger: dropped die inputs)
         if V.get('hub_io'):     # r15 (H10): HC (mHC / Sinkhorn) and SFU results return to the SU
             hl_ += [(f'hc_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'su_{q}', 1024)]
     hl_ += [('su_SW', 'su_SE', 1024), ('su_SE', 'su_SW', 1024), ('su_SW', 'su_NW', 1024), ('su_NW', 'su_SW', 1024),
