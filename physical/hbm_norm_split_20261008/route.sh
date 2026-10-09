@@ -21,7 +21,7 @@ SRAM=ot_sram_1r1w_128x256_m1_r2c2
 if [ "$kind" = grp ]; then
   top=ot_hbm_norm_grp$G
   case $G in 8) DW=${DIEW:-380}; DH=${DIEH:-380} ;; 16) DW=${DIEW:-540}; DH=${DIEH:-540} ;; esac
-  MV="$SRAM=physical/asap7_memory_macros_v2/$SRAM"; MACD=physical/asap7_memory_macros_v2/$SRAM; HALO="4 4"
+  MV="$SRAM=physical/asap7_memory_macros_v2/$SRAM"; MACD=physical/asap7_memory_macros_v2/$SRAM; HALO="${GHALO:-4 4}"
 else
   top=ot_hbm_norm_split_view_g$G
   GV=$V/views/ot_hbm_norm_grp$G
