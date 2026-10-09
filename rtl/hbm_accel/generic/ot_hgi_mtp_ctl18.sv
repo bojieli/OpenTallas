@@ -91,5 +91,6 @@ module ot_hgi_mtp_ctl18 #(
         .step_g(step_g),
         .steps(steps),
         .cyc_total(cyc_total),
-        .cyc_engine(cyc_engine));
+        .cyc_engine(cyc_engine),
+        .cyc_markov(cyc_markov));
 endmodule
