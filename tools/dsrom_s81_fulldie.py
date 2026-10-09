@@ -2905,6 +2905,9 @@ def build_r8(variant=None):
     if PQ_PLACE:          # S81-DIE: the PQ core slot right after the VM (VM read by its N face -> core S face)
         centre.insert(centre.index('vm') + 1, 'pq')
         centre_area['pq'] = PQ_CORE_H * cw / 1e6
+    if HOST_SLAB:         # s81-dies / ingest RQ-ING-1: dsfd_host (ot_rom_host_ingest ROWS / IKEY / CSR) beside the collective
+        centre.insert(centre.index('collective') + 1, 'host')
+        centre_area['host'] = HOST_MM2
     if VM_FACE_MM2 and centre_area['vm'] < VM_FACE_MM2:
         # S81-RERUN v9e (OWNER rule 3, coordinator 2026-10-07): the head die's VM slab (0.89 mm2, ~880 um tall) took
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
@@ -2954,7 +2957,8 @@ def build_r8(variant=None):
                 insts.append(Inst(f'pqrom{j}', rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * up(rc_['h'] + 17.28, GY),
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
         else:
-            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2')
+            slab(n, centre_area[n], x_sp, yy, cw, dom='serial_0p9' if n == 'vm' else 'stream_1p2',
+                 master='dsfd_host' if n == 'host' else None)
         yy += up(centre_area[n] * 1e6 / cw, GY) + SPINE_GAP
     slab('su_n', su_area - su_lo, x_sp, yy, cw, dom='serial_0p9')
     vm = hub['vm']
@@ -3416,6 +3420,10 @@ def buses_r8(m):
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
         bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+    if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
+        for st, ct in m['ctrls'].items():
+            bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (ct.name, 'hw')])
+            bus(f'hc_{st}', 'host_wr', 18, [(ct.name, 'hc'), (hub['host'].name, f'fc{st}')])
     if PQ_PLACE:      # PQ core <-> its ROMs (real ot_rom_4096x72 ports), direct: they abut the core's E face
         for j in range(PQ_ROMS):
             bus(f'pqra_{j}', 'rom_a', 12, [(hub['pq'].name, f'ra{j}'), (f'pqrom{j}', 'a')])
@@ -3744,7 +3752,7 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
-                if pl is None and reg is not None and not fwd and PQ_PLACE:
+                if pl is None and reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY):
                     # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
                     # takes the nearest legal spot within reach (the strip / channel next to the frame)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
@@ -3783,7 +3791,7 @@ def _hop_fix(m, P):
                             break
                     # s81-die-2 2026-10-08: the legacy chain also has the whole-die fallbacks (PQ frame_out, pin relay);
                     # without them a packed frame failed under --nxt-reach where legacy passed (es_12_y0, adopted PQ row)
-                    if pl is None and ((reg is not None and not fwd and PQ_PLACE) or (PIN_RELAY and reg is None)):
+                    if pl is None and ((reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY)) or (PIN_RELAY and reg is None)):
                         for span, rows in ((300.0, 30), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
                                         reach=R - 10.0, span=span, rows=rows)
@@ -5179,6 +5187,10 @@ def die_options(ap):
     ap.add_argument('--face-pin-inset', action='store_true', help='die-gaps 2026-10-08: generated face pins start '
                     '0.048 um inside the outline (abutted node stacks put different-net M5 pins tip to tip under the '
                     'EOL keepout); default off for reproducing r3/r4')
+    ap.add_argument('--host', action='store_true', help='s81-dies / ingest RQ-ING-1: dsfd_host slab (0.10 mm2) beside '
+                    'the collective (HOST class demuxed from the board SerDes) wired to every stack controller; default off')
+    ap.add_argument('--frame-out-relay', action='store_true', help='s81-dies: a frame relay with no spot in its full '
+                    'frame takes the nearest legal spot within reach outside it, as --pq-place does (head die); default off')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
@@ -5216,6 +5228,9 @@ def apply_options(a):
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
     global PQ_PLACE, FIELD_MARGIN
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    global FRAME_OUT_RELAY, HOST_SLAB
+    FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
+    HOST_SLAB = bool(getattr(a, 'host', False))
     if getattr(a, 'field_margin', None) is not None:
         FIELD_MARGIN = float(a.field_margin)     # explicit, every gen (a leftover --pq-place margin must not leak)
     else:
