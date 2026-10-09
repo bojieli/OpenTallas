@@ -14930,3 +14930,13 @@ def qwen_protected_phy_bank_pair_model():
     """Parallel DATA/check reads with statically distinct banks, same capacity."""
     from tools.qwen_protected_phy_bank_map import model
     return model()
+
+
+def qwen_embedding_native_pc_binding_model():
+    from tools.qwen_embedding_native_binding_model import native_pc_model
+    return native_pc_model()
+
+
+def qwen_embedding_typed_phy_binding_model():
+    from tools.qwen_embedding_native_binding_model import typed_phy_model
+    return typed_phy_model()
