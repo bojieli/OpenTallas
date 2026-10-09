@@ -68,3 +68,24 @@ def vm_read_share_model(*, replicas=12, hop_credit=32, native_latency=10,
                 reset_contract='Common reset/quiescence with VM; stale response afterflush faults. No independent reset epoch safety inferred.',
                 other_slot_owners=other_slot_owners,
                 adoption='Native response order and actual slot1 owner reservation must be qualified; not a full-token or SS/FF claim')
+
+
+def runtime_pc_lease_model(*, source_stop_roundtrip_cycles=None, native_service_cycles=None):
+    return dict(schema='opentallas.uarch.s81-runtime-pc-lease.v1',
+                status='COMPONENT_SIZED_PRODUCER_AND_SERVICE_BINDING_PENDING',
+                enabled_default=False, pcs=64, credits_per_pc=8, macs_per_cycle=0,
+                storage_bits=dict(protected_debt=64*8, protected_held=64*2, fault=64, total=704),
+                bytes_per_cycle=dict(request_per_pc=341/8, read_payload_per_pc=32),
+                boundary_bits_per_cycle=dict(actual_request_accept=64, owned_completion=64,
+                    quiescent_ack=64, decode_held=64, lease_want_claim_release=192,
+                    issue_enable_available_held=192),
+                routing_tracks_required=640, available_tracks=None,
+                replicas_mux_fanout='64independent protected4bit counters and lease bits; no global PCmux/data movement added',
+                area_slot_fit='704mutablecontrolbits; native PCproducer placement and first physical timing pending',
+                latency_cycles=dict(grant_revoke=0, claim_state=1, release_state=1,
+                    source_stop_roundtrip=source_stop_roundtrip_cycles,
+                    native_owned_transaction_service=native_service_cycles),
+                token_contribution='Engram lease wait <= source stop roundtrip +8*nativeservice under bounded PCschedule; exact measured service and producerack needed before rate adoption',
+                availability='want && debt0 && explicit sourcequiescent && !decodeheld && !sameedge acceptance; never derive from local mux occupancy alone',
+                reset='Common producer/controller reset with drain or explicit discard epoch; independently resetting debt is not safe',
+                adoption=False)

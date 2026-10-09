@@ -1,0 +1,12 @@
+{
+ "status":"PASS_COMPONENT_REAL_SOURCE_PRODUCER_BINDING_PENDING",
+ "enabled_default":false,"host":"ot-agidock128","admitted_ram_gb":1,
+ "source_pins":"source.sha256",
+ "remote_run":"/srv/opentallas-scratch/codex/ds-control/runtime-pc-lease",
+ "positive":"64PCs each8actualaccepted requests; grantrevocation/explicitquiescent cannot erase debt; eightowned completions drain; missingack and decodeheld prevent lease; claim/release retains ownership",
+ "negatives":{"bad1.log":"orphan completion","bad2.log":"claim before sourcequiescent","bad3.log":"protected counter corruption","bad4.log":"ninth acceptedrequest credit overflow"},
+ "model":"results/rtl/s81_ctrl_20261009/runtime_pc_lease_implemented_model.json",
+ "sizing_correction":"Prebuild641bit row counted oneglobalfault; implementation preserves64independentstickyfaults, now priced704bits total. Original prebuild retained.",
+ "scope":"Completion input must already be validated physicalwd or correcttag/lastread. rk queue-credit return never substitutes for completion. No payload/opcode translator or upstream producer fabricated.",
+ "remaining":["Actual runtime source0 producer before quadrant transport","Real grantrevocation/drain sourcequiescent ack","Actual decodeheld scheduler owner","Sourceacceptedrequest and validatedcompletion integration","Commonreset/quiescence","Native PC service/stop-roundtrip measured latency and contextual SS/FF"]
+}

@@ -1,0 +1,41 @@
+{
+  "schema": "opentallas.uarch.s81-runtime-pc-lease.v1",
+  "status": "COMPONENT_SIZED_PRODUCER_AND_SERVICE_BINDING_PENDING",
+  "enabled_default": false,
+  "pcs": 64,
+  "credits_per_pc": 8,
+  "macs_per_cycle": 0,
+  "storage_bits": {
+    "protected_debt": 512,
+    "protected_held": 128,
+    "fault": 1,
+    "total": 641
+  },
+  "bytes_per_cycle": {
+    "request_per_pc": 42.625,
+    "read_payload_per_pc": 32
+  },
+  "boundary_bits_per_cycle": {
+    "actual_request_accept": 64,
+    "owned_completion": 64,
+    "quiescent_ack": 64,
+    "decode_held": 64,
+    "lease_want_claim_release": 192,
+    "issue_enable_available_held": 192
+  },
+  "routing_tracks_required": 640,
+  "available_tracks": null,
+  "replicas_mux_fanout": "64independent protected4bit counters and lease bits; no global PCmux/data movement added",
+  "area_slot_fit": "641mutablecontrolbits; native PCproducer placement and first physical timing pending",
+  "latency_cycles": {
+    "grant_revoke": 0,
+    "claim_state": 1,
+    "release_state": 1,
+    "source_stop_roundtrip": null,
+    "native_owned_transaction_service": null
+  },
+  "token_contribution": "Engram lease wait <= source stop roundtrip +8*nativeservice under bounded PCschedule; exact measured service and producerack needed before rate adoption",
+  "availability": "want && debt0 && explicit sourcequiescent && !decodeheld && !sameedge acceptance; never derive from local mux occupancy alone",
+  "reset": "Common producer/controller reset with drain or explicit discard epoch; independently resetting debt is not safe",
+  "adoption": false
+}
