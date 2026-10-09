@@ -1,47 +1,72 @@
 {
- "name": "s81ctrl_ctrl_B",
- "block": "dsfd_sp_ctrl",
- "owner": "Claude:ds-control",
- "purpose": "S81 die control-plane master dsfd_sp_ctrl (ot_s81_ctrl: guard + pkg ctrl + stage sequencer + hop framer), variant B: util 35 %, HM 0.01 | PENDING REVIEW (review_queue/ds-control.md RQ-DSC-1): NOT queued until the reviewer approves.",
- "status": "pending review",
- "hosts": [
-  "ot-epyc1tb",
-  "ot-epyc2",
-  "ot-epyc3",
-  "ot-agidock128"
- ],
- "threads": 12,
- "peak_ram_gb": 48,
- "route_hold_margin_ns": 0.01,
- "source": {
-  "branch": "claude/ds-control-20261008",
-  "commit": "PENDING_COMMIT"
- },
- "stages": {
-  "bench": [
-   {
-    "name": "s81ctrl_chain",
-    "cmd": "bash rtl/dsrom_sys/s81_ctrl/test/run_ctrl_chain.sh {SRC} {RUN}/bench > {RUN}/bench.txt 2>&1; [ $(grep -c ' PASS$' {RUN}/bench/chain.log) = 2 ] && echo CHAIN_PASS",
-    "expect": "pass",
-    "pass_regex": "CHAIN_PASS",
-    "threads": 2,
-    "peak_ram_gb": 4
-   }
+  "name": "s81ctrl_ctrl_B",
+  "block": "dsfd_sp_ctrl",
+  "owner": "Claude:ds-control",
+  "purpose": "Reviewed D1 nativecontroller TT pathfinding; statictransparent0cycleuser/1Mpositionrange observer, noSRCauthorization/drop. Generic20%IO is referenceonly, no die-context adoption.",
+  "status": "approved_review53_claude_intake_only",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-agidock128"
   ],
-  "calibrate": {
-   "enabled": false,
-   "reason": "new master, die-generator ports pending (--ctrl-slab, RQ-DSC-2): generic 20 % IO first"
+  "threads": 12,
+  "peak_ram_gb": 48,
+  "route_hold_margin_ns": 0.01,
+  "source": {
+    "branch": "codex/ds-control-resume-20261009",
+    "commit": "bb00a9338",
+    "extra_paths": [
+      "results/rtl/s81_ctrl_20261009"
+    ],
+    "required_files": [
+      "physical/s81_ctrl/rtl/dsfd_sp_ctrl.sv",
+      "physical/s81_ctrl/rtl/dsfd_sp_ctrl_core.sv",
+      "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv",
+      "results/rtl/s81_ctrl_20261009/stage_range/ctrl_chain.log"
+    ]
   },
-  "route": {
-   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" UTIL=\"35\" PD=\"0.55\" HM=\"0.01\" NEED=\"48\" bash physical/s81_ctrl/route.sh {LABEL} dsfd_sp_ctrl",
-   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
-   "logs": [
-    "{RUN}/routes/{LABEL}/run.log"
-   ]
-  }
- },
- "verdict": {
-  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
-  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
- }
+  "stages": {
+    "bench": [
+      {
+        "name": "pinned_native_ctrl_chain_exact",
+        "cmd": "grep -q 'mut=0 forge=0 .* PASS' {SRC}/results/rtl/s81_ctrl_20261009/stage_range/ctrl_chain.log && echo CTRL_CHAIN_EXACT_PASS",
+        "expect": "pass",
+        "pass_regex": "CTRL_CHAIN_EXACT_PASS",
+        "threads": 1,
+        "peak_ram_gb": 1
+      },
+      {
+        "name": "pinned_STOP_mutant",
+        "cmd": "if grep -q 'TB_S81_CTRL_CHAIN TIMEOUT .* FAIL' {SRC}/results/rtl/s81_ctrl_20261009/stage_range/ctrl_chain.log; then echo CTRL_STOP_MUTANT_EXPECTED_FAIL; exit 1; fi; exit 0",
+        "expect": "fail",
+        "fail_regex": "CTRL_STOP_MUTANT_EXPECTED_FAIL",
+        "threads": 1,
+        "peak_ram_gb": 1
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "TTpathfinding/reference20%IO only; actualfloorplan clockarrival/nativecredit relay budgets pending, no die-signoff claim."
+    },
+    "route": {
+      "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; SRC=\"{SRC}\" OUT=\"{RUN}/routes\" UTIL=\"35\" PD=\"0.55\" HM=\"0.01\" NEED=\"48\" bash physical/s81_ctrl/route.sh {LABEL} dsfd_sp_ctrl",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ]
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json"
+  },
+  "route_corner": "TC",
+  "route_hold_corners": "TC,BC",
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "Explicit generic20%IO TT pathfinding, no nativefloorplan budget/SSFFcontext adoption."
+  },
+  "notes": "Realbase+STOPmutant source-pinned atbb00a9338. Exactreceipt reused acrosssix sameRTL variants; no repeated expensivecompile. Model actualcore/diefit remainsrequired, not old0.15mm2estimate.48GiB firstfullcontroller routecapacityreservation is unmeasured; inventory/actualpeak mustbe recorded byClaudeintake. No process/address-space/time caps."
 }
