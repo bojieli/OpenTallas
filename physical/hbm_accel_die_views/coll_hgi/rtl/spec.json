@@ -12,12 +12,12 @@
   "pll_serial",
   "pll_hbm"
  ],
- "note": "INTERIM, REDUCED: unchanged ot_hbm_accel_tu_endpoint with FIFO depths RXAW = QAW = TXAW = 4 (16 entries); at the RTL defaults (RXAW 8, QAW 6, TXAW 6) its flop FIFOs hold ~2.5 Mb, more std-cell area than the 1.96 mm2 slot: the endpoint needs SRAM FIFOs before a full-depth view exists. pclk = clk (the PHY clock is the link clock region outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.",
+ "note": "HGI-1 collective view (hgi-takeover 2026-10-09): ot_hgi_coll_ep (PSG endpoint + ot_hgi_coll_record + config station rx) with the legacy die binding plus the HGI record / config / row-formatter / VM-address pins. INTERIM, REDUCED: unchanged ot_hbm_accel_tu_endpoint with FIFO depths RXAW = QAW = TXAW = 4 (16 entries); at the RTL defaults (RXAW 8, QAW 6, TXAW 6) its flop FIFOs hold ~2.5 Mb, more std-cell area than the 1.96 mm2 slot: the endpoint needs SRAM FIFOs before a full-depth view exists. pclk = clk (the PHY clock is the link clock region outside this block). Extra pins refclk / por: the die has no clock / reset input for its PLL owner.",
  "instances": [
   {
    "name": "ep",
-   "module": "ot_hbm_accel_tu_endpoint",
-   "file": "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv",
+   "module": "ot_hgi_coll_ep",
+   "file": "rtl/hbm_accel/generic/collective/ot_hgi_coll_ep.sv",
    "params": {
     "ENABLE": 1,
     "RXAW": 4,
@@ -61,6 +61,17 @@
      "die:t_su_NW[578:580]",
      "die:t_su_SE[578:580]",
      "die:t_su_NE[578:580]"
+    ],
+    "hgi_rec": "die:f_hgi_cmdproc[0:968]",
+    "hgi_ret": "die:t_hgi_cmdproc[0:3]",
+    "hgi_cfg": "die:f_hgi_cfg[0:40]",
+    "hgi_rowfmt_o": "fold",
+    "hgi_rowfmt_i": "cfg",
+    "hgi_vmaddr": [
+     "die:t_hgi_vmaddr_SW[0:80]",
+     "die:t_hgi_vmaddr_NW[0:80]",
+     "die:t_hgi_vmaddr_SE[0:80]",
+     "die:t_hgi_vmaddr_NE[0:80]"
     ]
    }
   }
@@ -93,64 +104,6 @@
  ],
  "kept_out_regs": true,
  "face_stages": 5,
- "share_tree": {
-  "min": 3,
-  "fanout": 4
- },
- "port_stages": {
-  "f_cmdproc": 3,
-  "t_cmdproc": 3,
-  "f_su_SW": 4,
-  "t_su_SW": 4,
-  "llk_S0": 3,
-  "llk_S1": 3,
-  "llk_S2": 3,
-  "por_stream": 3,
-  "llk_N0": 3,
-  "llk_N1": 3,
-  "f_su_NW": 4,
-  "t_su_NW": 4,
-  "f_su_SE": 4,
-  "t_su_SE": 4,
-  "por_link": 3,
-  "llk_S3": 3,
-  "llk_S4": 3,
-  "llk_N2": 3,
-  "llk_N3": 3,
-  "f_su_NE": 4,
-  "t_su_NE": 4,
-  "por_serial": 3,
-  "por_hbm": 3
- },
- "port_stages_basis": {
-  "rule": "owner cost rule 2026-10-06: per face N = clamp(ceil(d / 380 um), 2, 5), d = in-view core endpoint <-> pin wire (max over the port bits); one hop <= 380 um at the 770 ps route target",
-  "d_um": {
-   "f_cmdproc": 939,
-   "t_cmdproc": 939,
-   "f_su_SW": 1317,
-   "t_su_SW": 1183,
-   "llk_S0": 1071,
-   "llk_S1": 939,
-   "llk_S2": 808,
-   "por_stream": 808,
-   "llk_N0": 939,
-   "llk_N1": 1071,
-   "f_su_NW": 1204,
-   "t_su_NW": 1317,
-   "f_su_SE": 1336,
-   "t_su_SE": 1172,
-   "por_link": 1051,
-   "llk_S3": 920,
-   "llk_S4": 761,
-   "llk_N2": 892,
-   "llk_N3": 1051,
-   "f_su_NE": 1215,
-   "t_su_NE": 1336,
-   "por_serial": 842,
-   "por_hbm": 1121
-  },
-  "source": "pin -> view centre Manhattan, max over the port bits (no placed core yet)"
- },
  "contracts": {
   "ep.inj_data": "SU-quarter ownership (hgi-takeover 2026-10-09, defined by the die-integration owner): inject flit i (inj_idx, broadcast to all four quarters on t_su_q[546:580]) is owned by quarter i mod 4 in the order SW, NW, SE, NE; the owner drives its 1024-bit f_su_q (hfd_su t_coll), the other three drive 0, so the OR is the owner data. The functional SU inject gate is one AND per quarter (the physical envelope hfd_su has no inject select); hfd_coll rtl_hgi asserts at most one non-zero quarter."
  },
@@ -164,5 +117,8 @@
    "reason": "spare TX lanes: 9 x 487 b uniform stripes hold 4,376 b"
   }
  },
- "replaced_when_hgi": "coll"
+ "hgi_unit": "coll",
+ "open_items": [
+  "ROW_GATHER datapath: the row formatter needs an HBM row reader (svc native read client, as ot_hfd_loader_kport) and an inject source into the endpoint; until it exists hgi_rowfmt_o / hgi_rowfmt_i are unbound (visible TIED_OFF 97 b)"
+ ]
 }

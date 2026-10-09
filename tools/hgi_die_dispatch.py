@@ -119,6 +119,13 @@ def install(m, buses, paths, units):
             buses.append((name, 'hub', bits, eps))
             paths[name] = [name]
             names.add(name)
+        if r['unit'] == 'coll':
+            # A / O effective bases of a collective record -> the SU quarters' inject / deliver addressing (80 b each)
+            for q in ('SW', 'NW', 'SE', 'NE'):
+                if f'su_{q}' in hub:
+                    name = f'hgi_vmaddr_{q}'
+                    buses.append((name, 'hub', 80, [(peer, f't_hgi_vmaddr_{q}'), (hub[f'su_{q}'].name, 'f_hgi_vmaddr')]))
+                    paths[name] = [name]
         if r['unit'] in CFG_UNITS:
             name = f"hgi_cfg_{r['unit']}"
             buses.append((name, 'hub', CFG_BITS, [(cp, f"t_hgi_cfg_{r['unit']}"), (peer, 'f_hgi_cfg')]))
