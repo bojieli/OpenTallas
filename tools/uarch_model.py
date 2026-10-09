@@ -14165,7 +14165,7 @@ def hbm_dskv_shadow_sram_model(*, utilisation=0.55, macro_capture_cycles=1):
     macro_area = 94.824 * 41.040
     # One transaction at a time. Request/response credit returned only on consume.
     write_cycles = 4  # accept, encode, macro write, response consume
-    read_cycles = macro_capture_cycles + 4  # issue, capture, decoder2, consume
+    read_cycles = macro_capture_cycles + 5  # accept, issue, capture, decoder2, consume
     return dict(scope='prebuild estimate; opt-in, unqualified',
         arithmetic=dict(MACs_per_cycle=0, compute_intensity=0),
         memory=dict(logical_sectors=136, logical_bytes=4352, data_macros=2,
@@ -14182,9 +14182,9 @@ def hbm_dskv_shadow_sram_model(*, utilisation=0.55, macro_capture_cycles=1):
             logic_area='pending measured synthesis; cannot claim slot fit',
             utilisation=utilisation),
         latency=dict(write_cycles=write_cycles, read_cycles=read_cycles,
-            preload_cycles=17*write_cycles,
-            key_merge_2sector_cycles=2*(read_cycles+write_cycles+1),
-            key_merge_3sector_cycles=3*(read_cycles+write_cycles+1),
-            upper_added_cycles_per_token_8_index_layers=8*3*(read_cycles+write_cycles+1),
-            upper_added_ns_per_token_1p2GHz=8*3*(read_cycles+write_cycles+1)/1.2,
+            preload_cycles_upper_bound=17*(write_cycles+2),
+            key_merge_2sector_cycles_upper_bound=2*(read_cycles+write_cycles+5),
+            key_merge_3sector_cycles_upper_bound=3*(read_cycles+write_cycles+5),
+            upper_added_cycles_per_token_8_index_layers=8*3*(read_cycles+write_cycles+5),
+            upper_added_ns_per_token_1p2GHz=8*3*(read_cycles+write_cycles+5)/1.2,
             note='full key golden mapping unchanged; stalls add actual consumer delay'))
