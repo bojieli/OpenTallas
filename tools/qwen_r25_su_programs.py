@@ -93,6 +93,7 @@ def main():
     from pathlib import Path
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--exe',type=Path)
+    ap.add_argument('--fp',choices=('rtl','dpi'),default='rtl')
     ap.add_argument('--out',type=Path)
     ap.add_argument('--n',type=int,default=64)
     ap.add_argument('--m',type=int,default=16)
@@ -102,7 +103,10 @@ def main():
         if not a.out:
             ap.error('--out required with --exe')
         import hbm_su_c12 as S
-        S.apply(C)
+        if a.fp == 'dpi':
+            import dshbm_baseline_measure as D
+            C.LIB=D.fp_dpi_lib(C.LIB)
+        S.apply(C,dpi=(a.fp=='dpi'))
         old=C.run_case
         C.run_case=lambda exe,d,nops,x=None:old(exe,d,nops,x,timeout=None)
     for stage,mutant in [(s,m) for s in ('rmsnorm','qknorm','softmax','swiglu') for m in (False,True)]:
@@ -112,7 +116,7 @@ def main():
             mem,ops,checks=reference(stage,mutant,return_case=True)
             compare,trace,_,_=C.run_program(a.exe,a.out/(stage+('_mutant' if mutant else '')),mem,ops,a.n,a.m,chain=False)
             got=trace['vm'];assert got is not None
-            rec.update(rtl_compare=compare,n=a.n,m=a.m,
+            rec.update(rtl_compare=compare,n=a.n,m=a.m,fp=a.fp,
                 rtl_golden_mismatches=sum(int(np.count_nonzero(got[x:x+len(w)]!=w)) for x,w in checks))
             assert compare['pass_'],compare
             assert (rec['rtl_golden_mismatches']>0)==mutant

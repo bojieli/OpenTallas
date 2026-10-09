@@ -39,13 +39,13 @@ def program(mutant=None):
 
 def fixture(mutant=None):
     rng = np.random.default_rng(8191)
-    x = G.to_bf16(rng.standard_normal((HEADS, HD)).astype(np.float32)*3)
+    x = rng.standard_normal((HEADS, HD)).astype(np.float32)*3
     # Released Qwen theta=1e6, full 128-dimensional rotate_half. Table
     # construction is a fixture, not checkpoint-provided production data.
     inv = np.power(1e6, -np.arange(0, HD, 2, dtype=np.float64)/HD)
     angles = np.float32(POSITION) * inv.astype(np.float32)
-    cos = np.tile(np.cos(angles).astype(np.float32), 2)
-    sin = np.tile(np.sin(angles).astype(np.float32), 2)
+    cos = np.tile(np.cos(angles.astype(np.float64)).astype(np.float32), 2)
+    sin = np.tile(np.sin(angles.astype(np.float64)).astype(np.float32), 2)
     signed = sin.copy(); signed[:64] = G.neg(signed[:64])
     m = C.Mem(np.zeros(1 << C.VMA, np.uint32),
               np.zeros(1 << C.KVA, np.uint32),
@@ -73,6 +73,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--rtl', action='store_true')
+    ap.add_argument('--fp', choices=('rtl','dpi'), default='rtl')
     ap.add_argument('--exe', type=Path, help='previously source-matched c12 campaign Vtb')
     ap.add_argument('--n', type=int, default=64)
     ap.add_argument('--m', type=int, default=16)
@@ -89,7 +90,10 @@ def main():
     C.write_case(a.out/'inputs', fixture()[0], program())
     if a.rtl:
         import hbm_su_c12 as S
-        S.apply(C)
+        if a.fp == 'dpi':
+            import dshbm_baseline_measure as D
+            C.LIB = D.fp_dpi_lib(C.LIB)
+        S.apply(C, dpi=(a.fp == 'dpi'))
         # Host resource guard admits the build; no wall-time deadline.
         original_run_case = C.run_case
         C.run_case = lambda exe, d, nops, x=None: original_run_case(exe, d, nops, x, timeout=None)
@@ -108,8 +112,8 @@ def main():
                 orders=trace['orders'], acc=trace['acc'], emits=trace['emits'], rets=trace['rets'])
             assert compare['pass_'], compare
             assert (mismatch == 0) == (variant is None)
-        rec['rtl'] = dict(n=a.n,m=a.m,rows=rows)
-        if a.n == 1024 and a.m == 256:
+        rec['rtl'] = dict(n=a.n,m=a.m,fp=a.fp,rows=rows,scope='minimum SU controller mechanism; no production quarter composition or timing claim')
+        if a.n == 1024 and a.m == 256 and a.fp == 'rtl':
             rec['production_cycles'] = rows['positive']['end'][0]
     rec['source_sha256'] = {str(p.relative_to(C.ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()
                             for p in [Path(__file__).resolve(), *C.RTL,*C.LIB,C.TB]}
