@@ -24,7 +24,10 @@ module tb_dsrom_engram_prefetch #(
         .rd_v(rv),.rd_addr(ra),.out_v(ov),.out_data(out),.out_ce(ce),.out_ue(ue),.fault(fault));
     always @(negedge ck) if(rst_n&&ov) begin
         if(INJECT==0 || INJECT==1) begin
-            if(out!==value(read_count)) $fatal(1,"prefetch payload mismatch row%0d",read_count);
+            if(out!==value(read_count)) begin
+                $display("PREFETCH_MISMATCH got=%h expected=%h code=%h group=%d",out,value(read_count),dut.read_code,dut.rg_q);
+                $fatal(1,"prefetch payload mismatch row%0d",read_count);
+            end
             if(ce!==(INJECT==1)||ue) $fatal(1,"prefetch correction flags wrong");
         end else if(!ue) $fatal(1,"prefetch double error not rejected");
         read_count=read_count+1;
