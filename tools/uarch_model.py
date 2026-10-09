@@ -14545,3 +14545,9 @@ def hbm_native_mtp_stop_model(tw=17):
     """Full-context native MTP stop/ready successor with composed ACK cycles."""
     from hbm_native_mtp_stop_model import model
     return model(tw=tw)
+
+
+def hbm_native_mtp_transaction_model():
+    """Full native command ownership/reset epoch join model."""
+    from hbm_native_mtp_transaction_model import model
+    return model()
