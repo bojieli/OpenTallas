@@ -15035,3 +15035,8 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def qwen_tile_raw_group_model():
+    from uarch_model_qwen_tile_raw_group import model
+    return model()
