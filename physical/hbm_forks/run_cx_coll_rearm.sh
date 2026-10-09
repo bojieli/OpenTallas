@@ -34,7 +34,7 @@ for mode in ${MODES:-positive premature_done};do
  if [ "$mode" = positive ];then
    "$O/positive/Vtb_hgi_coll_rearm" +VEC="$O/fx" +DUPLICATE_LAST=1 > "$O/duplicate.log" 2>&1
    grep -q 'REARM_DUPLICATE PASS' "$O/duplicate.log"
-   ! grep -q '%Fatal' "$O/duplicate.log"
+   if grep -q '%Fatal' "$O/duplicate.log";then echo "DUPLICATE_GATE_ERROR";exit 4;fi
  fi
 done
 echo 'CX_COLL_REARM PASS' >> "$O/verdict.txt"

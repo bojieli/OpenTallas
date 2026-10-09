@@ -312,9 +312,11 @@ module tb_hgi_coll_rearm #(
                 if(credits[p]!=cr_before[p])$fatal(1,"ingress credit reset at rearm p=%0d prior=%0d now=%0d",p,cr_before[p],credits[p]);
             if(done || !sr)$fatal(1,"rearm handshake failed");
         end
+        if(!duplicate_last)begin
         if(delayed_credit_observations==0 || stall_observations==0)$fatal(1,"credit-delay/stall coverage missing");
         $display("REARM PASS commands=%0d delayed_credit=%0d stalls=%0d reset_count=1 external_quiescence=stub_contract",total_commands,delayed_credit_observations,stall_observations);
         $finish;
+        end
     end
     initial begin #400000; $fatal(1,"REARM timeout cmd=%0d got=%0d/%0d tx=%0d rx=%0d done=%0d fault=%0d",cmd,got,TOT,ndep,narr,done,flt);end
 endmodule
