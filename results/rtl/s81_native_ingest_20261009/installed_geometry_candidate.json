@@ -1,0 +1,55 @@
+{
+  "scope": "candidate ND1/NS4 golden descriptor geometry; runtime reader/physical capacity installation not yet bound",
+  "stacks": [
+    {
+      "id": 0,
+      "name": "SW",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500
+    },
+    {
+      "id": 1,
+      "name": "SE",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500
+    },
+    {
+      "id": 2,
+      "name": "NW",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500
+    },
+    {
+      "id": 3,
+      "name": "NE",
+      "physical_capacity_sectors": 703125000,
+      "usable_sectors": 632812500
+    }
+  ],
+  "capacity_grade": "configured simulation/model capacity, not inferred from K_HAW or attested commercial hardware",
+  "engram_home_stack_ids": [
+    0,
+    1
+  ],
+  "host_stack_stride_sectors": 268435456,
+  "users": 64,
+  "positions_per_user": 1048576,
+  "rope_positions": 1048576,
+  "engram_pc_local_atom_count": 13500720,
+  "window_ring_rows": 128,
+  "window_stack_id": 0,
+  "mutable_regions": [
+    {
+      "kind": "KEY",
+      "global_base_sector": 0
+    },
+    {
+      "kind": "CKV",
+      "global_base_sector": 35651584
+    },
+    {
+      "kind": "WINDOW",
+      "global_base_sector": 186646528
+    }
+  ]
+}
