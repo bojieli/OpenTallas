@@ -62,7 +62,11 @@ module ot_qfd_res_ser #(
     parameter integer RS = 12,          // stall-loop edges: rok low at edge t -> at most RS more engine edges
     parameter integer CRB = 4,          // credits (the merge's input FIFO depth for this band)
     parameter integer USE_MACRO = 0,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    // TSR = 1 (safe-qwen S-D2, 2026-10-08; 0 = unchanged): the beat's slot select t2_s -> o_data (8:1 x 512 b, routed
+    // TT -1,143 post-CTS: t2_s[0] -> o_data[400], 30 of 34 cells buffers) comes from a REGISTERED copy per 64-bit output
+    // slice (keep_hierarchy leaves, registered from t1_s with t2_s, so 0 added cycles); each copy drives one slice.
+    parameter integer TSR = 0
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -179,8 +183,23 @@ module ot_qfd_res_ser #(
         t1_nul <= d_nul; t1_end <= d_end; t1_s <= d_s; t1_row <= d_row; t1_mask <= d_mask;
         t2_nul <= t1_nul; t2_end <= t1_end; t2_s <= t1_s; t2_row <= t1_row; t2_mask <= t1_mask;
         o_nul <= t2_nul; o_end <= t2_end; o_row <= t2_row; o_mask <= t2_nul ? {W{1'b0}} : t2_mask;
-        o_data <= cap[t2_s*512 +: 512];
     end
+    generate if (TSR == 0) begin : g_od
+        always @(posedge clk) o_data <= cap[t2_s*512 +: 512];
+    end else begin : g_odr
+        initial if (NS > 8) $error("ot_qfd_res_ser TSR=1: NS <= 8 (3-bit select leaves)");
+        genvar k;
+        for (k = 0; k < W * 32 / 64; k = k + 1) begin : g_sl
+            wire [2:0] sk;
+            (* keep_hierarchy *) ot_qfd_rs_sel3 u_c (.clk(clk), .d(t1_s), .q(sk));
+            always @(posedge clk) o_data[k*64 +: 64] <= cap[sk*512 + k*64 +: 64];
+        end
+    end endgenerate
+endmodule
+
+// TSR leaf: a kept 3-bit register (fixed width, no parameters: Yosys 0.68 asserts on parameterised keep_hierarchy)
+module ot_qfd_rs_sel3 (input wire clk, input wire [2:0] d, output reg [2:0] q);
+    always @(posedge clk) q <= d;
 endmodule
 
 
