@@ -1,0 +1,21 @@
+{
+ "status":"pass",
+ "source_commit":"a26ba1384",
+ "producer_source_commit":"8c8b3947f",
+ "RTL_interceptor_commit":"9dc516b47",
+ "host":"ot-agidock128",
+ "admission_gib":4,
+ "cases":4,
+ "scope":"Actual QWEN1 two-half32SM CP and token runtime with plain finite coalescer; native completion and SM arithmetic results are synthetic providers, not numerical qualification",
+ "vectors":[131071,131072,151935],
+ "position":524288,
+ "records_per_positive":2,
+ "native_requests_per_positive":2,
+ "ordinary_SM_launches_per_positive":6,
+ "positive":"Actual supported SM launch before south SU creates genuine CP pulse skew; native namespace never reaches ordinary SM; full owner74 and original masks survive readiness/completion; TOKEN18 and positionMSB preserved",
+ "negative":"Wrong TOKEN18 owner bit in native completion fences real joined CP path without launching post-SU SM kernels",
+ "evidence":["token131071.log","token131072.log","token151935.log","foreign.log"],
+ "native_arithmetic_qualified":false,
+ "actual_native_SU_dispatch_bound":false,
+ "physical_qualified":false
+}
