@@ -3,7 +3,7 @@
 // qfd_sp_constants_sequencer master (IS / OS stations) against the bare controller + TP sequencer + stores
 // wired as the runtime die wires them; every output of the master must equal the reference's IS + OS cycles
 // earlier (4-state).  MUT = 1 inverts one input-station bit (tp_token[0]): must FAIL.
-module tb_qfd_constants_sequencer;
+module tb_fqh_txn;
     parameter integer IS = 1, OS = 1, MUT = 0, CYCLES = 6000, SEED = 3, RT = 4, FQ_HEAD = 0;
     localparam integer W = 16, G = 6144, AW = 24, NW = 18, PAW = 12, SW = 64, LV = 7, D = 4;
     localparam integer SMIN = 7, SMAX = 11, TCUT = 7, L = IS + OS;
@@ -300,7 +300,7 @@ module tb_qfd_constants_sequencer;
     always @(posedge clk) if (res_re_w) rtok_l <= rcore_tok_w;
     assign rme_go_w = r_po_me_go; assign rsu_go_w = r_po_su_go; assign rme_amax_w = r_po_me_i_amax;
     assign rsu_sfu_w = r_po_su_i_sfu; assign rme_en_w = r_me_clk_en; assign r_su_tok = rtok_l;
-    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(FQ_HEAD)) ref_core (
+    ot_qwen_rom_core_ctrl #(.W(W), .G(G), .AW(AW), .NW(NW), .PAW(PAW), .SU_VEC(1), .SW(SW), .LV(LV), .KV_FP8(1), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1), .INT8_EMBED(1), .QWEN_FULLSHAPE(1), .HID(4096), .HALF(64), .HD(128), .EMB_CODE_LANES(64), .EMB_ADDR_BASE(0), .KV_HBM(1), .KV_VEC_WRITE_BRIDGE(1), .ME_STALL(1), .ME_IDLE_GATE(1), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT), .FQ_HEAD(0)) ref_core (
         .clk(clk),
         .rst_n(rst_n),
         .start(core_start),
@@ -555,5 +555,19 @@ module tb_qfd_constants_sequencer;
         if (bad == 0 && starts > 3) $display("PASS qfd_constants_sequencer IS=%0d OS=%0d cycles=%0d starts=%0d outputs=%0d bits latency+%0d", IS, OS, CYCLES, starts, OW, L);
         else $display("FAIL qfd_constants_sequencer mismatching cycles=%0d first=%0d", bad, first_bad);
         $finish;
+    end
+    integer fm, fr;
+    initial begin fm = $fopen("/tmp/sq_b/fqh_m.txt", "w"); fr = $fopen("/tmp/sq_b/fqh_r.txt", "w"); end
+    always @(posedge clk) begin
+        if (m_po_me_go) $fdisplay(fm, "ME %h %h %h %h %h %h %h", m_po_me_i_nout, m_po_me_i_tiles, m_po_me_i_k, m_po_me_i_wbase, m_po_me_i_xbase, m_po_me_i_obase, m_po_me_i_split);
+        if (r_po_me_go) $fdisplay(fr, "ME %h %h %h %h %h %h %h", r_po_me_i_nout, r_po_me_i_tiles, r_po_me_i_k, r_po_me_i_wbase, r_po_me_i_xbase, r_po_me_i_obase, r_po_me_i_split);
+        if (m_po_su_go) $fdisplay(fm, "SU %h %h %h %h %h %h", m_po_su_i_nout, m_po_su_i_nin, m_po_su_i_abase, m_po_su_i_bbase, m_po_su_i_dbase, m_po_su_i_imm1);
+        if (r_po_su_go) $fdisplay(fr, "SU %h %h %h %h %h %h", r_po_su_i_nout, r_po_su_i_nin, r_po_su_i_abase, r_po_su_i_bbase, r_po_su_i_dbase, r_po_su_i_imm1);
+        if (m_kvd_v) $fdisplay(fm, "KV %h %h %h", m_kvd_wbase, m_kvd_tiles, m_kvd_pos);
+        if (r_kvd_v) $fdisplay(fr, "KV %h %h %h", r_kvd_wbase, r_kvd_tiles, r_kvd_pos);
+        if (dut.u_ctrl.load) $fdisplay(fm, "LD %h", dut.u_ctrl.ir);
+        if (ref_core.load) $fdisplay(fr, "LD %h", ref_core.ir);
+        if (m_s_done) $fdisplay(fm, "DONE");
+        if (r_s_done) $fdisplay(fr, "DONE");
     end
 endmodule
