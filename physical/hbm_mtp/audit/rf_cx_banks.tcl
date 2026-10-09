@@ -14,6 +14,9 @@ foreach inst [$block getInsts] {
         set net [$iterm getNet]
         if {$net == "NULL"} {continue}
         set mt [$iterm getMTerm]
+        # Supply pins do not participate in data/control timing cones.
+        set sigtype [$mt getSigType]
+        if {$sigtype == "POWER" || $sigtype == "GROUND"} {continue}
         puts $fp [join [list [$inst getName] [$master getName] [$mt getName] [$mt getIoType] [$net getName]] "\t"]
     }
 }
