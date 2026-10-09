@@ -71,6 +71,30 @@
      "peak_ram_gb": 250,
      "owner": "Codex:hbm_continuation",
      "reason": "Admitted full connected FA6 KEYLEG24 SCORE32 LA7 CRED128 gate; expected250GiB; persistent remaining peak until actualworker exit"
+    },
+    {
+     "name": "hbm-hc40-physical",
+     "pid": 1873433,
+     "command_match": "hc_row40_sram900_pathfinding",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "FullW32 realFP/40macro remainingstage128GiB envelope conservatively reserved against stabledriver; actualYosys9.88GiB; futurePNR peakunmeasured"
+    },
+    {
+     "name": "hbm-retry545-compact",
+     "pid": 873659,
+     "command_match": "hbm-retry545-pathfinding-r3",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry",
+     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT2.44GiB"
+    },
+    {
+     "name": "hbm-retry545-wide",
+     "pid": 3630405,
+     "command_match": "hbm-retry545-pathfinding-wide-r1",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry",
+     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT4.24GiB"
     }
    ],
    "paused_admission_previous": {
