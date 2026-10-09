@@ -1,0 +1,32 @@
+{
+  "read_latency_cycles": 2,
+  "extra_cycles_per_sweep": 1,
+  "token_extra_cycles_formula": "sum(measured_selector_cycle_deltas per token stage)",
+  "additional_credit_recycle_cycles": 1,
+  "nominal_drain_cycles_formula": "(gc_sweeps + pass2_sweeps + pass3_sweeps + emit_sweeps) * extra_cycles_per_sweep",
+  "token_gain_claim": false,
+  "macs_per_cycle": 0,
+  "replicas": 4,
+  "memory": {
+    "topk_bytes_per_cycle": 74,
+    "candidate_bytes_per_cycle": 8.5,
+    "topk_bits_per_cycle": 592,
+    "candidate_bits_per_cycle": 68
+  },
+  "capture_payload_bits": 2640,
+  "capture_metadata_bits": 32,
+  "mux_demux_added": 0,
+  "cross_boundary_bits_added": 0,
+  "routing_tracks_added": 0,
+  "reservations": {
+    "gc_lines": 8,
+    "output_beats": 4,
+    "policy": "issue counts outstanding until pack exit/output enqueue; capture included"
+  },
+  "area": {
+    "capture_flops": 2672,
+    "floorplan_fit": "requires real mapped area and pins; not physically qualified"
+  },
+  "latency_clock_ns": 0.8333333333333334,
+  "physical_status": "candidate; macro output must terminate at capture D pins"
+}
