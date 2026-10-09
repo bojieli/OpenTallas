@@ -56,9 +56,9 @@ module ot_hgi_seq #(
     input  wire [3:0]    db_gen,
     input  wire [1:0]    db_entry,
     // record fetch: 32 B sectors, in-order responses
-    output reg           f_req_v,
+    output wire          f_req_v,
     input  wire          f_req_rdy,
-    output reg  [39:0]   f_req_addr,
+    output wire [39:0]   f_req_addr,
     input  wire          f_rsp_v,
     input  wire [255:0]  f_rsp_data,
     // VM read port (I tables, the END token): one outstanding, in order
@@ -111,7 +111,7 @@ module ot_hgi_seq #(
                        M_LSTR = 136, M_DSEL = 168, M_DMUL = 174, M_NSEL = 201, M_L1STR = 207;
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
-                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12;
+                     S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13;
     reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
@@ -120,7 +120,7 @@ module ot_hgi_seq #(
     reg [4:0]   inflight, drop;
     reg         fetching;
     wire [RB:0] frp_al = {frp[RB:1], 1'b0};
-    wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0} + (f_req_v ? 2 : 0);
+    wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0};
     reg         wv;                      // a sector has landed since the doorbell (before it, rp may lead wp by 1)
     wire [RB:0] avail = wv ? wp - rp : {(RB+1){1'b0}};
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
@@ -273,7 +273,22 @@ module ot_hgi_seq #(
     assign cpl_v = (st == S_CPL);
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
     wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
-    wire [4:0] fl_after = inflight + ((f_req_v && f_req_rdy) ? 5'd1 : 5'd0) - (f_rsp_v_r ? 5'd1 : 5'd0);
+    wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
+    // fetch requests leave through a 2-entry FIFO (registered boundary: f_req_rdy only pops it); inflight counts
+    // requests PUSHED and not yet answered (every pushed request is sent and answered; a new doorbell drops them)
+    reg [39:0] rqf [0:1]; reg rqh; reg [1:0] rqn;
+    assign f_req_v = (rqn != 2'd0);
+    assign f_req_addr = rqf[rqh];
+    wire       rq_push = fetching && (rqn != 2'd2) && (inflight < NOS) && (used + 2 <= RW);
+    wire       rq_pop = f_req_v && f_req_rdy;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rqh <= 1'b0; rqn <= 2'd0; end
+        else begin
+            if (rq_push) rqf[rqh ^ (rqn != 2'd0)] <= faddr;
+            if (rq_pop) rqh <= ~rqh;
+            rqn <= rqn + (rq_push ? 2'd1 : 2'd0) - (rq_pop ? 2'd1 : 2'd0);
+        end
+    wire [4:0] fl_after = (rq_push && !f_rsp_v_r) ? infl_p1 : (!rq_push && f_rsp_v_r) ? infl_m1 : inflight;
     wire       is_ctl = (h_unit == 4'd0);
     wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
     wire [1:0] top = depth - 2'd1;
@@ -312,22 +327,23 @@ module ot_hgi_seq #(
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
     endtask
     task fault3;
-        begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; f_req_v <= 1'b0; u_v <= 16'd0;
+        begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_v <= 16'd0;
               vr_v <= 1'b0; end
     endtask
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0; f_req_v <= 1'b0;
+            st <= S_IDLE; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
             depth <= 0; Lc <= 0; L1c <= 0; u_v <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00;
             cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
-            for (k = 0; k < 16; k = k + 1) outst[k] <= outst[k] + {7'd0, u_acc[k]} - {7'd0, u_done_r[k]};
+            for (k = 0; k < 16; k = k + 1)                     // +1 / -1 precomputed from flops: u_rdy only selects
+                if (u_acc[k] && !u_done_r[k]) outst[k] <= outst[k] + 8'd1;
+                else if (!u_acc[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
             if (st != S_IDLE && st != S_CPL) cpl_cycles <= cpl_cycles + 32'd1;
             inflight <= fl_after;
             // ---- fetch requests (valid held until ready)
-            if (f_req_v && f_req_rdy) begin f_req_v <= 1'b0; faddr <= faddr + 40'd32; end
-            else if (fetching && !f_req_v && inflight < NOS && used + 2 <= RW) begin f_req_v <= 1'b1; f_req_addr <= faddr; end
+            if (rq_push) faddr <= faddr + 40'd32;
             // ---- fetch responses -> ring (one sector a response)
             if (f_rsp_v_r) begin
                 if (drop != 0) drop <= drop - 5'd1;
@@ -336,7 +352,7 @@ module ot_hgi_seq #(
             // ---- ring read pipe (address registered, sector registered: a word lands two edges after its issue)
             rpipe_v <= {rpipe_v[0], 1'b0}; rpipe_k1 <= rpipe_k0;
             if (|(u_fault_r & ~16'd1) && st != S_IDLE && st != S_CPL) begin
-                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_v <= 0; vr_v <= 1'b0; fetching <= 1'b0; f_req_v <= 1'b0;
+                st <= S_CPL; cpl_status <= 4'd1; cpl_token <= 0; u_v <= 0; vr_v <= 1'b0; fetching <= 1'b0;
             end else case (st)
                 S_IDLE: if (db_v && !hold_r) begin
                     token <= db_token; pos <= db_pos; cpl_job <= db_job; cpl_gen <= db_gen; cpl_pos <= db_pos;
@@ -347,7 +363,7 @@ module ot_hgi_seq #(
                     if (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
-                        faddr <= {img[39:5], 5'd0}; fetching <= 1'b1; f_req_v <= 1'b0;
+                        faddr <= {img[39:5], 5'd0}; fetching <= 1'b1;
                         wp <= 0; wv <= 1'b0; rp <= {{RB{1'b0}}, img[4]}; frp <= {{RB{1'b0}}, img[4]}; drop <= fl_after;
                         st <= S_DEC;
                     end
@@ -503,12 +519,13 @@ module ot_hgi_seq #(
                         end
                     end
                     endcase
-                S_DISP: if (|u_acc) begin u_v <= 16'd0; advance(rlen); st <= S_DEC; end
+                S_DISP: if (|u_acc) begin u_v <= 16'd0; st <= S_ADV; end   // accepted: the ring advances next cycle
+                S_ADV: begin advance(rlen); st <= S_DEC; end
                 S_DRAIN: if ((busy_u & 16'hFFFE) == 16'd0 && wr_quiet_r) begin advance(rlen); st <= S_DEC; end
                 S_ENDRD: begin
                     if (vr_v && vr_rdy) vr_v <= 1'b0;
                     if (vr_rsp_v_r) begin
-                        st <= S_CPL; fetching <= 1'b0; f_req_v <= 1'b0;
+                        st <= S_CPL; fetching <= 1'b0;
                         cpl_token <= vr_rsp_data_r[17:0];
                         cpl_status <= (vr_rsp_data_r[31:18] != 14'd0 || vr_rsp_data_r[17:0] >= cfg_vocab_r) ? 4'd3 : 4'd0;
                     end
