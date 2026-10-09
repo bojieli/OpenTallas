@@ -14128,7 +14128,7 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
 
 
-def hbm_index_selector_capture_model(read_latency=2):
+def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slot_height_um=777.6):
     """Opt-in macro capture: unchanged issue width, finite existing reservations.
 
     One capture stage isolates 405/545 ps TT macro clk->q from selector mux.
@@ -14138,6 +14138,14 @@ def hbm_index_selector_capture_model(read_latency=2):
     if read_latency not in (1, 2):
         raise ValueError("selector read latency must be 1 or 2")
     extra = read_latency - 1
+    macro_names = [(256, 12), (1024, 4)]
+    macro_area = 0.0
+    for depth, count in macro_names:
+        name = f"ot_sram_1r1w_{depth}x256_m2_r2c2"
+        record = json.loads((ROOT / "physical/asap7_memory_macros" / name / (name + ".json")).read_text())
+        macro_area += count * record["area"]["macro_area_um2"]
+    slot_area = slot_width_um * slot_height_um
+    published_cell_estimate = 400000.0  # physical/hbm_accel_die_views/index/DESIGN.md, estimate only
     return dict(read_latency_cycles=read_latency, extra_cycles_per_sweep=extra,
         token_extra_cycles_formula="sum(measured_selector_cycle_deltas per token stage)",
         additional_credit_recycle_cycles=extra,
@@ -14150,6 +14158,14 @@ def hbm_index_selector_capture_model(read_latency=2):
         reservations=dict(gc_lines=8, output_beats=4,
                           policy="issue counts outstanding until pack exit/output enqueue; capture included"),
         area=dict(capture_flops=4*(592+68+8)*extra,
-                  floorplan_fit="requires real mapped area and pins; not physically qualified"),
+                  capture_cell_um2="unmapped; reserve until synthesis", standard_cell_estimate_um2=published_cell_estimate,
+                  macro_area_um2=macro_area, macro_count=16,
+                  proposed_slot_width_um=slot_width_um, proposed_slot_height_um=slot_height_um,
+                  proposed_slot_area_um2=slot_area,
+                  estimated_total_fill=(published_cell_estimate+macro_area)/slot_area,
+                  cell_capacity_at_55pct_um2=.55*(slot_area-macro_area),
+                  capture_and_repair_reserve_at_55pct_um2=.55*(slot_area-macro_area)-published_cell_estimate,
+                  estimate_fits=published_cell_estimate<.55*(slot_area-macro_area),
+                  floorplan_fit="R25I prototype from hbm_wiring; real pins and mapped capture area still required"),
         latency_clock_ns=0.8333333333333334,
         physical_status="candidate; macro output must terminate at capture D pins")
