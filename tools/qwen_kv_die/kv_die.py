@@ -59,7 +59,8 @@ ENG_IN = 1 + 14 + 3 + 1 + 6 + 512 + 32 + 64 + 1
 # er, sc, lmax, node beat {valid, beat, g, gam, 4,096 b}, k/v_done, fault
 ENG_OUT = 1 + 12 + 1 + 12 + 128 + 256 + 2 + 1 + 4 + 1 + 4 + 4096 + 1 + 1 + 1
 ABUT = {'stack_local', 'phy_dfi', 'd2d_fdi', 'hbm_cdc', 'cdc_core'}    # abutted / band buses: no relays
-RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv + per-PC leaves)',
+RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv + per-PC leaves; '
+                    'ot_qfd_emb_pcport KVW 2: KV writes carry the HBM ECC side-band, data = the CDC completion h_cv / h_cdata)',
            qkd_cdc='rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv ot_qwen_stream4_cdc_pc (route r11a)',
            qkd_land='qfd_kvc successor (landing crossbar) + ot_qkvd_kv_seq KV-merge slices + ot_qfd_emb_strip',
            qkd_reng='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv ot_qwen_nearhbm_row_engine_d (re-cut D)',
@@ -115,7 +116,7 @@ FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_d minus its engines (re-c
                   qkd_land='qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip',
                   qkd_embgw='ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)',
                   qkd_host='qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter', qkd_pll='vendor PLL + '
-                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element, unchanged)',
+                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element; pcport KVW 2: KV write side-band from the CDC completion, no new die port)',
                   qkd_ckbump='clock / reset bump pair to the ROM die (pad cell, no logic: by design)')
 
 

@@ -751,6 +751,14 @@ def _io_south(v):
 # area estimates of the in-frame additions (flops x 0.32 um2 ASAP7 DFF / 0.55 util x 1.6 logic) -- the review sizes them
 EMB_STRIP_FLOPS = 32 * 4 * 258 + 4 * 523 + 4 * 523 + 516 + 400 + 32 * 4 + 200     # rx FIFOs, in/tx queues, packer, credits
 EMB_PCPORT_FLOPS = 32 + 4 * 288 + 288 + 32 + 288 + 258 + 64                         # class FIFO, write FIFO, decode pipe
+# sys-takeover 2026-10-09 (coordinator: adopt the HBM ECC side-band on KV writes, registry qfd_hbm_ecc_provider): the
+# per-PC port runs KVW = 2 -- the KV write data is the per-PC STREAM4 CDC's completion entry (h_cv / h_cdata, already on
+# the cdho_<st>_<p> hbm_cdc bus into the controller element, CDC_HO), encoded into the side-band; every WR's PHY write
+# data leaves two HCLK edges after its column.  No new die bus (kw_v / kw_d = h_cv / h_cdata inside qfd_ctrl);
+# +2 x 288 + 2 flops a PC.  (KVW = 1, the closed view views/qfd_emb_pcport_kvw, expects the data before the column and
+# faults at this timing: physical/sys_takeover/kvw2_path_bench.sh neg 'kvw1'.)
+EMB_PCPORT_KVW = 2
+EMB_PCPORT_FLOPS += 2 * 288 + 2 if EMB_PCPORT_KVW == 2 else 0
 EMB_GW_FLOPS = 32 * 25 + 4 * 523 + 512 + 26 + 512 + 160 + 4 * 8 * 11                 # request FIFO, slots, eq, pins, tags
 
 
@@ -790,7 +798,7 @@ def _emb_hbm(v, m):
                   'emb_cr (1 b) hub_el.ecr -> sp_su64_sfu.ecr'],
         rtl={'qfd_hub': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv ot_qwen_die_hub_emb_top (+ ot_qfd_emb_gw)',
              'qfd_ctrl (per PC)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv (ot_hbm_r14_stream_pc_srow SROW 1) '
-                                  '+ ot_qfd_emb_pcport.sv',
+                                  '+ ot_qfd_emb_pcport.sv (KVW 2: KV write side-band from the CDC completion h_cv / h_cdata)',
              'qfd_kvc (strip end)': 'rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip.sv + ot_qfd_link_far.sv (class split)'},
         in_frame_mm2=dict(gateway_in_hub=round(gw_mm2, 4),
                           strip_engine_per_stack=round(EMB_STRIP_FLOPS * 0.32 * 1.6 / 0.55 / 1e6, 4),
