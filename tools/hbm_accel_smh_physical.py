@@ -464,6 +464,9 @@ def config_mk(name, nick, die, macros, extra):
                   "export SYNTH_BLACKBOXES = " + " ".join(Path(m).name for m in macros),
                   "export MACRO_PLACEMENT_TCL = /work/macros.tcl"]
     lines += [f"export {k} = {v}" for k, v in extra.items()]
+    # FLOW-FIX-0410: (* keep *) register copies survive yosys opt_merge (physical/common_flow/ot_keep_regs.tcl)
+    if os.environ.get("OT_KEEP_REGS", "1").strip() != "0" and "SYNTH_CANONICALIZE_TCL" not in extra:
+        lines.append("export SYNTH_CANONICALIZE_TCL = /src/physical/common_flow/ot_keep_regs.tcl")
     return "\n".join(lines) + "\n"
 
 
