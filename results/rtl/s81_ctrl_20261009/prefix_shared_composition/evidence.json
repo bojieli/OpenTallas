@@ -1,0 +1,17 @@
+{
+ "status":"ACTUAL_MINIMUM_PREFIX_SHARED_PRIMARY_COMPOSITION_PASS",
+ "source_commit":"3d43d663e",
+ "models_before_build":["a0d2f661d","525be7742"],
+ "prefix_owner_source":"08a2a7957 qualified native publisher0091c7ad5",
+ "shared_publisher_source":"f530b946e defaultoff plain control SECDED mutable SRAM payload",
+ "primary_source":"936149ecb native594bit CDC and16 actual LAT3 FP32 adders",
+ "remote":"ot-agidock128:/srv/opentallas-scratch/codex/ds-control/prefix-shared-compose-3d43d663e",
+ "admission_gib":2,
+ "mechanism":"One rank1280 values; actual12SRAM sortedexpert prefix,3SRAM shared publisher, native594bit finite source+async FIFOs1.2GHz→.9GHz, actual16LAT3 sharedLAST adds and one final BF16 rounding",
+ "input_scope":"Synthetic BF16-widened contribution vectors; actual hdc_golden.add/to_bf16 used for all golden rounding points, firstlane directed midpoint. Separate released two-row shared-W2 owner prooff869a6bb5 is not substituted for production1280-value GU.",
+ "mutant":"P2_MUT_PRE_ROUND same-source firstword premature-prefix BF16 rounding changes result3f810000 to3f800000; actual final consumer detects numeric mismatch",
+ "flow":"Opposite expert arrival order retained by actual ordered producer; shared input gaps, independent source readiness, serial output stalls; all80 outputframes exact and final context retirement checked",
+ "historical_control_scope":"Existing qualified prefix owner path contains its previously qualified control; new shared/primary use ordinary control without leases/complement guards. No inherited physical/adoption claim.",
+ "production_pending":["Actual A/Markov transaction namespace caller","Native E3 literal output VM range and static write-visible fence/read1 capture","Production GU/full released1280 contribution fixture","Actual primary SU/main_norm sink","Contextual clocks/floorplan/SSFF"],
+ "physical_claim":null
+}
