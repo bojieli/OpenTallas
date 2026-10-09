@@ -1,0 +1,134 @@
+{
+  "schema": "opentallas.embedding_hbm_station_pair_gate.v1",
+  "model_before_RTL_commit": "d13317bbe",
+  "source_commit": "8c33bb885",
+  "source_sha256": {
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/model_ready_hbm_r14/ot_hbm_r14_pkg.sv": "fb0d8e2c86884a80e388ef40eabf94f7026415647519153b4ffb0587d5255b98",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pkg.sv": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv": "714487a068ea745f17ee742c9e57b630566004f7dcf6ad4bdb74f9ca77622cbc",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv": "a203e503786573378a44b3471f252b68a7370a9e9566d598c6b6e229be637fda",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv": "e49dcb70cfc2586c267b8d4aee476f127f921e8a5560819103171a5719e8f0c8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pcport.sv": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc.sv": "be273f59525261fe3387424965e12237647559d43698ba0cc41e357ce000d1a5",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc_bus.sv": "31b789e66cb321b7bf619ae2b68ee1a1e3981684b521ff120d974f2ce17c0cb2",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_station_pair.sv": "d6338423077e0a9b3684f51f64588ad276b53784c0b9254ffc8009ebee475eba",
+    "rtl/test/emb_hbm/tb_emb_dram_pc.sv": "0820e641959de123cc1e1a497f295cc4212d5950ed5ede9ba0a57062ba8cfa6e",
+    "rtl/test/emb_hbm/tb_emb_station_pc.sv": "abbccf47e7e5c7b9a205e2b128727fe5f8efd417dc4156d6217f3fd7929d810f",
+    "rtl/test/emb_hbm/tb_emb_station_leaf.sv": "70aa96612fba258801a2aa525e61d95fe22863654afa4385ed46bf52bc920ee1",
+    "results/arch/emb_hbm_20261008/takeover/station_pair_model.json": "9b9f5ffd9e12e3053d22931f34ebc55d277cee3b22ed1063cb1862b5bd68a871"
+  },
+  "logs_sha256": {
+    "leaf17_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "leaf1.log": "545ee9388483c77dc6e6727addbc1c1247b355c92a217d6300c4bc6700ac0cd1",
+    "pc0_compile.log": "78f897576c8665ebe1e57b6d62a0838283fe5b6ea99a8132e7164f1cdde9e29e",
+    "exits.txt": "c37466457d971ab1e0b4b88b65523f9567a5ea46423c8f76c370c04535f92f8f",
+    "negative_compile.log": "78f897576c8665ebe1e57b6d62a0838283fe5b6ea99a8132e7164f1cdde9e29e",
+    "pc17_compile.log": "78f897576c8665ebe1e57b6d62a0838283fe5b6ea99a8132e7164f1cdde9e29e",
+    "negative.log": "54a132cfb49c52e7a1b0cd33482dc127dbefbc89ec74eddda90ee7be0c9c3b42",
+    "pc0.log": "078e5819d037ac050e0f0ae33c08246bed90675a819fd09c5c3464a2f0e1085c",
+    "pc17.log": "7fa1fa1cf192d2fcbbc406f08336833acd468e9139955d5ed91d003ead9b5b0f",
+    "leaf1_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "leaf0_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "leaf17.log": "8390c8e5177a845ab099bafb4263f6f1c065f34240c2d9debcc12ad587ae77f8",
+    "leaf0.log": "1b47fc49b4b9f8b6b3ab86d85cbcf2197568ac4b8cc61f8df0013fe971c63c45",
+    "run.sh": "2f9e0d3a4d571e9307c42afa35795f7dda5fec5d79a0894d3da8898392f4fe2b"
+  },
+  "tool": "Icarus Verilog12.0 stable",
+  "host": "ot-epyc4",
+  "admission_peak_GiB": 1,
+  "remote_workdir": "/srv/opentallas-scratch/codex/emb-station-gate",
+  "verdict": "PASS",
+  "leaf": {
+    "STAGES": [
+      0,
+      1,
+      17
+    ],
+    "packets_each": 256,
+    "all548bits_exact": true,
+    "exact_edge_latency": true,
+    "resetzero_and_flush": true
+  },
+  "actual_PC": {
+    "STAGES0": {
+      "writes": 64,
+      "reads": 64,
+      "CE": 1,
+      "UE": 1,
+      "JEDEC_violations": 0,
+      "max_inflight": 1,
+      "read_latency_sum_cycles": 4980,
+      "read_latency_mean_cycles": 77.8125,
+      "read_latency_min_cycles": 67,
+      "read_latency_max_cycles": 307,
+      "credit_latency_sum_cycles": 5765,
+      "total_cycles": 7830
+    },
+    "STAGES17": {
+      "writes": 64,
+      "reads": 64,
+      "CE": 1,
+      "UE": 1,
+      "JEDEC_violations": 0,
+      "max_inflight": 1,
+      "read_latency_sum_cycles": 7278,
+      "read_latency_mean_cycles": 113.71875,
+      "read_latency_min_cycles": 100,
+      "read_latency_max_cycles": 400,
+      "credit_latency_sum_cycles": 9953,
+      "total_cycles": 12002
+    }
+  },
+  "latency_price": {
+    "fixed_command_edges": 17,
+    "fixed_return_edges": 17,
+    "fixed_roundtrip_edges": 34,
+    "fixed_roundtrip_ns": 28.333333356000004,
+    "measured_mean_read_delta_cycles": 35.90625,
+    "measured_mean_read_delta_ns": 29.9218750239375,
+    "explanation": "Independent timing runs change HBM phase and refresh timing; measured mean/max changes are not pure pipeline edge counts."
+  },
+  "frame_price": {
+    "candidate_um": [
+      92.016,
+      36.72
+    ],
+    "area_per_frame_um2": 3378.8275200000003,
+    "minimum_pairs": 716,
+    "total_frame_mm2_lower_bound": 2.4192405043200003,
+    "total_flop_proxy_mm2": 0.12555776000000002,
+    "real_slots_buffers_clock_routing": "OPEN; no measured route-area claim"
+  },
+  "negative": {
+    "mutation": "Command data bit0 at station output before nativePC",
+    "expected": "FAIL golden data",
+    "exit_code": 1,
+    "wrong_rows": 63,
+    "JEDEC_violations": 0,
+    "fault_core": 0,
+    "fault_HBM": 0
+  },
+  "period_ps": {
+    "core": 833.333334,
+    "HBM": 1024
+  },
+  "finite_flow": {
+    "SQD": 4,
+    "CDC_depth": 8,
+    "backend_queue": 4,
+    "PFD": 4,
+    "no_new_credits": true,
+    "scope": "Gate source has max1 in-flight command; fullSQD4 and2responses/fetch system composition remains parent responsibility. Station leaf never modifies credit counts/pulses."
+  },
+  "queue_history": [
+    "EPYC1 stopped at mkdir before source transfer/launch; localwaiting caller canceled after inventory verifiednojob",
+    "EPYC2 source copied; ownerpause_new marker kept admissionwaiting; canceledwaitingguardonly",
+    "EPYC4 measured399GiBavailable, no pause marker; actualguard admitted1GiB gate"
+  ],
+  "physical_ECC_provider": "OPEN",
+  "physical_closed": false,
+  "adopted": false,
+  "headline_credit": 0
+}
