@@ -262,7 +262,17 @@
       "disk_roots": {
         "/": 100
       },
-      "min_free_ram_gb": 16
+      "min_free_ram_gb": 16,
+      "external_jobs": [
+        {
+          "name": "ha2-owner-opposite-phase-minimum-gate",
+          "pid": 299770,
+          "command_match": "ha2-owner-cx-20261009/run-gate.sh",
+          "peak_ram_gb": 12,
+          "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+          "reason": "Actual admitted fullPF384 NC8 NPT8 INJ2 owner positive/changed-phase mutant minimum; pinnedVerilator5.050 source31f18f89a. Owner fullshape inventory12GiB envelope, soft capacity reservation until terminal"
+        }
+      ]
     },
     {
       "name": "ot-agidock128",
