@@ -1,0 +1,73 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+BF_HOLDSEAT_PROBE corner=TT seats=4 ideal_clock=1 no_wire_delay_credit=1
+BF_CHAIN_SETUP 3.894647659929973e-10
+BF_CHAIN_HOLD 8.375105470248556e-11
+Startpoint: a (input port clocked by core_clk)
+Endpoint: u_q (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: min
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock core_clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+   0.000    0.000 ^ input external delay
+   0.000    0.000 ^ a (in)
+  22.730   22.730 ^ u_hb0/Y (HB2xp67_ASAP7_75t_R)
+  26.690   49.421 ^ u_hb1/Y (HB2xp67_ASAP7_75t_R)
+  26.707   76.127 ^ u_hb2/Y (HB2xp67_ASAP7_75t_R)
+  28.062  104.189 ^ u_hb3/Y (HB2xp67_ASAP7_75t_R)
+   0.000  104.189 ^ u_q/D (DFFHQNx1_ASAP7_75t_R)
+          104.189   data arrival time
+
+   0.000    0.000   clock core_clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+  25.000   25.000   clock uncertainty
+   0.000   25.000   clock reconvergence pessimism
+           25.000 ^ u_q/CLK (DFFHQNx1_ASAP7_75t_R)
+  -4.562   20.438   library hold time
+           20.438   data required time
+-----------------------------------------------------------
+           20.438   data required time
+         -104.189   data arrival time
+-----------------------------------------------------------
+           83.751   slack (MET)
+
+
+Startpoint: a (input port clocked by core_clk)
+Endpoint: u_q (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+   Delay     Time   Description
+-----------------------------------------------------------
+   0.000    0.000   clock core_clk (rise edge)
+   0.000    0.000   clock network delay (ideal)
+ 250.000  250.000 v input external delay
+   0.000  250.000 v a (in)
+  28.461  278.461 v u_hb0/Y (HB2xp67_ASAP7_75t_R)
+  32.591  311.051 v u_hb1/Y (HB2xp67_ASAP7_75t_R)
+  32.598  343.649 v u_hb2/Y (HB2xp67_ASAP7_75t_R)
+  33.222  376.871 v u_hb3/Y (HB2xp67_ASAP7_75t_R)
+   0.000  376.871 v u_q/D (DFFHQNx1_ASAP7_75t_R)
+          376.871   data arrival time
+
+ 833.333  833.333   clock core_clk (rise edge)
+   0.000  833.333   clock network delay (ideal)
+ -60.000  773.333   clock uncertainty
+   0.000  773.333   clock reconvergence pessimism
+          773.333 ^ u_q/CLK (DFFHQNx1_ASAP7_75t_R)
+  -6.997  766.336   library setup time
+          766.336   data required time
+-----------------------------------------------------------
+          766.336   data required time
+         -376.871   data arrival time
+-----------------------------------------------------------
+          389.465   slack (MET)
+
+

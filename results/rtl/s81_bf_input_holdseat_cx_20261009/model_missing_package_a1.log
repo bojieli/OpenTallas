@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "<stdin>", line 3, in <module>
+  File "/srv/opentallas-scratch2/scratch/codex/s81-bf-inhold-cx-20261009/repo/tools/uarch_model.py", line 261, in <module>
+    import arch_budget_v41 as A  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/codex/s81-bf-inhold-cx-20261009/repo/tools/arch_budget_v41.py", line 64, in <module>
+    import decode_critical_path as D  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch2/scratch/codex/s81-bf-inhold-cx-20261009/repo/tools/decode_critical_path.py", line 64, in <module>
+    from opentallas.critical_path import PackageLevel  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'opentallas'
