@@ -1,0 +1,21 @@
+{
+  "verdict": "PASS",
+  "source_commit": "5799ddda6",
+  "scope": "actual three-SRAM protected headjoin120full512bframes; independent capture2/0/1, identity/frame/last/duplicate/bounds negatives, partial reset, CE/UE",
+  "logs": {
+    "negative_2.log": "PASS join negative 2\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 90000 (1ps)\n",
+    "reset.log": "PASS join120frames cycles=849 CE=0 reset=1\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:60: $finish called at 8500000 (1ps)\n",
+    "negative_7.log": "PASS join negative 7\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 90000 (1ps)\n",
+    "positive.log": "PASS join120frames cycles=767 CE=0 reset=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:60: $finish called at 7680000 (1ps)\n",
+    "negative_1.log": "PASS join negative 1\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 90000 (1ps)\n",
+    "negative_6.log": "PASS join negative 6\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 870000 (1ps)\n",
+    "negative_5.log": "PASS join negative 5\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 90000 (1ps)\n",
+    "UE.log": "PASS join UE no disclosure retained ownership\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:68: $finish called at 2490000 (1ps)\n",
+    "negative_4.log": "PASS join negative 4\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 890000 (1ps)\n",
+    "CE.log": "PASS join120frames cycles=767 CE=120 reset=0\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:60: $finish called at 7680000 (1ps)\n",
+    "negative_3.log": "PASS join negative 3\nrtl/test/dsrom_hc_capture_20261009/tb_hc_seed_join.sv:44: $finish called at 890000 (1ps)\n"
+  },
+  "registered_link_qualified": false,
+  "physical_qualified": false,
+  "integration_qualified": false
+}
