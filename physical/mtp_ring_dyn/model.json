@@ -8,7 +8,7 @@
   "macs_per_cycle": 0,
   "memory_bytes_per_cycle_delta": 0,
   "payload_bits_per_cycle_delta": 0,
-  "internal_address_bits": {"slot_word_offset": 20, "pair_element_offset": 20},
+  "internal_address_bits": {"reduced_vehicle_per_offset": 24, "native_full_shape_per_offset": 30, "offsets": 2},
   "nonconstant_state_bits_per_slot": 5,
   "state_equations": {"slot_word_offset": "(position % 8) * 4", "pair_element_offset": "((position / 2) % 4) * 128"},
   "replicas": 1,
