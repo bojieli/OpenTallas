@@ -20,6 +20,10 @@ assert m.PAIRS == 696 and m.BF_PAIRS == 338 and m.NV_PAIRS == 0
 assert m.bf_sites() == set(range(338))
 m.set_pairs(696)
 assert m.BF_PAIRS == 338
+capacity = m.capacity_report()
+assert capacity['pairs'] == 696 and capacity['bf_double'] == 338
+assert capacity['bf_pair_ids'] == list(range(338))
+assert m.PAIRS == 696 and m.BF_PAIRS == 338 and m.bf_sites() == set(range(338))
 for bad in ['0:339,338:340', '0:697', '-1:3', '3:3', '0', '']:
     try:
         m.parse_bf_pair_ranges(bad, 696)
