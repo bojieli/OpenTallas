@@ -1,0 +1,205 @@
+{
+  "schema": "opentallas.qwen_i4_i7_existing_inventory.v1",
+  "observed_utc": "2026-10-09T10:23:53.278002+00:00",
+  "scope": "Read-only inventory; no new RTL, architecture, build, bench, or route. Structural placement waits for coordinator and KV contract.",
+  "worktree": "/home/ubuntu/wt-codex-qwen-crom-ctl",
+  "branch": "codex/qwen-crom-ctl-physical-20261009",
+  "source_tip": "e2220ff9e",
+  "I4": {
+    "requested": "5601 baseline s_wvalid -> s_awready: physical input-pin FF and registered AXI ready/credit +1 edge",
+    "status": "UNIMPLEMENTED_AS_REQUESTED",
+    "baseline_ref": "5601e8881",
+    "baseline_source": "rtl/qwen_sys/system_20261008/ot_qfd_sysctl.sv",
+    "existing_partial_ref": "52e97db99",
+    "existing_partial_source": "rtl/qwen_sys/system_20261008/ot_qfd_sysctl_stn.sv",
+    "existing_partial_contract": "ot_qfd_packet_stn stores complete AW/W/data+valid; i_ready=!full from registered occupancy; one entry, no bypass, one-edge latency, two-edge minimum acceptance interval; AXIL POR reset, DMA host reset",
+    "missing": "No separately bound AXI physical input-pin FF placement/replicated credit implementation or KV-placement contract. Queue registers are not a pin-position proof.",
+    "bench": [
+      "rtl/test/qwen_system/tb_qfd_ctl_stn.sv",
+      "rtl/test/qwen_system/run_ctl_stn.sh"
+    ],
+    "evidence": "results/rtl/qwen_system_20261009/physical/control_stn",
+    "mutant": "PB_VALID_ONLY0 on poisoned unwritten SRAM fails closed; this validates protected prompt reads, not physical AXI pin placement.",
+    "placement": "WAIT_FOR_KV_CONTRACT",
+    "do_not_substitute": [
+      "a3e585f3f SRAM OUTPUT capture",
+      "d4760be45 PKG_DONE_REG completion reduction"
+    ]
+  },
+  "I5_separate_existing": {
+    "ref": "d4760be45",
+    "branch": "claude/drive-0158-20261009",
+    "source_ref": "e0710ae25",
+    "source": "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+    "param": "DONE_REG1 propagated as PKG_DONE_REG1",
+    "latency": "One completion edge per step; 735->736 in CL40 fixture",
+    "kit": "physical/qwen_die_masters/cfg/qfd_sysctl_stn_pb2_cl.env",
+    "bench": "rtl/test/qwen_system/run_ctl_stn_pb2.sh -DPKG_DONE_REG=1",
+    "full_context": "8192steps/1245184events/0tracebad/8191CQ; actual parallel receipts PASS; poisoned unconditional read mutant fails closed",
+    "jobs": [
+      {
+        "name": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-a-cl",
+        "status": "NEEDS_RTL",
+        "host": "ot-epyc1tb",
+        "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-a-cl",
+        "updated": "2026-10-09T03:08:06-07:00",
+        "reason": "FF hold -5.5: route hold repair stalled; window I2R=127@-15.8",
+        "commit_full": "d4760be4512224864f7ba47b4e931fa056ddc324",
+        "benches": {
+          "bench_ctl_pb2_cl_campaign": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "ult_status=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309\n/srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-a-cl/bench/ctl/length.log:CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=34 turn_max=100 turn_avg=80 step_cycles=791 CL=40 cycles=3408\nCTL_SRAM_CAMPAIGN_PASS\nCTL_RESULT pass=0 steps=3 trace_events=456 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00440000 turn_min=34 turn_max=99 turn_avg=76 step_cycles=709 CL=40 cycles=2645\nCTL_STATION_POISON_PASS\n",
+            "track": "parallel"
+          },
+          "bench_ctl_pb2_cl_neg_unconditional_read": {
+            "expect": "fail",
+            "rc": 1,
+            "ok": true,
+            "tail": "CTL_RESULT pass=0 steps=3 trace_events=456 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00440000 turn_min=35 turn_max=100 turn_avg=77 step_cycles=710 CL=40 cycles=2648\n",
+            "track": "parallel"
+          }
+        }
+      },
+      {
+        "name": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+        "status": "RUNNING",
+        "host": "ot-epyc2",
+        "run": "/srv/opentallas-data/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+        "updated": "2026-10-09T03:23:37-07:00",
+        "reason": null,
+        "commit_full": "d4760be4512224864f7ba47b4e931fa056ddc324",
+        "benches": {
+          "bench_ctl_pb2_cl_campaign": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "s=00000000 turn_min=21 turn_max=100 turn_avg=87 step_cycles=736 CL=40 cycles=6226309\n/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/bench/ctl/length.log:CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=34 turn_max=100 turn_avg=80 step_cycles=791 CL=40 cycles=3408\nCTL_SRAM_CAMPAIGN_PASS\nCTL_RESULT pass=0 steps=3 trace_events=456 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00440000 turn_min=34 turn_max=99 turn_avg=76 step_cycles=709 CL=40 cycles=2645\nCTL_STATION_POISON_PASS\n",
+            "track": "parallel"
+          },
+          "bench_ctl_pb2_cl_neg_unconditional_read": {
+            "expect": "fail",
+            "rc": 1,
+            "ok": true,
+            "tail": "CTL_RESULT pass=0 steps=3 trace_events=456 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00440000 turn_min=35 turn_max=100 turn_avg=77 step_cycles=710 CL=40 cycles=2648\n",
+            "track": "parallel"
+          }
+        }
+      }
+    ],
+    "live_verified": "EPYC2 route wrapper2474230, route_master2474283, elapsed20m36s at inspection; preserve progressing job"
+  },
+  "I7": {
+    "requested": "Additional me_en physical input-pin FF plus replicated enable, combined with macro_edge fix for tsr41",
+    "status": "COMBINED_VARIANT_NOT_IMPLEMENTED",
+    "implemented_ref": "ff159dc2c",
+    "branch": "claude/struct-close-20261009",
+    "source": "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv",
+    "implemented_param": "MEC1, TSR1, RS41, DB64, CRB16, USE_MACRO1",
+    "implemented_contract": "Payload capture loads every edge; existing c_v=me_en&&i_ov qualifies every use. me_en drives c_v only. Zero added edges. This is not the additional input-pin FF/replicated-enable requested by I7.",
+    "kit": "physical/qwen_die_masters/cfg/qfd_sp_res_ser_tsr41m.env",
+    "macro": "Eight ot_sram_1r1w_64x512_m1_r2c2 slots",
+    "outline_um": [
+      777.6,
+      518.4
+    ],
+    "bench": "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv TSR1 + OT_QFD_RES_MEC, seeds3/7 review reported PASS; canonical seeded3 receipt PASS; run_spine_landed.sh exact receipt PASS",
+    "mutants": [
+      "SMUT swaps slot mask, expected FAIL receipt",
+      "OT_QFD_RES_MUT_CVNOEN ignores me_en in c_v, expected FAIL receipt"
+    ],
+    "jobs": [
+      {
+        "name": "qfd_sp_res_ser_tsr41m-ff159dc2c-tc-bal32-cl",
+        "status": "FLOORPLAN_MARGIN",
+        "host": "ot-epyc3",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_res_ser_tsr41m-ff159dc2c-tc-bal32-cl",
+        "updated": "2026-10-09T03:09:34-07:00",
+        "reason": "macro_edge: 3 macro(s) abut a pin edge with signal pins behind them (g_slot\\[2\\].u_m.g_mac.u_m W face 4.3 um, 356 pins behind; g_slot\\[3\\].u_m.g_mac.u_m W face 4.3 um, 357 pins behind; g_slot\\[3\\].u_m.g_mac.u_m S face 2.2 um, 122 pins behind): keep macros off pin edges (rows/columns inside, channels to the pins)",
+        "commit_full": "ff159dc2cd3fd9d3e4a1d763dfb7f20878bd3f7f",
+        "benches": {
+          "bench_res_ports_s3": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "ev v5.050\n- Verilator: Built from 0.461 MB sources in 22 modules, into 11.749 MB in 15 C++ files needing 0.018 MB\n- Verilator: Walltime 20.858 s (elab=0.166, cvt=1.913, bld=18.523); cpu 2.565 s on 8 threads; allocated 170.453 MB\nPASS qfd_vm_bv_ports NRB=16 SW=8 VL=7 su_reads=59138 row_reads=8975 tuples=2835 bursts=1561 land_steps=1551 cycles=40000\n- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:308: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 41us; walltime 0.296 s; speed 139.520 us/s\n- Verilator: cpu 0.296 s on 1 threads; allocated 9 MB\n",
+            "track": "parallel"
+          },
+          "bench_res_ports_smut": {
+            "expect": "fail",
+            "rc": 0,
+            "ok": true,
+            "tail": " rev v5.050\n- Verilator: Built from 0.461 MB sources in 22 modules, into 11.749 MB in 15 C++ files needing 0.018 MB\n- Verilator: Walltime 17.349 s (elab=0.177, cvt=1.953, bld=15.000); cpu 2.542 s on 8 threads; allocated 171.449 MB\nFAIL qfd_vm_bv_ports x=0 su=0 row=0 land=40948 image=69 faults x0 xh0 w0 wh0 ser000000 landed=1213/1213 su_reads=45333\n- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:308: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 31us; walltime 0.245 s; speed 127.818 us/s\n- Verilator: cpu 0.245 s on 1 threads; allocated 9 MB\n",
+            "track": "parallel"
+          },
+          "bench_landed_exact": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "PASS qfd_spine_landed GT=96 bands=3 engine_edges=13655 ops=290 bursts=4560 landed=4560 idle_checks=13\n",
+            "track": "parallel"
+          },
+          "bench_landed_smut": {
+            "expect": "fail",
+            "rc": 0,
+            "ok": true,
+            "tail": "FAIL qfd_spine_landed mism=0 first=0/0 prog_ahead=0 ovbad=0 idle_bad=13 img_bad=4 faults ser000 w0 wh0 bursts=3472 idle_checks=9\n",
+            "track": "parallel"
+          },
+          "bench_res_ports_cvnoen_mut": {
+            "expect": "fail",
+            "rc": 0,
+            "ok": true,
+            "tail": " v5.050\n- Verilator: Built from 0.461 MB sources in 22 modules, into 11.748 MB in 15 C++ files needing 0.018 MB\n- Verilator: Walltime 27.339 s (elab=0.247, cvt=2.734, bld=24.047); cpu 3.478 s on 8 threads; allocated 170.457 MB\nFAIL qfd_vm_bv_ports x=0 su=0 row=0 land=4493561 image=2160 faults x0 xh0 w0 wh0 ser111111 landed=1700/1367 su_reads=59085\n- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:308: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 61us; walltime 0.592 s; speed 103.253 us/s\n- Verilator: cpu 0.592 s on 1 threads; allocated 9 MB\n",
+            "track": "parallel"
+          }
+        }
+      },
+      {
+        "name": "qfd_sp_res_ser_tsr41m-ff159dc2c-tc-bal32-lvt-cl",
+        "status": "FLOORPLAN_MARGIN",
+        "host": "ot-epyc4",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_res_ser_tsr41m-ff159dc2c-tc-bal32-lvt-cl",
+        "updated": "2026-10-09T03:01:44-07:00",
+        "reason": "macro_edge: 3 macro(s) abut a pin edge with signal pins behind them (g_slot\\[2\\].u_m.g_mac.u_m W face 4.3 um, 356 pins behind; g_slot\\[3\\].u_m.g_mac.u_m W face 4.3 um, 357 pins behind; g_slot\\[3\\].u_m.g_mac.u_m S face 2.2 um, 122 pins behind): keep macros off pin edges (rows/columns inside, channels to the pins)",
+        "commit_full": "ff159dc2cd3fd9d3e4a1d763dfb7f20878bd3f7f",
+        "benches": {
+          "bench_res_ports_s3": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "ev v5.050\n- Verilator: Built from 0.461 MB sources in 22 modules, into 11.749 MB in 15 C++ files needing 0.018 MB\n- Verilator: Walltime 15.471 s (elab=0.144, cvt=1.824, bld=13.314); cpu 2.323 s on 8 threads; allocated 170.449 MB\nPASS qfd_vm_bv_ports NRB=16 SW=8 VL=7 su_reads=59138 row_reads=8975 tuples=2835 bursts=1561 land_steps=1551 cycles=40000\n- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:308: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 41us; walltime 0.273 s; speed 151.212 us/s\n- Verilator: cpu 0.273 s on 1 threads; allocated 9 MB\n",
+            "track": "parallel"
+          },
+          "bench_res_ports_smut": {
+            "expect": "fail",
+            "rc": 0,
+            "ok": true,
+            "tail": " rev v5.050\n- Verilator: Built from 0.461 MB sources in 22 modules, into 11.749 MB in 15 C++ files needing 0.018 MB\n- Verilator: Walltime 17.068 s (elab=0.120, cvt=1.730, bld=14.969); cpu 2.328 s on 8 threads; allocated 170.457 MB\nFAIL qfd_vm_bv_ports x=0 su=0 row=0 land=40948 image=69 faults x0 xh0 w0 wh0 ser000000 landed=1213/1213 su_reads=45333\n- rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv:308: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 31us; walltime 0.234 s; speed 134.118 us/s\n- Verilator: cpu 0.233 s on 1 threads; allocated 9 MB\n",
+            "track": "parallel"
+          },
+          "bench_landed_exact": {
+            "expect": "pass",
+            "rc": 0,
+            "ok": true,
+            "tail": "PASS qfd_spine_landed GT=96 bands=3 engine_edges=13655 ops=290 bursts=4560 landed=4560 idle_checks=13\n",
+            "track": "parallel"
+          }
+        }
+      }
+    ],
+    "missing": "Both jobs FLOORPLAN_MARGIN: g_slot2/3 W edge4.3um with356/357pins; g_slot3 S edge2.2um with122pins. No combined input-pin/replicated-enable + macro-edge placement successor found. Existing struct-close ownership; no duplicate intake."
+  },
+  "source_blob_ids": {
+    "52e97db99:rtl/qwen_sys/system_20261008/ot_qfd_sysctl_stn.sv": "3d057a6d70f6562fe29ad211f204fdc95650195f",
+    "e0710ae25:rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv": "fb3572b010d08b75246304e20f0fda5f70004e96",
+    "ff159dc2c:rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv": "203cb9f218b521bd26c23f0eb8e7fc19cb8ed880"
+  },
+  "review_refs": [
+    "/home/ubuntu/claude-takeover-20261007/review_queue/drive-0158.md:76",
+    "/home/ubuntu/claude-takeover-20261007/review_queue/drive-0158.md:78",
+    "/home/ubuntu/claude-takeover-20261007/review_queue/drive-0158.md:99",
+    "/home/ubuntu/claude-takeover-20261007/review_queue/struct-close.md:118"
+  ]
+}
