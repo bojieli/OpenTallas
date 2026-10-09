@@ -1,0 +1,22 @@
+{
+ "schema": "opentallas.mtp.p2.general.physical.launch.v1",
+ "observed_at": "2026-10-09T08:21:23.947008+00:00",
+ "source_commit": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+ "job": "mtp-p2-transport-8ed8e9762-tt-remote",
+ "host": "ot-epyc1tb",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote",
+ "confirmed_live_process": "    PID    PPID ELAPSED STAT COMMAND\n 870466       1     359 Ss   bash /srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/cl/run.sh calibrate.a1\n",
+ "events": [
+  "2026-10-09T01:07:18-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/mtp-p2-transport-8ed8e9762-tt-remote.json",
+  "2026-10-09T01:07:52-07:00 source 8ed8e9762d1e synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/src",
+  "2026-10-09T01:08:19-07:00 calibrate waiting for capacity: EPYC4 MemAvailable 331-16 GB - reserve 249.61705780029297 < 24+57",
+  "2026-10-09T01:10:22-07:00 calibrate cannot start on EPYC4 (EPYC4 MemAvailable 327-16 GB - reserve 249.61705780029297 < 24+57); moving to EPYC1",
+  "2026-10-09T01:12:45-07:00 source 8ed8e9762d1e synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/mtp-p2-transport-8ed8e9762-tt-remote/src",
+  "2026-10-09T01:15:24-07:00 launched calibrate (attempt 1) on ot-epyc1tb"
+ ],
+ "scope": "general4bank protected expert+shared transport component only; selected3expertprefix-to-primarysharedlast/arithmeticconsumer/dieclosure unqualified",
+ "clock": "TT/FF pathfinding833.333ps60/25uncertainty, SSsensitivity, owncalibrated250psIO",
+ "macro_count": 12,
+ "macro_master": "ot_sram_1r1w_128x256_m1_r2c2",
+ "macro_multicycle": false
+}
