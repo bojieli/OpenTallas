@@ -6,7 +6,7 @@ interfaces must subsequently be bound by the system builder before routing.
 """
 
 
-def insert_columns(v, model, width_um, height_um=2000., master='qfd_emb_strip_narrow92'):
+def insert_columns(v, model, width_um=92.016, height_um=2000.16, master='qfd_emb_strip_narrow92'):
     if model.get('relay_plan') or any(i.kind == 'relay' or i.name.startswith('dr_') for i in model['insts']):
         raise ValueError('embedding columns must precede relay placement')
     if 'embedding_columns' in model:
@@ -34,7 +34,7 @@ def insert_columns(v, model, width_um, height_um=2000., master='qfd_emb_strip_na
         # Check against every actual shifted abstract, including controller and CDC.
         for other in model['insts']:
             ox = other.x + left_shift(other.x)
-            if min(x + width - v.SHAVE, ox + other.w) > max(x, ox) + eps and min(y + height - v.SHAVE, other.y + other.h) > max(y, other.y) + eps:
+            if min(x + width, ox + other.w) > max(x, ox) + eps and min(y + height, other.y + other.h) > max(y, other.y) + eps:
                 raise ValueError(f'embedding engine {stack} overlaps {other.name}')
         planned.append((stack, side, x, y))
     if len(planned) != 4:
@@ -51,7 +51,7 @@ def insert_columns(v, model, width_um, height_um=2000., master='qfd_emb_strip_na
     model['col_x'] = lambda col: old_col_x(col) + (width if col < 32 else 2 * width)
     engines = {}
     for stack, side, x, y in planned:
-        engine = v.Inst(f'emb_engine_{stack}', master, x, y, width-v.SHAVE, height-v.SHAVE,
+        engine = v.Inst(f'emb_engine_{stack}', master, x, y, width, height,
                         kind='embedding_engine', region='strip', domain='stream')
         model['insts'].append(engine)
         engines[stack] = engine
@@ -60,6 +60,7 @@ def insert_columns(v, model, width_um, height_um=2000., master='qfd_emb_strip_na
     model['embedding_columns'] = dict(width_um=width, height_um=height,
         engines=engines, added_outline_mm2=round(2*width*die['h']/1e6, 6),
         linear_reticle_limits_um=[26000,33000], physical_closed=False,
+        abstract_dimensions='actual emitted standalone LEF SIZE equals FW/FH; no synthetic SHAVE subtraction',
         interfaces_bound=False, added_pc_core_stations_forward=1,
         added_pc_core_stations_return=1, proposed_parallel_batch_added_edges=2,
         latency_adopted=False, pcport_slot='inside measured controller frame; not yet bound',
