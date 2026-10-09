@@ -1,0 +1,11 @@
+{
+  "name": "mtp-wfc_tok-hard-e829cb457-r2-tc-cx",
+  "status": "QUEUED",
+  "host": null,
+  "run": null,
+  "admission_hold": {
+    "reason": "W8 matching SOURCE metadata f8f493123 must PASS; r3/tokpipe harness fixes bound before physical admission",
+    "owner": "Claude:W8",
+    "source_gate_pending": true
+  }
+}

@@ -3975,7 +3975,7 @@ def handle_transient(j, fleet, ex):
 def advance_job(name, fleet):
     with job_lock(name):
         j = load_job(name)
-        if j["status"] in TERMINAL:
+        if j["status"] in TERMINAL or j.get("admission_hold"):
             return
         nt = j.get("transient_next")
         if nt and time.time() < nt:

@@ -89,3 +89,10 @@ class MainSourceRecordTests(unittest.TestCase):
                     result=cl.publish(j,metrics)
                 self.assertEqual(pushes,['HEAD:refs/heads/codex/closure-record-fixture'])
                 self.assertEqual(result['record_branch'],'codex/closure-record-fixture')
+
+class PendingGateAdmissionTests(unittest.TestCase):
+    def test_pending_source_gate_never_starts_job(self):
+        from contextlib import nullcontext
+        j=dict(name="fixture",status="QUEUED",admission_hold=dict(reason="matching SOURCE gate pending"))
+        with patch.object(cl,"job_lock",return_value=nullcontext()),patch.object(cl,"load_job",return_value=j),patch.object(cl,"step",side_effect=AssertionError("pending gate launched")):
+            cl.advance_job("fixture",object())
