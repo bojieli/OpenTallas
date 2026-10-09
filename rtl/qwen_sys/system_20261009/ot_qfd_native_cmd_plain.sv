@@ -2,7 +2,7 @@
 // Actual cmd32 adapter. DESC/GO pulse storage and native FIFO reservations
 // precede command launch. A retired read window is insufficient alone: old
 // writes and transport must also be quiet before replacing its descriptor.
-module ot_qfd_native_cmd_plain #(parameter integer ENABLE=0)(
+module ot_qfd_native_cmd_plain #(parameter integer ENABLE=0, MUT_SKIP_DRAIN=0)(
  input wire clk,rst_n,
  input wire desc_v,input wire [18:0] desc_row,input wire [10:0] desc_n,
  input wire go_v,input wire wr_v,input wire [4:0] wr_bank,wr_col,
@@ -20,22 +20,22 @@ module ot_qfd_native_cmd_plain #(parameter integer ENABLE=0)(
  reg [31:0] cq;
  reg cv;
  reg [2:0] rc;
- wire context_room=!phase||(phase[1]&&write_quiet&&transport_quiet&&!wr_v);
+ wire context_room=!phase[0]||(phase[1]&&(MUT_SKIP_DRAIN!=0 || (write_quiet&&transport_quiet&&!wr_v)));
  wire desc_bad=desc_v&&(desc_n==0||desc_n>1024);
- wire retire_bad=window_retired&&(!phase||!phase[2]);
+ wire retire_bad=window_retired&&(!phase[0]||!phase[2]);
  reg choose;reg [31:0] packet;reg [1:0] kind;
  always @*begin
   choose=0;packet=0;kind=0;
   if(credits!=0)begin
    if(dv)begin choose=1;packet={2'd0,dp};kind=0;end
    else if(gp)begin choose=1;packet=32'h40000000;kind=1;end
-   else if(wr_v&&phase&&phase[2])begin choose=1;packet={2'd2,20'd0,wr_col,wr_bank};kind=2;end
+   else if(wr_v&&phase[0]&&phase[2])begin choose=1;packet={2'd2,20'd0,wr_col,wr_bank};kind=2;end
   end
  end
  wire credit_bad=cmd_credit_return&&credits==8&&!choose;
  wire pre_safe=ENABLE&&!fault&&!desc_bad&&!retire_bad&&!credit_bad;
  wire take_desc=pre_safe&&desc_v&&!dv&&!gp&&context_room;
- wire go_bad=go_v&&(gp||phase[2]||(!phase&&!take_desc));
+ wire go_bad=go_v&&(gp||phase[2]||(!phase[0]&&!take_desc));
  wire safe=pre_safe&&!go_bad;
  assign desc_take=safe&&take_desc;
  assign go_take=safe&&go_v;
