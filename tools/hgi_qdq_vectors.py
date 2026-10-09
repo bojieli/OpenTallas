@@ -56,7 +56,8 @@ def cases(block, seed):
             np.linspace(-1536, 1536, 16, dtype=np.float32)])))
         # Scale midpoint, maximum scale, and the next overflowing midpoint.
         # Keep each anchor at +/- one binary32 ULP around the exact boundary.
-        for boundary in [2640, 2688, 2784]:
+        # amax=2592 gives scale432, the true416/448 tie (2640/6=440).
+        for boundary in [2592, 2640, 2688, 2784]:
             center = np.float32(boundary)
             for side, anchor in [("below", np.nextafter(center, np.float32(-np.inf))),
                                  ("tie", center),
