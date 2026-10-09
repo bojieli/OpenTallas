@@ -1,0 +1,211 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "tokloop_rb-a2360a330-tc-hm10-cl",
+ "block": "ot_hbm_token_loop",
+ "owner": "Claude:struct-close",
+ "source_branch": "claude/struct-close-20261009",
+ "record_branch": "codex/closure-record-tokloop_rb-a2360a330-tc-hm10-cl",
+ "source_commit": "a2360a330ae9455bf5699eacb8934d9cc8452d9a",
+ "host": "ot-epyc4",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/tokloop_rb-a2360a330-tc-hm10-cl",
+ "acceptance": {
+  "setup_corner": "TT",
+  "setup_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "clock_periods_ps": {},
+  "rule": "OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 23.07,
+  "ff_ps": 5.33,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "clock_periods_ps": {},
+  "setup_corner": "tt",
+  "ss_sensitivity_ps": -224.01,
+  "ss_sensitivity_tns_ps": -34624.5,
+  "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/tokloop_rb-a2360a330-tc-hm10-cl/routes/tokloop_rb_a2360a330_tc_hm10_cl/corner_sta.json",
+  "post_sdc": [
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+   "physical/common_flow/link_budget_consistent.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/tokloop_rb-a2360a330-tc-hm10-cl/routes/tokloop_rb_a2360a330_tc_hm10_cl/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/tokloop_rb-a2360a330-tc-hm10-cl/routes/tokloop_rb_a2360a330_tc_hm10_cl/work/orfs/logs/asap7/opentallas_ot_hbm_token_loop_asap7_mtp_tokloop_rb_a2360a330_tc_hm10_cl/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_rb_token_loop_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "PASS {'verdict': 'PASS', 'problems': []} FAIL {'1': 31, '2': 28, '3': 3, '5': 6}\n\nRB_token_loop_PASS\n",
+   "track": "parallel"
+  },
+  "bench_rb_token_loop_mutant": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "PASS {'verdict': 'PASS', 'problems': []} FAIL {'1': 31, '2': 28, '3': 3, '5': 6}\n\nRB_token_loop_NEG_FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1267,
+    "mean": 240.4,
+    "min": 231.7,
+    "max": 247.9
+   },
+   "all": {
+    "n": 1859,
+    "mean": 240.5,
+    "min": 231.7,
+    "max": 247.9
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1267,
+    "mean": 151.0,
+    "min": 144.6,
+    "max": 157.7
+   },
+   "all": {
+    "n": 1859,
+    "mean": 150.8,
+    "min": 144.6,
+    "max": 157.7
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 185,
+   "CK_SS_ALL_MEAN": 185,
+   "CK_SS_MIN": 178,
+   "CK_SS_ALL_MIN": 178,
+   "CK_SS_MAX": 192,
+   "CK_SS_ALL_MAX": 192,
+   "CK_TT_MEAN": 185,
+   "CK_TT_ALL_MEAN": 185,
+   "CK_TT_MIN": 178,
+   "CK_TT_ALL_MIN": 178,
+   "CK_TT_MAX": 192,
+   "CK_TT_ALL_MAX": 192,
+   "CK_FF_MEAN": 151,
+   "CK_FF_ALL_MEAN": 151,
+   "CK_FF_MIN": 145,
+   "CK_FF_ALL_MIN": 145,
+   "CK_FF_MAX": 158,
+   "CK_FF_ALL_MAX": 158,
+   "CK_SSLIB_MEAN": 240,
+   "CK_SSLIB_MIN": 232,
+   "CK_SSLIB_MAX": 248,
+   "CK_SSLIB_ALL_MEAN": 240,
+   "CK_SSLIB_ALL_MIN": 232,
+   "CK_SSLIB_ALL_MAX": 248,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 2,
+ "status": "CLOSED",
+ "closed_at": "2026-10-09T04:50:30-07:00",
+ "job_spec": {
+  "name": "tokloop_rb-a2360a330-tc-hm10-cl",
+  "block": "ot_hbm_token_loop",
+  "element": "ot_hbm_token_loop",
+  "owner": "Claude:struct-close",
+  "purpose": "struct-close 2026-10-09 registered-boundary batch 2 (-cl): pi-tokloop TT -497 (reg2reg +131): unregistered boundary. Wrapper: job / cpl in and hr / db out through pin FIFOs, the rest flopped (host_stop direct: its stop-after-the-raising-step semantics are cycle-relative). +1 in / +1 out. Bench: tools/hbm_token_loop_bench.py reference (independent Python model) PASS on the wrapper, MUT=1 (no EOS) FAIL.",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc4",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 12,
+  "source": {
+   "branch": "claude/struct-close-20261009",
+   "commit": "a2360a330ae9455bf5699eacb8934d9cc8452d9a"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "rb_token_loop_exact",
+     "cmd": "python3 physical/struct_close/regbound/bench.py token_loop pos {RUN}/bench_pos",
+     "expect": "pass",
+     "pass_regex": "RB_token_loop_PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "rb_token_loop_mutant",
+     "cmd": "python3 physical/struct_close/regbound/bench.py token_loop neg {RUN}/bench_neg",
+     "expect": "fail",
+     "fail_regex": "RB_token_loop_NEG_FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_token_loop --source physical/struct_close/regbound/ot_hbm_token_loop_rb.sv --source rtl/common/ot_sc_pfifo.sv --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+   },
+   "calibrate": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes CORES=8 UTIL=40 PD=0.55 HM=0.010 LB=1 bash physical/hbm_mtp/route_mtp.sh {LABEL}${CL_LABEL_SUFFIX} ot_hbm_token_loop --source physical/struct_close/regbound/ot_hbm_token_loop_rb.sv --source rtl/common/ot_sc_pfifo.sv --clock-port clk --die-area 0 0 130 130 --core-area 2.16 2.16 127.84 127.84 $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "threads": 8,
+    "peak_ram_gb": 12
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+    "physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "cycles_added": 2,
+  "notes": "cycles added: 0 (RTL as written)",
+  "merge_target": null
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}
