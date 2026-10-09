@@ -1,0 +1,31 @@
+{
+ "cfg": "hgi_quant_pd50",
+ "pins": 1672,
+ "die_um": [
+  1800.0,
+  600.0
+ ],
+ "layers": {
+  "PIN_H": "M4 M6",
+  "PIN_V": "M5 M7"
+ },
+ "tracks": 2.0,
+ "limit": 12.0,
+ "est": {
+  "W": 7.82,
+  "E": 5.12,
+  "N": 0.08,
+  "S": 1.28
+ },
+ "verdict": "PASS",
+ "message": "pin density within limits (estimate)",
+ "rtl_boundary": {
+  "verdict": "PASS",
+  "message": "rtl_boundary ot_hgi_quant_decode: registered boundary (in->reg 10, reg->out 2 levels)",
+  "in_to_out_bits": 0,
+  "in_to_reg_max": 10,
+  "reg_to_out_max": 2,
+  "levels": 16,
+  "strict": true
+ }
+}

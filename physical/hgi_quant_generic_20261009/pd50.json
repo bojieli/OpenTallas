@@ -1,5 +1,5 @@
 {
-  "name": "hgi_quant_pd50-397461f5f-tc-cx",
+  "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
   "block": "ot_hgi_quant_decode",
   "owner": "Codex:generic_quant_decode/quant_physical_pair",
   "hosts": [
@@ -11,8 +11,8 @@
   "threads": 12,
   "peak_ram_gb": 60,
   "source": {
-    "branch": "codex/hgi-quant-physical-20261009",
-    "commit": "1a2b6e93b"
+    "branch": "codex/hgi-quant-decode-20261009",
+    "commit": "7202d4ec4"
   },
   "purpose": "Owner-approved HGI-1 G8 full32-lane/128-bit record quant decode; SATFINITE opt-in E4M3 corrected fork; all ports live. Physical-only density variant. Standalone boundary contract is provisional and explicitly not legacyhfd_quant die budget match. No adoption until generic die integration budget approved. Parent exact lockstep/CF-QDQ/mutants must pass before fleet intake.",
   "registered_io": true,
