@@ -1,0 +1,49 @@
+"""Analytical four-adjacent-tile shared pool; no RTL/physical adoption claim."""
+import argparse,gzip,hashlib,heapq,json
+from collections import defaultdict
+from pathlib import Path
+from qwen_kv_landing_fabric import placement_m
+
+def model(trace,depth):
+    positions=placement_m();groups=defaultdict(list)
+    with gzip.open(trace,'rt') as f:
+        for line in f:
+            cy,fo,p,n,t0,t1=map(int,line.split())
+            for tile in [t0,t1][:max(n,0)]:
+                col,row=positions[tile]
+                groups[(col//4,row)].append((fo,p,tile))
+    origin=min(t for es in groups.values() for t,p,tile in es)
+    final=0;wait=0;peak=0
+    for (gc,row),es in groups.items():
+        # Existing worst-case row chain ending at the farthest member.
+        col=gc*4+3;fw=col%32+11;rev=col%32+3
+        free=[0]*depth;heapq.heapify(free);sendlast=servicelast=-1
+        es.sort();block=es[0][0]-origin+fw
+        for when,p,tile in es:
+            offer=when-origin
+            send=max(offer,sendlast+1,heapq.heappop(free));sendlast=send
+            service=max(send+fw,servicelast+1)
+            if block<=service<block+8: service=block+8
+            servicelast=service;heapq.heappush(free,service+2+rev)
+            wait+=send-offer
+        final=max(final,servicelast+2);peak=max(peak,len(es))
+    bits=1033;ff=depth*bits+2*(bits+1)+32
+    return dict(schema='opentallas.qwen-shared-skid-traffic.v1',trace_sha256=hashlib.sha256(Path(trace).read_bytes()).hexdigest(),
+      tiles_per_pool=4,shared_entries=depth,replicas=len(groups),offered_words=sum(len(e) for e in groups.values()),
+      max_group_words=peak,fill_edges=final,sum_wait_edges=wait,
+      service_words_per_cycle=1,token_preemption_edges=8,
+      state_bits_per_pool=ff,estimated_cell_um2_per_pool=ff*.2916+3655,
+      shared_frame_um=[160,160],provisional_frame_area_mm2=len(groups)*160*160/1e6,
+      routing=dict(ingress_bits=1034,broadcast_bits=1032,local_dest_select_bits=2,
+        fanout=4,pin_capacity_2layer_160um=2*int(160/.096)),
+      latency=dict(fill_edges=final,gross_layer_cycles=36*(final+2)),
+      adopted=False,physical_fit=False,rtl_built=False,
+      limitations=['timing-only offers; no golden full-width shared implementation yet',
+        'group frame/proximity may overlap existing four tile abstracts; needs actual composition',
+        'one output bus must exist and meet four actual tile write ports without duplicating pins',
+        'token conflict policy eight grouped edges is provisional; actual four producers may extend it',
+        'group arbitration/credit ownership and far relay costs must be implemented before adoption'])
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--trace',type=Path,required=True);p.add_argument('--depth',type=int,default=8)
+    a=p.parse_args();print(json.dumps(model(a.trace,a.depth),indent=2))
