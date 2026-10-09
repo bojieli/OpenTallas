@@ -43,7 +43,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
   end else if(ENABLE!=0)begin
    lines<=0;pop<=0;done<=0;
    for(l=0;l<8;l=l+1)begin
-    if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
+    if(credit[l]&&credits[l]==CRED&&!(can&&(line0+l<nlines)))fault<=1;
     credits[l]<=credits[l]+CW'(credit[l])-CW'(can&&(line0+l<nlines));
    end
    if(start)begin
