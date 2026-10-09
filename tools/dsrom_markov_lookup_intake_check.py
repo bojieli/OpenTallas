@@ -28,6 +28,7 @@ puts OT_I16_ELECTRICAL_END
 set ot_block [ord::get_db_block]
 set ot_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ot_captures 0;set ot_max_distance 0.0
+set ot_row_mismatch 0
 foreach ot_macro [$ot_block getInsts] {
  if {[[$ot_macro getMaster] getName] ne "ot_rom_4096x274_m8"} {continue}
  foreach ot_q [$ot_macro getITerms] {
@@ -40,6 +41,12 @@ foreach ot_macro [$ot_block getInsts] {
   if {[llength $ot_inputs]!=1} {error "payload output requires one direct capture sink"}
   set ot_d [lindex $ot_inputs 0];set ot_ff [$ot_d getInst]
   if {[[$ot_d getMTerm] getName] ne "D" || ![string match *DFF* [[$ot_ff getMaster] getName]]} {error "logic before macro capture"}
+  set ot_fb [$ot_ff getBBox];set ot_rows {}
+  foreach ot_row [$ot_block getRows] {
+   set ot_rb [$ot_row getBBox]
+   if {[$ot_fb yMin]==[$ot_rb yMin] && [$ot_fb xMin]>=[$ot_rb xMin] && [$ot_fb xMax]<=[$ot_rb xMax]} {lappend ot_rows $ot_row}
+  }
+  if {[llength $ot_rows]!=1 || [$ot_ff getOrient] ne [[lindex $ot_rows 0] getOrient]} {incr ot_row_mismatch}
   set ot_qxy [$ot_q getAvgXY];set ot_dxy [$ot_d getAvgXY]
   if {![lindex $ot_qxy 0] || ![lindex $ot_dxy 0]} {error "unplaced capture pin"}
   set ot_distance [expr {(abs([lindex $ot_qxy 1]-[lindex $ot_dxy 1])+abs([lindex $ot_qxy 2]-[lindex $ot_dxy 2]))/double($ot_dbu)}]
@@ -59,8 +66,13 @@ foreach ot_net [$ot_block getNets] {
 }
 puts "OT_I16_CAPTURES $ot_captures"
 puts "OT_I16_CAPTURE_DISTANCE $ot_max_distance"
+puts "OT_I16_ROW_MISMATCH $ot_row_mismatch"
 puts "OT_I16_CLOCK_LEAVES $ot_leaves"
 puts "OT_I16_CLOCK_LEAF_MAX $ot_max_leaf"
+check_power_grid -net VDD
+puts OT_I16_PG_VDD_PASS
+check_power_grid -net VSS
+puts OT_I16_PG_VSS_PASS
 exit
 '''
 def routed(orfs,out):
@@ -78,8 +90,10 @@ def routed(orfs,out):
  section=log.split('OT_I16_ELECTRICAL_BEGIN')[-1].split('OT_I16_ELECTRICAL_END')[0]
  violations=section.count('(VIOLATED)')
  caps=number('OT_I16_CAPTURES');dist=number('OT_I16_CAPTURE_DISTANCE');leaves=number('OT_I16_CLOCK_LEAVES');fan=number('OT_I16_CLOCK_LEAF_MAX')
- passed=run.returncode==0 and 'OT_I16_ELECTRICAL_END' in log and violations==0 and caps==512 and dist is not None and dist<=20 and leaves is not None and leaves>0 and fan is not None and fan<=16
+ row_mismatch=number('OT_I16_ROW_MISMATCH');pg=all(marker in log for marker in ('OT_I16_PG_VDD_PASS','OT_I16_PG_VSS_PASS'))
+ passed=run.returncode==0 and 'OT_I16_ELECTRICAL_END' in log and violations==0 and caps==512 and dist is not None and dist<=20 and row_mismatch==0 and pg and leaves is not None and leaves>0 and fan is not None and fan<=16
  rec=dict(passed=passed,source_binding=bound,returncode=run.returncode,TC_electrical_violations=violations,captures=caps,max_actual_q_to_D_manhattan_um=dist,clock_leaves=leaves,max_clock_leaf_inputs=fan,scope='actual final TT electrical/directcapture/CTSleaf acceptance; setup/hold/DRC independently required')
+ rec.update(actual_row_orientation_mismatch=row_mismatch,VDD_VSS_power_grid_connected=pg)
  (out/'verdict.json').write_text(json.dumps(rec,indent=2));print(json.dumps(rec));return passed
 if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--orfs',type=Path);p.add_argument('--out',type=Path);a=p.parse_args()
