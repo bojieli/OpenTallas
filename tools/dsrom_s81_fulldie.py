@@ -5520,7 +5520,13 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
-    global PQ_PLACE, FIELD_MARGIN
+    global PQ_PLACE, FIELD_MARGIN, WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS
+    # s81-gen 2026-10-09: restored (0544fca2c set these here; a later merge dropped the lines, so --wfc-hard / --mtp-seq /
+    # --mtp-links were silently ignored: no dsfd_wfc slab on any 'wfc-hard' layer die, no MTP sequencer / links on head dies)
+    WFC_HARD = bool(getattr(a, 'wfc_hard', False))
+    MTP_SEQ = bool(getattr(a, 'mtp_seq', False))
+    MTP_SEQ_MM2 = getattr(a, 'mtp_seq_mm2', None) or 0.15
+    MTP_LINKS = int(getattr(a, 'mtp_links', 0) or 0)
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
