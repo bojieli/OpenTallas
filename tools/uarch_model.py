@@ -14087,3 +14087,8 @@ def qwen_system_physical_model():
 def qwen_sequencer_sys_model():
     """Actual Q2 FQS stage traversal/template-ROM/base-add sizing before RTL."""
     return json.loads((ROOT / "results/rtl/qwen_system_20261009/physical/sequencer_sys_model.json").read_text())
+
+
+def qwen_sysctl_prompt_read_model():
+    """Full-context protected prompt read station and conditional host latency."""
+    return json.loads((ROOT / "results/rtl/qwen_system_20261009/physical/sysctl_prompt_read_model.json").read_text())
