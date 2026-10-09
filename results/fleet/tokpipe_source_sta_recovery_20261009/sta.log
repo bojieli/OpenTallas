@@ -1,0 +1,51 @@
+{"SS": {"done": true, "violators": {"slew": 1009, "capacitance": 0, "fanout": 0}}, "FF": {"done": true, "violators": {"slew": 3, "capacitance": 0, "fanout": 0}}}
+{
+ "SS": {
+  "insertion_ps": [
+   447.9,
+   605.6
+  ],
+  "block": -222.7,
+  "incontext": -222.7,
+  "die150": -222.7,
+  "region": -222.7,
+  "reg2reg": -222.7,
+  "hold_block": 76.5,
+  "hold_incontext": 76.5,
+  "hold_die150": -64.5,
+  "hold_region": -41.1,
+  "hold_reg2reg": 76.5
+ },
+ "TT": {
+  "insertion_ps": [
+   335.3,
+   462.6
+  ],
+  "block": 102.8,
+  "incontext": 102.8,
+  "die150": 102.8,
+  "region": 102.8,
+  "reg2reg": 102.8,
+  "hold_block": -7.9,
+  "hold_incontext": 43.7,
+  "hold_die150": -62.0,
+  "hold_region": -57.4,
+  "hold_reg2reg": 43.7
+ },
+ "FF": {
+  "insertion_ps": [
+   267.8,
+   374.6
+  ],
+  "block": 159.9,
+  "incontext": 267.3,
+  "die150": 235.3,
+  "region": 243.0,
+  "reg2reg": 267.3,
+  "hold_block": -103.3,
+  "hold_incontext": 20.4,
+  "hold_die150": -69.3,
+  "hold_region": -67.6,
+  "hold_reg2reg": 20.4
+ }
+}

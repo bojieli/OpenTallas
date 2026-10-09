@@ -1,0 +1,13 @@
+{
+  "old": [],
+  "new": {
+    "name": "qwen-fmt3-nominal-route",
+    "pid": 3669250,
+    "command_match": "global_route.tcl",
+    "peak_ram_gb": 3.3,
+    "launcher_pid": 3549079,
+    "owner": "Codex:qwen_hbm_unify/fmt3",
+    "reason": "Current GRT worker HWM2655052KiB; completed same-job CTS observed3370636KiB plus launcher23064KiB rounds3.3GiB. Measured phase basis, not unmeasured DRT. Old CTS worker2658285 replaced naturally."
+  },
+  "cmd": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_route.tcl -metrics /work/logs/asap7/smh_front_c_one_qwen_fmt3_ss/base/5_1_grt.json "
+}

@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-09T12:04:27.440482+00:00",
+  "absent_pids": [
+    745294,
+    745361,
+    2558538
+  ],
+  "released": [
+    {
+      "name": "hbm-selector-native-qend-calibration",
+      "pid": 2558538,
+      "command_match": "openroad",
+      "peak_ram_gb": 19,
+      "owner": "Codex:hbm_continuation/selector_capture",
+      "reason": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
+      "launcher_pid": 745294
+    }
+  ],
+  "basis": "Owner terminal floorplan PPL0061 and wrapper rc4; fresh /proc revalidation."
+}
