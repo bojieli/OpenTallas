@@ -43,7 +43,7 @@ Adoption still requires real finite VM producer/count/drain/writeACK consumer pr
 
 ## Children
 
-- Physical owner `/root/generic_quant_decode/quant_physical_pair`, WT `/home/ubuntu/wt/codex-hgi-quant-physical`, branch `codex/hgi-quant-physical-20261009`: collecting final clean pushed takeover receipts, preserves livejobs.
-- Golden owner `/root/generic_quant_decode/qdq_conformance_vectors`, WT `/home/ubuntu/wt/codex-hgi-qdq-vectors`, branch `codex/hgi-qdq-vectors-20261009`, last pushedHEAD `736174ce8`: completed, no continuing golden jobs; final clean confirmation requested.
+- Physical owner `/root/generic_quant_decode/quant_physical_pair`, WT `/home/ubuntu/wt/codex-hgi-quant-physical`, branch `codex/hgi-quant-physical-20261009`, exact pushedcleanHEAD `dbd4b6b368e6d83d71f251cdeb214040f940b0f3`. Handoff `physical/hgi_quant_generic_20261009/TAKEOVER_20261009.md` and twelve-file state/log/hash receipt preserve terminalPD50/livePD55; no WIP/newbuilds/routes. Do not merge its whole history blindly (duplicate original ownerRTLcherries), select needed metadata/evidence only.
+- Golden owner `/root/generic_quant_decode/qdq_conformance_vectors`, WT `/home/ubuntu/wt/codex-hgi-qdq-vectors`, branch `codex/hgi-qdq-vectors-20261009`, exact local=remoteHEAD `736174ce8904712f0e94e06f384b73ff6e1304ab`: confirmedclean, no WIP or continuing golden Pythonprocesses onEPYC3.
 
 All source/evidence and READY/review coordination is already posted in `/home/ubuntu/claude-takeover-20261007/`.
