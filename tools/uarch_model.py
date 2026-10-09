@@ -14567,3 +14567,45 @@ def qwen_r25_su_dispatch_contract_model():
     """Full p4 finite-window consumer and four-quarter native dispatch sizing."""
     from qwen_r25_su_dispatch_model import model
     return model()
+
+
+def dsrom_mtp_p2_transport_model():
+    """Individual expert FP32 returns preserve the released golden sum order."""
+    from dsrom_mtp_p2_transport_model import model
+    return model()
+
+
+def hbm_loader_native_service_model():
+    """Finite deployment ingress; unresolved transport never earns token credit."""
+    from hbm_loader_native_service_model import model
+    result = model()
+    result['design_applicability'] = {
+        'Qwen3-8B ROM': False, 'DeepSeek-V4.1 ROM': False,
+        'Qwen3-8B HBM': True, 'DeepSeek-V4.1 HBM': True,
+    }
+    result['physical_measurement'] = dict(
+        source_commit='05c0a8a00', per_PC_FF=316,
+        per_PC_routed_cell_area_um2=395.862, PCs_per_stack=32,
+        stacks_per_die=4, per_die_lease_cell_area_um2=395.862*32*4,
+        evidence='results/hbm_loader_native_pc_pathfinding_r2_20261009',
+        scope='generic IO primitive pathfinding; actual loaded pins and clock unresolved',
+        SS_setup_ps=-207.1, TT_setup_ps=58.1045, FF_hold_ps=34.03,
+        headline_closed=False)
+    result['unresolved_composition'] = dict(
+        dispatcher='actual landing coordinates, registered relay hops and channel occupancy required',
+        writes='actual external producer/link pending fence and configured capacity inventory required',
+        floorplan='station reservations must include existing PC/line logic occupancy',
+        token_delta='runtime native access not admitted or credited until measured arbitration is composed')
+    return result
+
+
+def hbm_native_index_control_model():
+    """Dynamic frame metadata and retained native source lease, before build."""
+    from tools.hbm_native_index_control_model import model
+    return model()
+
+
+def qwen_kv_row_model():
+    """Full32-PC option-M row mechanism and merged-word prepaid credits."""
+    from uarch_model_qwen_kv_row import model
+    return model(DFF_UM2)
