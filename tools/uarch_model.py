@@ -12812,6 +12812,11 @@ def dsrom_mtp_seed_qs5f_candidate():
         collector=dict(root_storage_bits=256,FP32_add_operations=6,adder_instances=1,adder_LAT=8,minimum_serial_join_cycles=48),
         partial_phase_fmt_fp32=[True,True],final_projection_rounding='BF16 once after balanced full root, before main_norm',
         config_cycles=100,phase_quiet_fence_cycles=128,measured_complete_column_cycles=None,
+        PQ_shadow_replay=dict(words_per_phase=17,phases=4,QM5_read_stages=2,
+            input_pipeline_fence_cycles=6,post_replay_settle_fence_cycles=6,
+            go_condition='registered sh_free && !walking, then settle fence',
+            load_condition='registered bank_free && sh_free',
+            replay_latency_overlap='none in this minimum serial bench; actual status wait is included in measured complete cycles'),
         latency_contribution='measure actualselectedminimum; wholematrix, HCmean, main_norm, rankgather and6position sharing remainunqualified',
         storage=dict(logical8192x32B_rowbanks_per_rank=75,nativeNB2pairs_per_rank=38,physical4096macros_per_rank=152),
         qualification=dict(whole_field_descriptor=False,parallel_engine_count=False,six_positions=False,new_collector_physical_closed=False))
