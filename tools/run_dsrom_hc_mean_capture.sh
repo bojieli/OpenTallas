@@ -3,6 +3,7 @@ set -euo pipefail
 out=$1
 extra_defines=()
 if [[ ${HC_ECC_PIPE:-0} == 1 ]];then extra_defines=(-DHC_ECC_PIPE);fi
+if [[ ${HC_MREG:-0} == 1 ]];then extra_defines+=(-DHC_MREG);fi   # sys-takeover: captured-SRAM-word SECDED pipe
 mkdir -p "$out"
 if [[ -e "$out/terminal.json" || -e "$out/positive.log" ]]; then
     echo 'immutable gate already exists' >&2;exit 73

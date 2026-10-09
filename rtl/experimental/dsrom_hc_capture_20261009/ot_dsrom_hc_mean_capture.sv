@@ -11,6 +11,10 @@ module ot_dsrom_hc_mean_capture #(
     parameter integer ADD_LAT=7, MUL_LAT=7,
     parameter integer MAX_CONTEXT=1048576,
     parameter integer ECC_PIPE=0, // opt-in registered syndrome and correction
+    // MREG=1 (sys-takeover 2026-10-09, opt-in, with ECC_PIPE): the SECDED pipe reads the CAPTURED word held_code instead
+    // of the raw SRAM rd_out (c5dfa5e7f TT -235: SRAM clk->q 459 ps + 7 XNOR syndrome levels into overall_q; owner rule:
+    // capture flop next to the macro, no logic before it).  One state RPRE between RDECODE and RECC: +1 cycle per frame.
+    parameter integer MREG=0,
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -36,7 +40,7 @@ module ot_dsrom_hc_mean_capture #(
     output wire busy, output reg fault
 );
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
-                     STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12;
+                     STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12,RPRE=13;
     reg [3:0] state;
     reg owned;
     reg [USER_W-1:0] user_q;
@@ -85,8 +89,8 @@ module ot_dsrom_hc_mean_capture #(
         ot_s81_secded_enc72 u_enc(.d(pack_q[64*l+:64]),.c(write_code[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_n),
-                .valid_in(state==RDECODE&&!fault),
-                .c(read_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .valid_in((MREG?(state==RPRE):(state==RDECODE))&&!fault),
+                .c((MREG?held_code[72*l+:72]:read_code[72*l+:72])^(l==0?READ_INJECT:72'd0)),
                 .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),
                 .ce(enc_ce[l]),.ue(dec_ue[l]));
         end else begin:g_comb
@@ -180,7 +184,8 @@ module ot_dsrom_hc_mean_capture #(
                 end
                 RREQ: state<=RWAIT;
                 RWAIT: state<=RDECODE;
-                RDECODE: begin held_code<=read_code;state<=ECC_PIPE?RECC:RHOLD;end
+                RDECODE: begin held_code<=read_code;state<=ECC_PIPE?(MREG?RPRE:RECC):RHOLD;end
+                RPRE: state<=RECC;
                 RECC: if(&decode_valid) state<=RHOLD;
                 RHOLD: begin
                     if(|dec_ue) fault<=1;
