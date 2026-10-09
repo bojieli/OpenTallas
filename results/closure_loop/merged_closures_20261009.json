@@ -470,15 +470,16 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 52,
-   "merged": 52,
-   "record_only": 10
+   "closed": 55,
+   "merged": 55,
+   "record_only": 12
   },
   "notes": [
    "hgi_coll_decode_a/b: adoption_scope BLOCKED_ELECTRICAL (5 max_slew ~285 ps vs 260) - merged as evidence, not adopted",
    "hbm_cmdproc_s_orph2 record updates the live cmdproc view_s (as cmdproc_n orph2 did in merge-eco)",
    "struct-close/drive-0158/w2/wfc-hard: closure files only; shared flow files (io_ref_routed, link_budget intra knob, route_master CORE_INSET) not taken; defaults equivalent for these routes",
-   "hgi_coll_decode_a/b: g96 closures (10b28cd17) are the electrically clean successors of the BLOCKED_ELECTRICAL 7c38e6508 closures"
+   "hgi_coll_decode_a/b: g96 closures (10b28cd17) are the electrically clean successors of the BLOCKED_ELECTRICAL 7c38e6508 closures",
+   "batch 5: rowfence_a/b-7eea9e354 skipped here - already merged to main by sys-takeover (3fd78b574)"
   ],
   "jobs": [
    {
@@ -1210,6 +1211,49 @@
     "record_merged_sha": "0c563c001f34455cd72ab31b2022188b793b2e5e",
     "source_merged_sha": "eb9d9f942c698d3698e0878fa1ccab4cbebe9ca9",
     "note": "merge 12c0bd9da (whole quant branch); ot_hgi_fp4qdq.sv add/add conflict resolved to the branch (S5 count tree) version; FF +0.44 ps thin but passing (coordinator batch 4)"
+   },
+   {
+    "job": "hgi_adp_hc_a-d2f363a3c-tc-cl",
+    "closed": "2026-10-09T11:17:46-07:00",
+    "branch": "claude/hgi-adapters-20261009",
+    "source_commit": "d2f363a3c31898d4cc58c3eb9c04f194805e4a88",
+    "record_commit": "a63305a7d",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +48.19 / FF +3.65 ps DRC 0; SS sensitivity -67.33 ps",
+    "status": "merged",
+    "record_merged_sha": "9a2f45f10306572b90f61e7ec7723b2fe30d6304",
+    "source_merged_sha": null,
+    "note": "source d2f363a3c already on main; record only (coordinator batch 5)"
+   },
+   {
+    "job": "hgi_coll_row_formatter_c130-264ff331a-tc-cl",
+    "closed": "2026-10-09T11:13:50-07:00",
+    "branch": "claude/hgi-rowfmt-pipe-20261009",
+    "source_commit": "264ff331a3cf3e11c4f1df80785e33268001def5",
+    "record_commit": "c944a276e",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +92.22 / FF +19.99 ps DRC 0; SS sensitivity -249.34 ps",
+    "status": "merged",
+    "record_merged_sha": "dd739288338f3b1a1a9faf34298ebcbd8880226f",
+    "source_merged_sha": "7915ed933b4aa5312b5a255266a075789c98dca7",
+    "note": "merge 264ff331a (counter-feedback fix, PRE/MUL edges, c130/c180 cfgs; c180 is an unclosed cfg only); local GOLDEN PASS + 5 mutants FATAL (coordinator batch 5)"
+   },
+   {
+    "job": "hcreader-plain300-lb0-f0ba521d3-tc-cl",
+    "closed": "2026-10-09T11:15:59-07:00",
+    "branch": "claude/cont-takeover-20261009",
+    "source_commit": "f0ba521d3e19bae11c97cce722b4f655d34644fe",
+    "record_commit": "34727be99",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +93.60 / FF +11.24 ps DRC 0; SS sensitivity -167.77 ps",
+    "status": "merged",
+    "record_merged_sha": "91e7f00c9ce2d9a29b62742279302d3ab48f6ac0",
+    "source_merged_sha": null,
+    "note": "EVIDENCE ONLY, NOT ADOPTED: closed against the 0.2T IO budget only; decision ~11:30 = HC blocks sign off with the credit relay at the die-link budget. Source already on main; record only (coordinator batch 5)",
+    "adoption_scope": "EVIDENCE_NOT_ADOPTED"
    }
   ]
  }
