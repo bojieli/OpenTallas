@@ -1,0 +1,130 @@
+{
+  "schema": "opentallas.qwen_registry_priority1_actions.v1",
+  "scope": "Metadata/source/job inventory only; no architecture, program, RTL, local build, daemon mutation or route submission",
+  "review_binding": [
+    "REVIEW_20261009 Q2 approval with SECDED on prompt SRAM only",
+    "REVIEW_20261009 Q3 requires fault register/A6 recut in one successor",
+    "REVIEW_20261009 I5 approves existing DONE_REG1",
+    "REVIEW_20261009 J5 confirms I4 placement waits KV K2 and I7 new design belongs Claude"
+  ],
+  "qfd_sysctl_stn": {
+    "registry_issue": "row still reports52failure and no variants while approved I5 successor is closed",
+    "implemented_source_ref": "d4760be45",
+    "source_branch": "claude/drive-0158-20261009",
+    "source_paths": [
+      "rtl/qwen_sys/system_20261008/ot_qfd_sysctl_stn_pb2.sv",
+      "rtl/qwen_sys/system_20261008/ot_qfd_sysctl_pb2.sv",
+      "rtl/qwen_sys/system_20261008/ot_qfd_prompt_sram_pb2.sv",
+      "rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv",
+      "rtl/qwen_sys/system_20261008/ot_host_if_pb2.sv"
+    ],
+    "model": "results/rtl/qwen_system_20261009/physical/sysctl_prompt_read_model.json plus approved I5 +1 step completion edge",
+    "kit": "physical/qwen_die_masters/cfg/qfd_sysctl_stn_pb2_cl.env",
+    "params": {
+      "PROMPT_SRAM": 1,
+      "BOUNDARY_STATIONS": 1,
+      "PROMPT_READ_STATION": 1,
+      "PKG_DONE_REG": 1
+    },
+    "macros": "one real ot_sram_1r1w_1024x256_m2_r2c2, payload SECDED24,192 used codeword capture bits",
+    "frame_um": [
+      500,
+      300
+    ],
+    "bench": "run_ctl_stn_pb2.sh -DPKG_DONE_REG=1;9cases8192steps1245184events8191CQzero mismatches; unconditional-readpoisonmutantFAIL",
+    "selected_job": {
+      "name": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+      "status": "CLOSED",
+      "commit_full": "d4760be4512224864f7ba47b4e931fa056ddc324",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl",
+      "reason": "CLOSED TT +17.23 / FF +13.72 ps DRC 0; SS sensitivity -366.30 ps | record claude/drive-0158-20261009 71e85321e (14 files) | no merge target",
+      "updated": "2026-10-09T04:06:31-07:00"
+    },
+    "alternate_job": {
+      "name": "qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-a-cl",
+      "status": "NEEDS_RTL",
+      "commit_full": "d4760be4512224864f7ba47b4e931fa056ddc324",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-a-cl",
+      "reason": "FF hold -5.5: route hold repair stalled; window I2R=127@-15.8",
+      "updated": "2026-10-09T04:07:13-07:00"
+    },
+    "closed_record": "71e85321e",
+    "closed_record_paths": [
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/export.json",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/export_ff.log",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/export_ss.log",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/export_tt.log",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/qfd_sysctl_stn_pb2_cl.lef",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/qfd_sysctl_stn_pb2_cl_ff.lib",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/qfd_sysctl_stn_pb2_cl_ss.lib",
+      "physical/qwen_die_masters/views/qfd_sysctl_stn_pb2_cl/qfd_sysctl_stn_pb2_cl_tt.lib",
+      "results/closure_loop/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/verdict.json",
+      "results/rtl/qwen_system_20261009/routes/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/STATUS",
+      "results/rtl/qwen_system_20261009/routes/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/corner_sta.json",
+      "results/rtl/qwen_system_20261009/routes/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/export.log",
+      "results/rtl/qwen_system_20261009/routes/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/signoff.sdc",
+      "results/rtl/qwen_system_20261009/routes/qfd_sysctl_stn_pb2_cl-d4760be45-tc-hm10-b-cl/status"
+    ],
+    "terminal_gates": {
+      "TT_ps": 17.23,
+      "FF_ps": 13.72,
+      "DRC": 0,
+      "SS_sensitivity_ps": -366.3
+    },
+    "concrete_action_now": "Claude intake/coordinator bind existing closedI5 successor/view/evidence to qfd_sysctl_stn canonical row; run any mandated current-budget rejudge/export qualification on saved winner only. No duplicate physical route. KV placement/integration remains separate gate.",
+    "two_variant_dedupe": "Existing -a/RVT failed FF; -b/LVT closed. Both source-matched variants already ran. No reason to add two more."
+  },
+  "qfd_production_stage_traversal": {
+    "registry_issue": "qualification still points146 external-start/mutableprogram FQS rather than actual38stage_sys",
+    "real_implemented_ref": "942f01edc",
+    "exact_source_ref": "37c6b83d1",
+    "source_paths": [
+      "rtl/qwen_sys/system_20261008/ot_qfd_sp_constants_sequencer_sys.sv",
+      "rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv",
+      "rtl/qwen_sys/missing_masters_20261007/gen/ot_qwen_rom_core_ctrl.sv",
+      "rtl/rom/ot_qwen_tp_seq_w12_fs.sv"
+    ],
+    "producer_wrapper": "Real dctl38-stage traversal and immutable template functions in_sys; no missing host command producer for component route. Full engines are external module boundaries; fixture uses ready/idle engine stubs, so no numerical token execution claim.",
+    "model": "results/rtl/qwen_system_20261009/physical/sequencer_sys_model.json, unified qwen_sequencer_sys_model",
+    "params": {
+      "SYS_ENABLE": 1,
+      "FQ_HEAD": 1,
+      "MSTN": 1,
+      "DIE_RANK": 0
+    },
+    "frame_um": [
+      777.6,
+      1000.08
+    ],
+    "kit": "physical/qwen_die_masters/cfg/qfd_sp_constants_sequencer_sys.env",
+    "exact_positive": "native_scale_37c6b83d1, four ranks andP0/P8191:304stages1760ME5792SU584collectiveszero mismatches; stagehandoff2edges",
+    "exact_negative": "missingstagebase mutant576bad; invalidtemplateaddr64 fails code2",
+    "packing_gate": "parent09432714d constructive148releasedstage payload permutationPASS; global scale physical binding remainsopen",
+    "existing_jobs": [
+      {
+        "name": "qfd_sp_constants_sequencer_sys-08ef6a8a8-tc-hm10",
+        "status": "FLOORPLAN_MARGIN",
+        "commit_full": "08ef6a8a88ccdf32a8529690c28a09d1de2214d0",
+        "host": "ot-epyc4",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_constants_sequencer_sys-08ef6a8a8-tc-hm10",
+        "reason": "pin_density: pin density > 12.0 bits/um/layer over 100 um: E/M4 20.8 b/um @819, W/M4 13.0 b/um @95: spread over the face (target <= 6.0) / more layers / a longer edge",
+        "updated": "2026-10-09T00:50:21-07:00"
+      },
+      {
+        "name": "qfd_sp_constants_sequencer_sys-d06ab7a00-tc-hm10",
+        "status": "PREROUTE_MARGIN",
+        "commit_full": "d06ab7a003b41a81ee53ae345841a2bd47a6665a",
+        "host": "ot-epyc4",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_constants_sequencer_sys-d06ab7a00-tc-hm10",
+        "reason": "reg2reg WNS -872.7 ps at 833.333 (route-period -936.0), 336 endpoints below -750 (> 50); worst u_ctrl.me_ts[0]$_DFFE_PP_/QN -> u_ctrl.fault$_DFFE_PN0P_/D",
+        "updated": "2026-10-09T01:05:25-07:00"
+      }
+    ],
+    "failure": "d06 balancedpin floorplanPASS; prerouteTT-872.7,336endpoints below-750,me_ts0->fault cone also d_base/r_so/me_tiles",
+    "status": "BLOCKED_Q3_APPROVED_SUCCESSOR_SOURCE_MISSING",
+    "concrete_action_now": "Claude supplies reviewed single fault/A6 recut successor source/model/exact gate. Coordinator attaches actual_sys evidence and historical d06 failure to canonical traversal row now. Once approved successor exists, intake selects >=2 existing physical configs (RVT/LVT) with current clocks and budgets. Do not route stale146 FQS or fabricate a wrapper; do not repeat identical hopeless d06 cone.",
+    "routine_limit": "No new RTL or program authored; no submitted spec because the reviewed successor is unimplemented."
+  }
+}

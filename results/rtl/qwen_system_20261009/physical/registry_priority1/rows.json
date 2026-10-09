@@ -1,0 +1,161 @@
+[
+  {
+    "element": "qfd_sysctl_stn",
+    "target": "Qwen ROM",
+    "variants": [],
+    "category": "needs redesign (no live job)",
+    "via": "",
+    "purpose": "Fix measured5601 CTSfailure using complete die-report inputstation and finite tenAXIchannel queues; unchangedprotectedSRAM andclocks; actualfullctx+fault+negative gatespassed.",
+    "jobs": 1,
+    "live": 0,
+    "failed": 1,
+    "closed_jobs": 0,
+    "best": {
+      "tt": -274.65,
+      "ff": -1.31,
+      "ss": -704.97,
+      "drc": 0,
+      "job": "qfd_sysctl_stn-52e97db99-tc-hm10",
+      "corner": "TT",
+      "source_commit": "52e97db99"
+    },
+    "area": {
+      "die": 150000,
+      "core": 146544,
+      "util": 0.113169
+    },
+    "revoked": null,
+    "latest": {
+      "t": 1791553525.0,
+      "job": "qfd_sysctl_stn-52e97db99-tc-hm10",
+      "status": "NEEDS_RTL",
+      "text": "route bulk released (drive-resume disk cleanup, NEEDS_RTL; MB before/after 3006 2040); kept 6_final.*, 5_2_route.odb, logs/reports/json"
+    },
+    "closed_t": null,
+    "owner": "Codex:qwen-system-crom-control",
+    "evidence_history": [],
+    "qualification": null,
+    "superseded": null
+  },
+  {
+    "element": "qfd_production_stage_traversal",
+    "target": "Qwen ROM",
+    "variants": [],
+    "category": "implementation recorded (no physical job)",
+    "via": "",
+    "purpose": "Real38stage embedding/36layer/head traversal, read-only templates and native base dispatch; oldFQS requires hosth_start/pw/dw and exposes no top traversal",
+    "jobs": 0,
+    "live": 0,
+    "failed": 0,
+    "closed_jobs": 0,
+    "best": {
+      "tt": null,
+      "ff": null,
+      "ss": null,
+      "drc": null,
+      "job": null,
+      "corner": null,
+      "source_commit": null
+    },
+    "area": null,
+    "revoked": null,
+    "latest": null,
+    "closed_t": null,
+    "owner": "/root/qwen_system/crom_control_physical",
+    "evidence_history": [
+      {
+        "element": "qfd_production_stage_traversal",
+        "target": "Qwen ROM",
+        "owner": "/root/qwen_system/crom_control_physical",
+        "description": "Real38stage embedding/36layer/head traversal, read-only templates and native base dispatch; oldFQS requires hosth_start/pw/dw and exposes no top traversal",
+        "source": {
+          "commit": "146fb7f0e3d9dfd54194170f4f371e3c10b9794b",
+          "paths": [
+            "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv"
+          ]
+        },
+        "implementation": {
+          "status": "pending",
+          "evidence": [
+            "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv"
+          ]
+        },
+        "model": {
+          "status": "pending",
+          "evidence": []
+        },
+        "exactness": {
+          "positive": {
+            "status": "pending",
+            "evidence": []
+          },
+          "negative": {
+            "status": "pending",
+            "evidence": []
+          }
+        },
+        "physical": {
+          "status": "pending",
+          "corners": {},
+          "evidence": []
+        },
+        "dependencies": [
+          "qfd_prompt_sram",
+          "qfd_native_stage_dispatch"
+        ],
+        "integration": {
+          "status": "pending",
+          "evidence": []
+        },
+        "registry_path": "results/fleet_viz/element_registry/qwen_rom_token_review_20261009.json"
+      }
+    ],
+    "qualification": {
+      "element": "qfd_production_stage_traversal",
+      "target": "Qwen ROM",
+      "owner": "/root/qwen_system/crom_control_physical",
+      "description": "Real38stage embedding/36layer/head traversal, read-only templates and native base dispatch; oldFQS requires hosth_start/pw/dw and exposes no top traversal",
+      "source": {
+        "commit": "146fb7f0e3d9dfd54194170f4f371e3c10b9794b",
+        "paths": [
+          "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv"
+        ]
+      },
+      "implementation": {
+        "status": "pending",
+        "evidence": [
+          "rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv"
+        ]
+      },
+      "model": {
+        "status": "pending",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qfd_prompt_sram",
+        "qfd_native_stage_dispatch"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": []
+      },
+      "registry_path": "results/fleet_viz/element_registry/qwen_rom_token_review_20261009.json"
+    },
+    "superseded": null
+  }
+]
