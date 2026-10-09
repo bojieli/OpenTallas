@@ -14,6 +14,9 @@ module tb_hgi_coll_mode_guard;
    if(fault!==1)$fatal(1,"BAD_MODE_NO_FAULT code=%0d",code);
    $display("MODE_REJECT PASS code=%0d",code);
   end
-  $display("MODE_GUARD PASS 11 reserved codes");$finish;
+  rst_n=0;go=0;gsz=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);go=1;
+  repeat(200)begin @(negedge clk);if(ir!==0||txv!==0||dv!==0)$fatal(1,"BAD_MODE_ACTIVITY capacity");end
+  if(fault!==1)$fatal(1,"BAD_MODE_NO_FAULT capacity");
+  $display("MODE_GUARD PASS 11 reserved codes + oversized groupone");$finish;
  end
 endmodule

@@ -119,11 +119,11 @@ module tb_hbm_accel_tu_endpoint #(
     wire flt;
     wire [31:0] cst;
 `ifdef TU_GSZ                // hbm-forks: the group-size fork (NC 8 hardware, n = 2^TU_GSZ active); the stub models NC = n
-    localparam integer DNC = 8;
+    localparam integer DNC = 8, DNG = 12;
 `else
-    localparam integer DNC = NC;
+    localparam integer DNC = NC, DNG = NOG;
 `endif
-    `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+    `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(DNG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
         .SWCRED(1 << RXAW), .LAT(LAT)
 `ifdef TU_SYNCPHY
