@@ -11,7 +11,7 @@
     "ot-epyc3"
   ],
   "threads": 16,
-  "peak_ram_gb": 32,
+  "peak_ram_gb": 98,
   "source": {
     "branch": "codex/hbm-collector-dpl-20261009",
     "commit": "e0c39fc90",
@@ -52,7 +52,7 @@
       "logs": [
         "{RUN}/routes/{NAME}/run.log"
       ],
-      "peak_ram_gb": 32
+      "peak_ram_gb": 98
     },
     "collect": {
       "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_coll.lef {RUN}/routes/{NAME}/view/hfd_coll_ss.lib {RUN}/routes/{NAME}/view/hfd_coll_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
@@ -87,6 +87,8 @@
     "completed_stage_peak_KB": 25528524,
     "initial_phase_claim_GiB": 32,
     "claim_scope": "conservative phase-derived above24.35GiB measuredcompletedGPL; notmeasuredCTS/DRT",
-    "future_phase_peak": "UNKNOWN; fleetmonitor/increaseclaimfrommeasurements before advancing capacitylimited phases"
+    "future_phase_peak": "UNKNOWN; fleetmonitor/increaseclaimfrommeasurements before advancing capacitylimited phases",
+    "full_route_claim_GiB": 98,
+    "route_claim_basis": "Owner instructed ceil(4*25528524KiB/1048576)=98GiB conservative phase-derived estimate, not measuredDRT or inherited96; no hardprocesscap; monitorRSS/HWM atphasechanges"
   }
 }
