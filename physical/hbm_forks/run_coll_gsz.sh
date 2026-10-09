@@ -35,11 +35,11 @@ for n in (1, 2, 4, 8):
     HF.write(Path(sys.argv[1]) / 'fx' / f'g{n}', f'g{n}', 20261009 + n)
 PY
 M=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv"
+SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv"
 D="+define+TU_DUT=ot_hbm_accel_tu_endpoint_psg"; CK="+define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
 build() { n=$1; shift; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
   --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || echo "BUILD_FAIL $n"; }
-AR="+define+TU_NC=8 +define+TU_NOG=8 +define+TU_BF16=1 +define+TU_GSZPORT=15"; GA="+define+TU_NC=1 +define+TU_NOG=96 +define+TU_BF16=0 +define+TU_GSZPORT=15"
+AR="+define+TU_LOCKSTEP +define+TU_NC=8 +define+TU_NOG=8 +define+TU_BF16=1 +define+TU_GSZPORT=15"; GA="+define+TU_LOCKSTEP +define+TU_NC=1 +define+TU_NOG=96 +define+TU_BF16=0 +define+TU_GSZPORT=15"
 build ar $AR +define+TU_PFMAX=384 $CK; build ga $GA +define+TU_PFMAX=384 $CK; build arblk $AR +define+TU_PFMAX=64 $CK;
 for n in 1 2 4 8; do l=$(python3 -c "print({1:0,2:1,4:2,8:3}[$n])")
   build g$n +define+TU_NC=$n +define+TU_NOG=$((8 / n)) +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=$l +define+TU_PFMAX=64 $CK;

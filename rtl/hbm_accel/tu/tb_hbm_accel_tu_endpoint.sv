@@ -137,6 +137,30 @@ module tb_hbm_accel_tu_endpoint #(
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
            .stat_credit_stall(cst));
+`ifdef TU_LOCKSTEP
+    wire [INJ*16-1:0] ref_ii;wire[INJ-1:0]ref_ir;
+    wire[NPT-1:0]ref_txv,ref_rxc;wire[NPT*PWT-1:0]ref_txf;
+    wire[DEL-1:0]ref_dv;wire[DEL*PWT-1:0]ref_dfl;wire ref_flt;wire[31:0]ref_cst;
+    ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+        .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
+        .SWCRED(1 << RXAW), .LAT(LAT)
+`ifdef TU_SYNCPHY
+        , .SYNCPHY(1)
+`endif
+        )
+      reference (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+
+           .inj_idx(ref_ii), .inj_rd(ref_ir), .inj_data(idata), .ph_tx_v(ref_txv), .ph_tx_flit(ref_txf), .sw_cr_ret(crr),
+           .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(ref_rxc), .del_valid(ref_dv), .del_flit(ref_dfl), .fault(ref_flt),
+           .stat_credit_stall(ref_cst));
+    always @(negedge clk) if(rst_n) begin
+      if({ii,ir,txv,rxc,dv,flt,cst} !== {ref_ii,ref_ir,ref_txv,ref_rxc,ref_dv,ref_flt,ref_cst})
+        $fatal(1,"DS_LOCKSTEP control mismatch");
+      for(integer p=0;p<NPT;p=p+1)if(txv[p] && txf[p*PWT+:PWT]!==ref_txf[p*PWT+:PWT])$fatal(1,"DS_LOCKSTEP TX mismatch");
+      for(integer d=0;d<DEL;d=d+1)if(dv[d] && dfl[d*PWT+:PWT]!==ref_dfl[d*PWT+:PWT])$fatal(1,"DS_LOCKSTEP DEL mismatch");
+    end
+`endif
+
 
     // ---- stub: egress queues per port, credits ------------------------------------------------------------
     real          eq_t [NPT][$];
