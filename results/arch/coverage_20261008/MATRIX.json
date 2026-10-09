@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.coverage_matrix.v1",
- "generated": "2026-10-08 22:06 PT",
+ "generated": "2026-10-08 22:13 PT",
  "generator": "results/arch/coverage_20261008/gen_matrix.py",
  "targets": {
   "T1": {
@@ -97,18 +97,18 @@
   "mtp-hbm": {
    "scope": "HBM MTP blocks: hfd_mtp (ctl, accept, spec_state_f, union, argmax), fence, topk",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-hbm.log",
-   "lines": 9,
-   "mtime": "2026-10-08 21:45",
+   "lines": 10,
+   "mtime": "2026-10-08 22:06",
    "status": "active",
-   "last": "2026-10-08 21:45 PT mtp-hbm: accept_a0 CLOSED (TT +113.91 / FF +21.46 / DRC 0, loop record 7e8c71853); scratch_c2 calibrate NEEDS_HUMAN (flow: --memory-macro needs --stages pnr) -> fixed route_mtp.sh STAGES (c4a73b788), requeued mtp_scratch_c2-c4a73b788-tc; fence_a1_lvt EARLY_FAIL_SETUP -816.7 post-"
+   "last": "2026-10-08 22:06 PT mtp-hbm: ctl_f2 CLOSED TT +28.49 / FF +10.88 / DRC 0 (record c6d2ebfb2) | scratch_c2 | fail: FLOORPLAN_MARGIN macro_edge (auto macro placement 2.2 um off the S pin face, 120 pins behind) | fix: explicit centre placement, 410 um frame (6724e9d82) | job: mtp_scratch_c2-6724e9d82-tc"
   },
   "mtp-die": {
    "scope": "MTP die recipes: draft dies, head-die slot, placement, links, HBM fit",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-die.log",
-   "lines": 4,
-   "mtime": "2026-10-08 22:00",
+   "lines": 5,
+   "mtime": "2026-10-08 22:12",
    "status": "active",
-   "last": "2026-10-08 22:00 PT [from ingest -> mtp-die] REVIEWER-APPROVED shared HBM write port: per-stack write merge in your generator = dskv_wb write-back strict first, then hfd_host_ingest / loader MREQ round robin, posted-write ACKs returned per source (hfd_host_ingest input ack_n[5:0] = its ACKs this ck;"
+   "last": "2026-10-08 22:12 PDT mtp-die: plan + generators committed 0544fca2c (claude/mtp-die-20261008); fed token-path.log + s81-dies.log; HBM r25m/r25sm checks PASS (outline unchanged, 0 clashes); S81 head/layer1 MTP checks running locally"
   },
   "mtp-exact": {
    "scope": "MTP exactness benches: ROM MTP cached RTL, wavefront, HBM connected top",
@@ -137,18 +137,18 @@
   "s81-dies": {
    "scope": "S81 scan / head dies, array v2 composition (rack at 120 stages), die slots",
    "log": "/home/ubuntu/claude-takeover-20261007/s81-dies.log",
-   "lines": 4,
-   "mtime": "2026-10-08 21:56",
+   "lines": 6,
+   "mtime": "2026-10-08 22:12",
    "status": "active",
-   "last": "2026-10-08 21:56 PT [from ingest -> s81-dies] (unchanged ask) dsfd_host jobs queued (hing_dsfd_*); r5 generator: dsfd_host slab 0.10 mm2 + HOST class on the board SerDes + dsfd_ctrl host-write port."
+   "last": "2026-10-08 22:10 PT mtp-die -> s81-dies (array v2 inputs; review_queue/mtp-die.md MD-2): head dies 12 (content 1,472 -> 511 pairs: drafter moved to draft dies; + dsfd_mtp_seq 0.15 mm2 + 5 draft SerDes on h0..h3 = DP1 primary), draft dies 40 (P2 package-pair fan-out, layer1 recipe, 1,680/1,792 pairs;"
   },
   "ds-control": {
    "scope": "S81 control plane, EOS, RoPE boot, ECC, re-measure of modelled terms",
    "log": "/home/ubuntu/claude-takeover-20261007/ds-control.log",
-   "lines": 1,
-   "mtime": "2026-10-08 21:57",
-   "status": "started only",
-   "last": "2026-10-08 21:57 PT ds-control: start; worktree /home/ubuntu/wt-claude-ds-control (claude/ds-control-20261008 from origin/main bb9aea88d + merged claude/ingest-20261008 f8e459542 for dsfd_host / ot_rom_host_ingest). Scope T2 gaps (a)-(e). Benches on ot-epyc3 Verilator 5.032 (/srv/opentallas-scratch/"
+   "lines": 2,
+   "mtime": "2026-10-08 22:08",
+   "status": "active",
+   "last": "2026-10-08 22:08 PT (a) ot_s81_stage_seq + tools/s81_ctrl/stage_programs.py (59 S81 stage programs S000..S058 from the token-path DAG, golden ASAP trace): bench PASS 59/59 at QD 6/8 (L 4/8/12 cmd+done wire cycles), 0 late jobs => 0 cycles added on the token path; job_done = last completion + 7; QD 4"
   },
   "hbm-indexer": {
    "scope": "HBM indexer on r25 (scores, top-k, candidates)",
@@ -452,6 +452,19 @@
    ],
    "why": "on-die SRAM protection choice / fault-trap bench: no stream assigned",
    "proposed": "hbm-system"
+  }
+ ],
+ "ownerless_structural": [
+  {
+   "id": "O1",
+   "scope": "all targets: token-path re-export (tools/token_path_export.py, unified_composition.py, reprice_20261008.py; qwen_hbm() missing)",
+   "rows": "every NOT_PRICED / MODELLED_ONLY cell",
+   "classes": [
+    "NOT_PRICED",
+    "MODELLED_ONLY"
+   ],
+   "why": "functional owners deliver block cycles, but nobody re-exports the token path (token-path stream STOP 21:10, reprice STOP 18:25); T4 has no view",
+   "proposed": "new token-path re-export stream on the 15-min drive cadence; qwen-hbm-unify writes qwen_hbm()"
   }
  ],
  "summary": {
@@ -5734,8 +5747,8 @@
       "hfd_vm_se_s",
       "hfd_vm_sw_n",
       "hfd_vm_sw_s",
-      "hfd_result_relay64_ew",
       "hfd_result_relay64_ns",
+      "hfd_result_relay64_ew",
       "hfd_su_result_ingress",
       "hfd_gath_r9",
       "hfd_gath_r25"
@@ -11551,8 +11564,8 @@
      ],
      "cycles": 57404.3,
      "elements": [
-      "hfd_result_relay64_ew",
       "hfd_result_relay64_ns",
+      "hfd_result_relay64_ew",
       "hfd_su_result_ingress",
       "hfd_gath_r9",
       "hfd_gath_r25"
@@ -14248,7 +14261,7 @@
        ]
       }
      ],
-     "owner": "mtp-die",
+     "owner": "mtp-hbm",
      "function": [
       "DSpark window-row write into the DSK ring (per stage, slot p mod WR)"
      ],
@@ -14780,7 +14793,7 @@
        ]
       }
      ],
-     "owner": "mtp-die",
+     "owner": "mtp-rom",
      "function": [
       "Draft-die fan-out: primary -> 15 expert replicas per primary (DP1-EP5), ids / return hops"
      ],
@@ -15296,7 +15309,7 @@
        ]
       }
      ],
-     "owner": "mtp-die",
+     "owner": "mtp-hbm",
      "function": [
       "Verify walk: all AR layer operators at P=6 (attention, indexer, MoE, HC, collectives) + 6 head argmaxes",
       "Routed-expert union across the 6 positions (extra expert SM work + extra expert fetch)"
