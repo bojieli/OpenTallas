@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.qwen_kv_die.embedding_ownership.v1",
+  "owner_decision": "2026-10-09 04:00 confirmed TP4 ROM dies + separate KV die/package; KV payload never crosses",
+  "status": "RETARGETED_CONTRACT_PENDING",
+  "ROM_TP": 4,
+  "physical_contract": "results/arch/qwen_kv_die_20261009/CONTRACT.md",
+  "contract_published": false,
+  "embedding_copy_count": null,
+  "cross_die_fields": null,
+  "KV_die_outline": null,
+  "adopted": false,
+  "headline_credit": 0,
+  "historical_single_die_fit": "Preserved. Stop r21c outline squeezing; old ROM reservation is not a new KV-die area credit.",
+  "clock_scope": {
+    "core_ps": 833.333333333,
+    "HBM_ps": 1024,
+    "qualification": "Existing minimum component clocks; new package production clock/boundary contract pending."
+  },
+  "owners": {
+    "embedding_fetch_and_hub": "embedding_hbm",
+    "protected_HBM_pairing_and_core_HBM_composite": "embedding_hbm",
+    "finite_command_reply_transport": "embedding_hbm",
+    "host_RAW_BOOT_path": "embedding_hbm",
+    "native_DATA_SIDECAR_scheduler_and_runtime_write_completion": "qwen_system",
+    "issued_sector_row_metadata_PCordinal_head_rowattention": "qwen_system",
+    "KV_CDC_before_correction": "review_qwen_token_path",
+    "ROM_KV_UCIe_field_clock_credit_contract": "Claude publication pending",
+    "distinct_r25_HBM_embedding_producer": "embedding_hbm/r25_embedding, separate stream"
+  },
+  "blocks": [
+    {
+      "name": "embedding_fetch_engine",
+      "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_strip_bus_crc.sv",
+      "status": "Minimum exact CRC/golden gates passed; actual KV-die physical binding pending.",
+      "cycles": "CRC +2 boot drain, 0 decode"
+    },
+    {
+      "name": "hub_BOOT_SU_merge",
+      "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb_boot_top.sv",
+      "source_commit": "68c961866",
+      "status": "160 RAW, 32 SU, END and actual hub/gateway credit/order gate PASS; payload mutant FAIL. Runtime native host credit joining open.",
+      "cycles": "Existing standalone merger +2 SU forward, +1 credit; folded implementation model only."
+    },
+    {
+      "name": "protected_read_pair",
+      "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_protected_phy_bank_pair_pc.sv",
+      "source_commit": "7460775e9",
+      "status": "Component gates and bank-disjoint static map PASS. Actual native 32-PC/JEDEC binding OPEN.",
+      "cycles": "Measured ECC tail 1..17 HBM cycles, mean2.390625 +3 publication; F6 accepts priced residual tail, no zero-latency claim."
+    },
+    {
+      "name": "native_PC_composite",
+      "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_pc.sv",
+      "status": "Existing actual two-domain minimum gate PASS; native plain-provider wrapper child qualifying, full qualified PHY and runtime writer pending."
+    },
+    {
+      "name": "shared_PC_transport",
+      "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_group_node.sv",
+      "source_commit": "fd2dd387d",
+      "status": "Four PCBASE component gates PASS; four-group KV-die geometry/relay/credit-round-trip composition OPEN.",
+      "cycles": "Measured stress ingress2..76 core edges, RRwait9; serialized code/credit +16/+48 service-edge lower bounds, not per-token measured distribution."
+    },
+    {
+      "name": "hub_SRAM_ingress",
+      "source": "proposal hub_sram_model.json / child hub_sram_fit",
+      "status": "F5 model to RTL approved; twelve real macro seats, registered outputs and exact/CEUE/postmap gates in progress. KV-die frame still contract pending.",
+      "cycles": "Proposed +3 fck edges; actual occupancy includes pending stages."
+    }
+  ],
+  "mandatory_interface_gaps": [
+    "Native outer seq11 tag collides with embedding class bit10; real write_link_bridge checks outerseq against payloadseq, so clearing bit10 is unsafe. Contract/remedy and all high-sequence gate required.",
+    "One-active pair provider cannot sustain old native GO stream. SROW lacks native return-credit reservation; typed physical scheduler and full-rate pricing required.",
+    "Runtime KV write service uses w_room/h_hand/tagged h_av completion; it is not native host o_cr. Five-access boot writes cannot replace runtime completion.",
+    "Production ROM/KV link fields, widths, copies, clock arrivals and finite round-trip credit sizes await actual published contract.",
+    "KV-die actual master inventory and registered stations/last100um physical pin binding await new placement, not old r21c containment."
+  ],
+  "preserved_physical_handles": {
+    "qfd_emb_pc_00-0ebf67a31-tc": "RUNNING EPYC1 as last observed; historical single-die component context, not package qualification",
+    "qfd_hub_emb-975fdada2-tc": "FLOORPLAN_MARGIN util69.8% preserved8bfbb0bb0",
+    "grid92_and_bus_far_failures": "Immutable history retained; no new submissions"
+  }
+}
