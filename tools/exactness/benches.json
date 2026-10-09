@@ -204,11 +204,16 @@
     "runs_cycles": {
      "img_gold4_forced_g5_n12": 11387277,
      "img_oracle3_forced_g5_n12": 8333009,
-     "img_oracle5_forced_g5_n12": 9255693
+     "img_oracle5_forced_g5_n12": 9255693,
+     "img_gold4_dspark_g5_n12": 29049215
     }
    },
-   "last_pass": null,
-   "note": "ROM harness validation still live at takeover; earlier forced cases are committed in rom_b_part.json; no full-shape S81 implementation claim; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Pinned Claude mtp-exact/src snapshot; source and image hashes in validation/rom_record.json",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/rom.json"
+   },
+   "note": "Terminal exact true on all four cases (acceptance0..5), all five restore/accept-extra mutants detected. Reduced core with XU/Sinkhorn handshake successor; no full-shape S81 implementation claim."
   },
   {
    "bench": "v41_mtp_rom_wf2",
@@ -265,8 +270,30 @@
    "expect": {
     "exact": true
    },
-   "last_pass": null,
-   "note": "Validation still live at takeover; prior 64-seed drained/undrained sweep is committed in spec_state/sweep.json; peak_gb retains the existing admitted 40 GB campaign reservation, not a measured peak"
+   "last_pass": {
+    "commit": "1ca5e0a7e",
+    "source": "Pinned Claude mtp-exact/src snapshot; source digests in spec_state/sweep.json, validator logs archived",
+    "evidence": "results/rtl/mtp_exact_20261008/validation/spec_state.json"
+   },
+   "note": "9-run validation terminal exact true: original undrained seed8 plus drained seeds1..8, all mismatches0; prior64-seed sweep covers both reset modes; no full-die physical qualification"
+  },
+  {
+   "bench": "v41_mtp_rollback_rtl",
+   "target": "ds_v41",
+   "tier": "nightly",
+   "host": "ot-epyc3",
+   "group": "mtp_rollback",
+   "peak_gb": 40,
+   "label": "33 ROM/HBM rollback storage positive and mutant cases, W128/W8 wrap, golden truncate, commit/accept and prefetch",
+   "expect": {
+    "exact": true
+   },
+   "last_pass": {
+    "commit": "e12c9a0fe",
+    "source": "Inherited rollback campaign source digests in record.json",
+    "evidence": "results/rtl/mtp_rollback_20261008/record.json"
+   },
+   "note": "Synthetic32-bit mixing replaces model arithmetic; this proves storage dataflow and negative-control detection, not released-weight arithmetic or full-target die timing. Ring-bearing fullgamma reduced RTL vehicle is separate. 40GB retains campaign admission reservation; no measured-peak claim."
   }
  ],
  "not_covered": [
