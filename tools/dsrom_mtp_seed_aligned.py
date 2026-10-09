@@ -6,7 +6,7 @@ import numpy as np
 import dsrom_mtp_seed_qelem as B
 from dsrom_mtp_seed_qelem import F,I,A,G
 
-def bench():
+def bench(wrong_three=False):
  s=B.TB.replace('gold[0:1]','gold[0:1],partgold[0:7],roots[0:7],jl[0:1],jr[0:1]').replace('cfg[0:24]','cfg[0:99]')
  s=s.replace('integer cyc=0,', '''integer phase=0,phase_hits=0,join_start=0,join_end=0;reg jv=0;reg[31:0]ja=0,jb=0,jout;wire jvo;wire[31:0]jy;wire[1:0]je;
  ot_v41_fadd joiner(.clk(clk),.rst_n(rst_n),.valid_in(jv),.a(ja),.b(jb),.y(jy),.err(je),.valid_out(jvo));
@@ -33,26 +33,33 @@ def bench():
 '''
  s=s[:start]+loop+s[stop:];s=s.replace('if(ny!=2)','if(ny!=8)')
  s=s.replace('$display("MTP_SEED PASS K=15360 rows=2 quant_cycles=%0d first_cycles=%0d last_cycles=%0d",quant_end-quant_start+1,first-go_cycle,last-go_cycle);', '$display("MTP_SEED_ALIGNED PASS K=15360 rows=2 phases=4 adds=6 joinLAT=8 quant_cycles=%0d first_cycles=%0d last_cycles=%0d join_cycles=%0d complete_column_cycles=%0d",quant_end-quant_start+1,first-go_cycle,last-go_cycle,join_end-join_start,join_end-quant_start+1);')
+ if wrong_three:
+  s=s.replace('partgold[0:7]','partgold[0:5]').replace('roots[0:7]','roots[0:5]').replace('cfg[0:99]','cfg[0:74]').replace('phase<4','phase<3')
+  s=s.replace('k=(phase<3 ? phase*128:384);k<(phase<3 ? (phase+1)*128:480)', 'k=phase*168;k<(phase+1)*168').replace('phase*128+xs_p','phase*160+xs_p')
+  s=s.replace('add_join(roots[j],roots[2+j],jl[j]);add_join(roots[4+j],roots[6+j],jr[j]);add_join(jl[j],jr[j],jout);','add_join(roots[j],roots[2+j],jl[j]);add_join(jl[j],roots[4+j],jout);').replace('if(ny!=8)','if(ny!=6)')
  return s
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--ref',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--jobs',type=int,default=12);a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--ref',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--jobs',type=int,default=12);p.add_argument('--wrong-three',action='store_true');a=p.parse_args();a.work.mkdir(parents=True,exist_ok=True)
  G.set_arith('chunk8');ck=A.Ckpt(a.snapshot)
  def mean(h):return G.to_bf16(G.mul(G.seqsum([h[j] for j in range(4)]),G.F(.25)))
  x=np.concatenate([mean(np.load(a.ref/f'ctx1048576_L{l}.npz')['h_in']) for l in (37,38,39)])
  m=A.Mat(ck,'mtp.0.main_proj','fp8',2,15360);acc,_,xq,xe=A.golden_rows(m,x);fld=I.Field(1,1,0,pp=True,fast=True);partials=[];phases=[]
- for offset,k in [(0,4096),(4096,4096),(8192,4096),(12288,3072)]:
+ for offset,k in ([(0,5120),(5120,5120),(10240,5120)] if a.wrong_three else [(0,4096),(4096,4096),(8192,4096),(12288,3072)]):
   part=A.Mat(ck,'mtp.0.main_proj','fp8',2,k,k0=offset);part.s81_segments=[[0,k]];part.s81_place=[(0,0,0)];phases.append(I.add_phase(fld,[part],(True,False),0));partials.extend(A.golden_rows(part,x[offset:offset+k])[0])
- assert [p['nbeat'] for p in phases]==[128,128,128,96]
+ assert [p['nbeat'] for p in phases]==([168,168,168] if a.wrong_three else [128,128,128,96])
  for mb in range(2):
   for parity in (0,1):
    f=a.work/f'seed{"b" if mb else ""}_{parity}.viamap.hex';A.viamap({k//2:v for k,v in fld.words[mb].items() if k%2==parity},f);f.write_text(''.join(f.read_text().splitlines(keepends=True)[:512]))
  def hx(n,vs,w):(a.work/n).write_text(''.join(f'{int(v):0{w}x}\n' for v in vs))
  codes=A.x_codes(xq);hx('x.hex',G.bits(x),8);hx('gold.hex',acc,8);hx('partial.hex',partials,8);hx('cfg.hex',[v for cfg in fld.cfg for v in cfg[0]],12);hx('stream.hex',fld.stream,12);hx('q.hex',[int.from_bytes(codes[k:k+32].tobytes(),'little') for k in range(0,15360,32)],64);hx('e.hex',xe.astype(int)&1023,3)
- tb=a.work/'tb.sv';tb.write_text(bench().replace('QXV','9').replace('NBTS','480'))
+ tb=a.work/'tb.sv';tb.write_text(bench(a.wrong_three).replace('QXV','9').replace('NBTS',str(len(fld.stream))))
  (a.work/'plan.json').write_text(json.dumps(dict(source='four aligned segment subtrees; no engine RTL change',phases=phases,seed_model_function='uarch_model.dsrom_mtp_seed_aligned_candidate',collector='one actual ot_v41_fadd LAT8;6 serialized operations for2 rows',whole_field_qualified=False),indent=1)+'\n')
  sources=list(dict.fromkeys(F.RTL+F.QRTL+F.ROMS));run=subprocess.run([os.environ.get('OT_VERILATOR',F.VERILATOR),'--binary','--timing','-Wno-fatal','--top-module','tb_mtp_seed','--Mdir',str(a.work/'obj'),'-j',str(a.jobs),str(tb)]+list(map(str,sources)),text=True,capture_output=True);(a.work/'build.log').write_text(run.stdout+run.stderr)
  if run.returncode:raise RuntimeError('build failed')
  run=subprocess.run([str(a.work/'obj/Vtb_mtp_seed'),f'+DATA={a.work}',f'+OT_ROM_DIR={a.work}'],text=True,capture_output=True);(a.work/'sim.log').write_text(run.stdout+run.stderr);print(run.stdout)
+ if a.wrong_three:
+  if run.returncode and 'global root got' in run.stdout:print('MTP_SEED_WRONG3 FAIL_AS_REQUIRED');return
+  raise RuntimeError('wrong-three negative did not expose changed tree')
  if run.returncode or 'MTP_SEED_ALIGNED PASS' not in run.stdout:raise RuntimeError('aligned seed failed')
 if __name__=='__main__':main()
