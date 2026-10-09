@@ -1,0 +1,15 @@
+{
+  "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+  "original_shard": "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/snapshot/model-00044-of-00048.safetensors",
+  "original_header_sha256": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
+  "derived_header_sha256": "31951bdc11e3ae601d324eb6aca6f1cb704fbaaa89eece939ba90a293c15e7b7",
+  "tensor_payload_sha256": {
+    "mtp.0.ffn.shared_experts.w1.weight": "282e373ca6f1f95ba0679eed4a9f6beb4b42aec7875f1b7113263816061cad09",
+    "mtp.0.ffn.shared_experts.w1.scale": "c4aef6fce6a43bdd91f4ec8683d77a82f09ce34f9c35be85345aeb98e1a411cf",
+    "mtp.0.ffn.shared_experts.w3.weight": "cdf64fbffb0f8d7116260b1c150079b7cdcb822dc5d7e6164e3e1fc2fbd0a63e",
+    "mtp.0.ffn.shared_experts.w3.scale": "3591e6b8b7d3b57911e1555c5b399ac1716d8c9e02cf2d2ecab35675062ae1c0",
+    "mtp.0.ffn.shared_experts.w2.weight": "f4399fdfdea3ea48b9e886983a5b2d64c0e0067e604cbe14076be44f3f68ccfe",
+    "mtp.0.ffn.shared_experts.w2.scale": "bfdc68b117b9417507e99764b168d6337f0cb7eaaf84a237b33ead7e379cc0a4"
+  },
+  "payload_bytes": 35424000
+}
