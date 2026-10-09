@@ -1,0 +1,499 @@
+{
+ "schema": "opentallas.hbm_system.svc_kvs.v1",
+ "input_sha256": {
+  "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+  "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+  "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "ad06938b21352f40882f3d2efc6cf5c2995624f7bdec9a8a389417b669d395f1",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+  "rtl/test/hbm_accel/tb_hbm_svc_kvs.sv": "b1e484f97493d032345fc289aacef43bd7122ca770eea8f6c5203a24453a5aa9",
+  "tools/hbm_svc_kvs_bench.py": "1ec7d48ee1c8f6e169140378fc56313f677c2e60e464774cdd9d5c3218d1206f"
+ },
+ "simulator": "Verilator 5.050",
+ "model": "ot_hdc_v41x_idx_hbm NPC 32 REFPB 3 (REFpb refresh-aware), 1.0 TB/s a stack",
+ "params": {
+  "KNO": 15,
+  "XST": 2,
+  "E_ST": 11,
+  "ck_ps": 1024
+ },
+ "summary": {
+  "17": {
+   "what": "DS window rows (17 sectors a PC a layer, latency-bound)",
+   "frac_peak": {
+    "min": 0.0935,
+    "mean": 0.146,
+    "max": 0.1754
+   },
+   "t_ns": {
+    "min": 99.2,
+    "mean": 122.1,
+    "max": 186.3
+   },
+   "runs": 12
+  },
+  "184": {
+   "what": "DS index keys at 1M (~181 sectors a PC)",
+   "frac_peak": {
+    "min": 0.2276,
+    "mean": 0.5631,
+    "max": 0.6816
+   },
+   "t_ns": {
+    "min": 276.4,
+    "mean": 369.6,
+    "max": 827.9
+   },
+   "runs": 12
+  },
+  "1024": {
+   "what": "Qwen 8K KV sweep (4.19 MB/die/layer = 1,024 sectors a PC)",
+   "frac_peak": {
+    "min": 0.6379,
+    "mean": 0.7985,
+    "max": 0.9151
+   },
+   "t_ns": {
+    "min": 1145.8,
+    "mean": 1326.5,
+    "max": 1643.9
+   },
+   "runs": 12
+  },
+  "2048": {
+   "what": "steady stream (2,048 sectors a PC)",
+   "frac_peak": {
+    "min": 0.7504,
+    "mean": 0.8623,
+    "max": 0.9082
+   },
+   "t_ns": {
+    "min": 2309.1,
+    "mean": 2438.6,
+    "max": 2794.8
+   },
+   "runs": 12
+  }
+ },
+ "verdict": "PASS",
+ "negative": [
+  {
+   "nsec": 184,
+   "phase_ns": 0,
+   "mut": 1,
+   "runs": [
+    {
+     "t_ns": 436.1,
+     "frac": 0.432
+    },
+    {
+     "t_ns": 400.2,
+     "frac": 0.4708
+    }
+   ],
+   "verdict": "FAIL"
+  }
+ ],
+ "cases": [
+  {
+   "nsec": 17,
+   "phase_ns": 0,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 99.2,
+     "frac": 0.1754
+    },
+    {
+     "t_ns": 125.9,
+     "frac": 0.1383
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 17,
+   "phase_ns": 1300,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 107.5,
+     "frac": 0.162
+    },
+    {
+     "t_ns": 123.7,
+     "frac": 0.1407
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 17,
+   "phase_ns": 2700,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 108.9,
+     "frac": 0.1599
+    },
+    {
+     "t_ns": 124.5,
+     "frac": 0.1398
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 17,
+   "phase_ns": 4100,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 186.3,
+     "frac": 0.0935
+    },
+    {
+     "t_ns": 124.5,
+     "frac": 0.1398
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 17,
+   "phase_ns": 5500,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 108.0,
+     "frac": 0.1612
+    },
+    {
+     "t_ns": 123.4,
+     "frac": 0.141
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 17,
+   "phase_ns": 6900,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 109.6,
+     "frac": 0.1588
+    },
+    {
+     "t_ns": 123.4,
+     "frac": 0.1411
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 0,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 436.1,
+     "frac": 0.432
+    },
+    {
+     "t_ns": 400.2,
+     "frac": 0.4708
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 1300,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 276.4,
+     "frac": 0.6816
+    },
+    {
+     "t_ns": 311.2,
+     "frac": 0.6054
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 2700,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 277.9,
+     "frac": 0.6781
+    },
+    {
+     "t_ns": 308.9,
+     "frac": 0.61
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 4100,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 448.4,
+     "frac": 0.4202
+    },
+    {
+     "t_ns": 283.3,
+     "frac": 0.6651
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 5500,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 277.0,
+     "frac": 0.6803
+    },
+    {
+     "t_ns": 308.8,
+     "frac": 0.6101
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 6900,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 278.6,
+     "frac": 0.6764
+    },
+    {
+     "t_ns": 827.9,
+     "frac": 0.2276
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 0,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1310.6,
+     "frac": 0.8001
+    },
+    {
+     "t_ns": 1210.3,
+     "frac": 0.8664
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 1300,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1145.8,
+     "frac": 0.9151
+    },
+    {
+     "t_ns": 1425.2,
+     "frac": 0.7357
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 2700,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1643.9,
+     "frac": 0.6379
+    },
+    {
+     "t_ns": 1228.3,
+     "frac": 0.8537
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 4100,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1323.9,
+     "frac": 0.792
+    },
+    {
+     "t_ns": 1203.1,
+     "frac": 0.8716
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 5500,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1310.2,
+     "frac": 0.8003
+    },
+    {
+     "t_ns": 1506.8,
+     "frac": 0.6959
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 1024,
+   "phase_ns": 6900,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 1382.4,
+     "frac": 0.7585
+    },
+    {
+     "t_ns": 1227.1,
+     "frac": 0.8545
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 0,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2432.9,
+     "frac": 0.862
+    },
+    {
+     "t_ns": 2511.7,
+     "frac": 0.8349
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 1300,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2309.1,
+     "frac": 0.9082
+    },
+    {
+     "t_ns": 2365.4,
+     "frac": 0.8866
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 2700,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2794.8,
+     "frac": 0.7504
+    },
+    {
+     "t_ns": 2335.6,
+     "frac": 0.8979
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 4100,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2446.2,
+     "frac": 0.8573
+    },
+    {
+     "t_ns": 2333.5,
+     "frac": 0.8987
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 5500,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2499.0,
+     "frac": 0.8392
+    },
+    {
+     "t_ns": 2367.9,
+     "frac": 0.8857
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 2048,
+   "phase_ns": 6900,
+   "mut": 0,
+   "runs": [
+    {
+     "t_ns": 2533.4,
+     "frac": 0.8278
+    },
+    {
+     "t_ns": 2333.3,
+     "frac": 0.8988
+    }
+   ],
+   "verdict": "PASS"
+  },
+  {
+   "nsec": 184,
+   "phase_ns": 0,
+   "mut": 1,
+   "runs": [
+    {
+     "t_ns": 436.1,
+     "frac": 0.432
+    },
+    {
+     "t_ns": 400.2,
+     "frac": 0.4708
+    }
+   ],
+   "verdict": "FAIL"
+  }
+ ],
+ "note": "end-to-end: descriptor launch on the e link to kvs_done (includes the e-link CDC + 13 wire stages and first access); the stack peak is 32 sectors per 1.024 ns"
+}

@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.emb_hbm_package_inline.v1",
+  "transformation": "Replace exactly one import ot_qfd_emb_pkg::*; with the identical package body (module-local localparams and functions); original sources are unchanged.",
+  "package_sha256": "be6f7509c4444e4f2093df548c7e955b5754aecac3ea7d7bbc48d8912c381c63",
+  "sources": {
+    "ot_qfd_emb_strip": {
+      "original_sha256": "51e5289c6cad293096a52a1d73eb1645a37f349dc383fcf2417e36394067d3b5",
+      "generated_sha256": "2a038262fdd70802ab59ea42825b3944a79006fa3da8ec9ce8cf7d27fb60b821"
+    },
+    "ot_qfd_emb_gw": {
+      "original_sha256": "4a8566f6efddff15dd3ea0b001264893a5a60f03b731598c343cd2933e895bf9",
+      "generated_sha256": "a4712483972547ed365b3a865861d69badc6db5b58d9e2f66365b0e875272e14"
+    },
+    "ot_qfd_emb_pcport": {
+      "original_sha256": "0dbf70cc95a0e9875e5930eae089add1468f1969c8f8236051807b27316532fd",
+      "generated_sha256": "9ff7913899721f678082629b4865f1623aebc79b289c3be6250e91b13eeb8f99"
+    },
+    "ot_qwen_die_hub_emb": {
+      "original_sha256": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+      "generated_sha256": "fa28137c05dd6c500440cdd647e3a6850a10301dd7faae8e59c6e42f408add3f"
+    }
+  }
+}
