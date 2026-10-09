@@ -5,7 +5,7 @@
 // wire-stage chain portions (ot_svc_vpipe, cross-face flops at both pins), own ck / rst synchroniser.
 module hfd_svc_SW_s7 (
     input wire [0:0] ck,
-    input wire [3:0] kq7,
+    input wire [1:0] kq7,
     output wire [1101:0] ks7,
     output wire [1098:0] l7,
     inout wire [2487:0] phy,

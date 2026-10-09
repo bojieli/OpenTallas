@@ -1005,8 +1005,6 @@ place_pin -pin_name {eo[441]} -layer M4 -location {1094.8560 43.3480} -pin_size 
 place_pin -pin_name {eo[442]} -layer M4 -location {1094.8560 43.4440} -pin_size {0.1920 0.0240}
 place_pin -pin_name {kq6[0]} -layer M5 -location {1057.2120 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq6[1]} -layer M5 -location {1057.4040 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq6[2]} -layer M5 -location {1057.5960 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq6[3]} -layer M5 -location {1057.7880 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks6[0]} -layer M5 -location {621.3720 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks6[1]} -layer M5 -location {621.5640 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks6[2]} -layer M5 -location {621.7560 259.0800} -pin_size {0.0240 0.1920}

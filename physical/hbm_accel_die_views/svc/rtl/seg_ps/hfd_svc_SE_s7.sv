@@ -7,7 +7,7 @@ module hfd_svc_SE_s7 (
     input wire [0:0] ck,
     input wire [279:0] ei,
     output wire [116:0] eo,
-    input wire [3:0] kq7,
+    input wire [1:0] kq7,
     output wire [1101:0] ks7,
     output wire [1098:0] l7,
     inout wire [1243:0] phy,

@@ -8,7 +8,7 @@ module hfd_svc_SW_s1 (
     input wire [1042:0] ei,
     output wire [1424:0] eo,
     output wire [1025:0] ik,
-    input wire [3:0] kq2,
+    input wire [1:0] kq2,
     output wire [1101:0] ks2,
     output wire [1040:0] kv,
     output wire [1101:0] l2,

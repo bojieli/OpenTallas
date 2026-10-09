@@ -31,24 +31,22 @@ sim() {   # sim <label> <st> <fam> <ps lib file> <defines...>
     $V/rtl/seg/hfd_svc_${F}_s[0-9].sv $V/rtl/seg/hfd_svc_${S}_seg.sv $T/tb_svc_physide.sv $T/tb_svc_ps_$S.sv > $O/build_$L.log 2>&1 || { echo "$L build FAIL" >> $O/summary.txt; return 3; }
   vvp -n $O/$L.vvp > $O/$L.log 2>&1
 }
-for st in SW:SW NE:SE; do
-  s=${st%:*}; f=${st#*:}
-  sim sim_ps_$s $s $f $PSLIB -DPS_STREAMS; r=$?
-  echo "sim_ps_$s rc=$r $(grep SVC_BENCH $O/sim_ps_$s.log | tail -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
-  sim ls_$s $s $f $PSLIB -DLOCKSTEP; r=$?
-  echo "ls_$s rc=$r $(grep SVC_BENCH $O/ls_$s.log | tail -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
-done
+# every simulation in parallel (single-threaded each), then the verdicts
 sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
-cmp -s $O/ps_mut_slot.sv $PSLIB && { echo "slot mutant not applied" >> $O/summary.txt; rc=1; }
-sim neg_slot SW SW $O/ps_mut_slot.sv -DPS_STREAMS; r=$?
-echo "neg_slot rc=$r (must be nonzero) $(grep SVC_BENCH $O/neg_slot.log | tail -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
 sed 's/&& pdone && !di_v;/\&\& !di_v;/' $PSLIB > $O/ps_mut_done.sv
-cmp -s $O/ps_mut_done.sv $PSLIB && { echo "done mutant not applied" >> $O/summary.txt; rc=1; }
-sim neg_done SW SW $O/ps_mut_done.sv -DPS_STREAMS; r=$?
-echo "neg_done rc=$r (must be nonzero) $(grep SVC_BENCH $O/neg_done.log | tail -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
-# PC-collapse negative (CF-SVC; Codex I2's lane-drop check folded in): only PC 0 of each stack streams
 sed 's/mine <= di_d\[PCID\]; act <= di_d\[PCID\];/mine <= di_d[PCID] \&\& PCID == 0; act <= di_d[PCID] \&\& PCID == 0;/' $PSLIB > $O/ps_mut_pc.sv
-cmp -s $O/ps_mut_pc.sv $PSLIB && { echo "pc mutant not applied" >> $O/summary.txt; rc=1; }
-sim neg_pc SW SW $O/ps_mut_pc.sv -DPS_STREAMS; r=$?
-echo "neg_pc rc=$r (must be nonzero) $(grep SVC_BENCH $O/neg_pc.log | tail -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
+for m in slot done pc; do cmp -s $O/ps_mut_$m.sv $PSLIB && { echo "$m mutant not applied" >> $O/summary.txt; rc=1; }; done
+sim sim_ps_SW SW SW $PSLIB -DPS_STREAMS & sim sim_ps_NE NE SE $PSLIB -DPS_STREAMS &
+sim ls_SW SW SW $PSLIB -DLOCKSTEP & sim ls_NE NE SE $PSLIB -DLOCKSTEP &
+sim neg_slot SW SW $O/ps_mut_slot.sv -DPS_STREAMS & sim neg_done SW SW $O/ps_mut_done.sv -DPS_STREAMS &
+sim neg_pc SW SW $O/ps_mut_pc.sv -DPS_STREAMS &
+wait
+for L in sim_ps_SW sim_ps_NE ls_SW ls_NE; do
+  grep -q "^SVC_BENCH PASS" $O/$L.log; r=$?
+  echo "$L rc=$r $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
+done
+for L in neg_slot neg_done neg_pc; do
+  grep -q "^SVC_BENCH PASS" $O/$L.log && r=0 || r=1
+  echo "$L rc=$r (must be nonzero) $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
+done
 echo "overall rc=$rc" >> $O/summary.txt; cat $O/summary.txt; exit $rc

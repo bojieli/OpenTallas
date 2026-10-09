@@ -15,11 +15,12 @@
 //                SM issue is never delayed when the PC is idle (DS cycle-identical without streams); while a stream read
 //                is being presented an SM issue waits in a one-entry hold (the arbiter keeps one SM read a PC).
 //                Stream reads carry tag {2'b11, rq10, 5'd0} (legacy SM 00 / KV 01 / IK 10 filters ignore them); the
-//                returned beat leaves with tag[4:0] = {1'b0, idx, valid, slot2} (slot = sector j[1:0]).
+//                returned beat leaves with tag[4:0] = {nocr, idx, valid, slot2} (slot = sector j[1:0]).
 //   ot_svs_grp   group unit beside SM arbiter k (PCs 4k .. 4k+3): ping-pong 4-sector row buffers per PC, round-robin
 //                onto the group's row port ks = {meta64, row1024, rq10, v} (the SM-line format: 1,099 b + 3 forwarded
-//                clock copies), meta = {44'd0, idx, pcid5, smask4, 10'd0}; line credits back from the consumer on kq
-//                ({fclk, pc2, v}, two-clock FIFO) to the owning PC (credit mode: CRR rows outstanding a PC).
+//                clock copies), meta = {44'd0, idx, pcid5, smask4, 10'd0}; ONE-BIT line credits back from the consumer
+//                on kq ({fclk, v}, two-clock FIFO), returned in row order: the group keeps the PC id of every credited
+//                row it sent (a 4 x CRR FIFO) and hands each credit to that row's PC (credit mode: CRR rows a PC).
 // Physical: rows of 4 PCs leave each group at its arbiter's x: 8 row ports a stack (8 x 1,024 b a cycle = the stack's 32
 // sectors a cycle).  No protection beyond what the legacy units had (REVIEW_20261009).
 // ---------------------------------------------------------------------------------------------------------------------
@@ -123,7 +124,7 @@ module ot_svs_pcs #(parameter integer PCID = 0, parameter integer KNO = 15, para
   always @(posedge ck or negedge rn) if (!rn) begin kr_v_q <= 1'b0; bv <= 1'b0; end else begin kr_v_q <= kr_v; bv <= kr_v_q && rdy_q2; end
   always @(posedge ck) begin
     t_r <= kr_tag; bb_r <= kr_beat; d_r <= kr_data;
-    bt <= s_beat ? {t_r[16:5], 1'b0, idx, svalid, slot} : t_r;
+    bt <= s_beat ? {t_r[16:5], nocr, idx, svalid, slot} : t_r;
     bb <= bb_r; bd <= d_r;
   end
   assign b_v = bv; assign b_t = bt; assign b_b = bb; assign b_d = bd;
@@ -155,15 +156,16 @@ endmodule
 module ot_svs_grp #(parameter integer K = 0) (
   input wire ck, input wire rst, input wire rn,
   input wire [3:0] sv, input wire [4*277-1:0] sq,         // stream beats of PCs 4K .. 4K+3 (tag 11)
-  input wire [3:0] kq,                                     // {fclk, pc2, v}: one line credit back to a PC
+  input wire [1:0] kq,                                     // {fclk, v}: one line credit, in row order
   output wire [3:0] cr,                                    // credit pulse to PC 4K + j
   output wire [1101:0] ks,                                 // {fclk x3, meta64, row1024, rq10, v}
-  output reg ovf);                                         // a beat found its row buffer still full (never: schedule)
+  output wire ovf);                                        // a beat found its row buffer still full / credit queue overflow (never)
   reg [255:0] b [0:3][0:1][0:3];
   reg [3:0] sm [0:3][0:1];
   reg [2:0] cnt [0:3][0:1];
   reg [9:0] rq [0:3][0:1];
   reg ix [0:3][0:1];
+  reg nc [0:3][0:1];
   reg [1:0] full [0:3];
   reg ws [0:3], rs [0:3];
   integer p, s;
@@ -177,17 +179,17 @@ module ot_svs_grp #(parameter integer K = 0) (
   wire [1:0] off = rot[0] ? 2'd0 : rot[1] ? 2'd1 : rot[2] ? 2'd2 : 2'd3;
   wire [1:0] sel = rr + off;
   wire any = |rdy;
-  reg ov; reg [1087:0] od; reg [9:0] ot;
+  reg ov, ovb; reg [1087:0] od; reg [9:0] ot;
   always @(posedge ck or negedge rn)
     if (!rn) begin
       for (p = 0; p < 4; p = p + 1) begin full[p] <= 2'b00; ws[p] <= 1'b0; rs[p] <= 1'b0;
         for (s = 0; s < 2; s = s + 1) begin cnt[p][s] <= 3'd0; sm[p][s] <= 4'd0; end end
-      rr <= 2'd0; ov <= 1'b0; ovf <= 1'b0;
+      rr <= 2'd0; ov <= 1'b0; ovb <= 1'b0;
     end else begin
       ov <= any;
       if (any) begin rr <= sel + 2'd1; full[sel][rs[sel]] <= 1'b0; rs[sel] <= ~rs[sel]; end
       for (p = 0; p < 4; p = p + 1) if (sv[p]) begin
-        if (full[p][ws[p]] && !(any && sel == p && rs[p] == ws[p])) ovf <= 1'b1;
+        if (full[p][ws[p]] && !(any && sel == p && rs[p] == ws[p])) ovb <= 1'b1;
         sm[p][ws[p]] <= ((cnt[p][ws[p]] == 3'd0) ? 4'd0 : sm[p][ws[p]]) |
                         (sq[p*277+260+2] ? (4'd1 << sq[p*277+260 +: 2]) : 4'd0);
         if (cnt[p][ws[p]] == 3'd3) begin
@@ -200,6 +202,7 @@ module ot_svs_grp #(parameter integer K = 0) (
       b[p][ws[p]][sq[p*277+260 +: 2]] <= sq[p*277 +: 256];
       rq[p][ws[p]] <= sq[p*277+265 +: 10];
       ix[p][ws[p]] <= sq[p*277+260+3];
+      nc[p][ws[p]] <= sq[p*277+260+4];
     end
     if (any) begin
       od <= {44'd0, ix[sel][rs[sel]], 5'(4 * K + sel), sm[sel][rs[sel]], 10'd0,
@@ -209,15 +212,29 @@ module ot_svs_grp #(parameter integer K = 0) (
   end
   wire fck; ot_svc_fclk_buf u_fk (.a(ck), .y(fck));
   assign ks = {fck, fck, fck, od, ot, ov};
-  // credits: forwarded {pc2, v} with its clock, falling-edge capture + two-clock FIFO (as the e port)
-  reg cf_v; reg [1:0] cf_d; wire c_empty, c_full; wire [2:0] c_fr; wire [1:0] cd;
-  wire c_wck = ~kq[3];
+  // credits: forwarded {fclk, v}, falling-edge capture + two-clock FIFO (as the e port); the PC of each credited row
+  // sent is queued, and a returned credit goes to the PC at the head (the consumer returns credits in row order)
+  localparam integer QD = 64;
+  reg [1:0] pq [0:QD-1]; reg [5:0] qh, qt; reg [6:0] qn;
+  wire push = any && !nc[sel][rs[sel]];
+  reg cf_v; wire c_empty, c_full; wire [2:0] c_fr; wire cd;
+  wire c_wck = ~kq[1];
   always @(posedge c_wck or negedge rst) if (!rst) cf_v <= 1'b0; else cf_v <= kq[0];
-  always @(posedge c_wck) cf_d <= kq[2:1];
-  ot_hbm_accel_cdc_fifo #(.W(2), .AW(3)) u_c (.wclk(c_wck), .wrst_n(rst), .we(cf_v), .wdata(cf_d), .full(c_full),
-    .rd_freed(c_fr), .rclk(ck), .rrst_n(rn), .re(!c_empty), .rdata(cd), .empty(c_empty));
-  reg [3:0] crq;
-  always @(posedge ck or negedge rn) if (!rn) crq <= 4'd0; else crq <= c_empty ? 4'd0 : (4'd1 << cd);
+  ot_hbm_accel_cdc_fifo #(.W(1), .AW(3)) u_c (.wclk(c_wck), .wrst_n(rst), .we(cf_v), .wdata(1'b1), .full(c_full),
+    .rd_freed(c_fr), .rclk(ck), .rrst_n(rn), .re(!c_empty && qn != 0), .rdata(cd), .empty(c_empty));
+  wire pop = !c_empty && qn != 0;
+  reg [3:0] crq; reg ovq;
+  assign ovf = ovb | ovq;
+  always @(posedge ck) if (push) pq[qt] <= sel;
+  always @(posedge ck or negedge rn)
+    if (!rn) begin qh <= 0; qt <= 0; qn <= 0; crq <= 4'd0; ovq <= 1'b0; end
+    else begin
+      if (push) qt <= qt + 6'd1;
+      if (pop) qh <= qh + 6'd1;
+      qn <= qn + (push ? 7'd1 : 7'd0) - (pop ? 7'd1 : 7'd0);
+      crq <= pop ? (4'd1 << pq[qh]) : 4'd0;
+      if (push && qn == QD) ovq <= 1'b1;
+    end
   assign cr = crq;
 endmodule
 `default_nettype wire

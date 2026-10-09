@@ -7,7 +7,7 @@ module hfd_svc_SE_s5 (
     input wire [0:0] ck,
     input wire [559:0] ei,
     output wire [442:0] eo,
-    input wire [3:0] kq6,
+    input wire [1:0] kq6,
     output wire [1101:0] ks6,
     output wire [1101:0] l6,
     inout wire [2487:0] phy,

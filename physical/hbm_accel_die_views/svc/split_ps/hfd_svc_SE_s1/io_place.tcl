@@ -1,5 +1,5 @@
 # hfd_svc_SE_s1: every die pin at the generator's position (svc/gen_svc_seg.py, derived master; generator, r16i)
-place_pin -pin_name {ck[0]} -layer M5 -location {889.5000 259.0800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {ck[0]} -layer M5 -location {888.4920 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ei[0]} -layer M4 -location {1300.8720 138.4280} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[1]} -layer M4 -location {1300.8720 138.5240} -pin_size {0.1920 0.0240}
 place_pin -pin_name {ei[2]} -layer M4 -location {1300.8720 138.6200} -pin_size {0.1920 0.0240}
@@ -2425,8 +2425,6 @@ place_pin -pin_name {eo[1419]} -layer M4 -location {1300.8720 137.2360} -pin_siz
 place_pin -pin_name {eo[1420]} -layer M4 -location {1300.8720 137.3320} -pin_size {0.1920 0.0240}
 place_pin -pin_name {kq2[0]} -layer M5 -location {887.2440 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq2[1]} -layer M5 -location {887.4360 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq2[2]} -layer M5 -location {887.6280 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq2[3]} -layer M5 -location {887.8200 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[0]} -layer M5 -location {451.4040 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[1]} -layer M5 -location {451.5960 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[2]} -layer M5 -location {451.7880 259.0800} -pin_size {0.0240 0.1920}
@@ -8882,7 +8880,7 @@ place_pin -pin_name {q2[41]} -layer M5 -location {884.6520 259.0800} -pin_size {
 place_pin -pin_name {q2[42]} -layer M5 -location {884.8440 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q2[43]} -layer M5 -location {885.0360 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {q2[44]} -layer M5 -location {885.2280 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {rst[0]} -layer M5 -location {889.8840 259.0800} -pin_size {0.0240 0.1920}
+place_pin -pin_name {rst[0]} -layer M5 -location {888.8760 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {wi[0]} -layer M4 -location {0.0960 1.0120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wi[1]} -layer M4 -location {0.0960 1.1080} -pin_size {0.1920 0.0240}
 place_pin -pin_name {wi[2]} -layer M4 -location {0.0960 1.2040} -pin_size {0.1920 0.0240}

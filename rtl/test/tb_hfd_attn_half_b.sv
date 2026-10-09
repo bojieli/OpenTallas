@@ -13,6 +13,7 @@ module tb_hfd_attn_half_b (input wire clk);
     parameter integer NCYC = 4000;
     parameter integer ROLE = 4;
     parameter integer MUT = 0;
+    parameter integer LDK = 0;     // hbm-forks: 1 = the entry-point strap (ROLE 4 packets; reference sees chain ld masked)
     reg rst_n = 1'b0;
     reg [1617:0] pk0, pk1, pk2;
     reg [528:0] iw;
@@ -63,13 +64,16 @@ module tb_hfd_attn_half_b (input wire clk);
     wire [1617:0] pk_k = (ROLE == 0 || ROLE == 4) ? pk0 : 1618'd0;
     wire [1617:0] pk_c = (ROLE == 1 || ROLE == 4) ? pk1 : 1618'd0;
     wire [1617:0] pk_r = (ROLE == 2 || ROLE == 4) ? pk2 : 1618'd0;
+    // LDK = 1: the reference one-piece tile sees the forward chains with their ld field cleared (what the strap means)
+    wire [1617:0] pk_cr = LDK ? {1038'd0, pk_c[579:0]} : pk_c;
+    wire [1617:0] pk_rr = LDK ? {1038'd0, pk_r[579:0]} : pk_r;
     wire [528:0]  i_in = (ROLE == 3 || ROLE == 4) ? iw : 529'd0;
     wire [1040:0] k_in = {3'b101, pk_k[1617:580]};
     wire [581:0]  q_in = {2'b10, pk_k[579:0]};
     // reference: the one-piece tile
     wire [1617:0] cf_r, rf_r; wire [528:0] o_r;
     hfd_attn_tile_b #(.NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .NFC(NFC), .NFR(NFR), .NL(NL), .NI(NI)) u_ref (
-        .ck(clk), .rst(rst_n), .k(k_in), .q(q_in), .ci(pk_c), .ri(pk_r), .i(i_in), .cf(cf_r), .rf(rf_r), .o(o_r));
+        .ck(clk), .rst(rst_n), .k(k_in), .q(q_in), .ci(pk_cr), .ri(pk_rr), .i(i_in), .cf(cf_r), .rf(rf_r), .o(o_r));
     // the split pair + the die-link model (abutting pins: a wire; mutants corrupt it)
     wire [1618:0] xp_l, xp_h; wire [271:0] xr_l, xr_h;
     reg  [1618:0] xp_d; reg [271:0] xr_d;
@@ -78,7 +82,7 @@ module tb_hfd_attn_half_b (input wire clk);
     assign xr_h = (MUT == 2) ? xr_d : (MUT == 3) ? {xr_l[135:0], xr_l[271:136]} : xr_l;
     wire [1617:0] cf_s, rf_s; wire [528:0] o_s;
     hfd_attn_half_lo #(.NK(NK), .NC(NC), .NR(NR), .PMID(PMID), .NFR(NFR), .NLL(NLL)) u_lo (
-        .ck(clk), .rst(rst_n), .k(k_in), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
+        .ck(clk), .rst(rst_n), .k(k_in), .ldk(LDK[0]), .q(q_in), .ci(pk_c), .ri(pk_r), .rf(rf_s), .xp(xp_l), .xr(xr_l));
     hfd_attn_half_hi #(.PMID(PMID), .NFC(NFC), .NL(NL), .NLL(NLL + ((MUT == 4) ? 1 : 0)), .NI(NI)) u_hi (
         .ck(clk), .xp(xp_h), .xr(xr_h), .i(i_in), .cf(cf_s), .o(o_s));
     always @(posedge clk) begin

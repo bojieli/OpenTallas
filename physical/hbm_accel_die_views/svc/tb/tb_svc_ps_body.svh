@@ -163,22 +163,21 @@
       if (ps_rows != ps_want) begin err = err + 1; $display("ERR PS kd early: rows %0d/%0d 64 cycles after done", ps_rows, ps_want); end
     end join_none
   end
-  // consumer credits: one {pc2, v} a forwarded cycle per port, released at random (rows of IK streams only)
-  integer cr_pend [0:31];
-  initial for (pq = 0; pq < 32; pq = pq + 1) cr_pend[pq] = 0;
-  always @(posedge ck) if (rst) for (kc = 0; kc < 8; kc = kc + 1) if (ks[kc][0] && !ps_nocr) cr_pend[ks[kc][1053:1049]] = cr_pend[ks[kc][1053:1049]] + 1;
+  // consumer credits: one 1-bit credit a forwarded cycle per port, in row order, released at random (IK streams only)
+  integer cr_pend [0:7];
+  initial for (pq = 0; pq < 8; pq = pq + 1) cr_pend[pq] = 0;
+  always @(posedge ck) if (rst) for (kc = 0; kc < 8; kc = kc + 1) if (ks[kc][0] && !ps_nocr) cr_pend[kc] = cr_pend[kc] + 1;
   genvar gq;
   generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkq
-    integer jj;
     always @(posedge fck) begin
-      kq[gq] <= {1'b0, 3'd0}; 
-      if (($urandom % 3) == 0) for (jj = 0; jj < 4; jj = jj + 1) if (cr_pend[gq*4 + jj] > 0) begin
-        kq[gq] <= {1'b0, 2'(jj), 1'b1}; cr_pend[gq*4 + jj] = cr_pend[gq*4 + jj] - 1; ps_cr_out = ps_cr_out - 1; jj = 4;
+      kq[gq] <= 4'd0;
+      if (($urandom % 3) == 0 && cr_pend[gq] > 0) begin
+        kq[gq] <= 4'd1; cr_pend[gq] = cr_pend[gq] - 1; ps_cr_out = ps_cr_out - 1;
       end
     end
   end endgenerate
-  wire [3:0] kqf [0:7];
-  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][2:0]}; end endgenerate
+  wire [1:0] kqf [0:7];
+  generate for (gq = 0; gq < 8; gq = gq + 1) begin : gkf assign kqf[gq] = {fck, kq[gq][0]}; end endgenerate
   // ---------------------------------------------------------------- stimulus
   localparam integer NREQ = 24;        // per SM
   reg [9:0] ntag [0:7];

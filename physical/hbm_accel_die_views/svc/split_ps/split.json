@@ -62,14 +62,14 @@
       "parent_port": "kq0",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kq1": {
       "parent_port": "kq1",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -134,7 +134,7 @@
       "parent_port": "kq2",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -185,7 +185,7 @@
       "parent_port": "kq3",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -243,7 +243,7 @@
       "parent_port": "kq4",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kd": {
@@ -324,7 +324,7 @@
       "parent_port": "kq5",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -375,7 +375,7 @@
       "parent_port": "kq6",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -440,7 +440,7 @@
       "parent_port": "kq7",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -512,14 +512,14 @@
       "parent_port": "kq0",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kq1": {
       "parent_port": "kq1",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -584,7 +584,7 @@
       "parent_port": "kq2",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -635,7 +635,7 @@
       "parent_port": "kq3",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -693,7 +693,7 @@
       "parent_port": "kq4",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kd": {
@@ -774,7 +774,7 @@
       "parent_port": "kq5",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -825,7 +825,7 @@
       "parent_port": "kq6",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -890,7 +890,7 @@
       "parent_port": "kq7",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -977,14 +977,14 @@
       "parent_port": "kq0",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kq1": {
       "parent_port": "kq1",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1021,7 +1021,7 @@
       "parent_port": "kq2",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1072,7 +1072,7 @@
       "parent_port": "kq3",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1144,7 +1144,7 @@
       "parent_port": "kq4",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kd": {
@@ -1202,7 +1202,7 @@
       "parent_port": "kq5",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1253,7 +1253,7 @@
       "parent_port": "kq6",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1327,7 +1327,7 @@
       "parent_port": "kq7",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1451,14 +1451,14 @@
       "parent_port": "kq0",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kq1": {
       "parent_port": "kq1",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1495,7 +1495,7 @@
       "parent_port": "kq2",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1546,7 +1546,7 @@
       "parent_port": "kq3",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1618,7 +1618,7 @@
       "parent_port": "kq4",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "kd": {
@@ -1676,7 +1676,7 @@
       "parent_port": "kq5",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1727,7 +1727,7 @@
       "parent_port": "kq6",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1801,7 +1801,7 @@
       "parent_port": "kq7",
       "parent_bits": [
        0,
-       3
+       1
       ]
      },
      "phy": {
@@ -1889,12 +1889,12 @@
      "face": "N"
     },
     "kq0": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
     "kq1": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -1956,7 +1956,7 @@
      "face": "N"
     },
     "kq2": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2018,7 +2018,7 @@
      "face": "N"
     },
     "kq3": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2085,7 +2085,7 @@
      "face": "N"
     },
     "kq4": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2194,7 +2194,7 @@
      "face": "N"
     },
     "kq5": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2256,7 +2256,7 @@
      "face": "N"
     },
     "kq6": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2328,7 +2328,7 @@
      "face": "N"
     },
     "kq7": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2395,12 +2395,12 @@
      "face": "N"
     },
     "kq0": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
     "kq1": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2442,7 +2442,7 @@
      "face": "N"
     },
     "kq2": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2504,7 +2504,7 @@
      "face": "N"
     },
     "kq3": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2581,7 +2581,7 @@
      "face": "N"
     },
     "kq4": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2648,7 +2648,7 @@
      "face": "N"
     },
     "kq5": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2710,7 +2710,7 @@
      "face": "N"
     },
     "kq6": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },
@@ -2814,7 +2814,7 @@
      "face": "N"
     },
     "kq7": {
-     "bits": 4,
+     "bits": 2,
      "direction": "input",
      "face": "N"
     },

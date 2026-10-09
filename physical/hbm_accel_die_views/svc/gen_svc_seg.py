@@ -34,7 +34,7 @@ S, H, L = V.S, V.H, V.L
 PS = '--ps' in sys.argv          # hbm-forks 2026-10-09: per-PC stream successor (ot_hbm_svc_ps_lib.sv); outputs *_ps
 SEGD, SPLD, SDCD, STG = (('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json') if PS else
                          ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
-PS_PORTS_BITS = dict(ks=1102, kq=4, kd=2)
+PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -123,7 +123,7 @@ PS_NEW = {}
 
 
 def ps_ports(P, parent, segs, seg_of, H_um, wants):
-    """PS row ports ks<k> (1,102 out: line + 3 forwarded clocks), credit ports kq<k> (4 in: {fclk, pc2, v}) and the
+    """PS row ports ks<k> (1,102 out: line + 3 forwarded clocks), credit ports kq<k> (2 in: {fclk, v}) and the
     stream-done port kd (2 out: {fclk, done}): N-face M5 pins at 0.192 um pitch (the l<k> line ports' density, 5.2 b/um),
     in the free N-face span nearest the unit inside the unit's segment."""
     PITCH_N = 0.192
@@ -169,7 +169,7 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
                        direction='input' if d_ == 'in' else 'output')
         occl[L_] = merged(occl[L_] + [(pins[0][2], pins[-1][4])])
         fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
-                    {3: 'in'} if name.startswith('kq') else {1: 'out'})
+                    {1: 'in'} if name.startswith('kq') else {1: 'out'})
         PS_NEW[name] = (bits, P[name]['direction'])
 
 
@@ -670,8 +670,8 @@ def build(pl):
                 sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[44]}}]'); cl.append(f'f{bn}')
                 sdc.append(f'for {{set i 0}} {{$i < 44}} {{incr i}} {{ set_input_delay -clock f{bn} 166.6 [get_ports [format {{{bn}[%d]}} $i]] }}')
             if PS and bn.startswith('kq'):
-                sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[3]}}]'); cl.append(f'f{bn}')
-                sdc.append(f'for {{set i 0}} {{$i < 3}} {{incr i}} {{ set_input_delay -clock f{bn} 166.6 [get_ports [format {{{bn}[%d]}} $i]] }}')
+                sdc.append(f'create_clock -name f{bn} -period 833 [get_ports {{{bn}[1]}}]'); cl.append(f'f{bn}')
+                sdc.append(f'set_input_delay -clock f{bn} 166.6 [get_ports {{{bn}[0]}}]')
             if bn == 'e':
                 sdc.append('create_clock -name fe -period 833 [get_ports {e[128]}]'); cl.append('fe')
                 sdc.append('for {set i 0} {$i < 128} {incr i} { set_input_delay -clock fe 166.6 [get_ports [format {e[%d]} $i]] }')
@@ -693,6 +693,13 @@ def build(pl):
                 fo += ['kd[1]']
         if fo:
             sdc.append('set_false_path -to [get_ports -quiet {' + ' '.join(fo) + '}]')
+        if PS:      # PS row / done outputs: the consistent die-link split (S = R = 254.7 ps) until the rebudget covers them
+            for bn in port_map[names[j]]:
+                if bn.startswith('ks'):
+                    sdc.append(f'set_output_delay -clock vclk 254.7 [get_ports -quiet {{{bn}[*]}}]')
+                    sdc.append(f'set_false_path -to [get_ports -quiet {{{bn}[1099] {bn}[1100] {bn}[1101]}}]')
+                elif bn == 'kd':
+                    sdc.append('set_output_delay -clock vclk 254.7 [get_ports -quiet {kd[0]}]')
         if cl:
             sdc += ['set_clock_uncertainty -setup 60 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_uncertainty -hold 25 [get_clocks {' + ' '.join(cl) + '}]',

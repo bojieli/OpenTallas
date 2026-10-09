@@ -10,7 +10,7 @@ module hfd_svc_SE_s3 (
     output wire [986:0] eo,
     output wire [1025:0] ik,
     output wire [1:0] kd,
-    input wire [3:0] kq4,
+    input wire [1:0] kq4,
     output wire [1101:0] ks4,
     output wire [1040:0] kv,
     output wire [1101:0] l4,

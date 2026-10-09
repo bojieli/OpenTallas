@@ -28,6 +28,9 @@ module hfd_attn_half_lo #(
     input  wire [1617:0] ci,
     input  wire [0:0]    ck,
     input  wire [1040:0] k,
+    input  wire [0:0]    ldk,      // hbm-forks 2026-10-09 (RQ-HF-4, 8 KV entry points a stack): STATIC die strap (by_design
+                                   // tie, false path).  1: the ld half of the packet comes from this tile's own k port only
+                                   // (the forward chains' ld field is ignored; they still carry the query); 0: today's OR
     input  wire [581:0]  q,
     output wire [1617:0] rf,
     input  wire [1617:0] ri,
@@ -44,7 +47,13 @@ module hfd_attn_half_lo #(
     ot_attn_fpipe #(.W(39), .N(1 + NK)) u_pqx (.clk(clk), .d({rst[0], q[581:544]}), .q(q_s[582:544]));
     ot_attn_bpipe #(.W(PK),   .N(1 + NC)) u_pc (.clk(clk), .d(ci), .q(ci_s));
     ot_attn_bpipe #(.W(PK),   .N(1 + NR), .EW0(1)) u_pr (.clk(clk), .d(ri), .q(ri_s));
-    wire [PW-1:0] pk = {q_s[582], k_s[1037:0], q_s[579:0]} | {1'b0, ci_s} | {1'b0, ri_s};
+`ifdef OT_ATTN_MUT_LDK
+    wire ldk_s = 1'b0;                                       // NEGATIVE CONTROL: the strap ignored
+`else
+    wire ldk_s = ldk[0];
+`endif
+    wire [PK-1:0] fw = ci_s | ri_s;                          // forward-chain packet (ld 1,038 | query 580)
+    wire [PW-1:0] pk = {q_s[582], k_s[1037:0] | (ldk_s ? 1038'd0 : fw[PK-1:580]), q_s[579:0] | fw[579:0]};
     wire [PW-1:0] root_q;
     // ROOT on the N face: its bank outputs are the xp pins
     ot_attn_bpipe #(.W(PW), .N(1)) u_root (.clk(clk), .d(pk), .q(root_q));

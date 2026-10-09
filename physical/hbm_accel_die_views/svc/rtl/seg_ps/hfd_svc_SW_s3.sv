@@ -9,7 +9,7 @@ module hfd_svc_SW_s3 (
     input wire [895:0] ei,
     output wire [935:0] eo,
     output wire [1:0] kd,
-    input wire [3:0] kq4,
+    input wire [1:0] kq4,
     output wire [1101:0] ks4,
     output wire [1101:0] l4,
     inout wire [2587:0] phy,

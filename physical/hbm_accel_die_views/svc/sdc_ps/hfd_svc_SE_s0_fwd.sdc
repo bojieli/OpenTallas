@@ -1,11 +1,15 @@
 # hfd_svc_SE_s0: forwarded input clocks (two-clock FIFO writes, asynchronous to ck); forwarded-clock output bits
 create_clock -name fq0 -period 833 [get_ports {q0[44]}]
 for {set i 0} {$i < 44} {incr i} { set_input_delay -clock fq0 166.6 [get_ports [format {q0[%d]} $i]] }
-create_clock -name fkq0 -period 833 [get_ports {kq0[3]}]
-for {set i 0} {$i < 3} {incr i} { set_input_delay -clock fkq0 166.6 [get_ports [format {kq0[%d]} $i]] }
-create_clock -name fkq1 -period 833 [get_ports {kq1[3]}]
-for {set i 0} {$i < 3} {incr i} { set_input_delay -clock fkq1 166.6 [get_ports [format {kq1[%d]} $i]] }
+create_clock -name fkq0 -period 833 [get_ports {kq0[1]}]
+set_input_delay -clock fkq0 166.6 [get_ports {kq0[0]}]
+create_clock -name fkq1 -period 833 [get_ports {kq1[1]}]
+set_input_delay -clock fkq1 166.6 [get_ports {kq1[0]}]
 set_false_path -to [get_ports -quiet {l0[1099] l0[1100] l0[1101] ks0[1099] ks0[1100] ks0[1101] ks1[1099] ks1[1100] ks1[1101]}]
+set_output_delay -clock vclk 254.7 [get_ports -quiet {ks0[*]}]
+set_false_path -to [get_ports -quiet {ks0[1099] ks0[1100] ks0[1101]}]
+set_output_delay -clock vclk 254.7 [get_ports -quiet {ks1[*]}]
+set_false_path -to [get_ports -quiet {ks1[1099] ks1[1100] ks1[1101]}]
 set_clock_uncertainty -setup 60 [get_clocks {fq0 fkq0 fkq1}]
 set_clock_uncertainty -hold 25 [get_clocks {fq0 fkq0 fkq1}]
 set_clock_groups -asynchronous -group [get_clocks {core_clk vclk}] -group [get_clocks fq0] -group [get_clocks fkq0] -group [get_clocks fkq1]

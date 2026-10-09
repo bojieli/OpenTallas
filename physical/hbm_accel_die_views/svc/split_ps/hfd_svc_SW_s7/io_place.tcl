@@ -2,8 +2,6 @@
 place_pin -pin_name {ck[0]} -layer M5 -location {1134.9240 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq7[0]} -layer M5 -location {694.9560 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq7[1]} -layer M5 -location {695.1480 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq7[2]} -layer M5 -location {695.3400 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq7[3]} -layer M5 -location {695.5320 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks7[0]} -layer M5 -location {259.8840 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks7[1]} -layer M5 -location {260.0760 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks7[2]} -layer M5 -location {260.2680 259.0800} -pin_size {0.0240 0.1920}

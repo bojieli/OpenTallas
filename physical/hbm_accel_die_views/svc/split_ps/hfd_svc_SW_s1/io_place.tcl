@@ -3496,8 +3496,6 @@ place_pin -pin_name {ik[1024]} -layer M5 -location {1238.0280 259.0800} -pin_siz
 place_pin -pin_name {ik[1025]} -layer M5 -location {1238.2200 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq2[0]} -layer M5 -location {1240.2360 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {kq2[1]} -layer M5 -location {1240.4280 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq2[2]} -layer M5 -location {1240.6200 259.0800} -pin_size {0.0240 0.1920}
-place_pin -pin_name {kq2[3]} -layer M5 -location {1240.8120 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[0]} -layer M5 -location {407.1480 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[1]} -layer M5 -location {407.3400 259.0800} -pin_size {0.0240 0.1920}
 place_pin -pin_name {ks2[2]} -layer M5 -location {407.5320 259.0800} -pin_size {0.0240 0.1920}
