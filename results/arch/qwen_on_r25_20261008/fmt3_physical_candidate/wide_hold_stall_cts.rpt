@@ -1,0 +1,37 @@
+OT_HOLD_STALL NEEDS_RTL stage=cts reason=hold repair over 3.0 h
+chunks (wns_ps tns_ps viol_endpoints): {-167.1 -344783.9 12683.0} {-142.1 -128714.5 2869.0}
+class  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)
+I2R          986    -142.1  fx_b[1440] -> u_xld/q[1440]$_DFF_P_/D
+R2O          349      -7.3  g_bs[0].u_bod/q[120]$_DFF_P_/QN -> bout_l1[120]
+R2R         1535     -86.3  g_h[0].g_rows.g_r0.u_w/q[8]$_DFF_P_/QN -> g_h2[0].g_rows.g_r0.u_w/q[8]$_DFF_P_/D
+top pin groups (class start -> end, bus indices folded):
+    984    -142.1  I2R fx_b[*] -> u_xld/q[*]$_DFF_P_/D
+    622     -65.2  R2R g_side[*].g_rs[*].g_in.u_p.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_o.g_p.u_d/q[*]$_DFF_P_/D
+    287     -71.9  R2R g_side[*].g_rs[*].genblk1.g_x.u_a.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].genblk1.g_x.u_m.g_p.u_d/q[*]$_DFF_P_/D
+    205      -4.4  R2O g_bs[*].u_bod/q[*]$_DFF_P_/QN -> bout_r1[*]
+    171     -86.3  R2R g_h[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/D
+    143      -7.3  R2O g_bs[*].u_bod/q[*]$_DFF_P_/QN -> bout_l1[*]
+    134     -42.6  R2R g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_p.g_p.u_d/q[*]$_DFF_P_/D
+    109     -34.4  R2R g_side[*].g_rs[*].g_in.u_a.g_p.u_d/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_m.g_p.u_d/q[*]$_DFF_P_/D
+     74     -51.3  R2R u_prd.g_s[*].g_n.u/q[*]$_DFF_P_/QN -> u_prd.g_s[*].g_n.u/q[*]$_DFF_P_/D
+     57     -28.8  R2R g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_a.g_p.u_d/q[*]$_DFF_P_/D
+     14     -16.6  R2R u_sk0.g_c[*].g_d.e0[*]$_DFFE_PP_/QN -> u_sk.g_c[*].g_d.e0[*]$_DFFE_PP_/D
+      7     -73.3  R2R g_side[*].g_rs[*].genblk1.g_x.u_a.g_p.u_a/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].genblk1.g_x.u_m.g_p.u_a/q[*]$_DFF_P_/D
+      7     -64.9  R2R g_side[*].g_rs[*].g_in.u_p.g_p.u_a/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].g_in.u_o.g_p.u_a/q[*]$_DFF_P_/D
+      5     -33.8  R2R u_bc.g_lookahead.set_lo[*]$_DFF_PN0_/QN -> u_bc.g_lookahead.full[*]$_DFFE_PN0P_/D
+      4     -16.4  R2R u_issue.sw_row[*]$_DFF_P_/QN -> u_issue.s_row[*][*]$_DFFE_PP_/D
+      4      -8.9  R2R u_bc.g_lookahead.clr_lo[*]$_DFF_PN0_/QN -> u_bc.g_lookahead.full[*]$_DFFE_PN0P_/D
+      4      -6.2  R2R u_sk0.g_c[*].g_d.e0[*]$_DFFE_PP_/QN -> u_sk.g_c[*].g_d.e1[*]$_DFFE_PP_/D
+      3      -1.6  R2R g_h2[*].g_rows.g_r0.u_w/q[*]$_DFF_P_/QN -> g_side[*].g_rs[*].genblk1.g_x.u_a.g_p.u_d/q[*]$_DFF_P_/D
+      3     -17.8  R2R u_bc.g_lookahead.clr_hi[*]$_DFF_PN0_/QN -> u_bc.g_lookahead.full[*]$_DFFE_PN0P_/D
+      3     -29.1  R2R u_bc.g_lookahead.g_sram.oq2[*]$_DFFE_PP_/QN -> u_sk0.g_c[*].g_d.e0[*]$_DFFE_PP_/D
+      3      -1.8  R2R g_h[*].u_t/q[*]$_DFF_P_/QN -> g_h2[*].u_t/q[*]$_DFF_P_/D
+      3     -15.3  R2R u_bc.g_lookahead.bank_ptr[*][*]$_DFFE_PN0P_/QN -> u_bc.g_lookahead.bp_d[*]$_DFF_PN0_/D
+      2     -17.2  R2R u_issue.ti_n[*]$_DFFE_PN0P_/QN -> u_issue.ti_n[*]$_DFFE_PN0P_/D
+      2      -7.1  R2R u_sch.rp[*]$_DFFE_PN0P_/QN -> u_sch.head[*]$_DFFE_PP_/D
+      2     -64.1  R2R g_side[*].g_rs[*].g_in.u_p.g_p.u_x/q$_DFF_PN0_/QN -> g_side[*].g_rs[*].g_in.u_o.g_p.u_x/q$_DFF_PN0_/D
+      2     -41.4  R2R u_issue.rb[*]$_DFFE_PN0P_/QN -> u_issue.rsi_q[*]$_DFFE_PN0P_/D
+      2      -5.5  R2R u_dch.head[*]$_DFFE_PP_/QN -> u_bc.g_lookahead.q_len_hdec[*][*]$_DFFE_PP_/D
+      1      -0.4  R2R g_fmt[*].u/q[*]$_DFFE_PN0P_/QN -> g_side[*].g_rs[*].genblk1.g_x.u_a.g_p.u_d/q[*]$_DFF_P_/D
+      1      -4.8  R2O u_sch.u_cr.g_s[*].g_r.u/q$_DFF_PN0_/QN -> fs_ret
+      1     -16.6  R2R u_sch.head[*]$_DFFE_PP_/QN -> u_issue.g_end[*]$_DFFE_PN0P_/D

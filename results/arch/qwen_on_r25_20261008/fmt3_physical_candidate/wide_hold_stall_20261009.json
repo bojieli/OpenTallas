@@ -1,0 +1,31 @@
+{
+  "observed_utc": "2026-10-09T13:11:11Z",
+  "scope": "Routine evidence from progressing original wide route; no restart or new design",
+  "source_commit": "2831b78d525eaa86a7d5706446cbf8ccdb8374bc",
+  "host": "ot-epyc3",
+  "driver_pid": 1835875,
+  "worker_pid": 3685092,
+  "remote_root": "/srv/opentallas-scratch/codex/qwen-fmt3-wide-2831b78d5",
+  "flow_log": "run/route/flow.log",
+  "report": "run/route/reports/asap7/smh_front_c_one_qwen_fmt3_wide_ss/base/ot_hold_stall_cts.rpt",
+  "report_sha256": "3378024cb0dd8f1744163e23b841c474a9f4d332f7f432287165e87755f679f1",
+  "report_bytes": 3599,
+  "hold_guard": {
+    "status": "OT_HOLD_STALL NEEDS_RTL",
+    "reason": "hold repair over 3.0 h",
+    "elapsed_seconds": 11263,
+    "chunk_1_runtime_seconds": 11260.77,
+    "chunk_1_inserted_hold_buffers": 80885,
+    "remaining_endpoints_flow_report": 2869,
+    "class_counts_from_stall_report": {"I2R": 986, "R2O": 349, "R2R": 1535},
+    "ff_hold_worst_ps": -142.07,
+    "ff_hold_tns_ps": -128714.5,
+    "ss_setup_worst_ps": -513.46
+  },
+  "current_phase": "postCTS detailed legalization, same OpenROAD worker",
+  "worker_hwm_kib": 3271292,
+  "terminal_verdict_present": false,
+  "acceptance": "TT setup >= 0 ps, FF hold >= 0 ps, DRC 0; SS sensitivity only",
+  "classification": "Intermediate hold failure retained; final routed TT/FF/DRC verdict pending",
+  "actions": "Recorded evidence only; original source, constraints and progressing job preserved"
+}
