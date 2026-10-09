@@ -1,0 +1,20 @@
+{
+  "verdict": "FAIL_NOT_ADOPTED",
+  "binding_policy": "OWNER_DIRECTIVES_2026_10_07 SSsetup>=15ps FFhold>=15ps DRC0 realinterface/clock budgets",
+  "scope": "PATHFINDING_GENERIC_IO_FULL545_REPLAY512",
+  "source_origin": "32f53c3a4",
+  "source_storage": "b11e829d3",
+  "remote_work": "/srv/opentallas-data/codex/hbm-retry545-pathfinding-wide-r1/work",
+  "real_macro_count": 16,
+  "slot_area_um2": 317400,
+  "TT_setup_ps": -541.33,
+  "SS_setup_ps": -1008.64,
+  "SS_reg_to_reg_ps": -680.36,
+  "FF_hold_ps": -173.83,
+  "FF_reg_to_reg_ps": -1.5,
+  "DRC": 0,
+  "antenna_nets": 0,
+  "actual_TU_boundary_budget_bound": false,
+  "stale_tool_policy": "Raw corner_sta.json records obsolete TTacceptance label; this verdict applies actual ownerSS15/FF15. Raw evidence is preserved unchanged.",
+  "next": "structural controller pipeline/partition and actual source/capture clock budgets; no route-settings rescue claim"
+}
