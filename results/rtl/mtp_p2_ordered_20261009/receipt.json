@@ -1,0 +1,32 @@
+{
+  "source": "9f6265320",
+  "model_before_RTL": "0072d1b9a",
+  "host": "ot-agidock128",
+  "admitted_GiB": 2,
+  "measured_compile_RSS_KiB": 11976,
+  "status": "PASS_COMPONENT_TRANSPORT",
+  "shape": {
+    "rows": 4,
+    "flits_per_row": 80,
+    "FP32_words_per_row": 1280,
+    "input_lanes": 2,
+    "real_SRAM_macros": 12,
+    "output_queue_words": 8
+  },
+  "exact_gate": "all320 SECDED flits, golden ascending expert-ID row order then shared",
+  "negative_gates": [
+    "wrong identity epoch",
+    "wrong expert",
+    "wrong word",
+    "wrong last",
+    "duplicate",
+    "sink_abort input assertion"
+  ],
+  "mutation": {
+    "MUT_ORDER": 1,
+    "status": "EXPECTED_FAIL_RESULT0"
+  },
+  "physical_qualification": false,
+  "arithmetic_qualification": false,
+  "scope": "Protected transport only; actual ECC consumer/FP32 arithmetic/shared producer binding remains required"
+}

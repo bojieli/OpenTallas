@@ -1,0 +1,257 @@
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat.sv:207:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                          : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am.g_add[7].u_add.u.u_ca'
+  207 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv:137:33: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'ffs' generates 5 bits.
+                                                                            : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_un'
+  137 |     wire [IW-1:0] cur = wp * WB + ffs;
+      |                                 ^
+%Warning-WIDTHTRUNC: physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv:137:23: Operator ASSIGNW expects 9 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                           : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_un'
+  137 |     wire [IW-1:0] cur = wp * WB + ffs;
+      |                       ^
+%Warning-WIDTHEXPAND: physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv:197:28: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 4 bits.
+                                                                            : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_un'
+  197 |                     if (wp == NW - 1) scan <= 1'b0;
+      |                            ^~
+%Warning-WIDTHEXPAND: physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv:79:39: Operator COND expects 32 bits on the Conditional True, but Conditional True's REPLICATE generates 17 bits.
+                                                                     : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am'
+   79 |             if (in_v) base <= in_last ? {IW{1'b0}} : base + LP;
+      |                                       ^
+%Warning-WIDTHEXPAND: physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv:79:59: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'base' generates 17 bits.
+                                                                     : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am'
+   79 |             if (in_v) base <= in_last ? {IW{1'b0}} : base + LP;
+      |                                                           ^
+%Warning-WIDTHTRUNC: physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv:79:28: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                    : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am'
+   79 |             if (in_v) base <= in_last ? {IW{1'b0}} : base + LP;
+      |                            ^~
+%Warning-WIDTHEXPAND: physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv:137:60: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'e_base' generates 17 bits.
+                                                                      : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am'
+  137 |                         bk[k] <= e_key[k]; bi[k] <= e_base + k;
+      |                                                            ^
+%Warning-WIDTHTRUNC: physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv:137:50: Operator ASSIGNDLY expects 17 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                     : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_am'
+  137 |                         bk[k] <= e_key[k]; bi[k] <= e_base + k;
+      |                                                  ^~
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:78:38: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                                                       : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+   78 |         if ($signed(t) >= R) wrapfix = t - R;
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:79:42: Operator ASSIGN expects 16 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                       : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+   79 |         else if ($signed(t) < 0) wrapfix = t + R;
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:116:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'TOKEN_EDGE_FIX' generates 32 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  116 |         else if (TOKEN_EDGE_FIX && n_set)
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:119:27: Logical operator IF expects 1 bit on the If, but If's VARREF 'TOKEN_EDGE_FIX' generates 32 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  119 |     always @(posedge clk) if (TOKEN_EDGE_FIX) begin
+      |                           ^~
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:216:38: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  216 |                                 tring[wrapfix({16'd0, st_token_n} + (p_cur - i_cur - n), TR)];
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:214:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'TOKEN_EDGE_FIX' generates 32 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  214 |                         if (TOKEN_EDGE_FIX)
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:332:28: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  332 |             if (tw_v) tring[wrapfix({16'd0, st_token_n} + (tw_pos - n), TR)] <= tw_tok;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:333:33: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  333 |         end else if (w4_v) tring[w4_slot] <= w4_k;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:329:9: Logical operator IF expects 1 bit on the If, but If's VARREF 'TOKEN_EDGE_FIX' generates 32 bits.
+                                                                                                       : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  329 |         if (TOKEN_EDGE_FIX) begin
+      |         ^~
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:346:56: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TOKEN_EDGE_FIX' generates 32 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  346 |             if (s4_c == C_TOK) a_tok <= TOKEN_EDGE_FIX ? s4_token : (s4_tneg ? {TW{1'b0}} : tring[s4_slot]);
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:346:98: Bit extraction of array[15:0] requires 4 bit index, not 16 bits.
+                                                                                                        : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.g_state1.u_state'
+  346 |             if (s4_c == C_TOK) a_tok <= TOKEN_EDGE_FIX ? s4_token : (s4_tneg ? {TW{1'b0}} : tring[s4_slot]);
+      |                                                                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:133:29: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  133 |     assign step_a = STOP_EN ? (effective_n - 1'b1) : acc_a;
+      |                             ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:151:52: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'fbase' generates 23 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  151 |             else if (s == S_COMMIT) fbase <= fbase + B;
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:151:43: Operator ASSIGNDLY expects 23 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  151 |             else if (s == S_COMMIT) fbase <= fbase + B;
+      |                                           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:158:42: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  158 |     wire [31:0] context_limit = (STOP_EN && MUT!=2) ? {{(31-PW){1'b0}},cfg_maxpos} : MAXPOS;
+      |                                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:180:33: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'rw' generates 4 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  180 |     wire rd_ok = (PRL==0) || (rw>=PRL);
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:194:17: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  194 |             if (!STOP_EN || !e_v || e_ready) e_v <= 1'b0; n_set <= 1'b0; tw_v <= 1'b0; acc_start <= 1'b0; acc_tokx <= 1'b0; acc_amax <= 1'b0;
+      |                 ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:212:22: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  212 |                     d[cmd_idx] <= am_idx;
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:221:33: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  221 |                     if (STOP_EN && (cfg_ngen==0 || cfg_plen==0 || cfg_plen>cfg_maxpos || cfg_maxpos>MAXPOS || cfg_gamma>B || B>=PMAX)) begin
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:221:100: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cfg_maxpos' generates 21 bits.
+                                                                               : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  221 |                     if (STOP_EN && (cfg_ngen==0 || cfg_plen==0 || cfg_plen>cfg_maxpos || cfg_maxpos>MAXPOS || cfg_gamma>B || B>=PMAX)) begin
+      |                                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:221:120: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'cfg_gamma' generates 4 bits.
+                                                                               : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  221 |                     if (STOP_EN && (cfg_ngen==0 || cfg_plen==0 || cfg_plen>cfg_maxpos || cfg_maxpos>MAXPOS || cfg_gamma>B || B>=PMAX)) begin
+      |                                                                                                                        ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:226:42: Operator ASSIGNDLY expects 32 bits on the Assign RHS, but Assign RHS's VARREF 'pp' generates 20 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  226 |                     tw_v <= 1'b1; tw_pos <= pp; tw_tok <= p_tok;
+      |                                          ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:228:21: Operator TASKREF 'issue' expects 32 bits on the Function Argument, but Function Argument's VARREF 'pp' generates 20 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  228 |                     issue(C_VLAYER, 0, 1, pp, 0, 0);
+      |                     ^~~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:233:43: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_idx' generates 8 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  233 |                     C_VLAYER: if (cmd_idx < NL - 1) issue(C_VLAYER, cmd_idx + 1, cmd_ncol, cmd_pos, 0, 0);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:237:60: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'pp' generates 20 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  237 |                                 n_set <= 1'b1; n_val <= pp + 1;
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:241:54: Operator TASKREF 'issue' expects 4 bits on the Function Argument, but Function Argument's VARREF 'B' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  241 |                     C_DSTAGE: if (cmd_idx < NST - 1) issue(C_DSTAGE, cmd_idx + 1, B, cmd_pos, y, 0);
+      |                                                      ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:242:36: Operator TASKREF 'issue' expects 4 bits on the Function Argument, but Function Argument's VARREF 'B' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  242 |                               else issue(C_DHEAD, 0, B, cmd_pos, y, 0);
+      |                                    ^~~~~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:241:43: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cmd_idx' generates 8 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  241 |                     C_DSTAGE: if (cmd_idx < NST - 1) issue(C_DSTAGE, cmd_idx + 1, B, cmd_pos, y, 0);
+      |                                           ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:244:94: Bit extraction of array[7:0] requires 3 bit index, not 8 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  244 |                     C_MARKOV: if (cmd_idx + 1 < g) issue(C_MARKOV, cmd_idx + 1, 1, cmd_pos, d[cmd_idx], 1);
+      |                                                                                              ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:252:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  252 |                     s <= STOP_EN ? S_PF_ACK : ((cfg_ngen <= 1) ? S_DONE : S_STEP);
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:259:26: Operator TASKREF 'issue' expects 4 bits on the Function Argument, but Function Argument's VARREF 'B' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  259 |                     else issue(C_DSTAGE, 0, B, q, y, 0);
+      |                          ^~~~~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:262:22: Bit extraction of array[7:0] requires 3 bit index, not 4 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  262 |                     d[j] <= f_tok;
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:267:47: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'j' generates 4 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  267 |                     tw_v <= 1'b1; tw_pos <= n + j; tw_tok <= (j == 0) ? y : d[j-1];
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:283:57: Operator ASSIGNDLY expects 20 bits on the Assign RHS, but Assign RHS's VARREF 'emitted' generates 21 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  283 |                     e_v<=1; e_tok<=ttok[j*TW+:TW]; e_idx<=emitted;
+      |                                                         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:287:71: Operator ASSIGNDLY expects 20 bits on the Assign RHS, but Assign RHS's VARREF 'emitted' generates 21 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  287 |                         e_v <= 1'b1; e_tok <= ttok[j*TW +: TW]; e_idx <= emitted; emitted <= emitted + 1;
+      |                                                                       ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:289:27: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'acc_a' generates 3 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  289 |                     if (j == acc_a) s <= S_COMMIT;
+      |                           ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:282:25: Logical operator IF expects 1 bit on the If, but If's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  282 |                 S_EMIT: if(STOP_EN) begin
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:294:32: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's ADD generates 32 or 4 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  294 |                     effective_n<=j+1; effective_bonus<=e_tok;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:299:34: Operator EQ expects 4 bits on the RHS, but RHS's VARREF 'acc_a' generates 3 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  299 |                     end else if(j==acc_a) s<=S_COMMIT;
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:295:82: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'j' generates 4 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  295 |                     if((cfg_eos_en && e_tok==cfg_eos) || emitted+1>=cfg_ngen || n+j+1>=cfg_maxpos) begin
+      |                                                                                  ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:304:43: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  304 |                     n_val <= n + (STOP_EN ? effective_n : (1 + acc_a)) + (MUT == 1 ? 1 : 0);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:304:43: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 'effective_n' generates 3 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  304 |                     n_val <= n + (STOP_EN ? effective_n : (1 + acc_a)) + (MUT == 1 ? 1 : 0);
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:304:62: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'acc_a' generates 3 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  304 |                     n_val <= n + (STOP_EN ? effective_n : (1 + acc_a)) + (MUT == 1 ? 1 : 0);
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:305:69: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'acc_a' generates 3 bits.
+                                                                              : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  305 |                     y <= (MUT == 2 && acc_a + 1 <= g) ? ttok[(acc_a + 1)*TW +: TW] : (STOP_EN ? effective_bonus : bonus);
+      |                                                                     ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:305:95: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  305 |                     y <= (MUT == 2 && acc_a + 1 <= g) ? ttok[(acc_a + 1)*TW +: TW] : (STOP_EN ? effective_bonus : bonus);
+      |                                                                                               ^
+%Warning-WIDTHTRUNC: rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv:308:36: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'STOP_EN' generates 32 bits.
+                                                                             : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core.u_top.u_ctl'
+  308 |                     s <= ((STOP_EN && stop_latched) || emitted >= cfg_ngen) ? S_DONE : S_CWAIT;
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv:184:42: Operator ADD expects 3 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                                          : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core'
+  184 |         else pending_emits<=pending_emits+(w_e_v && w_e_ready)-(e_v && e_ready);
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv:184:63: Operator SUB expects 3 bits on the RHS, but RHS's LOGAND generates 1 bits.
+                                                                          : ... note: In instance 'hfd_mtp_native_stop.on.core.u_core'
+  184 |         else pending_emits<=pending_emits+(w_e_v && w_e_ready)-(e_v && e_ready);
+      |                                                               ^
+%Error: Internal Error: rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv:77:52: ../V3Delayed.cpp:937: Multiple Write refs on LHS of NBA
+   77 |     function automatic [15:0] wrapfix(input [31:0] t, input integer R);
+      |                                                    ^
+Command exited with non-zero status 1
+	Command being timed: "verilator --lint-only --timing -Wno-fatal --top-module hfd_mtp_native_stop -GENABLE=1 /srv/opentallas-scratch/claude/mtp-die/nativestopf90d728da/facade.sv rtl/hbm_accel/control/hfd_mtp_x_stop.sv rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv rtl/gpu/dshbm/ot_dshbm_accept_port.sv rtl/hdc/ot_hdc_accept.sv rtl/gpu/dshbm/ot_dshbm_spec_state.sv rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv rtl/gpu/ot_gpu_router_topk.sv rtl/gpu/ot_gpu_router_topk_f.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/gpu/ot_gpu_fadd.sv rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+	User time (seconds): 0.89
+	System time (seconds): 0.04
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.94
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 106772
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 27210
+	Voluntary context switches: 5
+	Involuntary context switches: 5
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 56
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1

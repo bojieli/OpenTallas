@@ -1,0 +1,23 @@
+	Command being timed: "iverilog -g2012 -s hfd_mtp_native_stop -Phfd_mtp_native_stop.ENABLE=1 -o /srv/opentallas-scratch/mtp-die-nativestopf90d728da/lint.vvp /srv/opentallas-scratch/mtp-die-nativestopf90d728da/facade.sv rtl/hbm_accel/control/hfd_mtp_x_stop.sv rtl/hbm_accel/control/ot_hfd_mtp_core_stop.sv physical/hbm_mtp/rtl/ot_hfd_mtp_skid.sv rtl/hbm_accel/control/ot_dshbm_dspark_top_stop.sv rtl/hbm_accel/control/ot_dshbm_dspark_ctl_stop.sv physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv physical/hbm_mtp/rtl/ot_dshbm_expert_union_m.sv rtl/gpu/dshbm/ot_dshbm_accept_port.sv rtl/hdc/ot_hdc_accept.sv rtl/gpu/dshbm/ot_dshbm_spec_state.sv rtl/gpu/dshbm/ot_dshbm_spec_state_f.sv rtl/gpu/ot_gpu_router_topk.sv rtl/gpu/ot_gpu_router_topk_f.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/gpu/ot_gpu_fadd.sv rtl/experimental/ctl_spec_seed8_20261005/ot_dshbm_spec_state_f_token_edge.sv"
+	User time (seconds): 2.04
+	System time (seconds): 0.14
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 160484
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 39121
+	Voluntary context switches: 24
+	Involuntary context switches: 6
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 21120
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,25 @@
+{
+  "facade_source": "f90d728da",
+  "model_source": "f49a3d30f",
+  "controller_source": "18aa299bb",
+  "status": "PASS_FULL_SOURCE_ICARUS_ELABORATION",
+  "host": "ot-agidock128",
+  "admitted_GiB": 2,
+  "measured_RSS_KiB": 160484,
+  "groups": {
+    "CP_input179": 179,
+    "CP_output517": 517,
+    "SU_input": 523,
+    "router_input": 59,
+    "router_output": 58,
+    "collective_input": 1,
+    "collective_output": 19
+  },
+  "prior_failure": {
+    "tool": "Verilator",
+    "reason": "Internal compiler error token_edge.sv:77 Multiple Write refs on LHS of NBA",
+    "retained": "verilator_failure.log"
+  },
+  "physical_qualification": false,
+  "scope": "Actual full-context stop source facade; controller exact gate owned review_hbm_token_path"
+}
