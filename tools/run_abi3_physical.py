@@ -1957,6 +1957,8 @@ def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
 def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = False) -> str:
     """set_io_pin_constraint per region; ports are matched by Tcl regexp on the
     block's own terminal names, so a bus is pinned bit by bit, in order.
+    OT_PIN_GROUP_MAX optionally bounds each ordered group; every chunk keeps
+    the original region. Zero (default) retains the original single group.
 
     exhaustive (--pin-regions-exhaustive): before any constraint, every signal
     terminal must match EXACTLY ONE region regex, else the floorplan errors out.
@@ -1997,10 +1999,25 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         if "range_um" in region:
             lo, hi = region["range_um"]
             edge_region = f"{region['edge']}:{lo:g}-{hi:g}"
-        lines.append(
-            f"set_io_pin_constraint -group -order -region {edge_region} "
-            f"-pin_names [ot_match_pins {{{region['regex']}}}]"
-        )
+        # A large ordered group must fit on one edge/layer. Merely adding
+        # IO layers cannot legalize that group. Opt-in chunks retain its
+        # region and port order while allowing the placer to use all layers.
+        group_max = int(os.environ.get("OT_PIN_GROUP_MAX", "0"))
+        if group_max < 0:
+            raise ValueError("OT_PIN_GROUP_MAX must be nonnegative")
+        if group_max:
+            lines += [
+                f"set ot_region_pins [ot_match_pins {{{region['regex']}}}]",
+                f"for {{set ot_first 0}} {{$ot_first < [llength $ot_region_pins]}} {{incr ot_first {group_max}}} {{",
+                f"  set_io_pin_constraint -group -order -region {edge_region} "
+                f"-pin_names [lrange $ot_region_pins $ot_first [expr {{$ot_first + {group_max} - 1}}]]",
+                "}",
+            ]
+        else:
+            lines.append(
+                f"set_io_pin_constraint -group -order -region {edge_region} "
+                f"-pin_names [ot_match_pins {{{region['regex']}}}]"
+            )
     return "\n".join(lines) + "\n"
 
 
