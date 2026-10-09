@@ -63,6 +63,8 @@ def private_operand_model():
       "SRAM_internal_read_bytes_per_cycle_FN":1024,"SRAM_internal_read_bytes_per_cycle_X":512,
       "snapshot_replica_count_per_die":1,
       "snapshot_input_selection":"one admitted lease, tagged finite transaction; upstream producer mux unbound",
+      "FN_tag_scope":"10-bit bank/word within one active row window; reused next command",
+      "FN_epoch_fence":"actual outer service must bind base and lease, quiesce previous transaction before reuse; pending integration gate",
       "measured_component_cycles_per_row_finite_fixture":4009,
       "measured_component_row_us_at900MHz":4009/900,
       "fixture_supply_overlap":"independent test producers only; production overlap unqualified",
