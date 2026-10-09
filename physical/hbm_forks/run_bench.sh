@@ -20,6 +20,8 @@ case $B in
     S="rtl/gpu/ot_gpu_fadd.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv
        $AM $G/tb/tb_hgi_argmax.sv"; TOP=tb_hgi_argmax; TAG=HGI_ARGMAX; RUNDIR=.
     [ $B = argmax_f1 ] && D="$D -Ptb_hgi_argmax.FAST=1";;
+  seq)
+    S="$G/ot_hgi_seq.sv $G/tb/tb_hgi_seq.sv"; TOP=tb_hgi_seq; TAG=HGI_SEQ; RUNDIR=$G/tb;;
   *) echo "unknown bench $B"; exit 2;;
 esac
 iverilog -g2012 $D -I $G -I $G/tb -o $O/$B.vvp -s $TOP $S > $O/$B.build.log 2>&1 || { echo "$TAG FAIL build"; head -20 $O/$B.build.log; exit 2; }

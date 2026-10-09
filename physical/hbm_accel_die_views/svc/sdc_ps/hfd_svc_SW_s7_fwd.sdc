@@ -1,0 +1,7 @@
+# hfd_svc_SW_s7: forwarded input clocks (two-clock FIFO writes, asynchronous to ck); forwarded-clock output bits
+create_clock -name fkq7 -period 833 [get_ports {kq7[3]}]
+for {set i 0} {$i < 3} {incr i} { set_input_delay -clock fkq7 166.6 [get_ports [format {kq7[%d]} $i]] }
+set_false_path -to [get_ports -quiet {ks7[1099] ks7[1100] ks7[1101]}]
+set_clock_uncertainty -setup 60 [get_clocks {fkq7}]
+set_clock_uncertainty -hold 25 [get_clocks {fkq7}]
+set_clock_groups -asynchronous -group [get_clocks {core_clk vclk}] -group [get_clocks fkq7]
