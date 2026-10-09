@@ -37,7 +37,7 @@ module tb_qwen_r25_su_dispatch;
   wait(finished_v);if(fault||seen!=3||fetches!=4)$fatal(1,"p4 schedule");
   repeat(3)@(negedge clk);if(!finished_v)$fatal(1,"completion not held");
   // Foreign late completion must fence even while finished is held.
-  done_v=1;done_owner=0;@(posedge clk);#0.01;
+  #0.02;done_v=1;done_owner=0;@(posedge clk);#0.01;
   if(!fault||finished_v)$fatal(1,"foreign completion admitted");
   $display("PASS_QWEN_DISPATCH_P4 native690 quarters4 queries4 fetches4 nonempty3 tail_NIN1_2_3 checked_completion_negative");$finish;
  end
