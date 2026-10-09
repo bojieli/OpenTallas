@@ -29,7 +29,14 @@ module tb_shared_reader;
   .pub_valid(pub_valid),.pub_ready(pub_ready),.pub_data(pub_data),.pub_context(pub_context),.pub_word(pub_word),
   .pub_last(pub_last),.pub_fmt_fp32(pub_fmt_fp32),.pub_error(pub_error),
   .pub_retired(pub_retired),.pub_retired_context(pub_retired_context),.busy(busy),.fault(reader_fault));
- ot_dsrom_mtp_shared_producer #(.ECC_PIPE(1)) publisher(
+`ifdef READER_CE
+ localparam [71:0] INJECT=72'd1;
+`elsif READER_UE
+ localparam [71:0] INJECT=72'd3;
+`else
+ localparam [71:0] INJECT=72'd0;
+`endif
+ ot_dsrom_mtp_shared_producer #(.ECC_PIPE(1),.READ_INJECT(INJECT)) publisher(
   .clk(clk),.rst_n(rst_n),.cmd_valid(pub_cmd_valid),.cmd_ready(pub_cmd_ready),.cmd_context(pub_cmd_context),
   .in_valid(pub_valid),.in_ready(pub_ready),.in_data(pub_data),.in_context(pub_context),.in_word(pub_word),
   .in_last(pub_last),.in_fmt_fp32(pub_fmt_fp32),.in_error(pub_error),
@@ -46,32 +53,48 @@ module tb_shared_reader;
    .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
  end
  integer cyc=0,bad=0,nreq=0,nout=0,start=0;
- reg route_v=0;reg [73:0] route_context;reg [6:0] route_word;
+ reg route_v=0,pending=0;reg [73:0] route_context,pending_context;
+ reg [6:0] route_word,pending_word;reg [511:0] pending_data;reg [1:0] response_delay;
  function automatic [31:0] value(input integer row);
-  value={((row%2)!=0),8'(110+row%30),7'((row*17)%128),16'd0};
+  case(row)
+   0:value=32'h00000000;1:value=32'h80000000;
+   2:value=32'h00010000;3:value=32'h80010000;
+   default:value={((row%2)!=0),8'(110+row%30),7'((row*17)%128),16'd0};
+  endcase
  endfunction
  always @(posedge clk)begin
   cyc<=cyc+1;
   if(rst_n)begin
-   route_v<=req_valid&&req_ready;rsp_valid<=route_v;
+   route_v<=req_valid&&req_ready;rsp_valid<=0;
    if(req_valid&&req_ready)begin
     nreq<=nreq+1;route_context<=req_context;route_word<=req_word;
     if(req_row!==14'(64+nreq)||req_word!==7'(nreq))$fatal(1,"request address/order mismatch");
    end
    if(route_v)begin
-    rsp_data<=vm_rdata;rsp_context<=route_context;rsp_word<=route_word;rsp_fault<=0;
-    if(route_word==17)case(bad)
-     4:rsp_context<=route_context^74'd1;
+    if(pending)$fatal(1,"fixture outstanding read overflow");
+    pending_data<=vm_rdata;pending_context<=route_context;pending_word<=route_word;
+    pending<=1;response_delay<=route_word%4;
+   end else if(pending)begin
+    if(response_delay!=0)response_delay<=response_delay-1'b1;
+    else begin
+    pending<=0;rsp_valid<=1;rsp_data<=pending_data;
+    rsp_context<=pending_context;rsp_word<=pending_word;rsp_fault<=0;
+    if(pending_word==17)case(bad)
+     4:rsp_context<=pending_context^74'd1;
      5:rsp_word<=16;
-     6:rsp_data<=vm_rdata|512'd1;
+     6:rsp_data<=pending_data|512'd1;
      7:rsp_fault<=1;
     endcase
+    end
    end
    if(bad==8&&req_valid&&req_word==17)lease_valid<=0;
    if(out_valid&&out_ready)begin
     if(bad||out_context!==cmd_context||out_word!==7'(nout)||out_last!==(nout==79))$fatal(1,"reader publication identity/order mismatch");
     for(integer j=0;j<16;j=j+1)if(out_data[32*j+:32]!==value(16*nout+j))$fatal(1,"reader publication payload mismatch");
     nout<=nout+1;
+`ifdef READER_CE
+    if(!out_corrected)$fatal(1,"reader CE not corrected/reported");
+`endif
    end
    // The fixed fixture's grant and response/calendar bounds are <2000 cycles.
    if(cyc>4096)$fatal(1,"fixture did not retire within its finite calendar");
@@ -98,6 +121,11 @@ module tb_shared_reader;
    if(bad<=3&&nreq!=0)$fatal(1,"reader published before native retirement/range lease");
    $display("SHARED_READER_NEGATIVE PASS bad=%0d",bad);$finish;
   end
+`ifdef READER_UE
+  wait(publisher_fault);repeat(2)@(negedge clk);
+  if(lease_release||nout!=0||!busy)$fatal(1,"reader UE released lease or published payload");
+  $display("SHARED_READER_UE PASS leaseheld=1");$finish;
+`endif
   wait(lease_release);@(negedge clk);
   if(nreq!=80||nout!=80||busy||publisher_busy||reader_fault||publisher_fault||release_context!==cmd_context)$fatal(1,"reader retirement mismatch");
   $display("SHARED_READER PASS reads=%0d rows=1280 output_flits=%0d elapsed_cycles=%0d",nreq,nout,cyc-start);$finish;
