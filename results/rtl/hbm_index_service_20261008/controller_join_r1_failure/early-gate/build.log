@@ -1,0 +1,11 @@
+%Error: /srv/opentallas-scratch/codex/hbm-service-striped-20261008/controller-join-r1/rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv:45:60: Can't find definition of 'idx_busy' in dotted variable/method: 'dut.idx_busy'
+   45 |  .index_event(got==1368?2'b01:2'b00),.returns_drained(!dut.idx_busy),
+      |                                                            ^~~~~~~~
+        ... See the manual at https://verilator.org/verilator_doc.html?v=5.050 for more assistance.
+%Error: /srv/opentallas-scratch/codex/hbm-service-striped-20261008/controller-join-r1/rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv:53:61: Can't find definition of 'idx_busy' in dotted variable/method: 'dut.idx_busy'
+   53 | always@(posedge clk)if(rst_n&&EARLY&&rep_==1&&portal_v&&dut.idx_busy)begin
+      |                                                             ^~~~~~~~
+%Error: /srv/opentallas-scratch/codex/hbm-service-striped-20261008/controller-join-r1/rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv:179:10: Can't find definition of 'idx_busy' in dotted variable/method: 'dut.idx_busy'
+  179 |   if(dut.idx_busy||fifo_ne!=0)$fatal(1,"controller retired before transport drained");
+      |          ^~~~~~~~
+%Error: Exiting due to 3 error(s)

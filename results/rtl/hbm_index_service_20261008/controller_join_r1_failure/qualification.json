@@ -1,0 +1,8 @@
+{
+  "verdict": "BUILD_FAIL",
+  "source_commit": "9bcc33f84",
+  "cause": "Testbench referred to dut.idx_busy; actual retained flag is dut.gkvs.idx_busy",
+  "scope": "No controller or service simulation executed in this attempt",
+  "fix_source": "47e056c77",
+  "prior_pass_fail_records_unchanged": true
+}
