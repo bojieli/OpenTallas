@@ -15,7 +15,8 @@ export OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_io_xfifo_p2_gray.sdc
 container_make() {
   docker run --rm -v "$SRC:/src:ro" -v "$O:/work" -w /OpenROAD-flow-scripts/flow \
     openroad/orfs:asap7lock bash -lc '
-      trap '''chmod -R a+rwX /work >/dev/null 2>&1 || true''' EXIT
+      set -e
+      trap "chmod -R a+rwX /work >/dev/null 2>&1 || true" EXIT
       source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1
       python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts
       python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl
