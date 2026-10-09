@@ -1,0 +1,71 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "tools/physical/hbm_mtp/resta_io_vclk.sdc",
+  "tools/physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+  "tools/physical/hbm_accel_die_views/common/vclk_corner_true.sdc",
+  "tools/physical/common_flow/link_budget_consistent.sdc",
+  "tools/physical/common_flow/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -809.68,
+  "tns_ps": -127283.73,
+  "worst_reg_to_reg_slack_ps": -377.54,
+  "worst_input_to_reg_slack_ps": -809.68,
+  "worst_output_port_slack_ps": 14.25,
+  "violating_d_pins": "818",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 105.4,
+    "min": 99.7,
+    "max": 112.2,
+    "n": 600,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 105.4,
+    "min": 99.7,
+    "max": 112.2,
+    "n": 600,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "c2ca633ebd84d7d3de9d582c023be8f1d725851370d64bb5ce6182247f5a1052"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": 1.45,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 12.49,
+  "worst_input_to_reg_slack_ps": 1.45,
+  "worst_output_port_slack_ps": 1.62,
+  "violating_d_pins": "0",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 85.7,
+    "min": 79.6,
+    "max": 92.6,
+    "n": 600,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 85.7,
+    "min": 79.6,
+    "max": 92.6,
+    "n": 600,
+    "kind": "boundary"
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "608bedb13a47de4567d239690570a87b23f878a1f1d6a0d3295a1955545fa656"
+ }
+}
