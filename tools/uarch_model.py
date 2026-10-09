@@ -14637,3 +14637,8 @@ def dsrom_mtp_p2_prefix_composed_model():
 def hbm_perstack_write_join_model():
     from hbm_perstack_write_join_model import model
     return model()
+
+
+def hbm_ingest_global_prefix_model():
+    from hbm_perstack_write_join_model import global_ingest_prefix_model
+    return global_ingest_prefix_model()

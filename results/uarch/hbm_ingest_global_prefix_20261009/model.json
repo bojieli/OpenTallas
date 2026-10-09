@@ -1,0 +1,45 @@
+{
+  "schema": "opentallas.hbm.ingest-global-visible-prefix.v1",
+  "default_enabled": false,
+  "reason": "perstack prefix ACKs cannot be summed into hfd_host_ingest global descriptor fence",
+  "MACs_per_cycle": 0,
+  "memory_bytes_per_cycle": 0,
+  "replicas": 1,
+  "actual_producer": "physical/rom_host_ingest/rtl/hfd_host_ingest.sv wq_v&&wq_r at ck1.2GHz",
+  "accepted_order": "one global stack2 tag appended for each real accepted ingest sector",
+  "completion": "perstack source1 ordered ACK deltas supply credits; only global head can retire",
+  "dynamic_state": {
+    "plain_stack_FIFO_bits": 2048,
+    "depth": 1024,
+    "pointer_count_bits": 31,
+    "perstack_completed_credits_bits": 44,
+    "perstack_unretired_accepts_bits": 44,
+    "no_extra_identity_or_epoch": true
+  },
+  "mux_demux": "headstack selects one of four completioncredit counters",
+  "fanout": "four stack counter enables",
+  "routing": {
+    "input_tracks": 28,
+    "output_tracks": 6,
+    "channel_capacity": null
+  },
+  "area": {
+    "planning_slot_um": [
+      100,
+      100
+    ],
+    "logic_upper_um2": 3500,
+    "mapped_area": null,
+    "slot_coordinates": null
+  },
+  "latency": {
+    "clock_GHz": 1.2,
+    "added_registered_retirement_cycles": 1,
+    "retire_rate_per_clock": 1,
+    "completed_backlog_cycles_upper": 1023,
+    "forward_admission_cycles_added": 0,
+    "composition": "hfd descriptor visible only after contiguous global acceptance prefix; crossstack completion reorder adds real waiting, not performance credit"
+  },
+  "physical_qualified": false,
+  "qualification": "actual token-path fence gap; plain controlFIFO only; crossstack reorder and sum-ACK mutant required"
+}

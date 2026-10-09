@@ -40,3 +40,25 @@ def model():
             read_admission='never inferred from FIFO pop or aggregate completion count',
             parent_native_read_binding_pending=True),
         qualification='model before actual minimum integration gate; no new physical route until Claude review')
+
+
+def global_ingest_prefix_model(depth=1024):
+    assert depth>=2 and depth&(depth-1)==0
+    p=depth.bit_length()-1
+    return dict(schema='opentallas.hbm.ingest-global-visible-prefix.v1',default_enabled=False,
+        reason='perstack prefix ACKs cannot be summed into hfd_host_ingest global descriptor fence',
+        MACs_per_cycle=0,memory_bytes_per_cycle=0,replicas=1,
+        actual_producer='physical/rom_host_ingest/rtl/hfd_host_ingest.sv wq_v&&wq_r at ck1.2GHz',
+        accepted_order='one global stack2 tag appended for each real accepted ingest sector',
+        completion='perstack source1 ordered ACK deltas supply credits; only global head can retire',
+        dynamic_state=dict(plain_stack_FIFO_bits=2*depth,depth=depth,
+            pointer_count_bits=3*p+1,perstack_completed_credits_bits=4*(p+1),
+            perstack_unretired_accepts_bits=4*(p+1),no_extra_identity_or_epoch=True),
+        mux_demux='headstack selects one of four completioncredit counters',fanout='four stack counter enables',
+        routing=dict(input_tracks=1+1+2+24,output_tracks=6,channel_capacity=None),
+        area=dict(planning_slot_um=[100,100],logic_upper_um2=3500,mapped_area=None,slot_coordinates=None),
+        latency=dict(clock_GHz=1.2,added_registered_retirement_cycles=1,
+            retire_rate_per_clock=1,completed_backlog_cycles_upper=depth-1,
+            forward_admission_cycles_added=0,
+            composition='hfd descriptor visible only after contiguous global acceptance prefix; crossstack completion reorder adds real waiting, not performance credit'),
+        physical_qualified=False,qualification='actual token-path fence gap; plain controlFIFO only; crossstack reorder and sum-ACK mutant required')
