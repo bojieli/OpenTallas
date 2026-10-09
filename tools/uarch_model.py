@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+def dsrom_mtp_vmx_read_pipeline_proposal_model():
+    """Price the measured VMX read decode path before any successor build."""
+    from tools.dsrom_mtp_vmx_read_pipeline_model import model
+    return model()
+
+
