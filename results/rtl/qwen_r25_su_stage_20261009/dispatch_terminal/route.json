@@ -1,0 +1,217 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T09:47:16.067986+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 6245.76,
+    "block": "ot_qwen_r25_su_dispatch",
+    "cells": 44224,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": 1.111111,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": "static_timing.fmax_hz (pre-layout)",
+    "fmax_hz": 74678774.44482933,
+    "io_delay_fraction": 0.0,
+    "parameters": {
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch_flat.sv",
+        "sha256": "75c9954e8f407a2b5824b7460853e42dc49b15a72e0c6414ba4a26af2862e697",
+        "size_bytes": 7418
+      }
+    ],
+    "top": "ot_qwen_r25_su_dispatch"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\ned.context_seat[20]$_DFFE_PN0P_/D\n     2510 |       0 |   23535 |            0 |   +15.7% | -691.040 | -1581437.125 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2520 |       0 |   23668 |            0 |   +15.7% | -691.040 | -1579104.875 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2530 |       0 |   23848 |            0 |   +15.9% | -691.040 | -1576851.500 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2540 |       0 |   24008 |            0 |   +16.0% | -691.040 | -1574641.750 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2550 |       0 |   24160 |            0 |   +16.1% | -691.040 | -1572464.750 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2560 |       0 |   24308 |            0 |   +16.2% | -691.040 | -1570151.125 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2570 |       0 |   24485 |            0 |   +16.3% | -691.040 | -1567871.125 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2580 |       0 |   24630 |            0 |   +16.4% | -691.040 | -1565554.625 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2590 |       0 |   24798 |            0 |   +16.5% | -691.040 | -1563403.625 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2600 |       0 |   24954 |            0 |   +16.6% | -691.040 | -1561207.500 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2610 |       0 |   25106 |            0 |   +16.7% | -691.040 | -1558784.500 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2620 |       0 |   25281 |            0 |   +16.8% | -691.040 | -1556351.750 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2630 |       0 |   25455 |            0 |   +16.9% | -691.040 | -1553875.250 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2640 |       0 |   25635 |            0 |   +17.0% | -691.040 | -1551586.625 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2650 |       0 |   25803 |            0 |   +17.2% | -691.040 | -1549168.375 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2660 |       0 |   25956 |            0 |   +17.3% | -691.040 | -1546795.875 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2670 |       0 |   26102 |            0 |   +17.4% | -691.040 | -1544646.250 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2680 |       0 |   26262 |            0 |   +17.5% | -691.040 | -1542145.625 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2690 |       0 |   26430 |            0 |   +17.6% | -691.040 | -1539503.375 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2700 |       0 |   26611 |            0 |   +17.7% | -691.040 | -1536939.125 | enabled.context_seat[20]$_DFFE_PN0P_/D\n     2710 |       0 |   26774 |            0 |   +17.8% | -691.040 | -1534549.625 | enabled.context_seat[20]$_DFFE_PN0P_/D\n    final |       0 |   26901 |            0 |   +17.9% | -691.040 | -1532938.875 | enabled.context_seat[20]$_DFFE_PN0P_/D\n--------------------------------------------------------------------------------------\n[WARNING RSZ-0066] Unable to repair all hold violations.\n[INFO RSZ-0032] Inserted 26901 hold buffers.\n[ERROR RSZ-0060] Max buffer count reached.\nError: cts.tcl, 83 RSZ-0060\n\nElapsed time: 0:04.38[h:]min:sec. CPU time: user 4.09 sys 0.31 (100%). Peak memory: 408080KB.\nElapsed time: 4:11.45[h:]min:sec. CPU time: user 408.80 sys 423.12 (330%). Peak memory: 550108KB.\nElapsed time: 0:04.48[h:]min:sec. CPU time: user 4.19 sys 0.29 (100%). Peak memory: 384196KB.\nElapsed time: 0:04.33[h:]min:sec. CPU time: user 4.04 sys 0.29 (100%). Peak memory: 378780KB.\nElapsed time: 0:15.88[h:]min:sec. CPU time: user 15.44 sys 0.43 (100%). Peak memory: 566488KB.\nElapsed time: 2:36.72[h:]min:sec. CPU time: user 3463.71 sys 3.46 (2212%). Peak memory: 956620KB.\nElapsed time: 0:04.66[h:]min:sec. CPU time: user 4.26 sys 0.42 (100%). Peak memory: 522044KB.\nElapsed time: 5:29.26[h:]min:sec. CPU time: user 4884.50 sys 162.22 (1532%). Peak memory: 3793736KB.\nElapsed time: 1:15.36[h:]min:sec. CPU time: user 95.38 sys 29.92 (166%). Peak memory: 786320KB.\nElapsed time: 1:32.25[h:]min:sec. CPU time: user 109.61 sys 28.32 (149%). Peak memory: 2541548KB.\nElapsed time: 1:05:09.73[h:]min:sec. CPU time: user 12347.98 sys 7748.00 (513%). Peak memory: 3260200KB.\nmake[1]: *** [Makefile:548: do-4_1_cts] Error 1\nmake: *** [Makefile:548: /work/results/asap7/opentallas_ot_qwen_r25_su_dispatch_asap7/base/4_1_cts.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T07:24:56.130536+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_r25_su_dispatch",
+      "--param",
+      "ENABLE=1",
+      "--source",
+      "rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_dispatch_flat.sv",
+      "--clock-period-ns",
+      "1.111111",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--io-delay-fraction",
+      "0",
+      "--stages",
+      "synth,sta,pnr",
+      "--die-area",
+      "0",
+      "0",
+      "600",
+      "900",
+      "--core-area",
+      "5",
+      "5",
+      "595",
+      "895",
+      "--orfs-corner",
+      "TC",
+      "--hold-corners",
+      "TC,BC",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--output",
+      "../route.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/qwen-r25-dispatch/flat/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "9a8288a21396120eed6610eb60099d5ec5f1c11c57808d68a6d91ce504957e9f",
+      "tree": "/srv/opentallas-scratch/codex/qwen-r25-dispatch/flat/src"
+    },
+    "platform": "Linux-7.0.0-28-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/qwen-r25-dispatch/flat/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta",
+    "pnr"
+  ],
+  "static_timing": {
+    "clock_period_ns": 1.111111,
+    "critical_path_ns": 13.390685739477059,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 74678774.44482933,
+    "hold_violating_paths": 6118,
+    "hold_wns_ns": -0.046162698848100245,
+    "library_time_unit_ns": 0.001,
+    "raw_library_units": {
+      "hold_wns": -46.16269884810024,
+      "setup_tns": -35144767.165917195,
+      "setup_wns": -12279.574739477059
+    },
+    "sdc_clock_period_library_units": 1111.1109999999999,
+    "setup_tns_ns": -35144.7671659172,
+    "setup_violating_paths": 3310,
+    "setup_wns_ns": -12.27957473947706,
+    "timing_met": false
+  },
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 1111.1109999999999,
+    "cell_area_um2": 6245.76,
+    "cell_count": 44224,
+    "cell_types_used": 38,
+    "chip_area_um2": 6249.4983,
+    "combinational_cell_count": 40923,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "cbad20150b05cc53534fe0e1590b15c25c2c446c0c3d7a761f7928ad7aa070cc",
+      "raw_netlist_sha256": "cbad20150b05cc53534fe0e1590b15c25c2c446c0c3d7a761f7928ad7aa070cc",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 1250.0,
+    "sequential_cell_count": 3301,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 1.111111,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

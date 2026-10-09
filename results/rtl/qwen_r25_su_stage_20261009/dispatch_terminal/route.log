@@ -1,0 +1,45 @@
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+ed.context_seat[20]$_DFFE_PN0P_/D
+     2510 |       0 |   23535 |            0 |   +15.7% | -691.040 | -1581437.125 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2520 |       0 |   23668 |            0 |   +15.7% | -691.040 | -1579104.875 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2530 |       0 |   23848 |            0 |   +15.9% | -691.040 | -1576851.500 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2540 |       0 |   24008 |            0 |   +16.0% | -691.040 | -1574641.750 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2550 |       0 |   24160 |            0 |   +16.1% | -691.040 | -1572464.750 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2560 |       0 |   24308 |            0 |   +16.2% | -691.040 | -1570151.125 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2570 |       0 |   24485 |            0 |   +16.3% | -691.040 | -1567871.125 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2580 |       0 |   24630 |            0 |   +16.4% | -691.040 | -1565554.625 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2590 |       0 |   24798 |            0 |   +16.5% | -691.040 | -1563403.625 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2600 |       0 |   24954 |            0 |   +16.6% | -691.040 | -1561207.500 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2610 |       0 |   25106 |            0 |   +16.7% | -691.040 | -1558784.500 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2620 |       0 |   25281 |            0 |   +16.8% | -691.040 | -1556351.750 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2630 |       0 |   25455 |            0 |   +16.9% | -691.040 | -1553875.250 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2640 |       0 |   25635 |            0 |   +17.0% | -691.040 | -1551586.625 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2650 |       0 |   25803 |            0 |   +17.2% | -691.040 | -1549168.375 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2660 |       0 |   25956 |            0 |   +17.3% | -691.040 | -1546795.875 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2670 |       0 |   26102 |            0 |   +17.4% | -691.040 | -1544646.250 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2680 |       0 |   26262 |            0 |   +17.5% | -691.040 | -1542145.625 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2690 |       0 |   26430 |            0 |   +17.6% | -691.040 | -1539503.375 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2700 |       0 |   26611 |            0 |   +17.7% | -691.040 | -1536939.125 | enabled.context_seat[20]$_DFFE_PN0P_/D
+     2710 |       0 |   26774 |            0 |   +17.8% | -691.040 | -1534549.625 | enabled.context_seat[20]$_DFFE_PN0P_/D
+    final |       0 |   26901 |            0 |   +17.9% | -691.040 | -1532938.875 | enabled.context_seat[20]$_DFFE_PN0P_/D
+--------------------------------------------------------------------------------------
+[WARNING RSZ-0066] Unable to repair all hold violations.
+[INFO RSZ-0032] Inserted 26901 hold buffers.
+[ERROR RSZ-0060] Max buffer count reached.
+Error: cts.tcl, 83 RSZ-0060
+
+Elapsed time: 0:04.38[h:]min:sec. CPU time: user 4.09 sys 0.31 (100%). Peak memory: 408080KB.
+Elapsed time: 4:11.45[h:]min:sec. CPU time: user 408.80 sys 423.12 (330%). Peak memory: 550108KB.
+Elapsed time: 0:04.48[h:]min:sec. CPU time: user 4.19 sys 0.29 (100%). Peak memory: 384196KB.
+Elapsed time: 0:04.33[h:]min:sec. CPU time: user 4.04 sys 0.29 (100%). Peak memory: 378780KB.
+Elapsed time: 0:15.88[h:]min:sec. CPU time: user 15.44 sys 0.43 (100%). Peak memory: 566488KB.
+Elapsed time: 2:36.72[h:]min:sec. CPU time: user 3463.71 sys 3.46 (2212%). Peak memory: 956620KB.
+Elapsed time: 0:04.66[h:]min:sec. CPU time: user 4.26 sys 0.42 (100%). Peak memory: 522044KB.
+Elapsed time: 5:29.26[h:]min:sec. CPU time: user 4884.50 sys 162.22 (1532%). Peak memory: 3793736KB.
+Elapsed time: 1:15.36[h:]min:sec. CPU time: user 95.38 sys 29.92 (166%). Peak memory: 786320KB.
+Elapsed time: 1:32.25[h:]min:sec. CPU time: user 109.61 sys 28.32 (149%). Peak memory: 2541548KB.
+Elapsed time: 1:05:09.73[h:]min:sec. CPU time: user 12347.98 sys 7748.00 (513%). Peak memory: 3260200KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_ot_qwen_r25_su_dispatch_asap7/base/4_1_cts.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/codex/qwen-r25-dispatch/flat/src/../route.json
