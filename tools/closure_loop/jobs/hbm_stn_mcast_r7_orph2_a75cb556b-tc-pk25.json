@@ -1,0 +1,96 @@
+{
+ "name": "hbm_stn_mcast_r7_orph2_a75cb556b-tc-pk25",
+ "block": "hfd_mcast_r7",
+ "owner": "Claude:orphans-2",
+ "purpose": "orphans-2 2026-10-08: hfd_mcast_r7 revoked by the link budget (336e4655e SS-era closure, TT link budget -102.62; its -tt re-route was cancelled, so the current RTL (tap pin-stages 2) was never routed at TT). The older-RTL k25-tt route is TT +50.37 / FF +28.35 but DRC 4 = M4 Metal Spacing between adjacent E-face pins a[2063..2067] (pin-access class, flow). Fix: 336e4655e RTL on main, calibrate AND route at TC (CKINS/CKFF from the TC calibrate), E-face pin keepout OT_PK_FRAC 0.25 halo 0, PD 0.40. +1 cycle on r7 taps (already in 336e4655e), 0 new.",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 6,
+ "peak_ram_gb": 20,
+ "source": {
+  "branch": "claude/orphans2-20261008",
+  "commit": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+  "extra_paths": [
+   "results/uarch/hbm_current_target_portmap_20261005",
+   "results/rtl/hbm_accel_die_floorplan_20261005",
+   "results/rtl/die_top_lint_20261006",
+   "results/rtl/dshbm_matched_reference_20261005",
+   "results/uarch/hbm_accel_fulldie_inputs_20261004/providers/sm_r2/routes/sm_r2/fp"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "bench_mcast_exact_and_negatives",
+    "cmd": "bash physical/hbm_accel_die_views/stations/bench/run_mcast_bench.sh $PWD/physical/hbm_accel_die_views/stations hfd_mcast_r7 $PWD {RUN}/bench",
+    "expect": "pass",
+    "pass_regex": "MCAST_BENCH PASS",
+    "threads": 4,
+    "peak_ram_gb": 12
+   },
+   {
+    "name": "bench_neg_generator_mutant",
+    "cmd": "grep -q '^neg rc=1' {RUN}/bench/hfd_mcast_r7/result.txt && echo NEG_DETECTED && exit 1",
+    "expect": "fail",
+    "fail_regex": "NEG_DETECTED",
+    "threads": 1,
+    "peak_ram_gb": 1
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; MARGIN=1 CKINS=334 CKFF=\"167 183\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r7 0.40 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "ck",
+   "threads": 6,
+   "peak_ram_gb": 20
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; MARGIN=1 CKINS=$CK_SS_MAX CKFF=\"$CK_FF_MIN $CK_FF_MAX\" HM=0.035 CORES=6 NEED=16 bash physical/hbm_accel_die_views/stations/bench/stn_route.sh {SRC} {RUN}/routes {LABEL}${CL_LABEL_SUFFIX} hfd_mcast_r7 0.40 --step-tcl PRE_GLOBAL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --step-tcl POST_DETAIL_ROUTE=physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl --orfs-var OT_PK_FRAC=0.25 --orfs-var OT_PK_HALO=0 --orfs-var OT_PK_FACES=E",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^signoff_corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/hfd_mcast_r7.lef {RUN}/routes/{NAME}/view/hfd_mcast_r7_ss.lib {RUN}/routes/{NAME}/view/hfd_mcast_r7_ff.lib {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/record/ && cp {RUN}/routes/{NAME}/args {RUN}/record/route_args_{NAME}.txt && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "die_pin_access",
+    "cmd": "bash physical/hbm_accel_die_views/stations/bench/stn_pa_check.sh {RUN}/routes/{NAME}/view/hfd_mcast_r7.lef hfd_mcast_r7 {RUN}/pa"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/orphans2_20261008/routes/hbm_stn_mcast_r7_orph2_a75cb556b-tc-pk25"
+  }
+ ],
+ "cycles_added": 0,
+ "budget": {
+  "enabled": false,
+  "reason": "station margin SDC recipe (stn_margin_sdc.py: forwarded-clock arcs + meso crossing bounds); ck IO from this job's calibrate (CKINS = CK_SS_MAX, CKFF = CK_FF_MIN/MAX)"
+ },
+ "cycles_note": "+1 cycle on every r7 tap output (bench ck<-a 4/5 -> 5/6 periods); forwarded b unchanged (r7 has no forwarded slices)",
+ "route_hold_corners": "mm",
+ "route_corner": "TC",
+ "merge_target": null,
+ "route_hold_margin_ns": 0.035
+}
