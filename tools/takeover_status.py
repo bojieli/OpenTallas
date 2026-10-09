@@ -21,6 +21,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 INV = ROOT / "results/rtl/die_top_lint_20261006"
+# S81 die view index (tools/s81/die_sta.py kit --index-out): the masters of the CURRENT S81 die case, each mapped to the
+# view the die STA uses.  When present it replaces the 2026-10-06 S81 abstract inventories as the ds_rom total (those
+# lists name the pre-1,792 masters, so no closed m221pq master ever matched them: "0 / 179").  Macros (ROM / PHY / SerDes
+# hard IP liberty) are not closure-loop blocks and are left out of the total.
+S81_INDEX = ROOT / "results/rtl/s81_die_view_index_20261008/index.json"
 LEDGER = ROOT / "results/arch/unified_composition_20261007/ledger.json"
 LB = ROOT / "results/arch/unified_composition_20261007/link_budget_restatus_20261007.json"   # SS re-STA (superseded by OB)
 OB = ROOT / "results/closure_loop/option_b_status_20261007/status.json"   # option-B TT re-STA with the link budget (authoritative)
@@ -42,9 +47,12 @@ def masters():
     q = json.loads((INV / "qwen_rom_abstract_list.json").read_text())
     out["qwen_rom"] = sorted({m for f in q["families"] for m in f.get("masters", [])})
     s = set()
-    for f in ("s81_layer_abstract_list.json", "s81_head_abstract_list.json"):
-        d = json.loads((INV / f).read_text())
-        s |= {m for fam in d["families"] for m in fam.get("masters", [])}
+    if S81_INDEX.exists():
+        s = {m for m, r in json.loads(S81_INDEX.read_text())["masters"].items() if r["view"] != "macro"}
+    else:
+        for f in ("s81_layer_abstract_list.json", "s81_head_abstract_list.json"):
+            d = json.loads((INV / f).read_text())
+            s |= {m for fam in d["families"] for m in fam.get("masters", [])}
     out["ds_rom"] = sorted(s)
     h = json.loads((INV / "hbm_die_abstract_list.json").read_text())
     out["hbm_ds"] = [(f["family"], f["masters"]) for f in h["families"]]    # family glob, master count
@@ -178,7 +186,8 @@ STREAM_INDEX = [
 ]
 DIE_STATE = dict(
     qwen_rom="REOPENED 2026-10-07; die-level items in the evidence table below (no flat full-die DRT by design)",
-    ds_rom="actual 1,792 mixed geometry (77ffa0428 / 2d811aafb) is the basis; die-level items below were run on earlier geometries",
+    ds_rom=("actual 1,792 mixed geometry is the basis; block total = the m221pq_r3 layer1 die view index "
+                "(results/rtl/s81_die_view_index_20261008/index.json, macros excluded)"),
     hbm_ds="r23 die views; die-level items in the evidence table below")
 HEAD = dict(qwen_rom=("unified_candidate", "unified_candidate_with_closure_upper"),
             ds_rom=("published", "published_m221pq_die", "actual1792_half_dedicated", "actual1792_full_shared"),

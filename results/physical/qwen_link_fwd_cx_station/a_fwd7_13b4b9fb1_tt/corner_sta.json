@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.qwen_fwd_cx_station.ssff.v1",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt/routes/qwen_fwd_cx_station_a_fwd7_13b4b9fb1_tt/work/orfs",
+  "setup_tt": {
+    "corner": "tt",
+    "check": "setup",
+    "worst_slack_ps": 6.19,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 170.750778,
+    "worst_reg_to_reg_slack_ps": 665.16,
+    "worst_input_to_reg_slack_ps": 78.98,
+    "worst_output_port_slack_ps": -1165.144165,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "c3e6adb6ee4da8d2d98f38638d59b1b927f4ffcece2cd0ed23cbba328db065d4",
+    "spef_sha256": "5f238497840a81c860cafeeb195f003f1b9d9e5630de8b9de9ef7a601ea34dbb",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72"
+  },
+  "setup_ss": {
+    "corner": "ss",
+    "check": "setup",
+    "worst_slack_ps": -99.08,
+    "tns_ps": -7268.4,
+    "worst_register_d_slack_ps": 150.456863,
+    "worst_reg_to_reg_slack_ps": 605.58,
+    "worst_input_to_reg_slack_ps": 83.9,
+    "worst_output_port_slack_ps": -1232.647949,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "c3e6adb6ee4da8d2d98f38638d59b1b927f4ffcece2cd0ed23cbba328db065d4",
+    "spef_sha256": "5f238497840a81c860cafeeb195f003f1b9d9e5630de8b9de9ef7a601ea34dbb",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72"
+  },
+  "hold_ff": {
+    "corner": "ff",
+    "check": "hold",
+    "worst_slack_ps": 16.31,
+    "tns_ps": 0.0,
+    "worst_register_d_slack_ps": 16.309898,
+    "worst_reg_to_reg_slack_ps": 16.31,
+    "worst_input_to_reg_slack_ps": 111.91,
+    "worst_output_port_slack_ps": 220.284683,
+    "violating_d_pins": 0,
+    "errors": [],
+    "odb_sha256": "c3e6adb6ee4da8d2d98f38638d59b1b927f4ffcece2cd0ed23cbba328db065d4",
+    "spef_sha256": "5f238497840a81c860cafeeb195f003f1b9d9e5630de8b9de9ef7a601ea34dbb",
+    "sdc_name": "6_final.sdc",
+    "sdc_sha256": "b3116ddccabe1228124a5eb258ce15e7ec41104d7645691f5b36d0cd98e22c72"
+  },
+  "adoption": false,
+  "remaining": [
+    "die endpoint budgets",
+    "control/link protection",
+    "cold reset physical binding",
+    "warm drain and epoch",
+    "postroute clockbuffer and placement inventory",
+    "DRC0"
+  ],
+  "margin_pass": true
+}

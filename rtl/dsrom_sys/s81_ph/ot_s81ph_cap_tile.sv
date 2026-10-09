@@ -478,7 +478,13 @@ endmodule
 
 
 module dsfd_capt_ctl #(
-    parameter integer NT = 8
+    parameter integer NT = 8,
+    // s81-die-timing 2026-10-08: the ctl <-> group hop is 562 um in the S channel (TT -257 in the assembled glue), so the
+    // composition puts KST common-clock stations on t_k / f_sb / t_sn.  KST >= 1: the constant bus leaves ONE stage
+    // earlier (kq loads the phase fields straight from the pin flops on go, the held c_* copy otherwise), so a group
+    // still sees the constants on the same cycle relative to its rows (rows come straight from the gather); the holdoff
+    // grows by 2 * KST (the done AND is KST cycles later each way: guard only).
+    parameter integer KST = 1
 ) (
     input  wire [0:0]             ck,
     input  wire [0:0]             rst,
@@ -530,7 +536,7 @@ module dsfd_capt_ctl #(
             if (phase_v && !phase_ok) proto_fault <= 1'b1;
             if (rq || any_bad) stk <= 1'b1;
             // holdoff covers go -> tile constants (t'+5) -> tile AND (2 levels) -> pins -> all_done
-            if (go) begin act <= 1'b1; drained <= 1'b0; hold <= 5'd14; h_id <= identity; h_ph <= phase_id; end
+            if (go) begin act <= 1'b1; drained <= 1'b0; hold <= 5'(14 + 2 * KST); h_id <= identity; h_ph <= phase_id; end
             else begin
                 if (hold != 5'd0) hold <= hold - 5'd1;
                 if (act && hold == 5'd0 && all_done && !stk) begin act <= 1'b0; drained <= 1'b1; end
@@ -544,11 +550,22 @@ module dsfd_capt_ctl #(
     reg [KB-1:0] kq [0:NT-1];
     genvar g;
     generate for (g = 0; g < NT; g = g + 1) begin : g_k
+        if (KST == 0) begin : g_late
         wire [8:0] lo_d = {1'b0, c_rows[7:0]} - 9'(32 * g);
         wire [5:0] lo_t = lo_d[8] ? 6'd0 : (lo_d[7:0] > 8'd32) ? 6'd32 : lo_d[5:0];
         always @(posedge ck[0] or negedge rst_n)
             if (!rst_n) kq[g] <= {KB{1'b0}};
             else kq[g] <= {stk | rq, c_go, c_ob, c_ops, c_np, c_fmt, c_rs, c_rows[15:8], lo_t, c_lo, c_hi};
+        end else begin : g_early   // same content one cycle earlier: on go the fields the c_* registers are loading
+        wire [15:0] rw = go ? prows : c_rows;
+        wire [8:0] lo_d = {1'b0, rw[7:0]} - 9'(32 * g);
+        wire [5:0] lo_t = lo_d[8] ? 6'd0 : (lo_d[7:0] > 8'd32) ? 6'd32 : lo_d[5:0];
+        always @(posedge ck[0] or negedge rst_n)
+            if (!rst_n) kq[g] <= {KB{1'b0}};
+            else if (go) kq[g] <= {stk | rq, 1'b1, c0_d[88:59], c0_d[118:89], c0_d[121:119], fmt_in, c0_d[139:124],
+                                   prows[15:8], lo_t, c0_d[140], c0_d[141]};
+            else kq[g] <= {stk | rq, 1'b0, c_ob, c_ops, c_np, c_fmt, c_rs, c_rows[15:8], lo_t, c_lo, c_hi};
+        end
         assign t_k[KB * g +: KB] = kq[g];
     end endgenerate
     // status lane
@@ -565,7 +582,12 @@ endmodule
 module ot_s81ph_cap_t #(
     parameter integer SAFE = 0,              // 1: dsfd_capt_g2 + dsfd_capt_x per group (crossings in their own tile)
     parameter integer NT = 8,
-    parameter integer LD = 4
+    parameter integer LD = 4,
+`ifdef S81PH_CAP_KST
+    parameter integer KST = `S81PH_CAP_KST
+`else
+    parameter integer KST = 1                // s81-die-timing 2026-10-08: one station each way on the 562-um S hop
+`endif
 ) (
     input  wire          ck, rst, ckv, rsv,      // raw die nets
     input  wire [6946:0] f_gather,
@@ -576,7 +598,23 @@ module ot_s81ph_cap_t #(
     wire [NT*2-1:0]  st;
     wire [63:0] sn;
     wire [NT*64-1:0] stv;
-    dsfd_capt_ctl #(.NT(NT)) u_ctl (.ck(ck), .rst(rst), .f_ctl(f_gather[6946:6784]), .t_k(k), .f_sb(st), .t_sn(sn));
+    // KST common-clock stations on the ctl <-> group S-channel hop (562 um): t_k, f_sb, t_sn (+KST cycles each way)
+    wire [NT*KB-1:0] k_c; wire [NT*2-1:0] st_c; wire [63:0] sn_c;
+    dsfd_capt_ctl #(.NT(NT), .KST(KST)) u_ctl (.ck(ck), .rst(rst), .f_ctl(f_gather[6946:6784]), .t_k(k_c), .f_sb(st_c), .t_sn(sn_c));
+`ifndef SYNTHESIS
+    initial if (KST > 1) $fatal(1, "ot_s81ph_cap_t: KST > 1 needs the constant bus more than one stage earlier in dsfd_capt_ctl");
+`endif
+    generate if (KST == 0) begin : g_nst
+        assign k = k_c; assign st_c = st; assign sn = sn_c;
+    end else begin : g_st
+        reg [NT*KB-1:0] kd [0:KST-1]; reg [NT*2-1:0] sd [0:KST-1]; reg [63:0] nd [0:KST-1];
+        integer j;
+        always @(posedge ck) begin
+            kd[0] <= k_c; sd[0] <= st; nd[0] <= sn_c;
+            for (j = 1; j < KST; j = j + 1) begin kd[j] <= kd[j - 1]; sd[j] <= sd[j - 1]; nd[j] <= nd[j - 1]; end
+        end
+        assign k = kd[KST - 1]; assign st_c = sd[KST - 1]; assign sn = nd[KST - 1];
+    end endgenerate
     assign t_vm[13375:13312] = stv[64 * (NT / 2 - 1) +: 64];   // the tile left of the control tile
     genvar g;
     generate for (g = 0; g < NT; g = g + 1) begin : g_t
