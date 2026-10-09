@@ -7,6 +7,8 @@ export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_fl
 # pending: generic IO fractions cannot qualify the parent token path.
 python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_hc_mean_capture \
  --param SINGLE_CAPTURE=1 \
+ --param ECC_PIPE=${HC_ECC_PIPE:-0} \
+ --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv \
  --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv \
  --source rtl/hdc/ot_hdc_prefix.sv --source rtl/hdc/ot_hdc_fastfp.sv \
  --source rtl/hdc/ot_hdc_fp32_add_lat.sv --source rtl/hdc/ot_hdc_fp32_mul_lat.sv \
