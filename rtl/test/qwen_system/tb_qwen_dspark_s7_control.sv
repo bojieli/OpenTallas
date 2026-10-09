@@ -1,10 +1,11 @@
 `timescale 1ns/1ps
 module tb_qwen_dspark_s7_control;
+ parameter integer MUT=0;
  reg clk=0,rst=0,sv=0,cr=0,dv=0,rr=0,fenced=1,trunc3=0;
  always #0.555555 clk=~clk;
  reg [63:0] sid=0,did=0;reg [7:0] dseq=0;reg [17:0] dtok=0;reg [143:0] targets=0;reg [3:0] dn=0,ctx=3;
  wire sr,cv,rv,fault;wire [4:0] op;wire [2:0] layer,slot;wire [3:0] positions,commitn,rn;wire [17:0] token,pos,bonus,rpos;wire [63:0] cid,rid;wire [7:0] seq;
- ot_qwen_dspark_s7_control #(.ENABLE(1)) dut(.clk(clk),.rst_n(rst),.start_v(sv),.start_r(sr),.start_id(sid),.start_token(18'd77),.start_pos(18'd8190),
+ ot_qwen_dspark_s7_control #(.ENABLE(1),.MUT_FENCE(MUT)) dut(.clk(clk),.rst_n(rst),.start_v(sv),.start_r(sr),.start_id(sid),.start_token(18'd77),.start_pos(18'd8190),
   .context_n(ctx),.truncate3(trunc3),.allcopy_fenced(fenced),.cmd_v(cv),.cmd_r(cr),.cmd_op(op),.cmd_layer(layer),.cmd_slot(slot),.cmd_positions(positions),.cmd_commit_n(commitn),
   .cmd_token(token),.cmd_pos(pos),.cmd_id(cid),.cmd_sequence(seq),.done_v(dv),.done_id(did),.done_sequence(dseq),.done_token(dtok),.done_targets(targets),.done_n(dn),.done_fault(1'b0),
   .result_v(rv),.result_r(rr),.result_id(rid),.result_n(rn),.result_bonus(bonus),.result_pos(rpos),.fault(fault));
@@ -41,11 +42,21 @@ module tb_qwen_dspark_s7_control;
     rr=1;@(negedge clk);rr=0;tests=tests+1;
    end
   end
+  reset();sid=54;ctx=3;trunc3=1;sv=1;@(negedge clk);sv=0;
+  while(!fault&&!rv)begin
+   if(cv)begin
+    did=cid;dseq=seq;dtok=18'(100+slot);
+    if(op==14)begin targets=0;dn=4;end
+    if(op==15)begin fenced=0;dn=commitn;end
+    cr=1;@(negedge clk);cr=0;@(negedge clk);dv=1;@(negedge clk);dv=0;
+   end else @(negedge clk);
+  end
+  if(!fault||rv)$fatal(1,"missing allcopy fence mutant published result");
   reset();sid=55;ctx=3;sv=1;@(negedge clk);sv=0;@(negedge clk);cr=1;did=sid+1;dseq=seq;@(negedge clk);cr=0;dv=1;@(negedge clk);dv=0;@(negedge clk);
   if(!fault||cv||sr||rv)$fatal(1,"wrong cohort completion not quarantined");
   reset();dv=1;did=55;dseq=0;@(negedge clk);dv=0;@(negedge clk);
   if(!fault||cv||sr||rv)$fatal(1,"unsolicited completion not quarantined");
-  $display("QWEN_S7_CONTROL_PASS accept_cases=%0d commands_each=54 drafter_always7=1 retained_context1to8=1 cohort_hold=1 wrongID_unsolicited_negative=1",tests);
+  $display("QWEN_S7_CONTROL_PASS accept_cases=%0d commands_each=54 drafter_always7=1 retained_context1to8=1 cohort_hold=1 wrongID_unsolicited_fence_negative=1",tests);
   $finish;
  end
 endmodule

@@ -3,7 +3,7 @@
 // carries the same full cohort and a distinct command command_seq. S3 output
 // truncation still executes all7 drafter positions. This block supplies real
 // dispatch/accept/commit control, not numerical or physical backend evidence.
-module ot_qwen_dspark_s7_control #(parameter integer ENABLE=0)(
+module ot_qwen_dspark_s7_control #(parameter integer ENABLE=0,MUT_FENCE=0)(
  input wire clk,rst_n,input wire start_v,output wire start_r,
  input wire [63:0] start_id,input wire [17:0] start_token,start_pos,
  input wire [3:0] context_n,input wire truncate3,
@@ -78,7 +78,7 @@ module ot_qwen_dspark_s7_control #(parameter integer ENABLE=0)(
      end else if(op==COMMIT)begin
       // Backend positive all-copy drain is authoritative; no FIFO push or
       // offered write completion can substitute for it.
-      if(!allcopy_fenced||done_n!=emit||({1'b0,pos}+emit)>19'h3ffff)fault<=1;
+      if((!allcopy_fenced&&MUT_FENCE==0)||done_n!=emit||({1'b0,pos}+emit)>19'h3ffff)fault<=1;
       else begin live<=0;result_v<=1;result_id<=cohort;result_n<=emit;result_bonus<=bonus;result_pos<=pos+18'(emit);end
      end else op<=op+1'b1;
     end
