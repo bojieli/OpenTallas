@@ -1,0 +1,71 @@
+{
+  "adopted": false,
+  "slots": [
+    {
+      "name": "hb_write_join_SW",
+      "x": 9693.12,
+      "y": 1211.76,
+      "w": 250.584,
+      "h": 250.584,
+      "orient": "R0"
+    },
+    {
+      "name": "hb_write_join_SE",
+      "x": 19787.328,
+      "y": 1211.76,
+      "w": 250.584,
+      "h": 250.584,
+      "orient": "MY"
+    },
+    {
+      "name": "hb_write_join_NW",
+      "x": 9693.12,
+      "y": 23159.52,
+      "w": 250.584,
+      "h": 250.584,
+      "orient": "MX"
+    },
+    {
+      "name": "hb_write_join_NE",
+      "x": 19787.328,
+      "y": 23159.52,
+      "w": 250.584,
+      "h": 250.584,
+      "orient": "R180"
+    }
+  ],
+  "ordinal": {
+    "name": "hb_ingest_write_ordinal",
+    "x": 14763.6,
+    "y": 7989.12,
+    "w": 100.224,
+    "h": 99.36,
+    "orient": "R0"
+  },
+  "collisions": {
+    "hb_write_join_SW": [],
+    "hb_write_join_SE": [],
+    "hb_write_join_NW": [],
+    "hb_write_join_NE": [],
+    "hb_ingest_write_ordinal": []
+  },
+  "replicas": {
+    "perstack_write_join": 4,
+    "global_ingest_acceptance_ordinal": 1
+  },
+  "added_outline_um2": 261127.62086400003,
+  "proposed_native_service_fields": {
+    "source": 2,
+    "source_g": 32,
+    "pending": 1,
+    "busyPC": 32,
+    "fault": 1
+  },
+  "prerequisite": "Actual source-owned FIFO8 popGray and orderedACK; globalaccepted-stack FIFO cannot sum4local prefixACKs",
+  "service": "Existing legacy16bitwq_g collar unchanged; fresh functional writer/servicemaster/collar must be source-pinned before any physicaljoin",
+  "phase": "Held readyvalid merge cannot directly drive falling-fclk pulse landing; actual credit-controlled pulse adapter required",
+  "clock": "Native K service1024ps; incoming forwarded writeclock and finiteCDC must match actual source implementation",
+  "latency": "Actual component models fec7/6eacc and native writejoin model own service acceptance/ACK/readfence; additional diehop/finalsegment budget unmeasured",
+  "pin_grid": "250.584 mirror dimensions have24nm phase modulo48nm for candidate M4/M5 collar; noM7viewassumed",
+  "physical": "Geometry candidates only, no cellfit/nativepins/CTS/channelcapacity or route qualification"
+}
