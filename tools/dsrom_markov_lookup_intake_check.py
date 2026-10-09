@@ -20,6 +20,10 @@ def bind():
  assert anchor['passed'] and anchor['capture_count']==512 and anchor['RTL_sha256']==SHA
  lint=json.loads((EVIDENCE/'intake_offline_r3/offline_fp_lint.json').read_text())
  assert lint['passed'] if 'passed' in lint else lint['verdict']=='PASS'
+ pg=json.loads((EVIDENCE/'pg_fix_c2/verdict.json').read_text())
+ assert pg['passed'] and pg['captures']==512 and pg['actual_row_orientation_mismatch']==0
+ assert pg['max_actual_q_to_D_manhattan_um']<=20 and pg['VDD_connected'] and pg['VSS_connected']
+ assert hashlib.sha256((ROOT/'physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl').read_bytes()).hexdigest()==pg['capture_anchor_sha256']
  return dict(passed=True,RTL_sha256=SHA,checked_beats=160,genuine_mutant_rejected=True,mapped_prerequisite=anchor['anchored_ODB_sha256'])
 AUDIT=r'''
 puts OT_I16_ELECTRICAL_BEGIN
