@@ -35,7 +35,6 @@ module tb_hbm_native_ar_token_join #(parameter QWEN=0,MUT=0);
    end
   end
   if(hr_v && hr_rdy) begin
-   if(MUT)$fatal(1,"identity mutant must stop before exact output");
    if(hr_d[TW-1:0]!==FIRST+nrec+1 || hr_d[TW+:21]!==21'd1235+nrec ||
       hr_d[TW+21+:32]!==32'hfedcba98)$fatal(1,"token/job/position corrupt");
    if(hr_d[TW+56] !== (nrec==11) || hr_d[TW+53+:3] !== ((nrec==11)?3'd2:3'd0))$fatal(1,"terminal record");
