@@ -1,0 +1,38 @@
+{
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "original_job": "s81ph-dsfd_selt_q-cd3337221-b",
+  "archive_recovered_by": "hbm_continuation via saved setup-triage-local archives",
+  "archive_not_regenerated": true,
+  "original_live_directory_missing": true,
+  "ttlb": {
+    "report": "ttlb.log",
+    "raw_sha256": "ca7a81a9fadd9df3db4046cd8264873571ba1d218e92e80423bedfda44db725d",
+    "start": "sq[864]",
+    "end": "t_s[864]",
+    "path": "QN -> INV -> 7 BUFx6f -> output",
+    "slack_ps": -297.843262,
+    "launch_clock_ps": 601.45,
+    "data_arrival_ps": 1109.21,
+    "required_ps": 811.37,
+    "output_external_max_ps": 518.67,
+    "virtual_clock_arrival_ps": 556.7,
+    "input_lane501_to_u_in_s0_274_slack_ps": -110.781494,
+    "TRI_RC": 0
+  },
+  "ss": {
+    "start": "u_s.u_hf.hbin[936]",
+    "end": "u_s.u_hf.gs1[284]",
+    "slack_ps": -434.67,
+    "data_arrival_ps": 1886.04,
+    "launch_clock_ps": 750.79,
+    "logic_after_clock_ps": 1135.25
+  },
+  "diagnosis": "TT+LB headline is external registered status seat/buffer chain, not histogram. PIPE2 cuts histogram; READLAT2 captures SRAM. Neither alone fixes TT headline. Seat existing boundary registers or price aligned extra pin stage before route.",
+  "files_sha256": {
+    "ff.log": "3abaf780289fcf91a000307cc937e2c2eb78b278700023ab1940f78a500cb9da",
+    "tt.log": "78a1cd02652164eac7896f150d28a41aa69ce8886362088c5f441fc4c21144c6",
+    "ss_paths.log": "12e62a3fadead3e898f112b8bc4835b025ebf7ef01489c3db0475dab8e123868",
+    "ttlb.log": "ca7a81a9fadd9df3db4046cd8264873571ba1d218e92e80423bedfda44db725d",
+    "ss.log": "196608f124e48ec86f4e68bbf71d40f3732c77c90ebc5f59b8573f0503e83cec"
+  }
+}
