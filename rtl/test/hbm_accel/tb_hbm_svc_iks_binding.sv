@@ -1,12 +1,12 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_binding #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64);
+module tb_hbm_svc_iks_binding #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64,MAXREAD=15);
 reg clk=0,efck=0,rst_n=0;always #512 clk=~clk;always #416 efck=~efck;
 reg[127:0] ed=0;wire[31:0]kv,krdy,kwe,rv,rrdy;wire[959:0]addr;wire[127:0]len,beat;wire[543:0]tag,rtag;
 wire[8191:0]data_;wire[8791:0]lines;wire done,fault;reg[7:0]credit=0;
 wire phy_clk,phy_rst_n;wire[8191:0]rawdata;wire[8191:0]wdata;wire[1023:0]wstrb;wire[31:0]wdone;
 assign data_=rawdata ^ ((mut==1 && rv[5]) ? (8192'd1 << (5*256)) : 8192'd0);
-ot_hbm_svc_core #(.IKS(1),.IK_DEPTH(KEY_DEPTH),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
+ot_hbm_svc_core #(.IKS(1),.IK_DEPTH(KEY_DEPTH),.KNO(MAXREAD),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(phy_clk),.phy_rst_n(phy_rst_n),.k_v(kv),.k_rdy(krdy),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(wdata),.k_wstrb(wstrb),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
 .wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault));
@@ -26,7 +26,7 @@ for(genvar rp=0;rp<32;rp=rp+1)begin:monitor
  assign slots[rp]=dut.gkvs.gs[rp].slots;
  assign request_j[rp]=dut.gkvs.gs[rp].jn;
 end
-integer mp,mb;integer req_beats=0,rsp_beats=0,req_stall=0,slot_stall=0,queued=0,max_queued=0,ref_head=0;
+integer mp,mb;integer req_beats=0,rsp_beats=0,req_stall=0,slot_stall=0,queued=0,max_queued=0,ref_head=0,scheduled_wait=0,return_wait=0,return_full=0; 
 always @(posedge clk)if(rst_n&&launch>0&&got<1368)begin
  for(mp=0;mp<32;mp=mp+1)begin
   if(kv[mp]&&krdy[mp])req_beats=req_beats+len[mp*4+:4];
@@ -34,6 +34,9 @@ always @(posedge clk)if(rst_n&&launch>0&&got<1368)begin
   if(rv[mp])rsp_beats=rsp_beats+1;
   if(request_j[mp]<182&&slots[mp]<4)slot_stall=slot_stall+1;
   queued=queued+mem.q_n[mp];
+  if(mem.h_sched[mp] && mem.h_tcol[mp]>mem.cyc*1024)scheduled_wait=scheduled_wait+1;
+  if(mem.r_n[mp]>0 && mem.r_t[mp][mem.r_rp[mp]]>mem.cyc*1024)return_wait=return_wait+1;
+  if(mem.r_n[mp]>=32)return_full=return_full+1;
   if(mem.q_n[mp]>max_queued)max_queued=mem.q_n[mp];
   if(mem.q_n[mp]>0)begin
    mb=mem.bank_of(mem.q_addr[mp][mem.q_rp[mp]]);
@@ -50,7 +53,7 @@ repeat(10)@(negedge clk);rst_n=1;
 #(phase*1000+3000);
 for(rep_=0;rep_<2;rep_=rep_+1)begin
  got=0;t=0;fin=0;row0=4006+rep_*8;
- req_beats=0;rsp_beats=0;req_stall=0;slot_stall=0;queued=0;max_queued=0;ref_head=0;
+ req_beats=0;rsp_beats=0;req_stall=0;slot_stall=0;queued=0;max_queued=0;ref_head=0;scheduled_wait=0;return_wait=0;return_full=0;
  @(negedge efck);ed=0;ed[0]=1;ed[2:1]=2;ed[17:3]=15'(row0);ed[70:62]=342;launch=$time;
  @(negedge efck);ed[0]=0;
  while(!fin)begin
@@ -78,7 +81,7 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  credit=0;
  for(l=0;l<8;l=l+1)if(owed[l]!=0)$fatal(1,"credit debt lane=%0d owed=%0d",l,owed[l]);
  $display("IKS_TIMED rep=%0d phase_ns=%0d credit_delay=%0d lines=%0d bytes=186048 last_line_ns=%0.3f drain_ns=%0.3f logical_tbs=%0.6f",rep_,phase,delay_,got,(lastline-launch)/1000.0,(drained-launch)/1000.0,186048.0/(lastline-launch));
- $display("IKS_BINDING refmode=%0d pull=%0d batch=%0d req_beats=%0d rsp_beats=%0d req_stall=%0d slot_stall=%0d max_queued=%0d queued_integral=%0d queued_head_in_REFpb=%0d",REF_MODE,PULL,BATCH,req_beats,rsp_beats,req_stall,slot_stall,max_queued,queued,ref_head);
+ $display("IKS_BINDING refmode=%0d pull=%0d batch=%0d req_beats=%0d rsp_beats=%0d req_stall=%0d slot_stall=%0d max_queued=%0d queued_integral=%0d queued_head_in_REFpb=%0d scheduled_head_future=%0d return_head_future=%0d return_full=%0d maxread=%0d",REF_MODE,PULL,BATCH,req_beats,rsp_beats,req_stall,slot_stall,max_queued,queued,ref_head,scheduled_wait,return_wait,return_full,MAXREAD);
 end
 $display("PASS_HBM_SVC_IKS_TIMED");$finish;
 end
