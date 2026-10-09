@@ -470,9 +470,9 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 68,
-   "merged": 68,
-   "record_only": 21
+   "closed": 74,
+   "merged": 74,
+   "record_only": 25
   },
   "notes": [
    "hgi_coll_decode_a/b: adoption_scope BLOCKED_ELECTRICAL (5 max_slew ~285 ps vs 260) - merged as evidence, not adopted",
@@ -480,7 +480,8 @@
    "struct-close/drive-0158/w2/wfc-hard: closure files only; shared flow files (io_ref_routed, link_budget intra knob, route_master CORE_INSET) not taken; defaults equivalent for these routes",
    "hgi_coll_decode_a/b: g96 closures (10b28cd17) are the electrically clean successors of the BLOCKED_ELECTRICAL 7c38e6508 closures",
    "batch 5: rowfence_a/b-7eea9e354 skipped here - already merged to main by sys-takeover (3fd78b574)",
-   "batch 7: fleet-viz /api/elements rows hfd_svc_SE_s5, hfd_svc_SW_s1, hfd_svc_SE_s8 = closed (TT era)"
+   "batch 7: fleet-viz /api/elements rows hfd_svc_SE_s5, hfd_svc_SW_s1, hfd_svc_SE_s8 = closed (TT era)",
+   "batch 8: qfd_sp_constants_sequencer_sys_icut_t-a8f3ba53c skipped here - drive-0849 merged it to main (55b8e3b53, element files + verdict; view not published, closed pending die-plan adoption)"
   ],
   "jobs": [
    {
@@ -1437,6 +1438,91 @@
     "record_merged_sha": "1bd415940b0eb3bf78c3ed5a8f24b64d8ddbd9db",
     "source_merged_sha": null,
     "note": "source on main (hbm-forks); ADOPTED (better hold FF +14.43): view in split_ps/hfd_svc_SE_s8 (coordinator batch 7)"
+   },
+   {
+    "job": "hgi_adp_argmax_a-c226d244d-tc-cl",
+    "closed": "2026-10-09T12:44:35-07:00",
+    "branch": "claude/hgi-adapters-20261009",
+    "source_commit": "c226d244d995e419b4cb6786b426f64d7f2a5353",
+    "record_commit": "47c86671f",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +76.64 / FF +25.15 ps DRC 0; SS sensitivity -121.02 ps",
+    "status": "merged",
+    "record_merged_sha": "b4888b5cca3c9e82b051037a79a017159f235442",
+    "source_merged_sha": "ffea7ec9c79c1e1de71607e3f6bae44c102867bb",
+    "note": "ADOPTED. ot_hgi_argmax_record.sv from c226d244d only; benchless job - local Verilator 5.050: HGI_ARGMAX PASS, MUT_OFFSET FAIL (35) (coordinator batch 8)"
+   },
+   {
+    "job": "hgi_adp_argmax_b-c226d244d-tc-cl",
+    "closed": "2026-10-09T12:34:29-07:00",
+    "branch": "claude/hgi-adapters-20261009",
+    "source_commit": "c226d244d995e419b4cb6786b426f64d7f2a5353",
+    "record_commit": "08afec539",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +49.89 / FF +11.79 ps DRC 0; SS sensitivity -147.52 ps",
+    "status": "merged",
+    "record_merged_sha": "c154fc15a7401c7a7ef954e268680c4630a15760",
+    "source_merged_sha": "ffea7ec9c79c1e1de71607e3f6bae44c102867bb",
+    "note": "same source; NOT adopted (variant a chosen) (coordinator batch 8)"
+   },
+   {
+    "job": "hbm_svc_SE_s6_ps_58321d22f_tc_hm10-cl",
+    "closed": "2026-10-09T12:25:21-07:00",
+    "branch": "claude/hbm-forks-20261009",
+    "source_commit": "58321d22f6e4b7ce0dda7b781243e0d84d7d37a3",
+    "record_commit": "edecd7946",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +6.40 / FF +0.40 ps DRC 0; SS sensitivity -112.84 ps",
+    "status": "merged",
+    "record_merged_sha": "1eafa6f080bfc2064bca39367049460e0f4012bd",
+    "source_merged_sha": null,
+    "note": "source on main (hbm-forks); NOT adopted - view kept at split_ps/hfd_svc_SE_s6_hm10 (FF +0.40) (coordinator batch 8)"
+   },
+   {
+    "job": "hbm_svc_SE_s6_ps_58321d22f_tc_hm25-cl",
+    "closed": "2026-10-09T12:30:42-07:00",
+    "branch": "claude/hbm-forks-20261009",
+    "source_commit": "58321d22f6e4b7ce0dda7b781243e0d84d7d37a3",
+    "record_commit": "a14db73aa",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +23.84 / FF +11.79 ps DRC 0; SS sensitivity -38.42 ps",
+    "status": "merged",
+    "record_merged_sha": "728f20b1a480181fb41812c27e68c9fb539f7eae",
+    "source_merged_sha": null,
+    "note": "source on main; ADOPTED (better hold FF +11.79): view in split_ps/hfd_svc_SE_s6 (coordinator batch 8)"
+   },
+   {
+    "job": "hbm_svc_SW_s4_ps_58321d22f_tc_hm25-cl",
+    "closed": "2026-10-09T12:36:41-07:00",
+    "branch": "claude/hbm-forks-20261009",
+    "source_commit": "58321d22f6e4b7ce0dda7b781243e0d84d7d37a3",
+    "record_commit": "e1ded4b26",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +12.52 / FF +5.79 ps DRC 0; SS sensitivity -145.78 ps",
+    "status": "merged",
+    "record_merged_sha": "c018936494b5ec20935adb5e1ed84b3d66073edd",
+    "source_merged_sha": null,
+    "note": "source on main; view in split_ps/hfd_svc_SW_s4 (coordinator batch 8)"
+   },
+   {
+    "job": "hcjoin-mc500-lb0-f0ba521d3-tc-cl",
+    "closed": "2026-10-09T12:40:45-07:00",
+    "branch": "claude/cont-takeover-20261009",
+    "source_commit": "f0ba521d3e19bae11c97cce722b4f655d34644fe",
+    "record_commit": "a2dd0fb08",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +62.65 / FF +21.45 ps DRC 0; SS sensitivity -220.40 ps",
+    "status": "merged",
+    "record_merged_sha": "6d347080aee57bbc4040fa5827dfe81b6b567ed8",
+    "source_merged_sha": null,
+    "note": "EVIDENCE ONLY, NOT ADOPTED: closed against the 0.2T IO budget only (credit-relay decision: HC blocks sign off with the credit relay at the die-link budget); source on main; record only (coordinator batch 8)",
+    "adoption_scope": "EVIDENCE_NOT_ADOPTED"
    }
   ]
  }
