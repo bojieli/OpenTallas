@@ -64,8 +64,12 @@ SLABS = {
               ('dsfd_svc_stn', 'a0_wr', 'dsfd_svc_stn', 'a0_er', SVC_HOP, 0, 'a0 chain ready'),
               ('dsfd_svcio_q', 'q_q', 'dsfd_svc_stn', 'q_e', SVC_HUB, 0, 'IO hub -> first station (q)'),
               ('dsfd_svc_stn', 'od_ed', 'dsfd_svcio_od', 'od_d', SVC_HUB, 0, 'last station -> IO hub (od)'),
+              # S81-TAIL 2026-10-08: the valid bit travels the same hub hop as the data (the glue had only od_ed / a0_ed,
+              # so od_v / a0_v had no link and kept the fixed 254.7 split: svcio_od od_v R 292.1 -> -37.4 unlinked)
+              ('dsfd_svc_stn', 'od_ev', 'dsfd_svcio_od', 'od_v', SVC_HUB, 0, 'last station -> IO hub (od valid)'),
               ('dsfd_svcio_od', 'od_r', 'dsfd_svc_stn', 'od_er', SVC_HUB, 0, 'IO hub ready -> station (od)'),
               ('dsfd_svc_stn', 'a0_ed', 'dsfd_svcio_ad', 'a0_d', SVC_HUB, 0, 'last station -> IO hub (a0)'),
+              ('dsfd_svc_stn', 'a0_ev', 'dsfd_svcio_ad', 'a0_v', SVC_HUB, 0, 'last station -> IO hub (a0 valid)'),
               ('dsfd_svcio_ad', 'a0_r', 'dsfd_svc_stn', 'a0_er', SVC_HUB, 0, 'IO hub ready -> station (a0)'),
               ('dsfd_svcio_od', 'bad', 'dsfd_svcio_ad', 'fi', 430.0, 0, 'u_od.bad -> u_ad.fi (fault)')]),
     'dsfd_sp_capture': dict(
