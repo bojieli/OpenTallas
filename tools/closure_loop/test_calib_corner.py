@@ -71,7 +71,8 @@ class Loop(unittest.TestCase):
         with tempfile.TemporaryDirectory() as td:
             st = Path(td)
             blocks = {"blk": {"ss": {"mean": 770, "min": 700, "max": 800}, "ff": {"mean": 420, "min": 400, "max": 450},
-                              "tt": {"mean": 581, "min": 488, "max": 768}, "grade": "routed", "job": "x"},
+                              "tt": {"mean": 581, "min": 488, "max": 768}, "grade": "routed", "job": "x",
+                              "variant": cl.variant_key(job()["spec"])},     # bf-insertion: same-variant entries only
                       "nott": {"ss": {"mean": 770, "min": 700, "max": 800}, "ff": {"mean": 420, "min": 400, "max": 450}}}
             (st / "measured_insertion.json").write_text(json.dumps({"blocks": blocks}))
             with patch.object(cl, "STATE", st):

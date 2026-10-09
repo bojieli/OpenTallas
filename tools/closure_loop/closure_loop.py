@@ -944,28 +944,147 @@ def budget_check(j):
     return None
 
 
-def record_measured(j):
-    """every calibrated block's measured insertion -> STATE/measured_insertion.json (published to main by the daemon
-    as results/rtl/budgets_20261006/measured_insertion.json for the die clock plan)"""
+# ---- variant-keyed insertion (bf-insertion 2026-10-08): measured_insertion.json was keyed per BLOCK, and variants of one
+# block differ wildly (bfh_halfphl_a730 routed on bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured
+# 1546 / 875).  A route may start on an ASSUMED insertion only when it was measured on the SAME variant: same block,
+# same recipe script and the same insertion-relevant build options in the stage cmd (VAR=value assignments such as
+# BF_VAR / OT_CGL_FRAC / OT_MULTI_VT / OT_CTS_FIX_HOOKS / corner overrides, --param K=V, other --flags).  Hold-repair
+# knobs, run paths and labels are not part of the key.  No same-variant value -> sequential CTS-only calibrate.
+VKEY_IGNORE_VARS = {"OUT", "SRC", "TTB", "OT_TTB_CORNER_MARK", "OT_MM_FF_SDC", "CL_LABEL_SUFFIX", "CL_STOP_AFTER"}
+VKEY_IGNORE_FLAGS = {"--hold-margin-ns", "--pnr-stop-after", "--hold-corners", "--hm-guard"}
+
+
+def variant_key(spec):
+    """block + recipe + insertion-relevant options of the route (else calibrate) stage cmd (see above)"""
+    stages = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    cmd = ""
+    for k in ("route", "calibrate"):
+        st = stages.get(k)
+        if isinstance(st, dict) and st.get("cmd"):
+            cmd = st["cmd"]
+            break
+    toks = []
+    for m in re.finditer(r"(?<![\w$])([A-Z][A-Z0-9_]*)=('[^']*'|\"[^\"]*\"|\S*)", cmd):
+        if m.group(1) not in VKEY_IGNORE_VARS and not m.group(2).startswith("$("):
+            if not re.search(r"--param\s+$", cmd[:m.start()]):
+                toks.append(f"{m.group(1)}={m.group(2).rstrip(';&|').strip(chr(39) + chr(34))}")
+    words = re.findall(r"\S+", cmd)
+    skip = False
+    for i, w in enumerate(words):
+        if skip:
+            skip = False
+            continue
+        if not w.startswith("--"):
+            continue
+        nxt = words[i + 1] if i + 1 < len(words) else ""
+        has_val = "=" not in w and bool(re.match(r"^[\w.:,+=-]+$", nxt)) and not nxt.startswith("-")
+        skip = has_val
+        if w.split("=")[0] in VKEY_IGNORE_FLAGS:
+            continue
+        toks.append(f"{w} {nxt}" if has_val else w)
+    scripts = sorted(x for x in set(re.findall(r"[\w./-]+\.(?:sh|py)\b", cmd)) if not x.endswith("tt_overlay.py"))
+    return f"{spec.get('block')}|{','.join(scripts)}|{' '.join(sorted(set(toks)))}"
+
+
+def _entry_variant(m):
+    """the variant key of a measured_insertion.json entry: stored, else derived from the measuring job's JSON"""
+    if not m:
+        return None
+    if m.get("variant"):
+        return m["variant"]
+    try:
+        return variant_key(load_job(m["job"])["spec"])
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def same_variant_insertion(j):
+    """(entry, why_not): the measured_insertion.json entry measured on THIS job's variant, else (None, reason)"""
+    vk = variant_key(j["spec"])
+    try:
+        d = json.loads((STATE / "measured_insertion.json").read_text())
+    except (OSError, ValueError):
+        return None, "no measured_insertion.json"
+    m = (d.get("variants") or {}).get(vk)
+    if m:
+        return m, None
+    b = (d.get("blocks") or {}).get(j["spec"].get("block"))
+    if b and _entry_variant(b) == vk:
+        return b, None
+    return None, (f"block value from another variant ({b.get('job')})" if b else "block never measured")
+
+
+def _store_variant(d, j, e):
+    vk = variant_key(j["spec"])
+    e["variant"] = vk
+    d.setdefault("variants", {})[vk] = dict(e, block=j["spec"].get("block"))
+
+
+def _cal_entry(j, measured_at):
     c = j.get("calibration") or {}
-    if not c.get("env"):
-        return
-    e = c["env"]
+    e = c.get("env") or {}
     p_ss = "CK_SSLIB_" if "CK_SSLIB_MEAN" in e else "CK_SS_"     # CK_SS_* is the route-corner value under CALIB-CORNER
+    if not all(k in e for k in (p_ss + "MEAN", p_ss + "MIN", p_ss + "MAX", "CK_FF_MEAN", "CK_FF_MIN", "CK_FF_MAX")):
+        return None
+    return dict(
+        job=j["name"], source_commit=j.get("commit_full"), host=j.get("host"), run=j.get("run"), clock=c.get("clock"),
+        parasitics=c.get("parasitics"), measured_at=measured_at,
+        ss=dict(mean=e[p_ss + "MEAN"], min=e[p_ss + "MIN"], max=e[p_ss + "MAX"]),
+        ff=dict(mean=e["CK_FF_MEAN"], min=e["CK_FF_MIN"], max=e["CK_FF_MAX"]),
+        **({"tt": dict(mean=e["CK_TT_MEAN"], min=e["CK_TT_MIN"], max=e["CK_TT_MAX"])} if "CK_TT_MEAN" in e else {}),
+        route_ref=e.get("CK_ROUTE_REF", "SS"),
+        boundary_n=(c.get("ss") or {}).get("boundary", {}) and c["ss"]["boundary"].get("n"),
+        budget=(j.get("budget") or {}).get("check"))
+
+
+_CAL_DONE = re.compile(r"^(\S+) (calibrate done \(rc=0\)|parallel calibrate: measured )")
+
+
+def backfill_variants():
+    """bf-insertion 2026-10-08: measurements taken before the variant table existed (only blocks{} kept the LAST one per
+    block) are added to variants{} from every job's calibration, newest measurement per variant; existing variant
+    entries are never replaced.  Without it a re-route of e.g. bfh2_recut_lvt (measured SS 951 / FF 556) could not
+    find its own variant's value and would calibrate again.  Returns the number of variants added."""
+    best = {}
+    for j in all_jobs():
+        try:
+            t = max((m.group(1) for m in map(_CAL_DONE.match, j.get("events") or []) if m), default=None)
+            if not t or not j.get("calibration") or not j.get("spec", {}).get("block"):
+                continue
+            ent = _cal_entry(j, t)
+            vk = variant_key(j["spec"])
+        except Exception:  # noqa: BLE001
+            continue
+        if ent and (vk not in best or t > best[vk]["measured_at"]):
+            best[vk] = dict(ent, variant=vk, block=j["spec"]["block"], backfilled=True)
     p = STATE / "measured_insertion.json"
     with open(STATE / "measured.lock", "w") as lk:
         fcntl.flock(lk, fcntl.LOCK_EX)
         d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
                                                           "blocks": {}}
-        d["blocks"][j["spec"]["block"]] = dict(
-            job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"], clock=c.get("clock"),
-            parasitics=c.get("parasitics"), measured_at=now_iso(),
-            ss=dict(mean=e[p_ss + "MEAN"], min=e[p_ss + "MIN"], max=e[p_ss + "MAX"]),
-            ff=dict(mean=e["CK_FF_MEAN"], min=e["CK_FF_MIN"], max=e["CK_FF_MAX"]),
-            **({"tt": dict(mean=e["CK_TT_MEAN"], min=e["CK_TT_MIN"], max=e["CK_TT_MAX"])} if "CK_TT_MEAN" in e else {}),
-            route_ref=e.get("CK_ROUTE_REF", "SS"),
-            boundary_n=(c.get("ss") or {}).get("boundary", {}) and c["ss"]["boundary"].get("n"),
-            budget=(j.get("budget") or {}).get("check"))
+        v = d.setdefault("variants", {})
+        new = {k: e for k, e in best.items() if k not in v}
+        if new:
+            v.update(new)
+            d["updated"] = now_iso()
+            p.write_text(json.dumps(d, indent=1) + "\n")
+            (STATE / "measured.dirty").write_text(now_iso())
+    return len(new)
+
+
+def record_measured(j):
+    """every calibrated block's measured insertion -> STATE/measured_insertion.json (published to main by the daemon
+    as results/rtl/budgets_20261006/measured_insertion.json for the die clock plan)"""
+    c = j.get("calibration") or {}
+    if not c.get("env") or not _cal_entry(j, ""):
+        return
+    p = STATE / "measured_insertion.json"
+    with open(STATE / "measured.lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
+                                                          "blocks": {}}
+        d["blocks"][j["spec"]["block"]] = ent = _cal_entry(j, now_iso())
+        _store_variant(d, j, ent)
         d["updated"] = now_iso()
         p.write_text(json.dumps(d, indent=1) + "\n")
         (STATE / "measured.dirty").write_text(now_iso())
@@ -2597,24 +2716,26 @@ def record_routed(j, rr):
         fcntl.flock(lk, fcntl.LOCK_EX)
         d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
                                                           "blocks": {}}
-        old = d["blocks"].get(j["spec"]["block"]) or {}
+        old = (d.get("variants") or {}).get(variant_key(j["spec"])) or d["blocks"].get(j["spec"]["block"]) or {}
         e = dict(old, job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"],
                  parasitics="routed (6_final.spef)", grade="routed", measured_at=now_iso(), ff=pick["ff"],
                  calibrate=old.get("calibrate") or ({k: old.get(k) for k in ("ss", "ff", "parasitics", "job")} if old else None))
         if "tt" in pick:
             e["tt"] = pick["tt"]
+        e.pop("block", None)
         d["blocks"][j["spec"]["block"]] = e
+        _store_variant(d, j, e)
         d["updated"] = now_iso()
         p.write_text(json.dumps(d, indent=1) + "\n")
         (STATE / "measured.dirty").write_text(now_iso())
 
 
 def assumed_insertion(j):
-    blk = j["spec"].get("block")
-    try:
-        m = json.loads((STATE / "measured_insertion.json").read_text())["blocks"].get(blk)
-    except (OSError, ValueError, KeyError):
-        m = None
+    # bf-insertion 2026-10-08: only a SAME-VARIANT measurement is an assumption (see variant_key); the budget-sheet
+    # fallback below stays (a sheet is per master/pin contract, not per variant)
+    m, why = same_variant_insertion(j)
+    if m is None and why and "another variant" in why:
+        j["ins_assume_skip"] = why
     if route_ref(j):
         # CALIB-CORNER: a TC/TT route references its IO to the TT insertion: the block's routed TT (grade routed), else
         # a calibrate's TT; none -> no assumption (sequential CTS-only calibrate, minutes)
@@ -2659,6 +2780,9 @@ def start_parallel_calibrate(j, stl, st):
         # a pending / running / failed track of an earlier placement (host move) is replaced
         env, src = assumed_insertion(j)
     if not env:
+        why = j.pop("ins_assume_skip", None)
+        if why:
+            event(j, f"no same-variant measured insertion ({why}): calibrate first (CTS-only), route after")
         return False
     if c0 and c0.get("state") == "running":
         try:
@@ -3847,6 +3971,10 @@ def cmd_daemon(a):
     DROP.mkdir(parents=True, exist_ok=True)
     fleet = Fleet()
     log(f"closure-loop daemon up (pid {os.getpid()}, interval {a.interval}s, state {STATE})")
+    try:
+        log(f"variant-keyed insertion backfill: {backfill_variants()} variants added")
+    except Exception:  # noqa: BLE001
+        log("backfill_variants error:\n" + traceback.format_exc())
     recon = None
     last_recon = 0.0
     while True:
