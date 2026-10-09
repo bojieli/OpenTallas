@@ -15,6 +15,9 @@ def model():
             memory_bytes_per_cycle=0,output_boundary_bits_per_cycle=545,
             initial_landing_credits=8,landing_storage_bits=8*73,
             assembly_bits=510,output_bits=545,owner_metadata_bits=73,
+            protection=dict(kind='dualrail detect failstop; no correction',
+                extra_fifo_bits=8*73,extra_payload_bits=510,extra_control_bits=124,
+                qualification='exact fault-injection gate and actual physical cost required'),
             arithmetic_changes=0,latency='one tuple/cycle plus actual TU stalls; no overlap credit',
             area_status='FF and mux estimate only; mapped area unqualified'),
         parser=dict(held_flit_bits=545,held_owner_bits=73,slot_bits=4,
@@ -23,5 +26,5 @@ def model():
                     arithmetic_changes=0,maximum_rank_literal_slots=1380),
         physical=dict(slot_status='unallocated; no P&R admission until die owner assigns slot',
             boundary_tracks_status='545 TU tracks and owner sideband require actual layer/channel allocation',
-            mutable_protection='query credits/order dualrail; candidate FIFO/control protection pending'),
+            mutable_protection='query credits/order dualrail; candidate FIFO/payload/control dualrail failstop; parser payload/control protection pending'),
         composed_latency='formatter occupancy must be measured and composed; no adopted token-rate credit')

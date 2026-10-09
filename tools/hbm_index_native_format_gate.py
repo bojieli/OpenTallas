@@ -28,16 +28,17 @@ reg clk=0;always #0.416 clk=~clk;
 reg por_n=0,retained=0;reg[71:0]co=0;reg qlast=0;wire coc,v,drained,fault;
 reg ready=0;wire[544:0]tu;wire[72:0]owner;
 reg[72:0]pk[0:NP-1];reg[544:0]gold[0:NF-1];
-integer sent=0,got=0,credits=8,cyc=0,errors=0;reg mutant,mut_qlast;
+integer sent=0,got=0,credits=8,cyc=0,errors=0;reg mutant,mut_qlast,mut_fifo,injected=0;
 ot_hbm_native_candidate_format #(.ENABLE(1))dut(.clk(clk),.por_n(por_n),
 .owner_valid(1'b1),.owner_fault(1'b0),.retained(retained),.owner_frame(73'h123456789abcdef),
 .owner_rank(7'd73),.tu_kind(1'b1),.tu_dst(8'd9),.co(co),.co_quarter_last(qlast),.coc(coc),
 .tu_v(v),.tu_r(ready),.tu(tu),.tu_owner(owner),.drained(drained),.fault(fault));
 initial begin
-$readmemh("packets.mem",pk);$readmemh("flits.mem",gold);mutant=$test$plusargs("MUT_ID");mut_qlast=$test$plusargs("MUT_QLAST");
+$readmemh("packets.mem",pk);$readmemh("flits.mem",gold);mutant=$test$plusargs("MUT_ID");mut_qlast=$test$plusargs("MUT_QLAST");mut_fifo=$test$plusargs("MUT_FIFO");
 repeat(4)@(negedge clk);por_n=1;repeat(2)@(negedge clk);retained=1;
 while(got<NF && cyc<NP*40+100)begin
-@(negedge clk);cyc=cyc+1;ready=(cyc%10==0);co=0;qlast=0;
+@(negedge clk);if(mut_fifo&&sent==4&&!injected)begin dut.fifo[3][38]=!dut.fifo[3][38];injected=1;end
+cyc=cyc+1;ready=(cyc%10==0);co=0;qlast=0;
 if(sent<NP&&credits>0&&cyc%3!=0)begin
 co=pk[sent][71:0];qlast=pk[sent][72];if(mut_qlast&&sent==0)qlast=!qlast;if(mutant&&sent==30)co[38]=!co[38];
 sent=sent+1;credits=credits-1;end
@@ -61,10 +62,10 @@ endmodule
  (w/'build.exit').write_text(str(r.returncode)+'\n')
  if r.returncode:return r.returncode
  runs=[]
- for name,extra in [('base',[]),('MUT_ID',['+MUT_ID']),('MUT_QLAST',['+MUT_QLAST'])]:
+ for name,extra in [('base',[]),('MUT_ID',['+MUT_ID']),('MUT_QLAST',['+MUT_QLAST']),('MUT_FIFO',['+MUT_FIFO'])]:
   r=subprocess.run([str(w/'obj/Vtb'),*extra],cwd=w,capture_output=True,text=True)
   (w/(name+'.log')).write_text(r.stdout+r.stderr)
-  ok=(r.returncode==0 and 'errors=0' in r.stdout) if not extra else (r.returncode!=0 and ('FAULT' in r.stdout if name=='MUT_QLAST' else 'EXACT_MISMATCH' in r.stdout and 'FORMAT_DONE' in r.stdout))
+  ok=(r.returncode==0 and 'errors=0' in r.stdout) if not extra else (r.returncode!=0 and ('FAULT' in r.stdout if name in ('MUT_QLAST','MUT_FIFO') else 'EXACT_MISMATCH' in r.stdout and 'FORMAT_DONE' in r.stdout))
   runs.append(dict(name=name,exit=r.returncode,pass_gate=ok))
  record=dict(verdict='PASS' if all(r['pass_gate'] for r in runs)else 'FAIL',source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),packets=len(packets),flits=len(flits),runs=runs,scope='lossless literal slots, quarter partial, actual33bit header, finite8credits,90percent TU stalls; no physical credit')
  (w/'record.json').write_text(json.dumps(record,indent=2)+'\n');print(record['verdict'])
