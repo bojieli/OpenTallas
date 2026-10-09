@@ -4,7 +4,7 @@ import json
 
 def model():
     return dict(scope='native loader sector endpoint; explicit external address translation and real service completion required',
-      parameters=dict(default_enable=0,sector_bits=30,pc_bits=5,tag_bits=16,data_bits=256,stack_instances=4),
+      parameters=dict(default_enable=0,native_address_bits=32,native_address_parameter_min=32,sector_bits=30,pc_bits=5,tag_bits=16,data_bits=256,stack_instances=4),
       request_bits=291,response_bits=1+5+16+4+256,
       state_bits=3,saved_request_bits=1+5+30+16+256,saved_reply_bits=256,
       flops_per_stack=3+1+5+30+16+256+256+1,
@@ -18,5 +18,6 @@ def model():
       invalid='misaligned/unmapped address or partial write strobe faults before acceptance; malformed/unsolicited service completion faults without loader success',
       address_mapping='external owner supplies actual byte-address→stack/PC/sector translator; endpoint never truncates native address',
       write_visibility='service response for write must originate physical k_wr_done after accepted write; request acceptance is never completion',
+      read_lease=dict(outstanding_per_PC=1,beat_mask_bits=16,saved_normal_tag_bits=17,native_tag_bits=16,stages=1,normal_path_added_cycles=0,normal_priority="normal valid or existing lease blocks native admission",same_PC_write_arbitration="must compose with physical WB arbiter"),
       adoption=False,physical_admitted=False)
 if __name__=='__main__': print(json.dumps(model(),indent=2))

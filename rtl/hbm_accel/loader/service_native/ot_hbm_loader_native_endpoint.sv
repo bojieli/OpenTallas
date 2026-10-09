@@ -2,9 +2,9 @@
 // Native loader byte address is validated by the actual external mapper. The
 // supplied sector/PC are its outputs, not a guessed truncation or aperture.
 // wr_ack is source-owned retirement of physical write completion, NEVER credit.
-module ot_hbm_loader_native_endpoint #(parameter integer ENABLE=0)(
+module ot_hbm_loader_native_endpoint #(parameter integer ENABLE=0,ADDR_W=32)(
  input wire clk,rst_n,input wire req_v,output wire req_rdy,
- input wire req_we,input wire [31:0] req_addr,input wire [255:0] req_wdata,
+ input wire req_we,input wire [ADDR_W-1:0] req_addr,input wire [255:0] req_wdata,
  input wire [31:0] req_wstrb,input wire [15:0] req_tag,
  input wire translation_valid,input wire [4:0] translated_pc,input wire [29:0] translated_addr,
  output wire rsp_v,input wire rsp_rdy,output wire rsp_we,
