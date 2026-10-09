@@ -51,6 +51,18 @@ Placeholders in every command: `{RUN}` (the job's run dir), `{SRC}` (`{RUN}/src`
 `CL_STOP_AFTER`. Every stage after calibrate also gets `CK_SS_MEAN/MIN/MAX`, `CK_FF_MEAN/MIN/MAX` (boundary
 registers, ps) and `CK_*_ALL_*` (all registers).
 
+## Floorplan margin lint (OWNER 2026-10-08): verdict FLOORPLAN_MARGIN
+Every calibrate and route runs `tools/fp_margin_lint.tcl` + `tools/fp_margin_lint.py` at ORFS PRE GLOBAL_PLACE (after the
+block's own PRE_GLOBAL_PLACE hook, on 3_2_place_iop.odb), installed in the flow container by `tools/orfs_hold_mm.py` and
+switched on through the docker shim (`OT_FP_LINT=1`, verdict dir `{CL}/fplint/<stage tag>` mounted at /ot_fplint). A failing
+floorplan stops the flow in seconds and the job ends `FLOORPLAN_MARGIN` with the reasons (no retry, no route spent):
+utilisation > 60% (> 65% with 1 BUFx2 hold buffer per flop), > 12 pins/um/layer over 100 um of a face, a full-density pin
+column within 1 track of a PDN strap / via stack, an illegal pin width (WIDTHTABLE), cut-line nets over the free tracks,
+a macro on a pin edge with pins behind it, an unblocked < 12 um macro gap with rows, a pin bank > 100 um from its pins.
+Spec `"fp_lint": false` opts out; `"fp_lint": {"set": {"util_max": 0.62}, "warn_only": true}` overrides / reports only.
+Offline: `openroad` `read_db X.odb; source tools/fp_margin_lint.tcl; ot_fp_lint_dump d.json`, then
+`python3 tools/fp_margin_lint.py check d.json` (calibration and thresholds in that file's docstring).
+
 ## Rules the daemon enforces
 - Load cap (OWNER_RULE_LOAD_CAP): launch only if `load1 + own launches of the last 5 min + threads <= cap`
   (1.2 x cores: 154 / 34 / 77) and `MemAvailable >= peak + 32 GB`; per-host per-job limits and NVMe run roots in

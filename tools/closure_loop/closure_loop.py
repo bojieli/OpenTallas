@@ -70,7 +70,8 @@ SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT 
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
-TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
+TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
+            "FLOORPLAN_MARGIN"}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
@@ -1144,7 +1145,7 @@ def corner_sta_compat(j, host, run, full):
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc")
+           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1198,6 +1199,11 @@ DOCKER_SHIM = r"""#!/bin/bash
 # closure-loop shim: every container gets LEC_CHECK=0 (kepler-formal needs AVX-512); then the real docker
 for e in ${PATH//:/ }; do
   if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ]; then
+    if [ "${1:-}" = run ] && [ -n "${OT_FP_LINT_DIR:-}" ]; then
+      # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
+      mkdir -p "$OT_FP_LINT_DIR"; shift
+      exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+    fi
     if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
     exec "$e/docker" "$@"
   fi
@@ -1230,6 +1236,47 @@ def route_ref(j):
     return "TT" if route_corner(j) in ("TC", "TT") else None
 
 
+# FP-LINT (owner 2026-10-08): floorplan margin lint before global placement, on by default for calibrate and route.
+# tools/orfs_hold_mm.py (run in every run_abi3_physical flow container) hooks ORFS PRE GLOBAL_PLACE; the docker shim
+# passes OT_FP_LINT and mounts {CL}/fplint/<tag> at /ot_fplint; a failing floorplan writes FAIL there and stops the
+# flow, and crash() / cal_track() finish the job with verdict FLOORPLAN_MARGIN (no retry, no route spent).
+# Spec "fp_lint": false opts out; {"set": {"util_max": 0.62, ...}} overrides thresholds (tools/fp_margin_lint.py
+# THRESHOLDS); {"warn_only": true} reports without failing.
+def fp_lint_env(j, t):
+    cfg = j["spec"].get("fp_lint", True)
+    if cfg is False:
+        return ""
+    cfg = cfg if isinstance(cfg, dict) else {}
+    args = " ".join(f"--set {k}={v}" for k, v in (cfg.get("set") or {}).items())
+    if cfg.get("warn_only"):
+        args += " --warn-only"
+    run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
+    return (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl; do "
+            f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+            f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\n"
+            f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} OT_FP_LINT_ARGS={shlex.quote(args.strip())}\n")
+
+
+def fp_lint_failed(host, run, tag):
+    """the lint's FAIL text for stage tag (None: no lint failure, or the host could not be read)"""
+    try:
+        r = ssh(host, f"cat {run}/cl/fplint/{tag}/FAIL 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return None
+    return r.stdout.strip() if r.returncode == 0 and "FLOORPLAN_MARGIN" in (r.stdout or "") else None
+
+
+def fp_lint_finish(j, tag, text):
+    reasons = next((l[len("FLOORPLAN_MARGIN: "):] for l in text.splitlines() if l.startswith("FLOORPLAN_MARGIN: ")), text)
+    kill_own_stage(j)          # a parallel calibrate / route of the same floorplan stops too
+    finish(j, "FLOORPLAN_MARGIN", reasons[:600],
+           f"FLOORPLAN_MARGIN ({tag}): the floorplan failed the margin lint before global placement (no route spent; "
+           f"report {j['run']}/cl/fplint/{tag}/fp_margin_lint.json)\n" +
+           "\n".join(l for l in text.splitlines() if l.startswith("fp_margin_lint:"))[:1500] +
+           "\nFIX (REDESIGN_RULES 'floorplan margin targets'): <= 55-60% util, <= 6 bits/um/layer, PDN-clear pin "
+           "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -1246,6 +1293,9 @@ def launch_stage(j, st, cmd):
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
+    if st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False:
+        ship_helpers(j["host"], j["run"])
+        env += fp_lint_env(j, t)
     if st["kind"] == "calibrate":
         # UNSTICK (owner 2026-10-08): calibrate measures clock insertion only.  No CTS timing/hold repair
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
@@ -1829,6 +1879,11 @@ def first_error(j, st):
 def crash(j, st, fleet, why):
     if preserve_completed_route(j, st, why):
         return
+    if st["kind"] in ("calibrate", "route") and j.get("stage_tag") and j.get("host"):
+        txt = fp_lint_failed(j["host"], j["run"], j["stage_tag"])
+        if txt:
+            fp_lint_finish(j, j["stage_tag"], txt)
+            return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
     if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
@@ -2563,6 +2618,10 @@ def cal_track(j, fleet, stl):
         return
     if state == "LOST" or rc != 0:
         c["state"] = "failed"
+        txt = fp_lint_failed(c["host"], c["run"], c["tag"]) if state != "LOST" else None
+        if txt:
+            fp_lint_finish(j, c["tag"], txt)
+            return
         event(j, f"parallel calibrate failed ({state}, rc={rc}): the route keeps its assumed insertion")
         return
     r = ssh(c["host"], f"cat {c['run']}/cl/calib.json", timeout=60)

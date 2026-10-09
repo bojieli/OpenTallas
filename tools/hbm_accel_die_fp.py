@@ -2815,6 +2815,17 @@ def svg(m, path, scale=0.03):
     Path(path).write_text('\n'.join(o))
 
 
+# FP-LINT (owner 2026-10-08): die relay margin -- every driver -> station / waypoint ... -> load chain against the SS
+# reach (504 um) after the segment's priced wire stages (seg_stages), and no station on the far side of its driver.
+MARGIN_RELAY_KINDS = ('stn', 'waypoint')
+
+
+def margin_lint(m):
+    import fp_margin_lint as FPL
+    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+                          stages=lambda bid, L: seg_stages(m, bid, L))
+
+
 def manhattan_paths(m):
     """Built-route length per critical path (sum of segment Manhattan lengths between consecutive endpoints)."""
     by = {it.name: it for it in m['insts']}
@@ -3967,7 +3978,9 @@ def main(argv=None):
         print(json.dumps(class_bounds(manhattan_paths(m)), indent=1))
         print(json.dumps(dict(die_mm2=round(m['geo']['W'] * m['geo']['H'] / 1e6, 2), W=m['geo']['W'], H=m['geo']['H'],
                               notes=m['notes'], power=die_power(m)['peak_in_phase_w'])))
-        return 0
+        ml = margin_lint(m)
+        print(json.dumps(dict(margin_lint=ml), indent=1))
+        return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'irwin':
         print(' '.join(ir_windows(m)))
         return 0

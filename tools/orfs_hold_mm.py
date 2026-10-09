@@ -86,5 +86,31 @@ def tolerate_flow_errors(errors: dict, logs_dir) -> dict:
     return out
 
 
+# FP-LINT (owner 2026-10-08): the floorplan margin lint runs at the start of ORFS global placement (after the block's own
+# PRE_GLOBAL_PLACE hook), on 3_2_place_iop.odb.  Inert unless the container env has OT_FP_LINT=1 (the closure loop's docker
+# shim passes it); tools/fp_margin_lint.tcl stops the flow with FLOORPLAN_MARGIN on a failing floorplan.
+FPL_ANCHOR = 'proc source_step_tcl { hook_type step_name } {\n  set env_var "${hook_type}_${step_name}_TCL"\n  source_env_var_if_exists $env_var\n'
+FPL_CODE = ('  if {$hook_type eq "PRE" && $step_name eq "GLOBAL_PLACE" && [info exists ::env(OT_FP_LINT)] && '
+            '$::env(OT_FP_LINT) ni {"" 0 false}} {\n'
+            '    set ot_fpl [expr {[info exists ::env(OT_FP_LINT_TCL)] ? $::env(OT_FP_LINT_TCL) : "/src/tools/fp_margin_lint.tcl"}]\n'
+            '    if {[file exists $ot_fpl]} { source $ot_fpl; ot_fp_lint_flow } else { puts "OT_FP_LINT: $ot_fpl missing: lint skipped" }\n'
+            '  }\n')
+
+
+def patch_fp_lint(scripts: Path) -> str:
+    util = scripts / "util.tcl"
+    ut = util.read_text()
+    if "ot_fp_lint_flow" in ut:
+        return "already patched"
+    if ut.count(FPL_ANCHOR) != 1:
+        return "anchor not found: fp lint unavailable in this image"
+    util.write_text(ut.replace(FPL_ANCHOR, FPL_ANCHOR + FPL_CODE, 1))
+    return "patched"
+
+
 if __name__ == "__main__":
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
+    try:
+        print("orfs_hold_mm: fp lint hook", patch_fp_lint(Path(sys.argv[1])))
+    except Exception as ex:  # noqa: BLE001 - the lint hook must never break a flow
+        print(f"orfs_hold_mm: fp lint hook not installed ({ex})")
