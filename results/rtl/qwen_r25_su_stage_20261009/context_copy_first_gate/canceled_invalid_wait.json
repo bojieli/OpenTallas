@@ -1,0 +1,15 @@
+{
+  "status": "canceled_invalid_protocol_wait",
+  "source_commit": "bd5c628ab",
+  "host": "ot-agidock128",
+  "simulation_pid": 4143009,
+  "launcher_pid": 4142900,
+  "verified_command": "../obj/Vtb_qwen_r25_causal_mask_pipe",
+  "verified_cwd": "/srv/opentallas-scratch/codex/qwen-r25-mask/context-copy-bd5c628ab/src",
+  "signal_sent": "SIGTERM",
+  "reason": "Same arithmetic-free RTL failed full p4 group0 with an explicit finite handshake assertion at f8215518a; the older bench waits indefinitely for the invalid frame. Failure evidence retained in failed.log. Corrected copy-only successor preserves original occupancy updates and passes the exact gate.",
+  "build_completed_before_cancellation": true,
+  "terminal_observation": "Both simulation and launcher no longer present; launcher log reports Terminated for this exact executable.",
+  "actual_exit_code": null,
+  "exit_code_note": "Detached launcher reaped before observation; no numeric child wait status available."
+}
