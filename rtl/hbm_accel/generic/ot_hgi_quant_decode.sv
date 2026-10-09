@@ -18,7 +18,7 @@ module ot_hgi_quant_decode #(parameter integer MUTANT=0)(
  ot_hfd_actquant_m #(.MR(1),.MLAT(6)) aq(
  .clk(clk),.rst_n(rst_n),.v(take && !e4),.fp4(fp4),.x(x),
  .vo(av),.q(q),.e(exponent),.y(ay),.fault(af));
- ot_hdc_fp4qdq bq(.clk(clk),.rst_n(rst_n),.v(take && e4),.x(x),.vo(bv),.y(by),.fault(bf));
+ ot_hgi_fp4qdq bq(.clk(clk),.rst_n(rst_n),.v(take && e4),.x(x),.vo(bv),.y(by),.fault(bf));
  reg [14:0] valid_pipe,fault_pipe;
  reg [511:0] value_pipe[0:14]; integer i;
  always @(posedge clk or negedge rst_n) begin
