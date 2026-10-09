@@ -42,5 +42,30 @@
     "composition": "Prompting addsoneedge pervalidprompt token; steady-state autoregressive decode addszeroedges. Existing boundary stationmeasured+1turnaround remains."
   },
   "correctness": "Retimedcomplete eight24bit SECDED codewords+lane+valid; ECCdecode/fault remainsbeforeI_GO/packageaccept; unwrittenread gate unchanged; defaultoff derivative preservesoriginal52sourcebyteidentical",
-  "physical": "pending remote admitted exact/component and route; no closureclaim"
+  "physical": "pending remote admitted exact/component and route; no closureclaim",
+  "validation": {
+    "source": "19699b86e",
+    "host": "ot-agidock128",
+    "admission": "admit.sh4",
+    "full_context_steps": 8192,
+    "trace_events": 1245184,
+    "trace_bad": 0,
+    "completions": 8191,
+    "completion_bad": 0,
+    "campaign_cases": 9,
+    "ECC_checks": 2592,
+    "ECC_resets": 2400,
+    "ECC_mutant_bad": 288,
+    "missing_host_wait_mutant_trace_bad": 456,
+    "unused_read_mutant": "failclosed fault00440000",
+    "measured_turn_max_CL40": {
+      "station52": 98,
+      "prompt_pb2": 99
+    },
+    "measured_fullctx_turn_avg_CL40": {
+      "station52": 86,
+      "prompt_pb2": 86
+    },
+    "physical": "pendingadmittedroute"
+  }
 }

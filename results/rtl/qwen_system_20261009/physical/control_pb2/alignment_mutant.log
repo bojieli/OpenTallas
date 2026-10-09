@@ -1,0 +1,12 @@
+SCEN control/golden/scen_eos.hex plen=3 max=8 steps=7 completions=5
+BOOT sys_ready cycle 245
+TRACE_BAD die0 step0 stage 0 (exp 0) prog 0 layer 63 next 0 crom 63 code 0 scale 0 token 0 pos 0 (exp token 1000 pos 0)
+TRACE_BAD die0 step0 stage 1 (exp 1) prog 1 layer 0 next 1 crom 0 code 0 scale 0 token 0 pos 0 (exp token 1000 pos 0)
+TRACE_BAD die0 step0 stage 2 (exp 2) prog 1 layer 1 next 2 crom 1 code 1056 scale 50112 token 0 pos 0 (exp token 1000 pos 0)
+TRACE_BAD die1 step0 stage 0 (exp 0) prog 0 layer 63 next 0 crom 63 code 0 scale 0 token 0 pos 0 (exp token 1000 pos 0)
+TRACE_BAD die2 step0 stage 0 (exp 0) prog 0 layer 63 next 0 crom 63 code 0 scale 0 token 0 pos 0 (exp token 1000 pos 0)
+CTL_RESULT pass=0 steps=7 trace_events=1064 trace_bad=456 cq=5/5 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=33 turn_max=98 turn_avg=83 step_cycles=765 CL=40 cycles=5747
+- rtl/test/qwen_system/tb_qfd_ctl_stn_pb2.sv:336: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.012 s; speed 332.659 us/s
+- Verilator: cpu 0.014 s on 1 threads; alloced 505 MB

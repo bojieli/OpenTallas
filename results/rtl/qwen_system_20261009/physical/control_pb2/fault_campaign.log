@@ -1,0 +1,5 @@
+PROMPT_FAULT_PASS checks=2592 resets=2400
+rtl/test/qwen_system/tb_qfd_prompt_sram_pb2_fault.sv:57: $finish called at 120126000 (1ps)
+PROMPT_FAULT_FAIL bad=288 checks=2592 resets=2400
+rtl/test/qwen_system/tb_qfd_prompt_sram_pb2_fault.sv:57: $finish called at 120126000 (1ps)
+PROMPT_FAULT_CAMPAIGN_PASS

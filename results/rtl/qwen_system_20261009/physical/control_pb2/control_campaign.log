@@ -1,0 +1,12 @@
+control/badlen.log:CTL_RESULT pass=1 steps=0 trace_events=0 trace_bad=0 cq=1/1 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=1073741824 turn_max=0 turn_avg=0 step_cycles=0 CL=40 cycles=368
+control/disagree.log:CTL_RESULT pass=1 steps=3 trace_events=456 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00010000 turn_min=34 turn_max=99 turn_avg=76 step_cycles=709 CL=40 cycles=2626
+control/eos.log:CTL_RESULT pass=1 steps=7 trace_events=1064 trace_bad=0 cq=5/5 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=34 turn_max=99 turn_avg=84 step_cycles=765 CL=40 cycles=5750
+control/fault1.log:CTL_RESULT pass=1 steps=2 trace_events=241 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00100100 turn_min=60 turn_max=99 turn_avg=89 step_cycles=741 CL=40 cycles=1513
+control/fault2.log:CTL_RESULT pass=1 steps=2 trace_events=241 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00100100 turn_min=60 turn_max=99 turn_avg=89 step_cycles=741 CL=40 cycles=1513
+control/fault3.log:CTL_RESULT pass=1 steps=2 trace_events=241 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00100100 turn_min=60 turn_max=99 turn_avg=89 step_cycles=741 CL=40 cycles=1513
+control/fault4.log:CTL_RESULT pass=1 steps=2 trace_events=284 trace_bad=0 cq=0/5 cq_bad=0 fault_cq=1 fault_status=00100100 turn_min=60 turn_max=99 turn_avg=89 step_cycles=741 CL=40 cycles=6493
+control/fullctx.log:CTL_RESULT pass=1 steps=8192 trace_events=1245184 trace_bad=0 cq=8191/8191 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=20 turn_max=99 turn_avg=86 step_cycles=735 CL=40 cycles=6218117
+control/length.log:CTL_RESULT pass=1 steps=4 trace_events=608 trace_bad=0 cq=3/3 cq_bad=0 fault_cq=0 fault_status=00000000 turn_min=33 turn_max=99 turn_avg=79 step_cycles=790 CL=40 cycles=3404
+CTL_SRAM_CAMPAIGN_PASS
+CTL_RESULT pass=0 steps=3 trace_events=456 trace_bad=0 cq=1/5 cq_bad=0 fault_cq=1 fault_status=00440000 turn_min=34 turn_max=99 turn_avg=76 step_cycles=709 CL=40 cycles=2645
+CTL_STATION_POISON_PASS
