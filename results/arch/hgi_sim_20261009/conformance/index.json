@@ -1,0 +1,1063 @@
+{
+ "schema": "opentallas.hgi_conformance_vectors.v1",
+ "spec": "docs/HBM_GENERIC_INTERFACE.md section 8.4",
+ "encoding": "HGI-1 1.0 owner-approved (records: hbm_generic_iface D_UOP_FIELDS / D_MDESC_FIELDS / D_SUT_LAYOUT / D_OPS)",
+ "modes": {
+  "DS": "the DS reset / DS per-operation values (CF-1 equivalence side)",
+  "QWEN": "Qwen3-8B per-operation values",
+  "GENERIC": "other models (generic interface)"
+ },
+ "provisional": [
+  "IDX.TOPK param[12] = 1: ids in ascending id order (open gap G15; DS router / index order)"
+ ],
+ "not_covered": [
+  "CF-SFX (FUSED.SOFTMAX is not bound yet; the SU fallback is)",
+  "CF-SM format 3 (hbm-forks owns the fmt3 adapter; SM.MATVEC fmt 3 vectors: CF-IDXD and the Qwen token)",
+  "CF-SVC / CF-GDN / CF-PROG as timing or whole-program checks: see qwen / ds / gdn evidence"
+ ],
+ "vectors": [
+  {
+   "id": "cfg_ds_v41_flash_ok",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_ok.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "OK",
+   "mutants": [],
+   "sha256": "e7073b426bdd14bfec51b73ac40d14720c438e909e22b30cbbbb3e4fcbff481f"
+  },
+  {
+   "id": "cfg_ds_v41_flash_bad_magic",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_bad_magic.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_MAGIC",
+   "mutants": [],
+   "sha256": "ac5ee4526ceac09873a476d4f098fdb6d642f6c4025b4bb7f984a9fa494ee73f"
+  },
+  {
+   "id": "cfg_ds_v41_flash_bad_version",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_bad_version.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_VERSION",
+   "mutants": [],
+   "sha256": "20856f6dc9eb061b8502dad0e2d5e35168395cb9e11bdaa6877d81b91a2d9b9f"
+  },
+  {
+   "id": "cfg_ds_v41_flash_bad_crc",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_bad_crc.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_CRC",
+   "mutants": [],
+   "sha256": "e946546b66dde6346d2c5f653180546762f6fafd69e4e66653a080fabe8c276a"
+  },
+  {
+   "id": "cfg_ds_v41_flash_group_12",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_group_12.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RANGE",
+   "mutants": [],
+   "sha256": "d24e4bde6097479eac4bd46fbeb4bb10176b3acb31b64457dba2ad16c630bfdf"
+  },
+  {
+   "id": "cfg_ds_v41_flash_group_16",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_group_16.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RANGE",
+   "mutants": [],
+   "sha256": "9efeda849ade56606b1e64feac143d937f130866bb3fe528c71497eb3aeeac64"
+  },
+  {
+   "id": "cfg_ds_v41_flash_reserved_bit",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_reserved_bit.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RESERVED",
+   "mutants": [],
+   "sha256": "4abb4ef03563673b22f52823f42fac0f3e445ce380430dde9e89ce807e292d5b"
+  },
+  {
+   "id": "cfg_ds_v41_flash_vocab_2p18",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_vocab_2p18.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RESERVED",
+   "mutants": [],
+   "sha256": "4e94efb78b472321d60bf65200aa70ebfadb83f8653b4a11bb938cdd8206bb38"
+  },
+  {
+   "id": "cfg_ds_v41_flash_busy",
+   "row": "CF-0",
+   "mode": "DS",
+   "file": "cf-0__cfg_ds_v41_flash_busy.json",
+   "what": "CFG_COMMIT while a job runs",
+   "status": "E_BUSY",
+   "mutants": [],
+   "sha256": "6b2d9e26365567b6bd8db8cf4fee28a891d5ee9454036e3d8aee41b8292e5288"
+  },
+  {
+   "id": "cfg_qwen3_8b_ok",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_ok.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "OK",
+   "mutants": [],
+   "sha256": "769ab54fd082c6ff774567f41f683d4d95dc38c1ef141548a54417db4aabb3ba"
+  },
+  {
+   "id": "cfg_qwen3_8b_bad_magic",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_bad_magic.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_MAGIC",
+   "mutants": [],
+   "sha256": "fce761232d7f2f964e2289913b0751dca3b014645bf3a53e38ae551b878ec55f"
+  },
+  {
+   "id": "cfg_qwen3_8b_bad_version",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_bad_version.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_VERSION",
+   "mutants": [],
+   "sha256": "08bfc96820ff1d0407da78b24e4d459fc6c2848c6366321e1a36fcfa0c4f3f62"
+  },
+  {
+   "id": "cfg_qwen3_8b_bad_crc",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_bad_crc.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_CRC",
+   "mutants": [],
+   "sha256": "c264cbdaacf1ac0cba1dcbfe5751a0bd24db94224b00c71407cbce18fd1c764a"
+  },
+  {
+   "id": "cfg_qwen3_8b_group_12",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_group_12.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RANGE",
+   "mutants": [],
+   "sha256": "75d6c388abaa7f195d4d112ecb6f67b3354975256bd458cdf14af8403539d3f1"
+  },
+  {
+   "id": "cfg_qwen3_8b_group_16",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_group_16.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RANGE",
+   "mutants": [],
+   "sha256": "3a775ea80d5b06a295f82544e624c92be9a414042d2008d044876ba16049afee"
+  },
+  {
+   "id": "cfg_qwen3_8b_reserved_bit",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_reserved_bit.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RESERVED",
+   "mutants": [],
+   "sha256": "8b33176df82f32ee843cf8d1ba681dada34ca0bdf64fc23949ac9e11ac3b98e5"
+  },
+  {
+   "id": "cfg_qwen3_8b_vocab_2p18",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_vocab_2p18.json",
+   "what": "CFG_COMMIT of the descriptor words",
+   "status": "E_RESERVED",
+   "mutants": [],
+   "sha256": "f80e35ba3437ca186f1a608f081f936fc1f248f5a75908e78a25fec430a1a3df"
+  },
+  {
+   "id": "cfg_qwen3_8b_busy",
+   "row": "CF-0",
+   "mode": "QWEN",
+   "file": "cf-0__cfg_qwen3_8b_busy.json",
+   "what": "CFG_COMMIT while a job runs",
+   "status": "E_BUSY",
+   "mutants": [],
+   "sha256": "c5263d556ad37589165dce3b6e3cb9450c7cedab3d63f84c9a233a98876e9c00"
+  },
+  {
+   "id": "norm_d4096_bf16_and_qknorm_seg128_fp32",
+   "row": "CF-NORM",
+   "mode": "QWEN",
+   "file": "cf-norm__norm_d4096_bf16_and_qknorm_seg128_fp32.json",
+   "what": "FUSED.ROW_NORM: D4096 BF16 out (d_units 32), then QK-norm seg 128 FP32 out for 8 q heads (d_units 8) and 2 k heads (d_units 2) in one program",
+   "status": 0,
+   "mutants": [
+    "qknorm_bf16",
+    "seg64"
+   ],
+   "sha256": "e9c585c097771905952089f730d817e2dc6ec55ac92f801f021dcb93889e7f1a"
+  },
+  {
+   "id": "glu_bf16_noclamp_route1",
+   "row": "CF-GLU",
+   "mode": "QWEN",
+   "file": "cf-glu__glu_bf16_noclamp_route1.json",
+   "what": "SFU.GLU 3,072 a die: BF16 out, imm_a = FLT_MAX, C = 1.0 by ibcast",
+   "status": 0,
+   "mutants": [
+    "clamp10",
+    "fp32_out"
+   ],
+   "sha256": "09ddfea1f2aa75213d8df7fe359c5543056e09359ed67efa1d69f8c5f4becaca"
+  },
+  {
+   "id": "glu_clamp10_routew_fp32",
+   "row": "CF-GLU",
+   "mode": "DS",
+   "file": "cf-glu__glu_clamp10_routew_fp32.json",
+   "what": "SFU.GLU with the DS clamp 10.0 and a route weight 0.37 by ibcast (FP32 out here; the DS FP8 publication is FUSED.QDQ_FP8 / the DS chain)",
+   "status": 0,
+   "mutants": [
+    "no_clamp"
+   ],
+   "sha256": "d60a6b1748c97e9e48dc79dc6c0a21ed16530890874b77979911d5d721626809"
+  },
+  {
+   "id": "rope_qwen_permuted_128",
+   "row": "CF-ROPE",
+   "mode": "QWEN",
+   "file": "cf-rope__rope_qwen_permuted_128.json",
+   "what": "SU RoPE on rows already permuted offline (pairs (2t, 2t + 1) at angle t, c_pair = i XOR 1, cos / sin tables of 64 read through b_half), 8 q + 2 k heads, pos 8,191",
+   "status": 0,
+   "mutants": [
+    "unpermuted"
+   ],
+   "sha256": "2dc778c3ce40f069000f7fbdf4542cad9ec0036e86bc7f408a8daaf41ef958aa"
+  },
+  {
+   "id": "rope_ds_tail64",
+   "row": "CF-ROPE",
+   "mode": "DS",
+   "file": "cf-rope__rope_ds_tail64.json",
+   "what": "DS adjacent-pair RoPE on the last 64 of a 512 row, BF16 out",
+   "status": 0,
+   "mutants": [
+    "pair_xor32"
+   ],
+   "sha256": "0461fe5f571da799b8ddf77a1aa9e2cedaecfe9b53284dd54829ebaaa7166b8c"
+  },
+  {
+   "id": "bcast_per_row_scalar",
+   "row": "CF-BCAST",
+   "mode": "QWEN",
+   "file": "cf-bcast__bcast_per_row_scalar.json",
+   "what": "MDESC ibcast: a per-row scalar (the softmax normaliser of 8 heads) read by every element of its row",
+   "status": 0,
+   "mutants": [
+    "istride1"
+   ],
+   "sha256": "5eb420396eac55698b5d9d10041d8d7e4f77a25ab7a8edf20c9e9ab5a5d38fb8"
+  },
+  {
+   "id": "emb_int8_row151935",
+   "row": "CF-EMB",
+   "mode": "QWEN",
+   "file": "cf-emb__emb_int8_row151935.json",
+   "what": "embedding of token 151,935: INT8 codes (incl. -128, 127, 0) x the row's BF16 scale, rows of 4,128 B at TOKEN x 4,128",
+   "status": 0,
+   "mutants": [
+    "row_stride_4096"
+   ],
+   "sha256": "b8768a8cdce8c25cce31c89138d772db39b2aac483485f1ca67b0daeaf75e932"
+  },
+  {
+   "id": "idxd_expert_fetch_by_id",
+   "row": "CF-IDXD",
+   "mode": "GENERIC",
+   "file": "cf-idxd__idxd_expert_fetch_by_id.json",
+   "what": "SM.MATVEC fmt 3 with an indexed B (expert id = U32(VM[I + L])) in a 2-iteration CTL.LOOP: experts 5 then 2",
+   "status": 0,
+   "mutants": [
+    "ignore_index"
+   ],
+   "sha256": "6d14adf47318ef4cf2671c762d418e434881daba40f7aba80fbcabbc0a1dde18"
+  },
+  {
+   "id": "idxd_out_of_range_faults",
+   "row": "CF-IDXD",
+   "mode": "GENERIC",
+   "file": "cf-idxd__idxd_out_of_range_faults.json",
+   "what": "an indexed id past the weight region faults (status 3)",
+   "status": 3,
+   "mutants": [],
+   "sha256": "d46269465803ece213702de21f8862da8cb60ab6dd855f121e6ba548287b33bb"
+  },
+  {
+   "id": "idxd_n_from_vm",
+   "row": "CF-IDXD",
+   "mode": "GENERIC",
+   "file": "cf-idxd__idxd_n_from_vm.json",
+   "what": "n_sel = 63: n = U32(VM[I + I.stride + L]) = 37 elements",
+   "status": 0,
+   "mutants": [
+    "static_n"
+   ],
+   "sha256": "66ea45463642c0827f7bb342bcd00220bcd482a664987bb25fa5a357201229f7"
+  },
+  {
+   "id": "loop2_l1stride",
+   "row": "CF-LOOP2",
+   "mode": "GENERIC",
+   "file": "cf-loop2__loop2_l1stride.json",
+   "what": "CTL.LOOP level 0 (3) around level 1 (4): base + L lstride + L1 l1stride on A, O and R",
+   "status": 0,
+   "mutants": [
+    "l1_as_l"
+   ],
+   "sha256": "8be269244959e96f67c7171e6a5658d99850e0385ca894ca7cf6c9933e19fb97"
+  },
+  {
+   "id": "cp_doorbell_tok131071_pos0",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_doorbell_tok131071_pos0.json",
+   "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+   "status": 0,
+   "mutants": [],
+   "sha256": "a5317b30ac143e4cafa85c1e3ce645d6014f0a188ec3163afb17517eec84a43f"
+  },
+  {
+   "id": "cp_doorbell_tok131072_pos0",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_doorbell_tok131072_pos0.json",
+   "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+   "status": 0,
+   "mutants": [],
+   "sha256": "6aa95d5906a9600fa5c4b3f2839f50756775db0950e852b85d0f1df3e87891e4"
+  },
+  {
+   "id": "cp_doorbell_tok151935_pos40959",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_doorbell_tok151935_pos40959.json",
+   "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+   "status": 0,
+   "mutants": [],
+   "sha256": "e07c6580cb0f5f1bc2238b5d670b81367badcb1f64e3ecf3059d00c1dfbed32e"
+  },
+  {
+   "id": "cp_doorbell_tok151936_pos0",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_doorbell_tok151936_pos0.json",
+   "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+   "status": 3,
+   "mutants": [],
+   "sha256": "2418cf0b4727ef13e82834ee77abb33629a6b6ca57a939bdd330308a4fd94084"
+  },
+  {
+   "id": "cp_doorbell_tok0_pos40960",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_doorbell_tok0_pos40960.json",
+   "what": "doorbell range check against cp_vocab 151,936 / cp_ctx_max 40,960",
+   "status": 3,
+   "mutants": [],
+   "sha256": "c7821e4278cc2e8c29709e0bf9f866843287037cb32f39fe731d0ab98e23d9ca"
+  },
+  {
+   "id": "cp_ds_pos_max",
+   "row": "CF-CP",
+   "mode": "DS",
+   "file": "cf-cp__cp_ds_pos_max.json",
+   "what": "DS reset: token 129,279 and position 2^20 - 1 accepted",
+   "status": 0,
+   "mutants": [],
+   "sha256": "c938d057a36978158de4f58e627d70271b2a5ab8e0ccfbee44ef4c57044e90ac"
+  },
+  {
+   "id": "cp_end_token_range",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_end_token_range.json",
+   "what": "CTL.END token 151,936 >= cp_vocab: status 3",
+   "status": 3,
+   "mutants": [],
+   "sha256": "c961a99a69705ca822091b3137d77dc27fa237e008286843902c356c13bb38dc"
+  },
+  {
+   "id": "cp_absent_unit_simt",
+   "row": "CF-CP",
+   "mode": "QWEN",
+   "file": "cf-cp__cp_absent_unit_simt.json",
+   "what": "a SIMT.RUN record on r25 (no SIMT unit) faults with status 3",
+   "status": 3,
+   "mutants": [],
+   "sha256": "2a4d2fd6092961733b8245d366a72546bfdc631c983d79186096ae569d6a37d3"
+  },
+  {
+   "id": "coll_all_reduce_g1",
+   "row": "CF-COLL",
+   "mode": "GENERIC",
+   "file": "cf-coll__coll_all_reduce_g1.json",
+   "what": "ALL_REDUCE_SUM of 256 words, groups of 1 over 8 dies (rank-order pairwise tree; -0 at rank 1)",
+   "status": 0,
+   "mutants": [
+    "group_isolation"
+   ],
+   "sha256": "10369ee0f132097ef8310ded5d37323f8e176f6bb85a931ba6354eaf10c3c84b"
+  },
+  {
+   "id": "coll_all_reduce_g2",
+   "row": "CF-COLL",
+   "mode": "GENERIC",
+   "file": "cf-coll__coll_all_reduce_g2.json",
+   "what": "ALL_REDUCE_SUM of 256 words, groups of 2 over 8 dies (rank-order pairwise tree; -0 at rank 1)",
+   "status": 0,
+   "mutants": [
+    "group_isolation"
+   ],
+   "sha256": "0458873028b1c3b88dcfa526c23f469ea57c4403c96df5f84760f7ac5f97de93"
+  },
+  {
+   "id": "coll_all_reduce_g4",
+   "row": "CF-COLL",
+   "mode": "QWEN",
+   "file": "cf-coll__coll_all_reduce_g4.json",
+   "what": "ALL_REDUCE_SUM of 256 words, groups of 4 over 8 dies (rank-order pairwise tree; -0 at rank 1)",
+   "status": 0,
+   "mutants": [
+    "group_isolation"
+   ],
+   "sha256": "b15bba1c452f1b139c5f72c8f2f52029bdf3c11e08210f8651e713040c96188d"
+  },
+  {
+   "id": "coll_all_reduce_g8",
+   "row": "CF-COLL",
+   "mode": "GENERIC",
+   "file": "cf-coll__coll_all_reduce_g8.json",
+   "what": "ALL_REDUCE_SUM of 256 words, groups of 8 over 8 dies (rank-order pairwise tree; -0 at rank 1)",
+   "status": 0,
+   "mutants": [
+    "group_isolation"
+   ],
+   "sha256": "bfbe2156b92bca49d6cd1059620b8183f19748d85cf7f7133b7f87754a44e0f4"
+  },
+  {
+   "id": "coll_argmax_merge_ties",
+   "row": "CF-COLL",
+   "mode": "QWEN",
+   "file": "cf-coll__coll_argmax_merge_ties.json",
+   "what": "ARGMAX_MERGE: equal values on all 4 ranks -> lowest global id (100) wins",
+   "status": 0,
+   "mutants": [
+    "highest_id"
+   ],
+   "sha256": "31b3fe7a5c955e995e6d4b2bd6b0fff6c0223c18eec3e92d4c853c9ef74519eb"
+  },
+  {
+   "id": "coll_all_gather_g96_n1000",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_all_gather_g96_n1000.json",
+   "what": "ALL_GATHER even-split segments, G = 96, n = 1000",
+   "status": 0,
+   "mutants": [
+    "ceil_segments"
+   ],
+   "sha256": "3afe0690ed55377205bf3fa9f11d3a9c8c801fe64e4982852a9aee5cf56dcb74"
+  },
+  {
+   "id": "coll_all_gather_g4_n1030",
+   "row": "CF-COLL",
+   "mode": "QWEN",
+   "file": "cf-coll__coll_all_gather_g4_n1030.json",
+   "what": "ALL_GATHER even-split segments, G = 4, n = 1030",
+   "status": 0,
+   "mutants": [
+    "ceil_segments"
+   ],
+   "sha256": "6cc5621dc6734fff5de3c933de8df9b052def2326ea479fe61c73cabf4dccbb0"
+  },
+  {
+   "id": "coll_group_reduce_mcast_s8",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_group_reduce_mcast_s8.json",
+   "what": "GROUP_REDUCE_MCAST s = 8 over 96 ranks, BF16 out: O = the 12 sub-groups' rank-order pairwise sums in sub-group order on every rank",
+   "status": 0,
+   "mutants": [
+    "fp32_out",
+    "s4"
+   ],
+   "sha256": "0f9c2a7ed8d4b349e71673607ef832458e32d61ca2aa0101e69863a797b9adde"
+  },
+  {
+   "id": "coll_row_gather_k7",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_row_gather_k7.json",
+   "what": "ROW_GATHER k = 7: owner rank (i div 8) mod 96, local row (i div 768) * 8 + i mod 8; ranks 0..63 receive the rows in list order (64-word rows)",
+   "status": 0,
+   "mutants": [
+    "list_order"
+   ],
+   "sha256": "943a5c38275509a1785b04f5b8f44050173f90ec3632145af9406f25c4dc9469"
+  },
+  {
+   "id": "coll_row_gather_k512",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_row_gather_k512.json",
+   "what": "ROW_GATHER k = 512: owner rank (i div 8) mod 96, local row (i div 768) * 8 + i mod 8; ranks 0..63 receive the rows in list order (8-word rows)",
+   "status": 0,
+   "mutants": [
+    "list_order"
+   ],
+   "sha256": "d273dd41de4c6781b5df8a32f7a98abc1a3cef5698107d09bf0d521d7614daf7"
+  },
+  {
+   "id": "coll_row_gather_k2048",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_row_gather_k2048.json",
+   "what": "ROW_GATHER k = 2048: owner rank (i div 8) mod 96, local row (i div 768) * 8 + i mod 8; ranks 0..63 receive the rows in list order (4-word rows)",
+   "status": 0,
+   "mutants": [
+    "list_order"
+   ],
+   "sha256": "d5aaafe5b9b68e14fd456978f533a82ad1da5c2eec898efa24b8ef89bb8ac175"
+  },
+  {
+   "id": "coll_row_gather_unwritten_faults",
+   "row": "CF-COLL",
+   "mode": "DS",
+   "file": "cf-coll__coll_row_gather_unwritten_faults.json",
+   "what": "ROW_GATHER of a never-written row (id 9 on rank 1) faults: completion status 1",
+   "status": 1,
+   "mutants": [],
+   "sha256": "839c0ba03e2615ebbe3beb3d622faa287d05fc5152dfaa74c5cfe2777f49520f"
+  },
+  {
+   "id": "topk_k6_n384_m1_asc",
+   "row": "CF-TOPK",
+   "mode": "DS",
+   "file": "cf-topk__topk_k6_n384_m1_asc.json",
+   "what": "IDX.TOPK k = 6 over 1 row(s) of 384; ties to the lowest index; ids in ASCENDING ID order (param[12], open gap G15: the DS router / index order)",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "f160e4e2d3f4dc5e887479814f641371e9ffb3a289102f32798b02a4f9eadaef"
+  },
+  {
+   "id": "topk_k512_n4096_m1_asc",
+   "row": "CF-TOPK",
+   "mode": "DS",
+   "file": "cf-topk__topk_k512_n4096_m1_asc.json",
+   "what": "IDX.TOPK k = 512 over 1 row(s) of 4096; ties to the lowest index; ids in ASCENDING ID order (param[12], open gap G15: the DS router / index order)",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "e3c1285612deaec5bac7bd002c9bea4c2801146606cf9529d0e1e767a69e8af2"
+  },
+  {
+   "id": "topk_k1_n64_m3",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k1_n64_m3.json",
+   "what": "IDX.TOPK k = 1 over 3 row(s) of 64; ties to the lowest index; ids by descending score",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "477fbc9a19a7b4e18c6534f48fc5ad8e9ceaae0e879458f63582bf12311cf119"
+  },
+  {
+   "id": "topk_k2_n64_m2",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k2_n64_m2.json",
+   "what": "IDX.TOPK k = 2 over 2 row(s) of 64; ties to the lowest index; ids by descending score",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "fc57c5b1d0fb29998866379fd75c671667b3b5457a223dd1c7fcba8ee66a8d25"
+  },
+  {
+   "id": "topk_k8_n128_m2",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k8_n128_m2.json",
+   "what": "IDX.TOPK k = 8 over 2 row(s) of 128; ties to the lowest index; ids by descending score",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "9025caef61e98c90d16139a6706d58f56e2afbea1105122816295957a3224a96"
+  },
+  {
+   "id": "topk_k512_n2048_m2",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_k512_n2048_m2.json",
+   "what": "IDX.TOPK k = 512 over 2 row(s) of 2048; ties to the lowest index; ids by descending score",
+   "status": 0,
+   "mutants": [
+    "tie_high"
+   ],
+   "sha256": "c54258de05556f2ed7147ec29bfc70db253b7fb367a964427c8a435cfdb2baf9"
+  },
+  {
+   "id": "topk_nan_fails_closed",
+   "row": "CF-TOPK",
+   "mode": "GENERIC",
+   "file": "cf-topk__topk_nan_fails_closed.json",
+   "what": "IDX.TOPK with a NaN score faults (status 1)",
+   "status": 1,
+   "mutants": [],
+   "sha256": "dadf8a60bdebd78b136fac9f85ed41336015315b723ce49fffb9f230eedabb93"
+  },
+  {
+   "id": "argmax_id_151935",
+   "row": "CF-ARG",
+   "mode": "QWEN",
+   "file": "cf-arg__argmax_id_151935.json",
+   "what": "ARGMAX.LOCAL imm_a = 37,984 on 4 dies; the winner is local id 37,983 on rank 3 = global id 151,935 (the CTL.END token, < cp_vocab)",
+   "status": 0,
+   "mutants": [
+    "no_offset"
+   ],
+   "sha256": "4f0f1a17ee2ff48b95db96ff6755c78b67a485f31295b9d6154d749b030810f6"
+  },
+  {
+   "id": "argmax_tie_lowest",
+   "row": "CF-ARG",
+   "mode": "DS",
+   "file": "cf-arg__argmax_tie_lowest.json",
+   "what": "ARGMAX.LOCAL lowest index on ties (17 before 300), O = {value, id}",
+   "status": 0,
+   "mutants": [],
+   "sha256": "f2c9ac7a239a408ce7cc8aa6ef108caec72b6110a8c743b7dfaef29b62e08bdc"
+  },
+  {
+   "id": "qdq_fp8",
+   "row": "CF-QDQ",
+   "mode": "DS",
+   "file": "cf-qdq__qdq_fp8.json",
+   "what": "FUSED.QDQ_FP8: random, all-zero, maximum, subnormal, saturating (amax 2,784 tie / 2,785 / 3,000 / 1e30: the E4M3 scale saturates at 448) and large blocks; the reference is hdc_golden_v41 (the shipped ot_hdc_fp4qdq has no 448 clamp: its default is exact on DS, whose inputs stay below 26, but it fails the saturating blocks; SATFINITE opt-in required off DS)",
+   "status": 0,
+   "mutants": [
+    "block_size"
+   ],
+   "sha256": "a8bb7fb1aa2dd6fd9f61f4b7910fedb954d0c37e8c306ffffcf97ddf591dfb9a"
+  },
+  {
+   "id": "qdq_fp4_e8m0",
+   "row": "CF-QDQ",
+   "mode": "DS",
+   "file": "cf-qdq__qdq_fp4_e8m0.json",
+   "what": "FUSED.QDQ_FP4_E8M0: random, all-zero, maximum, subnormal, saturating (amax 2,784 tie / 2,785 / 3,000 / 1e30: the E4M3 scale saturates at 448) and large blocks; the reference is hdc_golden_v41 (the shipped ot_hdc_fp4qdq has no 448 clamp: its default is exact on DS, whose inputs stay below 26, but it fails the saturating blocks; SATFINITE opt-in required off DS)",
+   "status": 0,
+   "mutants": [
+    "block_size"
+   ],
+   "sha256": "8e1bd38e2bec353aeb4e1042eafe2c75d67d9873d1b0c555eca5ffe7bac6d1df"
+  },
+  {
+   "id": "qdq_fp4_e4m3",
+   "row": "CF-QDQ",
+   "mode": "DS",
+   "file": "cf-qdq__qdq_fp4_e4m3.json",
+   "what": "FUSED.QDQ_FP4_E4M3: random, all-zero, maximum, subnormal, saturating (amax 2,784 tie / 2,785 / 3,000 / 1e30: the E4M3 scale saturates at 448) and large blocks; the reference is hdc_golden_v41 (the shipped ot_hdc_fp4qdq has no 448 clamp: its default is exact on DS, whose inputs stay below 26, but it fails the saturating blocks; SATFINITE opt-in required off DS)",
+   "status": 0,
+   "mutants": [
+    "block_size"
+   ],
+   "sha256": "aa5f90dbe2398ec0512acbb60f24432dd683d97bca64ea93ae88753afcb2cb4f"
+  },
+  {
+   "id": "qdq_fp4_e4m3_block32_undefined",
+   "row": "CF-QDQ",
+   "mode": "GENERIC",
+   "file": "cf-qdq__qdq_fp4_e4m3_block32_undefined.json",
+   "what": "QDQ_FP4_E4M3 with param[7:0] = 32: undefined block size faults (status 3) until a vector defines it",
+   "status": 3,
+   "mutants": [],
+   "sha256": "d65c3b5b3ae2dc60e061342ee4f136f6fbeaa47d7f5a8163700d57b7d4601cd1"
+  },
+  {
+   "id": "att_ring_pos1048575_m128_n128_k7_hd512",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos1048575_m128_n128_k7_hd512.json",
+   "what": "ATT.QK + ATT.PV over a 128-slot ring (first slot (POS1 - n) mod m = 0, wrapping) then 7 C rows; pos 1048575",
+   "status": 0,
+   "mutants": [
+    "no_C"
+   ],
+   "sha256": "29c0754c254651504003cbc3996c83bc970746ecba0a51d0491790283c07ccbc"
+  },
+  {
+   "id": "att_ring_pos1000_m128_n128_k3_hd512",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos1000_m128_n128_k3_hd512.json",
+   "what": "ATT.QK + ATT.PV over a 128-slot ring (first slot (POS1 - n) mod m = 105, wrapping) then 3 C rows; pos 1000",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "4328d9cf8d13dee0cedc428a9e0b035d29674374d90054abd3b0dd77600041fe"
+  },
+  {
+   "id": "att_ring_pos16_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos16_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 1, wrapping) then 3 C rows; pos 16",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "6b053979e6077f64f7043f07f561b1edf410506d5d8d5e23abd66d0d52a87668"
+  },
+  {
+   "id": "att_ring_pos17_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos17_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 2, wrapping) then 3 C rows; pos 17",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "7395187eff223cd93b46217621be8b8e51d7f9d77decfd0193dc16cf9ee22761"
+  },
+  {
+   "id": "att_ring_pos18_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos18_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 3, wrapping) then 3 C rows; pos 18",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "1682f567b9c2f5a8fe967837fae6e5f7fcf23ecb4e227e5e82f535625b7507d1"
+  },
+  {
+   "id": "att_ring_pos19_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos19_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 4, wrapping) then 3 C rows; pos 19",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "3ea5b59deb9621765b6dc19fe036a5fda419b53b14ceed4a0dff619672e7cfb1"
+  },
+  {
+   "id": "att_ring_pos20_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos20_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 5, wrapping) then 3 C rows; pos 20",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "43a6a8ee22f03823d42d233057306d939bf620b9693bf3a35a283ec82a39fe48"
+  },
+  {
+   "id": "att_ring_pos21_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos21_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 6, wrapping) then 3 C rows; pos 21",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "e0fb71361c6023b1b9e17b481194677d91ec3688d017495aca731bfd8d6c0449"
+  },
+  {
+   "id": "att_ring_pos22_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos22_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 7, wrapping) then 3 C rows; pos 22",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "52be1beb6a8acc1345f2d580af718b8601065db6343447a5b0695d0016993033"
+  },
+  {
+   "id": "att_ring_pos23_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos23_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 8, wrapping) then 3 C rows; pos 23",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "c97beb44facd8128369f94a9da99e90f7ec312f6ed45ab7b6a64b1eb5f0aad1e"
+  },
+  {
+   "id": "att_ring_pos24_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos24_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 9, wrapping) then 3 C rows; pos 24",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "c7a3cd96259ac56b63e650759eac3469c45ac2b485d95988fce32d161b2ad1d0"
+  },
+  {
+   "id": "att_ring_pos25_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos25_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 10, wrapping) then 3 C rows; pos 25",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "801b55a2b3f84c3b0d8cb529aa121654087f17e5acdfcd0bd9f593f28f7552e9"
+  },
+  {
+   "id": "att_ring_pos26_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos26_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 11, wrapping) then 3 C rows; pos 26",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "4bb9a67a7af35742ee0d79f58bc2021b1904f508f153a74a254939a0a91dd7f5"
+  },
+  {
+   "id": "att_ring_pos27_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos27_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 12, wrapping) then 3 C rows; pos 27",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "6d6d6b55d336cd7bad837099856d68cdf903c68c52a4d2af469303a89d55ca2d"
+  },
+  {
+   "id": "att_ring_pos28_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos28_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 13, wrapping) then 3 C rows; pos 28",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "79b17ff4386c6568d4f6605f59e4ef8c086afee4a4c4972e1c5a65e72f761c7d"
+  },
+  {
+   "id": "att_ring_pos29_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos29_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 14, wrapping) then 3 C rows; pos 29",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "7e8def148553de1c0fbcfb501eef75b9f39f027e95efa7d2bac42c05a4dcdc5c"
+  },
+  {
+   "id": "att_ring_pos30_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos30_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 15, wrapping) then 3 C rows; pos 30",
+   "status": 0,
+   "mutants": [
+    "ring_from_slot0",
+    "no_C"
+   ],
+   "sha256": "1fa2da804697574da386f18a324c1e5a53e377b064c9d498c46254c8acc53a4f"
+  },
+  {
+   "id": "att_ring_pos31_m16_n16_k3_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos31_m16_n16_k3_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 0, wrapping) then 3 C rows; pos 31",
+   "status": 0,
+   "mutants": [
+    "no_C"
+   ],
+   "sha256": "c016ec8e61aa13de641082dae64ae31990054a41fed5085585146afecc52d6d1"
+  },
+  {
+   "id": "att_ring_pos5_m16_n6_k2_hd64",
+   "row": "CF-ATT",
+   "mode": "DS",
+   "file": "cf-att__att_ring_pos5_m16_n6_k2_hd64.json",
+   "what": "ATT.QK + ATT.PV over a 16-slot ring (first slot (POS1 - n) mod m = 0, wrapping) then 2 C rows; pos 5",
+   "status": 0,
+   "mutants": [
+    "no_C"
+   ],
+   "sha256": "358d042984ff5c45337b2df77f8eaabd3898d062fe954fe2d2f23af557458952"
+  },
+  {
+   "id": "att_qwen_pos0",
+   "row": "CF-ATT",
+   "mode": "QWEN",
+   "file": "cf-att__att_qwen_pos0.json",
+   "what": "ATT.QK, 4 lanes, B = n_sel POS1 rows (the causal mask, 1 rows) of a linear FP8 KV plane",
+   "status": 0,
+   "mutants": [
+    "mask_plus1"
+   ],
+   "sha256": "2550a05f5bcecb85738cf8d0faf9cd338604afd3081bbc0aa00b9059c579a364"
+  },
+  {
+   "id": "att_qwen_pos63",
+   "row": "CF-ATT",
+   "mode": "QWEN",
+   "file": "cf-att__att_qwen_pos63.json",
+   "what": "ATT.QK, 4 lanes, B = n_sel POS1 rows (the causal mask, 64 rows) of a linear FP8 KV plane",
+   "status": 0,
+   "mutants": [
+    "mask_plus1"
+   ],
+   "sha256": "61c20c19644a459f75fdd9d74399460cf0d0f1202a78965f7355c74f617c1b65"
+  },
+  {
+   "id": "att_qwen_pos64",
+   "row": "CF-ATT",
+   "mode": "QWEN",
+   "file": "cf-att__att_qwen_pos64.json",
+   "what": "ATT.QK, 4 lanes, B = n_sel POS1 rows (the causal mask, 65 rows) of a linear FP8 KV plane",
+   "status": 0,
+   "mutants": [
+    "mask_plus1"
+   ],
+   "sha256": "209b62321b20021794acd81a487b78ec4ca8710243c4a19c7dbd7d0631ee6969"
+  },
+  {
+   "id": "att_qwen_pos65",
+   "row": "CF-ATT",
+   "mode": "QWEN",
+   "file": "cf-att__att_qwen_pos65.json",
+   "what": "ATT.QK, 4 lanes, B = n_sel POS1 rows (the causal mask, 66 rows) of a linear FP8 KV plane",
+   "status": 0,
+   "mutants": [
+    "mask_plus1"
+   ],
+   "sha256": "3f5ca9e648cc04b1ce52783cc0111205ad5a6eb9aa03bdfd65fa7e0dfd656f4d"
+  },
+  {
+   "id": "att_qwen_pos127",
+   "row": "CF-ATT",
+   "mode": "QWEN",
+   "file": "cf-att__att_qwen_pos127.json",
+   "what": "ATT.QK, 4 lanes, B = n_sel POS1 rows (the causal mask, 128 rows) of a linear FP8 KV plane",
+   "status": 0,
+   "mutants": [
+    "mask_plus1"
+   ],
+   "sha256": "2c11d485310a1a0d37496a383c914db296c072db667444b983f3f3849e1df1bf"
+  },
+  {
+   "id": "kv_linear_append_pos127",
+   "row": "CF-KV",
+   "mode": "QWEN",
+   "file": "cf-kv__kv_linear_append_pos127.json",
+   "what": "DMA.STORE of 2 KV heads' K rows at POS (FP8, [kvh][K|V][pos][128] planes of 128 positions)",
+   "status": 0,
+   "mutants": [
+    "pos_minus1"
+   ],
+   "sha256": "0d7cb9223b9e54688c85de234156194671f3d061042e13406e42356cbda14b3e"
+  },
+  {
+   "id": "kvwb_ds_pos1048575",
+   "row": "CF-KV",
+   "mode": "DS",
+   "file": "cf-kv__kvwb_ds_pos1048575.json",
+   "what": "DMA.KVWB_DS window row into ring slot POS mod 128 = 127",
+   "status": 0,
+   "mutants": [
+    "slot0"
+   ],
+   "sha256": "1a8f25c6035d267903addab2312f03fa723e370a261dc8bf7fbdcf22027dc167"
+  },
+  {
+   "id": "kvwb_ds_pos130",
+   "row": "CF-KV",
+   "mode": "DS",
+   "file": "cf-kv__kvwb_ds_pos130.json",
+   "what": "DMA.KVWB_DS window row into ring slot POS mod 128 = 2",
+   "status": 0,
+   "mutants": [
+    "slot0"
+   ],
+   "sha256": "38a49d6705a4ce4602945e3ea84a265d42bd98d62497428ec60cde4c1bb1772c"
+  },
+  {
+   "id": "ehash_ds_token_sequence",
+   "row": "CF-EHASH",
+   "mode": "DS",
+   "file": "cf-ehash__ehash_ds_token_sequence.json",
+   "what": "Engram row ids of every Engram layer for each prefix of a token sequence (O of IDX.EHASH, one id per head and n-gram order, order: n-gram 2..n, heads within); ACCEPT restores the history to the last accepted slot (ids after a rejected 3-token draft = ids of the accepted prefix)",
+   "status": null,
+   "mutants": [],
+   "sha256": "63d921e8ffb609bccb4685aef3e974c3209547d8753b8541bc2c316daeb43e45"
+  }
+ ],
+ "sources": {
+  "hgi_sim/conformance.py": "b6364e645d679610fac8bee9450e22ed60b1ddf2343e21394e628babc1a65fd1",
+  "hgi_sim/machine.py": "fda6ac1ac11d692dec443690cdb438213c5701f9a3f91b9d0c9f4d1c25b5eeae",
+  "hgi_sim/records.py": "b19a0301076521589a2d60bb2fce9e97ccf3fd4028c80a7d4be0c44fc9a49a73",
+  "hgi_sim/lib.py": "e7d93d2e27664b4a867569fd6f9c36b83993fcae4dbd7c8cddcbd5037b0f14ca",
+  "hbm_generic_iface.py": "4e4ab02ab9fa10fc83b887eae9909dcaf536d61b79cadba62c904255de4aa0a7",
+  "hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+ }
+}

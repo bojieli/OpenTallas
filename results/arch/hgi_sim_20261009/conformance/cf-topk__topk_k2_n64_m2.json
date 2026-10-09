@@ -1,0 +1,157 @@
+{
+ "id": "topk_k2_n64_m2",
+ "row": "CF-TOPK",
+ "mode": "GENERIC",
+ "what": "IDX.TOPK k = 2 over 2 row(s) of 64; ties to the lowest index; ids by descending score",
+ "cfg": {
+  "cp_vocab": 129280,
+  "cp_ctx_max": 1048576,
+  "coll_group_size": 96
+ },
+ "doorbell": {
+  "token": 0,
+  "pos": 0
+ },
+ "records_hex": "000000000000000002000020060080900100000000004000200000400000000000000000000000000000000000000000150000010000020020000002000000000000000000000000000000000000000001000002000002002000000200000000000000000000000000000000000000000000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000",
+ "record_hex": [
+  "00000000000000000200002006008090010000000000400020000040000000000000000000000000000000000000000015000001000002002000000200000000000000000000000000000000000000000100000200000200200000020000000000000000000000000000000000000000",
+  "0000000000000000000000200000c00015ffff0300000100100000000000000000000000000000000000000000000000"
+ ],
+ "records": [
+  {
+   "unit": "IDX",
+   "op": "TOPK",
+   "param": 2,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 0,
+     "n": 64,
+     "m": 2,
+     "stride": 64,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "O": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 65536,
+     "n": 2,
+     "m": 2,
+     "stride": 2,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    },
+    "R": {
+     "space": "VM",
+     "fmt": "FP32",
+     "base": 131072,
+     "n": 2,
+     "m": 2,
+     "stride": 2,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  },
+  {
+   "unit": "CTL",
+   "op": "END",
+   "param": 0,
+   "imm_a": 0,
+   "imm_b": 0,
+   "wait": 0,
+   "pred": "ALWAYS",
+   "slot": 0,
+   "tmpl": false,
+   "desc": {
+    "A": {
+     "space": "VM",
+     "fmt": "U32",
+     "base": 262143,
+     "n": 1,
+     "m": 1,
+     "stride": 0,
+     "istride": 0,
+     "lstride": 0,
+     "dyn_sel": 0,
+     "dyn_mul": 0,
+     "n_sel": 0,
+     "l1stride": 0,
+     "ibcast": 0,
+     "indexed": 0
+    }
+   }
+  }
+ ],
+ "tags": [
+  "topk",
+  "end"
+ ],
+ "dies": [
+  {
+   "rank": 0,
+   "vm_in": [
+    [
+     0,
+     "b2a61cc0d7274abb6ab29f3dbdf9e53e9735ab3eb92d52407390bb3d6b2d3e3f35888bbfb92d524092a4c03f14eefc3f1879563eb9d4933f12f687beda3babbe8810af3e610af63de96595bfd863173fc0317c3dc8e1afbc1f024fbe5b792abe75e63fbfc17405406079793fe4fc903cd2c21bbff2a5aebfa28fce3e0f0f573e9cb2763ed5442a3f4e32b9beb92d12407a2311bf5365e2bf49006a3fc9dc103f636782bf957738bfaa5cda3f13bc97bf9b21c6bfc285d3bebf1d7f3ec11d5ebf1f9db5bf6428bdbf432229bd2d91acbd5f8b403e1bb9c63fc687a0be543786bde63ca3be7cde3a3e24d9cd3f2ec909bfa446a3bf0da3ae39f437113ef996efbe8d05c9be666b453f6a8a8dbf90b6edbebea17d3f77e757403805093f1d69d9bf3fb4d9be77e7574056007b3fbe75483fc420ebbe267a25bf347374bfef9e0b3f3193ac3d2265e23f21a30bbfcffa3fbe6439abbe7fbee3bf0f1eab3f70a6f8bef8b7863d029547bf528d273fcc05ae3f2e00e53fb03681bf80c4873ff8d5923e781ec4be108d1dc0ccca01bff0d27d3f598c163ddfdd9f3fc6e45d3f042507be87f2353e2989a7bc211e91be60af40c0bf2bccbf77e71740968c863fd9cc7ebe96a840bd0f5483bf2374303e6a4c91bfb5f6f0be95e717bef3d188be50b893beb3459fbef22ece3e99e2a63f5f0bafbe337a5fbf0f3ac6be8fc0023f9a80d7bf"
+    ]
+   ],
+   "hbm_in": []
+  }
+ ],
+ "expect": {
+  "status": 0,
+  "dies": [
+   {
+    "rank": 0,
+    "vm_out": [
+     [
+      65536,
+      "05000000090000000500000009000000"
+     ],
+     [
+      131072,
+      "b92d5240b92d524077e7574077e75740"
+     ]
+    ],
+    "hbm_out": []
+   }
+  ],
+  "outputs_sha256": "3b44093c5e440fcc6334a2fe81eeadbd7ef4acd7410b6afedbde5b5ef9cfef5b"
+ },
+ "mutants": [
+  {
+   "name": "tie_high",
+   "defect": "ties resolved to the higher index",
+   "status": 0,
+   "differs": true,
+   "outputs_sha256": "05f4db1a7243557a438a6692c91b7346e3e10c6a30bdfee293e868465d023140"
+  }
+ ]
+}

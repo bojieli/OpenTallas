@@ -15035,3 +15035,8 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def mtp_ring_dyn_model():
+    """Price one-position ring addressing independently of multi-token slot state."""
+    return json.loads((ROOT / 'physical/mtp_ring_dyn/model.json').read_text())

@@ -50,7 +50,9 @@ module ot_hbm_accel_dskv_wb_spec #(
   parameter integer SH_LOCK = 1,                 // MR-6: shadow loads only before the first key write
   parameter integer STACK = 0,
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
-  parameter integer SLOT_ROWS = 2
+  parameter integer SLOT_ROWS = 2,
+  parameter integer PIPE = 0                      // mtp-lead 2026-10-09: 1 = the ownership divide (pos -> q = b/96 -> own, k)
+                                                 // in its own state S_OWN after the row capture (+1 cycle a row); 0 = as built
 )(
   input  wire          clk, rst_n,
   input  wire [6:0]    die,
@@ -72,10 +74,14 @@ module ot_hbm_accel_dskv_wb_spec #(
     assign row_r = 0; assign wq_v = 0; assign wq_pc = 0; assign wq_bank = 0; assign wq_row = 0; assign wq_col = 0;
     assign wq_data = 0; assign issued = 0; assign acked = 0; assign fence_ok = 0;
   end else begin : on
-    localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2;
+    localparam [1:0] S_IDLE = 0, S_MAP = 1, S_EMIT = 2, S_OWN = 3;
     reg [1:0] st;
     reg [1:0] kind; reg [5:0] slot; reg r2; reg [4351:0] dat;
-    reg [7:0] shadow [0:7][0:543];
+    // mtp-lead 2026-10-09: the key shadow as 8 slot rows of 544 B (4,352 b), written and read with CONSTANT part
+    // selects (a 544-bit key field write chosen by a case on n, a 17-way sector read).  Bit-identical to the original
+    // byte array shadow[slot][byte] (byte y of a row = bits [8y +: 8]); the byte loops with computed indices
+    // (68 n + y, 32 ksec + y) made yosys 0.68 run > 4 h / fail (mtprb-dskvwb_spec-a/b).  No cycle change.
+    reg [4351:0] shadow [0:7];
     reg [19:0] n; reg [16:0] b; reg [13:0] k; reg own;
     reg [20:0] s0;            // first die-local sector (window: PC index with j = t)
     reg [4:0] ns, t;          // sectors in this row, current
@@ -84,19 +90,64 @@ module ot_hbm_accel_dskv_wb_spec #(
     reg sh_locked;
     wire sh_go = sh_v && !(SH_LOCK != 0 && sh_locked);
     // ---- address map of sector t (combinational from registered state) ----
-    wire [7:0]  wslot = 8'(pos & 20'(WIN_SLOTS - 1));
+    reg  [19:0] pos_q;          // PIPE: the row's position held for its emit (a pin FIFO moves on after the pop)
+    wire [19:0] pos_w = (PIPE != 0) ? pos_q : pos;
+    wire [7:0]  wslot = 8'(pos_w & 20'(WIN_SLOTS - 1));
     wire [20:0] S = (kind == 2'd0) ? 21'(wslot[6:0]) : s0 + 21'(t);
     wire [6:0]  pcg = S[6:0];
     wire [13:0] jj = (kind == 2'd0) ? 14'(t) + 14'(wslot[7] ? 17 : 0) : 14'(S >> 7);
     wire [18:0] rbase = (kind == 2'd0) ? 19'(WIN_ROW0) : (kind == 2'd1) ? 19'(CKV_ROW0) : 19'(KEY_ROW0);
     wire [18:0] wrow_a = rbase + 19'(slot) * 19'(SLOT_ROWS) + 19'(jj >> 10);
     wire [4:0]  ksec = 5'(S - 21'(kb_s));           // key: sector within the block (0..16)
+    wire [4351:0] sh_row = shadow[slot[2:0]];
+    reg [255:0] sh_sec, dat_sec;
+    always @* begin
+      case (ksec)
+        5'd0: sh_sec = sh_row[255:0];
+        5'd1: sh_sec = sh_row[511:256];
+        5'd2: sh_sec = sh_row[767:512];
+        5'd3: sh_sec = sh_row[1023:768];
+        5'd4: sh_sec = sh_row[1279:1024];
+        5'd5: sh_sec = sh_row[1535:1280];
+        5'd6: sh_sec = sh_row[1791:1536];
+        5'd7: sh_sec = sh_row[2047:1792];
+        5'd8: sh_sec = sh_row[2303:2048];
+        5'd9: sh_sec = sh_row[2559:2304];
+        5'd10: sh_sec = sh_row[2815:2560];
+        5'd11: sh_sec = sh_row[3071:2816];
+        5'd12: sh_sec = sh_row[3327:3072];
+        5'd13: sh_sec = sh_row[3583:3328];
+        5'd14: sh_sec = sh_row[3839:3584];
+        5'd15: sh_sec = sh_row[4095:3840];
+        5'd16: sh_sec = sh_row[4351:4096];
+        default: sh_sec = 256'd0;
+      endcase
+      case (t)
+        5'd0: dat_sec = dat[255:0];
+        5'd1: dat_sec = dat[511:256];
+        5'd2: dat_sec = dat[767:512];
+        5'd3: dat_sec = dat[1023:768];
+        5'd4: dat_sec = dat[1279:1024];
+        5'd5: dat_sec = dat[1535:1280];
+        5'd6: dat_sec = dat[1791:1536];
+        5'd7: dat_sec = dat[2047:1792];
+        5'd8: dat_sec = dat[2303:2048];
+        5'd9: dat_sec = dat[2559:2304];
+        5'd10: dat_sec = dat[2815:2560];
+        5'd11: dat_sec = dat[3071:2816];
+        5'd12: dat_sec = dat[3327:3072];
+        5'd13: dat_sec = dat[3583:3328];
+        5'd14: dat_sec = dat[3839:3584];
+        5'd15: dat_sec = dat[4095:3840];
+        5'd16: dat_sec = dat[4351:4096];
+        default: dat_sec = 256'd0;
+      endcase
+    end
     reg [255:0] sdat;
     always @* begin
       sdat = 0;
-      if (kind == 2'd2) begin
-        for (integer y = 0; y < 32; y = y + 1) sdat[8*y +: 8] = shadow[slot[2:0]][32 * ksec + y];
-      end else sdat = dat[256 * t +: 256];
+      if (kind == 2'd2) sdat = sh_sec;
+      else sdat = dat_sec;
     end
     wire on_stack = (pcg[6:5] == 2'(STACK));
     wire emit = (st == S_EMIT) && on_stack;
@@ -112,25 +163,29 @@ module ot_hbm_accel_dskv_wb_spec #(
     wire [10:0] q_in = 11'((25'(x_in) * 25'd2731) >> 13);
     wire [16:0] own_in = b_in - 17'(q_in) * 17'd96;
     wire [13:0] k_in = {q_in, n_in[2:0]};
+    wire [11:0] x_b = b[16:5];
+    wire [10:0] q_b = 11'((25'(x_b) * 25'd2731) >> 13);
+    wire [16:0] own_b = b - 17'(q_b) * 17'd96;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
         st <= S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; sh_locked <= 0;
+        ns <= 0; t <= 0; kb_s <= 0; pos_q <= 0; iss <= 0; ack <= 0; sh_locked <= 0;
       end else begin
         ack <= ack + 16'(ack_n);
         if (wq_v && wq_r) iss <= iss + 1'b1;
         case (st)
           S_IDLE: begin
-            if (sh_go) for (integer y = 0; y < 544; y = y + 1) shadow[sh_slot][y] <= sh_data[8*y +: 8];
+            if (sh_go) ;                       // shadow load: see the shadow block below
             else if (row_v) begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
-              n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
+              n <= n_in; b <= b_in; pos_q <= pos;
+              if (PIPE == 0) begin k <= k_in; own <= (own_in[6:0] == die); end
               if (row_kind == 2'd2) sh_locked <= 1'b1;
-              if (row_kind == 2'd2)          // merge the new key into the open block's shadow
-                for (integer y = 0; y < 68; y = y + 1)
-                  shadow[row_slot[2:0]][68 * n_in[2:0] + y] <= row_data[8*y +: 8];
-              st <= S_MAP;
+              st <= (PIPE != 0) ? S_OWN : S_MAP;
             end
+          end
+          S_OWN: begin                       // PIPE: the same divide on the registered b / n
+            k <= {q_b, n[2:0]}; own <= (own_b[6:0] == die); st <= S_MAP;
           end
           S_MAP: begin
             t <= 0;
@@ -152,6 +207,23 @@ module ot_hbm_accel_dskv_wb_spec #(
             end
           end
         endcase
+      end
+    // shadow writes (no reset, as the original array): a bring-up load of a whole slot row, else the new key's
+    // 68 B merged at byte 68 n of the open block's row (only in S_IDLE, as in the original)
+    always @(posedge clk)
+      if (rst_n && st == S_IDLE) begin
+        if (sh_go) shadow[sh_slot] <= sh_data;
+        else if (row_v && row_kind == 2'd2)
+          case (n_in[2:0])
+            3'd0: shadow[row_slot[2:0]][543:0] <= row_data[543:0];
+            3'd1: shadow[row_slot[2:0]][1087:544] <= row_data[543:0];
+            3'd2: shadow[row_slot[2:0]][1631:1088] <= row_data[543:0];
+            3'd3: shadow[row_slot[2:0]][2175:1632] <= row_data[543:0];
+            3'd4: shadow[row_slot[2:0]][2719:2176] <= row_data[543:0];
+            3'd5: shadow[row_slot[2:0]][3263:2720] <= row_data[543:0];
+            3'd6: shadow[row_slot[2:0]][3807:3264] <= row_data[543:0];
+            3'd7: shadow[row_slot[2:0]][4351:3808] <= row_data[543:0];
+          endcase
       end
   end endgenerate
 endmodule
