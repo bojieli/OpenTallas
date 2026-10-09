@@ -82,6 +82,8 @@ def main():
                 except Exception:  # noqa: BLE001
                     nodir += 1
             out.append([inst, port, d])
+        if a.die == 'qwen_rom' and cls == 'clock_trunk' and bid.startswith('fck_'):
+            cls = 'fclk'       # Qwen link-hop forwarded clocks (relay chain fck_*): travel with their data, not CTS trees
         buses.append([bid, cls, bits, out])
     ports = {}
     for name, Mx in M.items():
@@ -131,7 +133,7 @@ def main():
                outline_um=die_wh, regions=regions,
                insts=[[it.name, it.master, it.kind, getattr(it, 'region', ''), getattr(it, 'domain', ''), round(it.x, 3),
                        round(it.y, 3), round(it.w, 3), round(it.h, 3), it.orient] for it in m['insts']],
-               buses=buses, ports=ports, fclk_buses=sorted(m.get('fclk', {})),
+               buses=buses, ports=ports, fclk_buses=sorted(m.get('fclk', {})) or sorted(b[0] for b in buses if b[1] == 'fclk'),
                pin_stage_buses=sorted(m.get('pin_stage_buses', [])),
                relay_rule=bool(a.die == 'hbm' and (m.get('variant') or {}).get('relay_all')),
                budget_stages=bool(a.die == 'hbm' and (m.get('variant') or {}).get('budget_stages')),
