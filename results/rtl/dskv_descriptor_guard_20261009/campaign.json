@@ -1,0 +1,73 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_descriptor_guard_campaign.v1",
+  "cases": [
+    {
+      "revision": "r1",
+      "gate": "descriptor",
+      "source_commit": "c564f3708",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "2c3d4d5d4c05f0f09340058a9bbcf4fbbb8d7d7a6f856b3c7ea23aa1454d7c06"
+    },
+    {
+      "revision": "r1",
+      "gate": "core",
+      "source_commit": "c564f3708",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "fcd36c0c5e9c604009fa61239fe268650f454aaca577d41a8abca8335ac136c5"
+    },
+    {
+      "revision": "r1",
+      "gate": "hub",
+      "source_commit": "c564f3708",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "347638b6d077de649a2544231369b782e8fe337035342a8807006baa8a425479"
+    },
+    {
+      "revision": "r2",
+      "gate": "descriptor",
+      "source_commit": "eb4c566ed",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "e0b6cc760d33c44423fb820981204d1fa005850993b4e5474e129320e99a5c81"
+    },
+    {
+      "revision": "r2",
+      "gate": "core",
+      "source_commit": "eb4c566ed",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "80fcfc24fe8020445747a35eee040d52e27292b7856c8b28ace303f18ad85fba"
+    },
+    {
+      "revision": "r2",
+      "gate": "hub",
+      "source_commit": "eb4c566ed",
+      "verdict": "PASS",
+      "all_source_pins_match_archive": true,
+      "record_sha256": "389ee1d646e36c8472cbe248ee914d7158c4797a2fffc7d974936754d83fe825"
+    }
+  ],
+  "accepted_revision": "r2",
+  "qualification_source_commit": "eb4c566ed",
+  "coverage": {
+    "invalid_descriptor_cases": 19,
+    "initialized_mask_flip": 1,
+    "zero_reads_writes_posts_for_all_invalid_cases": true,
+    "nonowner_uninitialized_key_drop": true,
+    "positive_preload_sectors": 17,
+    "positive_key_sectors": 3
+  },
+  "source_archives_sha256": {
+    "r1": "d6c57dff9d887323ee317541fac735bd01f931f6b7481f3422ed2483dc5cf860",
+    "r2": "3c9d75cf5e3a8839e8e838f5ab176f27cf624a526abc7fa464d46f1c33979577"
+  },
+  "scope": "Minimum direct WB descriptor bench; one WB controller exactness bench; full hub with timed Gray respondents. No arrays/services/HBM stacks simulated.",
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "reservation_gib_per_build": 2,
+  "bulk_remote_root": "ot-epyc2:/srv/opentallas-data/codex/dskv-guard-gates-r{1,2}",
+  "prior_revision": "r1 retains original c564f3708 bounds-guard PASS before dual-rail initialized state and owner-only initialization check.",
+  "verdict": "PASS"
+}

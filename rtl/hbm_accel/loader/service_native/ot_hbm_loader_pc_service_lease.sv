@@ -46,7 +46,7 @@ module ot_hbm_loader_pc_service_lease #(parameter integer ENABLE=0)(
  assign k_wdata=normal_wdata;assign k_wstrb=is_normal?normal_wstrb:32'd0;
  assign normal_rsp_v=normal_reply;
  assign normal_rsp_tag=kr_tag;assign normal_rsp_beat=kr_beat;assign normal_rsp_data=kr_data;
- assign kr_rdy=normal_reply?normal_rsp_rdy:(state==WAIT_REPLY&&native_match&&!sticky);
+ assign kr_rdy=is_normal&&read_debt!=0&&!sticky?normal_rsp_rdy:(state==WAIT_REPLY&&!sticky&&(!kr_v||native_match));
  assign native_rsp_v=state==REPLY&&!sticky;
  assign native_rsp_tag=tag_q;assign native_rsp_beat=0;assign native_rsp_data=reply_q;
  assign fault=sticky;

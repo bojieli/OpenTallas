@@ -25,7 +25,7 @@ def model(strip_side_um=600.0, pin_pitch_um=0.096, pin_layers=2, usable_edge_fra
     paths += ['rtl/qwen_sys/emb_hbm_20261008/'+p.name
               for p in sorted((ROOT/'rtl/qwen_sys/emb_hbm_20261008').glob('*.sv'))]
     paths += ['physical/qwen_die_masters/cfg/'+p+'.env' for p in
-              ('qfd_hub_emb','qfd_ctrl_emb_00','qfd_emb_pcport','qfd_emb_strip','qfd_emb_strip_w600','qfd_emb_strip_narrow96')]
+              ('qfd_hub_emb','qfd_ctrl_emb_00','qfd_emb_pcport','qfd_emb_strip','qfd_emb_strip_w600','qfd_emb_strip_narrow96','qfd_emb_strip_narrow92','qfd_emb_strip_narrow92_spread')]
     return dict(schema='opentallas.qwen.embedding_hbm_closure.v1', adopted=False, physical_closed=False,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},
         MACs_per_cycle=0, compute_intensity_MAC_per_byte=0,

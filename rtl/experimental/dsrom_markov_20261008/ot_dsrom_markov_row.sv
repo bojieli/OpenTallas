@@ -7,6 +7,7 @@
 // lookup/allocation and parent placement remain separate qualification obligations.
 module ot_dsrom_markov_row #(
  parameter integer K=256,
+ parameter integer PINREG=0,
  parameter [8:0] CUT=511,
  parameter integer SPLIT9=1,
  parameter integer SK=1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
@@ -32,15 +33,37 @@ module ot_dsrom_markov_row #(
  assign start_ready=!busy && !fault;
  assign in_ready=busy && !out_valid && count<WORDS && !fault;
  wire fire=in_valid && in_ready;
+ // Capture only accepted beats. The external count still tracks admission,
+ // while this valid moves with its two operand buses into the multiplier.
+ // Start/head already capture on accepted start; output retirement stays on
+ // the real out_valid/out_ready handshake, with no delayed ready protocol.
+ wire mul_fire;
+ wire [255:0] mul_weight,mul_embed;
+ generate if(PINREG) begin:g_pin
+  reg accepted;
+  reg [255:0] weight_q,embed_q;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) accepted<=0; else accepted<=fire;
+  // PINREG=2 removes fire from the512 payload-enable cones.
+  // Invalid captured payload is ignored through the single accepted valid.
+  always @(posedge clk) if(PINREG==2 || fire) begin weight_q<=weight_bf16;embed_q<=embed_bf16;end
+  assign mul_fire=accepted;
+  assign mul_weight=weight_q;
+  assign mul_embed=embed_q;
+ end else begin:g_direct
+  assign mul_fire=fire;
+  assign mul_weight=weight_bf16;
+  assign mul_embed=embed_bf16;
+ end endgenerate
  wire [31:0] p[0:15];
  wire [15:0] pf;
  reg [5:0] pv;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n) pv<=0; else pv<={pv[4:0],fire};
+  if(!rst_n) pv<=0; else pv<={pv[4:0],mul_fire};
  genvar lane,c,s,k;
  generate for(lane=0;lane<16;lane=lane+1) begin:g_mul
-  ot_dsrom_bmul3 u_mul(.clk(clk),.rst_n(rst_n),.v(fire),
-   .a({weight_bf16[16*lane+:16],16'b0}),.b({embed_bf16[16*lane+:16],16'b0}),.y(p[lane]),.fault(pf[lane]));
+  ot_dsrom_bmul3 u_mul(.clk(clk),.rst_n(rst_n),.v(mul_fire),
+   .a({mul_weight[16*lane+:16],16'b0}),.b({mul_embed[16*lane+:16],16'b0}),.y(p[lane]),.fault(pf[lane]));
  end endgenerate
  wire [31:0] cs[0:1][0:8];
  wire cv[0:1][0:8];

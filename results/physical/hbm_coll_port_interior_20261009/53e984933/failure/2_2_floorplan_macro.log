@@ -1,0 +1,47 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/2_1_floorplan.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/2_1_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/2_1_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.2594999937713146, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.20999999344348907
+rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 10 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2594999937713146
+[WARNING MPL-0074] -halo_width/-halo_height are deprecated, use the set_macro_base_halo command instead.
+Die Area: (0.00, 0.00) (480.00, 540.00),  Floorplan Area: (1.08, 1.08) (478.87, 538.92)
+	Number of std cell instances: 50706
+	Area of std cell instances: 6823.54
+	Number of macros: 18
+	Macros to be placed: 18
+	Area of macros: 70048.39
+	Base halo (L, B, R, T): (4.00, 10.00, 4.00, 10.00)
+	Area of macros with halos: 76046.99
+	Area of std cell instances + Area of macros: 76871.93
+	Floorplan area: 256975.65
+	Design Utilization: 0.30
+	Floorplan Utilization: 0.04
+	Manufacturing Grid: 1
+
+[INFO MPL-0500] Runtime: 78.11s
+Took 78 seconds: rtl_macro_placer -max_num_level 2 -halo_width 4 -halo_height 10 -min_ar 0.33 -area_weight 0.1 -wirelength_weight 100.0 -outline_weight 100.0 -boundary_weight 50.0 -notch_weight 50.0 -report_directory /work/objects/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_interior_53e984933_tc_cal/base/rtlmp -fence_lx 0.0 -fence_ly 0.0 -fence_ux 0.0 -fence_uy 0.0 -target_util 0.2594999937713146
+source /work/hooks/post_macro_place_interior_macros.tcl
+[ERROR ODB-0359] Attempt to change the origin of LOCKED instance u_qp/g_bk\[0\].u_m.g_m\[0\].u_sram
+Error: macro_place.tcl, 8 ODB-0359
+Elapsed time: 1:22.97[h:]min:sec. CPU time: user 56.32 sys 10.62 (80%). Peak memory: 724156KB.

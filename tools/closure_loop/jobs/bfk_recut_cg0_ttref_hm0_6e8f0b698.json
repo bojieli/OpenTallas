@@ -1,0 +1,74 @@
+{
+ "name": "bfk_recut_cg0_ttref_hm0_6e8f0b698",
+ "block": "ot_s81_bf_native",
+ "owner": "Codex:bf_closure",
+ "purpose": "BF full-rate input-hold recovery 2026-10-09: unchanged CG0 RTL, correct route-time TT insertion measured by CTS-only calibration before routing. Original CG0 used CK_SS_MEAN1143 at TT; completed routed TT boundary max mean701.554 and FF boundary min mean549.544. Repair left1652 input endpoints unchanged while internal hold debt cleared. Successor keeps actual FF library and input min measured in FF,60ps setup/25ps hold uncertainty,HM0 explicit,833.333ps signoff; no relaxed timing or extra RTL cycles. Original failed route preserved.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc4"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "branch": "claude/bf-icg-20261008",
+  "commit": "6e8f0b698"
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL}${CL_LABEL_SUFFIX} --hold-margin-ns 0.000 --param CG=0 $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL} --hold-margin-ns 0.000 --param CG=0",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [],
+  "post_sdc": [
+   "physical/s81_native_bf/margin/signoff_ref.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "reason": "Guarded rev3 reproduces SS/FF sign-off independently; owner BF recovery requests first hold-only ECO",
+  "session": "mm"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_bf_icg_20261008/bfk_recut_cg0_ttref_hm0_6e8f0b698"
+  }
+ ],
+ "cycles_added": "0 additional cycles relative to CG0 predecessor; same RTL/source tree, TT-reference constraint correction only. CG0 idle clock power cost remains previously priced +162 W/layer die.",
+ "merge_target": null,
+ "no_bench_reason": "Unchanged source commit6e8f0b698, same Git tree as e4272b562. Exact positive and both negative controls committed in results/rtl/s81_bf_icg_20261008/exact_gate_recovered; recovery.json confirms original markers and source tree identity. Constraint-only successor requires physical qualification.",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.0,
+ "fp_lint": {
+  "set": {
+   "sliver_um": 10.0
+  },
+  "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
+ },
+ "calibrate_parallel": false
+}

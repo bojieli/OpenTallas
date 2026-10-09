@@ -8,6 +8,7 @@
 // [31:0]=expected sectors. Fingerprint XORs each little-endian data word and
 // the region-local atom. ready stays low until all tagged writes complete.
 module ot_dsrom_engram_boot_dispatch #(
+    parameter integer ROWSTRIPE = 0,
     parameter integer EXPECT_SECTORS = 1
 ) (
     input wire ck, rst_n,
@@ -64,7 +65,7 @@ module ot_dsrom_engram_boot_dispatch #(
             i_cred<=0; w_v<=0;
             completed=0;
             for (j=0;j<2;j=j+1) if (dv_q[j]) begin
-                if (state[dt_q[3*j+:3]]!=2 || addr[dt_q[3*j+:3]][0]!=j[0]) fault<=1;
+                if (state[dt_q[3*j+:3]]!=2 || (ROWSTRIPE ? ((addr[dt_q[3*j+:3]]/9)%2) : addr[dt_q[3*j+:3]][0])!=j[0]) fault<=1;
                 else begin
                     state[dt_q[3*j+:3]]<=0;
                     completed=completed+1;
@@ -78,8 +79,8 @@ module ot_dsrom_engram_boot_dispatch #(
             if (!fault) begin
                 if (queued_slot>=0) begin
                     state[queued_slot]<=2;
-                    w_v<=addr[queued_slot][0] ? 2'b10 : 2'b01;
-                    w_atom<=addr[queued_slot][29:1]; w_tag<=queued_slot[2:0]; w_d<=data[queued_slot];
+                    w_v<=(ROWSTRIPE ? ((addr[queued_slot]/9)%2) : addr[queued_slot][0]) ? 2'b10 : 2'b01;
+                    w_atom<=ROWSTRIPE ? ((addr[queued_slot]/9)/2)*9+addr[queued_slot]%9 : addr[queued_slot][29:1]; w_tag<=queued_slot[2:0]; w_d<=data[queued_slot];
                 end
                 if (iv_q) begin
                     if (marker || loaded) fault<=1;

@@ -12,8 +12,10 @@ def model(depth=8, local_columns=32, dff_um2=0.2916):
     rtt=forward+2+reverse
     control_bits=3*math.ceil(math.log2(depth))+16
     ff=depth*word_bits+2*(word_bits+1)+control_bits
-    cell_area=ff*dff_um2+1600
-    slot=[160.,64.]
+    analytical_area=ff*dff_um2+1600
+    measured_area=6672.0 if depth==8 else 0.0
+    cell_area=max(analytical_area, measured_area)
+    slot=[160.,112.]
     return dict(schema='opentallas.qwen-kv-merge-skid.v1',default_off=True,
         adopted=False,physical_closed=False,model_precedes_rtl=True,
         replicas=1536,macs_per_cycle=0,compute_intensity_macs_per_byte=0,
@@ -22,12 +24,15 @@ def model(depth=8, local_columns=32, dff_um2=0.2916):
         boundary_bits_per_cycle=dict(landing=word_bits+1,token=word_bits+1,
             output=word_bits+1,return_credit=1),
         routing=dict(required_tracks_per_face=word_bits+4,
-            face_capacity_tracks=int(slot[0]/.048),pin_layers=['M4','M6'],
+            face_capacity_tracks=2*int(min(slot)/.096),pin_layers=['M4','M6'],minimum_pin_spacing_tracks=2,
             credit_return_per_row_bits=32,return_is_registered=True),
         replicas_cost=dict(storage_bits=ff*1536,read_mux=f'{depth}:1 x {word_bits}',
             write_demux=f'{depth} local enables',token_fanout=1,
             row_credit_fanout='one independently reserved counter per tile'),
         slot_um=slot,cell_area_bound_um2=cell_area,
+        analytical_cell_area_um2=analytical_area,
+        measured_cell_area_um2=measured_area,
+        measured_source='595982c67 EPYC2 routed flow floorplan: std6672um2; no timing closure claimed',
         cell_area_basis='DFFHQNx1 0.2916um2: unified DFF_UM2, results/floorplan/qwen_o4_unit_areas.json',
         slot_fit_at_55pct=cell_area<=math.prod(slot)*.55,
         reserved_area_mm2_per_die=math.prod(slot)*1536/1e6,

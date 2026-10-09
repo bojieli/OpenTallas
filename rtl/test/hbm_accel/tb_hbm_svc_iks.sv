@@ -32,10 +32,11 @@ always @(posedge clk)begin
   end
  end
 end
-integer got=0,l,i,g,pc,j,off,mut=0,t=0;reg[255:0]ex;reg[7:0]pend=0;reg fin=0;
+integer got=0,l,i,g,pc,j,off,mut=0,t=0;reg[255:0]ex;integer pend[0:7];reg fin=0;
 initial begin
 if($value$plusargs("mut=%d",mut))begin end
 for(p=0;p<32;p=p+1)begin head[p]=0;tail[p]=0;count[p]=0;end
+for(l=0;l<8;l=l+1)pend[l]=0;
 repeat(10)@(negedge clk);rst_n=1;repeat(10)@(negedge efck);
 ed[0]=1;ed[2:1]=2;ed[17:3]=4006;ed[70:62]=342;
 @(negedge efck);ed[0]=0;
@@ -47,11 +48,11 @@ while(!fin)begin
    g=(got+l)*136+i;pc=(g/32)%32;j=g/1024;off=g%32;ex=pat(kaddr(pc,j));
    if(lines[l*1099+11+i*8+:8]!==ex[off*8+:8])$fatal(1,"data line=%0d byte=%0d",got+l,i);
   end
-  pend[l]=1;
+  pend[l]=pend[l]+1;
  end
  if(lines[0])got=got+8;
  // Credit delay forces the finite return-slot reservation to stall issue.
- if(t%23==0)begin credit=pend;pend=0;end
+ if(t>300)for(l=0;l<8;l=l+1)if(pend[l]>0)begin credit[l]=1;pend[l]=pend[l]-1;end
  if(fault)$fatal(1,"svc fault got=%0d",got);
  fin=done;t=t+1;if(t>10000)$fatal(1,"timeout got=%0d",got);
 end

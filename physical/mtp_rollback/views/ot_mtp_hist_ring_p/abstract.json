@@ -1,0 +1,85 @@
+{
+  "name": "ot_mtp_hist_ring_p",
+  "orfs_dir": "/srv/opentallas-data/claude/closure-loop/mtprb-hist-ring-p-190e09324-tc/routes/mtprb_hist_ring_p_190e09324_tc/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -8.40729152962183e-11 min 2.971033141729862e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtprb-hist-ring-p-190e09324-tc/routes/mtprb_hist_ring_p_190e09324_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/views:/out",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.3518959002544193e-10 min -8.442219145976537e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtprb-hist-ring-p-190e09324-tc/routes/mtprb_hist_ring_p_190e09324_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/views:/out",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.4998569053403799e-10 min 6.8287042687131816e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-data/claude/closure-loop/mtprb-hist-ring-p-190e09324-tc/routes/mtprb_hist_ring_p_190e09324_tc/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/views:/out",
+        "-v",
+        "/srv/opentallas-data/claude/mtp-hist-view-190e09324/interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-data/claude/mtp-hist-view-190e09324/interface.sdc",
+    "sha256": "4172821e91872409d31f7532781e9d8c5b0b5ad0c4a95dd231875c7641506f11",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_mtp_hist_ring_p.lef": "d801f033b7a9c82ec9ebb0721ffb4acc5b34f2bda6fc92a844974460f2a9fac2",
+    "ot_mtp_hist_ring_p_ff.lib": "122ba1f4619a81e9fef0b889e2716fe5c879dd1e24a5409bcf3d03b03639f818",
+    "ot_mtp_hist_ring_p_ss.lib": "7445d81b5c4e3abff77024806a6d06ef393d743ee3bf6a54eead95ac7dce40a6",
+    "ot_mtp_hist_ring_p_tt.lib": "a83dd12c000b375bed7d969a875f3371db47430e34233795d8245bdd9016a035"
+  },
+  "ok": true
+}

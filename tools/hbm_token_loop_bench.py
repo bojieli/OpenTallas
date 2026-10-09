@@ -78,6 +78,9 @@ def scenarios(rng):
     jobs.append((jid, 5, 10, 50, EOS, 1, 1 << 20, 1, 0, [(6, [3, 4, EOS, 6, 7, 8])] + [(1, [2] * 6)] * 79)); jid += 1
     jobs.append((jid, 5, (1 << 20) - 3, 50, EOS, 1, 1 << 20, 0, 0, [9] * 80)); jid += 1
     jobs.append((jid, 5, 10, 50, EOS, 0, 1 << 20, 0, 0, [EOS, EOS, 3] + [4] * 77)); jid += 1
+    jobs.append((1000, 5, 10, 18, EOS, 0, 1 << 20, 1, 0, [(6, [3,4,5,6,7,8])] * 3))
+    jobs.append((1001, 5, 10, 18, EOS, 0, 1 << 20, 0, 0, list(range(3, 21))))
+    jobs.append((1002, 5, 10, 18, EOS, 1, 1 << 20, 1, 0, [(6, [3,4,5,6,7,8]), (6, [9,10,11,EOS,13,14])]))
     return jobs
 
 
@@ -123,11 +126,12 @@ def main():
     ap = argparse.ArgumentParser(); ap.add_argument('--work', type=Path, required=True); ap.add_argument('--out', type=Path, required=True)
     a = ap.parse_args()
     jobs = scenarios(random.Random(20261008))
-    b0 = run(a.work, 0, jobs); b1 = run(a.work, 1, jobs)
+    b0 = run(a.work, 0, jobs); b1 = run(a.work, 1, jobs); b2 = run(a.work, 2, jobs)
     stat = {}
     for j in jobs:
         _, R, _ = ref(j); s = R[-1][1]; stat[s] = stat.get(s, 0) + 1
-    rec = dict(schema='opentallas.hbm_system.token_loop.v1',
+    if not b2: raise RuntimeError('registered FIFO overflow mutant escaped')
+    rec = dict(fifo_reservation_negative=b2, schema='opentallas.hbm_system.token_loop.v1',
                source_sha256={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SRC + ['tools/hbm_token_loop_bench.py']},
                jobs=len(jobs), records=sum(len(ref(j)[1]) for j in jobs), final_status_counts={str(k): v for k, v in sorted(stat.items())},
                positive=dict(verdict='PASS' if not b0 else 'FAIL', problems=b0[:5]),

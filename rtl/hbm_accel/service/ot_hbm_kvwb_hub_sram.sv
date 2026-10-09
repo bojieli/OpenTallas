@@ -23,6 +23,7 @@
 // Every input lands in a flop; every output leaves a flop.  MUT (bench negative control): 1 flips sector bit 0.
 module ot_hbm_kvwb_hub_sram #(
   parameter integer ENABLE=0,
+  parameter integer NLAYERS=40,
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
   parameter integer SLOT_ROWS = 2,
   parameter integer KEY_CONTIGUOUS = 0,
@@ -96,7 +97,7 @@ module ot_hbm_kvwb_hub_sram #(
   wire wq_v; wire [4:0] wq_pc, wq_bank, wq_col; wire [18:0] wq_row; wire [255:0] wq_data; wire [1:0] wq_stk;
   reg [5:0] ack_n;
   wire wq_r;
-  ot_hbm_accel_dskv_wb_sram #(.ENABLE(1), .STACK(0), .ALL_STACKS(1), .WIN_ROW0(WIN_ROW0), .CKV_ROW0(CKV_ROW0),
+  ot_hbm_accel_dskv_wb_sram #(.ENABLE(1),.NLAYERS(NLAYERS), .STACK(0), .ALL_STACKS(1), .WIN_ROW0(WIN_ROW0), .CKV_ROW0(CKV_ROW0),
     .KEY_ROW0(KEY_ROW0), .SLOT_ROWS(SLOT_ROWS), .KEY_CONTIGUOUS(KEY_CONTIGUOUS)) u_wb (
     .clk(clk), .rst_n(rst_n), .die(die), .pos(cur_pos),
     .row_v(row_v), .row_kind(h_kind), .row_slot(h_slot), .row_r2(h_r2), .row_data(buf_), .row_r(row_r),

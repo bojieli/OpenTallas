@@ -60,6 +60,7 @@
 import ot_hdc_engram_tables_shipped_pkg::*;
 
 module ot_dsrom_engram_lookup #(
+    parameter integer ROWSTRIPE = 0, // opt-in nine contiguous atoms per PC row
     parameter integer NR    = 4,           // TP ranks
     parameter integer CPR   = 6,           // columns per rank (ENG_COLS / NR)
     parameter integer NSLOT = 2,           // prefetch slots in every sink
@@ -117,7 +118,7 @@ module ot_dsrom_engram_lookup #(
         begin
             acc = 64'd0;
             for (i = 0; i < j; i = i + 1) begin
-                sz = ENG_PRIME[QW*(l*ENG_COLS + rk*CPR + i) +: QW] * 64'd264;
+                sz = ENG_PRIME[QW*(l*ENG_COLS + rk*CPR + i) +: QW] * (ROWSTRIPE ? 64'd288 : 64'd264);
                 acc = acc + ((sz + 64'd31) & ~64'd31);
             end
             col_base = acc;
@@ -212,7 +213,7 @@ module ot_dsrom_engram_lookup #(
                 if (hdone) res[gj] <= lr[QW-1:0];
                 if (st == S_ADDR && acnt == 2'd0) begin
                     r256[gj] <= {{(ABW-QW-8){1'b0}}, res[gj], 8'd0};
-                    r8[gj]   <= {{(ABW-QW-3){1'b0}}, res[gj], 3'd0} + cb_q;
+                    r8[gj]   <= (ROWSTRIPE ? {{(ABW-QW-5){1'b0}},res[gj],5'd0} : {{(ABW-QW-3){1'b0}},res[gj],3'd0}) + cb_q;
                 end
                 if (st == S_ADDR && acnt == 2'd1) baddr[gj] <= r256[gj] + r8[gj];
             end

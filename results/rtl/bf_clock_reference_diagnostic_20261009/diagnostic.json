@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.bf.clock_reference_diagnostic.v1",
+ "scope": "Read-only harvest of existing source-pinned postroute logs; no compute rerun or modified constraints",
+ "jobs": [
+  {
+   "job": "bfi_recut_cg0_hm0_6e8f0b698",
+   "source_commit": "6e8f0b698e83f5010050afdbf7cdccde8bdf15e7",
+   "host": "ot-epyc2",
+   "remote_existing_probe": "/srv/opentallas-data/claude/closure-loop/bfi_recut_cg0_hm0_6e8f0b698/cl/routed_ioref.a1_meas",
+   "evidence_sha256": {
+    "meas_ff.tcl": "c18aad1837bf71c06594b54b3a161159f1ba04afadf8a06ad1a021072f324954",
+    "meas_ff.log": "cb9ecae3c5426f572a4b4e0f2f760a10ccc2ef09a15f608e4671831db5f0378b"
+   },
+   "actual_corner": "FF Liberty and FF macro",
+   "check": "hold",
+   "path": {
+    "startpoint": "xb_sv[0]",
+    "endpoint": "g_pin.r_xb_sv[0]$_DFF_P_",
+    "input_delay_ps": 549.544,
+    "data_arrival_ps": 560.2,
+    "capture_clock_ps": 595.06,
+    "hold_uncertainty_ps": 25,
+    "library_hold_ps": 12.88,
+    "required_ps": 632.94,
+    "slack_ps": -72.74
+   }
+  },
+  {
+   "job": "bfh2_recut_lvt_hm0_a12f3c7e7",
+   "source_commit": "a12f3c7e7f066ccc0ebcf8f8a042dae66458ca2b",
+   "host": "ot-epyc4",
+   "remote_existing_probe": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfh2_recut_lvt_hm0_a12f3c7e7/cl/routed_ioref.a1_meas",
+   "evidence_sha256": {
+    "meas_ff.tcl": "bdf1d1959f5b7aa74f65f71fe7b60812c6ab946c71ee7ee0e40660af36dab597",
+    "meas_ff.log": "81222a2ee74310b8d019bab8ddee3c5aad5028a28fb22a56b6c85ed2d9d6615a"
+   },
+   "actual_corner": "FF Liberty and FF macro",
+   "check": "hold",
+   "path": {
+    "startpoint": "xs_q0[47]",
+    "endpoint": "g_pin.r_xs_q0[47]$_DFF_P_",
+    "input_delay_ps": 498.08,
+    "data_arrival_ps": 508.92,
+    "capture_clock_ps": 533.41,
+    "hold_uncertainty_ps": 25,
+    "library_hold_ps": 13.93,
+    "required_ps": 572.34,
+    "slack_ps": -63.43
+   }
+  }
+ ],
+ "interpretation": "Existing FF reports contain real input-to-register hold debt under applied corner-specific mean minimum boundary arrival. Earlier slow setup repair can block ordinary hold insertion because setup uses mismatched planning insertion. Measured TT setup configuration successor owned by bf_closure; raw failures retained."
+}

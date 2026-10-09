@@ -75,3 +75,43 @@ def test_reject_truncation_trailing_data_and_address_overflow():
         list(B.column_chunks(io.BytesIO(bytes(265)), 1))
     with pytest.raises(ValueError, match="overflow"):
         B.raw_descriptor(B.REGION_ATOMS - 1, 64, 0)
+
+
+def test_rowstripe_payload_pc_identity_and_capacity():
+    # Evaluate the actual unified-model function in isolation; the minimum
+    # component does not need unrelated rack history or whole-model inputs.
+    import ast
+    from types import SimpleNamespace
+    source=Path(__file__).resolve().parents[1]/'tools/uarch_model.py'
+    tree=ast.parse(source.read_text())
+    fn=next(node for node in tree.body if isinstance(node,ast.FunctionDef) and node.name=='dsrom_engram_rowstripe_model')
+    namespace={}
+    exec(compile(ast.Module(body=[fn],type_ignores=[]),str(source),'exec'),namespace)
+    M=SimpleNamespace(dsrom_engram_rowstripe_model=namespace['dsrom_engram_rowstripe_model'])
+    counts=[65,67,69,71,73,75]  # cross both stack and all32PC boundaries
+    rows=[bytes([(i+j)%256 for j in range(256)])+bytes([127])+bytes(7)
+          for i in range(sum(counts))]
+    chunks=[];start=0
+    for count in counts:
+        chunks.extend(B.column_chunks(io.BytesIO(b''.join(rows[start:start+count])),count,True))
+        start+=count
+    image=b''.join(chunks)
+    assert len(image)==sum(counts)*288
+    bases=B.column_bases(counts,True)
+    assert bases==[sum(counts[:i])*288 for i in range(6)]
+    pc_image={}
+    for atom in range(len(image)//32):
+        row,index=divmod(atom,9)
+        stack,pc,local=row%2,(row//2)%32,(row//64)*9+index
+        key=(stack,pc,local)
+        assert key not in pc_image
+        pc_image[key]=image[atom*32:(atom+1)*32]
+    for row,payload in enumerate(rows):
+        actual=b''.join(pc_image[(row%2,(row//2)%32,(row//64)*9+i)] for i in range(9))
+        assert actual[:264]==B.packed_row(payload)
+        assert actual[264:]==bytes(24)
+    model=M.dsrom_engram_rowstripe_model()
+    assert model['matched_context_capacity_pass']
+    assert model['total_bytes']>model['historical_total_bytes']
+    assert model['table_increase_percent']==pytest.approx(100/11)
+    assert not M.dsrom_engram_rowstripe_model(users=1000)['matched_context_capacity_pass']

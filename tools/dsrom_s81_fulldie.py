@@ -86,7 +86,8 @@ def configure(die, gen='r7'):
     """'layer': the S81 layer die (L20 scan die = the hottest).  'head': one of the 12 head dies (coordinator
     decision 2026-10-04, main 57e041e74): 1,682 content pairs (embed + lm-head + norm + DSpark drafter), of which the
     210 lm-head pairs carry the NV5 batched draft head; the drafter/embed pairs keep the layer die's BF share."""
-    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN
+    global PAIRS, BF_PAIRS, NV_PAIRS, DIE_KIND, GEN, CFG_LEF, HEAD_BUNDLES, HOP_PLAN, BF_EXPLICIT_IDS
+    BF_EXPLICIT_IDS = None
     DIE_KIND, GEN = die, gen
     HOP_PLAN = None                  # --hop-fix plans are per die
     # r8 uses the mirror-legal v2 cfg ROM view (ROM inventory note 2); r7 keeps the v1 view it was run with
@@ -116,12 +117,33 @@ def configure(die, gen='r7'):
 # BF pairs in every return region of a layer die, at the in-region positions tools/dsrom_bf_double_alloc.py binds
 # (pair (2j+1)n/(2N) of the region's n, j < N); 0 = the q-only die flavour.
 BF_PER_REGION = None
+BF_EXPLICIT_IDS = None
+
+
+def parse_bf_pair_ranges(text, pairs):
+    """Explicit BF-double field IDs; comma-separated half-open ranges."""
+    ids = set()
+    for item in text.split(','):
+        ends = item.split(':')
+        if len(ends) != 2:
+            raise ValueError('BF ranges require start:stop')
+        lo, hi = map(int, ends)
+        if not 0 <= lo < hi <= pairs:
+            raise ValueError(f'BF range {item} outside [0,{pairs})')
+        current = set(range(lo, hi))
+        if ids & current:
+            raise ValueError(f'overlapping BF range {item}')
+        ids.update(current)
+    return frozenset(ids)
 
 
 def set_pairs(n):
     """r8: pairs (elements) per die; BF / NV shares scaled as the decision's"""
     global PAIRS, BF_PAIRS, NV_PAIRS
-    if DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
+    if BF_EXPLICIT_IDS is not None:
+        assert n > max(BF_EXPLICIT_IDS, default=-1), 'explicit BF IDs exceed pair count'
+        PAIRS, BF_PAIRS = n, len(BF_EXPLICIT_IDS)
+    elif DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
         PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
     elif DIE_KIND in ('layer', 'layer1'):
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
@@ -356,6 +378,10 @@ def region_bounds():
 
 
 def bf_sites():
+    if BF_EXPLICIT_IDS is not None:
+        assert len(BF_EXPLICIT_IDS) == BF_PAIRS
+        assert not (set(BF_EXPLICIT_IDS) & nv_sites())
+        return set(BF_EXPLICIT_IDS)
     if BF_PER_REGION is not None and DIE_KIND in ('layer', 'layer1'):
         # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
         nb = BF_PER_REGION * ROOTS
@@ -2371,6 +2397,13 @@ def frame_slots_needed(npairs_frame, bf_frac, nv_frac=0.0):
 def capacity_report():
     """pairs per die that fit the r8 field at the current slot height, and the die count for the S81 deployment"""
     sh, sl = slot_geometry()
+    if BF_EXPLICIT_IDS is not None:
+        # The typed head inventory is fixed; layer capacity sweeps would
+        # change pair identity and omit its dedicated Markov engines.
+        return dict(scope='fixed explicit head field inventory; no maximum-die claim',
+                    pairs=PAIRS, bf_double=BF_PAIRS, ordinary=PAIRS-BF_PAIRS,
+                    bf_pair_ids=sorted(BF_EXPLICIT_IDS), field_frames_fit=_frames_fit(sl, sh),
+                    dedicated_Markov_engines_included=False)
     keep = (PAIRS, BF_PAIRS, NV_PAIRS)
     best = 0
     for p in range(1000, 4000, 16):
@@ -3051,6 +3084,8 @@ def build_r8(variant=None):
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
                    elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
+    if BF_EXPLICIT_IDS is not None:
+        variant['bf_pair_ids'] = sorted(BF_EXPLICIT_IDS)
     m = dict(geo=geo, insts=insts, regions=regions, frames=frames, cregions=[], fifo_of={}, hub=hub, phys=phys,
              ctrls=ctrls, svcs=svcs, links=links, notes=notes, slot_of=slot_of, x_vch=x_vch, x_spe=x_spe, mid=mid,
              corridor=(c0, c1), variant=variant, gap_x=(gap_x0, gap_x1))
@@ -5198,6 +5233,7 @@ def die_options(ap):
     ap.add_argument('--elem-h', type=float, help='r8: element frame height in its slot (default 157.68)')
     ap.add_argument('--q-elem-h', type=float, help='r8 layer/layer1: independent q frame height; --elem-h remains BF height; requires --bf-per-region')
     ap.add_argument('--pairs', type=int, help='r8: pairs (elements) per die (default: the decision value)')
+    ap.add_argument('--bf-pair-ranges', help='r8 head: explicit BF-double IDs as comma-separated half-open ranges; e.g. 0:338 for the typed 696-slot inventory')
     ap.add_argument('--bf-per-region', type=int, default=None,
                     help='r8 layer die: exactly N BF pairs in every region (0 = q-only flavour; bf-double 2026-10-07)')
     ap.add_argument('--field-margin', type=float, help='r8: min gap field <-> band (default 216 um)')
@@ -5277,7 +5313,7 @@ def apply_options(a):
             raise ValueError('--ctrl-slab requires real native endpoints (--ctrl-bindings); no inferred or tied-off binding')
         from s81_ctrl.die_binding_contract import validate_manifest
         CTRL_BINDINGS = validate_manifest(a.ctrl_bindings, ROOT, CTRL_ROLE)
-    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2
+    global Q_ELEM_FRAME_H, BF_PER_REGION, SU_AREA_MM2, BF_EXPLICIT_IDS
     SU_AREA_MM2 = getattr(a, "su_mm2", None)
     Q_ELEM_FRAME_H = getattr(a, "q_elem_h", None)
     BF_PER_REGION = getattr(a, "bf_per_region", None)
@@ -5341,10 +5377,18 @@ def apply_options(a):
             set_pairs(a.pairs or PAIRS)
         elif a.pairs:
             set_pairs(a.pairs)
+        if getattr(a, 'bf_pair_ranges', None) is not None:
+            assert a.die == 'head' and BF_PER_REGION is None and NV_PAIRS == 0, \
+                '--bf-pair-ranges requires r8 head, no NV, and no --bf-per-region'
+            BF_EXPLICIT_IDS = parse_bf_pair_ranges(a.bf_pair_ranges, PAIRS)
+            set_pairs(PAIRS)
         slot_geometry()
+    else:
+        assert getattr(a, 'bf_pair_ranges', None) is None, '--bf-pair-ranges requires r8'
 
 
 def main(argv=None):
+    global BF_EXPLICIT_IDS
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['plan', 'real', 'grt', 'ir', 'irm', 'psmt', 'record', 'check'])
     ap.add_argument('--work', type=Path)
@@ -5445,6 +5489,11 @@ def main(argv=None):
                         configure(v_.get('die', 'layer'), v_.get('gen', 'r7'))
                         slot_geometry(v_.get('elem_frame_h'))
                         set_pairs(v_['pairs'])
+                        if v_.get('bf_pair_ids') is not None:
+                            assert DIE_KIND == 'head' and NV_PAIRS == 0
+                            BF_EXPLICIT_IDS = frozenset(v_['bf_pair_ids'])
+                            assert all(0 <= p < PAIRS for p in BF_EXPLICIT_IDS)
+                            set_pairs(PAIRS)
                     m = build()
                     if man.get('variant', {}).get('gen') == 'r8':
                         finalize_r8(m)

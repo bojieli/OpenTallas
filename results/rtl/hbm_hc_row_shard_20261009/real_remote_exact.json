@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "candidate_commit": "b820a328d",
+  "remote_host": "ot-epyc2",
+  "verilator": "5.050",
+  "claims": "one full20480-term F32 row, W32(256lanes), real FP RTL, golden chunk8 norm and projection, serial256b operands, stalled producer and consumer; synthetic full-shape operands; no die integration or clock/physical qualification",
+  "arms": {
+    "window": {
+      "cycles_command_to_accept": 3998,
+      "sectors": 2560,
+      "data": "40c340af",
+      "negative_sign_flip": "FAIL_AS_EXPECTED"
+    },
+    "sram_secded": {
+      "cycles_command_to_accept": 4009,
+      "sectors": 2560,
+      "data": "40c340af",
+      "negative_sign_flip": "FAIL_AS_EXPECTED"
+    }
+  },
+  "latency_policy": "11 observed extra cycles includes consumer11-cycle acceptance cadence; one additional memory pipeline cycle is structural.900MHzserialclockrequired, actualPLL/CDCbindingpending; no1.2GHzclaim",
+  "source_sha256": {
+    "rtl/hdc/hbm/ot_hbm_hc_row_projection.sv": "71fd57f43214a6bd3687428e01608aa10584f1d57f40bb5848c2be6a1a9ccdd6",
+    "rtl/hdc/hbm/ot_hdc_v41x_hcp_hbm_window.sv": "83a771db3ffcc35fe108b9f7aec89b3ef9bdc9bf4191cbb458a3d83fdc10d6dd",
+    "rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv": "c6d108ba9d3f740703b3f0af5cdc62e5359a6d0687608e8ef875d5e0e6a9f2d0",
+    "rtl/hdc/hbm/ot_hbm_hc_row_projection_sram.sv": "d0f1c907af9770ba023617ce932d496560b14e80f34d2527cc01c4a36b7269d4",
+    "rtl/hdc/hbm/ot_hbm_hc_row_operand_sram.sv": "a18fb067b00fba53b3e2a8078aef91464164d36b7d1aa8486226360f42866758",
+    "rtl/model/ot_hbm_hc_operand_sram_sim.sv": "6db9894782b91560ef95f875407d663d5e49eb64e9b1320064d50b420e5315d4",
+    "rtl/hdc/v41x/ot_hdc_v41x_hcp.sv": "a55882fff524807d78b4eb59d8f6311e94e3544205314da8c2d83f20065e9173",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/v41/ot_hdc_fdiv.sv": "0b8e4d7d680d7ca77cff139fe8f51b649c56cbc185560af767530895438eac25",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/hdc/ot_hdc_sfu.sv": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+    "rtl/test/tb_hbm_hc_row_projection.sv": "05bdb15b2001d16e563141da72e9953ec77b7c5bb33ab14d5e2a7aca5ef09cbc",
+    "rtl/test/tb_hbm_hc_row_projection_sram.sv": "cfe278540ea7256b76f76a1ccec9751e13c6b4807b4d3583f33cf891e4a09c9d",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+    "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816"
+  },
+  "fixture_sha256": {
+    "hcp_x.mem": "140aa45a8b59175b72c079ddf6139eb868e71fe5be0a18e136144241826b7b2a",
+    "expected.mem": "1c2e017f11206c808da73851d30be6bca421a1496f6f4b7529c697d203652209",
+    "hcp_exp.mem": "8e01486247521d61cd07795a2e0be9bc2bb57f2c802a9691caea1a6d8bedbbf6",
+    "hcp_meta.mem": "d2d9aa11926b4e09cfbc196578c090dd05e4bd08133c2f5af0e5a24bad640fde",
+    "hcp_cmd.mem": "62bb43ff5a97a90765875502b7fbd4cc89d9a61efdb00e96a540ccd2854f649f",
+    "hcp_w.mem": "80731d31a6654100898a9df1ae049d06d920fe29d38e9c338c78e390a51b38ed"
+  },
+  "log_sha256": {
+    "pch_failed.log": "d19bc4466a4129a43b7ec3bef4c52a8e15533a416b73db20b430bebbb4e04a12",
+    "sram_exact.log": "e00d39f189874ff836ca48249e6dcae2260166e30755b7e5e8fd3f0c97d32347",
+    "sram_negative.log": "e147bd944d3286c1aeba3796d3d77d3614eca936dbd69fb96e6bc4bca2071ae1",
+    "window_exact.log": "4f7f8cf07c71b84acb8ca5a32be83b7b5487c9d8263c3fc9087ad8d306879faf",
+    "window_negative.log": "248bb06b29d480c9fea5cd29a5d9516f25748339ef1c7ff8615c846c01212ff2"
+  },
+  "remote_runs": [
+    "/srv/opentallas-data/codex/hc-row-shard-r2/90c290853",
+    "/srv/opentallas-data/codex/hc-row-shard-r2/b820a328d"
+  ],
+  "external_secded_source_sha256": {
+    "ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18"
+  }
+}

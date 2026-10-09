@@ -99,6 +99,8 @@
       "capacity_tokens": 8192,
       "macro_area_um2": 12314.20968,
       "read_latency_edges": 1,
+      "generation_unused_reads": 0,
+      "read_enable_contract": "MODE0 reads only sl_pos<promptlen; poisonedunwritten-memoryfullshape golden+oldreadmutant PASS5601e8881",
       "write_mask_bits": 256,
       "replication_cost": "8 static slot write decoders; 8:1 read24 mux; shortened SECDED24 decode; sticky UE fault",
       "read_memory_bytes_cycle": 32,

@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.markov.pinreg.qualify.v1",
+ "observed_at": "2026-10-09T06:54:34.056132+00:00",
+ "source_commit": "38f22c6d8",
+ "rows": 48,
+ "K": 256,
+ "PINREG": 1,
+ "exact": true,
+ "faultcases": 3,
+ "mutant_separate_join": "FAIL as required",
+ "first_result_cycles_no_bubbles": 178,
+ "first_result_cycles_with_bubbles": 190,
+ "baseline_cycles_no_bubbles": 177,
+ "baseline_cycles_with_bubbles": 189,
+ "added_cycles": 1,
+ "capture_FF_bits": 513,
+ "physical_job": "dsrom-markov256-pinreg-38f22c6d8-tt-remote",
+ "physical_host": "ot-agidock128",
+ "physical_run": "/srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-pinreg-38f22c6d8-tt-remote",
+ "confirmed_live_calibration": "    PID    PPID ELAPSED STAT COMMAND\n2699378       1     179 Ss   bash /srv/opentallas-scratch/claude/closure-loop/dsrom-markov256-pinreg-38f22c6d8-tt-remote/cl/run.sh calibrate.a1\n",
+ "physical_qualified": false,
+ "adopted": false
+}

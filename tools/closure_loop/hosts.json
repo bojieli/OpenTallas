@@ -48,8 +48,8 @@
    "cores": 128,
    "cap": 141,
    "base": "/srv/opentallas-data/claude/closure-loop",
-   "max_job_threads": 128,
-   "max_job_ram_gb": 1076,
+   "max_job_threads": 0,
+   "max_job_ram_gb": 0,
    "min_free_disk_gb": 200,
    "caps": [
     "verilator",
@@ -62,7 +62,22 @@
     "/": 100,
     "/srv/opentallas-scratch2": 100
    },
-   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs."
+   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs.",
+   "external_jobs": [
+    {
+     "name": "hbm-indexer-deepcredit-exact",
+     "pid": 2153931,
+     "command_match": "hbm-indexer-2f27cb363/src",
+     "peak_ram_gb": 250,
+     "owner": "Codex:hbm_continuation",
+     "reason": "Admitted full connected FA6 KEYLEG24 SCORE32 LA7 CRED128 gate; expected250GiB; persistent remaining peak until actualworker exit"
+    }
+   ],
+   "paused_admission_previous": {
+    "max_job_threads": 128,
+    "max_job_ram_gb": 1076
+   },
+   "admission_disabled_reason": "OWNER2026-10-09 transient EPYC2memorypressure audit: pause NEW compute until activefuturepeaks accounted; preserveprogressingjobs"
   },
   {
    "name": "ot-epyc4",

@@ -8,6 +8,7 @@
 // SRAM macros (12 x ot_sram_1r1w_256x256 at NSLOT 8), placed by the die.
 // ---------------------------------------------------------------------------
 module dsfd_engram_sink #(
+    parameter integer PIN_CAPTURE = 0, // off until exact and physical candidate gates
     parameter integer NSLOT = 8,
     parameter integer SLW   = 3
 ) (
@@ -43,7 +44,7 @@ module dsfd_engram_sink #(
     wire [SLW+7:0]     w_addr;
     wire [511:0]       w_data;
     wire [NSLOT-1:0]   s_rdy, s_perr;
-    ot_dsrom_engram_rowsink #(.NSRC(4), .NC(24), .NSLOT(NSLOT)) u_s (
+    ot_dsrom_engram_rowsink #(.PIN_CAPTURE(PIN_CAPTURE), .NSRC(4), .NC(24), .NSLOT(NSLOT)) u_s (
         .clk(ck), .rst_n(rst_n), .in_valid(in_v), .in_ready(in_r), .in_col(in_col), .in_beat(in_beat),
         .in_slot(in_slot), .in_data(in_d), .st_valid(stv_q), .st_slot(sts_q), .st_bad(stb_q),
         .wr_en(w_en), .wr_addr(w_addr), .wr_data(w_data), .rdy(s_rdy), .perr(s_perr),

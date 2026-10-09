@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_markov_fault;
+ parameter integer PINREG=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start=0,iv=0,ordy=0;
  reg [31:0] head=0;
@@ -7,7 +8,7 @@ module tb_markov_fault;
  wire sr,ir,ov,fault;
  wire [31:0] bits;
  integer mode,b;
- ot_dsrom_markov_row dut(.clk(clk),.rst_n(rst_n),.start(start),.start_ready(sr),.head_logit(head),
+ ot_dsrom_markov_row #(.PINREG(PINREG)) dut(.clk(clk),.rst_n(rst_n),.start(start),.start_ready(sr),.head_logit(head),
   .in_valid(iv),.in_ready(ir),.weight_bf16(w),.embed_bf16(x),.out_valid(ov),.out_ready(ordy),.out_bits(bits),.fault(fault));
  initial begin
   for(mode=0;mode<3;mode=mode+1) begin

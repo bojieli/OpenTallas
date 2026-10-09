@@ -32,7 +32,7 @@ LIVE = {'QUEUED', 'SYNC', 'READY', 'RUNNING', 'ECO', 'MIGRATING'}
 FAIL = {'NEEDS_RTL', 'NEEDS_HUMAN', 'INVALID', 'NEEDS_BUDGET', 'REFUSED'}
 CATS = ['closed (TT era)', 'closed (TT re-verified)', 'closed (earlier)', 'first trial in flight', 'failed, re-running',
         'revoked, re-running', 'revoked (no live job)', 'needs redesign (no live job)', 'flow failure (no live job)',
-        'cancelled only', 'superseded']
+        'cancelled only', 'superseded', 'implementation recorded (no physical job)']
 TARGETS = ['Qwen ROM', 'DeepSeek ROM', 'HBM accelerator', 'Other']
 
 # ---------------------------------------------------------------- naming
@@ -249,6 +249,7 @@ class Elements:
         name = j.get('name') or ''
         return dict(name=name, block=s.get('block') or re.sub(r'[-_][0-9a-f]{9}.*$', '', name), status=j.get('status'),
                     owner=s.get('owner') or '', branch=(s.get('source') or {}).get('branch') or '', purpose=s.get('purpose') or '',
+                    source_commit=(s.get('source') or {}).get('commit'),
                     created=ts(j.get('created', '')), updated=ts(j.get('updated', '')), et=et or ts(j.get('updated', '')), event=etext[:300],
                     closed_t=closed_t, host=j.get('host'), tt_corner=tt,
                     tt=_f(m.get('ss_ps')) if tt else None, ss=_f(m.get('ss_sensitivity_ps')) if tt else _f(m.get('ss_ps')),
@@ -304,17 +305,69 @@ class Elements:
             self.supk = (key, d)
         return self.supk[1]
 
+    def registry(self):
+        """Read additive, committed implementation evidence; never infer physical closure."""
+        history = collections.defaultdict(list); errors = []
+        for p in sorted((self.repo / 'results/fleet_viz/element_registry').glob('*.json')):
+            rel = str(p.relative_to(self.repo))
+            try:
+                document = json.loads(p.read_text())
+                if not isinstance(document, dict) or document.get('schema_version') != 1 or not isinstance(document.get('records'), list):
+                    raise ValueError('expected schema_version 1 and records list')
+                accepted = []
+                for record in document['records']:
+                    if not isinstance(record, dict) or not isinstance(record.get('element'), str) or not record['element']:
+                        raise ValueError('record requires element')
+                    source = record.get('source') or {}
+                    if not isinstance(source, dict): raise ValueError('source must be an object')
+                    if not re.fullmatch(r'[0-9a-f]{9,40}', str(source.get('commit', ''))):
+                        raise ValueError('record requires pinned source.commit')
+                    if not isinstance(source.get('paths'), list) or not source['paths'] or not all(isinstance(x, str) and x for x in source['paths']):
+                        raise ValueError('record requires source.paths')
+                    if record.get('target') not in TARGETS:
+                        raise ValueError('record requires canonical target')
+                    for field in ('recorded_at', 'owner', 'description'):
+                        if field in record and not isinstance(record[field], str):
+                            raise ValueError('%s must be a string' % field)
+                    if 'dependencies' in record and (not isinstance(record['dependencies'], list) or
+                            not all(isinstance(x, str) for x in record['dependencies'])):
+                        raise ValueError('dependencies must be a list of strings')
+                    for field in ('implementation', 'model', 'exactness', 'physical', 'integration'):
+                        if field in record and not isinstance(record[field], dict):
+                            raise ValueError('%s must be an object' % field)
+                    for field in ('positive', 'negative'):
+                        if field in record.get('exactness', {}) and not isinstance(record['exactness'][field], dict):
+                            raise ValueError('exactness.%s must be an object' % field)
+                    accepted.append(dict(record, registry_path=rel))
+                for record in accepted: history[record['element']].append(record)
+            except (OSError, ValueError, TypeError) as e:
+                errors.append(dict(path=rel, error=str(e)))
+        return history, errors
+
     # ---- classification
     def compute(self):
         js = self.jobs(); ob, rest = self.option_b(); rj = self.revoked_jobs(); sup = self.superseded()
-        known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {}))
+        registry, registry_errors = self.registry()
+        known = {j['block'] for j in js} | set(ob.get('closed', {})) | set(ob.get('revoked', {})) | set(registry)
         groups = collections.defaultdict(list)
         for j in js: groups[master(j['block'], known)].append(j)
         for b in ob.get('closed', {}):   # option-B closed blocks with no loop job (routes judged outside the loop)
             groups.setdefault(master(b, known), [])
+        evidence = collections.defaultdict(list)
+        for b, records in registry.items():
+            key = master(b, known); groups.setdefault(key, []); evidence[key].extend(records)
         rows = []
         for m, g in groups.items():
             r = self.element(m, g, ob, rest, rj)
+            records = sorted(evidence[m], key=lambda x: (x.get('recorded_at', ''), x['registry_path']))
+            r['evidence_history'] = records
+            r['qualification'] = records[-1] if records else None
+            if records:
+                q = records[-1]
+                r['target'] = q['target']; r['owner'] = q.get('owner') or r['owner']
+                r['purpose'] = q.get('description') or r['purpose']
+                if not g and m not in ob.get('closed', {}):
+                    r['category'] = 'implementation recorded (no physical job)'
             sv = sup.get(m) or next((sup[b] for b in [m] + r['variants'] if b in sup), None)
             r['superseded'] = None
             if sv and not r['category'].startswith('closed'):
@@ -329,6 +382,8 @@ class Elements:
                     summary={t: dict(summ[t]) for t in TARGETS if t in summ},
                     sources=dict(option_b=ob.get('path'), option_b_decided=ob.get('decided'), jobs=len(js),
                                  revoked_jobs=str(self.revoked_path) if rj else None, n_revoked_jobs=len(rj),
+                                 registry='results/fleet_viz/element_registry', registry_records=sum(map(len, registry.values())),
+                                 registry_errors=registry_errors,
                                  superseded=str(self.superseded_path) if sup else None, n_superseded=len(sup)))
 
     def element(self, m, g, ob, rest, rj=None):
@@ -380,14 +435,14 @@ class Elements:
                 s = j['tt'] if j['tt'] is not None else j['ss']
                 return (j['drc'] == 0, min(x for x in (s, j['ff'], 1e9) if x is not None), j['updated'])
             best = max(cand, key=score) if cand else None
-        tm = dict(tt=None, ff=None, ss=None, drc=None, job=None, corner=None)
+        tm = dict(tt=None, ff=None, ss=None, drc=None, job=None, corner=None, source_commit=None)
         if best:
             tm = dict(tt=best['tt'], ff=best['ff'], ss=best['ss'], drc=best['drc'], job=best['name'],
-                      corner='TT' if best['tt_corner'] else 'SS')
+                      corner='TT' if best['tt_corner'] else 'SS', source_commit=best.get('source_commit'))
         elif ob_only:
             o = okb[ob_only[0]]
             tm = dict(tt=_f(o.get('tt_lb_ps') if o.get('tt_lb_ps') is not None else o.get('tt_ps')), ff=_f(o.get('ff_ps')),
-                      ss=_f(o.get('ss_sensitivity_ps')), drc=o.get('drc'), job=o.get('job'), corner='TT')
+                      ss=_f(o.get('ss_sensitivity_ps')), drc=o.get('drc'), job=o.get('job'), corner='TT', source_commit=o.get('source_commit'))
         lj = max(g, key=lambda j: j['et']) if g else None
         a = self.area.get(tm['job'] or '') or {}
         rv = rev_blocks.get(m) or next((rev_blocks[b] for b in blocks if b in rev_blocks), None)
@@ -484,14 +539,14 @@ class Elements:
             rs = [r for r in d['rows'] if r['target'] == t]
             if not rs: continue
             L += ['', '## %s (%d)' % (t, len(rs)), '',
-                  '| element | status | what it is | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
-                  '|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
+                  '| element | status | what it is | qualification | TT | FF | SS | DRC | die µm² | util | jobs live/failed/total | closed | latest |',
+                  '|---|---|---|---|---:|---:|---:|---:|---:|---:|---|---|---|']
             for r in rs:
                 b = r['best']; a = r['area'] or {}
                 fmt = lambda x: '' if x is None else ('%+.1f' % x)
-                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
+                L.append('| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %d/%d/%d | %s | %s |' % (
                     r['element'] + (' (+%d variants)' % len(r['variants']) if r['variants'] else ''), r['category'],
-                    _md(r['purpose'][:120]), fmt(b['tt']), fmt(b['ff']), fmt(b['ss']), '' if b['drc'] is None else b['drc'],
+                    _md(r['purpose'][:120]), _md(qualification_text(r.get('qualification'))), fmt(b['tt']), fmt(b['ff']), fmt(b['ss']), '' if b['drc'] is None else b['drc'],
                     '' if a.get('die') is None else '%.0f' % a['die'], '' if a.get('util') is None else '%.0f%%' % (100 * a['util']),
                     r['live'], r['failed'], r['jobs'],
                     datetime.datetime.fromtimestamp(r['closed_t']).strftime('%m-%d %H:%M') if r['closed_t'] else '',
@@ -508,7 +563,18 @@ def public(r):
 
 def change_key(d):
     """What makes an element snapshot worth recording now (not the per-minute latest-event churn)."""
-    return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job']) for r in d['rows']))
+    return hash(tuple((r['element'], r['category'], r['live'], r['failed'], r['jobs'], r['best']['job'],
+                       json.dumps(r.get('evidence_history', []), sort_keys=True)) for r in d['rows']))
+
+def qualification_text(q):
+    if not q: return ''
+    exact = q.get('exactness') or {}
+    status = lambda x: (x or {}).get('status', 'unrecorded')
+    return 'source %s; RTL %s; model %s; exact +%s / -%s; physical %s; corners %s; dependencies %s; integration %s; record %s' % (
+        q['source']['commit'], status(q.get('implementation')), status(q.get('model')),
+        status(exact.get('positive')), status(exact.get('negative')), status(q.get('physical')),
+        json.dumps((q.get('physical') or {}).get('corners', {}), sort_keys=True), ', '.join(q.get('dependencies', [])),
+        status(q.get('integration')), q['registry_path'])
 
 def _md(s):
     return str(s).replace('|', '\\|').replace('\n', ' ')

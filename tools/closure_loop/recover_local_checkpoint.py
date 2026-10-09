@@ -130,7 +130,7 @@ docker run --rm -v {shlex.quote(run)}/src:/src:ro -v "$O":/work -w /OpenROAD-flo
                                                      owner_review='resume unfinished stages after verified terminal owner kill'))
             j['checkpoint_affinity'] = dict(host=host, run=run)
             j.setdefault('hosts_tried', []).append(host)
-            j.update(host=host, status='READY', attempt=j.get('attempt', 1) + 1,
+            j.update(host=host, status='READY', reason=None, attempt=j.get('attempt', 1) + 1,
                      retries_used=0, errors=[], wait=None)
             cl.event(j, f'full localhost checkpoint preserved on {host} NVMe {actual}; remote next stages {stages}')
             cl.save_job(j)

@@ -120,6 +120,9 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
+    if native.exists():
+        return json.loads(native.read_text())
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None
@@ -127,6 +130,10 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
+    if d is not None and d.get('schema') == 'opentallas.hbm_native_indexer_ports.v1':
+        # The same source-pinned native contract drives the first full-shape
+        # hardening and the opt-in R25I placement; never synthesize fake peers.
+        return d
     m, pw, M, real = model()
     if d is not None and name not in M:     # a split the generator does not place yet
         return d
@@ -178,7 +185,12 @@ def svh(rec):
 
 
 def cmd_ports(a):
-    m, pw, M, real = model()
+    native_only = a.master and all((derived_record(n) or {}).get('schema') ==
+                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+    if native_only:
+        M = {}
+    else:
+        m, pw, M, real = model()
     names = a.master or sorted(n for n in M if n.startswith('hfd_') and n != 'hfd_sm' or n == 'hfd_sm')
     out = Path(a.out)
     summary = {}

@@ -12,8 +12,9 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
  output reg done,output reg fault,output wire retained);
  assign retained=active;
  localparam AW=$clog2(DEPTH);
+ localparam CW=$clog2(CRED+1);
  reg[255:0] mem[0:31][0:DEPTH-1];reg[DEPTH-1:0] valid[0:31];
- reg[5:0] credits[0:7];reg active;reg[10:0] line0,nlines;
+ reg[CW-1:0] credits[0:7];reg active;reg[10:0] line0,nlines;
  integer p,l,b,g,pc,j,slot,n,need;reg can;reg[31:0] used[0:31];
  reg[1087:0] assembled[0:7];
  always @*begin
@@ -39,7 +40,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
    lines<=0;pop<=0;done<=0;
    for(l=0;l<8;l=l+1)begin
     if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
-    credits[l]<=credits[l]+6'(credit[l])-6'(can);
+    credits[l]<=credits[l]+CW'(credit[l])-CW'(can);
    end
    if(start)begin
     if(active||blocks>342)fault<=1;
