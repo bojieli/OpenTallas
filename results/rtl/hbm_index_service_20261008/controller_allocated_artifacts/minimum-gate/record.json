@@ -1,0 +1,38 @@
+{
+  "source_commit": "e100721e7",
+  "input_sha256": {
+    "rtl/hbm_accel/control/ot_hbm_native_index_control.sv": "a2bc1d457b3e57aba943665bd3454aeacce4e72ef373e66e2547fb18b604d680",
+    "rtl/test/hbm_accel/tb_hbm_native_index_control.sv": "6ca69ca845969939b403597182fa45f7c85f5d84fe7ea2b35d9cf75f784939fa",
+    "tools/hbm_native_index_control_model.py": "0d9dfdf1423f125babc5f76c0fd4128d7167055472b07c8a3e2ec227a37aedb8"
+  },
+  "scope": "minimum controller only; receipt is test actor; actual service join separately measured",
+  "cases": [
+    {
+      "name": "dynamic24",
+      "exit": 0,
+      "passed": true,
+      "raw_sha256": "2424c6ef00e0ac983f4d6f9acd66247bff4dd5f0dd9f0e9aaec185ab49606acd"
+    },
+    {
+      "name": "identity",
+      "exit": 0,
+      "passed": true,
+      "raw_sha256": "18b6e89a40b07b7192eb278aaeb0df25701106901b6b5b21edec09be9f75ba90"
+    },
+    {
+      "name": "empty",
+      "exit": 0,
+      "passed": true,
+      "raw_sha256": "1f75f89fea9e140ead0f029e89827c06b68442e86f195172e5a426d775b585ad"
+    },
+    {
+      "name": "oversize",
+      "exit": 0,
+      "passed": true,
+      "raw_sha256": "18791626d619c87694a35ff8c46d0f1ef54df57b2c3eaa38ebad7c1e8bd215d1"
+    }
+  ],
+  "verdict": "PASS",
+  "adopted": false,
+  "build_exit": 0
+}

@@ -1,0 +1,15 @@
+{
+ "verdict":"PASS",
+ "source_commit":"e100721e7",
+ "controller_successor":"fd27a45ed",
+ "minimum_controller_frames":24,
+ "minimum_allocated_counts":"1..23 and342",
+ "minimum_negatives":"wrong full73 receipt, zero and343 blocks rejected before prefetch",
+ "actual_service_joint_frames":2,
+ "actual_service_joint_blocks":342,
+ "actual_service_negative":"byte error rejected at actual checker",
+ "receipt":"actual mailbox receipt only after core admission, complete73 identity retained",
+ "partial_stream_counts_qualified":false,
+ "query_producer_window_bound":false,
+ "physical_adoption":false
+}
