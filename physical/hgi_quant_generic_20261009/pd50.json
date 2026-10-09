@@ -33,10 +33,11 @@
       },
       {
         "name": "ds_mutant_rejected",
-        "cmd": "test -s {RUN}/bench_ds/mutant.rc && test $(cat {RUN}/bench_ds/mutant.rc) != 0 && grep -q 'ARITHMETIC mismatch' {RUN}/bench_ds/mutant.log && exit 1; exit 0",
+        "cmd": "cat {RUN}/bench_ds/mutant.log; test -s {RUN}/bench_ds/mutant.rc && test $(cat {RUN}/bench_ds/mutant.rc) != 0 && grep -q 'ARITHMETIC mismatch' {RUN}/bench_ds/mutant.log && exit 1; exit 0",
         "expect": "fail",
         "threads": 1,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "fail_regex": "ARITHMETIC mismatch"
       },
       {
         "name": "cf_qdq_and_mutant",
@@ -47,10 +48,11 @@
       },
       {
         "name": "cf_scale_mutant_rejected",
-        "cmd": "test -s {RUN}/bench_cf/mutant.rc && test $(cat {RUN}/bench_cf/mutant.rc) != 0 && grep -q 'CF-QDQ golden mismatch' {RUN}/bench_cf/mutant.log && exit 1; exit 0",
+        "cmd": "cat {RUN}/bench_cf/mutant.log; test -s {RUN}/bench_cf/mutant.rc && test $(cat {RUN}/bench_cf/mutant.rc) != 0 && grep -q 'CF-QDQ golden mismatch' {RUN}/bench_cf/mutant.log && exit 1; exit 0",
         "expect": "fail",
         "threads": 1,
-        "peak_ram_gb": 1
+        "peak_ram_gb": 1,
+        "fail_regex": "CF-QDQ golden mismatch"
       }
     ],
     "calibrate": {
