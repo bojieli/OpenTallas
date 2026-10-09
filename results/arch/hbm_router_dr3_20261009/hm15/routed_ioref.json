@@ -1,0 +1,83 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch/claude/closure-loop/hbm_router_kneg_orph2_a75cb556b-ttref-hm15/cl/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -148.24,
+  "tns_ps": -28572.16,
+  "worst_reg_to_reg_slack_ps": 181.87,
+  "worst_input_to_reg_slack_ps": 134.41,
+  "worst_output_port_slack_ps": -148.24,
+  "violating_d_pins": "0",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 585.0,
+    "min": 489.9,
+    "max": 775.3,
+    "n": 1090,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 585.0,
+    "min": 489.9,
+    "max": 775.3,
+    "n": 1090,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 1090,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "625e03908769a3573865748c0ba0a164976ce6544b2f0f9ec752b38f223b2a66"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -19.92,
+  "tns_ps": -2303.67,
+  "worst_reg_to_reg_slack_ps": -0.15,
+  "worst_input_to_reg_slack_ps": -19.92,
+  "worst_output_port_slack_ps": 79.46,
+  "violating_d_pins": "203",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 488.9,
+    "min": 405.6,
+    "max": 650.2,
+    "n": 1090,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 488.9,
+    "min": 405.6,
+    "max": 650.2,
+    "n": 1090,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 1090,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "e843f50fe6c07134c44e38421a110bf631e18b31af24c14d54580f7404e25d58"
+ }
+}

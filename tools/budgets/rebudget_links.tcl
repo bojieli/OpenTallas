@@ -35,7 +35,7 @@ proc ot_rb_fwd_clocks {scope_file period unc_s unc_h mm {lat_file ""}} {
       if {[regexp {^set_clock_latency\s+([-0-9.eE]+)\s+\[get_pins -quiet \{(\S+)} $ln -> v pn]} { if {![dict exists $lat $pn]} { dict set lat $pn $v } }
     }
     close $fh
-  } elseif {[info exists ::ot_lat]} { foreach e $::ot_lat { lassign $e d l p; dict set lat [get_full_name $p] $l } }
+  } elseif {[info exists ::ot_lat]} { foreach e $::ot_lat { lassign $e d l pins; foreach p $pins { dict set lat [get_full_name $p] $l } } }
   set fh [open $scope_file]; set insts [split [string trim [read $fh]] "\n"]; close $fh
   set done [dict create]; set n 0; set nr 0
   set srcs {}
@@ -117,7 +117,9 @@ proc ot_rb_dump {mm out scope_file} {
   set f [open $out w]
   set fh [open $scope_file]; set insts [split [string trim [read $fh]] "\n"]; close $fh
   puts $f "# ot_rb_dump $mm [llength $insts] instances, UI per ps $u"
-  if {[info exists ::ot_lat]} { foreach e $::ot_lat { lassign $e d l p; puts $f "L\t[get_full_name $p]\t[format %.1f [expr {$l / $u}]]\t$d" } }
+  # A planned clock entry can contain several literal pins (e.g. eight HC bank clocks).
+  # OpenSTA get_full_name accepts one object, so expand the collection without changing its latency.
+  if {[info exists ::ot_lat]} { foreach e $::ot_lat { lassign $e d l pins; foreach p $pins { puts $f "L\t[get_full_name $p]\t[format %.1f [expr {$l / $u}]]\t$d" } } }
   set np 0; set ne 0
   foreach iname $insts {
     set inst [get_cells -quiet $iname]
