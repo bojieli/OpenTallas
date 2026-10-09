@@ -11,6 +11,11 @@
 // 2x the window region (+128 x 544 B a layer a user; 40 layers + 3 DSpark stages = +2.99 MB a user a die).
 // The DSpark stage window rows (golden state["dsk"]) are window rows of layer slots NL .. NL+2 (row_slot 40..42).
 // WIN_SLOTS = 128 reproduces the as-built unit (the bench mutant).
+// MR-6 (APPROVED 2026-10-09): the index-key open-block SHADOW loads only at bring-up / ingest.  SH_LOCK = 1 (default)
+// ignores sh_v once the first key row has been accepted since reset (decode has begun): a reload at a block opening
+// under MTP would let a REJECTED key opening block b+1 replace the shadow, and the next committed key of block b
+// would rewrite its neighbours' bytes from it.  Ingest (dsfd_host / prefill) loads the shadow before the first key
+// write, then a reset or the next user's bring-up re-arms it.  SH_LOCK = 0 = the as-built policy (bench mutant).
 // DS-V4.1 HBM accelerator: per-token KV + index-key WRITE-BACK of one HBM3E stack, 1M-addressable (2026-10-04).
 // ENABLE = 0 (default) ties every output to zero; nothing pinned instantiates it.
 //
@@ -42,6 +47,7 @@
 module ot_hbm_accel_dskv_wb_spec #(
   parameter integer ENABLE = 0,
   parameter integer WIN_SLOTS = 256,             // power of two, <= 256 (as built: 128)
+  parameter integer SH_LOCK = 1,                 // MR-6: shadow loads only before the first key write
   parameter integer STACK = 0,
   parameter integer WIN_ROW0 = 2000, parameter integer CKV_ROW0 = 3000, parameter integer KEY_ROW0 = 4000,
   parameter integer SLOT_ROWS = 2
@@ -75,6 +81,8 @@ module ot_hbm_accel_dskv_wb_spec #(
     reg [4:0] ns, t;          // sectors in this row, current
     reg [16:0] kb_s;          // key: first sector of k's block (17 (k >> 3))
     reg [15:0] iss, ack;
+    reg sh_locked;
+    wire sh_go = sh_v && !(SH_LOCK != 0 && sh_locked);
     // ---- address map of sector t (combinational from registered state) ----
     wire [7:0]  wslot = 8'(pos & 20'(WIN_SLOTS - 1));
     wire [20:0] S = (kind == 2'd0) ? 21'(wslot[6:0]) : s0 + 21'(t);
@@ -94,7 +102,7 @@ module ot_hbm_accel_dskv_wb_spec #(
     wire emit = (st == S_EMIT) && on_stack;
     assign wq_v = emit; assign wq_pc = pcg[4:0]; assign wq_bank = {jj[9:7], jj[1:0]}; assign wq_row = wrow_a;
     assign wq_col = jj[6:2]; assign wq_data = sdat;
-    assign row_r = (st == S_IDLE) && !sh_v;
+    assign row_r = (st == S_IDLE) && !sh_go;
     assign issued = iss; assign acked = ack;
     assign fence_ok = (st == S_IDLE) && !row_v && iss == ack;
     // b / 96 = (b >> 5) / 3
@@ -107,16 +115,17 @@ module ot_hbm_accel_dskv_wb_spec #(
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin
         st <= S_IDLE; kind <= 0; slot <= 0; r2 <= 0; dat <= 0; n <= 0; b <= 0; k <= 0; own <= 0; s0 <= 0;
-        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0;
+        ns <= 0; t <= 0; kb_s <= 0; iss <= 0; ack <= 0; sh_locked <= 0;
       end else begin
         ack <= ack + 16'(ack_n);
         if (wq_v && wq_r) iss <= iss + 1'b1;
         case (st)
           S_IDLE: begin
-            if (sh_v) for (integer y = 0; y < 544; y = y + 1) shadow[sh_slot][y] <= sh_data[8*y +: 8];
+            if (sh_go) for (integer y = 0; y < 544; y = y + 1) shadow[sh_slot][y] <= sh_data[8*y +: 8];
             else if (row_v) begin
               kind <= row_kind; slot <= row_slot; r2 <= row_r2; dat <= row_data;
               n <= n_in; b <= b_in; k <= k_in; own <= (own_in[6:0] == die);
+              if (row_kind == 2'd2) sh_locked <= 1'b1;
               if (row_kind == 2'd2)          // merge the new key into the open block's shadow
                 for (integer y = 0; y < 68; y = y + 1)
                   shadow[row_slot[2:0]][68 * n_in[2:0] + y] <= row_data[8*y +: 8];

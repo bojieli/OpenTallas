@@ -246,23 +246,26 @@ MUTANTS = {
         "hbm_slot_ring_eq_r": dict(SSR=2),                   # spec-state compressor slot ring SR = r
         "hbm_tok_ring_eq_NG": dict(STR=4),                   # spec-state token ring TR = NG
         "hbm_commit_off_by_one": dict(MUT_OFF=1),
-        "hbm_key_shadow_reload_on_block_open": dict(MUT_SHRELOAD=1),   # as-built shadow policy under MTP
+        "hbm_key_shadow_reload_on_block_open": dict(MUT_SHRELOAD=1, SH_LOCK=0),   # as-built shadow policy under MTP
     },
 }
 
 
 def params(W, over):
     p = dict(W=W, WRR=2 * W, DRR=2 * W, TAGCHK=1, MUT_OPEN_REG=0, MUT_APPEND=0, MUT_OFF=0,
-             WINSL=2 * W, SSR=16, STR=16, MUT_SHRELOAD=0)
+             WINSL=2 * W, SSR=16, STR=16, MUT_SHRELOAD=0, SH_LOCK=1)
     for k, v in over.items():
         p[k] = W if v == "W" else v
     return p
 
 
+GOOD_VARIANTS = {"hbm_mr6_lock_ignores_reload": dict(MUT_SHRELOAD=1, SH_LOCK=1)}   # must PASS
+
+
 def run(out: Path, backend: str, mutant: str | None, sim: str, spec_f: bool = False, tag: str | None = None):
     meta = json.loads((out / "meta.json").read_text())
     W = meta["window"]
-    over = MUTANTS[backend][mutant] if mutant else {}
+    over = GOOD_VARIANTS[mutant] if mutant in GOOD_VARIANTS else MUTANTS[backend][mutant] if mutant else {}
     p = params(W, over)
     name = tag or (mutant or f"{backend}_good") + ("_specf" if spec_f else "")
     d = out / name
@@ -295,8 +298,44 @@ def run(out: Path, backend: str, mutant: str | None, sim: str, spec_f: bool = Fa
     v = res[-1].split()[1] if res else "NO_RESULT"
     kv = dict(x.split("=", 1) for x in res[-1].split()[2:]) if res else {}
     return dict(name=name, backend=backend, mutant=mutant, spec_state="f_token_edge_fix1" if spec_f else "as_built",
-                params=p, verdict=v, expect="FAIL" if mutant else "PASS", ok=(v == ("FAIL" if mutant else "PASS")),
+                params=p, verdict=v, expect=("FAIL" if mutant and mutant not in GOOD_VARIANTS else "PASS"),
+                ok=(v == ("FAIL" if mutant and mutant not in GOOD_VARIANTS else "PASS")),
                 first_mismatches=first, wall_s=round(time.time() - t0, 1), **kv)
+
+
+PF_SRC = ["rtl/chip/ot_chip_v41x_window_kv_prefetch_r256.sv", "rtl/chip/ot_chip_v41x_window_row_codec.sv",
+          "rtl/chip/ot_chip_v41x_window_stage4.sv", "rtl/test/mtp_rollback/tb_window_prefetch_mtp.sv"]
+PF_RUNS = {"rom_prefetch_r256_c1": dict(WINDOW_SLOTS=256, CREDITS=1), "rom_prefetch_r256_c8": dict(WINDOW_SLOTS=256, CREDITS=8),
+           "rom_prefetch_asbuilt128_c1": dict(WINDOW_SLOTS=128, CREDITS=1)}       # the last is the mutant
+
+
+def run_prefetch(out: Path, name: str):
+    """MR-1: the DS ROM window prefetch successor (256 HBM slots, 128-row stage) under MTP rollback."""
+    p = PF_RUNS[name]
+    d = out / name
+    d.mkdir(parents=True, exist_ok=True)
+    vl = os.environ.get("VERILATOR", str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
+    t0 = time.time()
+    b = subprocess.run([vl, "--binary", "--timing", "-Wno-fatal", "-Wno-WIDTH", "-Wno-lint", "-Wno-style", "-O2", "-j", "4",
+                        "--top-module", "tb_window_prefetch_mtp", "--Mdir", str(d / "obj")] +
+                       [f"-G{k}={v}" for k, v in p.items()] + [str(ROOT / x) for x in PF_SRC], capture_output=True, text=True)
+    (d / "build.log").write_text(b.stdout + b.stderr)
+    if b.returncode:
+        return dict(name=name, verdict="BUILD_FAIL", ok=False, expect="?")
+    try:
+        r = subprocess.run([str(d / "obj" / "Vtb_window_prefetch_mtp")], capture_output=True, text=True, timeout=1800)
+        txt = r.stdout + r.stderr
+    except subprocess.TimeoutExpired as e:
+        txt = (e.stdout or b"").decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
+        txt += "\nRESULT FAIL timeout=1"
+    (d / "run.log").write_text(txt)
+    res = [l for l in txt.splitlines() if l.startswith("RESULT")]
+    v = res[-1].split()[1] if res else "NO_RESULT"
+    exp = "FAIL" if p["WINDOW_SLOTS"] == 128 else "PASS"
+    kv = dict(x.split("=", 1) for x in res[-1].split()[2:] if "=" in x) if res else {}
+    return dict(name=name, backend="rom_prefetch", mutant=None if exp == "PASS" else "window_slots_128_asbuilt",
+                params=p, verdict=v, expect=exp, ok=(v == exp), wall_s=round(time.time() - t0, 1),
+                first_mismatches=[l for l in txt.splitlines() if l.startswith(("FAULT", "MISMATCH"))][:3], **kv)
 
 
 def campaign(out: Path, sim: str, record: Path | None, jobs: int):
@@ -310,10 +349,13 @@ def campaign(out: Path, sim: str, record: Path | None, jobs: int):
             tasks.append((cd, backend, None, False))
             if backend == "hbm":
                 tasks.append((cd, backend, None, True))
+                tasks.append((cd, backend, "hbm_mr6_lock_ignores_reload", False))
             for m in MUTANTS[backend]:
                 tasks.append((cd, backend, m, False))
     with ThreadPoolExecutor(jobs) as ex:
+        pf = [ex.submit(run_prefetch, out / "prefetch", n) for n in PF_RUNS]
         results = list(ex.map(lambda t: {**run(t[0], t[1], t[2], sim, t[3]), "config": t[0].name}, tasks))
+        results += [{**f.result(), "config": "prefetch"} for f in pf]
     allok = all(r["ok"] for r in results)
     rec = dict(stream="mtp-rollback", date="2026-10-08", tool="tools/mtp_rollback_bench.py", simulator=sim,
                configs=metas, digests_checked_every_step=DIGEST_NAMES,
@@ -321,14 +363,14 @@ def campaign(out: Path, sim: str, record: Path | None, jobs: int):
                                   "emitted tokens (bench feeds its own bonus forward)"] + DIGEST_NAMES,
                results=results, all_good_pass_all_mutants_fail=allok,
                sources={s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest()
-                        for s in sorted(set(ROM_SRC + HBM_SRC + [TB, "tools/mtp_rollback_bench.py",
+                        for s in sorted(set(ROM_SRC + HBM_SRC + PF_SRC + [TB, "tools/mtp_rollback_bench.py",
                                                                   "tools/hdc_golden_v41.py"]))})
     if record:
         record.parent.mkdir(parents=True, exist_ok=True)
         record.write_text(json.dumps(rec, indent=1) + "\n")
     for r in results:
         print(f"{r['config']:5s} {r['name']:34s} {r['verdict']:10s} expect {r['expect']:4s} "
-              f"{'ok' if r['ok'] else 'WRONG'}  {r.get('steps', '')} {r.get('mism', '')} {r.get('err', '')}")
+              f"{'ok' if r['ok'] else 'WRONG'}  {r.get('steps', '')} {r.get('mism', r.get('errors', ''))} {r.get('err', r.get('faults', ''))}")
     print("ALL OK" if allok else "NOT OK")
     return rec
 

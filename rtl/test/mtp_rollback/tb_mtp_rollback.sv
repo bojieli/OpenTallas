@@ -34,7 +34,8 @@ module tb_mtp_rollback;
     parameter integer WINSL = 256;        // HBM writer + read stream window slots (as built 128)
     parameter integer SSR = 16;           // HBM spec-state compressor slot ring
     parameter integer STR = 16;           // HBM spec-state token ring
-    parameter integer MUT_SHRELOAD = 0;   // HBM mutant: reload the index-key block shadow when a key opens a block
+    parameter integer MUT_SHRELOAD = 0;
+    parameter integer SH_LOCK = 1;        // MR-6 guard in the writer (0 = as built)   // HBM mutant: reload the index-key block shadow when a key opens a block
     parameter STIM = "stim.txt";
     parameter integer MAXCYC = 200000000;   // watchdog
     localparam integer NL = 4, NST = 3, NG = 4, GM = 5, PMAX_ROM = GM + 1, PMAX_HBM = 8;
@@ -202,7 +203,7 @@ module tb_mtp_rollback;
     bit  [255:0] dram [bit [63:0]];          // key {die, stack, pc, bank, row, col}: one HBM a die
     genvar gs;
     generate for (gs = 0; gs < 4; gs = gs + 1) begin : g_wb
-        ot_hbm_accel_dskv_wb_spec #(.ENABLE(1), .STACK(gs), .WIN_SLOTS(WINSL)) u_wb (
+        ot_hbm_accel_dskv_wb_spec #(.ENABLE(1), .STACK(gs), .WIN_SLOTS(WINSL), .SH_LOCK(SH_LOCK)) u_wb (
             .clk(clk), .rst_n(rst_n), .die(r_die), .pos(r_pos), .row_v(r_v), .row_kind(r_kind), .row_slot(r_slot),
             .row_r2(r_r2), .row_data(r_data), .row_r(r_r[gs]), .sh_v(r_sh_v), .sh_slot(r_sh_slot), .sh_data(4352'd0),
             .wq_v(wq_v[gs]), .wq_pc(wq_pc[gs]), .wq_bank(wq_bank[gs]), .wq_row(wq_row[gs]), .wq_col(wq_col[gs]),
