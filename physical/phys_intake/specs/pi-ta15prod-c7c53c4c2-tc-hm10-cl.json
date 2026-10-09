@@ -1,0 +1,75 @@
+{
+ "name": "pi-ta15prod-c7c53c4c2-tc-hm10-cl",
+ "block": "ot_hbm_production_clock_digital_body",
+ "element": "TA15 production clock controller readiness",
+ "owner": "Claude:phys-intake",
+ "purpose": "phys-intake 2026-10-09 (owner: start physical work on every 'implementation recorded (no physical job)' element; dual-track '-cl' line). TA15 full 91-FF digital boot/readiness body (analog PLL is a black box outside the block), five clocks per the owner's production_body.sdc (aon/stream/serial/hbm/link); first loop route of this composition (Codex r1-r4 were the 51-FF collar body only, TT -179 on async-intent inputs). W2: AON = reset/PLL-lock sync only, no power domain. Variant: TC route / option B (TT setup, FF hold, DRC 0), HM 10 ps. Exact bench + mutant: physical/phys_intake/bench.sh ta15_prod_clock (pos PASS / mutant FAIL on this source).",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "threads": 4,
+ "peak_ram_gb": 12,
+ "source": {
+  "branch": "claude/phys-intake-20261009",
+  "commit": "c7c53c4c21e03b3c37bc1c8a2ebd890e7e0f8df8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "ta15_prod_clock_exact",
+    "cmd": "bash physical/phys_intake/bench.sh ta15_prod_clock pos {RUN}/bench_pos",
+    "expect": "pass",
+    "pass_regex": "PHYSINTAKE_ta15_prod_clock_PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "ta15_prod_clock_mutant",
+    "cmd": "bash physical/phys_intake/bench.sh ta15_prod_clock neg {RUN}/bench_neg",
+    "expect": "fail",
+    "fail_regex": "PHYSINTAKE_ta15_prod_clock_NEG_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; OUT={RUN}/routes CORES=4 UTIL=40 PD=0.55 HM=0.010 LB=0 SDCX=physical/hbm_accel_die_views/clock_boundary/production_body.sdc bash physical/hbm_mtp/route_mtp.sh {LABEL} ot_hbm_production_clock_digital_body --source rtl/hbm_accel/control/ot_hbm_production_clock_digital_body.sv --source rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv --source rtl/hbm_accel/control/ot_hbm_reset_seq.sv --clock-port clk_stream --die-area 0 0 100.224 99.36 --core-area 1.08 1.08 99.144 98.28",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/"
+  },
+  "calibrate": {
+   "enabled": false,
+   "reason": "multi-clock boot body (five clocks redefined by production_body.sdc): no single core_clk insertion to calibrate; IO is the owner's provisional AON budget in that SDC"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/hbm_accel_die_views/clock_boundary/production_body.sdc",
+   "physical/hbm_accel_die_views/common/signoff_unc60.sdc",
+   "physical/hbm_accel_die_views/common/vclk_corner_true.sdc"
+  ]
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "cycles_added": 0,
+ "notes": "cycles added: 0 (RTL as written)",
+ "merge_target": null
+}

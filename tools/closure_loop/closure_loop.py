@@ -25,6 +25,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py tick                       # one pass (debug)
     closure_loop.py status                     # table of jobs
     closure_loop.py validate <job.json>        # check a spec before dropping it
+    closure_loop.py submit-recheck --since ISO [--requeue] [--log F]   # re-judge FLOORPLAN_MARGIN jobs at submit
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
@@ -58,6 +59,7 @@ from pathlib import Path
 from ssh_transport import command as transport_command
 from source_archive import build_archive, repo_path
 from postroute_recovery import remote_command as postroute_probe_command
+import submit_lint
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -118,6 +120,14 @@ OPTB_SINCE = "2026-10-07T20:20"
 # (CTS-only, minutes).  SS-corner routes keep the SS reference.  Earlier jobs keep their behaviour.
 ROUTE_REF_SINCE = "2026-10-08T19:05"
 SETUP_LIB = "TT"
+# VT-SWAP ECO (merge-eco 2026-10-09, from eco-sweep e494ff8ac): a route whose only miss is a THIN TT setup miss
+# (TT in [VTSWAP_TT_FLOOR, 0), FF >= 0, DRC 0, checks/benches clean) runs vtswap_eco.sh (RVT->LVT master swaps on the
+# TT paths, prospective <= VTSWAP_CAP_PCT % LVT, FF hold guard, no re-route) as its ECO stage before it is judged
+# NEEDS_RTL.  Targets are tried in order (a miss at 10 ps re-runs once at 5 ps: fewer swaps, under the cap -- eco-sweep
+# wfc_lnk / topk closed on the 5 ps rerun).  spec hold_eco.vtswap: false turns it off; vtswap_targets / vtswap_cap_pct override.
+VTSWAP_TT_FLOOR = -45.0
+VTSWAP_TARGETS = (10.0, 5.0)
+VTSWAP_CAP_PCT = 2.0
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -530,6 +540,124 @@ def experiment(j, status, register=False):
         sh([sys.executable, str(EXPERIMENT), "register", *args], timeout=60)
 
 
+# LINT-AT-SUBMIT (stream lint-at-submit 2026-10-09): pin density (and utilisation where a measurement of the same
+# synthesis input exists) estimated from the job's pin plan + outline at intake (submit_lint.py), before a queue slot or
+# synthesis is spent.  Fails on one layer but passes with the approved two-layer spread -> the spread (PIN_H 'M4 M6' /
+# PIN_V 'M5 M7') is added to the route_master stage commands and recorded in spec.submit_lint (the submitted spec is
+# kept in spec_submitted); fails even spread -> REFUSED "SUBMIT_LINT FLOORPLAN_MARGIN: ..." with no compute spent.
+# Spec "submit_lint": false (or "fp_lint": false) opts out; fp_lint {"set": {...}} / warn_only apply as in the flow lint.
+def util_db_path():
+    return STATE / "submit_lint_util.json"
+
+
+def util_db():
+    try:
+        return json.loads(util_db_path().read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def util_db_add(key, rec):
+    p = util_db_path()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(str(p) + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        db = util_db()
+        db[key] = rec
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(db, indent=1, sort_keys=True) + "\n")
+        os.replace(tmp, p)
+
+
+def submit_check(spec, force=False):
+    git_ = submit_lint.Git(REPO)
+    commit = str((spec.get("source") or {}).get("commit", ""))
+    if commit and git_.blob(commit, "") is None and (spec.get("source") or {}).get("branch"):
+        gfetch(spec["source"]["branch"], timeout=300)
+    return submit_lint.check(spec, git_, util_db(), force=force)
+
+
+BENCH_PATH_RE = re.compile(r"(?<![\w./$}{-])((?:[A-Za-z0-9_.-]+/)+[A-Za-z0-9_.-]+\.[A-Za-z0-9]+)\b")
+BENCH_SCRIPT_RE = re.compile(r"[\w./-]+\.(?:sh|py|tcl)\b")
+
+
+def bench_missing_paths(spec, git_=None):
+    """drive-0212 2026-10-09: repo files a bench needs that the job's source sync would not carry (it syncs
+    source.paths, default tools rtl physical Makefile, + extra_paths).  pi-ta15prod-c7c53c4c2-*: bench.sh read
+    tests/rtl/tb_hbm_production_clock_control.sv -> rc=2 'No such file' after a full route.  Scans the bench commands
+    and the scripts they call (one level, at the source commit) for literal relative paths that exist at the commit.
+    Returns the sorted parent directories to add to source.extra_paths."""
+    src = spec.get("source") or {}
+    commit = str(src.get("commit", ""))
+    benches = ((spec.get("stages") or {}).get("bench") or [])
+    if not commit or not benches:
+        return []
+    git_ = git_ or submit_lint.Git(REPO)
+    synced = [str(x).rstrip("/") for x in list(src.get("paths", DEFAULT_SRC_PATHS)) + list(src.get("extra_paths", []))]
+
+    def covered(path):
+        return any(path == x or path.startswith(x + "/") for x in synced)
+
+    texts = []
+    for b in benches:
+        cmd = b.get("cmd") or ""
+        texts.append(cmd)
+        for sc in sorted(set(BENCH_SCRIPT_RE.findall(cmd))):
+            body = git_.show(commit, sc.lstrip("./"))
+            if body:
+                texts.append(body)
+    need = set()
+    for t in texts:
+        for path in BENCH_PATH_RE.findall(t):
+            path = path.lstrip("./") if path.startswith("./") else path
+            if path.startswith("/") or covered(path) or ".." in path.split("/"):
+                continue
+            if git_.blob(commit, path) is not None:
+                need.add(path.rsplit("/", 1)[0])
+    return sorted(need)
+
+
+def bench_paths_at_submit(j):
+    """intake: add the directories the benches need to source.extra_paths (recorded in an event)"""
+    try:
+        need = bench_missing_paths(j["spec"])
+    except Exception as ex:  # noqa: BLE001  (never block intake on the scan itself)
+        event(j, f"bench path scan skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    if need:
+        j.setdefault("spec_submitted", json.loads(json.dumps(j["spec"])))
+        src = j["spec"]["source"]
+        src["extra_paths"] = list(src.get("extra_paths", [])) + need
+        event(j, f"bench needs repo paths outside the source sync: added {need} to source.extra_paths")
+
+
+def lint_at_submit(j):
+    """run the submit lint on a freshly ingested QUEUED job: may add the pin spread or REFUSE it"""
+    try:
+        res = submit_check(j["spec"])
+    except Exception as ex:  # noqa: BLE001  (never block intake on the estimate itself)
+        event(j, f"submit lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    v = res["verdict"]
+    if v == "SKIP":
+        return
+    if v == "PASS":
+        event(j, f"submit lint PASS (estimate {res.get('est')} b/um, limit {res.get('limit')}"
+                 + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")")
+    elif v == "FIX":
+        j["spec_submitted"] = j["spec"]
+        j["spec"] = submit_lint.apply_fix(j["spec"], res, now_iso())
+        event(j, f"submit lint FIX {res['fix']}: {res['message'][:500]}; settings added to the route_master stage "
+                 f"commands (spec.submit_lint)")
+        ledger(j, f"SUBMIT_LINT {res['fix']} applied: {res['message'][:300]}")
+    elif v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT FLOORPLAN_MARGIN: {res['message']}"[:1500]
+        j["submit_lint"] = res
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+
+
 def ingest():
     try:
         gfetch("main", timeout=300)
@@ -543,7 +671,7 @@ def ingest():
         p = jpath(name) if NAME_RE.match(str(name)) else None
         if p is not None and p.exists():
             j = load_job(name)
-            frozen = {k: v for k, v in j["spec"].items()}
+            frozen = {k: v for k, v in j.get("spec_submitted", j["spec"]).items()}
             if json.dumps(frozen, sort_keys=True) != json.dumps(spec, sort_keys=True) and not j.get("spec_change_noted"):
                 j["spec_change_noted"] = True
                 event(j, f"NOTE spec in {origin} changed after ingest: ignored (frozen at first sight; a new source "
@@ -574,6 +702,9 @@ def ingest():
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
                 event(j, f"ingested from {origin}")
+                lint_at_submit(j)
+                if j["status"] == "QUEUED":
+                    bench_paths_at_submit(j)
         save_job(j)
 
 
@@ -669,7 +800,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
-        res = cfg.get("reserve_ram_gb", 0) + info.get("external_remaining_gb", 0)
+        # OWNER 2026-10-09: NEVER reserve memory for future growth (no reserve_ram_gb, no external-job remaining-peak
+        # reservations) -- admit on measured MemAvailable minus own launches of the last few minutes only.
+        res = 0
         head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
@@ -766,7 +899,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                 return -9e9
             pt, pr = self.own_pending(h)
             fc = (cfg["cap"] - info["load1"] - pt - threads) / cfg["cap"]
-            fr = (info["mem_gb"] - pr - cfg.get("reserve_ram_gb", 0) - ram) / cfg.get("ram_gb", 1133)
+            fr = (info["mem_gb"] - pr - ram) / cfg.get("ram_gb", 1133)
             # OWNER 2026-10-08: memory is the only ADMISSION limit; ranking sends a job where it runs fastest among hosts
             # that fit -- free CPU weighs 0.5 (was 0.1: AGIdock sat at load 15/64 with 67 GB free while EPYCs ran 4x over)
             return fr + 0.5 * max(fc, -1.0) + (0.02 if h in pref else 0) - (10 if cfg.get("spillover_only") else 0)
@@ -1321,7 +1454,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py",
+           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
@@ -1550,6 +1683,12 @@ def preroute_finish(j, tag, text):
 
 def fp_lint_finish(j, tag, text):
     reasons = next((l[len("FLOORPLAN_MARGIN: "):] for l in text.splitlines() if l.startswith("FLOORPLAN_MARGIN: ")), text)
+    try:                       # lint-at-submit: the measured area predicts the next job of the same synthesis input
+        rec = submit_lint.util_record(j.get("spec_submitted", j["spec"]), reasons, submit_lint.Git(REPO), j["name"])
+        if rec:
+            util_db_add(*rec)
+    except Exception:  # noqa: BLE001
+        pass
     kill_own_stage(j)          # a parallel calibrate / route of the same floorplan stops too
     finish(j, "FLOORPLAN_MARGIN", reasons[:600],
            f"FLOORPLAN_MARGIN ({tag}): the floorplan failed the margin lint before global placement (no route spent; "
@@ -3324,11 +3463,17 @@ def step(j, fleet):
                 res = None
             j["eco"]["result"] = res
             ok = eco_passes(res, rc)
-            event(j, f"hold ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
+            vt = j["eco"].get("kind") == "vtswap"
+            event(j, f"{'VT-swap' if vt else 'hold'} ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
             if not ok:
-                ledger(j, f"HOLD-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
+                ledger(j, f"{'VT-SWAP' if vt else 'HOLD'}-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
                           f"after {res}")
                 m = j.get("metrics", {})
+                prev = j["eco"]
+                if vt and vtswap_eligible(j, m, j.get("failed_checks") or []) and start_vtswap_eco(j, fleet, m):
+                    if j["eco"] is prev:   # no capacity yet: re-judged at the verdict stage next tick, which relaunches
+                        j["status"] = "READY"
+                    return             # next VT-swap target launched
                 if not summarize_failure(j, fleet, m):
                     text = failure_text(j)
                     finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
@@ -3391,6 +3536,22 @@ def hm_auto_events(j):
     j["hm_auto_seen"] = seen[-20:]
 
 
+RECORD_DIR = "{RUN}/record"
+
+
+def precollect_cmd(spec):
+    """drive-0212 2026-10-09: the collect stage runs AFTER the verdict, but a verdict check may read what collect writes
+    (s81-dsfd-hstnh-515-pe-4a12f4d5d-tc-cl: lef_check_MATCH on {RUN}/record/check.json, written only by collect's
+    s81_die_view_ports check), so the check could never pass (TT +84.94 / FF +8.01 / DRC 0 -> NEEDS_RTL).  When a check
+    reads {RUN}/record and the collect command writes it, the verdict runs the collect command first (collect is an
+    idempotent export: it runs again after the verdict as before)."""
+    col = ((spec.get("stages") or {}).get("collect") or {}).get("cmd") or ""
+    checks = (spec.get("verdict") or {}).get("checks") or []
+    if RECORD_DIR in col and any(RECORD_DIR in (c.get("cmd") or "") for c in checks):
+        return col
+    return None
+
+
 def do_verdict(j, fleet, stl):
     if adoption_held(j):
         return
@@ -3403,6 +3564,13 @@ def do_verdict(j, fleet, stl):
             return
     j["metrics"] = m
     checks, failed = {}, []
+    pre = precollect_cmd(j["spec"])
+    if pre:
+        ok, out = remote_ok(j, pre, timeout=3600)
+        if not ok and TRANSIENT_RE.search(out):
+            raise RuntimeError(f"verdict pre-collect: ssh/network failure: {out.strip()[-200:]}")
+        event(j, f"verdict: ran the collect stage first (a check reads {{RUN}}/record): rc {'0' if ok else 'nonzero'}"
+                 + ("" if ok else f": {out.strip()[-200:]}"))
     for c in v.get("checks", []):
         # verdict checks may run real tools (stn_pa_check.sh routes a pin-access probe: > 300 s on AGIdock, which put
         # hbm_stn_mcast_r5/r6 into NEEDS_HUMAN as "loop errors"); spec checks[].timeout_s, default 1800
@@ -3477,6 +3645,8 @@ def do_verdict(j, fleet, stl):
             return
     if hold_only(j, m, failed, benches_ok) and start_hold_eco(j, fleet, m):
         return
+    if vtswap_eligible(j, m, failed, benches_ok) and start_vtswap_eco(j, fleet, m):
+        return
     if not summarize_failure(j, fleet, m):
         text = failure_text(j)
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
@@ -3497,6 +3667,74 @@ def hold_only(j, m, failed=(), benches_ok=True):
     return (m.get("ss_ps") is not None and m["ss_ps"] >= SS_MIN and m.get("drc") == 0 and m.get("ff_ps") is not None
             and m["ff_ps"] < FF_MIN and not failed and benches_ok and not (j.get("eco") or {}).get("tried")
             and (j["spec"].get("hold_eco") or {}).get("enabled", True) is not False)
+
+
+def vtswap_targets(j):
+    he = j["spec"].get("hold_eco") or {}
+    return [float(t) for t in he.get("vtswap_targets", VTSWAP_TARGETS)]
+
+
+def vtswap_eligible(j, m, failed=(), benches_ok=True):
+    """a thin TT setup miss the VT-swap ECO may close: TT in [VTSWAP_TT_FLOOR, 0), FF >= 0, DRC 0, no failed check /
+    bench / metric error, no installed ECO, VT-swap targets left, not turned off by the spec"""
+    he = j["spec"].get("hold_eco") or {}
+    e = j.get("eco") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if he.get("enabled", True) is False or he.get("vtswap", True) is False:
+        return False
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    if not (VTSWAP_TT_FLOOR <= tt < SS_MIN and ff >= FF_MIN and m.get("drc") == 0):
+        return False
+    if failed or not benches_ok or m.get("errors") or e.get("installed") or j.get("eco_stack"):
+        return False
+    if e.get("tried") and e.get("kind") != "vtswap":
+        return False
+    done = sum(1 for x in [*(j.get("eco_history") or []), e] if (x or {}).get("kind") == "vtswap")
+    return done < len(vtswap_targets(j))
+
+
+def start_vtswap_eco(j, fleet, m):
+    """launch vtswap_eco.sh as the job's ECO stage (tag hold_eco.aN, status ECO): the hold-ECO completion path installs /
+    re-verdicts / records it unchanged (result.json -> eco_passes -> eco_install_cmd -> verdict)"""
+    rb, ob = eco_paths(j, m)
+    if not rb:
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"VT-swap ECO waiting for capacity: {why}")
+        return True            # stays at the verdict stage; the next tick retries
+    he, v = j["spec"].get("hold_eco") or {}, j["spec"].get("verdict", {})
+    e = j.get("eco") or {}
+    hist = [x for x in (j.get("eco_history") or []) if x.get("kind") == "vtswap"]
+    n = len(hist) + (1 if e.get("kind") == "vtswap" else 0)
+    target = vtswap_targets(j)[n]
+    cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
+    if e:
+        j.setdefault("eco_history", []).append(e)
+        j["attempt"] += 1          # a fresh stage tag: hold_eco.a<attempt>.rc of the previous ECO stays as evidence
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    tt = m["ss_ps"]
+    out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
+    env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
+           f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
+           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
+    if m.get("setup_post_sdc"):
+        env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    cmd = f"{env} bash {{CL}}/vtswap_eco.sh {rb} {ob} {out} {j['spec']['block']} " + " ".join(shlex.quote(p) for p in post_sdcs)
+    ship_helpers(j["host"], j["run"])
+    j["eco"] = dict(tried=True, kind="vtswap", rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
+                    setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=tt, ff_ps=m["ff_ps"]),
+                    started=now_iso(), target_ps=target, lvt_cap_pct=cap, auto=True)
+    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=16)
+    launch_stage(j, st, cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"thin TT setup miss ({setup_corner_label(m)} {tt:+.2f} / FF {m['ff_ps']:+.2f} / DRC 0): post-route VT-swap setup ECO "
+             f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
+    ledger(j, f"VT-SWAP ECO launched (loop): TT {tt:+.2f} / FF {m['ff_ps']:+.2f}, target {target:g}, LVT cap {cap:g} %")
+    experiment(j, "running: post-route VT-swap setup ECO")
+    return True
 
 
 def eco_output(j):
@@ -3975,10 +4213,41 @@ def advance_job(name, fleet):
 
 
 BULK_RELEASE_PER_TICK = 4
+# NEAR-MISS RETENTION (merge-eco 2026-10-09): eco-sweep found the routed databases of near-miss elements gone
+# (smh_tile_w, su12_full, qfd_hub, frame_station, router: review_queue/eco-sweep.md ES-1..8), so nothing was left to
+# ECO or re-STA.  A non-closed route with TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS keeps its whole route tree
+# (6_final odb/spef/sdc/v, ORFS objects the re-STA reads, src snapshot) until its element (spec block) has a CLOSED job.
+# Enforced in three places: release_bulk() skips it, BULK_RELEASE_SH itself refuses a run whose corner_sta*.json is a
+# near miss unless the caller sets NEAR_MISS_RELEASE=1 (manual reuse of the script keeps them), and the hourly fleet
+# sweeper keeps any unit holding a near-miss route (tools/fleet/sweep.py) and every run dir in near_miss_retain.json.
+NEAR_MISS_PS = -100.0
+NEAR_MISS_JSON = STATE / "near_miss_retain.json"
 # Route bulk released on terminal jobs (fleet disk guard 2026-10-07): intermediate ODB/DEF/SPEF/guides/netlists and
 # ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
 BULK_RELEASE_SH = r"""set -u
 R=%(run)s
+if [ "${NEAR_MISS_RELEASE:-0}" != 1 ] && python3 - "$R" <<'NMPY'
+import json, os, sys
+r = sys.argv[1].rstrip("/")
+for dp, dn, fn in os.walk(r):
+    rel = dp[len(r):]
+    dn[:] = [] if rel.count("/") >= 8 else [d for d in dn if not (rel == "" and d == "src") and d not in ("objects", ".git")]
+    for f in fn:
+        if not (f.startswith("corner_sta") and f.endswith(".json")):
+            continue
+        try:
+            d = json.load(open(os.path.join(dp, f)))
+            su = d.get("setup_tt") or d.get("setup_ss") or {}
+            tt, ff = su.get("worst_slack_ps"), (d.get("hold_ff") or {}).get("worst_slack_ps")
+        except Exception:
+            continue
+        num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+        if num(tt) and num(ff) and tt >= -100 and ff >= -100 and not (tt >= 0 and ff >= 0):
+            print("NEAR_MISS", os.path.join(dp, f), tt, ff)
+            sys.exit(0)
+sys.exit(1)
+NMPY
+then echo "RETAIN near-miss route (TT/FF >= -100 ps, not closed); set NEAR_MISS_RELEASE=1 once the element closes"; exit 4; fi
 for p in "$R"/cl/*.pid; do [ -f "$p" ] && [ ! -f "${p%%.pid}.rc" ] && kill -0 "$(cat "$p")" 2>/dev/null && { echo LIVE "$p"; exit 3; }; done
 for c in $(docker ps -q 2>/dev/null); do docker inspect --format '{{range .Mounts}}{{.Source}} {{end}}' $c | grep -q "$R/" && { echo LIVE docker; exit 3; }; done
 before=$(du -sm "$R" 2>/dev/null | cut -f1)
@@ -4036,9 +4305,47 @@ def closed_blocks(jobs):
     return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
 
 
+def near_miss(j, closed=None):
+    """a non-CLOSED job whose route verdict is TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS (and not both >= the line),
+    while its element (spec block) has no counting CLOSED job: its route tree is retained"""
+    if j.get("status") == "CLOSED":
+        return False
+    m = j.get("metrics") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (tt, ff)):
+        return False
+    if not (tt >= NEAR_MISS_PS and ff >= NEAR_MISS_PS) or (tt >= SS_MIN and ff >= FF_MIN):
+        return False
+    return closed is None or j["spec"].get("block") not in closed
+
+
+def write_near_miss_retain(jobs, closed=None):
+    """STATE/near_miss_retain.json: run dirs (+ ORFS dir) of retained near-miss routes, read by tools/fleet/fleet_sweep.py"""
+    closed = closed_blocks(jobs) if closed is None else closed
+    rows = []
+    for x in jobs:
+        if x.get("run") and x.get("host") and near_miss(x, closed):
+            m = x.get("metrics") or {}
+            rows.append(dict(job=x["name"], block=x["spec"].get("block"), host=x["host"], run=x["run"],
+                             orfs_dir=m.get("orfs_dir"), tt_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"),
+                             status=x["status"]))
+    body = dict(schema="opentallas.closure_loop.near_miss_retain.v1", generated=now_iso(), threshold_ps=NEAR_MISS_PS,
+                rule="non-closed route with TT >= threshold and FF >= threshold keeps its route tree until its block closes",
+                jobs=sorted(rows, key=lambda r: r["job"]))
+    try:
+        tmp = NEAR_MISS_JSON.with_suffix(".tmp")
+        tmp.write_text(json.dumps(body, indent=1) + "\n")
+        tmp.replace(NEAR_MISS_JSON)
+    except OSError as ex:
+        log(f"near_miss_retain.json not written: {ex}")
+    return rows
+
+
 def release_bulk(jobs):
-    """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk."""
+    """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
+    except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
     closed = closed_blocks(jobs)
+    write_near_miss_retain(jobs, closed)
     n = 0
     for x in jobs:
         if n >= BULK_RELEASE_PER_TICK:
@@ -4047,14 +4354,24 @@ def release_bulk(jobs):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
+        if near_miss(x, closed) or (x.get("near_miss_retained") and x["spec"].get("block") not in closed):
+            continue
         if x["host"] not in {h["name"] for h in hosts_table()}:
             continue
         with job_lock(x["name"]):
             j = load_job(x["name"])
             if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
                 continue
-            r = ssh(j["host"], BULK_RELEASE_SH % dict(run=shlex.quote(j["run"])), timeout=900)
+            # the block is closed (or the job has no near-miss verdict): a near-miss corner_sta may be released
+            rel = "NEAR_MISS_RELEASE=1\n" if j["spec"].get("block") in closed else ""
+            r = ssh(j["host"], rel + BULK_RELEASE_SH % dict(run=shlex.quote(j["run"])), timeout=900)
             n += 1
+            if r.returncode == 4:
+                if not j.get("near_miss_retained"):
+                    j["near_miss_retained"] = now_iso()
+                    event(j, f"bulk release refused: near-miss route retained ({r.stdout.strip()[-200:]})")
+                    save_job(j)
+                continue
             if r.returncode == 3:
                 event(j, f"bulk release skipped: live process ({r.stdout.strip()[:120]})")
                 continue
@@ -4235,8 +4552,91 @@ def cmd_status(a):
 def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
     errs = validate(spec)
+    if not errs:
+        res = submit_check(spec)
+        print(f"submit lint {res['verdict']}: {res.get('message', '')}"
+              + (f" (estimate {res.get('est')} b/um, with fix {res.get('est_fix')})" if res.get("est") else ""))
+        if res["verdict"] == "REFUSE":
+            errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
+        elif res["verdict"] == "FIX":
+            print(f"  the loop will add {res['fix']} {res['fix_env']} to the route_master stage commands at intake")
+        need = bench_missing_paths(spec)
+        if need:
+            print(f"bench needs repo paths outside the source sync: the loop will add {need} to source.extra_paths "
+                  f"at intake (or list them in source.extra_paths)")
     print("\n".join(errs) if errs else "OK")
     sys.exit(1 if errs else 0)
+
+
+def fp_margin_time(j):
+    """when the job finished FLOORPLAN_MARGIN (its event), else its last update"""
+    for e in reversed(j.get("events", [])):
+        if " FLOORPLAN_MARGIN" in e[:60]:
+            return e.split(" ", 1)[0]
+    return j.get("updated", "")
+
+
+def release_route_key(j):
+    """drop a FLOORPLAN_MARGIN job from its block@commit route-key list: it stopped before global placement and spent
+    no route, so its requeue must not be REFUSED by MAX_ROUTES_PER_KEY"""
+    keys = route_keys()
+    key = f"{j['spec']['block']}@{j['spec']['source']['commit'][:12]}"
+    if j["name"] in keys.get(key, []):
+        keys[key] = [n for n in keys[key] if n != j["name"]]
+        tmp = keys_path().with_suffix(".tmp")
+        tmp.write_text(json.dumps(keys, indent=1) + "\n")
+        os.replace(tmp, keys_path())
+
+
+def cmd_submit_recheck(a):
+    """lint-at-submit back-check: every FLOORPLAN_MARGIN job since --since with no live successor (a job of the same
+    block that is not terminal, or a later CLOSED one) is re-judged by the submit lint; pin-density-only failures an
+    approved automatic fix passes (forced: the measured failure outranks the lower-bound estimate) are requeued
+    (--requeue: the fixed spec, spec.submit_lint recorded, named <name>-ls in the drop dir; the failed job's route-key
+    slot is released, it spent no route); the rest are listed with their failing checks"""
+    jobs = all_jobs()
+    out = []
+    for j in sorted(jobs, key=fp_margin_time):
+        if j["status"] != "FLOORPLAN_MARGIN" or fp_margin_time(j) < a.since:
+            continue
+        blk = j["spec"].get("block")
+        succ = [x["name"] for x in jobs if x["name"] != j["name"] and x["spec"].get("block") == blk
+                and (x["status"] not in TERMINAL or (x["status"] in ("CLOSED", "SMOKE_OK")
+                                                     and x.get("created", "") > j.get("created", "")))]
+        reason = j.get("reason") or ""
+        checks = sorted({part.split(":", 1)[0].strip() for part in reason.split(" | ") if ":" in part})
+        spec = j.get("spec_submitted", j["spec"])
+        try:
+            rec = submit_lint.util_record(spec, reason, submit_lint.Git(REPO), j["name"])
+            if rec:
+                util_db_add(*rec)
+        except Exception:  # noqa: BLE001
+            pass
+        if succ:
+            out.append(f"SUCCESSOR {j['name']}: {','.join(checks)} -> live successor {', '.join(succ[:3])}")
+            continue
+        pin_only = checks == ["pin_density"]
+        res = submit_check(spec, force=pin_only)
+        est = f" est {res.get('est')} with fix {res.get('est_fix')}" if res.get("est") else ""
+        if pin_only and res["verdict"] == "FIX":
+            new = (j["name"][:92] + "-ls")
+            line = f"REQUEUE {j['name']} -> {new}: pin density only, fix {res['fix']} {res['fix_env']}{est}"
+            if a.requeue:
+                nspec = submit_lint.apply_fix(spec, res, now_iso())
+                nspec["name"] = new
+                nspec["submit_lint"]["requeued_from"] = j["name"]
+                release_route_key(j)
+                DROP.mkdir(parents=True, exist_ok=True)
+                (DROP / f"{new}.json").write_text(json.dumps(nspec, indent=1) + "\n")
+            out.append(line)
+        else:
+            what = ("pin density only; " if checks == ["pin_density"] else "") + f"submit lint {res['verdict']}"
+            out.append(f"LIST {j['name']} [{blk}]: {','.join(checks) or '?'}: {reason[:220]} || {what}: "
+                       f"{res.get('message', '')[:400]}{est}")
+    text = "\n".join(out)
+    print(text)
+    if a.log:
+        append_locked(Path(a.log), "".join(f"{now_iso()} [lint-at-submit recheck] {x}\n" for x in out))
 
 
 @locked_job_command
@@ -4559,6 +4959,8 @@ def main():
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
+    sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
+    sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
@@ -4584,6 +4986,8 @@ def main():
         cmd_status(a)
     elif a.cmd == "validate":
         cmd_validate(a)
+    elif a.cmd == "submit-recheck":
+        cmd_submit_recheck(a)
     elif a.cmd == "retry":
         cmd_retry(a)
     elif a.cmd == "retry-eco":
