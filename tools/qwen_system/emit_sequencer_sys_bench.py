@@ -33,10 +33,10 @@ def emit(out):
     ref=[f'.{n}({"r_" if dr=="output" else ""}{n})' for dr,w,n in ports]
     s.append('ot_qfd_sp_constants_sequencer #(.FQ_HEAD(1),.MSTN(1)) reference_master ('+','.join(ref)+');')
     s += ['integer errors=0, cycles=0, starts=0, me_ops=0,su_ops=0,coll_ops=0,i,bank,j,rx_left=0,rx_rank=0,case_no=0;',
-          'reg previous_done=0; reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;',
+          'reg check_commands=1,previous_done=0; reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;',
           'always @(posedge clk) begin expected_code<=(stage==0?0:stage==37?36:stage-1)*512; expected_scale<=(stage==0?0:stage==37?36:stage-1)*1056; end',
           'task bad(input [255:0] what); begin errors=errors+1; if(errors<20)$display("SYS_BAD cycle=%0d stage=%0d what=%0s",cycles,stage,what); end endtask',
-          'always @(negedge clk) if(rst_n) begin',
+          'always @(negedge clk) if(rst_n && check_commands) begin',
           ' cycles=cycles+1;',
           ' if(h_start)begin',
           '  $display("SYS_START stage=%0d cycle=%0d",stage,cycles);',
@@ -86,6 +86,11 @@ def emit(out):
           '  $display("SYS_CASE pos=%0d starts=%0d me=%0d su=%0d coll=%0d cycles=%0d bad=%0d",d_pos,starts,me_ops,su_ops,coll_ops,d_cycles,errors);',
           '  repeat(5)@(negedge clk);',
           ' end',
+          ' check_commands=0;rst_n=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);',
+          ' d_start=1;@(negedge clk);d_start=0;',
+          " wait(dut.prog_re);force dut.prog_addr=12'd64;repeat(2)@(negedge clk);release dut.prog_addr;",
+          ' wait(d_done);@(negedge clk);if(!d_fault || d_fault_code!=2 || d_drained)bad("program bounds fault");',
+          ' $display("SYS_BOUNDS_FAULT pass=%0d code=%0d",d_fault && d_fault_code==2 && !d_drained,d_fault_code);',
           ' $display("SEQUENCER_SYS_RESULT pass=%0d cases=2 stages=76 me=%0d su=%0d coll=%0d bad=%0d",errors==0,me_ops,su_ops,coll_ops,errors);',
           ' if(errors)$fatal(1,"control/command mismatch");$finish;',
           'end endmodule']
