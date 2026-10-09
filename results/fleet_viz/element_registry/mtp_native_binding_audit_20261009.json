@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp_rom",
+      "recorded_at": "2026-10-09T14:05:19.534891+00:00",
+      "description": "Native production composition blocked. Existing dsfd_mtp_seq leaf has CLOSED TT63.55/FF18.83/DRC0 evidence; seed77/drafthead34/RESULT512 wrapper ports do not bind missing fullK15360 seed/draft/verify/rollback providers. Leaf closure is not full binding closure.",
+      "source": {
+        "commit": "fac1b9ad4",
+        "paths": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "component exists; native production composition missing",
+        "evidence": [
+          "results/rtl/mtp_registry_gap_audit_20261009/native_seq_binding.json"
+        ]
+      },
+      "model": {
+        "status": "component sized; full composition unbound",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "component forced/hash fixtures PASS; full native binding pending",
+          "evidence": [
+            "results/rtl/mtp_registry_gap_audit_20261009/native_seq_binding.json"
+          ]
+        },
+        "negative": {
+          "status": "component off1/nohold genuine failures; full native binding pending",
+          "evidence": [
+            "results/rtl/mtp_registry_gap_audit_20261009/native_seq_binding.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "full native binding pending; existing leaf CLOSED separately",
+        "corners": {},
+        "evidence": [
+          "results/rtl/mtp_registry_gap_audit_20261009/native_seq_binding.json"
+        ]
+      },
+      "dependencies": [
+        "Claude fullK15360 executable descriptor/provider/collector",
+        "Draft rows-to-head completion provider",
+        "Causal verify and committed rollback join"
+      ],
+      "integration": {
+        "status": "blocked; no implemented full top/approved recipe",
+        "evidence": [
+          "results/rtl/mtp_registry_gap_audit_20261009/native_seq_binding.json"
+        ]
+      }
+    }
+  ]
+}

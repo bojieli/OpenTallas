@@ -1,0 +1,69 @@
+{
+  "schema": "opentallas.registry_gap_action.v1",
+  "recorded_at": "2026-10-09T14:04:30.743433+00:00",
+  "element": "dsrom_mtp_seq_native_binding",
+  "baseline_idle": 51,
+  "action": "bind existing closed component evidence without aliasing full native composition to component closure",
+  "component": {
+    "element": "dsfd_mtp_seq",
+    "job": "mtp-mtp_seq-b-511fa714d-tc",
+    "status": "CLOSED",
+    "source_commit": "511fa714d18826c98280aa2248d04f8d82142e53",
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc",
+    "corners": {
+      "TT_setup_ps": 63.55,
+      "FF_hold_ps": 18.83,
+      "SS_sensitivity_ps": -275.87,
+      "DRC": 0
+    },
+    "bench_results": {
+      "bench_pass_s0_tr_forced": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true
+      },
+      "bench_pass_s0_hash_u3": {
+        "expect": "pass",
+        "rc": 0,
+        "ok": true
+      },
+      "bench_fail_s0_neg_off1": {
+        "expect": "fail",
+        "rc": 1,
+        "ok": true
+      },
+      "bench_fail_s0_neg_nohold": {
+        "expect": "fail",
+        "rc": 1,
+        "ok": true
+      }
+    },
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/mtp-mtp_seq-b-511fa714d-tc/routes/mtp_mtp_seq_b_511fa714d_tc/corner_sta.json"
+    ],
+    "scope": "head-die sequencer component only; full native provider/composition not qualified"
+  },
+  "actual_wrapper_bits": {
+    "cfg": 42,
+    "RESULT": 512,
+    "seed": 77,
+    "rows_ready": 10,
+    "draft_head_request": 34,
+    "draft_head_result": 34,
+    "accept_observation": 57
+  },
+  "source_paths_sha256": {
+    "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv": "3d9db273aaf792fcd060a5f5885e9e195c08a117456a927408f71b9aff0ea2f4",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv": "b733347ea2eaa2267e366a4c55ca7300147b9224dc0f7cb734bd00d358c9f111",
+    "tools/dsrom_s81_fulldie.py": "712719f0ed600243ca4e7fab616bcdf04862ef79437d7cca13d313d107fa413e"
+  },
+  "blockers": [
+    "Full K15360 native seed executable descriptor/provider/collector missing",
+    "Actual draft rows-to-head completion provider remains unbound",
+    "Causal verify plus committed rollback join production composition pending",
+    "Old aggregate64/128/576 buses do not describe this wrapper"
+  ],
+  "route_action": "No new route: existing component already CLOSED; full binding has no implemented physical top/approved recipe",
+  "design_authority": "Claude owns missing architecture/compiler/provider; Codex routine-only scope retained"
+}
