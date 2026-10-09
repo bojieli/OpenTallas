@@ -1,0 +1,16 @@
+{
+  "recorded_at": "2026-10-09T13:01:28.552213+00:00",
+  "operation": "closure_loop.py validate for two EHASH watched specs",
+  "tool_worktree": "/home/ubuntu/wt-codex-closure-daemon-20261007l",
+  "unexpected_behavior": "Registered IO submit lint implicitly invoked local Yosys rtl_boundary synthesis rather than metadata-only validation",
+  "observed_processes": [
+    1976822,
+    1977252,
+    1977282
+  ],
+  "observed_child_command": "yosys read_verilog shipped engram hash and ot_hbm_idx_ehash_ds; chparam ENABLE_GENERIC1 NSLOT8 MUTANT0; proc; flatten; techmap; write_json",
+  "result": "Both invocations terminal rc0 before intervention; not cited as admitted remote qualification",
+  "prevention": "No further local validate with registered IO. Use schema-only local metadata and admitted remote boundary/synthesis checks. Gate remains mandatory.",
+  "root_notified": true,
+  "owner_requested_remote_proof": true
+}
