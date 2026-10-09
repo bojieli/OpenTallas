@@ -210,7 +210,16 @@ module ot_hgi_fp4qdq (
     reg [30:0]       xm;
     reg [2:0]        cc;
     reg [6:0]        qp;
-    reg [1:0]        pa, pb, pc;
+    //: balanced count of seven predicates: (p0+p1)+(p2+p3) and (p4+p5)+p6
+    function automatic [2:0] cnt7(input [6:0] p);
+        reg [1:0] a, b2, c;
+        begin
+            a  = {1'b0, p[0]} + {1'b0, p[1]};
+            b2 = {1'b0, p[2]} + {1'b0, p[3]};
+            c  = {1'b0, p[4]} + {1'b0, p[5]};
+            cnt7 = ({1'b0, a} + {1'b0, b2}) + ({1'b0, c} + {2'b0, p[6]});
+        end
+    endfunction
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s5_v <= 1'b0;
         else s5_v <= s4_v;
@@ -226,11 +235,8 @@ module ot_hgi_fp4qdq (
             //: hgi-takeover: the seven predicates are evaluated in parallel and counted by a
             //: balanced tree (same count as the former serial cc = cc + 1 chain)
             for (j = 0; j < 7; j = j + 1)
-                qp[j] = !s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1));
-            pa = {1'b0, qp[0]} + {1'b0, qp[1]};
-            pb = {1'b0, qp[2]} + {1'b0, qp[3]};
-            pc = {1'b0, qp[4]} + {1'b0, qp[5]};
-            cc = ({1'b0, pa} + {1'b0, pb}) + ({1'b0, pc} + {2'b0, qp[6]});
+                qp = {(!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1))), qp[6:1]};
+            cc = cnt7(qp);
             s5_c[i] <= cc;
             s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
