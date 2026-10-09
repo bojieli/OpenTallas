@@ -1,0 +1,129 @@
+{
+  "source_commit": "859068da1",
+  "scope": "Mapped structural independence (known ASAP7 library outputs QN/Y, macro rd_out fallback when JSON lacks port_directions) of complemented mutable control/scoreboard state; not a netlist fault simulation or physical signoff",
+  "pairs": [
+    {
+      "primary": "group_tag[0]",
+      "complement": "group_tag_n[0]",
+      "width": 11,
+      "counts": {
+        "constant_pair": 3,
+        "nonregister_driver_failure": 8
+      }
+    },
+    {
+      "primary": "group_tag[1]",
+      "complement": "group_tag_n[1]",
+      "width": 11,
+      "counts": {
+        "constant_pair": 3,
+        "nonregister_driver_failure": 8
+      }
+    },
+    {
+      "primary": "group_tag[2]",
+      "complement": "group_tag_n[2]",
+      "width": 11,
+      "counts": {
+        "constant_pair": 3,
+        "nonregister_driver_failure": 8
+      }
+    },
+    {
+      "primary": "group_tag[3]",
+      "complement": "group_tag_n[3]",
+      "width": 11,
+      "counts": {
+        "constant_pair": 3,
+        "nonregister_driver_failure": 8
+      }
+    },
+    {
+      "primary": "next_line",
+      "complement": "next_line_n",
+      "width": 11,
+      "counts": {
+        "nonregister_driver_failure": 11
+      }
+    },
+    {
+      "primary": "nlines",
+      "complement": "nlines_n",
+      "width": 11,
+      "counts": {
+        "constant_pair": 2,
+        "nonregister_driver_failure": 9
+      }
+    },
+    {
+      "primary": "read_j[0]",
+      "complement": "read_j_n[0]",
+      "width": 768,
+      "counts": {
+        "constant_pair": 224,
+        "nonregister_driver_failure": 544
+      }
+    },
+    {
+      "primary": "read_j[1]",
+      "complement": "read_j_n[1]",
+      "width": 768,
+      "counts": {
+        "constant_pair": 224,
+        "nonregister_driver_failure": 544
+      }
+    },
+    {
+      "primary": "read_j[2]",
+      "complement": "read_j_n[2]",
+      "width": 768,
+      "counts": {
+        "constant_pair": 224,
+        "nonregister_driver_failure": 544
+      }
+    },
+    {
+      "primary": "read_j[3]",
+      "complement": "read_j_n[3]",
+      "width": 768,
+      "counts": {
+        "constant_pair": 224,
+        "nonregister_driver_failure": 544
+      }
+    },
+    {
+      "primary": "read_need[0]",
+      "complement": "read_need_n[0]",
+      "width": 64,
+      "counts": {
+        "nonregister_driver_failure": 64
+      }
+    },
+    {
+      "primary": "read_need[1]",
+      "complement": "read_need_n[1]",
+      "width": 64,
+      "counts": {
+        "nonregister_driver_failure": 64
+      }
+    },
+    {
+      "primary": "read_need[2]",
+      "complement": "read_need_n[2]",
+      "width": 64,
+      "counts": {
+        "nonregister_driver_failure": 64
+      }
+    },
+    {
+      "primary": "read_need[3]",
+      "complement": "read_need_n[3]",
+      "width": 64,
+      "counts": {
+        "nonregister_driver_failure": 64
+      }
+    }
+  ],
+  "failure_bits": 2484,
+  "verdict": "FAIL"
+}

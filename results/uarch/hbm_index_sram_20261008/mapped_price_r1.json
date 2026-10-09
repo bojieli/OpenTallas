@@ -1,0 +1,53 @@
+{
+  "source_commit": "859068da1",
+  "mapping_verdict": "MAPPED",
+  "protected_state_independence": "UNPROVED_AUDIT_INCOMPLETE",
+  "standardcell_area_mm2": 0.06973227629999999,
+  "native_macro_count": 64,
+  "native_macro_area_mm2": 0.24906092544,
+  "macro_plus_standardcell_area_mm2": 0.31879320174,
+  "sequential_area_um2": 29925.97488,
+  "DFF_cells": {
+    "DFFHQNx1_ASAP7_75t_R": 85264,
+    "DFFASRHQNx1_ASAP7_75t_R": 13356,
+    "total": 98620
+  },
+  "library_corner": "TT pathfinding only",
+  "clock_placement_wire_signoff_included": false,
+  "mapped_json_sha256": "f28be1480e7b5479829d2563eb9fd2d653c2e1536dc0ef0f765823d9afcc3f46",
+  "mapped_verilog_sha256": "2f4635315a4a45340d4b331eb10e85da9bed840e33c3ae9387b601236e1f760b",
+  "mapped_json_gz_sha256": "23d0038374b1903cf7096a7fb2cb57459a1cb2e06152d8f6b81a365f4ed4a743",
+  "artifact_host": "ot-epyc1tb",
+  "artifact_directory": "/srv/opentallas-scratch/codex/hbm-index-sram-20261008/rotate-synth-r1",
+  "audit_correction": "Original audit incorrectly classified library output roots as undriven because mapped JSON omitted port_directions. Corrected QN/Y pin recovery still cannot identify control FFs through optimized public alias nets. Neither audit establishes FF merging; preserve raw FAIL outputs as audit failures, not hardware-failure proof. Before physical adoption require a complete actual-library FF identity/independence audit. No new control RTL or synthesis launched.",
+  "partition_scope": "Current flattened central64-decoded-bank gather. Per-PC named-net root inventory is incomplete/overlapping and is not physical placement or area attribution. ABC combinational hierarchy provenance absent.",
+  "source_bank_inventory_unoptimized": {
+    "per_PC": {
+      "macros": 2,
+      "encoder_instances_K256R10": 1,
+      "decoder_instances_K256R10": 2,
+      "encoder_register_bits": 266,
+      "write_metadata_primary_and_complement_bits": 26,
+      "sidecar_bits": 640,
+      "sidecar_read_register_bits": 20,
+      "capture_register_bits": 532,
+      "decoder_register_bits_including_unused_ov": 1052,
+      "valid_scoreboard_primary_and_complement_bits": 128
+    },
+    "per_bank": {
+      "macro": "ot_sram_1r1w_128x256_m1_r2c2",
+      "logical_rows": 32,
+      "native_rows": 128,
+      "check_bits": 320,
+      "check_read_register_bits": 10,
+      "capture_bits": 266,
+      "decoder_syndrome_data_valid_bits": 267,
+      "decoder_corrected_data_flags_bits": 259
+    }
+  },
+  "newer_source_changes_not_mapped": {
+    "final_credit_retention": "8 comparisons,0FF/extra cycles; afeaad741",
+    "partial_final_group": "reuse8 bounds predicates,0FF/extra cycles; 9c4cd032a"
+  },
+  "physical_adopted": false
+}

@@ -1,0 +1,215 @@
+{
+  "source_commit": "859068da1",
+  "DFF_cells_total": 98620,
+  "DFF_cells_driving_PC_named_nets": 24864,
+  "DFF_cells_not_attributed_to_PC_named_nets": 73756,
+  "per_PC": {
+    "0": 777,
+    "10": 777,
+    "11": 777,
+    "12": 777,
+    "13": 777,
+    "14": 777,
+    "15": 777,
+    "16": 777,
+    "17": 777,
+    "18": 777,
+    "19": 777,
+    "1": 777,
+    "20": 777,
+    "21": 777,
+    "22": 777,
+    "23": 777,
+    "24": 777,
+    "25": 777,
+    "26": 777,
+    "27": 777,
+    "28": 777,
+    "29": 777,
+    "2": 777,
+    "30": 777,
+    "31": 777,
+    "3": 777,
+    "4": 777,
+    "5": 777,
+    "6": 777,
+    "7": 777,
+    "8": 777,
+    "9": 777
+  },
+  "component_DFF_roots": {
+    "capture": 16384,
+    "decoder": 16512,
+    "other_local_metadata": 160,
+    "encoder": 8192
+  },
+  "component_counts_may_overlap": true,
+  "scope": "Mapped FF output roots intersecting retained PC namespace nets, conservative attribution; ABC combinational area lost hierarchy provenance. Central/global and frontend-renamed arrays may be unattributed. Current RTL is central64-decoded-bank gather, not distributed285bit collector.",
+  "PC0_net_sample": [
+    {
+      "net": "pcs[0].banks[0].capture",
+      "width": 266,
+      "DFF_roots": 256
+    },
+    {
+      "net": "pcs[0].banks[0].dec.ce",
+      "width": 1,
+      "DFF_roots": 1
+    },
+    {
+      "net": "pcs[0].banks[0].dec.clk",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].dec.i",
+      "width": 32,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].dec.rst_n",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].dec.syn",
+      "width": 10,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].dec.v",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].dec.v1",
+      "width": 1,
+      "DFF_roots": 1
+    },
+    {
+      "net": "pcs[0].banks[0].dec.w",
+      "width": 266,
+      "DFF_roots": 256
+    },
+    {
+      "net": "pcs[0].banks[0].rd",
+      "width": 256,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].re",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].read_index",
+      "width": 12,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[0].we",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].capture",
+      "width": 266,
+      "DFF_roots": 256
+    },
+    {
+      "net": "pcs[0].banks[1].dec.ce",
+      "width": 1,
+      "DFF_roots": 1
+    },
+    {
+      "net": "pcs[0].banks[1].dec.clk",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].dec.i",
+      "width": 32,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].dec.rst_n",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].dec.syn",
+      "width": 10,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].dec.v",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].dec.v1",
+      "width": 1,
+      "DFF_roots": 1
+    },
+    {
+      "net": "pcs[0].banks[1].dec.w",
+      "width": 266,
+      "DFF_roots": 256
+    },
+    {
+      "net": "pcs[0].banks[1].rd",
+      "width": 256,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].re",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].read_index",
+      "width": 12,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].banks[1].we",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].ej",
+      "width": 12,
+      "DFF_roots": 5
+    },
+    {
+      "net": "pcs[0].enc.c",
+      "width": 10,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].enc.clk",
+      "width": 1,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].enc.d",
+      "width": 256,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].enc.i",
+      "width": 32,
+      "DFF_roots": 0
+    },
+    {
+      "net": "pcs[0].enc.q",
+      "width": 266,
+      "DFF_roots": 256
+    },
+    {
+      "net": "pcs[0].encoded",
+      "width": 266,
+      "DFF_roots": 256
+    }
+  ]
+}
