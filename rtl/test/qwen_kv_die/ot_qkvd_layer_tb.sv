@@ -21,6 +21,7 @@ module ot_qkvd_layer_tb #(
     parameter integer PHY_LAT = 5,
     parameter integer QX     = 0,      // KV die: extra stages seq -> stack aggregators beyond LINK (placement)
     parameter integer RX     = 0,      // KV die: stages attention hub -> seq (placement)
+    parameter integer KVL    = 0,      // KV die: stages seq -> KV landings (the posted KV rows; placement)
     parameter integer MUT    = 0,
     parameter integer DROP_AT = 300,
     parameter [31:0]  SCALE  = 32'h3DB504F3,
@@ -87,10 +88,6 @@ module ot_qkvd_layer_tb #(
     localparam integer LB  = (RT_LNK + 4 > 32) ? RT_LNK + 4 : 32;
     localparam integer KB  = (RT_KV + 4 > 32) ? RT_KV + 4 : 32;
     // KV end: TX RES EMBD HCTL (4-6), RX CTL Q KVN EMBQ (0-3)
-    localparam [31:0] K_IBD = {8'd8, 8'd4, 8'(KB + 8), 8'(KB + 8)};
-    localparam [31:0] K_FCR = {8'd0, 8'd4, 8'(LB), 8'(LB)};
-    localparam [31:0] K_RBD = {8'd32, 8'd8, 8'(LB), 8'd4};
-    localparam [31:0] K_OCR = {8'd32, 8'd8, 8'(KB + 8), 8'd4};
 
     // ---------------- ROM die: SU / VM / sequencer faces -> ROM_ST relay stages -> ot_qkvd_rom_end ----------------
     wire          x3_v_r, ea_v_r, dc_v_r, x3_cr_r, ea_cr_r, dc_cr_r, ar_v_r, eq_v_r, dh_v_r, ar_cr_r, dh_cr_r;
@@ -130,10 +127,10 @@ module ot_qkvd_layer_tb #(
     // ---------------- KV die ----------------
     wire [3:0]     kr_v;  wire [4*W-1:0] kr_d;  wire [3:0] kr_cr;
     wire [2:0]     kt_v;  wire [3*W-1:0] kt_d;  wire [2:0] kt_cr;
-    ot_qkvd_d2d #(.NT(3), .NR(4), .TXB(4), .RXB(0), .IBD(K_IBD), .FCR(K_FCR), .RBD(K_RBD), .OCR(K_OCR)) u_kv (
+    ot_qkvd_kv_end #(.QD(KB + 8), .UCX(KB + 8)) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
-        .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .fault(faults[1]),
-        .fault_cause(kv_fc));
+        .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .pll_fwd_i(clk),
+        .rst_fwd_i(rst_n), .pll_fwd_pad(), .rst_fwd_pad(), .fault(faults[1]), .fault_cause(kv_fc));
     wire [3:0]     sc_v;  wire [4*W-1:0] sc_d;  wire [3:0] sc_cr;
     wire [2:0]     su_tv; wire [3*W-1:0] su_td; wire [2:0] su_tcr;
     ot_hdc_delay #(.W(4), .D(KV_ST), .RESET(1)) u_k1v (.clk(clk), .rst_n(rst_n), .d(kr_v), .q(sc_v));
@@ -149,17 +146,32 @@ module ot_qkvd_layer_tb #(
     wire [E-1:0]  e_rv;
     wire [E*HD*8-1:0] e_rd;
     wire [7:0]    seq_fc;
+    wire [4:0]    af;
+    wire [3:0]    mf;
     ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(KB + 8), .UC1(KB + 8),
-                     .UC2(4), .MUT(MUT == 2 ? 1 : (MUT == 5 ? 2 : 0))) u_seq (
+                     .UC2(4), .MUT(MUT == 5 ? 2 : 0)) u_seq (
         .clk(clk), .rst_n(rst_n), .c_v(sc_v), .c_d(sc_d), .c_cr(sc_cr), .u_v(su_tv), .u_d(su_td), .u_cr(su_tcr),
         .a_start(a_start), .a_T(a_T), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),
-        .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .e_req_valid(req_valid), .e_req_v(req_v),
-        .e_req_g(req_g), .e_req_t(req_t), .h_rsp_valid(rsp_valid), .h_rsp_data(rsp_data), .e_rsp_valid(e_rv),
-        .e_rsp_data(e_rd), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
+        .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .a_hub_fault(af[4]), .a_stk_fault(af[3:0]),
+        .m_fault(mf), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
         .kvw_cr(kvw_cr), .emb_req_v(emb_req_v), .emb_req_d(emb_req_d), .emb_req_cr(emb_req_cr), .emb_q_v(emb_q_v),
         .emb_q_d(emb_q_d), .emb_q_cr(emb_q_cr), .hc_v(hc_v), .hc_d(hc_d), .hc_cr(hc_cr), .tok_v(tok_v),
         .tok_d(tok_d), .tok_cr(tok_cr), .fault(faults[2]), .fault_cause(seq_fc));
-    wire [4:0] af;
+    // the four KV landings: the posted rows reach them over KVL relay stages; one KV merge slice per row engine
+    wire       kl_v;
+    wire [1:0] kl_vg;
+    wire [13:0] kl_t;
+    wire [HD*8-1:0] kl_d;
+    ot_hdc_delay #(.W(1), .D(KVL), .RESET(1)) u_klv (.clk(clk), .rst_n(rst_n), .d(kvw_v), .q(kl_v));
+    ot_hdc_delay #(.W(2 + 14 + HD*8), .D(KVL)) u_kld (.clk(clk), .rst_n(rst_n), .d({kvw_vg, kvw_t, kvw_d}), .q({kl_vg, kl_t, kl_d}));
+    genvar s;
+    generate for (s = 0; s < 4; s = s + 1) begin : g_land
+        ot_qkvd_kv_merge #(.HD(HD), .E(R), .MUT(MUT == 2 ? 1 : 0)) u_merge (.clk(clk), .rst_n(rst_n), .kvw_v(kl_v),
+            .kvw_vg(kl_vg), .kvw_t(kl_t), .kvw_d(kl_d), .e_req_valid(req_valid[R*s +: R]), .e_req_v(req_v[R*s +: R]),
+            .e_req_g(req_g[R*s +: R]), .e_req_t(req_t[13*R*s +: 13*R]), .h_rsp_valid(rsp_valid[R*s +: R]),
+            .h_rsp_data(rsp_data[HD*8*R*s +: HD*8*R]), .e_rsp_valid(e_rv[R*s +: R]), .e_rsp_data(e_rd[HD*8*R*s +: HD*8*R]),
+            .fault(mf[s]));
+    end endgenerate
     // KV-die wires seq -> aggregators (QX stages beyond the LINK the attention bench applies) and hub -> seq (RX)
     wire          x_start, x_qv, h_ov, h_og;
     wire [13:0]   x_T;

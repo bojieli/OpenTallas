@@ -44,6 +44,9 @@ SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
 FRAMES = dict(qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
+RELAY_TARGET = 380.0            # placement pitch: keeps every segment (nearest frame points) under the 504 um SS reach
+GRID = 43.2                     # relay routing grid (um)
+CHAN = 129.6                    # routing / relay channel beside every column (um)
 STACKS = ('WS', 'WN', 'ES', 'EN')
 W = 528
 FDI_UCIE = 1 + 1 + 548 + 1 + 548
@@ -58,10 +61,88 @@ RTL = dict(qkd_ctrl='qfd_ctrl element (rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctr
            qkd_astk='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv ot_qwen_nearhbm_attn_stack_p minus its engines',
            qkd_ahub='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv ot_qwen_nearhbm_attn_hub_p',
            qkd_seq='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv ot_qkvd_kv_seq',
-           qkd_d2d='rtl/qwen_sys/kv_die_20261009/ot_qkvd_d2d.sv ot_qkvd_d2d (NT 3 / NR 4)',
+           qkd_d2d='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv ot_qkvd_kv_end (ot_qkvd_d2d NT 3 / NR 4)',
            qkd_embgw='rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_gw.sv ot_qfd_emb_gw',
            qkd_host='qfd_io_host successor (ingest stream: hing_qfd) + SerDes adapter ot_qfd_link_adapter',
            qkd_pll='vendor PLL abstract + ot_qwen_sys_rst_seq (ASSUMED frame)')
+
+
+# die port -> RTL ports of the bound module (strict_ports: every RTL port is in exactly one die port or is classed)
+BINDINGS = dict(
+    qkd_reng=dict(module='ot_qwen_nearhbm_row_engine_p', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_p.sv',
+                  ports=dict(si=['start_in', 'T_in', 'cyc8_in', 'q_ready', 'q_bf16', 'exp_done', 'er_data', 'lf_take'],
+                             so=['er_valid', 'er_addr', 'sc_valid', 'sc_addr', 'sc_data', 'lmax', 'lmax_any', 'lf_valid',
+                                 'lf_g', 'lf_gam', 'lf_slot', 'lf_data', 'k_done', 'v_done', 'fault'],
+                             rq=['req_valid', 'req_v', 'req_g', 'req_t'], rs=['rsp_valid_in', 'rsp_data_in'],
+                             ck=['clk'], rst_n=['rst_n']),
+                  classed={'ev_k_first': 'debug', 'ev_v_first': 'debug'}),
+    qkd_ahub=dict(module='ot_qwen_nearhbm_attn_hub_p', file='rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_hub_p.sv',
+                  ports=dict(ap_WS=['si_valid', 'si_type', 'si_g', 'si_hh', 'si_k', 'si_any', 'si_data', 'pi_valid',
+                                    'pi_g', 'pi_beat', 'pi_data'],
+                             am_WS=['mo_valid', 'mo_g', 'mo_hh', 'mo_data'],
+                             ao=['out_valid', 'out_g', 'out_beat', 'out_data'], hs=['start'], hf=['fault'],
+                             ck=['clk'], rst_n=['rst_n']),
+                  sliced=dict(ap_WN='ap_WS', ap_ES='ap_WS', ap_EN='ap_WS', am_WN='am_WS', am_ES='am_WS', am_EN='am_WS'),
+                  classed={'ev': 'debug'}),
+    qkd_seq=dict(module='ot_qkvd_kv_seq', file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_seq.sv',
+                 ports=dict(rf=['c_v', 'c_d', 'c_cr'], tf=['u_v', 'u_d', 'u_cr'],
+                            aq_WS=['a_start', 'a_T', 'a_q_valid', 'a_q_beat', 'a_q_data'],
+                            ar=['a_out_valid', 'a_out_g', 'a_out_beat', 'a_out_data'], hf=['a_hub_fault'],
+                            af_WS=['a_stk_fault'], mf_WS=['m_fault'],
+                            kvn_WS=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'],
+                            gq=['emb_req_v', 'emb_req_d', 'emb_req_cr'], gr=['emb_q_v', 'emb_q_d', 'emb_q_cr'],
+                            hc=['hc_v', 'hc_d', 'hc_cr'], tk=['tok_v', 'tok_d', 'tok_cr'], hs=['a_start'],
+                            ck=['clk'], rst_n=['rst_n']),
+                 sliced=dict(aq_WN='aq_WS', aq_ES='aq_WS', aq_EN='aq_WS', af_WN='af_WS', af_ES='af_WS', af_EN='af_WS',
+                             mf_WN='mf_WS', mf_ES='mf_WS', mf_EN='mf_WS', kvn_WN='kvn_WS', kvn_ES='kvn_WS',
+                             kvn_EN='kvn_WS'),
+                 classed={'fault': 'by_design: sticky status, carried to the host on HCTL op 8 (internal path)',
+                          'fault_cause': 'by_design: as fault'}),
+    qkd_d2d=dict(module='ot_qkvd_kv_end', file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv',
+                 ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
+                            fdi=['tx_up', 'tx_v', 'tx_flit', 'rx_v', 'rx_flit'], ck=['clk'], rst_n=['rst_n'],
+                            pll_fwd_i=['pll_fwd_i'], rst_fwd_i=['rst_fwd_i']),
+                 classed={'pll_fwd_pad': 'by_design: package bump (forwarded clock to the ROM die)',
+                          'rst_fwd_pad': 'by_design: package bump (reset to the ROM die)','fault': 'by_design: sticky status to qkd_seq (HCTL op 8) through the status word',
+                          'fault_cause': 'by_design: as fault'}),
+)
+# not exact-cut yet (frames sized, RTL partition owed): reported, not strict
+FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_p minus its engines (re-cut owed: q registers into the engines '
+                           'or abutted 16 k-bit faces, see review_queue/kv-die.md)',
+                  qkd_land='qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip',
+                  qkd_embgw='ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)',
+                  qkd_host='qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter', qkd_pll='vendor PLL + '
+                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element, unchanged)')
+
+
+def strict_ports(M):
+    """every RTL port of every bound master is in exactly one die port (or classed debug / by_design) and every die
+    port of the master is bound.  -> dict(ok, failures, rows)."""
+    import re as _re
+    rows, fails = [], []
+    for mst, b in BINDINGS.items():
+        txt = _re.sub(r'//[^\n]*', '', (ROOT / b['file']).read_text())
+        mm = _re.search(r'module\s+' + b['module'] + r'\b.*?\);', txt, _re.S)
+        rtl = set(_re.findall(r'(?:input|output)\s+(?:wire|reg)?\s*(?:\[[^\]]*\])?\s*(\w+)', mm.group(0)))
+        bound = {}
+        for dp, ps in b['ports'].items():
+            for p in ps:
+                bound.setdefault(p, []).append(dp)
+        die = set(M[mst].order) if mst in M else set()
+        for p in sorted(rtl):
+            if p in bound or p in b.get('classed', {}):
+                continue
+            fails.append(f'{mst}: RTL port {p} has no die port')
+        for p in sorted(set(bound) - rtl):
+            fails.append(f'{mst}: binding names {p}, not an RTL port of {b["module"]}')
+        for dp in sorted(die):
+            if dp not in b['ports'] and dp not in b.get('sliced', {}):
+                fails.append(f'{mst}: die port {dp} not bound to RTL')
+        for dp in sorted(set(b['ports']) - die):
+            fails.append(f'{mst}: bound die port {dp} absent from the abstract (no die net)')
+        rows.append(dict(master=mst, module=b['module'], rtl_ports=len(rtl), die_ports=len(die),
+                         classed=b.get('classed', {})))
+    return dict(ok=not fails, failures=fails, rows=rows, frame_only=FRAME_ONLY)
 
 
 def tpl():
@@ -95,9 +176,9 @@ def build(r=R):
     Hk = up(2 * MARGIN + 2 * stack_h + GY, GY)
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
-    x_grp = up(x_land + LAND_W + 2 * GX, GX)
+    x_grp = up(x_land + LAND_W + CHAN, GX)
     grp_w = 2 * RENG[0] + ASTK_W + 2 * GX
-    centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0]) + 2 * 129.6
+    centre_w = max(UCIE[1], FRAMES['qkd_ahub'][0]) + 2 * CHAN
     Wk = up(2 * (x_grp + grp_w) + centre_w, 2 * GX)
     m = dict(die=dict(w=Wk, h=Hk), insts=[], buses=[], regions=[], geo={})
     ins = m['insts']
@@ -118,7 +199,7 @@ def build(r=R):
         side, half = st[0], st[1]
         y0 = ystack[half]
         lx = x_land if side == 'W' else Wk - x_land - LAND_W
-        add(f'land_{st}', 'qkd_land', lx, y0, LAND_W - SHAVE, stack_h - SHAVE, 'R0' if side == 'W' else 'MY',
+        add(f'land_{st}', 'qkd_land', lx, y0, LAND_W - SHAVE, stack_h - SHAVE, 'MY' if side == 'W' else 'R0',
             'land', 'strip')
         gx = x_grp if side == 'W' else Wk - x_grp - grp_w
         gh = 4 * RENG[1] + 3 * GY
@@ -199,6 +280,11 @@ def _buses(m, T, r):
         add((f'emr_{st}', 'kvn', W + 2, [(f'land_{st}', 'emr'), ('embgw', f'emr_{st}')]))
         add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
     add(('ares', 'spine_local', 1 + 1 + 6 + 512, [('ahub', 'ao'), ('seq', 'ar')]))
+    add(('hs', 'spine_local', 1, [('seq', 'hs'), ('ahub', 'hs')]))                  # layer start to the hub
+    add(('hf', 'spine_local', 1, [('ahub', 'hf'), ('seq', 'hf')]))                  # hub fault
+    for st in STACKS:
+        add((f'af_{st}', 'spine_local', 1, [(f'astk_{st}', 'af'), ('seq', f'af_{st}')]))
+        add((f'mf_{st}', 'spine_local', 1, [(f'land_{st}', 'mf'), ('seq', f'mf_{st}')]))
     add(('gq', 'kvn', W + 2, [('seq', 'gq'), ('embgw', 'gq')]))
     add(('gr', 'kvn', W + 2, [('embgw', 'gr'), ('seq', 'gr')]))
     add(('hc', 'kvn', W + 2, [('host', 'hc'), ('seq', 'hc')]))
@@ -211,42 +297,96 @@ def _centre(it, port=None):
 
 
 def _relays(m):
-    """registered relay stations every <= RELAY_PITCH along an L path (x first) between the two endpoints of every
-    non-abutted point-to-point bus; multi-endpoint buses (clock / reset trees) are CTS / reset trees, not relayed."""
+    """Registered relay stations every <= RELAY_PITCH on every non-abutted point-to-point bus.  The path is a shortest
+    route on a GRID-um grid that avoids every block frame except the two endpoints (BFS from the driver's nearest edge
+    point to the load's), so a word between the centre column and a landing column runs through the free rows above /
+    below the attention groups and the channels beside them; relays sit on the path at <= RELAY_PITCH (a free spot
+    within two grid cells).  Clock / reset trees (CTS / reset tree) and multi-endpoint buses are not relayed."""
+    from collections import deque
     by = {i.name: i for i in m['insts']}
-    nb, stages = [], {}
+    Wd, Hd = m['die']['w'], m['die']['h']
+    G = GRID
+    nx, ny = int(Wd // G) + 1, int(Hd // G) + 1
+    owner = {}
+    for it in m['insts']:
+        for gx in range(int(it.x // G), int((it.x + it.w) // G) + 1):
+            for gy in range(int(it.y // G), int((it.y + it.h) // G) + 1):
+                owner.setdefault((gx, gy), set()).add(it.name)
     occ = [(i.x, i.y, i.x + i.w, i.y + i.h) for i in m['insts']]
+    rocc = {}
 
     def free(x, y, w, h):
-        return all(not (a < x + w and x < c and b < y + h and y < d) for a, b, c, d in occ) and x >= 0 and y >= 0 \
-            and x + w <= m['die']['w'] and y + h <= m['die']['h']
+        if x < 0 or y < 0 or x + w > Wd or y + h > Hd:
+            return False
+        for gx in range(int(x // G) - 1, int((x + w) // G) + 2):
+            for gy in range(int(y // G) - 1, int((y + h) // G) + 2):
+                for q in rocc.get((gx, gy), ()):
+                    if q[0] < x + w and x < q[2] and q[1] < y + h and y < q[3]:
+                        return False
+                for n in owner.get((gx, gy), ()):
+                    it = by[n]
+                    if it.x < x + w and x < it.x + it.w and it.y < y + h and y < it.y + it.h:
+                        return False
+        return True
+
+    def ring(it):
+        """free grid cells touching the frame from outside (where its pins meet the die routing)."""
+        x0, y0 = int(it.x // G) - 1, int(it.y // G) - 1
+        x1, y1 = int((it.x + it.w) // G) + 1, int((it.y + it.h) // G) + 1
+        cells = [(x, y) for x in range(x0, x1 + 1) for y in (y0, y1)] + \
+                [(x, y) for y in range(y0 + 1, y1) for x in (x0, x1)]
+        return [c for c in cells if 0 <= c[0] < nx and 0 <= c[1] < ny and not owner.get(c)]
+
+    def route(a, b):
+        src, dst = ring(by[a]), set(ring(by[b]))
+        if not src or not dst:
+            raise ValueError(f'kv die: {a} or {b} has no free cell around it')
+        prev = {c: None for c in src}
+        dq = deque(src)
+        hit = None
+        while dq:
+            c = dq.popleft()
+            if c in dst:
+                hit = c
+                break
+            for d in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                q = (c[0] + d[0], c[1] + d[1])
+                if q not in prev and 0 <= q[0] < nx and 0 <= q[1] < ny and not owner.get(q):
+                    prev[q] = c
+                    dq.append(q)
+        if hit is None:
+            raise ValueError(f'kv die: no route {a} -> {b}')
+        path, c = [], hit
+        while c is not None:
+            path.append(((c[0] + 0.5) * G, (c[1] + 0.5) * G))
+            c = prev[c]
+        return path[::-1]
+    nb, stages, lengths = [], {}, {}
     for bid, cl, bits, eps in m['buses']:
         if cl in ABUT or cl in ('clock_trunk', 'reset') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
             stages[bid] = 0
             continue
         (a, pa), (b, pb) = eps
-        (x0, y0), (x1, y1) = _centre(by[a]), _centre(by[b])
-        d = abs(x1 - x0) + abs(y1 - y0)
-        n = max(0, math.ceil(d / RELAY_PITCH) - 1)
+        path = route(a, b)
+        L = (len(path) + 1) * G            # + the cell from each frame edge to the ring
+        lengths[bid] = round(L, 1)
+        n = max(0, math.ceil(L / RELAY_TARGET) - 1)
         stages[bid] = n
         if n == 0:
             nb.append((bid, cl, bits, eps))
             continue
-        fw = max(52.68, up(bits * 0.048 + 4.0, GX)) if bits > 512 else 52.68
-        fh = 30.24 if bits <= 512 else 60.48
+        span = bits * 0.048 + 4.0
+        fw, fh = (52.68, 30.24) if bits <= 512 else (52.68, up(span, GY))
         mst = f'qkd_rly_{bits}'
-        prev = (a, pa)
+        prev_ep = (a, pa)
+        step = L / (n + 1)
         for k in range(1, n + 1):
-            s = d * k / (n + 1)
-            if s <= abs(x1 - x0):
-                px, py = x0 + math.copysign(s, x1 - x0), y0
-            else:
-                px, py = x1, y0 + math.copysign(s - abs(x1 - x0), y1 - y0)
-            # nearest free spot on a small spiral (relays live in channels / free space)
+            idx = int(round(k * step / G))
             got = None
-            for rr in range(0, 4000, 20):
-                for dx_, dy_ in ((0, 0), (rr, 0), (-rr, 0), (0, rr), (0, -rr), (rr, rr), (-rr, -rr), (rr, -rr), (-rr, rr)):
+            for back in range(0, 6):                    # on the path, at most 5 cells back toward the driver
+                px, py = path[max(0, idx - back)]
+                for dx_, dy_ in ((0, 0), (G, 0), (-G, 0), (0, G), (0, -G), (2 * G, 0), (-2 * G, 0), (0, 2 * G), (0, -2 * G)):
                     qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                     if free(qx, qy, fw, fh):
                         got = (qx, qy)
@@ -254,16 +394,19 @@ def _relays(m):
                 if got:
                     break
             if got is None:
-                raise ValueError(f'kv die relays: no spot for {bid} stage {k}')
+                raise ValueError(f'kv die relays: no spot for {bid} stage {k} near ({px:.0f}, {py:.0f})')
             nm = f'rly_{bid}_{k - 1}'
             it = F.Inst(nm, mst, got[0], got[1], fw - SHAVE, fh - SHAVE, 'R0', kind='relay', region='relay')
             m['insts'].append(it)
-            occ.append((it.x, it.y, it.x + fw, it.y + fh))
-            nb.append((f'{bid}__r{k - 1}' if k > 1 else bid, cl, bits, [prev, (nm, 'a')]))
-            prev = (nm, 'b')
-        nb.append((f'{bid}__r{n}', cl, bits, [prev, (b, pb)]))
+            for gx in range(int(it.x // G), int((it.x + fw) // G) + 1):
+                for gy in range(int(it.y // G), int((it.y + fh) // G) + 1):
+                    rocc.setdefault((gx, gy), []).append((it.x, it.y, it.x + fw, it.y + fh))
+            nb.append((f'{bid}__r{k - 1}' if k > 1 else bid, cl, bits, [prev_ep, (nm, 'a')]))
+            prev_ep = (nm, 'b')
+        nb.append((f'{bid}__r{n}', cl, bits, [prev_ep, (b, pb)]))
     m['buses'] = nb
     m['relay_stages'] = stages
+    m['route_um'] = lengths
 
 
 def _regions(m):
@@ -332,7 +475,7 @@ def masters(m, k=1, port_bits=None):
                         min(mm.h - 1.0, max(1.0, mm.h / 2 + (j // 12 - 5) * 1.6)), 1)
                 continue
             if mst.startswith('qkd_rly'):
-                mm.face(p, bits, 'W' if p == 'a' else 'E', 'M4', mm.h / 2, 1)
+                mm.face(p, bits, 'W' if p == 'a' else 'E', 'M4', mm.h / 2, 1)   # wide relays: frame height = the word
                 continue
             pe = peer.get((mst, p), [inst0])[0]
             dxp, dyp = pe.x + pe.w / 2 - (inst0.x + inst0.w / 2), pe.y + pe.h / 2 - (inst0.y + inst0.h / 2)
@@ -433,6 +576,7 @@ def main(argv=None):
     rec['legality'] = check(m)
     M = masters(m, 1)
     rec['masters_abstract'] = {n: dict(w=round(mm.w, 3), h=round(mm.h, 3), ports=len(mm.order)) for n, mm in M.items()}
+    rec['strict_ports'] = strict_ports(M)
     a.out.mkdir(parents=True, exist_ok=True)
     (a.out / 'plan.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
     (a.out / 'insts.json').write_text(json.dumps([i.d() for i in m['insts']]) + '\n')

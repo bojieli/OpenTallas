@@ -1,9 +1,9 @@
 #!/bin/bash
 # kv-die layer-step bench campaign (remote, detached).
-#   bench_run.sh <src> <out> <ROM_ST> <KV_ST> <LINK> <PHY_LAT> <QX> <RX> [mutants=1]
+#   bench_run.sh <src> <out> <ROM_ST> <KV_ST> <LINK> <PHY_LAT> <QX> <RX> <KVL> [mutants=1]
 # builds base (+ mutants 1-5), generates golden vectors, runs base (stall 0/1) on every vector and each mutant once.
 set -u
-SRC=$1; OUT=$2; RST=$3; KST=$4; LNK=$5; PL=$6; QX=$7; RX=$8; MUTS=${9:-1}
+SRC=$1; OUT=$2; RST=$3; KST=$4; LNK=$5; PL=$6; QX=$7; RX=$8; KVL=$9; MUTS=${10:-1}
 mkdir -p $OUT/v $OUT/log
 cd $SRC
 echo "start $(date) src=$(git -C $SRC log --oneline -1)" > $OUT/STATUS
@@ -15,7 +15,7 @@ done
 # builds: base + mutants
 ML="0"; [ "$MUTS" = 1 ] && ML="0 1 2 3 4 5"
 for m in $ML; do
-  bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GMUT=$m > $OUT/log/build$m.log 2>&1 &
+  bash rtl/test/qwen_kv_die/build_qkvd_tb.sh $OUT/b$m -GR=8 -GLINK=$LNK -GROM_ST=$RST -GKV_ST=$KST -GPHY_LAT=$PL -GQX=$QX -GRX=$RX -GKVL=$KVL -GMUT=$m > $OUT/log/build$m.log 2>&1 &
 done
 wait
 echo "built $(date)" >> $OUT/STATUS

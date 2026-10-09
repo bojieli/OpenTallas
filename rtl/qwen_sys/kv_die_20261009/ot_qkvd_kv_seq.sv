@@ -5,15 +5,15 @@
 // CTL / Q / KVN / EMBQ, TX classes RES / EMBD / HCTL) and the KV-die blocks:
 //   * the near-HBM attention (ot_qwen_nearhbm_attn_stack_p x 4 + ot_qwen_nearhbm_attn_hub_p): start, T, q beats in;
 //     the hub's 64 result beats out to RES (no ready on the hub: a RES credit must be in hand, else a sticky fault);
-//   * the KV merge (one per row engine, E = 4 R): the new position's K / V rows crossed on KVN are merged into the row
-//     stream -- a row response for t = T-1 is replaced by the crossed row (the posted HBM write may not have landed);
-//     the same rows are posted to the KV write port (kvw_*, the HBM controllers' write queue, credit-flow);
+//   * the new position's K / V rows crossed on KVN are posted on kvw_* to the four KV landings, whose KV merges
+//     (ot_qkvd_kv_merge, one slice per row engine) replace the t = T-1 row reads with them and whose HBM write queues
+//     store them (credit flow);
 //   * the embedding fetch: EMBQ words -> the embedding gateway (emb_req_*), gateway row words -> EMBD;
 //   * the host: host-control words (hc_*) -> HCTL; non-ATTN CTL words (token out, CSR responses) -> tok_*.
 // Every port is registered at the boundary; every producer->consumer hop is credit flow (no same-cycle ready).
 // Word = {tag 16, data 512}.  CTL tag[15:12] op: 1 ATTN {data[13:0] T, [21:16] layer, [63:32] kv base}, 2 TOKEN,
 // 3 CSR_RSP.  Q tag[5:0] beat (32 BF16).  KVN tag[2:0] {v, g, half} (64 FP8 E4M3).  RES tag {g, beat[5:0]} (16 FP32).
-// MUT (bench only): 1 = no KV merge (the t = T-1 row comes from HBM as is), 2 = Q beats 0 / 1 swapped.
+// MUT (bench only): 2 = Q beats 0 / 1 swapped.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qkvd_kv_seq #(
     parameter integer HD  = 128,
@@ -31,7 +31,6 @@ module ot_qkvd_kv_seq #(
     parameter integer GWD = 8,                 // embedding row words buffered from the gateway
     parameter integer HCD = 4,
     parameter integer TKC = 4,                 // host token / CSR-response credits
-    parameter integer PD  = 64,                // outstanding row requests per engine
     parameter integer MUT = 0,
     parameter integer E   = 4 * R
 ) (
@@ -55,16 +54,10 @@ module ot_qkvd_kv_seq #(
     input  wire              a_out_g,
     input  wire [5:0]        a_out_beat,
     input  wire [511:0]      a_out_data,
-    // row request snoop (engine -> HBM controller) and the merged row response (HBM controller -> engine)
-    input  wire [E-1:0]      e_req_valid,
-    input  wire [E-1:0]      e_req_v,
-    input  wire [E-1:0]      e_req_g,
-    input  wire [13*E-1:0]   e_req_t,
-    input  wire [E-1:0]      h_rsp_valid,
-    input  wire [E*HD*8-1:0] h_rsp_data,
-    output reg  [E-1:0]      e_rsp_valid,
-    output reg  [E*HD*8-1:0] e_rsp_data,
-    // KV write (posted, to the HBM controllers' write queue)
+    input  wire              a_hub_fault,      // attention hub fault
+    input  wire [3:0]        a_stk_fault,      // stack aggregator faults
+    input  wire [3:0]        m_fault,          // KV merge faults (one per landing)
+    // KV write (posted to the four landings: their KV merges keep the rows, the HBM write queue stores them)
     output reg               kvw_v,
     output reg  [1:0]        kvw_vg,
     output reg  [13:0]       kvw_t,
@@ -171,7 +164,7 @@ module ot_qkvd_kv_seq #(
             st <= S_IDLE; layer <= 0; kv_n <= 0; q_n <= 0; r_n <= 0; a_start <= 1'b0; a_T <= 14'd0; a_q_valid <= 1'b0;
             c_cr <= 4'd0; uc0 <= 8'(UC0); rs_v <= 1'b0; tk_in_v <= 1'b0; tk_c <= 3'd4;
             kw_n <= 3'd4; kwc <= 8'(KWC); kw_go <= 1'b0; kvw_v <= 1'b0;
-            f_res <= 1'b0; f_ord <= 1'b0; f_kw <= 1'b0; f_ib <= 1'b0; fault <= 1'b0; fault_cause <= 8'd0;
+            f_res <= 1'b0; f_ord <= 1'b0; f_kw <= 1'b0; f_ib <= 1'b0; f_row <= 1'b0; f_pend <= 1'b0; fault <= 1'b0; fault_cause <= 8'd0;
         end else begin
             c_cr <= {eq_cr, ib_pop[2:0]};
             a_start <= 1'b0;
@@ -210,34 +203,8 @@ module ot_qkvd_kv_seq #(
             if (|(ib_full[2:0] & cv[2:0] & ~ib_pop[2:0])) f_ib <= 1'b1;
             if (kwq && kwc == 8'(KWC)) f_kw <= 1'b1;
             fault_cause <= {tk_f, hc_f, ed_f, eq_f, f_kw | f_row | f_pend, f_ord, f_res, f_ib};
+            f_row <= f_row | |m_fault; f_pend <= f_pend | a_hub_fault | |a_stk_fault;
             fault <= |{tk_f, hc_f, ed_f, eq_f, f_kw, f_row, f_pend, f_ord, f_res, f_ib};
-        end
-    end
-    // ---- KV merge: one per row engine ----
-    wire [E-1:0] m_hv, m_pe, m_rqv, m_pf;
-    genvar e;
-    generate for (e = 0; e < E; e = e + 1) begin : g_m
-        reg        rq_v, rq_vv, rq_g, hv;
-        reg [12:0] rq_t;
-        reg [HD*8-1:0] hd;
-        always @(posedge clk) begin rq_vv <= e_req_v[e]; rq_g <= e_req_g[e]; rq_t <= e_req_t[13*e +: 13]; hd <= h_rsp_data[HD*8*e +: HD*8]; end
-        always @(posedge clk or negedge rst_n) if (!rst_n) begin rq_v <= 1'b0; hv <= 1'b0; end
-                                               else begin rq_v <= e_req_valid[e]; hv <= h_rsp_valid[e]; end
-        wire [2:0] ph;
-        wire pe, pf;
-        ot_qkvd_fifo #(.W(3), .D(PD)) u_p (.clk(clk), .rst_n(rst_n), .push(rq_v),
-            .din({({1'b0, rq_t} == a_T - 14'd1), rq_vv, rq_g}), .pop(hv), .dout(ph), .empty(pe), .full(pf), .count());
-        always @(posedge clk) begin
-            if (hv) e_rsp_data[HD*8*e +: HD*8] <= (ph[2] && MUT != 1) ? {kvn[{ph[1:0], 1'b1}], kvn[{ph[1:0], 1'b0}]} : hd;
-        end
-        always @(posedge clk or negedge rst_n) if (!rst_n) e_rsp_valid[e] <= 1'b0; else e_rsp_valid[e] <= hv;
-        assign m_hv[e] = hv; assign m_pe[e] = pe; assign m_rqv[e] = rq_v; assign m_pf[e] = pf;
-    end endgenerate
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin f_row <= 1'b0; f_pend <= 1'b0; end
-        else begin
-            if (|(m_hv & m_pe)) f_row <= 1'b1;                       // a response with no request outstanding
-            if (|(m_rqv & m_pf & ~m_hv)) f_pend <= 1'b1;
         end
     end
 endmodule
