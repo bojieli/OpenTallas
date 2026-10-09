@@ -2,7 +2,7 @@
  "name": "hbm_idx_sel_capture_r2",
  "block": "hfd_idx_sel",
  "owner": "Codex:selector_capture",
- "status": "AWAITING R25I real slot/pin budgets and measured remote admission",
+ "status": "AWAITING authoritative R25I records: native T1/LA7 slot 1399.656 x 844.56um at (14164.416,17169.84); then source-pin remote route",
  "purpose": "Full Q4/W16/K512 selector plus Q4/SL16/K2048 candidate and query, actual 16 compiled SRAM macros; READLAT=2 registered output capture",
  "hosts": [
   "ot-epyc1tb",
@@ -41,5 +41,14 @@
   "policy": "owner corrected OptionB TT setup >=0 / FF hold >=0 / DRC0; SS sensitivity",
   "physical_qualified": false,
   "capture_placement": "direct macro rd_out to capture D; legal row sites within100um; actual routed distance/timing to be checked"
+ },
+ "selected_outline": {
+  "width_um": 1399.656,
+  "height_um": 844.56,
+  "origin_um": [
+   14164.416,
+   17169.84
+  ],
+  "source": "hbm_wiring accepted legal-grid successor, native-aaf36bdba 777.6um record superseded; new pin commit awaited"
  }
 }

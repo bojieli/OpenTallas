@@ -14128,7 +14128,7 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
 
 
-def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slot_height_um=777.6, score_fifo_aw=7):
+def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slot_height_um=844.56, score_fifo_aw=7):
     """Opt-in macro capture: unchanged issue width, finite existing reservations.
 
     One capture stage isolates 405/545 ps TT macro clk->q from selector mux.
