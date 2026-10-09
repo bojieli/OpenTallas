@@ -1,0 +1,36 @@
+{
+  "source_original_contract": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "bench_draft_source": "380c1cd21",
+  "bench_halfperiod_ns": 0.4166,
+  "period_ps_physical_target": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "pin_width_height_um": [
+    756,
+    159.84
+  ],
+  "pins": 1803,
+  "counts": {
+    "lane": 515,
+    "ck": 1,
+    "rst": 1,
+    "t_s": 865,
+    "t_o": 354,
+    "f_c": 66,
+    "f_cr": 1
+  },
+  "boundary_tracks": {
+    "M4_pitch_um": 0.048,
+    "face_track_capacity": 3329,
+    "W_reserved_span_tracks": 1031,
+    "E_reserved_span_tracks": 2569
+  },
+  "clock_pin_files_sha256": {
+    "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json": "c06b32150b8cdd472d5b8984671513b8389b1a38817e4cac56948565bcebc63e",
+    "physical/s81_ph_views/specs/dsfd_selt_q.json": "1b8ae36816e084c944cbbdad8d18c926ac9ddac775c219beed0e793e7f981098",
+    "physical/s81_ph_views/common/io_vclk_m_770.sdc": "9862c6f037deeffa44364ab533f3b0d635b7b4da39a806a0fe98bd61ebe3cae8",
+    "physical/s81_ph_views/common/vclk_latency.tcl": "bb5705852417584bb44a88a8f8ba5c558cc58fc7760148c42bd36db56b0f3aec",
+    "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv": "95e87003cc7f234478aa27268953e1f837c1ff1cabf48bd268915eca6cc10505"
+  },
+  "chosen_fix": "none; IO rejudge blocked by missing original ODB, no -cx route"
+}
