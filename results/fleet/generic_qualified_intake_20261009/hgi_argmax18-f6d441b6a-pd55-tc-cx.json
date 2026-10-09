@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-09T13:16:01.432854+00:00",
+  "name": "hgi_argmax18-f6d441b6a-pd55-tc-cx",
+  "source": {
+    "branch": "codex/hgi-argmax18-20261009",
+    "commit": "f6d441b6a"
+  },
+  "sha256": "29c1249b3496508fba6798b32e8a0c77290ada795bcc66207d68c185e1c02d4d",
+  "cache_key": "e8df6787972b2114908376ac",
+  "schema": "PASS",
+  "submit_lint": {
+    "cfg": "hgi_argmax18",
+    "pins": 604,
+    "die_um": [
+      180.0,
+      140.0
+    ],
+    "layers": {
+      "PIN_H": "M4 M6",
+      "PIN_V": "M5 M7"
+    },
+    "tracks": 1.0,
+    "limit": 12.0,
+    "est": {
+      "W": 5.12,
+      "E": 0.53,
+      "N": 0.13,
+      "S": 0.25
+    },
+    "verdict": "PASS",
+    "message": "pin density within limits (estimate)",
+    "rtl_boundary": {
+      "verdict": "PASS",
+      "message": "rtl_boundary ot_hgi_argmax18_m: registered boundary (in->reg 12, reg->out 1 levels)",
+      "in_to_out_bits": 0,
+      "in_to_reg_max": 12,
+      "reg_to_out_max": 1,
+      "levels": 16,
+      "strict": true
+    }
+  },
+  "remote_source_hashes_verified": true,
+  "local_synthesis": false,
+  "memory": "conservative sibling/phase estimate, not measured own DRT",
+  "independent_launch": false
+}

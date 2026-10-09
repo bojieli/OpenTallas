@@ -1,0 +1,46 @@
+{
+  "at": "2026-10-09T13:16:01.262936+00:00",
+  "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
+  "source": {
+    "branch": "codex/hgi-argmax18-20261009",
+    "commit": "f6d441b6a"
+  },
+  "sha256": "d9a2b60cf1f550776b92c4c381ea675c81bca8ca8ffc23cc62e60b56e9c3e5e1",
+  "cache_key": "e8df6787972b2114908376ac",
+  "schema": "PASS",
+  "submit_lint": {
+    "cfg": "hgi_argmax18",
+    "pins": 604,
+    "die_um": [
+      180.0,
+      140.0
+    ],
+    "layers": {
+      "PIN_H": "M4 M6",
+      "PIN_V": "M5 M7"
+    },
+    "tracks": 1.0,
+    "limit": 12.0,
+    "est": {
+      "W": 5.12,
+      "E": 0.53,
+      "N": 0.13,
+      "S": 0.25
+    },
+    "verdict": "PASS",
+    "message": "pin density within limits (estimate)",
+    "rtl_boundary": {
+      "verdict": "PASS",
+      "message": "rtl_boundary ot_hgi_argmax18_m: registered boundary (in->reg 12, reg->out 1 levels)",
+      "in_to_out_bits": 0,
+      "in_to_reg_max": 12,
+      "reg_to_out_max": 1,
+      "levels": 16,
+      "strict": true
+    }
+  },
+  "remote_source_hashes_verified": true,
+  "local_synthesis": false,
+  "memory": "conservative sibling/phase estimate, not measured own DRT",
+  "independent_launch": false
+}
