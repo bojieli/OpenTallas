@@ -16,7 +16,7 @@ def model():
         input_capture=dict(widths=widths_in, bank_bits=bank, banks=ni, cycles=1),
         output_relay=dict(widths=widths_out, bank_bits=bank, banks=no, cycles=3),
         replicas=ni+no, register_bits=ff,
-        storage_macro_count=3,
+        storage_macro_count=6,
         storage_macro='ot_sram_1r1w_128x256_m1_r2c2',
         leaf_boundary_bits_per_cycle=256,
         parent_boundary_bits_per_cycle=sum(widths_in)+sum(widths_out),
@@ -38,7 +38,7 @@ def model():
             'alignment gate, no uniform token +0 claim until that passes',
         clocks=dict(period_ps=833.333,setup_uncertainty_ps=60,hold_uncertainty_ps=25),
         physical_method='Harden full128-bit D1 andD3 relay elements, '
-            'then assemble real abstract instances and three SRAM macros hierarchically',
+            'then assemble real abstract instances and six SRAM macros hierarchically',
         dependencies=['Claude review before physical route',
             'current actual die slot and fullpin clock budgets',
             'real relay leaf SS/FF/DRC qualification and CTS arrival',
