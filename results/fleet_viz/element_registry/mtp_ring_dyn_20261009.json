@@ -5,7 +5,7 @@
       "element": "dsrom_one_position_compressor_ring_dyn",
       "target": "DeepSeek ROM",
       "owner": "mtp_numerical_repair",
-      "description": "Default-off DYN25/26 address repair for the one-position wavefront core with eight compressor records",
+      "description": "Default-off DYN25/26 address repair for one-position eight-record ring; original two-stage fixture exactness gates are separate from native production and physical qualification",
       "source": {
         "commit": "aff63db74",
         "paths": [
@@ -29,15 +29,15 @@
       },
       "exactness": {
         "positive": {
-          "status": "CAMPAIGN14_FULL_18_JOB_PASS_CAMPAIGN19_QUEUED_SAME_SOURCE",
+          "status": "CAMPAIGN14_18_JOB_PASS_CAMPAIGN19_BUILDING_SAME_SOURCE",
           "evidence": [
             "results/rtl/mtp_ring_dyn_20261009/campaign14_terminal.json"
           ]
         },
         "negative": {
-          "status": "RUNNING_WAVE0_CONTROL_ORIGINAL_FAILURE_PRESERVED",
+          "status": "CAMPAIGN15_PROTOCOL11_EXPECTED_FAIL_PAYLOAD_AND_STATE_EXACT_CAMPAIGN20_BUILDING",
           "evidence": [
-            "results/rtl/hbm_token_fifo_reservation_20261009/legacy_mtp_ring14_verdict.json"
+            "results/rtl/mtp_ring_dyn_20261009/campaign15_terminal.json"
           ]
         }
       },
@@ -58,7 +58,7 @@
         "status": "SOURCE_BRANCH_PUSHED_CLAUDE_MAIN_REVIEW_PENDING",
         "evidence": []
       },
-      "recorded_at": "2026-10-09T09:14:00Z"
+      "recorded_at": "2026-10-09T09:29:00Z"
     }
   ]
 }

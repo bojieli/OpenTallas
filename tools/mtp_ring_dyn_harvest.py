@@ -35,9 +35,13 @@ def main():
     metrics = mod.analyse(log.read_text())
     full = (meta["rc"] == 0 and metrics["out_msgs"] == 18
             and len(metrics["jobs"]) == 36 and metrics["total_cycles"] is not None)
-    exact = all(metrics[k] == 0 for k in ("out_mismatch", "mismatches", "state_mismatch"))
-    passed = (full and exact and not metrics["passed"] and metrics["proto_fault"]
-              if a.negative else full and exact and metrics["passed"] and not metrics["proto_fault"])
+    exact = all(metrics[k] == 0 for k in ("out_mismatch", "state_mismatch"))
+    # The pinned bench increments its generic bad counter once for protocol=11.
+    # Thus the expected negative has mismatches=1 despite exact payload/state.
+    passed = (full and exact and metrics["mismatches"] == 1
+              and not metrics["passed"] and metrics["proto_fault"]
+              if a.negative else full and exact and metrics["mismatches"] == 0
+              and metrics["passed"] and not metrics["proto_fault"])
     paths = [receipt, log, a.scratch / "prepare_stage2_deep.json"]
     paths.extend(sorted((a.scratch / "cfg_stage2_deep").glob("*.hex")))
     result = dict(schema="opentallas.mtp_ring_dyn_terminal.v1", campaign=a.campaign,
@@ -46,7 +50,7 @@ def main():
                   source=dict(core_sha256=digest(a.source / "rtl/hdc/v41x/ot_hdc_core_v41x.sv"),
                               tool_sha256=digest(tool)),
                   artifacts=[dict(path=str(f), sha256=digest(f)) for f in paths],
-                  scope="Original full-shape two-stage 18-job ring8 fixture; not full-die closure",
+                  scope="Original two-stage 18-job ring8 fixture; native production shape and full-die closure are not qualified",
                   physical="Repair rides consuming sequencer contextual qualification; no standalone route")
     result["source_receipt_matches"] = result["source"]["core_sha256"] == meta["core_sha256"]
     result["gate_passed"] &= result["source_receipt_matches"]
