@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.mtp.fixture.v1",
+  "source_commit": "16c0b3533d3e1fc91217be7f4e23fbf9be8f4a05",
+  "origin": "tools/hdc_golden_v41.generate_spec reduced V4.1 golden greedy speculative decode; existing historical fixture unchanged",
+  "files": {
+    "tr_dspark.cfg.json": {
+      "original_path": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_dspark.cfg.json",
+      "git_blob": "a4f81af8cd1280553ccd87f52646acb769cb5c26",
+      "sha256": "a59de1e034d04ed23e838d2ea6b5a8f727fda71add79b904ffacfbd4583d3262"
+    },
+    "tr_forced.cfg.json": {
+      "original_path": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json",
+      "git_blob": "6a6e68461042137bae666e6197ebcd2d99c05243",
+      "sha256": "84b7711627fbc1c44e95b091c6ddbeefef6a7bcc96f1f81708a8177dd1cd1c0f"
+    },
+    "tr_forced_w16.cfg.json": {
+      "original_path": "results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced_w16.cfg.json",
+      "git_blob": "96d0d949f000b625cb594fd0130afc6e2ebd3d50",
+      "sha256": "0133ef12dd87f7cbdfb853c1158c43a26a90be2b065131491c55dbc4fbb7409a"
+    }
+  }
+}
