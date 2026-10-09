@@ -34,6 +34,56 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 
 
+def dsrom_engram_rowstripe_model(context=1048576, users=64):
+    """Opt-in whole-row PC placement; historical atom-striped layout retained.
+
+    Capacity compares identical released rows and the inherited busiest-die KV
+    footprint at the same context/users. No timing/adoption credit is assigned.
+    """
+    import hdc_v41_engram_shipped as shipped
+    primes = shipped.shipped_tables().primes.reshape(2, 24)
+    old = [[sum((int(n)*264+31)//32*32 for n in row[r*6:r*6+6])
+            for r in range(4)] for row in primes]
+    new = [[sum(int(n)*288 for n in row[r*6:r*6+6])
+            for r in range(4)] for row in primes]
+    usable = 2*22.5e9*.9
+    kv_user = 20.25e9/216 * context/1048576
+    return dict(schema='opentallas.engram-rowstripe-model.v1', opt_in_default=False,
+                replicas=8, macs_per_cycle=0, released_row_bytes=264, stored_row_bytes=288,
+                table_increase_percent=100*(288/264-1),
+                historical_rank_bytes=old, rowstripe_rank_bytes=new,
+                historical_total_bytes=sum(map(sum, old)), total_bytes=sum(map(sum, new)),
+                usable_bytes_per_home_die=usable, context=context, users=users,
+                kv_bytes_per_user_busiest=kv_user, required_kv_bytes=kv_user*users,
+                kv_headroom_bytes=usable-max(map(max,new)),
+                matched_context_capacity_pass=max(map(max,new))+kv_user*users<=usable,
+                maximum_users_at_context=int((usable-max(map(max,new)))//kv_user),
+                mapping='row=logical_atom//9; atom_in_row=logical_atom%9; stack=row[0]; PC=row[5:1]; PC_atom=(row>>6)*9+atom_in_row',
+                read_request='one len=8 controller burst of nine32B atoms per row; original row tag',
+                table_bytes_per_token_per_rank=6*288, read_bytes_per_cycle_per_pc=32,
+                boundary_bits_per_pc=341, concurrent_rows_per_rank=6,
+                return_obligation='64 PC identity streams, finite tagged buffering and simultaneous stalls exact gate',
+                added_decode_cycles=0, qualification='layout model only; no service/physical/performance credit')
+
+
+def dsrom_engram_sink_pincapture_model():
+    return dict(schema='opentallas.engram-sink-pincapture-model.v1', opt_in_default=False,
+                replicas=8, sources=4, queue_entries_per_source=4,
+                payload_bits_per_source=275, queue_payload_bits=4*4*275,
+                pin_bits=4*(275+1), control_bits=4*(3+2+2+1),
+                state_bits=4*4*275+4*276+4*8,
+                area_sequential_mm2=(4*4*275+4*276+4*8)*.2916/1e6,
+                area_basis='ASAP7 FF0.2916um2, excludes combinational and routing; no physical credit',
+                input_bytes_per_cycle_max=4*33, aggregate_output_bytes_per_cycle=64,
+                input_boundary_bits=4*(275+2), output_boundary_bits=512+11+1,
+                routing_tracks_needed=4*(275+2), routing_tracks_available_modelled=int(1188/.048),
+                floorplan_slot_um=[1188,432], mux='four4:1 local FIFO heads, four-source round-robin unchanged',
+                reservation='advertise ready only when queued plus captured accepted beats <= depth-2; reserve current and next accepted beat',
+                added_input_cycles=1, steady_aggregate_beats_per_cycle=1,
+                latency_composition='rows arrive in prefetch ahead of wkv; +1 last-beat capture cycle, no gain claimed',
+                qualification='full8slot exact component and routed candidate required')
+
+
 def dsrom_engram_boot_dispatch_model():
     """Class-11 mutable-HBM boot dispatch; implemented separately from RoPE.
 
