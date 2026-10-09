@@ -1,0 +1,39 @@
+{
+  "status": "READ_ONLY_FIXED_CONTACT_AUDIT_COMPLETE_NOT_PLACEMENT_PASS",
+  "source_before_evidence": "338ea2109c17c1a8d08ebeacb3617a1a202e4adf",
+  "original_rtl_source": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+  "host": "ot-epyc4",
+  "remote_directory": "/srv/opentallas-scratch2/scratch/codex/hbm-collector-sr-dpl-inspect-20261009",
+  "anchors": 12161,
+  "released_physical_contacts": 181,
+  "retained_anchors": 11980,
+  "anchor_macro_contacts": 0,
+  "anchor_other_fixed_cell_contacts": 0,
+  "original_final_odb_markers": {
+    "overlap": 3241,
+    "padding": 3241,
+    "retained_anchor_only_pairs": 0
+  },
+  "historical_precrash_log": {
+    "overlap": 5103,
+    "edge": 5006,
+    "note": "Different state from final failed ODB; preserved, not replaced."
+  },
+  "original_edge_name_membership": {
+    "anchors": 317,
+    "released": 23,
+    "retained": 294,
+    "note": "Membership alone does not establish infeasibility; counterpart may move."
+  },
+  "remote_artifacts": {
+    "sr-original-placement-markers.json": "9415667c5e344ca69dfb689fd3894e41c7350b9568efbc553f96970e8a8cac9e",
+    "sr-anchor-names.tsv": "495f70dd35075a393a74ee6dbdc28368170571509a6a4bfa2373e8c5f2599dc0"
+  },
+  "audit_peak_kib": 4072500,
+  "active_probe_source": "e0c479a84",
+  "limitations": [
+    "No timing verdict",
+    "No remaining fixed-only collision proves infeasibility",
+    "Actual bounded legalizer and geometry/negative gate remain pending"
+  ]
+}
