@@ -1,0 +1,99 @@
+{
+  "host": "ot-epyc1tb",
+  "helper_sha256": "9840b1df50b5caad528fd3381a7ecb10d55ac072f8020930994d9d2344317eb8",
+  "cases": [
+    {
+      "case": "tt_ff_zero_ss_negative",
+      "expected_rc": 0,
+      "actual_rc": 0,
+      "verdict": "PASS",
+      "replicas_preserved": true
+    },
+    {
+      "case": "missing_tt",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "negative_tt",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "negative_ff",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "sta_error",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "nonfinite_tt",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "boolean_tt",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "slew",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "cap",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "fanout",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "drc",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "antenna",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": true
+    },
+    {
+      "case": "missing_replica",
+      "expected_rc": 1,
+      "actual_rc": 1,
+      "verdict": "FAIL",
+      "replicas_preserved": false
+    }
+  ],
+  "verdict": "PASS",
+  "policy": "TT>=0/FF>=0; negative SS sensitivity accepted; SI/DRC/antenna/replicas and missing/error/nonfinite TT fail closed"
+}

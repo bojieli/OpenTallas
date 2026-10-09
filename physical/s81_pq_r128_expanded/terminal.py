@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Terminal verdict of one v9 spine screen (phys.sh): corner STA (SS 60 / FF 25), signal integrity, DRC, antenna and the
+"""Terminal verdict of one v9 spine screen (phys.sh): corner STA (TT setup / FF hold, 60 / 25 ps uncertainty), signal integrity, DRC, antenna and the
 kept replica instances in the routed netlist.  Usage: terminal.py <out dir> <tag>"""
 import json
+import math
 import re
 import sys
 from pathlib import Path
@@ -33,20 +34,30 @@ pat2 = dict(g_ixc=r"u_sp\.g_ixc\[\d+\]\.u_ix", g_s11c=r"u_sp\.g_aq\[\d+\]\.u_aq/
 exp.update(g_ixc=64, g_s11c=16, g_selg=4 * R)   # v12: per-lane select copies; v13: 64 g_ixc, 8 s11 copies per aq12m
 act.update({k: sum(bool(re.fullmatch(p, n)) for n in (names | names2)) for k, p in pat2.items()})
 si = phy.get("signal_integrity_violations", {})
-d.update(SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["violating_d_pins"],
+tt = sta.get("setup_tt") or {}
+ff = sta["hold_ff"]
+d.update(setup_corner="tt", TT_ps=tt.get("worst_slack_ps"), TT_pins=tt.get("violating_d_pins"),
+         SS_ps=sta["setup_ss"]["worst_slack_ps"], SS_pins=sta["setup_ss"]["violating_d_pins"],
+         SS_sensitivity_ps=sta["setup_ss"]["worst_slack_ps"],
          FF_ps=sta["hold_ff"]["worst_slack_ps"], FF_pins=sta["hold_ff"]["violating_d_pins"], SI=si,
          drc=phy.get("drc"), antenna=phy.get("antenna"), area_um2=phy.get("area_um2"),
          replicas=dict(expected=exp, actual=act, passed=act == exp))
 clean = all(si.get(k) == 0 for k in ("max_slew_violations", "max_cap_violations", "max_fanout_violations")) \
     and d["drc"] == 0 and d["antenna"] == 0
-d["verdict"] = "PASS" if sta.get("closes_signoff") and clean and act == exp else "FAIL"
-# v13 margin-first sign-off (owner rule 2026-10-06, UPDATE 2: design target +60, ACCEPT at SS >= +40 ps) and FF hold >= +15 ps at 833.333 ps with the
-# IO budget of signoff_r<R>.sdc (OT_FS_MARGIN=1, set by phys13.sh); MARGIN_FAIL if it closes without the margin
+# Owner Option B: require measured TT setup and FF hold at zero; retain SS as sensitivity.
+# A legacy closes_signoff flag may still include SS, so judge the actual corner receipts.
+def finite_nonnegative(value):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0
+
+errors = list(tt.get("errors") or []) + list(ff.get("errors") or [])
+if tt.get("error") or ff.get("error"):
+    errors.append(tt.get("error") or ff.get("error"))
+d["timing_errors"] = errors
+timing_ok = finite_nonnegative(d["TT_ps"]) and finite_nonnegative(d["FF_ps"]) and not errors
+d["verdict"] = "PASS" if timing_ok and clean and act == exp else "FAIL"
 import os  # noqa: E402
 if os.environ.get("OT_FS_MARGIN") == "1":
-    d["margin"] = dict(ss_min_ps=15, ss_target_ps=15, ff_min_ps=15, post_sdc=sta.get("post_sdc"))
-    if d["verdict"] == "PASS" and not ((d["SS_ps"] or -1e9) >= 15 and (d["FF_ps"] or -1e9) >= 15):
-        d["verdict"] = "MARGIN_FAIL"
+    d["margin"] = dict(setup_corner="tt", tt_min_ps=0, ff_min_ps=0, post_sdc=sta.get("post_sdc"))
 (out / f"{tag}_terminal.json").write_text(json.dumps(d, indent=1) + "\n")
-print(json.dumps({k: d[k] for k in ("tag", "verdict", "SS_ps", "FF_ps", "SI", "drc", "SS_pins", "FF_pins")}))
+print(json.dumps({k: d[k] for k in ("tag", "verdict", "setup_corner", "TT_ps", "SS_ps", "FF_ps", "SI", "drc", "SS_pins", "FF_pins")}))
 sys.exit(0 if d["verdict"] == "PASS" else 1)
