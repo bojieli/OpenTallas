@@ -272,6 +272,24 @@
     "evidence": "results/rtl/mtp_exact_20261008/validation/spec_state.json"
    },
    "note": "9-run validation terminal exact true: original undrained seed8 plus drained seeds1..8, all mismatches0; prior64-seed sweep covers both reset modes; no full-die physical qualification"
+  },
+  {
+   "bench": "v41_mtp_rollback_rtl",
+   "target": "ds_v41",
+   "tier": "nightly",
+   "host": "ot-epyc3",
+   "group": "mtp_rollback",
+   "peak_gb": 40,
+   "label": "33 ROM/HBM rollback storage positive and mutant cases, W128/W8 wrap, golden truncate, commit/accept and prefetch",
+   "expect": {
+    "exact": true
+   },
+   "last_pass": {
+    "commit": "e12c9a0fe",
+    "source": "Inherited rollback campaign source digests in record.json",
+    "evidence": "results/rtl/mtp_rollback_20261008/record.json"
+   },
+   "note": "Synthetic32-bit mixing replaces model arithmetic; this proves storage dataflow and negative-control detection, not released-weight arithmetic or full-target die timing. Ring-bearing fullgamma reduced RTL vehicle is separate. 40GB retains campaign admission reservation; no measured-peak claim."
   }
  ],
  "not_covered": [

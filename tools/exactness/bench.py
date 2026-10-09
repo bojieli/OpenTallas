@@ -265,6 +265,22 @@ def mtp_hbm(work):
     return save(work, dict(bench="v41_mtp_hbm_rtl", exact=exact, runs=runs, cycles=runs["forced"]["cycles"]))
 
 
+def mtp_rollback(work):
+    """Minimum ROM/HBM storage mechanism: 33 positive/mutant runs, W128/W8 wrap,
+    golden truncate, commit pointer, prefix accept and prefetch; mixed arithmetic is synthetic."""
+    out = work / "rollback.json"
+    rc, sec = run([PY, TOOLS / "mtp_rollback_bench.py", "campaign", "--out", work / "rt",
+                   "--record", out, "--jobs", 4], work, "rollback", env=V5050)
+    d = json.loads(out.read_text()) if out.exists() else {}
+    rows = d.get("results", [])
+    exact = bool(rc == 0 and d.get("all_good_pass_all_mutants_fail") and len(rows) == 33
+                 and all(r.get("ok") and not r.get("timeout") for r in rows))
+    return save(work, dict(bench="v41_mtp_rollback_rtl", exact=exact, cycles=None,
+                          runs={r["config"] + ":" + r["name"]: dict(verdict=r.get("verdict"),
+                                expect=r.get("expect"), ok=r.get("ok")) for r in rows},
+                          returncode=rc, wall_seconds=sec))
+
+
 def spec_state(work):
     """HBM spec_state successor (token-edge TOKEN_EDGE_FIX = 1) in cycle lockstep with the as-built rings: the
     original seed-8 bench (reset with a token write in flight) and seeds 1..8 of the drained bench."""
@@ -292,6 +308,7 @@ BENCHES = {
     "v41_mtp_rom_wf2": mtp_wf2,
     "v41_mtp_hbm_rtl": mtp_hbm,
     "hbm_spec_state_lockstep": spec_state,
+    "v41_mtp_rollback_rtl": mtp_rollback,
     "s81_token_l20": s81_token,
     "qwen_rom_L0": lambda w: qwen_rom(w, "L0"),
     "qwen_rom_full": lambda w: qwen_rom(w, "full"),
