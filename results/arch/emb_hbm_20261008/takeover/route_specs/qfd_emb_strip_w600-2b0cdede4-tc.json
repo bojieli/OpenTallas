@@ -1,0 +1,71 @@
+{
+  "name": "qfd_emb_strip_w600-2b0cdede4-tc",
+  "block": "qfd_emb_strip_w600",
+  "owner": "Codex:embedding-hbm",
+  "purpose": "Review-approved HBM embedding standalone closure vehicle; model and all9 exactness/negative variants committed. Actual clock: 1.2GHz stream. TT>=0/FF>=0/DRC0; SS sensitivity; no die slot/closure claim.",
+  "hosts": [
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-epyc1tb",
+    "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 32,
+  "source": {
+    "branch": "codex/emb-hbm-takeover-20261008",
+    "commit": "2b0cdede437cc2c6062fd8c85b7ff03df94ee406"
+  },
+  "no_bench_reason": "Unchanged RTL from e48258ccd: 5positive and4negative full-shape variants harvested and hash-pinned in results/arch/emb_hbm_20261008/takeover/summary.json. Only physical frames and actual implemented clock binding change. No proof reruns.",
+  "stages": {
+    "bench": [],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+    },
+    "route": {
+      "cmd": "export CORNER=TC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_emb_strip_w600.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_emb_strip_w600 {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "threads": 16,
+      "peak_ram_gb": 32,
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_emb_strip_w600 --out {RUN}/record/views/qfd_emb_strip_w600 --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_emb_strip_w600.sdc"
+    ],
+    "checks": [
+      {
+        "name": "owner_TT_FF_nonnegative",
+        "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+      }
+    ],
+    "macros": []
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/emb_hbm_closure_20261008/qfd_emb_strip_w600-2b0cdede4-ss"
+    }
+  ],
+  "cycles_added": "Measured baseKV1 473mean/789max, full128PC shape; frame-only change adds0cycles. Qualified headline credit0 until die integration/reprice.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+}
