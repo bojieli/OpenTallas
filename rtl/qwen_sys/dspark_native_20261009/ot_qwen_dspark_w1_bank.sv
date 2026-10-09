@@ -42,6 +42,10 @@ module ot_qwen_dspark_w1_bank #(parameter integer ENABLE=0,BANK=0)(
  for(genvar g=0;g<8;g=g+1)begin : banks
   `ifdef SYNTHESIS
   ot_rom_4096x266_m8 macro_inst(
+  `elsif OT_QWEN_W1_SIM_NO_INSTANCE
+  // Icarus cannot elaborate a constant $sformatf string parameter. Tests
+  // program the same real via-mask arrays directly and use no image loader.
+  ot_rom_4096x266_m8 macro_inst(
   `else
   ot_rom_4096x266_m8 #(.INSTANCE($sformatf("qwen_w1_b%0d_c%0d",BANK,g))) macro_inst(
   `endif
