@@ -425,8 +425,23 @@ R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0]
             split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 320, 'S', 'M5', 0.30, 2),
                                                'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
 # Native indexer successors remain opt-in until source joins and physical evidence close.
-R25I = dict(R25, native_indexer=True)
+R25I = dict(R25, native_indexer=True, iv_pin_stn=False,
+    split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}},
+    split_x_new_port_band={f'{kind}{p}':p for kind in ('ki','kc') for p in range(8)})
 R25IC2 = dict(R25I, indexer_large_slot=True)
+R25IQ = dict(R25I,indexer_quarter_end=True)
+R25IQC2 = dict(R25IQ,indexer_large_slot=True)
+R25IQG = dict(R25IQ,indexer_mirror_grid=True)
+R25IQGC2 = dict(R25IQG,indexer_large_slot=True)
+# Actual x-controller bus facade and SRAM writeback slots. Loader stays on its
+# historical base until the ND1/ADDR37 facade and service landing are qualified.
+R25IMW = dict(R25IQG, native_mtp_wb=True,
+    spine_slots_low={'mtp': MTP_SLOT, 'kvwb': (300.24, 241.92)},
+    spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
+    spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
+        mtp='stream_1p2', kvwb='stream_1p2'))
+R25IMWS = dict(R25IMW, native_mtp_stop=True,
+    spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
 ADOPTED = R25
 
 
@@ -583,7 +598,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     yy = min(it.y for it in hub.values() if it.kind == 'spine' and it.x == sx0) - glo / 2
     for n_, (w_, h_) in variant.get('spine_slots_low', {}).items():
         y_ = dn(yy - glo / 2 - h_, GY)
-        it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
+        master_ = variant.get('spine_slot_masters', {}).get(n_, f'hfd_{n_}')
+        it = Inst(f'hb_{n_}', master_, up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
                   kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'stream_1p2'))
         assert it.y >= hy0 + 43.2, ('low spine slot below the hub band', n_, it.y, hy0)
         insts.append(it)
@@ -741,6 +757,13 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         from hbm_indexer_die_topology import install
         import sys
         install(m, sys.modules[__name__])
+    if variant.get('native_mtp_wb'):
+        from hbm_mtp_wb_die_model import model as native_model
+        m['mtp_wb_native'] = native_model(ROOT)
+        if variant.get('native_mtp_stop'):
+            from hbm_mtp_native_contract import stop_model
+            m['mtp_wb_native']['MTP'] = stop_model(ROOT)
+        m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
     if geometry_only:
         m['buses'], m['paths'] = [], {}
         m['geometry_only'] = True
@@ -840,6 +863,28 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         m['child_reservations'] = allocations(m)
     if variant.get('split_masters'):
         apply_splits(m, variant['split_masters'], variant.get('split_lattice'))
+    if variant.get('native_indexer'):
+        # Allocate the already-qualified wide station A/B footprints first;
+        # native relays must not occupy a required B-half landing region.
+        for role_ in variant.get('split_stations', ()):
+            split_station(m, role_)
+        from hbm_indexer_die_topology import networks
+        import sys
+        old_names={i.name for i in m['insts']}
+        _,native_chain=_router(m,m['buses'],m['paths'])
+        networks(m,sys.modules[__name__],m['buses'],m['paths'],native_chain)
+        # Existing split clock leaves remain intact. Extend the unique domain
+        # roots only with newly allocated native relay endpoints.
+        for i in m['insts']:
+            if i.name in old_names:
+                continue
+            d=m.get('clocked',{}).get(i.name)
+            if d:
+                bus=next(b for b in m['buses'] if b[0]==f'clk_{d}')
+                bus[3].append((i.name,'ck'))
+            d=d or m.get('fwd_dom',{}).get(i.name,'stream')
+            bus=next(b for b in m['buses'] if b[0]==f'rst_{d}')
+            bus[3].append((i.name,'rst'))
     if variant.get('split_x_masters'):
         apply_splits_x(m, variant['split_x_masters'])
     fixv = ['hfd_barrier'] if variant.get('barrier_low') else []
@@ -855,7 +900,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         split_vm8(m)
     if variant.get('attn_split'):       # r25s: attention tiles as two half-tile die blocks (default off)
         split_attn(m, variant['attn_split'])
-    for role_ in variant.get('split_stations', ()):     # r23: station roles split into half-bus A / B masters
+    for role_ in (() if variant.get('native_indexer') else variant.get('split_stations', ())):     # r23: station roles split into half-bus A / B masters
         split_station(m, role_)
     if variant.get('relay_all'):        # r22: relays at every block pin (pin_stage_buses become a subset of them)
         rf = ROOT / 'physical/hbm_accel_die_views/relay_ends.json'   # the budget's pin-to-pin list (authoritative)
@@ -1650,9 +1695,12 @@ def apply_splits_x(m, rel):
                     continue
                 o = by_[eps[1 - i][0]] if len(eps) == 2 else None
                 ox = (o.x + o.w / 2) if o is not None else it.x + it.w / 2
-                for bn in sp['parents'][it.master]['bands']:
+                ordered = sp['parents'][it.master]['bands']
+                forced = (m.get('variant') or {}).get('split_x_new_port_band', {}).get(port)
+                eligible = [ordered[forced]] if forced is not None else ordered
+                for bn in eligible:
                     b = sp['bands'][bn]
-                    if it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == sp['parents'][it.master]['bands'][-1]:
+                    if forced is not None or it.x + b['x0_um'] <= ox < it.x + b['x0_um'] + b['w_um'] or bn == ordered[-1]:
                         xl = min(max(ox - it.x - b['x0_um'], 0.1 * b['w_um']), 0.9 * b['w_um'])
                         extra_x[bn][port] = ('face', newp[port], 'N', 'M5', round(xl, 4), 2)
                         new_owner[(inst, port)] = bn
@@ -1851,7 +1899,8 @@ def _router(m, B, P):
     insts = m['insts']
     g = m['geo']
     faces = m['stn_faces']
-    n_wp = [0]
+    n_wp = [max([int(q.group(1)) for it in insts
+                 if (q := re.match(r'^w(\d+)_',it.name))]+[0])]
     pf = m['variant'].get('port_fix')
     fwd_on = m['variant'].get('fwd')
     blocked = [(it.x - 4.32, it.y - 4.32, it.x + it.w + 4.32, it.y + it.h + 4.32) for it in insts]
@@ -1876,6 +1925,11 @@ def _router(m, B, P):
 
     def station(cx, cy, chain, bits, fa, fb, horizontal, kind='stn', extra=None, fifo_bits=0, dom='stream'):
         w, h = stn_size(bits, horizontal)
+        if m['variant'].get('native_indexer') and bits == 1 and chain.startswith('idx_'):
+            from hbm_indexer_r25i_model import hbm_indexer_scalar_credit_relay_model
+            scalar_model = hbm_indexer_scalar_credit_relay_model()
+            w,h=scalar_model['outline_um']
+            m['scalar_credit_station_model']=scalar_model
         if extra:
             w, h = max(w, extra[0]), max(h, extra[1])
         nf = math.ceil(fifo_bits / 512) if fifo_bits else 0
@@ -2087,7 +2141,8 @@ def buses(m):
         P[f'attn_q_{st}'] = qids + hops_c + hops_r
         P[f'kv_{st}'] = P[f'kv_{st}'] + hops_c + hops_r
         B.append((f'ao_{st}', 'attn_out', 2 * ATTN_OUT, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = hops_o + [tr, f'ao_{st}']
 
     for st, G in m['groups'].items():
@@ -2325,6 +2380,8 @@ def buses(m):
         corner = (rowt[-1] if half == 'W' else rowt[0]) if attn_rtl else (rowt[0] if half == 'W' else rowt[-1])
         for name, tgt_inst, port, off in (('kv', corner, 'k' if pf else f'k{st}', -50.0),
                                           ('ik', sc['index'], 'k' if pf else f'k{st}', 50.0)):
+            if V.get('native_indexer') and name == 'ik':
+                continue
             tp = _cxy(tgt_inst, 'S' if side == 'S' else 'N', 0.5)
             so = _cxy(svc, 'W' if half == 'W' else 'E', 0.3 if name == 'kv' else 0.7)
             yy_ = ylane(side, 'lk0' if name == 'kv' else 'lk1', ych[side] + 40.0 * sgn * (1 if name == 'kv' else -1))
@@ -2362,7 +2419,8 @@ def buses(m):
                 lo, hi_ = (grid[r][c], grid[r + 1][c]) if side == 'S' else (grid[3 - r][c], grid[2 - r][c])
                 B.append((f'tk_{st}{r}{c}', 'attn_kv', 1618 if actual_attn else 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
         B.append((f'ao_{st}', 'attn_out', 1058 if actual_attn else 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = [f'tr_{st}0', f'ao_{st}']
     # ---- hub internal (adjacent slabs across one channel, or vertical in the spine column): direct nets; their
     #      stage count is read from the routed length
@@ -2376,7 +2434,16 @@ def buses(m):
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
-        hl_ += list(MTP_HUB_LINKS)
+        if V.get('native_mtp_wb'):
+            from hbm_mtp_native_contract import model, stop_model
+            native_contract = stop_model if V.get('native_mtp_stop') else model
+            contract = native_contract(ROOT)
+            for name, group in contract['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_')
+                           else ('mtp', peer_, group['bits']))
+        else:
+            hl_ += list(MTP_HUB_LINKS)
     for q in ('SW', 'SE', 'NW', 'NE'):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
@@ -2460,7 +2527,7 @@ def buses(m):
         vm = hub['vm']
         hy0_, hy1_ = g['hub_y']
         drop = set()
-        for st in ('SW', 'SE', 'NW', 'NE'):
+        for st in (() if V.get('native_indexer') else ('SW', 'SE', 'NW', 'NE')):
             sc = m['scan'][st]
             ix = sc['index']
             side, half = st[0], st[1]
@@ -3544,7 +3611,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

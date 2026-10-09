@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import sys;sys.path.insert(0,"tools");import hbm_accel_die_fp as f;m=f.build(f.R25I);print("NATIVE_BUSES",len([b for b in m["buses"] if b[1]=="index_native"]));print("PATHS",[(p,len(v)) for p,v in m["paths"].items() if p.startswith("idx_")])
+                                                                         ~~~~~~~^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 861, in build
+    split_station(m, role_)
+    ~~~~~~~~~~~~~^^^^^^^^^^
+  File "/srv/opentallas-scratch/codex/hbm-wiring-r25i/source-prebuild/tools/hbm_accel_die_fp.py", line 1166, in split_station
+    assert bx is not None, ('no room for the B half', it.name)
+           ^^^^^^^^^^^^^^
+AssertionError: ('no room for the B half', 'w25_xmSW2')
