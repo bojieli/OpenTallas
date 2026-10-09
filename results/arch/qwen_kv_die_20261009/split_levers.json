@@ -66,5 +66,34 @@
   "SU memory latency: ML 4 -> 7 = +48 a layer (s11ml4 5,389 vs s11ml7 5,437), ~16 a layer per ML edge; ML 7 = ~112 of the +198.  The SU memory latency is the larger share.",
   "Stations are at the registered-boundary minimum (OS + IS each way); the remaining lever is the SU memory latency: ML 7 applies to EVERY SU memory (the abutted VM answers too) because the stream unit has one ML for all ports; only the far constant ROM needs it."
  ],
- "next": "per-port SU memory latency (VM at its abutted latency, constant ROM operands prefetched or the constant ROM moved beside the SU) -- RTL change in ot_hdc_vstream_rt, benched on the same chain"
+ "next": "per-port SU memory latency (VM at its abutted latency, constant ROM operands prefetched or the constant ROM moved beside the SU) -- RTL change in ot_hdc_vstream_rt, benched on the same chain",
+ "lever_b_forwarding": {
+  "scope": "results/arch/qwen_kv_die_20261009/split_forward_scope.json (layer program L1-d0: the 12 SU ops issued after a wait on the previous SU op)",
+  "finding": "1 of 12 dependent SU boundaries is forwardable (op 7 <- op 6: elementwise, same stride, same SFU class). The other 11: 5 read a REDUCTION result (scalar / per-segment, available only after the whole segment), 4 read a reshaped operand (different stride / broadcast), 2 depend on an older op or the ME; 10 of the 12 also change the SFU class, which drains the lockstep lanes regardless of data.",
+  "estimate": "<= ~20 cycles a layer (one boundary: its drain, ML + element pipeline), ~0.35 % a token",
+  "recommendation": "NOT BUILT: below the 1 % adoption bar; the dependent chain is reduction / broadcast-bound, not forwarding-bound"
+ },
+ "lever_a_vm_stages_paper": {
+  "path": "ot_qfd_sp_vector_memory_bv SU read: E1 descriptor register (pin), E2 broadcast register, E3 per-bank address register beside the macro, E4 macro read, E5 capture beside the macro, E6 coarse rotate, E7 fine rotate -> answer at 1 + 7",
+  "removable": [
+   {
+    "stage": "E7 into E6 (one 64-way rotate stage)",
+    "saving_edges": 1,
+    "risk": "moderate: 512 b x 64-way mux + the wire to the SU lanes in one 833 ps cycle; the rotate sits beside the abutted SU face"
+   },
+   {
+    "stage": "E5 into E6 (macro clk->q straight into the rotate)",
+    "saving_edges": 1,
+    "risk": "high: SS macro clk->q + the coarse rotate + wire; the capture flop exists for the macro read timing"
+   },
+   {
+    "stage": "E1 / E2 / E3",
+    "saving_edges": 0,
+    "risk": "kept: E1 is the registered-boundary pin flop; E2 / E3 carry the descriptor over the replica banks"
+   }
+  ],
+  "estimate": "-1 edge (E6/E7) ~ -16 cycles a layer; -2 (with E5) ~ -32 a layer (~0.6 % a token); the write path and the uniform-latency exactness argument are unaffected (reads only)",
+  "cost": "re-close qfd_sp_vector_memory_bv (777.6 x 6,220.8, closed) and the SU master at ML 6 / 5; not launched (coordinator: no VM re-route until (b) is in)"
+ },
+ "conclusion": "The split loss (+198 a layer) is ~86 stations (at the registered minimum) + ~112 SU memory latency (the banked VM, 1 + 7). Go-queues (-22, rejected), interleaving (0 movable) and lane forwarding (<= 20, not built) cannot recover it; the VM stage cut is worth <= ~32 a layer. A larger recovery needs a structural change: the SU / VM / sequencer crossings inside one master (no pin stations) or a lower-latency SU operand memory."
 }
