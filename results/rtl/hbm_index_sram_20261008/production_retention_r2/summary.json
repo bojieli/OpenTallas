@@ -1,0 +1,15 @@
+{
+  "source_commit": "afeaad741",
+  "verdict": "PASS",
+  "positive_descriptors": 14,
+  "final_credit_hold_cycles": 12,
+  "retention_assertions": "idx_busy remains asserted while final credits withheld; clears after every credit returns",
+  "default_dependency_free": true,
+  "byte_mutation_negative": "PASS",
+  "first_descriptor_last_line_latency_unchanged": true,
+  "second_descriptor_timing": "Intentional12-cycle hold shifts descriptor launch against REFpb; no matched-phase speedup claim",
+  "postprocessing_assumption_failure_preserved": "Initial all-row-latency-equality assertion failed because second descriptor phase shifts; RTL gate remained PASS",
+  "timing_scope": "controller1024ps clock; no added datapath pipeline cycle",
+  "area_model": "8 generic credit comparisons and pipeline-v OR; zero additional FF; older mappedsource predates thisguard",
+  "physical_qualified": false
+}
