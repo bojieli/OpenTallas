@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "HBM native index dynamic controller",
+      "target": "HBM accelerator",
+      "recorded_at": "2026-10-09T07:43:40.392038+00:00",
+      "owner": "/root/hbm_system",
+      "source": {
+        "commit": "13b343feb",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_index_control.sv",
+          "tools/hbm_native_index_control_model.py"
+        ]
+      },
+      "description": "Retained dynamic key layer/allocated row0 and matching actual prefetch acceptance full73; separate actual pairedappend WB fence visibility dependency before query starts.",
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "ENABLE0/PREFETCH0 default; dualrail state/metadata; no timer or issued-write-count ACK"
+        ]
+      },
+      "model": {
+        "status": "priced",
+        "evidence": [
+          "tools/hbm_native_index_control_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pass_component",
+          "evidence": [
+            "results/rtl/hbm_native_index_control_20261009/prefetch_13b343feb/record.json",
+            "24frames/48masks normal and optinprefetch each"
+          ]
+        },
+        "negative": {
+          "status": "pass_expected_rejection",
+          "evidence": [
+            "results/rtl/hbm_native_index_control_20261009/prefetch_13b343feb/negative_prefetch_identity.log",
+            "results/rtl/hbm_native_index_control_20261009/prefetch_13b343feb/generation_drop.log"
+          ]
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "evidence": [
+          "Actual R25I placement/loaded clock/pin SS/FF unqualified; no rate credit"
+        ]
+      },
+      "dependencies": {
+        "status": "missing_bindings",
+        "evidence": [
+          "Actual CP retained full73/layer6/allocatedkeyrow15",
+          "Actual pairedappend WB fence visibility receipt held full73",
+          "Dedicated K99 protected service descriptor mailbox and accepted receipt CDC",
+          "Continuation query credit and actual VM/router consumer joins"
+        ]
+      },
+      "integration": {
+        "status": "incomplete",
+        "evidence": [
+          "Component gate does not prove actual service prefetch or end-to-end AR/MTP"
+        ]
+      }
+    }
+  ]
+}
