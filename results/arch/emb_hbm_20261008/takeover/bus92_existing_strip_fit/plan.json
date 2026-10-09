@@ -1,0 +1,170 @@
+{
+  "schema": "opentallas.embedding_existing_strip_rectangle_plan.v1",
+  "status": "ANALYTICAL_GEOMETRY_ONLY",
+  "die": {
+    "w": 25815.456,
+    "h": 32801.76,
+    "mm2": 846.792,
+    "budget_mm2": 858,
+    "margin_mm2": 11.208
+  },
+  "parents": [
+    {
+      "name": "lfifo_WS",
+      "master": "qfd_kvc",
+      "x": 1284.768,
+      "y": 21.6,
+      "w": 96.744,
+      "h": 15597.336000000003,
+      "kind": "link_fifo",
+      "region": "strip",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "lfifo_WN",
+      "master": "qfd_kvc_n",
+      "x": 1284.768,
+      "y": 15618.960000000003,
+      "w": 96.744,
+      "h": 15597.336000000005,
+      "kind": "link_fifo",
+      "region": "strip",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "lfifo_ES",
+      "master": "qfd_kvc",
+      "x": 24433.92,
+      "y": 21.6,
+      "w": 96.744,
+      "h": 15597.336000000003,
+      "kind": "link_fifo",
+      "region": "strip",
+      "domain": "stream_1p2"
+    },
+    {
+      "name": "lfifo_EN",
+      "master": "qfd_kvc_n",
+      "x": 24433.92,
+      "y": 15618.960000000003,
+      "w": 96.744,
+      "h": 15597.336000000005,
+      "kind": "link_fifo",
+      "region": "strip",
+      "domain": "stream_1p2"
+    }
+  ],
+  "children": [
+    {
+      "name": "lfifo_WS_engine",
+      "parent": "lfifo_WS",
+      "master": "qfd_emb_strip_bus92",
+      "x": 1284.768,
+      "y": 6819.12,
+      "w": 92.016,
+      "h": 2000.16,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_WS_far",
+      "parent": "lfifo_WS",
+      "master": "qfd_emb_far92",
+      "x": 1284.768,
+      "y": 5417.28,
+      "w": 92.016,
+      "h": 1401.84,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_WN_engine",
+      "parent": "lfifo_WN",
+      "master": "qfd_emb_strip_bus92",
+      "x": 1284.768,
+      "y": 22416.48,
+      "w": 92.016,
+      "h": 2000.16,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_WN_far",
+      "parent": "lfifo_WN",
+      "master": "qfd_emb_far92",
+      "x": 1284.768,
+      "y": 21014.64,
+      "w": 92.016,
+      "h": 1401.84,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_ES_engine",
+      "parent": "lfifo_ES",
+      "master": "qfd_emb_strip_bus92",
+      "x": 24433.92,
+      "y": 6819.12,
+      "w": 92.016,
+      "h": 2000.16,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_ES_far",
+      "parent": "lfifo_ES",
+      "master": "qfd_emb_far92",
+      "x": 24433.92,
+      "y": 5417.28,
+      "w": 92.016,
+      "h": 1401.84,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_EN_engine",
+      "parent": "lfifo_EN",
+      "master": "qfd_emb_strip_bus92",
+      "x": 24433.92,
+      "y": 22416.48,
+      "w": 92.016,
+      "h": 2000.16,
+      "other_existing_rectangles_overlapped": []
+    },
+    {
+      "name": "lfifo_EN_far",
+      "parent": "lfifo_EN",
+      "master": "qfd_emb_far92",
+      "x": 24433.92,
+      "y": 21014.64,
+      "w": 92.016,
+      "h": 1401.84,
+      "other_existing_rectangles_overlapped": []
+    }
+  ],
+  "outline_addition_um": 0,
+  "child_rectangles_mm2": 1.2521537280000001,
+  "added_die_area_mm2": 0,
+  "old_KVC_replaced": false,
+  "actual_ports_bound": false,
+  "physical_closed": false,
+  "headline_credit": 0,
+  "source_removed_ROM": {
+    "instance": "io_embedding_rom",
+    "master": "qfd_io_embedding_rom",
+    "rect_um": [
+      4688.928,
+      31216.32,
+      7063.608,
+      1563.816
+    ],
+    "mm2": 11.046,
+    "buses_dropped": [
+      "clk_r115"
+    ],
+    "note": "the r21b placeholder; the RTL-sized full replica (2,374 code + 3 scale bank parents + 2,376 taps + root) would need ~88.1 mm2 (EMB_HBM_FEASIBILITY.md)"
+  },
+  "obligations": [
+    "actual native KVC function/interfaces must survive replacement",
+    "real engine/far hardened views and actual pin/station binding",
+    "node/control/native KV/stations fit in the remaining real rectangles",
+    "actual die compaction/host/PLL sheet meets current <=~845 target",
+    "freed ROM rectangle cannot be numerically subtracted from die outline"
+  ],
+  "inventory_sha256": "18098d043f6a1aef15ce62399dece55bdc830f02d4095c3a3fc3807f3381e2d4",
+  "script_sha256": "fe67bd9ece533c4c86b27e95275096b54008ab3e5eb4c1986302bf043177bb28"
+}
