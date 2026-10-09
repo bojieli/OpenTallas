@@ -3,7 +3,9 @@
 // lanes/word each protected independently with32+7SECDED. Three256b real
 // macros/bank pack624live bits, with active-high partial writes, noRMW.
 // ReadML3. Rowlease mustmatchcommand;1280unique beats mustCOMMIT before ready.
-module ot_hbm_hc_flat_operand_sram(
+// LEASE_CHECK (cont-takeover 2026-10-09): 0 drops the row-lease identity compare (REVIEW S3 binding: fn/x rows are a
+// fixed-order snapshot; ordering comes from start/release and the per-beat seen map, which stay).  Default 1 = unchanged.
+module ot_hbm_hc_flat_operand_sram #(parameter integer LEASE_CHECK=1)(
  input wire clk,rst_n,start,release_window,input wire[15:0]lease,
  input wire i_valid,output wire i_ready,input wire[15:0]i_lease,
  input wire[10:0]i_beat,input wire[255:0]i_data,
@@ -12,7 +14,7 @@ module ot_hbm_hc_flat_operand_sram(
 );
  reg active,wr_v;reg[15:0]lease_r;reg[1279:0]seen;
  reg[10:0]committed;reg[6:0]wr_word;reg[3:0]wr_pair;
- wire bad=i_lease!=lease_r || i_beat>=1280 || seen[i_beat];
+ wire bad=(LEASE_CHECK!=0 && i_lease!=lease_r) || i_beat>=1280 || seen[i_beat];
  wire accept=i_valid&&i_ready;
  assign i_ready=active&&!fault;
  assign ready=active&&!fault&&(committed==1280)&&!wr_v;

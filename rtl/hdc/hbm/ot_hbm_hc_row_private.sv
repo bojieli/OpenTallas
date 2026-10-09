@@ -2,7 +2,7 @@
 // Whole-rowHCP, both operands privately resident in real protected SRAM.
 // Production900MHzserialclock,service/producerCDC belongs to die collars.
 // Tag identifies this residual snapshot, independent of static FN base.
-module ot_hbm_hc_row_private(
+module ot_hbm_hc_row_private #(parameter integer LEASE_CHECK=1)(
  input wire clk,rst_n,cmd_valid,output wire cmd_ready,input wire[4:0]cmd_row,
  input wire[15:0]cmd_lease,input wire[29:0]cmd_weight_base,input wire[31:0]cmd_eps,
  output wire hq_v,input wire hq_rdy,output wire[29:0]hq_addr,output wire[2:0]hq_len,output wire[9:0]hq_tag,
@@ -34,7 +34,7 @@ module ot_hbm_hc_row_private(
   .hbm_base(base),.ready(wrdy),.hq_v(hq_v),.hq_rdy(hq_rdy),.hq_addr(hq_addr),.hq_len(hq_len),.hq_tag(hq_tag),
   .hr_v(hr_v),.hr_rdy(hr_rdy),.hr_tag(hr_tag),.hr_beat(hr_beat),.hr_data(hr_data),
   .rom_re(wre),.rom_addr(wa),.rom_q(wq),.fault(wfault),.ce_seen(),.ue_seen());
- ot_hbm_hc_flat_operand_sram flat(.clk(clk),.rst_n(rst_n),.start(start),.release_window(o_valid&&o_ready),.lease(lease),
+ ot_hbm_hc_flat_operand_sram #(.LEASE_CHECK(LEASE_CHECK)) flat(.clk(clk),.rst_n(rst_n),.start(start),.release_window(o_valid&&o_ready),.lease(lease),
   .i_valid(x_valid),.i_ready(x_ready),.i_lease(x_lease),.i_beat(x_beat),.i_data(x_data),
   .ready(xrdy),.re(xre),.addr(xa),.q(xq),.fault(xfault),.ce_seen(),.ue_seen());
  ot_hdc_v41x_hcp #(.W(32),.TL(7),.PMAX(1),.OMAX(2),.ML(3))core(
