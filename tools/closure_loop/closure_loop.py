@@ -2052,9 +2052,12 @@ def bench_outcome(j, st, rc, ok_extra=True):
     (last 20000 lines), so ^FAIL matches any line."""
     full = ""
     for _ in range(4):  # an ssh hiccup returns an empty log and mis-judged benches (code-pair 10-07); fetch until it reads
-        r = ssh(j["host"], f"tail -n 20000 {j['run']}/cl/{j['stage_tag']}.log", timeout=180)
-        if r.returncode == 0 and r.stdout.strip():
-            full = r.stdout
+        # drive-resume 2026-10-09: a bench that prints nothing (qkd_d2d *_record: a python -c exit-code check) left an
+        # EMPTY log, read as an ssh hiccup 10x -> NEEDS_HUMAN.  A marker line proves the file was read: empty is valid.
+        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && echo OT_BENCH_LOG_READ && tail -n 20000 $f",
+                timeout=180)
+        if r.returncode == 0 and r.stdout.startswith("OT_BENCH_LOG_READ"):
+            full = r.stdout.split("\n", 1)[1] if "\n" in r.stdout else ""
             break
         time.sleep(15)
     else:
