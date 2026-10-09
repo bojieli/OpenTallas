@@ -1,5 +1,5 @@
 `timescale 1ps/1fs
-module tb_dshbm_dspark_ctl_stop #(parameter KIND=0,MUT=0);
+module tb_dshbm_dspark_ctl_stop #(parameter KIND=0,MUT=0,PRL=0);
  reg clk=0;always #417 clk=~clk;
  reg rst_n=0,start=0,e_ready=0;wire [19:0] p_addr,e_idx;wire [22:0] f_addr;
  wire e_v,done,cmd_v;wire [16:0] e_tok;wire [3:0] cmd_op,cmd_ncol;
@@ -8,7 +8,7 @@ module tb_dshbm_dspark_ctl_stop #(parameter KIND=0,MUT=0);
  reg [31:0] n=0;wire n_set,tw_v,step_v;wire [31:0] n_val,tw_pos;wire [16:0] tw_tok;
  wire [2:0] step_a,stop_status;wire [3:0] step_g;wire [20:0] steps;
  wire [31:0] cyc_total,cyc_engine,cyc_markov;
- ot_dshbm_dspark_ctl_stop #(.STOP_EN(1),.FAST(1),.MAXPOS(1048576),.MUT(MUT)) dut(
+ ot_dshbm_dspark_ctl_stop #(.STOP_EN(1),.PRL(PRL),.FAST(1),.MAXPOS(1048576),.MUT(MUT)) dut(
  .clk(clk),.rst_n(rst_n),.start(start),.cfg_gamma(4'd5),.cfg_force(1'b1),
  .cfg_ngen(KIND==1?21'd4:21'd20),.cfg_plen(21'd2),.p_addr(p_addr),.p_tok(17'd5),
  .f_addr(f_addr),.f_tok(17'd100+f_addr),.e_v(e_v),.e_tok(e_tok),.e_idx(e_idx),.e_ready(e_ready),

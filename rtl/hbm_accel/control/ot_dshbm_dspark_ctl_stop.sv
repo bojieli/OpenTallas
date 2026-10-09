@@ -34,7 +34,7 @@
 // 2 next pending token t_{a+1} instead of t_a, 3 accept ignores the last draft's match.
 // ---------------------------------------------------------------------------
 module ot_dshbm_dspark_ctl_stop #(
-    parameter integer STOP_EN = 0, CW = 21, PW = 20, FW = 23,
+    parameter integer STOP_EN = 0, CW = 21, PW = 20, FW = 23, PRL = 0,
     parameter integer B      = 5,
     parameter integer PMAX   = 8,
     parameter integer TW     = 17,
@@ -176,6 +176,12 @@ module ot_dshbm_dspark_ctl_stop #(
     end else begin : g_cnt0
         assign ct_n = 32'd0; assign ce_n = 32'd0; assign cm_n = 32'd0;
     end endgenerate
+    reg [3:0] rw;
+    wire rd_ok = (PRL==0) || (rw>=PRL);
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) rw<=0;
+        else if((s==S_PF_TOK || s==S_FLOAD) && !rd_ok) rw<=rw+1'b1;
+        else rw<=0;
     integer k;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -216,7 +222,7 @@ module ot_dshbm_dspark_ctl_stop #(
                         s <= S_DONE; stop_latched <= 1; stop_status <= cfg_ngen==0 ? 3'd2 : 3'd4;
                     end
                 end
-                S_PF_TOK: begin                      // the prompt token of position pp
+                S_PF_TOK: if(rd_ok) begin                      // the prompt token of position pp
                     tw_v <= 1'b1; tw_pos <= pp; tw_tok <= p_tok;
                     g <= 0;
                     issue(C_VLAYER, 0, 1, pp, 0, 0);
@@ -252,7 +258,7 @@ module ot_dshbm_dspark_ctl_stop #(
                     else if (cfg_force) s <= S_FLOAD;
                     else issue(C_DSTAGE, 0, B, q, y, 0);
                 end
-                S_FLOAD: begin                       // host drafts (bench drafter)
+                S_FLOAD: if(rd_ok) begin                       // host drafts (bench drafter)
                     d[j] <= f_tok;
                     if (j + 1 == g) begin j <= 0; s <= S_VTOK; end
                     else j <= j + 1;
