@@ -1,6 +1,6 @@
 {
  "spec": {
-  "name": "engram-sink-pin-e04204d20-tt",
+  "name": "engram-sink-pin-e5c627229-tt",
   "block": "dsfd_engram_sink",
   "owner": "Codex:engram",
   "purpose": "Opt-in PIN_CAPTURE=1: full four-source eight-slot sink with unconditional payload pin registers, four-entry source queues and two-beat acceptance reservation. +1 input capture cycle, default unchanged. Historical scalar sink TT -28.93ps retained; this is a measured structural candidate, no adoption claim.",
@@ -14,7 +14,7 @@
   "peak_ram_gb": 32,
   "source": {
    "branch": "codex/engram-resume-20261009",
-   "commit": "e04204d20eeff85a58d1664992bb20afb420145b"
+   "commit": "e5c6272290a1b951e961d8222e70d2b4d10aaa61"
   },
   "stages": {
    "bench": [
