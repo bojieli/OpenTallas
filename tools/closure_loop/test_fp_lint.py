@@ -55,20 +55,29 @@ class Lint(unittest.TestCase):
 
     def test_pin_width(self):
         ck = ["ck", "ck", "SIGNAL", "INPUT", [["M7", [99.6, 199.7, 99.664, 200.0]]]]    # 0.064 on M7 (vm8)
-        self.assertIn("pin_width", self.checks(dump(bterms=[ck])))
+        m6 = [["wire", "M6", "", [0.4, 199.8, 199.6, 200.088]]]                 # M6 strap under the pin (vm8: DRC 3)
+        self.assertIn("pin_width", self.checks(dump(bterms=[ck], pdn_edge=m6)))
+        far = [["wire", "M6", "", [0.4, 201.2, 199.6, 201.488]]]                # 1.2 um away (svc_SE_s0 r18b: DRC 0)
+        r = F.lint(dump(bterms=[ck], pdn_edge=far))
+        self.assertNotIn("pin_width", {f["check"] for f in r["fails"]})
+        self.assertIn("pin_width", {w["check"] for w in r["warns"]})
         ok = ["ck", "ck", "SIGNAL", "INPUT", [["M7", [99.6, 199.7, 99.632, 200.0]]]]
-        self.assertNotIn("pin_width", self.checks(dump(bterms=[ok])))
+        self.assertNotIn("pin_width", self.checks(dump(bterms=[ok], pdn_edge=m6)))
 
     def test_pin_pdn_full_column(self):
         strap = [["wire", "M5", "", [0.24, 0.5, 0.36, 199.5]]]                 # pdn_view M5 offset 0.300 (hx_E)
         full = [m4_pin(f"i{i}", 20 + i * 0.048) for i in range(400)]
-        self.assertIn("pin_pdn", self.checks(dump(bterms=full, pdn_edge=strap)))
+        r = F.lint(dump(bterms=full, pdn_edge=strap))                         # hx_W / hl_E1 closed DRC 0: warning
+        self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]})
+        self.assertIn("pin_pdn", {w["check"] for w in r["warns"]})
+        self.assertIn("pin_pdn", {f["check"] for f in F.lint(dump(bterms=full, pdn_edge=strap), {"pin_pdn_fail": 1.0})["fails"]})
         half = [m4_pin(f"i{i}", 20 + i * 0.096) for i in range(400)]
         r = F.lint(dump(bterms=half, pdn_edge=strap))
         self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]})
         self.assertIn("pin_pdn", {w["check"] for w in r["warns"]})
         moved = [["wire", "M5", "", [2.64, 0.5, 2.76, 199.5]]]                  # m5w offset 2.700
-        self.assertNotIn("pin_pdn", self.checks(dump(bterms=full, pdn_edge=moved)))
+        r = F.lint(dump(bterms=full, pdn_edge=moved), {"pin_pdn_fail": 1.0})
+        self.assertNotIn("pin_pdn", {f["check"] for f in r["fails"]} | {w["check"] for w in r["warns"]})
 
     def test_sliver_and_blockage(self):
         macros = [{"name": "a", "master": "B", "bbox": [20, 20, 120, 60], "status": "FIRM", "halo": None, "pins": []},
