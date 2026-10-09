@@ -22,8 +22,6 @@ module ot_hgi_idx_topk #(
  reg [31:0] n,m,row,cursor,emit_cursor;
  reg [11:0] k;
  reg values_enabled;
- localparam integer EW=$clog2(MAX_K);
- wire [EW-1:0] emit_index=emit_cursor[EW-1:0];
  reg [52:0] cells[0:MAX_K-1];
  reg [31:0] values[0:MAX_K-1];
  wire [31:0] canon=(in_score[30:0]==0)?32'd0:in_score;
@@ -39,8 +37,8 @@ module ot_hgi_idx_topk #(
  assign cmd_ready=state==IDLE;
  assign in_ready=ENABLE&&state==FILL;
  assign out_valid=ENABLE&&state==EMIT;
- assign out_id={{12{1'b0}},MUTANT_TIE?cells[emit_index][19:0]:~cells[emit_index][19:0]};
- assign out_score=values[emit_index];
+ assign out_id={{12{1'b0}},MUTANT_TIE?cells[0][19:0]:~cells[0][19:0]};
+ assign out_score=values[0];
  assign out_row=row;
  assign out_values_valid=out_valid&&values_enabled;
  assign out_last=state==EMIT&&emit_cursor+1==k;
@@ -75,6 +73,10 @@ module ot_hgi_idx_topk #(
      end
     end
     EMIT: if(out_ready) begin
+     // Consume the head through the existing local-neighbor shift path.
+     // No MAX_K-to-one output mux or global variable-index fanout.
+     for(i=0;i<MAX_K-1;i=i+1) begin cells[i]<=cells[i+1];values[i]<=values[i+1];end
+     cells[MAX_K-1]<=0;values[MAX_K-1]<=0;
      emit_cursor<=emit_cursor+1;
      if(emit_cursor+1==k) begin
       if(row+1==m) state<=FINISH;
