@@ -1,0 +1,45 @@
+OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); orfs corner WC, hold corners WC,BC
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/hbm_attn_tile_r/signoff_833_int.sdc]
+FAILED: FlowError: ORFS place-and-route failed with exit 2:
+eak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            3            394 d2f73ca3f6671d0ab9a2
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/hbm_attn_tile_r/quad_b_cts/ot_attn_tile_m6h1q/ot_attn_tile_m6h1q_tt.lib
+read_liberty /src/physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544/ot_attn_bank_sn544_tt.lib
+read_liberty /src/physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544/ot_attn_bank_ew544_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/hbm_attn_tile_r/quad_b_cts/ot_attn_tile_m6h1q/ot_attn_tile_m6h1q_ff.lib
+read_liberty /src/physical/hbm_attn_tile_r/bank/ot_attn_bank_sn544/ot_attn_bank_sn544_ff.lib
+read_liberty /src/physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544/ot_attn_bank_ew544_ff.lib
+read_db /work/results/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl12_021f55db2_tt/base/2_3_floorplan_tapcell.odb
+read_sdc -mode ss /work/results/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl12_021f55db2_tt/base/2_1_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl12_021f55db2_tt/base/2_1_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl12_021f55db2_tt/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO PDN-0001] Inserting grid: top
+[WARNING PDN-0178] Remaining channel (1765.0440, 54.5310) - (1765.5840, 55.8990) on M2 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1765.2060, 27.2610) - (1765.5840, 41.5890) on M2 for nets: VDD, VSS
+[WARNING PDN-0178] Remaining channel (1637.0080, -0.0090) - (1637.4560, 11.5440) on M6 for nets: VSS
+[ERROR PDN-0179] Unable to repair all channels.
+Error: pdn.tcl, 7 PDN-0179
+
+Elapsed time: 0:03.91[h:]min:sec. CPU time: user 3.74 sys 0.16 (99%). Peak memory: 387864KB.
+Elapsed time: 0:05.68[h:]min:sec. CPU time: user 4.88 sys 1.32 (109%). Peak memory: 407320KB.
+Elapsed time: 0:06.82[h:]min:sec. CPU time: user 8.50 sys 0.61 (133%). Peak memory: 1578928KB.
+Elapsed time: 0:03.10[h:]min:sec. CPU time: user 2.94 sys 0.16 (99%). Peak memory: 404264KB.
+Elapsed time: 0:15.44[h:]min:sec. CPU time: user 14.99 sys 0.46 (99%). Peak memory: 1286636KB.
+make[1]: *** [Makefile:464: do-2_4_floorplan_pdn] Error 1
+make: *** [Makefile:464: /work/results/asap7/opentallas_hfd_attn_half_hi_asap7_ah_hbm_attn_half_hi_sl12_021f55db2_tt/base/2_4_floorplan_pdn.odb] Error 2
+
+partial record written to /srv/opentallas-data/claude/closure-loop/hbm_attn_half_hi_sl12_021f55db2-tt/routes/hbm_attn_half_hi_sl12_021f55db2_tt/physical.json

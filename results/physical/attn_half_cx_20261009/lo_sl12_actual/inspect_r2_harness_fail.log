@@ -1,0 +1,6 @@
+LOCATED u_pqx.gn.g_s\[2\].u_r/wire85399
+TARGET u_pqx.gn.g_s[2].u_r/wire85399 MASTER BUFx16f_ASAP7_75t_R
+NET u_pqx.gn.g_s\[2\].u_r/net85399
+TERM u_pqx.gn.g_s\[2\].u_r/wire85399/A BUFx16f_ASAP7_75t_R INPUT
+TERM u_pqx.gn.g_s\[2\].u_r/wire85400/Y BUFx16f_ASAP7_75t_R OUTPUT
+Error: attn_half_cx_inspect_slew_r2.tcl, 22 invalid command name "NULL"
