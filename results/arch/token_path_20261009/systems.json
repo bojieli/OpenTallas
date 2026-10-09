@@ -21,11 +21,11 @@
   "graph": "qwen_rom.json",
   "per_user": {
    "AR": {
-    "value": 5416.7,
+    "value": 5474.5,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "221,538 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 143669.0, 'apportioned': 60696.0, 'priced': 17173.0}); range [5455.6, 5476.4] (PHY latency best/worst)",
+    "note": "219,200 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 141329.0, 'apportioned': 60696.0, 'priced': 17175.0}); range [5455.6, 5476.4] (PHY latency best/worst)",
     "vs_tp4_single_die": -0.0033
    },
    "MTP": {
@@ -113,7 +113,7 @@
     "note": "uarch model; UCIe crossing energy (~0.3 MB a token at sub-pJ/bit) is below its resolution"
    },
    "batch1_w": {
-    "value": 622.5,
+    "value": 626.9,
     "unit": "W",
     "grade": "modelled",
     "source": "static + dyn x per-user rate"
@@ -134,7 +134,7 @@
   },
   "efficiency": {
    "per_user_tok_s_per_kw": {
-    "value": 8701.3,
+    "value": 8732.1,
     "unit": "tok/s per kW (batch 1)",
     "grade": "modelled",
     "source": "per-user / batch1_w"
@@ -146,7 +146,7 @@
     "source": "aggregate / saturated_w"
    },
    "j_per_token_batch1": {
-    "value": 0.1149,
+    "value": 0.1145,
     "unit": "J/token",
     "grade": "modelled",
     "source": "batch1_w / per-user"
@@ -165,8 +165,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     10.34,
-     20.31
+     10.23,
+     20.09
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -212,7 +212,7 @@
     "note": "measured field phases (19,312 regions exact) + measured/vendor hops, composed; by grade {'measured': 705675.2, 'measured+vendor': 123191.2}; Engram branch 0 cycles on the path (slack L1 8,572 / L14 235,129 cycles, modelled)"
    },
    "MTP": {
-    "value": 4351.6,
+    "value": 4238.4,
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/ds_rom_mtp.json totals.tok_s_published",
@@ -223,7 +223,8 @@
    "decision": "owner BF decision 2026-10-09 21:30 PT pending; HALF_PHL is the accepted closure path (headline)",
    "half_phl": {
     "AR": 1447.7,
-    "MTP": 4351.6,
+    "MTP": 4238.4,
+    "MTP_composed": 4351.6,
     "stages": 120,
     "dies": 532,
     "grade": "derived",
@@ -368,7 +369,7 @@
      "source": "per-user / chips_w"
     },
     "MTP": {
-     "value": 93.36,
+     "value": 90.93,
      "unit": "tok/s per kW",
      "grade": "modelled",
      "source": "per-user / chips_w"
@@ -402,8 +403,8 @@
    },
    "usd_per_user_tok_s": {
     "value": [
-     1711.55,
-     3361.98
+     1757.27,
+     3451.77
     ],
     "unit": "USD per (tok/s) at batch 1",
     "grade": "assumed",
@@ -453,7 +454,7 @@
       "note": "unified composition (RTL-contract levers) + 10-08 re-price upper bound; by grade {'measured': 321354.0, 'measured+vendor': 200710.7, 'priced': 180469.8, 'modelled': 47700.0, 'lever': -51058.8}; generic die: DS is the default mode (closed blocks stay valid), fork cost 0 measured so far (/home/ubuntu/claude-takeover-20261007/hbm-forks.log 05:24 RQ-HF-7 (one-beat INT8: zero added cycles, DS cycle-identical)); the fmt3 adapter's modelled bound is 343-2,744 cycles (<= 0.4 %) if not bypass-matched (claude/hbm-generic-20261009 01f643326 results/arch/hbm_generic_20261009/plan.json (die_fit R25G 798.49 mm2 measured with tools/hbm_accel_die_fp.py; branch, planning record))"
      },
      "MTP": {
-      "value": 3700.3,
+      "value": 3699.9,
       "unit": "tok/s",
       "grade": "derived",
       "source": "results/arch/token_path_20261009/hbm_ds_mtp.json totals.tok_s_published",
@@ -562,14 +563,14 @@
        "source": "static + switches + dyn x per-user"
       },
       "MTP": {
-       "value": 12661.4,
+       "value": 12661.0,
        "unit": "W",
        "grade": "modelled",
        "source": "static + switches + dyn x per-user"
       }
      },
      "wall_w": {
-      "value": 15705.4,
+      "value": 15705.0,
       "unit": "W",
       "grade": "derived",
       "source": "MTP batch-1 W x wall factor 1.2404"
@@ -584,7 +585,7 @@
        "source": "per-user / batch1_w"
       },
       "MTP": {
-       "value": 292.25,
+       "value": 292.23,
        "unit": "tok/s per kW",
        "grade": "modelled",
        "source": "per-user / batch1_w"
@@ -610,8 +611,8 @@
      },
      "usd_per_user_tok_s": {
       "value": [
-       324.3,
-       324.3
+       324.33,
+       324.33
       ],
       "unit": "USD per (tok/s) at batch 1",
       "grade": "assumed",
@@ -1072,22 +1073,22 @@
    "target": "Qwen ROM (ROM + KV die)",
    "model": "Qwen3-8B 8K",
    "mode": "AR",
-   "per_user": 5416.7,
+   "per_user": 5474.5,
    "aggregate": 25362,
    "dies": 8,
    "stacks": 16,
    "power_w": 2150.1,
-   "tok_s_per_kw_b1": 8701.3,
+   "tok_s_per_kw_b1": 8732.1,
    "capex": [
     56000,
     110000
    ],
    "gpu": 1175,
    "served": 55,
-   "vs_gpu_batch1": 4.61,
-   "vs_served_median": 98.5,
+   "vs_gpu_batch1": 4.66,
+   "vs_served_median": 99.5,
    "gpu_same_mode": 230,
-   "vs_gpu_same_mode": 23.55
+   "vs_gpu_same_mode": 23.8
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -1114,22 +1115,22 @@
    "target": "DS ROM (S81 + Engram HBM)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "MTP",
-   "per_user": 4351.6,
+   "per_user": 4238.4,
    "aggregate": 24963.7,
    "dies": 532,
    "stacks": 632,
    "power_w": 46612.4,
-   "tok_s_per_kw_b1": 93.36,
+   "tok_s_per_kw_b1": 90.93,
    "capex": [
     7448000,
     14630000
    ],
    "gpu": 873.63,
    "served": 88.5,
-   "vs_gpu_batch1": 4.98,
-   "vs_served_median": 49.2,
+   "vs_gpu_batch1": 4.85,
+   "vs_served_median": 47.9,
    "gpu_same_mode": 873.63,
-   "vs_gpu_same_mode": 4.98
+   "vs_gpu_same_mode": 4.85
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -1156,12 +1157,12 @@
    "target": "HBM accelerator (generic die)",
    "model": "DeepSeek-V4.1-Flash 1M",
    "mode": "MTP",
-   "per_user": 3700.3,
+   "per_user": 3699.9,
    "aggregate": null,
    "dies": 96,
    "stacks": 384,
-   "power_w": 12661.4,
-   "tok_s_per_kw_b1": 292.25,
+   "power_w": 12661.0,
+   "tok_s_per_kw_b1": 292.23,
    "capex": [
     1200000,
     1200000
@@ -1222,7 +1223,7 @@
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 5,416.7 tok/s (-0.33 %); pair 962.4 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 5,474.5 tok/s (-0.33 %); pair 962.4 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -1257,6 +1258,12 @@
    "source": "results/arch/reprice_20261008/reprice.json"
   },
   {
+   "item": "MTP block cycles charged",
+   "effect": "DS ROM 4,351.6 -> 4,238.4 tok/s (+30,632 cycles a step); HBM DS 3,700.3 -> 3,699.9 tok/s (+130 cycles a step) (WFC kit, P2 selected path, sequencer, Markov floor, hfd_mtp pins / FAST registers, spec state, fence, commit; per-charge critical / overlapped proof in the files)",
+   "grade": "measured",
+   "source": "results/arch/mtp_step_20261009 (tools/mtp_step_charges.py)"
+  },
+  {
    "item": "replica-fold / keep fixes",
    "effect": "0 cycles (synthesis attribute only: (* keep *) copies survive opt_merge)",
    "grade": "measured",
@@ -1285,9 +1292,9 @@
   "results/arch/hgi_sim_20261009/ds_timing_1M.json": "a976b16354106e93",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
-  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "02cd46e8e07f9f51",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "6dc167d0878a3fe3",
-  "results/arch/qwen_kv_die_20261009/rom_r22k.json": "b60f28f683bb0438",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "c53ea9d94285f136",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "f8d499fe74a4eccf",
+  "results/arch/qwen_kv_die_20261009/rom_r22k.json": "1f7d306ec9136948",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",
   "results/arch/token_path_20261008/qwen_rom.json": "a039a9b4ea3e5806",
