@@ -7,10 +7,11 @@ def model(lp=8, flat=7, fast=1):
     latency=flat+fast+ll+2
     return dict(schema=1, block='ot_hgi_argmax18_m', native_leaf='ot_dshbm_argmax_m',
       macs_per_cycle=0, comparisons_per_cycle=lp, memory_bytes_per_cycle=0,
-      input_bits_per_cycle=lp*64+lp+3, output_bits_per_row=21,
+      input_bits_per_cycle=lp*64+lp+3, output_bits_per_row=53,
       rank_bits=7, immediate_bits=18, product_bits=25,
       replicas_per_die=1, local_index_bits=18, latency_cycles=latency,
       added_token_cycles=0, leaf_pipeline_extra_index_flops=flat+1+lp+lp*(ll+1)+1,
+      winner_value_pipeline_flops=32*(lp+lp+sum(lp>>j for j in range(ll+1))+1),
       offset_pipeline_flops=(latency+1)*25+25+1,
       offset_compute='7x18 unsigned multiply registered at row entry; parallel to native reduction',
       output_compute='25-bit unsigned sum; overflow flagged, never silently truncated',

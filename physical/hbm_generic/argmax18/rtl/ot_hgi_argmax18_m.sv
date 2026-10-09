@@ -11,16 +11,25 @@ module ot_hgi_argmax18_m #(
  input wire [17:0] cfg_imm_a,
  output wire out_v,
  output wire [17:0] out_idx,
- output wire out_nan, fault, out_range_fault
+ output wire out_nan, fault, out_range_fault,
+ output wire [31:0] out_value
 );
  localparam integer IW=GENERIC18 ? 18 : 17;
  localparam integer LL=(LP>1)?$clog2(LP):1;
  localparam integer LAT=FLAT+FAST+LL+2;
  wire [IW-1:0] local_idx;
+ generate if(GENERIC18) begin:g_value_leaf
+ ot_hgi_argmax18_value_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST)) u_native(
+ .clk(clk),.rst_n(rst_n),.in_v(in_v),.in_last(in_last),.in_bias_en(in_bias_en),
+ .in_mask(in_mask),.in_vals(in_vals),.in_bias(in_bias),
+ .out_v(out_v),.out_idx(local_idx),.out_nan(out_nan),.fault(fault),.out_value(out_value));
+ end else begin:g_native_leaf
  ot_dshbm_argmax_m #(.LP(LP),.IW(IW),.FLAT(FLAT),.FAST(FAST)) u_native(
  .clk(clk),.rst_n(rst_n),.in_v(in_v),.in_last(in_last),.in_bias_en(in_bias_en),
  .in_mask(in_mask),.in_vals(in_vals),.in_bias(in_bias),
  .out_v(out_v),.out_idx(local_idx),.out_nan(out_nan),.fault(fault));
+ assign out_value=32'b0;
+ end endgenerate
  generate if(GENERIC18) begin:g_generic
    reg fresh;
    reg [24:0] row_offset;
