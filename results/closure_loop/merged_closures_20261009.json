@@ -470,9 +470,9 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 55,
-   "merged": 55,
-   "record_only": 12
+   "closed": 58,
+   "merged": 58,
+   "record_only": 14
   },
   "notes": [
    "hgi_coll_decode_a/b: adoption_scope BLOCKED_ELECTRICAL (5 max_slew ~285 ps vs 260) - merged as evidence, not adopted",
@@ -1254,6 +1254,48 @@
     "source_merged_sha": null,
     "note": "EVIDENCE ONLY, NOT ADOPTED: closed against the 0.2T IO budget only; decision ~11:30 = HC blocks sign off with the credit relay at the die-link budget. Source already on main; record only (coordinator batch 5)",
     "adoption_scope": "EVIDENCE_NOT_ADOPTED"
+   },
+   {
+    "job": "hgi_adp_att_b-74c999141-tc-cl",
+    "closed": "2026-10-09T11:29:40-07:00",
+    "branch": "claude/hgi-adapters-20261009",
+    "source_commit": "74c99914103d98910832fd5cccd8b73579a21057",
+    "record_commit": "13bedb638",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +12.32 / FF +7.86 ps DRC 0; SS sensitivity -336.36 ps",
+    "status": "merged",
+    "record_merged_sha": "22dc7e0afcc6efedd2a84005267d2942a5dfaa91",
+    "source_merged_sha": null,
+    "note": "source 74c999141 already on main; record only (coordinator batch 6)"
+   },
+   {
+    "job": "hgi_adp_sfu_a-29d197bf0-tc-cl",
+    "closed": "2026-10-09T11:48:46-07:00",
+    "branch": "claude/hgi-adapters-20261009",
+    "source_commit": "29d197bf04abf7e18fe07e7a5e7876cd443a101f",
+    "record_commit": "0501be7f6",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +56.43 / FF +0.51 ps DRC 0; SS sensitivity -51.51 ps",
+    "status": "merged",
+    "record_merged_sha": "59da1fe50b99013b0a9e38e2ddfd791939ff74b6",
+    "source_merged_sha": "f2a6cb6d60e3ce335ab082a78e9b0aa94fa036f2",
+    "note": "ot_hgi_sfu_record + ot_hgi_su_record from 29d197bf0 only (SFU = su_record GLU mode; record bus in unconditional pin flops). The job had no bench stage: local Verilator 5.050 run_su.sh HGI_SU PASS / MUT_EARLY FAIL, HGI_SFU PASS / MUT_SWAP FAIL. FUSED/mover and the other adapters' 29d197bf0 edits not taken. FF +0.51 thin (coordinator batch 6)"
+   },
+   {
+    "job": "qfd_pcport_kvw2_a-b1916d941-tc",
+    "closed": "2026-10-09T11:35:05-07:00",
+    "branch": "claude/sys-takeover-kvw-20261009",
+    "source_commit": "b1916d941dad7da9cd402567b204d16c02d2fc68",
+    "record_commit": "17b474601",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +78.35 / FF +22.53 ps DRC 0; SS sensitivity -154.74 ps",
+    "status": "merged",
+    "record_merged_sha": "794e8565df019ff653d0a2538cef0944a8695cb9",
+    "source_merged_sha": null,
+    "note": "record only (source b1916d941 on main via sys-takeover with _b); RELOCATED to views/qfd_emb_pcport_kvw2_a + results/rtl/emb_hbm_closure_20261008/qfd_pcport_kvw2_a-b1916d941-tc (spec published over the live qfd_emb_pcport view and the f42e102ca evidence) (coordinator batch 6)"
    }
   ]
  }
