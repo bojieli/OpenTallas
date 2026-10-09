@@ -14300,3 +14300,10 @@ def hbm_coll_port_interior_model():
     """Full-shape SRAM port placement successor; no closure credit."""
     from tools.hbm_coll_port_interior_model import model
     return model()
+
+
+
+def dsrom_head_input_staging_model(**kwargs):
+    """Aligned hbglue-to-A input transport; proposed stages require routed qualification."""
+    from dsrom_head_input_staging_model import model
+    return model(**kwargs)

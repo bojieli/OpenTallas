@@ -56,6 +56,7 @@ def released_seed():
 
 
 def compose():
+    from dsrom_head_input_staging_model import model as dsrom_head_input_staging_model
     old = read(OLD)
     tensors, sources = released_markov()
     seed, seed_sources = released_seed()
@@ -63,6 +64,8 @@ def compose():
     sources.add(OLD)
     placement_path = 'results/rtl/dsrom_recovery_20261004/draft/placement.json'
     sources.add(placement_path)
+    sources.add('tools/uarch_model.py')
+    sources.add('tools/dsrom_head_input_staging_model.py')
     placement = read(placement_path)
     for part in seed.values():
         prior = next(t for t in placement['tensors'] if t['tensor'] == part['tensor'])
@@ -155,6 +158,7 @@ def compose():
             generator_BF_map_must_be_explicit=True,
             floorplan_slot_fit=False,
             qualification='typed proposed inventory; not equivalent to --pairs631 with heuristic BF ratio'),
+        aligned_head_input_staging=dsrom_head_input_staging_model(head_dies=heads, stages=4),
         main_hidden_transport=dict(hidden_dimension=5120, captures=3, bytes_per_value=2,
                                    global_bytes_per_position=30720,
                                    bytes_per_TP4_rank_per_position=7680,
