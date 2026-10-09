@@ -52,7 +52,7 @@ RACK = "results/arch/v41_rack.json"
 REG = "results/external/registry.json"
 HQT = "results/arch/hgi_sim_20261009/qwen_timing_P8191.json"
 HQP = "results/arch/hgi_sim_20261009/qwen_int8_packing.json"
-HDT = "results/arch/hgi_sim_20261009/ds_timing_1M.json"
+HDT = "results/arch/hgi_sim_20261009/ds_native_timing_1M.json"   # the spec-conformant native record stream
 MAP = "results/uarch/dsrom_s81_mixed1792_mapping_20261007"
 HBM_GENERIC = ("claude/hbm-generic-20261009 01f643326 results/arch/hbm_generic_20261009/plan.json (die_fit R25G "
                "798.49 mm2 measured with tools/hbm_accel_die_fp.py; branch, planning record)")
@@ -356,8 +356,16 @@ def hbm(E, wall):
     static, sw_w = terms["static"]["value"], terms["switch_w"]["value"] * switches
     p_ar = static + sw_w + terms["dyn_ar"]["value"] * ar
     p_mtp = static + sw_w + terms["dyn_mtp"]["value"] * mtp
-    s0, s2, sl = dt["S0"]["total_cycles"], dt["S2"]["total_cycles"], dt["cp_fix_variants"]["S2_compiler_list_scheduled"]
+    s0, s2 = dt["S0"]["total_cycles"], dt["S2"]["total_cycles"]
+    v = dt.get("variants", {})
+    sl = v["S2_list_scheduled"] if v.get("S2_list_scheduled_races", 1) == 0 else s2   # a racy schedule is not usable
+    mt = gm["totals"]
     sens = dict(
+        native_stream=dict(cycles=r1(s2), tok_s=r1(CLK / s2),
+                           note="the native HGI-1 program alone, as compiled (fused SU chains, CP-aware order)"),
+        mtp_as_emitted=dict(delta_cycles=r1(s2 - s0), MTP=r1(mt["tau"] * CLK / (mt["step_cycles"] + s2 - s0)),
+                            note="the same delta once per verify pass (records issue once a pass; the columns ride "
+                                 "in each record); no native verify program is compiled yet"),
         as_emitted=dict(delta_cycles=r1(s2 - s0), AR=r1(CLK / (cyc + s2 - s0))),
         compiler_list_scheduled=dict(delta_cycles=r1(sl - s0), AR=r1(CLK / (cyc + sl - s0))))
     lo, hi = capex(dies // 2, 0, E)
@@ -381,7 +389,7 @@ def hbm(E, wall):
             MTP=f(mtp, "tok/s", "derived", "results/arch/token_path_20261009/hbm_ds_mtp.json totals.tok_s_published",
                   note="DSpark gamma 5, tau 4.159; expert union and spec-state commit partial")),
         sequencer_retiming=dict(
-            grade="modelled", source=f"{HDT} result (HGI-1 sequencer on 96 simulated dies; DS unit costs from the composition, "
+            grade="modelled", source=f"{HDT} result (the bit-exact native HGI-1 program, rank 0, CP modelled; unit costs walk-priced, "
                                      "CP entries ESTIMATES)",
             rule="delta = simulated program time - its own in-order dataflow (S0), added to the token path; not in the headline "
                  "until the sequencer (C2) costs are measured (simulator spec section 4: published numbers use measured entries only)",
