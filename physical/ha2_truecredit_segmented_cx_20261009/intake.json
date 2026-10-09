@@ -1,0 +1,20 @@
+{
+  "name": "ha2_tccr_segmented_cx_20261009",
+  "owner": "Codex:link_retry",
+  "top": "ot_ha2_truecredit_rx_cx_phys",
+  "source_inventory": [
+    "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit_rxp.sv",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_ha2_truecredit_receiver_segmented_cx.sv",
+    "physical/ha2_truecredit_segmented_cx_20261009/ot_ha2_truecredit_rx_cx_phys.sv"
+  ],
+  "model": "tools/uarch_model.py:hbm_truecredit_rx_segmented_model",
+  "minimum_gate": "results/rtl/ha2_truecredit_segmented_cx_20261009/terminal.json",
+  "baseline": "79315a431/ha2_tccr_x1_hm10_79315a431",
+  "route_state": "NOT LAUNCHED: Claude review and exclusive phys-intake",
+  "physical_recipe": "same840.024x201.528 slot and signal pin plan as rx_c; existing833.333ps60/25ps clock; TT>=0FF>=0DRC0SSsensitivity; actualcorner measuredvclk insertion unchanged methodology, noSDC-onlyrescue",
+  "extra_FF_bits": 8962,
+  "cycles_added": 1,
+  "peak_resource_reservation_GiB": 24,
+  "resource_basis": "samefull~73kFF flopqueue, +8962partial readFF; baseline guard24GiB; hostmeasured admission required",
+  "parent_binding_qualified": false
+}
