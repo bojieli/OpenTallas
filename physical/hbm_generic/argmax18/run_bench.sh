@@ -15,5 +15,9 @@ case "$mut" in
  *) exit 2;;
 esac
 iverilog -g2012 -s tb_hgi_argmax18 -o "$out/bench.vvp" rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/gpu/ot_gpu_fadd.sv "$out/native.sv" "$out/value.sv" "$out/wrapper.sv" physical/hbm_generic/argmax18/bench/tb_hgi_argmax18.sv > "$out/build.log" 2>&1
+set +e
 vvp -n "$out/bench.vvp" > "$out/sim.log" 2>&1
+sim_rc=$?
+set -e
 cat "$out/sim.log"
+exit "$sim_rc"

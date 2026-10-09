@@ -22,35 +22,37 @@
         "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_exact 0",
         "ok": "grep -q 'HGI_ARGMAX18 PASS' {RUN}/bench_exact/sim.log",
         "peak_ram_gb": 1,
-        "expect": "pass"
+        "expect": "pass",
+        "min_count_regex": "rows=([0-9]+)",
+        "min_count": 6
       },
       {
         "name": "mutant_1",
-        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut1 1; bench_rc=$?; cat {RUN}/bench_mut1/sim.log; exit \"$bench_rc\"",
         "peak_ram_gb": 1,
         "expect": "fail"
       },
       {
         "name": "mutant_2",
-        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut2 2; bench_rc=$?; cat {RUN}/bench_mut2/sim.log; exit \"$bench_rc\"",
         "peak_ram_gb": 1,
         "expect": "fail"
       },
       {
         "name": "mutant_3",
-        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut3 3; bench_rc=$?; cat {RUN}/bench_mut3/sim.log; exit \"$bench_rc\"",
         "peak_ram_gb": 1,
         "expect": "fail"
       },
       {
         "name": "mutant_value_zero",
-        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut4 4; bench_rc=$?; cat {RUN}/bench_mut4/sim.log; exit \"$bench_rc\"",
         "peak_ram_gb": 1,
         "expect": "fail"
       },
       {
         "name": "mutant_nan_payload",
-        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5",
+        "cmd": "bash physical/hbm_generic/argmax18/run_bench.sh {RUN}/bench_mut5 5; bench_rc=$?; cat {RUN}/bench_mut5/sim.log; exit \"$bench_rc\"",
         "peak_ram_gb": 1,
         "expect": "fail"
       }
