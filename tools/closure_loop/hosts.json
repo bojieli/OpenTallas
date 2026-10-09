@@ -224,9 +224,9 @@
           "name": "hbm-indexer-t1-exact",
           "pid": 952687,
           "command_match": "hbm-indexer-3a6f720d4",
-          "peak_ram_gb": 250,
+          "peak_ram_gb": 200,
           "owner": "Codex:hbm_continuation",
-          "reason": "admitted 250GiB; measured Verilator parent RSS120GiB still growing"
+          "reason": "Measured compile-tail inventory:9804of9805CPP compiled, one180.84MB CPP remains; fullsubtree125.8GiB, onecompilerHWM5.616GiB,1.035GB objectarchive/link input. Owner confirmed200GiB phase envelope leaves~74GiB additional headroom; soft reservation, no process cap/restart."
         },
         {
           "name": "hbm-indexer-nk4-synthesis",
