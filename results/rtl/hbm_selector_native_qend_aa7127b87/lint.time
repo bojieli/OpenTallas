@@ -1,0 +1,31 @@
+%Warning-TIMESCALEMOD: physical/hbm_accel_die_views/index/rtl/hfd_idx_sel_native_qend.sv:3:8: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    3 | module hfd_idx_sel_native_qend(
+      |        ^~~~~~~~~~~~~~~~~~~~~~~
+                       physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv:28:8: ... Location of module with timescale
+   28 | module hfd_idx_sel #(
+      |        ^~~~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.032
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+	Command being timed: "verilator --lint-only --timing -DSYNTHESIS -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-BLKANDNBLK -Wno-MULTIDRIVEN --top-module hfd_idx_sel_native_qend physical/hbm_accel_die_views/index/rtl/hfd_idx_sel_native_qend.sv physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+	User time (seconds): 9.91
+	System time (seconds): 0.55
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.46
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 812144
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 217188
+	Voluntary context switches: 7
+	Involuntary context switches: 25
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

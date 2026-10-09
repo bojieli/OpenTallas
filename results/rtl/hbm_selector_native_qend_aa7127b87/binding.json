@@ -1,0 +1,23 @@
+{
+  "verdict": "PASS_ELABORATION",
+  "source_commit": "aa7127b87d46",
+  "host": "ot-agidock128",
+  "admitted_gib": 2,
+  "native_pin_source": "a6a1609a0",
+  "parameters": {
+    "T": 1,
+    "LA": 7,
+    "MEMV": 1,
+    "READLAT": 2,
+    "EXPOSE_QUARTER_LAST": 1
+  },
+  "quarter_completion_exact_gate": "4ba6437bd:results/rtl/hbm_native_index_format_20261009/quarter_completion",
+  "actual_macro_exact_gate": "83fd85eec:results/rtl/hbm_selector_capture_macro_20261009_r2",
+  "files": {
+    "lint.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "lint.log": "ed7bebdf793d66adea0801cae8fea12c81ce3e40d27ed28fb2612c9eb2d51dfa",
+    "admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "lint.sh": "d7add8ca8b17074e3444d662b9c36a6285c96dae13986d0cf0dae05d6ba6f0c8",
+    "lint.time": "ed6abeb957c09c0d9f27bc73083dc2e416bdea9ba08790a07cf5e0d720d85bb2"
+  }
+}
