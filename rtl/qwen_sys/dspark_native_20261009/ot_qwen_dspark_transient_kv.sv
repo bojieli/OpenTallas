@@ -49,18 +49,18 @@ module ot_qwen_dspark_transient_kv #(parameter integer ENABLE=0,POSITIONS=8)(
     end
   endfunction
  reg fault_latched;
- reg [0:0] live_copy;
- reg [0:0] seen_copy;
- reg [63:0] owner_copy;
- reg [63:0] previous_owner_copy;
- reg [13:0] base_copy;
- reg [63:0] written_copy;
- reg [2:0] phase_copy;
- reg [5:0] row_copy;
- reg [13:0] packet_pos_copy;
- reg [2:0] packet_word_copy;
- reg [7:0] packet_sequence_copy;
- reg [511:0] o_data_copy;
+ (* keep = 1, dont_touch = 1 *) reg [0:0] live_copy;
+ (* keep = 1, dont_touch = 1 *) reg [0:0] seen_copy;
+ (* keep = 1, dont_touch = 1 *) reg [63:0] owner_copy;
+ (* keep = 1, dont_touch = 1 *) reg [63:0] previous_owner_copy;
+ (* keep = 1, dont_touch = 1 *) reg [13:0] base_copy;
+ (* keep = 1, dont_touch = 1 *) reg [63:0] written_copy;
+ (* keep = 1, dont_touch = 1 *) reg [2:0] phase_copy;
+ (* keep = 1, dont_touch = 1 *) reg [5:0] row_copy;
+ (* keep = 1, dont_touch = 1 *) reg [13:0] packet_pos_copy;
+ (* keep = 1, dont_touch = 1 *) reg [2:0] packet_word_copy;
+ (* keep = 1, dont_touch = 1 *) reg [7:0] packet_sequence_copy;
+ (* keep = 1, dont_touch = 1 *) reg [511:0] o_data_copy;
  wire control_bad=(live!=live_copy)|(seen!=seen_copy)|(owner!=owner_copy)|(previous_owner!=previous_owner_copy)|(base!=base_copy)|(written!=written_copy)|(phase!=phase_copy)|(row!=row_copy)|(packet_pos!=packet_pos_copy)|(packet_word!=packet_word_copy)|(packet_sequence!=packet_sequence_copy)|(o_data!=o_data_copy);
  assign fault=fault_latched|control_bad;
  reg live,seen;reg [63:0] owner,previous_owner;reg [13:0] base;
@@ -89,7 +89,7 @@ module ot_qwen_dspark_transient_kv #(parameter integer ENABLE=0,POSITIONS=8)(
  end
  integer j;reg [639:0] payload;
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin live<=0;live_copy<=0;seen<=0;seen_copy<=0;owner<=0;owner_copy<=0;previous_owner<=0;previous_owner_copy<=0;base<=0;base_copy<=0;written<=0;written_copy<=0;phase<=0;phase_copy<=0;row<=0;row_copy<=0;packet_pos<=0;packet_pos_copy<=0;packet_word<=0;packet_word_copy<=0;packet_sequence<=0;packet_sequence_copy<=0;o_data<=0;o_data_copy<=0;live<=0;live_copy<=0;seen<=0;seen_copy<=0;written<=0;written_copy<=0;phase<=0;phase_copy<=0;fault_latched<=0;corrected_reads<=0;end
+  if(!rst_n)begin live<=0;live_copy<=0;seen<=0;seen_copy<=0;owner<=0;owner_copy<=0;previous_owner<=0;previous_owner_copy<=0;base<=0;base_copy<=0;written<=0;written_copy<=0;phase<=0;phase_copy<=0;row<=0;row_copy<=0;packet_pos<=0;packet_pos_copy<=0;packet_word<=0;packet_word_copy<=0;packet_sequence<=0;packet_sequence_copy<=0;o_data<=0;o_data_copy<=0;fault_latched<=0;corrected_reads<=0;end
   else begin
    if(control_bad)fault_latched<=1;
    if(begin_v&&begin_r)begin
@@ -111,16 +111,16 @@ module ot_qwen_dspark_transient_kv #(parameter integer ENABLE=0,POSITIONS=8)(
     if(r_id!=owner||r_offset>=POSITIONS||!written[read_row])fault_latched<=1;
     else begin row<=read_row;row_copy<=read_row;packet_pos<=r_pos;packet_pos_copy<=r_pos;packet_word<=r_word;packet_word_copy<=r_word;packet_sequence<=r_sequence;packet_sequence_copy<=r_sequence;phase<=4;phase_copy<=4;end
    end
-   if(phase==1)phase<=2;phase_copy<=2;
+   if(phase==1)begin phase<=2;phase_copy<=2;end
    if(phase==2)begin written[row]<=1;written_copy[row]<=1;phase<=3;phase_copy<=3;end
-   if(phase==3&&w_done_r)phase<=0;phase_copy<=0;
-   if(phase==4)phase<=5;phase_copy<=5;
+   if(phase==3&&w_done_r)begin phase<=0;phase_copy<=0;end
+   if(phase==4)begin phase<=5;phase_copy<=5;end
    if(phase==5)begin captured<=macro_q;phase<=6;phase_copy<=6;end
    if(phase==6)begin
     if(any_ue||decoded[512+:64]!=owner||decoded[576+:14]!=packet_pos||decoded[590+:3]!=packet_word||decoded[593+:47]!=0)fault_latched<=1;
     else begin o_data<=decoded[511:0];o_data_copy<=decoded[511:0];if(any_ce)corrected_reads<=corrected_reads+1'b1;phase<=7;phase_copy<=7;end
    end
-   if(phase==7&&o_r)phase<=0;phase_copy<=0;
+   if(phase==7&&o_r)begin phase<=0;phase_copy<=0;end
   end
  end
  for(genvar m=0;m<2;m=m+1)begin:memories

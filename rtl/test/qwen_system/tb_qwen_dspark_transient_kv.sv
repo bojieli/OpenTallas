@@ -62,6 +62,15 @@ module tb_qwen_dspark_transient_kv;
   @(negedge clk);rid=bid;rp=bp;rw=0;rv=1;@(negedge clk);rv=0;@(negedge clk);if(!fault||ov)$fatal(1,"unwritten read accepted");
   reset();bid=bid+1;start();write_row(0);
   @(negedge clk);rid=bid+1;rp=bp;rw=0;rv=1;@(negedge clk);rv=0;@(negedge clk);if(!fault||ov)$fatal(1,"stale owner read accepted");
-  $display("QWEN_TRANSIENT_KV_PASS realmacros=2 rows=64 words512=1 positions8191through8198=1 fullcohort64_seq8=1 singlebit720=1 UE_quarantine=1 heldcredits=1 negative_fence_unwritten_stale=1");$finish;
+  reset();bid=bid+1;start();write_row(0);
+  @(negedge clk);dut.owner_copy[42]=~dut.owner_copy[42];#0.01;
+  if(!fault||wr||rr||ov)$fatal(1,"owner control bit not immediately quarantined");
+  @(negedge clk);dut.owner_copy[42]=dut.owner[42];@(negedge clk);if(!fault)$fatal(1,"control corruption fault notsticky");
+  reset();bid=bid+1;start();write_row(0);
+  @(negedge clk);rid=bid;rp=bp;rw=0;rv=1;@(negedge clk);rv=0;
+  while(!ov&&!fault)@(negedge clk);
+  @(negedge clk);dut.o_data_copy[511]=~dut.o_data_copy[511];#0.01;
+  if(!fault||ov||wr||rr)$fatal(1,"held output bit not immediately quarantined");
+  $display("QWEN_TRANSIENT_KV_PASS realmacros=2 rows=64 words512=1 positions8191through8198=1 fullcohort64_seq8=1 singlebit720=1 UE_quarantine=1 heldcredits=1 negative_fence_unwritten_stale_control_output=1");$finish;
  end
 endmodule
