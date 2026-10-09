@@ -1,0 +1,1459 @@
+{
+ "schema": "opentallas.hbm_generic_iface.v0.9",
+ "version": "0.9",
+ "doc": "docs/HBM_GENERIC_INTERFACE.md",
+ "magic": "0x31494748",
+ "md_words": 64,
+ "md_fields": [
+  {
+   "name": "magic",
+   "word": 0,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject a non-HGI image",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_minor",
+   "word": 1,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ver_major",
+   "word": 1,
+   "lsb": 8,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "reject an incompatible layout",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "n_words",
+   "word": 1,
+   "lsb": 16,
+   "width": 8,
+   "kind": "u",
+   "consumer": "cp",
+   "why": "fixed 64; guards a truncated load",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "model_class",
+   "word": 2,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "1 DeepSeek-V4.1-Flash, 2 Qwen3 dense; names the golden",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "features",
+   "word": 3,
+   "lsb": 0,
+   "width": 12,
+   "kind": "flags",
+   "consumer": "sw",
+   "why": "which operator families the program contains (bit order FEATURES)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "hidden",
+   "word": 4,
+   "lsb": 0,
+   "width": 16,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "residual width",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "layers",
+   "word": 4,
+   "lsb": 16,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "backbone layers",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_layers",
+   "word": 4,
+   "lsb": 24,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "built-in draft layers (DSpark 3)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "q_heads",
+   "word": 5,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "attention heads",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "kv_heads",
+   "word": 5,
+   "lsb": 8,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "KV heads (1 = shared latent / MQA)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "head_dim",
+   "word": 5,
+   "lsb": 16,
+   "width": 12,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "per-head width",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "vocab",
+   "word": 6,
+   "lsb": 0,
+   "width": 18,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "vocabulary (151,936 needs 18 bits)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ffn_inter",
+   "word": 7,
+   "lsb": 0,
+   "width": 16,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "dense FFN width (0 = none)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "moe_inter",
+   "word": 7,
+   "lsb": 16,
+   "width": 16,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "expert FFN width (0 = none)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "norm_type",
+   "word": 8,
+   "lsb": 0,
+   "width": 2,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "0 RMSNorm",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "act",
+   "word": 8,
+   "lsb": 2,
+   "width": 2,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "0 SiLU-gated (SwiGLU)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "norm_eps",
+   "word": 9,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "RMSNorm eps (DS 1e-20, Qwen 1e-6), an SU template immediate",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_pair",
+   "word": 10,
+   "lsb": 0,
+   "width": 2,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "0 adjacent (2i, 2i+1), 1 half (i, i + dims/2)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_dims",
+   "word": 10,
+   "lsb": 2,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "rotated dims per head (DS 64, Qwen 128)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_offset",
+   "word": 10,
+   "lsb": 12,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "first rotated dim (DS head_dim - 64, Qwen 0)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_scaling",
+   "word": 10,
+   "lsb": 22,
+   "width": 2,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "0 none, 1 YaRN; only the host's table generator reads it",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_theta",
+   "word": 11,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "rope_factor",
+   "word": 12,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "YaRN factor (0 = none); table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "yarn_beta_fast",
+   "word": 13,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "yarn_beta_slow",
+   "word": 13,
+   "lsb": 8,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "yarn_orig_log2",
+   "word": 13,
+   "lsb": 16,
+   "width": 6,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "log2 original max positions; table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "compress_rope_theta",
+   "word": 14,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "DS compressed-KV RoPE tables; table generator only",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "window",
+   "word": 15,
+   "lsb": 0,
+   "width": 17,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "sliding window rows (0 = dense)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "ctx_max",
+   "word": 16,
+   "lsb": 0,
+   "width": 21,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "deployed context (positions)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "attn_scale",
+   "word": 17,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "softmax scale literal of the golden (an SU immediate, never folded)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "swiglu_limit",
+   "word": 18,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "SwiGLU clamp (0 = none)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "weight_fmt",
+   "word": 19,
+   "lsb": 0,
+   "width": 3,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "dense weight format",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "kv_fmt",
+   "word": 19,
+   "lsb": 3,
+   "width": 3,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "KV cache format",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "act_quant",
+   "word": 19,
+   "lsb": 6,
+   "width": 3,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "matvec activation format (FP8 block for DS, BF16 for Qwen)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "scale_kind",
+   "word": 19,
+   "lsb": 9,
+   "width": 3,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "weight scale: none / per-row BF16 / UE8M0 block",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "wblock",
+   "word": 19,
+   "lsb": 12,
+   "width": 6,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "weight block size (DS 32)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "expert_fmt",
+   "word": 19,
+   "lsb": 18,
+   "width": 3,
+   "kind": "enum",
+   "consumer": "sw",
+   "why": "expert weight format (DS FP4)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "n_routed",
+   "word": 20,
+   "lsb": 0,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "MoE routed experts",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "n_shared",
+   "word": 20,
+   "lsb": 10,
+   "width": 3,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "MoE shared experts",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "moe_topk",
+   "word": 20,
+   "lsb": 13,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "experts per token",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "moe_scoring",
+   "word": 20,
+   "lsb": 17,
+   "width": 2,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "0 softmax, 1 sqrt(softplus)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "moe_norm_topk",
+   "word": 20,
+   "lsb": 19,
+   "width": 1,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "normalise top-k weights",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "routed_scaling",
+   "word": 21,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "routed scaling factor",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "idx_heads",
+   "word": 22,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "indexer heads",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "idx_head_dim",
+   "word": 22,
+   "lsb": 8,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "indexer head dim",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "idx_topk",
+   "word": 22,
+   "lsb": 18,
+   "width": 12,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "indexer top-k",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cand_topk_blocks",
+   "word": 23,
+   "lsb": 0,
+   "width": 12,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "candidate blocks",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cand_block",
+   "word": 23,
+   "lsb": 12,
+   "width": 6,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "candidate block size",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cand_src_layer",
+   "word": 23,
+   "lsb": 18,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "candidate source layer",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "hc_mult",
+   "word": 24,
+   "lsb": 0,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "hyper-connection copies",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "hc_sinkhorn_iters",
+   "word": 24,
+   "lsb": 4,
+   "width": 6,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "Sinkhorn iterations",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "hc_eps",
+   "word": 25,
+   "lsb": 0,
+   "width": 32,
+   "kind": "f32",
+   "consumer": "sw",
+   "why": "Sinkhorn eps",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "engram_heads",
+   "word": 26,
+   "lsb": 0,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "Engram heads",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "engram_head_dim",
+   "word": 26,
+   "lsb": 4,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "Engram head dim",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "engram_max_ngram",
+   "word": 26,
+   "lsb": 14,
+   "width": 3,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "Engram n-gram order",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "engram_layers",
+   "word": 26,
+   "lsb": 17,
+   "width": 3,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "Engram layer count (ids in the config)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_kind",
+   "word": 27,
+   "lsb": 0,
+   "width": 2,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "0 none, 1 DSpark",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_block",
+   "word": 27,
+   "lsb": 2,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "draft block",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_markov_rank",
+   "word": 27,
+   "lsb": 6,
+   "width": 10,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "DSpark Markov rank",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_experts",
+   "word": 27,
+   "lsb": 16,
+   "width": 9,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "draft routed experts",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_topk",
+   "word": 27,
+   "lsb": 25,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "draft experts per token",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "mtp_noise_token",
+   "word": 28,
+   "lsb": 0,
+   "width": 18,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "DSpark noise token",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "q_lora",
+   "word": 29,
+   "lsb": 0,
+   "width": 12,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "q LoRA rank",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "o_lora",
+   "word": 29,
+   "lsb": 12,
+   "width": 12,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "o LoRA rank",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "o_groups",
+   "word": 29,
+   "lsb": 24,
+   "width": 4,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "o groups",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "tp_size",
+   "word": 30,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "dies in the tensor-parallel group",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cfg_sha256",
+   "word": 32,
+   "lsb": 0,
+   "width": 256,
+   "kind": "u",
+   "consumer": "sw",
+   "why": "sha256 of the model config.json (words 32-39): binds MD to one model",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "cp_vocab",
+   "word": 40,
+   "lsb": 0,
+   "width": 18,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell / completion token range check (width is 18 everywhere)",
+   "reset": 129280,
+   "legal": [
+    1,
+    262144
+   ]
+  },
+  {
+   "name": "cp_ctx_max",
+   "word": 41,
+   "lsb": 0,
+   "width": 21,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "doorbell position range check",
+   "reset": 1048576,
+   "legal": [
+    1,
+    1048576
+   ]
+  },
+  {
+   "name": "rope_half",
+   "word": 42,
+   "lsb": 0,
+   "width": 1,
+   "kind": "u",
+   "consumer": "RoPE chains (hfd_su q/kv)",
+   "why": "0 adjacent pairs (2i, 2i+1); 1 split-half (i, i + dims/2)",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "rope_rot_log2",
+   "word": 42,
+   "lsb": 1,
+   "width": 3,
+   "kind": "u",
+   "consumer": "RoPE chains (hfd_su q/kv)",
+   "why": "rotated dims: 6 = 64-dim tail (DS), 7 = 128 (Qwen)",
+   "reset": 6,
+   "legal": [
+    6,
+    7
+   ]
+  },
+  {
+   "name": "norm_d_units",
+   "word": 43,
+   "lsb": 0,
+   "width": 6,
+   "kind": "u",
+   "consumer": "norm engine",
+   "why": "vector width / 128: 40 (D5120, DS) or 32 (D4096); zero-padded tree is exact",
+   "reset": 40,
+   "legal": [
+    32,
+    40
+   ]
+  },
+  {
+   "name": "norm_hc_off",
+   "word": 43,
+   "lsb": 6,
+   "width": 1,
+   "kind": "u",
+   "consumer": "norm engine",
+   "why": "1 skips the hc_pre mix",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "norm_out_bf16",
+   "word": 43,
+   "lsb": 7,
+   "width": 1,
+   "kind": "u",
+   "consumer": "norm engine",
+   "why": "0 FP8 publish (DS), 1 BF16",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "sfx_sink_off",
+   "word": 44,
+   "lsb": 0,
+   "width": 1,
+   "kind": "u",
+   "consumer": "ot_dsrom_su_softmax",
+   "why": "1 drops the sink term from max and denominator",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "sfx_multipass",
+   "word": 44,
+   "lsb": 1,
+   "width": 1,
+   "kind": "u",
+   "consumer": "ot_dsrom_su_softmax",
+   "why": "1 rows > NVMAX*LPH: global max, fixed 640-row chunks exp+sum carried in, then scale",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "glu_out_bf16",
+   "word": 45,
+   "lsb": 0,
+   "width": 1,
+   "kind": "u",
+   "consumer": "SwiGLU fused chain",
+   "why": "0 FP8 publish quant (DS), 1 BF16",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "glu_clamp_off",
+   "word": 45,
+   "lsb": 1,
+   "width": 1,
+   "kind": "u",
+   "consumer": "SwiGLU fused chain",
+   "why": "1 skips the swiglu_limit clamp",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "glu_routew_off",
+   "word": 45,
+   "lsb": 2,
+   "width": 1,
+   "kind": "u",
+   "consumer": "SwiGLU fused chain",
+   "why": "1 skips the route-weight multiply (= x 1.0, exact)",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "coll_group_size",
+   "word": 46,
+   "lsb": 0,
+   "width": 8,
+   "kind": "u",
+   "consumer": "hfd_coll",
+   "why": "4, 8 or 96 dies; groups aligned: rank = die_id mod size, owner order = rank order",
+   "reset": 96,
+   "legal": [
+    4,
+    8,
+    96
+   ]
+  },
+  {
+   "name": "coll_head_rows",
+   "word": 46,
+   "lsb": 8,
+   "width": 18,
+   "kind": "u",
+   "consumer": "hfd_coll",
+   "why": "argmax select: global id = rank * rows + local id (0: ids already global, DS)",
+   "reset": 0,
+   "legal": [
+    0,
+    262143
+   ]
+  },
+  {
+   "name": "kv_dense",
+   "word": 47,
+   "lsb": 0,
+   "width": 1,
+   "kind": "u",
+   "consumer": "hfd_kvwb_native, hfd_host_ingest, causal mask",
+   "why": "0 DS (window ring / selected rows / ROWS+IKEY ingest); 1 dense per-head linear [l][kvh][K|V][pos][hd] FP8, cache-length mask, QKV NHD ingest",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "emb_int8",
+   "word": 48,
+   "lsb": 0,
+   "width": 1,
+   "kind": "u",
+   "consumer": "embedding fetch (svc row + SU)",
+   "why": "0 BF16 rows (DS); 1 INT8 rows + BF16 row scale",
+   "reset": 0,
+   "legal": [
+    0,
+    1
+   ]
+  },
+  {
+   "name": "emb_row_bytes",
+   "word": 48,
+   "lsb": 1,
+   "width": 16,
+   "kind": "u",
+   "consumer": "embedding fetch (svc row + SU)",
+   "why": "embedding row stride, 32 B aligned (DS 10,240 BF16; Qwen 4,128 = 4,096 codes + BF16 scale + pad)",
+   "reset": 10240,
+   "legal": [
+    1,
+    65535
+   ]
+  },
+  {
+   "name": "entry_ar",
+   "word": 56,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "AR decode step: record offset in the image (16 B units)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_verify",
+   "word": 57,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP verify pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "entry_draft",
+   "word": 58,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "MTP draft pass (0 = absent)",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_base",
+   "word": 60,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image in HBM, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "image_pages",
+   "word": 61,
+   "lsb": 0,
+   "width": 28,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "program image size, 4 KiB pages",
+   "reset": null,
+   "legal": null
+  },
+  {
+   "name": "crc32",
+   "word": 63,
+   "lsb": 0,
+   "width": 32,
+   "kind": "u",
+   "consumer": "hfd_cmdproc",
+   "why": "IEEE CRC-32 of words 0..62",
+   "reset": null,
+   "legal": null
+  }
+ ],
+ "hw_words": [
+  0,
+  1,
+  40,
+  41,
+  42,
+  43,
+  44,
+  45,
+  46,
+  47,
+  48,
+  56,
+  57,
+  58,
+  60,
+  61,
+  63
+ ],
+ "errors": {
+  "0": "OK",
+  "1": "E_MAGIC",
+  "2": "E_VERSION",
+  "3": "E_CRC",
+  "4": "E_BUSY",
+  "5": "E_RANGE",
+  "6": "E_RESERVED"
+ },
+ "features": [
+  "MOE",
+  "INDEXER",
+  "HC",
+  "ENGRAM",
+  "MTP",
+  "QK_NORM",
+  "ATTN_SINK",
+  "KV_COMPRESS",
+  "SHARED_LATENT_KV",
+  "Q_LORA",
+  "O_GROUPS",
+  "SWIGLU_CLAMP"
+ ],
+ "fmt": {
+  "FP32": 0,
+  "BF16": 1,
+  "FP8E4M3": 2,
+  "FP4E2M1": 3,
+  "INT8": 4,
+  "U32": 5,
+  "UE8M0": 6
+ },
+ "scale_kind": {
+  "NONE": 0,
+  "ROW_BF16": 1,
+  "BLOCK_UE8M0": 2
+ },
+ "rope_pair": {
+  "ADJACENT": 0,
+  "HALF": 1
+ },
+ "uop": {
+  "bits": 128,
+  "fields": [
+   {
+    "name": "imm_b",
+    "lsb": 0,
+    "width": 32
+   },
+   {
+    "name": "imm_a",
+    "lsb": 32,
+    "width": 32
+   },
+   {
+    "name": "param",
+    "lsb": 64,
+    "width": 32
+   },
+   {
+    "name": "slot",
+    "lsb": 96,
+    "width": 3
+   },
+   {
+    "name": "tmpl",
+    "lsb": 99,
+    "width": 1
+   },
+   {
+    "name": "opnd",
+    "lsb": 100,
+    "width": 4
+   },
+   {
+    "name": "pred",
+    "lsb": 104,
+    "width": 2
+   },
+   {
+    "name": "wait",
+    "lsb": 106,
+    "width": 12
+   },
+   {
+    "name": "op",
+    "lsb": 118,
+    "width": 6
+   },
+   {
+    "name": "unit",
+    "lsb": 124,
+    "width": 4
+   }
+  ],
+  "units": [
+   "CTL",
+   "SM",
+   "SU",
+   "SFU",
+   "FUSED",
+   "ATT",
+   "COLL",
+   "ARGMAX",
+   "DMA",
+   "IDX",
+   "HC",
+   "SIMT"
+  ],
+  "ops": {
+   "CTL": [
+    "NOP",
+    "LOOP",
+    "ENDLOOP",
+    "END",
+    "FENCE",
+    "TOKX",
+    "AMAX",
+    "ACCEPT"
+   ],
+   "SM": [
+    "MATVEC"
+   ],
+   "SU": [
+    "VOP"
+   ],
+   "SFU": [
+    "GLU"
+   ],
+   "FUSED": [
+    "HC_PRE_NORM",
+    "ROW_NORM",
+    "HC_POST"
+   ],
+   "ATT": [
+    "QK",
+    "PV"
+   ],
+   "COLL": [
+    "ALL_REDUCE_SUM",
+    "ALL_GATHER",
+    "TOPK_MERGE",
+    "ARGMAX_MERGE"
+   ],
+   "ARGMAX": [
+    "LOCAL"
+   ],
+   "DMA": [
+    "LOAD",
+    "STORE",
+    "FENCE"
+   ],
+   "IDX": [
+    "INDEX_Q",
+    "INDEX_SCORES",
+    "TOPK_LOCAL",
+    "SELECT"
+   ],
+   "HC": [
+    "HC_MIX"
+   ],
+   "SIMT": [
+    "RUN"
+   ]
+  },
+  "pred": [
+   "ALWAYS",
+   "POS0",
+   "NOT_POS0",
+   "LAST_ITER"
+  ],
+  "opnd_order": [
+   "A",
+   "B",
+   "C",
+   "O"
+  ],
+  "record": "header(16 B) + [SUT 32 B if tmpl] + one MDESC (32 B) per set opnd bit, in A,B,C,O order"
+ },
+ "mdesc": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "space",
+    "lsb": 0,
+    "width": 2
+   },
+   {
+    "name": "fmt",
+    "lsb": 2,
+    "width": 3
+   },
+   {
+    "name": "base",
+    "lsb": 8,
+    "width": 40
+   },
+   {
+    "name": "n",
+    "lsb": 48,
+    "width": 20
+   },
+   {
+    "name": "m",
+    "lsb": 68,
+    "width": 20
+   },
+   {
+    "name": "stride",
+    "lsb": 88,
+    "width": 32
+   },
+   {
+    "name": "istride",
+    "lsb": 120,
+    "width": 16
+   },
+   {
+    "name": "lstride",
+    "lsb": 136,
+    "width": 32
+   },
+   {
+    "name": "dyn_sel",
+    "lsb": 168,
+    "width": 5
+   },
+   {
+    "name": "dyn_mul",
+    "lsb": 173,
+    "width": 27
+   },
+   {
+    "name": "n_sel",
+    "lsb": 200,
+    "width": 5
+   }
+  ],
+  "space": [
+   "HBM",
+   "VM",
+   "STREAM",
+   "NONE"
+  ],
+  "dyn": [
+   "ZERO",
+   "POS",
+   "POS1",
+   "TOKEN",
+   "L",
+   "RANK",
+   "SLOT",
+   "POS_SLOT"
+  ],
+  "address": "base + L*lstride + DYN[dyn_sel]*dyn_mul; HBM bytes (32 B aligned), VM FP32 words"
+ },
+ "sut": {
+  "bits": 256,
+  "fields": [
+   {
+    "name": "a_src",
+    "width": 2
+   },
+   {
+    "name": "a_ind",
+    "width": 2
+   },
+   {
+    "name": "b_src",
+    "width": 2
+   },
+   {
+    "name": "b_half",
+    "width": 1
+   },
+   {
+    "name": "c_src",
+    "width": 2
+   },
+   {
+    "name": "c_pair",
+    "width": 1
+   },
+   {
+    "name": "d_src",
+    "width": 2
+   },
+   {
+    "name": "a_rnd",
+    "width": 1
+   },
+   {
+    "name": "a_relu",
+    "width": 1
+   },
+   {
+    "name": "a_min",
+    "width": 1
+   },
+   {
+    "name": "c_clip",
+    "width": 1
+   },
+   {
+    "name": "m1",
+    "width": 3
+   },
+   {
+    "name": "m2",
+    "width": 2
+   },
+   {
+    "name": "qm",
+    "width": 3
+   },
+   {
+    "name": "ad",
+    "width": 3
+   },
+   {
+    "name": "sfu",
+    "width": 3
+   },
+   {
+    "name": "e1",
+    "width": 3
+   },
+   {
+    "name": "e2",
+    "width": 2
+   },
+   {
+    "name": "rnd",
+    "width": 1
+   },
+   {
+    "name": "dst",
+    "width": 2
+   },
+   {
+    "name": "red",
+    "width": 2
+   },
+   {
+    "name": "red_sq",
+    "width": 1
+   },
+   {
+    "name": "red_whole",
+    "width": 1
+   },
+   {
+    "name": "red_rnd",
+    "width": 1
+   },
+   {
+    "name": "su_vec",
+    "width": 2
+   },
+   {
+    "name": "red_tree",
+    "width": 1
+   },
+   {
+    "name": "imm1",
+    "width": 32
+   },
+   {
+    "name": "imm2",
+    "width": 32
+   },
+   {
+    "name": "imm3",
+    "width": 32
+   }
+  ],
+  "semantics": "tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 (DS) or i XOR dims/2 (rope_half)"
+ }
+}
