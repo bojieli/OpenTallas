@@ -50,13 +50,20 @@ def s81_bf_input_holdseat_model(seats=4, replicas=338):
                 boundary_bits_per_cycle=bits, added_boundary_bits_per_cycle=0,
                 added_mux_inputs=0, added_fanout=0,
                 minimum_hold_delay_needed_ps=72.7+15,
-                measured_correct_reference_tt_input_setup_spare_ps=470,
+                measured_correct_reference_tt_input_setup_spare_ps=362.255,
+                measured_tt_reference_period_ps=730,
+                measured_tt_headline_input_setup_spare_ps=465.588,
+                measured_ff_input_hold_deficit_ps=72.741757,
+                measured_component_ff_min_delay_ps=84.421 if seats == 4 else None,
+                measured_component_tt_max_delay_ps=126.871 if seats == 4 else None,
+                component_estimated_ff_slack_ps=11.679243 if seats == 4 else None,
+                design_margin_goal_met_by_component=False if seats == 4 else None,
                 input_hold_seat_area_um2=seats*.27*.27,
                 hold_seat_linear_width_um=seats*.27,
                 local_connections=bits*seats,
                 routing_tracks_needed=bits, routing_channel_capacity='actual per-face placement required',
                 latency_composition='unchanged PINREG+RECUT element latency and initiation interval',
-                qualification='candidate; real FF delay, TT setup, capture-row fit and routed closure unmeasured')
+                qualification='real-lib component measured; capture-row fit and full routed TT/FF closure pending')
 
 
 def dsrom_engram_lead_model(users=64):
