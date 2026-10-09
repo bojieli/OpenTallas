@@ -101,7 +101,7 @@ D_OPTIONAL_UNITS = {"SIMT": "absent on r25; a record to an absent unit faults (c
 D_OPS = {k: list(v) for k, v in OPS.items()}
 D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
 D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
-D_OPS["IDX"] = ["INDEX_Q", "INDEX_SCORES", "TOPK", "SELECT", "EHASH"]  # TOPK generic top-k; EHASH Engram ids (DS G13)
+D_OPS["IDX"] = ["INDEX", "RESERVED1", "TOPK", "RESERVED3", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
 # DS native lowering (hgi_sim ds_native, gaps G8-G14): quantise-dequantise on the act-quant engine, the o-group
 # sub-group reduce with multicast, and the selected compressed-row gather from owner dies.
 D_OPS["FUSED"] += ["QDQ_FP8", "QDQ_FP4_E8M0", "QDQ_FP4_E4M3"]                          # G8
@@ -160,8 +160,9 @@ D_PARAM = {
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
     "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
     "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
-    "IDX.INDEX_Q/INDEX_SCORES/SELECT": "DS indexer engines, working buffers internal (A/B/C may be NONE): [5:0] source (compressed-KV) layer, imm_a = candidate count, imm_b = layer; SELECT (DS index top-512): O = selected ids (U32, ascending id), R (optional) = values (G16)",
+    "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = keep bitmap (keep_en), O / R = local top-k ids (ascending) / values, D = candidates (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
+    "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
     "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
