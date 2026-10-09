@@ -14097,3 +14097,8 @@ def hbm_indexer_r25i_physical_model():
 def hbm_production_clock_control_model():
     from hbm_production_clock_control_model import model
     return model()
+
+
+def hbm_indexer_service_transport_model():
+    from hbm_indexer_r25i_model import hbm_indexer_service_transport_model as impl
+    return impl()

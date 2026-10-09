@@ -91,3 +91,35 @@ def hbm_indexer_r25i_physical_model():
     model['storage'].update(line_landing_bits_per_stack=8*64*1098,
                            score_landing_bits_per_die=4*128*609)
     return model
+
+
+def hbm_indexer_service_transport_model():
+    """Price packed-key collection before new native service masters are built."""
+    height=388.8
+    ordinary=16*279
+    extras=2*279
+    pop=32
+    tracks_per_layer=math.floor(height/0.096)
+    return dict(default_enabled=False,adopted=False,
+      layout='Packed136B keys preserved; 34sector group,32PCs,local primary-bank rotation plus2protectedextras',
+      collector=dict(width_um=500,height_um=height,replicas=4,
+        location='Within middle service bands; area allocation, not a second overlapping macro',
+        footprint_um2_per_stack=500*height,mapped_area_status='Await source-owned storage/codec/gather/legacy mapped inventory'),
+      boundary=dict(ordinary_sectors=16,extra_sectors=2,protected_packet_bits=279,
+        forward_peak_bits_per_cycle=ordinary+extras,reverse_pop_bits_per_cycle=pop,
+        total_peak_bits_per_cycle=ordinary+extras+pop,
+        data_bytes_per_peak_cycle=18*32,
+        protection='269payload+10check candidate; exact metadata coding/identity binding required'),
+      routing=dict(layers=['M4','M6'],pitch_um=0.096,tracks_per_layer=tracks_per_layer,
+        aggregate_tracks=2*tracks_per_layer,
+        residual_tracks_before_legacy_clock_control=2*tracks_per_layer-ordinary-extras-pop,
+        qualification='No fit until actual legacy/control/clockshield demand is subtracted and exact encoded transport is implemented'),
+      geometry=dict(old_band_height_um=259.176,new_band_height_um=height,
+        extra_service_footprint_mm2=4*8500.032*(height-259.176)/1e6,
+        full_die_height_candidate_um=24621.84+2*(height-259.176),
+        preserve_historical_masters=True),
+      latency=dict(stage_count='To be measured from actual collector and bank station routes',
+        exact_gate='Source-owned18sector cut transport and returned pop with complete34sector frame identity',
+        token_latency='Not qualified until path inventory is composed; no rate credit'),
+      MACs_per_cycle=0,
+      replica_cost='32PCprimary rotation+2extra steering; actual mux and protectedmetadata area must be mapped')
