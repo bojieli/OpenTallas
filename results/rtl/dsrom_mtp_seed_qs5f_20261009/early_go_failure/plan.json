@@ -1,0 +1,158 @@
+{
+ "source": "four aligned segment subtrees; no engine RTL change",
+ "phases": [
+  {
+   "index": 0,
+   "bf": false,
+   "K": 4096,
+   "nbeat": 128,
+   "sbase": 0,
+   "nrows": 2,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 128,
+   "t_phase_model": 128,
+   "matrices": [
+    {
+     "name": "mtp.0.main_proj",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      0,
+      4096
+     ],
+     "off": 0,
+     "split": 1,
+     "segment_elems": [
+      4096
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1
+  },
+  {
+   "index": 1,
+   "bf": false,
+   "K": 4096,
+   "nbeat": 128,
+   "sbase": 128,
+   "nrows": 2,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 128,
+   "t_phase_model": 128,
+   "matrices": [
+    {
+     "name": "mtp.0.main_proj",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      4096,
+      8192
+     ],
+     "off": 0,
+     "split": 1,
+     "segment_elems": [
+      4096
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1
+  },
+  {
+   "index": 2,
+   "bf": false,
+   "K": 4096,
+   "nbeat": 128,
+   "sbase": 256,
+   "nrows": 2,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 128,
+   "t_phase_model": 128,
+   "matrices": [
+    {
+     "name": "mtp.0.main_proj",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      8192,
+      12288
+     ],
+     "off": 0,
+     "split": 1,
+     "segment_elems": [
+      4096
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1
+  },
+  {
+   "index": 3,
+   "bf": false,
+   "K": 3072,
+   "nbeat": 96,
+   "sbase": 384,
+   "nrows": 2,
+   "fmt_fp32": [
+    true,
+    true
+   ],
+   "rsplit": 0,
+   "t_read": 96,
+   "t_phase_model": 96,
+   "matrices": [
+    {
+     "name": "mtp.0.main_proj",
+     "fmt": "fp8",
+     "rows": [
+      0,
+      2
+     ],
+     "cols": [
+      12288,
+      15360
+     ],
+     "off": 0,
+     "split": 1,
+     "segment_elems": [
+      3072
+     ]
+    }
+   ],
+   "segments_per_pair_max": 1
+  }
+ ],
+ "seed_model_function": "uarch_model.dsrom_mtp_seed_qs5f_candidate",
+ "selected_native_source": "fa27bd60819f9bf61483d5605a02837fe6a34088",
+ "selected_native_master": "ot_v41_rom_elem_q_qxpq_w10",
+ "params": {
+  "QX": 10,
+  "PQ": 1,
+  "QW": 0,
+  "QM": 5,
+  "QS": 5
+ },
+ "native_physical_closed": false,
+ "collector": "one actual ot_v41_fadd LAT8;6 serialized operations for2 rows",
+ "whole_field_qualified": false
+}

@@ -1,0 +1,16 @@
+{
+ "verdict":"FAIL",
+ "tool_source":"f398618f5",
+ "native_source":"fa27bd60819f9bf61483d5605a02837fe6a34088",
+ "selected_master":"ot_v41_rom_elem_q_qxpq_w10",
+ "params":{"QX":10,"PQ":1,"QW":0,"QM":5,"QS":5,"NB":2},
+ "remote_host":"ot-epyc1tb",
+ "remote_run":"/srv/opentallas-scratch/claude/mtp-seed-qs5f-f398618f5",
+ "failure":"element fault at254000ps before projection outputs",
+ "diagnosis_scope":"source review identifies six-cycle go fence shorter than17-word PQ shadow replay; instrumented negative required to establish actual fault provenance",
+ "aggregate_peak_RSS_KiB":2771820,
+ "admission_GB":6,
+ "whole_field_qualified":false,
+ "native_physical_closed":false,
+ "released_payload":"complete original main_proj weight and scale byte payload, derived two-tensor safetensors header; see released_fixture_provenance.json"
+}
