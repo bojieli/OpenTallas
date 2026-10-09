@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_s81_prefix_shared_path;
+module tb_s81_prefix_shared_path #(parameter integer INJECT=0);
  reg clk=0,serial_clk=0;always #0.416667 clk=~clk;always #0.555555 serial_clk=~serial_clk;
  reg rst_n=0,start_v=0;wire start_r,pdone,pfault,pce;
  reg[73:0] id={3'd0,2'd3,2'd2,4'd13,21'd1048575,10'd513,32'hdead0000};
@@ -12,7 +12,7 @@ module tb_s81_prefix_shared_path;
  wire ov,ol,cd,busy,fault;reg ordy=0;wire[511:0] out;
  wire[73:0] ot;wire[6:0] ow;
  reg[31:0] inputs[0:3839],shared[0:1279],gold[0:1279];
- integer w,l,received=0,cycles=0,sumcycles=0,first=0,ptail=0,stail=0;
+ integer w,l,received=0,cycles=0,sumcycles=0,first=0,ptail=0,stail=0,corrected_count=0;
  reg[511:0] held;reg stalled=0;
  ot_mtp_p2_prefix_path #(.ENABLE(1)) prefix(.clk(clk),.rst_n(rst_n),
  .start_v(start_v),.start_r(start_r),.start_identity(id),.start_ids({9'd127,9'd65,9'd3}),
@@ -20,7 +20,7 @@ module tb_s81_prefix_shared_path;
  .in_last(ilast),.in_word(iw),.in_data(data),.out_v(pv),.out_r(pr),
  .out_data(pd),.out_identity(pt),.out_word(pw),.out_last(pl),
  .abort(1'b0),.done(pdone),.fault(pfault),.corrected(pce));
- ot_s81_shared_publisher_plain #(.ENABLE(1)) publisher(.clk(clk),.rst_n(rst_n),
+ ot_s81_shared_publisher_plain #(.ENABLE(1),.READ_INJECT(INJECT)) publisher(.clk(clk),.rst_n(rst_n),
  .cmd_valid(scmd),.cmd_ready(scr),.cmd_context(id),.in_valid(siv),.in_ready(sir),
  .in_data(sidata),.in_context(id),.in_word(siword),.in_last(siword==79),
  .in_fmt_fp32(1'b0),.in_error(1'b0),.out_valid(sv),.out_ready(sr),
@@ -33,7 +33,12 @@ module tb_s81_prefix_shared_path;
  .out_last(ol),.context_done(cd),.busy(busy),.fault(fault));
  always @(posedge clk)if(rst_n)begin
  cycles=cycles+1;
+ if(INJECT==3&&sfault)begin
+ if(received!=0||sv)$fatal(1,"COMPOSE UE published payload");
+ $display("COMPOSE shared SRAM UE blocks publication PASS cycle%0d",cycles);$finish;
+ end
  if(pfault||sfault||fault)$fatal(1,"COMPOSE component fault");
+ if(sv&&sr&&sce)corrected_count=corrected_count+1;
  if(pv&&pr&&pl)ptail=cycles;
  if(sv&&sr&&sl)stail=cycles;
  end
@@ -85,6 +90,8 @@ module tb_s81_prefix_shared_path;
  join
  wait(cd);repeat(6)@(negedge serial_clk);
  if(received!=80||busy||sbusy||!start_r)$fatal(1,"COMPOSE final retirement");
+ if(INJECT==1&&corrected_count!=80)$fatal(1,"COMPOSE missing SRAM correction");
+ if(INJECT==1)$display("COMPOSE shared SRAM CE80 corrected PASS");
  $display("COMPOSE PASS actual12prefixSRAM+3sharedSRAM native594CDC16LAT3 sharedLAST1280values frames80 streamcycles%0d serialcycles%0d first%0d prefixlast%0d sharedlast%0d",cycles,sumcycles,first,ptail,stail);$finish;
  end
  initial begin #1000000;$fatal(1,"COMPOSE deadlock");end
