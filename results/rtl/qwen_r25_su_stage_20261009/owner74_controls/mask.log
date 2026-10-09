@@ -1,0 +1,5 @@
+PASS_QWEN_R25_P4_CAUSAL_MASK_PIPE capacity8224 groups257 query_positions8191_8194 lengths8192_8195 checks32896 shared_limit_leaks6 held_frames CE UE truncation checked_owner capacity_negative
+- rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 2us; walltime 0.077 s; speed 18.970 us/s
+- Verilator: cpu 0.080 s on 1 threads; alloced 505 MB
