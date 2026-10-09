@@ -1,0 +1,99 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch/claude/closure-loop/hbm_coll_port_capture-94623b7d3-tc/cl/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -40.0,
+  "tns_ps": -270.11,
+  "worst_reg_to_reg_slack_ps": -26.19,
+  "worst_input_to_reg_slack_ps": 287.88,
+  "worst_output_port_slack_ps": -40.0,
+  "violating_d_pins": "16",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 656.7,
+    "min": 634.6,
+    "max": 719.3,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 656.7,
+    "min": 634.6,
+    "max": 719.3,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "vclki": {
+    "clock": "core_clk",
+    "mean": 656.7,
+    "min": 634.6,
+    "max": 719.3,
+    "n": 2734,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2734,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "f75ae354bc61f881e512c49035e56e69bc86f25e5b46d51bb911929c1cf3fed2"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -14.35,
+  "tns_ps": -77.86,
+  "worst_reg_to_reg_slack_ps": 0.22,
+  "worst_input_to_reg_slack_ps": -14.35,
+  "worst_output_port_slack_ps": -7.42,
+  "violating_d_pins": "9",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 552.9,
+    "min": 532.3,
+    "max": 609.5,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 552.9,
+    "min": 532.3,
+    "max": 609.5,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "vclki": {
+    "clock": "core_clk",
+    "mean": 552.9,
+    "min": 532.3,
+    "max": 609.5,
+    "n": 2734,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2734,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "7f527821cffac01ac0bc0807c4a37c2f52969ed665f752ac28067d6f3baba6e6"
+ }
+}
