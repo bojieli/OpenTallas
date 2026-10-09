@@ -24,6 +24,8 @@ module ot_hbm_svc_core_native #(
   // beats leave on its OWN lane kvs[p] = {data256, j12, v} (one sector a clock a PC: the PHY rate), so a stack
   // delivers up to 32 sectors a clock.  kvs_done pulses when every PC finished.  KVS = 0: the single-PC kind 1.
   parameter integer KVS = 0,
+  parameter integer IKS = 0, // opt-in kind2 stripe: blocks chd[69:61], row0 chd[16:2], all32PCs
+
   parameter integer KNO = 15              // 4-sector reads outstanding per PC (60 of the controller's 64 queued beats)
 )(
   input  wire ck, input wire rst,          // rst: active-low die reset (por_hbm)
@@ -46,6 +48,7 @@ module ot_hbm_svc_core_native #(
   input wire [1:0] wq_source, output wire [31:0] wq_source_g, output wire wq_source_fault, output wire [NPC-1:0] wq_source_busy, output wire wq_pending,
   // KVS = 1: per-PC KV stream lanes (launched on ck, forwarded with fclk) and the stream-complete pulse
   output wire [NPC*269-1:0] kvs, output wire kvs_done,
+  input wire [7:0] ik_credit, output wire [8791:0] ik_lines, output wire ik_done,ik_fault,
  input wire outer_write_pending,
  input wire native_v,output wire native_rdy,input wire[4:0]native_pc,input wire[29:0]native_addr,input wire[15:0]native_tag,
  output wire native_rsp_v,input wire native_rsp_rdy,output wire[4:0]native_rsp_pc,output wire[15:0]native_rsp_tag,
@@ -66,7 +69,7 @@ module ot_hbm_svc_core_native #(
  wire [NPC*256-1:0] n_kr_data;
  wire n_pending;wire[NPC-1:0]n_busy,native_busy;
  assign wq_pending=n_pending;assign wq_source_busy=n_busy;
- ot_hbm_svc_core #(.NSM(NSM),.SM_PC0(SM_PC0),.RSP_ST(RSP_ST),.REQ_ST(REQ_ST),.W_ST(W_ST),.FWD(FWD),.KV_PC(KV_PC),.KV_ST(KV_ST),.E_ST(E_ST),.XST(XST),.WB(WB),.WB_SOURCE_ACK(WB_SOURCE_ACK),.WQ_ST(WQ_ST),.KVS(KVS),.KNO(KNO)) u_core (
+ ot_hbm_svc_core #(.NSM(NSM),.SM_PC0(SM_PC0),.RSP_ST(RSP_ST),.REQ_ST(REQ_ST),.W_ST(W_ST),.FWD(FWD),.KV_PC(KV_PC),.KV_ST(KV_ST),.E_ST(E_ST),.XST(XST),.WB(WB),.WB_SOURCE_ACK(WB_SOURCE_ACK),.WQ_ST(WQ_ST),.KVS(KVS),.IKS(IKS),.KNO(KNO)) u_core (
  .ck(ck),
  .rst(rst),
  .q_d(q_d),
@@ -115,7 +118,10 @@ module ot_hbm_svc_core_native #(
  .wq_source_busy(n_busy),
  .wq_pending(n_pending),
  .kvs(kvs),
- .kvs_done(kvs_done));
+ .kvs_done(kvs_done),
+ .ik_credit(ik_credit),
+ .ik_lines(ik_lines),
+ .ik_done(ik_done));
  ot_hbm_loader_service_boundary #(.ENABLE(NATIVE),.NPC(NPC)) u_native(
  .clk(ck),.rst_n(phy_rst_n),.normal_pending_write({NPC{outer_write_pending||n_pending}}|n_busy),
  .native_v(native_v),.native_rdy(native_rdy),.native_pc(native_pc),.native_addr(native_addr),.native_tag(native_tag),
