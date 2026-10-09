@@ -3,7 +3,7 @@
 Run under host guard128GiB after prior full-quarter frontend has terminated.
 Compiler source d5225192c, arithmetic parent5449dfcc4, plain AR successor must be source-pinned must be in pinned SRC.
 """
-import argparse,json,subprocess,sys
+import argparse,hashlib,json,subprocess,sys
 from pathlib import Path
 SOURCES='''rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv
 rtl/hdc/ot_hdc_cg.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_delay_ring.sv
@@ -20,7 +20,7 @@ rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv
 rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter_ar.sv
 rtl/qwen_r25_su_dispatch/tb_qwen_r25_su_quarter_ar.sv'''.split()
 def main():
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--prepare-only',action='store_true');a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--prepare-only',action='store_true');p.add_argument('--source-pin',required=True);a=p.parse_args()
  root=Path(__file__).resolve().parents[1];out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
  sys.path.insert(0,str(root/'tools'))
  import qwen_r25_native690 as B
@@ -42,7 +42,9 @@ def main():
   args=[f'+PROGRAM={out}/rom/Q0.hex',f'+META={out}/rom/META.hex',f'+VM={directory}/VM.hex',f'+EXPECTED={directory}/expected',f'+START={spec["pc"]}',f'+NOPS={spec["count"]}',f'+QUERIES={queries}',f'+POSITION=8191',f'+NCHECK={counts[0]}']
   cases.append((stage,args,'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP'))
  cases.extend([('rms_stalls',cases[0][1]+['+STALL=3'],'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP'),('foreign_reply',cases[0][1]+['+NEGATIVE=1'],'PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE')])
- manifest=dict(source_dependencies={'compiler':'d5225192c','arithmetic_parent':'5449dfcc4','selected_AR_source':'pinned launch source manifest'},N=256,M=64,OWNER_W=74,TOKEN18=151935,DPI=False,queries=1,dispatcher=False,query_release=False,control_mirror=False,lease_epoch=False,CP_binding_credit=False,vm_words=262144,CONST0=262143,cases=cases,compile_admission_gib=128,workers=8)
+ dependencies=SOURCES+['rtl/test/tb_hdc_v41x_vec_fields.svh','tools/qwen_r25_native690.py','tools/qwen_r25_native690_fixture.py','tools/run_qwen_r25_quarter_ar.py']
+ inventory={s:dict(sha256=hashlib.sha256((root/s).read_bytes()).hexdigest(),bytes=(root/s).stat().st_size) for s in dependencies}
+ manifest=dict(source_dependencies={'compiler':'d5225192c','arithmetic_parent':'5449dfcc4','selected_AR_source':a.source_pin},source_inventory=inventory,N=256,M=64,OWNER_W=74,TOKEN18=151935,DPI=False,queries=1,dispatcher=False,query_release=False,control_mirror=False,lease_epoch=False,CP_binding_credit=False,vm_words=262144,CONST0=262143,cases=cases,compile_admission_gib=128,workers=8)
  (out/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
  if a.prepare_only:return
  cmd=['verilator','--binary','--timing','-Wno-fatal','--top-module','tb_qwen_r25_su_quarter_ar','-I'+str(root/'rtl/test'),'--Mdir',str(out/'obj'),'--output-split','20000','--output-split-cfuncs','20000','-CFLAGS','-O1','-j','8',*[str(root/s) for s in SOURCES]]
