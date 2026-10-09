@@ -1,0 +1,21 @@
+{
+  "at": "2026-10-08T23:56:38.545345-07:00",
+  "job": "bfh2_deep4_hm0_6cd23db2b",
+  "source_commit": "6cd23db2b",
+  "artifact": "existing completed route 4_1_cts.odb +4_cts.sdc, read-only; not separate legacy calibration result",
+  "input_sha256": {
+    "4_1_cts.odb": "50a2d888c120f93471c98754b2dd62e9cbec971ff386881ffe1f50fcbb287e11",
+    "4_cts.sdc": "d168edb7331e8c4d67933ef75f6343dd8b59622dc4d20dd0b446f53af81a5eb7"
+  },
+  "run_host": "ot-epyc2",
+  "run": "/srv/opentallas-data/codex/bf-deep4-insertion-20261008",
+  "admission": "actual memory/disk guard12GiB expected peak; no process cap or deadline",
+  "prior_local_attempt": "terminal global OOM23:33:38 killed OpenROAD697254; failed log retained in original local artifact directory and copied remote",
+  "measured_route_tt_mean_ps": 760,
+  "assumed_setup_mean_ps": 1169,
+  "delta_ps": -409,
+  "measured_ff_mean_ps": 598,
+  "assumed_ff_mean_ps": 714,
+  "delta_ff_ps": -116,
+  "adoption_scope": "CTS insertion diagnostic only, placement-estimated parasitics. Existing actual route untouched; final routed insertion SS-sensitivity/TT-setup/FF-hold verdict still required."
+}
