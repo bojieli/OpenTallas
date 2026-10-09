@@ -9,6 +9,7 @@ os.environ['QWEN_O4_TP'] = '4'
 os.environ['HDC_SU_WIDTH'] = '64'
 os.environ['QWEN_O4_AR_WORDS'] = '256'
 import argparse
+import ast
 import hashlib
 import json
 import re
@@ -19,9 +20,19 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import hdc_program as P
 import hdc_qwen_fullshape_program_w12 as FP
 import hdc_qwen_fullshape_isa_w12 as QI
-from qwen_o4_fulltoken_binding_w12 import compact_rows, POST_SCALE_BASES, HEAD_ROWS
+import hdc_isa as I
 from hdc_qwen_fullshape_placement_w12 import matrix
 from qwen_system.ctl_golden import stage_table, stab_bits
+
+# Execute the exact shape-only golden function without importing checkpoint IO packages.
+_binding_ast = ast.parse((ROOT / 'tools/qwen_o4_fulltoken_binding_w12.py').read_text())
+_shape_fn = next(n for n in _binding_ast.body if isinstance(n, ast.FunctionDef) and n.name == 'compact_rows')
+_shape_globals = dict(TP=4,GROUPS=6144,matrix=matrix,I=I,PINNED={})
+exec(compile(ast.Module(body=[_shape_fn],type_ignores=[]),str(ROOT / 'tools/qwen_o4_fulltoken_binding_w12.py'),'exec'),_shape_globals)
+compact_rows = _shape_globals['compact_rows']
+HEAD_ROWS = 151936 // 4
+_rope = 2 * 4096 + (32 // 4 + 8 // 4) * 128 + 1
+POST_SCALE_BASES = (_rope + FP.TMAX * 64, _rope + FP.TMAX * 64 + 4096)
 
 
 def emit(out):
