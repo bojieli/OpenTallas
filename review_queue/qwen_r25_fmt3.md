@@ -18,4 +18,8 @@ Already progressing immutable jobs, checked on 2026-10-09:
 - Wide one-stage: ot-epyc3 driver 1835875, source `2831b78d525eaa86a7d5706446cbf8ccdb8374bc`, `/srv/opentallas-scratch/codex/qwen-fmt3-wide-2831b78d5/run`. Calibration global placement completed; no terminal verdict yet.
 - Wide two-stage: ot-epyc3 driver 1855945, source `77ec33a0e`, `/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e/run`. Admitted calibration timing repair is progressing; no terminal verdict yet.
 
-All builds used measured remote admission and immutable source archives. No localhost compile or compute was launched. Existing jobs will be retained through their terminal SS/FF/DRC verdicts; failed verdicts will be preserved.
+All builds used measured remote admission and immutable source archives. No localhost compile or compute was launched. Existing jobs will be retained through their terminal verdicts; failed verdicts will be preserved.
+
+## Binding acceptance correction — 2026-10-09
+
+The latest root instruction and Claude-confirmed `REVIEW_20261009.md`/`REDESIGN_RULES.md` supersede the strict acceptance sentence above: acceptance is TT setup >=0 ps at 833.333 ps, FF hold >=0 ps and DRC=0, with SS sensitivity reported separately and consistent interface budgets. Existing jobs retain their immutable original constraints and driver verdicts; no reroute, restart or judgment-driven constraint change is authorized. Their raw TT/FF/SS results will be classified separately under this updated acceptance rule when available. Claude remains the sole reviewer; this is a review request, not a review approval.
