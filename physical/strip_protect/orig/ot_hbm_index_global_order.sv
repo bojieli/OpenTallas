@@ -3,9 +3,7 @@
 // Finite full-TP96 merge of actual published ascending native candidate lists.
 // Provider reads must come from checked TU publication storage. No sorting of
 // host operands, relabelling IDs, implied ACK or delay-derived publication.
-// strip-protect 2026-10-09 (REVIEW_20261009 S4/X3): PROTECT=0 (default) removes the rejected flop-level protection;
-// PROTECT=1 is the original, bit for bit.  Fault-free behaviour is identical (physical/strip_protect/bench.py).
-module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROTECT=0)(
+module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0)(
  input wire clk,por_n,start,output wire start_r,
  input wire [72:0] start_frame,input wire publication_complete,
  input wire owner_valid,input wire [72:0] owner_frame,
@@ -46,7 +44,6 @@ module ot_hbm_index_global_order #(parameter integer ENABLE=0,STATIC_SCAN=0,PROT
   for(integer c=0;c<96;c=c+1)
    codes_ok=codes_ok&&(head_n[c]==~head[c])&&(ordinal_n[c]==~ordinal[c])&&
                          (tree_n[c]==~tree[c]);
-  if(PROTECT==0)codes_ok=1'b1; // complemented head/valid/tree mirrors only when PROTECT
  end
  wire lease_ok=owner_valid&&owner_frame==frame;
  wire enabled=ENABLE&&codes_ok&&state!=FAULT;
