@@ -1,0 +1,68 @@
+{
+  "observer_only": true,
+  "checker_sha256": "2a58b077da0f405c9589d87984087f295357534b1ce4bd5e7f1909c90e7567a1",
+  "pid": 1047707,
+  "pgid": 1047695,
+  "config_sha256": "7a8e860cacb7ba61d35f1e37d8f9184a5fc2b94d4712f5826f7faec785e3efd6",
+  "source_commit": "5b11f631f3c73044f5447a592dc7847e6c94779b",
+  "top": "ot_dsrom_wfc_tokpipe_src",
+  "params": {
+    "WAVE": "1",
+    "WIN": "6",
+    "FLIT": "512",
+    "NW": "21",
+    "AW": "30",
+    "VWA": "15",
+    "USER_W": "10",
+    "MAXU": "866",
+    "KVW": "32768",
+    "SEND_HIDDEN": "1",
+    "HID_DEST": "1",
+    "FWD_TOKEN": "1",
+    "SOURCE": "1",
+    "XWORDS": "41",
+    "RXWORDS": "41",
+    "REC_SRAM": "1",
+    "UPOS_LWR": "1",
+    "CONTROL_PIPE": "1",
+    "CFG_Q": "1",
+    "PRECOMP": "1",
+    "IN_DEC": "1",
+    "TXQ_SLICE": "1",
+    "RDY_LT": "1",
+    "FANOUT_COPY": "1",
+    "MARGIN": "1",
+    "LINK_REG": "1",
+    "LINK_SEL": "1",
+    "VM_REG": "1",
+    "RD_PIPE": "1",
+    "SLEW_COPY": "1",
+    "PROMPT_EXTRA": "2"
+  },
+  "sources_sha256": {
+    "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv": "27ec0d2a5f4cbd79c0aef026699d2275c4286a1237c22f22266d5128bd39ac22",
+    "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv": "4cdc0fe9c0a122db81dae32c34c9afe65185fc6673525c0caa644420b3ecf6e5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v": "a8fb2509a28f91a30c9b28184fd9be11f30eea9f847797cb8c5435f8870c6128"
+  },
+  "actual_synth_netlist": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/cal/results/asap7/wfc_src_cal/base/1_2_yosys.v",
+    "sha256": "82e030af1ca4ad383af9e8a1214d043a830161182aaf6c8e929d2e3d2a63c1dd",
+    "bytes": 7173257,
+    "macro_type_occurrences": 4
+  },
+  "synth_snapshot": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/cal/results/asap7/wfc_src_cal/base/mem.json",
+    "sha256": "45d6ccbccf3844b0a62eda6e86508f1333f8516917f8979ae24611edfffc88a3"
+  },
+  "boundary": {
+    "verdict": "SKIP",
+    "message": "Unknown primitives fail closed",
+    "unknown": [
+      "$paramod$279b373a33f26d44b102a7605eb845249f8d7cc7\\ot_rom_pkg_ctrl_wfc_tokpipe_grp",
+      "$paramod$8f7a71db5080589cb179d63b857f88763a3114c5\\ot_rom_pkg_ctrl_wfc_tokpipe_grp",
+      "$paramod$d1377ee62ed37b38dd70971d8429cf929fd285c4\\ot_rom_pkg_ctrl_wfc_tokpipe_upos",
+      "$paramod$db590ea58279be8dbb0e228bc9ed3f56511e8c9e\\ot_rom_pkg_ctrl_wfc_tokpipe_upos"
+    ]
+  },
+  "scope": "Generic elaboration from actual full-shape sources/params; mapped netlist is inventory only"
+}

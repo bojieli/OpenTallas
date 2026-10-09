@@ -1,0 +1,42 @@
+2026-10-09T13:15:52Z
+    PID    PPID    PGID   RSS COMMAND
+1059428       1 1059426  3768 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059435 1059428 1059426  2240 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059436 1059428 1059426  1828 /usr/bin/time -v -o /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/time.txt python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059439 1059436 1059426 20240 python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059440 1059435 1059426  4916 ps -eo pid,ppid,pgid,rss,args
+1059441 1059435 1059426  4476 awk -v group=1059426 NR==1 || $3==group
+2026-10-09T13:15:53Z
+    PID    PPID    PGID   RSS COMMAND
+1059428       1 1059426  3768 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059435 1059428 1059426  2240 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059436 1059428 1059426  1828 /usr/bin/time -v -o /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/time.txt python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059439 1059436 1059426 36708 python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059445 1059439 1059426 274100 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -p read_verilog -lib -sv /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v; read_json /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/cal/results/asap7/wfc_src_cal/base/mem.json; hierarchy -top ot_dsrom_wfc_tokpipe_src; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; memory_map; opt_clean; techmap; opt_clean; write_json /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/generic.json
+1059733 1059435 1059426  4920 ps -eo pid,ppid,pgid,rss,args
+1059734 1059435 1059426  4500 awk -v group=1059426 NR==1 || $3==group
+2026-10-09T13:15:54Z
+    PID    PPID    PGID   RSS COMMAND
+1059428       1 1059426  3768 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059435 1059428 1059426  2240 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059436 1059428 1059426  1828 /usr/bin/time -v -o /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/time.txt python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059439 1059436 1059426 36708 python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059445 1059439 1059426 349096 /home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys -p read_verilog -lib -sv /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v; read_json /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx/cal/results/asap7/wfc_src_cal/base/mem.json; hierarchy -top ot_dsrom_wfc_tokpipe_src; setattr -mod -unset keep_hierarchy; setattr -unset keep_hierarchy; flatten; memory_map; opt_clean; techmap; opt_clean; write_json /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/generic.json
+1060406 1059435 1059426  4924 ps -eo pid,ppid,pgid,rss,args
+1060407 1059435 1059426  4516 awk -v group=1059426 NR==1 || $3==group
+2026-10-09T13:15:55Z
+    PID    PPID    PGID   RSS COMMAND
+1059428       1 1059426  3768 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059435 1059428 1059426  2240 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059436 1059428 1059426  1828 /usr/bin/time -v -o /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/time.txt python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059439 1059436 1059426 235208 python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1060626 1059435 1059426  4924 ps -eo pid,ppid,pgid,rss,args
+1060627 1059435 1059426  4504 awk -v group=1059426 NR==1 || $3==group
+2026-10-09T13:15:56Z
+    PID    PPID    PGID   RSS COMMAND
+1059428       1 1059426  3768 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059435 1059428 1059426  2240 bash /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/run.sh
+1059436 1059428 1059426  1828 /usr/bin/time -v -o /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out/time.txt python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1059439 1059436 1059426 45840 python3 /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/probe.py --synth-json --run /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-hard-binding-5b11f631f-tc-cx --out /srv/opentallas-scratch/codex/source-boundary-5b11-952a9b-a4/out
+1060630 1059435 1059426  4972 ps -eo pid,ppid,pgid,rss,args
+1060631 1059435 1059426  4448 awk -v group=1059426 NR==1 || $3==group

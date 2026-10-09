@@ -1,0 +1,1 @@
+Actual SOURCE5b full-shape boundary qualification. Final PASS is a4; preceding SKIPs are preserved. Unknown non-generic logic fails closed rather than counting as macro/flop boundaries. Generic snapshot remains onEPYC3 under the a4 privateout; only evidence metadata is committed. This does not establish SOURCE physical closure.
