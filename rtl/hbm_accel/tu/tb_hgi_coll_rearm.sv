@@ -291,7 +291,7 @@ module tb_hgi_coll_rearm #(
             @(negedge clk);go=0;
             if(duplicate_last && cmd==2)begin
                 wait(flt);repeat(12)begin @(negedge clk);if(done)$fatal(1,"duplicate replaced missing result");end
-                $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish;
+                $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish;disable commands;
             end
             wait(done);@(negedge clk);
             if(flt || mism || own_ok!=ROF)$fatal(1,"REARM exact/fault cmd=%0d got=%0d mismatch=%0d fault=%0d own=%0d",cmd,got,mism,flt,own_ok);
