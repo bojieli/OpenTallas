@@ -1,6 +1,6 @@
 {
   "schema": "hgi.g12.record-ports.v1",
-  "source_commit": "76bb97ff2db443ccae29fcf60d401111a08ce303",
+  "source_commit": "630558368c2a02e3a16d96bd3e908f6ec80d55b6",
   "module": "ot_hgi_att_record_adapter",
   "seq_tuple_ABI_bits": 1409,
   "requires_normative_header": true,
@@ -61,7 +61,8 @@
     ],
     "all_mutants": "expected FATAL",
     "max_rss_KiB": 8800,
-    "scope": "Adapter+actual G12 leaf; external ATTdone test driver, not whole ATT arithmetic proof"
+    "scope": "Adapter+actual G12 leaf; external ATTdone test driver, not whole ATT arithmetic proof",
+    "reuse": "a5 RTL/leaf/bench/runner byte-identical to630558368, proved in boundary.a6.receipt.json"
   },
   "adopted": false
 }
