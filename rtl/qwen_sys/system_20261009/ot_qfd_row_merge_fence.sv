@@ -11,13 +11,18 @@
 //     written state; it precedes the layer's first row request and its write (the KV4 lay_start wavefront).
 //     No timing assumption: a write ack delayed by any amount is a stall, never a fault.
 //   * Source IDs / V halves: the arb's 64 grant bits {pc, half} are packed into the head owners' three ACK lanes
-//     {pc, mask} (one lane per granted PC, both halves in one lane when both were granted).
-//   * A half granted once is never offered again for the same head (the offer is withdrawn the edge after the grant
-//     and stays withdrawn until the head owner drops head_v).
-// Registered boundary: every input is captured in a pin flop (h_grant also withdraws the next offer: 2 gates to the
-// offer flop), every output is a flop: +1 edge on the offer, +1 edge on the ACK, so a PC's grant -> ACK -> next-head
-// turnaround grows by 2 edges.  Sticky fault (0 cycles): a grant to a half not on offer, more than three granted PCs in
-// one edge, a duplicate write ack for a half within a layer, an empty write-ack mask.  No ECC / parity / IDs / leases.
+//     {pc, mask} (one lane per granted PC, ascending PC, both halves in one lane when both were granted).
+//   * A half granted once is never offered again for the same head.
+// STRUCTURE (rev 2, rowfence_a/b e34e1c8cb TT -160/-203: 64-grant -> 3-lane packing and the wack decode -> fence were
+// one edge, 26-29 levels): both are split at the pin flop, 0 added edges on the ACK path:
+//   - grant packing: the pin stage pre-encodes each group of 8 PCs (first three granted PCs, count, >3 flag); the
+//     second edge merges the four groups' lanes by prefix offsets into the ACK register.
+//   - write acks: the pin stage decodes the three lanes into a 64-bit half mask (+ in-edge duplicate flag); the fence
+//     uses that register: +1 edge on a fence release only (<= 1 cycle per layer, the tail head of a PC).
+//   - offers / ACK lanes are gated by the registered fault; a violation is flagged on the next edge (sticky).
+// Registered boundary: every output is a flop; offer +1 edge, ACK +1 edge (grant -> next head turnaround +2 edges).
+// Sticky fault: a grant to a half not on offer, more than three granted PCs in one edge, a duplicate write ack for a
+// half within a layer, an empty write-ack mask.  No ECC / parity / IDs / leases.
 // MUT (bench only): 1 = fence off (tail heads offered before the write ack); 2 = ACK lane carries pc+1 (wrong source).
 module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
  input  wire              clk, rst_n,
@@ -33,79 +38,113 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
  output reg  [20:0]       ack_data,
  output reg               fault
 );
+ localparam integer NG = NPC/8;
  generate if (!ENABLE) begin : g_off
-  always @* begin h_v = 0; h_need = 0; ack_v = 0; ack_data = 0; fault = 0; end
+  always_comb begin h_v = 0; h_need = 0; ack_v = 0; ack_data = 0; fault = 0; end
  end else begin : g_on
-  // pin flops
-  reg ls_q; reg [NPC-1:0] hv_q, ht_q; reg [2*NPC-1:0] hn_q, g_q; reg [2:0] wv_q; reg [20:0] wd_q;
+  // ---------------- pin stage ----------------
+  reg ls_q; reg [NPC-1:0] hv_q, ht_q; reg [2*NPC-1:0] hn_q, g_q;
+  // write-ack decode
+  reg [2*NPC-1:0] wm_d, wm_q; reg wdup_d, wdup_q;
+  reg [2*NPC-1:0] lane_m [0:2];
+  always_comb begin
+   wm_d = 0; wdup_d = 0;
+   for (integer j = 0; j < 3; j = j + 1) begin
+    lane_m[j] = 0;
+    if (wack_v[j]) begin
+     lane_m[j][2*wack_data[j*7+2 +: 5] +: 2] = wack_data[j*7 +: 2];
+     if (wack_data[j*7 +: 2] == 2'b00) wdup_d = 1;
+    end
+   end
+   wm_d = lane_m[0] | lane_m[1] | lane_m[2];
+   if (|((lane_m[0] & lane_m[1]) | (lane_m[0] & lane_m[2]) | (lane_m[1] & lane_m[2]))) wdup_d = 1;
+  end
+  // grant pre-encode per group of 8 PCs: first three granted PCs
+  reg gl_v_d [0:NG-1][0:2]; reg [2:0] gl_i_d [0:NG-1][0:2]; reg [1:0] gl_m_d [0:NG-1][0:2];
+  reg [1:0] gc_d [0:NG-1]; reg go_d [0:NG-1];
+  reg [2:0] gl_v_q [0:NG-1]; reg [2:0] gl_i_q [0:NG-1][0:2]; reg [1:0] gl_m_q [0:NG-1][0:2];
+  reg [1:0] gc_q [0:NG-1]; reg go_q [0:NG-1];
+  integer n;
+  always_comb begin
+   for (integer g = 0; g < NG; g = g + 1) begin
+    n = 0; go_d[g] = 0;
+    for (integer k = 0; k < 3; k = k + 1) begin gl_v_d[g][k] = 0; gl_i_d[g][k] = 0; gl_m_d[g][k] = 0; end
+    for (integer k = 0; k < 8; k = k + 1) if (|h_grant[2*(8*g+k) +: 2]) begin
+     if (n < 3) begin gl_v_d[g][n] = 1; gl_i_d[g][n] = 3'(k); gl_m_d[g][n] = h_grant[2*(8*g+k) +: 2]; end
+     else go_d[g] = 1;
+     n = n + 1;
+    end
+    gc_d[g] = (n > 3) ? 2'd3 : 2'(n);
+   end
+  end
   always @(posedge clk or negedge rst_n)
-   if (!rst_n) begin ls_q <= 0; hv_q <= 0; wv_q <= 0; g_q <= 0; end
-   else begin ls_q <= lay_start; hv_q <= head_v; wv_q <= wack_v; g_q <= h_grant; end
-  always @(posedge clk) begin ht_q <= head_tail; hn_q <= head_need; wd_q <= wack_data; end
+   if (!rst_n) begin
+    ls_q <= 0; hv_q <= 0; g_q <= 0; wm_q <= 0; wdup_q <= 0;
+    for (integer g = 0; g < NG; g = g + 1) begin gl_v_q[g] <= 0; gc_q[g] <= 0; go_q[g] <= 0; end
+   end else begin
+    ls_q <= lay_start; hv_q <= head_v; g_q <= h_grant; wm_q <= wm_d; wdup_q <= wdup_d;
+    for (integer g = 0; g < NG; g = g + 1) begin
+     gl_v_q[g] <= {gl_v_d[g][2], gl_v_d[g][1], gl_v_d[g][0]}; gc_q[g] <= gc_d[g]; go_q[g] <= go_d[g];
+    end
+   end
+  always @(posedge clk) begin
+   ht_q <= head_tail; hn_q <= head_need;
+   for (integer g = 0; g < NG; g = g + 1) for (integer k = 0; k < 3; k = k + 1) begin gl_i_q[g][k] <= gl_i_d[g][k]; gl_m_q[g][k] <= gl_m_d[g][k]; end
+  end
+  // ---------------- second stage ----------------
   reg [1:0] written [0:NPC-1];   // halves of this PC's new-position row acknowledged in this layer
   reg [1:0] gm      [0:NPC-1];   // halves of the current head already granted
-  reg [2*NPC-1:0] wmask, off_q;
-  reg wbad, gbad;
-  reg [NPC-1:0] gpc;
-  integer p, j, ng;
-  always @* begin
-   wmask = 0; wbad = 0;
-   for (j = 0; j < 3; j = j + 1) if (wv_q[j]) begin
-    if (wd_q[j*7 +: 2] == 2'b00 || (wmask[2*wd_q[j*7+2 +: 5] +: 2] & wd_q[j*7 +: 2]) != 2'b00) wbad = 1;
-    wmask[2*wd_q[j*7+2 +: 5] +: 2] = wmask[2*wd_q[j*7+2 +: 5] +: 2] | wd_q[j*7 +: 2];
+  reg [2*NPC-1:0] off_q;
+  // merge the groups' lanes by prefix offsets (ascending PC)
+  reg [2:0] nav; reg [20:0] nad; reg [3:0] off, tot; reg gover; reg [4:0] pcn;
+  always_comb begin
+   nav = 0; nad = 0; off = 0; gover = 0; pcn = 0;
+   for (integer g = 0; g < NG; g = g + 1) begin
+    if (go_q[g]) gover = 1;
+    for (integer k = 0; k < 3; k = k + 1) if (gl_v_q[g][k] && off + k < 3) begin
+     pcn = 5'(8*g) + {2'b00, gl_i_q[g][k]};
+     if (MUT == 2) pcn = pcn + 5'd1;
+     nav[off + k] = 1'b1;
+     nad[(off + k)*7 +: 7] = {pcn, gl_m_q[g][k]};
+    end
+    off = off + {2'b00, gc_q[g]};
    end
-   for (p = 0; p < NPC; p = p + 1)
-    if ((ls_q ? 2'b00 : written[p]) & wmask[2*p +: 2]) wbad = 1;
+   tot = off;
   end
-  // grant check against the offer the arb saw on the grant edge
-  always @* begin
-   gbad = 0; gpc = 0; ng = 0;
-   for (p = 0; p < NPC; p = p + 1) begin
-    gpc[p] = |g_q[2*p +: 2];
-    ng = ng + gpc[p];
-    if ((g_q[2*p +: 2] & ~off_q[2*p +: 2]) != 2'b00) gbad = 1;
-   end
-   if (ng > 3) gbad = 1;
-  end
-  // ACK lanes: one per granted PC, ascending PC order
-  reg [2:0] nav; reg [20:0] nad; integer n;
-  always @* begin
-   nav = 0; nad = 0; n = 0;
-   for (p = 0; p < NPC; p = p + 1) if (gpc[p] && n < 3) begin
-    nav[n] = 1'b1;
-    nad[n*7 +: 7] = {5'((MUT == 2) ? (p + 1) % NPC : p), g_q[2*p +: 2]};
-    n = n + 1;
-   end
+  wire gbad = gover || tot > 4'd3 || |(g_q & ~off_q);
+  reg wbad_w;
+  always_comb begin
+   wbad_w = wdup_q;
+   for (integer p = 0; p < NPC; p = p + 1) if (((ls_q ? 2'b00 : written[p]) & wm_q[2*p +: 2]) != 2'b00) wbad_w = 1;
   end
   // next offer
   reg [NPC-1:0] nv; reg [2*NPC-1:0] nn; reg [1:0] rem, wr;
-  always @* begin
+  always_comb begin
    nv = 0; nn = 0; rem = 0; wr = 0;
-   for (p = 0; p < NPC; p = p + 1) begin
-    wr  = (ls_q ? 2'b00 : written[p]) | wmask[2*p +: 2];
+   for (integer p = 0; p < NPC; p = p + 1) begin
+    wr  = (ls_q ? 2'b00 : written[p]) | wm_q[2*p +: 2];
     rem = hn_q[2*p +: 2] & ~gm[p] & ~g_q[2*p +: 2] & ~h_grant[2*p +: 2];
     nv[p] = hv_q[p] && rem != 2'b00 && (!ht_q[p] || (wr & hn_q[2*p +: 2]) == hn_q[2*p +: 2] || MUT == 1);
     nn[2*p +: 2] = nv[p] ? rem : 2'b00;
    end
   end
-  integer c;
-  wire bad = fault || wbad || gbad;
   always @(posedge clk or negedge rst_n) begin
    if (!rst_n) begin
     h_v <= 0; h_need <= 0; off_q <= 0; ack_v <= 0; ack_data <= 0; fault <= 0;
-    for (c = 0; c < NPC; c = c + 1) begin written[c] <= 2'b00; gm[c] <= 2'b00; end
+    for (integer c = 0; c < NPC; c = c + 1) begin written[c] <= 2'b00; gm[c] <= 2'b00; end
    end else begin
-    fault    <= bad;
-    h_v      <= bad ? {NPC{1'b0}} : nv;
-    h_need   <= bad ? {2*NPC{1'b0}} : nn;
+    fault    <= fault || wbad_w || gbad;
+    h_v      <= fault ? {NPC{1'b0}} : nv;
+    h_need   <= fault ? {2*NPC{1'b0}} : nn;
     off_q    <= h_need;
-    ack_v    <= (fault || gbad) ? 3'b000 : nav;
+    ack_v    <= fault ? 3'b000 : nav;
     ack_data <= nad;
-    for (c = 0; c < NPC; c = c + 1) begin
-     written[c] <= (ls_q ? 2'b00 : written[c]) | wmask[2*c +: 2];
+    for (integer c = 0; c < NPC; c = c + 1) begin
+     written[c] <= (ls_q ? 2'b00 : written[c]) | wm_q[2*c +: 2];
      gm[c]      <= !hv_q[c] ? 2'b00 : (gm[c] | g_q[2*c +: 2]);
     end
    end
   end
+  initial if (NPC % 8 != 0) $fatal(1, "NPC must be a multiple of 8");
  end endgenerate
 endmodule
