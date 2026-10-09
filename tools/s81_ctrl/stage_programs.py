@@ -158,6 +158,10 @@ def hexline(o):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", type=Path, default=ROOT / "results/rtl/s81_ctrl_20261008/programs")
+    ap.add_argument("--native-registry", type=Path,
+                    help="Compile owner-provided native endpoint jobs; missing binding fails closed")
+    ap.add_argument("--native-context", type=Path,
+                    help="Explicit token/user/epoch/address context JSON for native compilation")
     a = ap.parse_args()
     tp = json.loads(TP.read_text())
     progs, asap_bad = build(tp)
@@ -182,6 +186,20 @@ def main():
     print(f"{len(progs)} programs, max jobs {rec['max_jobs']}, max fan-in {rec['max_fanin']}, "
           f"ASAP mismatches {asap_bad}, max |critical end - composition group span| "
           f"{max(abs(x['delta']) for x in index)}, max |start - composition start| {max(x['max_start_drift'] for x in index)}")
+    if a.native_registry:
+        from native_descriptors import compile_jobs, digest
+        context = json.loads(a.native_context.read_text()) if a.native_context else {}
+        request = {"context": context,
+                   "jobs": [{"id": op["id"], "engine": op["port"]}
+                            for program in progs for op in program["ops"]]}
+        native = compile_jobs(request, json.loads(a.native_registry.read_text()), ROOT)
+        native["registry_sha256"] = digest(a.native_registry)
+        native["composition_sha256"] = rec["source_sha256"]
+        native["scope"] = "Named native command signals only; execution/stream/VM binding requires its own exact gate"
+        (a.out / "native_dispatch.json").write_text(json.dumps(native, indent=2) + "\n")
+        if not native["dispatch_eligible"]:
+            print(f"Native dispatch BLOCKED: {len(native['rejected'])} unbound/invalid jobs; no dispatch rows emitted")
+            raise SystemExit(2)
 
 
 if __name__ == "__main__":
