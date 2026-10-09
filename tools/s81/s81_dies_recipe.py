@@ -51,7 +51,7 @@ LAYER1 = 'results/rtl/dsrom_s81_fulldie_20261004/m221pq/options.txt'
 def _layer1_opts():
     o = (ROOT / LAYER1).read_text().split()
     i = o.index('--die')
-    return o[:i] + o[i + 2:] + ['--nxt-reach']          # r4b: r3 options + --nxt-reach
+    return o[:i] + o[i + 2:] + ['--nxt-reach', '--host']   # r4b: r3 options + --nxt-reach; + dsfd_host (TA-17)
 
 
 def _sub(o, k, v=None):
@@ -69,17 +69,19 @@ def _head_base():
     for k in ('--bf-per-region', '--pairs', '--q-elem-h'):
         o = _sub(o, k)
     o = _sub(o, '--pq-place', False)
-    return _sub(o, '--elem-h', 221.4) + ['--frame-out-relay']
+    return _sub(o, '--elem-h', 241.92) + ['--frame-out-relay']
 
 
 def recipes():
     scan = _sub(_sub(_layer1_opts(), '--hub-column-width', 1771.2), '--vch-w', 1555.2)
     hb = _head_base()
     return {
-        'scan': dict(opts=_sub(scan, '--bf-per-region', 0) + ['--die', 'layer'],
+        'scan': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer'],
                      role='scan die (4 HBM3E stacks), 32 of the rack: q-only flavour',
                      note='the 1,792 mapping homes every scan service on a q stage (half_dedicated stage_map '
-                          'scan_service_homes 7, 25, ..., 109; flavour b q q): --bf-per-region 0 on the m221pq frames; '
+                          'scan_service_homes 7, 25, ..., 109; flavour b q q): --bf-per-region 0, q frames 241.92 um '
+                          '(the 221.4 um qs5f element fills a 221.4 frame and the column relays found no spot: 8 rows '
+                          'of 324 um still fit the field); '
                           'hub columns 1,771.2 um / VCH 1,555.2 um (spine width unchanged)'),
         'scanbf': dict(opts=scan + ['--die', 'layer'], role='scan die, BF flavour (sensitivity: a scan home on a BF stage)',
                        note='m221pq BF-flavour frames (4 BF a region); hub columns 1,771.2 um / VCH 1,555.2 um'),
