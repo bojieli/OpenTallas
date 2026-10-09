@@ -62,7 +62,7 @@
     "descriptor_read_edges": 1,
     "weight_base_added_edges": 0,
     "weight_base_fallback_added_edges": 1,
-    "fallback_added_cycles_token_upper": 217,
+    "fallback_added_cycles_token_upper": 220,
     "baseline_stage_switch_added_cycles_token": 74,
     "stage_pipeline": "priceactualdctl plusFQS IS/OS from commandtrace; do not assumefake-stagebench equalsactualFQS",
     "FQ_HEAD": 1,
@@ -107,7 +107,7 @@
     "collectives": 584,
     "bad": 0,
     "basefoldmutantbad": 576,
-    "pending": "Corrected native scale bases fixture, parent all148stage nativepayload/permutation numerical gate, source-matched physical closure",
+    "pending": "Parent all148nativepayload/permutation gate and source-matched correctedscalephysicalclosure",
     "ranks": 4,
     "program_bounds_fault_checks": 4,
     "head_rank_offsets": [
@@ -115,6 +115,12 @@
       37984,
       75968,
       113952
+    ],
+    "selected_scale_bases": [
+      0,
+      96,
+      384,
+      768
     ]
   },
   "physical_pin_successor": {

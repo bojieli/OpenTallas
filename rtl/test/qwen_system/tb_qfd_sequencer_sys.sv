@@ -6,6 +6,8 @@ reg d_start=0; reg [17:0] d_token=151000,d_pos=0; reg [1:0] d_gen=0;
 wire d_done,d_drained,d_fault; wire [1:0] d_done_gen; wire [17:0] d_next_token;
 wire [31:0] d_next_val,d_cycles; wire [3:0] d_fault_code;
 wire [5:0] stage,st_layer,st_next_layer,st_crom;
+reg [8191:0] golden_dir; reg [1023:0] goldE[0:63],goldL[0:63],goldH[0:63];
+reg [63:0] goldDE[0:7],goldDL[0:7],goldDH[0:7];
 wire h_start=dut.h_start; wire [17:0] tp_token=dut.tp_token,tp_pos=dut.tp_pos;
 wire po_me_clk;
 wire r_po_me_clk;
@@ -238,8 +240,8 @@ always @(negedge clk) if(rst_n && check_commands) begin
   if(st_crom!==(starts==0 ? 63 : starts==37 ? 36 : starts-1))bad("constant stage");
   if(st_next_layer!==(starts<36 ? starts : 63))bad("next layer");
   expected_prog=starts==0?0:starts==37?2:1;
-  for(i=0;i<64;i=i+1)reference_master.prog_mem[i]=dut.sys_program(expected_prog,i);
-  for(i=0;i<8;i=i+1)reference_master.desc_mem[i]=dut.sys_descriptor(expected_prog,i);
+  for(i=0;i<64;i=i+1)reference_master.prog_mem[i]=expected_prog==0?goldE[i]:expected_prog==1?goldL[i]:goldH[i];
+  for(i=0;i<8;i=i+1)reference_master.desc_mem[i]=expected_prog==0?goldDE[i]:expected_prog==1?goldDL[i]:goldDH[i];
   starts=starts+1;
  end
  if(po_me_go)begin me_ops=me_ops+1;
@@ -318,6 +320,12 @@ always @(negedge clk) if(rst_n && check_commands) begin
  if(cycles>200000)begin $display("SYS_TIMEOUT stage=%0d seq=%0d core=%0d",stage,dut.u_seq.u_base.st,dut.u_ctrl.st);$fatal;end
 end
 initial begin
+ if(!$value$plusargs("GOLDEN_DIR=%s",golden_dir))$fatal(1,"need immutable golden template files");
+ $readmemh({golden_dir,"/program_E.hex"},goldE);$readmemh({golden_dir,"/program_L.hex"},goldL);$readmemh({golden_dir,"/program_H.hex"},goldH);
+ $readmemh({golden_dir,"/descriptor_E.hex"},goldDE);$readmemh({golden_dir,"/descriptor_L.hex"},goldDL);
+ case(DIE_RANK)
+ 0:$readmemh({golden_dir,"/descriptor_H0.hex"},goldDH);1:$readmemh({golden_dir,"/descriptor_H1.hex"},goldDH);
+ 2:$readmemh({golden_dir,"/descriptor_H2.hex"},goldDH);3:$readmemh({golden_dir,"/descriptor_H3.hex"},goldDH);endcase
  kv_write_drained=1;kv_ok=1;me_mem_ok=1;c_ready=1;pi_me_ready=1;pi_me_idle=1;pi_me_am_idx=17;pi_me_am_val=32'h3f800000;pi_me_am_any=1;pi_me_progress=16'hffff;
  pi_su_ready=1;pi_su_idle=1;pi_su_progress=16'hffff;pi_su_progress_rows=16'hffff;
  repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);

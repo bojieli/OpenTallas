@@ -1,0 +1,178 @@
+SYS_START stage=0 cycle=11
+SYS_STAGE_DONE stage=0 cycle=30
+SYS_START stage=1 cycle=32
+SYS_STAGE_DONE stage=1 cycle=1219
+SYS_START stage=2 cycle=1221
+SYS_BAD cycle=1234 stage=2 what=po_me_i_wbase
+SYS_BAD cycle=1234 stage=2 what=po_me_i_wcs
+SYS_BAD cycle=1304 stage=2 what=po_me_i_wbase
+SYS_BAD cycle=1304 stage=2 what=po_me_i_wcs
+SYS_BAD cycle=1847 stage=2 what=po_me_i_wbase
+SYS_BAD cycle=1847 stage=2 what=po_me_i_wcs
+SYS_BAD cycle=1863 stage=2 what=po_me_i_wbase
+SYS_BAD cycle=1863 stage=2 what=po_me_i_wcs
+SYS_STAGE_DONE stage=2 cycle=2408
+SYS_START stage=3 cycle=2410
+SYS_BAD cycle=2423 stage=3 what=po_me_i_wbase
+SYS_BAD cycle=2423 stage=3 what=po_me_i_wcs
+SYS_BAD cycle=2493 stage=3 what=po_me_i_wbase
+SYS_BAD cycle=2493 stage=3 what=po_me_i_wcs
+SYS_BAD cycle=3036 stage=3 what=po_me_i_wbase
+SYS_BAD cycle=3036 stage=3 what=po_me_i_wcs
+SYS_BAD cycle=3052 stage=3 what=po_me_i_wbase
+SYS_BAD cycle=3052 stage=3 what=po_me_i_wcs
+SYS_STAGE_DONE stage=3 cycle=3597
+SYS_START stage=4 cycle=3599
+SYS_BAD cycle=3612 stage=4 what=po_me_i_wbase
+SYS_BAD cycle=3612 stage=4 what=po_me_i_wcs
+SYS_BAD cycle=3682 stage=4 what=po_me_i_wbase
+SYS_STAGE_DONE stage=4 cycle=4786
+SYS_START stage=5 cycle=4788
+SYS_STAGE_DONE stage=5 cycle=5975
+SYS_START stage=6 cycle=5977
+SYS_STAGE_DONE stage=6 cycle=7164
+SYS_START stage=7 cycle=7166
+SYS_STAGE_DONE stage=7 cycle=8353
+SYS_START stage=8 cycle=8355
+SYS_STAGE_DONE stage=8 cycle=9542
+SYS_START stage=9 cycle=9544
+SYS_STAGE_DONE stage=9 cycle=10731
+SYS_START stage=10 cycle=10733
+SYS_STAGE_DONE stage=10 cycle=11920
+SYS_START stage=11 cycle=11922
+SYS_STAGE_DONE stage=11 cycle=13109
+SYS_START stage=12 cycle=13111
+SYS_STAGE_DONE stage=12 cycle=14298
+SYS_START stage=13 cycle=14300
+SYS_STAGE_DONE stage=13 cycle=15487
+SYS_START stage=14 cycle=15489
+SYS_STAGE_DONE stage=14 cycle=16676
+SYS_START stage=15 cycle=16678
+SYS_STAGE_DONE stage=15 cycle=17865
+SYS_START stage=16 cycle=17867
+SYS_STAGE_DONE stage=16 cycle=19054
+SYS_START stage=17 cycle=19056
+SYS_STAGE_DONE stage=17 cycle=20243
+SYS_START stage=18 cycle=20245
+SYS_STAGE_DONE stage=18 cycle=21432
+SYS_START stage=19 cycle=21434
+SYS_STAGE_DONE stage=19 cycle=22621
+SYS_START stage=20 cycle=22623
+SYS_STAGE_DONE stage=20 cycle=23810
+SYS_START stage=21 cycle=23812
+SYS_STAGE_DONE stage=21 cycle=24999
+SYS_START stage=22 cycle=25001
+SYS_STAGE_DONE stage=22 cycle=26188
+SYS_START stage=23 cycle=26190
+SYS_STAGE_DONE stage=23 cycle=27377
+SYS_START stage=24 cycle=27379
+SYS_STAGE_DONE stage=24 cycle=28566
+SYS_START stage=25 cycle=28568
+SYS_STAGE_DONE stage=25 cycle=29755
+SYS_START stage=26 cycle=29757
+SYS_STAGE_DONE stage=26 cycle=30944
+SYS_START stage=27 cycle=30946
+SYS_STAGE_DONE stage=27 cycle=32133
+SYS_START stage=28 cycle=32135
+SYS_STAGE_DONE stage=28 cycle=33322
+SYS_START stage=29 cycle=33324
+SYS_STAGE_DONE stage=29 cycle=34511
+SYS_START stage=30 cycle=34513
+SYS_STAGE_DONE stage=30 cycle=35700
+SYS_START stage=31 cycle=35702
+SYS_STAGE_DONE stage=31 cycle=36889
+SYS_START stage=32 cycle=36891
+SYS_STAGE_DONE stage=32 cycle=38078
+SYS_START stage=33 cycle=38080
+SYS_STAGE_DONE stage=33 cycle=39267
+SYS_START stage=34 cycle=39269
+SYS_STAGE_DONE stage=34 cycle=40456
+SYS_START stage=35 cycle=40458
+SYS_STAGE_DONE stage=35 cycle=41645
+SYS_START stage=36 cycle=41647
+SYS_STAGE_DONE stage=36 cycle=42834
+SYS_START stage=37 cycle=42836
+SYS_STAGE_DONE stage=37 cycle=42892
+SYS_CASE pos=0 starts=38 me=220 su=724 coll=73 cycles=42886 bad=288
+SYS_START stage=0 cycle=42905
+SYS_STAGE_DONE stage=0 cycle=42924
+SYS_START stage=1 cycle=42926
+SYS_STAGE_DONE stage=1 cycle=44113
+SYS_START stage=2 cycle=44115
+SYS_STAGE_DONE stage=2 cycle=45302
+SYS_START stage=3 cycle=45304
+SYS_STAGE_DONE stage=3 cycle=46491
+SYS_START stage=4 cycle=46493
+SYS_STAGE_DONE stage=4 cycle=47680
+SYS_START stage=5 cycle=47682
+SYS_STAGE_DONE stage=5 cycle=48869
+SYS_START stage=6 cycle=48871
+SYS_STAGE_DONE stage=6 cycle=50058
+SYS_START stage=7 cycle=50060
+SYS_STAGE_DONE stage=7 cycle=51247
+SYS_START stage=8 cycle=51249
+SYS_STAGE_DONE stage=8 cycle=52436
+SYS_START stage=9 cycle=52438
+SYS_STAGE_DONE stage=9 cycle=53625
+SYS_START stage=10 cycle=53627
+SYS_STAGE_DONE stage=10 cycle=54814
+SYS_START stage=11 cycle=54816
+SYS_STAGE_DONE stage=11 cycle=56003
+SYS_START stage=12 cycle=56005
+SYS_STAGE_DONE stage=12 cycle=57192
+SYS_START stage=13 cycle=57194
+SYS_STAGE_DONE stage=13 cycle=58381
+SYS_START stage=14 cycle=58383
+SYS_STAGE_DONE stage=14 cycle=59570
+SYS_START stage=15 cycle=59572
+SYS_STAGE_DONE stage=15 cycle=60759
+SYS_START stage=16 cycle=60761
+SYS_STAGE_DONE stage=16 cycle=61948
+SYS_START stage=17 cycle=61950
+SYS_STAGE_DONE stage=17 cycle=63137
+SYS_START stage=18 cycle=63139
+SYS_STAGE_DONE stage=18 cycle=64326
+SYS_START stage=19 cycle=64328
+SYS_STAGE_DONE stage=19 cycle=65515
+SYS_START stage=20 cycle=65517
+SYS_STAGE_DONE stage=20 cycle=66704
+SYS_START stage=21 cycle=66706
+SYS_STAGE_DONE stage=21 cycle=67893
+SYS_START stage=22 cycle=67895
+SYS_STAGE_DONE stage=22 cycle=69082
+SYS_START stage=23 cycle=69084
+SYS_STAGE_DONE stage=23 cycle=70271
+SYS_START stage=24 cycle=70273
+SYS_STAGE_DONE stage=24 cycle=71460
+SYS_START stage=25 cycle=71462
+SYS_STAGE_DONE stage=25 cycle=72649
+SYS_START stage=26 cycle=72651
+SYS_STAGE_DONE stage=26 cycle=73838
+SYS_START stage=27 cycle=73840
+SYS_STAGE_DONE stage=27 cycle=75027
+SYS_START stage=28 cycle=75029
+SYS_STAGE_DONE stage=28 cycle=76216
+SYS_START stage=29 cycle=76218
+SYS_STAGE_DONE stage=29 cycle=77405
+SYS_START stage=30 cycle=77407
+SYS_STAGE_DONE stage=30 cycle=78594
+SYS_START stage=31 cycle=78596
+SYS_STAGE_DONE stage=31 cycle=79783
+SYS_START stage=32 cycle=79785
+SYS_STAGE_DONE stage=32 cycle=80972
+SYS_START stage=33 cycle=80974
+SYS_STAGE_DONE stage=33 cycle=82161
+SYS_START stage=34 cycle=82163
+SYS_STAGE_DONE stage=34 cycle=83350
+SYS_START stage=35 cycle=83352
+SYS_STAGE_DONE stage=35 cycle=84539
+SYS_START stage=36 cycle=84541
+SYS_STAGE_DONE stage=36 cycle=85728
+SYS_START stage=37 cycle=85730
+SYS_STAGE_DONE stage=37 cycle=85786
+SYS_CASE pos=8191 starts=38 me=440 su=1448 coll=146 cycles=42886 bad=576
+SYS_BOUNDS_FAULT pass=1 code=2
+SEQUENCER_SYS_RESULT pass=0 cases=2 stages=76 me=440 su=1448 coll=146 bad=576
+[858230000] %Fatal: tb_qfd_sequencer_sys.sv:346: Assertion failed in tb_qfd_sequencer_sys: control/command mismatch
+%Error: rtl/test/qwen_system/tb_qfd_sequencer_sys.sv:346: Verilog $stop
+Aborting...
