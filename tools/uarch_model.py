@@ -12793,3 +12793,25 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def dsrom_mtp_seed_qs5f_candidate():
+    """Before-build sizing for minimum seed gate on exact selected native QS5f.
+
+    Parent baseline aligned experiment is historical QX9; this candidate has
+    exact pinnedfa27 source/params and does not inherit a closedphysical view.
+    """
+    return dict(adopted=False,source_commit='fa27bd60819f9bf61483d5605a02837fe6a34088',
+        native_master='ot_v41_rom_elem_q_qxpq_w10',NB=2,MTP=1,EARLY=1,FAST=1,PP=1,
+        QTIMING_FIX=1,QPIPE=1,QP_XS=1,QP_CAP=0,QP_P1=1,QP_CSAM=10,QZ=1,QZ_NS=8,QZ_NE=4,QY=1,QX=10,PQ=1,QW=0,QM=5,QS=5,
+        native_physical_closed=False,known_physical_FF_hold_ps=-111.3,
+        element_scope='one native NB2 pair, two releasedrows fullK15360, four sequentialaligned phases and LAT8actualFP32joins',
+        segment_K=[4096,4096,4096,3072],MACs=30720,MACs_per_issue_cycle=64,
+        weight_bytes_per_issue_cycle=64,ROM_boundary_bits_per_issue_cycle=548,
+        activation=dict(quantisers=2,blocks32=480,words_per_cycle=64,VM_bytes_per_cycle=256,buffer_bytes=15960),
+        collector=dict(root_storage_bits=256,FP32_add_operations=6,adder_instances=1,adder_LAT=8,minimum_serial_join_cycles=48),
+        partial_phase_fmt_fp32=[True,True],final_projection_rounding='BF16 once after balanced full root, before main_norm',
+        config_cycles=100,phase_quiet_fence_cycles=128,measured_complete_column_cycles=None,
+        latency_contribution='measure actualselectedminimum; wholematrix, HCmean, main_norm, rankgather and6position sharing remainunqualified',
+        storage=dict(logical8192x32B_rowbanks_per_rank=75,nativeNB2pairs_per_rank=38,physical4096macros_per_rank=152),
+        qualification=dict(whole_field_descriptor=False,parallel_engine_count=False,six_positions=False,new_collector_physical_closed=False))
