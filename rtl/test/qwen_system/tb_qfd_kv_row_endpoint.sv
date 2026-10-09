@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
-module tb_qfd_kv_row_endpoint;
+module tb_qfd_kv_row_endpoint #(parameter integer MUT=0);
  reg clk=0;always#5 clk=~clk;reg rst_n=0;reg[6:0]rr=0;
  reg[31:0]h_v=0,h_isk=0,h_tail=0,tile_credit_return=0;
  reg[63:0]h_need=0,h_sel0=0,h_sel1=0;reg[2047:0]h_id=0;
  reg[8191:0]h_data=0;reg[351:0]h_tile0=0,h_tile1=0;
  reg[223:0]h_loc0=0,h_loc1=0;reg[127:0]h_tail_lanes=0;
  wire[2:0]row_v,ack_v;wire[842:0]row_data;wire[212:0]ack_data;wire fault;
- ot_qfd_kv_row_endpoint #(.ENABLE(1)) dut(.*);
+ ot_qfd_kv_row_endpoint #(.ENABLE(1),.MUT_REPLAY(MUT)) dut(.*);
  reg[31:0]observed=0;integer ackcount=0,wordcount=0,cycle=0,slot,pc;
  reg[31:0]credit_pipe[0:23];reg[31:0]pending_credit;reg monitor=1;reg[63:0]want_id=1;
  always @(posedge clk)if(rst_n&&monitor)begin
@@ -20,7 +20,7 @@ module tb_qfd_kv_row_endpoint;
    if(ack_v[slot])begin
     pc=ack_data[slot*71+2+:5];
     if(ack_data[slot*71+7+:64]!==want_id||ack_data[slot*71+:2]!==2'b01)$fatal(1,"ack identity/mask");
-    if(observed[pc])$fatal(1,"duplicate head consumption while reverse ack in flight");
+    if(observed[pc])begin $display("NEG_DETECTED duplicate head consumption while reverse ack in flight");$fatal(1);end
     observed[pc]=1;ackcount=ackcount+1;
    end
   end

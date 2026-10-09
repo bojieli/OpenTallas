@@ -3,7 +3,7 @@
 // return an explicit ID-tagged acknowledgment through the real reverse link.
 // The PC FIFO may keep broadcasting the same head while the ack is in flight.
 module ot_qfd_kv_row_endpoint #(
- parameter integer ENABLE=0,STACK=0,ROW=0,DEPTH=8
+ parameter integer ENABLE=0,STACK=0,ROW=0,DEPTH=8,MUT_REPLAY=0
 )(
  input wire clk,rst_n,input wire [6:0] rr,
  input wire [31:0] h_v,input wire [63:0] h_need,input wire [2047:0] h_id,
@@ -25,7 +25,7 @@ module ot_qfd_kv_row_endpoint #(
       done[0][n]!=done[1][n]||done[0][n]!=done[2][n]||
       seen[0][n]!=seen[1][n]||seen[0][n]!=seen[2][n])bad=1;
    if(h_v[n]&&seen[0][n]&&h_id[n*64+:64]<last_id[0][n])bad=1;
-   if(seen[0][n]&&h_id[n*64+:64]==last_id[0][n])eligible[n*2+:2]=h_need[n*2+:2]&~done[0][n];
+   if(MUT_REPLAY==0&&seen[0][n]&&h_id[n*64+:64]==last_id[0][n])eligible[n*2+:2]=h_need[n*2+:2]&~done[0][n];
   end
  end
  reg poisoned;wire core_fault;wire [63:0] grants;
