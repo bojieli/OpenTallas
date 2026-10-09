@@ -14106,3 +14106,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+def qwen_r25_su_quarter_contract_model():
+    """Real N256/M64 c12 quarters and finite native service calendar."""
+    from tools.qwen_r25_su_quarter_model import model
+    return model()
+
+
