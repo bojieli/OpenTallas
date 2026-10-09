@@ -1,0 +1,38 @@
+{
+ "variant": "recut",
+ "params": "INPUT_HOLD_SEATS=4,CG=0",
+ "cases": {
+  "positive": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=3.332 max=12.495 mean=6.591 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "mutant_input_seat": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[7048000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=17 ref=120000c000404010 shadow=1330100040404010"
+   ]
+  }
+ },
+ "pass": true,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "82a708f5ea85770e584126b02a509f337d489916",
+ "dirty": false
+}

@@ -50,3 +50,20 @@ The actual PVE1 full transaction positive (`positive_a3.log`, clean pinned
 configuration assertions, actual-element124422cycles,232partials,4288issues,
 and TXN MATCH456 with no faults. Stuck-sign negative is still running;
 this positive receipt alone does not authorize routing or adoption.
+
+The final complete gate is PASS (`terminal_a3.json`, source
+82a708f5ea85770e584126b02a509f337d489916, dirty=false). The enabled-seat
+stuck-sign negative compiled successfully and fails with an actual numerical
+DIFF TXN at lane0/transaction17: reference120000c000404010 versus
+shadow1330100040404010, then Fatal/returncode1 (`mutant_a3.log`). It is
+not a compile-failure or generic-crash receipt. Final driver exit0 and
+resource report are retained in `gate_a3.log`/`gate_a3.exit`; the source-
+pinned unified component accounting is retained in `model_a3.json`.
+
+Confirmed owner review H7 permits Claude exclusive intake now, carrying
+same-route setup ECO for the separate real TT R2R miss: existing ORFS
+setup repair enabled, SETUP_SLACK_MARGIN=15ps. Original route target730ps,
+headline833.333ps,60/25ps uncertainty and actualTT/FF I/O policy remain
+unchanged. New CTS topology must receive fresh actual-corner insertion
+calibration. Intake request submitted to Claude through shared phys-intake;
+no physical route has been self-submitted and no closure/adoption claimed.

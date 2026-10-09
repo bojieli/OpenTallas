@@ -1,0 +1,25 @@
+positive ok ['PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448', 'PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350', 'PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418', 'TXN LAG ns min=3.332 max=12.495 mean=6.591 n=456']
+mutant_input_seat ok ['[7048000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=17 ref=120000c000404010 shadow=1330100040404010']
+	Command being timed: "python3 tools/s81/bf_txn_bench.py --variant recut --level 2 --params INPUT_HOLD_SEATS=4,CG=0 --jobs 8 --work /srv/opentallas-scratch/codex/s81-bf-inhold-cx-20261009/gate_a3/exact --no-default-mutants --mutant mutant_input_seat=BF_INPUT_SEAT_MUTANT"
+	User time (seconds): 6583.25
+	System time (seconds): 59.64
+	Percent of CPU this job got: 242%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 45:33.73
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2523228
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 226
+	Minor (reclaiming a frame) page faults: 11520006
+	Voluntary context switches: 1126
+	Involuntary context switches: 109518
+	Swaps: 0
+	File system inputs: 33656
+	File system outputs: 2135864
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
