@@ -1349,7 +1349,10 @@ SS_REACH_UM = 504.0
 def margin_lint(m):
     import fp_margin_lint as FPL
     # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
-    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+    # s81-gen 2026-10-09: data buses only.  Clock trunks / resets / column clock trees fan out from sp_collective (the
+    # PLL) to every station's ck: as 'segments' they gave 52,988 false 9-13 mm reach violations on the layer1 die.
+    data = [b for b in m['buses'] if b[1] not in HOP_SKIP]
+    return FPL.die_margin(m['insts'], data, MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
                           edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
 
 
