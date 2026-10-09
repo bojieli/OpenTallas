@@ -6,22 +6,26 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-def model(strip_side_um=600.0, pin_pitch_um=0.096, pin_layers=2, usable_edge_fraction=0.75):
-    if strip_side_um <= 0 or pin_pitch_um <= 0 or pin_layers < 1 or not 0 < usable_edge_fraction <= 1:
+def model(strip_side_um=600.0, pin_pitch_um=0.096, pin_layers=2, usable_edge_fraction=0.75,
+          strip_width_um=None, strip_height_um=None):
+    width = strip_side_um if strip_width_um is None else strip_width_um
+    height = strip_side_um if strip_height_um is None else strip_height_um
+    if width <= 0 or height <= 0 or strip_side_um <= 0 or pin_pitch_um <= 0 or pin_layers < 1 or not 0 < usable_edge_fraction <= 1:
         raise ValueError('positive dimensions/layers and usable edge fraction in (0,1] required')
     measured = json.loads((ROOT/'results/arch/emb_hbm_20261008/takeover/summary.json').read_text())
     die = json.loads((ROOT/'results/arch/emb_hbm_20261008/r21c_die.json').read_text())
     replicas = dict(gateway=1, strip=4, controller=128, pcport=128)
-    frames = dict(gateway_hub=[567.216,567.216], strip=[strip_side_um,strip_side_um],
+    frames = dict(gateway_hub=[567.216,567.216], strip=[width,height],
                   controller=[247.536,370.44], pcport=[116.64,116.64])
     demand = 32*(258+1)
-    capacity = int(strip_side_um/pin_pitch_um*pin_layers*usable_edge_fraction)
+    capacity = int(height/pin_pitch_um*pin_layers*usable_edge_fraction)
+    bottom_capacity = int(width/pin_pitch_um*pin_layers*usable_edge_fraction)
     paths = ['results/arch/emb_hbm_20261008/takeover/summary.json',
              'results/arch/emb_hbm_20261008/r21c_die.json']
     paths += ['rtl/qwen_sys/emb_hbm_20261008/'+p.name
               for p in sorted((ROOT/'rtl/qwen_sys/emb_hbm_20261008').glob('*.sv'))]
     paths += ['physical/qwen_die_masters/cfg/'+p+'.env' for p in
-              ('qfd_hub_emb','qfd_ctrl_emb_00','qfd_emb_pcport','qfd_emb_strip','qfd_emb_strip_w600')]
+              ('qfd_hub_emb','qfd_ctrl_emb_00','qfd_emb_pcport','qfd_emb_strip','qfd_emb_strip_w600','qfd_emb_strip_narrow96')]
     return dict(schema='opentallas.qwen.embedding_hbm_closure.v1', adopted=False, physical_closed=False,
         source_sha256={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in paths},
         MACs_per_cycle=0, compute_intensity_MAC_per_byte=0,
@@ -41,12 +45,14 @@ def model(strip_side_um=600.0, pin_pitch_um=0.096, pin_layers=2, usable_edge_fra
         routing=dict(pin_pitch_um=pin_pitch_um,pin_layers=pin_layers,usable_edge_fraction=usable_edge_fraction,
                      strip_left_demand_tracks=demand,strip_left_capacity_tracks=capacity,
                      strip_left_planned_fit=demand<=capacity,
+                     strip_bottom_demand_tracks=1050,strip_bottom_capacity_tracks=bottom_capacity,
+                     strip_bottom_planned_fit=1050<=bottom_capacity,
                      legacy_strip_side_um=414.72,
                      legacy_strip_capacity_tracks=int(414.72/pin_pitch_um*pin_layers*usable_edge_fraction),
                      legacy_strip_planned_fit=False,
                      assumptions='Conservative pin-side planning only; verify actual layer access and pin placement in route. Die corridors and 100um final boundary wires remain OPEN.'),
-        area=dict(frames_um=frames,strip_total_frame_mm2=4*strip_side_um**2/1e6,
-                  strip_frame_delta_vs_414p72_mm2=4*(strip_side_um**2-414.72**2)/1e6,
+        area=dict(frames_um=frames,strip_total_frame_mm2=4*width*height/1e6,
+                  strip_frame_delta_vs_414p72_mm2=4*(width*height-414.72**2)/1e6,
                   existing_r21c_die_mm2=die['die_mm2'],existing_reticle_margin_mm2=die['margin_mm2'],
                   freed_embedding_reservation_mm2=11.046,utilisation_target=0.55,
                   slot_fit='OPEN: r21c uses historical qfd_kvc slots; strip/controller/pcport successors need real abstract placement. Freed north IO-band area does not establish east/west shoreline slot fit.'),
