@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def qwen_system_physical_model():
+    """Q1 CROM48 and Q2 full-context control sizing, no speculative route credit."""
+    from uarch_qwen_system_physical import model
+    return model()

@@ -161,7 +161,11 @@ module ot_qfd_crom #(
     generate
         for (g = 0; g < WC; g = g + 1) begin : g_w
             for (d = 0; d < 2; d = d + 1) begin : g_d
+                `ifdef SYNTHESIS
+                ot_rom_4096x266_m8 u_m (.clk(clk),
+`else
                 ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_w_c%0d_d%0d", g, d))) u_m (.clk(clk),
+`endif
                     .ce_in(w_ce[g] && w_row[g*RW + 12] == d[0]), .addr_in(w_row[g*RW +: 12]),
                     .rd_out(w_rd[(g*2 + d)*266 +: 266]));
                 always @(posedge clk) w_cap[(g*2 + d)*256 +: 256] <= w_rd[(g*2 + d)*266 +: 256];
@@ -169,7 +173,11 @@ module ot_qfd_crom #(
         end
         for (g = 0; g < NC; g = g + 1) begin : g_n
             for (d = 0; d < 2; d = d + 1) begin : g_d
+                `ifdef SYNTHESIS
+                ot_rom_4096x266_m8 u_m (.clk(clk),
+`else
                 ot_rom_4096x266_m8 #(.INSTANCE($sformatf("crom_n_c%0d_d%0d", g, d))) u_m (.clk(clk),
+`endif
                     .ce_in(n_ce[g] && n_row[g*RW + 12] == d[0]), .addr_in(n_row[g*RW +: 12]),
                     .rd_out(n_rd[(g*2 + d)*266 +: 266]));
                 always @(posedge clk) n_cap[(g*2 + d)*256 +: 256] <= n_rd[(g*2 + d)*266 +: 256];
