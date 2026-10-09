@@ -1,7 +1,16 @@
 """Streaming immutable released-stage inventory; never modifies source images."""
 import argparse,hashlib,json,time
 from pathlib import Path
-import hdc_qwen_fullshape_isa_w12 as ISA
+import hdc_isa as ISA
+
+def decode_instruction(word):
+    # Same two reserved me_row0 high bits as the fullshape ISA, without
+    # importing the unrelated full model/program builder during an inventory.
+    fields=ISA.decode(word)
+    offset,width=ISA.LAYOUT['me_row0']
+    high=offset+width+ISA.LAYOUT['me_amc'][1]
+    fields['me_row0']|=((word>>high)&3)<<16
+    return fields
 
 def file_record(path):
     sha=hashlib.sha256();count=0;lo=None;hi=0;total=0
@@ -26,6 +35,7 @@ def audit(root,out):
         source_contract='original released stage images; resident packing not adopted',
         stage_count=37,embedding_source='separate HBM contract',stages=[],
         code_capacity_words=5*4096,scale_capacity_words=48*4096,
+        capacity_basis='code native5banks; scale proposed48banks needs actual physical inventory join',
         remaining=['derive an exact resident address permutation for the actual pinned ISA',
                    'prove same released payload and golden reduction order before selecting compact compiler'])
     # Progress is incremental so a partial inventory remains reviewable.
@@ -39,7 +49,7 @@ def audit(root,out):
             event=dict(stage=name,die=die,file=fname,**entry)
             progress.write(json.dumps(event)+'\n');progress.flush()
             print(f'PINNED {name} die{die} {fname} words={entry["words"]} width={entry["hex_width_min"]}:{entry["hex_width_max"]} bytes={entry["bytes"]}',flush=True)
-          stage['instructions']=[ISA.decode_instruction(int(s,16)) for s in (directory/'program.hex').read_text().split()]
+          stage['instructions']=[decode_instruction(int(s,16)) for s in (directory/'program.hex').read_text().split()]
           record['stages'].append(stage)
     totals={}
     for die in range(4):
