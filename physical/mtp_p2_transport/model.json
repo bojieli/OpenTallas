@@ -70,7 +70,7 @@
  },
  "routing": {
   "tracks": 512,
-  "channel_capacity": null,
+  "channel_capacity": "two vertical routing layers,50percent usable,80tracks reserved for PDN/control; actual placement cut lint required",
   "pin_faces": {
    "left_bits": 1212,
    "right_bits": 671,
@@ -82,9 +82,9 @@
    "columns": 3,
    "rows": 4,
    "x_um": [
-    38,
-    146,
-    254
+    27,
+    152,
+    277
    ],
    "y_um": [
     70,
@@ -93,10 +93,12 @@
     238
    ],
    "halo_um": 3,
-   "minimum_column_gap_um": 13.176,
+   "minimum_column_gap_um": 30.176,
    "minimum_row_gap_um": 14.96,
    "qualification": "precise site/M4 snap; row and column gaps>=12um and own actual margin lint"
-  }
+  },
+  "intercolumn_bits_planning": 544,
+  "intercolumn_tracks_planning_after_reserve": 548
  },
  "area": {
   "A_buffer_macro_inventory": 12,
