@@ -245,7 +245,8 @@ def _rst(w: str) -> str:
     return ", .RESET(1)" if w in ("1", "8", "16") else ""
 
 
-def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int = 0, gq: int = 0) -> str:
+def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int = 0, gq: int = 0,
+              dcu_me=None, duc_me=None) -> str:
     """ot_qwen_rom_core_part: the core re-wired across the three die masters with DCU / DUC pin stations and the
     split-exact compensation.  DCU = DUC = 0 (any COMP) is cycle-identical to ot_qwen_rom_core."""
     params, port_text = header(core)
@@ -260,9 +261,17 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
          "// qfd_sp_su64_sfu = ot_hdc_vstream_rt) with DCU / DUC pin stations and the split-exact compensation",
          "// (ot_qfd_split_exact.sv).  Same ports as ot_qwen_rom_core.",
          params.replace("module ot_qwen_rom_core #(", "module ot_qwen_rom_core_part #(", 1)
-         + f",\n    parameter integer DCU = {dcu},\n    parameter integer DUC = {duc},\n    parameter integer COMP = {comp}",
+         + f",\n    parameter integer DCU = {dcu},\n    parameter integer DUC = {duc},\n    parameter integer COMP = {comp}"
+         + ("" if dcu_me is None and duc_me is None else
+            f",\n    parameter integer DCU_ME = {dcu if dcu_me is None else dcu_me},"
+            f"\n    parameter integer DUC_ME = {duc if duc_me is None else duc_me}"),
          ") (", port_text, ");",
          "    localparam integer RT = DCU + DUC;   // c_me_clk = the controller's po_me_clk: the engine's gated clock"]
+    me_split = not (dcu_me is None and duc_me is None)    # kv-die 10-09: the die's ME issue / status relay chains (tt_si / tt_so)
+    if me_split:
+        L.append("    localparam integer RT_ME_D = DCU_ME + DUC_ME;")
+    rt_me = "RT_ME_D" if me_split else "RT"
+    dcu_m, duc_m = ("DCU_ME", "DUC_ME") if me_split else ("DCU", "DUC")
     dir_ports = {ex.split("[")[0] for _, ex, k, _ in ME + SU if k in ("dir_o", "dir_i")}
     for unit, table in (("me", ME), ("su", SU)):
         for p, ex, k, w in table:
@@ -304,14 +313,14 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
     if gq:
         # kv-die GO QUEUES (rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_gq.sv): ready = a free unit-side entry
         L += ["    wire [3:0] c_me_popc, u_me_popc, c_su_popc, u_su_popc;",
-              f"    ot_qfd_issue_shell_gq #(.RT_ME(RT), .RT_SU(RT), .GQ({gq})) u_shell (.clk(clk), .rst_n(rst_n),",
+              f"    ot_qfd_issue_shell_gq #(.RT_ME({rt_me}), .RT_SU(RT), .GQ({gq})) u_shell (.clk(clk), .rst_n(rst_n),",
               "        .me_go(c_me_go), .su_go(c_su_go), .me_en(me_clk_en), .me_amax(c_me_i_amax),",
               "        .d_me_idle(c_me_idle), .d_me_progress(c_me_progress), .d_me_popc(c_me_popc),",
               "        .d_su_idle(c_su_idle), .d_su_progress(c_su_progress), .d_su_rows(c_su_progress_rows), .d_su_popc(c_su_popc),",
               "        .c_me_ready(s_me_ready), .c_me_idle(s_me_idle), .c_me_progress(s_me_progress),",
               "        .c_su_ready(s_su_ready), .c_su_idle(s_su_idle), .c_su_progress(s_su_progress), .c_su_rows(s_su_progress_rows));"]
     else:
-      L += ["    ot_qfd_issue_shell #(.RT_ME(RT), .RT_SU(RT), .COMP(COMP)) u_shell (.clk(clk), .rst_n(rst_n),",
+      L += [f"    ot_qfd_issue_shell #(.RT_ME({rt_me}), .RT_SU(RT), .COMP(COMP)) u_shell (.clk(clk), .rst_n(rst_n),",
             "        .me_go(c_me_go), .su_go(c_su_go), .me_en(me_clk_en), .su_sfu(c_su_i_sfu), .me_amax(c_me_i_amax),",
             "        .d_me_ready(c_me_ready), .d_me_idle(c_me_idle), .d_me_progress(c_me_progress),",
             "        .d_su_ready(c_su_ready), .d_su_idle(c_su_idle), .d_su_active(c_su_rt_active), .d_su_inflight(c_su_rt_inflight),",
@@ -328,9 +337,9 @@ def emit_part(core: str, dcu: int = 0, duc: int = 0, comp: int = 1, su_ml: int =
         L.append(f"    ot_hdc_delay #(.W({w}), .D({d}){rst}) u_{name} (.clk({clk}), .rst_n(rst_n), .d({src}), .q({dst}));")
     for p, ex, k, w in ME:
         if k == "out" and p != "clk":
-            stn(f"sd_me_{p}", w, "DCU", "c_me_clk", f"c_me_{p}", f"u_me_{p}", ", .RESET(1)" if p == "go" else "")
+            stn(f"sd_me_{p}", w, dcu_m, "c_me_clk", f"c_me_{p}", f"u_me_{p}", ", .RESET(1)" if p == "go" else "")
         elif k == "in" and p not in ME_LOCAL:
-            stn(f"su_me_{p}", w, "DUC", "c_me_clk", f"u_me_{p}", f"c_me_{p}", _rst(w))
+            stn(f"su_me_{p}", w, duc_m, "c_me_clk", f"u_me_{p}", f"c_me_{p}", _rst(w))
     for p, ex, k, w in SU:
         if k == "out" and p != "va_q":
             stn(f"sd_su_{p}", w, "DCU", "clk", f"c_su_{p}", f"u_su_{p}", ", .RESET(1)" if p == "go" else "")

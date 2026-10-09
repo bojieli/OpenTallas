@@ -614,6 +614,19 @@ def case(m, work):
         F.masters, F.port_widths = saved
     run = (work / 'run.tcl').read_text()
     (work / 'run_pdn.tcl').write_text((work / 'run_pa.tcl').read_text())
+    # the HBM PHY macros' own M4 power rails (the KV die's four PHY bands): a macro grid that straps them to M8 / M9,
+    # so the PG check sees them connected (die_kv2..4: 1,000 PSM-0038 unconnected M4 shapes over x 20.8 - 853.3 um)
+    (work / 'pdn.tcl').write_text((work / 'pdn.tcl').read_text() + '''
+set phy_cells {}
+foreach mst [[ord::get_db] getLibs] { foreach c [$mst getMasters] { if {[string match ot_hbm3e_phy* [$c getName]]} { lappend phy_cells [$c getName] } } }
+if {[llength $phy_cells]} {
+  define_pdn_grid -macro -cells $phy_cells -halo {0 0 0 0} -voltage_domains {CORE} -name {phy}
+  add_pdn_stripe -grid {phy} -layer {M8} -width {0.48} -pitch {2.88} -offset {1.0}
+  add_pdn_stripe -grid {phy} -layer {M9} -width {0.48} -pitch {2.88} -offset {1.0}
+  add_pdn_connect -grid {phy} -layers {M4 M8}
+  add_pdn_connect -grid {phy} -layers {M8 M9}
+}
+''')
     man.update(die='qwen_kv', die_um=[m['die']['w'], m['die']['h']], generator='tools/qwen_kv_die/kv_die.py')
     (work / 'manifest.json').write_text(json.dumps(man, indent=1))
     return man
