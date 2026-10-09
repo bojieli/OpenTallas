@@ -14512,6 +14512,36 @@ def hbm_expert_steering_model():
     from hbm_expert_steering_model import model
     return model()
 
+def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24,
+                                  depth=512, ports=8):
+    """Closure successor: four-edge paced admission and pipelined feedback."""
+    record = payload_bits + seq_bits + session_bits
+    chunks = (record + 255) // 256
+    macros = ((chunks * 266 + 255) // 256) * (depth // 128)
+    return dict(design_applicability={'Qwen3-8B ROM': False,
+        'DeepSeek-V4.1 ROM': False, 'Qwen3-8B HBM': True,
+        'DeepSeek-V4.1 HBM': True}, macs_per_cycle=0,
+        payload_bits=payload_bits, record_bits=record, depth=depth,
+        replicas=ports, admission_interval_cycles=4,
+        normal_forward_added_cycles_min=1, normal_forward_added_cycles_max=4,
+        forward_bits_per_cycle=record/4,
+        reverse_bits_per_cycle=seq_bits+session_bits+1,
+        SRAM_port_bytes_per_cycle_peak=record/8,
+        SRAM_port_bytes_per_cycle_normal_mean=record/32,
+        SRAM_macros_per_port=macros, SRAM_macros_per_die=macros*ports,
+        SRAM_area_per_port_um2=macros*3891.57696,
+        pathfinding_slot_um=[690,460], slot_area_per_die_um2=690*460*ports,
+        macro_utilization=macros*3891.57696/(690*460),
+        payload_register_bits_per_port=2*payload_bits,
+        feedback_latency_cycles=4, replay_SRAM_read_latency_cycles=4,
+        serial_token_cost='For N framed records on a contended hop, '
+            'service is 4*N stream edges plus 1..4 entry edges; '
+            'actual hop/FEC/ACK round trip must be composed before adoption.',
+        routing_tracks_required=record*2+seq_bits+session_bits+1,
+        routing_capacity_checked=False, actual_pin_budget_known=False,
+        physical_qualified=False, default_enabled=False)
+
+
 def hbm_link_retry_model(payload_bits=551, seq_bits=12, session_bits=16,
                          ports=8, rtt_cycles=None, depth=None):
     """RQ-HS7 go-back-N sizing. RTT must include real relay/FEC/ACK path.
