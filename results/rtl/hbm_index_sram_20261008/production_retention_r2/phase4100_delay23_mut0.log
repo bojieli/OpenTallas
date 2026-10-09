@@ -1,0 +1,7 @@
+IKS_TIMED rep=0 phase_ns=4100 credit_delay=23 lines=1368 bytes=186048 last_line_ns=2692.096 drain_ns=2770.432 logical_tbs=0.069109
+IKS_TIMED rep=1 phase_ns=4100 credit_delay=23 lines=1368 bytes=186048 last_line_ns=2622.144 drain_ns=2700.480 logical_tbs=0.070953
+PASS_HBM_SVC_IKS_TIMED
+- /srv/opentallas-scratch/codex/hbm-index-sram-20261008/production-r2/src/rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv:68: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 10us; walltime 0.787 s; speed 12.526 us/s
+- Verilator: cpu 0.787 s on 1 threads; allocated 9 MB
