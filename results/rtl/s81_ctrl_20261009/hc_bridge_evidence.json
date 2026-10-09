@@ -1,0 +1,39 @@
+{
+  "status": "HC_NATIVE_COMMAND_COMPONENT_PASS_NOT_INTEGRATION",
+  "host": "ot-agidock128",
+  "admission": "admit.sh2",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ctrl/ot_s81_hc_cmd_bridge.sv": "2232438c44bd5080973a1ccf3b55cd2018265135a0d374618d2b1f644082ccef",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv": "9fbaad7358eb6a1924f3e4318638f9f3513fa294ca3077320fb3014e8a65ff98",
+    "rtl/dsrom_sys/s81_ctrl/test/run_hc_cmd_bridge.sh": "5656f500d6b28c9233e89643aadbf41f8ad051ae26f43f11fd8d73aa94ff3d1c"
+  },
+  "native_producer_commit": "308a0500e",
+  "native_producer_sha256": "74e53b90f9bf320c2e2ed70001382248b36ffa7843aa7c832f0ba41a1e7cacfa",
+  "native_source": "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+  "shape": {
+    "captures": 3,
+    "dimensions_per_capture": 1280,
+    "input_beats_per_capture": 160,
+    "native_sram_macros": 3,
+    "seed_frames": 120
+  },
+  "verdict": {
+    "commands": 3,
+    "done_returns": 3,
+    "cycles": 16609,
+    "all120_meanframes_exact": true
+  },
+  "negative_gates": [
+    "orphan completion rejected",
+    "wrong user completion rejected without credit",
+    "capture3 descriptor rejected"
+  ],
+  "immutable_initial_failure": "/srv/opentallas-scratch/codex/ds-control/hc-bridge-test/orphan.log: bench unexpectedfault assertion fired on expected rejected orphan; v2 fixes only benchguard",
+  "remote_artifacts": "/srv/opentallas-scratch/codex/ds-control/hc-bridge-test-v2",
+  "scope": "Real named native command and physical SRAM-commit completion of actual HC producer, synthetic fullshape mean reference. Existing arithmetic engine/storage unmodified. No production VM reader or stage-DAG binding claim.",
+  "remaining": [
+    "actual H native NP8 sharedslot arbiter and row map",
+    "compiler capture nodes at inputs L37/38/39",
+    "SS/FF contextual closure and model composition"
+  ]
+}

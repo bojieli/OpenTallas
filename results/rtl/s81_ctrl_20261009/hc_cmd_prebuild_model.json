@@ -1,0 +1,21 @@
+{
+ "status":"PREBUILD_MODEL_NOT_ADOPTED",
+ "block":"ot_s81_hc_cmd_bridge",
+ "macs_per_cycle":0,
+ "replicas_per_tp_rank":1,
+ "native_command_signals":{"capture":2,"user":10,"position":21,"epoch":4,"valid":1,"ready":1},
+ "generic_context_bits":84,
+ "completion_bits":8,
+ "descriptor_arg24":"capture[1:0],epoch[5:2],reserved[23:6]=0; generic op7 remains job identity, never native opcode",
+ "ownership_storage_bits":45,
+ "output_storage_bits":9,
+ "control_storage_bits":2,
+ "input_bytes_per_cycle":0,
+ "boundary_bits_per_cycle":{"generic_cmd":84,"native_cmd_named":38,"native_done_identity":37,"generic_done":9},
+ "max_accepted_native_captures":1,
+ "latency_cycles":{"dispatch_added":0,"done_after_native_sram_commit":1},
+ "token_contribution_cycles":3,
+ "dependency":"Native HC capture_done must assert only after the40th protected512bit meanframe commits; match capture,user,position,epoch. VM input reader and exact H layout/NP8 slot remain separate required endpoints.",
+ "slot_fit":"56bits control state beside HC endpoint; no new memory/network ports. Synthesized area and SS/FF contextual constraints still required.",
+ "gate":"Actual full160 eightdimension inputbeats per capture, three real native producer captures; old/wrongidentity completion and malformed descriptor reject. No synthetic done proof qualifies producer."
+}
