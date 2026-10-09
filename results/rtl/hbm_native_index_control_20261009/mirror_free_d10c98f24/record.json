@@ -1,0 +1,129 @@
+{
+  "source_sha256": "623ed5bae8891cc41050b7c0620419ac9873955c77c77d4115d6b3d61ec4ce2a",
+  "bench_sha256": "85ad9f7a7248a24a5af1fca55d4b93deaff0ef39b79d0d9e1815515809b8fa62",
+  "checks": {
+    "positive": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive/gate.vvp"
+      ]
+    },
+    "positive_prefetch": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive_prefetch/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive_prefetch/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/positive_prefetch/gate.vvp"
+      ]
+    },
+    "negative_prefetch_identity": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_identity/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_identity/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_identity/gate.vvp",
+        "+BAD_PREFETCH"
+      ]
+    },
+    "negative_prefetch_zero": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_zero/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_zero/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_zero/gate.vvp",
+        "+BAD_BLOCKS_ZERO"
+      ]
+    },
+    "negative_prefetch_max": {
+      "compile_returncode": 0,
+      "run_returncode": 0,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-Ptb_hbm_native_index_control.PREFETCH_CASE=1",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_max/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_max/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/negative_prefetch_max/gate.vvp",
+        "+BAD_BLOCKS_MAX"
+      ]
+    },
+    "generation_drop": {
+      "compile_returncode": 0,
+      "run_returncode": 1,
+      "passed": true,
+      "argv": [
+        "iverilog",
+        "-g2012",
+        "-s",
+        "tb_hbm_native_index_control",
+        "-o",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/generation_drop/gate.vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/generation_drop/control.sv",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/rtl/test/hbm_accel/tb_hbm_native_index_control.sv"
+      ],
+      "run_argv": [
+        "vvp",
+        "/srv/opentallas-scratch/codex/hbm-index-control-d10-r1/generation_drop/gate.vvp"
+      ]
+    }
+  },
+  "passed": true,
+  "scope": "24 dynamic frames,48 full342b masks,24 source starts/receipts; publication stalls and retained return debt. Control only; production query/VM/TU joins and physical qualification remain incomplete."
+}
