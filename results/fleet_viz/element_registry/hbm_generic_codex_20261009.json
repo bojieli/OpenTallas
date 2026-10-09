@@ -459,12 +459,19 @@
       },
       "exactness": {
         "positive": {
-          "status": "PENDING_VERILATOR_EXACT_GATE",
-          "evidence": []
+          "status": "PASS_COMPONENT_400_RUNS_323338_CYCLES_3398_STEPS_4704_EMITS",
+          "evidence": [
+            "results/rtl/hgi_token18_20261009/control/positive_low.log",
+            "results/rtl/hgi_token18_20261009/control/positive_high.log"
+          ],
+          "receipt_commit": "3679f4e88"
         },
         "negative": {
-          "status": "PENDING_SOURCE_MATCHED_MUTANTS",
-          "evidence": []
+          "status": "PASS_COMPILED_ROLLBACK_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hgi_token18_20261009/control/rollback_mut.log"
+          ],
+          "receipt_commit": "3679f4e88"
         },
         "simulator_conformance": {
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
@@ -473,7 +480,7 @@
         }
       },
       "physical": {
-        "status": "NOT_SUBMITTED",
+        "status": "SYNTHESIS_FLOORPLAN_PREFLIGHT_NO_WATCHED_PAIR_SUBMISSION",
         "jobs": [],
         "corners": {},
         "evidence": [],
@@ -492,7 +499,7 @@
       "dependencies": [
         "host token/history/command/completion widths updated together",
         "source c644518bf port manifest",
-        "Icarus suspicion preserved; no positive claim until real gate"
+        "original Icarus suspicion preserved; current Verilator lockstep passes, no end-to-end CP claim"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -715,6 +722,147 @@
         "real new port consumers and producers must be wired; no implicit constants/cfg/folds/truncation",
         "Claude R25G geometry preserved; reservations missing for TOPK, generic paths, PLL/host/KV andINT8 growth",
         "strict wrapper regeneration and die_top_lint + remote elaboration/connectivity before adoption"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_coll_row_formatter",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_collective",
+      "description": "Record-controlled ordered row gather formatter, existing reader protocol, default off",
+      "source": {
+        "commit": "42ee27e47",
+        "paths": [
+          "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED",
+        "source_commit": "edb9b5b35",
+        "evidence": [
+          "tools/uarch_model.py:hgi_collective_row_formatter_model"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_COMPONENT_30_CALLS_12925_ROWS_411340_WORDS",
+          "evidence": [
+            "results/rtl/hgi_collective_row_20261009/receipt.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_THREE_COMPILED_MUTANTS_DETECTED",
+          "evidence": [
+            "results/rtl/hgi_collective_row_20261009/receipt.json"
+          ]
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "FOUR_PD55_60_PAIR_SPECS_PREPARED_NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+      },
+      "dependencies": [
+        "real decoder ROW_GATHER metadata to start",
+        "actual I list producer",
+        "actual reader request/response/written flag",
+        "actual result store/multicast consumer",
+        "normative simulator vector ABI and DS payload/isolation gate",
+        "boundary lint running; no physical job claimed"
+      ],
+      "integration": {
+        "status": "INCOMPLETE",
+        "evidence": [
+          "results/arch/hgi_die_integration_20261009/port_delta.json"
+        ]
+      }
+    },
+    {
+      "element": "hgi_idx_ds_dispatch",
+      "target": "generic HBM accelerator (Qwen3-8B + DeepSeek-V4.1 Flash)",
+      "owner": "generic_index_decode",
+      "description": "Normative IDX SELECT bypass to unchanged DS native parallel K6 mechanism",
+      "source": {
+        "commit": "d2086a9af",
+        "paths": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_ds_dispatch.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/generic_20261009/ot_hgi_idx_ds_dispatch.sv"
+        ]
+      },
+      "model": {
+        "status": "PENDING_DS_FULL_SLOT_AND_CYCLE_LOCKSTEP_PRICE",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "DS_NATIVE_CYCLE_LOCKSTEP_RUNNING",
+          "evidence": []
+        },
+        "negative": {
+          "status": "DROP_LAST_MUTANT_RUNNING",
+          "evidence": []
+        },
+        "simulator_conformance": {
+          "status": "PENDING_NORMATIVE_VECTOR_ABI",
+          "evidence": [],
+          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+        }
+      },
+      "physical": {
+        "status": "NOT_SUBMITTED",
+        "jobs": [],
+        "corners": {},
+        "evidence": [],
+        "electrical": {
+          "status": "NOT_VERIFIED",
+          "evidence": [],
+          "required": [
+            "slew",
+            "capacitance",
+            "clock_leaf_fanout",
+            "power_grid_connectivity"
+          ]
+        },
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+      },
+      "dependencies": [
+        "actual normative cmd unit9/op3 transport",
+        "native N384/P16/K6 retains DS default ordering/cycles",
+        "generic op2 is a distinct module and never silently replaces DS SELECT",
+        "source-matched DS lockstep and mutant gate pending"
       ],
       "integration": {
         "status": "INCOMPLETE",
