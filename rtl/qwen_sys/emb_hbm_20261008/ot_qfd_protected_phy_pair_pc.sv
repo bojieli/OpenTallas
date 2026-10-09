@@ -82,7 +82,8 @@ module ot_qfd_protected_phy_pair_pc #(parameter integer ENABLE=0, PC=0, ROW0=244
  DR,ER,FD,FE:if(p_v&&p_rdy)begin
  expected<=serial;serial<=serial+1'b1;
  case(st)DR:begin data_tag<=serial;data_issued<=1;st<=ER;end
- ER:if(wr)st<=EWAIT;else begin ecc_tag<=serial;ecc_issued<=1;st<=PAIRWAIT;endFD:st<=FDWAIT;FE:st<=FEWAIT;default:st<=DEAD;endcase end
+ ER:if(wr)st<=EWAIT;else begin ecc_tag<=serial;ecc_issued<=1;st<=PAIRWAIT;end
+ FD:st<=FDWAIT;FE:st<=FEWAIT;default:st<=DEAD;endcase end
  PAIRWAIT:if(data_seen&&ecc_seen)begin o_code<=join_code(data_q,ecc_q[lane*32+:32]) ^ 288'(MUT!=0);st<=OUT;end
  EWAIT:if(r_v&&r_rdy)begin
  if(wr)begin ec=r_data;ec[lane*32+:32]=checks(code_q);ecc_q<=ec;st<=DW;end
