@@ -65,7 +65,8 @@ endmodule
 
 // Registered bitwise-AND reduction tree (OR quantities ride inverted). Missing children are 1.
 module ot_mtp_and_tree #(
-    parameter integer W = 1, parameter integer N = 4, parameter integer FAN = 8, parameter integer DEPTH = 1
+    parameter integer W = 1, parameter integer N = 4, parameter integer FAN = 8, parameter integer DEPTH = 1,
+    parameter [W-1:0] RV = {W{1'b0}}                     // reset value of every node
 ) (
     input wire clk, rst_n, input wire [N*W-1:0] d, output wire [W-1:0] q
 );
@@ -91,7 +92,7 @@ module ot_mtp_and_tree #(
             integer j;
             reg [W-1:0] acc;
             always @(*) begin acc = {W{1'b1}}; for (j = 0; j < FAN; j = j + 1) acc = acc & child[j]; end
-            always @(posedge clk or negedge rst_n) if (!rst_n) node <= {W{1'b0}}; else node <= acc;
+            always @(posedge clk or negedge rst_n) if (!rst_n) node <= RV; else node <= acc;
             assign lv[k][i] = node;
         end
     end endgenerate
@@ -104,7 +105,7 @@ module ot_dsrom_markov_head_bundle_x #(
     parameter integer VALID_ROWS = 128, parameter integer A_INPUT_STAGES = 4,
     parameter [8:0] CUT = 511, parameter integer SPLIT9 = 1,
     parameter integer SK = 1+CUT[0]+CUT[1]+CUT[2]+CUT[3]+CUT[4]+CUT[5]+CUT[6]+CUT[7]+CUT[8]+SPLIT9,
-    parameter PFX = "b000_"
+    parameter [39:0] PFX = "b000_"           // packed (Verilator keeps untyped INSTANCE params packed)
 ) (
     input wire clk, rst_n,
     input wire start, output wire start_ready,
@@ -129,7 +130,7 @@ module ot_dsrom_markov_head_bundle_x #(
         ot_hdc_delay #(.W(16), .D(SK*(j%8))) sb (.clk(clk), .rst_n(rst_n), .d(xb[16*j+:16]), .q(xsb[16*j+:16]));
     end endgenerate
     wire bo, bfault; wire [31:0] bd;
-    ot_dsrom_head_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE($sformatf("%shb", PFX)), .SAFE(1)) b (
+    ot_dsrom_head_elem #(.LV(6), .PAD(2), .JOIN(0), .ROWS(128), .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE({PFX, "hb"}), .SAFE(1)) b (
         .clk(clk), .rst_n(rst_n), .go(go), .row0(17'd0), .x(xsb), .b_v(1'b0), .b_d(32'b0),
         .o_v(bo), .o_d(bd), .l_v(), .l_d(), .done(), .best_row(), .best_bits(), .best_key(), .fault(bfault));
     reg [1:0] bq; reg [3:0] bv; reg [31:0] held_b;
@@ -145,11 +146,11 @@ module ot_dsrom_markov_head_bundle_x #(
         ot_hdc_delay #(.W(305), .D(A_INPUT_STAGES)) landing_payload (
             .clk(clk), .rst_n(rst_n), .d({landed_row, xsa, held_b}), .q({ar, ax, ad}));
         ot_dsrom_head_elem #(.LV(8), .PAD(0), .JOIN(1), .ROWS(32), .CUT(CUT), .SPLIT9(SPLIT9),
-            .INSTANCE($sformatf("%sha%0d", PFX, q)), .SAFE(1)) a (
+            .INSTANCE({PFX, (q==0 ? "ha0" : q==1 ? "ha1" : q==2 ? "ha2" : "ha3")}), .SAFE(1)) a (
             .clk(clk), .rst_n(rst_n), .go(ag), .row0(ar), .x(ax), .b_v(bvalid), .b_d(ad), .o_v(), .o_d(),
             .l_v(hv), .l_d(hb), .done(), .best_row(), .best_bits(), .best_key(), .fault(af[q]));
         ot_dsrom_markov_head_driver #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .VALID_ROWS(NVALID),
-            .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE($sformatf("%smk%0d", PFX, q))) markov (
+            .CUT(CUT), .SPLIT9(SPLIT9), .INSTANCE({PFX, (q==0 ? "mk0" : q==1 ? "mk1" : q==2 ? "mk2" : "mk3")})) markov (
             .clk(clk), .rst_n(rst_n), .start(accept), .start_ready(sr[q]), .row0(driver_row), .transaction(transaction),
             .embed_valid(embed_valid), .embed_ready(er[q]), .embed_data(embed_data), .embed_beat(embed_beat),
             .embed_id(embed_id), .embed_last(embed_last),
@@ -252,6 +253,8 @@ module ot_dsrom_markov_head_full340 #(
     wire [NB*17-1:0] b_row; wire [NB*32-1:0] b_bits;
     genvar b;
     generate for (b = 0; b < NB; b = b + 1) begin : g_b
+        localparam integer BI = FIRST_BUNDLE + b;
+        localparam [39:0] PFX = {"b", 8'(48 + (BI / 100) % 10), 8'(48 + (BI / 10) % 10), 8'(48 + BI % 10), "_"};
         localparam integer VR = (DIE_ROWS - 128*b) >= 128 ? 128 : ((DIE_ROWS - 128*b) <= 0 ? 0 : DIE_ROWS - 128*b);
         wire [WS-1:0] s = sb[b*WS +: WS];
         // MUTANT 2: bundle 0's embedding one cycle late (lockstep broken)
@@ -265,7 +268,7 @@ module ot_dsrom_markov_head_full340 #(
         end
         ot_dsrom_markov_head_bundle_x #(.ENABLE(ENABLE), .PINREG(PINREG), .CACHE_PINREG(CACHE_PINREG), .VALID_ROWS(VR),
             .A_INPUT_STAGES(A_INPUT_STAGES), .CUT(CUT), .SPLIT9(SPLIT9),
-            .PFX($sformatf("b%03d_", FIRST_BUNDLE + b))) u (
+            .PFX(PFX)) u (
             .clk(clk), .rst_n(rst_n), .start(s_m[0]), .start_ready(b_rdy[b]),
             .row0(17'(ROW_BASE + 128*b)), .transaction(s_m[33:2]),
             .embed_valid(s_m[1]), .embed_data(s_m[289:34]), .embed_beat(s_m[293:290]), .embed_id(s_m[325:294]),
@@ -282,7 +285,7 @@ module ot_dsrom_markov_head_full340 #(
         assign tin[b*4 +: 4] = {~b_fault[b], ~b_mgo[b], b_mga[b], b_rdy[b]};
     end endgenerate
     wire [3:0] tq;
-    ot_mtp_and_tree #(.W(4), .N(NB), .FAN(FAN), .DEPTH(DB)) u_t (.clk(clk), .rst_n(rst_n), .d(tin), .q(tq));
+    ot_mtp_and_tree #(.W(4), .N(NB), .FAN(FAN), .DEPTH(DB), .RV(4'b1100)) u_t (.clk(clk), .rst_n(rst_n), .d(tin), .q(tq));
     assign rdy_all = tq[0]; assign hg_all = tq[1]; assign hg_any = ~tq[2]; assign fl_any = ~tq[3];
     always @(posedge clk or negedge rst_n) if (!rst_n) hg_q <= 0; else hg_q <= hg_all && !fault;
     assign head_go = hg_q;
