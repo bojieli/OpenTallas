@@ -41,7 +41,7 @@ ASTK_W = 777.6                  # stack aggregator column (q registers, exp, Z /
 LAND_W = 172.8                  # KV landing column: 8 x 32 crossbar, 8 KV merges, emb strip (ASSUMED; r21c qfd_kvc 96.7)
 UCIE = ('ot_qkvd_ucie_x64_phy', 777.6, 777.6)
 SERDES = ('ot_qfd_serdes_112g_x12_phy', 2400.0, 1512.0)
-FRAMES = dict(qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
+FRAMES = dict(qkd_ckbump=(43.2, 43.2), qkd_d2d=(777.6, 518.4), qkd_seq=(777.6, 518.4), qkd_embgw=(388.8, 388.8), qkd_pll=(324.0, 324.0),
               qkd_ahub=(648.0, 648.0), qkd_host=(777.6, 518.4))
 RELAY_PITCH = 430.56
 REACH_TARGET = 470.0            # every register-to-register segment (nearest frame points) <= this (SS reach 504 um)
@@ -93,19 +93,16 @@ BINDINGS = dict(
                             kvn_WS=['kvw_v', 'kvw_vg', 'kvw_t', 'kvw_layer', 'kvw_d', 'kvw_cr'],
                             gq=['emb_req_v', 'emb_req_d', 'emb_req_cr'], gr=['emb_q_v', 'emb_q_d', 'emb_q_cr'],
                             hc=['hc_v', 'hc_d', 'hc_cr'], tk=['tok_v', 'tok_d', 'tok_cr'], hs=['a_start'],
-                            ck=['clk'], rst_n=['rst_n']),
+                            d2df=['d2d_fault', 'd2d_cause'], kst=['fault', 'fault_cause'], ck=['clk'], rst_n=['rst_n']),
                  sliced=dict(aq_WN='aq_WS', aq_ES='aq_WS', aq_EN='aq_WS', af_WN='af_WS', af_ES='af_WS', af_EN='af_WS',
                              mf_WN='mf_WS', mf_ES='mf_WS', mf_EN='mf_WS', kvn_WN='kvn_WS', kvn_ES='kvn_WS',
                              kvn_EN='kvn_WS'),
-                 classed={'fault': 'by_design: sticky status, carried to the host on HCTL op 8 (internal path)',
-                          'fault_cause': 'by_design: as fault'}),
+                 classed={}),
     qkd_d2d=dict(module='ot_qkvd_kv_end', file='rtl/qwen_sys/kv_die_20261009/ot_qkvd_kv_end.sv',
                  ports=dict(rf=['r_v', 'r_d', 'r_cr'], tf=['t_v', 't_d', 't_cr'],
-                            fdi=['tx_up', 'tx_v', 'tx_flit', 'rx_v', 'rx_flit'], ck=['clk'], rst_n=['rst_n'],
-                            pll_fwd_i=['pll_fwd_i'], rst_fwd_i=['rst_fwd_i']),
-                 classed={'pll_fwd_pad': 'by_design: package bump (forwarded clock to the ROM die)',
-                          'rst_fwd_pad': 'by_design: package bump (reset to the ROM die)','fault': 'by_design: sticky status to qkd_seq (HCTL op 8) through the status word',
-                          'fault_cause': 'by_design: as fault'}),
+                            fdi=['tx_up', 'tx_v', 'tx_flit', 'rx_v', 'rx_flit'], flt=['fault', 'fault_cause'],
+                            ck=['clk'], rst_n=['rst_n']),
+                 classed={}),
 )
 # not exact-cut yet (frames sized, RTL partition owed): reported, not strict
 FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_p minus its engines (re-cut owed: q registers into the engines '
@@ -113,7 +110,8 @@ FRAME_ONLY = dict(qkd_astk='ot_qwen_nearhbm_attn_stack_p minus its engines (re-c
                   qkd_land='qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip',
                   qkd_embgw='ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)',
                   qkd_host='qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter', qkd_pll='vendor PLL + '
-                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element, unchanged)')
+                  'ot_qwen_sys_rst_seq', qkd_ctrl='qfd_ctrl (r21c element, unchanged)',
+                  qkd_ckbump='clock / reset bump pair to the ROM die (pad cell, no logic: by design)')
 
 
 def strict_ports(M):
@@ -221,6 +219,8 @@ def build(r=R):
     add('seq', 'qkd_seq', xc - sw / 2, sy, sw - SHAVE, sh - SHAVE, 'R0', 'seq', 'ctl')
     gw_, gh_ = FRAMES['qkd_embgw']
     add('embgw', 'qkd_embgw', xc - gw_ / 2, up(sy - GY - gh_, GY), gw_ - SHAVE, gh_ - SHAVE, 'R0', 'embgw', 'ctl')
+    cw_, ch_ = FRAMES['qkd_ckbump']
+    add('ckb_kv', 'qkd_ckbump', xc - UCIE[1] / 2 - cw_ - 10 * GX, Hk - MARGIN - ch_, cw_ - SHAVE, ch_ - SHAVE, 'R0', 'bump', 'io')
     pw, ph = FRAMES['qkd_pll']
     add('pll', 'qkd_pll', xc + UCIE[1] / 2 + GX * 10, Hk - MARGIN - ph, pw - SHAVE, ph - SHAVE, 'R0', 'pll', 'io')
     hw, hh = FRAMES['qkd_ahub']
@@ -260,8 +260,8 @@ def _buses(m, T, r):
          [('ucie_rom', 'clk'), ('serdes_host', 'clk')]))
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
          [('ucie_rom', 'rst_n'), ('serdes_host', 'rst_n')]))
-    add(('pll_fwd', 'clock_trunk', 1, [('pll', 'pll_fwd'), ('d2d_kv', 'pll_fwd_i')]))
-    add(('rst_fwd', 'spine_local', 1, [('pll', 'rso_fwd'), ('d2d_kv', 'rst_fwd_i')]))
+    add(('pll_fwd', 'clock_trunk', 1, [('pll', 'pll_fwd'), ('ckb_kv', 'pll_ck')]))       # to the clock bump pair
+    add(('rst_fwd', 'reset', 1, [('pll', 'rso_fwd'), ('ckb_kv', 'rs')]))
     # the link
     add(('d2d_fdi', 'd2d_fdi', FDI_UCIE, [('d2d_kv', 'fdi'), ('ucie_rom', 'fdi')]))
     add(('d2d_dn', 'd2d_face', 4 * (W + 1) + 4, [('d2d_kv', 'rf'), ('seq', 'rf')]))       # CTL Q KVN EMBQ + credits back
@@ -282,6 +282,8 @@ def _buses(m, T, r):
         add((f'ing_{st}', 'kvn', W + 2, [('host', f'ing_{st}'), (f'land_{st}', 'ing')]))
     add(('ares', 'spine_local', 1 + 1 + 6 + 512, [('ahub', 'ao'), ('seq', 'ar')]))
     add(('hs', 'spine_local', 1, [('seq', 'hs'), ('ahub', 'hs')]))                  # layer start to the hub
+    add(('d2df', 'spine_local', 6, [('d2d_kv', 'flt'), ('seq', 'd2df')]))            # link-end fault + cause
+    add(('kst', 'spine_local', 10, [('seq', 'kst'), ('host', 'kst')]))               # KV-die status to the host
     add(('hf', 'spine_local', 1, [('ahub', 'hf'), ('seq', 'hf')]))                  # hub fault
     for st in STACKS:
         add((f'af_{st}', 'spine_local', 1, [(f'astk_{st}', 'af'), ('seq', f'af_{st}')]))
@@ -485,7 +487,7 @@ def masters(m, k=1, port_bits=None):
         for p, bits in sorted(ports.items()):
             if p in mm.ports:
                 continue
-            if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n') or p.startswith(('pll', 'rso'))):
+            if bits == 1 and (p in ('ck', 'clk', 'rst_n', 'rsi', 'c_arst_n', 'rs') or p.startswith(('pll', 'rso'))):
                 j = len([q for q in mm.order if mm.ports[q][0] == 'area'])
                 mm.area(p, 1, min(mm.w - 1.0, max(1.0, mm.w / 2 + ((j % 12) - 6) * 1.6)),
                         min(mm.h - 1.0, max(1.0, mm.h / 2 + (j // 12 - 5) * 1.6)), 1)
