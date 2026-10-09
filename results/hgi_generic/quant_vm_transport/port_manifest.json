@@ -104,9 +104,13 @@
     "DEPTH": 32
   },
   "open": [
-    "physical VM ingress binding owner parent",
-    "exact fault/reset benches",
-    "remote synthesis slot sizing",
-    "two route variants + strict boundary pin lint"
-  ]
+    "partialoverlap aliaspolicy",
+    "physicalVMingressbinding",
+    "remoteactualsynthfit/boundary",
+    "two routevariants"
+  ],
+  "command_capture_validate_edges": 2,
+  "clock_domain": "opt-instream1p2 pendingcombinedTT/FFphysicalgates;offpathlegacyserial0p9unchanged",
+  "legal_geometry": "multirow,unalignedbase,positiveinnerstride,inputbroadcast,outputrowstride inclaliaseswhenA/Odisjoint;UE n multiple32/E4 n multiple16;FP32input/BF16orFP32outputVM",
+  "alias_policy": "samebaseidenticalnonaliasingrowgeometryinplacepermitted;partiallyoverlappingrangesawaitnormativepolicy"
 }
