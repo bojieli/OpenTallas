@@ -13,7 +13,7 @@
   "peak_ram_gb": 32,
   "source": {
     "branch": "codex/w2-phase-seat-20261009",
-    "commit": "22c48cdf8379f075f2191b0d1ecc6d3bd2e17ed9",
+    "commit": "fac2006f589832219516f4d0a9d6be8f536c1b36",
     "required_files": [
       "tools/w2_c1_eco_current/run.py",
       "tools/w2_c1_eco_current/spec.json"
@@ -50,7 +50,7 @@
   "no_bench_reason": "Pure existing-ODB ECO. Immutable exact gate full37word4x44, quarter19, crossbank7 and genuine runtime S3 FATAL are hash-bound by preflight; no recompilation. Evidence source22c48cdf8 c1_eco_readiness.",
   "verdict": {
     "corner_sta": "{RUN}/c1/eco/corner_sta.json",
-    "drc_metrics": "{RUN}/c1/eco/orfs/logs/asap7/*/base/5_2_route.json",
+    "drc_metrics": "{RUN}/c1/eco_drc_metrics.json",
     "post_sdc": [],
     "macros": []
   },
