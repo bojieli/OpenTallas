@@ -347,7 +347,11 @@ def receipt_views():
         n, met = v['block'], v['metrics']
         if latest[n] != path:
             continue                   # superseded receipt: its export was overwritten by the later closure
-        if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
+        # the receipt's own acceptance (OWNER 2026-10-07 20:30: SS >= 0 / FF >= 0; older jobs +15); below +15 the
+        #   index labels it closed-below-margin (+15 is the design target) instead of dropping the installed view
+        acc = v.get('acceptance', {})
+        if (met.get('ss_ps', -1) < acc.get('ss_min_ps', 15) or met.get('ff_ps', -1) < acc.get('ff_min_ps', 15)
+                or met.get('drc') != 0
                 or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
                 or not all(b.get('ok') for b in v.get('benches', {}).values())):
             continue
@@ -357,13 +361,18 @@ def receipt_views():
             if not all((base / f).is_file() for f in files):
                 continue
             corner = json.loads((base / 'corner_sta.json').read_text())
+            # OWNER OPTION B (2026-10-07): a TT-setup closure exports setup_tt (setup_ss = sensitivity) and the
+            #   verdict's ss_ps is that TT figure; an SS-setup closure has no setup_tt.  Compare like with like.
+            setup = corner.get('setup_tt') or corner['setup_ss']
             if (not corner.get('closes_signoff')
-                    or corner['setup_ss']['worst_slack_ps'] != met['ss_ps']
+                    or setup['worst_slack_ps'] != met['ss_ps']
                     or corner['hold_ff']['worst_slack_ps'] != met['ff_ps']):
                 # the loop verdict re-times the route with its post_sdc set (e.g. the link-budget / option-B SDCs);
                 #   then the verdict's metrics are the closure figure and the exported corner_sta is the route's own
                 if not met.get('post_sdc'):
-                    raise ValueError(f'closure receipt/export disagreement: {path}')
+                    raise ValueError(f'closure receipt/export disagreement: {path} (receipt SS/FF {met["ss_ps"]}/'
+                                     f'{met["ff_ps"]}, export {base} {setup["worst_slack_ps"]}/'
+                                     f'{corner["hold_ff"]["worst_slack_ps"]}: re-export the receipt\'s route)')
             rows[n] = dict(master=n, kind=kind_of(n), status='closed', dir=dest['to'],
                            lef=files[0], lib=dict(ss=files[1], ff=files[2]),
                            files_sha256={f: sha(base / f) for f in files},
@@ -372,7 +381,8 @@ def receipt_views():
                            source=dict(SOURCE_COMMIT=v['source_commit'], host=v['host'],
                                        route=v['run_dir'], ss_setup_ps=met['ss_ps'],
                                        ff_hold_ps=met['ff_ps'], drc=met['drc'],
-                                       closes_signoff_SS60_FF25=True, closed_at=v['closed_at']))
+                                       closes_signoff_SS60_FF25=True, setup_corner=setup.get('corner', 'ss'),
+                                       closed_at=v['closed_at']))
     return rows
 
 
