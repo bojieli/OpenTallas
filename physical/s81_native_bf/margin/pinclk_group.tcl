@@ -31,22 +31,51 @@ proc bf_pinclk_group {} {
   if {[llength $sinks] == 0} { error "BF_PINCLK: no $pat register on the root clock net [$root getName] (skipped $skipped)" }
   set bm [[ord::get_db] findMaster [expr {[info exists ::env(BF_PINCLK_BUF)] ? $::env(BF_PINCLK_BUF) : "BUFx24_ASAP7_75t_R"}]]
   if {$bm eq "NULL" || $bm eq ""} { error "BF_PINCLK: no buffer master" }
-  set b [odb::dbInst_create $blk $bm bf_pinclk_root]
-  set nn [odb::dbNet_create $blk bf_pinclk]
-  $nn setSigType CLOCK
-  [$b findITerm A] connect $root
-  [$b findITerm Y] connect $nn
-  foreach it $sinks { $it disconnect; $it connect $nn }
-  # at the clock root: the clk port, pulled inside the core area
-  set bb [$bt getBBox]
-  set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
-  set core [$blk getCoreArea]
-  set w [$bm getWidth]; set h [$bm getHeight]
-  set x [expr {max([$core xMin], min($x, [$core xMax] - $w))}]
-  set y [expr {max([$core yMin], min($y, [$core yMax] - $h))}]
-  $b setLocation $x $y
-  $b setPlacementStatus PLACED
-  puts "BF_PINCLK group: [llength $sinks] $pat register clock pins moved from [$root getName] to bf_pinclk (driver bf_pinclk_root [$bm getName] at [expr {$x/1000.0}] [expr {$y/1000.0}] um); $skipped matching registers on other clock nets left in place"
+  # a2 (2026-10-09 11:00): spatial sink groups.  Routes a/b/c900 showed the single group's H-tree puts the pin registers that sit
+  # alone at the die edge (west edge x < 5 um: xs_q0[176..183], xb_d[150..160], xb_sv, xs_p; north edge strip) on long branches
+  # +25..+80 ps over the group mean.  Each single-linkage cluster (BF_PINCLK_LINK um, default 60) of pin registers gets its OWN root
+  # buffer on clk, so TritonCTS builds one child tree per cluster and latency-balances the trees (CTS-0033) instead of stretching
+  # one H-tree over 1000 um.  The main body stays one group.
+  set link [expr {[info exists ::env(BF_PINCLK_LINK)] ? $::env(BF_PINCLK_LINK) : 60} * 1000]
+  set left $sinks; set groups {}
+  while {[llength $left]} {
+    set cl [list [lindex $left 0]]; set left [lrange $left 1 end]; set frontier $cl
+    while {[llength $frontier]} {
+      set nf {}; set keep {}
+      foreach it $left {
+        lassign [[$it getInst] getLocation] x y; set near 0
+        foreach c $frontier { lassign [[$c getInst] getLocation] cx cy; if {abs($cx-$x)+abs($cy-$y) <= $link} { set near 1; break } }
+        if {$near} { lappend nf $it } else { lappend keep $it }
+      }
+      set left $keep; lappend cl {*}$nf; set frontier $nf
+    }
+    lappend groups $cl
+  }
+  set groups [lsort -command {apply {{a b} {expr {[llength $b] - [llength $a]}}}} $groups]
+  set core [$blk getCoreArea]; set w [$bm getWidth]; set h [$bm getHeight]
+  set g 0
+  foreach cl $groups {
+    set bn [expr {$g == 0 ? "bf_pinclk_root" : "bf_pinclk_root$g"}]; set nnn [expr {$g == 0 ? "bf_pinclk" : "bf_pinclk$g"}]
+    set b [odb::dbInst_create $blk $bm $bn]
+    set nn [odb::dbNet_create $blk $nnn]
+    $nn setSigType CLOCK
+    [$b findITerm A] connect $root
+    [$b findITerm Y] connect $nn
+    set sx 0; set sy 0
+    foreach it $cl { lassign [[$it getInst] getLocation] x y; incr sx $x; incr sy $y; $it disconnect; $it connect $nn }
+    if {$g == 0} {
+      # main group: at the clock root (the clk port)
+      set bb [$bt getBBox]
+      set x [expr {([$bb xMin] + [$bb xMax]) / 2}]; set y [expr {([$bb yMin] + [$bb yMax]) / 2}]
+    } else { set x [expr {$sx / [llength $cl]}]; set y [expr {$sy / [llength $cl]}] }
+    set x [expr {max([$core xMin], min($x, [$core xMax] - $w))}]
+    set y [expr {max([$core yMin], min($y, [$core yMax] - $h))}]
+    $b setLocation $x $y
+    $b setPlacementStatus PLACED
+    puts "BF_PINCLK group: [llength $cl] $pat register clock pins moved from [$root getName] to $nnn (driver $bn [$bm getName] at [expr {$x/1000.0}] [expr {$y/1000.0}] um)"
+    incr g
+  }
+  puts "BF_PINCLK groups: $g for [llength $sinks] pin registers (link [expr {$link/1000}] um); $skipped matching registers on other clock nets left in place"
   set ::bf_pinclk_n [llength $sinks]
 }
 proc bf_pinclk_stats {tag} {
