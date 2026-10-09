@@ -65,7 +65,7 @@
       "owner": "candidate_store",
       "description": "Full TP96 literal-slot publication and finite provider lease",
       "source": {
-        "commit": "a54dd9b39",
+        "commit": "730113028",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
         ]
@@ -84,12 +84,20 @@
       },
       "exactness": {
         "positive": {
-          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
-          "evidence": []
+          "status": "PASS full native8832writes132480literalreads withowner74 highbit/backpressure/empty/reset/CEcorrection/UEquarantine",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/full_store/record.json",
+            "results/rtl/hbm_candidate_store_20261009/full_store/mode0.log",
+            "results/rtl/hbm_candidate_store_20261009/full_store/mode3.log",
+            "results/rtl/hbm_candidate_store_20261009/full_store/mode4.log"
+          ]
         },
         "negative": {
-          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
-          "evidence": []
+          "status": "PASS wrongquarter andearlyretirement rejected; same-source MUT_SLOT1 firstproviderread mismatch EXIT1 after8832writes",
+          "evidence": [
+            "results/rtl/hbm_candidate_store_20261009/full_store/record.json",
+            "results/rtl/hbm_candidate_store_20261009/full_store/mutant.log"
+          ]
         }
       },
       "physical": {
@@ -105,7 +113,7 @@
         "latest source exact+mutant gate"
       ],
       "integration": {
-        "status": "provider ABI implemented; real global-order join pending",
+        "status": "full actual store/provider component proof PASS; global-order consumer joined gate pending, rank-cache only proposal",
         "evidence": [
           "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
         ]
@@ -136,11 +144,11 @@
       },
       "exactness": {
         "positive": {
-          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
+          "status": "pending actual native consumer/global-order joined gate; store/provider transport independently PASS",
           "evidence": []
         },
         "negative": {
-          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
+          "status": "pending native joined malformed/stale/order gate; bank/store component negative controls PASS",
           "evidence": []
         }
       },
