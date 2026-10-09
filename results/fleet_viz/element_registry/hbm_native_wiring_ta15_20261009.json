@@ -78,7 +78,7 @@
    "owner": "hbm_wiring",
    "source": {"commit": "46baa12f9", "paths": ["rtl/hbm_accel/control/ot_hbm_production_clock_control.sv", "tests/rtl/tb_hbm_production_clock_control.sv"]},
    "implementation": {"status": "actual PORTS9 reset sequencer and17 destination release collars; stopped serial clock blocks readiness"},
-   "model": {"status": "91FF floor26.5356um2; three destination edges plus two AON edges boot readiness; zero steady-state added cycles", "evidence": ["tools/hbm_ta15_clock_boundary_model.py"]},
+   "model": {"status": "91FF floor26.5356um2; three destination edges plus two AON edges boot readiness; zero steady-state added cycles", "evidence": ["tools/hbm_production_clock_control_model.py"]},
    "exactness": {
     "positive": {"status": "PASS admitted production stopped-clock readiness and raw POR revocation", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/production-clock-porheld.log"]},
     "negative": {"status": "initial insufficient POR bench pulse failure preserved", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/production-clock-a67450115.log"]}

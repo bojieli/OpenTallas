@@ -1,0 +1,217 @@
+{
+ "schema": "opentallas.hbm_native_pin_gate.v1",
+ "variant": "r25iqg",
+ "source_commit": "3b3157b5a",
+ "verdict": "PASS",
+ "native_pins": [
+  {
+   "instance": "idx_score_SW",
+   "master": "hfd_idx_score_native_grid",
+   "orient": "R0",
+   "origin_um": [
+    10732.608,
+    1596.24
+   ],
+   "outline_um": [
+    2000.16,
+    3000.264
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_score_SE",
+   "master": "hfd_idx_score_native_grid",
+   "orient": "MY",
+   "origin_um": [
+    16994.88,
+    1596.24
+   ],
+   "outline_um": [
+    2000.16,
+    3000.264
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_score_NW",
+   "master": "hfd_idx_score_native_grid",
+   "orient": "MX",
+   "origin_um": [
+    10732.608,
+    20025.36
+   ],
+   "outline_um": [
+    2000.16,
+    3000.264
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_score_NE",
+   "master": "hfd_idx_score_native_grid",
+   "orient": "R180",
+   "origin_um": [
+    16994.88,
+    20025.36
+   ],
+   "outline_um": [
+    2000.16,
+    3000.264
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_selector",
+   "master": "hfd_idx_sel_native_qend",
+   "orient": "R0",
+   "origin_um": [
+    14164.416,
+    17169.84
+   ],
+   "outline_um": [
+    1399.656,
+    844.56
+   ],
+   "pins": 6903,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  }
+ ],
+ "historical_R25IQ_negative": [
+  {
+   "instance": "idx_score_SW",
+   "master": "hfd_idx_score_native",
+   "orient": "R0",
+   "origin_um": [
+    10732.608,
+    1596.24
+   ],
+   "outline_um": [
+    2000.16,
+    3000.24
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_score_SE",
+   "master": "hfd_idx_score_native",
+   "orient": "MY",
+   "origin_um": [
+    16994.88,
+    1596.24
+   ],
+   "outline_um": [
+    2000.16,
+    3000.24
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  },
+  {
+   "instance": "idx_score_NW",
+   "master": "hfd_idx_score_native",
+   "orient": "MX",
+   "origin_um": [
+    10732.608,
+    20025.36
+   ],
+   "outline_um": [
+    2000.16,
+    3000.24
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 9986,
+   "examples": [
+    {
+     "pin": "ik[0]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    },
+    {
+     "pin": "ik[1]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    },
+    {
+     "pin": "ik[2]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    }
+   ]
+  },
+  {
+   "instance": "idx_score_NE",
+   "master": "hfd_idx_score_native",
+   "orient": "R180",
+   "origin_um": [
+    16994.88,
+    20025.36
+   ],
+   "outline_um": [
+    2000.16,
+    3000.24
+   ],
+   "pins": 9988,
+   "exact_record_identity": true,
+   "offtrack_count": 9986,
+   "examples": [
+    {
+     "pin": "ik[0]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    },
+    {
+     "pin": "ik[1]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    },
+    {
+     "pin": "ik[2]",
+     "layer": "M4",
+     "track_error_um": 0.024
+    }
+   ]
+  },
+  {
+   "instance": "idx_selector",
+   "master": "hfd_idx_sel_native_qend",
+   "orient": "R0",
+   "origin_um": [
+    14164.416,
+    17169.84
+   ],
+   "outline_um": [
+    1399.656,
+    844.56
+   ],
+   "pins": 6903,
+   "exact_record_identity": true,
+   "offtrack_count": 0,
+   "examples": []
+  }
+ ],
+ "instances": 875,
+ "native_bus_segments": 422,
+ "overlaps": [],
+ "outside": [],
+ "qualification": "Exact native abstract identity and track/bbox gate only; routed timing, legacy pins, service joins and actual clock arrival remain unqualified"
+}
