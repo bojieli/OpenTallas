@@ -3832,7 +3832,13 @@ def _col_relays(m, P):
     B = m['buses']
     out, added = [], defaultdict(int)       # (bus id) -> relays
     ck_add = defaultdict(list)
-    for bid, cls, bits, eps in list(B):
+    ordered = list(B)
+    if os.environ.get('OT_S81_RETURN_RELAY_FIRST') == '1':
+        # Reserve real return-data landing sites before small control relays consume
+        # the narrow inter-slot strip. Preserve every master, reach and bus order
+        # within its class; this changes placement only, not the reduction tree.
+        ordered.sort(key=lambda b: 0 if b[1] in ('ret_leaf', 'ret_tree', 'col_ret') else 1)
+    for bid, cls, bits, eps in ordered:
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
             continue
