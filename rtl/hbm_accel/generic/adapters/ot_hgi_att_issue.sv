@@ -58,7 +58,8 @@ module ot_hgi_att_issue #(
                           hq <= 0; dq <= 0; pq <= 0; end
         else begin
             att_done <= 1'b0; att_fault <= 1'b0;
-            if (att_v && att_r) begin raw_v <= 1'b1; hq <= att_hdr; dq <= att_desc; pq <= att_pos1; end
+            hq <= att_hdr; dq <= att_desc; pq <= att_pos1;                   // pin flops (no enable from att_v)
+            if (att_v && att_r) raw_v <= 1'b1;
             if (raw_v) begin
                 raw_v <= 1'b0;
                 if (bad) att_fault <= 1'b1;
