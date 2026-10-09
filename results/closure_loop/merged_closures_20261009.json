@@ -470,9 +470,9 @@
   "generated": "2026-10-09 PT",
   "scope": "6 named CLOSED closures + every READY closure-record entry in READY_TO_MERGE (03:00-06:31 PT) not on origin/main",
   "counts": {
-   "closed": 44,
-   "merged": 44,
-   "record_only": 8
+   "closed": 52,
+   "merged": 52,
+   "record_only": 10
   },
   "notes": [
    "hgi_coll_decode_a/b: adoption_scope BLOCKED_ELECTRICAL (5 max_slew ~285 ps vs 260) - merged as evidence, not adopted",
@@ -1098,6 +1098,118 @@
     "record_merged_sha": "0101b70c600c218efc985ba9925c8437573ab0d7",
     "source_merged_sha": "8d9eff44abf566c39d2b2413a168233d6a8da9a5",
     "note": "cherry-pick 11dbd8935 only (claude/sys-takeover-ecc-20261009); KVW=0 default. Record RELOCATED: its spec (cloned from qfd_emb_pcport-f42e102ca-tc) published over the live views/qfd_emb_pcport (116.64->150.12 um, new kw_v/kw_d pins) and over the f42e102ca evidence dir; merged to views/qfd_emb_pcport_kvw and results/rtl/emb_hbm_closure_20261008/qfd_hbm_ecc_provider_b-11dbd8935-tc instead; die adoption of KVW=1 not made here (coordinator batch 3)"
+   },
+   {
+    "job": "qfd_hbm_ecc_provider_a-11dbd8935-tc",
+    "closed": "2026-10-09T08:53:59-07:00",
+    "branch": "claude/sys-takeover-ecc-20261009",
+    "source_commit": "11dbd893505c7a45df3a33fffa4594100bfb47fc",
+    "record_commit": "42060124a",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +27.32 / FF +19.15 ps DRC 0; SS sensitivity -235.15 ps",
+    "status": "merged",
+    "record_merged_sha": "4ef9afee93ed247d8d053c6264f28495d5c2bb3f",
+    "source_merged_sha": null,
+    "note": "source 11dbd8935 already on main (8d9eff44a); record RELOCATED to views/qfd_emb_pcport_kvw_a + results/rtl/emb_hbm_closure_20261008/qfd_hbm_ecc_provider_a-11dbd8935-tc (its spec published over the live qfd_emb_pcport view and the f42e102ca evidence); KVW=1 die adoption still open (coordinator batch 4)"
+   },
+   {
+    "job": "hcsecded_pipe_lvt_a-f11374855-tc",
+    "closed": "2026-10-09T08:50:51-07:00",
+    "branch": "claude/sys-takeover-20261009",
+    "source_commit": "f11374855e13e610cad140c8b933f521a8234773",
+    "record_commit": "f6b90d4e7",
+    "source_on_main_before": true,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +30.77 / FF +15.29 ps DRC 0; SS sensitivity -63.09 ps",
+    "status": "merged",
+    "record_merged_sha": "53ca298c64c24933d67b59fb304d2f4376b6ace0",
+    "source_merged_sha": null,
+    "note": "record only: the routed element ot_dsrom_hc_secded_pipe.sv is byte-identical on main (LVT re-route of the same RTL); the bench-only opt-ins (hc mean MREG 94e3662f3, reader PLAIN 4ced1ee21) belong to unclosed hcmean/hcreader jobs and are not taken (coordinator batch 4)"
+   },
+   {
+    "job": "gorder_fast_a-ef4ca885f-tc-hm25",
+    "closed": "2026-10-09T09:51:42-07:00",
+    "branch": "claude/sys-takeover-20261009",
+    "source_commit": "ef4ca885f58745c56b0f6471e1a8dcf7f5348b15",
+    "record_commit": "eba515673",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +10.28 / FF +16.37 ps DRC 0; SS sensitivity -365.29 ps",
+    "status": "merged",
+    "record_merged_sha": "25b962fc00231722d4d0f2961d81917746408218",
+    "source_merged_sha": "9aaca4ee0838c3782bacf99f85db7d983d28fd31",
+    "note": "gorder FAST=1/2 files from f11374855 (ef4ca885f + f11374855 only), FAST=0 default (coordinator batch 4)"
+   },
+   {
+    "job": "gorder_fast_b-ef4ca885f-tc-hm10",
+    "closed": "2026-10-09T09:44:47-07:00",
+    "branch": "claude/sys-takeover-20261009",
+    "source_commit": "ef4ca885f58745c56b0f6471e1a8dcf7f5348b15",
+    "record_commit": "6200d1073",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +12.52 / FF +7.04 ps DRC 0; SS sensitivity -362.88 ps",
+    "status": "merged",
+    "record_merged_sha": "d9e2409fbc3c4e528aa365f985e02298c46ceaee",
+    "source_merged_sha": "9aaca4ee0838c3782bacf99f85db7d983d28fd31",
+    "note": "as gorder_fast_a (coordinator batch 4)"
+   },
+   {
+    "job": "gorderscan_fast2_a-f11374855-tc-hm10",
+    "closed": "2026-10-09T10:05:47-07:00",
+    "branch": "claude/sys-takeover-20261009",
+    "source_commit": "f11374855e13e610cad140c8b933f521a8234773",
+    "record_commit": "587700029",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +4.27 / FF +5.32 ps DRC 0; SS sensitivity -381.89 ps",
+    "status": "merged",
+    "record_merged_sha": "86c1d231d28f84dc184b812b165b8d013a26d8a6",
+    "source_merged_sha": "9aaca4ee0838c3782bacf99f85db7d983d28fd31",
+    "note": "as gorder_fast_a (FAST=2 scan) (coordinator batch 4)"
+   },
+   {
+    "job": "mtp-ringdyn-a-673d12103-tc",
+    "closed": "2026-10-09T09:38:43-07:00",
+    "branch": "claude/mtp-ringdyn-route-20261009",
+    "source_commit": "673d12103db71e272b4b96b4a15327126b4f348c",
+    "record_commit": "8065b6629",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +64.79 / FF +24.03 ps DRC 0; SS sensitivity -289.99 ps",
+    "status": "merged",
+    "record_merged_sha": "e83a72c13eceff42f2e0dba04973053010e5da1b",
+    "source_merged_sha": "b884ef6183c2636a05ad00a7fe38621369b43381",
+    "note": "merge 673d12103: v41x DYN table + read selectors moved verbatim into ot_hdc_v41x_dyn_unit (core file changed; new module must be in every core source list); vehicle bench PASS locally (coordinator batch 4)"
+   },
+   {
+    "job": "mtp-ringdyn-b-673d12103-tc",
+    "closed": "2026-10-09T09:20:41-07:00",
+    "branch": "claude/mtp-ringdyn-route-20261009",
+    "source_commit": "673d12103db71e272b4b96b4a15327126b4f348c",
+    "record_commit": "34e008206",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +30.74 / FF +3.39 ps DRC 0; SS sensitivity -306.29 ps",
+    "status": "merged",
+    "record_merged_sha": "ee6b55e02ca419cfe60564a430f0f5a843e5e832",
+    "source_merged_sha": "b884ef6183c2636a05ad00a7fe38621369b43381",
+    "note": "as mtp-ringdyn-a (coordinator batch 4)"
+   },
+   {
+    "job": "hgi_quant_c360p-12c0bd9da-tc-cl",
+    "closed": "2026-10-09T10:03:50-07:00",
+    "branch": "claude/hgi-quant-compact-20261009",
+    "source_commit": "12c0bd9daf6127cd43acd20abe82bcf4ea1c2a81",
+    "record_commit": "bc32755d8",
+    "source_on_main_before": false,
+    "record_on_main_before": false,
+    "verdict": "CLOSED TT +31.71 / FF +0.44 ps DRC 0; SS sensitivity -315.30 ps",
+    "status": "merged",
+    "record_merged_sha": "0c563c001f34455cd72ab31b2022188b793b2e5e",
+    "source_merged_sha": "eb9d9f942c698d3698e0878fa1ccab4cbebe9ca9",
+    "note": "merge 12c0bd9da (whole quant branch); ot_hgi_fp4qdq.sv add/add conflict resolved to the branch (S5 count tree) version; FF +0.44 ps thin but passing (coordinator batch 4)"
    }
   ]
  }
