@@ -1,0 +1,26 @@
+{
+  "host": "ot-epyc1tb",
+  "cases": [
+    {
+      "core_period": 730,
+      "ingest_period": 1460.0,
+      "clk_period_defined": false,
+      "rc": 0
+    },
+    {
+      "core_period": 833.333,
+      "ingest_period": 1666.666,
+      "clk_period_defined": false,
+      "rc": 0
+    },
+    {
+      "core_period": 1024,
+      "ingest_period": 2048.0,
+      "clk_period_defined": false,
+      "rc": 0
+    }
+  ],
+  "fixed_sdc_sha256": "f843fc8d3e837049f5ced753463c35ebbcf729ecb60bbb5dbbd430801e8c1563",
+  "verdict": "PASS",
+  "scope": "Tcl binding fixture only; no timing closure claim."
+}
