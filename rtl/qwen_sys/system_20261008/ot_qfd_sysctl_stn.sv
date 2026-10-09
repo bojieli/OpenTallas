@@ -192,11 +192,11 @@ assign q_c_fault = c_fault;
 assign q_c_fault_vec = c_fault_vec;
 assign q_crom_fault = crom_fault;
 end else begin:g_stations
-ot_qfd_packet_stn #(.W(((12)-(0)+1))) u_s_aw (.clk(clk),.rst_n(host_rst_n),.i_valid(s_awvalid),.i_ready(s_awready),.i_data({s_awaddr}),.o_valid(q_s_awvalid),.o_ready(q_s_awready),.o_data({q_s_awaddr}));
-ot_qfd_packet_stn #(.W(((31)-(0)+1)+((3)-(0)+1))) u_s_w (.clk(clk),.rst_n(host_rst_n),.i_valid(s_wvalid),.i_ready(s_wready),.i_data({s_wdata,s_wstrb}),.o_valid(q_s_wvalid),.o_ready(q_s_wready),.o_data({q_s_wdata,q_s_wstrb}));
-ot_qfd_packet_stn #(.W(((1)-(0)+1))) u_s_b (.clk(clk),.rst_n(host_rst_n),.i_valid(q_s_bvalid),.i_ready(q_s_bready),.i_data({q_s_bresp}),.o_valid(s_bvalid),.o_ready(s_bready),.o_data({s_bresp}));
-ot_qfd_packet_stn #(.W(((12)-(0)+1))) u_s_ar (.clk(clk),.rst_n(host_rst_n),.i_valid(s_arvalid),.i_ready(s_arready),.i_data({s_araddr}),.o_valid(q_s_arvalid),.o_ready(q_s_arready),.o_data({q_s_araddr}));
-ot_qfd_packet_stn #(.W(((31)-(0)+1)+((1)-(0)+1))) u_s_r (.clk(clk),.rst_n(host_rst_n),.i_valid(q_s_rvalid),.i_ready(q_s_rready),.i_data({q_s_rdata,q_s_rresp}),.o_valid(s_rvalid),.o_ready(s_rready),.o_data({s_rdata,s_rresp}));
+ot_qfd_packet_stn #(.W(((12)-(0)+1))) u_s_aw (.clk(clk),.rst_n(por_n),.i_valid(s_awvalid),.i_ready(s_awready),.i_data({s_awaddr}),.o_valid(q_s_awvalid),.o_ready(q_s_awready),.o_data({q_s_awaddr}));
+ot_qfd_packet_stn #(.W(((31)-(0)+1)+((3)-(0)+1))) u_s_w (.clk(clk),.rst_n(por_n),.i_valid(s_wvalid),.i_ready(s_wready),.i_data({s_wdata,s_wstrb}),.o_valid(q_s_wvalid),.o_ready(q_s_wready),.o_data({q_s_wdata,q_s_wstrb}));
+ot_qfd_packet_stn #(.W(((1)-(0)+1))) u_s_b (.clk(clk),.rst_n(por_n),.i_valid(q_s_bvalid),.i_ready(q_s_bready),.i_data({q_s_bresp}),.o_valid(s_bvalid),.o_ready(s_bready),.o_data({s_bresp}));
+ot_qfd_packet_stn #(.W(((12)-(0)+1))) u_s_ar (.clk(clk),.rst_n(por_n),.i_valid(s_arvalid),.i_ready(s_arready),.i_data({s_araddr}),.o_valid(q_s_arvalid),.o_ready(q_s_arready),.o_data({q_s_araddr}));
+ot_qfd_packet_stn #(.W(((31)-(0)+1)+((1)-(0)+1))) u_s_r (.clk(clk),.rst_n(por_n),.i_valid(q_s_rvalid),.i_ready(q_s_rready),.i_data({q_s_rdata,q_s_rresp}),.o_valid(s_rvalid),.o_ready(s_rready),.o_data({s_rdata,s_rresp}));
 ot_qfd_packet_stn #(.W(((63)-(0)+1)+((7)-(0)+1)+((2)-(0)+1))) u_m_ar (.clk(clk),.rst_n(host_rst_n),.i_valid(q_m_arvalid),.i_ready(q_m_arready),.i_data({q_m_araddr,q_m_arlen,q_m_arsize}),.o_valid(m_arvalid),.o_ready(m_arready),.o_data({m_araddr,m_arlen,m_arsize}));
 ot_qfd_packet_stn #(.W(((63)-(0)+1)+((1)-(0)+1)+1)) u_m_r (.clk(clk),.rst_n(host_rst_n),.i_valid(m_rvalid),.i_ready(m_rready),.i_data({m_rdata,m_rresp,m_rlast}),.o_valid(q_m_rvalid),.o_ready(q_m_rready),.o_data({q_m_rdata,q_m_rresp,q_m_rlast}));
 ot_qfd_packet_stn #(.W(((63)-(0)+1)+((7)-(0)+1)+((2)-(0)+1))) u_m_aw (.clk(clk),.rst_n(host_rst_n),.i_valid(q_m_awvalid),.i_ready(q_m_awready),.i_data({q_m_awaddr,q_m_awlen,q_m_awsize}),.o_valid(m_awvalid),.o_ready(m_awready),.o_data({m_awaddr,m_awlen,m_awsize}));

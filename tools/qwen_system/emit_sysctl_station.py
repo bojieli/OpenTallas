@@ -36,7 +36,10 @@ def emit(out):
         v,r=prefix+'valid',prefix+'ready'
         ind,outd=(extdata,intdata) if direction=='in' else (intdata,extdata)
         inv,inr,outv,outr=(v,r,'q_'+v,'q_'+r) if direction=='in' else ('q_'+v,'q_'+r,v,r)
-        lines.append(f'ot_qfd_packet_stn #(.W({"+".join(width(n) for n in fields)})) u_{prefix} (.clk(clk),.rst_n(host_rst_n),.i_valid({inv}),.i_ready({inr}),.i_data({ind}),.o_valid({outv}),.o_ready({outr}),.o_data({outd}));')
+        # System CSR access must work while host_rst_n is low during boot. AXI-Lite
+        # survives the host soft reset; only DMA queues belong to that reset domain.
+        reset='por_n' if prefix.startswith('s_') else 'host_rst_n'
+        lines.append(f'ot_qfd_packet_stn #(.W({"+".join(width(n) for n in fields)})) u_{prefix} (.clk(clk),.rst_n({reset}),.i_valid({inv}),.i_ready({inr}),.i_data({ind}),.o_valid({outv}),.o_ready({outr}),.o_data({outd}));')
     for n in levels:
         reset='por_n' if n in ['link_up','boot_done','boot_ok'] else 'die_rst_n'
         lines += [f'reg {shapes[n]} r_{n};',f'always @(posedge clk or negedge {reset}) if(!{reset})r_{n}<=0;else r_{n}<={n};',f'assign q_{n}=r_{n};']
