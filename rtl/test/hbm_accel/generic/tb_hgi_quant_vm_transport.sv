@@ -7,7 +7,18 @@ module tb_hgi_quant_vm_transport;
  reg rst_n=0;reg [1408:0] cmd=0;wire ready,done,fault,drained;
  wire req_v,rsp_r;wire [336:0] req;reg req_r=0,rsp_v=0;
  reg [272:0] rsp=0;reg provider_fault=0;
+`ifdef HGI_REC
+ // hgi-takeover: drive the normative die record bus through ot_hgi_quant_record (counts = descriptor n)
+ wire [1408:0] cmd_int;wire nfault;
+ wire [682:0] rec={1'b0,cmd[1153+48+:20],1'b0,cmd[385+48+:20],cmd[1153+:256],cmd[385+:256],cmd[128:1],cmd[0]};
+ ot_hgi_quant_record #(.MUT_NOCHECK(0)) recb(.clk(clk),.rst_n(rst_n),.rec(rec),.cmd(cmd_int),.nfault(nfault));
+ always @(posedge clk) if(nfault)$fatal(1,"record count consistency fault on a legal record");
+ ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.clk(clk),.rst_n(rst_n),.cmd(cmd_int),.ready(ready),
+  .done(done),.fault(fault),.drained(drained),.req_v(req_v),.req_r(req_r),.req(req),.rsp_v(rsp_v),.rsp_r(rsp_r),
+  .rsp(rsp),.provider_fault(provider_fault));
+`else
  ot_hgi_quant_vm_transport #(.ENABLE(1),.MUTANT(`MUTANT)) dut(.*);
+`endif
  reg [31:0] vm[0:8191];reg [31:0] expected[0:8191];
  reg corrupt_tag=0;reg pv=0;reg [336:0] held;integer delay_count=0;
  integer dest_base=4096,layout_rows=1,layout_ostride=1,layout_wstride=0,published_words=0;
