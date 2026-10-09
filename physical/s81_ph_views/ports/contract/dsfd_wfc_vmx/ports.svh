@@ -18,4 +18,5 @@
     output wire [526:0] t_swd,
     output wire [0:0] t_swv,
     output wire [0:0] t_vc,
-    output wire [511:0] t_vq
+    output wire [511:0] t_vq,
+    output wire [6:0] t_vqi

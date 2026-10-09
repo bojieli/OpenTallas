@@ -2335,3 +2335,10 @@ place_pin -pin_name {t_vq[508]} -layer M4 -location {0.0960 255.3240} -pin_size 
 place_pin -pin_name {t_vq[509]} -layer M4 -location {0.0960 255.4680} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_vq[510]} -layer M4 -location {0.0960 255.6120} -pin_size {0.1920 0.0240}
 place_pin -pin_name {t_vq[511]} -layer M4 -location {0.0960 255.7560} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[0]} -layer M4 -location {0.0960 276.3960} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[1]} -layer M4 -location {0.0960 276.4440} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[2]} -layer M4 -location {0.0960 276.4920} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[3]} -layer M4 -location {0.0960 276.5400} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[4]} -layer M4 -location {0.0960 276.5880} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[5]} -layer M4 -location {0.0960 276.6360} -pin_size {0.1920 0.0240}
+place_pin -pin_name {t_vqi[6]} -layer M4 -location {0.0960 276.6840} -pin_size {0.1920 0.0240}

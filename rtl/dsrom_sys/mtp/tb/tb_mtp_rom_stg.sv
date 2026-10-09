@@ -181,6 +181,21 @@ module tb_mtp_rom_stg;
         if (li_v && li_r) begin t_li[li_n % 4096] = cyc; li_n = li_n + 1; end
         if (w_in_valid) begin sum_li = sum_li + (cyc - t_li[wi_n % 4096]); if (cyc - t_li[wi_n % 4096] > max_li) max_li = cyc - t_li[wi_n % 4096]; wi_n = wi_n + 1; end
     end
+    reg [2:0] read_history=0;
+    reg held=0; reg [FLIT:0] held_data;
+    always @(posedge fclk) begin
+        if(!rst_n) begin read_history<=0; held<=0; end
+        else begin
+            if(vqi[6] !== (READPIPE ? read_history[2] : read_history[0])) begin
+                $display("MTP_STG FAIL: response edge latency readpipe=%0d",READPIPE); $finish;
+            end
+            read_history<={read_history[1:0],vm_re};
+            if(held && (!lo_v || lo_d !== held_data)) begin
+                $display("MTP_STG FAIL: stalled output changed"); $finish;
+            end
+            held<=lo_v&&!lo_r; held_data<=lo_d;
+        end
+    end
     integer peak_queue=0, peak_debt=0, stalls=0;
     always @(posedge fclk) if(rst_n) begin
         if(u_wfc.txq_n>peak_queue) peak_queue=u_wfc.txq_n;
