@@ -53,6 +53,19 @@ def plan_groups(d):
     return trees, groups
 
 
+S81_LOCAL_FAMILIES = False    # opt-in measured SELECT/COLLECT/GATHER trunk sharing
+
+
+def s81_clock_family(inst):
+    if inst == "bk_selector" or inst.startswith(("xsix_", "hix_")):
+        return "SELECT"
+    if inst == "bk_collector" or inst.startswith(("xsco_", "hco_")):
+        return "COLLECT"
+    if inst == "sp_gather" or inst.startswith(("f_hr_", "g_hr_")):
+        return "GATHER"
+    return None
+
+
 MAX_MERGE_UM = 5250.0         # merged region limit: the measured 60 ps H-tree extent (rom_die_clocking_decision)
 MAX_REGION_UM = 4000.0        # a region's sink bbox side (option C: <= 5.25 mm measured 60 ps H-tree extent)
 
@@ -71,6 +84,8 @@ def plan_regions(d, trees, max_ext=MAX_REGION_UM, max_merge=None):
         for inst, port in dict.fromkeys(tr['sinks']):
             (x, y), _ = C.port_xy(d, d['by'][inst], port)
             rect = reg.get(inst, (t, f'{t}:die'))[1].split(':', 1)[1]     # rect part (a block on two trees: per tree)
+            if S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81'):
+                rect = s81_clock_family(inst) or rect
             groups[f'{t}:{rect}'].append((inst, port, x, y))
         work = list(groups.items())
         done = {}
@@ -209,7 +224,7 @@ def clock_nets(d, trees, groups, group):
         return nets
     R = plan_regions(d, trees)
     fam_root = {}
-    if d.get('die') == 'hbm' and FAMILY_ROOTS[0]:
+    if (d.get('die') == 'hbm' and FAMILY_ROOTS[0]) or (S81_LOCAL_FAMILIES and d.get('die', '').startswith('s81')):
         # HBM r23 (die 30.6 mm wide, stream trunk 3.1 ns: sibling regions of one SM group (G<q>w / G<q>e) or one scan
         # quadrant (HUB-Q<q> cuts) diverged near the PLL, 150-160 ps): sibling regions share one root point (their
         # family's sink bbox centre), so the trunk is common down to the family and only the region trees differ
@@ -218,6 +233,8 @@ def clock_nets(d, trees, groups, group):
             for r, sl in regs.items():
                 rect = r.split(':', 1)[1] if ':' in r else r
                 fk = re.sub(r'^(G[NS][EW])[we]$', r'\1', rect.split('.')[0])
+                if d.get('die', '').startswith('s81') and fk not in ('SELECT', 'COLLECT', 'GATHER'):
+                    fk = rect  # retain existing tree roots outside the local functional families
                 fam[fk] += [(r, p) for p in sl]
             for fk, l in fam.items():
                 xs, ys = [p[2] for _, p in l], [p[3] for _, p in l]
@@ -524,7 +541,7 @@ def record(a):
     viol_inter = [w for w in worst if w[4] != w[5] and w[0] > C.SKEW_INTER_PS]
     rec = dict(schema='opentallas.budgets.clock_plan.v1', die=d['die'], source_commit=d.get('source_commit'),
                s81_opts=d.get('s81_opts'), method=__doc__.split('\n\n')[1].strip(), cases=F.meta,
-               max_region_um=MAX_REGION_UM, max_merge_um=MAX_MERGE_UM,
+               max_region_um=MAX_REGION_UM, max_merge_um=MAX_MERGE_UM, s81_local_families=S81_LOCAL_FAMILIES,
                policy=dict(inter_ps=C.SKEW_INTER_PS, intra_default_ps=C.SKEW_INTRA_PS, intra_margin_ps=C.INTRA_MARGIN_PS,
                            ocv=C.OCV, hold_io_ps=C.HOLD_IO_SKEW_PS),
                trees=trees_out, regions=out_regions, inter_region=out_inter,
@@ -556,8 +573,10 @@ def main():
     ap.add_argument('--max-merge-um', type=float, default=None,
                     help='merged-region sink-bbox side limit (default MAX_MERGE_UM 5250); die-gaps 2026-10-08: S81 r3 '
                          'serial spine merged to 5.23 mm gave a 65.2 ps intra bound (+25 margin > 90)')
+    ap.add_argument('--s81-local-families', action='store_true', help='opt-in: selector/collector plus local crossing stages share band trunk roots')
     a = ap.parse_args()
-    global MAX_MERGE_UM
+    global MAX_MERGE_UM, S81_LOCAL_FAMILIES
+    S81_LOCAL_FAMILIES = a.s81_local_families
     if a.max_merge_um:
         MAX_MERGE_UM = a.max_merge_um
     emit(a) if a.mode == 'emit' else record(a)
