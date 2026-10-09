@@ -3749,6 +3749,12 @@ def _bank_nets(m):
 
 
 PATH_PICK = os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+# --relay-tt-reach UM (s81-gen 2026-10-09): option-B sign-off is TT setup (owner 10-07).  A relay / station with no legal box
+# inside the SS-derived reach (HOP_R_CC 410 um: the frame / corridor is 100 % packed, m221pq_r4c rt_0_8a_y1) takes the
+# nearest legal box within the TT reach instead (real relay, counted in hop_fix.pad_fallback.tt_reach and listed by name in
+# hop_fix.tt_reach_relays for the die STA).  TT wire fit 261 ps + 0.76 ps/um: 600 um = 717 ps < 833.333 - 60 ps setup
+# uncertainty.  Default None = off (r3 / r4 reproduce byte-identically).
+RELAY_TT_REACH = None
 
 
 def _corr_frac(path, rects, step=20.0):
@@ -3762,6 +3768,46 @@ def _corr_frac(path, rects, step=20.0):
             tot += 1
             ins += any(a - 1e-6 <= x <= c + 1e-6 and b - 1e-6 <= y <= d + 1e-6 for a, b, c, d in rects)
     return ins / tot if tot else 0.0
+
+
+def _hop_paths(a, b, cor):
+    """candidate Manhattan paths a -> b for a die-level hop (s81-gen 2026-10-09, --path-pick): the two L orientations
+    and a Z through the centre line of every corridor that spans the turn (vertical corridors: a -> (xc, ay) -> (xc, by)
+    -> b; horizontal: a -> (ax, yc) -> (bx, yc) -> b).  The 20.2 mm layer1 hw_SW host chain ran its horizontal-first L
+    along y = 14724.7 through packed field frames (station 5 / 53 had no corridor box)."""
+    out = [[a, (b[0], a[1]), b], [a, (a[0], b[1]), b]]
+    lo_y, hi_y = min(a[1], b[1]), max(a[1], b[1])
+    lo_x, hi_x = min(a[0], b[0]), max(a[0], b[0])
+    for x0, y0, x1, y1 in cor.values():
+        if x1 - x0 < y1 - y0 and y0 <= lo_y + 1e-6 and y1 >= hi_y - 1e-6:       # vertical corridor spanning both ys
+            xc = (x0 + x1) / 2
+            out.append([a, (xc, a[1]), (xc, b[1]), b])
+        if x1 - x0 >= y1 - y0 and x0 <= lo_x + 1e-6 and x1 >= hi_x - 1e-6:     # horizontal corridor spanning both xs
+            yc = (y0 + y1) / 2
+            out.append([a, (a[0], yc), (b[0], yc), b])
+    return out
+
+
+def _pick_path(a, b, cor):
+    """the candidate path with the largest share of its length inside the corridors (stations may only stand there);
+    within 2 % of the best share, the shortest"""
+    rects = list(cor.values())
+    cands = [(_corr_frac(p_, rects), _poly_len(p_), j, p_) for j, p_ in enumerate(_hop_paths(a, b, cor))]
+    best = max(c[0] for c in cands)
+    return min((c for c in cands if c[0] >= best - 0.02), key=lambda c: (c[1], c[2]))[3]
+
+
+def _tt_place(P, cx, cy, w_, h_, cur, R_tt, nxt, nreach_tt, horiz):
+    """RELAY_TT_REACH tier: nearest legal box anywhere on the die within the TT reach of the previous chain point and
+    (when the chain has a next point) of the next one"""
+    W, H = DIE
+    nr = dict(nxt=nxt, nreach=nreach_tt) if nxt is not None else {}
+    for span, rows in ((300.0, 30), (600.0, 60), (1200.0, 120)):
+        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                    reach=R_tt - 10.0, span=span, rows=rows, **nr)
+        if pl:
+            return (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+    return None
 
 
 def _hop_fix(m, P):
@@ -3812,10 +3858,14 @@ def _hop_fix(m, P):
                 # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1): a die-level hop takes the L orientation that runs more
                 # of its length inside the corridors (its stations may only sit there); the horizontal-first default
                 # drove the 20.9 mm scan hw_SW host chain along y=15373 through packed field frames (station 5/55 trap).
-                alt = [a, (a[0], b[1]), b]
-                if _corr_frac(alt, cor) > _corr_frac(path, cor) + 1e-9:
+                # s81-gen 2026-10-09 (--path-pick): also a Z through any spanning corridor; the station count follows the
+                # chosen path length (a detour longer than the plan L would otherwise stretch every stage past the reach).
+                alt = _pick_path(a, b, cor)
+                if alt != path:
                     path = alt
-                    rec['path_pick']['vfirst'] = rec['path_pick'].get('vfirst', 0) + 1
+                    kind_ = 'vfirst' if len(alt) == 3 else 'z'
+                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                    n = max(n, math.ceil(_poly_len(path) / (R - 20.0) - 1e-9) - 1)
             Lp = _poly_len(path)
             # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
             # segment) at each non-glue end, the span between them at the reach as before
@@ -3920,6 +3970,14 @@ def _hop_fix(m, P):
                             pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
                             rec['pad_fallback']['fine_lattice'] = rec['pad_fallback'].get('fine_lattice', 0) + 1
                             break
+                if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > R:
+                    nr_tt = None
+                    if NXT_REACH:
+                        nr_tt = (RELAY_TT_REACH - 10.0) if k == n - 1 else (n - k) * (RELAY_TT_REACH - 10.0)
+                    pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, b if NXT_REACH else None, nr_tt, horiz)
+                    if pl:
+                        rec['pad_fallback']['tt_reach'] = rec['pad_fallback'].get('tt_reach', 0) + 1
+                        m.setdefault('tt_reach_relays', []).append(f'g_{bid}_{e[0]}_{k}')
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
@@ -3992,7 +4050,8 @@ def _hop_fix(m, P):
         f['relay_ret'] = f.get('relay_ret', 0) + sum(v for (k, _), v in d.items() if k == 'r')
     m['hop_fix'] = dict(classes={k: dict(v, max_um=round(v['max_um'], 1)) for k, v in rec.items()},
                         planned_hops=len(plan), fwd_rt_add=fwd_add.get('r', 0) + fwd_add.get('x', 0),
-                        reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD))
+                        reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD, tt_exception=RELAY_TT_REACH),
+                        tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
 
 
 def _col_relays(m, P):
@@ -4005,6 +4064,7 @@ def _col_relays(m, P):
     B = m['buses']
     out, added = [], defaultdict(int)       # (bus id) -> relays
     ck_add = defaultdict(list)
+    tt_col = []                             # --relay-tt-reach: pass-1 relays placed in the TT-reach tier
     for bid, cls, bits, eps in list(B):
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
@@ -4035,6 +4095,16 @@ def _col_relays(m, P):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
             NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
             pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
+            if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > BANK_RULE_UM + 40.0:
+                # s81-gen: the unbounded fallback below put y_rt_0_8a_1 773.7 um from its driver (r4c frame 0); a relay
+                # first takes a box within the TT reach (inside the frame, then the strip / channel beside it)
+                nr_tt = dict(nxt=b, nreach=(n - k) * (RELAY_TT_REACH - 10.0)) if NXT_REACH else {}
+                pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=RELAY_TT_REACH - 10.0, span=400.0,
+                            rows=40, **nr_tt)
+                if pl is None and (PQ_PLACE or FRAME_OUT_RELAY):
+                    pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, nr_tt.get('nxt'), nr_tt.get('nreach'), True)
+                if pl:
+                    tt_col.append(f'y_{bid}_{k}')
             if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             assert pl, (bid, k)
@@ -4088,7 +4158,7 @@ def _col_relays(m, P):
         f['relay_x'] = max((v for k_, v in added.items() if k_.startswith((f'xa_{r}_', f'xb_{r}_', f'qt_{r}_', f'cc_{r}_'))),
                            default=0)
         f['bank_stages'] = 2 if any(k == 'q' for _, k, _, _ in f['elems']) else 0
-    m['col_relays'] = dict(nets=len(added), relays=sum(added.values()),
+    m['col_relays'] = dict(nets=len(added), relays=sum(added.values()), tt_reach_relays=sorted(tt_col),
                            by_class={c: sum(v for k_, v in added.items() if k_.startswith(c)) for c in
                                      ('rt_', 'xa_', 'xb_', 'cc_', 'qt_', 'es_', 'ss_', 'so_', 'nf_', 'cfg_', 'go_', 'rr_')})
 
@@ -5312,6 +5382,11 @@ def die_options(ap):
                     'EOL keepout); default off for reproducing r3/r4')
     ap.add_argument('--host', action='store_true', help='s81-dies / ingest RQ-ING-1: dsfd_host slab (0.10 mm2) beside '
                     'the collective (HOST class demuxed from the board SerDes) wired to every stack controller; default off')
+    ap.add_argument('--path-pick', action='store_true', help='s81-gen 2026-10-09: a die-level hop runs on the L or '
+                    'corridor Z path with the largest corridor share (station count from that path); = OT_S81_PATH_PICK=1')
+    ap.add_argument('--relay-tt-reach', type=float, help='s81-gen 2026-10-09: a relay with no legal box inside the SS '
+                    'reach takes the nearest box within this TT reach in um (option B: TT setup; 600 = 717 ps of TT wire); '
+                    'listed in hop_fix.tt_reach_relays / col_relays.tt_reach_relays; default off')
     ap.add_argument('--frame-out-relay', action='store_true', help='s81-dies: a frame relay with no spot in its full '
                     'frame takes the nearest legal spot within reach outside it, as --pq-place does (head die); default off')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
@@ -5396,7 +5471,11 @@ def apply_options(a):
     assert not CFIFO_COLCK or CFIFO_V2, '--cfifo-colck needs --cfifo-v2'
     CF_WH = CF_WH_V2 if CFIFO_V2 else (850.176, 47.52)
     FWD_REACH = float(a.fwd_pitch) if a.fwd_pitch else LINK_STAGE_UM
-    HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, 410.0
+    # s81-gen: the OT_S81_HOP_R_CC override (9917e9987) was reset to 410 here, after import (the r4e_rcc runs were no-ops)
+    HOP_R_FWD, HOP_R_CC = LINK_STAGE_UM, float(os.environ.get('OT_S81_HOP_R_CC', 410.0))
+    global PATH_PICK, RELAY_TT_REACH
+    PATH_PICK = bool(getattr(a, 'path_pick', False)) or os.environ.get('OT_S81_PATH_PICK', '0') == '1'
+    RELAY_TT_REACH = getattr(a, 'relay_tt_reach', None)
     if a.fwd_pitch:            # every hop on the die at or under the pitch
         HOP_R_FWD = HOP_R_CC = float(a.fwd_pitch)
     global REV, HEAD_DIES
