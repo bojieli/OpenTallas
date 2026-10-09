@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.engram-source-word-gate.v1",
+ "retained_objects": "/tmp/engram-dead-source-rt8_bqpe",
+ "qualification": "actual nativeSOURCE word software producer\u2192decoder\u2192full64-user prompt store/source scheduling; VL embedding arithmetic and system software launch separately unqualified",
+ "cases": {
+  "0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE PASS users64 prompt256 windows320 all4imageTypes firstDEAD generatedImageRawTEXT stalls feedbackqueue\n- /srv/opentallas-scratch/engram-source-word-39c71da42/rtl/test/tb_dsrom_engram_dead_source.sv:86: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE NEG mode1 rejected64+launch\n- /srv/opentallas-scratch/engram-source-word-39c71da42/rtl/test/tb_dsrom_engram_dead_source.sv:82: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE NEG mode2 rejected64+launch\n- /srv/opentallas-scratch/engram-source-word-39c71da42/rtl/test/tb_dsrom_engram_dead_source.sv:82: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_DEAD_SOURCE NEG mode3 rejected64+launch\n- /srv/opentallas-scratch/engram-source-word-39c71da42/rtl/test/tb_dsrom_engram_dead_source.sv:82: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_source_command_decode.sv": "73fc0984dd3109fc224edf072cc882977e006d05101556ed61ed313adee80951",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv": "f2bbec9a6d2b9b4aa2277b50ae849868dcb007d4cad2c358ebe35ed51a4f43ac",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "46427f73ed80712101fac2cb94733911ee34c11180e7ad62633154979950bf4f",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "de314478aadc6570cc7b5f20ffd3bef7535e3dc52d39c5911edce5df879ee7c7",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin_protected.sv": "6fcdd90a470af736e61e02244bdc42808b0dd6f816108e1cbf1de927657f7c6e",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "rtl/test/tb_dsrom_engram_dead_source.sv": "9cf9dfad516f46c2d5ebc612db1ab3d4a4366a83e7130df6846a639c9a82fa97",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "5bb6fc045157bf4881327bd005248a3eae89a047807f3730283dba6e421ad4a2",
+  "tools/engram_source_prompt.py": "60e76dd43eaeb15b3b9b9c4a67167219bd16c309596a4b70f3a95df6f0cf4233",
+  "tools/engram_dead_source_gate.py": "5e225f1bacc19d7451de2d03af04364e288a3357b2f7bae56ff6824715c6a030"
+ },
+ "prepared_input_sha256": "95630dc6e70317a3d47bb6f4e3df40a900d86b8befbf31a196355db887b9b584",
+ "commands_sha256": "abb2314287820e967e03a1c2718927d4694313ab073019207c887a7974ce482f",
+ "status": "pass"
+}
