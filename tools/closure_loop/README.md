@@ -63,6 +63,18 @@ Spec `"fp_lint": false` opts out; `"fp_lint": {"set": {"util_max": 0.62}, "warn_
 Offline: `openroad` `read_db X.odb; source tools/fp_margin_lint.tcl; ot_fp_lint_dump d.json`, then
 `python3 tools/fp_margin_lint.py check d.json` (calibration and thresholds in that file's docstring).
 
+### Lint at submit (2026-10-09): pin density / utilisation before any compute
+`validate` and intake run `submit_lint.py` on route_master.sh jobs: the cfg outline, `--pin-region` plan, top-module port
+widths (ANSI header, parameters resolved, no synthesis) and IO placer settings give a LOWER BOUND on the flow lint's pin
+density per face/layer (a region is one ordered group packed on one layer at PIN_MIN_TRACKS x pitch; a face averages at
+least T/(layers x max(L, 100 um))).  Fails on one layer but passes with the approved two-layer spread -> the loop prefixes
+the route_master stage commands with `export PIN_H='M4 M6' PIN_V='M5 M7'` and records it in `spec.submit_lint` (the
+submitted spec stays in `spec_submitted`); fails even spread -> `REFUSED` "SUBMIT_LINT FLOORPLAN_MARGIN: ..." naming the
+face, the group and the settings that would pass (PIN_MIN_TRACKS=2, OT_PIN_GROUP_MAX + OT_PIN_BALANCE_H/V).  Utilisation
+is estimated only from an earlier FLOORPLAN_MARGIN util measurement of the same synthesis input (STATE/submit_lint_util.json).
+`"submit_lint": false` opts out.  `closure_loop.py submit-recheck --since ISO [--requeue] [--log F]` re-judges past
+FLOORPLAN_MARGIN jobs without a live successor.
+
 ## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
 The daemon probes every RUNNING route every 15 min (`early_fail_gate`, one ssh; spec `"early_fail": false` opts out) and
 stops a hopeless run at once with a terminal verdict, its diagnosis in `{CL}/early_fail.json`,

@@ -25,6 +25,7 @@ NVMe run roots (hosts.json), one route per (block, source commit), it never kill
     closure_loop.py tick                       # one pass (debug)
     closure_loop.py status                     # table of jobs
     closure_loop.py validate <job.json>        # check a spec before dropping it
+    closure_loop.py submit-recheck --since ISO [--requeue] [--log F]   # re-judge FLOORPLAN_MARGIN jobs at submit
     closure_loop.py retry <name>               # human: re-queue a NEEDS_HUMAN job from its failed stage
     closure_loop.py retry-eco <name> [--why]   # human: re-run the hold ECO (current rev) on a hold-only NEEDS_RTL job
     closure_loop.py ioref-rejudge <name>       # human: re-judge a NEEDS_RTL job at its ROUTED clock insertion (no re-route)
@@ -58,6 +59,7 @@ from pathlib import Path
 from ssh_transport import command as transport_command
 from source_archive import build_archive, repo_path
 from postroute_recovery import remote_command as postroute_probe_command
+import submit_lint
 
 HERE = Path(__file__).resolve().parent
 REPO = Path(os.environ.get("CL_REPO", "/home/ubuntu/OpenTallas"))          # git object store for archive/commit/merge
@@ -530,6 +532,70 @@ def experiment(j, status, register=False):
         sh([sys.executable, str(EXPERIMENT), "register", *args], timeout=60)
 
 
+# LINT-AT-SUBMIT (stream lint-at-submit 2026-10-09): pin density (and utilisation where a measurement of the same
+# synthesis input exists) estimated from the job's pin plan + outline at intake (submit_lint.py), before a queue slot or
+# synthesis is spent.  Fails on one layer but passes with the approved two-layer spread -> the spread (PIN_H 'M4 M6' /
+# PIN_V 'M5 M7') is added to the route_master stage commands and recorded in spec.submit_lint (the submitted spec is
+# kept in spec_submitted); fails even spread -> REFUSED "SUBMIT_LINT FLOORPLAN_MARGIN: ..." with no compute spent.
+# Spec "submit_lint": false (or "fp_lint": false) opts out; fp_lint {"set": {...}} / warn_only apply as in the flow lint.
+def util_db_path():
+    return STATE / "submit_lint_util.json"
+
+
+def util_db():
+    try:
+        return json.loads(util_db_path().read_text())
+    except (OSError, ValueError):
+        return {}
+
+
+def util_db_add(key, rec):
+    p = util_db_path()
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with open(str(p) + ".lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        db = util_db()
+        db[key] = rec
+        tmp = p.with_suffix(".tmp")
+        tmp.write_text(json.dumps(db, indent=1, sort_keys=True) + "\n")
+        os.replace(tmp, p)
+
+
+def submit_check(spec):
+    git_ = submit_lint.Git(REPO)
+    commit = str((spec.get("source") or {}).get("commit", ""))
+    if commit and git_.blob(commit, "") is None and (spec.get("source") or {}).get("branch"):
+        gfetch(spec["source"]["branch"], timeout=300)
+    return submit_lint.check(spec, git_, util_db())
+
+
+def lint_at_submit(j):
+    """run the submit lint on a freshly ingested QUEUED job: may add the pin spread or REFUSE it"""
+    try:
+        res = submit_check(j["spec"])
+    except Exception as ex:  # noqa: BLE001  (never block intake on the estimate itself)
+        event(j, f"submit lint skipped: {type(ex).__name__}: {str(ex)[:200]}")
+        return
+    v = res["verdict"]
+    if v == "SKIP":
+        return
+    if v == "PASS":
+        event(j, f"submit lint PASS (estimate {res.get('est')} b/um, limit {res.get('limit')}"
+                 + (f", util {res['util_est']['util']:.1%}" if res.get("util_est") else "") + ")")
+    elif v == "SPREAD":
+        j["spec_submitted"] = j["spec"]
+        j["spec"] = submit_lint.apply_spread(j["spec"], res, now_iso())
+        event(j, f"submit lint SPREAD: {res['message'][:500]}; PIN_H/PIN_V added to the stage commands "
+                 f"(spec.submit_lint)")
+        ledger(j, f"SUBMIT_LINT pin spread applied: {res['message'][:300]}")
+    elif v == "REFUSE":
+        j["status"] = "REFUSED"
+        j["reason"] = f"SUBMIT_LINT FLOORPLAN_MARGIN: {res['message']}"[:1500]
+        j["submit_lint"] = res
+        event(j, j["reason"])
+        ledger(j, f"REFUSED at submit (no compute spent): {j['reason'][:400]}")
+
+
 def ingest():
     try:
         gfetch("main", timeout=300)
@@ -543,7 +609,7 @@ def ingest():
         p = jpath(name) if NAME_RE.match(str(name)) else None
         if p is not None and p.exists():
             j = load_job(name)
-            frozen = {k: v for k, v in j["spec"].items()}
+            frozen = {k: v for k, v in j.get("spec_submitted", j["spec"]).items()}
             if json.dumps(frozen, sort_keys=True) != json.dumps(spec, sort_keys=True) and not j.get("spec_change_noted"):
                 j["spec_change_noted"] = True
                 event(j, f"NOTE spec in {origin} changed after ingest: ignored (frozen at first sight; a new source "
@@ -574,6 +640,7 @@ def ingest():
                 ledger(j, f"REFUSED: {j['reason']}")
             else:
                 event(j, f"ingested from {origin}")
+                lint_at_submit(j)
         save_job(j)
 
 
@@ -1550,6 +1617,12 @@ def preroute_finish(j, tag, text):
 
 def fp_lint_finish(j, tag, text):
     reasons = next((l[len("FLOORPLAN_MARGIN: "):] for l in text.splitlines() if l.startswith("FLOORPLAN_MARGIN: ")), text)
+    try:                       # lint-at-submit: the measured area predicts the next job of the same synthesis input
+        rec = submit_lint.util_record(j.get("spec_submitted", j["spec"]), reasons, submit_lint.Git(REPO), j["name"])
+        if rec:
+            util_db_add(*rec)
+    except Exception:  # noqa: BLE001
+        pass
     kill_own_stage(j)          # a parallel calibrate / route of the same floorplan stops too
     finish(j, "FLOORPLAN_MARGIN", reasons[:600],
            f"FLOORPLAN_MARGIN ({tag}): the floorplan failed the margin lint before global placement (no route spent; "
@@ -4235,8 +4308,71 @@ def cmd_status(a):
 def cmd_validate(a):
     spec = json.loads(Path(a.file).read_text())
     errs = validate(spec)
+    if not errs:
+        res = submit_check(spec)
+        print(f"submit lint {res['verdict']}: {res.get('message', '')}"
+              + (f" (estimate {res.get('est')} b/um, spread {res.get('est_spread')})" if res.get("est") else ""))
+        if res["verdict"] == "REFUSE":
+            errs.append(f"SUBMIT_LINT FLOORPLAN_MARGIN: the loop would REFUSE this job: {res['message']}")
+        elif res["verdict"] == "SPREAD":
+            print("  the loop will add PIN_H='M4 M6' PIN_V='M5 M7' to the route_master stage commands at intake")
     print("\n".join(errs) if errs else "OK")
     sys.exit(1 if errs else 0)
+
+
+def fp_margin_time(j):
+    """when the job finished FLOORPLAN_MARGIN (its event), else its last update"""
+    for e in reversed(j.get("events", [])):
+        if " FLOORPLAN_MARGIN" in e[:60]:
+            return e.split(" ", 1)[0]
+    return j.get("updated", "")
+
+
+def cmd_submit_recheck(a):
+    """lint-at-submit back-check: every FLOORPLAN_MARGIN job since --since with no live successor (a later job of the
+    same block that is not terminal, or CLOSED) is re-judged by the submit lint; pin-density-only failures the
+    two-layer spread fixes are requeued (--requeue: a copy of the submitted spec named <name>-ls in the drop dir, so
+    intake applies and records the spread); the rest are listed with their failing checks"""
+    jobs = all_jobs()
+    out = []
+    for j in sorted(jobs, key=fp_margin_time):
+        if j["status"] != "FLOORPLAN_MARGIN" or fp_margin_time(j) < a.since:
+            continue
+        blk = j["spec"].get("block")
+        succ = [x["name"] for x in jobs if x["name"] != j["name"] and x["spec"].get("block") == blk
+                and x.get("created", "") > j.get("created", "")
+                and (x["status"] not in TERMINAL or x["status"] in ("CLOSED", "SMOKE_OK"))]
+        reason = j.get("reason") or ""
+        checks = sorted({part.split(":", 1)[0].strip() for part in reason.split(" | ") if ":" in part})
+        spec = j.get("spec_submitted", j["spec"])
+        try:
+            rec = submit_lint.util_record(spec, reason, submit_lint.Git(REPO), j["name"])
+            if rec:
+                util_db_add(*rec)
+        except Exception:  # noqa: BLE001
+            pass
+        if succ:
+            out.append(f"SUCCESSOR {j['name']}: {','.join(checks)} -> live successor {', '.join(succ[:3])}")
+            continue
+        res = submit_check(spec)
+        est = f" est {res.get('est')} spread {res.get('est_spread')}" if res.get("est") else ""
+        if checks == ["pin_density"] and res["verdict"] == "SPREAD":
+            new = (j["name"][:92] + "-ls")
+            line = f"REQUEUE {j['name']} -> {new}: pin density only, fixed by the two-layer spread{est}"
+            if a.requeue:
+                nspec = json.loads(json.dumps(spec))
+                nspec["name"] = new
+                DROP.mkdir(parents=True, exist_ok=True)
+                (DROP / f"{new}.json").write_text(json.dumps(nspec, indent=1) + "\n")
+            out.append(line)
+        else:
+            what = ("pin density only; " if checks == ["pin_density"] else "") + f"submit lint {res['verdict']}"
+            out.append(f"LIST {j['name']} [{blk}]: {','.join(checks) or '?'}: {reason[:220]} || {what}: "
+                       f"{res.get('message', '')[:400]}{est}")
+    text = "\n".join(out)
+    print(text)
+    if a.log:
+        append_locked(Path(a.log), "".join(f"{now_iso()} [lint-at-submit recheck] {x}\n" for x in out))
 
 
 @locked_job_command
@@ -4559,6 +4695,8 @@ def main():
     d = sub.add_parser("daemon"); d.add_argument("--interval", type=int, default=60)
     sub.add_parser("tick"); sub.add_parser("status")
     v = sub.add_parser("validate"); v.add_argument("file")
+    sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
+    sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
@@ -4584,6 +4722,8 @@ def main():
         cmd_status(a)
     elif a.cmd == "validate":
         cmd_validate(a)
+    elif a.cmd == "submit-recheck":
+        cmd_submit_recheck(a)
     elif a.cmd == "retry":
         cmd_retry(a)
     elif a.cmd == "retry-eco":
