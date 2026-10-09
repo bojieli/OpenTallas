@@ -6,9 +6,9 @@
   "branch": "claude/sys-takeover-coll2-20261009"
  },
  "clock_plan": {
-  "note": "Qwen ROM die generator (tools/qwen_rom_fulldie.py SPINE_BLOCKS / IO_BLOCKS): constants_sequencer stream_1p2 (1.2 GHz), io collective (ot_rom_oneshot_die_m) serial_0p9 (0.9 GHz), vector_memory serial_0p9. The first native-coll bench assumed the opposite (sequencer 0.9 / engine 1.2); the die plan row is eng0p9_seq1p2.",
-  "die_row": "eng0p9_seq1p2",
-  "reference_row": "eng1p2_seq1p2 (single 1.2 GHz clock = the measured token-path AR windows)"
+  "note": "CORRECTED 2026-10-09 10:20: the collective engine master qfd_io_collective (ot_rom_oneshot_die_m) is signed off at 833.333 ps (physical/qwen_die_masters/signoff/qfd_io_collective_pr2.sdc; cfg ROUTE period 0.770): it runs at 1.2 GHz, and the sequencer is stream_1p2.  The generator's 'serial_0p9' label is the io_collective RESERVATION (PLL / SerDes side), not the engine.  So the price is the native port itself (CDC + credit hops) vs the engine alone at one clock, both 1.2 GHz.",
+  "die_row": "eng1p2_seq1p2",
+  "reference": "engine alone, same clock, no xfifo (tools/qwen_coll_margin_bench.py build, DEPTH 32): AR256 296 cycles, 2x256 552, 2x320 680, 4x320 1,320, argmax 24"
  },
  "table": {
   "eng0p9_seq1p2": {
@@ -31,7 +31,8 @@
     "engine_cycles": 36,
     "ns": 40.0,
     "cycles_1p2": 48
-   }
+   },
+   "note": "clock what-if (not the die plan)"
   },
   "eng1p2_seq0p9": {
    "reduce_320w": {
@@ -53,7 +54,8 @@
     "engine_cycles": 41,
     "ns": 34.2,
     "cycles_1p2": 41
-   }
+   },
+   "note": "clock what-if (not the die plan)"
   },
   "eng1p2_seq1p2": {
    "reduce_320w": {
@@ -97,20 +99,65 @@
     "engine_cycles": 38,
     "ns": 42.2,
     "cycles_1p2": 51
-   }
+   },
+   "note": "clock what-if (not the die plan)"
   }
  },
  "token_path": {
-  "per_allreduce_add_cycles": 144,
+  "per_allreduce_add_cycles": 22,
   "allreduces_per_token": 72,
-  "per_argmax_add_cycles": 10,
-  "token_add_cycles": 10378,
-  "note": "the measured AR windows (1,094 / 949 cycles, single 1.2 GHz clock RTL) are kept; the production die runs the collective engine at 0.9 GHz: +144 cycles per 256-word all-reduce (transport only, bench-measured). NOT yet included: the 0.9 GHz vector-memory read/write share of each AR window (not re-measured)."
+  "per_argmax_add_cycles": 14,
+  "token_add_cycles": 1598,
+  "adopted": "CR8_IB8_LCR8",
+  "without_lever": {
+   "per_allreduce_add_cycles": 140,
+   "token_add_cycles": 10094
+  },
+  "note": "measured AR windows (1,094 / 949, single-clock RTL) kept; the native port adds +22 per 256-word AR with the credit lever (+140 without), +14 on the argmax all-gather"
  },
  "levers": {
-  "engine_at_1p2": "move ot_rom_oneshot_die_m to stream_1p2 (CDC at the SerDes face instead): recovers all 144 cycles/AR (eng1p2_seq1p2 row); blocked by qfd_io_collective not closing even at its current plan (TT -340.7, live struct jobs)",
-  "wider_return": "two return channels / 2-word return: no gain at 256 words (the engine word rate, not the return path, bounds the AR; eng0p9 rows equal with any sequencer clock)",
-  "sequencer_side_1p2": "already 1.2 GHz in the die plan; the 0.9 GHz-sequencer row (eng1p2_seq0p9) costs +45/AR vs reference",
-  "overlap": "stream the all-reduce out of the o_proj / down matvec as words are produced: up to min(op, AR) per AR hidden; a sequencer program-structure change (segment END barrier), not benched"
+  "credit_depth": "ADOPTED in the price: CR 8 / ENG_IB 8 / LCR 8 -> +22/AR (was +140); routes queued",
+  "engine_at_1p2": "moot: the engine already signs off at 1.2 GHz",
+  "wider_return": "no gain: the 2-word return does not beat the credit-bound / engine word rate (LCR > 8 changes nothing)",
+  "sequencer_side": "already 1.2 GHz (stream_1p2)",
+  "overlap": "stream the AR out of o_proj / down as words are produced: up to min(op, AR) hidden per AR; sequencer program-structure change, not benched"
+ },
+ "engine_alone": {
+  "qwen_ar_256w": 296,
+  "qwen_layer_2x256w": 552,
+  "reduce_2x320w": 680,
+  "reduce_4x320w": 1320,
+  "qwen_argmax_1w": 24
+ },
+ "credit_lever": {
+  "note": "the AR word rate across the CDC is credit-bound (4 credits per ~8-edge round trip on the sq hop and the engine IB). CR / ENG_IB / LCR sweep at both 1.2 GHz:",
+  "rows": {
+   "CR4_IB4_LCR4 (acb615a21 default)": {
+    "qwen_ar_256w": 436,
+    "qwen_layer_2x256w": 820,
+    "argmax": 38
+   },
+   "CR8_IB4_LCR8": {
+    "qwen_ar_256w": 436
+   },
+   "CR4_IB8_LCR4": {
+    "qwen_ar_256w": 373
+   },
+   "CR8_IB8_LCR4": {
+    "qwen_ar_256w": 373,
+    "qwen_layer_2x256w": 693,
+    "reduce_2x320w": 853
+   },
+   "CR8_IB8_LCR8 (adopt)": {
+    "qwen_ar_256w": 318,
+    "qwen_layer_2x256w": 584,
+    "argmax": 38
+   },
+   "CR16_IB16_LCR16": {
+    "qwen_ar_256w": 318,
+    "qwen_layer_2x256w": 584
+   }
+  },
+  "cost": "engine IB 4 -> 8 (+4 x ~600-b input words in qfd_io_collective), sq receive buffer 4 -> 8 and its async FIFO 8 -> 16 slots (546 b), sequencer landing 4 -> 8 (516 b): ~ +9k flops"
  }
 }

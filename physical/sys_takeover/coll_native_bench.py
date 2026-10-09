@@ -53,7 +53,8 @@ def build(w: Path, mode: str) -> Path:
     obj = w / "obj"
     cmd = ["verilator", "--cc", "--exe", "--build", "-O2", "-Wno-fatal", "-Wno-WIDTH", "-Wno-UNUSED", "-Wno-BLKSEQ",
            "-Wno-TIMESCALEMOD", "-Wno-MULTIDRIVEN", "--top-module", "tb_qfd_coll_native", "-Mdir", str(obj),
-           f"-GCQ_AD={os.environ.get('NCOLL_CQ_AD', '64')}"] + \
+           f"-GCQ_AD={os.environ.get('NCOLL_CQ_AD', '64')}", f"-GCR={os.environ.get('NCOLL_CR', '4')}",
+           f"-GENG_IB={os.environ.get('NCOLL_ENG_IB', '4')}", f"-GLCR={os.environ.get('NCOLL_LCR', '4')}"] + \
           (["+define+OT_NCOLL_MUT_NOREFUND_CHECK"] if mode == "gate" else []) + src + \
           [str(ROOT / "physical/sys_takeover/coll_native_harness.cpp"), "-CFLAGS", "-O1", "-j", "8"]
     r = subprocess.run(cmd, capture_output=True, text=True)
