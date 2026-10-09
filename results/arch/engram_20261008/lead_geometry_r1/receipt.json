@@ -1,0 +1,222 @@
+{
+ "schema": "opentallas.engram-lead-geometry-probe.v1",
+ "source_commit": "765470589",
+ "original_job": "engram-lead-765470589-tt",
+ "rtl_change": false,
+ "added_cycles": 0,
+ "outline_um": [
+  324,
+  216
+ ],
+ "outline_mm2": 0.069984,
+ "outline_area_delta_mm2": 0,
+ "macro_count": 8,
+ "macro_mm2": 0.019132692479999998,
+ "macro_area_delta_mm2": 0,
+ "placement": "4columns2rows;x70+50.1*c,y68+75*r; R0; LOCKED",
+ "gap_x_um": 12.084,
+ "gap_y_um": 12.09,
+ "residual_sliver_policy": "block every residual positive gap<12um; none in selected geometry",
+ "macro_geometry": [
+  {
+   "name": "map.m\\[0\\].rom",
+   "bbox_um": [
+    70.0,
+    68.0,
+    108.016,
+    130.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 95.08258825753262
+  },
+  {
+   "name": "map.m\\[1\\].rom",
+   "bbox_um": [
+    120.1,
+    68.0,
+    158.116,
+    130.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 76.93367476488044
+  },
+  {
+   "name": "map.m\\[2\\].rom",
+   "bbox_um": [
+    170.2,
+    68.0,
+    208.216,
+    130.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 76.92350076575539
+  },
+  {
+   "name": "map.m\\[3\\].rom",
+   "bbox_um": [
+    220.3,
+    68.0,
+    258.316,
+    130.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 95.00607082253266
+  },
+  {
+   "name": "map.m\\[4\\].rom",
+   "bbox_um": [
+    70.0,
+    143.0,
+    108.016,
+    205.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 56.23219832278495
+  },
+  {
+   "name": "map.m\\[5\\].rom",
+   "bbox_um": [
+    120.1,
+    143.0,
+    158.116,
+    205.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 6.3365488469624225
+  },
+  {
+   "name": "map.m\\[6\\].rom",
+   "bbox_um": [
+    170.2,
+    143.0,
+    208.216,
+    205.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 6.21180396669999
+  },
+  {
+   "name": "map.m\\[7\\].rom",
+   "bbox_um": [
+    220.3,
+    143.0,
+    258.316,
+    205.91
+   ],
+   "direct_block_pins": 13,
+   "pin_centroid_um": [
+    164.22276923076925,
+    207.60092307692307
+   ],
+   "pin_to_bank_distance_um": 56.10271857581977
+  }
+ ],
+ "original_odb": "/srv/opentallas-scratch/claude/closure-loop/engram-lead-765470589-tt/routes/engram_lead_765470589_tt_cal/work/orfs/results/asap7/opentallas_ot_dsrom_engram_lead_producer_asap7_s81ph_engram_lead_765470589_tt_cal/base/3_2_place_iop.odb",
+ "original_odb_sha256": "8c694142a95bf41a38b4b35e91478493d9795314aabb04c66ab448e3f4835a79",
+ "repaired_dump_sha256": "0d7150b0cebfe21d2ecf8380064806d7cf8661c3770ad6313afc24f8be885876",
+ "repaired_odb_sha256": "f113b324ac0f5196bf508ea91d5d007750acd9eb680c0c375c6c109d167e3b55",
+ "lint": {
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [
+   {
+    "check": "pin_pdn",
+    "msg": "19 pin(s) within 1 track of a PDN strap / via stack (column not full: escape tracks remain)"
+   }
+  ],
+  "metrics": {
+   "core_um2": 69634.1,
+   "std_um2": 11445.2,
+   "macro_um2": 19132.7,
+   "flops": 11351,
+   "hold_allow_um2": 827.5,
+   "util": 0.4391,
+   "util_hold": 0.451,
+   "n_macros": 8,
+   "n_pins": 205,
+   "pin_density_max": 0.69,
+   "pin_density_at": "S M5 @32.4 um (69 pins / 100 um, 72 on the face)",
+   "pin_width_illegal": 0,
+   "pin_width_offtable_accessible": 0,
+   "pin_pdn_near": 0,
+   "pin_pdn_near_sparse": 19,
+   "pin_pdn_min_um": {
+    "M4": 0.048,
+    "M5": 0.325
+   },
+   "macro_edge_shadow": 0,
+   "bank_far": 0,
+   "slivers": 0,
+   "channel_worst": {
+    "axis": "x",
+    "at": 89.01,
+    "demand": 13,
+    "cap": 2607.2,
+    "ratio": 0.005
+   },
+   "capture_unanchored": 0
+  },
+  "thresholds": {
+   "util_max": 0.6,
+   "util_hold_max": 0.65,
+   "hold_buf_per_flop": 1.0,
+   "pin_density_max": 12.0,
+   "pin_density_target": 6.0,
+   "pin_density_window_um": 100.0,
+   "pin_density_min_pins": 1,
+   "pin_pdn_tracks": 1.0,
+   "pin_pdn_fail": 0.0,
+   "pin_width_access_pitches": 1.0,
+   "pin_pdn_full_frac": 0.9,
+   "channel_usable": 0.5,
+   "channel_min_layer": 4,
+   "macro_edge_um": 10.0,
+   "macro_edge_pins": 32,
+   "sliver_um": 12.0,
+   "sliver_min_row_area_um2": 2.0,
+   "sliver_blocked_frac": 0.9,
+   "bank_dist_um": 100.0,
+   "bank_min_pins": 8,
+   "capture_warn_um": 50.0,
+   "capture_warn_count": 256
+  },
+  "dump": "/srv/opentallas-scratch/engram-lead-geometry-r1/repaired_dump.json"
+ },
+ "remote_host": "ot-agidock128",
+ "remote_objects": "/srv/opentallas-scratch/engram-lead-geometry-r1",
+ "admission_reserved_gib": 2,
+ "qualification": "offline actual3_2ODB geometry only; unchanged source; no timing/routing/adoption claim; new physical intake requires Claude review",
+ "probe_failures_preserved": [
+  "probe.log (binary PATH)",
+  "probe-r2.log (LOCKED relocation)",
+  "probe-r3.log (Tcl stringcompare)"
+ ]
+}
