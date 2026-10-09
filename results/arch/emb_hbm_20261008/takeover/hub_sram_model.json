@@ -1,0 +1,367 @@
+{
+  "schema": "opentallas.embedding_hub_sram_proposal.v1",
+  "status": "PRE_RTL_REVIEW_ONLY",
+  "parent_source": "8bfbb0bb0",
+  "model_before_RTL": true,
+  "MAC_per_cycle": 0,
+  "scope": "Replace only four synchronous ingress ib[128][523] arrays; preserve AD8 async FIFO, OD8 output FIFO, XS8 skid and all other native logic.",
+  "fault_evidence": {
+    "source": "975fdada2e4cb3d43acdfc34208eedaac12cf4bc",
+    "verdict": "FLOORPLAN_MARGIN",
+    "reason": "util: utilisation 69.8% > 60% (std 221043 + macro 0 um2 in 316730 um2): grow the outline to <= 55-60%",
+    "actual_stdcell_um2": 221043,
+    "actual_core_um2": 316730,
+    "actual_utilization_pct": 69.8,
+    "historical_frame_um": [
+      567.216,
+      567.216
+    ],
+    "core_area_required_um2_at_60pct": 368405.0,
+    "core_area_required_um2_at_55pct": 401896.3636363636,
+    "minimum_additional_core_area_um2_at_55pct": 85166.36363636359,
+    "timing_closed": false,
+    "next": "actual existing hub/oldembedding rectangle fit and source partition model before structural review; no duplicate route"
+  },
+  "inventory": {
+    "links": 4,
+    "depth_per_link": 128,
+    "payload_bits": 523,
+    "original_payload_flop_bits": 267776,
+    "secded_64_72_words_per_payload": 9,
+    "padded_data_bits": 576,
+    "encoded_bits": 648,
+    "useful_payload_bits_per_die": 267776,
+    "encoded_bits_per_die": 331776,
+    "physical_capacity_bits": 393216,
+    "unused_bits_per_macro_triplet": 120,
+    "macro_name": "ot_sram_1r1w_128x256_m1_r2c2",
+    "macros_per_link": 3,
+    "macros_per_die": 12
+  },
+  "bandwidth": {
+    "per_link_useful_bits_per_edge": 523,
+    "per_link_SRAM_write_bits_per_edge": 648,
+    "per_link_SRAM_read_bits_per_edge": 648,
+    "per_link_physical_port_bytes_per_edge": 96,
+    "per_link_used_port_bytes_per_edge": 81,
+    "aggregate_useful_bits_per_edge": 2092,
+    "aggregate_physical_write_bytes_per_edge": 384,
+    "aggregate_physical_read_bytes_per_edge": 384,
+    "II_target_edges": 1,
+    "port_type": "three concurrent 1R1W SRAMs/link, same wclk, no read/write port arbitration"
+  },
+  "latency": {
+    "domain": "fck0..3, actual833.333ps; source route770ps; uncertainties60/25ps unchanged",
+    "baseline_edges": {
+      "E0": "capture ingress",
+      "E1": "write ib",
+      "E2": "pop ib into async FIFO and return credit"
+    },
+    "proposed_edges": {
+      "E0": "capture ingress and reserve one of128 logical capacity slots",
+      "E1": "capture nine parallel SECDED encodings",
+      "E2": "write all three SRAM banks",
+      "E3": "earliest SRAM read issue, avoiding same-address read/write ambiguity",
+      "E4": "capture macro data and syndrome, reserving finite corrected-output capacity",
+      "E5": "correct/UE classify and actually accept into async FIFO; only then return upstream credit"
+    },
+    "added_wclk_edges": 3,
+    "added_first_word_ns": 2.499999,
+    "added_credit_return_edges": 3,
+    "existing_RTT_window_restart_edges": [
+      117,
+      119
+    ],
+    "proposed_no_extra_stall_window_restart_edges": [
+      120,
+      122
+    ],
+    "minimum_remaining_128_window_margin_edges": 6,
+    "system_composition": "Add3 fck edges to each traversed ingress. A response/fence traversing one ingress costs+2.5ns; do not multiply by four parallel links. Async phase/backpressure changes require measured gate.",
+    "BOOT_END": "Ordered behind all earlier ingress words; do not report drain/credit at SRAM read issue. Fence completes only after real downstream retirement and pre-existing gateway semantics."
+  },
+  "finite_flow_control": {
+    "capacity": 128,
+    "rule": "One logical occupancy reservation per accepted ingress word, including encoder pending, resident SRAM and read/decode pending; reservation released only at real async acceptance. No early credit and no 128+pipeline overbooking.",
+    "encode_pending_slots": 1,
+    "read_decode_pending_minimum_slots": 2,
+    "read_issue_rule": "Reserve pending decode slot before read; stop when reserved pending slots unavailable. Maintain in-order issue and acceptance; no SRAM row reused while a read is pending.",
+    "implementation_question": "Two pending slots are minimum; actual registered async-ready stop latency must be measured and may require one additional plain holding slot. Any such slot is priced before RTL approval.",
+    "controls": "single plain pointers, counts, credits, valid flags; no control ECC/TMR/mirrors/authentication",
+    "ECC_scope": "actual SRAM payload including11 tagbits, only; nine independent SECDED64/72 lanes. CE corrected before async; UE sticky fault and no silent publication, with explicit credit/reset behavior to be gated.",
+    "same_address": "Issue read only for committed older row; no reliance on ambiguous macro same-address simultaneous read/write behavior."
+  },
+  "placement_arithmetic": {
+    "outline_um": [
+      567.216,
+      567.216
+    ],
+    "core_area_um2": 316730,
+    "macro_area_um2": 46698.92352,
+    "halo_seat_area_um2": 53966.06208,
+    "seats": [
+      {
+        "link": 0,
+        "bank": 0,
+        "origin_um": [
+          70.2,
+          100.44
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 0,
+        "bank": 1,
+        "origin_um": [
+          197.424,
+          100.44
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 0,
+        "bank": 2,
+        "origin_um": [
+          324.648,
+          100.44
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 136,
+        "orientation": "R0"
+      },
+      {
+        "link": 1,
+        "bank": 0,
+        "origin_um": [
+          70.2,
+          173.88
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 1,
+        "bank": 1,
+        "origin_um": [
+          197.424,
+          173.88
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 1,
+        "bank": 2,
+        "origin_um": [
+          324.648,
+          173.88
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 136,
+        "orientation": "R0"
+      },
+      {
+        "link": 2,
+        "bank": 0,
+        "origin_um": [
+          70.2,
+          247.32
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 2,
+        "bank": 1,
+        "origin_um": [
+          197.424,
+          247.32
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 2,
+        "bank": 2,
+        "origin_um": [
+          324.648,
+          247.32
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 136,
+        "orientation": "R0"
+      },
+      {
+        "link": 3,
+        "bank": 0,
+        "origin_um": [
+          70.2,
+          320.76
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 3,
+        "bank": 1,
+        "origin_um": [
+          197.424,
+          320.76
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 256,
+        "orientation": "R0"
+      },
+      {
+        "link": 3,
+        "bank": 2,
+        "origin_um": [
+          324.648,
+          320.76
+        ],
+        "size_um": [
+          94.824,
+          41.04
+        ],
+        "halo_um": 2.16,
+        "used_bits_per_word": 136,
+        "orientation": "R0"
+      }
+    ],
+    "between_macro_gap_um": 32.4,
+    "between_halos_channel_um": 28.08,
+    "macro_region_extent_um": [
+      70.2,
+      100.44,
+      419.472,
+      361.8
+    ],
+    "geometric_nonoverlap_by_construction": true,
+    "actual_placement_or_route_proof": false,
+    "stdcell_budget_at55pct_after_macro_exclusion_um2": 148517.092064,
+    "stdcell_budget_at55pct_after_halo_exclusion_um2": 144520.165856,
+    "minimum_net_stdcell_saving_without_halo_um2": 72525.907936,
+    "minimum_net_stdcell_saving_with_halo_um2": 76522.834144,
+    "break_even_removed_area_per_original_payload_bit_um2": 0.2857718172801147,
+    "flop_proxy_only_um2_per_bit": 0.32,
+    "removed_payload_flop_proxy_um2": 85688.32,
+    "net_new_logic_allowance_at_proxy_with_halo_um2": 9165.485856000014,
+    "new_register_proxy": {
+      "per_link_encode_bits": 648,
+      "per_link_read_capture_bits": 648,
+      "per_link_syndrome_flags_bits": 72,
+      "per_link_plain_pending_hold_bits": 523,
+      "total_bits": 7564,
+      "proxy_um2": 2420.48,
+      "remaining_codec_control_buffer_allowance_um2_at_proxy": 6745.005856000014,
+      "claim": "Sizing allowance only; actual registered-ready latency and pending-slot implementation may change this inventory. No measured area saving."
+    },
+    "claim": "Seat arithmetic fits existing outline. Standard-cell saving, codec/control cost, pins, PDN, detailed route and timing are unmeasured; no adoption or die growth/removal credit."
+  },
+  "pin_channels": {
+    "macro_total_signal_pins": 819,
+    "dynamic_pins_full_bank": 529,
+    "dynamic_pins_136bit_bank": 289,
+    "dynamic_pins_per_link_triplet": 1347,
+    "constants": "write masks all ones for648 meaningful bits, spare repair configuration tied inactive, unused120 physical bits static; not runtime protected controls",
+    "pin_view": "M4 edge pins at96nm pitch; macro interior OBS M1-M4, route above on M5-M7 as allowed by hub",
+    "cross_macro_edge_demand_upper_bound": 410,
+    "edge_nominal_two_track_48nm_capacity": 427,
+    "margin_tracks": 17,
+    "edge_conservative_M4_only_capacity": 320,
+    "edge_conservative_M4_plus_M6_capacity": 641,
+    "escape_requirement": "410-pin edge does not meet75%-usable two-track singleM4 capacity320. Require actual M4\u2192M6 escape vias for spare routing capacity; do not treat nominal427 as conservative pass.",
+    "claim": "Only local edge escape arithmetic, not a proved global channel. Align codec/capture cells next to each bank; avoid gathering all twelve819-pin interfaces into one channel. Preserve existing top-level hub pins."
+  },
+  "macro_timing": {
+    "claim_boundary": "abstract views from a calibrated analytical model on measured ASAP7 bitcells and ASAP7 standard-cell FO4; no transistor layout, no SPICE of the macro, not silicon; ASAP7 is a predictive PDK and nothing here is a foundry N7 number",
+    "SS_clk_to_q_ps": 455.3205489475797,
+    "SS_min_period_ps": 435.17450020501155,
+    "SS_setup_ps": 39.800541169166664,
+    "FF_hold_ps": 19.67222053777778,
+    "SS_nominal_remaining_capture_budget_ps_excluding_sink_setup_wire_skew": 318.01245105242026,
+    "source770_remaining_capture_budget_ps_excluding_sink_setup_wire_skew": 254.6794510524203,
+    "qualification": "Macro minperiod alone does not close codec/hold or actual macro\u2192capture path; all actuallib corners and own clk\u2192q retained."
+  },
+  "energy": {
+    "TT_three_macro_read_fj_per_link_word": 1009.9455674430081,
+    "TT_three_macro_write_fj_per_link_word": 3621.5203514430077,
+    "TT_full_four_link_II1_macro_dynamic_w": 0.022231036410652886,
+    "claim": "Analytical macro-only access energy at all ports active each edge; excludes codec/control/clock tree/wires. No measured system power or energy gain."
+  },
+  "review_gates": [
+    "Claude approval before additive default-off RTL",
+    "minimum one-link523bit exact gate: capacity128 burst, II1, credits, stalls, wrap/reset, tags and BOOT_END ordering",
+    "actual SRAM CE correction/UE rejection and data/tag/order/early-credit mutants",
+    "remote admitted postmap memory inventory and netstdarea saving versus threshold",
+    "existing outline actual macro seats/pin escape/PDN/hub routing-layer check",
+    "TT/FF closure with SS sensitivity and actual833.333ps/60ps/25ps budgets"
+  ],
+  "inputs": {
+    "results/arch/emb_hbm_20261008/takeover/terminal_routes_20261009/hub_util/scope.json": "8c47b819f5f8c670c7b20ac4f08df8455c0aed11600371f8f950e2ae87be3099",
+    "rtl/physical/ot_qwen_die_cdc_ch.sv": "6fbd0613e528e1c436fda651a1c266dd00e079f9a29780b7c146164ee93e30a8",
+    "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_die_hub_emb.sv": "70200910c32481c11f8204b7e6b52ba15855709de0df434e1c551656c3ae7dcb",
+    "physical/qwen_die_masters/cfg/qfd_hub_emb.env": "d6d5de75e88757ddfe909f97893e1d3917b2b061a587260529cf444e35b6e679",
+    "physical/qwen_die_masters/mc/qfd_hub_emb/plain.sdc": "4c98fe83e8d9de17bca3a65d9f68f8b11f7e9b372a9fa33fae62fa01031671df",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json": "9cb36a209b2f0e1ecdfe80ec8c93e7c01f5349fc5aa9b5ac2215dba9637bfb87",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib": "3952d726a7f8d478b00138db7f4e90639f2533ca82422796787ab7bb4d23db84",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "2f308628d401c6ac7fed7846148293b2e758f3da104609691f892d14c84979b0",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib": "c39f42e739c93c5809d82fdc12d41cbb3ddfc6ab43fba192e542e347a7f6ea94"
+  }
+}
