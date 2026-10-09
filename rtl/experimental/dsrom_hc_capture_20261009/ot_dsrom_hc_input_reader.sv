@@ -9,6 +9,10 @@
 module ot_dsrom_hc_input_reader #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,
     parameter integer MAX_CONTEXT=1048576, ECC_PIPE=0,
+    // PROTECT=0 (sys-takeover 2026-10-09, opt-in; default 1 = original): the four row registers hold the plain 512-b
+    // response (REVIEW_20261009 S4: flop state gets no SECDED; the VM SRAM it was read from keeps its own SECDED).
+    // Same states / cycles as PROTECT=1 ECC_PIPE=0; mean_residuals = the held row directly.
+    parameter integer PROTECT=1,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -48,7 +52,22 @@ module ot_dsrom_hc_input_reader #(
     wire [31:0] ue,decode_valid;
     wire [31:0] ce_unused;
     genvar c,l;
-    generate for(l=0;l<8;l=l+1) begin:g_encode
+    generate if(PROTECT==0) begin:g_plain
+      for(l=0;l<8;l=l+1) begin:g_encode
+        assign encode_valid[l]=1'b1;
+        assign rsp_encoded[72*l+:72]={8'd0,rsp_data[64*l+:64]};
+      end
+      for(c=0;c<4;c=c+1) begin:g_copy
+        for(l=0;l<8;l=l+1) begin:g_decode
+          assign decode_valid[8*c+l]=1'b1; assign ce_unused[8*c+l]=1'b0; assign ue[8*c+l]=1'b0;
+          assign decoded[c][64*l+:64]=rows[c][72*l+:64]^(c==0&&l==0?HOLD_INJECT[63:0]:64'd0);
+        end
+        for(l=0;l<8;l=l+1) begin:g_select
+          assign mean_residuals[128*c+16*l+:16]=decoded[c][256*half_q+32*l+16+:16];
+        end
+      end
+    end else begin:g_prot
+    for(l=0;l<8;l=l+1) begin:g_encode
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_encode_pipe e(.clk(clk),.rst_n(rst_n),
                 .valid_in(state==WAIT&&rsp_valid&&!rsp_fault&&!bad_bf16&&!fault),
@@ -75,6 +94,7 @@ module ot_dsrom_hc_input_reader #(
         for(l=0;l<8;l=l+1) begin:g_select
             assign mean_residuals[128*c+16*l+:16]=decoded[c][256*half_q+32*l+16+:16];
         end
+    end
     end endgenerate
     wire [14:0] end_row={1'b0,cmd_h_row}+15'd1280;
     wire [14:0] requested_row={1'b0,base_q}+{13'd0,copy_q}*15'd320+
