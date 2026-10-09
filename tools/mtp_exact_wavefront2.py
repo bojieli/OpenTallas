@@ -163,7 +163,7 @@ def prepare(scratch: Path, gold_from: Path):
                 input_sha256={str(p_.relative_to(ROOT)): sha(p_) for p_ in [*W.sources(), Path(__file__)]})
     prep["order"] = ORDER
     prep["compressor_ring_records"] = lay.ring
-    prep["rollback_storage_delta_bytes_per_package"] = 3 * (lay.ring - 2) * 64 * 4
+    prep["rollback_storage_delta_bytes_per_package"] = 4 * (lay.ring - 2) * 64 * 4
     prep["rollback_added_isa_instructions"] = 0
     (scratch / prep_name).write_text(json.dumps(prep, indent=1) + "\n")
     print(json.dumps({x: prep[x] for x in ("layers", "rxw", "txw", "jobs",
