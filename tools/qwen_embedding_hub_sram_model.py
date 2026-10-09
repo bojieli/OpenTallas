@@ -9,7 +9,7 @@ OUT = ROOT / 'results/arch/emb_hbm_20261008/takeover/hub_sram_model.json'
 BASE = ROOT / 'physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2'
 NAME = BASE.name
 
-def main():
+def model():
     macro = json.loads((BASE / f'{NAME}.json').read_text())
     scope_path = ROOT / 'results/arch/emb_hbm_20261008/takeover/terminal_routes_20261009/hub_util/scope.json'
     scope = json.loads(scope_path.read_text())
@@ -130,8 +130,13 @@ def main():
         'TT/FF closure with SS sensitivity and actual833.333ps/60ps/25ps budgets'],
       'inputs': {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     }
+    return model
+
+
+def main():
+    report = model()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(model, indent=2) + '\n')
+    OUT.write_text(json.dumps(report, indent=2) + '\n')
     print(OUT.relative_to(ROOT))
 
 if __name__ == '__main__':
