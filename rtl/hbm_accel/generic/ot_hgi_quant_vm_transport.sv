@@ -13,6 +13,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [127:0] ch=cmd[1+:128];
  wire [255:0] a=cmd[385+:256],o=cmd[1153+:256];
  reg busy,bad,pending,pending_write;
+ reg seat_v;reg [336:0] seat;
  reg [127:0] header;
  reg [19:0] n,read_words,launched,returned,finished;
  reg [31:0] abase,obase;
@@ -44,26 +45,26 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  assign drained=!busy&&!pending&&reserved==0;
  wire write_offer=queued!=0 && (read_words>=n || (reserved>=DEPTH && MUTANT!=3));
  wire read_offer=read_words<n && (read_part!=0 || (reserved<DEPTH || MUTANT==3));
- assign req_v=ENABLE&&rst_n&&busy&&!bad&&!pending&&!launch&&(write_offer||read_offer);
+ assign req_v=ENABLE&&rst_n&&seat_v&&!bad;
  wire [31:0] word_addr=write_offer ? obase+finished*32+write_part*8 : abase+read_words;
  reg [255:0] wd;
  always @* begin
   wd=0;
   for(integer j=0;j<8;j=j+1)wd[j*32+:32]={result[head][(write_part*8+j)*16+:16],16'd0};
  end
- assign req={write_offer,word_addr<<2,write_offer?wd:256'd0,32'hffffffff,next_tag};
+ assign req=seat;
  assign rsp_r=ENABLE&&rst_n&&pending;
  wire take_req=req_v&&req_r,take_rsp=rsp_v&&rsp_r;
  wire reply_ok=rsp[272:257]==pending_tag && rsp[256]==pending_write;
  wire last_read=(read_part==3 || read_words+8==n);
  wire last_write=(write_part==3 || finished*32+write_part*8+8==n);
- wire reserve_read=take_req&&!write_offer&&read_part==0;
+ wire reserve_read=take_req&&!req[336]&&read_part==0;
  wire retire_write=take_rsp&&reply_ok&&pending_write&&last_write&&!bad;
  wire [PW-1:0] head_next=head==DEPTH-1?0:head+1;
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   busy<=0;bad<=0;pending<=0;pending_write<=0;header<=0;n<=0;
+   busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;header<=0;n<=0;
    abase<=0;obase<=0;read_words<=0;launched<=0;returned<=0;finished<=0;
    read_part<=0;write_part<=0;next_tag<=0;pending_tag<=0;
    x<=0;launch<=0;head<=0;tail<=0;reserved<=0;queued<=0;done<=0;fault<=0;
@@ -77,10 +78,15 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
      reserved<=0;queued<=0;head<=0;tail<=0;x<=0;end
    end
    if(busy)begin
+    if(!bad&&!pending&&!seat_v&&!launch&&(write_offer||read_offer))begin
+     seat_v<=1;seat<={write_offer,word_addr<<2,write_offer?wd:256'd0,32'hffffffff,next_tag};
+    end
+    if(bad)seat_v<=0;
     if(provider_fault||decode_fault)begin bad<=1;fault<=1;end
     if(take_req)begin
-     if(!write_offer&&read_part==0)x<=0;
-     pending<=1;pending_write<=write_offer;pending_tag<=next_tag;next_tag<=next_tag+1;end
+     if(!req[336]&&read_part==0)x<=0;
+     seat_v<=0;
+     pending<=1;pending_write<=req[336];pending_tag<=next_tag;next_tag<=next_tag+1;end
     if(take_rsp)begin
      pending<=0;
      if(!reply_ok)begin bad<=1;fault<=1;end
