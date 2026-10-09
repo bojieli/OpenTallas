@@ -1,0 +1,65 @@
+{
+  "source_commit": "8591723ac",
+  "host": "ot-epyc3",
+  "remote_run": "/srv/opentallas-scratch/codex/native512-8591723ac",
+  "launcher_pid": 1119360,
+  "terminal": true,
+  "golden_compile_rc": 0,
+  "golden_rc": 0,
+  "mutant_compile_rc": 0,
+  "mutant_rc": 1,
+  "source_pins": {
+    "rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv": "1a09be4f1ae36bc56625fbe1587393d0f501265f201962f34738e2fad3ded70d",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv": "0095d70919a7a3594757aab5f455e742f342285d0b7945a17782d279c4cfbd3c",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel.sv": "893675838e94c9fb2f5f54419417d0be3f13e3e9ac727b8e7784618f5695bdaf",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv": "3716c56efe4dcd751d1dfa501de364b36b8357b03c4a10f0d93f9d6cb7971e6b",
+    "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv": "564187e89040cbb0f9cd7e5e2a641914ee12153c67cac48dd88800d39ce3eceb",
+    "rtl/hbm_accel/generic_20261009/ot_hgi_idx_native_ds_dispatch.sv": "d049803beaa76667f49ebd50e841b0de86b5a97bb57bc2f1cf3ed10d4127d546",
+    "rtl/test/hbm_generic_20261009/tb_hgi_idx_native_ds_dispatch.sv": "94701b6b97558b0f4b01fa9885664af2a8fc74986ad3efcf29fa06cbc635cc38"
+  },
+  "cases": [
+    {
+      "k": 512,
+      "quarter_allocation": "balanced",
+      "cycles": 871,
+      "selected": 512
+    },
+    {
+      "k": 512,
+      "quarter_allocation": "all1366blocks-quarter0",
+      "cycles": 2637,
+      "selected": 512
+    },
+    {
+      "k": 2048,
+      "quarter_allocation": "all1366blocks-quarter0",
+      "cycles": 3185,
+      "selected": 1366
+    },
+    {
+      "k": 1,
+      "quarter_allocation": "balanced",
+      "cycles": 667,
+      "selected": 1
+    }
+  ],
+  "memory": "two independent synchronous behavioral four1024x68 one-read/one-write line stores; physical macro timing not qualified",
+  "mutant": "compile-success ID bit corruption, consumed validlane fails cycle490",
+  "replay_scope": "all lawfully owned1366 blocks fit683 lines<1024; rep_req/ovf zero verified and cycle-equivalent. Natural overflow replay not exercised.",
+  "boundary": "unit9/op3 DS candidate dispatch only; genericTOPK op2 refused; full final TP96 gather not proven",
+  "added_edges": 0,
+  "physical_closed": false,
+  "die_reachable": false,
+  "peak_kib": {
+    "golden.compile.time": 326888,
+    "mutant.runtime.time": 103600,
+    "golden.runtime.time": 102504,
+    "mutant.compile.time": 326712
+  },
+  "launcher_verified_absent": true,
+  "bench_timescale": "1ps/1fs",
+  "half_period_ps": 416.6665,
+  "period_ps": 833.333,
+  "sdf": false,
+  "scope": "Clock-matched functional cycle equivalence, no physical setup/hold qualification"
+}
