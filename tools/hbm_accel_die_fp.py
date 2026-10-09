@@ -442,6 +442,9 @@ R25IMW = dict(R25IQG, native_mtp_wb=True,
         mtp='stream_1p2', kvwb='stream_1p2'))
 R25IMWS = dict(R25IMW, native_mtp_stop=True,
     spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
+R25IMWX = dict(R25IMWS, native_mtp_cp_result=True, native_backend_slot=True,
+    spine_slot_masters={"mtp":"hfd_mtp_native_cp_stop","kvwb":"hfd_kvwb_native"},
+    split_masters={**R25IMWS.get("split_masters",{}), "hfd_cmdproc":"physical/hbm_cp_mtp_native/collar_mx1/split.json"})
 ADOPTED = R25
 
 
@@ -760,7 +763,10 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     if variant.get('native_mtp_wb'):
         from hbm_mtp_wb_die_model import model as native_model
         m['mtp_wb_native'] = native_model(ROOT)
-        if variant.get('native_mtp_stop'):
+        if variant.get('native_mtp_cp_result'):
+            from hbm_mtp_native_contract import cp_result_model
+            m['mtp_wb_native']['MTP'] = cp_result_model(ROOT)
+        elif variant.get('native_mtp_stop'):
             from hbm_mtp_native_contract import stop_model
             m['mtp_wb_native']['MTP'] = stop_model(ROOT)
         m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
@@ -1561,13 +1567,17 @@ def apply_splits(m, specs, lattice=None):
             record_path = ROOT / b['source_port_record'] if b.get('source_port_record') else (ROOT / rel).parent.joinpath(bn, 'ports.json')
             recs[bn] = json.loads(record_path.read_text())
             spec, order = _split_spec(recs[bn]['ports'])
+            exact_spec = None
+            if b.get('source_port_record'):
+                exact_spec = {pn:('rects',[(pin[0],pin[1],tuple(pin[2:])) for pin in pv['pins']]) for pn,pv in recs[bn]['ports'].items()}
+                m.setdefault('full_source_ports',[]).extend(dict(master=bn,port=pn,bits=pv['bits']) for pn,pv in recs[bn]['ports'].items())
             for pn_, (bn_, bits_, face_, layer_, frac_, pitch_) in extra.items():
                 if bn_ == bn:
                     span_ = sp['parent_size_um'][0] if face_ in 'NS' else b['h_um']
                     spec[pn_] = ('face', bits_, face_, layer_, round(frac_ * span_, 4), pitch_)
                     order.append(pn_)
-            def fn(mst, k=1, spec=spec, order=order):
-                sp_ = dict(spec)
+            def fn(mst, k=1, spec=spec, order=order, exact_spec=exact_spec):
+                sp_ = dict(exact_spec if k==1 and exact_spec is not None else spec)
                 if k > 1:
                     _bundle_pack(mst, sp_, order, k)
                 if V_ck:
@@ -1599,7 +1609,8 @@ def apply_splits(m, specs, lattice=None):
                     if top is not None and yy < top - 1e-6:
                         yy = round(yy + LAT_Y, 4)
                 top = yy + h
-                nm = f'{it.name}_{bn.rsplit("_", 1)[1]}'
+                leaf = "s" if bn.startswith("hfd_cmdproc_s_mtp_native") else bn.rsplit("_",1)[1]
+                nm = f'{it.name}_{leaf}'
                 new_insts.append(Inst(nm, bn, it.x, round(yy, 4), it.w, h, it.orient, kind=it.kind, region=it.region,
                                       domain=it.domain))
                 names[bn] = nm
@@ -2436,8 +2447,8 @@ def buses(m):
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
         if V.get('native_mtp_wb'):
-            from hbm_mtp_native_contract import model, stop_model
-            native_contract = stop_model if V.get('native_mtp_stop') else model
+            from hbm_mtp_native_contract import model, stop_model, cp_result_model
+            native_contract = cp_result_model if V.get('native_mtp_cp_result') else stop_model if V.get('native_mtp_stop') else model
             contract = native_contract(ROOT)
             for name, group in contract['groups'].items():
                 peer_ = name[2:]
@@ -2681,6 +2692,8 @@ def port_widths(m, k):
                 continue
             key = (mst, port)
             w[key] = max(w.get(key, 0), n)
+    for p in m.get('full_source_ports',[]):
+        w[(p['master'],p['port'])]=p['bits'] if k==1 else max(1,math.ceil(p['bits']/k))
     return w
 
 
@@ -3612,7 +3625,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25imwx=R25IMWX, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
