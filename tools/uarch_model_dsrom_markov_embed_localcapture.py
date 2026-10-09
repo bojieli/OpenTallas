@@ -30,7 +30,12 @@ def model():
   per_bank_corridor_um=28,per_bank_payload_tracks=256,
   per_layer_tracks_at55pct=28/.036*.55,
   CTS_leaf_fanout_limit=16,CTS_proposed_cluster_size=12,
-  capture_placement='one local256FF bank beside each real macro q-pin face; no pre-capture mux/buffer logic',
+  capture_placement='permacro130FFleft+126FFright actualqfaces; fourcolumns perface on actualsite/rowgrid; no pre-capture mux/buffer logic',
+  per_macro_left_payload_pins=130,per_macro_right_payload_pins=126,
+  left_payload_tracks=130,right_payload_tracks=126,
+  measured_macro_gap_um=8.37,hard_macro_gap_placement_blockage_required=True,
+  actual_mapped_capture_master_um=[1.08,.27],
+  previous_all_left_anchor_plan_qualified=False,
   fit='analytical only; macro pin coordinates, PG access, fplint and TC electrical checks gate measured fit')
  std_budget=1000
  slot_w,slot_h=190,155
@@ -41,7 +46,7 @@ def model():
   proposed_macro_origins_um=[[16,10],[16,82.91]],
   macro_origins_joint_site_and_pin_grid_snap_required=True,
   macro_geometry_fit_pending=True,local_capture_left_strip_um=12,
-  macro_q_pin_face='left M4; q0 starts y2.112 with .096um pitch',
+  macro_q_pin_face='actual mapped M4 faces:130left+126right payload pins permacro; q0 starts y2.112 with .096um pitch',
   local_capture_and_channel_width_um=54.72,
   proposed_total_usage_fraction=(15762.7+std_budget)/(slot_w*slot_h),
   replicated_proposed_pair_slots_mm2=253*slot_w*slot_h/1e6,
