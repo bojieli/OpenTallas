@@ -9194,52 +9194,6 @@
 ],
 "direction": "inout"
 },
-"ck": {
-"bits": 1,
-"layer": "M5",
-"pins": [
-[
-"ck[0]",
-"M5",
-1134.912,
-258.984,
-1134.936,
-259.176
-]
-],
-"face": "N",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
-},
-"rst": {
-"bits": 1,
-"layer": "M5",
-"pins": [
-[
-"rst[0]",
-"M5",
-1135.296,
-258.984,
-1135.32,
-259.176
-]
-],
-"face": "N",
-"dir_segments": [
-[
-0,
-1,
-"in"
-]
-],
-"direction": "input"
-},
 "ks7": {
 "bits": 1102,
 "layer": "M5",
@@ -38135,6 +38089,52 @@
 ]
 ],
 "direction": "inout"
+},
+"ck": {
+"bits": 1,
+"layer": "M5",
+"pins": [
+[
+"ck[0]",
+"M5",
+697.056,
+258.984,
+697.08,
+259.176
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
+},
+"rst": {
+"bits": 1,
+"layer": "M5",
+"pins": [
+[
+"rst[0]",
+"M5",
+697.44,
+258.984,
+697.464,
+259.176
+]
+],
+"face": "N",
+"dir_segments": [
+[
+0,
+1,
+"in"
+]
+],
+"direction": "input"
 },
 "wi": {
 "bits": 349,
