@@ -145,8 +145,8 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  launch=$time;
  if(CONTROL)begin
   command_frame=portal_req_d[98:26];command_row=row0;
-  key_visible=0;producer_published=0;producer_drained=0;control_done_seen=0;command_v=1;
-  do @(negedge efck);while(!command_r);
+  key_visible=0;producer_published=0;producer_drained=0;control_done_seen=0;
+  while(!command_r)@(negedge efck);command_v=1;
   @(negedge efck);command_v=0;
   repeat(70)@(negedge efck);
   if(actual_accepts!=rep_)$fatal(1,"core accepted before visibility fence");
