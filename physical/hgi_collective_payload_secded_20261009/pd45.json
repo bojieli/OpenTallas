@@ -1,8 +1,8 @@
 {
-  "name": "hgi-coll-port-secded-c035be9a7-pd45-tc-cx",
+  "name": "hgi-coll-port-secded-041b11f2a-pd45-tc-cx",
   "block": "ot_hcoll_port",
   "owner": "Codex:generic_collective_sram",
-  "purpose": "Owner GH-c approved payload-only SECDED in all real mutable collective SRAMs. Full545bit port, eighteen128x256 macros unchanged; nine72 codewords storedin648bits. InputencodebeforepinFF anddecodeaftercapture, zeroaddedlogicaledges. Actual CE648/UE23004 andFIFOcycle/fault/mutants passed; endpoint96rank gate parallel. Routes beforebenches per latestowner, adoptionrequiresall exact/electrical/fault/TTFF gates.",
+  "purpose": "Owner GH-c approved payload-only SECDED in all real mutable collective SRAMs. Full545bit port, eighteen128x256 macros unchanged; nine72 codewords storedin648bits. InputencodebeforepinFF anddecodeaftercapture, zeroaddedlogicaledges. Actual CE648/UE23004 andFIFOcycle/fault/mutants passed; endpoint96rank gate parallel. Routes beforebenches per latestowner, adoptionrequiresall exact/electrical/fault/TTFF gates. Expanded hierarchy original parityboundary41/68 levels preserved; balanced identical equations and registered CE/RXdrop outputs successor. Fault-free additionaledges0; UE-retirement publiccredit gains1edge.",
   "hosts": [
     "ot-epyc2",
     "ot-epyc4",
@@ -14,7 +14,7 @@
   "peak_ram_gb": 32,
   "source": {
     "branch": "codex/hgi-collective-sram-20261009",
-    "commit": "c035be9a74cabc959d603cc7ace4988c2658ce82",
+    "commit": "041b11f2ae4389906635811d9ef0b896bff63ccc",
     "paths": [
       "tools",
       "rtl",
