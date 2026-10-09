@@ -132,7 +132,7 @@ def surgery(v, m):
     m['insts'] = insts
     m['buses'] = nb
     H = m['die']['h']
-    m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3))
+    m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
     m['r22k'] = rec
     _wrap_masters(v, m)
 
