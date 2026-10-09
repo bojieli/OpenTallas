@@ -57,7 +57,9 @@ def main():
         stage_note='relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is '
                    'registered as well (the stage the r21 token-cost counts as one per die hop)',
         r22k=m.get('r22k'),
-        margin_lint=FPL.die_margin(ins, m['buses'], {i.kind for i in ins if i.name.startswith('rly_')}, reach_um=504.0),
+        margin_lint=FPL.die_margin(ins, [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
+                                   {i.kind for i in ins if i.name.startswith('rly_')}, reach_um=504.0),
+        margin_note='data buses only: clock / reset trunks are CTS / reset trees (their relay-row sinks are clock pins)',
         relay_kinds=sorted({i.kind for i in ins if i.name.startswith('rly_')}))
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1, default=str) + '\n')

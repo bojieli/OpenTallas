@@ -2137,7 +2137,8 @@ def margin(die, m):
             return H.margin_lint(m)
         if die == 'qwen_kv' or (die == 'qwen_rom' and QWEN_RECIPE == 'r22k'):
             import fp_margin_lint as FPL
-            return FPL.die_margin(m['insts'], m['buses'], {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
+            return FPL.die_margin(m['insts'], [b for b in m['buses'] if b[1] not in ('clock_trunk', 'reset')],
+                                  {it.kind for it in m['insts'] if it.name.startswith('rly_')} or {'relay'},
                                   reach_um=504.0, sliver_um=12.0)
     except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
         return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
