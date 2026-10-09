@@ -220,7 +220,7 @@ module ot_s81_ctrl #(
     ot_s81_hop_tx #(.MY_ID(MY_ID), .FLIT(FLIT), .NW(NW), .USER_W(12), .VWA(VWA), .XW(XW), .TXB(TXB),
         .WINDOW_CONTEXT(WINDOW_CONTEXT),.SIDE_TXB(SIDE_TXB), .SIDE_RXB(SIDE_RXB), .CMDW(CMDW), .OPW(OPW), .ARGW(ARGW), .SUW(SUW), .USE_VM_RVALID(USE_VM_RVALID), .OUT_DEPTH(OUT_DEPTH), .QD(QD)) u_hop (
         .clk(clk), .rst_n(rst_n), .cmd_v(s_cv[ENG_HOP]), .cmd_d(s_cd[ENG_HOP*CMDW +: CMDW]), .dn_v(h_dv), .dn_tag(h_dt),
-        .win_ctx_v(native_win_v),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
+        .win_ctx_v(native_win_v && ROLE!=2),.win_ctx_slot(native_win_slot),.win_ctx_user(native_win_user),
         .win_ctx_pos(native_win_pos),.win_ctx_tok(native_win_tok),.win_ctx_ids(native_win_ids),.win_ctx_dead(native_win_dead),
         .go(hop_go || (ROLE == 2 && r_v)), .res_v(r_v || rh_v || ROLE != 2), .res_tok(r_v ? r_tok : rh_tok),
         .res_val(r_v ? r_val : rh_val), .res_stop(r_v ? r_stop : rh_stop),
