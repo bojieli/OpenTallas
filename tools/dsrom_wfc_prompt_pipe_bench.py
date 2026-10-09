@@ -6,10 +6,14 @@ import dsrom_mtp_rom_bench as B
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--case');p.add_argument('--raw-negative',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  common=[s for s in B.COMMON if s!='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv']+['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv','rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv']
  base=B.cases();base['stg_neg_prevuser']=dict(base['stg_r1'],defines=['OT_WFC_TOKPIPE_MUT_PREVUSER'],expect='fail')
  names=('s0_tr_dspark','s0_tr_forced','s0_tr_forced_w16','s0_hash_u3','s0_hash_u1_fast','s0_neg_noepoch','stg_vmnat','stg_r1','stg_lag1','stg_neg_prevuser')
+ if a.case:
+  if a.case not in names:raise ValueError(a.case)
+  names=(a.case,)
+ if a.raw_negative and (len(names)!=1 or base[names[0]]['expect']!='fail'):raise ValueError('raw-negative requires one negative case')
  rec=[];pins={}
  for name in names:
   spec=dict(base[name]);stage=name.startswith('stg_');spec['tb']='tb_mtp_rom_stg_tokpipe' if stage else 'tb_mtp_rom_s0_tokpipe'
@@ -28,5 +32,7 @@ def main():
    (a.out/'summary.json').write_text(json.dumps(dict(all_ok=False,cases=rec,source_sha256=pins),indent=2)+'\n')
    raise RuntimeError(name+' '+run.stdout[-2000:])
  (a.out/'summary.json').write_text(json.dumps(dict(all_ok=all(r['pass_'] for r in rec),source='approved+1prompt cut matchedSOURCE metadata and current-user STAGE launch',source_sha256=pins,cases=rec),indent=2)+'\n')
+ if a.raw_negative:
+  print('WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED '+json.dumps(rec));raise SystemExit(1)
  print('WFC_TOKPIPE_GATE PASS '+json.dumps(rec))
 if __name__=='__main__':main()
