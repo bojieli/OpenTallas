@@ -1,0 +1,32 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "ot_hbm_clock_reset_collars_rs", "target": "HBM accelerator", "owner": "hbm_wiring", "recorded_at": "2026-10-09T14:03:00Z",
+   "source": {"commit": "006e20771", "paths": ["rtl/hbm_accel/control/ot_hbm_clock_reset_collars_rs.sv", "physical/strip_protect/ta15_collars_rs.sdc"]},
+   "description": "Selected17endpoint clock/reset collar successor; historical rawPOR collar row maps here without duplicate route",
+   "implementation": {"status": "implemented and canonical two variants CLOSED"},
+   "physical": {"status": "CLOSED isolated digital collars; die source and loaded CTS remain external", "jobs": ["sp-ta15rs-006e20771-tc-hm10-cl", "sp-ta15rs-006e20771-tc-hm25-cl"], "corners": {"hm10_TT_ps": 275.92, "hm10_FF_ps": 10.94, "hm25_TT_ps": 272.47, "hm25_FF_ps": 18.28}, "evidence": ["results/uarch/hbm_ta15_body_cl_adoption_20261009"]},
+   "integration": {"status": "exact collar module selected inside adopted production body; no separate retry"},
+   "dependencies": ["actual analog PLL and AON source contract", "loaded die clock/reset and synchronizer MTBF"]
+  },
+  {
+   "element": "ot_hbm_production_clock_digital_body", "target": "HBM accelerator", "owner": "hbm_wiring", "recorded_at": "2026-10-09T14:03:00Z",
+   "source": {"commit": "1f77ae2d0", "paths": ["rtl/hbm_accel/control/ot_hbm_production_clock_digital_body_cl.sv", "physical/hbm_accel_die_views/clock_boundary/production_body_cl.sdc", "physical/hbm_accel_die_views/clock_boundary/closed_body_cl"]},
+   "description": "ConfirmedX5 production readiness winner, real48pin exported abstract; DATA retired evidence-only",
+   "implementation": {"status": "selected body and pairedSDC; no new route"},
+   "physical": {"status": "CLOSED isolated digital body and standardSS/TT/FF views checked", "jobs": ["ta15prod_body-1f77ae2d0-tc-hm10-cl", "ta15prod_body-1f77ae2d0-tc-hm25-cl"], "corners": {"hm10_TT_ps": 269.46, "hm10_FF_ps": 8.03, "hm25_TT_ps": 269.73, "hm25_FF_ps": 21.52}, "evidence": ["results/uarch/hbm_ta15_body_cl_adoption_20261009/exported_view/check.json"]},
+   "integration": {"status": "adopted on ownerbranch; same exact element as human-label readiness row"},
+   "dependencies": ["vendor PLL/AON characterization", "actual loaded die clock/reset fanout"]
+  },
+  {
+   "element": "R25IQG native indexer topology", "target": "HBM accelerator", "owner": "hbm_wiring", "recorded_at": "2026-10-09T14:03:00Z",
+   "source": {"commit": "0857e76b3", "paths": ["tools/hbm_indexer_die_topology.py", "tools/hbm_indexer_native_views.py", "tools/hbm_accel_die_fp.py"]},
+   "description": "Four scorer plus selector composition: actual liveqend covers selector component only, not complete die topology",
+   "implementation": {"status": "native875instance geometry pinned; composition not a standalone RTL master"},
+   "physical": {"status": "PARTIAL_COMPONENT_ROUTE_LIVE; do not duplicate selector or claim wholecomposition closure", "component_jobs": ["hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx"], "evidence": ["results/uarch/hbm_indexer_r25i_20261009/native-pin-grid-0857e76b3.json"]},
+   "integration": {"status": "wholecomposition remains blocked on real scorer qualification, native service transport, source joins and actual die budgets"},
+   "dependencies": ["fullL16FA6 scorer exactgate and actualmapped-area/native route readiness from arithmetic owner", "native service crossing and protected line transport", "actual linked die timing and pin budgets"]
+  }
+ ]
+}

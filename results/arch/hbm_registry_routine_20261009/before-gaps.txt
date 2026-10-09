@@ -1,0 +1,73 @@
+OPEN 120
+  DeepSeek ROM     failed, re-running                            14
+  DeepSeek ROM     flow failure (no live job)                    2
+  DeepSeek ROM     implementation recorded (no physical job)     10
+  DeepSeek ROM     needs redesign (no live job)                  2
+  HBM accelerator  failed, re-running                            23
+  HBM accelerator  first trial in flight                         4
+  HBM accelerator  flow failure (no live job)                    6
+  HBM accelerator  implementation recorded (no physical job)     9
+  HBM accelerator  needs redesign (no live job)                  5
+  HBM accelerator  revoked (no live job)                         1
+  HBM accelerator  revoked, re-running                           2
+  Other            failed, re-running                            4
+  Other            first trial in flight                         4
+  Other            flow failure (no live job)                    1
+  Other            needs redesign (no live job)                  2
+  Qwen ROM         failed, re-running                            13
+  Qwen ROM         first trial in flight                         5
+  Qwen ROM         flow failure (no live job)                    3
+  Qwen ROM         implementation recorded (no physical job)     7
+  Qwen ROM         needs redesign (no live job)                  3
+IDLE (open, no live job): 51
+  DeepSeek ROM | dsfd_engram_lkp                                      | flow failure (no live job)     | fails 3 | owner Codex:engram
+  DeepSeek ROM | ot_s81_native_pc_mux                                 | flow failure (no live job)     | fails 2 | owner ingest
+  DeepSeek ROM | dsrom_mtp_head_full340_A                             | implementation recorded (no ph | fails 0 | owner Codex:s81_continuation/dies_
+  DeepSeek ROM | dsrom_mtp_seed_projection_full15360                  | implementation recorded (no ph | fails 0 | owner Codex:mtp_rom/draft_p2
+  DeepSeek ROM | dsrom_mtp_seq_native_binding                         | implementation recorded (no ph | fails 0 | owner Codex:mtp_rom
+  DeepSeek ROM | dsrom_native_engine_argument_binding                 | implementation recorded (no ph | fails 0 | owner Codex:ds_control
+  DeepSeek ROM | ot_dsrom_hc_input_reader                             | implementation recorded (no ph | fails 0 | owner Codex:review_dsrom_token_pat
+  DeepSeek ROM | ot_dsrom_hc_mean_capture                             | implementation recorded (no ph | fails 0 | owner Codex:review_dsrom_token_pat
+  DeepSeek ROM | ot_dsrom_hc_secded_pipe                              | implementation recorded (no ph | fails 0 | owner Codex:review_dsrom_token_pat
+  DeepSeek ROM | ot_rom_host_ingest_protected                         | implementation recorded (no ph | fails 0 | owner ingest
+  DeepSeek ROM | ot_s81_engram_aperture                               | implementation recorded (no ph | fails 0 | owner ingest
+  DeepSeek ROM | ot_s81_ingest_afifo                                  | implementation recorded (no ph | fails 0 | owner ingest
+  DeepSeek ROM | dsfd_selt_q                                          | needs redesign (no live job)   | fails 1 | owner Codex:selector_capture routi
+  DeepSeek ROM | dsfd_wfc_tok                                         | needs redesign (no live job)   | fails 3 | owner Claude:mtp-rom
+  HBM accelera | hfd_sfu                                              | flow failure (no live job)     | fails 2 | owner Claude:safe-hbm
+  HBM accelera | hfd_vm_ne_n                                          | flow failure (no live job)     | fails 2 | owner Claude:hbm-vm-split8
+  HBM accelera | hfd_vm_sw_n                                          | flow failure (no live job)     | fails 1 | owner Claude:safe-hbm
+  HBM accelera | ot_ha2_truecredit_rx_s_phys                          | flow failure (no live job)     | fails 1 | owner Claude:safe-hbm
+  HBM accelera | ot_hbm_accel_dskv_wb_spec                            | flow failure (no live job)     | fails 1 | owner Claude:mtp-rollback
+  HBM accelera | ot_su64_full64                                       | flow failure (no live job)     | fails 3 | owner Claude:fill-3
+  HBM accelera | HBM full-quarter VM collective publication           | implementation recorded (no ph | fails 0 | owner hbm_system/link_retry
+  HBM accelera | HBM protected TU PHY retry port                      | implementation recorded (no ph | fails 0 | owner hbm_system/link_retry
+  HBM accelera | R25IQG native indexer topology                       | implementation recorded (no ph | fails 0 | owner hbm_wiring
+  HBM accelera | TA15 digital clock reset collars                     | implementation recorded (no ph | fails 0 | owner hbm_wiring
+  HBM accelera | TA15 production clock controller readiness           | implementation recorded (no ph | fails 0 | owner hbm_wiring
+  HBM accelera | hbm_native_mtp_emit_queue                            | implementation recorded (no ph | fails 0 | owner review_hbm_token_path
+  HBM accelera | hbm_native_mtp_transaction_join                      | implementation recorded (no ph | fails 0 | owner review_hbm_token_path
+  HBM accelera | ot_hbm_index_global_order_scan                       | implementation recorded (no ph | fails 0 | owner /root/hbm_system
+  HBM accelera | ot_qwen_r25_su_dispatch                              | implementation recorded (no ph | fails 0 | owner Codex:qwen_hbm_unify/stage_h
+  HBM accelera | hfd_host_ingest                                      | needs redesign (no live job)   | fails 3 | owner Claude:struct-close
+  HBM accelera | ot_hbm_collective_vm_publication                     | needs redesign (no live job)   | fails 2 | owner Claude:phys-intake
+  HBM accelera | ot_hbm_index_global_order                            | needs redesign (no live job)   | fails 4 | owner /root/hbm_system
+  HBM accelera | ot_hbm_native_frame_station_rb_NO2                   | needs redesign (no live job)   | fails 11 | owner Codex:hbm_w2
+  HBM accelera | ot_hbm_norm_grp8                                     | needs redesign (no live job)   | fails 3 | owner Claude:hbm-norm-split
+  HBM accelera | hfd_router                                           | revoked (no live job)          | fails 9 | owner Claude:hbm-router
+  Other        | ot_hcoll_port2                                       | flow failure (no live job)     | fails 3 | owner Claude:struct-close
+  Other        | ot_hgi_mtp_accept18                                  | needs redesign (no live job)   | fails 2 | owner Codex:generic_token18
+  Other        | ot_mtp_p2_ordered_rows_general4bank                  | needs redesign (no live job)   | fails 2 | owner Codex:mtp-markov-route-P2
+  Qwen ROM     | qfd_emb_far92                                        | flow failure (no live job)     | fails 1 | owner Codex:embedding-hbm
+  Qwen ROM     | qfd_hub_emb                                          | flow failure (no live job)     | fails 2 | owner Codex:embedding-hbm
+  Qwen ROM     | qfd_sp_res_ser                                       | flow failure (no live job)     | fails 5 | owner Claude:fill-3
+  Qwen ROM     | qfd_dspark_accept_commit                             | implementation recorded (no ph | fails 0 | owner /root/review_qwen_token_path
+  Qwen ROM     | qfd_dspark_drafter_production                        | implementation recorded (no ph | fails 0 | owner /root/review_qwen_token_path
+  Qwen ROM     | qfd_dspark_tail_window_positions                     | implementation recorded (no ph | fails 0 | owner /root/review_qwen_token_path
+  Qwen ROM     | qfd_hbm_ecc_provider                                 | implementation recorded (no ph | fails 0 | owner /root/embedding_hbm
+  Qwen ROM     | qfd_native_collective_binding                        | implementation recorded (no ph | fails 0 | owner /root/qwen_system
+  Qwen ROM     | qfd_production_stage_traversal                       | implementation recorded (no ph | fails 0 | owner /root/qwen_system/crom_contr
+  Qwen ROM     | qfd_row_merge_native_fence                           | implementation recorded (no ph | fails 0 | owner /root/qwen_system
+  Qwen ROM     | qfd_sp_constants_sequencer                           | needs redesign (no live job)   | fails 2 | owner Claude:safe-qwen
+  Qwen ROM     | qfd_su_kv624                                         | needs redesign (no live job)   | fails 1 | owner Codex:qwen-system
+  Qwen ROM     | qfd_sysctl_stn                                       | needs redesign (no live job)   | fails 1 | owner Codex:qwen-system-crom-contr
