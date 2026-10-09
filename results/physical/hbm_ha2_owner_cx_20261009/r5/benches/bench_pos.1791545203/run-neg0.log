@@ -1,0 +1,10 @@
+S0 pf=64 mode=0 throttle=0 results=4 ref_first_issue->last=84 dut_first_issue->last=106 ref_last=102 dut_last=148 dut_ready_stalls=56
+S1 pf=384 mode=0 throttle=0 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=570 dut_last=616 dut_ready_stalls=343
+S2 pf=384 mode=1 throttle=0 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=1038 dut_last=1084 dut_ready_stalls=331
+S3 pf=384 mode=1 throttle=1 results=24 ref_first_issue->last=405 dut_first_issue->last=426 ref_last=1506 dut_last=1552 dut_ready_stalls=122
+CADENCE fast_period_ps=833.333334 core_service_fast_edges=2 pops=1064 adjacent_pairs=1042
+PASS banked HA2 owner reducer: 4 scenarios bit-exact vs unchanged TU adapter (CUTS=0)
+- /srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_tuhalf_cx_landing-28cabe1fe-tc-cx/bench_src_a1/rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.sv:154: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 1us; walltime 0.439 s; speed 2.950 us/s
+- Verilator: cpu 0.440 s on 1 threads; alloced 1024 MB

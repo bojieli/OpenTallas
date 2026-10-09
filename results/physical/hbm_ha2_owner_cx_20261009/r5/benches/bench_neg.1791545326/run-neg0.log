@@ -1,0 +1,7 @@
+S0 count ref 4 dut 0
+S0 unexpected dupe ref 0 dut 1
+S0 not quiet
+S0 pf=64 mode=0 throttle=0 results=0 ref_first_issue->last=88 dut_first_issue->last=0 ref_last=106 dut_last=-1 dut_ready_stalls=84
+[25068353000] %Fatal: tb_ha2_tu_owner_banked_half_cx.sv:148: Assertion failed in tb_ha2_tu_owner_banked_half_cx.unnamedblk11: FAIL scenario 0 (3 mismatches)
+%Error: /srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_tuhalf_cx_landing-28cabe1fe-tc-cx/bench_src_a1/rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.sv:148: Verilog $stop
+Aborting...

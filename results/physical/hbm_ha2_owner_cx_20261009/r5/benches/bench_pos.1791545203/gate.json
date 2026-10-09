@@ -1,0 +1,37 @@
+{
+  "source_commit": "28cabe1fe8f8f171e55253677a2bfc2b0c6f5f13",
+  "source_sha256": {
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_runtime.sv": "755267df5522c9bf08a612e4d504fe6eb1dbea9d33e4954b8d2a0b6dbafe172b",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_owner_reduce_item9_cuts.sv": "a2fe90db2587c38f4405809d8f1458fa8e318c33588029f9a8907d7fd1c7138e",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_adapter_item9_cuts.sv": "7f3285cd01c6b730f02b78d71e164d6d7c968b945943fe1677379a4d10f256e1",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v": "862e21e63d6805e46226cb8ca27b731a7a6c778783e4c44f123ca30950ffde83",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked.sv": "02bec6fc2cdb69e5f6a9ea6aec09c32caa9e2b2830285855ad4494234195d241",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half.sv": "384c3f0b67034c9778f3dc6cbf27edcf47e5c0d4dec3a389d25f05248eedcd5f",
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half_cx.sv": "05154d341a4fecdcfa09b6181637ee69fe0ef35969e5b4a6dad5234656df6bd0",
+    "rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.sv": "34ed8078a759327e71c09a39d3c49620f184a5ce370c9aca33f9643442c9215b"
+  },
+  "shape": {
+    "NC": 8,
+    "PFMAX": 384,
+    "NPT": 8,
+    "INJ": 2,
+    "LANES": 16,
+    "FD": 8
+  },
+  "fast_period_ps": 833.333334,
+  "landing": 1,
+  "phase_mutant": 0,
+  "scope": "minimum full failed owner shape; no die closure or native INJ8 qualification",
+  "build_rc": 0,
+  "run_rc": {
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 0
+  },
+  "verdict": "PASS"
+}
