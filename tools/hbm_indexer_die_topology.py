@@ -85,11 +85,23 @@ def networks(m, fp, buses, paths, chain):
         for p in range(8):
             a=fp._cxy(svc,startface,(p+0.5)/8)
             b=point(score,'ik',p*1099,1099)
-            gutter=svc.y+svc.h+30+12*p if side=='S' else svc.y-30-12*p
-            # Escape parallel to the service band, then enter the scorer from
-            # its outer edge. Automatic station legality remains mandatory.
-            outer=score.x-80-8*p if half=='W' else score.x+score.w+80+8*p
-            pts=[a,(a[0],gutter),(outer,gutter),(outer,b[1]),b]
+            gutter=svc.y+svc.h+40 if side=='S' else svc.y-40
+            # Only two full line bundles occupy the service gap; five use the
+            # real SM interrow channel and one uses the hub-edge channel.
+            group=m['groups'][st];sms=group['sms']
+            row0=next(i for i in sms if i.sm['row']==0)
+            row1=next(i for i in sms if i.sm['row']==1)
+            cxs=[group['x']+fp.CH/2+c*(row0.w+fp.SHAVE+fp.CH) for c in range(5)]
+            col=min(cxs,key=lambda x:abs(x-a[0]))
+            if p<2:
+                cross=gutter+sgn*(20+70*p)
+            elif p<7:
+                mid=row0.y+row0.h+fp.SHAVE+fp.CH/2 if side=='S' else row0.y-fp.CH/2
+                cross=mid+sgn*((p-4)*72)
+            else:
+                cross=row1.y+row1.h+fp.SHAVE+fp.CH/2 if side=='S' else row1.y-fp.CH/2
+            outer=score.x-80-12*p if half=='W' else score.x+score.w+80+12*p
+            pts=[a,(a[0],gutter),(col,gutter),(col,cross),(outer,cross),(outer,b[1]),b]
             route(f'idx_key_{st}_{p}',1099,(svc.name,f'ki{p}'),
                   (score.name,f'ik@{p*1099}:{(p+1)*1099-1}'),pts)
             c=point(score,'ikc',p,1)

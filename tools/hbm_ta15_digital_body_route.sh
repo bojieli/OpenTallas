@@ -16,7 +16,7 @@ export OT_ORFS_NUM_CORES=4 NUM_CORES=4
  --place-density 0.55 --routing-layers M2 M7 \
  --orfs-var ADDER_MAP_FILE= --orfs-var 'CTS_ARGS=-sink_clustering_enable -repair_clock_nets -apply_ndr none' \
  --slew-margin-percent 60 --hold-margin-ns 0.010 \
- --purpose pathfinding --nickname-tag ta15_digital_multiclock \
+ --purpose characterization --nickname-tag ta15_digital_multiclock \
  --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  --keep-workdir "$OUT/work" --output "$OUT/physical.json" > "$OUT/route.log" 2>&1
 status=$?
