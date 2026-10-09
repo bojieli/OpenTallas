@@ -56,7 +56,7 @@ module tb_hc_mean_capture;
     reg req_ready=0,rsp_valid=0;reg [511:0] rsp_data=0;
     reg pending=0;integer delay_q=0,copy_vm,row_vm,i_vm;
     reg [511:0] response_q;
-    ot_dsrom_hc_input_reader reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
+    ot_dsrom_hc_input_reader #(.ECC_PIPE(EP)) reader(.clk(clk),.rst_n(rst_n),.cmd_valid(cmd_valid),.cmd_ready(cmd_ready),
       .cmd_capture(cmd_capture),.cmd_user(cmd_user),.cmd_position(cmd_position),.cmd_epoch(cmd_epoch),
       .cmd_h_row(bad==7?14'd16300:14'd512),.cmd_rank(rank[1:0]),.cmd_region_rows(bad==8?15'd319:15'd1280),
       .mean_cmd_valid(mcv),.mean_cmd_ready(mcr),.mean_cmd_capture(mcc),.mean_cmd_user(mcu),
