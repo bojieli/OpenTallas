@@ -1,0 +1,15 @@
+{
+  "source_commit": "6eacc2adb",
+  "model_before_RTL": "fec7abe36",
+  "remote_root": "ot-agidock128:/srv/opentallas-scratch/mtp-die-globalprefix6eacc2adb",
+  "verdict": "PASS",
+  "accepted_and_retired": 1536,
+  "actual_FIFO_depth": 1024,
+  "cycles": 2834,
+  "mechanism": "actualacceptedglobalstack order restored from perstackprefix completion credits",
+  "negative": {
+    "sum_perstack_prefix_verdict": "FAIL",
+    "reason": "EARLY_FENCE laterstack falsely retires earlierstack0"
+  },
+  "scope": "plain controlFIFO component only; actualhost/service/generator integrations pending; no auth/lease/epoch/protectedcontrol or physical qualification"
+}
