@@ -56,6 +56,30 @@
    "wall_s": 0.9,
    "wire": "bf16"
   },
+  "qwen_die_geom_bf16_rmw_en0": {
+   "beats": 2048,
+   "boot_end_marker_errors": 0,
+   "boot_end_markers": 0,
+   "ck_cycles": 5097,
+   "descriptors": 8,
+   "errors": 0,
+   "fabric_active_ck_cycles": 4128,
+   "fault": 0,
+   "fault_words": 0,
+   "fenced": 8,
+   "fenced_done": 8,
+   "first_mismatch": [],
+   "oob": 0,
+   "pass": true,
+   "plusargs": {},
+   "rmw_reads": 0,
+   "sectors_per_ck": 0.4961,
+   "sectors_written": 2048,
+   "share_seen_x256": 0,
+   "tag_errors": 0,
+   "timeout": false,
+   "wall_s": 1.1
+  },
   "qwen_reduced_bf16": {
    "beats": 504,
    "boot_end_marker_errors": 0,
@@ -88,7 +112,7 @@
    "share_seen_x256": 0,
    "tag_errors": 0,
    "timeout": false,
-   "wall_s": 0.5
+   "wall_s": 0.2
   },
   "qwen_reduced_fp32": {
    "beats": 1008,
@@ -122,7 +146,7 @@
    "share_seen_x256": 0,
    "tag_errors": 0,
    "timeout": false,
-   "wall_s": 0.6
+   "wall_s": 0.4
   },
   "raw_boot": {
    "beats": 150,
@@ -184,7 +208,7 @@
    "stacks": 4,
    "tag_errors": 0,
    "timeout": false,
-   "wall_s": 2.2
+   "wall_s": 1.7
   },
   "v41_ikey": {
    "beats": 4352,
@@ -248,7 +272,7 @@
    "stacks": 4,
    "tag_errors": 0,
    "timeout": false,
-   "wall_s": 0.8
+   "wall_s": 1.1
   }
  },
  "clocks_ps": {
@@ -257,7 +281,7 @@
   "clk_i": 1666
  },
  "dut": "rtl/hdc/ingest/ot_rom_host_ingest.sv",
- "git_head": "d14c1955ca3fbd819864b189656b0e1922649335",
+ "git_head": "3af3b689f97819825b3a65369fc4287d15f1822a",
  "input_sha256": {
   "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
   "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "a72e50fbeb1376b52b0156d7b8b822957380b991ca7c8ec5c578a39b28241e71",
@@ -267,7 +291,7 @@
   "rtl/test/tb_rom_host_ingest.sv": "9f402bf4206fce5ef4c7d08152b1648251f011cc0f3b4af9128f22360089fb2f",
   "tools/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
   "tools/rtl_hdc_kv_ingest_campaign.py": "184f63ac390a299e109cc99fad6afe43515cfb7eb99f716fed7290d120a86b94",
-  "tools/rtl_rom_host_ingest_bench.py": "f2ad3efb63614c690fc2a0b23fab20704e0d36ecd273040f7333d858eff0d74e"
+  "tools/rtl_rom_host_ingest_bench.py": "2a43a50f5d813a818d3ade315cfa93658662d3c0fe6c64d6d04701fd992b90d5"
  },
  "mutations": {
   "done_tag_plus_one": {
@@ -281,6 +305,11 @@
    "tag_errors": 0
   },
   "qkv_descriptor_on_qkv_en0_fails_closed": {
+   "detected": true,
+   "fault_words": 1,
+   "sectors_written": 0
+  },
+  "rmw_descriptor_on_rmw_en0_fails_closed": {
    "detected": true,
    "fault_words": 1,
    "sectors_written": 0
@@ -353,7 +382,7 @@
     "share_x256": 64,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 0.2
+    "wall_s": 0.7
    },
    {
     "beats": 368,
@@ -385,7 +414,7 @@
     "share_x256": 16,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 0.4
+    "wall_s": 0.5
    }
   ],
   "qwen_die_geom_bf16": [
@@ -419,7 +448,7 @@
     "share_x256": 64,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 1.0
+    "wall_s": 1.9
    },
    {
     "beats": 2048,
@@ -451,7 +480,7 @@
     "share_x256": 64,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 1.3
+    "wall_s": 0.9
    },
    {
     "beats": 2048,
@@ -483,7 +512,7 @@
     "share_x256": 16,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 1.8
+    "wall_s": 2.3
    }
   ],
   "v41_ikey": [
@@ -517,7 +546,7 @@
     "share_x256": 64,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 2.8
+    "wall_s": 2.4
    },
    {
     "beats": 4352,
@@ -549,7 +578,7 @@
     "share_x256": 64,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 3.1
+    "wall_s": 2.1
    },
    {
     "beats": 4352,
@@ -581,7 +610,7 @@
     "share_x256": 16,
     "tag_errors": 0,
     "timeout": false,
-    "wall_s": 2.2
+    "wall_s": 4.5
    }
   ]
  }
