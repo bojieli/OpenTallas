@@ -1,0 +1,40 @@
+{
+  "old_source": "fac108b0bb4924db48edc6b51e4876c6e70c87e2",
+  "new_source": "95f75fa1e121c8e1e7e312bc07496fbdb63bb6a9",
+  "old_key": "efd8818a1d33c0e2a27f2d0c",
+  "new_key": "88974f51ea2a1f8b8faf79cd",
+  "sources": {
+    "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv": {
+      "sha256": "743063fbfc402bda039919cfe0de959980ac5f1fa3999474503dc70060342989",
+      "byte_identical": true
+    },
+    "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv": {
+      "sha256": "86749dce384ec65ec1ac3dd99e34848161c1ddc8931b69ee3c5688c953fb4a98",
+      "byte_identical": true
+    },
+    "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv": {
+      "sha256": "01cd047a4243a7a06d7e30b4fab4d2aa3ded9176a965c824edac7a600d6f9337",
+      "byte_identical": true
+    }
+  },
+  "recipe": {
+    "top": "ot_hbm_idx_ehash_ds",
+    "sources": [
+      "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+      "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+      "rtl/hbm_accel/generic_20261009/ot_hbm_idx_ehash_ds.sv"
+    ],
+    "params": {
+      "ENABLE_GENERIC": "1",
+      "NSLOT": "8",
+      "MUTANT": "0"
+    },
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "reason": "only bench/evidence differences after actual native remote registered RTL proof; source blobs and params identical",
+  "actual_remote_receipt": "results/rtl/hgi_ehash_20261009/registered_boundary/receipt.json"
+}
