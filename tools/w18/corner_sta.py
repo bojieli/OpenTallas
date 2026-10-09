@@ -15,12 +15,16 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+STA_POLICY = ("OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps "
+              "at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; "
+              "60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.")
 PLAT = "/OpenROAD-flow-scripts/flow/platforms/asap7"
 LIBS = {"ss": ["asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
                "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz", "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
@@ -128,9 +132,21 @@ exit
 
 def _f(v):
     try:
-        return round(float(v), 2)
+        value = float(v)
+        return round(value, 2) if math.isfinite(value) else None
     except (TypeError, ValueError):
         return None
+
+
+def timing_checks_pass(rec):
+    """Require valid tool runs as well as the owner's setup/hold thresholds."""
+    for key in ("setup_tt", "hold_ff"):
+        result = rec[key]
+        slack = result.get("worst_slack_ps")
+        if (result.get("tool_rc", 0) != 0 or result.get("errors") or
+                slack is None or not math.isfinite(slack) or slack < 0):
+            return False
+    return True
 
 
 def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
@@ -157,18 +173,37 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
     (orfs / f"w18_sta_{corner}.tcl").write_text(script(*args))
     cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
-    out = subprocess.run(cmd, capture_output=True, text=True).stdout
+    process = subprocess.run(cmd, capture_output=True, text=True)
+    out = process.stdout
+    if process.stderr:
+        out += "\n--- tool stderr ---\n" + process.stderr
     (orfs / f"w18_sta_{corner}.log").write_text(out)
     g = lambda k: (re.search(rf"^{k} (\S+)", out, re.M) or [None, None])[1]  # noqa: E731
+    errors = re.findall(r"(?:\[ERROR[^\n]*|^Error:[^\n]*)", out, re.M)[:5]
+    if process.returncode:
+        errors.insert(0, f"OpenROAD process exited with status {process.returncode}")
+    # OT_WS/TNS use seconds; avoid rounding them before conversion to ps.
+    try:
+        ws = float(g("OT_WS"))
+        ws = round(ws * 1e12, 2) if math.isfinite(ws) else None
+    except (TypeError, ValueError):
+        ws = None
+    if ws is None:
+        errors.append("Missing or non-finite OT_WS timing result")
+    try:
+        tns = float(g("OT_TNS"))
+        tns = round(tns * 1e12, 1) if math.isfinite(tns) else None
+    except (TypeError, ValueError):
+        tns = None
     return dict(corner=corner, check="setup" if corner in SETUP_CORNERS else "hold",
-                worst_slack_ps=round(float(g("OT_WS")) * 1e12, 2) if g("OT_WS") else None,
-                tns_ps=round(float(g("OT_TNS")) * 1e12, 1) if g("OT_TNS") else None,
-                worst_register_d_slack_ps=float(g("OT_WS_REG_D")) if g("OT_WS_REG_D") else None,
+                worst_slack_ps=ws if not errors else None,
+                tns_ps=tns,
+                worst_register_d_slack_ps=_f(g("OT_WS_REG_D")),
                 worst_reg_to_reg_slack_ps=_f(g("OT_WS_R2R")),
                 worst_input_to_reg_slack_ps=_f(g("OT_WS_I2R")),
-                worst_output_port_slack_ps=float(g("OT_WS_OUT")) if g("OT_WS_OUT") else None,
+                worst_output_port_slack_ps=_f(g("OT_WS_OUT")),
                 violating_d_pins=int(g("OT_VIOL_D_PINS")) if g("OT_VIOL_D_PINS") else None,
-                errors=re.findall(r"\[ERROR[^\n]*", out)[:5],
+                errors=errors, tool_rc=process.returncode,
                 odb_sha256=sha(base / "6_final.odb"), spef_sha256=sha(base / "6_final.spef"),
                 sdc_name=sdc_name, sdc_sha256=sha(selected_sdc),
                 **({"vt_flavours_added": vts, "libraries": corner_libs(corner, vts)} if vts else {}))
@@ -193,11 +228,9 @@ def main(argv=None):
                hold_ff=run(o, "ff", a.macro, a.post_sdc, a.sdc_name),
                post_sdc={p: sha(ROOT / p) for p in a.post_sdc},
                libraries=LIBS, tool_sha256=sha(Path(__file__)),
-               policy="OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is "
-                      "reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty")
+               policy=STA_POLICY)
     rec["ss_sensitivity"] = rec["setup_ss"]["worst_slack_ps"]
-    rec["closes_signoff"] = bool(rec["setup_tt"]["worst_slack_ps"] is not None and rec["setup_tt"]["worst_slack_ps"] >= 0
-                                 and rec["hold_ff"]["worst_slack_ps"] is not None and rec["hold_ff"]["worst_slack_ps"] >= 0)
+    rec["closes_signoff"] = timing_checks_pass(rec)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     a.output.write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps({k: rec[k] for k in ("setup_tt", "setup_ss", "hold_ff", "closes_signoff")}, indent=1))
