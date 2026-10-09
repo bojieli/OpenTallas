@@ -1593,7 +1593,7 @@ def apply_splits(m, specs, lattice=None):
                 sp_ = dict(exact_spec if k==1 and exact_spec is not None else spec)
                 if k > 1:
                     _bundle_pack(mst, sp_, order, k)
-                if V_ck:
+                if V_ck and not (k == 1 and exact_spec is not None):
                     ck_centre(mst, sp_)
                 mst.ports, mst.order = sp_, list(order)
             fixed[bn] = fn
