@@ -198,7 +198,8 @@ def main():
         native["scope"] = "Named native command signals only; execution/stream/VM binding requires its own exact gate"
         (a.out / "native_dispatch.json").write_text(json.dumps(native, indent=2) + "\n")
         if not native["dispatch_eligible"]:
-            print(f"Native dispatch BLOCKED: {len(native['rejected'])} unbound/invalid jobs; no dispatch rows emitted")
+            print(f"Native dispatch BLOCKED: {len(native['rejected'])} missing/invalid jobs, "
+                  f"{len(native['unbound_endpoints'])} endpoints lacking integration; command table eligible={native['command_table_eligible']}")
             raise SystemExit(2)
 
 

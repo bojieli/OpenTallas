@@ -1,8 +1,168 @@
 {
   "schema": "opentallas.s81-native-descriptor-registry.v1",
-  "status": "NO_PRODUCTION_SCHEMA_OR_ADDRESS_MAP_AVAILABLE",
-  "schemas": {},
-  "jobs": {},
+  "status": "PARTIAL_HC_CAPTURE_NATIVE_COMMAND_SCHEMA_ONLY",
+  "schemas": {
+    "hc_input_capture": {
+      "engine": 2,
+      "status": "OWNER_NATIVE_CONTRACT",
+      "endpoint": "ot_dsrom_hc_mean_capture",
+      "evidence": [
+        {
+          "path": "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "sha256": "74e53b90f9bf320c2e2ed70001382248b36ffa7843aa7c832f0ba41a1e7cacfa"
+        }
+      ],
+      "acceptance": "cmd_valid&&cmd_ready; one accepted capture until capture_done final40thSRAMframe commit",
+      "completion": "capture_done/capture_done_capture plus held out_user/out_position/out_epoch; bridge returns matching generic8bit jobtag",
+      "integration_required": [
+        "actualnativeHreader NP8ownership/layout",
+        "dispatcher routes only these named jobs to dedicatedcaptureendpoint",
+        "OP_MASK only compilerassigned perstagecaptureop IDs; default0rejectsall",
+        "whole-tokenDAG capture nodes afterEngram beforeHCpre/Hoverwrite",
+        "SS/FF context qualification"
+      ],
+      "signals": {
+        "cmd_valid": {
+          "width": 1,
+          "fields": [
+            {
+              "name": "value",
+              "lsb": 0,
+              "width": 1,
+              "allowed": [
+                1
+              ]
+            }
+          ]
+        },
+        "cmd_capture": {
+          "width": 2,
+          "fields": [
+            {
+              "name": "value",
+              "lsb": 0,
+              "width": 2,
+              "allowed": [
+                0,
+                1,
+                2
+              ]
+            }
+          ]
+        },
+        "cmd_user": {
+          "width": 10,
+          "fields": [
+            {
+              "name": "value",
+              "lsb": 0,
+              "width": 10
+            }
+          ]
+        },
+        "cmd_position": {
+          "width": 21,
+          "fields": [
+            {
+              "name": "value",
+              "lsb": 0,
+              "width": 21
+            }
+          ]
+        },
+        "cmd_epoch": {
+          "width": 4,
+          "fields": [
+            {
+              "name": "value",
+              "lsb": 0,
+              "width": 4
+            }
+          ]
+        }
+      }
+    }
+  },
+  "jobs": {
+    "L37.mtp.input_hc_capture": {
+      "schema": "hc_input_capture",
+      "signals": {
+        "cmd_valid": {
+          "value": 1
+        },
+        "cmd_capture": {
+          "value": 0
+        },
+        "cmd_user": {
+          "value": {
+            "ref": "user"
+          }
+        },
+        "cmd_position": {
+          "value": {
+            "ref": "position"
+          }
+        },
+        "cmd_epoch": {
+          "value": {
+            "ref": "epoch"
+          }
+        }
+      }
+    },
+    "L38.mtp.input_hc_capture": {
+      "schema": "hc_input_capture",
+      "signals": {
+        "cmd_valid": {
+          "value": 1
+        },
+        "cmd_capture": {
+          "value": 1
+        },
+        "cmd_user": {
+          "value": {
+            "ref": "user"
+          }
+        },
+        "cmd_position": {
+          "value": {
+            "ref": "position"
+          }
+        },
+        "cmd_epoch": {
+          "value": {
+            "ref": "epoch"
+          }
+        }
+      }
+    },
+    "L39.mtp.input_hc_capture": {
+      "schema": "hc_input_capture",
+      "signals": {
+        "cmd_valid": {
+          "value": 1
+        },
+        "cmd_capture": {
+          "value": 2
+        },
+        "cmd_user": {
+          "value": {
+            "ref": "user"
+          }
+        },
+        "cmd_position": {
+          "value": {
+            "ref": "position"
+          }
+        },
+        "cmd_epoch": {
+          "value": {
+            "ref": "epoch"
+          }
+        }
+      }
+    }
+  },
   "pending_contracts": {
     "fld0_su1_hc2_coll3_svc4_sel5_col6": "S81 parent/native slab owners must provide operation/program/VM-address contracts. Physical pins alone do not establish dispatch semantics.",
     "hop7": "Internal native hop engine; authorization specialization, tx/rx and actual VM return adapter exist. Stage-specific source/destination/address mapping remains an explicit compiler dependency.",

@@ -25,7 +25,8 @@ def main():
         request={'context':{'payload':payload,'position':(1<<21)-1},
                  'jobs':[{'id':'fullwidth','engine':2}]}
         result=compile_jobs(request,registry,root)
-        assert result['dispatch_eligible'] and int(result['rows'][0]['signals']['data']['hex'],16)==payload
+        assert result['command_table_eligible'] and not result['dispatch_eligible']
+        assert int(result['rows'][0]['signals']['data']['hex'],16)==payload
         assert int(result['rows'][0]['signals']['position']['hex'],16)==(1<<21)-1
         checks=2
         def rejected(req=request, reg=registry):

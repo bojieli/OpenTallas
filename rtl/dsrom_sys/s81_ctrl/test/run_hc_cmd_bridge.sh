@@ -13,8 +13,8 @@ FILES=("$SRC/rtl/hdc/ot_hdc_prefix.sv" "$SRC/rtl/hdc/ot_hdc_fastfp.sv"
  "$SRC/rtl/dsrom_sys/s81_ctrl/test/tb_s81_hc_cmd_bridge.sv")
 sha256sum "${FILES[@]}" "$VECTORS/input.hex" "$VECTORS/expected.hex" > "$OUT/sources.sha256"
 iverilog -g2012 -s tb_s81_hc_cmd_bridge -o "$OUT/bridge.vvp" "${FILES[@]}" > "$OUT/build.log" 2>&1
-for mode in full orphan identity malformed;do
- case $mode in full)P="";;orphan)P="+bridge_bad=1";;identity)P="+bridge_bad=2";;malformed)P="+bad=4";;esac
+for mode in full orphan identity malformed unknown;do
+ case $mode in full)P="";;orphan)P="+bridge_bad=1";;identity)P="+bridge_bad=2";;malformed)P="+bad=4";;unknown)P="+bridge_bad=3";;esac
  vvp "$OUT/bridge.vvp" +vectors="$VECTORS" $P > "$OUT/$mode.log" 2>&1
  cat "$OUT/$mode.log"
 done

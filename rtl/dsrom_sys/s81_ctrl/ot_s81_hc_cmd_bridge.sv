@@ -2,7 +2,8 @@
 // Native HC capture command endpoint. The generic op is only a job return tag.
 // Compiler-owned arg24 is {18zero,epoch4,capture2}; no engine opcode inference.
 // Enable only with actual capture_done after final SRAM commit, not busy/idle.
-module ot_s81_hc_cmd_bridge #(parameter integer ENABLE=0)(
+module ot_s81_hc_cmd_bridge #(parameter integer ENABLE=0,
+ parameter [127:0] OP_MASK=128'd0)(
  input wire clk,rst_n,
  input wire e_cmd_v,input wire[83:0] e_cmd_d,output wire e_cmd_ready,
  output reg e_done_v,output reg[7:0] e_done_tag,output reg fault,
@@ -14,7 +15,8 @@ module ot_s81_hc_cmd_bridge #(parameter integer ENABLE=0)(
  input wire[3:0] h_done_epoch,input wire h_fault
 );
  wire[23:0] arg=e_cmd_d[30:7];
- wire legal=(arg[23:6]==0)&&(arg[1:0]<3);
+ // Burn only compiler-assigned HC capture job IDs into this endpoint variant.
+ wire legal=(arg[23:6]==0)&&(arg[1:0]<3)&&OP_MASK[e_cmd_d[6:0]];
  reg inflight;
  reg[7:0] tag;
  reg[1:0] capture;

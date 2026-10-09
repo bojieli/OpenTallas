@@ -13,8 +13,8 @@ module tb_s81_hc_cmd_bridge;
     wire[1:0] native_capture;wire[9:0] native_user;wire[20:0] native_position;wire[3:0] native_epoch;
     wire done_v;wire[7:0] done_tag;integer done_count=0,bridge_bad=0;reg injected_done=0;
     assign fault=native_fault|bridge_fault;
-    wire[83:0] descriptor={cmd_capture[0],cmd_user,cmd_position,21'h1fffff,18'd0,cmd_epoch,cmd_capture,7'(23+cmd_capture)};
-    ot_s81_hc_cmd_bridge #(.ENABLE(1)) bridge(.clk(clk),.rst_n(rst_n),
+    wire[83:0] descriptor={cmd_capture[0],cmd_user,cmd_position,21'h1fffff,18'd0,cmd_epoch,cmd_capture,bridge_bad==3?7'd127:7'(23+cmd_capture)};
+    ot_s81_hc_cmd_bridge #(.ENABLE(1),.OP_MASK((128'd1<<23)|(128'd1<<24)|(128'd1<<25))) bridge(.clk(clk),.rst_n(rst_n),
       .e_cmd_v(cmd_valid),.e_cmd_d(descriptor),.e_cmd_ready(cmd_ready),
       .e_done_v(done_v),.e_done_tag(done_tag),.fault(bridge_fault),
       .h_cmd_valid(native_valid),.h_cmd_ready(native_ready),.h_cmd_capture(native_capture),
@@ -94,6 +94,7 @@ module tb_s81_hc_cmd_bridge;
         if($value$plusargs("bridge_bad=%d",bridge_bad))begin end
         repeat(5) @(negedge clk);rst_n=1;
         if(bridge_bad==1)begin @(negedge clk);injected_done=1;@(negedge clk);injected_done=0;repeat(2)@(negedge clk);if(!bridge_fault||done_v)$fatal(1,"orphan escaped");$display("HC_CMD_BRIDGE orphan PASS");$finish;end
+        if(bridge_bad==3)begin @(negedge clk);cmd_valid=1;@(negedge clk);cmd_valid=0;repeat(2)@(negedge clk);if(!bridge_fault||done_v||native_valid)$fatal(1,"unknown job escaped");$display("HC_CMD_BRIDGE unknown_job PASS");$finish;end
         for(phase=0;phase<3;phase=phase+1) begin
             cap=(phase==0)?2:(phase==1)?0:1;
             @(negedge clk);while(!cmd_ready) @(negedge clk);
