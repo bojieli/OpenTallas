@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_su_swiglu_lane",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/routes/s81_swiglu_esum_435a62a41_hm25_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/routes/s81_swiglu_esum_435a62a41_hm25_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/routes/s81_swiglu_esum_435a62a41_hm25_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-swiglu-esum-435a62a41-hm25-tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_su_swiglu_lane.lef": "301217d75c4389c4494cd3e10fed70d4cc706d4b06f75141db3034de3f902bbf",
+    "ot_dsrom_su_swiglu_lane_ff.lib": "a3219870385a55fbce7d3a1ef3e8ea003604e52307be495989dba7b7393f43ad",
+    "ot_dsrom_su_swiglu_lane_ss.lib": "7fe5a1697f4c2357ae426c72255a321e0921c2c0df859254ab55e3be7fcd6f02"
+  },
+  "ok": true
+}
