@@ -30,6 +30,13 @@ set fc_core [$fc_blk getCoreArea]
 set fc_x0 [$fc_core xMin]; set fc_y0 [$fc_core yMin]; set fc_x1 [$fc_core xMax]; set fc_y1 [$fc_core yMax]
 
 proc fc_seq {inst} { return [[$inst getMaster] isSequential] }
+# A hard macro (SRAM / ROM / hardened slice, master BLOCK) is never a face-chain stage: macro placement has LOCKED it
+# (hbm_coll_srcdc 3_3: a pin-flop chain ran into a delay-line SRAM, setLocation -> ODB-0359).  Walks stop at a
+# macro and fc_move leaves any macro or fixed instance where it is.
+proc fc_mac {inst} {
+  if {[[$inst getMaster] isBlock]} { return 1 }
+  return [expr {[$inst getPlacementStatus] in {LOCKED FIRM COVER}}]
+}
 proc fc_sig_inputs {inst} {
   set l {}
   foreach it [$inst getITerms] {
@@ -126,6 +133,7 @@ foreach bt [$fc_blk getBTerms] {
     if {[llength $ld] != 1} break
     set i [lindex $ld 0]
     if {[info exists fc_done([$i getName])]} break
+    if {[fc_mac $i]} break
     if {![fc_seq $i] && [llength [fc_sig_inputs $i]] != 1} break
     lappend chain [list $i [fc_seq $i]]
     set cur [fc_out_net $i]
@@ -189,7 +197,7 @@ foreach bt [$fc_blk getBTerms] {
   set k [expr {$nn - 1}]; set cur $net; set pend {}; set walked {}
   while {$k >= 0} {
     set d [fc_driver $cur]
-    if {$d eq "NULL"} break
+    if {$d eq "NULL" || [fc_mac $d]} break
     set ins [fc_sig_inputs $d]
     if {[fc_seq $d]} {
       lappend walked [list $d $k $pend]; set pend {}
