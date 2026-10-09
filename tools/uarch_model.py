@@ -14911,3 +14911,8 @@ def dsrom_mtp_shared_producer_candidate():
     from dsrom_mtp_shared_producer_model import model
     return model()
 
+def dsrom_mtp_shared_native_reader_candidate():
+    """Model existing-port, leased sharedW2 VM reader before implementation."""
+    from dsrom_mtp_shared_producer_model import reader_model
+    return reader_model()
+
