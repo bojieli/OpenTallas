@@ -1,0 +1,42 @@
+{
+  "name": "qfd_q5_landing_ecc",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_q5_landing_ecc-ab9c785e9-wc-ttalias/routes/qfd_q5_landing_ecc_ab9c785e9_wc_ttalias/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.442729352125639e-10 min 2.8116731165539477e-11",
+      "image": "openroad/orfs:asap7lock",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/qfd_q5_landing_ecc-ab9c785e9-wc-ttalias/routes/qfd_q5_landing_ecc_ab9c785e9_wc_ttalias/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/qwen-q5-final-views-20261009/views:/out",
+        "openroad/orfs:asap7lock",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "qfd_q5_landing_ecc.lef": "4115ba2f5a2a9af3671635325f3a284cf4b2d63cfe01b6e6caf58cfbae755eb3",
+    "qfd_q5_landing_ecc_ff.lib": "ab81e5f1a97f232ec8b1fcd968fbd45141a0bca5babcfcda55e16313a3ebd4fb",
+    "qfd_q5_landing_ecc_ss.lib": "5fb2b5f72c0b8141e890c07f0e33431775db048cad4d1141bef64993a8620149",
+    "qfd_q5_landing_ecc_tt.lib": "ad19cb28461f2d64a6a505598dc5dbbab870b8b2c55dae9bc23702ebc5d5ec54"
+  },
+  "ok": true
+}
