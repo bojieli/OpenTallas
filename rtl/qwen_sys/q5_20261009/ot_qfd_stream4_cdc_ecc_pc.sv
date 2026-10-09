@@ -74,7 +74,7 @@ module ot_qfd_stream4_cdc_ecc_pc #(
     // A quarantined UE is never successful retirement. Keep the controller
     // stopped once faulted, including already synchronized credit returns.
     assign h_cred=ecc_fault?3'b0:credit;
-    ot_qwen_stream4_cdc_pc #(.TAGW(TAGW),.LD(LD),.WB(WB),.AD(AD),.SYNC(SYNC),.RSEL(RSEL),.RNG(RNG),.MARGIN(MARGIN)) cdc(
+    ot_qwen_stream4_cdc_pc #(.TAGW(TAGW),.LD(LD),.WB(WB),.AD(AD),.SYNC(SYNC),.RSEL(RSEL),.RNG(RNG),.MARGIN(MARGIN),.LCRED(LCRED)) cdc(
      .clk(clk),.c_arst_n(c_arst_n),.l_v(cv),.l_sec(l_sec),.l_row(l_row),.l_data(l_data),.l_pop(l_pop&&!ef2),
      .w_v((ENABLE!=0)&&w_v&&!ef2),.w_sec(w_sec),.w_data(w_data),.w_tag(w_tag),.w_room(w_room),.wd_v(wd_v),.wd_tag(wd_tag),.c_fault(cf),
      .hclk(hclk),.h_arst_n(h_arst_n),.h_lv(decoded_v),.h_lsec(decoded_sec),.h_lrow(decoded_row),.h_ldata(decoded_data),.h_cred(credit),
