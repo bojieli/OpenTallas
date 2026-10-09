@@ -3,7 +3,7 @@
   "source_RTL": "6529f2bd2",
   "slot_um": [
     1800,
-    600
+    275.6
   ],
   "replicas": 1,
   "cellarea_status": "actual adapter synth pending; originalcore18541.0944um2 is only nearest measuredreference",
@@ -33,5 +33,16 @@
   "actual_sequential_area_um2": 15484.07664,
   "actual_synth_source": "4d9aa382b",
   "core_area_um2": 1069650.6624,
-  "synth_utilisation_percent": 2.721271179759707
+  "synth_utilisation_percent": 2.721271179759707,
+  "legacy_generator_slot_um": [
+    1814.376,
+    276.456
+  ],
+  "outline_fit": "geometricPASS usingcurrentquant ceil500000/spine/GY2.16 thenSHAVE.024; halos/rails/pintransform requireactualP&R/integration",
+  "boundary_density_bits_per_um_per_layer": {
+    "cmd": 0.4002840909090909,
+    "req": 0.7151952461799661,
+    "rsp": 0.5793718166383701
+  },
+  "actual_stdcell_area_status": "priorbf4/TT29108.0952um2 is nearest, currentresponse+constantlane source requiresnewactualTTsizing"
 }
