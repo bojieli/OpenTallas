@@ -193,32 +193,39 @@ module ot_hgi_seq #(
     endfunction
     assign busy = (st != S_IDLE) || (busy_u != 16'd0);
     // ------------------------------------------------------------------ DYN
-    wire [20:0] ps  = {1'b0, pos} + {18'd0, h_slot};
-    wire [20:0] p1  = ps + 21'd1;
-    wire [20:0] n2  = {1'b0, p1[20:1]};
+    // DS full-shape selectors: a free-running 4-stage registered bank from (pos, the record's slot, rank) -- the
+    // values are valid 4 cycles after the header lands (dv_cnt); the address unit waits for it (timing: the
+    // combinational form was the -701 ps limiter, header slot -> 21-bit adds / mins / rank x sc1 -> multiplier)
     function automatic [20:0] mn(input [20:0] a, input [20:0] b); mn = (a < b) ? a : b; endfunction
     function automatic [20:0] cdv(input [20:0] a, input integer sh);       // ceil(a / 2^sh)
         cdv = (a + ((21'd1 << sh) - 21'd1)) >> sh;
     endfunction
-    wire [20:0] ns1 = mn(p1, DS_TOPK), ns2 = mn(n2, DS_TOPK), win = mn(p1, DS_WIN);
-    wire [20:0] sc1 = cdv(p1, DS_TPL), sc2 = cdv(n2, DS_TPL), scr = cdv(mn(p1, DS_SCAN), DS_TPL);
-    wire [28:0] rsc = {21'd0, rank_r} * {8'd0, sc1};
-    wire        own = ({8'd0, ps} >= rsc) && ({8'd0, ps} < rsc + {8'd0, sc1});
-    wire [28:0] nbo = ({8'd0, ps} - rsc) >> 3;
+    reg [20:0] ps, p1, q_p1, q_n2, q_ns1, q_ns2, q_win, q_sc1, q_sc2, q_scr, q_ps;
+    reg [28:0] q_rsc;
+    reg [20:0] q_sc1b, q_psb;
+    reg [31:0] dsq [16:40];
+    reg [2:0]  dv_cnt;
+    wire       dv_ok = (dv_cnt == 3'd4);
+    always @(posedge clk) begin
+        ps <= {1'b0, pos} + {18'd0, h_slot};                                   // stage 1
+        p1 <= {1'b0, pos} + {18'd0, h_slot} + 21'd1;
+        q_ps <= ps; q_p1 <= p1; q_n2 <= {1'b0, p1[20:1]};                       // stage 2
+        q_ns1 <= mn(p1, DS_TOPK); q_ns2 <= mn({1'b0, p1[20:1]}, DS_TOPK); q_win <= mn(p1, DS_WIN);
+        q_sc1 <= cdv(p1, DS_TPL); q_sc2 <= cdv({1'b0, p1[20:1]}, DS_TPL); q_scr <= cdv(mn(p1, DS_SCAN), DS_TPL);
+        q_rsc <= {21'd0, rank_r} * {8'd0, cdv(p1, DS_TPL)};                    // stage 2 (rank x sc1)
+        q_sc1b <= q_sc1; q_psb <= q_ps;
+        dsq[16] <= q_win;            dsq[17] <= q_p1;             dsq[18] <= q_n2;             dsq[19] <= q_ns1;  // stage 3
+        dsq[20] <= q_ns2;            dsq[21] <= q_win;            dsq[22] <= q_win + q_ns1;    dsq[23] <= q_win + q_ns2;
+        dsq[24] <= q_sc1;            dsq[25] <= q_sc2;            dsq[26] <= q_scr;            dsq[27] <= mn(q_sc1, DS_TOPK);
+        dsq[28] <= mn(q_sc2, DS_TOPK); dsq[29] <= mn(q_scr, DS_TOPK);
+        dsq[30] <= cdv(q_sc1, 4);    dsq[31] <= cdv(q_sc1, 3);    dsq[32] <= cdv(q_sc2, 4);    dsq[33] <= cdv(q_scr, 4);
+        dsq[34] <= cdv(q_win, 5);    dsq[35] <= cdv(q_win + q_ns1, 5); dsq[36] <= cdv(q_win + q_ns2, 5);
+        dsq[37] <= q_win - 21'd1;    dsq[38] <= {11'd0, q_win} << DS_HDL; dsq[39] <= {11'd0, q_win - 21'd1} << DS_HDL;
+        dsq[40] <= (({8'd0, q_psb} >= q_rsc) && ({8'd0, q_psb} < q_rsc + {8'd0, q_sc1b})) ?              // stage 3
+                   {3'd0, ({8'd0, q_psb} - q_rsc) >> 3} : {11'd0, cdv(q_sc1b, 3)};
+    end
     function automatic [31:0] dsv(input [5:0] c);
-        case (c)
-            6'd16: dsv = win;       6'd17: dsv = p1;        6'd18: dsv = n2;        6'd19: dsv = ns1;
-            6'd20: dsv = ns2;       6'd21: dsv = win;       6'd22: dsv = win + ns1; 6'd23: dsv = win + ns2;
-            6'd24: dsv = sc1;       6'd25: dsv = sc2;       6'd26: dsv = scr;       6'd27: dsv = mn(sc1, DS_TOPK);
-            6'd28: dsv = mn(sc2, DS_TOPK);                  6'd29: dsv = mn(scr, DS_TOPK);
-            6'd30: dsv = cdv(sc1, 4);                       6'd31: dsv = cdv(sc1, 3);
-            6'd32: dsv = cdv(sc2, 4);                       6'd33: dsv = cdv(scr, 4);
-            6'd34: dsv = cdv(win, 5);                       6'd35: dsv = cdv(win + ns1, 5);
-            6'd36: dsv = cdv(win + ns2, 5);                 6'd37: dsv = win - 21'd1;
-            6'd38: dsv = {11'd0, win} << DS_HDL;            6'd39: dsv = {11'd0, win - 21'd1} << DS_HDL;
-            6'd40: dsv = own ? {3'd0, nbo} : {11'd0, cdv(sc1, 3)};
-            default: dsv = 32'd0;
-        endcase
+        dsv = (c >= 6'd16 && c <= 6'd40) ? dsq[c] : 32'd0;
     endfunction
     function automatic dyn_rsv(input [5:0] c);           // codes with no value on r25
         dyn_rsv = (c >= 6'd9 && c <= 6'd14) || (c >= 6'd41);
@@ -232,7 +239,7 @@ module ot_hgi_seq #(
             6'd4: dynv = {16'd0, Lc};
             6'd5: dynv = {24'd0, rank_r};
             6'd6: dynv = {29'd0, h_slot};
-            6'd7: dynv = {11'd0, ps};
+            6'd7: dynv = {11'd0, ps};          // valid with dv_ok (registered)
             6'd8: dynv = {16'd0, L1c};
             6'd15: dynv = {11'd0, p1};
             default: dynv = dsv(c);
@@ -246,7 +253,8 @@ module ot_hgi_seq #(
     reg [4:0]   wk;                      // word index being read (0 = evaluate the header)
     reg [2:0]   aj;                      // descriptor in the address pass (6 = I first, then 0..5)
     reg [2:0]   as;                      // address sub-state
-    reg [63:0]  acc, mcand;
+    reg [63:0]  acc, mcand, m3;
+    reg         m3v;
     reg [31:0]  mplier;
     reg [5:0]   ash;
     reg [39:0]  ieff;
@@ -324,8 +332,13 @@ module ot_hgi_seq #(
         };
     wire [63:0] iaddr_n = {24'd0, ieff} + sx32(dr[6][M_STRIDE +: 32]) + {48'd0, Lc};
     // one radix-16 step of the address unit; returns 1 when the multiplier is exhausted
+    // radix-4 multiply step: acc += {0, m, 2m, 3m}[digit]; m and 3m shift left by 2 (3m registered one cycle after a
+    // new multiplicand: m3v).  One 64-bit add a cycle (the radix-16 form's 64 x 4 product + variable shift was a
+    // setup limiter)
     wire        mdone = (mplier == 32'd0);
-    wire [63:0] mstep = acc + ((mcand * {60'd0, mplier[3:0]}) << ash);
+    wire [63:0] mpick = (mplier[1:0] == 2'd1) ? mcand : (mplier[1:0] == 2'd2) ? {mcand[62:0], 1'b0} :
+                        (mplier[1:0] == 2'd3) ? m3 : 64'd0;
+    wire [63:0] mstep = acc + mpick;
     function automatic [2:0] first0(input [6:0] o); first0 = o[0] ? 3'd0 : nxt(o, 4'd0); endfunction
     task advance(input [RB:0] n);
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
@@ -337,7 +350,7 @@ module ot_hgi_seq #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             st <= S_IDLE; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
-            depth <= 0; Lc <= 0; L1c <= 0; u_v <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00;
+            depth <= 0; Lc <= 0; L1c <= 0; u_v <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 3'd0; m3v <= 1'b0;
             cpl_status <= 0; cpl_token <= 0; cpl_cycles <= 0; faddr <= 0; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
@@ -346,6 +359,7 @@ module ot_hgi_seq #(
                 else if (!u_acc[k] && u_done_r[k]) outst[k] <= outst[k] - 8'd1;
             if (st != S_IDLE && st != S_CPL) cpl_cycles <= cpl_cycles + 32'd1;
             inflight <= fl_after;
+            if (dv_cnt != 3'd4) dv_cnt <= dv_cnt + 3'd1;
             // ---- fetch requests (valid held until ready)
             if (rq_push) faddr <= faddr + 40'd32;
             // ---- fetch responses -> ring (one sector a response)
@@ -375,7 +389,7 @@ module ot_hgi_seq #(
                 end
                 S_DEC: if (avail != 0) begin rd_ptr <= rp; st <= S_H1; end
                 S_H1: st <= S_H2;                                      // the sector read (registered address)
-                S_H2: begin h <= rd_word; st <= S_RDW; wk <= 5'd0;
+                S_H2: begin h <= rd_word; st <= S_RDW; wk <= 5'd0; dv_cnt <= 3'd0;
 `ifdef SEQ_DEBUG
                     $display("SEQDBG t=%0t rp=%0d wp=%0d frp=%0d hdr=%h", $time, rp, wp, frp, rd_word);
 `endif
@@ -434,7 +448,8 @@ module ot_hgi_seq #(
                 end
                 S_ADDR: if (aj == 3'd7) st <= S_WAIT;
                     else case (as)
-                    A_LOAD: begin
+                    A_LOAD: if (dv_ok) begin
+                        m3v <= 1'b0;
                         if ((aj == 3'd6 && (dc_idx || dc_nsel == 6'd63 || dc_sp != 2'd1)) ||
                             (aj != 3'd6 && (dc_idx || dc_nsel == 6'd63) && !have_i) ||
                             (!dc_idx && dyn_rsv(dc_dsel)) ||
@@ -445,9 +460,12 @@ module ot_hgi_seq #(
                             ash <= 6'd0; as <= A_ML;
                         end
                     end
-                    A_ML, A_ML1, A_MD: if (!mdone) begin
-                            acc <= mstep; mplier <= mplier >> 4; ash <= ash + 6'd4;
+                    A_ML, A_ML1, A_MD: if (!mdone && !m3v) begin
+                            m3 <= mcand + {mcand[62:0], 1'b0}; m3v <= 1'b1;
+                        end else if (!mdone) begin
+                            acc <= mstep; mplier <= mplier >> 2; mcand <= mcand << 2; m3 <= m3 << 2;
                         end else begin
+                            m3v <= 1'b0;
                             ash <= 6'd0;
                             if (as == A_ML) begin mcand <= sx32(dc[M_L1STR +: 32]); mplier <= {16'd0, L1c}; as <= A_ML1; end
                             else if (as == A_ML1 && !dc_idx) begin
@@ -509,8 +527,9 @@ module ot_hgi_seq #(
                             mcand <= {37'd0, dr[aj][M_DMUL +: 27]}; mplier <= vr_rsp_data_r; ash <= 6'd0; ix <= 3'd2;
                         end
                     end
-                    3'd2: if (!mdone) begin acc <= mstep; mplier <= mplier >> 4; ash <= ash + 6'd4; end
-                          else ix <= 3'd3;
+                    3'd2: if (!mdone && !m3v) begin m3 <= mcand + {mcand[62:0], 1'b0}; m3v <= 1'b1; end
+                          else if (!mdone) begin acc <= mstep; mplier <= mplier >> 2; mcand <= mcand << 2; m3 <= m3 << 2; end
+                          else begin m3v <= 1'b0; ix <= 3'd3; end
                     3'd3: if (pend_n[aj]) begin
                             if (iaddr_n[63:18] != 46'd0) fault3;
                             else begin vr_v <= 1'b1; vr_addr <= iaddr_n[17:0]; ix <= 3'd4; end
