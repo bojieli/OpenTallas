@@ -159,7 +159,16 @@ module tb_hc_mean_capture;
     end
     always @(negedge clk) begin
         cycles=cycles+1;
-        if(cycles>40000) $fatal(1,"finite test inventory exhausted");
+`ifdef HC_VM_READER
+`ifdef HC_READER_DIAG
+        if(cycles<50) $display("TRACE cycle=%d state=%d rsp=%b bad=%b fault=%b evin=%b evq=%b evout=%b",cycles,reader.state,rsp_valid,reader.bad_bf16,rf,reader.g_encode[0].g_pipe.e.valid_in,reader.g_encode[0].g_pipe.e.valid_q,reader.g_encode[0].g_pipe.e.valid_out);
+`endif
+`endif
+        if(cycles>40000) begin
+`ifdef HC_VM_READER
+            $display("reader state=%d copy=%d row=%d encv=%h decv=%h meanstate=%d nout=%d phase=%d",reader.state,reader.copy_q,reader.row_q,reader.encode_valid,reader.decode_valid,u.state,nout,phase);
+`endif
+            $fatal(1,"finite test inventory exhausted");end
         out_ready=(cycles%7!=0)&&(cycles%11!=0);
 `ifdef HC_INJECT_UE
         if(fault) begin

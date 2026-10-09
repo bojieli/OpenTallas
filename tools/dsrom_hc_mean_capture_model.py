@@ -111,7 +111,7 @@ def input_reader_model():
                    'ECC_PIPE_encode_increment_cycles_per_response':2,
                    'ECC_PIPE_encode_increment_cycles_per_capture':640,
                    'ECC_PIPE_total_increment_cycles_per_capture':880,
-                   'ECC_PIPE_encode_register_bits':64+7+72,
+                   'ECC_PIPE_encode_register_bits':8*(64+7+72),
                    'actual_VM_wait_cycles':'sum of320 admitted request-to-real-rvalid waits',
                    'input_reader_cycles_not_in_capture_cost':True},
         'integration':{'adopted':False,'default_enabled':False,
