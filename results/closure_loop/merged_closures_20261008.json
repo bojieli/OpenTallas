@@ -5,9 +5,9 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 198,
+  "closed": 199,
   "revoked": 9,
-  "held": 0,
+  "held": 1,
   "bench_failed": 0,
   "already_on_main": 71,
   "merged": 118
@@ -19,7 +19,8 @@
   "hfd_index_q_b1 and qfd_lst_c_split: main's records kept (setup-triage copy revoked / identical numbers).",
   "Revoked records (revoked_closures.json) that arrived with branch tips restored to main's files in bb320341a.",
   "multivt LVT routes: record commits cherry-picked only (overlay commits not merged).",
-  "merge-1658: cdc_eco-hm80-h1-e59973516-tt + s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt merged; qfd_cdc live view stays cdc_hm25."
+  "merge-1658: cdc_eco-hm80-h1-e59973516-tt + s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt merged; qfd_cdc live view stays cdc_hm25.",
+  "drive-1925: window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt CLOSED TT +110.15 / FF +17.43 / DRC 0; record only (adoption hold on parent), child 69cd5731a not merged."
  ],
  "ready_to_merge": [
   {
@@ -2676,6 +2677,23 @@
    "status": "merged",
    "adopted_view": false,
    "note": "closed, not adopted (LVT alternative): TT +251.39 / FF hold +13.18 / SS sens +132.09 ps, DRC 0"
+  },
+  {
+   "job": "window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt",
+   "closed": "2026-10-08 19:11 PT (closure loop, CLOSED, EPYC1)",
+   "closed_by": "closure loop (TT +110.15 / FF +17.43 / DRC 0 at 833.333, routed insertion)",
+   "branch": "claude/multivt-20261007-vf6bb5fd3da",
+   "source_commit": "69cd5731a",
+   "record_commit": "040299d9a",
+   "bench_ok": null,
+   "bench_note": "pure re-route (OT_MULTI_VT=lvt) of 6bb5fd3da; RTL benches gate adoption on the parent job",
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": true,
+   "merged_sha": null,
+   "status": "record_only_held",
+   "adopted": null,
+   "hold": "parent window-column128-halfwrite-distributed-6bb5fd3da adoption hold: actual independent 1280 capture-FF mapping, both-edge SS/FF/DRC, and actual parent PG/access/interface still required. Record cherry-picked to main (physical/variant_fill/...-vf-lvt/view); child commit 69cd5731a (flow-file overlay from older main 29803a27c) NOT merged."
   }
  ]
 }
