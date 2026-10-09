@@ -30,7 +30,7 @@ module tb_hbm_index_lines_sram #(parameter integer MODE=0);
     for(p=0;p<32;p=p+1)begin
      avail[p]=avail[p]+pop[p*2+:2];
      if(avail[p]>64)$fatal(1,"slot conservation PC%0d=%0d",p,avail[p]);
-     if(nextj[p]*32+p<nsector&&avail[p]>0&&((cyc+p)%7!=0))begin
+     if(nextj[p]*32+p<nsector&&avail[p]>=(nextj[p]%2==0?2:1)&&((cyc+p)%7!=0))begin
       j=nextj[p]^1;if(j*32+p>=nsector)j=nextj[p];
       v[p]=1;sj[p*12+:12]=j;
       for(b=0;b<32;b=b+1)sd[p*256+b*8+:8]=8'((j*32+p)*32+b);

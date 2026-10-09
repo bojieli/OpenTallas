@@ -11,9 +11,9 @@ module ot_hbm_index_lines_sram #(
  input wire[31:0] sector_v,input wire[383:0] sector_j,input wire[8191:0] sector_data,
  input wire[7:0] credit,output reg[8791:0] lines,output reg[63:0] pop,
  output reg done,output reg fault,output wire retained,output wire[63:0] corrected);
- localparam integer AW=5;
+ localparam integer AW=5,CW=$clog2(CRED+1);
  reg active,active_n;reg[10:0] next_line,nlines,next_line_n,nlines_n;
- reg[6:0] credits[0:7],credits_n[0:7];
+ reg[CW-1:0] credits[0:7],credits_n[0:7];
  reg[63:0] valid[0:31],valid_n[0:31];
  wire[31:0] wv;wire[383:0] wj;
  reg can,control_bad;
@@ -91,7 +91,7 @@ module ot_hbm_index_lines_sram #(
    active<=0;active_n<=1;next_line<=0;next_line_n<=~11'd0;nlines<=0;nlines_n<=~11'd0;
    lines<=0;pop<=0;done<=0;fault<=0;pipe_v<=0;pipe_v_n<=~4'd0;
    for(p=0;p<32;p=p+1)begin valid[p]<=0;valid_n[p]<=~64'd0;end
-   for(l=0;l<8;l=l+1)begin credits[l]<=CRED;credits_n[l]<=~7'(CRED);end
+   for(l=0;l<8;l=l+1)begin credits[l]<=CRED;credits_n[l]<=~CW'(CRED);end
   end else if(ENABLE!=0)begin
    lines<=0;pop<=0;done<=0;pipe_v<={pipe_v[2:0],can};pipe_v_n<=~{pipe_v[2:0],can};
    group_tag[0]<=next_line;group_tag_n[0]<=~next_line;read_need[0]<=need;read_need_n[0]<=~need;read_j[0]<=rj;read_j_n[0]<=~rj;
@@ -99,8 +99,8 @@ module ot_hbm_index_lines_sram #(
    if(control_bad)fault<=1;
    for(l=0;l<8;l=l+1)begin
     if(credit[l]&&credits[l]==CRED&&!can)fault<=1;
-    credits[l]<=credits[l]+7'(credit[l])-7'(can);
-    credits_n[l]<=~(credits[l]+7'(credit[l])-7'(can));
+    credits[l]<=credits[l]+CW'(credit[l])-CW'(can);
+    credits_n[l]<=~(credits[l]+CW'(credit[l])-CW'(can));
    end
    if(start)begin
     if(active||pipe_v!=0||blocks>342)fault<=1;
