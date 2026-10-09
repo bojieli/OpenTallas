@@ -43,11 +43,21 @@
         }
       },
       "physical": {
-        "status": "pending",
+        "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_q5_landing_ecc-facfb2167-tc.json"
-        ]
+          "tools/closure_loop/jobs/qfd_q5_landing_ecc-facfb2167-tc.json",
+          "tools/closure_loop/jobs/qfd_q5_landing_ecc-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
       },
       "dependencies": [
         "qfd_hbm_ecc_provider",
@@ -455,11 +465,21 @@
         }
       },
       "physical": {
-        "status": "queued",
+        "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_biased_amax-e96b4354c-tc.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_biased_amax-e96b4354c-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
       },
       "dependencies": [
         "qfd_dspark_logit_SU_native_tap",
@@ -509,11 +529,21 @@
         }
       },
       "physical": {
-        "status": "queued",
+        "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_w1_bank-1e16ab97d-tc.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_w1_bank-1e16ab97d-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_bank-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
       },
       "dependencies": [
         "qfd_dspark_w1_38bank_mux",
@@ -563,11 +593,21 @@
         }
       },
       "physical": {
-        "status": "queued",
+        "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_s7_control-ce667d01f-tc.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_s7_control-ce667d01f-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
       },
       "dependencies": [
         "qfd_production_stage_traversal",
@@ -621,11 +661,21 @@
         }
       },
       "physical": {
-        "status": "queued",
+        "status": "prepared",
         "corners": {},
         "evidence": [
-          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-a090cddb3-tc.json"
-        ]
+          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-a090cddb3-tc.json",
+          "tools/closure_loop/jobs/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias.json"
+        ],
+        "configuration_successor": {
+          "source": "ab9c785e9",
+          "scope": "configuration-only",
+          "previous_TC_attempt": "FAILED WC_LIB_FILES missing; immutable historical record retained",
+          "setup": "TT stdcells+TT macros through supported namedWC alias",
+          "hold": "BC/FF actual domain budget",
+          "no_RTL_change": true,
+          "running_handle": null
+        }
       },
       "dependencies": [
         "qfd_dspark_w1_bank",
