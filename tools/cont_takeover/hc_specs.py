@@ -3,11 +3,12 @@
 import json, sys
 commit, branch, outdir = sys.argv[1], sys.argv[2], sys.argv[3]
 LB = int(sys.argv[4]) if len(sys.argv) > 4 else 1
-ONLY = sys.argv[5].split(',') if len(sys.argv) > 5 else None
+ONLY = sys.argv[5].split(',') if len(sys.argv) > 5 and sys.argv[5] else None
+LINK = int(sys.argv[6]) if len(sys.argv) > 6 else 0
 D = 'rtl/experimental/dsrom_hc_capture_20261009'
 MV = 'ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2'
 MAC = 'physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2'
-COMMON = f'--source {D}/ot_dsrom_hc_skid.sv --source {D}/ot_dsrom_hc_secded_pipe.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv'
+COMMON = f'--source rtl/common/ot_link_credit.sv --source {D}/ot_dsrom_hc_skid.sv --source {D}/ot_dsrom_hc_secded_pipe.sv --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv'
 FP = ' '.join(f'--source rtl/hdc/{f}' for f in ('ot_hdc_prefix.sv', 'ot_hdc_fastfp.sv', 'ot_hdc_fp32_add_lat.sv', 'ot_hdc_fp32_mul_lat.sv'))
 V = {
   # name: (block, element, bench case, sources+params, die, macro tcl, HM, purpose, cycles)
@@ -37,6 +38,12 @@ V = {
 for n, (block, el, case, args, die, mtcl, hm, why, cyc) in V.items():
     if ONLY and n not in ONLY:
         continue
+    if LINK:
+        n = n + '-lk'
+        args = args + ' --param LINK_CREDIT=1 --param LINK_DEPTH=8'
+        case = case + '_lk'
+        why = why + '; LINK_CREDIT=1: every stream boundary is the die-link credit relay (REVIEW ~11:30), signed off against the die-link budget (LB=1)'
+        cyc = cyc + '; credit relay: +2 cycles per channel (pin flop + landing), full rate at round trip <= 8'
     if not LB:
         n = n + '-lb0'
         why = why + '; LB=0: standard 0.2 T IO budget (Codex characterization basis). With the die-link budget (LB=1) the join/reader failed only on IO: out_ready -> 600-bit skid pop fan-out (-120 TT) and fault out (-28); a die-link boundary needs the finite-credit relay (parent obligation in the RTL), not valid/ready'
