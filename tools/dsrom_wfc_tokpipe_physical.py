@@ -87,6 +87,9 @@ def main():
   s+='\n# TC route: WC alias reads TC stdcell and TT macro liberties\n'
  cfg.write_text(s)
  run=a.case/'run.sh';s=run.read_text().replace('tools/dsrom_wfc_split_physical.py sta',f'tools/dsrom_wfc_tokpipe_physical.py sta --inst {a.inst}').replace('tools/dsrom_wfc_split_physical.py check',f'tools/dsrom_wfc_tokpipe_physical.py check --inst {a.inst}')
+ # Wrapper infers SRAM macro STA from --inst src; the base generator's --macros
+ # option belongs to dsrom_wfc_split_physical and is redundant/invalid here.
+ s=s.replace(' --case $W --macros', ' --case $W')
  # Calibrate stops atCTS; subsequent route keeps the same pinned source and recipe.
  s=s.replace('finish\" > $W/flow.log','${WFC_TARGET:-finish}\" > $W/flow.log')
  s=s.replace('cd $S && python3', 'if [[ "${WFC_TARGET:-finish}" != "finish" ]]; then exit 0; fi\ncd $S && python3',1)
