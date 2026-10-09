@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.rtl.mtp_exact_mr5_isa_probe.v1",
+ "question": "MR-5 wavefront ordering invariant for squashed jobs: positions after a rejected draft that are ALREADY in the pipeline (issued on the corrupted context) are squashed and re-issued after the corrected position",
+ "vehicle": "reduced V4.1, split [0..18][19][20][21..39] (tools/mtp_exact_wavefront2.py), ISA pipeline (dsrom_wavefront_rtl_campaign.isa_replay, Engram history truncated to the position)",
+ "basic_order": {
+  "jobs": "0,1,2,3(bad),3,4",
+  "final_state_equal_clean_all_packages": true,
+  "rtl": "PASS (wf2_record.json stage2_wfc_w1)"
+ },
+ "deep_order_1": {
+  "jobs": "0,1,2,3(bad),4(squashed),3,4",
+  "final_state_equal_clean": false,
+  "kv_words_differing_per_package": [
+   3053,
+   188,
+   313,
+   4819
+  ],
+  "vm_persistent_words_differing": [
+   351,
+   31,
+   63,
+   63
+  ]
+ },
+ "deep_order_2_continued": {
+  "jobs": "0,1,2,3(bad),4,5(squashed),3,4..11",
+  "post_reissue_logits_exact": false,
+  "first_wrong": "the re-issued position 3 itself"
+ },
+ "finding": "On the AS-BUILT reduced vehicle the invariant does NOT hold at ISA level once a squashed successor has run: state it wrote outside the position-indexed rows (KV / persistent VM of every package) is read by the re-issued position. Consistent with mtp-rollback MR-1/MR-2/MR-6 (window ring, compressor open-group record, key shadow): the MR-5 RTL proof needs those rollback rings in the stage vehicle; no RTL run is launched for the deep order because it fails by construction.",
+ "tool": "tools/mtp_exact_wavefront2.py prepare --order deep (raises: squash + re-issue does not restore the clean state)"
+}
