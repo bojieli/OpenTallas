@@ -31,6 +31,7 @@ module tb_hbm_native_mtp_transaction_join;
  tick();if(tm[83])$fatal(1,"done duplicated");
  launch();cjid=ej;cgen=eg;cseq=seq;cepoch=ee+1;cv=1;tick();cv=0;
  if(!fault||!idfault||tm[83]||tm[139])$fatal(1,"stale epoch accepted");
+ completion();if(tm[83]||!fault)$fatal(1,"faulted command later completed");
  xf=1;tick();xf=0;q=0;jv=1;tick();jv=0;if(active)$fatal(1,"fault without quiescence");
  epoch=4;job();launch();
  if(MUT)begin cjid=ej;cgen=eg;cseq=seq;cepoch=ee-1;cv=1;tick();cv=0;

@@ -24,7 +24,7 @@ module ot_hbm_native_mtp_transaction_join #(
  reg start_q,done_q;
  wire owned=eng_cpl_job==owner_job && eng_cpl_generation==owner_gen &&
   eng_cpl_sequence==sequence_q && eng_cpl_epoch==owner_epoch;
- assign job_rdy=ENABLE && !active && !inflight && backend_quiescent && !external_fault;
+ assign job_rdy=ENABLE && !active && !inflight && backend_quiescent && !external_fault && !eng_cpl_v;
  assign eng_cmd_v=ENABLE && active && !inflight && !fault && !external_fault &&
   !done_q && f_mtp[82] && sequence_q!={SEQ_W{1'b1}};
  assign eng_cmd={f_mtp[148+:136],f_mtp[131+:17],f_mtp[99+:32],f_mtp[95+:4],f_mtp[87+:8],f_mtp[83+:4]};
@@ -55,7 +55,7 @@ module ot_hbm_native_mtp_transaction_join #(
    end
    if(eng_cmd_v && eng_cmd_rdy) inflight<=1;
    if(eng_cpl_v && eng_cpl_rdy) begin
-    if(!active || !inflight || !owned) begin identity_fault<=1;fault<=1;end
+    if(fault || !active || !inflight || !owned) begin identity_fault<=1;fault<=1;end
     else if(eng_cpl_fault) begin fault<=1;inflight<=0;end
     else begin done_q<=1;inflight<=0;sequence_q<=sequence_q+1'b1;end
    end
