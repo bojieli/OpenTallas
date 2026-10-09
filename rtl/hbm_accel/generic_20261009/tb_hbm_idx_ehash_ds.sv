@@ -3,6 +3,14 @@ import ot_hdc_engram_tables_shipped_pkg::*;
 module tb_hbm_idx_ehash_ds;
  parameter integer MUTANT=0, GENERIC=1;
  reg clk=0;always begin #416.666 clk=~clk; #416.667 clk=~clk;end
+ realtime last_rise=0.0;reg period_printed=0;
+ always @(posedge clk)begin
+  if(last_rise>0.0)begin
+   if(($realtime-last_rise)>833.334||($realtime-last_rise)<833.332)$fatal(1,"wrong EHASH clock period");
+   if(!period_printed)begin $display("EHASH_CLOCK_PERIOD_PS %.3f",$realtime-last_rise);period_printed=1;end
+  end
+  last_rise=$realtime;
+ end
  reg rst_n=0,token_begin=0,accept_valid=0,cmd_valid=0,cmd_first=0,row_ready=1;
  reg [2:0] accept_slot=0,cmd_op=4,cmd_layer=0,cmd_slot=0;
  reg [16:0] cmd_cid=0;
