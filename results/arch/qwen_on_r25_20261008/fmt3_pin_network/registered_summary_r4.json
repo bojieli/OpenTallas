@@ -1,0 +1,79 @@
+{
+  "source_sha256": "a7b8357562809c1c73a9b6c705d1df3b098c64f81f5253df704e6a356c2c7b56",
+  "strip": "front_c",
+  "max_pin_to_cell_origin_um": 19.794000000000096,
+  "status": "actual placed DFF cells, not routed wire length or added latency credit",
+  "registered_bindings": 12370,
+  "placement_counts": {
+    "FIRM": 12370
+  },
+  "die_cost": {
+    "source_evidence": "3467f362e",
+    "wide_area_mm2": 763.2604012608,
+    "area_delta_vs_actual_sm3_mm2": 19.949359103999996,
+    "area_delta_vs_adopted_r25_mm2": 10.069649
+  },
+  "hop_delta_by_class": {
+    "link": {
+      "max_ref_stages": 26,
+      "max_wide_stages": 26,
+      "max_path_delta_stages": 0
+    },
+    "weight": {
+      "max_ref_stages": 23,
+      "max_wide_stages": 24,
+      "max_path_delta_stages": 1
+    },
+    "attn_q": {
+      "max_ref_stages": 38,
+      "max_wide_stages": 38,
+      "max_path_delta_stages": 0
+    },
+    "kv": {
+      "max_ref_stages": 27,
+      "max_wide_stages": 29,
+      "max_path_delta_stages": 3
+    },
+    "xbcast": {
+      "max_ref_stages": 73,
+      "max_wide_stages": 81,
+      "max_path_delta_stages": 25
+    },
+    "expert_req": {
+      "max_ref_stages": 57,
+      "max_wide_stages": 56,
+      "max_path_delta_stages": 0
+    },
+    "ik": {
+      "max_ref_stages": 31,
+      "max_wide_stages": 29,
+      "max_path_delta_stages": 1
+    },
+    "host": {
+      "max_ref_stages": 54,
+      "max_wide_stages": 54,
+      "max_path_delta_stages": 0
+    },
+    "control": {
+      "max_ref_stages": 60,
+      "max_wide_stages": 63,
+      "max_path_delta_stages": 3
+    },
+    "result": {
+      "max_ref_stages": 78,
+      "max_wide_stages": 64,
+      "max_path_delta_stages": 9
+    }
+  },
+  "physical_source_commit": "2831b78d525eaa86a7d5706446cbf8ccdb8374bc",
+  "probe_source_sha256": "9d3ca925b0e9d96d5baa263a76a01ec5ba1f7f86d347c89302cd40641269f4b3",
+  "scope": "front_c actual FIRM DFF bindings; N/S external master endpoint qualification and routed whole-die network still pending",
+  "stage": "after immutable generated hops.tcl; calibration floorplan before CTS",
+  "eligible_signal_ports": 12370,
+  "excluded_ports": [
+    "clk",
+    "rst_n"
+  ],
+  "network_qualified": false,
+  "timing_qualified": false
+}
