@@ -10,7 +10,10 @@
 // pulse slot_done_v / slot_done_tag (ck) for the decode scheduler, so decode can never read a slot whose writes are still
 // in flight.  Fault words pass at once.  FENCE 0 (bench mutant, must FAIL) releases completions without waiting.
 module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
-    parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif) (
+    parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif,
+    // sys-takeover 2026-10-09: engine options (ot_rom_host_ingest ENG_TRIM / APIPE), opt-in
+    parameter integer ENG_TRIM = `ifdef OT_HING_ETRIM 1 `else 0 `endif,
+    parameter integer APIPE = `ifdef OT_HING_APIPE 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -44,7 +47,7 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
     wire [255:0] o_d;
     wire rn_c;
     ot_reset_sync u_rs (.clk(ck), .async_rst_n(rst_n), .sync_rst_n(rn_c));
-    ot_rom_host_ingest #(.KVHMAX(1), .HDMAX(16), .QKV_EN(0), .RMW_EN(0), .OCRED(IQ)) u_hi (
+    ot_rom_host_ingest #(.KVHMAX(1), .HDMAX(16), .QKV_EN(0), .RMW_EN(0), .OCRED(IQ), .ENG_TRIM(ENG_TRIM), .APIPE(APIPE)) u_hi (
         .rst_n(rst_n), .clk_h(clk_h), .h_v(h_v), .h_cls(h_cls), .h_d(h_d), .h_crn(h_crn), .t_v(u_tv), .t_d(u_td),
         .t_cr(u_tcr), .clk_i(clk_i), .ck(ck), .o_v(o_v), .o_we(o_we), .o_addr(o_addr), .o_d(o_d), .o_cr(o_cr),
         .i_rv(1'b0), .i_rd(256'd0), .fault(f_hi));

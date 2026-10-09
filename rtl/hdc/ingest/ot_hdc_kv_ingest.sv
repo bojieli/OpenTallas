@@ -61,7 +61,16 @@ module ot_hdc_kv_ingest #(
     parameter integer AW     = 32,        // sector address bits
     parameter integer HDMAX  = 128,       // largest head_dim (QKV), a power of two >= 16
     parameter integer KVHMAX = 8,         // most KV heads per block (QKV), a power of two <= 16
-    parameter integer DQ     = 4          // descriptor queue depth (a power of two)
+    parameter integer DQ     = 4,         // descriptor queue depth (a power of two)
+    // sys-takeover 2026-10-09 (dsfd_host_native / hfd_host_ingest TT -194: qi_slot -> sd[qi_slot] -> granule walk ->
+    // bk / bv write decode, 43-45 levels; st_d -> stream address arithmetic -> request FIFO, 42 levels).  Both opt-in,
+    // defaults = the original:
+    //   QKV   = 0: the QKV path is absent (a QKV descriptor is never dispatched; the host wrappers with QKV_EN = 0
+    //           already fail it closed before the engine), so the QKV walk / banks / drain synthesise away.
+    //   APIPE = 1: the stream path's per-row address terms (ROWS row address, ownership, IKEY code / scale bases) are
+    //           registered: one bubble edge after every row / key / segment start before its first sector.
+    parameter integer QKV    = 1,
+    parameter integer APIPE  = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -298,6 +307,15 @@ module ot_hdc_kv_ingest #(
     wire [31:0] k_blk = s_rbase + (k_sb << 11) + (k_sb << 7);
     wire [31:0] k_code = k_blk + ((32'd1 + {28'd0, k_q[5:2]}) << 7) + ({30'd0, k_q[1:0]} << 5) + ((st_row & 32'd15) << 1);
     wire [31:0] k_scal = k_blk + ({26'd0, k_q} << 1);
+    // APIPE: per-row address terms registered (ap_ok = valid for the current st_row / segment)
+    reg         ap_ok;
+    reg  [31:0] ap_raddr, ap_kcode, ap_kscal;
+    reg         ap_mine;
+    wire [31:0] u_raddr = (APIPE != 0) ? ap_raddr : s_raddr;
+    wire [31:0] u_kcode = (APIPE != 0) ? ap_kcode : k_code;
+    wire [31:0] u_kscal = (APIPE != 0) ? ap_kscal : k_scal;
+    wire        u_mine  = (APIPE != 0) ? ap_mine  : s_mine;
+    wire        ap_go   = (APIPE == 0) || ap_ok || st_mode == M_RAW;
     // this cycle's stream step
     reg  [5:0]  st_pop;
     reg         st_wv, st_adv;
@@ -306,26 +324,26 @@ module ot_hdc_kv_ingest #(
     wire [5:0]  k_take = (st_rem > 16'd32) ? 6'd32 : st_rem[5:0];
     always @* begin
         st_pop = 6'd0; st_wv = 1'b0; st_wd = 256'd0; st_wa = {AW{1'b0}}; st_adv = 1'b0;
-        if (st_act && !st_pad) begin
+        if (st_act && !st_pad && ap_go) begin
             case (st_mode)
                 M_RAW: if (ra_n >= 9'd32) begin
                     st_pop = 6'd32; st_wv = 1'b1; st_wd = ra_head; st_wa = st_d[47:16] + st_row; st_adv = 1'b1;
                 end
                 M_ROWS: if (ra_n >= {3'd0, k_take}) begin
-                    st_pop = k_take; st_adv = 1'b1; st_wv = s_mine;
+                    st_pop = k_take; st_adv = 1'b1; st_wv = u_mine;
                     st_wd = (k_take == 6'd32) ? ra_head : (ra_head & ~({256{1'b1}} << {k_take[4:0], 3'b000}));
-                    st_wa = s_raddr + st_sec;
+                    st_wa = u_raddr + st_sec;
                 end
                 M_IKEY: begin
                     if (st_ph < 3'd2) begin
                         if (ra_n >= 9'd32) begin
-                            st_pop = 6'd32; st_adv = 1'b1; st_wv = s_mine; st_wd = ra_head; st_wa = k_code + st_ph;
+                            st_pop = 6'd32; st_adv = 1'b1; st_wv = u_mine; st_wd = ra_head; st_wa = u_kcode + st_ph;
                         end
                     end else if (st_ph == 3'd2) begin
                         if (ra_n >= 9'd4) begin st_pop = 6'd4; st_adv = 1'b1; end
                     end else begin
-                        st_adv = 1'b1; st_wv = s_mine; st_wd = sc_acc[st_ph[0] ? 0 : 1];
-                        st_wa = k_scal + (st_ph == 3'd4 ? 1 : 0);
+                        st_adv = 1'b1; st_wv = u_mine; st_wd = sc_acc[st_ph[0] ? 0 : 1];
+                        st_wa = u_kscal + (st_ph == 3'd4 ? 1 : 0);
                     end
                 end
                 default: ;
@@ -334,7 +352,7 @@ module ot_hdc_kv_ingest #(
     end
     wire st_go = st_adv && (!st_wv || w_rdy);
     // ROWS: the row ends with its last output sector (this die) or its last bytes (dropped)
-    wire st_row_end = s_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
+    wire st_row_end = u_mine ? (st_sec + 5'd1 >= s_pitch) : (st_rem <= 16'd32);
 
     // =============================================================================
     // Ports
@@ -353,7 +371,7 @@ module ot_hdc_kv_ingest #(
     // RMW descriptor waits for any preload in flight); a stream descriptor starts
     // when the QKV path is idle
     wire nslot = ~qi_slot;
-    wire q_disp = dh_v && dh_mode == M_QKV && !qi_act && !st_act && !s_full[nslot] && !s_pre[nslot]
+    wire q_disp = (QKV != 0) && dh_v && dh_mode == M_QKV && !qi_act && !st_act && !s_full[nslot] && !s_pre[nslot]
                   && !(qo_act && qo_slot == nslot) && (!dh[6] || (!pr_act && pr_out == 0 && s_pre == 2'b00));
     wire s_disp = dh_v && dh_mode != M_QKV && !qi_act && !st_act && !qo_act && s_full == 2'b00 && !pr_act
                   && s_pre == 2'b00;
@@ -500,7 +518,7 @@ module ot_hdc_kv_ingest #(
                     M_ROWS: begin
                         st_rem <= st_rem - {10'd0, k_take};
                         if (!st_row_end) begin
-                            if (s_mine) st_sec <= st_sec + 5'd1;
+                            if (u_mine) st_sec <= st_sec + 5'd1;
                         end else begin
                             st_sec <= 0; st_rem <= s_rb; st_row <= st_row + 1; st_left <= st_left - 1;
                             if (st_left == 32'd1) st_pad <= 1'b1;
@@ -522,5 +540,20 @@ module ot_hdc_kv_ingest #(
             end
             if (st_act && !st_pad && st_left == 0 && !s_disp) st_pad <= 1'b1;   // an empty segment
         end
+    end
+    // APIPE: the address terms of the current row; invalidated whenever st_row / the segment can change
+    wire ap_inval = s_disp || (st_go && (st_mode == M_ROWS ? st_row_end :
+                                         st_mode == M_IKEY ? ((st_ph == 3'd2 && st_row[3:0] != 4'd15) || st_ph == 3'd4) : 1'b0));
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) ap_ok <= 1'b0;
+`ifdef OT_ING_MUT_APSTALE
+        else if (s_disp) ap_ok <= 1'b0;                    // mutant: stale row address kept across rows
+`else
+        else if (ap_inval) ap_ok <= 1'b0;
+`endif
+        else ap_ok <= st_act;
+    end
+    always @(posedge clk) if (!ap_ok) begin
+        ap_raddr <= s_raddr; ap_kcode <= k_code; ap_kscal <= k_scal; ap_mine <= s_mine;
     end
 endmodule
