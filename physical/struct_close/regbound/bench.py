@@ -167,6 +167,15 @@ L_ = "rtl/hbm_accel/tu/link_retry_sram_20261008"
 CASES["coll_vm_pub"] = dict(rtl=[f"{D}/ot_hbm_collective_vm_publication_rb.sv", "rtl/common/ot_secded.sv", f"{L_}/ot_hbm_replay_sram.sv",
      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"], tb=cvp_tb,
      top="tb_hbm_collective_vm_publication", ok="PASS_ALL", neg_defines=["OT_HBM_PUBLICATION_MUT_QID"], neg_ok="quarter read ownership lost")
+def cvp_fix_tb():
+    """sys-takeover PUBFIX=1: indexed read 7 edges on the wrapper (+1 MUXREG), everything else unchanged"""
+    t = cvp_tb()
+    for a, b in (("if(cycles-expected_cycle[seen]!=6)", "if(cycles-expected_cycle[seen]!=7)"),
+                 ("ot_hbm_collective_vm_publication #(", "ot_hbm_collective_vm_publication #(.PUBFIX(1),")):
+        assert t.count(a) == 1, a
+        t = t.replace(a, b)
+    return t
+CASES["coll_vm_pub_fix"] = dict(CASES["coll_vm_pub"], tb=cvp_fix_tb)
 def artok(mode, w):
     """tools/hbm_native_ar_token_join_gate.py (4 positive vectors, MUT and owner-17 truncation mutants) on the wrapper"""
     import os, json as _j
