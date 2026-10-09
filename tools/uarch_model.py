@@ -14621,3 +14621,9 @@ def qwen_kv_row_model():
     """Full32-PC option-M row mechanism and merged-word prepaid credits."""
     from uarch_model_qwen_kv_row import model
     return model(DFF_UM2)
+
+
+def hbm_coll_capture_placement_model():
+    """Same full collective port with measured legal direct SRAM captures."""
+    from tools.hbm_coll_capture_placement_model import model
+    return model()
