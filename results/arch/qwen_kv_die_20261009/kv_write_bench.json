@@ -93,5 +93,6 @@
   }
  },
  "ok": true,
- "throughput": "long run: 144 rows in 9,702 core cycles = 67 cycles a row (rows serialised per queue head), 270 a layer for the 4 rows of a layer: posted, off the token path"
+ "throughput": "long run: 144 rows in 9,702 core cycles = 67 cycles a row (rows serialised per queue head), 270 a layer for the 4 rows of a layer: posted, off the token path",
+ "rebench": "re-benched after the pc_of NBA-index fix (wire array pcq): identical results on all 6 runs"
 }
