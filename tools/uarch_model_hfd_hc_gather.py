@@ -39,7 +39,7 @@ def model(plan, floorplan, period_ps=833.333333):
         'logical_latency_cycles_added': 0,
         'envelope_gather_chain_cycles': groups + 1 + plan['face_stages']['t_sfu'],
         'envelope_gather_chain_ns': (groups + 1 + plan['face_stages']['t_sfu']) * period_ps / 1000,
-        'token_latency_change': '0 logical cycles in envelope; production composition unqualified',
+        'token_latency_change': '0 added pipeline stages; phase-sensitive edge alignment and production composition unqualified',
         'outline_um': [w, h],
         'channel_um': channel,
         'signal_tracks_per_layer_at_048um_pitch': int(channel / .048),
