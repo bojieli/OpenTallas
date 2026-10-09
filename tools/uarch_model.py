@@ -14581,3 +14581,18 @@ def dshbm_mtp_kernel_enrollment_model():
     """Full-shape kernel enrollment and actual component receipts; total unknown until complete."""
     from dshbm_mtp_kernel_model import model
     return model()
+
+
+def dshbm_mtp_native_record_dispatch_model():
+    from dshbm_mtp_record_dispatch_model import model
+    return model()
+
+
+def dshbm_mtp_native_score_join_model():
+    from dshbm_mtp_score_join_model import model
+    return model()
+
+
+def dshbm_mtp_native_rank_argmax_model():
+    from dshbm_mtp_rank_argmax_model import model
+    return model()
