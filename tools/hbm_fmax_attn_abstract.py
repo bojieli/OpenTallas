@@ -10,6 +10,7 @@ composition; SS remains a sensitivity. Same OpenROAD commands as tools/w18/recov
 import argparse
 import hashlib
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -31,7 +32,7 @@ def main():
     ap.add_argument("--orfs-dir", type=Path, required=True)
     ap.add_argument("--name", required=True)
     ap.add_argument("--out", type=Path, required=True)
-    ap.add_argument("--image", default="openroad/orfs:latest")
+    ap.add_argument("--image", default=os.environ.get("OPENTALLAS_ORFS_IMAGE", "openroad/orfs:latest"))
     ap.add_argument("--tt", action="store_true", help="also export actual TT Liberty for OptionB parent setup timing")
     ap.add_argument("--interface-sdc", type=Path,
                     help="source-pinned interface constraints without leaf IO exceptions, for parent timing views")
@@ -50,7 +51,7 @@ def main():
         tmp_args = ["-v", f"{tmp_dir}:/tmp", "-e", "TMPDIR=/tmp"]
     base = next((orfs / "results/asap7").glob("*/base"))
     rel = base.relative_to(orfs)
-    rec = dict(name=a.name, orfs_dir=str(orfs), corners={})
+    rec = dict(name=a.name, orfs_dir=str(orfs), image=a.image, corners={})
     if a.interface_sdc is not None:
         interface_sdc = a.interface_sdc.resolve()
         if not interface_sdc.is_file():

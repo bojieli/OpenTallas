@@ -155,7 +155,8 @@ def run(orfs: Path, corner: str, macros: list[str], post_sdc: list[str] = (),
         # without their liberty
         args.append(vts)
     (orfs / f"w18_sta_{corner}.tcl").write_text(script(*args))
-    cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", "openroad/orfs:asap7lock", "bash",
+    image = os.environ.get("OPENTALLAS_ORFS_IMAGE", "openroad/orfs:asap7lock")
+    cmd = ["docker", "run", "--rm", "-v", f"{orfs}:/work", "-v", f"{ROOT}:/src:ro", image, "bash",
            "-lc", f"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/w18_sta_{corner}.tcl"]
     out = subprocess.run(cmd, capture_output=True, text=True).stdout
     (orfs / f"w18_sta_{corner}.log").write_text(out)
