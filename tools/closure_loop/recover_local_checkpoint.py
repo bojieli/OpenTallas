@@ -46,7 +46,7 @@ def verify_terminal(j):
     return observations
 
 
-def recover(name, host):
+def recover(name, host, resume_transferred=False):
     if cl.is_local(host):
         raise RuntimeError('destination must be remote')
     with cl.job_lock(name):
@@ -63,28 +63,42 @@ def recover(name, host):
         archive = cl.STATE / 'localhost_evacuations' / name
         archive.mkdir(parents=True, exist_ok=True)
         original = cl.jpath(name).read_bytes()
-        if (archive / 'state_before.json').exists():
+        previous = archive / 'state_before.json'
+        if previous.exists() and not resume_transferred:
             raise RuntimeError('explicit evacuation already attempted; inspect preserved attempt')
-        (archive / 'state_before.json').write_bytes(original)
+        if resume_transferred:
+            if not previous.exists() or j.get('reason') != 'checkpoint evacuation: remote preserved-checkpoint make dry-run failed':
+                raise RuntimeError('resume requires the preserved exact dry-run failure')
+            old = json.loads(previous.read_text())
+            if old['spec'] != j['spec']:
+                raise RuntimeError('frozen specification changed since preserved transfer')
+            failed = archive / 'next_stage_dryrun.txt'
+            if failed.exists():
+                failed.rename(archive / ('next_stage_dryrun.failed_' + hashlib.sha256(failed.read_bytes()).hexdigest()[:12] + '.txt'))
+        else:
+            previous.write_bytes(original)
         (archive / 'terminal_handles.json').write_text(json.dumps(observations, indent=2) + '\n')
         j.update(status='MIGRATING', wait=None)
         cl.event(j, f'owner-authorized terminal localhost evacuation to {host}; no surviving producer stopped')
         cl.save_job(j)
         try:
-            # Preserve absolute generated-Makefile paths while locating bulk data on NVMe.
-            setup = ('set -eu; '
-                     f'test ! -e {shlex.quote(actual)}; test ! -e {shlex.quote(run)}; '
-                     f'mkdir -p {shlex.quote(actual)} {shlex.quote(str(Path(run).parent))}; '
-                     f'ln -s {shlex.quote(actual)} {shlex.quote(run)}')
-            cl.ssh(host, setup, check=True)
-            with ExitStack() as stack:
-                prefixes = {h: stack.enter_context(command(h)) for h in ('localhost', host)}
-                read = shlex.join(prefixes['localhost'] + [f'tar -C {shlex.quote(run)} -cf - .'])
-                write = shlex.join(prefixes[host] + [f'tar -C {shlex.quote(actual)} -xf -'])
-                transfer = subprocess.run(['bash', '-o', 'pipefail', '-c', read + ' | ' + write],
-                                          capture_output=True, text=True)
-            if transfer.returncode:
-                raise RuntimeError('checkpoint transfer failed: ' + transfer.stderr[-800:])
+            if resume_transferred:
+                cl.ssh(host, f'test "$(readlink {shlex.quote(run)})" = {shlex.quote(actual)} && test -d {shlex.quote(actual)}/src', check=True)
+            else:
+                # Preserve absolute generated-Makefile paths while locating bulk data on NVMe.
+                setup = ('set -eu; '
+                         f'test ! -e {shlex.quote(actual)}; test ! -e {shlex.quote(run)}; '
+                         f'mkdir -p {shlex.quote(actual)} {shlex.quote(str(Path(run).parent))}; '
+                         f'ln -s {shlex.quote(actual)} {shlex.quote(run)}')
+                cl.ssh(host, setup, check=True)
+                with ExitStack() as stack:
+                    prefixes = {h: stack.enter_context(command(h)) for h in ('localhost', host)}
+                    read = shlex.join(prefixes['localhost'] + [f'tar -C {shlex.quote(run)} -cf - .'])
+                    write = shlex.join(prefixes[host] + [f'tar -C {shlex.quote(actual)} -xf -'])
+                    transfer = subprocess.run(['bash', '-o', 'pipefail', '-c', read + ' | ' + write],
+                                              capture_output=True, text=True)
+                if transfer.returncode:
+                    raise RuntimeError('checkpoint transfer failed: ' + transfer.stderr[-800:])
             cl.ship_helpers(host, run)
             cl.ssh(host, f'python3 {shlex.quote(run)}/cl/resume_patch.py {shlex.quote(run)}/src', check=True)
             stl = cl.stage_list(j['spec'])
@@ -96,11 +110,13 @@ def recover(name, host):
                 dm = cl.subst(j['spec']['verdict']['drc_metrics'], j)
                 base = dm.split('/logs/')[0] + '/results/asap7/*/base'
                 locate = f'ls -d {base} | tail -1'
+            # CTS-only calibration has no GRT target rule: dry-run its real goal.
+            goal = 'cts' if st['kind'] == 'calibrate' else 'finish'
             # Inventory and make -n are remote metadata checks, not resumed compute.
             dry = cl.ssh(host, f'''set -eu
 B=$({locate}); O=${{B%/results/*}}
 test -n "$(find "$B" -maxdepth 1 -name '*.odb' -print -quit)"
-docker run --rm -v {shlex.quote(run)}/src:/src:ro -v "$O":/work -w /OpenROAD-flow-scripts/flow {cl.LOCAL_ORFS_REF} bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make -n DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base finish'
+docker run --rm -v {shlex.quote(run)}/src:/src:ro -v "$O":/work -w /OpenROAD-flow-scripts/flow {cl.LOCAL_ORFS_REF} bash -lc 'source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; make -n DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base {goal}'
 ''', timeout=600)
             (archive / 'next_stage_dryrun.txt').write_text(dry.stdout + dry.stderr)
             if dry.returncode:
@@ -134,5 +150,6 @@ if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('name')
     ap.add_argument('host')
+    ap.add_argument('--resume-transferred', action='store_true')
     args = ap.parse_args()
-    recover(args.name, args.host)
+    recover(args.name, args.host, args.resume_transferred)
