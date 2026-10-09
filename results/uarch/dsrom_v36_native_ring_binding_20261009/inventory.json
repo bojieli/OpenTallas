@@ -1,0 +1,109 @@
+{
+  "schema": "opentallas.dsrom.v36-native-ring-binding.v1",
+  "status": "CONDITIONAL_PENDING_ACTUAL_COMPILED_PROGRAM_PROVIDER",
+  "observed_source_sha256": {
+    "rtl/dsrom_sys/s81_capture_parent/selection.json": "cced5f0d9a89edc2f103170a18a569e7a67b9a4ad7fdbbd86d184fc9182a4a5c",
+    "rtl/dsrom_sys/s81_capture_parent/sources.f": "1a700a9a69914539ff592a3c1669c13a87487b059a160606aceab4a80938dc75",
+    "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv": "f982ac8faf83763458f310d2794795aaa7d4b4479b4f4151120b5a3060738cc7",
+    "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv": "f18c98d033d7f7e16a775d5b70522285912607b41d482f18de2cd8c5837fe251",
+    "tools/dsrom_s81_system_sources.py": "4e8937477805484e55151be188893254d5719b1d46112f3a312d5f4c1017e2ee",
+    "tools/hdc_isa_v41.py": "e32522bab7199130df40a0ba3e4452b6f6ad1cd008372b58ab4c3eda344c17c3",
+    "tools/hdc_program_v41.py": "71c6d76f1218b6f66ce768f9679efa70750cfecd21f6c93d97a9d65828006da7",
+    "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp": "49e2ccac189f1bd487b7e10e6a770ceee7ef69e6e1857ccd67b1f161de042e78",
+    "results/host/s81_native_head_capture_terminal_20261004/terminal.json": "6151e27ed8c3780c999f1bd6ab9cae60cad04a58b4fec9fcba02784745033d40",
+    "results/host/s81_head_capture_binding_fix_20261004/terminal.json": "a55a7bb48e8619633f29c1a3d80efb71974201428ca15a413ab0a27af0201bad"
+  },
+  "static_selection": {
+    "top": "ot_v41_rt_die_l20_c8",
+    "parameters": {
+      "COLL_ACCEPTED_POP": 1,
+      "IDX_DRAIN_LOOKAHEAD": 0,
+      "S81_COMMAND_TRACE": 1,
+      "S81_TRACE_STAGE": 37,
+      "S81_HOST_WORKSPACE": 1,
+      "S81_CAPTURE": 1,
+      "C8_CONTEXT": 1,
+      "C8_PUBLICATION": 1,
+      "ROM_R": 128,
+      "ROM_PHW": 10,
+      "WINDOW_REFILL_OWNER_SAFE": 1,
+      "WINDOW_REFILL_CREDITS": 8
+    },
+    "sources_file": "rtl/dsrom_sys/s81_capture_parent/sources.f",
+    "host_cpp": "rtl/test/v41_runtime/s81_selected/w17_current_fastpp_c8_s81_rt.cpp",
+    "functional_parent_measured": false,
+    "physical_admission": false,
+    "listed_core": "rtl/dsrom_sys/s81_capture_parent/ot_hdc_core_v41x.sv",
+    "core_matches_manifest": true,
+    "remaining_manifest_hashes_validated": false,
+    "compiled_receipt": false
+  },
+  "installer": {
+    "source": "tools/dsrom_s81_system_sources.py",
+    "CORE": "rtl/w17_runtime/hdc/v41x/fastpp_pc21/l20/ot_hdc_core_v41x.sv",
+    "generated_core": "native/ot_hdc_core_v41x.sv then capture/WAVE hooks",
+    "original_source_unchanged": true
+  },
+  "ABI": {
+    "default_core_NSLOT": 1,
+    "static_selection_core_NSLOT_override": false,
+    "ISA_source": "tools/hdc_isa_v41.py",
+    "SLOTW8_DYN": 25,
+    "SLOTP8_DYN": 26,
+    "TOK32_DYN": 27,
+    "program_source": "tools/hdc_program_v41.py",
+    "compressor_condition": "ratio2 && layout.ring>2",
+    "program_fields": {
+      "ME": "me_d_obase=SLOTW8",
+      "SU": [
+        "a_d=SLOTP8",
+        "b_d=SLOTP8",
+        "c_d=SLOTP8"
+      ]
+    },
+    "required_values": {
+      "DYN25": "(position & 7)<<2",
+      "DYN26": "((position>>1)&3)<<7"
+    },
+    "actual_emitted_program_bound": false,
+    "actual_fullshape_ISA_width_bound": false
+  },
+  "current_clones": {
+    "capture_parent": "DYN25/26 and TOK32 initialized only under NSLOT>1",
+    "fastpp_pc21_l20": "same NSLOT>1 guard; unchanged"
+  },
+  "qualification_prerequisites": {
+    "canonical_source": "codex/mtp-numerical-repair-20261009",
+    "canonical_tip_reported": "667f02df0",
+    "same_source_gates": [
+      14,
+      15,
+      19,
+      20
+    ],
+    "all_four_terminal_qualified": false,
+    "required_provider": [
+      "actual compiled source list and source hashes",
+      "actual program bytes/config/ISA fields",
+      "effective NSLOT1 and ring8 elaboration",
+      "executed DYN25/26 instruction and visibility trace",
+      "existing native sequencer contextual physical source/budget"
+    ]
+  },
+  "historical_receipts": {
+    "native_head": "exit1/source16d35fbeb; head+END only, no fulltoken or physical credit",
+    "host_capture_fix": "compile/linkPASS/source0613be50f; host-only, no runtime/native rebuild"
+  },
+  "physical_context": {
+    "actual_selected_sequencer_bound": false,
+    "standalone_route_allowed": false,
+    "WFC_SOURCE_dispatcher_is_native_HDC_sequencer": false
+  },
+  "scope": {
+    "native_port_applied": false,
+    "new_RTL": false,
+    "new_routes": false,
+    "auth_leases_mirrors_reset_epochs_added": false,
+    "reintroduces_retired_hist_ring_integration": false
+  }
+}

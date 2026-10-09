@@ -1,0 +1,48 @@
+{
+  "schema": "opentallas.dsrom.v36-native-ring-model.v1",
+  "adopted": false,
+  "status": "conditional pending actual program/source/physical context",
+  "mechanism": "initialize existing DYN25/26 for actual qualified one-position ring8; TOK32 remains multi-position only",
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "memory_bytes_per_cycle_delta": 0,
+  "boundary_bits_per_cycle_delta": 0,
+  "external_ports_added": 0,
+  "storage": {
+    "existing_DYN_entries": 2,
+    "new_entries": 0,
+    "variable_bits_per_position": 5,
+    "synthesis_live_bit_delta_upper": 5
+  },
+  "mux_demux": {
+    "local_selector_upper": 16,
+    "variable_mux_arms_upper": 80
+  },
+  "fanout": {
+    "variable_bit_sinks_upper": 16
+  },
+  "replicas": {
+    "minimum_component": 1,
+    "production_count": "requires actual compiled hierarchy"
+  },
+  "routing": {
+    "new_external_tracks": 0,
+    "local_signal_sink_upper": 80,
+    "existing_channel_capacity": "unbound until selected sequencer context identified"
+  },
+  "area": {
+    "existing_slot": "unbound",
+    "conditional_logic_upper": "5 live DFF bits and80 local mux arms",
+    "actual_mapped_area_um2": null,
+    "slot_fit": false
+  },
+  "latency": {
+    "added_decode_cycles": 0,
+    "changed_golden_order": false,
+    "production_clock": "existing selected sequencer; not inferred from SOURCE dispatcher",
+    "single_user_credit": 0,
+    "contextual_measurement_required": true
+  },
+  "implementation_gate": "all same-source numerical14/15/19/20 + actual compiled ring8 provider before targeted native port",
+  "physical_gate": "existing sequencer context only; no standalone route"
+}

@@ -21,6 +21,12 @@ Every constant cites its source; ASSUMED marks a number that has no measurement 
 """
 from __future__ import annotations
 
+
+def dsrom_v36_native_ring_binding_candidate():
+    """Conditional sizing only; actual compiled ring8 provider remains required."""
+    from dsrom_v36_native_ring_binding import model
+    return model()
+
 import argparse
 import copy
 import dataclasses
