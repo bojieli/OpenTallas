@@ -34,7 +34,7 @@ S, H, L = V.S, V.H, V.L
 PS = '--ps' in sys.argv          # hbm-forks 2026-10-09: per-PC stream successor (ot_hbm_svc_ps_lib.sv); outputs *_ps
 SEGD, SPLD, SDCD, STG = (('rtl/seg_ps', 'split_ps', 'sdc_ps', 'seg_stages_ps.json') if PS else
                          ('rtl/seg', 'split', 'sdc', 'seg_stages.json'))
-PS_PORTS_BITS = dict(ks=1102, kq=2, kd=2)
+PS_PORTS_BITS = dict(ks=1102, kq=2, kd=3)
 HOP = 380.0                      # um per wire-stage hop (index_q b4 sign-off reg-to-reg +135 ps at 323 um, 1.135 ps/um -> ~+70 ps at 380)
 XST = 2                          # the one-slot margin view's extra stages per chain (ledger)
 PITCH = 0.096                    # cross-bus pins: M4 on the E / W faces, every other track
@@ -171,7 +171,7 @@ def ps_ports(P, parent, segs, seg_of, H_um, wants):
                        direction='input' if d_ == 'in' else 'output')
         occl[L_] = merged(occl[L_] + [(pins[0][2], pins[-1][4])])
         fk[name] = ({1099: 'out', 1100: 'out', 1101: 'out'} if name.startswith('ks') else
-                    {1: 'in'} if name.startswith('kq') else {1: 'out'})
+                    {1: 'in'} if name.startswith('kq') else {2: 'out'})
         PS_NEW[name] = (bits, P[name]['direction'])
 
 
@@ -256,9 +256,12 @@ def plan_family(fam):
         for side, Ls in ps_lists.items():
             for i, p in enumerate(Ls):
                 src = ('e', 'e_sdv', 'e_sdd') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dov', f'pc{Ls[i-1]}_dod')
-                ch(f'c_sd{p}', 62, src[0], src[1], src[2], f'pc{p}', f'pc{p}_div', f'pc{p}_did', 'ps_desc')
+                ch(f'c_sd{p}', 124, src[0], src[1], src[2], f'pc{p}', f'pc{p}_div', f'pc{p}_did', 'ps_desc')
                 dst = ('e', f'e_d{side}ok', f'e_d{side}ph') if i == 0 else (f'pc{Ls[i-1]}', f'pc{Ls[i-1]}_dniok', f'pc{Ls[i-1]}_dniph')
                 ch(f'c_dd{p}', 1, f'pc{p}', f'pc{p}_dnook', f'pc{p}_dnoph', dst[0], dst[1], dst[2], 'ps_done')
+                # indexed id-FIFO pop credits back to the e port (32-bit OR chain, same direction as the done chain)
+                dsti = ('e', None, f'e_ic{side}') if i == 0 else (f'pc{Ls[i-1]}', None, f'pc{Ls[i-1]}_ici')
+                ch(f'c_ic{p}', 32, f'pc{p}', "1'b1", f'pc{p}_ico', dsti[0], f'pc{p}_icv', dsti[2], 'ps_icr')
         for p in range(32):
             o, j = divmod(p, 4)
             ch(f'c_cr{p}', 1, f'gp{o}', f'gp{o}_cr[{j}]', "1'b0", f'pc{p}', f'pc{p}_crv', None, 'ps_cr')
@@ -557,15 +560,16 @@ def build(pl):
                             f'wire [29:0] pc{p}_k_addr; wire [3:0] pc{p}_k_len, pc{p}_kr_beat, pc{p}_bb; '
                             f'wire [16:0] pc{p}_k_tag, pc{p}_kr_tag, pc{p}_bt; wire [255:0] pc{p}_kr_data, pc{p}_bd; '
                             f'wire pc{p}_div, pc{p}_dov, pc{p}_dniok, pc{p}_dniph, pc{p}_dnook, pc{p}_dnoph, pc{p}_crv; '
-                            f'wire [61:0] pc{p}_did, pc{p}_dod;')
+                            f'wire [123:0] pc{p}_did, pc{p}_dod; wire [31:0] pc{p}_ici, pc{p}_ico;')
                 if end:
-                    body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 1'b0;   // chain end (END = 1)")
+                    body.append(f"  assign pc{p}_dniok = 1'b0; assign pc{p}_dniph = 1'b0; assign pc{p}_ici = 32'd0;   // chain end (END = 1)")
                 body.append(f'  ot_svs_pcs #(.PCID({p}), .END({end})) u_pc{p} (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc{p}_iv), '
                             f'.iss_d(pc{p}_id), .k_v(pc{p}_k_v), .k_rdy(pc{p}_k_rdy), .k_addr(pc{p}_k_addr), .k_len(pc{p}_k_len), '
                             f'.k_tag(pc{p}_k_tag), .kr_v(pc{p}_kr_v), .kr_tag(pc{p}_kr_tag), .kr_beat(pc{p}_kr_beat), '
                             f'.kr_data(pc{p}_kr_data), .b_v(pc{p}_bv), .b_t(pc{p}_bt), .b_b(pc{p}_bb), .b_d(pc{p}_bd), '
                             f'.di_v(pc{p}_div), .di_d(pc{p}_did), .do_v(pc{p}_dov), .do_d(pc{p}_dod), .dni_ok(pc{p}_dniok), '
-                            f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .cr_v(pc{p}_crv));')
+                            f'.dni_ph(pc{p}_dniph), .dno_ok(pc{p}_dnook), .dno_ph(pc{p}_dnoph), .ici(pc{p}_ici), .ico(pc{p}_ico), '
+                            f'.cr_v(pc{p}_crv));')
             elif u.startswith('gp'):
                 k = int(u[2:])
                 decl.append(f'  wire [3:0] gp{k}_sv, gp{k}_cr; wire [1107:0] gp{k}_sq; wire gp{k}_ovf, gp{k}_sgv; wire [12:0] gp{k}_sgd;')
@@ -599,15 +603,16 @@ def build(pl):
             elif u == 'e' and PS:
                 we, ee = int(not pl['ps_lists']['w']), int(not pl['ps_lists']['e'])
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od; wire e_sdv; wire [61:0] e_sdd; '
-                            'wire e_dwok, e_dwph, e_deok, e_deph, e_sgv; wire [12:0] e_sgd;')
+                            'wire e_dwok, e_dwph, e_deok, e_deph, e_sgv; wire [12:0] e_sgd; wire [31:0] e_icw, e_ice; '
+                            '')
                 if we:
-                    body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0;   // no PC west of the e port")
+                    body.append("  assign e_dwok = 1'b0; assign e_dwph = 1'b0; assign e_icw = 32'd0;   // no PC west of the e port")
                 if ee:
-                    body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0;   // no PC east of the e port")
+                    body.append("  assign e_deok = 1'b0; assign e_deph = 1'b0; assign e_ice = 32'd0;   // no PC east of the e port")
                 body.append(f'  ot_svs_eps #(.WEMPTY({we}), .EEMPTY({ee})) u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), '
                             '.e_fclk(e[128]), .ow_v(e_ow), .ok_v(e_ok), .oi_v(e_oi), .o_d(e_od), .bw(e_bw), .bk(e_bk), .bi(e_bi), '
                             '.sd_v(e_sdv), .sd_d(e_sdd), .dw_ok(e_dwok), .dw_ph(e_dwph), .de_ok(e_deok), .de_ph(e_deph), .kd(kd), '
-                            '.sg_v(e_sgv), .sg_d(e_sgd));')
+                            '.sg_v(e_sgv), .sg_d(e_sgd), .icw(e_icw), .ice(e_ice));')
             elif u == 'e':
                 decl.append('  wire e_ow, e_ok, e_oi, e_bw, e_bk, e_bi; wire [39:0] e_od;')
                 body.append('  ot_svs_e u_e (.ck(c), .rst(rst[0]), .rn(rn), .e_d(e[127:0]), .e_fclk(e[128]), .ow_v(e_ow), '
@@ -643,7 +648,9 @@ def build(pl):
                 decl.append(f'  wire {nm}_v; wire [{wb - 1}:0] {nm}_d;')
                 body.append(f"  ot_svc_vpipe #(.W({wb}), .N({po['N']})) {nm} (.ck(c), .rst_n(rn), .v({vin}), .d({din}), "
                             f".qv({nm}_v), .q({nm}_d));")
-                if po['B'][0] == 'u':
+                if po['B'][0] == 'u' and cc['kind'] == 'ps_icr':     # credit masks count only while valid
+                    body.append(f"  assign {cc['dd']} = {nm}_v ? {nm}_d : {wb}'d0;")
+                elif po['B'][0] == 'u':
                     body.append(f"  assign {cc['dv']} = {nm}_v;")
                     if cc['dd']:
                         body.append(f"  assign {cc['dd']} = {nm}_d;")
@@ -695,7 +702,7 @@ def build(pl):
             elif PS and bn.startswith('ks'):
                 fo += [f'{bn}[{i}]' for i in (1099, 1100, 1101)]
             elif PS and bn == 'kd':
-                fo += ['kd[1]']
+                fo += ['kd[2]']
         if fo:
             sdc.append('set_false_path -to [get_ports -quiet {' + ' '.join(fo) + '}]')
         if PS:      # PS row / done outputs: the consistent die-link split (S = R = 254.7 ps) until the rebudget covers them
@@ -704,7 +711,7 @@ def build(pl):
                     sdc.append(f'set_output_delay -clock vclk 254.7 [get_ports -quiet {{{bn}[*]}}]')
                     sdc.append(f'set_false_path -to [get_ports -quiet {{{bn}[1099] {bn}[1100] {bn}[1101]}}]')
                 elif bn == 'kd':
-                    sdc.append('set_output_delay -clock vclk 254.7 [get_ports -quiet {kd[0]}]')
+                    sdc.append('set_output_delay -clock vclk 254.7 [get_ports -quiet {kd[0] kd[1]}]')
         if cl:
             sdc += ['set_clock_uncertainty -setup 60 [get_clocks {' + ' '.join(cl) + '}]',
                     'set_clock_uncertainty -hold 25 [get_clocks {' + ' '.join(cl) + '}]',

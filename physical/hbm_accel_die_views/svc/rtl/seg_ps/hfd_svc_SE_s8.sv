@@ -7,31 +7,34 @@ module hfd_svc_SE_s8 (
     input wire [0:0] ck,
     inout wire [621:0] phy,
     input wire [0:0] rst,
-    input wire [116:0] wi,
-    output wire [279:0] wo
+    input wire [178:0] wi,
+    output wire [312:0] wo
 );
   wire c = ck[0]; wire rn, rdy_q, rdy_q2;
   ot_svs_rsync u_rs (.ck(c), .rst(rst[0]), .rn(rn));
   ot_svs_rdy u_rd (.ck(c), .rn(rn), .rdy_q(rdy_q), .rdy_q2(rdy_q2));
-  wire pc31_iv, pc31_k_v, pc31_k_rdy, pc31_kr_v, pc31_bv; wire [50:0] pc31_id; wire [29:0] pc31_k_addr; wire [3:0] pc31_k_len, pc31_kr_beat, pc31_bb; wire [16:0] pc31_k_tag, pc31_kr_tag, pc31_bt; wire [255:0] pc31_kr_data, pc31_bd; wire pc31_div, pc31_dov, pc31_dniok, pc31_dniph, pc31_dnook, pc31_dnoph, pc31_crv; wire [61:0] pc31_did, pc31_dod;
+  wire pc31_iv, pc31_k_v, pc31_k_rdy, pc31_kr_v, pc31_bv; wire [50:0] pc31_id; wire [29:0] pc31_k_addr; wire [3:0] pc31_k_len, pc31_kr_beat, pc31_bb; wire [16:0] pc31_k_tag, pc31_kr_tag, pc31_bt; wire [255:0] pc31_kr_data, pc31_bd; wire pc31_div, pc31_dov, pc31_dniok, pc31_dniph, pc31_dnook, pc31_dnoph, pc31_crv; wire [123:0] pc31_did, pc31_dod; wire [31:0] pc31_ici, pc31_ico;
   wire c_is31_1_v; wire [50:0] c_is31_1_d;
   wire c_rs31_0_v; wire [276:0] c_rs31_0_d;
-  wire c_sd31_1_v; wire [61:0] c_sd31_1_d;
+  wire c_sd31_1_v; wire [123:0] c_sd31_1_d;
   wire c_dd31_0_v; wire [0:0] c_dd31_0_d;
+  wire c_ic31_0_v; wire [31:0] c_ic31_0_d;
   wire c_cr31_1_v; wire [0:0] c_cr31_1_d;
-  assign pc31_dniok = 1'b0; assign pc31_dniph = 1'b0;   // chain end (END = 1)
-  ot_svs_pcs #(.PCID(31), .END(1)) u_pc31 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc31_iv), .iss_d(pc31_id), .k_v(pc31_k_v), .k_rdy(pc31_k_rdy), .k_addr(pc31_k_addr), .k_len(pc31_k_len), .k_tag(pc31_k_tag), .kr_v(pc31_kr_v), .kr_tag(pc31_kr_tag), .kr_beat(pc31_kr_beat), .kr_data(pc31_kr_data), .b_v(pc31_bv), .b_t(pc31_bt), .b_b(pc31_bb), .b_d(pc31_bd), .di_v(pc31_div), .di_d(pc31_did), .do_v(pc31_dov), .do_d(pc31_dod), .dni_ok(pc31_dniok), .dni_ph(pc31_dniph), .dno_ok(pc31_dnook), .dno_ph(pc31_dnoph), .cr_v(pc31_crv));
-  ot_svc_vpipe #(.W(51), .N(1)) c_is31_1 (.ck(c), .rst_n(rn), .v(wi[63]), .d(wi[114:64]), .qv(c_is31_1_v), .q(c_is31_1_d));
+  assign pc31_dniok = 1'b0; assign pc31_dniph = 1'b0; assign pc31_ici = 32'd0;   // chain end (END = 1)
+  ot_svs_pcs #(.PCID(31), .END(1)) u_pc31 (.ck(c), .rn(rn), .rdy_q2(rdy_q2), .iss_v(pc31_iv), .iss_d(pc31_id), .k_v(pc31_k_v), .k_rdy(pc31_k_rdy), .k_addr(pc31_k_addr), .k_len(pc31_k_len), .k_tag(pc31_k_tag), .kr_v(pc31_kr_v), .kr_tag(pc31_kr_tag), .kr_beat(pc31_kr_beat), .kr_data(pc31_kr_data), .b_v(pc31_bv), .b_t(pc31_bt), .b_b(pc31_bb), .b_d(pc31_bd), .di_v(pc31_div), .di_d(pc31_did), .do_v(pc31_dov), .do_d(pc31_dod), .dni_ok(pc31_dniok), .dni_ph(pc31_dniph), .dno_ok(pc31_dnook), .dno_ph(pc31_dnoph), .ici(pc31_ici), .ico(pc31_ico), .cr_v(pc31_crv));
+  ot_svc_vpipe #(.W(51), .N(1)) c_is31_1 (.ck(c), .rst_n(rn), .v(wi[125]), .d(wi[176:126]), .qv(c_is31_1_v), .q(c_is31_1_d));
   assign pc31_iv = c_is31_1_v;
   assign pc31_id = c_is31_1_d;
   ot_svc_vpipe #(.W(277), .N(1)) c_rs31_0 (.ck(c), .rst_n(rn), .v(pc31_bv), .d({pc31_bt, pc31_bb, pc31_bd}), .qv(c_rs31_0_v), .q(c_rs31_0_d));
-  assign wo[279:2] = {c_rs31_0_d, c_rs31_0_v};
-  ot_svc_vpipe #(.W(62), .N(1)) c_sd31_1 (.ck(c), .rst_n(rn), .v(wi[0]), .d(wi[62:1]), .qv(c_sd31_1_v), .q(c_sd31_1_d));
+  assign wo[312:35] = {c_rs31_0_d, c_rs31_0_v};
+  ot_svc_vpipe #(.W(124), .N(1)) c_sd31_1 (.ck(c), .rst_n(rn), .v(wi[0]), .d(wi[124:1]), .qv(c_sd31_1_v), .q(c_sd31_1_d));
   assign pc31_div = c_sd31_1_v;
   assign pc31_did = c_sd31_1_d;
   ot_svc_vpipe #(.W(1), .N(1)) c_dd31_0 (.ck(c), .rst_n(rn), .v(pc31_dnook), .d(pc31_dnoph), .qv(c_dd31_0_v), .q(c_dd31_0_d));
   assign wo[1:0] = {c_dd31_0_d, c_dd31_0_v};
-  ot_svc_vpipe #(.W(1), .N(1)) c_cr31_1 (.ck(c), .rst_n(rn), .v(wi[115]), .d(wi[116:116]), .qv(c_cr31_1_v), .q(c_cr31_1_d));
+  ot_svc_vpipe #(.W(32), .N(1)) c_ic31_0 (.ck(c), .rst_n(rn), .v(1'b1), .d(pc31_ico), .qv(c_ic31_0_v), .q(c_ic31_0_d));
+  assign wo[34:2] = {c_ic31_0_d, c_ic31_0_v};
+  ot_svc_vpipe #(.W(1), .N(1)) c_cr31_1 (.ck(c), .rst_n(rn), .v(wi[177]), .d(wi[178:178]), .qv(c_cr31_1_v), .q(c_cr31_1_d));
   assign pc31_crv = c_cr31_1_v;
   assign phy[0] = pc31_k_v;
   assign pc31_k_rdy = phy[1];

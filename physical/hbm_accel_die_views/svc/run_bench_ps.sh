@@ -6,6 +6,7 @@
 #   neg_slot                mutant: the sector slot ignores the row's bank XOR (beat order) -> must FAIL
 #   neg_done                mutant: a PC reports done without its sectors -> must FAIL
 #   neg_pc                  mutant: PC collapse (only PC 0 streams; I2 lane-drop) -> must FAIL
+#   neg_iorder / neg_islot  mutants: an indexed PC breaks list order / indexed rows unpermuted -> must FAIL
 #   neg_conc                mutant: a second stream launched while one runs (KV no-credit / IK credited overlap) -> must FAIL
 # (run from the source snapshot root)
 set -u
@@ -42,12 +43,13 @@ sim ls_SW SW SW $PSLIB -DLOCKSTEP & sim ls_NE NE SE $PSLIB -DLOCKSTEP &
 sim neg_slot SW SW $O/ps_mut_slot.sv -DPS_STREAMS & sim neg_done SW SW $O/ps_mut_done.sv -DPS_STREAMS &
 sim neg_pc SW SW $O/ps_mut_pc.sv -DPS_STREAMS &
 sim neg_conc SW SW $PSLIB -DPS_STREAMS -DOT_PS_MUT_CONC &
+sim neg_iorder SW SW $PSLIB -DPS_STREAMS -DOT_PS_MUT_IORDER & sim neg_islot NE SE $PSLIB -DPS_STREAMS -DOT_PS_MUT_ISLOT &
 wait
 for L in sim_ps_SW sim_ps_NE ls_SW ls_NE; do
   grep -q "^SVC_BENCH PASS" $O/$L.log; r=$?
   echo "$L rc=$r $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
 done
-for L in neg_slot neg_done neg_pc neg_conc; do
+for L in neg_slot neg_done neg_pc neg_conc neg_iorder neg_islot; do
   grep -q "^SVC_BENCH PASS" $O/$L.log && r=0 || r=1
   echo "$L rc=$r (must be nonzero) $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
 done

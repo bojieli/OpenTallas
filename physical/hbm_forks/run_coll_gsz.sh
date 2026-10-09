@@ -7,12 +7,26 @@
 #   mutant OT_COLL_MUT_GSZ_PAD (inactive columns feed stale slots instead of +0) at n = 2 / 4: must FAIL.
 #   run_coll_gsz.sh <out dir>   (from the source root)
 set -u
-O=$(readlink -f $1); mkdir -p $O; T=$O/t; rm -rf $T; mkdir -p $T
+mkdir -p $1; O=$(readlink -f $1); T=$O/t; rm -rf $T; mkdir -p $T/b
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$V" ] || V=$(command -v verilator)
 python3 tools/dshbm_1m_coll.py fixtures $T > $T/fx.log 2>&1 || { echo "COLL_GSZ ERROR fixtures"; exit 3; }
 python3 - $T <<'PY' || { echo "COLL_GSZ ERROR group fixtures"; exit 3; }
 import sys; from pathlib import Path
 sys.path.insert(0, 'tools'); import ha2_ar_fixture as HF
+import numpy as np, hdc_golden as G
+_b = HF.build
+def nb(shape, seed):                    # + -0 contributors (review-0427 HF-5): every contributor -0 on lanes 224..239,
+    s, parts, zr = _b(shape, seed)      # even contributors -0 / odd +0 on 240..255; golden recomputed (canonical +0)
+    nc, nog = s['NC'], s['NOG']
+    parts[:, 224:240] = np.float32(-0.0)
+    parts[0::2, 240:256] = np.float32(-0.0); parts[1::2, 240:256] = np.float32(0.0)
+    for og in range(nog):
+        q = [parts[og * nc + j].copy() for j in range(nc)]
+        while len(q) > 1:
+            q = [G.add(q[i], q[i + 1]) for i in range(0, len(q), 2)]
+        zr[og] = q[0]
+    return s, parts, zr
+HF.build = nb
 for n in (2, 4, 8):
     HF.SHAPES[f'g{n}'] = dict(GS=n, NG=max(1, 8 // n), NC=n, NOG=8 // n, E=256, LANES=16, ONESHOT=0, BF16=1)
     HF.write(Path(sys.argv[1]) / 'fx' / f'g{n}', f'g{n}', 20261009 + n)
@@ -41,9 +55,9 @@ for n in 2 4; do for r in 0 1; do echo "m$n neg +VEC=fx/g$n +PF=16 +RANK=$r +SEE
 i=0; while read b kind args; do i=$((i+1)); echo "cd $T && timeout 600 b/$b/Vtb_hbm_accel_tu_endpoint $args > run_$i.log 2>&1; echo \"$b $kind $args\" >> run_$i.log"; done < $J > $T/cmds.txt
 xargs -P ${PAR:-16} -I{} bash -c '{}' < $T/cmds.txt
 bad=0; negok=0; neg=0
-for f in $T/run_*.log; do k=$(tail -1 $f | cut -d' ' -f2)
-  if grep -q "TUDONE .* mismatches=0 faults=0 " $f; then [ $k = neg ] && { echo "MUTANT PASSED: $(tail -1 $f)"; bad=$((bad+1)); }
-  else [ $k = neg ] && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
+for f in $T/run_*.log; do k=$(tail -n 1 $f | cut -d' ' -f2)
+  if grep -q "TUDONE .* mismatches=0 faults=0 " $f; then [ $k = neg ] && { echo "MUTANT PASSED: $(tail -n 1 $f)"; bad=$((bad+1)); }
+  else [ $k = neg ] && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -n 1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
   [ $k = neg ] && neg=$((neg+1))
 done
 grep -h TUDONE $T/run_*.log | cut -c1-160 > $O/summary.txt

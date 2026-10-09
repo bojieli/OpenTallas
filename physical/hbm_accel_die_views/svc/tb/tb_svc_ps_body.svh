@@ -138,7 +138,7 @@
       kmap = {row[14:0], bhi, col, pc ^ col ^ hi5, blo}; end
   endfunction
   integer ps_n = 0, ps_rows = 0, ps_kd = 0, ps_want = 0, ps_cr_out = 0;
-  reg ps_busy = 0; reg ps_idx; reg ps_nocr; reg [14:0] ps_row0; reg [11:0] ps_nsec; reg [31:0] ps_mask; reg [12:0] ps_tag;
+  reg ps_busy = 0; reg ps_idx; reg ps_nocr; reg [14:0] ps_row0; reg [11:0] ps_nsec; reg [31:0] ps_mask; reg [12:0] ps_tag; reg ps_ixm = 0;
   // back-to-back streams (review-0400 R4 (3)): the next stream's command may be issued while one runs; the e port must
   // hold it until the running stream is done.  ps2_* = the queued one; ps_seq = sequence number of the current stream.
   reg ps2_v = 0; reg ps2_idx, ps2_nocr; reg [14:0] ps2_row0; reg [11:0] ps2_nsec; reg [31:0] ps2_mask; reg [12:0] ps2_tag; integer ps_seq = 0;
@@ -150,16 +150,26 @@
     meta = ks[kr][1098:1035]; pcid = meta[18:14]; sm = meta[13:10]; rq = ks[kr][10:1];
     jq = {rq, 2'b00}; rr = ps_row0 + 15'(jq >> 10);
     a4 = {kmap(pcid, {jq[9:7], jq[1:0]}, {4'd0, ps_row0} + 19'(jq >> 10), jq[6:2])};
+    if (ps_ixm) begin : ixa                       // indexed row: list index li -> position -> PC / sector / address
+      reg [10:0] li; reg [19:0] pp; reg [16:0] ij;
+      li = meta[43:33]; pp = ix_pos[li]; ij = {pp[19:5], 2'b00};
+      rr = ps_row0 + 15'(ij >> 10);
+      a4 = kmap(pp[4:0], {ij[9:7], ij[1:0]}, {4'd0, ps_row0} + 19'(ij >> 10), ij[6:2]);
+      if (pp[4:0] != pcid) begin err = err + 1; $display("ERR PS indexed row li %0d on PC %0d, owner %0d", li, pcid, pp[4:0]); end
+      if (ix_seen[li]) begin err = err + 1; $display("ERR PS indexed duplicate li %0d", li); end
+      if (integer'(li) <= ix_last[pcid]) begin err = err + 1; $display("ERR PS indexed list order PC %0d li %0d after %0d", pcid, li, ix_last[pcid]); end
+      ix_seen[li] = 1'b1; ix_last[pcid] = li;
+    end
     a4 = {a4[29:2], 2'b00};
     for (sl = 0; sl < 4; sl = sl + 1) want[sl*256 +: 256] = f({2'b00, a4}, 5'(sl ^ rr[1:0]));
-    wsm = 4'd0; for (sl = 0; sl < 4; sl = sl + 1) if (ps_idx || (jq + sl) < ps_nsec) wsm[sl] = 1'b1;
+    wsm = 4'd0; for (sl = 0; sl < 4; sl = sl + 1) if (ps_idx || ps_ixm || (jq + sl) < ps_nsec) wsm[sl] = 1'b1;
     if (!ps_busy) begin err = err + 1; $display("ERR PS row with no stream"); end
     else if (pcid[4:2] != kr || !ps_mask[pcid] || meta[19] != ps_idx || meta[32:20] != ps_tag) begin err = err + 1;
       $display("ERR PS row port %0d pc %0d idx %0d", kr, pcid, meta[19]); end
-    else if (ps_seen[pcid][rq]) begin err = err + 1; $display("ERR PS duplicate row pc %0d rq %0d", pcid, rq); end
+    else if (!ps_ixm && ps_seen[pcid][rq]) begin err = err + 1; $display("ERR PS duplicate row pc %0d rq %0d", pcid, rq); end
     else if (ks[kr][1034:11] !== want || sm !== wsm) begin err = err + 1;
       $display("ERR PS row data pc %0d rq %0d smask %b/%b", pcid, rq, sm, wsm); end
-    else begin ps_seen[pcid][rq] = 1'b1; ps_rows = ps_rows + 1; if (!ps_nocr) ps_cr_out = ps_cr_out + 1; end
+    else begin if (!ps_ixm) ps_seen[pcid][rq] = 1'b1; ps_rows = ps_rows + 1; if (!ps_nocr) ps_cr_out = ps_cr_out + 1; end
   end
   always @(posedge ck) if (kd[0]) begin ps_kd = ps_kd + 1; if (!ps_busy || ps_kd > ps_seq) begin err = err + 1; $display("ERR PS kd with no (current) stream"); end
     else fork : late begin : lt
@@ -214,42 +224,69 @@
   end endgenerate
   // e commands on the forwarded e link: W fetches, KV rows, index keys
   integer ne = 0;
+  // e-FIFO credits (PS e port: one credit back on kd[1] per popped command; <= 4 unpopped)
+  integer e_sent = 0, e_ret = 0;
+  always @(posedge ck) if (kd[1]) e_ret = e_ret + 1;
+  // indexed streams (DS selected rows): the sorted position list and the chunk sender
+  reg [19:0] ix_pos [0:2047]; integer ix_k = 0, ix_sent = 0; reg ix_on = 0;
+  reg [2047:0] ix_seen; integer ix_last [0:31];
   always @(posedge fck) begin
     ev <= 1'b0;
 `ifdef PS_STREAMS
-    if (rst && ps_n < PS_N && (!ps_busy || !ps2_v) && ($urandom % 5 == 0)) begin : sst
+    if (rst && ix_on && ix_sent < ix_k && e_sent - e_ret < 4) begin : chunk
+      integer c, z; reg [119:0] pl;
+      c = (ix_k - ix_sent > 6) ? 6 : ix_k - ix_sent; pl = 120'd0;
+      for (z = 0; z < 6; z = z + 1) if (z < c) pl[20*z +: 20] = ix_pos[ix_sent + z];
+      ed <= {1'b1, 1'b0, 3'(c), pl, 2'd3}; ev <= 1'b1; e_sent = e_sent + 1; ix_sent = ix_sent + c;
+    end else
+    if (rst && ps_n < PS_N && !ix_on && (!ps_busy || (!ps2_v && ps_n % 4 != 3)) && (ps_n % 4 != 3 || !ps_busy) &&
+        e_sent - e_ret < 4 && ($urandom % 5 == 0)) begin : sst
       reg [31:0] m; reg [8:0] blocks; reg idx_, nocr_; reg [14:0] row0_; reg [11:0] nsec_; reg [31:0] mask_; reg [12:0] tag_; integer q;
       tag_ = $urandom;
-      idx_ = ps_n % 3 == 2; nocr_ = !idx_; row0_ = $urandom % 32000;
+      idx_ = ps_n % 3 == 2 && ps_n % 4 != 3; nocr_ = !idx_; row0_ = $urandom % 32000;
+      if (ps_n % 4 == 3) begin : ixgen          // INDEXED KV stream: k sorted distinct positions in [0, 2^19)
+        integer z, w; reg [19:0] p_;
+        ix_k = (ps_n % 8 == 3) ? 2048 : ((ps_n % 16 == 7) ? 7 : 513);
+        p_ = $urandom % 300;
+        for (z = 0; z < ix_k; z = z + 1) begin
+          w = (z % 64 == 0) ? 1 + $urandom % 2000 : 1 + $urandom % 3;   // clustered runs + jumps (uneven PC load)
+          p_ = p_ + 20'(w); ix_pos[z] = p_ & 20'h7FFFF;
+        end
+        ix_sent = 0; ix_on = 1; ix_seen = 2048'd0; for (z = 0; z < 32; z = z + 1) ix_last[z] = -1;
+      end
       nsec_ = idx_ ? 0 : 1 + ($urandom % ((ps_n % 4 == 0) ? 1100 : 70));
       m = (ps_n % 2) ? {$urandom} : 32'hFFFF_FFFF;
       mask_ = idx_ ? 32'hFFFF_FFFF : m;
       blocks = 1 + $urandom % 120;
       if (idx_) nsec_ = 12'(((17 * blocks) + 31) >> 5);
-      ed <= {1'b1, nocr_, 41'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
+      if (ps_n % 4 == 3) nsec_ = 12'(ix_k);
+      ed <= {1'b1, nocr_, (ps_n % 4 == 3), 40'd0, tag_, idx_ ? {1'b0, blocks} : 10'd0, idx_ ? 32'd0 : m, idx_ ? 12'd0 : nsec_, row0_,
              idx_ ? 2'd2 : 2'd1};
-      ev <= 1'b1; ps_n = ps_n + 1;
+      ev <= 1'b1; e_sent = e_sent + 1; ps_n = ps_n + 1;
       if (!ps_busy) begin
         ps_idx = idx_; ps_nocr = nocr_; ps_row0 = row0_; ps_nsec = nsec_; ps_mask = mask_; ps_tag = tag_; ps_seq = ps_seq + 1;
-        for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
+        if (ix_on) begin ps_ixm = 1; ps_want = ps_want + ix_k; end
+        else begin ps_ixm = 0;
+          for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
+        end
         ps_busy = 1;
       end else begin
         ps2_idx = idx_; ps2_nocr = nocr_; ps2_row0 = row0_; ps2_nsec = nsec_; ps2_mask = mask_; ps2_tag = tag_; ps2_v = 1;
       end
     end else
 `endif
-    if (rst && ne < 48 && ($urandom % 9 == 0)) begin : snd
+    if (rst && ne < 48 && e_sent - e_ret < 4 && ($urandom % 9 == 0)) begin : snd
       reg [1:0] kind; reg [31:0] a; reg [9:0] t; integer s;
       kind = ne % 3; a = {$urandom} & 32'h00ff_fff0; s = $urandom % 8;
       if (kind == 0 && outst[s] < 6) begin
         t = {ntag[s][9:3] | 7'h40, s[2:0]};      // W tags: bit 9 set (disjoint from SM tags < 512 here)
-        ed <= {79'd0, t, 6'd5, a[29:0], 2'd0}; ev <= 1'b1; expect_line(s, t, {8'd0, a[23:0]}, 1'b1);
+        ed <= {79'd0, t, 6'd5, a[29:0], 2'd0}; ev <= 1'b1; e_sent = e_sent + 1; expect_line(s, t, {8'd0, a[23:0]}, 1'b1);
         ntag[s] <= ntag[s] + 8; ne = ne + 1;
       end else if (kind == 1 && kv_want - kv_got < 1) begin : kv1
-        t = ne; ed <= {79'd0, t, 6'd4, a[29:0], 2'd1}; ev <= 1'b1;
+        t = ne; ed <= {79'd0, t, 6'd4, a[29:0], 2'd1}; ev <= 1'b1; e_sent = e_sent + 1;
         kv_a[kv_want] = a; kv_t[kv_want] = t; kv_want = kv_want + 1; ne = ne + 1;
       end else if (kind == 2 && ik_want - ik_got < 1) begin
-        t = ne; ed <= {79'd0, t, 6'd4, a[29:0], 2'd2}; ev <= 1'b1;
+        t = ne; ed <= {79'd0, t, 6'd4, a[29:0], 2'd2}; ev <= 1'b1; e_sent = e_sent + 1;
         ik_a[ik_want] = a; ik_want = ik_want + 1; ne = ne + 1;
       end
     end
@@ -257,6 +294,7 @@
   always @(posedge ck) if (ps_busy && ps_kd == ps_seq && ps_rows == ps_want) begin : nxt
     integer q;
     repeat (4) @(posedge ck);
+    if (ps_ixm) begin ix_on = 0; ps_ixm = 0; end
     if (ps2_v) begin       // the queued stream becomes current (its rows can only start after this one's done)
       ps_idx = ps2_idx; ps_nocr = ps2_nocr; ps_row0 = ps2_row0; ps_nsec = ps2_nsec; ps_mask = ps2_mask; ps_tag = ps2_tag; ps_seq = ps_seq + 1;
       for (q = 0; q < 32; q = q + 1) begin ps_seen[q] = 1024'd0; if (ps_mask[q]) ps_want = ps_want + (ps_nsec + 3) / 4; end
