@@ -59,6 +59,17 @@ def model():
  m['timing'].update(SS_FF_qualified=False,OptionB_TT_FF_DRC_qualified=False,
   original_actual_TT_setup_ps=249.78,original_actual_FF_hold_ps=30.32,
   original_actual_SS_sensitivity_ps=130.42,original_TC_electrical_qualified=False)
+ m['output_landing']={
+  'scope':'routine placement of already selected output buffers; not a new interface',
+  'buffers':258,'master_um':[1.62,.27],'selected_buffer_area_um2':258*1.62*.27,
+  'added_cells_vs_existing_strong_drive':0,'added_cycles':0,
+  'right_face_columns':4,'column_pitch_um':1.728,'right_face_width_um':4*1.728,
+  'port_to_buffer_distance_target_um':12,'actual_row_orientation_required':True,
+  'placement':'FIRM existing buffers near actual output pins; nets and instance connectivity editable for input/hold repair',
+  'capture_placement_unchanged':True,'load_unchanged':3.898,'slew_limit_ps_unchanged':250,
+  'bytes_per_cycle_unchanged':32,'data_boundary_bits_per_cycle_unchanged':256,
+  'routing':'existing M2-M6 and outputpin channels; no new pins/tracks or replica count',
+  'fit':'existing1000um2 std/hold allowance includes112.8492um2 selectedbuffers; measured mapped/PG/fplint gates required'}
  m['composed_head_latency'].update(localcapture_added_cycles=0,
   current_actual_PP_bundle_pending=True)
  m['identity']='pair contains no request transaction identity or lease/auth/epoch guards'
