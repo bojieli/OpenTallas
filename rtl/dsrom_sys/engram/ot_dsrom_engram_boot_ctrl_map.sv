@@ -6,8 +6,9 @@
 // not a completion: each PC owns eight request credits but only one is used.
 // Request mapping: stack=global_atom[0], PC=global_atom[5:1],
 // PC-local atom=global_atom>>6. No controller/PHY or route qualification claim.
-module ot_dsrom_engram_boot_ctrl_map #(parameter integer ROWSTRIPE=0,parameter integer CANONICAL=0,parameter integer APERTURE=0) (
+module ot_dsrom_engram_boot_ctrl_map #(parameter integer ROWSTRIPE=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388) (
     input wire ck, rst_n,
+    input wire aperture_valid,
     input wire [64*30-1:0] pc_base,pc_limit, // exclusive limit, PC-local32B atoms
     input wire [1:0] i_v,
     input wire [28:0] i_atom, // already stack-stripped
@@ -86,7 +87,7 @@ module ot_dsrom_engram_boot_ctrl_map #(parameter integer ROWSTRIPE=0,parameter i
                 end
                 if(launch>=0) begin
                     if((CANONICAL && !APERTURE) || launch_global[34:30]!=0 ||
-                       (APERTURE && (launch_end[30] || launch_end>{1'b0,pc_limit[pc[launch]*30+:30]}))) fault<=1;
+                       (APERTURE && (!aperture_valid || pc_base[pc[launch]*30+:30]>=pc_limit[pc[launch]*30+:30] || pc_limit[pc[launch]*30+:30]>MAX_PC_ATOMS || launch_end[30] || launch_end>{1'b0,pc_limit[pc[launch]*30+:30]}))) fault<=1;
                     else begin
                         state[launch]<=2;busy[pc[launch]]<=1;pc_tag[pc[launch]]<=launch[2:0];
                         out_v<=64'b1<<pc[launch];

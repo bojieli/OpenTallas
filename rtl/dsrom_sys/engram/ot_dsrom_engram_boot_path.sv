@@ -8,6 +8,7 @@ module ot_dsrom_engram_boot_path #(
     parameter integer EXPECT_SECTORS=1
 ) (
     input wire ck,rst_n,
+    input wire aperture_valid,
     input wire [64*30-1:0] pc_base,pc_limit,
     input wire i_v,
     input wire [31:0] i_addr,
@@ -28,7 +29,7 @@ module ot_dsrom_engram_boot_path #(
         .w_v(wv),.w_atom(wa),.w_tag(wt),.w_d(data),.done_v(dv),.done_tag(dt),
         .ready(dispatch_ready),.fault(dispatch_fault));
     ot_dsrom_engram_boot_ctrl_map #(.ROWSTRIPE(ROWSTRIPE),.CANONICAL(CANONICAL),.APERTURE(APERTURE)) u_map(
-        .ck(ck),.rst_n(rst_n),.pc_base(pc_base),.pc_limit(pc_limit),.i_v(wv),.i_atom(wa),.i_tag(wt),.i_d(data),
+        .ck(ck),.rst_n(rst_n),.aperture_valid(aperture_valid),.pc_base(pc_base),.pc_limit(pc_limit),.i_v(wv),.i_atom(wa),.i_tag(wt),.i_d(data),
         .rq(rq),.wd(wd),.done_v(dv),.done_tag(dt),.fault(map_fault));
     assign fault=dispatch_fault|map_fault;
     assign ready=dispatch_ready&&!fault;

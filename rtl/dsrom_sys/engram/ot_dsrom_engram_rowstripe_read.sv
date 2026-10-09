@@ -4,8 +4,9 @@
 // row. Every real controller stream drains every cycle: up to six independent
 // PCs may return simultaneously into the reserved per-row buffers. Generation
 // wrap fails closed and requires reset/fence; it never aliases a stale return.
-module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0)(
+module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388)(
     input wire ck,rst_n,
+    input wire aperture_valid,
     input wire [64*30-1:0] pc_base,pc_limit,
     input wire hq_valid,output wire hq_ready,
     input wire [30:0] hq_atom,input wire [3:0] hq_len,input wire [2:0] hq_tag,
@@ -107,7 +108,7 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
             for(t=0;t<64;t=t+1) if(rd_q[(t/32)*8896+8864+t%32] && !pc_busy[t]) fault<=1;
             if(hq_valid && hq_ready) begin
                 if(hq_len!=9 || hq_atom%9!=0 || (CANONICAL && !APERTURE) ||
-                   (APERTURE && (incoming_end[31:30]!=0 || incoming_end>{2'b0,pc_limit[req_pc*30+:30]})) ||
+                   (APERTURE && (!aperture_valid || pc_base[req_pc*30+:30]>=pc_limit[req_pc*30+:30] || pc_limit[req_pc*30+:30]>MAX_PC_ATOMS || incoming_end[31:30]!=0 || incoming_end>{2'b0,pc_limit[req_pc*30+:30]})) ||
                    (CANONICAL && incoming_global[34:30]!=0)) fault<=1;
                 else begin
                     active[hq_tag]<=1;pc_busy[req_pc]<=1;pc[hq_tag]<=req_pc;
