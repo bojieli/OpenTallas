@@ -14532,7 +14532,9 @@ def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24
         'DeepSeek-V4.1 HBM': True}, macs_per_cycle=0,
         payload_bits=payload_bits, record_bits=record, depth=depth,
         replicas=ports, admission_interval_cycles=4,
-        normal_forward_added_cycles_min=1, normal_forward_added_cycles_max=4,
+        normal_forward_added_cycles_min=2, normal_forward_added_cycles_max=5,
+        TX_entry_added_cycles_min=1, TX_entry_added_cycles_max=4,
+        RX_landing_added_cycles=1,
         forward_bits_per_cycle=record/4,
         reverse_bits_per_cycle=seq_bits+session_bits+1,
         SRAM_port_bytes_per_cycle_peak=chunks*266/8,
@@ -14551,9 +14553,12 @@ def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24
         new_stage_protection='32-bit payload parity groups, tag/control parity and classified-control complements; detect/poison',
         parity_register_bits_per_port=2*((payload_bits+31)//32)+8,
         feedback_latency_cycles=4, replay_SRAM_read_latency_cycles=4,
+        replay_launch_from_read_request_cycles=6,
+        replay_steady_interval_cycles_min=8,
         serial_token_cost='For N framed records on a contended hop, '
-            'service is 4*N stream edges plus 1..4 entry edges; '
-            'actual hop/FEC/ACK round trip must be composed before adoption.',
+            'service is 4*N stream edges plus 1..4 TX entry edges '
+            'and one RX landing edge; actual hop/FEC/ACK round trip '
+            'must be composed before adoption.',
         routing_tracks_required=record*2+seq_bits+session_bits+1,
         routing_capacity_checked=False, actual_pin_budget_known=False,
         physical_qualified=False, default_enabled=False)
