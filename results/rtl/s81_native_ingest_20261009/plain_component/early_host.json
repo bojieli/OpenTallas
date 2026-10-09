@@ -1,0 +1,5 @@
+{
+  "pass": false,
+  "stdout": "WARNING: /srv/opentallas-scratch/codex/s81-native-plain/rtl/test/s81_native_ingest/tb_s81_native_host_plain.sv:48: $readmemh(desc.mem): Not enough words in the file for the requested range [0:15].\nWARNING: /srv/opentallas-scratch/codex/s81-native-plain/rtl/test/s81_native_ingest/tb_s81_native_host_plain.sv:49: $readmemh(pay.mem): Not enough words in the file for the requested range [0:255].\nWARNING: /srv/opentallas-scratch/codex/s81-native-plain/rtl/test/s81_native_ingest/tb_s81_native_host_plain.sv:50: $readmemh(nb.mem): Not enough words in the file for the requested range [0:15].\nFATAL: /srv/opentallas-scratch/codex/s81-native-plain/rtl/test/s81_native_ingest/tb_s81_native_host_plain.sv:113: EARLY_NATIVE_HOST_COMPLETION before physical ACK\n       Time: 547500  Scope: tb_rom_host_ingest\n",
+  "stderr": ""
+}

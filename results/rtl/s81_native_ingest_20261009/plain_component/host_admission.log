@@ -1,0 +1,34 @@
+qwen_die_geom_bf16 {'pass': True, 'errors': 0, 'sectors_written': 2048, 'ck_cycles': 5232, 'wall_s': 0.9}
+v41_ckv {'pass': True, 'errors': 0, 'sectors_written': 864, 'ck_cycles': 7669, 'wall_s': 0.9}
+v41_win {'pass': True, 'errors': 0, 'sectors_written': 3400, 'ck_cycles': 7399, 'wall_s': 0.7}
+v41_ikey {'pass': True, 'errors': 0, 'sectors_written': 544, 'ck_cycles': 6899, 'wall_s': 0.8}
+raw_boot {'pass': True, 'errors': 0, 'sectors_written': 300, 'ck_cycles': 1191, 'wall_s': 0.1}
+mutant payload_bit_flip_in_cdc detected
+mutant done_tag_plus_one detected
+fail-closed qkv on QKV_EN 0: True
+qwen_die_geom_bf16 RMW_EN 0: True
+fail-closed rmw on RMW_EN 0: True
+pass: True -> /srv/opentallas-scratch/codex/s81-native-plain/out/host.json
+	Command being timed: "python3 tools/rtl_s81_native_host_plain_bench.py --quick --no-model --work /srv/opentallas-scratch/codex/s81-native-plain/out/work --output /srv/opentallas-scratch/codex/s81-native-plain/out/host.json"
+	User time (seconds): 8.45
+	System time (seconds): 0.29
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:08.72
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 60248
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 67744
+	Voluntary context switches: 125
+	Involuntary context switches: 25
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 79200
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

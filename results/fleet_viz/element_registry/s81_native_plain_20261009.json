@@ -13,7 +13,7 @@
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; admitted remote gates running",
+        "status": "Implemented defaultoff; admitted exact+mutant gates PASS",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv"
         ]
@@ -26,12 +26,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending source-matched admitted component",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending source-matched admitted mutant",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         }
       },
       "physical": {
@@ -61,7 +65,7 @@
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; admitted remote gates running",
+        "status": "Implemented defaultoff; admitted exact+mutant gates PASS",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv"
         ]
@@ -74,12 +78,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending source-matched admitted component",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending source-matched admitted mutant",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         }
       },
       "physical": {
@@ -109,7 +117,7 @@
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; admitted remote gates running",
+        "status": "Implemented defaultoff; admitted exact+mutant gates PASS",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_host_native_plain.sv"
         ]
@@ -122,12 +130,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending source-matched admitted component",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending source-matched admitted mutant",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         }
       },
       "physical": {
@@ -157,7 +169,7 @@
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; admitted remote gates running",
+        "status": "Implemented defaultoff; admitted exact+mutant gates PASS",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/dsfd_host_native_plain.sv"
         ]
@@ -170,12 +182,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending source-matched admitted component",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         },
         "negative": {
-          "status": "pending source-matched admitted mutant",
-          "evidence": []
+          "status": "PASS same-source minimumcomponent/hostcampaign",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/plain_component/receipt.json"
+          ]
         }
       },
       "physical": {

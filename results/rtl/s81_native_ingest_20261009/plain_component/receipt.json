@@ -1,0 +1,26 @@
+{
+  "source_commit": "47dbc4636",
+  "component_runner_commit": "368edb855",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/s81-native-plain",
+  "positive": [
+    "PC238transactions/307reversedreadbeats",
+    "physicalvisibility40writes/4fences/4creditreturns",
+    "host7156goldensectors5formatszeroerrors128cycledelayedphysicalACK"
+  ],
+  "negative": [
+    "wrongsourcephysicalretirementdetected",
+    "earlycounterfencemutantdetected",
+    "actualhost FENCE0 on300sectorRAW failsbeforephysicalACK",
+    "hostpayload/tagmutants andinvalidQKV/RMWdetected"
+  ],
+  "scope": "Minimal reviewed nativeflopcredits/fence/source-owner components; noSECDEDonflops/aperture/leases/mirrors. Physicalslotandendtoendstaticrouterbindingremainpending. ACKncontractisacceptedorderprefix.",
+  "sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv": "6b9315ad69fe6de3c1f17887fb8260f911384f74cebdbb1e9129e7fef05f2cb3",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv": "1ccefeb4dabf9c9b012bf05d1a062abd0573350c4c62792c66e724d8e4cd6bc6",
+    "rtl/dsrom_sys/s81_ingest/ot_s81_host_native_plain.sv": "a2e9107fc70938439e869ccd4778b5f1a5db2f7314ca3a04e2f6eef3bc60b299",
+    "rtl/dsrom_sys/s81_ingest/dsfd_host_native_plain.sv": "5260bee99c5e44aeb5ba9379ebf511f8a75f42de7656b9ea4698b0957500df4a",
+    "rtl/test/s81_native_ingest/tb_s81_native_host_plain.sv": "8abff47d549e8b2f8477f0282e9d701b0797629bae3f16df850072918595773e",
+    "rtl/test/s81_native_ingest/tb_s81_native_pc_mux_plain.sv": "0d385a65080f144a2aaac1b3bc9286647e2f7fab3d51fa270f3fd0239094228d",
+    "rtl/test/s81_native_ingest/tb_s81_ingest_visibility_plain.sv": "9eb9ee80559bebe32c871852c96d5c30192551150c29e90ca5b18fd845ef8ea2"
+  }
+}
