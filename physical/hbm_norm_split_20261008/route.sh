@@ -23,7 +23,7 @@ if [ "$kind" = grp ]; then
   case $G in 8) DW=${DIEW:-380}; DH=${DIEH:-380} ;; 16) DW=${DIEW:-540}; DH=${DIEH:-540} ;; esac
   MV="$SRAM=physical/asap7_memory_macros_v2/$SRAM"; MACD=physical/asap7_memory_macros_v2/$SRAM; HALO="4 4"
 else
-  top=ot_hbm_norm_split_view_g$G
+  top=ot_hbm_norm_split_view_g$G${TOPSFX:-}   # safe-hbm S-C7: TOPSFX=r -> the REP=1 top (broadcast flops per group)
   GV=$V/views/ot_hbm_norm_grp$G
   [ -s $GV/ot_hbm_norm_grp${G}_tt.lib ] || { echo "group view missing: $GV" > $W/run.log; echo "rc=2" > $W/exit; exit 2; }
   read GW GH < <(awk '/^ *SIZE/{print $2, $4; exit}' $GV/ot_hbm_norm_grp$G.lef)
