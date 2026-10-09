@@ -1,3 +1,18 @@
+# Fresh-process metadata reload avoids OpenROAD populated-DB/logger reset errors.
+if {[info exists ::env(OT_SR_METADATA_FILE)]} {
+ source $::env(OT_SR_METADATA_FILE)
+ read_db $::env(OT_SR_CHECK_ONLY_ODB)
+ set block [ord::get_db_block]
+ set instmap [dict create]
+ foreach inst [$block getInsts] {dict set instmap [$inst getName] $inst}
+ set anchors [dict create]
+ foreach name [dict keys $anchor_meta] {
+  lassign [dict get $anchor_meta $name] xy orient
+  if {![dict exists $instmap $name]} {error "Missing anchor $name"}
+  dict set anchors $name [list [dict get $instmap $name] $xy $orient]
+ }
+ set rc 0;set err ""
+} else {
 # Private-ODB existing-legalizer probe. Original source and database mounted read-only.
 read_db $::env(OT_FAILED_ODB)
 set block [ord::get_db_block]
@@ -70,30 +85,28 @@ foreach bt [$block getBTerms] {
  foreach pin [$bt getBPins] {foreach box [$pin getBoxes] {lappend geom [list [[$box getTechLayer] getName] [$box xMin] [$box yMin] [$box xMax] [$box yMax]]}}
  dict set bt_orig [$bt getName] $geom
 }
-# OpenROAD arguments are microns:150 sites X and23 rows Y.
-if {[info exists ::env(OT_SR_CHECK_ONLY_ODB)]} {
- ord::clear
- read_db $::env(OT_SR_CHECK_ONLY_ODB)
- set block [ord::get_db_block]
- set instmap [dict create]
- foreach inst [$block getInsts] {dict set instmap [$inst getName] $inst}
- foreach name [dict keys $anchors] {
-  lassign [dict get $anchors $name] oldinst xy orient
-  if {![dict exists $instmap $name]} {error "Missing anchor $name"}
-  dict set anchors $name [list [dict get $instmap $name] $xy $orient]
+
+ if {[info exists ::env(OT_SR_EXPORT_METADATA_FILE)]} {
+  set anchor_meta [dict create]
+  foreach name [dict keys $anchors] {
+   lassign [dict get $anchors $name] inst xy orient
+   dict set anchor_meta $name [list $xy $orient]
+  }
+  set mf [open $::env(OT_SR_EXPORT_METADATA_FILE) w]
+  foreach var {anchor_meta released pin_links all_orig macro_orig outline_orig bt_orig} {puts $mf [list set $var [set $var]]}
+  close $mf
+  puts "SR_IMMUTABLE_GEOMETRY_METADATA_EXPORTED_NOT_LEGALITY"
+  exit
  }
- set rc 0;set err ""
- # Minimum in-memory wrong-movement negative; never writes candidate output.
- if {[info exists ::env(OT_SR_WRONG_MOVEMENT)]} {
-  set name [lindex [lsort [dict keys $released]] 0]
-  lassign [dict get $anchors $name] inst xy orient
-  $inst setLocation [expr {[lindex $xy 0]+8154}] [lindex $xy 1]
-  puts "SR_WRONG_MOVEMENT_INJECTED $name"
- }
-} else {
+ # Microns:150 sites horizontally,23 rows vertically.
  set rc [catch {detailed_placement -max_displacement {8.10 6.21}} err]
- # Retain private output even if existing legalizer reports failure.
  write_db /probe/sr-displacement-8p10x6p21-release181.odb
+}
+if {[info exists ::env(OT_SR_WRONG_MOVEMENT)]} {
+ set name [lindex [lsort [dict keys $released]] 0]
+ lassign [dict get $anchors $name] inst xy orient
+ $inst setLocation [expr {[lindex $xy 0]+8154}] [lindex $xy 1]
+ puts "SR_WRONG_MOVEMENT_INJECTED $name"
 }
 set die [$block getDieArea];set core [$block getCoreArea]
 if {$outline_orig ne [list [$die xMin] [$die yMin] [$die xMax] [$die yMax] [$core xMin] [$core yMin] [$core xMax] [$core yMax]]} {error "Source outline changed"}
