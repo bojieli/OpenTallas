@@ -21,7 +21,7 @@ module tb_hbm_native_mtp_emit_queue;
  if(received!=40||count!=40||status!=2)$fatal(1,"final commit count");
  dr=1;@(negedge clk);dr=0;jv=1;@(negedge clk);jv=0;
  // Wrong index must fault without inventing a committed token.
- emit={20'd1,17'd4,1'b1};@(negedge clk);emit=0;
+ emit={20'd1,17'd4,1'b1};nd=1;@(negedge clk);emit=0;nd=0;
  if(!fault||!dv||count!=0||status!=4)$fatal(1,"bad index not rejected");
  $display("PASS finite8 fullpressure40 ordered commits plus bad index");$finish;
  end
