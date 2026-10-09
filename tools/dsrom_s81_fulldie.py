@@ -2531,12 +2531,12 @@ class Placer:
         self.occ.add(it.box())
         return it
 
-    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None):
+    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None, cross_step=None):
         """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev` and
         (s81-die-timing 2026-10-08) within `nreach` of the next point `nxt` of the chain (r3: hop relays that found no
         spot inside a packed frame landed up to 906 um short of their load, on the far side of their driver)."""
         reach = reach or FWD_REACH
-        step = (h if horiz else w) + 2.16
+        step = cross_step or (h if horiz else w) + 2.16
         cands = _near_cands(span, rows, step)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
@@ -3736,6 +3736,17 @@ def _hop_fix(m, P):
                                 pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                                 rec['pad_fallback']['relaxed_die'] = rec['pad_fallback'].get('relaxed_die', 0) + 1
                                 break
+                if pl is None and NXT_REACH:
+                    # The coarse row pitch can skip a narrow legal gap in a packed frame. Search a finer
+                    # lattice before failing; keep both timing reaches and the original occupancy clearance.
+                    for PAD in (2.16, 1.08, 0.0):
+                        pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, [(0.0, 0.0, W, H)],
+                                    prev=cur, horiz=horiz, reach=R - 10.0, span=1200.0,
+                                    rows=560, cross_step=2.16, **NR)
+                        if pl:
+                            pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                            rec['pad_fallback']['fine_lattice'] = rec['pad_fallback'].get('fine_lattice', 0) + 1
+                            break
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
