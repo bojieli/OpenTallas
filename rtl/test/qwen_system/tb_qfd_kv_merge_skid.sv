@@ -1,7 +1,8 @@
 `timescale 1ns/1ps
 module tb_qfd_kv_merge_skid;
     parameter integer MUT=0;
-    localparam integer D=8,FWD=42,RET=34,AW=7,DW=512,N=600;
+    parameter integer D=8;
+    localparam integer FWD=42,RET=34,AW=7,DW=512,N=600;
     reg clk=0; always #5 clk=~clk;
     reg rst_n=0,request=0,tok_v=0;
     reg [AW-1:0] tok_addr;
@@ -12,7 +13,7 @@ module tb_qfd_kv_merge_skid;
     reg [FWD-1:0]fv; reg [AW+DW-1:0]fd[0:FWD-1];
     reg [RET-1:0]rc;
     integer sent=0,seen=0,tokens=0,cy=0,i,errors=0;
-    integer target=N,tn=0,fh,scan,offers[0:4095],ports[0:4095];
+    integer target=N,tn=0,fh,scan,offers[0:4095],ports[0:4095],bound;
     reg [2047:0] trace_name;
     reg [DW-1:0] golden[0:127], actual[0:127];
     reg [DW-1:0] payload;
@@ -57,7 +58,10 @@ module tb_qfd_kv_merge_skid;
         end
         repeat(4)@(negedge clk);rst_n=1;
         // A300-cycle token burst lets an early-credit mutant overfill the queue.
-        for(cy=0;cy<18000;cy=cy+1)begin
+        // Finite completion bound: even one launch per complete credit RTT,
+        // after the final trace offer and initial 300-edge token burst.
+        bound=(tn==0?0:offers[tn-1])+300+target*(FWD+RET+100);
+        for(cy=0;cy<bound;cy=cy+1)begin
             @(negedge clk);
             request=(sent<target) && (cy%7!=3) && ((tn==0)||(cy>=offers[sent]));
             payload={16{32'(sent*7919+31+(tn==0?0:ports[sent]))}};
@@ -67,7 +71,7 @@ module tb_qfd_kv_merge_skid;
                 $display("NEG_DETECTED credit-early fault at cycle%0d sent%0d seen%0d",cy,sent,seen);$finish;
             end
             if(MUT==0 && (rfault||tfault))$fatal(1,"fault legal sender credits");
-            if(sent==target && seen==target && drained && fv==0 && rc==0) cy=18000;
+            if(sent==target && seen==target && drained && fv==0 && rc==0) cy=bound;
         end
         @(negedge clk);request=0;tok_v=0;
         repeat(RET+FWD+16)@(negedge clk);
