@@ -88,12 +88,20 @@
   },
   "validation": {
     "scope": "actual controlcommands against hostswapped oldFQS currentcompilerISA, stubengines; notnumericalpayloadgate",
-    "stages": 76,
-    "mecommands": 440,
-    "sucommands": 1448,
-    "collectives": 146,
+    "stages": 304,
+    "mecommands": 1760,
+    "sucommands": 5792,
+    "collectives": 584,
     "bad": 0,
     "basefoldmutantbad": 576,
-    "pending": "native releasedimage relocation and numerical order proof +physicalroute"
+    "pending": "native releasedimage relocation and numerical order proof +physicalroute",
+    "ranks": 4,
+    "program_bounds_fault_checks": 4,
+    "head_rank_offsets": [
+      0,
+      37984,
+      75968,
+      113952
+    ]
   }
 }
