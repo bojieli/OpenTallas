@@ -28,7 +28,7 @@
       "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
       "simulator_vectors": "pendingprovider",
       "model": "757907078 tools/uarch_model.py:hgi_token18_accept_seat_model",
-      "route_status": "PD48/55 spec075a3182a pendingexclusivefleetintake; sourcef4 runnerstdout-safe"
+      "route_status": "both completed flow0/corner0; PD55 TT229.99FF9.55, PD48TT226.06FF19.78, electrical0; DRC1 clock/reset M5 metalspacing at top boundary; pin-separated config variants preparing"
     },
     "ot_hgi_mtp_ctl18": {
       "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
@@ -83,5 +83,13 @@
     }
   },
   "route_jobs": [],
-  "routes": "notqueued,noP&Rclosureclaim"
+  "routes": "notqueued,noP&Rclosureclaim",
+  "die_facade": {
+    "source": "d7cdfd630",
+    "data_boundary_bits": 1297,
+    "cmdproc_in": 131,
+    "cmdproc_out": 506,
+    "reset_release_extra_cycles": 2,
+    "gate": "actual facade replay/boundary pending; reset startup must be checked; real ARGMAX winning-value collective consumer remains unbound"
+  }
 }
