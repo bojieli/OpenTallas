@@ -12,12 +12,15 @@
   "nonconstant_state_bits_per_slot": 5,
   "state_equations": {"slot_word_offset": "(position % 8) * 4", "pair_element_offset": "((position / 2) % 4) * 128"},
   "replicas": 1,
-  "mux_cost": "five captured state bits with the existing DYN update enable; existing DYN read selection remains",
-  "fanout_cost": "existing local DYN read consumers; no broadcast or added die boundary",
+  "mux_cost": "five captured state bits with the existing DYN update enable; two formerly constant rows become variable inputs to the existing read selectors",
+  "unique_dyn_read_consumer_fields": 16,
+  "additional_bit_mux_arms_upper_bound": 80,
+  "read_decode_cost": "at most two row-decode terms per unique selector; synthesis may share decode logic",
+  "fanout_cost": "five additional capture-enable/clock loads and up to sixteen local read-selector consumers per variable address bit; no broadcast or added die boundary",
   "new_routing_tracks_at_die_boundary": 0,
   "added_latency_cycles": 0,
   "clock_domain": "existing streaming sequencer at 1.2 GHz",
   "floorplan_vehicle_um": [40, 40],
-  "area_status": "five state bits plus local update gating; physical measurement pending",
+  "area_status": "five state bits plus local update gating and up to eighty bit-mux arms; contextual synthesis/physical measurement pending",
   "qualification": "pre-build sizing only; requires native program and exactness gates plus contextual timing before adoption"
 }
