@@ -137,3 +137,12 @@ def hbm_indexer_scalar_credit_relay_model():
       boundary_bits_per_cycle=1,clock_tracks=1,
       physical='Candidate native credit station only; no contextual closure credit',
       historical='Keep generic2000um2 station overhead and all historical masters unchanged')
+
+
+def hbm_indexer_quarter_end_model():
+    return dict(default_enabled=False, adopted=False, extra_registered_sideband_bits=1,
+      FF_area_floor_um2=0.2916, added_boundary_bits_per_cycle=1, routing_tracks=1,
+      latency_added_cycles=0, slot_um=[1399.656,844.56],
+      purpose='Lossless candidate quarter termination; whole-frame co.last cannot flush partial quarter flits',
+      source='33b02c114 EXPOSE_QUARTER_LAST',
+      physical='Fresh6903pin native master; historical6902pin record and failedroute preserved')
