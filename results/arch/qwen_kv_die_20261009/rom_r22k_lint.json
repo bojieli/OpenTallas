@@ -3,17 +3,17 @@
  "die": "qwen_rom",
  "top_fix": false,
  "generator": "tools/qwen_rom_fulldie_b3r2.py",
- "generator_sha256": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0",
+ "generator_sha256": "6e0e423b402e7f824fbed4bb378efea0815e57aca7b24dfc6062549cf56c173e",
  "generator_tag": {
   "file": "tools/qwen_rom_fulldie_b3r2.py",
-  "sha256": "3e6eadea3b893633b634e82bd9dac6be25706075ac2676b6e7e1c9f4f6ae08f0",
-  "tree_head": "135e277ecf3e8c3c827a0fc8b603966cda9d3f4e",
+  "sha256": "6e0e423b402e7f824fbed4bb378efea0815e57aca7b24dfc6062549cf56c173e",
+  "tree_head": "fd79a0aed75bc08f7c3d6986ddbf0be3249f52e1",
   "file_commit": "b56bfee54fbcfd8a3bfed17563e60738b671ae8f"
  },
  "qwen_source": {
   "root": "/home/ubuntu/wt-claude-kv-die",
   "ref": "None",
-  "commit": "135e277ecf3e8c3c827a0fc8b603966cda9d3f4e",
+  "commit": "fd79a0aed75bc08f7c3d6986ddbf0be3249f52e1",
   "overlay": "[]"
  },
  "qwen_recipe": {
@@ -38,18 +38,18 @@
   "vm_me": true,
   "tt_h": 3732.48,
   "emb_hbm": true,
-  "before_relays": "<function surgery at 0x7a11c5bb16c0>"
+  "before_relays": "<function surgery at 0x738bbaaad6c0>"
  },
  "pin_fit_errors": {},
  "lint_tool_sha256": "96106938d8e90a6c7a7e7e56e628e7612ef6b631fd84fc7dff0cc3cdedb51451",
  "variant": null,
  "census": {
-  "instances": 12885,
-  "buses": 16047,
-  "net_bits": 6700051,
-  "masters": 145,
+  "instances": 12902,
+  "buses": 16064,
+  "net_bits": 6705097,
+  "masters": 164,
   "real_instances": 1,
-  "placeholder_instances": 12884
+  "placeholder_instances": 12901
  },
  "real_blocks": {
   "ot_qkvd_ucie_x64_phy": {
@@ -221,28 +221,46 @@
    "instances": 19
   },
   {
-   "master": "qfd_rly_107_NE_53x30",
+   "master": "qfd_rly_107_EN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 1
+  },
+  {
+   "master": "qfd_rly_107_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_rly_107_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 22
+   "instances": 23
   },
   {
    "master": "qfd_rly_107_SE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1
+   "instances": 3
   },
   {
    "master": "qfd_rly_107_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 98
+   "instances": 97
+  },
+  {
+   "master": "qfd_rly_107_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_107_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_rly_107_WN_53x30",
@@ -251,10 +269,22 @@
    "instances": 1
   },
   {
+   "master": "qfd_rly_107_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_1538_EN_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qfd_rly_1538_EW_78x80",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 3
+   "instances": 1
   },
   {
    "master": "qfd_rly_1538_NS_78x80",
@@ -264,6 +294,18 @@
   },
   {
    "master": "qfd_rly_1538_NW_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_SE_78x80",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_1538_WS_78x80",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 1
@@ -284,43 +326,43 @@
    "master": "qfd_rly_1_ES_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 6
+   "instances": 7
   },
   {
    "master": "qfd_rly_1_EW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 11
+   "instances": 9
   },
   {
    "master": "qfd_rly_1_NE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 15
+   "instances": 13
   },
   {
    "master": "qfd_rly_1_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 125
+   "instances": 129
   },
   {
    "master": "qfd_rly_1_NW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 10
+   "instances": 8
   },
   {
    "master": "qfd_rly_1_SE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 11
+   "instances": 12
   },
   {
    "master": "qfd_rly_1_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 170
+   "instances": 171
   },
   {
    "master": "qfd_rly_1_SW_53x30",
@@ -332,19 +374,19 @@
    "master": "qfd_rly_1_WE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 28
+   "instances": 26
   },
   {
    "master": "qfd_rly_1_WN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 9
+   "instances": 11
   },
   {
    "master": "qfd_rly_1_WS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 7
+   "instances": 5
   },
   {
    "master": "qfd_rly_26_NS_53x30",
@@ -362,13 +404,13 @@
    "master": "qfd_rly_28_ES_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 6
+   "instances": 7
   },
   {
    "master": "qfd_rly_28_EW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 16
+   "instances": 18
   },
   {
    "master": "qfd_rly_28_NE_53x30",
@@ -380,19 +422,25 @@
    "master": "qfd_rly_28_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 69
+   "instances": 66
   },
   {
    "master": "qfd_rly_28_NW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 5
+   "instances": 4
+  },
+  {
+   "master": "qfd_rly_28_SE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
   },
   {
    "master": "qfd_rly_28_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 24
+   "instances": 23
   },
   {
    "master": "qfd_rly_28_SW_53x30",
@@ -407,10 +455,28 @@
    "instances": 2
   },
   {
+   "master": "qfd_rly_2_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qfd_rly_2_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_2_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_2_WS_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
   },
   {
    "master": "qfd_rly_323_EN_53x30",
@@ -458,7 +524,7 @@
    "master": "qfd_rly_323_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1475
+   "instances": 1474
   },
   {
    "master": "qfd_rly_323_WE_53x30",
@@ -470,34 +536,64 @@
    "master": "qfd_rly_323_WN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_EN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
    "instances": 1
+  },
+  {
+   "master": "qfd_rly_343_ES_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
   },
   {
    "master": "qfd_rly_343_EW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1
+   "instances": 2
+  },
+  {
+   "master": "qfd_rly_343_NE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 2
   },
   {
    "master": "qfd_rly_343_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 98
+   "instances": 90
   },
   {
    "master": "qfd_rly_343_NW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1
+   "instances": 2
   },
   {
    "master": "qfd_rly_343_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 21
+   "instances": 23
   },
   {
    "master": "qfd_rly_343_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 3
+  },
+  {
+   "master": "qfd_rly_343_WE_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_343_WS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 2
@@ -551,10 +647,28 @@
    "instances": 2
   },
   {
+   "master": "qfd_rly_492_EW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qfd_rly_492_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_492_SW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_492_WN_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
   },
   {
    "master": "qfd_rly_512_EN_53x30",
@@ -566,7 +680,7 @@
    "master": "qfd_rly_512_EN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 65
+   "instances": 66
   },
   {
    "master": "qfd_rly_512_ES_53x30",
@@ -596,7 +710,7 @@
    "master": "qfd_rly_512_NE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 127
+   "instances": 128
   },
   {
    "master": "qfd_rly_512_NS_53x30",
@@ -608,19 +722,19 @@
    "master": "qfd_rly_512_NS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1646
+   "instances": 1644
   },
   {
    "master": "qfd_rly_512_NW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 14
+   "instances": 11
   },
   {
    "master": "qfd_rly_512_SE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 43
+   "instances": 45
   },
   {
    "master": "qfd_rly_512_SN_53x30",
@@ -632,7 +746,7 @@
    "master": "qfd_rly_512_SN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 1028
+   "instances": 1026
   },
   {
    "master": "qfd_rly_512_SW_53x30",
@@ -644,7 +758,7 @@
    "master": "qfd_rly_512_SW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 260
+   "instances": 261
   },
   {
    "master": "qfd_rly_512_WE_53x30",
@@ -656,13 +770,13 @@
    "master": "qfd_rly_512_WE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 859
+   "instances": 855
   },
   {
    "master": "qfd_rly_512_WN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 25
+   "instances": 26
   },
   {
    "master": "qfd_rly_512_WS_53x30",
@@ -674,7 +788,7 @@
    "master": "qfd_rly_512_WS_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 61
+   "instances": 63
   },
   {
    "master": "qfd_rly_513_EN_53x60",
@@ -686,67 +800,55 @@
    "master": "qfd_rly_513_ES_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
-  },
-  {
-   "master": "qfd_rly_513_EW_53x60",
-   "view": "placeholder",
-   "clock": "clock_trunk",
    "instances": 1
   },
   {
    "master": "qfd_rly_513_NE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 3
+   "instances": 2
   },
   {
    "master": "qfd_rly_513_NS_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 25
-  },
-  {
-   "master": "qfd_rly_513_NW_53x60",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
+   "instances": 30
   },
   {
    "master": "qfd_rly_513_SE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 4
+   "instances": 5
   },
   {
    "master": "qfd_rly_513_SN_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 97
+   "instances": 95
   },
   {
    "master": "qfd_rly_513_SW_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 1
   },
   {
    "master": "qfd_rly_513_WE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 9
+   "instances": 7
   },
   {
    "master": "qfd_rly_513_WN_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 3
   },
   {
    "master": "qfd_rly_513_WS_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 3
   },
   {
    "master": "qfd_rly_519_EN_53x60",
@@ -755,16 +857,10 @@
    "instances": 1
   },
   {
-   "master": "qfd_rly_519_SE_53x60",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
-  },
-  {
    "master": "qfd_rly_519_SN_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 26
+   "instances": 27
   },
   {
    "master": "qfd_rly_530_NE_53x60",
@@ -776,7 +872,7 @@
    "master": "qfd_rly_530_NS_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 11
+   "instances": 10
   },
   {
    "master": "qfd_rly_530_SN_53x60",
@@ -786,6 +882,18 @@
   },
   {
    "master": "qfd_rly_530_SW_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_530_WN_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_530_WS_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 1
@@ -821,10 +929,16 @@
    "instances": 1
   },
   {
+   "master": "qfd_rly_551_ES_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
    "master": "qfd_rly_551_NE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 5
+   "instances": 6
   },
   {
    "master": "qfd_rly_551_NS_53x60",
@@ -836,31 +950,31 @@
    "master": "qfd_rly_551_NW_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 1
   },
   {
    "master": "qfd_rly_551_SE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 5
+   "instances": 3
   },
   {
    "master": "qfd_rly_551_SN_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 44
+   "instances": 43
   },
   {
    "master": "qfd_rly_551_WE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 9
+   "instances": 11
   },
   {
    "master": "qfd_rly_551_WN_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 4
+   "instances": 5
   },
   {
    "master": "qfd_rly_551_WS_53x60",
@@ -869,7 +983,13 @@
    "instances": 3
   },
   {
-   "master": "qfd_rly_553_EN_53x60",
+   "master": "qfd_rly_553_ES_53x60",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_553_NE_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 1
@@ -878,13 +998,7 @@
    "master": "qfd_rly_553_NS_53x60",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 13
-  },
-  {
-   "master": "qfd_rly_553_NW_53x60",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
+   "instances": 14
   },
   {
    "master": "qfd_rly_66_SE_53x30",
@@ -899,22 +1013,16 @@
    "instances": 60
   },
   {
-   "master": "qfd_rly_66_SW_53x30",
-   "view": "placeholder",
-   "clock": "clock_trunk",
-   "instances": 1
-  },
-  {
    "master": "qfd_rly_66_WE_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 3
   },
   {
    "master": "qfd_rly_66_WN_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
-   "instances": 2
+   "instances": 1
   },
   {
    "master": "qfd_rly_97_ES_53x30",
@@ -936,6 +1044,12 @@
   },
   {
    "master": "qfd_rly_97_NW_53x30",
+   "view": "placeholder",
+   "clock": "clock_trunk",
+   "instances": 1
+  },
+  {
+   "master": "qfd_rly_9_EW_53x30",
    "view": "placeholder",
    "clock": "clock_trunk",
    "instances": 1
@@ -1512,8 +1626,8 @@
     "bits": 9216
    },
    "tree_spine|region": {
-    "buses": 567,
-    "bits": 240784
+    "buses": 569,
+    "bits": 241094
    },
    "sequencer|region": {
     "buses": 25,
@@ -1585,8 +1699,8 @@
  "margin_lint": {
   "chains": 2676,
   "reach_um": 504.0,
-  "reach_violations": 10,
-  "far_side_relays": 36,
+  "reach_violations": 4,
+  "far_side_relays": 35,
   "reach_examples": [
    {
     "chain": "sp_vector_memory->io_xfifo",
@@ -1595,45 +1709,15 @@
     "hops": 1
    },
    {
-    "chain": "sp_band_lanes_4->sp_tree_top",
-    "seg": "rly_pword_4_4->rly_pword_4_5",
-    "um": 1264.9,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_1->sp_tree_top",
-    "seg": "rly_pword_1_22->rly_pword_1_23",
-    "um": 1215.3,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_1->sp_tree_top",
-    "seg": "rly_pword_1_8->rly_pword_1_9",
-    "um": 1213.1,
-    "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_1->sp_tree_top",
-    "seg": "rly_pword_1_14->rly_pword_1_15",
-    "um": 1128.9,
-    "hops": 1
-   },
-   {
     "chain": "sp_tree_top->sp_band_lanes_2",
     "seg": "rly_tt_lc2_4->rly_tt_lc2_5",
-    "um": 1109.4,
+    "um": 1029.9,
     "hops": 1
    },
    {
-    "chain": "sp_band_lanes_2->sp_tree_top",
-    "seg": "rly_tt_lf2_7->rly_tt_lf2_8",
-    "um": 865.3,
-    "hops": 1
-   },
-   {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "seg": "rly_tt_mx_13->rly_tt_mx_14",
-    "um": 822.1,
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "seg": "rly_tt_ty_0->rly_tt_ty_1",
+    "um": 966.4,
     "hops": 1
    },
    {
@@ -1641,18 +1725,22 @@
     "seg": "rly_coll_tx_5->rly_coll_tx_6",
     "um": 671.4,
     "hops": 1
-   },
-   {
-    "chain": "sp_band_lanes_2->sp_tree_top",
-    "seg": "rly_tt_lf2_8->rly_tt_lf2_9",
-    "um": 616.5,
-    "hops": 1
    }
   ],
   "far_side_examples": [
    {
+    "chain": "sp_vector_memory->sp_tree_top",
+    "relay": "rly_tt_xr_21",
+    "back_um": 410.4
+   },
+   {
     "chain": "t_31_1->sp_port_tiles_0",
     "relay": "rly_bword_42_9",
+    "back_um": 410.4
+   },
+   {
+    "chain": "t_31_17->sp_port_tiles_4",
+    "relay": "rly_bword_46_9",
     "back_um": 410.4
    },
    {
@@ -1661,24 +1749,19 @@
     "back_um": 410.4
    },
    {
-    "chain": "sp_port_tiles_2_f1->sp_port_tiles_2",
-    "relay": "rly_pfrag_2_port_tiles_2_f1_19",
-    "back_um": 410.4
-   },
-   {
     "chain": "sp_constants_sequencer->sp_tree_top",
     "relay": "rly_tt_si_33",
     "back_um": 410.4
    },
    {
-    "chain": "sp_tree_top->sp_port_tiles_2",
-    "relay": "rly_tt_c2_18",
-    "back_um": 410.4
+    "chain": "sp_tree_top->sp_port_tiles_3",
+    "relay": "rly_tt_c3_6",
+    "back_um": 324.0
    },
    {
-    "chain": "sp_tree_top->sp_port_tiles_0",
-    "relay": "rly_tt_c0_41",
-    "back_um": 324.0
+    "chain": "sp_tree_top->sp_port_tiles_2",
+    "relay": "rly_tt_c2_27",
+    "back_um": 302.4
    },
    {
     "chain": "t_27_17->sp_port_tiles_4",
@@ -1686,9 +1769,14 @@
     "back_um": 291.6
    },
    {
-    "chain": "t_31_17->sp_port_tiles_4",
-    "relay": "rly_bword_46_9",
-    "back_um": 280.8
+    "chain": "sp_tree_top->sp_band_lanes_2",
+    "relay": "rly_tt_lc2_4",
+    "back_um": 278.6
+   },
+   {
+    "chain": "t_63_9->sp_port_tiles_2_f1",
+    "relay": "rly_bword_92_31",
+    "back_um": 259.2
    },
    {
     "chain": "t_63_21->sp_port_tiles_5_f1",
@@ -1696,44 +1784,29 @@
     "back_um": 259.2
    },
    {
+    "chain": "sp_tree_top->sp_port_tiles_1",
+    "relay": "rly_tt_c1_29",
+    "back_um": 244.1
+   },
+   {
     "chain": "t_63_1->sp_port_tiles_0_f1",
     "relay": "rly_bword_90_31",
     "back_um": 226.8
    },
    {
-    "chain": "t_63_9->sp_port_tiles_2_f1",
-    "relay": "rly_bword_92_31",
-    "back_um": 226.8
+    "chain": "sp_tree_top->sp_port_tiles_0",
+    "relay": "rly_tt_c0_39",
+    "back_um": 222.5
    },
    {
-    "chain": "sp_vector_memory->sp_tree_top",
-    "relay": "rly_tt_xr_21",
-    "back_um": 216.0
-   },
-   {
-    "chain": "sp_band_lanes_2->sp_tree_top",
-    "relay": "rly_tt_lf2_14",
-    "back_um": 208.2
-   },
-   {
-    "chain": "sp_res_ser_3->sp_vector_memory",
-    "relay": "rly_rs_3_3",
+    "chain": "sp_tree_top->sp_vector_memory",
+    "relay": "rly_tt_mx_15",
     "back_um": 151.2
    },
    {
-    "chain": "sp_tree_top->sp_band_lanes_2",
-    "relay": "rly_tt_lc2_4",
-    "back_um": 148.6
-   },
-   {
-    "chain": "sp_band_lanes_1->sp_tree_top",
-    "relay": "rly_pword_1_8",
-    "back_um": 121.0
-   },
-   {
-    "chain": "sp_tree_top->sp_band_lanes_2",
-    "relay": "rly_tt_lc2_3",
-    "back_um": 113.2
+    "chain": "sp_band_lanes_2->sp_tree_top",
+    "relay": "rly_pword_2_19",
+    "back_um": 108.0
    },
    {
     "chain": "sp_vector_memory->io_xfifo",
@@ -1741,17 +1814,22 @@
     "back_um": 102.4
    },
    {
-    "chain": "sp_tree_top->sp_vector_memory",
-    "relay": "rly_tt_mx_14",
-    "back_um": 101.5
-   },
-   {
     "chain": "sp_vector_memory->io_xfifo",
     "relay": "rly_coll_tx_6",
     "back_um": 88.1
+   },
+   {
+    "chain": "sp_vector_memory->io_xfifo",
+    "relay": "rly_coll_tx_3",
+    "back_um": 69.1
+   },
+   {
+    "chain": "sp_tree_top->sp_band_lanes_0",
+    "relay": "rly_tt_ty_2",
+    "back_um": 68.3
    }
   ],
-  "slivers": 22948,
+  "slivers": 23136,
   "sliver_examples": [
    [
     "t_0_0",
@@ -1860,7 +1938,7 @@
  "top_fixes": {},
  "verilog": {
   "top": "qwen_rom_lint_top",
-  "stubs": 144,
+  "stubs": 163,
   "nc_wires": 0,
   "filelist": "qwen_rom_lint_top.f",
   "rtl_files": 0,

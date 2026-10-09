@@ -1,0 +1,20 @@
+{
+  "scope": "read-only TT electrical check on same6_final ODB/SPEF and postSDC as corner timing; no reroute or changed constraints",
+  "source": "f6869fa",
+  "container_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "admission_GiB": 1,
+  "max_slew_violations_TT": 26,
+  "worst_slew_pin": "place802/A",
+  "worst_slew_ps": 389.94,
+  "slew_limit_ps": 250,
+  "max_cap_violations_TT": 8,
+  "cap_macro_pins": ["m0/rd_out[221]", "m0/rd_out[223]", "m0/rd_out[210]", "m0/rd_out[220]", "m0/rd_out[162]", "m0/rd_out[209]", "m0/rd_out[215]", "m0/rd_out[156]"],
+  "cap_range_fF": [48.36, 52.83],
+  "cap_limit_fF": 46.08,
+  "max_fanout_violations_TT": 4,
+  "clock_leaf_indices": [0, 1, 2, 4],
+  "fanout": 17,
+  "fanout_limit": 16,
+  "electrical_qualified": false,
+  "note": "Violations persist at TC; cannot classify them solely as legacy WC770 artifacts. Historical raw physical not_met unchanged."
+}

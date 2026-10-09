@@ -1,0 +1,275 @@
+{
+  "acceptance": {
+    "checks": [],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires finite reported timing and zero DRC, antenna, max-slew, max-capacitance and max-fanout violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "no timing-bearing stage ran; nothing to accept or reject",
+    "status": "not_evaluated"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T14:00:57.255798+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 29104.728,
+    "block": "ot_hgi_quant_vm_transport",
+    "cells": 200951,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "DEPTH": 32,
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv",
+        "sha256": "ff7081eecc025181e9132cde4a3426c831330b3c4902b5eca35cd3d0998dcdc7",
+        "size_bytes": 8511
+      },
+      {
+        "path": "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+        "sha256": "f3a62f069096c8cf18e9321ad0164aeec00bc14b8ab61c602707020e0c141927",
+        "size_bytes": 1757
+      },
+      {
+        "path": "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+        "sha256": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+        "size_bytes": 2463
+      },
+      {
+        "path": "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+        "sha256": "177a532ff0f64d69eaf39995a257922c3709ffe14dd048d5e1a4945c8e0586d7",
+        "size_bytes": 15442
+      },
+      {
+        "path": "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+        "sha256": "681b53cc943a4c891490f7a097e30e9ea252aaf0f24cf3f5786961bc8e1d7467",
+        "size_bytes": 10929
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_delay.sv",
+        "sha256": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+        "size_bytes": 1395
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fpu.sv",
+        "sha256": "11e967902a2be539bff6ea26245df2cdd84f0178968c8a3528dfe8940baed110",
+        "size_bytes": 5251
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+        "sha256": "864a9f228d4afad7870c0e54908d522b044c34c354aae37b89c46b5bd6d8c204",
+        "size_bytes": 10519
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_sfu.sv",
+        "sha256": "c11a2d3341d952ca221f4478193e5ef3f817ac51abe8744274bf59f59e146923",
+        "size_bytes": 7751
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp.sv",
+        "sha256": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+        "size_bytes": 19069
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+        "sha256": "fca42d0f525ee4183afaadc9cebafa894a9b5abbab32d93a5991bc7b906b24b1",
+        "size_bytes": 7005
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+        "sha256": "34fa3525c135d547c87b21e662397110157ffb6e7c9701fae142fae046101c5e",
+        "size_bytes": 28238
+      },
+      {
+        "path": "rtl/hdc/ot_hdc_prefix.sv",
+        "sha256": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+        "size_bytes": 2803
+      }
+    ],
+    "top": "ot_hgi_quant_vm_transport"
+  },
+  "elapsed_seconds": 155.717,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-10-09T13:58:21.538993+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_hgi_quant_vm_transport",
+      "--source",
+      "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv",
+      "--source",
+      "rtl/hbm_accel/generic/ot_hgi_quant_decode.sv",
+      "--source",
+      "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv",
+      "--source",
+      "physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv",
+      "--source",
+      "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_delay.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fpu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_sfu.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "--source",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "DEPTH=32",
+      "--stages",
+      "synth",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.833333",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "TC",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--keep-workdir",
+      "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/synth/work",
+      "--force",
+      "--output",
+      "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/synth/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "2d41c60b910d73e1e1ccc35cf7ce119e1ebfe260423192d6660d49dbef71fe45",
+      "tree": "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/src"
+    },
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch/codex/hgi-quant-vm-2cb556822/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth"
+  ],
+  "status": "not_evaluated",
+  "synthesis": {
+    "abc_delay_target_ps": 833.333,
+    "cell_area_um2": 29104.728,
+    "cell_count": 200951,
+    "cell_types_used": 40,
+    "chip_area_um2": 29130.81084,
+    "combinational_cell_count": 148179,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "dd5b1554b58da229d08798001e09a38476bcb0652fb13634cab6248cf88ae292",
+      "raw_netlist_sha256": "dd5b1554b58da229d08798001e09a38476bcb0652fb13634cab6248cf88ae292",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 15565.061,
+    "sequential_cell_count": 52772,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.833333,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

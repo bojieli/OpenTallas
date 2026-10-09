@@ -245,6 +245,27 @@ def gen(spec, strict=True):
                 errors.append(f'{inst["name"]}.{rp}: RTL {rd} ({rw} b) not named in bind (an unnamed port is never '
                               f'silently put on the cfg chain / fold)')
             b = inst['bind'].get(rp, 'cfg' if rd == 'input' else 'fold')
+            if isinstance(b, dict) and rd == 'input' and set(b) == {'or'}:
+                # hgi-takeover 2026-10-09: an input driven by several die sources that each drive 0 unless they own
+                # the transfer (e.g. the four SU quarters' collective inject data): the bitwise OR of the full-width
+                # registered sources.  Functional wiring (every source bit is used), not a tie; the ownership
+                # contract is stated in spec["contracts"][<inst>.<port>].
+                w = f'w_{inst["name"]}_{rp}'
+                sigs.append(f'    wire [{rw - 1}:0] {w};')
+                conns.append(f'.{rp}({w})')
+                if f'{inst["name"]}.{rp}' not in spec.get('contracts', {}):
+                    errors.append(f'{inst["name"]}.{rp}: an "or" bind needs spec["contracts"]["{inst["name"]}.{rp}"]')
+                terms = []
+                for part in b['or']:
+                    port, lo, hi = parse_rng(part[4:])
+                    if hi - lo != rw:
+                        errors.append(f'{inst["name"]}.{rp}: or-term {part} is {hi - lo} bits, port is {rw}')
+                    for i in range(lo, hi):
+                        assert dirs[port][i] == 'in', (master, port, i, 'not an input bit')
+                        used_in[port][i] = True
+                    terms.append(f'i_{port}[{hi - 1}:{lo}]')
+                body.append(f'    assign {w} = {" | ".join(terms)};')
+                continue
             if isinstance(b, str):
                 kind = ('cfg' if b == 'cfg' else 'const' if b.startswith('const:') else 'expr' if b.startswith('expr:')
                         else 'fold' if b == 'fold' else 'open' if b == 'open' else None)

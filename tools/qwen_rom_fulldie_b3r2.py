@@ -923,6 +923,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             xc = cx_list[min(cs, key=lambda c: load(c, Pf[1], Po[1]) + abs(cx_list[c] - Po[0]) / 2000.0)]
             path = [Pf, (xc, Pf[1]), (xc, Po[1]), Po]
             return path if f0 else path[::-1]
+        chx = getattr(v, 'SPINE_CHANNEL_X', None)
+        if chx and abs(P0[1] - P1[1]) > 1000.0 and min(chx) - 1500.0 < P0[0] < max(chx) + 1500.0 \
+                and min(chx) - 1500.0 < P1[0] < max(chx) + 1500.0:
+            # r22k (kv-die KV2): a long vertical spine word runs in the spine relay channel nearest its two pins (the
+            # spine columns abut blocks end to end: a leg over them has no relay site)
+            xc = min(chx, key=lambda x: abs(x - P0[0]) + abs(x - P1[0]))
+            return [P0, (xc, P0[1]), (xc, P1[1]), P1]
         return [P0, (P0[0], P1[1]), P1]
 
     def candidates(path):

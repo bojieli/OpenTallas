@@ -258,7 +258,7 @@ def main(argv=None):
     ap.add_argument("--workdir", default=None)
     ap.add_argument("--out", required=True)
     a = ap.parse_args(argv)
-    a.workdir = a.workdir or tempfile.mkdtemp(prefix="smpq_")
+    a.workdir = str(Path(a.workdir or tempfile.mkdtemp(prefix="smpq_")).resolve())   # the run cwd is the case dir
     return cmd_run(a)
 
 

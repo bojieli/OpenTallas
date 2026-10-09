@@ -1,0 +1,10 @@
+{
+  "method": "sample whole POSIX process group every 5seconds; process_samples immutable raw",
+  "sample_peak_rss_kib": 1002060,
+  "samples": 5,
+  "not_claimed": "time-v per-process maximum is not whole-process-group peak; between-sample peaks may exceed observed value",
+  "initial_admission_gib": 16,
+  "initial_admission_basis": "conservative inventory, not measured cap",
+  "measured_simulation_envelope_gib": 2,
+  "future_admission_basis": "ceil sampled whole PG plus observed generated-C++ inventory and child maximum; unchanged 8worker sequential positive/mutant"
+}

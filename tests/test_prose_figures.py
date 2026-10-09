@@ -183,8 +183,8 @@ def test_every_annotated_release_document_carries_pinned_provenance() -> None:
     # (unlisted -> 11) and PROGRAM_PLAN_2026_10_05 (unlisted -> 4) bind the unified candidate figures (1424 -> 1444).
     # INTEGRATED_PHYSICAL_PLAN binds the HBM II=3 cap / II=1 rotation candidates (11 -> 14) (1444 -> 1447).
     # INTEGRATED_PHYSICAL_PLAN binds the HBM contracts-RTL candidate (14 -> 15) (1447 -> 1448).
-    # ANALYTICAL_REPORT binds the generated current-design-point section of tools/token_path_systems.py (310 -> 337) (1448 -> 1475).
-    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1475
+    # ANALYTICAL_REPORT binds the generated current-design-point section of tools/token_path_systems.py (310 -> 337 -> 340: + the Qwen-HBM DFlash row and the two GPU AR rows) (1448 -> 1475 -> 1478).
+    assert sum(CPF.REQUIRED_COVERAGE.values()) == 1478
     for document in CPF.REQUIRED_COVERAGE:
         assert document in out, f"{document} reports no annotated figures"
 
