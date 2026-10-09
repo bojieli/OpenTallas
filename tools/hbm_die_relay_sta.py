@@ -163,7 +163,12 @@ def constraints(sinks, corner):
          'set ot_clock_missing {}', 'set ot_clock_bound 0', 'set ot_dom [dict create]', 'set ot_lat {}']
     for key, s in sorted(sinks.items()):
         pin = key if '[' in s['port'] else key + '[0]'
-        L.append(f'set p [get_pins -quiet {{{pin}}}]; if {{![llength $p]}} {{ set p [get_pins -quiet {{{key}}}] }}; '
+        # die-gaps 2026-10-08: the r25 kit left 22 view clocks unbound (paths untimed): the hub quarters hfd_hc /
+        # hfd_sfu / hfd_su enter their clock on ck0..ck7 (one die net) and the SerDes / host PHY macros on 'clk', while
+        # the die model names every sink port 'ck'.  Fallbacks: <inst>/clk, then <inst>/ck? (all taps, same entry).
+        inst = key.rsplit('/', 1)[0]
+        L.append(f'set p [get_pins -quiet {{{pin}}}]; foreach alt {{{{{key}}} {{{inst}/clk}} {{{inst}/ck?}} {{{inst}/ck?[0]}}}} '
+                 f'{{ if {{![llength $p]}} {{ set p [get_pins -quiet $alt] }} }}; '
                  f'if {{![llength $p]}} {{ lappend ot_clock_missing {{{pin}}} }} else {{ dict lappend ot_dom {s["domain"]} $p; '
                  f'lappend ot_lat [list {s["domain"]} {s["entry_ps"][corner] / 1000:.6f} $p] }}')
     for d, per in PERIOD_PS.items():
