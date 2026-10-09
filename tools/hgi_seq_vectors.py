@@ -183,6 +183,7 @@ class Ref:
         if self.token >= self.vocab or self.pos >= self.ctxmax:
             return [], (0, 3)
         out, i, stack, Lc = [], self.entry, [], [0, 0]
+        self.toks = []
         try:
             while True:
                 h = self.w[i]
@@ -237,7 +238,18 @@ class Ref:
                         tok = self.vmr(field(e, MD, 'base'))
                         st = 3 if (tok >> 18) or tok >= self.vocab else 0
                         return out, (tok & 0x3FFFF, st)
-                    elif name in ('TOKX', 'AMAX', 'ACCEPT'):
+                    elif name == 'TOKX':           # Q-MTP-1: k committed tokens (1..16) from VM[A_eff ..] onto the completion
+                        if 'A' not in descs or field(descs['A'], MD, 'space') != 1:
+                            raise Fault('TOKX without a VM A')
+                        e, k = self.eff(descs['A'], slot, L, L1, ieff, idesc)
+                        b0 = field(e, MD, 'base')
+                        if not 1 <= k <= 16 or b0 + k > (1 << 18):
+                            raise Fault('TOKX count out of range')
+                        toks = [self.vmr(b0 + q) for q in range(k)]
+                        if any((t >> 18) or t >= self.vocab for t in toks):
+                            raise Fault('TOKX token out of range')
+                        self.toks = toks
+                    elif name in ('AMAX', 'ACCEPT'):
                         raise Fault('reserved CTL op')
                     i += rlen
                     continue
@@ -253,6 +265,7 @@ class Ref:
                 i += rlen
         except Fault as f:
             self.fault = str(f)
+            self.toks = []
             return out, (0, 3)
 
 
@@ -365,7 +378,16 @@ def fault_programs():
     P['simt_absent'] = ok + record(header('SIMT', 'RUN', param=5)) + end
     P['rsv_unit13'] = ok + record(header(13, 0)) + end
     P['op_range'] = ok + record(header('SM', 1)) + end
-    P['ctl_tokx'] = ok + record(header('CTL', 'TOKX')) + end
+    P['ctl_amax'] = ok + record(header('CTL', 'AMAX')) + end
+    tk = lambda base, n, **kw: record(header('CTL', 'TOKX', wait=0xFFFE, **kw), descs=dict(A=mdesc(space=1, fmt=5, base=base, n=n)))  # noqa: E731
+    P['tokx_16'] = ok + tk(0x8100, 16) + end
+    P['tokx_3_dyn'] = ok + record(header('CTL', 'TOKX', wait=0xFFFE, slot=3), descs=dict(
+        A=mdesc(space=1, fmt=5, base=0x8100, n=0, n_sel=DYN['SLOT']))) + end
+    P['tokx_twice'] = ok + tk(0x8100, 16) + tk(0x8105, 2) + end
+    P['tokx_17'] = ok + tk(0x8100, 17) + end
+    P['tokx_0'] = ok + tk(0x8100, 0) + end
+    P['tokx_vocab'] = ok + tk(0x8110, 2) + end
+    P['tokx_no_A'] = ok + record(header('CTL', 'TOKX')) + end
     P['dyn_rsv9'] = ok + record(header('DMA', 'LOAD'), descs=dict(
         A=mdesc(space=0, base=0, n=4, dyn_sel=9, dyn_mul=1), O=mdesc(space=1, n=4))) + end
     P['dyn_rsv41'] = ok + record(header('DMA', 'LOAD'), descs=dict(
@@ -402,6 +424,8 @@ def main():
     rng = random.Random(20261009)
     words, cases, meta = [], [], {}
     VM0 = {0x8001: 4242, 0x8002: 151936, 0x8003: 151935, 0xF100: 1 << 21, 0xF000: 3}
+    VM0.update({0x8100 + q: 1000 * q + 7 for q in range(16)})
+    VM0.update({0x8110: 5, 0x8111: 151936})
 
     def add_prog(name, w):
         meta[name] = (len(words), len(w))
@@ -458,7 +482,7 @@ def main():
                 vmw.append((len(dst) // 11 + k, a, v))
         c = dict(name=name, entry=entry, token=tok, pos=pos, rank=rank, vocab=lim['vocab'], ctxmax=lim['ctxmax'],
                  ndisp=len(tr), cpl=cpl, fault_at=fault_at, first=len(dst) // 11, vmw=vmw,
-                 fault=getattr(ref, 'fault', None))
+                 fault=getattr(ref, 'fault', None), toks=list(ref.toks) if cpl[1] == 0 else [])
         for d in tr:
             meta_w = d['unit'] | d['L'] << 4 | d['L1'] << 20 | (d['pos1'] & M21) << 36 | (d['pslot1'] & M21) << 57
             dst += [meta_w, d['hdr'], d['sut']] + d['eff'] + [sum((n & M21) << (21 * j) for j, n in enumerate(d['n']))]
@@ -473,7 +497,10 @@ def main():
         cfg = []
         for c in cs:
             cfg.append(' '.join(f'{v:08X}' for v in (c['entry'], c['token'], c['pos'], c['rank'], c['vocab'], c['ctxmax'],
-                                                    c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'], 0)))
+                                                    c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'],
+                                                    len(c['toks']))))
+        (T / f'hgi_seq_toks{tag}.mem').write_text('\n'.join(' '.join(f'{x:08X}' for x in (c['toks'] + [0] * 16)[:16])
+                                                           for c in cs) + '\n')
         (T / f'hgi_seq_cfg{tag}.mem').write_text('\n'.join(cfg) + '\n')
         vmw = [w for c in cs for w in c['vmw']]
         (T / f'hgi_seq_vmw{tag}.mem').write_text('\n'.join(f'{k:08X}{a:08X}{v:08X}' for k, a, v in vmw) + '\n')
