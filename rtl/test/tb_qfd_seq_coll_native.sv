@@ -86,7 +86,13 @@ module tb_qfd_seq_coll_native #(parameter integer CR = 8, parameter integer ENG_
             .r_v(vm_re), .r_rdy(r_rdy), .r_row(20'(vm_raddr)), .r_qv(vm_qv), .r_q(vm_rq),
             .x_rdy(), .x_fault(), .x_hazard());
         reg vb = 0;
+        // VM port exclusion monitor: the sequencer's row read never coincides with the core segment (whose ME / SU /
+        // tree-top ops are the VM's other readers)
+        wire core_win = (u_seq.u_seq.st == 3'd3) || (u_seq.u_seq.st == 3'd4);
         always @(posedge ckd) if (vm_re && !r_rdy) vb <= 1'b1;
+        always @(posedge ckd) if (rst_n && vm_re && core_win) begin
+            vb <= 1'b1; $display("VM_EXCL die=%0d: sequencer VM read while a core segment runs", g);
+        end
         assign vmbad[g] = vb;
         // write-back checker
         reg [255:0] seen;

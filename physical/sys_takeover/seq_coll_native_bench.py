@@ -37,7 +37,8 @@ CASES = [  # name, VW, NW (0 = 256 rows), steps
     ("ar256_argmax_x2", 0, 0, 2),
     ("ar40_vw200_wrap_x2", 200, 40, 2),     # vw + k wraps the 8-bit VM word address
 ]
-MUT = {"nocredit": "OT_SEQNC_MUT_NOCREDIT", "wbaddr": "OT_SEQNC_MUT_WBADDR", "fixedlat": "OT_SEQNC_MUT_FIXEDLAT"}
+MUT = {"nocredit": "OT_SEQNC_MUT_NOCREDIT", "wbaddr": "OT_SEQNC_MUT_WBADDR", "fixedlat": "OT_SEQNC_MUT_FIXEDLAT",
+       "overlap": "OT_SEQNC_MUT_OVERLAP"}   # overlap: VM reads forced into the core segment window
 
 
 def okey(v):

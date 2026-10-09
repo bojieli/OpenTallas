@@ -143,7 +143,19 @@ module ot_qwen_tp_seq_w12_nc #(
     assign c_data  = q_d[q_r];
     assign c_mode  = (kind == K_ARGMAX);
     assign c_last  = (tx_k == ((kind == K_ARGMAX) ? 9'd0 : nw - 1'b1));
+    // VM read exclusion (sys-takeover 2026-10-09, coordinator: minimal hardware, enforced in the issue rule): the
+    // sequencer reads the vector memory only in S_COLL, and starts a core segment (the ME / SU / tree-top ops that read
+    // the VM) only when the collective has drained (no outstanding VM read, empty send queue): coll_drained gates
+    // S_DLAT -> S_RUN.  The two readers therefore never coincide on the VM row port (asserted below and at the VM port
+    // by the bench).
+    wire   coll_drained = (rq_n == 0) && (q_n == 0);
+    wire   core_window  = (st == S_RUN) || (st == S_CWAIT);
+`ifdef OT_SEQNC_MUT_OVERLAP
+    // mutant: forced overlap -- the next all-reduce's partial reads start while the core segment runs
+    wire   rd_go   = ((st == S_COLL) || (st == S_CWAIT && kind == K_AR)) && kind == K_AR && rd_k < nw && (q_n + rq_n) < QD;
+`else
     wire   rd_go   = (st == S_COLL) && kind == K_AR && rd_k < nw && (q_n + rq_n) < QD;
+`endif
 `ifdef OT_SEQNC_MUT_FIXEDLAT
     reg    rd_go_q;                                // mutant: the base's one-edge read assumption (ignores vm_qv)
     always @(posedge clk or negedge rst_n) if (!rst_n) rd_go_q <= 1'b0; else rd_go_q <= rd_go;
@@ -185,7 +197,7 @@ module ot_qwen_tp_seq_w12_nc #(
                     desc_re <= 1'b1; desc_addr <= 0; st <= S_DLAT;
                 end
                 S_DESC: begin desc_re <= 1'b1; desc_addr <= seg; st <= S_DLAT; end
-                S_DLAT: if (!desc_re) begin
+                S_DLAT: if (!desc_re && coll_drained) begin
                     kind <= desc_q[1:0]; vw <= desc_q[2 +: 8];
                     nw <= (ENABLE_AR256 != 0 && desc_q[1:0] == K_AR && desc_q[10 +: 8] == 8'd0) ? 9'd256 : {1'b0, desc_q[10 +: 8]};
                     prog_base <= desc_q[32 +: PAW];
@@ -251,4 +263,8 @@ module ot_qwen_tp_seq_w12_nc #(
             endcase
         end
     end
+`ifndef SYNTHESIS
+    // VM read exclusion assertion (simulation): no sequencer VM read inside a core segment window
+    always @(posedge clk) if (rst_n && vm_re && core_window) $error("VM_EXCL sequencer VM read during a core segment (st=%0d)", st);
+`endif
 endmodule
