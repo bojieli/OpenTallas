@@ -59,6 +59,22 @@
      "peak_ram_gb": 128,
      "owner": "Codex:hbm_system/hc_shard",
      "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
+    },
+    {
+     "name": "hbm-hc-epoch-physical",
+     "pid": 1366211,
+     "command_match": "hc-row-shard-r2/physical_epoch_c3b3f94c8/run.sh",
+     "peak_ram_gb": 128,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "Admitted full W32 realFP64macro epoch-identity route; futurephase estimate128GiB until actual peak measured"
+    },
+    {
+     "name": "hbm-retry545-pipeline-physical",
+     "pid": 2706708,
+     "command_match": "hbm-retry545-pipeline-pathfinding-r2/work",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "New protected545/512 controller16realSRAM fullshape pathfinding; prior related GRT4.3GiB but futureDRT unmeasured, keep24GiB inventory"
     }
    ]
   },
