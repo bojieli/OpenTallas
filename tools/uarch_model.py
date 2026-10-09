@@ -15035,3 +15035,9 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+def dsrom_mtp_vmx_read_pipeline_proposal_model():
+    """Price the measured VMX read decode path before any successor build."""
+    from tools.dsrom_mtp_vmx_read_pipeline_model import model
+    return model()
+
+
