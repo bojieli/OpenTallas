@@ -1,0 +1,46 @@
+{
+  "module": "ot_hbm_expert_workgroup",
+  "parameter": {
+    "ENABLE": 0
+  },
+  "slot": "hb_router",
+  "clock": "stream1p2",
+  "launch": {
+    "valid": "launch_v",
+    "ready": "launch_ready",
+    "expert_ids_bits": 54,
+    "source": "six ascending source-produced router expert IDs",
+    "die_bits": 7,
+    "layer_bits": 8,
+    "job_bits": 32
+  },
+  "descriptor": {
+    "valid": "desc_v",
+    "ready": "desc_ready",
+    "consumer": "SM native descriptor dispatcher and source weight-fetch request",
+    "fields": {
+      "sm": 5,
+      "slot": 3,
+      "expert": 9,
+      "matrix": 1,
+      "row": 12,
+      "base": 32,
+      "lines": 9,
+      "layer": 8,
+      "job": 32
+    },
+    "weight_source": "original native packed1088bit stream; base=sm*288; each slice maps to carried expert/matrix/globalrow"
+  },
+  "result": {
+    "input": "ret_* tagged SM output; unchanged32bitFP32",
+    "output": "out_* registered tagged globalrow and slot; no expert reduction",
+    "consumer": "lane local w1/w3 fusion and golden expert-order sum"
+  },
+  "fault": "sticky fault to die aggregator; done only after final output drains",
+  "requirements": [
+    "All32SM result sources carry actual metadata; 24active only",
+    "Descriptor ready must reserve source-fetch+SM dispatch atomically",
+    "Physical relay/credit implementation required outside shell",
+    "In-context SS/FF and route needed before ENABLE1 adoption"
+  ]
+}
