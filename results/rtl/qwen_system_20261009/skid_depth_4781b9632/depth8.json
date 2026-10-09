@@ -1,0 +1,93 @@
+{
+  "schema": "opentallas.qwen-kv-merge-skid.v1",
+  "default_off": true,
+  "adopted": false,
+  "physical_closed": false,
+  "model_precedes_rtl": true,
+  "replicas": 1536,
+  "macs_per_cycle": 0,
+  "compute_intensity_macs_per_byte": 0,
+  "memory_ports": [
+    {
+      "name": "merge_output_queue",
+      "read_bytes_per_cycle": 128.875,
+      "write_bytes_per_cycle": 128.875,
+      "depth": 8,
+      "bits": 8248
+    }
+  ],
+  "boundary_bits_per_cycle": {
+    "landing": 1032,
+    "token": 1032,
+    "output": 1032,
+    "return_credit": 1
+  },
+  "routing": {
+    "required_tracks_per_face": 1035,
+    "face_capacity_tracks": 2332,
+    "pin_layers": [
+      "M4",
+      "M6"
+    ],
+    "minimum_pin_spacing_tracks": 2,
+    "credit_return_per_row_bits": 32,
+    "return_is_registered": true
+  },
+  "replicas_cost": {
+    "storage_bits": 15877632,
+    "read_mux": "8:1 x 1031",
+    "write_demux": "8 local enables",
+    "token_fanout": 1,
+    "row_credit_fanout": "one independently reserved counter per tile"
+  },
+  "slot_um": [
+    160.0,
+    112.0
+  ],
+  "cell_area_bound_um2": 6672.0,
+  "analytical_cell_area_um2": 4614.269200000001,
+  "measured_cell_area_um2": 6672.0,
+  "measured_source": "595982c67 EPYC2 routed flow floorplan: std6672um2; no timing closure claimed",
+  "cell_area_basis": "DFFHQNx1 0.2916um2: unified DFF_UM2, results/floorplan/qwen_o4_unit_areas.json",
+  "slot_fit_at_55pct": true,
+  "reserved_area_mm2_per_die": 27.52512,
+  "flow": {
+    "depth": 8,
+    "initial_sender_credits": 8,
+    "forward_max_edges": 42,
+    "reverse_max_edges": 34,
+    "roundtrip_max_edges": 78,
+    "full_rate_depth_required": 78,
+    "guaranteed_continuous_rate_words_per_cycle": 0.10256410256410256,
+    "overflow_rule": "receiver faults and suppresses releases; sender reserves before row launch",
+    "token_preempts_dequeue": true
+  },
+  "latency": {
+    "added_landing_edges_min": 2,
+    "composed_gross_added_cycles_per_token": 72,
+    "token_write_edges": 2,
+    "queue_stall_cost": "trace measurement, no overlap credit"
+  },
+  "constraints": [
+    "real row relay count must replace worst-case32 before adoption",
+    "retire every credit on actual dequeue, never PHY arrival",
+    "existing merged disjoint-lane golden arithmetic unchanged",
+    "slot is separate added tile-side master; full die fit is an outstanding obligation"
+  ],
+  "trace_measurement": {
+    "trace": "kvtrace_ISO_P8191_m1.txt.gz",
+    "sha256": "458317d2cca01a3a7825c9cacbde5235b82b731a6bea29e9a0fd16d4b89a2af7",
+    "payload_scope": "timing only; full-width numerical mechanism has separate RTL bench",
+    "credit_return_is_actual_dequeue": true,
+    "token_block_edges_per_tile": 8,
+    "offered_words": 196592,
+    "tile_count": 1536,
+    "busiest_tile_words": 172,
+    "unconstrained_credit_fill_edges": 1333,
+    "finite_credit_fill_edges": 1437,
+    "added_credit_stall_edges_per_fill": 104,
+    "composed_gross_token_added_cycles": 3816,
+    "sum_offer_to_send_wait_edges": 1085661,
+    "scope": "per-tile finite credits; row arbitration+PC atomic halves remain separate obligations"
+  }
+}

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_kv_merge_skid8-4f3ed8428-tc-hm10/bench_src_a1/tools/qwen_system/skid_trace.py", line 50, in <module>
+    record,vectors=run(args.trace,args.depth);args.out.parent.mkdir(parents=True,exist_ok=True)
+                   ~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/srv/opentallas-scratch/claude/closure-loop/qfd_kv_merge_skid8-4f3ed8428-tc-hm10/bench_src_a1/tools/qwen_system/skid_trace.py", line 10, in run
+    with gzip.open(trace,'rt') as f:
+         ~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/gzip.py", line 66, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.14/gzip.py", line 208, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+                               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'results/rtl/qwen_stream4_kvmap_m_20261006/kvtrace_ISO_P8191_m1.txt.gz'

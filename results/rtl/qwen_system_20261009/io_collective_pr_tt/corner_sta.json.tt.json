@@ -1,0 +1,15 @@
+{
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries)",
+  "worst_slack_ps": -340.69,
+  "tns_ps": -604144.1,
+  "worst_reg_to_reg_slack_ps": "-340.693695",
+  "worst_input_to_reg_slack_ps": "-114.330322",
+  "worst_output_port_slack_ps": "-227.096558",
+  "violating_d_pins": "3940",
+  "errors": [],
+  "tcl_sha256": "3ccb6d74d2ca42419a3068cdc5614fda30521a81dec1dcad46c04a06fa4e5ccb"
+ }
+}
