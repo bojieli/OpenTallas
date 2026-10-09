@@ -24,9 +24,9 @@ def catalogue(headers,nsub):
  for p in sorted(headers.glob('model-*.safetensors.header.json')):
   raw=p.read_bytes();h=json.loads(raw);pins[p.name]=sha(raw)
   for name,t in h.items():
-   m=re.fullmatch(r'layers\.(\d+)\.hc_(attn|ffn)_fn',name)
+   m=re.fullmatch(r'(layers|mtp)\.(\d+)\.hc_(attn|ffn)_fn',name)
    if not m:continue
-   s=2*int(m[1])+int(m[2]=='ffn')
+   s=(80 if m[1]=='mtp' else 0)+2*int(m[2])+int(m[3]=='ffn')
    if t.get('dtype')!='F32' or t.get('shape')!=[24,K]:raise ValueError(name+' shape/dtype')
    if t['data_offsets'][1]-t['data_offsets'][0]!=24*ROW_BYTES:raise ValueError(name+' byte length')
    if s in records:raise ValueError('duplicate tensor')
@@ -75,6 +75,7 @@ def main():
  ap.add_argument('--verify',action='store_true');a=ap.parse_args()
  m,ts=manifest(a.headers,86 if a.mtp else 80,a.base_sector)
  if a.verify:m['swizzle_gate']=verify()
+ if a.output.exists():raise FileExistsError('immutable output already exists')
  if a.checkpoint_dir:
   a.output.parent.mkdir(parents=True,exist_ok=True);images={};payload_pins={}
   for t in ts:
@@ -90,7 +91,8 @@ def main():
     out=a.output.parent/f'fn_die{die:02d}.bin'
     packed=pack_row(raw[row*ROW_BYTES:(row+1)*ROW_BYTES])
     assert unpack_row(packed)==raw[row*ROW_BYTES:(row+1)*ROW_BYTES]
-    with out.open('r+b' if out.exists() else 'w+b') as f:f.seek(slot*APERTURE_BYTES);f.write(packed)
+    if die not in images and out.exists():raise FileExistsError('immutable die image already exists')
+    with out.open('r+b' if die in images else 'w+b') as f:f.seek(slot*APERTURE_BYTES);f.write(packed)
     images[die]=out
   m['status']='PAYLOAD_PACKED_INVERSE_EXACT_LOADER_INTEGRATION_PENDING'
   m['payload_sha256']=payload_pins;m['image_sha256']={p.name:sha(p.read_bytes()) for p in images.values()}
