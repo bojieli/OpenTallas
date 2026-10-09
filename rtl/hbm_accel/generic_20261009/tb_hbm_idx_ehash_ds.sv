@@ -58,7 +58,7 @@ module tb_hbm_idx_ehash_ds;
   begin_token();send(0,1,412,0);send(0,0,412,0);
   // A changed dynamic B must fail closed; mutant 4 ignores this requirement.
   @(negedge clk);cmd_layer=0;cmd_slot=0;cmd_cid=412;if(GENERIC)b_mult[63:0]=b_mult[63:0]^1;else cmd_op=7;cmd_valid=1;
-  @(negedge clk);cmd_valid=0;@(negedge clk);@(negedge clk);   // MATCH stage: the fault lands one edge later
+  @(negedge clk);cmd_valid=0;@(negedge clk);@(negedge clk);@(negedge clk);   // LAND + MATCH stages: the fault lands two edges later
   if(!fault)$fatal(1,"EHASH B mismatch was not rejected");
   $display("PASS EHASH DS LOCKSTEP HISTORY ACCEPT %0d cases %0d row ids",cases,beats);$finish;
  end

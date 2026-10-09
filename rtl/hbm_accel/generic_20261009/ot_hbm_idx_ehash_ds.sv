@@ -20,10 +20,16 @@ module ot_hbm_idx_ehash_ds #(
  output wire [31:0] row_id, output wire [4:0] row_column,
  output reg done,fault
 );
- localparam IDLE=0,FEED=1,WAIT_HASH=2,EMIT=3,CHECK=4,MATCH=5;
+ localparam IDLE=0,FEED=1,WAIT_HASH=2,EMIT=3,CHECK=4,MATCH=5,LAND=6;
  // MATCH (drive-0849 -633 ps): the 1,792-bit constants compare is registered (cm_q) one edge before CHECK
  // gates the snapshot / window writes: +1 cycle per EHASH command, same result.
  reg cm_q;
+ // LAND (route 2 of drive-0849: SS setup -430 on b_* -> q_* through the input-driven 1,792-bit capture enable, FF hold
+ // flood on the same D pins): b_* land in plain pin flops every cycle (no enable, no logic); q_* copy them one edge
+ // after the accept from the registered accept (a flop, not an input pin, drives the wide enable).  +1 cycle a command.
+ reg [255:0] p_mult; reg [767:0] p_prime,p_offset; reg acc_d;
+ always @(posedge clk) begin p_mult<=b_mult; p_prime<=b_prime; p_offset<=b_offset; end
+ always @(posedge clk or negedge rst_n) if(!rst_n) acc_d<=1'b0; else acc_d<=cmd_valid&&cmd_ready&&!token_begin&&!accept_valid;
  reg [2:0] state;
  reg [2:0] q_op,q_layer;reg [SW-1:0] q_slot;
  reg [16:0] q_cid;reg q_first;
@@ -79,8 +85,9 @@ module ot_hbm_idx_ehash_ds #(
  end
  always @(posedge clk)if(cmd_valid&&cmd_ready&&!token_begin&&!accept_valid)begin
   q_op<=cmd_op;q_layer<=cmd_layer;q_slot<=cmd_slot;q_cid<=cmd_cid;q_first<=cmd_first;
-  q_mult<=b_mult;q_prime<=b_prime;q_offset<=b_offset;
+
  end
+ always @(posedge clk) if(acc_d) begin q_mult<=p_mult;q_prime<=p_prime;q_offset<=p_offset; end
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
    state<=IDLE; seen<=0;next_slot<=0;history<={3{ENG_PAD}};
@@ -99,8 +106,9 @@ module ot_hbm_idx_ehash_ds #(
     end
    end
    if(cmd_valid&&cmd_ready)begin
-    if(token_begin||accept_valid)fault<=1;else state<=MATCH;
+    if(token_begin||accept_valid)fault<=1;else state<=LAND;
    end
+   if(state==LAND) state<=MATCH;
    if(state==MATCH) begin
     cm_q<=constants_match;state<=CHECK;
    end
