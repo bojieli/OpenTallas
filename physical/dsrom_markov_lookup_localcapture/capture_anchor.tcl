@@ -71,7 +71,19 @@ foreach macro [$block getInsts] {
             if {$x+$width>188.0 || $x<$mx+$mw+3.0} {error "right capture strip does not fit"}
         }
         set y [expr {$y0+round(($my+2.0+($rank/4)*0.540-$y0)/$yp)*$yp}]
-        place_inst -name [$cell getName] -location [list $x $y] -status FIRM
+        # PG follow-pins were generated on the actual R0/MX row alternation.
+        # An R0 cell on an MX row swaps VDD/VSS rails: fail rather than assume.
+        set landing_rows {}
+        foreach row [$block getRows] {
+            set rb [$row getBBox]
+            if {abs(double([$rb yMin])/$dbu-$y)<0.00001 &&
+                $x>=double([$rb xMin])/$dbu &&
+                $x+$width<=double([$rb xMax])/$dbu} {lappend landing_rows $row}
+        }
+        if {[llength $landing_rows]!=1} {error "capture has no unique actual containing row"}
+        set landing_row [lindex $landing_rows 0]
+        place_inst -name [$cell getName] -location [list $x $y] \
+            -orientation [$landing_row getOrient] -status FIRM
         incr bankcaps
         incr captures
     }
