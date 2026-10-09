@@ -268,7 +268,7 @@ module tb_hgi_coll_rearm #(
         integer n; n=0;for(integer p=0;p<NPT;p=p+1)n+=eq_f[p].size();return n;
     endfunction
     always @(negedge clk) if(active)begin
-        if(done && (got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+(((gs==15 || mc)?NR:NA)-1)*ROF))
+        if(done && (got!=TOT || ndep!=pf-OF+ROF || (!mc && (queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF))))
             $fatal(1,"PREMATURE_DONE cmd=%0d got=%0d/%0d tx=%0d/%0d pending_external=%0d rx=%0d",cmd,got,TOT,ndep,pf-OF+ROF,queue_words(),narr);
         if(done && sr)$fatal(1,"DONE start_ready overlap");
         if(cst>0)stall_observations++;
@@ -318,9 +318,14 @@ module tb_hgi_coll_rearm #(
                 $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish; #1; // Yield after Verilator deferred finish before any command continuation.
             end
             wait(done);@(negedge clk);
-            if(got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+(((gs==15 || mc)?NR:NA)-1)*ROF)
+            if(got!=TOT || ndep!=pf-OF+ROF || (!mc && (queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF)))
                 $fatal(1,"PREMATURE_DONE consuming checker cmd=%0d got=%0d/%0d tx=%0d pending=%0d",cmd,got,TOT,ndep,queue_words());
             if(flt || mism || own_ok!=ROF)$fatal(1,"REARM exact/fault cmd=%0d got=%0d mismatch=%0d fault=%0d own=%0d",cmd,got,mism,flt,own_ok);
+            // Local completion is not a network barrier: finish consuming all scheduled foreign noise before ACK.
+            while(queue_words()!=0 || |rxv || dut.g_on.rx_pending!=0)begin
+                @(negedge clk);if(!done)$fatal(1,"DONE lost while external old noise drains");
+            end
+            if(narr!=(NA-1)*OF+(((gs==15 || mc)?NR:NA)-1)*ROF)$fatal(1,"RX command conservation at external barrier");
             // Done stays sticky, descriptors remain captured, late ingress credits are preserved.
             for(integer p=0;p<NPT;p=p+1)begin
                 cr_before[p]=credits[p];
