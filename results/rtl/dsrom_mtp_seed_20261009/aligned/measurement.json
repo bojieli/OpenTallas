@@ -1,0 +1,69 @@
+{
+ "verdict": "PASS",
+ "source_commit": "c7c857906",
+ "host": "ot-epyc3",
+ "remote_run": "/srv/opentallas-scratch2/scratch/claude/mtp-seed-059696cc9/aligned_c7c857906",
+ "scope": "two released MTP0 main_proj rows; fullK15360; actualquantisers; fouralignedsubtrees; actual6FP32joins",
+ "measured": {
+  "K": 15360,
+  "rows": 2,
+  "phases": 4,
+  "adds": 6,
+  "joinLAT": 8,
+  "quant_cycles": 253,
+  "first_cycles": 224,
+  "last_cycles": 1179,
+  "join_cycles": 54,
+  "complete_column_cycles": 1596
+ },
+ "clock_GHz": 1.2,
+ "complete_column_us": 1.33,
+ "weight_MACs": 30720,
+ "native_MACs_per_issue_cycle": 64,
+ "native_weight_payload_bytes_per_issue_cycle": 64,
+ "ROM_boundary_bits_per_issue_cycle": 548,
+ "activation_port_bytes_per_cycle": 256,
+ "activation_quant_all480_blocks_exact": true,
+ "phase_configuration_cycles": 100,
+ "quiet_fence_cycles": 128,
+ "segment_K": [
+  4096,
+  4096,
+  4096,
+  3072
+ ],
+ "leaf_nodes": [
+  16,
+  16,
+  16,
+  12
+ ],
+ "padded_leaf_nodes": [
+  16,
+  16,
+  16,
+  16
+ ],
+ "collector_FP32_adds": 6,
+ "collector_adder_instances": 1,
+ "collector_adder_latency": 8,
+ "physical_read_capture_cycles": 2,
+ "native_engine_RTL_unchanged": true,
+ "source_model_commit": "7a105e870",
+ "qualified_full_rank_schedule": false,
+ "qualified_whole_seed": false,
+ "six_position_sharing_qualified": false,
+ "new_collector_physical_closed": false,
+ "excluded": [
+  "HCmeanproducer",
+  "main_norm",
+  "rankinputgather",
+  "wholematrixphase/rowpacking",
+  "physical collector closure"
+ ],
+ "artifact_sha256": {
+  "aligned_c7c857906_job.log": "b2ca912efd76fef7de3127c48f4ab71a304c26424eb4c7d5286352d973a908ee",
+  "plan.json": "c9f8cecc751b68026f21af60f646376f27b3d8c639cb2e8041a15dda72628984",
+  "sim.log": "f519dea7dea3149fa6c9bd0d4b4303d145f0ae3d31e2e9d0adf5151fe7292d94"
+ }
+}
