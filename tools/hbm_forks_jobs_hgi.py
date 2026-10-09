@@ -133,11 +133,11 @@ def specs(commit):
                                              'physical/hbm_attn_tile_r/bank/ot_attn_bank_ew544']),
                         route_hold_margin_ns=float(hm_a)))
         # ---- attention half_hi (review-1149 e): unchanged RTL, its own outline / parameters (attn-split's sl20p line)
-        rcmd_hi = (rcmd.replace('TOP=hfd_attn_half_lo', 'TOP=hfd_attn_half_hi').replace('DH=814.32', 'DH=673.92')
+        rcmd_hi = (rcmd.replace('TOP=hfd_attn_half_lo', 'TOP=hfd_attn_half_hi').replace('DH=814.32', 'DH=689.04')
                    .replace('PARAMS="NK=4 NC=2 NR=3 PMID=2 NFR=3 NLL=3" SLIVER=12', 'PARAMS="PMID=2 NFC=2 NL=8 NLL=3 NI=6" SLIVER=20 HALO=2 PADG=4 PADD=2'))
         out.append(dict(name=f'hgi_attn_half_hi_ps-{c9}-tc-{tag}-cl', block='hfd_attn_half_hi', **common(commit, ram=96, threads=16),
                         purpose='hbm-forks item 3 (review-1149 e): closure pair of hfd_attn_half_hi on the half_ps pin plan (the hi '
-                                'half has no PS port: hi outline DH 673.92, hi parameters, attn-split sl20p sliver / halo / pads). TC, HM ' + hm_a,
+                                'half has no PS port: hi outline DH 689.04 (strip widened 7 rows for the floorplan lint), hi parameters, attn-split sl20p sliver / halo / pads). TC, HM ' + hm_a,
                         stages=dict(bench=[], calibrate=dict(enabled=False, reason='tile IO false-pathed: every face pin is '
                                                              'a pin-bank register (as the half-tile lines)'),
                                     route=dict(cmd=rcmd_hi, ok="grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
