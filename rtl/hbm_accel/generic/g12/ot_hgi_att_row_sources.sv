@@ -5,7 +5,8 @@ module ot_hgi_att_row_sources #(
     parameter integer ENABLE_G12=0,
     parameter integer MUT_RING_ZERO=0,
     parameter integer MUT_DROP_C=0,
-    parameter integer MUT_C_REVERSE=0
+    parameter integer MUT_C_REVERSE=0,
+    parameter integer MUT_C_ORDER=0
 )(
     input wire clk, rst_n,
     input wire cmd_v, output wire cmd_r,
@@ -87,7 +88,7 @@ module ot_hgi_att_row_sources #(
                         end else begin
                             valid_q<=1; source_q<=1;
                             index_q<=MUT_C_REVERSE ? ~c_id[19:0] : c_id[19:0];
-                            ordinal_q<=ordinal; last_q<=(c_left==1);
+                            ordinal_q<=MUT_C_ORDER ? (ordinal^21'b1) : ordinal; last_q<=(c_left==1);
                             c_left<=c_left-1'b1; ordinal<=ordinal+1'b1;
                         end
                     end

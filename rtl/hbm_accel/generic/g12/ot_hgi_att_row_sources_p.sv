@@ -2,7 +2,7 @@
 // Physical/exactness vehicle for the opt-in G12 frontend. The legacy engine is
 // unchanged and selects this vehicle only after its gates pass.
 module ot_hgi_att_row_sources_p #(
-    parameter integer MUT_RING_ZERO=0, MUT_DROP_C=0, MUT_C_REVERSE=0
+    parameter integer MUT_RING_ZERO=0, MUT_DROP_C=0, MUT_C_REVERSE=0, MUT_C_ORDER=0
 )(
     input wire clk,rst_n,cmd_v,ring,
     output wire cmd_r,
@@ -23,8 +23,8 @@ module ot_hgi_att_row_sources_p #(
     wire inner_cmd_r,inner_id_r,inner_busy;
     wire push_id=c_id_v && c_id_r;
     wire pop_id=(id_count!=0) && inner_id_r;
-    assign cmd_r=!command_full;
-    assign c_id_r=(id_count<2);
+    assign cmd_r=!command_full && !inner_busy && !fault;
+    assign c_id_r=(id_count<2) && (command_full || inner_busy) && !fault;
     assign busy=inner_busy || command_full;
     always @(posedge clk) begin
         if(!rst_n) begin
@@ -42,9 +42,10 @@ module ot_hgi_att_row_sources_p #(
                 2'b01:id_count<=id_count-1'b1;
                 default:id_count<=id_count;
             endcase
+            if(fault) begin id_count<=0;wr_ptr<=0;rd_ptr<=0;end
         end
     end
-    ot_hgi_att_row_sources #(.ENABLE_G12(1),.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE)) u_rows(
+    ot_hgi_att_row_sources #(.ENABLE_G12(1),.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE),.MUT_C_ORDER(MUT_C_ORDER)) u_rows(
         .clk(clk),.rst_n(rst_n),.cmd_v(command_full),.cmd_r(inner_cmd_r),.ring(ring_q),.pos1(pos1_q),.b_n(b_n_q),.b_m(b_m_q),.c_n(c_n_q),
         .c_id_v(id_count!=0),.c_id_r(inner_id_r),.c_id(id_fifo[rd_ptr]),
         .legacy_v(1'b0),.legacy_r(),.legacy_source(1'b0),.legacy_last(1'b0),.legacy_row(20'b0),.legacy_ordinal(21'b0),

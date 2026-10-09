@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_att_row_sources;
-    parameter integer MUT_RING_ZERO=0, MUT_DROP_C=0, MUT_C_REVERSE=0;
+    parameter integer MUT_RING_ZERO=0, MUT_DROP_C=0, MUT_C_REVERSE=0, MUT_C_ORDER=0;
     reg clk=0; always #416.6665 clk=~clk;
     reg rst_n=0,cmd_v=0,ring=0;
     reg [20:0] pos1=0,b_n=0,b_m=0,c_n=0;
@@ -10,7 +10,7 @@ module tb_hgi_att_row_sources;
     reg lv=0,ls=0,ll=0; reg [19:0] li=0; reg [20:0] lo=0;
     wire lr,lrv,lrs,lrl; wire [19:0] lri; wire [20:0] lro;
     integer tests=0, rows=0, cycle=0;
-    ot_hgi_att_row_sources_p #(.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE)) dut(
+    ot_hgi_att_row_sources_p #(.MUT_RING_ZERO(MUT_RING_ZERO),.MUT_DROP_C(MUT_DROP_C),.MUT_C_REVERSE(MUT_C_REVERSE),.MUT_C_ORDER(MUT_C_ORDER)) dut(
         .clk(clk),.rst_n(rst_n),.cmd_v(cmd_v),.cmd_r(cmd_r),.ring(ring),.pos1(pos1),.b_n(b_n),.b_m(b_m),.c_n(c_n),
         .c_id_v(c_id_v),.c_id_r(c_id_r),.c_id(c_id),.row_v(row_v),.row_r(row_r),.row_source(row_source),.row_last(row_last),
         .row_index(row_index),.row_ordinal(row_ordinal),.busy(busy),.done(done),.fault(fault));
@@ -70,7 +70,7 @@ module tb_hgi_att_row_sources;
         end
         lv=0;
         run_case(0,8192,8192,0,0);
-        run_case(0,1048576,1048576,0,0); // effective DYN count includes the 1M endpoint
+        if(!(MUT_RING_ZERO || MUT_DROP_C || MUT_C_REVERSE || MUT_C_ORDER)) run_case(0,1048576,1048576,0,0); // effective DYN count includes the 1M endpoint
         run_case(1,1048576,128,128,2048); // POS1 must not truncate at ring wrap // full Qwen 8K single B source
         for(phase=0;phase<128;phase=phase+1) run_case(1,4096+phase,128,128,17);
         run_case(1,8191,128,128,2048); // full DS selected rows + window
@@ -84,6 +84,10 @@ module tb_hgi_att_row_sources;
         @(negedge clk);cmd_v=0;c_id_v=1;c_id=32'h00100000;row_r=1;
         @(negedge clk);
         @(negedge clk);if(!fault || !done || row_v) $fatal(1,"invalid C id truncated");
+        c_id_v=0;
+        @(negedge clk); // invalid command's prefetched IDs must not poison the next token
+        run_case(0,4,4,0,3);
+        if(c_id_r) $fatal(1,"idle selected IDs have no owning command");
         $display("PASS CF-ATT cases=%0d rows=%0d cycles=%0d legacy_lockstep=300",tests+1,rows,cycle);$finish;
     end
 endmodule
