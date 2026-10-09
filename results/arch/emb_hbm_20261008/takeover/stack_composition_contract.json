@@ -1,0 +1,46 @@
+{
+  "schema": "opentallas.embedding_stack_source_composition.v1",
+  "model_prerequisites": [
+    "r21c_binding_model.json",
+    "real_ports_binding_model.json",
+    "far_bus_binding_model.json",
+    "composed_slots/transport_lower_bound.json"
+  ],
+  "source": "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_stack_bus.sv",
+  "source_sha256": "76760922d87e3ec7995622139b54c7af38d5653e27d0fc7b86c8143ad329db86",
+  "replicas_per_stack": {
+    "engine": 1,
+    "far_class_endpoint": 1,
+    "actual_per_PC_embedding_CDC_controller_PCport": 32
+  },
+  "stacks_per_die": 4,
+  "wrapper_added_registers": 0,
+  "wrapper_added_cycles": 0,
+  "native_command_layout": "32PCcmd_v1/cmd32/read_credit3/cmd_credit1; actualhclkdomain. Nolegacy319/283alias.",
+  "protected_PHY_layout": "32PCrawreadv1/data288;writepayload288;fullJEDECrow/columnpins exposed. PhysicalECC32providerOPEN.",
+  "KV_transport": "Qualifiedfarclass525 bidirectional is separatefrom rawKVlanding288 perPC. Actualordinal/row/metadata andcorrectedKVlandingprovider required beforebinding.",
+  "clocks": "actualcore1.2GHz833.333ps, HBM976.5625MHz1024ps, actualhubforwarded1.2GHz input. Forwardreturnclock islocalcoreclk. NoSDConlydomainchange.",
+  "default_ENABLE": 0,
+  "mutable_flow": "All originalleafqueues/credits unchanged. Nativeproviderprepaid8FIFO maybind later. Noadditionalcapacityorprotectioninvented.",
+  "elaboration": {
+    "status": "WAITING_ADMISSION",
+    "host": "ot-agidock128",
+    "root": "/srv/opentallas-scratch/codex/emb-stack-elaboration",
+    "guard_peak_GiB": 4,
+    "observer_PID": 2843971,
+    "source_script": "run.sh inremoteroot hashes actualsources beforecompile",
+    "scope": "32-PCrealhierarchy elaboration only; no wholearraysimulation"
+  },
+  "physical_binding": false,
+  "die_binding": false,
+  "adopted": false,
+  "obligations": [
+    "qualifiednativeprovider/descriptor/WRledger/readcredit sourceowner",
+    "protectedPHY288 andactualrowpairarbitration/writepayload binding",
+    "qualifiedKVfarclass+rawlandingmetadata/ordinal providers",
+    "realclosedleafpinviews",
+    "implementactualpipeline stations inlongPCbranches, sourceprice\u2265716pairs lowerbound",
+    "exactminimummechanismwithaddedstations andfinitecreditroundtrip beforeadoption",
+    "actual128PCparameter-family physicalqualification"
+  ]
+}
