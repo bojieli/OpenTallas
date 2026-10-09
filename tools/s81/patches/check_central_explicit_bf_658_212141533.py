@@ -21,6 +21,7 @@ m.apply_options(ap.parse_args(opts))
 legacy=m.bf_sites()
 m.apply_options(ap.parse_args(opts+['--bf-pair-ranges','0:338']))
 assert m.PAIRS==658 and m.BF_PAIRS==338 and m.NV_PAIRS==0
+assert m.PAIRS-m.BF_PAIRS==320
 assert m.bf_sites()==set(range(338))
 cap=m.capacity_report()
 assert json.loads(json.dumps(cap))['bf_pair_ids']==list(range(338))
@@ -47,7 +48,7 @@ with tempfile.TemporaryDirectory(dir=base,prefix='identity_probe_') as temp:
     record=json.loads(out.read_text())['cases']['case']
     assert record==dict(pairs=658,bf=338,ids=list(range(338))),record
 print(json.dumps(dict(source_commit='212141533',source_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),
-    fields=658,BF_double=338,ordinary=358,legacy_BF=len(legacy),
+    fields=658,BF_double=338,ordinary=320,legacy_BF=len(legacy),
     capacity_identity_preserved=True,record_mode_identity_restored=True,
     defaults_reset=True,rejects_overlap_and_bounds=True,
     scope='fixed inventory and actual record identity path; build and STA-result bodies stubbed; no physical or engine qualification'),indent=2))
