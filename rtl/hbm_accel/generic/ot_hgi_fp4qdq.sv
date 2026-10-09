@@ -209,6 +209,8 @@ module ot_hgi_fp4qdq (
     reg signed [9:0] s5_qs [0:1];
     reg [30:0]       xm;
     reg [2:0]        cc;
+    reg [6:0]        qp;
+    reg [1:0]        pa, pb, pc;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) s5_v <= 1'b0;
         else s5_v <= s4_v;
@@ -221,10 +223,14 @@ module ot_hgi_fp4qdq (
             b = i / 16;
             //: the thresholds increase, so the code is the number passed; on a
             //: threshold the even code wins (midpoint j sits below code j+1)
-            cc = 3'd0;
+            //: hgi-takeover: the seven predicates are evaluated in parallel and counted by a
+            //: balanced tree (same count as the former serial cc = cc + 1 chain)
             for (j = 0; j < 7; j = j + 1)
-                if (!s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1)))
-                    cc = cc + 3'd1;
+                qp[j] = !s4_big[7*b + j] && (xm > s4_t[7*b + j] || (xm == s4_t[7*b + j] && (j % 2) == 1));
+            pa = {1'b0, qp[0]} + {1'b0, qp[1]};
+            pb = {1'b0, qp[2]} + {1'b0, qp[3]};
+            pc = {1'b0, qp[4]} + {1'b0, qp[5]};
+            cc = ({1'b0, pa} + {1'b0, pb}) + ({1'b0, pc} + {2'b0, qp[6]});
             s5_c[i] <= cc;
             s5_sgn[i] <= x4[32*i + 31] && (xm != 31'd0);
         end
