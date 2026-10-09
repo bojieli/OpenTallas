@@ -1,0 +1,2 @@
+PASS raw_group full_shape columns=2 banks=5 codes_per_bank=32 all256_int8 bank_changes_and_bubbles cycles=4096 checks=262016 latency_edges=3 period_ns=0.833333 functional_no_SDF
+rtl/test/tb_qwen_rom_raw_group.sv:42: $finish called at 3413749634 (1fs)
