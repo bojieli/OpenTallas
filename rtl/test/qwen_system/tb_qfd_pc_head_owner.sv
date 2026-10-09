@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
-module tb_qfd_pc_head_owner;
+module tb_qfd_pc_head_owner #(parameter integer MUT=0);
  reg clk=0;always#5 clk=~clk;reg rst_n=0,in_v=0;reg[303:0]in_payload=0;
  reg[2:0]ack_v=0;reg[212:0]ack_data=0;
  wire head_v,credit_return,fault,ce;wire[303:0]head_payload;wire[63:0]head_id;
- ot_qfd_pc_head_owner #(.ENABLE(1)) dut(.*);
+ ot_qfd_pc_head_owner #(.ENABLE(1),.MUT_ECC(MUT)) dut(.*);
  integer credits=0,corrections=0;reg monitor=1;
  always@(posedge clk)if(rst_n&&monitor)begin
-  if(fault)$fatal(1,"unexpected PC owner fault");
+  if(fault)begin if(MUT)$display("NEG_DETECTED pcowner incorrect SECDED encoder");$fatal(1,"unexpected PC owner fault");end
   if(credit_return)credits=credits+1;
   if(ce)corrections=corrections+1;
  end

@@ -2,7 +2,7 @@
 // Per-PC finite decoded-head queue. No raw sector metadata is synthesized:
 // the qualified adapter must supply the entire304-bit decoded payload.
 // payload={need2,tail_lanes4,tail,isk,sel1_2,sel0_2,loc1_7,loc0_7,tile1_11,tile0_11,data256}.
-module ot_qfd_pc_head_owner #(parameter integer ENABLE=0,PC=0)(
+module ot_qfd_pc_head_owner #(parameter integer ENABLE=0,PC=0,MUT_ECC=0)(
  input wire clk,rst_n,input wire in_v,input wire [303:0] in_payload,
  input wire [2:0] ack_v,input wire [212:0] ack_data,
  output wire head_v,output wire [303:0] head_payload,output wire [63:0] head_id,
@@ -19,7 +19,7 @@ module ot_qfd_pc_head_owner #(parameter integer ENABLE=0,PC=0)(
  wire [383:0]decoded;wire[5:0]dec_v,dec_ce,dec_ue;
  reg[431:0]raw;
  genvar s;generate for(s=0;s<6;s=s+1)begin:g_ecc
-  ot_secded_enc #(.K(64),.R(8)) u_enc(.clk(clk),.d(encoded_input[s*64+:64]),.q(encoded[s*72+:72]));
+  ot_secded_enc #(.K(64),.R(8),.MUT(MUT_ECC)) u_enc(.clk(clk),.d(encoded_input[s*64+:64]),.q(encoded[s*72+:72]));
   ot_secded_dec #(.K(64),.R(8)) u_dec(.clk(clk),.rst_n(rst_n),.v(raw_v[0]),.w(raw[s*72+:72]),
     .ov(dec_v[s]),.d(decoded[s*64+:64]),.ce(dec_ce[s]),.ue(dec_ue[s]),.n_ce(),.n_ue());
  end endgenerate

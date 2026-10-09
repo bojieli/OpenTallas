@@ -14542,3 +14542,13 @@ def qwen_kv_row_endpoint_model():
     """Distributed ID-tagged row mechanism, additive over the native arbiter."""
     from uarch_model_qwen_row_endpoint import model
     return model()
+
+
+def qwen_native_cmd_provider_model():
+    from uarch_model_qwen_native_cmd import model
+    return model()
+
+
+def qwen_pc_head_owner_model():
+    from uarch_model_qwen_pc_head import model
+    return model()
