@@ -15095,6 +15095,12 @@ def hbm_native_mtp_emit_model(depth=8):
     return model(depth)
 
 
+def hbm_w2_phase_seat_model(no=2):
+    """Full-shaped default-off W2 phase locality and held-delay seats."""
+    from w2_phase_seat_model import model
+    return model(no)
+
+
 def mtp_ring_dyn_model():
     """Price one-position ring addressing independently of multi-token slot state."""
     return json.loads((ROOT / 'physical/mtp_ring_dyn/model.json').read_text())
