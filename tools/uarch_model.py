@@ -12793,3 +12793,43 @@ def hbm_cp_owner_veto_polarity_model():
     from pathlib import Path
     return json.loads((Path(__file__).resolve().parents[1]/
         "results/uarch/hbm_cp_owner_veto_polarity_20261006/model.json").read_text())
+
+
+def dsfd_selector_plan_c_model():
+    """Source-sized independent dsfd_selt_q -cx; fault-free pathfinding only.
+
+    Native PIPE2 sizing from36b7a0452. Three256x256 actual SRAM macros;
+    same logical592-bit line, direct capture before any slice data selection.
+    """
+    hist_ff = 2 * (2 + 16 + 16*8 + 128*12 + 32*14)
+    capture_ff = 592 + 4
+    other_pipe_ff = 16 + 594
+    macro_area = 3 * 172.824 * 41.064
+    return {
+        "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+        "native_pipe_source": "36b7a0452", "scope": "fault-free isolated pathfinding",
+        "replicas": 4, "macs_per_cycle": 0, "scores_per_cycle_per_quarter": 16,
+        "bf16_compare_lanes": 16, "compute_intensity": "selection; no MACs",
+        "memory_ports": {"read_bytes_per_cycle": 74, "write_bytes_per_cycle": 74,
+                         "raw_macro_read_bytes": 96, "depth": 256, "width": 592,
+                         "macro_count_per_quarter": 3},
+        "boundaries_bits_per_cycle": {"lane": 515, "command": 66, "credit": 1,
+                                     "status": 865, "selected": 354},
+        "mapping": "physical SW/SE/NW/NE lane q serves quarter q; no permutation; indices increase in quarter order",
+        "mux_demux": "no SRAM bank mux; identity controller PERM0 removes quota/output quarter search",
+        "capture_ff_per_quarter": capture_ff, "histogram_cut_ff_per_quarter": hist_ff,
+        "other_pipe_ff_per_quarter": other_pipe_ff,
+        "added_ff_floor_um2_per_quarter": (capture_ff+hist_ff+other_pipe_ff)*0.2916,
+        "area": {"macro_um2": macro_area, "slot_um2": 756*159.84,
+                 "new_stdcell_limit_at_55pct_um2": (756*159.84-macro_area)*0.55,
+                 "baseline_stdcell_um2": None, "slot_fit": "requires mapped inventory; no measured claim"},
+        "routing": {"pin_tracks_W_M4": 517, "pin_tracks_E_M4": 1286,
+                    "capacity_policy": "native full-shape 159.84um pin contract; actual legality check before route",
+                    "macro_min_gap_um": 12, "capture_placement": "adjacent to real rd_out pins"},
+        "latency": {"macro_read_edges": 1, "raw_capture_edges": 1, "readlat": 2,
+                    "histogram_status_extra_edges": 3, "output_fifo_input_extra_edges": 1,
+                    "historical_PIPE2_total_extra_cycles": 48,
+                    "historical_PIPE2_tail_mean": 153, "historical_baseline_tail_mean": 127,
+                    "composed_token": "one selector segment tail on indexer path; preserve measured full segment cycles, no rate claim",
+                    "capture_extra_segment_cycles": "pending minimum exact gate"},
+        "adoption_dependencies": ["payload SRAM SECDED", "exact plus mechanism mutants", "TT setup >=0 / FF hold >=0 / DRC0; SS sensitivity", "actual die context"]}
