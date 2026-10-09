@@ -8,7 +8,8 @@ its host (one ssh per host) and diagnoses:
              ODB size), or the step log is quiet > HUNG_QUIET_S while the processes still burn CPU
   hopeless   the early-fail gates (shared with the daemon, closure_loop.early_fail_gate):
                EARLY_FAIL_SETUP       post-CTS (else post-placement) TT setup far past what DRT/opt ever recovered
-               EARLY_FAIL_HOLD        FF hold repair flooded (> 20k endpoints in margin) or real WNS < -150 ps after 1 h
+               EARLY_FAIL_HOLD        FF hold repair NOT converging: buffers past a cap, WNS < 0 frozen over 2000 it, or
+                                      real WNS < -150 ps after 1 h with < 5 ps gained over 2000 it
                EARLY_FAIL_CONGESTION  GRT past extra iteration 20 with the congestion markers not decreasing
                EARLY_FAIL_DRC         DRT past iteration 20 with the violation count not decreasing over K iterations
   stalled    old-flow (no OT_HOLD_GUARD) hold repair with hold already >= 0 and WNS frozen for > 3 h (margin chase)
@@ -74,9 +75,16 @@ GATES = dict(
     setup_tns_ps=-1.0e6,         # ... or TNS beyond this (count-free bound)
     setup_place_ws_ps=-900.0,    # post-placement (ideal clocks) bound, used only before CTS finishes
     setup_place_count=2000,
-    hold_flood_ep=20000,         # endpoints in hold margin reported by the repair
+    # hold (drive-2140): the endpoint count in margin is NOT a gate; only a non-converging repair is (hold_verdict)
+    hold_buf_cap=100000,         # hold buffers inserted in the step (rx128: 146k -> DPL-0033) ...
+    hold_buf_frac=0.30,          # ... or this fraction of the placed instance count ...
+    hold_buf_min=20000,          # ... (never below this many buffers)
+    hold_stall_it=2000,          # real WNS < 0 gaining < hold_stall_dwns ps over this many iterations: stalled
+    hold_stall_dwns=1.0,
     hold_real_ws_ps=-150.0,      # real hold WNS still below this ...
-    hold_real_after_s=3600,      # ... after this long in repair
+    hold_real_after_s=3600,      # ... after this long in repair ...
+    hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
+    hold_deep_dwns=5.0,
     grt_min_iter=20, grt_markers=1000, grt_flat=0.95,
     drt_min_iter=20, drt_k=8, drt_min_viol=100,
     stall_after_s=3 * 3600,
@@ -193,6 +201,21 @@ def probe_base(b, live):
                     last_it = int(its[-1][0]); w_last = float(its[-1][5])
                     back = [r for r in its if int(r[0]) <= last_it - 1000]
                     if back: hold["dwns_1000"] = round(w_last - float(back[-1][5]), 3)
+            # whole-step convergence series [cumulative iteration, cumulative buffers, WNS] over every hold repair call of
+            # the step (the HM/stall guard runs chunks of 1000 iterations, each restarting the iteration / buffer columns)
+            ser = []; off = boff = 0; pit = pb = -1
+            for r in rows:
+                if r[0] == "final": continue
+                it_, b_ = int(r[0]), int(r[2])
+                if it_ < pit or (it_ == pit == 0):
+                    off += max(pit, 0); boff += max(pb, 0)
+                pit, pb = it_, b_
+                ser.append([off + it_, boff + b_, float(r[5])])
+            if len(ser) > 400:
+                ser = [ser[int(i * (len(ser) - 1) / 399)] for i in range(400)]
+            hold["series"] = ser
+        hold["chunks"] = [[int(a), float(w), float(g)] for a, w, g in
+                          re.findall(r"OT_HOLD_GUARD chunk (\d+): hold ws ([-\d.]+) \([-+\d.]+\) tns [-\d.]+ \(([-+\d.]+)%\)", t)][-20:]
         o["hold"] = hold
         g = re.findall(r"Start extra iteration (\d+)/(\d+)", t)
         if g: o["grt_iter"] = [int(g[-1][0]), int(g[-1][1])]
@@ -451,19 +474,10 @@ def hopeless(b, j, now):
                                                if g.get("io_excluded") else "")))
     elapsed = now - step_start(b)
     hd = b.get("hold") or {}
-    if hd.get("found") and cur.startswith(("4_1_cts", "5_1_grt")):
-        n = hd["found"][-1]
-        last = hd.get("cur_last")
-        if n > GATES["hold_flood_ep"] and not hd.get("hm_auto"):
-            sync = (hd.get("sync") or [[None, None]])[-1]
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} hold repair flooded: {n} endpoints in margin (> "
-                                           f"{GATES['hold_flood_ep']}), hold WNS now {last[2] if last else '?'} ps "
-                                           f"(start {sync[1]}), {elapsed / 3600:.1f} h in step, "
-                                           f"{'HM guard present' if hd.get('guard') else 'old flow without the HM/stall guard'}"))
-        elif last and last[2] < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"] and \
-                not (j and insertion_untrusted(j)):     # IO hold on a wrong insertion may be fake: let it run
-            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} real FF hold WNS {last[2]:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) "
-                                           f"after {elapsed / 3600:.1f} h of repair, {n} endpoints"))
+    if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
+        hv = hold_verdict(hd, b, elapsed, bool(j and insertion_untrusted(j)))
+        if hv:
+            out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} {hv}"))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
     gi = b.get("grt_iter")
     if cur.startswith("5_1_grt") and gi and gi[0] >= GATES["grt_min_iter"] and len(cg) >= 3:
@@ -484,6 +498,65 @@ def hopeless(b, j, now):
             out.append(("EARLY_FAIL_DRC", f"DRT iteration {dr[-1][0]}: {last[-1]} violations, no decrease over the "
                                           f"last {k} iterations (best before {min(before)}, since {min(last)})"))
     return out
+
+
+def hold_gain(series, window):
+    """WNS gained (ps) over the last `window` cumulative hold-repair iterations of the step; None while the series
+    spans fewer iterations than the window."""
+    if not series:
+        return None
+    last = series[-1]
+    back = [p for p in series if p[0] <= last[0] - window]
+    return round(last[2] - back[-1][2], 3) if back else None
+
+
+def place_instances(b):
+    for k in ("3_5_place_dp", "3_4_place_resized", "3_3_place_gp"):
+        for kk, v in ((b.get("metrics") or {}).get(k) or {}).items():
+            if kk.endswith("design__instance__count") and isinstance(v, (int, float)):
+                return v
+    return None
+
+
+def hold_verdict(hd, b, elapsed, untrusted=False):
+    """EARLY_FAIL_HOLD only when the hold repair is NOT converging (drive-2140, 2026-10-08).  The endpoint count inside
+    the margin (RSZ-0046) is NOT a verdict: at HM 10-25 a big block routinely has 30k-70k endpoints in margin with real
+    WNS -20..-40 ps, and the repair converges (qfd_tile_rp1p / hbm_su_full / hbm_quant outline were killed at 10
+    iterations while improving).  Fires on
+      (1) buffers: hold buffers inserted in the step > hold_buf_cap, or > hold_buf_frac x placed instances;
+      (2) stall: real WNS < 0 and < hold_stall_dwns ps gained over the last hold_stall_it cumulative iterations;
+      (3) deep: real WNS < hold_real_ws_ps after hold_real_after_s with < hold_deep_dwns ps gained over the last
+          hold_deep_it iterations.
+    (2)/(3) are skipped on an untrusted clock insertion (IO hold may be fake there)."""
+    ser = hd.get("series") or []
+    last = hd.get("cur_last")
+    ws = ser[-1][2] if ser else (last[2] if last else None)
+    if ws is None:
+        return None
+    its, bufs = (ser[-1][0], ser[-1][1]) if ser else (0, 0)
+    n = (hd.get("found") or [None])[-1]
+    start = ((hd.get("sync") or [[None, None]])[-1])[1]
+    ctx = (f"hold WNS now {ws:+.1f} ps (start {start}), {its} it / {bufs} buffers, {n} endpoints in margin, "
+           f"{elapsed / 3600:.1f} h in step, {'HM guard present' if hd.get('guard') else 'old flow without the HM/stall guard'}")
+    inst = place_instances(b)
+    cap = GATES["hold_buf_cap"]
+    if inst:
+        cap = min(cap, max(GATES["hold_buf_min"], GATES["hold_buf_frac"] * inst))
+    if bufs > cap:
+        return f"hold repair past the buffer cap: {bufs} buffers > {cap:.0f} (cap {GATES['hold_buf_cap']}, " \
+               f"{GATES['hold_buf_frac']:g} x {inst} instances); {ctx}"
+    if ws >= 0 or untrusted:
+        return None
+    g = hold_gain(ser, GATES["hold_stall_it"])
+    if g is not None and g < GATES["hold_stall_dwns"]:
+        return f"hold repair not converging: WNS gained {g:+.2f} ps over the last {GATES['hold_stall_it']} iterations " \
+               f"(< {GATES['hold_stall_dwns']:g}); {ctx}"
+    if ws < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"]:
+        g = hold_gain(ser, GATES["hold_deep_it"])
+        if g is not None and g < GATES["hold_deep_dwns"]:
+            return f"real FF hold WNS {ws:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) with no progress: {g:+.2f} ps over " \
+                   f"the last {GATES['hold_deep_it']} iterations (< {GATES['hold_deep_dwns']:g}); {ctx}"
+    return None
 
 
 def step_start(b):
