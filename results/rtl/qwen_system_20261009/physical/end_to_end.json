@@ -8,13 +8,15 @@
     "status": "original route terminal macro-name placement error, full synthesis passed; physical-only successor being queued",
     "run": "/srv/opentallas-data/claude/closure-loop/qfd_crom48-91e710eae-tc-hm10",
     "physical_claim": "pending",
-    "exact_claim": "historical full-shape pass/mutant; simulationtoken-equivalent"
+    "exact_claim": "historical full-shape pass/mutant; simulationtoken-equivalent",
+    "successor": "qfd_crom48-4a4c4b97d-tc-hm10",
+    "successor_status": "admitted source synced ot-epyc4, READY for route"
   },
   "sysctl": {
     "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
     "status": "validated queued; remote bench-first builds gate route",
     "physical_claim": "pending",
-    "exact_claim": "pending; opt-in PROMPT_SRAM=1",
+    "exact_claim": "Minimum component PASS:20480 reads,2400ECC cases;mutant144 mismatches; fullcontrol pending",
     "mutable_storage": "SECDED24 per18b token in32b slot, eight slots per1024x256 SRAM row",
     "fault_source": 22,
     "UE_contract": "qzero, sticky pb_fault gates package readiness"
