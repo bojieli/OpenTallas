@@ -16,7 +16,10 @@
 module tb_hgi_seq;
 `include "hgi_seq_sizes.svh"
 `include "hgi_seq_sizes_conf.svh"
-`ifdef SEQ_CONF
+`include "hgi_seq_sizes_ds.svh"
+`ifdef SEQ_DS
+    localparam integer NCASE = DS_NCASE, NEXP = DS_NEXP, NW = DS_NW;
+`elsif SEQ_CONF
     localparam integer NCASE = CONF_NCASE, NEXP = CONF_NEXP, NW = CONF_NW;
 `elsif SEQ_STALE
     localparam integer NCASE = SEQ_NCASE_STALE, NEXP = SEQ_NEXP_STALE, NW = SEQ_NW;
@@ -57,7 +60,9 @@ module tb_hgi_seq;
         begin @(negedge clk); cmd_we = 1; cmd_addr = {1'b1, pr}; cmd_wdata = {hi, lo}; @(negedge clk); cmd_we = 0; end
     endtask
     reg [31:0] mdw [0:NCASE*64-1];
-`ifdef SEQ_CONF
+`ifdef SEQ_DS
+    initial $readmemh("hgi_seq_md_ds.mem", mdw);
+`elsif SEQ_CONF
     initial $readmemh("hgi_seq_md_conf.mem", mdw);
 `elsif SEQ_STALE
     initial $readmemh("hgi_seq_md_stale.mem", mdw);
@@ -86,14 +91,19 @@ module tb_hgi_seq;
         .cpl_tokx(cpl_tokx));
 `endif
     reg [127:0] img [0:NW-1];
-    reg [95:0] vmi [0:CONF_NVMI-1];
+    reg [95:0] vmi [0:((CONF_NVMI > DS_NVMI) ? CONF_NVMI : DS_NVMI)-1];
     reg [255:0] ex [0:NEXP-1];
     reg [31:0] cfg [0:NCASE*12-1];
     reg [95:0] vmw [0:4095];
     reg [63:0] vm0 [0:SEQ_NVM0-1];
     integer nvmw = 0;
     initial begin
-`ifdef SEQ_CONF
+`ifdef SEQ_DS
+        $readmemh("hgi_seq_image_ds.mem", img);
+        $readmemh("hgi_seq_expect_ds.mem", ex); $readmemh("hgi_seq_cfg_ds.mem", cfg); $readmemh("hgi_seq_toks_ds.mem", tks);
+        for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
+        $readmemh("hgi_seq_vmi_ds.mem", vmi);
+`elsif SEQ_CONF
         $readmemh("hgi_seq_image_conf.mem", img);
         $readmemh("hgi_seq_expect_conf.mem", ex); $readmemh("hgi_seq_cfg_conf.mem", cfg);
         for (nvmw = 0; nvmw < 4096; nvmw = nvmw + 1) vmw[nvmw] = {96{1'b1}};
@@ -208,6 +218,10 @@ module tb_hgi_seq;
 `ifdef SEQ_CONF
             for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
             for (a = 0; a < CONF_NVMI; a = a + 1) if (vmi[a][95:64] == c) vm[vmi[a][49:32]] = vmi[a][31:0];
+`endif
+`ifdef SEQ_DS
+            for (a = 0; a < 262144; a = a + 1) vm[a] = 0;
+            for (a = 0; a < DS_NVMI; a = a + 1) if (vmi[a][95:64] == c) vm[vmi[a][49:32]] = vmi[a][31:0];
 `endif
             md_d = {32'd1, PAGE, 32'd0, 32'd0, cfg[c*12 + 0]};
             vocab = cfg[c*12 + 4]; ctxmax = cfg[c*12 + 5]; rank = cfg[c*12 + 3];
