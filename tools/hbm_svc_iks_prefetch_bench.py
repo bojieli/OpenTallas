@@ -9,7 +9,7 @@ SRC=['rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv','rtl/hbm_accel/service/ot_
 'physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv','physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv',
 'rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv','physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv','rtl/common/ot_secded.sv','rtl/common/ot_secded_cols.svh','rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo_p2.sv','rtl/hbm_accel/service/ot_hbm_index_line_cdc.sv','rtl/hbm_accel/service/ot_hbm_index_prefetch.sv','rtl/test/hbm_accel/tb_hbm_svc_iks_prefetch.sv','rtl/hbm_accel/control/ot_hbm_native_index_control.sv']
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--ref-mode',type=int,default=3);ap.add_argument('--pull',type=int,default=0);ap.add_argument('--batch',type=int,default=0);ap.add_argument('--depth',type=int,default=64);ap.add_argument('--maxread',type=int,default=15);ap.add_argument('--code-mut',type=int,default=0);ap.add_argument('--portal',type=int,default=0);ap.add_argument('--control',type=int,default=0);ap.add_argument('--early',type=int,default=0);a=ap.parse_args()
+ ap=argparse.ArgumentParser();ap.add_argument('--work',type=Path,required=True);ap.add_argument('--out',type=Path,required=True);ap.add_argument('--ref-mode',type=int,default=3);ap.add_argument('--pull',type=int,default=0);ap.add_argument('--batch',type=int,default=0);ap.add_argument('--depth',type=int,default=64);ap.add_argument('--maxread',type=int,default=15);ap.add_argument('--code-mut',type=int,default=0);ap.add_argument('--portal',type=int,default=0);ap.add_argument('--control',type=int,default=0);ap.add_argument('--early',type=int,default=0);ap.add_argument('--compact',action='store_true');a=ap.parse_args()
  a.work.mkdir(parents=True,exist_ok=False)
  rec={'schema':'opentallas.hbm_iks_prefetch_fifo.v1','source_commit':os.environ.get('PINNED_SOURCE_COMMIT') or subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
  'input_sha256':{s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in SRC+['tools/hbm_svc_iks_prefetch_bench.py','results/rtl/hbm_index_service_20261008/binding_before_bench.json']},
@@ -30,6 +30,7 @@ def main():
  cases=([(0,300,0,0)] if a.code_mut else [(0,q,0,0) for q in [0,100,300,1000]]+[(4100,300,0,0),(4100,1000,0,0),(6900,300,0,0),(0,300,0,125),(0,300,0,625),(0,300,1,0)])
  if a.portal:cases=[(0,300,0,0),(0,1000,0,0),(4100,300,0,0),(0,300,1,0)]
  if a.early:cases=[(0,300,0,0)]
+ if a.compact:cases=[(0,300,0,0),(0,300,1,0)]
  for phase,delay,mut,score_phase in cases:
   logpath=a.work/f'phase{phase}_delay{delay}_mut{mut}_scorephase{score_phase}.log'
   with logpath.open('w') as log:cp=subprocess.run([str(exe),f'+phase_ns={phase}',f'+query_ns={delay}',f'+mut={mut}',f'+score_phase_ps={score_phase}'],stdout=log,stderr=subprocess.STDOUT)
