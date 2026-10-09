@@ -67,9 +67,9 @@ python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "$
  --core-input-delay-min-ns $IMIN --core-input-delay-max-ns $IMAX --output-delay-min-ns $OMIN --output-delay-max-ns $OMAX \
  --orfs-var ADDER_MAP_FILE= --place-density 0.55 --orfs-var PLACE_DENSITY_LB_ADDON= --max-transition-ns 0.25 \
  --hold-margin-ns $HMS --step-tcl POST_PDN=physical/dsrom_markov_lookup_localcapture/sliver_block.tcl \
- --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl \
- --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
- --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
+ --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_markov_lookup_localcapture/pre_global_place.tcl \
+ --step-tcl PRE_CTS=physical/dsrom_markov_lookup_localcapture/pre_repair.tcl \
+ --step-tcl PRE_GLOBAL_ROUTE=physical/dsrom_markov_lookup_localcapture/pre_repair.tcl \
  --sdc-append physical/dsrom_markov_lookup_localcapture/macro_capture.sdc --keep-workdir "$O/work" --nickname-tag $LBL --keep-heavy-artifacts --output "$O/physical.json" "$@" > $O/run.log 2>&1
 rc=$?; result_rc=$rc; echo "rc=$rc" > $O/exit
 if [ $rc = 0 ] && ! echo "$*" | grep -q -- --pnr-stop-after; then

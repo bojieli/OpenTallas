@@ -1,0 +1,2 @@
+source /src/physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl
+source /src/physical/dsrom_markov_lookup_localcapture/electrical_env.tcl
