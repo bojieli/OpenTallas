@@ -291,7 +291,7 @@ module tb_hgi_coll_rearm #(
             @(negedge clk);go=0;
             if(duplicate_last && cmd==2)begin
                 wait(flt);repeat(12)begin @(negedge clk);if(done)$fatal(1,"duplicate replaced missing result");end
-                $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish;disable commands;
+                $display("REARM_DUPLICATE PASS missing_result_not_completed fault=%0d got=%0d/%0d",flt,got,TOT);$finish; #1; // Yield after Verilator deferred finish before any command continuation.
             end
             wait(done);@(negedge clk);
             if(got!=TOT || ndep!=pf-OF+ROF || queue_words()!=0 || narr!=(NA-1)*OF+((gs==15?NR:NA)-1)*ROF)

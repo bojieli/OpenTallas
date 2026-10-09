@@ -11,6 +11,7 @@ import numpy as np, hdc_golden as G
 original_build=HF.build
 def canonical_build(shape,seed):
     s,parts,z=original_build(shape,seed)
+    if s['NC']==1: parts[:,0:8]=np.float32(-0.0)
     if s['NC']==1:
         # U2: physical NC8 tree pads inactive operands with +0; signed zero canonicalizes.
         z=G.to_bf16(G.add(parts,np.zeros_like(parts)))
@@ -33,6 +34,7 @@ for mode in ${MODES:-positive premature_done};do
  if [ "$mode" = positive ];then
    "$O/positive/Vtb_hgi_coll_rearm" +VEC="$O/fx" +DUPLICATE_LAST=1 > "$O/duplicate.log" 2>&1
    grep -q 'REARM_DUPLICATE PASS' "$O/duplicate.log"
+   ! grep -q '%Fatal' "$O/duplicate.log"
  fi
 done
 echo 'CX_COLL_REARM PASS' >> "$O/verdict.txt"
