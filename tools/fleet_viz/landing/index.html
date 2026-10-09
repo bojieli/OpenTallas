@@ -14,7 +14,7 @@
 <header class="top"><div class="wrap">
   <a class="brand" href="#top" aria-label="OpenTallas home"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="3" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="6.5" y="6.5" width="4.5" height="4.5" fill="var(--chip)"/><rect x="13" y="6.5" width="4.5" height="4.5" fill="var(--chip)" opacity=".55"/><rect x="6.5" y="13" width="4.5" height="4.5" fill="var(--chip)" opacity=".55"/><rect x="13" y="13" width="4.5" height="4.5" fill="var(--chip)" opacity=".25"/></svg>OpenTallas</a>
   <nav class="nav" aria-label="Sections">
-    <a class="in" href="#agent">Agent</a><a class="in" href="#answer">Long answer</a><a class="in" href="#home">Home hub</a><a class="in" href="#numbers">Numbers</a>
+    <a class="in" href="#agent">Agent</a><a class="in" href="#answer">Long answer</a><a class="in" href="#home">Home hub</a><a class="in" href="#genui">Generative UI</a><a class="in" href="#numbers">Numbers</a>
     <a class="ext" href="/">Fleet</a><a class="ext" href="/explorer">Explorer</a><a class="ext" href="/explorer/coverage/">Coverage</a>
   </nav>
   <button class="themebtn" id="themeBtn" type="button" aria-label="Switch colour theme" title="Switch colour theme"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.8a6.2 6.2 0 0 1 0 12.4z" fill="currentColor"/></svg></button>
@@ -115,6 +115,40 @@
     <div class="card"><p class="eyebrow">Why this matters</p><p class="sub" style="margin-top:8px">Most voice assistants still route requests through scripted intent pipelines rather than an LLM that reasons and calls tools. Decode latency is one major reason: a reasoning model that thinks for a few hundred tokens at GPU per-user rates takes seconds. Cost, reliability and privacy matter too. Faster decode does not fix those, but it does remove the wait.</p><p class="sub" id="cWhy"></p></div>
   </div>
   <p class="note" id="cNote"></p>
+</div></section>
+
+<section class="demo" id="genui"><div class="wrap">
+  <div class="shead">
+    <p class="eyebrow">Demo D · <b>DeepSeek-V4.1 Flash</b> · generative UI</p>
+    <h2>An app that writes its next screen</h2>
+    <p class="lede">In a generative UI there is no fixed interface. After every click the model reasons, calls tools, and then writes the next screen as HTML or patches the one on screen. These are real sessions with DeepSeek-V4.1 Flash in three apps. Each action replays at four per-user rates, and each lane renders the model's HTML as it streams. The first interaction (a full screen) and the follow-ups (patches) are measured separately.</p>
+  </div>
+  <div class="controls">
+    <div class="seg" id="gCases" role="group" aria-label="App"></div>
+    <div class="seg" id="gKind" role="group" aria-label="Interaction type"><button type="button" data-k="full" aria-pressed="true">Full generation</button><button type="button" data-k="patch" aria-pressed="false">Patch</button></div>
+  </div>
+  <p class="note" id="gCaseNote" style="margin:-4px 0 12px"></p>
+  <div class="controls">
+    <div class="seg" id="gInter" role="group" aria-label="Recorded interaction"></div>
+    <button class="play" id="gPlay" type="button"><svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" fill="currentColor"/></svg><span>Play</span></button>
+    <button class="ghost" id="gReset" type="button">Restart</button>
+    <div class="seg" id="gSpeed" role="group" aria-label="Playback speed"><button type="button" data-s="1" aria-pressed="true">1× real time</button><button type="button" data-s="4" aria-pressed="false">4×</button><button type="button" data-s="16" aria-pressed="false">16×</button></div>
+  </div>
+  <p class="task" id="gTask">Loading the recorded sessions…</p>
+  <div class="glanes">
+    <div class="lane chip" id="gChip"><div class="lhead"><div class="who"><b>DS ROM array</b><span id="gChipRate">—</span></div><div class="clock" id="gChipClock">0.0 s<small>this action</small></div></div><div class="gbox"><iframe id="gChipFrame" sandbox="allow-same-origin" title="Screen generated in the DS ROM lane"></iframe><div class="gstat" id="gChipStat"></div></div></div>
+    <div class="lane chip hbm" id="gHbm"><div class="lhead"><div class="who"><b>HBM accelerator</b><span id="gHbmRate">—</span></div><div class="clock" id="gHbmClock">0.0 s<small>this action</small></div></div><div class="gbox"><iframe id="gHbmFrame" sandbox="allow-same-origin" title="Screen generated in the HBM accelerator lane"></iframe><div class="gstat" id="gHbmStat"></div></div></div>
+    <div class="lane gpu" id="gGpu"><div class="lhead"><div class="who"><b>Best GPU, batch 1</b><span id="gGpuRate">—</span></div><div class="clock" id="gGpuClock">0.0 s<small>this action</small></div></div><div class="gbox"><iframe id="gGpuFrame" sandbox="allow-same-origin" title="Screen generated in the best-GPU lane"></iframe><div class="gstat" id="gGpuStat"></div></div></div>
+    <div class="lane or" id="gOr"><div class="lhead"><div class="who"><b>OpenRouter today</b><span id="gOrRate">—</span></div><div class="clock" id="gOrClock">0.0 s<small>this action</small></div></div><div class="gbox"><iframe id="gOrFrame" sandbox="allow-same-origin" title="Screen generated in the OpenRouter lane"></iframe><div class="gstat" id="gOrStat"></div></div></div>
+  </div>
+  <div class="tl" id="gTl"></div>
+  <div class="legend" style="margin-top:10px"><span style="--c:var(--prefill)">prefill of the new tokens (same in every lane)</span><span style="--c:var(--kv)">KV transfer to the chip (chip lanes)</span><span style="--c:var(--decode)">decode (reasoning, tool arguments, HTML or patch)</span><span style="--c:var(--tools)">tools (measured wall time)</span></div>
+  <h3 style="margin:26px 0 10px">All recorded interactions, by app and type</h3>
+  <div class="tablebox"><table class="nums gtable" id="gSum"><thead><tr><th>App · type</th><th>Model turns</th><th>Tool calls</th><th>Reasoning tok</th><th>HTML / patch tok</th><th>Tool-arg tok</th><th>Tool-result tok</th><th>Tool time</th><th>DS ROM</th><th>HBM</th><th>Best GPU</th><th>OpenRouter</th><th>DeepSeek API, as recorded</th></tr></thead><tbody><tr><td colspan="13">Loading…</td></tr></tbody></table></div>
+  <p class="note" id="gSumNote"></p>
+  <h3 style="margin:26px 0 10px">This app, interaction by interaction</h3>
+  <div class="tablebox"><table class="nums gtable" id="gTable"><thead><tr><th>Interaction</th><th>Turns / tools</th><th>Generated tokens</th><th>Tool-result tok</th><th>Tool time</th><th>DS ROM</th><th>HBM</th><th>Best GPU</th><th>OpenRouter</th><th>DeepSeek API, as recorded</th></tr></thead><tbody></tbody></table></div>
+  <div class="method" id="gMethod"></div>
 </div></section>
 
 <section class="demo" id="numbers"><div class="wrap">

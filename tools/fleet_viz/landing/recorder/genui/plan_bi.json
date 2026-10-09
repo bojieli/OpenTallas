@@ -1,0 +1,78 @@
+[
+ {
+  "type": "full",
+  "say": "Show me a sales overview dashboard for the last 12 months: revenue, orders, average order value and gross margin, a monthly revenue trend, and revenue by region."
+ },
+ {
+  "type": "patch",
+  "click": "enterprise",
+  "else": "Only count Enterprise customers."
+ },
+ {
+  "type": "patch",
+  "say": "Make the monthly trend a bar chart instead."
+ },
+ {
+  "type": "patch",
+  "say": "Add a year-over-year growth column to the region breakdown."
+ },
+ {
+  "type": "patch",
+  "click": "california|region",
+  "else": "Highlight California in the region breakdown and the trend."
+ },
+ {
+  "type": "full",
+  "say": "Open a page about our sales reps: 2026 quota attainment so far, ranked, with their region."
+ },
+ {
+  "type": "patch",
+  "click": "revenue|sort",
+  "else": "Sort by revenue instead of attainment."
+ },
+ {
+  "type": "patch",
+  "say": "Add each rep's average discount as a column."
+ },
+ {
+  "type": "full",
+  "say": "New page: product category performance, revenue and margin by category this year, and the biggest movers versus last year."
+ },
+ {
+  "type": "patch",
+  "say": "Leave Services out of this view."
+ },
+ {
+  "type": "patch",
+  "say": "Show margin as a percentage instead of dollars."
+ },
+ {
+  "type": "patch",
+  "say": "Switch the page to a dark theme."
+ },
+ {
+  "type": "full",
+  "say": "Customer cohorts: 90-day repeat-purchase rate by signup quarter, as a table with a small bar per row."
+ },
+ {
+  "type": "patch",
+  "click": "2025",
+  "else": "Only show the 2025 signup cohorts."
+ },
+ {
+  "type": "patch",
+  "say": "Add a 180-day repeat-rate column next to the 90-day one."
+ },
+ {
+  "type": "patch",
+  "say": "Colour the bars green above the median rate and orange below it."
+ },
+ {
+  "type": "patch",
+  "say": "Add a row at the bottom with the average across these cohorts."
+ },
+ {
+  "type": "patch",
+  "say": "Split each cohort's numbers by segment: Consumer, Small Business, Enterprise."
+ }
+]

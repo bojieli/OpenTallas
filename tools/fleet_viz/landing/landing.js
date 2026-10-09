@@ -378,6 +378,186 @@ function setupC(N, idx) {
 }
 function frameC(t) { if (!C.cur) return; C.cur.L.forEach((x) => { x.pane.render(t); clockSet($('c' + x.k + 'Clock'), $('c' + x.k), t, x.tl.total, 'time to done'); }); C.bars.set(t); }
 
+/* ---------- Demo D: generative UI ---------- */
+/* one interaction = the model calls dsh made for one user action; each call: prefill of the new tokens ->
+   (chip lanes) KV transfer -> decode of every generated token -> the call's tools at their measured wall time */
+function gSegments(calls, rate, kv) {
+  const segs = []; let t = 0;
+  calls.forEach((c, i) => {
+    const add = (k, d) => { if (d > 0) { segs.push({ k, i, t0: t, t1: t + d }); t += d; } };
+    add('prefill', c.prefill_s); if (kv) add('kv', c.kv_s); add('decode', c.output_tokens / rate); add('tools', c.tool_s);
+  });
+  const sum = (k) => segs.filter((x) => x.k === k).reduce((a, x) => a + x.t1 - x.t0, 0);
+  return { segs, total: t, prefill: sum('prefill'), kv: sum('kv'), decode: sum('decode'), tools: sum('tools') };
+}
+const gSum = (it, k) => it.calls.reduce((a, c) => a + c[k], 0);
+const gTools = (it) => it.calls.reduce((a, c) => a + c.tool_calls.length, 0);
+function gMark(prev, html) {  // put a marker at the first changed tag boundary (not inside <style>), so the patch can be outlined
+  let i = 0; const n = Math.min(prev.length, html.length); while (i < n && prev[i] === html[i]) i++;
+  let p = html.lastIndexOf('<', i); if (p < 0) return html;
+  const so = html.lastIndexOf('<style', p), sc = html.lastIndexOf('</style', p); if (so > sc) return html;
+  const vo = html.lastIndexOf('<svg', p), vc = html.lastIndexOf('</svg', p); if (vo > vc) p = vo;      // outline the whole chart, never split an SVG
+  const tb = html.search(/<body[\s>]/i); if (tb < 0 || p < tb) return html;
+  return html.slice(0, p) + '<span id="ot-edit"></span>' + html.slice(p);
+}
+function gPane(frame, stat, rec, it, tl) {
+  const ev = it.event, before = it.page_before == null ? null : rec.pages[it.page_before];
+  const cssq = (v) => String(v).replace(/["\\]/g, '\\$&');
+  const hl = ev.kind === 'click' ? `<style>[data-action="${cssq(ev.action)}"]${ev.arg != null ? `[data-arg="${cssq(ev.arg)}"]` : ''}{outline:3px solid #e8925a!important;outline-offset:2px;box-shadow:0 0 0 7px rgba(232,146,90,.3)!important}</style>` : '';
+  const blank = `<!doctype html><body style="margin:0;font:14px/1.5 system-ui,sans-serif;color:#6f7889;display:grid;place-items:center;height:100vh;background:#f7f8fa"><div style="max-width:80%;text-align:center">No screen yet.</div></body>`;
+  // the page each call leaves on screen, and where in the call's output its HTML / patch tokens sit
+  const plan = it.calls.map((c) => { const last = [...c.tool_calls].reverse().find((x) => x.page != null); return { page: last ? last.page : null, kind: last ? last.kind : null }; });
+  let cur = { key: null, written: 0 }, lastStat = '';
+  const doc = () => { try { return frame.contentDocument; } catch (e) { return null; } };
+  const at = (d, m) => { const se = d.scrollingElement; if (m && se) se.scrollTop = Math.max(0, m.getBoundingClientRect().top + se.scrollTop - frame.clientHeight / 2); };
+  function show(html, key, mode) {
+    if (cur.key === key) return; const d = doc(); if (!d) return;
+    d.open(); d.write(html); d.close(); cur = { key, written: html.length };
+    if (mode === 'edit') { const m = d.getElementById('ot-edit'); const tg = m && (m.nextElementSibling || m.parentElement); if (tg && tg.style) { tg.style.outline = '3px solid #2f8a68'; tg.style.outlineOffset = '2px'; } at(d, tg); }
+    else if (mode === 'click' && ev.kind === 'click') at(d, d.querySelector(`[data-action="${cssq(ev.action)}"]`));
+  }
+  function stream(html, n, key) {  // incremental document.write of the HTML generated so far
+    if (cur.key === key + ':done' && n >= html.length) return;
+    const d = doc(); if (!d) return;
+    if (cur.key !== key || n < cur.written) { d.open(); cur = { key, written: 0 }; }
+    if (n > cur.written) { d.write(html.slice(cur.written, n)); cur.written = n; const se = d.scrollingElement; if (se) se.scrollTop = se.scrollHeight; }
+    if (n >= html.length) { d.close(); cur.key = key + ':done'; const se = d.scrollingElement; if (se) se.scrollTop = 0; }
+  }
+  function render(t) {
+    let shown = false, prevPage = before;
+    for (let i = it.calls.length - 1; i >= 0 && !shown; i--) {
+      const c = it.calls[i], P = plan[i]; if (P.page == null) continue;
+      const w = tl.segs.find((s) => s.i === i && s.k === 'decode'); if (!w || t < w.t0) continue;
+      const e = clamp01((t - w.t0) / Math.max(1e-9, w.t1 - w.t0)) * c.output_tokens;
+      if (P.kind === 'html') {
+        const html = rec.pages[P.page], hf = clamp01((e - c.reasoning_tokens - c.tool_tokens) / Math.max(1, c.html_tokens));
+        if (hf > 0) { stream(html, Math.round(html.length * hf), 'p' + P.page); shown = true; }
+      } else if (t >= w.t1) {
+        let pv = before; for (let j = i - 1; j >= 0; j--) if (plan[j].page != null) { pv = rec.pages[plan[j].page]; break; }
+        show(gMark(pv || '', rec.pages[P.page]), 'e' + P.page, 'edit'); shown = true;
+      }
+    }
+    if (!shown) {
+      show(before ? before + hl : blank, 'b' + it.i, 'click');
+    }
+    let st = '';
+    const wNow = tl.segs.find((s) => t >= s.t0 && t < s.t1);
+    if (t >= tl.total && t > 0) st = `<span class="ok">✓ ${it.kind === 'full' ? 'new screen' : it.kind === 'patch' ? 'screen patched' : 'no change'} · ${fmtS(tl.total)} s</span> · ${fmt(gSum(it, 'output_tokens'))} tokens · ${gTools(it)} tool calls`;
+    else if (t > 0 && wNow) {
+      const c = it.calls[wNow.i], cn = `turn ${wNow.i + 1}/${it.calls.length}`;
+      if (wNow.k === 'prefill') st = `<span class="ph">prefill</span> · ${cn} · ${fmt(c.new_tokens)} new tokens`;
+      else if (wNow.k === 'kv') st = `<span class="ph">KV → chip</span> · ${cn} · ${fmt(c.kv_bytes / 1e6, 2)} MB`;
+      else if (wNow.k === 'tools') st = `<span class="ph">tools</span> · ${cn} · ${c.tool_calls.length} call${c.tool_calls.length === 1 ? '' : 's'}, ${fmtS(c.tool_s)} s measured` + c.tool_calls.slice(0, 3).map((x) => `<span class="tc">→ ${esc(x.label.slice(0, 100))}</span>`).join('') + (c.tool_calls.length > 3 ? `<span class="tc">… +${c.tool_calls.length - 3} more</span>` : '');
+      else {
+        const e = clamp01((t - wNow.t0) / Math.max(1e-9, wNow.t1 - wNow.t0)) * c.output_tokens, r = c.reasoning_tokens;
+        if (e < r) { const k = Math.round(c.thinking.length * e / r); st = `<span class="ph">thinking</span> · ${cn} · ${fmt(e)} / ${fmt(r)} tokens<span class="th">${esc(c.thinking.slice(Math.max(0, k - 150), k))}</span>`; }
+        else if (c.html_tokens && e >= r + c.tool_tokens) st = `<span class="ph">writing HTML</span> · ${cn} · ${fmt(e - r - c.tool_tokens)} / ${fmt(c.html_tokens)} tokens`;
+        else if (c.patch_tokens && e >= r + c.tool_tokens) st = `<span class="ph">writing a patch</span> · ${cn} · ${fmt(c.patch_tokens)} tokens of find/replace`;
+        else if (c.tool_calls.length) st = `<span class="ph">calling tools</span> · ${cn}` + c.tool_calls.filter((x) => x.kind === 'tool').slice(0, 3).map((x) => `<span class="tc">→ ${esc(x.label.slice(0, 100))}</span>`).join('');
+        else st = `<span class="ph">replying</span> · ${cn} · “${esc(c.text.slice(0, 60))}”`;
+      }
+    } else st = ev.kind === 'click' ? `<span class="ph">click</span> · “${esc(ev.label)}”` : `<span class="ph">request</span> · “${esc(ev.text.slice(0, 90))}”`;
+    if (st !== lastStat) { stat.innerHTML = st; lastStat = st; }
+  }
+  return { render, reset() { cur = { key: null, written: 0 }; lastStat = ''; } };
+}
+const D = { recs: {}, kind: 'full' };
+function gLanes(N) {
+  const sys = N.systems || {}, hb = ((sys.hbm || {}).targets || []).find((x) => x.id === 'hbm_ds');
+  const dsm = (sys.ds_rom && sys.ds_rom.per_user && sys.ds_rom.per_user.MTP) || null, hbm = (hb && hb.per_user && hb.per_user.MTP) || null;
+  const Dd = Object.fromEntries(N.designs.map((d) => [d.id, d])), G = N.gpu.ds;
+  const dv = dsm ? dsm.value : Dd.ds_rom.per_user_mtp.value, hv = hbm ? hbm.value : Dd.hbm_ds.per_user_mtp.value;
+  const src = shortSrc(N.generated_from.systems || N.generated_from.token_path);
+  return [
+    { k: 'Chip', cls: 'chip', short: 'DS ROM', rate: dv, kv: true, lab: `${fmt(dv, 1)} tok/s · analytical, MTP`, label: `${fmt(dv, 1)} tok/s per user · analytical · MTP τ 4.159 · ${src} ds_rom.per_user.MTP` },
+    { k: 'Hbm', cls: 'chip', short: 'HBM', rate: hv, kv: true, lab: `${fmt(hv, 1)} tok/s · analytical, MTP`, label: `${fmt(hv, 1)} tok/s per user · analytical · MTP τ 4.159 · generic die · ${src} hbm.targets[hbm_ds].per_user.MTP` },
+    { k: 'Gpu', cls: 'gpu', short: 'Best GPU', rate: G.per_user.value, kv: false, lab: `${fmt(G.per_user.value, 1)} tok/s · 4 × GB300, published`, label: `${fmt(G.per_user.value, 2)} tok/s per user · third-party · ${G.per_user.label}` },
+    { k: 'Or', cls: 'or', short: 'OpenRouter', rate: G.served.value, kv: false, lab: `${fmt(G.served.value, 1)} tok/s · median served`, label: `${fmt(G.served.value, 1)} tok/s · ${G.served.label} · snapshot ${G.served.date}` },
+  ];
+}
+function setupD(N, idx) {
+  if (!idx.genui || !idx.genui.length) { $('genui').hidden = true; const a = document.querySelector('.nav a[href="#genui"]'); if (a) a.hidden = true; return; }
+  const L = gLanes(N); D.L = L; L.forEach((x) => { const e = $('g' + x.k + 'Rate'); e.textContent = x.lab; e.title = x.label; });
+  D.P = player($('gPlay'), $('gReset'), $('gSpeed'), (t) => frameD(t), { observe: $('gChip') });
+  $('gKind').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; D.kind = b.dataset.k; $('gKind').querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b)); pickCase(D.case, true); });
+  return Promise.all(idx.genui.map((g) => J('recordings/' + g.file))).then((recs) => {
+    D.recs = recs; tabs($('gCases'), recs.map((r, i) => ({ title: r.title, i })), (it) => pickCase(it.i, true));
+    gSummary(N, recs, L); gMethod(N, recs);
+    pickCase(0, false);
+  });
+}
+function pickCase(ci, play) {
+  D.case = ci; const rec = D.recs[ci], list = rec.interactions.filter((x) => x.kind === D.kind);
+  $('gCases').querySelectorAll('button').forEach((b, j) => b.setAttribute('aria-pressed', j === ci));
+  $('gCaseNote').innerHTML = `<b>${esc(rec.title)}.</b> ${esc(rec.blurb)}`;
+  const host = $('gInter'); host.innerHTML = '';
+  list.forEach((it, j) => { const b = el('button', '', '#' + it.i); b.type = 'button'; b.title = it.event.kind === 'click' ? 'click: ' + it.event.label : it.event.text; b.onclick = () => { pickD(rec, list, j); D.P.auto = false; D.P.set(true); }; host.append(b); });
+  gDetail(rec);
+  if (list.length) { pickD(rec, list, 0); if (play) { D.P.auto = false; D.P.set(true); } }
+}
+function pickD(rec, list, j) {
+  const it = list[j]; D.list = list; D.j = j; D.rec = rec; D.chained = false;
+  $('gInter').querySelectorAll('button').forEach((b, k) => b.setAttribute('aria-pressed', k === j));
+  D.cur = D.L.map((x) => { const tl = gSegments(it.calls, x.rate, x.kv); return { ...x, tl, pane: gPane($('g' + x.k + 'Frame'), $('g' + x.k + 'Stat'), rec, it, tl) }; });
+  D.bars = tlRows($('gTl'), D.cur.map((x) => ({ name: x.short, cls: x.cls, tl: x.tl })));
+  const ev = it.event, S = (k) => gSum(it, k);
+  const kinds = {}; it.calls.forEach((c) => c.tool_calls.forEach((x) => { const n = x.kind === 'html' ? 'write screen' : x.kind === 'patch' ? 'edit screen' : x.name; kinds[n] = (kinds[n] || 0) + 1; }));
+  $('gTask').innerHTML = (ev.kind === 'click' ? `<b>#${it.i} · The user clicks</b> “${esc(ev.label)}” <span class="mono" style="font-size:12px">data-action="${esc(ev.action)}"</span>` : `<b>#${it.i} · The user asks:</b> “${esc(ev.text)}”`) +
+    ` <span class="src">${it.kind === 'full' ? 'The model writes a new screen.' : 'The model patches the screen in place.'} ${it.calls.length} model turns · ${gTools(it)} tool calls (${Object.entries(kinds).map(([k, v]) => `${v} ${k}`).join(', ')}) · ${fmt(S('output_tokens'))} generated tokens: ${fmt(S('reasoning_tokens'))} reasoning, ${fmt(S('tool_tokens'))} tool-call arguments, ${fmt(S('html_tokens'))} HTML, ${fmt(S('patch_tokens'))} patch, ${fmt(S('text_tokens'))} text · ${fmt(S('tool_result_tokens'))} tool-result tokens · ${fmt(S('new_tokens'))} new tokens prefilled · tools ${fmtS(S('tool_s'))} s measured</span>`;
+  D.P.total = Math.max(...D.cur.map((x) => x.tl.total)); D.P.ready = true; D.P.restart();
+}
+function frameD(t) {
+  if (!D.cur) return;
+  D.cur.forEach((x) => { if (t === 0) x.pane.reset(); x.pane.render(t); clockSet($('g' + x.k + 'Clock'), $('g' + x.k), t, x.tl.total, 'this action'); }); D.bars.set(t);
+  if (t >= D.P.total && t > 0 && !D.chained && D.j < D.list.length - 1) {
+    D.chained = true; const nx = D.j + 1, list = D.list; setTimeout(() => { if (D.list === list && D.j === nx - 1 && D.chained) { pickD(D.rec, list, nx); D.P.set(true); } }, 1800);
+  }
+}
+function gq(a, q) { const s = [...a].sort((x, y) => x - y); if (!s.length) return NaN; const p = (s.length - 1) * q, lo = Math.floor(p), hi = Math.ceil(p); return s[lo] + (s[hi] - s[lo]) * (p - lo); }
+function gStats(list, L) {
+  const col = (f) => list.map(f);
+  return {
+    n: list.length, turns: col((it) => it.calls.length), tools: col(gTools), reasoning: col((it) => gSum(it, 'reasoning_tokens')),
+    out: col((it) => gSum(it, 'output_tokens')), html: col((it) => gSum(it, 'html_tokens')), patch: col((it) => gSum(it, 'patch_tokens')), targs: col((it) => gSum(it, 'tool_tokens')),
+    res: col((it) => gSum(it, 'tool_result_tokens')), tool_s: col((it) => gSum(it, 'tool_s')), api: col((it) => gSum(it, 'api_s')),
+    lanes: L.map((x) => col((it) => gSegments(it.calls, x.rate, x.kv).total)), decode: L.map((x) => col((it) => gSegments(it.calls, x.rate, x.kv).decode)),
+  };
+}
+const gMP = (a, d = 0, s = '') => `${fmt(gq(a, 0.5), d)}${s}<div class="src">p90 ${fmt(gq(a, 0.9), d)}${s}</div>`;
+const gMPs = (a) => `${fmtS(gq(a, 0.5))} s<div class="src">p90 ${fmtS(gq(a, 0.9))} s</div>`;
+function gSummary(N, recs, L) {
+  const rows = [];
+  recs.forEach((rec) => ['full', 'patch'].forEach((k) => {
+    const list = rec.interactions.filter((x) => x.kind === k); if (!list.length) return; const s = gStats(list, L);
+    rows.push(`<tr><td><b>${esc(rec.title)}</b><div class="src">${k === 'full' ? 'full generation' : 'patch'} · ${s.n} interactions</div></td><td class="num">${gMP(s.turns)}</td><td class="num">${gMP(s.tools)}</td><td class="num">${gMP(s.reasoning)}</td><td class="num">${gMP(k === 'full' ? s.html : s.patch)}</td><td class="num">${gMP(s.targs)}</td><td class="num">${gMP(s.res)}</td><td class="num">${gMPs(s.tool_s)}</td>` +
+      s.lanes.map((a, j) => `<td class="v ${['lc', 'lc', 'lg', 'lo'][j]}">${fmtS(gq(a, 0.5))} s<div class="src">p90 ${fmtS(gq(a, 0.9))} s · decode ${fmtS(gq(s.decode[j], 0.5))} s</div></td>`).join('') + `<td class="v">${gMPs(s.api)}</td></tr>`);
+  }));
+  $('gSum').tBodies[0].innerHTML = rows.join('');
+  const none = recs.reduce((a, r) => a + r.interactions.filter((x) => x.kind === 'none').length, 0);
+  $('gSumNote').innerHTML = `Median, with the 90th percentile under it. “HTML / patch” is the tokens of the new screen (full) or of the find/replace edits (patch). Tool-call arguments are the SQL and shell commands. Tool results are what the tools returned; they are most of the new tokens prefilled. Wall time per lane = prefill + KV transfer (chip lanes) + decode + measured tool time, summed over the model's turns; the median decode time alone is under it. Tool time is the same in every lane, so it sets a floor. It is measured from the end of the model's response to the last tool result, so it includes the harness's own per-call overhead: on our shared test host (load about 25 on 32 cores) even a file read took 1–2 s and an edit about 4 s. It is an upper bound for a tuned harness. In these sessions it is often longer than the chip's decode.${none ? ` ${none} recorded interaction${none === 1 ? '' : 's'} left the screen unchanged (the model found the request already satisfied) and ${none === 1 ? 'is' : 'are'} not counted as patches.` : ''}`;
+}
+function gDetail(rec) {
+  const L = D.L, rows = rec.interactions.map((it) => {
+    const tls = L.map((x) => gSegments(it.calls, x.rate, x.kv)), S = (k) => gSum(it, k);
+    return `<tr class="${it.kind === D.kind ? '' : 'dim'}"><td><b>#${it.i} ${it.kind === 'full' ? 'full' : it.kind === 'patch' ? 'patch' : 'no change'}</b><div class="src">${esc(it.event.kind === 'click' ? 'click: ' + it.event.label : it.event.text).slice(0, 110)}</div></td><td class="num">${it.calls.length} / ${gTools(it)}</td>` +
+      `<td class="num">${fmt(S('output_tokens'))}<div class="src">reasoning ${fmt(S('reasoning_tokens'))} · args ${fmt(S('tool_tokens'))} · HTML ${fmt(S('html_tokens'))} · patch ${fmt(S('patch_tokens'))}</div></td><td class="num">${fmt(S('tool_result_tokens'))}<div class="src">${fmt(S('new_tokens'))} new prefilled</div></td><td class="num">${fmtS(S('tool_s'))} s</td>` +
+      tls.map((tl, j) => `<td class="v ${['lc', 'lc', 'lg', 'lo'][j]}">${fmtS(tl.total)} s</td>`).join('') + `<td class="v">${fmtS(S('api_s'))} s</td></tr>`;
+  });
+  $('gTable').tBodies[0].innerHTML = rows.join('');
+}
+function gMethod(N, recs) {
+  const A = recs[0].assumptions, G = N.gpu.ds, all = recs.flatMap((r) => r.interactions.flatMap((it) => it.calls));
+  const lo = Math.min(...all.map((c) => c.prefill_s_low)), hi = Math.max(...all.map((c) => c.prefill_s_low));
+  const kvlo = Math.min(...all.map((c) => c.kv_s)), kvhi = Math.max(...all.map((c) => c.kv_s));
+  $('gMethod').innerHTML = `
+  <p><b>The recordings are real.</b> Every token of reasoning, every SQL query and shell command, and every byte of HTML here is DeepSeek-V4.1 Flash output from the DeepSeek API (served model <span class="mono">${esc(recs[0].model_served.join(', '))}</span>), run by the DeepSeek Harness (${esc(recs[0].harness)}) in a sandbox. The SQL ran against a real 1M-order SQLite database and the shell commands against a real directory tree. Each case is one session; every user action resumes it, so the conversation stays in the prefix cache. Token counts come from the API; the split into reasoning, tool arguments, HTML and patch re-tokenises each part with the DeepSeek-V4.1 tokenizer and scales it to the API's output count. Only the replay rate differs between lanes.</p>
+  <p><b>Wall time per action.</b> It is the sum over the model's turns of four parts. <b>Prefill</b> covers only the new tokens since the previous turn (the user's event, or the tool results); the cached prefix is free. <b>KV transfer</b> applies in the chip lanes only. <b>Decode</b> is every generated token (reasoning, tool-call arguments, HTML or patch, text) at the lane's per-user rate. <b>Tools</b> run at their measured wall time, the same in every lane. That time runs from the end of the model's response to the last tool result and includes the harness's per-call overhead on a loaded host. The harness's further gap before its next request (typically 2–3 s) is not counted, and neither is user think time.</p>
+  <p><b>Prefill</b> runs on 8 B200 GPUs in every lane, so the comparison isolates decode. It uses the repository's turn model (<span class="mono">${esc(A.prefill_model)}</span>). The FLOP rate is calibrated from ${esc(A.prefill_cite)}. At these sizes the ${fmt(A.layers)}-layer expert-parallel floor dominates: ${fmt(A.ep_layer_floor_s * 1000, 1)} ms per layer (<b>assumed</b>, DeepEP low-latency dispatch + combine class), so ${fmt(A.ep_floor_s * 1000, 1)} ms per turn. Compute alone would take ${fmt(lo * 1000, 2)}–${fmt(hi * 1000, 1)} ms. We found no published batch-1 time to first token for a DeepSeek-V3/V4-class model with a cached prefix, so this is a bound, not a measurement.</p>
+  <p><b>KV transfer to the chip</b>: ${esc(A.kv_model)}, over ${fmt(A.link_Bps / 1e9, 1)} GB/s (${esc(A.link_note)}). That is ${fmt(kvlo * 1e6, 0)}–${fmt(kvhi * 1e6, 0)} µs per turn. The HBM lane is charged the same link, because its own ingest path has not been composed. The GPU lanes prefill and decode on one node and pay no transfer.</p>
+  <p><b>Not modelled.</b> The network between the user and the server, the browser's render time, and the harness's own time between turns are not modelled. They would add the same amount to every lane. The OpenRouter lane uses the median served decode rate (${fmt(G.served.value, 1)} tok/s), not OpenRouter's real time to first token, so it is optimistic for OpenRouter. The last column is what the DeepSeek API actually took for the model calls, measured from our client.</p>
+  <p><b>Rates.</b> The chip rates are analytical per-user MTP rates at 1M context (τ 4.159), read live from <span class="mono">${esc(shortSrc(N.generated_from.systems || ''))}</span>. These sessions run at 10K–150K context, so the chip rates are conservative. Best GPU: ${fmt(G.per_user.value, 2)} tok/s, ${esc(G.per_user.title)}. Its accept length is simulated at 5.5, which favours the GPU. OpenRouter: ${esc(G.served.label)}, snapshot ${esc(G.served.date)}.</p>`;
+}
+
 /* ---------- numbers table + hero ---------- */
 function numbers(N) {
   const D = Object.fromEntries(N.designs.map((d) => [d.id, d])), G = N.gpu;
@@ -462,7 +642,7 @@ function chart(N, m) {
 
 /* ---------- boot ---------- */
 let last = performance.now();
-function loop(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; die.tick(now); [A.P, B.P, C.P].forEach((p) => p && p.step(dt)); requestAnimationFrame(loop); }
+function loop(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; die.tick(now); [A.P, B.P, C.P, D.P].forEach((p) => p && p.step(dt)); requestAnimationFrame(loop); }
 requestAnimationFrame(loop);
 (async () => {
   try {
@@ -470,8 +650,8 @@ requestAnimationFrame(loop);
     if (N.error) throw new Error(N.error);
     numbers(N);
     const q = idx.long ? await J('recordings/' + idx.long) : null;
-    await Promise.all([setupA(N, idx), q ? setupB(N, q) : null, setupC(N, idx)]);
-    $('recInfo').textContent = `${idx.agent.length} dsh coding sessions, ${idx.home.length} home-hub traces, 1 long Qwen3-8B answer, all recorded 2026-10-09`;
+    await Promise.all([setupA(N, idx), q ? setupB(N, q) : null, setupC(N, idx), setupD(N, idx)]);
+    $('recInfo').textContent = `${idx.agent.length} dsh coding sessions, ${idx.home.length} home-hub traces, 1 long Qwen3-8B answer, ${(idx.genui || []).length} generative-UI sessions, all recorded 2026-10-09`;
   } catch (e) {
     console.warn('landing:', e); $('aTask').textContent = 'Could not load the numbers or recordings: ' + e.message;
   }

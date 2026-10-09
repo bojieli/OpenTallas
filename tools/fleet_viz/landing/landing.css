@@ -252,3 +252,27 @@ footer { border-top: 1px solid var(--line); padding-block: 28px 40px; color: var
 .watch .meta { min-width: 0; flex: 1 1 180px; overflow-wrap: anywhere; }
 .lanes.three .watch { flex-direction: column; align-items: stretch; gap: 6px; }
 .lanes.three .watch .meta { margin-left: 0; text-align: left; flex: none; }
+/* Demo D: generative UI, four lanes rendering the model's HTML */
+:root { --kv: #b48ee8; }
+.glanes { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 1180px) { .glanes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .glanes { grid-template-columns: 1fr; } }
+.glanes .clock { font-size: 22px; }
+.lane.hbm { border-style: dashed; }
+.gbox { position: relative; height: 480px; background: #fff; }
+@media (max-width: 640px) { .gbox { height: 420px; } }
+.gbox iframe { display: block; width: 100%; height: 100%; border: 0; background: #fff; }
+.gstat { position: absolute; left: 8px; right: 8px; bottom: 8px; background: rgba(12,15,20,.9); color: #d8dde7; border-radius: 8px; padding: 7px 10px; font: 11.5px/1.45 var(--f-mono); max-height: 46%; overflow: hidden; pointer-events: none; transition: opacity .25s; }
+.gstat:empty { opacity: 0; }
+.gstat .ph { color: #f0b78c; font-weight: 600; }
+.gstat .th { color: #8c93a3; font-style: italic; display: block; overflow-wrap: anywhere; }
+.gstat .tc { color: #f0b78c; display: block; overflow-wrap: anywhere; }
+.gstat .ok { color: #8fd3b0; }
+.bar i.kv { background: var(--kv); }
+table.gtable td { font-size: 13px; }
+table.gtable td.v { font-size: 15px; }
+table.gtable td .src { margin-top: 3px; }
+table.gtable td.lc { color: var(--chip); } table.gtable td.lg { color: var(--gpu); } table.gtable td.lo { color: var(--or); }
+table.gtable { min-width: 1100px; }
+table.gtable tr.dim td { opacity: .55; }
+#gInter { max-width: 100%; }
