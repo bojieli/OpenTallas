@@ -10,6 +10,7 @@ from dsrom_mtp_shared_qelem_model import model
 def bench(raw_negative=False):
     s=B.TB.replace('0:15359','0:2303').replace('0:479','0:71')
     s=s.replace('k<240','k<36').replace('nq==480','nq==72')
+    s=s.replace('$fatal(1,"activation quant mismatch %0d",nq+j);', '$fatal(1,"activation quant mismatch %0d fault=%b q=%h want=%h e=%h want_e=%h",nq+j,aqf[j],aq[j*256+:256],qgold[nq+j],ae[j*10+:10],egold[nq+j]);')
     s=s.replace('wire busy,fault;', 'wire busy,fault,walking,bank_free,sh_free;')
     s=s.replace(".go_tag(2'd0),", ".go_tag(2'd0),.walking(walking),.bank_free(bank_free),.sh_free(sh_free),")
     s=s.replace('end cfg_v=0;repeat(6)@(negedge clk);go=1;', 'end cfg_v=0;repeat(6)@(negedge clk);wait(sh_free && !walking);repeat(6)@(negedge clk);go=1;')
