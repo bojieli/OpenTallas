@@ -237,26 +237,56 @@ def sut(**kw):
 
 
 class Builder:
+    """Program assembly with wait masks from region hazards: a record waits for unit u (u != its own unit) when it
+    reads a region u wrote, or writes a region u read or wrote, since u last drained (RAW / WAR / WAW; read-read is
+    not a hazard).  A record's own unit orders it (in-order queue)."""
+
     def __init__(self, g):
         self.g = g
         self.recs = []
-        self.pending = {u: set() for u in HGI.UNITS}
+        self.prd = {u: set() for u in HGI.UNITS}
+        self.pwr = {u: set() for u in HGI.UNITS}
 
     def add(self, rec: Rec, reads, writes):
         mask = 0
-        touch_r, touch_w = set(reads), set(writes)
-        for u, regs in self.pending.items():
-            if u == rec.unit or not regs:
+        rd, wr = set(reads), set(writes)
+        for u in HGI.UNITS:
+            if u == rec.unit:
                 continue
-            if regs & (touch_r | touch_w):
+            if (rd & self.pwr[u]) or (wr & (self.prd[u] | self.pwr[u])):
                 mask |= wait_mask(u)
         for u in HGI.UNITS:
             if mask >> HGI.UNITS.index(u) & 1:
-                self.pending[u] = set()
+                self.prd[u], self.pwr[u] = set(), set()
         rec.wait = mask
-        self.pending[rec.unit] |= touch_r | touch_w if rec.unit != "COLL" else touch_w | touch_r
+        rec.reads, rec.writes = sorted(rd), sorted(wr)
+        self.prd[rec.unit] |= rd
+        self.pwr[rec.unit] |= wr
         self.recs.append(rec)
         return rec
+
+
+def assign_waits(recs):
+    """Wait masks for a record list that may hold one LOOP: the hazard rule over the sequence prefix, body, body,
+    suffix (the second body pass sees the pending state the loop's back edge carries); a body record's mask is the
+    union of its two passes."""
+    lo = next((k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "LOOP"), None)
+    if lo is None:
+        seq = list(range(len(recs)))
+    else:
+        hi = next(k for k in range(lo, len(recs)) if recs[k].unit == "CTL" and recs[k].op == "ENDLOOP")
+        body = list(range(lo + 1, hi))
+        seq = list(range(lo + 1)) + body + body + list(range(hi, len(recs)))
+    b = Builder(None)
+    masks = {}
+    import copy as _c
+    for k in seq:
+        r = _c.copy(recs[k])
+        b.add(r, recs[k].reads, recs[k].writes)
+        masks[k] = masks.get(k, 0) | r.wait
+    for k, r in enumerate(recs):
+        r.wait = masks.get(k, 0)
+    return recs
 
 
 def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
@@ -413,4 +443,4 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
     for r in b.recs:
         if r.unit == "ARGMAX":
             r.tag = r.tag or "argmax_local"
-    return b.recs
+    return assign_waits(b.recs)

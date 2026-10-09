@@ -60,7 +60,7 @@ def main():
     write_snapshot(tmp)
     model = R.QwenR25(tmp, tmp / "img")
     ok = True
-    for stage, layer, pos in (("layer", 0, 63), ("layer", 1, 40), ("head", 0, 0)):
+    for stage, layer, pos in (("layer", 0, 63), ("layer", 1, 40), ("head", 0, 0), ("token", 0, 50)):
         r = QP.run_stage(model, model.ck.cfg, stage, layer, pos)
         print(stage, layer, pos, "PASS" if r["pass_"] else f"FAIL {r.get('fault')} {r.get('failures')}",
               r.get("families"))

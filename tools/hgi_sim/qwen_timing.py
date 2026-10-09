@@ -55,13 +55,27 @@ def main():
     res = dict(program=dict(records_in_image=len(recs), image_bytes=len(image),
                             image_sha256=hashlib.sha256(image).hexdigest(),
                             families=sorted({r.family for r in recs})))
+    POSV = a.position
     sched = {}
     for mode in ("S0", "S1", "S2", "S3"):
         s = T.schedule(recs, a.position, mode)
         sched[mode] = s
         res[mode] = summarize(s, recs)
         print(mode, res[mode]["total_cycles"], res[mode]["tok_s"], "races", res[mode]["n_races"], flush=True)
-    t0, t1, t2, t3 = (sched[m]["total_cycles"] for m in ("S0", "S1", "S2", "S3"))
+    S_ = sched
+    cf = {} if "qwen" in __name__ or True else {}
+    variants = {}
+    kw = dict(cost_fn=wc) if "wc" in dir() else {}
+    variants["S2_no_wires"] = T.schedule(recs, POSV, "S2", wires=False, **kw)["total_cycles"]
+    variants["SX_skip_ahead"] = T.schedule(recs, POSV, "SX", **kw)["total_cycles"]
+    ro = T.reorder(recs, POSV, rebuild=T.rebuild_waits, **kw)
+    sro = T.schedule(ro, POSV, "S2", **kw)
+    variants["S2_compiler_reordered"] = sro["total_cycles"]
+    variants["S2_compiler_reordered_races"] = len(sro["races"])
+    variants["SX_compiler_reordered"] = T.schedule(ro, POSV, "SX", **kw)["total_cycles"]
+    res["cp_fix_variants"] = {k: (round(v, 1) if isinstance(v, float) else v) for k, v in variants.items()}
+    print(json.dumps(res["cp_fix_variants"], indent=1))
+    t0, t1, t2, t3 = (S_[m]["total_cycles"] for m in ("S0", "S1", "S2", "S3"))
     res["overheads"] = dict(
         drain_wait_vs_dataflow_cycles=round(t1 - t0, 1), drain_wait_pct=round(100 * (t1 - t0) / t2, 2),
         cp_issue_hol_cycles=round(t2 - t1, 1), cp_issue_hol_pct=round(100 * (t2 - t1) / t2, 2),

@@ -2,7 +2,7 @@
  "schema": "opentallas.hgi_sim.qwen_timing.v0",
  "spec": "HGI-1 v0.9 (024fa2af1)",
  "position": 8191,
- "generated_utc": "2026-10-09T10:45:59Z",
+ "generated_utc": "2026-10-09T11:01:12Z",
  "grade": "pathfinding: unit entries are mostly estimates (calibration.json); not a published rate",
  "calibration": {
   "schema": "opentallas.hgi_sim.calibration.v0",
@@ -570,6 +570,13 @@
     "head_scale": 281.0,
     "end": 1.0
    }
+  },
+  "cp_fix_variants": {
+   "S2_no_wires": 1088484.0,
+   "SX_skip_ahead": 1105944.0,
+   "S2_compiler_reordered": 1109821.4,
+   "S2_compiler_reordered_races": 0,
+   "SX_compiler_reordered": 1109785.4
   },
   "overheads": {
    "drain_wait_vs_dataflow_cycles": 0.0,

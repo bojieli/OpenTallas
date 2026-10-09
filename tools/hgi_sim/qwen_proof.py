@@ -76,6 +76,7 @@ def vmget(die, g, name, n, off=0):
 
 
 def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
+    tok_in = 0
     ctx = 8192 if cfg["hidden_size"] == 4096 else max(64, pos + 1)
     g = QC.Geometry(cfg, ctx)
     words = md_words(cfg)
@@ -91,6 +92,20 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
         x = R.synthetic_x(model, 1)
         model.head(x, tr)
         layers, kvs, parts = [], {}, ("head",)
+    elif stage == "token":
+        tok_in = 9707 % model.V
+        layers = list(range(model.L))
+        kvs = {i: R.synthetic_kv(model, i, pos) for i in layers}
+        x = model.embed(tok_in)
+        tr["x_layers"] = []
+        for i in layers:
+            Kc, Vc = kvs[i]
+            x = model.layer(i, x, pos, Kc.copy(), Vc.copy())
+            tr["x_layers"].append(x)
+            log(f"golden layer {i}")
+        model.head(x, tr)
+        x = None
+        parts = ("embed", "layers", "head")
     else:
         raise ValueError(stage)
     hbms, _ = QC.build_images(model, g, layers, kv_state=kvs.get)
@@ -118,11 +133,18 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
     err = M.cfg_commit(w2)
     if err:
         raise SystemExit(f"CFG commit refused: {HGI.ERR[err]}")
-    for d in dies:
-        d.vm[g.vm["X"]:g.vm["X"] + g.H] = bits(x)
+    if x is not None:
+        for d in dies:
+            d.vm[g.vm["X"]:g.vm["X"] + g.H] = bits(x)
     snaps = {}
 
     def hook(Mm, r, L):
+        if stage == "token":
+            if r.tag == "row_scale_down+residual":
+                snaps[("x", L)] = [d.vm[g.vm["X"]:g.vm["X"] + g.H].copy() for d in dies]
+            elif r.tag in ("head_scale", "embedding.dequant"):
+                snaps[r.tag] = [d.vm.copy() for d in dies]
+            return
         snaps[r.tag] = [d.vm.copy() for d in dies]
     orig = Machine.run
 
@@ -135,14 +157,26 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
         return _run(self, recs_, token, pos, hook)
     t0 = time.time()
     try:
-        tok, trace = run_with_hook(M, image, 0, pos)
+        tok, trace = run_with_hook(M, image, tok_in if stage == "token" else 0, pos)
     except Fault as e:
         return dict(stage=stage, layer=layer, position=pos, mutant=mutant, fault=str(e), status=e.status,
                     pass_=False, records=len(recs), image_bytes=len(image))
     wall = time.time() - t0
     C = Checker()
     H, HD, nq, nk = g.H, g.HD, g.nq, g.nk
-    for d, die in enumerate(dies):
+    if stage == "token":
+        for d in range(QC.TP):
+            C.eq("embedding", "x0", d, snaps["embedding.dequant"][d][g.vm["X"]:g.vm["X"] + H].view(F),
+                 model.embed(tok_in))
+            for i in layers:
+                C.eq("layer", f"x_out L{i}", d, snaps[("x", i)][d].view(F), tr["x_layers"][i])
+            r0, r1 = model.head_rows(d)
+            vm = snaps["head_scale"][d]
+            C.eq("head+head_scale", "logits", d, vm[g.vm["LOG"]:g.vm["LOG"] + g.hrows].view(F), tr["logits"][r0:r1])
+        C.rows.append(dict(family="argmax_local+argmax_merge+end", what="token", die=-1, n=1,
+                           bit_exact=int(tok) == int(tr["token"][0]), first_bad=None if int(tok) == int(tr["token"][0])
+                           else [int(tok), int(tr["token"][0])]))
+    for d, die in enumerate(dies if stage != "token" else []):
         if stage == "head":
             r0, r1 = model.head_rows(d)
             vm = snaps["head_scale"][d]
@@ -233,7 +267,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--snapshot", required=True, type=Path)
     ap.add_argument("--cache", required=True, type=Path)
-    ap.add_argument("--stage", default="layer", choices=("layer", "head"))
+    ap.add_argument("--stage", default="layer", choices=("layer", "head", "token"))
     ap.add_argument("--layer", type=int, default=0)
     ap.add_argument("--position", type=int, default=8191)
     ap.add_argument("--mutants", action="store_true")

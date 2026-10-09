@@ -113,7 +113,11 @@ def intervals(d, dyn, L):
 
 
 def footprint(r, dyn, L):
+    """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
+    lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
+    for kind, iv in getattr(r, "implicit", ()):
+        (writes if kind == "w" else reads).append(iv)
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
             continue
@@ -221,7 +225,10 @@ PIPELINED = {"DMA": cv("units", "DMA.load_issue")}
 # ----------------------------------------------------------------------------------------------------------------
 # the schedules
 # ----------------------------------------------------------------------------------------------------------------
-def schedule(recs, pos, mode="S2", token=0, cost_fn=cost):
+def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
+    """mode: S0 dataflow | S1 per-unit sequencers (drain waits, no HOL) | S2 the CP as specified | S3 S2 with free
+    fetch / decode | SX S2 with dispatch skip-ahead (a held record blocks only later records it has a region hazard
+    with, or of its own unit).  wires=False zeroes dispatch_wire / retire_wire."""
     dyn = Dyn(pos, token)
     ex = expand(recs, pos, token)
     n = len(ex)
@@ -260,6 +267,10 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost):
         cpc["fetch_req_bytes"]["value"]
     ring = cpc["ring_bytes"]["value"]
     dwire, rwire, qd = cpc["dispatch_wire"]["value"], cpc["retire_wire"]["value"], cpc["queue_depth"]["value"]
+    if not wires:
+        dwire = rwire = 0
+    nm_rd = [set(getattr(recs[k], "reads", ())) for k, _ in ex]
+    nm_wr = [set(getattr(recs[k], "writes", ())) for k, _ in ex]
     # record byte offsets in the image (for fetch); loop replays hit the ring when the body fits
     offs, o = [], 0
     for r in recs:
@@ -309,7 +320,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost):
             dcyc = 0.0 if mode in ("S1",) else cpc["decode_header"]["value"] + nch * cpc["decode_per_chunk"]["value"]
             alat = 0.0 if mode in ("S1",) else cpc["addr_latency"]["value"]
             f_r = fetch_ready(i, k, L)
-            dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2",) else (dec_t + dcyc)
+            dec_t = max(dec_t + dcyc, f_r + dcyc) if mode in ("S2", "SX") else (dec_t + dcyc)
             ready = dec_t + alat
             wt = 0.0
             for b, un in enumerate(units):
@@ -321,6 +332,15 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost):
                 # per-unit sequencers, drain semantics: wait for every unit that produced an input to drain
                 wt = max([outstanding_end[recs[ex[j][0]].unit] for j in deps[i]] + [0.0])
                 d_t = max(ready, wt)
+            elif mode == "SX":
+                # skip-ahead: order only against earlier records with a region hazard, and the unit's own queue
+                lim = qt
+                for j in range(i - 1, max(-1, i - 64), -1):
+                    if recs[ex[j][0]].unit == u or (nm_rd[i] & nm_wr[j]) or (nm_wr[i] & (nm_rd[j] | nm_wr[j])):
+                        lim = max(lim, disp[j] + 1)
+                d_t = max(ready, wt, lim)
+                hol_block[i] = max(0.0, d_t - max(ready, wt, qt))
+                cp_busy += dcyc + cpc["dispatch_cycles"]["value"]
             else:
                 d_t = max(ready, cp_t + cpc["dispatch_cycles"]["value"], wt, qt)
                 wait_block[i] = max(0.0, wt - max(ready, cp_t + 1, qt))
@@ -398,3 +418,39 @@ def critical_path(s, recs):
             path[-1]["bound_by"] = "dispatch"
         i = j
     return list(reversed(path))
+
+
+def reorder(recs, pos, cost_fn=cost, rebuild=None):
+    """Compiler fix: within each straight-line segment (between CTL records; a LOOP body is one segment, ordered by
+    its first iteration), issue records in the order of their ideal-dataflow (S0) start, then recompute the wait
+    masks for the new order.  S0 start order respects every true dependence (a consumer never starts before its
+    producer ends), so the program's results are unchanged."""
+    s0 = schedule(recs, pos, "S0", cost_fn=cost_fn)
+    first = {}
+    for i, (k, L) in enumerate(s0["ex"]):
+        first.setdefault(k, (s0["start"][i], s0["end"][i], i))
+    out, seg = [], []
+
+    def flush():
+        seg.sort(key=lambda k: (first.get(k, (0, 0, k))[0], first.get(k, (0, 0, k))[2]))
+        out.extend(seg)
+        seg.clear()
+    for k, r in enumerate(recs):
+        if r.unit == "CTL":
+            flush()
+            out.append(k)
+        else:
+            seg.append(k)
+    flush()
+    new = [recs[k] for k in out]
+    return rebuild(new) if rebuild else new
+
+
+def rebuild_waits(recs):
+    """Recompute wait masks for a reordered record list (the Builder's hazard rule over the records' region names)."""
+    import copy as _c
+    from .qwen_compiler import assign_waits
+    out = [_c.copy(r) for r in recs]
+    for r in out:
+        r.reads, r.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))
+    return assign_waits(out)
