@@ -94,7 +94,7 @@ def configure(die, gen='r7'):
     CFG_LEF = CFG_LEF_V2 if gen == 'r8' else CFG_LEF_V1
     REAL_FILES.clear()
     HEAD_BUNDLES = 0
-    if die in ('layer', 'layer1'):
+    if die in LAYER_KINDS:
         PAIRS, BF_PAIRS, NV_PAIRS = 2417, 519, 0
     else:
         h = json.loads((ROOT / HEAD_REC).read_text())
@@ -143,9 +143,9 @@ def set_pairs(n):
     if BF_EXPLICIT_IDS is not None:
         assert n > max(BF_EXPLICIT_IDS, default=-1), 'explicit BF IDs exceed pair count'
         PAIRS, BF_PAIRS = n, len(BF_EXPLICIT_IDS)
-    elif DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None:
+    elif DIE_KIND in LAYER_KINDS and BF_PER_REGION is not None:
         PAIRS, BF_PAIRS = n, BF_PER_REGION * ROOTS
-    elif DIE_KIND in ('layer', 'layer1'):
+    elif DIE_KIND in LAYER_KINDS:
         PAIRS, BF_PAIRS = n, round(n * 519 / 2417)
     else:
         NV_PAIRS = round(NV_PAIRS * n / PAIRS)
@@ -382,7 +382,7 @@ def bf_sites():
         assert len(BF_EXPLICIT_IDS) == BF_PAIRS
         assert not (set(BF_EXPLICIT_IDS) & nv_sites())
         return set(BF_EXPLICIT_IDS)
-    if BF_PER_REGION is not None and DIE_KIND in ('layer', 'layer1'):
+    if BF_PER_REGION is not None and DIE_KIND in LAYER_KINDS:
         # the RTL's flat is_bf map (bf-double): floor(i * PAIRS / NBF), NBF = N x ROOTS; N per region asserted
         nb = BF_PER_REGION * ROOTS
         s = {i * PAIRS // nb for i in range(nb)}
@@ -2275,8 +2275,31 @@ STEP8 = 400.0                       # nominal forwarded-stage spacing (<= LINK_S
 STEP9 = 425.0                       # r9: closer to the 430.56 um reach (the placement search still enforces it)
 HSTN_DOM = dict(serial_0p9='serial', stream_1p2='stream')
 SEQ_WH = (34.56, 60.48)
-STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',))
+STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',), layer1e=('SW', 'SE'))
+LAYER_KINDS = ('layer', 'layer1', 'layer1e')
+# layer1e (s81-gen 2026-10-09; OWNER 10-09 engram-tables-in-hbm; design results/arch/engram_20261008/design.json die_change):
+# the layer1 (m221pq) die of the 8 Engram home dies (stages 3 / 42 x 4 TP ranks) + the SE HBM3E stack band: phy_SE + ctrl_SE
+# (same masters as SW) and, in the SE service slot, the Engram service eng_SE (dsfd_engram: ot_dsrom_engram_lookup in
+# dsfd_engram_lkp, dsfd_engram_sink, ot_dsrom_engram_prefetch SRAM, the SE half of ot_dsrom_engram_hbm_backend), centred on
+# ctrl_SE's request face.  The table region (25.35 GB / die) spans both stacks (Codex 4a86bf870: homes SW0 / SE1): the SW
+# half is reached through the SW stack's client svc_SW (eq / er: the backend's narrow hq / hr interface; the SW half of the
+# backend shares ctrl_SW.rq with the scan service under svc_SW's PC grants).  Widths from the RTL ports:
+ENG_WH = (1188.0, 432.0)        # design.json eng_SE outline (route variant A, ~55 % util pending synthesis)
+HBM_RQ_BITS = 10912             # dsfd_ctrl rq = 32 x {wdata 256, wstrb 32, tag 17, len 4, addr 30, we, v}
+ENG_BUSES = (
+    # (driver, driver port, load, load port, bits, what)
+    ('collective', 't_eng', 'eng', 'f_win', 73, 'lead flit window: win_v 1 + win_ids 4 x 17 + rel 4 (rank retirements)'),
+    ('eng', 't_collective', 'collective', 'f_engc', 1, 'win_cred'),
+    ('eng', 't_ag', 'collective', 'f_eng', 282, 'all-gather out: o_v/col5/beat3/slot3/d264 + st_v/slot3/bad + fault'),
+    ('collective', 't_engc', 'eng', 'f_agc', 1, 'o_cred'),
+    ('collective', 't_engi', 'eng', 'f_ai', 1124, 'all-gather in (4 ranks): in_v4/col20/beat12/slot12/d1056 + st 4/12/4'),
+    ('eng', 't_air', 'collective', 'f_engr', 4, 'in_r'),
+    ('eng', 't_vm', 'vm', 'f_eng', 532, 'prefetch rows to the consumer: out_v + 512 + ce/ue/fault + rdy 8 + perr 8'),
+    ('vm', 't_eng', 'eng', 'f_vm', 16, 'rd_v + rd_addr 11 + rel_v + rel_slot 3'),
+    ('host', 't_eng', 'eng', 'f_cfg', 3, 'cfg_layer + cfg_rank (boot CSR)'),
+)
 HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
+CTRL_RQ = False                # --ctrl-rq (implied by layer1e)
 HOST_MM2 = 0.10
 FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
@@ -2326,7 +2349,7 @@ def slot_geometry(elem_frame_h=None, field_margin=None):
         SLOTS8 = int(avail // (TIERS * SLOT_H8))
         FRAME_H8 = SLOTS8 * SLOT_H8
     else:
-        assert DIE_KIND in ('layer', 'layer1') and BF_PER_REGION is not None and NV_PAIRS == 0, \
+        assert DIE_KIND in LAYER_KINDS and BF_PER_REGION is not None and NV_PAIRS == 0, \
             'mixed q/BF heights need an r8 layer die with explicit --bf-per-region and no NV'
         qh = round(up(ELEM_DY + Q_ELEM_FRAME_H + 4.32, GY), 3)
         SLOTS8 = math.floor((avail / TIERS - BF_PER_REGION * (SLOT_H8 - qh)) / qh + 1e-9)
@@ -2738,7 +2761,7 @@ def MESO_P():
 
 HOP_FWD_CLS = ('lane',)
 HOP_SKIP = ('clock_trunk', 'reset', 'reset_tree', 'clock', 'col_clock', 'col_reset', 'top_in', 'fclk', 'phy_dfi',
-            'hbm_read')
+            'hbm_read', 'hbm_req')    # hbm_req (s81-gen --ctrl-rq): abutting controller faces, as hbm_read
 
 
 def _anchor(Mx, it, port):
@@ -2954,7 +2977,7 @@ def build_r8(variant=None):
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
         # capture buses at the VM face); the slab grows to the layer die's VM outline so its face spreads them
         centre_area['vm'] = VM_FACE_MM2
-    if WFC_HARD and DIE_KIND in ('layer', 'layer1'):
+    if WFC_HARD and DIE_KIND in LAYER_KINDS:
         # MTP-DIE: the bound WFC slab (real master dsfd_wfc) on every layer-class die, after the capture (its
         # core_start / done / result endpoint), next to the collective (stage link in / out) and one slab from the VM
         if 'wfc' in centre:
@@ -2964,7 +2987,7 @@ def build_r8(variant=None):
     if MTP_SEQ and DIE_KIND == 'head':
         centre.insert(centre.index('capture') + 1, 'mtp')
         centre_area['mtp'] = MTP_SEQ_MM2
-    if (WFC_HARD and DIE_KIND in ('layer', 'layer1')) or (MTP_SEQ and DIE_KIND == 'head'):
+    if (WFC_HARD and DIE_KIND in LAYER_KINDS) or (MTP_SEQ and DIE_KIND == 'head'):
         # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
         # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
         centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
@@ -3043,9 +3066,18 @@ def build_r8(variant=None):
                             domain='hbm')
             ctrls[st] = Inst(f'ctrl_{st}', 'dsfd_ctrl', xp, yc_, PHY_W - SHAVE, CTRL_D - SHAVE, orient, kind='ctrl',
                              region='ctrl', domain='hbm')
-            svcs[st] = Inst(f'svc_{st}', 'dsfd_svc', xp, ys_, PHY_W - SHAVE, SVC_D - SHAVE, orient, kind='svc',
-                            region='svc')
-            insts += [phys[st], ctrls[st], svcs[st]]
+            if DIE_KIND == 'layer1e' and st == 'SE':
+                # layer1e: the Engram service in the SE service slot, centred on ctrl_SE's request face
+                ex_ = up(xp + (PHY_W - ENG_WH[0]) / 2, GX)
+                hub['eng'] = Inst(f'eng_{st}', 'dsfd_engram', ex_, ys_, ENG_WH[0], ENG_WH[1], orient, kind='svc',
+                                  region='svc', power_w=0.6)
+                insts += [phys[st], ctrls[st], hub['eng']]
+                notes.append('layer1e: eng_SE = dsfd_engram (lookup + sink + prefetch SRAM + SE backend half) %.0f x %.0f um '
+                             'in the SE service slot (Engram tables in HBM, owner 10-09)' % ENG_WH)
+            else:
+                svcs[st] = Inst(f'svc_{st}', 'dsfd_svc', xp, ys_, PHY_W - SHAVE, SVC_D - SHAVE, orient, kind='svc',
+                                region='svc')
+                insts += [phys[st], ctrls[st], svcs[st]]
             regions.append(dict(name=f'svc_{st}', kind='svc', rect=[xp, min(yc_, ys_), xp + PHY_W,
                                                                     max(yc_ + CTRL_D, ys_ + SVC_D)]))
     gap_x0, gap_x1 = xs_phy[0] + PHY_W, xs_phy[1]
@@ -3081,6 +3113,8 @@ def build_r8(variant=None):
             y = up(y + m_['h'] + 43.2, GY)
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
+                                                    layer1e='Engram home layer die, 2 HBM3E stacks (8 of the rack: '
+                                                            'stages 3 / 42 x 4 ranks)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
                    elem_frame_h=ELEM_FRAME_H, q_elem_frame_h=Q_ELEM_FRAME_H, frame_h=FRAME_H, slot_h=SLOT_H, slots=SLOTS)
@@ -3473,7 +3507,17 @@ def buses_r8(m):
     npins = len(real_ports_r8()[real_lef(PHY_LEF)['name']]['dfi'])
     for st, ph in m['phys'].items():
         bus(f'dfi_{st}', 'phy_dfi', npins, [(m['ctrls'][st].name, 'phy'), (ph.name, 'dfi')])
-        bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (m['svcs'][st].name, 'rd')])
+        cl_ = m['svcs'][st].name if st in m['svcs'] else hub['eng'].name      # the stack's client
+        bus(f'rd_{st}', 'hbm_read', HBM_RD_BITS, [(m['ctrls'][st].name, 'rd'), (cl_, 'rd')])
+        if CTRL_RQ:   # s81-gen: the controller's request side (real dsfd_ctrl rq / rk / wd), abutting faces
+            bus(f'rq_{st}', 'hbm_req', HBM_RQ_BITS, [(cl_, 'rq'), (m['ctrls'][st].name, 'rq')])
+            bus(f'rk_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'rk'), (cl_, 'rk')])
+            bus(f'wd_{st}', 'hbm_req', 32, [(m['ctrls'][st].name, 'wd'), (cl_, 'wd')])
+    if 'eng' in hub:  # layer1e Engram service (ENG_BUSES) + the SW-home share through svc_SW
+        for a_, pa, b_, pb, bits, _ in ENG_BUSES:
+            bus(f'eng_{a_}_{b_}_{pa}', 'eng', bits, [(hub[a_].name, pa), (hub[b_].name, pb)])
+        bus('eng_sw_q', 'eng', 35, [(hub['eng'].name, 'teq'), (m['svcs']['SW'].name, 'feq')])   # hq_v + atom 31 + tag 3
+        bus('eng_sw_r', 'eng', 265, [(m['svcs']['SW'].name, 'ter'), (hub['eng'].name, 'fer')])  # hq_cred + hr 264
     if HOST_SLAB:     # host sector writes -> each stack controller's host write port (decode first), completions back
         for st, ct in m['ctrls'].items():
             bus(f'hw_{st}', 'host_wr', 512 + 64 + 2, [(hub['host'].name, f'tw{st}'), (ct.name, 'hw')])
@@ -3788,15 +3832,6 @@ def _hop_paths(a, b, cor):
     return out
 
 
-def _pick_path(a, b, cor):
-    """the candidate path with the largest share of its length inside the corridors (stations may only stand there);
-    within 2 % of the best share, the shortest"""
-    rects = list(cor.values())
-    cands = [(_corr_frac(p_, rects), _poly_len(p_), j, p_) for j, p_ in enumerate(_hop_paths(a, b, cor))]
-    best = max(c[0] for c in cands)
-    return min((c for c in cands if c[0] >= best - 0.02), key=lambda c: (c[1], c[2]))[3]
-
-
 def _tt_place(P, cx, cy, w_, h_, cur, R_tt, nxt, nreach_tt, horiz):
     """RELAY_TT_REACH tier: nearest legal box anywhere on the die within the TT reach of the previous chain point and
     (when the chain has a next point) of the next one"""
@@ -3853,35 +3888,9 @@ def _hop_fix(m, P):
                     rec[cls + ':no_fclk']['hops'] += 1
                     continue
                 fdrv = B[fi_][3][0]
-            path = [a, (b[0], a[1]), b]
-            if PATH_PICK and reg is None:
-                # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1): a die-level hop takes the L orientation that runs more
-                # of its length inside the corridors (its stations may only sit there); the horizontal-first default
-                # drove the 20.9 mm scan hw_SW host chain along y=15373 through packed field frames (station 5/55 trap).
-                # s81-gen 2026-10-09 (--path-pick): also a Z through any spanning corridor; the station count follows the
-                # chosen path length (a detour longer than the plan L would otherwise stretch every stage past the reach).
-                alt = _pick_path(a, b, cor)
-                if alt != path:
-                    path = alt
-                    kind_ = 'vfirst' if len(alt) == 3 else 'z'
-                    rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
-                    n = max(n, math.ceil(_poly_len(path) / (R - 20.0) - 1e-9) - 1)
-            Lp = _poly_len(path)
-            # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
-            # segment) at each non-glue end, the span between them at the reach as before
-            pos = [Lp * (k + 1) / (n + 1) for k in range(n)]
-            if PIN_RELAY and reg is None:      # die-level interfaces (field frames: q banks already abut the pins)
-                h0, h1 = not is_glue(d0.master), not is_glue(l0.master)
-                if (h0 or h1) and Lp > PIN_SEG:
-                    s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
-                    s1 = Lp - min(PIN_SEG - 10.0, Lp / 2) if h1 else Lp
-                    mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1)
-                    pos = ([s0] if h0 else []) + [s0 + (s1 - s0) * (k + 1) / (mid + 1) for k in range(mid)] \
-                        + ([s1] if h1 and s1 > s0 + 1.0 else [])
-                    n = len(pos)
-            prev, cur = eps[0], a
-            fprev = fdrv if fwd else None
-            for k in range(n):
+            def find(k, n, path, pos, cur, rc, tt):
+                """s81-gen: the station search tiers of one hop station (unchanged order); rc counts the fallbacks"""
+                Lp = _poly_len(path)
                 (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
                 NR = dict(nxt=b, nreach=max(Lp - pos[k], PIN_SEG) + 40.0 if k == n - 1 else (n - k) * (R - 10.0)) \
@@ -3900,7 +3909,7 @@ def _hop_fix(m, P):
                 # v6c: searched with a 2.16 um keep-out each side (the PA track snap moved v6b's tightly packed
                 # stations into each other: 41 / 49 / 49 overlaps, all hop-fix stations)
                 # v7: a station with no padded spot inside its frame (v6c: rt_63_26b in frame 63) falls back to a
-                # 1.08 um, then no keep-out (counted in rec['pad_fallback'])
+                # 1.08 um, then no keep-out (counted in rc)
                 for PAD in (2.16, 1.08, 0.0):
                     for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
@@ -3910,7 +3919,7 @@ def _hop_fix(m, P):
                             break
                     if pl:
                         if PAD < 2.16:
-                            rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
+                            rc[f'{PAD:g}'] = rc.get(f'{PAD:g}', 0) + 1
                         break
                 if pl is None and reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY):
                     # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
@@ -3920,7 +3929,7 @@ def _hop_fix(m, P):
                                     reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
-                            rec['pad_fallback']['frame_out'] = rec['pad_fallback'].get('frame_out', 0) + 1
+                            rc['frame_out'] = rc.get('frame_out', 0) + 1
                             break
                 if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
                     for span, rows in ((300.0, 30), (1200.0, 120)):
@@ -3928,7 +3937,7 @@ def _hop_fix(m, P):
                                     reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
-                            rec['pad_fallback']['die'] = rec['pad_fallback'].get('die', 0) + 1
+                            rc['die'] = rc.get('die', 0) + 1
                             break
                 if pl is None and NR:          # both reaches, anywhere legal on the die (the frame / channel is full)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
@@ -3936,10 +3945,10 @@ def _hop_fix(m, P):
                                     reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
-                            rec['pad_fallback']['nxt_die'] = rec['pad_fallback'].get('nxt_die', 0) + 1
+                            rc['nxt_die'] = rc.get('nxt_die', 0) + 1
                             break
                 if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
-                    rec['pad_fallback']['nxt_relaxed'] = rec['pad_fallback'].get('nxt_relaxed', 0) + 1   # (an int in rec broke the summary)
+                    rc['nxt_relaxed'] = rc.get('nxt_relaxed', 0) + 1   # (an int in rec broke the summary)
                     for PAD in (2.16, 1.08, 0.0):
                         for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
@@ -3957,7 +3966,7 @@ def _hop_fix(m, P):
                                         reach=R - 10.0, span=span, rows=rows)
                             if pl:
                                 pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
-                                rec['pad_fallback']['relaxed_die'] = rec['pad_fallback'].get('relaxed_die', 0) + 1
+                                rc['relaxed_die'] = rc.get('relaxed_die', 0) + 1
                                 break
                 if pl is None and NXT_REACH:
                     # The coarse row pitch can skip a narrow legal gap in a packed frame. Search a finer
@@ -3968,7 +3977,7 @@ def _hop_fix(m, P):
                                     rows=560, cross_step=2.16, **NR)
                         if pl:
                             pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
-                            rec['pad_fallback']['fine_lattice'] = rec['pad_fallback'].get('fine_lattice', 0) + 1
+                            rc['fine_lattice'] = rc.get('fine_lattice', 0) + 1
                             break
                 if pl is None and RELAY_TT_REACH and RELAY_TT_REACH > R:
                     nr_tt = None
@@ -3976,8 +3985,60 @@ def _hop_fix(m, P):
                         nr_tt = (RELAY_TT_REACH - 10.0) if k == n - 1 else (n - k) * (RELAY_TT_REACH - 10.0)
                     pl = _tt_place(P, cx, cy, w_, h_, cur, RELAY_TT_REACH, b if NXT_REACH else None, nr_tt, horiz)
                     if pl:
-                        rec['pad_fallback']['tt_reach'] = rec['pad_fallback'].get('tt_reach', 0) + 1
-                        m.setdefault('tt_reach_relays', []).append(f'g_{bid}_{e[0]}_{k}')
+                        rc['tt_reach'] = rc.get('tt_reach', 0) + 1
+                        tt.append(f'g_{bid}_{e[0]}_{k}')
+                return pl, (cx, cy), dch, horiz, w_, h_, NR
+
+            def stations_at(path, n):
+                Lp = _poly_len(path)
+                # OWNER rule 1 (2026-10-07, --pin-relay): a relay abutting every hardened-block pin (<= PIN_SEG um last
+                # segment) at each non-glue end, the span between them at the reach as before
+                pos = [Lp * (k + 1) / (n + 1) for k in range(n)]
+                if PIN_RELAY and reg is None:      # die-level interfaces (field frames: q banks already abut the pins)
+                    h0, h1 = not is_glue(d0.master), not is_glue(l0.master)
+                    if (h0 or h1) and Lp > PIN_SEG:
+                        s0 = min(PIN_SEG - 10.0, Lp / 2) if h0 else 0.0
+                        s1 = Lp - min(PIN_SEG - 10.0, Lp / 2) if h1 else Lp
+                        mid = max(0, math.ceil((s1 - s0) / (R - 20.0) - 1e-9) - 1)
+                        pos = ([s0] if h0 else []) + [s0 + (s1 - s0) * (k + 1) / (mid + 1) for k in range(mid)] \
+                            + ([s1] if h1 and s1 > s0 + 1.0 else [])
+                return pos
+
+            path = [a, (b[0], a[1]), b]
+            if PATH_PICK and reg is None:
+                # cont-takeover 2026-10-09 (OT_S81_PATH_PICK=1) / s81-gen (--path-pick): a die-level hop whose stations
+                # do not all find a box on the default horizontal-first L (the 20.2 mm layer1 hw_SW host chain along
+                # y = 14724.7 through packed field frames: station 5 / 53) takes the first candidate on which every
+                # station places (dry run, no occupancy change): the other L, then corridor Z paths by corridor share
+                # (then length).  Hops that place on the default L are unchanged; the station count follows the path.
+                cands = _hop_paths(a, b, cor)
+                rects = list(cor.values())
+                order = [cands[0]] + sorted(cands[1:], key=lambda p_: (-round(_corr_frac(p_, rects), 2), _poly_len(p_)))
+                n0 = n
+                for j_, cand in enumerate(order):
+                    n_c = n0 if j_ == 0 else max(n0, math.ceil(_poly_len(cand) / (R - 20.0) - 1e-9) - 1)
+                    pos_c = stations_at(cand, n_c)
+                    cur_, ok = a, True
+                    for k in range(len(pos_c)):
+                        pl_, _, _, _, w_, h_, _ = find(k, len(pos_c), cand, pos_c, cur_, {}, [])
+                        if pl_ is None:
+                            ok = False
+                            break
+                        cur_ = (pl_[0] + w_ / 2, pl_[1] + h_ / 2)
+                    if ok:
+                        if j_:
+                            path, n = cand, n_c
+                            kind_ = 'vfirst' if len(cand) == 3 else 'z'
+                            rec['path_pick'][kind_] = rec['path_pick'].get(kind_, 0) + 1
+                        break
+            Lp = _poly_len(path)
+            pos = stations_at(path, n)
+            n = len(pos)
+            prev, cur = eps[0], a
+            fprev = fdrv if fwd else None
+            tt_ = m.setdefault('tt_reach_relays', [])
+            for k in range(n):
+                pl, (cx, cy), dch, horiz, w_, h_, NR = find(k, n, path, pos, cur, rec['pad_fallback'], tt_)
                 assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
@@ -4956,7 +5017,7 @@ def _faces_r8(m, Mx, it, ports):
             Mx.order.append('phy')
         else:
             Mx.face('phy', len(dfi), 'S', 'M5', Mx.w / 2, 4)
-        _lay(Mx, 'N', P_(['rd']), 'M5')
+        _lay(Mx, 'N', P_(['rd', 'rq', 'rk', 'wd', 'hw', 'hc']), 'M5')   # s81-gen: rq / rk / wd (--ctrl-rq), host hw / hc
         _lay(Mx, 'N', P_(['ckh', 'rst']), 'M5', start=60.0)
         # die-gaps 2026-10-08: the stream-side clock entry sits at the face end under the stream peer's (dsfd_svc) clock
         # entry (svc 'ck' is laid toward the clk_stream root at the same end), so the hbm_read interface ctrl -> svc is
@@ -5329,7 +5390,11 @@ def _stn_lanes(m, it):
 
 def die_options(ap):
     """die-variant options shared by main and tools/die_top_lint.py (--s81-opts)"""
-    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
+    ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
+    ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
+                    'side bound (dsfd_ctrl rq 10,912 / rk 32 / wd 32 to its client: the svc, or the Engram service on '
+                    'the layer1e SE stack); the r3 / r4 dies left these real controller ports without a die net. '
+                    'Implied by --die layer1e; default off')
     ap.add_argument('--gen', default='r7', choices=['r7', 'r8'], help='r7: the 21fcf6469 die (default); r8: wired die')
     ap.add_argument('--head-dies', type=int, default=12, help='head die: dies sharing the head content (default 12)')
     ap.add_argument('--rev', default='r8', choices=['r8', 'r9'], help='r8 sub-revision (r9: S81-RERUN hub-bus stations)')
@@ -5445,6 +5510,11 @@ def apply_options(a):
     global FRAME_OUT_RELAY, HOST_SLAB
     FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     HOST_SLAB = bool(getattr(a, 'host', False))
+    global CTRL_RQ
+    CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'
+    if a.die == 'layer1e':
+        assert a.gen == 'r8' and a.rev == 'r9' and HOST_SLAB, \
+            'layer1e: the r9 wired die with --host (Engram table boot load + cfg through dsfd_host)'
     if getattr(a, 'field_margin', None) is not None:
         FIELD_MARGIN = float(a.field_margin)     # explicit, every gen (a leftover --pq-place margin must not leak)
     else:
@@ -5453,7 +5523,7 @@ def apply_options(a):
         # height").  Under --pq-place the minimum gap is PQ_FIELD_MARGIN; the field stays centred (actual gap ~215 um).
         FIELD_MARGIN = PQ_FIELD_MARGIN if PQ_PLACE else FIELD_MARGIN_DEFAULT
     if PQ_PLACE:
-        assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
+        assert a.gen == 'r8' and a.rev == 'r9' and a.die in LAYER_KINDS and getattr(a, 'q_elem_h', None), \
             '--pq-place: the r9 mixed q/BF layer die (--q-elem-h) only'
         CHS = [c + (PQ_ROOT_ROW if t < TIERS else 0.0) for t, c in enumerate(CHS or [CH] * (TIERS + 1))]
     VCH8 = float(a.vch_w) if getattr(a, 'vch_w', None) else 1209.6
@@ -5552,7 +5622,7 @@ def main(argv=None):
         print(json.dumps(dict(margin_lint=ml), indent=1))
         return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'plan' and a.gen == 'r8':
-        out = ROOT / OUT / out_rev() / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
+        out = ROOT / OUT / out_rev() / dict(layer='', layer1='layer1_die', layer1e='layer1e_die', head='head_die')[a.die]
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record_r8(m)
         rec['legality_python'] = legality(m)
@@ -5569,7 +5639,7 @@ def main(argv=None):
                          indent=1, default=str))
         return 0
     if a.mode == 'plan':
-        out = ROOT / OUT / {'layer': '', 'layer1': 'layer1_die'}.get(a.die, 'head_die')   # layer1 no longer overwrites head
+        out = ROOT / OUT / {'layer': '', 'layer1': 'layer1_die', 'layer1e': 'layer1e_die'}.get(a.die, 'head_die')   # layer1 no longer overwrites head
         out.mkdir(parents=True, exist_ok=True)
         rec = plan_record(m)
         rec['legality_python'] = legality(m)

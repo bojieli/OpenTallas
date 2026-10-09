@@ -2279,7 +2279,7 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
-    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1',
+    ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'qwen_kv', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_layer1e',
                                          's81r8_head'])
     ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt',
                                                               'r21c', 'r22k'])
