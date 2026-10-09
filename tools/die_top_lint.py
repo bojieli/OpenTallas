@@ -2269,6 +2269,7 @@ def main(argv=None):
     ap.add_argument('--tag', default='', help='output name tag (e.g. _r15)')
     ap.add_argument('--variant', default='', help='hbm: tools/hbm_accel_die_fp.py --variant (default: its adopted r16g)')
     ap.add_argument('--out', type=Path, default=ROOT / OUT)
+    ap.add_argument('--generic-contract', type=Path, help='HBM generic integration: fail closed on functional ties, source hash drift, or incomplete wrappers before die lint')
     a = ap.parse_args(argv)
     global VARIANT, S81_OPTS
     S81_OPTS = a.s81_opts
@@ -2281,8 +2282,28 @@ def main(argv=None):
         (a.out / f'{a.top}_verilator_summary.json').write_text(json.dumps(s, indent=1) + '\n')
         print(json.dumps(s, indent=1))
         return 0
+    if a.generic_contract is not None and (a.mode != 'lint' or a.die != 'hbm'):
+        ap.error('--generic-contract applies only to lint --die hbm')
     if a.mode == 'lint':
+        generic = None
+        if a.generic_contract is not None:
+            import hgi_die_integration_check as G
+            contract = json.loads(a.generic_contract.read_text())
+            if contract['variant'] != a.variant:
+                ap.error('--variant must match the generic contract variant')
+            generic = G.audit(contract)
+            generic['contract_sha256'] = G.digest(a.generic_contract)
+            generic['checker_sha256'] = G.digest(Path(G.__file__))
+            a.out.mkdir(parents=True, exist_ok=True)
+            (a.out / 'generic_integration.json').write_text(json.dumps(generic, indent=1) + '\n')
+            if generic['verdict'] != 'PASS':
+                print(json.dumps(generic, indent=1))
+                return 1
         rec = run_lint(a.die, a.out, a.top_fix, a.tag)
+        if generic is not None:
+            rec['generic_integration'] = generic
+            top = f'{a.die}{a.tag}_lint_top' + ('_fix' if a.top_fix else '')
+            (a.out / f'{top}_lint.json').write_text(json.dumps(rec, indent=1, default=str) + '\n')
         print(json.dumps(rec['census']))
     elif a.die == 'rom' or (a.die and a.die != 'hbm'):
         a.out.mkdir(parents=True, exist_ok=True)
