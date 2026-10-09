@@ -41,7 +41,7 @@ def private_operand_model():
       "activation_payload_dtype":"BF16 copiedbitwise at existing golden rounding boundary",
       "activation_input_bits":256,"activation_input_beat_bits":11,"activation_transaction_bits":16,
       "activation_input_forward_boundary_bits":284,
-      "activation_live_bytes":40960,"activation_prefetch_beats":1280,
+      "activation_live_bytes":40960,"activation_live_bytes_per_die_body_token":819200,"activation_prefetch_beats":1280,
       "activation_prefetch_cycles_min":1280,"activation_prefetch_us_at900MHz":1.422222222,
       "activation_code":"16pairs/bank/word,each32data+7SECDED,bits624packedacross3macros",
       "activation_macro_count":24,"activation_reserved_bytes_including_checks":98304,

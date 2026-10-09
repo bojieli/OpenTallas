@@ -12,7 +12,8 @@ module ot_hbm_hc_row_private(
  output wire[31:0]o_data,output wire fault
 );
  reg busy,start,launch,cfault;reg[4:0]row;reg[15:0]lease;reg[29:0]base;reg[31:0]eps;
- wire wrdy,xrdy,wfault,xfault,hfault,hready;
+ wire wrdy,xrdy,wfault,xfault,hfault,hready,core_valid;
+ assign o_valid=core_valid&&!fault;
  wire[7:0]wre,xre;wire[127:0]wa,xa;wire[8191:0]wq;wire[4095:0]xq;
  assign cmd_ready=!busy&&!fault;assign fault=cfault|wfault|xfault|hfault;
  assign o_row=row;assign o_lease=lease;
@@ -40,5 +41,5 @@ module ot_hbm_hc_row_private(
   .clk(clk),.rst_n(rst_n),.cmd_valid(launch),.cmd_ready(hready),.cmd_npos(2'd1),.cmd_nout(2'd1),
   .cmd_nchunk(16'd2560),.cmd_scale(1'b1),.cmd_nf(32'h46a00000),.cmd_eps(eps),.cmd_wbase(16'd0),.cmd_xbase(16'd0),
   .w_re(wre),.w_addr(wa),.w_data(wq),.x_re(xre),.x_addr(xa),.x_data(xq),
-  .o_valid(o_valid),.o_ready(o_ready),.o_pos(),.o_idx(),.o_data(o_data),.o_last(),.fault(hfault),.idle());
+  .o_valid(core_valid),.o_ready(o_ready),.o_pos(),.o_idx(),.o_data(o_data),.o_last(),.fault(hfault),.idle());
 endmodule
