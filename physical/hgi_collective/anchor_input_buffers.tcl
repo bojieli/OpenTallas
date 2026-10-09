@@ -6,6 +6,18 @@ set hc_block [ord::get_db_block]
 set hc_dbu [$hc_block getDbUnitsPerMicron]
 set hc_rows [$hc_block getRows]
 set hc_busy [dict create]
+# Preserve taps, endcaps, macros and other existing fixed objects. Row bounds
+# alone include the edge tap sites; they are not free placement locations.
+foreach hc_fixed [$hc_block getInsts] {
+ if {[$hc_fixed getPlacementStatus] ni {FIRM LOCKED}} {continue}
+ set hc_fbb [$hc_fixed getBBox]
+ foreach hc_row $hc_rows {
+  set hc_rbb [$hc_row getBBox]
+  if {[$hc_fbb yMin]<[$hc_rbb yMax] && [$hc_fbb yMax]>[$hc_rbb yMin]} {
+   dict lappend hc_busy [$hc_row getName] [list [$hc_fbb xMin] [$hc_fbb xMax]]
+  }
+ }
+}
 set hc_moved 0
 foreach hc_inst [$hc_block getInsts] {
  if {![string match input* [$hc_inst getName]]} {continue}
