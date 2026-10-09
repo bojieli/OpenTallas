@@ -126,6 +126,13 @@ module ot_hbm_tu_retry_phy_port #(
  always@(posedge pclk or negedge phy_run)if(!phy_run)begin tx_v_q<=0;fb_v_q<=0;fb_g_q<=0;fb_n_q<=0;end
   else begin tx_v_q<=ph_tx_v;fb_v_q<=fb_valid;fb_g_q<=fb_good;fb_n_q<=fb_nak;end
  always@(posedge pclk)begin tx_f_q<=ph_tx_flit;fb_s_q<=fb_seq;fb_e_q<=fb_session;fb_p_q<=fb_pop;ses_q<=phy_session;end
+ // reset / link-up into the core from flops (the core uses its run gates as data): async-assert, sync-release
+ // reset synchronisers and registered link-up per domain (+2 cycles on reset release, +1 on link-up)
+ reg[1:0]prs;reg[1:0]crs;reg pup_q,cup_q;
+ always@(posedge pclk or negedge prst_n)if(!prst_n)prs<=0;else prs<={prs[0],1'b1};
+ always@(posedge clk or negedge rst_n)if(!rst_n)crs<=0;else crs<={crs[0],1'b1};
+ always@(posedge pclk or negedge prst_n)if(!prst_n)pup_q<=0;else pup_q<=phy_link_up;
+ always@(posedge clk or negedge rst_n)if(!rst_n)cup_q<=0;else cup_q<=core_link_up;
  // clk input flop
  reg cred_q;always@(posedge clk or negedge core_run)if(!core_run)cred_q<=0;else cred_q<=rx_credit;
  // core
@@ -133,7 +140,7 @@ module ot_hbm_tu_retry_phy_port #(
  wire[EW-1:0]c_tx_e,c_ack_e;wire[CW-1:0]c_ack_p,c_debt;
  wire r_v,r_ue;wire[W-1:0]r_d;wire[SW-1:0]r_s;wire[EW-1:0]r_e;
  ot_hbm_tu_retry_phy_port_core #(.ENABLE(ENABLE),.W(W),.SW(SW),.EW(EW),.CW(CW),.CAPACITY(CAPACITY),.TIMEOUT(TIMEOUT)) u(
- .pclk(pclk),.prst_n(prst_n),.phy_link_up(phy_link_up),.phy_session(ses_q),.clk(clk),.rst_n(rst_n),.core_link_up(core_link_up),
+ .pclk(pclk),.prst_n(prs[1]),.phy_link_up(pup_q),.phy_session(ses_q),.clk(clk),.rst_n(crs[1]),.core_link_up(cup_q),
  .ph_tx_v(tx_v_q),.ph_tx_flit(tx_f_q),.ph_rx_v(c_rx_v),.ph_rx_flit(c_rx_f),.rx_credit(cred_q),.sw_cr_ret(c_cr),
  .fec_tx_v(c_tx_v),.fec_tx_ready(c_tx_r),.fec_tx_data(c_tx_d),.fec_tx_seq(c_tx_s),.fec_tx_session(c_tx_e),
  .fec_rx_v(r_v),.fec_rx_ready(c_rxin_r),.fec_rx_ue(r_ue),.fec_rx_data(r_d),.fec_rx_seq(r_s),.fec_rx_session(r_e),
