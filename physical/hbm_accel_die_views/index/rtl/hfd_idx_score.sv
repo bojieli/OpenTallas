@@ -31,6 +31,7 @@ module hfd_idx_score #(
   parameter integer FWD = 0,         // 1: forwarded-clock line ports through two-clock FIFOs
   parameter integer FA = 4,          // line FIFO address bits (depth 16 per port)
   parameter integer CRED = 64,       // output credits (hfd_idx_sel landing FIFO depth)
+  parameter integer SAFE_QUERY_GATE = 0,
   parameter integer NK = 4, IW = 20, MD = 64, FPL = 7, FML = 5, QL = 5,
   parameter integer NP = L / 2,      // line ports (a line = 2 keys)
   parameter integer NS = L / NK,     // score slices
@@ -177,7 +178,7 @@ module hfd_idx_score #(
       st <= {fault, active, qloaded, 1'b0};
     end
   end
-  ot_hdc_v41x_idx_array_l #(.NS(NS), .NK(NK), .NB(4), .IH(32), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL)) u_arr (
+  ot_hdc_v41x_idx_array_l #(.NS(NS), .NK(NK), .NB(4), .IH(32), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL), .SAFE_QUERY_GATE(SAFE_QUERY_GATE)) u_arr (
     .clk(ck), .rst_n(rn),
     .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
     .i_valid(bv), .i_ready(a_ready), .i_last(blast), .i_kv(bkv), .i_ref(bref), .i_keep(bkeep), .i_index(bfirst),
