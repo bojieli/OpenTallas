@@ -68,6 +68,12 @@ module ot_hgi_argmax_record #(
         for (j = 0; j < 8; j = j + 1)
             msk[j] = ({sec, 3'b000} + j >= a_base) && ({sec, 3'b000} + j < w_end);
     end
+    // engine / VM inputs land in flops (registered boundary): the response and the result are used one edge later
+    reg [273:0] vr; reg eo_v, eo_nan, eo_f, eo_rf; reg [17:0] eo_idx; reg [31:0] eo_val;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin vr <= 274'd0; eo_v <= 1'b0; end
+        else begin vr <= vmr; eo_v <= e_out_v; end
+    always @(posedge clk) begin eo_nan <= e_out_nan; eo_f <= e_fault; eo_rf <= e_range_fault; eo_idx <= e_out_idx; eo_val <= e_out_value; end
     wire [39:0] wa = wr_n[0] ? (o_base + {24'd0, o_is}) : o_base;         // word address of the write in flight
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -92,8 +98,8 @@ module ot_hgi_argmax_record #(
             if (busy && !stream_m && !rd_done_all && !rd_pend) begin              // read request: sector sec
                 vmq <= {1'b1, 1'b0, sec[26:0], 5'd0, 256'd0, 32'd0, 16'h7A00}; rd_pend <= 1'b1;
             end
-            if (busy && rd_pend && vmr[273] && !vmr[256]) begin                  // read response: one engine beat
-                rd_pend <= 1'b0; e_in_v <= 1'b1; e_vals <= vmr[255:0]; e_mask <= msk; e_bias_en <= 1'b0;
+            if (busy && rd_pend && vr[273] && !vr[256]) begin                  // read response: one engine beat
+                rd_pend <= 1'b0; e_in_v <= 1'b1; e_vals <= vr[255:0]; e_mask <= msk; e_bias_en <= 1'b0;
                 e_in_last <= (sec == sec_last);
                 if (sec == sec_last) rd_done_all <= 1'b1; else sec <= sec + 35'd1;
             end
@@ -102,18 +108,18 @@ module ot_hgi_argmax_record #(
                 e_bias <= am_stream[521:266]; e_bias_en <= am_stream[522];
                 if (am_stream[1]) rd_done_all <= 1'b1;
             end
-            if (busy && e_out_v && !got_out) begin
-                got_out <= 1'b1; res_val <= e_out_value;
-                res_id <= {14'd0, e_out_idx} - (MUT_OFFSET ? 32'd0 : {29'd0, stream_m ? 3'd0 : a_base[2:0]});
-                if (e_out_nan) nan_flag <= 1'b1;
-                if (e_range_fault || e_fault) begin ret[2] <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; end
+            if (busy && eo_v && !got_out) begin
+                got_out <= 1'b1; res_val <= eo_val;
+                res_id <= {14'd0, eo_idx} - (MUT_OFFSET ? 32'd0 : {29'd0, stream_m ? 3'd0 : a_base[2:0]});
+                if (eo_nan) nan_flag <= 1'b1;
+                if (eo_rf || eo_f) begin ret[2] <= 1'b1; halt_q <= 1'b1; busy <= 1'b0; end
                 else wr_phase <= 1'b1;
             end
             if (busy && wr_phase && !wr_pend && wr_n != 2'd2) begin               // word-masked sector write
                 vmq <= {1'b1, 1'b1, wa[29:3], 5'd0, {8{wr_n[0] ? res_id : res_val}}, (32'hF << (4 * wa[2:0])), 16'h7A01};
                 wr_pend <= 1'b1;
             end
-            if (busy && wr_pend && vmr[273] && vmr[256]) begin
+            if (busy && wr_pend && vr[273] && vr[256]) begin
                 wr_pend <= 1'b0; wr_n <= wr_n + 2'd1;
                 if (wr_n == 2'd1) begin busy <= 1'b0; ret[1] <= 1'b1; ret[0] <= 1'b1; wr_phase <= 1'b0; end
             end
