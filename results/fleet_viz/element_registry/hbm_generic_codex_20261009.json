@@ -616,12 +616,15 @@
         "simulator_conformance": {
           "status": "PENDING_NORMATIVE_VECTOR_ABI",
           "evidence": [],
-          "reason": "tools/hgi_sim/records.py provisional encoding is not the normative D_UOP_FIELDS mapping; source-pinned conversion/vector provider required"
+          "reason": "Current hgi_sim.machine ATT QK/PV consumes A/B/O only; param[8] ring and C second-list implementation/vectors not installed. Full G12 conformance remains incomplete."
         }
       },
       "physical": {
-        "status": "CORRECTED21BIT_PAIR_PROPOSED_INTAKE_PENDING",
-        "jobs": [],
+        "status": "QUEUED_CORRECTED21BIT_SOURCE",
+        "jobs": [
+          "hgi-att-g12-120-187a8471c-tc-cx",
+          "hgi-att-g12-140-187a8471c-tc-cx"
+        ],
         "corners": {},
         "evidence": [],
         "electrical": {
@@ -640,19 +643,17 @@
             "hgi-att-g12-120-799f13777-tc-cx",
             "hgi-att-g12-140-799f13777-tc-cx"
           ],
-          "reason": "799f counts20bits could not represent exclusive1M endpoint"
+          "reason": "799f counts20bits could not represent exclusive1M endpoint",
+          "status": "OLD799_PAIR_ADMINISTRATIVELY_CANCELLED_BEFORE_ANY_WORKER"
         },
-        "proposed_jobs": [
-          "hgi-att-g12-120-187a8471c-tc-cx",
-          "hgi-att-g12-140-187a8471c-tc-cx"
-        ]
+        "queued_at_utc": "2026-10-09T13:08:36Z"
       },
       "dependencies": [
         "Claude descriptor adapter and existing DS9-sector gather row request binding",
         "4stack replicas/384 state bound; actual3edge command latency",
         "external normative simulator CF-ATT vectors",
         "POS1/counts21bit full1M corrected exact gate; old799f pair held, not eligible for route",
-        "actual corrected-pair intake receipt not yet collected; no real running route claimed"
+        "actual corrected intake13:08:36Z: schema/pinlint and remote boundary cache PASS; no local synth fallback"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -890,5 +891,5 @@
       }
     }
   ],
-  "collected_at_utc": "2026-10-09T13:09:24.091378+00:00"
+  "collected_at_utc": "2026-10-09T13:09:47.772292+00:00"
 }

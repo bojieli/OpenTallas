@@ -54,7 +54,7 @@
       },
       "latency_edges": 23,
       "integration_gap": "Current quant wrapper ties valid=1, toggles format, folds valid/fault; replace with real command and completion nets. Quant no-backpressure execution must be priced against VM/dispatch handshake.",
-      "source_commit": "b827340df"
+      "source_commit": "7c0dd09fa"
     },
     {
       "owner": "generic_token18",
@@ -75,7 +75,7 @@
     },
     {
       "owner": "generic_attn_g12",
-      "source_commit": "7eea061a8",
+      "source_commit": "187a8471c",
       "module": "ot_hgi_att_row_sources_p",
       "command_inputs": {
         "cmd_v": 1,
