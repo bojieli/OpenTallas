@@ -1,0 +1,6 @@
+S0 count ref 4 dut 0
+S0 not quiet
+S0 pf=64 mode=0 throttle=0 results=0 ref_first_issue->last=84 dut_first_issue->last=0 ref_last=102 dut_last=-1 dut_ready_stalls=56
+[25065020000] %Fatal: tb_ha2_tu_owner_banked_half_cx.sv:148: Assertion failed in tb_ha2_tu_owner_banked_half_cx.unnamedblk11: FAIL scenario 0 (2 mismatches)
+%Error: /srv/opentallas-scratch/codex/ha2-owner-cx-20261009/source-r2/rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.sv:148: Verilog $stop
+Aborting...

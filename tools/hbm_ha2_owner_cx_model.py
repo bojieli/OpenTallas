@@ -44,6 +44,8 @@ def model(injectors=2, ports=8, columns=8, pfmax=384, lanes=16, depth=8):
         floorplan_slot_um=[840,480],additional_die_area_um2=0,
         single_record_visibility_added_fast_edges_min=0,
         single_record_visibility_added_fast_edges_max=2,
+        arm_visibility_added_fast_edges_max=2,
+        arm_flow='Existing sticky arm retained until its landed offer reaches the consuming core phase; no added state. Existing BLKN hold-off starts on that consumption and can add up to two fast edges to arm/start visibility.',
         frame_composition='PF384/NC8 ->48 operand slots ->24 BF16 result packets. The landing may shift the critical final-input visibility by0..2 fast edges; core arithmetic/reduction order and one-per-two-edge service remain unchanged. Existing arrival, read/tree/output, physical wire and true-credit latencies remain baseline; actual end-to-end delta must be measured against full-shape predecessor.',
         minimum_gate='Full PF384 NC8 NPT8 INJ2 owner vs golden; INJ8 separately where actual native parent selects it; same-phase landing mutant must fail.',
         default_enabled=False,physical_qualified=False,die_binding_qualified=False,

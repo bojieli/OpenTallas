@@ -46,12 +46,16 @@ module ot_ha2_tu_owner_banked_half_cx #(
   pd_f<=p_flit;
   for(integer i=0;i<INJ;i=i+1)hd_f[i*HW+:HW]<=h_d[i*(32+FW)+:HW];
  end
+ // Existing sticky arm must span the intervening landing edge. Clear it on
+ // the consuming core phase only after the landed arm is actually offered;
+ // otherwise a one-fast-edge pulse can start and finish between landing edges.
+ wire core_act,core_arm;wire [7:0] core_rank;wire [15:0] core_pf;
  // sticky arm, hold-off counter
  reg arm_s;reg [3:0] blk;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin arm_s<=0;blk<=0;end
   else begin
-   arm_s<=arm_f||(arm_s&&!ph);
+   arm_s<=arm_f||(arm_s&&!(ph&&(LANDING==0||core_arm)));
    if(ph&&arm_s)blk<=BLKN;else if(ph&&blk!=0)blk<=blk-1'b1;
   end
  wire hold=(blk!=0)||arm_s;
@@ -59,7 +63,6 @@ module ot_ha2_tu_owner_banked_half_cx #(
  wire [NPT-1:0] core_pr;wire [INJ-1:0] hp_pop_unused;
  wire [NPT-1:0] p_head_v;wire [INJ-1:0] h_head_v;
  wire [NPT*PWT-1:0] p_head_d,p_fifo_d;wire [INJ*HW-1:0] h_head_d,h_fifo_d;
- wire core_act,core_arm;wire [7:0] core_rank;wire [15:0] core_pf;
  wire [NPT-1:0] p_nonempty;wire [INJ-1:0] h_nonempty;
  wire [NPT-1:0] p_ovf;wire [INJ-1:0] h_ovf;wire [NPT*4-1:0] p_cnt;wire [INJ*4-1:0] h_cnt;
  for(genvar p=0;p<NPT;p=p+1)begin:g_pf
