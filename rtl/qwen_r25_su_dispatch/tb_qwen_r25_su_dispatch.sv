@@ -19,7 +19,7 @@ module tb_qwen_r25_su_dispatch;
  integer q,seen=0,fetches=0,cycles=0;
  always @(negedge clk)if(rst_n)begin
   cycles=cycles+1;if(cycles>200)$fatal(1,"functional deadlock");
-  rom_out_v=rom_v;rom_out_pc=rom_pc;
+  rom_out_v=rom_out_rdy;rom_out_pc=rom_pc;
   if(rom_v)fetches=fetches+1;
   done_v=0;
   if(|cmd_v)begin
