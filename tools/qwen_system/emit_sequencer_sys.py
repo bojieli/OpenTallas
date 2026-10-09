@@ -95,7 +95,9 @@ def emit(out):
             rom.append(f"8'd{bank*64+i}: sys_descriptor = {expr};")
     rom += ['default: sys_descriptor = 0; endcase end endfunction',
             'function automatic sys_program_valid(input [1:0] bank,input [11:0] addr);',
-            f'begin sys_program_valid=(bank==0 && addr<{len(ew)}) || (bank==1 && addr<{len(lw)}) || (bank==2 && addr<{len(hw)}); end endfunction',
+            '// Controller fetch may prefetch past END. Logical padding is a valid zero END word;',
+            '// it is constant-folded and consumes no additional mutable or ROM storage.',
+            'begin sys_program_valid=(bank<3 && addr<64); end endfunction',
             'function automatic sys_descriptor_valid(input [1:0] bank,input [5:0] addr);',
             f'begin sys_descriptor_valid=(bank==0 && addr<{len(ed)}) || (bank==1 && addr<{len(ld)}) || (bank==2 && addr<{len(hd[0])}); end endfunction']
     (out / 'sequencer_sys_templates.svh').write_text('\n'.join(rom) + '\n')
