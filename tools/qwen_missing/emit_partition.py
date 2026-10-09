@@ -195,7 +195,7 @@ def emit_ctrl(core: str) -> str:
             "(tools/qwen_rom_rt_core_emit_w12.py). The core minus its matrix-engine spine and stream unit.\n" + t)
 
 
-def fq_head(t: str) -> str:
+def fq_head(t: str, module: str = "ot_qwen_rom_core_ctrl", default: int = 0) -> str:
     """safe-qwen S-A6 (2026-10-08): parameter FQ_HEAD (default 0 = unchanged).  FQ_HEAD = 1 cuts the decode path
     fq_rd -> fq[] read mux -> DYN add -> NEXT registers (qfd_sp_constants_sequencer TT -747.5, u_ctrl.fq_rd ->
     me_tiles, ~26 logic levels): the FIFO head is moved into a registered head word hq (refilled when empty or on
@@ -208,8 +208,8 @@ def fq_head(t: str) -> str:
             raise SystemExit(f"fq_head anchor: {old[:60]!r}")
         t = t.replace(old, new, 1)
     # parameter
-    m = re.search(r"(module ot_qwen_rom_core_ctrl #\(\n)", t)
-    one(m.group(1), m.group(1) + "    parameter integer FQ_HEAD = 0,   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n")
+    m = re.search(r"(module " + module + r" #\(\n)", t)
+    one(m.group(1), m.group(1) + f"    parameter integer FQ_HEAD = {default},   // safe-qwen S-A6: registered FIFO head word (decode reads a flop)\n")
     one("    wire [INSTR_BITS-1:0] ir = fq[fq_rd]; // FIFO head: the word decode reads",
         "    reg  [INSTR_BITS-1:0] hq;            // FQ_HEAD: registered head word\n"
         "    reg                   hq_v;\n"
