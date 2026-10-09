@@ -1,0 +1,91 @@
+{
+ "schema_version": 1,
+ "records": [
+  {
+   "element": "R25IQG native indexer topology",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "description": "Four full L16 FA6 CRED128 scorer slots and T1 LA7 captured selector with explicit quarter completion",
+   "source": {
+    "commit": "0857e76b3",
+    "paths": ["tools/hbm_indexer_die_topology.py", "tools/hbm_indexer_native_views.py", "tools/hbm_accel_die_fp.py"]
+   },
+   "implementation": {"status": "implemented optin; historical R25 and original native pin records preserved"},
+   "model": {
+    "status": "KEYLEG24 LEG32 credit reservations; grid pad priced before generation; no rate credit",
+    "evidence": ["tools/hbm_indexer_r25i_model.py"],
+    "mirror_grid_extra_outline_um2_per_die": 192.01536,
+    "mirror_grid_added_cycles": 0
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS exact abstract identity, track lattice, native topology bbox",
+     "instances": 875,
+     "native_bus_segments": 422,
+     "native_pins": 46855,
+     "offtrack": 0,
+     "overlaps": 0,
+     "outside": 0,
+     "evidence": ["results/uarch/hbm_indexer_r25i_20261009/native-pin-grid-0857e76b3.json"]
+    },
+    "negative": {
+     "status": "PASS historical north scorer mirror phase defect detected and preserved",
+     "evidence": ["results/uarch/hbm_indexer_r25i_20261009/native-pin-grid-0857e76b3.json"]
+    }
+   },
+   "physical": {"status": "abstract geometry PASS only; no die timing or routed closure", "corners": {}, "evidence": []},
+   "dependencies": [
+    "service-owned native388.8 band and protected1153-bit line CDC from1024ps HBM to833ps streaming",
+    "actual scalar credit relay hardened views",
+    "selector isolated full6903pin route and actual die boundary budgets",
+    "native query/config/control producer and candidate/topk consumer joins",
+    "actual clock insertion and pin-to-pin final segments"
+   ],
+   "integration": {"status": "logical native service/scorer/selector fullwidth topology; protected service transport and formatter joins pending"}
+  },
+  {
+   "element": "TA15 digital clock reset collars",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "description": "17 asynchronous assert, three-edge synchronous release collars across four independent real PLL domains",
+   "source": {
+    "commit": "d707730d0",
+    "paths": ["rtl/hbm_accel/control/ot_hbm_clock_reset_boundary.sv", "rtl/hbm_accel/control/ot_hbm_reset_seq.sv"]
+   },
+   "implementation": {"status": "implemented; analog PLL is a real blackbox contract; digital body51FF"},
+   "model": {
+    "status": "modeled; streaming/link833.333ps, serial1111.111ps, HBM1024ps; no steady-state token cycles",
+    "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/model.json"]
+   },
+   "exactness": {
+    "positive": {"status": "PASS all17 edge-release oracle and production blackbox elaboration", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/remote_validation.log"]},
+    "negative": {"status": "PASS missing-lock veto mutant rejected", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/remote_validation.log"]}
+   },
+   "physical": {
+    "status": "terminal NOT_MET isolated pathfinding; objects and r1-r4 failures preserved",
+    "corners": {"TT_setup_ps": -179.39, "SS_sensitivity_ps": -189.32, "FF_hold_ps": -8.93, "DRC": 0},
+    "internal_reg_to_reg": {"TT_setup_ps": 670.5, "SS_setup_ps": 611.55, "FF_hold_ps": 16.75},
+    "classification": "Worst constrained raw POR to asynchronous RESETN recovery/removal crosses provisional HBM/link phase. No recovery/removal exception or physical closure claimed.",
+    "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/physical_r4/corner_sta.json", "results/uarch/hbm_ta15_clock_boundary_20261008/physical_r4/physical.json"],
+    "remote_objects": "ot-epyc2:/srv/opentallas-scratch/codex/hbm-ta15-physical/run-r4; ot-epyc1tb:/srv/opentallas-scratch/codex/hbm-ta15-corner-r4/run"
+   },
+   "dependencies": ["actual analog PLL lock/phase and AON readiness providers", "asynchronous reset metastability/boot contract", "actual die load/CTS and destination recovery/removal obligations"],
+   "integration": {"status": "production sequencer plus readiness veto implemented; actual collective wrapper/status provider binding pending"}
+  },
+  {
+   "element": "TA15 production clock controller readiness",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "source": {"commit": "46baa12f9", "paths": ["rtl/hbm_accel/control/ot_hbm_production_clock_control.sv", "tests/rtl/tb_hbm_production_clock_control.sv"]},
+   "implementation": {"status": "actual PORTS9 reset sequencer and17 destination release collars; stopped serial clock blocks readiness"},
+   "model": {"status": "91FF floor26.5356um2; three destination edges plus two AON edges boot readiness; zero steady-state added cycles", "evidence": ["tools/hbm_ta15_clock_boundary_model.py"]},
+   "exactness": {
+    "positive": {"status": "PASS admitted production stopped-clock readiness and raw POR revocation", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/production-clock-porheld.log"]},
+    "negative": {"status": "initial insufficient POR bench pulse failure preserved", "evidence": ["results/uarch/hbm_ta15_clock_boundary_20261008/production-clock-a67450115.log"]}
+   },
+   "physical": {"status": "not yet routed full91FF composition;51FF collar failed physical receipt applies only to that body", "corners": {}},
+   "dependencies": ["actual platform POR and AON clock", "all four PHY and nine link readiness sources", "BIST completion and fatal fault providers"],
+   "integration": {"status": "RTL implemented and minimum production gate PASS; real die source binding pending"}
+  }
+ ]
+}
