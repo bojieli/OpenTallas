@@ -70,8 +70,8 @@ module ot_hgi_hc_record #(
                           hdr_q <= 0; a_q <= 0; b_q <= 0; o_q <= 0; na_q <= 0; no_q <= 0; job_q <= 0; end
         else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            if (rec_v && rec_rdy) begin raw_v <= 1'b1; hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o;
-                                        na_q <= rec_n_a; no_q <= rec_n_o; end
+            hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o; na_q <= rec_n_a; no_q <= rec_n_o;   // pin flops
+            if (rec_v && rec_rdy) raw_v <= 1'b1;
             if (raw_v) begin
                 raw_v <= 1'b0;
                 if (bad) begin rec_fault <= 1'b1; halt_q <= 1'b1; end

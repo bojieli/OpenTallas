@@ -164,9 +164,8 @@ module ot_hgi_sm_record #(
             pub_base <= 0; pub_stride <= 0; pub_space <= 0; pub_m <= 0; pub_q <= 0; pub_p <= 0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            if (rec_v && rec_rdy) begin
-                raw_v <= 1'b1; hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o; na_q <= rec_n_a; nb_q <= rec_n_b;
-            end
+            hdr_q <= rec_hdr; a_q <= rec_a; b_q <= rec_b; o_q <= rec_o; na_q <= rec_n_a; nb_q <= rec_n_b;   // pin flops
+            if (rec_v && rec_rdy) raw_v <= 1'b1;
             // E1: decode, issue x load + publication, start the products
             if (raw_v) begin
                 raw_v <= 1'b0;

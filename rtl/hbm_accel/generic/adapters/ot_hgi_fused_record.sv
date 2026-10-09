@@ -58,10 +58,14 @@ module ot_hgi_fused_record #(
     input  wire          q_done,
     input  wire          q_fault
 );
+    localparam [3:0] S_LD = 12;
     localparam [3:0] S_IDLE = 0, S_DEC = 1, S_MV = 2, S_MVW = 3, S_OP1 = 4, S_OP2 = 5, S_OP3 = 6, S_WSU = 7, S_NE = 8,
                      S_NEW = 9, S_Q = 10, S_HALT = 11;
     reg [3:0] st;
     reg [127:0] hdr; reg [255:0] dA, dB, dC, dO; reg [20:0] nA, nB, nO;
+    reg [127:0] p_hdr; reg [255:0] p_a, p_b, p_c, p_o; reg [20:0] p_na, p_nb, p_no;      // pin flops
+    always @(posedge clk) begin p_hdr <= rec_hdr; p_a <= rec_a; p_b <= rec_b; p_c <= rec_c; p_o <= rec_o;
+                                p_na <= rec_n_a; p_nb <= rec_n_b; p_no <= rec_n_o; end
     reg in_mvd, in_mvf, in_ned, in_nef, in_qd, in_qf;
     always @(posedge clk) begin in_mvd <= mv_done; in_mvf <= mv_fault; in_ned <= ne_done; in_nef <= ne_fault;
                                 in_qd <= q_done; in_qf <= q_fault; end
@@ -116,8 +120,9 @@ module ot_hgi_fused_record #(
             if (ne_v && ne_rdy) ne_v <= 1'b0;
             if (s_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
             case (st)
-                S_IDLE: if (rec_v) begin hdr <= rec_hdr; dA <= rec_a; dB <= rec_b; dC <= rec_c; dO <= rec_o;
-                                         nA <= rec_n_a; nB <= rec_n_b; nO <= rec_n_o; st <= S_DEC; end
+                S_IDLE: if (rec_v) st <= S_LD;
+                S_LD: begin hdr <= p_hdr; dA <= p_a; dB <= p_b; dC <= p_c; dO <= p_o; nA <= p_na; nB <= p_nb; nO <= p_no;
+                            st <= S_DEC; end
                 S_DEC: begin
                     if (hdr[127:124] != 4'd4 || op > 6'd6 || op == 6'd3) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (op == 6'd1) begin

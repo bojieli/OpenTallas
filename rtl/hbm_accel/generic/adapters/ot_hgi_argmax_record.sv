@@ -84,7 +84,8 @@ module ot_hgi_argmax_record #(
             res_val <= 0; res_id <= 0;
         end else begin
             ret[2:1] <= 2'b00; vmq[337] <= 1'b0; e_in_v <= 1'b0; e_in_last <= 1'b0;
-            if (rec[0] && ret[0]) begin ret[0] <= 1'b0; raw_v <= 1'b1; rq <= rec; end      // E0 accept (ready = idle)
+            rq <= rec;                                                          // pin flops (no enable from rec[0])
+            if (rec[0] && ret[0]) begin ret[0] <= 1'b0; raw_v <= 1'b1; end        // E0 accept (ready = idle)
             if (raw_v) begin                                                     // E1 decode
                 raw_v <= 1'b0;
                 if (bad) begin ret[2] <= 1'b1; halt_q <= 1'b1; end
