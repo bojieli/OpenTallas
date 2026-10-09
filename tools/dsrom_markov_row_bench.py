@@ -19,7 +19,7 @@ def rows(name,ids):
 def write(p,arr):
  p.write_text(''.join(f'{int(v):0{arr.dtype.itemsize*2}x}\n' for v in arr))
 def main():
- ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1],default=0);ap.add_argument('--vectors',type=Path);ap.add_argument('--source-commit');a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1,2],default=0);ap.add_argument('--vectors',type=Path);ap.add_argument('--source-commit');a=ap.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  if a.vectors:
   vr=json.loads((a.vectors/'record.json').read_text())
   wh,xh=vr['headers']['head'],vr['headers']['embed'];rowids,tokens=vr['rows'],vr['tokens']

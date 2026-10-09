@@ -44,7 +44,9 @@ module ot_dsrom_markov_row #(
   reg [255:0] weight_q,embed_q;
   always @(posedge clk or negedge rst_n)
    if(!rst_n) accepted<=0; else accepted<=fire;
-  always @(posedge clk) if(fire) begin weight_q<=weight_bf16;embed_q<=embed_bf16;end
+  // PINREG=2 removes fire from the512 payload-enable cones.
+  // Invalid captured payload is ignored through the single accepted valid.
+  always @(posedge clk) if(PINREG==2 || fire) begin weight_q<=weight_bf16;embed_q<=embed_bf16;end
   assign mul_fire=accepted;
   assign mul_weight=weight_q;
   assign mul_embed=embed_q;
