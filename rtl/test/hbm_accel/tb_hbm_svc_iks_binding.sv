@@ -1,12 +1,12 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_binding #(parameter REF_MODE=3,PULL=0,BATCH=0);
+module tb_hbm_svc_iks_binding #(parameter REF_MODE=3,PULL=0,BATCH=0,KEY_DEPTH=64);
 reg clk=0,efck=0,rst_n=0;always #512 clk=~clk;always #416 efck=~efck;
 reg[127:0] ed=0;wire[31:0]kv,krdy,kwe,rv,rrdy;wire[959:0]addr;wire[127:0]len,beat;wire[543:0]tag,rtag;
 wire[8191:0]data_;wire[8791:0]lines;wire done,fault;reg[7:0]credit=0;
 wire phy_clk,phy_rst_n;wire[8191:0]rawdata;wire[8191:0]wdata;wire[1023:0]wstrb;wire[31:0]wdone;
 assign data_=rawdata ^ ((mut==1 && rv[5]) ? (8192'd1 << (5*256)) : 8192'd0);
-ot_hbm_svc_core #(.IKS(1),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
+ot_hbm_svc_core #(.IKS(1),.IK_DEPTH(KEY_DEPTH),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(phy_clk),.phy_rst_n(phy_rst_n),.k_v(kv),.k_rdy(krdy),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(wdata),.k_wstrb(wstrb),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
 .wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault));
@@ -21,7 +21,7 @@ endfunction
 function automatic[255:0]pat(input[29:0]a);integer i;begin for(i=0;i<8;i=i+1)pat[i*32+:32]=(a*8+i)*32'h9E3779B1^32'h5bd1e995;end endfunction
 integer got=0,l,i,g,pc,j,off,mut=0,t=0,phase=0,delay_=1,rep_=0;
 integer owed[0:7];reg[255:0]ex;reg fin=0;time launch,lastline,drained;
-wire[6:0] slots[0:31];wire[11:0] request_j[0:31];
+wire[8:0] slots[0:31];wire[11:0] request_j[0:31];
 for(genvar rp=0;rp<32;rp=rp+1)begin:monitor
  assign slots[rp]=dut.gkvs.gs[rp].slots;
  assign request_j[rp]=dut.gkvs.gs[rp].jn;

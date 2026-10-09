@@ -131,6 +131,7 @@ module ot_hbm_svc_core #(
   // delivers up to 32 sectors a clock.  kvs_done pulses when every PC finished.  KVS = 0: the single-PC kind 1.
   parameter integer KVS = 0,
   parameter integer IK_CRED = 64, // production scorer FA6: line credits independent of64sector slots/PC
+  parameter integer IK_DEPTH = 64, // opt-in return retention; default retains measured64-slot implementation
   parameter integer IKS = 0, // opt-in kind2 stripe: blocks chd[69:61], row0 chd[16:2], all32PCs
 
   parameter integer KNO = 15              // 4-sector reads outstanding per PC (60 of the controller's 64 queued beats)
@@ -470,7 +471,7 @@ module ot_hbm_svc_core #(
       assign idx_data[ip*256+:256]=sectors[ip*269+13+:256];
     end
     if (IKS != 0) begin : gi
-    ot_hbm_index_lines #(.ENABLE(IKS),.CRED(IK_CRED)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && c_kind==2'd2),
+    ot_hbm_index_lines #(.ENABLE(IKS),.CRED(IK_CRED),.DEPTH(IK_DEPTH)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && c_kind==2'd2),
       .blocks(chd[69:61]),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
       .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(ik_fault),.retained(idx_busy));
     end else begin : gni
@@ -492,7 +493,8 @@ module ot_hbm_svc_core #(
       wire [9:0] rq = jn[11:2];
       wire [11:0] jq = {rq, 2'b00};
       reg [12:0] jr;          // beats received
-      reg [6:0] slots;
+      localparam SC=$clog2(IK_DEPTH+1);
+      reg [SC-1:0] slots;
       reg [6:0] nob;          // beats requested (accepted) and not yet returned
       wire on = act && mask[p];
       assign sreq[p] = on && (jn < nsec) && (nob <= 7'(4 * KNO - 4)) && (!idx || (slots >= 4)) && !ik_fault;
@@ -506,11 +508,11 @@ module ot_hbm_svc_core #(
       wire [11:0] bj4 = {b_t[p*17+5 +: 10], 2'b00};
       wire [14:0] rr = row0 + 15'(bj4 >> 10);
       always @(posedge ck or negedge rn)
-        if (!rn) begin jn <= 0; jr <= 0; nob <= 0; slots <= 64; end
-        else if (c_kvs) begin jn <= 0; jr <= 0; nob <= 0; slots <= 64; end
+        if (!rn) begin jn <= 0; jr <= 0; nob <= 0; slots <= IK_DEPTH; end
+        else if (c_kvs) begin jn <= 0; jr <= 0; nob <= 0; slots <= IK_DEPTH; end
         else begin
           if (sacc[p]) jn <= jn + 12'd4;
-          if(idx)slots <= slots - (sacc[p] ? 7'd4 : 0) + 7'(idx_pop[p*2+:2]);
+          if(idx)slots <= slots - (sacc[p] ? SC'(4) : SC'(0)) + SC'(idx_pop[p*2+:2]);
           if (bv) jr <= jr + 13'd1;
           nob <= nob + (sacc[p] ? 7'd4 : 7'd0) - (bv ? 7'd1 : 7'd0);
         end
