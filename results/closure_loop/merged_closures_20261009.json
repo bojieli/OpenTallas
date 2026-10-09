@@ -2,11 +2,11 @@
  "schema": "opentallas.closure_loop.merged_closures.v1",
  "generated": "2026-10-09 PT",
  "stream": "merge-eco",
- "scope": "CLOSED closure-loop jobs since 2026-10-08 22:00 PT whose source or record was not on origin/main (scan of ~/.local/state/closure_loop/jobs at 02:36 PT); rejected scope (qfd_dspark_*, Qwen-ROM MTP) skipped",
+ "scope": "CLOSED closure-loop jobs since 2026-10-08 22:00 PT whose source or record was not on origin/main (scan of ~/.local/state/closure_loop/jobs at 02:36 PT); rejected scope (qfd_dspark_*, Qwen-ROM MTP) skipped; rescanned 02:58 PT (+4 closed 02:41-02:46)",
  "base_origin_main": "ba35177c7",
  "counts": {
-  "closed": 29,
-  "merged": 21,
+  "closed": 33,
+  "merged": 25,
   "already_on_main": 6,
   "skipped": 2
  },
@@ -410,6 +410,58 @@
    "record_merged_sha": "2042d3764345661d13a8cfd804b0593d39b99af5",
    "source_merged_sha": "2c2e9932d",
    "note": "closure files only from struct-close 4a12f4d5d (dsfd_hstnh_515_pe.sv + tb); rx head pipeline, L-DIV v2 SDC and later struct-close commits not closed, not merged"
+  },
+  {
+   "job": "hbm_cmdproc_n_orph2_a75cb556b-ttref-hm25-ioreffix",
+   "closed": "2026-10-09T02:41:13-07:00",
+   "branch": "claude/orphans2-20261008",
+   "source_commit": "a75cb556b",
+   "record_commit": "50af1ccae",
+   "source_on_main_before": true,
+   "record_on_main_before": false,
+   "verdict": "hfd_cmdproc_n CLOSED TT +67.15 / FF +25.83 ps DRC 0 (loop hold ECO at the routed reference; record updates the live view_n; option-B-revoked block re-closed at TT)",
+   "status": "merged",
+   "record_merged_sha": "8b06b9677",
+   "note": "closed after the 02:36 scan; source on main (or merged in this stream); record cherry-picked"
+  },
+  {
+   "job": "qfd_q5_landing_ecc-ab9c785e9-wc-ttalias",
+   "closed": "2026-10-09T02:41:28-07:00",
+   "branch": "codex/qwen-q5-ecc-20261009",
+   "source_commit": "ab9c785e9",
+   "record_commit": "7cba3f22f",
+   "source_on_main_before": true,
+   "record_on_main_before": false,
+   "verdict": "qfd_q5_landing_ecc CLOSED TT +7.19 / FF +11.00 ps DRC 0",
+   "status": "merged",
+   "record_merged_sha": "c8f5cf1dd",
+   "note": "closed after the 02:36 scan; source on main (or merged in this stream); record cherry-picked"
+  },
+  {
+   "job": "mtp_topk_f384-d30fa5f39-tc",
+   "closed": "2026-10-09T02:46:10-07:00",
+   "branch": "claude/mtp-hbm-20261008",
+   "source_commit": "d30fa5f39",
+   "record_commit": "19d40c4ff",
+   "source_on_main_before": true,
+   "record_on_main_before": false,
+   "verdict": "mtp_topk_f384 CLOSED TT +18.26 / FF +17.31 ps DRC 0 (RVT sibling of the VT-swap closure)",
+   "status": "merged",
+   "record_merged_sha": "f24452fbb",
+   "note": "closed after the 02:36 scan; source on main (or merged in this stream); record cherry-picked"
+  },
+  {
+   "job": "sp-ta15rs-006e20771-tc-hm10-cl",
+   "closed": "2026-10-09T02:46:19-07:00",
+   "branch": "claude/strip-protect-20261009",
+   "source_commit": "006e20771",
+   "record_commit": "bb011b7bd",
+   "source_on_main_before": true,
+   "record_on_main_before": false,
+   "verdict": "ot_hbm_clock_reset_collars_rs CLOSED TT +275.92 / FF +10.94 ps DRC 0",
+   "status": "merged",
+   "record_merged_sha": "a6f9ad28c",
+   "note": "closed after the 02:36 scan; source on main (or merged in this stream); record cherry-picked"
   }
  ]
 }
