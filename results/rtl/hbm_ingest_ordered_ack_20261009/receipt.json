@@ -1,0 +1,37 @@
+{
+  "implementation_commit": "e4a9a67fa",
+  "bench_commit": "828531e63",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/hbm-ordered-e4a9a67fa",
+  "admission_peak_GiB": 0.1,
+  "positive": {
+    "exit_code": 0,
+    "result": "512 accepted/512 retired; full32PCdepth8 reverse-PC and simultaneous32WD"
+  },
+  "negative": {
+    "aggregate_count_exit_code": 1,
+    "required_failure": "EARLY_ORDINAL_ACK source1 ordinal0",
+    "orphan_exit_code": 0,
+    "result": "ORPHAN_DETECTED"
+  },
+  "scope": "Functional prefix ACK; ordinary flops only. No leases, aperture installation or protected-flop state. Consuming service integration and physical closure remain pending.",
+  "latency": {
+    "added_in_order_pipeline_cycles": 0,
+    "maximum_completed_prefix_backlog_cycles": 255,
+    "ack_per_source_per_cycle": 1,
+    "rate_credit": 0
+  },
+  "consumer_assumptions": {
+    "core_commit": "adf5e21d4",
+    "path": "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv",
+    "sha256": "ade896dc9ddc9a045c5f623f698d26bd7dac8467085e794bca781f924e41dad0",
+    "source_order": "One FIFO head between WQ FIFO and PHY: wbusy set on w_pop and cleared only by delayed |wacc; hv retains hsource and packet until selected-PC wacc. Thus actual wacc order equals FIFO order.",
+    "completion_order": "Actual k_wr_done captured as wd_q; same-PC issue order required, cross-PC reorder supported.",
+    "integration": "Replace source_pc instance by source_ordered ENABLE1 only in selected source-aware successor; default legacy preserved."
+  },
+  "sha256": {
+    "rtl/hbm_accel/ingest/ot_hbm_write_source_ordered.sv": "9a797b01a4177f87ce6cc9d527940f7d4b90458162bca2d2a6ab803b28591c2d",
+    "rtl/hbm_accel/ingest/ot_hbm_write_source_pc.sv": "0deeaac2785563acefcf591cc9f1ab5f440c46a9e7899a5f93984bc7c317420e",
+    "rtl/test/tb_hbm_write_source_ordered.sv": "58b032f2389d8bc544a51cbbd4426bb7cafface5d497fe74d46fc64da5c7b4e6",
+    "tools/hbm_ingest_ack_model.py": "8c0bbff9273f3c031c3d7f0d287f222ed556ee96c6298b351ac3ef55915c9ddc"
+  }
+}

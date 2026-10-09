@@ -26,12 +26,18 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending admittedfullshape",
-          "evidence": []
+          "status": "PASS remote full32PCdepth8",
+          "evidence": [
+            "results/rtl/hbm_ingest_ordered_ack_20261009/receipt.json",
+            "results/rtl/hbm_ingest_ordered_ack_20261009/base.log"
+          ]
         },
         "negative": {
-          "status": "pending aggregateACKmutant",
-          "evidence": []
+          "status": "PASS canonical aggregate-ACK counterexample and orphan detection",
+          "evidence": [
+            "results/rtl/hbm_ingest_ordered_ack_20261009/count.log",
+            "results/rtl/hbm_ingest_ordered_ack_20261009/orphan.log"
+          ]
         }
       },
       "physical": {
