@@ -14102,3 +14102,9 @@ def hbm_production_clock_control_model():
 def hbm_indexer_service_transport_model():
     from hbm_indexer_r25i_model import hbm_indexer_service_transport_model as impl
     return impl()
+
+
+def hbm_loader_external_core_clock_model(nd=2, aw=3):
+    """Finite full-shape loader CDC alternative with an actual core clock pin."""
+    from hbm_loader_cx_model import model
+    return model(nd=nd, aw=aw)
