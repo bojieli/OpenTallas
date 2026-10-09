@@ -23,12 +23,14 @@ config.write_text(text)
 for n,f in enumerate(['cg_pushdown.tcl','clk_net_protect.tcl','link_budget_hook.tcl']):
  shutil.copy2(src/'physical/common_flow'/f,out/'hooks'/f'ot_cts_fix_{n}_{f}')
 shutil.copy2(src/'physical/common_flow/link_budget_consistent.sdc',out/'hooks/link_budget_consistent.sdc')
+rb=src/'physical/common_flow/rebudget_block.sdc'
+if rb.exists(): shutil.copy2(rb,out/'hooks/rebudget_block.sdc')
 hook=out/'hooks/pre_cts_ot_cts_fix.tcl'
 with hook.open('a') as f:f.write('\nsource /src/physical/qwen_die_masters/signoff/qfd_io_xfifo_gray_cdc.tcl\n')
 # Copytree preserves the completed objects; mutable unfinished logs belong to
 # the new lineage only. The old failure remains preserved at its original path.
 manifest={'original_orfs':str(old),'new_orfs':str(out),'checkpoint_sha256':actual,
  'resume_stage':'4_1_cts','rtl_source':'1d3c576bb','approved_overlay':'J6/I12',
- 'old_failure_preserved':True,'source_commit':(src/'SOURCE_COMMIT').read_text().strip() if (src/'SOURCE_COMMIT').exists() else None}
+ 'old_failure_preserved':True,'current_rebudget_present':rb.exists(),'source_commit':(src/'SOURCE_COMMIT').read_text().strip() if (src/'SOURCE_COMMIT').exists() else None}
 (w/'checkpoint_import.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps(manifest))
