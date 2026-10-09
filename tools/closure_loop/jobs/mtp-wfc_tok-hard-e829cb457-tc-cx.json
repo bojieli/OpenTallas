@@ -1,5 +1,5 @@
 {
- "name": "mtp-wfc_tok-hard-2588ae8d7-tc-cx",
+ "name": "mtp-wfc_tok-hard-e829cb457-tc-cx",
  "block": "dsfd_wfc_tok_hard",
  "owner": "Codex:mtp-rom/wfc_hard",
  "purpose": "Single approved HARD structural token candidate, exact+epoch-mutant PASS. Four-edge full128-entry lookup: pin register,16-slot bank read,8-user selection,tag output. +2cycles versus r3; matched SOURCE still owed. TT>=0/FF>=0/DRC0,SS sensitivity,60/25ps unchanged. Remote admission only; no progressing predecessor changes.",
@@ -12,7 +12,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "codex/mtp-wfc-hard-20261009",
-  "commit": "2588ae8d7",
+  "commit": "e829cb457",
   "extra_paths": [
    "results/rtl/dshbm_dspark_rtl_20261003/traces"
   ],
@@ -21,7 +21,8 @@
    "rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv",
    "tools/s81_ph/s81_ph_wfc_token_hard_plan.py",
    "tools/dsrom_wfc_token_hard_gate.py",
-   "tools/uarch_model.py"
+   "tools/uarch_model.py",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv"
   ]
  },
  "stages": {
