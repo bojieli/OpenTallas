@@ -38,6 +38,7 @@ module ot_dsrom_wfc_vmx #(
     parameter integer PRE    = 4,       // fast-side pre-queue (two pushes a cycle: last write + start)
     parameter integer RQ     = 16,       // slow-side read-response queue
     parameter integer RDEPTH = 8,       // slow -> fast ratio FIFO entries
+    parameter integer READPIPE = 0, // V14 default-off two added read edges
     parameter integer LAG    = 0        // ot_ratio_cdc_fifo LAG on both crossings (route variant: mem -> shadow arcs become
                                         // a max-delay write-period path with no hold check; +1 write cycle each way)
 ) (
@@ -50,6 +51,8 @@ module ot_dsrom_wfc_vmx #(
     input  wire              vm_re,
     input  wire [VWA-1:0]    vm_raddr,
     output reg  [FLIT-1:0]   vm_rq,
+    output reg vm_rvalid,
+    output reg [$clog2(XWORDS+SIDE_WORDS+1)-1:0] vm_rindex,
     input  wire              core_start,
     input  wire [NW-1:0]     core_token,
     input  wire [NW-1:0]     core_pos,
@@ -147,7 +150,39 @@ module ot_dsrom_wfc_vmx #(
         wire [VWA-1:0] ra_sd = vm_raddr - SIDE_TXB[VWA-1:0] + XWORDS[VWA-1:0];
         assign ra = (ra_tx < XWORDS) ? ra_tx : ra_sd;
     end endgenerate
-    always @(posedge fclk) if (vm_re) vm_rq <= stg[ra[IB-1:0]];
+    initial if (READPIPE != 0 && READPIPE != 2) $fatal(1,"READPIPE supports0or2");
+    generate if (READPIPE==0) begin:g_read_legacy
+        always @(posedge fclk) begin
+            vm_rvalid <= vm_re && frst_n;
+            if(vm_re) begin vm_rq <= stg[ra[IB-1:0]]; vm_rindex <= ra[IB-1:0]; end
+        end
+    end else begin:g_read2
+        reg [VWA-1:0] address_q;
+        reg request_q;
+        wire [VWA-1:0] qtx=address_q-TXB;
+        wire [VWA-1:0] qside=address_q-SIDE_TXB+XWORDS;
+        wire [VWA-1:0] normalized=(qtx<XWORDS)?qtx:qside;
+        // Always capture payload; only valid selects consumption.
+        always @(posedge fclk) begin address_q<=vm_raddr; request_q<=vm_re&&frst_n; end
+        localparam integer NS=(FLIT+31)/32;
+        genvar sl;
+        for(sl=0;sl<NS;sl=sl+1) begin:g_slice
+            (* keep *) reg [IB-1:0] index_q;
+            (* keep *) reg valid_q;
+            always @(posedge fclk) begin
+                index_q<=normalized[IB-1:0]; valid_q<=request_q&&frst_n;
+                if(valid_q) vm_rq[sl*32+:32]<=stg[index_q][sl*32+:32];
+            end
+        end
+        always @(posedge fclk) begin
+            vm_rvalid<=g_slice[0].valid_q&&frst_n;
+`ifdef OT_VMX_MUT_INDEX
+            vm_rindex<=g_slice[0].index_q^1'b1;
+`else
+            vm_rindex<=g_slice[0].index_q;
+`endif
+        end
+    end endgenerate
     // credit return: the slow side's issued-write count, sampled flop -> flop
     reg [3:0] wcnt_s, wcnt_f, wcnt_seen;
     always @(posedge fclk) begin

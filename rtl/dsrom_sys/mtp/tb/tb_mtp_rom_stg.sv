@@ -11,7 +11,7 @@
 // PASS: NJOB jobs in, NJOB messages out, all content exact, no fault (WFC proto_fault, lnk, vmx).
 // ---------------------------------------------------------------------------
 module tb_mtp_rom_stg;
-    parameter integer SEED = 1, NJOB = 60, NUSR = 3, VMSLOW = 0, VMNAT = 0, LAG = 0, T_CORE = 80, MAXC = 400000;
+    parameter integer READPIPE = 0, FULLSTALL = 0, SEED = 1, NJOB = 60, NUSR = 3, VMSLOW = 0, VMNAT = 0, LAG = 0, T_CORE = 80, MAXC = 400000;
     localparam integer FLIT = 512, NW = 21, USER_W = 10, VWA = 15, RXW = 41, TXW = 46;
     localparam integer HDR_TYPE = 16, HDR_LEN = 24, HDR_USER = 32, HDR_POS = 40, HDR_IDX = 61, HDR_VAL = 82,
                        HDR_TOK = 114, HDR_USER_HI = 151;
@@ -37,20 +37,25 @@ module tb_mtp_rom_stg;
     wire [FLIT-1:0] w_in_data, w_out_data;
     wire core_start, core_done_w; wire [NW-1:0] core_token, core_pos, cnt_tok; wire [31:0] cnt_val;
     wire [USER_W-1:0] core_user; wire [29:0] kv_base;
+    wire [6:0] vqi;
     wire vm_we, vm_re; wire [VWA-1:0] vm_waddr, vm_raddr; wire [FLIT-1:0] vm_wdata, vm_rq;
     wire pr_re; wire [USER_W-1:0] pr_user; wire [NW-1:0] pr_pos; wire [3:0] pr_blk;
     wire core_busy, tok_valid, proto_fault, wf_issue, wf_reject, wf_squash;
     wire [USER_W-1:0] tok_user, users_done; wire [NW-1:0] tok_pos, tok_id;
-    ot_rom_pkg_ctrl_wfc #(.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
+`ifdef OT_VMX_TOKPIPE
+    ot_rom_pkg_ctrl_wfc_tokpipe #(
+`else
+    ot_rom_pkg_ctrl_wfc #(
+`endif.WAVE(1), .WIN(6), .FLIT(FLIT), .NW(NW), .AW(30), .VWA(VWA), .USER_W(USER_W), .MAXU(866),
         .KVW(32768), .SEND_HIDDEN(1), .HID_DEST(1), .FWD_TOKEN(1), .SOURCE(0), .XWORDS(TXW), .RXWORDS(RXW),
         .UPOS_LWR(1), .CONTROL_PIPE(1), .PRECOMP(1), .IN_DEC(1), .TXQ_SLICE(1), .RDY_LT(1), .FANOUT_COPY(1),
-        .MARGIN(1), .LINK_REG(1), .LINK_SEL(1), .VM_REG(1), .SLEW_COPY(1)) u_wfc (
+        .MARGIN(1), .LINK_REG(1), .LINK_SEL(1), .VM_REG(1), .VM_RETURN_EXTRA(READPIPE), .TXQ(READPIPE?8:4), .SLEW_COPY(1)) u_wfc (
         .clk(fclk), .rst_n(rst_n), .cfg_users(10'd0), .cfg_prompt_len(21'd0), .cfg_gen_len(21'd0),
         .in_valid(w_in_valid), .in_ready(w_in_ready), .in_data(w_in_data), .in_last(w_in_last),
         .out_valid(w_out_valid), .out_ready(w_out_ready), .out_data(w_out_data), .out_last(w_out_last),
         .core_start(core_start), .core_token(core_token), .core_pos(core_pos), .core_user(core_user),
         .core_done(core_done_w), .core_next_token(cnt_tok), .core_next_val(cnt_val), .kv_base(kv_base),
-        .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq),
+        .vm_we(vm_we), .vm_waddr(vm_waddr), .vm_wdata(vm_wdata), .vm_re(vm_re), .vm_raddr(vm_raddr), .vm_rq(vm_rq), .vm_rv(vqi[6]), .vm_ridx(vqi[5:0]),
         .pr_re(pr_re), .pr_user(pr_user), .pr_pos(pr_pos), .pr_q(21'd0), .pr_blk(pr_blk), .pr_qk(1'b0),
         .core_busy(core_busy), .tok_valid(tok_valid), .tok_user(tok_user), .tok_pos(tok_pos), .tok_id(tok_id),
         .users_done(users_done), .proto_fault(proto_fault), .wf_issue(wf_issue), .wf_reject(wf_reject),
@@ -65,8 +70,8 @@ module tb_mtp_rom_stg;
     wire swv; wire [VWA+FLIT-1:0] swd; reg swr = 0, swa = 0;
     wire srv; wire [VWA-1:0] srd; reg srr = 0; reg [FLIT:0] srq = 0;
     wire [USER_W+2*NW:0] ks; reg [NW+32:0] kd = 0; wire vmx_ft;
-    dsfd_wfc_vmx #(.XWORDS(TXW), .LAG(LAG)) u_vmx (.ck(fclk), .ckv(sclk), .rst(rst_n), .rsv(rst_n),
-        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq),
+    dsfd_wfc_vmx #(.XWORDS(TXW), .LAG(LAG), .READPIPE(READPIPE)) u_vmx (.ck(fclk), .ckv(sclk), .rst(rst_n), .rsv(rst_n),
+        .f_vw({vm_we, vm_waddr, vm_wdata}), .f_vr({vm_re, vm_raddr}), .t_vq(vm_rq), .t_vqi(vqi),
         .f_cs({core_start, core_user, core_token, core_pos}), .t_cd({core_done_w, cnt_tok, cnt_val}), .t_vc(vc_ret),
         .t_swv(swv), .t_swd(swd), .f_swr(swr), .f_swa(swa), .t_srv(srv), .t_srd(srd), .f_srr(srr), .f_srq(srq),
         .t_ks(ks), .f_kd(kd), .t_ft(vmx_ft));
@@ -140,7 +145,7 @@ module tb_mtp_rom_stg;
     integer m_k = -1, m_u, m_p, m_t, outs = 0;
     always @(posedge fclk) if (rst_n) begin
         rnd = mix(SEED * 9, cyc);
-        lo_r <= rnd[2:0] != 0;
+        lo_r <= FULLSTALL ? (cyc % 160 >= 96) : rnd[2:0] != 0;
         if (lo_v && lo_r) begin
             if (m_k < 0) begin
                 if (lo_d[HDR_TYPE +: 4] != 4'd1 || lo_d[HDR_LEN +: 8] != TXW) begin
@@ -173,6 +178,16 @@ module tb_mtp_rom_stg;
         if (li_v && li_r) begin t_li[li_n % 4096] = cyc; li_n = li_n + 1; end
         if (w_in_valid) begin sum_li = sum_li + (cyc - t_li[wi_n % 4096]); if (cyc - t_li[wi_n % 4096] > max_li) max_li = cyc - t_li[wi_n % 4096]; wi_n = wi_n + 1; end
     end
+    integer peak_queue=0, peak_debt=0, stalls=0;
+    always @(posedge fclk) if(rst_n) begin
+        if(u_wfc.txq_n>peak_queue) peak_queue=u_wfc.txq_n;
+        if((u_wfc.rd_inflight+u_wfc.rd_pre+u_wfc.rd_extra[0]+u_wfc.rd_extra[1])>peak_debt)
+            peak_debt=u_wfc.rd_inflight+u_wfc.rd_pre+u_wfc.rd_extra[0]+u_wfc.rd_extra[1];
+        if(lo_v&&!lo_r) stalls=stalls+1;
+        if(lo_v&&lo_r&&m_k>=0 && lo_d[FLIT] !== (m_k==TXW-1)) begin
+            $display("MTP_STG FAIL: last flag word=%0d",m_k); $finish;
+        end
+    end
     integer i;
     initial begin
         for (i = 0; i < 8; i = i + 1) nxt[i] = 0;
@@ -181,6 +196,10 @@ module tb_mtp_rom_stg;
         while (outs < NJOB && cyc < MAXC) @(posedge fclk);
         if (outs < NJOB) begin $display("MTP_STG FAIL: timeout, %0d of %0d out", outs, NJOB); $finish; end
         repeat (100) @(posedge fclk);
+        if(READPIPE && FULLSTALL && (peak_queue<8 || peak_debt<4 || stalls==0)) begin
+            $display("MTP_STG FAIL: insufficient finite queue coverage q=%0d debt=%0d stalls=%0d",peak_queue,peak_debt,stalls); $finish;
+        end
+        $display("MTP_STG_QUEUE peak=%0d debt=%0d stalls=%0d readpipe=%0d",peak_queue,peak_debt,stalls,READPIPE);
         $display("MTP_STG PASS jobs=%0d starts=%0d out=%0d cycles=%0d vmslow=%0d core_user_mismatch_at_start=%0d", jobs_in, starts, outs, cyc, VMSLOW, user_mis);
         $display("MTP_STG_CYC start_mean=%0.2f start_max=%0d done_mean=%0.2f done_max=%0d link_in_mean=%0.2f link_in_max=%0d txw=%0d (fast cycles; done = k_done -> WFC core_done incl. the %0d-word prefetch)",
                  1.0 * sum_s / n_s, max_s, 1.0 * sum_d / n_d, max_d, 1.0 * sum_li / wi_n, max_li, TXW, TXW);

@@ -34,7 +34,7 @@ TRACES = "results/rtl/dshbm_dspark_rtl_20261003/traces"
 FIXTURES = ROOT / "rtl/test/mtp_rom_fixtures"
 COMMON = [f"{M}/ot_dsrom_mtp_skid.sv", f"{M}/ot_dsrom_mtp_link_pair.sv", f"{M}/ot_dsrom_mtp_seq.sv", f"{M}/ot_dsrom_wfc_tok.sv", f"{M}/ot_dsrom_wfc_lnk.sv",
           f"{M}/ot_dsrom_wfc_vmx.sv", f"{M}/ot_dsrom_drf_fan.sv", f"{M}/dsfd_mtp_tops.sv", "rtl/common/ot_ratio_cdc_fifo.sv",
-          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv",
+          "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc.sv", "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
           "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.v"]
 
 
@@ -75,6 +75,11 @@ def cases():
         c[f"s0_neg_{mut.split('MUT_')[1].lower()}"] = dict(neg, defines=[mut])
     stg = dict(tb="tb_mtp_rom_stg")
     c["stg_r1"] = dict(stg, params=dict(SEED=1, NJOB=60))
+    rp=dict(stg, params=dict(SEED=4,NJOB=40,READPIPE=2,FULLSTALL=1,VMNAT=1))
+    c["stg_readpipe2"]=rp
+    c["stg_readpipe2_tokpipe"]=dict(rp,defines=["OT_VMX_TOKPIPE"])
+    for mut in ("INDEX","LAST","EARLY_RESPONSE","NODEBT"):
+        c["stg_readpipe2_neg_"+mut.lower()]=dict(rp,defines=["OT_VMX_MUT_"+mut],expect="fail")
     c["stg_vmnat"] = dict(stg, params=dict(SEED=4, NJOB=40, VMNAT=1))
     c["stg_lag1"] = dict(stg, params=dict(SEED=6, NJOB=40, LAG=1))
     c["stg_r2_slowvm"] = dict(stg, params=dict(SEED=2, NJOB=60, VMSLOW=1))

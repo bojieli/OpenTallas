@@ -127,6 +127,7 @@ endmodule
 module dsfd_wfc_vmx #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10, parameter integer VWA = 15,
     parameter integer TXB = 0, parameter integer XWORDS = 46, parameter integer SIDE_TXB = 0, parameter integer SIDE_WORDS = 0,
+    parameter integer READPIPE = 0,
     parameter integer LAG = 0
 ) (
     input  wire [0:0]        ck,
@@ -137,6 +138,7 @@ module dsfd_wfc_vmx #(
     input  wire [VWA+FLIT:0] f_vw,           // {we, waddr, wdata}
     input  wire [VWA:0]      f_vr,           // {re, raddr} (fixed one-edge read)
     output wire [FLIT-1:0]   t_vq,
+    output wire [$clog2(XWORDS+SIDE_WORDS+1):0] t_vqi, // {valid,index} matchedV14
     input  wire [USER_W+2*NW:0] f_cs,        // {start, user, token, pos}
     output wire [NW+32:0]    t_cd,           // {done, next_token, next_val}
     output wire [0:0]        t_vc,           // VM write credit return (to dsfd_wfc_lnk)
@@ -163,9 +165,10 @@ module dsfd_wfc_vmx #(
     wire swv, swr, srv, srr; wire [VWA-1:0] swa, sra; wire [FLIT-1:0] swd;
     wire ks; wire [USER_W-1:0] ku; wire [NW-1:0] kt, kp; wire cd; wire [NW-1:0] ct; wire [31:0] cv; wire vc, fl;
     ot_dsrom_wfc_vmx #(.FLIT(FLIT), .NW(NW), .USER_W(USER_W), .VWA(VWA), .TXB(TXB), .XWORDS(XWORDS),
-                       .SIDE_TXB(SIDE_TXB), .SIDE_WORDS(SIDE_WORDS), .LAG(LAG)) u_vmx (
+                       .SIDE_TXB(SIDE_TXB), .SIDE_WORDS(SIDE_WORDS), .READPIPE(READPIPE), .LAG(LAG)) u_vmx (
         .fclk(fclk), .frst_n(frn), .vm_we(f_vw[VWA+FLIT]), .vm_waddr(f_vw[FLIT +: VWA]), .vm_wdata(f_vw[FLIT-1:0]),
         .vm_re(f_vr[VWA]), .vm_raddr(f_vr[VWA-1:0]), .vm_rq(t_vq),
+        .vm_rvalid(t_vqi[$clog2(XWORDS+SIDE_WORDS+1)]), .vm_rindex(t_vqi[$clog2(XWORDS+SIDE_WORDS+1)-1:0]),
         .core_start(f_cs[USER_W+2*NW]), .core_user(f_cs[2*NW +: USER_W]), .core_token(f_cs[NW +: NW]), .core_pos(f_cs[NW-1:0]),
         .core_done(cd), .core_next_token(ct), .core_next_val(cv), .vc_ret(vc),
         .sclk(sclk), .srst_n(srn), .sw_valid(swv), .sw_ready(swr), .sw_addr(swa), .sw_data(swd), .sw_ack(swa_q),

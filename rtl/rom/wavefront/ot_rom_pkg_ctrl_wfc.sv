@@ -210,6 +210,7 @@ module ot_rom_pkg_ctrl_wfc #(
     // and a read reach the memory one edge later; the read data is taken one edge later (+1 cycle per
     // payload read; a second read in flight counts against the queue space)
     parameter integer VM_REG = `OT_WFC_VM_REG,
+    parameter integer VM_RETURN_EXTRA = 0, // V14: matched VMX READPIPE2, default unchanged
     // RD_PIPE (SOURCE with REC_SRAM): a second register stage on the SRAM read (rd_out -> a capture
     // register that only feeds the second one, so it sits at the macro pins): +1 cycle per record event
     parameter integer RD_PIPE = `OT_WFC_RD_PIPE,
@@ -281,6 +282,8 @@ module ot_rom_pkg_ctrl_wfc #(
     output wire               vm_re,
     output wire [VWA-1:0]     vm_raddr,
     input  wire [FLIT-1:0]    vm_rq,
+    input wire vm_rv,
+    input wire [$clog2(XWORDS+(SEND_SIDE?SIDE_WORDS:0)+1)-1:0] vm_ridx,
     // prompt tokens (SOURCE), synchronous read
     output reg                pr_re,
     output reg  [USER_W-1:0]  pr_user,
@@ -485,6 +488,15 @@ module ot_rom_pkg_ctrl_wfc #(
     reg            rd_inflight, rd_last;
     reg            rd_pre, rd_last_pre;   // VM_REG: a read issued, not yet at the memory
     wire           rd_pre_v = VM_REG ? rd_pre : 1'b0;
+    localparam integer VRI = $clog2(XWORDS+(SEND_SIDE?SIDE_WORDS:0)+1);
+    reg [1:0] rd_extra, rd_last_extra;
+    reg [VRI-1:0] rd_index [0:3];
+    integer ri;
+    wire rd_tail_busy = VM_RETURN_EXTRA && |rd_extra;
+    wire [VWA-1:0] rd_expected_index = (c_vm_raddr-TXB < XWORDS) ?
+        c_vm_raddr-TXB : c_vm_raddr-SIDE_TXB+XWORDS;
+    initial if (VM_RETURN_EXTRA != 0 && (VM_RETURN_EXTRA != 2 || !VM_REG || TXQ < 8))
+        $fatal(1,"V14 requires VM_REG1 VM_RETURN_EXTRA2 TXQ>=8");
     reg [VWA-1:0]  tx_k;
     reg [USER_W-1:0] tx_user;
     reg [NW-1:0]   tx_pos, tx_idx, tx_tok;
@@ -494,9 +506,14 @@ module ot_rom_pkg_ctrl_wfc #(
     assign lk_out_data  = TXQ_SLICE ? txq_slice_out : txq_d[QUEUE_SHIFT ? 0 : txq_r];
     assign lk_out_last  = txq_l[QUEUE_SHIFT ? 0 : txq_r];
     wire tx_pop   = lk_out_valid && lk_out_ready;
+`ifdef OT_VMX_MUT_NODEBT
     wire tx_space = (txq_n + rd_inflight + rd_pre_v) < TXQ;
+`else
+    wire tx_space = (txq_n + rd_inflight + rd_pre_v +
+        (VM_RETURN_EXTRA ? rd_extra[0]+{1'b0,rd_extra[1]} : 2'b0)) < TXQ;
+`endif
     // the finished job is taken once the previous one's messages are queued
-    wire completion_qual = running && c_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && !rd_pre_v && (txq_n + 2 <= TXQ);
+    wire completion_qual = running && c_done && !launch_wait && tx_st == T_IDLE && !rd_inflight && !rd_pre_v && !rd_tail_busy && (txq_n + 2 <= TXQ);
     wire job_done;
     wire [NW-1:0] rep_idx;
     wire [31:0] rep_val;
@@ -814,8 +831,8 @@ module ot_rom_pkg_ctrl_wfc #(
         end
     end endgenerate
     // -- sequential ---------------------------------------------------------------------
-    wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight && !rd_pre_v;   // RESULT after a HIDDEN
-    wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight && !rd_pre_v;   // SIDE after a HIDDEN
+    wire q_hdr_r = !job_done && tx_st == T_RHDR && tx_space && !rd_inflight && !rd_pre_v && !rd_tail_busy;   // RESULT after a HIDDEN
+    wire q_hdr_s = !job_done && tx_st == T_SHDR && tx_space && !rd_inflight && !rd_pre_v && !rd_tail_busy;   // SIDE after a HIDDEN
     wire q_push  = (job_done && (SEND_HIDDEN || SEND_RESULT)) || q_hdr_r || q_hdr_s || rd_inflight;
     generate if (MARGIN) begin : g_rdy_flags
         always @(posedge clk or negedge rst_q)
@@ -832,7 +849,7 @@ module ot_rom_pkg_ctrl_wfc #(
             cur_tok <= 0; hdr_tok <= 0; side_user <= 0; side_addr <= 0;
             pend <= 1'b0; hdr_user <= 0; hdr_pos <= 0; hdr_pa_idx <= 0; hdr_pa_val <= 0;
             txq_bank <= {{(TXQ-1){1'b0}}, 1'b1};
-            tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0; rd_pre <= 1'b0; rd_last_pre <= 1'b0;
+            tx_st <= T_IDLE; txq_w <= 0; txq_r <= 0; txq_n <= 0; rd_inflight <= 1'b0; rd_last <= 1'b0; rd_pre <= 1'b0; rd_last_pre <= 1'b0; rd_extra <= 0; rd_last_extra <= 0;
             tx_k <= 0; tx_user <= 0; tx_pos <= 0; tx_idx <= 0; tx_val <= 0; tx_tok <= 0;
             rx_st <= R_IDLE; rx_j <= 0;
             rxw <= RXB; sww <= 0; txh <= TXB; txs <= SIDE_TXB; uchk <= 1'b0; uchk2 <= 1'b0; uchk3 <= 1'b0; uchk4 <= 1'b0; upos_hr <= 0; hdr_pos1 <= 0; pos_c <= 0; gsel_oh <= 0; gw_oh <= 0;
@@ -943,16 +960,36 @@ module ot_rom_pkg_ctrl_wfc #(
             end
             if (q_hdr_r) tx_st <= T_IDLE;
             if (q_hdr_s) begin tx_st <= T_SDATA; tx_k <= 0; txh <= TXB; txs <= SIDE_TXB; end
+            if (VM_RETURN_EXTRA) begin
+                rd_extra <= {rd_extra[0],rd_pre};
+                rd_last_extra <= {rd_last_extra[0],rd_last_pre};
+                rd_index[0] <= rd_expected_index[VRI-1:0];
+                for(ri=1;ri<4;ri=ri+1) rd_index[ri] <= rd_index[ri-1];
+                if (rd_inflight && (!vm_rv || vm_ridx != rd_index[3])) proto_fault <= 1'b1;
+                if (vm_rv && !rd_inflight) proto_fault <= 1'b1;
+            end
             rd_pre <= c_vm_re;
             rd_last_pre <= c_vm_re && (job_done ? (XWORDS == 1) :
                                  (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1));
 `ifdef OT_WFC_NEG_VMRD
             rd_inflight <= c_vm_re;                  // negative control: VM_REG read data taken one edge early
 `else
+            `ifdef OT_VMX_MUT_EARLY_RESPONSE
             rd_inflight <= VM_REG ? rd_pre : c_vm_re;
+`else
+            rd_inflight <= VM_RETURN_EXTRA ? rd_extra[1] : (VM_REG ? rd_pre : c_vm_re);
 `endif
+`endif
+`ifdef OT_VMX_MUT_LAST
             rd_last <= VM_REG ? rd_last_pre : (c_vm_re && (job_done ? (XWORDS == 1) :
-                                 (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1)));
+`else
+            rd_last <= VM_RETURN_EXTRA ? rd_last_extra[1] : (VM_REG ? rd_last_pre : (c_vm_re && (job_done ? (XWORDS == 1) :
+`endif
+                                 (tx_st == T_SDATA) ? (tx_k == SIDE_WORDS - 1) : (tx_k == XWORDS - 1)))
+`ifndef OT_VMX_MUT_LAST
+                )
+`endif
+                ;
             // Same queue, same priority, same write edge. The opt-in bank
             // mirror removes binary write-address decoding from the late
             // core_done enqueue control. Payload registers remain unreset.
@@ -1069,7 +1106,11 @@ module ot_rom_pkg_ctrl_wfc #(
 `ifdef OT_WFC_NEG_VMRD
                     rd <= c_vm_re;
 `else
+`ifdef OT_VMX_MUT_EARLY_RESPONSE
                     rd <= VM_REG ? rdp : c_vm_re;
+`else
+                    rd <= VM_RETURN_EXTRA ? rd_extra[1] : (VM_REG ? rdp : c_vm_re);
+`endif
 `endif
                     if (q_push) ws <= (ws << 1) | (ws >> (TXQ - 1));
                     if (tx_pop) rs <= (rs << 1) | (rs >> (TXQ - 1));
