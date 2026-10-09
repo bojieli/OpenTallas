@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.engram-hbm-backend-gate.v1",
+ "boundary": "576 boot writes+marker then6runtime rows at actual two32PC timing models, registered phase fence and stalled PCgrant/claim/release; fixture aperture, no concurrent KV arbiter/die/physical qualification",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_hbm_backend.sv": "03345cf9b162abcc86da3bdc6ee732e2103a02c2f38c11e863640abb56015fec",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_path.sv": "e5603e78f29c7de7d1a9e1fcac6d71ce9b58d3361d51dc1b5cf3938e60b5d874",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_dispatch.sv": "06ee59aa5a7b3a822166b3f3686091434e1f42e3d906e28a462a75de5e35ca31",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_boot_ctrl_map.sv": "ab65abfc0426b3ddec2d09b45d2f0e8494d7cbc0001cc6da9fe2a651d26987c8",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_service.sv": "5bcee8acb502862467e1828e3c86f81c913fa67bd6fff1b82cb85e339ef97768",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_rowstripe_read.sv": "e533abb9fb2129e7d9e750d657417c7506b495f4dc197187935108e9875573c2",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+  "rtl/test/tb_dsrom_engram_hbm_backend.sv": "e627f0d7be4ae06757bcdef6ded4d11f938853fd0b392df2b6bcb1516271e489",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/uarch_model.py": "5881ce189aad28e015b274e5e6c2896f7d468a4581a9f2d5a4cbf6df990f28ed",
+  "tools/engram_hbm_backend_gate.py": "5c29bd06e938ac9fb25daec55298527c78d4040324b0acdec956a157acf519dd"
+ },
+ "cases": {
+  "mode0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_BACKEND PASS boot=576 read_rows=6 read_atoms=54 bursts=18 actual_PHY=1 lease_wait=200 claims=6 releases=6 cycles=6807\n- /srv/opentallas-scratch/claude/engram/backend-de9a4b137/rtl/test/tb_dsrom_engram_hbm_backend.sv:107: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "mode1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_BACKEND NEG mode=1 caught\n- /srv/opentallas-scratch/claude/engram/backend-de9a4b137/rtl/test/tb_dsrom_engram_hbm_backend.sv:55: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "mode2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_BACKEND NEG mode=2 caught\n- /srv/opentallas-scratch/claude/engram/backend-de9a4b137/rtl/test/tb_dsrom_engram_hbm_backend.sv:55: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "retained_objects": "/tmp/engram-hbm-backend-z8meqid9",
+ "status": "pass"
+}
