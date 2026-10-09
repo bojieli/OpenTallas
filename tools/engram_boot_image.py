@@ -44,30 +44,30 @@ def crc32_msb(data: bytes) -> int:
     return crc
 
 
-def packed_row(row: bytes) -> bytes:
+def packed_row(row: bytes, rowstripe: bool = False) -> bytes:
     if len(row) != ROW_BYTES:
         raise ValueError("released row must contain exactly 264 bytes")
-    return row[:257] + crc32_msb(row[:257]).to_bytes(4, "little") + bytes(3)
+    return row[:257] + crc32_msb(row[:257]).to_bytes(4, "little") + bytes(27 if rowstripe else 3)
 
 
-def column_bases(rows: Iterable[int]) -> list[int]:
+def column_bases(rows: Iterable[int], rowstripe: bool = False) -> list[int]:
     bases, offset = [], 0
     for count in rows:
         if count <= 0:
             raise ValueError("column row counts must be positive")
         bases.append(offset)
-        offset += (count * ROW_BYTES + ATOM_BYTES - 1) // ATOM_BYTES * ATOM_BYTES
+        offset += (count * (288 if rowstripe else ROW_BYTES) + ATOM_BYTES - 1) // ATOM_BYTES * ATOM_BYTES
     return bases
 
 
-def column_chunks(stream: BinaryIO, rows: int) -> Iterator[bytes]:
+def column_chunks(stream: BinaryIO, rows: int, rowstripe: bool = False) -> Iterator[bytes]:
     """Bounded stream; the last chunk includes only the column's atom padding."""
     chunk = bytearray()
     for _ in range(rows):
         row = stream.read(ROW_BYTES)
         if len(row) != ROW_BYTES:
             raise ValueError("truncated released column")
-        chunk.extend(packed_row(row))
+        chunk.extend(packed_row(row, rowstripe))
         while len(chunk) >= MAX_SEGMENT_BYTES:
             yield bytes(chunk[:MAX_SEGMENT_BYTES])
             del chunk[:MAX_SEGMENT_BYTES]
@@ -88,10 +88,10 @@ def raw_descriptor(atom: int, nbytes: int, tag: int) -> int:
     return (1 << 7) | ((tag & 255) << 8) | ((BOOT_ATOM | atom) << 16) | (nsec << 144) | (nb << 240)
 
 
-def host_records(columns: Iterable[tuple[BinaryIO, int]]) -> Iterator[tuple[int, bytes]]:
+def host_records(columns: Iterable[tuple[BinaryIO, int]], rowstripe: bool = False) -> Iterator[tuple[int, bytes]]:
     atom, tag, fingerprint = 0, 0, 0
     for stream, rows in columns:
-        for chunk in column_chunks(stream, rows):
+        for chunk in column_chunks(stream, rows, rowstripe):
             desc = raw_descriptor(atom, len(chunk), tag)
             yield 1, desc.to_bytes(64, "little")
             for start in range(0, len(chunk), 64):
@@ -114,6 +114,7 @@ def main() -> int:
     ap.add_argument("--layer", type=int, choices=(1, 14), required=True)
     ap.add_argument("--rank", type=int, choices=range(4), required=True)
     ap.add_argument("--output", type=Path, required=True)
+    ap.add_argument("--rowstripe", action="store_true", help="opt-in 288-byte whole-row PC layout; bind ROWSTRIPE=1 service and boot mapper")
     a = ap.parse_args()
     import hdc_v41_engram_shipped as shipped
     primes = shipped.shipped_tables().primes.reshape(2, 24)
@@ -127,7 +128,7 @@ def main() -> int:
     digest, records = hashlib.sha256(), 0
     try:
         with a.output.open("xb") as out:
-            for cls, data in host_records(zip(sources, rows_per_column)):
+            for cls, data in host_records(zip(sources, rows_per_column), a.rowstripe):
                 record = bytes([cls]) + data
                 out.write(record)
                 digest.update(record)
@@ -137,7 +138,8 @@ def main() -> int:
             source.close()
     print(json.dumps(dict(records=records, sha256=digest.hexdigest(),
                           layer=a.layer, rank=a.rank,
-                          column_byte_bases=column_bases(rows_per_column),
+                          column_byte_bases=column_bases(rows_per_column, a.rowstripe),
+                          rowstripe=a.rowstripe, stored_row_bytes=288 if a.rowstripe else 264,
                           requires="Engram class 11 dispatch, SW/SE atom striping, fenced completions")))
     return 0
 
