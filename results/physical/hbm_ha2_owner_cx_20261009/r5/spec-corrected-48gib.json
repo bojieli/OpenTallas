@@ -1,0 +1,91 @@
+{
+  "name": "ha2_tuhalf_cx_landing-28cabe1fe-tc-cx",
+  "block": "ot_ha2_tu_owner_banked_half",
+  "owner": "Claude:drive-0212 (Codex codex-dual TUhalf -cx, review-0400 R5)",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+    "branch": "claude/tuhalf-sdc-20261009",
+    "commit": "28cabe1fe"
+  },
+  "purpose": "review-0400 R5 / H6: TUhalf -cx route at TT/FF. ot_ha2_tu_owner_banked_half_cx LANDING=1 (final source eecb92775; terminal gate 002dd03e8: full-shape positive PASS at a falling 833.333 ps edge, genuine same-phase mutant FAIL, 0 added delivery edges). H6(b): route SDC cx_landing/route_cx.sdc declares the landing clock headclk as a generated clock off clk through the head-seat ICG (-edges {4 5 8}: rises on the clk fall just before each gclk edge) with clock-gating checks on both gates; the PRE_CTS hook re-declares it on every cg_pushdown clone so CTS treats both gates as clock gates. Fixes the baseline FF -540 (fast FIFO mem -> gated pd_p) by landing the heads half a cycle before the core edge.",
+  "stages": {
+    "calibrate": {
+      "enabled": false,
+      "reason": "Preserve original h2 route constraints for physical-only comparison. Signoff measures actual SS/FF insertion; actual parent budgets remain adoption hold."
+    },
+    "route": {
+      "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; bash physical/hbm_ha2_fixedpins_20261007/run_cg.sh {SRC} {RUN}/route cx_landing",
+      "ok": "test \"$(cat {RUN}/route/terminal.exit)\" = 0",
+      "logs": [
+        "{RUN}/route/run.log"
+      ]
+    },
+    "signoff": {
+      "cmd": "python3 physical/hbm_ha2_owner_banked_20261006/signoff.py --half --h1 --tt --landing --run {RUN}/route || test -f {RUN}/route/signoff.json"
+    },
+    "bench": [
+      {
+        "name": "tuhalf_cx_gate",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "pass_regex": "\"verdict\": \"PASS\"",
+        "cmd": "test -f .source_commit || cp SOURCE_COMMIT .source_commit; python3 tools/hbm_ha2_owner_cx_bench.py --out {RUN}/bench_pos.$(date +%s) --landing 1"
+      },
+      {
+        "name": "tuhalf_cx_phase_mutant",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "fail_regex": "\"verdict\": \"FAIL\"",
+        "cmd": "test -f .source_commit || cp SOURCE_COMMIT .source_commit; python3 tools/hbm_ha2_owner_cx_bench.py --out {RUN}/bench_neg.$(date +%s) --landing 1 --phase-mutant 1"
+      }
+    ]
+  },
+  "verdict": {
+    "metrics_cmd": "python3 - <<'METRICS'\nimport glob,json\ns=json.load(open('{RUN}/route/signoff.json'))\np=glob.glob('{RUN}/route/logs/asap7/*/base/5_2_route.json');assert len(p)==1\nm=json.load(open(p[0]))\nprint(json.dumps(dict(ss_ps=s['accept']['TT_setup_ps'],ff_ps=s['accept']['FF_hold_ps'],drc=m['detailedroute__route__drc_errors'])))\nMETRICS",
+    "checks": [
+      {
+        "name": "all6028_native_pin_boxes",
+        "cmd": "grep -q 'HA2_FIXED_PIN_CHECK_PASS count=6028' {RUN}/route/logs/asap7/*/base/3_2_place_iop.log"
+      },
+      {
+        "name": "headclk_declared_at_cts",
+        "cmd": "grep -q 'OT_HA2_HEADCLK: headclk on [1-9]' {RUN}/route/logs/asap7/*/base/4_1_cts.log"
+      }
+    ]
+  },
+  "merge_target": null,
+  "cycles_added": 0,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "budget": {
+    "enabled": false,
+    "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  },
+  "notes": "drive-0212: generated-clock SDC written by Claude per review-0400 R5 (CONFIRMED ~07:30). Route corner TC, mm hold, HM 0.05 as the h2 sdc variant. Ready for intake (validate OK). | Routine resource correction: original40GiB under measured47.18GiB DRT. Reserve48GiB from exact fullshape predecessor; hosts exclude pausedEPYC2. Source/SDC/bench unchanged; same canonical job held before physical admission, no restart.",
+  "resource_basis": {
+    "kind": "measured nearest exact fullshape predecessor; rounded persistent reservation, not process cap",
+    "predecessor_source": "ca0d6a5a2f22b6d92151a2a14e7a3b339299d463",
+    "predecessor_job": "ha2_h2_fixedpins_ca0d6a5a2-tt",
+    "measured_peak_kib": {
+      "CTS": 17533252,
+      "GRT": 26702780,
+      "DRT": 49474496,
+      "report": 31988352
+    },
+    "measured_DRT_gib": 47.18255615234375,
+    "reservation_gib": 48,
+    "locator": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_h2_fixedpins_ca0d6a5a2-tt/route/logs/asap7/ha2_owner_banked_h2_fixedpins/base/5_2_route.log",
+    "authority": "root R5 routine resource correction; fleet measurement 2026-10-09",
+    "host_policy": "EPYC2 paused; unpaused EPYC4/EPYC1/PVE only, existing measured fleet guard admission",
+    "candidate_growth": "monitor actual phase memory and adjust future reservation if required; no address-space cap or build deadline"
+  }
+}

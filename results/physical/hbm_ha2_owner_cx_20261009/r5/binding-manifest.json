@@ -1,0 +1,42 @@
+{
+  "job": "ha2_tuhalf_cx_landing-28cabe1fe-tc-cx",
+  "source_commit": "28cabe1fe8f8f171e55253677a2bfc2b0c6f5f13",
+  "source_branch": "claude/tuhalf-sdc-20261009",
+  "positive_and_mutant_binding": "unchanged fullshape RTL/bench from actual-period gate sourceeecb92775, evidence002dd03e8",
+  "source_hash_matches": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_tu_owner_banked_half_cx.sv": true,
+    "rtl/hbm_accel/ha2_ar/tb_ha2_tu_owner_banked_half_cx.sv": true
+  },
+  "wrapper": {
+    "LANDING": 1,
+    "MUT_PHASE": 0,
+    "NC": 8,
+    "PFMAX": 384,
+    "LANES": 16,
+    "INJ": 2,
+    "NPT": 8,
+    "FD": 8
+  },
+  "native_pins_expected": 6028,
+  "actual_SRAM_masters": 8,
+  "SDC_headclk_edges": [
+    4,
+    5,
+    8
+  ],
+  "route_period_ps": 730,
+  "signoff_period_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "clock_gating_setup_hold_ps": [
+    25,
+    25
+  ],
+  "generated_clock_redeclared_after_pushdown": true,
+  "resource_reservation_gib": 48,
+  "nearest_measured_DRT_peak_KiB": 49474496,
+  "acceptance": "TTsetup>=0 FFhold>=0 DRC0; SS sensitivity; native pin/headclk checks",
+  "scope": "routine R5 standalone physical comparison; actual parent budgets/reset/nativeINJ8 remain adoption hold",
+  "no_RTL_arch_or_clock_relaxation": true,
+  "duplicate_route": "none; same canonical job corrected under lock before physical admission"
+}

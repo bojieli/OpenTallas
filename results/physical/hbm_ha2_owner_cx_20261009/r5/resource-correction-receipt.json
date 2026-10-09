@@ -1,0 +1,16 @@
+{
+  "name": "ha2_tuhalf_cx_landing-28cabe1fe-tc-cx",
+  "updated_utc": "2026-10-09T11:21:59.303190+00:00",
+  "original_watch_sha256": "2fce994872f2d7bc43f9f57a75bb0ff9333ad84bd766dea676b793745531e7db",
+  "corrected_spec_sha256": "d519944404d1041e097f724be4411405652f5d104e7aa3137f135e24eebe2a5d",
+  "resource_reservation_gib": 48,
+  "physical_stage_unlaunched": true,
+  "admission_hold_preserved": {
+    "owner": "fleet resource health knownsamebaselinepeak",
+    "reason": "Actualsameca0d TUhalf detailedroute49,474,496KiB47.18GiB exceeds40declared; awaitcorrected>=48phaseclaim",
+    "at": "2026-10-09T11:19:54.645322+00:00"
+  },
+  "source_sdc_bench_unchanged": true,
+  "validation": "live dispatcher validate OK",
+  "state_spec_update_and_release_owner": "fleet_closure"
+}
