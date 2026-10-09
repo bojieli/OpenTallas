@@ -35,7 +35,8 @@
       "results/rtl/engram_window_gate_20261009.json",
       "results/rtl/engram_native_elab_gate_20261009.json",
       "results/rtl/engram_source_word_gate_20261009.json",
-      "results/rtl/engram_native_typed_elab_gate_20261009.json"
+      "results/rtl/engram_native_typed_elab_gate_20261009.json",
+      "results/rtl/engram_lead765_route_gate_20261009.json"
      ]
     },
     "negative": {
@@ -43,7 +44,8 @@
      "evidence": [
       "results/rtl/engram_lead_gate_20261009.json",
       "results/rtl/engram_window_gate_20261009.json",
-      "results/rtl/engram_source_word_gate_20261009.json"
+      "results/rtl/engram_source_word_gate_20261009.json",
+      "results/rtl/engram_lead765_route_gate_20261009.json"
      ]
     }
    },
@@ -57,7 +59,19 @@
     "evidence": [
      "results/arch/engram_20261008/native_lead_physical.json"
     ],
-    "failure": "ROM centroid distances174.7/127.8/121.3/104.0um exceed100um; live rows in10um macro slivers"
+    "failure": "ROM centroid distances174.7/127.8/121.3/104.0um exceed100um; live rows in10um macro slivers",
+    "prepared_successor": {
+     "job": "engram-lead-765470589-geom-r1-tt",
+     "status": "prepared only, Claude RQ-3 review/exclusive intake pending",
+     "source_commit": "765470589",
+     "rtl_change": false,
+     "outline_area_delta_mm2": 0,
+     "added_cycles": 0,
+     "geometry_lint": "PASS actual3_2ODB bank_far0/slivers0",
+     "spec": "results/arch/engram_20261008/route_specs/engram-lead-765470589-geom-r1-tt.json",
+     "geometry_receipt": "results/arch/engram_20261008/lead_geometry_r1/receipt.json",
+     "same_source_exact_and_mutants": "results/rtl/engram_lead765_route_gate_20261009.json"
+    }
    },
    "dependencies": [
     "actual system software command delivery and VL embedding arithmetic qualification",
