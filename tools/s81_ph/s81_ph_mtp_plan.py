@@ -67,7 +67,7 @@ SPECS = [
                 ['t_dw', FLIT + 1, 'output', 'S', 'M5', 4, 0.5], ['f_vc', 1, 'input', 'S', 'M5', 1, 0.96],
                 ['t_ft', 1, 'output', 'S', 'M5', 1, 0.985],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.015], ['rst', 1, 'input', 'S', 'M5', 1, 0.03]]),
-    dict(master='dsfd_wfc_vmx', w_um=248.4, h_um=241.92, domain='stream_1p2+serial_0p9',
+    dict(master='dsfd_wfc_vmx', w_um=291.6, h_um=280.8, domain='stream_1p2+serial_0p9',
          note='WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, fixed one-edge read), '
               'E = sp_vm (0.9 GHz write / read), N = the WFC core start / done + VM credit, S = stage core (0.9 GHz) '
               '+ clocks',
