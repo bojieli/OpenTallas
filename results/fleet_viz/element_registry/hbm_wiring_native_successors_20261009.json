@@ -1,38 +1,159 @@
 {
- "schema_version":1,
- "records":[
+ "schema_version": 1,
+ "records": [
   {
-   "element":"hfd_loader_cx_local_reset","target":"HBM accelerator","owner":"hbm_wiring",
-   "description":"Independent external600MHz loader core with five actual local reset-release buckets per engine",
-   "source":{"commit":"c9297cfb3","paths":["physical/hbm_accel_die_views/loader/rtl/hfd_loader_cx_local_reset.sv","physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_reset_leaf.sv"]},
-   "implementation":{"status":"implemented default-off structural successor; baseline preserved"},
-   "model":{"status":"ND2 fullshape,24finite channel FIFOs,+10localFF,+1reset-release coreedge1.666667ns,0token cycles","evidence":["tools/hbm_loader_cx_model.py"]},
-   "exactness":{"positive":{"status":"PASS two85-descriptor golden runs with0mismatches; corrected active-reset gate PASS","evidence":["results/uarch/hbm_loader_cx_reset_20261009/fail-r1/gate.log","results/uarch/hbm_loader_cx_reset_20261009/pass-r2/actual.log"]},"negative":{"status":"PASS payload/CRC/reset-bypass mutants rejected","evidence":["results/uarch/hbm_loader_cx_reset_20261009/fail-r1/gate.log","results/uarch/hbm_loader_cx_reset_20261009/pass-r2/mutant.log"]}},
-   "physical":{"status":"prepared own-cx recipe; W9 review pending; NO route queued","corners":{},"evidence":["tools/tt_batch/specs/hbm_loader_cx_reset_c9297cfb3-cx.json"]},
-   "dependencies":["Claude W9 review","mapped five actual local leaf instances per loader and reset fanout","real external600MHz PLL producer","actual TT/FF timing andDRC0 under current budget","nativeND1/ADDR37 integration separate"],
-   "integration":{"status":"historical loader envelope successor only; no native service adoption"}
+   "element": "hfd_loader_cx_local_reset",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "description": "Independent external600MHz loader core with five actual local reset-release buckets per engine",
+   "source": {
+    "commit": "c9297cfb3",
+    "paths": [
+     "physical/hbm_accel_die_views/loader/rtl/hfd_loader_cx_local_reset.sv",
+     "physical/hbm_accel_die_views/loader/rtl/ot_hfd_loader_reset_leaf.sv"
+    ]
+   },
+   "implementation": {
+    "status": "implemented default-off structural successor; baseline preserved"
+   },
+   "model": {
+    "status": "ND2 fullshape,24finite channel FIFOs,+10localFF,+1reset-release coreedge1.666667ns,0token cycles",
+    "evidence": [
+     "tools/hbm_loader_cx_model.py"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS two85-descriptor golden runs with0mismatches; corrected active-reset gate PASS",
+     "evidence": [
+      "results/uarch/hbm_loader_cx_reset_20261009/fail-r1/gate.log",
+      "results/uarch/hbm_loader_cx_reset_20261009/pass-r2/actual.log"
+     ]
+    },
+    "negative": {
+     "status": "PASS payload/CRC/reset-bypass mutants rejected",
+     "evidence": [
+      "results/uarch/hbm_loader_cx_reset_20261009/fail-r1/gate.log",
+      "results/uarch/hbm_loader_cx_reset_20261009/pass-r2/mutant.log"
+     ]
+    }
+   },
+   "physical": {
+    "status": "Z2 APPROVED-WITH-CONDITIONS; handed to Claude phys-intake, dedup0 existing jobs; no Codex route queued",
+    "corners": {},
+    "evidence": [
+     "tools/tt_batch/specs/hbm_loader_cx_reset_c9297cfb3-cx.json"
+    ]
+   },
+   "dependencies": [
+    "Claude intake/admission and exact recovery/removal signoff",
+    "mapped five actual local leaf instances per loader and reset fanout",
+    "real external600MHz PLL producer",
+    "actual TT/FF timing andDRC0 under current budget",
+    "nativeND1/ADDR37 integration separate"
+   ],
+   "integration": {
+    "status": "historical loader envelope successor only; no native service adoption"
+   }
   },
   {
-   "element":"R25IMWX native CP197 topology","target":"HBM accelerator","owner":"hbm_wiring",
-   "description":"Actual epoch-free MX1 southCP source collar and MTP197/517 groups with backend region reservation",
-   "source":{"commit":"5c2cba090","paths":["tools/hbm_accel_die_fp.py","physical/hbm_cp_mtp_native/collar_mx1/split.json"]},
-   "implementation":{"status":"implemented optin; historical variants preserved"},
-   "model":{"status":"actual2134backend storagebits and1921functional pins;120.096x120.96 reservation","evidence":["tools/hbm_native_backend_slot.py","tools/hbm_native_backend_pins.py"]},
-   "exactness":{"positive":{"status":"PASS full877instance1320bus topology; north2149 and south4029 literal sourcepins","evidence":["results/uarch/hbm_r25imwx_20261009/topology-r1.log","results/uarch/hbm_r25imwx_20261009/native-pins-r2.log"]},"negative":{"status":"physical/functional composition mutants are owned by original facade producer; no die-exact claim","evidence":[]}},
-   "physical":{"status":"geometry only; numeric clock insertion missing; no new route","corners":{},"evidence":[]},
-   "dependencies":["actual PLL root-to-backend CTS arrival","native backend73/271+AM18 loaded joins","32SM finite launch/result transport","final pin segments and per-port loaded budgets"],
-   "integration":{"status":"source-native CP/MTP topology,backend reservation; remaining endpoint obligations explicit"}
+   "element": "R25IMWX native CP197 topology",
+   "target": "HBM accelerator",
+   "owner": "hbm_wiring",
+   "description": "Actual epoch-free MX1 southCP source collar and MTP197/517 groups with backend region reservation",
+   "source": {
+    "commit": "5c2cba090",
+    "paths": [
+     "tools/hbm_accel_die_fp.py",
+     "physical/hbm_cp_mtp_native/collar_mx1/split.json"
+    ]
+   },
+   "implementation": {
+    "status": "implemented optin; historical variants preserved"
+   },
+   "model": {
+    "status": "actual2134backend storagebits and1921functional pins;120.096x120.96 reservation",
+    "evidence": [
+     "tools/hbm_native_backend_slot.py",
+     "tools/hbm_native_backend_pins.py"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS full877instance1320bus topology; north2149 and south4029 literal sourcepins",
+     "evidence": [
+      "results/uarch/hbm_r25imwx_20261009/topology-r1.log",
+      "results/uarch/hbm_r25imwx_20261009/native-pins-r2.log"
+     ]
+    },
+    "negative": {
+     "status": "physical/functional composition mutants are owned by original facade producer; no die-exact claim",
+     "evidence": []
+    }
+   },
+   "physical": {
+    "status": "geometry only; numeric clock insertion missing; no new route",
+    "corners": {},
+    "evidence": []
+   },
+   "dependencies": [
+    "actual PLL root-to-backend CTS arrival",
+    "native backend73/271+AM18 loaded joins",
+    "32SM finite launch/result transport",
+    "final pin segments and per-port loaded budgets"
+   ],
+   "integration": {
+    "status": "source-native CP/MTP topology,backend reservation; remaining endpoint obligations explicit"
+   }
   },
   {
-   "element":"TA15 DATA reset boundary","target":"HBM accelerator","owner":"hbm_clock_boundary",
-   "description":"Held reset intent DATA synchronization with destination negative-edge release and actual returned endpoint levels",
-   "source":{"commit":"e631befc2","paths":["rtl/hbm_accel/control/ot_hbm_clock_reset_data_boundary.sv"]},
-   "implementation":{"status":"defaultoff source ready on codex/hbm-clock-boundary-20261008; no AON power management"},
-   "model":{"status":"86boundary FF plus38sequencer=124FF;2.5destination cycles intent,3AON ready nominal stable capture","evidence":["results/uarch/hbm_ta15_clock_reset_data_20261009/"]},
-   "exactness":{"positive":{"status":"PASS admitted phase-varied intent and production elaboration","evidence":["results/uarch/hbm_ta15_clock_reset_data_20261009/"]},"negative":{"status":"PASS raw-intent/direct-ready bypass mutants rejected","evidence":["results/uarch/hbm_ta15_clock_reset_data_20261009/"]}},
-   "physical":{"status":"not routed; true firstCDC and coldPOR recovery require actual platform characterization","corners":{},"evidence":[]},
-   "dependencies":["vendor PLL coldPOR startup recovery/removal guarantee","forward and returned DATA firststage tau/T0 and MTBF target","actual PLL-loss safe-clock/coldPOR contract","root-to-destination CTS and sink binding"],
-   "integration":{"status":"no deterministic firstCDC timing acceptance,waiver or exception inferred"}
+   "element": "TA15 DATA reset boundary",
+   "target": "HBM accelerator",
+   "owner": "hbm_clock_boundary",
+   "description": "Held reset intent DATA synchronization with destination negative-edge release and actual returned endpoint levels",
+   "source": {
+    "commit": "e631befc2",
+    "paths": [
+     "rtl/hbm_accel/control/ot_hbm_clock_reset_data_boundary.sv"
+    ]
+   },
+   "implementation": {
+    "status": "preserved experimental source; Claude approved collars_rs is production successor after its route closes; no competing DATA route"
+   },
+   "model": {
+    "status": "86boundary FF plus38sequencer=124FF;2.5destination cycles intent,3AON ready nominal stable capture",
+    "evidence": [
+     "results/uarch/hbm_ta15_clock_reset_data_20261009/"
+    ]
+   },
+   "exactness": {
+    "positive": {
+     "status": "PASS admitted phase-varied intent and production elaboration",
+     "evidence": [
+      "results/uarch/hbm_ta15_clock_reset_data_20261009/"
+     ]
+    },
+    "negative": {
+     "status": "PASS raw-intent/direct-ready bypass mutants rejected",
+     "evidence": [
+      "results/uarch/hbm_ta15_clock_reset_data_20261009/"
+     ]
+    }
+   },
+   "physical": {
+    "status": "DATA not routed or selected; Claude-owned collars_rs17endpoint2sync+tree3edge routes pending; approved rawassert-fall-only/rawrelease500/0 contract",
+    "corners": {},
+    "evidence": []
+   },
+   "dependencies": [
+    "vendor PLL coldPOR startup recovery/removal guarantee",
+    "forward and returned DATA firststage tau/T0 and MTBF target",
+    "actual PLL-loss safe-clock/coldPOR contract",
+    "root-to-destination CTS and sink binding"
+   ],
+   "integration": {
+    "status": "Coordinate approved collars_rs binding only after closure; DATA evidence preserved without adoption"
+   }
   }
  ]
 }
