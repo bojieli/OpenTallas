@@ -15073,8 +15073,8 @@ def hgi_attention_record_adapter_model():
         routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
                      perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
                      face_capacity_320=1316,actual_submit_lint='mandatory'),
-        latency_cycles=dict(added_record_command_edges=2,record_to_first_row_edges_including_G12=5,row_II=1),
-        token_charge=dict(DS_40_layers_QK_PV=160,Qwen_36_layers_two_local_KV_heads_QK_PV=288),
+        latency_cycles=dict(added_record_command_edges=3,record_to_first_row_edges_including_G12=6,row_II=1),
+        token_charge=dict(DS_40_layers_QK_PV=240,Qwen_36_layers_two_local_KV_heads_QK_PV=432),
         retirement='rows_done AND actual_ATT_done; fault is explicit, no completion on row emission alone',
         selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
         physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)
