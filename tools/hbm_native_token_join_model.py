@@ -8,7 +8,7 @@ def model(qwen=False):
   boundary_bits_per_cycle={'host_record':hrw,'sm_launch':32+2*(32+tw+pw),'sm_completion':32*35,'producer_owner':2*(tw+pw+36)},
   mux_cost='two equal-token completion sources plus checked job/position/generation',
   fanout='16 launches per actual CP half; host record posted by owner die only',
-  routing_tracks_required=hrw+32+2*(32+tw+pw)+32*35,
+  routing_tracks_required=hrw+32+2*(32+tw+pw)+32*35+2*(tw+pw+36),
   channel_capacity='pending actual CP boundary sheet',
   area={'command_storage_bits':2*256*64,'host_fifo_bits':8*hrw,'identity_bits':36,
         'floorplan_fit':'pending native CP/token-loop slot'},
