@@ -60,6 +60,16 @@ def dsrom_engram_boot_dispatch_model():
                 channel_tracks_capacity_modelled=int(324 / .048),
                 channel_basis='0.048um contract pin lattice; metal/routing must validate',
                 serial_latency_cycles=2, single_user_decode_added_cycles=0,
+                controller_map=dict(
+                    status='boot-exclusive API mapper; actual hierarchical controller wiring/closure pending',
+                    queued_sectors=8, request_bits_per_pc=341, pseudochannels=64,
+                    state_bits=3290, sequential_cell_mm2_modelled=3290*.2916/1e6,
+                    queue='8 tagged sectors, one outstanding write per PC, completion tags retained until wd',
+                    request_fanout='data256/address30/tag17 shared; 64 independently registered valid bits',
+                    arbitration='8:1 queued-sector mux, two stack completion returns/cycle',
+                    added_preboot_pipeline_cycles=2, added_decode_cycles=0,
+                    boundary_bits_per_cycle=341,
+                    physical_obligation='distributed relay/pin copies for 64PC endpoints, FIFO and wd identity exact gate'),
                 composed_latency='preboot only: pin capture, registered dispatch, controller completion drain, publish',
                 address_contract='class11, 30-bit local atom; stack=atom[0], stack_atom=atom>>1',
                 status='sized for minimal exact RTL; no physical or controller qualification')
