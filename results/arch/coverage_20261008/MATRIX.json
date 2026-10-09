@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.coverage_matrix.v1",
- "generated": "2026-10-08 22:13 PT",
+ "generated": "2026-10-08 22:35 PT",
  "generator": "results/arch/coverage_20261008/gen_matrix.py",
  "targets": {
   "T1": {
@@ -65,10 +65,10 @@
   "qwen-system": {
    "scope": "Qwen control plane (host_if / pkg ctl / rst seq / CSR placement), constant ROM, kvc, split spine",
    "log": "/home/ubuntu/claude-takeover-20261007/qwen-system.log",
-   "lines": 1,
-   "mtime": "2026-10-08 21:48",
-   "status": "started only",
-   "last": "2026-10-08 21:48 PT start: worktree /home/ubuntu/wt-claude-qwen-system on claude/qwen-system-20261008 from origin/main"
+   "lines": 15,
+   "mtime": "2026-10-08 22:35",
+   "status": "active",
+   "last": " not done: tools/qwen_system/port_map.py (TA-11 bit map), SYS-2 generator change, kvc RTL, r21c recipe option (waits for review; coordinate emb-hbm-impl)"
   },
   "emb-hbm-impl": {
    "scope": "Qwen embedding in HBM (r21c): RTL, e2e bench, boot load, SECDED",
@@ -89,26 +89,26 @@
   "mtp-rom": {
    "scope": "DS-ROM MTP blocks: dsfd_mtp_seq, WFC shims, draft fan-out",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-rom.log",
-   "lines": 21,
-   "mtime": "2026-10-08 21:50",
+   "lines": 31,
+   "mtime": "2026-10-08 22:31",
    "status": "active",
-   "last": "2026-10-08 21:50 PDT mtp-rom: records 474ddeaf3 pushed; REVIEW_QUEUE 'MTP-ROM' (+ 'MTP-ROM area': no die over its limit) and READY_TO_MERGE entry written; 15 jobs QUEUED in the loop. STOP."
+   "last": "Step record: results/uarch/dsrom_mtp_rom_step_20261008/step.json (unpublished)."
   },
   "mtp-hbm": {
    "scope": "HBM MTP blocks: hfd_mtp (ctl, accept, spec_state_f, union, argmax), fence, topk",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-hbm.log",
-   "lines": 10,
-   "mtime": "2026-10-08 22:06",
+   "lines": 11,
+   "mtime": "2026-10-08 22:25",
    "status": "active",
-   "last": "2026-10-08 22:06 PT mtp-hbm: ctl_f2 CLOSED TT +28.49 / FF +10.88 / DRC 0 (record c6d2ebfb2) | scratch_c2 | fail: FLOORPLAN_MARGIN macro_edge (auto macro placement 2.2 um off the S pin face, 120 pins behind) | fix: explicit centre placement, 410 um frame (6724e9d82) | job: mtp_scratch_c2-6724e9d82-tc"
+   "last": "2026-10-08 22:25 PT mtp-hbm: MR-8 (reviewer): hfd_mtp tops/core carried RLOG 16'h7272 / WR 136 -> fixed to RLOG 16'h0111 / WR 256 (MR-7) / SR 10 / CKMAX 2^20 (1c33f2dc9). CANCELLED hfd_mtp-d30fa5f39-tc, hfd_mtp_x-d30fa5f39-tc, hfd_mtp_x_lvt-fc1b8a377-tc (were in calibrate); requeued hfd_mtp-1c33f2dc"
   },
   "mtp-die": {
    "scope": "MTP die recipes: draft dies, head-die slot, placement, links, HBM fit",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-die.log",
-   "lines": 5,
-   "mtime": "2026-10-08 22:12",
+   "lines": 14,
+   "mtime": "2026-10-08 22:29",
    "status": "active",
-   "last": "2026-10-08 22:12 PDT mtp-die: plan + generators committed 0544fca2c (claude/mtp-die-20261008); fed token-path.log + s81-dies.log; HBM r25m/r25sm checks PASS (outline unchanged, 0 clashes); S81 head/layer1 MTP checks running locally"
+   "last": "  Requests: a die variant (e.g. R25I) with these masters / nets so tools/hbm_die_views.py ports can emit their pin files; route specs wait for the review (STOP)."
   },
   "mtp-exact": {
    "scope": "MTP exactness benches: ROM MTP cached RTL, wavefront, HBM connected top",
@@ -121,18 +121,18 @@
   "mtp-rollback": {
    "scope": "MTP rollback hardware (dsk rows, HBM ring addressing)",
    "log": "/home/ubuntu/claude-takeover-20261007/mtp-rollback.log",
-   "lines": 2,
-   "mtime": "2026-10-08 21:59",
+   "lines": 11,
+   "mtime": "2026-10-08 22:21",
    "status": "active",
-   "last": "2026-10-08 21:59 PT mtp-rollback: start; worktree /home/ubuntu/wt/mtp-rollback (claude/mtp-rollback-20261008 from origin/main 8837fcbd7)"
+   "last": "  review: ~/claude-takeover-20261007/review_queue/mtp-rollback.md (MR-1..MR-8). STOP."
   },
   "engram": {
-   "scope": "Engram E-side: hash, table dies, row transport (both DS targets)",
+   "scope": "Engram E-side: hash, HBM-resident tables on the home dies (owner option A 2026-10-09), row transport, history (both DS targets)",
    "log": "/home/ubuntu/claude-takeover-20261007/engram.log",
-   "lines": 3,
-   "mtime": "2026-10-08 21:56",
+   "lines": 10,
+   "mtime": "2026-10-08 22:34",
    "status": "active",
-   "last": "2026-10-08 21:56 PT engram: coordinator T2 items taken: hash (in lookup element), wkv node, transport nodes, MTP Engram history restore (idwin ring HD=8 + rewind port; home dies stateless). Hardened boundary dsfd_engram_lkp (pin flops + credits). Full campaign relaunched (wrapped element, 8-slot, PI"
+   "last": "- follow-ups owed (owner items 2-5): generator STACKS['layer1e'] (--die layer1e flag, coordinate s81-die-2/s81-dies), die kit + evidence; rack/power/reprice (-36 dies, +8 stacks, -3,302 W) to s81-dies + token-reexport; boot table load via dsfd_host ingest stream; T2 coverage ledger rows"
   },
   "s81-dies": {
    "scope": "S81 scan / head dies, array v2 composition (rack at 120 stages), die slots",
@@ -153,31 +153,34 @@
   "hbm-indexer": {
    "scope": "HBM indexer on r25 (scores, top-k, candidates)",
    "log": "/home/ubuntu/claude-takeover-20261007/hbm-indexer.log",
-   "lines": 1,
-   "mtime": "2026-10-08 22:04",
-   "status": "started only",
-   "last": "2026-10-08 22:04 PDT hbm-indexer: start; worktree /home/ubuntu/wt-claude-hbm-indexer (claude/hbm-indexer-20261008 from origin/main bb9aea88d). Synth of indexer element bodies (slice NK1/2/4, sel Q1/Q4, cand, actquant; yosys/abc ASAP7 RVT TT) running on EPYC1 /srv/opentallas-scratch/claude/hbm-indexe"
+   "lines": 10,
+   "mtime": "2026-10-08 22:32",
+   "status": "active",
+   "last": " then: update DESIGN.md / review item \u00a74-5 with measured numbers, commit, and (after review + mtp-die R25I) queue the approved specs."
   },
   "hbm-system": {
    "scope": "HBM write-back, HC mix / Sinkhorn, RoPE producer, host loop, EOS, PLL / reset / retry, expert steering / fetch",
-   "log": null,
-   "status": "NO LOG: assigned, not started (or logging elsewhere)"
+   "log": "/home/ubuntu/claude-takeover-20261007/hbm-system.log",
+   "lines": 1,
+   "mtime": "2026-10-08 22:22",
+   "status": "started only",
+   "last": "2026-10-08 22:22 PT hbm-system: start (late line); worktree /home/ubuntu/wt/hbm-system (claude/hbm-system-20261008 from origin/main 2ea2494ca). Scope: T3 gaps 3,4,5,6,7,10 + KV_PC per-PC streaming (coordinator) + on-die SRAM SECDED + fault bench (coordinator). Done so far: (3) write path RTL ot_hbm_"
   },
   "qwen-hbm-unify": {
    "scope": "Qwen3-8B on r25 (T4): program, dtype, RoPE, vocab, GQA, token path",
    "log": "/home/ubuntu/claude-takeover-20261007/qwen-hbm-unify.log",
-   "lines": 1,
-   "mtime": "2026-10-08 22:05",
-   "status": "started only",
-   "last": "2026-10-08 22:05 PT qwen-hbm-unify: design study done. PLAN results/arch/qwen_on_r25_20261008/{PLAN.md,plan.json}: P-min = 0 closed blocks reopened (front_c INT8->BF16 fmt3 + cmdproc TW18, both open); est TP4 P8191 AR ~1,240-1,340 tok/s (model), DSpark p4 ~2,700-3,450; risk: svc KV_PC single PC per "
+   "lines": 3,
+   "mtime": "2026-10-08 22:30",
+   "status": "active",
+   "last": "2026-10-08 22:30 PT GPU UNREACHABLE: local RTX PRO 6000 (the only GPU; remote hosts have none) went into Xid 175 (GSP RPC timeout) -> Xid 154 \"GPU Reset Required\" at load of the r25 quality run; nvidia-smi -r: \"Not Supported\" (needs a host reboot / PCI reset by the owner). Quality run r25_full_w8 NO"
   },
   "closure-drive": {
    "scope": "block-closure streams: drive-* (15-min closure-loop drive), s81-tail, safe-* variants, die evidence",
-   "log": "/home/ubuntu/claude-takeover-20261007/drive-2140.log",
-   "lines": 25,
-   "mtime": "2026-10-08 21:54",
+   "log": "/home/ubuntu/claude-takeover-20261007/drive-2155.log",
+   "lines": 29,
+   "mtime": "2026-10-08 22:31",
    "status": "active",
-   "last": "2026-10-08 22:01 PT drive-2140: scan.py --commit done. STOP."
+   "last": "2026-10-08 22:38 PT drive-2155: follow-up -- mtp-wfc_vmx synth passes with OT_ABC_NO_DCH, now FLOORPLAN_MARGIN util 70.5 % (outline 216x216 too small) -> review_queue DR6. hbm_vm8_nen_sp_hm25 (old a5b5873d9 design, 0.064 ck pin) now caught by fp-lint pin_width since FH jobs get the lint; its spcb su"
   },
   "owner-decision": {
    "scope": "out of scope by an owner decision (listed so the scope stays explicit)",
@@ -493,29 +496,29 @@
    "nodes": 61
   },
   "T2": {
-   "rows_applicable": 91,
+   "rows_applicable": 92,
    "covered": 2,
-   "with_gap": 89,
-   "uncovered": 34,
+   "with_gap": 90,
+   "uncovered": 29,
    "by_class": {
-    "MISSING_HW": 14,
-    "NOT_ON_DIE": 25,
+    "MISSING_HW": 13,
+    "NOT_ON_DIE": 20,
     "NOT_CLOSED": 79,
-    "NOT_EXACT": 7,
-    "NOT_PRICED": 21,
-    "MODELLED_ONLY": 13,
+    "NOT_EXACT": 6,
+    "NOT_PRICED": 15,
+    "MODELLED_ONLY": 14,
     "UNENUMERATED": 1
    },
    "by_owner": {
     "ingest": 13,
-    "ds-control": 34,
-    "closure-drive": 52,
+    "ds-control": 35,
+    "closure-drive": 55,
     "s81-dies": 10,
     "OWNERLESS": 1,
-    "engram": 19,
+    "engram": 4,
     "mtp-die": 18,
     "mtp-rom": 9,
-    "mtp-exact": 7,
+    "mtp-exact": 6,
     "mtp-rollback": 1
    },
    "nodes": 97
@@ -2378,8 +2381,46 @@
      "why": "DeepSeek-only operator (Qwen3-8B has no Engram / HC / indexer / MoE / FP8 activations)"
     },
     "T2": {
-     "state": "na",
-     "why": "Engram tables are mask ROM on table dies (ds.engram_fetch)"
+     "state": "gap",
+     "nodes": [
+      "T2-B03"
+     ],
+     "gaps": [
+      {
+       "cls": "MISSING_HW",
+       "owner": "ds-control",
+       "nodes": [
+        "T2-B03"
+       ]
+      }
+     ],
+     "owner": "ds-control",
+     "function": [
+      "HBM-resident read-only tables loaded at boot: RoPE cos/sin table (rope_mode hbm_cache, 256 B/position x 1M positions), KV region init"
+     ],
+     "hw_element": [
+      "boot loader / host DMA into HBM"
+     ],
+     "die": [
+      null
+     ],
+     "hw": false,
+     "on_die": true,
+     "rtl": false,
+     "exact": true,
+     "closure": "NONE",
+     "closure_text": [
+      "NONE"
+     ],
+     "priced": "none",
+     "in_token_path": [
+      null
+     ],
+     "cycles": null,
+     "elements": [],
+     "notes": [
+      "No loader / host write port on any S81 die on main; the ingest branch (T2-H04) could carry it. Boot time unpriced (not a per-token cost)."
+     ]
     },
     "T3": {
      "state": "gap",
@@ -6332,53 +6373,39 @@
      ],
      "gaps": [
       {
-       "cls": "NOT_ON_DIE",
-       "owner": "engram",
-       "nodes": [
-        "T2-C15"
-       ]
-      },
-      {
        "cls": "NOT_CLOSED",
-       "owner": "engram",
-       "nodes": [
-        "T2-C15"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
-       "owner": "engram",
+       "owner": "closure-drive",
        "nodes": [
         "T2-C15"
        ]
       }
      ],
-     "owner": "engram",
+     "owner": "closure-drive",
      "function": [
       "Engram token history per user (last 3 tokens) delivered to the hash unit"
      ],
      "hw_element": [
-      "ot_hdc_v41_xu history (HDC core)"
+      "ot_dsrom_engram_idwin (per-user ring of 8 ids + DEAD flags, official blocking rule) on the S0 rank dies; home dies stateless"
      ],
      "die": [
-      null
+      "S81 S0 rank dies (embedding stage)"
      ],
      "hw": true,
-     "on_die": false,
+     "on_die": true,
      "rtl": true,
      "exact": true,
      "closure": "NONE",
      "closure_text": [
-      "NONE"
+      "RTL only (small; folds into the S0 embed reader on the die kit)"
      ],
-     "priced": "no",
+     "priced": "RTL (1-cycle registered)",
      "in_token_path": [
-      null
+      "ds_rom E{L}.lead_flit source"
      ],
-     "cycles": null,
+     "cycles": 1.0,
      "elements": [],
      "notes": [
-      "The hash unit has no S81 home (T2-D02); history transport from the token-return path is undefined."
+      "History transport = the lead flit (window travels; no history on the home dies)."
      ]
     },
     "T3": {
@@ -11598,21 +11625,7 @@
      ],
      "gaps": [
       {
-       "cls": "NOT_ON_DIE",
-       "owner": "engram",
-       "nodes": [
-        "T2-D02"
-       ]
-      },
-      {
        "cls": "NOT_CLOSED",
-       "owner": "engram",
-       "nodes": [
-        "T2-D02"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
        "owner": "engram",
        "nodes": [
         "T2-D02"
@@ -11624,27 +11637,29 @@
       "Engram n-gram hash (L1, L14): token_map, 4-gram rolling XOR x multipliers mod primes -> 2 layers x 24 row ids"
      ],
      "hw_element": [
-      "ot_hdc_engram_hash_shipped (+ ot_hdc_engram_tables_shipped_pkg)"
+      "ot_hdc_engram_hash_shipped inside dsfd_engram_lkp (ot_dsrom_engram_lookup; window fed oldest-first, strap-selected 6 columns)"
      ],
      "die": [
-      null
+      "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)"
      ],
      "hw": true,
-     "on_die": false,
+     "on_die": true,
      "rtl": true,
      "exact": true,
      "closure": "NONE",
      "closure_text": [
-      "NONE"
+      "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)"
      ],
-     "priced": "no",
+     "priced": "modelled (design.json timeline_cycles)",
      "in_token_path": [
-      null
+      "ds_rom E1.hash / E14.hash (off-critical)"
      ],
-     "cycles": null,
-     "elements": [],
+     "cycles": 17.0,
+     "elements": [
+      "dsfd_engram_lkp"
+     ],
      "notes": [
-      "Data tables (token_map 129,280, primes, multipliers) must come from the real module (memory meta-skeleton-zeroes-data-buffers); the vendor-oracle bench covers that. No S81 die hosts the hash unit (table dies have no recipe)."
+      "On die since the HBM Engram design (stream engram); hash runs on the home rank dies from the lead-flit window."
      ]
     },
     "T3": {
@@ -11720,28 +11735,7 @@
      ],
      "gaps": [
       {
-       "cls": "MISSING_HW",
-       "owner": "engram",
-       "nodes": [
-        "T2-D03"
-       ]
-      },
-      {
-       "cls": "NOT_ON_DIE",
-       "owner": "engram",
-       "nodes": [
-        "T2-D03"
-       ]
-      },
-      {
        "cls": "NOT_CLOSED",
-       "owner": "engram",
-       "nodes": [
-        "T2-D03"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
        "owner": "engram",
        "nodes": [
         "T2-D03"
@@ -11753,27 +11747,30 @@
       "Engram table row fetch: 48 rows x 264 B a token from 202.76 GB tables (2 layers x 24 cols, 768M rows)"
      ],
      "hw_element": [
-      "ot_hdc_v41x_egather / ot_hdc_engram_gather + Engram table dies"
+      "HBM-resident tables (rank r of the home stage holds columns 6r..6r+5, 25.35 GB) read by dsfd_engram_lkp via ctrl_SE; dsfd_engram_sink decodes into the prefetch buffer"
      ],
      "die": [
-      null
+      "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)"
      ],
-     "hw": false,
-     "on_die": false,
-     "rtl": false,
+     "hw": true,
+     "on_die": true,
+     "rtl": true,
      "exact": true,
      "closure": "NONE",
      "closure_text": [
-      "NONE: no table-die recipe, element, route or power design (COMPLETENESS_AUDIT finding 1); stream engram started 2026-10-08 21:28 (claude/engram-20261008)"
+      "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)"
      ],
-     "priced": "no",
+     "priced": "RTL bench isolated token (200 ns HBM) via design.json",
      "in_token_path": [
-      null
+      "ds_rom E1.hbm_read / E14.hbm_read (off-critical; slack L1 ~8.5k, L14 ~235k cycles)"
      ],
      "cycles": null,
-     "elements": [],
+     "elements": [
+      "dsfd_engram_lkp",
+      "dsfd_engram_sink"
+     ],
      "notes": [
-      "Table dies: 36 in the rack (inherited from the S=58 C1 ledger), 32-56 needed by density. Index = token ids only, so the fetch is prefetchable at token start; whether it hides behind embed+L0 is unproven."
+      "OWNER option A 2026-10-09: 36 ROM table dies deleted, +8 HBM3E stacks (1->2 on the 8 home dies). Integrity: HBM3E ECC + per-row CRC-32 (bytes 257..260) with slot poison."
      ]
     },
     "T3": {
@@ -11860,14 +11857,7 @@
      ],
      "gaps": [
       {
-       "cls": "MISSING_HW",
-       "owner": "engram",
-       "nodes": [
-        "T2-D04"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
+       "cls": "MODELLED_ONLY",
        "owner": "engram",
        "nodes": [
         "T2-D04"
@@ -11879,27 +11869,27 @@
       "Engram row transport: table dies -> L1 and L14 stage dies (rack R2 bottom -> S0/S1, S9-ish)"
      ],
      "hw_element": [
-      "board/cable links from table trays"
+      "lead flit (window, 72 b) on the existing stage hops + TP4 all-gather of the 6 packed rows a rank on the existing collective"
      ],
      "die": [
-      null
+      "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)"
      ],
-     "hw": false,
+     "hw": true,
      "on_die": true,
-     "rtl": false,
-     "exact": false,
-     "closure": "NONE",
+     "rtl": true,
+     "exact": true,
+     "closure": "CLOSED",
      "closure_text": [
-      "NONE"
+      "links unchanged (no new link); collective endpoint per the closure loop"
      ],
-     "priced": "no",
+     "priced": "modelled",
      "in_token_path": [
-      null
+      "ds_rom E{1,14}.lead_flit + E{1,14}.rows_allgather"
      ],
      "cycles": null,
      "elements": [],
      "notes": [
-      "rack.json places the Engram tables at the bottom of R2; no link class, hop count or port is defined for them."
+      "No table trays or table links remain."
      ]
     },
     "T3": {
@@ -12026,7 +12016,7 @@
      ],
      "priced": "no",
      "in_token_path": [
-      null
+      "ds_rom E1.wkv / E1.knorm, E14.wkv / E14.knorm (off-critical)"
      ],
      "cycles": null,
      "elements": [
@@ -14261,7 +14251,7 @@
        ]
       }
      ],
-     "owner": "mtp-hbm",
+     "owner": "mtp-die",
      "function": [
       "DSpark window-row write into the DSK ring (per stage, slot p mod WR)"
      ],
@@ -14793,7 +14783,7 @@
        ]
       }
      ],
-     "owner": "mtp-rom",
+     "owner": "mtp-die",
      "function": [
       "Draft-die fan-out: primary -> 15 expert replicas per primary (DP1-EP5), ids / return hops"
      ],
@@ -14984,7 +14974,7 @@
        ]
       }
      ],
-     "owner": "mtp-exact",
+     "owner": "mtp-die",
      "function": [
       "MTP control block on the die (dspark_top_m: ctl FAST + accept, spec_state_f, argmax FAST, union FAST, 2 x topk_f, registered pins)"
      ],
@@ -15309,7 +15299,7 @@
        ]
       }
      ],
-     "owner": "mtp-hbm",
+     "owner": "mtp-die",
      "function": [
       "Verify walk: all AR layer operators at P=6 (attention, indexer, MoE, HC, collectives) + 6 head argmaxes",
       "Routed-expert union across the 6 positions (extra expert SM work + extra expert fetch)"
@@ -15662,51 +15652,39 @@
      ],
      "gaps": [
       {
-       "cls": "NOT_ON_DIE",
-       "owner": "engram",
-       "nodes": [
-        "T2-M16"
-       ]
-      },
-      {
        "cls": "NOT_CLOSED",
-       "owner": "engram",
-       "nodes": [
-        "T2-M16"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
-       "owner": "engram",
+       "owner": "closure-drive",
        "nodes": [
         "T2-M16"
        ]
       }
      ],
-     "owner": "engram",
+     "owner": "closure-drive",
      "function": [
       "Per-position Engram hash with speculative history (drafts enter the n-gram history)"
      ],
      "hw_element": [
-      "ot_hdc_engram_hash_shipped"
+      "ot_dsrom_engram_idwin (drafts enter the ring) + dsfd_engram_lkp (6 windows a step, serial ~405 cycles each)"
      ],
      "die": [
-      null
+      "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)"
      ],
      "hw": true,
-     "on_die": false,
+     "on_die": true,
      "rtl": true,
      "exact": true,
      "closure": "NONE",
      "closure_text": [
-      "NONE"
+      "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)"
      ],
-     "priced": "no",
+     "priced": "modelled: 5 extra windows x ~405 (bench throughput), inside the slack",
      "in_token_path": [
       null
      ],
-     "cycles": null,
-     "elements": [],
+     "cycles": 2025.0,
+     "elements": [
+      "dsfd_engram_lkp"
+     ],
      "notes": [
       "As T2-D02, x6 positions a step; table fetch x6 (288 rows/step)."
      ]
@@ -16631,60 +16609,39 @@
      ],
      "gaps": [
       {
-       "cls": "NOT_ON_DIE",
-       "owner": "engram",
-       "nodes": [
-        "T2-M24"
-       ]
-      },
-      {
        "cls": "NOT_CLOSED",
-       "owner": "engram",
-       "nodes": [
-        "T2-M24"
-       ]
-      },
-      {
-       "cls": "NOT_EXACT",
-       "owner": "mtp-exact",
-       "nodes": [
-        "T2-M24"
-       ]
-      },
-      {
-       "cls": "NOT_PRICED",
-       "owner": "engram",
+       "owner": "closure-drive",
        "nodes": [
         "T2-M24"
        ]
       }
      ],
-     "owner": "engram",
+     "owner": "closure-drive",
      "function": [
       "ROLLBACK - Engram token history (snapshot restore at slot a)"
      ],
      "hw_element": [
-      "XU history snapshot (HDC core)"
+      "ot_dsrom_engram_idwin rewind port (rb_valid/rb_user/rb_n <= 5): ring + position count move back = official cache truncation"
      ],
      "die": [
-      null
+      "S81 S0 rank dies"
      ],
      "hw": true,
-     "on_die": false,
+     "on_die": true,
      "rtl": true,
-     "exact": false,
+     "exact": true,
      "closure": "NONE",
      "closure_text": [
-      "NONE"
+      "RTL only"
      ],
-     "priced": "no",
+     "priced": "RTL",
      "in_token_path": [
-      null
+      "ds_rom_mtp accept.engram_rewind (parallel to the commit tail)"
      ],
-     "cycles": null,
+     "cycles": 1.0,
      "elements": [],
      "notes": [
-      "inventory.json: 'Engram history restore is still testbench logic (tb_hdc_v41x_array g_prime)'. No S81 home (T2-C15)."
+      "Coordinated with mtp-rollback (mtp-rollback.log): one rewind per user per step from the commit sequencer."
      ]
     },
     "T3": {
