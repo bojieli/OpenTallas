@@ -164,7 +164,7 @@ module ot_dsrom_markov_head_A #(
 endmodule
 
 // Minimum concrete successor with actual token lookup wired to actual A rowstream.
-// For a full shard the embedding response is broadcast to its337successors;
+// For proposed 12-shard capacity the embedding response serves 340 successors;
 // duplicating this506macro lookup per A is NOT the selected die architecture.
 module ot_dsrom_markov_head_lookup_A #(
  parameter bit ENABLE=0,parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0

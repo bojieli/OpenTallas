@@ -26,7 +26,7 @@ args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv
  --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv
  --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_dsrom_bmul3.sv
  --param ENABLE=1 --param CACHE_PINREG=${CACHE_PINREG:-0} --param VALID_ROWS=32 --param PINREG=${PINREG:-1} --param CUT=511 --param SPLIT9=1 --param MUTANT_FOLD=0
- --orfs-var SYNTH_HDL_FRONTEND=slang --die-area 0 0 $SLOT_W $SLOT_H --core-area 2 2 $CORE_X $CORE_Y
+ --orfs-var SYNTH_HDL_FRONTEND=slang --orfs-var "SYNTH_SLANG_ARGS=--unroll-limit 8192" --die-area 0 0 $SLOT_W $SLOT_H --core-area 2 2 $CORE_X $CORE_Y
  --core-utilization 55 --max-fanout 16 --routing-layers M2 M6
  --pin-region "^embed_data.*=left:30-$PIN_Y"
  --pin-region "^(embed_id.*|embed_beat.*|embed_last|embed_valid|transaction.*|row0.*|start)$=bottom:30-$PIN_X"

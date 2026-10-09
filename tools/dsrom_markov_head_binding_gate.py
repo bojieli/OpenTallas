@@ -17,7 +17,7 @@ def viamap(path,words):
         physical[a//8]|=expanded<<(a%8)
     path.write_text(''.join(f'{r:0548x}\n' for r in physical))
 def packed(row):return sum(int(x)<<(16*l) for l,x in enumerate(row))
-def main(out,pinreg=1,cache_pinreg=0):
+def main(out,pinreg=1,cache_pinreg=0,metrics_only=False):
     out.mkdir(parents=True,exist_ok=False);images=out/'images';images.mkdir()
     (out/'model.json').write_text(json.dumps(model(),indent=2)+'\n')
     inp=ROOT/'input';receipt=json.loads((inp/'released_inputs.json').read_text())
@@ -64,25 +64,33 @@ module tb #(parameter MUTANT=0);
  ot_dsrom_markov_head_lookup_A #(.ENABLE(1),.PINREG(PINREG_VALUE),.CACHE_PINREG(CACHE_PINREG_VALUE),.MUTANT_FOLD(MUTANT))dut(.*);
  reg[255:0]xm[0:255];reg[31:0]roots[0:31],bm[0:31],gold[0:31];
  integer cyc=0,g0=-1,nroot=0,njoin=0,first_tail=-1,last_tail=-1,highwater=0,head_cycle[0:31];
+ integer query0=-1,first_root=-1,last_root=-1,first_head=-1,last_head=-1,first_join=-1,last_join=-1,previous_join=-1,join_II_min=99999,join_II_max=0,head_stall_cycles=0,head_wait_cycles=0;
  reg[8*1024-1:0]dir;
- always @(posedge clk)cyc<=cyc+1;
+ always @(posedge clk)begin cyc<=cyc+1;if(start&&start_ready)query0<=cyc+1;end
  always @(negedge clk)begin
   b_v=0;
   if(head_go&&g0<0)g0=cyc;
   if(g0>=0&&cyc-g0>=5)x=xm[(cyc-g0-5)%256];
   if(root_valid)begin
+   if(first_root<0)first_root=cyc;last_root=cyc;
    if(root_bits!==roots[nroot])$fatal(1,"actual Aroot mismatch row%0d got%h gold%h",nroot,root_bits,roots[nroot]);
    b_v=1;b_d=bm[nroot];nroot=nroot+1;
   end
-  if(dut.successor.hv)head_cycle[dut.successor.driver.emitted]=cyc;
+  if(dut.successor.hv)begin head_cycle[dut.successor.driver.emitted]=cyc;if(first_head<0)first_head=cyc;last_head=cyc;end
+  if(dut.successor.driver.hn==2)head_stall_cycles=head_stall_cycles+1;
+  if(dut.successor.driver.hn!=0&&!dut.successor.driver.launch)head_wait_cycles=head_wait_cycles+1;
   if(dut.successor.driver.hn>highwater)highwater=dut.successor.driver.hn;
   if(joined_valid)begin
+   if(first_join<0)first_join=cyc;last_join=cyc;
+   if(previous_join>=0)begin if(cyc-previous_join<join_II_min)join_II_min=cyc-previous_join;if(cyc-previous_join>join_II_max)join_II_max=cyc-previous_join;end
+   previous_join=cyc;
    if(joined_bits!==gold[njoin]||joined_row!==ROW0+njoin)$fatal(1,"postMarkov mismatch row%0d got%h gold%h",njoin,joined_bits,gold[njoin]);
    if(first_tail<0)first_tail=cyc-head_cycle[njoin];last_tail=cyc-head_cycle[njoin];njoin=njoin+1;
   end
   if(fault)$fatal(1,"successor fault");
   if(done)begin
    if(!best_valid||nroot!=32||njoin!=32||best_row!=BESTROW||best_bits!==BESTBITS)$fatal(1,"argmax mismatch");
+   $display("METRICS query=%0d headgo=%0d firstroot=%0d lastroot=%0d firsthead=%0d lasthead=%0d firstjoin=%0d lastjoin=%0d argmax=%0d joinIImin=%0d joinIImax=%0d headstall=%0d headwait=%0d queuehigh=%0d",query0,g0,first_root,last_root,first_head,last_head,first_join,last_join,cyc,join_II_min,join_II_max,head_stall_cycles,head_wait_cycles,highwater);
    $display("PASS actualAroot lookup256dot separatejoin argmax roots=%0d rows=%0d firsttail=%0d lasttail=%0d headqueuehighwater=%0d",nroot,njoin,first_tail,last_tail,highwater);$finish;
   end
  end
@@ -97,7 +105,7 @@ endmodule
 '''.replace('CACHE_PINREG_VALUE',str(cache_pinreg)).replace('PINREG_VALUE',str(pinreg)).replace('TOKEN',str(token)).replace('ROW0',str(r0)).replace('BESTROW',str(r0+best)).replace('BESTBITS',f"32'h{int(logits.view(np.uint32)[best]):08x}"))
     sources=['rtl/common/ot_prefix.sv','rtl/v41rom/ot_v41_bmul2.sv','rtl/v41rom/ot_dsrom_bmul3.sv','rtl/v41rom/ot_v41_fadd.sv','rtl/v41rom/ot_dsrom_head_elem.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_port.sv','rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_head_A.sv']
     results=[]
-    for mutant in (0,1):
+    for mutant in ((0,) if metrics_only else (0,1)):
         obj=out/f'obj{mutant}';exe=obj/'Vtb'
         p=subprocess.run(['verilator','--binary','--timing','-j','8','-Wno-fatal','--top-module','tb',f'-GMUTANT={mutant}','--Mdir',str(obj),*[str(ROOT/s) for s in sources],str(macro),str(tb)],capture_output=True,text=True)
         (out/f'compile{mutant}.log').write_text(p.stdout+p.stderr)
@@ -106,8 +114,14 @@ endmodule
         (out/f'sim{mutant}.log').write_text(p.stdout+p.stderr);print(p.stdout,flush=True)
         results.append(dict(mutant=mutant,exit=p.returncode,passed=p.returncode==0 and 'PASS actualAroot' in p.stdout))
         if (not mutant and not results[-1]['passed']) or (mutant and p.returncode==0):break
-    success=len(results)==2 and results[0]['passed'] and results[1]['exit']!=0
-    record=dict(passed=success,PINREG=pinreg,CACHE_PINREG=cache_pinreg,scope='one actual32-row A, real tokenlookup, fullK256 Markov dot, separatejoin, localargmax; not fullshard/die closure',released=receipt,results=results,nonzero_markov_rows=int(np.count_nonzero(mk)),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},macro_model_patch=['744ps SSclkq'],physical_qualified=False)
+    success=bool(results) and results[0]['passed'] and (metrics_only or (len(results)==2 and results[1]['exit']!=0))
+    record=dict(passed=success,metrics_only=metrics_only,PINREG=pinreg,CACHE_PINREG=cache_pinreg,scope='one actual32-row A, real tokenlookup, fullK256 Markov dot, separatejoin, localargmax; not fullshard/die closure',released=receipt,results=results,nonzero_markov_rows=int(np.count_nonzero(mk)),source_sha256={s:hashlib.sha256((ROOT/s).read_bytes()).hexdigest() for s in sources},macro_model_patch=['744ps SSclkq'],physical_qualified=False)
+    import re
+    line=next((x for x in (out/'sim0.log').read_text().splitlines() if x.startswith('METRICS ')),None)
+    if line:
+        met={k:int(v) for k,v in re.findall(r'(\w+)=(-?\d+)',line)}
+        met.update(firstroot_to_lastjoined=met['lastjoin']-met['firstroot'],firsthead_to_lastjoined=met['lastjoin']-met['firsthead'],lasthead_to_argmax=met['argmax']-met['lasthead'],embedding_warmup=met['headgo']-met['query'])
+        record['measured_cycles']=met
     (out/'verdict.json').write_text(json.dumps(record,indent=2)+'\n');return success
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1,2],default=1);ap.add_argument('--cache-pinreg',type=int,choices=[0,1],default=0);a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.pinreg,a.cache_pinreg) else 1)
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pinreg',type=int,choices=[0,1,2],default=1);ap.add_argument('--cache-pinreg',type=int,choices=[0,1],default=0);ap.add_argument('--metrics-only',action='store_true');a=ap.parse_args();raise SystemExit(0 if main(a.out.resolve(),a.pinreg,a.cache_pinreg,a.metrics_only) else 1)
