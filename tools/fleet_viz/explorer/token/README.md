@@ -10,7 +10,7 @@ Owned by the token-path stream; the explorer-core stream owns `server.py`, `inst
 
 | file | role |
 |---|---|
-| `index.html` | entry page; state in the hash: `#design=qwen_rom|ds_rom|hbm_ds&group=<group id>` |
+| `index.html` | entry page; state in the hash: `#design=qwen_rom|ds_rom|hbm_ds[&mode=mtp]&group=<group id>` |
 | `token.js` | `mountTokenExplorer(el, opts)`: tabs, provenance banner, replay controls, the three views, share tables |
 | `flow.js` | (a) flow graph: `mountFlow(el, data, {clock, group, onDrill, onSelect})` |
 | `gantt.js` | (b) swimlane timeline: `mountGantt(el, data, {clock, range, onZoom, onSelect})` |
@@ -62,3 +62,13 @@ class's elements.
 
 Every operator detail lists its elements as `/explorer#element=<name>` links. The die caption links
 `/explorer#die=<die id>`. `/explorer` can link in with `/explorer/token/#design=<d>&group=<g>`.
+
+## AR | MTP
+
+`data/<design>.json` carries `mtp`: `{available, file, tok_s, tau}` (DS ROM, HBM) or `{available: false, reason}` (Qwen ROM:
+AR only by the owner's decision). `data/<design>_mtp.json` is the same `token_path.v1` schema for ONE MTP verify step
+(`mode: "mtp"`), plus `phases[]` (draft / verify / accept spans), `accounting` (tau, step and per-accepted-token cycles,
+speedup over AR), `hw_summary`, and for the DS ROM `mtp_variants` (HALF_PHL and full-rate BF at phase level). Nodes and
+groups carry `phase`; MTP-only operators carry `hw: {status: built|partial|none, note, evidence}` and `flag` when none.
+The views draw `none` hatched with a NOT BUILT badge (the die replay lights nothing and hatches the die), `partial`
+dashed. `mountTokenExplorer(el, {mode: 'mtp'})`, `api.show(design, group, mode)`.

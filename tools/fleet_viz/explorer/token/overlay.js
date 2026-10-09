@@ -66,10 +66,13 @@ export function overlayEvents(data, geometry, { range = null, group = null } = {
   const nodes = data.nodes.filter((n) => n.end >= t0 && n.start <= t1);
   const idxOf = {};
   const events = nodes.map((n) => {
-    const idx = resolveInstances(data, geometry, n, cache);
+    // an operator with no closed hardware lights nothing: the die it would run on does not exist (notBuilt)
+    const notBuilt = n.hw?.status === 'none';
+    const idx = notBuilt ? [] : resolveInstances(data, geometry, n, cache);
     idxOf[n.id] = idx;
     return { t0: n.start, t1: Math.max(n.end, n.start + span * 0.002), node: n.id, label: n.label, cls: n.cls,
-             color: p.cls[n.cls]?.color, critical: n.critical, idx, instances: idx.map((i) => G.inst[i].name) };
+             color: p.cls[n.cls]?.color, critical: n.critical, idx, instances: idx.map((i) => G.inst[i].name),
+             phase: n.phase || null, hw: n.hw?.status || null, notBuilt };
   });
   const centroid = (idx) => {
     if (!idx || !idx.length) return null;
@@ -156,7 +159,20 @@ export class DieReplay {
       c.fillStyle = '#fff'; c.beginPath(); c.arc(ax + (bx - ax) * f, ay + (by - ay) * f, 3.5, 0, 6.3); c.fill();
     }
     const cur = events.filter((e) => e.critical).pop();
-    this.cap.textContent = cur ? `${Math.round(t).toLocaleString()} cyc · ${cur.label} · ${cur.idx.length} instances lit` +
+    if (cur && cur.notBuilt) {
+      // not built: hatch the die and badge it (the operator runs on hardware that does not exist yet)
+      c.save(); c.globalAlpha = 0.5; c.strokeStyle = '#e66767'; c.lineWidth = 3;
+      for (let x = -this.ch; x < this.cw; x += 14) { c.beginPath(); c.moveTo(x, this.ch); c.lineTo(x + this.ch, 0); c.stroke(); }
+      c.restore();
+      const msg = 'NOT BUILT: ' + cur.label;
+      c.font = '700 13px ui-monospace,Menlo,monospace';
+      const tw = Math.min(this.cw - 16, c.measureText(msg).width + 16);
+      c.fillStyle = '#2a0f16'; c.strokeStyle = '#e66767'; c.lineWidth = 1.5;
+      c.fillRect(8, 8, tw, 24); c.strokeRect(8, 8, tw, 24);
+      c.fillStyle = '#ffd0d0'; c.fillText(msg.length > 60 ? msg.slice(0, 59) + '…' : msg, 16, 25);
+    }
+    this.cap.textContent = cur ? `${Math.round(t).toLocaleString()} cyc · ${cur.phase ? cur.phase.toUpperCase() + ' · ' : ''}${cur.label} · ` +
+      (cur.notBuilt ? 'not built (no die / closed element)' : `${cur.idx.length} instances lit${cur.hw === 'partial' ? ' (block closed, not integrated)' : ''}`) +
       (events.length > 1 ? ` · ${events.length - 1} more active` : '') : `${Math.round(t).toLocaleString()} cyc`;
     this.active = events;
   }

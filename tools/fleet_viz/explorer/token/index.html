@@ -21,7 +21,8 @@
   <h1>Critical path of one token</h1>
   <p>One decode token of each design as its critical chain: the stages and operators it passes through, the element class
      each runs on, and when. Cycles come from the measured RTL records and the composition tools, priced as of the
-     2026-10-08 re-price; every operator says where its number comes from.</p>
+     2026-10-08 re-price; every operator says where its number comes from. AR | MTP switches between one plain decode
+     token and one speculative (MTP) verify step: draft → verify → accept.</p>
   <a href="/explorer">&larr; Chip Explorer</a>
 </header>
 <main><div id="app"></div><div id="err"></div></main>
@@ -33,14 +34,15 @@ const design = DESIGNS.some((d) => d.id === h0.design) ? h0.design : 'qwen_rom';
 let api;
 try {
   api = await mountTokenExplorer(document.getElementById('app'), {
-    base: './data/', design, group: h0.group || null,
-    onState: (s) => { const want = '#design=' + s.design + (s.group ? '&group=' + encodeURIComponent(s.group) : ''); if (location.hash !== want) history.replaceState(null, '', want); },
+    base: './data/', design, group: h0.group || null, mode: h0.mode === 'mtp' ? 'mtp' : 'ar',
+    onState: (s) => { const want = '#design=' + s.design + (s.mode === 'mtp' ? '&mode=mtp' : '') + (s.group ? '&group=' + encodeURIComponent(s.group) : ''); if (location.hash !== want) history.replaceState(null, '', want); },
   });
   window.tokenPath = api;
 } catch (e) { document.getElementById('err').textContent = 'token path: ' + e.message; }
 window.addEventListener('hashchange', () => {
   const q = parse();
-  if (api && q.design && (q.design !== api.state.design || (q.group || null) !== api.state.group)) api.show(q.design, q.group || null);
+  const md = q.mode === 'mtp' ? 'mtp' : 'ar';
+  if (api && q.design && (q.design !== api.state.design || (q.group || null) !== api.state.group || md !== api.state.mode)) api.show(q.design, q.group || null, md);
 });
 </script>
 </body>

@@ -1,6 +1,6 @@
 // (b) Swimlane timeline (Gantt) for one token: one lane per element class, a bar per operator, the critical chain
 // drawn through the lanes, a group strip on top (click a group to zoom), a cursor for the shared Clock.
-import { P, svg, h, tip, detail, fmtCyc, fmtUs, CRIT, injectCSS, CSS, CLK } from './core.js';
+import { P, svg, h, tip, detail, fmtCyc, fmtUs, CRIT, injectCSS, CSS, CLK, PHASE, hatch } from './core.js';
 
 const G_CSS = `
 .tp-gantt{position:relative}
@@ -19,6 +19,8 @@ const G_CSS = `
 .tp-gantt .grplab{fill:#8a97b8!important;pointer-events:none}
 .tp-gantt .cursor{stroke:#fff;stroke-width:1.5}
 .tp-gantt .tick{stroke:#1b2540}
+.tp-gantt .bar.hwp{stroke:#e8eefc;stroke-width:1;stroke-dasharray:3 2}
+.tp-gantt .phlab{fill:#05070d!important;font-weight:700!important}
 `;
 
 export function mountGantt(el, data, { clock, range = null, onZoom, onSelect } = {}) {
@@ -27,7 +29,9 @@ export function mountGantt(el, data, { clock, range = null, onZoom, onSelect } =
   const t0 = range ? range[0] : 0, t1 = range ? range[1] : data.totals.cycles;
   const W = Math.max(320, el.clientWidth || 900);
   const narrow = W < 640;
-  const labW = narrow ? 0 : 190, padR = 12, laneH = 24, gH = 22, axH = 30;
+  const phases = (data.phases || []).filter((q) => q.end >= t0 && q.start <= t1);
+  const pH = phases.length ? 18 : 0;
+  const labW = narrow ? 0 : 190, padR = 12, laneH = 24, gH = 22 + pH, axH = 30;
   const used = data.classes.filter((c) => data.nodes.some((n) => n.cls === c.id && n.end >= t0 && n.start <= t1));
   const laneY = {};
   const lanePitch = laneH + (narrow ? 14 : 4);
@@ -48,13 +52,23 @@ export function mountGantt(el, data, { clock, range = null, onZoom, onSelect } =
     svg('title', {}, t).textContent = c.label;
     svg('rect', { x: narrow ? x0 : 4, y: narrow ? y - 12 : y + laneH / 2 - 4, width: 8, height: 8, rx: 2, fill: p.cls[c.id].color }, s);
   });
+  const hatchUrl = hatch(s, '#ff9a9a');
+  // phase strip (MTP): draft / verify / accept
+  for (const q of phases) {
+    const a = Math.max(x0, X(q.start)), b = Math.min(x1, X(q.end));
+    if (b - a < 0.3) continue;
+    const r = svg('rect', { x: a, y: 0, width: Math.max(0.6, b - a - 1), height: pH - 3, rx: 3, fill: PHASE[q.id]?.color || '#888' }, s);
+    if (b - a > 40) { const t = svg('text', { x: a + 4, y: pH - 6, class: 'phlab' }, s); t.textContent = clipTo(`${q.label} · ${fmtCyc(q.cycles)}`, (b - a - 6) / 6.6); }
+    r.addEventListener('mousemove', (ev) => tip(h('div', {}, h('b', {}, q.label), h('div', { class: 'tp-dm' }, `${fmtCyc(q.cycles)} (${fmtUs(q.cycles)}) · ${(q.share * 100).toFixed(1)} % of the step`)), ev));
+    r.addEventListener('mouseleave', () => tip(null));
+  }
   // group strip
   const gs = data.groups.filter((g) => g.end >= t0 && g.start <= t1);
   gs.forEach((g, i) => {
     const a = Math.max(x0, X(g.start)), b = Math.min(x1, X(g.end));
     if (b - a < 0.5) return;
-    const r = svg('rect', { x: a, y: 0, width: Math.max(0.5, b - a - 1), height: gH, rx: 3, class: 'grp' + (i % 2 ? ' alt' : '') }, s);
-    if (b - a > 34) { const t = svg('text', { x: a + 4, y: 15, class: 'grplab' }, s); t.textContent = clipTo(g.label.replace(/^Stage (\d+): /, 'S$1 ').replace(/^Layer /, 'L'), (b - a - 6) / 6.6); }
+    const r = svg('rect', { x: a, y: pH, width: Math.max(0.5, b - a - 1), height: gH - pH, rx: 3, class: 'grp' + (i % 2 ? ' alt' : '') }, s);
+    if (b - a > 34) { const t = svg('text', { x: a + 4, y: pH + 15, class: 'grplab' }, s); t.textContent = clipTo(g.label.replace(/^Stage (\d+): /, 'S$1 ').replace(/^Layer /, 'L'), (b - a - 6) / 6.6); }
     r.addEventListener('mousemove', (ev) => tip(h('div', {}, h('b', {}, g.label), h('div', { class: 'tp-dm' }, `${fmtCyc(g.cycles)} · ${(g.share * 100).toFixed(2)} % of the token · click to zoom`)), ev));
     r.addEventListener('mouseleave', () => tip(null));
     r.addEventListener('click', () => onZoom && onZoom(g.id));
@@ -68,7 +82,8 @@ export function mountGantt(el, data, { clock, range = null, onZoom, onSelect } =
     const w = Math.max(1, b - a);
     const y = laneY[n.cls] + (n.critical ? 0 : laneH * 0.55);
     const hh = n.critical ? laneH : laneH * 0.45;
-    const r = svg('rect', { x: a, y, width: w, height: hh, rx: Math.min(3, w / 3), fill: p.cls[n.cls].color, class: 'bar ' + (n.critical ? 'crit' : 'par') }, s);
+    const r = svg('rect', { x: a, y, width: w, height: hh, rx: Math.min(3, w / 3), fill: p.cls[n.cls].color, class: 'bar ' + (n.critical ? 'crit' : 'par') + (n.hw?.status === 'partial' ? ' hwp' : '') }, s);
+    if (n.hw?.status === 'none') svg('rect', { x: a, y, width: w, height: hh, fill: hatchUrl, 'pointer-events': 'none' }, s);
     r.addEventListener('mousemove', (ev) => tip(detail(data, n, { links: false }), ev));
     r.addEventListener('mouseleave', () => tip(null));
     r.addEventListener('click', () => { hl(n.id); onSelect && onSelect(n); });

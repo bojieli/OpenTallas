@@ -11,6 +11,36 @@ export const CRIT = '#5ee7ff';          // critical-path accent (fleet-viz --acc
 
 export const SVGNS = 'http://www.w3.org/2000/svg';
 
+// MTP: phases of one verify step and the hardware status of MTP-only operators (hw.status from the export).
+export const PHASE = {
+  draft: { label: 'Draft', color: '#f2b84b' },
+  verify: { label: 'Verify', color: CRIT },
+  accept: { label: 'Accept / commit', color: '#7ee08a' },
+};
+export const HW = {
+  built: 'built (closed elements / the AR path\'s hardware)',
+  partial: 'block closed, not integrated / adopted',
+  none: 'not built — no closed hardware element',
+};
+/** hardware status of a group: none when every critical operator is unbuilt, partial when any is unbuilt / partial */
+export function groupHw(data, gid) {
+  const ns = (P(data).byGroup[gid] || []).filter((n) => n.critical && n.hw);
+  if (!ns.length) return null;
+  if (ns.every((n) => n.hw.status === 'none')) return 'none';
+  if (ns.some((n) => n.hw.status !== 'built')) return 'partial';
+  return 'built';
+}
+let hatchN = 0;
+/** add a diagonal-hatch pattern to an svg; returns its url(#id) */
+export function hatch(s, color = '#ffffff') {
+  const id = 'tp-hatch-' + (++hatchN);
+  const defs = svg('defs', {}, s);
+  const p = svg('pattern', { id, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+  svg('rect', { width: 6, height: 6, fill: '#05070d', 'fill-opacity': 0.55 }, p);
+  svg('line', { x1: 0, y1: 0, x2: 0, y2: 6, stroke: color, 'stroke-width': 2.2, 'stroke-opacity': 0.75 }, p);
+  return `url(#${id})`;
+}
+
 export function svg(tag, attrs = {}, parent) {
   const e = document.createElementNS(SVGNS, tag);
   for (const [k, v] of Object.entries(attrs)) if (v !== undefined && v !== null) e.setAttribute(k, v);
@@ -88,6 +118,11 @@ export function detail(data, n, { links = true } = {}) {
     h('span', {}, 'window'), h('b', {}, `${Math.round(n.start).toLocaleString()} → ${Math.round(n.end).toLocaleString()}`),
     h('span', {}, 'critical'), h('b', { style: n.critical ? `color:${CRIT}` : '' }, n.critical ? `yes · ${fmtPct(n.share)} of the token` : `no · slack ${fmtCyc(n.slack || 0)}`),
     h('span', {}, 'source'), h('b', {}, GRADE[n.src.grade] || n.src.grade)));
+  if (n.phase) rows.push(h('div', { class: 'tp-dm' }, 'MTP phase: ', h('b', { style: `color:${PHASE[n.phase]?.color}` }, PHASE[n.phase]?.label || n.phase)));
+  if (n.hw) {
+    rows.push(h('div', { class: 'tp-hw tp-hw-' + n.hw.status }, n.hw.status === 'none' ? '▨ ' + (n.flag || 'NOT BUILT') : n.hw.status === 'partial' ? '◌ block closed, not integrated' : '■ built'));
+    rows.push(h('div', { class: 'tp-note' }, n.hw.note + (n.hw.evidence ? ' [' + n.hw.evidence + ']' : '')));
+  }
   if (n.adders && n.adders.length) {
     const t = h('div', { class: 'tp-add' }, h('div', { class: 'tp-dm' }, `base ${fmtCyc(n.base_cycles)} + priced adders:`));
     for (const [it, cy] of n.adders) t.append(h('div', {}, `${cy >= 0 ? '+' : ''}${cy} ${it}`));
@@ -180,6 +215,11 @@ export const CSS = `
 .tp-els{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .tp-el{font:11px ui-monospace,Menlo,monospace;color:#5ee7ff;text-decoration:none;border:1px solid #1b2540;border-radius:5px;padding:1px 5px}
 .tp-el:hover{border-color:#5ee7ff}
+.tp-hw{margin-top:6px;font:600 11px ui-monospace,Menlo,monospace;display:inline-block;border-radius:5px;padding:1px 6px}
+.tp-hw-none{color:#ffd0d0;background:repeating-linear-gradient(45deg,#5a1f2a 0 4px,#2a0f16 4px 8px);border:1px solid #e66767}
+.tp-hw-partial{color:#e8eefc;border:1px dashed #c3cbe0}
+.tp-hw-built{color:#7ee08a;border:1px solid #1b2540}
+.tp-badge{font:700 9.5px ui-monospace,Menlo,monospace;fill:#ffd0d0!important;letter-spacing:.04em}
 `;
 
 export function injectCSS(id, text) {

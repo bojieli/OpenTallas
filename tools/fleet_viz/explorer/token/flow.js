@@ -2,7 +2,7 @@
 // and an animated token pulse driven by a shared Clock.
 //   token scope: one box per stage/layer group (width ∝ cycles, filled by the element-class split), serpentine rows;
 //   group scope: the group's operators as a layered DAG (circle area ∝ cycles), critical chain on the centre row.
-import { P, svg, h, tip, detail, fmtCyc, fmtPct, CRIT, critAt, injectCSS, CSS, reducedMotion } from './core.js';
+import { P, svg, h, tip, detail, fmtCyc, fmtPct, CRIT, critAt, injectCSS, CSS, reducedMotion, PHASE, groupHw, hatch } from './core.js';
 
 const FLOW_CSS = `
 .tp-flow{position:relative;overflow-x:auto;overflow-y:hidden;border-radius:10px}
@@ -25,6 +25,9 @@ const FLOW_CSS = `
 .tp-flow .nd:hover circle.ring,.tp-flow .nd.sel circle.ring{stroke:#e8eefc;stroke-width:3}
 .tp-flow .pulse{fill:#fff;filter:drop-shadow(0 0 8px ${CRIT}) drop-shadow(0 0 3px #fff)}
 .tp-flow .rowlab{fill:#4a5678!important}
+.tp-flow .gbox.hwp .frame{stroke-dasharray:4 3;stroke:#c3cbe0;stroke-opacity:.9}
+.tp-flow .nd.hwp circle.ring{stroke-dasharray:3 2;stroke:#c3cbe0}
+.tp-flow .phlab{font-weight:700!important;letter-spacing:.08em}
 `;
 
 export function mountFlow(el, data, { clock, group = null, onDrill, onSelect } = {}) {
@@ -56,12 +59,14 @@ function tokenLevel(root, data, p, W, onDrill) {
     }
     if (rows.length <= R) break;
   }
-  const H = pad * 2 + rows.length * BH + (rows.length - 1) * rowGap + 18;
-  const s = svg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${data.title}: token path by stage` }, root);
+  const ph = !!data.phases, top0 = ph ? 12 : 0;
+  const H = pad * 2 + top0 + rows.length * BH + (rows.length - 1) * rowGap + 18;
+  const s = svg('svg', { width: W, height: H, viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${data.title}: ${ph ? 'one MTP step' : 'token path'} by stage` }, root);
+  const hatchUrl = hatch(s, '#ff9a9a');
   const linkL = svg('g', {}, s), boxL = svg('g', {}, s), top = svg('g', {}, s);
   const pos = {};
   rows.forEach((row, ri) => {
-    const y = pad + ri * (BH + rowGap);
+    const y = pad + top0 + ri * (BH + rowGap);
     const ltr = ri % 2 === 0;
     let x = ltr ? pad : W - pad;
     for (const [g, w] of row) {
@@ -98,7 +103,21 @@ function tokenLevel(root, data, p, W, onDrill) {
       if (ww > 0.2) svg('rect', { x: cx, y, width: ww, height: BH, fill: p.cls[c]?.color || '#555', rx: 2 }, gg);
       cx += (cy / sum) * w;
     }
+    const hs = ph ? groupHw(data, g.id) : null;
+    if (hs === 'none') {
+      svg('rect', { x: x0, y, width: w, height: BH, rx: 2, fill: hatchUrl }, gg);
+      if (w > 64) { const b = svg('text', { x: x0 + w / 2, y: y + BH / 2 + 3.5, 'text-anchor': 'middle', class: 'tp-badge' }, gg); b.textContent = 'NOT BUILT'; }
+    }
+    if (hs === 'partial') gg.classList.add('hwp');
     svg('rect', { x: x0 - 1, y: y - 1, width: w + 2, height: BH + 2, rx: 4, class: 'frame' }, gg);
+    if (ph && g.phase) {
+      svg('rect', { x: x0, y: y - 6, width: w, height: 3, rx: 1.5, fill: PHASE[g.phase]?.color || '#888' }, gg);
+      const prevG = G[G.indexOf(g) - 1];
+      if (!prevG || prevG.phase !== g.phase) {
+        const t = svg('text', { x: x0, y: y - 9, class: 'phlab', style: `fill:${PHASE[g.phase]?.color}` }, gg);
+        t.textContent = (PHASE[g.phase]?.label || g.phase).toUpperCase();
+      }
+    }
     const lab = shortLabel(g);
     if (w > 46) {
       const t = svg('text', { x: x0 + 4, y: y + BH + 13, class: 'glab' }, gg); t.textContent = clip(lab, Math.floor((w + gap) / 6.6));
@@ -140,6 +159,9 @@ function groupTip(data, g) {
       h('span', {}, 'operators'), h('b', {}, String(g.n_nodes))));
   const t = h('div', { class: 'tp-add' });
   for (const [c, cy] of Object.entries(g.cls_cycles)) t.append(h('div', {}, h('span', { class: 'tp-sw', style: `display:inline-block;margin-right:6px;background:${p.cls[c]?.color}` }), `${p.cls[c]?.label || c}: ${fmtCyc(cy)}`));
+  const hs = groupHw(data, g.id);
+  if (hs && hs !== 'built') d.append(h('div', { class: 'tp-hw tp-hw-' + hs }, hs === 'none' ? '▨ NOT BUILT: no closed hardware element' : '◌ includes operators whose block is closed but not integrated'));
+  if (g.phase) d.append(h('div', { class: 'tp-dm' }, 'MTP phase: ' + (PHASE[g.phase]?.label || g.phase)));
   d.append(t, h('div', { class: 'tp-dm' }, 'click to open the operators'));
   return d;
 }
@@ -187,6 +209,7 @@ function drill(root, data, p, gid, W, onSelect) {
     }
   }
   svg('text', { x: 6, y: cy0 - R - 8, class: 'rowlab' }, s).textContent = 'critical path';
+  const hatchUrl = hatch(s, '#ff9a9a');
   const eL = svg('g', {}, s), nL = svg('g', {}, s), top = svg('g', {}, s);
   const eEls = [];
   for (const e of edges) {
@@ -200,13 +223,15 @@ function drill(root, data, p, gid, W, onSelect) {
   let selected = null;
   for (const n of nodes) {
     const { x, y } = pos[n.id];
-    const g = svg('g', { class: 'nd ' + (n.critical ? 'crit' : 'par'), tabindex: 0 }, nL);
+    const g = svg('g', { class: 'nd ' + (n.critical ? 'crit' : 'par') + (n.hw?.status === 'partial' ? ' hwp' : ''), tabindex: 0 }, nL);
     const r = rad(n);
     svg('circle', { cx: x, cy: y, r, fill: p.cls[n.cls]?.color || '#888', class: 'body' }, g);
+    if (n.hw?.status === 'none') svg('circle', { cx: x, cy: y, r, fill: hatchUrl, 'pointer-events': 'none' }, g);
     svg('circle', { cx: x, cy: y, r: r + 2.5, class: 'ring', fill: 'none', stroke: n.critical ? CRIT : 'none' }, g);
     if (n.critical) {
       const t = svg('text', { x, y: y + (Number(rank[n.id]) % 2 ? -R - 8 : R + 16), 'text-anchor': 'middle' }, g);
       t.textContent = clip(n.op.replace(/^attn\.|^ffn\./, ''), 12);
+      if (n.hw?.status === 'none' && r >= 8) { const b = svg('text', { x, y: y + 3, 'text-anchor': 'middle', class: 'tp-badge' }, g); b.textContent = '✕'; }
     }
     g.addEventListener('mousemove', (ev) => tip(detail(data, n, { links: false }), ev));
     g.addEventListener('mouseleave', () => tip(null));

@@ -1,6 +1,6 @@
 // Token-path explorer: the three views (flow graph, swimlane timeline, die replay) for one design, on one shared
 // replay clock, with the provenance banner and the per-stage shares.  Mount API: see README.md.
-import { P, h, CSS, injectCSS, Clock, fmtCyc, fmtUs, fmtPct, GRADE, detail, CRIT } from './core.js';
+import { P, h, CSS, injectCSS, Clock, fmtCyc, fmtUs, fmtPct, GRADE, detail, CRIT, PHASE, HW } from './core.js';
 import { mountFlow } from './flow.js';
 import { mountGantt } from './gantt.js';
 import { DieReplay } from './overlay.js';
@@ -48,6 +48,17 @@ const T_CSS = `
 .tp-x .notes{font-size:12px;color:#8a97b8;line-height:1.45;margin:6px 0 0;padding-left:18px}
 .tp-x .legend{display:flex;flex-wrap:wrap;gap:4px 14px;font:11.5px Inter,system-ui,sans-serif;color:#c3cbe0;margin-top:8px}
 .tp-x .legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.tp-x .mode{display:inline-flex;border:1px solid #1b2540;border-radius:999px;overflow:hidden;margin-left:auto}
+.tp-x .mode button{background:#0b1020;color:#c3cbe0;border:0;padding:5px 14px;font:700 12px Inter,system-ui,sans-serif;cursor:pointer}
+.tp-x .mode button[aria-pressed=true]{background:#10204a;color:#e8eefc;box-shadow:inset 0 -2px 0 ${CRIT}}
+.tp-x .mode button:disabled{color:#4a5678;cursor:not-allowed}
+.tp-x .phb{display:flex;height:22px;border-radius:5px;overflow:hidden;gap:2px;margin:8px 0 4px}
+.tp-x .phb div{display:flex;align-items:center;padding:0 6px;font:700 11px ui-monospace,Menlo,monospace;color:#05070d;white-space:nowrap;overflow:hidden;min-width:2px}
+.tp-x .acc{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-top:8px}
+.tp-x .acc div{background:#0b1020;border:1px solid #1b2540;border-radius:9px;padding:6px 9px;font:11px ui-monospace,Menlo,monospace;color:#8a97b8}
+.tp-x .acc b{display:block;color:#e8eefc;font:700 15px Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.tp-x .arnote{border:1px dashed #2a3a63;border-radius:9px;padding:7px 10px;font-size:12px;color:#c3cbe0;margin-top:8px;line-height:1.4}
+.tp-x .hatchsw{background:repeating-linear-gradient(45deg,#e66767 0 2px,#2a0f16 2px 5px)!important}
 `;
 
 const GRADE_COL = { measured: '#199e70', 'measured+vendor': '#3987e5', apportioned: '#9085e9', priced: '#c98500', modelled: '#e66767', lever: '#d55181', zero: '#4a5678' };
@@ -67,7 +78,7 @@ export async function mountTokenExplorer(el, opts = {}) {
   injectCSS('tp-css', CSS); injectCSS('tp-x-css', T_CSS);
   const o = Object.assign({ base: './data/', design: 'qwen_rom', group: null, onState: null,
     geometryUrl: defaultGeometry(opts.base || './data/') }, opts);
-  const state = { design: o.design, group: o.group };
+  const state = { design: o.design, group: o.group, mode: o.mode === 'mtp' ? 'mtp' : 'ar' };
   const cache = {}, gcache = {};
   const clock = new Clock({ seconds: 24 });
   const root = h('div', { class: 'tp-x tp-root' });
@@ -77,8 +88,11 @@ export async function mountTokenExplorer(el, opts = {}) {
   async function render() {
     views.forEach((v) => v && v.destroy && v.destroy()); views = [];
     clock.pause();
-    const data = cache[state.design] ||= P(await loadRecord(o.base + state.design + '.json')) && cache[state.design] || await loadRecord(o.base + state.design + '.json');
-    P(data);
+    const arData = cache[state.design] ||= await loadRecord(o.base + state.design + '.json');
+    const mtpInfo = arData.mtp || { available: false, reason: 'no MTP record' };
+    if (state.mode === 'mtp' && !mtpInfo.available) state.mode = 'ar';
+    const data = state.mode === 'mtp' ? (cache[state.design + '_mtp'] ||= await loadRecord(o.base + mtpInfo.file)) : arData;
+    const mtp = state.mode === 'mtp';
     const p = P(data);
     if (state.group && !p.groups[state.group]) state.group = null;
     o.onState && o.onState({ ...state });
@@ -86,18 +100,26 @@ export async function mountTokenExplorer(el, opts = {}) {
     const t0 = g ? g.start : 0, t1 = g ? g.end : data.totals.cycles;
     clock.scope(t0, t1, g ? 12 : 24);
     // tabs
+    const modeSw = h('div', { class: 'mode', role: 'group', 'aria-label': 'decode mode' },
+      h('button', { 'aria-pressed': String(!mtp), onclick: () => { if (mtp) { state.mode = 'ar'; state.group = null; render(); } } }, 'AR'),
+      h('button', { 'aria-pressed': String(mtp), title: mtpInfo.available ? 'MTP: one speculative verify step (draft → verify → accept)' : mtpInfo.reason,
+        ...(mtpInfo.available ? {} : { disabled: '' }),
+        onclick: () => { if (!mtp && mtpInfo.available) { state.mode = 'mtp'; state.group = null; render(); } } }, 'MTP'));
     const tabs = h('div', { class: 'bar', role: 'group', 'aria-label': 'design' },
-      ...DESIGNS.map((d) => h('button', { class: 'tab', 'aria-pressed': String(d.id === state.design), onclick: () => { state.design = d.id; state.group = null; render(); } }, d.label)));
+      ...DESIGNS.map((d) => h('button', { class: 'tab', 'aria-pressed': String(d.id === state.design), onclick: () => { state.design = d.id; state.group = null; render(); } }, d.label)), modeSw);
     // provenance banner
     const hd = data.headline, tt = data.totals;
     const grades = Object.entries(tt.by_grade);
     const gpos = grades.filter(([, v]) => v > 0), gsum = gpos.reduce((a, [, v]) => a + v, 0);
     const banner = h('div', { class: 'panel' },
-      h('div', { class: 'pt' }, h('b', {}, data.title), h('span', {}, 'one decode token · critical path')),
+      h('div', { class: 'pt' }, h('b', {}, data.title), h('span', {}, mtp ? 'one MTP verify step · critical path' : 'one decode token · critical path')),
       h('div', { class: 'hero' },
-        h('span', {}, h('span', { class: 'big' }, hd.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })), h('span', { class: 'u' }, ' tok/s per user (AR)')),
-        h('span', { class: 'kv' }, 'token ', h('b', {}, fmtCyc(tt.cycles)), ' = ', h('b', {}, fmtUs(tt.cycles))),
+        h('span', {}, h('span', { class: 'big' }, hd.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })), h('span', { class: 'u' }, mtp ? ` tok/s per user (MTP, tau ${tt.tau})` : ' tok/s per user (AR)')),
+        mtp ? h('span', { class: 'kv' }, 'step ', h('b', {}, fmtCyc(tt.cycles)), ' = ', h('b', {}, fmtUs(tt.cycles)), ' · per accepted token ', h('b', {}, fmtCyc(tt.per_accepted_cycles)))
+          : h('span', { class: 'kv' }, 'token ', h('b', {}, fmtCyc(tt.cycles)), ' = ', h('b', {}, fmtUs(tt.cycles))),
         h('span', { class: 'kv' }, 'status ', h('b', {}, hd.status))),
+      mtp ? mtpPanel(data) : (mtpInfo.available ? h('div', { class: 'kv', style: 'margin-top:6px' }, 'MTP: ', h('b', {}, `${mtpInfo.tok_s.toLocaleString(undefined, { minimumFractionDigits: 1 })} tok/s`), ` at tau ${mtpInfo.tau} (switch to MTP above for the speculative step)`)
+        : h('div', { class: 'arnote' }, h('b', {}, 'AR only. '), mtpInfo.reason || '', mtpInfo.source ? h('div', { class: 'tp-src' }, mtpInfo.source) : null)),
       h('div', { class: 'kv', style: 'margin-top:6px' }, 'reproduces: ', h('b', {}, tt.reproduces)),
       h('div', { class: 'kv', style: 'margin-top:3px' }, 'basis: ', hd.basis),
       h('div', { class: 'kv', style: 'margin-top:3px' }, 'source: ', hd.source),
@@ -121,17 +143,21 @@ export async function mountTokenExplorer(el, opts = {}) {
     });
     // class legend
     const legend = h('div', { class: 'legend' }, ...data.classes.filter((c) => data.nodes.some((n) => n.cls === c.id)).map((c) => h('span', {}, h('i', { style: `background:${p.cls[c.id].color}` }), c.label)),
-      h('span', {}, h('i', { style: `background:none;border:2px solid ${CRIT}` }), 'critical path'));
+      h('span', {}, h('i', { style: `background:none;border:2px solid ${CRIT}` }), 'critical path'),
+      ...(mtp ? [h('span', {}, h('i', { class: 'hatchsw' }), 'not built (no closed hardware)'), h('span', {}, h('i', { style: 'background:none;border:1.5px dashed #c3cbe0' }), 'block closed, not integrated'),
+        ...Object.entries(PHASE).map(([k, v]) => h('span', {}, h('i', { style: `background:${v.color};height:4px;vertical-align:2px` }), v.label))] : []));
     // panels
-    const flowP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, g ? `Operators of ${g.label}` : 'Flow graph by stage'), crumb), h('div', { class: 'fl' }), legend);
+    const flowP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, g ? `Operators of ${g.label}` : mtp ? 'Flow graph of one MTP step: draft → verify → accept' : 'Flow graph by stage'), crumb), h('div', { class: 'fl' }), legend);
     const ganttP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Timeline by element class'), h('span', {}, 'critical chain = cyan line · dbl-click to seek')), h('div', { class: 'gn' }));
     const sel = h('div', { class: 'kv' }, 'Click an operator for its detail and element cards.');
     const dieBox = h('div', {});
     const dieP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Floorplan replay'), h('span', {}, 'lit = instances of the running operators · line = data moving')), dieBox);
     const selP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Selected operator')), sel);
-    const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, (gid) => { state.group = gid; render(); }));
+    const shareP = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, mtp ? 'Share of the MTP step' : 'Share of the token latency'), h('span', {}, 'by stage and by element class')), shareTables(data, p, (gid) => { state.group = gid; render(); }));
     const notes = h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'How the numbers are built')), h('ul', { class: 'notes' }, ...data.notes.map((n) => h('li', {}, n))));
-    root.replaceChildren(tabs, banner, h('div', { class: 'panel' }, ctl), flowP, ganttP, h('div', { class: 'two' }, dieP, selP), shareP, notes);
+    const parts = [tabs, banner, h('div', { class: 'panel' }, ctl), flowP, ganttP, h('div', { class: 'two' }, dieP, selP)];
+    if (mtp) parts.push(hwPanel(data, (n) => { state.group = n.group; render(); }));
+    root.replaceChildren(...parts, shareP, notes);
     const onSelect = (n) => { sel.replaceChildren(detail(data, n)); views.forEach((v) => v && v.select && v.select(n.id)); };
     views.push(mountFlow(flowP.querySelector('.fl'), data, { clock, group: state.group, onSelect, onDrill: (gid) => { state.group = gid; render(); } }));
     views.push(mountGantt(ganttP.querySelector('.gn'), data, { clock, range: [t0, t1], onSelect, onZoom: (gid) => { state.group = gid; render(); } }));
@@ -153,7 +179,7 @@ export async function mountTokenExplorer(el, opts = {}) {
     clock.seek(t0);
   }
   await render();
-  return { clock, show(design, group = null) { state.design = design; state.group = group; return render(); }, state };
+  return { clock, show(design, group = null, mode = state.mode) { state.design = design; state.group = group; state.mode = mode; return render(); }, state };
 }
 
 function shareTables(data, p, open) {
@@ -167,4 +193,55 @@ function shareTables(data, p, open) {
     ...cls.map((c) => h('tr', {}, h('td', {}, h('span', { class: 'tp-sw', style: `display:inline-block;margin-right:6px;background:${p.cls[c.cls]?.color}` }), p.cls[c.cls]?.label || c.cls),
       h('td', { class: 'n' }, fmtCyc(c.cycles)), h('td', { class: 'n' }, fmtPct(c.share)))));
   return h('div', { class: 'two' }, h('div', {}, t1, h('div', { class: 'kv', style: 'margin-top:4px' }, `${crit.length} critical stages; top 12 shown (click to open)`)), t2);
+}
+
+/** MTP banner block: the step split into draft / verify / accept, the accepted-token accounting, other BF cases */
+function mtpPanel(data) {
+  const a = data.accounting, tt = data.totals, ph = data.phases || [];
+  const bar = h('div', { class: 'phb', role: 'img', 'aria-label': 'MTP step by phase' },
+    ...ph.map((q) => h('div', { style: `flex:${Math.max(q.share, 0.004)};background:${PHASE[q.id]?.color || '#888'}`, title: `${q.label}: ${fmtCyc(q.cycles)} (${fmtPct(q.share)})` },
+      q.share > 0.06 ? `${q.label} ${fmtPct(q.share)}` : '')));
+  const cell = (big, small) => h('div', {}, h('b', {}, big), small);
+  const pa = a.per_accepted_by_phase || {};
+  const acc = h('div', { class: 'acc' },
+    cell(String(a.tau), `tau: accepted tokens per step (${a.drafted_tokens} drafted, ${a.verified_positions} positions verified)`),
+    cell(fmtCyc(tt.cycles), `one step = ${fmtUs(tt.cycles)}`),
+    cell(fmtCyc(a.per_accepted_cycles), `per accepted token (step / tau) = ${a.per_accepted_us} µs`),
+    cell(`${a.speedup_over_ar.toFixed(2)}×`, `over AR (${fmtCyc(a.ar_token_cycles)} a token)`),
+    ...ph.map((q) => cell(fmtCyc(pa[q.id] ?? q.cycles / a.tau), `${q.label} per accepted token`)));
+  const hs = data.hw_summary || {};
+  const kids = [bar, acc,
+    h('div', { class: 'kv', style: 'margin-top:6px' }, 'MTP-only operators: ',
+      ...['built', 'partial', 'none'].filter((k) => hs[k]).map((k) => h('span', { class: 'tp-hw tp-hw-' + k, style: 'margin-right:6px' },
+        `${k === 'none' ? 'not built' : k === 'partial' ? 'closed, not integrated' : 'built'}: ${hs[k].nodes} ops · ${fmtCyc(hs[k].cycles)}`))),
+    h('div', { class: 'tp-src' }, 'tau: ' + a.tau_source)];
+  const v = data.mtp_variants;
+  if (v) {
+    kids.push(h('table', { style: 'margin-top:8px' }, h('tr', {}, h('th', {}, 'BF case'), h('th', {}, 'AR tok/s'), h('th', {}, 'MTP tok/s'), h('th', {}, 'step µs'), h('th', {}, 'draft'), h('th', {}, 'verify: AR pass + 5 × II'), h('th', {}, 'seed/commit')),
+      ...Object.values(v).map((x) => h('tr', { title: x.reproduces }, h('td', {}, x.label), h('td', { class: 'n' }, x.AR_tok_s.toLocaleString()), h('td', { class: 'n' }, h('b', {}, x.MTP_tok_s.toLocaleString())),
+        h('td', { class: 'n' }, x.step_us), h('td', { class: 'n' }, x.draft_us), h('td', { class: 'n' }, `${x.verify_first_position_us} + 5 × ${x.II_us}`), h('td', { class: 'n' }, x.seed_commit_us)))));
+  }
+  return h('div', {}, ...kids);
+}
+
+/** MTP: every MTP-only operator group with its hardware status (flagged ones first) */
+function hwPanel(data, open) {
+  const rows = new Map();
+  for (const n of data.nodes) {
+    if (!n.hw || !n.critical) continue;
+    const key = n.hw.status + '|' + n.group + '|' + n.hw.note;
+    const r = rows.get(key) || { n, status: n.hw.status, note: n.hw.note, flag: n.flag, group: n.group, cycles: 0, count: 0, phase: n.phase };
+    r.cycles += n.cycles; r.count++; rows.set(key, r);
+  }
+  const order = { none: 0, partial: 1, built: 2 };
+  const list = [...rows.values()].sort((a, b) => order[a.status] - order[b.status] || b.cycles - a.cycles);
+  const p = P(data);
+  return h('div', { class: 'panel' }, h('div', { class: 'pt' }, h('b', {}, 'Hardware status of the MTP operators'), h('span', {}, 'verify-pass operators are the AR path\'s')),
+    h('table', {}, h('tr', {}, h('th', {}, 'status'), h('th', {}, 'phase'), h('th', {}, 'operators'), h('th', {}, 'cycles'), h('th', {}, 'why')),
+      ...list.map((r) => h('tr', { style: 'cursor:pointer', onclick: () => open(r.n) },
+        h('td', {}, h('span', { class: 'tp-hw tp-hw-' + r.status }, r.status === 'none' ? (r.flag || 'not built') : HW[r.status])),
+        h('td', {}, PHASE[r.phase]?.label || r.phase || ''),
+        h('td', {}, `${p.groups[r.group]?.label || r.group} (${r.count})`),
+        h('td', { class: 'n' }, fmtCyc(r.cycles)),
+        h('td', { style: 'font-family:Inter,system-ui,sans-serif;font-size:11.5px;color:#8a97b8' }, r.note)))));
 }
