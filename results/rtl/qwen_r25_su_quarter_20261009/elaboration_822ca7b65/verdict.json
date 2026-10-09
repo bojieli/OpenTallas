@@ -1,0 +1,22 @@
+{
+  "verdict": "PASS_ELABORATION",
+  "recorded_utc": "2026-10-09T08:23:00Z",
+  "host": "ot-epyc3",
+  "source_commit": "822ca7b65",
+  "native_primitives_commit": "0cb3d962452b9a627de3a386cd4e0baf5be0c7bf",
+  "runner_commit": "9a4b034ae",
+  "top": "ot_qwen_r25_su_quarter",
+  "parameters": {"ENABLE": 1, "N": 256, "M": 64, "OWNER_W": 73, "GROUP_SKIP": 0},
+  "native_contract": {"instruction_bits": 690, "CTL12": 2, "MLAT": 6, "ALAT": 6},
+  "tool": "Verilator 5.032",
+  "mode": "lint-only, Wno-fatal",
+  "exit_status": 0,
+  "elapsed_seconds": 2825.74,
+  "maximum_rss_kib": 95595836,
+  "swap_count": 0,
+  "source_modules": 101,
+  "generated_cpp_files": 1647,
+  "log_sha256": "e905d0fae10aada2e3a40c343d598506cdc4608587da4426e2a352e4fac5a6c6",
+  "remote_log": "/srv/opentallas-scratch/codex/qwen-quarter/elaboration_822ca7b65.log",
+  "scope": "Enabled real N256/M64 native arithmetic and finite service quarter elaborates. Existing warnings remain in the full log. No C++ build, numerical result, area, routing or timing qualification is implied. OWNER_W74 and GROUP_SKIP successor numerical gate is a separate live job."
+}

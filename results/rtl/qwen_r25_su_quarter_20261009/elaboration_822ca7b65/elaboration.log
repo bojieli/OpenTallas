@@ -1,0 +1,513 @@
+%Warning-TIMESCALEMOD: rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv:2:9: Timescale missing on this module as other modules have it (IEEE 1800-2023 3.14.2.3)
+    2 | package ot_gpu_w6_secded_pkg;
+      |         ^~~~~~~~~~~~~~~~~~~~
+                       rtl/hdc/ot_hdc_cg.sv:25:8: ... Location of module with timescale
+   25 | module ot_hdc_cg (
+      |        ^~~~~~~~~
+                       ... For warning description see https://verilator.org/warn/TIMESCALEMOD?v=5.032
+                       ... Use "/* verilator lint_off TIMESCALEMOD */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:18:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                             : ... note: In instance 'ot_qwen_r25_su_quarter'
+   18 |  generate if(!ENABLE)begin:g_off
+      |              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:330:23: Operator VAR 'H_A' expects 16 bits on the Initial value, but Initial value's VARREF 'ALAT' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  330 |     localparam [15:0] H_A = ALAT;
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:331:23: Operator VAR 'H_R' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  331 |     localparam [15:0] H_R = ALAT + ROPI;                         
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:336:23: Operator VAR 'H_F5' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  336 |     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;    
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:336:52: Operator VAR 'H_F3' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  336 |     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;    
+      |                                                    ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:336:69: Operator VAR 'H_MD' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  336 |     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;    
+      |                                                                     ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:336:88: Operator VAR 'H_MM' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  336 |     localparam [15:0] H_F5 = 5 + OPR + CAPR + GSH, H_F3 = 3 + CAPR, H_MD = DDIV + OPR, H_MM = MLAT + OPR;    
+      |                                                                                        ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:23: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                       ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:35: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                   ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:50: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:65: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:80: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:338:97: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  338 |     localparam [15:0] H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT, H_SP = D_SP,
+      |                                                                                                 ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:339:23: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  339 |                       H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:147:23: Operator VAR 'H1_DIV' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  147 |     localparam [15:0] H1_DIV = D_DIV + OPR, H1_M = MLAT + OPR;       
+      |                       ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:147:45: Operator VAR 'H1_M' expects 16 bits on the Initial value, but Initial value's ADD generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  147 |     localparam [15:0] H1_DIV = D_DIV + OPR, H1_M = MLAT + OPR;       
+      |                                             ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:23: Operator VAR 'H_DIV' expects 16 bits on the Initial value, but Initial value's VARREF 'D_DIV' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                       ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:38: Operator VAR 'H_M' expects 16 bits on the Initial value, but Initial value's VARREF 'MLAT' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                      ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:50: Operator VAR 'H_EXP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EXP' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                  ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:65: Operator VAR 'H_SIG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SIG' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:80: Operator VAR 'H_RSQ' expects 16 bits on the Initial value, but Initial value's VARREF 'D_RSQ' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:148:95: Operator VAR 'H_SQRT' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SQRT' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  148 |     localparam [15:0] H_DIV = D_DIV, H_M = MLAT, H_EXP = D_EXP, H_SIG = D_SIG, H_RSQ = D_RSQ, H_SQRT = D_SQRT,
+      |                                                                                               ^~~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:149:23: Operator VAR 'H_SP' expects 16 bits on the Initial value, but Initial value's VARREF 'D_SP' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  149 |                       H_SP = D_SP, H_EG = D_EG;
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:149:36: Operator VAR 'H_EG' expects 16 bits on the Initial value, but Initial value's VARREF 'D_EG' generates 32 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  149 |                       H_SP = D_SP, H_EG = D_EG;
+      |                                    ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:150:24: Operator VAR 'HAS_SFU' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                                     : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  150 |     localparam integer HAS_SFU = (KIND != 0);
+      |                        ^~~~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_lane_c12.sv:151:24: Operator VAR 'FULL' expects 32 bits on the Initial value, but Initial value's EQ generates 1 bits.
+                                                                     : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[0].u_lane'
+  151 |     localparam integer FULL = (KIND == 2);
+      |                        ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:775:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_cf'
+  775 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p) canbe = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_su_f12.sv:486:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp..g_d21.u_div'
+  486 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6b' generates 8 bits.
+                                                       : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_red.g_full.g_sl[3].u_s.g_sq[63].u_sq.u....g_l6.u.u'
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6b' generates 7 bits.
+                                                      : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_red.g_full.u_t.g_time[7].u_op.u_add....g_keep6.u.u'
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_red.g_full.g_sl[3].u_s.g_sq[63].u_sq.u....g_l6.u.u.u_k1'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:394:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.u_exp'
+  394 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:109:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'h' generates 12 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  109 |     wire signed [EXP_W-1:0] b_lo_hi = h + $signed(TOP - FRAC_SHIFT + 127);       
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:109:37: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  109 |     wire signed [EXP_W-1:0] b_lo_hi = h + $signed(TOP - FRAC_SHIFT + 127);       
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:110:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'h' generates 12 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  110 |     wire signed [EXP_W-1:0] b_lo_lo = h + $signed(TOP - 1 - FRAC_SHIFT + 127);   
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:110:37: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  110 |     wire signed [EXP_W-1:0] b_lo_lo = h + $signed(TOP - 1 - FRAC_SHIFT + 127);   
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:111:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'h' generates 12 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  111 |     wire signed [EXP_W-1:0] b_hi_hi = h + $signed(TOP - FRAC_SHIFT + 128);       
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt_c12.sv:111:37: Operator ASSIGNW expects 12 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                           : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp.g_sq12.u_sq'
+  111 |     wire signed [EXP_W-1:0] b_hi_hi = h + $signed(TOP - FRAC_SHIFT + 128);       
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_su_f12.sv:408:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp..g_d21.u_div'
+  408 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_su_f12.sv:441:48: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                            : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp..g_d21.u_div'
+  441 |             if (e != 8'd0) normp = {1'b1, f, e - 10'sd127};
+      |                                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_dsrom_su_f12.sv:491:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                           : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp..g_d21.u_div'
+  491 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_dsrom_su_f12.sv:502:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                           : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_side.u_sp..g_d21.u_div'
+  502 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_red_c12.sv:473:95: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                                    : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_red.g_full.u_t'
+  473 |         always @(*) for (h = 0; h <= LC; h = h + 1) hp[h] = pre_v[h] && (pre_t[h][TAG-2 -: 4] == h);
+      |                                                                                               ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sfu_c12.sv:768:66: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.g_lane[63].u_lane.g_sfu.g_vec.u_l4'
+  768 |             for (k = 0; k < K; k = k + 1) if (DEPTHS[16*k +: 16] == p && s[k]) has = 1'b1;
+      |                                                                  ^~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:305:72: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  305 |             for (b = 0; b < 32; b = b + 1) if ((32'd1 << b) < x) log2c = b + 1;
+      |                                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:312:60: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  312 |             for (b = 0; b < 32; b = b + 1) if (x[b]) log2f = b;
+      |                                                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:319:65: Operator ASSIGN expects 5 bits on the Assign RHS, but Assign RHS's VARREF 'b' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  319 |             for (b = CW - 1; b >= 0; b = b - 1) if (x[b]) tzero = b;
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:342:28: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_EXP' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  342 |             SFU_EXP: sfu_d = D_EXP;
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:343:39: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_SIG' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  343 |             SFU_SIGM, SFU_SILU: sfu_d = D_SIG;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:344:30: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_RSQ' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  344 |             SFU_RSQRT: sfu_d = D_RSQ;
+      |                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:345:29: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_SQRT' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  345 |             SFU_SQRT: sfu_d = D_SQRT;
+      |                             ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:346:31: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_SP' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  346 |             SFU_SPSQRT: sfu_d = D_SP;
+      |                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:347:30: Operator ASSIGN expects 10 bits on the Assign RHS, but Assign RHS's VARREF 'D_EG' generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  347 |             SFU_EGATE: sfu_d = D_EG;
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:391:24: Operator ASSIGNW expects 24 bits on the Assign RHS, but Assign RHS's VARREF 'q_nin' generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  391 |     wire [AW-1:0] ni_a = q_nin;
+      |                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:392:32: Operator SHIFTR expects 24 bits on the LHS, but LHS's VARREF 'q_nin' generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  392 |     wire [AW-1:0] ni_h = q_nin >> 1;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:409:50: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h0' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  409 |     always @(posedge clk) if (pst == 2'd1 && sst == 3'd0) begin
+      |                                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:476:99: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h1' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  476 |     wire s1_ld = (CTL12 >= 2) ? (pst == 2'd1 && sst == 4'd3) : (CTL12 != 0) ? (pst == 2'd1 && sst == 3'd1) : (pst == 2'd1);
+      |                                                                                                   ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:482:37: Operator COND expects 24 bits on the Conditional False, but Conditional False's VARREF 'q_nin' generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  482 |         s_ni <= (s1_cand && s1_okx) ? s1_nn : q_nin;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:483:37: Operator COND expects 32 or 24 bits on the Conditional False, but Conditional False's VARREF 'q_nout' generates 16 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  483 |         s_no <= (s1_cand && s1_okx) ? 1 : q_nout;
+      |                                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:495:71: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  495 |     wire [4:0] c_lsz = s_wnf ? c_tz : log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:496:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  496 |     wire [3:0] x_ls = (c_lsz > c_lvw) ? c_lvw : c_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:523:22: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_nvs' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  523 |     wire [4:0] c_L = log2c(c_nvs);
+      |                      ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:528:40: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h6' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  528 |     wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR + GSH : 10'd4 + CAPR;        
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:528:67: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h4' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  528 |     wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR + GSH : 10'd4 + CAPR;        
+      |                                                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:528:21: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  528 |     wire [9:0] x_dF = c_gather ? 10'd6 + OPR + CAPR + GSH : 10'd4 + CAPR;        
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:529:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'x_dF' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  529 |     wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:529:28: Operator ADD expects 32 bits on the RHS, but RHS's CONST '10'h1' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  529 |     wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:529:51: Operator COND expects 32 bits on the Conditional False, but Conditional False's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  529 |     wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
+      |                                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:529:21: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  529 |     wire [9:0] x_dM = x_dF + 10'd1 + OPR + (c_div ? DDIV : H_M[9:0]);
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:530:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'x_dM' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  530 |     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:530:28: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  530 |     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:530:39: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  530 |     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+      |                                       ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:530:56: Operator ADD expects 32 bits on the RHS, but RHS's FUNCREF 'sfu_d' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  530 |     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:530:21: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  530 |     wire [9:0] x_dS = x_dM + H_M[9:0] + H_A[9:0] + OPR + sfu_d(q_sfu);
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:538:32: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h2' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  538 |         if (pst == 2'd1 && sst == 3'd2) r_ls <= x_ls;
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:539:32: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h3' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  539 |         if (pst == 2'd1 && sst == 3'd3) begin
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:544:32: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h4' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  544 |         if (pst == 2'd1 && sst == 3'd4) begin r_wl <= s_no[7:0] * r_sh; r_wh <= s_no[15:8] * r_sh[CW-9:0]; end
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:545:32: Operator EQ expects 4 bits on the RHS, but RHS's CONST '3'h5' generates 3 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  545 |         if (pst == 2'd1 && sst == 3'd5) r_nvs <= r_wl + {r_wh, 8'd0};
+      |                                ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'c_dS' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:40: Operator SHIFTL expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:52: Operator ADD expects 32 bits on the RHS, but RHS's CONST '10'h1' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'RHO' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:81: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h1' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:81: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:112: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                 : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                                                                                                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:550:21: Operator ASSIGNW expects 10 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  550 |     wire [9:0] c_dT = c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT
+      |                     ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:553:70: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'c_L' generates 5 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  553 |     wire c_bad = (red_on && scalar_c) || s_flatbad || (c_span && c_L > LV) || (c_gather && !pow2(c_gstr));
+      |                                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:572:73: Operator SUB expects 32 bits on the RHS, but RHS's SEL generates 4 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  572 |                     else c_terms[(s*LN + kk)*AW +: AW] = so_s[s] << (kk - c_ls_t[s*4 +: 4]);
+      |                                                                         ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:628:56: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  628 |             .d((pst == 2'd1 && sst == 4'd5) ? ((c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0]) : r2_ls_t[gt*4 +: 4]),
+      |                                                        ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:636:23: Operator FUNCREF 'log2c' expects 32 bits on the Function Argument, but Function Argument's VARREF 'r2_nvs' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  636 |     wire [4:0] c2_L = log2c(r2_nvs);
+      |                       ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:640:54: Operator COND expects 32 bits on the Conditional True, but Conditional True's VARREF 's_ni' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  640 |             r2_lg <= log2c((s_ni > (red_on ? 8 : 1)) ? s_ni : (red_on ? 8 : 1));
+      |                                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:644:30: Operator GT expects 5 bits on the RHS, but RHS's VARREF 'c_lvw' generates 4 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  644 |             r2_ls <= (c2_lsz > c_lvw) ? c_lvw : c2_lsz[3:0];
+      |                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:645:23: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'r2_gstr' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  645 |             r2_gsh <= log2f(r2_gstr); r2_rsh <= log2f(q_rso); r2_gpow <= pow2(r2_gstr); r2_rpow <= pow2(q_rso);
+      |                       ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:645:49: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  645 |             r2_gsh <= log2f(r2_gstr); r2_rsh <= log2f(q_rso); r2_gpow <= pow2(r2_gstr); r2_rpow <= pow2(q_rso);
+      |                                                 ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:655:20: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's SHIFTR generates 25 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  655 |             r2_nvs <= r2_nva >> c_ls;                     
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:28: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'c_dS' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:40: Operator SHIFTL expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                        ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:52: Operator ADD expects 32 bits on the RHS, but RHS's CONST '10'h1' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:60: Operator ADD expects 32 bits on the RHS, but RHS's VARREF 'RHO' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:81: Operator ADD expects 32 bits on the LHS, but LHS's CONST '10'h1' generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:81: Operator ADD expects 32 bits on the RHS, but RHS's SEL generates 10 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                                                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:112: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 10 bits.
+                                                                 : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                                                                                                                ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:659:20: Operator ASSIGNDLY expects 10 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                               : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  659 |             r2_dTa <= c_dS + (H_M[9:0] << 1) + OPR + 10'd1 + RHO + RHM * (10'd1 + H_M[9:0] + 10'd7 * (H_A[9:0] + ROPI) + RPAD + RSL + RTAP + ROUT);
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:668:76: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'r2_L' generates 5 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  668 |             r2_bad <= (red_on && scalar_c) || s_flatbad || (c_span && r2_L > LV) || (c_gather && !r2_gpow);
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:691:42: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'c_gstr' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  691 |         p_gsh <= (CTL12 >= 2) ? r2_gsh : log2f(c_gstr); p_rsh <= (CTL12 >= 2) ? r2_rsh : log2f(q_rso);
+      |                                          ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_vec_c12.sv:691:90: Operator FUNCREF 'log2f' expects 32 bits on the Function Argument, but Function Argument's VARREF 'q_rso' generates 24 bits.
+                                                                : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native'
+  691 |         p_gsh <= (CTL12 >= 2) ? r2_gsh : log2f(c_gstr); p_rsh <= (CTL12 >= 2) ? r2_rsh : log2f(q_rso);
+      |                                                                                          ^~~~~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:138:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                               : ... note: In instance 'ot_qwen_r25_su_quarter'
+  138 |     else if(cursor==RN-1)begin next_c[17:5]=0;next_c[4:0]=WRITE_SELECT;end
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:136:34: Operator NEQ expects 16 bits on the RHS, but RHS's VARREF 'cursor' generates 13 bits.
+                                                                               : ... note: In instance 'ot_qwen_r25_su_quarter'
+  136 |    READ_HEAD:if(hd[65]||hr[63:48]!=cursor)begin next_c[37]=1;next_c[4:0]=FAILED;end
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:143:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                               : ... note: In instance 'ot_qwen_r25_su_quarter'
+  143 |    RENC1:if(cursor==RN-1)begin next_c[17:5]=0;next_c[4:0]=WRITE_SELECT;end
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:149:19: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                               : ... note: In instance 'ot_qwen_r25_su_quarter'
+  149 |     else if(cursor==WN-1)next_c[4:0]=FRAME_DONE;
+      |                   ^~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:157:15: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'cursor' generates 13 bits.
+                                                                               : ... note: In instance 'ot_qwen_r25_su_quarter'
+  157 |      if(cursor==WN-1)next_c[4:0]=FRAME_DONE;
+      |               ^~
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:180:40: Operator FUNCREF 'encode64' expects 64 bits on the Function Argument, but Function Argument's SHIFTR generates 704 bits.
+                                                                              : ... note: In instance 'ot_qwen_r25_su_quarter'
+  180 |     for(i=0;i<11;i=i+1)word_chunks[i]<=encode64(({14'd0,cmd_word}>>(i*64)));
+      |                                        ^~~~~~~~
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:193:32: Bit extraction of array[1279:0] requires 11 bit index, not 13 bits.
+                                                                              : ... note: In instance 'ot_qwen_r25_su_quarter'
+  193 |     READ_SELECT:head<=read_meta[cursor];
+      |                                ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:195:22: Bit extraction of array[1279:0] requires 11 bit index, not 13 bits.
+                                                                              : ... note: In instance 'ot_qwen_r25_su_quarter'
+  195 |     RENC1:reply_words[cursor]<=encode64({16'd0,16'(cursor),response_word});
+      |                      ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_su_quarter.sv:196:34: Bit extraction of array[543:0] requires 10 bit index, not 13 bits.
+                                                                              : ... note: In instance 'ot_qwen_r25_su_quarter'
+  196 |     WRITE_SELECT:head<=write_meta[cursor];
+      |                                  ^
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.g'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.p'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_nva.g_k.u.p
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:58:27: Signal unoptimizable: Circular combinational logic: 'ot_qwen_r25_su_quarter.g_on.u_native.u_r3.g_k.u.t'
+                                                  : ... note: In instance 'ot_qwen_r25_su_quarter.g_on.u_native.u_r3'
+   58 |     (* keep *) wire [W:0] t [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_r3.g_k.u.t
+                    rtl/hdc/ot_hdc_prefix.sv:67:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:58:27:      Example path: ot_qwen_r25_su_quarter.g_on.u_native.u_r3.g_k.u.t
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 3.139 MB sources in 101 modules, into 1327.233 MB in 1647 C++ files needing 0.000 MB
+- Verilator: Walltime 2817.779 s (elab=11.500, cvt=2778.737, bld=0.000); cpu 2816.240 s on 1 threads; alloced 93360.812 MB
+	Command being timed: "bash /srv/opentallas-scratch/codex/qwen-quarter/qwen_r25_su_quarter_elaborate.sh /srv/opentallas-scratch/codex/qwen-quarter/src"
+	User time (seconds): 2789.17
+	System time (seconds): 35.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 47:05.74
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 95595836
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 246
+	Minor (reclaiming a frame) page faults: 25109241
+	Voluntary context switches: 654
+	Involuntary context switches: 2576
+	Swaps: 0
+	File system inputs: 14192
+	File system outputs: 128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
