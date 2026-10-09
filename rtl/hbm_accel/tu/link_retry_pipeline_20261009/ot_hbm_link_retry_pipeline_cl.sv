@@ -42,6 +42,11 @@ module ot_hbm_link_retry_pipeline #(
  reg fault_r,replaying,nak_pending,nak_seen;
  reg [SW-1:0] last_nak;
  reg [31:0] retries;
+ // struct-close r3: the replay counter leaves the fault_r-gated state block (fault_r -> retries[31:30] reg2reg -187 ps,
+ // 36 endpoints: fault_r gated a 32-bit increment).  rinc is a one-cycle pulse set by the rewind; the counter adds it
+ // one edge later in its own block (+1 cycle on the replay_count status only).
+ reg rinc;
+ always @(posedge clk or negedge rst_n) if(!rst_n) retries<=0; else if(rinc) retries<=retries+1'b1;
  localparam TW=$clog2(TIMEOUT+1),RW=$clog2(MAX_RETRY+2);
  reg [TW-1:0] timer;
  reg [RW-1:0] attempts;
@@ -90,13 +95,15 @@ module ot_hbm_link_retry_pipeline #(
  if(!rst_n) begin
  phase<=0;base<=0;next_seq<=0;sent_seq<=0;cursor<=0;expected<=0;
  debt_pipe<=0;full_pipe<=0;fault_r<=0;replaying<=0;nak_pending<=0;
- nak_seen<=0;last_nak<=0;retries<=0;timer<=0;attempts<=0;
+ nak_seen<=0;last_nak<=0;rinc<=0;timer<=0;attempts<=0;
  timeout_pending<=0;txv<=0;tx_replay<=0;txd<=0;txs<=0;rxv<=0;rxd<=0;
  mail_v<=0;mail_nak<=0;mail_seq<=0;cap_v<=0;cap_nak<=0;cap_seq<=0;
  cap_base<=0;cap_sent<=0;delta_pipe<=0;window_pipe<=0;
  ack_progress<=0;invalid_ack<=0;fresh_nak<=0;
  read_pending<=0;read_target<=0;generation<=0;read_generation<=0;write_guard<=0;
- end else if(!fault_r) begin
+ end else if(fault_r) rinc<=0;
+ else begin
+ rinc<=0;
  phase<=phase+1'b1;
  if(write_guard!=0)write_guard<=write_guard-1'b1;
  if(feedback)begin
@@ -154,7 +161,7 @@ module ot_hbm_link_retry_pipeline #(
  if(fresh_nak)begin nak_seen<=1;last_nak<=cap_seq;end
  if(rewind)begin
  cursor<=ack_progress?cap_seq:base;generation<=~generation;
- replaying<=1;timer<=0;timeout_pending<=0;retries<=retries+1'b1;
+ replaying<=1;timer<=0;timeout_pending<=0;rinc<=1;
  attempts<=ack_progress?1:attempts+1'b1;
  // A normal buffered packet remains retained and launches before replay.
  if(tx_replay)begin txv<=0;end

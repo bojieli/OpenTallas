@@ -5,7 +5,7 @@
 // releases the RSTR=1 instance from reset, which must mismatch.  Reset windows (and 40 idle drain edges before each) are
 // not compared: RSTR=1 enters and leaves reset one edge later, by design.
 module tb_su12_sfu_rstr;
-    parameter integer NCYC = 4000, SEED = 1, MUT = 0;
+    parameter integer NCYC = 4000, SEED = 1, MUT = 0, RLEN = 8;   // RLEN: reset pulse length (edges); MUT=2 drives 2
     reg clk = 0; always #0.5 clk = ~clk;
     reg rst_n = 0, rst_n_m = 0;
     reg ld, ld_bank, emit, bank, cpair, cx_arnd, cx_arelu, cx_amin, cx_cclip, co_rnd;
@@ -54,19 +54,30 @@ module tb_su12_sfu_rstr;
                o[190] ? o[246:191] : 56'd0, o[190], o[133] ? o[189:134] : 56'd0, o[133],
                (|o[124:121]) ? o[132:25] : 108'd0, o[0] ? o[24:1] : 24'd0, o[0]};
     endfunction
+    // review-0443 X6: the RSTR multicycle (lane_rstr_mc.sdc, setup 4 / hold 3) needs the registered reset rst_q to stay
+    // stable >= 4 edges after every change.  Checked on the RSTR instance for every reset in the run (initial + periodic).
+    integer rrun = 0, rshort = 0, rchg = 0; reg rq_d = 0;
+    always @(posedge clk) begin
+        if (u_cl.u.rst_q === 1'bx) rrun = 0;                     // power-up X: not a reset pulse
+        else if (u_cl.u.rst_q !== rq_d) begin
+            if (rchg > 0 && rrun < 4) rshort = rshort + 1;
+            rchg = rchg + 1; rrun = 1; rq_d = u_cl.u.rst_q;
+        end else rrun = rrun + 1;
+    end
     always @(negedge clk) if (active && obs(oa) !== obs(ob)) begin bad = bad + 1; if (bad < 4) $display("MISMATCH t=%0t", $time); end
     initial begin
         s = SEED; idle;
         repeat (12) @(negedge clk);
-        rst_n = 1; if (!MUT) rst_n_m = 1;                // mutant: the RSTR instance is never released from reset
+        rst_n = 1; if (MUT != 1) rst_n_m = 1;                // mutant: the RSTR instance is never released from reset
         repeat (8) @(negedge clk);
         active = 1;
         for (c = 0; c < NCYC; c = c + 1) begin
-            if (c % 97 == 50) begin active = 0; idle; repeat (40) @(negedge clk); rst_n = 0; rst_n_m = 0; repeat (3) @(negedge clk);
-                rst_n = 1; if (!MUT) rst_n_m = 1; repeat (10) @(negedge clk); active = 1; end
+            if (c % 97 == 50) begin active = 0; idle; repeat (40) @(negedge clk); rst_n = 0; rst_n_m = 0; repeat ((MUT == 2) ? 2 : RLEN) @(negedge clk);
+                rst_n = 1; if (MUT != 1) rst_n_m = 1; repeat (10) @(negedge clk); active = 1; end
             rnd; @(negedge clk);
         end
-        if (bad == 0) $display("SU12_RSTR PASS cycles=%0d", NCYC); else $display("SU12_RSTR FAIL mismatches=%0d", bad);
+        if (bad == 0 && rshort == 0) $display("SU12_RSTR PASS cycles=%0d rst_q_changes=%0d (every stable run >= 4 edges)", NCYC, rchg);
+        else $display("SU12_RSTR FAIL mismatches=%0d rst_q_runs_below_4=%0d", bad, rshort);
         $finish;
     end
 endmodule
