@@ -85,6 +85,33 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
                 qualification='layout model only; no service/physical/performance credit')
 
 
+def dsrom_engram_canonical_model(context=1048576, users=64):
+    """Preserve physical global-sector XOR map; three bounded row bursts.
+
+    The preceding PC-local len8 fixture is historical API evidence only. The
+    actual model interprets req_len as sector count; boot writes require len1.
+    """
+    record=dsrom_engram_rowstripe_model(context, users)
+    record['schema']='opentallas.engram-canonical-rowstripe-model.v1'
+    record['pc_map']='pc_of(s)=((s>>2)^(s>>7)^(s>>12))&31'
+    record['inverse_map']='t=pc_local_atom>>2; s=(t<<7)|(((pc^t^(t>>5))&31)<<2)|(pc_local_atom&3)'
+    record['read_request']='three same-PC bursts with actual counts [4-a%4,4,1+a%4], tag={generation12,row3,burst2}'
+    record['boot_request']='one sector write with actual len1, global stack sector from canonical inverse'
+    record['requests_per_rank_token']=18
+    record['request_boundary_bits_per_rank_token']=18*341
+    record['historical_api_fixture_requests_per_rank_token']=6
+    record['added_issue_cycles_vs_single_burst']=12
+    record['added_request_queue_cycles']=2
+    record['added_return_capture_cycles']=3
+    record['read_adapter']['transaction']='generation12,row3,burst2; three requests per reserved row, one row per PC, bounds on each burst/beat'
+    record['read_adapter']['requests_per_reserved_row']=3
+    record['read_adapter']['controller_request_credits_used_per_pc_max']=3
+    record['read_adapter']['request_credit_depth_actual']=8
+    record['aperture']='per64PC base/limit in PC-local32B atoms; inverse checked wide before rq.addr30, region inventory pending loader owner'
+    record['qualification']='model before canonical RTL; actual PHY pc_of, len-count, aperture bounds and fullpayload/CRC gates required; historical len8 API fixtures do not qualify PHY'
+    return record
+
+
 def dsrom_engram_sink_pincapture_model():
     return dict(schema='opentallas.engram-sink-pincapture-model.v1', opt_in_default=False,
                 replicas=8, sources=4, queue_entries_per_source=4,
