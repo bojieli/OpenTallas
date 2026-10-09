@@ -1,0 +1,17 @@
+{
+ "status": "TERMINAL_TIMING_FAIL",
+ "source_commit": "38f22c6d8fceb38f9d78a7905b51d541cf6f04b6",
+ "chain_process_rc": 0,
+ "setup_TT_ps": -28.62,
+ "hold_FF_ps": -66.87,
+ "SS_sensitivity_ps": -307.79,
+ "DRC": 0,
+ "period_ps": 833.333,
+ "setup_uncertainty_ps": 60,
+ "hold_uncertainty_ps": 25,
+ "final_setup_start": "in_valid",
+ "final_setup_end": "g_pin.embed_q[240]$_DFFE_PP_",
+ "final_hold_start": "out_bits[3]$_DFFE_PN0P_",
+ "final_hold_end": "out_bits[3]",
+ "adoption_qualified": false
+}
