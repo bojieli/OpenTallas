@@ -15040,3 +15040,46 @@ def hbm_native_mtp_emit_model(depth=8):
 def mtp_ring_dyn_model():
     """Price one-position ring addressing independently of multi-token slot state."""
     return json.loads((ROOT / 'physical/mtp_ring_dyn/model.json').read_text())
+
+
+def hgi_attention_row_sources_model():
+    """HGI-1 G12 ordered-row frontend; arithmetic and gather engines unchanged."""
+    return dict(schema='hgi.att-row-sources.v1', enable_default=False,
+        model_before_build=True, MACs_per_cycle=0, arithmetic_order='B then C; existing tile chunk8/tree unchanged',
+        full_shape=dict(Qwen_rows=8192, maximum_linear_rows=1048576, effective_count_bits=21, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
+        replicas=4, placement='one frontend per HBM stack, upstream of existing gather reader',
+        ports=dict(command_bits=85, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
+                   selected_ID_bytes_per_cycle=4, HBM_payload_bytes_per_cycle=0),
+        boundary_bits_per_cycle=43, mux_cost='one B/C row-index mux; no payload mux',
+        fanout='local command registers only, 4 independent replicas',
+        latency_cycles=dict(command_to_first_request=3, initiation_interval=1,
+                            added_row_payload_cycles=0, post_command_tail=0),
+        token_latency='Three frontend command edges per attention invocation; existing gather/tile/formatter separately priced; no ideal throughput credit',
+        slot_um=[120,120], initial_state_bit_upper_bound=384, area_measured_um2=None,
+        floorplan_utilisation_target=0.55, fit='pending synthesis and route, no physical claim',
+        routing=dict(signal_bits_estimate=220, pin_layers=2, pitch_um=0.48,
+                     perimeter_tracks_capacity=1000, capacity_fraction=0.22,
+                     actual_pin_lint='required before route'),
+        source_binding='B ring physical index; C existing selected-ID stream, does not replace DS nine-sector gather reader',
+        clock_ns=0.833333, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
+
+
+def hgi_attention_record_adapter_model():
+    """Normative ATT records to G12 row front + existing ATT controller, no payload arithmetic."""
+    return dict(schema='hgi.att-record-adapter.v1',model_before_build=True,
+        transport_ABI='valid1/header128/SUT256/MDESC1024 actual3fae tuple; normative fields required',
+        upstream_gap='3fae sequencer is legacy fields/count20; Claude must supply normative header and full typed counts',
+        sideband_bits=dict(POS1=21,effective_B_count=32,effective_C_count=32),
+        replicas=4,MACs_per_cycle=0,memory_bytes_per_cycle=0,
+        record_payload_bits=1408,record_transport_bytes=176,
+        ATT_setup_payload_bits=1152,row_command_payload_bits=85,
+        state_bits_upper_bound=2656,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
+        slot_variants_um=[[320,320],[360,360]],stdcell_area_measured_um2=None,utilisation_target=0.55,
+        routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
+                     perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
+                     face_capacity_320=1316,actual_submit_lint='mandatory'),
+        latency_cycles=dict(added_record_command_edges=3,record_to_first_row_edges_including_G12=6,row_II=1),
+        token_charge=dict(DS_40_layers_QK_PV=240,Qwen_36_layers_two_local_KV_heads_QK_PV=432),
+        retirement='rows_done AND actual_ATT_done; sticky fault halts CP without completion; recovery only by externally drained reset',
+        selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
+        physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)

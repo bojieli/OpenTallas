@@ -1,0 +1,83 @@
+{
+  "items": [
+    {
+      "spec": "hgi-att-record-g12-320-d6579854b-tc-cx",
+      "source": "d6579854b44625c5eda4841e8f05bf24b961ce19",
+      "recipe": {
+        "top": "ot_hgi_att_record_adapter",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "key": "e86ade6d3d38aa6f19b578b0",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 10,
+        "reg_to_out_max": 2,
+        "reg_to_out_example": "rows_cmd_v",
+        "cells": 12775,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "top": "ot_hgi_att_record_adapter",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_record_adapter: registered boundary (in->reg 10, reg->out 2 levels)"
+      },
+      "file_sha": {
+        "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv": "437a1de54b25e81b9543f16c37b30317a9278f56d52be953cf2231d932a11eb1",
+        "physical/qwen_die_masters/cfg/hgi_att_record_g12_320.env": "51c491073306c6b3540477bdad9c19d8d32a1a11c180ab2f8f2ba0a9ac79e04b"
+      }
+    },
+    {
+      "spec": "hgi-att-record-g12-360-d6579854b-tc-cx",
+      "source": "d6579854b44625c5eda4841e8f05bf24b961ce19",
+      "recipe": {
+        "top": "ot_hgi_att_record_adapter",
+        "sources": [
+          "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv"
+        ],
+        "params": {},
+        "incdirs": [
+          "rtl/common"
+        ]
+      },
+      "levels": 16,
+      "key": "e86ade6d3d38aa6f19b578b0",
+      "result": {
+        "in_to_out_bits": 0,
+        "in_to_out_max": -1,
+        "in_to_out_example": [],
+        "in_to_reg_max": 10,
+        "reg_to_out_max": 2,
+        "reg_to_out_example": "rows_cmd_v",
+        "cells": 12775,
+        "ctrl_ports": [
+          "clk"
+        ],
+        "cached": true,
+        "top": "ot_hgi_att_record_adapter",
+        "levels": 16,
+        "strict": true,
+        "verdict": "PASS",
+        "message": "rtl_boundary ot_hgi_att_record_adapter: registered boundary (in->reg 10, reg->out 2 levels)"
+      },
+      "file_sha": {
+        "rtl/hbm_accel/generic/g12/record/ot_hgi_att_record_adapter.sv": "437a1de54b25e81b9543f16c37b30317a9278f56d52be953cf2231d932a11eb1",
+        "physical/qwen_die_masters/cfg/hgi_att_record_g12_360.env": "411ada73532ce2ba7499ff80012596d71b8d888d87f91f4564141b61b3428537"
+      }
+    }
+  ],
+  "helper_sha": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "yosys_version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)",
+  "host": "ot-pve1",
+  "admitted_GiB": 1
+}
