@@ -1,0 +1,18 @@
+{
+ "verdict":"PASS_CONTROL_RTL",
+ "source_commit":"4eb90c27d",
+ "model_commit":"9acde04ac",
+ "host":"ot-epyc4",
+ "admission_guard_gib":1,
+ "tool":"iverilog -g2012 and vvp",
+ "cases":14,
+ "stdout":"PASS actual CP32/native690 launch 14 cases; finish at1116000ps",
+ "source_sha256":{
+  "ot_gpu_w6_secded_pkg.sv":"4cb22a293abd6891d5fa0b3a2ac1f41074a08ef4a4e664d06fa23162e2e58e39",
+  "ot_qwen_r25_cp_native_launch.sv":"3455db501b2be96e03de3cc9afd9609a1e8cc0728733a55c0835171045f36cf9",
+  "tb_qwen_r25_cp_native_launch.sv":"388f91ef82ab801220970615511eecf92ac3a69d0f9a5ce2b8d1d4e6b5d01b07"
+ },
+ "positive":"Explicit CP32 map to actual ROM12/count13; token151935 owner74; launch and retirement stalls; retirement waits actual matching completion; map locks after first request; one-bit owner SECDED correction.",
+ "negative":"Unknown CP entry, TOKEN17-truncated VM receipt, queries4, unchecked VM receipt, unchecked request, vocabulary overflow, position overflow, duplicate CP map, ROM overflow, foreign completion, two-bit owner UE, warm abort quarantine.",
+ "scope":"Actual launcher control RTL only. Bench supplies dispatcher readiness/completion and VM receipt; no arithmetic or CP integration is claimed. Mapping loader still needs actual production CP entry addresses; exclusive VM lease provider and native fault wiring must bind. p4 intentionally fails closed. Default ENABLE0. No physical qualification or adoption."
+}
