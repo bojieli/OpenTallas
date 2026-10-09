@@ -22,9 +22,10 @@ def model():
             area_status='FF and mux estimate only; mapped area unqualified'),
         parser=dict(held_flit_bits=545,held_owner_bits=73,slot_bits=4,
                     tuple_bits_per_cycle=34,tuples_per_cycle=1,added_cycles=1,
+                    protection_extra_ff_bits=624,protection="dualrail detect failstop; no correction",
                     quarter_last='actual quarter-last flit accepted slot14',
                     arithmetic_changes=0,maximum_rank_literal_slots=1380),
         physical=dict(slot_status='unallocated; no P&R admission until die owner assigns slot',
             boundary_tracks_status='545 TU tracks and owner sideband require actual layer/channel allocation',
-            mutable_protection='query credits/order dualrail; candidate FIFO/payload/control dualrail failstop; parser payload/control protection pending'),
+            mutable_protection='query credits/order dualrail; candidate FIFO/payload/control dualrail failstop; parser payload/control dualrail failstop; physical cost pending'),
         composed_latency='formatter occupancy must be measured and composed; no adopted token-rate credit')
