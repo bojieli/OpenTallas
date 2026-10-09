@@ -67,7 +67,10 @@ def main():
     args.out.write_text(json.dumps(record,indent=1)+'\n')
     if args.context_out:
         context=dict(schema='opentallas.hbm_native_die_context.v1',source_commit=args.source_commit,
-            variant=args.variant,geometry=selected['geo'],instances=[vars(a) for a in instances],
+            variant=args.variant,geometry=selected['geo'],instances=[dict(
+                name=a.name,master=a.master,x=a.x,y=a.y,w=a.w,h=a.h,
+                orient=a.orient,kind=a.kind,region=a.region,domain=getattr(a,'domain',None))
+                for a in instances],
             buses=selected['buses'],paths=selected['paths'],
             qualification=record['qualification'])
         args.context_out.write_text(json.dumps(context,indent=1)+'\n')
