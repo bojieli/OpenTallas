@@ -593,11 +593,25 @@
         }
       },
       "physical": {
-        "status": "prepared",
-        "corners": {},
+        "status": "pass",
+        "corners": {
+          "TT": {
+            "setup_ps": 130.52
+          },
+          "FF": {
+            "hold_ps": 5.25
+          },
+          "SS": {
+            "setup_sensitivity_ps": -173.93
+          },
+          "DRC": 0,
+          "period_ps": 1111.111
+        },
         "evidence": [
           "tools/closure_loop/jobs/qfd_dspark_s7_control-ce667d01f-tc.json",
-          "tools/closure_loop/jobs/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json"
+          "tools/closure_loop/jobs/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json",
+          "results/closure_loop/qfd_dspark_s7_control-ab9c785e9-wc-ttalias/verdict.json",
+          "results/rtl/qwen_native_corner_alias_20261009/qfd_dspark_s7_control-ab9c785e9-wc-ttalias/corner_sta.json"
         ],
         "configuration_successor": {
           "source": "ab9c785e9",
@@ -607,7 +621,8 @@
           "hold": "BC/FF actual domain budget",
           "no_RTL_change": true,
           "running_handle": null
-        }
+        },
+        "qualification": "Current TT>=0/FF>=0/DRC0 policy; SS sensitivity only; isolated controller leaf, actual native numerical backend/controlstate/link integration pending."
       },
       "dependencies": [
         "qfd_production_stage_traversal",
