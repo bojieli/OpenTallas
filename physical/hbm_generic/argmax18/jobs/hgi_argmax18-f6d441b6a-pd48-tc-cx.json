@@ -1,5 +1,5 @@
 {
-  "name": "hgi_argmax18-4d3c77846-pd48-tc-cx",
+  "name": "hgi_argmax18-f6d441b6a-pd48-tc-cx",
   "block": "ot_hgi_argmax18_m",
   "owner": "Codex:generic_token18/argmax18",
   "purpose": "Owner-approved HGI-1 CF-ARG width18 + row-bound rank*imm_a offset; qualified FAST1 native leaf; DS default off. Two physical alternatives.",
@@ -94,7 +94,7 @@
   "route_hold_margin_ns": 0.035,
   "route_corner": "TC",
   "cycles_added": 0,
-  "notes": "Memory claim16GiB conservative ceil2x measured nearest native LP8/FLAT7/FAST1 DRT7956564KiB(7.588GiB); calibration2GiB based native CTS884264KiB and GP937244KiB, new winner/index/offset flop overhead. These are admission claims, not generic measured peaks or hard caps. Own synth mapped area required <=11918um2 before continuing physical adoption.",
+  "notes": "Memory claim16GiB conservative ceil2x measured nearest native LP8/FLAT7/FAST1 DRT7956564KiB(7.588GiB); calibration2GiB based native CTS884264KiB and GP937244KiB, new winner/index/offset flop overhead. These are admission claims, not generic measured peaks or hard caps. Own synth mapped area required <=11918um2 before continuing physical adoption. Corrected source own synthesis mapped area=5767.945um\u00b2 <=11918um\u00b2, exact6rows +5compiledmutants PASS; actual remote boundary PASS12/1 levels. Native sibling16GiB route reservation remains conservative.",
   "registered_io": true,
   "rtl_boundary": {
     "levels": 16
