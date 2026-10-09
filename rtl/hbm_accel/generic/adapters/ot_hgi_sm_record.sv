@@ -108,7 +108,8 @@ module ot_hgi_sm_record #(
     wire [20:0] km1 = nb_q - 21'd1;
     wire [20:0] g_full = (km1 >> lw8) + 21'd1;                                       // ceil(K / 8W)
     wire [19:0] mm = b_q[87:68];
-    wire [15:0] q_full = MUT_ROWS ? {1'b0, mm[19:5]} : (mm + 20'd31) >> 5;
+    localparam integer LNSM = $clog2(NSM);                                         // NSM a power of two
+    wire [15:0] q_full = MUT_ROWS ? (mm >> LNSM) : (mm + NSM - 1) >> LNSM;           // Q = ceil(M / NSM)
     wire bad = (hdr_q[127:124] != 4'd1) || (hdr_q[123:118] != 6'd0) || !opnd[0] || !opnd[1] || !opnd[4] ||
                (b_q[1:0] != 2'd0) || (a_q[1:0] != 2'd1 && a_q[1:0] != 2'd2) || (o_q[1:0] != 2'd1 && o_q[1:0] != 2'd2) ||
                (bfmt != want) || b_q[5] || (b_q[135:120] > 16'd1) || (na_q != nb_q) || (nb_q == 21'd0) ||
@@ -176,7 +177,7 @@ module ot_hgi_sm_record #(
                     base_r <= b_q[47:8]; str_r <= b_q[119:88]; fmt_r <= pf;
                     qs <= 45'd0; lq <= 24'd0; ml <= 31'd0; dig <= 3'd5; prod_v <= 1'b0; pd_seen <= 1'b0;
                     x_v <= 1'b1; x_base <= a_q[47:8]; x_n <= na_q; x_p <= pp; x_stride <= a_q[119:88];
-                    x_space <= a_q[1:0]; x_fmt <= 2'd0;
+                    x_space <= a_q[1:0]; x_fmt <= pf;
                     pub_v <= 1'b1; pub_base <= o_q[47:8]; pub_stride <= o_q[119:88]; pub_space <= o_q[1:0]; pub_m <= mm;
                     pub_q <= q_full[12:0]; pub_p <= pp;
                     arr_seen <= 0; arr_want <= 0; st_pend <= 0; d_pend <= 0;
