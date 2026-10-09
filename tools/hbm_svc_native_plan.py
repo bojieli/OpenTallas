@@ -38,8 +38,11 @@ def plan(height=388.8):
             collector=dict(x0_um=4000, x1_um=4500, y0_um=160, y1_um=height,
                 note='provisional logic region above bank rows; mapped fit not yet qualified'),
             PC_to_collector_horizontal_hops=[math.ceil(abs(x - width / 2) / hop) for x in pc_x],
-            output_stations=[dict(port=p, segment=segments[p]['name'], line_bits=1099,
-                credit_bits=1, initial_credits=64) for p in range(8)])
+            output_stations=[dict(port=p, segment=segments[p]['name'], coded_line_bits=1153, decoded_stream_line_bits=1099,
+                service_clock_ps=1024, scorer_clock_ps=833.333,
+                forward_codec_cycles=1, landing_decode_cycles=2,
+                finite_CDC_depth=8, conservative_stream_relay_stages=24,
+                credit_bits=1, initial_credits=64, physical_qualified=False) for p in range(8)])
     return dict(schema='opentallas.hbm_svc_native_plan.v1', status='PRE_RTL_UNQUALIFIED',
         source_sha256={str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in (geometry_path, stages_path, Path(__file__))},
@@ -51,7 +54,8 @@ def plan(height=388.8):
             request_bits_per_half=request, reverse_pop_bits_per_half=reverse,
             collector_tracks_per_half=crossing, M4_M6_capacity_estimate=capacity,
             remaining_before_legacy_clock_shields=capacity-crossing,
-            line_boundary_bits=8792, credit_boundary_bits=8),
+            line_boundary_bits=9224, decoded_stream_line_bits=8792, credit_boundary_bits=8,
+            descriptor_forward_bits=109, receipt_reverse_bits=84, receipt_release_bits=2),
         implementation=dict(selected_banks='one local primary bank perPC plus selected adjacent pair sidechannel',
             identity_protection='separate K13/R6 SECDED for valid and j12; candidate not yet implemented',
             replica_mux_cost='32 local bank selectors plus two per-half pair selectors; mapped inventory pending',
