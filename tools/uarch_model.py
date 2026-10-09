@@ -14105,3 +14105,9 @@ def s81_stage_range_observer_model():
     """Reviewed0cycle transparentstage user/1Mposition bounds flag."""
     from tools.s81_ctrl.control_transport_model import stage_range_observer_model
     return stage_range_observer_model()
+
+
+def s81_prefix_shared_composition_model():
+    """Native sorted expert prefix and SECDED shared publisher into serial shared-LAST."""
+    from tools.s81_ctrl.control_transport_model import prefix_shared_composition_model
+    return prefix_shared_composition_model()

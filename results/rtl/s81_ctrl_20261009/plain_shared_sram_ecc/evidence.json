@@ -1,0 +1,12 @@
+{
+ "status":"ACTUAL_PLAIN_SHARED_SRAM_SECDED_PASS",
+ "source_commit":"5e70cd813",
+ "publisher_rtl":"f530b946e",
+ "remote":"ot-agidock128:/srv/opentallas-scratch/codex/ds-control/prefix-shared-ecc-5e70cd813",
+ "admission_gib":2,
+ "single_bit":"READ_INJECT1 corrects all80 physical SRAM returns, exact1280-value actualprefix/shared/CDC/primary chain, CE80",
+ "double_bit":"READ_INJECT3 causes actual UE at cycle291 and blocks all publisher payload; primary receives zero result frames",
+ "timing":"CE chain same5475stream/4106serialcycles as clean minimum gate, actual first output stream4835,prefixlast5455,sharedlast5275",
+ "scope":"Payload SECDED retained, plain control has no complementary guards or leases. Synthetic contribution fixture; production E3 read1 capture/write-visible fence and GU remain unbound.",
+ "physical_claim":null
+}
