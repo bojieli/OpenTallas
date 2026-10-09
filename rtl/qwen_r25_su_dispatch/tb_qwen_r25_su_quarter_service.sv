@@ -92,7 +92,8 @@ module tb_qwen_r25_su_quarter_service;
   wait(launch_rdy);@(negedge clk);launch_v=1;@(negedge clk);launch_v=0;
   if(negative==1)begin
    wait(rsp_v);repeat(8)begin @(negedge clk);if(rsp_rdy||done_v)$fatal(1,"foreign service reply consumed");end
-   warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort did not fence");
+   if(!fault)$fatal(1,"foreign reply did not fence actual quarter");
+   warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort lost fence");
    $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
   end
   for(q=0;q<queries;q=q+1)begin
