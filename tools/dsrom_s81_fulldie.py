@@ -2250,6 +2250,9 @@ STEP9 = 425.0                       # r9: closer to the 430.56 um reach (the pla
 HSTN_DOM = dict(serial_0p9='serial', stream_1p2='stream')
 SEQ_WH = (34.56, 60.48)
 STACKS = dict(layer=('SW', 'SE', 'NW', 'NE'), head=('SW', 'SE', 'NW', 'NE'), layer1=('SW',))
+HOST_SLAB = False              # host-aware generator default; initialized before direct build() calls
+HOST_MM2 = 0.10
+FRAME_OUT_RELAY = False        # direct-build callers retain the CLI default too
 HB_PITCH = (279.936, 280.8)                 # head element pitch (275.23 + halo, on the lattice)
 HB_H = 2 * HB_PITCH[1]                      # one bundle: B + glue row, then 4 A row
 HB_GLUE = (302.4, 151.2)                    # bundle glue: BST stages, lane skew, B demux, compare (RTL inside the bundle)
@@ -3410,7 +3413,9 @@ def buses_r8(m):
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
               ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
             (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
-            (MTP_SEQ_BUSES if 'mtp' in hub else ()):
+            (MTP_SEQ_BUSES if 'mtp' in hub else ()) + \
+            ((('collective', 'host', 514, 't_host', 'f_collective'),
+              ('host', 'collective', 130, 't_collective', 'f_host')) if HOST_SLAB else ()):
         if REV == 'r9':
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
         else:
