@@ -1,6 +1,6 @@
 {
   "schema": "hgi.g12.record-ports.v1",
-  "source_commit": "GH5 source commit pending",
+  "source_commit": "76bb97ff2db443ccae29fcf60d401111a08ce303",
   "module": "ot_hgi_att_record_adapter",
   "seq_tuple_ABI_bits": 1409,
   "requires_normative_header": true,
@@ -48,8 +48,20 @@
     "rowII": 1
   },
   "exact_gate": {
-    "status": "PENDING revised GH5 proof",
-    "scope": "Adapter + actual G12 leaf; ATTdone supplied by test completion driver, not full ATT arithmetic proof"
+    "host": "ot-pve1",
+    "run": "a5",
+    "cases": 18,
+    "rows": 1059089,
+    "mutants": [
+      "ring",
+      "count",
+      "fields",
+      "completion",
+      "fault"
+    ],
+    "all_mutants": "expected FATAL",
+    "max_rss_KiB": 8800,
+    "scope": "Adapter+actual G12 leaf; external ATTdone test driver, not whole ATT arithmetic proof"
   },
   "adopted": false
 }

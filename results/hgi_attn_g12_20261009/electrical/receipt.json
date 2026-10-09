@@ -1,0 +1,28 @@
+{
+  "source_commit": "187a8471c953b4ee5b0c83234719fea8fcac830e",
+  "host": "ot-agidock128",
+  "method": "Read-only final routed ODB/SPEF with original post SDC; report_check_types -max_slew -max_capacitance -max_fanout -violators; actual OpenDB CLOCK net INPUT iterm count",
+  "admitted_GiB": 3,
+  "variants": {
+    "120": {
+      "TT_electrical_violations": 0,
+      "FF_electrical_violations": 0,
+      "max_clock_net_inputs": 16,
+      "max_all_net_inputs": 32,
+      "clock_nets": 32
+    },
+    "140": {
+      "TT_electrical_violations": 0,
+      "FF_electrical_violations": 0,
+      "max_clock_net_inputs": 15,
+      "max_all_net_inputs": 32,
+      "clock_nets": 29
+    }
+  },
+  "logs_sha256": {
+    "140_ff.log": "c4f737fb332778a717329dce034e059e75abb0be39b39a052fb693bab9186d0e",
+    "120_tt.log": "81d87773cb40a59919c1df66025fa83dbf4cc60d6e33ecae6a20f0528ec740ab",
+    "120_ff.log": "be7bae4f6dcaf20f69368a7d17398aebf1bf7977825a6efb04d251061034e102",
+    "140_tt.log": "c93d9949ab878baab304d39fae2cde41b925bce29986c0d9e15416c644477934"
+  }
+}
