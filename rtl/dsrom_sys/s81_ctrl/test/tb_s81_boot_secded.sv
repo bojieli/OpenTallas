@@ -112,7 +112,7 @@ module tb_s81_boot_secded;
         for (k = 0; k < 576; k = k + 1) begin            // every single-bit position of row 7
             @(negedge ck); inj_v = 1; inj_a = 7; inj_m = 576'd1 << k;
             @(negedge ck); inj_v = 0; s_re = 1; s_ra = 7;
-            @(negedge ck); s_re = 0; @(posedge ck); @(posedge ck); #0.1;
+            @(negedge ck); s_re = 0; @(posedge ck); #0.1;
             if (!s_rv || s_rd != {16{32'(7 * 2654435761)}} || !s_ce || s_ue) sram_err = sram_err + 1; else sram_ce = sram_ce + 1;
             @(negedge ck); inj_v = 1; inj_a = 7; inj_m = 576'd1 << k;          // restore
             @(negedge ck); inj_v = 0;
@@ -120,14 +120,14 @@ module tb_s81_boot_secded;
         for (j = 0; j < 72; j = j + 1) for (k = j + 1; k < 72; k = k + 1) begin   // every double-bit pair of word 0, row 9
             @(negedge ck); inj_v = 1; inj_a = 9; inj_m = (576'd1 << j) | (576'd1 << k);
             @(negedge ck); inj_v = 0; s_re = 1; s_ra = 9;
-            @(negedge ck); s_re = 0; @(posedge ck); @(posedge ck); #0.1;
+            @(negedge ck); s_re = 0; @(posedge ck); #0.1;
             if (!s_rv || !s_ue) sram_err = sram_err + 1; else sram_ue = sram_ue + 1;
             @(negedge ck); inj_v = 1; inj_a = 9; inj_m = (576'd1 << j) | (576'd1 << k);
             @(negedge ck); inj_v = 0;
         end
         for (i = 0; i < 64; i = i + 1) begin            // clean rows
             @(negedge ck); s_re = 1; s_ra = i;
-            @(negedge ck); s_re = 0; @(posedge ck); @(posedge ck); #0.1;
+            @(negedge ck); s_re = 0; @(posedge ck); #0.1;
             if (s_rd != {16{32'(i * 2654435761)}} || s_ce || s_ue) sram_err = sram_err + 1;
         end
         begin : verdict
