@@ -242,14 +242,22 @@
     "original_srpd45/3_3_place_gp.log": "d4d48e854b627f5f3efb36828c8c8701ef4f665a875a5261cd3c5f216cbff874",
     "original_srpd45/config.mk": "3fb15e2670d9b203a802b59f43e96632e7588e5169e4a579cee24dcca8beb940",
     "original_srpd45/run.log": "d53c678a977c364ed16bb6948447a946de34244267585331f863331811e31401",
-    "original_srpd45/3_5_place_dp.log": "6dd016363b0776008bf4070cc2a13276307fb7adc5ef6da6ec55e397deb56c5a"
+    "original_srpd45/3_5_place_dp.log": "6dd016363b0776008bf4070cc2a13276307fb7adc5ef6da6ec55e397deb56c5a",
+    "sr-halo-positive.log": "9e3adbe6933a1653b4b9efde9b846a1beb2d318f06a7f94c0efd926b53e37756",
+    "sr-halo-wrongmaster.log": "aad995273e301d960e8b19c1f227f569770604ee37a0ea4dae61079f2840c9e3",
+    "sr-halo-gate.log": "37472e9c886572dc413367360fe4bcaa66384d47863ca4541b747a65383a65d6",
+    "hy-intake-r2.json": "8b09783e1f73fcbe64fd0aadbcd17cdad6f0a876782a31ccfec46d875d2de134",
+    "hy-r1-withdrawal.json": "27d286f5548ac5a1aaaac566b92cce3e57733d97737eff3227be78741addf3f0"
   },
   "findings": [
     "SR55/SR45 identical effectiveGPLdensity0.2025 then0.233346 becausePLACE_DENSITY_LB_ADDON0.05 overridesPD; PDalone not a newexperiment",
     "HY18edgespacing/1padding RX6 adjacentBUFF12 alignedto54x270DBUsite within8um intermacrochannel",
     "actual48 RXSRAMs each94824x41040DBU; one macro has925M4pinshapes; no relabeling historicalmasterdimensions",
     "read-onlyqueryr1 failed absentPATHbinary, preserved; r2PASS3405936KBpeak",
-    "actualfull48blockagehookpositivePASS andwrongmasternegativeFAIL; no originalODBwrite"
+    "actualfull48blockagehookpositivePASS andwrongmasternegativeFAIL; no originalODBwrite",
+    "SR own failed165-macro ODB: 48 RX hard-halo positive PASS, wrong-master negative FAIL; actual query maximum3097732KiB",
+    "SR5006 listed edge-spacing instances span RX_RING141/RX_DELAY652/DELIVERY_DELAY130/FACE_INPUT751/FACE_OUTPUT1387/OTHER1945; ring-only correction not sufficient causal explanation; no SR requeue yet",
+    "HY initial watched r1 safely withdrawn before compute; actual nested NEED corrected32/98 and r2 atomically registered12:26:49Z; original receipt preserved"
   ],
   "measured_prior_stage_peak_KB": {
     "HY": 25528524,
@@ -258,6 +266,11 @@
   "initial_admission_GiB": 32,
   "admission_basis": "conservative phase-derived above completed24.35/22.6GiB; not measured futureCTS/DRT claim",
   "remaining_phase_peak": "UNKNOWN, fleet monitor and claims required",
-  "route_status": "NOT_SUBMITTED rootconfigreviewbeforeonewatchedcorrectedjob",
-  "physical_qualified": false
+  "route_status": "REGISTERED_R2_CANONICAL_PENDING",
+  "physical_qualified": false,
+  "job_name": "hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine-r2",
+  "job_source": "e0c39fc90",
+  "job_config_commit": "4ac53e1e9",
+  "route_admission_GiB": 98,
+  "route_admission_basis": "Owner-approved ceil(4*25528524 KiB/1048576), conservative phase-derived estimate; DRT unmeasured; no hard process cap"
 }
