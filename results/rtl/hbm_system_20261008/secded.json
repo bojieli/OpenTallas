@@ -1,0 +1,4 @@
+{"schema": "opentallas.hbm_system.secded.v1", "rtl": "rtl/common/ot_secded.sv (+ ot_secded_cols.svh)", "bench": "rtl/test/tb_ot_secded.sv (Icarus)",
+ "K_R": [[32,7],[64,8],[128,9],[256,10]], "positive": "SECDED_BENCH checks=6126 errors=0 PASS (0/1/2 flips, every single flip incl. check bits, random doubles, K=32 every double flip of 2 words)",
+ "negative_mut1_wrong_column": "SECDED_BENCH checks=6126 errors=1855 FAIL", "verdict": "PASS",
+ "input_sha256": {"rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18", "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0", "rtl/test/tb_ot_secded.sv": "c5a5f3a7666fe34e5c0f37f53c3e8dedef36468c4646103e22072e19ac8c2dcf"}}
