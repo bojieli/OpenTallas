@@ -1,5 +1,5 @@
 `timescale 1ps/1fs
-module tb_hfd_mtp_x_stop #(parameter KIND=0);
+module tb_hfd_mtp_x_stop #(parameter KIND=0,RESET_FIRST=0);
  reg clk=0;always #417 clk=~clk;
  reg rst_n=0,start=0,e_ready=0;wire [19:0] p_addr,e_idx;wire [22:0] f_addr;
  wire e_v,done,cmd_v;wire [16:0] e_tok;wire [3:0] cmd_op,cmd_ncol;
@@ -16,10 +16,13 @@ module tb_hfd_mtp_x_stop #(parameter KIND=0);
  .sr_v(1'b0),.sr_kind(4'd0),.sr_idx(16'd0),.sr_pos(32'd0),.n_committed(n),
  .x_v(1'b0),.x_draft(1'b0),.x_ids(54'd0),.x_col(3'd0),
  .u_clr(1'b0),.u_flush(1'b0),.u_ready(1'b1),.step_a(step_a),.steps(steps));
+ integer phase=0;
  integer seen=0,eng_state=0,row=0,rows=0,headpass=0,cycles=0,cmds=0,beat=0,target=0;
  reg [16:0] held_tok;reg [19:0] held_idx;reg held=0;integer stall=0;
  always @(posedge clk) begin
   eng_done<=0;lg_v<=0;lg_last<=0;cycles=cycles+1;
+  if(!rst_n) begin seen=0;eng_state=0;row=0;rows=0;headpass=0;cmds=0;beat=0;held<=0;stall=0;e_ready<=0;end
+  else begin
   if(e_v && !e_ready) begin
    if(held && (e_tok!==held_tok || e_idx!==held_idx))$fatal(1,"native stalled output changed");held_tok<=e_tok;held_idx<=e_idx;held<=1;
   end else held<=0;
@@ -39,11 +42,20 @@ module tb_hfd_mtp_x_stop #(parameter KIND=0);
     else beat=beat+1;
    end else begin eng_done<=1;eng_state=0;end
   end else if(eng_state==2) begin eng_done<=1;eng_state=0;end
-  if(seen==1 && stall<50) begin e_ready<=0;stall=stall+1;end else e_ready<=1;
+  if(RESET_FIRST && phase==0) e_ready<=0;
+  else if(seen==1 && stall<50) begin e_ready<=0;stall=stall+1;end else e_ready<=1;
+  end
  end
  initial begin
   repeat(7) @(negedge clk);rst_n=1;repeat(5) @(negedge clk);
   start=1;@(negedge clk);start=0;
+  if(RESET_FIRST) begin
+   wait(e_v);repeat(3) @(negedge clk);rst_n=0;
+   repeat(4) @(negedge clk);
+   if(e_v || cmd_v || done || n!=0)$fatal(1,"reset retained stale native transaction");
+   phase=1;rst_n=1;repeat(5) @(negedge clk);
+   start=1;@(negedge clk);start=0;
+  end
   wait(done);repeat(7) @(negedge clk);
   if(seen!=4 || n!=5 || step_a!=2 || steps!=1 || stop_status!=(KIND==0?1:(KIND==1?2:3)))$fatal(1,"native effective-prefix state");
   $display("PASS actualnativeMTP KIND=%0d tokens=%0d n=%0d cmds=%0d cycles=%0d",KIND,seen,n,cmds,cycles);$finish;
