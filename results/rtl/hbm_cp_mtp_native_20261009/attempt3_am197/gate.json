@@ -1,0 +1,42 @@
+{
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "actual",
+      "verdict": "PASS",
+      "returncode": 0
+    },
+    {
+      "name": "epoch_pin_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    },
+    {
+      "name": "constant_ready_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    },
+    {
+      "name": "AM_token16_mutant",
+      "verdict": "MUTANT_REJECTED",
+      "returncode": 1
+    }
+  ],
+  "native_CP_to_MTP_bits": 197,
+  "source_sha256": {
+    "physical/hbm_cp_mtp_native/rtl/hfd_cmdproc_s_mtp_native_am.sv": "33516600db4ccaae4890e981318301e2aa51835402486279131c174106ec221e",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join.sv": "330310c3e3c156d42fe1e45d3f8f61c0d529353fb8da7ce8b9c9690b2b0a4c6b",
+    "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue.sv": "8bd0c43ff9979b82450531680d9def80edc1eb1645a1cbd6bf0291d3b1aa2279",
+    "physical/hbm_accel_die_views/cmdproc/rtl/hfd_cmdproc_s.sv": "cdb3620d0c49c2e4879c4e3dff52a0c33485fbf4a14367406795867844a9be18",
+    "physical/hbm_accel_die_views/cmdproc/rtl/ot_hfd_cmdproc20_m.sv": "4369463ede4f68713baabd03cc9f61d154b2396095bc6a6856f9cf419787e7f6",
+    "physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv": "c809d974d76ccc2cbe608a23d2f65ff40410726a80d8168298ac3b6c5401d160",
+    "physical/asap7_memory_macros/ot_sram_2rw_512x64_m4_r2c2/ot_sram_2rw_512x64_m4_r2c2.v": "76226bc1260ea5311e0c9ca2626f1f6b1ce1d5512753cc77b07b550253407664",
+    "rtl/common/ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+    "physical/hbm_cp_mtp_native/rtl/tb_hfd_cmdproc_s_mtp_native_am.sv": "465456c9873baf48b2f300aced58622ec49a46c1e57b93483e95df0f60eafba2"
+  },
+  "actual_facade_RTL": true,
+  "actual_native_MTP_controller": false,
+  "backend_operation_translator_bound": false,
+  "physical_qualification": false,
+  "full_decode_executable": false
+}

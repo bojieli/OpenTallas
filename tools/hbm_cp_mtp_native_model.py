@@ -7,9 +7,9 @@ and provider state must be priced from their source before elaboration/P&R.
 import argparse,json
 from pathlib import Path
 
-def model():
+def model(am=False):
     w,h=1399.656,701.976
-    return dict(schema='opentallas.hbm.cp-mtp-native-south.v1',default_enabled=False,adopted=False,
+    result=dict(schema='opentallas.hbm.cp-mtp-native-south.v1',default_enabled=False,adopted=False,
         source_contract='f49a3d30f',MTP_facade_source='f90d728da',master='hfd_cmdproc_s_mtp_native',
         replaced_master='hfd_cmdproc_s',north_master_unchanged='hfd_cmdproc_n',
         macs_per_cycle=0,compute_intensity=0,communication_intensity='control/command/emitted-token traffic',
@@ -30,7 +30,19 @@ def model():
         missing_before_adoption=['actual operation descriptor translator','mutable join state protection','real finite provider and tagged completion bindings','source-owned collar/pin context closure'],
         precision=dict(MTP_token_bits=17,Qwen18_supported=False,policy='native DS MTP contract only; no implicit narrowing'),
         physical_qualification=False,headline_rate=None)
+    if am:
+        result['master']='hfd_cmdproc_s_mtp_native_am'
+        result['MTP_facade_source']='native CP STOP197 grouped facade must bind source08e4b1bf7; separate from frozen179'
+        result['native_controller_source']='08e4b1bf7'
+        result['native_controller_master']='hfd_mtp_x_cp_stop'
+        result['boundary_bits_per_cycle'].update(t_mtp=197,f_am=18)
+        result['routing'].update(interface_tracks=714,extra_transaction_endpoint_tracks=978,total_new_interface_span_um=1692*.192)
+        result['area']['checked_join_source']='a9f866a26'
+        result['latency']['native_MTP_AM_pin_capture_cycles']=1
+        result['AM_identity']='actual backend captured job/gen/sequence/epoch remains stable through CPRESULT winners and final completion'
+        result['AM_order']='up to six ordered VHEAD winners precede final completion; no delayed/fabricated LG stream'
+    return result
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);a=p.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(model(),indent=2)+'\n')
+    p=argparse.ArgumentParser();p.add_argument('--out',required=True,type=Path);p.add_argument('--am',action='store_true');a=p.parse_args();a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(model(a.am),indent=2)+'\n')
 if __name__=='__main__':main()
