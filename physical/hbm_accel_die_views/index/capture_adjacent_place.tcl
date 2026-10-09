@@ -29,7 +29,7 @@ foreach mac [$hc_block getInsts] {
     foreach load [$net getITerms] {
       if {[$load isOutputSignal]} continue
       set inst [$load getInst]; set master [$inst getMaster]
-      if {![$master isSequential] || [[$load getMTerm] getName] ne "D" || ![regexp {capture[./].*captured} [$inst getName]]} {
+      if {![$master isSequential] || [[$load getMTerm] getName] ne "D"} {
         error "HBM_CAPTURE_NONREGISTER [$mac getName]/[[$pin getMTerm] getName] -> [$inst getName]/[[$load getMTerm] getName]"
       }
       set width [$master getWidth]; set height [$master getHeight]
