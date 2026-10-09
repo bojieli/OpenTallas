@@ -497,7 +497,7 @@ function renderCard(c){
   H.push(`<div class="sec"><h3>Where it sits</h3>${pl || '<p class="note">Not placed on an exported die map: a sub-block hardened inside a die master, or not used by the current dies.</p>'}</div>`);
   if (sel && g && sel.insts.length){
     const ids = sel.insts.slice(0, 14);
-    H.push(`<div class="sec"><h3>Instances on this die (${fmt(sel.insts.length, 0)})</h3><table class="t"><thead><tr><th>instance</th><th class="n">x µm</th><th class="n">y µm</th><th>region</th></tr></thead><tbody>${ids.map(i =>
+    H.push(`<div class="sec"><h3>Instances on this die (${fmt(sel.insts.length, 0)})</h3><table class="t"><thead><tr><th>instance</th><th class="n">x <span class="u">(µm)</span></th><th class="n">y <span class="u">(µm)</span></th><th>region</th></tr></thead><tbody>${ids.map(i =>
       `<tr class="cl" data-inst="${i}"><td class="m">${esc(SAFE ? '#' + i : g.names[i])}</td><td class="n">${fmt(g.x[i], 1)}</td><td class="n">${fmt(g.y[i], 1)}</td><td class="m">${esc((g.rec.regions_names || [])[g.r[i]] || '')}</td></tr>`).join('')}</tbody></table>${sel.insts.length > ids.length ? `<p class="note">and ${fmt(sel.insts.length - ids.length, 0)} more, all highlighted on the map.</p>` : ''}</div>`);
     // physical
     const m0 = g.masters[sel.masters[0]]; const i0 = sel.insts[0];
