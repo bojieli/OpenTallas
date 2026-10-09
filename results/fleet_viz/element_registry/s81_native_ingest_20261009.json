@@ -7,14 +7,14 @@
       "owner": "ingest",
       "description": "Actual341-bit perPC controller client arbitration, protected queues and true source-owned completion",
       "source": {
-        "commit": "2f179fc18",
+        "commit": "74948ef0d",
         "paths": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv",
           "tools/s81_native_ingest_model.py"
         ]
       },
       "implementation": {
-        "status": "implemented default off; remote elaboration pending",
+        "status": "implemented defaultoff; minimumcomponent elaborated remotely",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv"
         ]
@@ -27,12 +27,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending remote admitted gate",
-          "evidence": []
+          "status": "PASS minimumcomponent",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/pc_component/result.json"
+          ]
         },
         "negative": {
-          "status": "pending remote admitted gate",
-          "evidence": []
+          "status": "PASS requiredfault/mutantdetected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/pc_component/result.json"
+          ]
         }
       },
       "physical": {
@@ -57,13 +61,13 @@
       "owner": "ingest",
       "description": "Actual host ABI with source-owned physical visibility fence, finite protected completion/credit state",
       "source": {
-        "commit": "3ba34f388",
+        "commit": "71062a5da",
         "paths": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv"
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; remote elaboration pending",
+        "status": "implemented defaultoff; minimumcomponent elaborated remotely",
         "evidence": [
           "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv"
         ]
@@ -76,12 +80,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending admitted remote componentgate",
-          "evidence": []
+          "status": "PASS minimumcomponent",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/visibility_component/result.json"
+          ]
         },
         "negative": {
-          "status": "pending admitted remote componentgate",
-          "evidence": []
+          "status": "PASS requiredfault/mutantdetected",
+          "evidence": [
+            "results/rtl/s81_native_ingest_20261009/visibility_component/result.json"
+          ]
         }
       },
       "physical": {

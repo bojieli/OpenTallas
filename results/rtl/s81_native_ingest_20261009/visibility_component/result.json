@@ -1,0 +1,16 @@
+{
+  "schema": "opentallas.s81-native-component.v1",
+  "source_pin": "71062a5da",
+  "host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/codex/s81-visibility-71062a5da",
+  "pass": true,
+  "input_sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "95aa1cdbdb015fbfe3e07419ce0991dd50c2c25331d7af34773a4013735cd65f",
+    "rtl/test/s81_native_ingest/tb_s81_ingest_visibility.sv": "0f261ecd5b009fdce0660dfc3f40acf80195c48df81cd0bb85531cb7bc340b46"
+  },
+  "scope": "One fullshape minimum component, fourcredit queues SECDED/ownership and truewritevisibility respectively; not full host stream, controller PHY, region inventory or physical closure",
+  "verdicts": {
+    "positive": "PASS",
+    "negative": "expected FAIL detected"
+  }
+}
