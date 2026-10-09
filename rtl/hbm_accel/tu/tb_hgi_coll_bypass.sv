@@ -8,10 +8,10 @@
 // then accept a second collective (REARM) with a different pf.
 //   +GN=1|2|4|8|96 +RANK=r +PF=p +SEED=s   (GN = 96: mcast_all outer group)
 module tb_hgi_coll_bypass;
-    parameter integer MUT_MULTI = 0;
+    parameter integer MUT_MULTI = 0, MUT_TIE = 0;
     localparam integer NC = 8, NOG = 12, PFMAX = 64, LANES = 16, NPT = 8, INJ = 2, DEL = 4, RXAW = 8;
     localparam integer FW = 32 * LANES, PWT = FW + 33, NR = NOG * NC;
-    integer gn, rank, pf, pf2, seed, base, lat, dupe, peer, die;
+    integer gn, rank, pf, pf2, seed, base, lat, dupe, peer, die, amx = 0; reg [31:0] exp_tok;
     reg [FW-1:0] part [0:NR*PFMAX-1];
     reg clk = 0, rst_n = 0, go = 0, done_ready = 0;
     always #0.4166665 clk = ~clk;
@@ -36,7 +36,7 @@ module tb_hgi_coll_bypass;
             if (multi != 0 && ir[i] && ii[16*i +: 16] == 2) injq[((2 + 1) % 4) * INJ * FW + i * FW +: FW] = {16{32'h1}};
         end
     end
-    ot_hgi_coll_ep #(.MUT_MULTI(MUT_MULTI)) dut (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
+    ot_hgi_coll_ep #(.MUT_MULTI(MUT_MULTI), .MUT_TIE(MUT_TIE)) dut (.clk(clk), .rst_n(rst_n), .pclk(clk), .prst_n(rst_n), .rank(8'd0), .pf(16'd0), .go(1'b0),
         .inj_idx(ii), .inj_rd(ir), .inj_q(injq), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
         .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt), .stat_credit_stall(cst),
         .hgi_rec(rec), .hgi_ret(ret), .hgi_cfg(cfgb), .hgi_rowfmt_o(rfo), .hgi_rowfmt_i(3'b000), .hgi_vmaddr(vma));
@@ -118,13 +118,47 @@ module tb_hgi_coll_bypass;
     always @(posedge clk) if (rst_n) for (integer l = 0; l < DEL; l = l + 1) if (dv[l]) begin : chk
         reg [PWT-1:0] f; integer gi, q, m;
         f = dfl[l*PWT +: PWT]; gi = integer'(f[FW +: 16]); q = base + gi / pf; m = gi % pf;
+        if (amx != 0) begin
+            if (gi != 0 || f[FW-1:0] !== {{(FW-32){1'b0}}, exp_tok}) begin mism = mism + 1; $display("AMX_MISMATCH tok=%0d want=%0d", f[31:0], exp_tok); end
+            got = got + 1;
+        end else begin
         if (gi >= gn * pf || seen[gi] || integer'(f[FW+16 +: 8]) != q || f[FW-1:0] !== part[q * PFMAX + m]) begin
             mism = mism + 1; if (mism < 8) $display("BYP_MISMATCH gi=%0d src=%0d q=%0d", gi, f[FW+16 +: 8], q);
         end
         if (gi < NR * PFMAX) seen[gi] = 1;
         got = got + 1;
+        end
     end
 
+    // ARGMAX_MERGE reference (independent of the RTL: real compares, NaN by bit pattern): larger value, NaN last,
+    // equal values (or two NaNs) -> the lower id
+    function automatic isnan(input [31:0] v); isnan = v[30:23] == 8'hFF && v[22:0] != 0; endfunction
+    // FP32 bits -> real (normals, zeros, infinities: the values this bench uses)
+    function automatic real f2r(input [31:0] v);
+        reg [63:0] d;
+        begin
+            if (v[30:0] == 0) d = {v[31], 63'd0};
+            else if (v[30:23] == 8'hFF) d = {v[31], 11'h7FF, 52'd0};
+            else d = {v[31], 11'(v[30:23]) + 11'd896, v[22:0], 29'd0};
+            f2r = $bitstoreal(d);
+        end
+    endfunction
+    function automatic [31:0] amx_ref(input integer b, input integer n);
+        reg [31:0] bv, bi, v, i; reg take;
+        begin
+            bv = part[b * PFMAX][31:0]; bi = part[b * PFMAX][63:32];
+            for (integer q = b + 1; q < b + n; q = q + 1) begin
+                v = part[q * PFMAX][31:0]; i = part[q * PFMAX][63:32];
+                if (isnan(v) != isnan(bv)) take = isnan(bv);
+                else if (isnan(v)) take = i < bi;
+                else if (f2r(v) > f2r(bv)) take = 1;
+                else if (f2r(v) == f2r(bv)) take = i < bi;
+                else take = 0;
+                if (take) begin bv = v; bi = i; end
+            end
+            amx_ref = bi;
+        end
+    endfunction
     task run(input integer p_);
         integer t;
         begin
@@ -132,6 +166,9 @@ module tb_hgi_coll_bypass;
             @(negedge clk); while (!start_ready) @(negedge clk);
 `ifdef BYP_REC
             begin reg [127:0] h; h = 0; h[127:124] = 4'd6; h[123:118] = 6'd1; h[99:93] = 7'b0010001;
+                if (amx != 0) begin h[123:118] = 6'd3;
+                    rec = {8'(die), 21'd0, 21'd1, 21'd2, 256'd0, md(3'd6, 40'h2000, 20'd1), md(3'd0, 40'h1000, 20'd2), h, 1'b1}; end
+                else
                 rec = {8'(die), 21'd0, 21'(pf * 16), 21'(pf * 16), 256'd0, md(3'd0, 40'h2000, 20'(pf * 16)),
                        md(3'd0, 40'h1000, 20'(pf * 16)), h, 1'b1}; end
             @(negedge clk); rec[0] = 0;
@@ -157,6 +194,10 @@ module tb_hgi_coll_bypass;
             if (flt) $fatal(1, "BYP_FAULT gn=%0d rank=%0d pf=%0d got=%0d", gn, rank, pf, got);
             if (!done_valid) $fatal(1, "BYP_NO_DONE gn=%0d rank=%0d pf=%0d got=%0d of %0d ndep=%0d", gn, rank, pf, got, gn * pf, ndep);
             repeat (30) @(negedge clk);   // nothing may arrive after done
+            if (amx != 0) begin
+                if (got != 1 || mism != 0 || ndep != 1) $fatal(1, "AMX_COUNT got=%0d mism=%0d ndep=%0d", got, mism, ndep);
+                $display("PASS HGI_COLL_ARGMAX_MERGE gn=%0d rank=%0d token=%0d", gn, rank, exp_tok); $finish;
+            end
             if (got != gn * pf || mism != 0 || ndep != pf)
                 $fatal(1, "BYP_COUNT got=%0d want=%0d mism=%0d ndep=%0d", got, gn * pf, mism, ndep);
             $display("BYP_RUN gn=%0d rank=%0d base=%0d pf=%0d delivered=%0d cycles=%0d", gn, rank, base, pf, got, t);
@@ -176,12 +217,29 @@ module tb_hgi_coll_bypass;
         if (!$value$plusargs("DUPE=%d", dupe)) dupe = 0;
 `ifdef BYP_REC
         if (!$value$plusargs("MULTI=%d", multi)) multi = 0;
+        if (!$value$plusargs("AMX=%d", amx)) amx = 0;
 `endif
         base = (gn == 96) ? 0 : (rank / gn) * gn;
         peer = (rank == base) ? base + 1 : base;
         for (integer i = 0; i < NR * PFMAX; i = i + 1)
             for (integer w = 0; w < LANES; w = w + 1)
                 part[i][32*w +: 32] = ((i + w) % 3 == 0) ? special(i * 7 + w + seed) : $random(seed);
+        if (amx != 0) begin   // one flit a rank: {value, id}; ties, -0 / +0, NaNs, infinities; ids NOT in rank order
+            for (integer q = 0; q < NR; q = q + 1) begin
+                part[q * PFMAX] = 0;
+                case ((q + seed) % 7)
+                    0, 1: part[q * PFMAX][31:0] = 32'h40A00000;   // 5.0 (tie)
+                    2: part[q * PFMAX][31:0] = 32'h7FC00001;      // NaN
+                    3: part[q * PFMAX][31:0] = 32'h80000000;      // -0
+                    4: part[q * PFMAX][31:0] = 32'h00000000;      // +0
+                    5: part[q * PFMAX][31:0] = (seed % 2) ? 32'h7F800000 : 32'h3F800000;   // +inf or 1.0
+                    default: part[q * PFMAX][31:0] = 32'hFF800000; // -inf
+                endcase
+                part[q * PFMAX][63:32] = (NR - q) * 1000 + 7;
+            end
+            pf2 = 1;
+            exp_tok = amx_ref(base, gn);
+        end
         pf_in = 0;
         repeat (4) @(negedge clk); rst_n = 1; repeat (4) @(negedge clk);
 `ifdef BYP_REC

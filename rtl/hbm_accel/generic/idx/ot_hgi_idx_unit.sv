@@ -9,24 +9,39 @@
 //         cache; ids go to O (VM U32), values to R (VM FP32) when R is present.  param[12] order = 1 (legal for k <= 8,
 //         HGI-1 G15): the row's k results are emitted in ascending id order (a k <= 8 selection sort), values with
 //         their ids.  order = 1 with k > 8, or a non-VM / wrong-format operand: E_RANGE -> record fault.
-//   ops 0, 1, 3 (INDEX_Q, INDEX_SCORES, SELECT) and 4 (EHASH): NOT bound in v1 -> record fault (fail-closed).  The DS
-//         native selector frame needs one frame record (spec amendment proposed: review_queue/hgi-die-gaps.md G18).
+//   op 0  IDX.INDEX (spec G18): one DS native selector frame through ot_hgi_idx_index (fs / qb / kin out, to / co in;
+//         the selector hfd_idx_sel_native_qend and its four stack scorers are separate die blocks).
+//   ops 1, 3 reserved and 4 (EHASH, not bound here): record fault (fail-closed).
 // Return {fault, done, ready}: ready = no record in flight.
 module ot_hgi_idx_unit #(
     parameter integer MUT = 0           // bench mutants: 1 ascending sort compares scores instead of ids
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [1236:0] rec,
+    input  wire [1818:0] rec,           // {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     output reg  [2:0]    ret,
-    output reg  [337:0]  vmq,
-    input  wire [273:0]  vmr
+    output wire [337:0]  vmq,
+    input  wire [273:0]  vmr,
+    // native selector (IDX.INDEX)
+    output wire [89:0]   sel_fs,
+    output wire [1047:0] sel_qb,
+    input  wire          sel_qbr,
+    output wire [344:0]  sel_kin,
+    input  wire [611:0]  sel_to,
+    output wire          sel_toc,
+    input  wire [71:0]   sel_co,
+    output wire          sel_coc,
+    input  wire [1:0]    sel_ev
 );
+    reg [337:0] vmq_t;
+    wire [337:0] vmq_x;
+    reg x_active;
+    assign vmq = x_active ? vmq_x : vmq_t;
     // ---------------------------------------------------------------- record station
     reg busy, started, eng_done, eng_err;
     reg [31:0] w_sc;
     reg [11:0] o_k;                      // output index within the row (descending order)
-    reg [127:0] hdr; reg [255:0] dA, dO, dR;
+    reg [127:0] hdr; reg [255:0] dA, dB, dC, dD, dO, dR; reg [19:0] rpos; reg [7:0] rdie;
     wire [5:0]  op    = hdr[123:118];
     wire [6:0]  opnd  = hdr[99:93];
     wire [11:0] k     = hdr[75:64];
@@ -50,6 +65,21 @@ module ot_hgi_idx_unit #(
         .in_valid(e_in_v), .in_ready(e_in_r), .in_score(e_in),
         .out_valid(e_out_v), .out_ready(e_out_r), .out_id(e_id), .out_score(e_sc), .out_row(e_row),
         .out_last(e_last), .out_values_valid(e_vv), .done(e_done), .error(e_err));
+    // ---------------------------------------------------------------- IDX.INDEX frame adapter (op 0)
+    reg x_go; wire x_done, x_fault;
+    wire [17:0] dB_b = dB[25:8], dC_b = dC[25:8], dD_b = dD[25:8], dD_s = dD[105:88];
+    // legal: A VM FP32 n*m = 4,096, B VM FP32 >= 32, C VM U32 (keep_en), O VM U32, R VM FP32 (optional), D VM (cand_en)
+    wire x_keep = hdr[77], x_cand = hdr[76];
+    wire x_legal = opnd[0] && opnd[1] && opnd[4] && dA[1:0] == 2'd1 && dA[4:2] == 3'd0 && a_n * a_m == 20'd4096 &&
+                   dB[1:0] == 2'd1 && dB[4:2] == 3'd0 && dO[1:0] == 2'd1 && dO[4:2] == 3'd5 &&
+                   (!has_r || (dR[1:0] == 2'd1 && dR[4:2] == 3'd0)) && (!x_keep || (opnd[2] && dC[1:0] == 2'd1)) &&
+                   (!x_cand || (opnd[3] && dD[1:0] == 2'd1)) && hdr[88:78] == 11'd0;
+    ot_hgi_idx_index #(.MUT(MUT >= 2 ? MUT - 1 : 0)) u_index (.clk(clk), .rst_n(rst_n), .go(x_go), .k(k), .cand_en(x_cand),
+        .keep_en(x_keep), .n(hdr[63:32]), .rank(rdie >= 8'd192 ? 7'(rdie - 8'd192) : rdie >= 8'd96 ? 7'(rdie - 8'd96) : rdie[6:0]),
+        .pos(rpos), .a_base(a_base[17:0]), .b_base(dB_b), .c_base(dC_b), .o_base(o_base[17:0]), .r_base(r_base[17:0]),
+        .d_base(dD_b), .d_stride(dD_s), .has_r(has_r), .done(x_done), .fault(x_fault),
+        .vmq(vmq_x), .vmr(x_active ? vmr : 274'd0), .fs(sel_fs), .qb(sel_qb), .qbr(sel_qbr), .kin(sel_kin), .to(sel_to),
+        .toc(sel_toc), .co(sel_co), .coc(sel_coc), .ev(sel_ev));
     // ---------------------------------------------------------------- output buffer (order = 1: k <= 8 ascending ids)
     reg [31:0] b_id [0:7]; reg [31:0] b_sc [0:7]; reg [7:0] b_v; reg [3:0] b_n; reg [31:0] b_row; reg b_full;
     // write queue entry being written: {is_r, word address, data}
@@ -73,20 +103,22 @@ module ot_hgi_idx_unit #(
     wire [39:0] rw_now = a_base + r_row * a_str + r_col * a_is;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq <= 338'd0; vm_pend <= 1'b0;
+            busy <= 1'b0; ret <= 3'b001; e_cmd_v <= 1'b0; e_in_v <= 1'b0; vmq_t <= 338'd0; vm_pend <= 1'b0; x_go <= 1'b0; x_active <= 1'b0;
             b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; w_v <= 1'b0; c_ok <= 1'b0; r_done <= 1'b1;
             started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0; w_cnt <= 32'd0;
         end else begin
-            ret[2:1] <= 2'b00; vmq[337] <= 1'b0;
+            ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0;
             if (e_cmd_v && e_cmd_r) e_cmd_v <= 1'b0;
             if (e_in_v && e_in_r) e_in_v <= 1'b0;
             // record intake
             if (!busy && rec[0]) begin
-                hdr <= rec[128:1]; dA <= rec[384:129]; dO <= rec[896:641]; dR <= rec[1152:897];
+                hdr <= rec[128:1]; dA <= rec[384:129]; dB <= rec[640:385]; dC <= rec[896:641]; dD <= rec[1152:897];
+                dO <= rec[1408:1153]; dR <= rec[1664:1409]; rpos <= rec[1810:1791]; rdie <= rec[1818:1811];
                 busy <= 1'b1; ret[0] <= 1'b0; e_cmd_v <= 1'b0; r_row <= 20'd0; r_col <= 20'd0; r_done <= 1'b0;
                 c_ok <= 1'b0; w_cnt <= 32'd0; b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; o_k <= 12'd0;
             end else if (busy && !e_cmd_v && r_row == 20'd0 && r_col == 20'd0 && !r_done && !e_in_v && !vm_pend && w_cnt == 32'd0 && !started) begin
-                if (!legal) begin busy <= 1'b0; ret <= 3'b101; r_done <= 1'b1; end
+                if (op == 6'd0 && x_legal) begin x_go <= 1'b1; x_active <= 1'b1; started <= 1'b1; r_done <= 1'b1; end
+                else if (!legal) begin busy <= 1'b0; ret <= 3'b101; r_done <= 1'b1; end
                 else begin e_cmd_v <= 1'b1; started <= 1'b1; end
             end
             // reader: next word of A into the engine
@@ -99,7 +131,7 @@ module ot_hgi_idx_unit #(
                     end else r_col <= r_col + 20'd1;
                 end else if (!vm_pend && !w_v) begin
                     vm_pend <= 1'b1; vm_rd <= 1'b1;
-                    vmq <= {1'b1, 1'b0, {12'd0, rw_now[17:3], 5'd0}, 256'd0, 32'd0, 16'h0900};
+                    vmq_t <= {1'b1, 1'b0, {12'd0, rw_now[17:3], 5'd0}, 256'd0, 32'd0, 16'h0900};
                 end
             end
             // engine output
@@ -123,20 +155,24 @@ module ot_hgi_idx_unit #(
             // writer: one word per VM write (word mask)
             if (w_v && !vm_pend) begin
                 vm_pend <= 1'b1; vm_rd <= 1'b0;
-                vmq <= {1'b1, 1'b1, {12'd0, w_a[17:3], 5'd0}, {8{w_d}}, 32'hf << (w_a[2:0] * 4), 16'h0901};
+                vmq_t <= {1'b1, 1'b1, {12'd0, w_a[17:3], 5'd0}, {8{w_d}}, 32'hf << (w_a[2:0] * 4), 16'h0901};
                 if (w_second) begin
                     w_second <= 1'b0; w_r <= 1'b1; w_d <= w_sc;
                     w_a <= r_base + b_row * r_str + w_idx;
                 end else w_v <= 1'b0;
             end
-            if (vmr[273]) begin
+            x_go <= 1'b0;
+            if (x_active && (x_done || x_fault)) begin
+                x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= x_fault ? 3'b101 : 3'b011;
+            end
+            if (vmr[273] && !x_active) begin
                 vm_pend <= 1'b0;
                 if (vm_rd) begin c_ok <= 1'b1; c_sec <= rw_now[17:3]; c_dat <= vmr[255:0]; end
             end
             // completion
-            if (busy && started && e_done) eng_done <= 1'b1;
+            if (busy && started && !x_active && e_done) eng_done <= 1'b1;
             if (busy && started && e_done && e_err != 4'd0) eng_err <= 1'b1;
-            if (busy && eng_done && !w_v && !vm_pend && !b_full && !e_out_v) begin
+            if (busy && !x_active && eng_done && !w_v && !vm_pend && !b_full && !e_out_v) begin
                 busy <= 1'b0; started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0;
                 ret <= eng_err ? 3'b101 : 3'b011;
             end

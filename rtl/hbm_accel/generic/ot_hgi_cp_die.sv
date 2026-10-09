@@ -26,7 +26,7 @@ module ot_hgi_cp_die #(
     input  wire [2:0]    coll_ret,      // {fault, done, ready}
     output reg  [682:0]  quant_rec,     // unit 4
     input  wire [2:0]    quant_ret,
-    output reg  [1236:0] idx_rec,       // unit 9 {n_R, n_O, n_B, n_A, R, O, B, A, header, valid}
+    output reg  [1818:0] idx_rec,       // unit 9 {die_id 8, pos 20, n_R, n_O, n_D, n_C, n_B, n_A, R, O, D, C, B, A, header, valid}
     input  wire [2:0]    idx_ret,
     output wire [39:0]   cfg_bus,
     // units without a record adapter yet (index = unit code; 4, 6 and 9 unused here)
@@ -78,12 +78,14 @@ module ot_hgi_cp_die #(
     end
     assign ux_v = u_v & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)) & {16{!halt}};
     // descriptor index: A 0, B 1, C 2, D 3, O 4, R 5, I 6
-    wire [255:0] dA = d_desc[0*256 +: 256], dB = d_desc[1*256 +: 256], dO = d_desc[4*256 +: 256], dR = d_desc[5*256 +: 256],
+    wire [255:0] dA = d_desc[0*256 +: 256], dB = d_desc[1*256 +: 256], dC = d_desc[2*256 +: 256], dD = d_desc[3*256 +: 256],
+                 dO = d_desc[4*256 +: 256], dR = d_desc[5*256 +: 256],
                  dI = d_desc[6*256 +: 256];
-    wire [20:0] nA = d_n[0*21 +: 21], nB = d_n[1*21 +: 21], nO = d_n[4*21 +: 21], nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
+    wire [20:0] nA = d_n[0*21 +: 21], nB = d_n[1*21 +: 21], nC = d_n[2*21 +: 21], nD = d_n[3*21 +: 21], nO = d_n[4*21 +: 21],
+                nR = d_n[5*21 +: 21], nI = d_n[6*21 +: 21];
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            credit <= 3'b111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1237'd0; halt <= 1'b0;
+            credit <= 3'b111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1819'd0; halt <= 1'b0;
             db_hold <= 1'b0; fq_busy <= 1'b0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
@@ -93,7 +95,9 @@ module ot_hgi_cp_die #(
             else if (coll_ret[1] || coll_ret[2]) credit[0] <= 1'b1;
             if (u_v[4] && u_rdy[4]) begin quant_rec <= {nO, nA, dO, dA, d_hdr, 1'b1}; credit[1] <= 1'b0; end
             else if (quant_ret[1] || quant_ret[2]) credit[1] <= 1'b1;
-            if (u_v[9] && u_rdy[9]) begin idx_rec <= {nR, nO, nB, nA, dR, dO, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0; end
+            if (u_v[9] && u_rdy[9]) begin
+                idx_rec <= {rank, 20'(d_pos1 - 21'd1), nR, nO, nD, nC, nB, nA, dR, dO, dD, dC, dB, dA, d_hdr, 1'b1}; credit[2] <= 1'b0;
+            end
             else if (idx_ret[1] || idx_ret[2]) credit[2] <= 1'b1;
             if (vmstat[18] || vmstat[17] || vmstat[16]) halt <= 1'b1;
             // doorbell station

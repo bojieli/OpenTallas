@@ -18,7 +18,7 @@ UNITS = {
     'quant':  (4, 'quant', 'AO', ()),                 # FUSED.QDQ_* (A in, O out; scale in-band)
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', ()),                   # ARGMAX.LOCAL (imm_a in the header); ot_hgi_argmax18_m in hfd_mtp
-    'idx':    (9, 'hgi_idx', 'ABOR', ()),             # IDX unit body ot_hgi_idx_unit (TOPK v1) in its own low spine slot
+    'idx':    (9, 'hgi_idx', 'ABCDOR', (('pos', 20), ('die_id', 8))),   # IDX unit ot_hgi_idx_unit: TOPK + INDEX frames (G18)
 }
 RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 # units that decode a static MD field (coll: word 46 coll_group_size) get the 40-bit config station bus

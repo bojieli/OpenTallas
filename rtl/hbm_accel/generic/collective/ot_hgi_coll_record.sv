@@ -44,7 +44,8 @@ module ot_hgi_coll_record #(
     output reg  [7:0]    ep_mcast_group_size,
     output reg           ep_mcast_all,
     output reg  [3:0]    ep_gsz,
-    output reg           ep_byp,         // exact gather bypass (ALL_GATHER)
+    output reg           ep_byp,         // exact gather bypass (ALL_GATHER, ARGMAX_MERGE)
+    output reg           ep_amx,         // ARGMAX_MERGE: the delivered flits fold to one token (ot_hgi_coll_amerge)
     output reg  [15:0]   ep_pf,
     output reg           ep_go,
     input  wire          ep_start_ready,
@@ -114,7 +115,7 @@ module ot_hgi_coll_record #(
         if (!rst_n) begin
             st <= S_IDLE; dc_cmd_v <= 1'b0; rec_done <= 1'b0; rec_fault <= 1'b0;
             ep_go <= 1'b0; ep_done_ready <= 1'b0; rf_start_v <= 1'b0; rf_done_r <= 1'b0;
-            ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0; ep_byp <= 1'b0;
+            ep_rank <= 8'd0; ep_mcast_group_size <= 8'd96; ep_mcast_all <= 1'b0; ep_gsz <= 4'hF; ep_pf <= 16'd0; ep_byp <= 1'b0; ep_amx <= 1'b0;
             ep_a_base <= 40'd0; ep_o_base <= 40'd0;
             rf_group_size <= 8'd96; rf_owner_block <= 8'd8; rf_destinations <= 8'd0; rf_row_count <= 21'd0;
             rf_row_words <= 16'd0; rf_context_rows <= 32'd0;
@@ -133,14 +134,14 @@ module ot_hgi_coll_record #(
                             if (pf_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
                             else begin
                                 ep_rank <= rank96; ep_gsz <= (dc_op == 6'd4) ? sub_gsz : dc_gsz; ep_mcast_all <= (dc_op == 6'd4);
-                                ep_mcast_group_size <= dc_g; ep_byp <= 1'b0;
+                                ep_mcast_group_size <= dc_g; ep_byp <= 1'b0; ep_amx <= 1'b0;
                                 ep_pf <= MUT_PF ? n_a_q[15:0] : n_a_q[19:4];
                                 ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
                             end
                         end else if (dc_op == 6'd1) begin   // ALL_GATHER: exact bypass over the group (G = 96: outer group)
                             if (pfg_bad) begin rec_fault <= 1'b1; st <= S_HALT; end
                             else begin
-                                ep_rank <= rank96; ep_byp <= 1'b1;
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b0;
                                 ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
                                 ep_mcast_group_size <= dc_g;
                                 ep_pf <= MUT_PF ? n_a_q[15:0] : a_rowwords[15:0];
@@ -150,7 +151,15 @@ module ot_hgi_coll_record #(
                             rf_group_size <= dc_g; rf_owner_block <= dc_blk; rf_destinations <= dc_dest;
                             rf_row_count <= dc_rows; rf_row_words <= a_rowwords[15:0];
                             rf_context_rows <= {12'd0, a_q[87:68]}; rf_start_v <= 1'b1; st <= S_RFGO;
-                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // ops 2-3: merge stage not installed yet
+                        end else if (dc_op == 6'd3) begin   // ARGMAX_MERGE: A = {value FP32, id U32}: one flit a rank
+                            if (n_a_q != 21'd2) begin rec_fault <= 1'b1; st <= S_HALT; end
+                            else begin
+                                ep_rank <= rank96; ep_byp <= 1'b1; ep_amx <= 1'b1;
+                                ep_gsz <= (dc_g == 8'd96) ? 4'd3 : dc_gsz; ep_mcast_all <= (dc_g == 8'd96);
+                                ep_mcast_group_size <= dc_g; ep_pf <= 16'd1;
+                                ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
+                            end
+                        end else begin rec_fault <= 1'b1; st <= S_HALT; end   // op 2 (TOPK_MERGE): merge stage not installed yet
                     end
                 S_EPGO: if (in_ep_fault) begin rec_fault <= 1'b1; st <= S_HALT; end
                     else if (in_ep_ready) begin
