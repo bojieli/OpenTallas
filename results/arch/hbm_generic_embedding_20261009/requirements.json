@@ -1,0 +1,86 @@
+{
+  "schema": "opentallas.hbm_generic.embedding_requirements.v1",
+  "status": "PROGRAM_REQUIREMENTS_ONLY_GENERIC_CONTRACT_PENDING",
+  "source_base": "68c961866",
+  "scope": "One configurable HBM accelerator shared by Qwen3-8B and DeepSeek-V4.1; no Qwen-specific new hardware or fields. TP4 ROM plus KV die is separate.",
+  "source_sha256": {
+    "tools/qwen3_deployment_quality.py": "e2a5c25a05d8bd88e63cb14f10e2e2010c49d517053381ba5c6a9e90b5c70634",
+    "tools/qwen_r25_decode_program.py": "48245bf7b62234a08756a8c133baa9958da0b8e2ae642a4816959596a4f8ed8e",
+    "tools/qwen_r25_cmdproc_program.py": "a0aa76c1d017c3afae0b2b33be2d221a6fc4db42693f166cc339e18fc44fd82e",
+    "tools/qwen_r25_int8_image.py": "ac90ee9645fca1c58ed629c75bf12f6acdb57a6a6a0e0f2abbeb373a0f9d0be9",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv": "2eb902b1979247bb1d6c7d7589955965669b3377ef81b542681a56d17fbca86c",
+    "rtl/hbm_accel/ingest/ot_hbm_loader_kport_address.sv": "b6eea0ffce657114439b555d6d4eee5ee6ad7efa4c6d226e94aa8697d539898b",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv": "5027f86159808299ab7cc3b8ea8a8ea91a47a1c099e58efcddec8f1a1b9c52fb",
+    "rtl/hbm_accel/loader/service_native/tb_loader_service_core_native.sv": "b2c4b8438d2266e41b3d47ebb71291b2f4cf32e60e9135173d9fd1dbcd02e10d"
+  },
+  "Qwen": {
+    "checkpoint_revision": "b968826d9c46dd6066d109eabc6255188de91218",
+    "vocab": 151936,
+    "hidden": 4096,
+    "TP": 4,
+    "call_token_bits": 18,
+    "input": "actual host token; bounds 0 <= token < 151936",
+    "weights": "released signed INT8 row codes and BF16 row scales from quantize_w8; no new quantization",
+    "golden": "embed_rows: FP32(signed_INT8_code) * FP32(BF16_scale); FP32 residual4096, no BF16 result round and no norm fold",
+    "codes_bytes_per_copy": 622329856,
+    "scales_bytes_per_copy": 303872,
+    "output_bytes_per_consumer": 16384,
+    "code_address_requirement": "installed codes base plus token*4096 + column; base must be supplied by real generic image installation",
+    "scale_address_requirement": "installed scales base plus token*2; little endian opaque released BF16 bits",
+    "graph_logical_base": "codes0, scales622329856 in qwen_r25_decode_program.layout(); these are proposed logical offsets, not installed physical extents",
+    "fmt3_exclusion": "qwen_r25_int8_image is matrix issuer-interleaved 128-code+8zero-byte response136/storage160. storage_base and linked_entry_pc are None. Does not install an embedding producer.",
+    "residual_graph_location": "VM FP32 word base229376 length4096; actual selected generic operand installation must supply physical backing and publication",
+    "native_facade": "ot_hbm_loader_kport_address: address37={stack2,local_byte35}; aligned32B local sector30 and exact PC=s[6:2]^s[11:7]^s[16:12]. A global logical offset is not directly address37.",
+    "logical_traffic_lower_bound": {
+      "read_code_sectors": 128,
+      "scale_read_sectors_if_uncached": 1,
+      "write_FP32_sectors": 512,
+      "useful_read_bytes": 4098,
+      "useful_write_bytes": 16384,
+      "sector_read_bytes": 4128
+    },
+    "finite_flow_requirements": [
+      "real native request acceptance and matching data response; finite held payload until consumer acceptance",
+      "publication/completion only after real VM write visibility; command acceptance is insufficient",
+      "original installed call mask retirement; numerical completion cannot be supplied by namespace registration",
+      "generic configuration and clock binding supplied by selected hardware; no new transient ECC, control mirror, lease, epoch or invented ID"
+    ]
+  },
+  "DeepSeek": {
+    "golden_and_embedding_storage": "UNBOUND: requires selected released DS golden and generic program image contract; no transfer of Qwen W8/BF16 assumption"
+  },
+  "open_gaps": [
+    {
+      "id": "EMB_FORMAT",
+      "gap": "Generic embedding storage format/layout and selected program instructions not published"
+    },
+    {
+      "id": "EMB_INSTALL",
+      "gap": "No actual installed embedding kernel or source-assigned generic registry slot; Qwen graph embedding production_entry null"
+    },
+    {
+      "id": "EMB_BASE",
+      "gap": "Generic image allocator and installed physical byte bases absent; native37 is stack-local facade, native Waddr24 translation absent"
+    },
+    {
+      "id": "EMB_VM",
+      "gap": "Actual residual provider/publication binding absent; standalone numerical/control fixture cannot prove installed VM producer"
+    },
+    {
+      "id": "EMB_DS",
+      "gap": "DS embedding released arithmetic/format must be supplied by its program owner"
+    },
+    {
+      "id": "EMB_CALL",
+      "gap": "Generic command call and actual completion fanback must replace Qwen-specific proposed namespace"
+    }
+  ],
+  "claims": {
+    "new_RTL": false,
+    "new_bench": false,
+    "installed_producer": false,
+    "physical_qualification": false,
+    "full_decode_executable": false,
+    "rate_or_latency_headline": null
+  }
+}
