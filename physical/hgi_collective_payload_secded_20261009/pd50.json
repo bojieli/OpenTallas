@@ -81,6 +81,10 @@
       {
         "name": "ttb_routed_at_TC",
         "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      },
+      {
+        "name": "independent_electrical_zero",
+        "cmd": "python3 -c \"import json; m=json.load(open('{RUN}/routes/{LABEL}/physical.json'))['place_and_route']['metrics']; k=('drc_errors','antenna_violating_nets','antenna_violating_pins','max_slew_violations','max_cap_violations','max_fanout_violations'); assert all(m.get(x)==0 for x in k), {x:m.get(x) for x in k}\""
       }
     ]
   },
@@ -102,5 +106,13 @@
   "registered_io": true,
   "rtl_boundary": {
     "levels": 16
-  }
+  },
+  "hold_eco": {
+    "enabled": true,
+    "vtswap": false,
+    "reexport": true,
+    "authorization": "HoldECO ONLYTTsetup>=0DRC0andallindependentelectricalchecksPASS; anyfailedgateblocks; noVTswapTT-failECO",
+    "resource_note": "existingdaemon32GiBguard conservativeunknownfutureECOpeak, notmeasured32"
+  },
+  "bench_first": false
 }
