@@ -939,10 +939,12 @@ end endgenerate
     wire          atop_v = atop[CW-1];
     wire [31:0]   atop_key = atop[CW-2 -: 32];
     wire [NW-1:0] atop_idx = atop[NW-1:0];
-`ifdef OT_MUT_AMR
-    wire [31:0]   atop_val = {1'b0, atop_key[30:0]};      // bench mutant: the negative-key decode is dropped
-`else
     wire [31:0]   atop_val = atop_key[31] ? {1'b0, atop_key[30:0]} : ~atop_key;
+`ifdef OT_MUT_AMR
+    // bench mutant (AMR path only, so the AMR = 0 reference is untouched): the accumulator stores a wrong row index
+    wire [NW-1:0] atop_idx_w = atop_idx ^ {{(NW-1){1'b0}}, (AMR != 0) ? 1'b1 : 1'b0};
+`else
+    wire [NW-1:0] atop_idx_w = atop_idx;
 `endif
     ot_qwen_w12_ksa #(.W(32 + NW)) u_bgt (.a({atop_key, ~atop_idx}), .b(~{best_key, ~am_idx}), .cin(1'b0), .s(best_s),
         .cout(best_gt));
@@ -952,7 +954,7 @@ end endgenerate
         end else begin
             if (a_clr) am_any <= 1'b0;
             else if (a_tv && !a_rmax && atop_v && (!am_any || best_gt)) begin
-                am_any <= 1'b1; best_key <= atop_key; am_idx <= atop_idx; am_val <= atop_val;
+                am_any <= 1'b1; best_key <= atop_key; am_idx <= atop_idx_w; am_val <= atop_val;
             end
         end
     end
