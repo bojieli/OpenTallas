@@ -1,75 +1,101 @@
-# PRE_GLOBAL_PLACE hook (safe-hbm 2026-10-08, reviewer decision R-b): put every IO pin register AT its die pin.
-# ot_hcoll_port2 tall (1e2cc4ed6-tc) failed post-CTS TT -505 on IO pin -> flop wire: the RTL registers every port
-# (pin flop, no logic between pin and flop), but timing-driven GPL pulled the pin flops into the logic.  Same technique
-# as qwen_die_masters/rom_cap_at_pins.tcl: for every signal port whose net connects ONLY the port and ONE flop pin
-# (input -> DFF D, or DFF Q -> output), the flop is placed FIRM just inside the core on the pin's edge, stacked
-# OT_IOF_ROWS deep (rows for horizontal edges, columns for vertical ones) so neighbouring pins' flops do not pile up.
-# io_flop_release.tcl (PRE_DETAIL_PLACE) returns them to PLACED so DPL legalises them.  Placement only: netlist unchanged,
-# 0 cycles.
+# PRE_GLOBAL_PLACE hook (drive-0849, 2026-10-09): out_flop_at_pins.tcl extended to INPUT ports.  For every output port its
+# launching flop, and for every input port its single capturing flop (the port net -- through up to three single-fanout
+# INV / BUF stages -- reaches exactly one DFF D pin), is placed FIRM just inside the core on the pin's own edge, in up to
+# 4 staggered columns by pin order.  Why: low-utilisation die-slot outlines (qfd_sp_constants_sequencer_sys 777.6 x 1000
+# at ~1 %, qfd_sp_res_ser) let timing-driven GPL pull pin flops into the central logic, so pin -> flop and flop -> pin
+# become 200-760 ps wires (ICUT 155370387: vm_rq -> line -514.8, c_data -309; res_ser r2q: i_addr -> c_addr 535 ps wire).
+# The pin flop then carries the distance on a reg -> reg path with a full cycle.  out_flop_release.tcl (PRE_DETAIL_PLACE)
+# returns them to PLACED for DPL (same list file).  Placement only, 0 cycles.
 set ot_blk [ord::get_db_block]
 set ot_dbu [[ord::get_db_tech] getDbUnitsPerMicron]
 set ot_core [$ot_blk getCoreArea]
-set ot_x0 [expr {double([$ot_core xMin]) / $ot_dbu}]; set ot_x1 [expr {double([$ot_core xMax]) / $ot_dbu}]
-set ot_y0 [expr {double([$ot_core yMin]) / $ot_dbu}]; set ot_y1 [expr {double([$ot_core yMax]) / $ot_dbu}]
-set ot_rows [expr {[info exists ::env(OT_IOF_ROWS)] ? $::env(OT_IOF_ROWS) : 8}]
-set ot_in [expr {[info exists ::env(OT_IOF_INSET)] ? $::env(OT_IOF_INSET) : 1.0}]
-set ot_rh 0.27
-set ot_list {}
-array set ot_k {B 0 T 0 L 0 R 0}
-foreach ot_bt [$ot_blk getBTerms] {
-  set ot_net [$ot_bt getNet]
-  if {$ot_net eq "NULL" || $ot_net eq ""} continue
-  if {[$ot_net getSigType] ne "SIGNAL"} continue
-  set ot_its [$ot_net getITerms]
-  if {[llength $ot_its] != 1 || [llength [$ot_net getBTerms]] != 1} continue
-  set ot_it [lindex $ot_its 0]
-  set ot_ff [$ot_it getInst]
-  set ot_pn [[$ot_it getMTerm] getName]
-  set ot_dir [$ot_bt getIoType]
-  set ot_mv {}
-  # an output pin flop is mapped as DFF QN -> INV -> port (or Q -> BUF): follow one inverter / buffer stage
-  if {$ot_dir eq "OUTPUT" && [regexp {^(INV|BUF)} [[$ot_ff getMaster] getName]]} {
-    set ot_a ""
-    foreach t [$ot_ff getITerms] { if {[$t isInputSignal]} { set ot_a $t } }
-    if {$ot_a eq ""} continue
-    set ot_n2 [$ot_a getNet]
-    if {$ot_n2 eq "NULL" || $ot_n2 eq "" || [llength [$ot_n2 getITerms]] != 2} continue
-    set ot_drv ""
-    foreach t [$ot_n2 getITerms] { if {$t ne $ot_a} { set ot_drv $t } }
-    lappend ot_mv $ot_ff
-    set ot_ff [$ot_drv getInst]; set ot_pn [[$ot_drv getMTerm] getName]
-  }
-  if {![string match "DFF*" [[$ot_ff getMaster] getName]]} continue
-  if {!(($ot_dir eq "INPUT" && $ot_pn eq "D") || ($ot_dir eq "OUTPUT" && ($ot_pn eq "Q" || $ot_pn eq "QN")))} continue
-  if {[$ot_ff getPlacementStatus] in {FIRM LOCKED COVER}} continue
-  set ot_bb [$ot_bt getBBox]
-  set px [expr {([$ot_bb xMin] + [$ot_bb xMax]) / 2.0 / $ot_dbu}]
-  set py [expr {([$ot_bb yMin] + [$ot_bb yMax]) / 2.0 / $ot_dbu}]
-  set d [list [list B [expr {$py - $ot_y0}]] [list T [expr {$ot_y1 - $py}]] [list L [expr {$px - $ot_x0}]] [list R [expr {$ot_x1 - $px}]]]
-  set side [lindex [lsort -real -index 1 $d] 0 0]
-  set r [expr {$ot_k($side) % $ot_rows}]; incr ot_k($side)
-  set w [expr {double([[$ot_ff getMaster] getWidth]) / $ot_dbu}]
-  switch $side {
-    B { set x [expr {$px - $w / 2}]; set y [expr {$ot_y0 + $ot_in + $r * $ot_rh}] }
-    T { set x [expr {$px - $w / 2}]; set y [expr {$ot_y1 - $ot_in - ($r + 1) * $ot_rh}] }
-    L { set x [expr {$ot_x0 + $ot_in + $r * ($w + 0.2)}]; set y $py }
-    R { set x [expr {$ot_x1 - $ot_in - ($r + 1) * ($w + 0.2)}]; set y $py }
-  }
-  set x [expr {max($ot_x0, min($x, $ot_x1 - $w))}]
-  set y [expr {max($ot_y0, min($y, $ot_y1 - $ot_rh))}]
-  $ot_ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
-  $ot_ff setPlacementStatus FIRM
-  lappend ot_list [$ot_ff getName]
-  foreach ot_b $ot_mv {
-    # the output inverter / buffer sits beside its flop, toward the pin
-    set bx [expr {$side eq "L" ? $x - double([[$ot_b getMaster] getWidth]) / $ot_dbu : ($side eq "R" ? $x + $w : $x + $w)}]
-    set bx [expr {max($ot_x0, min($bx, $ot_x1 - double([[$ot_b getMaster] getWidth]) / $ot_dbu))}]
-    $ot_b setLocation [expr {round($bx * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
-    $ot_b setPlacementStatus FIRM
-    lappend ot_list [$ot_b getName]
-  }
+set cx0 [expr {double([$ot_core xMin]) / $ot_dbu}]; set cx1 [expr {double([$ot_core xMax]) / $ot_dbu}]
+set cy0 [expr {double([$ot_core yMin]) / $ot_dbu}]; set cy1 [expr {double([$ot_core yMax]) / $ot_dbu}]
+set ot_gap [expr {[info exists ::env(OT_OFLOP_GAP)] ? $::env(OT_OFLOP_GAP) : 1.0}]
+proc ot_of_drv {net} {
+  foreach it [$net getITerms] { if {[$it isOutputSignal]} { return $it } }
+  return ""
 }
-set ot_fh [open $::env(RESULTS_DIR)/ot_io_flop_at_pins.txt w]
-puts $ot_fh [join $ot_list "\n"]
-close $ot_fh
-puts "OT_IOF fixed [llength $ot_list] IO pin flops at their pins (B $ot_k(B) T $ot_k(T) L $ot_k(L) R $ot_k(R))"
+proc ot_of_isff {inst} { return [string match "DFF*" [[$inst getMaster] getName]] }
+proc ot_of_isbuf {inst} { set m [[$inst getMaster] getName]; return [expr {[string match "INV*" $m] || [string match "BUF*" $m]}] }
+# the single input-signal sink of a net (or "" if 0 or > 1 sinks)
+proc ot_of_sink {net} {
+  set s ""
+  foreach it [$net getITerms] {
+    if {![$it isInputSignal]} continue
+    if {$s ne ""} { return "" }
+    set s $it
+  }
+  return $s
+}
+set ot_list {}; set ot_n 0; set ot_ni 0; set ot_skip 0
+set cand {}
+set ot_seen [dict create]
+foreach bt [$ot_blk getBTerms] {
+  set io [$bt getIoType]
+  set net [$bt getNet]; if {$net eq "NULL"} continue
+  set ff ""
+  if {$io eq "OUTPUT"} {
+    set d [ot_of_drv $net]; if {$d eq ""} { incr ot_skip; continue }
+    set inst [$d getInst]
+    for {set hop 0} {$hop < 4} {incr hop} {
+      if {[ot_of_isff $inst]} { set ff $inst; break }
+      if {![ot_of_isbuf $inst]} break
+      set nxt ""
+      foreach it [$inst getITerms] {
+        if {![$it isInputSignal]} continue
+        set n2 [$it getNet]; if {$n2 eq "NULL"} continue
+        set d2 [ot_of_drv $n2]
+        if {$d2 ne "" && [llength [$n2 getITerms]] == 2} { set nxt [$d2 getInst] }
+      }
+      if {$nxt eq ""} break
+      set inst $nxt
+    }
+  } elseif {$io eq "INPUT"} {
+    if {[$net getSigType] eq "CLOCK"} continue
+    set s [ot_of_sink $net]; if {$s eq ""} { incr ot_skip; continue }
+    for {set hop 0} {$hop < 4} {incr hop} {
+      set inst [$s getInst]
+      if {[ot_of_isff $inst]} {
+        if {[[$s getMTerm] getName] eq "D"} { set ff $inst }
+        break
+      }
+      if {![ot_of_isbuf $inst]} break
+      set on ""
+      foreach it [$inst getITerms] { if {[$it isOutputSignal]} { set on [$it getNet] } }
+      if {$on eq "" || $on eq "NULL"} break
+      set s [ot_of_sink $on]; if {$s eq ""} break
+    }
+  } else { continue }
+  if {$ff eq ""} { incr ot_skip; continue }
+  set fn [$ff getName]
+  if {[dict exists $ot_seen $fn]} continue
+  dict set ot_seen $fn 1
+  set bb [$bt getBBox]
+  set px [expr {double([$bb xMin] + [$bb xMax]) / 2.0 / $ot_dbu}]
+  set py [expr {double([$bb yMin] + [$bb yMax]) / 2.0 / $ot_dbu}]
+  if {$px <= $cx0} { set side L } elseif {$px >= $cx1} { set side R } elseif {$py <= $cy0} { set side B } else { set side T }
+  lappend cand [list $side [expr {($side eq "L" || $side eq "R") ? $py : $px}] $ff $px $py $io]
+}
+foreach side {L R B T} { set ot_k($side) 0 }
+foreach c [lsort -real -index 1 $cand] {
+  lassign $c side pos ff px py io
+  set col [expr {$ot_k($side) % 4}]; incr ot_k($side)
+  set w [expr {double([[$ff getMaster] getWidth]) / $ot_dbu}]
+  set h [expr {double([[$ff getMaster] getHeight]) / $ot_dbu}]
+  switch $side {
+    L { set x [expr {$cx0 + $ot_gap + $col * ($w + 0.2)}]; set y $py }
+    R { set x [expr {$cx1 - $ot_gap - ($col + 1) * ($w + 0.2)}]; set y $py }
+    B { set x $px; set y [expr {$cy0 + $ot_gap + $col * $h}] }
+    T { set x $px; set y [expr {$cy1 - $ot_gap - ($col + 1) * $h}] }
+  }
+  $ff setLocation [expr {round($x * $ot_dbu)}] [expr {round($y * $ot_dbu)}]
+  $ff setPlacementStatus FIRM
+  lappend ot_list [$ff getName]
+  if {$io eq "INPUT"} { incr ot_ni } else { incr ot_n }
+}
+set fh [open $::env(RESULTS_DIR)/ot_out_flop_at_pins.txt w]
+foreach n $ot_list { puts $fh $n }
+close $fh
+puts "OT_IOFLOP fixed $ot_n output-port and $ot_ni input-port flops at their pins ($ot_skip ports not single-flop)"
+if {$ot_n + $ot_ni == 0} { error "OT_IOFLOP: no pin flop found (netlist changed?)" }

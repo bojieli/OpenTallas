@@ -63,6 +63,8 @@ set_load 4 [all_outputs]
           '--purpose','signoff_target','--nickname-tag',f'ha2_tc{a.variant}_rx',
           '--synth-timeout-seconds','unlimited','--flow-timeout-seconds','unlimited',
           '--keep-workdir',str(run/'work'),'--output',str(run/'physical.json')]
+    # struct-close 2026-10-09: HA2_EXTRA (shell words) appended to the driver command, e.g. extra --step-tcl hooks
+    cmd+=__import__('shlex').split(os.environ.get('HA2_EXTRA',''))
     if a.cts_only:cmd+=['--pnr-stop-after','cts']
     # safe-hbm 2026-10-08: SRAM-queue variant s carries two 64x512 1R1W macros per lane
     for m in part.get('macros',[]):cmd+=['--macro-view',f'{m}=physical/asap7_memory_macros/{m}']
