@@ -1,0 +1,1124 @@
+{
+  "scope": "actual PC-coordinate reservation proposal; occupancy and IO/clock closure still required",
+  "source_sha256": {
+    "physical/hbm_accel_die_views/svc/svc_geometry.json": "01a8bd7465e4ce4a26911d01a1acc235e87e8c203ae7b98ac0af80d4513551c0",
+    "physical/hbm_accel_die_views/svc/seg_stages.json": "931cd26074edbe4180d205a1ed0cb2c9db257ad517320fb22a76967bdac3e225",
+    "tools/hbm_loader_native_slot_plan.py": "d66439446048939b8b32e82da91ff17b52d04f8e7099c56aaa1780da0020958b"
+  },
+  "replicas": {
+    "per_stack": 32,
+    "stacks": 4,
+    "total": 128
+  },
+  "families": {
+    "SW": {
+      "proposed_slots": [
+        {
+          "PC": 0,
+          "segment": "hfd_svc_SW_s0",
+          "box_um": [
+            0.0,
+            0,
+            100.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            49.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.002777692049186,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 1,
+          "segment": "hfd_svc_SW_s0",
+          "box_um": [
+            265.1,
+            0,
+            365.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            315.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 2,
+          "segment": "hfd_svc_SW_s0",
+          "box_um": [
+            530.6,
+            0,
+            630.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            580.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 3,
+          "segment": "hfd_svc_SW_s0",
+          "box_um": [
+            796.2,
+            0,
+            896.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            846.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 4,
+          "segment": "hfd_svc_SW_s1",
+          "box_um": [
+            1061.8,
+            0,
+            1161.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            1111.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 5,
+          "segment": "hfd_svc_SW_s1",
+          "box_um": [
+            1327.4,
+            0,
+            1427.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            1377.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 6,
+          "segment": "hfd_svc_SW_s1",
+          "box_um": [
+            1593.0,
+            0,
+            1693.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            1643.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 7,
+          "segment": "hfd_svc_SW_s1",
+          "box_um": [
+            1858.6,
+            0,
+            1958.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            1908.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 8,
+          "segment": "hfd_svc_SW_s1",
+          "box_um": [
+            2124.1,
+            0,
+            2224.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            2174.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 9,
+          "segment": "hfd_svc_SW_s2",
+          "box_um": [
+            2389.7,
+            0,
+            2489.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            2439.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 10,
+          "segment": "hfd_svc_SW_s2",
+          "box_um": [
+            2655.3,
+            0,
+            2755.3,
+            100
+          ],
+          "actual_pin_center_um": [
+            2705.3,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 11,
+          "segment": "hfd_svc_SW_s2",
+          "box_um": [
+            2920.9,
+            0,
+            3020.9,
+            100
+          ],
+          "actual_pin_center_um": [
+            2970.9,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 12,
+          "segment": "hfd_svc_SW_s2",
+          "box_um": [
+            3186.5,
+            0,
+            3286.5,
+            100
+          ],
+          "actual_pin_center_um": [
+            3236.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 13,
+          "segment": "hfd_svc_SW_s3",
+          "box_um": [
+            3452.1,
+            0,
+            3552.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            3502.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 14,
+          "segment": "hfd_svc_SW_s3",
+          "box_um": [
+            3717.7,
+            0,
+            3817.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            3767.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 15,
+          "segment": "hfd_svc_SW_s3",
+          "box_um": [
+            3983.2,
+            0,
+            4083.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            4033.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 16,
+          "segment": "hfd_svc_SW_s3",
+          "box_um": [
+            4248.8,
+            0,
+            4348.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            4298.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 17,
+          "segment": "hfd_svc_SW_s4",
+          "box_um": [
+            4514.4,
+            0,
+            4614.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            4564.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 18,
+          "segment": "hfd_svc_SW_s4",
+          "box_um": [
+            4780.0,
+            0,
+            4880.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            4830.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 19,
+          "segment": "hfd_svc_SW_s4",
+          "box_um": [
+            5045.6,
+            0,
+            5145.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            5095.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 20,
+          "segment": "hfd_svc_SW_s5",
+          "box_um": [
+            5311.2,
+            0,
+            5411.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            5361.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 21,
+          "segment": "hfd_svc_SW_s5",
+          "box_um": [
+            5576.7,
+            0,
+            5676.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            5626.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 22,
+          "segment": "hfd_svc_SW_s5",
+          "box_um": [
+            5842.3,
+            0,
+            5942.3,
+            100
+          ],
+          "actual_pin_center_um": [
+            5892.3,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 23,
+          "segment": "hfd_svc_SW_s5",
+          "box_um": [
+            6107.9,
+            0,
+            6207.9,
+            100
+          ],
+          "actual_pin_center_um": [
+            6157.9,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 24,
+          "segment": "hfd_svc_SW_s6",
+          "box_um": [
+            6373.5,
+            0,
+            6473.5,
+            100
+          ],
+          "actual_pin_center_um": [
+            6423.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 25,
+          "segment": "hfd_svc_SW_s6",
+          "box_um": [
+            6639.1,
+            0,
+            6739.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            6689.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 26,
+          "segment": "hfd_svc_SW_s6",
+          "box_um": [
+            6904.7,
+            0,
+            7004.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            6954.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 27,
+          "segment": "hfd_svc_SW_s6",
+          "box_um": [
+            7170.2,
+            0,
+            7270.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            7220.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 28,
+          "segment": "hfd_svc_SW_s7",
+          "box_um": [
+            7435.8,
+            0,
+            7535.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            7485.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 29,
+          "segment": "hfd_svc_SW_s7",
+          "box_um": [
+            7701.4,
+            0,
+            7801.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            7751.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 30,
+          "segment": "hfd_svc_SW_s7",
+          "box_um": [
+            7967.0,
+            0,
+            8067.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            8017.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 31,
+          "segment": "hfd_svc_SW_s7",
+          "box_um": [
+            8232.6,
+            0,
+            8332.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            8282.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        }
+      ],
+      "proposed_lease_slot_overlap": [],
+      "station_area_um2": 320000,
+      "station_FF": 10112,
+      "station_DFF_area_proxy_um2": 2948.6592,
+      "region_fit_proven": false
+    },
+    "SE": {
+      "proposed_slots": [
+        {
+          "PC": 0,
+          "segment": "hfd_svc_SE_s0",
+          "box_um": [
+            0.0,
+            0,
+            100.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            49.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.002777692049186,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 1,
+          "segment": "hfd_svc_SE_s0",
+          "box_um": [
+            265.1,
+            0,
+            365.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            315.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 2,
+          "segment": "hfd_svc_SE_s0",
+          "box_um": [
+            530.6,
+            0,
+            630.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            580.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 3,
+          "segment": "hfd_svc_SE_s0",
+          "box_um": [
+            796.2,
+            0,
+            896.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            846.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 4,
+          "segment": "hfd_svc_SE_s1",
+          "box_um": [
+            1061.8,
+            0,
+            1161.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            1111.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 5,
+          "segment": "hfd_svc_SE_s1",
+          "box_um": [
+            1327.4,
+            0,
+            1427.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            1377.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 6,
+          "segment": "hfd_svc_SE_s1",
+          "box_um": [
+            1593.0,
+            0,
+            1693.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            1643.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 7,
+          "segment": "hfd_svc_SE_s1",
+          "box_um": [
+            1858.6,
+            0,
+            1958.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            1908.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 8,
+          "segment": "hfd_svc_SE_s1",
+          "box_um": [
+            2124.1,
+            0,
+            2224.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            2174.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 9,
+          "segment": "hfd_svc_SE_s2",
+          "box_um": [
+            2389.7,
+            0,
+            2489.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            2439.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 10,
+          "segment": "hfd_svc_SE_s2",
+          "box_um": [
+            2655.3,
+            0,
+            2755.3,
+            100
+          ],
+          "actual_pin_center_um": [
+            2705.3,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 11,
+          "segment": "hfd_svc_SE_s2",
+          "box_um": [
+            2920.9,
+            0,
+            3020.9,
+            100
+          ],
+          "actual_pin_center_um": [
+            2970.9,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 12,
+          "segment": "hfd_svc_SE_s2",
+          "box_um": [
+            3186.5,
+            0,
+            3286.5,
+            100
+          ],
+          "actual_pin_center_um": [
+            3236.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 13,
+          "segment": "hfd_svc_SE_s3",
+          "box_um": [
+            3452.1,
+            0,
+            3552.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            3502.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 14,
+          "segment": "hfd_svc_SE_s3",
+          "box_um": [
+            3717.7,
+            0,
+            3817.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            3767.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 15,
+          "segment": "hfd_svc_SE_s3",
+          "box_um": [
+            3983.2,
+            0,
+            4083.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            4033.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 16,
+          "segment": "hfd_svc_SE_s3",
+          "box_um": [
+            4248.8,
+            0,
+            4348.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            4298.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 17,
+          "segment": "hfd_svc_SE_s3",
+          "box_um": [
+            4514.4,
+            0,
+            4614.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            4564.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 18,
+          "segment": "hfd_svc_SE_s4",
+          "box_um": [
+            4780.0,
+            0,
+            4880.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            4830.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 19,
+          "segment": "hfd_svc_SE_s4",
+          "box_um": [
+            5045.6,
+            0,
+            5145.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            5095.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 20,
+          "segment": "hfd_svc_SE_s4",
+          "box_um": [
+            5311.2,
+            0,
+            5411.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            5361.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 21,
+          "segment": "hfd_svc_SE_s4",
+          "box_um": [
+            5576.7,
+            0,
+            5676.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            5626.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 22,
+          "segment": "hfd_svc_SE_s5",
+          "box_um": [
+            5842.3,
+            0,
+            5942.3,
+            100
+          ],
+          "actual_pin_center_um": [
+            5892.3,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 23,
+          "segment": "hfd_svc_SE_s5",
+          "box_um": [
+            6107.9,
+            0,
+            6207.9,
+            100
+          ],
+          "actual_pin_center_um": [
+            6157.9,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 24,
+          "segment": "hfd_svc_SE_s5",
+          "box_um": [
+            6373.5,
+            0,
+            6473.5,
+            100
+          ],
+          "actual_pin_center_um": [
+            6423.5,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 25,
+          "segment": "hfd_svc_SE_s5",
+          "box_um": [
+            6639.1,
+            0,
+            6739.1,
+            100
+          ],
+          "actual_pin_center_um": [
+            6689.1,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 26,
+          "segment": "hfd_svc_SE_s6",
+          "box_um": [
+            6904.7,
+            0,
+            7004.7,
+            100
+          ],
+          "actual_pin_center_um": [
+            6954.7,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 27,
+          "segment": "hfd_svc_SE_s6",
+          "box_um": [
+            7170.2,
+            0,
+            7270.2,
+            100
+          ],
+          "actual_pin_center_um": [
+            7220.2,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 28,
+          "segment": "hfd_svc_SE_s6",
+          "box_um": [
+            7435.8,
+            0,
+            7535.8,
+            100
+          ],
+          "actual_pin_center_um": [
+            7485.8,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 29,
+          "segment": "hfd_svc_SE_s7",
+          "box_um": [
+            7701.4,
+            0,
+            7801.4,
+            100
+          ],
+          "actual_pin_center_um": [
+            7751.4,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 30,
+          "segment": "hfd_svc_SE_s7",
+          "box_um": [
+            7967.0,
+            0,
+            8067.0,
+            100
+          ],
+          "actual_pin_center_um": [
+            8017.0,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        },
+        {
+          "PC": 31,
+          "segment": "hfd_svc_SE_s8",
+          "box_um": [
+            8232.6,
+            0,
+            8332.6,
+            100
+          ],
+          "actual_pin_center_um": [
+            8282.6,
+            5
+          ],
+          "max_pin_to_station_center_um": 45.0,
+          "existing_occupancy_checked": false,
+          "loaded_clock_budget": null
+        }
+      ],
+      "proposed_lease_slot_overlap": [],
+      "station_area_um2": 320000,
+      "station_FF": 10112,
+      "station_DFF_area_proxy_um2": 2948.6592,
+      "region_fit_proven": false
+    }
+  },
+  "native_req_reply_routing": "Each PC station needs actual native request/return relay chains from the loader landing face, including finite ownership transport; the raw32way mux wrapper is functional evidence only",
+  "final_physical_qualified": false,
+  "adopted": false
+}

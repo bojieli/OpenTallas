@@ -6,7 +6,7 @@
 // Timed HBM3E stack ot_hdc_v41x_idx_hbm (REFpb, FR-FCFS, 1.0 TB/s peak = 32 sectors per 1.024 ns), MEM_MODE 1.
 // Prints KVS lines: nsec, cycles from the descriptor's launch to kvs_done, delivered bytes, fraction of peak.
 // Plusargs: +nsec=N +reps=R +phase_ns=T (start offset against the refresh schedule) +mut=1 (drop lane 5 beats).
-module tb_loader_service_kvs #(parameter integer NATIVE=1,KNO=15,XST=2);
+module tb_loader_service_kvs #(parameter integer NATIVE=1,CONCURRENT=0,KNO=15,XST=2);
   localparam integer TH = 833, TCK = 1024;
   reg ck = 0, efck = 0, rst_n = 0;
   always #(TCK/2) ck = ~ck;
@@ -17,7 +17,16 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,KNO=15,XST=2);
   wire [8*1099-1:0] line; wire [1037:0] kv; wire [1023:0] ik; wire [7:0] q_rdy;
   wire [32*269-1:0] kvs; wire kvs_done;
   reg [127:0] e_d = 0;
-  wire native_fault;
+  wire native_fault,native_rdy,native_rsp_v;reg native_v=0,native_rsp_rdy=0;
+  reg[29:0]native_addr=0;wire[255:0]native_rsp_data;wire[15:0]native_rsp_tag;
+  integer native_done=0;integer normal_debt[0:31];
+  always @(posedge ck)begin
+   if(!rst_n)for(integer d=0;d<32;d=d+1)normal_debt[d]=0;
+   else for(integer d=0;d<32;d=d+1)begin
+    if(k_v[d]&&k_rdy[d]&&!k_we[d]&&k_tag[17*d+15+:2]==2'b01)normal_debt[d]=normal_debt[d]+k_len[4*d+:4];
+    if(kr_v[d]&&kr_rdy[d]&&kr_tag[17*d+15+:2]==2'b01)normal_debt[d]=normal_debt[d]-1;
+   end
+  end
   ot_hbm_svc_core_native #(.NATIVE(NATIVE),.SM_PC0({5'd28, 5'd24, 5'd20, 5'd16, 5'd12, 5'd8, 5'd4, 5'd0}),
     .RSP_ST(128'h10111101210021002211322133212110), .REQ_ST(32'h11112332), .W_ST(32'hec985300),
     .FWD(8'b01010101), .KV_PC(16), .IK_PC(17), .KV_ST(0), .IK_ST(0), .E_ST(11), .XST(XST), .KVS(1), .KNO(KNO)) u_svc (
@@ -28,7 +37,8 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,KNO=15,XST=2);
     .w_v(), .w_rdy(1'b0), .w_addr(), .w_len(), .w_tag(), .w_room(8'd0), .wr_v(8'd0), .wr_rdy(), .wr_tag(80'd0),
     .wr_beat(40'd0), .wr_data(2048'd0), .wq_d(292'd0), .wq_fclk(1'b0), .wq_g(), .k_wr_done(k_wr_done),
     .kvs(kvs), .kvs_done(kvs_done),
-    .outer_write_pending(1'b0),.native_v(1'b0),.native_pc(5'b0),.native_addr(30'b0),.native_tag(16'b0),.native_rsp_rdy(1'b0),.native_fault(native_fault));
+    .outer_write_pending(1'b0),.native_v(native_v),.native_rdy(native_rdy),.native_pc(5'd7),.native_addr(native_addr),.native_tag(16'hbeef),
+    .native_rsp_v(native_rsp_v),.native_rsp_rdy(native_rsp_rdy),.native_rsp_tag(native_rsp_tag),.native_rsp_data(native_rsp_data),.native_fault(native_fault));
   ot_hdc_v41x_idx_hbm #(.NPC(32), .AW(30), .DW(256), .MEM_WORDS(1024), .TAGW(17), .LENW(4), .BEATW(4),
     .QD(64), .REFPB(3), .MEM_MODE(1), .CLK_PS(TCK)) u_m (
     .clk(phy_clk), .rst_n(phy_rst_n), .req_v(k_v), .req_rdy(k_rdy), .req_addr(k_addr), .req_len(k_len),
@@ -50,6 +60,24 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,KNO=15,XST=2);
   function automatic integer pc_of(input [29:0] s);
     pc_of = ((s >> 2) ^ (s >> 7) ^ (s >> 12)) & 31;
   endfunction
+  initial if(CONCURRENT)begin
+    wait(rst_n);wait(normal_debt[7]>=16);
+    @(negedge ck);native_addr=kaddr(7,0,row0);native_v=1;
+    while(!native_rdy)begin
+      if(native_fault)$fatal(1,"native identity fault while normal reads outstanding");
+      @(negedge ck);
+    end
+    if(normal_debt[7]!=0)$fatal(1,"native stole live normal read beat debt");
+    @(posedge ck);#1;@(negedge ck);native_v=0;
+    while(!native_rsp_v)begin
+      if(native_fault)$fatal(1,"native service fault");
+      @(negedge ck);
+    end
+    if(native_rsp_tag!==16'hbeef||native_rsp_data!==pat(native_addr))$fatal(1,"concurrent native read data/tag mismatch");
+    repeat(3)@(negedge ck);
+    if(!native_rsp_v)$fatal(1,"concurrent native reply not retained");
+    native_rsp_rdy=1;@(posedge ck);#1;@(negedge ck);native_rsp_rdy=0;native_done=1;
+  end
   // ---- checker
   integer nsec, reps, phase, mut, row0, err = 0, got = 0, r, p, w, k;
   reg seen [0:31][0:4095];
@@ -91,6 +119,7 @@ module tb_loader_service_kvs #(parameter integer NATIVE=1,KNO=15,XST=2);
       repeat (200) @(posedge ck);
     end
     if(native_fault)$fatal(1,"native boundary debt fault on production KVS");
+    if(CONCURRENT&&!native_done)$fatal(1,"native request did not retire");
     $display("KVS_BENCH errors=%0d %s", err, err ? "FAIL" : "PASS");
     $finish;
   end
