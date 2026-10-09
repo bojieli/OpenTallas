@@ -94,12 +94,12 @@ module ot_hgi_seq #(
     // ---- registered boundary (submit rule X4): every data / status input lands in a pin flop (config words are
     // quasi-static, retire / fault pulses and VM read data one cycle later: the drain mask only waits longer)
     reg [159:0] md_d_r; reg [17:0] cfg_vocab_r; reg [20:0] cfg_ctx_max_r; reg [7:0] rank_r; reg hold_r;
-    reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r;
+    reg vr_rsp_v_r; reg [31:0] vr_rsp_data_r; reg [15:0] u_done_r, u_fault_r; reg wr_quiet_r; reg f_rsp_v_r; reg [255:0] f_rsp_data_r;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; end
-        else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; end
+        if (!rst_n) begin hold_r <= 1'b1; vr_rsp_v_r <= 1'b0; u_done_r <= 16'd0; u_fault_r <= 16'd0; wr_quiet_r <= 1'b0; f_rsp_v_r <= 1'b0; end
+        else begin hold_r <= hold; vr_rsp_v_r <= vr_rsp_v; u_done_r <= u_done; u_fault_r <= u_fault; wr_quiet_r <= wr_quiet; f_rsp_v_r <= f_rsp_v; end
     always @(posedge clk) begin
-        md_d_r <= md_d; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data;
+        md_d_r <= md_d; cfg_vocab_r <= cfg_vocab; cfg_ctx_max_r <= cfg_ctx_max; rank_r <= rank; vr_rsp_data_r <= vr_rsp_data; f_rsp_data_r <= f_rsp_data;
     end
     localparam integer RB = $clog2(RW);
     localparam integer RS = RW / 2;                       // sectors
@@ -125,20 +125,20 @@ module ot_hgi_seq #(
     wire [RB:0] avail = wv ? wp - rp : {(RB+1){1'b0}};
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
     reg [255:0] rd_sec; reg rd_hi;
-    wire        ring_we = f_rsp_v && (drop == 5'd0);
+    wire        ring_we = f_rsp_v_r && (drop == 5'd0);
     always @(posedge clk) rd_hi <= rd_ptr[0];
     generate if (USE_MACRO) begin : g_ring_m
         initial if (RW != 512) $fatal(1, "ot_hgi_seq: USE_MACRO needs RW 512");
         wire [255:0] q;
         ot_sram_1r1w_256x256_m2_r2c2 u_ring (.clk(clk), .r_ce_in(1'b1), .r_addr_in(rd_ptr[8:1]), .rd_out(q),
-            .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data), .w_mask_in({256{1'b1}}),
+            .w_ce_in(ring_we), .w_addr_in(wp[8:1]), .wd_in(f_rsp_data_r), .w_mask_in({256{1'b1}}),
             .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
         always @* rd_sec = q;
     end else begin : g_ring_r
         reg [255:0] ring [0:RS-1];
         always @(posedge clk) begin
             rd_sec <= ring[rd_ptr[RB-1:1]];
-            if (ring_we) ring[wp[RB-1:1]] <= f_rsp_data;
+            if (ring_we) ring[wp[RB-1:1]] <= f_rsp_data_r;
         end
     end endgenerate
     wire [127:0] rd_word = rd_hi ? rd_sec[255:128] : rd_sec[127:0];
@@ -273,7 +273,7 @@ module ot_hgi_seq #(
     assign cpl_v = (st == S_CPL);
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
     wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
-    wire [4:0] fl_after = inflight + ((f_req_v && f_req_rdy) ? 5'd1 : 5'd0) - (f_rsp_v ? 5'd1 : 5'd0);
+    wire [4:0] fl_after = inflight + ((f_req_v && f_req_rdy) ? 5'd1 : 5'd0) - (f_rsp_v_r ? 5'd1 : 5'd0);
     wire       is_ctl = (h_unit == 4'd0);
     wire [RB+1:0] rec_end = {1'b0, rp - frp} + {{(RB-3){1'b0}}, rlen};
     wire [1:0] top = depth - 2'd1;
@@ -329,7 +329,7 @@ module ot_hgi_seq #(
             if (f_req_v && f_req_rdy) begin f_req_v <= 1'b0; faddr <= faddr + 40'd32; end
             else if (fetching && !f_req_v && inflight < NOS && used + 2 <= RW) begin f_req_v <= 1'b1; f_req_addr <= faddr; end
             // ---- fetch responses -> ring (one sector a response)
-            if (f_rsp_v) begin
+            if (f_rsp_v_r) begin
                 if (drop != 0) drop <= drop - 5'd1;
                 else begin wp <= wp + 2'd2; wv <= 1'b1; end         // the ring write: g_ring_*
             end
