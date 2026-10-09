@@ -136,6 +136,7 @@ def main():
         rec['blocked_softmax']=a.blocked_softmax and stage=='softmax'
         if a.exe:
             mem,ops,checks=reference(stage,mutant,return_case=True,blocked=a.blocked_softmax)
+            assert all(not C.layout(f,a.n,a.m)['bad'] for f in ops), 'Stage exceeds actual LV6/controller capacity; use --blocked-softmax for small-lane proof'
             compare,trace,_,_=C.run_program(a.exe,a.out/(stage+('_mutant' if mutant else '')),mem,ops,a.n,a.m,chain=False)
             got=trace['vm'];assert got is not None
             rec.update(rtl_compare=compare,n=a.n,m=a.m,fp=a.fp,
