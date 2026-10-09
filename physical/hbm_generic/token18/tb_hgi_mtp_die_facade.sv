@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hgi_mtp_die_facade;
  reg clk=0; always #0.4166665 clk=~clk;
- reg rst=1; reg [130:0] f_cmdproc=0; reg [522:0] f_su_red=0; reg [58:0] f_router=0; reg f_coll=1;
+ reg rst=1; reg [130:0] f_cmdproc=0; reg [522:0] f_su_red=0; reg [58:0] f_router=0; reg [0:0] f_coll=1;
  wire[505:0] t_cmdproc,ref_t_cmdproc; wire[57:0] t_router,ref_t_router;wire[18:0] t_coll,ref_t_coll;
  reg[1:0] reset_reference=3; always @(posedge clk) reset_reference<={reset_reference[0],rst};
  wire ref_rst_n=~reset_reference[1];
