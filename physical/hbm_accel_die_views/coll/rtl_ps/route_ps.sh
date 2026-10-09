@@ -7,7 +7,12 @@
 #   top : the die master hfd_coll (rtl_ps/hfd_coll.sv: wrapper + core) through common/route_view.sh with MACROS =
 #         8 slices from rtl_ps/views/ot_hcoll_port (installed by tools/tt_views/ttv_install.sh from the slice route)
 #         + the core's SRAM macros, PDN pdn_top.tcl; corner_sta reads EVERY macro view (route_view.sh reads the first).
-# env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), route_view.sh env (top)
+# env: OUT, CORES, PD, PER (0.833), HM (0.050), IO_ROUTE_SDC / IO_FF_SDC (port), DIEW/DIEH + PHALO (port outline and
+#      macro halo "x y", default 340x340 / "4 4"), route_view.sh env (top)
+# coll-port 2026-10-08: 340x340 (67% util incl. the 18 SRAMs = 61% of the die) failed GRT-0116 twice: the placer ringed
+#      the die edge with macros, so the 2,736 edge pins and the macro q buses crossed macros on M6 alone (the only
+#      horizontal layer over an SRAM; M6 53% used, 7,351 of 12,948 overflow gcells, 8,452 H vs 3,593 V). Variants
+#      route at ~42% util with wider halos (DIEW/DIEH/PHALO).
 set -u
 lab=$1; kind=$2; shift 2
 D=physical/hbm_accel_die_views/coll/rtl_ps
@@ -16,11 +21,11 @@ if [ "$kind" = port ]; then
   W=${OUT:?}/$lab; mkdir -p $W
   C=${CORES:-8}; DW=${DIEW:-340}; DH=${DIEH:-340}
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
-  echo "kind=port die=${DW}x${DH} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
+  echo "kind=port die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
   cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
   python3 tools/run_abi3_physical.py --view asap7 --top ot_hcoll_port \
     --source rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv --source rtl/hbm_accel/tu/ot_hcoll_port.sv \
-    --macro-view $SRAM=$SD --macro-place-halo 4 4 \
+    --macro-view $SRAM=$SD --macro-place-halo ${PHALO:-4 4} \
     --clock-port clk --clock-period-ns ${PER:-0.833} --clock-uncertainty-ns 0.060 --clock-uncertainty-hold-ns 0.025 \
     --orfs-corner WC --hold-corners WC,BC --io-delay-fraction .2 --sdc-append physical/hbm_contracts_20261007/screening.sdc \
     --sdc-append physical/hbm_contracts_20261007/reset_rst_n.sdc ${IO_ROUTE_SDC:+--sdc-append $IO_ROUTE_SDC} --stages pnr \
