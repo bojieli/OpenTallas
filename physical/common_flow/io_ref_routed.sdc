@@ -35,6 +35,23 @@ if {[ot_ir_multi]} {
 }
 set ot_ir_real {}
 foreach c [all_clocks] { if {[llength [get_property $c sources]]} { lappend ot_ir_real [get_full_name $c] } }
+# S81-TAIL 2026-10-08: a data input delay on a REAL clock's source port (route SDCs that budget every non-core input,
+# e.g. s81ph dsfd_ctrl_pc: set_input_delay 316.7 -clock vclk on ckh[0] = hbm_clk) makes the register clock pins of
+# that clock carry a DATA arrival (vclk latency + input delay + tree), and arrival_max_rise below returns it instead
+# of the clock arrival: hbm_clk measured 796 TT / 752 FF vs the real tree 226 / 188 -> fake i2r TT -556 / out FF -487.
+# A clock source port times no data, so its input delays are dropped before the measurement.
+foreach cn $ot_ir_real {
+  foreach s [get_property [get_clocks $cn] sources] {
+    set sn [get_full_name $s]
+    if {![llength [get_ports -quiet $sn]]} continue
+    # unset_input_delay without -clock only drops clock-less delays: one call per reference clock and edge
+    foreach ot_ir_c [all_clocks] {
+      unset_input_delay -clock $ot_ir_c [get_ports $sn]; unset_input_delay -clock $ot_ir_c -clock_fall [get_ports $sn]
+    }
+    unset_input_delay [get_ports $sn]
+    puts "OT_IOREF clock-port $sn ($cn): data input delays dropped"
+  }
+}
 set ot_ir_bnd [dict create]
 set ot_ir_din [all_inputs -no_clocks]
 if {[llength $ot_ir_din]} {
