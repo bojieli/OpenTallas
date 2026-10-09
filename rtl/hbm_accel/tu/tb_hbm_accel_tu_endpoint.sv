@@ -243,6 +243,12 @@ module tb_hbm_accel_tu_endpoint #(
         end
     end
 
+`ifdef TU_GSZ
+    initial begin
+      wait(go_clk); #700;
+      $display("GSZDEBUG rank=%0d gs=%0d started=%0d k=%0d NA=%0d OF=%0d ptr=%0d pres0=%h col=%h rv=%b",rank,dut.gsz,dut.g_on.started,dut.g_on.k,dut.g_on.NA,dut.g_on.OF,dut.g_on.rptr,dut.g_on.pres[0],dut.g_on.col,dut.g_on.r_v);
+    end
+`endif
     // ---- checker ------------------------------------------------------------------------------------------
     integer got = 0, mism = 0, own_ok = 0;
     reg seen [0:MAXL-1];
