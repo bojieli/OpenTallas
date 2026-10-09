@@ -1,0 +1,6 @@
+{
+  "source_commit": "364f0306b",
+  "golden_rc": 1,
+  "cause": "Output harness wait(ov) resumed on posedge and deasserted ready at next negedge before a transfer in second row; natural timeout preserved. d52820055 changes consumer alignment to negedge; production core/wrapper unchanged.",
+  "status": "historical failed harness; no gate waiver"
+}
