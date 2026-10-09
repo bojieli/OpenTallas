@@ -122,5 +122,6 @@
  },
  "hold_eco": {
   "reexport": "[ -f {RUN}/route/wf_sta.json.pre_eco ] || cp {RUN}/route/wf_sta.json {RUN}/route/wf_sta.json.pre_eco\n[ -f {RUN}/route/wf_drv.json.pre_eco ] || cp {RUN}/route/wf_drv.json {RUN}/route/wf_drv.json.pre_eco\npython3 tools/dsrom_wfc_tokpipe_physical.py sta --inst stg --case {RUN}/route"
- }
+ },
+ "routed_ioref": false
 }

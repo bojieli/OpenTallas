@@ -45,7 +45,7 @@
   "sha256": {
     "before_state.json": "388c7ae3a44d29d59a30995048be01f13f3d5a7ee6cf58db5230c472097dcc4a",
     "before_spec.json": "00f9870a7368e7378d32df992ce6d9d035426894abd2f138920f0871ae63fad5",
-    "corrected_spec.json": "49d211952a14f1ad467b28d650a18adf3498d2dcef6585754f037e5c9ce95a0f",
+    "corrected_spec.json": "4de8f1d09cca09bec8bff30ea020ecdbf3aead9c474d228c277da7faeb64c5f5",
     "initial_eco_corner_sta.json": "19bb208b040870a476df1eb8f99622e82aba4503b90d3310cee349195af5fe2d"
   },
   "correction_scope": "ECO eligibility split; existing helper had no SS setup term. Retain FF mandatory final closure across same four modes. Original833/60/25 and region/die150 delays remain byte-identical or exact union. Original RTL and physical assets unchanged.",
@@ -66,5 +66,6 @@
     "rounding_tolerance_ps": 0.1,
     "equivalent": true
   },
-  "parser_contract": "NORMAL corner_sta+drc_metrics parser; metrics_cmd removed because currentloop strips custom ECO metadata. Must verify actualparser post_sdc and sdc_name before lockedreentry."
+  "parser_contract": "NORMAL corner_sta+drc_metrics parser; metrics_cmd removed because currentloop strips custom ECO metadata. Must verify actualparser post_sdc and sdc_name before lockedreentry.",
+  "routed_ioref": "Disabled for this source-specific existing all4 measured-insertion union. Generic IO override previously failed on missing w18_sta scripts; actual union already uses routed per-corner insertion and final all4 WFC reexport. No new virtual-neighbour rebudget supersedes proven150/90 coverage."
 }
