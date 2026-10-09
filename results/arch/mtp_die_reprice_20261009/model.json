@@ -23,6 +23,37 @@
       "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json"
     }
   },
+  "released_seed": {
+    "weight": {
+      "tensor": "mtp.0.main_proj.weight",
+      "shape": [
+        5120,
+        15360
+      ],
+      "dtype": "F8_E4M3",
+      "bytes": 78643200,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    },
+    "scale": {
+      "tensor": "mtp.0.main_proj.scale",
+      "shape": [
+        160,
+        480
+      ],
+      "dtype": "F8_E8M0",
+      "bytes": 76800,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    },
+    "norm": {
+      "tensor": "mtp.0.main_norm.weight",
+      "shape": [
+        5120
+      ],
+      "dtype": "BF16",
+      "bytes": 10240,
+      "header": "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json"
+    }
+  },
   "storage": {
     "head_dies": 12,
     "allocation_pair_bytes": 524288,
@@ -41,6 +72,81 @@
     "successor_element_pair_ROM4096_macros": 2,
     "successor_embed_pairs_per_head": 253,
     "successor_head_pairs_per_head": 22
+  },
+  "seed_allocation": {
+    "previous_primary_block_pairs": 282,
+    "original_seed_slices": null,
+    "original_seed_counted_in_primary_capacity": false,
+    "bytes_global": 78730240,
+    "bytes_per_TP4_rank": 19682560,
+    "additional_storage_pairs_per_primary_rank_lower_bound": 38,
+    "primary_block_plus_seed_pairs_lower_bound": 320,
+    "head_dense_storage_with_seed_pairs_lower_bound": 669,
+    "qualification": "payload bound; bank/port allocation and main_proj RTL timing required"
+  },
+  "markov_ports": {
+    "logical_minimum_row_engines": 337,
+    "actual_head_bundles": 85,
+    "actual_A_elements": 340,
+    "row_engines": 340,
+    "weight_ROM4096_macros": 680,
+    "weight_macro_outline_um": [
+      125.28,
+      62.91
+    ],
+    "raw_weight_macro_area_mm2": 5.359328064,
+    "weight_read_bytes_per_cycle_per_engine": 32,
+    "aggregate_weight_read_bytes_per_cycle": 10880,
+    "staged_embedding_bytes_per_engine": 512,
+    "replicated_embedding_bytes": 174080,
+    "embedding_broadcast_bits_per_beat": 256,
+    "embedding_broadcast_beats": 16,
+    "local_weight_words_per_macro": 256,
+    "macro_used_fraction": 0.0625,
+    "row_launch_interval_cycles": 256,
+    "measured_component_cycles_after_first_beat": 177,
+    "integrated_join_cycles": null,
+    "reason_two_macros": "real SS macro clkq needs two-edge capture; alternating banks preserve q",
+    "row_engine_route_area_mm2": null,
+    "physical_slot_fit": false
+  },
+  "typed_head_inventory": {
+    "field_slots": 696,
+    "regular_two_ROM_slots": 358,
+    "BF_double_four_ROM_slots": 338,
+    "non_lm_head_global_BF_double_slots": 211,
+    "Markov_embed_BF_double_slots": 127,
+    "primary_block_regular_slots": 282,
+    "seed_regular_slots": 76,
+    "seed_weight_regular_slots": 75,
+    "seed_norm_words_per_rank": 80,
+    "seed_scale_carrier_bits": 18,
+    "seed_scale_packing_qualification": "proposed repeated scale in carrier; packed proof required",
+    "field_ROM4096_macros": 2068,
+    "lm_head_bundles": 85,
+    "lm_head_ROM4096_macros": 850,
+    "local_Markov_ROM4096_macros": 680,
+    "total_ROM4096_macros": 3598,
+    "dense_Markov_head_storage_slots_removed": 11,
+    "generator_BF_map_must_be_explicit": true,
+    "floorplan_slot_fit": false,
+    "qualification": "typed proposed inventory; not equivalent to --pairs631 with heuristic BF ratio"
+  },
+  "main_hidden_transport": {
+    "hidden_dimension": 5120,
+    "captures": 3,
+    "bytes_per_value": 2,
+    "global_bytes_per_position": 30720,
+    "bytes_per_TP4_rank_per_position": 7680,
+    "link_bits": 512,
+    "link_bytes_per_cycle": 64,
+    "global_flits_if_single_lane": 480,
+    "flits_per_rank_with_TP4_lanes": 120,
+    "flits_per_capture_per_rank": 40,
+    "rank_lane_tail_us": 0.1,
+    "rank_lane_occupancy_pct_of_historical_II": 0.36017864860971044,
+    "RTL_capture_and_identity_qualified": false,
+    "note": "SEND_HIDDEN sends ordinary core output; independent HC-mean capture and typed forwarding absent"
   },
   "latency": {
     "historical_budget": {
@@ -159,7 +265,21 @@
   "physical": {
     "historical_head_case": "511-pair headmtp, source0544fca2c",
     "released_head_case_required": true,
-    "routing_or_clock_closure_credit": false
+    "routing_or_clock_closure_credit": false,
+    "vmx_fallback": {
+      "source_commit": "a2f264c8b",
+      "outline_um": [
+        291.6,
+        280.8
+      ],
+      "gross_um2": 81881.28,
+      "prior_gross_um2": 60092.928,
+      "added_gross_um2": 21788.352,
+      "historical_cells_um2": 38438,
+      "estimated_gross_utilization": 0.46943574892820433,
+      "added_cycles": 0,
+      "status": "sized_from_prior_cells_route_pending"
+    }
   },
   "loader": {
     "historical_svc_bits": [
@@ -167,19 +287,26 @@
       624
     ],
     "native_svc_bits": [
-      678,
+      688,
       550
     ],
+    "native_address_bits": 37,
+    "physical_stacks": 4,
     "external_host_AXI_bits": [
       226,
       74
     ],
     "additional_host_DMA_write_data_bits": 64,
+    "host_minimum_out_bits": 404,
+    "host_minimum_in_bits": 381,
+    "host_physical_bits_with_forwarded_clocks": 787,
     "status": "protocol endpoint RTL and revised chain area remain required"
   },
   "inputs": {
     "results/arch/mtp_die_20261008/plan.json": "caf363a23f6fa5ef72a093ec8ac6881a02ba142d7e545707fec90e3cdeee86a5",
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00044-of-00048.safetensors.header.json": "bcfa221d7a325e0a910e262d782c0e97bd5e5b7cbde6c9b480bb88ab7c23a36e",
     "results/quality/w16_w17_checkpoint_header_catalogue_20261001/headers/model-00046-of-00048.safetensors.header.json": "1baad4e59ff44a15727f0c294d015da70a90502fd5d1e844c1c0939a8194793e",
-    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8"
+    "results/quality/w16_w17_checkpoint_header_catalogue_20261001/model.safetensors.index.json": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
+    "results/rtl/dsrom_recovery_20261004/draft/placement.json": "266d55ea4d91587d9784a777788e7850c592931c550c9c0e1a0e155ae6e89621"
   }
 }
