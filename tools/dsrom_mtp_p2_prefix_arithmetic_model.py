@@ -40,3 +40,38 @@ def model():
                 'actual consumer decode/UE correction and state-injection gate',
                 'native prefix publisher and existing transaction namespace',
                 'contextual mapped master and clock/pin budgets']))
+
+
+def native_publisher_model():
+    return dict(schema='opentallas.dsrom.mtp-prefix-native-publisher.v1',adopted=False,
+        MACs_per_cycle=0,compute_intensity=0,replicas=20,
+        decoder=dict(master='ot_secded_dec',code='systematic Hsiao72 same ordered transport',
+            lanes=8,latency_cycles=2,CE='correct before publishing',UE='stop before publishing'),
+        memory_bytes_per_cycle=0,
+        boundary_bits_per_cycle=dict(input_protected=576,output_native=512,identity=74,word=7,last=1),
+        storage=dict(one_flight=True,payload_hold_bits=512,payload_duplicate_bits=512,
+            duplicated_identity_and_word_last_bits=164,control_bits_upper=16),
+        mux_demux='one protected prefix input to one native output; no cast/round',
+        fanout='eight decoder lanes',routing=dict(input_tracks=660,output_tracks=596,channel_capacity=None),
+        area=dict(slot_um=[200,200],logic_upper_um2=15000,macros=0,
+            mapped_area=None,slot_fit_qualified=False),
+        latency=dict(clock_GHz=1.2,decode_cycles=2,hold_capture_cycles=1,
+            serialization_per_flit_upper_cycles=5,total80_flit_cycles_upper=400),
+        primary_receive_clock_GHz=.9,
+        CDC='actual primary receive finite CDC owned ds_control; publisher ready must not cross domains directly',
+        qualification='defaultoff; minimum CE/UE/stability gate and actual nativeport integration required')
+
+
+def composed_model():
+    return dict(schema='opentallas.dsrom.mtp-prefix-composition.v1',adopted=False,
+        producer='PRIMARY_SHARED1 actual three-bank ordered transport',
+        arithmetic=model(),native_publisher=native_publisher_model(),
+        MACs_per_cycle=0,FP32_adder_lanes=16,replicas=20,
+        SRAM128x256_macros_per_replica=12,
+        slot_mm2_per_replica=.144+.250+.040,array_slot_mm2=20*(.144+.250+.040),
+        producer_fill_cycles_upper=240,producer_ordered_drain_cycles_lower_bound=243,
+        modeled_serial_cycles_upper=240+243+6240+400,
+        modeled_serial_us_upper=(240+243+6240+400)/1200,
+        overlap_credit=0,primary_shared_LAST_cycles=None,primary_receive_CDC_cycles=None,
+        protocol='one atomic start to producer and arithmetic; retain context through final native output handshake; either fault aborts both',
+        qualification='no token rate claim until source caller/shared producer/primary CDC are bound and minimum composed gate passes')

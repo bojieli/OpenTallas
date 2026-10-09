@@ -14627,3 +14627,8 @@ def dsrom_hc_seed_homes_model(owner_root):
 def dsrom_mtp_p2_prefix_arithmetic_model():
     from dsrom_mtp_p2_prefix_arithmetic_model import model
     return model()
+
+
+def dsrom_mtp_p2_prefix_composed_model():
+    from dsrom_mtp_p2_prefix_arithmetic_model import composed_model
+    return composed_model()

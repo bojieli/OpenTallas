@@ -1,0 +1,182 @@
+{
+  "schema": "opentallas.dsrom.mtp-prefix-composition.v1",
+  "adopted": false,
+  "producer": "PRIMARY_SHARED1 actual three-bank ordered transport",
+  "arithmetic": {
+    "schema": "opentallas.dsrom.mtp-p2-prefix-arithmetic.v1",
+    "adopted": false,
+    "shape": {
+      "rank_values": 1280,
+      "flits_per_expert": 80,
+      "experts": 3,
+      "lanes": 16,
+      "contexts": 1
+    },
+    "arithmetic": "RN(RN(RN(+0,E0),E1),E2), each E is BF16-rounded W2 widenedFP32",
+    "primitive": {
+      "master": "ot_v41_fadd",
+      "CUT": "1_0111_1011",
+      "SPLIT9": 0,
+      "latency_cycles": 8,
+      "primitive_II": 1,
+      "clock_domain": "stream",
+      "clock_GHz": 1.2,
+      "contextual_timing_qualified": false
+    },
+    "MACs_per_cycle": 0,
+    "FP32_adds_per_issue": 16,
+    "intensity": {
+      "adds_per_input_byte": 0.25,
+      "actual_consumer_II_upper": 24
+    },
+    "memory": {
+      "accumulator_SRAM": "ot_sram_1r1w_128x256_m1_r2c2",
+      "macros": 3,
+      "word_bits": 768,
+      "protected_bits": 576,
+      "live_words": 80,
+      "port_read_bytes_per_active_cycle": 96,
+      "port_write_bytes_per_active_cycle": 96,
+      "arithmetic_read_payload_bytes_per_active_cycle": 64
+    },
+    "protection": {
+      "SECDed_slices": 8,
+      "code": "Hsiao SECDED72 systematic {check8,data64}; same ot_secded_cols.svh as ordered transport",
+      "decode_cycles": 2,
+      "encode_cycles": 1,
+      "UE": "poison transaction; no subsequent output",
+      "control": "duplicated identity, expert index and word state; mismatch fault"
+    },
+    "boundary": {
+      "input_protected_bits": 576,
+      "output_protected_bits": 576,
+      "identity_bits": 74,
+      "word_bits": 7,
+      "expert_bits": 9,
+      "credit_depth": 1
+    },
+    "replicas": {
+      "prefix_engines": 20,
+      "adder_lanes_per_engine": 16
+    },
+    "mux_demux": {
+      "accumulator_first_input": "constant +0 only for E0; SRAM otherwise",
+      "within_word_order": "three expert-major stages, no pre-sum/copy-first shortcut"
+    },
+    "fanout": {
+      "clock_adders": 16,
+      "identity_sinks": 1
+    },
+    "routing": {
+      "input_tracks": 671,
+      "output_tracks": 671,
+      "channel_capacity": null
+    },
+    "area": {
+      "slot_um": [
+        500,
+        500
+      ],
+      "raw_SRAM_um2": 11674.73088,
+      "reference_other_adder_area_um2": 385.524,
+      "adder_planning_multiplier": 2,
+      "lane_adder_planning_um2": 12336.768,
+      "whole_logic_planning_upper_um2": 90000,
+      "planning_total_utilization": 0.407,
+      "measured_actual_area": null,
+      "physical_slot_fit_qualified": false
+    },
+    "latency": {
+      "one_flit_service_cycles_upper": 24,
+      "all_three_experts_cycles_upper": 5760,
+      "final_read_decode_output_cycles_upper": 480,
+      "unoverlapped_cycles_upper": 6240,
+      "unoverlapped_us_at1p2GHz": 5.2,
+      "transport_overlap_credit": 0,
+      "composition": "candidate upper bound replaces unpriced A-prefix consumer; add actual primary shared-last and board/CDC costs separately"
+    },
+    "integration": {
+      "default_enabled": false,
+      "predecessor_transport": "PRIMARY_SHARED=1 three-bank protected ordered rows",
+      "contribution_low16_zero_required": true,
+      "pending": [
+        "real released contribution gate and signedzero control",
+        "actual consumer decode/UE correction and state-injection gate",
+        "native prefix publisher and existing transaction namespace",
+        "contextual mapped master and clock/pin budgets"
+      ]
+    }
+  },
+  "native_publisher": {
+    "schema": "opentallas.dsrom.mtp-prefix-native-publisher.v1",
+    "adopted": false,
+    "MACs_per_cycle": 0,
+    "compute_intensity": 0,
+    "replicas": 20,
+    "decoder": {
+      "master": "ot_secded_dec",
+      "code": "systematic Hsiao72 same ordered transport",
+      "lanes": 8,
+      "latency_cycles": 2,
+      "CE": "correct before publishing",
+      "UE": "stop before publishing"
+    },
+    "memory_bytes_per_cycle": 0,
+    "boundary_bits_per_cycle": {
+      "input_protected": 576,
+      "output_native": 512,
+      "identity": 74,
+      "word": 7,
+      "last": 1
+    },
+    "storage": {
+      "one_flight": true,
+      "payload_hold_bits": 512,
+      "payload_duplicate_bits": 512,
+      "duplicated_identity_and_word_last_bits": 164,
+      "control_bits_upper": 16
+    },
+    "mux_demux": "one protected prefix input to one native output; no cast/round",
+    "fanout": "eight decoder lanes",
+    "routing": {
+      "input_tracks": 660,
+      "output_tracks": 596,
+      "channel_capacity": null
+    },
+    "area": {
+      "slot_um": [
+        200,
+        200
+      ],
+      "logic_upper_um2": 15000,
+      "macros": 0,
+      "mapped_area": null,
+      "slot_fit_qualified": false
+    },
+    "latency": {
+      "clock_GHz": 1.2,
+      "decode_cycles": 2,
+      "hold_capture_cycles": 1,
+      "serialization_per_flit_upper_cycles": 5,
+      "total80_flit_cycles_upper": 400
+    },
+    "primary_receive_clock_GHz": 0.9,
+    "CDC": "actual primary receive finite CDC owned ds_control; publisher ready must not cross domains directly",
+    "qualification": "defaultoff; minimum CE/UE/stability gate and actual nativeport integration required"
+  },
+  "MACs_per_cycle": 0,
+  "FP32_adder_lanes": 16,
+  "replicas": 20,
+  "SRAM128x256_macros_per_replica": 12,
+  "slot_mm2_per_replica": 0.434,
+  "array_slot_mm2": 8.68,
+  "producer_fill_cycles_upper": 240,
+  "producer_ordered_drain_cycles_lower_bound": 243,
+  "modeled_serial_cycles_upper": 7123,
+  "modeled_serial_us_upper": 5.935833333333333,
+  "overlap_credit": 0,
+  "primary_shared_LAST_cycles": null,
+  "primary_receive_CDC_cycles": null,
+  "protocol": "one atomic start to producer and arithmetic; retain context through final native output handshake; either fault aborts both",
+  "qualification": "no token rate claim until source caller/shared producer/primary CDC are bound and minimum composed gate passes"
+}
