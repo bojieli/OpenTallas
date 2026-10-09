@@ -63,6 +63,39 @@ Spec `"fp_lint": false` opts out; `"fp_lint": {"set": {"util_max": 0.62}, "warn_
 Offline: `openroad` `read_db X.odb; source tools/fp_margin_lint.tcl; ot_fp_lint_dump d.json`, then
 `python3 tools/fp_margin_lint.py check d.json` (calibration and thresholds in that file's docstring).
 
+## Early-fail gates and the stuck scanner (OWNER 2026-10-08, stuckscan)
+The daemon probes every RUNNING route every 15 min (`early_fail_gate`, one ssh; spec `"early_fail": false` opts out) and
+stops a hopeless run at once with a terminal verdict, its diagnosis in `{CL}/early_fail.json`,
+`STATE/early_fail/<job>.json` and `failtrig/stuck/<job>.json` (failtrig/scan.py lists EARLY_FAIL_* as redesign work even
+with a live sibling; an old-flow hold flood is a `flow` item: re-route under the HM/stall guard):
+- `EARLY_FAIL_SETUP`: TT runs only (liberty corner read from the synthesis log), before 5_3/6_*. Post-CTS
+  (`4_1_cts.json`) WNS normalised to 833.333 (`ws + 833.333 - route period` for 730-833 ps routes; other clocks
+  unshifted) < -400 ps with > 500 failing endpoints (or TNS < -1e6); before CTS finishes, post-placement
+  (`3_5_place_dp.json`, ideal clocks) < -900 ps with > 2,000 endpoints. CALIBRATION (`stuckscan.py --calibrate`,
+  289 finished TT routes, 214 closed at TT): post-CTS -> final TT recovered p50 +133 / p90 +312 ps (NOT the 60-100 ps
+  assumed: route-SDC IO and repair after CTS), the worst post-CTS WNS that still closed is -358.1 (4 endpoints) /
+  -329.3 (656 endpoints), post-placement -736.6; the gates would have stopped 12 (CTS) / 5 (placement) routes whose best
+  final TT was -117 / -162 ps and NO eventual closure. The verdict carries the worst max path of every path group
+  from the post-CTS (else placement) report: class input/reg/macro -> reg/macro/out, wire- vs logic-dominated, max fanout.
+- `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, > 20,000 endpoints in margin (RSZ-0046) unless the HM guard
+  already auto-reduced the margin, or real hold WNS < -150 ps after 1 h of repair.
+- `EARLY_FAIL_CONGESTION`: GRT past extra iteration 20 with > 1,000 markers in the latest congestion-N.rpt and no new
+  best (by 5%) over the last two reports (10 iterations).
+- `EARLY_FAIL_DRC`: DRT past iteration 20 with > 100 violations and no new best over the last 8 iterations.
+- A stage still without a pid file 1 h after its launch is LOST (crash path: retry once elsewhere); it used to poll
+  STARTING forever (hbm_pkt_ii3ref: run dir emptied, 16 h).
+
+`stuckscan.py` (run by the 15-min drive) diagnoses every live job from one probe per host (step logs, the current
+step's hold/GRT/DRT progress, congestion reports, the job's process-tree CPU over 5 s) and recommends an action:
+`cancel` (redundant: a counting closure of the block on the same or a newer commit, or a newer descendant commit of the
+same variant RUNNING; a closure on an OLDER commit only flags `redundant?`), `early_fail` (the gates above), `kill_stage`
+(hung: no write for 45 min and < 0.2 cores; or an old-flow hold margin chase frozen >= 3 h with hold >= 0 -> the loop
+retries the stage once under the guarded flow; cancelled instead when a newer commit of the block is live), else
+`let_run` with `slow` (step > 2x the p90 duration per floorplan-ODB MB learned from finished jobs,
+`STATE/stuckscan_hist.json`) / `quiet_busy` notes. `--apply` executes them through `closure_loop.py cancel --why`,
+`early-fail <job> --verdict V --why W --detail F` and `kill-stage <job> --why W [--orfs DIR]`, and logs to
+`claude-takeover-20261007/stuckscan.log`. Report: `STATE/stuckscan_last.json`.
+
 ## Rules the daemon enforces
 - Load cap (OWNER_RULE_LOAD_CAP): launch only if `load1 + own launches of the last 5 min + threads <= cap`
   (1.2 x cores: 154 / 34 / 77) and `MemAvailable >= peak + 32 GB`; per-host per-job limits and NVMe run roots in

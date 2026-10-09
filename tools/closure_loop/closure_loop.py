@@ -70,8 +70,10 @@ SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT 
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
+# EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
+EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC")
 TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
-            "FLOORPLAN_MARGIN"}
+            "FLOORPLAN_MARGIN", *EARLY_FAIL}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
@@ -2310,6 +2312,52 @@ def stuck_watchdog(j, st):
         event(j, f"observation: {st['key']} wrote no file for {mins // 60} h; process preserved")
 
 
+EARLY_CHECK_S = 900
+STARTING_TIMEOUT_S = 3600
+
+
+def early_fail_gate(j, st):
+    """EARLY-FAIL GATES (OWNER 2026-10-08, stream stuckscan): every 15 min a RUNNING route's ORFS run is probed
+    (stuckscan.probe: post-placement / post-CTS TT setup metrics, the live hold repair, GRT congestion reports, DRT
+    violation series) and a hopeless run stops at once with EARLY_FAIL_SETUP / _HOLD / _CONGESTION / _DRC plus its
+    worst-path summary, instead of spending hours in repair/route.  Thresholds: stuckscan.GATES (calibrated on the
+    loop's finished TT routes; README "Early-fail gates").  Spec "early_fail": false opts out."""
+    now = time.time()
+    if j["spec"].get("early_fail") is False or now - j.get("ef_checked", 0) < EARLY_CHECK_S:
+        return
+    j["ef_checked"] = now
+    try:
+        import stuckscan
+        stuckscan.cl = sys.modules[__name__]
+        res, err = stuckscan.probe(j["host"], [dict(name=j["name"], run=j["run"], tag=j.get("stage_tag"), live=True)],
+                                   cpu=False, timeout=300)
+        if not res:
+            return
+        o = res["jobs"].get(j["name"]) or {}
+        bs = [b for b in o.get("bases") or [] if not b["design"].endswith("_cal")]
+        if not bs:
+            return
+        b = max(bs, key=lambda x: max([lg[1] for lg in x["logs"]] or [0]))
+        hp = stuckscan.hopeless(b, j, res.get("now", now))
+    except Exception:  # noqa: BLE001
+        log(f"[{j['name']}] early-fail gate error:\n{traceback.format_exc()}")
+        return
+    if not hp:
+        return
+    verdict, why = hp[0][0], "; ".join(w for _, w in hp)
+    detail = dict(name=j["name"], verdict=verdict, why=[w for _, w in hp], orfs=b["root"], corner=b.get("corner"),
+                  step=(b.get("current") or "")[:-8], setup=stuckscan.gate_metrics(b), hold=b.get("hold"),
+                  congestion=b.get("congestion"), drt=(b.get("drt") or [])[-12:], paths=stuckscan.path_classes(b),
+                  block=j["spec"].get("block"), owner=j["spec"].get("owner"), gates=stuckscan.GATES)
+    (STATE / "early_fail").mkdir(parents=True, exist_ok=True)
+    (STATE / "early_fail" / f"{j['name']}.json").write_text(json.dumps(detail, indent=1))
+    early_fail_finish(j, verdict, why, detail)
+    try:
+        stuckscan.failtrig_item(dict(detail, action="early_fail", kind="hopeless"))
+    except Exception:  # noqa: BLE001
+        pass
+
+
 # ---- parallel calibrate (OWNER 2026-10-08 "calibration must not gate the route"): the route starts at once on the
 # block's previous-measured insertion (STATE/measured_insertion.json), else its budget sheet insertion; the no-repair
 # CTS-only calibrate runs beside it (j["ctrack"]).  The verdict waits for it; when the measured insertion differs from
@@ -2768,11 +2816,23 @@ def step(j, fleet):
                 j["stage_idx"] += 1
                 j["status"] = "READY"
                 return
+        if state == "STARTING" and st["kind"] != "bench":
+            # stuckscan 2026-10-08: a stage with no pid file long after its launch never started (hbm_pkt_ii3ref route.a3:
+            # run dir emptied by a disk sweep, polled STARTING for 16 h) -> the crash path (LOST: retry once elsewhere)
+            try:
+                age = time.time() - dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+            except Exception:  # noqa: BLE001
+                age = 0
+            if age > STARTING_TIMEOUT_S:
+                return crash(j, st, fleet, f"LOST: stage {j.get('stage_tag')} never started (no pid file {age / 60:.0f} min "
+                                           f"after launch)")
         if state in ("RUNNING", "STARTING"):
             if j.get("unreachable"):     # 2026-10-08: clear a stale "unreachable" as the latest event once polling works
                 event(j, f"{j['host']} reachable again; {st['key']} still running")
                 j["unreachable"] = 0
             stuck_watchdog(j, st)
+            if st["kind"] == "route" and state == "RUNNING":
+                early_fail_gate(j, st)
             return
         if state == "UNREACHABLE":
             j["unreachable"] = j.get("unreachable", 0) + 1
@@ -3898,7 +3958,10 @@ def cmd_cancel(a):
     j = load_job(a.name)
     if j["status"] in TERMINAL:
         sys.exit(f"{a.name} already {j['status']}")
-    j.update(status="CANCELLED", reason="cancelled by a human", cancelled_at=now_iso())
+    why = getattr(a, "why", None)
+    if why:
+        event(j, f"cancel requested: {why}")
+    j.update(status="CANCELLED", reason="cancelled by a human" + (f" ({why[:300]})" if why else ""), cancelled_at=now_iso())
     save_job(j)                 # durable even if the remote stop or experiment register fails
     if j.get("stage_tag") and j.get("host"):
         run, t = j["run"], j["stage_tag"]
@@ -3906,7 +3969,52 @@ def cmd_cancel(a):
         ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
 for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
             timeout=180)
-    finish(j, "CANCELLED", "cancelled by a human", "CANCELLED by a human")
+    finish(j, "CANCELLED", j["reason"], "CANCELLED by a human" + (f": {why}" if why else ""))
+    save_job(j)
+
+
+def early_fail_finish(j, verdict, why, detail=None):
+    """Stop a hopeless route (stuckscan gates): kill this job's own stage (and parallel tracks), record the diagnosis
+    (STATE/early_fail/<name>.json, {CL}/early_fail.json) and end the job with the EARLY_FAIL_* verdict; failtrig/scan.py
+    reports it as redesign work."""
+    kill_own_stage(j)
+    j["early_fail"] = dict(verdict=verdict, why=why, at=now_iso(), detail=detail or {})
+    if j.get("host") and j.get("run") and detail:
+        ssh(j["host"], f"cat > {j['run']}/cl/early_fail.json", input=json.dumps(detail, indent=1), timeout=60)
+    paths = "\n".join(f"  {p.get('slack_ps')} ps {p.get('cls')} {p.get('dominated')}-dominated (wire {p.get('wire_ps')} / "
+                      f"cell {p.get('cell_ps')} ps, fanout {p.get('max_fanout')}) {p.get('start')} -> {p.get('end')}"
+                      for p in (detail or {}).get("paths", [])[:6])
+    finish(j, verdict, why[:600], f"{verdict}: {why}" + (f"\nworst paths per group (post-CTS/placement report):\n{paths}"
+                                                        if paths else ""))
+
+
+@locked_job_command
+def cmd_early_fail(a):
+    j = load_job(a.name)
+    if j["status"] != "RUNNING":
+        sys.exit(f"{a.name} is {j['status']}, not RUNNING")
+    if a.verdict not in EARLY_FAIL:
+        sys.exit(f"verdict must be one of {EARLY_FAIL}")
+    detail = json.loads(Path(a.detail).read_text()) if a.detail else None
+    early_fail_finish(j, a.verdict, a.why, detail)
+    save_job(j)
+
+
+@locked_job_command
+def cmd_kill_stage(a):
+    """stuckscan: kill a hung / stalled stage of a RUNNING job (its own process group, and the flow containers mounting
+    --orfs, else every container of its run dir).  The loop then sees the stage LOST and retries it once (crash path)."""
+    j = load_job(a.name)
+    if j["status"] != "RUNNING" or not (j.get("stage_tag") and j.get("host")):
+        sys.exit(f"{a.name} is {j['status']}: no running stage to kill")
+    run, t = j["run"], j["stage_tag"]
+    pat = shlex.quote((a.orfs.rstrip("/") + ":") if a.orfs else (run + "/"))
+    ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
+for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}}:{{{{.Destination}}}} {{{{end}}}}' $c | grep -qF {pat} && docker stop -t 5 $c; done; true""",
+        timeout=300)
+    j["stuck_kill"] = dict(at=now_iso(), why=a.why, tag=t)
+    event(j, f"stage {t} killed by stuckscan ({a.why[:300]}); the loop retries it once")
+    ledger(j, f"STUCK-KILL {t}: {a.why}")
     save_job(j)
 
 
@@ -3987,7 +4095,11 @@ def main():
     r.add_argument("--stack", action="store_true", help="ECO on top of an installed ECO (its db in the route base)")
     r = sub.add_parser("ioref-rejudge"); r.add_argument("name")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
-    c = sub.add_parser("cancel"); c.add_argument("name")
+    c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
+    ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
+    ef.add_argument("--why", required=True); ef.add_argument("--detail")
+    ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
+    ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
@@ -4011,6 +4123,10 @@ def main():
         cmd_ioref_rejudge(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "early-fail":
+        cmd_early_fail(a)
+    elif a.cmd == "kill-stage":
+        cmd_kill_stage(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
     elif a.cmd == "restore-cancelled":
