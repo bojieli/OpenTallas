@@ -114,7 +114,7 @@ module ot_qkvd_layer_tb #(
         .ar_v(ar_v_r), .ar_d(ar_r), .ar_cr(ar_cr_r), .ea_v(ea_v_r), .ea_kind(ea_r[24]), .ea_addr(ea_r[23:0]),
         .ea_cr(ea_cr_r), .eq_v(eq_v_r), .eq_d(eq_r), .dc_v(dc_v_r), .dc_d(dc_r), .dc_cr(dc_cr_r), .dh_v(dh_v_r),
         .dh_d(dh_r), .dh_cr(dh_cr_r), .tx_up(rom_up), .tx_v(rom_txv), .tx_flit(rom_txf), .rx_v(rom_rxv),
-        .rx_flit(rom_rxf), .pll_fwd_pad(clk), .rst_fwd_pad(rst_n), .pll_fwd_o(), .rst_fwd_o(), .fault(faults[0]),
+        .rx_flit(rom_rxf), .fault(faults[0]),
         .fault_cause(rom_fc));
     // ---------------- package: the two macros ----------------
     reg [31:0] cyc;
@@ -131,8 +131,8 @@ module ot_qkvd_layer_tb #(
     wire [2:0]     kt_v;  wire [3*W-1:0] kt_d;  wire [2:0] kt_cr;
     ot_qkvd_kv_end #(.QD(KB + 8), .UCX(TIGHT ? 64 : KB + 8), .FCR_RES(TIGHT ? 4 : 32), .MUT(MUT == 1 ? 1 : 0)) u_kv (
         .clk(clk), .rst_n(rst_n), .t_v(kt_v), .t_d(kt_d), .t_cr(kt_cr), .r_v(kr_v), .r_d(kr_d), .r_cr(kr_cr),
-        .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .pll_fwd_i(clk),
-        .rst_fwd_i(rst_n), .pll_fwd_pad(), .rst_fwd_pad(), .fault(faults[1]), .fault_cause(kv_fc));
+        .tx_up(kv_up), .tx_v(kv_txv), .tx_flit(kv_txf), .rx_v(kv_rxv), .rx_flit(kv_rxf), .fault(faults[1]),
+        .fault_cause(kv_fc));
     wire [3:0]     sc_v;  wire [4*W-1:0] sc_d;  wire [3:0] sc_cr;
     wire [2:0]     su_tv; wire [3*W-1:0] su_td; wire [2:0] su_tcr;
     ot_hdc_delay #(.W(4), .D(KV_ST), .RESET(1)) u_k1v (.clk(clk), .rst_n(rst_n), .d(kr_v), .q(sc_v));
@@ -147,7 +147,7 @@ module ot_qkvd_layer_tb #(
     wire [511:0]  a_qd, a_od;
     wire [E-1:0]  e_rv;
     wire [E*HD*8-1:0] e_rd;
-    wire [7:0]    seq_fc;
+    wire [8:0]    seq_fc;
     wire [4:0]    af;
     wire [3:0]    mf;
     ot_qkvd_kv_seq #(.HD(HD), .R(R), .W(W), .QD(KB + 8), .CD(4), .KD(8), .ED(32), .GWC(32), .UC0(TIGHT ? 64 : KB + 8), .UC1(KB + 8),
@@ -155,7 +155,7 @@ module ot_qkvd_layer_tb #(
         .clk(clk), .rst_n(rst_n), .c_v(sc_v), .c_d(sc_d), .c_cr(sc_cr), .u_v(su_tv), .u_d(su_td), .u_cr(su_tcr),
         .a_start(a_start), .a_T(a_T), .a_q_valid(a_qv), .a_q_beat(a_qb), .a_q_data(a_qd), .a_out_valid(a_ov),
         .a_out_g(a_og), .a_out_beat(a_ob), .a_out_data(a_od), .a_hub_fault(af[4]), .a_stk_fault(af[3:0]),
-        .m_fault(mf), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
+        .m_fault(mf), .d2d_fault(faults[1]), .d2d_cause(kv_fc), .kvw_v(kvw_v), .kvw_vg(kvw_vg), .kvw_t(kvw_t), .kvw_layer(kvw_layer), .kvw_d(kvw_d),
         .kvw_cr(kvw_cr), .emb_req_v(emb_req_v), .emb_req_d(emb_req_d), .emb_req_cr(emb_req_cr), .emb_q_v(emb_q_v),
         .emb_q_d(emb_q_d), .emb_q_cr(emb_q_cr), .hc_v(hc_v), .hc_d(hc_d), .hc_cr(hc_cr), .tok_v(tok_v),
         .tok_d(tok_d), .tok_cr(tok_cr), .fault(faults[2]), .fault_cause(seq_fc));
