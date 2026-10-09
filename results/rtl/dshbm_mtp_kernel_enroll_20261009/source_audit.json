@@ -1,0 +1,39 @@
+{
+  "schema": "opentallas.dshbm.mtp.production_kernel_audit.v1",
+  "target": "DeepSeek-V4.1 HBM accelerator native MTP",
+  "status": "INCOMPLETE",
+  "selected_control": "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend_mx1.sv at f7498a6b1",
+  "kernel_order_source": "tools/gpu_sys/v41_dspark.py KINDS and expand",
+  "kernel_order": ["swapin", "swapout", "embed", "layer", "head", "seed", "demb", "dsa", "dsb", "dhead", "markov"],
+  "selected_semantic_graph": "tools/w19_hbm_tp96_isa.py Compiler.compile_layer/compile_head; op dictionaries are not instruction images",
+  "released_rounding": "tools/hdc_golden_v41.py chunk8, BF16 publication, exact tree order; draft own-block attention intentionally noncausal",
+  "reduced_image_generator": {
+    "path": "tools/gpu_sys/v41_dspark_connected.py emit_images",
+    "status": "HISTORICAL_REDUCED_ONLY",
+    "actual_shapes": {"hidden": 160, "residual": 640, "context": 32, "SM_per_die": 2},
+    "incompatible_with": {"hidden": 5120, "residual": 20480, "SM_per_die": 32, "position_bits": 20},
+    "reason": "Kernel arithmetic, workspace offsets, descriptor extents and collective topology are all reduced; changing metadata does not generate full-shape images."
+  },
+  "actual_SM_ISA": "tools/gpu_sys/isa.py SRAM64; linked branch relocation is authoritative for SM programs",
+  "native_SU_ISA": "rtl/test/tb_hdc_v41x_vec_fields.svh native690, separately compiled; no selected DS native690 namespace known",
+  "new_implementation": "tools/dshbm_mtp_kernel_enroll.py links unrelocated source SRAM64 kernel words across all32 SMs and emits actual backend PC64 install events; no guessed addresses",
+  "remote_gate": {
+    "host": "ot-agidock128",
+    "admission_GiB": 1,
+    "path": "/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/kernel-enroll-r1",
+    "scope": "Linker fixtures only, not numerical or production image qualification",
+    "result": "verdict.json"
+  },
+  "reused_numeric_evidence": "results/rtl/dshbm_dspark_rtl_20261003/sm_fullshape.json; Markov560/LMhead3671/mainproj449 cycles, component-only",
+  "missing": [
+    "Full-shape source generator for all11 kernels, including actual SRAM/HBM addressing and mutable payload protection",
+    "Actual layer compiler image for dedicated compressor/key/attention/collective operators and native690 SU dispatch",
+    "Source-generated selected SRAM PC map and real loader acknowledgement",
+    "Minimum actual installed native CP to numerical kernel gate plus operand/arithmetic mutant",
+    "Complete latency composition and physical qualification with actual clock arrival"
+  ],
+  "production_images_enrolled": 0,
+  "native_CP_numerical_binding": false,
+  "whole_token_PASS": false,
+  "new_physical_submission": false
+}

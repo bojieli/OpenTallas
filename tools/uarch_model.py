@@ -14575,3 +14575,9 @@ def hbm_native_mtp_mx1_model():
     """Confirmed drained-reset/plain-control-flop native MTP model."""
     from hbm_native_mtp_mx1_model import model
     return model()
+
+
+def dshbm_mtp_kernel_enrollment_model():
+    """Full-shape kernel enrollment and actual component receipts; total unknown until complete."""
+    from dshbm_mtp_kernel_model import model
+    return model()

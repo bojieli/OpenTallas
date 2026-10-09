@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "scope": "source-linker fixture gate only; no production images or arithmetic",
+  "actual_SM_replicas": 32,
+  "kernels": 11,
+  "linked_words": 44,
+  "positive_cases": 2,
+  "negative_cases": {
+    "reduced_hidden": "selected full-shape chunk8 contract required; reduced images refused",
+    "token16_truncation": "selected full-shape chunk8 contract required; reduced images refused",
+    "missing_SM": "head: actual 32 SM payloads required",
+    "duplicated_SM": "SM order or duplicate ownership",
+    "payload_mutation": "source payload hash mismatch: /srv/opentallas-scratch/review-hbm-token-fifo-97740d865/kernel-enroll-r1/markov_0.hex"
+  },
+  "numerical_qualified": false,
+  "source_sha256": {
+    "/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/tools/dshbm_mtp_kernel_enroll_gate.py": "155b6d1d05513dbbea17728926db2fad8ed40551dadbfa72404e0f829a076618",
+    "/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/tools/dshbm_mtp_kernel_enroll.py": "d5e271d1392a611680f859ceb82589f414bef300ca5dabf7c546d84c9f2466a1",
+    "/srv/opentallas-scratch/review-hbm-token-fifo-97740d865/tools/gpu_sys/isa.py": "0554044c77d6e3da00cd159a46061f1c48c51778d2178871998f3dde4c392677"
+  }
+}
