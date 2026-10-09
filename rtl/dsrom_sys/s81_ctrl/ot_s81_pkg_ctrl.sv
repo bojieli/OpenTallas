@@ -115,6 +115,8 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     wire [USER_W-1:0] in_user = in_data[SH_USER +: USER_W];
     wire [NW-1:0]     in_pos  = in_data[SH_POS +: NW];
     wire [SH_LENW-1:0] in_len = in_data[SH_LEN +: SH_LENW];
+    wire window_bad=WINDOW_CONTEXT && (!in_data[276] || in_data[208 +:17]>=17'd99092 ||
+        in_data[225 +:17]>=17'd99092 || in_data[242 +:17]>=17'd99092 || in_data[259 +:17]>=17'd99092);
     assign vm_wdata = in_data;
 
     reg [NW-1:0] upos [0:MAXU-1];     // next expected position (SOURCE: the in-flight step)
@@ -164,7 +166,9 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         case (rx_st)
             R_IDLE: begin
                 if (in_type == MT_HIDDEN && !SOURCE) begin
-                    in_ready = job_rdy; rx_hdr_h = in_valid && job_rdy;
+                    in_ready = window_bad ? 1'b1 : job_rdy;
+                    rx_hdr_h = in_valid && job_rdy && !window_bad;
+                    rx_bad = in_valid && window_bad;
                 end else if (in_type == MT_SIDE) begin
                     in_ready = 1'b1; rx_hdr_s = in_valid;
                 end else if (in_type == MT_RESULT && SOURCE) begin
@@ -252,7 +256,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                 if (in_last) rx_st <= R_IDLE;
             end
             if (rx_bad) begin
-                flt((in_type == MT_HIDDEN) ? 4'd5 : 4'd4);
+                flt((in_type == MT_HIDDEN) ? (window_bad ? 4'd9 : 4'd5) : 4'd4);
                 rx_st <= in_last ? R_IDLE : R_SKIP;
             end
             if (rx_st == R_SKIP && in_valid && in_last) rx_st <= R_IDLE;
