@@ -14116,3 +14116,8 @@ def hbm_owner_key_projection_model():
     """Full128x512 goldenchunk8 projection with explicit finiteprovider gap."""
     from tools.hbm_owner_key_projection_model import model
     return model()
+
+def hbm_vm8_face_family_model():
+    """Optional full eight-half relay hierarchy with literal native depths."""
+    from tools.hbm_vm8_face_family import model
+    return model()
