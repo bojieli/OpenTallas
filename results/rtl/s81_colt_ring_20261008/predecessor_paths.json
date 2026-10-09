@@ -1,0 +1,198 @@
+{
+ "schema": "opentallas.closure_loop.path_summary.v1",
+ "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-d04574493-lvt-tc-hm10-g12-d2125/routes/s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/work/orfs/results/asap7/opentallas_dsfd_colt_lane_asap7_s81ph_s81ph_dsfd_colt_lane_d04574493_lvt_tc_hm10_g12_d2125/base",
+ "setup_ss": {
+  "paths_seen": 1200,
+  "worst_slack_ps": -165.3,
+  "classes": [
+   {
+    "start_class": "fc[*]$_DFF_PN0_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": -165.3,
+    "paths": 382,
+    "max_levels": 13,
+    "example_start": "fc[2]$_DFF_PN0_/QN",
+    "example_end": "u_q.ob[1][278]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_q.f3$_DFF_PN0_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": -108.69,
+    "paths": 16,
+    "max_levels": 14,
+    "example_start": "u_q.f3$_DFF_PN0_/QN",
+    "example_end": "u_q.ob[0][43]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_q.oc[*]$_DFF_PN0_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": -87.61,
+    "paths": 2,
+    "max_levels": 12,
+    "example_start": "u_q.oc[1]$_DFF_PN0_/QN",
+    "example_end": "u_q.ob[0][63]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "ow[*]$_DFF_PN0_/QN",
+    "end_class": "t_w[*]",
+    "worst_slack_ps": -40.5,
+    "paths": 396,
+    "max_levels": 5,
+    "example_start": "ow[229]$_DFF_PN0_/QN",
+    "example_end": "t_w[229]"
+   },
+   {
+    "start_class": "flt[*]$_DFF_PN0_/QN",
+    "end_class": "t_f[*]",
+    "worst_slack_ps": 10.79,
+    "paths": 4,
+    "max_levels": 5,
+    "example_start": "flt[2]$_DFF_PN0_/QN",
+    "example_end": "t_f[2]"
+   },
+   {
+    "start_class": "rst[*]",
+    "end_class": "rst_s[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 452.48,
+    "paths": 2,
+    "max_levels": 2,
+    "example_start": "rst[0]",
+    "example_end": "rst_s[1]$_DFF_PN0_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "ow[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 847.54,
+    "paths": 388,
+    "max_levels": 13,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "ow[123]$_DFF_PN0_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "flt[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 1023.38,
+    "paths": 1,
+    "max_levels": 10,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "flt[0]$_DFF_PN0_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "u_q.rp[*]$_DFFE_PN0P_/RESETN",
+    "worst_slack_ps": 1113.76,
+    "paths": 8,
+    "max_levels": 8,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "u_q.rp[6]$_DFFE_PN0P_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "u_q.wp[*]$_DFFE_PN0P_/RESETN",
+    "worst_slack_ps": 1135.67,
+    "paths": 1,
+    "max_levels": 8,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "u_q.wp[7]$_DFFE_PN0P_/RESETN"
+   }
+  ],
+  "errors": []
+ },
+ "hold_ff": {
+  "paths_seen": 1200,
+  "worst_slack_ps": -1.26,
+  "classes": [
+   {
+    "start_class": "pd[*]$_DFF_P_/QN",
+    "end_class": "u_q.g_m[*].u_m/wd_in[*]",
+    "worst_slack_ps": -1.26,
+    "paths": 103,
+    "max_levels": 3,
+    "example_start": "pd[105]$_DFF_P_/QN",
+    "example_end": "u_q.g_m[0].u_m/wd_in[105]"
+   },
+   {
+    "start_class": "ow[*]$_DFF_PN0_/QN",
+    "end_class": "t_w[*]",
+    "worst_slack_ps": 0.68,
+    "paths": 398,
+    "max_levels": 3,
+    "example_start": "ow[278]$_DFF_PN0_/QN",
+    "example_end": "t_w[278]"
+   },
+   {
+    "start_class": "w[*]$_DFF_P_/QN",
+    "end_class": "pd[*]$_DFF_P_/D",
+    "worst_slack_ps": 5.17,
+    "paths": 81,
+    "max_levels": 4,
+    "example_start": "w[336]$_DFF_P_/QN",
+    "example_end": "pd[335]$_DFF_P_/D"
+   },
+   {
+    "start_class": "u_q.ob[*][*]$_DFFE_PP_/QN",
+    "end_class": "ow[*]$_DFF_PN0_/D",
+    "worst_slack_ps": 6.13,
+    "paths": 23,
+    "max_levels": 3,
+    "example_start": "u_q.ob[0][282]$_DFFE_PP_/QN",
+    "example_end": "ow[283]$_DFF_PN0_/D"
+   },
+   {
+    "start_class": "u_q.ob[*][*]$_DFFE_PP_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 8.04,
+    "paths": 144,
+    "max_levels": 4,
+    "example_start": "u_q.ob[1][122]$_DFFE_PP_/QN",
+    "example_end": "u_q.ob[0][122]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "u_q.rq_r[*]$_DFFE_PP_/QN",
+    "end_class": "u_q.ob[*][*]$_DFFE_PP_/D",
+    "worst_slack_ps": 8.51,
+    "paths": 4,
+    "max_levels": 3,
+    "example_start": "u_q.rq_r[260]$_DFFE_PP_/QN",
+    "example_end": "u_q.ob[0][260]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "flt[*]$_DFF_PN0_/QN",
+    "end_class": "t_f[*]",
+    "worst_slack_ps": 9.06,
+    "paths": 2,
+    "max_levels": 3,
+    "example_start": "flt[0]$_DFF_PN0_/QN",
+    "example_end": "t_f[0]"
+   },
+   {
+    "start_class": "u_q.rq_r[*]$_DFFE_PP_/QN",
+    "end_class": "u_q.rq_r[*]$_DFFE_PP_/D",
+    "worst_slack_ps": 10.34,
+    "paths": 45,
+    "max_levels": 2,
+    "example_start": "u_q.rq_r[325]$_DFFE_PP_/QN",
+    "example_end": "u_q.rq_r[325]$_DFFE_PP_/D"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "srem[*]$_DFFE_PN0P_/RESETN",
+    "worst_slack_ps": 76.55,
+    "paths": 12,
+    "max_levels": 6,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "srem[8]$_DFFE_PN0P_/RESETN"
+   },
+   {
+    "start_class": "rst_s[*]$_DFF_PN0_/QN",
+    "end_class": "crd[*]$_DFF_PN0_/RESETN",
+    "worst_slack_ps": 79.27,
+    "paths": 3,
+    "max_levels": 8,
+    "example_start": "rst_s[1]$_DFF_PN0_/QN",
+    "example_end": "crd[0]$_DFF_PN0_/RESETN"
+   }
+  ],
+  "errors": []
+ }
+}
