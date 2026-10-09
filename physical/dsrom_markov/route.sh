@@ -21,7 +21,7 @@ TOP=ot_dsrom_markov_row
 args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv
  --source rtl/v41rom/ot_v41_fadd.sv --source rtl/common/ot_prefix.sv
  --source rtl/v41rom/ot_v41_bmul2.sv --source rtl/v41rom/ot_dsrom_bmul3.sv
- --param K=256 --param CUT=511 --param SPLIT9=1 --param MUTANT_FOLD=0
+ --param K=256 --param PINREG=${PINREG:-0} --param CUT=511 --param SPLIT9=1 --param MUTANT_FOLD=0
  --orfs-var SYNTH_HDL_FRONTEND=slang --die-area 0 0 600 600 --core-area 2 2 598 598
  --core-utilization 55 --max-fanout 16 --routing-layers M2 M6
  --pin-region '^weight_bf16.*=left:30-570' --pin-region '^embed_bf16.*=bottom:30-570'
