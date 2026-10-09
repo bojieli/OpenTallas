@@ -1,0 +1,263 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_dsrom_hc_mean_capture",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:review_dsrom_token_path",
+      "recorded_at": "2026-10-09T07:19:36.631897+00:00",
+      "description": "Independent input-HC4 means L37/L38/L39, full1280d TP4 rank; protected3SRAM;120 ordered512b flits. Remote gate AGIdock PID2753144. Actual H input VM read and seed QX joins pending.",
+      "source": {
+        "commit": "20585cd70",
+        "paths": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented",
+        "evidence": [
+          "rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_mean_capture.sv",
+          "tools/dsrom_hc_mean_capture_model.py",
+          "rtl/test/dsrom_hc_capture_20261009/tb_hc_mean_capture.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/dsrom_hc_mean_capture_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "native pre-hc_pre H VM read adapter",
+        "L37/L38/L39 input capture dispatch",
+        "seed QX delivery"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsrom_mtp_seed_projection_full15360",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp_rom/draft_p2",
+      "recorded_at": "2026-10-09T07:19:36.631897+00:00",
+      "description": "Released5120x15360 FP8 projection plus5120BF16 norm. Native phase K13 cannot encode15360; exact aligned segmentation/ordered reduction under implementation.",
+      "source": {
+        "commit": "20585cd70",
+        "paths": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "implementation": {
+        "status": "in progress",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "ot_dsrom_hc_mean_capture",
+        "full15360 native descriptor ABI",
+        "released scale packing",
+        "main_norm exact golden"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsrom_mtp_head_full340_A",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:s81_continuation/dies_scan_head",
+      "recorded_at": "2026-10-09T07:19:36.631897+00:00",
+      "description": "Typed696slot/BF338 inventory and340 Markov A engines680 ROMs; historical631 storage recipe insufficient. Full-shape actual physical head not qualified.",
+      "source": {
+        "commit": "20585cd70",
+        "paths": [
+          "tools/mtp_die_reprice.py",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "in progress",
+        "evidence": [
+          "tools/mtp_die_reprice.py",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "full typed BF IDs",
+        "aligned head input staging",
+        "actual Markov weight/embedding ports"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsrom_native_engine_argument_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:ds_control",
+      "recorded_at": "2026-10-09T07:19:36.631897+00:00",
+      "description": "Native84bit cmd/done8 queues and CDC exist; engine-specific compiler arg24 translation and actual slab/VM joins remain mandatory. Synthetic descriptor bitbundles do not prove full token control.",
+      "source": {
+        "commit": "20585cd70",
+        "paths": [
+          "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+          "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv"
+        ]
+      },
+      "implementation": {
+        "status": "missing",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+          "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "production compiler engine argument translation",
+        "native slab cmd/done binding",
+        "finite VM reservations"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsrom_mtp_seq_native_binding",
+      "target": "DeepSeek ROM",
+      "owner": "Codex:mtp_rom",
+      "recorded_at": "2026-10-09T07:19:36.631897+00:00",
+      "description": "Sequencer component exists; old full-die aggregate64/128/576 buses do not describe actualNW21 wrapper ports. Full seed/draft/verify/rollback identity-bound composition remains pending.",
+      "source": {
+        "commit": "20585cd70",
+        "paths": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "implementation": {
+        "status": "component implemented",
+        "evidence": [
+          "rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv",
+          "rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv",
+          "tools/dsrom_s81_fulldie.py"
+        ]
+      },
+      "model": {
+        "status": "sized",
+        "evidence": [
+          "tools/mtp_die_reprice.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "seed/draft native endpoints",
+        "verify causal path",
+        "rollback committed-state join"
+      ],
+      "integration": {
+        "status": "unbound",
+        "evidence": []
+      }
+    }
+  ]
+}
