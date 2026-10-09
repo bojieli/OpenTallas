@@ -1799,13 +1799,15 @@ def get_metrics(j, tt_resta=True):
                                f"{(r.stderr or r.stdout).strip()[-300:]}")
         m = json.loads(last[-1]) if last else {}
         return dict(ss_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"), orfs_dir=m.get("orfs_dir"),
-                    raw=m)
+                    setup_corner=m.get("setup_corner"), clock_periods_ps=m.get("clock_periods_ps"),
+                    ss_sensitivity_ps=m.get("ss_sensitivity_ps"), raw=m)
     py = r"""
-import glob,json,sys
+import glob,json,sys,re
 cs=sorted(glob.glob(sys.argv[1])); dm=sorted(glob.glob(sys.argv[2])) if sys.argv[2] else []
 o={'corner_sta':cs,'drc_metrics':dm}
 if cs:
   d=json.load(open(cs[-1])); o['ff_ps']=d['hold_ff']['worst_slack_ps']
+  o['clock_periods_ps']={name:float(period) for name,period in re.findall(r'create_clock\s+-name\s+(\S+)\s+-period\s+([0-9.]+)', d.get('extra_sdc',''))}
   o['orfs_dir']=d.get('orfs_dir'); o['post_sdc']=list(d.get('post_sdc',{}))
   o['sdc_name']=d.get('sdc_name') or d['hold_ff'].get('sdc_name') or '6_final.sdc'; o['setup_post_sdc']=list(d.get('setup_post_sdc') or [])
   o['ss_sensitivity_ps']=d['setup_ss']['worst_slack_ps']; o['ss_sensitivity_tns_ps']=d['setup_ss'].get('tns_ps')
@@ -1865,6 +1867,13 @@ def setup_corner_label(metrics):
     return {"tt": "TT", "tc": "TT", "ss": "SS", "wc": "SS"}.get(corner, corner.upper())
 
 
+def measured_clock_text(metrics):
+    periods = metrics.get("clock_periods_ps") or {}
+    if not periods:
+        return "under measured clock constraints"
+    return "at " + ", ".join(f"{name} {period:g} ps" for name, period in sorted(periods.items()))
+
+
 def setup_sensitivity_text(metrics):
     value = metrics.get("ss_sensitivity_ps")
     return f"; SS sensitivity {value:+.2f} ps" if isinstance(value, (int, float)) else ""
@@ -1901,10 +1910,10 @@ def publish(j, metrics):
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
                        owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
-                       host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0,
-                       rule="OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity at 833.333 (60/25 uncertainties; +15 design target), "
+                       host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
+                       rule="OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), "
                             "agreed die-clock IO budgets, DRC 0"),
-                       metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
+                       metrics={k: metrics.get(k) for k in ("ss_ps", "ff_ps", "drc", "ss_tns_ps", "clock_periods_ps", "setup_corner", "ss_sensitivity_ps", "ss_sensitivity_tns_ps", "corner_sta_tt", "post_sdc", "corner_sta",
                                                             "drc_metrics", "drc_skipped")},
                        benches=j.get("benches", {}), no_bench_reason=spec.get("no_bench_reason"),
                        checks=j.get("checks", {}), calibration=j.get("calibration"), cycles_added=spec.get("cycles_added"), status="CLOSED",
@@ -1914,7 +1923,7 @@ def publish(j, metrics):
         git("add", "--sparse", "--", *tos, cwd=cwt)
         staged = sh(["git", "-C", str(cwt), "diff", "--cached", "--name-only"], timeout=120).stdout.split()
         msg = (f"closure-loop: {spec['block']} CLOSED {setup_corner_label(metrics)} {metrics['ss_ps']:+.2f} / FF {metrics['ff_ps']:+.2f} ps DRC "
-               f"{metrics['drc']}{setup_sensitivity_text(metrics)} at 833.333 (source {j['commit_full'][:9]}, {host_cfg(j['host'])['label']} "
+               f"{metrics['drc']}{setup_sensitivity_text(metrics)} {measured_clock_text(metrics)} (source {j['commit_full'][:9]}, {host_cfg(j['host'])['label']} "
                f"{j['run']}); job {j['name']}, owner {spec['owner']}\n\nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>\n")
         if staged:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m", msg,
