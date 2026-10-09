@@ -5,6 +5,7 @@
 // Three real SRAM macros retain120 distinct512b frames with SECDED72.
 module ot_dsrom_hc_seed_join #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,MAX_CONTEXT=1048576,
+    parameter integer ECC_PIPE=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -18,7 +19,7 @@ module ot_dsrom_hc_seed_join #(
     output wire [5:0] out_frame,output wire out_last,output wire out_corrected,
     output wire busy,output reg fault
 );
-    localparam [2:0] ARRIVE=0,COMMIT=1,READ=2,RWAIT=3,RCAP=4,HOLD=5;
+    localparam [2:0] ARRIVE=0,COMMIT=1,READ=2,RWAIT=3,RCAP=4,HOLD=5,RECC=6;
     reg [2:0] state;
     reg owned;
     reg [USER_W-1:0] user_q;
@@ -37,13 +38,21 @@ module ot_dsrom_hc_seed_join #(
     wire fire=in_valid&&in_ready;
     wire [575:0] encoded;
     wire [767:0] memory_q;
-    wire [7:0] ce,ue;
+    wire [7:0] ce,ue,decode_valid;
     wire [7:0] ra={6'd0,rcapture}*8'd40+{2'd0,rframe};
     genvar l,b;
     generate for(l=0;l<8;l=l+1) begin:g_code
         ot_s81_secded_enc72 e(.d(in_data[64*l+:64]),.c(encoded[72*l+:72]));
-        ot_s81_secded_dec72 d(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-            .d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+        if(ECC_PIPE) begin:g_pipe
+            ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
+                .valid_in(state==RCAP&&!fault),
+                .c(memory_q[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+        end else begin:g_comb
+            assign decode_valid[l]=1'b0;
+            ot_s81_secded_dec72 d(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
+        end
     end
     for(b=0;b<3;b=b+1) begin:g_sram
         wire [767:0] banks={192'd0,wd_q};
@@ -81,7 +90,8 @@ module ot_dsrom_hc_seed_join #(
                         else state<=ARRIVE;
                 READ: state<=RWAIT;
                 RWAIT: state<=RCAP;
-                RCAP: begin held_code<=memory_q[575:0];state<=HOLD;end
+                RCAP: begin held_code<=memory_q[575:0];state<=ECC_PIPE?RECC:HOLD;end
+                RECC: if(&decode_valid) state<=HOLD;
                 HOLD: if(|ue) fault<=1;
                     else if(out_ready) begin
                         if(rframe==39) begin

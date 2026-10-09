@@ -10,6 +10,7 @@ module ot_dsrom_hc_mean_capture #(
     parameter integer USER_W=10, POS_W=21, EPOCH_W=4,
     parameter integer ADD_LAT=7, MUL_LAT=7,
     parameter integer MAX_CONTEXT=1048576,
+    parameter integer ECC_PIPE=0, // opt-in registered syndrome and correction
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -35,7 +36,7 @@ module ot_dsrom_hc_mean_capture #(
     output wire busy, output reg fault
 );
     localparam [3:0] CMD=0,LOAD=1,AISS=2,AWAIT=3,MISS=4,MWAIT=5,
-                     STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11;
+                     STORE=6,WCOMMIT=7,RREQ=8,RWAIT=9,RDECODE=10,RHOLD=11,RECC=12;
     reg [3:0] state;
     reg owned;
     reg [USER_W-1:0] user_q;
@@ -79,11 +80,20 @@ module ot_dsrom_hc_mean_capture #(
     end endgenerate
     wire [575:0] write_code,read_code;
     wire [767:0] bank_data;
-    wire [7:0] enc_ce,dec_ue;
+    wire [7:0] enc_ce,dec_ue,decode_valid;
     generate for(l=0;l<8;l=l+1) begin:g_ecc
         ot_s81_secded_enc72 u_enc(.d(pack_q[64*l+:64]),.c(write_code[72*l+:72]));
-        ot_s81_secded_dec72 u_dec(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
-            .d(out_data[64*l+:64]),.ce(enc_ce[l]),.ue(dec_ue[l]));
+        if(ECC_PIPE) begin:g_pipe
+            ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_n),
+                .valid_in(state==RDECODE&&!fault),
+                .c(read_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),
+                .ce(enc_ce[l]),.ue(dec_ue[l]));
+        end else begin:g_comb
+            assign decode_valid[l]=1'b0;
+            ot_s81_secded_dec72 u_dec(.c(held_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .d(out_data[64*l+:64]),.ce(enc_ce[l]),.ue(dec_ue[l]));
+        end
     end endgenerate
     wire [7:0] write_addr=(MUT_LAYER_ALIAS?8'd0:{6'd0,capture_q})*8'd40+{2'd0,frame_q};
     wire [7:0] read_addr={6'd0,read_capture}*8'd40+{2'd0,read_frame};
@@ -170,7 +180,8 @@ module ot_dsrom_hc_mean_capture #(
                 end
                 RREQ: state<=RWAIT;
                 RWAIT: state<=RDECODE;
-                RDECODE: begin held_code<=read_code;state<=RHOLD;end
+                RDECODE: begin held_code<=read_code;state<=ECC_PIPE?RECC:RHOLD;end
+                RECC: if(&decode_valid) state<=RHOLD;
                 RHOLD: begin
                     if(|dec_ue) fault<=1;
                     else if(out_ready) begin

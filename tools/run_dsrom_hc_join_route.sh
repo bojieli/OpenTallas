@@ -6,6 +6,8 @@ export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_fl
 # Characterization only; actual registered receive/seed endpoints and clock
 # budgets remain pending. Use the actual three-macro protected join.
 python3 tools/run_abi3_physical.py --view asap7 --top ot_dsrom_hc_seed_join \
+ --param ECC_PIPE=${HC_ECC_PIPE:-0} \
+ --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv \
  --source rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_seed_join.sv \
  --source rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv \
  --macro-view ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 \

@@ -1,5 +1,10 @@
 `timescale 1ns/1ps
 module tb_hc_seed_join;
+`ifdef HC_ECC_PIPE
+    localparam integer EP=1;
+`else
+    localparam integer EP=0;
+`endif
     reg clk=0;always #5 clk=~clk;
     reg rst_n=0,in_valid=0,out_ready=0;
     reg [511:0] in_data=0;reg [9:0] in_user=513;
@@ -15,7 +20,7 @@ module tb_hc_seed_join;
 `else
     localparam [71:0] INJ=72'd0;
 `endif
-    ot_dsrom_hc_seed_join #(.READ_INJECT(INJ)) u(.*);
+    ot_dsrom_hc_seed_join #(.ECC_PIPE(EP),.READ_INJECT(INJ)) u(.*);
     reg [511:0] expected[0:119];string idir;
     integer bad=0,reset_test=0,reset_done=0,phase,cap,f,nout=0,cycles=0,corrected=0;
     reg stalled=0;reg [511:0] held;
