@@ -14150,3 +14150,9 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
+
+
+def hbm_index_native_format_model():
+    """Native query credit, lossless real TU payload and literal-slot decoder."""
+    from tools.hbm_index_native_format_model import model
+    return model()
