@@ -70,10 +70,11 @@ module tb_dshbm_dspark;
     // PRL 2 token reads); +define+HFD_MTP_XSEL feeds the selections from bench-side selectors (the die's hfd_router)
     localparam integer HM_FAST = `ifdef HFD_MTP_FAST 1 `else 0 `endif;
     localparam integer HM_XSEL = `ifdef HFD_MTP_XSEL 1 `else 0 `endif;
+    localparam integer HM_SPECF = `ifdef HFD_MTP_SPECF 1 `else 0 `endif;   // hgi-takeover: pipelined spec state (ot_dshbm_spec_state_f)
     wire x_v, x_draft; wire [KV*IW-1:0] x_ids; wire [2:0] x_col; reg u_flush_d = 0;
     ot_hfd_mtp_core #(.B(B), .PMAX(PMAX), .TW(TW), .NL(NL), .NST(3), .MAXPOS(MAXPOS), .W(W), .WR(WR), .SR(SR),
         .TR(16), .NG(4), .NSRC(4), .RLOG(16'h0111), .CKMAX(1 << 16), .AW(AW), .LP(LP), .FLAT(7), .NEXP(NEXP),
-        .KV(KV), .NDEXP(NDEXP), .KD(KD), .RP(RP), .IW(IW), .MUT(MUT), .FAST(HM_FAST), .SPECF(0), .UNF(NEXP >= 32 ? HM_FAST : 0), .AMF(HM_FAST),
+        .KV(KV), .NDEXP(NDEXP), .KD(KD), .RP(RP), .IW(IW), .MUT(MUT), .FAST(HM_FAST), .SPECF(HM_SPECF), .UNF(NEXP >= 32 ? HM_FAST : 0), .AMF(HM_FAST),
         .XSEL(HM_XSEL)) dut (
         .clk(clk), .rst_n(rst_n), .start(start), .cfg_gamma(GAMMA[3:0]), .cfg_force(FORCE[0]),
         .cfg_ngen(NGEN[15:0]), .cfg_plen(PLEN[15:0]), .p_addr(p_addr), .p_tok(prm[p_addr[7:0]][TW-1:0]),
