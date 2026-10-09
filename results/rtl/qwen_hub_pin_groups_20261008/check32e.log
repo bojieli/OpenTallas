@@ -1,0 +1,599 @@
+OPENROAD: /OpenROAD-flow-scripts/tools/OpenROAD
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO IFP-0001] Added 1511 rows of 7559 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 412.536 412.536 ) um
+[INFO IFP-0101] Core BBox: (  2.160  2.160 ) ( 410.346 410.130 ) um
+[INFO IFP-0102] Core area:                       166527.642 um^2
+[INFO IFP-0103] Total instances area:             22368.271 um^2
+[INFO IFP-0104] Effective utilization:                0.134
+[INFO IFP-0105] Number of instances:                 159701
+Found 0 macro blocks.
+[INFO PPL-0044] Pin group: [ l2_i[0] l2_i[1] l2_i[2] l2_i[3] l2_i[4] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[32] l2_i[33] l2_i[34] l2_i[35] l2_i[36] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[64] l2_i[65] l2_i[66] l2_i[67] l2_i[68] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[96] l2_i[97] l2_i[98] l2_i[99] l2_i[100] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[128] l2_i[129] l2_i[130] l2_i[131] l2_i[132] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[160] l2_i[161] l2_i[162] l2_i[163] l2_i[164] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[192] l2_i[193] l2_i[194] l2_i[195] l2_i[196] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[224] l2_i[225] l2_i[226] l2_i[227] l2_i[228] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[256] l2_i[257] l2_i[258] l2_i[259] l2_i[260] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[288] l2_i[289] l2_i[290] l2_i[291] l2_i[292] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[320] l2_i[321] l2_i[322] l2_i[323] l2_i[324] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[352] l2_i[353] l2_i[354] l2_i[355] l2_i[356] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[384] l2_i[385] l2_i[386] l2_i[387] l2_i[388] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[416] l2_i[417] l2_i[418] l2_i[419] l2_i[420] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[448] l2_i[449] l2_i[450] l2_i[451] l2_i[452] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[480] l2_i[481] l2_i[482] l2_i[483] l2_i[484] ... ]
+[INFO PPL-0044] Pin group: [ l2_i[512] l2_i[513] l2_i[514] l2_i[515] l2_i[516] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[16] l2_o[17] l2_o[18] l2_o[19] l2_o[20] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[48] l2_o[49] l2_o[50] l2_o[51] l2_o[52] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[80] l2_o[81] l2_o[82] l2_o[83] l2_o[84] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[112] l2_o[113] l2_o[114] l2_o[115] l2_o[116] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[144] l2_o[145] l2_o[146] l2_o[147] l2_o[148] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[176] l2_o[177] l2_o[178] l2_o[179] l2_o[180] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[208] l2_o[209] l2_o[210] l2_o[211] l2_o[212] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[240] l2_o[241] l2_o[242] l2_o[243] l2_o[244] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[272] l2_o[273] l2_o[274] l2_o[275] l2_o[276] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[304] l2_o[305] l2_o[306] l2_o[307] l2_o[308] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[336] l2_o[337] l2_o[338] l2_o[339] l2_o[340] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[368] l2_o[369] l2_o[370] l2_o[371] l2_o[372] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[400] l2_o[401] l2_o[402] l2_o[403] l2_o[404] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[432] l2_o[433] l2_o[434] l2_o[435] l2_o[436] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[464] l2_o[465] l2_o[466] l2_o[467] l2_o[468] ... ]
+[INFO PPL-0044] Pin group: [ l2_o[496] l2_o[497] l2_o[498] l2_o[499] l2_o[500] ... ]
+[INFO PPL-0044] Pin group: [ x3_cr x3_d[0] x3_d[1] x3_d[2] x3_d[3] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[31] x3_d[32] x3_d[33] x3_d[34] x3_d[35] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[63] x3_d[64] x3_d[65] x3_d[66] x3_d[67] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[95] x3_d[96] x3_d[97] x3_d[98] x3_d[99] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[127] x3_d[128] x3_d[129] x3_d[130] x3_d[131] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[159] x3_d[160] x3_d[161] x3_d[162] x3_d[163] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[191] x3_d[192] x3_d[193] x3_d[194] x3_d[195] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[223] x3_d[224] x3_d[225] x3_d[226] x3_d[227] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[255] x3_d[256] x3_d[257] x3_d[258] x3_d[259] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[287] x3_d[288] x3_d[289] x3_d[290] x3_d[291] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[319] x3_d[320] x3_d[321] x3_d[322] x3_d[323] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[351] x3_d[352] x3_d[353] x3_d[354] x3_d[355] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[383] x3_d[384] x3_d[385] x3_d[386] x3_d[387] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[415] x3_d[416] x3_d[417] x3_d[418] x3_d[419] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[447] x3_d[448] x3_d[449] x3_d[450] x3_d[451] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[479] x3_d[480] x3_d[481] x3_d[482] x3_d[483] ... ]
+[INFO PPL-0044] Pin group: [ x3_d[511] x3_tag[0] x3_tag[1] x3_tag[2] x3_tag[3] ... ]
+[INFO PPL-0044] Pin group: [ ar_cr ar_d[0] ar_d[1] ar_d[2] ar_d[3] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[31] ar_d[32] ar_d[33] ar_d[34] ar_d[35] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[63] ar_d[64] ar_d[65] ar_d[66] ar_d[67] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[95] ar_d[96] ar_d[97] ar_d[98] ar_d[99] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[127] ar_d[128] ar_d[129] ar_d[130] ar_d[131] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[159] ar_d[160] ar_d[161] ar_d[162] ar_d[163] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[191] ar_d[192] ar_d[193] ar_d[194] ar_d[195] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[223] ar_d[224] ar_d[225] ar_d[226] ar_d[227] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[255] ar_d[256] ar_d[257] ar_d[258] ar_d[259] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[287] ar_d[288] ar_d[289] ar_d[290] ar_d[291] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[319] ar_d[320] ar_d[321] ar_d[322] ar_d[323] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[351] ar_d[352] ar_d[353] ar_d[354] ar_d[355] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[383] ar_d[384] ar_d[385] ar_d[386] ar_d[387] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[415] ar_d[416] ar_d[417] ar_d[418] ar_d[419] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[447] ar_d[448] ar_d[449] ar_d[450] ar_d[451] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[479] ar_d[480] ar_d[481] ar_d[482] ar_d[483] ... ]
+[INFO PPL-0044] Pin group: [ ar_d[511] ar_v ]
+[INFO PPL-0044] Pin group: [ l3_i[0] l3_i[1] l3_i[2] l3_i[3] l3_i[4] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[32] l3_i[33] l3_i[34] l3_i[35] l3_i[36] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[64] l3_i[65] l3_i[66] l3_i[67] l3_i[68] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[96] l3_i[97] l3_i[98] l3_i[99] l3_i[100] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[128] l3_i[129] l3_i[130] l3_i[131] l3_i[132] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[160] l3_i[161] l3_i[162] l3_i[163] l3_i[164] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[192] l3_i[193] l3_i[194] l3_i[195] l3_i[196] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[224] l3_i[225] l3_i[226] l3_i[227] l3_i[228] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[256] l3_i[257] l3_i[258] l3_i[259] l3_i[260] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[288] l3_i[289] l3_i[290] l3_i[291] l3_i[292] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[320] l3_i[321] l3_i[322] l3_i[323] l3_i[324] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[352] l3_i[353] l3_i[354] l3_i[355] l3_i[356] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[384] l3_i[385] l3_i[386] l3_i[387] l3_i[388] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[416] l3_i[417] l3_i[418] l3_i[419] l3_i[420] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[448] l3_i[449] l3_i[450] l3_i[451] l3_i[452] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[480] l3_i[481] l3_i[482] l3_i[483] l3_i[484] ... ]
+[INFO PPL-0044] Pin group: [ l3_i[512] l3_i[513] l3_i[514] l3_i[515] l3_i[516] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[16] l3_o[17] l3_o[18] l3_o[19] l3_o[20] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[48] l3_o[49] l3_o[50] l3_o[51] l3_o[52] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[80] l3_o[81] l3_o[82] l3_o[83] l3_o[84] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[112] l3_o[113] l3_o[114] l3_o[115] l3_o[116] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[144] l3_o[145] l3_o[146] l3_o[147] l3_o[148] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[176] l3_o[177] l3_o[178] l3_o[179] l3_o[180] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[208] l3_o[209] l3_o[210] l3_o[211] l3_o[212] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[240] l3_o[241] l3_o[242] l3_o[243] l3_o[244] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[272] l3_o[273] l3_o[274] l3_o[275] l3_o[276] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[304] l3_o[305] l3_o[306] l3_o[307] l3_o[308] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[336] l3_o[337] l3_o[338] l3_o[339] l3_o[340] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[368] l3_o[369] l3_o[370] l3_o[371] l3_o[372] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[400] l3_o[401] l3_o[402] l3_o[403] l3_o[404] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[432] l3_o[433] l3_o[434] l3_o[435] l3_o[436] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[464] l3_o[465] l3_o[466] l3_o[467] l3_o[468] ... ]
+[INFO PPL-0044] Pin group: [ l3_o[496] l3_o[497] l3_o[498] l3_o[499] l3_o[500] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[0] l0_i[1] l0_i[2] l0_i[3] l0_i[4] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[32] l0_i[33] l0_i[34] l0_i[35] l0_i[36] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[64] l0_i[65] l0_i[66] l0_i[67] l0_i[68] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[96] l0_i[97] l0_i[98] l0_i[99] l0_i[100] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[128] l0_i[129] l0_i[130] l0_i[131] l0_i[132] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[160] l0_i[161] l0_i[162] l0_i[163] l0_i[164] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[192] l0_i[193] l0_i[194] l0_i[195] l0_i[196] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[224] l0_i[225] l0_i[226] l0_i[227] l0_i[228] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[256] l0_i[257] l0_i[258] l0_i[259] l0_i[260] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[288] l0_i[289] l0_i[290] l0_i[291] l0_i[292] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[320] l0_i[321] l0_i[322] l0_i[323] l0_i[324] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[352] l0_i[353] l0_i[354] l0_i[355] l0_i[356] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[384] l0_i[385] l0_i[386] l0_i[387] l0_i[388] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[416] l0_i[417] l0_i[418] l0_i[419] l0_i[420] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[448] l0_i[449] l0_i[450] l0_i[451] l0_i[452] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[480] l0_i[481] l0_i[482] l0_i[483] l0_i[484] ... ]
+[INFO PPL-0044] Pin group: [ l0_i[512] l0_i[513] l0_i[514] l0_i[515] l0_i[516] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[16] l0_o[17] l0_o[18] l0_o[19] l0_o[20] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[48] l0_o[49] l0_o[50] l0_o[51] l0_o[52] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[80] l0_o[81] l0_o[82] l0_o[83] l0_o[84] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[112] l0_o[113] l0_o[114] l0_o[115] l0_o[116] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[144] l0_o[145] l0_o[146] l0_o[147] l0_o[148] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[176] l0_o[177] l0_o[178] l0_o[179] l0_o[180] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[208] l0_o[209] l0_o[210] l0_o[211] l0_o[212] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[240] l0_o[241] l0_o[242] l0_o[243] l0_o[244] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[272] l0_o[273] l0_o[274] l0_o[275] l0_o[276] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[304] l0_o[305] l0_o[306] l0_o[307] l0_o[308] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[336] l0_o[337] l0_o[338] l0_o[339] l0_o[340] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[368] l0_o[369] l0_o[370] l0_o[371] l0_o[372] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[400] l0_o[401] l0_o[402] l0_o[403] l0_o[404] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[432] l0_o[433] l0_o[434] l0_o[435] l0_o[436] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[464] l0_o[465] l0_o[466] l0_o[467] l0_o[468] ... ]
+[INFO PPL-0044] Pin group: [ l0_o[496] l0_o[497] l0_o[498] l0_o[499] l0_o[500] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[0] l1_i[1] l1_i[2] l1_i[3] l1_i[4] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[32] l1_i[33] l1_i[34] l1_i[35] l1_i[36] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[64] l1_i[65] l1_i[66] l1_i[67] l1_i[68] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[96] l1_i[97] l1_i[98] l1_i[99] l1_i[100] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[128] l1_i[129] l1_i[130] l1_i[131] l1_i[132] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[160] l1_i[161] l1_i[162] l1_i[163] l1_i[164] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[192] l1_i[193] l1_i[194] l1_i[195] l1_i[196] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[224] l1_i[225] l1_i[226] l1_i[227] l1_i[228] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[256] l1_i[257] l1_i[258] l1_i[259] l1_i[260] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[288] l1_i[289] l1_i[290] l1_i[291] l1_i[292] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[320] l1_i[321] l1_i[322] l1_i[323] l1_i[324] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[352] l1_i[353] l1_i[354] l1_i[355] l1_i[356] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[384] l1_i[385] l1_i[386] l1_i[387] l1_i[388] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[416] l1_i[417] l1_i[418] l1_i[419] l1_i[420] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[448] l1_i[449] l1_i[450] l1_i[451] l1_i[452] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[480] l1_i[481] l1_i[482] l1_i[483] l1_i[484] ... ]
+[INFO PPL-0044] Pin group: [ l1_i[512] l1_i[513] l1_i[514] l1_i[515] l1_i[516] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[16] l1_o[17] l1_o[18] l1_o[19] l1_o[20] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[48] l1_o[49] l1_o[50] l1_o[51] l1_o[52] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[80] l1_o[81] l1_o[82] l1_o[83] l1_o[84] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[112] l1_o[113] l1_o[114] l1_o[115] l1_o[116] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[144] l1_o[145] l1_o[146] l1_o[147] l1_o[148] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[176] l1_o[177] l1_o[178] l1_o[179] l1_o[180] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[208] l1_o[209] l1_o[210] l1_o[211] l1_o[212] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[240] l1_o[241] l1_o[242] l1_o[243] l1_o[244] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[272] l1_o[273] l1_o[274] l1_o[275] l1_o[276] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[304] l1_o[305] l1_o[306] l1_o[307] l1_o[308] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[336] l1_o[337] l1_o[338] l1_o[339] l1_o[340] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[368] l1_o[369] l1_o[370] l1_o[371] l1_o[372] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[400] l1_o[401] l1_o[402] l1_o[403] l1_o[404] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[432] l1_o[433] l1_o[434] l1_o[435] l1_o[436] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[464] l1_o[465] l1_o[466] l1_o[467] l1_o[468] ... ]
+[INFO PPL-0044] Pin group: [ l1_o[496] l1_o[497] l1_o[498] l1_o[499] l1_o[500] ... ]
+[INFO PPL-0044] Pin group: [ ck fault fck0 fck1 fck2 ... ]
+[INFO PPL-0067] Restrict pins [ ck fault fck0 fck1 fck2 ... ] to region 100.00u-300.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ l2_i[0] l2_i[100] l2_i[101] l2_i[102] l2_i[103] ... ] to region 4.00u-62.00u at the RIGHT edge.
+[INFO PPL-0067] Restrict pins [ x3_cr x3_d[0] x3_d[100] x3_d[101] x3_d[102] ... ] to region 64.00u-120.00u at the RIGHT edge.
+[INFO PPL-0067] Restrict pins [ ar_cr ar_d[0] ar_d[100] ar_d[101] ar_d[102] ... ] to region 122.00u-178.00u at the RIGHT edge.
+[INFO PPL-0067] Restrict pins [ l3_i[0] l3_i[100] l3_i[101] l3_i[102] l3_i[103] ... ] to region 180.00u-238.00u at the RIGHT edge.
+[INFO PPL-0067] Restrict pins [ l0_i[0] l0_i[100] l0_i[101] l0_i[102] l0_i[103] ... ] to region 240.00u-323.00u at the RIGHT edge.
+[INFO PPL-0067] Restrict pins [ l1_i[0] l1_i[100] l1_i[101] l1_i[102] l1_i[103] ... ] to region 325.00u-408.00u at the RIGHT edge.
+[INFO PPL-0001] Number of available slots 59924
+[INFO PPL-0002] Number of I/O             5270
+[INFO PPL-0003] Number of I/O w/sink      5226
+[INFO PPL-0004] Number of I/O w/o sink    44
+[INFO PPL-0006] Number of I/O Groups    167
+[INFO PPL-0005] Slots per section         200
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 61.644)-(412.536, 61.98) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (10) in section (412.536, 55.248)-(412.536, 61.968) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 52.044)-(412.536, 61.596) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.448)-(412.536, 55.184) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 42.444)-(412.536, 51.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 32.844)-(412.536, 42.396) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 102.416)-(412.536, 115.152) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 102.416)-(412.536, 115.152) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 102.416)-(412.536, 115.152) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 115.216)-(412.536, 119.952) at edge RIGHT to place the pin group of size 13.
+[WARNING PPL-0078] Not enough available positions (6) in section (412.536, 112.044)-(412.536, 119.964) at edge RIGHT to place the pin group of size 13.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 102.416)-(412.536, 115.152) at edge RIGHT to place the pin group of size 13.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 160.4)-(412.536, 173.136) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 160.4)-(412.536, 173.136) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (11) in section (412.536, 173.2)-(412.536, 177.936) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (7) in section (412.536, 170.028)-(412.536, 177.996) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 160.4)-(412.536, 173.136) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 189.612)-(412.536, 199.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 189.612)-(412.536, 199.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 199.212)-(412.536, 208.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 205.648)-(412.536, 218.384) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 192.848)-(412.536, 205.584) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 208.812)-(412.536, 218.364) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 189.612)-(412.536, 199.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 259.212)-(412.536, 268.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 259.212)-(412.536, 268.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.012)-(412.536, 249.564) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 240.016)-(412.536, 252.752) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 249.612)-(412.536, 259.164) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 252.816)-(412.536, 265.552) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 259.212)-(412.536, 268.764) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 344.22)-(412.536, 353.772) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 344.22)-(412.536, 353.772) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.02)-(412.536, 334.572) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 325.008)-(412.536, 337.744) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 334.62)-(412.536, 344.172) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 337.808)-(412.536, 350.544) at edge RIGHT to place the pin group of size 32.
+[WARNING PPL-0078] Not enough available positions (8) in section (412.536, 344.22)-(412.536, 353.772) at edge RIGHT to place the pin group of size 32.
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 1512051.00 um.
+PIN_GROUP_CHECK_PASS
