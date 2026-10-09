@@ -436,12 +436,32 @@ R25IQGC2 = dict(R25IQG,indexer_large_slot=True)
 # Actual x-controller bus facade and SRAM writeback slots. Loader stays on its
 # historical base until the ND1/ADDR37 facade and service landing are qualified.
 R25IMW = dict(R25IQG, native_mtp_wb=True,
+    # hbm-forks 2026-10-09: the MTP slot's cmdproc command pair (t_mtp / f_mtp ECO pins on hfd_cmdproc_s) as in R25M;
+    # without them `--ds-var r25imw[s]` fails in apply_splits (('hfd_cmdproc', 't_mtp'))
+    split_extra_ports=R25M['split_extra_ports'],
     spine_slots_low={'mtp': MTP_SLOT, 'kvwb': (300.24, 241.92)},
     spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
     spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
         mtp='stream_1p2', kvwb='stream_1p2'))
 R25IMWS = dict(R25IMW, native_mtp_stop=True,
     spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
+# hbm-forks 2026-10-09 (coordinator; results/arch/hbm_generic_20261009 PLAN R25G): one generic HBM die for Qwen3-8B
+# and DS-V4.1 = r25s (split attention tiles) + r25m (MTP slot, loader memory ports) + r25iqg (native indexer) + the fmt3
+# wide SM grid (3x3 sites, Codex qwen_r25_fmt3), with the indexer anchors rebased to the wider outline.  Candidate only.
+FMT3_WIDE = dict(sm_wh=(3214.08, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+
+
+def _vmerge(*vs):
+    out = dict(vs[0])
+    for v in vs[1:]:
+        for k, x in v.items():
+            if k in R25 and R25[k] == x:
+                continue
+            out[k] = {**out[k], **x} if isinstance(x, dict) and isinstance(out.get(k), dict) else x
+    return out
+
+
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True))
 ADOPTED = R25
 
 
@@ -2898,6 +2918,13 @@ def pin_clashes(m, k=1):
     for name, mst in M.items():
         if name in REAL:
             continue
+        if any(sp_[0] == 'rects' for sp_ in mst.ports.values()):
+            # exact hardened pin rectangles (native indexer views): no generated pins to clash; a die bus whose width
+            # differs from the hardened port is reported instead of aborting the check
+            for p_, sp_ in mst.ports.items():
+                if sp_[0] == 'rects' and pw.get((name, p_), len(sp_[1])) != len(sp_[1]) and k == 1:
+                    out.append((name, f'width {p_}: die bus {pw[(name, p_)]} b != hardened {len(sp_[1])} b', '', ''))
+            continue
         rects = sorted(S.pin_rects(mst, k, {p: pw.get((name, p), 0) for p in mst.order}), key=lambda r: (r[1], r[2][0]))
         by = defaultdict(list)
         for nm, ly, r in rects:
@@ -3611,7 +3638,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
