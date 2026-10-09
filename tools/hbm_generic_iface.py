@@ -136,13 +136,13 @@ D_PARAM = {
     "SFU.GLU": "C = route weight (a 1.0 constant with ibcast to disable); imm_a = clamp limit (FLT_MAX disables); out fmt = O.fmt",
     "FUSED.ROW_NORM": "[5:0] d_units (32|40), [13:6] seg (0|128); imm_a = eps; out fmt = O.fmt (FP8|BF16|FP32)",
     "FUSED.SOFTMAX": "[0] multipass; A = scores, B = sink row (data: -2^100 for no sink), O = probabilities; imm_a = scale",
-    "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (0 = ids already global)",
+    "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (DS 1347: uniform 1,347-row head shards; Qwen3-8B 37984) (G17)",
     "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1, [8] ring; B = first row source (n rows, n_sel POS1 / "
                  "POS_SLOT1 = the mask), C (optional) = second row source appended after B (e.g. DS selected compressed rows); "
                  "ring = 1: B is a ring of B.m slots (power of two), first row read = slot (POS1 - n) mod B.m, wrapping (G12)",
     "FUSED.QDQ_FP8": "act_quant FP8E4M3 with a UE8M0 scale per 32-element block (hfd_quant): O = dequantised values (G8)",
     "FUSED.QDQ_FP4_E8M0": "FP4E2M1 with a UE8M0 scale per 32-element block: O = dequantised values (G8)",
-    "FUSED.QDQ_FP4_E4M3": "FP4E2M1 with an FP8E4M3 scale per block; [7:0] block size (DS 16): O = dequantised values (G8)",
+    "FUSED.QDQ_FP4_E4M3": "FP4E2M1 with an FP8E4M3 scale per block; [7:0] block size (v1 legal set {16}, others E_RANGE; DS 16): O = dequantised values (G8)",
     "COLL.ALL_GATHER": "even-split segments: rank r contributes elements [floor(r*n/G), floor((r+1)*n/G)) of A (n = A.n, "
                        "G = group size); every rank receives all n in O (G9)",
     "COLL.GROUP_REDUCE_MCAST": "[7:0] sub-group size s (2, 4, 8): each aligned sub-group of s ranks reduces A in the rank-order "
@@ -156,7 +156,9 @@ D_PARAM = {
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
     "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
-    "IDX.TOPK": "[11:0] k (1..2048); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score, ties lowest index; R (optional) = the k values",
+    "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
+    "IDX.INDEX_Q/INDEX_SCORES/SELECT": "DS indexer engines, working buffers internal (A/B/C may be NONE): [5:0] source (compressed-KV) layer, imm_a = candidate count, imm_b = layer; SELECT (DS index top-512): O = selected ids (U32, ascending id), R (optional) = values (G16)",
+    "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
     "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
