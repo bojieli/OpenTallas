@@ -9,12 +9,14 @@ src=root/'rtl/hbm_accel/control/ot_hbm_native_index_control.sv'
 tb=root/'rtl/test/hbm_accel/tb_hbm_native_index_control.sv'
 checks={}
 for name,body in [('positive',src.read_text()),
+                  ('positive_prefetch',src.read_text()),
                   ('generation_drop',src.read_text().replace('desc[35:32],desc[31:0]',"4'b0,desc[31:0]"))]:
     case=root/name
     case.mkdir(exist_ok=True)
     source=case/'control.sv'
     source.write_text(body)
     argv=['iverilog','-g2012','-s','tb_hbm_native_index_control','-o',str(case/'gate.vvp'),str(source),str(tb)]
+    if name=='positive_prefetch':argv.insert(2,'-Ptb_hbm_native_index_control.PREFETCH_CASE=1')
     compile_result=subprocess.run(argv,capture_output=True,text=True)
     (case/'compile.log').write_text(compile_result.stdout+compile_result.stderr)
     run_result=subprocess.run(['vvp',str(case/'gate.vvp')],capture_output=True,text=True) if compile_result.returncode==0 else None
@@ -23,7 +25,7 @@ for name,body in [('positive',src.read_text()),
     checks[name]=dict(compile_returncode=compile_result.returncode,
         run_returncode=None if run_result is None else run_result.returncode,
         passed=compile_result.returncode==0 and run_result is not None and
-          ((run_result.returncode==0 and 'PASS_NATIVE_INDEX_CONTROL' in output) if name=='positive' else
+          ((run_result.returncode==0 and 'PASS_NATIVE_INDEX_CONTROL' in output) if name.startswith('positive') else
            (run_result.returncode!=0 and 'dynamic frame metadata mismatch' in output)),argv=argv)
 record=dict(source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),
     bench_sha256=hashlib.sha256(tb.read_bytes()).hexdigest(),checks=checks,
