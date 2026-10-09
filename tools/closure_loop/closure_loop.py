@@ -1533,6 +1533,16 @@ def launch_stage(j, st, cmd):
             # opts out; a spec that already lists an io_ref_routed.sdc keeps its own.
             if j["spec"].get("route_ff_ioref", True) and not any(f.rsplit("/", 1)[-1] == "io_ref_routed.sdc" for f in ff):
                 ff = ff + [f"{j['run']}/cl/io_ref_routed.sdc"]
+            # MMFF-IOREF 2026-10-08: a route cmd that inlines its own `export OT_MM_FF_SDC=...` (43 live jobs: setup_triage
+            # requeue, make_lvt_job, mk_jobs) overrode the export above, so the FF scene lost io_ref_routed.sdc and timed
+            # the assumed vclk (hbm_quant_ts0spl_tt: fake 4_1_cts hold -334).  The appended reference now travels as a
+            # FILE the FF scene reads last whatever the final env says (orfs_hold_mm.tcl ot_mm_sync,
+            # {SRC}/.ot_mm/ff_ioref_last.sdc; skipped when the list already holds an io_ref_routed.sdc); the opt-out
+            # removes it so an earlier attempt's copy cannot leak in.
+            if j["spec"].get("route_ff_ioref", True):
+                env += f"mkdir -p {j['run']}/src/.ot_mm && cp {j['run']}/cl/io_ref_routed.sdc {j['run']}/src/.ot_mm/ff_ioref_last.sdc\n"
+            else:
+                env += f"rm -f {j['run']}/src/.ot_mm/ff_ioref_last.sdc\n"
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
