@@ -150,6 +150,12 @@ def gorder_fast_tb(n):
 CASES["global_order_fast"] = dict(CASES["global_order"], tb=lambda: gorder_fast_tb(12288))
 CASES["global_order_scan_fast"] = dict(CASES["global_order"], tb=lambda: gorder_fast_tb(4096),
      params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
+def gorder_fast2_tb(n):
+    t = sp_tb("gorder_tb", n); a = ".STATIC_SCAN(SCAN_CASE))"; assert a in t
+    return t.replace(a, ".STATIC_SCAN(SCAN_CASE),.FAST(2))")
+CASES["global_order_fast2"] = dict(CASES["global_order"], tb=lambda: gorder_fast2_tb(12288))
+CASES["global_order_scan_fast2"] = dict(CASES["global_order"], tb=lambda: gorder_fast2_tb(4096),
+     params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
 CASES["global_order_scan"] = dict(CASES["global_order"], tb=lambda: sp_tb("gorder_tb", 4096),
      params=["-Ptb_hbm_index_global_order.SCAN_CASE=1"], ok="PASS_GLOBAL_ORDER ranks=96 tuples=4096")
 def cvp_tb():
