@@ -56,7 +56,7 @@ VARIANT = [(r'_signoff\d+$', '', True), (r'_(parent|retained)$', '', False), (r'
            (r'_split$', '', False), (r'_s2$', '', False), (r'_t$', '', False), (r'_(ab|bv|sq)$', '', False),
            (r'_l$', '', False), (r'_w\d+$', '', False), (r'_fr$', '', False), (r'_credit$', '', False),
            (r'^(ot_qwen_stream4_cdc_pc)_.+$', r'\1', True), (r'^(ot_hbm_native_frame_station_rb_NO\d)_(HALF|SAFE)$', r'\1', True),
-           (r'_c12[hs]$', '', True), (r'_halfwrite_distributed$', '_halfwrite', False), (r'_root_phase$', '', False)]
+           (r'_c12[hs]$', '', True), (r'^(qfd_sysctl_stn)_pb2$', r'\1', True), (r'_halfwrite_distributed$', '_halfwrite', False), (r'_root_phase$', '', False)]
 
 def master(block, known):
     b = block
