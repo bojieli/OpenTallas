@@ -356,7 +356,7 @@ def main():
     ap.add_argument("--output", type=Path)
     ap.add_argument("--order", default="basic", choices=("basic", "deep"))
     ap.add_argument("--rollback-ring-dyn", action="store_true",
-                    help="Opt in to one-position core ring addressing; preserve original failing vehicle by default")
+                    help="Explicit ring addressing and immutable _ringdyn records; original failure requires its pinned source")
     ap.add_argument("--source-layer", type=int, default=19, choices=(8, 14, 19),
                     help="First measured stage; 14 exercises ratio2 compressor rollback plus Engram, 19 is original WFC vehicle")
     a, rest = ap.parse_known_args()

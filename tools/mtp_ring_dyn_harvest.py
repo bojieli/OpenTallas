@@ -43,17 +43,30 @@ def main():
               if a.negative else full and exact and metrics["mismatches"] == 0
               and metrics["passed"] and not metrics["proto_fault"])
     paths = [receipt, log, a.scratch / "prepare_stage2_deep.json"]
+    prep = json.loads(paths[-1].read_text())
+    expected_layers = [[14], [15]] if a.campaign in (14, 15) else [[19], [20]]
+    if a.campaign not in (14, 15, 19, 20):
+        raise ValueError("Only original campaigns 14, 15, 19, 20 are qualified")
+    matched_vehicle = (prep["layers"] == expected_layers and len(prep["jobs"]) == 18
+                       and meta["wave"] == (0 if a.negative else 1)
+                       and meta["ctrl"] == ("wf" if a.negative else "wfc")
+                       and bool(meta["rollback_ring_dyn"]))
+    phase_log = a.scratch.parent / ("admitted_negative.log" if a.negative else "admitted_positive.log")
+    if phase_log.exists():
+        paths.append(phase_log)
     paths.extend(sorted((a.scratch / "cfg_stage2_deep").glob("*.hex")))
     result = dict(schema="opentallas.mtp_ring_dyn_terminal.v1", campaign=a.campaign,
                   role="negative_protocol_control" if a.negative else "positive_exactness",
                   gate_passed=bool(passed), run=meta, metrics=metrics,
                   source=dict(core_sha256=digest(a.source / "rtl/hdc/v41x/ot_hdc_core_v41x.sv"),
                               tool_sha256=digest(tool)),
+                  collector_sha256=digest(Path(__file__)),
                   artifacts=[dict(path=str(f), sha256=digest(f)) for f in paths],
                   scope="Original two-stage 18-job ring8 fixture; native production shape and full-die closure are not qualified",
                   physical="Repair rides consuming sequencer contextual qualification; no standalone route")
     result["source_receipt_matches"] = result["source"]["core_sha256"] == meta["core_sha256"]
-    result["gate_passed"] &= result["source_receipt_matches"]
+    result["campaign_vehicle_matches"] = matched_vehicle
+    result["gate_passed"] &= result["source_receipt_matches"] and matched_vehicle
     with a.output.open("x") as f:  # preserve any prior verdict
         json.dump(result, f, indent=2)
         f.write("\n")

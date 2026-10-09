@@ -4,13 +4,20 @@
   "source_mechanism": "ot_hdc_core_v41x DYN25/SLOTW8 and DYN26/SLOTP8",
   "scope": "one-position wavefront core with eight compressor records; no arithmetic or payload-format change",
   "opt_in_parameter": "ROLLBACK_RING_DYN",
-  "default": 0,
+  "default": 1,
   "macs_per_cycle": 0,
   "memory_bytes_per_cycle_delta": 0,
   "payload_bits_per_cycle_delta": 0,
-  "internal_address_bits": {"reduced_vehicle_per_offset": 24, "native_full_shape_per_offset": 30, "offsets": 2},
+  "internal_address_bits": {
+    "reduced_vehicle_per_offset": 24,
+    "native_full_shape_per_offset": 30,
+    "offsets": 2
+  },
   "nonconstant_state_bits_per_slot": 5,
-  "state_equations": {"slot_word_offset": "(position % 8) * 4", "pair_element_offset": "((position / 2) % 4) * 128"},
+  "state_equations": {
+    "slot_word_offset": "(position % 8) * 4",
+    "pair_element_offset": "((position / 2) % 4) * 128"
+  },
   "replicas": 1,
   "mux_cost": "five captured state bits with the existing DYN update enable; two formerly constant rows become variable inputs to the existing read selectors",
   "unique_dyn_read_consumer_fields": 16,
@@ -20,7 +27,13 @@
   "new_routing_tracks_at_die_boundary": 0,
   "added_latency_cycles": 0,
   "clock_domain": "existing streaming sequencer at 1.2 GHz",
-  "floorplan_vehicle_um": [40, 40],
+  "floorplan_vehicle_um": [
+    40,
+    40
+  ],
   "area_status": "five state bits plus local update gating and up to eighty bit-mux arms; contextual synthesis/physical measurement pending",
-  "qualification": "pre-build sizing only; requires native program and exactness gates plus contextual timing before adoption"
+  "qualification": "Original four-case ring8 campaign exactness qualified; native selected program binding and contextual sequencer SS/FF timing remain separate",
+  "exactness_gate": "results/rtl/mtp_ring_dyn_20261009/four_campaign_gate.json",
+  "physical_vehicle": "Actual consuming sequencer successor; no standalone route per V36",
+  "floorplan_vehicle_status": "Prior 40um estimate is unmeasured standalone pathfinding, not an actual allocated production slot"
 }

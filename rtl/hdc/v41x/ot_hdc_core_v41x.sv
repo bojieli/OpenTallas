@@ -72,7 +72,7 @@ module ot_hdc_core_v41x #(
     parameter integer KV_HBM = 0,
     parameter integer ME0_HBM = 0,       // selected re-specified ME weight op uses an HBM window
     parameter integer NSLOT = 1,           // position slots (1: the one-position core)
-    parameter integer ROLLBACK_RING_DYN = 0, // one-position wavefront: eight compressor records
+    parameter integer ROLLBACK_RING_DYN = 1, // V36: four same-source ring8 campaign gates qualified
     parameter integer MP    = 1,           // lane multiplier of the ME, QE and HE
     // re-specified units (1) or the as-built unit (0), per unit: the bring-up switches
     parameter integer X_HE  = 1,
