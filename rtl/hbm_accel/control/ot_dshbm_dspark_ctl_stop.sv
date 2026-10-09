@@ -155,7 +155,8 @@ module ot_dshbm_dspark_ctl_stop #(
             .a(fbase), .b({{(FW-4){1'b0}}, j}), .cin(1'b0), .s(f_addr), .cout());
     end endgenerate
     wire [31:0] q = n - 1;
-    wire [31:0] room = (MAXPOS >= 2 && MAXPOS - 2 > q) ? MAXPOS - 2 - q : 0;
+    wire [31:0] context_limit = STOP_EN ? {{(31-PW){1'b0}},cfg_maxpos} : MAXPOS;
+    wire [31:0] room = (context_limit >= 2 && context_limit - 2 > q) ? context_limit - 2 - q : 0;
     wire [3:0]  g_new = (room < cfg_gamma) ? room[3:0] : cfg_gamma;
     task issue(input [3:0] op, input [7:0] idx, input [3:0] ncol, input [31:0] pos, input [TW-1:0] t1,
                input [3:0] need);
@@ -211,7 +212,7 @@ module ot_dshbm_dspark_ctl_stop #(
                     stop_latched <= 0; stop_status <= 0; effective_n <= 0;
                     pf <= 1'b1; pp <= 0; emitted <= 0; steps <= 0;
                     n_set <= 1'b1; n_val <= 0; s <= S_PF_TOK;
-                    if (STOP_EN && (cfg_ngen==0 || cfg_plen==0 || cfg_plen>cfg_maxpos || cfg_maxpos>MAXPOS)) begin
+                    if (STOP_EN && (cfg_ngen==0 || cfg_plen==0 || cfg_plen>cfg_maxpos || cfg_maxpos>MAXPOS || cfg_gamma>B || B>=PMAX)) begin
                         s <= S_DONE; stop_latched <= 1; stop_status <= cfg_ngen==0 ? 3'd2 : 3'd4;
                     end
                 end
