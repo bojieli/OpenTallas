@@ -2,7 +2,7 @@
  "name": "hbm_idx_sel_capture_r2",
  "block": "hfd_idx_sel",
  "owner": "Codex:selector_capture",
- "status": "AWAITING R25I real slot/pin budgets and measured remote admission",
+ "status": "AWAITING authoritative R25I records: native T1/LA7 slot 1399.656 x 844.56um at (14164.416,17169.84); then source-pin remote route",
  "purpose": "Full Q4/W16/K512 selector plus Q4/SL16/K2048 candidate and query, actual 16 compiled SRAM macros; READLAT=2 registered output capture",
  "hosts": [
   "ot-epyc1tb",
@@ -26,7 +26,7 @@
    }
   ],
   "route": {
-   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && VARIANT=R25I SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"120\" PER=\"0.770\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv  --param T=1 --param MEMV=1 --param READLAT=2 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl $CL_STOP_AFTER",
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && VARIANT=R25I SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"120\" PER=\"0.770\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\" MACROS=\"ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2 ot_sram_1r1w_1024x256_m2_r2c2=physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2\" SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hbm_accel/index/ot_hbm_accel_index_query.sv rtl/hbm_accel/index/ot_hbm_accel_index_candidate.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel_cand.sv rtl/hdc/v41/ot_hdc_actquant.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_sel physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv  --param T=1 --param LA=7 --param MEMV=1 --param READLAT=2 --step-tcl PRE_GLOBAL_PLACE=physical/hbm_accel_die_views/index/capture_adjacent_place.tcl $CL_STOP_AFTER",
    "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
    "logs": [
     "{RUN}/routes/{NAME}/run.log"
@@ -41,5 +41,14 @@
   "policy": "owner corrected OptionB TT setup >=0 / FF hold >=0 / DRC0; SS sensitivity",
   "physical_qualified": false,
   "capture_placement": "direct macro rd_out to capture D; legal row sites within100um; actual routed distance/timing to be checked"
+ },
+ "selected_outline": {
+  "width_um": 1399.656,
+  "height_um": 844.56,
+  "origin_um": [
+   14164.416,
+   17169.84
+  ],
+  "source": "hbm_wiring accepted legal-grid successor, native-aaf36bdba 777.6um record superseded; new pin commit awaited"
  }
 }
