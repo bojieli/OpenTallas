@@ -481,7 +481,7 @@
       "owner": "generic_attn_g12",
       "description": "hgi att row sources g12",
       "source": {
-        "commit": "799f13777",
+        "commit": "7eea061a8",
         "paths": [
           "rtl/hbm_accel/generic/g12/ot_hgi_att_row_sources_p.sv"
         ]
@@ -500,7 +500,7 @@
       },
       "exactness": {
         "positive": {
-          "status": "PASS_COMPONENT_139_CASES_31107_ROWS",
+          "status": "PRIOR799_COMPONENT_PASS_CORRECTED21BIT_GATE_RUNNING",
           "evidence": [
             "results/hgi_attn_g12_20261009/golden.a4.log",
             "results/hgi_attn_g12_20261009/source.a4.sha256",
@@ -508,7 +508,7 @@
           ]
         },
         "negative": {
-          "status": "PASS_THREE_MUTANTS_DETECTED",
+          "status": "PRIOR799_MUTANTS_PASS_CORRECTED21BIT_MUTANTS_RUNNING",
           "evidence": [
             "results/hgi_attn_g12_20261009/golden.a4.log",
             "results/hgi_attn_g12_20261009/source.a4.sha256",
@@ -522,7 +522,7 @@
         }
       },
       "physical": {
-        "status": "QUEUED",
+        "status": "HELD_BEFORE_LAUNCH_799F_COUNT_TRUNCATION",
         "jobs": [
           "hgi-att-g12-120-799f13777-tc-cx",
           "hgi-att-g12-140-799f13777-tc-cx"
@@ -534,7 +534,8 @@
         "Claude descriptor adapter and existing DS9-sector gather row request binding",
         "4stack replicas/384 state bound; actual3edge command latency",
         "external normative simulator CF-ATT vectors",
-        "queued12:58:37UTC schema and pinlintPASS;8GiB inventory estimate, not measured P&R peak"
+        "queued12:58:37UTC schema and pinlintPASS;8GiB inventory estimate, not measured P&R peak",
+        "POS1/counts21bit full1M corrected exact gate; old799f pair held, not eligible for route"
       ],
       "integration": {
         "status": "INCOMPLETE",
