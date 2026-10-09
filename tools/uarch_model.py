@@ -82,6 +82,18 @@ def hbm_write_merge_contract_model():
     return model()
 
 
+def hbm_write_source_pc_contract_model():
+    """Full32-PC source ownership with reordered cross-PC completion."""
+    from hbm_write_merge_model import per_pc_model
+    return per_pc_model()
+
+
+def hbm_loader_kport_address_contract_model():
+    """Existing37-bit flat aperture to exact controller address permutation."""
+    from hbm_loader_kport_address_model import model
+    return model()
+
+
 # ---------------------------------------------------------------------------------------------------------
 # Physical constants (sources in-line)
 # ---------------------------------------------------------------------------------------------------------

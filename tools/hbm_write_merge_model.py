@@ -18,3 +18,9 @@ def model():
         single_user_composition='WB incurs one registered admission cycle plus occupied service and FIFO drain; background maximum6 issued plus1 pending => up to7 service completion intervals before WB',
         throughput='1 write/cycle admission when credits available; physical service cadence bounds sustained rate',
         adoption=False, performance_credit=False)
+
+
+def per_pc_model():
+    m=model()
+    m.update(schema="opentallas.hbm-write-source-pc-model.v1", ledger_depth_per_pc=8, pc_count=32, source_id_storage_bits=512, pointer_count_bits=32*(3+3+4), service_packet_bits=294, service_return_bits=32, service_order="only per-PC issue/completion order required; cross-PC completion may reorder", admission="actual-PC issue stalls when thatPC sourceFIFO full; sourcebits travel in sameCDC entry as payload", single_user_composition="source transport adds2bits/write, returned ACKcounters add16bits/stack; no physicalwrite serialization, ledger admission bounded by8 outstanding/PC", physical_qualification="pending model channelcapacity/slot and actual newABI route", adoption=False)
+    return m
