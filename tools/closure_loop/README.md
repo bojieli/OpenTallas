@@ -140,6 +140,14 @@ acceptance in `{CL}/calib.json` (`budget_accepted`). Every calibrated block's me
 `results/rtl/budgets_20261006/measured_insertion.json` on main (published at most every 10 min) for the die
 clock plan.
 
+Variant-keyed insertion (bf-insertion 2026-10-08): `measured_insertion.json` also holds `variants{variant_key: entry}`
+and every entry carries its `variant`. `variant_key(spec)` = block + recipe script + the insertion-relevant options of
+the route cmd (`VAR=value` assignments such as BF_VAR / OT_CGL_FRAC / OT_MULTI_VT / OT_CTS_FIX_HOOKS / corner
+overrides, `--param K=V`, other `--flags`; hold margin, paths and labels excluded). A parallel calibrate starts the route
+on an assumed insertion ONLY from the same variant (old block entries count when the measuring job's JSON gives the same
+key); otherwise the job calibrates first (CTS-only) and routes on the measurement. bfh_halfphl_a730 had started on
+bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured 1546 / 875.
+
 ## Hold margin and automatic hold ECO (2026-10-06)
 - Jobs created from 2026-10-07 04:17 get `HM=0.010` (10 ps; coordinator: 35 ps + the 50 ps FF IO hold uncertainty
   overloaded CTS/GRT hold repair, RSZ-0060 buffer-cap deaths); the post-route hold ECO carries hold to +18.

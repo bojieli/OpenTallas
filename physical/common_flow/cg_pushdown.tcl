@@ -19,6 +19,12 @@
 # post-CTS detailed_placement in cts.tcl legalizes them).  Gates handled: ICG* cells (CLK / ENA [/ SE] -> GCLK), and
 # hand-built 2-input AND gates whose one input net carries a clock (a clock-port net or a net that clocks registers)
 # and whose output net clocks >= OT_CG_MIN registers.  Knobs: OT_CG_K (sinks per clone, default 48), OT_CG_MIN (64).
+# Exclusions (bf-insertion 2026-10-08): ::ot_cg_exclude (Tcl list of glob patterns on the gate instance name, set by an
+# earlier hook, e.g. physical/s81_native_bf/margin/cg_keep_hcg.tcl) or env OT_CG_EXCLUDE.  A gate whose enable is a
+# PHASE register placed on the gate's own clock net (BF HALF_PHL: g_half.ph -> g_half.u_hcg.u_icg, rewired by
+# ph_local.tcl) must stay ONE gate: cloned 128x the phase register can sit on only one clone's net, so ph -> ENA of the
+# others is a single-cycle gating check with the ph leaf ~650 ps after the clones' clock pins plus a 128-way enable fan
+# (bfh_halfphl_a730_tt_hm10_639afaedc: -755.8 ps at 730 on 127 clone ENAs).
 # Fails closed (error) if a moved sink is not a register clock pin.
 proc ot_cg_is_seq {m} { return [regexp {^(DFF|DHL|DLL|SDF|ICG|ASYNC_DFF)} [$m getName]] }
 proc ot_cg_clk_sinks {net} {
@@ -64,10 +70,15 @@ set ::ot_cg_clones 0
 proc ot_cg_pushdown {} {
   set K [expr {[info exists ::env(OT_CG_K)] ? $::env(OT_CG_K) : 48}]
   set MIN [expr {[info exists ::env(OT_CG_MIN)] ? $::env(OT_CG_MIN) : 64}]
+  set EXCL [expr {[info exists ::ot_cg_exclude] ? $::ot_cg_exclude : {}}]
+  if {[info exists ::env(OT_CG_EXCLUDE)]} { lappend EXCL {*}$::env(OT_CG_EXCLUDE) }
   set blk [ord::get_db_block]
   set gates {}
   foreach inst [$blk getInsts] {
     set m [$inst getMaster]; set mn [$m getName]
+    set ex 0
+    foreach pat $EXCL { if {[string match $pat [$inst getName]]} { set ex 1; break } }
+    if {$ex} { puts "OT_CG_PUSHDOWN excluded [$inst getName] ($mn)"; continue }
     if {[string match "ICG*" $mn]} {
       set ck [$inst findITerm CLK]; set out [$inst findITerm GCLK]
       if {$ck eq "NULL" || $out eq "NULL"} continue
