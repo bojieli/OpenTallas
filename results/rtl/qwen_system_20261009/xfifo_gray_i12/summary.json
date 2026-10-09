@@ -1,0 +1,72 @@
+{
+  "scope": "I12 approved config-only GrayCDC diagnosis",
+  "rtl_source": "1d3c576bb11c6c1087abe31b19c2d7e587f2124f",
+  "rtl_unchanged_to_owner_HEAD": true,
+  "checkpoint_stage": "PLACEMENT ONLY; CTS/route checkpoints absent",
+  "checkpoint_sha256": "7faacf15e72e118e151e0cee53082099d70d62019ba4f000a9c460951a72a439",
+  "clock_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "hold_uncertainty_ps": 25,
+  "Gray_max_ps": 773.333,
+  "first_sync_bits": 40,
+  "exception": "Gray sourcecell -> through QN -> firstsync D; supported -ignore_clock_latency max, -hold-only falsepath",
+  "blanket_clock_group_cut": false,
+  "payload_exception": false,
+  "before_after_ps": {
+    "TT": {
+      "setup_before": -137.68347573162032,
+      "setup_after": -137.68347573162032,
+      "hold_before": -6.533974750144722,
+      "hold_after": -6.533974750144722
+    },
+    "FF": {
+      "setup_before": 30.90644407066634,
+      "setup_after": 30.90644407066634,
+      "hold_before": -26.6289143513454,
+      "hold_after": -26.6289143513454
+    }
+  },
+  "verdict": "NEEDS_PHYSICAL_CLOSURE; scoped Gray exception does NOT cure remaining sameclock output FF hold/TT setup; no CLOSED/routed verdict",
+  "current_hold_example": "ck->ck u_sq.g_ops2.odp43 -> o_seq_coll43 -26.118462ps",
+  "frozen_CTS_history": "-375.134ps endpoint u_sq.g_afw.u_af.mem7_64/D; actual killed CTS state not saved; no proof Gray caused this miss",
+  "original_benches": {
+    "bench_cdc_ch_p2_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS cdc_ch words=4000\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 24914250 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_exact_fastw": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS cdc_ch words=4000\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 25013000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_neg": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FAIL cdc_ch NEG=1: sent 4000 received 2048 mismatches 2029 w_fault 1 r_fault 0\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 13150350 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_mut_rsel2": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FAIL cdc_ch NEG=0: sent 4000 received 4000 mismatches 4000 w_fault 0 r_fault 0\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 24914250 (1ps)\n",
+      "track": "parallel"
+    }
+  },
+  "failed_diagnostics_preserved": [
+    "baseline_ff.log (toolpath)",
+    "scoped_ff.log/scoped_tt.log (MSB alias)",
+    "scoped_ff_v2/v3.log (OpenSTA QN startpoint warnings)"
+  ],
+  "final_logs": [
+    "scoped_ff_v4.log",
+    "scoped_tt_v4.log"
+  ],
+  "queue": "Claude intake only; no job mutation/requeue"
+}

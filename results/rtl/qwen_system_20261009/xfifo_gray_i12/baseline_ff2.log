@@ -1,0 +1,1422 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9184, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9217, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9250, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9283, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9316, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9349, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 9382, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10518, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10551, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz line 10584, timing group from output port.
+AUDIT_STAGE PLACE_BASELINE CORNER FF
+AUDIT_BASELINE_SETUP -3.2426561435983103e-11 HOLD 3.364586387277768e-12
+Startpoint: u_sr.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_st.g_afw.u_af.wq_row[3]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  39.90   39.90 v u_sr.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  34.71   74.61 ^ _523868_/Y (INVx1_ASAP7_75t_R)
+   8.44   83.05 ^ u_st.g_afw.u_af.wq_row[3]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          83.05   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_st.g_afw.u_af.wq_row[3]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  24.78   49.78   library removal time
+          49.78   data required time
+---------------------------------------------------------
+          49.78   data required time
+         -83.05   data arrival time
+---------------------------------------------------------
+          33.27   slack (MET)
+
+
+Startpoint: u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_ur.g_afw.u_af.wr_online_r2$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  40.76   40.76 v u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  10.41   51.18 ^ _524240_/Y (INVx1_ASAP7_75t_R)
+  24.12   75.30 ^ place82702/Y (BUFx10_ASAP7_75t_R)
+   1.10   76.40 ^ u_ur.g_afw.u_af.wr_online_r2$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          76.40   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ur.g_afw.u_af.wr_online_r2$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  15.14   40.14   library removal time
+          40.14   data required time
+---------------------------------------------------------
+          40.14   data required time
+         -76.40   data arrival time
+---------------------------------------------------------
+          36.26   slack (MET)
+
+
+Startpoint: u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+          (removal check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  40.76   40.76 v u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  10.41   51.18 ^ _524240_/Y (INVx1_ASAP7_75t_R)
+  24.12   75.30 ^ place82702/Y (BUFx10_ASAP7_75t_R)
+   2.85   78.15 ^ u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+          78.15   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  15.87   40.87   library removal time
+          40.87   data required time
+---------------------------------------------------------
+          40.87   data required time
+         -78.15   data arrival time
+---------------------------------------------------------
+          37.28   slack (MET)
+
+
+Startpoint: u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_st.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: path delay
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  34.48   34.48 ^ u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   5.82   40.29 v _337932_/Y (INVx1_ASAP7_75t_R)
+   0.02   40.31 v u_st.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          40.31   data arrival time
+
+   0.00    0.00   min_delay
+   9.27    9.27   library hold time
+           9.27   data required time
+---------------------------------------------------------
+           9.27   data required time
+         -40.31   data arrival time
+---------------------------------------------------------
+          31.04   slack (MET)
+
+
+Startpoint: u_ur.g_afw.u_af.rd_online$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_ur.g_afw.u_af.rd_online_w1$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: path delay
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_ur.g_afw.u_af.rd_online$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  34.52   34.52 ^ u_ur.g_afw.u_af.rd_online$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   6.17   40.69 v _524266_/Y (INVx1_ASAP7_75t_R)
+   0.03   40.72 v u_ur.g_afw.u_af.rd_online_w1$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          40.72   data arrival time
+
+   0.00    0.00   min_delay
+   9.21    9.21   library hold time
+           9.21   data required time
+---------------------------------------------------------
+           9.21   data required time
+         -40.72   data arrival time
+---------------------------------------------------------
+          31.51   slack (MET)
+
+
+Startpoint: u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: u_sq.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by ck)
+Path Group: path delay
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  34.85   34.85 ^ u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+   6.03   40.88 v _302716_/Y (INVx1_ASAP7_75t_R)
+   0.02   40.91 v u_sq.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D (DFFASRHQNx1_ASAP7_75t_R)
+          40.91   data arrival time
+
+   0.00    0.00   min_delay
+   9.24    9.24   library hold time
+           9.24   data required time
+---------------------------------------------------------
+           9.24   data required time
+         -40.91   data arrival time
+---------------------------------------------------------
+          31.67   slack (MET)
+
+
+Startpoint: u_ur.od_q[322]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_ur.g_ops2.odp[322]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.od_q[322]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_ur.od_q[322]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.76   37.03 v _366756_/Y (INVx1_ASAP7_75t_R)
+   0.02   37.05 v u_ur.g_ops2.odp[322]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.05   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ur.g_ops2.odp[322]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.64   33.64   library hold time
+          33.64   data required time
+---------------------------------------------------------
+          33.64   data required time
+         -37.05   data arrival time
+---------------------------------------------------------
+           3.41   slack (MET)
+
+
+Startpoint: u_sr.od_q[206]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sr.g_ops2.odp[206]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.od_q[206]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_sr.od_q[206]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.80   37.07 v _315506_/Y (INVx1_ASAP7_75t_R)
+   0.02   37.09 v u_sr.g_ops2.odp[206]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.09   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sr.g_ops2.odp[206]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.63   33.63   library hold time
+          33.63   data required time
+---------------------------------------------------------
+          33.63   data required time
+         -37.09   data arrival time
+---------------------------------------------------------
+           3.46   slack (MET)
+
+
+Startpoint: u_st.g_ipr.pd[898]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_st.id_q[898]$_DFF_P_ (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_st.g_ipr.pd[898]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_st.g_ipr.pd[898]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.87   37.14 v _337001_/Y (INVx1_ASAP7_75t_R)
+   0.03   37.17 v u_st.id_q[898]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.17   data arrival time
+
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_st.id_q[898]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.62   33.62   library hold time
+          33.62   data required time
+---------------------------------------------------------
+          33.62   data required time
+         -37.17   data arrival time
+---------------------------------------------------------
+           3.55   slack (MET)
+
+
+Startpoint: u_sq.g_ipr.pd[55]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: u_sq.id_q[55]$_DFF_P_ (rising edge-triggered flip-flop clocked by ckd)
+Path Group: ckd
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.g_ipr.pd[55]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.52   31.52 ^ u_sq.g_ipr.pd[55]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.29   37.81 v _293546_/Y (INVx1_ASAP7_75t_R)
+   0.04   37.85 v u_sq.id_q[55]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.85   data arrival time
+
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sq.id_q[55]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.56   33.56   library hold time
+          33.56   data required time
+---------------------------------------------------------
+          33.56   data required time
+         -37.85   data arrival time
+---------------------------------------------------------
+           4.29   slack (MET)
+
+
+Startpoint: u_sq.g_ipr.pd[46]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: u_sq.id_q[46]$_DFF_P_ (rising edge-triggered flip-flop clocked by ckd)
+Path Group: ckd
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.g_ipr.pd[46]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  32.02   32.02 ^ u_sq.g_ipr.pd[46]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.07   38.09 v _293555_/Y (INVx1_ASAP7_75t_R)
+   0.03   38.12 v u_sq.id_q[46]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          38.12   data arrival time
+
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sq.id_q[46]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.60   33.60   library hold time
+          33.60   data required time
+---------------------------------------------------------
+          33.60   data required time
+         -38.12   data arrival time
+---------------------------------------------------------
+           4.52   slack (MET)
+
+
+Startpoint: u_sq.g_ipr.pd[3]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: u_sq.id_q[3]$_DFF_P_ (rising edge-triggered flip-flop clocked by ckd)
+Path Group: ckd
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.g_ipr.pd[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.86   31.86 ^ u_sq.g_ipr.pd[3]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   6.30   38.16 v _293598_/Y (INVx1_ASAP7_75t_R)
+   0.04   38.20 v u_sq.id_q[3]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          38.20   data arrival time
+
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sq.id_q[3]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.56   33.56   library hold time
+          33.56   data required time
+---------------------------------------------------------
+          33.56   data required time
+         -38.20   data arrival time
+---------------------------------------------------------
+           4.64   slack (MET)
+
+
+Startpoint: u_sr.g_ipr.pd[490]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cks)
+Endpoint: u_sr.id_q[490]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: cks
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_ipr.pd[490]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_sr.g_ipr.pd[490]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.72   36.99 v _316245_/Y (INVx1_ASAP7_75t_R)
+   0.02   37.01 v u_sr.id_q[490]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.01   data arrival time
+
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sr.id_q[490]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.64   33.64   library hold time
+          33.64   data required time
+---------------------------------------------------------
+          33.64   data required time
+         -37.01   data arrival time
+---------------------------------------------------------
+           3.36   slack (MET)
+
+
+Startpoint: u_sr.g_ipr.pd[515]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cks)
+Endpoint: u_sr.id_q[515]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: cks
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_ipr.pd[515]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_sr.g_ipr.pd[515]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.97   37.24 v _316220_/Y (INVx1_ASAP7_75t_R)
+   0.03   37.27 v u_sr.id_q[515]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.27   data arrival time
+
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_sr.id_q[515]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.61   33.61   library hold time
+          33.61   data required time
+---------------------------------------------------------
+          33.61   data required time
+         -37.27   data arrival time
+---------------------------------------------------------
+           3.66   slack (MET)
+
+
+Startpoint: u_st.od_q[418]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cks)
+Endpoint: u_st.g_ops2.odp[418]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: cks
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_st.od_q[418]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_st.od_q[418]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.98   37.25 v _336458_/Y (INVx1_ASAP7_75t_R)
+   0.03   37.28 v u_st.g_ops2.odp[418]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.28   data arrival time
+
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_st.g_ops2.odp[418]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.61   33.61   library hold time
+          33.61   data required time
+---------------------------------------------------------
+          33.61   data required time
+         -37.28   data arrival time
+---------------------------------------------------------
+           3.67   slack (MET)
+
+
+Startpoint: u_ur.g_ipr.pd[243]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cku)
+Endpoint: u_ur.id_q[243]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: cku
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.g_ipr.pd[243]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.45   31.45 ^ u_ur.g_ipr.pd[243]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.76   37.20 v _367858_/Y (INVx1_ASAP7_75t_R)
+   0.02   37.22 v u_ur.id_q[243]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.22   data arrival time
+
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ur.id_q[243]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.64   33.64   library hold time
+          33.64   data required time
+---------------------------------------------------------
+          33.64   data required time
+         -37.22   data arrival time
+---------------------------------------------------------
+           3.58   slack (MET)
+
+
+Startpoint: u_ut.od_q[881]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cku)
+Endpoint: u_ut.g_ops2.odp[881]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: cku
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ut.od_q[881]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.27   31.27 ^ u_ut.od_q[881]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.98   37.25 v _387278_/Y (INVx1_ASAP7_75t_R)
+   0.03   37.28 v u_ut.g_ops2.odp[881]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.28   data arrival time
+
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ut.g_ops2.odp[881]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.61   33.61   library hold time
+          33.61   data required time
+---------------------------------------------------------
+          33.61   data required time
+         -37.28   data arrival time
+---------------------------------------------------------
+           3.67   slack (MET)
+
+
+Startpoint: u_ur.g_ipr.pd[896]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by cku)
+Endpoint: u_ur.id_q[896]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: cku
+Path Type: min
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.g_ipr.pd[896]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  31.60   31.60 ^ u_ur.g_ipr.pd[896]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+   5.79   37.39 v _367205_/Y (INVx1_ASAP7_75t_R)
+   0.02   37.41 v u_ur.id_q[896]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+          37.41   data arrival time
+
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+  25.00   25.00   clock uncertainty
+   0.00   25.00   clock reconvergence pessimism
+          25.00 ^ u_ur.id_q[896]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+   8.63   33.63   library hold time
+          33.63   data required time
+---------------------------------------------------------
+          33.63   data required time
+         -37.41   data arrival time
+---------------------------------------------------------
+           3.78   slack (MET)
+
+
+Startpoint: u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sq.cred[2]$_DFF_PN1_ (recovery check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  69.83   69.83 v u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  32.91  102.74 ^ _523714_/Y (INVx1_ASAP7_75t_R)
+  21.26  124.00 ^ place82733/Y (BUFx6f_ASAP7_75t_R)
+  47.14  171.14 ^ place82732/Y (BUFx6f_ASAP7_75t_R)
+  49.67  220.82 ^ place82730/Y (BUFx6f_ASAP7_75t_R)
+  60.94  281.76 ^ place82729/Y (BUFx10_ASAP7_75t_R)
+  18.93  300.69 ^ wire113026/Y (BUFx16f_ASAP7_75t_R)
+  91.23  391.92 ^ place82728/Y (BUFx3_ASAP7_75t_R)
+  45.21  437.13 ^ place82727/Y (BUFx6f_ASAP7_75t_R)
+  29.20  466.33 ^ u_sq.cred[2]$_DFF_PN1_/SETN (DFFASRHQNx1_ASAP7_75t_R)
+         466.33   data arrival time
+
+ 770.00  770.00   clock ck (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sq.cred[2]$_DFF_PN1_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  -8.84  701.16   library recovery time
+         701.16   data required time
+---------------------------------------------------------
+         701.16   data required time
+        -466.33   data arrival time
+---------------------------------------------------------
+         234.83   slack (MET)
+
+
+Startpoint: u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sq.g_ops2.ovp$_DFF_PN0_
+          (recovery check against rising-edge clock ck)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  69.83   69.83 v u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  32.91  102.74 ^ _523714_/Y (INVx1_ASAP7_75t_R)
+  21.26  124.00 ^ place82733/Y (BUFx6f_ASAP7_75t_R)
+  47.14  171.14 ^ place82732/Y (BUFx6f_ASAP7_75t_R)
+  49.67  220.82 ^ place82730/Y (BUFx6f_ASAP7_75t_R)
+  60.94  281.76 ^ place82729/Y (BUFx10_ASAP7_75t_R)
+  18.93  300.69 ^ wire113026/Y (BUFx16f_ASAP7_75t_R)
+  91.23  391.92 ^ place82728/Y (BUFx3_ASAP7_75t_R)
+  45.21  437.13 ^ place82727/Y (BUFx6f_ASAP7_75t_R)
+  29.49  466.62 ^ u_sq.g_ops2.ovp$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         466.62   data arrival time
+
+ 770.00  770.00   clock ck (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sq.g_ops2.ovp$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  16.62  726.62   library recovery time
+         726.62   data required time
+---------------------------------------------------------
+         726.62   data required time
+        -466.62   data arrival time
+---------------------------------------------------------
+         260.00   slack (MET)
+
+
+Startpoint: u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by ckd)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  69.83   69.83 v u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  39.85  109.68 v place111749/Y (BUFx3_ASAP7_75t_R)
+  71.86  181.54 v place111748/Y (BUFx3_ASAP7_75t_R)
+  52.29  233.83 v place111747/Y (BUFx3_ASAP7_75t_R)
+  57.22  291.05 v place111746/Y (BUFx3_ASAP7_75t_R)
+  96.84  387.89 ^ _523715_/Y (NOR2x1_ASAP7_75t_R)
+   4.54  392.43 ^ u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         392.43   data arrival time
+
+ 710.00  710.00   max_delay
+  16.32  726.32   library recovery time
+         726.32   data required time
+---------------------------------------------------------
+         726.32   data required time
+        -392.43   data arrival time
+---------------------------------------------------------
+         333.88   slack (MET)
+
+
+Startpoint: u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[0]$_DFF_PN0_
+          (rising edge-triggered flip-flop clocked by ckd)
+Path Group: path delay
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00 ^ u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  69.83   69.83 v u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  39.85  109.68 v place111749/Y (BUFx3_ASAP7_75t_R)
+  71.86  181.54 v place111748/Y (BUFx3_ASAP7_75t_R)
+  52.29  233.83 v place111747/Y (BUFx3_ASAP7_75t_R)
+  57.22  291.05 v place111746/Y (BUFx3_ASAP7_75t_R)
+  96.84  387.89 ^ _523715_/Y (NOR2x1_ASAP7_75t_R)
+   4.36  392.26 ^ u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+         392.26   data arrival time
+
+ 710.00  710.00   max_delay
+  16.32  726.32   library recovery time
+         726.32   data required time
+---------------------------------------------------------
+         726.32   data required time
+        -392.26   data arrival time
+---------------------------------------------------------
+         334.06   slack (MET)
+
+
+Startpoint: u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[1][2]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  41.90   41.90 v u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  21.14   63.03 v place111552/Y (BUFx6f_ASAP7_75t_R)
+  50.80  113.83 v place111551/Y (BUFx6f_ASAP7_75t_R)
+  52.97  166.80 v place111550/Y (BUFx6f_ASAP7_75t_R)
+  40.67  207.47 v place111549/Y (BUFx6f_ASAP7_75t_R)
+  32.44  239.92 v place111548/Y (BUFx6f_ASAP7_75t_R)
+  87.63  327.55 v place111547/Y (BUFx6f_ASAP7_75t_R)
+  32.08  359.63 v place111546/Y (BUFx6f_ASAP7_75t_R)
+  42.87  402.49 v place111545/Y (BUFx6f_ASAP7_75t_R)
+  47.76  450.26 v place111544/Y (BUFx6f_ASAP7_75t_R)
+  48.64  498.90 v place111543/Y (BUFx6f_ASAP7_75t_R)
+  57.31  556.21 v place111536/Y (BUFx3_ASAP7_75t_R)
+  49.12  605.33 v place111535/Y (BUFx10_ASAP7_75t_R)
+  22.90  628.23 v wire112760/Y (BUFx24_ASAP7_75t_R)
+  76.91  705.14 v _325336_/Y (AO21x1_ASAP7_75t_R)
+   0.11  705.25 v u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[1][2]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         705.25   data arrival time
+
+ 770.00  770.00   clock ck (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[1][2]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -11.34  698.66   library setup time
+         698.66   data required time
+---------------------------------------------------------
+         698.66   data required time
+        -705.25   data arrival time
+---------------------------------------------------------
+          -6.59   slack (VIOLATED)
+
+
+Startpoint: u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by ck)
+Endpoint: u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[0][7]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by ck)
+Path Group: ck
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ck (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  41.90   41.90 v u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  21.14   63.03 v place111552/Y (BUFx6f_ASAP7_75t_R)
+  50.80  113.83 v place111551/Y (BUFx6f_ASAP7_75t_R)
+  52.97  166.80 v place111550/Y (BUFx6f_ASAP7_75t_R)
+  40.67  207.47 v place111549/Y (BUFx6f_ASAP7_75t_R)
+  32.44  239.92 v place111548/Y (BUFx6f_ASAP7_75t_R)
+  87.63  327.55 v place111547/Y (BUFx6f_ASAP7_75t_R)
+  32.08  359.63 v place111546/Y (BUFx6f_ASAP7_75t_R)
+  42.87  402.49 v place111545/Y (BUFx6f_ASAP7_75t_R)
+  47.76  450.26 v place111544/Y (BUFx6f_ASAP7_75t_R)
+  48.64  498.90 v place111543/Y (BUFx6f_ASAP7_75t_R)
+  57.31  556.21 v place111536/Y (BUFx3_ASAP7_75t_R)
+  49.12  605.33 v place111535/Y (BUFx10_ASAP7_75t_R)
+  22.90  628.23 v wire112760/Y (BUFx24_ASAP7_75t_R)
+  75.33  703.56 v _332738_/Y (AO21x1_ASAP7_75t_R)
+   0.34  703.90 v u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[0][7]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         703.90   data arrival time
+
+ 770.00  770.00   clock ck (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[0][7]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -12.17  697.83   library setup time
+         697.83   data required time
+---------------------------------------------------------
+         697.83   data required time
+        -703.90   data arrival time
+---------------------------------------------------------
+          -6.08   slack (VIOLATED)
+
+
+Startpoint: u_sq.wf_q$_DFF_PN0_ (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: f_ckd$_DFF_P_ (rising edge-triggered flip-flop clocked by ckd)
+Path Group: ckd
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.wf_q$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  43.63   43.63 ^ u_sq.wf_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  17.22   60.85 v _523651_/Y (INVx4_ASAP7_75t_R)
+  66.72  127.57 v place82747/Y (BUFx6f_ASAP7_75t_R)
+  45.25  172.82 v place82746/Y (BUFx6f_ASAP7_75t_R)
+  44.74  217.56 v place82745/Y (BUFx6f_ASAP7_75t_R)
+  44.79  262.35 v place82744/Y (BUFx6f_ASAP7_75t_R)
+  45.50  307.85 v place82743/Y (BUFx6f_ASAP7_75t_R)
+  45.55  353.40 v place82742/Y (BUFx6f_ASAP7_75t_R)
+  45.09  398.49 v place82741/Y (BUFx6f_ASAP7_75t_R)
+  45.05  443.54 v place82740/Y (BUFx6f_ASAP7_75t_R)
+  44.64  488.18 v place82739/Y (BUFx6f_ASAP7_75t_R)
+  45.25  533.43 v place82738/Y (BUFx6f_ASAP7_75t_R)
+  45.16  578.60 v place82737/Y (BUFx6f_ASAP7_75t_R)
+  45.01  623.60 v place82736/Y (BUFx6f_ASAP7_75t_R)
+  44.69  668.29 v place82735/Y (BUFx6f_ASAP7_75t_R)
+  44.52  712.81 v place82734/Y (BUFx6f_ASAP7_75t_R)
+  16.56  729.37 v f_ckd$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+         729.37   data arrival time
+
+ 770.00  770.00   clock ckd (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ f_ckd$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -13.06  696.94   library setup time
+         696.94   data required time
+---------------------------------------------------------
+         696.94   data required time
+        -729.37   data arrival time
+---------------------------------------------------------
+         -32.43   slack (VIOLATED)
+
+
+Startpoint: u_sq.iw[0]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by ckd)
+Endpoint: u_sq.g_afw.u_af.wq_data[62]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by ckd)
+Path Group: ckd
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock ckd (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sq.iw[0]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  48.16   48.16 v u_sq.iw[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  27.15   75.32 v _313036_/Y (XOR2x2_ASAP7_75t_R)
+  37.02  112.33 v _313038_/Y (OR3x2_ASAP7_75t_R)
+  33.81  146.15 v place82652/Y (BUFx6f_ASAP7_75t_R)
+  51.85  198.00 v place82651/Y (BUFx6f_ASAP7_75t_R)
+  45.87  243.87 ^ _313042_/Y (NAND2x2_ASAP7_75t_R)
+  22.94  266.81 v _313043_/Y (INVx2_ASAP7_75t_R)
+  49.39  316.20 v place79288/Y (BUFx6f_ASAP7_75t_R)
+  42.93  359.13 v place79287/Y (BUFx6f_ASAP7_75t_R)
+  42.19  401.32 v place79284/Y (BUFx6f_ASAP7_75t_R)
+  31.25  432.56 v place79283/Y (BUFx6f_ASAP7_75t_R)
+  41.13  473.69 v _313115_/Y (OA211x2_ASAP7_75t_R)
+  38.59  512.28 v place77205/Y (BUFx6f_ASAP7_75t_R)
+  45.23  557.51 v place77204/Y (BUFx6f_ASAP7_75t_R)
+  35.12  592.63 ^ _313116_/Y (AOI21x1_ASAP7_75t_R)
+   0.03  592.66 ^ u_sq.g_afw.u_af.wq_data[62]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         592.66   data arrival time
+
+ 770.00  770.00   clock ckd (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sq.g_afw.u_af.wq_data[62]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -12.12  697.88   library setup time
+         697.88   data required time
+---------------------------------------------------------
+         697.88   data required time
+        -592.66   data arrival time
+---------------------------------------------------------
+         105.21   slack (MET)
+
+
+Startpoint: u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by cks)
+Endpoint: u_sr.g_afw.u_af.mem[3][276]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: cks
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  41.87   41.87 v u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  23.12   64.98 v place104280/Y (BUFx10_ASAP7_75t_R)
+  83.75  148.73 v place104279/Y (BUFx6f_ASAP7_75t_R)
+  60.42  209.15 v place104278/Y (BUFx6f_ASAP7_75t_R)
+  44.38  253.54 v place104277/Y (BUFx6f_ASAP7_75t_R)
+  48.97  302.51 v place104275/Y (BUFx6f_ASAP7_75t_R)
+  49.42  351.92 v place104274/Y (BUFx6f_ASAP7_75t_R)
+  57.64  409.56 v place104273/Y (BUFx6f_ASAP7_75t_R)
+  47.43  456.99 v place104272/Y (BUFx6f_ASAP7_75t_R)
+  48.87  505.86 v place104271/Y (BUFx6f_ASAP7_75t_R)
+  59.71  565.57 v place104270/Y (BUFx6f_ASAP7_75t_R)
+  42.40  607.97 v place104269/Y (BUFx6f_ASAP7_75t_R)
+  39.90  647.87 v place104268/Y (BUFx6f_ASAP7_75t_R)
+  12.97  660.84 ^ _456986_/Y (NAND2x1_ASAP7_75t_R)
+  18.92  679.76 ^ _456987_/Y (OA21x2_ASAP7_75t_R)
+   0.35  680.11 ^ u_sr.g_afw.u_af.mem[3][276]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         680.11   data arrival time
+
+ 770.00  770.00   clock cks (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sr.g_afw.u_af.mem[3][276]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -15.05  694.95   library setup time
+         694.95   data required time
+---------------------------------------------------------
+         694.95   data required time
+        -680.11   data arrival time
+---------------------------------------------------------
+          14.85   slack (MET)
+
+
+Startpoint: u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by cks)
+Endpoint: u_sr.g_afw.u_af.mem[3][275]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by cks)
+Path Group: cks
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cks (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  41.87   41.87 v u_sr.g_afw.u_af.wq_row[3]$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  23.12   64.98 v place104280/Y (BUFx10_ASAP7_75t_R)
+  83.75  148.73 v place104279/Y (BUFx6f_ASAP7_75t_R)
+  60.42  209.15 v place104278/Y (BUFx6f_ASAP7_75t_R)
+  44.38  253.54 v place104277/Y (BUFx6f_ASAP7_75t_R)
+  48.97  302.51 v place104275/Y (BUFx6f_ASAP7_75t_R)
+  49.42  351.92 v place104274/Y (BUFx6f_ASAP7_75t_R)
+  57.64  409.56 v place104273/Y (BUFx6f_ASAP7_75t_R)
+  47.43  456.99 v place104272/Y (BUFx6f_ASAP7_75t_R)
+  48.87  505.86 v place104271/Y (BUFx6f_ASAP7_75t_R)
+  59.71  565.57 v place104270/Y (BUFx6f_ASAP7_75t_R)
+  42.40  607.97 v place104269/Y (BUFx6f_ASAP7_75t_R)
+  39.90  647.87 v place104268/Y (BUFx6f_ASAP7_75t_R)
+  13.87  661.73 ^ _456988_/Y (NAND2x1_ASAP7_75t_R)
+  17.53  679.26 ^ _456989_/Y (OA21x2_ASAP7_75t_R)
+   0.10  679.36 ^ u_sr.g_afw.u_af.mem[3][275]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         679.36   data arrival time
+
+ 770.00  770.00   clock cks (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_sr.g_afw.u_af.mem[3][275]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -15.25  694.75   library setup time
+         694.75   data required time
+---------------------------------------------------------
+         694.75   data required time
+        -679.36   data arrival time
+---------------------------------------------------------
+          15.39   slack (MET)
+
+
+Startpoint: u_ur.ir[0]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by cku)
+Endpoint: u_ur.g_afw.u_af.wq_data[1008]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: cku
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.ir[0]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  39.51   39.51 ^ u_ur.ir[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  22.58   62.09 ^ place92874/Y (BUFx3_ASAP7_75t_R)
+  41.83  103.92 ^ _293609_/Y (XOR2x2_ASAP7_75t_R)
+  18.35  122.28 v _293610_/Y (NOR3x1_ASAP7_75t_R)
+  17.39  139.66 v place82676/Y (BUFx6f_ASAP7_75t_R)
+  56.88  196.54 v _293611_/Y (OR4x2_ASAP7_75t_R)
+  44.70  241.24 v place79875/Y (BUFx10_ASAP7_75t_R)
+  18.40  259.64 v wire112888/Y (BUFx16f_ASAP7_75t_R)
+  95.81  355.45 v place79874/Y (BUFx6f_ASAP7_75t_R)
+  46.45  401.90 v place79867/Y (BUFx6f_ASAP7_75t_R)
+  67.09  468.99 v place79866/Y (BUFx6f_ASAP7_75t_R)
+  22.13  491.12 ^ _293768_/Y (AOI21x1_ASAP7_75t_R)
+   0.03  491.15 ^ u_ur.g_afw.u_af.wq_data[1008]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         491.15   data arrival time
+
+ 770.00  770.00   clock cku (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_ur.g_afw.u_af.wq_data[1008]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -14.06  695.94   library setup time
+         695.94   data required time
+---------------------------------------------------------
+         695.94   data required time
+        -491.15   data arrival time
+---------------------------------------------------------
+         204.79   slack (MET)
+
+
+Startpoint: u_ur.ir[0]$_DFFE_PN0P_
+            (rising edge-triggered flip-flop clocked by cku)
+Endpoint: u_ur.g_afw.u_af.wq_data[1021]$_DFFE_PP_
+          (rising edge-triggered flip-flop clocked by cku)
+Path Group: cku
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock cku (rise edge)
+   0.00    0.00   clock network delay (ideal)
+   0.00    0.00 ^ u_ur.ir[0]$_DFFE_PN0P_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  39.51   39.51 ^ u_ur.ir[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  22.58   62.09 ^ place92874/Y (BUFx3_ASAP7_75t_R)
+  41.83  103.92 ^ _293609_/Y (XOR2x2_ASAP7_75t_R)
+  18.35  122.28 v _293610_/Y (NOR3x1_ASAP7_75t_R)
+  17.39  139.66 v place82676/Y (BUFx6f_ASAP7_75t_R)
+  56.88  196.54 v _293611_/Y (OR4x2_ASAP7_75t_R)
+  44.70  241.24 v place79875/Y (BUFx10_ASAP7_75t_R)
+  18.40  259.64 v wire112888/Y (BUFx16f_ASAP7_75t_R)
+  95.81  355.45 v place79874/Y (BUFx6f_ASAP7_75t_R)
+  46.45  401.90 v place79867/Y (BUFx6f_ASAP7_75t_R)
+  67.09  468.99 v place79866/Y (BUFx6f_ASAP7_75t_R)
+  22.06  491.05 ^ _293648_/Y (AOI21x1_ASAP7_75t_R)
+   0.03  491.08 ^ u_ur.g_afw.u_af.wq_data[1021]$_DFFE_PP_/D (DFFHQNx1_ASAP7_75t_R)
+         491.08   data arrival time
+
+ 770.00  770.00   clock cku (rise edge)
+   0.00  770.00   clock network delay (ideal)
+ -60.00  710.00   clock uncertainty
+   0.00  710.00   clock reconvergence pessimism
+         710.00 ^ u_ur.g_afw.u_af.wq_data[1021]$_DFFE_PP_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -14.09  695.91   library setup time
+         695.91   data required time
+---------------------------------------------------------
+         695.91   data required time
+        -491.08   data arrival time
+---------------------------------------------------------
+         204.84   slack (MET)
+
+
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0__351
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0__350
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0__349
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0__348
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0__347
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0__346
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0__345
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0__344
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0__323
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0__322
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0__321
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0__320
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[2]$_DFF_PN0__319
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[1]$_DFF_PN0__318
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[0]$_DFF_PN0__317
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0__278
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0__277
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0__276
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0__275
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0__274
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0__273
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0__272
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0__271
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0__243
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0__242
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0__241
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0__240
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0__239
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[1]$_DFF_PN0__238
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[0]$_DFF_PN0__237
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0__208
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0__207
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0__206
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0__205
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0__204
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0__203
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0__202
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0__201
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0__180
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0__179
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0__178
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0__177
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[2]$_DFF_PN0__176
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[1]$_DFF_PN0__175
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[0]$_DFF_PN0__174
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0__135
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0__134
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0__133
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0__132
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0__131
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0__130
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0__129
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0__128
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0__100
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0__99
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0__98
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0__97
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[2]$_DFF_PN0__96
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[1]$_DFF_PN0__95
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[0]$_DFF_PN0__94
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0__52
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0__51
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0__50
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0__49
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0__48
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0__47
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0__46
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0__45
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0__17
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0__16
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0__15
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0__14
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[2]$_DFF_PN0__13
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[1]$_DFF_PN0__12
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[0]$_DFF_PN0__11
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sq.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_sr.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_st.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ur.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_
+AUDIT_GRAY_CELL u_ut.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_
+AUDIT_HOLD 33.269180 ck->ck u_sr.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.wq_row[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 36.260223 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_online_r2$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.282650 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.288792 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_bin[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.339245 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_bin[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.576557 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r2[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.620396 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.623848 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r2[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.634285 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.696175 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.721161 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.722134 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r2[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.735886 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.742275 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.742767 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r2[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.746105 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_bin[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.747108 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_bin[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 37.754784 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_online_r1$_DFF_PN0_/RESETN
+AUDIT_HOLD 40.090862 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_empty$_DFF_PN1_/SETN
+AUDIT_HOLD 42.362480 cks->cks u_sr.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_empty$_DFF_PN1_/SETN
+AUDIT_HOLD 44.768024 cks->cks u_sr.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_bin[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 44.993519 cks->cks u_sr.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_bin[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 45.153812 cks->cks u_sr.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_bin[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 53.261147 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_online$_DFF_PN0_/RESETN
+AUDIT_HOLD 57.557049 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 57.630276 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_online$_DFF_PN0_/RESETN
+AUDIT_HOLD 58.462376 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 58.519573 cku->cku u_ur.u_wrs.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_reset_conditioner.reset_pipe[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 58.574451 cku->cku u_ur.u_wrs.reset_pipe[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 59.410019 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 60.501286 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_gray_w2[1]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.275936 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w1[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.353569 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w2[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.479599 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.549191 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.608566 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_bin[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.612244 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.619633 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_bin[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 61.643349 ck->ck u_ur.g_afw.u_af.rd_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/RESETN
+AUDIT_HOLD 62.457088 ckd->ckd u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/RESETN
+AUDIT_HOLD 31.041492 ck->cks u_st.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN -> u_st.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D
+AUDIT_HOLD 31.513639 ck->cku u_ur.g_afw.u_af.rd_online$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_online_w1$_DFF_PN0_/D
+AUDIT_HOLD 31.669775 ckd->ck u_sq.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D
+AUDIT_HOLD 31.670813 ck->ckd u_sq.g_afw.u_af.rd_gray[2]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/D
+AUDIT_HOLD 31.724619 ck->cks u_sr.g_afw.u_af.rd_online$_DFF_PN0_/QN -> u_sr.g_afw.u_af.rd_online_w1$_DFF_PN0_/D
+AUDIT_HOLD 31.768450 cks->ck u_sr.g_afw.u_af.wr_online$_DFF_PN0_/QN -> u_sr.g_afw.u_af.wr_online_r1$_DFF_PN0_/D
+AUDIT_HOLD 31.801420 ck->cku u_ut.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/D
+AUDIT_HOLD 31.819565 cku->ck u_ut.g_afw.u_af.rd_gray[0]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_/D
+AUDIT_HOLD 31.887722 ck->cks u_st.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/QN -> u_st.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/D
+AUDIT_HOLD 31.910801 ck->cku u_ut.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D
+AUDIT_HOLD 32.105286 cku->ck u_ur.g_afw.u_af.wr_online$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_online_r1$_DFF_PN0_/D
+AUDIT_HOLD 32.141399 ck->cku u_ut.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D
+AUDIT_HOLD 32.381058 cku->ck u_ur.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D
+AUDIT_HOLD 32.494579 ck->cku u_ut.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/D
+AUDIT_HOLD 32.514416 ckd->ck u_sq.g_afw.u_af.wr_online$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_online_r1$_DFF_PN0_/D
+AUDIT_HOLD 32.524750 cku->ck u_ut.g_afw.u_af.rd_gray[2]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/D
+AUDIT_HOLD 32.564800 ckd->ck u_sq.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/D
+AUDIT_HOLD 32.608944 cks->ck u_st.g_afw.u_af.rd_gray[2]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/D
+AUDIT_HOLD 33.036690 ck->cks u_sr.g_afw.u_af.rd_gray[0]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_/D
+AUDIT_HOLD 33.038349 ckd->ck u_sq.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/D
+AUDIT_HOLD 33.115940 cku->ck u_ut.g_afw.u_af.rd_gray[1]$_DFF_PN0_/QN -> u_ut.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_/D
+AUDIT_HOLD 33.181385 cku->ck u_ur.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/D
+AUDIT_HOLD 33.332283 cks->ck u_st.g_afw.u_af.rd_gray[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_/D
+AUDIT_HOLD 33.388279 ck->ckd u_sq.g_afw.u_af.rd_online$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_online_w1$_DFF_PN0_/D
+AUDIT_HOLD 33.479553 cku->ck u_ur.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D
+AUDIT_HOLD 33.610233 cku->ck u_ur.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/D
+AUDIT_HOLD 33.641911 cks->ck u_st.g_afw.u_af.rd_gray[0]$_DFF_PN0_/QN -> u_st.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_/D
+AUDIT_HOLD 33.700924 ck->cku u_ur.g_afw.u_af.rd_gray[2]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/D
+AUDIT_HOLD 33.819515 ck->cks u_st.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/QN -> u_st.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/D
+AUDIT_HOLD 34.042606 ck->cku u_ur.g_afw.u_af.rd_gray[1]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_/D
+AUDIT_HOLD 34.055191 ck->ckd u_sq.g_afw.u_af.rd_gray[1]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_gray_w1[1]$_DFF_PN0_/D
+AUDIT_HOLD 34.137604 ck->cku u_ur.g_afw.u_af.rd_gray[0]$_DFF_PN0_/QN -> u_ur.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_/D
+AUDIT_HOLD 34.484951 ck->cks u_st.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN -> u_st.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D
+AUDIT_HOLD 34.630295 ck->ckd u_sq.g_afw.u_af.rd_gray[0]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.rd_gray_w1[0]$_DFF_PN0_/D
+AUDIT_HOLD 35.450081 cks->ck u_sr.g_afw.u_af.wr_gray_pub[0]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.wr_gray_r1[0]$_DFF_PN0_/D
+AUDIT_HOLD 41.088459 cks->ck u_sr.g_afw.u_af.wr_gray_pub[3]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.wr_gray_r1[3]$_DFF_PN0_/D
+AUDIT_HOLD 41.406757 cks->ck u_sr.g_afw.u_af.wr_gray_pub[1]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.wr_gray_r1[1]$_DFF_PN0_/D
+AUDIT_HOLD 41.504086 ckd->ck u_sq.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN -> u_sq.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D
+AUDIT_HOLD 45.741753 ck->cks u_sr.g_afw.u_af.rd_gray[2]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.rd_gray_w1[2]$_DFF_PN0_/D
+AUDIT_HOLD 45.819435 cks->ck u_sr.g_afw.u_af.wr_gray_pub[2]$_DFF_PN0_/QN -> u_sr.g_afw.u_af.wr_gray_r1[2]$_DFF_PN0_/D
+AUDIT_HOLD 3.414772 ck->ck u_ur.od_q[322]$_DFF_P_/QN -> u_ur.g_ops2.odp[322]$_DFF_P_/D
+AUDIT_HOLD 3.463868 ck->ck u_sr.od_q[206]$_DFF_P_/QN -> u_sr.g_ops2.odp[206]$_DFF_P_/D
+AUDIT_HOLD 3.548432 ck->ck u_st.g_ipr.pd[898]$_DFF_P_/QN -> u_st.id_q[898]$_DFF_P_/D
+AUDIT_HOLD 3.608534 ck->ck u_ur.od_q[536]$_DFF_P_/QN -> u_ur.g_ops2.odp[536]$_DFF_P_/D
+AUDIT_HOLD 3.620753 ck->ck u_ur.od_q[729]$_DFF_P_/QN -> u_ur.g_ops2.odp[729]$_DFF_P_/D
+AUDIT_HOLD 3.647010 ck->ck u_ur.od_q[230]$_DFF_P_/QN -> u_ur.g_ops2.odp[230]$_DFF_P_/D
+AUDIT_HOLD 3.653328 ck->ck u_ur.od_q[305]$_DFF_P_/QN -> u_ur.g_ops2.odp[305]$_DFF_P_/D
+AUDIT_HOLD 3.659309 ck->ck u_ur.od_q[181]$_DFF_P_/QN -> u_ur.g_ops2.odp[181]$_DFF_P_/D
+AUDIT_HOLD 3.672704 ck->ck u_sq.od_q[42]$_DFF_P_/QN -> u_sq.g_ops2.odp[42]$_DFF_P_/D
+AUDIT_HOLD 3.674855 ck->ck u_sq.od_q[51]$_DFF_P_/QN -> u_sq.g_ops2.odp[51]$_DFF_P_/D
+AUDIT_HOLD 3.682832 ck->ck u_ur.od_q[229]$_DFF_P_/QN -> u_ur.g_ops2.odp[229]$_DFF_P_/D
+AUDIT_HOLD 3.683186 ck->ck u_sr.od_q[135]$_DFF_P_/QN -> u_sr.g_ops2.odp[135]$_DFF_P_/D
+AUDIT_HOLD 3.726693 ck->ck u_ur.od_q[446]$_DFF_P_/QN -> u_ur.g_ops2.odp[446]$_DFF_P_/D
+AUDIT_HOLD 3.738742 ck->ck u_ur.od_q[283]$_DFF_P_/QN -> u_ur.g_ops2.odp[283]$_DFF_P_/D
+AUDIT_HOLD 3.745306 ck->ck u_sr.od_q[647]$_DFF_P_/QN -> u_sr.g_ops2.odp[647]$_DFF_P_/D
+AUDIT_HOLD 3.758101 ck->ck u_ur.od_q[377]$_DFF_P_/QN -> u_ur.g_ops2.odp[377]$_DFF_P_/D
+AUDIT_HOLD 3.773964 ck->ck u_ur.od_q[104]$_DFF_P_/QN -> u_ur.g_ops2.odp[104]$_DFF_P_/D
+AUDIT_HOLD 3.773964 ck->ck u_ur.od_q[339]$_DFF_P_/QN -> u_ur.g_ops2.odp[339]$_DFF_P_/D
+AUDIT_HOLD 3.787123 ck->ck u_st.g_ipr.pd[916]$_DFF_P_/QN -> u_st.id_q[916]$_DFF_P_/D
+AUDIT_HOLD 3.788334 ck->ck u_ur.od_q[120]$_DFF_P_/QN -> u_ur.g_ops2.odp[120]$_DFF_P_/D
+AUDIT_HOLD 3.792092 ck->ck u_sr.od_q[211]$_DFF_P_/QN -> u_sr.g_ops2.odp[211]$_DFF_P_/D
+AUDIT_HOLD 3.793067 ck->ck u_ut.g_ipr.pd[315]$_DFF_P_/QN -> u_ut.id_q[315]$_DFF_P_/D
+AUDIT_HOLD 3.800033 ck->ck u_ur.od_q[209]$_DFF_P_/QN -> u_ur.g_ops2.odp[209]$_DFF_P_/D
+AUDIT_HOLD 3.809425 ck->ck u_ur.od_q[207]$_DFF_P_/QN -> u_ur.g_ops2.odp[207]$_DFF_P_/D
+AUDIT_HOLD 3.812194 ck->ck u_ur.od_q[367]$_DFF_P_/QN -> u_ur.g_ops2.odp[367]$_DFF_P_/D
+AUDIT_HOLD 3.828330 ck->ck u_ur.od_q[245]$_DFF_P_/QN -> u_ur.g_ops2.odp[245]$_DFF_P_/D
+AUDIT_HOLD 3.847662 ck->ck u_sr.od_q[340]$_DFF_P_/QN -> u_sr.g_ops2.odp[340]$_DFF_P_/D
+AUDIT_HOLD 3.849594 ck->ck u_ur.od_q[156]$_DFF_P_/QN -> u_ur.g_ops2.odp[156]$_DFF_P_/D
+AUDIT_HOLD 3.861283 ck->ck u_ur.od_q[877]$_DFF_P_/QN -> u_ur.g_ops2.odp[877]$_DFF_P_/D
+AUDIT_HOLD 3.882391 ck->ck u_ur.od_q[393]$_DFF_P_/QN -> u_ur.g_ops2.odp[393]$_DFF_P_/D
+AUDIT_HOLD 3.890461 ck->ck u_ur.od_q[131]$_DFF_P_/QN -> u_ur.g_ops2.odp[131]$_DFF_P_/D
+AUDIT_HOLD 3.917200 ck->ck u_sr.od_q[212]$_DFF_P_/QN -> u_sr.g_ops2.odp[212]$_DFF_P_/D
+AUDIT_HOLD 3.919781 ck->ck u_sr.od_q[317]$_DFF_P_/QN -> u_sr.g_ops2.odp[317]$_DFF_P_/D
+AUDIT_HOLD 3.939842 ck->ck u_ur.od_q[290]$_DFF_P_/QN -> u_ur.g_ops2.odp[290]$_DFF_P_/D
+AUDIT_HOLD 3.945313 ck->ck u_st.g_ipr.pd[864]$_DFF_P_/QN -> u_st.id_q[864]$_DFF_P_/D
+AUDIT_HOLD 3.945972 ck->ck u_ur.od_q[328]$_DFF_P_/QN -> u_ur.g_ops2.odp[328]$_DFF_P_/D
+AUDIT_HOLD 3.953237 ck->ck u_ur.od_q[407]$_DFF_P_/QN -> u_ur.g_ops2.odp[407]$_DFF_P_/D
+AUDIT_HOLD 3.965061 ck->ck u_sr.od_q[341]$_DFF_P_/QN -> u_sr.g_ops2.odp[341]$_DFF_P_/D
+AUDIT_HOLD 3.965377 ck->ck u_ur.od_q[165]$_DFF_P_/QN -> u_ur.g_ops2.odp[165]$_DFF_P_/D
+AUDIT_HOLD 3.975955 ck->ck u_sr.od_q[38]$_DFF_P_/QN -> u_sr.g_ops2.odp[38]$_DFF_P_/D
+AUDIT_HOLD 4.292490 ckd->ckd u_sq.g_ipr.pd[55]$_DFF_P_/QN -> u_sq.id_q[55]$_DFF_P_/D
+AUDIT_HOLD 4.518913 ckd->ckd u_sq.g_ipr.pd[46]$_DFF_P_/QN -> u_sq.id_q[46]$_DFF_P_/D
+AUDIT_HOLD 4.636086 ckd->ckd u_sq.g_ipr.pd[3]$_DFF_P_/QN -> u_sq.id_q[3]$_DFF_P_/D
+AUDIT_HOLD 4.677585 ckd->ckd u_sq.g_ipr.pd[27]$_DFF_P_/QN -> u_sq.id_q[27]$_DFF_P_/D
+AUDIT_HOLD 4.684659 ckd->ckd u_sq.g_ipr.pd[38]$_DFF_P_/QN -> u_sq.id_q[38]$_DFF_P_/D
+AUDIT_HOLD 4.687618 ckd->ckd u_sq.g_ipr.pd[35]$_DFF_P_/QN -> u_sq.id_q[35]$_DFF_P_/D
+AUDIT_HOLD 4.694845 ckd->ckd u_sq.g_ipr.pd[59]$_DFF_P_/QN -> u_sq.id_q[59]$_DFF_P_/D
+AUDIT_HOLD 4.727982 ckd->ckd u_sq.g_ipr.pd[49]$_DFF_P_/QN -> u_sq.id_q[49]$_DFF_P_/D
+AUDIT_HOLD 4.760716 ckd->ckd u_sq.g_ipr.pd[15]$_DFF_P_/QN -> u_sq.id_q[15]$_DFF_P_/D
+AUDIT_HOLD 4.818964 ckd->ckd u_sq.g_ipr.pd[10]$_DFF_P_/QN -> u_sq.id_q[10]$_DFF_P_/D
+AUDIT_HOLD 4.832631 ckd->ckd u_sq.g_ipr.pd[65]$_DFF_P_/QN -> u_sq.id_q[65]$_DFF_P_/D
+AUDIT_HOLD 4.852667 ckd->ckd u_sq.g_ipr.pd[8]$_DFF_P_/QN -> u_sq.id_q[8]$_DFF_P_/D
+AUDIT_HOLD 4.905729 ckd->ckd u_sq.g_ipr.pd[60]$_DFF_P_/QN -> u_sq.id_q[60]$_DFF_P_/D
+AUDIT_HOLD 4.973688 ckd->ckd u_sq.g_ipr.pd[64]$_DFF_P_/QN -> u_sq.id_q[64]$_DFF_P_/D
+AUDIT_HOLD 4.975159 ckd->ckd u_sq.g_ipr.pd[57]$_DFF_P_/QN -> u_sq.id_q[57]$_DFF_P_/D
+AUDIT_HOLD 5.055394 ckd->ckd u_sq.g_ipr.pd[51]$_DFF_P_/QN -> u_sq.id_q[51]$_DFF_P_/D
+AUDIT_HOLD 5.100080 ckd->ckd u_sq.g_ipr.pd[4]$_DFF_P_/QN -> u_sq.id_q[4]$_DFF_P_/D
+AUDIT_HOLD 5.131815 ckd->ckd u_sq.g_ipr.pd[20]$_DFF_P_/QN -> u_sq.id_q[20]$_DFF_P_/D
+AUDIT_HOLD 5.206866 ckd->ckd u_sq.g_ipr.pd[19]$_DFF_P_/QN -> u_sq.id_q[19]$_DFF_P_/D
+AUDIT_HOLD 5.277039 ckd->ckd u_sq.g_ipr.pd[30]$_DFF_P_/QN -> u_sq.id_q[30]$_DFF_P_/D
+AUDIT_HOLD 5.370690 ckd->ckd u_sq.g_ipr.pd[44]$_DFF_P_/QN -> u_sq.id_q[44]$_DFF_P_/D
+AUDIT_HOLD 5.373979 ckd->ckd u_sq.g_ipr.pd[61]$_DFF_P_/QN -> u_sq.id_q[61]$_DFF_P_/D
+AUDIT_HOLD 5.385491 ckd->ckd u_sq.g_ipr.pd[56]$_DFF_P_/QN -> u_sq.id_q[56]$_DFF_P_/D
+AUDIT_HOLD 5.408202 ckd->ckd u_sq.g_ipr.pd[1]$_DFF_P_/QN -> u_sq.id_q[1]$_DFF_P_/D
+AUDIT_HOLD 5.427513 ckd->ckd u_sq.g_ipr.pd[11]$_DFF_P_/QN -> u_sq.id_q[11]$_DFF_P_/D
+AUDIT_HOLD 5.449728 ckd->ckd u_sq.g_ipr.pd[21]$_DFF_P_/QN -> u_sq.id_q[21]$_DFF_P_/D
+AUDIT_HOLD 5.460406 ckd->ckd u_sq.g_ipr.pd[63]$_DFF_P_/QN -> u_sq.id_q[63]$_DFF_P_/D
+AUDIT_HOLD 5.539618 ckd->ckd u_sq.g_ipr.pd[37]$_DFF_P_/QN -> u_sq.id_q[37]$_DFF_P_/D
+AUDIT_HOLD 5.552867 ckd->ckd u_sq.g_ipr.pd[18]$_DFF_P_/QN -> u_sq.id_q[18]$_DFF_P_/D
+AUDIT_HOLD 5.558800 ckd->ckd u_sq.g_ipr.pd[53]$_DFF_P_/QN -> u_sq.id_q[53]$_DFF_P_/D
+AUDIT_HOLD 5.578305 ckd->ckd u_sq.g_ipr.pd[40]$_DFF_P_/QN -> u_sq.id_q[40]$_DFF_P_/D
+AUDIT_HOLD 5.610644 ckd->ckd u_sq.g_ipr.pd[22]$_DFF_P_/QN -> u_sq.id_q[22]$_DFF_P_/D
+AUDIT_HOLD 5.672130 ckd->ckd u_sq.g_ipr.pd[5]$_DFF_P_/QN -> u_sq.id_q[5]$_DFF_P_/D
+AUDIT_HOLD 5.707206 ckd->ckd u_sq.g_ipr.pd[12]$_DFF_P_/QN -> u_sq.id_q[12]$_DFF_P_/D
+AUDIT_HOLD 5.730600 ckd->ckd u_sq.g_ipr.pd[0]$_DFF_P_/QN -> u_sq.id_q[0]$_DFF_P_/D
+AUDIT_HOLD 5.790781 ckd->ckd u_sq.g_ipr.pd[43]$_DFF_P_/QN -> u_sq.id_q[43]$_DFF_P_/D
+AUDIT_HOLD 5.868899 ckd->ckd u_sq.g_ipr.pd[14]$_DFF_P_/QN -> u_sq.id_q[14]$_DFF_P_/D
+AUDIT_HOLD 5.912732 ckd->ckd u_sq.g_ipr.pd[16]$_DFF_P_/QN -> u_sq.id_q[16]$_DFF_P_/D
+AUDIT_HOLD 5.933625 ckd->ckd u_sq.g_ipr.pd[31]$_DFF_P_/QN -> u_sq.id_q[31]$_DFF_P_/D
+AUDIT_HOLD 6.086822 ckd->ckd u_sq.g_ipr.pd[28]$_DFF_P_/QN -> u_sq.id_q[28]$_DFF_P_/D
+AUDIT_HOLD 3.364586 cks->cks u_sr.g_ipr.pd[490]$_DFF_P_/QN -> u_sr.id_q[490]$_DFF_P_/D
+AUDIT_HOLD 3.659861 cks->cks u_sr.g_ipr.pd[515]$_DFF_P_/QN -> u_sr.id_q[515]$_DFF_P_/D
+AUDIT_HOLD 3.670616 cks->cks u_st.od_q[418]$_DFF_P_/QN -> u_st.g_ops2.odp[418]$_DFF_P_/D
+AUDIT_HOLD 3.774824 cks->cks u_sr.g_ipr.pd[980]$_DFF_P_/QN -> u_sr.id_q[980]$_DFF_P_/D
+AUDIT_HOLD 3.809050 cks->cks u_sr.g_ipr.pd[500]$_DFF_P_/QN -> u_sr.id_q[500]$_DFF_P_/D
+AUDIT_HOLD 3.839255 cks->cks u_st.od_q[375]$_DFF_P_/QN -> u_st.g_ops2.odp[375]$_DFF_P_/D
+AUDIT_HOLD 3.852269 cks->cks u_st.od_q[511]$_DFF_P_/QN -> u_st.g_ops2.odp[511]$_DFF_P_/D
+AUDIT_HOLD 3.879581 cks->cks u_st.od_q[497]$_DFF_P_/QN -> u_st.g_ops2.odp[497]$_DFF_P_/D
+AUDIT_HOLD 3.884955 cks->cks u_st.od_q[473]$_DFF_P_/QN -> u_st.g_ops2.odp[473]$_DFF_P_/D
+AUDIT_HOLD 3.934353 cks->cks u_sr.g_ipr.pd[231]$_DFF_P_/QN -> u_sr.id_q[231]$_DFF_P_/D
+AUDIT_HOLD 3.957223 cks->cks u_sr.g_ipr.pd[385]$_DFF_P_/QN -> u_sr.id_q[385]$_DFF_P_/D
+AUDIT_HOLD 3.969557 cks->cks u_sr.g_ipr.pd[227]$_DFF_P_/QN -> u_sr.id_q[227]$_DFF_P_/D
+AUDIT_HOLD 4.066990 cks->cks u_sr.g_ipr.pd[321]$_DFF_P_/QN -> u_sr.id_q[321]$_DFF_P_/D
+AUDIT_HOLD 4.068426 cks->cks u_sr.g_ipr.pd[813]$_DFF_P_/QN -> u_sr.id_q[813]$_DFF_P_/D
+AUDIT_HOLD 4.089257 cks->cks u_sr.g_ipr.pd[491]$_DFF_P_/QN -> u_sr.id_q[491]$_DFF_P_/D
+AUDIT_HOLD 4.095200 cks->cks u_st.od_q[403]$_DFF_P_/QN -> u_st.g_ops2.odp[403]$_DFF_P_/D
+AUDIT_HOLD 4.106680 cks->cks u_sr.g_ipr.pd[708]$_DFF_P_/QN -> u_sr.id_q[708]$_DFF_P_/D
+AUDIT_HOLD 4.122546 cks->cks u_st.od_q[445]$_DFF_P_/QN -> u_st.g_ops2.odp[445]$_DFF_P_/D
+AUDIT_HOLD 4.152779 cks->cks u_st.od_q[338]$_DFF_P_/QN -> u_st.g_ops2.odp[338]$_DFF_P_/D
+AUDIT_HOLD 4.160151 cks->cks u_sr.g_ipr.pd[532]$_DFF_P_/QN -> u_sr.id_q[532]$_DFF_P_/D
+AUDIT_HOLD 4.161369 cks->cks u_st.od_q[55]$_DFF_P_/QN -> u_st.g_ops2.odp[55]$_DFF_P_/D
+AUDIT_HOLD 4.173013 cks->cks u_sr.g_ipr.pd[218]$_DFF_P_/QN -> u_sr.id_q[218]$_DFF_P_/D
+AUDIT_HOLD 4.192708 cks->cks u_sr.g_ipr.pd[244]$_DFF_P_/QN -> u_sr.id_q[244]$_DFF_P_/D
+AUDIT_HOLD 4.225710 cks->cks u_sr.g_ipr.pd[426]$_DFF_P_/QN -> u_sr.id_q[426]$_DFF_P_/D
+AUDIT_HOLD 4.226404 cks->cks u_st.od_q[628]$_DFF_P_/QN -> u_st.g_ops2.odp[628]$_DFF_P_/D
+AUDIT_HOLD 4.230539 cks->cks u_sr.g_ipr.pd[389]$_DFF_P_/QN -> u_sr.id_q[389]$_DFF_P_/D
+AUDIT_HOLD 4.277412 cks->cks u_st.od_q[588]$_DFF_P_/QN -> u_st.g_ops2.odp[588]$_DFF_P_/D
+AUDIT_HOLD 4.278022 cks->cks u_sr.g_ipr.pd[478]$_DFF_P_/QN -> u_sr.id_q[478]$_DFF_P_/D
+AUDIT_HOLD 4.284104 cks->cks u_st.od_q[244]$_DFF_P_/QN -> u_st.g_ops2.odp[244]$_DFF_P_/D
+AUDIT_HOLD 4.298801 cks->cks u_sr.g_ipr.pd[411]$_DFF_P_/QN -> u_sr.id_q[411]$_DFF_P_/D
+AUDIT_HOLD 4.306461 cks->cks u_st.od_q[228]$_DFF_P_/QN -> u_st.g_ops2.odp[228]$_DFF_P_/D
+AUDIT_HOLD 4.327746 cks->cks u_st.od_q[357]$_DFF_P_/QN -> u_st.g_ops2.odp[357]$_DFF_P_/D
+AUDIT_HOLD 4.338769 cks->cks u_st.od_q[605]$_DFF_P_/QN -> u_st.g_ops2.odp[605]$_DFF_P_/D
+AUDIT_HOLD 4.345232 cks->cks u_st.od_q[4]$_DFF_P_/QN -> u_st.g_ops2.odp[4]$_DFF_P_/D
+AUDIT_HOLD 4.351162 cks->cks u_sr.g_ipr.pd[345]$_DFF_P_/QN -> u_sr.id_q[345]$_DFF_P_/D
+AUDIT_HOLD 4.354475 cks->cks u_sr.g_ipr.pd[649]$_DFF_P_/QN -> u_sr.id_q[649]$_DFF_P_/D
+AUDIT_HOLD 4.379667 cks->cks u_st.od_q[741]$_DFF_P_/QN -> u_st.g_ops2.odp[741]$_DFF_P_/D
+AUDIT_HOLD 4.390484 cks->cks u_st.od_q[268]$_DFF_P_/QN -> u_st.g_ops2.odp[268]$_DFF_P_/D
+AUDIT_HOLD 4.403824 cks->cks u_st.od_q[772]$_DFF_P_/QN -> u_st.g_ops2.odp[772]$_DFF_P_/D
+AUDIT_HOLD 4.414934 cks->cks u_sr.g_ipr.pd[336]$_DFF_P_/QN -> u_sr.id_q[336]$_DFF_P_/D
+AUDIT_HOLD 3.584705 cku->cku u_ur.g_ipr.pd[243]$_DFF_P_/QN -> u_ur.id_q[243]$_DFF_P_/D
+AUDIT_HOLD 3.670616 cku->cku u_ut.od_q[881]$_DFF_P_/QN -> u_ut.g_ops2.odp[881]$_DFF_P_/D
+AUDIT_HOLD 3.778561 cku->cku u_ur.g_ipr.pd[896]$_DFF_P_/QN -> u_ur.id_q[896]$_DFF_P_/D
+AUDIT_HOLD 3.857872 cku->cku u_ut.od_q[86]$_DFF_P_/QN -> u_ut.g_ops2.odp[86]$_DFF_P_/D
+AUDIT_HOLD 3.861026 cku->cku u_ur.g_ipr.pd[145]$_DFF_P_/QN -> u_ur.id_q[145]$_DFF_P_/D
+AUDIT_HOLD 3.883980 cku->cku u_ur.g_ipr.pd[842]$_DFF_P_/QN -> u_ur.id_q[842]$_DFF_P_/D
+AUDIT_HOLD 3.884955 cku->cku u_ut.od_q[715]$_DFF_P_/QN -> u_ut.g_ops2.odp[715]$_DFF_P_/D
+AUDIT_HOLD 3.902104 cku->cku u_ur.g_ipr.pd[367]$_DFF_P_/QN -> u_ur.id_q[367]$_DFF_P_/D
+AUDIT_HOLD 3.915607 cku->cku u_ut.od_q[140]$_DFF_P_/QN -> u_ut.g_ops2.odp[140]$_DFF_P_/D
+AUDIT_HOLD 3.922359 cku->cku u_ur.g_ipr.pd[193]$_DFF_P_/QN -> u_ur.id_q[193]$_DFF_P_/D
+AUDIT_HOLD 3.922879 cku->cku u_ur.g_ipr.pd[9]$_DFF_P_/QN -> u_ur.id_q[9]$_DFF_P_/D
+AUDIT_HOLD 3.993066 cku->cku u_ur.g_ipr.pd[686]$_DFF_P_/QN -> u_ur.id_q[686]$_DFF_P_/D
+AUDIT_HOLD 4.014587 cku->cku u_ur.g_ipr.pd[936]$_DFF_P_/QN -> u_ur.id_q[936]$_DFF_P_/D
+AUDIT_HOLD 4.055183 cku->cku u_ut.od_q[838]$_DFF_P_/QN -> u_ut.g_ops2.odp[838]$_DFF_P_/D
+AUDIT_HOLD 4.066355 cku->cku u_ur.g_ipr.pd[209]$_DFF_P_/QN -> u_ur.id_q[209]$_DFF_P_/D
+AUDIT_HOLD 4.070369 cku->cku u_ur.g_ipr.pd[663]$_DFF_P_/QN -> u_ur.id_q[663]$_DFF_P_/D
+AUDIT_HOLD 4.086065 cku->cku u_ut.od_q[792]$_DFF_P_/QN -> u_ut.g_ops2.odp[792]$_DFF_P_/D
+AUDIT_HOLD 4.120822 cku->cku u_ur.g_ipr.pd[557]$_DFF_P_/QN -> u_ur.id_q[557]$_DFF_P_/D
+AUDIT_HOLD 4.123990 cku->cku u_ur.g_ipr.pd[307]$_DFF_P_/QN -> u_ur.id_q[307]$_DFF_P_/D
+AUDIT_HOLD 4.129329 cku->cku u_ut.od_q[479]$_DFF_P_/QN -> u_ut.g_ops2.odp[479]$_DFF_P_/D
+AUDIT_HOLD 4.130540 cku->cku u_ur.g_ipr.pd[912]$_DFF_P_/QN -> u_ur.id_q[912]$_DFF_P_/D
+AUDIT_HOLD 4.152779 cku->cku u_ut.od_q[842]$_DFF_P_/QN -> u_ut.g_ops2.odp[842]$_DFF_P_/D
+AUDIT_HOLD 4.177148 cku->cku u_ur.g_ipr.pd[357]$_DFF_P_/QN -> u_ur.id_q[357]$_DFF_P_/D
+AUDIT_HOLD 4.216187 cku->cku u_ut.od_q[50]$_DFF_P_/QN -> u_ut.g_ops2.odp[50]$_DFF_P_/D
+AUDIT_HOLD 4.234478 cku->cku u_ut.od_q[986]$_DFF_P_/QN -> u_ut.g_ops2.odp[986]$_DFF_P_/D
+AUDIT_HOLD 4.263992 cku->cku u_ur.g_ipr.pd[801]$_DFF_P_/QN -> u_ur.id_q[801]$_DFF_P_/D
+AUDIT_HOLD 4.276353 cku->cku u_ur.g_ipr.pd[285]$_DFF_P_/QN -> u_ur.id_q[285]$_DFF_P_/D
+AUDIT_HOLD 4.277325 cku->cku u_ut.od_q[642]$_DFF_P_/QN -> u_ut.g_ops2.odp[642]$_DFF_P_/D
+AUDIT_HOLD 4.284104 cku->cku u_ut.od_q[96]$_DFF_P_/QN -> u_ut.g_ops2.odp[96]$_DFF_P_/D
+AUDIT_HOLD 4.287095 cku->cku u_ut.od_q[965]$_DFF_P_/QN -> u_ut.g_ops2.odp[965]$_DFF_P_/D
+AUDIT_HOLD 4.287435 cku->cku u_ur.g_ipr.pd[146]$_DFF_P_/QN -> u_ur.id_q[146]$_DFF_P_/D
+AUDIT_HOLD 4.288479 cku->cku u_ur.g_ipr.pd[835]$_DFF_P_/QN -> u_ur.id_q[835]$_DFF_P_/D
+AUDIT_HOLD 4.291092 cku->cku u_ur.g_ipr.pd[868]$_DFF_P_/QN -> u_ur.id_q[868]$_DFF_P_/D
+AUDIT_HOLD 4.291366 cku->cku u_ur.g_ipr.pd[74]$_DFF_P_/QN -> u_ur.id_q[74]$_DFF_P_/D
+AUDIT_HOLD 4.324454 cku->cku u_ut.od_q[757]$_DFF_P_/QN -> u_ut.g_ops2.odp[757]$_DFF_P_/D
+AUDIT_HOLD 4.331514 cku->cku u_ur.g_ipr.pd[56]$_DFF_P_/QN -> u_ur.id_q[56]$_DFF_P_/D
+AUDIT_HOLD 4.339744 cku->cku u_ut.od_q[689]$_DFF_P_/QN -> u_ut.g_ops2.odp[689]$_DFF_P_/D
+AUDIT_HOLD 4.348393 cku->cku u_ur.g_ipr.pd[386]$_DFF_P_/QN -> u_ur.id_q[386]$_DFF_P_/D
+AUDIT_HOLD 4.349895 cku->cku u_ur.g_ipr.pd[260]$_DFF_P_/QN -> u_ur.id_q[260]$_DFF_P_/D
+AUDIT_HOLD 4.355457 cku->cku u_ut.od_q[238]$_DFF_P_/QN -> u_ut.g_ops2.odp[238]$_DFF_P_/D

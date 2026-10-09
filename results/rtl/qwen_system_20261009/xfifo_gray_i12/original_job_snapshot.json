@@ -1,0 +1,2809 @@
+{
+  "name": "qfd_io_xfifo_p2-1d3c576bbtc",
+  "spec": {
+    "name": "qfd_io_xfifo_p2-1d3c576bbtc",
+    "block": "qfd_io_xfifo",
+    "owner": "Claude:safe-qwen",
+    "purpose": "safe-qwen 2026-10-08 (REVIEW_20261008, binding): S-A2 qfd_io_xfifo_p2 = _p (pin relay, wide async FIFO, per-slice read-pointer copies, enable-free capture, output station) + 2-level REGISTERED read select (PIPE=2 / RSEL2: <= 4:1 per group by kept per-128-b-slice head-pointer copies, captured every rclk; then 2:1 by kept group copies) + output station.  CDC-exception check done first (4_cts.odb of _p-3d5ad2a4ftt at FF with the sign-off SDC): no cross-clock hold violation; the async max/min exceptions are complete.  The X1 rerun of plain _p is drive-1956's qfd_io_xfifo_p-3d5ad2a4ftt-d1956 (running, HM guard). | current flow: TC route (OT_ORFS_CORNER_OVERRIDE=TC, tt_overlay, CTS fix hooks), mm route hold repair at HM 10 with the HM guard, route-time FF hold at io_ref_routed (route-ff-ioref), early-fail gates; Qwen IO referenced in-run to the block's own propagated clock (io_ref_skew.sdc: the same variant's insertion; no calibrate)",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-pve1",
+      "ot-agidock128"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 32,
+    "source": {
+      "branch": "claude/safe-qwen-20261008",
+      "commit": "1d3c576bb11c6c1087abe31b19c2d7e587f2124f"
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "cdc_ch_p2_exact",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp0 -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp0 | tee {RUN}/bench/cp0.log && grep -q '^PASS' {RUN}/bench/cp0.log",
+          "expect": "pass",
+          "pass_regex": "^PASS cdc_ch",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "min_count_regex": "words=(\\d+)"
+        },
+        {
+          "name": "cdc_ch_p2_exact_fastw",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp0f -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.HW=1.35 -P tb_qwen_die_cdc_ch.HR=1.0 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp0f | tee {RUN}/bench/cp0f.log && grep -q '^PASS' {RUN}/bench/cp0f.log",
+          "expect": "pass",
+          "pass_regex": "^PASS cdc_ch",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ],
+          "min_count_regex": "words=(\\d+)"
+        },
+        {
+          "name": "cdc_ch_p2_neg",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/cp1 -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=1 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cp1 | tee {RUN}/bench/cp1.log && grep -q '^PASS' {RUN}/bench/cp1.log",
+          "expect": "fail",
+          "fail_regex": "^FAIL cdc_ch",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ]
+        },
+        {
+          "name": "cdc_ch_p2_mut_rsel2",
+          "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -DOT_MUT_RSEL2 -o {RUN}/bench/cpm -P tb_qwen_die_cdc_ch.PIPE=2 -P tb_qwen_die_cdc_ch.W=300 -P tb_qwen_die_cdc_ch.NEG=0 rtl/test/tb_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_die_cdc_ch.sv rtl/physical/ot_qwen_async_fifo_w.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_reset_sync.sv && vvp -n {RUN}/bench/cpm | tee {RUN}/bench/cpm.log && grep -q '^PASS' {RUN}/bench/cpm.log",
+          "expect": "fail",
+          "fail_regex": "^FAIL cdc_ch",
+          "threads": 1,
+          "peak_ram_gb": 2,
+          "needs": [
+            "iverilog"
+          ]
+        }
+      ],
+      "calibrate": {
+        "enabled": false,
+        "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+      },
+      "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_io_xfifo_p2.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_xfifo_p2 {LABEL} {RUN}/routes",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+        "logs": [
+          "{RUN}/routes/{LABEL}/flow.log"
+        ],
+        "threads": 16,
+        "peak_ram_gb": 32
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_xfifo --out {RUN}/record/views/qfd_io_xfifo --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [
+        {
+          "name": "ttb_routed_at_TC",
+          "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+        }
+      ],
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/qfd_io_xfifo_p2.sdc"
+      ],
+      "macros": []
+    },
+    "hold_eco": {
+      "enabled": true,
+      "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+      "session": "mm"
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record/views",
+        "to": "physical/qwen_die_masters/views"
+      },
+      {
+        "from": "{RUN}/record/route",
+        "to": "results/rtl/safe_qwen_20261008/qfd_io_xfifo_p2-1d3c576bbtc"
+      }
+    ],
+    "cycles_added": "per channel: +1 wclk (input relay), +1 wclk (pointer publication), +2 rclk (2-level read select + output station) vs PIPE=0 (_p: +1 rclk; PIPE=2 adds +1 rclk); credits / order / faults unchanged",
+    "merge_target": "main",
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.01,
+    "route_corner": "TC"
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_io_xfifo_p2-1d3c576bbtc.json",
+  "created": "2026-10-08T20:58:45-07:00",
+  "status": "EARLY_FAIL_HOLD",
+  "stage_idx": 4,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_cdc_ch_p2_exact": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS cdc_ch words=4000\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 24914250 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_exact_fastw": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "PASS cdc_ch words=4000\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 25013000 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_neg": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FAIL cdc_ch NEG=1: sent 4000 received 2048 mismatches 2029 w_fault 1 r_fault 0\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 13150350 (1ps)\n",
+      "track": "parallel"
+    },
+    "bench_cdc_ch_p2_mut_rsel2": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "FAIL cdc_ch NEG=0: sent 4000 received 4000 mismatches 4000 w_fault 0 r_fault 0\nrtl/test/tb_qwen_die_cdc_ch.sv:47: $finish called at 24914250 (1ps)\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc4"
+  ],
+  "events": [
+    "2026-10-08T20:58:45-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_io_xfifo_p2-1d3c576bbtc.json",
+    "2026-10-08T20:58:46-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-08T21:00:01-07:00 source 1d3c576bb11c synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/src",
+    "2026-10-08T21:01:01-07:00 bench track: launched bench_cdc_ch_p2_exact (bench_cdc_ch_p2_exact.a1b1) beside None",
+    "2026-10-08T21:01:06-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-08T21:01:54-07:00 bench track: bench_cdc_ch_p2_exact PASS (rc=0) work: [4000]",
+    "2026-10-08T21:01:56-07:00 bench track: launched bench_cdc_ch_p2_exact_fastw (bench_cdc_ch_p2_exact_fastw.a1b1) beside route",
+    "2026-10-08T21:02:53-07:00 bench track: bench_cdc_ch_p2_exact_fastw PASS (rc=0) work: [4000]",
+    "2026-10-08T21:02:57-07:00 bench track: launched bench_cdc_ch_p2_neg (bench_cdc_ch_p2_neg.a1b1) beside route",
+    "2026-10-08T21:03:52-07:00 bench track: bench_cdc_ch_p2_neg FAIL as expected (rc=1) ",
+    "2026-10-08T21:03:54-07:00 bench track: launched bench_cdc_ch_p2_mut_rsel2 (bench_cdc_ch_p2_mut_rsel2.a1b1) beside route",
+    "2026-10-08T21:04:53-07:00 bench track: bench_cdc_ch_p2_mut_rsel2 FAIL as expected (rc=1) ",
+    "2026-10-08T21:45:39-07:00 ot-epyc4 unreachable while polling route (will keep polling)",
+    "2026-10-08T21:46:43-07:00 ot-epyc4 reachable again; route still running",
+    "2026-10-08T22:51:05-07:00 EARLY_FAIL_HOLD: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.4% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -375.1 ps (start -418.06), 4930 it / 10343 buffers, 6181 endpoints in margin, 1.0 h in step, HM guard present"
+  ],
+  "updated": "2026-10-08T22:51:06-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_cdc_ch_p2_exact": {
+      "state": "done",
+      "tag": "bench_cdc_ch_p2_exact.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+      "n": 1,
+      "started": "2026-10-08T21:01:01-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/bench_src_a1"
+    },
+    "bench_cdc_ch_p2_exact_fastw": {
+      "state": "done",
+      "tag": "bench_cdc_ch_p2_exact_fastw.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+      "n": 1,
+      "started": "2026-10-08T21:01:56-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/bench_src_a1"
+    },
+    "bench_cdc_ch_p2_neg": {
+      "state": "done",
+      "tag": "bench_cdc_ch_p2_neg.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+      "n": 1,
+      "started": "2026-10-08T21:02:57-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/bench_src_a1"
+    },
+    "bench_cdc_ch_p2_mut_rsel2": {
+      "state": "done",
+      "tag": "bench_cdc_ch_p2_mut_rsel2.a1b1",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+      "n": 1,
+      "started": "2026-10-08T21:03:54-07:00",
+      "stage_source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+  "source_synced": true,
+  "commit_full": "1d3c576bb11c6c1087abe31b19c2d7e587f2124f",
+  "reason": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.4% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -375.1 ps (start -418.06), 4930 it / 10343 buffers, 6181 endpoints in margin, 1.0 h in step, HM guard present",
+  "bench_location": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc",
+    "attempt": 1
+  },
+  "bwait": null,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-08T21:01:06-07:00",
+  "bench_work": {
+    "bench_cdc_ch_p2_exact": "work: [4000]",
+    "bench_cdc_ch_p2_exact_fastw": "work: [4000]"
+  },
+  "wd_checked": 1791523971.6543565,
+  "ef_checked": 1791525058.9426744,
+  "unreachable": 0,
+  "early_fail": {
+    "verdict": "EARLY_FAIL_HOLD",
+    "why": "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.4% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -375.1 ps (start -418.06), 4930 it / 10343 buffers, 6181 endpoints in margin, 1.0 h in step, HM guard present",
+    "at": "2026-10-08T22:51:05-07:00",
+    "detail": {
+      "name": "qfd_io_xfifo_p2-1d3c576bbtc",
+      "verdict": "EARLY_FAIL_HOLD",
+      "why": [
+        "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.4% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -375.1 ps (start -418.06), 4930 it / 10343 buffers, 6181 endpoints in margin, 1.0 h in step, HM guard present"
+      ],
+      "orfs": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-1d3c576bbtc/routes/qfd_io_xfifo_p2_1d3c576bbtc/work/orfs",
+      "corner": "TT",
+      "step": "4_1_cts",
+      "setup": {
+        "stage": "place",
+        "ws": -137.68300000000002,
+        "raw_ws": -201.016,
+        "period": 770.0,
+        "count": 5216,
+        "tns": -296971
+      },
+      "hold": {
+        "found": [
+          6181
+        ],
+        "guard": true,
+        "hm_auto": [],
+        "sync": [
+          [
+            "-371.44",
+            "-418.06"
+          ]
+        ],
+        "stall": false,
+        "rows": 494,
+        "first": [
+          "0",
+          0,
+          -418.058,
+          -167452.812
+        ],
+        "cur_first": [
+          "0",
+          0,
+          -418.058,
+          -167452.812
+        ],
+        "cur_last": [
+          "4930",
+          10343,
+          -375.134,
+          -97951.078
+        ],
+        "dwns_1000": 0.0,
+        "series": [
+          [
+            0,
+            0,
+            -418.058,
+            -167452.812
+          ],
+          [
+            10,
+            25,
+            -375.134,
+            -167251.5
+          ],
+          [
+            20,
+            54,
+            -375.134,
+            -167003.141
+          ],
+          [
+            30,
+            90,
+            -375.134,
+            -166725.516
+          ],
+          [
+            40,
+            124,
+            -375.134,
+            -166468.844
+          ],
+          [
+            60,
+            183,
+            -375.134,
+            -165997.938
+          ],
+          [
+            70,
+            215,
+            -375.134,
+            -165752.078
+          ],
+          [
+            80,
+            247,
+            -375.134,
+            -165480.125
+          ],
+          [
+            90,
+            274,
+            -375.134,
+            -165269.297
+          ],
+          [
+            110,
+            343,
+            -375.134,
+            -164730.016
+          ],
+          [
+            120,
+            379,
+            -375.134,
+            -164433.125
+          ],
+          [
+            130,
+            409,
+            -375.134,
+            -164158.672
+          ],
+          [
+            140,
+            443,
+            -375.134,
+            -163872.594
+          ],
+          [
+            160,
+            521,
+            -375.134,
+            -163211.469
+          ],
+          [
+            170,
+            564,
+            -375.134,
+            -162844.453
+          ],
+          [
+            180,
+            602,
+            -375.134,
+            -162515.562
+          ],
+          [
+            190,
+            650,
+            -375.134,
+            -162102.375
+          ],
+          [
+            210,
+            738,
+            -375.134,
+            -161351.406
+          ],
+          [
+            220,
+            781,
+            -375.134,
+            -160985.984
+          ],
+          [
+            230,
+            820,
+            -375.134,
+            -160664.016
+          ],
+          [
+            240,
+            871,
+            -375.134,
+            -160212.953
+          ],
+          [
+            250,
+            904,
+            -375.134,
+            -159858.516
+          ],
+          [
+            270,
+            964,
+            -375.134,
+            -159194.266
+          ],
+          [
+            280,
+            994,
+            -375.134,
+            -158867.031
+          ],
+          [
+            290,
+            1024,
+            -375.134,
+            -158529.75
+          ],
+          [
+            300,
+            1054,
+            -375.134,
+            -158196.516
+          ],
+          [
+            320,
+            1114,
+            -375.134,
+            -157526.281
+          ],
+          [
+            330,
+            1146,
+            -375.134,
+            -157173.312
+          ],
+          [
+            340,
+            1176,
+            -375.134,
+            -156839.422
+          ],
+          [
+            350,
+            1208,
+            -375.134,
+            -156490.422
+          ],
+          [
+            370,
+            1268,
+            -375.134,
+            -155818.578
+          ],
+          [
+            380,
+            1302,
+            -375.134,
+            -155443.094
+          ],
+          [
+            390,
+            1332,
+            -375.134,
+            -155109.875
+          ],
+          [
+            400,
+            1362,
+            -375.134,
+            -154770.688
+          ],
+          [
+            420,
+            1425,
+            -375.134,
+            -154075.984
+          ],
+          [
+            430,
+            1455,
+            -375.134,
+            -153732.312
+          ],
+          [
+            440,
+            1487,
+            -375.134,
+            -153383.422
+          ],
+          [
+            450,
+            1517,
+            -375.134,
+            -153033.547
+          ],
+          [
+            460,
+            1551,
+            -375.134,
+            -152664.062
+          ],
+          [
+            480,
+            1611,
+            -375.134,
+            -151989.297
+          ],
+          [
+            490,
+            1641,
+            -375.134,
+            -151644.266
+          ],
+          [
+            500,
+            1671,
+            -375.134,
+            -151310.641
+          ],
+          [
+            510,
+            1701,
+            -375.134,
+            -150967.328
+          ],
+          [
+            530,
+            1761,
+            -375.134,
+            -150298.047
+          ],
+          [
+            540,
+            1793,
+            -375.134,
+            -149937.344
+          ],
+          [
+            550,
+            1826,
+            -375.134,
+            -149587.531
+          ],
+          [
+            560,
+            1860,
+            -375.134,
+            -149215.312
+          ],
+          [
+            580,
+            1920,
+            -375.134,
+            -148554.156
+          ],
+          [
+            590,
+            1953,
+            -375.134,
+            -148178.375
+          ],
+          [
+            600,
+            1983,
+            -375.134,
+            -147832.219
+          ],
+          [
+            610,
+            2013,
+            -375.134,
+            -147490.203
+          ],
+          [
+            630,
+            2073,
+            -375.134,
+            -146828.828
+          ],
+          [
+            640,
+            2103,
+            -375.134,
+            -146481.969
+          ],
+          [
+            650,
+            2133,
+            -375.134,
+            -146141.438
+          ],
+          [
+            660,
+            2164,
+            -375.134,
+            -145820.016
+          ],
+          [
+            670,
+            2194,
+            -375.134,
+            -145503.75
+          ],
+          [
+            690,
+            2256,
+            -375.134,
+            -144843.656
+          ],
+          [
+            700,
+            2290,
+            -375.134,
+            -144487.031
+          ],
+          [
+            710,
+            2322,
+            -375.134,
+            -144152.047
+          ],
+          [
+            720,
+            2361,
+            -375.134,
+            -143766.281
+          ],
+          [
+            740,
+            2421,
+            -375.134,
+            -143143.547
+          ],
+          [
+            750,
+            2451,
+            -375.134,
+            -142816.547
+          ],
+          [
+            760,
+            2483,
+            -375.134,
+            -142491.266
+          ],
+          [
+            770,
+            2515,
+            -375.134,
+            -142169.234
+          ],
+          [
+            790,
+            2575,
+            -375.134,
+            -141507.938
+          ],
+          [
+            800,
+            2605,
+            -375.134,
+            -141187.516
+          ],
+          [
+            810,
+            2638,
+            -375.134,
+            -140848.234
+          ],
+          [
+            820,
+            2670,
+            -375.134,
+            -140531.359
+          ],
+          [
+            840,
+            2730,
+            -375.134,
+            -139876.109
+          ],
+          [
+            850,
+            2763,
+            -375.134,
+            -139513.391
+          ],
+          [
+            860,
+            2798,
+            -375.134,
+            -139146.922
+          ],
+          [
+            870,
+            2828,
+            -375.134,
+            -138824.188
+          ],
+          [
+            880,
+            2862,
+            -375.134,
+            -138475.062
+          ],
+          [
+            900,
+            2928,
+            -375.134,
+            -137791.656
+          ],
+          [
+            910,
+            2958,
+            -375.134,
+            -137448.781
+          ],
+          [
+            920,
+            2990,
+            -375.134,
+            -137122.656
+          ],
+          [
+            930,
+            3020,
+            -375.134,
+            -136791.328
+          ],
+          [
+            950,
+            3083,
+            -375.134,
+            -136096.516
+          ],
+          [
+            960,
+            3113,
+            -375.134,
+            -135778.938
+          ],
+          [
+            970,
+            3143,
+            -375.134,
+            -135450.031
+          ],
+          [
+            980,
+            3173,
+            -375.134,
+            -135121.906
+          ],
+          [
+            1000,
+            3236,
+            -375.134,
+            -134443.0
+          ],
+          [
+            1010,
+            3272,
+            -375.134,
+            -134070.109
+          ],
+          [
+            1020,
+            3302,
+            -375.134,
+            -133747.641
+          ],
+          [
+            1030,
+            3332,
+            -375.134,
+            -133413.328
+          ],
+          [
+            1050,
+            3392,
+            -375.134,
+            -132742.516
+          ],
+          [
+            1060,
+            3422,
+            -375.134,
+            -132432.266
+          ],
+          [
+            1070,
+            3452,
+            -375.134,
+            -132097.031
+          ],
+          [
+            1080,
+            3482,
+            -375.134,
+            -131752.703
+          ],
+          [
+            1090,
+            3512,
+            -375.134,
+            -131430.547
+          ],
+          [
+            1110,
+            3572,
+            -375.134,
+            -130768.953
+          ],
+          [
+            1120,
+            3602,
+            -375.134,
+            -130423.703
+          ],
+          [
+            1130,
+            3632,
+            -375.134,
+            -130100.359
+          ],
+          [
+            1140,
+            3662,
+            -375.134,
+            -129787.523
+          ],
+          [
+            1160,
+            3722,
+            -375.134,
+            -129113.672
+          ],
+          [
+            1170,
+            3752,
+            -375.134,
+            -128783.07
+          ],
+          [
+            1180,
+            3782,
+            -375.134,
+            -128451.859
+          ],
+          [
+            1190,
+            3812,
+            -375.134,
+            -128112.391
+          ],
+          [
+            1210,
+            3872,
+            -375.134,
+            -127445.648
+          ],
+          [
+            1220,
+            3902,
+            -375.134,
+            -127114.961
+          ],
+          [
+            1230,
+            3933,
+            -375.134,
+            -126785.797
+          ],
+          [
+            1240,
+            3964,
+            -375.134,
+            -126446.75
+          ],
+          [
+            1260,
+            4025,
+            -375.134,
+            -125774.75
+          ],
+          [
+            1270,
+            4055,
+            -375.134,
+            -125467.992
+          ],
+          [
+            1280,
+            4088,
+            -375.134,
+            -125107.602
+          ],
+          [
+            1290,
+            4118,
+            -375.134,
+            -124784.789
+          ],
+          [
+            1300,
+            4148,
+            -375.134,
+            -124461.766
+          ],
+          [
+            1320,
+            4210,
+            -375.134,
+            -123781.148
+          ],
+          [
+            1330,
+            4240,
+            -375.134,
+            -123435.453
+          ],
+          [
+            1340,
+            4271,
+            -375.134,
+            -123105.25
+          ],
+          [
+            1350,
+            4303,
+            -375.134,
+            -122754.445
+          ],
+          [
+            1370,
+            4365,
+            -375.134,
+            -122058.016
+          ],
+          [
+            1380,
+            4395,
+            -375.134,
+            -121726.672
+          ],
+          [
+            1390,
+            4425,
+            -375.134,
+            -121419.703
+          ],
+          [
+            1400,
+            4455,
+            -375.134,
+            -121084.273
+          ],
+          [
+            1420,
+            4520,
+            -375.134,
+            -120397.117
+          ],
+          [
+            1430,
+            4547,
+            -375.134,
+            -120088.461
+          ],
+          [
+            1440,
+            4578,
+            -375.134,
+            -119755.016
+          ],
+          [
+            1450,
+            4611,
+            -375.134,
+            -119432.57
+          ],
+          [
+            1470,
+            4662,
+            -375.134,
+            -118922.828
+          ],
+          [
+            1480,
+            4686,
+            -375.134,
+            -118681.117
+          ],
+          [
+            1490,
+            4710,
+            -375.134,
+            -118420.844
+          ],
+          [
+            1500,
+            4736,
+            -375.134,
+            -118142.961
+          ],
+          [
+            1510,
+            4760,
+            -375.134,
+            -117892.367
+          ],
+          [
+            1530,
+            4810,
+            -375.134,
+            -117381.219
+          ],
+          [
+            1540,
+            4840,
+            -375.134,
+            -117079.609
+          ],
+          [
+            1550,
+            4867,
+            -375.134,
+            -116780.148
+          ],
+          [
+            1560,
+            4889,
+            -375.134,
+            -116573.039
+          ],
+          [
+            1580,
+            4948,
+            -375.134,
+            -115993.289
+          ],
+          [
+            1590,
+            4971,
+            -375.134,
+            -115762.656
+          ],
+          [
+            1600,
+            5002,
+            -375.134,
+            -115452.898
+          ],
+          [
+            1610,
+            5026,
+            -375.134,
+            -115204.523
+          ],
+          [
+            1630,
+            5063,
+            -375.134,
+            -114811.703
+          ],
+          [
+            1640,
+            5092,
+            -375.134,
+            -114523.906
+          ],
+          [
+            1650,
+            5112,
+            -375.134,
+            -114332.617
+          ],
+          [
+            1660,
+            5131,
+            -375.134,
+            -114150.047
+          ],
+          [
+            1680,
+            5173,
+            -375.134,
+            -113772.969
+          ],
+          [
+            1690,
+            5189,
+            -375.134,
+            -113611.43
+          ],
+          [
+            1700,
+            5210,
+            -375.134,
+            -113410.789
+          ],
+          [
+            1710,
+            5235,
+            -375.134,
+            -113178.18
+          ],
+          [
+            1720,
+            5258,
+            -375.134,
+            -112972.203
+          ],
+          [
+            1740,
+            5307,
+            -375.134,
+            -112499.734
+          ],
+          [
+            1750,
+            5333,
+            -375.134,
+            -112261.039
+          ],
+          [
+            1760,
+            5357,
+            -375.134,
+            -112022.586
+          ],
+          [
+            1770,
+            5384,
+            -375.134,
+            -111787.805
+          ],
+          [
+            1790,
+            5433,
+            -375.134,
+            -111381.594
+          ],
+          [
+            1800,
+            5464,
+            -375.134,
+            -111099.148
+          ],
+          [
+            1810,
+            5493,
+            -375.134,
+            -110852.203
+          ],
+          [
+            1820,
+            5509,
+            -375.134,
+            -110715.125
+          ],
+          [
+            1840,
+            5561,
+            -375.134,
+            -110273.844
+          ],
+          [
+            1850,
+            5591,
+            -375.134,
+            -110035.0
+          ],
+          [
+            1860,
+            5603,
+            -375.134,
+            -109930.711
+          ],
+          [
+            1870,
+            5618,
+            -375.134,
+            -109799.32
+          ],
+          [
+            1890,
+            5663,
+            -375.134,
+            -109439.664
+          ],
+          [
+            1900,
+            5694,
+            -375.134,
+            -109197.305
+          ],
+          [
+            1910,
+            5717,
+            -375.134,
+            -109027.227
+          ],
+          [
+            1920,
+            5745,
+            -375.134,
+            -108812.031
+          ],
+          [
+            1930,
+            5769,
+            -375.134,
+            -108621.617
+          ],
+          [
+            1950,
+            5818,
+            -375.134,
+            -108229.922
+          ],
+          [
+            1960,
+            5839,
+            -375.134,
+            -108070.445
+          ],
+          [
+            1970,
+            5865,
+            -375.134,
+            -107890.312
+          ],
+          [
+            1980,
+            5893,
+            -375.134,
+            -107689.367
+          ],
+          [
+            2000,
+            5940,
+            -375.134,
+            -107346.484
+          ],
+          [
+            2010,
+            5970,
+            -375.134,
+            -107130.656
+          ],
+          [
+            2020,
+            5993,
+            -375.134,
+            -106960.844
+          ],
+          [
+            2030,
+            6014,
+            -375.134,
+            -106813.961
+          ],
+          [
+            2050,
+            6061,
+            -375.134,
+            -106483.789
+          ],
+          [
+            2060,
+            6091,
+            -375.134,
+            -106281.383
+          ],
+          [
+            2070,
+            6118,
+            -375.134,
+            -106101.297
+          ],
+          [
+            2080,
+            6146,
+            -375.134,
+            -105924.102
+          ],
+          [
+            2100,
+            6196,
+            -375.134,
+            -105595.641
+          ],
+          [
+            2110,
+            6226,
+            -375.134,
+            -105407.297
+          ],
+          [
+            2120,
+            6255,
+            -375.134,
+            -105220.93
+          ],
+          [
+            2130,
+            6280,
+            -375.134,
+            -105074.062
+          ],
+          [
+            2140,
+            6306,
+            -375.134,
+            -104911.898
+          ],
+          [
+            2160,
+            6364,
+            -375.134,
+            -104578.156
+          ],
+          [
+            2170,
+            6394,
+            -375.134,
+            -104403.625
+          ],
+          [
+            2180,
+            6406,
+            -375.134,
+            -104334.859
+          ],
+          [
+            2190,
+            6430,
+            -375.134,
+            -104182.828
+          ],
+          [
+            2210,
+            6482,
+            -375.134,
+            -103884.672
+          ],
+          [
+            2220,
+            6503,
+            -375.134,
+            -103771.195
+          ],
+          [
+            2230,
+            6530,
+            -375.134,
+            -103611.43
+          ],
+          [
+            2240,
+            6556,
+            -375.134,
+            -103470.344
+          ],
+          [
+            2260,
+            6600,
+            -375.134,
+            -103240.836
+          ],
+          [
+            2270,
+            6623,
+            -375.134,
+            -103120.617
+          ],
+          [
+            2280,
+            6645,
+            -375.134,
+            -103002.578
+          ],
+          [
+            2290,
+            6673,
+            -375.134,
+            -102857.242
+          ],
+          [
+            2310,
+            6727,
+            -375.134,
+            -102587.227
+          ],
+          [
+            2320,
+            6752,
+            -375.134,
+            -102461.141
+          ],
+          [
+            2330,
+            6772,
+            -375.134,
+            -102364.188
+          ],
+          [
+            2340,
+            6797,
+            -375.134,
+            -102241.469
+          ],
+          [
+            2350,
+            6823,
+            -375.134,
+            -102106.938
+          ],
+          [
+            2370,
+            6873,
+            -375.134,
+            -101872.93
+          ],
+          [
+            2380,
+            6896,
+            -375.134,
+            -101759.172
+          ],
+          [
+            2390,
+            6920,
+            -375.134,
+            -101647.672
+          ],
+          [
+            2400,
+            6939,
+            -375.134,
+            -101563.117
+          ],
+          [
+            2420,
+            6982,
+            -375.134,
+            -101363.195
+          ],
+          [
+            2430,
+            7005,
+            -375.134,
+            -101261.141
+          ],
+          [
+            2440,
+            7027,
+            -375.134,
+            -101161.117
+          ],
+          [
+            2450,
+            7051,
+            -375.134,
+            -101063.055
+          ],
+          [
+            2470,
+            7090,
+            -375.134,
+            -100899.547
+          ],
+          [
+            2480,
+            7110,
+            -375.134,
+            -100817.992
+          ],
+          [
+            2490,
+            7134,
+            -375.134,
+            -100728.219
+          ],
+          [
+            2500,
+            7160,
+            -375.134,
+            -100630.688
+          ],
+          [
+            2520,
+            7198,
+            -375.134,
+            -100480.031
+          ],
+          [
+            2530,
+            7219,
+            -375.134,
+            -100397.312
+          ],
+          [
+            2540,
+            7239,
+            -375.134,
+            -100325.242
+          ],
+          [
+            2550,
+            7261,
+            -375.134,
+            -100245.508
+          ],
+          [
+            2570,
+            7302,
+            -375.134,
+            -100097.844
+          ],
+          [
+            2580,
+            7328,
+            -375.134,
+            -100013.0
+          ],
+          [
+            2590,
+            7349,
+            -375.134,
+            -99938.125
+          ],
+          [
+            2600,
+            7373,
+            -375.134,
+            -99857.227
+          ],
+          [
+            2610,
+            7393,
+            -375.134,
+            -99788.07
+          ],
+          [
+            2630,
+            7435,
+            -375.134,
+            -99651.375
+          ],
+          [
+            2640,
+            7456,
+            -375.134,
+            -99585.875
+          ],
+          [
+            2650,
+            7473,
+            -375.134,
+            -99529.727
+          ],
+          [
+            2660,
+            7498,
+            -375.134,
+            -99460.734
+          ],
+          [
+            2680,
+            7534,
+            -375.134,
+            -99352.836
+          ],
+          [
+            2690,
+            7556,
+            -375.134,
+            -99288.844
+          ],
+          [
+            2700,
+            7579,
+            -375.134,
+            -99226.578
+          ],
+          [
+            2710,
+            7600,
+            -375.134,
+            -99171.961
+          ],
+          [
+            2730,
+            7640,
+            -375.134,
+            -99073.367
+          ],
+          [
+            2740,
+            7661,
+            -375.134,
+            -99023.047
+          ],
+          [
+            2750,
+            7681,
+            -375.134,
+            -98974.086
+          ],
+          [
+            2760,
+            7698,
+            -375.134,
+            -98926.406
+          ],
+          [
+            2780,
+            7741,
+            -375.134,
+            -98829.492
+          ],
+          [
+            2790,
+            7763,
+            -375.134,
+            -98780.516
+          ],
+          [
+            2800,
+            7783,
+            -375.134,
+            -98739.055
+          ],
+          [
+            2810,
+            7806,
+            -375.134,
+            -98693.102
+          ],
+          [
+            2820,
+            7824,
+            -375.134,
+            -98657.953
+          ],
+          [
+            2840,
+            7866,
+            -375.134,
+            -98578.203
+          ],
+          [
+            2850,
+            7884,
+            -375.134,
+            -98546.391
+          ],
+          [
+            2860,
+            7906,
+            -375.134,
+            -98507.75
+          ],
+          [
+            2870,
+            7928,
+            -375.134,
+            -98470.164
+          ],
+          [
+            2890,
+            7969,
+            -375.134,
+            -98407.453
+          ],
+          [
+            2900,
+            7992,
+            -375.134,
+            -98374.594
+          ],
+          [
+            2910,
+            8013,
+            -375.134,
+            -98346.445
+          ],
+          [
+            2920,
+            8032,
+            -375.134,
+            -98320.148
+          ],
+          [
+            2940,
+            8073,
+            -375.134,
+            -98273.383
+          ],
+          [
+            2950,
+            8096,
+            -375.134,
+            -98248.062
+          ],
+          [
+            2960,
+            8115,
+            -375.134,
+            -98228.57
+          ],
+          [
+            2970,
+            8135,
+            -375.134,
+            -98205.148
+          ],
+          [
+            2990,
+            8176,
+            -375.134,
+            -98163.797
+          ],
+          [
+            3000,
+            8201,
+            -375.134,
+            -98143.656
+          ],
+          [
+            3010,
+            8220,
+            -375.134,
+            -98126.164
+          ],
+          [
+            3020,
+            8239,
+            -375.134,
+            -98109.547
+          ],
+          [
+            3030,
+            8259,
+            -375.134,
+            -98091.734
+          ],
+          [
+            3050,
+            8294,
+            -375.134,
+            -98064.148
+          ],
+          [
+            3060,
+            8315,
+            -375.134,
+            -98049.492
+          ],
+          [
+            3070,
+            8333,
+            -375.134,
+            -98035.641
+          ],
+          [
+            3080,
+            8351,
+            -375.134,
+            -98024.43
+          ],
+          [
+            3100,
+            8392,
+            -375.134,
+            -98004.039
+          ],
+          [
+            3110,
+            8410,
+            -375.134,
+            -97995.969
+          ],
+          [
+            3120,
+            8427,
+            -375.134,
+            -97987.719
+          ],
+          [
+            3130,
+            8443,
+            -375.134,
+            -97980.594
+          ],
+          [
+            3150,
+            8478,
+            -375.134,
+            -97970.086
+          ],
+          [
+            3160,
+            8492,
+            -375.134,
+            -97965.414
+          ],
+          [
+            3170,
+            8506,
+            -375.134,
+            -97961.336
+          ],
+          [
+            3180,
+            8520,
+            -375.134,
+            -97957.773
+          ],
+          [
+            3200,
+            8546,
+            -375.134,
+            -97953.094
+          ],
+          [
+            3210,
+            8565,
+            -375.134,
+            -97951.773
+          ],
+          [
+            3220,
+            8580,
+            -375.134,
+            -97951.156
+          ],
+          [
+            3230,
+            8593,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3240,
+            8602,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3260,
+            8627,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3270,
+            8639,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3280,
+            8652,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3290,
+            8665,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3310,
+            8687,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3320,
+            8698,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3330,
+            8709,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3340,
+            8722,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3360,
+            8743,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3370,
+            8753,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3380,
+            8764,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3390,
+            8776,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3410,
+            8798,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3420,
+            8808,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3430,
+            8819,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3440,
+            8832,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3450,
+            8845,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3470,
+            8864,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3480,
+            8874,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3490,
+            8884,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3500,
+            8894,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3520,
+            8918,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3530,
+            8928,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3540,
+            8939,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3550,
+            8951,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3570,
+            8970,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3580,
+            8979,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3590,
+            8989,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3600,
+            8998,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3620,
+            9018,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3630,
+            9029,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3640,
+            9041,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3650,
+            9051,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3660,
+            9059,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3680,
+            9079,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3690,
+            9089,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3700,
+            9099,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3710,
+            9109,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3730,
+            9129,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3740,
+            9139,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3750,
+            9149,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3760,
+            9157,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3780,
+            9179,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3790,
+            9189,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3800,
+            9199,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3810,
+            9209,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3830,
+            9230,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3840,
+            9240,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3850,
+            9250,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3860,
+            9260,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3870,
+            9271,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3890,
+            9292,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3900,
+            9305,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3910,
+            9315,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3920,
+            9324,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3940,
+            9346,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3950,
+            9356,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3960,
+            9366,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3970,
+            9376,
+            -375.134,
+            -97951.078
+          ],
+          [
+            3990,
+            9396,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4000,
+            9407,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4010,
+            9417,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4020,
+            9426,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4040,
+            9447,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4050,
+            9457,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4060,
+            9466,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4070,
+            9476,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4080,
+            9486,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4100,
+            9506,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4110,
+            9516,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4120,
+            9525,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4130,
+            9536,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4150,
+            9556,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4160,
+            9565,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4170,
+            9576,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4180,
+            9589,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4200,
+            9610,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4210,
+            9620,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4220,
+            9630,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4230,
+            9640,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4250,
+            9661,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4260,
+            9670,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4270,
+            9680,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4280,
+            9690,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4290,
+            9700,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4310,
+            9722,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4320,
+            9732,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4330,
+            9743,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4340,
+            9753,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4360,
+            9773,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4370,
+            9783,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4380,
+            9794,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4390,
+            9804,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4410,
+            9823,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4420,
+            9833,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4430,
+            9843,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4440,
+            9853,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4460,
+            9872,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4470,
+            9882,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4480,
+            9892,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4490,
+            9902,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4500,
+            9913,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4520,
+            9933,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4530,
+            9941,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4540,
+            9951,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4550,
+            9961,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4570,
+            9980,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4580,
+            9989,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4590,
+            9998,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4600,
+            10008,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4620,
+            10029,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4630,
+            10039,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4640,
+            10049,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4650,
+            10059,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4670,
+            10078,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4680,
+            10088,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4690,
+            10098,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4700,
+            10108,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4710,
+            10118,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4730,
+            10139,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4740,
+            10149,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4750,
+            10159,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4760,
+            10169,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4780,
+            10190,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4790,
+            10200,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4800,
+            10210,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4810,
+            10220,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4830,
+            10240,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4840,
+            10250,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4850,
+            10260,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4860,
+            10270,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4880,
+            10293,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4890,
+            10302,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4900,
+            10311,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4910,
+            10321,
+            -375.134,
+            -97951.078
+          ],
+          [
+            4930,
+            10343,
+            -375.134,
+            -97951.078
+          ]
+        ],
+        "chunks": []
+      },
+      "congestion": [],
+      "drt": [],
+      "paths": [
+        {
+          "cls": "reg->reg",
+          "slack_ps": -201.02,
+          "group": "ckd",
+          "dominated": "logic",
+          "wire_ps": 281.6,
+          "cell_ps": 616.8,
+          "max_fanout": 2,
+          "start": "u_sq.wf_q$_DFF_PN0_",
+          "end": "f_ckd$_DFF_P_",
+          "check": "rising edge-triggered flip-flop clocked by ckd"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": -166.93,
+          "group": "ck",
+          "dominated": "logic",
+          "wire_ps": 262.3,
+          "cell_ps": 605.9,
+          "max_fanout": 24,
+          "start": "u_sr.g_afw.u_af.rd_bin[0]$_DFF_PN0_",
+          "end": "u_sr.g_afw.u_af.g_rs[2].g_s2.rs_q[0][7]$_DFF_P_",
+          "check": "rising edge-triggered flip-flop clocked by ck"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": -152.72,
+          "group": "cks",
+          "dominated": "logic",
+          "wire_ps": 234.6,
+          "cell_ps": 607.9,
+          "max_fanout": 17,
+          "start": "u_sr.g_afw.u_af.wq_row[5]$_DFF_PN0_",
+          "end": "u_sr.g_afw.u_af.mem[5][221]$_DFFE_PP_",
+          "check": "rising edge-triggered flip-flop clocked by cks"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": 52.67,
+          "group": "cku",
+          "dominated": "logic",
+          "wire_ps": 109.9,
+          "cell_ps": 539.0,
+          "max_fanout": 15,
+          "start": "u_ur.ir[0]$_DFFE_PN0P_",
+          "end": "u_ur.g_afw.u_af.wq_data[974]$_DFFE_PP_",
+          "check": "rising edge-triggered flip-flop clocked by cku"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": 108.12,
+          "group": "asynchronous",
+          "dominated": "logic",
+          "wire_ps": 183.3,
+          "cell_ps": 408.2,
+          "max_fanout": 9,
+          "start": "u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_",
+          "end": "u_sq.cred[2]$_DFF_PN1_",
+          "check": "recovery check against rising-edge clock ck"
+        },
+        {
+          "cls": "reg->reg",
+          "slack_ps": 218.61,
+          "group": "path",
+          "dominated": "logic",
+          "wire_ps": 117.4,
+          "cell_ps": 393.4,
+          "max_fanout": 4,
+          "start": "u_sq.u_rrs.reset_pipe[1]$_DFF_PN0_",
+          "end": "u_sq.g_afw.u_af.wr_reset_conditioner.reset_pipe[1]$_DFF_PN0_",
+          "check": "rising edge-triggered flip-flop clocked by ckd"
+        }
+      ],
+      "block": "qfd_io_xfifo",
+      "owner": "Claude:safe-qwen",
+      "gates": {
+        "setup_cts_ws_ps": -400.0,
+        "setup_cts_count": 500,
+        "setup_tns_ps": -1000000.0,
+        "setup_place_ws_ps": -900.0,
+        "setup_place_count": 2000,
+        "hold_buf_cap": 100000,
+        "hold_buf_frac": 0.3,
+        "hold_buf_min": 20000,
+        "hold_buf_improve_dwns": 5.0,
+        "hold_buf_improve_frac": 0.6,
+        "hold_buf_improve_min": 60000,
+        "hold_stall_it": 2000,
+        "hold_stall_dwns": 1.0,
+        "hold_stall_tns_pct": 2.0,
+        "hold_real_ws_ps": -150.0,
+        "hold_real_after_s": 3600,
+        "hold_deep_it": 2000,
+        "hold_deep_dwns": 5.0,
+        "grt_min_iter": 20,
+        "grt_markers": 1000,
+        "grt_flat": 0.95,
+        "drt_min_iter": 20,
+        "drt_k": 8,
+        "drt_min_viol": 100,
+        "stall_after_s": 10800
+      }
+    }
+  }
+}

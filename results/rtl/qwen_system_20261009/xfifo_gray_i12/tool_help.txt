@@ -1,0 +1,4 @@
+Actual OpenROAD26Q3-1510-g6cb3f2b704 / openroad-orfs-asap7lock:
+set_max_delay [-rise] [-fall] [-ignore_clock_latency] [-reset_path] [-probe] [-comment comment] [-from from_list] [-through through_list] [-to to_list] delay
+set_false_path [-setup] [-hold] ... [-from from_list] [-through through_list] [-to to_list]
+No -datapath_only support. Direct -from QN is not a valid startpoint here. Final uses sequential -from cells, -through selected QN, -to firststage D; conservative clk2q/setup terms retained.
