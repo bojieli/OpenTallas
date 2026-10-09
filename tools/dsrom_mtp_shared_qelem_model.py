@@ -20,9 +20,15 @@ def model():
             return_rounders=2,return_rounder_parameters=dict(D=16,QD=16)),
         latency=dict(issue_cycles=72,quantiser_input_cycles=36,configuration_words=25,
             PQ_shadow_replay='wait actual sh_free/walking plus existing six-cycle guard',
-            root_and_round_fill='must measure actual RTL',six_position_sharing='no production extrapolation',
+            measured_quant_cycles=49,measured_raw_first_from_go=179,measured_raw_last_from_go=179,
+            measured_rounded_last_from_go=181,measured_complete_cycles=285,
+            measured_complete_nominal_ns=285/1.2,
+            root_to_RNE_widen_cycles=2,six_position_sharing='no production extrapolation',
             W1_W3_GU='golden fixture generation only; not measured RTL or production input'),
         arithmetic='golden chunk8 FP8 exact block32 dot, native raw FP32 root, actual ot_v41_ret_root RNE BF16 then widen',
         fixture='released shared W1/W3/W2, scoped backbone L38 h_in[0] BF16 sample; NOT MTP shared GU capture',
         qualification=dict(field_descriptor=False,production_VM_binding=False,
-            actual_MTP_input=False,native_arithmetic=False,physical=False))
+            actual_MTP_input=False,native_arithmetic=True,raw_root_mutant_rejected=True,physical=False),
+        measurement=dict(source='682e6d076',record='results/rtl/dsrom_mtp_shared_qelem_20261009/selected_gate',
+            native_RTL_unchanged=True,reused_binary_after_identical_TB_and_RTL_hashes=True,
+            quantizer_oracle='negative rounded zeros retain FP8 sign; legacy zero canonicalization failures preserved'))

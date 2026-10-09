@@ -1,0 +1,5 @@
+MTP_SHARED_Q PASS K=2304 rows=2 issues=72 rowbank_reads=144 MACs=4608 weight_bytes=4608 quant_cycles=49 first_cycles=179 last_cycles=179 round_last_cycles=181 complete_cycles=285
+- ../gate/tb.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 590ns; walltime 0.151 s; speed 3.920 us/s
+- Verilator: cpu 0.151 s on 1 threads; allocated 8 MB

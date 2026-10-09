@@ -1,0 +1,30 @@
+MTP_SHARED_Q PASS K=2304 rows=2 issues=72 rowbank_reads=144 MACs=4608 weight_bytes=4608 quant_cycles=49 first_cycles=179 last_cycles=179 round_last_cycles=181 complete_cycles=285
+- ../gate/tb.sv:57: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 590ns; walltime 0.151 s; speed 3.920 us/s
+- Verilator: cpu 0.151 s on 1 threads; allocated 8 MB
+
+SHARED_RAW_ROOT FAIL_AS_REQUIRED (same compiled minimum vehicle)
+	Command being timed: "python3 tools/dsrom_mtp_shared_qelem.py --snapshot /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/snapshot --sample /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/ctx1048576_L38.npz --config /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/config.json --work ../gate --reuse-binary /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/gate/obj/Vtb_mtp_seed --reuse-tb /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/gate/tb.sv --reuse-source /srv/opentallas-scratch/claude/mtp-shared-q-6eea358e9/src"
+	User time (seconds): 0.52
+	System time (seconds): 0.10
+	Percent of CPU this job got: 98%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.64
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 344812
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 9
+	Minor (reclaiming a frame) page faults: 20641
+	Voluntary context switches: 85
+	Involuntary context switches: 3
+	Swaps: 0
+	File system inputs: 77744
+	File system outputs: 6792
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
