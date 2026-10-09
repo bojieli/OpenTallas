@@ -14,7 +14,12 @@
 //   ck     the die core clock: the HBM write fabric face (sector words with credits), pin flops.
 // Host stream (clk_h, valid + 2-b class + 512 b; the sender holds 2^HFA credits, h_crn returns freed entries):
 //   class 0 CSR write  d[7:0] index, d[63:32] value:  0 = share (ingest sectors per die cycle x 256, 0 = unpaced;
-//                      change it only while the block is idle), 1 = completion of every descriptor (bit 0).
+//                      change it only while the block is idle), 1 = reserved;  2 = BOOT END: once the engine is idle
+//                      (every sector of the descriptors before it has left the engine), one marker word goes out on the
+//                      die face in order behind them: o_we 1, o_addr all ones (never a data sector), o_d[63:0] =
+//                      d[127:64] (the emb-hbm BOOT_END {checksum[63:32], expected sectors[31:0]}).
+//   Address convention (runtime): o_addr[31] = 0 the die's linear KV sector space (Qwen: PC = a[6:0], PC-local
+//   sector = a >> 7, the decode map); o_addr[31] = 1 a static / boot region (Qwen: the embedding's logical sector E).
 //   class 1 descriptor d[255:0] (the engine's 256-b descriptor).  The host sends a descriptor, then its payload;
 //                      at most DQ (4) descriptors ahead of their payloads.
 //   class 2 payload    one 512-b beat.
@@ -130,7 +135,7 @@ module ot_rom_host_ingest #(
         if (hv_i) begin
             if (f_any) hx_pop = 1'b1;                                   // fail closed: drain and drop
             else case (hcl)
-                2'd0: hx_pop = 1'b1;
+                2'd0: hx_pop = (hx_head[7:0] == 8'd2) ? mark_go : 1'b1;
                 2'd1: hx_pop = (bad_qkv || bad_rmw) ? 1'b1 : e_drdy;
                 2'd2: hx_pop = e_inrdy;
                 default: hx_pop = 1'b1;
@@ -147,10 +152,14 @@ module ot_rom_host_ingest #(
     wire [AW+256:0] ox_head;
     reg  [RFA+1:0] outst;                   // RMW reads issued, not yet handed to the engine
     wire         rd_room = outst < (1 << RFA);
+    // CSR 2 (boot end): one marker word, in order after every sector of the descriptors before it
+    wire         csr_mark = hv_i && !f_any && hcl == 2'd0 && hx_head[7:0] == 8'd2;
+    wire         mark_go = csr_mark && !e_busy && !e_wv && !e_rv && !ox_full;
     assign e_wrdy = !ox_full;
     assign e_rrdy = (RMW_EN != 0) && !e_wv && !ox_full && rd_room;
-    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy);
-    wire [AW+256:0] ox_w = e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
+    wire         ox_wr = (e_wv && e_wrdy) || (e_rv && e_rrdy) || mark_go;
+    wire [AW+256:0] ox_w = mark_go ? {1'b1, {AW{1'b1}}, 192'd0, hx_head[127:64]}
+                         : e_wv ? {1'b1, e_waddr, e_wdata} : {1'b0, e_raddr, 256'd0};
     // read returns ck -> clk_i
     wire         rx_full, rx_empty, rx_ovf;
     wire [RFA:0] rx_freed, rx_cnt;

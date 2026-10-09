@@ -33,7 +33,7 @@ RTL = [ROOT / p for p in ("rtl/lib/ot_reset_sync.sv", "rtl/link/ot_link_afifo.sv
                           "rtl/hdc/ingest/ot_hdc_kv_ingest.sv", "rtl/hdc/ingest/ot_rom_host_ingest.sv")]
 TB = ROOT / "rtl/test/tb_rom_host_ingest.sv"
 RE = re.compile(r"HING descs=(\d+) beats=(\d+)/(\d+) sectors=(\d+) reads=(\d+) errors=(\d+) oob=(\d+) "
-                r"dones=(\d+)/(\d+) tag_err=(\d+) fault_words=(\d+) fault=(\d+) ck_cycles=(\d+) timeout=(\d+) share=(\d+) first_o=(-?\d+) last_o=(\d+)")
+                r"dones=(\d+)/(\d+) tag_err=(\d+) fault_words=(\d+) fault=(\d+) ck_cycles=(\d+) timeout=(\d+) share=(\d+) first_o=(-?\d+) last_o=(\d+) marks=(\d+) mark_bad=(\d+)")
 
 
 def sha(p):
@@ -66,20 +66,21 @@ def case_die_geom(rng, layers=2, T=64, fmt=R.FMT_BF16):
                 meta=dict(layers=layers, positions=T, kv_heads=2, head_dim=128, wire="bf16"))
 
 
-def cases(quick):
+def cases(quick, no_model=False):
     rng = np.random.default_rng(20261008)
-    cap = C.qwen_capture()
-    model, prompt, cache, ks, vs = cap
-    cfg = model.cfg
-    ref = R.QwenKV(cfg["num_hidden_layers"], cfg["num_key_value_heads"], cfg["head_dim"], 64)
     out = {}
-    for name, fmt in (("qwen_reduced_fp32", R.FMT_FP32), ("qwen_reduced_bf16", R.FMT_BF16)):
-        c = C.case_qwen_reduced(fmt, cap)
-        c["nb"] = qkv_nb(ref, ks, vs, fmt)
-        out[name] = dict(c, qkv=1)
-    c = C.case_qwen_append(cap)
-    c["nb"] = qkv_nb(ref, ks, vs, R.FMT_FP32, t0=40)
-    out["qwen_append_rmw"] = dict(c, qkv=1)
+    if not no_model:          # the reduced vehicle's real prefill KV (needs build/models/qwen3-reduced-v1)
+        cap = C.qwen_capture()
+        model, prompt, cache, ks, vs = cap
+        cfg = model.cfg
+        ref = R.QwenKV(cfg["num_hidden_layers"], cfg["num_key_value_heads"], cfg["head_dim"], 64)
+        for name, fmt in (("qwen_reduced_fp32", R.FMT_FP32), ("qwen_reduced_bf16", R.FMT_BF16)):
+            c = C.case_qwen_reduced(fmt, cap)
+            c["nb"] = qkv_nb(ref, ks, vs, fmt)
+            out[name] = dict(c, qkv=1)
+        c = C.case_qwen_append(cap)
+        c["nb"] = qkv_nb(ref, ks, vs, R.FMT_FP32, t0=40)
+        out["qwen_append_rmw"] = dict(c, qkv=1)
     out["qwen_die_geom_bf16"] = dict(case_die_geom(rng), qkv=1)
     for name, c in (("v41_ckv", C.case_rows(rng, "ckv", 400 if quick else 1000, first=48)),
                     ("v41_win", C.case_rows(rng, "win", 200, first=0)),
@@ -123,13 +124,14 @@ def run(exe, d, nd, np_, **pa):
     m = RE.search(p.stdout)
     if not m:
         return {"pass": False, "stdout": p.stdout[-1500:], "stderr": p.stderr[-800:]}
-    (descs, beats, npay, secs, reads, err, oob, dones, nfence, tag_err, fw, fault, cyc, tmo, shr, f0, f1) = map(int, m.groups())
+    (descs, beats, npay, secs, reads, err, oob, dones, nfence, tag_err, fw, fault, cyc, tmo, shr, f0, f1, marks, mbad) = map(int, m.groups())
+    want_marks = int(pa.get("BOOTEND", 0))
     span = max(1, f1 - f0 + 1)
     ok = (err == 0 and oob == 0 and tmo == 0 and beats == npay and descs == nd and dones == nfence and tag_err == 0
-          and fw == 0 and fault == 0)
+          and fw == 0 and fault == 0 and marks == want_marks and mbad == 0)
     return {"pass": ok, "errors": err, "oob": oob, "timeout": bool(tmo), "descriptors": descs, "beats": beats,
             "sectors_written": secs, "rmw_reads": reads, "fenced_done": dones, "fenced": nfence, "tag_errors": tag_err,
-            "fault_words": fw, "fault": fault, "ck_cycles": cyc, "share_seen_x256": shr,
+            "fault_words": fw, "fault": fault, "boot_end_markers": marks, "boot_end_marker_errors": mbad, "ck_cycles": cyc, "share_seen_x256": shr,
             "fabric_active_ck_cycles": span, "sectors_per_ck": round((secs + reads) / span, 4), "plusargs": pa, "wall_s": round(time.time() - t, 1),
             "first_mismatch": [ln for ln in p.stdout.splitlines() if ln.startswith("MISMATCH")][:2]}
 
@@ -139,10 +141,12 @@ def main():
     ap.add_argument("--output", type=Path, default=OUT)
     ap.add_argument("--work", type=Path, default=Path("/tmp/hing"))
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--no-model", action="store_true", help="skip the reduced-vehicle cases (no build/models in a "
+                    "loop snapshot); mutants then run on the per-die geometry case")
     args = ap.parse_args()
     work = args.work
     work.mkdir(parents=True, exist_ok=True)
-    cs = cases(args.quick)
+    cs = cases(args.quick, args.no_model)
     rec = {"schema": "opentallas.rtl-rom-host-ingest.v1", "tool": "tools/rtl_rom_host_ingest_bench.py",
            "dut": "rtl/hdc/ingest/ot_rom_host_ingest.sv", "clocks_ps": dict(clk_h=1000, clk_i=1666, ck=833),
            "cases": {}, "traffic": {}, "mutations": {}}
@@ -161,7 +165,8 @@ def main():
         exe, memw = exe_for(case)
         d = work / name
         write_case(d, case, memw)
-        r = run(exe, d, len(case["descs"]), len(case["beats"]))
+        pa = dict(BOOTEND=1, BCOUNT=case["meta"]["sectors"]) if name == "raw_boot" else {}
+        r = run(exe, d, len(case["descs"]), len(case["beats"]), **pa)
         r.update(case["meta"])
         if r["pass"] and name.startswith("qwen_reduced"):
             r["decode_from_ingested_image"] = C.isa_decode_from_image(case, final_image(d, case["exp"].size))
@@ -178,7 +183,7 @@ def main():
                 print("  traffic", name, share, hgap, mst, rr["pass"], rr.get("ck_cycles"), flush=True)
             rec["traffic"][name] = rows
     # mutants: each must FAIL
-    base = cs["qwen_reduced_fp32"]
+    base = cs["qwen_reduced_fp32" if "qwen_reduced_fp32" in cs else "qwen_die_geom_bf16"]
     for mname, mut in (("payload_bit_flip_in_cdc", 1), ("done_tag_plus_one", 2)):
         exe, memw = exe_for(base, mut=mut)
         d = work / ("mut_" + mname)

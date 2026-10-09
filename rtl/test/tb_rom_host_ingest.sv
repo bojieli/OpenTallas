@@ -78,7 +78,12 @@ module tb_rom_host_ingest #(
     integer hcred = 1 << HFA, di = 0, pi = 0, pleft = 0, csr_done = 0, hcyc = 0;
     integer dones = 0, fwords = 0, tag_err = 0, exp_tag_i = 0, hup = 0;
     reg [31:0] rnd_h;
-    wire host_done = csr_done && di == nd && pleft == 0;
+    integer bootend, bcount, mark_sent = 0;
+    initial begin
+        if (!$value$plusargs("BOOTEND=%d", bootend)) bootend = 0;
+        if (!$value$plusargs("BCOUNT=%d", bcount)) bcount = 0;
+    end
+    wire host_done = csr_done && di == nd && pleft == 0 && (bootend == 0 || mark_sent);
     always @(posedge clk_h) begin
         hcyc <= hcyc + 1;
         rnd_h = $random(seed);
@@ -89,6 +94,8 @@ module tb_rom_host_ingest #(
                 h_v <= 1'b1;
                 if (!csr_done) begin
                     h_cls <= 2'd0; h_d <= {448'd0, 23'd0, share[8:0], 32'd0}; csr_done <= 1;
+                end else if (di == nd && pleft == 0) begin
+                    h_cls <= 2'd0; h_d <= {384'd0, 32'h1234abcd, bcount[31:0], 56'd0, 8'd2}; mark_sent <= 1;
                 end else if (pleft > 0) begin
                     h_cls <= 2'd2; h_d <= pmem[pi]; pi <= pi + 1; pleft <= pleft - 1;
                 end else begin
@@ -115,7 +122,7 @@ module tb_rom_host_ingest #(
     reg [AW-1:0] fq_a   [0:OCRED-1];
     reg [255:0]  fq_d   [0:OCRED-1];
     integer fw = 0, fr = 0, rq_w = 0, rq_r = 0, ccyc = 0, errors = 0, oob = 0, sectors = 0, reads = 0, idle = 0;
-    integer last_dn = 0, first_o = -1;
+    integer last_dn = 0, first_o = -1, marks = 0, mark_bad = 0;
     reg [255:0] rq_d [0:255];
     integer     rq_t [0:255];
     reg [31:0] rnd_c;
@@ -128,8 +135,11 @@ module tb_rom_host_ingest #(
             if (fw - fr >= OCRED) oob <= oob + 1000;              // the block ignored its credits
         end
         if (fr != fw && (rnd_c % 100) >= mstall) begin
-            if (fq_a[fr % OCRED] >= MEMW) oob <= oob + 1;
-            else if (fq_we[fr % OCRED]) begin hbm[fq_a[fr % OCRED]] <= fq_d[fr % OCRED]; sectors <= sectors + 1; end
+            if (fq_a[fr % OCRED] >= MEMW && fq_a[fr % OCRED] != 32'hFFFFFFFF) oob <= oob + 1;
+            else if (fq_we[fr % OCRED] && fq_a[fr % OCRED] == 32'hFFFFFFFF) begin
+                marks <= marks + 1;
+                if (fq_d[fr % OCRED][63:0] != {32'h1234abcd, bcount[31:0]} || sectors != bcount) mark_bad <= mark_bad + 1;
+            end else if (fq_we[fr % OCRED]) begin hbm[fq_a[fr % OCRED]] <= fq_d[fr % OCRED]; sectors <= sectors + 1; end
             else begin
                 rq_d[rq_w % 256] <= hbm[fq_a[fr % OCRED]]; rq_t[rq_w % 256] <= ccyc + LAT; rq_w <= rq_w + 1;
                 reads <= reads + 1;
@@ -147,9 +157,9 @@ module tb_rom_host_ingest #(
                     errors = errors + 1;
                 end
             $writememh("final.mem", hbm);
-            $display("HING descs=%0d beats=%0d/%0d sectors=%0d reads=%0d errors=%0d oob=%0d dones=%0d/%0d tag_err=%0d fault_words=%0d fault=%0d ck_cycles=%0d timeout=%0d share=%0d first_o=%0d last_o=%0d",
+            $display("HING descs=%0d beats=%0d/%0d sectors=%0d reads=%0d errors=%0d oob=%0d dones=%0d/%0d tag_err=%0d fault_words=%0d fault=%0d ck_cycles=%0d timeout=%0d share=%0d first_o=%0d last_o=%0d marks=%0d mark_bad=%0d",
                      di, pi, np, sectors, reads, errors, oob, dones, nfence, tag_err, fwords, fault, ccyc, ccyc > maxcyc,
-                     dut.share_c, first_o, last_dn);
+                     dut.share_c, first_o, last_dn, marks, mark_bad);
             $finish;
         end
         if (o_v) begin last_dn <= ccyc; if (first_o < 0) first_o <= ccyc; end
