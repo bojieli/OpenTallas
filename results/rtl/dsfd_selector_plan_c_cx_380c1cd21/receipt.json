@@ -1,0 +1,16 @@
+{
+  "source": "380c1cd214f61ab57ce88bb5e8082b4f329e6056",
+  "host": "ot-agidock128",
+  "run": "/srv/opentallas-scratch/codex/dsfd-selt-q-cx-380c1cd21",
+  "guard_peak_gib": 8,
+  "result": "RESULT PASS segments 32 out_beats 709 replays 6 errors 0 tail_minus_ref max 197 mean 145 ref_holds 19",
+  "scope": "DRAFT fault-free exact positive only; W11 original own timing archive pending; no route/adoption",
+  "mutant_gate": "NOT RUN: original report confirmation required before continuing corrective successor",
+  "long_stalled_output_gate": "PACE8 NOT RUN",
+  "protection": "plain SRAM, payload SECDED adoption dependency",
+  "raw_sha256": {
+    "never_started_withdrawn.txt": "9381e06bf04c2b30c0d8a59f561367d45b2ee08adcb6c6085bfe8be4d2ac23e9",
+    "positive/build.log": "460d627770735799b5162c33aafe7f8c159a3048cfe8031567957e14b9fba4ee",
+    "positive/run.log": "708e258002cf16eb006dbceea44b484d7d191a499e1fbee1690042d987ec831a"
+  }
+}
