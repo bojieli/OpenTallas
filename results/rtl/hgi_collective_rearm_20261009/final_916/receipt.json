@@ -1,0 +1,108 @@
+{
+  "status": "PASS",
+  "bench_source": "cc25cf139",
+  "endpoint_source": "916a3915a",
+  "endpoint_byte_match": true,
+  "host": "ot-epyc3",
+  "path": "/srv/opentallas-scratch/codex/hgi-rearm-bench-cc25",
+  "driver_pid": 1097923,
+  "driver_terminal_rc": 0,
+  "admission_gib": 8,
+  "shape": {
+    "NC": 8,
+    "NOG": 12,
+    "TP": 96,
+    "PFMAX": 64,
+    "REARM": 1,
+    "pclk": "clk"
+  },
+  "commands_no_reset": 45,
+  "reset_count": 1,
+  "mcast_tuples": [
+    {
+      "command": 6,
+      "outer_group": 4,
+      "subgroup": 2,
+      "rank": 13,
+      "outer_base": 12,
+      "delivered_exact": 16,
+      "tx": 12,
+      "rx_all96_noise": 388
+    },
+    {
+      "command": 7,
+      "outer_group": 8,
+      "subgroup": 2,
+      "rank": 29,
+      "outer_base": 24,
+      "delivered_exact": 32,
+      "tx": 12,
+      "rx_all96_noise": 388
+    },
+    {
+      "command": 8,
+      "outer_group": 8,
+      "subgroup": 4,
+      "rank": 62,
+      "outer_base": 56,
+      "delivered_exact": 16,
+      "tx": 14,
+      "rx_all96_noise": 202
+    },
+    {
+      "command": 9,
+      "outer_group": 96,
+      "subgroup": 2,
+      "rank": 91,
+      "outer_base": 0,
+      "delivered_exact": 384,
+      "tx": 12,
+      "rx_all96_noise": 388
+    },
+    {
+      "command": 10,
+      "outer_group": 96,
+      "subgroup": 4,
+      "rank": 95,
+      "outer_base": 0,
+      "delivered_exact": 192,
+      "tx": 14,
+      "rx_all96_noise": 202
+    },
+    {
+      "command": 11,
+      "outer_group": 96,
+      "subgroup": 8,
+      "rank": 93,
+      "outer_base": 0,
+      "delivered_exact": 192,
+      "tx": 30,
+      "rx_all96_noise": 218
+    }
+  ],
+  "normal_mode": "mcast_all0,mcast_group_size96 explicit; NA local or legacy96 delivery",
+  "descriptor_capture": "external rank,PF,gsz,MC,G deliberately poisoned immediately after acceptedgo; effective descriptor must remain captured until ACK",
+  "exact_delivery_total": 13928,
+  "physical_tx_total": 2198,
+  "physical_rx_total": 16682,
+  "actual_credit_stall_cycles": 50318,
+  "nonzero_cumulative_stall_observations": 52378,
+  "pending_late_credit_observations": 356,
+  "duplicate": "replaces lastpeer result with earlier sameindex;fault1;done0 for12edges; no extraFatal",
+  "mutant": {
+    "define": "OT_COLL_MUT_PREMATURE_DONE",
+    "rc": 1,
+    "consuming_failure": "got0/4,tx0,command0,58ns"
+  },
+  "transport_boundary": "localdone validates local output obligations; externalstub drains all96 producer-noise queues and endpoint rx_pending before ACK; no claim localdone independently proves external network quiescence; credits may return after ACK",
+  "fixture_source": "../final_gate/fixtures; all remote hex SHA identical; canonical group1 +0 including directed \u22120",
+  "time_max_single_process_rss_kib": 1369328,
+  "sha256": {
+    "remote_sha256.txt": "063f168d935f436fb366d16288e54f4f1e9a0b57513325a3adb608239ee988a3",
+    "driver.log": "6db8417eb458b51f2e94bbd7d20d6b2b6bc249409605f4a7556e2b0f29c07181",
+    "out/premature_done.log": "51e87378954bfc7ec8365edd4ac1cb279b253e069c67ebcc2783ee41b2645440",
+    "out/positive.log": "1d2006e69fc6b07b66b2237c0193f706a1ba8e8dea176b8e745305c0ac7909fd",
+    "out/verdict.txt": "c52e83e9c2b76d87551cfb2848fe3ed4e4ec15e1b64119a4c2b2c79e04c211e7",
+    "out/duplicate.log": "f3fa965aa3777c32536e701245f7fe32eedb5433194457032c71638764be0b20"
+  }
+}
