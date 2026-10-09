@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.retired_master.v1",
+  "master": "dsfd_coll_lane_e",
+  "status": "SUPERSEDED_MASTER",
+  "replacement": "dsfd_coll_lane_w",
+  "orientation": "MY",
+  "positions_retained": [
+    "E0",
+    "E1",
+    "E2",
+    "E3"
+  ],
+  "decision": "owner confirmed via Claude coordinator CRITICAL_PATH2026-10-08 15:15",
+  "proof": "mirror_audit.json,track_alignment.json",
+  "composition": "physical/s81_ph_views/collective/composition_wide_lanes.json",
+  "terminal_e_history_preserved": [
+    "s81ph-dsfd_coll_lane_e-a53f40362-tt",
+    "s81b-coll_lane_ne-fmt1-mm2-9ac26e269-tt"
+  ],
+  "logical_cycle_delta": 0,
+  "memory_macro_delta": 0,
+  "area_delta_um2": 0,
+  "remaining_obligations": [
+    "W current routed-reference timing",
+    "TC provenance or freshly admitted W route if needed",
+    "all east-position pin routing and die clock endpoints",
+    "full die routing setup/hold/DRC/IR"
+  ],
+  "completion_claim": "No final closure claim; master retirement does not retire east physical positions"
+}
