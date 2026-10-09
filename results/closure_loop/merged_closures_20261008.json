@@ -2694,6 +2694,76 @@
    "status": "record_only_held",
    "adopted": null,
    "hold": "parent window-column128-halfwrite-distributed-6bb5fd3da adoption hold: actual independent 1280 capture-FF mapping, both-edge SS/FF/DRC, and actual parent PG/access/interface still required. Record cherry-picked to main (physical/variant_fill/...-vf-lvt/view); child commit 69cd5731a (flow-file overlay from older main 29803a27c) NOT merged."
+  },
+  {
+   "job": "s81-hend-m221pq-hr-E4-a1f23fa0b-mm-vf-hm25",
+   "closed": "2026-10-08T20:24:54-07:00",
+   "branch": "claude/variant-fill-20261008-m2l",
+   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
+   "record_commit": "3bc991b8f10a9c325379cb2d561ff4984f8eea38",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
+   "status": "merged",
+   "merged_by": "drive-2041"
+  },
+  {
+   "job": "s81-hend-m221pq-hr-W1-a1f23fa0b-mm-vf-hm25",
+   "closed": "2026-10-08T20:32:35-07:00",
+   "branch": "claude/variant-fill-20261008-m2l",
+   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
+   "record_commit": "8da4e8e9a26618eb1e8516cc52395e73a6e2e283",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
+   "status": "merged",
+   "merged_by": "drive-2041"
+  },
+  {
+   "job": "s81-hend-m221pq-hr-W2-a1f23fa0b-mm-vf-hm25",
+   "closed": "2026-10-08T20:06:42-07:00",
+   "branch": "claude/variant-fill-20261008-m2l",
+   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
+   "record_commit": "8e40068c9c028e70e273415e7d98ae02cddf3acd",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
+   "status": "merged",
+   "merged_by": "drive-2041"
+  },
+  {
+   "job": "s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25",
+   "closed": "2026-10-08T20:37:17-07:00",
+   "branch": "claude/variant-fill-20261008-m2l",
+   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
+   "record_commit": "ad1c9de1a6bd685d8f1bc2bd7ac10cf7cce24b58",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
+   "status": "merged",
+   "merged_by": "drive-2041"
+  },
+  {
+   "job": "s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25",
+   "closed": "2026-10-08T20:32:21-07:00",
+   "branch": "claude/variant-fill-20261008-m2l",
+   "source_commit": "a0ec01b27013d782d83e82da49707d0b66d0e1c1",
+   "record_commit": "8d135f88271920ab1bbaee06f7d554ed9b3f86c4",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
+   "status": "merged",
+   "merged_by": "drive-2041"
   }
  ]
 }

@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_m2l_vr_68x11__hr_W4",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W4_a1f23fa0b_mm_vf_hm25/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W4_a1f23fa0b_mm_vf_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W4_a1f23fa0b_mm_vf_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W4-a1f23fa0b-mm-vf-hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_m2l_vr_68x11__hr_W4.lef": "a9507fc13e1db199375b24ef40a45d834cb1fe0355d491987d6bca1876d90f4f",
+    "dsfd_m2l_vr_68x11__hr_W4_ff.lib": "aeef5fdcc5454688a8272562dd60a80bf17c859b6ac38560f43a8c49898af375",
+    "dsfd_m2l_vr_68x11__hr_W4_ss.lib": "0a877cf4f3ed5e86861679869816c4bcc95e12c7b68468aac1c76b65b371bb1b"
+  },
+  "ok": true
+}
