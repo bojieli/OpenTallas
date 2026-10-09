@@ -1,0 +1,36 @@
+{
+  "scope": "REMOTE_PHYSICAL_PATHFINDING_RUNNING_NOT_QUALIFIED",
+  "source_commit": "ef11702110e621c31d3141181fc13fa286f31e59",
+  "candidate_model_commit": "271ba2fd2",
+  "host": "ot-epyc1tb",
+  "root": "/srv/opentallas-scratch/codex/hc-row-shard-r2/physical_private64",
+  "stable_launcher_pid": 2938696,
+  "guard_peak_gib": 128,
+  "admission_measured_available_gib": 310,
+  "reserve_gib": 100,
+  "prior_epyc2": {
+    "root": "/srv/opentallas-data/codex/hc-row-shard-r2/physical_private64",
+    "guard_parent": 466721,
+    "guard_observer": 466723,
+    "withdrawn_before_compiler": true,
+    "record": "migration_guard_withdrawn.txt"
+  },
+  "preserved_live40": {
+    "host": "ot-epyc2",
+    "driver_pid": 1873433,
+    "actual_yosys_pid": 1874796
+  },
+  "clock_hz": 900000000,
+  "setup_corner": "SS",
+  "hold_corner": "FF",
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "adoption_margin_ps": [
+    15,
+    15
+  ],
+  "DRC_required": 0,
+  "actual_PLL_CDC_IO_budget": "PENDING"
+}
