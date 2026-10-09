@@ -61,6 +61,7 @@ def hgi_program(words, nlayers, rolled=True):
     pcs = [(w & 0xFFFFFFFF, (w >> 44) & 0xFFFF) for w in launches]
     embed, layer, head = pcs[0], pcs[1], pcs[-1]
     assert all(p == layer for p in pcs[1:1 + nlayers]) and len(pcs) == nlayers + 2
+    assert max(embed[0], layer[0], head[0]) < 1 << 14, "SIMT.RUN entry PC is param[13:0]"
     recs.append(Rec("SIMT", "RUN", param=embed[0], imm_a=embed[1], tag="embed"))
     if rolled:
         recs.append(Rec("CTL", "LOOP", param=nlayers, tag="layers"))
@@ -113,7 +114,7 @@ def run_hgi(recs_bytes, simt, token, pos, after=None):
     while pc < len(recs):
         r = recs[pc]
         if r.unit == "CTL" and r.op == "LOOP":
-            loop, L, pc = (pc + 1, r.param), 0, pc + 1
+            loop, L, pc = (pc + 1, r.param & 0xFFFF), 0, pc + 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
             L += 1

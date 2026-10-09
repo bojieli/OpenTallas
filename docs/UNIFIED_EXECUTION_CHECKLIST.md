@@ -1029,7 +1029,7 @@ lanes are a precondition for it, not the product. These items are the product.
   has an exact expected match count and the audit refuses stale or ambiguous
   selectors. The initial conservative pass resolves **8** <!-- figure: 8 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.normative_or_example" name="W11.3 explicitly triaged normative/example candidates" --> ABI shape/algebraic
   examples and rejected legacy proxies as `normative_or_example`.
-  **4,257** candidates remain explicitly `untriaged`. <!-- figure: 4257 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
+  **4,263** candidates remain explicitly `untriaged`. <!-- figure: 4263 src="results/abi3/prose_figure_coverage.json#totals.unbound_triage.untriaged" name="W11.3 candidates still awaiting triage" -->
   `make check-figures` fails on annotation, census, policy, or classification
   drift. This remains partial: triage is not proof, produced figures still need
   resolving annotations, and the remaining population must be classified as

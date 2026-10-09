@@ -124,7 +124,13 @@ class Image:
         codes, scales, _ = Q.quantize_w8(torch.from_numpy(np.ascontiguousarray(w)).to(torch.bfloat16))
         return codes.numpy().astype(np.int8), scales.to(torch.float32).numpy().reshape(-1).astype(F)
 
+    post = None                      # set by QwenR25: the offline RoPE row permutation of W_q / W_k
+
     def get(self, key):
+        codes, scales = self._get(key)
+        return self.post(key, codes, scales) if self.post else (codes, scales)
+
+    def _get(self, key):
         """key: 'L{i}.qkv' | 'L{i}.o' | 'L{i}.gu' | 'L{i}.down' | 'lm_head' | 'embed'."""
         p = self.cache / f"{key}.npz"
         if p.exists():
@@ -149,9 +155,13 @@ class Image:
 # the model
 # ----------------------------------------------------------------------------------------------------------------
 class QwenR25:
-    def __init__(self, snap, cache):
+    def __init__(self, snap, cache, perm=True):
+        """perm (spec 7.2, approved design): W_q / W_k rows and the QK-norm gains are permuted offline so the rotary
+        pairs are adjacent; q.k and the QK-norm then sum in the permuted order, which IS the qwen_r25 golden order.
+        perm=False is the pre-approval natural order (rotate-half), kept for the harness cross-check history."""
         self.ck = Checkpoint(snap)
         self.img = Image(self.ck, cache)
+        self.perm = perm
         c = self.ck.cfg
         self.L, self.H, self.NH, self.KV, self.HD = (c["num_hidden_layers"], c["hidden_size"],
                                                       c["num_attention_heads"], c["num_key_value_heads"],
@@ -161,6 +171,25 @@ class QwenR25:
         assert not c.get("tie_word_embeddings"), "lm_head is a separate matrix"
         self.scale = F(1.0 / np.sqrt(self.HD))
         self.grp = self.NH // self.KV
+        self.P = A.rope_perm_index(self.HD)
+        if perm:
+            self.img.post = self._perm_qkv
+
+    def _perm_qkv(self, key, codes, scales):
+        if not key.endswith(".qkv"):
+            return codes, scales
+        n = (self.NH + self.KV) * self.HD
+        rows = np.arange(codes.shape[0])
+        heads = rows[:n].reshape(self.NH + self.KV, self.HD)[:, self.P].reshape(-1)
+        rows = np.concatenate([heads, rows[n:]])
+        return codes[rows], scales[rows]
+
+    def rope_fn(self):
+        return A.rope_adj if self.perm else rope
+
+    def rope_cs(self, pos):
+        c, s = rope_tables(pos, self.HD, self.theta)
+        return c, s
 
     # -- per-die geometry ---------------------------------------------------------------------------------------
     def die_rows(self, d):
@@ -175,7 +204,10 @@ class QwenR25:
         return d * self.V // TP, (d + 1) * self.V // TP
 
     def lw(self, i, n):
-        return self.ck.get(f"model.layers.{i}.{n}.weight")
+        w = self.ck.get(f"model.layers.{i}.{n}.weight")
+        if self.perm and n in ("self_attn.q_norm", "self_attn.k_norm"):
+            w = w[self.P]
+        return w
 
     def embed(self, tok):
         codes, scales = self.img.get("embed")
@@ -212,8 +244,9 @@ class QwenR25:
         kn = rmsnorm(k, self.lw(i, "self_attn.k_norm"), self.eps)
         cos, sin = rope_tables(pos, HD, self.theta)
         cos, sin = cos[0], sin[0]
-        qr = rope(qn, cos, sin)
-        kr = G.to_fp8(rope(kn, cos, sin))
+        rf = self.rope_fn()
+        qr = rf(qn, cos, sin)
+        kr = G.to_fp8(rf(kn, cos, sin))
         vr = G.to_fp8(v)
         Kc[:, pos], Vc[:, pos] = kr, vr
         qb = G.to_bf16(qr)
@@ -270,7 +303,7 @@ def synthetic_kv(model: QwenR25, i, pos, seed=8191):
     sin = np.sin(ang.astype(np.float64)).astype(F)
     for kv in range(KV):
         k = rmsnorm(rng.standard_normal((pos, HD)).astype(F), gk, model.eps)
-        Kc[kv, :pos] = G.to_fp8(rope(k, cos, sin))
+        Kc[kv, :pos] = G.to_fp8(model.rope_fn()(k, cos, sin))
         Vc[kv, :pos] = G.to_fp8((rng.standard_normal((pos, HD)) * 0.5).astype(F))
     return Kc, Vc
 

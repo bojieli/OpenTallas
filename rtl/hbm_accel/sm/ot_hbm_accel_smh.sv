@@ -52,7 +52,8 @@ module ot_hbm_accel_smh #(
     parameter integer HAZ  = 1,
     parameter integer NOUT = 4,
     parameter integer RPT  = 2,         // leaves (rows) per hardened tile
-    parameter integer ENABLE_INT8 = 0, // opt-in fmt3; enabled front adds one registered cycle
+    parameter integer ENABLE_INT8 = 0,
+    parameter integer PIPE_INT8 = 0, // opt-in second elastic conversion stage
     parameter integer REQCR = 1         // 1 (production): request port with ready latency 2 (req_ready captured raw;
                                         // see front_s); 0: the m3b same-cycle port (bench comparison only)
 ) (
@@ -172,7 +173,7 @@ module ot_hbm_accel_smh #(
             .bout_r0(f_br[0 +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
             .fi_row0(n_row0), .fi_pbz(n_pbz));
         ot_hbm_accel_smh_front_c #(.SUB(SUB), .LBS(LBS), .LSB(LSB), .NC(NC), .IL(IL), .RMAX(RMAX), .XD(XD),
-                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT), .ENABLE_INT8(ENABLE_INT8)) u_fc (
+                                   .MAX_OUT(MAX_OUT), .PIO(PIO), .HAZ(HAZ), .NOUT(NOUT), .RPT(RPT), .ENABLE_INT8(ENABLE_INT8), .PIPE_INT8(PIPE_INT8)) u_fc (
             .clk(clk), .rst_n(rst_n), .rout_l1(f_rl[RBW +: RBW]), .rout_r1(f_rr[RBW +: RBW]),
             .rout_l2(f_rl[2*RBW +: RBW]), .rout_r2(f_rr[2*RBW +: RBW]), .bout_l1(f_bl[BBW +: BBW]),
             .bout_r1(f_br[BBW +: BBW]), .fs_v(n_sv), .fs_d(n_sd), .fs_ret(n_sret), .fx_b(n_xb), .fr_rl(n_rl),
@@ -947,6 +948,7 @@ endmodule
 
 module ot_hbm_accel_smh_front_c #(
     parameter integer ENABLE_INT8 = 0,
+    parameter integer PIPE_INT8 = 0,
     parameter integer SUB  = 4,
     parameter integer LBS  = 2,
     parameter integer LSB  = 16,
@@ -1086,11 +1088,32 @@ module ot_hbm_accel_smh_front_c #(
             if (!rst_n) input_open <= 1'b0;
             else if (h_pop) input_open <= 1'b1;
             else if (issue_line_end) input_open <= 1'b0;
-        wire demand = input_open && !issue_line_end;
-        assign w_ready = unpack_ready && demand;
-        ot_hbm_accel_int8_line u_unpack (.clk(clk), .rst_n(rst_n),
-            .int8_mode(fmt_q == 2'd3), .s_valid(w_valid && demand), .s_ready(unpack_ready), .s_data(w_data),
-            .m_valid(issue_w_valid), .m_ready(issue_w_ready), .m_data(issue_w_data));
+        wire intake_credit;
+        if (PIPE_INT8) begin : g_credit
+            ot_hbm_accel_int8_credit #(.RW(RW)) u_credit (
+                .clk(clk),.rst_n(rst_n),.launch(h_pop),.take(w_valid && w_ready),
+                .int8_mode(fmt_q==2'd3),.op_rows(h_rows),.op_g(h_g),.op_c(h_c),
+                .intake_credit(intake_credit));
+        end else begin : g_credit_legacy
+            assign intake_credit=1'b1;
+        end
+        wire demand = input_open && !issue_line_end && intake_credit;
+        // hbm-forks 2026-10-09 (HGI-1 CF-SM / CF-1): formats 0-2 BYPASS the adapter (zero added cycles: the DS formats
+        // are cycle-identical to ENABLE_INT8 = 0); fmt3 lines go through it.  A DS op behind a fmt3 op waits for the
+        // adapter to drain (order kept).
+        wire a_busy, a_v; wire [1087:0] a_d;
+        wire fmt3 = (fmt_q == 2'd3);
+`ifdef OT_SMH_MUT_NOBYP
+        wire byp = 1'b0;                                      // NEGATIVE CONTROL: every format through the adapter
+`else
+        wire byp = !fmt3 && !a_busy;
+`endif
+        assign w_ready = byp ? issue_w_ready : (unpack_ready && demand && fmt3);
+        ot_hbm_accel_int8_line #(.PIPE(PIPE_INT8)) u_unpack (.clk(clk), .rst_n(rst_n), .busy(a_busy),
+            .int8_mode(fmt3), .s_valid(w_valid && demand && !byp), .s_ready(unpack_ready), .s_data(w_data),
+            .m_valid(a_v), .m_ready(issue_w_ready && !byp), .m_data(a_d));
+        assign issue_w_valid = byp ? w_valid : a_v;
+        assign issue_w_data  = byp ? w_data : a_d;
     end else begin : g_no_int8
         assign issue_w_valid = w_valid;
         assign w_ready = issue_w_ready;

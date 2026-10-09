@@ -1,24 +1,25 @@
 """Qwen3 (dense, GQA, QK-norm) -> HGI-1 programs and per-die HBM images for the r25 die at TP4.
 
-The 28 families of Codex's inventory on the 12 unit ops + SU templates (spec section 3.7), with the bindings this
-compiler uses (each family's record tag starts with its family name):
+The 28 families on the HGI-1 unit operations + SU templates (spec sections 3.6 and 7.2, the owner-approved encoding),
+with the bindings this compiler uses (each family's record tag starts with its family name):
 
   embedding        DMA.LOAD codes (TOKEN * emb_row_bytes) + DMA.LOAD its BF16 scale + SU.VOP x = code * scale
   prenorm          FUSED.ROW_NORM seg 0, out BF16 (the matvec input rounding point)
   qkv/o/gu/down/head  SM.MATVEC fmt 3 (INT8), raw FP32 sums (row scale applied by the consumer)
   row_scale_qkv / row_scale_gu / head_scale   DMA.LOAD scales + SU.VOP y = t * s (M1 = A*B)
   row_scale_o / row_scale_down + residual     DMA.LOAD scales + ONE SU.VOP x = t * s + x (M1 A*B, AD +C)
-  qknorm           FUSED.ROW_NORM seg 128, out FP32 (provisional G5)
-  rope             DMA.LOAD the position's cos|sin row (hoisted: once a token) + SU.VOP c_pair under rope_half
+  qknorm           FUSED.ROW_NORM seg 128, out FP32 (O.fmt)
+  rope             DMA.LOAD the position's cos|sin row (hoisted: once a token) + SU.VOP c_pair (i XOR 1) on the
+                   offline-permuted W_q / W_k rows (spec 7.2: split-half pairs made adjacent), b_half tables
   round_q          SU.VOP rnd (BF16 q)
   kv_append        DMA.STORE K and V rows, FP8, at POS (kv_dense layout)        kv_fence  DMA.FENCE
   attention_qk     ATT.QK, one record a KV head, 4 lanes (GQA)               attention_pv  ATT.PV likewise
-  softmax          SU fallback (G4): pass 1 RED_MAX of s*scale; pass 2 exp(s*scale - m) + RED_SUM (FP32 e);
+  softmax          SU fallback (FUSED.SOFTMAX pending CF-SFX): pass 1 RED_MAX of s*scale; pass 2 exp(s*scale - m) + RED_SUM (FP32 e);
                    pass 2b BF16 publication of e
   pv_normalize     SU.VOP o = pv / Z (M1 = A / B, B broadcast)
-  swiglu           SFU.GLU (glu_* modes: BF16 out, no clamp, no route weight)
+  swiglu           SFU.GLU: O.fmt BF16, imm_a = FLT_MAX (no clamp), C = 1.0 by ibcast (no route weight)
   all_reduce_o / all_reduce_down   COLL.ALL_REDUCE_SUM (group 4, rank order)
-  argmax_local / argmax_gather+merge   ARGMAX.LOCAL + COLL.ARGMAX_MERGE (coll_head_rows)
+  argmax_local / argmax_gather+merge   ARGMAX.LOCAL (imm_a = head rows per die) + COLL.ARGMAX_MERGE
   end              CTL.END
 
 `wait` masks come from region hazards (RAW / WAR / WAW against every other unit's records since that unit last
@@ -37,11 +38,20 @@ import hbm_generic_iface as HGI  # noqa: E402
 import hdc_isa_v41 as I  # noqa: E402
 
 from .machine import Hbm, fp8_encode  # noqa: E402
-from .records import ISTRIDE_BCAST, MDesc, Rec, wait_mask  # noqa: E402
+from .records import DYN, MDesc, Rec, wait_mask  # noqa: E402
 
 F = np.float32
 TP = 4
-DYN = {k: i for i, k in enumerate(HGI.DYN)}
+FLT_MAX = 0x7F7FFFFF
+
+
+def f32bits(x):
+    return int(np.asarray(F(x)).view(np.uint32))
+
+
+def qwen_params(cfg):
+    """Per-operation immediates from the model (the manifest's eps and softmax-scale literal)."""
+    return dict(norm_eps=f32bits(cfg["rms_norm_eps"]), attn_scale=f32bits(1.0 / float(cfg["head_dim"]) ** 0.5))
 
 
 def f32u(x):
@@ -78,7 +88,8 @@ class Geometry:
         put("QKVRAW", self.rows_qkv)
         put("QKV", self.rows_qkv)
         put("QN", (self.nq + self.nk) * HD)
-        put("ROPE", 2 * HD)
+        put("ROPE", HD)
+        put("ONE", 1)
         put("QR", (self.nq + self.nk) * HD)
         put("QB", self.nq * HD)
         put("SC", self.nq * ctx)
@@ -138,8 +149,8 @@ class Geometry:
         self.emb_row = al(H + 2)
         base = 1 << 32
         self.hbm = dict(EMBED=base, TABLES=base * 2, HEAD=base * 3, WEIGHTS=base * 4, KV=base * 6)
-        self.tables = dict(norm=0, rope=al(H * 2))
-        self.rope_row = 4 * HD * 2                    # cos(HD) | sin(HD) FP32: tiled halves
+        self.tables = dict(norm=0, one=al(H * 2), rope=al(H * 2) + 32)
+        self.rope_row = HD * 4                        # cos(HD/2) | sin(HD/2) FP32: angle t serves the pair (2t, 2t+1)
 
 
 # ----------------------------------------------------------------------------------------------------------------
@@ -161,10 +172,10 @@ def build_images(model, g: Geometry, layers, kv_state=None, shared_embed=None):
         emb[:, :H] = ec.view(np.uint8)
         emb[:, H:H + 2] = bf16_bytes(es).reshape(-1, 2)
         shared_embed = emb
-    # rope table: row p = [cos | cos | sin | sin] FP32 (the two halves of rotate-half share one angle)
+    # rope table: row p = [cos | sin] FP32, HD/2 angles each; the SU reads angle i >> 1 for element i (b_half)
     pos = np.arange(g.ctx)
     cos, sin = A.rope_tables(pos, g.HD, model.theta)
-    rope = np.concatenate([cos, cos, sin, sin], axis=1).astype(F)
+    rope = np.concatenate([cos, sin], axis=1).astype(F)
     fnorm = bf16_bytes(model.ck.get("model.norm.weight"))
     hc, hs = model.img.get("lm_head")
     dies = []
@@ -174,6 +185,7 @@ def build_images(model, g: Geometry, layers, kv_state=None, shared_embed=None):
         hb.add(g.hbm["EMBED"], shared_embed, "EMBED")
         tab = np.zeros(g.tables["rope"] + rope.nbytes, dtype=np.uint8)
         tab[:fnorm.size] = fnorm
+        tab[g.tables["one"]:g.tables["one"] + 4] = np.asarray([1.0], dtype=F).view(np.uint8)
         tab[g.tables["rope"]:] = rope.view(np.uint8).reshape(-1)
         hb.add(g.hbm["TABLES"], tab, "TABLES")
         r0, r1 = model.head_rows(d)
@@ -225,8 +237,9 @@ def build_images(model, g: Geometry, layers, kv_state=None, shared_embed=None):
 # ----------------------------------------------------------------------------------------------------------------
 # program
 # ----------------------------------------------------------------------------------------------------------------
-def V(g, name, n, m=1, stride=0, istride=0, off=0, n_sel=0):
-    return MDesc(space="VM", fmt="FP32", base=g.vm[name] + off, n=n, m=m, stride=stride, istride=istride, n_sel=n_sel)
+def V(g, name, n, m=1, stride=0, istride=0, off=0, n_sel=0, ibcast=0, fmt="FP32"):
+    return MDesc(space="VM", fmt=fmt, base=g.vm[name] + off, n=n, m=m, stride=stride, istride=istride, n_sel=n_sel,
+                 ibcast=ibcast)
 
 
 def sut(**kw):
@@ -267,16 +280,30 @@ class Builder:
 
 
 def assign_waits(recs):
-    """Wait masks for a record list that may hold one LOOP: the hazard rule over the sequence prefix, body, body,
-    suffix (the second body pass sees the pending state the loop's back edge carries); a body record's mask is the
-    union of its two passes."""
-    lo = next((k for k, r in enumerate(recs) if r.unit == "CTL" and r.op == "LOOP"), None)
-    if lo is None:
-        seq = list(range(len(recs)))
-    else:
-        hi = next(k for k in range(lo, len(recs)) if recs[k].unit == "CTL" and recs[k].op == "ENDLOOP")
-        body = list(range(lo + 1, hi))
-        seq = list(range(lo + 1)) + body + body + list(range(hi, len(recs)))
+    """Wait masks for a record list with LOOPs (any number, nested): the hazard rule over the sequence in which each
+    loop body appears twice (the second pass sees the pending state the back edge carries); a body record's mask is
+    the union of its passes."""
+    def expand(lo, hi):
+        out, k = [], lo
+        while k < hi:
+            r = recs[k]
+            if r.unit == "CTL" and r.op == "LOOP":
+                depth, e = 0, k
+                for e in range(k, hi):
+                    if recs[e].unit == "CTL" and recs[e].op == "LOOP":
+                        depth += 1
+                    elif recs[e].unit == "CTL" and recs[e].op == "ENDLOOP":
+                        depth -= 1
+                        if depth == 0:
+                            break
+                body = expand(k + 1, e)
+                out += [k] + body + body + [e]
+                k = e + 1
+            else:
+                out.append(k)
+                k += 1
+        return out
+    seq = expand(0, len(recs))
     b = Builder(None)
     masks = {}
     import copy as _c
@@ -290,7 +317,8 @@ def assign_waits(recs):
 
 
 def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
-    """The token program (SPMD, every die).  parts: which blocks to emit (stage benches emit a subset)."""
+    """The token program (SPMD, every die).  md: qwen_params(cfg).  parts: which blocks to emit (stage benches emit a
+    subset)."""
     b = Builder(g)
     H, HD, nq, nk, P = g.H, g.HD, g.nq, g.nk, g.ctx
     eps = md["norm_eps"]
@@ -311,16 +339,18 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
             A=MDesc(space="HBM", fmt="BF16", base=g.hbm["EMBED"] + H, n=1, dyn_sel=DYN["TOKEN"], dyn_mul=g.emb_row),
             O=V(g, "ESC", 1)), tag="embedding.scale", family="embedding"), [], ["ESC"])
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM),
-                  desc=dict(A=V(g, "X", H), B=V(g, "ESC", H, istride=ISTRIDE_BCAST), O=V(g, "X", H)),
+                  desc=dict(A=V(g, "X", H), B=V(g, "ESC", H, ibcast=1), O=V(g, "X", H)),
                   tag="embedding.dequant", family="embedding"), ["X", "ESC"], ["X"])
     if "layers" in parts:
         b.add(Rec("DMA", "LOAD", desc=dict(
-            A=MDesc(space="HBM", fmt="FP32", base=T + g.tables["rope"], n=2 * HD * 2 // 2, dyn_sel=DYN["POS"],
-                    dyn_mul=g.rope_row), O=V(g, "ROPE", 2 * HD)), tag="rope.table_row", family="rope"), [], ["ROPE"])
+            A=MDesc(space="HBM", fmt="FP32", base=T + g.tables["rope"], n=HD, dyn_sel=DYN["POS"],
+                    dyn_mul=g.rope_row), O=V(g, "ROPE", HD)), tag="rope.table_row", family="rope"), [], ["ROPE"])
+        b.add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="FP32", base=T + g.tables["one"], n=1),
+                                           O=V(g, "ONE", 1)), tag="swiglu.route_one", family="swiglu"), [], ["ONE"])
         if n_layers > 1:
             b.add(Rec("CTL", "LOOP", param=n_layers, tag="layers"), [], [])
         # -- attention block ------------------------------------------------------------------------------
-        b.add(Rec("FUSED", "ROW_NORM", param=0, imm_a=eps, desc=dict(
+        b.add(Rec("FUSED", "ROW_NORM", param=H // 128, imm_a=eps, desc=dict(
             A=V(g, "X", H), B=W("ln1", "BF16", H, 1, 0), O=MDesc(space="VM", fmt="BF16", base=g.vm["H"], n=H)),
             tag="prenorm.attn", family="prenorm"), ["X"], ["H"])
         b.add(Rec("SM", "MATVEC", param=3, desc=dict(
@@ -331,16 +361,16 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(
             A=V(g, "QKVRAW", g.rows_qkv), B=V(g, "SCL", g.rows_qkv), O=V(g, "QKV", g.rows_qkv)),
             tag="row_scale_qkv", family="row_scale_qkv"), ["QKVRAW", "SCL"], ["QKV"])
-        b.add(Rec("FUSED", "ROW_NORM", param=HD, imm_a=eps, desc=dict(
+        b.add(Rec("FUSED", "ROW_NORM", param=(nq * HD // 128) | (HD << 6), imm_a=eps, desc=dict(
             A=V(g, "QKV", nq * HD), B=W("qn", "BF16", HD, 1, 0), O=V(g, "QN", nq * HD)),
             tag="qknorm.q", family="qknorm"), ["QKV"], ["QN"])
-        b.add(Rec("FUSED", "ROW_NORM", param=HD, imm_a=eps, desc=dict(
+        b.add(Rec("FUSED", "ROW_NORM", param=(nk * HD // 128) | (HD << 6), imm_a=eps, desc=dict(
             A=V(g, "QKV", nk * HD, off=nq * HD), B=W("kn", "BF16", HD, 1, 0), O=V(g, "QN", nk * HD, off=nq * HD)),
             tag="qknorm.k", family="qknorm"), ["QKV"], ["QN"])
         nh = nq + nk
-        b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, qm=I.QM_ALT_NP, ad=I.AD_Q, c_pair=1, dst=I.DST_VM), desc=dict(
-            A=V(g, "QN", HD, m=nh, stride=HD), B=V(g, "ROPE", HD, m=nh, stride=0),
-            D=V(g, "ROPE", HD, m=nh, stride=0, off=HD), O=V(g, "QR", HD, m=nh, stride=HD)),
+        b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, qm=I.QM_ALT_NP, ad=I.AD_Q, c_pair=1, b_half=1, dst=I.DST_VM),
+                  desc=dict(A=V(g, "QN", HD, m=nh, stride=HD), B=V(g, "ROPE", HD // 2, m=nh, stride=0),
+                            D=V(g, "ROPE", HD // 2, m=nh, stride=0, off=HD // 2), O=V(g, "QR", HD, m=nh, stride=HD)),
             tag="rope", family="rope"), ["QN", "ROPE"], ["QR"])
         b.add(Rec("SU", "VOP", sut=sut(rnd=1, dst=I.DST_VM), desc=dict(A=V(g, "QR", nq * HD), O=V(g, "QB", nq * HD)),
                   tag="round_q", family="round_q"), ["QR"], ["QB"])
@@ -365,7 +395,7 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
             A=sc_d, R=V(g, "MAX", 1, m=nq, stride=1)), tag="softmax.max", family="softmax"), ["SC"], ["MAX"])
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AIMM, imm1=scale, ad=I.AD_NEGB, sfu=I.SFU_EXP, red=I.RED_SUM,
                                        dst=I.DST_VM), desc=dict(
-            A=sc_d, B=V(g, "MAX", 1, m=nq, stride=1, istride=ISTRIDE_BCAST), O=V(g, "E", 1, m=nq, stride=P,
+            A=sc_d, B=V(g, "MAX", 1, m=nq, stride=1, ibcast=1), O=V(g, "E", 1, m=nq, stride=P,
                                                                                   n_sel=DYN["POS1"]),
             R=V(g, "Z", 1, m=nq, stride=1)), tag="softmax.exp_sum", family="softmax"), ["SC", "MAX"], ["E", "Z"])
         e_d = V(g, "E", 1, m=nq, stride=P, n_sel=DYN["POS1"])
@@ -379,7 +409,7 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
                 O=V(g, "PV", HD, m=lanes, stride=HD, off=h * lanes * HD)),
                 tag=f"attention_pv.kv{h}", family="attention_pv"), ["E", "KVCACHE"], ["PV"])
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_DIVB, dst=I.DST_VM), desc=dict(
-            A=V(g, "PV", HD, m=nq, stride=HD), B=V(g, "Z", HD, m=nq, stride=1, istride=ISTRIDE_BCAST),
+            A=V(g, "PV", HD, m=nq, stride=HD), B=V(g, "Z", HD, m=nq, stride=1, ibcast=1),
             O=V(g, "ATTN", HD, m=nq, stride=HD)), tag="pv_normalize", family="pv_normalize"), ["PV", "Z"], ["ATTN"])
         b.add(Rec("SM", "MATVEC", param=3, desc=dict(
             A=V(g, "ATTN", nq * HD), B=W("o", "INT8", nq * HD, H, nq * HD), O=V(g, "OPART", H)),
@@ -392,7 +422,7 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
             A=V(g, "OSUM", H), B=V(g, "SCL", H), C=V(g, "X", H), O=V(g, "X", H)),
             tag="row_scale_o+residual", family="row_scale_o"), ["OSUM", "SCL", "X"], ["X"])
         # -- FFN block ------------------------------------------------------------------------------------
-        b.add(Rec("FUSED", "ROW_NORM", param=0, imm_a=eps, desc=dict(
+        b.add(Rec("FUSED", "ROW_NORM", param=H // 128, imm_a=eps, desc=dict(
             A=V(g, "X", H), B=W("ln2", "BF16", H, 1, 0), O=MDesc(space="VM", fmt="BF16", base=g.vm["H"], n=H)),
             tag="prenorm.ffn", family="prenorm"), ["X"], ["H"])
         b.add(Rec("SM", "MATVEC", param=3, desc=dict(
@@ -403,8 +433,10 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(
             A=V(g, "GURAW", 2 * g.ff), B=V(g, "SCL", 2 * g.ff), O=V(g, "GU", 2 * g.ff)),
             tag="row_scale_gu", family="row_scale_gu"), ["GURAW", "SCL"], ["GU"])
-        b.add(Rec("SFU", "GLU", desc=dict(A=V(g, "GU", g.ff), B=V(g, "GU", g.ff, off=g.ff), O=V(g, "ACT", g.ff)),
-                  tag="swiglu", family="swiglu"), ["GU"], ["ACT"])
+        b.add(Rec("SFU", "GLU", imm_a=FLT_MAX, desc=dict(A=V(g, "GU", g.ff), B=V(g, "GU", g.ff, off=g.ff),
+                                                         C=V(g, "ONE", g.ff, ibcast=1),
+                                                         O=V(g, "ACT", g.ff, fmt="BF16")),
+                  tag="swiglu", family="swiglu"), ["GU", "ONE"], ["ACT"])
         b.add(Rec("SM", "MATVEC", param=3, desc=dict(
             A=V(g, "ACT", g.ff), B=W("down", "INT8", g.ff, H, g.ff), O=V(g, "DPART", H)),
             tag="down", family="down"), ["ACT"], ["DPART"])
@@ -420,7 +452,7 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
     if "head" in parts:
         hr = g.hrows
         HB = g.hbm["HEAD"]
-        b.add(Rec("FUSED", "ROW_NORM", param=0, imm_a=eps, desc=dict(
+        b.add(Rec("FUSED", "ROW_NORM", param=H // 128, imm_a=eps, desc=dict(
             A=V(g, "X", H), B=MDesc(space="HBM", fmt="BF16", base=T + g.tables["norm"], n=H),
             O=MDesc(space="VM", fmt="BF16", base=g.vm["H"], n=H)), tag="prenorm.final", family="prenorm"),
             ["X"], ["H"])
@@ -433,7 +465,7 @@ def program(g: Geometry, md, n_layers, parts=("embed", "layers", "head")):
         b.add(Rec("SU", "VOP", sut=sut(m1=I.M1_AB, dst=I.DST_VM), desc=dict(
             A=V(g, "LRAW", hr), B=V(g, "LSCL", hr), O=V(g, "LOG", hr)), tag="head_scale", family="head_scale"),
             ["LRAW", "LSCL"], ["LOG"])
-        b.add(Rec("ARGMAX", "LOCAL", desc=dict(A=V(g, "LOG", hr), O=V(g, "AMX", 2))),
+        b.add(Rec("ARGMAX", "LOCAL", imm_a=hr, desc=dict(A=V(g, "LOG", hr), O=V(g, "AMX", 2))),
               ["LOG"], ["AMX"]).family = "argmax_local"
         b.add(Rec("COLL", "ARGMAX_MERGE", desc=dict(A=V(g, "AMX", 2), O=MDesc(space="VM", fmt="U32",
                                                                               base=g.vm["TOK"], n=1)),
