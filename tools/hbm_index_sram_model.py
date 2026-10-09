@@ -1,10 +1,11 @@
 """Unified microarchitecture extension: physical banked IKS return storage."""
-import hashlib,json
+import hashlib,json,re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 def model():
- from uarch_model import DFF_UM2,hbm_index_service_model
- base=hbm_index_service_model()
+ from hbm_index_service_model import model as base_model
+ DFF_UM2=float(re.search(r'^DFF_UM2\s*=\s*([0-9.]+)',(ROOT/'tools/uarch_model.py').read_text(),re.M)[1])
+ base=base_model()
  name='ot_sram_1r1w_128x256_m1_r2c2'
  path=ROOT/'physical/asap7_memory_macros'/name/(name+'.json')
  macro=json.loads(path.read_text())
