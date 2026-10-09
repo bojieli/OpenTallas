@@ -1,0 +1,197 @@
+{
+  "schema": "opentallas.hbm_iks_native_sram_production.v1",
+  "source_commit": "631abeae8",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "2b2d2fbb872d6b9a2c07f0f83eb0b30dc6c6fcaccfd3fe7091287b0c64a41656",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "c5087709e681bd4a89a16e5dab19ecdc3e2e91069ef7e1063816ac51b1d856ca",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "b2819110dd3dc01d22c65eba96f03eb84c2913946a5c085547d221da82cdf749",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv": "0e9930f2d01c1ef093a895cb78aa438709be397067983c0889afce7ed174cbd0",
+    "tools/hbm_svc_iks_sram_production_gate.py": "ced8aaa6e758e9821e43074f26ce87605b01f3b52cd31f30f60d4111529dd646",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "results/uarch/hbm_index_sram_20261008/prebuild_r2.json": "c1b877c2fff377ac7dc9925c94a34cb56b222fbb23983797cc8c9cd8e643a85a"
+  },
+  "scope": "timed request-level controller; actual IK_SRAM1 IK_SRAM_ROTATE1 selector and SECDED, no physical signoff or performance adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps",
+  "cases": [
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase0_delay1_mut0.log",
+      "raw_sha256": "db2a6b89a5d331f028d22484d990e75c65a97bfc43d069e3ff6d7bcd981e192a",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 456.704,
+          "drain_ns": 457.216,
+          "logical_tbs": 0.407371
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 402.688,
+          "drain_ns": 403.2,
+          "logical_tbs": 0.462015
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 1300,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase1300_delay1_mut0.log",
+      "raw_sha256": "95590901a1d2d1013d74836abd3ea81a830556d71f1183ab8cc876d2f7945f9e",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 292.928,
+          "drain_ns": 293.44,
+          "logical_tbs": 0.635132
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 327.04,
+          "drain_ns": 327.552,
+          "logical_tbs": 0.568885
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 2700,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase2700_delay1_mut0.log",
+      "raw_sha256": "0ff85aa93b8891a5976b491dff43248b6a658349e62fe2e2fc2b798263437f6a",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 294.528,
+          "drain_ns": 295.04,
+          "logical_tbs": 0.631682
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 328.0,
+          "drain_ns": 328.512,
+          "logical_tbs": 0.56722
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay1_mut0.log",
+      "raw_sha256": "9ab225082a3405287feb540b1d7f40e904dbe182b70fa1b3198b55dac5ea5257",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 543.744,
+          "drain_ns": 544.256,
+          "logical_tbs": 0.342161
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 317.184,
+          "drain_ns": 317.696,
+          "logical_tbs": 0.586562
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 5500,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase5500_delay1_mut0.log",
+      "raw_sha256": "f67655a15bba0ca9919e4f190ea871b01279f0303bdc2dde94f4821767b03822",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 294.464,
+          "drain_ns": 294.976,
+          "logical_tbs": 0.631819
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 327.936,
+          "drain_ns": 328.448,
+          "logical_tbs": 0.56733
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 6900,
+      "credit_delay": 1,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase6900_delay1_mut0.log",
+      "raw_sha256": "0352c68943b5a03f3420044046883f2deec5c558a2e2f6b9991a3b1ddafdafde",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 296.064,
+          "drain_ns": 296.576,
+          "logical_tbs": 0.628405
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 1034.432,
+          "drain_ns": 1034.944,
+          "logical_tbs": 0.179855
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 4100,
+      "credit_delay": 23,
+      "mut": 0,
+      "returncode": 0,
+      "raw_log": "phase4100_delay23_mut0.log",
+      "raw_sha256": "0e469c6a2bf99c25f351418a33491a18e30d34383e4e59c8073ef5dbf1ab99d7",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 2692.096,
+          "drain_ns": 2758.144,
+          "logical_tbs": 0.069109
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 2621.312,
+          "drain_ns": 2687.36,
+          "logical_tbs": 0.070975
+        }
+      ],
+      "gate_passed": true
+    },
+    {
+      "phase_ns": 0,
+      "credit_delay": 1,
+      "mut": 1,
+      "returncode": 1,
+      "raw_log": "phase0_delay1_mut1.log",
+      "raw_sha256": "c8a1297e142f2f19f1a5e81d092870cd10d47329aeeabdfa90d3f5f853e90bc7",
+      "rows": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "default_without_sram_dependency_returncode": 0,
+  "build_returncode": 0
+}

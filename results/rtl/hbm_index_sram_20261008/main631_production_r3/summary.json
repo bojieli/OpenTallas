@@ -1,0 +1,10 @@
+{
+  "source_commit": "631abeae8",
+  "verdict": "PASS",
+  "positive_descriptors": 14,
+  "negative_byte_mutation": "PASS",
+  "default_without_sram_dependencies": "PASS",
+  "all_timing_rows_equal_production68bca1124": true,
+  "core_union": "WB_SOURCE_ACK and prefetch portal preserved; IK_SRAM1/ROTATE1 selected",
+  "scope": "exact merged main631 sources; final-credit native guard afeaad741 qualified separately in production_retention_r2; no physical closure/protection adoption"
+}
