@@ -1,0 +1,44 @@
+{
+  "module": "ot_hgi_idx_topk_registered",
+  "source_commit": "d52820055",
+  "source": "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv",
+  "parameters": {
+    "ENABLE": 0,
+    "MAX_K": 2048,
+    "MUTANT_TIE": 0,
+    "MUTANT_EARLY_DONE": 0
+  },
+  "physical_parameters": {
+    "ENABLE": 1,
+    "MAX_K": 2048
+  },
+  "unit": 9,
+  "op": 2,
+  "latency_added_generic_edges": 3,
+  "ports": {
+    "clk": "input1",
+    "rst_n": "input1",
+    "cmd_valid": "input1",
+    "cmd_ready": "output1",
+    "cmd_unit": "input4",
+    "cmd_op": "input6",
+    "cmd_param": "input25",
+    "cmd_n": "input32",
+    "cmd_m": "input32",
+    "cmd_values": "input1",
+    "in_valid": "input1",
+    "in_ready": "output1",
+    "in_score": "input32",
+    "out_valid": "output1",
+    "out_ready": "input1",
+    "out_id": "output32",
+    "out_score": "output32",
+    "out_row": "output32",
+    "out_last": "output1",
+    "out_values_valid": "output1",
+    "done": "output1",
+    "error": "output4"
+  },
+  "semantics": "cmd captures opcode/dimensions; score stream row-major; descending score then low ID; output relay held until accepted; done after final accepted result; error4 invalid/NaN; optionalR values_valid; param k[11:0]",
+  "unbound": "sequencer accepted-record adapter, VM A/O/R binding, combined unit9 arbitration/ready-done; no DS router production alias; native SELECT separate unit9/op3"
+}

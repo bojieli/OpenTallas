@@ -1,0 +1,23 @@
+{
+  "source_commit": "d52820055",
+  "source_sha256": {
+    "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv": "f4626783a2564d24b8e582cacda372f092405489b7b7a57c37e79945fc430e9e",
+    "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv": "8c9f749bd765b67b791eb39d9556afc98e4d79021de78c61f16cc75327d6e4a4",
+    "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv": "0102f088d7f2f063579da35122d5b40613c6341e9e9df5384e71da7ef501cf7a",
+    "physical/qwen_die_masters/cfg/hgi_idx_topk_a.env": "99e632d7f13ec4005c2fafb999308fde6cd7d158b36852bc7be3abf1c1c5596d",
+    "physical/qwen_die_masters/cfg/hgi_idx_topk_b.env": "6b26babf6cebb8fd28dbeb653c34cd80e4b78319bade394c29c6a04b27d1f8fc"
+  },
+  "period_ps": 833.333,
+  "golden_rc": 0,
+  "tie_compile_rc": 0,
+  "tie_runtime_rc": 1,
+  "early_compile_rc": 0,
+  "early_runtime_rc": 1,
+  "scope": "fullK2048/multirow/optionalR/backpressure/held output/repeated commands/invaliddone/restart; simulator CF vectors still pending",
+  "boundary_verdict": "PASS",
+  "boundary_cache_key": "fa823da917431bd095fd06fb",
+  "boundary_max_rss_kib": 12169656,
+  "route_ram_gib": 96,
+  "route_ram_basis": "comparative H11 measured DRT37.83GiB scaled1227516/520851 plus7%; not measured TOPK DRT or cap",
+  "fit_basis": "measured byte-identical e442 core175534.483um2 plus modeled256FF<=300um2 wrapper; full wrapper physical fit not yet measured"
+}

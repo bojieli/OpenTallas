@@ -1,0 +1,129 @@
+{
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "routed_ioref": true,
+  "bench_first": false,
+  "merge_target": null,
+  "name": "hgi-idx-topk-a-d52820055-tc-cx",
+  "block": "hgi_idx_topk_full",
+  "owner": "Codex:generic_index_decode",
+  "purpose": "OWNER APPROVAL HGI-1 generic TOPK fullK2048 registered boundary; +3 generic edges; DS native SELECT preserved separately. FullK833.333ps golden and two real mutants passed. Simulator CF vectors and DS router production binding pending; no die adoption claim.",
+  "threads": 16,
+  "peak_ram_gb": 96,
+  "source": {
+    "branch": "codex/hgi-index-decode-20261009",
+    "commit": "d52820055",
+    "required_files": [
+      "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk.sv",
+      "physical/hgi_idx_topk_20261009/ot_hgi_idx_topk_full.sv",
+      "tools/hgi_topk_gate.py",
+      "physical/qwen_die_masters/cfg/hgi_idx_topk_a.env",
+      "physical/qwen_die_masters/signoff/hgi_idx_topk_a.sdc",
+      "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_registered.sv",
+      "results/rtl/hgi_topk_20261009/synth_e442d85c4/receipt.json"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "fullK2048_exact",
+        "cmd": "python3 tools/hgi_topk_gate.py --out {RUN}/bench/exact",
+        "expect": "pass",
+        "pass_regex": "^PASS HGI TOPK",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "fullK2048_tie_mutant",
+        "cmd": "python3 tools/hgi_topk_gate.py --out {RUN}/bench/mutant --mutant",
+        "expect": "fail",
+        "fail_regex": "FATAL:.*topk case",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      },
+      {
+        "name": "fullK2048_early_done_mutant",
+        "cmd": "python3 tools/hgi_topk_gate.py --out {RUN}/bench/early --early-mutant",
+        "expect": "fail",
+        "fail_regex": "early_completion",
+        "threads": 1,
+        "peak_ram_gb": 1,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Current master flow measures real boundary clock in-run at each corner, no borrowed insertion."
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_idx_topk_a.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_idx_topk_a {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 96
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name hgi_idx_topk_full --out {RUN}/record/views/hgi_idx_topk_full --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/hgi_idx_topk_a.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "Current MM ECO after TT setup eligibility.",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "Actual measured boundary reference with unchanged die-context770-route/833.333 TTsignoff60/25/150ps inter-region."
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/hgi_topk_20261009/routes/hgi-idx-topk-a-d52820055-tc-cx"
+    }
+  ],
+  "cycles_added": "3 generic registered boundary edges; scalar core byte-identical; DS native SELECT unaffected. Model conservative rows*(n+k+6).",
+  "notes": "Owner approved96GiB comparative route admission, not a process cap. FullK2048 core measured175534.483um2 +registered wrapper modeled<=300um2, framesA600/B640. No waiver; genuine current source boundary and exact/mutant gates pending before intake. Preserve old all comparisons/failures. Native DS router production SELECT binding retired.",
+  "registered_io": true,
+  "resource_provenance": {
+    "route_claim_gib": 96,
+    "kind": "comparative measured H11 DRT scaled by measured TOPK fullshape cell inventory plus7percent reserve, NOT measured TOPK route peak",
+    "reference_drt_peak_gib": 37.83,
+    "reference_cells": 520851,
+    "current_core_cells": 1227516,
+    "current_synth_source": "e442d85c4",
+    "current_synth_sampled_tree_peak_kib": 10136348,
+    "registered_boundary_bits_bound": 256
+  }
+}
