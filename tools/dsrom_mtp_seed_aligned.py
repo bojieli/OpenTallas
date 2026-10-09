@@ -10,7 +10,7 @@ def bench():
  s=B.TB.replace('gold[0:1]','gold[0:1],partgold[0:7],roots[0:7],jl[0:1],jr[0:1]').replace('cfg[0:24]','cfg[0:99]')
  s=s.replace('integer cyc=0,', '''integer phase=0,phase_hits=0,join_start=0,join_end=0;reg jv=0;reg[31:0]ja=0,jb=0,jout;wire jvo;wire[31:0]jy;wire[1:0]je;
  ot_v41_fadd joiner(.clk(clk),.rst_n(rst_n),.valid_in(jv),.a(ja),.b(jb),.y(jy),.err(je),.valid_out(jvo));
- task automatic join(input[31:0]a,b,output[31:0]y);
+ task automatic add_join(input[31:0]a,b,output[31:0]y);
  @(negedge clk);ja=a;jb=b;jv=1;@(negedge clk);jv=0;wait(jvo);#0.01;if(je)$fatal(1,"join fault");y=jy;@(negedge clk);endtask
  integer cyc=0,''')
  s=s.replace('pval[j*32+:32]!==gold[j]','pval[j*32+:32]!==partgold[2*phase+j]').replace('gold[j]);','partgold[2*phase+j]);')
@@ -27,7 +27,7 @@ def bench():
  @(negedge clk);end xs_v=0;wait(phase_hits==2 && !busy);repeat(32)@(negedge clk);end
  join_start=cyc;
  for(integer j=0;j<2;j++)begin
- join(roots[j],roots[2+j],jl[j]);join(roots[4+j],roots[6+j],jr[j]);join(jl[j],jr[j],jout);
+ add_join(roots[j],roots[2+j],jl[j]);add_join(roots[4+j],roots[6+j],jr[j]);add_join(jl[j],jr[j],jout);
  if(jout!==gold[j])$fatal(1,"global root got %h want %h",jout,gold[j]);end
  join_end=cyc;
 '''
