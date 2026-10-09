@@ -33,6 +33,13 @@
 // banked-VM stream unit runs its lanes at ML = max(IS+OS+CRX, VL = 7) = 7 with IS = OS = 1, so CRX = 4 costs 0 cycles
 // when the ROM abuts the SU (no relay on the crom buses); each relay hop each way adds 1 to CRX.
 // MUT = 1 (bench mutant): flips bit 0 of lane 0's answer.
+// drive-0158 "-cl" options (REVIEW_20261009 addendum 02:35; all default 0 = the reviewed Q1 form, bit-identical):
+//   OREG  = 1: e6 output pin station q_p (q_r -> q_p, no logic, anchored at the lane window by out_flop_at_pins.tcl);
+//              q answers 6 edges after the strobe (CRX 5).  The select band (q_r, t_*) sits mid-block (crom48cl_pre_gpl.tcl).
+//   IREL  = 1: one inbound relay stage on {re, addr, stage} (pin station -> band); +1 more edge (CRX 6 with OREG).
+//   RSYNC = 1: reset tree = root 2-flop synchroniser (async assert, sync release) + one 2-flop synchroniser per
+//              16-lane macro column; every lane flop resets from its column's synchroniser, faults from the root.
+//              Reset release is 4 edges later than rst_n (the bench waits RWAIT = 4).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_crom #(
     parameter integer SW = 64,
@@ -51,7 +58,10 @@ module ot_qfd_crom #(
     parameter integer LROWS = 148,              // narrow rows a layer
     parameter integer FN_ROW0 = 5328,
     parameter [63:0] QSCALE_WORD = 64'h3db504f3_00000000,
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer OREG = 0,
+    parameter integer IREL = 0,
+    parameter integer RSYNC = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -71,31 +81,65 @@ module ot_qfd_crom #(
     localparam [LW-1:0] S_HEAD = HEAD;
     localparam [2:0] K_ZERO = 3'd0, K_QSC = 3'd1, K_WIDE = 3'd2, K_NARROW = 3'd3, K_BAD = 3'd4;
 
-    // ---- e1: input station ----
-    wire [SW-1:0]    re1;
+    // ---- reset tree (RSYNC) ----
+    localparam integer NCOL = 4, LPC = SW / NCOL;   // 16 lanes per physical macro column
+    wire            rst_root;
+    wire [NCOL-1:0] rst_col;
+    wire [SW-1:0]   rst_l;
+    genvar gc, gl;
+    generate
+        if (RSYNC != 0) begin : g_rsync
+            reg [1:0] rs_root;
+            always @(posedge clk or negedge rst_n)
+                if (!rst_n) rs_root <= 2'b00; else rs_root <= {rs_root[0], 1'b1};
+            assign rst_root = rs_root[1];
+            for (gc = 0; gc < NCOL; gc = gc + 1) begin : g_col
+                reg [1:0] rs_c;
+                always @(posedge clk or negedge rst_root)
+                    if (!rst_root) rs_c <= 2'b00; else rs_c <= {rs_c[0], 1'b1};
+                assign rst_col[gc] = rs_c[1];
+            end
+        end else begin : g_rdirect
+            assign rst_root = rst_n;
+            assign rst_col = {NCOL{rst_n}};
+        end
+        for (gl = 0; gl < SW; gl = gl + 1) begin : g_rl
+            assign rst_l[gl] = rst_col[gl / LPC];
+        end
+    endgenerate
+
+    // ---- e1: input station (+ IREL inbound relay stages toward the select band) ----
+    wire [SW-1:0]    re0, re1;
     wire [SW*AW-1:0] a1;
     wire [LW-1:0]    st1;
-    ot_hdc_delay #(.W(SW), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_n), .d(crom_re), .q(re1));
-    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_n), .d({crom_addr, crom_stage}), .q({a1, st1}));
+    wire [SW*AW+LW-1:0] as0;
+    generate
+        for (gc = 0; gc < NCOL; gc = gc + 1) begin : g_is
+            ot_hdc_delay #(.W(LPC), .D(1), .RESET(1)) u_is_re (.clk(clk), .rst_n(rst_col[gc]),
+                .d(crom_re[gc*LPC +: LPC]), .q(re0[gc*LPC +: LPC]));
+            ot_hdc_delay #(.W(LPC), .D(IREL), .RESET(1)) u_ir_re (.clk(clk), .rst_n(rst_col[gc]),
+                .d(re0[gc*LPC +: LPC]), .q(re1[gc*LPC +: LPC]));
+        end
+    endgenerate
+    ot_hdc_delay #(.W(SW*AW + LW), .D(1)) u_is_a (.clk(clk), .rst_n(rst_n), .d({crom_addr, crom_stage}), .q(as0));
+    ot_hdc_delay #(.W(SW*AW + LW), .D(IREL)) u_ir_a (.clk(clk), .rst_n(rst_n), .d(as0), .q({a1, st1}));
 
     // ---- e2: per-lane region decode ----
     // narrow row of a layer-local region: stage * LROWS + off (LROWS = 148 = 128 + 16 + 4: three shifted adds)
     wire [RW-1:0] lbase = ({{(RW-LW){1'b0}}, st1} << 7) + ({{(RW-LW){1'b0}}, st1} << 4) + ({{(RW-LW){1'b0}}, st1} << 2);
-    reg  [SW-1:0]    t_v;
-    reg  [SW*3-1:0]  t_kind;
-    reg  [SW*RW-1:0] t_row;
-    reg  [SW-1:0]    t_rng, t_al;
+    wire [SW-1:0]    t_v;
+    wire [SW*3-1:0]  t_kind;
+    wire [SW*RW-1:0] t_row;
+    wire [SW-1:0]    t_rng, t_al;
     integer l;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            t_v <= 0; t_rng <= 0; t_al <= 0;
-        end else begin
-            for (l = 0; l < SW; l = l + 1) begin : g_dec
-                reg [AW-1:0] a, off;
-                reg [2:0] k;
-                reg [RW-1:0] r;
-                reg al;
-                a = a1[l*AW +: AW];
+    generate
+        for (gl = 0; gl < SW; gl = gl + 1) begin : g_dec
+            reg [AW-1:0] a, off;
+            reg [2:0] k;
+            reg [RW-1:0] r;
+            reg al;
+            always @(*) begin
+                a = a1[gl*AW +: AW];
                 off = 0; r = 0; al = 1'b1;
                 if (st1 == S_HEAD) begin
                     if (a < A_HN) begin k = K_NARROW; off = a; r = R_FN0 + off[6 +: RW]; end
@@ -108,15 +152,28 @@ module ot_qfd_crom #(
                 else if (a < A_DSC0) begin k = K_NARROW; off = a - A_OSC0; r = lbase + R_QKR + off[6 +: RW]; end
                 else if (a < A_END) begin k = K_NARROW; off = a - A_DSC0; r = lbase + R_QKR64 + off[6 +: RW]; end
                 else k = K_BAD;
-                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != l[5:0]) al = 1'b0;
-                t_v[l] <= re1[l];
-                t_kind[l*3 +: 3] <= k;
-                t_row[l*RW +: RW] <= r;
-                t_rng[l] <= re1[l] && k == K_BAD;
-                t_al[l] <= re1[l] && !al;
+                if ((k == K_WIDE || k == K_NARROW) && off[5:0] != gl[5:0]) al = 1'b0;
             end
+            reg tv, trng, tal;
+            reg [2:0] tk;
+            reg [RW-1:0] tr;
+            always @(posedge clk or negedge rst_l[gl]) begin
+                if (!rst_l[gl]) begin
+                    tv <= 1'b0; trng <= 1'b0; tal <= 1'b0;
+                end else begin
+                    tv <= re1[gl];
+                    trng <= re1[gl] && k == K_BAD;
+                    tal <= re1[gl] && !al;
+                end
+            end
+            always @(posedge clk) begin
+                tk <= k;
+                tr <= r;
+            end
+            assign t_v[gl] = tv; assign t_rng[gl] = trng; assign t_al[gl] = tal;
+            assign t_kind[gl*3 +: 3] = tk; assign t_row[gl*RW +: RW] = tr;
         end
-    end
+    endgenerate
 
     // ---- e3: macro columns (address = first active lane's row) ----
     wire [WC-1:0]    w_ce;
@@ -186,13 +243,19 @@ module ot_qfd_crom #(
     endgenerate
 
     // per-lane side band through e3 / e4: valid, kind, depth bit
-    reg [SW-1:0]   m_v, c_v;
+    wire [SW-1:0]  m_v, c_v;
     reg [SW*3-1:0] m_kind, c_kind;
     reg [SW-1:0]   m_dp, c_dp;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin m_v <= 0; c_v <= 0; end
-        else begin m_v <= t_v; c_v <= m_v; end
-    end
+    generate
+        for (gl = 0; gl < SW; gl = gl + 1) begin : g_sbv
+            reg mv, cv;
+            always @(posedge clk or negedge rst_l[gl]) begin
+                if (!rst_l[gl]) begin mv <= 1'b0; cv <= 1'b0; end
+                else begin mv <= t_v[gl]; cv <= mv; end
+            end
+            assign m_v[gl] = mv; assign c_v[gl] = cv;
+        end
+    endgenerate
     always @(posedge clk) begin
         m_kind <= t_kind; c_kind <= m_kind;
         for (l = 0; l < SW; l = l + 1) m_dp[l] <= t_row[l*RW + 12];
@@ -213,12 +276,23 @@ module ot_qfd_crom #(
             if (c_v[l]) q_r[l*64 +: 64] <= w;
         end
     end
-    assign crom_q = (MUT != 0) ? (q_r ^ {{(SW*64-1){1'b0}}, 1'b1}) : q_r;
+    // ---- e6 (OREG): output pin station, no logic between q_p and the pin ----
+    wire [SW*64-1:0] q_o;
+    generate
+        if (OREG != 0) begin : g_oreg
+            reg [SW*64-1:0] q_p;
+            always @(posedge clk) q_p <= q_r;
+            assign q_o = q_p;
+        end else begin : g_noreg
+            assign q_o = q_r;
+        end
+    endgenerate
+    assign crom_q = (MUT != 0) ? (q_o ^ {{(SW*64-1){1'b0}}, 1'b1}) : q_o;
 
     // ---- faults (sticky, first cause) ----
     reg f_rng, f_al, f_dis;
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rst_root) begin
+        if (!rst_root) begin
             f_rng <= 1'b0; f_al <= 1'b0; f_dis <= 1'b0; fault <= 1'b0; fault_code <= 2'd0;
         end else begin
             f_rng <= |t_rng; f_al <= |t_al; f_dis <= (|w_dis) || (|n_dis);
