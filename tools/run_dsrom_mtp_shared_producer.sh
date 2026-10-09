@@ -4,7 +4,7 @@ out=$1
 mkdir -p "$out"
 test ! -e "$out/positive.log"
 sources=(rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv
-rtl/experimental/dsrom_hc_capture_20261009/ot_dsrom_hc_secded_pipe.sv
+rtl/experimental/dsrom_mtp_shared_20261009/ot_dsrom_mtp_shared_secded_pipe.sv
 physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
 rtl/experimental/dsrom_mtp_shared_20261009/ot_dsrom_mtp_shared_producer.sv
 rtl/test/dsrom_mtp_shared_20261009/tb_shared_producer.sv)

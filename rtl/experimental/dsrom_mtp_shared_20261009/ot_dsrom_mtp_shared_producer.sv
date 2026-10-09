@@ -37,7 +37,7 @@ module ot_dsrom_mtp_shared_producer #(
     generate for(k=0;k<8;k=k+1)begin:g_ecc
         ot_s81_secded_enc72 enc(.d(pack_q[64*k+:64]),.c(write_code[72*k+:72]));
         if(ECC_PIPE)begin:g_pipe
-            ot_dsrom_hc_secded_pipe dec(.clk(clk),.rst_n(rst_n),
+            ot_dsrom_mtp_shared_secded_pipe dec(.clk(clk),.rst_n(rst_n),
                 .valid_in(state==RWAIT&&!fault),
                 .c(bank_data[72*k+:72]^(k==0?READ_INJECT:72'd0)),
                 .valid_out(decode_valid[k]),.d(decoded[64*k+:64]),.ce(ce[k]),.ue(ue[k]));
