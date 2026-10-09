@@ -1154,6 +1154,8 @@ def publish_measured():
     if stamp.exists() and time.time() - stamp.stat().st_mtime < 600:
         return
     with PUBLISH_LOCK:
+        if (STATE / "main_integration_hold.json").exists():
+            return  # central coordinator is integrating; keep all unpublished measurements
         wt = STATE / "git" / "measured-main"
         for attempt in range(3):
             gfetch("main", timeout=600)
