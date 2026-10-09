@@ -9,7 +9,7 @@
     "rtl/dsrom_sys/s81_ctrl/test/run_control_lane.sh": "a1c6b6f74b86dda9c87fe15a30abc107d5c9d9453764d1ff17ac875e8b533a00"
   },
   "remote_artifacts": "/srv/opentallas-scratch/codex/ds-control/link-test",
-  "scope": "Registered native553 control-lane adapter; CT logical endpoint full512-bit flit reference with CRC/replay, not selected GFMT1/EPPIPE2 physical lane proof. Native composition elaboration pending.",
+  "scope": "Registered native553 control-lane adapter; CT logical endpoint full512-bit flit reference with CRC/replay, not selected GFMT1/EPPIPE2 physical lane proof. Native selected GFMT1/EPPIPE2 dsfd_coll_ck/core and8 W/MY lanes elaborate (84 modules) against real RTL, inherited gearbox MULTIDRIVEN warnings retained.",
   "shape": {
     "flits": 641,
     "payload_bits": 512,
@@ -37,9 +37,17 @@
     "last": "1 error expected FAIL"
   },
   "remaining": [
-    "native composition elaboration",
     "generator real peer lane reservation",
     "SS/FF contextual controller and adapter closure",
     "actual engine microprogram compiler binding"
-  ]
+  ],
+  "native_elaboration": {
+    "host": "ot-agidock128",
+    "tool": "Verilator5.032 --lint-only",
+    "gfmt": 1,
+    "eppipe": 2,
+    "modules": 84,
+    "status": "PASS_WITH_INHERITED_WARNINGS",
+    "log": "control_lane_native_elaboration.log"
+  }
 }
