@@ -1,0 +1,3 @@
+PASS rowendpoint full32PC heldhead cycles440 ack64 exactID64+PC5+half2, delayed24edgecredits, no duplicate grants
+PASS rowendpoint staleID and mutablecache fault failclosed
+rtl/tb_qfd_kv_row_endpoint.sv:53: $finish called at 4471000 (1ps)
