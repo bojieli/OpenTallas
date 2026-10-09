@@ -36,9 +36,9 @@ module tb_dsrom_engram_rowstripe_read;
         if($value$plusargs("MODE=%d",mode)) begin end
         repeat(4) @(posedge ck);#1;rst_n=1;
         for(n=0;n<6;n=n+1) begin
-            @(posedge ck);#1;atom=(64+n)*9;tag=n;hqv=1;
+            @(posedge ck);#1;atom=(64+n)*9;tag=n;hqv=0;#1;
             while(!hqr) begin @(posedge ck);#1;end
-            @(posedge ck);#1;hqv=0;
+            hqv=1;@(posedge ck);#1;hqv=0;
         end
         repeat(5) @(posedge ck);
         if(requests!=6) $fatal(1,"missing reserved requests");
