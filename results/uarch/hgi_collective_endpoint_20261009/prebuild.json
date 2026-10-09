@@ -1,5 +1,5 @@
 {
-  "source": "515c33b87",
+  "source": "292b4fb50",
   "provenance": "HF5 endpoint 0b2ff05a7, existing PS/tree; no arithmetic/tree pipeline changes",
   "unified_model": "tools/uarch_model.py TU / tools/dshbm_1m_coll.py",
   "macs_per_cycle": 0,
@@ -28,5 +28,8 @@
     "basis": "conservative serial -j4 compile inventory; related full PF384 NC8 frontend measured2.48GiB; whole process-group peak not yet measured",
     "is_measured": false
   },
-  "qualification": "bench pending; routes pending, not closed"
+  "qualification": "bench pending; routes pending, not closed",
+  "unified_model_source": "3612e0b68:tools/uarch_model.py:hgi_collective_endpoint_model",
+  "ds_lockstep_bench_source": "ef5ef9cb5",
+  "small_group_isolation": "nonLEG result groupheader!=OG consumed/dropped before delivery; credit returns preserved, no additional cycle/port"
 }
