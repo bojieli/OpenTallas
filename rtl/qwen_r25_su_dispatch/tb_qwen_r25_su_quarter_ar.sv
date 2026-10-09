@@ -67,16 +67,6 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
   $readmemh(vm_file,vm);$readmemh(program_file,program_words);$readmemh(meta_file,metadata);
   if(vm[262143]!==0)$fatal(1,"CONST0 fixture not zero");
   repeat(3)@(negedge clk);rst_n=1;
-  if(negative==1)begin
-   fork
-    begin
-     wait(rsp_v);repeat(8)begin @(negedge clk);if(rsp_rdy||done_v)$fatal(1,"foreign service reply consumed");end
-     if(!fault)$fatal(1,"foreign reply did not fence actual quarter");
-     warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort lost fence");
-     $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
-    end
-   join_none
-  end
   // Native AR host sequence. No dispatcher, query-release or mutable control mirror.
   // Window metadata excludes only the empty final32 rows at valid length8192.
   for(opcode=start_pc;opcode<start_pc+nops;opcode=opcode+1)begin
@@ -86,10 +76,18 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
     do @(posedge clk);while(!cmd_rdy);
     @(negedge clk);cmd_v=0;
     wait(done_v||fault);
-    if(fault)$fatal(1,"actual quarter fault PC%0d",cmd_pc);
+    if(fault)begin
+     if(negative==1)begin
+      if(!rsp_v)$fatal(1,"foreign-reply negative fault before actual response");
+      repeat(8)begin @(negedge clk);if(rsp_rdy||done_v)$fatal(1,"foreign service reply consumed");end
+      warm_abort=1;@(negedge clk);if(!fault)$fatal(1,"warm abort lost fence");
+      $display("PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE");$finish;
+     end else $fatal(1,"actual quarter fault PC%0d",cmd_pc);
+    end
     @(negedge clk);
    end
   end
+  if(negative==1)$fatal(1,"foreign-reply mutation did not fence");
   check_result(0);
   if(reads==0||writes==0||visibility_reads!=writes||transactions!=reads+writes+visibility_reads)
    $fatal(1,"actual memory mechanism vacuous or visibility count wrong");
