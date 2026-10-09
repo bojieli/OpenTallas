@@ -306,7 +306,11 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
-filler_placement {FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R}
+# MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
+# "No fillers found for LVTN" (dshead-ep-r6-60f5a0a90-tt-lvt hold ECO, drive-2041)
+set ot_fill {}
+foreach vt [envd OT_VT RVT] { set t [string map {SLVT SL LVT L RVT R} $vt]; lappend ot_fill FILLERxp5_ASAP7_75t_$t FILLER_ASAP7_75t_$t }
+filler_placement $ot_fill
 check_placement -verbose
 extract_parasitics -ext_model_file $P/rcx_patterns.rules
 write_spef $::env(OT_OUT)/6_final.spef
