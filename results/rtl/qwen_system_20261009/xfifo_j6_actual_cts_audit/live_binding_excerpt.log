@@ -1,0 +1,62 @@
+088bf5611b0664601a1a63d7e1bb70054f9a918eada12e1184ff8fddab3a3ef3  /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6/routes/qfd_io_xfifo_p2_463a4e86b_tc_gray_j6/flow_cts.log
+b0acd42ba89ec3005ecef389ddbffc491ca6857de27c50a9722e01a28a8ce83d  /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6/routes/qfd_io_xfifo_p2_463a4e86b_tc_gray_j6/work/orfs/hooks/pre_cts_ot_cts_fix.tcl
+bcd266eca00ea8ab8b11dc69456c6f08f22db3168c9fed26b67f1c610ddf9cb6  /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6/src/physical/qwen_die_masters/signoff/qfd_io_xfifo_gray_cdc.tcl
+c5ab8c391a51b73f847f50c54c34accfdd265733e46b072984eadaef19b3c43c  /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6/src/physical/qwen_die_masters/signoff/qfd_io_xfifo_p2_gray.sdc
+8fe09b5f519a8a386633fb0143007ca2b16fc34e957c077cff0eaa3e047d9508  /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo_p2-463a4e86b-tc-gray-j6/src/.ot_mm/ff_ioref_last.sdc
+OT_XFIFO_GRAY u_ut wr_gray_pub->wr_gray_r1 width=4 max=710.0 destination=cku period=770.000000 hold=async
+OT_XFIFO_GRAY u_ut rd_gray->rd_gray_w1 width=4 max=710.0 destination=ck period=770.000000 hold=async
+OT_XFIFO_GRAY u_ur wr_gray_pub->wr_gray_r1 width=4 max=710.0 destination=ck period=770.000000 hold=async
+OT_XFIFO_GRAY u_ur rd_gray->rd_gray_w1 width=4 max=710.0 destination=cku period=770.000000 hold=async
+OT_XFIFO_GRAY u_st wr_gray_pub->wr_gray_r1 width=4 max=710.0 destination=cks period=770.000000 hold=async
+OT_XFIFO_GRAY u_st rd_gray->rd_gray_w1 width=4 max=710.0 destination=ck period=770.000000 hold=async
+OT_XFIFO_GRAY u_sr wr_gray_pub->wr_gray_r1 width=4 max=710.0 destination=ck period=770.000000 hold=async
+OT_XFIFO_GRAY u_sr rd_gray->rd_gray_w1 width=4 max=710.0 destination=cks period=770.000000 hold=async
+OT_XFIFO_GRAY u_sq wr_gray_pub->wr_gray_r1 width=4 max=710.0 destination=ck period=770.000000 hold=async
+OT_XFIFO_GRAY u_sq rd_gray->rd_gray_w1 width=4 max=710.0 destination=ckd period=770.000000 hold=async
+OT_XFIFO_GRAY_TOTAL 40 first-stage synchronizer bits
+QDM ck ref f_ck$_DFF_P_/CLK L max 1213.267212 min 969.490051 skew 150
+QDM cku ref f_cku$_DFF_P_/CLK L max 967.298340 min 783.458252 skew 150
+QDM cks ref f_cks$_DFF_P_/CLK L max 1123.120361 min 897.597473 skew 150
+QDM ckd ref f_ckd$_DFF_P_/CLK L max 1429.083252 min 1178.692871 skew 150
+QDM boundary referenced to the propagated tree
+OT_HOLD_MM: ff mode reads /src/physical/qwen_die_masters/signoff/qfd_io_xfifo_p2_gray.sdc
+QDM ck ref f_ck$_DFF_P_/CLK L max 1003.5065 min 969.6382 skew 150
+QDM cku ref f_cku$_DFF_P_/CLK L max 809.7653 min 783.7542 skew 150
+QDM cks ref f_cks$_DFF_P_/CLK L max 929.848 min 897.8741 skew 150
+QDM ckd ref f_ckd$_DFF_P_/CLK L max 1213.6901 min 1178.2856 skew 150
+OT_XFIFO_GRAY u_ut wr_gray_pub->wr_gray_r1 width=4 max=773.333008 destination=cku period=833.333008 hold=async
+OT_XFIFO_GRAY u_ut rd_gray->rd_gray_w1 width=4 max=773.333008 destination=ck period=833.333008 hold=async
+OT_XFIFO_GRAY u_ur wr_gray_pub->wr_gray_r1 width=4 max=773.333008 destination=ck period=833.333008 hold=async
+OT_XFIFO_GRAY u_ur rd_gray->rd_gray_w1 width=4 max=773.333008 destination=cku period=833.333008 hold=async
+OT_XFIFO_GRAY u_st wr_gray_pub->wr_gray_r1 width=4 max=773.333008 destination=cks period=833.333008 hold=async
+OT_XFIFO_GRAY u_st rd_gray->rd_gray_w1 width=4 max=773.333008 destination=ck period=833.333008 hold=async
+OT_XFIFO_GRAY u_sr wr_gray_pub->wr_gray_r1 width=4 max=773.333008 destination=ck period=833.333008 hold=async
+OT_XFIFO_GRAY u_sr rd_gray->rd_gray_w1 width=4 max=773.333008 destination=cks period=833.333008 hold=async
+OT_XFIFO_GRAY u_sq wr_gray_pub->wr_gray_r1 width=4 max=773.333008 destination=ck period=833.333008 hold=async
+OT_XFIFO_GRAY u_sq rd_gray->rd_gray_w1 width=4 max=773.333008 destination=ckd period=833.333008 hold=async
+OT_XFIFO_GRAY_TOTAL 40 first-stage synchronizer bits
+OT_HOLD_MM: ff mode reads /src/.ot_mm/ff_ioref_last.sdc (loop default, appended last)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ck and ck.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cku and cku.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cks and cks.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ckd and ckd.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ck and ck.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cku and cku.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cks and cks.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ckd and ckd.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ck and ck.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cku and cku.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cks and cks.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ckd and ckd.
+OT_HOLD_MM sync: SS setup ws -371.44 / FF hold ws -418.06 ps
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ck and ck.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cku and cku.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cks and cks.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ckd and ckd.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ck and ck.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cku and cku.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_cks and cks.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_ckd and ckd.
+     4690 |       0 |   10098 |            0 |    +1.4% | -375.134 | -97951.078 | u_sq.g_afw.u_af.mem[7][64]$_DFFE_PP_/D
+     4700 |       0 |   10108 |            0 |    +1.4% | -375.134 | -97951.078 | u_sq.g_afw.u_af.mem[7][64]$_DFFE_PP_/D
+     4710 |       0 |   10118 |            0 |    +1.4% | -375.134 | -97951.078 | u_sq.g_afw.u_af.mem[7][64]$_DFFE_PP_/D

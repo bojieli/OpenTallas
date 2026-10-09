@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.xfifo.actual-cts-audit.v1",
+  "job": "qfd_io_xfifo_p2-463a4e86b-tc-gray-j6",
+  "source": "463a4e86b62faabe6388247fde9708279980c350",
+  "host": "ot-epyc4",
+  "verdict": "EARLY_FAIL_HOLD",
+  "actual_modes": {
+    "ss": {
+      "gray_firstsync_bits": 40,
+      "max_delay_ps": 710,
+      "destination_period_ps": 770
+    },
+    "ff": {
+      "gray_firstsync_bits": 40,
+      "max_delay_ps": 773.333008,
+      "destination_period_ps": 833.333008
+    }
+  },
+  "gray_constraints": "set_max_delay -ignore_clock_latency FROM_registers THROUGH_QN/Q TO_D; set_false_path -hold sameexactendpoints",
+  "exception_applied_in_actual_run": true,
+  "payload_exceptions_added": false,
+  "worst_endpoint": "u_sq.g_afw.u_af.mem[7][64]$_DFFE_PP_/D",
+  "worst_hold_ps": -375.134,
+  "worst_netlist_launch_candidates": [
+    {
+      "name": "u_sq.g_afw.u_af.wq_data[64]$_DFFE_PP_",
+      "clock": "ckd",
+      "path": "QN(_051194_) -> INV -> OA21 -> memD"
+    },
+    {
+      "name": "u_sq.g_afw.u_af.wq_row[7]$_DFF_PN0_",
+      "clock": "ckd",
+      "path": "QN(_079251_) -> BUFchain -> OA21/NAND -> memD"
+    },
+    {
+      "name": "u_sq.g_afw.u_af.mem[7][64]$_DFFE_PP_",
+      "clock": "ckd",
+      "path": "feedbackQN(_050090_) -> NAND/OA21 -> sameD"
+    }
+  ],
+  "interpretation": "Same-ckd payload/write-select path; noGrayfirstsync endpoint. No evidenceGraySDC dropped; do notcutpayload. Completeworstpathstart/skewcannotbeclaimed becauseCTSODB notsaved beforeguardtermination. Savednetlistcandidates are topology, not fullCTS timingreport.",
+  "unresolved": "ActualFFlast IOref logs virtual770 versusphysical833 commonperiodwarnings; affects boundaryreference, not proven causeofinternalmemhold. Currentrebudgetabsent, finalbudgetrejudge remainsrequired.",
+  "next_action": "Handpayloadhold diagnosis toClaude config/structclosure; no newconstraints/requeue/RTL byCodex."
+}
