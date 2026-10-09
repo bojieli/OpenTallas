@@ -1,10 +1,11 @@
 `timescale 1ns/1ps
 module tb_qfd_native_cmd_plain;
+ parameter integer MUT_DRAIN=0;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,desc_v=0,go_v=0,wr_v=0,window_retired=0,write_quiet=1,transport_quiet=1,cmd_credit_return=0;
  reg [18:0] desc_row=0;reg [10:0] desc_n=1024;reg [4:0] wr_bank=0,wr_col=0;reg [2:0] read_release=0;
  wire desc_take,go_take,wr_take,cmd_v,fault;wire[31:0]cmd;wire[2:0]read_credit;
- ot_qfd_native_cmd_plain #(.ENABLE(1)) dut(.*);
+ ot_qfd_native_cmd_plain #(.ENABLE(1),.MUT_SKIP_DRAIN(MUT_DRAIN)) dut(.*);
  reg [31:0] expected[0:2047];integer sent=0,received=0,checks=0;reg monitor=1;reg[2:0]previous_read=0;
  always @(posedge clk)begin
   if(rst_n&&monitor)begin
