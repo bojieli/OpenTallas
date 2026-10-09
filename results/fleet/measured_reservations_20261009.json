@@ -79,8 +79,8 @@
       "launcher_pid": 303289,
       "peak_identity_pid": 303289,
       "old_peak_ram_gb": 40,
-      "new_peak_ram_gb": 3,
-      "evidence": "BF actual8waycompiler PG303265 sum3128648KiB2.984GiB rounded3GiB; frontend earlierwholePG2549560KiB2.43GiB. Samepositive158.223MB/171CPP, frontend2489.758MB. No40GiB measured basis.",
+      "new_peak_ram_gb": 4.6,
+      "evidence": "Subsequent8-waycompiler sampledPG3032654755964KiB4.535GiB (later4197660KiB), source/inventory171CPP158.223MB unchanged. Owner preserves /tmp/bf-cx-mutant-phase-rss.log. Rounded4.6GiB current measured envelope, no processcap.",
       "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
     },
     {
