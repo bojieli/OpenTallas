@@ -1,0 +1,28 @@
+{
+  "cfg": "qfd_sp_res_ser_tsr",
+  "work": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_sp_res_ser_tsr-942f13c8atc/routes/qfd_sp_res_ser_tsr_942f13c8atc/work/orfs",
+  "fw": 777.6,
+  "fh": 518.4,
+  "regions": [
+    {
+      "regex": "^(clk|rst_n|me_en)$",
+      "edge": "top"
+    },
+    {
+      "regex": "^(i_ov|i_we|i_addr|i_mask)(\\[|$)",
+      "edge": "left"
+    },
+    {
+      "regex": "^i_data\\[[0-9]*[02468]\\]$",
+      "edge": "left"
+    },
+    {
+      "regex": "^i_data\\[[0-9]*[13579]\\]$",
+      "edge": "right"
+    },
+    {
+      "regex": "^(o_\\w+|rok|fault)(\\[|$)",
+      "edge": "bottom"
+    }
+  ]
+}

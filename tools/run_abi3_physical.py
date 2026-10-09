@@ -2011,14 +2011,14 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
         balanced_h = os.environ.get("OT_PIN_BALANCE_H", "").split()
         balanced_v = os.environ.get("OT_PIN_BALANCE_V", "").split()
         if balanced_h or balanced_v:
-            if not (group_max and balanced_h and balanced_v and die_area_um and "range_um" in region):
-                raise ValueError("balanced pins require group bound, both layer lists, die area and bounded regions")
+            if not (group_max and balanced_h and balanced_v and die_area_um):
+                raise ValueError("balanced pins require group bound, both layer lists and die area")
             if any(not re.fullmatch(r"[A-Za-z][A-Za-z0-9_]*", layer)
                    for layer in balanced_h + balanced_v):
                 raise ValueError("invalid balanced pin layer name")
-            lo, hi = region["range_um"]
             dx0, dy0, dx1, dy1 = die_area_um
             edge = region["edge"]
+            lo, hi = region.get("range_um", (dy0, dy1) if edge in ("left", "right") else (dx0, dx1))
             layers = balanced_h if edge in ("left", "right") else balanced_v
             location = (f"[list {dx1 if edge == 'right' else dx0:g} $ot_pos]"
                         if edge in ("left", "right") else
