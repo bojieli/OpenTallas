@@ -84,7 +84,25 @@
     "/": 100,
     "/srv/opentallas-scratch": 200
    },
-   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path)."
+   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path).",
+   "external_jobs": [
+    {
+     "name": "hbm-indexer-t1-exact",
+     "pid": 952687,
+     "command_match": "hbm-indexer-3a6f720d4",
+     "peak_ram_gb": 250,
+     "owner": "Codex:hbm_continuation",
+     "reason": "admitted 250GiB; measured Verilator parent RSS120GiB still growing"
+    },
+    {
+     "name": "hbm-indexer-nk4-synthesis",
+     "pid": 3252430,
+     "command_match": "slice_nk4/yosys.log",
+     "peak_ram_gb": 256,
+     "owner": "Codex:hbm_continuation",
+     "reason": "admitted 256GiB; retained historical NK4 peak203396396KiB"
+    }
+   ]
   },
   {
    "name": "ot-pve1",

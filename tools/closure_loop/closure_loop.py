@@ -609,15 +609,39 @@ class Fleet:
     def _probe_once(self, host):
         cfg = host_cfg(host)
         roots = disk_roots(cfg)
+        external = cfg.get("external_jobs", [])
+        reservation_probe = ""
+        if external:
+            probe = """import json, pathlib
+jobs = json.loads(__JOBS__)
+rows = []
+for j in jobs:
+    p = pathlib.Path('/proc') / str(j['pid'])
+    try:
+        cmd = (p / 'cmdline').read_bytes().replace(b'\\0', b' ').decode(errors='replace')
+        if j['command_match'] not in cmd:
+            continue
+        rss = next(int(x.split()[1]) for x in (p / 'status').read_text().splitlines() if x.startswith('VmRSS:')) / 1048576
+        rows.append(dict(name=j['name'], pid=j['pid'], rss_gb=rss, peak_ram_gb=j['peak_ram_gb'], remaining_gb=max(0, j['peak_ram_gb']-rss)))
+    except (OSError, StopIteration, ValueError):
+        continue
+print('OT_EXTERNAL_JOBS ' + json.dumps(rows))
+""".replace("__JOBS__", repr(json.dumps(external)))
+            reservation_probe = "; python3 -c " + shlex.quote(probe)
         dfs = "".join(f"; df -P -BG {shlex.quote(p)} | awk 'NR==2{{gsub(\"G\",\"\",$4);print $4}}'" for p in roots)
         r = ssh(host, f"""cat /proc/loadavg; awk '/MemAvailable/{{print int($2/1048576)}}' /proc/meminfo
-mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}""", timeout=40)
+mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);print $4}}'{dfs}{reservation_probe}""", timeout=40)
         if r.returncode:
             info = None
         else:
             v = r.stdout.split()
             info = dict(load1=float(v[0]), mem_gb=int(v[5]), disk_gb=int(v[6]),
                         roots_gb=dict(zip(roots, (int(x) for x in v[7:7 + len(roots)]))))
+            external_line = next((x[len("OT_EXTERNAL_JOBS "):] for x in r.stdout.splitlines() if x.startswith("OT_EXTERNAL_JOBS ")), None)
+            if external and external_line is None:
+                return None  # cannot admit without measuring the declared live reservations
+            info["external_jobs"] = json.loads(external_line) if external_line else []
+            info["external_remaining_gb"] = sum(x["remaining_gb"] for x in info["external_jobs"])
         return info
 
     def own_pending(self, host, job=None):
@@ -645,7 +669,7 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         # OWNER DECISION (2026-10-07 20:10, supersedes the 19:31 1.1 x nproc cap): MEMORY is the only admission limit on
         # the remote hosts -- CPU oversubscription is allowed (jobs wait on reads / run serial phases).  localhost keeps
         # its own guard below (max_loop_threads, min_free_ram_gb) so it stays responsive.
-        res = cfg.get("reserve_ram_gb", 0)
+        res = cfg.get("reserve_ram_gb", 0) + info.get("external_remaining_gb", 0)
         head = max(0.05 * cfg.get("ram_gb", 1133), cfg.get("min_free_ram_gb", RAM_HEADROOM_GB))  # OWNER 21:35 10%; OWNER 10-07 08:05 "fill the hosts": 5%
         if cfg.get("max_loop_threads") is not None:      # localhost: loop jobs in total, so ssh stays responsive
             used = self.own_running.get(host, 0) + pt
@@ -1649,7 +1673,7 @@ def launch_stage(j, st, cmd):
                     else:
                         rel.append(f)
                 env += f"export OT_MM_FF_SDC={shlex.quote(' '.join(rel))}\n"
-    if j.get("resume") and st["kind"] == "route":
+    if j.get("resume") and st["kind"] in ("route", "calibrate"):
         env += "export OT_CL_RESUME=1\n"    # patched run_abi3_physical in the moved snapshot: resume from the checkpoint
     if j.get("budget"):          # budget SDCs (tools/budgets/make_block_sdc.py from the published sheet)
         env += "".join(f"export {k}={j['run']}/cl/{v}\n" for k, v in (
