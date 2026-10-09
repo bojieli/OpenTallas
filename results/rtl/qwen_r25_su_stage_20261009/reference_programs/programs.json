@@ -6,7 +6,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": false,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -37,11 +37,11 @@
   {
     "stage": "rmsnorm",
     "ops": 3,
-    "mismatches": 4081,
+    "mismatches": 4096,
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": true,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -76,7 +76,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": false,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -111,7 +111,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": true,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -146,7 +146,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": false,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -181,7 +181,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": true,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -216,7 +216,7 @@
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": false,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
@@ -247,11 +247,11 @@
   {
     "stage": "swiglu",
     "ops": 1,
-    "mismatches": 3069,
+    "mismatches": 3072,
     "scope": "full tensor reference; no RTL cycles or checkpoint-quality claim",
     "negative": true,
     "source_sha256": {
-      "tools/qwen_r25_su_programs.py": "33fba722e2a8ef4c0ffe8053ab44da2ab2e4dcfc5e3518b36afaed71fd974dff",
+      "tools/qwen_r25_su_programs.py": "f28407c87ed032e5571bdd8db03b8ea512c54c967342d1b8b020afcbe9e8bafc",
       "tools/rtl_hdc_v41x_vec_campaign.py": "619367dddf92d3d0c2c7664bf8fdb76072bd9c22c27eb8f997712fca5a383346",
       "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
       "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",

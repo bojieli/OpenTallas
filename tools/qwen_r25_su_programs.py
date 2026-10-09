@@ -3,6 +3,7 @@
 
 No stage cycle credit: these programs still need real N1024 RTL measurement.
 The exp sum precedes BF16 publication; rounding before sum violates qwen_r25.
+Norm and SwiGLU retain FP32 until the actual downstream rounding boundary.
 """
 import numpy as np
 import rtl_hdc_v41x_vec_campaign as C
@@ -23,7 +24,7 @@ def norm_program(heads, dim, x=0, gain=8192, scalar=16384, y=32768):
                sfu=I.SFU_RSQRT,dst=I.DST_VM,obase=scalar,oso=1),
             op(nout=heads,nin=dim,abase=x,aso=dim,asi=1,
                bbase=scalar,bso=1,cbase=gain,csi=1,
-               m1=I.M1_AB,e1=I.E1_MULC,rnd=1,
+               m1=I.M1_AB,e1=I.E1_MULC,rnd=0,
                dst=I.DST_VM,obase=y,oso=dim,osi=1)]
 
 
@@ -42,7 +43,7 @@ def softmax_program(round_before_sum=False):
 
 def swiglu_program():
     return [op(nout=1,nin=3072,abase=0,asi=1,cbase=4096,csi=1,
-               sfu=I.SFU_SILU,e1=I.E1_MULC,rnd=1,
+               sfu=I.SFU_SILU,e1=I.E1_MULC,rnd=0,
                dst=I.DST_VM,obase=8192,osi=1)]
 
 
@@ -57,7 +58,7 @@ def reference(stage, mutant=False, return_case=False):
         mem.vm[:x.size]=C.fbits(x).reshape(-1);mem.vm[8192:8192+dim]=C.fbits(gain)
         ops=norm_program(heads,dim)
         inv=G.rsqrt(G.add(G.mul(V.csum(G.mul(x,x)),np.float32(1/dim)),np.float32(1e-6)))
-        want=G.to_bf16(G.mul(G.mul(x,inv[:,None]),gain))
+        want=G.mul(G.mul(x,inv[:,None]),gain)
         checks=[(32768,C.fbits(want).reshape(-1))]
     elif stage=='softmax':
         x=rng.uniform(-15,15,(8,8192)).astype(np.float32)
@@ -70,7 +71,7 @@ def reference(stage, mutant=False, return_case=False):
         u=rng.standard_normal(3072).astype(np.float32)
         mem.vm[:3072]=C.fbits(g);mem.vm[4096:4096+3072]=C.fbits(u)
         ops=swiglu_program()
-        want=G.to_bf16(G.mul(V.div(g,G.add(G.exp(G.neg(g)),np.float32(1))),u))
+        want=G.mul(V.div(g,G.add(G.exp(G.neg(g)),np.float32(1))),u)
         checks=[(8192,C.fbits(want))]
     else:
         raise ValueError(stage)
