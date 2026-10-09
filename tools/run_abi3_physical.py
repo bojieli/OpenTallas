@@ -2297,6 +2297,21 @@ def orfs_config_lines(
     return config
 
 
+KEEP_REGS_HOOK = "/src/physical/common_flow/ot_keep_regs.tcl"
+
+
+def keep_regs_config_lines(config: list[str]) -> list[str]:
+    """FLOW-FIX-0410 2026-10-09 (keep-regs backport): (* keep *) register copies survive the ORFS yosys opt_merge.
+    Default on; OT_KEEP_REGS=0 or a config that already names its own SYNTH_CANONICALIZE_TCL omits it."""
+    if os.environ.get("OT_KEEP_REGS", "1").strip() == "0":
+        return []
+    if any(line.startswith("export SYNTH_CANONICALIZE_TCL") for line in config):
+        return []
+    if not (ROOT / "physical/common_flow/ot_keep_regs.tcl").is_file():
+        return []
+    return [f"export SYNTH_CANONICALIZE_TCL = {KEEP_REGS_HOOK}"]
+
+
 def design_nickname(block_name: str, view_name: str, tag: str | None = None) -> str:
     """ORFS DESIGN_NICKNAME; a tag lets two concurrent routes of one top coexist."""
     base = f"opentallas_{block_name}_{view_name}"
@@ -2406,6 +2421,7 @@ def run_pnr(
         nickname, block, platform_name, pnr, core_utilization, place_density,
         constraints, memory_macros, floorplan,
     )
+    config.extend(keep_regs_config_lines(config))
     endpoint_netlist = prepare_w11_orfs_endpoint_netlist(block, work, case)
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
