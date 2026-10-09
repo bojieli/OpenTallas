@@ -1,0 +1,26 @@
+{
+  "schema": "cx.global-mcast.launch.v1",
+  "source_commit": "074ce8801",
+  "host": "ot-epyc4",
+  "launcher_pid": 2007803,
+  "driver_pid": 2007934,
+  "frontend_pid": 2007943,
+  "remote_path": "/srv/opentallas-scratch2/scratch/codex/hgi-coll-global-mcast-074ce8801",
+  "admission_gib": 8,
+  "resource_basis": "prior measured whole process-group PSG compile sampled peak 2.8 GiB; conservative serial four compiler workers inventory",
+  "positive_global_runs": 576,
+  "positive_legacy_lockstep_runs": 12,
+  "consuming_mutants": 9,
+  "builds_serial": true,
+  "compile_jobs": 4,
+  "RTL_edits": false,
+  "terminal": false,
+  "source_hashes": {
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv": "446066160b832413036b5b5a2aabbb97a75884d9bf0c62e293fd55d6ee9dc2c9",
+    "rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv": "e305ed8ab6a4679dbbe7108922554ec0d8aff01a713b467409200edb41051800",
+    "rtl/hbm_accel/tu/tb_cx_coll_global_mcast.sv": "514a3ae8ce20c8d87cda621b91bff9af32aaaade855f5e512be736f4d5de8c26",
+    "physical/hbm_forks/run_cx_coll_mcast.sh": "f2450452738737cfe53da190d9f727ac6fe3f7982adef5bf1a7ea28e6c228d63",
+    "tools/ha2_ar_fixture.py": "5a0ac155be87b79667b080fad6098a4ca1dbf32bfb79ba0449ac8ff2dda88164",
+    "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+}
