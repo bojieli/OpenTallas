@@ -45,13 +45,38 @@
         "-exit",
         "/out/export_ff.tcl"
       ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -5.415362602789742e-11 min 2.91730806178947e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/codex/wfc-hard-tt-export-a1/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/codex/wfc-hard-tt-export-a1/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/codex/wfc-hard-tt-export-a1/tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
     }
   },
   "macro_views": [],
   "files": {
     "dsfd_wfc_tok_hard.lef": "ebb76ec00d76f1ac0b919aae412dfe79351bc145481cd1521665198d6858581a",
     "dsfd_wfc_tok_hard_ff.lib": "e3a4c768afc26c4491eaae83cbe639e1ff2a2d77fd3dd08459d4bf6d2d5f22dc",
-    "dsfd_wfc_tok_hard_ss.lib": "58ede1b41f30fb29c3ae99708bbe0c38f930f360880a3ef653ff3dd96efae621"
+    "dsfd_wfc_tok_hard_ss.lib": "58ede1b41f30fb29c3ae99708bbe0c38f930f360880a3ef653ff3dd96efae621",
+    "dsfd_wfc_tok_hard_tt.lib": "609fd7da64bd54a32b6f80fc43f0efd7c976104e7de22113ecaf1703a2dd771f"
   },
   "ok": true
 }

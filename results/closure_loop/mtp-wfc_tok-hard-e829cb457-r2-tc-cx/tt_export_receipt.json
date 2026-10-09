@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.wfc_hard.tt_export.v1",
+  "physical_source": "e829cb45763defec6166dcacf33a2efe873c730c",
+  "tool": "tools/tt_views/view_export.py",
+  "tool_sha256": "6d945c86815672ea04f90a378b749f512b2955e436a07479dd5ea95c45f3c203",
+  "host": "ot-pve1",
+  "remote_root": "/srv/opentallas-scratch/codex/wfc-hard-tt-export-a1",
+  "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "guard_gib": 4,
+  "preadmission": {
+    "mem_available_mib": 147086,
+    "disk_free_gib": 1322,
+    "existing_guard_processes": 0
+  },
+  "returncode": 0,
+  "export_done": true,
+  "input_hashes": {
+    "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/routes/mtp_wfc_tok_hard_e829cb457_r2_tc_cx/work/orfs/results/asap7/opentallas_dsfd_wfc_tok_hard_asap7_s81ph_mtp_wfc_tok_hard_e829cb457_r2_tc_cx/base/6_final.odb": "bdfac978443e11e9becf7ec9de1dfb79571ce54aee8f3fe734704b1a713babfb",
+    "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/routes/mtp_wfc_tok_hard_e829cb457_r2_tc_cx/work/orfs/results/asap7/opentallas_dsfd_wfc_tok_hard_asap7_s81ph_mtp_wfc_tok_hard_e829cb457_r2_tc_cx/base/6_final.sdc": "03c1bccf15d1b1e0342a207bb3d3a0a2c0dfcaa2e869543e4a18e052f4f1f7ab",
+    "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/routes/mtp_wfc_tok_hard_e829cb457_r2_tc_cx/work/orfs/results/asap7/opentallas_dsfd_wfc_tok_hard_asap7_s81ph_mtp_wfc_tok_hard_e829cb457_r2_tc_cx/base/6_final.spef": "5a2afb7794885accae9a73f5cde3dd7e843924cf240bb28e74609643e3483fbd"
+  },
+  "files": {
+    "dsfd_wfc_tok_hard.lef": "ebb76ec00d76f1ac0b919aae412dfe79351bc145481cd1521665198d6858581a",
+    "dsfd_wfc_tok_hard_ff.lib": "e3a4c768afc26c4491eaae83cbe639e1ff2a2d77fd3dd08459d4bf6d2d5f22dc",
+    "dsfd_wfc_tok_hard_ss.lib": "58ede1b41f30fb29c3ae99708bbe0c38f930f360880a3ef653ff3dd96efae621",
+    "dsfd_wfc_tok_hard_tt.lib": "609fd7da64bd54a32b6f80fc43f0efd7c976104e7de22113ecaf1703a2dd771f"
+  },
+  "parity": {
+    "liberty_ss_ff_tt_all683_pin_directions": "MATCH",
+    "lef_liberty_all681_signal_directions": "MATCH",
+    "power_direction_convention": "VDD/VSS are input in all ETMs and inout in LEF, unchanged from SS/FF",
+    "outline_um": [
+      162.0,
+      151.2
+    ],
+    "all681_signal_pin_layers_and_rectangles": "MATCH contract",
+    "top_layer": 7
+  },
+  "observed_memory": {
+    "openroad_rss_kib": 1133700,
+    "container_bytes": 1103400960,
+    "note": "observations; lower bounds, not full-run peak"
+  },
+  "preserved_leaf_verdict": {
+    "tt_setup_ps": 8.85,
+    "ff_hold_ps": 22.26,
+    "drc": 0,
+    "context": "canonical measured routed boundary insertion; unchanged",
+    "ss_sensitivity_ps": -332.77,
+    "original_budget_ff_ps": -34.03
+  },
+  "extraction_context": {
+    "sdc": "same immutable 6_final.sdc as original SS/FF exports",
+    "raw_export_setup_ps": -54.15362602789742,
+    "raw_export_hold_ps": 29.1730806178947,
+    "purpose": "TT ETM extraction for hierarchical composition; not new leaf signoff"
+  },
+  "withdrawn_attempt": {
+    "host": "ot-epyc1tb",
+    "launcher_pid": 945453,
+    "waiting_guard_pid": 945455,
+    "reason": "disk187GiB<200GiB floor; no workload launched",
+    "log_retained": "/srv/opentallas-scratch/claude/closure-loop/mtp-wfc_tok-hard-e829cb457-r2-tc-cx/export_tt_a1/admission.log"
+  },
+  "adoption": "conditional on physically qualified PROMPT_EXTRA2 SOURCE; default-off remains"
+}
