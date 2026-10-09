@@ -1,0 +1,258 @@
+{
+  "name": "hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+  "status": "NEEDS_RTL",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+  "commit_full": "c4be41d706b7b72e911796f3647ca14e84baaf60",
+  "reason": "FF hold -48.2: route hold repair stalled; window I2R=3@-121.4 I2R=1@-14.3",
+  "stage_tag": "route.a1",
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs/logs/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/5_2_route.json"
+    ],
+    "ff_ps": -48.23,
+    "clock_periods_ps": {},
+    "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs",
+    "post_sdc": [
+      "physical/hbm_accel_die_views/common/io_vclk_ff_622_949.sdc",
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": -368.48,
+    "ss_sensitivity_tns_ps": -532873.1,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/corner_sta.json",
+    "ss_ps": -118.65,
+    "ss_tns_ps": -31.4,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs|0|ae0410",
+      "at": "2026-10-09T06:48:17-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 2734,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 2734,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": -118.65,
+      "ff": -48.23,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 689.3,
+            "min": 643.6,
+            "max": 892.0,
+            "n": 2734,
+            "kind": "boundary"
+          },
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 689.3,
+            "min": 643.6,
+            "max": 892.0,
+            "n": 2734,
+            "kind": "boundary"
+          },
+          "vclki": {
+            "clock": "core_clk",
+            "mean": 689.3,
+            "min": 643.6,
+            "max": 892.0,
+            "n": 2734,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "vclk": {
+            "clock": "core_clk",
+            "mean": 576.5,
+            "min": 532.0,
+            "max": 775.6,
+            "n": 2734,
+            "kind": "boundary"
+          },
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 576.5,
+            "min": 532.0,
+            "max": 775.6,
+            "n": 2734,
+            "kind": "boundary"
+          },
+          "vclki": {
+            "clock": "core_clk",
+            "mean": 576.5,
+            "min": 532.0,
+            "max": 775.6,
+            "n": 2734,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 216.03,
+      "tt_out": -118.65,
+      "ff_i2r": -1.65,
+      "ff_out": -20.66,
+      "ff_r2r": -48.23,
+      "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/cl/routed_ioref.a1.json"
+    },
+    "route_sdc_clock": {
+      "ss_ps": -17.17,
+      "ff_ps": -229.67
+    }
+  },
+  "checks": {
+    "ttb_routed_at_TC": {
+      "ok": true,
+      "out": ""
+    },
+    "independent_electrical_zero": {
+      "ok": false,
+      "out": "                                                                                                 ~~~^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'drc_errors': 0, 'antenna_violating_nets': 0, 'antenna_violating_pins': 0, 'max_slew_violations': 292, 'max_cap_violations': 0, 'max_fanout_violations': 512}\n"
+    }
+  },
+  "failed_checks": [
+    "independent_electrical_zero"
+  ],
+  "routed_ioref": {
+    "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs|0|ae0410",
+    "at": "2026-10-09T06:48:17-07:00",
+    "available": true,
+    "ioref_edge": {
+      "tt": {
+        "core_clk": {
+          "boundary": 2734,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      },
+      "ff": {
+        "core_clk": {
+          "boundary": 2734,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      }
+    },
+    "tt": -118.65,
+    "ff": -48.23,
+    "errors": [],
+    "ioref": {
+      "tt": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 689.3,
+          "min": 643.6,
+          "max": 892.0,
+          "n": 2734,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 689.3,
+          "min": 643.6,
+          "max": 892.0,
+          "n": 2734,
+          "kind": "boundary"
+        },
+        "vclki": {
+          "clock": "core_clk",
+          "mean": 689.3,
+          "min": 643.6,
+          "max": 892.0,
+          "n": 2734,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "vclk": {
+          "clock": "core_clk",
+          "mean": 576.5,
+          "min": 532.0,
+          "max": 775.6,
+          "n": 2734,
+          "kind": "boundary"
+        },
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 576.5,
+          "min": 532.0,
+          "max": 775.6,
+          "n": 2734,
+          "kind": "boundary"
+        },
+        "vclki": {
+          "clock": "core_clk",
+          "mean": 576.5,
+          "min": 532.0,
+          "max": 775.6,
+          "n": 2734,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": 216.03,
+    "tt_out": -118.65,
+    "ff_i2r": -1.65,
+    "ff_out": -20.66,
+    "ff_r2r": -48.23,
+    "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/cl/routed_ioref.a1.json"
+  },
+  "hold_window": "== /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs/reports/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/ot_hold_stall_cts.rpt\nOT_HOLD_STALL NEEDS_RTL stage=cts reason=stalled: chunk 3 gained 0.00 ps / 0.0% TNS\nchunks (wns_ps tns_ps viol_endpoints): {-193.3 -10351.1 380.0} {-121.4 -1381.9 48.0} {-121.4 -345.1 3.0} {-121.4 -345.1 3.0}\nclass  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)\nI2R            3    -121.4  ph_rx_flit[128] -> rxf_p[128]$_DFF_P_/D\ntop pin groups (class start -> end, bus indices folded):\n      3    -121.4  I2R ph_rx_flit[*] -> rxf_p[*]$_DFF_P_/D\n== /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/routes/hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/work/orfs/reports/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/ot_hold_stall_grt.rpt\nOT_HOLD_STALL NEEDS_RTL stage=grt reason=stalled: chunk 2 gained 0.00 ps / 0.0% TNS\nchunks (wns_ps tns_ps viol_endpoints): {-14.3 -26.7 4.0} {-14.3 -14.3 1.0} {-14.3 -14.3 1.0}\nclass  endpoints  worst_ps  worst_path   (I=input port, O=output port, R=register)\nI2R            1     -14.3  ph_rx_flit[26] -> rxf_p[26]$_DFF_P_/D\ntop pin groups (class start -> end, bus indices folded):\n      1     -14.3  I2R ph_rx_flit[*] -> rxf_p[*]$_DFF_P_/D\n",
+  "events": [
+    "2026-10-09T05:15:44-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine.json",
+    "2026-10-09T05:19:30-07:00 source c4be41d706b7 synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/src",
+    "2026-10-09T05:19:45-07:00 no same-variant measured insertion (block value from another variant (hbm_coll_port_capture-94623b7d3-tc)): calibrate first (CTS-only), route after",
+    "2026-10-09T05:19:46-07:00 calibrate waiting for capacity: EPYC4 MemAvailable 371-316 GB < 3+57",
+    "2026-10-09T05:20:45-07:00 no same-variant measured insertion (block value from another variant (hbm_coll_port_capture-94623b7d3-tc)): calibrate first (CTS-only), route after",
+    "2026-10-09T05:20:51-07:00 launched calibrate (attempt 1) on ot-epyc4",
+    "2026-10-09T05:29:51-07:00 calibrate done (rc=0)",
+    "2026-10-09T05:29:52-07:00 calibrated insertion CK_SS_MEAN=768 CK_SS_MIN=742 CK_SS_MAX=1074 CK_TT_MEAN=768 CK_TT_MIN=742 CK_TT_MAX=1074 CK_FF_MEAN=648 CK_FF_MIN=622 CK_FF_MAX=949 CK_SSLIB_MEAN=958 CK_SSLIB_MIN=930 CK_SSLIB_MAX=1269 CK_ROUTE_REF=TT",
+    "2026-10-09T05:30:41-07:00 launched route (attempt 1) on ot-epyc4",
+    "2026-10-09T12:45:44.290285+00:00 Automatic ECO disabled pending source-pinned independent electrical eligibility check (DRC, antenna, slew, capacitance and fanout) required by owner0512. Running route and commands unchanged.",
+    "2026-10-09T05:46:36-07:00 NOTE spec in /tmp/claude-review-20261003/closure_jobs/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)",
+    "2026-10-09T12:46:49.443380+00:00 Installed source-pinned electrical zero checks before verdict; hold-only ECO eligibility restored with VT swap disabled, no route change.",
+    "2026-10-09T06:47:45-07:00 route done (rc=0)",
+    "2026-10-09T06:48:17-07:00 verdict TT -17.17 / FF -229.67 / DRC 0 / checks failed ['independent_electrical_zero'] -> NOT CLOSED",
+    "2026-10-09T06:49:28-07:00 routed-insertion IO re-STA: TT setup -118.65 / FF hold -48.23 (route SDC -17.17 / -229.67); routed reference TT [ot_lb_v_core_clk 689, vclk 689, vclki 689] FF [ot_lb_v_core_clk 576, vclk 576, vclki 576]",
+    "2026-10-09T06:49:28-07:00 verdict at the ROUTED insertion: TT -118.65 / FF -48.23 -> NOT CLOSED",
+    "2026-10-09T06:49:29-07:00 NEEDS_RTL: FF hold -48.2: route hold repair stalled; window I2R=3@-121.4 I2R=1@-14.3"
+  ],
+  "operator_events": [
+    {
+      "at": "2026-10-09T12:45:44.290285+00:00",
+      "action": "disable_unqualified_automatic_eco",
+      "reason": "Automatic ECO disabled pending source-pinned independent electrical eligibility check (DRC, antenna, slew, capacitance and fanout) required by owner0512. Running route and commands unchanged."
+    },
+    {
+      "at": "2026-10-09T12:46:49.443380+00:00",
+      "action": "install_pinned_independent_electrical_eligibility",
+      "delta_commit": "cc8d2db67",
+      "guard_source": "bbe601a79",
+      "delta_sha256": "d68d1115e5696c77eedd4b0e2c5ce1946f202b7fdcb8ae4115672a96998c6946",
+      "running_route_unchanged": true
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 949.15s
+Took 950 seconds: detailed_route -output_drc /work/reports/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Design area 87442 um^2 34% utilization.
+write_db /work/results/asap7/opentallas_ot_hcoll_port_asap7_hcp_hbm_coll_port_capture_fanout8_c4be41d70_tc_routine/base/5_2_route.odb
+Elapsed time: 16:19.40[h:]min:sec. CPU time: user 6635.01 sys 24.61 (679%). Peak memory: 14026064KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_2_route                 .odb          979          13697 a340a0f6591bd6dc48fb

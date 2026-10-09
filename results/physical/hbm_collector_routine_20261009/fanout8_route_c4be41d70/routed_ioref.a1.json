@@ -1,0 +1,99 @@
+{
+ "inserted": [],
+ "replaced": {},
+ "appended": [
+  "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine/cl/io_ref_routed.sdc"
+ ],
+ "setup_tt": {
+  "corner": "tt",
+  "worst_slack_ps": -118.65,
+  "tns_ps": -3055.66,
+  "worst_reg_to_reg_slack_ps": -17.17,
+  "worst_input_to_reg_slack_ps": 216.03,
+  "worst_output_port_slack_ps": -118.65,
+  "violating_d_pins": "2",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 689.3,
+    "min": 643.6,
+    "max": 892.0,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 689.3,
+    "min": 643.6,
+    "max": 892.0,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "vclki": {
+    "clock": "core_clk",
+    "mean": 689.3,
+    "min": 643.6,
+    "max": 892.0,
+    "n": 2734,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2734,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "656d8f97ffb5a4619f7dc777fdfaea4a814725794e477f48e9247c7140084776"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "worst_slack_ps": -48.23,
+  "tns_ps": -834.09,
+  "worst_reg_to_reg_slack_ps": -48.23,
+  "worst_input_to_reg_slack_ps": -1.65,
+  "worst_output_port_slack_ps": -20.66,
+  "violating_d_pins": "57",
+  "ioref": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 576.5,
+    "min": 532.0,
+    "max": 775.6,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 576.5,
+    "min": 532.0,
+    "max": 775.6,
+    "n": 2734,
+    "kind": "boundary"
+   },
+   "vclki": {
+    "clock": "core_clk",
+    "mean": 576.5,
+    "min": 532.0,
+    "max": 775.6,
+    "n": 2734,
+    "kind": "boundary"
+   }
+  },
+  "ioref_edge": {
+   "core_clk": {
+    "boundary": 2734,
+    "negedge": 0,
+    "noarc": 0,
+    "inverted": 0
+   }
+  },
+  "errors": [],
+  "rc": 0,
+  "tcl_sha256": "9104e610a1979f99c134462c145bc818c6164a0fbc6e920d677645849ed61d78"
+ }
+}

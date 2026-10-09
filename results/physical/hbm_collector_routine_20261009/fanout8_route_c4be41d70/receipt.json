@@ -1,0 +1,37 @@
+{
+  "source": "c4be41d70",
+  "observed_utc": "2026-10-09T13:50:59.877610+00:00",
+  "status": "NEEDS_RTL",
+  "adopted": false,
+  "port_view_qualified": false,
+  "route_wrapper_rc": 0,
+  "authoritative_scene": "routed_ioref.a1.json; actual measured IO reference",
+  "tt_setup_ps": -118.65,
+  "ff_hold_ps": -48.23,
+  "ss_sensitivity_raw_scene_ps": -368.48,
+  "ss_scope": "raw virtual-IO scene; not a measured-IO SS headline",
+  "electrical": {
+    "drc_errors": 0,
+    "antenna_violating_nets": 0,
+    "antenna_violating_pins": 0,
+    "max_slew_violations": 292,
+    "max_cap_violations": 0,
+    "max_fanout_violations": 512
+  },
+  "hold_eco_eligible": false,
+  "failed_checks": [
+    "independent_electrical_zero"
+  ],
+  "detailed_route_peak_kib": 14026064,
+  "detailed_route_elapsed": "16:19.40",
+  "claim_route_gib": 16,
+  "claim_basis": "Conservative predecessor-derived estimate, not measured16",
+  "artifacts_sha256": {
+    "detailed_route_tail.log": "8a67fc4d3b7bb9ddc5baa71ffd56365a6d9819fe7726ea8c077e0bb7a0fc2cdf",
+    "physical.json": "b7a13c0f27c1348379e49efc9dcc1c3f389a836cf0eda2baad5f7a7250c5fe6b",
+    "route.a1.rc": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "routed_ioref.a1.json": "396f1a2ab03b2bd33e87ac4ff69a8952558d2e6f6e7ec20b452cebc6d6814a70",
+    "raw_corner_sta.json": "be01754c3b215f12859130f3e865b3c35171aca0a19b547c3c4dde58f50b1087",
+    "canonical_terminal.json": "e845c8add3f1c3b8b3b7409826cab52f6dcc7461b0c42c9609eba4d9143e9f82"
+  }
+}
