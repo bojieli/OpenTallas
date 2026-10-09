@@ -730,6 +730,8 @@ def endpoint_dirs(die, real, by, bus, j):
             else:
                 seg.append((i, i + 1, {'input': 'in', 'output': 'out', 'inout': 'io'}[d]))
         return seg, pins
+    if cls == 'index_native':
+        return [(0, bits, 'out' if j == 0 else 'in')], None
     rule = (dirs_s81 if die.startswith('s81') else dirs_qwen if die == 'qwen_rom' else dirs_hbm)(bid, cls, bits, eps, j, port)
     if rule == 'complement':
         others = [k for k in range(len(eps)) if k != j and by[eps[k][0]].master in real]

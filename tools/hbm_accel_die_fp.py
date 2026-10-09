@@ -425,7 +425,8 @@ R25M = dict(R25, ld_mem=LD_MEM_NATIVE, split_x_new_ports={'lq': LD_MEM_NATIVE[0]
             split_extra_ports={'hfd_cmdproc': {'t_mtp': ('hfd_cmdproc_s', 320, 'S', 'M5', 0.30, 2),
                                                'f_mtp': ('hfd_cmdproc_s', 126, 'S', 'M5', 0.70, 2)}})
 # Native indexer successors remain opt-in until source joins and physical evidence close.
-R25I = dict(R25, native_indexer=True)
+R25I = dict(R25, native_indexer=True, iv_pin_stn=False,
+    split_x_new_ports={**{f'ki{p}':1099 for p in range(8)}, **{f'kc{p}':1 for p in range(8)}})
 R25IC2 = dict(R25I, indexer_large_slot=True)
 ADOPTED = R25
 
@@ -2087,7 +2088,8 @@ def buses(m):
         P[f'attn_q_{st}'] = qids + hops_c + hops_r
         P[f'kv_{st}'] = P[f'kv_{st}'] + hops_c + hops_r
         B.append((f'ao_{st}', 'attn_out', 2 * ATTN_OUT, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = hops_o + [tr, f'ao_{st}']
 
     for st, G in m['groups'].items():
@@ -2325,6 +2327,8 @@ def buses(m):
         corner = (rowt[-1] if half == 'W' else rowt[0]) if attn_rtl else (rowt[0] if half == 'W' else rowt[-1])
         for name, tgt_inst, port, off in (('kv', corner, 'k' if pf else f'k{st}', -50.0),
                                           ('ik', sc['index'], 'k' if pf else f'k{st}', 50.0)):
+            if V.get('native_indexer') and name == 'ik':
+                continue
             tp = _cxy(tgt_inst, 'S' if side == 'S' else 'N', 0.5)
             so = _cxy(svc, 'W' if half == 'W' else 'E', 0.3 if name == 'kv' else 0.7)
             yy_ = ylane(side, 'lk0' if name == 'kv' else 'lk1', ych[side] + 40.0 * sgn * (1 if name == 'kv' else -1))
@@ -2362,7 +2366,8 @@ def buses(m):
                 lo, hi_ = (grid[r][c], grid[r + 1][c]) if side == 'S' else (grid[3 - r][c], grid[2 - r][c])
                 B.append((f'tk_{st}{r}{c}', 'attn_kv', 1618 if actual_attn else 1024, [(lo.name, 'ku'), (hi_.name, 'kd')]))
         B.append((f'ao_{st}', 'attn_out', 1058 if actual_attn else 1024, [(sc['index'].name, 't_su'), (hub[f'su_{st}'].name, 'a' if pf else f'a{st}')]))
-        B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
+        if not V.get('native_indexer'):
+            B.append((f'iv_{st}', 'hub', 512, [(sc['index'].name, 't_vm'), (vm.name, f'i{st}')]))
         P[f'attn_out_{st}'] = [f'tr_{st}0', f'ao_{st}']
     # ---- hub internal (adjacent slabs across one channel, or vertical in the spine column): direct nets; their
     #      stage count is read from the routed length
@@ -2460,7 +2465,7 @@ def buses(m):
         vm = hub['vm']
         hy0_, hy1_ = g['hub_y']
         drop = set()
-        for st in ('SW', 'SE', 'NW', 'NE'):
+        for st in (() if V.get('native_indexer') else ('SW', 'SE', 'NW', 'NE')):
             sc = m['scan'][st]
             ix = sc['index']
             side, half = st[0], st[1]
@@ -2517,6 +2522,10 @@ def buses(m):
             B[i0] = (b0[0], b0[1], b0[2], [(ps.name, 'b')] + b0[3][1:])
             B.append((f'iv_{st}_p', 'hub', 512, [b0[3][0], (ps.name, 'a')]))
             P[f'index_vm_{st}'] = [f'iv_{st}_p'] + P[f'index_vm_{st}']
+    if V.get('native_indexer'):
+        from hbm_indexer_die_topology import networks
+        import sys
+        networks(m, sys.modules[__name__], B, P, chain)
     if V.get('clk_dom'):
         clock_nets(m, B, coll)
         return B, dict(P)

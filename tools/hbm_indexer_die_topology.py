@@ -53,3 +53,58 @@ def install(m, fp):
         model=hbm_indexer_r25i_physical_model(),
         qualification='OPT_IN_NATIVE_RESERVATION; service joins and whole-die routing not yet qualified')
     m['notes'].append('R25I reserves four full16-lane scorers and captured-SRAM T1/LA7 selector; historical placeholder key/top-k nets require replacement before adoption.')
+
+
+def networks(m, fp, buses, paths, chain):
+    """Install actual scorer/selector and service line/credit boundaries.
+
+    Native query/config and final selector producer/consumer joins are supplied
+    by their source owner separately. They are never narrowed to old envelopes.
+    """
+    native=m['indexer_native']; sel=native['selector']; root=fp.ROOT/'physical/hbm_accel_die_views/index/native'
+    def point(it, port, lo=0, count=None):
+        rec=json.loads((root/it.master/'ports.json').read_text());pins=rec['ports'][port]['pins']
+        ps=pins[lo:lo+count] if count is not None else pins
+        x=sum((p[2]+p[4])/2 for p in ps)/len(ps);y=sum((p[3]+p[5])/2 for p in ps)/len(ps)
+        if it.orient in ('MY','R180'):x=it.w-x
+        if it.orient in ('MX','R180'):y=it.h-y
+        return it.x+x,it.y+y
+    def route(cid,bits,src,dst,pts):
+        chain(cid,'index_native',bits,src,dst,pts,path=cid,fc=(bits,),
+              local_src=True,meso_end=True,dom='stream')
+    for q,(st,score) in enumerate(native['scores'].items()):
+        side,half=st;svc=m['groups'][st]['svc'];sgn=1 if side=='S' else -1
+        startface='N' if side=='S' else 'S'
+        # Each service eighth owns a physically distributed output station.
+        # Native line storage still gathers all32PCs, per the packed136B ABI.
+        for p in range(8):
+            a=fp._cxy(svc,startface,(p+0.5)/8)
+            b=point(score,'ik',p*1099,1099)
+            gutter=svc.y+svc.h+30+12*p if side=='S' else svc.y-30-12*p
+            # Escape parallel to the service band, then enter the scorer from
+            # its outer edge. Automatic station legality remains mandatory.
+            outer=score.x-80-8*p if half=='W' else score.x+score.w+80+8*p
+            pts=[a,(a[0],gutter),(outer,gutter),(outer,b[1]),b]
+            route(f'idx_key_{st}_{p}',1099,(svc.name,f'ki{p}'),
+                  (score.name,f'ik@{p*1099}:{(p+1)*1099-1}'),pts)
+            c=point(score,'ikc',p,1)
+            route(f'idx_key_credit_{st}_{p}',1,(score.name,f'ikc@{p}:{p}'),
+                  (svc.name,f'kc{p}'),[c,(outer,c[1]),(outer,gutter),a])
+        # Separate unidirectional data and credit preserve ownership exactly.
+        # Query pin is the T1 direct quarter output, with no T4 column taps.
+        a=point(sel,'qo',q*571,571);b=point(score,'q')
+        lane=sel.x-160-32*q if half=='W' else sel.x+sel.w+160+32*q
+        exit_y=score.y+score.h+100 if side=='S' else score.y-100
+        route(f'idx_query_{st}',571,(sel.name,f'qo@{q*571}:{(q+1)*571-1}'),
+              (score.name,'q'),[a,(lane,a[1]-80),(lane,exit_y),(b[0],exit_y),b])
+        a=point(score,'s');b=point(sel,'si',q*610,610)
+        route(f'idx_score_{st}',610,(score.name,'s'),
+              (sel.name,f'si@{q*610}:{(q+1)*610-1}'),
+              [a,(a[0]+(80 if half=='W' else -80),a[1]),
+               (lane,exit_y),(lane,b[1]+80),b])
+        a=point(sel,'sc',q,1);b=point(score,'sc')
+        route(f'idx_score_credit_{st}',1,(sel.name,f'sc@{q}:{q}'),
+              (score.name,'sc'),[a,(lane,a[1]-80),(lane,exit_y),(b[0],exit_y),b])
+    native['unbound_producer_ports']=['fs90','qb1048','qbr1','kin345']
+    native['unbound_consumer_ports']=['to612','toc1','co72','coc1','ev2','4xst4']
+    native['qualification']='NATIVE_BOUNDARY_TOPOLOGY; source wrapper joins and exact pin routes remain unqualified'
