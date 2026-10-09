@@ -17,11 +17,14 @@
       "added_data_edges_vs_qualified_fullcore": 0,
       "reset_release_edges": 2,
       "pending": [
-        "fullcore exact replay",
         "actual whole wrapper boundary",
         "matching SPECF0 physical views",
-        "real CP/history/argmax producer joins"
-      ]
+        "real CP/history/argmax producer joins",
+        "Diefacade reset/port replay still separately required"
+      ],
+      "native_exact_gate": "387c3396e 502558cycles/allbad0",
+      "native_mutant_gate": "a8c837332 rollbackfailure",
+      "measured_floorplan_area_um2": 10400.5
     },
     {
       "element": "argmax_value32_token18",
@@ -103,11 +106,22 @@
         "genericVM root/provider and SECDED contract Claude GH-d",
         "partial overlap alias semantics",
         "actual VM RTT and sustainable input bandwidth",
-        "Real response-seat repair exact/boundary and source-rebound fullshape physical fit"
+        "Real response-seat repair exact/boundary and source-rebound fullshape physical fit",
+        "Constant-lane assembly replaces variable-LHS prioritychain inputboundary30 successor; currentexact/boundary reruns pending"
       ],
-      "repair_source": "bd5e792c7",
+      "repair_source": "a63e77167",
       "repair_added_flops": 274,
-      "repair_added_edges_per_sector_handshake": 1
+      "repair_added_edges_per_sector_handshake": 1,
+      "existing_slot_um": [
+        1814.376,
+        276.456
+      ],
+      "candidate_tight_slot_um": [
+        1800,
+        275.6
+      ],
+      "candidate_tight_reservation_mm2": 0.49608,
+      "candidate_tight_fit": "GEOMETRIC_OUTLINE_ONLY_HALO_PIN_BOUNDARY_ROUTE_PENDING"
     },
     {
       "element": "TOPK_K2048",

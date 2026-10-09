@@ -10,7 +10,8 @@
         "commit": "7c38e6508",
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv"
-        ]
+        ],
+        "electrical_repair_candidate": "d261d43c7"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -44,7 +45,7 @@
         }
       },
       "physical": {
-        "status": "RUNNING",
+        "status": "TIMING_CLOSED_BLOCKED_FIVE_ELECTRICAL_VIOLATIONS",
         "jobs": [
           "hgi_coll_decode_a-7c38e6508-tc-cx",
           "hgi_coll_decode_b-7c38e6508-tc-cx"
@@ -52,7 +53,7 @@
         "corners": {},
         "evidence": [],
         "electrical": {
-          "status": "NOT_VERIFIED",
+          "status": "FAIL_FIVE_SLEW",
           "evidence": [],
           "required": [
             "slew",
@@ -69,7 +70,8 @@
         "ROW_GATHER row backend must consume owner/count/destinations",
         "PSG endpoint isolation gates separate",
         "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open",
-        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim"
+        "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim",
+        "Fresh config-only electricalbuffer pair exact16654+2mutants/boundary4/2 passes, actualfreshintake pending; old overlapfail immutable"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -812,7 +814,7 @@
         "paths": [
           "rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv"
         ],
-        "repair_candidate": "61a_SETUP_LOOKAHEAD"
+        "repair_candidate": "c0c8382da"
       },
       "implementation": {
         "status": "IMPLEMENTED_DEFAULT_OFF",
@@ -847,12 +849,14 @@
         }
       },
       "physical": {
-        "status": "RUNNING",
+        "status": "EARLY_FAIL_SETUP_TT_MINUS430",
         "jobs": [
           "hgi_coll_row_formatter_a-7c38e6508-tc-cx",
           "hgi_coll_row_formatter_b-7c38e6508-tc-cx"
         ],
-        "corners": {},
+        "corners": {
+          "TT_setup_ps": -430
+        },
         "evidence": [],
         "electrical": {
           "status": "NOT_VERIFIED",
@@ -876,7 +880,8 @@
         "boundary lint running; no physical job claimed",
         "live routes verified; standalone exact gates passed, daemon mutant receipt collection ongoing; full reader/group conformance remains open",
         "Whole collective payload SRAM SECDED adoption gate unresolved; connected codec source2f7865e3b CE/UE proof running, no whole-element reliability claim",
-        "Setuprepair fa514/functional61a adds75lookaheadbits with identical publicports/cycles;65535word goldenPASS pendingmutants/edge equivalence; running7c routes qualify older source only"
+        "Setuprepair fa514/functional61a adds75lookaheadbits with identical publicports/cycles;65535word goldenPASS pendingmutants/edge equivalence; running7c routes qualify older source only",
+        "Fresh counterrepair sourcec0c8382da adds75registers ZEROedges;32calls477132words cyclelockstep+genuineprogressmutantPASS,boundary8/3 PASS; pairactualintake pending"
       ],
       "integration": {
         "status": "INCOMPLETE",
@@ -1059,11 +1064,13 @@
       },
       "exactness": {
         "positive": {
-          "status": "MATCHED_FULLCORE_SPECF0_REPLAY_PENDING",
+          "status": "PASS_NATIVE_FORCED_TW18_502558_CYCLES",
+          "evidence_commit": "387c3396e",
           "evidence": []
         },
         "negative": {
-          "status": "MATCHED_FULLCORE_MUTANT_PENDING",
+          "status": "PASS_REAL_ROLLBACK_MUTANT",
+          "evidence_commit": "a8c837332",
           "evidence": []
         },
         "simulator_conformance": {
@@ -1087,14 +1094,17 @@
             "power_grid_connectivity"
           ]
         },
-        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched"
+        "acceptance": "TT>=0/FF>=0/DRC0; SS sensitivity only; electrical clean; exact source gate matched",
+        "measured_floorplan_area_um2": 10400.5,
+        "evidence_commit": "e75645e28"
       },
       "dependencies": [
         "fullcore0newedges vs qualifiedfullcore,4edges vs barectl; resetfacade2releaseedges",
         "SPECF1 oldphysicalview cannot substitute for exactSPECF0 proof",
         "all17->18 fields carried: p/f/e/cmd1/am_idx/sa_tok18 +cmd_toks144",
         "newsource-derived groupedf_cmdproc131/t_cmdproc506/total1297bits; realCP/gather/historyproducers pending",
-        "clockck/resetactivehigh facade uses standard2flopreset; actual wrapper clock/electrical and fullcore gates still required"
+        "clockck/resetactivehigh facade uses standard2flopreset; actual wrapper clock/electrical and fullcore gates still required",
+        "t_coll19 carries UNION u_v/u_id9/u_mask8/u_last; am_idx18 is t_cmdproc[280+:18]. Winning FP32 O0score consumer remains separate unbound"
       ],
       "integration": {
         "status": "INCOMPLETE",
