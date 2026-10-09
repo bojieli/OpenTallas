@@ -14495,3 +14495,8 @@ def hbm_indexer_r25i_physical_model():
 def qwen_q5_landing_model():
     from uarch_qwen_q5_landing_model import model
     return model()
+
+
+def qwen_dspark_native_model():
+    from uarch_qwen_dspark_native_model import model
+    return model()
