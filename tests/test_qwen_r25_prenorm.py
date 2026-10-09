@@ -66,7 +66,10 @@ class PrenormGraphTest(unittest.TestCase):
             model.mv = capture
             tokens = torch.tensor([[1, 2]])
             initial = model.embed_rows(tokens).reshape(2, 64).numpy()
-            norm = G.rmsnorm(initial, model.layers[0]["ln1"].float().numpy(), model.eps)
+            weight = model.layers[0]["ln1"].float().numpy()
+            norm = np.stack([G.mul(G.mul(row, G.rsqrt(G.add(
+                G.mul(G.reduce_chunked(G.mul(row, row)), np.float32(1/64)), np.float32(model.eps)))), weight)
+                for row in initial])
             out = model.forward(tokens, model.new_cache(cap=16))
             self.assertTrue(torch.isfinite(out).all())
             self.assertTrue(np.array_equal(calls[0][0].numpy().view(np.uint32), norm.view(np.uint32)))
