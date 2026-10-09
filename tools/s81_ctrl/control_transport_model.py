@@ -187,6 +187,24 @@ def plain_shared_publisher_model():
         proposal='Review53 plain-control successor to historical7279623a2; no leases or complementary control guards')
 
 
+def prefix_shared_composition_model():
+    """Conservative serial composition; minimum gate measures overlap separately."""
+    return dict(schema='opentallas.uarch.s81-prefix-shared-compose.v1',adoption=False,
+        values_per_rank=1280,ranks=4,minimum_gate_ranks=1,
+        arithmetic='FP32 +0 then sorted E0/E1/E2 BF16-widened contributions; shared BF16-widened LAST; one BF16 round after final add',
+        prefix_source='08a2a7957, qualified native512 publisher gate0091c7ad5',
+        shared_publisher=plain_shared_publisher_model(),primary=plain_primary_shared_receive_model(),
+        prefix_stream_cycles_upper=7600,
+        shared_stream_cycles_upper=884,
+        primary_serial_cycles_no_stall_lower=93,
+        conservative_composed_us_no_stall_bound=7600/1200+884/1200+93/900,
+        no_overlap_credit=True,
+        boundary='Two native594bit producer frames, actual finite QD8 CDC into .9GHz primary; source-ready never crosses domains',
+        storage='Prefix12 actual SRAM banks; shared3 SRAM banks; primary33735 plain FF upper plus16native LAT3 adders',
+        floorplan_fit=None,channel_capacity=None,
+        pending='Native caller/E3 output literal/static write fence/read1 capture, production GU and contextual clocks/SSFF remain unbound')
+
+
 def stage_range_observer_model():
     return dict(schema='opentallas.uarch.s81-stage-range-observer.v1',
         enabled_default=True,macs_per_cycle=0, latency_cycles=0,

@@ -1,0 +1,156 @@
+{
+  "schema": "opentallas.uarch.s81-prefix-shared-compose.v1",
+  "adoption": false,
+  "values_per_rank": 1280,
+  "ranks": 4,
+  "minimum_gate_ranks": 1,
+  "arithmetic": "FP32 +0 then sorted E0/E1/E2 BF16-widened contributions; shared BF16-widened LAST; one BF16 round after final add",
+  "prefix_source": "08a2a7957, qualified native512 publisher gate0091c7ad5",
+  "shared_publisher": {
+    "schema": "opentallas.uarch.s81-shared-publisher-plain.v1",
+    "enabled_default": false,
+    "adoption": false,
+    "values_per_rank": 1280,
+    "frames": 80,
+    "macs_per_cycle": 0,
+    "clock_ghz": 1.2,
+    "contexts": 1,
+    "arithmetic": "Preserve actual W2 BF16-rounded widened FP32 words; no arithmetic or re-rounding",
+    "memory": {
+      "macros": 3,
+      "master": "ot_sram_1r1w_256x256_m2_r2c2",
+      "allocated_bits": 196608,
+      "live_protected_bits": 46080,
+      "read_bytes_per_active_cycle": 96,
+      "write_bytes_per_active_cycle": 96
+    },
+    "boundary_bits_per_cycle": {
+      "input": 596,
+      "output": 596
+    },
+    "bytes_per_cycle": {
+      "input": 64,
+      "output": 64
+    },
+    "plain_register_bits_upper": 1698,
+    "removed_complement_register_bits": 1120,
+    "ecc_decode": {
+      "slices": 8,
+      "pipeline_cycles": 2,
+      "payload_only": true
+    },
+    "replicas": 4,
+    "mux_demux_fanout": "One80-row context per rank, three SRAM banks; eight64bit SECDED slices",
+    "routing_tracks_required": 1192,
+    "available_tracks": null,
+    "latency_cycles": {
+      "load_per_frame": 3,
+      "read_and_publish_per_frame_upper": 8,
+      "full_context_no_stall_upper": 884
+    },
+    "token_contribution_us_upper": 0.7366666666666667,
+    "area_slot_fit": "Three real SRAM macros plus1698plain state/payload registers and eight SECDED pipelines; selected die fit pending",
+    "completion": "Only actual last publisher handshake releases one context",
+    "remaining": [
+      "Actual W2 scalar VM write visibility and80-row static read1 capture",
+      "Production opaque74bit transaction caller",
+      "Full released GU/native E3 binding",
+      "Actual physical placement, clock arrival and SS/FF"
+    ],
+    "proposal": "Review53 plain-control successor to historical7279623a2; no leases or complementary control guards"
+  },
+  "primary": {
+    "schema": "opentallas.uarch.s81-primary-shared-plain-cdc.v1",
+    "status": "PREBUILD_SIZED_NATIVE_CALLER_AND_IO_BINDING_PENDING",
+    "enabled_default": false,
+    "ranks": 4,
+    "values_per_rank": 1280,
+    "flits_per_rank": 80,
+    "arithmetic": "A FP32 prefix + shared BF16-rounded widenedFP32 LAST, then one RNE BF16 round; output80native widened32flits, no TP outputallreduce",
+    "clocks_ghz": {
+      "serial": 0.9,
+      "upstream_stream": 1.2
+    },
+    "macs_per_cycle": 0,
+    "fp32_adds_per_cycle": 16,
+    "fp32_add_latency": 3,
+    "bytes_per_cycle": {
+      "prefix": 64,
+      "shared": 64,
+      "output": 64
+    },
+    "boundary_bits_per_cycle": {
+      "prefix": 596,
+      "shared": 596,
+      "output": 596
+    },
+    "native_metadata": {
+      "transaction": 32,
+      "user": 10,
+      "position": 21,
+      "epoch": 4,
+      "stage": 2,
+      "rank": 2,
+      "frame": 3,
+      "word": 7,
+      "last": 1
+    },
+    "storage_bits": {
+      "queues": 14256,
+      "queue_control": 33,
+      "metadata_pipeline": 246,
+      "context_and_control_upper_bound": 192,
+      "receive_cdc": 19008,
+      "total_without_native_adders": 33735
+    },
+    "queue_depth": 8,
+    "max_reserved_outputs": 8,
+    "max_owned_contexts": 1,
+    "mux_demux_fanout": "16independentnative LAT3add lanes; eachfiniteFIFO8 selects one fullwidth frame; no reduction tree/reordered shared operand",
+    "routing_tracks_required": 1788,
+    "available_tracks": null,
+    "area_slot_fit": "PlainFIFO8/native594CDC33735FFbits plus16nativeLAT3adders; selectedSRAMproducerpayload retainsSECDED, noECC/duplication added to arithmeticflops",
+    "latency_cycles": {
+      "input_enqueue": 1,
+      "add": 3,
+      "output_enqueue": 1,
+      "no_stall80flit_context_lower_bound": 93,
+      "input_cdc_estimate": 8
+    },
+    "token_contribution_us_lower_bound": 0.10333333333333333,
+    "crossing": "Existingactualstream/serialCDC mustbind eachactual594bit frame; arbitraryCDCprimitive not automatically productionresetquiescence",
+    "completion": "Only actual80th outputhandshake retires context; partialoutputs require actualtransaction abort binding onfault",
+    "remaining": [
+      "Existing A/Markov transaction namespace caller",
+      "Actual shared native VM publisher and static write-visible fence",
+      "Actual SU/main_norm output endpoint",
+      "Contextual SS/FF and real clock arrival"
+    ],
+    "adoption": false,
+    "receive_cdc": {
+      "ports": 2,
+      "protected_frame_bits": null,
+      "queues_per_port": {
+        "source": 8,
+        "async": 8
+      },
+      "storage_bits": 19008,
+      "mutable_metadata": "Actualnative74context+word7/last only; no complementarymetadata or protectedflopFIFO hardware",
+      "clock_crossing": "1.2GHzstream\u2192.9GHzserial; ready remainslocal onbothsides",
+      "observed84bit_command_latency": 8,
+      "wide_frame_latency": "Actual594bit two-domain gate passed; common partial reset and premature-rounding mutant source471b0c95f",
+      "reset": "Common reset asserts both FIFO domains, synchronized release; no reset epoch hardware",
+      "native_frame_bits": 594
+    }
+  },
+  "prefix_stream_cycles_upper": 7600,
+  "shared_stream_cycles_upper": 884,
+  "primary_serial_cycles_no_stall_lower": 93,
+  "conservative_composed_us_no_stall_bound": 7.173333333333333,
+  "no_overlap_credit": true,
+  "boundary": "Two native594bit producer frames, actual finite QD8 CDC into .9GHz primary; source-ready never crosses domains",
+  "storage": "Prefix12 actual SRAM banks; shared3 SRAM banks; primary33735 plain FF upper plus16native LAT3 adders",
+  "floorplan_fit": null,
+  "channel_capacity": null,
+  "pending": "Native caller/E3 output literal/static write fence/read1 capture, production GU and contextual clocks/SSFF remain unbound"
+}
