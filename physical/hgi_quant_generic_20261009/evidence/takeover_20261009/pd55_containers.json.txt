@@ -1,0 +1,36 @@
+{
+  "matching_live_containers": [
+    {
+      "id": "11aea74832cd6d75e2420adb6d2a25cb5a9aba0ad6cacd0445e0be372fdcd569",
+      "name": "/competent_zhukovsky",
+      "pid": 2159155,
+      "status": "running",
+      "mounts": [
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/fplint/route.a1",
+          "Destination": "/ot_fplint",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/src",
+          "Destination": "/src",
+          "Mode": "ro",
+          "RW": false,
+          "Propagation": "rprivate"
+        },
+        {
+          "Type": "bind",
+          "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/work/orfs",
+          "Destination": "/work",
+          "Mode": "",
+          "RW": true,
+          "Propagation": "rprivate"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+UTC 2026-10-09T14:08:31.071794+00:00
+DRIVER     PID    PPID    PGID     ELAPSED   RSS COMMAND
+2124280       1 2124280       26:58  3824 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/run.sh route.a1
+
+MATCHING PROCESS INVENTORY
+2124280       1 2124280       26:58  3824 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/run.sh route.a1
+2124285 2124280 2124280       26:58  3900 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/route.a1.sh
+2124330 2124285 2124280       26:58  3900 bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd55 hgi_quant_pd55_7202d4ec4_tc_cx /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes
+2124336 2124330 2124280       26:58 77752 python3 tools/run_abi3_physical.py --view asap7 --top ot_hgi_quant_decode --source rtl/hbm_accel/generic/ot_hgi_quant_decode.sv --source physical/hbm_accel_die_views/common/ot_hfd_oreg1.sv --source physical/hbm_accel_die_views/quant/rtl/ot_hfd_actquant_m.sv --source rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv --source rtl/hdc/ot_hdc_delay.sv --source rtl/hdc/ot_hdc_fpu.sv --source rtl/hdc/ot_hdc_fp32_mul_pipe.sv --source rtl/hdc/ot_hdc_sfu.sv --source rtl/hdc/ot_hdc_fastfp.sv --source rtl/hdc/ot_hdc_fastfp_lat_f12.sv --source rtl/hdc/ot_hdc_fp32_f12.sv --source rtl/hdc/ot_hdc_prefix.sv --die-area 0 0 1800 600 --core-area 2.16 2.16 1797.84 597.84 --pin-region ^x\[=left:20-580 --pin-region ^header\[=bottom:20-1780 --pin-region ^y\[=right:20-580 --pin-region ^(clk|rst_n|v|generic_enable|legacy_fp4|vo|fault|decode_fault)$=top:20-1780 --pin-regions-exhaustive --routing-layers M2 M7 --clock-port clk --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages synth,pnr --place-density 0.55 --hold-margin-ns 0.020 --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=12 --orfs-var SDC_FILE=/src/physical/qwen_die_masters/die_p770.sdc --orfs-var QDM_SDC_DIR=/src/physical/qwen_die_masters --orfs-var PLACE_PINS_ARGS=-min_distance 2 -min_distance_in_tracks --orfs-var IO_PLACER_H=M4 M6 --orfs-var IO_PLACER_V=M5 M7 --step-tcl PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl --step-tcl POST_CTS=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl --orfs-var CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75 --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var OT_REF_GLOB=*valid_pipe* --orfs-var OT_IO_INTER=* --orfs-var OT_IO_SKEW_INTER=150 --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_hgi_quant_pd55_7202d4ec4_tc_cx --keep-workdir /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/work --force --output /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/physical.json
+2159112 2124336 2124280       23:22 30764 /usr/bin/docker run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS -e OT_ABC_NO_DCH -v /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/fplint/route.a1:/ot_fplint --rm -v /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/src:/src:ro -v /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/work/orfs:/work -w /OpenROAD-flow-scripts/flow openroad/orfs:latest bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=12 finish metadata-generate
+DOCKER INVENTORY aee48411db5f9a6c1d17f22f314170c161c31c0118153cb3b522cd6421f7b250 zen_engelbart Up 3 minutes
+f30917e4b6eae1a53239cda87b347b1f8643af22a2a314be0701386a556c6de4 ecstatic_cartwright Up 6 minutes
+ec6099c530e7bf151aa4b98aa1a57f0e3a2e1ce72eac98a78273046385020e91 tender_haibt Up 11 minutes
+4fc5ac69a5196971e8c507749d6ab55c23dad321b9d92a7349248193c76b77df focused_johnson Up 11 minutes
+8f576af4737e82e4388c7b7a4dee0dc7d1f124d0cf0175e2c205655c670ced1b dreamy_wing Up 13 minutes
+d7371a1aef1f3c9efaff4676af51f4ddd94d868bcbde568e70f2e60a5921a6b0 amazing_spence Up 13 minutes
+31febc1192bb5d46c344bf05e86e62a98cbcacbb9beedfc0957e00dc59769b34 wizardly_leavitt Up 14 minutes
+5df0283b822ab9797c91c1068ce7ebc603372381fb9d005494cbc104cd048aec festive_gagarin Up 16 minutes
+351a95eab16d251da21d5db6e251dfeae84c40c4542be1198aea0a786570dd47 elegant_dubinsky Up 19 minutes
+11aea74832cd6d75e2420adb6d2a25cb5a9aba0ad6cacd0445e0be372fdcd569 competent_zhukovsky Up 23 minutes
+cf39f76cd58b7ffb398f625d70d03534c00ccdbbd9a5d7f5bfafa8fb5e16660a busy_mirzakhani Up 24 minutes
+8a84e7f4d54411ff7af75c56a83231a5b201ffb61a15e99a7d18248d5c597049 jovial_edison Up 24 minutes
+d3d730c04ef946bfcdc5d47804737a48e164bc634d356a79908caa880b9f1369 recursing_swanson Up 27 minutes
+7c9781a39364ffbaaf0f50f8d1dc9891a2a8176140d99dd6a80390e4db387264 recursing_shtern Up 32 minutes
+a0a8e1201f9fb2a5000c84b2048660ae3fcbf3d4a170f3814497fd36b6af2c72 eloquent_mestorf Up 33 minutes
+7d23cdd59f544fb9218431df47324b8d7ff8aef13fffbeec0c319a2374ceb775 nifty_goldwasser Up 36 minutes
+22c2cb7de530ec15b17d5ed11eefc4edad444c00e9b715e18077e1c6a0e46a6a youthful_hamilton Up 41 minutes
+1dbc111e1cdd0770e939b2aa7427bccdfe304a08efe1404ccc2af3ad9b6f1bfb elated_agnesi Up 54 minutes
+33bba17222822ec98a7df658c9e1393ae20818d28d1d4efeafe6cd2a9775bce7 vibrant_stonebraker Up About an hour
+d474470de774773b186f6fab593a0df41a41b323a71122c6c2b5416fd81d6e06 elastic_varahamihira Up About an hour
+17b0243f7cd3f375b209c9ce813d7f45a48f19248a7e70b3cd9ae3ad1033e5be adoring_brattain Up 2 hours
+9a0fe108a25f9c52cc46f9d44f979fe2d01b522619ece5d1a97d992bca9c57b1 bold_rosalind Up 2 hours
+4272b4d5408297b1d1e7b6e74eea81b678ec714c8973904104e418f992295ff9 elastic_shamir Up 2 hours
+2b9c9232a9e9d02be196cb8eb89fd654f673f961938f8378a395369e42c1744c nice_northcutt Up 3 hours
+1d9911e596aa5801e5e4accf5a5b991c5d4622a427a221de97226132357a1bd6 amazing_bell Up 3 hours
+afd09f1d4d60eefee826c8b42ac19e4f6239a1e230890d50cc7f6da44a5a47be agitated_elbakyan Up 3 hours
+07ee8abb1d57459785d98e7f63236ceeb02d3566b8932e52c631b4e3eb467654 pedantic_goldwasser Up 3 hours
+a68c342ca27c4cc768cde3a74af5c04f688f5522455a2ca5118c5aa4e0740ba1 gallant_driscoll Up 3 hours
+d55d9482fc583e3c613df9b27aa37f4170df585161d8701d88892b505a714b29 agitated_banach Up 3 hours
+a3488e5f83ca9bf8e2faf3091e194a161f872e62d2ace2c7a34337e98c2a4d4c crazy_cartwright Up 5 hours
+f275b6d42970005875daeb8e9afab4a54b8da3d08c65d8a4fe0db69c4fc55f60 objective_hamilton Up 7 hours
+fc4ae78235dfea974cc0e554488ac916f7da9330270ea317d3bd8d1790775780 awesome_curran Up 7 hours
+9d561c998a3bf1b409cf8a4ad6ef910a56412d80d9195fc726d5c8397abe3c54 practical_dirac Up 7 hours
+6e9e27c4899f7b9df1053c3bbefdbd712a9e7d0ffa2a08d2d43cc39576204229 claude-smh-hbm_smh_front_c_m3f_f7f1a0ee4_tt_hm10_d2056 Up 9 hours
+b69e02da89cc487d3e32c0b358e2f3c6f10899ffb441895c032083ccc85503e1 busy_haslett Up 10 hours
+696289c7a2285e2d17a870a1ca627b3a8ce6d4e4c91beaa0cf98dc42d27c8706 blissful_ride Up 10 hours
+dc821b0bf7144a93925ed43a75e7299a8a5ec50b34e161fa9787506f2e7ad67d interesting_sutherland Up 13 hours
+ccac3869a391c6781eb14a5192fe3581500adaddee4784ec381591d68120d60a sharp_swartz Up 13 hours
+3d14202f8cf82be3071bd86c7250689dc17e2fd484d291260011be44a2b639ab keen_dubinsky Up 14 hours
+408176e91d4b0c04b8e214b990f42d65b9a358743085488c20c4442f5ada7861 interesting_villani Up 15 hours
+42ab398888b6dee429a4393e60853f8050dc9c72ae68c061d7c5ec7adef33dd6 dreamy_benz Up 15 hours
+610cc50f96b948594d7417117667e11a1411f68c3637cd11871ad4f175763fee mystifying_hodgkin Up 16 hours
+72fc6668929092a1a3a4c1df2b75edaa99634b7d1565b76c04d89650f9f2c493 busy_heyrovsky Up 17 hours
+b3d9b9564f6aa13a656cdfdaa20146ef839437427f8ac95ebe6ea68a270e5a7b practical_mendel Up 17 hours
+83637d6aebc2b43b4ca821b011632bf2031ce33f2a06480cbb0fa6edc1b20109 beautiful_kapitsa Up 20 hours
+09cbb01924d157ea27c1208a4cd6c2723a5f83ff0e209ce13086b1eaac860dff modest_margulis Up 21 hours
+c967f1696048d2f6d9b513fddfc7f16c3e52d199919e54d3b1a429041b785dd7 claude-smh-hbm_smh_front_c_m3f_f7f1a0ee4_cal Up 24 hours
+0bf6b000297eaecc12db780ea209f734562c5cfdc7ef720c33f83566459bc152 gallant_brahmagupta Up 27 hours
+61ffacab972a0a7b58d45ad89e1073aab21eec5ee40d310b0b6417ee1ede7fe2 compassionate_nash Up 28 hours
+
+FILE /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/early_fail.json EXISTS False
+FILE /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/route.a1.pid EXISTS True
+2124280
+
+FILE /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/cl/route.a1.rc EXISTS False
+FILE /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/status EXISTS False
+CTSLOG /srv/opentallas-scratch2/scratch/claude/closure-loop/hgi_quant_pd55-7202d4ec4-tc-cx/routes/hgi_quant_pd55_7202d4ec4_tc_cx/work/orfs/logs/asap7/opentallas_ot_hgi_quant_decode_asap7_qdm_hgi_quant_pd55_7202d4ec4_tc_cx/base/4_1_cts.tmp.log BYTES 59191 SHA256 5ae74b4732870b0e43f5c6d5443e3d6929e4c5a47e094972415d947653d643bb
+]$_DFF_P_/D
+    1371+ |      58 |     297 |      108 |     12 |    50 |    +0.1% | -565.340 |  -715943.1 |  -442298.0 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1380+ |      58 |     304 |      108 |     12 |    51 |    +0.1% | -565.340 |  -715895.1 |  -442281.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1381+ |      58 |     305 |      108 |     12 |    51 |    +0.1% | -565.340 |  -715946.2 |  -442277.3 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1385+ |      58 |     307 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715921.4 |  -442276.3 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1390+ |      58 |     311 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715581.1 |  -442229.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1391+ |      58 |     312 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715587.1 |  -442228.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1395+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.8 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1396+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.8 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1397+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.8 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1398+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1399+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1400+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1401+ |      58 |     315 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715578.1 |  -442189.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1404+ |      58 |     317 |      108 |     12 |    52 |    +0.1% | -565.340 |  -715524.2 |  -442124.0 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1410+ |      58 |     317 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715489.5 |  -442114.3 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1412+ |      58 |     319 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715489.5 |  -442085.6 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1413+ |      58 |     319 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715489.5 |  -442085.6 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1414+ |      58 |     319 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715489.5 |  -442085.6 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1415+ |      58 |     319 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715489.5 |  -442085.6 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1420+ |      58 |     323 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.5 |  -441331.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1420+ |      58 |     323 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.5 |  -441331.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1421+ |      58 |     323 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.5 |  -441331.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1422+ |      58 |     323 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.5 |  -441331.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1424+ |      58 |     324 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.2 |  -441328.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1425+ |      58 |     324 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.2 |  -441328.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1426+ |      58 |     324 |      108 |     12 |    57 |    +0.1% | -565.340 |  -715425.2 |  -441328.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1430+ |      58 |     326 |      108 |     12 |    58 |    +0.1% | -565.340 |  -715379.7 |  -441310.8 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1432+ |      58 |     327 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715379.9 |  -441307.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1433+ |      58 |     327 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715379.9 |  -441307.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1434+ |      58 |     327 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715379.9 |  -441307.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1435+ |      58 |     327 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715379.9 |  -441307.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1436+ |      58 |     327 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715379.9 |  -441307.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1440+ |      58 |     330 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715321.8 |  -440718.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1441+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1442+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1443+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1444+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1445+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1446+ |      58 |     331 |      108 |     12 |    59 |    +0.1% | -565.340 |  -715305.0 |  -440346.2 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1450+ |      58 |     333 |      108 |     12 |    60 |    +0.1% | -565.340 |  -715187.4 |  -440265.1 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1450+ |      58 |     333 |      108 |     12 |    60 |    +0.1% | -565.340 |  -715187.4 |  -440265.1 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1451+ |      58 |     333 |      108 |     12 |    60 |    +0.1% | -565.340 |  -715187.4 |  -440265.1 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1460+ |      58 |     339 |      108 |     12 |    62 |    +0.1% | -565.340 |  -714765.0 |  -440236.9 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1461+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1462+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1463+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1464+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1465+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1466+ |      58 |     339 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714757.6 |  -440234.7 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1469+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1470+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1470+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1471+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1472+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1473+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1474+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1475+ |      58 |     341 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714751.0 |  -440123.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1477+ |      58 |     342 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714749.5 |  -440113.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1479+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1480+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1480+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1481+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1482+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1483+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1484+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1485+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1486+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1487+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1488+ |      58 |     343 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714715.3 |  -440105.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1490+ |      58 |     344 |      108 |     12 |    63 |    +0.1% | -565.340 |  -714710.4 |  -440036.4 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1494+ |      58 |     347 |      108 |     12 |    64 |    +0.1% | -565.340 |  -714671.8 |  -439830.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1495+ |      58 |     347 |      108 |     12 |    64 |    +0.1% | -565.340 |  -714671.8 |  -439830.5 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    1500+ |      58 |     349 |      108 |     12 |    66 |    +0.1% | -565.340 |  -714622.3 |  -439820.0 |   2771 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+    final |      58 |     349 |      108 |     12 |    66 |    +0.1% | -565.340 |  -714622.3 |  -439820.0 |   2770 | bq.s5_c\[15\]\[2\]$_DFF_P_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 58 buffers.
+[INFO RSZ-0040] Inserted 108 buffers.
+[INFO RSZ-0051] Resized 349 instances: 349 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 66 instances.
+[INFO RSZ-0049] Cloned 12 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 203.19s
+Took 203 seconds: repair_timing -setup_margin 0 -hold_margin 20 -repair_tns 100 -max_buffer_percent 100 -verbose -setup
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HM_GUARD: margin 20 kept: 22197 endpoints in margin, ~31768 buffers, +0.2 util pts (22197 endpoints in margin > 10000)
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+[WARNING STA-1010] No common period was found between clocks ot_lb_v_core_clk and core_clk.
+OT_HOLD_GUARD start: hold ws -386.11 tns -143601.7 viol 3683 (margin 20, chunk 1000 it)
+repair_timing -setup_margin 0 -hold_margin 20 -repair_tns 100 -max_buffer_percent 100 -verbose -hold -max_iterations 1000
+[INFO RSZ-0046] Found 22197 endpoints with hold violations.
+Iteration | Resized | Buffers | Cloned Gates |   Area   |   WNS   |   TNS   | Endpoint
+--------------------------------------------------------------------------------------
+        0 |       0 |       0 |            0 |    +0.0% | -386.108 | -143601.719 | aq.s0_x[28]$_DFF_P_/D
+       10 |       0 |      11 |            0 |    +0.0% | -386.108 | -143289.562 | aq.s0_x[28]$_DFF_P_/D
+       20 |       0 |      34 |            0 |    +0.0% | -386.108 | -143003.781 | aq.s0_x[28]$_DFF_P_/D
+       30 |       0 |      61 |            0 |    +0.0% | -386.108 | -142521.203 | aq.s0_x[28]$_DFF_P_/D
+       40 |       0 |      80 |            0 |    +0.0% | -386.108 | -142326.891 | aq.s0_x[28]$_DFF_P_/D
+       50 |       0 |     121 |            0 |    +0.0% | -386.108 | -141626.172 | aq.s0_x[28]$_DFF_P_/D
+       60 |       0 |     157 |            0 |    +0.0% | -386.108 | -141010.312 | aq.s0_x[28]$_DFF_P_/D
+       70 |       0 |     193 |            0 |    +0.1% | -386.108 | -140421.203 | aq.s0_x[28]$_DFF_P_/D
+       80 |       0 |     232 |            0 |    +0.1% | -386.108 | -139707.625 | aq.s0_x[28]$_DFF_P_/D
+       90 |       0 |     277 |            0 |    +0.1% | -386.108 | -139016.953 | aq.s0_x[28]$_DFF_P_/D
+      100 |       0 |     317 |            0 |    +0.1% | -386.108 | -138397.734 | aq.s0_x[28]$_DFF_P_/D
+      110 |       0 |     346 |            0 |    +0.1% | -386.108 | -138019.547 | aq.s0_x[28]$_DFF_P_/D
+      120 |       0 |     388 |            0 |    +0.1% | -386.108 | -137354.250 | aq.s0_x[28]$_DFF_P_/D
+      130 |       0 |     405 |            0 |    +0.1% | -386.108 | -137151.141 | aq.s0_x[28]$_DFF_P_/D
+      140 |       0 |     425 |            0 |    +0.1% | -386.108 | -136874.719 | aq.s0_x[28]$_DFF_P_/D
+      150 |       0 |     462 |            0 |    +0.1% | -386.108 | -136236.297 | aq.s0_x[28]$_DFF_P_/D
+      160 |       0 |     494 |            0 |    +0.1% | -386.108 | -135833.703 | aq.s0_x[28]$_DFF_P_/D
+      170 |       0 |     531 |            0 |    +0.2% | -386.108 | -135318.516 | aq.s0_x[28]$_DFF_P_/D
+      180 |       0 |     566 |            0 |    +0.2% | -386.108 | -134916.453 | aq.s0_x[28]$_DFF_P_/D
+      190 |       0 |     609 |            0 |    +0.2% | -386.108 | -130932.453 | aq.s0_x[28]$_DFF_P_/D
+      200 |       0 |     650 |            0 |    +0.2% | -386.108 | -130299.398 | aq.s0_x[28]$_DFF_P_/D
+      210 |       0 |     687 |            0 |    +0.2% | -386.108 | -129608.805 | aq.s0_x[28]$_DFF_P_/D
+      220 |       0 |     729 |            0 |    +0.2% | -386.108 | -129115.594 | aq.s0_x[28]$_DFF_P_/D
+      230 |       0 |     761 |            0 |    +0.2% | -386.108 | -128741.477 | aq.s0_x[28]$_DFF_P_/D
+      240 |       0 |     794 |            0 |    +0.2% | -386.108 | -128407.922 | aq.s0_x[28]$_DFF_P_/D
+      250 |       0 |     827 |            0 |    +0.2% | -386.108 | -127951.711 | aq.s0_x[28]$_DFF_P_/D
+      260 |       0 |     865 |            0 |    +0.2% | -386.108 | -127420.789 | aq.s0_x[28]$_DFF_P_/D
+      270 |       0 |     889 |            0 |    +0.3% | -386.108 | -126825.852 | aq.s0_x[28]$_DFF_P_/D
+      280 |       0 |     913 |            0 |    +0.3% | -386.108 | -126530.109 | aq.s0_x[28]$_DFF_P_/D
+      290 |       0 |     942 |            0 |    +0.3% | -386.108 | -125988.227 | aq.s0_x[28]$_DFF_P_/D
+      300 |       0 |     975 |            0 |    +0.3% | -386.108 | -125466.148 | aq.s0_x[28]$_DFF_P_/D
+      310 |       0 |    1005 |            0 |    +0.3% | -386.108 | -124931.531 | aq.s0_x[28]$_DFF_P_/D
+      320 |       0 |    1045 |            0 |    +0.3% | -386.108 | -124341.852 | aq.s0_x[28]$_DFF_P_/D
+      330 |       0 |    1079 |            0 |    +0.3% | -386.108 | -123708.648 | aq.s0_x[28]$_DFF_P_/D
+      340 |       0 |    1106 |            0 |    +0.3% | -386.108 | -123255.547 | aq.s0_x[28]$_DFF_P_/D
+      350 |       0 |    1146 |            0 |    +0.3% | -386.108 | -122770.898 | aq.s0_x[28]$_DFF_P_/D
+      360 |       0 |    1179 |            0 |    +0.3% | -386.108 | -122254.594 | aq.s0_x[28]$_DFF_P_/D
+      370 |       0 |    1209 |            0 |    +0.3% | -386.108 | -121733.336 | aq.s0_x[28]$_DFF_P_/D
+      380 |       0 |    1250 |            0 |    +0.4% | -386.108 | -121115.289 | aq.s0_x[28]$_DFF_P_/D
+      390 |       0 |    1278 |            0 |    +0.4% | -386.108 | -120745.453 | aq.s0_x[28]$_DFF_P_/D
+      400 |       0 |    1315 |            0 |    +0.4% | -386.108 | -120245.719 | aq.s0_x[28]$_DFF_P_/D
+      410 |       0 |    1352 |            0 |    +0.4% | -386.108 | -119359.727 | aq.s0_x[28]$_DFF_P_/D
+      420 |       0 |    1390 |            0 |    +0.4% | -386.108 | -118883.133 | aq.s0_x[28]$_DFF_P_/D
+      430 |       0 |    1434 |            0 |    +0.4% | -386.108 | -117964.695 | aq.s0_x[28]$_DFF_P_/D
+      440 |       0 |    1469 |            0 |    +0.4% | -386.108 | -117345.875 | aq.s0_x[28]$_DFF_P_/D
+      450 |       0 |    1522 |            0 |    +0.4% | -386.108 | -116441.633 | aq.s0_x[28]$_DFF_P_/D
+      460 |       0 |    1565 |            0 |    +0.4% | -386.108 | -115730.195 | aq.s0_x[28]$_DFF_P_/D
+      470 |       0 |    1609 |            0 |    +0.5% | -386.108 | -115030.312 | aq.s0_x[28]$_DFF_P_/D
+      480 |       0 |    1652 |            0 |    +0.5% | -386.108 | -114071.641 | aq.s0_x[28]$_DFF_P_/D
+      490 |       0 |    1698 |            0 |    +0.5% | -386.108 | -113402.461 | aq.s0_x[28]$_DFF_P_/D
+      500 |       0 |    1755 |            0 |    +0.5% | -386.108 | -112423.125 | aq.s0_x[28]$_DFF_P_/D
+      510 |       0 |    1802 |            0 |    +0.5% | -386.108 | -111652.461 | aq.s0_x[28]$_DFF_P_/D
+      520 |       0 |    1847 |            0 |    +0.5% | -386.108 | -110830.961 | aq.s0_x[28]$_DFF_P_/D
+      530 |       0 |    1907 |            0 |    +0.5% | -386.108 | -110104.945 | aq.s0_x[28]$_DFF_P_/D
+      540 |       0 |    1971 |            0 |    +0.6% | -386.108 | -109334.617 | aq.s0_x[28]$_DFF_P_/D
+

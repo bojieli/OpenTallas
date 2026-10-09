@@ -1,0 +1,432 @@
+{
+  "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
+  "spec": {
+    "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
+    "block": "ot_hgi_quant_decode",
+    "owner": "Codex:generic_quant_decode/quant_physical_pair",
+    "hosts": [
+      "ot-epyc4",
+      "ot-epyc2",
+      "ot-epyc3",
+      "ot-epyc1tb"
+    ],
+    "threads": 12,
+    "peak_ram_gb": 48,
+    "source": {
+      "branch": "codex/hgi-quant-decode-20261009",
+      "commit": "7202d4ec4",
+      "extra_paths": [
+        "results/hgi_generic/cf_qdq_891b4b555"
+      ]
+    },
+    "purpose": "Owner-approved HGI-1 G8 full32-lane/128-bit record quant decode; SATFINITE opt-in E4M3 corrected fork; all ports live. Physical-only density variant. Standalone boundary contract is provisional and explicitly not legacyhfd_quant die budget match. No adoption until generic die integration budget approved. Parent exact lockstep/CF-QDQ/mutants must pass before fleet intake.",
+    "registered_io": true,
+    "rtl_boundary": {
+      "levels": 16
+    },
+    "stages": {
+      "bench": [
+        {
+          "name": "ds_lockstep_and_mutant",
+          "cmd": "bash tools/hgi_quant_decode_bench.sh {RUN}/bench_ds",
+          "expect": "pass",
+          "threads": 8,
+          "peak_ram_gb": 2
+        },
+        {
+          "name": "ds_mutant_rejected",
+          "cmd": "cat {RUN}/bench_ds/mutant.log; test -s {RUN}/bench_ds/mutant.rc && test $(cat {RUN}/bench_ds/mutant.rc) != 0 && grep -q 'ARITHMETIC mismatch' {RUN}/bench_ds/mutant.log && exit 1; exit 0",
+          "expect": "fail",
+          "threads": 1,
+          "peak_ram_gb": 1,
+          "fail_regex": "ARITHMETIC mismatch"
+        },
+        {
+          "name": "cf_qdq_and_mutant",
+          "cmd": "bash tools/hgi_quant_vector_bench.sh {RUN}/bench_cf +VECTORS=results/hgi_generic/cf_qdq_891b4b555 +N8=49 +N4=49 +N4E=86",
+          "expect": "pass",
+          "threads": 8,
+          "peak_ram_gb": 2
+        },
+        {
+          "name": "cf_scale_mutant_rejected",
+          "cmd": "cat {RUN}/bench_cf/mutant.log; test -s {RUN}/bench_cf/mutant.rc && test $(cat {RUN}/bench_cf/mutant.rc) != 0 && grep -q 'CF-QDQ golden mismatch' {RUN}/bench_cf/mutant.log && exit 1; exit 0",
+          "expect": "fail",
+          "threads": 1,
+          "peak_ram_gb": 1,
+          "fail_regex": "CF-QDQ golden mismatch"
+        }
+      ],
+      "calibrate": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+        "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "threads": 12,
+        "peak_ram_gb": 12
+      },
+      "route": {
+        "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc' CORNER=WC SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh hgi_quant_pd50 {LABEL} {RUN}/routes ${CL_STOP_AFTER:+cts}",
+        "ok": "grep -q '^flow_rc=0' {RUN}/routes/{NAME}/status && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/status",
+        "logs": [
+          "{RUN}/routes/{NAME}/flow.log"
+        ],
+        "peak_ram_gb": 48
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "post_sdc": [
+        "physical/qwen_die_masters/signoff/hgi_quant_pd50.sdc"
+      ]
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "New fullgeneric128-bit record/control interface absent from legacyhfd_quant budget. Explicit standalone route_master allinter150ps measuredTT reference/H1 boundary80fF load150ps transition used for pathfinding. Genericdie integration must supply and approve finalbudget before adoption."
+    },
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.01,
+    "cycles_added": 15,
+    "cycles_note": "E4M3 native8edges aligned by15edges to23edges; DSnative23edges unchanged; physicaldensityvariant adds0edges; illegaldecode_fault1edge",
+    "bench_memory_basis": "95eba5a81 actual five whole-PG samples max1002060KiB;2GiB conservative admissionenvelope for sequential8workerbuilds,not a cap/routepeak",
+    "route_memory_basis": {
+      "nearest_job": "hbm_quant_e7c2e5b06-tt",
+      "host": "ot-epyc3",
+      "baseline_cells": 112153,
+      "baseline_area_um2": 16816.63032,
+      "baseline_outline_um": [
+        1399.656,
+        358.536
+      ],
+      "new_cells": 122121,
+      "new_area_um2": 18541.0944,
+      "new_outline_um": [
+        1800,
+        600
+      ],
+      "baseline_cal_cts_peak_kib": 3462408,
+      "baseline_drt_peak_kib": 18642752,
+      "formula": "actual baseline phase peak * max(cellratio,arearatio) * outlinearea ratio * 1.10growth, then conservative wholeGiB rounding",
+      "scale_without_growth": 2.3728269383289358,
+      "cal_estimate_gib_unrounded": 8.618607016824889,
+      "drt_estimate_gib_unrounded": 46.40543610115453,
+      "admission_estimate_gib": {
+        "calibrate": 10,
+        "route": 48
+      },
+      "status": "Estimates derived from measured sibling phase peaks, not measured G8 peaks or hard caps"
+    },
+    "corner_scene_audit": "cfg contains noCORNER assignment; current route_master --orfs-corner ${CORNER:-WC}, holdcornersWC,BC. OT_ORFS_CORNER_OVERRIDE=TC overlaysWC_LIB_FILESwithTT liberties withoutTCscene rename. ActualgeneratedconfigWC/BC+60/25+833.333 mandatorypostlaunch.",
+    "hold_eco": {
+      "reexport": "mkdir -p {RUN}/record && python3 tools/hbm_fmax_attn_abstract.py --tt --orfs-dir {RUN}/routes/{NAME}/work/orfs --name ot_hgi_quant_decode --out {RUN}/record/view --tmp-dir {RUN}/record/export_tmp > {RUN}/record/export.log 2>&1 && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/record/corner_sta.json"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "physical/hgi_quant_generic_20261009/results/pd50"
+      }
+    ],
+    "merge_target": null
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/hgi_quant_pd50-7202d4ec4-tc-cx.json",
+  "created": "2026-10-09T06:16:25-07:00",
+  "status": "EARLY_FAIL_HOLD",
+  "stage_idx": 5,
+  "attempt": 1,
+  "retries_used": 0,
+  "benches": {
+    "bench_ds_lockstep_and_mutant": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "tools/hgi_quant_decode_bench.sh: line 11: 2752262 Aborted                    (core dumped) \"$out/mutant.obj/sim\" > \"$out/mutant.log\" 2>&1\n",
+      "track": "parallel"
+    },
+    "bench_ds_mutant_rejected": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "[858000] %Fatal: tb_hgi_quant_decode.sv:27: Assertion failed in tb_hgi_quant_decode: ARITHMETIC mismatch output 910\n%Error: rtl/test/hbm_accel/generic/tb_hgi_quant_decode.sv:27: Verilog $stop\nAborting...\n",
+      "track": "parallel"
+    },
+    "bench_cf_qdq_and_mutant": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "tools/hgi_quant_vector_bench.sh: line 15: 2839314 Aborted                    (core dumped) \"$out/mutant.obj/sim\" \"${args[@]}\" > \"$out/mutant.log\" 2>&1\n",
+      "track": "parallel"
+    },
+    "bench_cf_scale_mutant_rejected": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "[30000] %Fatal: tb_hgi_quant_vectors.sv:11: Assertion failed in tb_hgi_quant_vectors: CF-QDQ golden mismatch op=0 output=7 got=35803580b180318031803180800000000000000039e0b640365036403640b5a035a035a03590b580359035803580b180318031803180800000000000000039e0 expected=35803580b180318031803100800031000000000039e0b640365036403640b5a035a035a03590b580359035803580b180318031803100800031000000000039e0 fault=0\n%Error: rtl/test/hbm_accel/generic/tb_hgi_quant_vectors.sv:11: Verilog $stop\nAborting...\n",
+      "track": "parallel"
+    }
+  },
+  "hosts_tried": [
+    "ot-epyc2"
+  ],
+  "events": [
+    "2026-10-09T06:16:25-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/hgi_quant_pd50-7202d4ec4-tc-cx.json",
+    "2026-10-09T06:16:25-07:00 submit lint PASS (estimate {'W': 7.82, 'E': 5.12, 'N': 0.08, 'S': 1.28} b/um, limit 12.0); PASS rtl_boundary ot_hgi_quant_decode: registered boundary (in->reg 10, reg->out 2 levels)",
+    "2026-10-09T06:16:31-07:00 benches run in parallel with calibrate/route (4 benches; spec bench_first opts out)",
+    "2026-10-09T06:17:21-07:00 source 7202d4ec4eb9 synced to ot-epyc2:/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/src",
+    "2026-10-09T06:17:34-07:00 bench track: launched bench_ds_lockstep_and_mutant (bench_ds_lockstep_and_mutant.a1b1) beside None",
+    "2026-10-09T06:17:40-07:00 launched calibrate (attempt 1) on ot-epyc2",
+    "2026-10-09T06:18:29-07:00 bench track: bench_ds_lockstep_and_mutant PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-09T06:18:32-07:00 bench track: launched bench_ds_mutant_rejected (bench_ds_mutant_rejected.a1b1) beside calibrate",
+    "2026-10-09T06:31:30-07:00 bench track: bench_ds_mutant_rejected FAIL as expected (rc=1) ",
+    "2026-10-09T06:31:33-07:00 bench track: launched bench_cf_qdq_and_mutant (bench_cf_qdq_and_mutant.a1b1) beside calibrate",
+    "2026-10-09T06:32:34-07:00 bench track: bench_cf_qdq_and_mutant PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-09T06:32:38-07:00 bench track: launched bench_cf_scale_mutant_rejected (bench_cf_scale_mutant_rejected.a1b1) beside calibrate",
+    "2026-10-09T06:33:30-07:00 bench track: bench_cf_scale_mutant_rejected FAIL as expected (rc=1) ",
+    "2026-10-09T06:34:29-07:00 calibrate done (rc=0)",
+    "2026-10-09T06:34:30-07:00 calibrated insertion CK_SS_MEAN=1017 CK_SS_MIN=988 CK_SS_MAX=1409 CK_TT_MEAN=1017 CK_TT_MIN=988 CK_TT_MAX=1409 CK_FF_MEAN=831 CK_FF_MIN=804 CK_FF_MAX=1172 CK_SSLIB_MEAN=1320 CK_SSLIB_MIN=1286 CK_SSLIB_MAX=1780 CK_ROUTE_REF=TT",
+    "2026-10-09T06:35:34-07:00 launched route (attempt 1) on ot-epyc2",
+    "2026-10-09T07:02:34-07:00 EARLY_FAIL_HOLD: stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -386.1 ps (start -386.11), 7660 it / 10241 buffers, 18476 endpoints in margin, 0.3 h in step, HM guard present"
+  ],
+  "updated": "2026-10-09T07:02:34-07:00",
+  "bench_par": true,
+  "btrack": {
+    "bench_ds_lockstep_and_mutant": {
+      "state": "done",
+      "tag": "bench_ds_lockstep_and_mutant.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+      "n": 1,
+      "started": "2026-10-09T06:17:34-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_src_a1"
+    },
+    "bench_ds_mutant_rejected": {
+      "state": "done",
+      "tag": "bench_ds_mutant_rejected.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+      "n": 1,
+      "started": "2026-10-09T06:18:32-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_src_a1"
+    },
+    "bench_cf_qdq_and_mutant": {
+      "state": "done",
+      "tag": "bench_cf_qdq_and_mutant.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+      "n": 1,
+      "started": "2026-10-09T06:31:33-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_src_a1"
+    },
+    "bench_cf_scale_mutant_rejected": {
+      "state": "done",
+      "tag": "bench_cf_scale_mutant_rejected.a1b1",
+      "host": "ot-epyc2",
+      "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+      "n": 1,
+      "started": "2026-10-09T06:32:38-07:00",
+      "stage_source": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_src_a1"
+    }
+  },
+  "wait": null,
+  "host": "ot-epyc2",
+  "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+  "source_synced": true,
+  "commit_full": "7202d4ec4eb970a3f49514fcd4e42fcf782a39d2",
+  "reason": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -386.1 ps (start -386.11), 7660 it / 10241 buffers, 18476 endpoints in margin, 0.3 h in step, HM guard present",
+  "bench_location": {
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx",
+    "attempt": 1
+  },
+  "bwait": null,
+  "stage_key": "route",
+  "stage_tag": "route.a1",
+  "stage_started": "2026-10-09T06:35:34-07:00",
+  "bench_work": {
+    "bench_ds_lockstep_and_mutant": "WARN: pass log has no count line (set min_count_regex)",
+    "bench_cf_qdq_and_mutant": "WARN: pass log has no count line (set min_count_regex)"
+  },
+  "wd_checked": 1791553744.7659028,
+  "errors": [
+    "2026-10-09T06:20:33-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+    "2026-10-09T06:22:33-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+    "2026-10-09T06:24:31-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+    "2026-10-09T06:26:32-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+    "2026-10-09T06:28:33-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+    "2026-10-09T06:30:33-07:00 RuntimeError: bench log unreadable on ot-epyc2: /srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log"
+  ],
+  "operator_events": [
+    {
+      "at": "2026-10-09T13:29:39.627878+00:00",
+      "action": "classifier_output_recovery",
+      "proof": {
+        "actual": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_ds/mutant.log",
+        "actual_sha256": "743da9e4936edb8d31ce3043033bf2b0f28ea8e65099262c6304918547d8ef0c",
+        "stage_log": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+        "original_rc": "1",
+        "action": "Recovered actual consuming mutant output into previously empty collector log; no simulation or verdict edited."
+      },
+      "metadata_commit": "cccc4ecf9",
+      "commands_only_future_bench_stdout": true
+    },
+    {
+      "at": "2026-10-09T13:31:57.877025+00:00",
+      "action": "classifier_output_recovery",
+      "proof": {
+        "actual": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/bench_ds/mutant.log",
+        "actual_sha256": "743da9e4936edb8d31ce3043033bf2b0f28ea8e65099262c6304918547d8ef0c",
+        "stage_log": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/cl/bench_ds_mutant_rejected.a1b1.log",
+        "original_rc": "1",
+        "action": "Recovered actual consuming mutant output into previously empty collector log; no simulation or verdict edited."
+      },
+      "metadata_commit": "cccc4ecf9",
+      "commands_only_future_bench_stdout": true
+    }
+  ],
+  "unreachable": 0,
+  "hm_auto_seen": [],
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 2178,
+        "mean": 1319.7,
+        "min": 1286.2,
+        "max": 1780.5
+      },
+      "all": {
+        "n": 34345,
+        "mean": 1329.2,
+        "min": 1283.0,
+        "max": 1780.5
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 2178,
+        "mean": 831.4,
+        "min": 804.4,
+        "max": 1172.2
+      },
+      "all": {
+        "n": 34345,
+        "mean": 838.1,
+        "min": 800.6,
+        "max": 1172.2
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 1017,
+      "CK_SS_ALL_MEAN": 1025,
+      "CK_SS_MIN": 988,
+      "CK_SS_ALL_MIN": 984,
+      "CK_SS_MAX": 1409,
+      "CK_SS_ALL_MAX": 1409,
+      "CK_TT_MEAN": 1017,
+      "CK_TT_ALL_MEAN": 1025,
+      "CK_TT_MIN": 988,
+      "CK_TT_ALL_MIN": 984,
+      "CK_TT_MAX": 1409,
+      "CK_TT_ALL_MAX": 1409,
+      "CK_FF_MEAN": 831,
+      "CK_FF_ALL_MEAN": 838,
+      "CK_FF_MIN": 804,
+      "CK_FF_ALL_MIN": 801,
+      "CK_FF_MAX": 1172,
+      "CK_FF_ALL_MAX": 1172,
+      "CK_SSLIB_MEAN": 1320,
+      "CK_SSLIB_MIN": 1286,
+      "CK_SSLIB_MAX": 1780,
+      "CK_SSLIB_ALL_MEAN": 1329,
+      "CK_SSLIB_ALL_MIN": 1283,
+      "CK_SSLIB_ALL_MAX": 1780,
+      "CK_ROUTE_REF": "TT"
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+  },
+  "ef_checked": 1791553984.7557995,
+  "early_fail": {
+    "verdict": "EARLY_FAIL_HOLD",
+    "why": "stuckscan: 4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -386.1 ps (start -386.11), 7660 it / 10241 buffers, 18476 endpoints in margin, 0.3 h in step, HM guard present",
+    "at": "2026-10-09T07:02:33-07:00",
+    "detail": {
+      "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
+      "host": "ot-epyc2",
+      "status": "RUNNING",
+      "stage": "route",
+      "block": "ot_hgi_quant_decode",
+      "owner": "Codex:generic_quant_decode/quant_physical_pair",
+      "action": "early_fail",
+      "why": [
+        "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -386.1 ps (start -386.11), 7660 it / 10241 buffers, 18476 endpoints in margin, 0.3 h in step, HM guard present"
+      ],
+      "fresh_min": -0.0,
+      "cpu_cores": 1.0,
+      "orfs": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/routes/hgi_quant_pd50_7202d4ec4_tc_cx/work/orfs",
+      "step": "4_1_cts",
+      "step_h": 0.25,
+      "corner": "TT",
+      "setup": {
+        "stage": "place",
+        "ws": -443.1,
+        "raw_ws": -506.5,
+        "period": 770.0,
+        "count": 1582,
+        "tns": -289663
+      },
+      "hold": {
+        "found": [
+          18476
+        ],
+        "cur_last": [
+          "7660",
+          10241,
+          -386.108,
+          -92775.555
+        ],
+        "dwns_1000": 0.0,
+        "guard": true,
+        "sync": [
+          [
+            "-671.61",
+            "-386.11"
+          ]
+        ]
+      },
+      "expected_h": 2.52,
+      "kind": "hopeless",
+      "verdict": "EARLY_FAIL_HOLD",
+      "paths": [
+        {
+          "cls": "reg->out",
+          "slack_ps": -506.48,
+          "group": "core_clk",
+          "dominated": "logic",
+          "wire_ps": 240.3,
+          "cell_ps": 809.5,
+          "max_fanout": 17,
+          "start": "valid_pipe[14]$_DFF_PN0_",
+          "end": "y[36]",
+          "check": "output port clocked by core_clk"
+        },
+        {
+          "cls": "input->reg",
+          "slack_ps": -17.22,
+          "group": "asynchronous",
+          "dominated": "logic",
+          "wire_ps": 179.0,
+          "cell_ps": 398.5,
+          "max_fanout": 15,
+          "start": "rst_n",
+          "end": "aq.g_mr.u_scale4.u.u.y[20]$_DFF_PN0_",
+          "check": "recovery check against rising-edge clock core_clk"
+        }
+      ]
+    }
+  }
+}

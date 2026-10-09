@@ -1,0 +1,77 @@
+{
+  "matching_live_containers": []
+}
+EARLY_FAIL {
+ "name": "hgi_quant_pd50-7202d4ec4-tc-cx",
+ "host": "ot-epyc2",
+ "status": "RUNNING",
+ "stage": "route",
+ "block": "ot_hgi_quant_decode",
+ "owner": "Codex:generic_quant_decode/quant_physical_pair",
+ "action": "early_fail",
+ "why": [
+  "4_1_cts hold repair not converging: WNS gained +0.00 ps and TNS +0.0% over the last 2000 iterations (< 1 ps / 2%); hold WNS now -386.1 ps (start -386.11), 7660 it / 10241 buffers, 18476 endpoints in margin, 0.3 h in step, HM guard present"
+ ],
+ "fresh_min": -0.0,
+ "cpu_cores": 1.0,
+ "orfs": "/srv/opentallas-data/claude/closure-loop/hgi_quant_pd50-7202d4ec4-tc-cx/routes/hgi_quant_pd50_7202d4ec4_tc_cx/work/orfs",
+ "step": "4_1_cts",
+ "step_h": 0.25,
+ "corner": "TT",
+ "setup": {
+  "stage": "place",
+  "ws": -443.1,
+  "raw_ws": -506.5,
+  "period": 770.0,
+  "count": 1582,
+  "tns": -289663
+ },
+ "hold": {
+  "found": [
+   18476
+  ],
+  "cur_last": [
+   "7660",
+   10241,
+   -386.108,
+   -92775.555
+  ],
+  "dwns_1000": 0.0,
+  "guard": true,
+  "sync": [
+   [
+    "-671.61",
+    "-386.11"
+   ]
+  ]
+ },
+ "expected_h": 2.52,
+ "kind": "hopeless",
+ "verdict": "EARLY_FAIL_HOLD",
+ "paths": [
+  {
+   "cls": "reg->out",
+   "slack_ps": -506.48,
+   "group": "core_clk",
+   "dominated": "logic",
+   "wire_ps": 240.3,
+   "cell_ps": 809.5,
+   "max_fanout": 17,
+   "start": "valid_pipe[14]$_DFF_PN0_",
+   "end": "y[36]",
+   "check": "output port clocked by core_clk"
+  },
+  {
+   "cls": "input->reg",
+   "slack_ps": -17.22,
+   "group": "asynchronous",
+   "dominated": "logic",
+   "wire_ps": 179.0,
+   "cell_ps": 398.5,
+   "max_fanout": 15,
+   "start": "rst_n",
+   "end": "aq.g_mr.u_scale4.u.u.y[20]$_DFF_PN0_",
+   "check": "recovery check against rising-edge clock core_clk"
+  }
+ ]
+}
