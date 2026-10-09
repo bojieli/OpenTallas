@@ -226,7 +226,7 @@ wire [32-1:0] po_su_i_imm1;
 wire [32-1:0] r_po_su_i_imm1;
 wire [32-1:0] po_su_i_imm2;
 wire [32-1:0] r_po_su_i_imm2;
-ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.DIE_RANK(DIE_RANK),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)
+ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.DIE_RANK(DIE_RANK),.SYS_BASE_MUT(`SYS_MUT),.WDOG(`ifdef SYS_WDOG `SYS_WDOG `else 200000 `endif)
 `ifdef SYS_ICUT
 `ifndef SYS_ICUT0
  ,.ICUT(1)
@@ -381,7 +381,19 @@ initial begin
   $display("SYS_CASE pos=%0d starts=%0d me=%0d su=%0d coll=%0d cycles=%0d bad=%0d",d_pos,starts,me_ops,su_ops,coll_ops,d_cycles,errors);
   repeat(5)@(negedge clk);
  end
- check_commands=0;rst_n=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);
+ check_commands=0;
+`ifdef SYS_WDOG
+ // struct-close: WATCHDOG case -- the SU never reports ready / idle (a stuck unit): the step must fault with code 4 after
+ // WDOG cycles of the stage; the cycle of d_done is printed so WDQ = 0 and WDQ = 1 builds can be compared edge for edge.
+ rst_n=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);
+ pi_su_ready=0;pi_su_idle=0;cycles=0;
+ d_start=1;@(negedge clk);d_start=0;
+ begin : wdwait integer wc; wc=0; while(!d_done || wc<3) begin @(negedge clk); wc=wc+1; if(wc>4*`SYS_WDOG+2000) begin bad("watchdog never fired"); disable wdwait; end end
+   $display("SYS_WDOG_CASE fired=%0d code=%0d done_after=%0d",d_fault,d_fault_code,wc); end
+ if(!d_fault || d_fault_code!=4) bad("watchdog fault code");
+ pi_su_ready=1;pi_su_idle=1;
+`endif
+ rst_n=0;repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);
  d_start=1;@(negedge clk);d_start=0;
  wait(dut.prog_re);force dut.prog_addr=12'd64;repeat(2)@(negedge clk);release dut.prog_addr;
  wait(d_done);@(negedge clk);if(!d_fault || d_fault_code!=2 || d_drained)bad("program bounds fault");

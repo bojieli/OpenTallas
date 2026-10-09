@@ -110,7 +110,13 @@ module ot_qfd_dctl #(
         if (!rst_n) begin wdq <= 0; wd_ge <= 1'b0; end
         else if (WDQ != 0) begin
             if (wd_clr) begin wdq <= 0; wd_ge <= 1'b0; end
-            else if (wd_cnt) begin wdq <= wdq + 1; wd_ge <= (wdq + 1 >= WDOG); end
+            else if (wd_cnt) begin wdq <= wdq + 1;
+`ifndef OT_DCTL_MUT_WDQ
+                wd_ge <= (wdq + 1 >= WDOG);
+`else
+                wd_ge <= 1'b0;   // mutant: the registered expiry never sets (a stuck stage never faults)
+`endif
+            end
         end
     reg [1:0]  gap;
     wire       fault_in = q_sf || q_cf || q_lf;
