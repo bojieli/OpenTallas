@@ -1,0 +1,205 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "qfd_emb_strip_grid92",
+      "target": "Qwen ROM",
+      "recorded_at": "2026-10-09T10:35:56.046156+00:00",
+      "owner": "fleet_closure; confirmed Claude review0313",
+      "description": "Owner-retired strip target; original source commits, immutable state snapshots and exact remote absence checks retained in retirement audit. Standalone PC/KV fetch providers excluded.",
+      "source": {
+        "commit": "44ba44781",
+        "paths": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "WITHDRAWN_BY_OWNER_REVIEW0313"
+      },
+      "dependencies": []
+    },
+    {
+      "element": "qfd_emb_strip_bus92",
+      "target": "Qwen ROM",
+      "recorded_at": "2026-10-09T10:35:56.046175+00:00",
+      "owner": "fleet_closure; confirmed Claude review0313",
+      "description": "Owner-retired strip target; original source commits, immutable state snapshots and exact remote absence checks retained in retirement audit. Standalone PC/KV fetch providers excluded.",
+      "source": {
+        "commit": "44ba44781",
+        "paths": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "WITHDRAWN_BY_OWNER_REVIEW0313"
+      },
+      "dependencies": []
+    },
+    {
+      "element": "qfd_emb_strip_narrow92",
+      "target": "Qwen ROM",
+      "recorded_at": "2026-10-09T10:35:56.046179+00:00",
+      "owner": "fleet_closure; confirmed Claude review0313",
+      "description": "Owner-retired strip target; original source commits, immutable state snapshots and exact remote absence checks retained in retirement audit. Standalone PC/KV fetch providers excluded.",
+      "source": {
+        "commit": "44ba44781",
+        "paths": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "WITHDRAWN_BY_OWNER_REVIEW0313"
+      },
+      "dependencies": []
+    },
+    {
+      "element": "qfd_emb_strip_narrow96",
+      "target": "Qwen ROM",
+      "recorded_at": "2026-10-09T10:35:56.046182+00:00",
+      "owner": "fleet_closure; confirmed Claude review0313",
+      "description": "Owner-retired strip target; original source commits, immutable state snapshots and exact remote absence checks retained in retirement audit. Standalone PC/KV fetch providers excluded.",
+      "source": {
+        "commit": "44ba44781",
+        "paths": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "WITHDRAWN_BY_OWNER_REVIEW0313"
+      },
+      "dependencies": []
+    },
+    {
+      "element": "qfd_emb_strip_w600",
+      "target": "Qwen ROM",
+      "recorded_at": "2026-10-09T10:35:56.046184+00:00",
+      "owner": "fleet_closure; confirmed Claude review0313",
+      "description": "Owner-retired strip target; original source commits, immutable state snapshots and exact remote absence checks retained in retirement audit. Standalone PC/KV fetch providers excluded.",
+      "source": {
+        "commit": "44ba44781",
+        "paths": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "implementation": {
+        "status": "RETIRED_SCOPE",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "model": {
+        "status": "HISTORICAL"
+      },
+      "exactness": {
+        "positive": {
+          "status": "HISTORICAL_PRESERVED"
+        },
+        "negative": {
+          "status": "HISTORICAL_PRESERVED"
+        }
+      },
+      "physical": {
+        "status": "HISTORICAL_TERMINAL_VERDICTS_PRESERVED",
+        "evidence": [
+          "results/fleet/qwen_rom_strip_retirement_20261009.json"
+        ]
+      },
+      "integration": {
+        "status": "WITHDRAWN_BY_OWNER_REVIEW0313"
+      },
+      "dependencies": []
+    }
+  ]
+}
