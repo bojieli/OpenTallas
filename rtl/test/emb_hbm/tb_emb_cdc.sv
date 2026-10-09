@@ -1,8 +1,8 @@
-`timescale 1ps/1ps
+`timescale 1ps/1fs
 module tb_emb_cdc;
  parameter integer NEG=0;
  reg clk=0,hclk=0,rst_n=0,hrst_n=0;
- always #416 clk=~clk;
+ always #416.666667 clk=~clk;
  always #512 hclk=~hclk;
  reg s_v=0; reg [286:0] s_d=0;
  wire c_v,e_v,s_credit,fc,fh;wire [286:0] c_d;wire [257:0] e_d;
@@ -43,7 +43,7 @@ module tb_emb_cdc;
   end
   if(commands!=256 || received!=256 || credits!=256 || errors || fc || fh)
    $fatal(1,"FAIL emb_cdc cmd=%0d rsp=%0d cr=%0d errors=%0d faults=%b%b",commands,received,credits,errors,fc,fh);
-  $display("PASS emb_cdc commands=256 responses=256 credits=256 clocks=832ps/1024ps");
+  $display("PASS emb_cdc commands=256 responses=256 credits=256 clocks=833.333334ps/1024ps");
   $finish;
  end
 endmodule
