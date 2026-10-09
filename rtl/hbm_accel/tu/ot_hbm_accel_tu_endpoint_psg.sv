@@ -174,7 +174,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @* begin
             r_idx = '0; r_rd = '0;
             for (integer i = 0; i < INJ; i = i + 1)
-                if (CONTRIB && started && k + i < PF) begin
+                if (CONTRIB && started && k + i < PF && (LEG || NA > 1 || i == 0)) begin
                     r_rd[i] = 1'b1;           // rotated slice order: own slice last in each round
                     r_idx[16*i +: 16] = (NC == 1) ? 16'(k + i) : LEG ?
                         16'(mOF[(J + 1 + 32'((k + i) % NC)) % NC] + 16'((k + i) / NC)) :
@@ -187,7 +187,7 @@ module ot_hbm_accel_tu_endpoint_psg #(
             if (!rst_n) begin k <= 0; started <= 1'b0; end
             else begin
                 if (go && !started && ACCEPT_MODE) started <= 1'b1;
-                if (|r_rd) k <= k + INJ;
+                if (|r_rd) k <= k + ((LEG || NA > 1) ? INJ : 1);
             end
         wire [INJ-1:0] h_v;
         wire [INJ*(16+16+FW)-1:0] h_d;   // {injection ordinal, flit index, data}

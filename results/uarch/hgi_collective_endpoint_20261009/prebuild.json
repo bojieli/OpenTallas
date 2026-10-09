@@ -31,5 +31,8 @@
   "qualification": "bench pending; routes pending, not closed",
   "unified_model_source": "3612e0b68:tools/uarch_model.py:hgi_collective_endpoint_model",
   "ds_lockstep_bench_source": "ef5ef9cb5",
-  "small_group_isolation": "nonLEG result groupheader!=OG consumed/dropped before delivery; credit returns preserved, no additional cycle/port"
+  "small_group_isolation": "nonLEG result groupheader!=OG consumed/dropped before delivery; credit returns preserved, no additional cycle/port",
+  "group1_fix": "one own-column write per cycle: only injector lane0 enabled, k advances1; sameunchanged tree/pack pipeline, no new FF",
+  "group1_injection_cycles": "PF rather than ceil(PF/INJ); PF8 legalchunk costs4 extra injectionedges atINJ2, 2chunks256words costs8extraedges",
+  "evidence": "a041debug PF8 pres0=0xaa col0xfe demonstrates twoinjectionlanes collided onehot OR writers"
 }
