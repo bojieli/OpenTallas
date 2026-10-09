@@ -107,6 +107,30 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
 
 
+def hbm_link_landing_credit_model(capacity=256, payload_bits=545, seq_bits=12,
+                                  session_bits=16, rtt_cycles=None):
+    """TU RX FIFO owns256 finite landing slots; protected replay stays512.
+
+    New flits consume one slot until the actual TU FIFO pop is observed.
+    Replay duplicates consume no new credit and receiver drops duplicate seq.
+    Persistent cumulative pops tolerate lost/stale reverse control frames.
+    """
+    if capacity < 2 or capacity & (capacity-1):
+        raise ValueError("power-of-two landing capacity required")
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_TU545_RETRY_LANDING_CREDIT",default_enabled=False,
+        payload_bits=payload_bits,landing_capacity=capacity,credit_bits=cw,
+        RX_FIFO_ownership="external actual TU protected landing FIFO",
+        reverse_bits_per_cycle=seq_bits+session_bits+1+cw,
+        forward_bits_per_cycle=payload_bits+seq_bits+session_bits,
+        macs_per_cycle=0,memory_ports_added=0,fault_free_added_cycles=0,
+        pop_return_rtt_cycles=rtt_cycles,
+        rate_bound_records_per_cycle=None if rtt_cycles is None else min(1,capacity/rtt_cycles),
+        routing_tracks_needed=payload_bits+2*seq_bits+2*session_bits+1+cw,
+        channel_capacity=None,slot_fit=None,actual_TU_RX_FIFO_bound=False,
+        physical_qualified=False,adoptable=False)
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model
