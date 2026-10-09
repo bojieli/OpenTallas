@@ -46,6 +46,16 @@ SPEC_GAPS = [
          "DS head's even split (129,280 over 96: 1,346 or 1,347 rows) is not RANK x imm_a",
          status="open; the DS lowering uses uniform 1,347-row head shards (rows are independent dots, so logits are "
                 "unchanged) and imm_a = 1,347"),
+    # OPEN (DFlash on Qwen3-8B, stream qwen-hbm-spec 2026-10-09; spec 7.4)
+    dict(id="G18", item="SM.MATVEC [4:2] positions - 1: the spec shares one weight read over P <= 8 slots, but the r25 "
+         "SM element ot_hbm_accel_smh carries op_rows/op_c/op_g/op_gs/op_fmt/op_xb and no slot count; whether one "
+         "issued line serves P x-fragments in the same beat is not benched",
+         status="open (hbm-forks): simulator implements P rows bit-exact; timing reports 'spec' (issue unchanged) and "
+                "'reissue' (issue x P) modes"),
+    dict(id="G19", item="ATT [3:0] head lanes cannot encode 16 (4 query heads x 4 verify slots)",
+         status="clarified: 0 encodes 16 (backward compatible; machine.py)"),
+    dict(id="Q-MTP-1", item="a verify step commits k = 1..ncol tokens but the completion carries one token",
+         status="proposed CTL.TOKX (cmdproc): A[0] = k, A[1..k] tokens -> k completion beats; simulated"),
 ]
 
 

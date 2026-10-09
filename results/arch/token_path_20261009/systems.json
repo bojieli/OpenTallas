@@ -25,8 +25,8 @@
     "unit": "tok/s",
     "grade": "derived",
     "source": "results/arch/token_path_20261009/qwen_rom.json totals.tok_s_published <- results/arch/qwen_kv_die_20261009/reprice.json headline",
-    "note": "221,538 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1855 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 143669.0, 'apportioned': 60696.0, 'priced': 17173.0}); range [5398.2, 5418.5] (PHY latency best/worst)",
-    "vs_tp4_single_die": -0.0138
+    "note": "221,538 cycles at 1.2 GHz; the attention layer step through the link is MEASURED in RTL (bench bit-exact, 1789 cycles typical), the rest is the measured STREAM4 token + priced adders (by grade: {'measured': 143669.0, 'apportioned': 60696.0, 'priced': 17173.0}); range [5455.6, 5476.4] (PHY latency best/worst)",
+    "vs_tp4_single_die": -0.0033
    },
    "MTP": {
     "value": null,
@@ -52,21 +52,21 @@
     "note": "4 ROM dies (r22k) + 4 KV dies; 2 packages of 2 ROM + 2 KV dies + 8 stacks"
    },
    "rom_die_mm2": {
-    "value": 757.6,
+    "value": 770.3,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/rom_r22k.json die_mm2",
-    "note": "generator floorplan (placement legal); reticle margin 100.4 mm2"
+    "note": "generator floorplan (placement legal); reticle margin 87.7 mm2"
    },
    "kv_die_mm2": {
-    "value": 172.3,
+    "value": 192.1,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/kv_die/plan.json die_mm2",
     "note": "generator floorplan; OpenROAD placement legal"
    },
    "pair_mm2": {
-    "value": 929.9,
+    "value": 962.4,
     "unit": "mm2",
     "grade": "derived",
     "source": "results/arch/qwen_kv_die_20261009/rom_r22k.json + results/arch/qwen_kv_die_20261009/kv_die/plan.json"
@@ -85,13 +85,13 @@
     "note": "4 a KV die (KV, embedding)"
    },
    "logic_mm2": {
-    "value": 3719.5,
+    "value": 3849.5,
     "unit": "mm2",
     "grade": "derived",
     "source": "4 x pair"
    },
    "total_silicon_mm2": {
-    "value": 21143.5,
+    "value": 21273.5,
     "unit": "mm2",
     "grade": "derived",
     "source": "logic + stacks x 1089 mm2 (results/arch/energy_silicon_measured/energy_silicon.json convention)"
@@ -624,7 +624,8 @@
     "model": "Qwen3-8B",
     "context": "8K (position 8,191)",
     "modes": [
-     "AR"
+     "AR",
+     "MTP"
     ],
     "graph": null,
     "graph_note": "no token-path graph yet (export target qwen_hbm not defined); the rate is the HGI-1 simulator's",
@@ -634,15 +635,257 @@
       "unit": "tok/s",
       "grade": "modelled",
       "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json result.S2.tok_s",
-      "note": "pathfinding simulator on 4 r25 dies, TP4, INT8 fmt3 at the MEASURED SM issue (64 codes/cycle/SM, 2 beats a 128-code line: SM-issue bound); 1,261,770 cycles; CP entries estimates; dense 1,024-bit lines adopted (0 % alone); one-beat INT8 (RQ-HF-7, owner decision pending on the SM re-layout fit) gives 1300.6 (results/arch/hgi_sim_20261009/qwen_int8_packing.json)",
+      "note": "pathfinding simulator on 4 r25 dies, TP4, INT8 fmt3 at the MEASURED SM issue (64 codes/cycle/SM, 2 beats a 128-code line: SM-issue bound); 1,261,770 cycles; CP entries estimates; dense 1,024-bit lines adopted (0 % alone); one-beat INT8 (RQ-HF-7, REJECTED: NO_FIT, results/rtl/hbm_forks_20261009/int8_relayout_study.json) would give 1300.6 (results/arch/hgi_sim_20261009/qwen_int8_packing.json)",
       "one_beat_int8": 1300.6
      },
      "MTP": {
-      "value": null,
+      "value": 1793.5,
       "unit": "tok/s",
       "grade": "modelled",
-      "source": "memory qwen-on-r25-unified",
-      "note": "DSpark p=4 on the generic die; Qwen tau on the owner 6-class blend is still being measured (qwen-hbm-unify)"
+      "source": "results/arch/hgi_sim_20261009/dflash/dflash_timing.json table[B=16, sm_mode=spec, one_beat_int8=False, tau_kind=published]",
+      "note": "DFlash b16 step (draft + 2-pass verify + accept) compiled to HGI-1 and run bit-exact in hgi_sim (results/arch/hgi_sim_20261009/dflash/dflash_proof.json); step 5,359,384 cycles at 8K; tau 8.01 = DFlash arXiv:2602.06036v2 Table 3 (B200, MATH-500; largest published Qwen3-8B tau); sensitivity: our measured tau 3.656 -> 818.6; block 8 (1 weight pass) 2500.3 at tau 5.584 (published-anchored) / 1475.7 at measured 3.2956; one-beat INT8 (NO_FIT) 2126.7; assumes the SM shares one issued line over <= 8 slots (SPEC_GAP G18: if every slot re-issues, block 16 falls to 462.8)",
+      "table": [
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "published",
+        "tau": 5.584,
+        "step_cycles": 2679955.5,
+        "tok_s": 2500.3,
+        "vs_ar": 2.629
+       },
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "measured",
+        "tau": 3.2956,
+        "step_cycles": 2679955.5,
+        "tok_s": 1475.7,
+        "vs_ar": 1.552
+       },
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "measured_eq",
+        "tau": 3.7478,
+        "step_cycles": 2679955.5,
+        "tok_s": 1678.1,
+        "vs_ar": 1.765
+       },
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "published",
+        "tau": 5.584,
+        "step_cycles": 2260054.9,
+        "tok_s": 2964.9,
+        "vs_ar": 2.28
+       },
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "measured",
+        "tau": 3.2956,
+        "step_cycles": 2260054.9,
+        "tok_s": 1749.8,
+        "vs_ar": 1.345
+       },
+       {
+        "B": 8,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "measured_eq",
+        "tau": 3.7478,
+        "step_cycles": 2260054.9,
+        "tok_s": 1989.9,
+        "vs_ar": 1.53
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "published",
+        "tau": 5.584,
+        "step_cycles": 10346122.1,
+        "tok_s": 647.7,
+        "vs_ar": 0.681
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "measured",
+        "tau": 3.2956,
+        "step_cycles": 10346122.1,
+        "tok_s": 382.2,
+        "vs_ar": 0.402
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "measured_eq",
+        "tau": 3.7478,
+        "step_cycles": 10346122.1,
+        "tok_s": 434.7,
+        "vs_ar": 0.457
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "published",
+        "tau": 5.584,
+        "step_cycles": 6384874.1,
+        "tok_s": 1049.5,
+        "vs_ar": 0.807
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "measured",
+        "tau": 3.2956,
+        "step_cycles": 6384874.1,
+        "tok_s": 619.4,
+        "vs_ar": 0.476
+       },
+       {
+        "B": 8,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "measured_eq",
+        "tau": 3.7478,
+        "step_cycles": 6384874.1,
+        "tok_s": 704.4,
+        "vs_ar": 0.542
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "published",
+        "tau": 8.01,
+        "step_cycles": 5359384.1,
+        "tok_s": 1793.5,
+        "vs_ar": 1.886
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "measured",
+        "tau": 3.656,
+        "step_cycles": 5359384.1,
+        "tok_s": 818.6,
+        "vs_ar": 0.861
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": false,
+        "tau_kind": "measured_eq",
+        "tau": 4.662,
+        "step_cycles": 5359384.1,
+        "tok_s": 1043.9,
+        "vs_ar": 1.098
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "published",
+        "tau": 8.01,
+        "step_cycles": 4519583.0,
+        "tok_s": 2126.7,
+        "vs_ar": 1.635
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "measured",
+        "tau": 3.656,
+        "step_cycles": 4519583.0,
+        "tok_s": 970.7,
+        "vs_ar": 0.746
+       },
+       {
+        "B": 16,
+        "sm_mode": "spec",
+        "one_beat_int8": true,
+        "tau_kind": "measured_eq",
+        "tau": 4.662,
+        "step_cycles": 4519583.0,
+        "tok_s": 1237.8,
+        "vs_ar": 0.952
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "published",
+        "tau": 8.01,
+        "step_cycles": 20767685.3,
+        "tok_s": 462.8,
+        "vs_ar": 0.487
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "measured",
+        "tau": 3.656,
+        "step_cycles": 20767685.3,
+        "tok_s": 211.3,
+        "vs_ar": 0.222
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": false,
+        "tau_kind": "measured_eq",
+        "tau": 4.662,
+        "step_cycles": 20767685.3,
+        "tok_s": 269.4,
+        "vs_ar": 0.283
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "published",
+        "tau": 8.01,
+        "step_cycles": 12807205.3,
+        "tok_s": 750.5,
+        "vs_ar": 0.577
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "measured",
+        "tau": 3.656,
+        "step_cycles": 12807205.3,
+        "tok_s": 342.6,
+        "vs_ar": 0.263
+       },
+       {
+        "B": 16,
+        "sm_mode": "reissue",
+        "one_beat_int8": true,
+        "tau_kind": "measured_eq",
+        "tau": 4.662,
+        "step_cycles": 12807205.3,
+        "tok_s": 436.8,
+        "vs_ar": 0.336
+       }
+      ]
      }
     },
     "aggregate": {
@@ -757,6 +1000,15 @@
     "title": "DFlash (Chen, Liang, Liu), arXiv:2602.06036v2, Table 3 (SGLang FA4, B200, c=1) and Table 4 (long context)",
     "url": "https://arxiv.org/html/2602.06036v2"
    },
+   "ar_batch1": {
+    "value": 230,
+    "unit": "tok/s",
+    "grade": "third-party",
+    "source": "results/external/registry.json entries[id=new:dflash_table3_table4].value.qwen3_8b_b200_c1_math500.ar_tok_s",
+    "note": "1 x B200, SGLang, AR baseline of the same table (like-for-like AR row)",
+    "title": "DFlash (Chen, Liang, Liu), arXiv:2602.06036v2, Table 3 (SGLang FA4, B200, c=1) and Table 4 (long context)",
+    "url": "https://arxiv.org/html/2602.06036v2"
+   },
    "served_median": {
     "value": 55,
     "unit": "tok/s",
@@ -774,6 +1026,15 @@
     "grade": "third-party",
     "source": "results/external/registry.json entries[id=new:sglang_v41flash_gb300_bs1].value.dspark_tok_s",
     "note": "4 x GB300, SGLang + DSpark, batch 1, simulated accept length 5.5 (GPU-favourable vs our tau 4.159)",
+    "title": "SGLang blog, DeepSeek-V4.1 Flash on SGLang: from 35 to 873 tokens/s (4 x GB300, batch 1, DSpark)",
+    "url": "https://www.sglang.io/blog/deepseek-v4.1-flash-kernel-optimization"
+   },
+   "ar_batch1": {
+    "value": 203,
+    "unit": "tok/s",
+    "grade": "third-party",
+    "source": "results/external/registry.json entries[id=new:sglang_v41flash_gb300_bs1].value.plain_tok_s",
+    "note": "4 x GB300, SGLang, no speculation, batch 1 (like-for-like AR row)",
     "title": "SGLang blog, DeepSeek-V4.1 Flash on SGLang: from 35 to 873 tokens/s (4 x GB300, batch 1, DSpark)",
     "url": "https://www.sglang.io/blog/deepseek-v4.1-flash-kernel-optimization"
    },
@@ -824,7 +1085,9 @@
    "gpu": 1175,
    "served": 55,
    "vs_gpu_batch1": 4.61,
-   "vs_served_median": 98.5
+   "vs_served_median": 98.5,
+   "gpu_same_mode": 230,
+   "vs_gpu_same_mode": 23.55
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -843,7 +1106,9 @@
    "gpu": 873.63,
    "served": 88.5,
    "vs_gpu_batch1": 1.66,
-   "vs_served_median": 16.4
+   "vs_served_median": 16.4,
+   "gpu_same_mode": 203,
+   "vs_gpu_same_mode": 7.13
   },
   {
    "target": "DS ROM (S81 + Engram HBM)",
@@ -862,7 +1127,9 @@
    "gpu": 873.63,
    "served": 88.5,
    "vs_gpu_batch1": 4.98,
-   "vs_served_median": 49.2
+   "vs_served_median": 49.2,
+   "gpu_same_mode": 873.63,
+   "vs_gpu_same_mode": 4.98
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -881,7 +1148,9 @@
    "gpu": 873.63,
    "served": 88.5,
    "vs_gpu_batch1": 1.96,
-   "vs_served_median": 19.4
+   "vs_served_median": 19.4,
+   "gpu_same_mode": 203,
+   "vs_gpu_same_mode": 8.45
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -900,7 +1169,9 @@
    "gpu": 873.63,
    "served": 88.5,
    "vs_gpu_batch1": 4.24,
-   "vs_served_median": 41.8
+   "vs_served_median": 41.8,
+   "gpu_same_mode": 873.63,
+   "vs_gpu_same_mode": 4.24
   },
   {
    "target": "HBM accelerator (generic die)",
@@ -922,13 +1193,36 @@
    "gpu": 1175,
    "served": 55,
    "vs_gpu_batch1": 0.81,
-   "vs_served_median": 17.3
+   "vs_served_median": 17.3,
+   "gpu_same_mode": 230,
+   "vs_gpu_same_mode": 4.13
+  },
+  {
+   "target": "HBM accelerator (generic die)",
+   "model": "Qwen3-8B 8K",
+   "mode": "MTP",
+   "per_user": 1793.5,
+   "aggregate": null,
+   "dies": 4,
+   "stacks": 16,
+   "power_w": 1437.1,
+   "tok_s_per_kw_b1": 1248.04,
+   "capex": [
+    50000,
+    50000
+   ],
+   "gpu": 1175,
+   "served": 55,
+   "vs_gpu_batch1": 1.53,
+   "vs_served_median": 32.6,
+   "gpu_same_mode": 1175,
+   "vs_gpu_same_mode": 1.53
   }
  ],
  "changes": [
   {
    "item": "Qwen KV die",
-   "effect": "Qwen ROM per user 5,492.7 -> 5,416.7 tok/s (-1.38 %); pair 929.9 mm2; 8 dies",
+   "effect": "Qwen ROM per user 5,492.7 -> 5,416.7 tok/s (-0.33 %); pair 962.4 mm2; 8 dies",
    "grade": "derived",
    "source": "results/arch/qwen_kv_die_20261009/reprice.json"
   },
@@ -946,9 +1240,15 @@
   },
   {
    "item": "HBM generic die",
-   "effect": "Qwen3-8B on r25 TP4 INT8: 951.0 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6); DS unchanged (default mode, fork cost 0 measured so far); DS sequencer re-timing kept as a sensitivity",
+   "effect": "Qwen3-8B on r25 TP4 INT8: 951.0 tok/s (pathfinding simulator, SM-issue bound; one-beat INT8 1300.6 rejected NO_FIT); DS unchanged (default mode, fork cost 0 measured so far); DS sequencer re-timing kept as a sensitivity",
    "grade": "modelled",
    "source": "results/arch/hgi_sim_20261009/qwen_timing_P8191.json; results/arch/hgi_sim_20261009/ds_timing_1M.json"
+  },
+  {
+   "item": "Qwen3-8B DFlash on the generic die",
+   "effect": "block 16 1793.5 tok/s at the published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; open: SM multi-slot issue G18, CTL.TOKX)",
+   "grade": "modelled",
+   "source": "results/arch/hgi_sim_20261009/dflash/dflash_timing.json"
   },
   {
    "item": "BF decision",
@@ -972,8 +1272,8 @@
  "pending": [
   "BF decision (21:30 PT): switch the DS ROM headline to the chosen BF row and re-run this tool",
   "KV-die stream: GRT / STA of the ROM r22k and KV die (chain on EPYC1); the near-HBM attention elements are not closed",
-  "HBM forks: fmt3 adapter bypass match, one-beat INT8 owner decision (RQ-HF-7), sequencer C2 measured costs",
-  "Qwen-HBM DSpark tau on the 6-class blend (qwen-hbm-unify) and a qwen_hbm token-path graph",
+  "HBM forks: fmt3 adapter bypass match, sequencer C2 measured costs; one-beat INT8 closed (NO_FIT)",
+  "Qwen-HBM DFlash: SM multi-slot issue (G18, hbm-forks) and CTL.TOKX (cmdproc); a qwen_hbm token-path graph",
   "DS ROM 1,792 power pass (per-die W is the busiest saturated die for every die)",
   "HBM accelerator batch / union / credit calendar (no aggregate is composed)"
  ],
@@ -981,12 +1281,13 @@
   "configs/hardware/architectures.json": "fd3b286eebe534f5",
   "results/arch/energy_silicon_measured/energy_silicon.json": "64277a21714921ee",
   "results/arch/engram_20261008/design.json": "3fcba3d9efed464c",
+  "results/arch/hgi_sim_20261009/dflash/dflash_timing.json": "4222c46427c89b85",
   "results/arch/hgi_sim_20261009/ds_timing_1M.json": "a976b16354106e93",
   "results/arch/hgi_sim_20261009/qwen_int8_packing.json": "18a9adb55a6943ce",
   "results/arch/hgi_sim_20261009/qwen_timing_P8191.json": "95dc2ad9567bc8c3",
-  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "e4ca2d3b72c33ced",
-  "results/arch/qwen_kv_die_20261009/reprice.json": "6f9dbf3855f5c454",
-  "results/arch/qwen_kv_die_20261009/rom_r22k.json": "e9f270441054fe21",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "02cd46e8e07f9f51",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "6dc167d0878a3fe3",
+  "results/arch/qwen_kv_die_20261009/rom_r22k.json": "b60f28f683bb0438",
   "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
   "results/arch/reprice_20261008/reprice.json": "16c586162e2c61cc",
   "results/arch/token_path_20261008/qwen_rom.json": "a039a9b4ea3e5806",
