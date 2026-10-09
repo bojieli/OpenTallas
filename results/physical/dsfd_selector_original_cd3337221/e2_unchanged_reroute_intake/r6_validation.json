@@ -1,0 +1,13 @@
+{
+  "utc": "2026-10-09T11:13:47.056703+00:00",
+  "approval": "CONFIRMED review0400 R6 root routine intake NOW",
+  "spec": "results/physical/dsfd_selector_original_cd3337221/e2_unchanged_reroute_intake/r6_watched_spec.json",
+  "spec_sha256": "9eb89820c9cd9b46f9c0b3d89ec209c7207372cd6cd5d84dfef924ff9462aa6e",
+  "validation": "python3 /home/ubuntu/OpenTallas/tools/closure_loop/closure_loop.py validate <spec>: submit lint PASS; rtl_boundary dsfd_selt_q registeredboundary in->reg0/reg->out0; OK",
+  "dedup": "No advancing equivalent; originalcd333 NEEDS_RTL andoldTT EARLY_FAIL_HOLD preserved; newdistinct r6-ttref-rb2-cx label",
+  "gate_evidence_commit": "9b2120c0e",
+  "resource_reservation_gib": 24,
+  "resource_acceptance": "fleet_closure accepted conservative2x nearesttilemacrofamily measuredDRT11.26GiB plusclosestselector measuredCTS4.026; notactualselectorDRT; no old40guess/caps",
+  "registration": "Pending fleet atomic watched registration/actualqueue acceptance; no manual route",
+  "live_otherjob": "Existing HBM nativeqend aa7127 EPYC4 preserved"
+}

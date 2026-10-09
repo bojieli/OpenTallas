@@ -1,0 +1,161 @@
+{
+  "name": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "block": "dsfd_selt_q",
+  "owner": "Codex:selector_capture routine R6; Claude confirmed review0400 intake",
+  "purpose": "CONFIRMED R6 unchanged cd333 base diagnostic reroute: currentbudget_rb2 TTroute_ref/H1/MM FF hold/DRC, SS sensitivity. Real3macro direct SRAM baseline only; no READLAT2/static map/PIPE2/SEARCH_PIPE/380draft adoption; preserve all prior failures.",
+  "hosts": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 24,
+  "source": {
+    "branch": "codex/dsfd-selt-q-cx-20261009",
+    "commit": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+    "paths": [
+      "rtl/common",
+      "rtl/hdc/v41x",
+      "rtl/dsrom_sys/s81_ph",
+      "physical/abi3",
+      "physical/s81_ph_views",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+      "tools",
+      "configs",
+      "Makefile"
+    ],
+    "required_files": [
+      "rtl/common/ot_fwd_link_stage.sv",
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv",
+      "rtl/hdc/v41x/ot_hdc_v41x_sel.sv",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv",
+      "rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv",
+      "rtl/dsrom_sys/s81_ph/dsfd_bk_selector.sv",
+      "rtl/dsrom_sys/s81_ph/test/tb_s81ph_sel.sv",
+      "physical/s81_ph_views/tiles/place_macros_tile.tcl",
+      "physical/s81_ph_views/ports/contract/dsfd_selt_q/ports.json",
+      "physical/s81_ph_views/specs/dsfd_selt_q.json",
+      "physical/s81_ph_views/common/route_view.sh",
+      "physical/s81_ph_views/common/make_io_vclk_margin.sh",
+      "physical/s81_ph_views/common/signoff_unc60.sdc",
+      "tools/run_abi3_physical.py"
+    ]
+  },
+  "stages": {
+    "calibrate": {
+      "cmd": "python3 -c 'import base64,pathlib,hashlib; b=base64.b64decode('\"'\"'IyBTODEtUEggdGlsZSBjb3B5IChkcml2ZS0yMTI1IDIwMjYtMTAtMDgsIHRlbXBsYXRlIEYpOiBmcm9tIHBoeXNpY2FsL2hibV9hdHRuX3RpbGVfci9kaWVfdGlsZS9zbGl2ZXJfYmxvY2sudGNsLCBzb3VyY2VkIGFzIGEgUE9TVF9QRE4gc3RlcCBob29rCiMgKHJvdXRlX3ZpZXcuc2ggZXh0cmEgYXJnIC0tc3RlcC10Y2wgUE9TVF9QRE49Li4uKTsgb3Rfc2xpdmVyX3VtIGRlZmF1bHRzIHRvIDEyLjAuICBkc2ZkX2NvbHRfbGFuZTogdV9xLmdfbVswXS51X20gfCBnX21bMV0udV9tIGdhcCAxMC43OCB1bS4KIyBTbGl2ZXIgYmxvY2thZ2VzIGZvciB0aGUgYmFuay1idWlsdCBIQk0gYXR0ZW50aW9uIGRpZSB0aWxlIChhcHBlbmRlZCB0byB0aGUgUE9TVF9QRE4gaG9vayBieSByb3V0ZV9kdF9jbC5zaCB3aGVuCiMgU0xJVkVSIGlzIHNldDsgcm91dGVfZHRfY2wuc2ggcHJlcGVuZHMgInNldCBvdF9zbGl2ZXJfdW0gPHVtPiIpLgojIFJvb3QgY2F1c2UgKGF0dG4tdGlsZS0yLCAyMDI2LTEwLTA4KTogdGhlIHBpbi1iYW5rIHN0YWNrcyBzaXQgMS41LTMuNiB1bSBhcGFydCAobWFjcm8gZWRnZSB0byBlZGdlKS4gIFdpdGggdGhlIDEgdW0KIyByb3cgaGFsbyBlYWNoIGdhcCBsZWF2ZXMgYSAyLTUgcm93IHN0cmlwIG9mIGxlZ2FsIHNpdGVzIGJldHdlZW4gdHdvIGJhbmtzLiAgR2xvYmFsIHBsYWNlbWVudCBhbmQgcmVwYWlyX2Rlc2lnbidzCiMgd2lyZSBidWZmZXJzIHBpbGUgY2VsbHMgaW50byB0aG9zZSBzdHJpcHMgKHIyM2g6IDMwIEJVRngqIGF0IHggMTExMy0xMTM5IC8geSA4MDcuMyBiZXR3ZWVuIGJhbmtzIDc5NC4xOC04MDYuMDYgYW5kCiMgODA5LjMwLTgyMS4xODsgcjIzaHE6IDExMiBjZWxscyBhdCB4IDg1MC05MjUgLyB5IDU1MS4zIGJldHdlZW4gYmFua3MgNTM4LjIwLTU1MC4wOCBhbmQgNTUzLjQyLTU2NS4zMCwgcGx1cyAyIGNlbGxzIGluCiMgYSAyLjQ0IHVtIHZlcnRpY2FsIGdhcCBhdCB4IDk0MikgYW5kIHRoZSBkZXRhaWwgcGxhY2VyIGNhbm5vdCBsZWdhbGlzZSB0aGVtIC0+IERQTC0wMDMzLgojIEZpeDogYSBoYXJkIHBsYWNlbWVudCBibG9ja2FnZSBvdmVyIGV2ZXJ5IG1hY3JvLXRvLW1hY3JvIGdhcCBuYXJyb3dlciB0aGFuIG90X3NsaXZlcl91bSwgb3ZlciB0aGUgcGFpcidzIGZhY2luZwojIG92ZXJsYXAgZXh0ZW5kZWQgYnkgb3Rfc2xpdmVyX3VtIG9uIGVhY2ggc2lkZSAoY2F0Y2hlcyBzdGFnZ2VyZWQgcGFpcnMpLiAgUm91dGluZyBpcyB1bnRvdWNoZWQ6IG9ubHkgc3RkLWNlbGwKIyBwbGFjZW1lbnQgbGVhdmVzIHRoZSBzbGl2ZXJzOyB0aGUgY2VsbHMgbGFuZCBpbiB0aGUgb3BlbiBmbG9vciBuZXh0IHRvIHRoZSBzdGFjay4KaWYgeyFbaW5mbyBleGlzdHMgb3Rfc2xpdmVyX3VtXX0geyBzZXQgb3Rfc2xpdmVyX3VtIDEyLjAgfQpzZXQgb3RfYmxrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IG90X2RidSBbJG90X2JsayBnZXREYlVuaXRzUGVyTWljcm9uXQpzZXQgb3RfdCBbZXhwciB7aW50KCRvdF9zbGl2ZXJfdW0gKiAkb3RfZGJ1KX1dCnNldCBvdF9kaWUgWyRvdF9ibGsgZ2V0RGllQXJlYV0Kc2V0IG90X2JicyB7fQpmb3JlYWNoIG90X2kgWyRvdF9ibGsgZ2V0SW5zdHNdIHsKICBpZiB7IVtbJG90X2kgZ2V0TWFzdGVyXSBpc0Jsb2NrXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIGxhcHBlbmQgb3RfYmJzIFtsaXN0IFskYiB4TWluXSBbJGIgeU1pbl0gWyRiIHhNYXhdIFskYiB5TWF4XV0KfQpzZXQgb3RfbmIgMApzZXQgb3RfcmVjdHMge30Kc2V0IG90X2FyZWEgMC4wCnNldCBvdF9uIFtsbGVuZ3RoICRvdF9iYnNdCmZvciB7c2V0IGkgMH0geyRpIDwgJG90X259IHtpbmNyIGl9IHsKICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkaV0gYXgwIGF5MCBheDEgYXkxCiAgZm9yIHtzZXQgaiBbZXhwciB7JGkgKyAxfV19IHskaiA8ICRvdF9ufSB7aW5jciBqfSB7CiAgICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkal0gYngwIGJ5MCBieDEgYnkxCiAgICBzZXQgb3ggW2V4cHIge21pbigkYXgxLCAkYngxKSAtIG1heCgkYXgwLCAkYngwKX1dCiAgICBzZXQgb3kgW2V4cHIge21pbigkYXkxLCAkYnkxKSAtIG1heCgkYXkwLCAkYnkwKX1dCiAgICBzZXQgciB7fQogICAgaWYgeyRveCA+IC0kb3RfdCAmJiAkb3kgPCAwICYmIC0kb3kgPCAkb3RfdH0gewogICAgICAjIHZlcnRpY2FsIGdhcCAoc3RhY2tlZCBiYW5rcyk6IGJsb2NrIHRoZSBnYXAgcm93cyBvdmVyIHRoZSB4IG92ZXJsYXAgd2lkZW5lZCBieSBUCiAgICAgIHNldCByIFtsaXN0IFtleHByIHttYXgobWF4KCRheDAsICRieDApIC0gJG90X3QsIFskb3RfZGllIHhNaW5dKX1dIFtleHByIHttaW4oJGF5MSwgJGJ5MSl9XSBcCiAgICAgICAgICAgICAgICAgIFtleHByIHttaW4obWluKCRheDEsICRieDEpICsgJG90X3QsIFskb3RfZGllIHhNYXhdKX1dIFtleHByIHttYXgoJGF5MCwgJGJ5MCl9XV0KICAgIH0gZWxzZWlmIHskb3kgPiAtJG90X3QgJiYgJG94IDwgMCAmJiAtJG94IDwgJG90X3R9IHsKICAgICAgc2V0IHIgW2xpc3QgW2V4cHIge21pbigkYXgxLCAkYngxKX1dIFtleHByIHttYXgobWF4KCRheTAsICRieTApIC0gJG90X3QsIFskb3RfZGllIHlNaW5dKX1dIFwKICAgICAgICAgICAgICAgICAgW2V4cHIge21heCgkYXgwLCAkYngwKX1dIFtleHByIHttaW4obWluKCRheTEsICRieTEpICsgJG90X3QsIFskb3RfZGllIHlNYXhdKX1dXQogICAgfQogICAgaWYgeyRyIGVxIHt9fSB7Y29udGludWV9CiAgICBsYXNzaWduICRyIHgwIHkwIHgxIHkxCiAgICBpZiB7JHgxIDw9ICR4MCB8fCAkeTEgPD0gJHkwfSB7Y29udGludWV9CiAgICBvZGI6OmRiQmxvY2thZ2VfY3JlYXRlICRvdF9ibGsgJHgwICR5MCAkeDEgJHkxCiAgICBsYXBwZW5kIG90X3JlY3RzIFtsaXN0ICR4MCAkeTAgJHgxICR5MV0KICAgIGluY3Igb3RfbmIKICAgIHNldCBvdF9hcmVhIFtleHByIHskb3RfYXJlYSArICgkeDEgLSAkeDApIC8gZG91YmxlKCRvdF9kYnUpICogKCR5MSAtICR5MCkgLyBkb3VibGUoJG90X2RidSl9XQogIH0KfQojIHRhcGNlbGwgLyBlbmRjYXAgaW5zdGFuY2VzIChmaXhlZCwgcGh5c2ljYWwgb25seSkgaW5zaWRlIGEgYmxvY2tlZCBzbGl2ZXIgd291bGQgZmFpbCBjaGVja19wbGFjZW1lbnQncyAicGxhY2VkIGluCiMgcm93cyIgdGVzdDsgbm8gbG9naWMgY2FuIHNpdCBpbiB0aGUgc2xpdmVyLCBzbyBpdHMgdGFwcyBhbmQgcm93LWVuZCBjYXBzIGdvIHdpdGggaXQuCnNldCBvdF9ybSAwCmZvcmVhY2ggb3RfaSBbJG90X2JsayBnZXRJbnN0c10gewogIHNldCBvdF90eSBbWyRvdF9pIGdldE1hc3Rlcl0gZ2V0VHlwZV0KICBpZiB7IVtzdHJpbmcgbWF0Y2ggIkNPUkVfV0VMTFRBUCIgJG90X3R5XSAmJiAhW3N0cmluZyBtYXRjaCAiRU5EQ0FQKiIgJG90X3R5XSAmJiBcCiAgICAgICFbc3RyaW5nIG1hdGNoICJUQVBfKiIgWyRvdF9pIGdldE5hbWVdXSAmJiAhW3N0cmluZyBtYXRjaCAiUEhZX0VER0VfKiIgWyRvdF9pIGdldE5hbWVdXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIHNldCBjeDAgWyRiIHhNaW5dOyBzZXQgY3kwIFskYiB5TWluXTsgc2V0IGN4MSBbJGIgeE1heF07IHNldCBjeTEgWyRiIHlNYXhdCiAgZm9yZWFjaCBvdF9yICRvdF9yZWN0cyB7CiAgICBsYXNzaWduICRvdF9yIHgwIHkwIHgxIHkxCiAgICBpZiB7JGN4MCA8ICR4MSAmJiAkY3gxID4gJHgwICYmICRjeTAgPCAkeTEgJiYgJGN5MSA+ICR5MH0geyBvZGI6OmRiSW5zdF9kZXN0cm95ICRvdF9pOyBpbmNyIG90X3JtOyBicmVhayB9CiAgfQp9CnB1dHMgIk9UX1NMSVZFUl9QSFlTX1JFTU9WRUQgJG90X3JtIgpwdXRzIFtmb3JtYXQgIk9UX1NMSVZFUl9CTE9DS0FHRVMgJWQgKGdhcCA8ICUuMWYgdW0sICUuMWYgdW1eMikiICRvdF9uYiAkb3Rfc2xpdmVyX3VtICRvdF9hcmVhXQo='\"'\"'); assert hashlib.sha256(b).hexdigest()=='\"'\"'155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4'\"'\"'; pathlib.Path('\"'\"'physical/s81_ph_views/tiles/sliver_block.tcl'\"'\"').write_bytes(b)'\nHM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl $CL_STOP_AFTER",
+      "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+      "threads": 16,
+      "peak_ram_gb": 24
+    },
+    "route": {
+      "cmd": "python3 -c 'import base64,pathlib,hashlib; b=base64.b64decode('\"'\"'IyBTODEtUEggdGlsZSBjb3B5IChkcml2ZS0yMTI1IDIwMjYtMTAtMDgsIHRlbXBsYXRlIEYpOiBmcm9tIHBoeXNpY2FsL2hibV9hdHRuX3RpbGVfci9kaWVfdGlsZS9zbGl2ZXJfYmxvY2sudGNsLCBzb3VyY2VkIGFzIGEgUE9TVF9QRE4gc3RlcCBob29rCiMgKHJvdXRlX3ZpZXcuc2ggZXh0cmEgYXJnIC0tc3RlcC10Y2wgUE9TVF9QRE49Li4uKTsgb3Rfc2xpdmVyX3VtIGRlZmF1bHRzIHRvIDEyLjAuICBkc2ZkX2NvbHRfbGFuZTogdV9xLmdfbVswXS51X20gfCBnX21bMV0udV9tIGdhcCAxMC43OCB1bS4KIyBTbGl2ZXIgYmxvY2thZ2VzIGZvciB0aGUgYmFuay1idWlsdCBIQk0gYXR0ZW50aW9uIGRpZSB0aWxlIChhcHBlbmRlZCB0byB0aGUgUE9TVF9QRE4gaG9vayBieSByb3V0ZV9kdF9jbC5zaCB3aGVuCiMgU0xJVkVSIGlzIHNldDsgcm91dGVfZHRfY2wuc2ggcHJlcGVuZHMgInNldCBvdF9zbGl2ZXJfdW0gPHVtPiIpLgojIFJvb3QgY2F1c2UgKGF0dG4tdGlsZS0yLCAyMDI2LTEwLTA4KTogdGhlIHBpbi1iYW5rIHN0YWNrcyBzaXQgMS41LTMuNiB1bSBhcGFydCAobWFjcm8gZWRnZSB0byBlZGdlKS4gIFdpdGggdGhlIDEgdW0KIyByb3cgaGFsbyBlYWNoIGdhcCBsZWF2ZXMgYSAyLTUgcm93IHN0cmlwIG9mIGxlZ2FsIHNpdGVzIGJldHdlZW4gdHdvIGJhbmtzLiAgR2xvYmFsIHBsYWNlbWVudCBhbmQgcmVwYWlyX2Rlc2lnbidzCiMgd2lyZSBidWZmZXJzIHBpbGUgY2VsbHMgaW50byB0aG9zZSBzdHJpcHMgKHIyM2g6IDMwIEJVRngqIGF0IHggMTExMy0xMTM5IC8geSA4MDcuMyBiZXR3ZWVuIGJhbmtzIDc5NC4xOC04MDYuMDYgYW5kCiMgODA5LjMwLTgyMS4xODsgcjIzaHE6IDExMiBjZWxscyBhdCB4IDg1MC05MjUgLyB5IDU1MS4zIGJldHdlZW4gYmFua3MgNTM4LjIwLTU1MC4wOCBhbmQgNTUzLjQyLTU2NS4zMCwgcGx1cyAyIGNlbGxzIGluCiMgYSAyLjQ0IHVtIHZlcnRpY2FsIGdhcCBhdCB4IDk0MikgYW5kIHRoZSBkZXRhaWwgcGxhY2VyIGNhbm5vdCBsZWdhbGlzZSB0aGVtIC0+IERQTC0wMDMzLgojIEZpeDogYSBoYXJkIHBsYWNlbWVudCBibG9ja2FnZSBvdmVyIGV2ZXJ5IG1hY3JvLXRvLW1hY3JvIGdhcCBuYXJyb3dlciB0aGFuIG90X3NsaXZlcl91bSwgb3ZlciB0aGUgcGFpcidzIGZhY2luZwojIG92ZXJsYXAgZXh0ZW5kZWQgYnkgb3Rfc2xpdmVyX3VtIG9uIGVhY2ggc2lkZSAoY2F0Y2hlcyBzdGFnZ2VyZWQgcGFpcnMpLiAgUm91dGluZyBpcyB1bnRvdWNoZWQ6IG9ubHkgc3RkLWNlbGwKIyBwbGFjZW1lbnQgbGVhdmVzIHRoZSBzbGl2ZXJzOyB0aGUgY2VsbHMgbGFuZCBpbiB0aGUgb3BlbiBmbG9vciBuZXh0IHRvIHRoZSBzdGFjay4KaWYgeyFbaW5mbyBleGlzdHMgb3Rfc2xpdmVyX3VtXX0geyBzZXQgb3Rfc2xpdmVyX3VtIDEyLjAgfQpzZXQgb3RfYmxrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IG90X2RidSBbJG90X2JsayBnZXREYlVuaXRzUGVyTWljcm9uXQpzZXQgb3RfdCBbZXhwciB7aW50KCRvdF9zbGl2ZXJfdW0gKiAkb3RfZGJ1KX1dCnNldCBvdF9kaWUgWyRvdF9ibGsgZ2V0RGllQXJlYV0Kc2V0IG90X2JicyB7fQpmb3JlYWNoIG90X2kgWyRvdF9ibGsgZ2V0SW5zdHNdIHsKICBpZiB7IVtbJG90X2kgZ2V0TWFzdGVyXSBpc0Jsb2NrXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIGxhcHBlbmQgb3RfYmJzIFtsaXN0IFskYiB4TWluXSBbJGIgeU1pbl0gWyRiIHhNYXhdIFskYiB5TWF4XV0KfQpzZXQgb3RfbmIgMApzZXQgb3RfcmVjdHMge30Kc2V0IG90X2FyZWEgMC4wCnNldCBvdF9uIFtsbGVuZ3RoICRvdF9iYnNdCmZvciB7c2V0IGkgMH0geyRpIDwgJG90X259IHtpbmNyIGl9IHsKICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkaV0gYXgwIGF5MCBheDEgYXkxCiAgZm9yIHtzZXQgaiBbZXhwciB7JGkgKyAxfV19IHskaiA8ICRvdF9ufSB7aW5jciBqfSB7CiAgICBsYXNzaWduIFtsaW5kZXggJG90X2JicyAkal0gYngwIGJ5MCBieDEgYnkxCiAgICBzZXQgb3ggW2V4cHIge21pbigkYXgxLCAkYngxKSAtIG1heCgkYXgwLCAkYngwKX1dCiAgICBzZXQgb3kgW2V4cHIge21pbigkYXkxLCAkYnkxKSAtIG1heCgkYXkwLCAkYnkwKX1dCiAgICBzZXQgciB7fQogICAgaWYgeyRveCA+IC0kb3RfdCAmJiAkb3kgPCAwICYmIC0kb3kgPCAkb3RfdH0gewogICAgICAjIHZlcnRpY2FsIGdhcCAoc3RhY2tlZCBiYW5rcyk6IGJsb2NrIHRoZSBnYXAgcm93cyBvdmVyIHRoZSB4IG92ZXJsYXAgd2lkZW5lZCBieSBUCiAgICAgIHNldCByIFtsaXN0IFtleHByIHttYXgobWF4KCRheDAsICRieDApIC0gJG90X3QsIFskb3RfZGllIHhNaW5dKX1dIFtleHByIHttaW4oJGF5MSwgJGJ5MSl9XSBcCiAgICAgICAgICAgICAgICAgIFtleHByIHttaW4obWluKCRheDEsICRieDEpICsgJG90X3QsIFskb3RfZGllIHhNYXhdKX1dIFtleHByIHttYXgoJGF5MCwgJGJ5MCl9XV0KICAgIH0gZWxzZWlmIHskb3kgPiAtJG90X3QgJiYgJG94IDwgMCAmJiAtJG94IDwgJG90X3R9IHsKICAgICAgc2V0IHIgW2xpc3QgW2V4cHIge21pbigkYXgxLCAkYngxKX1dIFtleHByIHttYXgobWF4KCRheTAsICRieTApIC0gJG90X3QsIFskb3RfZGllIHlNaW5dKX1dIFwKICAgICAgICAgICAgICAgICAgW2V4cHIge21heCgkYXgwLCAkYngwKX1dIFtleHByIHttaW4obWluKCRheTEsICRieTEpICsgJG90X3QsIFskb3RfZGllIHlNYXhdKX1dXQogICAgfQogICAgaWYgeyRyIGVxIHt9fSB7Y29udGludWV9CiAgICBsYXNzaWduICRyIHgwIHkwIHgxIHkxCiAgICBpZiB7JHgxIDw9ICR4MCB8fCAkeTEgPD0gJHkwfSB7Y29udGludWV9CiAgICBvZGI6OmRiQmxvY2thZ2VfY3JlYXRlICRvdF9ibGsgJHgwICR5MCAkeDEgJHkxCiAgICBsYXBwZW5kIG90X3JlY3RzIFtsaXN0ICR4MCAkeTAgJHgxICR5MV0KICAgIGluY3Igb3RfbmIKICAgIHNldCBvdF9hcmVhIFtleHByIHskb3RfYXJlYSArICgkeDEgLSAkeDApIC8gZG91YmxlKCRvdF9kYnUpICogKCR5MSAtICR5MCkgLyBkb3VibGUoJG90X2RidSl9XQogIH0KfQojIHRhcGNlbGwgLyBlbmRjYXAgaW5zdGFuY2VzIChmaXhlZCwgcGh5c2ljYWwgb25seSkgaW5zaWRlIGEgYmxvY2tlZCBzbGl2ZXIgd291bGQgZmFpbCBjaGVja19wbGFjZW1lbnQncyAicGxhY2VkIGluCiMgcm93cyIgdGVzdDsgbm8gbG9naWMgY2FuIHNpdCBpbiB0aGUgc2xpdmVyLCBzbyBpdHMgdGFwcyBhbmQgcm93LWVuZCBjYXBzIGdvIHdpdGggaXQuCnNldCBvdF9ybSAwCmZvcmVhY2ggb3RfaSBbJG90X2JsayBnZXRJbnN0c10gewogIHNldCBvdF90eSBbWyRvdF9pIGdldE1hc3Rlcl0gZ2V0VHlwZV0KICBpZiB7IVtzdHJpbmcgbWF0Y2ggIkNPUkVfV0VMTFRBUCIgJG90X3R5XSAmJiAhW3N0cmluZyBtYXRjaCAiRU5EQ0FQKiIgJG90X3R5XSAmJiBcCiAgICAgICFbc3RyaW5nIG1hdGNoICJUQVBfKiIgWyRvdF9pIGdldE5hbWVdXSAmJiAhW3N0cmluZyBtYXRjaCAiUEhZX0VER0VfKiIgWyRvdF9pIGdldE5hbWVdXX0ge2NvbnRpbnVlfQogIHNldCBiIFskb3RfaSBnZXRCQm94XQogIHNldCBjeDAgWyRiIHhNaW5dOyBzZXQgY3kwIFskYiB5TWluXTsgc2V0IGN4MSBbJGIgeE1heF07IHNldCBjeTEgWyRiIHlNYXhdCiAgZm9yZWFjaCBvdF9yICRvdF9yZWN0cyB7CiAgICBsYXNzaWduICRvdF9yIHgwIHkwIHgxIHkxCiAgICBpZiB7JGN4MCA8ICR4MSAmJiAkY3gxID4gJHgwICYmICRjeTAgPCAkeTEgJiYgJGN5MSA+ICR5MH0geyBvZGI6OmRiSW5zdF9kZXN0cm95ICRvdF9pOyBpbmNyIG90X3JtOyBicmVhayB9CiAgfQp9CnB1dHMgIk9UX1NMSVZFUl9QSFlTX1JFTU9WRUQgJG90X3JtIgpwdXRzIFtmb3JtYXQgIk9UX1NMSVZFUl9CTE9DS0FHRVMgJWQgKGdhcCA8ICUuMWYgdW0sICUuMWYgdW1eMikiICRvdF9uYiAkb3Rfc2xpdmVyX3VtICRvdF9hcmVhXQo='\"'\"'); assert hashlib.sha256(b).hexdigest()=='\"'\"'155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4'\"'\"'; pathlib.Path('\"'\"'physical/s81_ph_views/tiles/sliver_block.tcl'\"'\"').write_bytes(b)'\nSDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.050 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=24 SRCS='rtl/dsrom_sys/s81_ph/ot_s81ph_sel.sv rtl/hdc/v41x/ot_hdc_v41x_sel_lib.sv rtl/hdc/v41x/ot_hdc_v41x_sel_slice.sv rtl/hdc/v41x/ot_hdc_v41x_sel.sv rtl/common/ot_fwd_link_stage.sv' MACROS='ot_sram_1r1w_256x256_m2_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2' PDN=physical/s81_ph_views/tiles/pdn_tile_sym.tcl CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_selt_q rtl/dsrom_sys/s81_ph/ot_s81ph_sel_tile.sv --orfs-var MACRO_PLACEMENT_TCL=/src/physical/s81_ph_views/tiles/place_macros_tile.tcl --step-tcl POST_PDN=physical/s81_ph_views/tiles/sliver_block.tcl $CL_STOP_AFTER",
+      "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/{LABEL}/run.log"
+      ],
+      "peak_ram_gb": 24
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "lef_check_MATCH",
+        "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+      }
+    ],
+    "post_sdc": [
+      "physical/s81_ph_views/common/signoff_unc60.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+    ]
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/physical/dsfd_selector_original_cd3337221_r6/record"
+    }
+  ],
+  "cycles_added": 20,
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_ref": "TT",
+  "gate_evidence": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json",
+  "no_bench_reason": "Pure physical reroute of unchanged cd333 RTL; fresh full minimum original exact32segments561beats4replays0errors and OT_S81PH_MUT2 FAIL6659 numerical/ordererrors. Evidence commit9b2120c0e, results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json SHA256e6a2d2b10a46336de543677ac5bea67cd988696c99b65f8b4aeecebe33532c0e. Nine source SHA matchcd333; rawpositive/mutant/build/run/time/wholePG receipts retained. No repeated gate needed.",
+  "fresh_gate_binding": {
+    "evidence_commit": "9b2120c0e",
+    "receipt_path": "results/rtl/dsfd_selector_original_cd3337221_e2/receipt.json",
+    "receipt_sha256": "e6a2d2b10a46336de543677ac5bea67cd988696c99b65f8b4aeecebe33532c0e",
+    "physical_source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+    "positive": "RESULT PASS segments 32 out_beats 561 replays 4 errors 0 tail_minus_ref max 240 mean 91 ref_holds 11",
+    "negative": "RESULT FAIL segments 32 out_beats 561 replays 4 errors 6659 tail_minus_ref max 278 mean 95 ref_holds 11",
+    "source_verification_sha256": "5d791bf6ede59ef5e9e419992d7344dc33797bb9184771dbf3705eb3d175211a"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "rebudget": true,
+  "budget": {
+    "enabled": false,
+    "reason": "R6 unchanged base current shared IO budgeting: currentbudget_rb2 has no dsfd_selt_q per-block override. Retain approved consistent die-link split, measure own TT route reference, rejudge under currentrebudget/H1/MM; do not fabricate a diecontext budget sheet."
+  },
+  "flow_only_overlay": {
+    "approved_review": "CONFIRMED0400 R6",
+    "sliver_hook_commit": "d045744932eb5a6e24ddb24fcc3048f40e8de06a",
+    "sliver_hook_path": "physical/s81_ph_views/tiles/sliver_block.tcl",
+    "sha256": "155dec08319a6b973ddcff219ec116e1c47a4805ac807b3b95d673da8fcd3ae4",
+    "step": "POST_PDN",
+    "macro_gap_um": 10.776,
+    "gap_threshold_um": 12,
+    "hardware_and_macro_placement": "unchanged",
+    "clock_period_ps": 833.333,
+    "uncertainty_ps": [
+      60,
+      25
+    ],
+    "route_ref": "TT",
+    "rebudget_expected": "budget_rb2/no dsfd_selt_q override; snapshot actual currentstate on submission"
+  },
+  "host_require": [
+    "ot-epyc4",
+    "ot-epyc1tb",
+    "ot-pve1"
+  ],
+  "resource_evidence": {
+    "reservation_gib": 24,
+    "claim_type": "conservative phase capacity reservation derived from actual sibling measurements;24 is not itself measured",
+    "closest_selector": {
+      "job": "s81b-selt_q2-frpr-sq12-3abd84e2c-tc",
+      "source": "3abd84e2c0faf561e8a1da8238c50799dadf3e03",
+      "host": "ot-epyc4",
+      "completed_calibration_cts_peak_kib": 4221400,
+      "completed_gp_peak_kib": 4142180,
+      "raw_log": "resource_basis/q2_frpr_4_1_cts.log",
+      "comparison": "Same native selector quarter W16/IW20/K512/AW8/EW37/256 rows and592-bit payload. q2 SAFE uses6x128x256 capture+bank mux with PIPE2/CMP/QIO/FRPR, original uses3x256x256 direct SRAM. Logical raw storage196608bits each; same total slot area121305.6 vsoriginal120839.04um2; extra q2 pipeline FFs are not adopted."
+    },
+    "same_tile_macro_family_actual_route": {
+      "job": "s81ph-dsfd_colt_lane-ring-e96dd1e56-tc-hm10-g12",
+      "source": "e96dd1e56",
+      "host": "ot-epyc4",
+      "completed_detailed_route_peak_kib": 11807236,
+      "raw_log": "resource_basis/colt_lane_5_2_route.log",
+      "stdcell_um2": 17461,
+      "comparison": "S81 native tile/macro family completed route; supplemental actual route-stage calibration, not claim identical selector complexity. Original selector slot55% stdcell capacity54,751.6781856um2 vs measured colt17,461um2; capacity is a geometric ceiling, not actual selector cellarea. Claim is conservative, not proven original DRT peak."
+    },
+    "derivation": "24GiB >2x actual sibling detailed-route11.2603GiB and >2x closest selector CTS4.026GiB. Conservative headroom for unmeasured original selector detailed route; replace with actual phase data once it runs. Never represent old40GiB declaration or gate5.75GiB as route measurement.",
+    "raw_sha256": {
+      "colt_lane_5_2_route.log": "3b7d39e616117c7754b80212426e703d99eee7b514f3b47bb12a1a3c8fbcc852",
+      "q2_frpr_4_1_cts.log": "9ceccfc851621fd1b4d8bf2d9b6c12daea37ae09c80e0de1bdd575b5cf4f3ce6"
+    },
+    "admission": "Actual host guard plus current external/recent remaining reservations; remote host_require excludeslocalhost; no address-space/file/time caps."
+  }
+}
