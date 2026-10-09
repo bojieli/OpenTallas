@@ -128,6 +128,9 @@ def main():
     p.add_argument('--jobs', type=int, default=8)
     p.add_argument('--only', nargs='*')
     p.add_argument('--verilator', default='/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator')
+    p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
+    p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
+    p.add_argument('--no-default-mutants', action='store_true', help='run only the --mutant negatives')
     a = p.parse_args()
     prep = a.prep or a.work / 'prep'
     if not (prep / 'prepared.json').exists():
@@ -161,16 +164,20 @@ def main():
         sh = SHADOW.replace('@CLOCK@', CLOCK_HALF).replace('@PARAMS@', ', .HALF(1)')
         muts = [('mutant_front_pair', ['+define+W10_MUTANT_FRONT_PAIR']), ('mutant_half_pv', ['+define+BF_HALF_MUTANT_PV'])]
     else:
-        sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', f', .RECUT({a.level})')
+        xp = ''.join(f', .{k.strip()}({v.strip()})' for k, v in (kv.split('=') for kv in a.params.split(',') if kv.strip()))
+        sh = SHADOW.replace('@CLOCK@', CLOCK_SAME).replace('@PARAMS@', f', .RECUT({a.level})' + xp)
         muts = [('mutant_dp', ['+define+QP_MUTANT_DP']), ('mutant_recut', ['+define+W10_MUTANT_RECUT'])]
         if a.level >= 3: muts.append(('mutant_u2', ['+define+W10_MUTANT_U2']))
+    if a.no_default_mutants:
+        muts = []
+    muts += [(m.split('=')[0], ['+define+' + m.split('=', 1)[1]]) for m in a.mutant]
     files[pair] = src.rstrip()[:-len('endmodule')] + sh.replace('@VAR@', a.variant) + '\n'
     try:
         commit = subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True, stderr=subprocess.DEVNULL).strip()
         dirty = bool(subprocess.check_output(['git', 'status', '--porcelain', '--', 'rtl', 'tools/s81'], cwd=ROOT, text=True).strip())
     except (subprocess.CalledProcessError, FileNotFoundError):
         commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
-    out = {'variant': a.variant, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
+    out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty}
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
     for name, defs in [('positive', pos)] + muts:
         if a.only and name not in a.only:
