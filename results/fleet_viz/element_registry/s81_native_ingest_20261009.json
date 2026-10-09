@@ -1,1 +1,153 @@
-{"schema_version":1,"records":[{"element":"ot_s81_native_pc_mux","target":"DeepSeek-V4.1 ROM S81","owner":"ingest","description":"Actual341-bit perPC controller client arbitration, protected queues and true source-owned completion","source":{"commit":"2f179fc18","paths":["rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv","tools/s81_native_ingest_model.py"]},"implementation":{"status":"implemented default off; remote elaboration pending","evidence":["rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv"]},"model":{"status":"prebuild sized; area lower bound only, physical slot and routing capacity pending","evidence":["results/rtl/s81_native_ingest_20261009/prebuild.json"]},"exactness":{"positive":{"status":"pending remote admitted gate","evidence":[]},"negative":{"status":"pending remote admitted gate","evidence":[]}},"physical":{"status":"not launched: remote elaboration and native endpoint slot budget pending","corners":{},"evidence":[]},"dependencies":["real rq341/rk/wd controller transport","host class/aperture and static region inventory","source queue credits","protected mutable identity"],"integration":{"status":"host and runtime binding in progress","evidence":[]}}]}
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_native_pc_mux",
+      "target": "DeepSeek-V4.1 ROM S81",
+      "owner": "ingest",
+      "description": "Actual341-bit perPC controller client arbitration, protected queues and true source-owned completion",
+      "source": {
+        "commit": "2f179fc18",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv",
+          "tools/s81_native_ingest_model.py"
+        ]
+      },
+      "implementation": {
+        "status": "implemented default off; remote elaboration pending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuild sized; area lower bound only, physical slot and routing capacity pending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending remote admitted gate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending remote admitted gate",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "not launched: remote elaboration and native endpoint slot budget pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "real rq341/rk/wd controller transport",
+        "host class/aperture and static region inventory",
+        "source queue credits",
+        "protected mutable identity"
+      ],
+      "integration": {
+        "status": "host and runtime binding in progress",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_s81_ingest_visibility_fence",
+      "target": "DeepSeek-V4.1 ROM S81",
+      "owner": "ingest",
+      "description": "Actual host ABI with source-owned physical visibility fence, finite protected completion/credit state",
+      "source": {
+        "commit": "3ba34f388",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; remote elaboration pending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuild sized; physicalbudget pending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/visibility_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending admitted remote componentgate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending admitted remote componentgate",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending nativeport slot and clockbudget",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual dsfd_host three-clock engine",
+        "source-owned controller writeACKs",
+        "markerregion dispatch",
+        "fullhost descriptor protection remains separate obligation"
+      ],
+      "integration": {
+        "status": "nativeABImodule built; controllerrouter integration pending",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsfd_host_native",
+      "target": "DeepSeek-V4.1 ROM S81",
+      "owner": "ingest",
+      "description": "Actual host ABI with source-owned physical visibility fence, finite protected completion/credit state",
+      "source": {
+        "commit": "3ba34f388",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; remote elaboration pending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuild sized; physicalbudget pending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/visibility_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending admitted remote componentgate",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending admitted remote componentgate",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending nativeport slot and clockbudget",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual dsfd_host three-clock engine",
+        "source-owned controller writeACKs",
+        "markerregion dispatch",
+        "fullhost descriptor protection remains separate obligation"
+      ],
+      "integration": {
+        "status": "nativeABImodule built; controllerrouter integration pending",
+        "evidence": []
+      }
+    }
+  ]
+}
