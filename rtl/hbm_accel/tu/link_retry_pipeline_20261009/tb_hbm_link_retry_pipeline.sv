@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hbm_link_retry_pipeline;
  localparam W=545,SW=12,EW=24,DEPTH=512;
- reg clk=0;always #.416667 clk=~clk;
+ reg clk=0;always #0.416667 clk=~clk;
  reg rst=0;reg [EW-1:0] epoch=1;
  reg iv=0;wire ir,tv;reg tr=1;reg [W-1:0] id=0;
  wire [W-1:0] td;wire [SW-1:0] ts;wire [EW-1:0] te;
@@ -41,7 +41,7 @@ module tb_hbm_link_retry_pipeline;
  if(debt>DEPTH)$fatal(1,"retained overflow");
  if(fault)$fatal(1,"unexpected fault");
  end
- task tick;begin @(posedge clk);#.05;end endtask
+ task tick;begin @(posedge clk);#0.05;end endtask
  task wait4;begin repeat(12)tick;end endtask
  task reset_link;begin
  run=0;@(negedge clk);rst=0;iv=0;rv=0;fv=0;ue=0;ordy=1;tr=1;fg=1;fn=0;
@@ -91,6 +91,17 @@ module tb_hbm_link_retry_pipeline;
  for(k=0;k<60&&!fault;k=k+1)begin tick;if(tv)$fatal(1,"poison emitted");end
  if(!fault||debt!=1)$fatal(1,"poison debt");
  $display("PASS real replay SRAM double-error poison blocks launch");
+ reset_link;epoch=6;tr=0;offer(0);wait4;
+ dut.g_on.txd[17]=~dut.g_on.txd[17];#0.01;
+ if(tv||!fault||debt!=1)$fatal(1,"TX register poison");tick;
+ reset_link;epoch=7;ordy=0;rv=1;re=7;rs=0;rd=payload(0);tick;
+ @(negedge clk);rv=0;dut.g_on.rxd[17]=~dut.g_on.rxd[17];#0.01;
+ if(ov||!fault)$fatal(1,"RX register poison");tick;
+ reset_link;epoch=8;offer(0);wait4;
+ @(negedge clk);fv=1;fe=8;fs=0;fn=0;tick;
+ @(negedge clk);fv=0;dut.g_on.mail_seq[0]=~dut.g_on.mail_seq[0];
+ wait4;if(!fault||debt!=1)$fatal(1,"feedback identity poison");
+ $display("PASS TX/RX stage and feedback mailbox corruption detect/poison");
  $display("PASS_ALL");$finish;
  end
  initial begin #1000000;$fatal(1,"watchdog");end

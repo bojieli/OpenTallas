@@ -14533,6 +14533,8 @@ def hbm_link_retry_pipeline_model(payload_bits=545, seq_bits=12, session_bits=24
         pathfinding_slot_um=[690,460], slot_area_per_die_um2=690*460*ports,
         macro_utilization=macros*3891.57696/(690*460),
         payload_register_bits_per_port=2*payload_bits,
+        new_stage_protection='32-bit payload parity groups, tag/control parity and classified-control complements; detect/poison',
+        parity_register_bits_per_port=2*((payload_bits+31)//32)+8,
         feedback_latency_cycles=4, replay_SRAM_read_latency_cycles=4,
         serial_token_cost='For N framed records on a contended hop, '
             'service is 4*N stream edges plus 1..4 entry edges; '

@@ -28,6 +28,24 @@ module ot_hbm_link_retry_pipeline #(
  assign ack_seq=0;assign ack_nak=0;assign ack_session=session;
  assign fault=0;assign retained=0;assign replay_count=0;
  end else begin:g_on
+ localparam PG=(W+31)/32;
+ function [PG-1:0] parity32(input [W-1:0] value);
+ integer p,j;begin
+ parity32=0;
+ for(p=0;p<PG;p=p+1)for(j=0;j<32;j=j+1)
+ if(p*32+j<W)parity32[p]=parity32[p]^value[p*32+j];
+ end endfunction
+ (* keep="true" *) reg [PG-1:0] tx_parity,rx_parity;
+ (* keep="true" *) reg tx_tag_parity,rx_valid_parity,mail_parity,cap_parity;
+ (* keep="true" *) reg delta_parity,window_parity;
+ (* keep="true" *) reg ack_inv,invalid_inv,nak_inv;
+ wire tx_good=(parity32(txd)==tx_parity)&&((^{txs,tx_replay,txv})==tx_tag_parity);
+ wire rx_good=(parity32(rxd)==rx_parity)&&(rxv==rx_valid_parity);
+ wire mail_good=(^{mail_seq,mail_v,mail_nak})==mail_parity;
+ wire cap_good=(^{cap_seq,cap_base,cap_sent,cap_v,cap_nak})==cap_parity;
+ wire arithmetic_good=(^delta_pipe)==delta_parity&&(^window_pipe)==window_parity;
+ wire classified_good=(ack_progress!=ack_inv)&&(invalid_ack!=invalid_inv)&&(fresh_nak!=nak_inv);
+ wire packet_poison=(txv&&!tx_good)||(rxv&&!rx_good);
  reg [1:0] phase;
  reg [SW-1:0] base,next_seq,sent_seq,cursor,expected;
  reg [SW-1:0] debt_pipe;
@@ -55,17 +73,17 @@ module ot_hbm_link_retry_pipeline #(
  wire apply=phase==3;
  wire rewind=apply&&(fresh_nak||timeout_pending);
  wire accepted=in_valid&&in_ready;
- wire launched=txv&&tx_ready&&!fault_r;
+ wire launched=txv&&tx_ready&&!fault_r&&tx_good;
  wire request_read=phase==0&&replaying&&!read_pending&&!txv&&
    cursor!=sent_seq&&write_guard==0&&!fault_r;
  assign in_ready=phase==0&&!fault_r&&!replaying&&!txv&&!full_pipe;
- assign tx_valid=txv&&!fault_r;assign tx_data=txd;assign tx_seq=txs;
+ assign tx_valid=txv&&!fault_r&&tx_good;assign tx_data=txd;assign tx_seq=txs;
  assign tx_session=session;
- assign out_valid=rxv&&!fault_r;assign out_data=rxd;
+ assign out_valid=rxv&&!fault_r&&rx_good;assign out_data=rxd;
  // Conservatively leave a bubble when the landing register is occupied.
  assign rx_ready=!rxv||fault_r;
  assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session;
- assign retained=next_seq-base;assign fault=fault_r;assign replay_count=retries;
+ assign retained=next_seq-base;assign fault=fault_r||packet_poison;assign replay_count=retries;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
  .clk(clk),.rst_n(rst_n),.w_valid(accepted),.w_data(in_data),
  .w_seq(next_seq),.w_session(session),.r_valid(request_read),
@@ -77,6 +95,8 @@ module ot_hbm_link_retry_pipeline #(
  end
  always @(posedge clk or negedge rst_n) begin
  if(!rst_n) begin
+ tx_parity<=0;rx_parity<=0;tx_tag_parity<=0;rx_valid_parity<=0;mail_parity<=0;cap_parity<=0;
+ delta_parity<=0;window_parity<=0;ack_inv<=1;invalid_inv<=1;nak_inv<=1;
  phase<=0;base<=0;next_seq<=0;sent_seq<=0;cursor<=0;expected<=0;
  debt_pipe<=0;full_pipe<=0;fault_r<=0;replaying<=0;nak_pending<=0;
  nak_seen<=0;last_nak<=0;retries<=0;timer<=0;attempts<=0;
@@ -87,18 +107,31 @@ module ot_hbm_link_retry_pipeline #(
  read_pending<=0;read_target<=0;generation<=0;read_generation<=0;write_guard<=0;
  end else if(!fault_r) begin
  phase<=phase+1'b1;
+ if(packet_poison)fault_r<=1;
  if(write_guard!=0)write_guard<=write_guard-1'b1;
- if(feedback)begin mail_v<=1;mail_seq<=fb_seq;mail_nak<=mail_nak|fb_nak;end
+ if(feedback)begin
+ mail_v<=1;mail_seq<=fb_seq;mail_nak<=mail_nak|fb_nak;
+ mail_parity<=^{fb_seq,1'b1,(mail_nak|fb_nak)};
+ end
  if(phase==0)begin
+ if(mail_v&&!mail_good)fault_r<=1;
+ cap_parity<=^{mail_seq,base,sent_seq,mail_v,mail_nak};
  cap_v<=mail_v;cap_nak<=mail_nak;cap_seq<=mail_seq;
  cap_base<=base;cap_sent<=sent_seq;
  mail_v<=feedback;mail_nak<=feedback&&fb_nak;
+ mail_parity<=^{(feedback?fb_seq:mail_seq),feedback,(feedback&&fb_nak)};
  end
  if(phase==1)begin
+ if(cap_v&&!cap_good)fault_r<=1;
  delta_pipe<=cap_seq-cap_base;window_pipe<=cap_sent-cap_base;
+ delta_parity<=^(cap_seq-cap_base);window_parity<=^(cap_sent-cap_base);
  debt_pipe<=next_seq-base;
  end
  if(phase==2)begin
+ if(cap_v&&!arithmetic_good)fault_r<=1;
+ ack_inv<=!(cap_v&&delta_pipe!=0&&delta_pipe<=window_pipe);
+ invalid_inv<=!(cap_v&&!delta_pipe[SW-1]&&delta_pipe>window_pipe);
+ nak_inv<=!(cap_v&&cap_nak&&delta_pipe<=window_pipe&&(!nak_seen||cap_seq!=last_nak));
  ack_progress<=cap_v&&delta_pipe!=0&&delta_pipe<=window_pipe;
  invalid_ack<=cap_v&&!delta_pipe[SW-1]&&delta_pipe>window_pipe;
  fresh_nak<=cap_v&&cap_nak&&delta_pipe<=window_pipe&&
@@ -107,10 +140,11 @@ module ot_hbm_link_retry_pipeline #(
  end
  if(accepted)begin
  txv<=1;tx_replay<=0;txd<=in_data;txs<=next_seq;
+ tx_parity<=parity32(in_data);tx_tag_parity<=^{next_seq,1'b0,1'b1};
  next_seq<=next_seq+1'b1;write_guard<=2;
  end
  if(launched)begin
- txv<=0;
+ txv<=0;tx_tag_parity<=^{txs,tx_replay,1'b0};
  if(tx_replay)begin
  cursor<=txs+1'b1;
  if(txs+1'b1==sent_seq)replaying<=0;
@@ -125,12 +159,15 @@ module ot_hbm_link_retry_pipeline #(
  else if(read_generation==generation&&rd_seq==read_target&&
     rd_seq==cursor&&rd_epoch==session&&!rewind)begin
  txv<=1;tx_replay<=1;txd<=rd_data;txs<=rd_seq;
+ tx_parity<=parity32(rd_data);tx_tag_parity<=^{rd_seq,1'b1,1'b1};
  end
  end
  if(next_seq==base)begin timer<=0;timeout_pending<=0;end
  else if(timer<TIMEOUT)timer<=timer+1'b1;
  else timeout_pending<=1;
  if(apply)begin
+ if(!classified_good||!cap_good)fault_r<=1;
+ else begin
  if(invalid_ack)fault_r<=1;
  if(ack_progress)begin
  base<=cap_seq;timer<=0;timeout_pending<=0;attempts<=0;nak_seen<=0;
@@ -141,22 +178,24 @@ module ot_hbm_link_retry_pipeline #(
  replaying<=1;timer<=0;timeout_pending<=0;retries<=retries+1'b1;
  attempts<=ack_progress?1:attempts+1'b1;
  // A normal buffered packet remains retained and launches before replay.
- if(tx_replay)txv<=0;
+ if(tx_replay)begin txv<=0;tx_tag_parity<=^{txs,tx_replay,1'b0};end
  if(!ack_progress&&attempts>=MAX_RETRY)fault_r<=1;
+ end
  end
  end
  // Replays may resend ACKed data: receiver removes duplicates, preserving order.
  if(replaying&&!txv&&!read_pending&&cursor==sent_seq)replaying<=0;
  if(rxv&&out_ready)begin
- rxv<=0;
+ rxv<=0;rx_valid_parity<=0;
 `ifndef OT_HBM_RETRY_PIPE_MUT_DUPLICATE
  expected<=expected+1'b1;
 `endif
  nak_pending<=0;
  end
  if(rx_valid&&rx_ready&&rx_session==session)begin
- if(!rx_ue&&rx_seq==expected)begin rxv<=1;rxd<=rx_data;end
+ if(!rx_ue&&rx_seq==expected)begin rxv<=1;rx_valid_parity<=1;rxd<=rx_data;rx_parity<=parity32(rx_data);end
  else if(rx_ue||!rx_delta[SW-1])nak_pending<=1;
+ end
  end
  end
  end
