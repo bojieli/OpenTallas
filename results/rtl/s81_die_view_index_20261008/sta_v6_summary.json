@@ -1,0 +1,126 @@
+{
+ "schema": "opentallas.s81.die_sta_summary.v1",
+ "case": "m221pq_r3 (EPYC3), r3 full-die GRT parasitics (grt/die_grt.spef)",
+ "kit": "kit_v6 = kit_v3 + tools/s81/kit_swap_views.py --rebalance (f9c674c0e + cfifo co pass)",
+ "host": "ot-epyc3",
+ "run": "/srv/opentallas-scratch/claude/s81-die/m221pq_r3/sta_v6",
+ "clock_model": {
+  "file": "/srv/opentallas-scratch/claude/s81-die/src_views_6f9e32822/results/rtl/budgets_20261006/measured_insertion.json",
+  "model": "balanced: flop arrival = planned sink arrival + D (per clock tree); pin latency = that - in-arc insertion; a column clock source = its cfifo ck pin latency",
+  "pad_ps": {
+   "trunk": [
+    443.0,
+    263.0,
+    339.5
+   ]
+  },
+  "masters_offset": [
+   "dsfd_bk_collector",
+   "dsfd_cfifo",
+   "dsfd_ctrl",
+   "dsfd_l2r_vr_512x1__hq_SW",
+   "dsfd_l2r_vr_564x1__hx_E",
+   "dsfd_l2r_vr_564x1__hx_W",
+   "dsfd_m2l_raw_512x1__hl_E0",
+   "dsfd_m2l_raw_512x1__hl_E2",
+   "dsfd_m2l_raw_512x1__hl_W1",
+   "dsfd_m2l_vr_512x1__hco_SW",
+   "dsfd_m2l_vr_512x1__hix_SW",
+   "dsfd_m2l_vr_512x1__hqe_SW",
+   "dsfd_m2l_vr_68x10__hr_W5",
+   "dsfd_r2l_vr_1024x1__ha_SW",
+   "dsfd_r2l_vr_512x1__hcol",
+   "dsfd_r2l_vr_512x1__hsel",
+   "dsfd_sp_capture",
+   "dsfd_svc"
+  ],
+  "pins": 54001
+ },
+ "column_root_co_ps": {
+  "ss": 432.2,
+  "ff": 263.8,
+  "tt": 327.0
+ },
+ "hold_uncertainty_ps": 50.0,
+ "setup_uncertainty_ps": 85.0,
+ "wns_tns_ps": {
+  "placeholder_kit": {
+   "tt": -244.2,
+   "ff": -84.9,
+   "ss": -291.2
+  },
+  "sta_v3": {
+   "tt": [
+    -244.2,
+    -558036
+   ],
+   "ff": [
+    -823.8,
+    -410120000.0
+   ],
+   "ss": [
+    -354.7,
+    -2508000.0
+   ],
+   "viol": {
+    "tt": 8401,
+    "ff": 2986002,
+    "ss": 14805
+   }
+  },
+  "sta_v4_balanced_global_pad": {
+   "tt": [
+    -244.2,
+    -235241.5
+   ],
+   "ff": [
+    -322.9,
+    -78568344
+   ],
+   "ss": [
+    -350.8,
+    -598566.9
+   ]
+  },
+  "sta_v5_per_tree_no_co": {
+   "tt": [
+    -244.2,
+    -216558.8
+   ],
+   "ff": [
+    -103.7,
+    -59757324
+   ],
+   "ss": [
+    -291.2,
+    -520870.5
+   ]
+  },
+  "sta_v6": {
+   "tt": [
+    -244.2,
+    -232041.6
+   ],
+   "ff": [
+    -323.7,
+    -78626152
+   ],
+   "ss": [
+    -367.0,
+    -602714.1
+   ],
+   "viol": {
+    "tt": 2398,
+    "ff": 2362507
+   }
+  }
+ },
+ "ff_classes_v6": {
+  "interim pin-to-pin (cq 32 - hold 15 - unc 50: placeholder constants)": 2291000,
+  "cfifo xa/xb -> first column relay (< -100, real)": 70272
+ },
+ "tt_classes_v6": {
+  "ck_col hop relays y_rt_*_8a/8b (r3 relay 776-906 um from load)": 2142,
+  "column -> cfifo cf* (column root now co + tree)": 256
+ }
+}

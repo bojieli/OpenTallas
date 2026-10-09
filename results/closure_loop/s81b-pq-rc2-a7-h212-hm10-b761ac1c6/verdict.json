@@ -1,0 +1,199 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81b-pq-rc2-a7-h212-hm10-b761ac1c6",
+ "block": "ot_s81_pq_ret_root_cam_p",
+ "owner": "Claude:pq-rootcam",
+ "source_branch": "claude/pq-rootcam-20261008",
+ "source_commit": "b761ac1c6da46ae5bdedacf9fa38abf21ac76242",
+ "host": "ot-epyc1tb",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 79.46,
+  "ff_ps": 3.85,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_pq_root_cam_p/cl_s81b_pq_rc2_a7_h212_hm10_b761ac1c6/signoff_ss.sdc",
+   "physical/s81_pq_root_cam_p/cl_s81b_pq_rc2_a7_h212_hm10_b761ac1c6/signoff_ff_guarded.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/routes/s81b_pq_rc2_a7_h212_hm10_b761ac1c6/work/orfs/logs/asap7/opentallas_ot_s81_pq_ret_root_cam_p_asap7_s81b_pq_rc2_a7_h212_hm10_b761ac1c6/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_cam_p": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "t_root_cam_p.sv\": \"dddd0aabb859f7f64a61023adf79edb40432542630a2947bd8c3a4004dd9ee77\",\n    \"tests/rtl/s81_pq_parent/root_cam_tb.sv\": \"16d0582162039f2ba9fe0aa56459c5e167135de6f35ad24c969ee2c73d357e83\",\n    \"rtl/gpu/ot_fp32_add_rne_deep.sv\": \"8585830592ac155123997be950fe997367227b05cdbeb65ca7d4ec6b5f18d714\",\n    \"rtl/hdc/ot_hdc_prefix.sv\": \"98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587\"\n  },\n  \"tool_sha256\": \"afef05e22fba21b116420abf94a768a2593804d4eb4b7f3278e5a338952b37fd\",\n  \"exact_roots\": 384,\n  \"ROOTD\": 128,\n  \"QD\": 128,\n  \"all_passed\": true,\n  \"adopted\": false\n}\ngate_rc=0\n",
+   "track": "parallel"
+  },
+  "bench_neg_wrong_sibling": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "wrong_sibling PASS rc 1 FATAL: /srv/opentallas-scratch/claude/closure-loop/s81b-pq-rc2-a7-h212-hm10-b761ac1c6/bench/ws/tb_wrong_sibling.sv:107: pairing/result mismatch row352 ref080000\nROOTCAM_P_GATE PASS\nROOTCAM_NEG FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "pg_reachable_M7_M9_free": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 137,
+    "mean": 348.4,
+    "min": 344.2,
+    "max": 351.8
+   },
+   "all": {
+    "n": 18715,
+    "mean": 347.8,
+    "min": 339.3,
+    "max": 354.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 137,
+    "mean": 215.6,
+    "min": 212.3,
+    "max": 219.0
+   },
+   "all": {
+    "n": 18715,
+    "mean": 214.9,
+    "min": 207.7,
+    "max": 221.2
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 348,
+   "CK_SS_ALL_MEAN": 348,
+   "CK_SS_MIN": 344,
+   "CK_SS_ALL_MIN": 339,
+   "CK_SS_MAX": 352,
+   "CK_SS_ALL_MAX": 355,
+   "CK_FF_MEAN": 216,
+   "CK_FF_ALL_MEAN": 215,
+   "CK_FF_MIN": 212,
+   "CK_FF_ALL_MIN": 208,
+   "CK_FF_MAX": 219,
+   "CK_FF_ALL_MAX": 221
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 11,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T15:46:32-07:00",
+ "job_spec": {
+  "name": "s81b-pq-rc2-a7-h212-hm10-b761ac1c6",
+  "block": "ot_s81_pq_ret_root_cam_p",
+  "owner": "Claude:pq-rootcam",
+  "purpose": "PQ root CAM ROUND 2 ot_s81_pq_ret_root_cam_p PAR 0 ASPLIT 7 (round 1 08f27dc4f TT -555.9/-551.4/PAR1 -682.1: serial norm -> qk/c_pt, adder s2->s3 ripple, match_vec->128x66 write enables, match loop, rst recovery). Fix: closed-form norm, parent from registered ct, key compare, registered match/removal masks, delayed entry write, deep KS adder, registered reset. TC route, mm FF hold HM 0.01. Latency vs native complete/2-leaf/8-leaf 2/7/18; +3 cycles per root add level vs round 1; throughput 1 candidate/cycle",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 44,
+  "source": {
+   "branch": "claude/pq-rootcam-20261008",
+   "commit": "b761ac1c6da46ae5bdedacf9fa38abf21ac76242",
+   "paths": [
+    "tools",
+    "rtl",
+    "physical",
+    "Makefile",
+    "tests"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_cam_p",
+     "cmd": "python3 tools/s81/pq_root_cam_p_gate.py --out {RUN}/bench/gate --par 0 --asplit 7; rc=$?; cat {RUN}/bench/gate/record.json; echo gate_rc=$rc; exit $rc",
+     "expect": "pass",
+     "pass_regex": "ROOTCAM_P_GATE PASS",
+     "threads": 1,
+     "peak_ram_gb": 4
+    },
+    {
+     "name": "neg_wrong_sibling",
+     "cmd": "python3 tools/s81/pq_root_cam_p_gate.py --out {RUN}/bench/ws --par 0 --asplit 7 --only wrong_sibling; if grep -Eq 'pairing/result mismatch|unexpected fault' {RUN}/bench/ws/wrong_sibling.log; then echo ROOTCAM_NEG FAIL; exit 1; fi; echo ROOTCAM_NEG PASS",
+     "expect": "fail",
+     "fail_regex": "ROOTCAM_NEG FAIL",
+     "threads": 1,
+     "peak_ram_gb": 4
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; DIE_H=211.68 OT_MM_FF_SDC=\"physical/s81_pq_root_cam_p/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/s81_pq_root_cam_p/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 bash physical/s81_pq_root_cam_p/route.sh {LABEL}${CL_LABEL_SUFFIX} --param ASPLIT=7 --orfs-var SYNTH_HDL_FRONTEND=slang $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo route_col.sh writes the IO SDC from CK_SS_MEAN/CK_FF_MIN/CK_FF_MAX",
+    "threads": 16,
+    "peak_ram_gb": 44
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; DIE_H=211.68 OT_MM_FF_SDC=\"physical/s81_pq_root_cam_p/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ss.sdc physical/s81_pq_root_cam_p/cl_{LABEL}${CL_LABEL_SUFFIX}/signoff_ff_guarded.sdc\" SRC={SRC} OUT={RUN}/routes CORES=16 bash physical/s81_pq_root_cam_p/route.sh {LABEL} --param ASPLIT=7 --orfs-var SYNTH_HDL_FRONTEND=slang",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^export_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp -r {RUN}/routes/{LABEL}/view {RUN}/record/ && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/pg_check.txt {RUN}/routes/{LABEL}/*.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "pg_reachable_M7_M9_free",
+     "cmd": "grep -q '^pg_rc=0' {RUN}/routes/{LABEL}/exit"
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_pq_root_cam_p/cl_{LABEL}/signoff_ss.sdc",
+    "physical/s81_pq_root_cam_p/cl_{LABEL}/signoff_ff_guarded.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_pq_root_cam_p/view_pq-rc2-a7-h212-hm10"
+   }
+  ],
+  "cycles_added": 11,
+  "merge_target": null,
+  "hold_eco": {
+   "session": "ff"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+ }
+}

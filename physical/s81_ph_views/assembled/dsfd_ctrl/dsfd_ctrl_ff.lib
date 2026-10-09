@@ -1,0 +1,61 @@
+library (dsfd_ctrl_asm_ff) {
+ delay_model : table_lookup;
+ time_unit : "1ps";
+ voltage_unit : "1V";
+ current_unit : "1mA";
+ pulling_resistance_unit : "1kohm";
+ leakage_power_unit : "1pW";
+ capacitive_load_unit (1, ff);
+ nom_process : 1.0;
+ nom_temperature : 25.0;
+ nom_voltage : 0.70;
+ input_threshold_pct_rise : 50; input_threshold_pct_fall : 50; output_threshold_pct_rise : 50;
+ output_threshold_pct_fall : 50; slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;
+ slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;
+ lu_table_template (dsfd_ctrl_ctr__template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+ lu_table_template (dsfd_ctrl_pc__template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+ type (b1) { base_type : array; data_type : bit; bit_width : 1; bit_from : 0; bit_to : 0; downto : true; }
+ type (b8864) { base_type : array; data_type : bit; bit_width : 8864; bit_from : 8863; bit_to : 0; downto : true; }
+ type (b22238) { base_type : array; data_type : bit; bit_width : 22238; bit_from : 22237; bit_to : 0; downto : true; }
+ cell (dsfd_ctrl) {
+  bus (ckh) { bus_type : b1; direction : input;
+   clock : true; capacitance : 1.0;
+  }
+  bus (cks) { bus_type : b1; direction : input;
+   clock : true; capacitance : 1.0;
+  }
+  bus (phy) { bus_type : b22238; direction : inout;
+  }
+  bus (rd) { bus_type : b8864; direction : output;
+   timing () {
+        related_pin : "cks";
+        timing_type : rising_edge;
+        cell_rise(dsfd_ctrl_pc__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("289.39383,291.68762,295.78104,303.53979,318.80139,349.18625,409.89890");
+        }
+        rise_transition(dsfd_ctrl_pc__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("8.00256,11.97031,20.16370,36.94676,71.10144,139.94946,277.89005");
+        }
+        cell_fall(dsfd_ctrl_pc__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("287.79022,290.00864,293.79678,300.70605,314.17429,340.96222,394.45660");
+        }
+        fall_transition(dsfd_ctrl_pc__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("7.25999,10.63359,17.39277,31.22288,59.38920,116.36245,230.77510");
+        }
+      }
+  }
+  bus (rst) { bus_type : b1; direction : input;
+   capacitance : 6.8296;
+  }
+ }
+}
