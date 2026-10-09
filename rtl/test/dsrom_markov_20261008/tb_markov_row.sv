@@ -25,7 +25,7 @@ module tb_markov_row;
    @(negedge clk);if(!sr) $fatal(1,"not idle");start=1;head=hm[n];t0=cyc;
    @(negedge clk);start=0;
    for(b=0;b<16;b=b+1) begin
-    if(n%3==1 && b%3==0) begin iv=0;repeat(2) @(negedge clk);end
+    if(n%3==1 && b%3==0) begin iv=0;if(PINREG==2) begin w={16{16'h7fc0}};x={16{16'h7f80}};end repeat(2) @(negedge clk);end
     if(!ir) $fatal(1,"unexpected input stall");iv=1;w=wm[n*16+b];x=xm[n*16+b];
     @(negedge clk);
    end
@@ -33,7 +33,7 @@ module tb_markov_row;
    while(!ov) begin @(negedge clk);if(cyc-t0>600 || fault) $fatal(1,"fault or missing result n=%0d",n);end
    if(out!==gm[n]) $fatal(1,"nonexact n=%0d got=%h golden=%h",n,out,gm[n]);
    for(stall=0;stall<7;stall=stall+1) begin
-    @(negedge clk);if(!ov || out!==gm[n] || sr) $fatal(1,"output changed under stall");
+    @(negedge clk);if(PINREG==2) begin w=~w;x=~x;end if(!ov || out!==gm[n] || sr) $fatal(1,"output changed under stall");
    end
    $display("ROW n=%0d cycles=%0d bits=%h",n,cyc-t0,out);
    ordy=1;@(negedge clk);ordy=0;
