@@ -1,6 +1,6 @@
 {
   "schema": "opentallas.hgi_token18.ports.v1",
-  "source": "77f87268c core/fullport; f4babd572 acceptbench; 4bffda75f acceptseatRTL",
+  "source": "77f87268c fullcore/pins; bbd709a32 acceptpinfix; 84d4ba0ca facadebench",
   "model_commit": "416766277",
   "model": "tools/uarch_model.py:hgi_token18_contract_model",
   "legacy_default": "GENERIC18=0,TW17",
@@ -28,7 +28,7 @@
       "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
       "simulator_vectors": "pendingprovider",
       "model": "757907078 tools/uarch_model.py:hgi_token18_accept_seat_model",
-      "route_status": "both completed flow0/corner0; PD55 TT229.99FF9.55, PD48TT226.06FF19.78, electrical0; DRC1 clock/reset M5 metalspacing at top boundary; pin-separated config variants preparing"
+      "route_status": "original both TT>=0/FF>=0/electrical0/DRC1: bbd709a32 receipts; pinfix52d6df55b fleetintake requested"
     },
     "ot_hgi_mtp_ctl18": {
       "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
@@ -90,6 +90,16 @@
     "cmdproc_in": 131,
     "cmdproc_out": 506,
     "reset_release_extra_cycles": 2,
-    "gate": "actual facade replay/boundary pending; reset startup must be checked; real ARGMAX winning-value collective consumer remains unbound"
+    "gate": "8588af822 actualproductionshape port/reset mechanism PASS220cycles62commands; genuine width17/resetbypass mutants build0/sim1. Numericalvectors, CPproducer, realwinningvalueconsumer still pending"
+  },
+  "fullcore_registered_boundary": {
+    "source": "77f87268c",
+    "evidence": "2d23c2ffd",
+    "strict": "PASS",
+    "input_to_output_bits": 0,
+    "input_to_register_levels": 3,
+    "register_to_output_levels": 0,
+    "actual_unmapped_cells": 914655,
+    "actual_peak_kib": 3416432
   }
 }
