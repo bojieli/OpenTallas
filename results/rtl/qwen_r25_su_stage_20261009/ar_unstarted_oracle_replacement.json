@@ -1,0 +1,20 @@
+{
+  "status": "unstarted_guard_replaced_for_invalid_negative_oracle",
+  "old_source_pin": "f806d8316",
+  "old_launcher_pid": 2562231,
+  "old_guard_pid": 2562233,
+  "host": "ot-epyc4",
+  "no_compute_child_verified": true,
+  "reason": "Source inspection found the positive command loop would fatal on the foreign-reply fault before the concurrent negative oracle could verify its eight held cycles. Corrected benchcdb620aef evaluates that exact fault in the command loop. No failing numerical execution is claimed; no frontend or objects were started.",
+  "preserved_remote": "/srv/opentallas-scratch/codex/qwen-r25-quarter-ar/f806d8316",
+  "preserved_receipt": "obsolete_oracle_queued.log",
+  "termination": "SIGTERM only to confirmed unstarted guard and launcher; both absent",
+  "actual_exit_code": null,
+  "successor_source_pin": "cdb620aef",
+  "successor_launcher_pid": 2563271,
+  "successor_guard_pid": 2563273,
+  "successor_remote": "/srv/opentallas-scratch/codex/qwen-r25-quarter-ar/cdb620aef",
+  "reservation_gib": 128,
+  "workers": 8,
+  "deadline_or_process_memory_cap": false
+}
