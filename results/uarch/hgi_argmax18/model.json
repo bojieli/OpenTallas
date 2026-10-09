@@ -21,9 +21,14 @@
   "output_compute": "25-bit unsigned sum; overflow flagged, never silently truncated",
   "ds_default": "GENERIC18=0; native IW17 index zero-extended; offset disabled",
   "channel_tracks_required": 569,
-  "channel_capacity": "requires pin-lint measurement before route intake",
-  "slot_fit": "native no-macro argmax slot with util40; new measured area pending",
+  "channel_capacity": "two-layer left edge132um x2 layers x12bits/um=3168 bits;512data input pins <3168",
+  "slot_fit": "50% area budget11918um\u00b2 after core margins; generic mapped area gate pending",
   "area_status": "structural FF count only; no synthetic physical area claim",
   "mux_cost": "first-beat row offset selection; compile-time default eliminates generic logic",
-  "token_model": "parallel offset adds zero cycles to existing head epilogue"
+  "token_model": "parallel offset adds zero cycles to existing head epilogue",
+  "slot_width_um": 180,
+  "slot_height_um": 140,
+  "slot_area_um2": 25200,
+  "native_measured_stdcell_um2": 6487.44,
+  "native_measured_cells": 53687
 }
