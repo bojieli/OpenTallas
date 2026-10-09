@@ -43,7 +43,7 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
    owed[l]=owed[l]+1;
   end
   if(lines[0])begin got=got+8;lastline=$time;end
-  if(t%delay_==0)for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;end
+  if(t%delay_==0)for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;drained=$time+512;end
   if(fault)$fatal(1,"svc fault got=%0d",got);
   fin=done;t=t+1;if(t>2000000)$fatal(1,"protocol timeout got=%0d",got);
  end
@@ -51,10 +51,10 @@ for(rep_=0;rep_<2;rep_=rep_+1)begin
  // Return every credit, including the final output group. Repetition proves restoration.
  for(i=0;i<200;i=i+1)begin
   @(negedge clk);credit=0;
-  for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;end
+  for(l=0;l<8;l=l+1)if(owed[l]>0)begin credit[l]=1;owed[l]=owed[l]-1;drained=$time+512;end
   if(fault)$fatal(1,"fault during final credit drain");
  end
- drained=$time;credit=0;
+ credit=0;
  for(l=0;l<8;l=l+1)if(owed[l]!=0)$fatal(1,"credit debt lane=%0d owed=%0d",l,owed[l]);
  $display("IKS_TIMED rep=%0d phase_ns=%0d credit_delay=%0d lines=%0d bytes=186048 last_line_ns=%0.3f drain_ns=%0.3f logical_tbs=%0.6f",rep_,phase,delay_,got,(lastline-launch)/1000.0,(drained-launch)/1000.0,186048.0/(lastline-launch));
 end
