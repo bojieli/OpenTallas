@@ -152,6 +152,7 @@ def emit(out):
     wire [AW-1:0] sys_wcs = b_po_me_i_wcs + (b_po_me_i_wsrc || SYS_BASE_MUT ? {AW{1'b0}} : q_st_scale);
 '''
     s = s.replace('    wire rs;', insert + '    wire rs;', 1)
+    s = s.replace('    `include "sequencer_sys_templates.svh"', '\n'.join(rom))
     s = s.replace('.d(b_po_me_i_wbase),', '.d(sys_wbase),').replace('.d(b_po_me_i_wcs),', '.d(sys_wcs),')
     s = s.replace('ot_qwen_tp_seq_w12 #(', 'ot_qwen_tp_seq_w12_fs #(')
     s = s.replace('.start(q_h_start), .token(q_tp_token), .pos(q_tp_pos),', '.start(q_h_start), .token(q_tp_token), .pos(q_tp_pos), .tag_stage(q_stage), .tag_gen(q_generation),')
