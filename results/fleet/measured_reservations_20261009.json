@@ -140,6 +140,20 @@
         313586
       ],
       "evidence": "Independentpsreturnednoidentities, ownerallgate terminal expectedresults. Allthree3.1 claimsreleased."
+    },
+    {
+      "host": "ot-epyc4",
+      "reservation": {
+        "name": "qwen-ar-quarter-frontend",
+        "pid": 3513967,
+        "command_match": "qwen-r25-quarter-ar/89a8ac363/",
+        "peak_ram_gb": 91.2,
+        "owner": "Codex:qwen_hbm_unify/stage_harness",
+        "launcher_pid": 2626636,
+        "reason": "ActualadmittedplainAR N256/M64 frontend3513967 RSS51075076/HWM51138320KiB. Evidence samefullquarter frontend source822ca7b65 completedGNUtime95595836KiB91.167GiB; rounded91.2GiB phase sibling, replacesunmeasured128. Eightworkers/outputsplit20000. No processcap/restart; C++phase refresh fromactualinventory."
+      },
+      "old_peak_ram_gb": 128,
+      "new_peak_ram_gb": 91.2
     }
   ]
 }

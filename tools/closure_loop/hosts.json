@@ -168,6 +168,15 @@
      "owner": "Codex:hbm_continuation/selector_capture",
      "reason": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
      "launcher_pid": 745294
+    },
+    {
+     "name": "qwen-ar-quarter-frontend",
+     "pid": 3513967,
+     "command_match": "qwen-r25-quarter-ar/89a8ac363/",
+     "peak_ram_gb": 91.2,
+     "owner": "Codex:qwen_hbm_unify/stage_harness",
+     "launcher_pid": 2626636,
+     "reason": "ActualadmittedplainAR N256/M64 frontend3513967 RSS51075076/HWM51138320KiB. Evidence samefullquarter frontend source822ca7b65 completedGNUtime95595836KiB91.167GiB; rounded91.2GiB phase sibling, replacesunmeasured128. Eightworkers/outputsplit20000. No processcap/restart; C++phase refresh fromactualinventory."
     }
    ]
   },
