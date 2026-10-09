@@ -14551,3 +14551,9 @@ def hbm_native_mtp_transaction_model():
     """Full native command ownership/reset epoch join model."""
     from hbm_native_mtp_transaction_model import model
     return model()
+
+
+def hbm_native_mtp_emit_model(depth=8):
+    """Finite native emitted-token sink model."""
+    from hbm_native_mtp_emit_model import model
+    return model(depth)
