@@ -1,0 +1,63 @@
+{
+  "utc": "2026-10-09T09:56:13.391394+00:00",
+  "source": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "job": "hbm_idx_sel_native_qend_aa7127b87_pathfinding",
+  "host": "ot-epyc4",
+  "phase": "2_1_floorplan",
+  "container_id": "8b9f30d8f9d616e26482105d724f605b7e9bb2e4fae13373442dc086f098875f",
+  "container_root_pid": 2554937,
+  "subtree_current_rss_kib": 13489108,
+  "processes": [
+    {
+      "pid": 2554937,
+      "ppid": 2554913,
+      "rss_kib": 3168,
+      "hwm_kib": 3168,
+      "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 cts "
+    },
+    {
+      "pid": 2554962,
+      "ppid": 2554937,
+      "rss_kib": 2704,
+      "hwm_kib": 2704,
+      "cmd": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 cts "
+    },
+    {
+      "pid": 2558500,
+      "ppid": 2554962,
+      "rss_kib": 2680,
+      "hwm_kib": 2680,
+      "cmd": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-2_1_floorplan "
+    },
+    {
+      "pid": 2558516,
+      "ppid": 2558500,
+      "rss_kib": 3440,
+      "hwm_kib": 3440,
+      "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan "
+    },
+    {
+      "pid": 2558518,
+      "ppid": 2558516,
+      "rss_kib": 2252,
+      "hwm_kib": 2252,
+      "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan "
+    },
+    {
+      "pid": 2558537,
+      "ppid": 2558518,
+      "rss_kib": 11556,
+      "hwm_kib": 11556,
+      "cmd": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_hfd_idx_sel_native_qend_asap7_hv_hbm_idx_sel_native_qend_aa7127b87_pathfinding_cal/base/2_1_floorplan.tmp.log --append --tee -- /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_hfd_idx_sel_native_qend_asap7_hv_hbm_idx_sel_native_qend_aa7127b87_pathfinding_cal/base/2_1_floorplan.json "
+    },
+    {
+      "pid": 2558538,
+      "ppid": 2558537,
+      "rss_kib": 13463308,
+      "hwm_kib": 13463308,
+      "cmd": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_hfd_idx_sel_native_qend_asap7_hv_hbm_idx_sel_native_qend_aa7127b87_pathfinding_cal/base/2_1_floorplan.json "
+    }
+  ],
+  "completed_synthesis_peak_kib": 19663284,
+  "GP_CTS_route_evidenced_sibling_peak": "UNAVAILABLE; first fullnativeqend vehicle, no claimed120GiB measuredpeak"
+}
