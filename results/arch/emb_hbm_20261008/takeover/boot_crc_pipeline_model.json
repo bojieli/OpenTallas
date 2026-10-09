@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.embedding_boot_crc_pipeline.v1",
+  "model_before_RTL": true,
+  "source_failure": "qfd_emb_strip_grid92-3a22276d6-tc terminalPREROUTE_MARGIN, be[8]\u2192csum[30], TT\u22128045.5ps,576endpointsbelow\u2212750",
+  "failure_preserved": true,
+  "source_original": "e48258ccd ot_qfd_emb_strip.sv +ot_qfd_emb_pkg.sv unchanged",
+  "clock_ps": 833.333333,
+  "MACs_per_cycle": 0,
+  "communication_bits_per_cycle": {
+    "input": 282,
+    "result": 33
+  },
+  "memory_port_bytes_per_cycle": {
+    "accepted_message_register_inputs": 36,
+    "partial_CRC_stage": 24,
+    "CRC_result_stage": 4,
+    "checksum_accumulator": 4
+  },
+  "replica_count": 4,
+  "implementation": "ExactaffineGF2transform forIEEEreflectedCRC32 of4byteLE logicalE+32payloadbytes:6independent48bitmessagechunks,eachcontributes32bits. Capture6partialCRC32 values stage1; XOR6partials+CRCzero-messageconstant stage2; existing32bitsum commitstage3. Twoadditionalcycles vsoriginalsingleedge CRC+sum. No numericalarithmeticreordering; CRClineartransform mathematicallyidentical, summedmod2^32 originalissueorder.",
+  "finite_flow": "EachvalidBOOT_WR issuesoneCRC eventinB1. TWINsecondcopydoesnotdoublecountlogicalchecksum. BOOT_ENDstatus waitsactualCRCpipelinevaliddrainandalloldcommandcredits; physicalwritevisibilityseparateproviderfence. No addedbuffercredit orruntimeepoch.",
+  "routing_tracks": {
+    "singlemessage_boundary_bits": 282,
+    "two-layerlongface_grid92_capacity_tracks": 31252,
+    "no_new_external_pins": true
+  },
+  "area": {
+    "added_register_bits": 226,
+    "flop_proxy_um2": 72.32000000000001,
+    "XOR_matrix_and_buffer_planning_um2": 5000,
+    "old_serial_XOR_network_removed": "measureactualnetlistdelta; planningnotzeroarea",
+    "slot": "sameapproved92.016\u00d72000.16 grid92 orbus92; no geometrychange",
+    "new_outline_mm2": 0
+  },
+  "latency": {
+    "additional_decode_edges": 0,
+    "additional_boot_checksum_commit_edges": 2,
+    "maximum_additional_BOOT_END_wait_edges": 2,
+    "single_user_decode_credit": 0,
+    "dataflow": "existingbootissue+goldenCRCsumorder unchanged; resultreadyatactualcommit"
+  },
+  "physical_closed": false,
+  "adopted": false,
+  "default_off_parameter": "CRC_PIPE=0 in additive originalengine successor, pinnedoriginalbyteidentical",
+  "gate": "exactcomponentCRC/message+modsum+BOOT_ENDflush, actual833.333ps,bitmutantfails; matchedoriginalenginecycleequivalencewhenCRC_PIPE0; sourcehierarchyenabledelaboration; no wholearray/die simulation",
+  "review": "newpath-informed structuralsource requiresClaude review beforeP&R; source/model/minimumgate proceed"
+}
