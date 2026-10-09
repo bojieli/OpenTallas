@@ -11,5 +11,7 @@ def model():
         floorplan=dict(area_slot_um2=120000, utilization_target=0.45, measured_area_pending=True),
         latency=dict(history_window=1, replay_window_to_shipped_hash=4, shipped_hash=12,
                      row_emit=24, total_no_backpressure=41, original_window_hash=16,
-                     added_serialization_cycles=25, token_path_priced_cycles=25),
+                     added_serialization_cycles_per_command=25, DS_layer_commands_per_token=2,
+                     DS_two_layer_serial_cycles=82, original_all_layer_hash_cycles=16,
+                     conservative_added_cycles_per_token=66, measured_command_to_ready_cycles=41),
         approval_gate="exact DS lockstep + CF-EHASH + mutant + TT/FF/DRC; no generic-B claim")
