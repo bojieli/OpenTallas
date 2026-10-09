@@ -13,7 +13,7 @@ def emit(out):
     ports=re.findall(r'^    (input|output)  ?wire (?:\[([^\]]+)\] )?([a-zA-Z0-9_]+),?$',old,flags=re.M)
     assert len(ports)>110,len(ports)
     removed={'h_start','tp_token','tp_pos','pw_v','pw_addr','pw_data','dw_v','dw_addr','dw_data'}
-    s=['`timescale 1ns/1ps','module tb_qfd_sequencer_sys;',
+    s=['`timescale 1ns/1ps','module tb_qfd_sequencer_sys #(parameter integer DIE_RANK=0);',
        'localparam W=16,G=6144,AW=24,NW=18,PAW=12,SW=64,LV=7,D=4;',
        'reg clk=0; always #5 clk=~clk; reg rst_n=0;',
        'reg d_start=0; reg [17:0] d_token=151000,d_pos=0; reg [1:0] d_gen=0;',
@@ -29,7 +29,7 @@ def emit(out):
     dut=['.clk(clk)', '.rst_n(rst_n)', '.d_start(d_start)', '.d_token(d_token)', '.d_pos(d_pos)', '.d_gen(d_gen)']
     dut += [f'.{n}({n})' for dr,w,n in ports if n not in removed|{'clk','rst_n'}]
     dut += [f'.{n}({n})' for n in ['d_done','d_drained','d_fault','d_done_gen','d_next_token','d_next_val','d_cycles','d_fault_code','stage','st_layer','st_next_layer','st_crom']]
-    s.append('ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)) dut ('+','.join(dut)+');')
+    s.append('ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.DIE_RANK(DIE_RANK),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)) dut ('+','.join(dut)+');')
     ref=[f'.{n}({"r_" if dr=="output" else ""}{n})' for dr,w,n in ports]
     s.append('ot_qfd_sp_constants_sequencer #(.FQ_HEAD(1),.MSTN(1)) reference_master ('+','.join(ref)+');')
     s += ['integer errors=0, cycles=0, starts=0, me_ops=0,su_ops=0,coll_ops=0,i,bank,j,rx_left=0,rx_rank=0,case_no=0;',
@@ -63,6 +63,7 @@ def emit(out):
           ' if(s_done!==r_s_done || s_fault!==r_s_fault || core_fault!==r_core_fault)bad("sequencer status");',
           ' if(s_done && !previous_done)$display("SYS_STAGE_DONE stage=%0d cycle=%0d",stage,cycles); previous_done=s_done;',
           ' if(c_valid)begin',
+          '  if(c_mode && (c_data[49:32] !== (18\'(DIE_RANK*37984+17))))bad("head rank identity");',
           '  if(c_tag!=={d_gen,stage,d_pos[12:0],d_token[7:0],reference_master.b_c_tag[2:0]})bad("fullshape tag");',
           '  if(c_data!==r_c_data || c_last!==r_c_last || c_mode!==r_c_mode)bad("collective packet");',
           ' end',
