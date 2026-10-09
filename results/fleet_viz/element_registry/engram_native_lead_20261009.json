@@ -1,0 +1,16 @@
+{
+ "schema_version":1,
+ "records":[{
+  "element":"ot_dsrom_engram_lead_producer",
+  "target":"DeepSeek ROM",
+  "owner":"Codex:engram",
+  "description":"Released token21→compressed17 map in eight actual no-ECC ROM macros; bounded64user eight-entry history, explicit DEAD/first/rollback, native identified68-bit HIDDEN lead context. Default WINDOW_CONTEXT0. Mutable protection successor separately priced and not yet implemented.",
+  "source":{"commit":"765470589","paths":["rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv","rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv","rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv"]},
+  "implementation":{"status":"implemented opt-in; protected history successor pending","evidence":["results/arch/engram_20261008/native_lead_contract.json"]},
+  "model":{"status":"sized before RTL, fourcapture cycles; protection successor priced82fc40878","evidence":["tools/uarch_model.py:dsrom_engram_lead_model","tools/uarch_model.py:dsrom_engram_protected_idwin_model"]},
+  "exactness":{"positive":{"status":"PASS released129280map,64users,1089windows,stalls,DEAD,rollback,reset andnativeHIDDEN","evidence":["results/rtl/engram_lead_gate_20261009.json","results/rtl/engram_window_gate_20261009.json","results/rtl/engram_native_elab_gate_20261009.json"]},"negative":{"status":"PASS rawtoken/user/position/rewind/context/range gates; protectedfault gate pending","evidence":["results/rtl/engram_lead_gate_20261009.json","results/rtl/engram_window_gate_20261009.json"]}},
+  "physical":{"status":"validated andsubmitted TT pathfinding fullshape; routeverdict andmeasuredpeak pending","job":"engram-lead-765470589-tt","recipe_commit":"734270c79","estimated_admission_peak_gib":24,"measured_peak_gib":null,"corners":{},"evidence":["results/arch/engram_20261008/native_lead_physical.json"]},
+  "dependencies":["protected mutable idwin","actual image-span DEAD metadata","actual commit/rewind source binding","native lookup slotpublication aggregation","installed aperture KV/index capacity ledger","actual layer1e generator/service binding"],
+  "integration":{"status":"actual native source/layer/head controller elaboration PASS; descriptor completion/native installed die unqualified; defaultoff","evidence":["rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv","results/rtl/engram_native_elab_gate_20261009.json"]}
+ }]
+}
