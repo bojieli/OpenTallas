@@ -1,0 +1,32 @@
+{
+  "source": "515c33b87",
+  "provenance": "HF5 endpoint 0b2ff05a7, existing PS/tree; no arithmetic/tree pipeline changes",
+  "unified_model": "tools/uarch_model.py TU / tools/dshbm_1m_coll.py",
+  "macs_per_cycle": 0,
+  "fp32_adders": 112,
+  "fp32_add_lanes": 16,
+  "tree_levels": 3,
+  "replica_count": 1,
+  "memory_port_payload_bytes_per_cycle": 32,
+  "hub_input_bits_per_cycle": 1024,
+  "delivery_bits_per_cycle": 2180,
+  "physical_port_count": 8,
+  "physical_bits_per_port": 545,
+  "wire_stages": {
+    "HUBW": 35,
+    "WSTG": 14
+  },
+  "new_data_path_cycles": 0,
+  "new_boundary_bits": 4,
+  "mode_error_state_bits": 1,
+  "latency_model": "unchanged tools/uarch_model.TU plus existing PS crossings; rejected command does not run",
+  "slot_area_fit": "inherits first viable PS/core slot; actual generic synthesis occupancy and four-pin spread must be checked before route",
+  "routing_tracks": "four new static cfg bits; existing payload channels unchanged; current submit fp-lint mandatory",
+  "admission": {
+    "host": "ot-epyc3",
+    "reservation_gib": 16,
+    "basis": "conservative serial -j4 compile inventory; related full PF384 NC8 frontend measured2.48GiB; whole process-group peak not yet measured",
+    "is_measured": false
+  },
+  "qualification": "bench pending; routes pending, not closed"
+}
