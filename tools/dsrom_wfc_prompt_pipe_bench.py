@@ -6,7 +6,7 @@ import dsrom_mtp_rom_bench as B
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--case');p.add_argument('--hard-token',action='store_true');p.add_argument('--raw-negative',action='store_true');a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--case');p.add_argument('--hard-token',action='store_true');p.add_argument('--raw-negative',action='store_true');a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
  common=list(B.COMMON)+['rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv','rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv','rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_src.sv','rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv']
  base=B.cases();base['stg_neg_prevuser']=dict(base['stg_r1'],defines=['OT_WFC_TOKPIPE_MUT_PREVUSER'],expect='fail')
  names=('s0_tr_dspark','s0_tr_forced','s0_tr_forced_w16','s0_hash_u3','s0_hash_u1_fast','s0_neg_noepoch','stg_vmnat','stg_r1','stg_lag1','stg_neg_prevuser')
