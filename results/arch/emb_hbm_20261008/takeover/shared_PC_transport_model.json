@@ -1,0 +1,57 @@
+{
+  "schema": "opentallas.embedding_shared_PC_transport_sizing.v1",
+  "model_before_RTL": true,
+  "source_geometry": "composed_slots/composed_slots.json",
+  "flat_per_PC_station_candidate": {
+    "verdict": "FAIL_CHANNEL_IF_CONFINED_TO_SHORELINE_COLUMNS",
+    "reason": "registering a branch does not remove its wires at horizontalcut",
+    "outside_engine_PCs": {
+      "WS": {
+        "north": 16,
+        "south": 10
+      },
+      "WN": {
+        "north": 9,
+        "south": 16
+      },
+      "ES": {
+        "north": 16,
+        "south": 10
+      },
+      "EN": {
+        "north": 9,
+        "south": 16
+      }
+    },
+    "peak_PC_branches_per_horizontal_cut": 16,
+    "bits_per_PC": 548,
+    "peak_demand_bits": 8768,
+    "engine_column_capacity_tracks": 1437,
+    "combined_engine_controller_width_um": 339.552,
+    "combined_capacity_tracks": 5305,
+    "required_width_um_at_conservative_policy": 561.152,
+    "station_frames_area_mm2": 2.4192405043200003,
+    "physical_sources_retained": "independentlyusefulstationleaf/fullbusengine sources; notadoptedwholetransport"
+  },
+  "shared_candidate": {
+    "command_trunk_bits": 350,
+    "fields": "valid1+PC5+originalcredit1+responsevalid1+data258",
+    "return_trunk_bits": 266,
+    "peak_wire_bits": 616,
+    "conservative92um_capacity_tracks": 1437,
+    "external_top_source": "prioractual32PCcmd288/ret260 interfaces remainleafactualports, localdemux/packetization+stations implementedbeforeadoption",
+    "PC_reply_FIFO_depth": 8,
+    "reply_queue_bits_per_PC_unprotected": 2120,
+    "reply_FIFO_protection": "SECDEDmutable SRAM required; encoder/correction/capturedidentitypipeline additionalcost notyetpriced",
+    "replicas_PC": 128,
+    "flow_bounds": "4issuedcommands/PC implyatmost4creditreturns+4readresponses beforeallcredit returns;8evententries sufficientforuncoalescedevents. Gatewayonefetch code+scale gives\u22642readbeats/PC. No new credits created.",
+    "arbitration": "twofinitearms proposed, captureactualPC5 identity; fairboundedreplyservice withblockedoutput; actualSQRcredits retained",
+    "latency": "physicalsegment counts actualpinbinding, trunkpipeline andserialization mustbemeasured; one266b armcarriesonePCreplyevent/coreedge. No equal-latency claim versusparallelbranch. OriginalFIFO/goldenwordorder preserved by perPCqueue andenginepairpoporder.",
+    "area": "stationtrunk+localreplyprotectedqueue+demux physicalframearea pending; nozeroarea",
+    "default_off": true,
+    "adopted": false
+  },
+  "next": "qualifiedleafRTL/model before build, minimumcredit4 andmixedcode/scale replies; reviewClauseapproval before new P&R",
+  "physical_closed": false,
+  "headline_credit": 0
+}
