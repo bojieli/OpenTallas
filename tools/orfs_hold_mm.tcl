@@ -42,6 +42,56 @@ proc ot_mm_read_sdc {sdc} {
   set ::ot_mm_active 1
   puts "OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from $sdc"
 }
+# MMFF-INSERTION 2026-10-08: the FF SDCs read into mode ff measure clock arrivals / latencies (io_ref_routed.sdc,
+# vclk_corner_true.sdc, io_ref_skew.sdc, signoff/*.sdc ...).  In this TWO-scene STA `get_property <pin> arrival_*` is the
+# extreme over BOTH scenes (arrival_max_rise = the WC TT/SS arrival: hbm_vm8_nws_s2_hm25 vclk 455.7 in the FF scene vs
+# FF 380.2) and report_clock_latency may mix scenes.  While those SDCs are read: ::ot_ioref_scene = BC (io_ref_routed.sdc
+# reads per-scene arrivals itself), get_property arrival_<max|min>_<rise|fall> of a pin is answered from scene BC
+# (report_arrival -scene BC), and report_clock_latency without -scenes gets -scenes BC.  Restored right after.
+proc ot_mm_arrival_bc {obj prop} {
+  regexp {^arrival_(max|min)_(rise|fall)$} $prop -> mm rf
+  sta::redirect_string_begin
+  catch {report_arrival -scene BC -digits 4 $obj}
+  set r [sta::redirect_string_end]
+  set v ""; set k [string index $rf 0]
+  foreach {- lo hi} [regexp -all -inline "\\s$k\\s+(\\S+):(\\S+)" $r] {
+    set x [expr {$mm eq "max" ? $hi : $lo}]
+    if {![string is double -strict $x]} continue
+    if {$v eq "" || ($mm eq "max" ? $x > $v : $x < $v)} { set v $x }
+  }
+  return $v
+}
+proc ot_mm_scene_shim {on} {
+  if {$on} {
+    set ::ot_ioref_scene BC
+    if {[llength [info commands ::ot_mm_orig_get_property]] || ![llength [info commands ::get_property]]} return
+    if {![llength [info commands ::report_clock_latency]]} return
+    rename ::get_property ::ot_mm_orig_get_property
+    proc ::get_property {args} {
+      set prop [lindex $args end]
+      set ot_a $args
+      if {[lindex $ot_a 0] eq "-object_type" && [lindex $ot_a 1] in {pin port}} { set ot_a [lrange $ot_a 2 end] }
+      if {[regexp {^arrival_(max|min)_(rise|fall)$} $prop] && [llength $ot_a] == 2} {
+        set o [lindex $ot_a 0]; set pl {}
+        if {[string match {*_p_Pin} $o] || [string match {*_p_Port} $o]} { set pl [list $o] } elseif {[llength $o] == 1} {
+          if {[catch {get_pins -quiet $o} pl] || [llength $pl] != 1} { if {[catch {get_ports -quiet $o} pl]} { set pl {} } }
+        }
+        if {[llength $pl] == 1} { return [ot_mm_arrival_bc [lindex $pl 0] $prop] }
+      }
+      return [uplevel 1 [list ::ot_mm_orig_get_property {*}$args]]
+    }
+    rename ::report_clock_latency ::ot_mm_orig_report_clock_latency
+    proc ::report_clock_latency {args} {
+      if {[lsearch -exact $args -scenes] < 0} { lappend args -scenes BC }
+      return [uplevel 1 [list ::ot_mm_orig_report_clock_latency {*}$args]]
+    }
+  } else {
+    catch {unset ::ot_ioref_scene}
+    if {![llength [info commands ::ot_mm_orig_get_property]]} return
+    rename ::get_property {}; rename ::ot_mm_orig_get_property ::get_property
+    rename ::report_clock_latency {}; rename ::ot_mm_orig_report_clock_latency ::report_clock_latency
+  }
+}
 proc ot_mm_sync {} {
   if {![info exists ::ot_mm_active] || $::ot_mm_stage ni {3_place.sdc 4_cts.sdc}} { return }
   set f $::env(RESULTS_DIR)/ot_mm_ss_[clock clicks].sdc
@@ -51,12 +101,25 @@ proc ot_mm_sync {} {
   read_sdc $f
   file delete $f
   set_propagated_clock [all_clocks]
+  set ot_mm_ioref_read 0
+  ot_mm_scene_shim 1
   if {[info exists ::env(OT_MM_FF_SDC)]} {
     foreach s $::env(OT_MM_FF_SDC) {
       if {![file exists $s]} { puts "OT_HOLD_MM WARNING: FF SDC $s missing: ff mode keeps the route SDC for it"; continue }
+      if {[file tail $s] eq "io_ref_routed.sdc"} { set ot_mm_ioref_read 1 }
       puts "OT_HOLD_MM: ff mode reads $s"; read_sdc $s
     }
   }
+  # MMFF-IOREF 2026-10-08: the closure loop drops {SRC}/.ot_mm/ff_ioref_last.sdc (a copy of io_ref_routed.sdc; absent
+  # when the spec opts out with route_ff_ioref: false).  It is read LAST, whatever OT_MM_FF_SDC the route command itself
+  # exported: an inline `export OT_MM_FF_SDC=...` in a job's route cmd overrode the loop's appended io_ref_routed.sdc,
+  # so the FF scene timed vclk at the assumed insertion (hbm_quant_ts0spl_tt: vclk FF 373 vs measured 546 -> fake
+  # 4_1_cts hold -334 on 32k endpoints).  Skipped when the list already read an io_ref_routed.sdc.
+  set ot_mm_ioref_file [expr {[info exists ::env(OT_MM_IOREF_FILE)] ? $::env(OT_MM_IOREF_FILE) : "/src/.ot_mm/ff_ioref_last.sdc"}]
+  if {!$ot_mm_ioref_read && [file exists $ot_mm_ioref_file]} {
+    puts "OT_HOLD_MM: ff mode reads $ot_mm_ioref_file (loop default, appended last)"; read_sdc $ot_mm_ioref_file
+  }
+  ot_mm_scene_shim 0
   set_false_path -setup -from [all_clocks]
   set_mode ss
   set_false_path -hold -from [all_clocks]
@@ -89,6 +152,7 @@ proc ot_mm_ws {check scene} {
 # unchanged; a combined call runs setup exactly as before, then hold in chunks of OT_HOLD_CHUNK iterations (default 1000)
 # and stops when a chunk improves hold TNS by < OT_HOLD_MIN_GAIN_PCT % (default 2) and WNS by < 1 ps, when hold is
 # already >= 0 and a chunk gains < 1 ps (chasing the margin only), or after OT_HOLD_MAX_HOURS (default 3) of hold repair.
+# After an HM-AUTO flood reduction the hold repair first runs at HM 0 and stops once real hold is met (MET-FIRST below).
 # A stall with hold < 0 writes REPORTS_DIR/ot_hold_stall_<stage>.rpt (path classes, pin groups) and logs OT_HOLD_STALL:
 # the closure loop reports it as NEEDS_RTL with that window instead of crawling.  OT_HOLD_GUARD=0 restores the old call.
 proc ot_hold_guard_on {} { expr {![info exists ::env(OT_HOLD_GUARD)] || $::env(OT_HOLD_GUARD) ne "0"} }
@@ -139,8 +203,125 @@ proc ot_hold_window_report {why hist} {
   foreach c [lsort [array names cls]] { lappend sum "$c=$cls($c)@[format %.0f $cw($c)]" }
   puts "OT_HOLD_STALL NEEDS_RTL ($why): [join $sum { }] -> $f"
 }
+# HM-GUARD (hm-guard 2026-10-08).  HM 50 is a design margin, acceptance is FF hold >= 0 (post-route hold ECO as before).
+# A block whose REAL FF hold already passes can still have tens of thousands of back-to-back flop pairs inside the 50 ps
+# margin; repair_timing pads every one: S81 PQ root CAM 17.2k endpoints -> 21.7k buffers (85.8 -> 95.7%), HBM VM8 ~102k
+# buffers, Qwen link rx128 72.5k endpoints -> 146k buffers (80.7 -> 97.2%, 6h53m) -- all DPL-0033.  Before a hold repair
+# ot_hm_guard counts the FF endpoints inside the margin and projects the buffer area (ceil(deficit / OT_HM_BUF_PS) buffers
+# of OT_HM_BUF_AREA_UM2 each over the core area).  Over OT_HM_GUARD_MAX_EP endpoints (10k) or OT_HM_GUARD_MAX_UTIL_PTS
+# (8 points) the margin of THIS run drops to max(floor, worst real violation + floor), floor OT_HM_GUARD_FLOOR_PS (10),
+# never above the asked margin; it logs "OT_HM_AUTO" and writes REPORTS_DIR/ot_hm_auto_<stage>.rpt (the closure loop
+# turns it into a job event).  OT_HM_GUARD=0 disables it.  Margins in the library unit (ps on asap7).
+proc ot_hm_buffers {slacks hm buf_ps} {
+  # projected hold buffers: one per buf_ps of deficit below the margin, per endpoint
+  set n 0
+  foreach s $slacks { if {$s < $hm} { incr n [expr {int(ceil(($hm - $s) / double($buf_ps)))}] } }
+  return $n
+}
+proc ot_hm_decide {hm worst n_in buffers core_um2 buf_area max_ep max_pts floor} {
+  # -> {new_margin util_pts reason}; new_margin == hm when no reduction
+  set pts [expr {$core_um2 > 0 ? 100.0 * $buffers * $buf_area / $core_um2 : 0.0}]
+  if {$hm <= $floor} { return [list $hm $pts "margin $hm <= floor $floor"] }
+  set why {}
+  if {$n_in > $max_ep} { lappend why "$n_in endpoints in margin > $max_ep" }
+  if {$pts > $max_pts} { lappend why [format "projected +%.1f util points > %g" $pts $max_pts] }
+  if {![llength $why]} { return [list $hm $pts "within limits"] }
+  set viol [expr {$worst < 0 ? -$worst : 0.0}]
+  set new [expr {max($floor, $viol + $floor)}]
+  set new [expr {min($hm, ceil($new * 10.0) / 10.0)}]
+  return [list $new $pts [join $why "; "]]
+}
+proc ot_hm_core_um2 {} {
+  if {[catch {
+    set blk [ord::get_db_block]; set r [$blk getCoreArea]
+    set u [$blk getDbUnitsPerMicron]
+    set a [expr {double([$r dx]) * [$r dy] / ($u * $u)}]
+  }]} { return 0.0 }
+  return $a
+}
+proc ot_hm_guard {rt_args} {
+  if {[info exists ::env(OT_HM_GUARD)] && $::env(OT_HM_GUARD) eq "0"} { return $rt_args }
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i < 0} { return $rt_args }
+  set hm [lindex $rt_args [expr {$i + 1}]]
+  set floor [ot_env_num OT_HM_GUARD_FLOOR_PS 10.0]
+  if {![string is double -strict $hm] || $hm <= $floor} { return $rt_args }
+  if {[catch {
+    set sc {}; if {[info exists ::ot_mm_synced]} { set sc [list -scenes BC] }
+    set slacks {}; set worst 1e6
+    foreach p [find_timing_paths -path_delay min {*}$sc -group_path_count 1000000 -endpoint_path_count 1 -slack_max $hm] {
+      set s [get_property $p slack]; if {$s eq "INF"} { continue }
+      lappend slacks $s; if {$s < $worst} { set worst $s }
+    }
+    if {![llength $slacks]} { set worst [lindex [ot_hold_stats] 0] }
+  } msg]} { puts "OT_HM_GUARD: endpoint count unavailable ($msg); margin $hm kept"; return $rt_args }
+  set n [llength $slacks]
+  set buf_area [ot_env_num OT_HM_BUF_AREA_UM2 0.08]
+  set nb [ot_hm_buffers $slacks $hm [ot_env_num OT_HM_BUF_PS 20.0]]
+  set core [ot_hm_core_um2]
+  lassign [ot_hm_decide $hm $worst $n $nb $core $buf_area [ot_env_num OT_HM_GUARD_MAX_EP 10000] \
+             [ot_env_num OT_HM_GUARD_MAX_UTIL_PTS 8.0] $floor] new pts why
+  set line [format "HM auto-reduced %g->%g: %d endpoints in margin (worst FF hold %.2f, ~%d buffers, +%.1f util pts of %.0f um2 core; %s)" \
+    $hm $new $n $worst $nb $pts $core $why]
+  if {$new >= $hm} {
+    puts [format "OT_HM_GUARD: margin %g kept: %d endpoints in margin, ~%d buffers, +%.1f util pts (%s)" $hm $n $nb $pts $why]
+    return $rt_args
+  }
+  puts "OT_HM_AUTO $line"
+  set stage [expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}]
+  catch {
+    set f [expr {[info exists ::env(REPORTS_DIR)] ? "$::env(REPORTS_DIR)/ot_hm_auto_${stage}.rpt" : "ot_hm_auto_${stage}.rpt"}]
+    set fh [open $f w]; puts $fh "OT_HM_AUTO stage=$stage $line"; close $fh
+  }
+  return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $new]
+}
+# HOLD-STOP (drive-resume 2026-10-09, coordinator APPROVED).  A hold repair that stalls already within a small margin
+# (stuckscan: real FF hold WNS >= -15 ps, setup not hopeless) is NOT early-failed: the route continues and the
+# post-route hold ECO repairs the residue.  repair_timing cannot be interrupted, so the closure loop stops the stage and
+# resumes it from its checkpoint with OT_HOLD_STOP = "<stage>:<buffers> ..." (stage cts | grt).  For that stage the hold
+# repair runs once with -max_buffer_percent set to <buffers> over the instance count -- the stalled run's buffer count
+# when it reached its final WNS, so the converging part replays and the flat tail is cut -- and <buffers> = 0 skips the
+# hold repair.  Setup repair is unchanged.  The cap ends the call with RSZ-0060; the stage continues on the repaired
+# design ("OT_HOLD_MM after repair" lets tolerate_flow_errors zero that one error).
+proc ot_hold_stage {} {
+  expr {[info exists ::env(RESULTS_DIR)] && [file exists $::env(RESULTS_DIR)/4_1_cts.odb] ? "grt" : "cts"}
+}
+proc ot_hold_stop_cap {stage} {
+  # -> "" (no stop for this stage) or the buffer cap (0 = skip the hold repair)
+  if {![info exists ::env(OT_HOLD_STOP)]} { return "" }
+  foreach e [split $::env(OT_HOLD_STOP) " ,;"] {
+    if {[regexp {^(cts|grt):([0-9]+)$} $e -> s n] && $s eq $stage} { return $n }
+  }
+  return ""
+}
+proc ot_hold_stop_args {rt_args pct} {
+  set i [lsearch -exact $rt_args -max_buffer_percent]
+  if {$i >= 0} { return [lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] $pct] }
+  return [concat $rt_args [list -max_buffer_percent $pct]]
+}
+proc ot_hold_stop {rt_args} {
+  # 1 when OT_HOLD_STOP handled this stage's hold repair (skipped or capped), else 0
+  set stage [ot_hold_stage]
+  set n [ot_hold_stop_cap $stage]
+  if {$n eq ""} { return 0 }
+  if {$n == 0} {
+    puts "OT_HOLD_STOP stage=$stage: hold repair skipped (near-miss stall; the post-route hold ECO repairs the residue)"
+    return 1
+  }
+  set inst 0
+  catch { set inst [llength [[ord::get_db_block] getInsts]] }
+  if {$inst <= 0} { puts "OT_HOLD_STOP stage=$stage: instance count unavailable; hold repair skipped"; return 1 }
+  set pct [format %.6f [expr {100.0 * $n / $inst}]]
+  puts "OT_HOLD_STOP stage=$stage: hold repair capped at $n buffers (-max_buffer_percent $pct of $inst instances)"
+  if {[catch {log_cmd repair_timing {*}[ot_hold_stop_args $rt_args $pct] -hold} err]} {
+    if {![regexp {RSZ-0060|Max buffer count} $err]} { error $err }
+    puts "OT_HOLD_MM after repair: OT_HOLD_STOP cap of $n buffers reached (RSZ-0060); continuing to route"
+  }
+  catch { lassign [ot_hold_stats] w t v; puts [format "OT_HOLD_STOP stage=%s done: hold ws %.2f tns %.1f viol %d" $stage $w $t $v] }
+  return 1
+}
 proc ot_repair_timing {rt_args} {
   if {![ot_hold_guard_on] || [lsearch -exact $rt_args -setup] >= 0 || [lsearch -exact $rt_args -hold] >= 0} {
+    if {[lsearch -exact $rt_args -setup] < 0} { set rt_args [ot_hm_guard $rt_args] }
     return [log_cmd repair_timing {*}$rt_args]
   }
   set hm 0.0
@@ -149,9 +330,30 @@ proc ot_repair_timing {rt_args} {
   set mingain [ot_env_num OT_HOLD_MIN_GAIN_PCT 2.0]
   set maxs [expr {[ot_env_num OT_HOLD_MAX_HOURS 3.0] * 3600}]
   log_cmd repair_timing {*}$rt_args -setup
+  set hm_asked $hm
+  set rt_args [ot_hm_guard $rt_args]
+  if {[ot_hold_stop $rt_args]} { return }
+  set i [lsearch -exact $rt_args -hold_margin]; if {$i >= 0} { set hm [lindex $rt_args [expr {$i + 1}]] }
   if {[catch {set prev [ot_hold_stats]} msg]} {
     puts "OT_HOLD_GUARD: hold stats unavailable ($msg); unguarded hold repair"
     return [log_cmd repair_timing {*}$rt_args -hold]
+  }
+  # MET-FIRST on a margin flood (drive-2155 2026-10-08, OWNER: the hold margin is a design target, HM 0 allowed; a route
+  # whose real FF hold is met stops repairing).  repair_timing's hold pass visits EVERY endpoint inside the margin in one
+  # call (-max_iterations does not bound it), so after an HM-AUTO flood reduction (worst + floor) the call still pads all
+  # of them: hbm_su_ctlh vf-lvt met real hold at 7.7k buffers, then spent 2.3 h / 58k more buffers on 60k endpoints for
+  # +4.4 ps.  When the guard flagged a flood, repair at HM 0 (real violations only) and stop once met.  Disable with
+  # OT_HOLD_FLOOD_MET_FIRST=0.
+  if {$hm < $hm_asked && [ot_env_num OT_HOLD_FLOOD_MET_FIRST 1] != 0 && $i >= 0} {
+    if {[lindex $prev 0] < 0} {
+      puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (met-first at HM 0 after a margin flood; asked $hm_asked, auto $hm)"
+      log_cmd repair_timing {*}[lreplace $rt_args [expr {$i + 1}] [expr {$i + 1}] 0.0] -hold
+      set prev [ot_hold_stats]
+    }
+    if {[lindex $prev 0] >= 0} {
+      puts [format "OT_HOLD_GUARD: hold met (ws %.2f >= 0) at HM 0 after a margin flood (asked %g, auto %g); margin chase skipped, stop" [lindex $prev 0] $hm_asked $hm]
+      return
+    }
   }
   set t0 [clock seconds]; set hist [list [lmap x $prev {format %.1f $x}]]
   puts "OT_HOLD_GUARD start: hold ws [format %.2f [lindex $prev 0]] tns [format %.1f [lindex $prev 1]] viol [lindex $prev 2] (margin $hm, chunk $chunk it)"
