@@ -51,6 +51,9 @@ BW_FIFO_BITS = 512 * 4             # one per block word (96)
 # valid + credit = 518 b (coll_seq).  Default off: the 64 + 2 descriptor word of r18-r21.
 NATIVE_COLL = False
 SEQ_COLL_BITS = (64 + 2, 546 + 2, 516 + 2)        # (r18-r21 descriptor, native forward, native return)
+# sequencer <-> VM row ports under --native-coll: read request {vm_re, raddr8}, returned word {vm_qv, data512},
+# write-back {vm_we, waddr8, wdata512}
+SEQ_VM_BITS = (1 + 8, 1 + 512, 1 + 8 + 512)
 STRIP_FIFO_BITS = 544 * 4          # one per strip return (4)
 # F2 station storage: 388 corridor flops + 379 assembly + one extra 190-bit beat entry, against 637 before
 F2_STATION_EXTRA_BITS = 388 + 379 + 190 - 637
@@ -2002,6 +2005,11 @@ def _spine_buses(v, m, gm):
     if NATIVE_COLL:
         B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[1], [(seq, 'cd'), ('io_collective', 'sd')]))
         B.append(('coll_seq', 'sequencer', SEQ_COLL_BITS[2], [('io_collective', 'cs'), (seq, 'cc')]))
+        # the collective's vector-memory traffic (ot_qfd_sp_constants_sequencer_nc <-> ot_qfd_sp_vector_memory row
+        # ports): the AR partial-word read request, its returned word, and the rank-order sum write-back
+        B.append(('seq_vmr', 'sequencer', SEQ_VM_BITS[0], [(seq, 'vr'), ('sp_vector_memory', 'cr')]))
+        B.append(('vm_seqd', 'sequencer', SEQ_VM_BITS[1], [('sp_vector_memory', 'cv'), (seq, 'vd')]))
+        B.append(('seq_vmw', 'sequencer', SEQ_VM_BITS[2], [(seq, 'vw'), ('sp_vector_memory', 'cw')]))
     else:
         B.append(('seq_coll', 'sequencer', SEQ_COLL_BITS[0], [(seq, 'cd'), ('io_collective', 'sd')]))
     B.append(('crom_a', 'crom', CROM_IN, [('sp_su64_sfu', 'ca'), (seq, 'ca')]))
