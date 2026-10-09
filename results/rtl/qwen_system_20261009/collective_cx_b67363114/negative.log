@@ -1,0 +1,13 @@
+/srv/opentallas-scratch/codex/qwen-collective-cx-f8693b17c/tools/hdc_golden.py:97: RuntimeWarning: overflow encountered in add
+  return z(np.asarray(a, dtype=F) + np.asarray(b, dtype=F))
+case reduce_8w margin=3 mutant=1 FAIL mismatches=1328 words_out=2048 cycles=1018
+case reduce_8w_gaps_skew margin=3 mutant=1 FAIL mismatches=1360 words_out=2048 cycles=1061
+case mixed_gather_gaps_skew margin=3 mutant=1 FAIL mismatches=612 words_out=5408 cycles=2114
+case gather_1w margin=3 mutant=1 PASS mismatches=0 words_out=1024 cycles=355
+case reduce_320w_depth16 margin=3 mutant=1 FAIL mismatches=3328 words_out=5120 cycles=2506
+case reduce_320w_depth32 margin=3 mutant=1 FAIL mismatches=3200 words_out=5120 cycles=1321
+case fault_nan margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88
+case fault_inf margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88
+case fault_overflow margin=3 mutant=1 PASS mismatches=0 words_out=128 cycles=88
+case fault_tag_mismatch margin=3 mutant=1 PASS mismatches=68 words_out=128 cycles=88
+COLL_MARGIN FAIL margin=3 mutant=1 failed=reduce_8w,reduce_8w_gaps_skew,mixed_gather_gaps_skew,reduce_320w_depth16,reduce_320w_depth32

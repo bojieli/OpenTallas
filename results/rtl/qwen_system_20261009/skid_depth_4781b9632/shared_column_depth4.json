@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.qwen-shared-skid-traffic.v1",
+  "trace_sha256": "458317d2cca01a3a7825c9cacbde5235b82b731a6bea29e9a0fd16d4b89a2af7",
+  "grouping": "column",
+  "tiles_per_pool": 24,
+  "shared_entries": 4,
+  "replicas": 64,
+  "offered_words": 196592,
+  "max_group_words": 4128,
+  "fill_edges": 127973,
+  "sum_wait_edges": 9598772340,
+  "service_words_per_cycle": 1,
+  "token_preemption_edges": 8,
+  "state_bits_per_pool": 6250,
+  "estimated_cell_um2_per_pool": 5477.5,
+  "shared_frame_um": [
+    160,
+    160
+  ],
+  "provisional_frame_area_mm2": 1.6384,
+  "routing": {
+    "ingress_bits": 1037,
+    "broadcast_bits": 1036,
+    "local_dest_select_bits": 5,
+    "fanout": 24,
+    "added_vertical_hops_per_direction": 35,
+    "pin_capacity_2layer_160um": 3332
+  },
+  "latency": {
+    "fill_edges": 127973,
+    "gross_layer_cycles": 4607100
+  },
+  "adopted": false,
+  "physical_fit": false,
+  "rtl_built": false,
+  "limitations": [
+    "timing-only offers; no golden full-width shared implementation yet",
+    "frame includes55percent cell bound; actual pin/channel and placement qualification required",
+    "one output bus must meet all actual group tile write ports without duplicated buses",
+    "token conflict policy eight grouped edges is provisional; actual independent producers may extend it",
+    "group arbitration/credit ownership and far relay costs must be implemented before adoption"
+  ]
+}
