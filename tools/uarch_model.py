@@ -14277,3 +14277,26 @@ def hbm_collective_vm_publication_model(words=4096,lanes=16,quarters=4):
         lease='allproducer writeACK and same-sector visibility under matching owner/op/PC/query precede publication start; stable readlease until TU release',
         native_endpoint_successor='PFMAX256, indexed response fouredges after request; currentPFMAX64/samecycleinjdata cannot bind',
         integration_open=['TU descriptor ISA/header and production SM publication grant','VM read arbiter and source fault transport','actual full shape native endpoint queue/relay inventory','descriptor/control-state protection and warm-abort drain','SS/FF15ps DRC0 with actual FF capture budgets'],physical_qualified=False)
+
+def hbm_collective_native_publication_endpoint_model():
+    """Source-sized successor of fixedPF64/same-edge injector native parent."""
+    return dict(candidate='HBM_NATIVE_FULL4096_INDEXED_RETURN',default_enabled=False,
+        adopted=False,physical_qualified=False,MACs_per_cycle=0,FW=512,PWT=545,
+        PFMAX=256,INJ=2,NPT=8,RXAW=8,QAW=7,TXAW=6,
+        partial_result_delivery_queue_depth=128,
+        native_source_landing_credit_window=64,
+        protected_RX_landing_depth=64,
+        queue_storage='new128-depth source successor; same3 real256x256 macros/queue, halfrowsused; original64-only contract preserved',
+        synchronous_packet_queues=25,synchronous_packet_macros=75,
+        additional_protected_landing_queues=8,additional_landing_macros=24,
+        publication=hbm_collective_vm_publication_model(),
+        injector_response_edges=4,added_request_to_hub_capture_edges=5,
+        injector_metadata_pipeline_register_bits=2*5*(32+1+1),
+        geometric_WSTG=22,protected_flight_instances=16,
+        geometric_flight_flit_seats=16*22,
+        geometric_flight_payload_bits=16*22*545,
+        RTT_cycles=None,RTT_qualified=False,
+        relay_basis='currentR25I max430-budget22 stages; uniform22 pathfinding, actual perport FF stations and ACK RTT not yet bound',
+        token_delta='512 actualVM sector reads before go +5sourcecore edges vs historicalsameedgeinjdata +8PHYingressedges perhop; compose actual measured stagecalendar, no invented overlap',
+        mutable_control='new valid/tag pipeline parity detects corruption before hub capture; broader native descriptor/control qualification open',
+        integration_open=['actual TUdescriptor/compiler production grant','actual perport PHYretry and separate control transport','actual source landing credit64 vs PHYcandidate256 must compose','source-sized full256 flit exactness and allnegative controls','real macro placement and SS/FF15ps DRC0'])
