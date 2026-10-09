@@ -123,6 +123,11 @@ class Density(unittest.TestCase):
         self.assertEqual(S.check(spec(cmd_env=env), g)["verdict"], "REFUSE")
         self.assertEqual(S.check(spec(cmd_env=env), git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'")))
                          ["verdict"], "PASS")
+        # dde873a8e balanced only lo-hi regions: a whole-face region falls through to the second fix
+        strict = dict(FLOW_NEW, **{"tools/run_abi3_physical.py": FLOW_NEW["tools/run_abi3_physical.py"] +
+                                   " balanced pins require ... bounded regions"})
+        r3 = S.check(spec(), git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"), flow=strict))
+        self.assertEqual(r3.get("fix"), "pin_tracks2_spread", r3)
         # a cfg PIN_MIN_TRACKS=2 the flow does not read gives no slot relief
         g2 = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'", extra="PIN_MIN_TRACKS=2"),
                      flow=FLOW_PRE_DDE)

@@ -86,6 +86,8 @@ def flow_support(git, commit: str) -> dict:
         if path not in cache:
             cache[path] = git.show(commit, path) or ""
         out[k] = marker in cache[path]
+    # dde873a8e itself balanced only bounded (lo-hi) regions and raised on a whole-face one; a66978536 relaxed it
+    out["balance_whole_face"] = "bounded regions" not in cache.get("tools/run_abi3_physical.py", "")
     return out
 
 
@@ -570,6 +572,11 @@ def _choose_fix(plan, limit, window, res, force=False):
                 continue
             if not plan["regions"]:
                 why.append("pin_balance: no --pin-region to balance")
+                continue
+            if not plan.get("flow", {}).get("balance_whole_face", True) and \
+                    any("range_um" not in r for r in plan["regions"]):
+                why.append(f"pin_balance: the source {str(plan.get('commit'))[:9]} flow balances only lo-hi regions "
+                           f"(whole-face regions raise; relaxed at a66978536)")
                 continue
             d = density(plan, {"PIN_H": env["OT_PIN_BALANCE_H"], "PIN_V": env["OT_PIN_BALANCE_V"]}, plan["tracks"],
                         int(env["OT_PIN_GROUP_MAX"]), True, window)
