@@ -321,7 +321,7 @@
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SW_s7_312bf36c8_s4-mmq",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T10:54:43-07:00",
+   "measured_at": "2026-10-08T18:51:09-07:00",
    "ss": {
     "mean": 673,
     "min": 630,
@@ -1061,22 +1061,22 @@
    }
   },
   "hfd_quant": {
-   "job": "hbm_quant_e7c2e5b06-tt",
-   "source_commit": "e7c2e5b068b03dbfc3c2221287e412850e16f3d5",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_e7c2e5b06-tt",
+   "job": "hbm_quant_tc_4aadc92bc",
+   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_quant_tc_4aadc92bc",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T16:18:04-07:00",
+   "measured_at": "2026-10-08T18:56:46-07:00",
    "ss": {
     "mean": 666,
     "min": 592,
     "max": 1198
    },
    "ff": {
-    "mean": 376,
-    "min": 344,
-    "max": 662,
+    "mean": 373,
+    "min": 338,
+    "max": 643,
     "n": 3072,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1099,9 +1099,9 @@
     "job": "hbm_quant_ts0_tt_c7f108c44"
    },
    "tt": {
-    "mean": 450,
-    "min": 415,
-    "max": 784,
+    "mean": 446,
+    "min": 409,
+    "max": 764,
     "n": 3072,
     "kind": "boundary",
     "clock": "core_clk"
@@ -2442,22 +2442,22 @@
    }
   },
   "ot_s81_bf_native": {
-   "job": "bfh2_recut_lvt_hm0_a12f3c7e7",
-   "source_commit": "a12f3c7e7f066ccc0ebcf8f8a042dae66458ca2b",
+   "job": "bfh2_recutcgl50_hm0_8db5411e3",
+   "source_commit": "8db5411e3c3630da5fd722fbac2bbb6be5d1593d",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfh2_recut_lvt_hm0_a12f3c7e7",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfh2_recutcgl50_hm0_8db5411e3",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T18:40:45-07:00",
+   "measured_at": "2026-10-08T18:49:42-07:00",
    "ss": {
-    "mean": 951,
-    "min": 918,
-    "max": 1054
+    "mean": 1143,
+    "min": 1123,
+    "max": 1294
    },
    "ff": {
-    "mean": 556,
-    "min": 526,
-    "max": 658
+    "mean": 700,
+    "min": 683,
+    "max": 814
    },
    "boundary_n": 1780,
    "budget": null
@@ -3772,22 +3772,22 @@
    "budget": null
   },
   "ot_dsrom_window_column_halfwrite_distributed": {
-   "job": "window-column128-halfwrite-distributed-6bb5fd3da",
-   "source_commit": "6bb5fd3da556c08b3710f78a2344b67d44896ff8",
+   "job": "window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt",
+   "source_commit": "69cd5731aa92f8436170b9004a832cd1c8342522",
    "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/window-column128-halfwrite-distributed-6bb5fd3da-vf-lvt",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-07T12:06:42-07:00",
+   "measured_at": "2026-10-08T18:52:47-07:00",
    "ss": {
-    "mean": 202,
-    "min": 196,
-    "max": 213
+    "mean": 203,
+    "min": 194,
+    "max": 210
    },
    "ff": {
-    "mean": 122,
-    "min": 116,
-    "max": 133
+    "mean": 123,
+    "min": 115,
+    "max": 131
    },
    "boundary_n": 1923,
    "budget": null
@@ -4076,24 +4076,24 @@
    "budget": null
   },
   "ot_ha2_truecredit_rx_phys": {
-   "job": "ha2_tcrxp_lvt_hm50_398750b79",
-   "source_commit": "398750b797558380ffc224005f8297520d4b2782",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/ha2_tcrxp_lvt_hm50_398750b79",
+   "job": "ha2_tccr_hm50_d5db55765",
+   "source_commit": "d5db557655e67afe7b831af1375440489741caaa",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/ha2_tccr_hm50_d5db55765",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T12:22:03-07:00",
+   "measured_at": "2026-10-08T18:57:42-07:00",
    "ss": {
-    "mean": 886,
-    "min": 869,
-    "max": 939
+    "mean": 889,
+    "min": 873,
+    "max": 921
    },
    "ff": {
-    "mean": 571,
-    "min": 557,
-    "max": 614
+    "mean": 572,
+    "min": 558,
+    "max": 600
    },
-   "boundary_n": 2423,
+   "boundary_n": 2249,
    "budget": null
   },
   "hfd_coll_credit_prod": {
@@ -5212,5 +5212,5 @@
    }
   }
  },
- "updated": "2026-10-08T18:42:48-07:00"
+ "updated": "2026-10-08T18:57:42-07:00"
 }
