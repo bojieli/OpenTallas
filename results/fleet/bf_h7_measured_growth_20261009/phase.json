@@ -1,0 +1,75 @@
+{
+  "identities": {
+    "3677872": {
+      "cmd": "python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix --recut --period .730 --work /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work --output /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/physical.json --util 45 --tag bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal --ins-ss 701.5540326188421 --ins-ff 701.5540326188421 --extra=--hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15 --pnr-stop-after cts ",
+      "pgid": 3677814,
+      "status": "Name:\tpython3\nUmask:\t0002\nState:\tS (sleeping)\nTgid:\t3677872\nNgid:\t0\nPid:\t3677872\nPPid:\t3677868\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t256\nGroups:\t27 109 1000 \nNStgid:\t3677872\nNSpid:\t3677872\nNSpgid:\t3677814\nNSsid:\t3677814\nKthread:\t0\nVmPeak:\t  366640 kB\nVmSize:\t   78488 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t  354736 kB\nVmRSS:\t   68456 kB\nRssAnon:\t   56052 kB\nRssFile:\t   12404 kB\nRssShmem:\t       0 kB\nVmData:\t   56940 kB\nVmStk:\t     132 kB\nVmExe:\t    3608 kB\nVmLib:\t    7316 kB\nVmPTE:\t     196 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t18/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001007\nSigCgt:\t0000000000000000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t2564\nnonvoluntary_ctxt_switches:\t116\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+    },
+    "3677814": {
+      "cmd": "bash /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/cl/run.sh calibrate.a2 ",
+      "pgid": 3677814,
+      "status": "Name:\tbash\nUmask:\t0002\nState:\tS (sleeping)\nTgid:\t3677814\nNgid:\t0\nPid:\t3677814\nPPid:\t1\nTracerPid:\t0\nUid:\t1000\t1000\t1000\t1000\nGid:\t1000\t1000\t1000\t1000\nFDSize:\t256\nGroups:\t27 109 1000 \nNStgid:\t3677814\nNSpid:\t3677814\nNSpgid:\t3677814\nNSsid:\t3677814\nKthread:\t0\nVmPeak:\t    7944 kB\nVmSize:\t    7944 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t    3792 kB\nVmRSS:\t    3792 kB\nRssAnon:\t     280 kB\nRssFile:\t    3512 kB\nRssShmem:\t       0 kB\nVmData:\t     308 kB\nVmStk:\t     132 kB\nVmExe:\t    1036 kB\nVmLib:\t    1908 kB\nVmPTE:\t      56 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t18/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000010000\nSigIgn:\t0000000000000007\nSigCgt:\t0000000000010000\nCapInh:\t0000000000000000\nCapPrm:\t0000000000000000\nCapEff:\t0000000000000000\nCapBnd:\t000001ffffffffff\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t0\nSeccomp_filters:\t0\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t7\nnonvoluntary_ctxt_switches:\t3\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+    },
+    "3749687": {
+      "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 cts ",
+      "pgid": 3749687,
+      "status": "Name:\tbash\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t3749687\nNgid:\t0\nPid:\t3749687\nPPid:\t3749664\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t3749687\t1\nNSpid:\t3749687\t1\nNSpgid:\t3749687\t1\nNSsid:\t3749687\t1\nKthread:\t0\nVmPeak:\t    4372 kB\nVmSize:\t    4372 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t    3428 kB\nVmRSS:\t    3428 kB\nRssAnon:\t     292 kB\nRssFile:\t    3136 kB\nRssShmem:\t       0 kB\nVmData:\t     304 kB\nVmStk:\t     132 kB\nVmExe:\t     892 kB\nVmLib:\t    1864 kB\nVmPTE:\t      52 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t47/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000010000\nSigIgn:\t0000000000000004\nSigCgt:\t0000000043817efb\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t35\nnonvoluntary_ctxt_switches:\t16\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+    },
+    "834769": {
+      "cmd": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/global_place.tcl -metrics /work/logs/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/3_3_place_gp.json ",
+      "pgid": 3749687,
+      "status": "Name:\topenroad\nUmask:\t0022\nState:\tR (running)\nTgid:\t834769\nNgid:\t0\nPid:\t834769\nPPid:\t834768\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t834769\t1017151\nNSpid:\t834769\t1017151\nNSpgid:\t3749687\t1\nNSsid:\t3749687\t1\nKthread:\t0\nVmPeak:\t10064684 kB\nVmSize:\t 9273564 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t 7659984 kB\nVmRSS:\t 7155012 kB\nRssAnon:\t 7094140 kB\nRssFile:\t   60872 kB\nRssShmem:\t       0 kB\nVmData:\t 7531784 kB\nVmStk:\t     800 kB\nVmExe:\t   58212 kB\nVmLib:\t   65192 kB\nVmPTE:\t   14620 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t32\nSigQ:\t47/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000080001000\nSigCgt:\t00000001000004ea\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t28200\nnonvoluntary_ctxt_switches:\t436591\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n"
+    }
+  },
+  "whole_pg_rss_kib": 7292596,
+  "members": [
+    {
+      "pid": 834723,
+      "rss_kib": 2780
+    },
+    {
+      "pid": 834744,
+      "rss_kib": 3572
+    },
+    {
+      "pid": 834747,
+      "rss_kib": 2164
+    },
+    {
+      "pid": 834768,
+      "rss_kib": 11620
+    },
+    {
+      "pid": 834769,
+      "rss_kib": 7155012
+    },
+    {
+      "pid": 3677814,
+      "rss_kib": 3792
+    },
+    {
+      "pid": 3677819,
+      "rss_kib": 3824
+    },
+    {
+      "pid": 3677868,
+      "rss_kib": 3832
+    },
+    {
+      "pid": 3677872,
+      "rss_kib": 68456
+    },
+    {
+      "pid": 3749647,
+      "rss_kib": 31440
+    },
+    {
+      "pid": 3749687,
+      "rss_kib": 3428
+    },
+    {
+      "pid": 3749973,
+      "rss_kib": 2676
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "at": "2026-10-09T12:42:58.813651+00:00",
+  "job": "bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+  "status": "RUNNING",
+  "stage": "calibrate.a2",
+  "host": "ot-epyc1tb",
+  "driver": 3677872,
+  "measured_whole_pg_rss_kib": 7292596,
+  "calibrate_gib": 9,
+  "route_gib": 44,
+  "external_duplicate_claim": false,
+  "evidence_dir": "/home/ubuntu/.local/state/closure_loop/operator_actions/bfk_recut_hs4_sm15-c674dadfd-tc-cx.measured-growth",
+  "previous_higher_observed_whole_pg_rss_kib": 7757652,
+  "previous_observation_source": "s81_continuation/service_q_repair owner report: stage3_3 placement iteration839 timing-driven2/2"
+}
