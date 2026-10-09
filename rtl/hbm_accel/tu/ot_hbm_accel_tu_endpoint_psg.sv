@@ -81,6 +81,8 @@
 // ---------------------------------------------------------------------------
 module ot_hbm_accel_tu_endpoint_psg #(
     parameter integer ENABLE = 0,
+    parameter integer REARM = 0, // opt-in; production pclk must equal clk
+
     parameter integer NC     = 8,
     parameter integer NOG    = 8,
     parameter integer PFMAX  = 64,
@@ -110,6 +112,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
     input  wire [3:0]           gsz,      // static: 4'hF legacy (DS, reset), 0..3 = log2 group size
     input  wire [15:0]          pf,              // flits per contributor this collective (runtime)
     input  wire                 go,
+    output wire                 start_ready,
+    output wire                 done_valid,
+    input  wire                 done_ready,
+    input  wire                 fault_ack,
     output wire [INJ*16-1:0]    inj_idx,
     output wire [INJ-1:0]       inj_rd,
     input  wire [INJ*FW-1:0]    inj_data,
@@ -131,14 +137,20 @@ module ot_hbm_accel_tu_endpoint_psg #(
     generate if (ENABLE == 0) begin : g_off
         assign inj_idx = '0; assign inj_rd = '0; assign ph_tx_v = '0; assign ph_tx_flit = '0;
         assign rx_credit = '0; assign del_valid = '0; assign del_flit = '0; assign fault = 1'b0;
-        assign stat_credit_stall = 0;
+        assign stat_credit_stall = 0; assign start_ready = 0; assign done_valid = 0;
     end else begin : g_on
-        wire [31:0] RANK = {24'b0, rank};
-        wire LEG = (gsz == 4'hF);
-        wire MODE_OK = LEG || ((gsz <= 3) && ((32'd1 << gsz) <= NC));
-        wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << gsz) : 1);
-        wire PAYLOAD_OK = (pf != 0) && (pf <= PFMAX) && (({16'd0,pf} % REQ_NA) == 0) &&
-                         (({16'd0,pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,pf} / REQ_NA) % 2 == 0));
+        reg [7:0] run_rank; reg [15:0] run_pf; reg [3:0] run_gsz;
+        reg pending_start, completed;
+        wire active_desc = REARM && (started || pending_start || completed);
+        wire [7:0] eff_rank = active_desc ? run_rank : rank;
+        wire [15:0] eff_pf = active_desc ? run_pf : pf;
+        wire [3:0] eff_gsz = active_desc ? run_gsz : gsz;
+        wire [31:0] RANK = {24'b0, eff_rank};
+        wire LEG = (eff_gsz == 4'hF);
+        wire MODE_OK = LEG || ((eff_gsz <= 3) && ((32'd1 << eff_gsz) <= NC));
+        wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << eff_gsz) : 1);
+        wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && (({16'd0,eff_pf} % REQ_NA) == 0) &&
+                         (({16'd0,eff_pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,eff_pf} / REQ_NA) % 2 == 0));
 `ifdef OT_COLL_MUT_MODE_GUARD
         wire ACCEPT_MODE = 1'b1;
 `else
@@ -147,12 +159,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
         reg mode_error;
         always @(posedge clk or negedge rst_n)
             if (!rst_n) mode_error <= 1'b0;
-            else if (go && !ACCEPT_MODE) mode_error <= 1'b1;
-        wire [3:0] LG = LEG ? 4'($clog2(NC)) : (MODE_OK ? gsz : 4'd0);
+            else if (REARM && fault_ack && !started && !pending_start) mode_error <= 1'b0;
+            else if (go && (!REARM || start_ready) && !ACCEPT_MODE) mode_error <= 1'b1;
+        wire [3:0] LG = LEG ? 4'($clog2(NC)) : (MODE_OK ? eff_gsz : 4'd0);
         wire [31:0] NA = LEG ? NC : (32'd1 << LG);              // active contributors
         wire [31:0] OG = LEG ? RANK / NC : RANK >> LG, J = LEG ? RANK % NC : RANK & (NA - 1);
         wire CONTRIB = LEG ? (RANK < NOG * NC) : 1'b1;
-        wire [31:0] PF = {16'b0, pf};
+        wire [31:0] PF = {16'b0, eff_pf};
         wire [31:0] OF = LEG ? PF / NC : PF >> LG;
         wire [31:0] ROF = BF16 ? OF / 2 : OF;
         // registered run constants (hbm-coll-rtl): rank and pf are static during a collective, so the runtime
@@ -169,6 +182,15 @@ module ot_hbm_accel_tu_endpoint_psg #(
         // ================= hub issue -> HUBW wire stages ==========================================
         integer k;
         reg started;
+        assign start_ready = !started && (!REARM || (!pending_start && !completed && !fault && rx_pending == 0 && !(|ph_rx_v)));
+        assign done_valid = REARM && completed;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) begin pending_start<=0; run_rank<=0;run_pf<=0;run_gsz<=15;end
+            else if (REARM) begin
+                if (go && start_ready && ACCEPT_MODE) begin
+                    run_rank<=rank;run_pf<=pf;run_gsz<=gsz;pending_start<=1;
+                end else if(pending_start) pending_start<=0;
+            end
         reg [INJ*16-1:0] r_idx;
         reg [INJ-1:0] r_rd;
         always @* begin
@@ -186,7 +208,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin k <= 0; started <= 1'b0; end
             else begin
-                if (go && !started && ACCEPT_MODE) started <= 1'b1;
+                if (REARM) begin
+                    if(pending_start) started<=1'b1;
+                    if(completed && done_ready) begin started<=0;k<=0;end
+                end else if (go && !started && ACCEPT_MODE) started <= 1'b1;
                 if (|r_rd) k <= k + ((LEG || NA > 1) ? INJ : 1);
             end
         wire [INJ-1:0] h_v;
@@ -456,6 +481,10 @@ module ot_hbm_accel_tu_endpoint_psg #(
             end else begin
                 drot <= (drot + 1) % (NPT + 1);
                 if (r_v) rcnt <= rcnt + 1;
+                if (REARM && completed && done_ready) begin
+                    for(integer c=0;c<NC;c=c+1)pres[c]<='0;
+                    rptr<=0;
+                end
                 if (NC > 1) begin
                     if (cw_dupe) dupe <= 1'b1;
                     for (integer c = 0; c < NC; c = c + 1)
@@ -466,12 +495,60 @@ module ot_hbm_accel_tu_endpoint_psg #(
                     end
                 end
             end
+        // Count actual endpoint events; port FIFOs, credits and serializer state are never reset at rearm.
+        localparam integer RMX = NOG * PFMAX / ((NC>1 && BF16) ? 2 : 1);
+        reg [RMX-1:0] result_seen;
+        reg result_error;
+        reg [15:0] tx_count, delivery_count, own_count, produced_count, rx_pending;
+        integer ntx, nrx, npop, ndel;
+        reg [RMX-1:0] seen_next;
+        reg bad_result;
+        wire [31:0] expected_delivery = (NC==1) ? (NOG-1)*PF : (LEG ? NOG*NC : NA)*ROF;
+        wire [31:0] expected_tx = (NC==1) ? PF : PF-OF+ROF;
+        always @* begin
+            ntx=0;nrx=0;npop=0;ndel=0;seen_next=result_seen;bad_result=0;
+            for(integer p=0;p<NPT;p=p+1)begin
+                ntx=ntx+ph_tx_v[p];nrx=nrx+ph_rx_v[p];npop=npop+(rb_pop[p]&&!rb_empty[p]);
+            end
+            for(integer l=0;l<DEL;l=l+1)if(del_valid[l])begin
+                integer gi;gi=integer'(del_flit[l*PWT+FW+:16]);ndel=ndel+1;
+                if(gi>=RMX)bad_result=1;
+                else if(seen_next[gi])bad_result=1;
+                else begin
+                    seen_next[gi]=1;
+                    if(NC>1 && ((!LEG && (gi<OG*NA*ROF || gi>=(OG+1)*NA*ROF)) || (LEG && gi>=expected_delivery)))bad_result=1;
+                end
+            end
+        end
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin
+                result_seen<=0;result_error<=0;tx_count<=0;delivery_count<=0;own_count<=0;produced_count<=0;rx_pending<=0;completed<=0;
+            end else if(REARM)begin
+                rx_pending<=rx_pending+16'(nrx)-16'(npop);
+                if(started && !completed)begin
+                    tx_count<=tx_count+16'(ntx);delivery_count<=delivery_count+16'(ndel);
+                    own_count<=own_count+16'(dq_own_pop&&!dq_own_empty);produced_count<=produced_count+16'(r_v);
+                    result_seen<=seen_next;
+                    if(bad_result || npop>rx_pending+nrx)result_error<=1;
+                    if(!fault && !bad_result && ntx==0 && nrx==0 && npop==0 && ndel==0 &&
+                       k>=PF && (NC==1 || (rptr>=OF && produced_count==ROF && own_count==ROF)) &&
+                       tx_count==expected_tx && delivery_count==expected_delivery && rx_pending==0 &&
+                       (&rb_empty) && dq_own_empty && !(|h_v) && !r_v && !(|del_valid) && !issue)
+                        completed<=1;
+`ifdef OT_COLL_MUT_PREMATURE_DONE
+                    if(k>=PF)completed<=1;
+`endif
+                end
+                if(completed && done_ready)begin
+                    completed<=0;result_seen<=0;tx_count<=0;delivery_count<=0;own_count<=0;produced_count<=0;
+                end
+            end
         reg anyovf;
         always @* begin
             anyovf = dq_own_ovf;
             for (integer p = 0; p < NPT; p = p + 1)
                 anyovf = anyovf | pfault[p] | rb_ovf[p];
         end
-        assign fault = anyovf | dupe | mode_error;
+        assign fault = anyovf | dupe | mode_error | (REARM && result_error);
     end endgenerate
 endmodule
