@@ -1,5 +1,5 @@
 #!/bin/bash
-# run_sr_bench.sh [none|m1..m8] [sr|ps] (run from the repo root): transaction-level exactness of
+# run_sr_bench.sh [none|m1..m8] [sr|ps|ps2|hy] (run from the repo root): transaction-level exactness of
 # ot_hbm_accel_tu_endpoint_sr (sr, default: the SRAM-FIFO / SRAM-delay hfd_coll endpoint) or of its per-port split
 # ot_hbm_accel_tu_endpoint_ps (ps: 8 x ot_hcoll_port + core; pclk = clk in every build), stream hbm-coll-rtl
 # 2026-10-08, on the collective bench
@@ -12,6 +12,9 @@
 #   SAMECOL runs (+SAMECOL=1, directed): every peer partial is held and released at once, flit x of every peer on port
 #   x % NPT, so each cycle all ports deliver partials of the SAME contributor column: the column arbitration (a second
 #   partial for a taken column waits a cycle in its receive buffer) is exercised every cycle of the release.
+#   coll-fallback 2026-10-08: ps2 = ot_hbm_accel_tu_endpoint_ps2 (4 x ot_hcoll_port2 pair slices + core; builds as ps),
+#   hy = ot_hbm_accel_tu_endpoint_hy (hybrid: SRAM receive buffers only, flop queues, shift-register delay lines;
+#   builds as sr; m1 for hy = shift-line output one stage early (d_out = ds[D-2]), m8 skipped as for sr).
 #   plus: the die wrappers rtl_sr/hfd_coll{,_cdc}.sv and rtl_ps/hfd_coll.sv == rtl/hfd_coll.sv but for the endpoint
 #   instance line.
 # m1..m8 run the same on a mutated copy and must FAIL:
@@ -22,34 +25,40 @@
 #   m1-m4, m6-m8; m8 is caught by 1 of 35 runs.)
 set -u
 R=$(pwd); MUT=${1:-none}; DV=${2:-sr}
-case $DV in sr|ps) ;; *) echo "unknown dut $DV"; exit 2 ;; esac
+case $DV in sr|ps|ps2|hy) ;; *) echo "unknown dut $DV"; exit 2 ;; esac
 T=$(mktemp -d /tmp/hcoll_sr.XXXXXX)
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 [ -x "$V" ] || V=$(command -v verilator)
 mkdir -p $T/src
-cp rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_$DV.sv rtl/hbm_accel/tu/ot_hcoll_port.sv \
+cp rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_$DV.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hcoll_port2.sv \
    physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll.sv physical/hbm_accel_die_views/coll/rtl_sr/hfd_coll_cdc.sv $T/src/
 cp physical/hbm_accel_die_views/coll/rtl_ps/hfd_coll.sv $T/src/hfd_coll_ps.sv
+cp physical/hbm_accel_die_views/coll/rtl_ps2/hfd_coll.sv $T/src/hfd_coll_ps2.sv
+cp physical/hbm_accel_die_views/coll/rtl_hy/hfd_coll.sv $T/src/hfd_coll_hy.sv
 P=$T/src/ot_hcoll_sram_prims.sv; E=$T/src/ot_hbm_accel_tu_endpoint_$DV.sv; WR=$T/src/hfd_coll.sv
-[ $DV = ps ] && WR=$T/src/hfd_coll_ps.sv
+case $DV in ps|ps2|hy) WR=$T/src/hfd_coll_$DV.sv ;; esac
 case $MUT in
   none) ;;
-  m1) sed -i "s/cnt - 7'(D - 3)/cnt - 7'(D - 2)/" $P ;;
+  m1) if [ $DV = hy ]; then sed -i "s/assign d_out = ds\[D-1\];/assign d_out = ds[D-2];/" $P
+      else sed -i "s/cnt - 7'(D - 3)/cnt - 7'(D - 2)/" $P; fi ;;
   m2) sed -i "s/rawb\[(NBK > 1) ? bs2/rawb[(NBK > 1) ? bs1/" $P ;;
   m3) sed -i "s/cw_d\[x\] = cw_d\[x\] | rb_head\[p\]\[FW-1:0\]/cw_d[x] = cw_d[x] | rb_head[0][FW-1:0]/" $E ;;
   m4) sed -i "s/if (f >= mOF\[m\])/if (f > mOF[m])/" $E ;;
   m5) sed -i "s/ocr <= 3'(K);/ocr <= 3'(K + 1);/" $P ;;
   m6) sed -i "s/u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk)/u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_clk)/; s/assign w_ep_rank = {i_f_cmdproc\[7:0\]}/assign w_ep_rank = {i_f_cmdproc[8:1]}/" $WR ;;
   m7) sed -i "s/else if (!ctk\[c\]) begin/else if (1'b1) begin/" $E ;;
-  m8) [ $DV = ps ] || { echo "HCOLL_SR MISMATCH m8 is a ps-only mutant (no exported head in sr)"; exit 1; }
+  m8) case $DV in ps|ps2) ;; *) false ;; esac || { echo "HCOLL_SR MISMATCH m8 is a ps-only mutant (no exported head in sr)"; exit 1; }
       sed -i "s/ocr <= 4'(K);/ocr <= 4'(K + 1);/" $P ;;
   *) echo "unknown mutant $MUT"; exit 2 ;;
 esac
+# hy depth sweep (sizing only, never in a gate): HY_QAW / HY_DQAW override the hybrid's queue depths in the copy
+[ $DV = hy ] && [ -n "${HY_QAW:-}" ] && sed -i "s/parameter integer QAW    = [0-9]*,/parameter integer QAW    = $HY_QAW,/" $E
+[ $DV = hy ] && [ -n "${HY_DQAW:-}" ] && sed -i "s/parameter integer DQAW   = [0-9]*,/parameter integer DQAW   = $HY_DQAW,/" $E
 for f in $P $E $WR; do b=$(basename $f); d=rtl/hbm_accel/tu/$b; [ $b = hfd_coll.sv ] && d=physical/hbm_accel_die_views/coll/rtl_sr/$b
-  [ $b = hfd_coll_ps.sv ] && d=physical/hbm_accel_die_views/coll/rtl_ps/hfd_coll.sv
+  case $b in hfd_coll_ps*.sv|hfd_coll_hy.sv) x=${b#hfd_coll_}; d=physical/hbm_accel_die_views/coll/rtl_${x%.sv}/hfd_coll.sv ;; esac
   cmp -s $f $d || echo "mutant $MUT applied to $b"; done
 # wrapper: identical to the benched flop-endpoint wrapper except the endpoint instance line
-python3 - $T/src/hfd_coll.sv $T/src/hfd_coll_cdc.sv physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv $T/src/hfd_coll_ps.sv > $T/wrap.log <<'PY'
+python3 - $T/src/hfd_coll.sv $T/src/hfd_coll_cdc.sv physical/hbm_accel_die_views/coll/rtl/hfd_coll.sv $T/src/hfd_coll_ps.sv $T/src/hfd_coll_ps2.sv $T/src/hfd_coll_hy.sv > $T/wrap.log <<'PY'
 import sys
 def body(f):
     L = open(f).read().splitlines()
@@ -60,7 +69,9 @@ old = 'ot_hbm_accel_tu_endpoint #(.ENABLE(1), .RXAW(4), .QAW(4), .TXAW(4)) u_ep 
 ok = True
 for f, new in ((sys.argv[1], 'ot_hbm_accel_tu_endpoint_sr #(.ENABLE(1), .SYNCPHY(1)) u_ep ('),
                (sys.argv[2], 'ot_hbm_accel_tu_endpoint_sr #(.ENABLE(1), .SYNCPHY(0)) u_ep ('),
-               (sys.argv[4], 'ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1)) u_ep (')):
+               (sys.argv[4], 'ot_hbm_accel_tu_endpoint_ps #(.ENABLE(1)) u_ep ('),
+               (sys.argv[5], 'ot_hbm_accel_tu_endpoint_ps2 #(.ENABLE(1)) u_ep ('),
+               (sys.argv[6], 'ot_hbm_accel_tu_endpoint_hy #(.ENABLE(1), .SYNCPHY(1)) u_ep (')):
     a = body(f)
     nd = [i for i, (x, y) in enumerate(zip(a, ref)) if x != y]
     ok &= len(a) == len(ref) and len(nd) == 1 and a[nd[0]] == ref[nd[0]].replace(old, new)
@@ -69,19 +80,19 @@ PY
 grep -q WRAP_OK $T/wrap.log || { echo "HCOLL_SR MISMATCH wrapper"; rm -rf $T; exit 1; }
 python3 tools/dshbm_1m_coll.py fixtures $T > $T/fx.log 2>&1 || { echo "HCOLL_SR ERROR fixtures"; cat $T/fx.log; exit 3; }
 M=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
-SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M $P $T/src/ot_hcoll_port.sv $E rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv"
+SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M $P $T/src/ot_hcoll_port.sv $T/src/ot_hcoll_port2.sv $E rtl/hbm_accel/tu/tb_hbm_accel_tu_endpoint.sv"
 D="+define+TU_DUT=ot_hbm_accel_tu_endpoint_$DV"
 AR="+define+TU_NC=8 +define+TU_NOG=8 +define+TU_BF16=1"; GA="+define+TU_NC=1 +define+TU_NOG=96 +define+TU_BF16=0"
 BLK="+define+TU_PFMAX=64 +define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
 build() { n=$1; shift; mkdir -p $T/b; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
   --top-module tb_hbm_accel_tu_endpoint --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || echo "BUILD_FAIL $n"; }
 CK="+define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
-if [ $DV = sr ]; then
+if [ $DV = sr ] || [ $DV = hy ]; then
   B="ar ga arblk_a arblk_s gablk_s"
   build ar $AR +define+TU_PFMAX=384 & build ga $GA +define+TU_PFMAX=384 & build arblk_a $AR $BLK &
   build arblk_s $AR $BLK +define+TU_SYNCPHY & build gablk_s $GA $BLK +define+TU_SYNCPHY & wait
 else
-  B="ar ga arblk_a arblk_s gablk_s"     # ps: every build at pclk = clk (arblk_a / arblk_s are the same ps build twice)
+  B="ar ga arblk_a arblk_s gablk_s"     # ps / ps2: every build at pclk = clk (arblk_a / arblk_s are the same ps build twice)
   build ar $AR +define+TU_PFMAX=384 $CK & build ga $GA +define+TU_PFMAX=384 $CK & build arblk_a $AR $BLK &
   build gablk_s $GA $BLK & wait; cp -r $T/b/arblk_a $T/b/arblk_s
 fi
@@ -105,4 +116,5 @@ done
 grep -h TUDONE $T/run_*.log | sed 's/^/  /' | cut -c1-200 > $T/summary.txt
 if [ $bad -eq 0 ] && [ $n -eq $(wc -l < $J) ]; then echo "HCOLL_SR PASS runs=$n mutant=$MUT dut=$DV"; rc=0
 else echo "HCOLL_SR MISMATCH bad=$bad of $n mutant=$MUT dut=$DV"; rc=1; fi
+[ -n "${KEEP:-}" ] && cp $T/summary.txt "$KEEP"   # per-run TUDONE lines (cycle cost comparisons)
 rm -rf $T; exit $rc
