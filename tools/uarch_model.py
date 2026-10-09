@@ -14086,3 +14086,8 @@ def hbm_write_source_transport_model():
     """Source bits stay with accepted write until its actual PC completion."""
     from tools.hbm_write_source_transport_model import model
     return model()
+
+def hbm_native_index_control_model():
+    """Dynamic frame metadata and retained native source lease, before build."""
+    from tools.hbm_native_index_control_model import model
+    return model()
