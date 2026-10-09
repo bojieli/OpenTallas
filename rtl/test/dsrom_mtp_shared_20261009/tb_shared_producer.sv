@@ -3,7 +3,7 @@ module tb_shared_producer;
     reg clk=0;always #.416667 clk=~clk;
     reg rst_n=0,cmd_valid=0,in_valid=0,out_ready=0;
     reg [73:0] cmd_context=0,in_context=0;
-    reg [511:0] in_bf16=0;reg [5:0] in_word=0;
+    reg [511:0] in_data=0;reg [6:0] in_word=0;
     reg in_last=0,in_fmt_fp32=0,in_error=0;
     wire cmd_ready,in_ready,out_valid,out_last,out_corrected,busy,fault;
     wire [511:0] out_data;wire [73:0] out_context;wire [6:0] out_word;
@@ -42,18 +42,19 @@ module tb_shared_producer;
             expected_context={3'(frame),2'(frame%4),2'(frame%3),4'(frame),21'(1048575-frame),10'(frame==5?865:frame),32'(100+frame)};
             wait(cmd_ready);@(negedge clk);cmd_valid=1;cmd_context=expected_context;
             @(negedge clk);cmd_valid=0;
-            for(integer w=0;w<40;w=w+1)begin
+            for(integer w=0;w<80;w=w+1)begin
                 wait(in_ready);@(negedge clk);in_valid=1;in_context=expected_context;
-                in_word=w;in_last=(w==39);
-                for(integer j=0;j<32;j=j+1)in_bf16[16*j+:16]=value(32*w+j,frame);
+                in_word=w;in_last=(w==79);
+                for(integer j=0;j<16;j=j+1)in_data[32*j+:32]={value(16*w+j,frame),16'd0};
                 if(w==17)begin
                     case(bad)
                         1:in_context[0]=~in_context[0];
                         2:in_word=16;
                         3:in_last=1;
                         4:in_fmt_fp32=1;
-                        5:in_bf16[15:0]=16'h7f80;
+                        5:in_data[31:0]=32'h7f800000;
                         6:in_error=1;
+                        8:in_data[0]=1;
                         7:force dut.context_n=74'd0;
                     endcase
                 end
