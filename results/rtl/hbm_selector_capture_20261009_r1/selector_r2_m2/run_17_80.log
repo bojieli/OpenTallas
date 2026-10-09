@@ -1,0 +1,8 @@
+SEG 0 tail=85 first=27 last=28 ovf=0 rep=0 stall=0 k=512 nhead=0,0,0,1  n2=0,0,0,1  n3=0,0,0,1 
+SEG 1 tail=264 first=159 last=377 ovf=0 rep=0 stall=0 k=512 nhead=74,73,78,79  n2=29,28,32,35  n3=28,27,31,34 
+SEG 2 tail=148 first=675 last=1617 ovf=0 rep=0 stall=0 k=512 nhead=77,80,75,77  n2=17,18,15,17  n3=16,17,15,16 
+SEG 3 tail=2158 first=1804 last=2760 ovf=1 rep=2 stall=0 k=512 nhead=31,32,41,256  n2=0,0,0,0  n3=0,0,0,0 
+SEG 4 tail=83 first=4950 last=4952 ovf=1 rep=0 stall=0 k=512 nhead=1,1,1,1  n2=1,1,1,1  n3=1,1,1,1 
+V41XSEL Q=4 W=16 IW=20 K=512 AW=8 segments=5 beats=6948 elements=111009 outputs=1601 out_beats=112 errors=0 tail_min=83 tail_max=2158 ovf_segs=2 stall=0 cycles=5064
+PASS
+- /home/ubuntu/worktrees/hbm-selector-capture-sparse/rtl/test/tb_hdc_v41x_sel.sv:288: Verilog $finish

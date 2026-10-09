@@ -1,0 +1,27 @@
+E seg 0 q 3: 1 outputs missing
+SEG 0 tail=82 first=27 last=28 ovf=0 rep=0 stall=0 k=2048 nhead=0,0,0,1  n2=0,0,0,1  n3=0,0,0,0 
+E seg 1 q 3: got 556 want 402
+E seg 1 q 3: got 557 want 403
+E seg 1 q 0: got 154 want 0
+E seg 1 q 0: got 155 want 1
+E seg 1 q 1: got 2aa want 156
+E seg 1 q 1: got 2ab want 157
+E seg 1 q 1: got 1b8 want 158
+E seg 1 q 1: got 1b9 want 159
+E seg 1 q 0: got 56 want 2
+E seg 1 q 0: got 57 want 3
+E seg 1 q 0: got 8 want 4
+E seg 1 q 0: got 9 want 5
+E seg 1 q 1: got 156 want 15a
+E seg 1 q 1: got 157 want 15b
+E seg 1 q 2: got 400 want 2ac
+E seg 1 q 2: got 401 want 2ad
+E seg 1 q 2: got 308 want 2ae
+E seg 1 q 2: got 309 want 2af
+SEG 1 tail=1232 first=159 last=377 ovf=0 rep=0 stall=0 k=2048 nhead=171,171,171,171  n2=170,170,170,171  n3=170,170,170,171 
+SEG 2 tail=2664 first=1637 last=2596 ovf=0 rep=0 stall=0 k=2048 nhead=669,660,686,678  n2=584,587,608,598  n3=581,583,603,593 
+SEG 3 tail=5269 first=5289 last=6244 ovf=0 rep=0 stall=0 k=2048 nhead=409,534,781,782  n2=84,216,754,782  n3=1,1,615,782 
+SEG 4 tail=82 first=11540 last=11543 ovf=0 rep=0 stall=0 k=2048 nhead=1,1,1,1  n2=1,1,1,1  n3=1,1,1,1 
+V41XSELC Q=4 W=16 IW=20 K=2048 AW=10 segments=5 beats=6944 elements=111009 outputs=5456 out_beats=2738 errors=5438 tail_min=82 tail_max=5269 ovf_segs=0 stall=0 cycles=11664
+FAIL
+- /home/ubuntu/worktrees/hbm-selector-capture-sparse/rtl/test/tb_hdc_v41x_sel_cand.sv:269: Verilog $finish
