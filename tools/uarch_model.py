@@ -14906,3 +14906,9 @@ def hbm_collective_native_publication_endpoint_model():
         token_delta='512 actualVM sector reads before go +5sourcecore edges vs historicalsameedgeinjdata +8PHYingressedges perhop; compose actual measured stagecalendar, no invented overlap',
         mutable_control='new valid/tag pipeline parity detects corruption before hub capture; broader native descriptor/control qualification open',
         integration_open=['actual TUdescriptor/compiler production grant','actual perport PHYretry and separate control transport','actual source landing credit64 vs PHYcandidate256 must compose','source-sized full256 flit exactness and allnegative controls','real macro placement and SS/FF15ps DRC0'])
+
+
+def hbm_w2_phase_seat_model(no=2):
+    """Full-shaped default-off W2 phase locality and held-delay seats."""
+    from w2_phase_seat_model import model
+    return model(no)
