@@ -25,7 +25,6 @@ from hgi_sim import timing as T  # noqa: E402
 from hgi_sim.records import encode_program  # noqa: E402
 
 CFG = ROOT / "compiler/models/qwen3-8b/config.json"
-MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/legacy_v0_9/md_qwen3_8b.hex"
 
 
 def summarize(s, recs):
@@ -48,7 +47,7 @@ def main():
     ap.add_argument("--out", type=Path)
     a = ap.parse_args()
     cfg = json.loads(CFG.read_text())
-    md = HGI.unpack([int(x, 16) for x in MD_HEX.read_text().split()])
+    md = QC.qwen_params(cfg)
     g = QC.Geometry(cfg, 8192)
     recs = QC.program(g, md, cfg["num_hidden_layers"])
     image = encode_program(recs)
@@ -82,7 +81,7 @@ def main():
         cp_fetch_decode_cycles=round(t2 - t3, 1), cp_fetch_decode_pct=round(100 * (t2 - t3) / t2, 2),
         hol_and_drain_vs_dataflow_pct=round(100 * (t2 - t0) / t2, 2))
     res["critical_path_S2_tail"] = T.critical_path(sched["S2"], recs)[-40:]
-    rec = dict(schema="opentallas.hgi_sim.qwen_timing.v0", spec="HGI-1 v0.9 (024fa2af1)", position=a.position,
+    rec = dict(schema="opentallas.hgi_sim.qwen_timing.v0", spec=f"HGI-1 {HGI.D_VERSION[0]}.{HGI.D_VERSION[1]}", position=a.position,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                grade="pathfinding: unit entries are mostly estimates (calibration.json); not a published rate",
                calibration=T.CAL, result=res)

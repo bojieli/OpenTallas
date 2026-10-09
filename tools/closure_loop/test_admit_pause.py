@@ -31,5 +31,24 @@ class AdmitPause(unittest.TestCase):
         self.assertTrue(ok)
 
 
+    def test_stopped_waiters_reported(self):
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as t, patch.object(cl, 'STOPPED_JSON', Path(t) / 's.json'), \
+                patch.object(cl, 'log') as lg:
+            info, (ok, _) = self.probe('OT_STOPPED_WAITER 430473 T 23400s /bin/bash /srv/opentallas-scratch/admit.sh 60 --\n')
+            self.assertTrue(ok)                       # reported, not an admission verdict
+            self.assertEqual(info["stopped_waiters"][0].split()[0], "430473")
+            self.assertIn("STOPPED ADMISSION WAITER", lg.call_args[0][0])
+            self.assertIn("430473", (Path(t) / 's.json').read_text())
+
+    def test_stopped_probe_awk(self):
+        import subprocess
+        line = "  4242 Tl 99 /bin/bash /srv/opentallas-scratch/admit.sh 8 -- x\n  4243 S 9 /bin/bash /srv/opentallas-scratch/admit.sh 8 -- y\n"
+        awk = cl.STOPPED_PROBE.split("| ", 1)[1]
+        r = subprocess.run(["bash", "-c", awk], input=line, capture_output=True, text=True)
+        self.assertEqual([x.split()[1] for x in r.stdout.splitlines()], ["4242"])
+
+
 if __name__ == "__main__":
     unittest.main()

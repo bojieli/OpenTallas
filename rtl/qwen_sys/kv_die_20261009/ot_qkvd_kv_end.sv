@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // kv-die 2026-10-09: the KV die's end of the ROM die <-> KV die link (die master qkd_d2d): ot_qkvd_d2d configured as the
-// KV end (TX RES / EMBD / HCTL = classes 4-6, RX CTL / Q / KVN / EMBQ = classes 0-3; buffers per CONTRACT.md) plus the
-// forwarded PLL clock and reset driven out to their bumps beside the UCIe macro (package bumps: not die nets).
+// KV end (TX RES / EMBD / HCTL = classes 4-6, RX CTL / Q / KVN / EMBQ = classes 0-3; buffers per CONTRACT.md).  The
+// forwarded PLL clock and reset to the ROM die leave through their own bump cell (qkd_ckbump), not through this block.
 module ot_qkvd_kv_end #(
     parameter integer W   = 528,
     parameter integer FW  = 548,
@@ -23,15 +23,9 @@ module ot_qkvd_kv_end #(
     output wire [FW-1:0]   tx_flit,
     input  wire            rx_v,
     input  wire [FW-1:0]   rx_flit,
-    input  wire            pll_fwd_i,
-    input  wire            rst_fwd_i,
-    output wire            pll_fwd_pad,
-    output wire            rst_fwd_pad,
     output wire            fault,
     output wire [4:0]      fault_cause
 );
-    assign pll_fwd_pad = pll_fwd_i;
-    assign rst_fwd_pad = rst_fwd_i;
     ot_qkvd_d2d #(.NT(3), .NR(4), .TXB(4), .RXB(0), .W(W), .IBD({8'd8, 8'd4, 8'(UCX), 8'(UCX)}),
                   .FCR({8'd0, 8'd4, 8'd32, 8'(FCR_RES)}), .RBD({8'd32, 8'd8, 8'd32, 8'd4}),
                   .OCR({8'd32, 8'd8, 8'(QD), 8'd4}), .MUT(MUT)) u_d2d (

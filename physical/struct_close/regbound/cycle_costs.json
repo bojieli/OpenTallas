@@ -1,0 +1,18 @@
+{
+ "schema": "struct-close.regbound.cycle_costs.v1",
+ "note": "review-0443 X3: every registered-boundary (_rb) element pays +1 cycle on each input crossing (pin flop / pin FIFO) and +1 on each output crossing (output flop / pin FIFO). A credit loop that crosses both boundaries gains +2 cycles of round trip; credit depth re-checked below (bench cycle counts, original vs wrapper, same stimulus).",
+ "elements": {
+  "ot_hbm_native_index_control":   {"in": 1, "out": 1, "credit_loops": "none (valid/ready: command, keep, source_start)"},
+  "ot_hbm_native_candidate_parse": {"in": 1, "out": 1, "credit_loops": "none (valid/ready flit / tuple)"},
+  "ot_hbm_native_candidate_format":{"in": 1, "out": 1, "credit_loops": "co / coc: 8 credits into the 8-entry FIFO, round trip +2. FORMAT gate (863 packets, 90% TU stalls): original 2,330 cycles, wrapper 1,860 cycles: the credits do not limit; depth OK"},
+  "ot_s81_host_dispatch":          {"in": 1, "out": 0, "credit_loops": "8 shared host credits: +1 (inputs only, outputs already registered); bench 48 sectors / 48 credit returns PASS"},
+  "ot_qfd_pc_head_owner_cl":       {"in": 1, "out": 1, "credit_loops": "credit_return vs the 16-entry queue: +2; bench actual16credits PASS (finite16, ordering unchanged)"},
+  "ot_hbm_native_index_query_credit": {"in": 1, "out": 1, "credit_loops": "qb / qbr: 4 credits, +2 round trip; QUERY gate 256 blocks: original 1,792 cycles, wrapper 1,792 cycles: depth OK"},
+  "ot_qwen_r25_causal_mask":       {"in": 1, "out": 1, "credit_loops": "none (valid/ready)"},
+  "ot_hbm_index_global_order":     {"in": 1, "out": 1, "credit_loops": "none (valid/ready start / read / rsp / out)"},
+  "ot_hbm_native_mtp_emit_queue":  {"in": 1, "out": 1, "credit_loops": "none (valid/ready; native_done held behind the emit FIFO)"},
+  "ot_hbm_token_loop":             {"in": 1, "out": 1, "credit_loops": "none; host_stop unregistered (cycle-relative semantics)"},
+  "ot_hbm_collective_vm_publication": {"in": 1, "out": 1, "credit_loops": "none (valid/ready start / 4 req / 4 rsp); indexed read inj_rd -> inj_valid 4 -> 6 edges"},
+  "ot_hbm_native_ar_token_join":   {"in": 1, "out": 1, "credit_loops": "none; host_stop unregistered"}
+ }
+}

@@ -109,7 +109,12 @@ module tb_hbm_accel_tu_endpoint #(
     wire [DEL*PWT-1:0] dfl;
     wire flt;
     wire [31:0] cst;
-    `TU_DUT #(.ENABLE(1), .NC(NC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
+`ifdef TU_GSZ                // hbm-forks: the group-size fork (NC 8 hardware, n = 2^TU_GSZ active); the stub models NC = n
+    localparam integer DNC = 8;
+`else
+    localparam integer DNC = NC;
+`endif
+    `TU_DUT #(.ENABLE(1), .NC(DNC), .NOG(NOG), .PFMAX(PFMAX), .LANES(LANES), .BF16(BF16), .NPT(NPT),
         .INJ(INJ), .DEL(DEL), .HUBW(HUBW), .WSTG(WSTG), .BITS_X100(BITS_X100), .PWB(PWB), .RXAW(RXAW),
         .SWCRED(1 << RXAW), .LAT(LAT)
 `ifdef TU_SYNCPHY
@@ -117,6 +122,9 @@ module tb_hbm_accel_tu_endpoint #(
 `endif
         )
       dut (.clk(clk), .rst_n(rst_n), .pclk(pclk), .prst_n(prst_n), .rank(8'(rank)), .pf(16'(pf)), .go(go),
+`ifdef TU_GSZPORT
+           .gsz(4'(`TU_GSZPORT)),
+`endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
            .ph_rx_v(rxv), .ph_rx_flit(rxf), .rx_credit(rxc), .del_valid(dv), .del_flit(dfl), .fault(flt),
            .stat_credit_stall(cst));

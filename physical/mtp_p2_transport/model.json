@@ -1,0 +1,212 @@
+{
+ "schema": "opentallas.dsrom.mtp-p2-transport.v1",
+ "adopted": false,
+ "source": "tools/hdc_golden_v41.py dspark expert sum; released width5120 TP4",
+ "arithmetic": "FP32 zero then each expert FP32 output in sorted expert-id order, then shared FP32, then BF16",
+ "shape": {
+  "rows_parallel": 5,
+  "ranks": 4,
+  "packages": 20,
+  "stages": 3,
+  "selected_experts_per_row": 3,
+  "rank_output_values": 1280
+ },
+ "MACs_per_cycle_unchanged": true,
+ "compute_intensity_unchanged": true,
+ "ports": {
+  "UCIe_bits_per_cycle": 512,
+  "UCIe_bytes_per_cycle": 64,
+  "primary_request_BF16_vector_bytes": 10240,
+  "GU_local_BF16_values": 576,
+  "GU_full_BF16_values": 2304,
+  "GU_local_BF16_bytes": 1152,
+  "GU_full_BF16_bytes": 4608,
+  "GU_TP4_allgather_received_bytes_per_rank": 3456,
+  "per_expert_return_FP32_bytes": 5120,
+  "per_expert_return_flits": 80
+ },
+ "boundaries": {
+  "individual_expert_payload_bits_per_cycle": 512,
+  "identity_bits": 74,
+  "selected_expert_bits": 27,
+  "word_index_bits": 7,
+  "A_B_input_lanes": 2,
+  "merger_input_bits_per_lane": 606,
+  "protected_output_bits": 671,
+  "identity_header_bits": "74 transaction bits plus9 expert/7 word/shared/last; exact link framing required"
+ },
+ "replicas": {
+  "A_die": 20,
+  "B_die": 20,
+  "UCIe_pairs": 20
+ },
+ "mux_demux_fanout": {
+  "A_sorted_expert_merge_inputs": 3,
+  "B_return_selection_inputs": 3,
+  "A_adder_order": "must stall until next golden expert arrives; no B pre-sum"
+ },
+ "storage": {
+  "A_individual_expert_row_bytes_upper": 15360,
+  "A_shared_last_row_bytes": 5120,
+  "A_total_buffered_rows": 4,
+  "A_protected_row_payload_bytes": 20480,
+  "B_pending_expert_row_bytes_upper": 15360,
+  "pair_row_buffer_bytes_upper": 35840,
+  "array_row_buffer_bytes_upper": 716800,
+  "protection": {
+   "code": "8 SECDED72 slices per512-bit flit",
+   "protected_flit_bits": 576,
+   "SRAM_bits_per_word": 768,
+   "SRAM_words": 128,
+   "live_words_per_row": 80,
+   "SRAM_master": "ot_sram_1r1w_128x256_m1_r2c2",
+   "SRAM_macros_per_row": 3,
+   "A_SRAM_macros": 12,
+   "B_pending_SRAM_macros": 9,
+   "metadata_and_flow_state": "duplicate control state with mismatch fault; immutable identity",
+   "output_consumer": "must decode/correct SECDED and abort UE before arithmetic"
+  },
+  "actual_minimum_FIFO_implementation_required": true
+ },
+ "routing": {
+  "tracks": 512,
+  "channel_capacity": "two vertical routing layers,50percent usable,80tracks reserved for PDN/control; actual placement cut lint required",
+  "pin_faces": {
+   "left_bits": 1212,
+   "right_bits": 671,
+   "top_bits": 108,
+   "usable_face_um": 320,
+   "maximum_average_bits_per_um": 3.7875
+  },
+  "macro_placement": {
+   "columns": 3,
+   "rows": 4,
+   "x_um": [
+    27,
+    152,
+    277
+   ],
+   "y_um": [
+    70,
+    126,
+    182,
+    238
+   ],
+   "halo_um": 3,
+   "minimum_column_gap_um": 30.176,
+   "minimum_row_gap_um": 14.96,
+   "qualification": "precise site/M4 snap; row and column gaps>=12um and own actual margin lint"
+  },
+  "intercolumn_bits_planning": 544,
+  "intercolumn_tracks_planning_after_reserve": 548
+ },
+ "area": {
+  "A_buffer_macro_inventory": 12,
+  "B_pending_buffer_macro_inventory": 9,
+  "macro_outline_um": [
+   94.824,
+   41.04
+  ],
+  "A_raw_SRAM_area_um2": 46698.92352,
+  "B_raw_SRAM_area_um2": 35024.192639999994,
+  "A_candidate_slot_um": [
+   400,
+   360
+  ],
+  "protected_output_FIFO_words": 8,
+  "protected_output_FIFO_bits": 4608,
+  "output_FIFO_FF_cell_floor_um2": 1343.6928,
+  "finite_merge_cell_area": null,
+  "floorplan_slot_fit": true,
+  "finite_merge_cell_area_planning_um2": 20015.999999999996,
+  "cell_planning_parts": {
+   "FF_bits": 7936,
+   "FF_um2": 4761.599999999999,
+   "parity_XOR_um2": 4915.2,
+   "queue_mux_um2": 1209.6,
+   "ingress_selection_um2": 1228.8,
+   "control_um2": 1228.8
+  },
+  "cell_planning_basis": "planning envelope: FF .6um2 is2x measured head sequential average rounded upward; XOR/mux/control .3um2 conservative cell allowance,50percent clock/repair allowance. Actual synthesis and floorplan gate must validate.",
+  "core_candidate_um": [
+   396,
+   356
+  ],
+  "total_planning_utilization": 0.47323603677221654
+ },
+ "ordered_consumer": {
+  "initial_accumulator": "FP32 +0",
+  "receipt_order": [
+   "expert0",
+   "expert1",
+   "expert2",
+   "shared"
+  ],
+  "selected_experts": "strict ascending IDs, three distinct receipts",
+  "shared_source": "among97 excluded primary headers; actual packed producer still absent",
+  "output_distribution": "disjoint1280 FP32 rows/rank; output gather, no output allreduce",
+  "GU_distribution": "TP4 allgather2304 weighted BF16 terms on chosen A/B side before W2",
+  "rejects": [
+   "duplicate",
+   "wrong expert",
+   "wrong transaction identity",
+   "wrong word or last",
+   "missing shared"
+  ],
+  "arithmetic_RTL_binding_qualified": false
+ },
+ "stages": [
+  {
+   "stage": 0,
+   "B_experts": 0,
+   "B_return_flits": 0
+  },
+  {
+   "stage": 1,
+   "B_experts": 3,
+   "B_return_flits": 240
+  },
+  {
+   "stage": 2,
+   "B_experts_range": [
+    0,
+    3
+   ],
+   "B_return_flits_upper": 240
+  }
+ ],
+ "latency": {
+  "clock_GHz": 1.2,
+  "old_summed_return_flits": 80,
+  "stage1_additional_return_flits": 160,
+  "stage2_additional_return_flits_upper": 160,
+  "stage1_extra_serialization_us": 0.13333333333333333,
+  "stage2_extra_serialization_us_upper": 0.13333333333333333,
+  "critical_row_extra_serialization_us_upper": 0.26666666666666666,
+  "ordered_expert_plus_shared_flits": 320,
+  "protected_buffer_encoder_cycles": 1,
+  "SRAM_read_cycles": 1,
+  "consumer_SECDED_decode_cycles": 2,
+  "per_complete_row_drain_lower_bound_cycles": 323,
+  "multiply_by_5_parallel_rows": false,
+  "headers_endpoint_credit_and_ordering_stalls_unmeasured": true,
+  "historical_P2_point2us_budget_qualified": false
+ },
+ "qualification": "model-before-build; full-shape output ordering and finite transport gates required",
+ "clock_budget": {
+  "route_ps": 770,
+  "TT_setup_signoff_ps": 833.333,
+  "setup_uncertainty_ps": 60,
+  "FF_hold_uncertainty_ps": 25,
+  "macro_read_cycles": 1,
+  "macro_clkq_ps": {
+   "SS": 455.3205,
+   "TT": 351.7717,
+   "FF": 286.1077
+  },
+  "macro_multicycle": false,
+  "IO_budget_ps": 250,
+  "clock_insertion": "own CTS calibration",
+  "acceptance": "TTsetup>=0/FFhold>=0/DRC0, SS sensitivity; pathfinding only"
+ }
+}

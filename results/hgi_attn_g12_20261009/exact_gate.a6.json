@@ -1,0 +1,51 @@
+{
+  "schema": "hgi.g12.exact-gate.v1",
+  "source_commit": "187a8471c",
+  "host": "ot-pve1",
+  "remote_run": "/srv/opentallas-scratch/codex/hgi-g12-20261009/run-a6",
+  "golden": {
+    "status": "PASS",
+    "cases": 142,
+    "rows": 1081866,
+    "cycles": 1894250,
+    "default_off_interface_lockstep_cycles": 300,
+    "coverage": [
+      "Qwen8192",
+      "DS128+2048",
+      "all128ringphases",
+      "POS1exclusive1048576",
+      "1048576linearrows",
+      "stallhold",
+      "emptylist",
+      "C-only",
+      "invalidring",
+      "invalidCaddress",
+      "faultthennewcommand"
+    ]
+  },
+  "mutants": {
+    "ring-zero": "expected FAIL, genuine RTL FATAL",
+    "drop-c": "expected FAIL, genuine RTL FATAL",
+    "c-address": "expected FAIL, genuine RTL FATAL",
+    "c-order": "expected FAIL, genuine RTL FATAL"
+  },
+  "boundary": {
+    "status": "PASS",
+    "in_to_out_bits": 0,
+    "in_to_reg_levels": 10,
+    "reg_to_out_levels": 16
+  },
+  "resources": {
+    "reservation_GiB": 1,
+    "reservation_kind": "conservative inventory admission, not cap",
+    "time_v_maximum_RSS_KiB": 8348,
+    "whole_process_group_peak_GiB": null
+  },
+  "pending": [
+    "hbm-sim external conformance vectors",
+    "descriptor-to-existing-gather binding",
+    "physical closure",
+    "die integration"
+  ],
+  "adopted": false
+}
