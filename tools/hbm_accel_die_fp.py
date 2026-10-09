@@ -433,6 +433,13 @@ R25IQ = dict(R25I,indexer_quarter_end=True)
 R25IQC2 = dict(R25IQ,indexer_large_slot=True)
 R25IQG = dict(R25IQ,indexer_mirror_grid=True)
 R25IQGC2 = dict(R25IQG,indexer_large_slot=True)
+# Actual x-controller bus facade and SRAM writeback slots. Loader stays on its
+# historical base until the ND1/ADDR37 facade and service landing are qualified.
+R25IMW = dict(R25IQG, native_mtp_wb=True,
+    spine_slots_low={'mtp': MTP_SLOT, 'kvwb': (300.24, 241.92)},
+    spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
+    spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
+        mtp='stream_1p2', kvwb='stream_1p2'))
 ADOPTED = R25
 
 
@@ -589,7 +596,8 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
     yy = min(it.y for it in hub.values() if it.kind == 'spine' and it.x == sx0) - glo / 2
     for n_, (w_, h_) in variant.get('spine_slots_low', {}).items():
         y_ = dn(yy - glo / 2 - h_, GY)
-        it = Inst(f'hb_{n_}', f'hfd_{n_}', up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
+        master_ = variant.get('spine_slot_masters', {}).get(n_, f'hfd_{n_}')
+        it = Inst(f'hb_{n_}', master_, up(sx0 + (spine_w - SHAVE - w_) / 2, GX), y_, w_, h_,
                   kind='spine', region='hub', domain=variant.get('spine_slot_domains', {}).get(n_, 'stream_1p2'))
         assert it.y >= hy0 + 43.2, ('low spine slot below the hub band', n_, it.y, hy0)
         insts.append(it)
@@ -747,6 +755,10 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         from hbm_indexer_die_topology import install
         import sys
         install(m, sys.modules[__name__])
+    if variant.get('native_mtp_wb'):
+        from hbm_mtp_wb_die_model import model as native_model
+        m['mtp_wb_native'] = native_model(ROOT)
+        m['notes'].append('R25IMW reserves actual MTP native facade and SRAM WB slots; endpoint joins and real native views remain unqualified. No historical904/624 loader bundle is adopted.')
     if geometry_only:
         m['buses'], m['paths'] = [], {}
         m['geometry_only'] = True
@@ -2417,7 +2429,15 @@ def buses(m):
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
-        hl_ += list(MTP_HUB_LINKS)
+        if V.get('native_mtp_wb'):
+            from hbm_mtp_native_contract import model as native_contract
+            contract = native_contract(ROOT)
+            for name, group in contract['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_')
+                           else ('mtp', peer_, group['bits']))
+        else:
+            hl_ += list(MTP_HUB_LINKS)
     for q in ('SW', 'SE', 'NW', 'NE'):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
@@ -3585,7 +3605,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)
