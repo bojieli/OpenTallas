@@ -18,6 +18,8 @@
 // [17] step watchdog, [18] start before ready, [19] boot fault, [20] die step fault (pkgctl), [21] constant ROM.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_sysctl #(
+    parameter integer PROMPT_VALID_ONLY = 1, // mutant switch; gate unwritten prompt reads
+    parameter integer PROMPT_SRAM = 0, // opt-in until exact/physical gates pass
     parameter integer D       = 4,
     parameter integer NW      = 18,
     parameter integer AW      = 24,
@@ -117,12 +119,21 @@ module ot_qfd_sysctl #(
     wire [31:0] h_wdata, h_rdata;
     wire [3:0]  h_wstrb;
     wire        hi_irq;
-    wire pb_we, pb_re; wire [SB+PLB-1:0] pb_waddr, pb_raddr; wire [NW-1:0] pb_wdata; reg [NW-1:0] pb_q;
-    reg  [NW-1:0] pbuf [0:NSLOT*(1<<PLB)-1];
-    always @(posedge clk) begin
-        if (pb_we) pbuf[pb_waddr] <= pb_wdata;
-        if (pb_re) pb_q <= pbuf[pb_raddr];
-    end
+    wire pb_we, pb_re; wire [SB+PLB-1:0] pb_waddr, pb_raddr; wire [NW-1:0] pb_wdata; wire [NW-1:0] pb_q;
+    wire pb_fault;
+    generate if (PROMPT_SRAM != 0) begin:g_pb_sram
+        // This exact physical shape supports one8192-token user with18-bit tokens.
+        initial if (NSLOT != 1 || PLB != 13 || NW != 18) $fatal(1, "prompt SRAM shape mismatch");
+        ot_qfd_prompt_sram u_pb(.clk(clk),.rst_n(host_rst_n),.we(pb_we),.re(pb_re),
+            .waddr(pb_waddr[12:0]),.raddr(pb_raddr[12:0]),.wdata(pb_wdata),.q(pb_q),.fault(pb_fault));
+    end else begin:g_pb_behavioral
+        reg [NW-1:0] pbuf [0:NSLOT*(1<<PLB)-1]; reg [NW-1:0] pq;
+        always @(posedge clk) begin
+            if (pb_we) pbuf[pb_waddr] <= pb_wdata;
+            if (pb_re) pq <= pbuf[pb_raddr];
+        end
+        assign pb_q = pq; assign pb_fault = 1'b0;
+    end endgenerate
     wire eng_start, eng_done, eng_fault;
     wire [NW-1:0] eng_token, eng_pos, eng_next_token;
     wire [SB-1:0] eng_slot;
@@ -133,7 +144,7 @@ module ot_qfd_sysctl #(
     wire clr_req;
     reg  clr_ack;
     always @(posedge clk or negedge host_rst_n) if (!host_rst_n) clr_ack <= 1'b0; else clr_ack <= clr_req && !clr_ack;
-    ot_host_if #(.NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
+    ot_host_if #(.PB_VALID_ONLY(PROMPT_SRAM && PROMPT_VALID_ONLY), .NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
                  .KVW(KVW), .FMT(1)) u_host (
         .clk(clk), .rst_n(host_rst_n),
         .s_awvalid(h_awvalid), .s_awready(h_awready), .s_awaddr(h_awaddr),
@@ -159,7 +170,7 @@ module ot_qfd_sysctl #(
     wire disagree, wdog_fault, start_unready, die_fault;
     wire [31:0] n_steps;
     ot_qfd_pkgctl #(.D(D), .NW(NW), .AW(AW), .WDOG(WDOG)) u_pkg (
-        .clk(clk), .rst_n(host_rst_n), .ready(sys_ready),
+        .clk(clk), .rst_n(host_rst_n), .ready(sys_ready && !pb_fault),
         .eng_start(eng_start), .eng_token(eng_token), .eng_pos(eng_pos), .eng_kv_base(kv_base),
         .eng_done(eng_done), .eng_next_token(eng_next_token), .eng_next_val(eng_next_val),
         .eng_cycles(eng_cycles), .eng_fault(eng_fault),
@@ -169,7 +180,7 @@ module ot_qfd_sysctl #(
         .disagree(disagree), .wdog_fault(wdog_fault), .start_unready(start_unready), .die_fault(die_fault),
         .n_steps(n_steps));
     // ---- CSRs, faults, interrupt ----
-    assign fault_src = {10'd0, crom_fault, die_fault, boot_fault, start_unready, wdog_fault, disagree,
+    assign fault_src = {9'd0, pb_fault, crom_fault, die_fault, boot_fault, start_unready, wdog_fault, disagree,
                         16'(c_fault_vec)};
     reg [16*32-1:0] cnt;
     always @(*) begin

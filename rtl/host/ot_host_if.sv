@@ -72,6 +72,7 @@
 //   100 + 8*s  slot s {pos, 00, inflight, state}   104 + 8*s {tag, generated}
 // ---------------------------------------------------------------------------
 module ot_host_if #(
+    parameter integer PB_VALID_ONLY = 0, // gate unused MODE0 prompt reads for protected SRAM
     parameter integer NSLOT   = 16,     // user contexts
     parameter integer MODE    = 0,      // 0 step (one core), 1 batch (ROM array SOURCE package)
     parameter integer ENG_CTX = 16,     // contexts the engine holds at once (1: clear between users)
@@ -667,7 +668,7 @@ module ot_host_if #(
             pb_re = pr_re;
             pb_raddr = {pr_user[SB-1:0], pr_pos[PLB-1:0]};
         end else begin
-            pb_re = (i_st == I_RD);
+            pb_re = (i_st == I_RD) && (PB_VALID_ONLY == 0 || sl_pos[eng_slot] < sl_plen[eng_slot]);
             pb_raddr = {eng_slot, sl_pos[eng_slot][PLB-1:0]};
         end
     end
