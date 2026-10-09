@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def hbm_coll_port_interior_model():
+    """Full-shape SRAM port placement successor; no closure credit."""
+    from tools.hbm_coll_port_interior_model import model
+    return model()

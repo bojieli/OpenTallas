@@ -20,6 +20,12 @@ SRAM=ot_sram_1r1w_128x256_m1_r2c2; SD=physical/asap7_memory_macros/$SRAM
 if [ "$kind" = port ]; then
   W=${OUT:?}/$lab; mkdir -p $W
   C=${CORES:-8}; DW=${DIEW:-340}; DH=${DIEH:-340}
+  interior_args=()
+  if [ "${INTERIOR:-0}" = 1 ]; then
+    interior_args=(--step-tcl POST_MACRO_PLACE=$D/interior_macros.tcl
+                   --step-tcl PRE_IO_PLACEMENT=$D/interior_pins.tcl
+                   --orfs-var 'IO_PLACER_H=M4 M6' --orfs-var 'IO_PLACER_V=M3 M5')
+  fi
   export OT_ORFS_NUM_CORES=$C NUM_CORES=$C OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
   echo "kind=port die=${DW}x${DH} halo=${PHALO:-4 4} PD=${PD:-0.5} PER=${PER:-0.833} HM=${HM:-0.050} IO_ROUTE_SDC=${IO_ROUTE_SDC:-} IO_FF_SDC=${IO_FF_SDC:-} $*" > $W/args
   cat SOURCE_COMMIT > $W/SOURCE_COMMIT 2>/dev/null
@@ -35,7 +41,7 @@ if [ "$kind" = port ]; then
     --orfs-var "SYNTH_KEEP_MODULES=" \
     --step-tcl PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl --step-tcl PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl \
     --slew-margin-percent 20 --hold-margin-ns ${HM:-0.050} --purpose signoff_target --nickname-tag hcp_$lab \
-    --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "$@" \
+    --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited "${interior_args[@]}" "$@" \
     --keep-workdir $W/work --force --output $W/physical.json > $W/run.log 2>&1
   rc=$?; echo "rc=$rc" > $W/exit
   case " $* " in *"stop-after"*) exit $rc ;; esac
