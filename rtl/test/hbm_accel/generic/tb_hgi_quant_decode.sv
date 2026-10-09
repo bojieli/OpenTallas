@@ -46,6 +46,8 @@ module tb_hgi_quant_decode;
  default:x[i*32+:32]={rnd[31],8'd100+rnd[5:0],rnd[22:0]};
  endcase
  end
+ if(cyc%997==0)x[31:0]=32'h7f800000;
+ if(cyc%991==0)x[63:32]=32'h7fc12345;
  end
  @(posedge clk);#0.01;v=0;repeat(40)@(negedge clk);
  if(n<5000||decodes==0)$fatal(1,"COVERAGE outputs=%0d illegal=%0d",n,decodes);
