@@ -18,6 +18,9 @@ run_abi3_physical has no include path, so the route source is one flat file: the
       / scan-cap edges, 2^20 range) == tools/v41_fullshape_isa.full_dyn on every row the core writes (NEWBLK, the
       rank-aware model row, is not written by the core: excluded); mutant ROLLBACK_RING_DYN=0 must FAIL.
       Prints RING_DYN_VEHICLE_GATE PASS|FAIL and writes DIR/bench.json.
+  mtp_ring_dyn_vehicle.py bench --negative --out DIR -> the ROLLBACK_RING_DYN=0 mutant alone: prints
+      RING_DYN_VEHICLE_NEGATIVE FAIL_AS_REQUIRED (mismatches only on DYN25/26) and exits 1, the closure-loop
+      expect=fail bench; an undetected mutant prints RING_DYN_VEHICLE_NEGATIVE UNDETECTED and exits 0.
 """
 import argparse
 import json
@@ -124,10 +127,17 @@ def compare(rows) -> dict:
                 mismatch_rows=sorted({b["idx"] for b in bad}))
 
 
-def bench(out: Path) -> int:
+def bench(out: Path, negative: bool = False) -> int:
     out.mkdir(parents=True, exist_ok=True)
     if build() != OUT.read_text():
         raise SystemExit("flat vehicle source is stale: run tools/mtp_ring_dyn_vehicle.py write")
+    if negative:
+        neg = compare(sim(out, 0))
+        (out / "negative.json").write_text(json.dumps(neg, indent=1) + "\n")
+        caught = neg["mismatches"] > 0 and set(neg["mismatch_rows"]) <= {25, 26}
+        print(f"RING_DYN_VEHICLE_NEGATIVE {'FAIL_AS_REQUIRED' if caught else 'UNDETECTED'} "
+              f"mut_bad={neg['mismatches']} mut_rows={neg['mismatch_rows']}")
+        return 1 if caught else 0
     pos = compare(sim(out, 1))
     neg = compare(sim(out, 0))
     ok = (pos["mismatches"] == 0 and pos["rows_compared"] > 0 and neg["mismatches"] > 0
@@ -145,9 +155,10 @@ def main() -> int:
     ap.add_argument("cmd", nargs="?", default="write", choices=["write", "bench"])
     ap.add_argument("--check", action="store_true")
     ap.add_argument("--out", type=Path, default=Path("/tmp/ring_dyn_vehicle_bench"))
+    ap.add_argument("--negative", action="store_true")
     a = ap.parse_args()
     if a.cmd == "bench":
-        return bench(a.out)
+        return bench(a.out, a.negative)
     text = build()
     if a.check:
         ok = OUT.exists() and OUT.read_text() == text
