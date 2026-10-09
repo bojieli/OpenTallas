@@ -22,13 +22,14 @@ module ot_hbm_index_lines_sram #(
  reg[3:0] pipe_v,pipe_v_n;
  reg[10:0] group_tag[0:3],group_tag_n[0:3];reg[63:0] read_need[0:3],read_need_n[0:3];reg[767:0] read_j[0:3],read_j_n[0:3];
  wire[31:0] write_bad;
- integer p,l,b,g,pc,j,bank,k,slot,count,base_sector,delta;
+
  assign retained=active;
  initial begin
   if(DEPTH!=64)$fatal(1,"native bank successor requires DEPTH64");
   if(CRED<1||CRED>64)$fatal(1,"credit shape");
  end
- always @*begin
+ always @*begin: issue_comb
+  integer p,l,k,g,pc,j,bank,base_sector;
   control_bad=(active_n!==~active)||(next_line_n!==~next_line)||(nlines_n!==~nlines);
   for(l=0;l<8;l=l+1)if(credits_n[l]!==~credits[l])control_bad=1;
   for(p=0;p<32;p=p+1)if(valid_n[p]!==~valid[p]||write_bad[p])control_bad=1;
@@ -75,7 +76,9 @@ module ot_hbm_index_lines_sram #(
   end
  end endgenerate
  reg[8791:0] assembled;reg output_bad;
- always @*begin
+ always @*begin: remap_comb
+  integer k,l,b,g,pc,j,bank;
+  g=0;pc=0;j=0;bank=0;b=0;
   assembled=0;output_bad=0;
   for(k=0;k<64;k=k+1)if(read_need[3][k]&&(!dec_v[k]||dec_ue[k]))output_bad=1;
   for(l=0;l<8;l=l+1)begin
@@ -86,7 +89,8 @@ module ot_hbm_index_lines_sram #(
    end
   end
  end
- always @(posedge clk or negedge rst_n)begin
+ always @(posedge clk or negedge rst_n)begin: state_seq
+  integer p,l,k,bank,slot,count,j;
   if(!rst_n)begin
    active<=0;active_n<=1;next_line<=0;next_line_n<=~11'd0;nlines<=0;nlines_n<=~11'd0;
    lines<=0;pop<=0;done<=0;fault<=0;pipe_v<=0;pipe_v_n<=~4'd0;
