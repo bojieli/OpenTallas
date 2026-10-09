@@ -6,14 +6,14 @@
  "blocks": {
   "qkd_reng (re-cut D)": {
    "rtl": "ot_qwen_nearhbm_row_engine_d",
-   "cells_um2": null,
+   "cells_um2": 544000,
    "cells_um2_composed": 529000,
    "frame_um": [
     531.36,
     1998.0
    ],
-   "note": "composed from synthesis (row_engine_e 310 k measured + 512 x 404.77 FP32 add LAT 7 + registers); direct synthesis synth3/reng_d running",
-   "util": 0.498
+   "note": "MEASURED (synth3/reng_d, yosys -noshare + abc, ASAP7 RVT TT): 5.44e5 um2 cells (51.8 % sequential), 2.9 % over the 529 k composed estimate; util 0.512 in the 531.36 x 1,998 frame (fp_lint limit 0.60): frame kept, KV die unchanged",
+   "util": 0.512
   },
   "qkd_ahub": {
    "rtl": "ot_qwen_nearhbm_attn_hub_p",
@@ -80,5 +80,5 @@
    "note": "synthesis running (synth3/astk_d, -noshare); its score / e memories (4,096 x 128 + 4,096 x 64 b) are SRAM-macro class (~24-32 x ot_sram_1r1w_128x256, ~0.12-0.16 mm2), not flops"
   }
  },
- "summary": "the centre blocks (seq, d2d, embgw, ahub) and the landing logic are measured at 1-30 % of their assumed frames: they do not set the die size (the KV die is set by the HBM PHY bands, the row-engine columns and the aggregator column). The re-cut D engine frame is sized from synthesis at 0.50 (KV die 192.1 mm2). The aggregator (qkd_astk) frame stays ASSUMED until synth3/astk_d reports."
+ "summary": "the centre blocks (seq, d2d, embgw, ahub) and the landing logic are measured at 1-30 % of their assumed frames: they do not set the die size (the KV die is set by the HBM PHY bands, the row-engine columns and the aggregator column). The re-cut D engine is measured at 544 k um2 (util 0.512 in its frame; KV die 192.1 mm2 unchanged). The aggregator (qkd_astk) frame stays ASSUMED until synth3/astk_d reports."
 }

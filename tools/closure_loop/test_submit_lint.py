@@ -196,6 +196,15 @@ class Density(unittest.TestCase):
         g2 = git_for(cfg("--pin-region '^i_a(\\[|$)=left'"))
         self.assertEqual(S.check(spec(), g2)["verdict"], "PASS")             # small group: no rule
 
+    def test_incomplete_mc_kit_refused(self):
+        # drive-0849: a QDMD kit without io_plain.sdc crashes at 4_1_cts (STA-0340)
+        g = git_for(cfg("--pin-region '^i_a(\\[|$)=left'", extra="QDMD=/src/physical/k\nSDCF=plain.sdc"))
+        r = S.check(spec(), g)
+        self.assertEqual(r["verdict"], "REFUSE", r)
+        self.assertIn("physical/k/io_plain.sdc", r["message"])
+        g.files.update({"physical/k/io_plain.sdc": "x", "physical/k/io_ref_skew.sdc": "x", "physical/k/plain.sdc": "x"})
+        self.assertEqual(S.check(spec(), g)["verdict"], "PASS")
+
     def test_env_settings_read(self):
         g = git_for(cfg("--pin-region '^i_data\\[[0-9]*[02468]\\]$=left'"))
         r = S.check(spec(cmd_env="PIN_H='M4 M6' PIN_V='M5 M7' "), g)

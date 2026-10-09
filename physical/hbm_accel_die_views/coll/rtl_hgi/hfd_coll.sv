@@ -132,7 +132,7 @@ module hfd_coll (
     // ---- HGI-1 record path (fault_ack is 0: an endpoint fault is sticky until the drained reset, HGI-1 MX-1) ----
     reg [967:0] i_f_hgi; always @(posedge clk) i_f_hgi <= f_hgi_cmdproc;
     wire [7:0] w_ep_mg; wire w_ep_mall; wire [3:0] w_ep_gsz; wire w_ep_start_ready, w_ep_done_valid, w_ep_done_ready;
-    wire [7:0] r_rank, r_mg; wire r_mall; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
+    wire [7:0] r_rank, r_mg; wire r_mall, r_byp; wire [3:0] r_gsz; wire [15:0] r_pf; wire r_go, r_done_ready;
     wire [39:0] r_abase, r_obase; wire rec_rdy, rec_done, rec_fault;
     wire rf_sv, rf_dr; wire [7:0] rf_g, rf_b, rf_d; wire [20:0] rf_rows; wire [15:0] rf_words; wire [31:0] rf_ctx;
     // static coll_group_size (MD word 46 [7:0]) from the config station bus; die id rides the record (seq rank strap)
@@ -144,7 +144,7 @@ module hfd_coll (
         .rec_v(i_f_hgi[0]), .rec_rdy(rec_rdy), .rec_hdr(i_f_hgi[128:1]), .rec_a(i_f_hgi[384:129]),
         .rec_o(i_f_hgi[640:385]), .rec_i(i_f_hgi[896:641]), .rec_n_a(i_f_hgi[917:897]), .rec_n_o(i_f_hgi[938:918]),
         .rec_n_i(i_f_hgi[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),
-        .ep_rank(r_rank), .ep_mcast_group_size(r_mg), .ep_mcast_all(r_mall), .ep_gsz(r_gsz), .ep_pf(r_pf), .ep_go(r_go),
+        .ep_rank(r_rank), .ep_mcast_group_size(r_mg), .ep_mcast_all(r_mall), .ep_gsz(r_gsz), .ep_byp(r_byp), .ep_pf(r_pf), .ep_go(r_go),
         .ep_start_ready(w_ep_start_ready), .ep_done_valid(w_ep_done_valid), .ep_done_ready(r_done_ready),
         .ep_fault(w_ep_fault[0]), .ep_a_base(r_abase), .ep_o_base(r_obase),
         .rf_start_v(rf_sv), .rf_start_r(i_f_rowfmt[0]), .rf_group_size(rf_g), .rf_owner_block(rf_b),
@@ -179,7 +179,7 @@ module hfd_coll (
     assign w_ep_sw_cr_ret = {i_llk_N3[966:959]};
     assign w_ep_ph_rx_v = {i_llk_S0[494:487]};
     assign w_ep_ph_rx_flit = {i_llk_N3[958:487], i_llk_N2[973:487], i_llk_N1[973:487], i_llk_N0[973:487], i_llk_S4[973:487], i_llk_S3[973:487], i_llk_S2[973:487], i_llk_S1[973:487], i_llk_S0[973:495]};
-    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1)) u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk), .prst_n(w_ep_prst_n), .rank(w_ep_rank), .mcast_group_size(w_ep_mg), .mcast_all(w_ep_mall), .gsz(w_ep_gsz), .pf(w_ep_pf), .go(w_ep_go), .start_ready(w_ep_start_ready), .done_valid(w_ep_done_valid), .done_ready(w_ep_done_ready), .fault_ack(1'b0), .inj_idx(w_ep_inj_idx), .inj_rd(w_ep_inj_rd), .inj_data(w_ep_inj_data), .ph_tx_v(w_ep_ph_tx_v), .ph_tx_flit(w_ep_ph_tx_flit), .sw_cr_ret(w_ep_sw_cr_ret), .ph_rx_v(w_ep_ph_rx_v), .ph_rx_flit(w_ep_ph_rx_flit), .rx_credit(w_ep_rx_credit), .del_valid(w_ep_del_valid), .del_flit(w_ep_del_flit), .fault(w_ep_fault), .stat_credit_stall(w_ep_stat_credit_stall));
+    ot_hbm_accel_tu_endpoint_psg #(.ENABLE(1), .REARM(1), .NOG(12)) u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk), .prst_n(w_ep_prst_n), .rank(w_ep_rank), .mcast_group_size(w_ep_mg), .mcast_all(w_ep_mall), .gsz(w_ep_gsz), .byp(sel_hgi & r_byp), .pf(w_ep_pf), .go(w_ep_go), .start_ready(w_ep_start_ready), .done_valid(w_ep_done_valid), .done_ready(w_ep_done_ready), .fault_ack(1'b0), .inj_idx(w_ep_inj_idx), .inj_rd(w_ep_inj_rd), .inj_data(w_ep_inj_data), .ph_tx_v(w_ep_ph_tx_v), .ph_tx_flit(w_ep_ph_tx_flit), .sw_cr_ret(w_ep_sw_cr_ret), .ph_rx_v(w_ep_ph_rx_v), .ph_rx_flit(w_ep_ph_rx_flit), .rx_credit(w_ep_rx_credit), .del_valid(w_ep_del_valid), .del_flit(w_ep_del_flit), .fault(w_ep_fault), .stat_credit_stall(w_ep_stat_credit_stall));
     wire fclk_0; ot_fwd_clk_inv u_fclk_0 (.a(clk), .y(fclk_0));
     wire fclk_1; ot_fwd_clk_inv u_fclk_1 (.a(clk), .y(fclk_1));
     wire fclk_2; ot_fwd_clk_inv u_fclk_2 (.a(clk), .y(fclk_2));

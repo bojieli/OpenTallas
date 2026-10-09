@@ -131,7 +131,7 @@ module hfd_coll (
     wire [0:0] w_ep_go;
     wire [31:0] w_ep_inj_idx;
     wire [1:0] w_ep_inj_rd;
-    wire [1023:0] w_ep_inj_data;
+    wire [4095:0] w_ep_inj_q;
     wire [7:0] w_ep_ph_tx_v;
     wire [4359:0] w_ep_ph_tx_flit;
     wire [7:0] w_ep_sw_cr_ret;
@@ -157,14 +157,14 @@ module hfd_coll (
     assign w_ep_rank = {i_f_cmdproc[7:0]};
     assign w_ep_pf = {i_f_cmdproc[23:8]};
     assign w_ep_go = {i_f_cmdproc[24:24]};
-    assign w_ep_inj_data = i_f_su_SW[1023:0] | i_f_su_NW[1023:0] | i_f_su_SE[1023:0] | i_f_su_NE[1023:0];
+    assign w_ep_inj_q = {i_f_su_NE[1023:0], i_f_su_SE[1023:0], i_f_su_NW[1023:0], i_f_su_SW[1023:0]};
     assign w_ep_sw_cr_ret = {i_llk_N3[966:959]};
     assign w_ep_ph_rx_v = {i_llk_S0[494:487]};
     assign w_ep_ph_rx_flit = {i_llk_N3[958:487], i_llk_N2[973:487], i_llk_N1[973:487], i_llk_N0[973:487], i_llk_S4[973:487], i_llk_S3[973:487], i_llk_S2[973:487], i_llk_S1[973:487], i_llk_S0[973:495]};
     assign w_ep_hgi_rec = {i_f_hgi_cmdproc[967:0]};
     assign w_ep_hgi_cfg = {i_f_hgi_cfg[39:0]};
     assign w_ep_hgi_rowfmt_i = cfg[2:0];
-    ot_hgi_coll_ep #(.ENABLE(1), .RXAW(4), .QAW(4), .TXAW(4)) u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk), .prst_n(w_ep_prst_n), .rank(w_ep_rank), .pf(w_ep_pf), .go(w_ep_go), .inj_idx(w_ep_inj_idx), .inj_rd(w_ep_inj_rd), .inj_data(w_ep_inj_data), .ph_tx_v(w_ep_ph_tx_v), .ph_tx_flit(w_ep_ph_tx_flit), .sw_cr_ret(w_ep_sw_cr_ret), .ph_rx_v(w_ep_ph_rx_v), .ph_rx_flit(w_ep_ph_rx_flit), .rx_credit(w_ep_rx_credit), .del_valid(w_ep_del_valid), .del_flit(w_ep_del_flit), .fault(w_ep_fault), .stat_credit_stall(w_ep_stat_credit_stall), .hgi_rec(w_ep_hgi_rec), .hgi_ret(w_ep_hgi_ret), .hgi_cfg(w_ep_hgi_cfg), .hgi_rowfmt_o(w_ep_hgi_rowfmt_o), .hgi_rowfmt_i(w_ep_hgi_rowfmt_i), .hgi_vmaddr(w_ep_hgi_vmaddr));
+    ot_hgi_coll_ep #(.ENABLE(1), .RXAW(4), .QAW(4), .TXAW(4)) u_ep (.clk(w_ep_clk), .rst_n(w_ep_rst_n), .pclk(w_ep_pclk), .prst_n(w_ep_prst_n), .rank(w_ep_rank), .pf(w_ep_pf), .go(w_ep_go), .inj_idx(w_ep_inj_idx), .inj_rd(w_ep_inj_rd), .inj_q(w_ep_inj_q), .ph_tx_v(w_ep_ph_tx_v), .ph_tx_flit(w_ep_ph_tx_flit), .sw_cr_ret(w_ep_sw_cr_ret), .ph_rx_v(w_ep_ph_rx_v), .ph_rx_flit(w_ep_ph_rx_flit), .rx_credit(w_ep_rx_credit), .del_valid(w_ep_del_valid), .del_flit(w_ep_del_flit), .fault(w_ep_fault), .stat_credit_stall(w_ep_stat_credit_stall), .hgi_rec(w_ep_hgi_rec), .hgi_ret(w_ep_hgi_ret), .hgi_cfg(w_ep_hgi_cfg), .hgi_rowfmt_o(w_ep_hgi_rowfmt_o), .hgi_rowfmt_i(w_ep_hgi_rowfmt_i), .hgi_vmaddr(w_ep_hgi_vmaddr));
     for (genvar k = 0; k < 94; k = k + 1) begin : g_sink_w_ep_hgi_rowfmt_o
         (* keep *) ot_hfd_sink1 u (.clk(clk), .d(w_ep_hgi_rowfmt_o[k]), .q());
     end

@@ -101,7 +101,7 @@ D_OPTIONAL_UNITS = {"SIMT": "absent on r25; a record to an absent unit faults (c
 D_OPS = {k: list(v) for k, v in OPS.items()}
 D_OPS["FUSED"] = ["HC_PRE_NORM", "ROW_NORM", "HC_POST", "SOFTMAX"]  # C1 / G4
 D_OPS["DMA"] = ["LOAD", "STORE", "FENCE", "KVWB_DS"]              # C7: kv_dense -> opcode (DS native ring = KVWB_DS)
-D_OPS["IDX"] = ["INDEX", "RESERVED1", "TOPK", "RESERVED3", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
+D_OPS["IDX"] = ["INDEX", "MERGE", "TOPK", "RESERVED3", "EHASH"]  # G18: one INDEX frame record; 1 / 3 reserved (E_RANGE)  # TOPK generic top-k; EHASH Engram ids (DS G13)
 # DS native lowering (hgi_sim ds_native, gaps G8-G14): quantise-dequantise on the act-quant engine, the o-group
 # sub-group reduce with multicast, and the selected compressed-row gather from owner dies.
 D_OPS["FUSED"] += ["QDQ_FP8", "QDQ_FP4_E8M0", "QDQ_FP4_E4M3"]                          # G8
@@ -154,7 +154,8 @@ D_PARAM = {
     "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's "
                        "row store; row i is owned by rank (i div B) mod G and stored there at local row "
                        "(i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; "
-                       "O = the rows in list order on every destination rank (G14)",
+                       "O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, "
+                       "M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
     "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); "
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
@@ -162,6 +163,7 @@ D_PARAM = {
     "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
     "IDX.INDEX": "one DS indexer frame (G18): [11:0] k (DS 512), [12] cand_en, [13] keep_en; imm_a = n keys, imm_b = layer; A = post-RoPE query (FP32), B = scaled head weights (BF16 values), C = keep bitmap (keep_en), O / R = local top-k ids (ascending) / values, D = candidates (cand_en)",
     "COLL.ALL_REDUCE_SUM": "rank-order pairwise tree over the group (G = 1, 2, 4, 8); G = 96 is rejected (E_RANGE): DS reduces as 12 groups of 8 with GROUP_REDUCE_MCAST s = 8 (GX11)",
+    "IDX.MERGE": "[11:0] k (1..2048), [12] key (0 larger value first, -0 = +0, NaN last, ties lower id; 1 lower id first); A FP32 / B U32 = G = m rows (<= 128) of n key-sorted {value, id} pairs; O / R = the first k of the merged order; an unsorted row faults (G20)",
     "COLL.TOPK_MERGE": "from VM: A = local values, B = local ids; the group top imm_a by descending value, ties lowest id; O = ids in ascending id order, R (optional) = values; bit-exact gather path (G18)",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
@@ -206,7 +208,7 @@ def d_spec_json():
             G11=dict(item="per-die program images of identical structure", needs="compiler only"),
             G12=dict(item="ATT second row source (C) and ring wrap", needs="small hardware: ATT row-fetch front end (second list, mask on a power-of-two ring counter)"),
             G13=dict(item="IDX.EHASH Engram ids", needs="existing DS Engram hash engine (ot_hdc_engram_hash) behind IDX; host-written ids are the bring-up fallback"),
-            G14=dict(item="COLL.ROW_GATHER", needs="the DS kv_gather collective; dispatcher decode of the owner rule"),
+            G14=dict(item="COLL.ROW_GATHER", needs="owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"),
         ),
         linear_attention=dict(scope="in scope via software (owner decision 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
                               state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",

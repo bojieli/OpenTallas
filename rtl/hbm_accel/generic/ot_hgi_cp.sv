@@ -32,6 +32,7 @@ module ot_hgi_cp #(
     input  wire [31:0]   db_job,
     input  wire [3:0]    db_gen,
     input  wire [1:0]    db_entry,
+    input  wire [3:0]    db_ncol,
     // record fetch, VM read, dispatch, retire (ot_hgi_seq)
     output wire          f_req_v,
     input  wire          f_req_rdy,
@@ -65,8 +66,7 @@ module ot_hgi_cp #(
     output wire [3:0]    cpl_gen,
     output wire [3:0]    cpl_status,
     output wire [31:0]   cpl_cycles,
-    output wire [4:0]    cpl_ntok,
-    output wire [287:0]  cpl_toks
+    output wire          cpl_tokx
 );
 `include "ot_hgi_cfg_consts.svh"
     reg        we_q; reg [5:0] a_q; reg [63:0] wd_q; reg ub_q;
@@ -90,12 +90,11 @@ module ot_hgi_cp #(
         .cfg_vocab(cp_act[HGI_CP_VOCAB_L +: HGI_CP_VOCAB_N]), .cfg_ctx_max(cp_act[32 + HGI_CP_CTX_MAX_L +: HGI_CP_CTX_MAX_N]),
         .rank(rank), .hold(hold), .busy(seq_busy),
         .db_v(db_v), .db_rdy(db_rdy), .db_token(db_token), .db_pos(db_pos), .db_job(db_job), .db_gen(db_gen),
-        .db_entry(db_entry), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr), .f_rsp_v(f_rsp_v),
+        .db_entry(db_entry), .db_ncol(db_ncol), .f_req_v(f_req_v), .f_req_rdy(f_req_rdy), .f_req_addr(f_req_addr), .f_rsp_v(f_rsp_v),
         .f_rsp_data(f_rsp_data), .vr_v(vr_v), .vr_rdy(vr_rdy), .vr_addr(vr_addr), .vr_rsp_v(vr_rsp_v),
         .vr_rsp_data(vr_rsp_data), .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n),
         .d_pos1(d_pos1), .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault),
         .wr_quiet(wr_quiet), .cpl_v(cpl_v), .cpl_rdy(cpl_rdy), .cpl_token(cpl_token), .cpl_pos(cpl_pos),
-        .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_ntok(cpl_ntok),
-        .cpl_toks(cpl_toks));
+        .cpl_job(cpl_job), .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_tokx(cpl_tokx));
 endmodule
 `default_nettype wire

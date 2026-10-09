@@ -45,7 +45,11 @@ endmodule
 // therefore a finite2-seat logit queue detects overflow rather than dropping rows.
 module ot_dsrom_markov_head_driver #(
  parameter bit ENABLE=0,parameter[8:0] CUT=511,parameter integer SPLIT9=1,
- parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter INSTANCE="mk"
+ parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter INSTANCE="mk",
+ // IOREG (mtp-lead 2026-10-09, margin-first; default 0 = unchanged): every input captured in a pin flop, every
+ // output launched from a flop, and the embedding write split into check -> registered one-hot bank enable -> write
+ // (the 32-bit id compare and the 4->16 decode no longer reach the 4,096 vector enables). +2 cycles to head_go.
+ parameter integer IOREG=0
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] row0,input wire[31:0] transaction,
  input wire embed_valid,output wire embed_ready,input wire[255:0] embed_data,
@@ -53,6 +57,31 @@ module ot_dsrom_markov_head_driver #(
  output reg head_go,input wire head_valid,input wire[31:0] head_bits,input wire head_fault,
  output reg joined_valid,output reg[31:0] joined_bits,output reg[16:0] joined_row,
  output reg done,output wire best_valid,output reg[16:0] best_row,output reg[31:0] best_bits,output reg fault);
+ wire i_start,i_ev,i_el,i_hv,i_hf;wire[16:0] i_row0;wire[31:0] i_tx,i_eid,i_hb;wire[255:0] i_ed;wire[3:0] i_eb;
+ wire start_ready_int,embed_ready_int,best_valid_int;
+ generate if(IOREG!=0)begin:g_io
+  reg r_start,r_ev,r_el,r_hv,r_hf,o_sr,o_er,o_bv;reg[16:0] r_row0;reg[31:0] r_tx,r_eid,r_hb;reg[255:0] r_ed;reg[3:0] r_eb;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin r_start<=0;r_ev<=0;r_el<=0;r_hv<=0;r_hf<=0;o_sr<=0;o_er<=0;o_bv<=0;end
+   else begin r_start<=start;r_ev<=embed_valid;r_el<=embed_last;r_hv<=head_valid;r_hf<=head_fault;
+    o_sr<=start_ready_int;o_er<=embed_ready_int;o_bv<=best_valid_int;end
+  always @(posedge clk)begin r_row0<=row0;r_tx<=transaction;r_ed<=embed_data;r_eb<=embed_beat;r_eid<=embed_id;r_hb<=head_bits;end
+  assign {i_start,i_ev,i_el,i_hv,i_hf,i_row0,i_tx,i_eid,i_hb,i_ed,i_eb}={r_start,r_ev,r_el,r_hv,r_hf,r_row0,r_tx,r_eid,r_hb,r_ed,r_eb};
+  assign start_ready=o_sr;assign embed_ready=o_er;assign best_valid=o_bv;
+ end else begin:g_noio
+  assign {i_start,i_ev,i_el,i_hv,i_hf,i_row0,i_tx,i_eid,i_hb,i_ed,i_eb}={start,embed_valid,embed_last,head_valid,head_fault,row0,transaction,embed_id,head_bits,embed_data,embed_beat};
+  assign start_ready=start_ready_int;assign embed_ready=embed_ready_int;assign best_valid=best_valid_int;
+ end endgenerate
+ // IOREG embedding write: check -> registered one-hot bank enable + data -> write
+ reg[15:0] w_en;reg[255:0] w_d;reg w_last;
+ wire e_take=i_ev&&embed_ready_int;
+ wire e_ok=i_eid==identity&&i_eb==embed_next[3:0]&&i_el==(embed_next==15);
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin w_en<=0;w_last<=0;end
+  else begin w_en<=(IOREG!=0&&e_take&&e_ok&&!fault)?(16'b1<<embed_next[3:0]):16'b0;w_last<=IOREG!=0&&e_take&&e_ok&&!fault&&i_el;end
+ always @(posedge clk) w_d<=i_ed;
+ integer wb_i;
+
  reg busy,vector_ready;reg[4:0] embed_next;reg[31:0] identity;reg[16:0] base;
  reg[255:0] vector[0:15];reg[31:0] hq[0:1];reg[4:0] rq[0:1];
  reg hw,hr;reg[1:0] hn;reg[5:0] emitted,completed,valid_count;
@@ -61,24 +90,24 @@ module ot_dsrom_markov_head_driver #(
  wire wr_ready,wv,wl;wire[255:0] wd;wire[3:0] wb;
  wire launch=ENABLE&&busy&&vector_ready&&!active&&hn!=0&&mk_ready&&wr_ready&&!fault;
  wire wtake=wv&&mk_in_ready;
- assign start_ready=ENABLE&&!busy&&!fault;
- assign best_valid=have&&!fault;
- wire push_head=head_valid&&busy&&vector_ready&&emitted<valid_count&&!fault;
- assign embed_ready=busy&&!vector_ready&&!fault&&embed_next<16;
- wire embed_take=embed_valid&&embed_ready;
- wire embed_good=embed_take&&embed_id==identity&&embed_beat==embed_next&&embed_last==(embed_next==15);
+ assign start_ready_int=ENABLE&&!busy&&!fault;
+ assign best_valid_int=have&&!fault;
+ wire push_head=i_hv&&busy&&vector_ready&&emitted<valid_count&&!fault;
+ assign embed_ready_int=busy&&!vector_ready&&!fault&&embed_next<16;
+ wire embed_take=i_ev&&embed_ready_int;
+ wire embed_good=embed_take&&i_eid==identity&&i_eb==embed_next&&i_el==(embed_next==15);
  reg[255:0] embed_q,embed_d;reg[3:0] embed_beat_q;reg embed_last_q,embed_last_d,cache_v;
  (* keep *) reg[16*16-1:0] bank_enable;
  integer ce_bank,ce_rep;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin cache_v<=0;bank_enable<=0;embed_last_q<=0;embed_last_d<=0;embed_beat_q<=0;end
   else begin
-   cache_v<=embed_good;embed_beat_q<=embed_beat;embed_last_q<=embed_last;embed_last_d<=embed_last_q;
+   cache_v<=embed_good;embed_beat_q<=i_eb;embed_last_q<=i_el;embed_last_d<=embed_last_q;
    for(ce_bank=0;ce_bank<16;ce_bank=ce_bank+1)for(ce_rep=0;ce_rep<16;ce_rep=ce_rep+1)
     bank_enable[ce_bank*16+ce_rep]<=CACHE_PINREG&&cache_v&&embed_beat_q==ce_bank;
   end
  end
- always @(posedge clk)begin embed_q<=embed_data;embed_d<=embed_q;end
+ always @(posedge clk)begin embed_q<=i_ed;embed_d<=embed_q;end
  wire cache_commit=CACHE_PINREG&&(|bank_enable);
  integer cache_bank,cache_bit;
  ot_dsrom_markov_weight32 #(.INSTANCE(INSTANCE)) weights(.clk(clk),.rst_n(rst_n),
@@ -96,16 +125,16 @@ module ot_dsrom_markov_head_driver #(
    joined_valid<=0;joined_bits<=0;joined_row<=0;done<=0;best_row<=0;best_bits<=0;best_key<=0;have<=0;fault<=0;
   end else begin
    head_go<=0;joined_valid<=0;
-   if(start&&!start_ready)fault<=1;
-   if(start&&start_ready)begin
-    begin busy<=1;valid_count<=row0>=129280?0:((129280-row0)<VALID_ROWS?129280-row0:VALID_ROWS);vector_ready<=0;embed_next<=0;identity<=transaction;base<=row0;
+   if(i_start&&!start_ready_int)fault<=1;
+   if(i_start&&start_ready_int)begin
+    begin busy<=1;valid_count<=i_row0>=129280?0:((129280-i_row0)<VALID_ROWS?129280-i_row0:VALID_ROWS);vector_ready<=0;embed_next<=0;identity<=i_tx;base<=i_row0;
      hw<=0;hr<=0;hn<=0;emitted<=0;completed<=0;done<=0;have<=0;end
    end
-   if(embed_valid&&embed_ready)begin
-    if(embed_id!=identity || embed_beat!=embed_next || embed_last!=(embed_next==15))fault<=1;
+   if(i_ev&&embed_ready_int)begin
+    if(i_eid!=identity || i_eb!=embed_next || i_el!=(embed_next==15))fault<=1;
     else begin embed_next<=embed_next+1;
-     if(!CACHE_PINREG)begin vector[embed_next]<=embed_data;
-      if(embed_last)begin vector_ready<=1;head_go<=1;end
+     if(!CACHE_PINREG&&IOREG==0)begin vector[embed_next]<=i_ed;
+      if(i_el)begin vector_ready<=1;head_go<=1;end
      end
     end
    end
@@ -114,14 +143,18 @@ module ot_dsrom_markov_head_driver #(
      if(bank_enable[cache_bank*16+cache_bit/16])vector[cache_bank][cache_bit]<=embed_d[cache_bit];
     if(cache_commit&&embed_last_d&&!fault)begin vector_ready<=1;head_go<=1;end
    end
-   if(head_valid)begin
+   if(IOREG!=0)begin
+    for(wb_i=0;wb_i<16;wb_i=wb_i+1) if(w_en[wb_i]) vector[wb_i]<=w_d;
+    if(w_last&&!fault)begin vector_ready<=1;head_go<=1;end
+   end
+   if(i_hv)begin
     if(!busy||!vector_ready||emitted>=32 || (push_head&&hn==2&&!launch))fault<=1;
-    else begin emitted<=emitted+1;if(push_head)begin hq[hw]<=head_bits;rq[hw]<=emitted[4:0];hw<=!hw;end end
+    else begin emitted<=emitted+1;if(push_head)begin hq[hw]<=i_hb;rq[hw]<=emitted[4:0];hw<=!hw;end end
    end
    if(launch)begin hr<=!hr;active<=1;active_row<=rq[hr];read_beat<=0;end
    case({push_head,launch})2'b10:hn<=hn+1;2'b01:hn<=hn-1;default:;endcase
    if(wtake)begin if(wb!=read_beat||wl!=(read_beat==15))fault<=1;read_beat<=read_beat+1;end
-   if(head_fault||mk_fault)fault<=1;
+   if(i_hf||mk_fault)fault<=1;
    if(mk_valid)begin
     if(!active||mk_bits[30:23]==8'hff||fault)fault<=1;
     else begin

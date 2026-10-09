@@ -29,14 +29,6 @@
     "rst_n": "rst_n",
     "pclk": "clk",
     "prst_n": "rst_n",
-    "inj_data": {
-     "or": [
-      "die:f_su_SW[0:1024]",
-      "die:f_su_NW[0:1024]",
-      "die:f_su_SE[0:1024]",
-      "die:f_su_NE[0:1024]"
-     ]
-    },
     "rank": "die:f_cmdproc[0:8]",
     "pf": "die:f_cmdproc[8:24]",
     "go": "die:f_cmdproc[24:25]",
@@ -72,7 +64,8 @@
      "die:t_hgi_vmaddr_NW[0:80]",
      "die:t_hgi_vmaddr_SE[0:80]",
      "die:t_hgi_vmaddr_NE[0:80]"
-    ]
+    ],
+    "inj_q": "die:f_su_SW[0:1024]+f_su_NW[0:1024]+f_su_SE[0:1024]+f_su_NE[0:1024]"
    }
   }
  ],
@@ -105,7 +98,7 @@
  "kept_out_regs": true,
  "face_stages": 5,
  "contracts": {
-  "ep.inj_data": "SU-quarter ownership (hgi-takeover 2026-10-09, defined by the die-integration owner): inject flit i (inj_idx, broadcast to all four quarters on t_su_q[546:580]) is owned by quarter i mod 4 in the order SW, NW, SE, NE; the owner drives its 1024-bit f_su_q (hfd_su t_coll), the other three drive 0, so the OR is the owner data. The functional SU inject gate is one AND per quarter (the physical envelope hfd_su has no inject select); hfd_coll rtl_hgi asserts at most one non-zero quarter."
+  "ep.inj_q": "SU-quarter ownership (hgi-takeover 2026-10-09, defined by the die-integration owner): inject flit i (inj_idx, broadcast to all four quarters on t_su_q[546:580]) is owned by quarter i mod 4 in the order SW, NW, SE, NE; the owner drives its 1024-bit f_su_q (hfd_su t_coll), the other three drive 0, so the OR (inside ot_hgi_coll_ep) is the owner data; two or more non-zero quarters in a cycle set the sticky multi-driver fault (review-1149, zero cycles on the data path). The functional SU inject gate is one AND per quarter (the physical envelope hfd_su has no inject select); "
  },
  "ties": {
   "die:llk_N3[967:974]": {

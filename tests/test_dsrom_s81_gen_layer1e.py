@@ -40,6 +40,8 @@ def test_layer1e_options():
     F.apply_options(_opts('--host', 'layer1e'))
     assert F.DIE_KIND == 'layer1e' and F.STACKS['layer1e'] == ('SW', 'SE') and F.CTRL_RQ and F.HOST_SLAB
     assert F.PAIRS == 1792
+    F.apply_options(_opts('--host --wfc-hard', 'layer1e'))
+    assert F.WFC_HARD
     with pytest.raises(AssertionError):
         F.apply_options(_opts('', 'layer1e'))          # Engram boot load needs the host path
     F.apply_options(_opts(''))

@@ -324,7 +324,7 @@ def read_cfg(text: str) -> dict:
         p = f.name
     try:
         script = ('set +u; source "$1" >/dev/null 2>&1; '
-                  'for v in TOP SRCS FW FH PIN_H PIN_V PIN_MIN_TRACKS; do printf "%s=%s\\0" "$v" "${!v-__unset__}"; done; '
+                  'for v in TOP SRCS FW FH PIN_H PIN_V PIN_MIN_TRACKS QDMD SDCF; do printf "%s=%s\\0" "$v" "${!v-__unset__}"; done; '
                   'printf "PARAMS\\0"; for x in "${PARAMS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"; '
                   'printf "PINS\\0"; for x in "${PINS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"; '
                   'printf "MACROS\\0"; for x in "${MACROS[@]}"; do printf "%s\\0" "$x"; done; printf "\\1\\0"')
@@ -516,6 +516,14 @@ def master_plan(spec: dict, git: Git) -> dict:
     if text is None:
         raise LookupError(f"{CFG_DIR}/{name}.env not readable at {commit[:12]}")
     cfg = read_cfg(text)
+    # drive-0849 (2026-10-09): post_plain.tcl reads $QDM_SDC_DIR/io_plain.sdc after CTS / GRT / DRT / fill; a hand-made mc
+    # kit without it crashes the route at 4_1_cts (STA-0340: sys sequencer a2cf5ee1c x2, qfd_coll_xfifo acb615a21 x2).
+    qdmd = str(cfg.get("QDMD") or "")
+    kit_missing = []
+    if qdmd.startswith("/src/"):
+        for f in ("io_plain.sdc", "io_ref_skew.sdc", str(cfg.get("SDCF") or "die_p770.sdc")):
+            if git.show(commit, f"{qdmd[5:].rstrip('/')}/{f}") is None:
+                kit_missing.append(f"{qdmd[5:].rstrip('/')}/{f}")
     if not cfg.get("TOP") or not cfg.get("FW") or not cfg.get("FH"):
         raise ExprError(f"cfg {name}: TOP / FW / FH not set")
     env = cmd_env(cmd)
@@ -553,7 +561,7 @@ def master_plan(spec: dict, git: Git) -> dict:
             "tracks": float(cfg.get("PIN_MIN_TRACKS") or env.get("PIN_MIN_TRACKS") or 1),
             "group_max": int(env.get("OT_PIN_GROUP_MAX") or 0),
             "balance": bool(env.get("OT_PIN_BALANCE_H") and env.get("OT_PIN_BALANCE_V") and env.get("OT_PIN_GROUP_MAX")),
-            "flow": flow, "commit": commit,
+            "flow": flow, "commit": commit, "kit_missing": kit_missing,
             "synth_key": key, "core_um2": round((fw - 2 * CORE_INSET) * (fh - 2 * CORE_INSET), 1)}
 
 
@@ -687,6 +695,11 @@ def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = 
             msgs.append(f"utilisation {ue:.1%} > {th['util_max']:.0%} at submit: the same synthesis input measured "
                         f"{u['area_um2']:.0f} um2 (job {u.get('job')}) in this outline's {core_new:.0f} um2 core: "
                         f"grow the outline to <= 55-60%")
+    if plan.get("kit_missing"):
+        verdict = "REFUSE"
+        msgs.append(f"die-master kit incomplete at the source commit: {', '.join(plan['kit_missing'])} missing "
+                    f"(route_master's post_plain.tcl / pre_ref_skew.tcl read them; the route would crash at 4_1_cts "
+                    f"with STA-0340): commit them (io_plain.sdc = the plain IO delays of the kit SDC, see mk_mc_kit.py)")
     if verdict == "REFUSE" and warn_only:
         verdict, msgs = "PASS", ["warn_only: " + m for m in msgs]
     res["verdict"] = verdict
