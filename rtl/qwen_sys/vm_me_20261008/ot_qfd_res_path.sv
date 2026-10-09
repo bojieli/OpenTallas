@@ -66,7 +66,13 @@ module ot_qfd_res_ser #(
     // TSR = 1 (safe-qwen S-D2, 2026-10-08; 0 = unchanged): the beat's slot select t2_s -> o_data (8:1 x 512 b, routed
     // TT -1,143 post-CTS: t2_s[0] -> o_data[400], 30 of 34 cells buffers) comes from a REGISTERED copy per 64-bit output
     // slice (keep_hierarchy leaves, registered from t1_s with t2_s, so 0 added cycles); each copy drives one slice.
-    parameter integer TSR = 0
+    parameter integer TSR = 0,
+    // MEC = 1 (struct-close 2026-10-09, "-cl"; 0 = unchanged): the boundary capture loads EVERY edge instead of under
+    // me_en.  tsr41-a66978536-tc-bal32 failed post-CTS TT -789.8 on me_en (input) -> c_data[*] load enables (4,096 b + the
+    // header words).  Every use of the captured burst is gated by c_v (= me_en && i_ov of the same edge): slot writes,
+    // header / row / mask writes, wp / n and the hi_bad fault, so a burst captured without me_en is never observed.
+    // 0 cycles; me_en now drives one flop (c_v).
+    parameter integer MEC = `ifdef OT_QFD_RES_MEC 1 `else 0 `endif
 ) (
     input  wire                 clk,
     input  wire                 rst_n,
@@ -97,8 +103,12 @@ module ot_qfd_res_ser #(
     reg  [NS*AW-1:0]  c_addr;
     reg  [NS*W-1:0]   c_mask;
     reg  [NS*W*32-1:0] c_data;
+`ifndef OT_QFD_RES_MUT_CVNOEN
     always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= me_en && i_ov;
-    always @(posedge clk) if (me_en) begin c_we <= i_we & {NS{i_ov}}; c_addr <= i_addr; c_mask <= i_mask; c_data <= i_data; end
+`else   // struct-close mutant for MEC: the burst valid ignores me_en (a paused engine's held burst is taken again)
+    always @(posedge clk or negedge rst_n) if (!rst_n) c_v <= 1'b0; else c_v <= i_ov;
+`endif
+    always @(posedge clk) if (me_en || MEC != 0) begin c_we <= i_we & {NS{i_ov}}; c_addr <= i_addr; c_mask <= i_mask; c_data <= i_data; end
     // ---- store: slot s of burst wp ----
     reg  [NS-1:0]  hdr [0:DB-1];
     reg  [RW-1:0]  srow [0:NS*DB-1];
