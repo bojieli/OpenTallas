@@ -3611,11 +3611,17 @@ def _hop_fix(m, P):
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rec['pad_fallback']['nxt_die'] = rec['pad_fallback'].get('nxt_die', 0) + 1
                             break
-                if pl is None and NR:          # no spot honours the load-side reach: legacy search, counted
+                if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
                     rec['nxt_relaxed'] = rec.get('nxt_relaxed', 0) + 1
-                    pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)] if reg is not None or PIN_RELAY else allowed,
-                                prev=cur, horiz=horiz, reach=R - 10.0, span=1200.0, rows=120)
-                    pl = pl and (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                    for PAD in (2.16, 1.08, 0.0):
+                        for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
+                            pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
+                                        reach=R - 10.0, span=span, rows=rows)
+                            if pl:
+                                pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                                break
+                        if pl:
+                            break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
                 if fwd:
