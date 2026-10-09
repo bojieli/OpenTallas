@@ -1,0 +1,109 @@
+{
+ "schema": "opentallas.qwen-kv-die.reprice.v1",
+ "date": "2026-10-09",
+ "clock_hz": 1200000000.0,
+ "position": 8191,
+ "mode": "AR (DSpark off), INT8 weights, FP8 KV in HBM",
+ "inputs": {
+  "results/arch/qwen_tp8_vs_sysdie_20261009/result.json": "664409499b753a7d",
+  "results/arch/qwen_kv_die_20261009/bench.json": "47957af6228d4812",
+  "results/arch/qwen_kv_die_20261009/kv_die/plan.json": "e4ca2d3b72c33ced",
+  "results/arch/qwen_kv_die_20261009/rom_r22k.json": "e9f270441054fe21"
+ },
+ "basis": {
+  "token_cycles": 218472.0,
+  "tok_s": 5492.7,
+  "layer": 5954.0,
+  "attn_kv": 1361.0,
+  "softmax_norm": 395.0,
+  "l0_extra": 984,
+  "l0_cold": 762,
+  "l0_kv_constants": 222,
+  "head": 3101.0,
+  "embed": 7.0,
+  "handoffs": 36,
+  "sysdie_1a_central": {
+   "added": 1050,
+   "token_cycles": 219522.0,
+   "tok_s": 5466.4,
+   "vs_tp4": -0.0048
+  }
+ },
+ "stages": {
+  "rom_q": 27,
+  "rom_res": 29,
+  "rom_ea": 26,
+  "rom_eq": 26,
+  "kv_seq_to_far_aggregator": 27,
+  "kv_hub_aggregator": 4,
+  "kv_hub_to_seq": 21,
+  "kv_seq_to_far_land": 23,
+  "kv_gw_land": 25,
+  "kv_land_gw": 25
+ },
+ "cases": {
+  "typical": {
+   "phy_latency": 5,
+   "adapter_plus_phy": 11,
+   "layer_step_measured": 1855,
+   "rom_stage_correction": 0,
+   "layer_step": 1855,
+   "layer_cycles": 6053.0,
+   "layer_delta_vs_tp4": 99.0,
+   "embed_cycles": 271,
+   "l0_extra": 222,
+   "token_cycles": 221538.0,
+   "tok_s": 5416.7,
+   "vs_tp4": -0.0138,
+   "vs_sysdie_1a_model": -0.0091,
+   "bench_exact": true
+  },
+  "best": {
+   "phy_latency": 3,
+   "adapter_plus_phy": 9,
+   "layer_step_measured": 1853,
+   "rom_stage_correction": 0,
+   "layer_step": 1853,
+   "layer_cycles": 6051.0,
+   "layer_delta_vs_tp4": 97.0,
+   "embed_cycles": 267,
+   "l0_extra": 222,
+   "token_cycles": 221462.0,
+   "tok_s": 5418.5,
+   "vs_tp4": -0.0135,
+   "vs_sysdie_1a_model": -0.0088,
+   "bench_exact": true
+  },
+  "worst": {
+   "phy_latency": 9,
+   "adapter_plus_phy": 15,
+   "layer_step_measured": 1867,
+   "rom_stage_correction": 0,
+   "layer_step": 1867,
+   "layer_cycles": 6065.0,
+   "layer_delta_vs_tp4": 111.0,
+   "embed_cycles": 598,
+   "l0_extra": 222,
+   "token_cycles": 222297.0,
+   "tok_s": 5398.2,
+   "vs_tp4": -0.0172,
+   "vs_sysdie_1a_model": -0.0125,
+   "bench_exact": true
+  }
+ },
+ "headline": {
+  "tok_s": 5416.7,
+  "token_cycles": 221538.0,
+  "vs_tp4": -0.0138,
+  "range_tok_s": [
+   5398.2,
+   5418.5
+  ],
+  "status": "priced candidate: the attention layer step is MEASURED through the link RTL (bit-exact), the relay stages come from the r22k / KV-die placements; the near-HBM attention elements are not closed physically"
+ },
+ "notes": [
+  "The decision record priced option 1a at 219,522 cycles assuming the TILE attention (1,756 cycles a layer) stays and only 2 x 14-cycle crossings are added.  Moving attention to the KV die means NEAR-HBM attention (row engines beside the HBM PHYs: KV never crosses), whose measured step is the layer_step here.",
+  "L0 cold KV-prefetch (762) is removed: each layer's near-HBM attention streams its own 4 MiB a die inside its step (the bench HBM model: 750 B a cycle a stack, 16-cycle latency); the per-token KV constants (+222) stay.",
+  "The row-engine <-> aggregator interface (16.5 k / 16.8 k bits) is abutted in the KV-die floorplan; if the re-cut adds pipeline stages on the q broadcast or the leaf path, each stage adds ~1-2 cycles a layer."
+ ]
+}

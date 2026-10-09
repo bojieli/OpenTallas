@@ -1,0 +1,22 @@
+{
+ "planned fmt3: 160 B / 128 codes, 64 codes/cyc/SM": {
+  "cycles": 1261770,
+  "tok_s": 951.0
+ },
+ "dense 128 B lines (scales separate), 64 codes/cyc/SM": {
+  "cycles": 1261770,
+  "tok_s": 951.0
+ },
+ "136 B lines back-to-back (byte-packed, 1.0625)": {
+  "cycles": 1261770,
+  "tok_s": 951.0
+ },
+ "planned 1.25, fmt3 one-beat issue (128 codes/cyc/SM)": {
+  "cycles": 1072014,
+  "tok_s": 1119.4
+ },
+ "dense 1.0, fmt3 one-beat issue (128 codes/cyc/SM)": {
+  "cycles": 922645,
+  "tok_s": 1300.6
+ }
+}

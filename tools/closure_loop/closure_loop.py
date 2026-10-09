@@ -3716,7 +3716,9 @@ def do_verdict(j, fleet, stl):
             # while check.json said MATCH): raise, so the verdict backs off and is re-taken
             raise RuntimeError(f"verdict check {c['name']}: ssh/network failure: {out.strip()[-200:]}")
         checks[c["name"]] = dict(ok=ok, out=out[-300:])
-        if not ok:
+        if not ok and restates_line(c):
+            checks[c["name"]]["restates_line"] = True     # judged by the line itself, below (drive-0212)
+        elif not ok:
             failed.append(c["name"])
     j["checks"], j["failed_checks"] = checks, failed
     if (j.get("eco") or {}).get("installed"):     # the post-route hold ECO replaced the route: its DRC counts
@@ -3797,6 +3799,41 @@ def eco_passes(res, rc):
         if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or value < minimum:
             return False
     return type(res.get("drc")) in (int, float) and res["drc"] == 0
+
+
+LINE_COND_RE = re.compile(r"""\b[A-Za-z_]\w*\[["'](setup_tt|hold_ff)["']\]\s*\[["']worst_slack_ps["']\]\s*>=\s*(-?[\d.]+)""")
+
+
+def restates_line(c):
+    """drive-0212 (coordinator APPROVED 2026-10-09): a verdict check that only restates the TT/FF acceptance line
+    (owner_TT_FF_nonnegative: corner_sta.json setup_tt / hold_ff worst_slack_ps >= 0, 18 specs) is not an independent
+    condition.  Counted as a failed check it blocked the one fix that applies: qfd_emb_pc_00-0ebf67a31-tc, TT +15.99 /
+    FF -59.47 / DRC 0, never got its post-route hold ECO.  Such a check is recorded but never counts as failed: the
+    line itself is judged on the metrics (route, routed insertion, or the installed ECO).  A check is a restatement
+    iff spec says "restates_line": true, or its command only reads corner_sta.json and asserts setup_tt >= SS_MIN /
+    hold_ff >= FF_MIN (nothing stricter: owner_SS_FF_15ps keeps counting)."""
+    if c.get("restates_line") is True:
+        return True
+    cmd = c.get("cmd") or ""
+    if "corner_sta.json" not in cmd:
+        return False
+    conds = LINE_COND_RE.findall(cmd)
+    if not conds:
+        return False
+    for key, val in conds:
+        if float(val) != (SS_MIN if key == "setup_tt" else FF_MIN):
+            return False
+    m = re.search(r"\bassert\b(.*?)(?:['\"]\s*$|;|$)", cmd, re.S)
+    if not m or not re.fullmatch(r"\s*C(\s+and\s+C)*\s*", LINE_COND_RE.sub("C", m.group(1))):
+        return False
+    files = set(re.findall(r"[\w{}./-]+\.(?:json|rpt|log|txt|csv)", cmd))
+    return bool(files) and all(x.endswith("corner_sta.json") for x in files)
+
+
+def blocking_checks(j):
+    """the job's recorded failed checks minus restatements of the line (records written before drive-0212)"""
+    rest = {c.get("name") for c in (j["spec"].get("verdict") or {}).get("checks", []) if restates_line(c)}
+    return [x for x in (j.get("failed_checks") or []) if x not in rest]
 
 
 def hold_only(j, m, failed=(), benches_ok=True):
@@ -4111,7 +4148,7 @@ def requeue_hold_only(jobs):
     busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL} | closed_blocks(jobs)
     for j in jobs:
         m = j.get("metrics") or {}
-        if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, j.get("failed_checks") or []):
+        if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, blocking_checks(j)):
             continue
         j.setdefault("fix_requeued", []).append(fid)
         if j["spec"].get("block") in busy:
