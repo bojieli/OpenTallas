@@ -54,6 +54,26 @@ def cases(block, seed):
         rows.append(("independent_half_scales", np.concatenate([
             np.linspace(-0.01, 0.01, 16, dtype=np.float32),
             np.linspace(-1536, 1536, 16, dtype=np.float32)])))
+        # Scale midpoint, maximum scale, and the next overflowing midpoint.
+        # Keep each anchor at +/- one binary32 ULP around the exact boundary.
+        for boundary in [2640, 2688, 2784]:
+            center = np.float32(boundary)
+            for side, anchor in [("below", np.nextafter(center, np.float32(-np.inf))),
+                                 ("tie", center),
+                                 ("above", np.nextafter(center, np.float32(np.inf)))]:
+                for sign in [1, -1]:
+                    values = np.resize(np.asarray([
+                        anchor, -anchor, 112, -112, 336, -336, 560, -560,
+                        784, -784, 1120, -1120, 1568, -1568, 2240, -2240],
+                        dtype=np.float32), 32) * sign
+                    rows.append((f"sat_boundary_{boundary}_{side}_sign{sign}", values))
+                rows.append((f"sat_boundary_{boundary}_{side}_mixed_halves",
+                             np.concatenate([
+                                 np.asarray([anchor, -anchor] + [336, -560] * 7,
+                                            dtype=np.float32),
+                                 np.asarray([6, -6, .25, -.25, .75, -.75, 1.25,
+                                             -1.25, 1.75, -1.75, 2.5, -2.5,
+                                             3.5, -3.5, 5, -5], dtype=np.float32)])))
     for i in range(32):
         exponent = int(rng.integers(-120, 110))
         values = np.ldexp(rng.uniform(-1, 1, 32).astype(np.float32), exponent)
@@ -87,18 +107,26 @@ def main():
              ("fp4_e4m3", 6, 16, G.qdq_fp4_e4m3)]
     for name, op, block, golden in modes:
         rows = cases(block, args.seed)
-        inputs, outputs = [], []
+        inputs, outputs, scales = [], [], []
         for label, x in rows:
             with np.errstate(over="ignore", under="ignore", invalid="raise"):
                 y = golden(x, block=block)
             inputs.append(packed(G.bits(x), 32))
             outputs.append(packed(G.bits(y) >> 16, 16))
+            if block == 16:
+                amax = np.maximum(np.max(np.abs(x.reshape(-1, block)), axis=1),
+                                  G.FP4_AMAX_FLOOR_E4M3).astype(G.F)
+                # Record the scale at the released golden's exact cast point.
+                scales.append(np.minimum(G._e4m3_round(
+                    amax.astype(np.float64) / G.FP4_MAX), 448.0).tolist())
         for suffix, lines in [("in", inputs), ("out", outputs)]:
             (args.out / f"{name}.{suffix}.hex").write_text("\n".join(lines) + "\n")
         manifest["modes"][name] = {"op": op, "block": block, "beats": len(rows),
             "cases": [label for label, _ in rows],
             "files": {f"{name}.{s}.hex": sha(args.out / f"{name}.{s}.hex")
                       for s in ["in", "out"]}}
+        if scales:
+            manifest["modes"][name]["golden_block_scales"] = scales
     (args.out / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(json.dumps({"status": "PASS", "modes": {
         k: v["beats"] for k, v in manifest["modes"].items()}}))
