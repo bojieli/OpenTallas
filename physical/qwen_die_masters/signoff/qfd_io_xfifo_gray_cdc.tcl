@@ -6,8 +6,13 @@
 proc ot_xfifo_gray_cdc_constraints {budget} {
   set cells [all_registers -cells]
   set checked 0
-  foreach prefix {u_ut u_ur u_st u_sr u_sq} {
+  foreach {prefix wclock rclock} {u_ut ck cku u_ur cku ck u_st ck cks u_sr cks ck u_sq ckd ck} {
     foreach {source target} {wr_gray_pub wr_gray_r1 rd_gray rd_gray_w1} {
+      set destination [expr {$target eq "wr_gray_r1" ? $rclock : $wclock}]
+      set destination_period [get_property [get_clocks $destination] period]
+      if {$budget <= 0 || $budget > $destination_period} {
+        error "OT_XFIFO_GRAY max $budget exceeds destination $destination period $destination_period"
+      }
       set from {};set to {}
       foreach cell $cells {
         set name [get_full_name $cell]
@@ -48,7 +53,7 @@ proc ot_xfifo_gray_cdc_constraints {budget} {
       set_max_delay -ignore_clock_latency $budget -from $from -through $qpins -to $dpins
       set_false_path -hold -from $from -through $qpins -to $dpins
       incr checked [llength $to]
-      puts "OT_XFIFO_GRAY $prefix $source->$target width=[llength $to] max=$budget hold=async"
+      puts "OT_XFIFO_GRAY $prefix $source->$target width=[llength $to] max=$budget destination=$destination period=$destination_period hold=async"
     }
   }
   puts "OT_XFIFO_GRAY_TOTAL $checked first-stage synchronizer bits"
