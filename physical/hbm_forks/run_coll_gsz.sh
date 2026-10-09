@@ -72,7 +72,7 @@ xargs -P ${PAR:-16} -I{} bash -c '{}' < $T/cmds.txt
 bad=0; negok=0; neg=0
 for f in $T/run_*.log; do k=$(tail -n 1 $f | cut -d' ' -f2)
   if grep -q "TUDONE .* mismatches=0 faults=0 " $f; then [ $k = neg ] && { echo "MUTANT PASSED: $(tail -n 1 $f)"; bad=$((bad+1)); }
-  else [ $k = neg ] && grep -Eq "TUMISMATCH|GROUP_ISOLATION" "$f" && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -n 1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
+  else [ $k = neg ] && grep -Eq "TUMISMATCH|GROUP_ISOLATION|PAD_PROGRESS" "$f" && negok=$((negok+1)) || { bad=$((bad+1)); echo "FAILED: $(tail -n 1 $f): $(grep -h 'TUDONE\|TUTIMEOUT\|TUMISMATCH' $f | head -2)"; }; fi
   [ $k = neg ] && neg=$((neg+1))
 done
 grep -h TUDONE $T/run_*.log | cut -c1-160 > $O/summary.txt
