@@ -14106,3 +14106,8 @@ def hbm_vm8_face_hierarchy_model():
     """Real bounded face relay banks instead of a single flat VM8 clock tree."""
     from tools.hbm_vm8_face_hierarchy_model import model
     return model()
+
+def hbm_key_quant_producer_model():
+    """Final real FP4 key arithmetic and finite68-byte append landing."""
+    from tools.hbm_key_quant_producer_model import model
+    return model()
