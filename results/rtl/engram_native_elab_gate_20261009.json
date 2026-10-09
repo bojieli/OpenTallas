@@ -1,0 +1,37 @@
+{
+ "schema": "opentallas.engram-native-elab.v1",
+ "retained_objects": "/tmp/engram-native-elab-2xm_gxwo",
+ "qualification": "actual64user SOURCE/layer/head controller elaboration; no whole-array simulation or numerical/physical adoption claim",
+ "cases": {
+  "1": {
+   "returncode": 0,
+   "log_sha256": "904ea74147fffbc783d0955973d24421ea42cc687307e327ff1bc645c7ea41c9"
+  },
+  "0": {
+   "returncode": 0,
+   "log_sha256": "9dc2ece39f6a43f06c782a043741c262458b41990f3e868724718fc7953687ad"
+  },
+  "2": {
+   "returncode": 0,
+   "log_sha256": "89179785e766bd215cf20290d4d591f027284f1e6bb2e3f9b8d2993851ef888d"
+  }
+ },
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_ctrl.sv": "8bbf2b1c918f57b32dceff6fe8235d2b7cdcf63b4b6eaf4d548bc45b7c9113d8",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_hop_tx.sv": "2af867faa15385fc168ca9f383e681ae982bbce32131fb456b631275c14a2cb7",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_host_cq.sv": "bef4e939d7c81c669b2affc95ebaa8a219f83d050659f2864d5194bb076b3fa4",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_pkg_ctrl.sv": "5c9eee113e08bcd24712fea81a554726a6d22c76afc894d6f176a8534dd0b810",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_guard.sv": "5b79131e49bc5ec6f62c9bca05ea443680fc99e21b68687280d248bbae25065e",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stage_seq.sv": "8bd4679e04687735f967bd06a8c92e7bfc1d3fdedb0c9a10699b5409ab38878f",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_stop.sv": "e0e4aa5a37b07c4d00aa7dd1c95dc035e637d3e4d8ddaeaf74f9248d0b0b2a4c",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "518c902b0f1909cdb874406887abbbb24a643462789ff017f6375ef418ef324a",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "rtl/dsrom_sys/ot_dsrom_stall_export.sv": "1008978333b07a3dff572c668dc5e7edb41d243f8501a5c9353500dbe46dc7cc",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "tools/engram_native_elab_gate.py": "c9040cf39a563131ad92ff190ce8d840c9314b485f5a7742d04cebe6b9ea0940"
+ },
+ "status": "pass"
+}
