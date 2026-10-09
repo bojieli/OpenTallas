@@ -4,6 +4,7 @@
 This proves control/addresses/tags, not arithmetic or engine execution time.
 """
 import argparse
+import json
 import re
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
@@ -20,6 +21,8 @@ def emit(out):
        'wire d_done,d_drained,d_fault; wire [1:0] d_done_gen; wire [17:0] d_next_token;',
        'wire [31:0] d_next_val,d_cycles; wire [3:0] d_fault_code;',
        'wire [5:0] stage,st_layer,st_next_layer,st_crom;',
+       'reg [8191:0] golden_dir; reg [1023:0] goldE[0:63],goldL[0:63],goldH[0:63];',
+       'reg [63:0] goldDE[0:7],goldDL[0:7],goldDH[0:7];',
        'wire h_start=dut.h_start; wire [17:0] tp_token=dut.tp_token,tp_pos=dut.tp_pos;']
     for dr,w,n in ports:
         if n in {'clk','rst_n','h_start','tp_token','tp_pos'}: continue
@@ -44,8 +47,8 @@ def emit(out):
           '  if(st_crom!==(starts==0 ? 63 : starts==37 ? 36 : starts-1))bad("constant stage");',
           '  if(st_next_layer!==(starts<36 ? starts : 63))bad("next layer");',
           '  expected_prog=starts==0?0:starts==37?2:1;',
-          '  for(i=0;i<64;i=i+1)reference_master.prog_mem[i]=dut.sys_program(expected_prog,i);',
-          '  for(i=0;i<8;i=i+1)reference_master.desc_mem[i]=dut.sys_descriptor(expected_prog,i);',
+          '  for(i=0;i<64;i=i+1)reference_master.prog_mem[i]=expected_prog==0?goldE[i]:expected_prog==1?goldL[i]:goldH[i];',
+          '  for(i=0;i<8;i=i+1)reference_master.desc_mem[i]=expected_prog==0?goldDE[i]:expected_prog==1?goldDL[i]:goldDH[i];',
           '  starts=starts+1;',
           ' end',
           ' if(po_me_go)begin me_ops=me_ops+1;']
@@ -76,6 +79,12 @@ def emit(out):
           ' if(cycles>200000)begin $display("SYS_TIMEOUT stage=%0d seq=%0d core=%0d",stage,dut.u_seq.u_base.st,dut.u_ctrl.st);$fatal;end',
           'end',
           'initial begin',
+          ' if(!$value$plusargs("GOLDEN_DIR=%s",golden_dir))$fatal(1,"need immutable golden template files");',
+          ' $readmemh({golden_dir,"/program_E.hex"},goldE);$readmemh({golden_dir,"/program_L.hex"},goldL);$readmemh({golden_dir,"/program_H.hex"},goldH);',
+          ' $readmemh({golden_dir,"/descriptor_E.hex"},goldDE);$readmemh({golden_dir,"/descriptor_L.hex"},goldDL);',
+          ' case(DIE_RANK)',
+          ' 0:$readmemh({golden_dir,"/descriptor_H0.hex"},goldDH);1:$readmemh({golden_dir,"/descriptor_H1.hex"},goldDH);',
+          ' 2:$readmemh({golden_dir,"/descriptor_H2.hex"},goldDH);3:$readmemh({golden_dir,"/descriptor_H3.hex"},goldDH);endcase',
           " kv_write_drained=1;kv_ok=1;me_mem_ok=1;c_ready=1;pi_me_ready=1;pi_me_idle=1;pi_me_am_idx=17;pi_me_am_val=32'h3f800000;pi_me_am_any=1;pi_me_progress=16'hffff;",
           " pi_su_ready=1;pi_su_idle=1;pi_su_progress=16'hffff;pi_su_progress_rows=16'hffff;",
           ' repeat(5)@(negedge clk);rst_n=1;repeat(5)@(negedge clk);',
@@ -98,4 +107,14 @@ def emit(out):
     out.write_text('\n'.join(s)+'\n')
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);emit(p.parse_args().out)
+    p=argparse.ArgumentParser();p.add_argument('--out',type=Path);p.add_argument('--reference-json',type=Path);p.add_argument('--reference-out',type=Path);a=p.parse_args()
+    if a.out:emit(a.out)
+    if a.reference_json:
+        j=json.loads(a.reference_json.read_text());a.reference_out.mkdir(parents=True,exist_ok=True)
+        for bank,words in j['programs'].items():
+            (a.reference_out/f'program_{bank}.hex').write_text('\n'.join(words+['0'*256]*(64-len(words)))+'\n')
+        for bank,ds in j['descriptors'].items():
+            batches=ds if bank=='H' else [ds]
+            for rank,words in enumerate(batches):
+                suffix=f'{rank}' if bank=='H' else ''
+                (a.reference_out/f'descriptor_{bank}{suffix}.hex').write_text('\n'.join(words+['0'*16]*(8-len(words)))+'\n')
