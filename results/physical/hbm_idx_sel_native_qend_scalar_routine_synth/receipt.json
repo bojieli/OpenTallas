@@ -1,0 +1,26 @@
+{
+  "source": "5931d5864b059e46ce195ab07f2d8d8064f9d2bc",
+  "rtl_baseline": "aa7127b87d46183784da371b635132a58f3f84d1",
+  "job": "hbm_idx_sel_native_qend_aa7127b87_scalar-routine-cx",
+  "host": "ot-epyc4",
+  "scope": "isolated fault-free synthesis only; no capture-placement/routedSTA qualification",
+  "verdict": "SYNTH PASS",
+  "elapsed": "1:28:36.20",
+  "reported_peak_kib": 19673700,
+  "cells": 3327656,
+  "chip_area_um2": 567558.386526,
+  "sequential_area_um2": 170602.125479,
+  "actual_macros": {
+    "256x256": 12,
+    "1024x256": 4
+  },
+  "port_bits": 6903,
+  "same_mapped_cell_count_area_as_original": true,
+  "reservation_gib": 76,
+  "reservation_type": "root-authorized conservative4x same-shape synth estimate; NOT measured DRT",
+  "sha256": {
+    "1_2_yosys.log": "ada5046ba349edd463ef1daa51731d25bca46d74f3581394fa8bdadcc2d62e90",
+    "mapped_netlist.sha256": "206c17788575bdca50c41acecb27b159c6cdabaee4d0d02a41b1dda2f09bde3d",
+    "synth_stat.txt": "9203a0353f71843d1131b6135820082e784ddb467574f01f6bb7beae2d0ae3d4"
+  }
+}
