@@ -121,6 +121,8 @@ def specs(commit):
                                                logs=['{RUN}/routes/{LABEL}/run.log']),
                                     collect=dict(cmd='mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json '
                                                      '{RUN}/routes/{LABEL}/args {RUN}/routes/{LABEL}/physical.json {RUN}/record/')),
+                        budget=dict(enabled=False, reason='tile IO false-pathed: every face pin is a pin-bank register '
+                                    '(the half-tile line convention, signoff_833_int.sdc); the die stations carry the budget'),
                         no_bench_reason='ldk lockstep bench (physical/hbm_forks/run_attn_ldk.sh: CF-1 roles 0-4 at ldk 0, '
                                         'ldk 1, mutant FAIL) PASS at 43dbec73e on the same RTL; re-run in parallel',
                         verdict=dict(corner_sta='{RUN}/routes/{LABEL}/corner_sta.json',
