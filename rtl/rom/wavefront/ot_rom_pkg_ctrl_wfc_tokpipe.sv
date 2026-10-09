@@ -441,7 +441,12 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
             token_q <= start_tok_i; pos_q <= start_pos_i;
             // Preserve the exact tuple the original receiver sampled before
             // this edge, including existing core_user/KV publication phase.
+`ifdef OT_WFC_TOKPIPE_MUT_PREVUSER
             user_q <= cur_user; kv_q <= kv_base_i;
+`else
+            // R6: publish the launching tuple, not the preceding job's held tuple.
+            user_q <= st_user; kv_q <= st_user * KVW;
+`endif
         end
         assign core_start = v;
         assign core_token = token_q;
