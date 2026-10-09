@@ -78,7 +78,16 @@ def test_reject_truncation_trailing_data_and_address_overflow():
 
 
 def test_rowstripe_payload_pc_identity_and_capacity():
-    import uarch_model as M
+    # Evaluate the actual unified-model function in isolation; the minimum
+    # component does not need unrelated rack history or whole-model inputs.
+    import ast
+    from types import SimpleNamespace
+    source=Path(__file__).resolve().parents[1]/'tools/uarch_model.py'
+    tree=ast.parse(source.read_text())
+    fn=next(node for node in tree.body if isinstance(node,ast.FunctionDef) and node.name=='dsrom_engram_rowstripe_model')
+    namespace={}
+    exec(compile(ast.Module(body=[fn],type_ignores=[]),str(source),'exec'),namespace)
+    M=SimpleNamespace(dsrom_engram_rowstripe_model=namespace['dsrom_engram_rowstripe_model'])
     counts=[65,67,69,71,73,75]  # cross both stack and all32PC boundaries
     rows=[bytes([(i+j)%256 for j in range(256)])+bytes([127])+bytes(7)
           for i in range(sum(counts))]
