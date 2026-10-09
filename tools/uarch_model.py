@@ -14092,3 +14092,8 @@ def hbm_indexer_die_interface_model(**kwargs):
 def hbm_indexer_r25i_physical_model():
     from hbm_indexer_r25i_model import hbm_indexer_r25i_physical_model as impl
     return impl()
+
+
+def hbm_production_clock_control_model():
+    from hbm_production_clock_control_model import model
+    return model()
