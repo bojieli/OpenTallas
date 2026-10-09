@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 // Additive two-seat pipeline: comparison plus byte SECDED, then final64 SECDED.
 // Every transient mask byte is protected; golden mask semantics unchanged.
-module ot_qwen_r25_causal_mask_pipe #
+module ot_qwen_r25_causal_mask_pipe #(
  parameter integer ENABLE=0, CAPACITY=8224
 )(
  input wire clk,rst_n,
