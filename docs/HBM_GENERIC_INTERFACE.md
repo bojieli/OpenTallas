@@ -655,7 +655,7 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 
 ### 6.10 Memory map (per die)
 
-**HBM** is one die-local, 40-bit byte address space with 32-byte sectors. The svc address map (sector → stack and PC) is fixed. A contiguous KV or index-key sweep must spread over all 32 PCs, and DS KV rows are striped over the PCs by position, so that an indexed selection also spreads evenly.
+**HBM** is one die-local, 40-bit byte address space with 32-byte sectors. The svc address map (sector → stack and PC) is fixed. A contiguous KV or index-key sweep must spread over all 32 PCs. DS compressed KV rows keep the shipped 9-channel layout: each 288-byte row is 9 consecutive sectors on 9 consecutive PCs (sector s on PC s mod 32), and the existing gather readers fetch the selected rows in that layout, so an indexed selection still spreads over all PCs. The indexed row stream of §3.3 and conformance row CF-IDXD apply to contiguous row layouts only (whole rows in consecutive sectors); the DS 9-channel rows are read by the DS gather readers and checked by their own vectors.
 
 **Regions** are placed by the compiler and recorded in the image manifest, not in hardware:
 
@@ -840,7 +840,7 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | CF-EMB | Embedding | BF16 rows | Row 151,935; INT8 plus scale dequantisation |
 | CF-SVC | KV striping | DS index-key sweep | Qwen 8K dense sweep at ≥ 90 % of die bandwidth |
 | CF-BCAST | Broadcast | — | `ibcast` per-row scalar; mutant reading inner stride 1 |
-| CF-IDXD | Indexed descriptors | DS selected-row stream (k = 7, 513, 2,048 sorted positions over 1M): every row exactly once, in list order; mutant: list order broken in one PC | Expert fetch by id; `n` from VM; stale-table mutant (missing wait) must fail; out-of-range id faults |
+| CF-IDXD | Indexed descriptors | Contiguous row layouts only: a selected-row stream (k = 7, 513, 2,048 sorted positions over 1M): every row exactly once, in list order; mutant: list order broken in one PC. DS compressed KV rows (9-channel layout, §6.10) are excluded: the existing DS gather readers and their vectors cover them | Expert fetch by id; `n` from VM; stale-table mutant (missing wait) must fail; out-of-range id faults |
 | CF-TOPK | Top-k | Router top-6, index top-512 | k ∈ {1, 2, 6, 8, 512}; m > 1 rows; lowest-index ties; NaN fail-closed |
 | CF-LOOP2 | Sequencer loops | — | Two-level loop with `l1stride` and L1 |
 | CF-GDN | Linear attention | — | State round trip in the transposed layout; convolution-ring wrap; per-head loop; GQA-map mutant |

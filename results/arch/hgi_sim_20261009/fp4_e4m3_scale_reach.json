@@ -1,0 +1,39 @@
+{
+ "schema": "opentallas.hgi_sim.fp4_e4m3_scale_reach.v1",
+ "generated": "2026-10-09",
+ "question": "review-0637 GH-b: ot_hdc_fp4qdq (shipped DS FP4 E4M3-scale quantiser) does not saturate the E4M3 scale at 448; the golden (hdc_golden_v41.qdq_fp4_e4m3) does (SATFINITE). Is the core on the DS token path, and can real DS blocks reach the divergence point?",
+ "core": {
+  "file": "rtl/hdc/v41/ot_hdc_fp4qdq.sv",
+  "sha256": "e7aa6c7ff8ddbd55a27dff7497e92f0e1dd9988e61c04527e75e247695433a84",
+  "behaviour": "s = E4M3-grid RNE of amax/6 with no upper clamp (header line 10)"
+ },
+ "divergence_point": {
+  "golden": "s = min(e4m3_round(amax/6), 448)",
+  "rtl": "s = e4m3_round(amax/6) unclamped",
+  "first_block_amax": "amax/6 > 464 (midpoint 448|480, the tie rounds to 448): amax > 2,784 (2,688 = 6*448 is where the golden scale reaches 448; RTL and golden still agree until the rounding moves past 448)"
+ },
+ "on_token_path": {
+  "answer": true,
+  "where": "DS compressor: ckv = qdq_fp4_e4m3(rope_tail(lat), 16) at the 4 KV-source layers (2, 8, 14, 20), every token whose position closes a compression group; the only FP4-E4M3 quantise point in DS-V4.1 (index keys / queries use the UE8M0 quantiser; weights are pre-quantised)",
+  "consumers": "ot_hdc_v41_qe (DS quant engine), dshbm_1m_local composition, HGI FUSED.QDQ_FP4_E4M3"
+ },
+ "reach": {
+  "analytic": {
+   "rule": "lat = RMSNorm(pooled) * g (n = 512): |lat_i| <= sqrt(512) * |g_i|; the RoPE tail rotates pairs (pair norm preserved), so every element of the quantiser input is <= sqrt(512) * max|g| (x1.004 BF16 rounding margin)",
+   "compressor_norm_gain_max_abs": {
+    "layers.2": 0.5039,
+    "layers.8": 0.8555,
+    "layers.14": 0.8672,
+    "layers.20": 1.1172
+   },
+   "bound": 25.38,
+   "margin_vs_2784": "110x"
+  },
+  "measured": {
+   "source": "1M reference token shards on ot-epyc1tb (/srv/opentallas-scratch/claude/hbm-sim/ref, ctx 1,048,576 seed 20260930): ckv rows of the 4 KV-source layers",
+   "max_abs": 2.8125
+  }
+ },
+ "verdict": "UNREACHABLE on DS-V4.1: the input bound (25.4 analytic, 2.81 measured) is ~110x below the divergence point; DS is exact today and the shared core needs no change for DS. The missing clamp matters only for the generic FUSED.QDQ_FP4_E4M3 on other models: CF-QDQ carries a saturating-block vector (amax 2,784 tie, 2,785, 3,000, 1e30) that a conforming core must match, i.e. the SATFINITE opt-in (codex/hgi-quant-decode) must be on for non-DS programs.",
+ "checkpoint": "DeepSeek-V4.1-Flash snapshot dba1be0a40aa45a94ad051997016db3960a90277"
+}
