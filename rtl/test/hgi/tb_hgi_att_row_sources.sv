@@ -55,6 +55,7 @@ module tb_hgi_att_row_sources;
         begin
             @(negedge clk);cmd_v=1;ring=1;b_n=nb;b_m=mb;pos1=p;c_n=0;
             @(negedge clk);cmd_v=0;
+            @(negedge clk);
             if(!fault || !done || row_v) $fatal(1,"invalid ring not rejected");
             tests=tests+1;
         end
@@ -79,6 +80,7 @@ module tb_hgi_att_row_sources;
         // Out-of-range selected id must fail closed, without truncating.
         @(negedge clk);ring=0;b_n=0;c_n=1;cmd_v=1;
         @(negedge clk);cmd_v=0;c_id_v=1;c_id=32'h00100000;row_r=1;
+        @(negedge clk);
         @(negedge clk);if(!fault || !done || row_v) $fatal(1,"invalid C id truncated");
         $display("PASS CF-ATT cases=%0d rows=%0d cycles=%0d legacy_lockstep=300",tests+1,rows,cycle);$finish;
     end
