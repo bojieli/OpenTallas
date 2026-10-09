@@ -6,7 +6,7 @@ module ot_hbm_native_candidate_format #(parameter integer ENABLE=0)(
  input wire clk,por_n,
  input wire owner_valid,owner_fault,retained,input wire [72:0] owner_frame,
  input wire [6:0] owner_rank,input wire tu_kind,input wire [7:0] tu_dst,
- input wire [71:0] co,input wire co_quarter_last,output reg coc,
+ input wire [71:0] co,input wire co_quarter_last,output wire coc,
  output wire tu_v,input wire tu_r,output wire [544:0] tu,
  output wire [72:0] tu_owner,output wire drained,output wire fault
 );
@@ -34,7 +34,9 @@ module ot_hbm_native_candidate_format #(parameter integer ENABLE=0)(
  reg [0:0] held_kind_n;
  reg [0:0] seen_retained_n;
  reg [72:0] fifo_n[0:7];
- wire control_ok=(wp_n==~wp)&&
+ reg coc_hold,coc_n;
+ assign coc=ENABLE&&coded_ok&&!sticky_fault&&coc_hold;
+ wire control_ok=(coc_n==~coc_hold)&&(wp_n==~wp)&&
    (rp_n==~rp)&&
    (used_n==~used)&&
    (half_n==~half)&&
@@ -69,10 +71,10 @@ module ot_hbm_native_candidate_format #(parameter integer ENABLE=0)(
  assign fault=ENABLE&&(sticky_fault||owner_fault||!coded_ok);
  always @(posedge clk or negedge por_n)begin
   if(!por_n)begin begin wp<=0;wp_n<=~(0); end begin rp<=0;rp_n<=~(0); end begin used<=0;used_n<=~(0); end begin half<=0;half_n<=~(0); end begin payload<=0;payload_n<=~(0); end begin slots<=0;slots_n<=~(0); end 
-   begin quarter<=0;quarter_n<=~(0); end begin beat<=0;beat_n<=~(0); end begin pending<=0;pending_n<=~(0); end begin qlast<=0;qlast_n<=~(0); end begin sticky_fault<=0;sticky_fault_n<=~(0); end coc<=0;
+   begin quarter<=0;quarter_n<=~(0); end begin beat<=0;beat_n<=~(0); end begin pending<=0;pending_n<=~(0); end begin qlast<=0;qlast_n<=~(0); end begin sticky_fault<=0;sticky_fault_n<=~(0); end begin coc_hold<=0;coc_n<=1;end 
    begin held_owner<=0;held_owner_n<=~(0); end begin held_rank<=0;held_rank_n<=~(0); end begin held_dst<=0;held_dst_n<=~(0); end begin held_kind<=0;held_kind_n<=~(0); end begin seen_retained<=0;seen_retained_n<=~(0); end end
   else if(ENABLE)begin
-   coc<=pop;begin seen_retained<=retained;seen_retained_n<=~(retained); end 
+   begin coc_hold<=pop;coc_n<=~pop;end begin seen_retained<=retained;seen_retained_n<=~(retained); end 
    if(retained&&!seen_retained)begin
     begin held_owner<=owner_frame;held_owner_n<=~(owner_frame); end begin held_rank<=owner_rank;held_rank_n<=~(owner_rank); end begin held_dst<=tu_dst;held_dst_n<=~(tu_dst); end begin held_kind<=tu_kind;held_kind_n<=~(tu_kind); end 
     if(!drained||owner_rank>=96)begin sticky_fault<=1;sticky_fault_n<=~(1); end 
@@ -99,7 +101,7 @@ module ot_hbm_native_candidate_format #(parameter integer ENABLE=0)(
    end
    // The last quarter leaves the ordinal ready for the next retained frame.
    if(!retained&&seen_retained&&drained)begin begin quarter<=0;quarter_n<=~(0); end begin beat<=0;beat_n<=~(0); end end
-  end else coc<=0;
+  end else begin coc_hold<=0;coc_n<=1;end 
  end
 endmodule
 `default_nettype wire

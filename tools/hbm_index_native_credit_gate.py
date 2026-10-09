@@ -9,18 +9,19 @@ reg clk=0;always #0.416 clk=~clk;
 reg por_n=0,retained=0,bv=0,qbr=0;reg[72:0]frame=73'h123456;
 reg[4:0]head;reg[1:0]bn;reg[1023:0]data;reg[15:0]weight;
 wire br,drained,fault;wire[1047:0]qb;
-integer sent,got,outstanding,cyc=0,i,round;reg mutant;
+integer sent,got,outstanding,cyc=0,i,round;reg mutant,mut_qb,injected=0;
 ot_hbm_native_index_query_credit #(.ENABLE(1))dut(.clk(clk),.por_n(por_n),
 .owner_valid(1'b1),.owner_fault(1'b0),.retained(retained),.owner_frame(73'h123456),
 .block_frame(frame),.owner_rank(7'd17),.block_rank(7'd17),.block_v(bv),.block_r(br),
 .block_head(head),.block_number(bn),.block_data(data),.head_weight(weight),.qbr(qbr),
 .qb(qb),.drained(drained),.fault(fault));
 initial begin
-mutant=$test$plusargs("MUT_OWNER");repeat(4)@(negedge clk);por_n=1;
+mutant=$test$plusargs("MUT_OWNER");mut_qb=$test$plusargs("MUT_QB");repeat(4)@(negedge clk);por_n=1;
 for(round=0;round<2;round=round+1)begin
 sent=0;got=0;outstanding=0;@(negedge clk);retained=1;
 while((got<128||outstanding!=0)&&cyc<4000)begin
-@(negedge clk);cyc=cyc+1;bv=sent<128;head=sent/4;bn=sent%4;weight=sent+31;
+@(negedge clk);if(mut_qb&&sent==1&&!injected)begin dut.qb_hold[15]=!dut.qb_hold[15];injected=1;end
+cyc=cyc+1;bv=sent<128;head=sent/4;bn=sent%4;weight=sent+31;
 for(i=0;i<32;i=i+1)data[32*i+:32]=sent*100+i;
 qbr=outstanding!=0&&cyc%7==0;
 frame=(mutant&&sent==13)?73'h123457:73'h123456;
@@ -81,6 +82,7 @@ def main():
   if r.returncode:return r.returncode
   tests=[('base',[]),(mutant,['+'+mutant])]
   if name=='parse':tests.append(('MUT_PAYLOAD',['+MUT_PAYLOAD']))
+  if name=='query':tests.append(('MUT_QB',['+MUT_QB']))
   for test,extra in tests:
    r=subprocess.run([str(d/'obj/Vtb'),*extra],capture_output=True,text=True);(d/(test+'.log')).write_text(r.stdout+r.stderr)
    ok=r.returncode==0 and '_DONE' in r.stdout if not extra else r.returncode!=0 and diagnostic in r.stdout
