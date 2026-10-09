@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module hgi_mtp_core18_route (
+module hgi_mtp_core18_route #(parameter integer RSTR=0) (
     input wire clk,
     input wire rst_n,
     input wire start,
@@ -67,7 +67,7 @@ module hgi_mtp_core18_route (
     output wire [31:0] cyc_engine,
     output wire [31:0] cyc_markov
 );
- ot_hgi_mtp_core18 #(.GENERIC18(1),.SPECF(0)) u (
+ ot_hgi_mtp_core18 #(.GENERIC18(1),.SPECF(0),.RSTR(RSTR)) u (
 .clk(clk),
 .rst_n(rst_n),
 .start(start),

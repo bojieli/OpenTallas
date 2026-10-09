@@ -343,6 +343,19 @@ module tb_dshbm_dspark;
                 n_committed, cyc_total, cyc_engine, cyc_markov);
         end
     endtask
+`ifdef HELD_RELEASE_CHECK
+    // GX7 (hgi-takeover): the RSTR 4-cycle reset-tree multicycle is valid only if no input is used within 4 cycles of
+    // the core's reset release (dut.rst_s[1] rising).  Fail the bench otherwise (mutant HELD_RELEASE_MUT starts early).
+    integer rel_cyc = -1;
+    always @(posedge clk) begin
+        if (!dut.rst_s[1]) rel_cyc <= -1;
+        else if (rel_cyc < 1000) rel_cyc <= rel_cyc + 1;
+        if (dut.rst_s[1] && rel_cyc < 4 && (start || x_v || eng_done)) begin
+            $display("DSHBM FAIL held-release: input used %0d cycles after reset release (< 4)", rel_cyc + 1);
+            $finish;
+        end
+    end
+`endif
     reg [3:0] want_ncol;
     initial begin
         $readmemh(SCRIPT, scr);
@@ -355,7 +368,9 @@ module tb_dshbm_dspark;
         rst_n = 1;
         repeat (2) @(posedge clk);
 `ifdef HFD_MTP
+`ifndef HELD_RELEASE_MUT
         repeat (4) @(posedge clk);           // the block's reset synchroniser
+`endif
 `endif
         @(negedge clk); start = 1; @(negedge clk); start = 0;
         nc = 0;
