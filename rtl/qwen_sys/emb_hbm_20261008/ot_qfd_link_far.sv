@@ -22,9 +22,16 @@ module ot_qfd_link_far #(
     // (ot_qwen_die_cdc_ch AFW = 1, +1 ck before visibility): qfd_emb_far92 PREROUTE -941 = ir -> 128:1 receive-buffer
     // mux -> async FIFO mem write.  Default from `OT_QFD_FAR_AFW (bench) else 0.
 `ifdef OT_QFD_FAR_AFW
-    parameter integer AFW = 1
+    parameter integer AFW = 1,
 `else
-    parameter integer AFW = 0
+    parameter integer AFW = 0,
+`endif
+    // RXP (sys-takeover, opt-in): receive buffer with one-hot pointers and a registered 2-stage read (ot_qwen_die_cdc_ch
+    // RXP; qfd_emb_far92_afw TT -557: ir -> 128:1 x 523-b receive mux).  Default from `OT_QFD_FAR_RXP (bench) else 0.
+`ifdef OT_QFD_FAR_RXP
+    parameter integer RXP = 1
+`else
+    parameter integer RXP = 0
 `endif
 ) (
     input  wire          ck,
@@ -55,7 +62,7 @@ module ot_qfd_link_far #(
     wire rv, rcr, rwf, rrf;
     wire [522:0] rd;
     reg rtake;
-    ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD), .AFW(AFW)) u_rx (
+    ot_qwen_die_cdc_ch #(.W(523), .IBUF(CR), .OCRED(OD), .AD(AD), .AFW(AFW), .RXP(RXP)) u_rx (
         .wclk(ck), .wrst_n(rst_n), .i_v(l_i[0]), .i_d({l_i[15:5], l_i[527:16]}), .i_cr(rcr), .w_fault(rwf),
         .rclk(lclk), .rrst_n(rst_n), .o_v(rv), .o_d(rd), .o_cr(rtake), .r_fault(rrf));
     reg [3:0] cb, cg;
@@ -85,7 +92,10 @@ module ot_qfd_link_far #(
             rtake <= fwd;
             if (fwd) orr <= orr + 1'b1;
             e_v <= fwd && o_emb; k_v <= fwd && !o_emb;
-            if (fwd) begin e_d <= oh; k_d <= oh; end
+            // RXP: separate enables so synthesis cannot merge e_d / k_d into one flop driving both the emb (top) and the KV
+            // (bottom) pins of the 1.4-mm strip (qfd_emb_far92_afw reg->out e_d[399] -> kv_o[400] -586 ps)
+            if (RXP != 0) begin if (fwd && o_emb) e_d <= oh; if (fwd && !o_emb) k_d <= oh; end
+            else if (fwd) begin e_d <= oh; k_d <= oh; end
             ec <= ec - ((fwd && o_emb) ? 1'b1 : 1'b0) + (e_cr ? 1'b1 : 1'b0);
             kc <= kc - ((fwd && !o_emb) ? 1'b1 : 1'b0) + (k_cr ? 1'b1 : 1'b0);
             if ((e_cr && ec == 4'(ECR)) || (k_cr && kc == 4'(KCR))) cro <= 1'b1;

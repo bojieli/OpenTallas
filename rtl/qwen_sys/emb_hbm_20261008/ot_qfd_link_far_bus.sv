@@ -2,9 +2,14 @@
 module ot_qfd_link_far_bus #(
  parameter integer ENABLE=0, CR=128, OD=8, ECR=4, KCR=4, TQ=4, AD=8,
 `ifdef OT_QFD_FAR_AFW
- parameter integer AFW=1   // sys-takeover: see ot_qfd_link_far AFW
+ parameter integer AFW=1,   // sys-takeover: see ot_qfd_link_far AFW
 `else
- parameter integer AFW=0   // sys-takeover: see ot_qfd_link_far AFW
+ parameter integer AFW=0,   // sys-takeover: see ot_qfd_link_far AFW
+`endif
+`ifdef OT_QFD_FAR_RXP
+ parameter integer RXP=1   // sys-takeover: see ot_qfd_link_far RXP
+`else
+ parameter integer RXP=0   // sys-takeover: see ot_qfd_link_far RXP
 `endif
 )(
  input wire ck,lclk,rst_n,
@@ -14,7 +19,7 @@ module ot_qfd_link_far_bus #(
  output wire fault
 );
  generate if (ENABLE != 0) begin: enabled
-  ot_qfd_link_far #(.CR(CR),.OD(OD),.ECR(ECR),.KCR(KCR),.TQ(TQ),.AD(AD),.AFW(AFW)) core(
+  ot_qfd_link_far #(.CR(CR),.OD(OD),.ECR(ECR),.KCR(KCR),.TQ(TQ),.AD(AD),.AFW(AFW),.RXP(RXP)) core(
    .ck(ck),.lclk(lclk),.rst_n(rst_n),.l_i(hub_i),.l_o(hub_o),
    .e_v(emb_o[524]),.e_d(emb_o[523:1]),.t_cr(emb_o[0]),
    .t_v(emb_i[524]),.t_d(emb_i[523:1]),.e_cr(emb_i[0]),
