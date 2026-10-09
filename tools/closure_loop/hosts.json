@@ -158,6 +158,14 @@
      "peak_ram_gb": 256,
      "owner": "Codex:hbm_continuation",
      "reason": "admitted 256GiB; retained historical NK4 peak203396396KiB"
+    },
+    {
+     "name": "hbm-selector-native-qend-calibration",
+     "pid": 745294,
+     "command_match": "hbm_idx_sel_native_qend_aa7127b87_pathfinding/cl/run.sh",
+     "peak_ram_gb": 120,
+     "owner": "Codex:hbm_continuation/selector_capture",
+     "reason": "Admitted actual6903pin native T1 LA7 MEMV1 READLAT2 EXPOSE1; sourceaa7127b87, inventory77952 override, stablelauncher tracks120GiB futuregrowth"
     }
    ]
   },
