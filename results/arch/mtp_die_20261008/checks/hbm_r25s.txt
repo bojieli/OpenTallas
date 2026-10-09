@@ -1,0 +1,94 @@
+{
+ "instances": 638,
+ "overlaps": 0,
+ "overlap_examples": [],
+ "outside": 0,
+ "outside_examples": [],
+ "reserved_regions": 0,
+ "reserved_overlaps": 0,
+ "reserved_overlap_examples": []
+}
+{"generated_pin_clashes": 0, "examples": [], "k16_clashes": 1, "k16_examples": [["hfd_vm_nw", "M5", "rst[0]", "f_s_row[134]"]]}
+{
+ "weight": {
+  "paths": 32,
+  "max_um": 4227.0,
+  "max_stages_430": 14,
+  "max_stages_504": 9,
+  "worst": "weight_sm12",
+  "what": "HBM -> SM weight stream (stream service -> SM d face)"
+ },
+ "xbcast": {
+  "paths": 56,
+  "max_um": 19388.0,
+  "max_stages_430": 51,
+  "max_stages_504": 47,
+  "worst": "xbcast_sm4",
+  "what": "VM root -> SM activation multicast (x face)"
+ },
+ "result": {
+  "paths": 32,
+  "max_um": 17463.1,
+  "max_stages_430": 49,
+  "max_stages_504": 40,
+  "worst": "result_sm8",
+  "what": "SM -> SU result gather"
+ },
+ "control": {
+  "paths": 32,
+  "max_um": 20710.4,
+  "max_stages_430": 54,
+  "max_stages_504": 49,
+  "worst": "control_sm24",
+  "what": "cmdproc / issue -> SM control (start/op, arrive/release)"
+ },
+ "expert_req": {
+  "paths": 4,
+  "max_um": 21300.9,
+  "max_stages_430": 57,
+  "max_stages_504": 52,
+  "worst": "expert_req_NE",
+  "what": "router -> stream service (expert-fetch descriptor)"
+ },
+ "kv": {
+  "paths": 4,
+  "max_um": 8622.1,
+  "max_stages_430": 30,
+  "max_stages_504": 27,
+  "worst": "kv_SW",
+  "what": "stream service -> attention tiles (KV rows)"
+ },
+ "ik": {
+  "paths": 4,
+  "max_um": 10100.1,
+  "max_stages_430": 28,
+  "max_stages_504": 25,
+  "worst": "ik_SW",
+  "what": "stream service -> index (index keys)"
+ },
+ "attn_q": {
+  "paths": 4,
+  "max_um": 13103.4,
+  "max_stages_430": 41,
+  "max_stages_504": 38,
+  "worst": "attn_q_NW",
+  "what": "VM -> attention tiles (query operand, r15 attn_rtl: chain + packet hops to the farthest tile)"
+ },
+ "link": {
+  "paths": 9,
+  "max_um": 8391.6,
+  "max_stages_430": 24,
+  "max_stages_504": 20,
+  "worst": "link_lk_N2",
+  "what": "collective endpoint -> SerDes macro"
+ },
+ "host": {
+  "paths": 1,
+  "max_um": 21345.5,
+  "max_stages_430": 55,
+  "max_stages_504": 53,
+  "worst": "host",
+  "what": "loader -> host link"
+ }
+}
+{"die_mm2": 787.15, "W": 30590.352, "H": 25732.08, "notes": ["hub band 12517.2 um tall; scan quadrant 6084.7 um; W slack 242.8 um"], "power": 484.6}

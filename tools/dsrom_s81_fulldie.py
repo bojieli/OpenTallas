@@ -2839,13 +2839,36 @@ def build_r8(variant=None):
         # every end block / pin relay on its E face (v9d head GRT: the last 5 overflowing gcells, ha_* / hsel / hq /
         # capture buses at the VM face); the slab grows to the layer die's VM outline so its face spreads them
         centre_area['vm'] = VM_FACE_MM2
+    if WFC_HARD and DIE_KIND in ('layer', 'layer1'):
+        # MTP-DIE: the bound WFC slab (real master dsfd_wfc) on every layer-class die, after the capture (its
+        # core_start / done / result endpoint), next to the collective (stage link in / out) and one slab from the VM
+        if 'wfc' in centre:
+            centre.remove('wfc')
+        centre.insert(centre.index('capture') + 1, 'wfc_hard')
+        centre_area['wfc_hard'] = WFC_SLAB_H * cw / 1e6
+    if MTP_SEQ and DIE_KIND == 'head':
+        centre.insert(centre.index('capture') + 1, 'mtp')
+        centre_area['mtp'] = MTP_SEQ_MM2
+    if (WFC_HARD and DIE_KIND in ('layer', 'layer1')) or (MTP_SEQ and DIE_KIND == 'head'):
+        # the capture slab (0.109 mm2, ~63 um tall) cannot take the WFC / sequencer endpoint pins on its E face
+        # (first --wfc-hard check: 66 um of pins > 65): the slab grows to CAPTURE_FACE_UM so its face spreads them
+        centre_area['capture'] = max(centre_area['capture'], CAPTURE_FACE_UM * cw / 1e6)
     ch_ = sum(up(centre_area[n] * 1e6 / cw, GY) for n in centre) + (len(centre) - 1) * SPINE_GAP
     yc = dn(mid - ch_ / 2, GY)
     su_lo = su_area * (yc - y_f) / (yc - y_f + y_top - (yc + ch_))
     slab('su_s', su_lo, x_sp, dn(yc - SPINE_GAP - up(su_lo * 1e6 / cw, GY), GY), cw, dom='serial_0p9')
     yy = yc
     for n in centre:
-        if n == 'wfc':
+        if n == 'wfc_hard':
+            slab('wfc', centre_area[n], x_sp, yy, cw, master='dsfd_wfc')
+            notes.append('MTP-DIE --wfc-hard: dsfd_wfc = ot_rom_pkg_ctrl_wfc src (r24, 78,190.7 um2 routed outline) + '
+                         'stg (r11, 35,941.7 um2) in a %.2f um slab (real need 0.114 mm2 of %.3f mm2 gross)'
+                         % (WFC_SLAB_H, centre_area[n]))
+        elif n == 'mtp':
+            slab('mtp', centre_area[n], x_sp, yy, cw, master='dsfd_mtp_seq')
+            notes.append('MTP-DIE --mtp-seq: dsfd_mtp_seq = ot_dsrom_mtp_seq (accept + draft-chain sequencer) %.3f mm2'
+                         % centre_area[n])
+        elif n == 'wfc':
             wh = up(centre_area[n] * 1e6 / cw, GY)
             wfc_rect = [x_sp, yy, x_sp + cw, yy + wh]
         elif n == 'pq':
@@ -2918,7 +2941,9 @@ def build_r8(variant=None):
     links = []
     for side in 'WE':
         stack = [('ucie', ru_), ('serdes', rs_), ('serdes', rs_), ('serdes', rs_)]
-        tot = sum(m_['h'] for _, m_ in stack) + 3 * 43.2
+        if MTP_LINKS and DIE_KIND == 'head':     # MTP-DIE: draft fan-out SerDes, W gets the odd one
+            stack += [('serdes', rs_)] * ((MTP_LINKS + (side == 'W')) // 2)
+        tot = sum(m_['h'] for _, m_ in stack) + (len(stack) - 1) * 43.2
         y = up(mid - tot / 2, GY)
         for i, (kind, m_) in enumerate(stack):
             if side == 'W':
@@ -2934,7 +2959,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(wfc_hard=WFC_HARD, mtp_seq=(MTP_SEQ_MM2 if MTP_SEQ else None), mtp_links=MTP_LINKS, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -2948,7 +2973,7 @@ def build_r8(variant=None):
         if reg['name'] in ('spine', 'vch'):
             reg['rect'][1] = min(reg['rect'][1], spine_y0)
             reg['rect'][3] = max(reg['rect'][3], spine_y1)
-    if DIE_KIND == 'layer':
+    if DIE_KIND == 'layer' and wfc_rect is not None:
         reservation = json.loads((ROOT / 'results/uarch/dsrom_s81_wfc_parent_allocation_20261006/model.json').read_text())
         x0, y0, x1, y1 = wfc_rect
         reservation['selected_WFC_gross_um'] = wfc_rect
@@ -3303,7 +3328,9 @@ def buses_r8(m):
                                  ('su_s', 'hc_s', 512, 't_hc', 'f_su_s'), ('su_n', 'hc_n', 512, 't_hc', 'f_su_n'),
                                  ('hc_s', 'hc_n', 1024, 't_n', 'f_s'), ('hc_n', 'hc_s', 1024, 't_s', 'f_n')) + \
             ((('vm', 'pq', PQ_VMR, 't_pq', 'f_vm'), ('pq', 'gather', PQ_CFG, 't_gather', 'f_pq'),
-              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()):
+              ('gather', 'pq', PQ_RCNT, 't_pq', 'f_gather')) if PQ_PLACE else ()) + \
+            (WFC_BUSES if 'wfc' in hub and hub['wfc'].master == 'dsfd_wfc' else ()) + \
+            (MTP_SEQ_BUSES if 'mtp' in hub else ()):
         if REV == 'r9':
             _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb)
         else:
@@ -3392,6 +3419,34 @@ PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a rela
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
+# MTP-DIE hub buses (a, b, bits, port at a, port at b).  WFC (ot_rom_pkg_ctrl_wfc ports): VM write xa_we/waddr15/wdata512
+# (528 + valid/ready) and read xa_re/raddr15 out, xa_rq512 in; stage link flit 512 + valid/credit each way through the
+# collective (the stage-hop endpoint); core_start / done / result (C8 capture binding) 64 each way.
+WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f_vm'),
+             ('collective', 'wfc', 514, 't_wfc', 'f_collective'), ('wfc', 'collective', 514, 't_collective', 'f_wfc'),
+             ('wfc', 'capture', 64, 't_capture', 'f_wfc'), ('capture', 'wfc', 64, 't_wfc', 'f_capture'))
+# sequencer: argmax token words in from the capture (verify targets t_0..t_5 + draft d_i, 17 b + valid + index), out
+# to the collective: acc_n / bonus / squash / epoch word on the token return + seed dispatch to the draft primary
+# (128 b); in from the collective: draft-chain completions and the 12-die argmax merge (128 b); to the VM: the Markov
+# embed row (32 x BF16 = 512 b) and the draft seed x control (64 b).
+MTP_SEQ_BUSES = (('capture', 'mtp', 64, 't_mtp', 'f_capture'), ('mtp', 'collective', 128, 't_collective', 'f_mtp'),
+                 ('collective', 'mtp', 128, 't_mtp', 'f_collective'), ('mtp', 'vm', 576, 't_vm', 'f_mtp'))
+# MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
+# r3 / r4 dies stay reproducible).
+WFC_HARD = False                # --wfc-hard: the wavefront controller (ot_rom_pkg_ctrl_wfc, src r24 + stg r11 CLOSED) as a
+                                #   BOUND slab on EVERY layer-class die (layer AND layer1: every stage needs it; the soft
+                                #   0.456 mm2 reservation sat on the 4-stack scan die only), wired to VM / capture /
+                                #   collective (link in / out), sized from the routed outlines (src 78,190.7 + stg
+                                #   35,941.7 um2 side by side, 17.28 um halos)
+WFC_SLAB_H = 231.12             #   slab height: both blocks at 196.56 um tall (src 398 x 196.56, stg 183 x 196.56) + halos
+MTP_SEQ = False                 # --mtp-seq: head die: ot_dsrom_mtp_seq (accept NSLOT 8 / NW 17 + draft-chain FSM + acc_n /
+                                #   squash word + position / epoch counter + Markov embed lookup control) slab between
+                                #   capture and collective, wired to capture (argmax tokens), collective (token return /
+                                #   seed / squash), VM (Markov embed row, draft seed x)
+MTP_SEQ_MM2 = 0.15              #   audit B1 upper estimate (ctl_f2-class 885 um2 + accept 290 um2 cells; pin-flop banks)
+CAPTURE_FACE_UM = 129.6         #   capture slab height with the MTP endpoints (twice the 63 um slab of a 0.109 mm2 capture)
+MTP_LINKS = 0                   # --mtp-links N: head die: N extra board SerDes (ot_pdie_serdes, real LEF) for the draft
+                                #   fan-out (DP1-EP5 primary on head dies h0..h3: one link per draft ROW package)
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
 PQ_ROOT_ROW = 241.92            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 211.68 + 8.64 + 8.64)
 PQ_ROOT_WH = (132.192, 211.68)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
@@ -4283,7 +4338,8 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
             ly_t, ly_r = link_span_y(lk, 'tx'), link_span_y(lk, 'rx')
         else:
             ly_t = ly_r = ly
-        yy = cy + (i - 1.5) * 90.0
+        n_side = sum(1 for l_ in m['links'] if l_.name[3] == side)
+        yy = cy + (i - 1.5) * 90.0 if n_side <= 4 else cy + (i - (n_side - 1) / 2) * min(90.0, 0.8 * coll.h / n_side)
         cx = coll.x if side == 'W' else coll.x + coll.w
         nm = f'K{side}{i}'
         if side == 'W':
@@ -5038,6 +5094,13 @@ def die_options(ap):
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
                     'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
+    ap.add_argument('--wfc-hard', action='store_true', help='MTP-DIE: bound, wired WFC slab (dsfd_wfc) on every '
+                    'layer-class die (layer and layer1) instead of the scan-die-only soft reservation; default off')
+    ap.add_argument('--mtp-seq', action='store_true', help='MTP-DIE: head die ot_dsrom_mtp_seq slab (dsfd_mtp_seq) '
+                    'between capture and collective, wired; default off')
+    ap.add_argument('--mtp-seq-mm2', type=float, help='MTP-DIE: sequencer slab area (default 0.15 mm2)')
+    ap.add_argument('--mtp-links', type=int, default=0, help='MTP-DIE: head die extra draft fan-out SerDes '
+                    '(default 0; the DP1-EP5 primary head die takes 5: one per draft row package)')
     return ap
 
 
@@ -5062,7 +5125,11 @@ def apply_options(a):
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
-    global PQ_PLACE
+    global PQ_PLACE, WFC_HARD, MTP_SEQ, MTP_SEQ_MM2, MTP_LINKS
+    WFC_HARD = bool(getattr(a, 'wfc_hard', False))
+    MTP_SEQ = bool(getattr(a, 'mtp_seq', False))
+    MTP_SEQ_MM2 = getattr(a, 'mtp_seq_mm2', None) or 0.15
+    MTP_LINKS = int(getattr(a, 'mtp_links', 0) or 0)
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
     if PQ_PLACE:
         assert a.gen == 'r8' and a.rev == 'r9' and a.die in ('layer', 'layer1') and getattr(a, 'q_elem_h', None), \
