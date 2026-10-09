@@ -1,0 +1,14 @@
+{"master":"ot_dsrom_engram_lead_producer","w_um":324.0,"h_um":216.0,"domain":"stream_1p2",
+ "ports":[
+ ["clk",1,"input","W","M4",1,0.50],["rst_n",1,"input","W","M4",1,0.45],
+ ["t_v",1,"input","N","M5",1,0.05],["t_ready",1,"output","N","M5",1,0.10],
+ ["t_user",12,"input","N","M5",2,0.20],["t_pos",21,"input","N","M5",2,0.35],
+ ["t_tok",21,"input","N","M5",2,0.55],["t_first",1,"input","N","M5",1,0.70],
+ ["t_dead",1,"input","N","M5",1,0.75],["t_slot",1,"input","N","M5",1,0.80],
+ ["rb_v",1,"input","W","M4",1,0.10],["rb_user",12,"input","W","M4",2,0.20],
+ ["rb_n",3,"input","W","M4",2,0.35],["rb_ready",1,"output","W","M4",1,0.60],
+ ["out_v",1,"output","S","M5",1,0.05],["out_ready",1,"input","S","M5",1,0.10],
+ ["out_ids",68,"output","S","M5",3,0.35],["out_dead",1,"output","S","M5",1,0.60],
+ ["out_slot",1,"output","S","M5",1,0.65],["out_user",12,"output","E","M4",2,0.20],
+ ["out_pos",21,"output","E","M4",2,0.40],["out_tok",21,"output","E","M4",2,0.65],
+ ["fault",1,"output","E","M4",1,0.90]]}
