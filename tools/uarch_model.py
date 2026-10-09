@@ -15045,3 +15045,9 @@ def hgi_die_record_transport_model(hub, units=('coll', 'quant')):
     """
     from hgi_die_record_ports import transport_model
     return transport_model(hub, units)
+
+
+def hgi_mtp_die_contract_model():
+    """Source-derived18bit registered fullcore facade; never reuse17bit widths."""
+    from hgi_mtp_die_contract import model
+    return model()

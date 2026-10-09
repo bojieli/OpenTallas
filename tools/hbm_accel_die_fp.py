@@ -447,6 +447,12 @@ ADOPTED = R25
 
 def build(variant=None, *, geometry_only=False, network_probe=False):
     variant = dict(variant if variant is not None else ADOPTED)
+    if variant.get('hgi_mtp_generic18'):
+        if variant.get('native_mtp_wb') or variant.get('native_mtp_stop'):
+            raise ValueError('generic18 fullcore is a separate opt-in contract; do not substitute for native-WB/stop facades')
+        if 'mtp' not in variant.get('spine_slots_low', {}):
+            raise ValueError('generic18 fullcore requires the modeled MTP slot')
+        variant['spine_slot_masters'] = {**variant.get('spine_slot_masters', {}), 'mtp': 'hfd_mtp_generic18'}
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
@@ -2434,7 +2440,15 @@ def buses(m):
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
-        if V.get('native_mtp_wb'):
+        if V.get('hgi_mtp_generic18'):
+            from uarch_model import hgi_mtp_die_contract_model as generic_mtp_contract
+            contract = generic_mtp_contract()
+            m['hgi_mtp_contract'] = contract
+            for name, group in contract['groups'].items():
+                peer_ = name[2:]
+                hl_.append((peer_, 'mtp', group['bits']) if name.startswith('f_')
+                           else ('mtp', peer_, group['bits']))
+        elif V.get('native_mtp_wb'):
             from hbm_mtp_native_contract import model, stop_model
             native_contract = stop_model if V.get('native_mtp_stop') else model
             contract = native_contract(ROOT)
