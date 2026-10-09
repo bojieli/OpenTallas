@@ -14355,3 +14355,36 @@ def hbm_collective_query_release_join_model():
         latency_cost='>=1coreedge afterfinalactualcapture andactualpublicationquiet; no dependency overlapcredit',
         final_physical_policy='latestOct8 ownerOptionB TTsetup>=0 FFhold>=0 DRC0 SSreported, actualclock/60ps25psunchanged',
         integration_open=['compilerTUdescriptorproducer and actualVMreadarbiterleasegrant','actualfourquartertyped normconsumerrole binding','softmaxlocalPV/SV capture neededbeforewholequeryrelease','minimumrealproducer-consumerjoin exactgate','Claude structuralreview beforeanyroute'],physical_qualified=False)
+
+
+def hbm_truecredit_rx_segmented_model():
+    """Actual64-row credit receiver read-ring timing cut; no protocol extension."""
+    lanes,width,tag,rows,groups=2,544,16,64,8
+    bits=lanes*groups*(width+tag)
+    return dict(candidate='HA2_TRUECREDIT_RX_SEGMENTED_CX',default_enabled=False,
+        adopted=False,physical_qualified=False,MACs_per_cycle=0,
+        compute_intensity=0,communication_intensity_bits_per_record=width+tag,
+        lanes=lanes,queue_rows=rows,queue_storage_bits=lanes*rows*(width+tag),
+        read_groups=groups,rows_per_group=rows//groups,
+        partial_read_register_bits=bits,delayed_pop_register_bits=lanes,
+        additional_FF_area_proxy_um2=(bits+lanes)*.2916,
+        SRAM_inventory_change=0,payload_protection_change=False,
+        read_mux='8 local8-row AND/OR groups capture each edge, then8-way reduction',
+        select_fanout='each onehot row selector still560 gates but terminates at local group registers; final8-way reduction uses local registers',
+        existing_credit_ownership='pop frees existing receiver slot; return and consumer send delayed together1edge; no new tags, leases, epochs or integrity mirrors',
+        bytes_per_cycle=dict(queue_write=140,queue_read=140),
+        boundary_bits_per_cycle=dict(forward=1122,return_credit_tag=34,consumer_payload_valid=1090,consumer_pop=2),
+        replicas=2,replica_mux_cost='each lane8partial masters; no lane payload crossbar',
+        physical_slot_um=[840.024,201.528],
+        slot_inventory_budget_um2=27956.9913696,
+        incremental_inventory_fits_proxy=(bits+lanes)*.2916<27956.9913696,
+        routing_tracks_required=2252,face_capacity_M5_tracks=5833,
+        cycles_added_vs_credit_receiver=1,steady_records_per_cycle_per_lane=1,
+        credit_roundtrip_added_cycles=1,consumer_credit_depth=8,
+        consumer_credit_full_rate='prior loop~7edges +1=8; actual fullshape gate must measure sustained rate',
+        composed_token_delta_cycles='1per serial receiver crossing; delayed credits may add measured stalls to existing half-rate endpoint calendar; no invented overlap',
+        baseline_report=dict(host='ot-agidock128',source='79315a431',run='ha2_tccr_x1_hm0_79315a431',
+            corner='TT',start='u_core.g_lane[0].rd_oh[63]',end='u_core.send_data[44]',slack_ps=-93.50),
+        failure='ring selector→large buffer chain→64row read reduction→outputFF',
+        closure_policy='Oct8 OptionB TT>=0 FF>=0 DRC0; SS sensitivity, 833.333ps and60/25ps unchanged',
+        required_gates=['full2x544 all64rows/wrap/reset/credit saturation positive and read-ring mutant','source-pinned Claude structural review before -cx route','actual pin/clock-budget qualification'])
