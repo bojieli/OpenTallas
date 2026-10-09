@@ -31,6 +31,11 @@ CASES = [  # name, msgs, words, gap %, modes, consumer %
     ("gather_1w_slow", 32, 1, 10, "g", 25),
     ("mixed_slow", 32, 8, 0, "m", 25),
     ("reduce_320w", 2, 320, 0, "r", 100),
+    # Qwen3-8B TP4 shape (tools/hdc_program.py: an all-reduce is 256 words = one 4,096-element FP32 vector at 16 lanes;
+    # two per layer; the lm-head argmax all-gathers one word)
+    ("qwen_ar_256w", 1, 256, 0, "r", 100),
+    ("qwen_layer_2x256w", 2, 256, 0, "r", 100),
+    ("qwen_argmax_1w", 1, 1, 0, "g", 100),
 ]
 MUT = {"trunc": (".i_d(i_coll_seq), .i_cr(), .w_fault(wf_cq)", ".i_d({i_coll_seq[WCQ-1:1], 1'b0}), .i_cr(), .w_fault(wf_cq)"),
        "credit": ("ocr_q <= o_coll_seq_v;", "ocr_q <= 1'b0;")}

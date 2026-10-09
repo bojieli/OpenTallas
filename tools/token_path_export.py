@@ -335,6 +335,16 @@ def qwen(kv=None):
               dict(item="band_integrate (re-price 10-08)", cycles=7, grade="priced", record=REPRICE + " qwen_rom band_integrate (+5 + 2 LNK, LNK 1)")]
     AR_ADD = [dict(item="die_relays_430um", cycles=d_link, grade="priced", record=REL + " delta_link_per_traversal"),
               dict(item="serdes_pinreg (re-price 10-08)", cycles=1, grade="priced", record=REPRICE + " qwen_rom serdes_pinreg")]
+    # sys-takeover 2026-10-09 (coordinator: the honest collective number into the token model NOW): the production Qwen
+    # ROM die runs the collective engine (ot_rom_oneshot_die_m, io_collective) at 0.9 GHz and the sequencer at 1.2 GHz;
+    # the native collective path bench (tb_qfd_coll_native, 4 dies, golden fold) measures the 256-word all-reduce at
+    # 580 cycles (1.2 GHz) vs 436 single-clock -> +144 per AR on the kv-die (headline) view; argmax all-gather +10
+    COLL = "results/arch/qwen_coll_native_20261009/coll_cost.json"
+    coll = J(COLL)["token_path"] if (kv and (ROOT / COLL).exists()) else None
+    if coll:
+        AR_ADD = AR_ADD + [dict(item="native_coll_engine_0p9 (sys-takeover 10-09)", cycles=coll["per_allreduce_add_cycles"],
+                                grade="measured", record=COLL + " token_path.per_allreduce_add_cycles",
+                                note="collective engine at 0.9 GHz in the die clock plan (transport only; the VM share of the AR window not re-measured)")]
     TOKEN_KV = [(k, lines[k]) for k in ("kv_map_m", "kv_crossbar_model", "ctrl_shift")]
     kvc = kv["cases"]["typical"] if kv else None
     d = Design("qwen_kvdie" if kv else "qwen_rom", "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)" if kv else
@@ -428,7 +438,10 @@ def qwen(kv=None):
     hn = d.add("head.lm_head", "Final RMSNorm -> LM head matvec (151,936 rows over 4 dies) -> argmax merge", "head", "head",
                stages["head"]["cycles"], src("measured", T, "stages[head]", note="RTL head; next token 18, exact on all ranks"),
                elements=QCLS["head"]["elements"], instances=QCLS["head"]["instances"],
-               adders=[dict(a) for a in ME_ADD], deps=[prev_group_last], bytes_in=16384, link_in="layer hand-off (registered, 1 cycle)",
+               adders=[dict(a) for a in ME_ADD] + ([dict(item="native_coll_engine_0p9 argmax all-gather (sys-takeover 10-09)",
+                                                          cycles=coll["per_argmax_add_cycles"], grade="measured",
+                                                          record=COLL + " token_path.per_argmax_add_cycles")] if coll else []),
+               deps=[prev_group_last], bytes_in=16384, link_in="layer hand-off (registered, 1 cycle)",
                edge_cycles=1)
     total = d.chain_schedule()
     # place the prefetch nodes: start at this layer's rmsnorm2 (MLP window), feed the next layer's attn_kv
