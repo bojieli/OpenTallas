@@ -1,0 +1,46 @@
+{
+  "observed_at": "2026-10-09T12:44:11.591853+00:00",
+  "nested_reservation_audit": {
+    "expanded_wrappers_NO_NEED": true,
+    "actual_port_scripts_NO_NEED": true,
+    "actual_run_abi_NO_nested_admit": true,
+    "top_route_view_branch": "notexecuted: actualkindport",
+    "calibration_GiB": 3,
+    "route_GiB": 16,
+    "conditional_hold_ECO_GiB": 32,
+    "ECO_runtime": "fleet.fits(host,8,32), stage ram32",
+    "no_progressing_restart": true,
+    "actual_daemon_TT_overlay_fallback": "insertedbyscheduler; exactpinnedtoolsexists and firstselected, noexternalhelperexecuted"
+  },
+  "fanout8": {
+    "host": "ot-epyc4",
+    "phase": "routeCTS",
+    "wrapper": 1262275,
+    "driver": 1262362,
+    "container": "db9e7881132e1a250128840704a1d593da4ed70ec35d2672263ad06519b227a2",
+    "container_pid": 1265260,
+    "OpenROAD": 1753675,
+    "RSS_KiB": 2034788,
+    "HWM_KiB": 2044956
+  },
+  "LVT": {
+    "host": "ot-pve1",
+    "phase": "calibrationresize",
+    "wrapper": 415550,
+    "driver": 415606,
+    "container": "8b0a02298cf9908b1ce6db965280b4c195ffad8e23b7737afc48b62b199b6016",
+    "container_pid": 416480,
+    "OpenROAD": 900043,
+    "RSS_KiB": 953328,
+    "completed_GP_peak_KiB": 2654076,
+    "completed_GP_peak_GiB": 2.5311241149902344,
+    "cal_claim_GiB": 3
+  },
+  "actual_memory_peaks_not_final": true,
+  "no_future_LVT_or_ECO_peak_claim": true,
+  "files_sha256": {
+    "lvt_expanded_calibrate.sh": "068bc7d1200cc3b8524bed5c2e8e244e40c425d216bd2a022ba4716ee82bcff1",
+    "lvt_cal_gp_peak.log": "ac4d8157331b17c6d60fe5001f209d9221553e8136176fdc2ddd528c62bb5dce",
+    "fanout8_expanded_route.sh": "2d4d6f1a5e114d894bc2ae71e61d1743dc67240f3a3ed15a7ad0cb1f6634ce4b"
+  }
+}
