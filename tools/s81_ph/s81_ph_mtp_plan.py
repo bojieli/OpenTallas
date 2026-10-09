@@ -47,7 +47,7 @@ SPECS = [
                 ['f_cfg', 2 * NW, 'input', 'S', 'M5', 4, 0.3], ['t_acc', 2 * NW + UW + 5, 'output', 'S', 'M5', 4, 0.72]]),
     dict(master='dsfd_wfc_tok', w_um=108.0, h_um=108.0, domain='stream_1p2',
          note='S0 cfg / prompt / draft store: W = DRAFT flits from dsfd_wfc_lnk, E = the WFC (prompt port in, '
-              'response + cfg out; abutting, fixed one-edge read), S = config port / clock',
+              'response + cfg out; abutting, default one-edge read / opt-in READPIPE2 three-edge read + returned valid/index), S = config port / clock',
          ports=[['f_dw', FLIT + 1, 'input', 'W', 'M4', 3, 0.5],
                 ['f_pr', UW + NW + 5, 'input', 'E', 'M4', 4, 0.2], ['t_pr', NW + 1, 'output', 'E', 'M4', 4, 0.48],
                 ['t_cfg', 10 + 2 * NW, 'output', 'E', 'M4', 4, 0.78], ['t_ft', 1, 'output', 'E', 'M4', 1, 0.97],
@@ -68,11 +68,12 @@ SPECS = [
                 ['t_ft', 1, 'output', 'S', 'M5', 1, 0.985],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.015], ['rst', 1, 'input', 'S', 'M5', 1, 0.03]]),
     dict(master='dsfd_wfc_vmx', w_um=291.6, h_um=280.8, domain='stream_1p2+serial_0p9',
-         note='WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, fixed one-edge read), '
+         note='WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, default one-edge read / opt-in READPIPE2 three-edge read + returned valid/index), '
               'E = sp_vm (0.9 GHz write / read), N = the WFC core start / done + VM credit, S = stage core (0.9 GHz) '
               '+ clocks',
          ports=[['f_vw', 1 + VWA + FLIT, 'input', 'W', 'M4', 3, 0.27], ['f_vr', VWA + 1, 'input', 'W', 'M4', 3, 0.53],
                 ['t_vq', FLIT, 'output', 'W', 'M4', 3, 0.78],
+                ['t_vqi', 7, 'output', 'W', 'M4', 1, 0.985],
                 ['t_swv', 1, 'output', 'E', 'M4', 1, 0.02], ['t_swd', VWA + FLIT, 'output', 'E', 'M4', 3, 0.26],
                 ['f_swr', 1, 'input', 'E', 'M4', 1, 0.495], ['f_swa', 1, 'input', 'E', 'M4', 1, 0.505],
                 ['f_srq', FLIT + 1, 'input', 'E', 'M4', 3, 0.74],
