@@ -1,0 +1,23 @@
+	Command being timed: "docker run --rm -v /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/src:/src:ro -v /srv/opentallas-scratch/claude/closure-loop/mtp-wfc-src-tokpipe-9f7a7f35e-tc/route:/work:ro -e WF_LIB=TT -e WF_XLIB=/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib -e WF_ODB=/work/results/asap7/wfc_src_route/base/6_final.odb -e WF_SDC=/work/results/asap7/wfc_src_route/base/6_final.sdc -e WF_SPEF=/work/results/asap7/wfc_src_route/base/6_final.spef -e WF_CLK=clk -e WF_USETUP=60 -e WF_UHOLD=25 sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 bash -lc source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; openroad -exit -no_splash /work/wf_drv.tcl"
+	User time (seconds): 0.01
+	System time (seconds): 0.00
+	Percent of CPU this job got: 0%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:00.20
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 24140
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3297
+	Voluntary context switches: 617
+	Involuntary context switches: 44
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
