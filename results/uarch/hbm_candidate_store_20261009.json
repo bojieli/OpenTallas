@@ -49,7 +49,13 @@
     "write_ack_cycles": 4,
     "read_response_cycles": 6,
     "provider_overhead_cycles": 2,
-    "whole_token": "8832 serialized writes and actual provider measured cycles; no free overlap"
+    "minimum_store_flit_issue_interval_cycles": 5,
+    "minimum_provider_literal_interval_cycles": 8,
+    "full_padded_publication_cycles": 44160,
+    "full_literal_provider_cycles": 1059840,
+    "serialized_store_service_cycles": 1104000,
+    "serialized_store_service_us": 920.0,
+    "whole_token": "This920us analytical store-service envelope is additive to native consumer scheduling and actual stalls, with no free overlap; measured provider gate required"
   },
   "floorplan": {
     "bank_pathfinding_um": [
