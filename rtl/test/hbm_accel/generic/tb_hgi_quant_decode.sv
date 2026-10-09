@@ -11,7 +11,7 @@ module tb_hgi_quant_decode;
  wire legal=hdr[127:124]==4 && (hdr[123:118]==4||hdr[123:118]==5||(hdr[123:118]==6&&hdr[71:64]==16));
  wire take=v&&(!gen||legal);wire e4=gen&&hdr[123:118]==6;
  ot_hfd_actquant_m #(.MR(1),.MLAT(6)) refa(clk,rst_n,take&&!e4,gen ? hdr[123:118]==5 : fp4,x,av,q,e,ay,af);
- ot_hdc_fp4qdq refb(clk,rst_n,take&&e4,x,bv,by,bf);
+ ot_hgi_fp4qdq refb(clk,rst_n,take&&e4,x,bv,by,bf);
  reg [14:0] rv=0,rf=0;reg [511:0] ry[0:14];integer i,cyc,n=0,decodes=0;reg [31:0] rnd;
  always @(posedge clk) begin
   if(!rst_n) begin rv<=0;rf<=0;end
