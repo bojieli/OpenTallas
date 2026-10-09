@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.embedding_hub_H1_fixture_failures.v1",
+  "failures_immutable": true,
+  "source_RTL_unchanged_across_retries": true,
+  "records": {
+    "r1": "CompileFAIL: test literal32hffffffff adjacent? parsed as hex; preservedbench/logs, no computation proceeded.",
+    "r2": "FAIL nativecodecsequence fixture: after waiting for returnedcredit, SU pulse began atposedge+1 and endednextnegedge before actualcapture. Fixeddriveralignsnewpulseafternegedge. RTLunchanged.",
+    "r3_class_mutant": "Notqualified: Icarus proceduralforce RHS evaluatedonce, failedearlyHOSTordinal0; log/warning preserved. r4constantforce waitsactualhighSUhead andfailsordinal1024.",
+    "positive_final_bench_difference": "Positive r3 bencharchivedwithhash; finaltb differsonly inactiveMODE1mutationfixture; no engine/sourcechange. Creditnegative r3 also unaffected."
+  },
+  "files_sha256": {
+    "r2/admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r2/run-r2.sh": "02a12aa597104f7893c50e6c6adbf0356c21846efd070d273324086a36deea51",
+    "r2/positive.log": "21356967fb5d9d32afa40108144490d8cd444b4b20bf27468ad76bcaf6d614de",
+    "r2/positive_compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r2/bench.sv": "eead44f0b805b9bec0bae04dbeb2e253e4dc921902b2abeffde9b5a46a6b21a8",
+    "r1/admission.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "r1/positive_compile.log": "cded31f86ae9caf0da3776e7eb74d63fd87109ff2649c6d0c801d657f815c7b3",
+    "r1/bench.sv": "50e35cbe245d7deb24720199f375547268f7e6647d6a2de9cdc6eb8268f3da09",
+    "r1/run.sh": "ab012b89daa0177a4eec659386f97c4a20006caa9798c55ed468b94ca8ff1f45"
+  }
+}
