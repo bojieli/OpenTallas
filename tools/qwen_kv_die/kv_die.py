@@ -538,7 +538,8 @@ def masters(m, k=1, port_bits=None):
                 sp[4] = pos + span / 2
                 if mst == 'qkd_astk' and p.startswith('e'):
                     e = int(p[1:-1])
-                    sp[4] = (e % 4) * (RENG[1] + GY) + RENG[1] / 2      # level with its engine (o on M4, i on M6)
+                    sp[4] = (e % 4) * (RENG[1] + GY) + RENG[1] / 2 + 0.32   # level with its engine, 5 tracks off
+                    # the engine's facing pins (die_kv2 / kv3: DRT-0073 on the first bit of each abutted face pair)
                 if mst == 'qkd_reng' and p in ('si', 'so'):
                     sp[4] = RENG[1] / 2
                 mm.ports[p] = tuple(sp)
