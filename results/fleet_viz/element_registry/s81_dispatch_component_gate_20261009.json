@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_host_dispatch",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "recorded_at": "2026-10-09T08:06:00Z",
+      "description": "Native S81 host class dispatch and shared-credit ownership, with committed minimum-component exactness",
+      "source": {"commit": "d61d74519", "paths": ["rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv", "rtl/test/s81_native_ingest/tb_s81_host_dispatch.sv"]},
+      "implementation": {"status": "implemented default off", "evidence": ["rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv"]},
+      "model": {"status": "prebuild sized; native port and clock budgets pending", "evidence": ["results/rtl/s81_native_ingest_20261009/dispatch_prebuild.json"]},
+      "exactness": {
+        "positive": {"status": "PASS minimum component: 48 sectors and 48 credits, simultaneous branch returns", "evidence": ["a1af75a5b:results/rtl/s81_native_ingest_20261009/dispatch_component/result.json"]},
+        "negative": {"status": "PASS wrong marker class mutant detected", "evidence": ["a1af75a5b:results/rtl/s81_native_ingest_20261009/dispatch_component/result.json"]}
+      },
+      "physical": {"status": "pending actual native port slot and clock budgets", "corners": {}, "evidence": []},
+      "dependencies": ["actual three-clock dsfd_host engine", "source-owned controller write ACKs", "marker-region dispatch", "full host descriptor protection"],
+      "integration": {"status": "controller and production host binding pending; component gate provides no contextual closure", "evidence": []}
+    }
+  ]
+}
