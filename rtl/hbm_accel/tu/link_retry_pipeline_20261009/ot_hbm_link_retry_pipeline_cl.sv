@@ -72,7 +72,11 @@ module ot_hbm_link_retry_pipeline #(
  // Conservatively leave a bubble when the landing register is occupied.
  assign rx_ready=!rxv||fault_r;
  assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session;
- assign retained=next_seq-base;assign fault=fault_r;assign replay_count=retries;
+ // struct-close r2: retained (next_seq - base, a 12-bit subtract) was the -cl routes' only failing class: reg->out -513
+ // (hbm_retry545_cl-958d0b4b1 x3).  Registered status: +1 cycle on the debt report, nothing else changes.
+ reg [SW-1:0] retained_q;
+ always @(posedge clk or negedge rst_n) if(!rst_n) retained_q<=0; else retained_q<=next_seq-base;
+ assign retained=retained_q;assign fault=fault_r;assign replay_count=retries;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
  .clk(clk),.rst_n(rst_n),.w_valid(accepted),.w_data(in_data),
  .w_seq(next_seq),.w_session(session),.r_valid(request_read),

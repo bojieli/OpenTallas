@@ -29,7 +29,9 @@ mod_body = src[m.start():]
 mod_body = mod_body[:mod_body.index("endmodule") + len("endmodule")]
 core = mod_body.replace("module " + spec["module"], "module " + spec["core"], 1)
 hs_ports = set(); 
-for g in spec.get("in_hs", []) + spec.get("out_hs", []): hs_ports |= {g["v"], g["r"], *g["data"]}
+for g in spec.get("in_hs", []) + spec.get("out_hs", []): hs_ports |= {g["v"].split("[")[0], g["r"], *g["data"]}
+# a valid carried as bit 0 of a data vector ("v": "emit[0]", data ["emit"]): the FIFO valid is that bit; the core sees
+# {data[MSB:1], fifo valid} (an empty FIFO presents valid 0)
 passp = set(spec.get("pass", [])) | {spec["clk"], spec["reset"]}
 if spec.get("outputs_registered"):   # the core already drives every output from a flop: no second output stage
     passp |= {n for d, w, n in ports if d == "output"}
@@ -43,6 +45,10 @@ L.append(f"module {spec['module']} {params}({plist});")
 ck, rs = spec["clk"], spec["reset"]
 L.append(f" // reset for the boundary FIFOs: synchronous use of the block's reset (held for several edges at POR)")
 conn = {}
+# a completion PULSE input (no ready) that must stay behind an input stream: held until that stream's pin FIFO is empty
+for k, o in enumerate(spec.get("in_after", [])):
+    hs_ports |= {o["pulse"], *o.get("data", [])}
+order_after = spec.get("in_after", [])
 for d, w, n in ports:
     if n in passp: conn[n] = n; continue
     if n in hs_ports: continue
@@ -64,12 +70,16 @@ for i, g in enumerate(spec.get("in_hs", [])):
     L.append(f" wire ci{i}_v, ci{i}_r; wire [WI{i}-1:0] ci{i}_d;")
     L.append(f" ot_sc_pfifo #(.W(WI{i}), .S(2), .G(64)) u_in{i} (.clk({ck}), .rst_n({rs}), .in_valid({g['v']}), .in_ready({g['r']}),")
     L.append(f"   .in_data({{{', '.join(g['data'])}}}), .out_valid(ci{i}_v), .out_ready(ci{i}_r), .out_data(ci{i}_d));")
-    conn[g["v"]] = f"ci{i}_v"; conn[g["r"]] = f"ci{i}_r"
+    if "[" not in g["v"]: conn[g["v"]] = f"ci{i}_v"
+    conn[g["r"]] = f"ci{i}_r"
     off = []
     for n in g["data"]:
         L.append(f" wire {P[n][1]} ci{i}_{n};"); off.append(n)
     L.append(f" assign {{{', '.join(f'ci{i}_{n}' for n in off)}}} = ci{i}_d;")
     for n in off: conn[n] = f"ci{i}_{n}"
+    if "[" in g["v"]:
+        b = g["v"].split("[")[0]; hi = P[b][1][1:-1].split(":")[0]
+        conn[b] = f"{{ci{i}_{b}[{hi}:1], ci{i}_v}}"
 for i, g in enumerate(spec.get("out_hs", [])):
     W = "+".join(width(n) for n in g["data"]) or "1"
     L.append(f" localparam integer WO{i} = {W};")
@@ -78,9 +88,21 @@ for i, g in enumerate(spec.get("out_hs", [])):
         L.append(f" wire {P[n][1]} co{i}_{n};"); conn[n] = f"co{i}_{n}"
     ind = "{" + ", ".join(f"co{i}_{n}" for n in g["data"]) + "}" if g["data"] else "1'b0"
     outd = "{" + ", ".join(g["data"]) + "}" if g["data"] else ""
+    ov, orr = g["v"], g["r"]
+    if "after" in g:   # cross-stream order: this stream (e.g. a done marker) leaves only once stream g["after"] is empty
+        prev = spec["out_hs"][g["after"]]["v"]
+        L.append(f" wire co{i}_ov; assign {g['v']} = co{i}_ov && !{prev};")
+        ov, orr = f"co{i}_ov", f"({g['r']} && !{prev})"
     L.append(f" ot_sc_pfifo #(.W(WO{i}), .S(2), .G(64)) u_out{i} (.clk({ck}), .rst_n({rs}), .in_valid(co{i}_v), .in_ready(co{i}_r),")
-    L.append(f"   .in_data({ind}), .out_valid({g['v']}), .out_ready({g['r']}), .out_data({outd}));")
+    L.append(f"   .in_data({ind}), .out_valid({ov}), .out_ready({orr}), .out_data({outd}));")
     conn[g["v"]] = f"co{i}_v"; conn[g["r"]] = f"co{i}_r"
+for k, o in enumerate(order_after):
+    pu, fifo = o["pulse"], o["after"]
+    L.append(f" // {pu}: held until the in-stream {fifo} pin FIFO is empty (keeps the pulse behind the beats sent before it)")
+    L.append(f" reg ia{k}_p; always @(posedge {ck} or negedge {rs}) if (!{rs}) ia{k}_p <= 1'b0; else if ({pu}) ia{k}_p <= 1'b1; else if (!ci{fifo}_v) ia{k}_p <= 1'b0;")
+    for dn in o.get("data", []):
+        L.append(f" reg {P[dn][1]} ia{k}_{dn}; always @(posedge {ck}) if ({pu}) ia{k}_{dn} <= {dn};"); conn[dn] = f"ia{k}_{dn}"
+    conn[pu] = f"(ia{k}_p && !ci{fifo}_v)"
 inst = ", ".join(f".{n}({conn[n]})" for _, _, n in ports)
 pp = ", ".join(f".{n}({n})" for n in pnames)
 L.append(f" {spec['core']} #({pp}) u_core ({inst});")

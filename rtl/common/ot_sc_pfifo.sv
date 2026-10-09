@@ -45,13 +45,30 @@ module ot_sc_pfifo #(
     wire [SB-1:0] r_nx = pop  ? ((r == S - 1) ? {SB{1'b0}} : r + 1'b1) : r;
     wire full_nx = (n_nx == S);
     always @(posedge clk) begin
-        if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b0; out_valid <= 1'b0; end
+        if (!rst_n) begin n <= 0; w <= 0; r <= 0; in_ready <= 1'b1; out_valid <= 1'b0; end   // empty after reset: ready at once
         else begin
             n <= n_nx; w <= w_nx; r <= r_nx;
             in_ready <= !full_nx;
             out_valid <= (n_nx != 0);
         end
     end
+    // late select (struct-close r2, fence_p2 TT -85 on host_wr_ready -> pop -> next-pointer arithmetic -> copies): the
+    // next value of every copy is precomputed from flops for the four {push, pop} cases; the pin handshake only selects
+    // (one 4:1 mux level after the AND with the registered in_ready / out_valid).
+    wire [S-1:0] we_t [0:3];
+    wire [S-1:0] rs_t [0:3];
+    genvar c4;
+    generate for (c4 = 0; c4 < 4; c4 = c4 + 1) begin : g_c4
+        wire pu = c4[1], po = c4[0];
+        wire [CB-1:0] n_c = n + {{(CB-1){1'b0}}, pu} - {{(CB-1){1'b0}}, po};
+        wire [SB-1:0] w_c = pu ? ((w == S - 1) ? {SB{1'b0}} : w + 1'b1) : w;
+        wire [SB-1:0] r_c = po ? ((r == S - 1) ? {SB{1'b0}} : r + 1'b1) : r;
+        genvar j;
+        for (j = 0; j < S; j = j + 1) begin : g_j
+            assign we_t[c4][j] = (w_c == j) && (MUT == 1 ? 1'b1 : (n_c != S));
+            assign rs_t[c4][j] = (r_c == j);
+        end
+    end endgenerate
     genvar g, i;
     generate for (g = 0; g < NG; g = g + 1) begin : g_g
         localparam integer LO = g * G;
@@ -61,9 +78,8 @@ module ot_sc_pfifo #(
         wire [GW-1:0] sel [0:S];
         assign sel[0] = {GW{1'b0}};
         for (i = 0; i < S; i = i + 1) begin : g_s
-            ot_sc_rep_ff #(.RV(i == 0)) u_we (.clk(clk), .rst_n(rst_n),
-                .d((w_nx == i) && (MUT == 1 ? 1'b1 : !full_nx)), .q(we[i]));
-            ot_sc_rep_ff #(.RV(i == 0)) u_rs (.clk(clk), .rst_n(rst_n), .d(r_nx == i), .q(rs[i]));
+            ot_sc_rep_ff #(.RV(i == 0)) u_we (.clk(clk), .rst_n(rst_n), .d(we_t[{push, pop}][i]), .q(we[i]));
+            ot_sc_rep_ff #(.RV(i == 0)) u_rs (.clk(clk), .rst_n(rst_n), .d(rs_t[{push, pop}][i]), .q(rs[i]));
             always @(posedge clk) if (we[i]) m[i] <= in_data[LO +: GW];
             assign sel[i+1] = sel[i] | ({GW{rs[i]}} & m[i]);
         end
