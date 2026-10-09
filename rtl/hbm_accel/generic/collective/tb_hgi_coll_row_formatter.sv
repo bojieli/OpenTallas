@@ -26,6 +26,7 @@ module tb_hgi_coll_row_formatter;
  begin
   @(negedge clk);g=G;b=B;k=K;words=W;dest=D;sv=1;startcycle=cycles;
   if(!sr)$fatal(1,"start notready");@(negedge clk);sv=0;
+  @(negedge clk);
   for(i=0;i<K;i=i+1)begin
    if(!ir)$fatal(1,"ID notready");sel=(i*977+13)%1048576;id=sel;iv=1;
    @(negedge clk);iv=0;

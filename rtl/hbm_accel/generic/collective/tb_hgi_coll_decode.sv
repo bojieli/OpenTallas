@@ -25,6 +25,7 @@ module tb_hgi_coll_decode;
    hdr[88:64]=p;hdr[63:32]=ia;hdr[31:0]=ib;cmd_v=1;
    if(!cr)$fatal(1,"notready");
    @(negedge clk);cmd_v=0;
+   @(negedge clk);
    if(expect_error)begin
     if(!ev || bv)$fatal(1,"invalid command leaked to backend g=%0d op=%0d",group_size,operation);
     er=1;@(negedge clk);er=0;

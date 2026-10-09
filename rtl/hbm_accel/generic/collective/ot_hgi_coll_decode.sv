@@ -20,38 +20,39 @@ module ot_hgi_coll_decode #(
  output reg [19:0] backend_row_count,
  output reg error_v, input wire error_r
 );
- wire [5:0] op=hdr[123:118];
- wire [7:0] param_lo=hdr[71:64];
- wire [31:0] imm_a=hdr[63:32],imm_b=hdr[31:0];
- wire [6:0] operands=hdr[99:93];
- wire legal_group=(coll_group_size==1 || coll_group_size==2 ||
-                   coll_group_size==4 || coll_group_size==8 || coll_group_size==96);
+ reg pending;reg [127:0] hdr_q;reg [7:0] group_q,die_q;reg [19:0] count_q;
+ wire [5:0] op=hdr_q[123:118];
+ wire [7:0] param_lo=hdr_q[71:64];
+ wire [31:0] imm_a=hdr_q[63:32],imm_b=hdr_q[31:0];
+ wire [6:0] operands=hdr_q[99:93];
+ wire legal_group=(group_q==1 || group_q==2 ||
+                   group_q==4 || group_q==8 || group_q==96);
  reg [3:0] gsz;
  reg [7:0] rank,group_id;
  always @* begin
-   gsz=4'hf;rank=die_id;group_id=0;
-   case(coll_group_size)
-    1: begin gsz=0;rank=0;group_id=die_id;end
-    2: begin gsz=1;rank={7'd0,die_id[0]};group_id=die_id>>1;end
-    4: begin gsz=2;rank={6'd0,die_id[1:0]};group_id=die_id>>2;end
-    8: begin gsz=3;rank={5'd0,die_id[2:0]};group_id=die_id>>3;end
-    96: begin rank=(die_id>=192)?die_id-192:((die_id>=96)?die_id-96:die_id);
-              group_id=(die_id>=192)?2:((die_id>=96)?1:0);end
+   gsz=4'hf;rank=die_q;group_id=0;
+   case(group_q)
+    1: begin gsz=0;rank=0;group_id=die_q;end
+    2: begin gsz=1;rank={7'd0,die_q[0]};group_id=die_q>>1;end
+    4: begin gsz=2;rank={6'd0,die_q[1:0]};group_id=die_q>>2;end
+    8: begin gsz=3;rank={5'd0,die_q[2:0]};group_id=die_q>>3;end
+    96: begin rank=(die_q>=192)?die_q-192:((die_q>=96)?die_q-96:die_q);
+              group_id=(die_q>=192)?2:((die_q>=96)?1:0);end
     default: begin rank=0;group_id=0;end
    endcase
  end
  wire subgroup_ok=(param_lo==2 || param_lo==4 || param_lo==8) &&
-                   coll_group_size>=param_lo;
- wire header_bad=(hdr[127:124]!=6 || op>5 || hdr[92] ||
+                   group_q>=param_lo;
+ wire header_bad=(hdr_q[127:124]!=6 || op>5 || hdr_q[92] ||
                   !operands[0] || !operands[4]);
- wire reduce_bad=(op==4 && (!subgroup_ok || hdr[88:72]!=0));
- wire gather_bad=(op==5 && (!operands[6] || param_lo==0 || hdr[88:72]!=0 ||
-                   imm_b==0 || imm_b>coll_group_size ||
-                   (selected_count==0 && (imm_a==0 || imm_a>32'hfffff))));
- assign cmd_r=(ENABLE!=0) && !backend_v && !error_v;
+ wire reduce_bad=(op==4 && (!subgroup_ok || hdr_q[88:72]!=0));
+ wire gather_bad=(op==5 && (!operands[6] || param_lo==0 || hdr_q[88:72]!=0 ||
+                   imm_b==0 || imm_b>group_q ||
+                   (count_q==0 && (imm_a==0 || imm_a>32'hfffff))));
+ assign cmd_r=(ENABLE!=0) && !pending && !backend_v && !error_v;
  always @(posedge clk or negedge rst_n) begin
   if(!rst_n) begin
-   backend_v<=0;error_v<=0;backend_op<=0;backend_gsz<=4'hf;
+   backend_v<=0;error_v<=0;pending<=0;hdr_q<=0;group_q<=96;die_q<=0;count_q<=0;backend_op<=0;backend_gsz<=4'hf;
    backend_group_size<=96;backend_rank<=0;backend_group<=0;
    backend_subgroup<=0;backend_owner_block<=0;backend_destinations<=0;
    backend_row_count<=0;
@@ -59,15 +60,19 @@ module ot_hgi_coll_decode #(
    if(backend_v && backend_r) backend_v<=0;
    if(error_v && error_r) error_v<=0;
    if(cmd_v && cmd_r) begin
+    pending<=1;hdr_q<=hdr;group_q<=coll_group_size;die_q<=die_id;count_q<=selected_count;
+   end
+   if(pending)begin
+    pending<=0;
     if(!legal_group || header_bad || reduce_bad || gather_bad) error_v<=1;
     else begin
      backend_v<=1;backend_op<=op;backend_gsz<=gsz;
-     backend_group_size<=coll_group_size;
+     backend_group_size<=group_q;
      backend_rank<=MUT_GROUP ? 0:rank;backend_group<=group_id;
      backend_subgroup<=(op==4)?param_lo:0;
      backend_owner_block<=(op==5)?(MUT_ROW_BLOCK?1:param_lo):0;
-     backend_destinations<=(op==5)?imm_b[7:0]:coll_group_size;
-     backend_row_count<=(op==5)?((selected_count!=0)?selected_count:imm_a[19:0]):0;
+     backend_destinations<=(op==5)?imm_b[7:0]:group_q;
+     backend_row_count<=(op==5)?((count_q!=0)?count_q:imm_a[19:0]):0;
     end
    end
   end

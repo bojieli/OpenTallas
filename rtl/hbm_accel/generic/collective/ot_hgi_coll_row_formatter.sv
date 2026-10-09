@@ -21,7 +21,7 @@ module ot_hgi_coll_row_formatter #(
  output reg [7:0] out_destinations,
  output wire done_v,input wire done_r,output reg fault
 );
- localparam IDLE=0,IDS=1,MAP=2,DIVB=3,DIVG=4,REQUEST=5,RESPONSE=6,OUTPUT=7,DONE=8;
+ localparam IDLE=0,IDS=1,MAP=2,DIVB=3,DIVG=4,REQUEST=5,RESPONSE=6,OUTPUT=7,DONE=8,CHECK=9;
  reg [3:0] state;
  reg [7:0] G,B;reg [19:0] K,index_,saved_id;
  reg [15:0] words;
@@ -32,7 +32,7 @@ module ot_hgi_coll_row_formatter #(
  wire subtract=shifted>={13'd0,divisor};
  wire [20:0] nextrem=subtract?shifted-{13'd0,divisor}:shifted;
  wire [19:0] nextquot={quotient[18:0],subtract};
- wire good_g=(group_size==1||group_size==2||group_size==4||group_size==8||group_size==96);
+ wire good_g=(G==1||G==2||G==4||G==8||G==96);
  assign start_r=(ENABLE!=0 && state==IDLE);
  assign id_r=(ENABLE!=0 && state==IDS);
  assign read_v=(ENABLE!=0 && state==REQUEST);
@@ -48,9 +48,12 @@ module ot_hgi_coll_row_formatter #(
   end else if(ENABLE!=0)begin
    case(state)
     IDLE:if(start_v)begin
-     fault<=0;
-     if(!good_g || owner_block==0 || destinations==0 || destinations>group_size || row_count==0 || row_words==0)begin fault<=1;state<=DONE;end
-     else begin G<=group_size;B<=owner_block;K<=row_count;words<=row_words;out_destinations<=destinations;index_<=0;state<=IDS;end
+     fault<=0;G<=group_size;B<=owner_block;K<=row_count;words<=row_words;
+     out_destinations<=destinations;index_<=0;state<=CHECK;
+    end
+    CHECK:begin
+     if(!good_g || B==0 || out_destinations==0 || out_destinations>G || K==0 || words==0)begin fault<=1;state<=DONE;end
+     else state<=IDS;
     end
     IDS:if(id_v)begin saved_id<=id;read_word<=0;state<=MAP;end
     MAP:begin
