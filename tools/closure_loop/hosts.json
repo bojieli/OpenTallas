@@ -23,12 +23,22 @@
    },
    "external_jobs": [
     {
-     "name": "qwen-quarter-fullshape-lint",
-     "pid": 1755537,
-     "command_match": "--lint-only -Wno-fatal --top-module ot_qwen_r25_su_quarter",
-     "peak_ram_gb": 128,
-     "owner": "Codex:qwen_hbm_unify",
-     "reason": "Actual full256 quarter Verilator frontend reached91GiB RSS; owner revised full inventory to128GiB, preserve current progressing lint"
+     "name": "qwen-fmt3-wide-calibration",
+     "pid": 3685092,
+     "command_match": "openroad",
+     "peak_ram_gb": 3.2,
+     "owner": "Codex:qwen_hbm_unify/fmt3",
+     "reason": "Wide currentCTS HWM2930680KiB; samewide calCTS3126784KiB/samepipe calCTS3156988KiB pluslauncher90852KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+     "launcher_pid": 1835875
+    },
+    {
+     "name": "qwen-fmt3-pipe-calibration",
+     "pid": 2708519,
+     "command_match": "openroad",
+     "peak_ram_gb": 3.2,
+     "owner": "Codex:qwen_hbm_unify/fmt3",
+     "reason": "Pipe currentfloorplanHWM1011520KiB; samepipe completedcalCTS3156988KiB pluslauncher89272KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+     "launcher_pid": 1855945
     }
    ]
   },
@@ -54,11 +64,21 @@
    "external_jobs": [
     {
      "name": "hbm-hc64-physical",
-     "pid": 2938696,
-     "command_match": "hc-row-shard-r2/physical_private64/run.sh",
-     "peak_ram_gb": 128,
+     "pid": 2939287,
+     "command_match": "yosys",
+     "peak_ram_gb": 15,
      "owner": "Codex:hbm_system/hc_shard",
-     "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
+     "reason": "Yosys SHARE dedicatedcontainer peak15482122240B14.42GiB; workerHWM15052780KiB. Helper+launcher aggregate rounds15GiB.",
+     "launcher_pid": 2938696
+    },
+    {
+     "name": "hbm-hc-epoch-physical",
+     "pid": 1579383,
+     "command_match": "yosys",
+     "peak_ram_gb": 15,
+     "owner": "Codex:hbm_system/hc_shard",
+     "reason": "Yosys SHARE dedicatedcontainer peak15577276416B14.51GiB; workerHWM15134892KiB. Helpers+launcher aggregate rounds15GiB.",
+     "launcher_pid": 1366211
     }
    ]
   },
@@ -68,8 +88,8 @@
    "cores": 128,
    "cap": 141,
    "base": "/srv/opentallas-data/claude/closure-loop",
-   "max_job_threads": 0,
-   "max_job_ram_gb": 0,
+   "max_job_threads": 128,
+   "max_job_ram_gb": 1076,
    "min_free_disk_gb": 200,
    "caps": [
     "verilator",
@@ -88,41 +108,19 @@
      "name": "hbm-indexer-deepcredit-exact",
      "pid": 2153931,
      "command_match": "hbm-indexer-2f27cb363/src",
-     "peak_ram_gb": 250,
+     "peak_ram_gb": 127,
      "owner": "Codex:hbm_continuation",
-     "reason": "Admitted full connected FA6 KEYLEG24 SCORE32 LA7 CRED128 gate; expected250GiB; persistent remaining peak until actualworker exit"
+     "reason": "FA6 final1CPPcompile liveindividualHWMsum133116660KiB126.950GiB; exactly1missing180841184B CPP,9821objects1035522712B, noarchive. Ownermeasuredsnapshot ef5a7f6e8.",
+     "launcher_pid": 2153931
     },
     {
      "name": "hbm-hc40-physical",
-     "pid": 1873433,
-     "command_match": "hc_row40_sram900_pathfinding",
-     "peak_ram_gb": 128,
+     "pid": 1874796,
+     "command_match": "yosys",
+     "peak_ram_gb": 15,
      "owner": "Codex:hbm_system/hc_shard",
-     "reason": "FullW32 realFP/40macro remainingstage128GiB envelope conservatively reserved against stabledriver; actualYosys9.88GiB; futurePNR peakunmeasured"
-    },
-    {
-     "name": "hbm-retry545-compact",
-     "pid": 873659,
-     "command_match": "hbm-retry545-pathfinding-r3",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry",
-     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT2.44GiB"
-    },
-    {
-     "name": "hbm-retry545-wide",
-     "pid": 3630405,
-     "command_match": "hbm-retry545-pathfinding-wide-r1",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry",
-     "reason": "Stablelauncher preserves24GiB futureDRT envelope; actualcurrentGRT4.24GiB"
-    },
-    {
-     "name": "hbm-index-selector-la7-calibration",
-     "pid": 360589,
-     "command_match": "hbm_idx_sel_capture_la7_e43dd9bc1_pathfinding/cl/run.sh",
-     "peak_ram_gb": 120,
-     "owner": "Codex:hbm_continuation/selector_capture",
-     "reason": "Active fullshape T1 LA7 MEMV1 READLAT2 calibration; stablelauncher preserves120GiB declared futurepeak until terminal; liveYosys OPT phase"
+     "reason": "HC40 YosysSHARE dedicatedcontainer peak15524855808B14.46GiB; workerHWM15123332KiB; subtree15132452KiB. Aggregate rounds15GiB.",
+     "launcher_pid": 1873433
     }
    ],
    "paused_admission_previous": {
@@ -157,25 +155,19 @@
      "name": "hbm-indexer-t1-exact",
      "pid": 952687,
      "command_match": "hbm-indexer-3a6f720d4",
-     "peak_ram_gb": 250,
+     "peak_ram_gb": 127,
      "owner": "Codex:hbm_continuation",
-     "reason": "admitted 250GiB; measured Verilator parent RSS120GiB still growing"
-    },
-    {
-     "name": "hbm-indexer-nk4-synthesis",
-     "pid": 3252430,
-     "command_match": "slice_nk4/yosys.log",
-     "peak_ram_gb": 256,
-     "owner": "Codex:hbm_continuation",
-     "reason": "admitted 256GiB; retained historical NK4 peak203396396KiB"
+     "reason": "T1 final1CPPcompile liveindividualHWMsum133115456KiB126.949GiB;1of9805CPPmissing180841184B, objects1.035GB noarchive. Ownercompile_phase_measured/snapshot ef5a7f6e8.",
+     "launcher_pid": 952687
     },
     {
      "name": "hbm-selector-native-qend-calibration",
-     "pid": 745294,
-     "command_match": "hbm_idx_sel_native_qend_aa7127b87_pathfinding/cl/run.sh",
-     "peak_ram_gb": 120,
+     "pid": 2558538,
+     "command_match": "openroad",
+     "peak_ram_gb": 19,
      "owner": "Codex:hbm_continuation/selector_capture",
-     "reason": "Admitted actual6903pin native T1 LA7 MEMV1 READLAT2 EXPOSE1; sourceaa7127b87, inventory77952 override, stablelauncher tracks120GiB futuregrowth"
+     "reason": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
+     "launcher_pid": 745294
     }
    ]
   },
@@ -195,7 +187,44 @@
    "disk_roots": {
     "/": 100
    },
-   "min_free_ram_gb": 16
+   "min_free_ram_gb": 16,
+   "external_jobs": [
+    {
+     "name": "s81-bf-input-holdseats-exact-gate",
+     "pid": 303289,
+     "command_match": "bf_txn_bench.py",
+     "peak_ram_gb": 3,
+     "owner": "Codex:s81_continuation",
+     "reason": "BF actual8waycompiler PG303265 sum3128648KiB2.984GiB rounded3GiB; frontend earlierwholePG2549560KiB2.43GiB. Samepositive158.223MB/171CPP, frontend2489.758MB. No40GiB measured basis.",
+     "launcher_pid": 303289
+    },
+    {
+     "name": "ha2-owner-phase-gate-r3",
+     "pid": 309330,
+     "command_match": "ha2-owner-cx-20261009/run-gate-r3.sh",
+     "peak_ram_gb": 3.1,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "HA2 phase-mutant r3 liveindividualHWMsum3161936KiB3.015GiB rounded3.1GiB; samevehiclepositive completedGNUtime2.48GiB4workers343.91s evidence4fa8ec6cc.",
+     "launcher_pid": 309330
+    },
+    {
+     "name": "ha2-owner-phase-gate-r4",
+     "pid": 310774,
+     "command_match": "ha2-owner-cx-20261009/run-gate-r4.sh",
+     "peak_ram_gb": 3.1,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "HA2 phase-mutant r4 measuredwholePG2632268KiB2.51GiB; SAME r3 compilerHWMsum3.015GiB rounds3.1GiB.",
+     "launcher_pid": 310774
+    },
+    {
+     "name": "ha2-owner-baseline-r4",
+     "pid": 313584,
+     "command_match": "ha2-owner-cx-20261009/run-baseline-r4.sh",
+     "peak_ram_gb": 3.1,
+     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
+     "reason": "Verified actualbaseline-r4 launcher; samefullPF384 owner fourworker sibling r3 measuredindividualHWMsum3161936KiB3.015GiB rounded3.1GiB."
+    }
+   ]
   },
   {
    "name": "ot-agidock128",
@@ -216,16 +245,7 @@
    "min_free_ram_gb": 2,
    "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB.",
    "reserve_ram_gb": 0,
-   "external_jobs": [
-    {
-     "name": "hbm-native-full-publication-lint",
-     "pid": 2811687,
-     "command_match": "--top-module ot_hbm_collective_native_publication_candidate",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry",
-     "reason": "Owner fullshape inventory envelope24GiB: protected545 queues/landing/CDC/flight plus256 native lanes; actual frontend exceeded4GiB, peak unmeasured"
-    }
-   ]
+   "external_jobs": []
   },
   {
    "name": "localhost",
@@ -247,7 +267,8 @@
     "/": 150
    },
    "bench_offload": true,
-   "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet."
+   "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet.",
+   "external_jobs": []
   }
  ]
 }

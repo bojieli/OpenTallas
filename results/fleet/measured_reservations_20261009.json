@@ -1,0 +1,125 @@
+{
+  "base": "7dc926e7102e5ec5eb7dc28c52064211edbec636",
+  "verified_utc": "2026-10-09T09:57:56.395315+00:00",
+  "entries": [
+    {
+      "host": "ot-epyc1tb",
+      "launcher_pid": 2938696,
+      "peak_identity_pid": 2939287,
+      "old_peak_ram_gb": 128,
+      "new_peak_ram_gb": 15,
+      "evidence": "Yosys SHARE dedicatedcontainer peak15482122240B14.42GiB; workerHWM15052780KiB. Helper+launcher aggregate rounds15GiB.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc1tb",
+      "launcher_pid": 1366211,
+      "peak_identity_pid": 1579383,
+      "old_peak_ram_gb": 128,
+      "new_peak_ram_gb": 15,
+      "evidence": "Yosys SHARE dedicatedcontainer peak15577276416B14.51GiB; workerHWM15134892KiB. Helpers+launcher aggregate rounds15GiB.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc2",
+      "launcher_pid": 2153931,
+      "peak_identity_pid": 2153931,
+      "old_peak_ram_gb": 250,
+      "new_peak_ram_gb": 127,
+      "evidence": "FA6 final1CPPcompile liveindividualHWMsum133116660KiB126.950GiB; exactly1missing180841184B CPP,9821objects1035522712B, noarchive. Ownermeasuredsnapshot ef5a7f6e8.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc2",
+      "launcher_pid": 1873433,
+      "peak_identity_pid": 1874796,
+      "old_peak_ram_gb": 128,
+      "new_peak_ram_gb": 15,
+      "evidence": "HC40 YosysSHARE dedicatedcontainer peak15524855808B14.46GiB; workerHWM15123332KiB; subtree15132452KiB. Aggregate rounds15GiB.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc3",
+      "launcher_pid": 1835875,
+      "peak_identity_pid": 3685092,
+      "old_peak_ram_gb": 64,
+      "new_peak_ram_gb": 3.2,
+      "evidence": "Wide currentCTS HWM2930680KiB; samewide calCTS3126784KiB/samepipe calCTS3156988KiB pluslauncher90852KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc3",
+      "launcher_pid": 1855945,
+      "peak_identity_pid": 2708519,
+      "old_peak_ram_gb": 64,
+      "new_peak_ram_gb": 3.2,
+      "evidence": "Pipe currentfloorplanHWM1011520KiB; samepipe completedcalCTS3156988KiB pluslauncher89272KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc4",
+      "launcher_pid": 952687,
+      "peak_identity_pid": 952687,
+      "old_peak_ram_gb": 200,
+      "new_peak_ram_gb": 127,
+      "evidence": "T1 final1CPPcompile liveindividualHWMsum133115456KiB126.949GiB;1of9805CPPmissing180841184B, objects1.035GB noarchive. Ownercompile_phase_measured/snapshot ef5a7f6e8.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-epyc4",
+      "launcher_pid": 745294,
+      "peak_identity_pid": 2558538,
+      "old_peak_ram_gb": 120,
+      "new_peak_ram_gb": 19,
+      "evidence": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-pve1",
+      "launcher_pid": 303289,
+      "peak_identity_pid": 303289,
+      "old_peak_ram_gb": 40,
+      "new_peak_ram_gb": 3,
+      "evidence": "BF actual8waycompiler PG303265 sum3128648KiB2.984GiB rounded3GiB; frontend earlierwholePG2549560KiB2.43GiB. Samepositive158.223MB/171CPP, frontend2489.758MB. No40GiB measured basis.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-pve1",
+      "launcher_pid": 309330,
+      "peak_identity_pid": 309330,
+      "old_peak_ram_gb": 12,
+      "new_peak_ram_gb": 3.1,
+      "evidence": "HA2 phase-mutant r3 liveindividualHWMsum3161936KiB3.015GiB rounded3.1GiB; samevehiclepositive completedGNUtime2.48GiB4workers343.91s evidence4fa8ec6cc.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    },
+    {
+      "host": "ot-pve1",
+      "launcher_pid": 310774,
+      "peak_identity_pid": 310774,
+      "old_peak_ram_gb": 12,
+      "new_peak_ram_gb": 3.1,
+      "evidence": "HA2 phase-mutant r4 measuredwholePG2632268KiB2.51GiB; SAME r3 compilerHWMsum3.015GiB rounds3.1GiB.",
+      "remaining_phase_policy": "Only evidenced current/sibling phase peak; archive/link or not-yet-observed later PNR peak unmeasured, no old expected wholeflow claim carried forward."
+    }
+  ],
+  "terminal_removed": [
+    1755537,
+    1855952,
+    1855953,
+    1915153,
+    1915154,
+    1930595,
+    1930242,
+    2587827,
+    2706708,
+    1878057,
+    3252430,
+    360589,
+    873659,
+    3630405,
+    2811687,
+    299770
+  ],
+  "terminal_proof": "Ring14/15/19/20 allindependentPIDmissing; BFreferenceTT+FFexit0/PIDmissing; bothretrydriversmissing/ownerterminal; historical terminal identities previously audited.",
+  "policy": "No process caps/restarts. Docker enginePID identity permits scheduler subtracting actualengineRSS alreadycounted in MemAvailable. Phase refresh required; no claimed peak for unmeasured futurephase. RestoresEPYC2enabled128/1076 ascurrentownerrequires; localhost stays0."
+}
