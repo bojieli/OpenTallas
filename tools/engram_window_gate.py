@@ -9,7 +9,7 @@ def main():
     if out.exists():raise FileExistsError(out)
     work=Path(tempfile.mkdtemp(prefix='engram-window-'));obj=work/'obj';top='tb_s81_engram_window'
     rec=dict(schema='opentallas.engram-native-window-gate.v1',retained_objects=str(work),cases={},input_sha256={str(p.relative_to(R)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths+[Path(__file__)]})
-    b=subprocess.run(['verilator','--cc','--exe','--build','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-BLKSEQ','--top-module',top,'-Mdir',str(obj),*[str(p) for p in paths],'-CFLAGS',f'-O1 -DVTOP=V{top}'],capture_output=True,text=True)
+    b=subprocess.run(['verilator','--timing','--cc','--exe','--build','-O2','-Wno-fatal','-Wno-WIDTH','-Wno-UNUSED','-Wno-BLKSEQ','--top-module',top,'-Mdir',str(obj),*[str(p) for p in paths],'-CFLAGS',f'-O1 -DVTOP=V{top}'],capture_output=True,text=True)
     (work/'build.log').write_text(b.stdout+b.stderr)
     if b.returncode:raise RuntimeError(b.stderr[-3000:])
     for m in range(5):
