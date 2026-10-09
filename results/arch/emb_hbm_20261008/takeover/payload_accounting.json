@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.emb_hbm_payload_accounting.v1",
+  "source": "results/arch/emb_hbm_20261008/full_table.json",
+  "preserve_original_record": true,
+  "original_table_bytes": 622633728,
+  "code_bytes": 622329856,
+  "scale_bytes": 303872,
+  "payload_bytes": 622633728,
+  "sector_count_bytes": 622633728,
+  "consistent": true,
+  "reason": "The historical table_bytes field equals code bytes and excludes 303872 scale bytes. Reconcile from explicit table shape and measured sector count without changing hashes/checksum or overwriting the original."
+}

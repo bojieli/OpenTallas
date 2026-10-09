@@ -1,0 +1,5 @@
+unset_input_delay [all_inputs]
+unset_output_delay [all_outputs]
+set_input_delay 204.8 -clock clk [get_ports {col_v col_we col_sr r_v r_d[*] w_v w_d[*]}]
+set_output_delay 204.8 -clock clk [get_ports {wd[*] kv_v kv_d[*] em_v em_d[*] fault}]
+set_false_path -from [get_ports {rst_n}]

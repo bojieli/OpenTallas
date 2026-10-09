@@ -40,7 +40,7 @@ ROWS = [
     ('boot.weights', 'boot', 'Weight image (mask ROM, or HBM load at boot) incl. LM head', 'control', 'boot', dict(T1=['B01'], T2=['B01'], T3=['B01'], T4=['boot.weight_image', 'boot.lm_head_table'])),
     ('boot.embedding', 'boot', 'Embedding table load + boot check', 'control', 'boot', dict(T1=['B02'], T4=['boot.embedding_table'])),
     ('boot.rope_tables', 'boot', 'RoPE cos/sin table load (HBM-resident tables)', 'control', 'boot', dict(T2=['B03'], T4=['boot.rope_tables'])),
-    ('boot.engram_tables', 'boot', 'Engram hash tables load / table storage', 'control', 'boot', dict(T3=['B02'])),
+    ('boot.engram_tables', 'boot', 'Engram hash tables load / table storage', 'control', 'boot', dict(T2=['B03'], T3=['B02'])),
     ('boot.program', 'boot', 'Program / configuration / descriptor load', 'control', 'boot', dict(T1=['B03'], T2=['B02'], T3=['B03'], T4=['boot.program_config'])),
     ('boot.reset', 'boot', 'Reset / power-up / power-gating sequencing', 'control', 'boot', dict(T1=['B04'], T2=['B05'], T3=['B05'], T4=['boot.reset_clocks'])),
     ('boot.clocks', 'boot', 'Clock generation (PLL) and distribution', 'control', 'boot', dict(T1=['B05'], T2=['B04'], T3=['B04'], T4=['boot.reset_clocks'])),
@@ -162,7 +162,6 @@ _na(['f.emb_ecc'], ['T2', 'T3', 'T4'], 'only T1 copies the embedding into HBM (r
 _na(['ctl.hbm_service'], ['T1', 'T4'], 'enumerated under ctl.kv_stream (T1) / ctl.weight_stream (T4)')
 _na(['boot.rope_tables'], ['T1'], 'RoPE rows live in the constant ROM (ctl.const_rom)')
 _na(['boot.rope_tables'], ['T3'], 'enumerated under ctl.rope_supply (T3-D19: no producer)')
-_na(['boot.engram_tables'], ['T2'], 'Engram tables are mask ROM on table dies (ds.engram_fetch)')
 _na(['smp.nongreedy'], ['T4'], 'not claimed (greedy contract)')
 _na(['d.residual'], ['T2'], 'DeepSeek residual is the hc_post mix (ds.hc_pre_post)')
 _na(['ctl.transport'], ['T4'], 'r25 transport shared with T3 (T3-D12 / D52); T4 maps no separate node')
@@ -183,7 +182,7 @@ STREAMS = {
     'mtp-die': 'MTP die recipes: draft dies, head-die slot, placement, links, HBM fit',
     'mtp-exact': 'MTP exactness benches: ROM MTP cached RTL, wavefront, HBM connected top',
     'mtp-rollback': 'MTP rollback hardware (dsk rows, HBM ring addressing)',
-    'engram': 'Engram E-side: hash, table dies, row transport (both DS targets)',
+    'engram': 'Engram E-side: hash, HBM-resident tables on the home dies (owner option A 2026-10-09), row transport, history (both DS targets)',
     's81-dies': 'S81 scan / head dies, array v2 composition (rack at 120 stages), die slots',
     'ds-control': 'S81 control plane, EOS, RoPE boot, ECC, re-measure of modelled terms',
     'hbm-indexer': 'HBM indexer on r25 (scores, top-k, candidates)',
@@ -291,14 +290,14 @@ _DS = [
     (r'^ffn\.(router|softplus_sqrt|bias|top6|top6_order|route_w|weights|router_allgather)', ['ds.router']),
     (r'^ffn\.(ids_hop|ret_hop)', ['ctl.expert_dispatch']),
     (r'^ffn\.(experts_gu|shared_gu)', ['d.ffn_up']), (r'^ffn\.(shared_)?swiglu', ['d.swiglu']), (r'^ffn\.down', ['d.ffn_down']),
-    (r'^ffn\.combine_allreduce$', ['d.allreduce_ffn', 'ds.moe_combine']), (r'^eng\.', ['ds.engram_gate']),
+    (r'^ffn\.combine_allreduce$', ['d.allreduce_ffn', 'ds.moe_combine']), (r'^eng\.(lead_flit|rows_allgather)$', ['ds.engram_transport']), (r'^eng\.hash$', ['ds.engram_hash', 'ctl.engram_history', 'mtp.verify_engram']), (r'^eng\.hbm_read$', ['ds.engram_fetch']), (r'^eng\.(wkv|knorm)$', ['ds.engram_proj']), (r'^eng\.', ['ds.engram_gate']),
     (r'^attn\.idx\.q$', ['ds.idx_query']), (r'^attn\.idx\.score$', ['ds.idx_score']), (r'^attn\.idx\.topk_', ['ds.idx_topk']), (r'^attn\.idx\.newkey$', ['ds.idx_key']),
     (r'^attn\.(gather|rows_allgather)$', ['ds.sel_gather']), (r'^attn\.cmp\.(pool|norm\.|row_qdq)', ['ds.compressor', 'ctl.compressor_state']),
     (r'^attn\.cmp\.(wk|k_norm\.|k_rope_qdq)', ['ds.idx_key']), (r'^attn\.cand\.', ['ds.cand_blocks']),
     (r'^head\.norm\.', ['smp.final_norm']), (r'^head\.lm_head$', ['smp.lm_head']), (r'^head\.argmax', ['smp.argmax']),
     (r'^draft\.head\d', ['mtp.draft_head']), (r'^draft\.markov\d', ['mtp.draft_head']), (r'^draft\.fixed$', ['mtp.draft']),
     (r'^wave\.', ['mtp.verify_batch']), (r'^accept\.seed$', ['mtp.seed', 'mtp.seed_capture']), (r'^accept\.commit$', ['mtp.commit', 'mtp.rollback_kv']),
-    (r'^accept\.round$', ['mtp.accept']),
+    (r'^accept\.round$', ['mtp.accept']), (r'^accept\.engram_rewind$', ['mtp.rollback_engram']),
 ]
 _HBM = [
     (r'^hbm:embedding_row$', ['d.embed']), (r'^(sufused|su|quant):hc_pre_norm$', ['ds.hc_pre_post', 'd.norm_pre', 'd.act_quant']),

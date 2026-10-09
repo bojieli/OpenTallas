@@ -33,7 +33,7 @@ K = dict(ss=dict(cq=90.0, su=30.0, ho=15.0), tt=dict(cq=55.0, su=18.0, ho=15.0),
 # ports + the inter-tile glue check); the others stay one interim master and the index reports their closed tiles.
 PARTS = dict(dsfd_bk_selector=('dsfd_selt_q', 'dsfd_selt_c'), dsfd_bk_collector=('dsfd_colt_lane', 'dsfd_colt_mrg'),
              dsfd_sp_capture=('dsfd_capt_x', 'dsfd_capt_g2', 'dsfd_capt_ctl'),
-             dsfd_sp_collective=('dsfd_coll_lane_w', 'dsfd_coll_lane_e', 'dsfd_coll_core', 'dsfd_coll_ck'),
+             dsfd_sp_collective=('dsfd_coll_lane_w', 'dsfd_coll_core', 'dsfd_coll_ck'),
              dsfd_ctrl=('dsfd_ctrl_pc', 'dsfd_ctrl_ctr'),
              dsfd_svc=('dsfd_svc_pc', 'dsfd_svc_stn', 'dsfd_svcio_ad', 'dsfd_svcio_od', 'dsfd_svcio_q', 'dsfd_svcio_x'),
              dsfd_sp_vm=('dsfd_vm_bg',), dsfd_sp_gather=('ot_s81ph_root_tile', 'ot_s81ph_root_blk'))

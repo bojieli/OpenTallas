@@ -334,6 +334,11 @@ def qwen():
     d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
           src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
           instances=QCLS["embed"]["instances"])
+    # emb-hbm 2026-10-08: the measured HBM embedding path replaces this behavioural-ROM node at the next reprice run;
+    # recorded here as a pending annotation only (the node's cycles are unchanged until then)
+    emb = ROOT / "results/arch/emb_hbm_20261008/token_path_inputs.json"
+    if emb.exists():
+        d.nodes["embed"]["pending_next_reprice"] = J("results/arch/emb_hbm_20261008/token_path_inputs.json")["embed_node"]
     prev_group_last = "embed"
     for L in range(36):
         g = f"L{L}"
@@ -447,7 +452,9 @@ DS_CLASSES = [
     dict(id="hop", label="Stage hop (SerDes, full-KP4 FEC)", elements=[], instances=["lk_E*", "lk_W*"]),
     dict(id="head", label="Head die (LM head bundle, argmax)", elements=["ot_dsrom_head_elem_A", "ot_dsrom_head_elem_B",
          "ot_dsrom_head_bundle_glue", "ot_s81_head_delay8x32", "ot_hdc_v41_fh_head_top"], instances=[]),
-    dict(id="embed", label="Embed / Engram table dies", elements=[], instances=[]),
+    dict(id="embed", label="Embed ROM / Engram lookup (HBM-resident tables, design 2026-10-08)",
+         elements=["ot_dsrom_engram_idwin", "ot_dsrom_engram_lookup", "ot_dsrom_engram_rowsink", "ot_hdc_engram_hash_shipped"],
+         instances=["eng_SE", "ctrl_SE", "phy_SE"]),
 ]
 FIELD_SUF = ("a_proj", "wq_b", "cmp.wk", "wo_a", "wo_b", "ffn.router", "shared_gu", "experts_gu", "ffn.down", "idx.q", "eng.dot")
 HBM_SUF = ("idx.score", "attn.scores", "attn.pv", "window_load", "own_row_write", "ckv")
@@ -708,6 +715,7 @@ def ds_rom():
     d.edges.append(dict(src="unplaced_hops", dst="head.hop", bytes=HOPB, link="stage hops", cycles=0))
     total_us = t_path + unplaced_us
     assert abs(total_us - comp["AR_us"]) < 0.002, (total_us, comp["AR_us"])
+    ds_engram_nodes(d)
     # slack for off-critical nodes is computed in finish(); order groups so SX precedes the head stage
     headline = dict(tok_s=comp["AR_tok_s"], us=comp["AR_us"], cycles=r1(comp["AR_us"] * CY), mode="AR, position 1,048,575",
                     mtp_tok_s=comp["MTP_tok_s"], tau=4.159,
@@ -728,12 +736,51 @@ def ds_rom():
         f"Each stage group is one TP4 layer-die group of the pipeline (split at stage hops); {n_s81 + extra_hops} further stage "
         "hops exist in the mapping but the composition does not place them: they are one aggregate node before the head hop.",
         "Field operators are the measured 1,792 field phases (HALF_PHL: BF16 phases at 2 x (go->idle) + 2, upper bound).",
+        "Engram (E1.* / E14.*, off the critical path): the HBM-resident table design of results/arch/engram_20261008/design.json "
+        "(lead flit from S0 -> HBM row lookup on the home stage's rank dies -> TP4 row all-gather -> wkv + key norm), "
+        "grade modelled until the blocks close; it replaces the composition's ROM-table gather / deliver placeholders and "
+        "the 36 table dies.",
     ]
     return finish(d, headline, gdef, DS_CLASSES, drill, notes,
                   extra=dict(geometry=dict(source=GEO, key="ds_s81_layer", die="S81 layer die (snapshot; one of 4 TP dies per stage)")))
 
 
 DSC = {c["id"]: c for c in DS_CLASSES}
+ENGRAM = "results/arch/engram_20261008/design.json"
+
+
+def ds_engram_nodes(d):
+    """The Engram side branch of the HBM-resident design (stream engram, 2026-10-08): lead flit -> HBM row lookup ->
+    TP4 row all-gather -> wkv + key norm, from token start, ending at the L{L}.eng.dot consumer.  The composition's
+    own E{L}.gather / E{L}.deliver (ROM-table placeholders) are not exported; these nodes replace them.  Off the
+    critical path (slack from the design record); grade 'modelled' until the blocks close."""
+    if not (ROOT / ENGRAM).exists():
+        return
+    rec = J(ENGRAM)
+    for L in (1, 14):
+        t = rec["timeline_cycles"][f"L{L}"]
+        cons = f"L{L}.eng.dot"
+        if cons not in d.nodes:
+            continue
+        grp = d.nodes[cons]["group"]
+        steps = [("lead_flit", "hop", t["lead_flit_cycles"], t["lead_flit_note"]),
+                 ("hash", "embed", t["hash_cycles"], t["hash_note"]),
+                 ("hbm_read", "embed", t["hbm_read_cycles"], t["hbm_read_note"] + "; " + t["lookup_local_src"]),
+                 ("rows_allgather", "coll", t["allgather_cycles"] - 4, t["allgather_note"]),
+                 ("wkv", "field", t["wkv_cycles"], t["wkv_note"]),
+                 ("knorm", "su", t["knorm_cycles"], t["wkv_knorm_src"])]
+        st, prev = 0.0, None
+        for k, cls, cyc, note in steps:
+            nid = f"E{L}.{k}"
+            n = d.add(nid, nid, grp, cls, cyc, src("modelled", ENGRAM, f"timeline_cycles.L{L}", note=note), op=f"eng.{k}",
+                      elements=DSC[cls]["elements"], instances=DSC[cls]["instances"], start=st, deps=[prev] if prev else [],
+                      critical=False, kind="parallel")
+            n["layer"] = L
+            n["slack"] = r1(t["slack_cycles"])
+            n["engram"] = True
+            st += cyc
+            prev = nid
+        d.edges.append(dict(src=prev, dst=cons, bytes=6 * 264 * 4, link="on die (key / value to the SU)", cycles=0))
 
 
 # ======================================================================================== HBM accelerator DS 1M
@@ -1163,6 +1210,14 @@ def ds_rom_mtp(ar=None):
                          "inventory) but is on no S81 die; the ROM commit path is ISA-level (ot_hdc_accept + CTL ACCEPT)",
                          evidence=HBM_CTL + " rows[accept_a0]"))
     t += n["cycles"]
+    if (ROOT / ENGRAM).exists():
+        er = J(ENGRAM)["mtp_history_restore"]
+        n = d.add("accept.engram_rewind", "Engram history restore: rewind the user's n-gram history by the rejected drafts",
+                  "A", "embed", er["cycles"], src("modelled", ENGRAM, "mtp_history_restore", note=er["how"]),
+                  op="accept.engram_rewind", start=t, deps=["accept.commit"], critical=False, kind="parallel",
+                  elements=["ot_dsrom_engram_idwin"], instances=[])
+        mark(n, "accept", hw("partial", "RTL rewind port of ot_dsrom_engram_idwin, bench-exact vs the official cache "
+                             "truncation; not routed", evidence="results/rtl/dsrom_engram_lookup_campaign.json"))
     n = d.add("accept.round", "composition rounding (MTP tok/s rounded to 0.1 before the 1,792 hops are added)", "A", "ctl",
               hv["step_us"] * CY - t, src("zero", "tools/s81/field_phases_1792.py compose", note=f"MTP_step_us = tau x 1e6 / "
               f"round(MTP_tok_s, 1) + extra hops: {hv['rounding_us'] * CY:+.1f} cycles against the sum of the terms "
@@ -1430,15 +1485,33 @@ def geo_snapshot(key):
                 instances=[[r[5], g["kinds"][r[0]], r[1], r[2], r[3], r[4], ms.get(r[5], "")] for r in g["rects"]])
 
 
+OPTIONAL_TARGETS = ("qwen_hbm",)
+
+
+def target_functions(namespace):
+    fns = dict(qwen_rom=namespace["qwen"], ds_rom=namespace["ds_rom"], hbm_ds=namespace["hbm"])
+    mtps = dict(ds_rom=namespace["ds_rom_mtp"], hbm_ds=namespace["hbm_mtp"])
+    for name in OPTIONAL_TARGETS:
+        if callable(namespace.get(name)):
+            fns[name] = namespace[name]
+            if callable(namespace.get(name + "_mtp")):
+                mtps[name] = namespace[name + "_mtp"]
+    return fns, mtps
+
+
+def optional_mtp_qualified(record):
+    """A characterization tau cannot establish deployment throughput."""
+    return bool((record.get("qualification") or {}).get("deployment_qualified") is True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--viz-dir", type=Path, default=None, help="also write data/ + geometry snapshots for the views here")
-    ap.add_argument("--only", default="qwen_rom,ds_rom,hbm_ds")
+    ap.add_argument("--only", default=None, help="comma-separated targets; default: all implemented targets")
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    fns = dict(qwen_rom=qwen, ds_rom=ds_rom, hbm_ds=hbm)
-    mtps = dict(ds_rom=ds_rom_mtp, hbm_ds=hbm_mtp)
+    fns, mtps = target_functions(globals())
     index = []
 
     def write(name, rec):
@@ -1451,9 +1524,13 @@ def main():
             shutil.copy(p, dd / p.name)
         return p
 
-    for k in a.only.split(","):
+    for k in (a.only.split(",") if a.only else fns):
         rec = fns[k]()
         mrec = mtps[k](rec) if k in mtps else None
+        if mrec and k in OPTIONAL_TARGETS and not optional_mtp_qualified(mrec):
+            mrec = None
+            rec["mtp"] = dict(available=False, deployment_qualified=False,
+                              reason="speculative characterization has not passed deployment qualification")
         if mrec:
             t = mrec["totals"]
             rec["mtp"] = dict(available=True, file=f"{k}_mtp.json", tok_s=t["tok_s_published"], tau=t["tau"],
@@ -1466,7 +1543,8 @@ def main():
             for vk, vv in (mrec.get("mtp_variants") or {}).items():
                 print(f"   {vk}: {vv['reproduces']}")
         else:
-            rec["mtp"] = qwen_mtp_note()
+            rec.setdefault("mtp", qwen_mtp_note() if k == "qwen_rom" else
+                           dict(available=False, reason="no qualified speculative composition implemented"))
         p = write(k, rec)
         t = rec["totals"]
         print(f"{k}: {t['cycles']:,.1f} cycles = {t['us']} us = {t['tok_s']} tok/s (published {t['tok_s_published']}); "

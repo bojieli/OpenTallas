@@ -1,0 +1,43 @@
+{
+  "verdict": "PASS",
+  "source_commit": "e96dd1e56",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_col_tile.sv": "25381bfd447f21d4ec24a68fdcde089b4b380cb183a5878dfcf2ebab07d1a6a8",
+    "rtl/dsrom_sys/s81_ph/test/tb_colt_ring.sv": "a43eb188d8c6f75c21279b0ebe03e0a87d90c7a1e98dcd84940316276de4ea38",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v": "dc4463c055342e209c7cb8b9506db79133d9f1d416d3c05f20feafb49cb8461c"
+  },
+  "tool": "Icarus Verilog version 11.0 (stable) ()",
+  "vehicle": {
+    "W": 512,
+    "DEPTH": 256,
+    "OBD": 4,
+    "RING": [
+      0,
+      1
+    ]
+  },
+  "positive": {
+    "cycles": 100000,
+    "reads": 27118,
+    "seed": 19,
+    "cycle_identical": [
+      "hv",
+      "ovf",
+      "head when hv"
+    ],
+    "patterns": [
+      "full array stalls and overflow",
+      "drain",
+      "random overlapping pushes/pops",
+      "ring wraps",
+      "reset while traffic"
+    ]
+  },
+  "negative": {
+    "mutation": "write one slot beyond ring tail",
+    "expected": "FAIL",
+    "observed": "COLT_RING FAIL i=5"
+  },
+  "measured_latency_added_cycles": 0,
+  "adoption": "opt-in pending admitted TT/FF route; no clock/throughput/area qualification claimed"
+}

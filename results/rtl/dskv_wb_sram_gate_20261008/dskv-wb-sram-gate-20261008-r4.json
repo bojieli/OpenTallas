@@ -1,0 +1,66 @@
+{
+  "schema": "opentallas.hbm_accel.dskv_wb_sram_gate.v1",
+  "source_commit": "238a54e71",
+  "input_sha256": {
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv": "06b555e5c5ffbdaae6045860d84b130ef59a99a06ca484806a74ab018091dbd9",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv": "7cc1db03f780d2cbf42d8120bd2a8d50651acec757228f09ffc0f371a7b7bd3b",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_wb_sram.sv": "cfe0b89946231adf6e2288fbeb6c8ad01d524df3b7c2d6826fe38ec5eb32a537",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "tools/hbm_accel_dskv_wb_sram_gate.py": "c5bcf97e0b4a99f2d13303f5f1065769632c8f19b5c7a536a9fd922185731df5"
+  },
+  "host": "climbing-locust",
+  "admission_peak_gb": 2.0,
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "clock_ns": 0.833,
+  "sources": [
+    "rtl/common/ot_secded.sv",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
+    "rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv",
+    "rtl/test/hbm_accel/tb_hbm_accel_dskv_wb_sram.sv"
+  ],
+  "cases": [
+    {
+      "mut": 0,
+      "build_returncode": 0,
+      "build_max_rss_kib": 318240,
+      "verdict": "PASS",
+      "metrics": {
+        "posts": 218,
+        "issued": 218,
+        "acked": 218,
+        "key2": 0,
+        "key3": 64,
+        "stall_cycles": 340,
+        "max_row_cycles": 41,
+        "max_preload_cycles": 69,
+        "bad": 0,
+        "mutant": 0
+      },
+      "returncode": 0
+    },
+    {
+      "mut": 1,
+      "build_returncode": 0,
+      "build_max_rss_kib": 318240,
+      "verdict": "FAIL",
+      "metrics": {
+        "posts": 218,
+        "issued": 218,
+        "acked": 218,
+        "key2": 0,
+        "key3": 64,
+        "stall_cycles": 340,
+        "max_row_cycles": 41,
+        "max_preload_cycles": 69,
+        "bad": 192,
+        "mutant": 1
+      },
+      "returncode": 1
+    }
+  ],
+  "verdict": "PASS",
+  "input_unchanged": true
+}

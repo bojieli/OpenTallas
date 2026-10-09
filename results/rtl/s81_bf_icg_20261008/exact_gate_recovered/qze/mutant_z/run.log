@@ -1,0 +1,7 @@
+ORACLE phase=1 positions=1 active_segments=8 nseg=1 cumulative_public_rows=16 value_assertions=32
+ORACLE phase=2 positions=1 active_segments=8 nseg=1 cumulative_public_rows=32 value_assertions=64
+ORACLE phase=3 positions=1 active_segments=8 nseg=1 cumulative_public_rows=48 value_assertions=96
+ORACLE phase=4 positions=1 active_segments=8 nseg=1 cumulative_public_rows=56 value_assertions=112
+[9845000] %Fatal: cand_ot_v41_pair_w17w10.sv:195: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=1 n=22 ref=33101fff00818010 shadow=3545e34800818010
+%Error: cand_ot_v41_pair_w17w10.sv:195: Verilog $stop
+Aborting...

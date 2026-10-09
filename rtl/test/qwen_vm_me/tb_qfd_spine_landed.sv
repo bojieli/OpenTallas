@@ -14,7 +14,10 @@ module tb_qfd_spine_landed;
     parameter integer GT = 96, TG = 4, SMIN = 3, SMAX = 5, TCUT = 3, NS = 4;
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
-    parameter integer MAXT = 3, MAXK = 4, SEED = 1, SMUT = 0, TSR = 0, CYCLES = 30000, DB = 16, RSD = 4, CRB = 4;
+    parameter integer MAXT = 3, MAXK = 4, SEED = 1, SMUT = 0, TSR = 0,
+    // RSM (safe-qwen A6, mutant): the serializers' stall budget RSM edges SHORT of the loop (the supply not signalling earlier
+    // when the sequencer stations me_mem_ok): must FAIL (overflow fault)
+    RSM = 0, CYCLES = 30000, DB = 16, RSD = 4, CRB = 4;
     localparam integer NPG = GT >> SMIN, NXC = 1 << SMAX, NPT = GT >> TCUT, IBW = 3*NW + 13*AW + 13;
     localparam integer NB = NPG / NS, ELEMS = 65536, NRB = 16, RW = AW - 4;
     localparam integer LAWT = $clog2((ELEMS / 16 + NRB - 1) / NRB);
@@ -110,7 +113,7 @@ module tb_qfd_spine_landed;
     wire [NB*512-1:0] l_data;
     genvar gb;
     generate for (gb = 0; gb < NB; gb = gb + 1) begin : g_ser
-        ot_qfd_res_ser #(.NS(NS), .W(16), .AW(AW), .RW(RW), .DB(DB), .RS(RSD + 2), .CRB(CRB), .MUT(gb == 0 ? SMUT : 0), .TSR(TSR)) u_s (
+        ot_qfd_res_ser #(.NS(NS), .W(16), .AW(AW), .RW(RW), .DB(DB), .RS(RSD + 2 - RSM), .CRB(CRB), .MUT(gb == 0 ? SMUT : 0), .TSR(TSR)) u_s (
             .clk(clk), .rst_n(rst_n), .me_en(me_en), .i_ov(b_ov), .i_we(b_o_we[gb*NS +: NS]),
             .i_addr(b_o_addr[gb*NS*AW +: NS*AW]), .i_mask(b_o_mask[gb*NS*16 +: NS*16]), .i_data(b_o_data[gb*NS*512 +: NS*512]),
             .o_v(l_v[gb]), .o_end(l_end[gb]), .o_nul(l_nul[gb]), .o_row(l_row[gb*RW +: RW]), .o_mask(l_mask[gb*16 +: 16]),

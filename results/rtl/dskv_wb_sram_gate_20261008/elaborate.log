@@ -1,0 +1,67 @@
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv:40:15: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                  : ... note: In instance 'ot_hbm_kvwb_hub_sram'
+   40 |   generate if(!ENABLE) begin:off
+      |               ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv:54:16: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                       : ... note: In instance 'ot_hbm_kvwb_hub_sram.on.u_wb'
+   54 |   generate if (!ENABLE) begin : off
+      |                ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv:13:14: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                                                                           : ... note: In instance 'ot_hbm_kvwb_hub_sram.on.u_wb.on.shadow_store'
+   13 |  generate if(!ENABLE) begin:off
+      |              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/common/ot_secded_cols.svh:9:19: Logical operator LOGAND expects 1 bit on the LHS, but LHS's AND generates 32 bits.
+                                                                                                                 : ... note: In instance 'ot_hbm_kvwb_hub_sram.on.u_wb.on.shadow_store.on.enc'
+    9 |       if ((w & 1) && w >= 3 && n < kk) begin cols_all[16*n +: 16] = v[15:0]; n = n + 1; end
+      |                   ^~
+                     /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/common/ot_secded.sv:16:1: ... note: In file included from 'ot_secded.sv'
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv:113:32: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'ALL_STACKS' generates 32 bits.
+                                                                                                                                        : ... note: In instance 'ot_hbm_kvwb_hub_sram.on.u_wb'
+  113 |     wire on_stack = ALL_STACKS ? 1'b1 : (pcg[6:5] == 2'(STACK));
+      |                                ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv:56:35: Operator COND expects 6 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'ot_hbm_kvwb_hub_sram'
+   56 |     else begin rwp <= rwp + (rv_q ? 1'b1 : 1'b0); rrp <= rrp + (r_pop ? 1'b1 : 1'b0); ri_cr <= r_pop; end
+      |                                   ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv:56:35: Operator COND expects 6 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'ot_hbm_kvwb_hub_sram'
+   56 |     else begin rwp <= rwp + (rv_q ? 1'b1 : 1'b0); rrp <= rrp + (r_pop ? 1'b1 : 1'b0); ri_cr <= r_pop; end
+      |                                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv:56:71: Operator COND expects 6 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'ot_hbm_kvwb_hub_sram'
+   56 |     else begin rwp <= rwp + (rv_q ? 1'b1 : 1'b0); rrp <= rrp + (r_pop ? 1'b1 : 1'b0); ri_cr <= r_pop; end
+      |                                                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv:56:71: Operator COND expects 6 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                   : ... note: In instance 'ot_hbm_kvwb_hub_sram'
+   56 |     else begin rwp <= rwp + (rv_q ? 1'b1 : 1'b0); rrp <= rrp + (r_pop ? 1'b1 : 1'b0); ri_cr <= r_pop; end
+      |                                                                       ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.215 MB sources in 8 modules, into 0.514 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.140 s (elab=0.081, cvt=0.041, bld=0.000); cpu 0.140 s on 1 threads; allocated 41.379 MB
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only --timing -Wno-fatal --top-module ot_hbm_kvwb_hub_sram -GENABLE=1 -I/srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/common /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/common/ot_secded.sv /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_accel_dskv_shadow_sram.sv /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_accel_dskv_wb_sram.sv /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kvwb_hub_sram.sv /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/rtl/hbm_accel/service/ot_hbm_kport_map.sv /srv/opentallas-scratch2/dskv-shadow-gate-20261008-source/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v"
+	User time (seconds): 0.17
+	System time (seconds): 0.02
+	Percent of CPU this job got: 97%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.19
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 31196
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 8905
+	Voluntary context switches: 6
+	Involuntary context switches: 6
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

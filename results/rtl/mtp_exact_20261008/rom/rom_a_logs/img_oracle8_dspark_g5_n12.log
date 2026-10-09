@@ -1,0 +1,16 @@
+ITER it=0 pos=8 in=3118 accepted=0 emitted=1 cycles=2492916 draft_cycles=198762 fault=0
+ITER it=1 pos=9 in=2400 accepted=0 emitted=1 cycles=2523118 draft_cycles=199500 fault=0
+ITER it=2 pos=10 in=64 accepted=0 emitted=1 cycles=2553174 draft_cycles=200228 fault=0
+ITER it=3 pos=11 in=2325 accepted=0 emitted=1 cycles=2594950 draft_cycles=200948 fault=0
+ITER it=4 pos=12 in=287 accepted=0 emitted=1 cycles=2634190 draft_cycles=208452 fault=0
+ITER it=5 pos=13 in=2963 accepted=0 emitted=1 cycles=2665430 draft_cycles=209156 fault=0
+ITER it=6 pos=14 in=3712 accepted=0 emitted=1 cycles=2695758 draft_cycles=209884 fault=0
+ITER it=7 pos=15 in=2774 accepted=0 emitted=1 cycles=2724782 draft_cycles=210612 fault=0
+ITER it=8 pos=16 in=91 accepted=0 emitted=1 cycles=2762038 draft_cycles=211316 fault=0
+ITER it=9 pos=17 in=104 accepted=0 emitted=1 cycles=2786638 draft_cycles=212044 fault=0
+ITER it=10 pos=18 in=843 accepted=0 emitted=1 cycles=2811254 draft_cycles=212772 fault=0
+HDC41_MTP prompt=8 generated=12 iters=11 token_mismatches=0 accept_mismatches=0 heads=74 head_mismatches=0 prefill_cycles=2650679 iter_cycles=29244248 draft_cycles=2273674 vm_mismatch=0 kv_mismatch=0
+ACCEPT_HIST a0=11 a1=0 a2=0 a3=0 a4=0 a5=0
+UTIL me_busy=11398840 su_busy=11042711 qe_busy=4995840 xu_busy=2118661 he_busy=3628108
+PASS
+- /srv/opentallas-scratch/claude/mtp-exact/src/rtl/test/tb_hdc_core_v41_mtp.sv:422: Verilog $finish

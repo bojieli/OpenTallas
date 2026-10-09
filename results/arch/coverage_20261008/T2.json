@@ -242,20 +242,18 @@
   "plane": "data",
   "function": "Engram n-gram hash (L1, L14): token_map, 4-gram rolling XOR x multipliers mod primes -> 2 layers x 24 row ids",
   "model_ref": "EngramTables.hashes / Model.engram_layer (tools/hdc_golden_v41.py)",
-  "hw_element": "ot_hdc_engram_hash_shipped (+ ot_hdc_engram_tables_shipped_pkg)",
-  "die": null,
-  "rtl": "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
-  "exact_bench": "results/rtl/a3_v41_ngram_hash_campaign.json + a3_v41_ngram_hash_vendor_oracle.json + results/rtl/hdc_v41_engram_campaign.json (pass)",
-  "closure": "NONE",
-  "in_token_path": null,
-  "cycles": null,
-  "cycles_source": "none",
+  "hw_element": "ot_hdc_engram_hash_shipped inside dsfd_engram_lkp (ot_dsrom_engram_lookup; window fed oldest-first, strap-selected 6 columns)",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv, rtl/dsrom_sys/engram/dsfd_engram_lkp.sv, rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
+  "in_token_path": "ds_rom E1.hash / E14.hash (off-critical)",
+  "cycles": 17.0,
+  "cycles_source": "modelled (design.json timeline_cycles)",
   "gap": [
-   "NOT_ON_DIE",
-   "NOT_CLOSED",
-   "NOT_PRICED"
+   "NOT_CLOSED"
   ],
-  "notes": "Data tables (token_map 129,280, primes, multipliers) must come from the real module (memory meta-skeleton-zeroes-data-buffers); the vendor-oracle bench covers that. No S81 die hosts the hash unit (table dies have no recipe)."
+  "notes": "On die since the HBM Engram design (stream engram); hash runs on the home rank dies from the lead-flit window."
  },
  {
   "id": "T2-D03",
@@ -263,21 +261,18 @@
   "plane": "data",
   "function": "Engram table row fetch: 48 rows x 264 B a token from 202.76 GB tables (2 layers x 24 cols, 768M rows)",
   "model_ref": "decode_engram_rows(codes, scale, ids)",
-  "hw_element": "ot_hdc_v41x_egather / ot_hdc_engram_gather + Engram table dies",
-  "die": null,
-  "rtl": "rtl/hdc/v41x/ot_hdc_v41x_egather.sv, rtl/hdc/v41/ot_hdc_engram_gather.sv",
-  "exact_bench": "results/rtl/hdc_v41x_egather_campaign.json, results/rtl/hdc_v41_engram_gather_campaign.json (pass; reduced tables)",
-  "closure": "NONE: no table-die recipe, element, route or power design (COMPLETENESS_AUDIT finding 1); stream engram started 2026-10-08 21:28 (claude/engram-20261008)",
-  "in_token_path": null,
+  "hw_element": "HBM-resident tables (rank r of the home stage holds columns 6r..6r+5, 25.35 GB) read by dsfd_engram_lkp via ctrl_SE; dsfd_engram_sink decodes into the prefetch buffer",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/{ot_dsrom_engram_lookup,dsfd_engram_lkp,ot_dsrom_engram_rowsink,dsfd_engram_sink}.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
+  "in_token_path": "ds_rom E1.hbm_read / E14.hbm_read (off-critical; slack L1 ~8.5k, L14 ~235k cycles)",
   "cycles": null,
-  "cycles_source": "none",
+  "cycles_source": "RTL bench isolated token (200 ns HBM) via design.json",
   "gap": [
-   "NOT_ON_DIE",
-   "NOT_CLOSED",
-   "NOT_PRICED",
-   "MISSING_HW"
+   "NOT_CLOSED"
   ],
-  "notes": "Table dies: 36 in the rack (inherited from the S=58 C1 ledger), 32-56 needed by density. Index = token ids only, so the fetch is prefetchable at token start; whether it hides behind embed+L0 is unproven."
+  "notes": "OWNER option A 2026-10-09: 36 ROM table dies deleted, +8 HBM3E stacks (1->2 on the 8 home dies). Integrity: HBM3E ECC + per-row CRC-32 (bytes 257..260) with slot poison."
  },
  {
   "id": "T2-D04",
@@ -285,19 +280,18 @@
   "plane": "data",
   "function": "Engram row transport: table dies -> L1 and L14 stage dies (rack R2 bottom -> S0/S1, S9-ish)",
   "model_ref": "rows feed linear_q(engram.wkv)",
-  "hw_element": "board/cable links from table trays",
-  "die": null,
-  "rtl": null,
-  "exact_bench": null,
-  "closure": "NONE",
-  "in_token_path": null,
+  "hw_element": "lead flit (window, 72 b) on the existing stage hops + TP4 all-gather of the 6 packed rows a rank on the existing collective",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv (flit source), dsfd_engram_lkp credit beat port -> sp_collective",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (behavioural all-gather)",
+  "closure": "links unchanged (no new link); collective endpoint per the closure loop",
+  "in_token_path": "ds_rom E{1,14}.lead_flit + E{1,14}.rows_allgather",
   "cycles": null,
-  "cycles_source": "none",
+  "cycles_source": "modelled: hops x 1,015 + all-gather upper bound 1,422",
   "gap": [
-   "MISSING_HW",
-   "NOT_PRICED"
+   "MODELLED_ONLY"
   ],
-  "notes": "rack.json places the Engram tables at the bottom of R2; no link class, hop count or port is defined for them."
+  "notes": "No table trays or table links remain."
  },
  {
   "id": "T2-D05",
@@ -310,9 +304,9 @@
   "rtl": "rtl/v41rom/ot_v41_rom_elem_q_qxpq_w10.sv",
   "exact_bench": "results/rtl/dsrom_1m_allmeasured_20261004/engram.json (rebuild bit-exact vs golden + shard)",
   "closure": "FAILED: ot_v41_rom_elem_q_qxpq_w10 'failed, re-running' best TT +87.45 / FF -26.71 (dsrom-qelem-qs5f-e1fbc25c1); ot_s81_bf_native 'failed, re-running' TT -101.07 / FF -63.08 (bf_half_61c1cf230) [/api/elements 2026-10-08]",
-  "in_token_path": null,
+  "in_token_path": "ds_rom E1.wkv / E1.knorm, E14.wkv / E14.knorm (off-critical)",
   "cycles": null,
-  "cycles_source": "none",
+  "cycles_source": "composition E{L}.wkv / knorm (dsrom_1m_allmeasured graph), exported by the engram stream",
   "gap": [
    "NOT_CLOSED",
    "NOT_PRICED"
@@ -1295,20 +1289,18 @@
   "plane": "control",
   "function": "Engram token history per user (last 3 tokens) delivered to the hash unit",
   "model_ref": "position's hist (state['tokens'][:n0+j+1])",
-  "hw_element": "ot_hdc_v41_xu history (HDC core)",
-  "die": null,
-  "rtl": "rtl/hdc/v41/ot_hdc_v41_xu.sv",
-  "exact_bench": "results/rtl/hdc_v41_engram_campaign.json",
-  "closure": "NONE",
-  "in_token_path": null,
-  "cycles": null,
-  "cycles_source": "none",
+  "hw_element": "ot_dsrom_engram_idwin (per-user ring of 8 ids + DEAD flags, official blocking rule) on the S0 rank dies; home dies stateless",
+  "die": "S81 S0 rank dies (embedding stage)",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations)",
+  "closure": "RTL only (small; folds into the S0 embed reader on the die kit)",
+  "in_token_path": "ds_rom E{L}.lead_flit source",
+  "cycles": 1.0,
+  "cycles_source": "RTL (1-cycle registered)",
   "gap": [
-   "NOT_ON_DIE",
-   "NOT_CLOSED",
-   "NOT_PRICED"
+   "NOT_CLOSED"
   ],
-  "notes": "The hash unit has no S81 home (T2-D02); history transport from the token-return path is undefined."
+  "notes": "History transport = the lead flit (window travels; no history on the home dies)."
  },
  {
   "id": "T2-C16",
@@ -1636,18 +1628,16 @@
   "plane": "data",
   "function": "Per-position Engram hash with speculative history (drafts enter the n-gram history)",
   "model_ref": "forward_positions hist = state['tokens'][:n0+j+1] incl. drafts",
-  "hw_element": "ot_hdc_engram_hash_shipped",
-  "die": null,
-  "rtl": "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
-  "exact_bench": "results/rtl/a3_v41_ngram_hash_campaign.json",
-  "closure": "NONE",
+  "hw_element": "ot_dsrom_engram_idwin (drafts enter the ring) + dsfd_engram_lkp (6 windows a step, serial ~405 cycles each)",
+  "die": "S81 layer1e (8 Engram home dies: stages 3 / 42 x 4 ranks; m221pq + phy_SE / ctrl_SE / eng_SE; design results/arch/engram_20261008/design.json die_change)",
+  "rtl": "rtl/dsrom_sys/engram/",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (stressed_8_slots_mtp: 8 prefetch slots)",
+  "closure": "QUEUED 2026-10-09 (owner option A): engram-lkp-A/B/C-tt, engram-sink-A-tt (closure loop, claude/engram-20261008 eb1ccfcc6)",
   "in_token_path": null,
-  "cycles": null,
-  "cycles_source": "none",
+  "cycles": 2025.0,
+  "cycles_source": "modelled: 5 extra windows x ~405 (bench throughput), inside the slack",
   "gap": [
-   "NOT_ON_DIE",
-   "NOT_CLOSED",
-   "NOT_PRICED"
+   "NOT_CLOSED"
   ],
   "notes": "As T2-D02, x6 positions a step; table fetch x6 (288 rows/step)."
  },
@@ -1795,21 +1785,18 @@
   "plane": "control",
   "function": "ROLLBACK - Engram token history (snapshot restore at slot a)",
   "model_ref": "Model.truncate: del tokens[n:] (hash history)",
-  "hw_element": "XU history snapshot (HDC core)",
-  "die": null,
-  "rtl": "rtl/hdc/v41/ot_hdc_v41_xu.sv",
-  "exact_bench": null,
-  "closure": "NONE",
-  "in_token_path": null,
-  "cycles": null,
-  "cycles_source": "none",
+  "hw_element": "ot_dsrom_engram_idwin rewind port (rb_valid/rb_user/rb_n <= 5): ring + position count move back = official cache truncation",
+  "die": "S81 S0 rank dies",
+  "rtl": "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv",
+  "exact_bench": "results/rtl/dsrom_engram_lookup_campaign.json (Verilator: idwin -> 2x4 lookup -> behavioural HBM / all-gather -> 8 sinks; every element vs golden; CRC injection; MTP rewinds; 14 mutations) (rewind events; 2 rewind mutants caught)",
+  "closure": "RTL only",
+  "in_token_path": "ds_rom_mtp accept.engram_rewind (parallel to the commit tail)",
+  "cycles": 1.0,
+  "cycles_source": "RTL",
   "gap": [
-   "NOT_ON_DIE",
-   "NOT_CLOSED",
-   "NOT_EXACT",
-   "NOT_PRICED"
+   "NOT_CLOSED"
   ],
-  "notes": "inventory.json: 'Engram history restore is still testbench logic (tb_hdc_v41x_array g_prime)'. No S81 home (T2-C15)."
+  "notes": "Coordinated with mtp-rollback (mtp-rollback.log): one rewind per user per step from the commit sequencer."
  },
  {
   "id": "T2-M25",

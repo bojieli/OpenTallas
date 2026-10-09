@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools"))
 import rtl_hdc_v41_mtp_campaign as C  # noqa: E402
 from dsrom_sink_handshake import select  # noqa: E402
+import mtp_exact_mutants as MUT  # noqa: E402
 
 
 def digest(p):
@@ -70,6 +71,9 @@ def main():
     ap.add_argument("--sink-handshake", action="store_true")
     ap.add_argument("--mutate", action="store_true", help="also run the HDC_MUTATE_RESTORE build on the first "
                                                           "+FORCE image (it must be detected)")
+    ap.add_argument("--mutate-accept", action="store_true", help="also run a build whose ot_hdc_accept accepts one "
+                                                                 "draft past the first mismatch (tools/mtp_exact_mutants.py) "
+                                                                 "on every MTP image (each must be detected)")
     ap.add_argument("--run-dir", type=Path, required=True)
     a = ap.parse_args()
     a.run_dir.mkdir(parents=True, exist_ok=True)
@@ -79,7 +83,8 @@ def main():
     imgs = [p.resolve() for p in a.image]
     args = {p: (p / "run.args").read_text().split() for p in imgs}
     plain = {p: "+PLAIN" in args[p] for p in imgs}
-    srcs = [C.SVH, *C.RTL, C.TB, C.HARNESS, *C.TOOLS, Path(__file__).resolve(), ROOT / "tools/dsrom_sink_handshake.py"]
+    srcs = [C.SVH, *C.RTL, C.TB, C.HARNESS, *C.TOOLS, Path(__file__).resolve(), ROOT / "tools/dsrom_sink_handshake.py",
+            ROOT / "tools/mtp_exact_mutants.py"]
     rec = {"part": a.part, "core": "ot_hdc_core_v41", "nslot": 8, "mp": 1, "sink_handshake": a.sink_handshake,
            "defines": list(defines), "status": "building",
            "input_sha256": {str(p.relative_to(ROOT)): digest(p) for p in srcs},
@@ -96,10 +101,25 @@ def main():
     forced = [p for p in imgs if "+FORCE" in args[p]]
     if a.mutate and forced:
         mexe = C.build(a.run_dir, 1, False, defines + ("HDC_MUTATE_RESTORE",))
+    aexe = None
+    if a.mutate_accept:
+        good = C.RTL
+        C.RTL = MUT.swap(good, MUT.ACCEPT, MUT.accept_extra(a.run_dir))
+        (a.run_dir / "acc_extra").mkdir(exist_ok=True)
+        aexe = C.build(a.run_dir / "acc_extra", 1, False, defines)
+        C.RTL = good
     rec["build_seconds"] = round(time.time() - t0, 1)
     rec["status"] = "running"
     save()
-    jobs = [(p.name, exe, p) for p in imgs] + ([("MUTANT_" + forced[0].name, mexe, forced[0])] if mexe else [])
+    def rejects(p):
+        """the accept-extra mutant only acts on a step that rejects a draft (a < gamma): an image whose every step
+        accepts all gamma drafts (spread6 forced: [5, 5]) cannot expose it, so it is not run there"""
+        g = int(next(x for x in args[p] if x.startswith("+GAMMA=")).split("=")[1])
+        isa = p / "isa.json"
+        acc = json.loads(isa.read_text()).get("accepted") if isa.exists() else None
+        return acc is None or any(x < g for x in acc)
+    jobs = [(p.name, exe, p) for p in imgs] + ([("MUTANT_" + forced[0].name, mexe, forced[0])] if mexe else []) + \
+        ([("ACCX_" + p.name, aexe, p) for p in imgs if not plain[p] and rejects(p)] if aexe else [])
 
     def sim(job):
         name, x, img = job
@@ -113,14 +133,18 @@ def main():
 
     with ThreadPoolExecutor(max_workers=len(jobs)) as ex:
         for name, img, r in ex.map(sim, jobs):
-            if name.startswith("MUTANT_"):
+            if name.startswith("ACCX_"):
+                rec.setdefault("mutation_rtl_accept_extra", []).append(
+                    {"image": str(img), "detected": not r["pass"], **{k: v for k, v in r.items() if k != "per_iter"}})
+            elif name.startswith("MUTANT_"):
                 rec["mutation_rtl_restore_slot_plus_1"] = {"image": str(img), "detected": not r["pass"],
                                                            **{k: v for k, v in r.items() if k != "per_iter"}}
             else:
                 rec["runs"].append({"image": str(img), "args": args[img], "rtl": r, "pass": r["pass"]})
             save()
     rec["pass"] = all(r["pass"] for r in rec["runs"]) and \
-        rec.get("mutation_rtl_restore_slot_plus_1", {"detected": True})["detected"]
+        rec.get("mutation_rtl_restore_slot_plus_1", {"detected": True})["detected"] and \
+        all(m["detected"] for m in rec.get("mutation_rtl_accept_extra", []))
     rec["status"] = "done"
     save()
     return 0 if rec["pass"] else 1

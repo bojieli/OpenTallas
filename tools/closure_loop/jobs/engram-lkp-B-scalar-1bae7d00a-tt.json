@@ -1,0 +1,81 @@
+{
+ "name": "engram-lkp-B-scalar-1bae7d00a-tt",
+ "block": "dsfd_engram_lkp",
+ "owner": "Codex:engram",
+ "purpose": "OWNER-APPROVED 2026-10-09 (option A, HBM-resident Engram). engram stream variant B: PIPE 1 (registered one-hot atom selects replicated per 64-bit lane group, linear-split CRC), 324 x 216 um; scalar pin-name successor only, same RTL/shape/coordinates/cycles; original terminal failure retained.",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-agidock128"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "codex/engram-resume-20261009",
+  "commit": "1bae7d00a2dff51c1708f34473df5dac0d2d0ec9"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_engram",
+    "cmd": "python3 tools/rtl_dsrom_engram_lookup_campaign.py --no-mutations --output {RUN}/bench.json",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "neg_offset_not_subtracted",
+    "cmd": "python3 tools/rtl_dsrom_engram_lookup_campaign.py --mutant 1",
+    "expect": "fail",
+    "fail_regex": "ENGRAM_NEG FAIL as required",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; sed -i 's/parameter integer PIPE    = 0/parameter integer PIPE    = 1/' rtl/dsrom_sys/engram/dsfd_engram_lkp.sv && HM=0.05 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_lkp rtl/dsrom_sys/engram/dsfd_engram_lkp.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 12,
+   "peak_ram_gb": 32
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; sed -i 's/parameter integer PIPE    = 0/parameter integer PIPE    = 1/' rtl/dsrom_sys/engram/dsfd_engram_lkp.sv && SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.05 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_engram_lkp rtl/dsrom_sys/engram/dsfd_engram_lkp.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/dsfd_engram_lkp"
+  }
+ ],
+ "cycles_added": 0,
+ "cycles_note": "+1 cycle per beat latency and +1 on the row status inside the off-critical Engram branch; 0 on the token path",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

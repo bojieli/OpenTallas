@@ -1,0 +1,26 @@
+{
+  "schema": "opentallas.qwen-r25-prenorm-mechanism.v1",
+  "source_commit": "e9397e46a",
+  "verdict": "PASS_ISOLATED_GRAPH_AND_QUANTIZATION",
+  "host": "ot-epyc2",
+  "admission": "/srv/opentallas-scratch/admit.sh 1 -- /usr/bin/time -v <existing tau venv>/bin/python tests/test_qwen_r25_prenorm.py",
+  "peak_rss_kib": 236676,
+  "tests": 3,
+  "successor_mode": "r25_prenorm_full_w8",
+  "verified": [
+    "INT8 codes and BF16 scales quantized directly from unmodified released-style projection matrices",
+    "actual forward passes FP32 pre-matvec RMSNorm output to the matvec input rounding boundary",
+    "independent numpy chunk8/RNE norm and INT8/BF16 projection agree bit-exactly",
+    "folded-weight and norm-after-matvec negative controls disagree and are rejected",
+    "historical constructor keeps its prior folded path; successor rejects transformed weight files"
+  ],
+  "fixture": "synthetic single layer H64/FF64, four query heads/two KV heads, two positions",
+  "historical_mode": "r25_full_w8 is preserved as unadopted NAM/folded characterization",
+  "limitations": [
+    "not a full-checkpoint quality run or a whole-layer independent exactness proof",
+    "not physical or production RTL qualification",
+    "PPL/MMLU and numerical stability still require the GPU quality gate",
+    "current local CUDA allocation fails; GPU availability evidence is recorded separately"
+  ],
+  "failed_test_history": ["failed_6d7369801", "failed_3506a4dfa"]
+}

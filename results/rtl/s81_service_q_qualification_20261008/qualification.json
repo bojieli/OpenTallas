@@ -1,0 +1,53 @@
+{
+ "key": "1|/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/routes/s81ph_dsfd_svcio_q_093da5918_lbc/work/orfs|0|budget_rb2",
+ "at": "2026-10-08T23:00:04-07:00",
+ "available": true,
+ "tt": 131.97,
+ "ff": 2.62,
+ "errors": [],
+ "ioref": {
+  "tt": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 172.7,
+    "min": 161.2,
+    "max": 191.9,
+    "n": 1030,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 172.7,
+    "min": 161.2,
+    "max": 191.9,
+    "n": 1030,
+    "kind": "boundary"
+   }
+  },
+  "ff": {
+   "vclk": {
+    "clock": "core_clk",
+    "mean": 140.1,
+    "min": 129.6,
+    "max": 158.1,
+    "n": 1030,
+    "kind": "boundary"
+   },
+   "ot_lb_v_core_clk": {
+    "clock": "core_clk",
+    "mean": 140.1,
+    "min": 129.6,
+    "max": 158.1,
+    "n": 1030,
+    "kind": "boundary"
+   }
+  }
+ },
+ "tt_i2r": 131.97,
+ "tt_out": 146.37,
+ "ff_i2r": 2.62,
+ "ff_out": 37.58,
+ "ff_r2r": 29.86,
+ "json": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_svcio_q-093da5918-lbc/cl/routed_ioref.a1.budget_rb2.json",
+ "rebudget": "budget_rb2"
+}

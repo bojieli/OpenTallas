@@ -1,0 +1,36 @@
+{
+  "source_commit": "c56a821770d6ba02e1e11ed07000e3eba4bff9e0",
+  "host": "ot-epyc4",
+  "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
+  "verdict": "PASS_CONTROL_EXACT",
+  "scenarios": 9,
+  "full_context": {
+    "steps": 8192,
+    "trace_events": 1245184,
+    "trace_bad": 0,
+    "completions": "8191/8191",
+    "completion_bad": 0
+  },
+  "CTRL_oneway_edges": 40,
+  "turnaround_max_edges": 97,
+  "prompt_read_added_edges": 0,
+  "faults": [
+    "die sequencer",
+    "die core",
+    "die collective",
+    "watchdog",
+    "die disagreement"
+  ],
+  "logs": {
+    "fault4.log": "2d3b20efea0619bf2d61e477675c2e291f34ce0ec5be74fd573425745f294d96",
+    "fault3.log": "7c7a943693a2da4dcfa30538bf55da34931442cf97b6d80c1367b8d0e45a47af",
+    "fault2.log": "7bc83a5d1f723ea7dbf7a2a902c2ec18a2a07c2653747bd4b44c80791a6a8e37",
+    "fullctx.log": "3c235d12d506533db715acf5bfb1aef33372127e5e497c827e2abd0bea6806bd",
+    "eos.log": "bd2f1db23c68180a6ae8961a87dfed6f679febfb2d067e92f171a667c0d9faac",
+    "length.log": "f853c065280669761e1ff765c0b858951317c346e29a0083e3ad29276cde17c9",
+    "badlen.log": "de85e9a453e5ece50e6fb1dc3e2cb086315c57b8307bd5fe0a64aa6d4fd26a43",
+    "fault1.log": "4cc44f685e470ffafea1af2d26c9fa821ccb2fadfdb1fb7bd66fcfee1185dc0a",
+    "disagree.log": "d52209f945eb75d4865216f620f6f5bf43b4b124c5c3a1b3c44e10ecd6818dee"
+  },
+  "physical_qualification": "pending route"
+}

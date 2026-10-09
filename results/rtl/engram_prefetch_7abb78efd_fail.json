@@ -1,0 +1,11 @@
+{
+ "schema": "opentallas.engram-prefetch-failure.v1",
+ "source_commit": "7abb78efd",
+ "host": "ot-epyc2",
+ "scratch": "/srv/opentallas-scratch/claude/engram/prefetch",
+ "status": "fail",
+ "case": "full1536word_readback_without_injection",
+ "terminal_returncode": 1,
+ "terminal_output": "FATAL: rtl/test/tb_dsrom_engram_prefetch.sv:27: prefetch payload mismatch row0\nTime: 15460000 Scope: tb_dsrom_engram_prefetch",
+ "qualification": "not eligible for adoption; real macro read/capture integration needs repair"
+}

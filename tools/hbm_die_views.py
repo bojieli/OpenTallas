@@ -120,6 +120,9 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
+    if native.exists():
+        return json.loads(native.read_text())
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None
@@ -127,6 +130,10 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
+    if d is not None and d.get('schema') == 'opentallas.hbm_native_indexer_ports.v1':
+        # The same source-pinned native contract drives the first full-shape
+        # hardening and the opt-in R25I placement; never synthesize fake peers.
+        return d
     m, pw, M, real = model()
     if d is not None and name not in M:     # a split the generator does not place yet
         return d
@@ -178,7 +185,12 @@ def svh(rec):
 
 
 def cmd_ports(a):
-    m, pw, M, real = model()
+    native_only = a.master and all((derived_record(n) or {}).get('schema') ==
+                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+    if native_only:
+        M = {}
+    else:
+        m, pw, M, real = model()
     names = a.master or sorted(n for n in M if n.startswith('hfd_') and n != 'hfd_sm' or n == 'hfd_sm')
     out = Path(a.out)
     summary = {}
@@ -434,10 +446,15 @@ def cmd_index(a):
 
 
 # ------------------------------------------------------------------------------------------------ die with real views
-def real_views(index_path):
+def real_views(index_path, active_masters=None):
     idx = json.loads(Path(index_path).read_text())
     out = {}
     for n, v in idx['masters'].items():
+        # Candidate dies can replace a master by hardened halves while retaining
+        # the adopted view index.  Only installed candidate masters have a LEF
+        # to replace; an absent parent view must never stand in for its halves.
+        if active_masters is not None and n not in active_masters:
+            continue
         if v['status'] in ('closed', 'closed-below-margin', 'interim-not-closed', 'reservation') and v.get('lef'):
             out[n] = ROOT / v['dir'] / v['lef']
     return out
@@ -521,7 +538,8 @@ def sta_tcl(m, work, index):
     tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
     and checked inside the station views)."""
     idx = json.loads(Path(index).read_text())['masters']
-    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
+    active_masters = {it.master for it in m['insts']}
+    libs = {n: v for n, v in idx.items() if n in active_masters and v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
                                                                             'interim-not-closed')}
     run = (work / 'run.tcl').read_text()
     head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
@@ -728,7 +746,8 @@ def bundle_real_pins(macro_text, view, k):
 
 def cmd_die(a):
     m, pw, M, real = model()
-    views = real_views(a.index)
+    active_masters = {it.master for it in m['insts']}
+    views = real_views(a.index, active_masters)
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     gen_text = {}
@@ -835,6 +854,9 @@ def cmd_die(a):
             (work / 'run.tcl').write_text(t_)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
+    man['indexed_views_not_instantiated'] = sorted(set(real_views(a.index)) - active_masters)
+    man['generated_masters_without_real_view'] = sorted(n for n in active_masters
+                                                       if n.startswith('hfd_') and n not in views)
     if a.case in ('real', 'sta') and pads:
         man['mirror_pads'] = pads
     if a.case == 'grt':

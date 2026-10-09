@@ -1,0 +1,251 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "mtp-mtp_seq-c-c67a71fe5-tc",
+ "block": "dsfd_mtp_seq",
+ "owner": "Claude:mtp-rom",
+ "source_branch": "claude/mtp-rom-20261008",
+ "source_commit": "c67a71fe589df4c8aeccfc9557e190620c5181c6",
+ "host": "ot-epyc2",
+ "run_dir": "/srv/opentallas-data/claude/closure-loop/mtp-mtp_seq-c-c67a71fe5-tc",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 52.37,
+  "ff_ps": 5.76,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-data/claude/closure-loop/mtp-mtp_seq-c-c67a71fe5-tc/routes/mtp_mtp_seq_c_c67a71fe5_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-data/claude/closure-loop/mtp-mtp_seq-c-c67a71fe5-tc/routes/mtp_mtp_seq_c_c67a71fe5_tc/work/orfs/logs/asap7/opentallas_dsfd_mtp_seq_asap7_s81ph_mtp_mtp_seq_c_c67a71fe5_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_pass_s0_tr_forced": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "{\"case\": \"s0_tr_forced\", \"expect\": \"pass\", \"params\": {\"MODE\": 0, \"NUSR\": 2}, \"defines\": [], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24, \"passes\": 8, \"drafter\": \"forced\", \"accepted\": [0, 1, 2, 3, 4, 5, 0, 1]}, \"result\": \"MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41423\", \"got\": \"pass\", \"verdict\": \"OK\"}\nMTP_BENCH s0_tr_forced PASS\n",
+   "track": "parallel"
+  },
+  "bench_pass_s0_hash_u3": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "{\"case\": \"s0_hash_u3\", \"expect\": \"pass\", \"params\": {\"MODE\": 1, \"NUSR\": 3, \"NGEN_H\": 48, \"RHO\": 70, \"SEED\": 3}, \"defines\": [], \"result\": \"MTP_S0 PASS mode=1 users=3 (ar 0) plen=5 ngen=48 steps_closed=52 accepted=92 seeds=49 dh=238 draft_flits=49 issues=299 rejects=39 squashed=146 hidden=302 s0_starts=302 cycles=89899\", \"got\": \"pass\", \"verdict\": \"OK\"}\nMTP_BENCH s0_hash_u3 PASS\n",
+   "track": "parallel"
+  },
+  "bench_fail_s0_neg_off1": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "{\"case\": \"s0_neg_off1\", \"expect\": \"fail\", \"params\": {\"MODE\": 0, \"NUSR\": 1}, \"defines\": [\"OT_MTPSEQ_MUT_OFF1\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24, \"passes\": 8, \"drafter\": \"forced\", \"accepted\": [0, 1, 2, 3, 4, 5, 0, 1]}, \"result\": \"MTP_S0 FAIL: u0 step 1 closed at 9 a 0, golden anchor 8 a 1 (g 5)\", \"got\": \"fail\", \"verdict\": \"OK\"}\nMTP_BENCH s0_neg_off1 FAIL\n",
+   "track": "parallel"
+  },
+  "bench_fail_s0_neg_nohold": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "{\"case\": \"s0_neg_nohold\", \"expect\": \"fail\", \"params\": {\"MODE\": 0, \"NUSR\": 1}, \"defines\": [\"OT_MTPSEQ_MUT_NOHOLD\"], \"trace\": {\"trace\": \"results/rtl/dshbm_dspark_rtl_20261003/traces/tr_forced.cfg.json\", \"plen\": 8, \"ngen\": 24, \"passes\": 8, \"drafter\": \"forced\", \"accepted\": [0, 1, 2, 3, 4, 5, 0, 1]}, \"result\": \"MTP_S0 FAIL: fault wfc 0 lnk 0 tok 0 vmx 0 seq 1\", \"got\": \"fail\", \"verdict\": \"OK\"}\nMTP_BENCH s0_neg_nohold FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "lef_check_MATCH": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1292,
+    "mean": 311.8,
+    "min": 304.4,
+    "max": 318.9
+   },
+   "all": {
+    "n": 11902,
+    "mean": 311.5,
+    "min": 304.1,
+    "max": 319.7
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1292,
+    "mean": 195.8,
+    "min": 189.3,
+    "max": 201.1
+   },
+   "all": {
+    "n": 11902,
+    "mean": 195.4,
+    "min": 189.3,
+    "max": 201.9
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 240,
+   "CK_SS_ALL_MEAN": 240,
+   "CK_SS_MIN": 233,
+   "CK_SS_ALL_MIN": 233,
+   "CK_SS_MAX": 246,
+   "CK_SS_ALL_MAX": 247,
+   "CK_TT_MEAN": 240,
+   "CK_TT_ALL_MEAN": 240,
+   "CK_TT_MIN": 233,
+   "CK_TT_ALL_MIN": 233,
+   "CK_TT_MAX": 246,
+   "CK_TT_ALL_MAX": 247,
+   "CK_FF_MEAN": 196,
+   "CK_FF_ALL_MEAN": 195,
+   "CK_FF_MIN": 189,
+   "CK_FF_ALL_MIN": 189,
+   "CK_FF_MAX": 201,
+   "CK_FF_ALL_MAX": 202,
+   "CK_SSLIB_MEAN": 312,
+   "CK_SSLIB_MIN": 304,
+   "CK_SSLIB_MAX": 319,
+   "CK_SSLIB_ALL_MEAN": 312,
+   "CK_SSLIB_ALL_MIN": 304,
+   "CK_SSLIB_ALL_MAX": 320,
+   "CK_ROUTE_REF": "TT"
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T22:28:58-07:00",
+ "job_spec": {
+  "name": "mtp-mtp_seq-c-c67a71fe5-tc",
+  "block": "dsfd_mtp_seq",
+  "owner": "Claude:mtp-rom",
+  "purpose": "MTP-ROM 2026-10-08 (CRITICAL PATH item 0; OWNER 21:00: route MTP blocks immediately, benches gate adoption): dsfd_mtp_seq = head-die MTP sequencer (ot_dsrom_mtp_seq: streamed greedy prefix accept mirroring the WFC, hold of the closing + squashed RESULTs, seed / draft-head chain, DRAFT flit then release); every port behind the WFC's registered link pair; 6-cycle registered event pipeline. Variant c: HM 10, PD 0.30 (spread: wire-dominated pin-to-flop paths shorter in a sparse core). TC route corner, mm FF hold, H1 + CTS fix hooks + link budget hook, CTS-only calibrate -> IO SDC at the measured insertion; contract pin plan tools/s81_ph/s81_ph_mtp_plan.py; bench tools/dsrom_mtp_rom_bench.py (real closed WFC in the S0 / stage benches, golden V4.1 speculative traces, negative mutants).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3"
+  ],
+  "threads": 12,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "claude/mtp-rom-20261008",
+   "commit": "c67a71fe589df4c8aeccfc9557e190620c5181c6",
+   "extra_paths": [
+    "results/rtl/dshbm_dspark_rtl_20261003/traces"
+   ]
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "pass_s0_tr_forced",
+     "cmd": "python3 tools/dsrom_mtp_rom_bench.py one s0_tr_forced --out {RUN}/bench",
+     "expect": "pass",
+     "pass_regex": "MTP_BENCH s0_tr_forced PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "pass_s0_hash_u3",
+     "cmd": "python3 tools/dsrom_mtp_rom_bench.py one s0_hash_u3 --out {RUN}/bench",
+     "expect": "pass",
+     "pass_regex": "MTP_BENCH s0_hash_u3 PASS",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "fail_s0_neg_off1",
+     "cmd": "python3 tools/dsrom_mtp_rom_bench.py one s0_neg_off1 --out {RUN}/bench",
+     "expect": "fail",
+     "fail_regex": "MTP_BENCH s0_neg_off1 FAIL",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    },
+    {
+     "name": "fail_s0_neg_nohold",
+     "cmd": "python3 tools/dsrom_mtp_rom_bench.py one s0_neg_nohold --out {RUN}/bench",
+     "expect": "fail",
+     "fail_regex": "MTP_BENCH s0_neg_nohold FAIL",
+     "threads": 2,
+     "peak_ram_gb": 4,
+     "needs": [
+      "iverilog"
+     ]
+    }
+   ],
+   "calibrate": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract dsfd_mtp_seq rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv  $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+    "threads": 12,
+    "peak_ram_gb": 32
+   },
+   "route": {
+    "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; HM=0.010 PD=0.30 SRC={SRC} OUT={RUN}/routes CORES=12 NEED=32 SRCS='rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv rtl/dsrom_sys/mtp/ot_dsrom_mtp_seq.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_lnk.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_vmx.sv rtl/dsrom_sys/mtp/ot_dsrom_drf_fan.sv rtl/common/ot_ratio_cdc_fifo.sv' CLK=ck bash physical/s81_ph_views/common/route_view.sh {LABEL} contract dsfd_mtp_seq rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv ",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/view/* {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "lef_check_MATCH",
+     "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_ph_views/common/signoff_unc60.sdc",
+    "physical/common_flow/link_budget_consistent.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_ph_views/closed/dsfd_mtp_seq_c"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "new MTP element: no budget sheet yet (stream mtp-die owns the MTP die/array budget); routed on the calibrated measured insertion (standard S81-PH flow)"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01
+ },
+ "io_budget": "link_budget_consistent (fixed split)",
+ "rebudget": null
+}

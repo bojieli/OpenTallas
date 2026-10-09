@@ -1,0 +1,122 @@
+{
+  "verdict": "PASS_ENDPOINT_ONLY",
+  "model": {
+    "scope": "native loader sector endpoint; explicit external address translation and real service completion required",
+    "parameters": {
+      "default_enable": 0,
+      "sector_bits": 30,
+      "pc_bits": 5,
+      "tag_bits": 16,
+      "data_bits": 256,
+      "stack_instances": 4
+    },
+    "request_bits": 291,
+    "response_bits": 282,
+    "state_bits": 3,
+    "saved_request_bits": 308,
+    "saved_reply_bits": 256,
+    "flops_per_stack": 568,
+    "memory_ports": {
+      "native": 1,
+      "service": 1
+    },
+    "outstanding_per_stack": 1,
+    "bytes_per_service_cycle": 32,
+    "MACs_per_cycle": 0,
+    "compute_intensity": 0,
+    "boundaries": {
+      "native_request_bits": 338,
+      "native_response_bits": 274,
+      "service_write_request_bits": 291,
+      "service_read_request_bits": 51,
+      "service_response_bits": 282
+    },
+    "latency": {
+      "request_capture_cycles": 1,
+      "reply_capture_cycles": 1,
+      "minimum_endpoint_cycles_per_sector": 3,
+      "service_cycles": "measured downstream; no invented bound",
+      "token_path_added_cycles": 0,
+      "token_path_condition": "deployment only; runtime load conflict remains explicitly unqualified"
+    },
+    "area": {
+      "flop_count_estimate": 568,
+      "slot_fit": "unqualified: service physical owner must admit"
+    },
+    "routing": {
+      "tracks": "port bits \u00d7 actual routing layers and occupancy required",
+      "channel_capacity": null,
+      "qualified": false
+    },
+    "mux_demux": {
+      "replicas": 4,
+      "request_select": "existing physical per-stack arbiter",
+      "response_select": "single saved PC and tag; we identity"
+    },
+    "invalid": "misaligned/unmapped address or partial write strobe faults before acceptance; malformed/unsolicited service completion faults without loader success",
+    "address_mapping": "external owner supplies actual byte-address\u2192stack/PC/sector translator; endpoint never truncates native address",
+    "write_visibility": "service response for write must originate physical k_wr_done after accepted write; request acceptance is never completion",
+    "adoption": false,
+    "physical_admitted": false
+  },
+  "cases": [
+    {
+      "mode": 0,
+      "passed": true,
+      "output": "PASS 64 sectors stalls visibility identity held replies mismatch\n"
+    },
+    {
+      "mode": 1,
+      "passed": true,
+      "output": "PASS negative mode=1\n"
+    },
+    {
+      "mode": 2,
+      "passed": true,
+      "output": "PASS negative mode=2\n"
+    },
+    {
+      "mode": 3,
+      "passed": true,
+      "output": "PASS negative mode=3\n"
+    },
+    {
+      "mode": 4,
+      "passed": true,
+      "output": "PASS negative mode=4\n"
+    },
+    {
+      "mode": 5,
+      "passed": true,
+      "output": "PASS negative mode=5\n"
+    }
+  ],
+  "mutants": [
+    {
+      "name": "acceptance_is_completion",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-codex-loader-service-20261008/rtl/hbm_accel/loader/service_native/tb_loader_native_endpoint.sv:39: accept credited as completion\n       Time: 206000 Scope: tb_loader_native_endpoint\n"
+    },
+    {
+      "name": "ignore_read_identity",
+      "detected": true,
+      "passed": false,
+      "output": "FATAL: /home/ubuntu/wt-codex-loader-service-20261008/rtl/hbm_accel/loader/service_native/tb_loader_native_endpoint.sv:57: tag mismatch not fenced\n       Time: 9636000 Scope: tb_loader_native_endpoint\n"
+    }
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_loader_native_endpoint.sv": "7639c48fb16ffe4ce1c7b1d1df9883593713169949ba0005e962ac371caf9864",
+    "rtl/hbm_accel/loader/service_native/tb_loader_native_endpoint.sv": "5921cc2673936c72cd147b089ccae55f0b4a635c2dd1115658dc48c3d26d00b2",
+    "tools/hbm_loader_native_service_gate.py": "645d6d4c734a2d4d91790b52a984728a322790273b7aa1f82facaa32fe826b3c",
+    "tools/hbm_loader_native_service_model.py": "d2d5951804ee47858112beec15b0b737c2f6c5bc45ce5c408883d87cb62f0d97"
+  },
+  "physical_admitted": false,
+  "service_join_proven": false,
+  "limitations": [
+    "external translated address validity is an input contract; actual aperture mapper must be joined",
+    "write ACK is test-owned; real source-owned physical completion counter join is required",
+    "read peer is test-owned; service read lease arbiter required",
+    "no SS/FF, die routing or token credit"
+  ]
+}

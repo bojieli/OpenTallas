@@ -24,7 +24,7 @@ module dsfd_sp_collective (
 `ifndef S81PH_COLL_V1
     // CLAUDE S81-PH coll v2 (redesign pass, coll_m1 7 h in timing-driven placement at ~1M nets): the slab is a
     // composition of tiles: dsfd_coll_ck (PLL, reset sequencer), dsfd_coll_core (engine, VM queues, packer) and 8
-    // lane tiles (dsfd_coll_lane_w: W0..W3 = lanes 0..3, dsfd_coll_lane_e: E0..E3 = lanes 4..7), joined by registered
+    // lane tiles (dsfd_coll_lane_w: W0..W3 = lanes 0..3, dsfd_coll_lane_w mirrored MY: E0..E3 = lanes 4..7), joined by registered
     // 2-slot skid interfaces (physical/s81_ph_views/collective/composition.json).  S81PH_COLL_V1 = the v1 flat slab.
     dsfd_coll_ck u_ck (.refclk(refclk), .por(por), .pll_stream(pll_stream), .pll_serial(pll_serial), .pll_hbm(pll_hbm),
         .rst_stream(rst_stream), .rst_serial(rst_serial), .rst_hbm(rst_hbm));
@@ -48,7 +48,7 @@ module dsfd_sp_collective (
                 .lo_v(lo_v[g]), .lo_r(lo_r[g]), .lo_d(lo_d[g*553 +: 553]), .li_v(li_v[g]), .li_r(li_r[g]),
                 .li_d(li_d[g*553 +: 553]), .flt(flt[3*g +: 3]));
         end else begin : g_e
-            dsfd_coll_lane_e u_l (.ck(pll_stream), .rs(rst_stream), .chb(chb), .rx(rxl[g]), .tx(txl[g]), .tf(tfl[g]),
+            dsfd_coll_lane_w u_l (.ck(pll_stream), .rs(rst_stream), .chb(chb), .rx(rxl[g]), .tx(txl[g]), .tf(tfl[g]),
                 .lo_v(lo_v[g]), .lo_r(lo_r[g]), .lo_d(lo_d[g*553 +: 553]), .li_v(li_v[g]), .li_r(li_r[g]),
                 .li_d(li_d[g*553 +: 553]), .flt(flt[3*g +: 3]));
         end

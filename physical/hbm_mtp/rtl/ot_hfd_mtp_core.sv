@@ -18,13 +18,13 @@ module ot_hfd_mtp_core #(
     parameter integer NST    = 3,
     parameter integer MAXPOS = 1 << 20,
     parameter integer W      = 128,
-    parameter integer WR     = 136,
-    parameter integer SR     = 136,
+    parameter integer WR     = 256,     // MR-7: window ring 256 slots (slot = pos[7:0])
+    parameter integer SR     = 10,      // compressor slot ring: max ratio 2 + PMAX
     parameter integer TR     = 16,
     parameter integer NG     = 4,
     parameter integer NSRC   = 4,
-    parameter [NSRC*4-1:0] RLOG = 16'h7272,
-    parameter integer CKMAX  = 1 << 18,
+    parameter [NSRC*4-1:0] RLOG = 16'h0111,  // MR-8: V4.1 L2 / L8 / L14 ratio 2, L20 ratio 1
+    parameter integer CKMAX  = 1 << 20,     // compressed rows per source: 1M positions at ratio 1
     parameter integer AW     = 32,
     parameter integer LP     = 8,
     parameter integer FLAT   = 7,

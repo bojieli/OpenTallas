@@ -1,0 +1,269 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T06:39:06.558610+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "antenna": null,
+    "area_basis": "synthesis.cell_area_um2 (pre-layout)",
+    "area_um2": 1889.319,
+    "block": "ot_qwen_ctrl_pc_emb",
+    "cells": 12718,
+    "cells_basis": "synthesis.cell_count (pre-layout, pinned host Yosys)",
+    "clock_period_ns": null,
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "description": "ad-hoc block supplied on the command line",
+    "drc": null,
+    "false_path_from_ports": [],
+    "false_path_io": false,
+    "fmax_basis": null,
+    "fmax_hz": null,
+    "io_delay_fraction": 0.2,
+    "parameters": {
+      "ENABLE": 1,
+      "PC": 0
+    },
+    "sources": [
+      {
+        "path": "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv",
+        "sha256": "a203e503786573378a44b3471f252b68a7370a9e9566d598c6b6e229be637fda",
+        "size_bytes": 4678
+      },
+      {
+        "path": "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv",
+        "sha256": "714487a068ea745f17ee742c9e57b630566004f7dcf6ad4bdb74f9ca77622cbc",
+        "size_bytes": 42398
+      }
+    ],
+    "top": "ot_qwen_ctrl_pc_emb"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\norfs_hold_mm: {\"helper\": \"/src/tools/orfs_hold_mm.tcl\", \"load_before\": \"bf7b6bc7e304c315fccc2ba3b0e79b8ea6cf927d56d28de51377c9ad3b3bb934\", \"util_before\": \"3347ecb35ca2b423b8544e3a9e5c9fe5b4d053c0003c81928c8c91c826bdbf81\", \"status\": \"patched\", \"load_after\": \"50f4af0af0194e085d6641275578d072ab1d25cb980513362df50888f83e1b4c\", \"util_after\": \"9bec38e0bc6c6109820d48ee99ed9c1c8a4232c8fce25f1fc67a3b0674c99329\"}\norfs_hold_mm: abc no-dch off\norfs_hold_mm: fp lint hook patched\norfs_hold_mm: pre-route gate hook patched\n{\"allcorner_spef_evaluator\": \"/OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl\", \"original_sha256\": \"8e38f283d4f669792bbec6a8dc673c336792f6fa4c3d3bb27c7ea65504d6ae7c\", \"patched_sha256\": \"532f9a29e7a3248959431366b7170986b6e4a5a3e8fb6fe572423a0c7c821b1d\", \"helper_sha256\": \"6b30c9746e3ae0b4cc01086c3eb1b3fe3363b55f3e4deba9d03448dd5225731a\"}\ncp /src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00/plain.sdc /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_2_yosys.sdc\ntouch -r /src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00/plain.sdc /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 8 thread(s).\nmkdir -p /work/objects/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nsource /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl\nError: synth_odb.tcl, 4 OT_HOLD_MM: WC_LIB_FILES missing (route with --hold-corners WC,BC)\n\nElapsed time: 0:00.14[h:]min:sec. CPU time: user 0.10 sys 0.03 (94%). Peak memory: 94872KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/asap7/opentallas_ot_qwen_ctrl_pc_emb_asap7_qdm_qfd_ctrl_emb_00_2b0cdede4_tc/base/1_synth.odb] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T06:38:18.322833+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_qwen_ctrl_pc_emb",
+      "--source",
+      "rtl/qwen_sys/emb_hbm_20261008/ot_qwen_ctrl_pc_emb.sv",
+      "--source",
+      "rtl/qwen_sys/emb_hbm_20261008/ot_hbm_r14_stream_pc_srow.sv",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "PC=0",
+      "--die-area",
+      "0",
+      "0",
+      "247.536",
+      "370.44",
+      "--core-area",
+      "2.16",
+      "2.16",
+      "245.376",
+      "368.28",
+      "--pin-region",
+      "^cmd(_v)?(\\[|$)=left:8-120",
+      "--pin-region",
+      "^s_(v|we|bank|col|row)(\\[|$)=left:125-240",
+      "--pin-region",
+      "^(read_credit|cmd_credit|s_cr)(\\[|$)=left:245-360",
+      "--pin-region",
+      "^(row|col)_.*=right:8-360",
+      "--pin-region",
+      "^(clk|rst_n|busy|fault)$=top:8-240",
+      "--pin-regions-exhaustive",
+      "--routing-layers",
+      "M2",
+      "M7",
+      "--clock-port",
+      "clk",
+      "--clock-period-ns",
+      "0.960",
+      "--clock-uncertainty-ns",
+      "0.06",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "TC",
+      "--hold-corners",
+      "TC,BC",
+      "--io-delay-fraction",
+      "0.2",
+      "--stages",
+      "synth,pnr",
+      "--place-density",
+      "0.55",
+      "--hold-margin-ns",
+      "0.05",
+      "--synth-timeout-seconds",
+      "unlimited",
+      "--flow-timeout-seconds",
+      "unlimited",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--orfs-var",
+      "NUM_CORES=8",
+      "--orfs-var",
+      "SDC_FILE=/src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00/plain.sdc",
+      "--orfs-var",
+      "QDM_SDC_DIR=/src/physical/qwen_die_masters/mc/qfd_ctrl_emb_00",
+      "--orfs-var",
+      "PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks",
+      "--step-tcl",
+      "PRE_CTS=physical/qwen_die_masters/pre_cts_skew.tcl",
+      "--step-tcl",
+      "POST_CTS=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl",
+      "--step-tcl",
+      "PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl",
+      "--step-tcl",
+      "POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl",
+      "--orfs-var",
+      "CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75",
+      "--orfs-var",
+      "OT_IO_SKEW=90",
+      "--orfs-var",
+      "OT_IO_HOLD_SKEW=50",
+      "--orfs-var",
+      "OT_REF_GLOB=*cmd_q*",
+      "--orfs-var",
+      "OT_IO_INTER=*",
+      "--orfs-var",
+      "OT_IO_SKEW_INTER=150",
+      "--slew-margin-percent",
+      "30",
+      "--purpose",
+      "signoff_target",
+      "--nickname-tag",
+      "qdm_qfd_ctrl_emb_00_2b0cdede4_tc",
+      "--keep-workdir",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/routes/qfd_ctrl_emb_00_2b0cdede4_tc/work",
+      "--force",
+      "--output",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/routes/qfd_ctrl_emb_00_2b0cdede4_tc/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "bb298f5dc56bb1e81c3a6e48a11069713d6573cdf009cecd7ee1e4f054ee160a",
+      "tree": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src"
+    },
+    "orfs_num_cores": 8,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_ctrl_emb_00-2b0cdede4-tc/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth"
+  ],
+  "stages_requested": [
+    "synth",
+    "pnr"
+  ],
+  "status": "error",
+  "synthesis": {
+    "abc_delay_target_ps": 960.0,
+    "cell_area_um2": 1889.319,
+    "cell_count": 12718,
+    "cell_types_used": 39,
+    "chip_area_um2": 1889.32014,
+    "combinational_cell_count": 10221,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "f50af5220a550c4233f537b44e1c05a1e9dc1e08f248d452dd911f9d2aa0244e",
+      "raw_netlist_sha256": "f50af5220a550c4233f537b44e1c05a1e9dc1e08f248d452dd911f9d2aa0244e",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 898.536,
+    "sequential_cell_count": 2497,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 0.96,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}

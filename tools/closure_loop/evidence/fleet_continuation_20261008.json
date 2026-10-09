@@ -1,0 +1,50 @@
+{
+  "at": "2026-10-08T22:54:58.303489-07:00",
+  "scope": "Operational continuation snapshot, not new physical acceptance evidence",
+  "status_counts": {
+    "ECO": 13,
+    "CANCELLED": 658,
+    "CLOSED": 381,
+    "NEEDS_RTL": 439,
+    "NEEDS_HUMAN": 301,
+    "INVALID": 33,
+    "RUNNING": 162,
+    "EARLY_FAIL_SETUP": 31,
+    "EARLY_FAIL_HOLD": 88,
+    "READY": 34,
+    "FLOORPLAN_MARGIN": 40,
+    "EARLY_FAIL_CONGESTION": 18,
+    "REFUSED": 18,
+    "NEEDS_BUDGET": 15,
+    "QUEUED": 15,
+    "SMOKE_OK": 2,
+    "EARLY_FAIL_DRC": 2,
+    "SYNC": 4
+  },
+  "active_counts": {
+    "ot-epyc3": 35,
+    "ot-epyc2": 37,
+    "ot-epyc1tb": 27,
+    "ot-epyc4": 56,
+    "ot-agidock128": 9,
+    "localhost": 7,
+    "ot-pve1": 8
+  },
+  "fleetfill": "2026-10-08 22:52:38 OK: 48 waiting; idle=[]; top waits=[('None', 32), ('EPYCN MemAvailable N-N GB < N; AGIdock MemAvailable N-N GB < N; EPYCN MemAvailable N-N GB ', 12), ('EPYCN MemAvailable N-N GB < N; EPYCN MemAvailable N-N GB < N; EPYCN MemAvailable N-N GB < ', 2)]; running={'ot-epyc3': 36, 'ot-epyc2': 37, 'ot-epyc1tb': 27, 'ot-epyc4': 52, 'ot-agidock128': 7, 'localhost': 5, 'ot-pve1': 5}; fixes=[]",
+  "stuckscan_report": "/home/ubuntu/.local/state/closure_loop/codex_stuckscan_20261008.json",
+  "new_failures": "/home/ubuntu/claude-takeover-20261007/failtrig/new_20261008-2252.json",
+  "failure_ownership": {
+    "hbm": "root/hbm_continuation",
+    "s81": "root/s81_continuation",
+    "qwen": "root/qwen_system"
+  },
+  "retirement": {
+    "job": "mtp-mtp_seq-a-e1c20dfb6-tc",
+    "status": "CANCELLED",
+    "descendant_closure": "mtp-mtp_seq-c-c67a71fe5-tc",
+    "source_ancestry_verified": true,
+    "tt_setup_ps": 52.37,
+    "ff_hold_ps": 5.76,
+    "drc": 0
+  }
+}

@@ -265,6 +265,9 @@ module tb_qfd_su_vm_bv;
         end
     endtask
     integer i, cyc, ops, quiet, bad, rb_i, rb_o;
+    // per-op latency, go -> unit idle again (qwen-system 2026-10-08: the split-spine SU memory-latency price); the
+    // master's idle leaves through its OS station and its go enters through IS, as the controller sees them
+    integer lt_go = 0, r_lat = -1, d_lat = -1, r_sum = 0, d_sum = 0, lat_n = 0, d_min = 1 << 30, d_max = 0, r_min = 1 << 30, r_max = 0;
     initial begin
         seed = SEED; ops = 0; quiet = 0; bad = 0;
         for (hk = 0; hk < 7; hk = hk + 1) begin hr[hk] = 0; hd[hk] = 0; nr[hk] = 0; nd[hk] = 0; end
@@ -283,9 +286,16 @@ module tb_qfd_su_vm_bv;
         for (cyc = 0; cyc < MAXCYC && ops < OPS; cyc = cyc + 1) begin
             @(negedge clk);
             go_r = 0; go_d = 0;
+            if (ops > 0 && r_lat < 0 && r_idle && cyc > lt_go + 1) r_lat = cyc - lt_go;
+            if (ops > 0 && d_lat < 0 && d_idle && !d_act && cyc > lt_go + IS + OS + 1) d_lat = cyc - lt_go;
             quiet = (r_idle && d_idle && !d_act) ? quiet + 1 : 0;
             if (quiet > IS + OS + CRX + 8) begin
-                randomize_instr; go_r = 1; go_d = 1; ops = ops + 1; quiet = 0;
+                if (ops > 0 && r_lat > 0 && d_lat > 0) begin
+                    r_sum = r_sum + r_lat; d_sum = d_sum + d_lat; lat_n = lat_n + 1;
+                    if (d_lat - r_lat < d_min) d_min = d_lat - r_lat; if (d_lat - r_lat > d_max) d_max = d_lat - r_lat;
+                    if (r_lat < r_min) r_min = r_lat; if (r_lat > r_max) r_max = r_lat;
+                end
+                randomize_instr; go_r = 1; go_d = 1; ops = ops + 1; quiet = 0; lt_go = cyc; r_lat = -1; d_lat = -1;
                 if (ops <= 16) begin : memchk
                     integer mi, mc; mc = 0;
                     for (mi = 0; mi < VMN; mi = mi + 1) if (vm_m[mi] !== vm_r[mi]) begin if (mc < 3) $display("  before op %0d: vm diff @%h ref %h dut %h", ops, mi, vm_r[mi], vm_m[mi]); mc = mc + 1; end
@@ -350,6 +360,9 @@ module tb_qfd_su_vm_bv;
         for (hk = 0; hk < 7; hk = hk + 1) if (hr[hk] !== hd[hk] || nr[hk] != nd[hk]) begin
             hbad = hbad + 1; $display("port stream %0d differs: ref %0d events, master %0d", hk, nr[hk], nd[hk]);
         end
+        $display("SU_LAT ops=%0d ref_avg=%0d.%02d dut_avg=%0d.%02d delta_min=%0d delta_max=%0d ref_min=%0d ref_max=%0d (SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d)",
+                 lat_n, r_sum / (lat_n ? lat_n : 1), (100 * r_sum / (lat_n ? lat_n : 1)) % 100, d_sum / (lat_n ? lat_n : 1),
+                 (100 * d_sum / (lat_n ? lat_n : 1)) % 100, d_min, d_max, r_min, r_max, SW, IS, OS, CRX, VL);
         if (vbad == 0 && bad == 0 && hbad == 0 && nr[4] > OPS && d_fault == r_fault && ops == OPS && !m_wf && !m_wh && !m_xf && !m_xh)
             $display("PASS qfd_su_vm_bv SW=%0d IS=%0d OS=%0d CRX=%0d VL=%0d ops=%0d va/vb/vc/crom/vm/red/kv events %0d/%0d/%0d/%0d/%0d/%0d/%0d", SW, IS, OS, CRX, VL, ops, nr[0], nr[1], nr[2], nr[3], nr[4], nr[5], nr[6]);
         else

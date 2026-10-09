@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/wt-codex-mtp-exact/tools/mtp_exact_wavefront2.py", line 361, in <module>
+    raise SystemExit(main())
+  File "/home/ubuntu/wt-codex-mtp-exact/tools/mtp_exact_wavefront2.py", line 353, in main
+    prepare(a.scratch, a.gold)
+  File "/home/ubuntu/wt-codex-mtp-exact/tools/mtp_exact_wavefront2.py", line 90, in prepare
+    r0, r1 = plan.role(KS[0]), plan.role(KS[1])
+  File "/home/ubuntu/wt-codex-mtp-exact/tools/hdc_program_v41_array.py", line 198, in role
+    side_in = sorted({reg for _, _, reg in self.inn[k] if reg.startswith("STG")})
+KeyError: 14

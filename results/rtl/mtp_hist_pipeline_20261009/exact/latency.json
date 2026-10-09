@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.mtp_hist_pipeline_latency.v1",
+  "source_commit": "d1db2e154",
+  "host": "ot-epyc2",
+  "remote_path": "/srv/opentallas-data/claude/mtp-hist-latency-d1db2e154",
+  "position_count": 40,
+  "outputs_per_dut": 160,
+  "original_first_read_cycles": 1,
+  "successor_first_read_cycles": 3,
+  "added_read_cycles": 2,
+  "exact": true,
+  "source_sha256": {
+    "rtl/test/mtp_rollback/tb_hist_pipeline_latency.sv": "20d49278d48bb0559a33d196a4af7a21e3d5bfc647c22954293ff795a6b53073",
+    "rtl/mtp/rollback/ot_mtp_hist_ring.sv": "cbeec81d8cc533f6f2e092f575a41ea609d2b13e335a6d2e9c3748e93320fde8",
+    "rtl/mtp/rollback/ot_mtp_hist_ring_p.sv": "79cf318bb4fe35b9f465cd67ceafc9dd81fb20ef3dbac89f4e7b24eba56a196f"
+  }
+}

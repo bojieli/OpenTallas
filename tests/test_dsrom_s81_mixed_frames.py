@@ -103,3 +103,39 @@ def test_r4_nxt_reach_builds_with_adopted_pq_root():
     assert lg['overlaps'] == 0 and lg['outside'] == 0
     cls = m['hop_fix']['classes']
     assert all(isinstance(v, dict) for v in cls.values())
+
+
+def test_unbound_functional_pin_check_flags_a_missing_q_net():
+    # build-every-path rule (TA-10): a q element whose go_tag has no net is reported; walking is diagnostic only
+    class It:
+        def __init__(s, name, master, kind):
+            s.name, s.master, s.kind = name, master, kind
+    setup('--die layer1 --pairs 1792 --q-elem-h 221.4 --pq-place')
+    qn = F.real_lef(F.Q_LEF)['name']
+    m = dict(insts=[It('e0', qn, 'q')], buses=[])
+    ub = F.unbound_functional_pins(m)
+    assert all(pin != 'walking' for _, pin in ub)
+    if F.q_pq():
+        assert (qn, 'go_tag') in ub and (qn, 'sh_free') in ub
+        m['buses'] = [('gt', 'cfg', 2, [('s0', 'go_tag'), ('e0', 'gt')]), ('ef', 'cfg', 2, [('e0', 'ef'), ('s0', 'ef')])]
+        m['insts'].append(It('s0', 'ot_s81_cfg7_seq', 'seq'))
+        ub = F.unbound_functional_pins(m)
+        assert (qn, 'go_tag') not in ub and (qn, 'sh_free') not in ub and (qn, 'bank_free') not in ub
+
+
+def test_fine_cross_lattice_finds_gap_between_coarse_rows():
+    # Packed-frame rescue must search the gap the block-height-spaced rows skip,
+    # without accepting an overlap or a point outside either timing reach.
+    p = F.Placer(dict(insts=[]))
+    p.occ.add((-100, -100, 100, 0))
+    p.occ.add((-100, 14, 100, 100))
+    args = dict(cx=0, cy=0, w=10, h=10, allowed=[(-100, -100, 100, 100)],
+                prev=(0, 0), reach=20, nxt=(0, 20), nreach=20, span=30, rows=20)
+    assert p.near(**args) is None
+    spot = p.near(**args, cross_step=2.16)
+    assert spot is not None
+    x, y = spot
+    assert p.occ.free((x, y, x + 10, y + 10), 0.432)
+    assert F._mh((x + 5, y + 5), args['prev']) <= 20
+    assert F._mh((x + 5, y + 5), args['nxt']) <= 20
+    assert p.near(**dict(args, nreach=1), cross_step=2.16) is None

@@ -1,0 +1,73 @@
+`timescale 1ns/1ps
+// Protected full-record replay storage. Real 128x256 1R1W macro ports.
+// Request edge0 -> macro read edge1 -> direct capture edge2 -> syndrome edge3
+// -> corrected response edge4. Client reserves response space BEFORE request.
+// Write accepted edge0 commits edge1; read requests must be >=2 edges later.
+// All payload, full sequence, and session identity participate in SECDED.
+module ot_hbm_replay_sram #(
+ parameter W=551, SW=12, EW=16, DEPTH=512,
+ parameter MUT=0,
+ parameter AW=$clog2(DEPTH), NB=DEPTH/128,
+ parameter BW=NB>1?$clog2(NB):1,
+ parameter RW=W+SW+EW, NC=(RW+255)/256, CW=NC*266, NM=(CW+255)/256
+)(
+ input wire clk,rst_n,
+ input wire w_valid,input wire[W-1:0] w_data,
+ input wire[SW-1:0] w_seq,input wire[EW-1:0] w_session,
+ input wire r_valid,input wire[SW-1:0] r_seq,input wire[EW-1:0] r_session,
+ output wire o_valid,output wire[W-1:0] o_data,
+ output wire[SW-1:0] o_seq,output wire[EW-1:0] o_session,
+ output wire o_ce,o_ue
+);
+ wire[NC*256-1:0] record_in={{(NC*256-RW){1'b0}},w_session,w_seq,w_data};
+ wire[CW-1:0] encoded;
+ for(genvar c=0;c<NC;c=c+1) begin:g_enc
+  ot_secded_enc #(.K(256),.R(10),.MUT(MUT)) u_enc(.clk(clk),.d(record_in[c*256+:256]),.q(encoded[c*266+:266]));
+ end
+ reg wp,rp;
+ reg[AW-1:0] wa,ra;
+ reg[BW-1:0] b1,b2;
+ wire[BW-1:0] rb=(NB==1)?0:(ra>>7);
+ wire[BW-1:0] wb=(NB==1)?0:(wa>>7);
+ wire[NM*256-1:0] macro_d={{(NM*256-CW){1'b0}},encoded};
+ reg[NM*256-1:0] captured[0:NB-1];
+ for(genvar b=0;b<NB;b=b+1) begin:g_bank
+  localparam BANK_INDEX=b;
+  wire[NM*256-1:0] raw;
+  for(genvar m=0;m<NM;m=m+1) begin:g_macro
+   ot_sram_1r1w_128x256_m1_r2c2 u_mem(
+    .clk(clk),.r_ce_in(rp && rb==BANK_INDEX),.r_addr_in(ra[6:0]),.rd_out(raw[m*256+:256]),
+    .w_ce_in(wp && wb==BANK_INDEX),.w_addr_in(wa[6:0]),.wd_in(macro_d[m*256+:256]),
+    .w_mask_in({256{1'b1}}),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+  end
+  always @(posedge clk) captured[b]<=raw;
+ end
+ reg[3:0] vp;
+ reg[SW-1:0] seqp[0:4];reg[EW-1:0] ep[0:4];
+ always @(posedge clk or negedge rst_n) begin
+  if(!rst_n) begin wp<=0;rp<=0;vp<=0; end
+  else begin wp<=w_valid;rp<=r_valid;vp<={vp[2:0],r_valid};end
+ end
+ always @(posedge clk) begin
+  wa<=w_seq[AW-1:0];ra<=r_seq[AW-1:0];b1<=rb;b2<=b1;
+  seqp[0]<=r_seq;ep[0]<=r_session;
+  for(integer t=1;t<5;t=t+1) begin seqp[t]<=seqp[t-1];ep[t]<=ep[t-1];end
+ end
+ wire[NC*256-1:0] corrected;
+ wire[NC-1:0] valid,ce,ue;
+ for(genvar c=0;c<NC;c=c+1) begin:g_dec
+  ot_secded_dec #(.K(256),.R(10)) u_dec(.clk(clk),.rst_n(rst_n),.v(vp[2]),
+   .w(captured[b2][c*266+:266]),.ov(valid[c]),.d(corrected[c*256+:256]),
+   .ce(ce[c]),.ue(ue[c]),.n_ce(),.n_ue());
+ end
+ wire[SW-1:0] stored_seq=corrected[W+:SW];
+ wire[EW-1:0] stored_epoch=corrected[W+SW+:EW];
+ assign o_valid=&valid;
+ assign o_ue=o_valid && ((|ue) || stored_seq!=seqp[4] || stored_epoch!=ep[4]);
+ assign o_ce=o_valid && |ce;
+ assign o_data=o_ue ? {W{1'b0}}:corrected[W-1:0];
+ assign o_seq=seqp[4];assign o_session=ep[4];
+ initial begin
+  if(DEPTH<128 || DEPTH%128 || (DEPTH&(DEPTH-1)) || AW>SW) $fatal(1,"invalid SRAM replay depth");
+ end
+endmodule

@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.hbm-write-merge-component.v1",
+  "runs": [
+    {
+      "name": "baseline",
+      "returncode": 0,
+      "expected_verdict_observed": true
+    },
+    {
+      "name": "wrong_ack_owner",
+      "returncode": 1,
+      "expected_verdict_observed": true
+    },
+    {
+      "name": "remove_wb_priority",
+      "returncode": 1,
+      "expected_verdict_observed": true
+    }
+  ],
+  "inputs": {
+    "rtl/hbm_accel/ingest/ot_hbm_write_merge.sv": "d60a41e4a626a29e54d7de2a9e1f20adb81fa8b5cd85ce26f7ab1019a511e490",
+    "rtl/test/tb_hbm_write_merge.sv": "af1fb88f5aa254a4e69c7fa5648c152e3ece96ecf02cf2f43cb4cd84052aeecc",
+    "tools/hbm_write_merge_model.py": "8816a1cdee5bdf3d83759092fb93046dbc0fc36739afc62c16b1010fe2b8624b"
+  },
+  "scope": "One full291-bit stack component, ordered true-completion count service contract; no physical route or complete die integration",
+  "pass_": true
+}

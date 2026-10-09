@@ -1,0 +1,32 @@
+{
+ "verdict": "PASS",
+ "generated_complete_pair_image_sha256": "d278d351baf43d5422113d175a4a39dd1505f6b4689ecb01a0dc49c355bd8e7c",
+ "config_sha256": "057c77219f04270c99b3f5487a1d4527645c8ae92d67f27bb0b25a87febfa83e",
+ "source_sha256": "b4876665f5fda0d14c4f03f637c281dd291577f536e64224e762252762347563",
+ "executable_sha256": "896ebfefc25288625b666b7b1d8a7c5b895e3b2ac36dda3d76f2316f6bd9c82d",
+ "golden_words": {
+  "32768": 3212312576,
+  "32769": 3220111360,
+  "33344": 1083965440,
+  "33345": 1066074112
+ },
+ "rtl_words": {
+  "32768": 3212312576,
+  "33344": 1083965440,
+  "32769": 3220111360,
+  "33345": 1066074112
+ },
+ "sim_log_sha256": "8bfeec4a8047c1d5cca5eb57f46ccca4516037798c3022c3602c960127e67231",
+ "cycles": {
+  "go": 1,
+  "first_w": 373,
+  "last_w": 376,
+  "idle": 377,
+  "phase_cycles": 375,
+  "writes": 4,
+  "fault": 0
+ },
+ "qualified_scope": "generated A/rank0/pair0 image, first GU subphase, fullK5120",
+ "physical_qualified": false,
+ "production_qelement_qualified": false
+}

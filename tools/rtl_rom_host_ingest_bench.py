@@ -91,11 +91,11 @@ def cases(quick, no_model=False):
     return out
 
 
-def build(work: Path, tag, memw, nd, np_, hd, kvh, qkv, mut=0):
+def build(work: Path, tag, memw, nd, np_, hd, kvh, qkv, mut=0, rmw=1):
     exe = work / f"sim_{tag}.vvp"
     cmd = ["iverilog", "-g2012", "-o", str(exe), "-s", "tb_rom_host_ingest",
            *(f"-Ptb_rom_host_ingest.{k}={v}" for k, v in dict(MEMW=memw, ND=nd, NP=np_, HDMAX=hd, KVHMAX=kvh,
-                                                                  QKV_EN=qkv, MUT=mut).items()),
+                                                                  QKV_EN=qkv, MUT=mut, RMW_EN=rmw).items()),
            *map(str, RTL), str(TB)]
     subprocess.run(cmd, check=True, capture_output=True, text=True)
     return exe
@@ -153,10 +153,10 @@ def main():
     exes = {}
     ok = True
 
-    def exe_for(case, mut=0, qkv=None):
+    def exe_for(case, mut=0, qkv=None, rmw=1):
         memw = C.pow2(max(case["exp"].size // 32 + 1, 1024 + 64))
         q = case["qkv"] if qkv is None else qkv
-        key = (memw, C.pow2(len(case["descs"])), C.pow2(len(case["beats"])), case["hd"], case["kvh"], q, mut)
+        key = (memw, C.pow2(len(case["descs"])), C.pow2(len(case["beats"])), case["hd"], case["kvh"], q, mut, rmw)
         if key not in exes:
             exes[key] = build(work, len(exes), *key)
         return exes[key], memw
@@ -203,6 +203,25 @@ def main():
         detected=fc, fault_words=r.get("fault_words"), sectors_written=r.get("sectors_written"))
     ok &= fc
     print("fail-closed qkv on QKV_EN 0:", fc, flush=True)
+    # qfd_io_host as adopted (reviewer 2026-10-08): write-only, RMW_EN 0.  The per-die geometry passes; an rmw descriptor
+    # fails closed (fault word, nothing written)
+    g = cs["qwen_die_geom_bf16"]
+    exe, memw = exe_for(g, rmw=0)
+    d = work / "qfd_rmw_en0_die_geom"
+    write_case(d, g, memw)
+    r = run(exe, d, len(g["descs"]), len(g["beats"]))
+    rec["cases"]["qwen_die_geom_bf16_rmw_en0"] = r
+    ok &= r["pass"]
+    print("qwen_die_geom_bf16 RMW_EN 0:", r["pass"], flush=True)
+    bad = dict(g, descs=[x | (1 << 6) for x in g["descs"]])
+    d = work / "failclosed_rmw_on_rmw_en0"
+    write_case(d, bad, memw)
+    r = run(exe, d, len(bad["descs"]), len(bad["beats"]), MAXCYC=400000)
+    fc = (not r.get("pass", False)) and r.get("fault_words") == 1 and r.get("sectors_written") == 0
+    rec["mutations"]["rmw_descriptor_on_rmw_en0_fails_closed"] = dict(
+        detected=fc, fault_words=r.get("fault_words"), sectors_written=r.get("sectors_written"))
+    ok &= fc
+    print("fail-closed rmw on RMW_EN 0:", fc, flush=True)
     rec["pass"] = bool(ok)
     rec["input_sha256"] = {str(p.relative_to(ROOT)): sha(p) for p in RTL + [TB, Path(__file__), ROOT / "tools/kv_ingest_ref.py",
                                                                             ROOT / "tools/rtl_hdc_kv_ingest_campaign.py"]}
