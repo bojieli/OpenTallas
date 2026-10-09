@@ -40,8 +40,8 @@ def main():
   assert len(set(counts))==1
   spec=compiler.stages[stage]
   args=[f'+PROGRAM={out}/rom/Q0.hex',f'+META={out}/rom/META.hex',f'+VM={directory}/VM.hex',f'+EXPECTED={directory}/expected',f'+START={spec["pc"]}',f'+NOPS={spec["count"]}',f'+QUERIES={queries}',f'+POSITION=8191',f'+NCHECK={counts[0]}']
-  cases.append((stage,args,'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP'))
- cases.extend([('rms_stalls',cases[0][1]+['+STALL=3'],'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP'),('foreign_reply',cases[0][1]+['+NEGATIVE=1'],'PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE')])
+  cases.append((stage,args,'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP',False))
+ cases.extend([('rms_stalls',cases[0][1]+['+STALL=3'],'PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP',False),('foreign_reply',cases[0][1]+['+NEGATIVE=1'],'PASS_QWEN_NATIVE_QUARTER_FOREIGN_REPLY_FENCE',False),('corrupt_gain',cases[0][1]+['+CORRUPT_GAIN=1'],'bitexact mismatch',True)])
  dependencies=SOURCES+['rtl/test/tb_hdc_v41x_vec_fields.svh','tools/qwen_r25_native690.py','tools/qwen_r25_native690_fixture.py','tools/run_qwen_r25_quarter_ar.py']
  inventory={s:dict(sha256=hashlib.sha256((root/s).read_bytes()).hexdigest(),bytes=(root/s).stat().st_size) for s in dependencies}
  manifest=dict(source_dependencies={'compiler':'d5225192c','arithmetic_parent':'5449dfcc4','selected_AR_source':a.source_pin},source_inventory=inventory,N=256,M=64,OWNER_W=74,TOKEN18=151935,DPI=False,queries=1,dispatcher=False,query_release=False,control_mirror=False,lease_epoch=False,CP_binding_credit=False,vm_words=262144,CONST0=262143,cases=cases,compile_admission_gib=128,workers=8)
@@ -53,11 +53,11 @@ def main():
  if rc:
   (out/'build_failed.json').write_text(json.dumps(dict(returncode=rc,manifest=manifest))+'\n');raise SystemExit(rc)
  results=[]
- for name,args,marker in cases:
+ for name,args,marker,expect_failure in cases:
   log=out/(name+'.log')
   with log.open('w') as f:rc=subprocess.call([str(out/'obj/Vtb_qwen_r25_su_quarter_ar'),*args],stdout=f,stderr=subprocess.STDOUT,cwd=root)
-  verdict='PASS' if rc==0 and marker in log.read_text() else 'FAIL'
-  rec=dict(name=name,returncode=rc,verdict=verdict,log=log.name);results.append(rec)
+  verdict='PASS' if ((rc!=0) if expect_failure else (rc==0)) and marker in log.read_text() else 'FAIL'
+  rec=dict(name=name,returncode=rc,verdict=verdict,negative_control=expect_failure,log=log.name);results.append(rec)
   (out/(name+'.json')).write_text(json.dumps(rec,indent=2)+'\n')
   if verdict!='PASS':break
  (out/'verdict.json').write_text(json.dumps(dict(verdict='PASS' if len(results)==len(cases) and all(r['verdict']=='PASS' for r in results) else 'FAIL',manifest=manifest,results=results),indent=2)+'\n')

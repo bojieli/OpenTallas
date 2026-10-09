@@ -14,7 +14,9 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
  reg [31:0] vm[0:262143];reg [689:0] program_words[0:4095];
  reg [41:0] metadata[0:4095];reg [63:0] expected[0:262143];
  string program_file,meta_file,vm_file,expected_prefix,expected_file;
- integer start_pc=0,nops=4,queries=1,position=8191,nchecks=1024,stall=0,negative=0;
+ integer start_pc=0,nops=4,queries=1,position=8191,nchecks=1024,stall=0,negative=0,corrupt_gain=0;
+ integer master_cycles=0,start_cycle=-1;
+ always @(posedge clk)if(rst_n)master_cycles<=master_cycles+1;
  integer i,j,p,q,opcode,byte_index,word_index,delay_count=0,checks=0,transactions=0;
 
  reg pending=0;reg [272:0] held_response;reg [255:0] sector;
@@ -62,10 +64,15 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
   $value$plusargs("START=%d",start_pc);$value$plusargs("NOPS=%d",nops);
   $value$plusargs("QUERIES=%d",queries);$value$plusargs("POSITION=%d",position);
   $value$plusargs("NCHECK=%d",nchecks);$value$plusargs("STALL=%d",stall);$value$plusargs("NEGATIVE=%d",negative);
+  $value$plusargs("CORRUPT_GAIN=%d",corrupt_gain);
   if(queries!=1||position!=8191||start_pc+nops>4096||nops<1)$fatal(1,"fixture shape");
   for(i=0;i<262144;i=i+1)vm[i]=0;
   $readmemh(vm_file,vm);$readmemh(program_file,program_words);$readmemh(meta_file,metadata);
   if(vm[262143]!==0)$fatal(1,"CONST0 fixture not zero");
+  if(corrupt_gain)begin
+   if((vm[237568]&32'h7fffffff)==0||(vm[229376]&32'h7fffffff)==0)$fatal(1,"gain corruption fixture vacuous");
+   vm[237568]=vm[237568]^32'h80000000;
+  end
   repeat(3)@(negedge clk);rst_n=1;
   // Native AR host sequence. No dispatcher, query-release or mutable control mirror.
   // Window metadata excludes only the empty final32 rows at valid length8192.
@@ -73,6 +80,7 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
    if(!metadata[opcode][41]||!metadata[opcode][37])$fatal(1,"program validity");
    if(!(metadata[opcode][36]&&metadata[opcode][35:16]>=8192))begin
     @(negedge clk);cmd_word=program_words[opcode];cmd_pc=12'(opcode);cmd_v=1;
+    if(start_cycle<0)start_cycle=master_cycles;
     do @(posedge clk);while(!cmd_rdy);
     @(negedge clk);cmd_v=0;
     wait(done_v||fault);
@@ -91,7 +99,7 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
   check_result(0);
   if(reads==0||writes==0||visibility_reads!=writes||transactions!=reads+writes+visibility_reads)
    $fatal(1,"actual memory mechanism vacuous or visibility count wrong");
-  $display("PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP N256 M64 queries%0d checks%0d virtual_edges%0d reads%0d writes%0d visibility_reads%0d transactions%0d stall%0d",queries,checks,virtual_edges,reads,writes,visibility_reads,transactions,stall);
+  $display("PASS_QWEN_NATIVE_QUARTER_AR_REAL_FP N256 M64 queries%0d checks%0d program_master_cycles%0d virtual_edges%0d reads%0d writes%0d visibility_reads%0d transactions%0d stall%0d",queries,checks,master_cycles-start_cycle,virtual_edges,reads,writes,visibility_reads,transactions,stall);
   $finish;
  end
 endmodule
