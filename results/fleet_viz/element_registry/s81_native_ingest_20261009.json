@@ -156,6 +156,55 @@
         "status": "nativeABImodule built; controllerrouter integration pending",
         "evidence": []
       }
+    },
+    {
+      "element": "ot_s81_host_dispatch",
+      "target": "DeepSeek-V4.1 ROM S81",
+      "owner": "ingest",
+      "description": "Actual host290-bit class dispatch with protected sharedcredit debt",
+      "source": {
+        "commit": "PENDING_IMPLEMENTATION_COMMIT",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; remotegatepending",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_host_dispatch.sv"
+        ]
+      },
+      "model": {
+        "status": "prebuildsized, nativepinbudgetpending",
+        "evidence": [
+          "results/rtl/s81_native_ingest_20261009/dispatch_prebuild.json"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending nativeport slot and clockbudget",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual dsfd_host three-clock engine",
+        "source-owned controller writeACKs",
+        "markerregion dispatch",
+        "fullhost descriptor protection remains separate obligation"
+      ],
+      "integration": {
+        "status": "nativeABImodule built; controllerrouter integration pending",
+        "evidence": []
+      }
     }
   ]
 }
