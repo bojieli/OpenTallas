@@ -37,7 +37,7 @@ def model():
                 context_code_copy_successor=dict(opt_in_default=False,
                     extra_cycles=0,extra_FF=0,extra_boundary_bits=0,
                     context_transfers_per_frame=4,
-                    removed_logic="unchanged SECDED64 context decode then encode on transfer; occupancy clear uses linear codeword XOR",
+                    removed_logic="unchanged SECDED64 context decode then encode on transfer; occupancy clear retains original checked decode and encode",
                     fault_policy="all source and destination SECDED decoders still fence UE; CE remains correctable until overwritten",
                     physical_basis="legacy73 pipeline TT critical pctx[1][14] to seat[3][71], WNS -0.211558ns",
                     numerical_or_rate_credit=0)),
