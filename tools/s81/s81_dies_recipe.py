@@ -12,7 +12,7 @@ r4b layer1 chain:
             (the generator's 4-stack kind: 4 PHY + 4 ctrl + 4 svc quarters, the layer-die VM 2.66 mm2 and the WFC soft
             reservation).  The 4-stack spine (VM 2.66 + WFC 0.456 on top of the layer1 spine) overflows the 1,728 um
             hub columns by ~200 um, and the die has only 90 um of horizontal slack (the W link stations need it), so the
-            hub columns widen to 1,771.2 um and the VCH narrows 1,641.6 -> 1,555.2 um: the spine keeps its width.
+            hub columns widen to 1,814.4 um and the VCH narrows 1,641.6 -> 1,468.8 um: the spine keeps its width.
   head12    the head die with its CURRENT content (embed + norm + lm-head bundles + the whole DSpark drafter:
             1,471 pairs + 85 head bundles a die over 12 dies), uniform 241.92 um frames (the qs5f q element; the
             generator's mixed q/BF frames are layer-die only).  Recorded to show whether it fits.
@@ -73,7 +73,7 @@ def _head_base():
 
 
 def recipes():
-    scan = _sub(_sub(_layer1_opts(), '--hub-column-width', 1771.2), '--vch-w', 1555.2)
+    scan = _sub(_sub(_layer1_opts(), '--hub-column-width', 1814.4), '--vch-w', 1468.8)
     hb = _head_base()
     return {
         'scan': dict(opts=_sub(_sub(scan, '--bf-per-region', 0), '--q-elem-h', 241.92) + ['--die', 'layer'],
@@ -82,9 +82,9 @@ def recipes():
                           'scan_service_homes 7, 25, ..., 109; flavour b q q): --bf-per-region 0, q frames 241.92 um '
                           '(the 221.4 um qs5f element fills a 221.4 frame and the column relays found no spot: 8 rows '
                           'of 324 um still fit the field); '
-                          'hub columns 1,771.2 um / VCH 1,555.2 um (spine width unchanged)'),
+                          'hub columns 1,814.4 um / VCH 1,468.8 um (spine width unchanged); 125.384 um minimum spine boundary margin with HOST slab'),
         'scanbf': dict(opts=scan + ['--die', 'layer'], role='scan die, BF flavour (sensitivity: a scan home on a BF stage)',
-                       note='m221pq BF-flavour frames (4 BF a region); hub columns 1,771.2 um / VCH 1,555.2 um'),
+                       note='m221pq BF-flavour frames (4 BF a region); hub columns 1,814.4 um / VCH 1,468.8 um'),
         'head12': dict(opts=hb + ['--die', 'head', '--head-dies', '12'], role='head die, current content, 12 dies',
                        note='uniform 241.92 um frames; content = embed + lm-head bundles + the whole drafter'),
         'head14': dict(opts=hb + ['--die', 'head', '--head-dies', '14'], role='head die, current content, 14 dies',
