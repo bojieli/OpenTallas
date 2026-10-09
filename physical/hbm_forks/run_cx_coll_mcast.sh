@@ -40,35 +40,42 @@ PY
 M=physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v
 SRC="rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv $M rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/tu/tb_cx_coll_global_mcast.sv"
 D="+define+TU_DUT=ot_hbm_accel_tu_endpoint_psg"; CK="+define+TU_PCLK_IS_CLK -GT_PHY=0.833333"
-build() { n=$1; shift; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
+build() { local n=$1; shift; $V --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --x-assign fast --x-initial fast \
   --top-module tb_cx_coll_global_mcast --Mdir $T/b/$n $D "$@" $SRC > $T/build_$n.log 2>&1 || { echo "BUILD_FAIL $n"; exit 3; }; }
 build ds +define+TU_LOCKSTEP +define+TU_NC=8 +define+TU_NOG=12 +define+TU_BF16=1 +define+TU_GSZPORT=15 +define+TU_PFMAX=64 $CK
 for n in 2 4 8; do
   case $n in 2) l=1;;4) l=2;;8) l=3;;esac
   build g$n +define+TU_NC=$n +define+TU_NOG=$((96/n)) +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=$l +define+TU_MCAST_ALL +define+TU_PFMAX=64 $CK
   build m$n +define+TU_NC=$n +define+TU_NOG=$((96/n)) +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=$l +define+TU_MCAST_ALL +define+TU_PFMAX=64 $CK +define+CX_MUT_LOCAL_ONLY
+  build l$n +define+TU_NC=$n +define+TU_NOG=$((96/n)) +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=$l +define+TU_MCAST_ALL +define+TU_PFMAX=64 $CK +define+OT_COLL_MUT_GROUP_ISOLATION
 done
 python3 - "$T" <<'PYC'
 import subprocess,sys,json,re
 from pathlib import Path
 t=Path(sys.argv[1]); rows=[]
 for n in (2,4,8):
- for rank in range(96):
-  for seed in (1,2): rows.append((f'g{n}','positive',16,rank,seed,f'g{n}'))
- for rank in (0,n-1,95): rows.append((f'm{n}','negative',16,rank,1,f'g{n}'))
+ for outer in (2,4,8,96):
+  if outer<n:continue
+  for rank in range(96):
+   for seed in (1,2):rows.append((f'g{n}','positive',16,rank,seed,f'g{n}',outer))
+  # Local-only drops are observable only when outer spans multiple subgroups.
+  if outer>n:
+   for rank in (0,n-1,95):rows.append((f'm{n}','missing',16,rank,1,f'g{n}',outer))
+  if outer<96:
+   for rank in (0,n-1,95):rows.append((f'l{n}','leak',16,rank,1,f'g{n}',outer))
 for rank in (0,7,8,31,63,95):
- for seed in (1,2):rows.append(('ds','positive',64,rank,seed,'ar96'))
+ for seed in (1,2):rows.append(('ds','positive',64,rank,seed,'ar96',96))
 records=[]
-for i,(build,kind,pf,rank,seed,fixture) in enumerate(rows):
- args=[str(t/'b'/build/'Vtb_cx_coll_global_mcast'),f'+VEC={t}/fx/{fixture}',f'+PF={pf}',f'+RANK={rank}',f'+SEED={seed}']
+for i,(build,kind,pf,rank,seed,fixture,outer) in enumerate(rows):
+ args=[str(t/'b'/build/'Vtb_cx_coll_global_mcast'),f'+VEC={t}/fx/{fixture}',f'+PF={pf}',f'+RANK={rank}',f'+SEED={seed}',f'+OUTER={outer}']
  log=t/f'run_{i:03}.log'
  with log.open('w') as f:rc=subprocess.run(args,stdout=f,stderr=subprocess.STDOUT).returncode
  txt=log.read_text(); done=re.search(r'TUDONE .*got=(\d+) own_exact=(\d+) mismatches=0 faults=0 ',txt)
- passed=(rc==0 and bool(done)) if kind=='positive' else (rc!=0 and 'GLOBAL_MCAST_MISSING_AFTER_TRANSPORT_DRAIN' in txt and 'MUTANT_NOT_SENSITIVE' not in txt)
- records.append(dict(build=build,kind=kind,pf=pf,rank=rank,seed=seed,rc=rc,passed=passed,log=log.name,completion=done.group(0) if done else None))
- (t.parent/'receipt.json').write_text(json.dumps(dict(schema='cx.global-mcast.exact.v1',source_base='89380f9f7',records=records,complete=False),indent=2)+'\n')
+ passed=(rc==0 and bool(done)) if kind=='positive' else (rc!=0 and ('GLOBAL_MCAST_MISSING_AFTER_TRANSPORT_DRAIN' if kind=='missing' else 'GROUP_OUTER_ISOLATION') in txt and 'MUTANT_NOT_SENSITIVE' not in txt)
+ records.append(dict(build=build,kind=kind,pf=pf,rank=rank,seed=seed,outer=outer,rc=rc,passed=passed,log=log.name,completion=done.group(0) if done else None))
+ (t.parent/'receipt.json').write_text(json.dumps(dict(schema='cx.global-mcast.exact.v1',source_base='916a3915a',records=records,complete=False),indent=2)+'\n')
  if not passed:print('FAILED',records[-1],flush=True);sys.exit(1)
  print('PASS',build,kind,rank,seed,flush=True)
-(t.parent/'receipt.json').write_text(json.dumps(dict(schema='cx.global-mcast.exact.v1',source_base='89380f9f7',records=records,complete=True,positive_runs=sum(r['kind']=='positive' for r in records),mutants=sum(r['kind']=='negative' for r in records)),indent=2)+'\n')
+(t.parent/'receipt.json').write_text(json.dumps(dict(schema='cx.global-mcast.exact.v1',source_base='916a3915a',records=records,complete=True,positive_runs=sum(r['kind']=='positive' for r in records),mutants=sum(r['kind']!='positive' for r in records)),indent=2)+'\n')
 print('GLOBAL_MCAST PASS',len(records),flush=True)
 PYC

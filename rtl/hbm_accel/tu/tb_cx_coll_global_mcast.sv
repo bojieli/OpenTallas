@@ -62,7 +62,7 @@ module tb_cx_coll_global_mcast #(
 `else
     localparam integer IS_REDUCE = (NC > 1);
 `endif
-    integer seed, seed0, pf, rank, samecol, npdep = 0;
+    integer seed, seed0, pf, rank, samecol, npdep = 0, outer_g=96, outer_base=0;
     real budget, cred;
     string vecdir;
     reg [FW-1:0] part [0:MAXL-1];      // AR: contributor partials; gather: every rank's segment
@@ -79,6 +79,8 @@ module tb_cx_coll_global_mcast #(
         if (!$value$plusargs("BUDGET=%f", budget)) budget = 377.6;
         if (!$value$plusargs("CRED=%f", cred)) cred = 113.8;
         if (!$value$plusargs("SAMECOL=%d", samecol)) samecol = 0;
+        if (!$value$plusargs("OUTER=%d", outer_g)) outer_g = 96;
+        outer_base=(rank/outer_g)*outer_g;
         if (pf > PFMAX || pf % NC != 0 || (BF16 && (pf / NC) % 2 != 0)) $fatal(1, "bad PF");
         ph0 = (($unsigned($random(seed)) % 1000) / 1000.0);
         ph1 = (($unsigned($random(seed)) % 1000) / 1000.0);
@@ -87,7 +89,7 @@ module tb_cx_coll_global_mcast #(
         OF = pf / NC; ROF = BF16 ? OF / 2 : OF; OG = rank / NC; J = rank % NC;
         `ifdef TU_GSZ
 `ifdef TU_MCAST_ALL
-        TOT = NR * ROF;
+        TOT = outer_g * ROF;
 `else
         TOT = NC * ROF;
 `endif
@@ -146,9 +148,9 @@ module tb_cx_coll_global_mcast #(
 `ifdef TU_GSZPORT
            .gsz(4'(`TU_GSZPORT)),
 `ifdef TU_MCAST_ALL
-           .mcast_all(1'b1),
+           .mcast_all(1'b1), .mcast_group_size(8'(outer_g)),
 `else
-           .mcast_all(1'b0),
+           .mcast_all(1'b0), .mcast_group_size(8'd96),
 `endif
 `endif
            .inj_idx(ii), .inj_rd(ir), .inj_data(idata), .ph_tx_v(txv), .ph_tx_flit(txf), .sw_cr_ret(crr),
@@ -276,6 +278,9 @@ module tb_cx_coll_global_mcast #(
             integer gi;
             reg [FW-1:0] want;
             gi = integer'(dfl[i*PWT + FW +: 16]);
+`ifdef TU_MCAST_ALL
+            if(gi < outer_base*ROF || gi >= (outer_base+outer_g)*ROF)$fatal(1,"GROUP_OUTER_ISOLATION rank=%0d gi=%0d outer=%0d base=%0d",rank,gi,outer_g,outer_base);
+`endif
 `ifdef TU_GSZ
 `ifndef TU_MCAST_ALL
             if (gi < OG * NC * ROF || gi >= (OG + 1) * NC * ROF)
@@ -301,7 +306,7 @@ module tb_cx_coll_global_mcast #(
                  ndep, narr, nres, got, own_ok, mism, flt, cst);
         if(mism != 0 || flt || got != TOT || own_ok != ROF)
             $fatal(1,"EXACT_COMPLETION_FAILED got=%0d TOT=%0d own=%0d ROF=%0d mism=%0d",got,TOT,own_ok,ROF,mism);
-        for(integer q=0;q<TOT;q=q+1)if(!seen[q])$fatal(1,"MISSING_INDEX %0d",q);
+        for(integer q=outer_base*ROF;q<(outer_base*ROF+TOT);q=q+1)if(!seen[q])$fatal(1,"MISSING_INDEX %0d",q);
         $finish;
     end
 `ifdef CX_MUT_LOCAL_ONLY
