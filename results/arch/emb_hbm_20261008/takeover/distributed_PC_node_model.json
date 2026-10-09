@@ -1,0 +1,80 @@
+{
+  "schema": "opentallas.embedding_distributed_PC_node.v1",
+  "model_before_RTL": true,
+  "parent_model": "shared_PC_transport_model.json",
+  "default_ENABLE": 0,
+  "replica_count": {
+    "groups_per_stack": 4,
+    "PCs_per_group": 8,
+    "stacks_per_die": 4,
+    "groups_per_die": 16
+  },
+  "MACs_per_cycle": 0,
+  "clocks": {
+    "core_ps": 833.333333,
+    "HBM_ps": 1024,
+    "group_logic_domain": "core"
+  },
+  "boundary": {
+    "command_shared_trunk_bits": 350,
+    "PC_local_command_bits_each": 288,
+    "PC_local_return_bits_each": 260,
+    "tagged_return_event_bits": 265,
+    "tagged_return_valid_bits": 1,
+    "shared_reply_credit_bits": 1,
+    "peak_vertical_shared_bits": 617,
+    "column_capacity_tracks": 1437,
+    "command_fields": "shared286bitpayload plus32selectmask and32writemask",
+    "return_fields": "capturedactualPC5+originalret260; event whencredit orresponsevalid; no fabricatedordinal",
+    "PC_local_distance": "8PCgroup distributedatcorrespondingverticalspan; actualendpointnearesthop/last100um and branchcrosssection mustbechecked; no central32PCfanout"
+  },
+  "reply_storage": {
+    "per_PC_event_FIFO_depth": 8,
+    "PCs": 8,
+    "body_bits": 265,
+    "padded_SECDED_data_bits": 320,
+    "SECDED72_words_per_entry": 5,
+    "encoded_bits_per_entry": 360,
+    "total_encoded_FIFO_bits": 23040,
+    "upstream_transit_FIFO_depth": 8,
+    "upstream_encoded_FIFO_bits": 2880,
+    "control": "triplicated actualoccupancy/pointers with majorityrepair and failclosed doublecontrolerrors; no epoch/auth extras",
+    "encoder_pipeline": "actualencoderpending slots includedinfinite8entryreservation; acceptance cannot overbook uncommittedencoderdata",
+    "decoder_pipeline": "capturecorrectedprotectedhead; actualCE/UEgate beforepacket/credit release; UEwithholdscreditandpublishesfault",
+    "data_protection": "SECDEDmutableSRAM mandatory; originalHBMCE/UE flags unchanged; storageCE/fault independent"
+  },
+  "flow": {
+    "original_PC_command_credits": 4,
+    "PC_return_max_events_for_4commands": 8,
+    "window_condition": "oneembeddingfetch serializedglobally (\u22642responsebeats/PC); BOOTwindow4 measured. More concurrentreadtraffic requiresfurtherbounds, notpretendedbatchthroughput.",
+    "downstream_prepaid_reply_credits": 8,
+    "upstream_credit_return": "actualtransitqueue retirement only",
+    "fair_service": "roundrobin local8 plusupstream; onepacket/coreedge; outputonlywithactualcredit",
+    "shared_command_trunk": "registered shared350bits; nodeunpacksownactualglobalPC selectors locally, no newcommandsorcredits",
+    "added_stage_counts": "model from actualgroupnode+pin placement; shared returnserialization andlocalbranchpipes measuredminimumbeforeadoption"
+  },
+  "area": {
+    "FIFO_encoded_bits_total": 25920,
+    "FIFO_flop_proxy_um2": 8294.4,
+    "control_flop_proxy_um2": 64.0,
+    "encoder_decoder_mux_planning_um2": 8000,
+    "planned_cell_proxy_um2": 16358.4,
+    "frame_width_um": 92.016,
+    "frame_height_um": 1000.08,
+    "frame_area_um2": 92023.36128000001,
+    "planning_utilization": 0.1777635566932423,
+    "sixteen_frames_mm2": 1.4723737804800001,
+    "physical_cell_and_buffer_cost": "actualmeasurementrequired"
+  },
+  "latency": {
+    "service_capacity_events_per_core_edge": 1,
+    "eightcodePCresponses_minimum_service_edges": 8,
+    "possible_readpluscredit_events_for8PCs": 16,
+    "decoder_encoder_edges": "source/modelupdateasimplemented; nozero-cycleassumption",
+    "single_user_composition": "sharedtransportaddsserializationandactualregisteredhops. Originalenginegoldenpairpoporder unchanged; absolute end-to-end source-qualifiedcycles needed.",
+    "headline_credit": 0
+  },
+  "physical_closed": false,
+  "full_die_bound": false,
+  "adopted": false
+}
