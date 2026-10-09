@@ -1,7 +1,8 @@
 `timescale 1ns/1fs
 module tb_qwen_rom_raw_group;
  parameter integer MUT=0;
- reg clk=0;always #(0.833333/2) clk=~clk;
+ // Unequal halves avoid rounding two416666.5fs delays to833334fs.
+ reg clk=0;always begin #0.416666 clk=1; #0.416667 clk=0; end
  reg [2559:0] cap=0;reg [4:0] sel=0;
  wire [1023:0] q;
  ot_qwen_rom_raw_group #(.MUT(MUT)) a(.clk(clk),.cap(cap[1279:0]),.sel(sel),.q(q[511:0]));
