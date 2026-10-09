@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-10-09T09:58:17.523819+00:00",
+  "scope": "Qwen3-8B TP4 ROM dies plus KV die/package, AR only",
+  "owner": "review_qwen_token_path",
+  "source_inspected": {
+    "commit": "15a4a56fa2b62fd3860615e79883a8ca4b0fde48",
+    "paths": [
+      "rtl/hdc/kv/ot_qwen_rt_kv_stream4_service.sv",
+      "rtl/hdc/kv/ot_qwen_s4_packet_link.sv",
+      "rtl/qwen_sys/system_20261008/ot_qfd_sp_constants_sequencer_sys.sv"
+    ]
+  },
+  "contract_status": "not_published_at_inspection",
+  "implementation_status": "review_inventory_only_no_new_RTL_or_route",
+  "findings": [
+    {
+      "element": "resident_KV_attention_boundary",
+      "status": "missing_selected_package_join",
+      "evidence": "Existing STREAM4 service emits sector-derived tile kvw data/masks and accepts kvd; legacy boundary moves resident KV toward ROM tiles. Selected package requires local KV-die attention and only attention results returned.",
+      "owner": "qwen_system",
+      "review_owner": "review_qwen_token_path"
+    },
+    {
+      "element": "four_TP_Q_newKV_result_transport",
+      "status": "contract_pending",
+      "owner": "review_qwen_token_path",
+      "required": "Published precision/packing/order, endpoints, clocks, finite credits, bytes per layer, physical link capacity and latency; do not infer from old sector wire."
+    },
+    {
+      "element": "AR_stage_completion",
+      "status": "package_binding_pending",
+      "owner": "qwen_system/crom_control_physical",
+      "evidence": "Current SYS sequencer consumes kv_ok/kv_write_drained and has d_start/token/pos/gen plus sticky d_done; package join must preserve actual AR command acceptance, result consumption and write visibility rather than translating wire delivery into completion."
+    },
+    {
+      "element": "embedding_host_transport",
+      "status": "provider_binding_pending",
+      "owner": "embedding_hbm",
+      "required": "Native32PC DATA/SIDECAR arbitration, true WR completion and shared native host o_cr; source owner reports seq11/class10 collision and forbids naive header normalization."
+    }
+  ],
+  "model_requirements": {
+    "outbound": "sum of actual Q and new K/V wire bits per rank/layer, including published metadata/protection/padding",
+    "inbound": "actual attention-result wire bits per rank/layer plus control",
+    "serialization": "ceil(actual frame bits / published usable link bits per edge), including finite-credit stalls",
+    "latency": "ROM producer rounding/packing + crossing/serialization + KV attention service + return crossing/serialization + ROM consumer capture, composed over36layers; shared or per-rank link allocation must be explicit",
+    "topology": "fourTP endpoints; no TP8 and no resident KV-window traffic across package"
+  },
+  "prohibited": [
+    "QROM MTP",
+    "invented package fields",
+    "single-die r21c fit squeezing",
+    "flop SECDED",
+    "ID64/TMR/mirrors/auth/extra epochs",
+    "new routes before Claude structural review"
+  ]
+}
