@@ -24,6 +24,7 @@ module ot_hgi_att_record_adapter #(
 );
     reg active,record_pending,setup_pending,rows_pending,setup_sent,rows_sent,att_retired,rows_retired;
     reg [127:0] hdr_q;reg [1023:0] desc_q;
+    reg [127:0] att_hdr_q;reg [1023:0] att_desc_q;
     reg [31:0] b_count_q,c_count_q;
     reg [20:0] pos1_q,bn_q,bm_q,cn_q;reg ring_q;
     wire [255:0] b=desc_q[256+:256], c=desc_q[512+:256];
@@ -42,8 +43,8 @@ module ot_hgi_att_record_adapter #(
                    (b_count_q>{12'b0,b[87:68]}) || (b_count_q>{11'b0,pos1_q}));
     assign rec_r=!active && !record_pending;
     assign att_v=active && setup_pending;
-    assign att_hdr=hdr_q;
-    assign att_desc=desc_q;
+    assign att_hdr=att_hdr_q;
+    assign att_desc=att_desc_q;
     assign rows_cmd_v=active && setup_sent && rows_pending;
     assign rows_ring=ring_q;
     assign rows_pos1=pos1_q;
@@ -55,7 +56,7 @@ module ot_hgi_att_record_adapter #(
         if(!rst_n) begin
             active<=0;record_pending<=0;setup_pending<=0;rows_pending<=0;setup_sent<=0;rows_sent<=0;
             att_retired<=0;rows_retired<=0;u_done<=0;u_fault<=0;
-            hdr_q<=0;desc_q<=0;pos1_q<=0;b_count_q<=0;c_count_q<=0;bn_q<=0;bm_q<=0;cn_q<=0;ring_q<=0;
+            hdr_q<=0;desc_q<=0;att_hdr_q<=0;att_desc_q<=0;pos1_q<=0;b_count_q<=0;c_count_q<=0;bn_q<=0;bm_q<=0;cn_q<=0;ring_q<=0;
         end else begin
             u_done<=0;u_fault<=0;
             if(rec_v && rec_r) begin
@@ -68,7 +69,9 @@ module ot_hgi_att_record_adapter #(
                 end else begin
                     active<=1;setup_pending<=1;rows_pending<=1;setup_sent<=0;rows_sent<=0;
                     att_retired<=0;rows_retired<=0;
-                    hdr_q<=MUT_FIELDS ? (hdr_q ^ (128'b1<<118)) : hdr_q;
+                    // Output station uses the existing decode edge, so no extra cycle.
+                    att_hdr_q<=MUT_FIELDS ? (hdr_q ^ (128'b1<<118)) : hdr_q;
+                    att_desc_q<=desc_q;
                     bn_q<=MUT_COUNTS ? {1'b0,b_count_q[19:0]} : b_count_q[20:0];
                     bm_q<={1'b0,b[87:68]};cn_q<=c_present ? c_count_q[20:0] : 21'b0;
                     ring_q<=MUT_RING ? 1'b0 : hdr_q[72];

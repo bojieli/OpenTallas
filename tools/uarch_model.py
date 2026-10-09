@@ -15068,7 +15068,7 @@ def hgi_attention_record_adapter_model():
         replicas=4,MACs_per_cycle=0,memory_bytes_per_cycle=0,
         record_payload_bits=1408,record_transport_bytes=176,
         ATT_setup_payload_bits=1152,row_command_payload_bits=85,
-        state_bits_upper_bound=1344,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
+        state_bits_upper_bound=2656,mux_fanout='one local record station, no wide payload arithmetic or inter-stack broadcast',
         slot_variants_um=[[320,320],[360,360]],stdcell_area_measured_um2=None,utilisation_target=0.55,
         routing=dict(total_signal_bits_estimate=2800,pin_layers=2,pitch_um=0.48,
                      perimeter_track_capacity_320=5266,max_face_ATT_descriptor_bits=1024,
