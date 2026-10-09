@@ -1,0 +1,9 @@
+Actual launched route uses the existing provisional single-SDC policy; driver ins-ss=806 / ins-ff=806 is intentional (run_bf_native_physical.py, command(), wc_only comment and core/output delay arguments).
+Provisional route period 730 ps and uncertainties setup60 / hold25; generated min806/max1056 and outmin-856/max-556.
+Actual config: OT_HOLD_MM=1; CORNERS=WC BC; WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES); WC_LIB_FILES includes TT memory macro; BC_LIB_FILES uses BC_NLDM_LIB_FILES plus FF memory macro.
+Actual config OT_MM_FF_SDC=/src/physical/s81_native_bf/margin/signoff_ref.sdc.
+signoff_ref.sdc recomputes clock arrival means at g_pin.r_* CLK pins (all-register fallback) in the current signoff corner. It resets clock833.333 and uncertainty60/25, then sets input max=Lmax+250/min=Lmin, output max=250-Lmax/min=-(Lmin+50). Final FF therefore does not retain provisional806.
+orfs_hold_mm.tcl ot_mm_sync activates for completed3_place.sdc/4_cts.sdc; refreshes modeff from mode ss, propagates clocks, enables BC-scene shim, sources configured signoff_ref.sdc, then reads /src/.ot_mm/ff_ioref_last.sdc last if not already present in configured list. It restores the shim after reading.
+BC-scene shim answers arrival_max/min_rise/fall through report_arrival -scene BC and sets ot_ioref_scene=BC, preventing TT/FF mixed clock-arrival measurements.
+ff_ioref_last.sdc is the loop's actual copied IOREF helper. It adjusts virtual reference clocks; BF uses real core_clk, so direct dynamic input/output delay calibration comes from signoff_ref.sdc.
+Pinned files are copied under dynamic_signoff/ with SHA256SUMS. This is source/config tracing, not a current routed timing verdict; actual logs must confirm execution after CTS/route when available.

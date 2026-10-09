@@ -1,0 +1,235 @@
+{
+  "Id": "3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a",
+  "Created": "2026-10-09T13:29:32.827489786Z",
+  "Path": "bash",
+  "Args": [
+    "-lc",
+    "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/1_2_yosys.v"
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 2016829,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2026-10-09T13:29:32.845161925Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "ResolvConfPath": "/srv/opentallas-scratch2/docker/containers/3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a/resolv.conf",
+  "HostnamePath": "/srv/opentallas-scratch2/docker/containers/3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a/hostname",
+  "HostsPath": "/srv/opentallas-scratch2/docker/containers/3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a/hosts",
+  "LogPath": "/srv/opentallas-scratch2/docker/containers/3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a/3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a-json.log",
+  "Name": "/gifted_bohr",
+  "RestartCount": 0,
+  "Driver": "overlayfs",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "docker-default",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": [
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/cl/fplint/calibrate.a2:/ot_fplint",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/src:/src:ro",
+      "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work/orfs:/work"
+    ],
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "bridge",
+    "PortBindings": {},
+    "RestartPolicy": {
+      "Name": "no",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": true,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": null,
+    "CgroupnsMode": "private",
+    "Dns": null,
+    "DnsOptions": [],
+    "DnsSearch": [],
+    "ExtraHosts": null,
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": false,
+    "SecurityOpt": null,
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 0,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": [],
+    "BlkioDeviceReadBps": [],
+    "BlkioDeviceWriteBps": [],
+    "BlkioDeviceReadIOps": [],
+    "BlkioDeviceWriteIOps": [],
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": [],
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 0,
+    "MemorySwappiness": null,
+    "OomKillDisable": null,
+    "PidsLimit": null,
+    "Ulimits": [],
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "MaskedPaths": [
+      "/proc/acpi",
+      "/proc/asound",
+      "/proc/interrupts",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/sys/devices/virtual/powercap",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "Storage": {
+    "RootFS": {
+      "Snapshot": {
+        "Name": "overlayfs"
+      }
+    }
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/cl/fplint/calibrate.a2",
+      "Destination": "/ot_fplint",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/src",
+      "Destination": "/src",
+      "Mode": "ro",
+      "RW": false,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "bind",
+      "Source": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work/orfs",
+      "Destination": "/work",
+      "Mode": "",
+      "RW": true,
+      "Propagation": "rprivate"
+    }
+  ],
+  "Config": {
+    "Hostname": "3620461f5c71",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "LEC_CHECK=0",
+      "OT_FP_LINT=1",
+      "OT_FP_LINT_ARGS=--set sliver_um=10.0",
+      "OT_PREROUTE_GATE",
+      "OT_PREROUTE_GATE_ARGS",
+      "OT_ABC_NO_DCH",
+      "PATH=/usr/local/bin/wrapped-cc:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+    ],
+    "Cmd": [
+      "bash",
+      "-lc",
+      "trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/1_2_yosys.v"
+    ],
+    "Image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "Volumes": null,
+    "WorkingDir": "/OpenROAD-flow-scripts/flow",
+    "Entrypoint": null,
+    "Labels": {
+      "org.opencontainers.image.version": "22.04"
+    }
+  },
+  "NetworkSettings": {
+    "SandboxID": "19256bfc391d1fbdc6e3ce20f35c224bcd640383446017a37e897dba699c0db1",
+    "SandboxKey": "/var/run/docker/netns/19256bfc391d",
+    "Ports": {},
+    "Networks": {
+      "bridge": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": null,
+        "DriverOpts": null,
+        "GwPriority": 0,
+        "NetworkID": "29507400eb6e2b93978f94b5e13613048a16023b53c4c985bd57766a95fa8bcf",
+        "EndpointID": "8a5e70561e5945e5505898ae74430c42d5fe64c39ff92fbe4a0e931a9e104f0c",
+        "Gateway": "172.17.0.1",
+        "IPAddress": "172.17.0.29",
+        "MacAddress": "5e:fe:2a:28:36:fe",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "DNSNames": null
+      }
+    }
+  },
+  "ImageManifestDescriptor": {
+    "mediaType": "application/vnd.oci.image.manifest.v1+json",
+    "digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "size": 4858,
+    "annotations": {
+      "containerd.io/distribution.source.docker.io": "openroad/orfs",
+      "io.containerd.image.name": "docker.io/openroad/orfs:asap7lock",
+      "org.opencontainers.image.ref.name": "asap7lock"
+    },
+    "platform": {
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  }
+}

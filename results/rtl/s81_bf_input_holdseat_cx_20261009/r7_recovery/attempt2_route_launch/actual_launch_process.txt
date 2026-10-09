@@ -1,0 +1,16 @@
+    PID    PPID    PGID                  STARTED     ELAPSED     TIME STAT %CPU   RSS COMMAND
+2082039       1 2082039 Fri Oct  9 06:37:31 2026       01:26 00:00:00 Ss    0.0  3796 bash /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/cl/run.sh route.a2
+2082088 2082084 2082039 Fri Oct  9 06:37:31 2026       01:26 00:00:00 S     0.3 68492 python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix --recut --period .730 --work /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx/work --output /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx/physical.json --util 45 --tag bfk_recut_hs4_sm15_c674dadfd_tc_cx --ins-ss 806 --ins-ff 806 --extra=--hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15
+2082094 2082088 2082039 Fri Oct  9 06:37:31 2026       01:26 00:00:00 Sl    0.0 31284 /usr/bin/docker run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS -e OT_ABC_NO_DCH -v /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/cl/fplint/route.a2:/ot_fplint --rm -v /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/src:/src:ro -v /srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx/work/orfs:/work -w /OpenROAD-flow-scripts/flow sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx/base/1_2_yosys.v
+sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 2082140 2026-10-09T13:37:32.41788474Z
+total 60
+-rw-rw-r-- 1 ubuntu ubuntu  190 Oct  9 06:29 calibrate.a2.log
+-rw-rw-r-- 1 ubuntu ubuntu  736 Oct  9 06:36 calibrate.a2.log.after
+-rw-rw-r-- 1 ubuntu ubuntu    8 Oct  9 06:29 calibrate.a2.pid
+-rw-rw-r-- 1 ubuntu ubuntu    8 Oct  9 06:29 calibrate.a2.pid.after
+-rw-rw-r-- 1 ubuntu ubuntu 9050 Oct  9 06:29 calibrate.a2.sh
+-rw-rw-r-- 1 ubuntu ubuntu 9050 Oct  9 06:29 calibrate.a2.sh.after
+-rw-rw-r-- 1 ubuntu ubuntu   11 Oct  9 06:29 calibrate.a2.start
+-rw-rw-r-- 1 ubuntu ubuntu   11 Oct  9 06:29 calibrate.a2.start.after
+-rw-rw-r-- 1 ubuntu ubuntu 8101 Oct  9 06:36 container.json
+-rw-rw-r-- 1 ubuntu ubuntu 3090 Oct  9 06:36 identity.json

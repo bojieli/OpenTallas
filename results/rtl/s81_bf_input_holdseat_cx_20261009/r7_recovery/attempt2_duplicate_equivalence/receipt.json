@@ -1,0 +1,20 @@
+{
+  "schema": "opentallas.h7.duplicate_calibration_equivalence.v1",
+  "read_only": true,
+  "source_file_count": 58,
+  "all_source_files_equal": true,
+  "config_byte_equal": true,
+  "constraint_byte_equal": true,
+  "hooks_byte_equal": true,
+  "normalized_calibrate_recipe_equal": false,
+  "image_binding": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "platform_library_binding": "same immutable image; exact additional macro library/LEF/source hashes included",
+  "observed_no_route": true,
+  "actual_E4_calibration_launcher": 2016702,
+  "actual_E4_calibration_driver": 2016752,
+  "actual_E4_docker_cli": 2016781,
+  "actual_E4_container": "3620461f5c71d488c025a7ad6bb6614d26ab2dcf64d28d98122e5394d1d6a43a",
+  "E1_terminal_rc": 0,
+  "operator_action_performed": false,
+  "equivalent": false
+}

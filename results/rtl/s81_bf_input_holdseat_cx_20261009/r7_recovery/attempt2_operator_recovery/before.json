@@ -1,0 +1,214 @@
+{
+  "name": "bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+  "spec": {
+    "name": "bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+    "block": "ot_s81_bf_native",
+    "owner": "Codex:s81_continuation; Claude exclusive intake",
+    "purpose": "Confirmed H7 full-rate input hold structural candidate: four retained HB2 seats before each original native input capture; 6688 actual HB2 masters,0cycles. Independent full golden456rows/912values PASS and enabled-seat stuck-sign numerical DIFF TXN lane0/n17 FAIL. Fresh actual730ps TT route-reference I2R+362.255ps and FF-72.741757ps proved. Separate internal TT-1.532552ps requires same-route setup ECO SETUP_SLACK_MARGIN15ps. No timing relaxation; actual TT/FF CTS insertion must be recalibrated for new topology. TT>=0/FF>=0/DRC0 required, SS sensitivity only. All predecessors retained.",
+    "hosts": [
+      "ot-epyc2",
+      "ot-epyc4"
+    ],
+    "threads": 16,
+    "peak_ram_gb": 39.0,
+    "source": {
+      "branch": "codex/s81-bf-inhold-cx-20261009",
+      "commit": "c674dadfd6eea63850ca61d7fb5470ca5bc55add"
+    },
+    "stages": {
+      "bench": [],
+      "calibrate": {
+        "cmd": "export CK_SS_MEAN=701.5540326188421; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL}${CL_LABEL_SUFFIX} --hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15 $CL_STOP_AFTER",
+        "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+        "clock": "core_clk",
+        "threads": 16,
+        "peak_ram_gb": 9.0
+      },
+      "route": {
+        "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MM_FF_SDC='physical/s81_native_bf/margin/signoff_ref.sdc'; OUT={RUN}/routes SRC={SRC} BF_VAR=recut bash physical/s81_native_bf/margin/route_var.sh {LABEL} --hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15",
+        "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+        "logs": [
+          "{RUN}/routes/{LABEL}/run.log"
+        ],
+        "peak_ram_gb": 44.0
+      },
+      "collect": {
+        "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+      }
+    },
+    "verdict": {
+      "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+      "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+      "checks": [],
+      "post_sdc": [
+        "physical/s81_native_bf/margin/signoff_ref.sdc"
+      ],
+      "macros": [
+        "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+      ]
+    },
+    "hold_eco": {
+      "enabled": true,
+      "reason": "H7 same-route repair, actual TT setup and FF hold/current measured boundary, preserve immutable original failures.",
+      "session": "mm"
+    },
+    "budget": {
+      "enabled": false,
+      "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+    },
+    "record": [
+      {
+        "from": "{RUN}/record",
+        "to": "results/rtl/s81_bf_input_holdseat_cx_20261009/bfk_recut_hs4_sm15-c674dadfd-tc-cx"
+      }
+    ],
+    "cycles_added": "0: original PINREG+RECUT2 capture edges/latency and full-rate initiation unchanged; only four physical HB2 cells per input. Complete1672bit upperarea487.5552um2; actualobserved1652active area481.7232um2.",
+    "merge_target": null,
+    "no_bench_reason": "Actual clean source82a708f5e terminal PASS in results/rtl/s81_bf_input_holdseat_cx_20261009/terminal_a3.json (proofc674dadfd): positive456goldenrows, independent912value/448config assertions,TXN MATCH; enabled-seat stuck-sign compiled thenDIFF TXN lane0/n17,Fatal,rc1. Native RTL and bf_txn_bench.py byte-identical between82a708f5e and sourcec674dadfd. Source-pinned unifiedmodel and golden Gitobject fixture committed. No duplicate expensive bench.",
+    "route_hold_corners": "mm",
+    "route_hold_margin_ns": 0.0,
+    "fp_lint": {
+      "set": {
+        "sliver_um": 10.0
+      },
+      "why": "sliver_um 12->10 (bf-fplint 2026-10-08 21:20 PT): the two flagged gaps are the 10.49 um channels between the stacked ROM pair of each column (place.tcl: rom0 R0 / rom1 MX, 2x5.4 um clearance), ~38 placement rows, ROM pins on the outer W/E faces (none face the gap). Not the r23h class (1.5-3.6 um, 2-5 rows -> DPL-0033): the identical floorplan (place.tcl md5 25d7794e at 8db5411e3/f5363befb/6cd23db2b/a12f3c7e7/6e8f0b698/e4272b562) legalised with no DPL error in bfh2_recutcgl50_hm0 cal + route (3_5_place_dp, util 55.3%). All other checks stay FAIL."
+    },
+    "calibrate_parallel": false,
+    "admission_evidence": "Measured identical native BF CG0 source6e8f0b698 predecessor phase logs committed results/rtl/s81_bf_input_holdseat_cx_20261009/predecessor_physical_peaks.log: route5_2 peak40862104KiB=38.969GiB (39.0 recorded); calibration3_3 max6608904KiB=6.303GiB (6.4 recorded). These are predecessor measured phase peaks, not newcandidate peak claims or RSS caps; fleet monitors actual candidate growth and updates claims without restarting progressing work. Only6688HB2/~488um2 added, sameoutline/4ROM. Memory-only measured host admission and hostreserve still required."
+  },
+  "origin": "/tmp/claude-review-20261003/closure_jobs/bfk_recut_hs4_sm15-c674dadfd-tc-cx.json",
+  "created": "2026-10-09T03:28:29-07:00",
+  "status": "RUNNING",
+  "stage_idx": 0,
+  "attempt": 2,
+  "retries_used": 0,
+  "benches": {},
+  "hosts_tried": [
+    "ot-epyc1tb",
+    "ot-epyc4"
+  ],
+  "events": [
+    "2026-10-09T03:28:29-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/bfk_recut_hs4_sm15-c674dadfd-tc-cx.json",
+    "2026-10-09T03:29:14-07:00 source c674dadfd6ee synced to ot-epyc1tb:/srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/src",
+    "2026-10-09T03:29:38-07:00 launched calibrate (attempt 1) on ot-epyc1tb",
+    "2026-10-09T11:10:32.140671+00:00 R7 preserved completeattempt1 and retiredonlywrong-referencecalibration; samejobattempt2 READY with measuredTT701.5540326188421 seed, route/source/SM15/resources unchanged",
+    "2026-10-09T04:11:10-07:00 NOTE spec in /tmp/claude-review-20261003/closure_jobs/bfk_recut_hs4_sm15-c674dadfd-tc-cx.json changed after ingest: ignored (frozen at first sight; a new source commit needs a new job name)",
+    "2026-10-09T04:11:26-07:00 launched calibrate (attempt 2) on ot-epyc1tb",
+    "2026-10-09T06:24:28-07:00 calibrate done (rc=0)",
+    "2026-10-09T06:24:28-07:00 calibrated insertion CK_SS_MEAN=806 CK_SS_MIN=793 CK_SS_MAX=818 CK_TT_MEAN=806 CK_TT_MIN=793 CK_TT_MAX=818 CK_FF_MEAN=663 CK_FF_MIN=652 CK_FF_MAX=674 CK_SSLIB_MEAN=1032 CK_SSLIB_MIN=1017 CK_SSLIB_MAX=1047 CK_ROUTE_REF=TT",
+    "2026-10-09T06:25:26-07:00 route waiting for capacity: EPYC1 run root has 125 GB free < 200",
+    "2026-10-09T06:27:30-07:00 route cannot start on EPYC1 (EPYC1 run root has 125 GB free < 200); moving to EPYC4",
+    "2026-10-09T06:28:56-07:00 source c674dadfd6ee synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/src",
+    "2026-10-09T06:29:32-07:00 launched calibrate (attempt 2) on ot-epyc4"
+  ],
+  "updated": "2026-10-09T06:35:27-07:00",
+  "bench_par": false,
+  "wait": null,
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+  "source_synced": true,
+  "commit_full": "c674dadfd6eea63850ca61d7fb5470ca5bc55add",
+  "reason": null,
+  "operator_attempt_history": [
+    {
+      "attempt": "calibrate.a1",
+      "disposition": "RETIRED_WRONG_CAL_REFERENCE_R7",
+      "before_state": "/home/ubuntu/.local/state/closure_loop/operator_actions/bfk_recut_hs4_sm15-c674dadfd-tc-cx.R7-attempt1.before.json",
+      "full_remote_attempt_archive": "/srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal.attempt1_R7_preserved",
+      "retirement": {
+        "driver_pid": 2372561,
+        "driver_cmd": "python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix --recut --period .730 --work /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work --output /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/physical.json --util 45 --tag bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal --ins-ss 1042 --ins-ff 1042 --extra=--hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15 --pnr-stop-after cts ",
+        "container": "d423e860bacd4e504d21414eef13a479c6f57435e9542e2607835d10f8585c65",
+        "container_root": 3612058,
+        "original_work": "/srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal",
+        "archive": "/srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal.attempt1_R7_preserved",
+        "driver_absent": true,
+        "launcher_absent": true,
+        "stopped_container": "d423e860bacd4e504d21414eef13a479c6f57435e9542e2607835d10f8585c65",
+        "reason": "R7 wrong calibration reference1042, corrected measuredTT701.554 only"
+      },
+      "at": "2026-10-09T11:10:32.140671+00:00"
+    }
+  ],
+  "spec_change_noted": true,
+  "stage_key": "calibrate",
+  "stage_tag": "calibrate.a2",
+  "stage_started": "2026-10-09T06:29:32-07:00",
+  "wd_checked": 1791551665.579041,
+  "operator_events": [
+    {
+      "at": "2026-10-09T12:42:58.813651+00:00",
+      "action": "reservation_phase_growth",
+      "calibrate_old_gib": 6.4,
+      "calibrate_new_gib": 9,
+      "route_old_gib": 39,
+      "route_new_gib": 44,
+      "measured_whole_pg_rss_kib": 7292596,
+      "basis": "Owner approved conservative accounting above current measured placement growth; route allowance above predecessor DRT38.969GiB. Not measured current DRT or a process cap. Commands and progressing attempt unchanged."
+    }
+  ],
+  "unreachable": 0,
+  "hm_auto_seen": [],
+  "calibration": {
+    "ss": {
+      "boundary": {
+        "n": 1780,
+        "mean": 1032.5,
+        "min": 1016.9,
+        "max": 1047.4
+      },
+      "all": {
+        "n": 109385,
+        "mean": 1035.0,
+        "min": 1010.6,
+        "max": 1136.6
+      },
+      "errors": []
+    },
+    "ff": {
+      "boundary": {
+        "n": 1780,
+        "mean": 663.4,
+        "min": 651.9,
+        "max": 673.5
+      },
+      "all": {
+        "n": 109385,
+        "mean": 664.9,
+        "min": 646.3,
+        "max": 754.9
+      },
+      "errors": []
+    },
+    "env": {
+      "CK_SS_MEAN": 806,
+      "CK_SS_ALL_MEAN": 808,
+      "CK_SS_MIN": 793,
+      "CK_SS_ALL_MIN": 787,
+      "CK_SS_MAX": 818,
+      "CK_SS_ALL_MAX": 903,
+      "CK_TT_MEAN": 806,
+      "CK_TT_ALL_MEAN": 808,
+      "CK_TT_MIN": 793,
+      "CK_TT_ALL_MIN": 787,
+      "CK_TT_MAX": 818,
+      "CK_TT_ALL_MAX": 903,
+      "CK_FF_MEAN": 663,
+      "CK_FF_ALL_MEAN": 665,
+      "CK_FF_MIN": 652,
+      "CK_FF_ALL_MIN": 646,
+      "CK_FF_MAX": 674,
+      "CK_FF_ALL_MAX": 755,
+      "CK_SSLIB_MEAN": 1032,
+      "CK_SSLIB_MIN": 1017,
+      "CK_SSLIB_MAX": 1047,
+      "CK_SSLIB_ALL_MEAN": 1035,
+      "CK_SSLIB_ALL_MIN": 1011,
+      "CK_SSLIB_ALL_MAX": 1137,
+      "CK_ROUTE_REF": "TT"
+    },
+    "db": "4_1_cts.odb",
+    "clock": "core_clk",
+    "parasitics": "placement-estimated"
+  }
+}
