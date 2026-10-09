@@ -11,11 +11,11 @@ def main():
  ss=min(c['SS'][m]['setup_wns_ps'] for m in modes)
  done=all(c[k].get('done') and c[k].get('exit')==0 for k in ('TT','FF'))
  out=dict(ss_ps=tt,tt_setup_ps=tt,ss_sensitivity_ps=ss,ff_ps=ff,drc=r['drc_errors'],orfs_dir=str(next(a.case.rglob('results/asap7/*/base/6_final.odb')).parent),setup_corner='TT',accepted=done and tt>=0 and ff>=0 and r['drc_errors']==0,case=r,corners=c,closure_rule='TT setup >=0; FF hold >=0; DRC0; SS sensitivity; retained region/die150 IO budgets')
- if a.eco_scope or a.eco_eligibility_check:out.update(sdc_name='6_final.sdc',post_sdc=['physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc'])
+ if a.eco_scope or a.eco_eligibility_check:out.update(orfs_base=out['orfs_dir'],orfs_dir=str(a.case.resolve()),drc_metrics=[str(next(a.case.rglob('logs/asap7/*/base/5_2_route.json')))],sdc_name='6_final.sdc',post_sdc=['physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc'])
  print(json.dumps(out,separators=(',',':')))
  if a.check and not out['accepted']:raise SystemExit(1)
  if a.eco_eligibility_check:
-  base=Path(out['orfs_dir'])
+  base=Path(out.get('orfs_base',out['orfs_dir']))
   installed=(base/'6_final.odb.pre_eco').exists()
   if installed:
    import hashlib
