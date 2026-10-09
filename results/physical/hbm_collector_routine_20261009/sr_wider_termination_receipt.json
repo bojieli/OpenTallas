@@ -1,0 +1,33 @@
+{
+  "verdict": "TERMINATED_INFEASIBLE_FIXED_GEOMETRY",
+  "authorization": "Root explicitly authorized onlydiagnostic stop after exact identity/archive;181 actual frozen-anchor physical overlaps establish infeasibility, not elapsed/iteration cutoff",
+  "pid": 1753201,
+  "start_ticks": "10042562",
+  "parent": "1753187",
+  "argv": [
+    "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+    "-exit",
+    "/probe/probe_sr_displacement.tcl"
+  ],
+  "cwd": "/OpenROAD-flow-scripts",
+  "stat": "1753201 (openroad) R 1753187 1753187 1753187 0 -1 4194560 2662720 0 0 0 306214 248 0 0 20 0 1 0 10042562 11085094912 2651219 18446744073709551615 107599386066944 107599445673905 140733639786304 0 0 0 0 4096 1258 0 0 0 17 44 0 0 0 0 0 107599476538720 107599478626832 107600436043776 140733639794277 140733639794375 140733639794375 140733639794621 0\n",
+  "status": "Name:\topenroad\nUmask:\t0022\nState:\tR (running)\nTgid:\t1753201\nNgid:\t0\nPid:\t1753201\nPPid:\t1753187\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t1753201\t7\nNSpid:\t1753201\t7\nNSpgid:\t1753187\t1\nNSsid:\t1753187\t1\nKthread:\t0\nVmPeak:\t10825288 kB\nVmSize:\t10825288 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t10608768 kB\nVmRSS:\t10608768 kB\nRssAnon:\t10550968 kB\nRssFile:\t   57800 kB\nRssShmem:\t       0 kB\nVmData:\t10596732 kB\nVmStk:\t     132 kB\nVmExe:\t   58212 kB\nVmLib:\t   65192 kB\nVmPTE:\t   21044 kB\nVmSwap:\t       0 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t1\nSigQ:\t73/4339909\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000000001000\nSigCgt:\t00000000000004ea\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tffffffff,ffffffff,ffffffff,ffffffff\nCpus_allowed_list:\t0-127\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000001\nMems_allowed_list:\t0\nvoluntary_ctxt_switches:\t0\nnonvoluntary_ctxt_switches:\t2678\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+  "archived_sha256": {
+    "probe_sr_displacement.tcl": "8ca7d6d750db09225c1da308a5ce3c0578cb53681afe18c7447a831e7c67eb91",
+    "run_probe_sr.sh": "e7c69c829cf62ed6b25e3517b42c77068a381ccb91b6ecaa919ab0506b9c2ee2",
+    "sr-displacement-probe.log": "f36c3c6c442079ce7b5373bbf54a3c2ec868a70446f85b7264a791cd6f006083",
+    "sr-displacement-probe-guard.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sr-pin-anchor-bbox-audit.log": "2380cdbde763c033237de43151a2531355648080169beb94d2b66bfe4f265966",
+    "audit_sr_pin_anchor_bboxes.tcl": "23fad5b9f313574858b52fca640b7685f38a0a60e9bbbce3dfa28e6cdf0059ed",
+    "probe_sr_bounded_release181.tcl": "c7bb173d5c0ca08ec96dc4d958a1da60a82bbf94f6b92ba419d7e29342cb5b91",
+    "sr-geometry-selftest-positive.log": "04f35f60385e6f2cc66f7798863b2f3e3387257d5bd8185c76b7d56c32ec4e96",
+    "sr-geometry-selftest-wrongmovement.log": "727a7a6ccde42425a39dc51b89e72f10d5d58f8ab039f0022e7dcd2f458e0448"
+  },
+  "signal": "SIGTERM",
+  "source_branch": "codex/hbm-collector-dpl-20261009",
+  "bounded_source": "b0139ca07",
+  "bounded_sha256": "c7bb173d5c0ca08ec96dc4d958a1da60a82bbf94f6b92ba419d7e29342cb5b91",
+  "timing_or_RTL_verdict": false,
+  "actual_identity_absent": true,
+  "terminal_log_sha256": "df754d8073fa7d2be7f31f12da21b8dd7996e4326800458831842ce44c8b35e8"
+}

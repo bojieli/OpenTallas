@@ -9,7 +9,7 @@
     "earlier_missing_name_diagnostic": "r1-namelookup preserved; literal escaped instance names required"
   },
   "private_probe": {
-    "status": "RUNNING",
+    "status": "TERMINATED_INFEASIBLE_FIXED_GEOMETRY",
     "host": "ot-epyc4",
     "OpenROAD_pid": 1753201,
     "guard_GiB": 32,
@@ -29,7 +29,13 @@
     ],
     "adoption": "NONE, diagnostic sensitivity; runtime units corrected and disclosed; preserve current job",
     "next": "actual displacement and pin anchor verification; sequential bounded follow-up only after terminal",
-    "output": "/srv/opentallas-scratch2/scratch/codex/hbm-collector-sr-dpl-inspect-20261009/sr-displacement-30x23.odb"
+    "output": "/srv/opentallas-scratch2/scratch/codex/hbm-collector-sr-dpl-inspect-20261009/sr-displacement-30x23.odb",
+    "stop_authorization": "Root explicitly authorized exact diagnostic PID after identity/source/raw/archive;181 frozen physical anchor overlaps",
+    "pid_start_ticks": "10042562",
+    "elapsed": "51:05.59",
+    "peak_KiB_time_v": 10604876,
+    "observed_proc_HWM_KiB": 10608768,
+    "timing_or_RTL_verdict": false
   },
   "read_only_anchor_audit": {
     "anchor_count": 12161,
@@ -46,5 +52,33 @@
     "elapsed_seconds": 10.63,
     "geometry": "actual transformed dbInst.getBBox xMin/xMax/yMin",
     "finding": "181 real required-anchor overlaps in frozen failed database. Exact literal fixed coordinates remain infeasible, independent of move limit/density."
+  },
+  "bounded_probe_r1": {
+    "source": "b0139ca07",
+    "verdict": "CONFIG_API_REJECTED_STA_0574",
+    "peak_KiB": 4142912,
+    "elapsed_seconds": 28.41,
+    "geometry": "UNCHANGED_PASS_NOT_LEGALITY",
+    "private_ODB_remote": "bounded-r1-parser-failure/sr-displacement-8p10x6p21-release181.odb",
+    "private_ODB_sha256": "b6aecbc0b2d8d296a9f4fe50ef9c90082c903c64dcd317d1ddfef8605dccfa1d"
+  },
+  "bounded_probe_r2": {
+    "source": "e0c479a84",
+    "host": "ot-epyc4",
+    "guard_pid": 2038346,
+    "OpenROAD_pid": 2038403,
+    "guard_GiB": 32,
+    "public_API_integer_microns": [
+      8,
+      6
+    ],
+    "hard_geometry_gate_microns": [
+      8.1,
+      6.21
+    ],
+    "released_right_contacts": 181,
+    "fixed_legal_anchors": 11980,
+    "status": "RUNNING",
+    "adoption": false
   }
 }
