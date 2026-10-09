@@ -12,7 +12,7 @@
 
 ## Abstract
 
-The generic HBM die is one accelerator design that must run very different language models: Qwen3-8B, a dense transformer; DeepSeek-V4.1-Flash, a large mixture-of-experts model with several unusual operators; and, through software, other dense, mixture-of-experts and linear-attention models. HGI-1 is the contract that makes that possible. It defines what software sees of the die: a small set of fixed engines, three kinds of memory, and a stream of self-describing *records* that the die executes for every generated token. Each record names an engine operation and describes every operand with a memory descriptor that carries its own address, shape and number format.
+The generic HBM (high-bandwidth memory) die is one accelerator design that must run very different language models: Qwen3-8B, a dense transformer; DeepSeek-V4.1-Flash (DS), a large mixture-of-experts (MoE) model with several unusual operators; and, through software, other dense, mixture-of-experts and linear-attention models. HGI-1 is the contract that makes that possible. It defines what software sees of the die: a small set of fixed engines, three kinds of memory, and a stream of self-describing *records* that the die executes for every generated token. Each record names an engine operation and describes every operand with a memory descriptor that carries its own address, shape and number format.
 
 Almost nothing about a model is configured in hardware. A 256-byte *model descriptor* sets three static values at model load (the vocabulary limit, the context limit and the collective group size). Everything else that distinguishes one model from another (its shapes, number formats, rotary-embedding layout, norm widths, sinks and layer mix) lives in the program, in per-operation fields and in data tables.
 
@@ -24,7 +24,7 @@ Every party builds against this one contract. Hardware engineers implement their
 
 ### 1.1 Purpose and audience
 
-This specification is written for an engineer who needs to program, simulate, verify or modify the generic HBM die, including one new to the project. It assumes familiarity with transformer inference (attention, feed-forward layers, the KV cache, tensor parallelism) but not with the project's history or block names. Every term is defined at first use and collected in the glossary (Chapter 11).
+This specification is written for an engineer who needs to program, simulate, verify or modify the generic HBM die, including one new to the project. It assumes familiarity with transformer inference (attention, feed-forward layers, the key-value (KV) cache, tensor parallelism) but not with the project's history or block names. Every term is defined at first use and collected in the glossary (Chapter 11).
 
 Chapters 2 to 4 explain the machine, the programming model and the ordering rules. Chapters 5 and 6 are the reference: the model descriptor and every encoding. Chapter 7 maps the target models onto the interface, Chapter 8 defines verification, and Chapter 9 covers extension to other models and the change process. Chapter 10 lists the open questions. Appendix A records the main design decisions and their reasons.
 
@@ -33,8 +33,8 @@ Chapters 2 to 4 explain the machine, the programming model and the ordering rule
 - **Normative language.** "Must", "must not" and "only" state requirements. Examples and notes are informative.
 - **Bits and words.** Bit 0 is the least significant bit. A *word* is 32 bits. Multi-word values are little-endian: the lowest word holds the lowest bits. A field written `46.0` is word 46, starting at bit 0.
 - **Floating-point constants** are stored as their IEEE-754 binary32 bit pattern.
-- **Sizes.** B is bytes; KiB is 1,024 bytes; MiB is 1,024 KiB. HBM addresses are in bytes. VM addresses are in 32-bit FP32 words.
-- **Engines** are written `UNIT.OP`, for example `SM.MATVEC`.
+- **Sizes.** B is bytes; KiB is 1,024 bytes; MiB is 1,024 KiB. Addresses in high-bandwidth memory (HBM) are in bytes. Addresses in the vector memory (VM, §2.4) are in 32-bit floating-point (FP32) words.
+- **Engines** are written `UNIT.OP`, for example `SM.MATVEC`, the matrix-vector operation of the matrix engine (SM). §2.3 gives every unit's full name, and tables that use the short names carry a legend.
 
 ### 1.3 Scope
 
@@ -52,7 +52,7 @@ It does not define block-internal ports, physical design, clocking beyond what t
 
 The die serves one user at a time with the lowest possible decode latency, and every result must match the golden bit for bit. Within those two objectives the interface follows one principle: **keep the hardware minimal and put the complexity in the compiler.** Compilers are written and corrected far more cheaply than silicon, and an interface that asks hardware to understand models becomes obsolete with the next model.
 
-Every way in which one model differs from another therefore has exactly one home, and that home is almost never a hardware mode:
+Every way in which one model differs from another therefore has exactly one home, and that home is almost never a hardware setting:
 
 | What differs between models | Where it lives | Hardware cost |
 |---|---|---|
@@ -61,24 +61,13 @@ Every way in which one model differs from another therefore has exactly one home
 | The layer mix (attention kind, window, FFN kind, norm kind per layer) | **The model manifest** (software) and the program | None |
 | Vocabulary limit, context limit, collective group size | **Three static fields** in the model descriptor, loaded once per model | Range checks and the collective group logic |
 
-### 1.5 Design principles
-
-Six rules follow from the goals. Each one is normative.
-
-1. **Reset equals DeepSeek.** The reset value of each static field is DeepSeek-V4.1-Flash (DS) behaviour, and DS records carry DS's own per-operation values. Loading the DS descriptor changes nothing, and a DS test bench that never loads a descriptor still runs.
-2. **Hardware never derives.** Software computes every configuration value. Hardware only latches words and checks the magic number, version, CRC, reserved bits and legal values.
-3. **Configuration is scoped to the operation.** A setting that one operation needs belongs in that operation's record, not in a global mode. Two consecutive records may use the same engine in different ways, so one program can mix layer types.
-4. **One path per operator family per model.** Each family of operations is bound either to a fused fast path or to an exact fallback on the programmable vector unit. The golden uses the arithmetic order of the bound path, so changing a binding is a golden change (§8.2).
-5. **Static during decode.** The static fields change only at a model load, while the die is idle.
-6. **One program format for every model.** The command processor runs a stream of records, and every engine is reached the same way. DS runs as native unit operations like every other model.
-
 ---
 
 ## 2. Machine model
 
 ### 2.1 Overview
 
-The die is a set of fixed-function and programmable **engines** (also called *units*) driven by a single in-order **command processor**. Weights, the KV cache, recurrent state and constant tables live in HBM. Activations live in an on-die scratch memory, the VM. A few producer–consumer pairs are joined by hardware FIFOs, called STREAM links. Dies of a tensor-parallel group exchange partial results through a collective engine.
+The die is a set of fixed-function and programmable **engines** (also called *units*) driven by a single in-order **command processor** (CP). Weights, the KV cache, recurrent state and constant tables live in HBM. Activations live in an on-die scratch memory, the vector memory (VM). A few producer–consumer pairs are joined by hardware first-in, first-out buffers (FIFOs), called STREAM links. Dies of a tensor-parallel group exchange partial results through a collective engine.
 
 ```text
                   host: doorbell (token, position, entry)  /  completion (token, status, cycles)
@@ -101,9 +90,9 @@ The die is a set of fixed-function and programmable **engines** (also called *un
         activations, staged tables, id tables; every address chosen by the compiler
 ```
 
-*Figure 2-1. The die as the program sees it. Each engine has its own in-order queue. STREAM links carry data directly between engines without passing through VM.*
+*Figure 2-1. The die as the program sees it. Each engine has its own in-order queue. STREAM links carry data directly between engines without passing through VM. Short names: CMDPROC command processor; SM matrix engine; SU/SFU stream unit and special-function unit; FUSED fused paths; ATT attention tiles; DMA DMA engine; COLL collective engine; ARGMAX argmax unit; IDX indexer / top-k; HC hyper-connections; VM vector memory.*
 
-### 2.2 The command processor
+### 2.2 The command processor (CP)
 
 The **command processor** (CP, block `hfd_cmdproc`) is the only control engine. It is an in-order sequencer:
 
@@ -113,7 +102,7 @@ The **command processor** (CP, block `hfd_cmdproc`) is the only control engine. 
 4. It computes the effective base address of each operand (§3.3). For an *indexed* operand, the unit dispatcher reads the id from VM.
 5. It dispatches the record to the target unit's queue.
 
-Each unit retires its queue in order and reports an outstanding-work count back to the CP. The CP also owns the doorbell and completion interface to the host, the per-slot DYN registers (§3.3) and the model-descriptor load path (Chapter 5).
+Every engine is reached the same way, through records, for every model. Each unit retires its queue in order and reports an outstanding-work count back to the CP. The CP also owns the doorbell and completion interface to the host, the per-slot DYN registers (§3.3) and the model-descriptor load path (Chapter 5).
 
 ### 2.3 The engines
 
@@ -121,29 +110,29 @@ Every engine is addressed by a 4-bit **unit code** in the record header. Codes 1
 
 | Code | Unit | What it does | Main blocks |
 |---:|---|---|---|
-| 0 | CTL | Control steps run by the CP itself: loops, fence, end of token, MTP control | `hfd_cmdproc` |
-| 1 | SM | Matrix-vector product: streams weight rows from HBM against an activation vector. The weight format is chosen per operation (BF16, FP8 block, FP4 block, INT8). 32 SMs per die. | `hfd_sm`, `smh_front_*`, tiles |
-| 2 | SU | The programmable vector pipeline. A 256-bit *SU template* configures its stages (multiply, add, special function, reduce, round). Exact fallbacks run here. | `hfd_su` lanes, `su_red`, `su_full` |
-| 3 | SFU | The fused SwiGLU chain | `hfd_sfu` |
-| 4 | FUSED | Fused fast paths: the norm engine, the DS hyper-connection norms, the softmax unit and the block quantiser (FP8/FP4 quantise-dequantise) | `norm_engine_view`, `ot_dsrom_su_softmax`, `hfd_quant` |
-| 5 | ATT | Attention tiles: QK scores and PV products over FP8/BF16 KV rows in HBM | `hfd_attn_half_*` |
-| 6 | COLL | Cross-die collectives: all-reduce, all-gather, top-k merge, argmax merge, sub-group reduce with multicast, row gather from owner dies | `hfd_coll` |
-| 7 | ARGMAX | Local argmax over a logit shard | `ot_dshbm_argmax_m` |
-| 8 | DMA | Row moves between HBM and VM, the KV append, the DS KV write-back and the HBM write fence | svc, `hfd_loader`, kvwb |
-| 9 | IDX | Generic top-k selection, the DS indexer engines and the Engram hash | DS selector, indexer, `ot_hdc_engram_hash` |
-| 10 | HC | DeepSeek hyper-connection mix | `hfd_hc` |
-| 11 | SIMT | **Optional; absent on r25.** Launches a general-purpose SIMT kernel on dies that have a kernel engine. | — |
+| 0 | Control (CTL) | Control steps run by the CP itself: loops, fence, end of token, MTP control | `hfd_cmdproc` |
+| 1 | Matrix engine (SM) | Matrix-vector product: streams weight rows from HBM against an activation vector. The weight format is chosen per operation (BF16, FP8 block, FP4 block, INT8). 32 SMs per die. | `hfd_sm`, `smh_front_*`, tiles |
+| 2 | Stream unit (SU) | The programmable vector pipeline. A 256-bit *SU template* configures its stages (multiply, add, special function, reduce, round). Exact fallbacks run here. | `hfd_su` lanes, `su_red`, `su_full` |
+| 3 | Special-function unit (SFU) | The fused SwiGLU chain | `hfd_sfu` |
+| 4 | Fused paths (FUSED) | Fused fast paths: the norm engine, the DS hyper-connection norms, the softmax unit and the block quantiser (FP8/FP4 quantise-dequantise) | `norm_engine_view`, `ot_dsrom_su_softmax`, `hfd_quant` |
+| 5 | Attention tiles (ATT) | Attention tiles: QK scores and PV products over FP8/BF16 KV rows in HBM | `hfd_attn_half_*` |
+| 6 | Collective engine (COLL) | Cross-die collectives: all-reduce, all-gather, top-k merge, argmax merge, sub-group reduce with multicast, row gather from owner dies | `hfd_coll` |
+| 7 | Argmax unit (ARGMAX) | Local argmax over a logit shard | `ot_dshbm_argmax_m` |
+| 8 | DMA engine (DMA) | Row moves between HBM and VM, the KV append, the DS KV write-back and the HBM write fence | svc, `hfd_loader`, kvwb |
+| 9 | Indexer / top-k (IDX) | Generic top-k selection, the DS indexer engines and the Engram hash | DS selector, indexer, `ot_hdc_engram_hash` |
+| 10 | Hyper-connections (HC) | DeepSeek hyper-connection mix | `hfd_hc` |
+| 11 | SIMT engine (SIMT) | **Optional; absent on r25.** Launches a general-purpose SIMT kernel on dies that have a kernel engine. | — |
 | 12–15 | — | Reserved | — |
 
-The r25 die's SMs are fixed-function matrix-vector elements with no kernel memory, so r25 has no SIMT unit. A record sent to an absent unit faults with completion status 3. Everything r25 runs is expressed with units 0–10.
+The r25 die's matrix engines are fixed-function matrix-vector elements with no kernel memory, so r25 has no SIMT (single-instruction, multiple-thread) kernel engine. A record sent to an absent unit faults with completion status 3. Everything r25 runs is expressed with units 0–10.
 
 ### 2.4 The memory hierarchy
 
 A record names each operand by a **memory descriptor** whose `space` field selects one of three memories (or none):
 
-- **HBM** is one die-local byte address space, 40 bits wide, organised in 32-byte sectors. It holds everything large or persistent: weights, the KV cache, recurrent state for linear-attention layers, constant tables (RoPE, norm gains, sinks, scales, gate constants), the embedding table, the program image and spill space. The service layer (svc) maps sectors onto stacks and pseudo-channels (PCs) with a fixed map.
+- **HBM** is one die-local byte address space, 40 bits wide, organised in 32-byte sectors. It holds everything large or persistent: weights, the KV cache, recurrent state for linear-attention layers, constant tables (rotary position embedding (RoPE) rows, norm gains, sinks, scales, gate constants), the embedding table, the program image and spill space. The service layer (svc) maps sectors onto stacks and pseudo-channels (PCs) with a fixed map.
 - **VM** (vector memory) is the on-die scratch: 262,144 FP32 words per die, addressed in words. It holds activations, staged tables and id tables. The compiler allocates every VM address; hardware has no allocator.
-- **STREAM** is a hardware FIFO between a fixed producer and a fixed consumer, for example SM results into SU lane registers, or the LM-head matvec into ARGMAX. Data on a STREAM never touches VM. The set of stream ids a die supports is fixed by its wiring.
+- **STREAM** is a hardware FIFO between a fixed producer and a fixed consumer, for example matrix-engine results into stream-unit lane registers, or the language-model (LM) head's matrix-vector product into the argmax unit. Data on a STREAM never touches VM. The set of stream ids a die supports is fixed by its wiring.
 
 STREAM operands implement the project's dataflow rule that a value returns to shared memory only when another lane, unit or die needs it (AGENTS.md dataflow level 2).
 
@@ -179,7 +168,7 @@ Groups are **aligned** blocks of die ids. A die's rank is `die_id mod group_size
 A **program** is a sequence of records stored in the **program image**, a region of HBM placed by the compiler. The model descriptor records the image's base and size (in 4 KiB pages) and up to three **entry points**, each a record offset into the image in 16-byte units:
 
 - `entry_ar`: the normal autoregressive (AR) decode step, one token;
-- `entry_verify`: the MTP verify pass (0 if absent);
+- `entry_verify`: the multi-token prediction (MTP) verify pass (0 if absent);
 - `entry_draft`: the MTP draft pass (0 if absent).
 
 ### 3.2 The record
@@ -191,6 +180,8 @@ A **record** is one unit operation with everything it needs. It has three parts:
 3. one **256-bit memory descriptor** (MDESC) for each operand the record names, in the fixed order **A, B, C, D, O, R, I**.
 
 The seven operand slots have fixed roles:
+
+*Units and terms in this table:* Stream unit (SU) · Vector memory (VM).
 
 | Slot | Role |
 |---|---|
@@ -258,13 +249,15 @@ A record's 2-bit **predicate** decides whether it runs: always, only at position
 
 This section traces the program for one Qwen3-8B token on one die of a 4-die group (TP4) at AR decode, with full attention over an 8,192-row context. It is the program the simulator runs bit-exact against the `qwen_r25` golden (`tools/hgi_sim/qwen_compiler.py`), shown in this document's encoding.
 
-**Shapes.** Qwen3-8B has a hidden width of 4,096, 36 layers, 32 query heads and 8 KV heads of dimension 128, and an FFN width of 12,288. At TP4 each die holds 8 query heads and 2 KV heads, so its QKV projection has 1,024 + 256 + 256 = 1,536 rows, its output projection takes 1,024 inputs, and its gate/up and down projections cover 3,072 FFN columns. Weights are INT8 with one BF16 scale per output row. The q and k rows of W_q and W_k (and the QK-norm gains) are permuted offline so that the rotary pairs are adjacent elements (§7.2).
+**Shapes.** Qwen3-8B has a hidden width of 4,096, 36 layers, 32 query heads and 8 KV heads of dimension 128, and a feed-forward network (FFN) width of 12,288. At TP4 each die holds 8 query heads and 2 KV heads, so its QKV projection has 1,024 + 256 + 256 = 1,536 rows, its output projection takes 1,024 inputs, and its gate/up and down projections cover 3,072 FFN columns. Weights are 8-bit integers (INT8) with one bfloat16 (BF16) scale per output row. The q and k rows of W_q and W_k (and the gains of the per-head query/key norm, QK-norm) are permuted offline so that the rotary pairs are adjacent elements (§7.2).
 
-**VM placement** (FP32 words): residual stream X at 0; normalised input H at 4,096; raw QKV at 8,192; scaled QKV at 9,728; QK-normalised heads at 11,264; the RoPE cos/sin row at 12,544; rotated heads at 12,800; BF16 queries at 14,080; scores at 15,104 (8 heads × 8,192); exponentials at 80,640; per-head maxima at 146,176 and sums at 146,304; PV at 146,432; attention output at 147,456; output-projection partial and sum at 148,480 and 152,576; staged row scales at 156,672; raw and scaled gate/up at 162,816 and 168,960; SwiGLU output at 175,104; down partial and sum at 178,176 and 182,272.
+**VM placement** (FP32 words): residual stream X at 0; normalised input H at 4,096; raw QKV at 8,192; scaled QKV at 9,728; QK-normalised heads at 11,264; the RoPE cos/sin row at 12,544; rotated heads at 12,800; BF16 queries at 14,080; scores at 15,104 (8 heads × 8,192); exponentials at 80,640; per-head maxima at 146,176 and sums at 146,304; the probability-weighted values (PV) at 146,432; attention output at 147,456; output-projection partial and sum at 148,480 and 152,576; staged row scales at 156,672; raw and scaled gate/up at 162,816 and 168,960; SwiGLU (SiLU-gated linear unit) output at 175,104; down partial and sum at 178,176 and 182,272.
 
-**HBM placement**: each layer's weights, scales and gains form one block of 48,283,648 bytes, so every weight descriptor uses `lstride` = 48,283,648 and the layer loop counter L selects the layer. Within the block, W_qkv is at offset 0, its scales at 6,291,456, W_o at 6,294,528, W_gu at 10,497,024, W_down at 35,675,136, and the gains at 48,266,240 onward. The KV cache gives each layer 2 heads × {K, V} planes of 8,192 rows × 128 bytes (FP8), so a plane is 1 MiB and `lstride` for KV is 4 MiB. `Wb`, `Tb` and `KVb` below are the weight, table and KV region bases.
+**HBM placement**: each layer's weights, scales and gains form one block of 48,283,648 bytes, so every weight descriptor uses `lstride` = 48,283,648 and the layer loop counter L selects the layer. Within the block, W_qkv is at offset 0, its scales at 6,291,456, W_o at 6,294,528, W_gu at 10,497,024, W_down at 35,675,136, and the gains at 48,266,240 onward. The KV cache gives each layer 2 heads × {K, V} planes of 8,192 rows × 128 bytes (8-bit floating point, FP8), so a plane is 1 MiB and `lstride` for KV is 4 MiB. `Wb`, `Tb` and `KVb` below are the weight, table and KV region bases.
 
 **Prologue** (once per token). Records 0–3 fetch the embedding row and the RoPE row:
+
+*Units and terms in this table:* Control (CTL) · Stream unit (SU) · DMA engine (DMA) · Vector memory (VM).
 
 | # | Record | Operands | `param`, immediates | `wait` |
 |---:|---|---|---|---|
@@ -277,6 +270,8 @@ This section traces the program for one Qwen3-8B token on one die of a 4-die gro
 *Table 3-1. The prologue.*
 
 **The layer** (records 5–36, replayed 36 times with L = 0 … 35):
+
+*Units and terms in this table:* Control (CTL) · Matrix engine (SM) · Stream unit (SU) · Special-function unit (SFU) · Fused paths (FUSED) · Attention tiles (ATT) · Collective engine (COLL) · DMA engine (DMA) · Vector memory (VM).
 
 | # | Record | Operands | `param`, immediates | `wait` | Family |
 |---:|---|---|---|---|---|
@@ -334,6 +329,8 @@ This section traces the program for one Qwen3-8B token on one die of a 4-die gro
 Linear-attention layers run in software on the same engines. This example is one Gated DeltaNet (GDN) decode layer at Qwen3-Next dimensions (hidden width 2,048; 16 key heads and 32 value heads of dimension 128; a 4-tap causal convolution) on one die of TP4, which holds 4 key heads and 8 value heads. The simulator runs this layer bit-exact against its golden on all four dies (`tools/hgi_sim/gdn.py`), and the golden matches the transformers reference to an rms relative error of 5.8e-7 before the BF16 projection rounding.
 
 A GDN head keeps a 128 × 128 FP32 **state** matrix S instead of a KV cache. Each token decays S, corrects it towards the new key/value pair (the delta rule), and reads it with the query. The state lives in HBM region STATE, **transposed** (`[dv][dk]` row-major per head) so that the SU's inner-index reduction computes S·k and S·q. It never passes through ATT, whose rows are FP8 or BF16.
+
+*Units and terms in this table:* Control (CTL) · Matrix engine (SM) · Stream unit (SU) · Fused paths (FUSED) · Collective engine (COLL) · DMA engine (DMA).
 
 | Step | Records | What they do |
 |---|---|---|
@@ -403,7 +400,7 @@ Latency may change between implementations, but the order of results and faults 
 
 A model is described at two levels:
 
-- The **model descriptor** (MD) is a 64-word, 256-byte image that the hardware reads at model load. It holds three static fields, the program's entry points and image location, a hash that binds it to one manifest, and a CRC.
+- The **model descriptor** (MD) is a 64-word, 256-byte image that the hardware reads at model load. It holds three static fields, the program's entry points and image location, a hash that binds it to one manifest, and a cyclic redundancy check (CRC).
 - The **model manifest** is a versioned JSON file that software reads: the compiler, the golden, the simulator and the table generator. It has global values (hidden width, vocabulary, RoPE θ and scaling, softmax-scale literal, weight and KV formats, TP size, head rows per die) and **one row per layer** (mixer kind and heads, window, RoPE span and pairing, DS compression ratio and source flags, Engram, FFN kind, norm). Per-layer rows let one model mix layer types, for example full attention with GDN, or dense layers before MoE layers.
 
 The descriptor carries the manifest's sha256 in words 32–39. The encoder generates both from the model's checked-in `config.json`.
@@ -411,6 +408,8 @@ The descriptor carries the manifest's sha256 in words 32–39. The encoder gener
 ### 5.2 Descriptor layout
 
 The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; the CP rejects a set reserved bit. `spec.json` → `md_fields` is the authority for every bit position.
+
+*Units and terms in this table:* Command processor (CP).
 
 | Words | Content | Read by |
 |---|---|---|
@@ -439,9 +438,13 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | `cp_ctx_max` (41.0) | 21 | 1 … 2²⁰ | 2²⁰ | 40,960 | Range check for the doorbell position. Positions are 20 bits. |
 | `coll_group_size` (46.0) | 8 | 1, 2, 4, 8, 96 | 96 | 4 | Which dies form a group. Membership is genuinely static configuration: every collective on a die uses the same group. The values 16, 32 and 64 are defined encodings that the range check rejects until a collective engine that builds them exists. |
 
+Each static field resets to the DS value. DS programs also carry DS's own per-operation settings in their records, so loading the DS descriptor changes nothing, and a DS test bench that never loads a descriptor still runs. The static fields change only when a model is loaded while the die is idle; they never change while it is decoding.
+
 ### 5.4 Per-operation settings that replace modes
 
-Every other model-dependent setting is carried by the operation that needs it. The engines decode these fields per record:
+Every other model-dependent setting is carried by the operation that needs it, not by a global setting. Two consecutive records may therefore use the same engine in different ways, and one program can mix layer types. The engines decode these fields per record:
+
+*Units and terms in this table:* Stream unit (SU) · Special-function unit (SFU) · Fused paths (FUSED) · Attention tiles (ATT) · Argmax unit (ARGMAX) · DMA engine (DMA).
 
 | Setting | Where it lives | DS value | Qwen3-8B value |
 |---|---|---|---|
@@ -462,7 +465,7 @@ Every other model-dependent setting is carried by the operation that needs it. T
 
 The descriptor reaches the blocks through the existing 64-bit host write port of the CP (`cmd_we`, `cmd_addr`, `cmd_wdata`). No new pin is needed.
 
-1. **CFG window.** Writes to addresses with the window bit set place descriptor word pairs (word 2a in bits 31:0, word 2a + 1 in bits 63:32) into the CP's 64-word staging buffer. One further address is `CFG_COMMIT`.
+1. **Configuration (CFG) window.** Writes to addresses with the window bit set place descriptor word pairs (word 2a in bits 31:0, word 2a + 1 in bits 63:32) into the CP's 64-word staging buffer. One further address is `CFG_COMMIT`.
 2. **Commit.** At `CFG_COMMIT` the CP runs the hardware check (§5.7). On success it broadcasts the static words on the **configuration bus** `cfg_v, cfg_addr[5:0], cfg_data[31:0], cfg_commit`. The bus is registered at every station it crosses and passes through the clock-crossing synchronisers into the 0.9 GHz serial-chain domain.
 3. **Latch.** Each block decodes only its own word addresses into shadow registers. On `cfg_commit` it copies the shadow registers into its active registers.
 4. **Settle.** The CP waits `CFG_SETTLE` cycles (at least the deepest bus latency plus 16; 64 by default), then sets `CFG_STATUS.loaded`. Doorbells are refused (`db_rdy` = 0) while a commit settles.
@@ -482,7 +485,7 @@ Reloading the same model is idempotent. Switching models repeats steps 1–4 wit
 
 ### 5.7 Validation and errors
 
-The hardware checks are implemented once, in `tools/hbm_generic_iface.py` `d_hw_check()`. The CP RTL must match them case for case (conformance test CF-0).
+Software computes every value in the descriptor; the hardware never derives one. It only latches the words and runs the checks below, which are implemented once, in `tools/hbm_generic_iface.py` `d_hw_check()`. The CP's register-transfer-level (RTL) design must match them case for case (conformance test CF-0).
 
 | Code | Name | Condition | Effect |
 |---:|---|---|---|
@@ -513,13 +516,17 @@ This chapter is the bit-level reference. `spec.json` is authoritative; these tab
 
 ### 6.1 Record layout
 
+*Units and terms in this table:* Stream unit (SU) · Unit operation header (UOP) · Memory descriptor (MDESC) · Stream-unit template (SUT).
+
 | Part | Size | Present when |
 |---|---|---|
 | Header (UOP) | 128 bits (16 B) | always |
 | SU template (SUT) | 256 bits (32 B) | header bit `tmpl` = 1 |
 | Memory descriptors (MDESC) | 256 bits (32 B) each | one per set bit of `opnd`, in A, B, C, D, O, R, I order |
 
-### 6.2 Header (UOP, 128 bits)
+### 6.2 Unit operation header (UOP, 128 bits)
+
+*Units and terms in this table:* Stream unit (SU) · Dynamic values (DYN).
 
 | Bits | Field | Meaning |
 |---|---|---|
@@ -544,6 +551,8 @@ This chapter is the bit-level reference. `spec.json` is authoritative; these tab
 | 3 | LAST_ITER | on the last iteration of the enclosing loop |
 
 ### 6.4 Memory descriptor (MDESC, 256 bits)
+
+*Units and terms in this table:* Vector memory (VM) · Dynamic values (DYN).
 
 | Bits | Field | Width | Meaning |
 |---|---|---:|---|
@@ -582,16 +591,16 @@ Bit 7 and bits 255:239 are reserved.
 
 | Unit | Operand use |
 |---|---|
-| SU | The template's sources map to A, B, C, D; the element result to O; the reduction result to R; a gather index table to I. |
-| SM | A = activation (VM or STREAM); B = weights (HBM, possibly indexed); O = result (VM or STREAM); I = id table when B is indexed. |
-| FUSED | A = input; B = gain (norms) or sink row (softmax); O = output, whose `fmt` is the output format. QDQ: A = values, O = the quantised-dequantised values. |
-| SFU | A = gate, B = up, C = route weight, O = output. |
-| ATT | A = queries or probabilities (VM); B = K or V rows (HBM, `n_sel` = POS1 or POS_SLOT1), optionally a ring; C (optional) = a second row source whose rows follow B's; O = scores or PV. |
-| DMA | A = source, O = destination; I = id table for an indexed source. |
-| IDX | TOPK: A = scores (m rows of n); O = selected ids (U32); R = selected values (optional). EHASH: B = hash constants; O = row ids (U32). |
-| COLL | A = local contribution (ROW_GATHER: this die's row store), O = result; I = the selected row ids (ROW_GATHER). |
-| ARGMAX | A = logits (VM or STREAM), O = {value, id}. |
-| CTL | `CTL.END`: A = the U32 token. |
+| Stream unit (SU) | The template's sources map to A, B, C, D; the element result to O; the reduction result to R; a gather index table to I. |
+| Matrix engine (SM) | A = activation (VM or STREAM); B = weights (HBM, possibly indexed); O = result (VM or STREAM); I = id table when B is indexed. |
+| Fused paths (FUSED) | A = input; B = gain (norms) or sink row (softmax); O = output, whose `fmt` is the output format. QDQ: A = values, O = the quantised-dequantised values. |
+| Special-function unit (SFU) | A = gate, B = up, C = route weight, O = output. |
+| Attention tiles (ATT) | A = queries or probabilities (VM); B = K or V rows (HBM, `n_sel` = POS1 or POS_SLOT1), optionally a ring; C (optional) = a second row source whose rows follow B's; O = scores or PV. |
+| DMA engine (DMA) | A = source, O = destination; I = id table for an indexed source. |
+| Indexer / top-k (IDX) | TOPK: A = scores (m rows of n); O = selected ids (U32); R = selected values (optional). EHASH: B = hash constants; O = row ids (U32). |
+| Collective engine (COLL) | A = local contribution (ROW_GATHER: this die's row store), O = result; I = the selected row ids (ROW_GATHER). |
+| Argmax unit (ARGMAX) | A = logits (VM or STREAM), O = {value, id}. |
+| Control (CTL) | `CTL.END`: A = the U32 token. |
 
 ### 6.7 Unit operations
 
@@ -599,20 +608,20 @@ Operation codes are the index of each operation in its unit's list in `spec.json
 
 | Unit | Operations (code order) | `param` and immediates | Semantics (bit-exact reference) |
 |---|---|---|---|
-| CTL | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX, AMAX, ACCEPT: MTP control steps, reserved until the Qwen MTP decision. |
-| SM | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
-| SU | VOP | — (the template carries the configuration) | `Machine.su1` (R-ARITH chunk8) |
-| SFU | GLU | `imm_a` = clamp limit (FLT_MAX disables) | The fused SwiGLU chain; output format = O `fmt` |
-| FUSED | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX, QDQ_FP8, QDQ_FP4_E8M0, QDQ_FP4_E4M3 | ROW_NORM: `[5:0]` d_units, `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. QDQ: quantise each 32-element block and dequantise it again, exactly as the DS activation quantiser does: QDQ_FP8 to FP8E4M3 with a UE8M0 (power-of-two) block scale; QDQ_FP4_E8M0 to FP4E2M1 with a UE8M0 block scale; QDQ_FP4_E4M3 to FP4E2M1 with an FP8E4M3 scale per block of `param[7:0]` elements (DS 16). The SU cannot form the exact power-of-two scale (⌈log2⌉ of the block maximum), so these are engine operations. |
-| ATT | QK, PV | `[3:0]` head lanes used; `[7:4]` 64-element slices per head − 1; `[8]` ring | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order. Rows are B's n rows, then C's rows when C is present (scores and PV run over the concatenation, B first). With `ring` = 1, B is a ring of `B.m` slots (a power of two): the first row read is slot (POS1 − n) mod `B.m` and reading wraps at `B.m`, so the rows arrive oldest first. |
-| COLL | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE, GROUP_REDUCE_MCAST, ROW_GATHER | GROUP_REDUCE_MCAST: `[7:0]` sub-group size s. ROW_GATHER: `[7:0]` owner block B; `imm_a` = row count when I has no count row; `imm_b` = destination ranks | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. ALL_GATHER: rank r contributes elements ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1 of A (n = A.n, G = group size) and every rank receives all n. GROUP_REDUCE_MCAST: each aligned sub-group of s ranks (s = 2, 4 or 8) reduces A in the rank-order pairwise tree, and each sub-group's result is multicast to every rank of the group; O holds the sub-groups' results in sub-group order, in format O `fmt`. ROW_GATHER: row i of the selection is owned by rank (i div B) mod G, which stores it at local row (i div (B·G))·B + i mod B of A; every destination rank 0 … `imm_b` − 1 receives the selected rows in list order in O. |
-| ARGMAX | LOCAL | `imm_a` = id offset multiplier | numpy argmax: lowest index on ties; NaN flag reported; global id = local id + RANK · `imm_a` |
-| DMA | LOAD, STORE, FENCE, KVWB_DS | — | LOAD/STORE: HBM ↔ VM row moves, including the linear KV append, recurrent state and the indexed row stream (§3.3). FENCE: makes the DMA unit's writes visible. KVWB_DS: the DS window-ring KV write-back. |
-| IDX | INDEX_Q, INDEX_SCORES, TOPK, SELECT, EHASH | TOPK: `[11:0]` k (1 … 2,048). EHASH: `[2:0]` Engram layer index | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index; R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. INDEX_Q, INDEX_SCORES and SELECT are the DS indexer engines. |
-| HC | HC_MIX | — | The DS hyper-connection mix |
-| SIMT | RUN | `[13:0]` entry PC; `imm_a` = SM mask | Optional unit, absent on r25 (§2.3) |
+| Control (CTL) | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX, AMAX, ACCEPT: MTP control steps, reserved until the Qwen MTP decision. |
+| Matrix engine (SM) | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
+| Stream unit (SU) | VOP | — (the template carries the configuration) | `Machine.su1` (R-ARITH chunk8) |
+| Special-function unit (SFU) | GLU | `imm_a` = clamp limit (FLT_MAX disables) | The fused SwiGLU chain; output format = O `fmt` |
+| Fused paths (FUSED) | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX, QDQ_FP8, QDQ_FP4_E8M0, QDQ_FP4_E4M3 | ROW_NORM: `[5:0]` d_units, `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. QDQ: quantise each 32-element block and dequantise it again, exactly as the DS activation quantiser does: QDQ_FP8 to FP8E4M3 with a UE8M0 (power-of-two) block scale; QDQ_FP4_E8M0 to FP4E2M1 with a UE8M0 block scale; QDQ_FP4_E4M3 to FP4E2M1 with an FP8E4M3 scale per block of `param[7:0]` elements (DS 16). The SU cannot form the exact power-of-two scale (⌈log2⌉ of the block maximum), so these are engine operations. |
+| Attention tiles (ATT) | QK, PV | `[3:0]` head lanes used; `[7:4]` 64-element slices per head − 1; `[8]` ring | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order. Rows are B's n rows, then C's rows when C is present (scores and PV run over the concatenation, B first). With `ring` = 1, B is a ring of `B.m` slots (a power of two): the first row read is slot (POS1 − n) mod `B.m` and reading wraps at `B.m`, so the rows arrive oldest first. |
+| Collective engine (COLL) | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE, GROUP_REDUCE_MCAST, ROW_GATHER | GROUP_REDUCE_MCAST: `[7:0]` sub-group size s. ROW_GATHER: `[7:0]` owner block B; `imm_a` = row count when I has no count row; `imm_b` = destination ranks | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. ALL_GATHER: rank r contributes elements ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1 of A (n = A.n, G = group size) and every rank receives all n. GROUP_REDUCE_MCAST: each aligned sub-group of s ranks (s = 2, 4 or 8) reduces A in the rank-order pairwise tree, and each sub-group's result is multicast to every rank of the group; O holds the sub-groups' results in sub-group order, in format O `fmt`. ROW_GATHER: row i of the selection is owned by rank (i div B) mod G, which stores it at local row (i div (B·G))·B + i mod B of A; every destination rank 0 … `imm_b` − 1 receives the selected rows in list order in O. |
+| Argmax unit (ARGMAX) | LOCAL | `imm_a` = id offset multiplier | numpy argmax: lowest index on ties; NaN flag reported; global id = local id + RANK · `imm_a` |
+| DMA engine (DMA) | LOAD, STORE, FENCE, KVWB_DS | — | LOAD/STORE: HBM ↔ VM row moves, including the linear KV append, recurrent state and the indexed row stream (§3.3). FENCE: makes the DMA unit's writes visible. KVWB_DS: the DS window-ring KV write-back. |
+| Indexer / top-k (IDX) | INDEX_Q, INDEX_SCORES, TOPK, SELECT, EHASH | TOPK: `[11:0]` k (1 … 2,048). EHASH: `[2:0]` Engram layer index | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index; R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. INDEX_Q, INDEX_SCORES and SELECT are the DS indexer engines. |
+| Hyper-connections (HC) | HC_MIX | — | The DS hyper-connection mix |
+| SIMT engine (SIMT) | RUN | `[13:0]` entry PC; `imm_a` = SM mask | Optional unit, absent on r25 (§2.3) |
 
-### 6.8 DYN codes
+### 6.8 Dynamic values (DYN)
 
 The CP computes the DYN values at the doorbell, one bank per slot. Codes are 6 bits.
 
@@ -632,7 +641,7 @@ The CP computes the DYN values at the doorbell, one bank per slot. Codes are 6 b
 | 16–62 | DS selectors | The DS window and compressed-row counts of `hdc_isa_v41.FULL_DYN`, in their order |
 | 63 | N_FROM_VM | `n_sel` only: n from row 1 of the I table |
 
-### 6.9 SU template (SUT, 256 bits)
+### 6.9 Stream-unit template (SUT, 256 bits)
 
 The SU template carries the pipeline fields of the SU operation set (`tools/hdc_isa_v41.py`), packed from bit 0 in this order; 142 bits are used and bits 255:142 are reserved. Its semantics are `tools/hdc_program_v41.py` `Machine.su1`. `c_pair` always pairs element i with i XOR 1.
 
@@ -649,6 +658,8 @@ The SU template carries the pipeline fields of the SU operation set (`tools/hdc_
 **HBM** is one die-local, 40-bit byte address space with 32-byte sectors. The svc address map (sector → stack and PC) is fixed. A contiguous KV or index-key sweep must spread over all 32 PCs, and DS KV rows are striped over the PCs by position, so that an indexed selection also spreads evenly.
 
 **Regions** are placed by the compiler and recorded in the image manifest, not in hardware:
+
+*Units and terms in this table:* Matrix engine (SM) · DMA engine (DMA).
 
 | Region | Content |
 |---|---|
@@ -689,6 +700,8 @@ The manifest (`schema` = `opentallas.hgi_model_manifest.v1`) has three parts:
 
 DS runs on r25 as a record stream of native unit operations only, one image per die (96 images of identical structure, §2.6). The simulator runs a full DS token at 1M context this way on 96 simulated dies, bit-exact against the released-checkpoint golden: all 40 layers and the head, 4,526 records per die per token.
 
+*Units and terms in this table:* Control (CTL) · Matrix engine (SM) · Stream unit (SU) · Special-function unit (SFU) · Fused paths (FUSED) · Attention tiles (ATT) · Collective engine (COLL) · Argmax unit (ARGMAX) · DMA engine (DMA) · Indexer / top-k (IDX) · Hyper-connections (HC).
+
 | DS work | Records |
 |---|---|
 | Matrix-vector products | `SM.MATVEC` (FP8 or FP4 block-dot, BF16); each die's rows by its own even-split constants |
@@ -713,6 +726,8 @@ The acceptance test is identical tokens and per-unit outputs against the existin
 
 **What the DS lowering needs beyond the generic set.** Most items map onto DS engines the die already carries:
 
+*Units and terms in this table:* Fused paths (FUSED) · Attention tiles (ATT) · Collective engine (COLL) · DMA engine (DMA) · Indexer / top-k (IDX).
+
 | Item | Interface | Hardware or compiler |
 |---|---|---|
 | Block quantise-dequantise | `FUSED.QDQ_*` | Existing DS activation quantiser behind the FUSED dispatcher; dispatcher decode only |
@@ -725,7 +740,9 @@ The acceptance test is identical tokens and per-unit outputs against the existin
 
 ### 7.2 Qwen3-8B: the 28 families
 
-A *family* is a class of graph operations that share one implementation. Qwen3-8B's 871 graph operations per token fall into 28 families. The counts below are operations per token; §3.6 shows the records.
+A *family* is a class of graph operations that share one implementation. Qwen3-8B's 871 graph operations per token fall into 28 families. Each family is bound, per model, either to a fused fast path or to an exact fallback on the stream unit. The golden follows the arithmetic order of the bound path, so changing a binding changes the golden (§8.2). The counts below are operations per token; §3.6 shows the records.
+
+*Units and terms in this table:* Control (CTL) · Matrix engine (SM) · Stream unit (SU) · Special-function unit (SFU) · Fused paths (FUSED) · Attention tiles (ATT) · Collective engine (COLL) · Argmax unit (ARGMAX) · DMA engine (DMA).
 
 | Family (operations per token) | Records | Path |
 |---|---|---|
@@ -788,7 +805,7 @@ The simulator and the goldens both call this library. Nothing else is shared, so
 A **golden** is the bit-exact software reference that hardware and simulator must reproduce.
 
 - **DS:** `hdc_golden_v41` (chunk8) and the existing campaigns.
-- **Qwen3-8B:** `qwen_r25`, the graph in r25 order on the arithmetic library, with the bindings of §7.2 and the permuted RoPE order. Binding a different path (for example the fused softmax) is a golden change. Owner sign-off rests on one contract quality run in r25 order (about 2.2 GPU-hours) within the pre-committed PPL/MMLU rule.
+- **Qwen3-8B:** `qwen_r25`, the graph in r25 order on the arithmetic library, with the bindings of §7.2 and the permuted RoPE order. Binding a different path (for example the fused softmax) is a golden change. Owner sign-off rests on one contract quality run in r25 order (about 2.2 GPU-hours) within the pre-committed rule on perplexity (PPL) and the MMLU benchmark.
 - **Gated DeltaNet:** the golden in `tools/hgi_sim/gdn.py`, checked against the transformers reference.
 
 ### 8.3 The verification ladder
@@ -801,6 +818,8 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | L3 | Composition: simulator timing with measured entries | Published only as a measured composition |
 
 ### 8.4 Conformance tests
+
+*Units and terms in this table:* DMA engine (DMA) · Hyper-connections (HC) · Command processor (CP) · Vector memory (VM).
 
 | ID | Block | DS (reset) | Qwen and other models |
 |---|---|---|---|
@@ -835,6 +854,8 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 
 HGI-1 is generic because model variation lives in programs and per-operation operand descriptors, and because the programmable vector unit (SU templates), indexed descriptors and the generic top-k cover what the fused fast paths do not. Each operator of a new model falls into one of three tiers:
 
+*Units and terms in this table:* Matrix engine (SM) · Stream unit (SU) · Special-function unit (SFU) · Fused paths (FUSED) · Attention tiles (ATT) · DMA engine (DMA) · Indexer / top-k (IDX).
+
 | Tier | Meaning |
 |---|---|
 | **F**, fast | A fused path (norm engine, `SFU.GLU`, `FUSED.SOFTMAX`, an `SM.MATVEC` format, ATT, `IDX.TOPK`) runs it with its per-operation settings. |
@@ -860,6 +881,8 @@ HGI-1 is generic because model variation lives in programs and per-operation ope
   - group sizes 16, 32 and 64 (for example Kimi-K2 at TP16), until the collective engine builds them.
 
 *Table 9-1. Capacity limits that bound generality.*
+
+*Units and terms in this table:* Stream unit (SU) · Special-function unit (SFU) · Attention tiles (ATT) · Vector memory (VM).
 
 | Limit | Value | Effect |
 |---|---|---|
@@ -917,38 +940,38 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | Term | Meaning |
 |---|---|
 | **AR** | Autoregressive decode: one new token per step. |
-| **ARGMAX** | Unit 7: the local argmax over this die's logit shard. |
-| **ATT** | Unit 5: the attention tiles, computing QK scores and PV products over KV rows read from HBM. |
+| **Argmax unit (ARGMAX)** | Unit 7: the local argmax over this die's logit shard. |
+| **Attention tiles (ATT)** | Unit 5: the attention tiles, computing QK scores and PV products over KV rows read from HBM. |
 | **BF16** | 16-bit brain floating point (8-bit exponent, 7-bit mantissa). |
 | **Block-dot** | A dot product over blocks of low-precision values that share one scale (FP8 or FP4 with UE8M0 block scales in DS). |
 | **chunk8** | The golden's summation order for attention dot products: chunks of 8, then pairwise. |
-| **CMDPROC, CP** | The command processor (`hfd_cmdproc`): the in-order sequencer that fetches and dispatches records and owns the doorbell and configuration path. |
-| **COLL** | Unit 6: the cross-die collective engine (all-reduce, all-gather, top-k merge, argmax merge). |
+| **Command processor (CP, CMDPROC)** | The command processor (`hfd_cmdproc`): the in-order sequencer that fetches and dispatches records and owns the doorbell and configuration path. |
+| **Collective engine (COLL)** | Unit 6: the cross-die collective engine (all-reduce, all-gather, top-k merge, argmax merge). |
 | **Completion** | The record the CP returns to the host at `CTL.END`: token, position, job, status and cycle count. |
 | **CRC-32** | The IEEE CRC-32 checksum over descriptor words 0–62, stored in word 63. |
 | **csum8** | The golden's chunked summation order; its streaming binary-counter state carries a multipass softmax sum exactly. |
-| **CTL** | Unit 0: control operations executed by the CP itself. |
-| **DMA** | Unit 8: row moves between HBM and VM, the KV append, the DS KV write-back and the HBM fence. |
+| **Control (CTL)** | Unit 0: control operations executed by the CP itself. |
+| **DMA engine (DMA)** | Unit 8 (direct memory access): row moves between HBM and VM, the KV append, the DS KV write-back and the HBM fence. |
 | **Doorbell** | The host's start command for one token: input token, position, job id, generation, entry point and column count. |
 | **DS** | DeepSeek-V4.1-Flash, the reference model whose behaviour is the reset state. |
 | **DSpark** | DeepSeek-V4.1's built-in multi-token prediction (draft) scheme. |
-| **DYN** | Small per-token integers (POS, POS1, TOKEN, L, L1, RANK, SLOT, …) computed by the CP at the doorbell and used in address computation. |
+| **Dynamic values (DYN)** | Small per-token integers (POS, POS1, TOKEN, L, L1, RANK, SLOT, …) computed by the CP at the doorbell and used in address computation. |
 | **Engram** | A DeepSeek-V4.1 operator family (hashed n-gram memory lookup). |
 | **Entry point** | A record offset in the program image where a pass starts (AR, verify, draft). |
 | **Family** | A class of graph operations that share one implementation, for example "prenorm" or "row_scale_qkv". |
 | **Fast path** | A fused hardware datapath for a family (norm engine, SwiGLU chain, softmax unit). |
 | **FENCE** | `CTL.FENCE` or `DMA.FENCE`: waits until posted HBM writes are visible. |
 | **FP8E4M3, FP4E2M1, UE8M0** | 8-bit float (4-bit exponent, 3-bit mantissa); 4-bit float (2-bit exponent, 1-bit mantissa); 8-bit unsigned power-of-two scale. |
-| **FUSED** | Unit 4: the norm engine, the DS hyper-connection norms and the softmax unit. |
+| **Fused paths (FUSED)** | Unit 4: the norm engine, the DS hyper-connection norms and the softmax unit. |
 | **GDN** | Gated DeltaNet: a linear-attention layer that keeps a per-head state matrix instead of a KV cache. |
 | **Golden** | The bit-exact software reference model (`hdc_golden_v41` for DS, `qwen_r25` for Qwen, the GDN golden in `hgi_sim`). |
 | **GQA** | Grouped-query attention: several query heads share one KV head (4 per KV head for Qwen3-8B). |
 | **HBM** | High-bandwidth memory attached to the die: 144 GB per die in 4 stacks. |
-| **HC** | Hyper-connections: DeepSeek-V4.1's multi-copy residual mixing; unit 10. |
+| **Hyper-connections (HC)** | DeepSeek-V4.1's multi-copy residual mixing; unit 10. |
 | **HGI-1** | HBM Generic Interface: this specification. |
 | **I table** | A VM table of U32 ids named by a record's I operand: row 0 holds ids, row 1 optional counts. |
 | **`ibcast`** | Descriptor bit that sets the inner stride to 0, so each row reads one value. |
-| **IDX** | Unit 9: generic top-k (`IDX.TOPK`) and the DS indexer engines. |
+| **Indexer / top-k (IDX)** | Unit 9: generic top-k (`IDX.TOPK`) and the DS indexer engines. |
 | **Image** | The program records stored in HBM, located by `image_base` and `image_pages`. |
 | **Indexed descriptor** | A descriptor whose address term comes from an id in VM instead of a DYN value. |
 | **INT8 row scale** | Qwen's weight format: signed 8-bit codes with one BF16 scale per output row. |
@@ -956,7 +979,7 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | **L, L1** | The counters of the level-0 and level-1 loops. |
 | **MD** | The model descriptor: 64 words read by hardware at model load. |
 | **Manifest** | The per-layer JSON description of a model that software reads; bound to the MD by sha256. |
-| **MDESC** | Memory descriptor: the 256-bit operand description in a record. |
+| **Memory descriptor (MDESC)** | The 256-bit operand description in a record. |
 | **MTP** | Multi-token prediction (speculative decoding with draft and verify passes). |
 | **OTG-1** | The SIMT instruction set of the GPU-organised ablation's kernels (`tools/gpu_sys`). |
 | **o-group** | DS's group of 8 head dies that share one output-projection reduction. |
@@ -971,28 +994,30 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | **Record** | One unit operation in a program: header, optional SU template and memory descriptors. |
 | **Reset value** | A static field's value before any descriptor load; equal to DS behaviour. |
 | **RoPE** | Rotary position embedding: pairs of query/key elements rotated by position-dependent angles. |
-| **SFU** | Unit 3: the fused SwiGLU chain. (Inside an SU template, `sfu` is also the stage that applies exp, rsqrt, sigmoid and other special functions.) |
-| **SIMT** | Unit 11: an optional kernel engine, absent on r25. |
+| **Special-function unit (SFU)** | Unit 3: the fused SwiGLU chain. (Inside an SU template, `sfu` is also the stage that applies exp, rsqrt, sigmoid and other special functions.) |
+| **SIMT engine (SIMT)** | Unit 11 (single-instruction, multiple-thread): an optional kernel engine, absent on r25. |
 | **Slot** | A verify column; each slot has its own DYN bank. |
-| **SM** | Unit 1: the 32 matrix-vector engines per die that stream weights from HBM. |
+| **Matrix engine (SM)** | Unit 1: one of the die's 32 weight-streaming matrix-vector engines. Each streams weight rows from HBM against an activation vector. The short name is borrowed from GPU naming, but an SM here is not a GPU streaming multiprocessor: it has no instruction stream, threads or register file. |
 | **SPMD** | Single program, multiple data: every die of a group runs the same program on its own shard. |
 | **STATE** | The HBM region holding linear-attention state and convolution rings. |
 | **STREAM** | A hardware FIFO with credit flow control joining a fixed producer and consumer. |
-| **SU** | Unit 2: the programmable vector pipeline configured by an SU template. |
-| **SUT** | SU template: the 256-bit configuration of the SU pipeline in a record. |
+| **Stream unit (SU)** | Unit 2: the programmable vector pipeline, configured per record by a stream-unit template (SUT). |
+| **Stream-unit template (SUT)** | The 256-bit configuration of the SU pipeline in a record. |
 | **svc** | The HBM service layer that maps sectors to stacks and pseudo-channels. |
 | **τ (tau)** | The measured mean number of tokens accepted per MTP verify step. |
 | **tc16 ring** | A stage of the SM's accumulation order in the smh arithmetic. |
 | **TP** | Tensor parallelism: splitting each layer's matrices over the dies of a group. |
-| **UOP** | The 128-bit record header. |
+| **Unit operation header (UOP)** | The 128-bit record header. |
 | **Verify pass** | The MTP pass that checks several drafted positions in one sweep. |
-| **VM** | Vector memory: the die's 262,144-word FP32 scratch, allocated by the compiler. |
+| **Vector memory (VM)** | The die's 262,144-word FP32 scratch, allocated by the compiler. |
 | **`wait` mask** | Header field naming the units that must drain before a record issues. |
 | **YaRN** | A RoPE context-extension scheme; only the host's table generator implements it. |
 
 ---
 
 ## Appendix A. Design decisions
+
+*Units and terms in this table:* Stream unit (SU) · Fused paths (FUSED) · Attention tiles (ATT) · Indexer / top-k (IDX) · SIMT engine (SIMT) · Command processor (CP) · Vector memory (VM) · Dynamic values (DYN).
 
 | Decision | Why |
 |---|---|
