@@ -36,7 +36,7 @@
     "bench": [
       {
         "name": "GOLDEN",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/GOLDEN.vvp > {RUN}/bench/GOLDEN.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/GOLDEN.vvp 2>&1 | tee {RUN}/bench/GOLDEN.log",
         "expect": "pass",
         "pass_regex": "PASS HGI",
         "min_count_regex": "words=(\\d+)",
@@ -51,7 +51,7 @@
       },
       {
         "name": "MUT_OWNER",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_OWNER=1 -o {RUN}/bench/MUT_OWNER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_OWNER.vvp > {RUN}/bench/MUT_OWNER.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_OWNER=1 -o {RUN}/bench/MUT_OWNER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_OWNER.vvp 2>&1 | tee {RUN}/bench/MUT_OWNER.log",
         "expect": "fail",
         "fail_regex": "FATAL:",
         "logs": [
@@ -65,7 +65,7 @@
       },
       {
         "name": "MUT_ORDER",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_ORDER=1 -o {RUN}/bench/MUT_ORDER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_ORDER.vvp > {RUN}/bench/MUT_ORDER.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_ORDER=1 -o {RUN}/bench/MUT_ORDER.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_ORDER.vvp 2>&1 | tee {RUN}/bench/MUT_ORDER.log",
         "expect": "fail",
         "fail_regex": "FATAL:",
         "logs": [
@@ -79,7 +79,7 @@
       },
       {
         "name": "MUT_WRITTEN",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_WRITTEN=1 -o {RUN}/bench/MUT_WRITTEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_WRITTEN.vvp > {RUN}/bench/MUT_WRITTEN.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_row_formatter -P tb_hgi_coll_row_formatter.MUT_WRITTEN=1 -o {RUN}/bench/MUT_WRITTEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_row_formatter.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_row_formatter.sv && vvp {RUN}/bench/MUT_WRITTEN.vvp 2>&1 | tee {RUN}/bench/MUT_WRITTEN.log",
         "expect": "fail",
         "fail_regex": "FATAL:",
         "logs": [

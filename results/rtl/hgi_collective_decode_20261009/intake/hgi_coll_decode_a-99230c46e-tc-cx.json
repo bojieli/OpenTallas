@@ -36,7 +36,7 @@
     "bench": [
       {
         "name": "GOLDEN",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/GOLDEN.vvp > {RUN}/bench/GOLDEN.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode  -o {RUN}/bench/GOLDEN.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/GOLDEN.vvp 2>&1 | tee {RUN}/bench/GOLDEN.log",
         "expect": "pass",
         "pass_regex": "PASS HGI",
         "min_count_regex": "cases=(\\d+)",
@@ -51,7 +51,7 @@
       },
       {
         "name": "MUT_GROUP",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_GROUP=1 -o {RUN}/bench/MUT_GROUP.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_GROUP.vvp > {RUN}/bench/MUT_GROUP.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_GROUP=1 -o {RUN}/bench/MUT_GROUP.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_GROUP.vvp 2>&1 | tee {RUN}/bench/MUT_GROUP.log",
         "expect": "fail",
         "fail_regex": "FATAL:",
         "logs": [
@@ -65,7 +65,7 @@
       },
       {
         "name": "MUT_ROW_BLOCK",
-        "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_ROW_BLOCK=1 -o {RUN}/bench/MUT_ROW_BLOCK.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_ROW_BLOCK.vvp > {RUN}/bench/MUT_ROW_BLOCK.log 2>&1",
+        "cmd": "set -o pipefail; mkdir -p {RUN}/bench && iverilog -g2012 -s tb_hgi_coll_decode -P tb_hgi_coll_decode.MUT_ROW_BLOCK=1 -o {RUN}/bench/MUT_ROW_BLOCK.vvp rtl/hbm_accel/generic/collective/ot_hgi_coll_decode.sv rtl/hbm_accel/generic/collective/tb_hgi_coll_decode.sv && vvp {RUN}/bench/MUT_ROW_BLOCK.vvp 2>&1 | tee {RUN}/bench/MUT_ROW_BLOCK.log",
         "expect": "fail",
         "fail_regex": "FATAL:",
         "logs": [
