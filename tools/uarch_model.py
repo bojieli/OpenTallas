@@ -77,6 +77,12 @@ def qwen_stream4_mutable_interface_model():
 
 
 # ---------------------------------------------------------------------------------------------------------
+def hbm_rf_fence_cx_model():
+    """Actual RF ready-to-skid fanout fix; zero added token-path cycles."""
+    from hbm_rf_fence_cx_model import model
+    return model()
+
+
 # Physical constants (sources in-line)
 # ---------------------------------------------------------------------------------------------------------
 WIRE_PS_PER_UM = 0.5997       # routed express-link fit (tools/chip_assembly/floorplans.wire_delay_model)
