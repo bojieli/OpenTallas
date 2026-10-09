@@ -23,6 +23,14 @@
     "4": {
       "build_rc": 0,
       "sim_rc": 1
+    },
+    "5": {
+      "name": "NaN_payload_canonicalization",
+      "build_rc": 0,
+      "sim_rc": 1,
+      "index_unchanged": 75972,
+      "nan_flag": 1,
+      "reason": "winning payload differs"
     }
   },
   "native_ds_leaf_unchanged": true,
@@ -30,7 +38,32 @@
   "run": "/srv/opentallas-scratch/codex/hgi-argmax18-3e3f1cd55",
   "missing": [
     "CF hbm-sim vector pin",
-    "route evidence",
-    "NaN payload mutant pending"
-  ]
+    "own mapped area/synthesis measurement",
+    "route evidence"
+  ],
+  "runner_commit": "4d3c77846",
+  "files_sha256": {
+    "results/rtl/hgi_argmax18_20261009/value_bench/2.sim.log": "2df6f26b15425b597b5165ccef0f8f28a3dfec9cc8626b698f19bf236511edc2",
+    "results/rtl/hgi_argmax18_20261009/value_bench/0.time.log": "225d4925b27c076128826ef44f38a083d84abbeaebea0fd3e235819569fb2926",
+    "results/rtl/hgi_argmax18_20261009/value_bench/4.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/value_bench/2.time.log": "ea58e6567f55c2cb54cbadb6c04445178c8c715ae33a21eff401529d075ce3cf",
+    "results/rtl/hgi_argmax18_20261009/value_bench/4.time.log": "c3217617c3d840cbe467968a6433628fae2f977eeadc020ee55ac399223661b0",
+    "results/rtl/hgi_argmax18_20261009/value_bench/1.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/value_bench/1.time.log": "05c5600018984826c42fb5ecbc773fc46d0a18535a5549ee7336ba31ed02ebae",
+    "results/rtl/hgi_argmax18_20261009/value_bench/1.sim.log": "86b77abec18e109edda8a89c145015394bbaa80d2a0b8c229506f6fe597ac911",
+    "results/rtl/hgi_argmax18_20261009/value_bench/0.sim.log": "521cdc481db8d23a28ef40a4a76eeb49f0eb8779d7f9f6a6dfc5d55405b34c95",
+    "results/rtl/hgi_argmax18_20261009/value_bench/3.sim.log": "5aa8148b29320e914ea1bb8e8c3c879c2e4958e1e21b1666eb6369d57743992b",
+    "results/rtl/hgi_argmax18_20261009/value_bench/3.time.log": "bab77b10c8b7de5b1a00338e81fe8d162d7b45f60a9c848e1d8d64136588bab1",
+    "results/rtl/hgi_argmax18_20261009/value_bench/3.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/value_bench/0.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/value_bench/4.sim.log": "cdcfe61a6874f7e54b33cf769056b4a664d870d752ba37913d3886d918517f27",
+    "results/rtl/hgi_argmax18_20261009/value_bench/2.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/rtl/hgi_argmax18_20261009/value_bench/5.time.log": "84b7e3ddf13a04db76cf76d1ed1e01ba3017309af6388b313b32f37031eb9b9e",
+    "results/rtl/hgi_argmax18_20261009/value_bench/5.sim.log": "5ffa629ee4fc26fbdb94f5a33d7eedb30f0cb8c7d3621695d663eb25f725f57d",
+    "results/rtl/hgi_argmax18_20261009/value_bench/5.build.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "rtl_sha256": {
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv": "fc2eea3ad7954a5f3d83291da2add57b8bce7e2ed6634869b7cc0bda06da4b92",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv": "3603e167a65a260465d427df1e8ddc6ca927f58e0d60c786b9e2ce01b8997ff0"
+  }
 }
