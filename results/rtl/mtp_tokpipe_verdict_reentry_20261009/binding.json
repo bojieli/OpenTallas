@@ -1,0 +1,59 @@
+{
+  "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "source_commit": "9f7a7f35e",
+  "before_status": "NEEDS_RTL",
+  "before_failed_checks": [
+    "TT_FF0_DRC0_region_die150"
+  ],
+  "before_metrics": {
+    "ss_ps": 127.4,
+    "ff_ps": -8.2,
+    "drc": 0,
+    "setup_corner": "TT"
+  },
+  "benches": {
+    "bench_exact_stg": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_r1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_r1/run.log\", \"returncode\": 0}]\n",
+      "track": "parallel"
+    },
+    "bench_negative_stg": {
+      "expect": "fail",
+      "rc": 1,
+      "ok": true,
+      "tail": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED [{\"case\": \"stg_neg_prevuser\", \"expected\": \"fail\", \"pass_\": true, \"trace\": null, \"log\": \"stg_neg_prevuser/run.log\", \"returncode\": 0}]\n",
+      "track": "parallel"
+    },
+    "bench_stg_vmnat": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_vmnat\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_vmnat/run.log\", \"returncode\": 0}]\n",
+      "track": "parallel"
+    },
+    "bench_stg_lag1": {
+      "expect": "pass",
+      "rc": 0,
+      "ok": true,
+      "tail": "WFC_TOKPIPE_GATE PASS [{\"case\": \"stg_lag1\", \"expected\": \"pass\", \"pass_\": true, \"trace\": null, \"log\": \"stg_lag1/run.log\", \"returncode\": 0}]\n",
+      "track": "parallel"
+    }
+  },
+  "actual_rule": "SS already sensitivity only; failed combined TT/FF closure custom check blocks hold_only. Separate independent TT/DRC eligibility from mandatory FF closure-loop line. All incontext/reg2reg/region/die150 modes retained in both metrics.",
+  "sha256": {
+    "before_state.json": "388c7ae3a44d29d59a30995048be01f13f3d5a7ee6cf58db5230c472097dcc4a",
+    "before_spec.json": "00f9870a7368e7378d32df992ce6d9d035426894abd2f138920f0871ae63fad5",
+    "corrected_spec.json": "f3dd247c4d8743ba6aa6a81619b04e2b1550f4c5a733fd4c511e1e988bdee524"
+  },
+  "correction_scope": "ECO eligibility split; existing helper had no SS setup term. Retain FF mandatory final closure across same four modes. Original833/60/25 and region/die150 delays remain byte-identical or exact union. Original RTL and physical assets unchanged.",
+  "overlay_sha256": {
+    "tools/dsrom_wfc_tokpipe_eco_metrics.py": "3e50702f5672fa204c316ab37b57975313e73e4562cac2fe21248991fef2a893",
+    "physical/dsrom_wfc_tokpipe/eco_scope/signoff_9f7a7f35e.sdc": "75780a480cb42e47178265999ab90cd83520b6324fc80dde44dc6f9e4519a36d",
+    "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc": "ca2fe779ea1d75f1ecfd64b8046fb6a04bc25d7b2c253d268f38113e3eeb6ce3",
+    "tools/dsrom_wfc_tokpipe_eco_observer.sh": "4fe5aa0d0badf0b247a55588583d46eea9db5722ed6d5c80e4efe5606ce22463"
+  },
+  "final_gate": "After ECO installation, reexport original WFC STA all4 modes on final objects; custom helper requires SHA match for ODB/SPEF/SDC and full original all4 TT/FF/DRC acceptance. Generic FF alone cannot authorize closure.",
+  "observer": "E1 guard4GiB justified measured same-block6_report peak3952832KB; launch3793538, parent3793558; serial original-corner STA on private assets, original scope minTT127.4/minFF-8.2; equivalence pending at commit."
+}

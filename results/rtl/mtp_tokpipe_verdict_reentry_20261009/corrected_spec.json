@@ -1,0 +1,123 @@
+{
+ "name": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+ "block": "ot_dsrom_wfc_tokpipe_stg",
+ "owner": "Codex:mtp-rom/WFCbinding",
+ "purpose": "Separate full-shape stg hardened successor of closed SOURCEr24/STGr11. +1SOURCEprompt cycle, +0R6 current-user launch cycles. Retain770ps route/833ps signoff,60/25 uncertainty,150ps dieclock IO obligation and90ps regional/50ps IOhold policy. Exact/negative gates run remotely beside admitted physical; no inherited closedview. Owner continuation acceptance TT setup>=0/FF hold>=0/DRC0; SS sensitivity.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3"
+ ],
+ "threads": 12,
+ "peak_ram_gb": 64,
+ "bench_first": false,
+ "source": {
+  "branch": "codex/mtp-wfc-token-r3-route-20261009",
+  "commit": "9f7a7f35e",
+  "extra_paths": [
+   "results/rtl/dshbm_dspark_rtl_20261003/traces"
+  ],
+  "required_files": [
+   "rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv",
+   "rtl/dsrom_sys/mtp/ot_dsrom_wfc_tokpipe_stg.sv",
+   "physical/dsrom_wfc_tokpipe/stg_basis.json"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_stg",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/bench --case stg_r1",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKPIPE_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "negative_stg",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/negative --case stg_neg_prevuser --raw-negative",
+    "expect": "fail",
+    "fail_regex": "WFC_TOKPIPE_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "stg_vmnat",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_vmnat --case stg_vmnat",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKPIPE_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "stg_lag1",
+    "cmd": "python3 tools/dsrom_wfc_prompt_pipe_bench.py --out {RUN}/stg_lag1 --case stg_lag1",
+    "expect": "pass",
+    "pass_regex": "WFC_TOKPIPE_GATE PASS",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/cal --src {SRC} --cores 12 --need 64 && WFC_TARGET=cts bash {RUN}/cal/run.sh",
+   "base": "{RUN}/cal/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "echo retained_measured_reference_pin_IO_and_die150_region_budgets",
+   "threads": 12,
+   "peak_ram_gb": 64
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/dsrom_wfc_tokpipe_physical.py prep --inst stg --case {RUN}/route --src {SRC} --cores 12 --need 64 && bash {RUN}/route/run.sh",
+   "ok": "grep -q '^flow_rc=0' {RUN}/route/status && grep -q '^sta_rc=0' {RUN}/route/status",
+   "logs": [
+    "{RUN}/route/flow.log",
+    "{RUN}/route/sta.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/case.json {RUN}/route/config.mk {RUN}/route/constraint.sdc {RUN}/route/signoff.sdc {RUN}/route/wf_sta.json {RUN}/route/wf_drv.json {RUN}/route/check.json {RUN}/record/ && B=$(ls -d {RUN}/route/results/asap7/*/base | tail -1) && cp \"$B/6_final.odb\" \"$B/6_final.def\" \"$B/6_final.v\" \"$B/6_final.sdc\" \"$B/6_final.spef\" {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 tools/dsrom_wfc_tokpipe_eco_metrics.py --case {RUN}/route --eco-scope",
+  "checks": [
+   {
+    "name": "TT_FF0_DRC0_region_die150",
+    "cmd": "python3 tools/dsrom_wfc_tokpipe_eco_metrics.py --case {RUN}/route --eco-eligibility-check"
+   }
+  ],
+  "corner_sta": "{RUN}/route/wfc_eco_corner_sta.json"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed/ot_dsrom_wfc_tokpipe_stg"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "budget": {
+  "enabled": false,
+  "reason": "Retained source-pinned full shape and IO boundary budgets; owner continuation TT/FF0/DRC0 with SS sensitivity."
+ },
+ "hold_eco": {
+  "reexport": "[ -f {RUN}/route/wf_sta.json.pre_eco ] || cp {RUN}/route/wf_sta.json {RUN}/route/wf_sta.json.pre_eco\n[ -f {RUN}/route/wf_drv.json.pre_eco ] || cp {RUN}/route/wf_drv.json {RUN}/route/wf_drv.json.pre_eco\npython3 tools/dsrom_wfc_tokpipe_physical.py sta --inst stg --case {RUN}/route"
+ }
+}
