@@ -1,0 +1,26 @@
+{
+ "schema": "opentallas.token_path.index.v1",
+ "designs": [
+  {
+   "design": "qwen_rom",
+   "title": "Qwen3-8B ROM, 8K context, AR (TP4 dies)",
+   "file": "qwen_rom.json",
+   "tok_s": 5492.7,
+   "cycles": 218472.0
+  },
+  {
+   "design": "ds_rom",
+   "title": "DeepSeek-V4.1 ROM array (S81 die, 1,792 pairs, HALF_PHL BF), 1M context, AR",
+   "file": "ds_rom.json",
+   "tok_s": 1447.7,
+   "cycles": 828878.4
+  },
+  {
+   "design": "hbm_ds",
+   "title": "HBM accelerator (TP-96 dies, Tomahawk Ultra tier), DeepSeek-V4.1 1M, AR",
+   "file": "hbm_ds.json",
+   "tok_s": 1716.3,
+   "cycles": 699175.7
+  }
+ ]
+}
