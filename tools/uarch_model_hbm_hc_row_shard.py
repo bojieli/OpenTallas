@@ -95,5 +95,6 @@ def epoch_operand_model():
       "FN_epoch_check":"16-bit equality before sector acceptance and write pipeline; stale/wrong epoch faults without commit",
       "FN_epoch_added_functional_cycles":0,
       "physical_scope":"new leased port layout and comparator not qualified; prior40/64 jobs immutable",
-      "exact_gate":"pending full K20480 W32 realFP baseline and wrong/late epoch negative gates"})
+      "FN_epoch_fence":"full command lease checked locally before commit; native service transport and lease reuse lifetime binding pending",
+      "exact_gate":"PASS K20480 W32 realFP baseline4009cycles; WRONGFN/LATEFN bothcommitted0"})
     return row
