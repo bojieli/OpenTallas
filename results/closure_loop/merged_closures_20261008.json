@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 199,
+  "closed": 202,
   "revoked": 9,
   "held": 1,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 118
+  "merged": 121
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -2764,6 +2764,51 @@
    "merged_sha": "15f430057e45ff86c65323221e9f9ebc23592421",
    "status": "merged",
    "merged_by": "drive-2041"
+  },
+  {
+   "job": "hbm_hcp_lane_pr_79315a431-tc",
+   "closed": "2026-10-08T21:40:14-07:00",
+   "branch": "claude/safe-hbm-20261008",
+   "source_commit": "79315a431e0b3f88e901b18f044f3f8af1069c23",
+   "record_commit": "e41139565e697e198c6c53e1660ea99cf436c770",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "1311bf70e7811eae5378d53f7e90625b7606fd3f",
+   "status": "merged",
+   "merged_by": "merge-2140",
+   "note": "ot_dsrom_su_hcpost_lane_pr SS +155.24 / FF +4.54 ps DRC 0; benches lane_pr_exact PASS, neg_bypass FAIL as expected; S-C1 files only (rest of safe-hbm not merged)"
+  },
+  {
+   "job": "mtp_accept_a0-d30fa5f39-tc",
+   "closed": "2026-10-08",
+   "branch": "claude/mtp-hbm-20261008",
+   "source_commit": "d30fa5f390491bf8059e4af8d7d7ea7ce383d33a",
+   "record_commit": "7e8c71853e21dcd9f9f2badf96446ad302eea929",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "bcdc7409f77fb5f6a2803ea785df326f2e828fa5",
+   "status": "merged",
+   "merged_by": "merge-2140",
+   "note": "ot_hdc_accept SS +113.91 / FF +21.46 ps DRC 0 (TC requeue of 10-05 RTL; no bench stage)"
+  },
+  {
+   "job": "mtp_ctl_f2-d30fa5f39-tc",
+   "closed": "2026-10-08",
+   "branch": "claude/mtp-hbm-20261008",
+   "source_commit": "d30fa5f390491bf8059e4af8d7d7ea7ce383d33a",
+   "record_commit": "c6d2ebfb2c91c30f89ba2007044177d91d66937f",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": true,
+   "record_on_main": true,
+   "merged_sha": "bcdc7409f77fb5f6a2803ea785df326f2e828fa5",
+   "status": "merged",
+   "merged_by": "merge-2140",
+   "note": "ot_dshbm_dspark_ctl SS +28.49 / FF +10.88 ps DRC 0 (TC requeue of 10-05 RTL; no bench stage)"
   }
  ],
  "merge_backlog_2026_10_08_2130": {
@@ -2853,5 +2898,41 @@
     "action": "not for main (route snapshots)"
    }
   ]
+ },
+ "merge_2140": {
+  "stream": "merge-2140",
+  "base": "origin/main 132866cd1 (+ later main)",
+  "closures_merged": [
+   "hbm_hcp_lane_pr_79315a431-tc",
+   "mtp_accept_a0-d30fa5f39-tc",
+   "mtp_ctl_f2-d30fa5f39-tc"
+  ],
+  "ready_to_merge": [
+   {
+    "entry": "s81-tail 4cd6d205a",
+    "action": "merged (no gate in entry)"
+   },
+   {
+    "entry": "ingest 3af3b689f",
+    "action": "merged (new files; kv_ingest portability edit, campaign figures unchanged)"
+   },
+   {
+    "entry": "safe-hbm c148714f3",
+    "action": "NOT merged beyond the S-C1 closure files: elements gated on their own jobs; branch carries unclosed vm8 merges and SEATP=1 behaviour change"
+   },
+   {
+    "entry": "drive-2125-loader-cfgrep c58c3934d",
+    "action": "skipped: hbm_loader_halfsk_cfgrep_c58c3934d-tc-hm10-d2125 RUNNING; changes hfd_loader.sv"
+   },
+   {
+    "entry": "redesign-2 / drive-1128 vm8 / vm8-seam2",
+    "action": "skipped: no hbm_vm8 job CLOSED"
+   },
+   {
+    "entry": "corekv-eco 5f51f9b61",
+    "action": "equivalent change already on main (closure_loop.py COREKV-ECO baked post-SDC)"
+   }
+  ],
+  "checks": "make check-figures (pipefail) rc 0; tests/test_*die*.py + tests/test_dsrom*.py (226 files): 55 FAILED/ERROR, identical set to base origin/main; tools/closure_loop pytest pass; tests/test_rebudget.py pass; py_compile + bash -n changed files OK; tb_hcpost_lane_pr PASS locally"
  }
 }
