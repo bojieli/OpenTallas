@@ -1,0 +1,112 @@
+{
+  "module": "ot_hgi_quant_vm_transport",
+  "RTL": "rtl/hbm_accel/generic/ot_hgi_quant_vm_transport.sv",
+  "core_functional_source": "b827340df",
+  "sequencer_ABI_source": "3fae1571d",
+  "ports": {
+    "clk": [
+      "input",
+      1
+    ],
+    "rst_n": [
+      "input",
+      1
+    ],
+    "cmd": [
+      "input",
+      1409
+    ],
+    "ready": [
+      "output",
+      1
+    ],
+    "done": [
+      "output",
+      1
+    ],
+    "fault": [
+      "output",
+      1
+    ],
+    "drained": [
+      "output",
+      1
+    ],
+    "req_v": [
+      "output",
+      1
+    ],
+    "req_r": [
+      "input",
+      1
+    ],
+    "req": [
+      "output",
+      337
+    ],
+    "rsp_v": [
+      "input",
+      1
+    ],
+    "rsp_r": [
+      "output",
+      1
+    ],
+    "rsp": [
+      "input",
+      273
+    ],
+    "provider_fault": [
+      "input",
+      1
+    ]
+  },
+  "record": {
+    "valid": [
+      0,
+      0
+    ],
+    "header": [
+      128,
+      1
+    ],
+    "sut": [
+      384,
+      129
+    ],
+    "A": [
+      640,
+      385
+    ],
+    "B": [
+      896,
+      641
+    ],
+    "C": [
+      1152,
+      897
+    ],
+    "O": [
+      1408,
+      1153
+    ]
+  },
+  "VM": {
+    "req": "write1,byteaddr32,data256,byteMask32,tag16",
+    "rsp": "tag16,WRITE_ECHO1,data256",
+    "fault": "provider_fault separate",
+    "VM_addr": "FP32words converted byteaddr <<2",
+    "writes": "BF16 expanded FP32 one word per element"
+  },
+  "completion": "done pulse only final counted writeACK or drained fault; no die closure claim",
+  "params": {
+    "ENABLE": 0,
+    "DEPTH": 32
+  },
+  "open": [
+    "physical VM ingress binding owner parent",
+    "exact fault/reset benches",
+    "remote synthesis slot sizing",
+    "two route variants + strict boundary pin lint"
+  ]
+}
