@@ -1,0 +1,24 @@
+{
+  "scope": "Historical layer1 r4c generator failure; fine-lattice candidate qualification pending",
+  "failed_source_commit": "9f0c3cbe6",
+  "failed_host": "ot-epyc3",
+  "failed_run": "/srv/opentallas-scratch/claude/s81-die/m221pq_r4c",
+  "failure_log_sha256": "43976379a16190ff53680dc8cf99772964d005c93b37e22b5d12401375f79b24",
+  "terminal": "GEN_FAIL",
+  "failure_mechanism": "No coarse-lattice placement for rt_0_8a_y1 relay within reach of preceding point",
+  "candidate_source_commit": "5efa1f528",
+  "candidate_change": "Fine crossing lattice rescue after coarse searches, retaining previous and next reach checks and 0.432um occupancy clearance",
+  "candidate_focused_test": {
+    "command": "pytest -q tests/test_dsrom_s81_mixed_frames.py -k fine_cross",
+    "result": "1 passed, 9 deselected"
+  },
+  "candidate_full_shape": {
+    "state": "RUNNING",
+    "host": "ot-epyc3",
+    "wrapper_pid": 570152,
+    "python_pid": 570154,
+    "log": "/srv/opentallas-scratch/claude/s81-codex-recovery/r4c_fine_lattice_check.log",
+    "exit": "/srv/opentallas-scratch/claude/s81-codex-recovery/r4c_fine_lattice_check.exit"
+  },
+  "claim": "No full-die legality, timing, routing or closure claim; adoption depends on terminal full-shape checks"
+}
