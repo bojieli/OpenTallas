@@ -137,7 +137,7 @@ def main():
     sp = ap.add_subparsers(dest='mode', required=True)
     p = sp.add_parser('ports')
     p.add_argument('--s81-opts', default=V5)
-    p.add_argument('--die', default='layer', choices=['layer', 'layer1', 'head'])
+    p.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     p.add_argument('--out', required=True)
     p.add_argument('--master', nargs='+', required=True)
     c = sp.add_parser('check')
