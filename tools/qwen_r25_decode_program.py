@@ -179,6 +179,8 @@ def link(program,bindings):
         words=[]
         for o in b['operations']:
             k=o['kernel'];bind=bindings.get(k)
+            if o.get('production_entry',{} ) and o['production_entry'].get('dispatch_resolved'):
+                raise ValueError('native SU ROM needs actual CP-to-SU adapter, not an SM kernel PC: '+k)
             if not bind:raise ValueError('missing actual production kernel binding: '+k)
             if bind.get('unit')!=o['unit'] or not bind.get('production_dispatch') or not bind.get('kernel_sha256'):
                 raise ValueError('unqualified unit/dispatcher/source binding: '+k)
@@ -194,7 +196,12 @@ def link(program,bindings):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--su-tools',required=True,type=Path);ap.add_argument('--image-tools',required=True,type=Path);ap.add_argument('--out',required=True,type=Path);ap.add_argument('--bindings',type=Path)
+    ap.add_argument('--native-rom',type=Path);ap.add_argument('--native-dispatcher',type=Path);ap.add_argument('--native-provider',type=Path)
     a=ap.parse_args();p=compile_program(a.su_tools,a.image_tools)
+    if any((a.native_rom,a.native_dispatcher,a.native_provider)):
+        if not all((a.native_rom,a.native_dispatcher,a.native_provider)):ap.error('native ROM, dispatcher and provider pins required together')
+        from qwen_r25_native_bridge import install,resolve
+        p=resolve(p,install(a.native_rom,a.native_dispatcher,a.native_provider))
     if a.bindings:p['linked_command_batches']=link(p,json.loads(a.bindings.read_text()))
     a.out.parent.mkdir(parents=True,exist_ok=True);a.out.write_text(json.dumps(p,indent=2)+'\n')
 if __name__=='__main__':main()
