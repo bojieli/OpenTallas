@@ -1,0 +1,38 @@
+{
+  "scope": "prebuild actual arithmetic hierarchy; no headline area or timing until mapped results",
+  "shape": {
+    "dot_products_per_cycle": 1,
+    "MACs_per_cycle": 32,
+    "keys_per_cycle": 0,
+    "heads": 32,
+    "head_blocks": 4
+  },
+  "ports": {
+    "dot_input_bits": 272,
+    "dot_output_bits": 33,
+    "bytes_per_operand": 17,
+    "memory_ports": 0
+  },
+  "replication": {
+    "dots_per_NK4_slice": 512,
+    "dots_per_L16_stack": 2048,
+    "stacks_per_die": 4,
+    "fanout_and_mux": "existing actual RTL; hierarchical mapping preserves all instances"
+  },
+  "latency": {
+    "dot_cycles": 5,
+    "added_cycles": 0,
+    "source": "QL5 full NK4 exact gate1152 golden keys"
+  },
+  "area": {
+    "mapping": "hierarchical synth, no flatten; every RTL instance counted recursively",
+    "slot": "parent four-slice L16 scorer2000x3000um at55%; fullglue/FIFO fit pending",
+    "mapped_um2": null
+  },
+  "resource": {
+    "old_flattened_NK4_OOM_peak_KiB": 481352416,
+    "new_dot_admission_GiB": 4,
+    "reason": "one32-MAC dot versus512 replicated dots in failed fullNK4 flatten; no process memory cap",
+    "hierarchical_fullshape_admission": "decide after actual leaf+elaboration inventory; no guessed flat retry"
+  }
+}
