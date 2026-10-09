@@ -2038,6 +2038,19 @@ def rom_readme(recs, out):
 
 
 # ------------------------------------------------------------------------------------------------ main
+def margin(die, m):
+    """FP-LINT (owner 2026-10-08): the generators' die relay margin (SS reach 504 um, no relay on the far side of its
+    driver) on the model this lint built; the qwen ROM die has no relay chains in this model."""
+    try:
+        if die.startswith('s81'):
+            return S.margin_lint(m)
+        if die == 'hbm':
+            return H.margin_lint(m)
+    except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
+        return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
+    return dict(verdict='N/A')
+
+
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
@@ -2096,6 +2109,7 @@ def run_lint(die, out, top_fix=False, tag=''):
                       abut_without_channel=[dict(compute=k[0], hub_kind=k[1], hub=k[2], **v) for k, v in sorted(ab.items())]),
         meso_forwarded_gap=dict(gp, clock_region_crossings=xr, clock_domain_crossings=domain_crossings(mp)),
         block_shape=block_shape(die, mp, real), counterparts=counterparts(die, m, pw),
+        margin_lint=margin(die, m),
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))

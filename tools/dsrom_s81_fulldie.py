@@ -1264,6 +1264,18 @@ def legality(m):
                 outside_examples=out[:20])
 
 
+# FP-LINT (owner 2026-10-08): die relay margin.  Every driver -> relay ... -> load chain (forwarded stations, column
+# relays, hub stations, pin relays) is checked against the SS wire reach (504 um at 1.2 GHz) and for a relay on the far
+# side of its driver (r3 hop relays g_rt_*_8a_y1: 776-906 um backwards, 860 ps of GRT wire).  `check` exits 3 on a FAIL.
+MARGIN_RELAY_KINDS = ('stn', 'sstn', 'rly', 'hstn', 'rstg', 'pqstn')
+SS_REACH_UM = 504.0
+
+
+def margin_lint(m):
+    import fp_margin_lint as FPL
+    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM)
+
+
 def write_def_floorplan(m, path):
     W, H = DIE
     o = {'R0': 'N', 'MY': 'FN', 'MX': 'FS', 'R180': 'S'}
@@ -5120,14 +5132,18 @@ def main(argv=None):
         rec = plan_record_r8(m)
         print(json.dumps({k_: rec[k_] for k_ in ('slot', 'instances', 'placed_footprint_mm2', 'utilisation', 'forwarded',
                                                   'field_round_trip_cycles')}, indent=1))
-        return 0
+        ml = margin_lint(m)
+        print(json.dumps(dict(margin_lint=ml), indent=1))
+        return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'check':
         print(json.dumps(legality(m), indent=1))
         pc = pin_clashes(m)
         pc16 = pin_clashes(m, 16, 0.024 * 16 - 1e-6)
         print(json.dumps(dict(generated_pin_clashes=len(pc), examples=pc[:10], k16_clashes=len(pc16), k16_examples=pc16[:10])))
         print(json.dumps(trunk_stages(m), indent=1))
-        return 0
+        ml = margin_lint(m)
+        print(json.dumps(dict(margin_lint=ml), indent=1))
+        return 3 if ml['verdict'] == 'FAIL' else 0
     if a.mode == 'plan' and a.gen == 'r8':
         out = ROOT / OUT / out_rev() / dict(layer='', layer1='layer1_die', head='head_die')[a.die]
         out.mkdir(parents=True, exist_ok=True)

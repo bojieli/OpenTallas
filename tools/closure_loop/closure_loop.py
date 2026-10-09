@@ -71,7 +71,10 @@ SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT 
 RAM_HEADROOM_GB = 32
 PENDING_WINDOW_S = 600
 PENDING_RAM_WINDOW_S = 180    # RAM reservation of a launch (threads keep the 10-min ramp allowance)
-TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID"}
+# EARLY_FAIL_* (stuckscan 2026-10-08): a route stopped by an early-fail gate (stuckscan.py hopeless()): redesign work
+EARLY_FAIL = ("EARLY_FAIL_SETUP", "EARLY_FAIL_HOLD", "EARLY_FAIL_CONGESTION", "EARLY_FAIL_DRC")
+TERMINAL = {"SMOKE_OK", "CLOSED", "NEEDS_RTL", "NEEDS_HUMAN", "NEEDS_BUDGET", "REFUSED", "CANCELLED", "INVALID",
+            "FLOORPLAN_MARGIN", "PREROUTE_MARGIN", *EARLY_FAIL}
 RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-kill|No space left|ENOSPC|std::bad_alloc|"
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
@@ -942,28 +945,147 @@ def budget_check(j):
     return None
 
 
-def record_measured(j):
-    """every calibrated block's measured insertion -> STATE/measured_insertion.json (published to main by the daemon
-    as results/rtl/budgets_20261006/measured_insertion.json for the die clock plan)"""
+# ---- variant-keyed insertion (bf-insertion 2026-10-08): measured_insertion.json was keyed per BLOCK, and variants of one
+# block differ wildly (bfh_halfphl_a730 routed on bfh_recutcgl50's SS 1169 / FF 714; the half-rate tree measured
+# 1546 / 875).  A route may start on an ASSUMED insertion only when it was measured on the SAME variant: same block,
+# same recipe script and the same insertion-relevant build options in the stage cmd (VAR=value assignments such as
+# BF_VAR / OT_CGL_FRAC / OT_MULTI_VT / OT_CTS_FIX_HOOKS / corner overrides, --param K=V, other --flags).  Hold-repair
+# knobs, run paths and labels are not part of the key.  No same-variant value -> sequential CTS-only calibrate.
+VKEY_IGNORE_VARS = {"OUT", "SRC", "TTB", "OT_TTB_CORNER_MARK", "OT_MM_FF_SDC", "CL_LABEL_SUFFIX", "CL_STOP_AFTER"}
+VKEY_IGNORE_FLAGS = {"--hold-margin-ns", "--pnr-stop-after", "--hold-corners", "--hm-guard"}
+
+
+def variant_key(spec):
+    """block + recipe + insertion-relevant options of the route (else calibrate) stage cmd (see above)"""
+    stages = spec.get("stages") if isinstance(spec.get("stages"), dict) else {}
+    cmd = ""
+    for k in ("route", "calibrate"):
+        st = stages.get(k)
+        if isinstance(st, dict) and st.get("cmd"):
+            cmd = st["cmd"]
+            break
+    toks = []
+    for m in re.finditer(r"(?<![\w$])([A-Z][A-Z0-9_]*)=('[^']*'|\"[^\"]*\"|\S*)", cmd):
+        if m.group(1) not in VKEY_IGNORE_VARS and not m.group(2).startswith("$("):
+            if not re.search(r"--param\s+$", cmd[:m.start()]):
+                toks.append(f"{m.group(1)}={m.group(2).rstrip(';&|').strip(chr(39) + chr(34))}")
+    words = re.findall(r"\S+", cmd)
+    skip = False
+    for i, w in enumerate(words):
+        if skip:
+            skip = False
+            continue
+        if not w.startswith("--"):
+            continue
+        nxt = words[i + 1] if i + 1 < len(words) else ""
+        has_val = "=" not in w and bool(re.match(r"^[\w.:,+=-]+$", nxt)) and not nxt.startswith("-")
+        skip = has_val
+        if w.split("=")[0] in VKEY_IGNORE_FLAGS:
+            continue
+        toks.append(f"{w} {nxt}" if has_val else w)
+    scripts = sorted(x for x in set(re.findall(r"[\w./-]+\.(?:sh|py)\b", cmd)) if not x.endswith("tt_overlay.py"))
+    return f"{spec.get('block')}|{','.join(scripts)}|{' '.join(sorted(set(toks)))}"
+
+
+def _entry_variant(m):
+    """the variant key of a measured_insertion.json entry: stored, else derived from the measuring job's JSON"""
+    if not m:
+        return None
+    if m.get("variant"):
+        return m["variant"]
+    try:
+        return variant_key(load_job(m["job"])["spec"])
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def same_variant_insertion(j):
+    """(entry, why_not): the measured_insertion.json entry measured on THIS job's variant, else (None, reason)"""
+    vk = variant_key(j["spec"])
+    try:
+        d = json.loads((STATE / "measured_insertion.json").read_text())
+    except (OSError, ValueError):
+        return None, "no measured_insertion.json"
+    m = (d.get("variants") or {}).get(vk)
+    if m:
+        return m, None
+    b = (d.get("blocks") or {}).get(j["spec"].get("block"))
+    if b and _entry_variant(b) == vk:
+        return b, None
+    return None, (f"block value from another variant ({b.get('job')})" if b else "block never measured")
+
+
+def _store_variant(d, j, e):
+    vk = variant_key(j["spec"])
+    e["variant"] = vk
+    d.setdefault("variants", {})[vk] = dict(e, block=j["spec"].get("block"))
+
+
+def _cal_entry(j, measured_at):
     c = j.get("calibration") or {}
-    if not c.get("env"):
-        return
-    e = c["env"]
+    e = c.get("env") or {}
     p_ss = "CK_SSLIB_" if "CK_SSLIB_MEAN" in e else "CK_SS_"     # CK_SS_* is the route-corner value under CALIB-CORNER
+    if not all(k in e for k in (p_ss + "MEAN", p_ss + "MIN", p_ss + "MAX", "CK_FF_MEAN", "CK_FF_MIN", "CK_FF_MAX")):
+        return None
+    return dict(
+        job=j["name"], source_commit=j.get("commit_full"), host=j.get("host"), run=j.get("run"), clock=c.get("clock"),
+        parasitics=c.get("parasitics"), measured_at=measured_at,
+        ss=dict(mean=e[p_ss + "MEAN"], min=e[p_ss + "MIN"], max=e[p_ss + "MAX"]),
+        ff=dict(mean=e["CK_FF_MEAN"], min=e["CK_FF_MIN"], max=e["CK_FF_MAX"]),
+        **({"tt": dict(mean=e["CK_TT_MEAN"], min=e["CK_TT_MIN"], max=e["CK_TT_MAX"])} if "CK_TT_MEAN" in e else {}),
+        route_ref=e.get("CK_ROUTE_REF", "SS"),
+        boundary_n=(c.get("ss") or {}).get("boundary", {}) and c["ss"]["boundary"].get("n"),
+        budget=(j.get("budget") or {}).get("check"))
+
+
+_CAL_DONE = re.compile(r"^(\S+) (calibrate done \(rc=0\)|parallel calibrate: measured )")
+
+
+def backfill_variants():
+    """bf-insertion 2026-10-08: measurements taken before the variant table existed (only blocks{} kept the LAST one per
+    block) are added to variants{} from every job's calibration, newest measurement per variant; existing variant
+    entries are never replaced.  Without it a re-route of e.g. bfh2_recut_lvt (measured SS 951 / FF 556) could not
+    find its own variant's value and would calibrate again.  Returns the number of variants added."""
+    best = {}
+    for j in all_jobs():
+        try:
+            t = max((m.group(1) for m in map(_CAL_DONE.match, j.get("events") or []) if m), default=None)
+            if not t or not j.get("calibration") or not j.get("spec", {}).get("block"):
+                continue
+            ent = _cal_entry(j, t)
+            vk = variant_key(j["spec"])
+        except Exception:  # noqa: BLE001
+            continue
+        if ent and (vk not in best or t > best[vk]["measured_at"]):
+            best[vk] = dict(ent, variant=vk, block=j["spec"]["block"], backfilled=True)
     p = STATE / "measured_insertion.json"
     with open(STATE / "measured.lock", "w") as lk:
         fcntl.flock(lk, fcntl.LOCK_EX)
         d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
                                                           "blocks": {}}
-        d["blocks"][j["spec"]["block"]] = dict(
-            job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"], clock=c.get("clock"),
-            parasitics=c.get("parasitics"), measured_at=now_iso(),
-            ss=dict(mean=e[p_ss + "MEAN"], min=e[p_ss + "MIN"], max=e[p_ss + "MAX"]),
-            ff=dict(mean=e["CK_FF_MEAN"], min=e["CK_FF_MIN"], max=e["CK_FF_MAX"]),
-            **({"tt": dict(mean=e["CK_TT_MEAN"], min=e["CK_TT_MIN"], max=e["CK_TT_MAX"])} if "CK_TT_MEAN" in e else {}),
-            route_ref=e.get("CK_ROUTE_REF", "SS"),
-            boundary_n=(c.get("ss") or {}).get("boundary", {}) and c["ss"]["boundary"].get("n"),
-            budget=(j.get("budget") or {}).get("check"))
+        v = d.setdefault("variants", {})
+        new = {k: e for k, e in best.items() if k not in v}
+        if new:
+            v.update(new)
+            d["updated"] = now_iso()
+            p.write_text(json.dumps(d, indent=1) + "\n")
+            (STATE / "measured.dirty").write_text(now_iso())
+    return len(new)
+
+
+def record_measured(j):
+    """every calibrated block's measured insertion -> STATE/measured_insertion.json (published to main by the daemon
+    as results/rtl/budgets_20261006/measured_insertion.json for the die clock plan)"""
+    c = j.get("calibration") or {}
+    if not c.get("env") or not _cal_entry(j, ""):
+        return
+    p = STATE / "measured_insertion.json"
+    with open(STATE / "measured.lock", "w") as lk:
+        fcntl.flock(lk, fcntl.LOCK_EX)
+        d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
+                                                          "blocks": {}}
+        d["blocks"][j["spec"]["block"]] = ent = _cal_entry(j, now_iso())
+        _store_variant(d, j, ent)
         d["updated"] = now_iso()
         p.write_text(json.dumps(d, indent=1) + "\n")
         (STATE / "measured.dirty").write_text(now_iso())
@@ -1145,7 +1267,8 @@ def corner_sta_compat(j, host, run, full):
 HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh", "hold_eco.tcl", "hold_eco_corner.tcl",
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
-           "../../physical/common_flow/io_ref_routed.sdc")
+           "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
+           "../preroute_gate.py", "../preroute_gate.tcl")
 
 # deterministic calibrate (CTS-only) failures: a retry reproduces them, so the job stops at once with an owner action
 CAL_OWNER_ACTION = {
@@ -1199,6 +1322,13 @@ DOCKER_SHIM = r"""#!/bin/bash
 # closure-loop shim: every container gets LEC_CHECK=0 (kepler-formal needs AVX-512); then the real docker
 for e in ${PATH//:/ }; do
   if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ]; then
+    if [ "${1:-}" = run ] && [ -n "${OT_FP_LINT_DIR:-}" ]; then
+      # FP-LINT: the floorplan margin lint (ORFS PRE GLOBAL_PLACE) sees OT_FP_LINT and writes its verdict to /ot_fplint
+      mkdir -p "$OT_FP_LINT_DIR"; shift
+      # PREROUTE-GATE: the pre-route timing gate (ORFS POST DETAIL_PLACE) sees OT_PREROUTE_GATE, writes PREROUTE_FAIL there
+      exec "$e/docker" run -e LEC_CHECK=0 -e OT_FP_LINT -e OT_FP_LINT_ARGS -e OT_PREROUTE_GATE -e OT_PREROUTE_GATE_ARGS \
+        -v "$OT_FP_LINT_DIR:/ot_fplint" "$@"
+    fi
     if [ "${1:-}" = run ]; then shift; exec "$e/docker" run -e LEC_CHECK=0 "$@"; fi
     exec "$e/docker" "$@"
   fi
@@ -1262,6 +1392,85 @@ def install_rebudget(j):
                  f"rebudget_block.sdc, sourced by link_budget_consistent.sdc")
 
 
+# FP-LINT (owner 2026-10-08): floorplan margin lint before global placement, on by default for calibrate and route.
+# tools/orfs_hold_mm.py (run in every run_abi3_physical flow container) hooks ORFS PRE GLOBAL_PLACE; the docker shim
+# passes OT_FP_LINT and mounts {CL}/fplint/<tag> at /ot_fplint; a failing floorplan writes FAIL there and stops the
+# flow, and crash() / cal_track() finish the job with verdict FLOORPLAN_MARGIN (no retry, no route spent).
+# Spec "fp_lint": false opts out; {"set": {"util_max": 0.62, ...}} overrides thresholds (tools/fp_margin_lint.py
+# THRESHOLDS); {"warn_only": true} reports without failing.
+def gate_args(cfg):
+    cfg = cfg if isinstance(cfg, dict) else {}
+    args = " ".join(f"--set {k}={v}" for k, v in (cfg.get("set") or {}).items())
+    if cfg.get("warn_only"):
+        args += " --warn-only"
+    return args.strip()
+
+
+# PREROUTE-GATE (owner 2026-10-08): the pre-route timing gate (tools/preroute_gate.tcl/.py) runs at ORFS POST
+# DETAIL_PLACE of a ROUTE stage (never a calibrate) and stops a variant whose placed design is far from closing before
+# CTS / GRT / DRT are spent.  The owner allows it only because it is fast: measured 2026-10-08 on the fleet's finished
+# routes (preroute-gate.log), the in-flow cost is the path dump alone (timing is already updated by report_metrics), a
+# few seconds against routes of hours.  On by default; spec "preroute_gate": false opts out; {"set": {"ws_ps": ...,
+# "count": ...}} overrides thresholds (tools/preroute_gate.py THRESHOLDS, calibrated to never reject an eventual closure).
+def preroute_gate_on(j, kind):
+    return kind == "route" and j["spec"].get("preroute_gate", True) is not False
+
+
+def fp_lint_env(j, t, lint=True, prg=False):
+    run, d = j["run"], f"{j['run']}/cl/fplint/{t}"
+    env = (f"ship_fpl() {{ for f in fp_margin_lint.py fp_margin_lint.tcl orfs_hold_mm.py orfs_hold_mm.tcl "
+           f"preroute_gate.py preroute_gate.tcl; do "
+           f"[ -f {run}/cl/$f ] && [ -d {run}/src/tools ] && cp -f {run}/cl/$f {run}/src/tools/$f; done; true; }}\nship_fpl\n"
+           f"rm -rf {d} && mkdir -p {d} && chmod a+rwx {d}\nexport OT_FP_LINT_DIR={d}\n")
+    if lint:
+        env += (f"export OT_FP_LINT=1 OT_FP_LINT_DIR={d} "
+                f"OT_FP_LINT_ARGS={shlex.quote(gate_args(j['spec'].get('fp_lint', True)))}\n")
+    if prg:
+        env += (f"export OT_PREROUTE_GATE=1 "
+                f"OT_PREROUTE_GATE_ARGS={shlex.quote(gate_args(j['spec'].get('preroute_gate', True)))}\n")
+    return env
+
+
+def fp_lint_failed(host, run, tag):
+    """the lint's FAIL text for stage tag (None: no lint failure, or the host could not be read)"""
+    try:
+        r = ssh(host, f"cat {run}/cl/fplint/{tag}/FAIL 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return None
+    return r.stdout.strip() if r.returncode == 0 and "FLOORPLAN_MARGIN" in (r.stdout or "") else None
+
+
+def preroute_failed(host, run, tag):
+    """the pre-route gate's FAIL text for stage tag (None: no gate failure, or the host could not be read)"""
+    try:
+        r = ssh(host, f"cat {run}/cl/fplint/{tag}/PREROUTE_FAIL 2>/dev/null", timeout=60)
+    except Exception:  # noqa: BLE001
+        return None
+    return r.stdout.strip() if r.returncode == 0 and "PREROUTE_MARGIN" in (r.stdout or "") else None
+
+
+def preroute_finish(j, tag, text):
+    reasons = next((l[len("PREROUTE_MARGIN: "):] for l in text.splitlines() if l.startswith("PREROUTE_MARGIN: ")), text)
+    kill_own_stage(j)
+    finish(j, "PREROUTE_MARGIN", reasons[:600],
+           f"PREROUTE_MARGIN ({tag}): the placed design failed the pre-route timing gate (no CTS/route spent; report "
+           f"{j['run']}/cl/fplint/{tag}/preroute_gate.json)\n" +
+           "\n".join(l for l in text.splitlines() if l.startswith("preroute_gate:"))[:1500] +
+           "\nFIX: the placed slack is far beyond what routing has ever recovered: pipeline / restructure the worst "
+           "paths (REDESIGN_RULES); spec preroute_gate:false opts out, {\"set\": {\"ws_ps\": ...}} overrides")
+
+
+def fp_lint_finish(j, tag, text):
+    reasons = next((l[len("FLOORPLAN_MARGIN: "):] for l in text.splitlines() if l.startswith("FLOORPLAN_MARGIN: ")), text)
+    kill_own_stage(j)          # a parallel calibrate / route of the same floorplan stops too
+    finish(j, "FLOORPLAN_MARGIN", reasons[:600],
+           f"FLOORPLAN_MARGIN ({tag}): the floorplan failed the margin lint before global placement (no route spent; "
+           f"report {j['run']}/cl/fplint/{tag}/fp_margin_lint.json)\n" +
+           "\n".join(l for l in text.splitlines() if l.startswith("fp_margin_lint:"))[:1500] +
+           "\nFIX (REDESIGN_RULES 'floorplan margin targets'): <= 55-60% util, <= 6 bits/um/layer, PDN-clear pin "
+           "columns, channels sized to the crossing nets; spec fp_lint:false opts out")
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -1278,6 +1487,11 @@ def launch_stage(j, st, cmd):
         CL_STOP_AFTER="--pnr-stop-after cts" if st["kind"] == "calibrate" else "").items())
     if st["kind"] != "bench":
         env += docker_lec_off(f"{j['run']}/cl")
+    fpl = st["kind"] in ("calibrate", "route") and j["spec"].get("fp_lint", True) is not False
+    prg = preroute_gate_on(j, st["kind"])
+    if fpl or prg:
+        ship_helpers(j["host"], j["run"])
+        env += fp_lint_env(j, t, lint=fpl, prg=prg)
     if st["kind"] == "calibrate":
         # UNSTICK (owner 2026-10-08): calibrate measures clock insertion only.  No CTS timing/hold repair
         # (SKIP_CTS_REPAIR_TIMING=1 through hold_corners_patch.py OT_CAL_CTS_ONLY): 40 calibrates sat 4-25 h in CTS hold
@@ -1353,6 +1567,16 @@ def launch_stage(j, st, cmd):
             # opts out; a spec that already lists an io_ref_routed.sdc keeps its own.
             if j["spec"].get("route_ff_ioref", True) and not any(f.rsplit("/", 1)[-1] == "io_ref_routed.sdc" for f in ff):
                 ff = ff + [f"{j['run']}/cl/io_ref_routed.sdc"]
+            # MMFF-IOREF 2026-10-08: a route cmd that inlines its own `export OT_MM_FF_SDC=...` (43 live jobs: setup_triage
+            # requeue, make_lvt_job, mk_jobs) overrode the export above, so the FF scene lost io_ref_routed.sdc and timed
+            # the assumed vclk (hbm_quant_ts0spl_tt: fake 4_1_cts hold -334).  The appended reference now travels as a
+            # FILE the FF scene reads last whatever the final env says (orfs_hold_mm.tcl ot_mm_sync,
+            # {SRC}/.ot_mm/ff_ioref_last.sdc; skipped when the list already holds an io_ref_routed.sdc); the opt-out
+            # removes it so an earlier attempt's copy cannot leak in.
+            if j["spec"].get("route_ff_ioref", True):
+                env += f"mkdir -p {j['run']}/src/.ot_mm && cp {j['run']}/cl/io_ref_routed.sdc {j['run']}/src/.ot_mm/ff_ioref_last.sdc\n"
+            else:
+                env += f"rm -f {j['run']}/src/.ot_mm/ff_ioref_last.sdc\n"
             if ff:
                 env += f"mkdir -p {j['run']}/src/.ot_mm\n"
                 rel = []
@@ -1864,6 +2088,16 @@ def first_error(j, st):
 def crash(j, st, fleet, why):
     if preserve_completed_route(j, st, why):
         return
+    if st["kind"] in ("calibrate", "route") and j.get("stage_tag") and j.get("host"):
+        txt = fp_lint_failed(j["host"], j["run"], j["stage_tag"])
+        if txt:
+            fp_lint_finish(j, j["stage_tag"], txt)
+            return
+    if st["kind"] == "route" and j.get("stage_tag") and j.get("host"):
+        txt = preroute_failed(j["host"], j["run"], j["stage_tag"])
+        if txt:
+            preroute_finish(j, j["stage_tag"], txt)
+            return
     tail = stage_tail(j, st) if j.get("stage_tag") else ""
     m = re.search(r"CALIBRATE_FAIL class=(\S+) detail=(.*)", tail)
     if st["kind"] == "calibrate" and m and m.group(1) in CAL_OWNER_ACTION:
@@ -1878,6 +2112,13 @@ def crash(j, st, fleet, why):
     if err:
         why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
         why = f"{why}; first error: {err}"
+    if st["kind"] == "route" and "GRT-0116" in (err + tail) and not why.startswith("LOST"):
+        # stuckscan 2026-10-08: GRT gave up with congestion -- deterministic for this floorplan; a retry re-spends the
+        # whole route (hbm_coll_port_big/rows, s81b-vm_bgh-grid: 'retry once on the same host')
+        finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
+               f"EARLY_FAIL_CONGESTION: GRT-0116, not retried (deterministic). Fix the floorplan (util/channels/pins); "
+               f"congestion reports in the route's reports dir.\n{err[:300]}")
+        return
     resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:], first_error=err))
@@ -2290,6 +2531,55 @@ def stuck_watchdog(j, st):
         event(j, f"observation: {st['key']} wrote no file for {mins // 60} h; process preserved")
 
 
+EARLY_CHECK_S = 900
+STARTING_TIMEOUT_S = 3600
+
+
+def early_fail_gate(j, st):
+    """EARLY-FAIL GATES (OWNER 2026-10-08, stream stuckscan): every 15 min a RUNNING route's ORFS run is probed
+    (stuckscan.probe: post-placement / post-CTS TT setup metrics, the live hold repair, GRT congestion reports, DRT
+    violation series) and a hopeless run stops at once with EARLY_FAIL_SETUP / _HOLD / _CONGESTION / _DRC plus its
+    worst-path summary, instead of spending hours in repair/route.  Thresholds: stuckscan.GATES (calibrated on the
+    loop's finished TT routes; README "Early-fail gates").  Spec "early_fail": false opts out."""
+    now = time.time()
+    if j["spec"].get("early_fail") is False or now - j.get("ef_checked", 0) < EARLY_CHECK_S:
+        return
+    import stuckscan
+    if stuckscan.protected(j):     # CRITICAL_PATH 1 (BF): stuckscan reports it, never auto-stopped
+        return
+    j["ef_checked"] = now
+    try:
+        import stuckscan
+        stuckscan.cl = sys.modules[__name__]
+        res, err = stuckscan.probe(j["host"], [dict(name=j["name"], run=j["run"], tag=j.get("stage_tag"), live=True)],
+                                   cpu=False, timeout=300)
+        if not res:
+            return
+        o = res["jobs"].get(j["name"]) or {}
+        bs = [b for b in o.get("bases") or [] if not b["design"].endswith("_cal")]
+        if not bs:
+            return
+        b = max(bs, key=lambda x: max([lg[1] for lg in x["logs"]] or [0]))
+        hp = stuckscan.hopeless(b, j, res.get("now", now))
+    except Exception:  # noqa: BLE001
+        log(f"[{j['name']}] early-fail gate error:\n{traceback.format_exc()}")
+        return
+    if not hp:
+        return
+    verdict, why = hp[0][0], "; ".join(w for _, w in hp)
+    detail = dict(name=j["name"], verdict=verdict, why=[w for _, w in hp], orfs=b["root"], corner=b.get("corner"),
+                  step=(b.get("current") or "")[:-8], setup=stuckscan.gate_metrics(b), hold=b.get("hold"),
+                  congestion=b.get("congestion"), drt=(b.get("drt") or [])[-12:], paths=stuckscan.path_classes(b),
+                  block=j["spec"].get("block"), owner=j["spec"].get("owner"), gates=stuckscan.GATES)
+    (STATE / "early_fail").mkdir(parents=True, exist_ok=True)
+    (STATE / "early_fail" / f"{j['name']}.json").write_text(json.dumps(detail, indent=1))
+    early_fail_finish(j, verdict, why, detail)
+    try:
+        stuckscan.failtrig_item(dict(detail, action="early_fail", kind="hopeless"))
+    except Exception:  # noqa: BLE001
+        pass
+
+
 # ---- parallel calibrate (OWNER 2026-10-08 "calibration must not gate the route"): the route starts at once on the
 # block's previous-measured insertion (STATE/measured_insertion.json), else its budget sheet insertion; the no-repair
 # CTS-only calibrate runs beside it (j["ctrack"]).  The verdict waits for it; when the measured insertion differs from
@@ -2483,24 +2773,26 @@ def record_routed(j, rr):
         fcntl.flock(lk, fcntl.LOCK_EX)
         d = json.loads(p.read_text()) if p.exists() else {"schema": "opentallas.closure_loop.measured_insertion.v1",
                                                           "blocks": {}}
-        old = d["blocks"].get(j["spec"]["block"]) or {}
+        old = (d.get("variants") or {}).get(variant_key(j["spec"])) or d["blocks"].get(j["spec"]["block"]) or {}
         e = dict(old, job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"],
                  parasitics="routed (6_final.spef)", grade="routed", measured_at=now_iso(), ff=pick["ff"],
                  calibrate=old.get("calibrate") or ({k: old.get(k) for k in ("ss", "ff", "parasitics", "job")} if old else None))
         if "tt" in pick:
             e["tt"] = pick["tt"]
+        e.pop("block", None)
         d["blocks"][j["spec"]["block"]] = e
+        _store_variant(d, j, e)
         d["updated"] = now_iso()
         p.write_text(json.dumps(d, indent=1) + "\n")
         (STATE / "measured.dirty").write_text(now_iso())
 
 
 def assumed_insertion(j):
-    blk = j["spec"].get("block")
-    try:
-        m = json.loads((STATE / "measured_insertion.json").read_text())["blocks"].get(blk)
-    except (OSError, ValueError, KeyError):
-        m = None
+    # bf-insertion 2026-10-08: only a SAME-VARIANT measurement is an assumption (see variant_key); the budget-sheet
+    # fallback below stays (a sheet is per master/pin contract, not per variant)
+    m, why = same_variant_insertion(j)
+    if m is None and why and "another variant" in why:
+        j["ins_assume_skip"] = why
     if route_ref(j):
         # CALIB-CORNER: a TC/TT route references its IO to the TT insertion: the block's routed TT (grade routed), else
         # a calibrate's TT; none -> no assumption (sequential CTS-only calibrate, minutes)
@@ -2545,6 +2837,9 @@ def start_parallel_calibrate(j, stl, st):
         # a pending / running / failed track of an earlier placement (host move) is replaced
         env, src = assumed_insertion(j)
     if not env:
+        why = j.pop("ins_assume_skip", None)
+        if why:
+            event(j, f"no same-variant measured insertion ({why}): calibrate first (CTS-only), route after")
         return False
     if c0 and c0.get("state") == "running":
         try:
@@ -2610,6 +2905,10 @@ def cal_track(j, fleet, stl):
         return
     if state == "LOST" or rc != 0:
         c["state"] = "failed"
+        txt = fp_lint_failed(c["host"], c["run"], c["tag"]) if state != "LOST" else None
+        if txt:
+            fp_lint_finish(j, c["tag"], txt)
+            return
         event(j, f"parallel calibrate failed ({state}, rc={rc}): the route keeps its assumed insertion")
         return
     r = ssh(c["host"], f"cat {c['run']}/cl/calib.json", timeout=60)
@@ -2756,11 +3055,23 @@ def step(j, fleet):
                 j["stage_idx"] += 1
                 j["status"] = "READY"
                 return
+        if state == "STARTING" and st["kind"] != "bench":
+            # stuckscan 2026-10-08: a stage with no pid file long after its launch never started (hbm_pkt_ii3ref route.a3:
+            # run dir emptied by a disk sweep, polled STARTING for 16 h) -> the crash path (LOST: retry once elsewhere)
+            try:
+                age = time.time() - dt.datetime.fromisoformat(j.get("stage_started")).timestamp()
+            except Exception:  # noqa: BLE001
+                age = 0
+            if age > STARTING_TIMEOUT_S:
+                return crash(j, st, fleet, f"LOST: stage {j.get('stage_tag')} never started (no pid file {age / 60:.0f} min "
+                                           f"after launch)")
         if state in ("RUNNING", "STARTING"):
             if j.get("unreachable"):     # 2026-10-08: clear a stale "unreachable" as the latest event once polling works
                 event(j, f"{j['host']} reachable again; {st['key']} still running")
                 j["unreachable"] = 0
             stuck_watchdog(j, st)
+            if st["kind"] == "route" and state == "RUNNING":
+                early_fail_gate(j, st)
             return
         if state == "UNREACHABLE":
             j["unreachable"] = j.get("unreachable", 0) + 1
@@ -3239,7 +3550,7 @@ def requeue_hold_only(jobs):
             j.update(status="READY", reason=None, errors=[], stage_idx=next(i for i, x in enumerate(stl) if x["kind"] == "verdict"))
             event(j, "hold ECO re-run: helpers shipped; clock wires re-routed (DRT-0206 with kept clock wires); buffer cap 30 %")
             save_job(j)
-    busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL or x["status"] == "CLOSED"}
+    busy = {x["spec"].get("block") for x in jobs if x["status"] not in TERMINAL} | closed_blocks(jobs)
     for j in jobs:
         m = j.get("metrics") or {}
         if j["status"] != "NEEDS_RTL" or fid in j.get("fix_requeued", []) or not hold_only(j, m, j.get("failed_checks") or []):
@@ -3510,9 +3821,56 @@ echo FREED $before $(du -sm "$R" 2>/dev/null | cut -f1)
 """
 
 
+
+REVOKED_JSON = Path(os.environ.get("CL_REVOKED", str(Path.home() / "claude-takeover-20261007/revoked_closures.json")))
+OPTB_STATUS_GLOB = "results/closure_loop/option_b_status_*/status.json"
+OPTB_DECISION = "2026-10-07T20:45"   # owner option B: setup judged at TT; SS-era closures of revoked blocks lapse
+
+
+def _closed_at(j):
+    ev = [e for e in j.get("events") or [] if " CLOSED" in e[:40] or "CLOSED:" in e[:40]]
+    return (ev[-1] if ev else (j.get("updated") or ""))[:16]
+
+
+def revoked_closures():
+    """(revoked job names, option-B revoked blocks): the two sources of closures that no longer count."""
+    names, blocks = set(), set()
+    try:
+        names |= set(json.loads(REVOKED_JSON.read_text()))
+    except Exception:  # noqa: BLE001
+        pass
+    for p in sorted(REPO.glob(OPTB_STATUS_GLOB))[-1:]:
+        try:
+            d = json.loads(p.read_text()).get("revoked_previously_closed") or {}
+            blocks |= {b["block"] for b in d.get("blocks", [])}
+            names |= {b["job"] for b in d.get("blocks", []) if b.get("job")}
+        except Exception:  # noqa: BLE001
+            pass
+    return names, blocks
+
+
+def closure_counts(j, revoked=None):
+    """A CLOSED job counts as its block's closure unless revoked (2026-10-08: dsfd_svcio_q's re-routes were bulk-released
+    against a revoked closure). An option-B-revoked block's closure counts only if judged at TT (tt_ps, or closed after
+    the option-B decision)."""
+    if j.get("status") != "CLOSED":
+        return False
+    names, blocks = revoked if revoked is not None else revoked_closures()
+    if j["name"] in names:
+        return False
+    if j["spec"].get("block") in blocks:
+        return "tt_ps" in (j.get("metrics") or {}) or _closed_at(j) >= OPTB_DECISION
+    return True
+
+
+def closed_blocks(jobs):
+    rv = revoked_closures()
+    return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
+
+
 def release_bulk(jobs):
     """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk."""
-    closed = {x["spec"].get("block") for x in jobs if x["status"] == "CLOSED"}
+    closed = closed_blocks(jobs)
     n = 0
     for x in jobs:
         if n >= BULK_RELEASE_PER_TICK:
@@ -3628,7 +3986,7 @@ def recover_jobs():
         try:
             jobs = all_jobs()
             live_blocks = {j["spec"].get("block") for j in jobs
-                           if j["status"] not in TERMINAL or j["status"] == "CLOSED"}
+                           if j["status"] not in TERMINAL} | closed_blocks(jobs)
             # Automatic migration of historical failures must not revive a
             # superseded route alongside an active or closed replacement.
             recover([j for j in jobs if j["status"] not in TERMINAL
@@ -3672,6 +4030,10 @@ def cmd_daemon(a):
     DROP.mkdir(parents=True, exist_ok=True)
     fleet = Fleet()
     log(f"closure-loop daemon up (pid {os.getpid()}, interval {a.interval}s, state {STATE})")
+    try:
+        log(f"variant-keyed insertion backfill: {backfill_variants()} variants added")
+    except Exception:  # noqa: BLE001
+        log("backfill_variants error:\n" + traceback.format_exc())
     recon = None
     last_recon = 0.0
     while True:
@@ -3711,8 +4073,9 @@ def cmd_validate(a):
 @locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET"):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET jobs can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", "PREROUTE_MARGIN", *EARLY_FAIL):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / PREROUTE_MARGIN / EARLY_FAIL_* jobs "
+                 f"can be retried")
     if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
@@ -3895,7 +4258,10 @@ def cmd_cancel(a):
     j = load_job(a.name)
     if j["status"] in TERMINAL:
         sys.exit(f"{a.name} already {j['status']}")
-    j.update(status="CANCELLED", reason="cancelled by a human", cancelled_at=now_iso())
+    why = getattr(a, "why", None)
+    if why:
+        event(j, f"cancel requested: {why}")
+    j.update(status="CANCELLED", reason="cancelled by a human" + (f" ({why[:300]})" if why else ""), cancelled_at=now_iso())
     save_job(j)                 # durable even if the remote stop or experiment register fails
     if j.get("stage_tag") and j.get("host"):
         run, t = j["run"], j["stage_tag"]
@@ -3903,7 +4269,52 @@ def cmd_cancel(a):
         ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
 for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}} {{{{end}}}}' $c | grep -q '{run}/' && docker stop -t 5 $c; done; true""",
             timeout=180)
-    finish(j, "CANCELLED", "cancelled by a human", "CANCELLED by a human")
+    finish(j, "CANCELLED", j["reason"], "CANCELLED by a human" + (f": {why}" if why else ""))
+    save_job(j)
+
+
+def early_fail_finish(j, verdict, why, detail=None):
+    """Stop a hopeless route (stuckscan gates): kill this job's own stage (and parallel tracks), record the diagnosis
+    (STATE/early_fail/<name>.json, {CL}/early_fail.json) and end the job with the EARLY_FAIL_* verdict; failtrig/scan.py
+    reports it as redesign work."""
+    kill_own_stage(j)
+    j["early_fail"] = dict(verdict=verdict, why=why, at=now_iso(), detail=detail or {})
+    if j.get("host") and j.get("run") and detail:
+        ssh(j["host"], f"cat > {j['run']}/cl/early_fail.json", input=json.dumps(detail, indent=1), timeout=60)
+    paths = "\n".join(f"  {p.get('slack_ps')} ps {p.get('cls')} {p.get('dominated')}-dominated (wire {p.get('wire_ps')} / "
+                      f"cell {p.get('cell_ps')} ps, fanout {p.get('max_fanout')}) {p.get('start')} -> {p.get('end')}"
+                      for p in (detail or {}).get("paths", [])[:6])
+    finish(j, verdict, why[:600], f"{verdict}: {why}" + (f"\nworst paths per group (post-CTS/placement report):\n{paths}"
+                                                        if paths else ""))
+
+
+@locked_job_command
+def cmd_early_fail(a):
+    j = load_job(a.name)
+    if j["status"] != "RUNNING":
+        sys.exit(f"{a.name} is {j['status']}, not RUNNING")
+    if a.verdict not in EARLY_FAIL:
+        sys.exit(f"verdict must be one of {EARLY_FAIL}")
+    detail = json.loads(Path(a.detail).read_text()) if a.detail else None
+    early_fail_finish(j, a.verdict, a.why, detail)
+    save_job(j)
+
+
+@locked_job_command
+def cmd_kill_stage(a):
+    """stuckscan: kill a hung / stalled stage of a RUNNING job (its own process group, and the flow containers mounting
+    --orfs, else every container of its run dir).  The loop then sees the stage LOST and retries it once (crash path)."""
+    j = load_job(a.name)
+    if j["status"] != "RUNNING" or not (j.get("stage_tag") and j.get("host")):
+        sys.exit(f"{a.name} is {j['status']}: no running stage to kill")
+    run, t = j["run"], j["stage_tag"]
+    pat = shlex.quote((a.orfs.rstrip("/") + ":") if a.orfs else (run + "/"))
+    ssh(j["host"], f"""p=$(cat {run}/cl/{t}.pid 2>/dev/null); [ -n "$p" ] && kill -TERM -- -$p 2>/dev/null
+for c in $(docker ps -q); do docker inspect --format '{{{{range .Mounts}}}}{{{{.Source}}}}:{{{{.Destination}}}} {{{{end}}}}' $c | grep -qF {pat} && docker stop -t 5 $c; done; true""",
+        timeout=300)
+    j["stuck_kill"] = dict(at=now_iso(), why=a.why, tag=t)
+    event(j, f"stage {t} killed by stuckscan ({a.why[:300]}); the loop retries it once")
+    ledger(j, f"STUCK-KILL {t}: {a.why}")
     save_job(j)
 
 
@@ -3986,7 +4397,11 @@ def main():
     r = sub.add_parser("rebudget-rejudge"); r.add_argument("name"); r.add_argument("--rb", required=True)
     r.add_argument("--sdc", required=True); r.add_argument("--dry", action="store_true")
     r = sub.add_parser("reverdict"); r.add_argument("name"); r.add_argument("--why", default="owner line SS>=0/FF>=0/DRC 0")
-    c = sub.add_parser("cancel"); c.add_argument("name")
+    c = sub.add_parser("cancel"); c.add_argument("name"); c.add_argument("--why")
+    ef = sub.add_parser("early-fail"); ef.add_argument("name"); ef.add_argument("--verdict", required=True)
+    ef.add_argument("--why", required=True); ef.add_argument("--detail")
+    ks = sub.add_parser("kill-stage"); ks.add_argument("name"); ks.add_argument("--why", required=True)
+    ks.add_argument("--orfs")
     rc = sub.add_parser("restore-cancelled"); rc.add_argument("name")
     er = sub.add_parser("recover-eco-overlays"); er.add_argument("name")
     mg = sub.add_parser("migrate"); mg.add_argument("name"); mg.add_argument("host")
@@ -4012,6 +4427,10 @@ def main():
         cmd_rebudget_rejudge(a)
     elif a.cmd == "cancel":
         cmd_cancel(a)
+    elif a.cmd == "early-fail":
+        cmd_early_fail(a)
+    elif a.cmd == "kill-stage":
+        cmd_kill_stage(a)
     elif a.cmd == "recover-eco-overlays":
         cmd_recover_eco_overlays(a)
     elif a.cmd == "restore-cancelled":

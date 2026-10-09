@@ -1,0 +1,57 @@
+{
+  "name": "dsfd_m2l_vr_68x11__hr_W3",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W3_a1f23fa0b_mm_vf_hm25/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W3_a1f23fa0b_mm_vf_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/routes/s81_hend_m221pq_hr_W3_a1f23fa0b_mm_vf_hm25/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/record:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-hend-m221pq-hr-W3-a1f23fa0b-mm-vf-hm25/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "dsfd_m2l_vr_68x11__hr_W3.lef": "2a75558675ceff33ff29cec5acc0250f602a14ddeebb44a197874b7fc51611bf",
+    "dsfd_m2l_vr_68x11__hr_W3_ff.lib": "eff2f6b442386b84fdde28259c89f6280ee2faa5397f8b0157252d82328417d5",
+    "dsfd_m2l_vr_68x11__hr_W3_ss.lib": "576a3bf488831d648c07787ccca0682a261ddb7b6d294317871e2cdda1d06376"
+  },
+  "ok": true
+}
