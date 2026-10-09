@@ -77,6 +77,18 @@ module tb_qwen_r25_causal_mask_pipe #(parameter OWNER_W=73, CONTEXT_CODE_COPY=0)
    out_rdy=1;@(negedge clk);out_rdy=0;
   end
   if(mutant_leaks!=6)$fatal(1,"shared latest-query limit negative control vacuous");
+  // A corrected context must survive raw protected-codeword transfer.
+  reset();
+  @(negedge clk);in_row0=8192;in_owner={{(OWNER_W-64){1'b1}},64'h123456789abc0456};in_v=1;
+  @(posedge clk);if(!in_rdy)$fatal(1,"context CE frame not admitted");
+  @(negedge clk);in_v=0;dut.enabled.pctx[0]=dut.enabled.pctx[0]^72'd4;
+  repeat(2)@(negedge clk);
+  if(fault||!out_v||out_owner!==in_owner)$fatal(1,"context CE lost during transfer");
+  if(CONTEXT_CODE_COPY)begin
+   dut.enabled.seat[2]=dut.enabled.seat[2]^72'd8;
+   #0.01;if(!fault||out_v||in_rdy)$fatal(1,"copied context double data error admitted");
+  end
+  reset();
   // A real transient byte error must be corrected or fence the held frame.
   accept_frame(8192,299);held=out_live;
   @(negedge clk);dut.enabled.pbyte[0]=dut.enabled.pbyte[0]^13'd4;
