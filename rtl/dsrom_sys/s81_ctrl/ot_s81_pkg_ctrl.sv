@@ -34,6 +34,7 @@
 //   6 SIDE outside the staging space, 7 cfg_users > MAXU, 8 RESULT_PARTS != 1 reduction overflow.
 // ---------------------------------------------------------------------------
 module ot_s81_pkg_ctrl #(
+    parameter integer WINDOW_CONTEXT = 0,
     parameter integer MY_ID      = 0,
     parameter integer FLIT       = 512,
     parameter integer NW         = 21,
@@ -68,6 +69,9 @@ module ot_s81_pkg_ctrl #(
     output reg  [USER_W-1:0]  job_user,
     output reg  [NW-1:0]      job_pos,
     output reg  [NW-1:0]      job_tok,
+    output reg                job_win_v,
+    output reg [67:0]         job_win_ids,
+    output reg                job_win_dead,
     input  wire               job_done,
     // run stop configuration (to the hop framer / head sampler)
     output reg                run_eosen,
@@ -155,6 +159,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         in_ready = 1'b0; rx_hdr_h = 1'b0; rx_hdr_s = 1'b0; rx_hdr_r = 1'b0; rx_bad = 1'b0;
         vm_we = 1'b0; vm_waddr = 0;
         job_v = 1'b0; job_user = 0; job_pos = 0; job_tok = 0;
+        job_win_v=0;job_win_ids=0;job_win_dead=0;
         st_new = 1'b0; st_q = 1'b0; st_fb = 1'b0;
         case (rx_st)
             R_IDLE: begin
@@ -183,6 +188,9 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         endcase
         if (rx_hdr_h) begin
             job_v = 1'b1; job_user = in_user; job_pos = in_pos; job_tok = in_data[SH_TOK +: NW];
+            if(WINDOW_CONTEXT) begin
+                job_win_v=in_data[276];job_win_ids=in_data[208 +:68];job_win_dead=in_data[277];
+            end
         end
         if (SOURCE && job_rdy && boot_ok) begin
             if (nu_ok && next_u < cfg_users && next_u < MAXU) st_new = 1'b1;

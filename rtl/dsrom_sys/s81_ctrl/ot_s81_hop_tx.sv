@@ -19,6 +19,7 @@
 // message type, 4 RESULT go without res_v.
 // ---------------------------------------------------------------------------
 module ot_s81_hop_tx #(
+    parameter integer WINDOW_CONTEXT = 0,
     parameter integer MY_ID    = 0,
     parameter integer FLIT     = 512,
     parameter integer NW       = 21,
@@ -32,10 +33,17 @@ module ot_s81_hop_tx #(
     parameter integer OPW      = 7,
     parameter integer ARGW     = 24,
     parameter integer SUW      = 10,     // the sequencer's descriptor user width
+    parameter integer USE_VM_RVALID = 0,
+    parameter integer OUT_DEPTH = 4,
     parameter integer QD       = 8
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input wire win_ctx_v, win_ctx_slot,
+    input wire [11:0] win_ctx_user,
+    input wire [20:0] win_ctx_pos, win_ctx_tok,
+    input wire [67:0] win_ctx_ids,
+    input wire win_ctx_dead,
     input  wire               cmd_v,
     input  wire [CMDW-1:0]    cmd_d,
     output reg                dn_v,
@@ -51,6 +59,7 @@ module ot_s81_hop_tx #(
     output reg                vm_re,
     output reg  [VWA-1:0]     vm_raddr,
     input  wire [FLIT-1:0]    vm_rq,
+    input wire vm_rvalid,
     output wire               out_valid,
     input  wire               out_ready,
     output wire [FLIT-1:0]    out_data,
@@ -81,12 +90,27 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     wire [3:0]      h_typ  = h_arg[3:0];
     wire [11:0]     h_dst  = h_arg[15:4];
     wire [7:0]      h_sl   = h_arg[23:16];
+    reg [1:0] wc_valid;
+    reg [123:0] wc [0:1]; // user12,pos21,tok21,ids68,dead1 + reserved1
+    wire wc_match = wc_valid[h_slot] && wc[h_slot][123:112]==12'(h_user) &&
+        wc[h_slot][111:91]==h_pos && wc[h_slot][90:70]==h_tok;
+    wire need_window = WINDOW_CONTEXT && h_typ==MT_HIDDEN;
 
-    // ---- output queue (4 flits) ----
-    reg [FLIT-1:0] oq_d [0:3];
-    reg            oq_l [0:3];
-    reg [1:0]      oq_w, oq_r;
-    reg [2:0]      oq_n;
+    // Return-valid mode reserves a queue slot for each issued VM read until the
+    // actual ordered response arrives. OUT_DEPTH includes all buffered and
+    // outstanding flits; enlarging it does not assume faster memory or wires.
+    localparam integer OB = $clog2(OUT_DEPTH);
+    reg [OUT_DEPTH-1:0] read_last;
+    reg [OB-1:0] read_w, read_r;
+    reg [OB:0] read_pending;
+    reg read_issue;
+    wire read_return = USE_VM_RVALID ? vm_rvalid : rd_v;
+    wire return_last = USE_VM_RVALID ? read_last[read_r] : rd_l;
+    // ---- output queue ----
+    reg [FLIT-1:0] oq_d [0:OUT_DEPTH-1];
+    reg            oq_l [0:OUT_DEPTH-1];
+    reg [OB-1:0]   oq_w, oq_r;
+    reg [OB:0]     oq_n;
     assign out_valid = oq_n != 0;
     assign out_data  = oq_d[oq_r];
     assign out_last  = oq_l[oq_r];
@@ -100,7 +124,7 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
     reg         cur_slot;
     reg [OPW-1:0] cur_op;
     reg [11:0]  pend_flits;                 // flits of the current message not yet popped
-    wire [2:0]  room = 3'd4 - oq_n - (rd_v ? 3'd1 : 3'd0) - (r1_v ? 3'd1 : 3'd0);
+    wire [OB:0] room = OUT_DEPTH - oq_n - read_pending;
 
     function automatic [FLIT-1:0] hdr(input [3:0] typ, input [11:0] dst, input [11:0] len, input [SUW-1:0] usr,
                                       input [NW-1:0] pos, input [NW-1:0] idx, input [31:0] val, input [NW-1:0] tok,
@@ -114,7 +138,8 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
         end
     endfunction
 
-    wire start = (st == S_IDLE) && dq_n != 0 && (go_n != 0 || go) && oq_n < 3'd4 && !rd_v && !r1_v;
+    wire start_base = (st == S_IDLE) && dq_n != 0 && (go_n != 0 || go) && oq_n < OUT_DEPTH && read_pending == 0;
+    wire start = start_base && (!need_window || wc_match);
     reg  [3:0]  cur_typ;
     reg         push; reg [FLIT-1:0] push_d; reg push_l;
     reg  [11:0] pf_n;                          // pend_flits after this cycle
@@ -123,13 +148,23 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
             dq_w <= 0; dq_r <= 0; dq_n <= 0; go_n <= 0;
             oq_w <= 0; oq_r <= 0; oq_n <= 0; cur_typ <= 0;
             st <= S_IDLE; k <= 0; nw <= 0; rd_v <= 1'b0; rd_l <= 1'b0; r1_v <= 1'b0; r1_l <= 1'b0; cur_slot <= 1'b0; cur_op <= 0; pend_flits <= 0;
+            read_w <= 0; read_r <= 0; read_pending <= 0; read_last <= 0;
             vm_re <= 1'b0; vm_raddr <= 0; dn_v <= 1'b0; dn_tag <= 0;
             fault <= 1'b0; fault_code <= 0; st_msgs <= 0;
+            wc_valid<=0;wc[0]<=0;wc[1]<=0;
         end else begin
             dn_v <= 1'b0;
             vm_re <= 1'b0;
             push = 1'b0; push_d = 0; push_l = 1'b0;
             pf_n = pend_flits;
+            if(WINDOW_CONTEXT && win_ctx_v) begin
+                if(wc_valid[win_ctx_slot]) begin fault<=1; if(fault_code==0) fault_code<=4'd5;end
+                else begin wc_valid[win_ctx_slot]<=1;wc[win_ctx_slot]<={win_ctx_user,win_ctx_pos,win_ctx_tok,win_ctx_ids,win_ctx_dead,1'b0};end
+            end
+            if(start_base && need_window && wc_valid[h_slot] && !wc_match) begin
+                fault<=1;if(fault_code==0) fault_code<=4'd6;
+            end
+            read_issue = 1'b0;
             // descriptors (the engine-side queue of QD entries)
             if (cmd_v) begin
                 if (dq_n == QD) begin fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd1; end
@@ -140,7 +175,14 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
             dq_n <= dq_n + ((cmd_v && dq_n != QD) ? 1'b1 : 1'b0) - (start ? 1'b1 : 1'b0);
             // VM read: vm_re (registered port) -> the memory's registered read -> data two edges after the issue
             rd_v <= r1_v; rd_l <= r1_l; r1_v <= 1'b0;
-            if (rd_v) begin push = 1'b1; push_d = vm_rq; push_l = rd_l; end
+            if (read_return) begin
+                if (read_pending == 0) begin
+                    fault <= 1'b1; if (fault_code == 0) fault_code <= 4'd5;
+                end else begin
+                    push = 1'b1; push_d = vm_rq; push_l = return_last;
+                    read_r <= read_r + 1'b1;
+                end
+            end
             case (st)
                 S_IDLE: if (start) begin
                     dq_r <= dq_r + 1'b1; cur_slot <= h_slot; cur_op <= h_op; cur_typ <= h_typ; k <= 0;
@@ -149,6 +191,10 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                     case (h_typ)
                         MT_HIDDEN: begin
                             push_d = hdr(MT_HIDDEN, h_dst, 12'(XW), h_user, h_pos, 0, 0, h_tok, 0, 1'b0);
+                            if(WINDOW_CONTEXT) begin
+                                push_d[208 +:68]=wc[h_slot][69:2];
+                                push_d[276]=1;push_d[277]=wc[h_slot][1];wc_valid[h_slot]<=0;
+                            end
                             nw <= 12'(XW); st <= S_DATA; pf_n = 12'(XW) + 1'b1;
                         end
                         MT_SIDE: begin
@@ -167,7 +213,10 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                         end
                     endcase
                 end
-                S_DATA: if (room > (push ? 3'd1 : 3'd0)) begin
+                S_DATA: if (room > ((!USE_VM_RVALID && push) ? 1 : 0)) begin
+                    read_issue = 1'b1;
+                    read_last[read_w] <= (k == nw - 1'b1);
+                    read_w <= read_w + 1'b1;
                     vm_re <= 1'b1;
                     vm_raddr <= ((cur_typ == MT_HIDDEN) ? VWA'(TXB) + (cur_slot ? VWA'(XW) : {VWA{1'b0}})
                                                         : VWA'(SIDE_TXB) + (cur_slot ? VWA'(256) : {VWA{1'b0}})) + VWA'(k);
@@ -176,6 +225,11 @@ localparam [3:0] MT_HIDDEN = 4'd1, MT_RESULT = 4'd2, MT_SIDE = 4'd3;
                     if (k == nw - 1'b1) st <= S_DRAIN;
                 end
                 default: ;
+            endcase
+            case ({read_issue, read_return && read_pending != 0})
+                2'b10: read_pending <= read_pending + 1'b1;
+                2'b01: read_pending <= read_pending - 1'b1;
+                default: read_pending <= read_pending;
             endcase
             if (push) begin oq_d[oq_w] <= push_d; oq_l[oq_w] <= push_l; oq_w <= oq_w + 1'b1; end
             if (pop) begin oq_r <= oq_r + 1'b1; pf_n = pf_n - 1'b1; end
