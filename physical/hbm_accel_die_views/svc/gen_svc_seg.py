@@ -463,7 +463,11 @@ def build(pl):
             east = cut == j
             nm_ = ('eo' if dirn == 'r' else 'ei') if east else ('wi' if dirn == 'r' else 'wo')
             xa_, xb_ = (w - 0.192, w) if east else (0.0, 0.192)
-            pins_ = [[f'{nm_}[{k}]', 'M4', round(xa_, 4), round(f['y0'] + k * PITCH, 4), round(xb_, 4),
+            # PS (hbm-forks 2026-10-09): the widened cross buses DRC-failed at 0.096 um on M4 alone (SE_s6: 579 LEF /
+            # 197 short / 124 spacing at the W-face pins): alternate M4 / M6 per bit (0.192 um a layer, the submit lint's
+            # pin_balance rule); both faces of a cut come from this one plan, so the abutment still matches
+            lay_ = (lambda k: 'M4' if k % 2 == 0 else 'M6') if PS else (lambda k: 'M4')
+            pins_ = [[f'{nm_}[{k}]', lay_(k), round(xa_, 4), round(f['y0'] + k * PITCH, 4), round(xb_, 4),
                       round(f['y0'] + k * PITCH + 0.024, 4)] for k in range(f['bits'])]
             d_ = 'out' if nm_ in ('eo', 'wo') else 'in'
             ports[nm_] = dict(bits=f['bits'], layer='M4', pins=pins_, face='E' if east else 'W',

@@ -130,7 +130,9 @@ class Ref:
     sequencer reads: I tables, the END token); on_dispatch(k, unit, op) -> list of (addr, value) VM writes that
     unit makes (applied at dispatch: a program with correct waits reads them)."""
 
-    def __init__(self, words, entry, token, pos, rank, vocab, ctxmax, vm, on_dispatch=None):
+    def __init__(self, words, entry, token, pos, rank, vocab, ctxmax, vm, on_dispatch=None, ncol=1):
+        self.ncol = ncol
+        self.toks = []
         self.w, self.entry = words, entry
         self.token, self.pos, self.rank, self.vocab, self.ctxmax = token, pos, rank, vocab, ctxmax
         self.vm = dict(vm)
@@ -191,8 +193,8 @@ class Ref:
                 opnd, tmpl, slot = field(h, UOP, 'opnd'), field(h, UOP, 'tmpl'), field(h, UOP, 'slot')
                 param, pred = field(h, UOP, 'param'), field(h, UOP, 'pred')
                 rlen = 1 + 2 * tmpl + 2 * bin(opnd).count('1')
-                if unit >= NUNIT_OK or op >= len(OPS[UNITS[unit]]):
-                    raise Fault('absent unit / op')
+                if unit >= NUNIT_OK or op >= len(OPS[UNITS[unit]]) or OPS[UNITS[unit]][op].startswith('RESERVED'):
+                    raise Fault('absent unit / op (or a reserved op code)')
                 if stack and i + rlen - stack[0][2] > RW - 2:
                     raise Fault('loop body larger than the ring')
                 last = bool(stack) and Lc[stack[-1][0]] == stack[-1][1] - 1
@@ -238,17 +240,22 @@ class Ref:
                         tok = self.vmr(field(e, MD, 'base'))
                         st = 3 if (tok >> 18) or tok >= self.vocab else 0
                         return out, (tok & 0x3FFFF, st)
-                    elif name == 'TOKX':           # Q-MTP-1: k committed tokens (1..16) from VM[A_eff ..] onto the completion
+                    elif name == 'TOKX':           # HGI-1 7.4 (Q-MTP-1): A[0] = k (1 <= k <= ncol), A[1..k] = tokens;
+                        # each is a completion beat {token, pos + i - 1, status 0} before END
                         if 'A' not in descs or field(descs['A'], MD, 'space') != 1:
                             raise Fault('TOKX without a VM A')
-                        e, k = self.eff(descs['A'], slot, L, L1, ieff, idesc)
+                        e, _ = self.eff(descs['A'], slot, L, L1, ieff, idesc)
                         b0 = field(e, MD, 'base')
-                        if not 1 <= k <= 16 or b0 + k > (1 << 18):
+                        if b0 + 17 > (1 << 18):
+                            raise Fault('TOKX table out of VM')
+                        k = self.vmr(b0)
+                        if not 1 <= k <= self.ncol:
                             raise Fault('TOKX count out of range')
-                        toks = [self.vmr(b0 + q) for q in range(k)]
-                        if any((t >> 18) or t >= self.vocab for t in toks):
-                            raise Fault('TOKX token out of range')
-                        self.toks = toks
+                        for q in range(1, k + 1):
+                            t = self.vmr(b0 + q)
+                            if (t >> 18) or t >= self.vocab:
+                                raise Fault('TOKX token out of range')
+                            self.toks.append((t, self.pos + q - 1))
                     elif name in ('AMAX', 'ACCEPT'):
                         raise Fault('reserved CTL op')
                     i += rlen
@@ -265,7 +272,6 @@ class Ref:
                 i += rlen
         except Fault as f:
             self.fault = str(f)
-            self.toks = []
             return out, (0, 3)
 
 
@@ -379,14 +385,15 @@ def fault_programs():
     P['rsv_unit13'] = ok + record(header(13, 0)) + end
     P['op_range'] = ok + record(header('SM', 1)) + end
     P['ctl_amax'] = ok + record(header('CTL', 'AMAX')) + end
-    tk = lambda base, n, **kw: record(header('CTL', 'TOKX', wait=0xFFFE, **kw), descs=dict(A=mdesc(space=1, fmt=5, base=base, n=n)))  # noqa: E731
-    P['tokx_16'] = ok + tk(0x8100, 16) + end
-    P['tokx_3_dyn'] = ok + record(header('CTL', 'TOKX', wait=0xFFFE, slot=3), descs=dict(
-        A=mdesc(space=1, fmt=5, base=0x8100, n=0, n_sel=DYN['SLOT']))) + end
-    P['tokx_twice'] = ok + tk(0x8100, 16) + tk(0x8105, 2) + end
-    P['tokx_17'] = ok + tk(0x8100, 17) + end
-    P['tokx_0'] = ok + tk(0x8100, 0) + end
-    P['tokx_vocab'] = ok + tk(0x8110, 2) + end
+    P['idx_rsv1'] = ok + record(header('IDX', 1)) + end
+    P['idx_rsv3'] = ok + record(header('IDX', 3)) + end
+    tk = lambda base, **kw: record(header('CTL', 'TOKX', wait=0xFFFE, **kw), descs=dict(A=mdesc(space=1, fmt=5, base=base, n=17)))  # noqa: E731
+    P['tokx_15'] = ok + tk(0x8200) + end            # A[0] = 15 (= ncol, the 4-bit maximum)
+    P['tokx_3'] = ok + tk(0x8220) + end             # A[0] = 3
+    P['tokx_twice'] = ok + tk(0x8220) + tk(0x8240) + end
+    P['tokx_k_gt_ncol'] = ok + tk(0x8260) + end     # A[0] = 5 (cases run with ncol 4 fault)
+    P['tokx_0'] = ok + tk(0x8280) + end             # A[0] = 0
+    P['tokx_vocab'] = ok + tk(0x82A0) + end         # A[0] = 2, A[2] = 151,936: one beat, then status 3
     P['tokx_no_A'] = ok + record(header('CTL', 'TOKX')) + end
     P['dyn_rsv9'] = ok + record(header('DMA', 'LOAD'), descs=dict(
         A=mdesc(space=0, base=0, n=4, dyn_sel=9, dyn_mul=1), O=mdesc(space=1, n=4))) + end
@@ -424,8 +431,12 @@ def main():
     rng = random.Random(20261009)
     words, cases, meta = [], [], {}
     VM0 = {0x8001: 4242, 0x8002: 151936, 0x8003: 151935, 0xF100: 1 << 21, 0xF000: 3}
-    VM0.update({0x8100 + q: 1000 * q + 7 for q in range(16)})
-    VM0.update({0x8110: 5, 0x8111: 151936})
+    VM0.update({0x8200: 15, **{0x8200 + q: 1000 * q + 7 for q in range(1, 16)}})
+    VM0.update({0x8220: 3, 0x8221: 11, 0x8222: 22, 0x8223: 151935})
+    VM0.update({0x8240: 1, 0x8241: 99})
+    VM0.update({0x8260: 5, **{0x8260 + q: q for q in range(1, 6)}})
+    VM0.update({0x8280: 0})
+    VM0.update({0x82A0: 2, 0x82A1: 4, 0x82A2: 151936})
 
     def add_prog(name, w):
         meta[name] = (len(words), len(w))
@@ -462,6 +473,7 @@ def main():
             ('synth_ds_p777_r3', se, 5, 777, 3, D, synth_disp, False),
             ('synth_qwen_p0', se, 131072, 0, 1, Q, synth_disp, False)]
     plan += [(n, e, 1, 100, 0, Q, lambda k, u, o: [], False) for n, e in fps.items()]
+    NCOL = {n: (4 if n == 'tokx_k_gt_ncol' else 15) for n in fps if n.startswith('tokx')}   # ncol is 4 bits
     plan += [('db_token_range', qe, 151936, 5, 0, Q, qwen_disp, False),
              ('db_pos_range', qe, 1, 40960, 0, Q, qwen_disp, False),
              ('db_ds_token_range', se, 129280, 5, 0, D, synth_disp, False),
@@ -469,7 +481,8 @@ def main():
     stale = [('stale_table', sse, 3, 9, 0, D, synth_disp, True)]
     out_cases, exp_lines, stale_exp = [], [], []
     for (name, entry, tok, pos, rank, lim, disp, _), dst in [(p, exp_lines) for p in plan] + [(p, stale_exp) for p in stale]:
-        ref = Ref(words, entry, tok, pos, rank, lim['vocab'], lim['ctxmax'], VM0, disp)
+        ncol = NCOL.get(name, 1)
+        ref = Ref(words, entry, tok, pos, rank, lim['vocab'], lim['ctxmax'], VM0, disp, ncol=ncol)
         tr, cpl = ref.run()
         fault_at = 3 if name == 'unit_fault' else 0xFFFF
         if name == 'unit_fault':
@@ -482,7 +495,7 @@ def main():
                 vmw.append((len(dst) // 11 + k, a, v))
         c = dict(name=name, entry=entry, token=tok, pos=pos, rank=rank, vocab=lim['vocab'], ctxmax=lim['ctxmax'],
                  ndisp=len(tr), cpl=cpl, fault_at=fault_at, first=len(dst) // 11, vmw=vmw,
-                 fault=getattr(ref, 'fault', None), toks=list(ref.toks) if cpl[1] == 0 else [])
+                 fault=getattr(ref, 'fault', None), toks=list(ref.toks), ncol=ncol)
         for d in tr:
             meta_w = d['unit'] | d['L'] << 4 | d['L1'] << 20 | (d['pos1'] & M21) << 36 | (d['pslot1'] & M21) << 57
             dst += [meta_w, d['hdr'], d['sut']] + d['eff'] + [sum((n & M21) << (21 * j) for j, n in enumerate(d['n']))]
@@ -498,7 +511,7 @@ def main():
         for c in cs:
             cfg.append(' '.join(f'{v:08X}' for v in (c['entry'], c['token'], c['pos'], c['rank'], c['vocab'], c['ctxmax'],
                                                     c['ndisp'], c['cpl'][0], c['cpl'][1], c['fault_at'], c['first'],
-                                                    len(c['toks']))))
+                                                    len(c['toks']) | (c['ncol'] << 8))))
         mds = []
         for c in cs:     # the case's model descriptor (CP mode: loaded through the CFG window + CFG_COMMIT)
             mds += G.d_pack(dict(magic=G.MAGIC, ver_minor=G.D_VERSION[1], ver_major=G.D_VERSION[0], n_words=G.NWORDS,
@@ -506,8 +519,8 @@ def main():
                                  coll_group_size=96 if c['vocab'] == 129280 else 4, entry_ar=c['entry'],
                                  image_base=0x10, image_pages=1))
         (T / f'hgi_seq_md{tag}.mem').write_text('\n'.join(f'{x:08X}' for x in mds) + '\n')
-        (T / f'hgi_seq_toks{tag}.mem').write_text('\n'.join(' '.join(f'{x:08X}' for x in (c['toks'] + [0] * 16)[:16])
-                                                           for c in cs) + '\n')
+        (T / f'hgi_seq_toks{tag}.mem').write_text('\n'.join(' '.join(f'{t:08X}{p_:08X}' for t, p_ in
+                                                                    (c['toks'] + [(0, 0)] * 16)[:16]) for c in cs) + '\n')
         (T / f'hgi_seq_cfg{tag}.mem').write_text('\n'.join(cfg) + '\n')
         vmw = [w for c in cs for w in c['vmw']]
         (T / f'hgi_seq_vmw{tag}.mem').write_text('\n'.join(f'{k:08X}{a:08X}{v:08X}' for k, a, v in vmw) + '\n')
