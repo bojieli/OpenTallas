@@ -1,0 +1,33 @@
+###############################################################################
+# Created by write_sdc
+###############################################################################
+current_design ot_s81_bf_native
+###############################################################################
+# Timing Constraints
+###############################################################################
+create_clock -name core_clk -period 730.0000 [get_ports {clk}]
+set_clock_uncertainty -setup 60.0000 core_clk
+set_clock_uncertainty -hold 25.0000 core_clk
+set_input_delay 1042.0000 -clock [get_clocks {core_clk}] -min -add_delay [get_ports {cfg_a[0]}]
+set_input_delay 1292.0000 -clock [get_clocks {core_clk}] -max -add_delay [get_ports {cfg_a[0]}]
+set_input_delay 1042.0000 -clock [get_clocks {core_clk}] -min -add_delay [get_ports {cfg_a[1]}]
+set_input_delay 1292.0000 -clock [get_clocks {core_clk}] -max -add_delay [get_ports {cfg_a[1]}]
+     564* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     565* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     566* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     567* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     568* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     569* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     570* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     570* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     571* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     572* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     573* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     574* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     575* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     576* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     577* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+     578* |       0 |      12 |        0 |      0 |     0 |    +0.0% | -757.305 | -1249197.2 | -2201226.0 |   5514 | g_pin.r_cfg_v$_DFF_PN0_/D
+    PID     ELAPSED     TIME COMMAND
+2372561       28:33 00:00:03 python3 tools/s81/run_bf_native_physical.py --margin --wc-only --hitfix --recut --period .730 --work /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/work --output /srv/opentallas-scratch/claude/closure-loop/bfk_recut_hs4_sm15-c674dadfd-tc-cx/routes/bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/physical.json --util 45 --tag bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal --ins-ss 1042 --ins-ff 1042 --extra=--hold-margin-ns 0.000 --param CG=0 --param INPUT_HOLD_SEATS=4 --orfs-var SETUP_SLACK_MARGIN=15 --pnr-stop-after cts
+3612910       10:13 00:10:59 /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit -no_init -threads 16 -no_splash /OpenROAD-flow-scripts/flow/scripts/floorplan.tcl -metrics /work/logs/asap7/opentallas_ot_s81_bf_native_asap7_bfk_recut_hs4_sm15_c674dadfd_tc_cx_cal/base/2_1_floorplan.json
