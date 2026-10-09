@@ -35,7 +35,7 @@ module ot_hbm_loader_read_lease #(parameter integer ENABLE=0)(
  assign normal_rsp_tag=kr_tag;assign normal_rsp_beat=kr_beat;assign normal_rsp_data=kr_data;
  assign native_rsp_v=kr_v&&state==NATIVE&&native_ok&&!sticky;
  assign native_rsp_tag=tag_q[15:0];assign native_rsp_beat=kr_beat;assign native_rsp_data=kr_data;
- assign kr_rdy=normal_rsp_v?normal_rsp_rdy:(native_rsp_v?native_rsp_rdy:1'b0);
+ assign kr_rdy=!sticky&&state==NORMAL&&(!kr_v||normal_ok)?normal_rsp_rdy:(!sticky&&state==NATIVE&&(!kr_v||native_ok)?native_rsp_rdy:1'b0);
  assign fault=sticky;
  wire[15:0]next_seen=seen|(16'b1<<kr_beat);
  wire[15:0]expected=(16'b1<<len_q)-1;
