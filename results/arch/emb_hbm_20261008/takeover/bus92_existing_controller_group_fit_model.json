@@ -1,0 +1,85 @@
+{
+  "schema": "opentallas.embedding_bus92_existing_controller_group_fit.v1",
+  "model_before_build": true,
+  "status": "ANALYTICAL_CANDIDATE_PENDING_ACTUAL_RECTANGLES_AND_REVIEW",
+  "default_off": true,
+  "adopted": false,
+  "MACs_per_cycle": 0,
+  "source_node_commit": "fd2dd387d",
+  "replicas": {
+    "groups_per_stack": 4,
+    "stacks": 4,
+    "group_nodes": 16,
+    "PCs_per_group": 8
+  },
+  "clock_ps": {
+    "core": 833.333333333,
+    "HBM": 1024
+  },
+  "proposed_placement": {
+    "shared_command_reply_trunk": "existing96.768um KVC reservation, pending realnativeKVCreplacement",
+    "group_node": "reharden one actualexisting247.536x370.44 PCcontroller composite near groupmidpoint with node FIFO+arbiter added; no independent overlappingnodeLEF",
+    "engine_and_far": "existingKVCstrip only after exactnativeKVmasters/interfaces/rectangles replaced, no occupancycredit fromplaceholder",
+    "outline_addition_um": 0,
+    "old_ROM_removed_rectangle": "reuse only; never subtractrectangle from outlinearea without actualcompaction"
+  },
+  "area": {
+    "existing_PC_frame_um": [
+      247.536,
+      370.44
+    ],
+    "existing_PC_frame_um2": 91697.23584,
+    "existing_PC_cells_partial_proxy_um2": 4655.005,
+    "group_node_partial_proxy_um2": 14342.400000000001,
+    "combined_partial_cells_um2": 18997.405000000002,
+    "combined_partial_utilization": 0.20717532896136648,
+    "sixteen_extra_standalone_frames_mm2": 0,
+    "omitted_costs": [
+      "actualnativeKVhead/CDC/provider logic",
+      "allCTS/buffers/routecells",
+      "extra localrelaystations",
+      "physicalmacro/pin/OBS keepouts"
+    ],
+    "cell_proxy_not_physical_fit": true
+  },
+  "channel": {
+    "shared_command": 350,
+    "reply_payload_valid": 266,
+    "reply_credit": 1,
+    "shared_total": 617,
+    "max_local_branches_one_side_of_midpoint": 4,
+    "local_branch_cmd_reply_bits": 548,
+    "max_local_branch_bits": 2192,
+    "conservative_vertical_tracks_controller_width": 3867,
+    "local_branches_plus_trunk": 2809,
+    "unallocated_track_margin_before_native_signals": 1058,
+    "available_track_claim": false,
+    "reason": "controllerabstracts mayobstruct uppermetal; geometricwidthisnotfreeroutingcapacity. ActualOBSlayers/nativebusoccupancy/currentmasterpin placement mustpass."
+  },
+  "memory_port_bytes_per_core_edge": {
+    "node_FIFO_event_write": 33.125,
+    "shared_reply": 33.25,
+    "shared_command": 43.75
+  },
+  "latency": {
+    "node_actual_min_capture_edges": 2,
+    "measured_group_ingress_to_sink_edges": [
+      2,
+      76
+    ],
+    "RR_observed_max_service_edges": 9,
+    "code_only_serialization_lower_bound_extra_edges": 16,
+    "code_plus_credit_serialization_lower_bound_extra_edges": 48,
+    "registered_localrelay_edges": "mustmeasure actual PCmidpointdistances, no combinationalmultimm branch",
+    "single_user_composed_latency": "OPEN until actualstationbindings/nativeprovider/4group minimumgate; noheadlinecredit"
+  },
+  "required_before_RTL_or_route": [
+    "authoritative selectedr21c precolumn/pre-relay rectangles andremovedROMrecord",
+    "actual KVCnativeport/master replacementinventory",
+    "controlleruppermetalOBSpolicy andnativebuspressure",
+    "Claude sourceproposalreview",
+    "actual groupmidpointplacement choosingnearestexistingPCframe",
+    "real registeredbranches\u2264350um/finalsegments\u2264100um andtruecreditRTT model",
+    "fit sheet\u2264~845 includinghost/PLL/ECO margin"
+  ]
+}
