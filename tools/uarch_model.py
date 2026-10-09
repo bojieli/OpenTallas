@@ -14076,3 +14076,9 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+
+def qwen_kv_merge_skid_model(depth=8):
+    """Finite Q4 landing queue, row round trip and exposed credit throttling."""
+    from uarch_model_qwen_kv_skid import model
+    return model(depth, dff_um2=DFF_UM2)
