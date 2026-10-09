@@ -20,7 +20,7 @@ module ot_hbm_native_index_query_credit #(parameter integer ENABLE=0)(
  wire allowed=ENABLE&&owner_valid&&!owner_fault&&retained&&!sticky_fault&&coded_ok;
  wire identity_ok=block_frame==owner_frame&&block_rank==owner_rank;
  wire order_ok=order<128&&{block_head,block_number}==order[6:0];
- assign block_r=allowed&&identity_ok&&order_ok&&(credits!=0);
+ assign block_r=allowed&&seen_retained&&identity_ok&&order_ok&&(credits!=0);
  wire take=block_v&&block_r;
  assign drained=ENABLE&&coded_ok&&credits==4&&!qb[0];
  assign fault=ENABLE&&(sticky_fault||!coded_ok||owner_fault);
