@@ -25,7 +25,7 @@
  "producer_flow": "one inflight accepted rawtoken; stage readiness gated; resultheld through stall; fourcapture cycles; sixcycles minimumissue",
  "first": "actualSOURCE jobposition0 explicitly resets window; received downstream HIDDEN never re-forms window",
  "dead_metadata": "Opt-in SOURCE_WORD1/TOKEN_TYPES1 decodes software-produced64bit SOURCE words. Signed released TEXT=-1 encodes7; image types0..3 encode DEAD. Default generated tokens remain TEXT even when rawtoken129264. Actual unprotected word gate PASS:64users256prompt320windows including4image types, firstDEAD, generatedraw129264TEXT, stalls and3negative classes.",
- "rewind": "eng_rb_v/user12/n3; accept only no inflight or held window, count>=n, n1..5; source commit sequencer must fence matching actual history rewind",
+ "rewind": "Opt-in selected WFC SOURCE ENGRAM_REWIND holds actual K_RES EX context at x_rew; user10 zero-extended to12, n3=r_wnf-1, no new issue/RESULT consume/writeback until actual lead rb_ready. Source rejection with no issued future x_rejb needs no rewind. Native594 receive binding pending minimum actual SOURCE gate.",
  "lookup_nodes": [
   "L1.eng.lookup",
   "L14.eng.lookup"
@@ -49,5 +49,6 @@
   "actual system software command delivery and VL embedding arithmetic"
  ],
  "performance_adoption": false,
- "owner_supersession": "Confirmed V37 rejects PROTECT_HISTORY flop SECDED; keep unprotected lead. V40 rejects installed aperture/lease hardware. Preserve all previous exact experiment evidence."
+ "owner_supersession": "Confirmed V37 rejects PROTECT_HISTORY flop SECDED; keep unprotected lead. V40 rejects installed aperture/lease hardware. Preserve all previous exact experiment evidence.",
+ "lookup_retirement": "dsfd_engram_lkp.rel[3:0] is one in-order release pulse per TP rank, not a slot bitmap. Each engine maintains rel_n[rank], admission requires acc_n-rel_n[rank]<NSLOT8 for every rank. Each rowsink exposes held rdy/perr slot bitmaps8 and rel_v/slot3 input; consumers retire in accepted slot order per rank and broadcast the four rank pulses to all engines."
 }
