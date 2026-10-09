@@ -1,0 +1,33 @@
+{
+ "schema": "opentallas.s81-secded-startup-gate.v1",
+ "source_commit": "ae210b62f",
+ "host": "ot-epyc2",
+ "status": "pass",
+ "input_sha256": {
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_boot_seq.sv": "ce7b71e1327260636eaf1ac9f45aa543261bf6be5629dec43ddcb91e5b81ec56",
+  "rtl/dsrom_sys/s81_ctrl/test/tb_s81_boot_secded.sv": "273b5c1cfd9c819bedae9a04b00a091e4ddfc3c45c594e93b063f5fa45cadcb8",
+  "rtl/dsrom_sys/s81_ctrl/test/run_boot_secded.sh": "23638a696a8cd7a2616e71adf369b931bdac1b9388edd74033c4b662f64ecf6c",
+  "tools/s81_ctrl/rope_boot_image.py": "c5e0dc8fa9fe1bdd5dd4e3b1e00e96e9b02ef7b70984f1fef6c416161fdf5ef3",
+  "tools/hdc_golden_v41.py": "7e6c677b72fc5178a622d192a517d223872dbc0ee1d5920d3441fcf4b5aa4816",
+  "tools/hdc_golden.py": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6",
+  "compiler/models/deepseek-v4.1-flash/inference_config.json": "2e84f45cf1dac8c7fcbb200e96667d4b913275690668ed496f24c7747207a809",
+  "run/img/rope.hex": "b20981dcba0451881def8542f5c5ced3c63b1036dbafaed3065ef35d27dc8da5",
+  "run/img/rope_meta.txt": "ad8b5e8bd6ad6226f1efc0b2038b8d3bc9b8ac5590f4234e2c38eec8d6435ac7"
+ },
+ "expected_verdicts": [
+  "PASS",
+  "PASS",
+  "PASS",
+  "FAIL",
+  "FAIL"
+ ],
+ "observed_rows": [
+  "TB_S81_BOOT_SECDED mut=0 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=1024/1024 mismatch=0 ce=40/40 ue=6/6 hbm_fault=1 sram_single=576/576 sram_double=2556/2556 sram_err=0 PASS",
+  "TB_S81_BOOT_SECDED neg=badsum boot_ok=0 fault=1 code=2 PASS",
+  "TB_S81_BOOT_SECDED neg= short boot_ok=0 fault=1 code=1 PASS",
+  "TB_S81_BOOT_SECDED mut=1 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=988/1024 mismatch=36 ce=40/40 ue=6/6 hbm_fault=1 sram_single=64/576 sram_double=2556/2556 sram_err=512 FAIL",
+  "TB_S81_BOOT_SECDED mut=2 max_pos=64 top_pos=1048512 sectors=1024 boot_ok=1 present=11 boot_fault=0 kv=28/28 kv_bad=0 read_ok=1022/1024 mismatch=2 ce=932/40 ue=27/6 hbm_fault=1 sram_single=576/576 sram_double=2556/2556 sram_err=34 FAIL"
+ ],
+ "scope": "zero-first-sector startup change;1024bootsectors,576singlebitpositions,2556doublepairs;decoder/paritymutants retained"
+}
