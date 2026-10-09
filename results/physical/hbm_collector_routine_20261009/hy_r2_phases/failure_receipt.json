@@ -1,0 +1,30 @@
+{
+  "job": "hbm_coll_hy-rxhalo4x6-e0c39fc90-tc-routine-r2",
+  "source": "e0c39fc90",
+  "host": "ot-epyc4",
+  "status": "CALIBRATE_FAIL_FLOORPLAN_MARGIN",
+  "stage": "3_3_place_gp",
+  "class": "synth_or_place",
+  "actual_failure": "9 RX macros at4um pin edge with signal pins behind them; independent floorplan margin lint fails before global placement",
+  "stage_elapsed": "0:45.10",
+  "reported_peak_kib": 6681376,
+  "raw_sha256": {
+    "3_3_place_gp.log": "f45d9c338a702343a75fb4bac52774c2cc9dbebd0b8e177b89c49004b7a54ffa",
+    "fp_margin_lint.json": "9c4ed7d595623f381d61cc41da31993cd6594f1604a0871d934ffd97013dc149"
+  },
+  "preserved_completed_phases": [
+    "floorplan",
+    "macro_place",
+    "PDN",
+    "global_place_skip_io",
+    "IOplacement"
+  ],
+  "limitations": [
+    "Not a setup/hold verdict",
+    "RX hard-halo count48 passed earlier; does not establish pinchannel legality",
+    "No4_1_cts.odb produced",
+    "No corrected restart or route submitted after owner takeover"
+  ],
+  "next_owner": "Claude",
+  "next_step": "Inspect actual9 macro/pin channel floorplan failures; repair existing config under approved geometry/pin model, then measured deduped intake."
+}

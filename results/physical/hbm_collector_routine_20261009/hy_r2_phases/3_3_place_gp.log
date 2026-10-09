@@ -1,0 +1,33 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 16 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/3_2_place_iop.odb
+read_sdc -mode ss /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+fp_margin_lint: FAIL  util 21.2% (+hold 22.9%), pins 15268, max pin density 10.25 b/um, macros 48, slivers 0, channel worst 0.033
+fp_margin_lint: WARN pin_density: pin density above the 6.0 bits/um/layer target: W/M4 10.2 b/um, E/M4 10.2 b/um
+fp_margin_lint: WARN pin_pdn: 7782 pin(s) of a full-density column within 1 track of a PDN strap / via stack on the same or an adjacent layer (f_su_NW[1000] M4 0.048 um; f_su_NW[1001] M4 0.048 um; f_su_NW[1002] M4 0.048 um; f_su_NW[1003] M4 0.048 um): offset the strap half a pitch off the pin column (pdn_view_m5w.tcl) or inset the core
+fp_margin_lint: WARN capture: 6905 macro outputs are captured by a single flop the placer may put far from the pin (qfd_tile rp1 class): anchor them at the pins (rom_cap_at_pins.tcl)
+fp_margin_lint: FAIL macro_edge: 9 macro(s) abut a pin edge with signal pins behind them (u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram E face 4.0 um, 218 pins behind; u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram E face 4.0 um, 189 pins behind; u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram E face 4.0 um, 427 pins behind; u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram E face 4.0 um, 333 pins behind): keep macros off pin edges (rows/columns inside, channels to the pins)
+FLOORPLAN_MARGIN: macro_edge: 9 macro(s) abut a pin edge with signal pins behind them (u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram E face 4.0 um, 218 pins behind; u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram E face 4.0 um, 189 pins behind; u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram E face 4.0 um, 427 pins behind; u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram E face 4.0 um, 333 pins behind): keep macros off pin edges (rows/columns inside, channels to the pins)
+child process exited abnormally
+OT_FP_LINT: 37 s
+Error: global_place.tcl, 5 FLOORPLAN_MARGIN: floorplan margin lint failed before global placement (see /work/reports/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_rxhalo4x6_e0c39fc90_tc_routine_r2_cal/base/fp_margin_lint.json)
+Elapsed time: 0:45.10[h:]min:sec. CPU time: user 42.03 sys 3.06 (99%). Peak memory: 6681376KB.
