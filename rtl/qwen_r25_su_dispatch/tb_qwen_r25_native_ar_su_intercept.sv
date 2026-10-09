@@ -58,19 +58,20 @@ module tb_qwen_r25_native_ar_su_intercept #(parameter TOKEN=131072,FIRST_POS=524
  end
  initial begin
   sm_wait[0]=0;sm_wait[1]=0;repeat(5)@(negedge clk);rst_n=1;
-  // The south half has one real NOP before SU, so actual CP launch pulses stagger.
-  @(negedge clk);cmd_we=3;cmd_addr=0;cmd_wdata={64'd0,64'h1ffff00053550000};
+  // A real ordinary SM launch precedes south SU; CP supports LAUNCH/END only.
+  // Its completion passes while the north native half waits, producing real skew.
+  @(negedge clk);cmd_we=3;cmd_addr=0;cmd_wdata={64'h1ffff00000abc123,64'h1ffff00053550000};
   @(negedge clk);cmd_addr={8'd1,8'd1};cmd_wdata={64'h1ffff00053550000,64'h1ffff00000abc123};
   @(negedge clk);cmd_addr={8'd2,8'd2};cmd_wdata={64'h1ffff00000abc123,64'h2000000000000000};
   @(negedge clk);cmd_addr={8'd3,8'd3};cmd_wdata={64'h2000000000000000,64'h2000000000000000};
   @(negedge clk);cmd_we=0;job_v=1;@(negedge clk);job_v=0;
   if(MUT)begin
    wait(intercept_fault);repeat(3)@(negedge clk);
-   if(native_calls!=1||sm_calls!=0||dut.cp_done)$fatal(1,"foreign native completion admitted");
+   if(native_calls!=1||sm_calls!=1||dut.cp_done)$fatal(1,"foreign native completion admitted");
    $display("PASS_QWEN_REAL_CP_SU_INTERCEPT_FOREIGN_OWNER_FENCE");$finish;
   end
   wait(records==2);repeat(4)@(negedge clk);
-  if(busy||identity_fault||intercept_fault||native_calls!=2||sm_calls!=4||st_tokens!=2)
+  if(busy||identity_fault||intercept_fault||native_calls!=2||sm_calls!=6||st_tokens!=2)
    $fatal(1,"actual CP/SU AR counter or completion mismatch");
   $display("PASS_QWEN_REAL_CP_SU_INTERCEPT TOKEN%0d POS%0d native_calls%0d SMcalls%0d records%0d",TOKEN,FIRST_POS,native_calls,sm_calls,records);
   $finish;
