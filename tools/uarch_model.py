@@ -14132,3 +14132,34 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
+
+
+def hbm_indexer_r25i_physical_model():
+    """Full-shape native R25I reservations with credits sized before routing.
+
+    Increase the historical FA4/LA6 queues for real die-distance round trips.
+    Area increments below are FF floors; mapped mux/clock costs remain required.
+    """
+    model = hbm_indexer_die_interface_model(relay_stages=32)
+    key_extra = 8 * (64 - 16) * 1098
+    score_extra = 4 * (128 - 64) * 609
+    model.update(default_enabled=False, adopted=False,
+        physical_params=dict(L=16, FA=6, CRED=128, T=1, LA=7, MEMV=1, READLAT=2),
+        credit_admission=dict(key_one_way_hops=24, key_return_hops=24,
+            key_capture_and_return_edges=4, line_credits_per_port=64,
+            score_one_way_hops=32, score_return_hops=32,
+            score_capture_and_return_edges=4, score_credits_per_stack=128),
+        fifo_area_delta_floor_um2=dict(key_per_stack=key_extra * 0.2916,
+            score_per_die=score_extra * 0.2916),
+        native_slots=dict(score_primary_um=[2000.16, 3000.24],
+            score_parallel_fallback_um=[2000.16, 3402.0],
+            selector_um=[1399.656, 777.6],
+            placement='four side-band scorers; selector above SU-full in the spine'),
+        routing_capacity=dict(track_pitch_um=0.048, key_lines_per_stack=8,
+            key_tracks=8 * 1099, preferred_key_corridors=dict(
+                SM_interrow_lines=5, service_gap_lines=2, hub_edge_lines=1),
+            qualification='capacity reservations only; exact station paths and GRT still required'),
+        acceptance='full-shape exactness/negative controls plus admitted physical context; no rate credit yet')
+    model['storage'].update(line_landing_bits_per_stack=8*64*1098,
+                           score_landing_bits_per_die=4*128*609)
+    return model
