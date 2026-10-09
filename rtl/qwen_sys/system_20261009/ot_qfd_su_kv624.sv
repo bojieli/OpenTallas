@@ -21,6 +21,11 @@ module ot_qfd_su_kv624 #(parameter integer AW=24, MUT_ADDR=0)(
             else f32_e4m3 = {1'b1, 8'd0};
         end
     endfunction
+ reg [63:0] in_mask;reg [1535:0] in_addr;reg [2047:0] in_data;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin in_mask<=0;in_addr<=0;in_data<=0;end
+  else begin in_mask<=i_mask;in_addr<=i_addr;in_data<=i_data;end
+ end
  localparam integer VBASE=131072*16;
  reg [AW-1:0] bases[0:1];reg found[0:1];
  reg [511:0] codes;reg bad;integer i,g,stride;reg [8:0] code;
@@ -28,21 +33,21 @@ module ot_qfd_su_kv624 #(parameter integer AW=24, MUT_ADDR=0)(
  always @(*)begin
   bases[0]=0;bases[1]=0;found[0]=0;found[1]=0;codes=0;bad=0;code=0;addr=0;expected=0;g=0;stride=0;
   for(i=0;i<64;i=i+1)begin
-   g=i/32;addr=i_addr[i*AW+:AW];stride=(addr<VBASE)?16:1;
-   if(i_mask[i]&&!found[g])begin bases[g]=addr-AW'((i%32)*stride);found[g]=1;end
+   g=i/32;addr=in_addr[i*AW+:AW];stride=(addr<VBASE)?16:1;
+   if(in_mask[i]&&!found[g])begin bases[g]=addr-AW'((i%32)*stride);found[g]=1;end
   end
   for(i=0;i<64;i=i+1)begin
-   g=i/32;addr=i_addr[i*AW+:AW];stride=(bases[g]<VBASE)?16:1;
+   g=i/32;addr=in_addr[i*AW+:AW];stride=(bases[g]<VBASE)?16:1;
    expected={1'b0,bases[g]}+(AW+1)'((i%32)*stride+(MUT_ADDR!=0?1:0));
-   code=f32_e4m3(i_data[i*32+:32]);codes[i*8+:8]=code[7:0];
-   if(i_mask[i]&&(code[8]||expected[AW]||expected[AW-1:0]!=addr||addr>=2*VBASE))bad=1;
+   code=f32_e4m3(in_data[i*32+:32]);codes[i*8+:8]=code[7:0];
+   if(in_mask[i]&&(code[8]||expected[AW]||expected[AW-1:0]!=addr||addr>=2*VBASE))bad=1;
   end
  end
  reg [63:0] mask_q;reg [AW-1:0] a0_q,a1_q;reg [511:0] data_q;reg bad_q;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin mask_q<=0;a0_q<=0;a1_q<=0;data_q<=0;bad_q<=0;o_mask<=0;o_a0<=0;o_a1<=0;o_data<=0;fault<=0;end
   else begin
-   mask_q<=i_mask;a0_q<=bases[0];a1_q<=bases[1];data_q<=codes;bad_q<=bad;
+   mask_q<=in_mask;a0_q<=bases[0];a1_q<=bases[1];data_q<=codes;bad_q<=bad;
    o_mask<=(bad_q||fault)?64'd0:mask_q;o_a0<=a0_q;o_a1<=a1_q;o_data<=data_q;
    fault<=fault||bad_q;
   end

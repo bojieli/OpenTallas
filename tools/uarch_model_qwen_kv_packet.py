@@ -1,7 +1,7 @@
 """Q3 lane-local exact FP8 KV packet: full64 lanes, two address bases."""
 def model(dff_um2=.2916):
     bits=64+2*24+64*8
-    state=2*bits+64*9+64
+    state=3648+2*bits+64*9+64
     slot=[160.,64.]
     area=state*dff_um2+2200
     return dict(schema='opentallas.qwen-kv624.v1',default_off=True,adopted=False,
@@ -19,5 +19,5 @@ def model(dff_um2=.2916):
         area_reservation_mm2=.01024,
         arithmetic='same f32_e4m3 as pinned KV service; packing already-rounded on-grid values only',
         address_contract='K addresses have stride16; V addresses stride1; two32lane bases; all active lanes checked',
-        latency=dict(added_write_edges=2,gross_exposed_token_cycles_upper=36*8*2,
+        latency=dict(added_write_edges=3,gross_exposed_token_cycles_upper=36*8*3,
             transport='actual die relays still separately priced; no overlap credit'))

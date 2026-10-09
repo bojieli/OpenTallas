@@ -27,7 +27,7 @@ module tb_qfd_su_kv624;
     addr[24*i+:24]=24'(base+(i/32)*65536+(i%32)*stride);
     code=8'(v+i*7);data[32*i+:32]=from_code(code);
    end
-   repeat(2)@(negedge clk);
+   repeat(3)@(negedge clk);
    if(MUT!=0)begin
     if(fault&&om==0)begin $display("NEG_DETECTED KV624 address mutation");$finish;end
     $fatal(1,"mutant survived");
@@ -37,7 +37,7 @@ module tb_qfd_su_kv624;
     code=8'(v+i*7);if(od[8*i+:8]!==code)$fatal(1,"codec mismatch");checks=checks+1;
    end
   end
-  @(negedge clk);mask=1;data[31:0]=32'h3f800001;repeat(2)@(negedge clk);
+  @(negedge clk);mask=1;data[31:0]=32'h3f800001;repeat(3)@(negedge clk);
   if(!fault||om!=0)$fatal(1,"off-grid value released");
   $display("PASS KV624 vectors512 active_lane_codes%0d all256codes K/V sparse/full masks; off-grid fail-closed",checks);
   rst_n=0;repeat(3)@(negedge clk);rst_n=1;
