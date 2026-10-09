@@ -14128,7 +14128,7 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             benchmark_required="base exact + MUT_LANE/GID/KEEP/SVAL/QORD; complete frame cycles"))
 
 
-def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slot_height_um=777.6):
+def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slot_height_um=777.6, score_fifo_aw=7):
     """Opt-in macro capture: unchanged issue width, finite existing reservations.
 
     One capture stage isolates 405/545 ps TT macro clk->q from selector mux.
@@ -14137,7 +14137,15 @@ def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slo
     """
     if read_latency not in (1, 2):
         raise ValueError("selector read latency must be 1 or 2")
+    if score_fifo_aw not in (6, 7):
+        raise ValueError("score FIFO sizing is LA6 historical or LA7 native deep-credit variant")
     extra = read_latency - 1
+    added_landing_bits = 4 * ((1 << score_fifo_aw) - 64) * 609
+    # Existing unified-model proxies: actual DFFHQN area, assumed 0.2um2 mux bit.
+    # Each added FIFO bit needs a write-enable mux and one added read-tree node.
+    landing_ff_floor_um2 = added_landing_bits * .2916
+    landing_mux_proxy_um2 = 2 * added_landing_bits * .2
+    capture_ff_floor_um2 = 4 * (592 + 68 + 8) * extra * .2916
     macro_names = [(256, 12), (1024, 4)]
     macro_area = 0.0
     for depth, count in macro_names:
@@ -14145,20 +14153,27 @@ def hbm_index_selector_capture_model(read_latency=2, slot_width_um=1399.656, slo
         record = json.loads((ROOT / "physical/asap7_memory_macros" / name / (name + ".json")).read_text())
         macro_area += count * record["area"]["macro_area_um2"]
     slot_area = slot_width_um * slot_height_um
-    published_cell_estimate = 400000.0  # physical/hbm_accel_die_views/index/DESIGN.md, estimate only
+    published_cell_estimate = 400000.0 + landing_ff_floor_um2 + landing_mux_proxy_um2 + capture_ff_floor_um2  # physical/hbm_accel_die_views/index/DESIGN.md, estimate only
     return dict(read_latency_cycles=read_latency, extra_cycles_per_sweep=extra,
         token_extra_cycles_formula="sum(measured_selector_cycle_deltas per token stage)",
         additional_credit_recycle_cycles=extra,
         nominal_drain_cycles_formula="(gc_sweeps + pass2_sweeps + pass3_sweeps + emit_sweeps) * extra_cycles_per_sweep",
         token_gain_claim=False, macs_per_cycle=0, replicas=4,
-        memory=dict(topk_bytes_per_cycle=74, candidate_bytes_per_cycle=8.5,
+        memory=dict(score_fifo_address_bits=score_fifo_aw, score_credits=1 << score_fifo_aw,
+                    score_landing_bits=4*(1 << score_fifo_aw)*609,
+                    added_score_landing_bits=added_landing_bits,
+                    topk_bytes_per_cycle=74, candidate_bytes_per_cycle=8.5,
                     topk_bits_per_cycle=592, candidate_bits_per_cycle=68),
         capture_payload_bits=4*(592+68)*extra, capture_metadata_bits=4*4*2*extra,
         mux_demux_added=0, cross_boundary_bits_added=0, routing_tracks_added=0,
         reservations=dict(gc_lines=8, output_beats=4,
                           policy="issue counts outstanding until pack exit/output enqueue; capture included"),
         area=dict(capture_flops=4*(592+68+8)*extra,
-                  capture_cell_um2="unmapped; reserve until synthesis", standard_cell_estimate_um2=published_cell_estimate,
+                  capture_cell_um2="unmapped; DFF floor only until synthesis", capture_ff_floor_um2=capture_ff_floor_um2,
+                  added_landing_ff_floor_um2=landing_ff_floor_um2,
+                  added_landing_mux_proxy_um2=landing_mux_proxy_um2,
+                  mux_proxy_basis="ASSUMED 0.2um2 per mux bit; one write-enable and one read-tree node per added FIFO bit",
+                  standard_cell_estimate_um2=published_cell_estimate,
                   macro_area_um2=macro_area, macro_count=16,
                   proposed_slot_width_um=slot_width_um, proposed_slot_height_um=slot_height_um,
                   proposed_slot_area_um2=slot_area,
