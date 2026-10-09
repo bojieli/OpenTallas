@@ -1,0 +1,11 @@
+ROMLAT token=5 tap=0 cycles=953
+ROMLAT token=600 tap=1 cycles=953
+ROMLAT token=75800 tap=148 cycles=5623
+ROMLAT token=151700 tap=296 cycles=100001
+ROMLAT token=151935 tap=296 cycles=100001
+ROMLAT token=40000 tap=78 cycles=100001
+ROM_BASELINE done fault=1 su_fault=1 EA_STG=55 EQ_STG=59 CR_STG=57 CRD=32
+- rtl/test/emb_hbm/tb_emb_rom_baseline.sv:45: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 256us; walltime 37.982 s; speed 8.986 us/s
+- Verilator: cpu 28.522 s on 1 threads; alloced 1020 MB
