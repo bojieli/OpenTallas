@@ -9,8 +9,10 @@
     "pid": 429671,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "source-route-r3",
-    "phase": "global routing",
-    "peak_ram_gb": 40
+    "phase": "terminal global-routing FAIL",
+    "peak_ram_gb": 40,
+    "return_code": 1,
+    "evidence": "results/physical/dsrom_hc_mean_capture_20261009/original_r3/physical.json"
   },
   "join_physical": {
     "host": "ot-epyc1tb",
@@ -65,7 +67,16 @@
       "host": "ot-agidock128",
       "pid": 2831553,
       "root": "/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f",
-      "phase": "component positive passed16931cycles; CE/UE/protocol/fullreleased/distributed/join gates progressing"
+      "phase": "component positive passed16931cycles; CE/UE/protocol/fullreleased/distributed/join gates progressing",
+      "component_evidence": "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_capture_r6/terminal.json"
+    },
+    "reader_exactness": {
+      "source_commit": "42e7e301d",
+      "host": "ot-agidock128",
+      "pid": 2842057,
+      "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-42e7e301d",
+      "stage": "distributed-gate-r8",
+      "phase": "running fresh gate after correcting forward predicate binding"
     }
   }
 }
