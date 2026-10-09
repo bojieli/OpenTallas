@@ -1,0 +1,173 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "hbm_native_mtp_operation_backend_mx1",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Confirmed MX1 successor: drained reset, plain control flops, no resetepoch/controlECC/mirror/auth/lease",
+      "source": {
+        "commit": "f7498a6b1",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend_mx1.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_operation_backend_mx1.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED_MX1",
+        "evidence": [
+          "tools/hbm_native_mtp_mx1_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_SAME_SOURCE_CONTROL",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_mx1_r2_verdict.json",
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_WRONG_JOB_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLAUDE_EXCLUSIVE_INTAKE_PENDING_APPROVAL_AND_DEDUP",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual eleven source-produced productionkernel images/PCs",
+        "real32SM arithmetic/results",
+        "confirmed MX1 physicalfacade/drainedresetbinding",
+        "SRAM/HBM payload SECDED retained; controlflops exempt"
+      ],
+      "integration": {
+        "status": "PASS_MINIMUM_CONTROL_PRODUCTION_NUMERICS_PENDING",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+        ]
+      }
+    },
+    {
+      "element": "hbm_native_mtp_transaction_cp_join_mx1",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Confirmed MX1 successor: drained reset, plain control flops, no resetepoch/controlECC/mirror/auth/lease",
+      "source": {
+        "commit": "f7498a6b1",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_transaction_cp_join_mx1.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED_MX1",
+        "evidence": [
+          "tools/hbm_native_mtp_mx1_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_SAME_SOURCE_CONTROL",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_mx1_r2_verdict.json",
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_WRONG_JOB_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLAUDE_EXCLUSIVE_INTAKE_PENDING_APPROVAL_AND_DEDUP",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual eleven source-produced productionkernel images/PCs",
+        "real32SM arithmetic/results",
+        "confirmed MX1 physicalfacade/drainedresetbinding",
+        "SRAM/HBM payload SECDED retained; controlflops exempt"
+      ],
+      "integration": {
+        "status": "PASS_MINIMUM_CONTROL_PRODUCTION_NUMERICS_PENDING",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+        ]
+      }
+    },
+    {
+      "element": "hbm_native_mtp_emit_queue_mx1",
+      "target": "HBM accelerator",
+      "owner": "review_hbm_token_path",
+      "description": "Confirmed MX1 successor: drained reset, plain control flops, no resetepoch/controlECC/mirror/auth/lease",
+      "source": {
+        "commit": "f7498a6b1",
+        "paths": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv"
+        ]
+      },
+      "implementation": {
+        "status": "IMPLEMENTED_DEFAULT_OFF",
+        "evidence": [
+          "rtl/hbm_accel/control/ot_hbm_native_mtp_emit_queue_mx1.sv"
+        ]
+      },
+      "model": {
+        "status": "MODELED_MX1",
+        "evidence": [
+          "tools/hbm_native_mtp_mx1_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "PASS_SAME_SOURCE_CONTROL",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/operation_mx1_r2_verdict.json",
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        },
+        "negative": {
+          "status": "PASS_WRONG_JOB_MUTANT_DETECTED",
+          "evidence": [
+            "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+          ]
+        }
+      },
+      "physical": {
+        "status": "CLAUDE_EXCLUSIVE_INTAKE_PENDING_APPROVAL_AND_DEDUP",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual eleven source-produced productionkernel images/PCs",
+        "real32SM arithmetic/results",
+        "confirmed MX1 physicalfacade/drainedresetbinding",
+        "SRAM/HBM payload SECDED retained; controlflops exempt"
+      ],
+      "integration": {
+        "status": "PASS_MINIMUM_CONTROL_PRODUCTION_NUMERICS_PENDING",
+        "evidence": [
+          "results/rtl/hbm_token_fifo_reservation_20261009/cp_closed_mx1_r2_verdict.json"
+        ]
+      }
+    }
+  ]
+}

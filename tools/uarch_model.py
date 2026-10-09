@@ -14569,3 +14569,9 @@ def hbm_native_mtp_cp_result_model():
     """Registered native checked CPRESULT producer model."""
     from hbm_native_mtp_cp_result_model import model
     return model()
+
+
+def hbm_native_mtp_mx1_model():
+    """Confirmed drained-reset/plain-control-flop native MTP model."""
+    from hbm_native_mtp_mx1_model import model
+    return model()
