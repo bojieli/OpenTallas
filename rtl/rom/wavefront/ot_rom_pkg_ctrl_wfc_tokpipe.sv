@@ -154,6 +154,7 @@
 `define OT_WFC_SLEW_COPY 0
 `endif
 module ot_rom_pkg_ctrl_wfc_tokpipe #(
+    parameter integer PROMPT_EXTRA = 0, // opt-in HARD token extra2 responseedges
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
     parameter integer PREFIX_INC = 0, // explicit balanced position carry
@@ -1616,8 +1617,7 @@ endmodule
 // the started / eligibility bits are cleared (own reset copy, synchronous); a
 // record is written whole when its user starts and read only after.
 // ---------------------------------------------------------------------------
-module ot_rom_pkg_ctrl_wfc_tokpipe_grp #(parameter integer PROMPT_EXTRA = 0, // token HARD successor:2 extra responseedges, off by default
-    parameter integer DECODED_READ = 0, parameter integer STORE = 1, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
+module ot_rom_pkg_ctrl_wfc_tokpipe_grp #(parameter integer DECODED_READ = 0, parameter integer STORE = 1, parameter integer RW = 64, parameter integer NW = 16, parameter integer N = 32) (
     input  wire          clk, rst_n,
     input  wire [4:0]    rd_lo,
     input  wire [2:0]    rd_slot,

@@ -37,6 +37,17 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "negative_epoch",
+    "cmd": "mkdir -p {RUN}/negative && iverilog -g2012 -s tb_mtp_rom_tok_hard -DOT_WFCTOK_MUT_NOEPOCH -o {RUN}/negative/sim.vvp rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok.sv rtl/dsrom_sys/mtp/ot_dsrom_wfc_tok_r3.sv rtl/dsrom_sys/mtp/tb/tb_mtp_rom_tok_hard.sv && vvp -n {RUN}/negative/sim.vvp > {RUN}/negative/run.log && python3 -c \"import pathlib,sys;p=pathlib.Path('{RUN}/negative/run.log').read_text();assert 'MTP_TOK_HARD FAIL read=277' in p;print('WFC_TOKEN_HARD_NEGATIVE FAIL_AS_REQUIRED');sys.exit(1)\"",
+    "expect": "fail",
+    "fail_regex": "WFC_TOKEN_HARD_NEGATIVE FAIL_AS_REQUIRED",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
    }
   ],
   "calibrate": {
