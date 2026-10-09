@@ -1,0 +1,20 @@
+{
+  "observed_at": "2026-10-09T12:51:46.840927+00:00",
+  "job": "hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+  "source": "bbe601a79",
+  "host": "ot-pve1",
+  "calibration_exit": 0,
+  "completed_peak_KiB": 2654076,
+  "completed_peak_GiB": 2.5311241149902344,
+  "calibration_reservation_GiB": 3,
+  "route_reservation_GiB": 16,
+  "route_peak_measured": false,
+  "no_nested_NEED_or_admit": true,
+  "clock_period_ps": 833,
+  "uncertainty_ps": [
+    60,
+    25
+  ],
+  "physical_closed": false,
+  "holdECO": "only after TT>=0/electrical checks PASS, noTTfailECO"
+}
