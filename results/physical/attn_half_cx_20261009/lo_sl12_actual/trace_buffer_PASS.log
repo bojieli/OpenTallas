@@ -1,0 +1,26 @@
+TRACE *wire85399 up
+STEP 0 u_pqx.gn.g_s\[2\].u_r/wire85400/Y BUFx16f_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/net85399
+STEP 1 u_pqx.gn.g_s\[2\].u_r/wire85401/Y BUFx16f_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/net85400
+STEP 2 u_pqx.gn.g_s\[2\].u_r/place79147/Y BUFx8_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/net79146
+STEP 3 u_pqx.gn.g_s\[2\].u_r/q\[38\]$_DFF_P_/QN DFFHQNx1_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/_38_
+TRACE *wire85399 down
+STEP 0 u_pqx.gn.g_s\[2\].u_r/wire85398/A BUFx16f_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/net85398
+STEP 1 u_pqx.gn.g_s\[2\].u_r/_39_/A INVx3_ASAP7_75t_R NET u_pqx.gn.g_s\[2\].u_r/net85397
+TRACE *wire85407 up
+STEP 0 wire85408/Y BUFx16f_ASAP7_75t_R NET net85407
+STEP 1 wire85409/Y BUFx16f_ASAP7_75t_R NET net85408
+STEP 2 wire85410/Y BUFx16f_ASAP7_75t_R NET net85409
+STEP 3 place79209/Y BUFx10_ASAP7_75t_R NET net79208
+STEP 4 place79210/Y BUFx6f_ASAP7_75t_R NET net79209
+STEP 5 place79220/Y BUFx3_ASAP7_75t_R NET net79219
+STEP 6 wire85415/Y BUFx12f_ASAP7_75t_R NET net85414
+STEP 7 input2592/Y BUFx5_ASAP7_75t_R NET net2591
+ROOT_PORT ck[0]
+TRACE *wire85407 down
+STEP 0 wire85406/A BUFx16f_ASAP7_75t_R NET net85406
+STEP 1 place79204/A BUFx3_ASAP7_75t_R NET net85405
+STEP 1 place79208/A BUFx3_ASAP7_75t_R NET net85405
+STEP 2 u_pqx.gn.g_s\[2\].u_r/wire85403/A BUFx12f_ASAP7_75t_R NET net79207
+STEP 2 u_pqx.gn.g_s\[3\].u_r/place79206/A BUFx3_ASAP7_75t_R NET net79207
+STEP 3 u_pqx.gn.g_s\[3\].u_r/place79205/A BUFx3_ASAP7_75t_R NET u_pqx.gn.g_s\[3\].u_r/net79205
+STEP 3 u_pqx.gn.g_s\[3\].u_r/q\[35\]$_DFF_P_/CLK DFFHQNx1_ASAP7_75t_R NET u_pqx.gn.g_s\[3\].u_r/net79205

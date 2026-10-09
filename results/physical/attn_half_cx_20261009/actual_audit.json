@@ -5,7 +5,7 @@
   "lo_slew_slack_ps": -1089.2,
   "reported_cell_type": "BUFx16f_ASAP7_75t_R",
   "driver_buffer": "u_pqx.gn.g_s[2].u_r/wire85400/Y",
-  "reset_or_data_or_clock_classification": "UNRESOLVED output-net inspection waiting measured remote admission",
+  "reset_or_data_or_clock_classification": "wire85399 reset data q38/QN; wire85407 clock from ck[0] to stage2/3 tail CLK",
   "hi_terminal_failure": "PDN-0179 already covered by live sl20p/rowfrag jobs",
   "active_variants_preserved": 7,
   "new_RTL": false,
@@ -14,7 +14,8 @@
     "host": "ot-epyc4",
     "pid": 2559733,
     "script": "/srv/opentallas-scratch2/scratch/codex/attn_half_cx_inspect_slew_r3.tcl",
-    "log": "/srv/opentallas-scratch2/scratch/codex/attn_half_cx_inspect_slew_r3.log"
+    "log": "/srv/opentallas-scratch2/scratch/codex/attn_half_cx_inspect_slew_r3.log",
+    "status": "COMPLETE"
   },
   "source_hashes": {
     "results/physical/attn_half_cx_20261009/hi_sl12_actual/run.log": "2bf87474da6fcd5976e598bc4d773707b3fde0de1b7e8ab712eed09d2683ed2c",

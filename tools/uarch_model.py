@@ -15035,3 +15035,24 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hbm_attn_half_flat_qtail_model():
+    """Actual reset-carry/clock slew fix; size before RTL, no new bank macros."""
+    stages=5;width=39
+    return dict(schema='opentallas.attn-half.flat-qtail.v1',default_parameter=dict(FLAT_QTAIL=0),
+        adopted=False,source='021f55db2814352ce55eda1d220833360d60a498',
+        mechanism='flatten five kept39-bit rp_reg module boundaries into actual leaf FF pipeline, same rst/query bits and stage count',
+        actual_cause=dict(reset_data='stage2 q[38]/QN -> BUFx8 -> three BUFx16f -> INVx3',
+            reset_slew_ps=-1089.20,clock='ck[0] -> top BUFx16f wire85407 -> soft-tail stage2/3 CLK',clock_slew_ps=-1085.81),
+        MACs_per_cycle=0,compute_intensity=0,memory_port_bytes_per_cycle=0,
+        communication_bits_per_cycle=39,bytes_per_cycle_equivalent=39/8,
+        boundaries=dict(input=39,output=39,seam_unchanged=1891),replica_count=5,
+        FF_baseline=stages*width,FF_candidate=stages*width,added_FF=0,new_memory_ports=0,new_macros=0,
+        mux_demux_added=0,new_fanout_copies=0,new_checks=0,
+        routing=dict(data_tracks=39,clock_leaf_loads=195,existing_lo_outline_um=[1778.52,814.32],
+                     slot_fit='macro floorplan unchanged, actual FF placement/clock/slew/route must measure'),
+        area=dict(FF_body_um2_estimate=195*.37908,added_FF_area_um2=0,actual_buffer_and_clock_area='measure; no claimed reduction'),
+        latency=dict(before_cycles=5,after_cycles=5,added_cycles=0,single_user_added_ns=0,initiation_interval=1),
+        gate='583bit full q/rst packet versus actual original pipes; reset-loss and off-by-one latency mutants must FAIL',
+        route_gate='minimum gate PASS then Claude phys-intake -cx; actual boundary TT/FF and DRC0; no SDC-only relaxation')

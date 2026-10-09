@@ -1,0 +1,15 @@
+LOCATED u_pqx.gn.g_s\[2\].u_r/wire85399
+TARGET u_pqx.gn.g_s[2].u_r/wire85399 MASTER BUFx16f_ASAP7_75t_R
+NET u_pqx.gn.g_s\[2\].u_r/net85399
+TERM u_pqx.gn.g_s\[2\].u_r/wire85399/A BUFx16f_ASAP7_75t_R INPUT
+TERM u_pqx.gn.g_s\[2\].u_r/wire85400/Y BUFx16f_ASAP7_75t_R OUTPUT
+NET u_pqx.gn.g_s\[2\].u_r/net85398
+TERM u_pqx.gn.g_s\[2\].u_r/wire85398/A BUFx16f_ASAP7_75t_R INPUT
+TERM u_pqx.gn.g_s\[2\].u_r/wire85399/Y BUFx16f_ASAP7_75t_R OUTPUT
+TARGET wire85407 MASTER BUFx16f_ASAP7_75t_R
+NET net85407
+TERM wire85407/A BUFx16f_ASAP7_75t_R INPUT
+TERM wire85408/Y BUFx16f_ASAP7_75t_R OUTPUT
+NET net85406
+TERM wire85406/A BUFx16f_ASAP7_75t_R INPUT
+TERM wire85407/Y BUFx16f_ASAP7_75t_R OUTPUT
