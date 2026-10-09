@@ -46,35 +46,39 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
   reg ls_q; reg [NPC-1:0] hv_q, ht_q; reg [2*NPC-1:0] hn_q, g_q;
   // write-ack decode
   reg [2*NPC-1:0] wm_d, wm_q; reg wdup_d, wdup_q;
+  // static decode: per PC, per lane, a 5-bit compare (no dynamic index)
   reg [2*NPC-1:0] lane_m [0:2];
   always_comb begin
-   wm_d = 0; wdup_d = 0;
+   wdup_d = 0;
    for (integer j = 0; j < 3; j = j + 1) begin
-    lane_m[j] = 0;
-    if (wack_v[j]) begin
-     lane_m[j][2*wack_data[j*7+2 +: 5] +: 2] = wack_data[j*7 +: 2];
-     if (wack_data[j*7 +: 2] == 2'b00) wdup_d = 1;
-    end
+    for (integer q = 0; q < NPC; q = q + 1)
+     lane_m[j][2*q +: 2] = (wack_v[j] && wack_data[j*7+2 +: 5] == 5'(q)) ? wack_data[j*7 +: 2] : 2'b00;
+    if (wack_v[j] && wack_data[j*7 +: 2] == 2'b00) wdup_d = 1;
    end
    wm_d = lane_m[0] | lane_m[1] | lane_m[2];
    if (|((lane_m[0] & lane_m[1]) | (lane_m[0] & lane_m[2]) | (lane_m[1] & lane_m[2]))) wdup_d = 1;
   end
-  // grant pre-encode per group of 8 PCs: first three granted PCs
+  // grant pre-encode per group of 8 PCs: first three granted PCs by three masked priority finds (one-hot, then encode)
   reg gl_v_d [0:NG-1][0:2]; reg [2:0] gl_i_d [0:NG-1][0:2]; reg [1:0] gl_m_d [0:NG-1][0:2];
   reg [1:0] gc_d [0:NG-1]; reg go_d [0:NG-1];
   reg [2:0] gl_v_q [0:NG-1]; reg [2:0] gl_i_q [0:NG-1][0:2]; reg [1:0] gl_m_q [0:NG-1][0:2];
   reg [1:0] gc_q [0:NG-1]; reg go_q [0:NG-1];
-  integer n;
+  function automatic [7:0] first1(input [7:0] x); first1 = x & (~x + 8'd1); endfunction
+  reg [7:0] gp, rest, oh;
   always_comb begin
    for (integer g = 0; g < NG; g = g + 1) begin
-    n = 0; go_d[g] = 0;
-    for (integer k = 0; k < 3; k = k + 1) begin gl_v_d[g][k] = 0; gl_i_d[g][k] = 0; gl_m_d[g][k] = 0; end
-    for (integer k = 0; k < 8; k = k + 1) if (|h_grant[2*(8*g+k) +: 2]) begin
-     if (n < 3) begin gl_v_d[g][n] = 1; gl_i_d[g][n] = 3'(k); gl_m_d[g][n] = h_grant[2*(8*g+k) +: 2]; end
-     else go_d[g] = 1;
-     n = n + 1;
+    for (integer k = 0; k < 8; k = k + 1) gp[k] = |h_grant[2*(8*g+k) +: 2];
+    rest = gp;
+    for (integer l = 0; l < 3; l = l + 1) begin
+     oh = first1(rest);
+     rest = rest & ~oh;
+     gl_v_d[g][l] = |oh;
+     gl_i_d[g][l] = {|(oh & 8'hf0), |(oh & 8'hcc), |(oh & 8'haa)};
+     gl_m_d[g][l] = 2'b00;
+     for (integer k = 0; k < 8; k = k + 1) if (oh[k]) gl_m_d[g][l] = h_grant[2*(8*g+k) +: 2];
     end
-    gc_d[g] = (n > 3) ? 2'd3 : 2'(n);
+    go_d[g] = |rest;
+    gc_d[g] = 2'(gl_v_d[g][0]) + 2'(gl_v_d[g][1]) + 2'(gl_v_d[g][2]);
    end
   end
   always @(posedge clk or negedge rst_n)
