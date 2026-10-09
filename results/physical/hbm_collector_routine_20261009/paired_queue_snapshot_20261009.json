@@ -1,0 +1,24 @@
+{
+  "observed_at": "2026-10-09T12:21:28.996160+00:00",
+  "jobs": [
+    {
+      "name": "hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+      "status": "RUNNING",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_port_capture-fanout8-c4be41d70-tc-routine",
+      "stage_key": "calibrate",
+      "stage_tag": "calibrate.a1",
+      "stage_pid": null
+    },
+    {
+      "name": "hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+      "status": "REGISTERED_NOT_YET_INGESTED",
+      "host": null,
+      "worker": null
+    }
+  ],
+  "actual_worker_claim": false,
+  "source_RTL_unchanged": true,
+  "no_duplicate_intake": true,
+  "holdECO": "conditionalonlyTTsetupandelectricalPASS, neverTTfailed"
+}

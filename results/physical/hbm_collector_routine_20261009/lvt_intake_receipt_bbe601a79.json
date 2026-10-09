@@ -1,0 +1,37 @@
+{
+  "at": "2026-10-09T12:20:53.581995+00:00",
+  "name": "hbm_coll_port_capture-lvt-bbe601a79-tc-routine",
+  "watch": "/tmp/claude-review-20261003/closure_jobs/hbm_coll_port_capture-lvt-bbe601a79-tc-routine.json",
+  "sha256": "43a36dde3f5183436ca5c12dc4b6d8d03bf26e11d67b46c4be887c5bed928622",
+  "source": {
+    "branch": "codex/hbm-collector-routine-20261009",
+    "commit": "bbe601a79",
+    "paths": [
+      "tools",
+      "rtl",
+      "physical",
+      "results/physical/hbm_coll_capture_20261009",
+      "results/physical/hbm_collector_routine_20261009"
+    ],
+    "required_files": [
+      "physical/hbm_accel_die_views/coll/rtl_ps/route_ps.sh",
+      "physical/hbm_accel_die_views/coll/rtl_ps/interior_macros.tcl",
+      "physical/hbm_accel_die_views/coll/rtl_ps/capture_adjacent_place.tcl",
+      "tools/closure_loop/tt_overlay.py",
+      "tools/closure_loop/hold_corners_patch.py",
+      "tools/closure_loop/h1_patch.py",
+      "tools/orfs_hold_mm.py",
+      "tools/orfs_hold_mm.tcl",
+      "results/physical/hbm_coll_capture_20261009/receipt.json",
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv",
+      "tools/hbm_coll_port_interior_model.py",
+      "tools/hbm_coll_capture_placement_model.py",
+      "physical/hbm_accel_die_views/coll/rtl_ps/interior_pins.tcl",
+      "results/physical/hbm_coll_capture_20261009/gate.log",
+      "results/physical/hbm_coll_capture_20261009/negative.log"
+    ]
+  },
+  "authorization": "Owner0512 approved same-design LVT routine; fanout8 independent sibling preserved.",
+  "validation": "Owner110dd900f actualschemaPASS15 requiredsourceSHAs + explicit electrical/ECOeligibilitychecks.",
+  "resource_basis": "16route/3cal conservative estimates above measured samecapture11.918/2.334GiB. LVT futurepeak not claimed measured; no extra externalclaim."
+}
