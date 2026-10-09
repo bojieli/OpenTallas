@@ -1,0 +1,43 @@
+{
+  "schema": "hgi-sum96-model-v1",
+  "algorithm": "rank-order pairwise tree with odd subtree carried unchanged",
+  "ranks": 96,
+  "words": 256,
+  "lanes": 16,
+  "tiles": 16,
+  "macs_per_cycle": 0,
+  "fp32_adds_per_issue": 16,
+  "issue_interval_cycles": 2,
+  "fp32_adds_per_command": 24320,
+  "memory": {
+    "payload_bits": 49152,
+    "ports": {
+      "read_bits_per_cycle": 512,
+      "write_bits_per_cycle": 512
+    },
+    "implementation": "protected payload SRAM adapter; raw data uses two128x256 banks, ECC sidecar supplied by SRAM owner"
+  },
+  "boundary_bits_per_cycle": {
+    "input": 512,
+    "output": 512
+  },
+  "adder_latency": 7,
+  "replicas": 16,
+  "latency_cycles_upper_bound": 6000,
+  "latency_ns_833ps": 4999.998,
+  "area_mm2": null,
+  "slot_fit": null,
+  "routing_tracks": {
+    "512bit_port_tracks": 512,
+    "capacity": null
+  },
+  "route_ready": false,
+  "remaining_before_routes": [
+    "actual protected macro area and abstract",
+    "16adder synthesis inventory",
+    "floorplan capacity and slot-fit",
+    "exact remote bench and genuine mutants"
+  ],
+  "adoption": false,
+  "note": "No 96-way claim is based on twelve independent8-rank reductions; no full-die timing claim."
+}
