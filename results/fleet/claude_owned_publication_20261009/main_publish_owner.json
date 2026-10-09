@@ -1,0 +1,10 @@
+{
+ "owner": "Claude",
+ "automatic_main_publish": false,
+ "reason": "OWNER2026-10-09 Claude coordinates main; Codex branch records and durable pending handoff only",
+ "handoff_log": "/home/ubuntu/claude-takeover-20261007/fleet_closure.log",
+ "retired_job_prefixes": [
+  "qfd_dspark_"
+ ],
+ "retired_scope_reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM"
+}

@@ -1,0 +1,351 @@
+[
+  {
+    "name": "qfd_dspark_s7_control-ce667d01f-tc",
+    "status": "NEEDS_HUMAN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "NEEDS_HUMAN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_s7_control-ce667d01f-tc.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_s7_control-ce667d01f-tc",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ce667d01f",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_s7_control.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_s7_control.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_s7_control.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_s7_control.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_biased_amax-e96b4354c-tc",
+    "status": "NEEDS_HUMAN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "NEEDS_HUMAN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_biased_amax-e96b4354c-tc.json",
+      "adoption": false
+    },
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_biased_amax-e96b4354c-tc",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "e96b4354c",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_biased_amax.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_biased_amax.env",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/qwen_die_masters/signoff/qfd_dspark_biased_amax.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_bank-ab9c785e9-wc-ttalias",
+    "status": "NEEDS_HUMAN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "NEEDS_HUMAN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_w1_bank-ab9c785e9-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_w1_bank-ab9c785e9-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_bank.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_bank.env",
+        "physical/qwen_die_masters/qwen_w1_bank8_place.tcl",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_bank.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_biased_amax-ab9c785e9-wc-ttalias",
+    "status": "FLOORPLAN_MARGIN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "FLOORPLAN_MARGIN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-pve1",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_biased_amax.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_biased_amax.env",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/qwen_die_masters/signoff/qfd_dspark_biased_amax.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_biased_amax-ab9c785e9-wc-ttalias-ls",
+    "status": "CANCELLED",
+    "retired_scope": null,
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-data/claude/closure-loop/qfd_dspark_biased_amax-ab9c785e9-wc-ttalias-ls",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_biased_amax.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_biased_amax.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_biased_amax.env",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/qwen_die_masters/signoff/qfd_dspark_biased_amax.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_transient_kv-926cf8fb2-wc-ttalias",
+    "status": "CANCELLED",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "RUNNING",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_transient_kv-926cf8fb2-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_transient_kv-926cf8fb2-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "926cf8fb2",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_transient_kv.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_transient_kv.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_transient_kv.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_transient_kv.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/qwen_die_masters/qwen_transient_kv2_place.tcl",
+        "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias-ls",
+    "status": "CANCELLED",
+    "retired_scope": null,
+    "host": "ot-epyc3",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias-ls",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "926cf8fb2",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_lookup.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_lookup.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_lookup.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_lookup.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv",
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+        "physical/qwen_die_masters/qwen_w1_bank8_place.tcl",
+        "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias",
+    "status": "FLOORPLAN_MARGIN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "FLOORPLAN_MARGIN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_w1_lookup-926cf8fb2-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "926cf8fb2",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_lookup.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_lookup.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_lookup.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_lookup.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv",
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+        "physical/qwen_die_masters/qwen_w1_bank8_place.tcl",
+        "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_dequant-a090cddb3-tc",
+    "status": "CANCELLED",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "CANCELLED",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_w1_dequant-a090cddb3-tc.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_w1_dequant-a090cddb3-tc",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "a090cddb3",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_dequant.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "tools/qwen_system/w1_dequant_gate.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_dequant.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_dequant.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_s7_control-ab9c785e9-wc-ttalias",
+    "status": "CLOSED",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "CLOSED",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_s7_control-ab9c785e9-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_s7_control-ab9c785e9-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_s7_control.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_s7_control.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_s7_control.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_s7_control.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias",
+    "status": "FLOORPLAN_MARGIN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "FLOORPLAN_MARGIN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_dequant.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "tools/qwen_system/w1_dequant_gate.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_dequant.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_dequant.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias",
+    "status": "CLOSED",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "CLOSED",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias.json",
+      "adoption": false
+    },
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_dspark_argmax_gather-bc6dafa13-wc-ttalias",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "bc6dafa13",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_s7_control.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_s7_control.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_argmax_gather.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_argmax_gather.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_bank-1e16ab97d-tc",
+    "status": "NEEDS_HUMAN",
+    "retired_scope": {
+      "at": "2026-10-09T01:50:58-07:00",
+      "reason": "OWNER2026-10-09 Qwen ROM AR-only; rejected QROM MTP, do not retarget as HBM",
+      "previous_status": "NEEDS_HUMAN",
+      "raw_state_backup": "/home/ubuntu/.local/state/closure_loop/retired_scope_20261009/qfd_dspark_w1_bank-1e16ab97d-tc.json",
+      "adoption": false
+    },
+    "host": "ot-agidock128",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_w1_bank-1e16ab97d-tc",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "1e16ab97d",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_bank.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_bank.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_bank.env",
+        "physical/qwen_die_masters/qwen_w1_bank8_place.tcl",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_bank.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc",
+        "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8_bb.v"
+      ]
+    }
+  },
+  {
+    "name": "qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias-ls",
+    "status": "CANCELLED",
+    "retired_scope": null,
+    "host": "ot-pve1",
+    "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_dspark_w1_dequant-ab9c785e9-wc-ttalias-ls",
+    "source": {
+      "branch": "codex/qwen-q5-ecc-20261009",
+      "commit": "ab9c785e9",
+      "required_files": [
+        "rtl/qwen_sys/dspark_native_20261009/ot_qwen_dspark_w1_dequant.sv",
+        "rtl/test/qwen_system/tb_qwen_dspark_w1_dequant.sv",
+        "tools/uarch_qwen_dspark_native_model.py",
+        "tools/qwen_system/w1_dequant_gate.py",
+        "physical/qwen_die_masters/cfg/qfd_dspark_w1_dequant.env",
+        "physical/qwen_die_masters/signoff/qfd_dspark_w1_dequant.sdc",
+        "physical/qwen_die_masters/qfd_dspark_serial.sdc"
+      ]
+    }
+  }
+]

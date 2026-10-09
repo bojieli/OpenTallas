@@ -1,0 +1,9 @@
+{
+  "test": "test_deferred_record_merge",
+  "host": "ot-pve1",
+  "guard_gib": 1,
+  "tests": 7,
+  "rc": 0,
+  "runtime": "closure-loop.service active",
+  "recording_policy": "Claude owns main; source-main jobs redirected to per-job Codex record branch; historical rejected QROM snapshots retained"
+}

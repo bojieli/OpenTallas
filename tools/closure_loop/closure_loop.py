@@ -538,6 +538,17 @@ def ingest():
     keys = route_keys()
     for origin, spec in load_sources():
         name = spec.get("name") or Path(origin.split(":")[-1]).stem
+        policy_path = STATE / 'main_publish_owner.json'
+        policy = json.loads(policy_path.read_text()) if policy_path.exists() else {}
+        if any(str(name).startswith(prefix) for prefix in policy.get('retired_job_prefixes', [])):
+            archive = STATE / 'retired_sources'
+            archive.mkdir(parents=True, exist_ok=True)
+            digest = hashlib.sha256(json.dumps(spec, sort_keys=True).encode()).hexdigest()
+            retired = archive / (str(name) + '-' + digest[:12] + '.json')
+            if not retired.exists():
+                retired.write_text(json.dumps(dict(at=now_iso(), origin=origin, spec=spec,
+                    reason=policy.get('retired_scope_reason', 'Owner retired scope')), indent=1) + '\n')
+            continue
         if spec.get("enabled") is False:
             continue
         p = jpath(name) if NAME_RE.match(str(name)) else None
@@ -1914,14 +1925,14 @@ def defer_record_merge(j, out, sparse, dry=False):
     was_pending = path.exists()
     tmp.replace(path)
     if claude_owns_main() and not was_pending:
-        notify_claude_record(j['name'], j['spec']['source']['branch'], out['branch_commit'])
+        notify_claude_record(j['name'], out.get('record_branch', j['spec']['source']['branch']), out['branch_commit'])
     out['merge'] = ('DEFERRED main merge: Claude owns integration; record committed on source branch' if claude_owns_main() else 'DEFERRED main merge: owner integration window; record committed on source branch')
     return True
 
 
 def merge_record(j, out, sparse, dry=False):
     spec = j['spec']
-    branch, target = j['spec']['source']['branch'], j['spec'].get('merge_target')
+    branch, target = out.get('record_branch', j['spec']['source']['branch']), j['spec'].get('merge_target')
     mwt = STATE / 'git' / (j['name'] + '-merge')
     for attempt in range(4):
         if defer_record_merge(j, out, sparse, dry):
@@ -1994,7 +2005,8 @@ def schedule_deferred_record_merges():
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
-    branch, target = spec["source"]["branch"], spec.get("merge_target")
+    source_branch, target = spec["source"]["branch"], spec.get("merge_target")
+    branch = f"codex/closure-record-{j['name']}" if source_branch == 'main' and claude_owns_main() else source_branch
     rec_dir = f"results/closure_loop/{j['name']}"
     tos = [r["to"] for r in spec.get("record", [])] + [rec_dir]
     sparse = ["/" + t.rstrip("/") for t in tos] + ["/tools/closure_loop/"]
@@ -2004,8 +2016,13 @@ def publish(j, metrics):
     dry = spec.get("dry_run_git", False)
     out = {}
     for attempt in range(4):
-        gfetch(branch, timeout=600)
-        wt_add(cwt, f"origin/{branch}", sparse)
+        base = branch
+        if branch != source_branch:
+            exists = git('ls-remote', '--heads', 'origin', branch).stdout.strip()
+            if not exists:
+                base = source_branch
+        gfetch(base, timeout=600)
+        wt_add(cwt, f"origin/{base}", sparse)
         for r in spec.get("record", []):
             src = subst(r["from"], j)
             dst = cwt / r["to"]
@@ -2021,7 +2038,7 @@ def publish(j, metrics):
                     sh(["rsync", "-a", *remote_shell, rpath(j['host'], src), str(dst)], timeout=1800, check=True)
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
         verdict = dict(schema="opentallas.closure_loop.verdict.v1", job=j["name"], block=spec["block"],
-                       owner=spec["owner"], source_branch=branch, source_commit=j["commit_full"],
+                       owner=spec["owner"], source_branch=source_branch, record_branch=branch, source_commit=j["commit_full"],
                        host=j["host"], run_dir=j["run"], acceptance=dict(setup_corner=setup_corner_label(metrics), setup_min_ps=SS_MIN, ff_min_ps=FF_MIN, drc=0, clock_periods_ps=metrics.get("clock_periods_ps"),
                        rule="OWNER 2026-10-08: TT setup >= 0 / FF hold >= 0; SS sensitivity (60/25 uncertainties; +15 design target), "
                             "agreed die-clock IO budgets, DRC 0"),
@@ -2040,6 +2057,7 @@ def publish(j, metrics):
         if staged:
             git("-c", "user.name=OpenTallas closure-loop", "-c", "user.email=boj@01.me", "commit", "-q", "-m", msg,
                 cwd=cwt)
+        out["record_branch"] = branch
         out["branch_commit"] = git("rev-parse", "HEAD", cwd=cwt).stdout.strip()
         out["files"] = len(staged)
         if dry:
