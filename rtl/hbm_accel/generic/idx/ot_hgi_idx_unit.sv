@@ -107,7 +107,7 @@ module ot_hgi_idx_unit #(
             b_v <= 8'd0; b_n <= 4'd0; b_full <= 1'b0; w_v <= 1'b0; c_ok <= 1'b0; r_done <= 1'b1;
             started <= 1'b0; eng_done <= 1'b0; eng_err <= 1'b0; w_cnt <= 32'd0;
         end else begin
-            ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0;
+            ret[2:1] <= 2'b00; vmq_t[337] <= 1'b0; x_go <= 1'b0;
             if (e_cmd_v && e_cmd_r) e_cmd_v <= 1'b0;
             if (e_in_v && e_in_r) e_in_v <= 1'b0;
             // record intake
@@ -161,7 +161,6 @@ module ot_hgi_idx_unit #(
                     w_a <= r_base + b_row * r_str + w_idx;
                 end else w_v <= 1'b0;
             end
-            x_go <= 1'b0;
             if (x_active && (x_done || x_fault)) begin
                 x_active <= 1'b0; busy <= 1'b0; started <= 1'b0; ret <= x_fault ? 3'b101 : 3'b011;
             end
