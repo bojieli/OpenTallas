@@ -724,13 +724,18 @@ window.addEventListener('resize', () => { for (const c of cards.values()) layout
 // ---- per-element closure status (/api/elements; replay: RP.elems; share-safe: summary counts only)
 const ECOL = {'closed (TT era)': '#4ade80', 'closed (TT re-verified)': '#2dd4bf', 'closed (earlier)': '#a3e635', 'first trial in flight': '#5ee7ff',
   'failed, re-running': '#fbbf24', 'revoked, re-running': '#fb923c', 'revoked (no live job)': '#f97316', 'needs redesign (no live job)': '#ff5d73',
-  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b'};
-const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
+  'flow failure (no live job)': '#c084fc', 'cancelled only': '#8a97b8', 'superseded': '#64748b', 'implementation recorded (no physical job)': '#93c5fd'};
+const ECOLS = [['element', 'element'], ['category', 'status'], ['purpose', 'what it is'], ['qualification', 'qualification'], ['tt', 'TT setup'], ['ff', 'FF hold'], ['ss', 'SS sens.'], ['drc', 'DRC'],
   ['die', 'die µm²'], ['util', 'util'], ['live', 'live'], ['failed', 'failed'], ['jobs', 'jobs'], ['closed_t', 'closed'], ['lt', 'latest event']];
 const EF = Object.assign({tgt: '', txt: '', grp: true, sts: null, sort: 'category', dir: 1}, relabel(ls('ef')) || {});
 let ED = null, eHash = null;
 const esgn = x => x == null ? "" : (x > 0 ? "+" : "") + x.toFixed(1);
 const ecls = x => x == null ? "en" : x < 0 ? "en eneg" : "en epos";
+function elementQualification(q) {
+  if (!q) return '';
+  const st = x => x && x.status || 'unrecorded', e = q.exactness || {};
+  return `source ${q.source.commit} · RTL ${st(q.implementation)} · model ${st(q.model)} · exact +${st(e.positive)} / -${st(e.negative)} · physical ${st(q.physical)} · corners ${JSON.stringify(q.physical && q.physical.corners || {})} · dependencies ${(q.dependencies || []).join(', ')} · integration ${st(q.integration)} · ${q.registry_path}`;
+}
 function renderElements() {
   if (!ED) return;
   if ($('elPanel').hidden) $('elPanel').hidden = false; lsw('ef', EF);
@@ -749,15 +754,18 @@ function renderElements() {
   for (const id of ['elCtl', 'elWrap']) if ($(id).hidden !== !rowsOK) $(id).hidden = !rowsOK;
   if (!rowsOK) return;
   if (!EF.sts) EF.sts = cats.slice();
+  if (EF.knownCats) { for (const c of cats) if (!EF.knownCats.includes(c) && !EF.sts.includes(c)) EF.sts.push(c); }
+  else if (!EF.sts.includes('implementation recorded (no physical job)')) EF.sts.push('implementation recorded (no physical job)');
+  EF.knownCats = cats.slice();
   const cnt = {}; ED.rows.forEach(r => cnt[r.category] = (cnt[r.category] || 0) + 1);
   setHTML($('eSt'), cats.filter(c => cnt[c]).map(c => `<span class="chip ${EF.sts.includes(c) ? 'on' : ''}" data-s="${esc(c)}" style="${EF.sts.includes(c) ? 'background:' + ECOL[c] : ''}">${esc(c)} ${cnt[c]}</span>`).join(' '));
   const sel = $('eTgt'); if (sel.options.length - 1 !== tg.length) sel.innerHTML = '<option value="">all targets</option>' + tg.map(t => `<option>${esc(t)}</option>`).join('');
   if (sel.value !== EF.tgt) sel.value = EF.tgt; $('eGrp').checked = EF.grp; if (document.activeElement !== $('eTxt')) $('eTxt').value = EF.txt;
   const tx = EF.txt.toLowerCase();
   const rows = ED.rows.map(r => Object.assign({}, r, {tt: r.best.tt, ff: r.best.ff, ss: r.best.ss, drc: r.best.drc, die: r.area && r.area.die, util: r.area && r.area.util,
-    lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category)}));
+    qualification: elementQualification(r.qualification), lt: r.latest ? r.latest.t : 0, cix: cats.indexOf(r.category)}));
   const vis = rows.filter(r => EF.sts.includes(r.category) && (!EF.tgt || r.target === EF.tgt) &&
-    (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.best.job, r.owner, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
+    (!tx || [r.element, r.variants.join(' '), r.purpose, r.category, r.qualification, r.best.job, r.owner, r.latest && r.latest.text].join(' ').toLowerCase().includes(tx)));
   const k = EF.sort === 'category' ? 'cix' : EF.sort, dir = EF.dir;
   const v = x => x == null ? -Infinity : x;
   vis.sort((a, b) => (EF.grp ? tg.indexOf(a.target) - tg.indexOf(b.target) : 0) || ((v(a[k]) > v(b[k])) - (v(a[k]) < v(b[k]))) * dir || a.cix - b.cix || a.element.localeCompare(b.element));
@@ -770,9 +778,10 @@ function renderElements() {
       items.push(['g|' + g, `<tr class="grp"><td colspan="${ECOLS.length}">${esc(g)} · ${Object.values(c2).reduce((a, b) => a + b, 0)}<small>${cats.filter(c => c2[c]).map(c => c + ' ' + c2[c]).join(' · ')}</small></td></tr>`]);
     }
     const b = r.best, lt = r.latest;
-    const tip = `best job ${b.job || '-'} (${b.corner || '-'} line)` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
+    const tip = `best job ${b.job || '-'} (${b.corner || '-'} line), source ${b.source_commit || 'unrecorded'}` + (r.via ? ` · via ${r.via}` : '') + (r.superseded ? ` · superseded by ${r.superseded.by}: ${r.superseded.reason}` : '') + (r.revoked ? (r.revoked.reason ? ` · revoked: ${r.revoked.reason} · re-timed FF ${r.revoked.ff ?? '-'} ps (${Object.entries(r.revoked.jobs || {}).map(([k, v]) => k + ' ' + v).join(', ')})` : ` · revoked ${r.revoked.verdict || ''} TT link budget ${r.revoked.tt_lb ?? ''}`) : '') + ` · owner ${r.owner}`;
     items.push(['e|' + r.target + '|' + r.element, `<tr class="el" style="--c:${ECOL[r.category]}"><td title="${esc(r.variants.length ? 'variants: ' + r.variants.join(', ') : r.element)}">${esc(r.element)}${r.variants.length ? ` <small>+${r.variants.length}</small>` : ''}</td>` +
       `<td><span class="st" style="background:${ECOL[r.category]}" title="${esc(tip)}">${esc(r.category)}</span></td><td class="pu" title="${esc(r.purpose)}"><div>${esc(r.purpose)}</div></td>` +
+      `<td class="pu" title="${esc(JSON.stringify(r.evidence_history || []))}"><div>${esc(r.qualification)}</div></td>` +
       `<td class="${ecls(b.tt)}">${esgn(b.tt)}</td><td class="${ecls(b.ff)}">${esgn(b.ff)}</td><td class="en" style="color:var(--dim)">${esgn(b.ss)}</td>` +
       `<td class="${b.drc == null ? 'en' : b.drc ? 'en eneg' : 'en'}">${b.drc ?? ''}</td><td class="en">${r.die == null ? '' : Math.round(r.die).toLocaleString('en-US')}</td>` +
       `<td class="en">${r.util == null ? '' : Math.round(r.util * 100) + '%'}</td><td class="en">${r.live || ''}</td><td class="en">${r.failed || ''}</td><td class="en">${r.jobs}</td>` +
