@@ -173,7 +173,7 @@ def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
         "output_register_bits": 1088, "control_register_bits": 2,
         "half_mux_inputs_per_lane": 2, "half_control_fanout": 64,
         "estimated_area_mm2_die": 0.1,
-        "floorplan_slot": "existing open smh_front_c strip; fit unverified",
+        "floorplan_slot": "actual hierarchical front_c candidate strip; adopted R25 element mapping unverified",
         "routing_tracks_needed": 2176,
         "routing_channel_capacity": 2500,
         "routing_capacity_basis": "120um central channel / 0.048um track pitch on one layer; other traffic shares it",
@@ -198,6 +198,32 @@ def qwen_r25_int8_unpack_model(dependent_sm_ops=253, replicas=32):
         "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
         "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0",
     }
+
+
+def qwen_r25_fmt3_wide_model():
+    """Structural fallback, not admitted until full-die slot/reticle check."""
+    base=qwen_r25_int8_unpack_model()
+    base.update(front_width_um=570.24, front_c_footprint_um=[570.24,518.4],
+        central_channel_um=240.0, routing_channel_capacity=5000,
+        routing_fit="2176/5000=43.52% adapter buses; all other traffic and DRC remain route gates",
+        element_outline_um=[3214.08,1131.84], previous_element_outline_um=[3075.84,1131.84],
+        comparison_basis="wide hierarchical SM3 vs separate unadopted R24SM3 baseline; neither is adopted R25",
+        adopted_r25_sm_slot_um=[2202.768,2072.79], adopted_r25_sm_grid=[4,2],
+        hierarchical_candidate_sm_grid=[3,3], hierarchical_candidate_side_padding_um=207.36,
+        additional_front_area_mm2_die=32*138.24*1114.56/1e6,
+        additional_element_area_mm2_die=32*138.24*1131.84/1e6,
+        additional_wire_length_um=138.24,
+        additional_wire_cycles=0,
+        wire_cycle_status="no new relay credit; same RTL must meet833ps; added relay needs priced RTL candidate",
+        neighbouring_masters="new front_n/front_s pin views required; preserve previous views",
+        die_admission="component geometry PASS at 3467f362e on source0cb3d9624; whole-die adoption pending widened actual pin anchors/network hops",
+        die_outline_um=[31734.288,24051.6], die_area_mm2=763.260401,
+        die_area_growth_mm2_vs_adopted_r25=10.069649,
+        die_area_growth_mm2_vs_unadopted_sm3=19.949359,
+        provisional_die_width_growth_um=829.44,
+        provisional_die_area_growth_mm2=829.44*24622/1e6,
+        full_die_cost_status="provisional wide-minus-SM3 baseline; not wide-minus-adoptedR25, not a measured or adopted headline")
+    return base
 
 
 def qwen_spine_credit_contract_model():
