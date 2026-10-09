@@ -247,6 +247,55 @@ def real_lef(rel):
     return _REAL[rel]
 
 
+def q_pq():
+    """True when the q abstract carries the PQ pins (go_tag / bank_free / sh_free / walking): ot_v41_rom_elem_q_qxpq_w10"""
+    return 'go_tag[0]' in real_lef(Q_LEF)['pins']
+
+
+# Real-macro pins that are left without a die net BY DESIGN (build-every-path rule, s81-die-2 2026-10-08: every other
+# functional pin of a real macro must have a net, see unbound_functional_pins).  pin name -> reason.
+DIAG_PINS = {
+    'walking': 'PQ q element diagnostic: no consumer in the PQ design (ot_v41_pair_pq_w17w10 leaves e_walking open; '
+               'the PQ spine admits ops by its GAP / GUARD timing, the loader by bank_free / sh_free)',
+}
+
+
+def unbound_functional_pins(m):
+    """{(master, pin): instances} of real-macro signal pins (LEF) with no die net, excluding DIAG_PINS,
+    UNUSED_BY_DESIGN and the cfg ROM's spare rd_out[71:48].  The generator fails on any (build-every-path rule)."""
+    rp = real_ports()
+    lefs = {}
+    for rel in (Q_LEF, CFG_LEF, PHY_LEF, SERDES_LEF, UCIE_LEF) + ((HEAD_A_LEF, HEAD_B_LEF) if HEAD_BUNDLES else ()):
+        r_ = real_lef(rel)
+        lefs[r_['name']] = r_['pins']
+    by = {it.name: it for it in m['insts']}
+    bound = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        for inst, port in eps:
+            if inst == 'TOP' or inst not in by:
+                continue
+            mst = by[inst].master
+            if mst not in rp:
+                continue
+            base, lo, hi = pslice(port)
+            if base in rp[mst]:
+                bound[inst].update(rp[mst][base][:bits] if lo is None else rp[mst][base][lo:hi + 1])
+    out = defaultdict(int)
+    for it in m['insts']:
+        pins = lefs.get(it.master)
+        if pins is None:
+            continue
+        got = bound.get(it.name, set())
+        for pn in pins:
+            b_ = re.sub(r'\[\d+\]$', '', pn)
+            if pn in got or b_ in DIAG_PINS or (it.master, b_) in UNUSED_BY_DESIGN:
+                continue
+            if b_ == 'rd_out' and int(pn[pn.index('[') + 1:-1]) >= 48:
+                continue                    # cfg ROM spare columns (48-b payload)
+            out[(it.master, b_)] += 1
+    return dict(out)
+
+
 def q_x1_south():
     """True when the q abstract has xs_q1 / xs_e1 on its S face (QELEM Z22+): the slot's own station drives them"""
     rq = real_lef(Q_LEF)
@@ -2387,6 +2436,11 @@ def real_ports_r8():
               + _bus('xs_sv', 2) + ['xs_v'],
               x1=_bus('xs_q1', 256) + _bus('xs_e1', 10), go=['go'], ck=['clk'], rs=['rst_n'],
               cfg=_bus('cfg_a', 5) + _bus('cfg_d', 48) + ['cfg_v'], r0=ln(0), r1=ln(1), st=['busy', 'fault'])
+    # s81-die-2 2026-10-08 (tie-off audit TA-10): the PQ q element's op tag in / loader handshake out, bound to its pair
+    # sequencer ot_s81_cfg7_seq (go_tag, ef = {bank_free, sh_free}); only when the abstract has them (PQ elements)
+    rq_ = real_lef(Q_LEF)['pins']
+    if 'go_tag[0]' in rq_:
+        qp.update(gt=_bus('go_tag', 2), ef=['sh_free', 'bank_free'])
     assert len(qp['x0']) == X0B and len(qp['x1']) == X1B and len(qp['r0']) == LEAF
     assert len(set(qp['r0'] + qp['r1'])) == 2 * LEAF == RET
     cfg = dict(ck=['clk'], ce=['ce_in'], a=_bus('addr_in', 12), rd=_bus('rd_out', 48))
@@ -3084,6 +3138,11 @@ def buses_r8(m):
                 col_rs += [(e, 'rs'), (sq, 'rst_n')]
                 bus(f'cfg_{p}', 'cfg', CFGB, [(sq, 'cfg'), (e, 'cfg')])
                 bus(f'go_{p}', 'go', 1, [(sq, 'go_e'), (e, 'go')])
+                if kind == 'q' and q_pq():
+                    # TA-10: op tag with go (the sequencer counts the broadcast gos = the PQ spine's tag), and the
+                    # element's {bank_free, sh_free} that hold a configuration load (ot_v41_pair_pq_ld PQ 1)
+                    bus(f'gt_{p}', 'cfg', 2, [(sq, 'go_tag'), (e, 'gt')])
+                    bus(f'ef_{p}', 'cfg', 2, [(e, 'ef'), (sq, 'ef')])
                 bus(f'ra_{p}', 'rom_a', 12, [(sq, 'a')] + [(f'c{p}_{k}', 'a') for k in range(CFG_PER_PAIR)])
                 for k in range(CFG_PER_PAIR):
                     bus(f'rc_{p}_{k}', 'rom_ce', 1, [(sq, f'ce{k}'), (f'c{p}_{k}', 'ce')])
@@ -4611,7 +4670,7 @@ def _faces_r8(m, Mx, it, ports):
         _lay(Mx, 'W', P_(['ck', 'rst']), 'M4')
     elif kind == 'seq':
         _lay(Mx, 'W', P_([f'q{j}' for j in range(7)] + ['a'] + [f'ce{j}' for j in range(7)]), 'M4', gap=0.0)
-        _lay(Mx, 'N', P_(['cfg', 'go_e']), 'M5')
+        _lay(Mx, 'N', P_(['cfg', 'go_e', 'go_tag', 'ef']), 'M5')
         _lay(Mx, 'E', P_(['lc', 'st']), 'M4')
         _lay(Mx, 'S', P_(['clk', 'rst_n']), 'M5')
     elif kind == 'hend':
@@ -5159,6 +5218,10 @@ def main(argv=None):
     m = build()
     if a.gen == 'r8':
         finalize_r8(m)
+        ub = unbound_functional_pins(m)
+        if ub:     # build-every-path rule (s81-die-2 2026-10-08, tie-off audit TA-10): no functional pin without a net
+            raise SystemExit('UNBOUND functional real-macro pins (master, pin): instances: '
+                             + json.dumps({f'{k[0]}.{k[1]}': v for k, v in sorted(ub.items())}))
     cov = dict(COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
