@@ -70,7 +70,12 @@ def networks(m, fp, buses, paths, chain):
         if it.orient in ('MX','R180'):y=it.h-y
         return it.x+x,it.y+y
     def route(cid,bits,src,dst,pts):
-        chain(cid,'index_native',bits,src,dst,pts,path=cid,fc=(bits,),
+        jogged=[pts[0]]
+        for a,b in zip(pts,pts[1:]):
+            if abs(a[0]-b[0])>1e-6 and abs(a[1]-b[1])>1e-6:
+                jogged.append((b[0],a[1]))
+            jogged.append(b)
+        chain(cid,'index_native',bits,src,dst,jogged,path=cid,fc=(bits,),
               local_src=True,meso_end=True,dom='stream')
     for q,(st,score) in enumerate(native['scores'].items()):
         side,half=st;svc=m['groups'][st]['svc'];sgn=1 if side=='S' else -1

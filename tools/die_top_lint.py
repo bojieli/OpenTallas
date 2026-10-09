@@ -376,6 +376,16 @@ def real_blocks(die, m=None):
         out['hfd_sm'] = dict(module='ot_hbm_accel_sm_v', file='rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv',
                              kind='RTL (sm_r2 parameters; hardened sub-views tc16 / bd_col / ring SRAM only)',
                              params=prm, ports=pm['ports'], binding=lay)
+    if die == 'hbm' and V.get('native_indexer'):
+        directory = 'physical/hbm_accel_die_views/index/rtl/'
+        for mn,filename,prm in (
+            ('hfd_idx_score_native','hfd_idx_score_native.sv',{}),
+            ('hfd_idx_score_native_c2','hfd_idx_score_native.sv',{}),
+            ('hfd_idx_sel','hfd_idx_sel.sv',dict(T=1,LA=7,MEMV=1,READLAT=2))):
+            pm=parse_module(directory+filename,mn,prm)
+            bind={pn:([pn] if n==1 else _bus(pn,n)) for pn,(_,n) in pm['ports'].items()}
+            out[mn]=dict(module=mn,file=directory+filename,kind='full-shape native index RTL',
+                         params=prm,ports=pm['ports'],binding=bind)
     return out
 
 
