@@ -1,0 +1,100 @@
+{
+ "name": "engram-lead-765470589-geom-r1-tt",
+ "block": "ot_dsrom_engram_lead_producer",
+ "owner": "Codex:engram",
+ "purpose": "Unchanged approved unprotected source765470589. Fixed eight-ROM4x2 placement and residual sliver blockage; offline actual3_2ODB fp_lint PASS. Standalone pathfinding only, no protected flops/runtimeleases/aperture hardware; +0cycles/+0outline.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/engram-resume-20261009",
+  "commit": "765470589",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile"
+  ],
+  "extra_paths": [
+   "results/arch/engram_20261008/route_specs/pins_engram_lead.json",
+   "results/rtl/engram_lead_gate_20261009.json"
+  ]
+ },
+ "no_bench_reason": "Same source765470589 full129280map/64users/1089windows positive and4negative classes PASS; removal mutants DEADmask/rewindpointer/outputhold all FAIL correctly. Gate results/rtl/engram_lead765_route_gate_20261009.json on codex/engram-resume-20261009 owner evidence commit appended to READY; source hashes bind all3compiled RTL files to unchanged765 and physical predecessor. Actual3_2ODB geometry fp_lint PASS97afc17f5 with originalODB/repairedODB hashes.",
+ "resource_evidence": {
+  "reservation_note": "24GiB full route inventory reservation, not process cap: eight38.016x62.910umROMmacros plus actual64user count/history/output logic on324x216um leaf; routepeak not measured yet, retain stage evidence."
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "python3 -c 'import base64,pathlib; p=pathlib.Path(\".views/engram_lead_geometry_r1\"); p.mkdir(parents=True,exist_ok=True); (p/\"place.tcl\").write_bytes(base64.b64decode(\"IyBVbmNoYW5nZWQgdW5wcm90ZWN0ZWQgc291cmNlNzY1NDcwNTg5LCBlaWdodCByZWFsMzguMDE2eDYyLjkxMHVtIFJPTXMuCiMgRml4ZWQ0eDIgZ2VvbWV0cnkgYXQgcmVhbCBpbnB1dC1waW4gY2VudHJvaWQ7IGdhcFgxMi4wODQvZ2FwWTEyLjA5MHVtLgpzZXQgZW5nX2Jsb2NrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IGVuZ19kYnUgWyRlbmdfYmxvY2sgZ2V0RGJVbml0c1Blck1pY3Jvbl0Kc2V0IGVuZ19pbmRleCAwCmZvcmVhY2ggZW5nX2luc3QgW2xzb3J0IC1kaWN0aW9uYXJ5IFskZW5nX2Jsb2NrIGdldEluc3RzXV0gewogICMgTmFtZXMgcmV0YWluIGVzY2FwZWQgVmVyaWxvZyBhcnJheSBicmFja2V0cyBpbiBhY3R1YWwgc3ludGhlc2l6ZWQgT0RCLgogIHNldCBlbmdfbmFtZSBbJGVuZ19pbnN0IGdldE5hbWVdCiAgaWYgeyFbcmVnZXhwIHtebWFwXC5tXFw/XFsoWzAtN10pXFw/XF1cLnJvbSR9ICRlbmdfbmFtZSAtPiBlbmdfYmFua119IHtjb250aW51ZX0KICBzZXQgZW5nX3ggW2V4cHIgezcwLjAgKyAoJGVuZ19iYW5rICUgNCkgKiA1MC4xfV0KICBzZXQgZW5nX3kgW2V4cHIgezY4LjAgKyAoJGVuZ19iYW5rIC8gNCkgKiA3NS4wfV0KICAkZW5nX2luc3Qgc2V0UGxhY2VtZW50U3RhdHVzIFBMQUNFRAogICRlbmdfaW5zdCBzZXRPcmllbnQgUjAKICAkZW5nX2luc3Qgc2V0TG9jYXRpb24gW2V4cHIge2ludChyb3VuZCgkZW5nX3gqJGVuZ19kYnUpKX1dIFtleHByIHtpbnQocm91bmQoJGVuZ195KiRlbmdfZGJ1KSl9XQogICRlbmdfaW5zdCBzZXRQbGFjZW1lbnRTdGF0dXMgTE9DS0VECiAgaW5jciBlbmdfaW5kZXgKfQppZiB7JGVuZ19pbmRleCAhPSA4fSB7ZXJyb3IgIkVuZ3JhbSBwbGFjZW1lbnQgbWF0Y2hlZCAkZW5nX2luZGV4IFJPTXMsIGV4cGVjdGVkOCJ9CiMgRGVmZW5zaXZlIGhhcmQgYmxvY2thZ2UgZm9yIGV2ZXJ5IHJlc2lkdWFsIHBvc2l0aXZlIGdhcDwxMnVtLCBpZiB0aGlzCiMgcGxhY2VtZW50IGlzIGxhdGVyIGNoYW5nZWQuIFRoZSBjdXJyZW50IGdhcFgvZ2FwWSBnZW9tZXRyeSBjcmVhdGVzIG5vbmUuCnNvdXJjZSBbZmlsZSBqb2luIFtmaWxlIGRpcm5hbWUgW2luZm8gc2NyaXB0XV0gc2xpdmVyX2Jsb2NrLnRjbF0K\")); (p/\"sliver_block.tcl\").write_bytes(base64.b64decode(\"c2V0IGVuZ19tYWNyb3Mge30KZm9yZWFjaCBlbmdfaSBbJGVuZ19ibG9jayBnZXRJbnN0c10gewogaWYge1tbJGVuZ19pIGdldE1hc3Rlcl0gZ2V0VHlwZV0gbmUgIkJMT0NLIn0ge2NvbnRpbnVlfQogbGFwcGVuZCBlbmdfbWFjcm9zICRlbmdfaQp9CnNldCBlbmdfbiAwCmZvcmVhY2ggZW5nX2EgJGVuZ19tYWNyb3Mgewogc2V0IGVuZ19hYiBbJGVuZ19hIGdldEJCb3hdCiBmb3JlYWNoIGVuZ19iICRlbmdfbWFjcm9zIHsKICBpZiB7W3N0cmluZyBjb21wYXJlIFskZW5nX2EgZ2V0TmFtZV0gWyRlbmdfYiBnZXROYW1lXV0gPj0gMH0ge2NvbnRpbnVlfQogIHNldCBlbmdfYmIgWyRlbmdfYiBnZXRCQm94XQogIHNldCBlbmdfcmVjdCB7fQogIHNldCBlbmdfbG8gW2V4cHIge21heChbJGVuZ19hYiB5TWluXSxbJGVuZ19iYiB5TWluXSl9XQogIHNldCBlbmdfaGkgW2V4cHIge21pbihbJGVuZ19hYiB5TWF4XSxbJGVuZ19iYiB5TWF4XSl9XQogIGlmIHskZW5nX2hpPiRlbmdfbG99IHsKICAgc2V0IGVuZ194bG8gW2V4cHIge21pbihbJGVuZ19hYiB4TWF4XSxbJGVuZ19iYiB4TWF4XSl9XQogICBzZXQgZW5nX3hoaSBbZXhwciB7bWF4KFskZW5nX2FiIHhNaW5dLFskZW5nX2JiIHhNaW5dKX1dCiAgIGlmIHskZW5nX3hoaT4kZW5nX3hsbyAmJiAkZW5nX3hoaS0kZW5nX3hsbzwxMiokZW5nX2RidX0ge3NldCBlbmdfcmVjdCBbbGlzdCAkZW5nX3hsbyAkZW5nX2xvICRlbmdfeGhpICRlbmdfaGldfQogIH0KICBzZXQgZW5nX2xvIFtleHByIHttYXgoWyRlbmdfYWIgeE1pbl0sWyRlbmdfYmIgeE1pbl0pfV0KICBzZXQgZW5nX2hpIFtleHByIHttaW4oWyRlbmdfYWIgeE1heF0sWyRlbmdfYmIgeE1heF0pfV0KICBpZiB7JGVuZ19oaT4kZW5nX2xvfSB7CiAgIHNldCBlbmdfeWxvIFtleHByIHttaW4oWyRlbmdfYWIgeU1heF0sWyRlbmdfYmIgeU1heF0pfV0KICAgc2V0IGVuZ195aGkgW2V4cHIge21heChbJGVuZ19hYiB5TWluXSxbJGVuZ19iYiB5TWluXSl9XQogICBpZiB7JGVuZ195aGk+JGVuZ195bG8gJiYgJGVuZ195aGktJGVuZ195bG88MTIqJGVuZ19kYnV9IHtzZXQgZW5nX3JlY3QgW2xpc3QgJGVuZ19sbyAkZW5nX3lsbyAkZW5nX2hpICRlbmdfeWhpXX0KICB9CiAgaWYge1tsbGVuZ3RoICRlbmdfcmVjdF19IHsKICAgbGFzc2lnbiAkZW5nX3JlY3QgZW5nX2x4IGVuZ19seSBlbmdfaHggZW5nX2h5CiAgIG9kYjo6ZGJCbG9ja2FnZV9jcmVhdGUgJGVuZ19ibG9jayAkZW5nX2x4ICRlbmdfbHkgJGVuZ19oeCAkZW5nX2h5CiAgIGluY3IgZW5nX24KICB9CiB9Cn0KcHV0cyAiRU5HUkFNX0dFT01FVFJZIG1hY3Jvcz0kZW5nX2luZGV4IHJlc2lkdWFsX3NsaXZlcnNfYmxvY2tlZD0kZW5nX24iCg==\"))' && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; python3 -c \"import json; d=json.load(open('results/arch/engram_20261008/route_specs/pins_engram_lead.json')); d['scalar_ports']=[p[0] for p in d['ports'] if p[1]==1]; json.dump(d,open('{CL}/lead_pins.json','w'))\" && python3 tools/s81_ph/s81_ph_pinplan.py {CL}/lead_pins.json && STEPS='--step-tcl PRE_GLOBAL_PLACE=.views/engram_lead_geometry_r1/place.tcl' HM=0.035 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv' MACROS='ot_rom_4096x72_m8=physical/asap7_memory_macros/ot_rom_4096x72_m8' CLK=clk bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract ot_dsrom_engram_lead_producer rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "python3 -c 'import base64,pathlib; p=pathlib.Path(\".views/engram_lead_geometry_r1\"); p.mkdir(parents=True,exist_ok=True); (p/\"place.tcl\").write_bytes(base64.b64decode(\"IyBVbmNoYW5nZWQgdW5wcm90ZWN0ZWQgc291cmNlNzY1NDcwNTg5LCBlaWdodCByZWFsMzguMDE2eDYyLjkxMHVtIFJPTXMuCiMgRml4ZWQ0eDIgZ2VvbWV0cnkgYXQgcmVhbCBpbnB1dC1waW4gY2VudHJvaWQ7IGdhcFgxMi4wODQvZ2FwWTEyLjA5MHVtLgpzZXQgZW5nX2Jsb2NrIFtvcmQ6OmdldF9kYl9ibG9ja10Kc2V0IGVuZ19kYnUgWyRlbmdfYmxvY2sgZ2V0RGJVbml0c1Blck1pY3Jvbl0Kc2V0IGVuZ19pbmRleCAwCmZvcmVhY2ggZW5nX2luc3QgW2xzb3J0IC1kaWN0aW9uYXJ5IFskZW5nX2Jsb2NrIGdldEluc3RzXV0gewogICMgTmFtZXMgcmV0YWluIGVzY2FwZWQgVmVyaWxvZyBhcnJheSBicmFja2V0cyBpbiBhY3R1YWwgc3ludGhlc2l6ZWQgT0RCLgogIHNldCBlbmdfbmFtZSBbJGVuZ19pbnN0IGdldE5hbWVdCiAgaWYgeyFbcmVnZXhwIHtebWFwXC5tXFw/XFsoWzAtN10pXFw/XF1cLnJvbSR9ICRlbmdfbmFtZSAtPiBlbmdfYmFua119IHtjb250aW51ZX0KICBzZXQgZW5nX3ggW2V4cHIgezcwLjAgKyAoJGVuZ19iYW5rICUgNCkgKiA1MC4xfV0KICBzZXQgZW5nX3kgW2V4cHIgezY4LjAgKyAoJGVuZ19iYW5rIC8gNCkgKiA3NS4wfV0KICAkZW5nX2luc3Qgc2V0UGxhY2VtZW50U3RhdHVzIFBMQUNFRAogICRlbmdfaW5zdCBzZXRPcmllbnQgUjAKICAkZW5nX2luc3Qgc2V0TG9jYXRpb24gW2V4cHIge2ludChyb3VuZCgkZW5nX3gqJGVuZ19kYnUpKX1dIFtleHByIHtpbnQocm91bmQoJGVuZ195KiRlbmdfZGJ1KSl9XQogICRlbmdfaW5zdCBzZXRQbGFjZW1lbnRTdGF0dXMgTE9DS0VECiAgaW5jciBlbmdfaW5kZXgKfQppZiB7JGVuZ19pbmRleCAhPSA4fSB7ZXJyb3IgIkVuZ3JhbSBwbGFjZW1lbnQgbWF0Y2hlZCAkZW5nX2luZGV4IFJPTXMsIGV4cGVjdGVkOCJ9CiMgRGVmZW5zaXZlIGhhcmQgYmxvY2thZ2UgZm9yIGV2ZXJ5IHJlc2lkdWFsIHBvc2l0aXZlIGdhcDwxMnVtLCBpZiB0aGlzCiMgcGxhY2VtZW50IGlzIGxhdGVyIGNoYW5nZWQuIFRoZSBjdXJyZW50IGdhcFgvZ2FwWSBnZW9tZXRyeSBjcmVhdGVzIG5vbmUuCnNvdXJjZSBbZmlsZSBqb2luIFtmaWxlIGRpcm5hbWUgW2luZm8gc2NyaXB0XV0gc2xpdmVyX2Jsb2NrLnRjbF0K\")); (p/\"sliver_block.tcl\").write_bytes(base64.b64decode(\"c2V0IGVuZ19tYWNyb3Mge30KZm9yZWFjaCBlbmdfaSBbJGVuZ19ibG9jayBnZXRJbnN0c10gewogaWYge1tbJGVuZ19pIGdldE1hc3Rlcl0gZ2V0VHlwZV0gbmUgIkJMT0NLIn0ge2NvbnRpbnVlfQogbGFwcGVuZCBlbmdfbWFjcm9zICRlbmdfaQp9CnNldCBlbmdfbiAwCmZvcmVhY2ggZW5nX2EgJGVuZ19tYWNyb3Mgewogc2V0IGVuZ19hYiBbJGVuZ19hIGdldEJCb3hdCiBmb3JlYWNoIGVuZ19iICRlbmdfbWFjcm9zIHsKICBpZiB7W3N0cmluZyBjb21wYXJlIFskZW5nX2EgZ2V0TmFtZV0gWyRlbmdfYiBnZXROYW1lXV0gPj0gMH0ge2NvbnRpbnVlfQogIHNldCBlbmdfYmIgWyRlbmdfYiBnZXRCQm94XQogIHNldCBlbmdfcmVjdCB7fQogIHNldCBlbmdfbG8gW2V4cHIge21heChbJGVuZ19hYiB5TWluXSxbJGVuZ19iYiB5TWluXSl9XQogIHNldCBlbmdfaGkgW2V4cHIge21pbihbJGVuZ19hYiB5TWF4XSxbJGVuZ19iYiB5TWF4XSl9XQogIGlmIHskZW5nX2hpPiRlbmdfbG99IHsKICAgc2V0IGVuZ194bG8gW2V4cHIge21pbihbJGVuZ19hYiB4TWF4XSxbJGVuZ19iYiB4TWF4XSl9XQogICBzZXQgZW5nX3hoaSBbZXhwciB7bWF4KFskZW5nX2FiIHhNaW5dLFskZW5nX2JiIHhNaW5dKX1dCiAgIGlmIHskZW5nX3hoaT4kZW5nX3hsbyAmJiAkZW5nX3hoaS0kZW5nX3hsbzwxMiokZW5nX2RidX0ge3NldCBlbmdfcmVjdCBbbGlzdCAkZW5nX3hsbyAkZW5nX2xvICRlbmdfeGhpICRlbmdfaGldfQogIH0KICBzZXQgZW5nX2xvIFtleHByIHttYXgoWyRlbmdfYWIgeE1pbl0sWyRlbmdfYmIgeE1pbl0pfV0KICBzZXQgZW5nX2hpIFtleHByIHttaW4oWyRlbmdfYWIgeE1heF0sWyRlbmdfYmIgeE1heF0pfV0KICBpZiB7JGVuZ19oaT4kZW5nX2xvfSB7CiAgIHNldCBlbmdfeWxvIFtleHByIHttaW4oWyRlbmdfYWIgeU1heF0sWyRlbmdfYmIgeU1heF0pfV0KICAgc2V0IGVuZ195aGkgW2V4cHIge21heChbJGVuZ19hYiB5TWluXSxbJGVuZ19iYiB5TWluXSl9XQogICBpZiB7JGVuZ195aGk+JGVuZ195bG8gJiYgJGVuZ195aGktJGVuZ195bG88MTIqJGVuZ19kYnV9IHtzZXQgZW5nX3JlY3QgW2xpc3QgJGVuZ19sbyAkZW5nX3lsbyAkZW5nX2hpICRlbmdfeWhpXX0KICB9CiAgaWYge1tsbGVuZ3RoICRlbmdfcmVjdF19IHsKICAgbGFzc2lnbiAkZW5nX3JlY3QgZW5nX2x4IGVuZ19seSBlbmdfaHggZW5nX2h5CiAgIG9kYjo6ZGJCbG9ja2FnZV9jcmVhdGUgJGVuZ19ibG9jayAkZW5nX2x4ICRlbmdfbHkgJGVuZ19oeCAkZW5nX2h5CiAgIGluY3IgZW5nX24KICB9CiB9Cn0KcHV0cyAiRU5HUkFNX0dFT01FVFJZIG1hY3Jvcz0kZW5nX2luZGV4IHJlc2lkdWFsX3NsaXZlcnNfYmxvY2tlZD0kZW5nX24iCg==\"))' && export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; python3 -c \"import json; d=json.load(open('results/arch/engram_20261008/route_specs/pins_engram_lead.json')); d['scalar_ports']=[p[0] for p in d['ports'] if p[1]==1]; json.dump(d,open('{CL}/lead_pins.json','w'))\" && python3 tools/s81_ph/s81_ph_pinplan.py {CL}/lead_pins.json && SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc STEPS='--step-tcl PRE_GLOBAL_PLACE=.views/engram_lead_geometry_r1/place.tcl' HM=0.035 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv' MACROS='ot_rom_4096x72_m8=physical/asap7_memory_macros/ot_rom_4096x72_m8' CLK=clk bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract ot_dsrom_engram_lead_producer rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8"
+  ],
+  "checks": [
+   {
+    "name": "actual_literal_pin_abstract_match",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ]
+ },
+ "record": [
+  {
+   "to": "results/rtl/engram_lead_physical_20261009/engram-lead-765470589-tt",
+   "from": "{RUN}/record"
+  }
+ ],
+ "cycles_added": 4,
+ "cycles_note": "Four stream edges before downstreamEngramlookup, model-priced; whole transport/integration additionalcosts remain open.",
+ "merge_target": null,
+ "route_corner": "TC",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.035,
+ "owner_conditions": {
+  "review_required_before_intake": true,
+  "owner_acceptance": "optionB: TTsetup>=0/FFhold>=0/DRC0; SS sensitivity only",
+  "unchanged_rtl_source": "765470589",
+  "geometry_receipt": "results/arch/engram_20261008/lead_geometry_r1/receipt.json",
+  "exact_gate": "results/rtl/engram_lead765_route_gate_20261009.json",
+  "original_failure_preserved": true,
+  "route_submitted": false
+ }
+}

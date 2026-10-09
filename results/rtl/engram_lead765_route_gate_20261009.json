@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.engram-lead765-route-gate.v1",
+ "source_commit": "765470589",
+ "physical_job": "engram-lead-765470589-tt",
+ "successor": "unchanged RTL geometry repair only; review before intake",
+ "retained_objects": "/tmp/engram-lead765-route-wkebzu35",
+ "input_sha256": {
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv": "9b955c7263887251bfdd5394fbb432d1111167a6a74fd54cf7520f94949dfaaa",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv": "518c902b0f1909cdb874406887abbbb24a643462789ff017f6375ef418ef324a",
+  "rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv": "43d6d611b0718272df4112f08b310e78727a2b336035644b6239a5b2d22899a2",
+  "physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v": "6ce53933a1648cd8f06b826b388a7e135bcad57476c4297aacd91e1a5b278994",
+  "rtl/test/tb_dsrom_engram_lead.sv": "9b88fa9576f5ad61e7085cd10b43d1dfcdc63c7fa188092404e003de76fa1e15",
+  "rtl/test/hdc_v41_tb_harness.cpp": "916936d5c2b5cc468751e8e3fa7c64dbafe66919958fda2a4ca1ad0806819523",
+  "tools/engram_lead_route_gate.py": "83fe9adc4a8e46b3f27db26d916d84aeb2e70b2fbcb8852676a309d56ea53ea8"
+ },
+ "cases": {
+  "control_0": {
+   "returncode": 0,
+   "stdout": "ENGRAM_LEAD PASS map129280 users64 tokens1089 stalls rollback5 dead reset\n- /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:70: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "control_1": {
+   "returncode": 0,
+   "stdout": "ENGRAM_LEAD NEG mode1 caught\n- /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:50: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "control_2": {
+   "returncode": 0,
+   "stdout": "ENGRAM_LEAD NEG mode2 caught\n- /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:50: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "control_3": {
+   "returncode": 0,
+   "stdout": "ENGRAM_LEAD NEG mode3 caught\n- /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:50: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "control_4": {
+   "returncode": 0,
+   "stdout": "ENGRAM_LEAD NEG mode4 caught\n- /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:50: Verilog $finish\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "dead_mask_removed_0": {
+   "returncode": -6,
+   "stdout": "[0] %Fatal: tb_dsrom_engram_lead.sv:34: Assertion failed in TOP.tb_dsrom_engram_lead.send: lead mismatch user0 seq4 raw31676 ids032c0c6987a2c6120 want00010000800040002\n%Error: /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:34: Verilog $stop\nAborting...\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "rewind_pointer_removed_0": {
+   "returncode": -6,
+   "stdout": "[0] %Fatal: tb_dsrom_engram_lead.sv:34: Assertion failed in TOP.tb_dsrom_engram_lead.send: lead mismatch user0 seq11 raw128799 ids999487589f8358133 want5efe053cccae78133\n%Error: /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:34: Verilog $stop\nAborting...\n",
+   "stderr": "",
+   "expected_observed": true
+  },
+  "output_hold_removed_0": {
+   "returncode": -6,
+   "stdout": "[0] %Fatal: tb_dsrom_engram_lead.sv:36: Assertion failed in TOP.tb_dsrom_engram_lead.send.unnamedblk1_1: stalled lead changed\n%Error: /srv/opentallas-scratch/engram-lead765-route-gate/rtl/test/tb_dsrom_engram_lead.sv:36: Verilog $stop\nAborting...\n",
+   "stderr": "",
+   "expected_observed": true
+  }
+ },
+ "status": "pass"
+}
