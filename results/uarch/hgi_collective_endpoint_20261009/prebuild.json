@@ -34,5 +34,8 @@
   "small_group_isolation": "nonLEG result groupheader!=OG consumed/dropped before delivery; credit returns preserved, no additional cycle/port",
   "group1_fix": "one own-column write per cycle: only injector lane0 enabled, k advances1; sameunchanged tree/pack pipeline, no new FF",
   "group1_injection_cycles": "PF rather than ceil(PF/INJ); PF8 legalchunk costs4 extra injectionedges atINJ2, 2chunks256words costs8extraedges",
-  "evidence": "a041debug PF8 pres0=0xaa col0xfe demonstrates twoinjectionlanes collided onehot OR writers"
+  "evidence": "a041debug PF8 pres0=0xaa col0xfe demonstrates twoinjectionlanes collided onehot OR writers",
+  "group1_arithmetic": "select rank0leaf atissue intoexistingBF16hold/pack; preservesminuszero/subnormalnoadd; suppressunusedaddervalidandindexv; noextraFF",
+  "group1_output_latency_edges_saved": 21,
+  "group1_hgi_golden": "single-leaf pairwisetree identity thenBF16round, negativezero directedoldpaddingfailed"
 }
