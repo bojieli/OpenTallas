@@ -27,6 +27,8 @@ module tb_hgi_idx_ds_dispatch;
    wait(bv);repeat(3)@(negedge clk);
   end
   if(outputs!=12)$fatal(1,"DS_LOCKSTEP outputs%0d",outputs);
+  @(negedge clk);op=63;cv=1;@(negedge clk);cv=0;
+  if(!error||!done)$fatal(1,"DS_LOCKSTEP invalidop not completed failclosed");
   $display("PASS DS_LOCKSTEP 12 vectors N384 P16 K6 same-cycle sortedIDs unchanged native mechanism");$finish;
  end
  initial begin repeat(3000)@(posedge clk);$fatal(1,"DS_LOCKSTEP timeout");end
