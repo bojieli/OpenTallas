@@ -19,11 +19,13 @@ module tb_hbm_token_loop #(parameter integer MUT = 0);
     .cpl_token(cpl_token), .cpl_status(cpl_status), .mtp_v(mtp_v), .mtp_n(mtp_n), .mtp_tok(mtp_tok),
     .mtp_emit_v(mtp_emit_v), .mtp_emit(mtp_emit), .mtp_stop(mtp_stop), .busy(busy), .last_status(last_status),
     .st_tokens(st_tokens), .st_hq_stall(st_hq_stall));
+  integer stall_host = 0;
   integer fi, fo, rc, k2, k, n, hsa, steps, seen_last, x0, x1, x2, x3, x4, x5, x6;
   string line, kw;
   reg [16:0] ts [0:4095]; integer nt, it; reg [16:0] bt [0:1023][0:5]; integer bn [0:1023]; integer nb, ib;
   always @(posedge clk) begin
-    hr_rdy <= ($urandom % 4) != 0;
+    hr_rdy <= (stall_host > 0) ? 1'b0 : (($urandom % 4) != 0);
+    if (stall_host > 0) stall_host <= stall_host - 1;
     if (hr_v && hr_rdy) begin
       $fdisplay(fo, "R %0d %0d %0d %0d %0d", hr_d[73], hr_d[72:70], hr_d[69:38], hr_d[37:17], hr_d[16:0]);
       if (hr_d[73]) seen_last = 1;
@@ -48,6 +50,7 @@ module tb_hbm_token_loop #(parameter integer MUT = 0);
       @(posedge clk); job_v <= 1;
       @(posedge clk); while (!job_rdy) @(posedge clk); job_v <= 0;
       it = 0; ib = 0; steps = 0; seen_last = 0;
+      if (job_id == 1000) stall_host = 100;
       fork : run
         begin   // AR cmdproc / MTP commit
           while (busy || job_v) begin

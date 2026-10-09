@@ -59,7 +59,10 @@ module ot_hbm_token_loop #(
   always @(posedge clk or negedge rst_n)
     if (!rst_n) begin hw <= 0; hr_ <= 0; end
     else begin hw <= hw + ((pv && post_en && !hq_full) ? 1'b1 : 1'b0); hr_ <= hr_ + ((hr_v && hr_rdy) ? 1'b1 : 1'b0); end
-  wire can_post = !post_en || !hq_full;
+  // Reserve the registered push before authorizing another emission.
+  // MUT=2 restores the overflow bug for the directed negative control.
+  wire [HQ_AW+1:0] hq_reserved = {1'b0, (hw - hr_)} + ((pv && post_en) ? 1'b1 : 1'b0);
+  wire can_post = !post_en || ((MUT == 2) ? !hq_full : (hq_reserved < HD));
   // ---------------------------------------------------------------- the stop decision of one emitted token
   function automatic [2:0] verdict(input [TW-1:0] t, input [PW-1:0] p_, input [PW-1:0] ne_);
     begin
