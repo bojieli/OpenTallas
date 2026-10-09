@@ -1,0 +1,95 @@
+{
+  "schema": "opentallas.hbm.cp-mtp-native-south.v1",
+  "default_enabled": false,
+  "adopted": false,
+  "source_contract": "f49a3d30f",
+  "MTP_facade_source": "native CP STOP197 grouped facade must bind source08e4b1bf7; separate from frozen179",
+  "master": "hfd_cmdproc_s_mtp_native_mx1",
+  "replaced_master": "hfd_cmdproc_s",
+  "north_master_unchanged": "hfd_cmdproc_n",
+  "macs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": "control/command/emitted-token traffic",
+  "memory_ports": [],
+  "replicas": 1,
+  "mux_demux_fanout": "direct grouped field wiring; no broadcast or mux added by facade",
+  "boundary_bits_per_cycle": {
+    "f_mtp": 517,
+    "t_mtp": 197,
+    "f_host": 216,
+    "t_host": 5,
+    "f_provider": 179,
+    "f_backend": 73,
+    "t_backend": 271,
+    "t_emit": 38,
+    "t_provider": 43,
+    "f_emit_host": 2,
+    "t_emit_host": 100,
+    "t_abort": 1,
+    "f_am": 18,
+    "t_drained": 1
+  },
+  "routing": {
+    "face": "S",
+    "layer": "M5",
+    "pin_pitch_um": 0.192,
+    "interface_tracks": 714,
+    "interface_span_um": 133.632,
+    "extra_transaction_endpoint_tracks": 947,
+    "total_new_interface_span_um": 318.91200000000003,
+    "face_capacity_tracks": 7289,
+    "channel_capacity_qualified": false,
+    "pin_offsets": "must reserve disjoint exact runs alongside other real ports"
+  },
+  "area": {
+    "slot_um": [
+      1399.656,
+      701.976
+    ],
+    "facade_extra_standard_cells": 0,
+    "facade_extra_state_bits": 0,
+    "checked_join_register_bits_upper": 592,
+    "checked_join_cell_area_bound_um2": 972.6272,
+    "emit_queue_source": "f7498a6b1",
+    "emit_queue_depth": 8,
+    "emit_queue_storage_bits": 584,
+    "emit_queue_other_state_bits_upper": 152,
+    "emit_queue_cell_area_bound_um2": 1014.6176,
+    "checked_join_source": "f7498a6b1",
+    "existing_command_memory": "actual CP NCMD256\u00d764 native SRAM provider",
+    "slot_fit_qualified": false
+  },
+  "latency": {
+    "facade_added_cycles": 0,
+    "native_command_accept_cycles": 0,
+    "tagged_completion_to_native_done_cycles": 1,
+    "serial_token_latency": "one acknowledgement cycle per real native command; command count measured separately",
+    "native_MTP_AM_pin_capture_cycles": 1
+  },
+  "model_ready_for_build": true,
+  "missing_before_adoption": [
+    "actual operation descriptor translator and provider binding",
+    "actual physical context and shared drained-reset wiring"
+  ],
+  "precision": {
+    "MTP_token_bits": 17,
+    "Qwen18_supported": false,
+    "policy": "native DS MTP contract only; no implicit narrowing"
+  },
+  "physical_qualification": false,
+  "headline_rate": null,
+  "native_controller_source": "08e4b1bf7",
+  "native_controller_master": "hfd_mtp_x_cp_stop",
+  "AM_identity": "actual captured job/generation/sequence remains stable through winners and completion; no reset epoch",
+  "AM_order": "up to six ordered VHEAD winners precede final completion; no delayed/fabricated LG stream",
+  "reset": "MX1 drained only; no persistent epoch; original job/generation/sequence stale-completion checks retained",
+  "control_protection": "plain flops; no SECDED, mirrors, authentication or lease machinery",
+  "drain": "guard+queue drained_ready; backend bit71 is backend drained_ready AND no outstanding SM/service result; native done held high, emit/cmd low; job_ready remains low until coordinated reset",
+  "peer_composition_evidence": "bf972bc00: two actual native drained-reset jobs and wrong-job completion negative",
+  "acceptance": {
+    "TT_setup_ps": 0,
+    "FF_hold_ps": 0,
+    "DRC": 0,
+    "SS": "sensitivity; no SS headline claim"
+  }
+}
