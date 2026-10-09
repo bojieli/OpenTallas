@@ -1,0 +1,377 @@
+{
+  "master": "hfd_mtp_x",
+  "source_commit": "1c33f2dc9",
+  "current_restored_branch": "claude/mtp-hbm-20261008",
+  "restored_head": "89577424a",
+  "job": "hfd_mtp_x-1c33f2dc9-tc",
+  "host": "ot-epyc3",
+  "remote_run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hfd_mtp_x-1c33f2dc9-tc",
+  "stage": "calibration global placement; no closure claim",
+  "mapped_stdcell_area_um2": 11611.86192,
+  "mapped_sequential_area_um2": 5128.63164,
+  "global_place_stdcell_area_um2": 10739.4,
+  "global_place_cell_count": 80312,
+  "die_um": [
+    157.421,
+    157.421
+  ],
+  "core_um": [
+    153.36,
+    153.09
+  ],
+  "macro_count": 0,
+  "ports": [
+    {
+      "name": "clk",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "rst_n",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "start",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "cfg_gamma",
+      "direction": "input",
+      "width": 4
+    },
+    {
+      "name": "cfg_force",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "cfg_ngen",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "cfg_plen",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "p_addr",
+      "direction": "output",
+      "width": 16
+    },
+    {
+      "name": "p_tok",
+      "direction": "input",
+      "width": 17
+    },
+    {
+      "name": "f_addr",
+      "direction": "output",
+      "width": 16
+    },
+    {
+      "name": "f_tok",
+      "direction": "input",
+      "width": 17
+    },
+    {
+      "name": "e_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "e_tok",
+      "direction": "output",
+      "width": 17
+    },
+    {
+      "name": "e_idx",
+      "direction": "output",
+      "width": 16
+    },
+    {
+      "name": "done",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "cmd_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "cmd_ready",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "cmd_op",
+      "direction": "output",
+      "width": 4
+    },
+    {
+      "name": "cmd_idx",
+      "direction": "output",
+      "width": 8
+    },
+    {
+      "name": "cmd_ncol",
+      "direction": "output",
+      "width": 4
+    },
+    {
+      "name": "cmd_pos",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "cmd_tok1",
+      "direction": "output",
+      "width": 17
+    },
+    {
+      "name": "cmd_toks",
+      "direction": "output",
+      "width": 136
+    },
+    {
+      "name": "eng_done",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lg_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lg_last",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lg_bias_en",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "lg_mask",
+      "direction": "input",
+      "width": 8
+    },
+    {
+      "name": "lg_vals",
+      "direction": "input",
+      "width": 256
+    },
+    {
+      "name": "lg_bias",
+      "direction": "input",
+      "width": 256
+    },
+    {
+      "name": "am_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "am_idx",
+      "direction": "output",
+      "width": 17
+    },
+    {
+      "name": "am_fault",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "sr_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "sr_ready",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "sr_kind",
+      "direction": "input",
+      "width": 4
+    },
+    {
+      "name": "sr_idx",
+      "direction": "input",
+      "width": 16
+    },
+    {
+      "name": "sr_pos",
+      "direction": "input",
+      "width": 32
+    },
+    {
+      "name": "sa_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "sa_addr",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "sa_tok",
+      "direction": "output",
+      "width": 17
+    },
+    {
+      "name": "sa_pad",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "sa_last",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "sa_err",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "n_committed",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "x_v",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "x_draft",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "x_ids",
+      "direction": "input",
+      "width": 54
+    },
+    {
+      "name": "x_col",
+      "direction": "input",
+      "width": 3
+    },
+    {
+      "name": "t_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "t_ids",
+      "direction": "output",
+      "width": 54
+    },
+    {
+      "name": "t_col",
+      "direction": "output",
+      "width": 3
+    },
+    {
+      "name": "u_clr",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "u_flush",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "u_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "u_ready",
+      "direction": "input",
+      "width": 1
+    },
+    {
+      "name": "u_id",
+      "direction": "output",
+      "width": 9
+    },
+    {
+      "name": "u_mask",
+      "direction": "output",
+      "width": 8
+    },
+    {
+      "name": "u_last",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "step_v",
+      "direction": "output",
+      "width": 1
+    },
+    {
+      "name": "step_a",
+      "direction": "output",
+      "width": 3
+    },
+    {
+      "name": "step_g",
+      "direction": "output",
+      "width": 4
+    },
+    {
+      "name": "steps",
+      "direction": "output",
+      "width": 16
+    },
+    {
+      "name": "cyc_total",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "cyc_engine",
+      "direction": "output",
+      "width": 32
+    },
+    {
+      "name": "cyc_markov",
+      "direction": "output",
+      "width": 32
+    }
+  ],
+  "external_router_selection": true,
+  "router_topk_inside": false,
+  "physical_source_sha256": "e7337ed5df7bfe089c3e097421be0c28f2365e0f814189c20588c0668df76fba",
+  "shape": {
+    "W": 128,
+    "WR": 256,
+    "SR": 10,
+    "NSRC": 4,
+    "RLOG": "0111",
+    "CKMAX": 1048576,
+    "NEXP": 384,
+    "KV": 6,
+    "NDEXP": 384,
+    "KD": 6,
+    "RP": 16,
+    "IW": 9,
+    "FAST": 1,
+    "SPECF": 1,
+    "AMF": 1,
+    "UNF": 1,
+    "XSEL": 1
+  }
+}
