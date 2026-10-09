@@ -2455,27 +2455,38 @@ class Placer:
         (s81-die-timing 2026-10-08) within `nreach` of the next point `nxt` of the chain (r3: hop relays that found no
         spot inside a packed frame landed up to 906 um short of their load, on the far side of their driver)."""
         reach = reach or FWD_REACH
-        al = [0.0]
-        for i in range(1, int(span / 4.32) + 1):
-            al += [-4.32 * i, 4.32 * i]
-        cr = [0.0]
         step = (h if horiz else w) + 2.16
-        for i in range(1, rows + 1):
-            cr += [step * i, -step * i]
-        cands = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+        cands = _near_cands(span, rows, step)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
             x = dn(cx + dx - w / 2, GX)
             y = dn(cy + dy - h / 2, GY)
-            r = (x, y, x + w, y + h)
-            if not _inside(r, allowed) or not self.occ.free(r, 0.432):
-                continue
+            # (s81-die-2) the cheap reach tests first: same first hit, the occupancy test only on reachable spots
             if prev is not None and _mh(prev, (x + w / 2, y + h / 2)) > reach:
                 continue
             if nxt is not None and _mh(nxt, (x + w / 2, y + h / 2)) > nreach:
                 continue
+            r = (x, y, x + w, y + h)
+            if not _inside(r, allowed) or not self.occ.free(r, 0.432):
+                continue
             return x, y
         return None
+
+
+_NEAR_CANDS = {}
+
+
+def _near_cands(span, rows, step):
+    k = (span, rows, step)
+    if k not in _NEAR_CANDS:
+        al = [0.0]
+        for i in range(1, int(span / 4.32) + 1):
+            al += [-4.32 * i, 4.32 * i]
+        cr = [0.0]
+        for i in range(1, rows + 1):
+            cr += [step * i, -step * i]
+        _NEAR_CANDS[k] = sorted(((a, c) for a in al for c in cr), key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
+    return _NEAR_CANDS[k]
 
 
 def _poly_len(P):
