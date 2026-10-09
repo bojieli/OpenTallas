@@ -49,6 +49,24 @@ DIES = {
         name='DeepSeek-V4.1 ROM S81 head die (headp2, 1,792 mapping)', host='ot-epyc1tb',
         note=f'chain {SCR}/s81-dies/headp2/STATUS.log (recipe headp2: mtp-die P2 content 511 pairs + 85 bundles, 221.4 um '
              'frames; MTP sequencer / draft SerDes not yet in the floorplan)'),
+    # die-evidence-2 2026-10-09: the CURRENT die recipes after the 10-09 owner decisions (Qwen ROM die + KV die,
+    # generic HBM die R25G, S81 layer1 with --host / --wfc-hard / --face-pin-inset); runs under {SCR}/die-evidence-2
+    'qwen_r22k': dict(
+        name='Qwen3-8B ROM die r22k (ROM die + KV die pair)', host='ot-epyc3',
+        note=f'chain {SCR}/die-evidence-2/qwen_r22k (EVIDENCE.log + STATUS.log): kv-die die_chain.sh with the GRT-0008 '
+             'fix (GRT SPEF) + ETM-bound libs, own clock plan, IR windows, guided regions'),
+    'qwen_kv': dict(
+        name='Qwen3-8B KV die (172.3 mm2, assumed frames)', host='ot-epyc1tb',
+        note=f'kv-die chain {SCR}/kv-die/die_kv (GRT + STA owned by kv-die; its STA predates the GRT-0008 fix) + '
+             f'die-evidence-2 re-STA on the GRT SPEF {SCR}/die-evidence-2/qwen_kv'),
+    'hbm_r25g': dict(
+        name='HBM generic die R25G (network probe)', host='ot-epyc4',
+        note=f'chain {SCR}/die-evidence-2/hbm_r25g/STATUS.log: R25G = r25s + r25m + r25iqg + fmt3 wide SM grid; the '
+             'generator builds it only as a NETWORK PROBE (retiled SM network unqualified)'),
+    's81_l1w': dict(
+        name='DeepSeek-V4.1 ROM S81 layer1 die (r3 relay rule + WFC hard + face-pin inset; no --host)', host='ot-epyc3',
+        note=f'chain {SCR}/die-evidence-2/s81_l1w (s81_opts_chain.sh: gen -> own clock plan -> kit -> place -> full GRT -> '
+             'STA). --host (dsfd_host) and --nxt-reach both fail generation today (hw_SW / rt_0_8a_y1 relay placement)'),
 }
 STATIC = {
     # evidence that lives only in a log / committed record (no live probe); cited, never recomputed
@@ -65,6 +83,12 @@ STATIC = {
                    source='hbm-die.log 2026-10-07 19:23 PT (EPYC2 hbm-die/ir)'),
     },
 }
+
+
+# die-evidence-2 2026-10-09: what each CURRENT die still needs for complete academic-validation evidence (hand-kept;
+# results/physical/die_evidence_20261009/gaps.json is the source, loaded here so README and report.json carry it)
+_GP = Path(__file__).resolve().parents[1] / 'results/physical/die_evidence_20261009/gaps.json'
+GAPS = json.loads(_GP.read_text()) if _GP.is_file() else {}
 
 
 # ----------------------------------------------------------------------------------------------- remote-side helpers
@@ -400,7 +424,7 @@ def probe_hbm():
 def probe_s81():
     B = f'{SCR}/s81-die'
     out = dict(run=B)
-    r4 = f'{B}/m221pq_r4'
+    r4 = f'{B}/m221pq_r4b' if _exists(f'{B}/m221pq_r4b/grt/summary.txt') else f'{B}/m221pq_r4'   # r4b = the r4 relaunch
     r4s = f'{r4}/grt/summary.txt'
     out['r4'] = dict(status='done' if _exists(r4s) else 'pending', summary=_read(r4s).strip() or None,
                      note='r4 = r3 + --nxt-reach relay placement (fixes the 776-906 um g_rt_*_8a_y1 relays behind TT -244)',
@@ -584,7 +608,108 @@ def probe_qwen():
     return out
 
 
-PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head)
+def probe_qwen_run(R, C, G, sta_dirs, libs_dir, ir_dir, clock_dir, regions_glob):
+    """die-evidence-2: a Qwen die chain laid out as tools/qwen_kv_die/chain/die_chain.sh (case_<die>/, grt_<die>/,
+    sta_<die>_<c>/) with the die-evidence-2 extras (clock/, ir/, regions/gw_*)."""
+    out = dict(run=R, status_log=(_read(f'{R}/STATUS.log').strip().splitlines() + _read(f'{R}/EVIDENCE.log').strip().splitlines())[-8:])
+    v = json.loads(_read(f'{libs_dir}/views.json') or '{}')
+    real = set(v.get('etm_bound', {})) | {'ot_hbm3e_phy', 'ot_qkvd_ucie_x64_phy', 'ot_qfd_serdes_112g_x12_phy'}
+    cls = lambda m: 'real' if m in real else ('relay' if re.search(r'q(fd|kd)_rlyf?_', m) else 'placeholder')
+    inst2m = netlist_masters(f'{C}/die.v') if _exists(f'{C}/die.v') else {}
+    out['views'] = dict(etm_bound=len(v.get('etm_bound', {})), assumed_constants=len(v.get('assumed_constants') or []),
+                        classes='real = ETM-bound masters (routed sign-off ETMs) + hard macros (PHY, UCIe, SerDes); '
+                                'relay = die relay stations; placeholder = ASSUMED constant views')
+    out['area'] = area_split(inst2m, lef_sizes(glob.glob(f'{C}/*.lef')), cls) if inst2m else dict(status='pending')
+    out['grt'] = grt_overflow(f'{G}/grt.log') if _exists(f'{G}/grt.log') else dict(status='pending')
+    out['grt_spef'] = _exists(f'{G}/die_grt.spef')
+    sta = {}
+    for c, chk in (('tt', 'setup'), ('ff', 'hold')):
+        for D in sta_dirs(c):
+            ends, paths, log = f'{D}/grt_{c}_ends.rpt', f'{D}/grt_{c}_paths.rpt', _read(f'{D}/grt_{c}.log')
+            w = re.findall(r'worst slack (?:max|min)\s+(\S+)', log)
+            t = re.findall(r'tns (?:max|min)\s+(\S+)', log)
+            if not (w and _exists(ends)):
+                continue
+            rc = 'GRT-0008' not in log and 'read_spef' in _read(f'{D}/grt_{c}.tcl')
+            res = dict(status='done', check=chk, dir=D, wire_rc=('GRT SPEF' if rc else 'NONE (read_guides: GRT-0008)'),
+                       all=dict(wns_ps=float(w[-1]), tns_ps=float(t[-1]) if t else None))
+            res['split'] = split_end_paths(ends, paths, inst2m, cls) if _exists(paths) else None
+            sta[c] = res
+            break
+        sta.setdefault(c, dict(status='pending', check=chk, dir=sta_dirs(c)[0]))
+    out['sta'] = sta
+    jt = _read(f'{ir_dir}/judged.txt').strip()
+    out['ir'] = (dict(status='done', judged=jt.splitlines()[-8:]) if jt and 'Traceback' not in jt
+                 else dict(status='pending', dir=ir_dir))
+    out['clock_plan'] = clock_summary(f'{clock_dir}/plan.json') if _exists(f'{clock_dir}/plan.json') else dict(status='pending', dir=clock_dir)
+    out['regions'] = [guided_region(d) for d in sorted(glob.glob(regions_glob))] or [dict(region='guided windows', status='pending')]
+    lint = sorted(glob.glob(f'{R}/lint*/*_lint.json'))
+    out['lint'] = [dict(file=f, census=json.loads(_read(f)).get('census')) for f in lint]
+    return out
+
+
+def probe_qwen_r22k():
+    R = f'{SCR}/die-evidence-2/qwen_r22k'
+    return probe_qwen_run(R, f'{R}/case_r22k', f'{R}/grt_r22k', lambda c: [f'{R}/sta_r22k_{c}'], f'{R}/libs',
+                          f'{R}/ir', f'{R}/clock', f'{R}/regions/gw22k_*')
+
+
+def probe_qwen_kv():
+    K, E = f'{SCR}/kv-die/die_kv', f'{SCR}/die-evidence-2/qwen_kv'
+    return probe_qwen_run(K, f'{K}/case_kv', f'{K}/grt_kv', lambda c: [f'{E}/sta_kv_{c}', f'{K}/sta_kv_{c}'], f'{K}/libs',
+                          f'{E}/ir', f'{E}/clock', f'{E}/regions/gwkv_*')
+
+
+def probe_hbm_run(B, W, variant):
+    """die-evidence-2: hbm_r25g_chain.sh layout (case/ = die case + GRT + raw STA, case/sta_pad/ = padded STA)"""
+    man = json.loads(_read(f'{W}/manifest.json') or '{}')
+    real = set(man.get('real_views', {}))
+    cls = lambda m: 'real' if m in real else ('relay' if re.search(r'_rly_?\d', m) else 'placeholder')
+    inst2m = netlist_masters(f'{W}/die.v') if _exists(f'{W}/die.v') else {}
+    out = dict(run=B, variant=variant, network_probe=True, status_log=_read(f'{B}/STATUS.log').strip().splitlines()[-6:])
+    out['views'] = dict(real_views=len(real), classes='real = manifest real_views; relay = hfd_rly_* die relays; '
+                                                      'placeholder = analytic / interim / new R25G masters')
+    out['area'] = area_split(inst2m, lef_sizes(glob.glob(f'{W}/*.lef')), cls) if inst2m else dict(status='pending')
+    out['grt'] = grt_overflow(f'{W}/grt_sta.log') if _exists(f'{W}/grt_sta.log') else dict(status='pending')
+    sta = {}
+    for c, chk in (('tt', 'setup'), ('ff', 'hold'), ('ss', 'setup (sensitivity)')):
+        res = dict(check=chk)
+        raw = re.findall(rf'OT_WNS corner={c} ns=(\S+) tns_ns=(\S+)', _read(f'{W}/grt_sta.log'))
+        if raw and _exists(f'{W}/paths_{c}.txt'):
+            res.update(status='done', all_nopad=dict(wns_ps=round(float(raw[-1][0]) * 1000, 2), tns_ps=round(float(raw[-1][1]) * 1000, 1)),
+                       split_nopad=split_pairs(f'{W}/paths_{c}.txt', inst2m, cls))
+        log = _read(f'{W}/sta_pad/sta.log')
+        for pads, wns, tns in re.findall(rf'OT_WNS corner={c} pads=(\w+) ns=(\S+) tns_ns=(\S+)', log):
+            res[f'all_{pads}'] = dict(wns_ps=round(float(wns) * 1000, 2), tns_ps=round(float(tns) * 1000, 1))
+        if _exists(f'{W}/sta_pad/paths_{c}.txt') and 'all_pad' in res:
+            res.update(status='done', split_padded=split_pairs(f'{W}/sta_pad/paths_{c}.txt', inst2m, cls))
+        cc = re.findall(rf'OT_CLOCK_CONTEXT corner={c} bound=(\d+) missing=(\d+)', log or _read(f'{W}/grt_sta.log'))
+        if cc:
+            res['clock_context'] = CC_NOTE.format(*cc[-1])
+        res.setdefault('status', 'pending')
+        sta[c] = res
+    out['sta'] = sta
+    out['hold_pads'] = json.loads(_read(f'{B}/hold_pads_summary.json') or '{}') or dict(status='pending')
+    out['clock_plan'] = clock_summary(f'{B}/clock/plan.json') if _exists(f'{B}/clock/plan.json') else dict(status='pending')
+    irf = json.loads(_read(f'{B}/ir/feasibility_{variant}.json') or '{}').get('ir_summary', {}).get(variant)
+    out['ir'] = dict(status='done', **irf, budget_mv=35.0) if irf else dict(status='pending', dir=f'{B}/ir')
+    out['regions'] = [guided_region(d) for d in sorted(glob.glob(f'{W}/regiong_*'))] or [dict(region='4 guided windows', status='pending')]
+    lint = sorted(glob.glob(f'{B}/lint/*_lint.json'))
+    out['lint'] = [dict(file=f, census=json.loads(_read(f)).get('census')) for f in lint]
+    return out
+
+
+def probe_hbm_r25g():
+    B = f'{SCR}/die-evidence-2/hbm_r25g'
+    return probe_hbm_run(B, f'{B}/case', 'r25g')
+
+
+def probe_s81_l1w():
+    return probe_s81_run(f'{SCR}/die-evidence-2/s81_l1w')
+
+
+PROBES = dict(qwen=probe_qwen, hbm=probe_hbm, s81=probe_s81, s81scan=probe_s81scan, s81head=probe_s81head,
+              qwen_r22k=probe_qwen_r22k, qwen_kv=probe_qwen_kv, hbm_r25g=probe_hbm_r25g, s81_l1w=probe_s81_l1w)
 
 
 # ----------------------------------------------------------------------------------------------- local driver
@@ -725,6 +850,11 @@ def readme(rep):
             L.append(f"- r4 (relay fix): {d['r4']['status']}.")
         if d.get('region_drc_classes'):
             L.append(f"- Region DRC classification: {d['region_drc_classes'].get('summary')}")
+        for ln in d.get('lint') or []:
+            L.append(f"- die_top_lint census: {json.dumps(ln.get('census'))}")
+        if d.get('gaps'):
+            L += ['', '**Missing for complete die evidence:**', '']
+            L += [f"{i}. {g}" for i, g in enumerate(d['gaps'], 1)]
         L.append('')
     L += ['## Refresh', '', '`python3 tools/die_evidence_report.py` (ssh to ot-epyc1tb and ot-epyc3; ~5-10 min, the S81',
           'endpoint reports are ~350 MB per corner). Re-run in the 15-min closure drive whenever a die chain lands.', '']
@@ -750,6 +880,8 @@ def main(argv=None):
     for d in DIES:
         if d in res:
             r = res[d]
+            if GAPS.get(d):
+                r['gaps'] = GAPS[d]
             for k, v in STATIC.get(d, {}).items():
                 if not r.get(k) or (isinstance(r.get(k), dict) and r[k].get('status') == 'pending'):
                     r[k] = v

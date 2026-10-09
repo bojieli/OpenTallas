@@ -2939,6 +2939,16 @@ def write_lefs(m, k, path):
         if k == 1 and name in REAL:
             continue
         wmap = {p: pw.get((name, p), 0) for p in mst.order}
+        if m.get('network_probe') and k == 1:
+            # die-evidence-2 2026-10-09: a network probe (R25G) carries exact-rectangle masters whose ports the probe
+            # does not wire (the native indexer's st / fs / co / kin / qb / to): write those pins UNCONNECTED at full
+            # width so the physical case exists.  They are build-every-path GAPS, listed in m['unwired_rect_ports']
+            # and in die_top_lint's unbound_real_pins; never a die net.
+            for p_ in mst.order:
+                sp_ = mst.ports.get(p_)
+                if wmap[p_] == 0 and sp_ and sp_[0] == 'rects':
+                    wmap[p_] = len(sp_[1])
+                    m.setdefault('unwired_rect_ports', []).append(f'{name}/{p_}')
         t, n = S.lef_text(mst, k, wmap)
         txt.append(t.replace('tools/dsrom_s81_fulldie.py', 'tools/hbm_accel_die_fp.py'))
         npins += n
@@ -4313,7 +4323,9 @@ def main(argv=None):
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build(variant_arg(a.ds_var))
+        v_ = variant_arg(a.ds_var)
+        # die-evidence-2 (2026-10-09): a retiled-SM variant (R25G) builds only as a labelled network probe
+        m = build(v_, network_probe=bool(v_ and v_.get('sm_physical_grid')))
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')
