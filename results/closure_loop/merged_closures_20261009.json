@@ -1531,8 +1531,8 @@
   "generated": "2026-10-09 PT",
   "scope": "coordinator 15:20 named closures",
   "counts": {
-   "closed": 9,
-   "merged": 9,
+   "closed": 10,
+   "merged": 10,
    "record_only": 6
   },
   "jobs": {
@@ -1544,7 +1544,8 @@
    "hgi_adp_mover_b-58682fb1f-tc-cl": "same source; record 9a237f4cf",
    "hbm_router_kneg_orph2_a75cb556b-ttref-hm15-f5-lvt-hm0": "ADOPTED (coordinator 15:2x): live physical/hbm_accel_die_views/router/ view swapped to this closure (lef/ss/ff libs, corner_sta, calib, check, route_args; view.json status closed + closure block); same LEF SIZE 1399.66 x 326.28 and 2118/2118 pins MATCH; old hfd_router_tt.lib left (not part of view.json)",
    "hbm_sfu_lane_ring3_aa5dd28d5": "source on main; record cae03da69 (view su/lane/ot_su12_sfu_ring3)",
-   "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl": "wfc_vmx RQFREE 2 RTL + prd bench cases from c39e235bb only; record 82204e4f3"
+   "mtp-wfc_vmx-prd-c39e235bb-tc-o292-r2-cl": "wfc_vmx RQFREE 2 RTL + prd bench cases from c39e235bb only; record 82204e4f3",
+   "qfd_coll_xfifo_b-66fd85cda-tc": "merged: acb615a21 (sys-takeover native collective binding, NCOLL=0 default unchanged) + 66fd85cda (kit io_plain) + record b2ca0a6ef (record spec fixed: was cloned from qfd_hub_emb and pointed at its evidence dir). Local: coll_native_bench pos PASS (reduce_320w 1,121 cyc), gate mutant DETECTED. No exported view (collect copies sign-off only)."
   }
  }
 }
