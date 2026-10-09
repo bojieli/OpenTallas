@@ -86,6 +86,7 @@ def collect(directory):
             "envelope": [min(medians), max(medians)] if complete else None,
             "deployment_qualified": False,
             "limitations": ["FP32-upcast released BF16 target, not the r25 INT8 target",
+                            "released drafter weights are unchanged but computation is FP32, not BF16",
                             "drafter reference comparison covers the first step of each prompt only",
                             "quality and RTL accept/rollback gates remain separate"]}
 
