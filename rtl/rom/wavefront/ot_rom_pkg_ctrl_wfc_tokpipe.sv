@@ -154,6 +154,7 @@
 `define OT_WFC_SLEW_COPY 0
 `endif
 module ot_rom_pkg_ctrl_wfc_tokpipe #(
+    parameter integer ENGRAM_REWIND = 0, // opt-in actual SOURCE lead admission/held rewind
     parameter integer PROMPT_EXTRA = 0, // opt-in HARD token extra2 responseedges
     parameter integer DECODED_READ = `OT_WFC_DECODED_READ,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -252,6 +253,11 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
 ) (
     input  wire               clk,
     input  wire               rst_n,
+    input wire eng_window_ready,eng_rb_ready,
+    output wire eng_issue_v,eng_rb_v,
+    output wire [USER_W-1:0] eng_issue_user,eng_rb_user,
+    output wire [NW-1:0] eng_issue_pos,eng_issue_tok,
+    output wire [2:0] eng_rb_n,
     // run configuration (SOURCE)
     input  wire [((MAXU > 255) ? $clog2(MAXU+1) : 8)-1:0] cfg_users,
     input  wire [NW-1:0]      cfg_prompt_len,
@@ -1098,10 +1104,13 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
         assign txq_slice_out = {FLIT{1'b0}};
     end endgenerate
 
+    assign eng_issue_v=ENGRAM_REWIND && WF && e_go;
+    assign eng_issue_user=e_user;assign eng_issue_pos=e_pos;assign eng_issue_tok=e_tok;
     generate if (WF) begin : g_wf
-        ot_rom_pkg_ctrl_wfc_tokpipe_src #(.PROMPT_EXTRA(PROMPT_EXTRA), .DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .RD_PIPE(RD_PIPE), .SLEW_COPY(SLEW_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
+        ot_rom_pkg_ctrl_wfc_tokpipe_src #(.ENGRAM_REWIND(ENGRAM_REWIND), .PROMPT_EXTRA(PROMPT_EXTRA), .DECODED_READ(DECODED_READ), .REC_SRAM(REC_SRAM), .STEPS_PIPE(CFG_Q), .PRECOMP(PRECOMP), .FANOUT_COPY(FANOUT_COPY), .RD_PIPE(RD_PIPE), .SLEW_COPY(SLEW_COPY), .NW(NW), .USER_W(USER_W), .UCW(UCW), .MAXU(MAXU), .WIN(WIN)) eng (
             .clk(clk), .rst_n(rst_q), .cfg_users(cfg_users_i), .cfg_prompt_len(cfg_plen_i),
-            .cfg_gen_len(cfg_glen_i), .core_free(src_free),
+            .cfg_gen_len(cfg_glen_i), .core_free(src_free && (!ENGRAM_REWIND || eng_window_ready)),
+            .eng_rb_ready(eng_rb_ready),.eng_rb_v(eng_rb_v),.eng_rb_user(eng_rb_user),.eng_rb_n(eng_rb_n),
             .res_v(res_v), .res_u(res_u), .res_p(res_p), .res_i(res_i), .rfull(e_rfull),
             .pr_q(pr_q), .pr_qk(pr_qk),
             .go(e_go), .tok(e_tok), .pos(e_pos), .user(e_user),
@@ -1109,6 +1118,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe #(
             .tok_v(e_tok_v), .tok_u(e_tok_u), .tok_p(e_tok_p), .tok_i(e_tok_i), .done(e_done),
             .fault(e_fault), .wfi(e_wfi), .rej(e_rej), .sq(e_sq));
     end else begin : g_nowf
+        assign eng_rb_v=0;assign eng_rb_user=0;assign eng_rb_n=0;
         assign e_go = 1'b0; assign e_rfull = 1'b0; assign e_pr_re = 1'b0; assign e_tok_v = 1'b0;
         assign e_done = 1'b0; assign e_fault = 1'b0; assign e_wfi = 1'b0; assign e_rej = 1'b0; assign e_sq = 1'b0;
         assign e_tok = 0; assign e_pos = 0; assign e_pr_pos = 0; assign e_tok_p = 0; assign e_tok_i = 0;
@@ -1194,6 +1204,7 @@ endmodule
 // RESULT messages queue (4 deep; in_ready drops at 3 queued).
 // ---------------------------------------------------------------------------
 module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
+    parameter integer ENGRAM_REWIND = 0, // opt-in actual SOURCE lead admission/held rewind
     parameter integer PROMPT_EXTRA = 0, // token HARD successor:2 extra responseedges, off by default
     parameter integer DECODED_READ = 0,
     parameter integer REC_SRAM = 0,
@@ -1208,6 +1219,10 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
     input  wire              clk, rst_n,
     input  wire [UCW-1:0]    cfg_users,
     input  wire [NW-1:0]     cfg_prompt_len, cfg_gen_len,
+    input wire eng_rb_ready,
+    output wire eng_rb_v,
+    output wire [USER_W-1:0] eng_rb_user,
+    output wire [2:0] eng_rb_n,
     input  wire              core_free,
     input  wire              res_v,
     input  wire [USER_W-1:0] res_u,
@@ -1510,7 +1525,11 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
     assign pr_pos = ex_rd ? r_wnp : {NW{1'b0}};
     assign pr_blk = ex_rd ? r_wblk : 4'd0;
     // RESULT (EX): the reference's verify / reject / squash on the user's record
-    wire          x_res = ex && kind == K_RES;
+    wire eng_rewind_wait=ENGRAM_REWIND && ex && kind==K_RES && x_rew && !eng_rb_ready;
+    wire          x_res = ex && kind == K_RES && !eng_rewind_wait;
+    assign eng_rb_v=ENGRAM_REWIND && ex && kind==K_RES && x_rew;
+    assign eng_rb_user=ou;
+    assign eng_rb_n=r_wnf-3'd1;
     wire          x_cont = p_cont;
     wire          x_gepl = p_gepl;
     wire          x_sq = r_wsq != 0;
@@ -1602,7 +1621,7 @@ module ot_rom_pkg_ctrl_wfc_tokpipe_src #(
 `endif
                 S_RDM: st <= S_RD2;
                 S_RD2: st <= S_EX;
-                default: st <= S_IDLE;
+                default: st <= eng_rewind_wait ? S_EX : S_IDLE;
             endcase
             rq_n <= rq_n + (res_v ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n != 0) ? 3'd1 : 3'd0);
             pq_n <= pq_n + (tr == 2'd3 ? 3'd1 : 3'd0) - ((st == S_IDLE && rq_n == 0 && pq_n != 0) ? 3'd1 : 3'd0);
