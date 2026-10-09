@@ -1,40 +1,40 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_312bf36c8_s4/cl/eco-r2/pass2/orfs",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s0_e8b5132fb_r18b/cl/eco/pass1/orfs",
  "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_svc_SE_s0\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.0000 [get_ports {ck[0]}]\nset_clock_uncertainty -setup 123.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\ncreat",
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
-  "worst_slack_ps": -100.32,
-  "tns_ps": -231.8,
-  "worst_register_d_slack_ps": -100.320084,
-  "worst_reg_to_reg_slack_ps": 98.04,
-  "worst_input_to_reg_slack_ps": 239.18,
-  "worst_output_port_slack_ps": -1010.709534,
-  "violating_d_pins": 8,
+  "worst_slack_ps": -262.46,
+  "tns_ps": -992051.5,
+  "worst_register_d_slack_ps": -262.460724,
+  "worst_reg_to_reg_slack_ps": -31.37,
+  "worst_input_to_reg_slack_ps": 206.81,
+  "worst_output_port_slack_ps": -957.473755,
+  "violating_d_pins": 12639,
   "errors": [],
-  "odb_sha256": "e735b2c368a15e500d4fc4622086f63bbc32a9ea25ed00020bf75dd3eccdbb0c",
-  "spef_sha256": "a14f892af329139d3ff84fc4f2d45ba0447edbee75f34e6a77c8bb05e6ffa314",
-  "sdc_sha256": "cb63765eba631c4d211a41f59d213edb5ba9a015ca9dbeed02b1fe50d303d2af"
+  "odb_sha256": "1669d5f92d744cc85503d5d7eceb3170259763360376c2a80ecbce6dc0897bca",
+  "spef_sha256": "858fb245e83fe4a5c2ebb622ef1777f3145e5d8f974e8f0300ff02674fc8a3b2",
+  "sdc_sha256": "ec5b33433cf34cbb141fb782a11e188c411a31b0415e140b0b4ff84737a2457f"
  },
  "hold_ff": {
   "corner": "ff",
   "check": "hold",
-  "worst_slack_ps": 20.51,
+  "worst_slack_ps": 23.35,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 25.476122,
-  "worst_reg_to_reg_slack_ps": 38.06,
-  "worst_input_to_reg_slack_ps": 28.78,
-  "worst_output_port_slack_ps": 20.505709,
+  "worst_register_d_slack_ps": 23.930607,
+  "worst_reg_to_reg_slack_ps": 50.66,
+  "worst_input_to_reg_slack_ps": 48.44,
+  "worst_output_port_slack_ps": 23.35046,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "e735b2c368a15e500d4fc4622086f63bbc32a9ea25ed00020bf75dd3eccdbb0c",
-  "spef_sha256": "a14f892af329139d3ff84fc4f2d45ba0447edbee75f34e6a77c8bb05e6ffa314",
-  "sdc_sha256": "cb63765eba631c4d211a41f59d213edb5ba9a015ca9dbeed02b1fe50d303d2af"
+  "odb_sha256": "1669d5f92d744cc85503d5d7eceb3170259763360376c2a80ecbce6dc0897bca",
+  "spef_sha256": "858fb245e83fe4a5c2ebb622ef1777f3145e5d8f974e8f0300ff02674fc8a3b2",
+  "sdc_sha256": "ec5b33433cf34cbb141fb782a11e188c411a31b0415e140b0b4ff84737a2457f"
  },
  "post_sdc": {
-  "physical/hbm_accel_die_views/common/budget_signoff.sdc": "901c26762e13d93a94f854a3824ba9824b24fb032828fbb8650e13799aa7d71a",
-  "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "667d28f4ddd2a21c702aa6ae6ffcacc66069864c65a7567d592af352ffb2fea2",
+  "physical/hbm_accel_die_views/common/budget_signoff.sdc": "0addcff7918da13f44a1281efbbfa7a042e1efccd75b47d5a23b1927f0c2ab0d",
+  "physical/hbm_accel_die_views/common/budget_ff_guarded.sdc": "989df5382c4fcd6e71a12cb2133115120cf14d6586fb12e0ee1ac7bd5d61147f",
   "physical/common_flow/io_ref_routed.sdc": "9b46ed2620aef301bfcd9334ea815e7531dba36d7db1c6ac959e8edf9273f30b"
  },
  "libraries": {
@@ -60,13 +60,13 @@
   "corner": "tt",
   "check": "setup",
   "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries)",
-  "worst_slack_ps": 162.67,
+  "worst_slack_ps": 25.56,
   "tns_ps": 0.0,
-  "worst_reg_to_reg_slack_ps": "276.033875",
-  "worst_input_to_reg_slack_ps": "297.440186",
-  "worst_output_port_slack_ps": "-831.683716",
+  "worst_reg_to_reg_slack_ps": "198.237869",
+  "worst_input_to_reg_slack_ps": "292.962433",
+  "worst_output_port_slack_ps": "-789.150757",
   "violating_d_pins": "0",
   "errors": [],
-  "tcl_sha256": "f689765b8eea0ff545e83db2da9f2596a768664bd99e3ea477283b6d9ad901fb"
+  "tcl_sha256": "a0f5a01ba3e5e9bed0e8baa6ee54ab26fe9acad24752413def8451bf13d34d22"
  }
 }
