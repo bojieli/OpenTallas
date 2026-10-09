@@ -5,8 +5,8 @@ program.json) as an HGI-1 record stream for one die, scheduled with the command 
 Lowering (spec section 3.8 native engine ops; one record per program op):
   mv            SM.MATVEC fmt 0 / 1 / 2 (BF16 / FP8 / FP4 block dot); A x (VM), B weights (HBM), O (VM)
   hc_mixes      HC.HC_MIX                 hc_pre_norm / final_norm   FUSED.HC_PRE_NORM     hc_post  FUSED.HC_POST
-  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK_LOCAL
-  route / cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
+  index_q / index_scores / topk_local     IDX.INDEX_Q / INDEX_SCORES / TOPK
+  route  IDX.TOPK;  cand_local / cand_apply / cand_mask   IDX.SELECT (param = sub-function)
   attend        ATT.QK (the tile job) + SU.VOP (the fused softmax / PV-normalise / inverse-RoPE chain)
   q_norm_kv_row / q_rope / router_act / moe_sum / compressor / engram_mix   SU.VOP (one record a fused chain)
   swiglu        SFU.GLU                   argmax_local  ARGMAX.LOCAL
@@ -46,10 +46,10 @@ FMT = {"fp8": (1, "FP8E4M3", 1.0), "fp4": (2, "FP4E2M1", 0.5), "bf16": (0, "BF16
 LOCAL_UNIT = {"hc_mixes": ("HC", "HC_MIX"), "hc_pre_norm": ("FUSED", "HC_PRE_NORM"),
               "final_norm": ("FUSED", "HC_PRE_NORM"), "hc_post": ("FUSED", "HC_POST"),
               "index_q": ("IDX", "INDEX_Q"), "index_scores": ("IDX", "INDEX_SCORES"),
-              "topk_local": ("IDX", "TOPK_LOCAL"), "route": ("IDX", "SELECT"), "cand_local": ("IDX", "SELECT"),
+              "topk_local": ("IDX", "TOPK"), "route": ("IDX", "TOPK"), "cand_local": ("IDX", "SELECT"),
               "cand_apply": ("IDX", "SELECT"), "cand_mask": ("IDX", "SELECT"), "swiglu": ("SFU", "GLU"),
               "argmax_local": ("ARGMAX", "LOCAL"), "engram_fetch": ("DMA", "LOAD")}
-SUB = {"route": 0, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
+SUB = {"route": 6, "cand_local": 1, "cand_apply": 2, "cand_mask": 3}
 TP = 96
 C3B = [False]
 
@@ -107,9 +107,11 @@ def lower(prog, die=0):
                 bdesc = H(fmt, op["k"], rows)
                 slot = isinstance(op["w"], list) and len(op["w"]) == 2 and isinstance(op["w"][0], int)
                 if slot and op["w"][0] < 6 and C3B[0]:      # routed expert: indexed descriptor on the router id word
-                    bdesc.dyn_sel, bdesc.lstride, bdesc.dyn_mul = 31, vm("route_ids", 8) + op["w"][0], 1 << 20
-                r = Rec("SM", "MATVEC", param=fp, desc=dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304),
-                                                            B=bdesc, O=V(op["out"], op["n"])),
+                    bdesc.indexed, bdesc.dyn_mul = 1, 1 << 20
+                dd = dict(A=V(xin, op["k"] if xin != "ea" else 7 * 2304), B=bdesc, O=V(op["out"], op["n"]))
+                if bdesc.indexed:
+                    dd["I"] = MDesc(space="VM", fmt="U32", base=vm("route_ids", 8) + op["w"][0], n=1)
+                r = Rec("SM", "MATVEC", param=fp, desc=dd,
                         tag=op["tag"], family="mv." + op["fn"])
                 r.src = src
                 b.add(r, [xin] + (["expert_w"] if slot else []), [op["out"]])
@@ -277,7 +279,7 @@ def main():
         hol_and_drain_vs_dataflow_pct=round(100 * (t2 - t0) / t2, 2),
         s2_vs_published_walk_pct=round(100 * (t2 / (walk_us * 1200) - 1), 2))
     print(json.dumps(res["overheads"], indent=1))
-    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 v0.9 (024fa2af1)", position=1048575,
+    rec = dict(schema="opentallas.hgi_sim.ds_timing.v0", spec="HGI-1 1.0 (approved encoding)", position=1048575,
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                grade="unit costs = the DS composition's (measured / measured_tu_budget / modelled rows as there); "
                      "CP entries estimates (calibration.json)", result=res, calibration_cp=T.CAL["cp"])
