@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.uarch.hbm_ta15_clock_reset_data.v1",
+  "default_enable": false,
+  "MACs_per_cycle": 0,
+  "compute_intensity": 0,
+  "communication_intensity": 0,
+  "memory_port_bytes_per_cycle": 0,
+  "replica_count": 1,
+  "replica_mux_demux_cost": 0,
+  "boundary_bits_per_cycle": {
+    "clocks": 5,
+    "intent": 17,
+    "raw_lock": 1,
+    "cold_POR": 1,
+    "sequence_ready": 1,
+    "reset_outputs": 17,
+    "ready_AON": 1
+  },
+  "forward_FF_bits": 51,
+  "return_FF_bits": 34,
+  "registered_ready_FF_bits": 1,
+  "boundary_FF_bits": 86,
+  "sequencer_FF_bits": 38,
+  "composed_FF_bits": 124,
+  "boundary_FF_area_floor_um2": 25.077600000000004,
+  "composed_FF_area_floor_um2": 36.1584,
+  "forward": "Two positive-edge DATA sampling FFs then negative-edge reset output; boot intent never drives an asynchronous reset pin",
+  "return_path": "Each actual reset output crosses through two AON DATA FFs; registered ready requires all returned levels and held AON sequence_ready",
+  "period_ns": {
+    "stream": 0.8333333333333334,
+    "serial": 1.1111111111111112,
+    "hbm": 1.024,
+    "link": 0.8333333333333334
+  },
+  "forward_latency_domain_cycles": {
+    "minimum": 1.5,
+    "maximum": 2.5
+  },
+  "forward_maximum_ns": {
+    "stream": 2.0833333333333335,
+    "serial": 2.7777777777777777,
+    "hbm": 2.56,
+    "link": 2.0833333333333335
+  },
+  "return_ready_maximum_AON_cycles": 3,
+  "source_sequence_ready_to_ready_AON_cycles": 1,
+  "cold_assertion": "Asynchronous cold POR assertion only; source assertion network delay remains unmeasured",
+  "steady_state_added_data_cycles": 0,
+  "latency_contribution": "Boot/runtime intent response up to 2.5 destination cycles; qualified ready return up to 3 AON cycles. AON period, analog acquisition and metastability-tail probability are unresolved terms, not zero.",
+  "routing_tracks_needed": {
+    "clock": 5,
+    "intent": 17,
+    "cold_reset": 1,
+    "lock": 1,
+    "local_reset": 17,
+    "return_status": 17,
+    "source_ready": 1
+  },
+  "channel_capacity": null,
+  "floorplan_slot_fit": false,
+  "analog_PLL_area_um2": null,
+  "analog_PLL_power_W": null,
+  "analog_PLL_startup_ns": null,
+  "AON_period_ns": null,
+  "platform_contract_required": [
+    "Cold POR release satisfies recovery/removal at first positive AND negative PLL edges and first AON edge; only startup contract, no runtime clock gating",
+    "First forward and return DATA FF metastability tau/T0 and required system MTBF at actual destination clocks, data toggle rate, PVT, resolution path and load",
+    "AON intents are held levels; brief pulses are unsupported",
+    "PLL lock loss either asserts cold POR through qualified emergency source or leaves all clocks valid for maximum 2.5-cycle sampled assertion plus implementation delay",
+    "Actual source slew, load, insertion, jitter, phase, sink recovery/removal and reset-tree obligations"
+  ],
+  "STA_policy": "No false paths, CDC timing waivers, invented phase or first-stage deterministic setup/hold claim. Retain first CDC failures and separately characterize asynchronous capture; downstream paths require ordinary SS/FF checks.",
+  "physical_closed": false,
+  "CDC_characterized": false,
+  "PLL_qualified": false
+}

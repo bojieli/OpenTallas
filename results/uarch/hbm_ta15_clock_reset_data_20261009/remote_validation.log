@@ -1,0 +1,15 @@
+Fri Oct  9 09:17:23 UTC 2026
+MemTotal:       131810932 kB
+MemFree:         3804112 kB
+MemAvailable:   47819776 kB
+Buffers:          790228 kB
+Cached:         65188020 kB
+Filesystem     1G-blocks  Used Available Use% Mounted on
+/dev/sda1           993G  579G      414G  59% /
+....                                                                     [100%]
+4 passed in 0.13s
+c4c6fcd1c7b9d02d6c1be6e5a62dd91edde4f92581314b2ff1dbef5b153f20c4  rtl/hbm_accel/control/ot_hbm_clock_reset_data_boundary.sv
+339f860cbe517c382c2c651efb0b04678fc3b206349436c778086b8c76ccd0c1  rtl/hbm_accel/control/ot_hbm_pll_bb.sv
+51d6239c922fd06bd1726fa3eea239aebe4cea1fda523c3dd54de674ef1d2654  tests/rtl/tb_hbm_clock_reset_data_boundary.sv
+b88886a73e1aee40aea8774b4feb55643af4ba6f9261c4f1f62138eb746dccfb  tests/test_hbm_clock_reset_data_boundary.py
+32f570eda1ffaeec253af76d609813a3f9a296512d2a06aedbca9604e307c841  tools/hbm_ta15_clock_reset_data_model.py

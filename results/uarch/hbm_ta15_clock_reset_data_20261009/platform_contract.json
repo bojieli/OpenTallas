@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.hbm_ta15.data_boundary_platform_contract.v1",
+  "candidate": "2626dd7b3",
+  "default_enable": false,
+  "selected_for_physical_adoption": false,
+  "actual_stream_clock_producer": {
+    "source": "ot_hbm_clock_reset_data_pll.pll.clk_stream",
+    "macro": "ot_hbm_pll_bb",
+    "destination_clock": "ot_hbm_clock_reset_data_pll.boundary.enabled.endpoint[13,15].endpoint_clk",
+    "forward_data_sampling": "intent_meta and intent_sync on actual stream positive edges",
+    "reset_release": "local_reset_n on actual stream negative edge",
+    "reset_outputs": "reset_n[13] collective stream; reset_n[15] command stream",
+    "period_ns": 0.8333333333333334,
+    "clock_gates_or_dividers": 0,
+    "numeric_CTS_arrival_claim": null,
+    "missing_parent_binding": "Actual backend clock/reset sink pins, physical clock/reset trees and source characterization"
+  },
+  "endpoint_mapping": {
+    "0..3": "four PHY resets on clk_hbm 1.024ns",
+    "4..12": "nine SerDes resets on clk_link 0.8333333333333334ns",
+    "13": "collective reset on clk_stream",
+    "14": "collective reset on clk_serial 1.1111111111111112ns",
+    "15": "command reset on clk_stream",
+    "16": "command reset on clk_serial"
+  },
+  "asynchronous_input_policy": {
+    "cold_POR": "Only asynchronous reset source in digital body; platform must qualify recovery/removal at first positive and negative PLL edges and first AON edge after cold release",
+    "intents_and_PLL_lock": "Held DATA levels into first destination sampling FF; never asynchronous reset inputs",
+    "first_capture": "Metastability characterization required; no deterministic all-phase setup/hold claim, false timing paths or waivers",
+    "MTBF_inputs_missing": "Technology tau/T0, system reliability target, actual PVT/toggle rate/load and resolution paths for both forward and return crossings",
+    "PLL_loss": "Qualified cold-POR emergency assertion OR all actual destination clocks remain valid until sampled assertion within 2.5 cycles plus implementation delay; minimum bench exercises the latter contract",
+    "ready": "Two AON sampling stages per actual endpoint reset output then registered reduction with held sequence_ready; up to three AON edges after endpoint transition"
+  },
+  "minimum_remote_gate": {
+    "host": "ot-agidock128",
+    "guard": "/srv/opentallas-scratch/admit.sh 1 --",
+    "observed_MemAvailable_kB": 47819776,
+    "observed_free_disk_GB": 414,
+    "tests_passed": 4,
+    "controls": "phase-varied held intent positive, raw-intent bypass rejection, direct-ready bypass rejection, production analog-blackbox wrapper elaboration",
+    "inventory": "86 FF bits; 69 positive-edge and 17 negative-edge; every asynchronous reset pin connected only to cold_por_n",
+    "failed_pending_admission": "EPYC2 guard was withdrawn before any benchmark started; own waiting PIDs 191630,191627,191625 terminated before AGIdock launch"
+  },
+  "physical_route_started": false,
+  "review_queue": "/home/ubuntu/claude-takeover-20261007/review_queue/hbm_wiring.md",
+  "earlier_failed_evidence": "Unchanged; old collar/ready-AON recovery failures and excluded clock-stop experiment remain history"
+}
