@@ -16,16 +16,13 @@
       ],
       "model": "tools/uarch_model.py:qwen_su_kv624_model / tools/uarch_model_qwen_kv_packet.py",
       "resource": "nearestsamefamilyDRT12023900KiB=11.467GiB rounded12; no guessed32",
-      "status": "intake_ready"
+      "status": "watched_registered",
+      "dedupe": "0live+2watch<=3/block/source"
     },
     "qfd_sysctl_stn": {
-      "action": "Child01e30e8c3 stalealiasresolution: adoptregistrylink existingd476 I5winner, notduplicate routes",
-      "source": "d4760be45",
-      "winner_record": "71e85321e",
-      "tt": 17.23,
-      "ff": 13.72,
-      "drc": 0,
-      "status": "existing_winner_registry_binding"
+      "action": "Existingclosedcomponent qfd_sysctl_stn_pb2 d476-b TT17.23/FF13.72/DRC0 record71e85321e; qfd_sysctl_sram cancelled-only. SelectedKVgeneratorb4617e33b binds qkd_host/PLL butnotthismaster. Do notfakealiasclosure: Claudeactualselectedmasterintegration required. Twoexistingcomponenttrialsalreadyran; no duplicateroute.",
+      "status": "selected_master_blocked",
+      "child_inventory": "01e30e8c3"
     },
     "qfd_production_stage_traversal": {
       "action": "Child01e30e8c3 SOURCE_BLOCKED; real38stage942f source/gatesexistsbutQ3fault/A6successorabsent. Claudeownsapprovedrecut; do notrouteolderfailedcone",
