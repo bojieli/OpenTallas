@@ -1,0 +1,30 @@
+{
+  "source_history": {
+    "initial": "5f1ebf5fb",
+    "collision_detector": "69b0964be",
+    "alignment": "5940517b2",
+    "SATFINITE": "cfdc798fc",
+    "registered_illegal_report": "b827340df"
+  },
+  "finite_vectors": 148,
+  "lockstep_outputs": 5409,
+  "format_mutant_failure_output": 910,
+  "one_power_mutant_failure_output": 7,
+  "actual_ue8m0_latency_edges": 23,
+  "original_e4m3_native_edges": 8,
+  "alignment_edges": 15,
+  "not_claimed": [
+    "route_closure",
+    "arbitrary_E4M3_block_size",
+    "full_die_integration"
+  ],
+  "files": {
+    "initial_coverage_failure.log": "3aeeb255642898437a55d23047c0afc706bf6cf22a193dbfe98899bef891e033",
+    "original_e4m3_saturation_failure.log": "28a3e58fad0cd90825e2c248a6d20156072f5b6077417ed2e7f5e34ea5ebd9fd",
+    "format_mutant.log": "095cd2504092635676fb5e48fd0bc55b314a9671ae39790d7d448a22cccff348",
+    "one_power_scale_mutant.log": "ca20643c9b9153325a5bade1ce3ee7ccbd293e80301f0e73a468571ad99696a6",
+    "aligned_lockstep.log": "604eb8e15e9942dc5dc22948b38824aa48f644b8b4e46b45bacf34f5dcc7a53d",
+    "mixedmode_collision_failure.log": "40c15551ed34a9fbe9c1441439586990b77a132e8d13cfd651d17d40e67f9f5a",
+    "satfinite_vectors.log": "3007ac825af0150e4d62ffecd5250338bb951d5039f9d1099f026fd8fd087a51"
+  }
+}
