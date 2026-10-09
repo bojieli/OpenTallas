@@ -2185,9 +2185,17 @@ def hbm_wrapper_ledgers(masters, root=None, generate=None):
         W.V._MODEL.clear()
         generate = W.gen
     rows = []
+    try:   # hgi-takeover: a spec with 'hgi_unit' applies only when that unit is in hgi_dispatch; 'replaced_when_hgi' the reverse
+        hgi_units = set((H.variant_arg(VARIANT) or {}).get('hgi_dispatch') or [])
+    except Exception:  # noqa: BLE001
+        hgi_units = set()
     for path in sorted((root / 'physical/hbm_accel_die_views').glob('*/rtl/spec*.json')):
         spec = json.loads(path.read_text())
         if spec.get('master') not in masters:
+            continue
+        if spec.get('hgi_unit') and spec['hgi_unit'] not in hgi_units:
+            continue
+        if spec.get('replaced_when_hgi') and spec['replaced_when_hgi'] in hgi_units:
             continue
         row = dict(master=spec['master'], spec=str(path.relative_to(root)),
                    spec_sha256=hashlib.sha256(path.read_bytes()).hexdigest())

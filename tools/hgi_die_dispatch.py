@@ -25,6 +25,10 @@ RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 # {cfg_commit, cfg_v, cfg_addr[5:0], cfg_data[31:0]} (ot_hgi_cfg_stn / ot_hgi_cfg_rx)
 CFG_UNITS = {'coll'}
 CFG_BITS = 40
+# units that are VM packet clients of ot_hgi_vm_unit (hfd_vm): {v, req 337} up, {v, rsp 273} down; one outstanding
+VM_CLIENTS = ['quant']
+VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
+HGI_VM_SLOT = (1399.656, 950.4)        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
 
 def fields(unit):
@@ -81,6 +85,8 @@ def split_extra_ports(units):
         out[f'f_hgi_{u}'] = (band, 3, face, layer, round(frac + 0.04, 3), 2)
         if u in CFG_UNITS:
             out[f't_hgi_cfg_{u}'] = (band, CFG_BITS, face, layer, round(frac + 0.08, 3), 2)
+    if any(u in VM_CLIENTS for u in units):
+        out['f_hgi_vmstat'] = ('hfd_cmdproc_n', VMSTAT_BITS, 'N', 'M5', 0.90, 2)
     return out
 
 
@@ -90,6 +96,12 @@ def variant(base, units):
     ex = {k: dict(x) for k, x in (base.get('split_extra_ports') or {}).items()}
     ex.setdefault('hfd_cmdproc', {}).update(split_extra_ports(units))
     v['split_extra_ports'] = ex
+    if any(u in VM_CLIENTS for u in units):
+        # the HGI-1 VM (ot_hgi_vm_unit: 1 MiB, 64 ECC macros 0.79 mm2) gets its own low spine slot under the loader;
+        # the legacy hfd_vm tiles keep the x multicast root and the SU / router feeds
+        v['spine_slots_low'] = dict(base.get('spine_slots_low') or {}, hgi_vm=HGI_VM_SLOT)
+        v['spine_slot_masters'] = dict(base.get('spine_slot_masters') or {}, hgi_vm='hfd_hgi_vm')
+        v['spine_slot_domains'] = dict(base.get('spine_slot_domains') or {}, hgi_vm='stream_1p2')
     return v
 
 
@@ -112,6 +124,17 @@ def install(m, buses, paths, units):
             buses.append((name, 'hub', CFG_BITS, [(cp, f"t_hgi_cfg_{r['unit']}"), (peer, 'f_hgi_cfg')]))
             paths[name] = [name]
             names.add(name)
+    vm_cl = [u for u in VM_CLIENTS if u in units]
+    if vm_cl and 'hgi_vm' in hub:
+        vm = hub['hgi_vm'].name
+        for u in vm_cl:
+            peer = hub[UNITS[u][1]].name
+            for name, bits, eps in ((f'hgi_vmq_{u}', VMQ_BITS, [(peer, 't_hgi_vmq'), (vm, f'f_hgi_{u}')]),
+                                    (f'hgi_vmr_{u}', VMR_BITS, [(vm, f't_hgi_{u}'), (peer, 'f_hgi_vmr')])):
+                buses.append((name, 'hub', bits, eps)); paths[name] = [name]
+        buses.append(('hgi_vmstat', 'hub', VMSTAT_BITS, [(vm, 't_hgi_vmstat'), (cp, 'f_hgi_vmstat')]))
+        paths['hgi_vmstat'] = ['hgi_vmstat']
+        rec['vm_clients'] = vm_cl
     m['hgi_dispatch'] = rec
     m['notes'].append('HGI normative dispatch buses (hgi_dispatch): declared; per-unit wrappers bind them before adoption.')
     return rec
