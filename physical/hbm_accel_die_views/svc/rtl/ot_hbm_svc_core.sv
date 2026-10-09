@@ -468,9 +468,13 @@ module ot_hbm_svc_core #(
       assign idx_j[ip*12+:12]=sectors[ip*269+1+:12];
       assign idx_data[ip*256+:256]=sectors[ip*269+13+:256];
     end
+    if (IKS != 0) begin : gi
     ot_hbm_index_lines #(.ENABLE(IKS)) idx_lines(.clk(ck),.rst_n(rn),.start(c_kvs && c_kind==2'd2),
       .blocks(chd[69:61]),.sector_v(idx_v),.sector_j(idx_j),.sector_data(idx_data),.credit(ik_credit),
       .lines(ik_lines),.pop(idx_pop),.done(ik_done),.fault(ik_fault),.retained(idx_busy));
+    end else begin : gni
+      assign ik_lines=0;assign ik_done=0;assign ik_fault=0;assign idx_busy=0;assign idx_pop=0;
+    end
     always @(posedge ck or negedge rn)
       if (!rn) begin act <= 1'b0; dn <= 1'b0; idx <= 1'b0; blocks <= 0; end
       else begin
