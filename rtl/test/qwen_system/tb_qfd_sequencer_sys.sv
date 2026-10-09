@@ -226,10 +226,21 @@ wire [32-1:0] po_su_i_imm1;
 wire [32-1:0] r_po_su_i_imm1;
 wire [32-1:0] po_su_i_imm2;
 wire [32-1:0] r_po_su_i_imm2;
-ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.DIE_RANK(DIE_RANK),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)) dut (.clk(clk),.rst_n(rst_n),.d_start(d_start),.d_token(d_token),.d_pos(d_pos),.d_gen(d_gen),.po_me_clk(po_me_clk),.kv_write_drained(kv_write_drained),.kv_ok(kv_ok),.me_mem_ok(me_mem_ok),.vm_rq(vm_rq),.c_ready(c_ready),.r_valid(r_valid),.r_data(r_data),.r_last(r_last),.r_rank(r_rank),.r_err(r_err),.pi_me_ready(pi_me_ready),.pi_me_idle(pi_me_idle),.pi_me_wrom_re(pi_me_wrom_re),.pi_me_wrom_addr(pi_me_wrom_addr),.pi_me_am_idx(pi_me_am_idx),.pi_me_am_val(pi_me_am_val),.pi_me_am_any(pi_me_am_any),.pi_me_progress(pi_me_progress),.pi_me_fault(pi_me_fault),.pi_su_rt_active(pi_su_rt_active),.pi_su_rt_inflight(pi_su_rt_inflight),.pi_su_ready(pi_su_ready),.pi_su_idle(pi_su_idle),.pi_su_wrom_re(pi_su_wrom_re),.pi_su_wrom_addr(pi_su_wrom_addr),.pi_su_kv_we(pi_su_kv_we),.pi_su_progress(pi_su_progress),.pi_su_progress_rows(pi_su_progress_rows),.pi_su_fault(pi_su_fault),.s_done(s_done),.seq_ntok(seq_ntok),.seq_nval(seq_nval),.s_fault(s_fault),.core_fault(core_fault),.coll_busy(coll_busy),.kv_write_flush(kv_write_flush),.kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),.kvd_wcs(kvd_wcs),.kvd_split(kvd_split),.kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),.kvd_kindk(kvd_kindk),.kvd_pos(kvd_pos),.me_clk_en(me_clk_en),.vm_re(vm_re),.vm_raddr(vm_raddr),.vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),.c_valid(c_valid),.c_data(c_data),.c_last(c_last),.c_mode(c_mode),.c_tag(c_tag),.rom_fault(rom_fault),.su_asrc(su_asrc),.su_tok(su_tok),.po_me_go(po_me_go),.po_me_i_nout(po_me_i_nout),.po_me_i_tiles(po_me_i_tiles),.po_me_i_k(po_me_i_k),.po_me_i_wsrc(po_me_i_wsrc),.po_me_i_wbase(po_me_i_wbase),.po_me_i_ts(po_me_i_ts),.po_me_i_ks(po_me_i_ks),.po_me_i_js(po_me_i_js),.po_me_i_xbase(po_me_i_xbase),.po_me_i_xks(po_me_i_xks),.po_me_i_xjs(po_me_i_xjs),.po_me_i_xcs(po_me_i_xcs),.po_me_i_jsh(po_me_i_jsh),.po_me_i_split(po_me_i_split),.po_me_i_wcs(po_me_i_wcs),.po_me_i_round(po_me_i_round),.po_me_i_obase(po_me_i_obase),.po_me_i_ots(po_me_i_ots),.po_me_i_ojs(po_me_i_ojs),.po_me_i_mmode(po_me_i_mmode),.po_me_i_oen(po_me_i_oen),.po_me_i_amax(po_me_i_amax),.po_me_i_rmax(po_me_i_rmax),.po_me_i_mbase(po_me_i_mbase),.po_su_go(po_su_go),.po_su_i_nout(po_su_i_nout),.po_su_i_nin(po_su_i_nin),.po_su_i_asrc(po_su_i_asrc),.po_su_i_abase(po_su_i_abase),.po_su_i_aso(po_su_i_aso),.po_su_i_asi(po_su_i_asi),.po_su_i_bsrc(po_su_i_bsrc),.po_su_i_bbase(po_su_i_bbase),.po_su_i_bso(po_su_i_bso),.po_su_i_bsi(po_su_i_bsi),.po_su_i_csrc(po_su_i_csrc),.po_su_i_cbase(po_su_i_cbase),.po_su_i_cso(po_su_i_cso),.po_su_i_csi(po_su_i_csi),.po_su_i_ma(po_su_i_ma),.po_su_i_mb(po_su_i_mb),.po_su_i_ad(po_su_i_ad),.po_su_i_sfu(po_su_i_sfu),.po_su_i_mc(po_su_i_mc),.po_su_i_md(po_su_i_md),.po_su_i_dst(po_su_i_dst),.po_su_i_dbase(po_su_i_dbase),.po_su_i_dso(po_su_i_dso),.po_su_i_dsi(po_su_i_dsi),.po_su_i_red(po_su_i_red),.po_su_i_redsq(po_su_i_redsq),.po_su_i_rbase(po_su_i_rbase),.po_su_i_rso(po_su_i_rso),.po_su_i_imm1(po_su_i_imm1),.po_su_i_imm2(po_su_i_imm2),.d_done(d_done),.d_drained(d_drained),.d_fault(d_fault),.d_done_gen(d_done_gen),.d_next_token(d_next_token),.d_next_val(d_next_val),.d_cycles(d_cycles),.d_fault_code(d_fault_code),.stage(stage),.st_layer(st_layer),.st_next_layer(st_next_layer),.st_crom(st_crom));
+ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.DIE_RANK(DIE_RANK),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)
+`ifdef SYS_ICUT
+`ifndef SYS_ICUT0
+ ,.ICUT(1)
+`endif
+`endif
+ ) dut (.clk(clk),.rst_n(rst_n),.d_start(d_start),.d_token(d_token),.d_pos(d_pos),.d_gen(d_gen),.po_me_clk(po_me_clk),.kv_write_drained(kv_write_drained),.kv_ok(kv_ok),.me_mem_ok(me_mem_ok),.vm_rq(vm_rq),.c_ready(c_ready),.r_valid(r_valid),.r_data(r_data),.r_last(r_last),.r_rank(r_rank),.r_err(r_err),.pi_me_ready(pi_me_ready),.pi_me_idle(pi_me_idle),.pi_me_wrom_re(pi_me_wrom_re),.pi_me_wrom_addr(pi_me_wrom_addr),.pi_me_am_idx(pi_me_am_idx),.pi_me_am_val(pi_me_am_val),.pi_me_am_any(pi_me_am_any),.pi_me_progress(pi_me_progress),.pi_me_fault(pi_me_fault),.pi_su_rt_active(pi_su_rt_active),.pi_su_rt_inflight(pi_su_rt_inflight),.pi_su_ready(pi_su_ready),.pi_su_idle(pi_su_idle),.pi_su_wrom_re(pi_su_wrom_re),.pi_su_wrom_addr(pi_su_wrom_addr),.pi_su_kv_we(pi_su_kv_we),.pi_su_progress(pi_su_progress),.pi_su_progress_rows(pi_su_progress_rows),.pi_su_fault(pi_su_fault),.s_done(s_done),.seq_ntok(seq_ntok),.seq_nval(seq_nval),.s_fault(s_fault),.core_fault(core_fault),.coll_busy(coll_busy),.kv_write_flush(kv_write_flush),.kvd_v(kvd_v),.kvd_wbase(kvd_wbase),.kvd_ts(kvd_ts),.kvd_ks(kvd_ks),.kvd_js(kvd_js),.kvd_wcs(kvd_wcs),.kvd_split(kvd_split),.kvd_jsh(kvd_jsh),.kvd_tiles(kvd_tiles),.kvd_k(kvd_k),.kvd_nout(kvd_nout),.kvd_kindk(kvd_kindk),.kvd_pos(kvd_pos),.me_clk_en(me_clk_en),.vm_re(vm_re),.vm_raddr(vm_raddr),.vm_we(vm_we),.vm_waddr(vm_waddr),.vm_wdata(vm_wdata),.c_valid(c_valid),.c_data(c_data),.c_last(c_last),.c_mode(c_mode),.c_tag(c_tag),.rom_fault(rom_fault),.su_asrc(su_asrc),.su_tok(su_tok),.po_me_go(po_me_go),.po_me_i_nout(po_me_i_nout),.po_me_i_tiles(po_me_i_tiles),.po_me_i_k(po_me_i_k),.po_me_i_wsrc(po_me_i_wsrc),.po_me_i_wbase(po_me_i_wbase),.po_me_i_ts(po_me_i_ts),.po_me_i_ks(po_me_i_ks),.po_me_i_js(po_me_i_js),.po_me_i_xbase(po_me_i_xbase),.po_me_i_xks(po_me_i_xks),.po_me_i_xjs(po_me_i_xjs),.po_me_i_xcs(po_me_i_xcs),.po_me_i_jsh(po_me_i_jsh),.po_me_i_split(po_me_i_split),.po_me_i_wcs(po_me_i_wcs),.po_me_i_round(po_me_i_round),.po_me_i_obase(po_me_i_obase),.po_me_i_ots(po_me_i_ots),.po_me_i_ojs(po_me_i_ojs),.po_me_i_mmode(po_me_i_mmode),.po_me_i_oen(po_me_i_oen),.po_me_i_amax(po_me_i_amax),.po_me_i_rmax(po_me_i_rmax),.po_me_i_mbase(po_me_i_mbase),.po_su_go(po_su_go),.po_su_i_nout(po_su_i_nout),.po_su_i_nin(po_su_i_nin),.po_su_i_asrc(po_su_i_asrc),.po_su_i_abase(po_su_i_abase),.po_su_i_aso(po_su_i_aso),.po_su_i_asi(po_su_i_asi),.po_su_i_bsrc(po_su_i_bsrc),.po_su_i_bbase(po_su_i_bbase),.po_su_i_bso(po_su_i_bso),.po_su_i_bsi(po_su_i_bsi),.po_su_i_csrc(po_su_i_csrc),.po_su_i_cbase(po_su_i_cbase),.po_su_i_cso(po_su_i_cso),.po_su_i_csi(po_su_i_csi),.po_su_i_ma(po_su_i_ma),.po_su_i_mb(po_su_i_mb),.po_su_i_ad(po_su_i_ad),.po_su_i_sfu(po_su_i_sfu),.po_su_i_mc(po_su_i_mc),.po_su_i_md(po_su_i_md),.po_su_i_dst(po_su_i_dst),.po_su_i_dbase(po_su_i_dbase),.po_su_i_dso(po_su_i_dso),.po_su_i_dsi(po_su_i_dsi),.po_su_i_red(po_su_i_red),.po_su_i_redsq(po_su_i_redsq),.po_su_i_rbase(po_su_i_rbase),.po_su_i_rso(po_su_i_rso),.po_su_i_imm1(po_su_i_imm1),.po_su_i_imm2(po_su_i_imm2),.d_done(d_done),.d_drained(d_drained),.d_fault(d_fault),.d_done_gen(d_done_gen),.d_next_token(d_next_token),.d_next_val(d_next_val),.d_cycles(d_cycles),.d_fault_code(d_fault_code),.stage(stage),.st_layer(st_layer),.st_next_layer(st_next_layer),.st_crom(st_crom));
 ot_qfd_sp_constants_sequencer #(.FQ_HEAD(1),.MSTN(1)) reference_master (.clk(clk),.rst_n(rst_n),.po_me_clk(r_po_me_clk),.h_start(h_start),.tp_token(tp_token),.tp_pos(tp_pos),.kv_write_drained(kv_write_drained),.kv_ok(kv_ok),.me_mem_ok(me_mem_ok),.vm_rq(vm_rq),.c_ready(c_ready),.r_valid(r_valid),.r_data(r_data),.r_last(r_last),.r_rank(r_rank),.r_err(r_err),.pw_v(pw_v),.pw_addr(pw_addr),.pw_data(pw_data),.dw_v(dw_v),.dw_addr(dw_addr),.dw_data(dw_data),.pi_me_ready(pi_me_ready),.pi_me_idle(pi_me_idle),.pi_me_wrom_re(pi_me_wrom_re),.pi_me_wrom_addr(pi_me_wrom_addr),.pi_me_am_idx(pi_me_am_idx),.pi_me_am_val(pi_me_am_val),.pi_me_am_any(pi_me_am_any),.pi_me_progress(pi_me_progress),.pi_me_fault(pi_me_fault),.pi_su_rt_active(pi_su_rt_active),.pi_su_rt_inflight(pi_su_rt_inflight),.pi_su_ready(pi_su_ready),.pi_su_idle(pi_su_idle),.pi_su_wrom_re(pi_su_wrom_re),.pi_su_wrom_addr(pi_su_wrom_addr),.pi_su_kv_we(pi_su_kv_we),.pi_su_progress(pi_su_progress),.pi_su_progress_rows(pi_su_progress_rows),.pi_su_fault(pi_su_fault),.s_done(r_s_done),.seq_ntok(r_seq_ntok),.seq_nval(r_seq_nval),.s_fault(r_s_fault),.core_fault(r_core_fault),.coll_busy(r_coll_busy),.kv_write_flush(r_kv_write_flush),.kvd_v(r_kvd_v),.kvd_wbase(r_kvd_wbase),.kvd_ts(r_kvd_ts),.kvd_ks(r_kvd_ks),.kvd_js(r_kvd_js),.kvd_wcs(r_kvd_wcs),.kvd_split(r_kvd_split),.kvd_jsh(r_kvd_jsh),.kvd_tiles(r_kvd_tiles),.kvd_k(r_kvd_k),.kvd_nout(r_kvd_nout),.kvd_kindk(r_kvd_kindk),.kvd_pos(r_kvd_pos),.me_clk_en(r_me_clk_en),.vm_re(r_vm_re),.vm_raddr(r_vm_raddr),.vm_we(r_vm_we),.vm_waddr(r_vm_waddr),.vm_wdata(r_vm_wdata),.c_valid(r_c_valid),.c_data(r_c_data),.c_last(r_c_last),.c_mode(r_c_mode),.c_tag(r_c_tag),.rom_fault(r_rom_fault),.su_asrc(r_su_asrc),.su_tok(r_su_tok),.po_me_go(r_po_me_go),.po_me_i_nout(r_po_me_i_nout),.po_me_i_tiles(r_po_me_i_tiles),.po_me_i_k(r_po_me_i_k),.po_me_i_wsrc(r_po_me_i_wsrc),.po_me_i_wbase(r_po_me_i_wbase),.po_me_i_ts(r_po_me_i_ts),.po_me_i_ks(r_po_me_i_ks),.po_me_i_js(r_po_me_i_js),.po_me_i_xbase(r_po_me_i_xbase),.po_me_i_xks(r_po_me_i_xks),.po_me_i_xjs(r_po_me_i_xjs),.po_me_i_xcs(r_po_me_i_xcs),.po_me_i_jsh(r_po_me_i_jsh),.po_me_i_split(r_po_me_i_split),.po_me_i_wcs(r_po_me_i_wcs),.po_me_i_round(r_po_me_i_round),.po_me_i_obase(r_po_me_i_obase),.po_me_i_ots(r_po_me_i_ots),.po_me_i_ojs(r_po_me_i_ojs),.po_me_i_mmode(r_po_me_i_mmode),.po_me_i_oen(r_po_me_i_oen),.po_me_i_amax(r_po_me_i_amax),.po_me_i_rmax(r_po_me_i_rmax),.po_me_i_mbase(r_po_me_i_mbase),.po_su_go(r_po_su_go),.po_su_i_nout(r_po_su_i_nout),.po_su_i_nin(r_po_su_i_nin),.po_su_i_asrc(r_po_su_i_asrc),.po_su_i_abase(r_po_su_i_abase),.po_su_i_aso(r_po_su_i_aso),.po_su_i_asi(r_po_su_i_asi),.po_su_i_bsrc(r_po_su_i_bsrc),.po_su_i_bbase(r_po_su_i_bbase),.po_su_i_bso(r_po_su_i_bso),.po_su_i_bsi(r_po_su_i_bsi),.po_su_i_csrc(r_po_su_i_csrc),.po_su_i_cbase(r_po_su_i_cbase),.po_su_i_cso(r_po_su_i_cso),.po_su_i_csi(r_po_su_i_csi),.po_su_i_ma(r_po_su_i_ma),.po_su_i_mb(r_po_su_i_mb),.po_su_i_ad(r_po_su_i_ad),.po_su_i_sfu(r_po_su_i_sfu),.po_su_i_mc(r_po_su_i_mc),.po_su_i_md(r_po_su_i_md),.po_su_i_dst(r_po_su_i_dst),.po_su_i_dbase(r_po_su_i_dbase),.po_su_i_dso(r_po_su_i_dso),.po_su_i_dsi(r_po_su_i_dsi),.po_su_i_red(r_po_su_i_red),.po_su_i_redsq(r_po_su_i_redsq),.po_su_i_rbase(r_po_su_i_rbase),.po_su_i_rso(r_po_su_i_rso),.po_su_i_imm1(r_po_su_i_imm1),.po_su_i_imm2(r_po_su_i_imm2));
 integer errors=0, cycles=0, starts=0, me_ops=0,su_ops=0,coll_ops=0,i,bank,j,rx_left=0,rx_rank=0,case_no=0;
-reg check_commands=1,previous_done=0; reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;
+reg check_commands=1,previous_done=0;
+`ifdef SYS_ICUT
+// struct-close ICUT: the DUT's issue may be later than the reference's by an edge, so op / packet streams are compared IN
+// ORDER (queues) instead of in lockstep; every DUT go is also checked legal by the core's own assertion.
+reg [4095:0] q_me[$]; reg [4095:0] q_su[$]; reg [1023:0] q_c[$]; integer n_done=0,n_rdone=0; reg r_prev_done=0;
+`endif reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;
 always @(posedge clk) begin expected_code<=(stage==0?0:stage==37?36:stage-1)*512; expected_scale<=(stage==0?0:stage==37?36:stage-1)*1056; end
 task bad(input [255:0] what); begin errors=errors+1; if(errors<20)$display("SYS_BAD cycle=%0d stage=%0d what=%0s",cycles,stage,what); end endtask
 always @(negedge clk) if(rst_n && check_commands) begin
@@ -244,6 +255,7 @@ always @(negedge clk) if(rst_n && check_commands) begin
   for(i=0;i<8;i=i+1)reference_master.desc_mem[i]=expected_prog==0?goldDE[i]:expected_prog==1?goldDL[i]:goldDH[i];
   starts=starts+1;
  end
+`ifndef SYS_ICUT
  if(po_me_go)begin me_ops=me_ops+1;
  if(po_me_go !== (r_po_me_go))bad("po_me_go");
  if(po_me_i_nout !== (r_po_me_i_nout))bad("po_me_i_nout");
@@ -271,6 +283,14 @@ always @(negedge clk) if(rst_n && check_commands) begin
  if(po_me_i_rmax !== (r_po_me_i_rmax))bad("po_me_i_rmax");
  if(po_me_i_mbase !== (r_po_me_i_mbase))bad("po_me_i_mbase");
  end
+`else
+ if(r_po_me_go) q_me.push_back({(r_po_me_i_nout),(r_po_me_i_tiles),(r_po_me_i_k),(r_po_me_i_wsrc),AW'(r_po_me_i_wbase+(r_po_me_i_wsrc?24'd0:expected_code)),(r_po_me_i_ts),(r_po_me_i_ks),(r_po_me_i_js),(r_po_me_i_xbase),(r_po_me_i_xks),(r_po_me_i_xjs),(r_po_me_i_xcs),(r_po_me_i_jsh),(r_po_me_i_split),AW'(r_po_me_i_wcs+(r_po_me_i_wsrc?24'd0:expected_scale)),(r_po_me_i_round),(r_po_me_i_obase),(r_po_me_i_ots),(r_po_me_i_ojs),(r_po_me_i_mmode),(r_po_me_i_oen),(r_po_me_i_amax),(r_po_me_i_rmax),(r_po_me_i_mbase)});
+ if(po_me_go)begin me_ops=me_ops+1;
+  if(q_me.size()==0) bad("me op without a reference op");
+  else begin if({po_me_i_nout,po_me_i_tiles,po_me_i_k,po_me_i_wsrc,po_me_i_wbase,po_me_i_ts,po_me_i_ks,po_me_i_js,po_me_i_xbase,po_me_i_xks,po_me_i_xjs,po_me_i_xcs,po_me_i_jsh,po_me_i_split,po_me_i_wcs,po_me_i_round,po_me_i_obase,po_me_i_ots,po_me_i_ojs,po_me_i_mmode,po_me_i_oen,po_me_i_amax,po_me_i_rmax,po_me_i_mbase} !== q_me[0]) begin bad("me op fields (ordered)"); if(errors<4) $display("ME_DIFF dut=%h\nME_DIFF ref=%h", {po_me_i_nout,po_me_i_tiles,po_me_i_k,po_me_i_wsrc,po_me_i_wbase,po_me_i_ts,po_me_i_ks,po_me_i_js,po_me_i_xbase,po_me_i_xks,po_me_i_xjs,po_me_i_xcs,po_me_i_jsh,po_me_i_split,po_me_i_wcs,po_me_i_round,po_me_i_obase,po_me_i_ots,po_me_i_ojs,po_me_i_mmode,po_me_i_oen,po_me_i_amax,po_me_i_rmax,po_me_i_mbase}, q_me[0]); end void'(q_me.pop_front()); end
+ end
+`endif
+`ifndef SYS_ICUT
  if(po_su_go)begin su_ops=su_ops+1;
  if(po_su_go !== r_po_su_go)bad("po_su_go");
  if(po_su_i_nout !== r_po_su_i_nout)bad("po_su_i_nout");
@@ -304,12 +324,36 @@ always @(negedge clk) if(rst_n && check_commands) begin
  if(po_su_i_imm1 !== r_po_su_i_imm1)bad("po_su_i_imm1");
  if(po_su_i_imm2 !== r_po_su_i_imm2)bad("po_su_i_imm2");
  end
+`else
+ if(r_po_su_go) q_su.push_back({(r_po_su_i_nout),(r_po_su_i_nin),(r_po_su_i_asrc),(r_po_su_i_abase),(r_po_su_i_aso),(r_po_su_i_asi),(r_po_su_i_bsrc),(r_po_su_i_bbase),(r_po_su_i_bso),(r_po_su_i_bsi),(r_po_su_i_csrc),(r_po_su_i_cbase),(r_po_su_i_cso),(r_po_su_i_csi),(r_po_su_i_ma),(r_po_su_i_mb),(r_po_su_i_ad),(r_po_su_i_sfu),(r_po_su_i_mc),(r_po_su_i_md),(r_po_su_i_dst),(r_po_su_i_dbase),(r_po_su_i_dso),(r_po_su_i_dsi),(r_po_su_i_red),(r_po_su_i_redsq),(r_po_su_i_rbase),(r_po_su_i_rso),(r_po_su_i_imm1),(r_po_su_i_imm2)});
+ if(po_su_go)begin su_ops=su_ops+1;
+  if(q_su.size()==0) bad("su op without a reference op");
+  else begin if({po_su_i_nout,po_su_i_nin,po_su_i_asrc,po_su_i_abase,po_su_i_aso,po_su_i_asi,po_su_i_bsrc,po_su_i_bbase,po_su_i_bso,po_su_i_bsi,po_su_i_csrc,po_su_i_cbase,po_su_i_cso,po_su_i_csi,po_su_i_ma,po_su_i_mb,po_su_i_ad,po_su_i_sfu,po_su_i_mc,po_su_i_md,po_su_i_dst,po_su_i_dbase,po_su_i_dso,po_su_i_dsi,po_su_i_red,po_su_i_redsq,po_su_i_rbase,po_su_i_rso,po_su_i_imm1,po_su_i_imm2} !== q_su[0]) bad("su op fields (ordered)"); void'(q_su.pop_front()); end
+ end
+`endif
+`ifndef SYS_ICUT
  if(s_done!==r_s_done || s_fault!==r_s_fault || core_fault!==r_core_fault)bad("sequencer status");
+`else
+ if(s_done && !previous_done) n_done=n_done+1; if(r_s_done && !r_prev_done) n_rdone=n_rdone+1; r_prev_done=r_s_done;
+ if((s_fault!==r_s_fault && s_done) || core_fault) bad("sequencer status (ICUT: fault at done)");
+`endif
  if(s_done && !previous_done)$display("SYS_STAGE_DONE stage=%0d cycle=%0d",stage,cycles); previous_done=s_done;
+`ifdef SYS_ICUT
+ if(r_c_valid) q_c.push_back({r_c_data,r_c_last,r_c_mode,reference_master.b_c_tag[2:0]});
+`endif
  if(c_valid)begin
   if(c_mode && (c_data[49:32] !== (18'(DIE_RANK*37984+17))))bad("head rank identity");
+`ifndef SYS_ICUT
   if(c_tag!=={d_gen,stage,d_pos[12:0],d_token[7:0],reference_master.b_c_tag[2:0]})bad("fullshape tag");
+`else
+  if(q_c.size()!=0 && c_tag!=={d_gen,stage,d_pos[12:0],d_token[7:0],q_c[0][2:0]})bad("fullshape tag");
+`endif
+`ifndef SYS_ICUT
   if(c_data!==r_c_data || c_last!==r_c_last || c_mode!==r_c_mode)bad("collective packet");
+`else
+  if(q_c.size()==0) bad("collective packet without a reference packet");
+  else begin if({c_data,c_last,c_mode}!==(q_c[0] >> 3)) bad("collective packet (ordered)"); void'(q_c.pop_front()); end
+`endif
  end
  r_valid=0;r_last=0;
  if(rx_left>0)begin
@@ -342,6 +386,10 @@ initial begin
  wait(dut.prog_re);force dut.prog_addr=12'd64;repeat(2)@(negedge clk);release dut.prog_addr;
  wait(d_done);@(negedge clk);if(!d_fault || d_fault_code!=2 || d_drained)bad("program bounds fault");
  $display("SYS_BOUNDS_FAULT pass=%0d code=%0d",d_fault && d_fault_code==2 && !d_drained,d_fault_code);
+`ifdef SYS_ICUT
+ if(q_me.size()!=0 || q_su.size()!=0) bad("reference ops never issued by the DUT");
+ $display("SYS_ICUT ordered compare: done %0d / ref %0d, left me %0d su %0d coll %0d",n_done,n_rdone,q_me.size(),q_su.size(),q_c.size());
+`endif
  $display("SEQUENCER_SYS_RESULT pass=%0d cases=2 stages=76 me=%0d su=%0d coll=%0d bad=%0d",errors==0,me_ops,su_ops,coll_ops,errors);
  if(errors)$fatal(1,"control/command mismatch");$finish;
 end endmodule
