@@ -1,0 +1,19 @@
+{
+  "in_to_out_bits": 0,
+  "in_to_out_max": -1,
+  "in_to_out_example": [],
+  "in_to_reg_max": 41,
+  "reg_to_out_max": 68,
+  "reg_to_out_example": "rx_ecc_drop[1]",
+  "cells": 488176,
+  "ctrl_ports": [
+    "clk",
+    "rst_n"
+  ],
+  "top": "ot_hcoll_port",
+  "levels": 16,
+  "strict": true,
+  "verdict": "REFUSE",
+  "message": "rtl_boundary ot_hcoll_port (registered_io): input->register 41 gate levels > 16; register->output 68 gate levels > 16 (e.g. rx_ecc_drop[1])",
+  "qualification": "source-identical complete primitive hierarchy; keep_hierarchy removed only for inspection"
+}

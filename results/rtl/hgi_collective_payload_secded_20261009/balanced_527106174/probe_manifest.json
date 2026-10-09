@@ -1,0 +1,28 @@
+{
+  "source_commit": "527106174c687d4ac617d9b0e0be3a671cf7882b",
+  "recipe": {
+    "top": "ot_hcoll_port",
+    "sources": [
+      "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+      "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv",
+      "rtl/hbm_accel/tu/ot_hcoll_port.sv",
+      "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+    ],
+    "params": {
+      "PAYLOAD_ECC": "1"
+    },
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16,
+  "archive_sha256": "c589710e170b01d51d51cfc11eced09355a3d167a2106f83f1b5c5862b23783e",
+  "helper_sha256": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c",
+  "source_sha256": {
+    "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv": "956adfa4600ed76b965cc380156427bb596ed0c57b9a79736aac530e3e7c19f3",
+    "rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv": "63b2fb72e690e0eac3af840719ae0b1ebfc59b830687724753707c579b96d037",
+    "rtl/hbm_accel/tu/ot_hcoll_port.sv": "7006b38ad0d93db1a1c97d8e4426ca2c24f6aa32f5058f0358be5588a0567426",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571"
+  },
+  "time": 1791554473.5190313
+}

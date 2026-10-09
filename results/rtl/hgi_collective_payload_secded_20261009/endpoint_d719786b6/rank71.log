@@ -1,0 +1,6 @@
+TUCFG seed=1 rank=71 NC=8 NOG=12 PF=64 INJ=2 DEL=4 NPT=8 RXAW=8 BUDGET=377.60 CRED=113.80 T_CORE=0.833333 T_PHY=0.833333 TOT=384
+TUDONE seed=1 rank=71 pf=64 lat_ns=993.294 lat_cyc=1192.0 tx_first_ns=48.372 tx_last_ns=508.740 rx_first_ns=426.174 rx_last_ns=905.724 res_first_ns=488.724 res_last_ns=508.740 deliver_tail_ns=87.570 ndep=60 narr=436 nres=4 got=384 own_exact=4 mismatches=0 faults=0 credit_stall=0
+- rtl/hbm_accel/generic_sram_ecc_20261009/tb_endpoint.sv:293: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 2.905 s; speed 485.722 ns/s
+- Verilator: cpu 2.889 s on 1 threads; allocated 28 MB

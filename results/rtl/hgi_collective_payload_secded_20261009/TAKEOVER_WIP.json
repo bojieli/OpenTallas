@@ -1,0 +1,26 @@
+{
+  "owner": "Claude takeover, root instructed stop new design/build/routes",
+  "worktree": "/home/ubuntu/wt/codex-hgi-collective-sram",
+  "branch": "codex/hgi-collective-sram-20261009",
+  "latest_rtl": "f6d7d9558",
+  "latest_bench": "041b11f2a",
+  "prepared_route_source": "041b11f2a",
+  "physical_jobs_submitted": 0,
+  "adopted": false,
+  "partial_fix_status": "WIP; expanded source-identical boundary improved41/68\u219214/0 PASS on527106174, but final canonical-fault gate and balanced fullendpoint repeat pending",
+  "live": {
+    "host": "ot-epyc3",
+    "pid": 1176568,
+    "child_time_pid": 1176577,
+    "path": "/srv/opentallas-scratch2/scratch/codex/hgi-sram-balanced-b2",
+    "stage": "canonical W6 codec/FIFO exact+mutants"
+  },
+  "next_steps": [
+    "collect unchanged live1176568 without restart",
+    "refresh source-bound boundarycache key for041b11f2a before intaking preparedpd45/pd50 specs",
+    "run full production96rank cyclelockstep on balanced successor (old d719 evidence only qualifies pre-balance RTL)",
+    "mapped area/actual18macro capture placement and two protected port routes",
+    "carry CE/RXdrop count and registered1edge fault-onlycredit latency into die wiring/model; no newcontrolflopECC"
+  ],
+  "known_failure": "oldcodec expandedhier input41/regout68; standard keep_hierarchy boundarychecker hidesnestedlogic; firstcanonical oracle sampled same negedge as drivingdin andfailed, bench-only deltasmplefix041 pending"
+}

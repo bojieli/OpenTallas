@@ -1,0 +1,39 @@
+%Warning-ZERODLY: rtl/hbm_accel/generic_sram_ecc_20261009/tb_endpoint.sv:102:33: Value of # delay control statically unknown. Assuming it can be #0.
+                                                                               : ... If all # delays are non-zero at runtime,
+                                                                               : ... use '--no-sched-zero-delay' for improved performance.
+                                                                               : ... If a real #0 is expected at runtime,
+                                                                               : ... use '--sched-zero-delay' to suppress this warning.
+  102 |     initial begin wait(go_clk); #(T_CORE * ph0 + 0.001); forever #(T_CORE/2) clk = ~clk; end
+      |                                 ^
+                  ... For warning description see https://verilator.org/warn/ZERODLY?v=5.050
+                  ... Use "/* verilator lint_off ZERODLY */" and lint_on around source to disable this message.
+%Warning-ZERODLY: rtl/hbm_accel/generic_sram_ecc_20261009/tb_endpoint.sv:103:33: Value of # delay control statically unknown. Assuming it can be #0.
+                                                                               : ... If all # delays are non-zero at runtime,
+                                                                               : ... use '--no-sched-zero-delay' for improved performance.
+                                                                               : ... If a real #0 is expected at runtime,
+                                                                               : ... use '--sched-zero-delay' to suppress this warning.
+  103 |     initial begin wait(go_clk); #(T_PHY * ph1 + 0.001);  forever #(T_PHY/2) pclk_r = ~pclk_r; end
+      |                                 ^
+	Command being timed: "/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_hbm_accel_tu_endpoint --Mdir /srv/opentallas-scratch2/scratch/codex/hgi-sram-endpoint-d719/out/obj +define+TU_DUT=ot_hbm_accel_tu_endpoint_psg +define+TU_LOCKSTEP +define+TU_NC=8 +define+TU_NOG=12 +define+TU_BF16=1 +define+TU_GSZPORT=15 +define+TU_PFMAX=64 +define+TU_PCLK_IS_CLK -GT_PHY=0.833333 rtl/link/ot_link_afifo.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/hbm_accel/tu/ot_hcoll_sram_prims.sv rtl/hbm_accel/tu/ot_hcoll_port.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_ps.sv rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint_psg.sv rtl/hbm_accel/generic_sram_ecc_20261009/tb_endpoint.sv"
+	User time (seconds): 459.26
+	System time (seconds): 6.74
+	Percent of CPU this job got: 174%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 4:26.52
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2836668
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 3202705
+	Voluntary context switches: 235
+	Involuntary context switches: 2029
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 1034680
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
