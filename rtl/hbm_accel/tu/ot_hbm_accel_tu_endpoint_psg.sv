@@ -157,8 +157,13 @@ module ot_hbm_accel_tu_endpoint_psg #(
         wire MODE_OK = (LEG || ((eff_gsz <= 3) && ((32'd1 << eff_gsz) <= NC))) && (!ALL_DEST || (!LEG && eff_gsz >= 1 && eff_gsz <= 3 &&
             (OUTER_G==2 || OUTER_G==4 || OUTER_G==8 || OUTER_G==96) && OUTER_G <= NOG*NC && (32'd1<<eff_gsz)<=OUTER_G));
         wire [31:0] REQ_NA = LEG ? NC : (MODE_OK ? (32'd1 << eff_gsz) : 1);
-        wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && (({16'd0,eff_pf} % REQ_NA) == 0) &&
-                         (({16'd0,eff_pf} / REQ_NA) <= OFMX) && (!BF16 || (({16'd0,eff_pf} / REQ_NA) % 2 == 0));
+        // Valid small groups have power-of-two NA. Avoid synthesizing a general32-bit divider
+        // merely to validate a descriptor; legacy NC remains a constant-expression divisor.
+        wire [31:0] req_of = LEG ? ({16'd0,eff_pf} / NC) : ({16'd0,eff_pf} >> eff_gsz);
+        wire req_aligned = LEG ? (({16'd0,eff_pf} % NC) == 0) :
+                                 (({16'd0,eff_pf} & ((32'd1 << eff_gsz) - 1)) == 0);
+        wire PAYLOAD_OK = (eff_pf != 0) && (eff_pf <= PFMAX) && (RANK < NOG * NC) && req_aligned &&
+                         (req_of <= OFMX) && (!BF16 || !req_of[0]);
 `ifdef OT_COLL_MUT_MODE_GUARD
         wire ACCEPT_MODE = 1'b1;
 `else
