@@ -13,11 +13,14 @@
 //  * result/issue pulses are one core cycle (two fast cycles): the fast launch flop passes them in the second half
 //    only, so the consumer sees one-fast-cycle pulses as before;
 //  * dupe is sticky and includes any shell FIFO overflow (fail closed); quiet includes the FIFOs.
+//  * H_CREDIT (credit-ready 2026-10-08, default 0 = the occupancy ready above): h_r[i] is a registered one-cycle
+//    CREDIT-RETURN pulse, one per item popped from the injector FIFO; the sender (ot_ha2_truecredit_receiver_p
+//    CREDIT=1, CRD<=FD) holds FD credits, so the FIFO cannot overflow (ovf stays fail-closed).
 // Cost: throughput of the core halves (one flit per two fast cycles per port, 0.5 flit/cycle per injector), latency
 // roughly doubles through the core; results/ordering/fault detection are transaction-exact vs the banked reducer.
 module ot_ha2_tu_owner_banked_half #(
  parameter integer NC=8,PFMAX=384,LANES=16,BF16=1,INJ=2,NPT=8,LAT=7,
- parameter integer QD=6,QO=4,MUTANT=0,PQREG=0,FD=8,BLKN=3,
+ parameter integer QD=6,QO=4,MUTANT=0,PQREG=0,FD=8,BLKN=3,H_CREDIT=0,
  parameter integer FW=32*LANES,PWT=FW+33
 )(input wire clk,rst_n,active,arm,input wire [7:0] rank,input wire [15:0] pf,
  input wire [INJ-1:0] h_v,input wire [INJ*(32+FW)-1:0] h_d,output reg [INJ-1:0] h_r,
@@ -73,7 +76,7 @@ module ot_ha2_tu_owner_banked_half #(
   if(!rst_n)begin p_r<=0;h_r<=0;end
   else begin
    for(integer p=0;p<NPT;p=p+1)p_r[p]<=p_cnt[p*4+:4]<=3;
-   for(integer i=0;i<INJ;i=i+1)h_r[i]<=h_cnt[i*4+:4]<=3;
+   for(integer i=0;i<INJ;i=i+1)h_r[i]<=(H_CREDIT!=0)?(ph&&h_head_v[i]):(h_cnt[i*4+:4]<=3);
   end
  // ---------------- core --------------------------------------------------------
  wire c_rv,c_iss,c_dupe,c_q;wire [15:0] c_rm;wire [FW-1:0] c_rd;
