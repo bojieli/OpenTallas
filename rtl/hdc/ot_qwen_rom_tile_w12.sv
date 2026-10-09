@@ -122,6 +122,9 @@ module ot_qwen_rom_tile_logic_w12 #(
     localparam integer RX = (ROM_PIPE != 0) ? (ROM_ARELAY + 2 + ROM_CAP2 + ROM_RAW_GROUP) : 0;   // extra memory cycles of the ROM pipeline
     localparam integer ME_EXTRA = MEM_EXTRA + RX;
     localparam integer SB = (CODE_BANKS + 1) / 2;                      // south group: banks [0, SB)
+    generate if ((ROM_RAW_GROUP != 0 && ROM_RAW_GROUP != 1) || (ROM_RAW_GROUP != 0 && ROM_PIPE == 0)) begin : g_raw_bad
+        initial $error("ROM_RAW_GROUP is boolean and needs ROM_PIPE=1");
+    end endgenerate
     generate if (ROM_PIPE != 0 && (MEM_EXTRA != 1 || ROM_ARELAY < 1)) begin : g_rp_bad
         initial $error("ROM_PIPE needs MEM_EXTRA = 1 and ROM_ARELAY >= 1");
     end endgenerate
