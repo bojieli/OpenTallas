@@ -12,12 +12,14 @@ module tb_hbm_candidate_global_publication_join #(parameter integer MUT_SLOT=0);
  .expected_kind(1'b1),.expected_dst(8'd3),.empty_v(empty_v),.empty_r(er),.empty_rank(empty_rank),.empty_frame(frame),
  .publication_complete(pub),.consumer_start(cs),.consumer_start_r(csr),.out_v(ov),.out_r(out_r),.out_tuple(tuple),.out_frame(oframe),.out_rank(rank),
  .retire(retire),.downstream_drained(downstream_drained),.retained(retained),.done(done),.fault(fault));
- integer mode=0,cycles=0,writes=0,emitted=0,nextid=0;reg prior_stall=0;reg[33:0]prior_tuple;reg[73:0]prior_frame;reg[6:0]prior_rank;
+ integer mode=0,cycles=0,writes=0,emitted=0,nextid=0,ce_responses=0;reg prior_stall=0;reg[33:0]prior_tuple;reg[73:0]prior_frame;reg[6:0]prior_rank;
  always @(negedge clk)begin if(cs||dut.consumer_retained)out_r<=cycles%7>=2;end
  always @(posedge clk)begin
  cycles<=cycles+1;
+ if(dut.sv&&dut.sr&&dut.ce)ce_responses++;
+ if(mode!=0&&mode!=2&&ov&&out_r)emitted++;
  if(cycles>200000)$fatal(1,"JOIN deadlock beyond finite96x60slot inventory");
- if(mode==0)begin
+ if(mode==0||mode==2)begin
  if(prior_stall&&(!ov||tuple!==prior_tuple||oframe!==prior_frame||rank!==prior_rank))$fatal(1,"JOIN_MISMATCH unstable output");
  prior_stall<=ov&&!out_r;prior_tuple<=tuple;prior_frame<=oframe;prior_rank<=rank;
  if(ov&&out_r)begin
@@ -66,7 +68,7 @@ module tb_hbm_candidate_global_publication_join #(parameter integer MUT_SLOT=0);
  end
  while(!done&&!fault)tick;
  if(fault)$fatal(1,"JOIN_MISMATCH unexpected consumer fault");
- if(mode==2)begin $display("JOIN_PASS real_macro_CE_consumer_completed");$finish;end
+ if(mode==2)begin if(emitted!=950||ce_responses!=15)$fatal(1,"JOIN_MISMATCH CE outputs=%0d responses=%0d",emitted,ce_responses);$display("JOIN_PASS real_macro_CE outputs=950 repeated_flit_reads=15");$finish;end
  if(emitted!=950)$fatal(1,"JOIN_MISMATCH output count=%0d",emitted);
  downstream_drained=1;tick;retire=1;tick;retire=0;
  if(retained||fault)$fatal(1,"JOIN_MISMATCH final retirement");
