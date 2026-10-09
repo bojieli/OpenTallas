@@ -18,7 +18,7 @@ export OT_SYNTH_TIMEOUT_SECONDS=unlimited OT_FLOW_TIMEOUT_SECONDS=unlimited
  --pin-region '^src_.*=top' --pin-region '^(rq|rk|wd|rv|r_data|r_tag|r_beat|ctrl_live)(\[.*\])?$=bottom' \
  --pin-region '^(ck|rst_n)$=left' --pin-region '^(fault|ce|pending)$=right' --pin-regions-exhaustive \
  --orfs-var ADDER_MAP_FILE= --slew-margin-percent 60 --hold-margin-ns 0.05 \
- --purpose pathfinding --nickname-tag "$label" --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
+ --purpose characterization --nickname-tag "$label" --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
  "$@" --keep-workdir "$work/work" --output "$work/physical.json" >"$work/run.log" 2>&1
 printf 'rc=0\n' >"$work/exit"
 case " $* " in *" --pnr-stop-after "*)exit 0;;esac
