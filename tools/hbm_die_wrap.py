@@ -12,6 +12,18 @@ bit from a register, and binds the unchanged RTL block(s) inside by an explicit 
     'fold'               an RTL output the die interface does not carry: XOR-folded into the spare die output bits
     'clk' / 'rst_n'      the die clock / the synchronised active-low reset (die rst is active high, 2-flop synced)
 
+FAIL CLOSED (SYS-1, OWNER 2026-10-08 "die views wire every functional port"): every RTL port must be named in its
+instance's bind (an unnamed port is an error, never a silent cfg / fold), and every TIE -- a 'cfg', 'const:', 'expr:',
+'fold' or 'open' bind, an unused (dropped) die input bit or an undriven (constant-0) die output bit -- must be classed in
+the spec's "ties" map with a reason:
+
+    "ties": {"<inst>.<rtl port>": {"class": "debug|test|by_design", "reason": "..."},
+             "die:<port>" | "die:<port>[lo:hi]": {"class": ..., "reason": ...}}
+
+Functional ports may not be classed (the class is a claim the reviewer checks; tests/test_hbm_die_wrap_failclosed.py
+holds the rules).  An unclassed tie makes gen() raise TieError listing EVERY tie (coverage gap class TIED_OFF);
+`--ledger` prints the ledger (classed and unclassed rows) without writing a wrapper.
+
 Forwarded clocks: die output bits that are a segment's forwarded clock (the generator's fclk map, one per 512 b slice
 and direction) are driven by the die clock through a kept ot_fwd_clk_inv; incoming forwarded clocks are captured as
 data (the receiving meso FIFO of the block is modelled as a ck-domain capture: interim).
@@ -74,7 +86,105 @@ def parse_rng(s):
     return port, int(lo), int(hi)
 
 
-def gen(spec):
+TIE_CLASSES = ('debug', 'test', 'by_design')
+
+
+class TieError(SystemExit):
+    """An unclassed tie / unnamed RTL port in a die wrapper spec (SYS-1).  .rows holds the full tie ledger."""
+
+    def __init__(self, master, rows, errors):
+        self.master, self.rows, self.errors = master, rows, errors
+        super().__init__(f'{master}: REFUSED (SYS-1 fail-closed): {len(errors)} unclassed tie(s) / unbound port(s):\n  '
+                         + '\n  '.join(errors))
+
+
+def _ranges(bits):
+    """sorted bit indices -> [(lo, hi)] half-open runs"""
+    out = []
+    for b in sorted(bits):
+        if out and out[-1][1] == b:
+            out[-1][1] = b + 1
+        else:
+            out.append([b, b + 1])
+    return [tuple(r) for r in out]
+
+
+def _die_refs(text, ports):
+    """die input bits a verbatim wrapper expression reads: i_<port>[a:b] / i_<port>[a] / i_<port> (whole port)"""
+    import re
+    for m in re.finditer(r'\bi_([A-Za-z_]\w*)(?:\[(\d+)(?::(\d+))?\])?', text):
+        p = m.group(1)
+        if p not in ports:
+            continue
+        if m.group(2) is None:
+            yield p, range(ports[p]['bits'])
+        elif m.group(3) is None:
+            yield p, range(int(m.group(2)), int(m.group(2)) + 1)
+        else:
+            a, b = int(m.group(2)), int(m.group(3))
+            yield p, range(min(a, b), max(a, b) + 1)
+
+
+def _tie_class(spec, key, errors):
+    t = spec.get('ties', {}).get(key)
+    if t is None:
+        return None
+    if t.get('class') not in TIE_CLASSES or not str(t.get('reason', '')).strip():
+        errors.append(f'{key}: tie class must be one of {TIE_CLASSES} with a non-empty reason (got {t})')
+        return None
+    return t
+
+
+def tie_ledger(spec, used_in, used_out, dirs, fck, rtl_ties, errors):
+    """SYS-1 ledger rows: RTL-port ties (cfg / const / expr / fold / open) and spare die bits, each classed from
+    spec['ties'] or gap TIED_OFF.  Unclassed rows are appended to errors."""
+    rows = []
+    for inst, rp, kind, bits in rtl_ties:
+        key = f'{inst}.{rp}'
+        t = _tie_class(spec, key, errors)
+        rows.append(dict(where=key, kind=kind, bits=bits, cls=t['class'] if t else None,
+                         reason=t['reason'] if t else None, gap=None if t else 'TIED_OFF'))
+        if not t:
+            errors.append(f'{key}: {kind} bind ({bits} b) on an RTL port -- wire it to its die net, or class it '
+                          f'debug|test|by_design with a reason in spec["ties"]')
+    ties = spec.get('ties', {})
+
+    def die_cls(p, i):
+        for k, t in ties.items():
+            if not k.startswith('die:'):
+                continue
+            body = k[4:]
+            if '[' in body:
+                q, lo, hi = parse_rng(body)
+                if q == p and lo <= i < hi:
+                    return k, t
+            elif body == p:
+                return k, t
+        return None, None
+    for direction, used in (('in', used_in), ('out', used_out)):
+        for p in sorted(used):
+            if p in ('ck',) or (p == 'rst' and direction == 'in'):
+                continue
+            spare = [i for i, d in enumerate(dirs[p]) if d == direction and not used[p][i]
+                     and not (direction == 'in' and p in fck and i in fck[p])]
+            groups = {}
+            for i in spare:
+                k, t = die_cls(p, i)
+                groups.setdefault(k, []).append(i)
+            for k, idx in groups.items():
+                t = _tie_class(spec, k, errors) if k else None
+                for lo, hi in _ranges(idx):
+                    where = f'die:{p}[{lo}:{hi}]'
+                    kind = 'spare_die_input_dropped' if direction == 'in' else 'spare_die_output_const0'
+                    rows.append(dict(where=where, kind=kind, bits=hi - lo, cls=t['class'] if t else None,
+                                     reason=t['reason'] if t else None, gap=None if t else 'TIED_OFF'))
+                    if not t:
+                        errors.append(f'{where}: {kind} ({hi - lo} b) -- bind it to its RTL port, or class it '
+                                      f'debug|test|by_design with a reason in spec["ties"]')
+    return rows
+
+
+def gen(spec, strict=True):
     master = spec['master']
     rec = V.master_record(master)
     ports = rec['ports']
@@ -123,11 +233,23 @@ def gen(spec):
     sigs, outs, ncfg, folds = [], {}, 0, []
     cfg_bits = []
     body = []
+    errors, rtl_ties = [], []
     for inst in spec['instances']:
         pm = L.parse_module(inst['file'], inst['module'], inst.get('params'))['ports']
         conns = []
+        for rp in inst['bind']:
+            if rp not in pm:
+                errors.append(f'{inst["name"]}.{rp}: bound in the spec but not a port of {inst["module"]}')
         for rp, (rd, rw) in pm.items():
+            if rp not in inst['bind']:
+                errors.append(f'{inst["name"]}.{rp}: RTL {rd} ({rw} b) not named in bind (an unnamed port is never '
+                              f'silently put on the cfg chain / fold)')
             b = inst['bind'].get(rp, 'cfg' if rd == 'input' else 'fold')
+            if isinstance(b, str):
+                kind = ('cfg' if b == 'cfg' else 'const' if b.startswith('const:') else 'expr' if b.startswith('expr:')
+                        else 'fold' if b == 'fold' else 'open' if b == 'open' else None)
+                if kind:
+                    rtl_ties.append((inst['name'], rp, kind, rw))
             w = f'w_{inst["name"]}_{rp}'
             sigs.append(f'    wire [{rw - 1}:0] {w};')
             conns.append(f'.{rp}({w})')
@@ -155,6 +277,7 @@ def gen(spec):
                     n = sum(parse_rng(x)[2] - parse_rng(x)[1] for x in b[4:].split('+'))
                     srcs = srcs[::-1]
                     if n < rw:
+                        rtl_ties.append((inst['name'], rp, 'die_input_zero_padding', rw - n))
                         srcs = [f"{rw - n}'d0"] + srcs
                     assert n <= rw, (inst['name'], rp, n, rw)
                     body.append(f'    assign {w} = {{{", ".join(srcs)}}};')
@@ -165,6 +288,11 @@ def gen(spec):
                     pass
                 else:
                   for b1 in (b if isinstance(b, list) else [b]):
+                    mapped = sum(hi - lo for _, lo, hi in (parse_rng(x) for x in b1[4:].split('+')))
+                    if mapped < rw:
+                        rtl_ties.append((inst['name'], rp, 'die_output_truncation', rw - mapped))
+                    elif mapped > rw:
+                        errors.append(f'{inst["name"]}.{rp}: die output bind has {mapped} bits for a {rw}-bit RTL port')
                     off = 0
                     for part in b1[4:].split('+'):
                         port, lo, hi = parse_rng(part)
@@ -184,6 +312,17 @@ def gen(spec):
             used_out[port][i] = True
         outs.setdefault(port, []).append((lo, hi, expr))
     body = spec.get('extra', []) + body
+    for txt in [e for *_, e in spec.get('extra_out', [])] + list(spec.get('extra', [])):
+        for p, rng in _die_refs(txt, ports):
+            for i in rng:
+                if i < len(dirs[p]) and dirs[p][i] == 'in':
+                    used_in[p][i] = True
+    # SYS-1: classify every tie BEFORE the cfg source / fold sinks consume spare bits (those spare bits are the tie's
+    # own carrier, already counted on its RTL-port row)
+    tie_rows = tie_ledger(spec, {p: list(u) for p, u in used_in.items()},
+                          {p: list(u) for p, u in used_out.items()}, dirs, fck, rtl_ties, errors)
+    if errors and strict:
+        raise TieError(master, tie_rows, errors)
     # spare bits
     spare_in = [(p, i) for p in sorted(ports) if p not in ('ck', 'rst') for i, d in enumerate(dirs[p])
                 if d == 'in' and not used_in[p][i] and not (p in fck and i in fck[p])]
@@ -371,15 +510,29 @@ def gen(spec):
                  die_output_bits_driven=sum(sum(u) for u in used_out.values()))
     if tree_lines:
         stats['share_tree'] = tree_stats
+    stats['ties'] = tie_rows
+    stats['tied_off_bits'] = sum(r['bits'] for r in tie_rows if r['gap'] == 'TIED_OFF')
+    stats['classed_tie_bits'] = {c: sum(r['bits'] for r in tie_rows if r['cls'] == c) for c in TIE_CLASSES}
+    if errors:
+        stats['errors'] = errors
     return '\n'.join(L_) + '\n', stats
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--spec', required=True, help='JSON spec file')
-    ap.add_argument('--out', required=True)
+    ap.add_argument('--out')
+    ap.add_argument('--ledger', action='store_true', help='print the SYS-1 tie ledger (no wrapper written; never fails)')
     a = ap.parse_args()
     spec = json.loads(Path(a.spec).read_text())
+    if a.ledger:
+        sv, st = gen(spec, strict=False)
+        print(json.dumps(dict(master=st['master'], tied_off_bits=st['tied_off_bits'],
+                              classed_tie_bits=st['classed_tie_bits'], ties=st['ties'],
+                              errors=st.get('errors', [])), indent=1))
+        return
+    if not a.out:
+        ap.error('--out is required (or --ledger)')
     sv, st = gen(spec)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -391,7 +544,7 @@ def main():
             '# generated by tools/hbm_die_wrap.py from spec port_stages: die port -> face chain depth\n'
             + ''.join(f'set fc_ps({p}) {n}\n' for p, n in sorted(spec['port_stages'].items()))
             + ''.join(f'set fc_psi({p}) {n}\n' for p, n in sorted(spec.get('port_in_stages', {}).items())))
-    print(json.dumps({k: v for k, v in st.items() if k != 'cfg_inputs'}))
+    print(json.dumps({k: v for k, v in st.items() if k not in ('cfg_inputs', 'ties')}))
 
 
 

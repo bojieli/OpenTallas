@@ -324,5 +324,19 @@
    "i_f_barrier[15:0]"
   ]
  ],
- "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)"
+ "latency": "cycle cost vs hfd_cmdproc (face_stages 5 everywhere): cpS core path in 3 + out 3 = 6 (-4); cpN in 4 (xl: S pin flop + 2 + N pin flop; cN* 4) + out 3 = 7 (-3); f_barrier[0:16] -> S faces 2+2+2+3 = 9 (-1), [16:32] -> N faces 2+3 = 5 (-5); t_barrier[0:16] 3+2+1+3 = 9 (-1), [16:32] 4+3 = 7 (-3)",
+ "ties": {
+  "cpN.st_kernels": {
+   "class": "debug",
+   "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live"
+  },
+  "cpN.st_busy": {
+   "class": "debug",
+   "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live"
+  },
+  "cpN.cpl_cycles": {
+   "class": "debug",
+   "reason": "performance counter (TA-19 debug counters: no die consumer, no DFT); kept-sink flops keep it live"
+  }
+ }
 }
