@@ -1,0 +1,24 @@
+COLL_GSZ PASS runs=10 negatives=0 caught
+	Command being timed: "env DS_ONLY=1 bash physical/hbm_forks/run_coll_gsz.sh ../out"
+	User time (seconds): 736.96
+	System time (seconds): 13.46
+	Percent of CPU this job got: 188%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 6:37.78
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2726072
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 6916112
+	Voluntary context switches: 826
+	Involuntary context switches: 4235
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 2197160
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

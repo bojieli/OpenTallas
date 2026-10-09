@@ -1,0 +1,87 @@
+{
+  "schema": "opentallas.w2-v16-bank-gate.v1",
+  "verdict": "PASS",
+  "cases": [
+    {
+      "name": "bank37_s0_d1_r1",
+      "expect": "pass",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 0,
+        "passed": true,
+        "summary": [
+          "CE_REPAIR edges=15",
+          "PASS_W2_VETO words=37 stage=0 dist=1 red=1 checks=44 normal_edges_monitored=48 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+        ]
+      }
+    },
+    {
+      "name": "bank37_s0_d1_r0",
+      "expect": "pass",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 0,
+        "passed": true,
+        "summary": [
+          "CE_REPAIR edges=13",
+          "PASS_W2_VETO words=37 stage=0 dist=1 red=0 checks=44 normal_edges_monitored=36 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+        ]
+      }
+    },
+    {
+      "name": "bank37_s1_d0_r1",
+      "expect": "pass",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 0,
+        "passed": true,
+        "summary": [
+          "CE_REPAIR edges=13",
+          "PASS_W2_VETO words=37 stage=1 dist=0 red=1 checks=44 normal_edges_monitored=48 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+        ]
+      }
+    },
+    {
+      "name": "bank37_s1_d0_r0",
+      "expect": "pass",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 0,
+        "passed": true,
+        "summary": [
+          "CE_REPAIR edges=11",
+          "PASS_W2_VETO words=37 stage=1 dist=0 red=0 checks=44 normal_edges_monitored=36 current_owner34bit62=1 protected_snapshot=1 protected_status=1 parallel_CE=1 DUE_refusal=1 changed_repair_identity=1 copy_check=1"
+        ]
+      }
+    },
+    {
+      "name": "B1_live_q_no_alignment",
+      "expect": "fail",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "summary": [
+          "FATAL: /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-v16-gate/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data"
+        ]
+      }
+    },
+    {
+      "name": "B4_red_data_not_delayed",
+      "expect": "fail",
+      "result": {
+        "compile_exit": 0,
+        "runtime_exit": 1,
+        "passed": false,
+        "summary": [
+          "FATAL: /srv/opentallas-scratch2/scratch/codex/w2-phase-seat-v16-gate/src/rtl/hbm_accel/integrated_20261005/tb_w2_bank_veto.sv:34: VETO: normal asserted with unverified data"
+        ]
+      }
+    }
+  ],
+  "new_phase_copy_check": false,
+  "source_sha256": {
+    "rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank_veto.sv": "1441ea6c9dc6cc7486be8df3787409ac7f382bf03f3ce2d781a961328191f540",
+    "tools/w2_phase_seat_v16_gate.py": "a351ac239adb6a64fa04468adbeaf397873a33c5c9d79d9a6239267f913b37fd"
+  }
+}

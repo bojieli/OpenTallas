@@ -74,59 +74,84 @@ module ot_hgi_cfg_master #(
     output reg  [5*32-1:0] md_d     // section D as committed: {image_pages(61), image_base(60), draft(58), verify(57), ar(56)}
 );
 `include "ot_hgi_cfg_consts.svh"
-    // REVIEW_20261009 F-2 (confirmed review-0342): the hardware keeps only the busy / settle interlock and the range
-    // checks of section C; magic, version, CRC and reserved bits are validated by the loader in software
-    // (tools/hbm_generic_iface.py hw_check / sw_check).  Only the hardware-read words are staged: section C (40-48) and
-    // section D (56-61); other window writes are ignored.
-    reg [31:0] wc [0:8];            // words 40 .. 48
-    reg [31:0] wd [0:5];            // words 56 .. 61
-    integer q;
-    always @(posedge clk) if (w_en) begin
-        for (q = 0; q < 9; q = q + 1) begin
-            if ({w_pair, 1'b0} == 40 + q) wc[q] <= w_data[31:0];
-            if ({w_pair, 1'b1} == 40 + q) wc[q] <= w_data[63:32];
+    // HGI-1 v1.0 (owner-approved normative, section 5.7): the CFG_COMMIT check is tools/hbm_generic_iface.d_hw_check case
+    // for case, in its priority order: E_BUSY, E_MAGIC, E_VERSION, E_CRC, E_RESERVED (words 1-62), E_RANGE (section C).
+    // (REVIEW F-2 had moved magic / version / CRC / reserved to the loader; the approved spec and the hbm-sim CF-0
+    // vectors put them back in the CP.)  On an error nothing is broadcast and the active values stay.
+    // CRC-32 (IEEE, reflected, poly 0xEDB88320): one 32-bit little-endian word a cycle; init / final XOR all-ones
+    function automatic [31:0] crc_w(input [31:0] c, input [31:0] w);
+        integer k;
+        reg [31:0] r;
+        begin
+            r = c;
+            for (k = 0; k < 32; k = k + 1) r = (r[0] ^ w[k]) ? ((r >> 1) ^ 32'hEDB88320) : (r >> 1);
+            crc_w = r;
         end
-        for (q = 0; q < 6; q = q + 1) begin
-            if ({w_pair, 1'b0} == 56 + q) wd[q] <= w_data[31:0];
-            if ({w_pair, 1'b1} == 56 + q) wd[q] <= w_data[63:32];
-        end
-    end
+    endfunction
+    reg [31:0] buf_ [0:63];
+    always @(posedge clk) if (w_en) begin buf_[{w_pair, 1'b0}] <= w_data[31:0]; buf_[{w_pair, 1'b1}] <= w_data[63:32]; end
     localparam [2:0] S_IDLE = 3'd0, S_CHK = 3'd1, S_DEC = 3'd2, S_BC = 3'd3, S_COMMIT = 3'd4, S_SETTLE = 3'd5;
     reg [2:0]  st;
-    reg [3:0]  i;
-    reg        f_rng;
+    reg [5:0]  i;
+    reg [31:0] crc;
+    reg        f_magic, f_ver, f_res, f_rng;
     reg [9:0]  cnt;
     reg        bv, bc;
     reg [5:0]  ba;
     reg [31:0] bd;
-    wire [31:0] wi = wc[i];
+    reg [31:0] wi;                  // the word under check, registered from the staging buffer (one word a cycle)
+    reg [5:0]  wi_n;
+    reg        wi_v;
     assign st_hold = (st != S_IDLE);
+    always @(posedge clk) begin wi <= buf_[i]; wi_n <= i; end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            st <= S_IDLE; i <= 4'd0; f_rng <= 1'b0; cnt <= 10'd0; bv <= 1'b0; bc <= 1'b0; ba <= 6'd0; bd <= 32'd0;
-            st_loaded <= 1'b0; st_err <= 3'd0; md_d <= {5*32{1'b0}};
+            st <= S_IDLE; i <= 6'd0; crc <= 32'hFFFFFFFF; f_magic <= 1'b0; f_ver <= 1'b0; f_res <= 1'b0; f_rng <= 1'b0;
+            cnt <= 10'd0; bv <= 1'b0; bc <= 1'b0; ba <= 6'd0; bd <= 32'd0; st_loaded <= 1'b0; st_err <= 3'd0;
+            md_d <= {5*32{1'b0}}; wi_v <= 1'b0;
         end else begin
             bv <= 1'b0; bc <= 1'b0;
             case (st)
                 S_IDLE: if (commit) begin
                     if (busy) st_err <= 3'd4;                               // E_BUSY: refused, values kept
-                    else begin st <= S_CHK; i <= 4'd0; f_rng <= 1'b0; end
+                    else begin
+                        st <= S_CHK; i <= 6'd0; crc <= 32'hFFFFFFFF; wi_v <= 1'b0;
+                        f_magic <= 1'b0; f_ver <= 1'b0; f_res <= 1'b0; f_rng <= 1'b0;
+                    end
                 end
-                S_CHK: begin                                                // the 9 section-C words, one a cycle
+                S_CHK: begin                                                // words 0 .. 63, the word lands a cycle later
+                    if (i != 6'd63) i <= i + 6'd1;
+                    wi_v <= 1'b1;
+                    if (wi_v) begin
+                        if (wi_n != 6'd63) crc <= crc_w(crc, wi);
+                        if (wi_n == 6'd0 && wi != HGI_MAGIC) f_magic <= 1'b1;
+                        if (wi_n == 6'd1 && wi[23:0] != HGI_W1) f_ver <= 1'b1;
+                        if (wi_n >= 6'd1 && wi_n <= 6'd62 && (wi & ~hgi_used(wi_n)) != 32'd0) f_res <= 1'b1;
 `ifndef OT_HGI_MUT_RANGE
-                    if (!hgi_c_legal(6'd40 + i, wi)) f_rng <= 1'b1;
+                        if (wi_n >= 6'd40 && wi_n <= 6'd48 && !hgi_c_legal(wi_n, wi)) f_rng <= 1'b1;
 `endif
-                    if (i == 4'd8) st <= S_DEC; else i <= i + 4'd1;
+                        if (wi_n == 6'd63) st <= S_DEC;
+                    end
                 end
-                S_DEC: if (f_rng) begin st_err <= 3'd5; st <= S_IDLE; end   // E_RANGE: refused, values kept
-                       else begin st <= S_BC; i <= 4'd0; end
-                S_BC: begin
-                    bv <= 1'b1; ba <= 6'd40 + i; bd <= wi;
-                    if (i == 4'd8) st <= S_COMMIT; else i <= i + 4'd1;
+                S_DEC: begin                                                // d_hw_check priority order
+                    if (f_magic) begin st_err <= 3'd1; st <= S_IDLE; end
+                    else if (f_ver) begin st_err <= 3'd2; st <= S_IDLE; end
+`ifdef OT_HGI_MUT_CRC
+                    else if (1'b0) begin st_err <= 3'd3; st <= S_IDLE; end
+`else
+                    else if ((crc ^ 32'hFFFFFFFF) != buf_[63]) begin st_err <= 3'd3; st <= S_IDLE; end
+`endif
+                    else if (f_res) begin st_err <= 3'd6; st <= S_IDLE; end
+                    else if (f_rng) begin st_err <= 3'd5; st <= S_IDLE; end
+                    else begin st <= S_BC; i <= 6'd40; end
+                end
+                S_BC: begin                                                 // the 9 section-C words, one a cycle
+                    bv <= 1'b1; ba <= i; bd <= buf_[i];
+                    if (i == 6'd48) st <= S_COMMIT; else i <= i + 6'd1;
                 end
                 S_COMMIT: begin
                     bc <= 1'b1; st_err <= 3'd0; cnt <= 10'd0; st <= S_SETTLE;
-                    md_d <= {wd[5], wd[4], wd[2], wd[1], wd[0]};
+                    md_d <= {buf_[61], buf_[60], buf_[58], buf_[57], buf_[56]};
                 end
                 S_SETTLE: begin
 `ifdef OT_HGI_MUT_SETTLE
@@ -140,6 +165,7 @@ module ot_hgi_cfg_master #(
             endcase
         end
     end
+    // the registered config bus {cfg_commit, cfg_v, cfg_addr[5:0], cfg_data[31:0]}
     assign bus = {bc, bv, ba, bd};
 endmodule
 `default_nettype wire

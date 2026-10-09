@@ -463,12 +463,16 @@ def _vmerge(*vs):
 
 R25SPS = dict(R25S, split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
               attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True)
-R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True))
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True, router_exact=True))   # router_exact: hgi-takeover die gap 1e
 ADOPTED = R25
 
 
 def build(variant=None, *, geometry_only=False, network_probe=False):
     variant = dict(variant if variant is not None else ADOPTED)
+    if variant.get('hgi_dispatch') and not variant.get('hgi_dispatch_pins_done'):
+        # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
+        from hgi_die_dispatch import variant as hgi_dispatch_variant
+        variant = dict(hgi_dispatch_variant(variant, variant['hgi_dispatch']), hgi_dispatch_pins_done=True)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
@@ -596,7 +600,7 @@ def build(variant=None, *, geometry_only=False, network_probe=False):
         yy += hs[n] + ghi
     for n, y_ in place:
         it = Inst(f'hb_{n}', f'hfd_{n}', sx0, up(y_, GY), spine_w - SHAVE, hs[n] - SHAVE, kind='spine', region='hub',
-                  domain='serial_0p9' if n == 'quant' else 'stream_1p2')
+                  domain='serial_0p9' if n == 'quant' and 'quant' not in (variant.get('hgi_dispatch') or []) else 'stream_1p2')   # hgi quant unit: stream 1.2 GHz (the record path and the VM are stream)
         insts.append(it)
         hub[n] = it
     # r16i (hub REQUEST 12:10 PT): one-per-die SU slots stacked above the top spine block (quant) in the free top
@@ -2486,8 +2490,10 @@ def buses(m):
         hl_ = [('cmdproc', 'coll', 8 + 16 + 1), ('coll', 'cmdproc', 1 + 32)]
     else:
         hl_ = [('cmdproc', 'coll', 64)]
-    hl_ += [('loader', 'cmdproc', 341), ('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
-            ('vm', 'quant', 1024), ('vm', 'router', 512)] + ([] if crtl else [('vm', 'coll', 512)])
+    hgi_q = 'quant' in (V.get('hgi_dispatch') or [])      # hgi-takeover: the hgi quant unit reads / writes VM by packets
+    hgi_cp_ = 'cp' in (V.get('hgi_dispatch') or [])    # hgi-takeover: the loader <-> CP link replaces the program-store bus
+    hl_ += ([] if hgi_cp_ else [('loader', 'cmdproc', 341)]) + [('barrier', 'cmdproc', 64), ('router', 'cmdproc', 64),
+            ('vm', 'router', 512)] + ([] if hgi_q else [('vm', 'quant', 1024)]) + ([] if crtl else [('vm', 'coll', 512)])
     if V.get('hub_io'):     # r15 (H10): the barrier's arrive input (SM arrives ride the control tree to the cmdproc)
         hl_ += [('cmdproc', 'barrier', 64)]
     if 'mtp' in hub:        # r25m (MTP-DIE): ot_dshbm_dspark_top die interfaces (port widths from the RTL)
@@ -2505,8 +2511,11 @@ def buses(m):
         # coll_rtl: SU quarter -> endpoint inject data (inj_data 2 x 512, muxed by the fan-in inside the block);
         # endpoint -> SU quarter: delivery lane del_flit 545 + del_valid + inj_idx 2 x 16 + inj_rd 2 = 580
         hl_ += [('vm', f'su_{q}', 2048), (f'su_{q}', 'vm', 2048), (f'su_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'hc_{q}', 1024),
-                (f'su_{q}', 'coll', 1024), ('coll', f'su_{q}', 580 if crtl else 1024), ('quant', f'su_{q}', 512),
-                ('cmdproc', f'su_{q}', 64), (f'su_{q}', 'router', 256)]
+                (f'su_{q}', 'coll', 1024), ('coll', f'su_{q}', 580 if crtl else 1024)] + ([] if hgi_q else [('quant', f'su_{q}', 512)]) + [
+                ('cmdproc', f'su_{q}', 64)] + ([] if V.get('router_exact') and q != 'SW' else
+                                               [(f'su_{q}', 'router', 2 if V.get('router_exact') else 256)])
+        # router_exact (hgi-takeover 2026-10-09, die gap 1e): the router RTL takes only in_valid / in_last from the SU (SW);
+        # the other quarters' 256 b and SW's 254 spare bits carried nothing (wrapper ledger: dropped die inputs)
         if V.get('hub_io'):     # r15 (H10): HC (mHC / Sinkhorn) and SFU results return to the SU
             hl_ += [(f'hc_{q}', f'sfu_{q}', 1024), (f'sfu_{q}', f'su_{q}', 1024)]
     hl_ += [('su_SW', 'su_SE', 1024), ('su_SE', 'su_SW', 1024), ('su_SW', 'su_NW', 1024), ('su_NW', 'su_SW', 1024),
@@ -2526,6 +2535,10 @@ def buses(m):
     for a_, b_, bits in hl_:
         B.append((f'hb_{a_}_{b_}', 'hub', bits, [(hub[a_].name, f't_{role(a_, b_)}'), (hub[b_].name, f'f_{role(b_, a_)}')]))
         P[f'hub_{a_}_{b_}'] = [f'hb_{a_}_{b_}']
+    if V.get('hgi_dispatch'):
+        # hgi-takeover 2026-10-09: normative ot_hgi_seq v1.0 record dispatch to the generic units (opt-in, buses only)
+        from hgi_die_dispatch import install as install_hgi_dispatch
+        install_hgi_dispatch(m, B, P, V['hgi_dispatch'])
     # ---- collective -> SerDes: 8 TU ports x 546 b each direction striped over the 9 macros (S centre 5, N centre 4):
     #      spine-side channel -> hub edge channel -> the channel east of the macro -> its E-face pins
     coll = hub['coll']
@@ -2939,6 +2952,16 @@ def write_lefs(m, k, path):
         if k == 1 and name in REAL:
             continue
         wmap = {p: pw.get((name, p), 0) for p in mst.order}
+        if m.get('network_probe') and k == 1:
+            # die-evidence-2 2026-10-09: a network probe (R25G) carries exact-rectangle masters whose ports the probe
+            # does not wire (the native indexer's st / fs / co / kin / qb / to): write those pins UNCONNECTED at full
+            # width so the physical case exists.  They are build-every-path GAPS, listed in m['unwired_rect_ports']
+            # and in die_top_lint's unbound_real_pins; never a die net.
+            for p_ in mst.order:
+                sp_ = mst.ports.get(p_)
+                if wmap[p_] == 0 and sp_ and sp_[0] == 'rects':
+                    wmap[p_] = len(sp_[1])
+                    m.setdefault('unwired_rect_ports', []).append(f'{name}/{p_}')
         t, n = S.lef_text(mst, k, wmap)
         txt.append(t.replace('tools/dsrom_s81_fulldie.py', 'tools/hbm_accel_die_fp.py'))
         npins += n
@@ -3443,7 +3466,19 @@ def clock_regions(m):
     out = [dict(r) for r in m.get('region_extra', [])]     # r17: station rects of a named region, matched first
     for st, G in m['groups'].items():
         retiled = bool(m['variant'].get('sm_physical_grid'))
-        cuts = [(f'c{c}', (c,)) for c in range(3)] if retiled else [('w', (0, 1)), ('e', (2, 3))]
+        if retiled:
+            # hbm-forks 2026-10-09 (SM-group clock distribution for the 3 x 3 retile): ONE region per SM group covering
+            # the whole group rect (SM sites + the column / row channels, so the x / result / control tree stations in
+            # the channels are inside it).  The clock plan splits it at the median into <= 4 mm sub-regions G<st>.k,
+            # which share ONE family root at the group centre (clock_plan.clock_nets: fk = G<st>): a common trunk down
+            # to the group and a balanced sub-tree per sub-region (the planned root pads equalise their insertion).
+            g_ = m['geo']
+            x0, y0 = G['x'], G['y']
+            x1, y1 = x0 + g_['grp_w'], y0 + g_['grp_h']
+            out.append(dict(name=f'G{st}', clock='clk_stream', rect=[round(x0, 1), round(y0, 1), round(x1, 1), round(y1, 1)],
+                            extent_um=round(max(x1 - x0, y1 - y0), 1), sms=[s.name for s in G['sms']]))
+            continue
+        cuts = [('w', (0, 1)), ('e', (2, 3))]
         for h, cols in cuts:
             ss = [s for s in G['sms'] if s.sm['physical_col' if retiled else 'col'] in cols]
             x0 = min(s.x for s in ss)
@@ -4313,7 +4348,9 @@ def main(argv=None):
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build(variant_arg(a.ds_var))
+        v_ = variant_arg(a.ds_var)
+        # die-evidence-2 (2026-10-09): a retiled-SM variant (R25G) builds only as a labelled network probe
+        m = build(v_, network_probe=bool(v_ and v_.get('sm_physical_grid')))
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

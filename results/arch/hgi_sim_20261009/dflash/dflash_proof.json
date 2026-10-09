@@ -1,0 +1,599 @@
+{
+ "schema": "opentallas.hgi_sim.dflash_proof.v1",
+ "generated_utc": "2026-10-09T15:02:41Z",
+ "what": "DFlash on HGI-1, functional proof: the step program (tools/hgi_sim/dflash.py) on the simulator against a numpy\ngolden built on the same arithmetic library, on a tiny Qwen3 target (random BF16 weights, 6 layers, TP4 shapes scaled\ndown) and a tiny DFlash drafter (2 layers, target layers [1, 3], random BF16 weights).  The golden's target is the\nqwen_r25 golden (QwenR25.layer / head); its drafter follows the bindings in dflash.py.",
+ "runs": [
+  {
+   "B": 4,
+   "mutant": null,
+   "pass_": true,
+   "lossless_vs_ar": true,
+   "committed": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92
+   ],
+   "ar": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92
+   ],
+   "steps": [
+    {
+     "step": 0,
+     "pos": 24,
+     "anchor": 7,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      841
+     ],
+     "wall_s": 0.34
+    },
+    {
+     "step": 1,
+     "pos": 25,
+     "anchor": 841,
+     "oracle": true,
+     "k": 4,
+     "golden_k": 4,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      63,
+      816,
+      902,
+      379
+     ],
+     "wall_s": 0.5
+    },
+    {
+     "step": 2,
+     "pos": 29,
+     "anchor": 379,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      92
+     ],
+     "wall_s": 0.31
+    }
+   ],
+   "records": 284,
+   "image_bytes": 33632,
+   "ctx": 96,
+   "pos0": 24
+  },
+  {
+   "B": 8,
+   "mutant": null,
+   "pass_": true,
+   "lossless_vs_ar": true,
+   "committed": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92,
+    516,
+    313,
+    453,
+    798
+   ],
+   "ar": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92,
+    516,
+    313,
+    453,
+    798
+   ],
+   "steps": [
+    {
+     "step": 0,
+     "pos": 24,
+     "anchor": 7,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      841
+     ],
+     "wall_s": 0.62
+    },
+    {
+     "step": 1,
+     "pos": 25,
+     "anchor": 841,
+     "oracle": true,
+     "k": 8,
+     "golden_k": 8,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      63,
+      816,
+      902,
+      379,
+      92,
+      516,
+      313,
+      453
+     ],
+     "wall_s": 0.56
+    },
+    {
+     "step": 2,
+     "pos": 33,
+     "anchor": 453,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      798
+     ],
+     "wall_s": 0.73
+    }
+   ],
+   "records": 456,
+   "image_bytes": 56160,
+   "ctx": 96,
+   "pos0": 24
+  },
+  {
+   "B": 16,
+   "mutant": null,
+   "pass_": true,
+   "lossless_vs_ar": true,
+   "committed": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92,
+    516,
+    313,
+    453,
+    798,
+    57,
+    687,
+    112,
+    667,
+    882,
+    650,
+    984,
+    663
+   ],
+   "ar": [
+    841,
+    63,
+    816,
+    902,
+    379,
+    92,
+    516,
+    313,
+    453,
+    798,
+    57,
+    687,
+    112,
+    667,
+    882,
+    650,
+    984,
+    663
+   ],
+   "steps": [
+    {
+     "step": 0,
+     "pos": 24,
+     "anchor": 7,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      841
+     ],
+     "wall_s": 1.13
+    },
+    {
+     "step": 1,
+     "pos": 25,
+     "anchor": 841,
+     "oracle": true,
+     "k": 16,
+     "golden_k": 16,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      63,
+      816,
+      902,
+      379,
+      92,
+      516,
+      313,
+      453,
+      798,
+      57,
+      687,
+      112,
+      667,
+      882,
+      650,
+      984
+     ],
+     "wall_s": 1.36
+    },
+    {
+     "step": 2,
+     "pos": 41,
+     "anchor": 984,
+     "oracle": false,
+     "k": 1,
+     "golden_k": 1,
+     "draft_ids_equal": true,
+     "committed_equal": true,
+     "state": [
+      {
+       "die": 0,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 1,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 2,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      },
+      {
+       "die": 3,
+       "target_kv_rows": true,
+       "drafter_kv_rows": true,
+       "captured_features": true
+      }
+     ],
+     "tokens": [
+      663
+     ],
+     "wall_s": 1.26
+    }
+   ],
+   "records": 878,
+   "image_bytes": 110432,
+   "ctx": 96,
+   "pos0": 24
+  }
+ ],
+ "mutants": [
+  {
+   "mutant": "no_mask_tail",
+   "fails_as_required": true,
+   "detail": {
+    "step": 1,
+    "pos": 25,
+    "anchor": 968,
+    "oracle": false,
+    "k": 1,
+    "golden_k": 1,
+    "draft_ids_equal": false,
+    "committed_equal": false,
+    "state": [
+     {
+      "die": 0,
+      "target_kv_rows": false,
+      "drafter_kv_rows": false,
+      "captured_features": false
+     },
+     {
+      "die": 1,
+      "target_kv_rows": false,
+      "drafter_kv_rows": false,
+      "captured_features": false
+     },
+     {
+      "die": 2,
+      "target_kv_rows": false,
+      "drafter_kv_rows": false,
+      "captured_features": false
+     },
+     {
+      "die": 3,
+      "target_kv_rows": false,
+      "drafter_kv_rows": false,
+      "captured_features": false
+     }
+    ],
+    "tokens": [
+     42
+    ],
+    "wall_s": 1.08
+   }
+  },
+  {
+   "mutant": "draft_causal",
+   "fails_as_required": true,
+   "detail": {
+    "step": 1,
+    "pos": 40,
+    "anchor": 650,
+    "oracle": false,
+    "k": 1,
+    "golden_k": 1,
+    "draft_ids_equal": false,
+    "committed_equal": true,
+    "state": [
+     {
+      "die": 0,
+      "target_kv_rows": false,
+      "drafter_kv_rows": true,
+      "captured_features": false
+     },
+     {
+      "die": 1,
+      "target_kv_rows": false,
+      "drafter_kv_rows": true,
+      "captured_features": false
+     },
+     {
+      "die": 2,
+      "target_kv_rows": false,
+      "drafter_kv_rows": true,
+      "captured_features": false
+     },
+     {
+      "die": 3,
+      "target_kv_rows": false,
+      "drafter_kv_rows": true,
+      "captured_features": false
+     }
+    ],
+    "tokens": [
+     984
+    ],
+    "wall_s": 1.15
+   }
+  }
+ ],
+ "pass": true
+}

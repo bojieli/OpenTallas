@@ -97,7 +97,7 @@ def run_dir(exe, d):
 
 
 def cmd_run(a):
-    w = Path(a.work) / a.set
+    w = Path(a.work).resolve() / a.set            # the run cwd is the case dir: the exe path must be absolute
     exe = w / "obj_lph16" / "Vtb_dsrom_su_softmax"
     meta = json.loads((w / "lph16" / "cases.json").read_text())["cases"]
     rows, neg = [], []
