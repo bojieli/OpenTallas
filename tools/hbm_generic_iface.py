@@ -154,7 +154,8 @@ D_PARAM = {
     "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's "
                        "row store; row i is owned by rank (i div B) mod G and stored there at local row "
                        "(i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; "
-                       "O = the rows in list order on every destination rank (G14)",
+                       "O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, "
+                       "M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
     "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); "
                  "the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by "
                  "CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
@@ -206,7 +207,7 @@ def d_spec_json():
             G11=dict(item="per-die program images of identical structure", needs="compiler only"),
             G12=dict(item="ATT second row source (C) and ring wrap", needs="small hardware: ATT row-fetch front end (second list, mask on a power-of-two ring counter)"),
             G13=dict(item="IDX.EHASH Engram ids", needs="existing DS Engram hash engine (ot_hdc_engram_hash) behind IDX; host-written ids are the bring-up fallback"),
-            G14=dict(item="COLL.ROW_GATHER", needs="the DS kv_gather collective; dispatcher decode of the owner rule"),
+            G14=dict(item="COLL.ROW_GATHER", needs="owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"),
         ),
         linear_attention=dict(scope="in scope via software (owner decision 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
                               state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",

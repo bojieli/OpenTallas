@@ -17,8 +17,8 @@ module ot_hgi_cp_die #(
 ) (
     input  wire          clk,
     input  wire          rst_n,
-    input  wire [414:0]  lcp,           // from the loader
-    output reg  [513:0]  cpl,           // to the loader
+    input  wire [418:0]  lcp,           // from the loader
+    output reg  [221:0]  cpl,           // to the loader
     output reg  [337:0]  vmq,           // VM client {v, req 337}
     input  wire [273:0]  vmr,           // VM client {v, rsp 273}
     input  wire [18:0]   vmstat,        // {proto_fault, mask_fault, ue, ce}
@@ -41,15 +41,15 @@ module ot_hgi_cp_die #(
     wire        l_db_v = lcp[71];     wire [17:0] l_tok = lcp[89:72];   wire [19:0] l_pos = lcp[109:90];
     wire [31:0] l_job = lcp[141:110]; wire [3:0] l_gen = lcp[145:142];  wire [1:0] l_ent = lcp[147:146];
     wire        l_cpl_ack = lcp[148]; wire l_frsp_v = lcp[149];         wire [255:0] l_frsp = lcp[405:150];
-    wire        l_freq_ack = lcp[406]; wire [7:0] rank = lcp[414:407];
+    wire        l_freq_ack = lcp[406]; wire [7:0] rank = lcp[414:407]; wire [3:0] l_ncol = lcp[418:415];
     // ---------------------------------------------------------------- CP
     wire db_rdy, f_req_v, vr_v, cpl_v; wire [39:0] f_req_addr; wire [17:0] vr_addr;
     wire [15:0] u_v; wire [127:0] d_hdr; wire [255:0] d_sut; wire [1791:0] d_desc; wire [146:0] d_n;
     wire [20:0] d_pos1, d_pslot1; wire [15:0] d_L, d_L1;
     wire [17:0] cpl_token; wire [19:0] cpl_pos; wire [31:0] cpl_job, cpl_cycles; wire [3:0] cpl_gen, cpl_status;
-    wire [4:0] cpl_ntok; wire [287:0] cpl_toks; wire cfg_loaded; wire [2:0] cfg_err; wire [63:0] cfg_cp_act;
+    wire cpl_tokx; wire cfg_loaded; wire [2:0] cfg_err; wire [63:0] cfg_cp_act;
     reg  [15:0] u_rdy, u_done, u_fault;
-    reg  db_hold; reg [75:0] db_q;                       // one doorbell station
+    reg  db_hold; reg [79:0] db_q;                       // one doorbell station
     reg  fq_busy;                                        // fetch station: one request in flight until its sector returns
     reg  cpl_hold;                                       // completion station: waits for the loader's ack
     reg  vr_busy, vr_rv; reg [31:0] vr_rd; reg [2:0] vr_w;
@@ -60,13 +60,13 @@ module ot_hgi_cp_die #(
         .cmd_wdata(cfg_wdata), .units_busy(units_busy), .cfg_bus(cfg_bus), .cfg_loaded(cfg_loaded), .cfg_err(cfg_err),
         .cfg_cp_act(cfg_cp_act), .rank(rank),
         .db_v(db_hold), .db_rdy(db_rdy), .db_token(db_q[17:0]), .db_pos(db_q[37:18]), .db_job(db_q[69:38]),
-        .db_gen(db_q[73:70]), .db_entry(db_q[75:74]),
+        .db_gen(db_q[73:70]), .db_entry(db_q[75:74]), .db_ncol(db_q[79:76]),
         .f_req_v(f_req_v), .f_req_rdy(!fq_busy), .f_req_addr(f_req_addr), .f_rsp_v(l_frsp_v), .f_rsp_data(l_frsp),
         .vr_v(vr_v), .vr_rdy(!vr_busy), .vr_addr(vr_addr), .vr_rsp_v(vr_rv), .vr_rsp_data(vr_rd),
         .u_v(u_v), .u_rdy(u_rdy), .d_hdr(d_hdr), .d_sut(d_sut), .d_desc(d_desc), .d_n(d_n), .d_pos1(d_pos1),
         .d_pslot1(d_pslot1), .d_L(d_L), .d_L1(d_L1), .u_done(u_done), .u_fault(u_fault), .wr_quiet(wr_quiet),
         .cpl_v(cpl_v), .cpl_rdy(!cpl_hold), .cpl_token(cpl_token), .cpl_pos(cpl_pos), .cpl_job(cpl_job),
-        .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_ntok(cpl_ntok), .cpl_toks(cpl_toks));
+        .cpl_gen(cpl_gen), .cpl_status(cpl_status), .cpl_cycles(cpl_cycles), .cpl_tokx(cpl_tokx));
     // ---------------------------------------------------------------- unit credits and dispatch packing
     always @* begin
         u_rdy = ux_rdy & ~((16'd1 << 4) | (16'd1 << 6) | (16'd1 << 9)) & {16{!halt}};
@@ -84,7 +84,7 @@ module ot_hgi_cp_die #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             credit <= 3'b111; coll_rec <= 968'd0; quant_rec <= 683'd0; idx_rec <= 1237'd0; halt <= 1'b0;
-            db_hold <= 1'b0; fq_busy <= 1'b0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 514'd0;
+            db_hold <= 1'b0; fq_busy <= 1'b0; cpl_hold <= 1'b0; vr_busy <= 1'b0; vr_rv <= 1'b0; cpl <= 222'd0;
             vmq <= 338'd0;
         end else begin
             // dispatch (the bus carries one valid edge per record)
@@ -97,21 +97,21 @@ module ot_hgi_cp_die #(
             else if (idx_ret[1] || idx_ret[2]) credit[2] <= 1'b1;
             if (vmstat[18] || vmstat[17] || vmstat[16]) halt <= 1'b1;
             // doorbell station
-            if (l_db_v && !db_hold) begin db_hold <= 1'b1; db_q <= {l_ent, l_gen, l_job, l_pos, l_tok}; end
+            if (l_db_v && !db_hold) begin db_hold <= 1'b1; db_q <= {l_ncol, l_ent, l_gen, l_job, l_pos, l_tok}; end
             cpl[0] <= 1'b0;
             if (db_hold && db_rdy) begin db_hold <= 1'b0; cpl[0] <= 1'b1; end          // db_taken
             // completion station
             cpl[1] <= 1'b0;
             if (cpl_v && !cpl_hold) begin
                 cpl_hold <= 1'b1; cpl[1] <= 1'b1;
-                cpl[404:2] <= {cpl_toks, cpl_ntok, cpl_cycles, cpl_status, cpl_gen, cpl_job, cpl_pos, cpl_token};
+                cpl[112:2] <= {cpl_tokx, cpl_cycles, cpl_status, cpl_gen, cpl_job, cpl_pos, cpl_token};
             end
             if (l_cpl_ack) cpl_hold <= 1'b0;
             // record-ring fetch station
-            cpl[405] <= 1'b0;
-            if (f_req_v && !fq_busy) begin fq_busy <= 1'b1; cpl[405] <= 1'b1; cpl[445:406] <= f_req_addr; end
+            cpl[113] <= 1'b0;
+            if (f_req_v && !fq_busy) begin fq_busy <= 1'b1; cpl[113] <= 1'b1; cpl[153:114] <= f_req_addr; end
             if (l_frsp_v) fq_busy <= 1'b0;                 // one fetch in flight end to end (in order)
-            cpl[513:446] <= {cfg_cp_act, cfg_err, cfg_loaded};
+            cpl[221:154] <= {cfg_cp_act, cfg_err, cfg_loaded};
             // VM read client: one word, read as its sector
             vmq[337] <= 1'b0; vr_rv <= 1'b0;
             if (vr_v && !vr_busy) begin

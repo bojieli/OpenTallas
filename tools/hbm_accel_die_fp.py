@@ -2821,6 +2821,8 @@ def masters(m, k=1):
         if mname.startswith('hfd_svc_') and port == 'phy':
             continue
         it = ref.get((mname, port), first[mname])
+        if not others:      # a die-top strap (no peer block, e.g. hfd_su qid): placed on the block's own centre face
+            others = [it]
         ox = sum(o.x + o.w / 2 for o in others) / len(others)
         oy = sum(o.y + o.h / 2 for o in others) / len(others)
         lx, ly = ox - it.x, oy - it.y

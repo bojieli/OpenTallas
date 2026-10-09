@@ -31,7 +31,8 @@ VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
 HGI_VM_SLOT = (1399.656, 885.6)        # 64 macros 174.7 x 70.5 um on a 7 x 10 grid with 2.16 um halos (1,261 x 758 um) + logic
 HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
-LCP_BITS, CPL_BITS = 415, 514           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
+LCP_BITS, CPL_BITS = 419, 222
+QID = dict(SW=0, NW=1, SE=2, NE=3)       # hfd_su inject-ownership strap values           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
 
 def fields(unit):
@@ -101,7 +102,7 @@ def variant(base, units):
     v['split_extra_ports'] = ex
     if 'cp' in units:
         # hgi-takeover die gap 4: ONE command-processor block (ot_hgi_cp_die) instead of the legacy N / S split; the
-        # loader <-> CP link (lcp 415 / cpl 514) replaces the legacy program-store bus; the loader memory lanes carry
+        # loader <-> CP link (lcp 419 / cpl 222) replaces the legacy program-store bus; the loader memory lanes carry
         # the native service protocol (lq 346 / lr 293 per stack, ot_hfd_loader_kport)
         v['split_masters'] = {k: x for k, x in (base.get('split_masters') or {}).items() if k != 'hfd_cmdproc'}
         v['split_extra_ports'] = {k: x for k, x in v['split_extra_ports'].items() if k != 'hfd_cmdproc'}
@@ -140,6 +141,11 @@ def install(m, buses, paths, units):
                 if f'su_{q}' in hub:
                     name = f'hgi_vmaddr_{q}'
                     buses.append((name, 'hub', 80, [(peer, f't_hgi_vmaddr_{q}'), (hub[f'su_{q}'].name, 'f_hgi_vmaddr')]))
+                    paths[name] = [name]
+                    # inject-ownership strap (hbm-forks 504aba259): quarter qid drives inject flit i iff i mod 4 == qid;
+                    # tied per instance (SW 0, NW 1, SE 2, NE 3), pins su/rtl/strap_pins.tcl
+                    name = f'hgi_qid_{q}'
+                    buses.append((name, f'strap:{QID[q]}', 2, [(hub[f"su_{q}"].name, 'qid')]))
                     paths[name] = [name]
         if r['unit'] in CFG_UNITS:
             name = f"hgi_cfg_{r['unit']}"

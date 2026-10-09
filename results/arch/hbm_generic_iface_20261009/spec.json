@@ -383,7 +383,7 @@
    "FUSED.QDQ_FP4_E4M3": "FP4E2M1 with an FP8E4M3 scale per block; [7:0] block size (v1 legal set {16}, others E_RANGE; DS 16): O = dequantised values (G8)",
    "COLL.ALL_GATHER": "even-split segments: rank r contributes elements [floor(r*n/G), floor((r+1)*n/G)) of A (n = A.n, G = group size); every rank receives all n in O (G9)",
    "COLL.GROUP_REDUCE_MCAST": "[7:0] sub-group size s (2, 4, 8): each aligned sub-group of s ranks reduces A in the rank-order pairwise tree, and every sub-group's result is multicast to all ranks of the group; O = the sub-groups' results in sub-group order, format O.fmt (G10)",
-   "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's row store; row i is owned by rank (i div B) mod G and stored there at local row (i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; O = the rows in list order on every destination rank (G14)",
+   "COLL.ROW_GATHER": "I = selected row ids (U32, identical on every rank; count from I row 1 or imm_a); A = this die's row store; row i is owned by rank (i div B) mod G and stored there at local row (i div (B*G))*B + i mod B; [7:0] B (DS 8); imm_b = destination ranks 0..imm_b-1; O = the rows in owner order on every destination rank: owner r's j-th selected row (list order) at O row r * M + j, M = the largest owned count (padded); the list-order view is the compiler's table read by ATT (G14, review-1149)",
    "IDX.EHASH": "Engram row ids of the slot's token: [2:0] Engram layer index; B = that layer's hash constants (table); the engine keeps the n-gram token history (pushed by the first EHASH of a token, restored by CTL.ACCEPT); O = U32 ids, one per head and n-gram order, an I table for indexed DMA.LOAD (G13)",
    "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
    "IDX.TOPK": "[11:0] k (1..2048), [12] order (0 descending score, 1 ascending id; 1 legal for k <= 8 only, else E_RANGE) (G15); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score (order 0), ties lowest index; R (optional) = the k values",
@@ -729,7 +729,7 @@
   },
   "G14": {
    "item": "COLL.ROW_GATHER",
-   "needs": "the DS kv_gather collective; dispatcher decode of the owner rule"
+   "needs": "owner reads (padded) + the collective gather bypass; no reorder hardware (compiler table)"
   }
  },
  "linear_attention": {
