@@ -39,7 +39,7 @@ from hgi_sim.machine import UNITS, Die, Fault, Machine  # noqa: E402
 from hgi_sim.records import decode_program, encode_program  # noqa: E402
 
 F = np.float32
-MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/md_qwen3_8b.hex"
+MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/legacy_v0_9/md_qwen3_8b.hex"
 
 
 def md_words(cfg):

@@ -1,18 +1,20 @@
 #!/usr/bin/env python3
 """HGI-1: the generic HBM-die interface (docs/HBM_GENERIC_INTERFACE.md), reference encoder and validator.
 
-One table, three uses:
-  * SPEC: every field of the model descriptor (MD), the program record header (UOP), the memory descriptor
-    (MDESC) and the SU template (SUT), with bit positions, legal values and the consuming block;
-  * encode(): the 64-word MD for a model, from its HF config.json plus the deployment (TP size, head shard);
-    section C (the only words hardware reads) is DERIVED here, never by hardware;
-  * validate(): the checks the command processor does at CFG_COMMIT (magic, version, CRC, reserved bits, legal
-    mode values) plus the software-only check that section C equals derive(sections A/B).
+The CURRENT design (proposed for owner review) is the default:
+  * SPEC: every field of the model descriptor (MD), the record header (UOP), the memory descriptor (MDESC) and
+    the SU template (SUT), with bit positions, legal values and the consuming block;
+  * the per-layer model manifest (JSON) of each model, bound to its MD by sha256;
+  * the 64-word MD (3 static fields: cp_vocab, cp_ctx_max, coll_group_size) and the CP's CFG_COMMIT checks.
 
-    python3 tools/hbm_generic_iface.py --out results/arch/hbm_generic_iface_20261009
+    python3 tools/hbm_generic_iface.py --out   results/arch/hbm_generic_iface_20261009
     python3 tools/hbm_generic_iface.py --check results/arch/hbm_generic_iface_20261009
 
-The DS descriptor's section C must equal the reset values (DS behaviour): loading it is a no-op for every block.
+The DS descriptor's static fields equal the reset values (DS behaviour): loading it is a no-op for every block.
+
+LEGACY: the earlier v0.9 encoding (17 mode fields, 4 operand slots) is kept below only because tools/hgi_sim still
+imports it (from_config, pack, unpack, RESET, UOP_FIELDS, ...) and reads its Qwen descriptor; `--legacy-v09`
+regenerates/checks those files in <dir>/legacy_v0_9.  It is not part of the design.
 """
 from __future__ import annotations
 
@@ -348,8 +350,8 @@ def self_test(words):
 
 def spec_json():
     return dict(
-        schema="opentallas.hbm_generic_iface.v0.9", version=f"{VERSION[0]}.{VERSION[1]}",
-        doc="docs/HBM_GENERIC_INTERFACE.md", magic=hex(MAGIC), md_words=NWORDS,
+        schema="opentallas.hbm_generic_iface.v0.9-legacy", version=f"{VERSION[0]}.{VERSION[1]}",
+        status="LEGACY encoding, superseded by the current design; kept only for tools/hgi_sim", magic=hex(MAGIC), md_words=NWORDS,
         md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y,
                         reset=RESET.get(n), legal=(sorted(LEGAL[n]) if isinstance(LEGAL.get(n), set) else LEGAL.get(n)))
                    for n, w, l, wd, k, c, y in MD_FIELDS],
@@ -365,9 +367,8 @@ def spec_json():
 
 
 # ============================================================================================================
-# HGI-1 v1.0 DRAFT (proposed, pending owner approval).  Used only with --draft; v0.9 above is untouched.
-# Incorporates the iface-review zero-hardware set (C1, C2, C3a, C5, C7, C8, C9, C10, V0), the simulator's gaps
-# G1-G7 and GDN-1..6 (tools/hgi_sim/records.py SPEC_GAPS, hbm-sim.log), and linear attention via software.
+# HGI-1 CURRENT DESIGN (proposed for owner review): the default of this tool and of docs/HBM_GENERIC_INTERFACE.md.
+# Everything above this line is the LEGACY v0.9 encoding, kept only for tools/hgi_sim.
 # ============================================================================================================
 D_VERSION = (1, 0)
 D_MD_FIELDS = [
@@ -389,11 +390,10 @@ D_MD_FIELDS = [
     ("crc32", 63, 0, 32, "u", "hfd_cmdproc", "IEEE CRC-32 of words 0..62"),
 ]
 D_RESET = dict(cp_vocab=129280, cp_ctx_max=1 << 20, coll_group_size=96)
-D_LEGAL = dict(cp_vocab=(1, (1 << 18) - 1), cp_ctx_max=(1, 1 << 20), coll_group_size={1, 2, 4, 8, 16, 32, 64, 96})
-# v0.9 section-C bits retired by C7/C10: reserved forever, never reused (change rule).
-D_RETIRED = ["rope_half 42.0", "rope_rot_log2 42.1-3", "norm_d_units 43.0-5", "norm_hc_off 43.6", "norm_out_bf16 43.7",
-             "sfx_sink_off 44.0", "sfx_multipass 44.1", "glu_out_bf16 45.0", "glu_clamp_off 45.1",
-             "glu_routew_off 45.2", "coll_head_rows 46.8-25", "kv_dense 47.0", "emb_int8 48.0", "emb_row_bytes 48.1-16"]
+# Collective groups: 1/2/4/8 on the NC-8 owner tree plus 96 (DS reset); 16/32/64 are defined encodings that the
+# CFG range check rejects (E_RANGE) until a priced variant builds them (REVIEW_20261009 S4).
+D_LEGAL = dict(cp_vocab=(1, (1 << 18) - 1), cp_ctx_max=(1, 1 << 20), coll_group_size={1, 2, 4, 8, 96})
+D_GROUP_DEFINED_REJECTED = [16, 32, 64]
 D_UNITS = UNITS + ["RSV12", "RSV13", "RSV14", "RSV15"]          # C3a: codes 12-15 reserved
 # Unit presence per die.  r25 (the generic HBM die) has fixed-function SMs and NO OTG-1/SIMT kernel memory
 # (hbm-forks.log 10-09 03:29): SIMT is an OPTIONAL unit, encoding kept for dies that have one.
@@ -435,7 +435,7 @@ D_PARAM = {
     "ARGMAX.LOCAL": "imm_a = id offset multiplier: global id = local + DYN[RANK] * imm_a (0 = ids already global)",
     "ATT.QK/PV": "[3:0] head lanes, [7:4] 64-slices per head - 1; mask = B.n_sel (POS1 or POS_SLOT1)",
     "SIMT.RUN": "OPTIONAL unit, absent on r25. Where present: [13:0] entry PC; imm_a = SM mask; UR4 = imm_b; UR5.. = effective bases of present descriptors in opnd order",
-    "IDX.TOPK": "REQUIRED (C1). [11:0] k (1..2048); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score, ties lowest index; R (optional) = the k values",
+    "IDX.TOPK": "[11:0] k (1..2048); per outer row of A (m rows of n scores): O = k U32 ids sorted by descending score, ties lowest index; R (optional) = the k values",
     "SM.MATVEC (indexed B)": "expert fetch by id: B.indexed = 1, I = the id table, CTL.LOOP over k experts (L)",
     "DMA.STORE": "linear append (dense KV, GDN state): O base + DYN[POS]*row bytes",
     "DMA.KVWB_DS": "DS native window-ring KV write-back (unchanged)",
@@ -444,17 +444,17 @@ D_PARAM = {
 
 def d_spec_json():
     return dict(
-        schema="opentallas.hbm_generic_iface.v1.0-draft", status="PROPOSED, pending owner approval",
+        schema="opentallas.hbm_generic_iface.v1", status="PROPOSED design for owner review",
         r25_facts=dict(simt="absent: fixed-function SMs, no kernel memory (hbm-forks.log 10-09 03:29)",
                        ds_program="native unit ops only (hbm-sim lowering), no SIMT.RUN"),
-        required_v1_0=["C3b indexed descriptors (MDESC indexed, n_sel N_FROM_VM)", "C1 generic IDX.TOPK"],
-        version="1.0-draft", base="v0.9 (results/arch/hbm_generic_iface_20261009/spec.json)",
-        doc="docs/HBM_GENERIC_INTERFACE.md section 10.5", magic=hex(MAGIC), md_words=NWORDS,
+        required_new_logic=["indexed descriptors (MDESC indexed, n_sel N_FROM_VM) in the unit dispatchers", "generic IDX.TOPK decode over the existing selector"],
+        version=f"{D_VERSION[0]}.{D_VERSION[1]}", doc="docs/HBM_GENERIC_INTERFACE.md", magic=hex(MAGIC), md_words=NWORDS,
         md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y, reset=D_RESET.get(n),
                         legal=(sorted(D_LEGAL[n]) if isinstance(D_LEGAL.get(n), set) else D_LEGAL.get(n)))
                    for n, w, l, wd, k, c, y in D_MD_FIELDS],
-        reserved_words=dict(section_b_moved_to_manifest="2-31", mtp_D4="49, 53-55", window_C4="50-52"),
-        retired_never_reuse=D_RETIRED, errors=ERR, fmt=FMT,
+        reserved_words=dict(geometry_in_manifest="2-31", static_reserved="42-45, 47-48, 46 bits 31:8",
+                            mtp="49, 53-55", window_chunk="50-52", other="59, 62"),
+        coll_group_size_defined_rejected=D_GROUP_DEFINED_REJECTED, errors=ERR, fmt=FMT,
         uop=dict(bits=128, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_UOP_FIELDS], units=D_UNITS,
                  optional_units=D_OPTIONAL_UNITS,
                  ops=D_OPS, op_code="index in ops[unit]", wait_bit="bit u = unit code u", pred=PRED,
@@ -464,11 +464,11 @@ def d_spec_json():
         mdesc=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_MDESC_FIELDS], space=SPACE,
                    dyn=D_DYN + ["DS_FULL_DYN[%d]" % i for i in range(47)] + ["N_FROM_VM"],
                    address="base + L*lstride + L1*l1stride + (indexed ? U32(VM[I_eff+L]) : DYN[dyn_sel])*dyn_mul",
-                   indexed="C3b REQUIRED: id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L)",
+                   indexed="id from VM table I (row 0); n_sel=63 takes n from row 1 (I_eff + I.stride + L)",
                    istride="0 means 1; ibcast=1 means inner stride 0 (per-row scalar broadcast)"),
         sut=dict(bits=256, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_SUT_LAYOUT],
-                 semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (C5)"),
-        linear_attention=dict(scope="in scope via software (owner 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
+                 semantics="tools/hdc_program_v41.py Machine.su1 (R-ARITH chunk8); c_pair partner i XOR 1 always (RoPE pairing is in the weights)"),
+        linear_attention=dict(scope="in scope via software (owner decision 2026-10-09)", engines="existing (SM, SU, DMA, COLL)",
                               state="FP32 in region STATE, per layer and local head, stored transposed [dv][dk] (GDN-4)",
                               conv_ring="FP32 [conv_k-1][channels] in region STATE", softplus="SU template (no SFU code)",
                               per_head="second loop level (CTL.LOOP level 1, MDESC l1stride)"),
@@ -496,7 +496,7 @@ def d_manifest(name):
                            ffn=dict(kind="moe", experts=t["n_routed_experts"], shared=t["n_shared_experts"],
                                     topk=t["num_experts_per_tok"]) if ds else dict(kind="dense", inter=t["intermediate_size"]),
                            norm=dict(kind="rms", eps=t["rms_norm_eps"], qk_norm=not ds)))
-    return dict(schema="opentallas.hgi_model_manifest.v1-draft", model=name, config=spec["cfg"],
+    return dict(schema="opentallas.hgi_model_manifest.v1", model=name, config=spec["cfg"],
                 config_sha256=hashlib.sha256(raw).hexdigest(),
                 globals=dict(hidden=t["hidden_size"], vocab=t["vocab_size"], rope_theta=t["rope_theta"],
                              rope_scaling=t.get("rope_scaling"), softmax_scale=f"FP32(head_dim^-0.5) = {hex(f32bits(hd ** -0.5))}",
@@ -562,7 +562,8 @@ def d_self_test(words):
     w = list(words); w[40] ^= 1; out["bad_crc"] = d_hw_check(w)
     out["busy"] = d_hw_check(words, busy=True)
     w = list(words); w[46] = (w[46] & ~0xFF) | 12; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["group_12"] = d_hw_check(w)
-    w = list(words); w[44] |= 1; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["retired_sink_bit"] = d_hw_check(w)
+    w = list(words); w[46] = (w[46] & ~0xFF) | 16; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["group_16"] = d_hw_check(w)
+    w = list(words); w[44] |= 1; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["reserved_bit"] = d_hw_check(w)
     w = list(words); w[40] = (1 << 18) - 0; w[63] = zlib.crc32(struct.pack("<63I", *w[:63])); out["vocab_2p18"] = d_hw_check(w)
     return out
 
@@ -578,7 +579,7 @@ def d_main(out_dir=None, check_dir=None):
             man, mbytes, md, words = d_build(name)
             assert d_hw_check(words) == 0, name
             neg = d_self_test(words)
-            assert neg == dict(bad_magic=1, bad_version=2, bad_crc=3, busy=4, group_12=5, retired_sink_bit=6,
+            assert neg == dict(bad_magic=1, bad_version=2, bad_crc=3, busy=4, group_12=5, group_16=5, reserved_bit=6,
                                vocab_2p18=6), neg
             (out / f"manifest_{name}.json").write_bytes(mbytes)
             (out / f"md_{name}.hex").write_text("".join(f"{x:08x}\n" for x in words))
@@ -590,12 +591,12 @@ def d_main(out_dir=None, check_dir=None):
         print(json.dumps(summ, indent=1))
     if check_dir:
         d = Path(check_dir)
-        assert json.loads((d / "spec.json").read_text()) == json.loads(json.dumps(d_spec_json())), "draft spec drift"
+        assert json.loads((d / "spec.json").read_text()) == json.loads(json.dumps(d_spec_json())), "spec drift"
         for name in names:
             man, mbytes, md, words = d_build(name)
             assert (d / f"manifest_{name}.json").read_bytes() == mbytes, f"{name}: manifest drift"
             assert [int(x, 16) for x in (d / f"md_{name}.hex").read_text().split()] == words, f"{name}: MD drift"
-        print("hbm_generic_iface --draft: v1.0-draft spec, manifests and descriptors current")
+        print("hbm_generic_iface: spec, manifests and descriptors current")
 
 
 
@@ -603,12 +604,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out")
     ap.add_argument("--check")
-    ap.add_argument("--draft", action="store_true", help="v1.0 DRAFT (proposed, pending owner approval)")
+    ap.add_argument("--legacy-v09", action="store_true",
+                    help="regenerate/check the legacy v0.9 files in <dir>/legacy_v0_9 (only tools/hgi_sim reads them)")
     a = ap.parse_args()
-    if a.draft:
+    if not a.legacy_v09:
         return d_main(a.out, a.check)
     if a.out:
-        out = Path(a.out)
+        out = Path(a.out) / "legacy_v0_9"
         out.mkdir(parents=True, exist_ok=True)
         (out / "spec.json").write_text(json.dumps(spec_json(), indent=1) + "\n")
         summary = {}
@@ -631,14 +633,14 @@ def main():
         assert summary["ds_v41_flash"]["equals_reset_ds"] and not summary["qwen3_8b"]["equals_reset_ds"]
         print(json.dumps(summary, indent=1))
     if a.check:
-        d = Path(a.check)
+        d = Path(a.check) / "legacy_v0_9"
         assert json.loads((d / "spec.json").read_text()) == json.loads(json.dumps(spec_json())), "spec drift"
         for name in MODELS:
             words = [int(x, 16) for x in (d / f"md_{name}.hex").read_text().split()]
             md, _ = from_config(name)
             assert words == pack(md), f"{name}: descriptor drift"
             assert hw_check(words) == 0 and not sw_check(words), name
-        print("hbm_generic_iface: spec and descriptors current")
+        print("hbm_generic_iface --legacy-v09: legacy spec and descriptors current")
 
 
 if __name__ == "__main__":

@@ -6,14 +6,15 @@
    "coll_group_size": 96
   },
   "equals_reset_ds": true,
-  "crc32": "0x741ec60b",
+  "crc32": "0xcb3ffafa",
   "negative_cases": {
    "bad_magic": "E_MAGIC",
    "bad_version": "E_VERSION",
    "bad_crc": "E_CRC",
    "busy": "E_BUSY",
    "group_12": "E_RANGE",
-   "retired_sink_bit": "E_RESERVED",
+   "group_16": "E_RANGE",
+   "reserved_bit": "E_RESERVED",
    "vocab_2p18": "E_RESERVED"
   }
  },
@@ -24,14 +25,15 @@
    "coll_group_size": 4
   },
   "equals_reset_ds": false,
-  "crc32": "0xa4ba061c",
+  "crc32": "0x9ed3a0c3",
   "negative_cases": {
    "bad_magic": "E_MAGIC",
    "bad_version": "E_VERSION",
    "bad_crc": "E_CRC",
    "busy": "E_BUSY",
    "group_12": "E_RANGE",
-   "retired_sink_bit": "E_RESERVED",
+   "group_16": "E_RANGE",
+   "reserved_bit": "E_RESERVED",
    "vocab_2p18": "E_RESERVED"
   }
  }
