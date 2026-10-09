@@ -9,7 +9,8 @@
 // ingest writes (ack_n: ACKs returned this ck cycle by the per-stack write merge); only then does it go to the host and
 // pulse slot_done_v / slot_done_tag (ck) for the decode scheduler, so decode can never read a slot whose writes are still
 // in flight.  Fault words pass at once.  FENCE 0 (bench mutant, must FAIL) releases completions without waiting.
-module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1) (
+module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1,
+    parameter integer HCUT = `ifdef OT_HING_HCUT 1 `else 0 `endif) (
     input  wire          rst_n,
     input  wire          clk_h,
     input  wire          h_v,
@@ -68,22 +69,37 @@ module hfd_host_ingest #(parameter integer IQ = 4, parameter integer FENCE = 1) 
         else begin ucr_q <= ucr_pend != 0; ucr_pend <= ucr_pend + a_freed - (ucr_pend != 0 ? 5'd1 : 5'd0); end
     assign u_tcr = ucr_q;
     // ck: ACK count, release when acked >= the word's sector count (fault words at once)
+    // struct-close 2026-10-09 (HCUT, drive-0849: hfd_host_ingest f5-lvt EF -404 / -467 = u_ca.rbin -> the u_ca read mux ->
+    // fence compare -> u_cb.mem write, 1,159 ps cell, fanout 15): HCUT = 1 moves the u_ca head into a REGISTER (hk_v / hk_d,
+    // refilled from u_ca when empty or released) and the fence / release / u_cb write work from it.  +1 ck edge per word;
+    // order, fence and credits unchanged (h is one extra slot, never more words in flight than the host credited).
     reg  [31:0] acked;
-    wire        is_done = a_head[63:56] == 8'h01;
     wire        b_full;
-    always @(*) a_pop = !a_empty && !b_full && (!is_done || FENCE == 0 || acked >= a_head[31:0]);
+    reg         hk_v; reg [63:0] hk_d;
+    wire [63:0] r_head = (HCUT != 0) ? hk_d : a_head;
+    wire        is_done = r_head[63:56] == 8'h01;
+`ifndef OT_HING_MUT_HCUT_NOFENCE
+    wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full && (!is_done || FENCE == 0 || acked >= r_head[31:0]);
+`else
+    wire        rel = ((HCUT != 0) ? hk_v : !a_empty) && !b_full;   // mutant: the fence is skipped on the head register
+`endif
+    always @(*) a_pop = (HCUT != 0) ? (!a_empty && (!hk_v || rel)) : rel;
+    always @(posedge ck or negedge rn_c)
+        if (!rn_c) hk_v <= 1'b0;
+        else if (HCUT != 0) begin if (a_pop) hk_v <= 1'b1; else if (rel) hk_v <= 1'b0; end
+    always @(posedge ck) if (HCUT != 0 && a_pop) hk_d <= a_head;
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin acked <= 0; slot_done_v <= 1'b0; slot_done_tag <= 0; end
         else begin
             acked <= acked + ack_n;
-            slot_done_v <= a_pop && is_done;
-            if (a_pop && is_done) slot_done_tag <= a_head[47:40];
+            slot_done_v <= rel && is_done;
+            if (rel && is_done) slot_done_tag <= r_head[47:40];
         end
     // ck -> clk_h: released words to the host (host credits TCRED 4, pin flops)
     wire       b_empty, b_ovf; wire [3:0] b_freed, b_cnt; wire [63:0] b_head;
     reg  [2:0] hcr; reg hcr_q; reg tv_q; reg [63:0] td_q;
     wire       b_pop = !b_empty && hcr != 0;
-    ot_link_afifo #(.W(64), .AW(3)) u_cb (.wclk(ck), .wrst_n(rn_c), .wr(a_pop), .wdata(a_head), .wfull(b_full),
+    ot_link_afifo #(.W(64), .AW(3)) u_cb (.wclk(ck), .wrst_n(rn_c), .wr(rel), .wdata(r_head), .wfull(b_full),
         .wfreed(b_freed), .ovf(b_ovf), .rclk(clk_h), .rrst_n(rn_h), .rd(b_pop), .rempty(b_empty), .rdata(b_head), .rcount(b_cnt));
     always @(posedge clk_h or negedge rn_h)
         if (!rn_h) begin hcr <= 3'd4; hcr_q <= 1'b0; tv_q <= 1'b0; td_q <= 0; end
