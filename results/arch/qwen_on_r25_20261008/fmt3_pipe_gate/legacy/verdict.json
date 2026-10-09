@@ -1,0 +1,91 @@
+{
+  "verdict": "PASS",
+  "scope": "exact conversion and finite protocol; production IL8 issuer; no physical qualification",
+  "contract": "128 INT8 codes pair consecutive issuer beats, low 64 then high 64; issue interleaves rows",
+  "precondition": "fmt3 operation has an even total count of real BF16 beats; all target Qwen shapes satisfy this",
+  "latency": "one registered stage, 2 consecutive output beats per packed line; no arithmetic-order change",
+  "source_sha256": {
+    "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv": "3e0f65f1ae0438b2f37d8434600c49abb087fb7471db1283921cdc883ef5dcb3",
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv": "032984049f7b73d00377cd30d4716c3e1553b71ebd2453b02326d59e4e526b06",
+    "rtl/test/tb_hbm_int8_line.sv": "d4017982b4fd28ded63f6018a9c70f13c0b5e04450fd4784e24d5d83c8533c79",
+    "rtl/test/tb_hbm_int8_issue.sv": "13a258ebe892c0ccd91c5ca64a735ca7513da2ab87d490174496a75ac2cec153",
+    "tools/uarch_model.py": "c32c708c92c7c509999a56f83169f96e5262a351f61d26571ff2ba58838f1b38",
+    "tools/qwen_r25_int8_gate.py": "e9d3a1b83a194dfb9717b5db216516d9f93f76c01b056641971b937e5ed4bc05",
+    "rtl/test/tb_hbm_int8_credit.sv": "ec8537ae85bfb6c05bddba16bd813b67128b6a998c20789cb25aa2d9819f2a1f"
+  },
+  "pipeline": false,
+  "model": {
+    "status": "proposal_not_physically_qualified",
+    "replicas": 32,
+    "macs_per_cycle": 0,
+    "compute_intensity": "conversion only",
+    "input_bytes_per_cycle_average": 64,
+    "input_burst_bytes": 136,
+    "output_bytes_per_cycle": 136,
+    "useful_output_bytes_per_cycle": 128,
+    "input_boundary_bits": 1088,
+    "output_boundary_bits": 1088,
+    "conversion_lanes": 64,
+    "held_high_codes_bits": 512,
+    "output_register_bits": 1088,
+    "control_register_bits": 2,
+    "half_mux_inputs_per_lane": 2,
+    "half_control_fanout": 64,
+    "estimated_area_mm2_die": 0.1,
+    "floorplan_slot": "actual hierarchical front_c candidate strip; adopted R25 element mapping unverified",
+    "routing_tracks_needed": 2176,
+    "routing_channel_capacity": 2500,
+    "routing_capacity_basis": "120um central channel / 0.048um track pitch on one layer; other traffic shares it",
+    "routing_fit": "analytic 2176/2500=87.04% for adapter boundary buses alone; detailed routing remains a gate",
+    "front_c_footprint_um": [
+      432.0,
+      518.4
+    ],
+    "front_c_slot_area_mm2": 0.2239488,
+    "adapter_estimated_area_mm2_per_slot": 0.003125,
+    "adapter_area_fraction_of_slot": 0.013954082361682671,
+    "target_utilization": 0.55,
+    "internal_clock_period_ps": 833,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25,
+    "boundary_external_setup_ps": 300,
+    "boundary_region_skew_budget_ps": 90,
+    "local_boundary_setup_budget_ps": 383,
+    "clock_plan": "balanced element region; per-corner neighbour insertion from CTS calibration; validate routed insertion",
+    "hold_budget": "input min30ps; sender output min0ps (50ps-50ps H1); correct FF scene",
+    "qualification_policy": "SS>=15ps FF>=15ps DRC0 at833ps; legacy corner tool TT verdict ignored",
+    "added_latency_cycles_per_dependent_sm_op": 1,
+    "added_token_cycles": 253,
+    "added_token_ns_at_1p2ghz": 210.83333333333334,
+    "dependent_sm_ops_assumption": "36 layers x 7 matvecs plus head",
+    "adoption_gate": "exact tests plus SS>=15ps FF>=15ps DRC0"
+  },
+  "tests": [
+    {
+      "name": "credit",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "line",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "issue",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "negative_prefetch",
+      "returncode": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "negative_sign",
+      "returncode": 1,
+      "gate_pass": true
+    }
+  ]
+}

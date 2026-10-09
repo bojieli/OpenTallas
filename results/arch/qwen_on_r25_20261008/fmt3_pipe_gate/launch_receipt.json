@@ -1,0 +1,12 @@
+{
+  "source_commit": "77ec33a0e",
+  "host": "ot-epyc3",
+  "pid": 1855945,
+  "root": "/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e",
+  "admission_peak_gib": 64,
+  "guard": "capacity5% cushion plus livewide64Gi futureclaim; queuedno compute",
+  "image_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "policy": "833ps SS/FF60/25uncertainty; setup>=15ps hold>=15ps DRC0",
+  "new_latency": "intrinsic adapter2cycles vs1; fullshape source-preloaded issuecycles unchanged; conservativelyprice+1cycle/op for late source chains",
+  "physical_qualification": "pending"
+}

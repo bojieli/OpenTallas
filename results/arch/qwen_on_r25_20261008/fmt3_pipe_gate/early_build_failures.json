@@ -1,0 +1,14 @@
+[
+  {
+    "source_commit": "2946c2e81",
+    "verdict": "FAIL",
+    "scope": "HDL parse",
+    "reason": "nested optional generate keywords in legacy branch; corrected417eafdc9"
+  },
+  {
+    "source_commit": "417eafdc9",
+    "verdict": "FAIL",
+    "scope": "bench invocation",
+    "reason": "PIPE override applied to credit-only bench with noPIPE parameter; corrected590abccdb"
+  }
+]

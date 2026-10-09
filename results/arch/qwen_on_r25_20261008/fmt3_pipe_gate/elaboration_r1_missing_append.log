@@ -1,0 +1,7 @@
+/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e/src/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1093: error: Unknown module type: ot_hbm_accel_int8_credit
+/srv/opentallas-scratch/codex/qwen-fmt3-pipe-77ec33a0e/src/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv:1102: error: Unknown module type: ot_hbm_accel_int8_line
+2 error(s) during elaboration.
+*** These modules were missing:
+        ot_hbm_accel_int8_credit referenced 1 times.
+        ot_hbm_accel_int8_line referenced 1 times.
+***

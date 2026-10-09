@@ -1,0 +1,260 @@
+{
+  "verdict": "PASS",
+  "scope": "all eight full per-SM TP4 matvec shapes roundtrip; minimum real issuer operand gate",
+  "symmetry": "32 identical SMs with contiguous equal output-row partitions; no full-die simulation",
+  "full_die_shapes": {
+    "q": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 1024,
+      "k": 4096,
+      "rows_per_sm": 32,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 2048,
+      "packed_lines_per_sm": 1024,
+      "useful_code_bytes_per_die": 4194304,
+      "response_bytes_per_die": 4456448,
+      "row_scale_bytes_per_die": 2048,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    },
+    "k": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 256,
+      "k": 4096,
+      "rows_per_sm": 8,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 512,
+      "packed_lines_per_sm": 256,
+      "useful_code_bytes_per_die": 1048576,
+      "response_bytes_per_die": 1114112,
+      "row_scale_bytes_per_die": 512,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    },
+    "v": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 256,
+      "k": 4096,
+      "rows_per_sm": 8,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 512,
+      "packed_lines_per_sm": 256,
+      "useful_code_bytes_per_die": 1048576,
+      "response_bytes_per_die": 1114112,
+      "row_scale_bytes_per_die": 512,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    },
+    "o": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 4096,
+      "k": 1024,
+      "rows_per_sm": 128,
+      "groups": 2,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 2048,
+      "packed_lines_per_sm": 1024,
+      "useful_code_bytes_per_die": 4194304,
+      "response_bytes_per_die": 4456448,
+      "row_scale_bytes_per_die": 8192,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 16
+    },
+    "gate": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 3072,
+      "k": 4096,
+      "rows_per_sm": 96,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 6144,
+      "packed_lines_per_sm": 3072,
+      "useful_code_bytes_per_die": 12582912,
+      "response_bytes_per_die": 13369344,
+      "row_scale_bytes_per_die": 6144,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    },
+    "up": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 3072,
+      "k": 4096,
+      "rows_per_sm": 96,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 6144,
+      "packed_lines_per_sm": 3072,
+      "useful_code_bytes_per_die": 12582912,
+      "response_bytes_per_die": 13369344,
+      "row_scale_bytes_per_die": 6144,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    },
+    "down": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 4096,
+      "k": 3072,
+      "rows_per_sm": 128,
+      "groups": 6,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 6144,
+      "packed_lines_per_sm": 3072,
+      "useful_code_bytes_per_die": 12582912,
+      "response_bytes_per_die": 13369344,
+      "row_scale_bytes_per_die": 8192,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 48
+    },
+    "head": {
+      "tp": 4,
+      "sm_replicas": 32,
+      "die_rows": 37984,
+      "k": 4096,
+      "rows_per_sm": 1187,
+      "groups": 8,
+      "c": 8,
+      "group_slot": true,
+      "bf16_issue_beats_per_sm": 75968,
+      "packed_lines_per_sm": 37984,
+      "useful_code_bytes_per_die": 155582464,
+      "response_bytes_per_die": 165306368,
+      "row_scale_bytes_per_die": 75968,
+      "nc": 8,
+      "nc_contract": "independent activation columns sharing each weight line",
+      "x_addresses_per_sm": 64
+    }
+  },
+  "full_per_sm_roundtrips": [
+    {
+      "name": "q",
+      "canonical_bytes": 131072,
+      "roundtrip": "PASS",
+      "sha256": "41f8eca548b39b9e30a3b281d1bff0bc91fde3cbefbcb8096443c569e8747329"
+    },
+    {
+      "name": "k",
+      "canonical_bytes": 32768,
+      "roundtrip": "PASS",
+      "sha256": "622775793154dcf8bd00e8f6a39f7dd82464f45a46db8f94ef8457334d37dddf"
+    },
+    {
+      "name": "v",
+      "canonical_bytes": 32768,
+      "roundtrip": "PASS",
+      "sha256": "a526ebfc0cd67bebf8659bfdb6fc795b63bba1dc4a06ad81ad9ffdfdb81eea22"
+    },
+    {
+      "name": "o",
+      "canonical_bytes": 131072,
+      "roundtrip": "PASS",
+      "sha256": "d7d046f23fc29d79db67d4e4e8419e690b875cadf31e16346ca04b2c0dcb5ce3"
+    },
+    {
+      "name": "gate",
+      "canonical_bytes": 393216,
+      "roundtrip": "PASS",
+      "sha256": "eaa3650f1748e4cfd4a5f4655b87f50da5cb3e1fceec13090edbc710d41a4197"
+    },
+    {
+      "name": "up",
+      "canonical_bytes": 393216,
+      "roundtrip": "PASS",
+      "sha256": "a65a46743a42edebdfe4fd1e2ff1751fcbf2524fdbc005ac9e308888af74e598"
+    },
+    {
+      "name": "down",
+      "canonical_bytes": 393216,
+      "roundtrip": "PASS",
+      "sha256": "fbbf821bf4f43302e964096ddfd02e51aa9015b610d4a9bd2db4c089122a0289"
+    },
+    {
+      "name": "head",
+      "canonical_bytes": 4861952,
+      "roundtrip": "PASS",
+      "sha256": "50047d67f980afaa64fc8d4d523b251111792ed47d876f9100a5325664a678ec"
+    }
+  ],
+  "rtl": [
+    {
+      "name": "correct",
+      "returncode": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "negative_row_major",
+      "returncode": 1,
+      "gate_pass": true
+    }
+  ],
+  "scales": "opaque BF16 bits preserved byte-for-byte; no scale arithmetic or norm folding",
+  "installed_image_test": {
+    "schema": "opentallas.qwen.r25.fmt3.image.v1",
+    "geometry": {
+      "rows": 3,
+      "k": 1024,
+      "il": 8,
+      "c": 8,
+      "lanes": 64,
+      "group_slot": true
+    },
+    "sm": 1,
+    "sms": 2,
+    "canonical_rows": [
+      3,
+      6
+    ],
+    "op_rows": 3,
+    "op_c": 8,
+    "op_g": 2,
+    "op_gs": 1,
+    "op_fmt": 3,
+    "bulk_copy_lines": 24,
+    "response_bytes": 136,
+    "storage_stride_bytes": 160,
+    "storage_base": null,
+    "linked_entry_pc": null,
+    "host_installation": "caller must bind existing service address mapping",
+    "scale_contract": "unchanged BF16 scale per output row; SU multiply after FP32 sum",
+    "source_sha256": {
+      "codes": "d2ac87053b363c6273d6f04bc24a87e863ec278bf5f69265b0df1838804702a5",
+      "scales": "de07d1d4fb807c1ff582ea9ad361baf971c05bf51f3fa62b259741e2c1aa511d",
+      "producer": "ac90ee9645fca1c58ed629c75bf12f6acdb57a6a6a0e0f2abbeb373a0f9d0be9"
+    },
+    "output_sha256": {
+      "weights": "4e37cff001d55a7e2e3b78f826811203d2e49e5b4cf31b631bffee1202f3f6e1",
+      "scales": "2bf65b25b36899bba401878f6c97f9d0a0cbfa5a00230aca8bd18f1b037c9d20"
+    }
+  },
+  "source_sha256": {
+    "tools/qwen_r25_int8_image.py": "ac90ee9645fca1c58ed629c75bf12f6acdb57a6a6a0e0f2abbeb373a0f9d0be9",
+    "tools/test_qwen_r25_int8_image.py": "6c65a24b07fcc95e8cd36a5f3b1ac8caefe9a3bb52ea6872f1a0b5a374f36249",
+    "rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv": "3e0f65f1ae0438b2f37d8434600c49abb087fb7471db1283921cdc883ef5dcb3",
+    "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv": "f9a025c3609612505c937b61ace0b5836c3fb65871df16a4978021f635743845",
+    "rtl/test/tb_qwen_r25_int8_image.sv": "3892eb77daae7702a94151e9f586ef4bdac10e3c9c5b9a75a13a83ac14dc7b6a",
+    "results/arch/qwen_on_r25_20261008/PLAN.md": "39134ae6e2dc9a47fc00b01d8721baaecc040cc35b8d989c988d05d5a48f9a29"
+  }
+}
