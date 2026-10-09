@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_hgi_att_record_adapter;
- parameter integer MUT_RING=0,MUT_COUNTS=0,MUT_FIELDS=0,MUT_EARLY_DONE=0,MUT_CANCEL_DONE=0;
+ parameter integer MUT_RING=0,MUT_COUNTS=0,MUT_FIELDS=0,MUT_EARLY_DONE=0,MUT_FAULT_RELEASE=0;
  reg clk=0;always #416.6665 clk=~clk;
  reg rst_n=0,rec_v=0,att_r=0,att_done=0,att_fault=0;
  reg [127:0] hdr=0;reg [255:0] sut=0;reg [1023:0] desc=0;
@@ -9,15 +9,15 @@ module tb_hgi_att_record_adapter;
  wire [127:0] ah;wire [1023:0] ad;
  wire [20:0] rp,rn,rm,rc;
  reg cidv=0,rowr=0;reg [31:0] cid=0;
- wire cidr,rowv,rs,rl,cancel_v,leafbusy;reg cancel_done=0;wire [19:0] ri;wire [20:0] ro;
+ wire cidr,rowv,rs,rl,leafbusy;wire [19:0] ri;wire [20:0] ro;
  integer cases=0,rows=0;
- ot_hgi_att_record_adapter #(.MUT_RING(MUT_RING),.MUT_COUNTS(MUT_COUNTS),.MUT_FIELDS(MUT_FIELDS),.MUT_EARLY_DONE(MUT_EARLY_DONE),.MUT_CANCEL_DONE(MUT_CANCEL_DONE)) dut(
+ ot_hgi_att_record_adapter #(.MUT_RING(MUT_RING),.MUT_COUNTS(MUT_COUNTS),.MUT_FIELDS(MUT_FIELDS),.MUT_EARLY_DONE(MUT_EARLY_DONE),.MUT_FAULT_RELEASE(MUT_FAULT_RELEASE)) dut(
   .clk(clk),.rst_n(rst_n),.rec_v(rec_v),.rec_r(rec_r),.rec_hdr(hdr),.rec_sut(sut),.rec_desc(desc),
   .rec_pos1(pos1),.rec_b_count(bn),.rec_c_count(cn),.att_v(att_v),.att_r(att_r),.att_hdr(ah),.att_desc(ad),
   .att_done(att_done),.att_fault(att_fault),.rows_cmd_v(rcv),.rows_cmd_r(rcr),.rows_ring(rring),
   .rows_pos1(rp),.rows_b_n(rn),.rows_b_m(rm),.rows_c_n(rc),.rows_done(rdone),.rows_fault(rfault),
-  .cancel_v(cancel_v),.cancel_done(cancel_done),.busy(busy),.u_done(done),.u_fault(fault));
- ot_hgi_att_row_sources_p leaf(.clk(clk),.rst_n(rst_n && !cancel_v),.cmd_v(rcv),.cmd_r(rcr),.ring(rring),.pos1(rp),.b_n(rn),.b_m(rm),.c_n(rc),
+  .busy(busy),.u_done(done),.u_fault(fault));
+ ot_hgi_att_row_sources_p leaf(.clk(clk),.rst_n(rst_n),.cmd_v(rcv),.cmd_r(rcr),.ring(rring),.pos1(rp),.b_n(rn),.b_m(rm),.c_n(rc),
   .c_id_v(cidv),.c_id_r(cidr),.c_id(cid),.row_v(rowv),.row_r(rowr),.row_source(rs),.row_last(rl),.row_index(ri),.row_ordinal(ro),
   .busy(leafbusy),.done(rdone),.fault(rfault));
  function automatic integer sel(input integer i);sel=(i*977+53)%1048576;endfunction
@@ -88,14 +88,15 @@ module tb_hgi_att_record_adapter;
     11:begin hdr=0;hdr[127:124]=5;hdr[103:100]=15;end //legacy header cannot pass normative gate
    endcase
    rec_v=1;@(negedge clk);rec_v=0;
-   for(t=0;t<4;t=t+1)begin
-    if(att_v||rcv)$fatal(1,"invalid record launched work");
-    if(done)begin if(!fault)$fatal(1,"invalid record not faulted");cases=cases+1;end
-    @(negedge clk);
-   end
+   repeat(2)@(negedge clk);
+   if(att_v||rcv||done||rec_r||!fault)$fatal(1,"invalid record fault not sticky CP halt");
+   cases=cases+1;
+   // No work dispatched for invalid record: drained reset is immediately safe.
+   rst_n=0;@(negedge clk);rst_n=1;
+
   end
  endtask
- task automatic run_cancel;
+ task automatic run_sticky_fault;
   integer t;
   begin
    @(negedge clk);init_record(0,0,4,4,0,0,0);rec_v=1;att_r=1;rowr=0;
@@ -103,17 +104,20 @@ module tb_hgi_att_record_adapter;
    while(!rcv)@(negedge clk);
    @(negedge clk);att_fault=1;
    @(negedge clk);att_fault=0;
-   if(!cancel_v)$fatal(1,"fault did not request real cancellation");
    for(t=0;t<4;t=t+1)begin
-    if(done||rec_r||!cancel_v)$fatal(1,"fault retired before actual cancel ACK");
+    if(done||rec_r||att_v||rcv||!fault)$fatal(1,"sticky fault released before drained reset");
     @(negedge clk);
    end
-   if(leafbusy)$fatal(1,"real row leaf not quiescent");
-   cancel_done=1;@(negedge clk);cancel_done=0;
-   if(!done||!fault||busy)$fatal(1,"cancel ACK did not retire fault");
+   // CP halted; drain the real leaf, then an external reset recovers all units.
+   rowr=1;
+   while(leafbusy)@(negedge clk);
+   if(!fault||done||rec_r)$fatal(1,"drain incorrectly cleared sticky fault");
+   rst_n=0;@(negedge clk);rst_n=1;
+   if(fault||busy||!rec_r)$fatal(1,"drained reset failed");
    cases=cases+1;
   end
  endtask
+
  integer j;
  initial begin
   repeat(3)@(negedge clk);rst_n=1;
@@ -123,7 +127,7 @@ module tb_hgi_att_record_adapter;
   run_good(1,0,1048576,1048576,0,0,1);
   run_good(0,0,0,0,0,0,0);
   for(j=0;j<12;j=j+1)run_bad(j);
-  run_cancel();
+  run_sticky_fault();
   $display("PASS G12_RECORD cases=%0d rows=%0d",cases,rows);$finish;
  end
 endmodule

@@ -15075,6 +15075,6 @@ def hgi_attention_record_adapter_model():
                      face_capacity_320=1316,actual_submit_lint='mandatory'),
         latency_cycles=dict(added_record_command_edges=3,record_to_first_row_edges_including_G12=6,row_II=1),
         token_charge=dict(DS_40_layers_QK_PV=240,Qwen_36_layers_two_local_KV_heads_QK_PV=432),
-        retirement='rows_done AND actual_ATT_done; fault cancellation retires only on actual quiescence ACK, no completion on emission',
+        retirement='rows_done AND actual_ATT_done; sticky fault halts CP without completion; recovery only by externally drained reset',
         selected_ID_and_payload_binding='External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced',
         physical_ready=False,clock_ns=0.833333,setup_uncertainty_ps=60,hold_uncertainty_ps=25)

@@ -1,6 +1,6 @@
 {
   "schema": "hgi.g12.record-ports.v1",
-  "source_commit": "d6579854b",
+  "source_commit": "GH5 source commit pending",
   "module": "ot_hgi_att_record_adapter",
   "seq_tuple_ABI_bits": 1409,
   "requires_normative_header": true,
@@ -20,8 +20,7 @@
     "att_fault": 1,
     "rows_cmd_r": 1,
     "rows_done": 1,
-    "rows_fault": 1,
-    "cancel_done": 1
+    "rows_fault": 1
   },
   "outputs": {
     "rec_r": 1,
@@ -34,13 +33,12 @@
     "rows_b_n": 21,
     "rows_b_m": 21,
     "rows_c_n": 21,
-    "cancel_v": 1,
     "busy": 1,
     "u_done": 1,
     "u_fault": 1
   },
   "normal_completion": "ActualATTdone ANDactualrowfrontdone",
-  "fault_completion": "cancel_done mustacknowledge actualATT+gather+rowproducer quiescence, never tieconstant",
+  "fault_completion": "Sticky u_fault halts CP and blocks new records/work; no fault u_done; recovery only by externally drained reset",
   "SUT_by_design_unused": "ATT cannotcarrySUtemplate: templatebit92 rejects records; transportfixedwidth stillincludesSUT",
   "producer_selected_ID_stream": "Independent realexistingIDstream binds unchangedG12physicalleaf c_id[31:0] ready/valid; thisadapterdoesnotproduceCID orrowpayload",
   "latency": {
@@ -50,19 +48,8 @@
     "rowII": 1
   },
   "exact_gate": {
-    "host": "ot-pve1",
-    "run": "a3",
-    "cases": 18,
-    "rows": 1059089,
-    "mutants": [
-      "ring",
-      "count",
-      "fields",
-      "completion",
-      "cancel"
-    ],
-    "all_mutants": "expectedFATAL",
-    "scope": "Adapter+actualG12leaf; ATTdone/cancelACK controlledtestcompletiondriver, notwholeATTarithmetic proof"
+    "status": "PENDING revised GH5 proof",
+    "scope": "Adapter + actual G12 leaf; ATTdone supplied by test completion driver, not full ATT arithmetic proof"
   },
   "adopted": false
 }

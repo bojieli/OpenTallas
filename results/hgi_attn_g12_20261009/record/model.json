@@ -47,7 +47,7 @@
     "DS_40_layers_QK_PV": 240,
     "Qwen_36_layers_two_local_KV_heads_QK_PV": 432
   },
-  "retirement": "rows_done AND actual_ATT_done; fault cancellation retires only on actual quiescence ACK, no completion on emission",
+  "retirement": "rows_done AND actual_ATT_done; sticky fault halts CP without completion; recovery only by externally drained reset",
   "selected_ID_and_payload_binding": "External existing selected-ID and nine-sector gather reader; no indexed-PS reader introduced",
   "physical_ready": false,
   "clock_ns": 0.833333,
