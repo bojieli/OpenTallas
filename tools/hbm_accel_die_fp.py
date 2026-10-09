@@ -1881,6 +1881,11 @@ def _router(m, B, P):
 
     def station(cx, cy, chain, bits, fa, fb, horizontal, kind='stn', extra=None, fifo_bits=0, dom='stream'):
         w, h = stn_size(bits, horizontal)
+        if m['variant'].get('native_indexer') and bits == 1 and chain.startswith('idx_'):
+            from hbm_indexer_r25i_model import hbm_indexer_scalar_credit_relay_model
+            scalar_model = hbm_indexer_scalar_credit_relay_model()
+            w,h=scalar_model['outline_um']
+            m['scalar_credit_station_model']=scalar_model
         if extra:
             w, h = max(w, extra[0]), max(h, extra[1])
         nf = math.ceil(fifo_bits / 512) if fifo_bits else 0
