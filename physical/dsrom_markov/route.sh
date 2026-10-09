@@ -24,9 +24,9 @@ args=(--source rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_row.sv
  --param K=256 --param CUT=511 --param SPLIT9=1 --param MUTANT_FOLD=0
  --orfs-var SYNTH_HDL_FRONTEND=slang --die-area 0 0 600 600 --core-area 2 2 598 598
  --core-utilization 55 --max-fanout 16 --routing-layers M2 M6
- --pin-region '^weight_bf16.*=left:30:570' --pin-region '^embed_bf16.*=bottom:30:570'
- --pin-region '^(head_logit.*|clk|rst_n|start|in_valid|out_ready)$=top:30:570'
- --pin-region '^(start_ready|in_ready|out_valid|out_bits.*|fault)$=right:30:570'
+ --pin-region '^weight_bf16.*=left:30-570' --pin-region '^embed_bf16.*=bottom:30-570'
+ --pin-region '^(head_logit.*|clk|rst_n|start|in_valid|out_ready)$=top:30-570'
+ --pin-region '^(start_ready|in_ready|out_valid|out_bits.*|fault)$=right:30-570'
  --pin-regions-exhaustive)
 MAC=(); FP="set_false_path -from [get_ports rst_n]"; MC=""
 IMAX=$(echo "($ISS+250)/1000" | bc -l); IMIN=$(echo "($IFF-${IN_HOLD_SKEW:-0})/1000" | bc -l)
