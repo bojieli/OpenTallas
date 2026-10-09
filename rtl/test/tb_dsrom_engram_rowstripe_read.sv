@@ -11,7 +11,7 @@ module tb_dsrom_engram_rowstripe_read;
     integer t,p,n,idx,base,localpc,cycles=0,received=0,requests=0,mode=0;
     reg [53:0] seen=0;
     reg [340:0] word;
-    ot_dsrom_engram_rowstripe_read #(.READ_INJECT(INJECT)) dut(.ck(ck),.rst_n(rst_n),
+    ot_dsrom_engram_rowstripe_read #(.HISTORICAL_FLOP_ECC(INJECT!=0),.READ_INJECT(INJECT)) dut(.ck(ck),.rst_n(rst_n),
         .hq_valid(hqv),.hq_ready(hqr),.hq_atom(atom),.hq_len(4'd9),.hq_tag(tag),
         .rq(rq),.rd(rd),.hr_valid(hrv),.hr_ready(hrr),.hr_tag(hrt),.hr_idx(hri),.hr_data(hrd),.ce(ce),.fault(fault));
     always @(negedge ck) if(rst_n) begin

@@ -20,7 +20,7 @@ module tb_dsrom_engram_canonical_read #(parameter [71:0] INJECT=0)(input wire cl
     function automatic [255:0] pattern(input [29:0] s);
         integer w;begin for(w=0;w<8;w=w+1) pattern[32*w+:32]=(s*32'd8+w)*32'h9e3779b1^32'h5bd1e995;end
     endfunction
-    ot_dsrom_engram_rowstripe_read #(.CANONICAL(1),.APERTURE(1),.READ_INJECT(INJECT)) dut(
+    ot_dsrom_engram_rowstripe_read #(.CANONICAL(1),.APERTURE(1),.HISTORICAL_FLOP_ECC(INJECT!=0),.READ_INJECT(INJECT)) dut(
         .ck(clk),.rst_n(rst_n),.aperture_valid(aperture_valid),.pc_base(pc_base),.pc_limit(pc_limit),
         .hq_valid(hqv),.hq_ready(hqr),.hq_atom(atom),.hq_len(4'd9),.hq_tag(tag),.rq(rq),.rd(rd),
         .hr_valid(hrv),.hr_ready(hrr),.hr_tag(hrt),.hr_idx(hri),.hr_data(hrd),.ce(ce),.fault(fault));

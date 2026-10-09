@@ -1,10 +1,10 @@
 `timescale 1ns/1ps
 // Opt-in ROWSTRIPE controller adapter. Boot/runtime ownership mux is external.
-// Six reserved rows, one outstanding request per PC, nine protected atoms per
+// Six reserved rows, one outstanding request per PC, nine captured atoms per
 // row. Every real controller stream drains every cycle: up to six independent
 // PCs may return simultaneously into the reserved per-row buffers. Generation
 // wrap fails closed and requires reset/fence; it never aliases a stale return.
-module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388,parameter integer USE_LEASE=0)(
+module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter integer CANONICAL=0,parameter integer APERTURE=0,parameter integer MAX_PC_ATOMS=19775388,parameter integer USE_LEASE=0,parameter integer HISTORICAL_FLOP_ECC=0)(
     input wire ck,rst_n,
     input wire [63:0] pc_available,
     output wire [63:0] pc_want,pc_held,
@@ -36,7 +36,8 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
     reg [255:0] cap_data[0:5];
     reg [16:0] cap_tag[0:5];reg [3:0] cap_idx[0:5];
     wire [287:0] encoded[0:5];
-    reg [287:0] buffer[0:5][0:8];
+    localparam integer BUFFER_BITS=HISTORICAL_FLOP_ECC ? 288 : 256;
+    reg [BUFFER_BITS-1:0] buffer[0:5][0:8];
     wire [287:0] selected[0:5];
     wire [255:0] decoded[0:5];wire [3:0] corrected[0:5],uncorrectable[0:5];
     wire [30:0] row=hq_atom/9;
@@ -50,9 +51,17 @@ module ot_dsrom_engram_rowstripe_read #(parameter [71:0] READ_INJECT=0,parameter
     end
     for(j=0;j<6;j=j+1) begin:g_row
         assign selected[j]=(next_atom[j]<9) ? buffer[j][next_atom[j]] : 288'd0;
-        for(w=0;w<4;w=w+1) begin:g_ecc
-            ot_s81_secded_enc72 enc(.d(cap_data[j][w*64+:64]),.c(encoded[j][w*72+:72]));
-            ot_s81_secded_dec72 dec(.c(selected[j][w*72+:72]^READ_INJECT),.d(decoded[j][w*64+:64]),.ce(corrected[j][w]),.ue(uncorrectable[j][w]));
+        if(HISTORICAL_FLOP_ECC) begin:g_history_only
+            // Rejected owner V37/X2 experiment retained for immutable history.
+            for(w=0;w<4;w=w+1) begin:g_ecc
+                ot_s81_secded_enc72 enc(.d(cap_data[j][w*64+:64]),.c(encoded[j][w*72+:72]));
+                ot_s81_secded_dec72 dec(.c(selected[j][w*72+:72]^READ_INJECT),.d(decoded[j][w*64+:64]),.ce(corrected[j][w]),.ue(uncorrectable[j][w]));
+            end
+        end else begin:g_flops
+            assign encoded[j]={32'd0,cap_data[j]};
+            assign decoded[j]=selected[j][255:0];
+            assign corrected[j]=0;
+            assign uncorrectable[j]=0;
         end
     end endgenerate
     wire [30:0] incoming_local=(row/64)*9+(APERTURE ? {1'b0,pc_base[req_pc*30+:30]} : 31'd0);
