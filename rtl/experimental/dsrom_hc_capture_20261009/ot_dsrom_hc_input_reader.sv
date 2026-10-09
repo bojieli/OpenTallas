@@ -47,6 +47,7 @@ module ot_dsrom_hc_input_reader #(
     wire [511:0] decoded[0:3];
     wire [31:0] ue,decode_valid;
     wire [31:0] ce_unused;
+    reg bad_bf16;
     genvar c,l;
     generate for(l=0;l<8;l=l+1) begin:g_encode
         if(ECC_PIPE) begin:g_pipe
@@ -89,7 +90,6 @@ module ot_dsrom_hc_input_reader #(
     assign mean_beat={row_q,half_q};
     assign busy=state!=IDLE;
     integer k;
-    reg bad_bf16;
     always_comb begin
         bad_bf16=0;
         for(integer w=0;w<16;w=w+1)
