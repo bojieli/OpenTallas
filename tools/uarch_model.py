@@ -14552,3 +14552,9 @@ def dsrom_hc_input_reader_model():
     """Finite native VM reader; port ownership and H mapping remain explicit."""
     from tools.dsrom_hc_mean_capture_model import input_reader_model
     return input_reader_model()
+
+
+def dsrom_hc_seed_join_model():
+    """Protected head join of three independently placed input-layer means."""
+    from tools.dsrom_hc_mean_capture_model import seed_join_model
+    return seed_join_model()
