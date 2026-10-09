@@ -359,7 +359,7 @@ class Elements:
         rows = []
         for m, g in groups.items():
             r = self.element(m, g, ob, rest, rj)
-            records = sorted(evidence[m], key=lambda x: (x.get('recorded_at', ''), x['registry_path']))
+            records = sorted(evidence[m], key=lambda x: (ts(x.get('recorded_at', '')), x['registry_path']))
             r['evidence_history'] = records
             r['qualification'] = records[-1] if records else None
             if records:
