@@ -155,5 +155,20 @@
       "old_peak_ram_gb": 128,
       "new_peak_ram_gb": 91.2
     }
+  ],
+  "phase_updates": [
+    {
+      "host": "ot-epyc3",
+      "name": "qwen-fmt3-pipe-calibration",
+      "old_pid": 655416,
+      "pid": 664023,
+      "phase": "CTS",
+      "peak_ram_gb": 3.2,
+      "observed_hwm_kib": 2952720,
+      "observed_rss_kib": 2909212,
+      "same_source_calibration_cts_peak_kib": 3156988,
+      "launcher_hwm_kib": 92332,
+      "evidence": "Independent /proc read: CTS command identity present; previous resizer absent. No compute settings changed."
+    }
   ]
 }

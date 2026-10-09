@@ -1,247 +1,247 @@
 {
- "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted. LOCALHOST (OWNER 2026-10-07 05:00): added with max_loop_threads 24 and min_free_ram_gb 40. FILL THE FLEET (OWNER 2026-10-07 19:00, integrate agent): per-job max_job_threads / max_job_ram_gb raised to the host (cores; 0.95 x ram_gb) so admission is bound only by measured MemAvailable minus own pending peaks >= job peak + max(5% ram, 32 GB, min_free_ram_gb), the 3 x cores load cap and the disk floor. localhost unchanged (owner cap: 24 loop threads, 60 GB/job). DISK GUARD (2026-10-07 integrate): disk_roots = {path: min free GB} for every other filesystem a host's jobs write (docker /, second scratch); admission refuses while any is below its floor, as for the run root. NO OVERSUBSCRIPTION (OWNER 2026-10-07 19:31): cap = round(1.1 x cores); admit while max(load1, own running declared threads) + own launches of the last 10 min + job threads <= cap (was 3 x cores). RAM headroom = max(5% ram_gb, min_free_ram_gb, default 32 GB): AGIdock 8 GB / PVE1 16 GB so the small hosts take 40 GB jobs. LOCALHOST ROUTES (OWNER 2026-10-07 19:40): localhost bench_offload=true -- a job whose route/calibrate stages need only ORFS may be placed on localhost although its spec hosts list omits it (that list is a preference); its benches run on a fleet host with the bench tools (source synced to <base>/<name>-bench). Guard unchanged: <= 24 loop threads, MemAvailable >= peak + 40 GB. ADMISSION FIX (coordinator 20:05): load term = measured load1 + declared threads of own launches of the last 10 min only; declared threads of long-running stages are no longer counted (they starved the fleet at 38-58 % idle). MEMORY ONLY (OWNER 2026-10-07 20:10, supersedes the 19:31 cap and the 20:05 eff fix): no CPU/load admission check on remote hosts; 'cap' is informational. localhost keeps max_loop_threads 24 / min_free_ram_gb 40.",
- "hosts": [
-  {
-   "name": "ot-epyc3",
-   "label": "EPYC3",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
-   "max_job_threads": 128,
-   "max_job_ram_gb": 1076,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100,
-    "/srv/opentallas-scratch": 200
-   },
-   "external_jobs": [
+  "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted. LOCALHOST (OWNER 2026-10-07 05:00): added with max_loop_threads 24 and min_free_ram_gb 40. FILL THE FLEET (OWNER 2026-10-07 19:00, integrate agent): per-job max_job_threads / max_job_ram_gb raised to the host (cores; 0.95 x ram_gb) so admission is bound only by measured MemAvailable minus own pending peaks >= job peak + max(5% ram, 32 GB, min_free_ram_gb), the 3 x cores load cap and the disk floor. localhost unchanged (owner cap: 24 loop threads, 60 GB/job). DISK GUARD (2026-10-07 integrate): disk_roots = {path: min free GB} for every other filesystem a host's jobs write (docker /, second scratch); admission refuses while any is below its floor, as for the run root. NO OVERSUBSCRIPTION (OWNER 2026-10-07 19:31): cap = round(1.1 x cores); admit while max(load1, own running declared threads) + own launches of the last 10 min + job threads <= cap (was 3 x cores). RAM headroom = max(5% ram_gb, min_free_ram_gb, default 32 GB): AGIdock 8 GB / PVE1 16 GB so the small hosts take 40 GB jobs. LOCALHOST ROUTES (OWNER 2026-10-07 19:40): localhost bench_offload=true -- a job whose route/calibrate stages need only ORFS may be placed on localhost although its spec hosts list omits it (that list is a preference); its benches run on a fleet host with the bench tools (source synced to <base>/<name>-bench). Guard unchanged: <= 24 loop threads, MemAvailable >= peak + 40 GB. ADMISSION FIX (coordinator 20:05): load term = measured load1 + declared threads of own launches of the last 10 min only; declared threads of long-running stages are no longer counted (they starved the fleet at 38-58 % idle). MEMORY ONLY (OWNER 2026-10-07 20:10, supersedes the 19:31 cap and the 20:05 eff fix): no CPU/load admission check on remote hosts; 'cap' is informational. localhost keeps max_loop_threads 24 / min_free_ram_gb 40.",
+  "hosts": [
     {
-     "name": "qwen-fmt3-wide-calibration",
-     "pid": 3685092,
-     "command_match": "openroad",
-     "peak_ram_gb": 3.2,
-     "owner": "Codex:qwen_hbm_unify/fmt3",
-     "reason": "Wide currentCTS HWM2930680KiB; samewide calCTS3126784KiB/samepipe calCTS3156988KiB pluslauncher90852KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
-     "launcher_pid": 1835875
+      "name": "ot-epyc3",
+      "label": "EPYC3",
+      "cores": 128,
+      "cap": 141,
+      "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+      "max_job_threads": 128,
+      "max_job_ram_gb": 1076,
+      "min_free_disk_gb": 200,
+      "caps": [
+        "verilator",
+        "yosys",
+        "iverilog",
+        "orfs"
+      ],
+      "ram_gb": 1133,
+      "disk_roots": {
+        "/": 100,
+        "/srv/opentallas-scratch": 200
+      },
+      "external_jobs": [
+        {
+          "name": "qwen-fmt3-wide-calibration",
+          "pid": 3685092,
+          "command_match": "openroad",
+          "peak_ram_gb": 3.2,
+          "owner": "Codex:qwen_hbm_unify/fmt3",
+          "reason": "Wide currentCTS HWM2930680KiB; samewide calCTS3126784KiB/samepipe calCTS3156988KiB pluslauncher90852KiB=3.10GiB rounded3.2GiB. Root/run/{cal,route}/flow.log.",
+          "launcher_pid": 1835875
+        },
+        {
+          "name": "qwen-fmt3-pipe-calibration",
+          "pid": 664023,
+          "command_match": "openroad",
+          "peak_ram_gb": 3.2,
+          "owner": "Codex:qwen_hbm_unify/fmt3",
+          "reason": "Pipe actual CTS664023 HWM2952720KiB RSS2909212KiB; completed route detail2733064KiB, same-source calCTS3156988KiB plus launcher92332KiB supports measured3.2GiB phase. Previous resizer655416 absent.",
+          "launcher_pid": 1855945
+        }
+      ]
     },
     {
-     "name": "qwen-fmt3-pipe-calibration",
-     "pid": 655416,
-     "command_match": "openroad",
-     "peak_ram_gb": 3.2,
-     "owner": "Codex:qwen_hbm_unify/fmt3",
-     "reason": "Pipe actualresizer655416 HWM1414028KiB, samecalresizer1494784KiB/calCTS3156988KiB knownremainingstage; existingmeasured3.2GiBceiling retained. PreviousrouteGPpeak2364808KiB.",
-     "launcher_pid": 1855945
+      "name": "ot-epyc1tb",
+      "label": "EPYC1",
+      "cores": 128,
+      "cap": 141,
+      "base": "/srv/opentallas-scratch/claude/closure-loop",
+      "max_job_threads": 128,
+      "max_job_ram_gb": 1076,
+      "min_free_disk_gb": 200,
+      "caps": [
+        "verilator",
+        "yosys",
+        "iverilog",
+        "orfs"
+      ],
+      "ram_gb": 1133,
+      "disk_roots": {
+        "/": 100
+      },
+      "external_jobs": [
+        {
+          "name": "hbm-hc64-physical",
+          "pid": 2939287,
+          "command_match": "yosys",
+          "peak_ram_gb": 15,
+          "owner": "Codex:hbm_system/hc_shard",
+          "reason": "Yosys SHARE dedicatedcontainer peak15482122240B14.42GiB; workerHWM15052780KiB. Helper+launcher aggregate rounds15GiB.",
+          "launcher_pid": 2938696
+        },
+        {
+          "name": "hbm-hc-epoch-physical",
+          "pid": 1579383,
+          "command_match": "yosys",
+          "peak_ram_gb": 15,
+          "owner": "Codex:hbm_system/hc_shard",
+          "reason": "Yosys SHARE dedicatedcontainer peak15577276416B14.51GiB; workerHWM15134892KiB. Helpers+launcher aggregate rounds15GiB.",
+          "launcher_pid": 1366211
+        }
+      ]
+    },
+    {
+      "name": "ot-epyc2",
+      "label": "EPYC2",
+      "cores": 128,
+      "cap": 141,
+      "base": "/srv/opentallas-data/claude/closure-loop",
+      "max_job_threads": 128,
+      "max_job_ram_gb": 1076,
+      "min_free_disk_gb": 200,
+      "caps": [
+        "verilator",
+        "yosys",
+        "iverilog",
+        "orfs"
+      ],
+      "ram_gb": 1133,
+      "disk_roots": {
+        "/": 100,
+        "/srv/opentallas-scratch2": 100
+      },
+      "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs.",
+      "external_jobs": [
+        {
+          "name": "hbm-indexer-deepcredit-exact",
+          "pid": 2153931,
+          "command_match": "hbm-indexer-2f27cb363/src",
+          "peak_ram_gb": 127,
+          "owner": "Codex:hbm_continuation",
+          "reason": "FA6 final1CPPcompile liveindividualHWMsum133116660KiB126.950GiB; exactly1missing180841184B CPP,9821objects1035522712B, noarchive. Ownermeasuredsnapshot ef5a7f6e8.",
+          "launcher_pid": 2153931
+        },
+        {
+          "name": "hbm-hc40-physical",
+          "pid": 1874796,
+          "command_match": "yosys",
+          "peak_ram_gb": 15,
+          "owner": "Codex:hbm_system/hc_shard",
+          "reason": "HC40 YosysSHARE dedicatedcontainer peak15524855808B14.46GiB; workerHWM15123332KiB; subtree15132452KiB. Aggregate rounds15GiB.",
+          "launcher_pid": 1873433
+        }
+      ],
+      "paused_admission_previous": {
+        "max_job_threads": 128,
+        "max_job_ram_gb": 1076
+      },
+      "admission_disabled_reason": "OWNER2026-10-09 transient EPYC2memorypressure audit: pause NEW compute until activefuturepeaks accounted; preserveprogressingjobs"
+    },
+    {
+      "name": "ot-epyc4",
+      "label": "EPYC4",
+      "cores": 128,
+      "cap": 384,
+      "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
+      "max_job_threads": 64,
+      "max_job_ram_gb": 900,
+      "min_free_disk_gb": 200,
+      "caps": [
+        "verilator",
+        "yosys",
+        "iverilog",
+        "orfs"
+      ],
+      "ram_gb": 1133,
+      "disk_roots": {
+        "/": 100,
+        "/srv/opentallas-scratch": 200
+      },
+      "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path).",
+      "external_jobs": [
+        {
+          "name": "hbm-indexer-t1-exact",
+          "pid": 952687,
+          "command_match": "hbm-indexer-3a6f720d4",
+          "peak_ram_gb": 127,
+          "owner": "Codex:hbm_continuation",
+          "reason": "T1 final1CPPcompile liveindividualHWMsum133115456KiB126.949GiB;1of9805CPPmissing180841184B, objects1.035GB noarchive. Ownercompile_phase_measured/snapshot ef5a7f6e8.",
+          "launcher_pid": 952687
+        },
+        {
+          "name": "hbm-selector-native-qend-calibration",
+          "pid": 2558538,
+          "command_match": "openroad",
+          "peak_ram_gb": 19,
+          "owner": "Codex:hbm_continuation/selector_capture",
+          "reason": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
+          "launcher_pid": 745294
+        },
+        {
+          "name": "qwen-ar-quarter-frontend",
+          "pid": 3513967,
+          "command_match": "qwen-r25-quarter-ar/89a8ac363/",
+          "peak_ram_gb": 91.2,
+          "owner": "Codex:qwen_hbm_unify/stage_harness",
+          "launcher_pid": 2626636,
+          "reason": "ActualadmittedplainAR N256/M64 frontend3513967 RSS51075076/HWM51138320KiB. Evidence samefullquarter frontend source822ca7b65 completedGNUtime95595836KiB91.167GiB; rounded91.2GiB phase sibling, replacesunmeasured128. Eightworkers/outputsplit20000. No processcap/restart; C++phase refresh fromactualinventory."
+        }
+      ]
+    },
+    {
+      "name": "ot-pve1",
+      "label": "PVE1",
+      "cores": 28,
+      "cap": 31,
+      "base": "/srv/opentallas-scratch/claude/closure-loop",
+      "max_job_threads": 28,
+      "max_job_ram_gb": 223,
+      "min_free_disk_gb": 100,
+      "caps": [
+        "orfs"
+      ],
+      "ram_gb": 235,
+      "disk_roots": {
+        "/": 100
+      },
+      "min_free_ram_gb": 16,
+      "external_jobs": []
+    },
+    {
+      "name": "ot-agidock128",
+      "label": "AGIdock",
+      "cores": 64,
+      "cap": 70,
+      "base": "/srv/opentallas-scratch/claude/closure-loop",
+      "max_job_threads": 64,
+      "max_job_ram_gb": 110,
+      "min_free_disk_gb": 0,
+      "caps": [
+        "verilator",
+        "yosys",
+        "iverilog",
+        "orfs"
+      ],
+      "ram_gb": 125,
+      "min_free_ram_gb": 2,
+      "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB.",
+      "reserve_ram_gb": 0,
+      "external_jobs": []
+    },
+    {
+      "name": "localhost",
+      "label": "localhost",
+      "cores": 32,
+      "cap": 35,
+      "base": "/home/ubuntu/closure-loop-local",
+      "max_job_threads": 0,
+      "max_job_ram_gb": 0,
+      "min_free_disk_gb": 150,
+      "caps": [
+        "orfs"
+      ],
+      "ram_gb": 188,
+      "max_loop_threads": 0,
+      "min_free_ram_gb": 16,
+      "note": "OWNER 2026-10-07 05:00: the coordinator host, capped so ssh stays responsive: <= 24 loop threads in total, MemAvailable >= job peak + 40 GB. ORFS only (local Verilator 4.038 / Yosys 0.9 differ from the fleet); the loop runs stages here directly (no ssh to itself). Fleet ORFS image loaded 2026-10-07 (old local latest kept as openroad/orfs:local-old-3985ce6d). RE-ENABLED 2026-10-07 07:00 after the smoke test (s81ph-dsfd_ctrl_ctr-34b3e75dd-localsmoke: calibrate -> route -> sign-off SS +307.0 / FF +8.41 / DRC 0 on localhost; ORFS image digest, yosys-0.68 and opensta binaries identical to the fleet; /srv/opentallas-scratch/admit.sh installed with a 40 GB reserve). | OWNER 2026-10-07 23:00: loop threads cap 48. | OWNER 2026-10-08 00:20: localhost admits more: 96 loop threads, 16 GB free floor, jobs up to 120 GB.",
+      "disk_roots": {
+        "/": 150
+      },
+      "bench_offload": true,
+      "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet.",
+      "external_jobs": []
     }
-   ]
-  },
-  {
-   "name": "ot-epyc1tb",
-   "label": "EPYC1",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
-   "max_job_threads": 128,
-   "max_job_ram_gb": 1076,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100
-   },
-   "external_jobs": [
-    {
-     "name": "hbm-hc64-physical",
-     "pid": 2939287,
-     "command_match": "yosys",
-     "peak_ram_gb": 15,
-     "owner": "Codex:hbm_system/hc_shard",
-     "reason": "Yosys SHARE dedicatedcontainer peak15482122240B14.42GiB; workerHWM15052780KiB. Helper+launcher aggregate rounds15GiB.",
-     "launcher_pid": 2938696
-    },
-    {
-     "name": "hbm-hc-epoch-physical",
-     "pid": 1579383,
-     "command_match": "yosys",
-     "peak_ram_gb": 15,
-     "owner": "Codex:hbm_system/hc_shard",
-     "reason": "Yosys SHARE dedicatedcontainer peak15577276416B14.51GiB; workerHWM15134892KiB. Helpers+launcher aggregate rounds15GiB.",
-     "launcher_pid": 1366211
-    }
-   ]
-  },
-  {
-   "name": "ot-epyc2",
-   "label": "EPYC2",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas-data/claude/closure-loop",
-   "max_job_threads": 128,
-   "max_job_ram_gb": 1076,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100,
-    "/srv/opentallas-scratch2": 100
-   },
-   "note": " | 2026-10-07 23:10: new runs on the empty /srv/opentallas-data NVMe (2.9 TB); scratch2 keeps running jobs.",
-   "external_jobs": [
-    {
-     "name": "hbm-indexer-deepcredit-exact",
-     "pid": 2153931,
-     "command_match": "hbm-indexer-2f27cb363/src",
-     "peak_ram_gb": 127,
-     "owner": "Codex:hbm_continuation",
-     "reason": "FA6 final1CPPcompile liveindividualHWMsum133116660KiB126.950GiB; exactly1missing180841184B CPP,9821objects1035522712B, noarchive. Ownermeasuredsnapshot ef5a7f6e8.",
-     "launcher_pid": 2153931
-    },
-    {
-     "name": "hbm-hc40-physical",
-     "pid": 1874796,
-     "command_match": "yosys",
-     "peak_ram_gb": 15,
-     "owner": "Codex:hbm_system/hc_shard",
-     "reason": "HC40 YosysSHARE dedicatedcontainer peak15524855808B14.46GiB; workerHWM15123332KiB; subtree15132452KiB. Aggregate rounds15GiB.",
-     "launcher_pid": 1873433
-    }
-   ],
-   "paused_admission_previous": {
-    "max_job_threads": 128,
-    "max_job_ram_gb": 1076
-   },
-   "admission_disabled_reason": "OWNER2026-10-09 transient EPYC2memorypressure audit: pause NEW compute until activefuturepeaks accounted; preserveprogressingjobs"
-  },
-  {
-   "name": "ot-epyc4",
-   "label": "EPYC4",
-   "cores": 128,
-   "cap": 384,
-   "base": "/srv/opentallas-scratch2/scratch/claude/closure-loop",
-   "max_job_threads": 64,
-   "max_job_ram_gb": 900,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100,
-    "/srv/opentallas-scratch": 200
-   },
-   "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path).",
-   "external_jobs": [
-    {
-     "name": "hbm-indexer-t1-exact",
-     "pid": 952687,
-     "command_match": "hbm-indexer-3a6f720d4",
-     "peak_ram_gb": 127,
-     "owner": "Codex:hbm_continuation",
-     "reason": "T1 final1CPPcompile liveindividualHWMsum133115456KiB126.949GiB;1of9805CPPmissing180841184B, objects1.035GB noarchive. Ownercompile_phase_measured/snapshot ef5a7f6e8.",
-     "launcher_pid": 952687
-    },
-    {
-     "name": "hbm-selector-native-qend-calibration",
-     "pid": 2558538,
-     "command_match": "openroad",
-     "peak_ram_gb": 19,
-     "owner": "Codex:hbm_continuation/selector_capture",
-     "reason": "Qend currentfloorplan subtree13489108KiB12.864GiB; SAMEsourceAA completed synthesis GNUtime19663284KiB18.75GiB pluslauncher75164KiB rounded19GiB. ac14cfaf7 receipt; cl/owner_phase_audit/20261009T095613Z.json.",
-     "launcher_pid": 745294
-    },
-    {
-     "name": "qwen-ar-quarter-frontend",
-     "pid": 3513967,
-     "command_match": "qwen-r25-quarter-ar/89a8ac363/",
-     "peak_ram_gb": 91.2,
-     "owner": "Codex:qwen_hbm_unify/stage_harness",
-     "launcher_pid": 2626636,
-     "reason": "ActualadmittedplainAR N256/M64 frontend3513967 RSS51075076/HWM51138320KiB. Evidence samefullquarter frontend source822ca7b65 completedGNUtime95595836KiB91.167GiB; rounded91.2GiB phase sibling, replacesunmeasured128. Eightworkers/outputsplit20000. No processcap/restart; C++phase refresh fromactualinventory."
-    }
-   ]
-  },
-  {
-   "name": "ot-pve1",
-   "label": "PVE1",
-   "cores": 28,
-   "cap": 31,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
-   "max_job_threads": 28,
-   "max_job_ram_gb": 223,
-   "min_free_disk_gb": 100,
-   "caps": [
-    "orfs"
-   ],
-   "ram_gb": 235,
-   "disk_roots": {
-    "/": 100
-   },
-   "min_free_ram_gb": 16,
-   "external_jobs": []
-  },
-  {
-   "name": "ot-agidock128",
-   "label": "AGIdock",
-   "cores": 64,
-   "cap": 70,
-   "base": "/srv/opentallas-scratch/claude/closure-loop",
-   "max_job_threads": 64,
-   "max_job_ram_gb": 110,
-   "min_free_disk_gb": 0,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 125,
-   "min_free_ram_gb": 2,
-   "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB.",
-   "reserve_ram_gb": 0,
-   "external_jobs": []
-  },
-  {
-   "name": "localhost",
-   "label": "localhost",
-   "cores": 32,
-   "cap": 35,
-   "base": "/home/ubuntu/closure-loop-local",
-   "max_job_threads": 0,
-   "max_job_ram_gb": 0,
-   "min_free_disk_gb": 150,
-   "caps": [
-    "orfs"
-   ],
-   "ram_gb": 188,
-   "max_loop_threads": 0,
-   "min_free_ram_gb": 16,
-   "note": "OWNER 2026-10-07 05:00: the coordinator host, capped so ssh stays responsive: <= 24 loop threads in total, MemAvailable >= job peak + 40 GB. ORFS only (local Verilator 4.038 / Yosys 0.9 differ from the fleet); the loop runs stages here directly (no ssh to itself). Fleet ORFS image loaded 2026-10-07 (old local latest kept as openroad/orfs:local-old-3985ce6d). RE-ENABLED 2026-10-07 07:00 after the smoke test (s81ph-dsfd_ctrl_ctr-34b3e75dd-localsmoke: calibrate -> route -> sign-off SS +307.0 / FF +8.41 / DRC 0 on localhost; ORFS image digest, yosys-0.68 and opensta binaries identical to the fleet; /srv/opentallas-scratch/admit.sh installed with a 40 GB reserve). | OWNER 2026-10-07 23:00: loop threads cap 48. | OWNER 2026-10-08 00:20: localhost admits more: 96 loop threads, 16 GB free floor, jobs up to 120 GB.",
-   "disk_roots": {
-    "/": 150
-   },
-   "bench_offload": true,
-   "admission_disabled_reason": "OWNER 2026-10-08 23:35: stop all new localhost tasks after measured global OOM; existing progressing jobs preserved. New compute admitted only on remote fleet.",
-   "external_jobs": []
-  }
- ]
+  ]
 }
