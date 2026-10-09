@@ -509,7 +509,9 @@ def u_su_vop(M: Machine, r: Rec, L):
             rr = {I.AD_BYP: lambda: p, I.AD_Q: lambda: A.add(p, q), I.AD_C: lambda: A.add(p, c_),
                   I.AD_NEGB: lambda: A.add(p, A.neg(bv)), I.AD_IMM: lambda: A.add(p, imm2),
                   I.AD_D: lambda: A.add(p, dv)}[f["ad"]]()
-            s = {I.SFU_NONE: lambda: rr, I.SFU_EXP: lambda: A.exp(rr), I.SFU_RSQRT: lambda: A.rsqrt(rr)}.get(f["sfu"])
+            s = {I.SFU_NONE: lambda: rr, I.SFU_EXP: lambda: A.exp(rr), I.SFU_RSQRT: lambda: A.rsqrt(rr),
+                 I.SFU_SQRT: lambda: A.sqrt(rr), I.SFU_SIGM: lambda: A.sigmoid(rr), I.SFU_SILU: lambda: A.silu(rr),
+                 I.SFU_SPSQRT: lambda: A.sqrt(A.softplus(rr))}.get(f["sfu"])
             if s is None:
                 raise Fault(3, f"SU sfu {f['sfu']} not modelled for this program")
             s = s()

@@ -143,3 +143,34 @@ def glu(g, u, limit=None, route_w=None, out_bf16=False):
 def argmax(v):
     v = np.asarray(v, dtype=F)
     return int(np.argmax(v))       # lowest index on ties
+
+
+# -- element functions of the SU / SFU (hdc_golden_v41 forms) ---------------------------------------------------------
+LOG1P_ODD = [F(1.0 / (2 * i + 1)) for i in range(8, -1, -1)]      # 1/17 .. 1/1, Horner in u^2 (hdc_golden_v41)
+
+
+def sigmoid(x):
+    return div(F(1.0), add(exp(neg(x)), F(1.0)))
+
+
+def silu(x):
+    return div(x, add(exp(neg(x)), F(1.0)))
+
+
+def log1p_unit(t):
+    u = div(t, add(t, F(2.0)))
+    u2 = mul(u, u)
+    p = np.full_like(u, LOG1P_ODD[0])
+    for c in LOG1P_ODD[1:]:
+        p = add(mul(p, u2), c)
+    return mul(mul(u, p), F(2.0))
+
+
+def softplus(x):
+    """hdc_golden_v41.softplus: max(x, 0) + log1p(exp(-|x|)) (the series log1p of the DS SFU's SPSQRT)."""
+    x = np.asarray(x, dtype=F)
+    return add(np.maximum(x, F(0)).astype(F), log1p_unit(exp(neg(np.abs(x).astype(F)))))
+
+
+def sqrt(a):
+    return z(np.sqrt(np.asarray(a, dtype=F)))
