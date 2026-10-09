@@ -19,7 +19,7 @@ def model(k=256, vocab=129280, sk=11,pinreg=0):
         routing=dict(input_tracks=549,output_tracks=36,capacity=dict(slot_um=[600,600],pin_faces_um=540,maximum_pins_per_um=256/540,routing_layers=['M2','M3','M4','M5','M6'],pin_fit=True)),
         storage=dict(embed_bytes=vocab*k*2,head_bytes=vocab*k*2,head_pair_payload_bytes=8192*32,
                      embed_head_pairs=math.ceil(vocab*k*2/(8192*32))),
-        area=dict(pinreg_enabled=bool(pinreg),pinreg_mode=pinreg,payload_capture="unconditional" if pinreg==2 else "accepted-only",maximum_extra_invalid_payload_Q_transitions_per_cycle=512 if pinreg==2 else 0,extra_energy_basis="up to512 payload FF/Q transitions each invalid cycle; dynamic energy awaits routed capacitance/activity; no energy credit",input_capture_bits=513*capture,input_capture_area_um2=513*capture*0.6,product_delay_bits=2*sum(range(8))*sk*32,
+        area=dict(pinreg_enabled=bool(pinreg),pinreg_mode=pinreg,payload_capture="unconditional" if pinreg==2 else "accepted-only",maximum_extra_invalid_payload_Q_transitions_per_cycle=512 if pinreg==2 else 0,extra_energy_basis="up to512 payload FF/Q transitions each invalid cycle plus possible downstream arithmetic activity; total dynamic energy awaits routed capacitance/activity; no energy credit",input_capture_bits=513*capture,input_capture_area_um2=513*capture*0.6,product_delay_bits=2*sum(range(8))*sk*32,
                   floorplan_slot_um=[600,600],core_um=[596,596],macros=0,
                   baseline_head_standardcell_um2=19061.2,baseline_head_sequential_um2=7686.36,baseline_head_sequential_cells=25862,
                   delay_flop_planning_um2_per_bit=0.6,delay_flop_basis='2x measured head sequential area/count, rounded upward; planning estimate, synthesis must confirm',

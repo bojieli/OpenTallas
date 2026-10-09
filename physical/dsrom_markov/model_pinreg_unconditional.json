@@ -66,7 +66,7 @@
     "pinreg_mode": 2,
     "payload_capture": "unconditional",
     "maximum_extra_invalid_payload_Q_transitions_per_cycle": 512,
-    "extra_energy_basis": "up to512 payload FF/Q transitions each invalid cycle; dynamic energy awaits routed capacitance/activity; no energy credit",
+    "extra_energy_basis": "up to512 payload FF/Q transitions each invalid cycle plus possible downstream arithmetic activity; total dynamic energy awaits routed capacitance/activity; no energy credit",
     "input_capture_bits": 513,
     "input_capture_area_um2": 307.8,
     "product_delay_bits": 19712,
