@@ -24,6 +24,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
 import math
 import re
 import sys
@@ -123,6 +124,11 @@ def derived_record(name):
     native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
     if native.exists():
         return json.loads(native.read_text())
+    alt = os.environ.get('OT_SVC_SPLIT')      # hbm-forks 2026-10-09: route a svc successor split (e.g. split_ps)
+    if alt:
+        f = ROOT / 'physical/hbm_accel_die_views/svc' / alt / name / 'ports.json'
+        if f.exists():
+            return json.loads(f.read_text())
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None

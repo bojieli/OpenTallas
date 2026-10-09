@@ -391,7 +391,7 @@ R25A = dict(R25, attn_tile_h_um=1600.5)
 #   2 x 4 x 138.264 um so the four tile rows still fit each scan quadrant (die H 25.7 mm <= 26 mm; a 1,661 um slot made
 #   27.1 mm).  Zero added cycles (the halves keep hfd_attn_tile_b's port latencies).
 ATTN_HALF_DIR = 'physical/hbm_attn_tile_r/half'
-ATTN_HALF_OF = dict(k='lo', ci='lo', q='lo', ri='lo', rf='lo', rst='lo', cf='hi', i='hi', o='hi')
+ATTN_HALF_OF = dict(k='lo', ks='lo', ci='lo', q='lo', ri='lo', rf='lo', rst='lo', cf='hi', i='hi', o='hi')
 R25S = dict(R25, attn_split=ATTN_HALF_DIR, attn_tile_h_um=1488.24,
             hub_h=R25['hub_h'] + 2 * (4 * (1488.24 - 1349.976)) + 2 * 2.16,
             # everything else in the hub keeps its r25 size: SU / SFU / HC quarters (cq_h, at the hub edge) and their
@@ -436,12 +436,34 @@ R25IQGC2 = dict(R25IQG,indexer_large_slot=True)
 # Actual x-controller bus facade and SRAM writeback slots. Loader stays on its
 # historical base until the ND1/ADDR37 facade and service landing are qualified.
 R25IMW = dict(R25IQG, native_mtp_wb=True,
+    # hbm-forks 2026-10-09: the MTP slot's cmdproc command pair (t_mtp / f_mtp ECO pins on hfd_cmdproc_s) as in R25M;
+    # without them `--ds-var r25imw[s]` fails in apply_splits (('hfd_cmdproc', 't_mtp'))
+    split_extra_ports=R25M['split_extra_ports'],
     spine_slots_low={'mtp': MTP_SLOT, 'kvwb': (300.24, 241.92)},
     spine_slot_masters={'mtp': 'hfd_mtp_native', 'kvwb': 'hfd_kvwb_native'},
     spine_slot_domains=dict(R25IQG.get('spine_slot_domains', {}),
         mtp='stream_1p2', kvwb='stream_1p2'))
 R25IMWS = dict(R25IMW, native_mtp_stop=True,
     spine_slot_masters={'mtp': 'hfd_mtp_native_stop', 'kvwb': 'hfd_kvwb_native'})
+# hbm-forks 2026-10-09 (coordinator; results/arch/hbm_generic_20261009 PLAN R25G): one generic HBM die for Qwen3-8B
+# and DS-V4.1 = r25s (split attention tiles) + r25m (MTP slot, loader memory ports) + r25iqg (native indexer) + the fmt3
+# wide SM grid (3x3 sites, Codex qwen_r25_fmt3), with the indexer anchors rebased to the wider outline.  Candidate only.
+FMT3_WIDE = dict(sm_wh=(3214.08, 1131.84), sm_physical_grid=(3, 3), side_padding_um=207.36)
+
+
+def _vmerge(*vs):
+    out = dict(vs[0])
+    for v in vs[1:]:
+        for k, x in v.items():
+            if k in R25 and R25[k] == x:
+                continue
+            out[k] = {**out[k], **x} if isinstance(x, dict) and isinstance(out.get(k), dict) else x
+    return out
+
+
+R25SPS = dict(R25S, split_x_masters='physical/hbm_accel_die_views/svc/split_ps/split.json',
+              attn_split='physical/hbm_attn_tile_r/half_ps', attn_entry8=True)
+R25G = _vmerge(R25S, R25M, R25IQG, FMT3_WIDE, dict(indexer_rebase=True))
 ADOPTED = R25
 
 
@@ -2074,7 +2096,8 @@ def buses(m):
         pos += nb * 1.2 + 40.0
     pos = 30.0
     for n_, nb in (('lk0', 64), ('lk1', 64), ('lk2', 64), ('ef', 8), ('ct', 23), ('xt', 129), ('rt', 135)) + \
-            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()):
+            ((('lm', LM_BUNDLES(m)),) if m['variant'].get('ld_mem') else ()) + \
+            (tuple((f'ks{g}', math.ceil(1102 / 16)) for g in range(8)) if m['variant'].get('attn_entry8') else ()):
         ed_off[n_] = pos + nb * 0.8 / 2
         pos += nb * 0.8 + 25.0
     spx = (hub['vm'].x, hub['vm'].x + hub['vm'].w)
@@ -2395,6 +2418,40 @@ def buses(m):
                 m.setdefault('meso', []).append(dict(inst=tgt_inst.name, kind=tgt_inst.kind, chain=f'{name}_{st}',
                                                      fifo_bits=kb, slices=math.ceil(kb / 512), clock='clk_stream',
                                                      where='inside the receiving hub block'))
+        if V.get('attn_entry8'):
+            # hbm-forks RQ-HF-4 (review-0400 / 0412): 8 KV entry points a stack.  Pair g of the scan quadrant (row r,
+            # inner / outer pair of the row, inner -> outer) takes the svc PS row port ks<g> on its entry tile's `ks`
+            # pin (half_lo); the partner tile gets the rows on the existing rf -> ri hop (strap ldk: entry 1, partner 0,
+            # a by_design die tie).  Route: svc inner face at the ks<g> pins -> the outer column channel -> the hub edge
+            # channel (one lane each, 12 um apart) -> the entry tile's S / N face; stations every <= WAYPOINT_UM.
+            sps_ = json.loads((ROOT / V['split_x_masters']).read_text())
+            par = sps_['parents'][svc.master]
+            rows_ = sc['tiles'] if side == 'S' else sc['tiles'][::-1]
+            for gk in range(8):
+                r_, pr = divmod(gk, 2)
+                out_ = rows_[r_][::-1] if half == 'W' else rows_[r_]
+                ent = out_[2 * pr]
+                band = next(b_ for b_ in par['bands'] if f'ks{gk}' in par['port_map'][b_])
+                prec = json.loads((ROOT / V['split_x_masters']).parent.joinpath(band, 'ports.json').read_text())
+                pins_ = prec['ports'][f'ks{gk}']['pins']
+                xg = sps_['bands'][band]['x0_um'] + (pins_[0][2] + pins_[-1][4]) / 2
+                if svc.orient in ('MY', 'R180'):
+                    xg = svc.w - xg
+                sn = _cxy(svc, 'N' if side == 'S' else 'S', xg / svc.w)
+                tp = _cxy(ent, 'S' if side == 'S' else 'N', 0.65)
+                eo = min(range(5), key=lambda c_: abs(cxs[c_] - tp[0]) + abs(cxs[c_] - sn[0]))
+                xl_ = cxs[eo] - 40.0 + 12.0 * gk
+                yy_ = ylane(side, f'ks{gk}', ych[side] + (20.0 + 6.0 * gk) * sgn)
+                pts = [sn, (sn[0], yy_), (xl_, yy_), (xl_, tp[1] - 30.0 * sgn), (tp[0], tp[1] - 30.0 * sgn), tp]
+                chain(f'ks{gk}_{st}', 'kv_rows', 1099, (svc.name, f'ks{gk}'), (ent.name, 'ks'), pts, path=f'ks{gk}_{st}',
+                      fc=(1099,))
+                if fwd:
+                    m.setdefault('meso', []).append(dict(inst=ent.name, kind=ent.kind, chain=f'ks{gk}_{st}', fifo_bits=1099,
+                                                         slices=3, clock='clk_stream', where='inside the entry tile'))
+                m.setdefault('straps', []).append(dict(inst=ent.name, port='ldk', value=1, cls='by_design',
+                                                       reason='RQ-HF-4 entry tile: ld from its own ks port'))
+                m['straps'].append(dict(inst=out_[2 * pr + 1].name, port='ldk', value=0, cls='by_design',
+                                        reason='RQ-HF-4 partner tile: ld from the forward hop'))
         # scan quadrant internals: tile row chains (outer -> inner), row end -> index quarter -> SU; KV down the
         # columns; index quarter -> VM (local top-k for the merge)
         grid = sc['tiles']
@@ -2897,6 +2954,13 @@ def pin_clashes(m, k=1):
     out = []
     for name, mst in M.items():
         if name in REAL:
+            continue
+        if any(sp_[0] == 'rects' for sp_ in mst.ports.values()):
+            # exact hardened pin rectangles (native indexer views): no generated pins to clash; a die bus whose width
+            # differs from the hardened port is reported instead of aborting the check
+            for p_, sp_ in mst.ports.items():
+                if sp_[0] == 'rects' and pw.get((name, p_), len(sp_[1])) != len(sp_[1]) and k == 1:
+                    out.append((name, f'width {p_}: die bus {pw[(name, p_)]} b != hardened {len(sp_[1])} b', '', ''))
             continue
         rects = sorted(S.pin_rects(mst, k, {p: pw.get((name, p), 0) for p in mst.order}), key=lambda r: (r[1], r[2][0]))
         by = defaultdict(list)
@@ -3611,7 +3675,7 @@ def variant_arg(v):
                     attn_tile_h_um=1350.0, child_contract='hbm_child_contract_20261005')
     if not v:
         return None
-    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
+    pre = dict(r8={}, r10=R10, r14b=R14B, r15=R15, r16e=R16E, r16g=R16G, r16h=R16H, r16i=R16I, r19b=R19B, r19c=R19C, r23=R23, r23v=R23V, r24=R24, r24p=R24P, r25=R25, r25a=R25A, r25s=R25S, r25m=R25M, r25i=R25I, r25ic2=R25IC2, r25iq=R25IQ, r25iqc2=R25IQC2, r25iqg=R25IQG, r25iqgc2=R25IQGC2, r25imw=R25IMW, r25imws=R25IMWS, r25g=R25G, r25sps=R25SPS, r24f=R24F, r24w=R24W, adopted=ADOPTED, r15m=dict(R15, hub_h=12355.2, **ATTN_MEAS))
     if v in pre:
         return dict(pre[v])
     d = json.loads(v)

@@ -46,17 +46,29 @@ def install(m, fp):
         return it
     h=json.loads((root/master/'ports.json').read_text())['h_um']
     g=m['geo']
+    # hbm-forks 2026-10-09 (coordinator, hbm-generic PLAN finding 2): the anchors below are r25-absolute.  indexer_rebase
+    # shifts them by the die-centre offset of the current outline (fmt3 wide SM grid: +571.968 um) and lifts the selector
+    # above hb_su_full when they would overlap (r25s hub shift).  Off by default: committed R25I* replay unchanged.
+    rebase=m['variant'].get('indexer_rebase')
+    DX=round((g['W']-30590.352)/2,6) if rebase else 0.0
     # Reserve inner side bands outside all eight stack SM footprints. Origins
     # align to the M7 mirrored pin lattice and the 2.16um placement row lattice.
     for st,group in m['groups'].items():
         side,half=st
-        x=10732.608 if half=='W' else 16994.88
+        x=round((10732.608 if half=='W' else 16994.88)+DX,6)
         core_h=h-0.024 if m['variant'].get('indexer_mirror_grid') else h
         y=1596.24 if side=='S' else round(g['H']-1596.24-core_h,6)
         orient={'SW':'R0','SE':'MY','NW':'MX','NE':'R180'}[st]
         scores[st]=add('idx_score_'+st,master,x,y,orient,'hub')
     sel_master='hfd_idx_sel_native_qend' if m['variant'].get('indexer_quarter_end') else 'hfd_idx_sel'
-    sel=add('idx_selector',sel_master,14164.416,17169.84,'R0','spine')
+    sx,sy=round(14164.416+DX,6),17169.84
+    if rebase:
+        sw_=json.loads((root/sel_master/'ports.json').read_text())['w_um']
+        for it in m['insts']:
+            if it.name=='hb_su_full' and it.x<sx+sw_ and sx<it.x+it.w and it.y<sy+1e9 and sy<it.y+it.h:
+                import math
+                sy=round(math.ceil((it.y+it.h+20.88)/0.24-1e-9)*0.24,6)
+    sel=add('idx_selector',sel_master,sx,sy,'R0','spine')
     m['indexer_native']=dict(scores=scores, selector=sel,
         model=hbm_indexer_r25i_physical_model(),
         qualification='OPT_IN_NATIVE_RESERVATION; service joins and whole-die routing not yet qualified')

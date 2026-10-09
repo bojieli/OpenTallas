@@ -1,5 +1,5 @@
 `timescale 1ns/1ps
-module tb_hbm_int8_issue;
+module tb_hbm_int8_issue #(parameter integer PIPE = 0);
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,start_v=0,op_bf=1,mode=0;
  reg [12:0] op_rows=3;reg [15:0] op_c=2;
@@ -12,7 +12,12 @@ module tb_hbm_int8_issue;
 `ifdef OT_INT8_MUT_PREFETCH
  wire demand=input_open; // removes last-real-beat gate: must prefetch the wrong format
 `else
- wire demand=input_open&&!line_end;
+ wire credit;
+ generate if(PIPE) begin
+  ot_hbm_accel_int8_credit #(.RW(12)) counter(.clk(clk),.rst_n(rst_n),.launch(launch),
+   .take(source_ready),.int8_mode(mode),.op_rows(op_rows),.op_g(8'd1),.op_c(op_c),.intake_credit(credit));
+ end else assign credit=1'b1;endgenerate
+ wire demand=input_open&&!line_end&&credit;
 `endif
  integer line_no=0,seen=0,k,code,cycles=0;
  reg [15:0] golden[0:255];
@@ -22,7 +27,7 @@ module tb_hbm_int8_issue;
   for(integer i=0;i<136;i=i+1) data[8*i+:8]=(line_no*128+i)%256;
  end
  assign source_ready=raw_ready&&demand;
- ot_hbm_accel_int8_line unpack(.clk(clk),.rst_n(rst_n),.int8_mode(mode),
+ ot_hbm_accel_int8_line #(.PIPE(PIPE)) unpack(.clk(clk),.rst_n(rst_n),.int8_mode(mode),
   .s_valid(demand),.s_ready(raw_ready),.s_data(data),
   .m_valid(w_valid),.m_ready(w_ready),.m_data(out_data));
  ot_hbm_accel_issue_pq #(.IL(8),.RMAX(4096),.XDEPTH(128),.HAZ(1)) issue(
