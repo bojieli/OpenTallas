@@ -22,7 +22,7 @@
   "macs_per_cycle": 0,
   "additions_per_cycle_full_occupancy": 176,
   "raw_partial_payload_bits": 98304,
-  "storage": "12 independently readable protected partial banks; each624bit word is16*(32+7)SECDED,3x128x256 macros/bank",
+  "storage": "12 independently readable protected partial banks; each576bit word is8*(64+8)SECDED,3x128x256 macros/bank",
   "macro_count_estimate": 36,
   "macro_area_um2": 140096.77055999998,
   "unit_adder_area_proxy_um2": 385.524,
