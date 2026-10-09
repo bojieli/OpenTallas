@@ -13,7 +13,9 @@
 //   * Source IDs / V halves: the arb's 64 grant bits {pc, half} are packed into the head owners' three ACK lanes
 //     {pc, mask} (one lane per granted PC, ascending PC, both halves in one lane when both were granted).
 //   * A half granted once is never offered again for the same head.
-// STRUCTURE (rev 2, rowfence_a/b e34e1c8cb TT -160/-203: 64-grant -> 3-lane packing and the wack decode -> fence were
+// STRUCTURE (rev 3: every input is a bare pin flop; the group pre-encode and the write-ack decode run from the pin
+// flops into their own registers: ACK +1 edge (grant -> ACK 2 edges, turnaround +3 edges total), fence release +2 edges.)
+// (rev 2, rowfence_a/b e34e1c8cb TT -160/-203: 64-grant -> 3-lane packing and the wack decode -> fence were
 // one edge, 26-29 levels): both are split at the pin flop, 0 added edges on the ACK path:
 //   - grant packing: the pin stage pre-encodes each group of 8 PCs (first three granted PCs, count, >3 flag); the
 //     second edge merges the four groups' lanes by prefix offsets into the ACK register.
@@ -43,7 +45,8 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
   always_comb begin h_v = 0; h_need = 0; ack_v = 0; ack_data = 0; fault = 0; end
  end else begin : g_on
   // ---------------- pin stage ----------------
-  reg ls_q; reg [NPC-1:0] hv_q, ht_q; reg [2*NPC-1:0] hn_q, g_q;
+  reg ls_p, ls_q; reg [NPC-1:0] hv_q, ht_q; reg [2*NPC-1:0] hn_q, g_q;
+  reg [2:0] wv_p; reg [20:0] wd_p;   // write-ack pin flops (decode is one edge behind the pins; ls_p..ls_q aligns lay_start)
   // write-ack decode
   reg [2*NPC-1:0] wm_d, wm_q; reg wdup_d, wdup_q;
   // static decode: per PC, per lane, a 5-bit compare (no dynamic index)
@@ -52,8 +55,8 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
    wdup_d = 0;
    for (integer j = 0; j < 3; j = j + 1) begin
     for (integer q = 0; q < NPC; q = q + 1)
-     lane_m[j][2*q +: 2] = (wack_v[j] && wack_data[j*7+2 +: 5] == 5'(q)) ? wack_data[j*7 +: 2] : 2'b00;
-    if (wack_v[j] && wack_data[j*7 +: 2] == 2'b00) wdup_d = 1;
+     lane_m[j][2*q +: 2] = (wv_p[j] && wd_p[j*7+2 +: 5] == 5'(q)) ? wd_p[j*7 +: 2] : 2'b00;
+    if (wv_p[j] && wd_p[j*7 +: 2] == 2'b00) wdup_d = 1;
    end
    wm_d = lane_m[0] | lane_m[1] | lane_m[2];
    if (|((lane_m[0] & lane_m[1]) | (lane_m[0] & lane_m[2]) | (lane_m[1] & lane_m[2]))) wdup_d = 1;
@@ -67,7 +70,7 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
   reg [7:0] gp, rest, oh;
   always_comb begin
    for (integer g = 0; g < NG; g = g + 1) begin
-    for (integer k = 0; k < 8; k = k + 1) gp[k] = |h_grant[2*(8*g+k) +: 2];
+    for (integer k = 0; k < 8; k = k + 1) gp[k] = |g_q[2*(8*g+k) +: 2];
     rest = gp;
     for (integer l = 0; l < 3; l = l + 1) begin
      oh = first1(rest);
@@ -75,7 +78,7 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
      gl_v_d[g][l] = |oh;
      gl_i_d[g][l] = {|(oh & 8'hf0), |(oh & 8'hcc), |(oh & 8'haa)};
      gl_m_d[g][l] = 2'b00;
-     for (integer k = 0; k < 8; k = k + 1) if (oh[k]) gl_m_d[g][l] = h_grant[2*(8*g+k) +: 2];
+     for (integer k = 0; k < 8; k = k + 1) if (oh[k]) gl_m_d[g][l] = g_q[2*(8*g+k) +: 2];
     end
     go_d[g] = |rest;
     gc_d[g] = 2'(gl_v_d[g][0]) + 2'(gl_v_d[g][1]) + 2'(gl_v_d[g][2]);
@@ -83,16 +86,16 @@ module ot_qfd_row_merge_fence #(parameter integer ENABLE=0, NPC=32, MUT=0) (
   end
   always @(posedge clk or negedge rst_n)
    if (!rst_n) begin
-    ls_q <= 0; hv_q <= 0; g_q <= 0; wm_q <= 0; wdup_q <= 0;
+    ls_p <= 0; ls_q <= 0; wv_p <= 0; hv_q <= 0; g_q <= 0; wm_q <= 0; wdup_q <= 0;
     for (integer g = 0; g < NG; g = g + 1) begin gl_v_q[g] <= 0; gc_q[g] <= 0; go_q[g] <= 0; end
    end else begin
-    ls_q <= lay_start; hv_q <= head_v; g_q <= h_grant; wm_q <= wm_d; wdup_q <= wdup_d;
+    ls_p <= lay_start; ls_q <= ls_p; wv_p <= wack_v; hv_q <= head_v; g_q <= h_grant; wm_q <= wm_d; wdup_q <= wdup_d;
     for (integer g = 0; g < NG; g = g + 1) begin
      gl_v_q[g] <= {gl_v_d[g][2], gl_v_d[g][1], gl_v_d[g][0]}; gc_q[g] <= gc_d[g]; go_q[g] <= go_d[g];
     end
    end
   always @(posedge clk) begin
-   ht_q <= head_tail; hn_q <= head_need;
+   ht_q <= head_tail; hn_q <= head_need; wd_p <= wack_data;
    for (integer g = 0; g < NG; g = g + 1) for (integer k = 0; k < 3; k = k + 1) begin gl_i_q[g][k] <= gl_i_d[g][k]; gl_m_q[g][k] <= gl_m_d[g][k]; end
   end
   // ---------------- second stage ----------------
