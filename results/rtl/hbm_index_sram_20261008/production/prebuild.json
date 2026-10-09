@@ -1,0 +1,11 @@
+{
+  "core_base": "f3ab602a2d0420519c288371ba3cc6a8ebd423dd",
+  "portal_only_hunks": "af372f969",
+  "selector_parameters": {
+    "IK_SRAM": 0,
+    "IK_SRAM_ROTATE": 0
+  },
+  "model": "results/uarch/hbm_index_sram_20261008/rotate_prebuild.json",
+  "gate": "actual full342blocks core selector with default dependency-free elaboration and byte mutation negative",
+  "scope": "No new hardware or latency beyond previously qualified native SRAM/structured remap; adoption and physical fit remain unproved"
+}
