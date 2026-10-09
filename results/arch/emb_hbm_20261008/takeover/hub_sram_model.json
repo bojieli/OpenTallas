@@ -301,12 +301,12 @@
     "net_new_logic_allowance_at_proxy_with_halo_um2": 9165.485856000014,
     "new_register_proxy": {
       "per_link_encode_bits": 648,
-      "per_link_read_capture_bits": 648,
-      "per_link_syndrome_flags_bits": 72,
-      "per_link_plain_pending_hold_bits": 523,
-      "total_bits": 7564,
-      "proxy_um2": 2420.48,
-      "remaining_codec_control_buffer_allowance_um2_at_proxy": 6745.005856000014,
+      "per_link_read_capture_bits": 1296,
+      "per_link_syndrome_flags_bits": 144,
+      "per_link_plain_pending_hold_bits": 0,
+      "total_bits": 8352,
+      "proxy_um2": 2672.64,
+      "remaining_codec_control_buffer_allowance_um2_at_proxy": 6492.8458560000145,
       "claim": "Sizing allowance only; actual registered-ready latency and pending-slot implementation may change this inventory. No measured area saving."
     },
     "claim": "Seat arithmetic fits existing outline. Standard-cell saving, codec/control cost, pins, PDN, detailed route and timing are unmeasured; no adoption or die growth/removal credit."
