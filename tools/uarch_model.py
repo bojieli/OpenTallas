@@ -12827,3 +12827,9 @@ def dsrom_mtp_seed_qs5f_candidate():
         qualified_minimum_record='results/rtl/dsrom_mtp_seed_qs5f_20261009/selected_gate/measurement.json',
         qualification=dict(minimum_two_rows=True,unsafe_PQ_go_negative=True,wrong_three_split_negative=True,
             whole_field_descriptor=False,parallel_engine_count=False,six_positions=False,new_collector_physical_closed=False))
+
+
+def dsrom_mtp_shared_qelem_candidate():
+    """Before-build minimum shared-W2 arithmetic sizing; no producer binding credit."""
+    from dsrom_mtp_shared_qelem_model import model
+    return model()

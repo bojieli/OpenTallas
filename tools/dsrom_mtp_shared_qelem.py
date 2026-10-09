@@ -43,7 +43,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--snapshot',type=Path,required=True);p.add_argument('--sample',type=Path,required=True);p.add_argument('--config',type=Path,required=True);p.add_argument('--work',type=Path,required=True);p.add_argument('--jobs',type=int,default=12);p.add_argument('--raw-negative',action='store_true');a=p.parse_args()
     a.work.mkdir(parents=True,exist_ok=True);G.set_arith('chunk8');ck=A.Ckpt(a.snapshot)
     sample=np.load(a.sample)['h_in'][0];assert sample.shape==(5120,)
-    sample=G.to_bf16(sample);limit=G.F(json.loads(a.config.read_text())['swiglu_limit'])
+    sample=G.to_bf16(sample);config=json.loads(a.config.read_text());limit=G.F(config.get('text_config',config)['swiglu_limit'])
     prefix='mtp.0.ffn.shared_experts.'
     w1=A.Mat(ck,prefix+'w1','fp8',2304,5120);w3=A.Mat(ck,prefix+'w3','fp8',2304,5120)
     g=G.linear_q(w1.w,sample);u=G.linear_q(w3.w,sample)
