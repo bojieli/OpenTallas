@@ -2444,8 +2444,10 @@ class Placer:
         self.occ.add(it.box())
         return it
 
-    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10):
-        """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev`."""
+    def near(self, cx, cy, w, h, allowed, prev=None, horiz=True, reach=None, span=72.0, rows=10, nxt=None, nreach=None):
+        """Free lattice spot for a w x h block centred near (cx, cy) inside `allowed`, within `reach` of `prev` and
+        (s81-die-timing 2026-10-08) within `nreach` of the next point `nxt` of the chain (r3: hop relays that found no
+        spot inside a packed frame landed up to 906 um short of their load, on the far side of their driver)."""
         reach = reach or FWD_REACH
         al = [0.0]
         for i in range(1, int(span / 4.32) + 1):
@@ -2463,6 +2465,8 @@ class Placer:
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
                 continue
             if prev is not None and _mh(prev, (x + w / 2, y + h / 2)) > reach:
+                continue
+            if nxt is not None and _mh(nxt, (x + w / 2, y + h / 2)) > nreach:
                 continue
             return x, y
         return None
@@ -2903,7 +2907,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
+    variant.update(su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
                                                     layer1='layer die, 1 HBM3E stack (292 of the rack)',
                                                     head='head die (4 stacks; 12 of the rack)')[DIE_KIND],
                    pairs=PAIRS, bf=BF_PAIRS, nv=NV_PAIRS, head_bundles=HEAD_BUNDLES, stacks=list(STACKS[DIE_KIND]),
@@ -3359,9 +3363,14 @@ HOP_PLAN = None                 # {(drv inst, drv port, load inst, load port): (
 VM_FACE_MM2 = None              # --vm-face-mm2 (v9e): minimum VM slab area on every die (layer die 2.6599)
 PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a relay station abutting every hardened-block pin
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
+NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
+                                #   NEXT point of its chain (the load for the last relay), not only of the previous one
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
-PQ_ROOT_ROW = 164.16            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 133.92 + 8.64 + 8.64)
-PQ_ROOT_WH = (132.192, 133.92)  #   ret_root_r128 reserved outline (results/uarch/s81_pq_root_cam_20261007/model.json)
+PQ_ROOT_ROW = 241.92            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 211.68 + 8.64 + 8.64)
+PQ_ROOT_WH = (132.192, 211.68)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
+                                #   85.8% util, rule ~55-60%) for the pipelined CAM ot_s81_pq_ret_root_cam_p.  ADOPTED PAR 0
+                                #   ASPLIT 0 (s81b-pq-rc2-a0-h212-hm10-b761ac1c6: TT +82.06 / FF +4.42 / DRC 0, 49.8% util);
+                                #   the PAR 1 variant (241.92 slot) was not adopted
 PQ_STN_H = 8.64                 #   return station height (S / N face of the root, full root width)
 PQ_CORE_H = 449.28              #   PQ core slot height after the VM (x the hub column width)
 PQ_TI, PQ_RO = NODEB, CRET      #   root in = the raw tree word (66); root out carried at the column return width (68):
@@ -3548,6 +3557,8 @@ def _hop_fix(m, P):
             for k in range(n):
                 (cx, cy), dch = _poly_at(path, pos[k])
                 horiz = dch in 'EW'
+                NR = dict(nxt=b, nreach=max(Lp - pos[k], PIN_SEG) + 40.0 if k == n - 1 else (n - k) * (R - 10.0)) \
+                    if NXT_REACH else {}
                 w_, h_ = stn_dims([bits], horiz)
                 if not fwd and (reg is not None or not GEOMETRY_FIX):  # frame relay faces chosen later -> square
                     w_ = h_ = max(w_, h_)
@@ -3566,7 +3577,7 @@ def _hop_fix(m, P):
                 for PAD in (2.16, 1.08, 0.0):
                     for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows)
+                                    reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
                             break
@@ -3579,7 +3590,7 @@ def _hop_fix(m, P):
                     # takes the nearest legal spot within reach (the strip / channel next to the frame)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows)
+                                    reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rec['pad_fallback']['frame_out'] = rec['pad_fallback'].get('frame_out', 0) + 1
@@ -3587,10 +3598,29 @@ def _hop_fix(m, P):
                 if pl is None and PIN_RELAY and reg is None:   # a pin relay beside a slab: anywhere legal on the die
                     for span, rows in ((300.0, 30), (1200.0, 120)):
                         pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
-                                    reach=R - 10.0, span=span, rows=rows)
+                                    reach=R - 10.0, span=span, rows=rows, **NR)
                         if pl:
                             pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
                             rec['pad_fallback']['die'] = rec['pad_fallback'].get('die', 0) + 1
+                            break
+                if pl is None and NR:          # both reaches, anywhere legal on the die (the frame / channel is full)
+                    for span, rows in ((300.0, 30), (1200.0, 120)):
+                        pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
+                                    reach=R - 10.0, span=span, rows=rows, **NR)
+                        if pl:
+                            pl = (up(pl[0] + 1.08, GX), up(pl[1] + 1.08, GY))
+                            rec['pad_fallback']['nxt_die'] = rec['pad_fallback'].get('nxt_die', 0) + 1
+                            break
+                if pl is None and NR:          # no spot honours the load-side reach: the legacy search, counted
+                    rec['nxt_relaxed'] = rec.get('nxt_relaxed', 0) + 1
+                    for PAD in (2.16, 1.08, 0.0):
+                        for span, rows in ((120.0, 12), (300.0, 30), (600.0, 60), (1200.0, 120)):
+                            pl = P.near(cx, cy, w_ + 2 * PAD, h_ + 2 * PAD, allowed, prev=cur, horiz=horiz,
+                                        reach=R - 10.0, span=span, rows=rows)
+                            if pl:
+                                pl = (up(pl[0] + PAD, GX), up(pl[1] + PAD, GY))
+                                break
+                        if pl:
                             break
                 assert pl, (bid, e, k)
                 nm = f'g_{bid}_{e[0]}_{k}'
@@ -3705,7 +3735,8 @@ def _col_relays(m, P):
         w_, h_ = stn_dims([bits], True)
         for k in range(n):
             (cx, cy), _ = _poly_at(path, Lp * (k + 1) / (n + 1))
-            pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20)
+            NR = dict(nxt=b, nreach=(n - k) * (BANK_RULE_UM + 40.0)) if NXT_REACH else {}
+            pl = P.near(cx, cy, w_, h_, [fr], prev=cur, horiz=True, reach=BANK_RULE_UM + 40.0, span=200.0, rows=20, **NR)
             if pl is None:
                 pl = P.near(cx, cy, w_, h_, [fr], prev=None, horiz=True, span=400.0, rows=40)
             assert pl, (bid, k)
@@ -4954,6 +4985,8 @@ def die_options(ap):
     ap.add_argument('--su-mm2', type=float, help='r9: SU total reservation area in mm2, split north/south; requires sizing record; default unchanged')
     ap.add_argument('--vm-face-mm2', type=float, help='r9: minimum VM slab area in mm2 on every die (spreads its pin '
                     'face; layer die value 2.6599; default off)')
+    ap.add_argument('--nxt-reach', action='store_true', help='relay placement honours the reach to the next chain point '
+                    '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
@@ -4965,8 +4998,8 @@ def die_options(ap):
     ap.add_argument('--geometry-fix', action='store_true', help='r9: canonical station footprints and bounded '
                     'k16 pin depth; default off pending geometry and physical gates')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
-                    'mixed layer die: a 164.16 um root row in the first TIERS tier channels (one ret_root_r128 a '
-                    'region, 132.192 x 133.92, between two 8.64 um return stations in the 142.56 um return strip) and '
+                    'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
+                    'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
                     'the PQ core in a 449.28 um x hub-column slot after the VM (with its 3 stream / phase ROMs)')
     return ap
 
@@ -4984,8 +5017,9 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
-    global PIN_RELAY, CHS, VCH8, HC_CORR, SPINE_W8
+    global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
+    NXT_REACH = bool(getattr(a, 'nxt_reach', False))
     global VM_FACE_MM2
     VM_FACE_MM2 = getattr(a, 'vm_face_mm2', None)
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None

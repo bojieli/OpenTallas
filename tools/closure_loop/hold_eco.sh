@@ -34,7 +34,8 @@ IMG=${ORFS_IMAGE:-openroad/orfs:asap7lock}
 [ ! -e "$OUT" ] || { echo "ECO output already exists; preserving evidence: $OUT"; exit 10; }
 if [ -n "${ECO_GUARD:-}" ]; then python3 "$CLD/eco_recovery.py" verify "$ECO_GUARD"; fi
 mkdir -p "$OUT"
-DB=5_2_route.odb; [ -f $RB/$DB ] || DB=6_final.odb   # pre-fill route db; the tcl removes fillers otherwise
+DB=${ECO_RB_DB:-5_2_route.odb}; [ -f $RB/$DB ] || DB=6_final.odb   # ECO_RB_DB=6_final.odb: stacked ECO on an installed ECO (drive-1243)
+# (pre-fill route db; the tcl removes fillers otherwise)
 CUR_DIR=$RB; CUR_DB=$DB; CUR_SPEF=$OB/6_final.spef; [ -f $CUR_SPEF ] || CUR_SPEF=$RB/6_final.spef
 PS=""; for p in "$@"; do PS="$PS /src/$p"; done
 MS=""; for m in ${MACROS:-}; do MS="$MS /src/$m"; done

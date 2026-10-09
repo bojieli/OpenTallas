@@ -91,3 +91,16 @@ class LoopGapTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DockerLecOffTests(unittest.TestCase):
+    def test_docker_shim_adds_lec_off_to_every_run(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d) / "fake"
+            fake.mkdir()
+            (fake / "docker").write_text('#!/bin/bash\necho REAL "$@"\n')
+            (fake / "docker").chmod(0o755)
+            env = cl.docker_lec_off(f"{d}/cl")
+            out = subprocess.run(["bash", "-c", env + "docker run --rm img make x; docker image ls"],
+                                 capture_output=True, text=True, env={"PATH": f"{fake}:/usr/bin:/bin"}).stdout
+            self.assertEqual(out.splitlines(), ["REAL run -e LEC_CHECK=0 --rm img make x", "REAL image ls"])

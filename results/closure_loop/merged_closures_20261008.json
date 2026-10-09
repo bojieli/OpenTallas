@@ -5,12 +5,12 @@
  "scope": "CLOSED closure-loop jobs since 2026-10-07 20:45 PT (option B), minus revoked / adoption-held / bench-failed",
  "main_after_merge": "110e635304ea02513abd0043956a228c15c85ea5",
  "counts": {
-  "closed": 192,
+  "closed": 198,
   "revoked": 9,
   "held": 0,
   "bench_failed": 0,
   "already_on_main": 71,
-  "merged": 112
+  "merged": 118
  },
  "notes": [
   "Records of the codex/qwen-ctrl-kvc-final 74d839a79 qfd_ctrl_pc_NN routes conflict with main's physical/qwen_die_masters/views/qfd_ctrl_pc_NN and signoff/qfd_ctrl_pc_NN.sdc (ready_hbm design, 3d5ad2a4f / 216a06602): main's views and SDCs kept; codex record commits are ancestors of main but their view files are not the live ones.",
@@ -18,7 +18,8 @@
   "hfd_mcast_r6b sttt (cc34880fa) record kept beside main's at physical/hbm_accel_die_views/stations/hfd_mcast_r6b/route_cl_sttt.",
   "hfd_index_q_b1 and qfd_lst_c_split: main's records kept (setup-triage copy revoked / identical numbers).",
   "Revoked records (revoked_closures.json) that arrived with branch tips restored to main's files in bb320341a.",
-  "multivt LVT routes: record commits cherry-picked only (overlay commits not merged)."
+  "multivt LVT routes: record commits cherry-picked only (overlay commits not merged).",
+  "merge-1658: cdc_eco-hm80-h1-e59973516-tt + s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt merged; qfd_cdc live view stays cdc_hm25."
  ],
  "ready_to_merge": [
   {
@@ -72,6 +73,10 @@
   {
    "entry": "drive-0928 1e23a4915 + 532869b2c (qfd_io_emb_root PINREG option, default 0) + record b84637e6d",
    "action": "merged by drive-0958 2026-10-08 after qfd_io_emb_root-1e23a4915-lvt-tc CLOSED; PINREG variant cancelled (0-cycle LVT wins)"
+  },
+  {
+   "entry": "pq-rootcam 08f27dc4f + pq-rootcam-2 b761ac1c6 (+ records 302e65bb0, 9c0b5009b)",
+   "action": "merged 803962f5a by merge-pq 2026-10-08 after rc2-a0/a7 CLOSED; a0 adopted; die slot set to PAR 0 211.68 (264d0e848); parity variant s81b-pq-rc2p-a7-h242-hm10-b761ac1c6 CANCELLED while RUNNING (PAR 1 not adopted: PAR 0 closed, PAR 1 costs 2/8/20 latency and a 241.92 slot, +30 um per root row x 6 tier channels)"
   }
  ],
  "jobs": [
@@ -2547,6 +2552,100 @@
    "record_on_main": false,
    "merged_sha": "(drive-0958 merge, see ready_to_merge)",
    "status": "merged"
+  },
+  {
+   "job": "qwen_fwd_cx_station_a_fwd7_13b4b9fb1-tt",
+   "closed": "2026-10-08 11:47:31-07:00",
+   "closed_by": "closure loop (cx station delay-matched forward FWD_INV=7, RVT, variant a, TC route; TT +6.19 / FF +16.31 / DRC 0 at the routed insertion; was LVT a TT -16.25). Alternative fwd5_lvt_f92a58eb4 also CLOSED TT +0.51 / FF +16.56 (not adopted: LVT, smaller margin); fwd5 RVT NEEDS_RTL TT -12.58",
+   "branch": "claude/drive-1113-cxstn-20261008",
+   "source_commit": "13b4b9fb144b43a52a4d13aba8406fe3a97fef9e",
+   "record_commit": "d058a69c3",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(merge-cxstn: station files only from 1c3be936a/97d3a4233/13b4b9fb1; redesign-2 VM split8 + face-chain stagger NOT merged)",
+   "status": "merged"
+  },
+  {
+   "job": "qfd_io_serdes_adapter_rxd512_pin-073694e6b-tc",
+   "closed": "2026-10-08 (closure loop, CLOSED)",
+   "closed_by": "closure loop (PINREG=1: r_v/r_d through a die-RX pin register, TC route; TT +6.61 / FF +16.92 / DRC 0 at 833.333; was RVT TT -37.11 at 351607d29tc on 7 r_d output ports). LVT alternatives b8fa70cd5-lvt-tc TT -74.93 and -lvt-hm25-tc TT -30.78 FAILED, so PINREG adopted",
+   "branch": "claude/drive-1143-serdes-pin-20261008",
+   "source_commit": "073694e6b",
+   "record_commit": "36f6cb9ff",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "(drive-1413 merge of claude/drive-1143-serdes-pin-20261008)",
+   "adopted": "PINREG=1 for qfd_io_serdes_rxd512 (views/qfd_io_serdes_rxd512 from this route); RTL default stays PINREG=0",
+   "cycles_added": "+1 cycle a received word (die-RX pin register), OCRED+1; exact512 bench 3320 -> 3321 cycles (1,500 words), rate unchanged 498/1000",
+   "status": "merged"
+  },
+  {
+   "job": "s81b-pq-rc2-a0-h212-hm10-b761ac1c6",
+   "closed": "2026-10-08 15:49 PT (closure loop, CLOSED, EPYC2)",
+   "closed_by": "closure loop (ot_s81_pq_ret_root_cam_p round 2 PAR 0 ASPLIT 0, TC route, mm FF hold HM 10; TT +82.06 / FF +4.42 / DRC 0 at 833.333; SS sensitivity -279.88). Area: slot 132.192 x 211.68 = 27,982.4 um2 die, std-cell 13,204.1 um2, util 49.8%, 228,171 insts. Gate PASS PAR0 A0 (6 mutants)",
+   "record_commit": "302e65bb0",
+   "branch": "claude/pq-rootcam-20261008",
+   "source_commit": "b761ac1c6",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "803962f5a (merge-pq merge of claude/pq-rootcam-20261008 b761ac1c6 + round 1 08f27dc4f)",
+   "status": "merged",
+   "adopted": "ADOPTED: PQ root CAM = ot_s81_pq_ret_root_cam_p PAR 0 ASPLIT 0 (fewest cycles); S81 die root reservation 132.192 x 211.68, PQ_ROOT_ROW 241.92 (264d0e848)",
+   "cycles_added": "latency vs native ot_v41_ret_root complete/2-leaf/8-leaf = 2/4/8 (old B 1/2/4: +1 input station, +1 per root add level; 0 over round 1); throughput 1 candidate/cycle unchanged. qelem_pq 2,121.3 tok/s pricing must be re-priced"
+  },
+  {
+   "job": "s81b-pq-rc2-a7-h212-hm10-b761ac1c6",
+   "closed": "2026-10-08 15:42 PT (closure loop, CLOSED, EPYC1)",
+   "closed_by": "closure loop (PAR 0 ASPLIT 7, TC route, HM 10; TT +79.46 / FF +3.85 / DRC 0 at 833.333; SS sensitivity -273.88). Area: 27,982.4 um2 die, std-cell 13,355.8 um2, util 50.4%, 229,162 insts",
+   "record_commit": "9c0b5009b",
+   "branch": "claude/pq-rootcam-20261008",
+   "source_commit": "b761ac1c6",
+   "bench_ok": true,
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "803962f5a (merge-pq merge of claude/pq-rootcam-20261008 b761ac1c6 + round 1 08f27dc4f)",
+   "status": "merged",
+   "adopted": "NOT adopted (record only): closes like a0 but costs 2/7/18 (+3 per root add level over a0)",
+   "cycles_added": "n/a (not adopted)"
+  },
+  {
+   "job": "cdc_eco-hm80-h1-e59973516-tt",
+   "closed": "2026-10-08 16:50 PT (closure loop, CLOSED, EPYC3)",
+   "closed_by": "closure loop (TT/SS +46.92 / FF +1.21 / DRC 0 at 833.333)",
+   "branch": "claude/h1-reroute-cdc-20261008",
+   "source_commit": "e59973516",
+   "record_commit": "35032e230",
+   "bench_ok": true,
+   "bench_note": "no bench: RTL unchanged from m1j CDC (exact bench record results/rtl/qwen_stream4_cdc_20261005/r11)",
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "5a0ce0fd5",
+   "status": "merged",
+   "adopted": "NOT adopted as the live qfd_cdc view: main's cdc_hm25 view (SS +43.12 / FF +4.95) kept; eco views at physical/qwen_die_masters/views/qfd_cdc_eco_h1. Source SDC conflicts resolved to main (H1 already on main)."
+  },
+  {
+   "job": "s81ph-dsfd_capt_ctl-df2ff7a97-kst1-tt",
+   "closed": "2026-10-08 (closure loop, CLOSED, EPYC4)",
+   "closed_by": "closure loop (SS +39.36 / FF +12.98 / DRC 0 at 833.333)",
+   "branch": "claude/s81-die-timing-20261008",
+   "source_commit": "df2ff7a97",
+   "record_commit": "39552afe6",
+   "bench_ok": true,
+   "bench_note": "bench_exact_cap_tiled CAPT_BENCH PASS; mutant bench_neg_bf16_trunc FAILs as expected",
+   "revoked": false,
+   "source_on_main": false,
+   "record_on_main": false,
+   "merged_sha": "46a24a9d8",
+   "status": "merged",
+   "adopted": "closed view physical/s81_ph_views/closed/dsfd_capt_ctl (branch tip incl. f9c674c0e, d1731f77f die-STA/generator commits)"
   }
  ]
 }

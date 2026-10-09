@@ -1,0 +1,46 @@
+{
+ "dsfd_ctrl": {
+  "glue_worst_ps": {
+   "tt_setup": 111.4,
+   "ss_setup": -25.3,
+   "ff_hold": 110.9,
+   "tt_setup_bal": 235.5,
+   "ss_setup_bal": 58.4,
+   "ff_hold_bal": 87.9
+  },
+  "ss_as_tt": []
+ },
+ "dsfd_svc": {
+  "glue_worst_ps": {
+   "tt_setup": -384.9,
+   "ss_setup": -685.5,
+   "ff_hold": 18.3,
+   "tt_setup_bal": -289.3,
+   "ss_setup_bal": -545.1,
+   "ff_hold_bal": 95.6
+  },
+  "ss_as_tt": []
+ },
+ "dsfd_sp_capture": {
+  "glue_worst_ps": {
+   "tt_setup": -257.3,
+   "ss_setup": -564.4,
+   "ff_hold": 4.2,
+   "tt_setup_bal": -139.6,
+   "ss_setup_bal": -530.6,
+   "ff_hold_bal": 37.8
+  },
+  "ss_as_tt": []
+ },
+ "dsfd_bk_collector": {
+  "glue_worst_ps": {
+   "tt_setup": -266.0,
+   "ss_setup": -578.2,
+   "ff_hold": -122.0,
+   "tt_setup_bal": 1.1,
+   "ss_setup_bal": -244.9,
+   "ff_hold_bal": 13.1
+  },
+  "ss_as_tt": []
+ }
+}

@@ -3033,6 +3033,8 @@ def main(argv=None):
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--iters', type=int, default=5)
     ap.add_argument('--tag', default='b3r2')
+    ap.add_argument('--recipe', default=None, help='die_top_lint Qwen recipe (e.g. r21b): selects the die from the '
+                    'recipe dict (incl. vm_me / tt_h / bl_h, which have no flag) instead of the per-feature flags')
     a = ap.parse_args(argv)
     if a.mode == 'summary':
         print(json.dumps(summarize(a.work), indent=1))
@@ -3040,14 +3042,20 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
-                    b3r6=a.b3r6, tree_cols=a.tree_cols,
-                    bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
-                    io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
-                    edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
-                    slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
-                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish)
+    if a.recipe:
+        import die_top_lint as DTL
+        r = dict(DTL.QWEN_RECIPES[a.recipe])
+        cdc = r.pop('cdc')
+        v, m = selected(True, cdc=_cdc_arg(cdc), **r)
+    else:
+        v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
+                        b3r6=a.b3r6, tree_cols=a.tree_cols,
+                        bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
+                        io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
+                        edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
+                        slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
+                        slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
+                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish)
     if a.mode == 'relaycost':
         rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
         if a.out:

@@ -1,0 +1,97 @@
+library (dsfd_sp_capture_asm_ff) {
+ delay_model : table_lookup;
+ time_unit : "1ps";
+ voltage_unit : "1V";
+ current_unit : "1mA";
+ pulling_resistance_unit : "1kohm";
+ leakage_power_unit : "1pW";
+ capacitive_load_unit (1, ff);
+ nom_process : 1.0;
+ nom_temperature : 25.0;
+ nom_voltage : 0.70;
+ input_threshold_pct_rise : 50; input_threshold_pct_fall : 50; output_threshold_pct_rise : 50;
+ output_threshold_pct_fall : 50; slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;
+ slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;
+ lu_table_template (dsfd_capt_ctl__template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+ lu_table_template (dsfd_capt_g2__template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+ lu_table_template (dsfd_capt_x__template_1) {
+    variable_1 : total_output_net_capacitance;
+    index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+  }
+ type (b1) { base_type : array; data_type : bit; bit_width : 1; bit_from : 0; bit_to : 0; downto : true; }
+ type (b512) { base_type : array; data_type : bit; bit_width : 512; bit_from : 511; bit_to : 0; downto : true; }
+ type (b576) { base_type : array; data_type : bit; bit_width : 576; bit_from : 575; bit_to : 0; downto : true; }
+ cell (dsfd_sp_capture) {
+  bus (ck) { bus_type : b1; direction : input;
+   clock : true; capacitance : 1.0;
+  }
+  bus (f_gather) { bus_type : b576; direction : input;
+   capacitance : 17.1694;
+   timing () {
+        related_pin : "ck";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("148.12683");
+        }
+        fall_constraint(scalar) {
+          values("161.91010");
+        }
+      }
+   timing () {
+        related_pin : "ck";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("-21.52039");
+        }
+        fall_constraint(scalar) {
+          values("-22.35591");
+        }
+      }
+  }
+  bus (rst) { bus_type : b1; direction : input;
+   capacitance : 7.5829;
+   timing () {
+        related_pin : "ck";
+        timing_type : hold_rising;
+        rise_constraint(scalar) {
+          values("148.70976");
+        }
+      }
+   timing () {
+        related_pin : "ck";
+        timing_type : setup_rising;
+        rise_constraint(scalar) {
+          values("-127.56817");
+        }
+      }
+  }
+  bus (t_vm) { bus_type : b512; direction : output;
+   timing () {
+        related_pin : "ck";
+        timing_type : rising_edge;
+        cell_rise(dsfd_capt_x__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("298.81607,301.12857,305.22980,312.98975,328.24445,358.63669,419.33691");
+        }
+        rise_transition(dsfd_capt_x__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("7.61368,11.68276,19.96007,36.84304,71.06678,139.93100,277.88907");
+        }
+        cell_fall(dsfd_capt_x__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("300.95605,303.16647,306.98190,313.92392,327.38263,354.16669,407.65692");
+        }
+        fall_transition(dsfd_capt_x__template_1) {
+          index_1("1.44000,  2.88000,  5.76000,  11.52000,  23.04000,  46.08000,  92.16000");
+          values("6.99830,10.42935,17.26782,31.14960,59.35970,116.35502,230.77402");
+        }
+      }
+  }
+ }
+}

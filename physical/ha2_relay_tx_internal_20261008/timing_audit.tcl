@@ -10,6 +10,9 @@ foreach p [all_registers -clock_pins] {
 }
 foreach p [all_registers -data_pins] {
  set n [get_full_name $p]
+ # D pins only: all_registers -data_pins also returns the async SETN/RESETN pins of the 128 reset flops
+ # (256 pins, census 1472 != 1216); those are recovery/removal checks, still covered by all_reg2reg below
+ if {![regexp {/D$} $n]} {continue}
  if {[string match {*u_tx*} $n]} {lappend tx_data $p}
  if {[string match {*u_tx.send_data*} $n]} {lappend tx_payload_data $p}
 }

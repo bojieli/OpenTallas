@@ -327,6 +327,15 @@
    "quadrant": 3
   },
   {
+   "inst": "u_io",
+   "master": "dsfd_svc_io",
+   "xy": [
+    6987.408,
+    1447.176
+   ],
+   "orient": "R0"
+  },
+  {
    "inst": "u_stn_q0[0]",
    "master": "dsfd_svc_stn",
    "xy": [
@@ -339,7 +348,7 @@
    "inst": "u_stn_q0[1]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6514.208,
+    6764.208,
     799.176
    ],
    "orient": "R0"
@@ -348,7 +357,7 @@
    "inst": "u_stn_q0[2]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6084.208,
+    6584.208,
     799.176
    ],
    "orient": "R0"
@@ -357,7 +366,7 @@
    "inst": "u_stn_q0[3]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5654.208,
+    6404.208,
     799.176
    ],
    "orient": "R0"
@@ -366,7 +375,7 @@
    "inst": "u_stn_q0[4]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5224.208,
+    6224.208,
     799.176
    ],
    "orient": "R0"
@@ -375,7 +384,7 @@
    "inst": "u_stn_q0[5]",
    "master": "dsfd_svc_stn",
    "xy": [
-    4794.208,
+    6044.208,
     799.176
    ],
    "orient": "R0"
@@ -384,7 +393,7 @@
    "inst": "u_stn_q0[6]",
    "master": "dsfd_svc_stn",
    "xy": [
-    4364.208,
+    5864.208,
     799.176
    ],
    "orient": "R0"
@@ -393,7 +402,7 @@
    "inst": "u_stn_q0[7]",
    "master": "dsfd_svc_stn",
    "xy": [
-    3934.208,
+    5684.208,
     799.176
    ],
    "orient": "R0"
@@ -402,7 +411,7 @@
    "inst": "u_stn_q0[8]",
    "master": "dsfd_svc_stn",
    "xy": [
-    3504.208,
+    5504.208,
     799.176
    ],
    "orient": "R0"
@@ -411,7 +420,7 @@
    "inst": "u_stn_q0[9]",
    "master": "dsfd_svc_stn",
    "xy": [
-    3074.208,
+    5324.208,
     799.176
    ],
    "orient": "R0"
@@ -420,7 +429,7 @@
    "inst": "u_stn_q0[10]",
    "master": "dsfd_svc_stn",
    "xy": [
-    2644.208,
+    5144.208,
     799.176
    ],
    "orient": "R0"
@@ -429,7 +438,7 @@
    "inst": "u_stn_q0[11]",
    "master": "dsfd_svc_stn",
    "xy": [
-    2214.208,
+    4964.208,
     799.176
    ],
    "orient": "R0"
@@ -438,7 +447,7 @@
    "inst": "u_stn_q0[12]",
    "master": "dsfd_svc_stn",
    "xy": [
-    1784.208,
+    4784.208,
     799.176
    ],
    "orient": "R0"
@@ -447,13 +456,184 @@
    "inst": "u_stn_q0[13]",
    "master": "dsfd_svc_stn",
    "xy": [
-    1354.208,
+    4604.208,
     799.176
    ],
    "orient": "R0"
   },
   {
    "inst": "u_stn_q0[14]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4424.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[15]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4244.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[16]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4064.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[17]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3884.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[18]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3704.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[19]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3524.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[20]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3344.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[21]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3164.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[22]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2984.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[23]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2804.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[24]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2624.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[25]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2444.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[26]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2264.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[27]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    2084.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[28]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    1904.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[29]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    1724.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[30]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    1544.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[31]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    1364.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[32]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    1184.208,
+    799.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q0[33]",
    "master": "dsfd_svc_stn",
    "xy": [
     1062.504,
@@ -474,7 +654,7 @@
    "inst": "u_stn_q1[1]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6514.208,
+    6764.208,
     1015.176
    ],
    "orient": "R0"
@@ -483,7 +663,7 @@
    "inst": "u_stn_q1[2]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6084.208,
+    6584.208,
     1015.176
    ],
    "orient": "R0"
@@ -492,7 +672,7 @@
    "inst": "u_stn_q1[3]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5654.208,
+    6404.208,
     1015.176
    ],
    "orient": "R0"
@@ -501,7 +681,7 @@
    "inst": "u_stn_q1[4]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5224.208,
+    6224.208,
     1015.176
    ],
    "orient": "R0"
@@ -510,7 +690,7 @@
    "inst": "u_stn_q1[5]",
    "master": "dsfd_svc_stn",
    "xy": [
-    4794.208,
+    6044.208,
     1015.176
    ],
    "orient": "R0"
@@ -519,7 +699,7 @@
    "inst": "u_stn_q1[6]",
    "master": "dsfd_svc_stn",
    "xy": [
-    4364.208,
+    5864.208,
     1015.176
    ],
    "orient": "R0"
@@ -528,7 +708,7 @@
    "inst": "u_stn_q1[7]",
    "master": "dsfd_svc_stn",
    "xy": [
-    3934.208,
+    5684.208,
     1015.176
    ],
    "orient": "R0"
@@ -537,13 +717,121 @@
    "inst": "u_stn_q1[8]",
    "master": "dsfd_svc_stn",
    "xy": [
-    3504.208,
+    5504.208,
     1015.176
    ],
    "orient": "R0"
   },
   {
    "inst": "u_stn_q1[9]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    5324.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[10]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    5144.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[11]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4964.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[12]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4784.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[13]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4604.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[14]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4424.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[15]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4244.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[16]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    4064.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[17]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3884.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[18]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3704.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[19]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3524.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[20]",
+   "master": "dsfd_svc_stn",
+   "xy": [
+    3344.208,
+    1015.176
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_stn_q1[21]",
    "master": "dsfd_svc_stn",
    "xy": [
     3187.512,
@@ -564,7 +852,7 @@
    "inst": "u_stn_q2[1]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6514.208,
+    6764.208,
     1231.176
    ],
    "orient": "R0"
@@ -573,7 +861,7 @@
    "inst": "u_stn_q2[2]",
    "master": "dsfd_svc_stn",
    "xy": [
-    6084.208,
+    6584.208,
     1231.176
    ],
    "orient": "R0"
@@ -582,7 +870,7 @@
    "inst": "u_stn_q2[3]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5654.208,
+    6404.208,
     1231.176
    ],
    "orient": "R0"
@@ -591,80 +879,62 @@
    "inst": "u_stn_q2[4]",
    "master": "dsfd_svc_stn",
    "xy": [
-    5312.52,
+    6224.208,
     1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_q",
-   "master": "dsfd_svcio_q",
+   "inst": "u_stn_q2[5]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    8121.168,
-    1447.176
+    6044.208,
+    1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_ad",
-   "master": "dsfd_svcio_ad",
+   "inst": "u_stn_q2[6]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    7851.6,
-    1447.176
+    5864.208,
+    1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_x",
-   "master": "dsfd_svcio_x",
+   "inst": "u_stn_q2[7]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    7400.16,
-    1447.176
+    5684.208,
+    1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_od",
-   "master": "dsfd_svcio_od",
+   "inst": "u_stn_q2[8]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    6990.192,
-    1447.176
+    5504.208,
+    1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_q",
-   "master": "dsfd_svcio_q",
+   "inst": "u_stn_q2[9]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    8121.168,
-    1447.176
+    5324.208,
+    1231.176
    ],
    "orient": "R0"
   },
   {
-   "inst": "u_io.u_ad",
-   "master": "dsfd_svcio_ad",
+   "inst": "u_stn_q2[10]",
+   "master": "dsfd_svc_stn",
    "xy": [
-    7851.6,
-    1447.176
-   ],
-   "orient": "R0"
-  },
-  {
-   "inst": "u_io.u_x",
-   "master": "dsfd_svcio_x",
-   "xy": [
-    7400.16,
-    1447.176
-   ],
-   "orient": "R0"
-  },
-  {
-   "inst": "u_io.u_od",
-   "master": "dsfd_svcio_od",
-   "xy": [
-    6990.192,
-    1447.176
+    5312.52,
+    1231.176
    ],
    "orient": "R0"
   }
@@ -673,62 +943,138 @@
   {
    "quadrant": 0,
    "row_y": 799.176,
-   "stations": 15,
+   "stations": 34,
    "xy": [
     [
      6944.208,
      799.176
     ],
     [
-     6514.208,
+     6764.208,
      799.176
     ],
     [
-     6084.208,
+     6584.208,
      799.176
     ],
     [
-     5654.208,
+     6404.208,
      799.176
     ],
     [
-     5224.208,
+     6224.208,
      799.176
     ],
     [
-     4794.208,
+     6044.208,
      799.176
     ],
     [
-     4364.208,
+     5864.208,
      799.176
     ],
     [
-     3934.208,
+     5684.208,
      799.176
     ],
     [
-     3504.208,
+     5504.208,
      799.176
     ],
     [
-     3074.208,
+     5324.208,
      799.176
     ],
     [
-     2644.208,
+     5144.208,
      799.176
     ],
     [
-     2214.208,
+     4964.208,
      799.176
     ],
     [
-     1784.208,
+     4784.208,
      799.176
     ],
     [
-     1354.208,
+     4604.208,
+     799.176
+    ],
+    [
+     4424.208,
+     799.176
+    ],
+    [
+     4244.208,
+     799.176
+    ],
+    [
+     4064.208,
+     799.176
+    ],
+    [
+     3884.208,
+     799.176
+    ],
+    [
+     3704.208,
+     799.176
+    ],
+    [
+     3524.208,
+     799.176
+    ],
+    [
+     3344.208,
+     799.176
+    ],
+    [
+     3164.208,
+     799.176
+    ],
+    [
+     2984.208,
+     799.176
+    ],
+    [
+     2804.208,
+     799.176
+    ],
+    [
+     2624.208,
+     799.176
+    ],
+    [
+     2444.208,
+     799.176
+    ],
+    [
+     2264.208,
+     799.176
+    ],
+    [
+     2084.208,
+     799.176
+    ],
+    [
+     1904.208,
+     799.176
+    ],
+    [
+     1724.208,
+     799.176
+    ],
+    [
+     1544.208,
+     799.176
+    ],
+    [
+     1364.208,
+     799.176
+    ],
+    [
+     1184.208,
      799.176
     ],
     [
@@ -736,47 +1082,95 @@
      799.176
     ]
    ],
-   "cycles_each_way": 15
+   "cycles_each_way": 34
   },
   {
    "quadrant": 1,
    "row_y": 1015.176,
-   "stations": 10,
+   "stations": 22,
    "xy": [
     [
      6944.208,
      1015.176
     ],
     [
-     6514.208,
+     6764.208,
      1015.176
     ],
     [
-     6084.208,
+     6584.208,
      1015.176
     ],
     [
-     5654.208,
+     6404.208,
      1015.176
     ],
     [
-     5224.208,
+     6224.208,
      1015.176
     ],
     [
-     4794.208,
+     6044.208,
      1015.176
     ],
     [
-     4364.208,
+     5864.208,
      1015.176
     ],
     [
-     3934.208,
+     5684.208,
      1015.176
     ],
     [
-     3504.208,
+     5504.208,
+     1015.176
+    ],
+    [
+     5324.208,
+     1015.176
+    ],
+    [
+     5144.208,
+     1015.176
+    ],
+    [
+     4964.208,
+     1015.176
+    ],
+    [
+     4784.208,
+     1015.176
+    ],
+    [
+     4604.208,
+     1015.176
+    ],
+    [
+     4424.208,
+     1015.176
+    ],
+    [
+     4244.208,
+     1015.176
+    ],
+    [
+     4064.208,
+     1015.176
+    ],
+    [
+     3884.208,
+     1015.176
+    ],
+    [
+     3704.208,
+     1015.176
+    ],
+    [
+     3524.208,
+     1015.176
+    ],
+    [
+     3344.208,
      1015.176
     ],
     [
@@ -784,27 +1178,51 @@
      1015.176
     ]
    ],
-   "cycles_each_way": 10
+   "cycles_each_way": 22
   },
   {
    "quadrant": 2,
    "row_y": 1231.176,
-   "stations": 5,
+   "stations": 11,
    "xy": [
     [
      6944.208,
      1231.176
     ],
     [
-     6514.208,
+     6764.208,
      1231.176
     ],
     [
-     6084.208,
+     6584.208,
      1231.176
     ],
     [
-     5654.208,
+     6404.208,
+     1231.176
+    ],
+    [
+     6224.208,
+     1231.176
+    ],
+    [
+     6044.208,
+     1231.176
+    ],
+    [
+     5864.208,
+     1231.176
+    ],
+    [
+     5684.208,
+     1231.176
+    ],
+    [
+     5504.208,
+     1231.176
+    ],
+    [
+     5324.208,
      1231.176
     ],
     [
@@ -812,7 +1230,7 @@
      1231.176
     ]
    ],
-   "cycles_each_way": 5
+   "cycles_each_way": 11
   }
  ],
  "quadrants": [
@@ -883,6 +1301,5 @@
   "clocks": "ck (stream 1.2 GHz) to every tile; rst async",
   "status": "hs (ctrl st) -> die (unchanged)"
  },
- "cost": "rd / rq +1 cks each way (credit round trip +2); quadrant link +1 cks per station each way (Q0 / Q1 / Q2 chains 15/10/5 stations)",
- "io_hub": "r3: four tiles at their pin groups (rtl/dsrom_sys/s81_ph/svc/ot_s81ph_svc_io_tiles.sv, composition ot_s81ph_svc_io_t); u_io.u_od.bad -> u_io.u_ad.fi (die net, flop both ends); svc fault = u_io.u_ad.fault"
+ "cost": "rd / rq +1 cks each way (credit round trip +2); quadrant link +1 cks per station each way (Q0 / Q1 / Q2 chains 34/22/11 stations)"
 }
