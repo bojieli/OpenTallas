@@ -89,3 +89,46 @@ def runtime_pc_lease_model(*, source_stop_roundtrip_cycles=None, native_service_
                 availability='want && debt0 && explicit sourcequiescent && !decodeheld && !sameedge acceptance; never derive from local mux occupancy alone',
                 reset='Common producer/controller reset with drain or explicit discard epoch; independently resetting debt is not safe',
                 adoption=False)
+
+
+def primary_shared_last_model():
+    return dict(schema='opentallas.uarch.s81-primary-shared-last.v1',
+                status='PREBUILD_SIZED_NATIVE_CALLER_AND_IO_BINDING_PENDING',
+                enabled_default=False, ranks=4, values_per_rank=1280, flits_per_rank=80,
+                arithmetic='A FP32 prefix + shared BF16-rounded widenedFP32 LAST, then one RNE BF16 round; output80native widened32flits, no TP outputallreduce',
+                clocks_ghz=dict(serial=.9, upstream_stream=1.2),
+                macs_per_cycle=0, fp32_adds_per_cycle=16, fp32_add_latency=3,
+                bytes_per_cycle=dict(prefix=64, shared=64, output=64),
+                boundary_bits_per_cycle=dict(prefix=596, shared=596, output=596),
+                native_metadata=dict(transaction=32,user=10,position=21,epoch=4,stage=2,rank=2,frame=3,word=7,last=1),
+                storage_bits=dict(queues=3*8*(512+2*82), queue_control=3*21,
+                    metadata_pipeline=3*2*82, context_and_control_upper_bound=256,
+                    total_without_native_adders=17035),
+                queue_depth=8, max_reserved_outputs=8, max_owned_contexts=1,
+                mux_demux_fanout='16independentnative LAT3add lanes; eachfiniteFIFO8 selects one fullwidth frame; no reduction tree/reordered shared operand',
+                routing_tracks_required=1788, available_tracks=None,
+                area_slot_fit='Firstactual16adder synthesis/route required; reserveFIFO17035FFbits plusnative16LAT3adder pipeline area, no standaloneaddertiming inherited incontext',
+                latency_cycles=dict(input_enqueue=1, add=3, output_enqueue=1, no_stall80flit_context_lower_bound=85),
+                token_contribution_us_lower_bound=85/900,
+                crossing='Existingactualstream/serialCDC mustbind eachactual594bit frame; arbitraryCDCprimitive not automatically productionresetquiescence',
+                completion='Only actual80th outputhandshake retires context; partialoutputs require actualtransaction abort binding onfault',
+                remaining=['ExistingA/Markov transaction namespace caller','Actualshared nativeVM publisher/visibilitylease','ActualSU/main_norm output endpoint','ActualdomainCDC/credits and contextualSSFF'],
+                adoption=False)
+
+
+def primary_shared_receive_cdc_model():
+    result=primary_shared_last_model()
+    result['schema']='opentallas.uarch.s81-primary-shared-cdc.v1'
+    result['receive_cdc']=dict(ports=2, protected_frame_bits=676,
+        queues_per_port={'source':8, 'async':8}, storage_bits=2*16*676,
+        mutable_metadata='82bits duplicated acrosswholeframe; destination validates beforearithmetic',
+        clock_crossing='1.2GHzstream→.9GHzserial; ready remainslocal onbothsides',
+        observed84bit_command_latency=8,
+        wide_frame_latency='Measureactual676bit crossing;84bit result is only prebuildestimate',
+        reset='Onecommonreset assertsbothFIFOdomains, synchronizedrelease; outsideproducer/resetepochquiescence stillmustbind')
+    result['storage_bits']['receive_cdc']=21632
+    result['storage_bits']['total_without_native_adders']+=21632
+    result['latency_cycles']['input_cdc_estimate']=8
+    result['latency_cycles']['no_stall80flit_context_lower_bound']+=8
+    result['token_contribution_us_lower_bound']=93/900
+    return result

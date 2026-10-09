@@ -1,0 +1,18 @@
+{
+ "schema":"opentallas.s81-primary-shared-last.component.v1",
+ "status":"PASS_COMPONENT_NATIVE_CALLER_AND_PRODUCER_BINDING_PENDING",
+ "enabled_default":false,"host":"ot-agidock128","admitted_ram_gb":2,
+ "models":["results/rtl/s81_ctrl_20261009/primary_shared_last_prebuild.json","results/rtl/s81_ctrl_20261009/primary_shared_cdc_prebuild.json"],
+ "native_core":"ot_s81_primary_shared_last","native_receive":"ot_s81_primary_shared_receive",
+ "arithmetic":"16actualot_hdc_fp32_add_lat LAT3 in serial.9GHz, fullFP32A-prefix +BF16roundedwidenedshared LAST thenoneBF16RNE; native80x512widened32output per1280rank. No outputallreduce.",
+ "metadata":"transaction32/user10/position21/epoch4/stage2/rank2/frame3 packed74; separateword7/last",
+ "finite_flow":{"core_fifo_depth_each":8,"core_queues":["prefix","shared","output"],"max_reserved_outputs":8,"owned_contexts":1,"receive_each_source_queue":8,"receive_each_async_queue":8,"receive_frame_bits_with_metacomplement":676},
+ "golden":"tools/hdc_golden.py add/to_bf16 imported by native vector generator; regeneratedgolden expectedsha2567e288c61514f3c0dd841bec8adb15e0978fdc12131bf2ec7071382be3371f5f3 identical to measuredgate expectedbytes. Fixtureprefix numericalinputs are synthetic, not releasedW2productionevidence.",
+ "serial":{"contexts":24,"ranks":4,"values_per_rank":1280,"values_exact":30720,"frames":1920,"sum_context_cycles_with_stalls":2828,"negative_cases":4},
+ "async":{"stream_ghz":1.2,"serial_ghz":0.9,"actual_fullwidth":676,"contexts":24,"values_exact":30720,"frames":1920,"sum_context_cycles_with_stalls":2907,"negative_cases":4,"common_partial_reset":"PASS reset/reset.log"},
+ "negatives":["mismatched actualtransactionuser","sharedrawFP32lower16nonzero","earlylast","firstword1"],
+ "mutation":"PrematureprefixBF16rounding expectedFAIL; actualgot3f800000 versus golden3f810000 at directedboundary. serial/mut.log",
+ "protection":"Metadata/counters/pointers/context complement protected. FIFOpayloads are finitearithmeticFFregisters, not newSRAM. Any futureSRAM mapping requiresmutableSRAMSECDED. SharedandAproducer SRAM mustdecode/correct/UEabort before native512input.",
+ "remaining":["ExistingnativeA/Markov transaction caller namespace","Actualnativeprefixpublisherandsharedreader range/visibilitylease bindings","ActualSU/main_norm outputendpointandcompletion","Productionreset/wholetransactionabort afterpartialoutput","Actual16adder/CDC area and contextualSSFF underfloorplanIO budgets"],
+ "physical":"No route launched; Claude structuralreview required first. No standaloneadder timing inherited or complete-token rate adoption."
+}

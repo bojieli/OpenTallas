@@ -14093,3 +14093,9 @@ def s81_runtime_pc_lease_model(**kwargs):
     """Price runtime accepted-request debt before granting native PC lease."""
     from tools.s81_ctrl.control_transport_model import runtime_pc_lease_model
     return runtime_pc_lease_model(**kwargs)
+
+
+def s81_primary_shared_last_model():
+    """Native final shared-LAST add, BF16 once, two actual receive CDC ports."""
+    from tools.s81_ctrl.control_transport_model import primary_shared_receive_cdc_model
+    return primary_shared_receive_cdc_model()
