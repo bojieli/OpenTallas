@@ -226,6 +226,97 @@ def qwen_r25_fmt3_wide_model():
     return base
 
 
+def hbm_link_landing_credit_model(capacity=256, payload_bits=545, seq_bits=12,
+                                  session_bits=16, rtt_cycles=None):
+    """TU RX FIFO owns256 finite landing slots; protected replay stays512.
+
+    New flits consume one slot until the actual TU FIFO pop is observed.
+    Replay duplicates consume no new credit and receiver drops duplicate seq.
+    Persistent cumulative pops tolerate lost/stale reverse control frames.
+    """
+    if capacity < 2 or capacity & (capacity-1):
+        raise ValueError("power-of-two landing capacity required")
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_TU545_RETRY_LANDING_CREDIT",default_enabled=False,
+        payload_bits=payload_bits,landing_capacity=capacity,credit_bits=cw,
+        RX_FIFO_ownership="external actual TU protected landing FIFO",
+        reverse_bits_per_cycle=seq_bits+session_bits+1+cw,
+        forward_bits_per_cycle=payload_bits+seq_bits+session_bits,
+        macs_per_cycle=0,memory_ports_added=0,fault_free_added_cycles=0,
+        pop_return_rtt_cycles=rtt_cycles,
+        rate_bound_records_per_cycle=None if rtt_cycles is None else min(1,capacity/rtt_cycles),
+        routing_tracks_needed=payload_bits+2*seq_bits+2*session_bits+1+cw,
+        channel_capacity=None,slot_fit=None,actual_TU_RX_FIFO_bound=False,
+        physical_qualified=False,adoptable=False)
+
+
+def hbm_retry_pop_cdc_model(capacity=256, source_period_ns=5/6,
+                           destination_period_ns=5/6):
+    """Real Gray event counter across independent core/PHY clocks.
+
+    Source advances by at most ONE per edge; destination emits individual
+    pops from bounded retained event debt. It never samples an atomic binary
+    multi-bit bus directly. Both domains reset before session admission.
+    """
+    cw=capacity.bit_length()+1
+    return dict(candidate="HBM_RETRY_POP_CDC",capacity=capacity,counter_bits=cw,
+        macs_per_cycle=0,memory_ports=0,source_event_per_cycle=1,
+        Gray_crossing_bits=cw,synchronizer_stages=2,registered_source_bits=2*cw,
+        destination_state_bits=3*cw,source_period_ns=source_period_ns,
+        destination_period_ns=destination_period_ns,
+        first_event_latency_ns_bound=3*destination_period_ns,
+        steady_events_per_cycle=1,retained_event_debt=capacity,
+        area_um2=None,floorplan_slot_fit=None,routing_tracks_needed=cw,
+        channel_capacity=None,actual_clock_reset_bound=False,physical_qualified=False)
+
+
+def hbm_retry_phy_ingress_model(depth=256, head_slots=8, payload_bits=545):
+    """Actual TU ph_tx has no ready; credit-qualified staging is finite.
+
+    TU SWCRED256 bounds accepted-but-not-remote-popped first sends, so a
+    full256-record ingress cannot overflow. Replay has its separate512 slots.
+    Storage issues one protected read/cycle with eight reserved head slots.
+    """
+    store=hbm_link_replay_sram_model(payload_bits=payload_bits,depth=depth,ports=1)
+    if head_slots<6 or head_slots & (head_slots-1):
+        raise ValueError("power-of-two head >=6 read pipeline slots required")
+    return dict(candidate="HBM_TU_PHY_PROTECTED_INGRESS",default_enabled=False,
+        storage=store,capacity=depth,head_slots=head_slots,
+        head_register_bits=head_slots*payload_bits,
+        accepted_records_per_cycle=1,read_requests_per_cycle=1,
+        reserved_response_slots=head_slots,macs_per_cycle=0,
+        producer_credit_owner="TU SWCRED256 actual remote landing pops",
+        minimum_enqueue_launch_edges=8,steady_records_per_cycle=1,
+        added_single_user_cycles_per_port_hop=8,
+        physical_qualified=False,actual_TU_bound=False,
+        composition_open="actual clockCDC/relay/PHY budgets and end-to-end stage gate")
+
+
+def hbm_tu_retry_phy_port_model(payload_bits=545, session_bits=24):
+    """One real TU port composition, source/receiver PHY and core pop clocks.
+
+    Actual native endpoint ph_tx/ph_rx are PHY-clock pulse ports; sw_cr_ret
+    and rx_credit are core-clock pulses. Two Gray bridges carry real pops.
+    """
+    ingress=hbm_retry_phy_ingress_model(payload_bits=payload_bits)
+    replay=hbm_link_replay_sram_model(payload_bits=payload_bits,session_bits=session_bits,ports=1)
+    return dict(candidate="HBM_ACTUAL_TU_RETRY_PHY_PORT",default_enabled=False,
+        payload_bits=payload_bits,session_bits=session_bits,source_SWCRED=256,
+        actual_port_names=dict(tx='ph_tx_v/ph_tx_flit',rx='ph_rx_v/ph_rx_flit',
+            source_credit='sw_cr_ret',receiver_pop='rx_credit'),
+        ingress=ingress,replay=replay,
+        pop_CDC_replicas=2,ingress_macros=8,replay_macros=16,
+        total_macros_per_port=24,total_macros_eight_ports=192,
+        SRAM_area_per_die_um2=192*3891.57696,
+        forward_bits_per_cycle=payload_bits+12+session_bits,
+        reverse_bits_per_cycle=12+session_bits+10+1,
+        ingress_added_edges=8,credit_CDC_edges_bound=3,
+        physical_rtt_cycles=None,first_send_latency_cycles=8,
+        steady_records_per_cycle=1,macs_per_cycle=0,physical_qualified=False,
+        actual_TU_endpoint_bound=False,
+        topology='each direction terminates at actual hop landing owner, including switch ingress; never treat switch debt as final peer debt')
+
+
 def qwen_spine_credit_contract_model():
     """Finite tagged lane shell with result reservation and explicitly priced stalls."""
     from qwen_spine_credit_model import model

@@ -1,0 +1,6 @@
+PASS independentphase1p2GHz source/destination,1530+events,Graywrap,noeventloss
+PASS coordinatedreset eventidentity
+PASS_ALL
+rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_pop_cdc.sv:21: $finish called at 1622883 (1ps)
+FATAL: rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_pop_cdc.sv:14: lost/duplicate GrayCDC pop sent1542 seen0 debt0
+       Time: 1548657  Scope: tb_hbm_retry_pop_cdc

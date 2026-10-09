@@ -1,0 +1,19 @@
+{
+  "gate": "PASS",
+  "drop_event_mutant": "EXPECTED_FAIL",
+  "source_sha256": {
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/ot_hbm_retry_pop_cdc.sv": "085488bb8cac07f74ff125ecdc657d482e4d017f1e0021a96d80861ad29d21e7",
+    "rtl/hbm_accel/tu/link_retry_sram_20261008/tb_hbm_retry_pop_cdc.sv": "9e5c8e07bab3bef62b14a41bad5e54ef918da906294346a6463d113d87ef21f7"
+  },
+  "host": "ot-epyc2",
+  "admission_guard": "/srv/opentallas-scratch/admit.sh",
+  "source_events": 1542,
+  "source_destination_phase_offset_ns": 0.17,
+  "source_destination_period_ns": 0.833334,
+  "nominal_frequency_GHz": 1.2,
+  "scope": "digital protocol simulation only",
+  "physical_qualified": false,
+  "MTBF_qualified": false,
+  "die_bound": false,
+  "historical_record": "record.json retains earlier8.333ns protocolgate; earlier log1p2 label incorrect, supersededbythisrecord"
+}
