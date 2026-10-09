@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-10-09T12:48:59.162222+00:00",
+  "owner": "s81_continuation/service_q_repair",
+  "job": "bfk_recut_hs4_sm15-c674dadfd-tc-cx",
+  "completed_stage": "3_3_place_gp",
+  "elapsed": "30:08.89",
+  "raw_time_v_peak_kib": 7659984,
+  "previous_whole_pg_sample_kib": 7757652,
+  "current_stage": "3_4_place_resized",
+  "engine": 1009695,
+  "container": "7c472581e5de",
+  "driver": 3677872,
+  "calibrate_reservation_gib": 9,
+  "route_reservation_gib": 44,
+  "readonly_hb2_audit": "waiting for EPYC1 disk floor; no container admitted",
+  "audit_log": "/srv/opentallas-scratch/codex/h7-hb2-audit-20261009/launch.log",
+  "running_job_unchanged": true
+}
