@@ -61,6 +61,22 @@
           "peak_ram_gb": 1,
           "owner": "Codex:mtp_numerical_repair",
           "reason": "Compilation completed; actual fixed-shape simulator RSS367728/367704KiB, measured simulation phase1GiB envelope; no24GiB build growth remains"
+        },
+        {
+          "name": "mtp-ring-dyn-same-source19-build-positive",
+          "pid": 1915153,
+          "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+          "peak_ram_gb": 24,
+          "owner": "Codex:mtp_numerical_repair",
+          "reason": "Actual admitted pinned Verilator5.050 full two-core16compiler inventory; source-layer19 same repaired RTL. Keep24GiB future compilation envelope until measured fixed simulation phase"
+        },
+        {
+          "name": "mtp-ring-dyn-same-source19-build-negative",
+          "pid": 1915154,
+          "command_match": "mtp-ring-dyn-same-source19-aff63db74/wf2",
+          "peak_ram_gb": 24,
+          "owner": "Codex:mtp_numerical_repair",
+          "reason": "Actual admitted pinned Verilator5.050 full two-core16compiler inventory; source-layer19 same repaired RTL. Keep24GiB future compilation envelope until measured fixed simulation phase"
         }
       ]
     },
