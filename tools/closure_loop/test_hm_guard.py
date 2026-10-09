@@ -134,13 +134,20 @@ class ShipFhTests(unittest.TestCase):
             (run / "cl/orfs_hold_mm.py").write_text("new py")
             (run / "cl/orfs_hold_mm.tcl").write_text("new tcl")
             (fh / "tools/orfs_hold_mm.py").write_text("stale py")
+            (fh / "tools/closure_loop").mkdir()
+            (fh / "tools/closure_loop/h1_patch.py").write_text("stale h1")
+            (run / "cl/h1_patch.py").write_text("new h1")
+            (run / "cl/hold_corners_patch.py").write_text("new hcp")
             with patch.object(cl, "FH_DIRS", (str(fh), str(Path(t) / "absent"))):
                 env = cl.fp_lint_env(dict(run=str(run), spec={}), "x", lint=False)
             subprocess.run(["bash", "-c", env], check=True)
             self.assertEqual((fh / "tools/orfs_hold_mm.py").read_text(), "new py")
             self.assertEqual((fh / "tools/orfs_hold_mm.tcl").read_text(), "new tcl")
             self.assertEqual((run / "src/tools/orfs_hold_mm.tcl").read_text(), "new tcl")
-            self.assertEqual(sorted(x.name for x in (fh / "tools").iterdir()), ["orfs_hold_mm.py", "orfs_hold_mm.tcl"])
+            self.assertEqual((fh / "tools/closure_loop/h1_patch.py").read_text(), "new h1")
+            self.assertEqual((fh / "tools/closure_loop/hold_corners_patch.py").read_text(), "new hcp")
+            self.assertEqual(sorted(x.name for x in (fh / "tools").iterdir()), ["closure_loop", "orfs_hold_mm.py", "orfs_hold_mm.tcl"])
+            self.assertFalse(any(x.name.startswith(".") for x in (fh / "tools/closure_loop").iterdir()))
 
 
 class AbcNoDchTests(unittest.TestCase):
