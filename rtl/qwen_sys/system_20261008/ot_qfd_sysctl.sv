@@ -18,6 +18,7 @@
 // [17] step watchdog, [18] start before ready, [19] boot fault, [20] die step fault (pkgctl), [21] constant ROM.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_sysctl #(
+    parameter integer PROMPT_VALID_ONLY = 1, // mutant switch; gate unwritten prompt reads
     parameter integer PROMPT_SRAM = 0, // opt-in until exact/physical gates pass
     parameter integer D       = 4,
     parameter integer NW      = 18,
@@ -143,7 +144,7 @@ module ot_qfd_sysctl #(
     wire clr_req;
     reg  clr_ack;
     always @(posedge clk or negedge host_rst_n) if (!host_rst_n) clr_ack <= 1'b0; else clr_ack <= clr_req && !clr_ack;
-    ot_host_if #(.NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
+    ot_host_if #(.PB_VALID_ONLY(PROMPT_SRAM && PROMPT_VALID_ONLY), .NSLOT(NSLOT), .MODE(0), .ENG_CTX(NSLOT), .NW(NW), .PLB(PLB), .CTX_MAX(CTX), .AW(AW),
                  .KVW(KVW), .FMT(1)) u_host (
         .clk(clk), .rst_n(host_rst_n),
         .s_awvalid(h_awvalid), .s_awready(h_awready), .s_awaddr(h_awaddr),

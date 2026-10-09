@@ -4,7 +4,7 @@ wd=$1
 mkdir -p "$wd/golden"
 python3 tools/qwen_system/ctl_golden.py --out "$wd/golden" > "$wd/golden.log"
 src=(rtl/test/qwen_system/tb_qfd_ctl_sys.sv rtl/qwen_sys/system_20261008/ot_qfd_sysctl.sv rtl/qwen_sys/system_20261008/ot_qfd_prompt_sram.sv rtl/qwen_sys/system_20261008/ot_qfd_pkgctl.sv rtl/qwen_sys/system_20261008/ot_qfd_dctl.sv rtl/host/ot_host_if.sv rtl/qwen_sys/ot_qwen_sys_csr.sv rtl/qwen_sys/ot_qwen_sys_rst_seq.sv rtl/lib/ot_reset_sync.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)
-verilator --binary --timing -j 4 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-PINCONNECTEMPTY -Wno-INITIALDLY -Wno-BLKSEQ -I"$wd/golden" -DCL=40 -DWDOG=5000 -DPROMPT_SRAM=1 --top-module tb_qfd_ctl_sys -Mdir "$wd/obj" "${src[@]}" > "$wd/build.log" 2>&1
+verilator --binary --timing -j 4 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-PINCONNECTEMPTY -Wno-INITIALDLY -Wno-BLKSEQ -I"$wd/golden" -DCL=40 -DWDOG=5000 -DPROMPT_SRAM=1 -DPROMPT_POISON=1 --top-module tb_qfd_ctl_sys -Mdir "$wd/obj" "${src[@]}" > "$wd/build.log" 2>&1
 for scen in eos length badlen fullctx; do
  "$wd/obj/Vtb_qfd_ctl_sys" +SCEN="$wd/golden/scen_$scen.hex" > "$wd/$scen.log"
  grep -q 'CTL_RESULT pass=1' "$wd/$scen.log"
@@ -17,3 +17,10 @@ done
 grep -q 'CTL_RESULT pass=1' "$wd/disagree.log"
 grep 'CTL_RESULT' "$wd"/*.log
 echo CTL_SRAM_CAMPAIGN_PASS
+
+# Negative control: replay the prior unconditional-read mechanism on poisoned unwritten slots.
+verilator --binary --timing -j 4 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-DECLFILENAME -Wno-PINCONNECTEMPTY -Wno-INITIALDLY -Wno-BLKSEQ -I"$wd/golden" -DCL=40 -DWDOG=5000 -DPROMPT_SRAM=1 -DPROMPT_POISON=1 -DPB_VALID_ONLY=0 --top-module tb_qfd_ctl_sys -Mdir "$wd/mut_obj" "${src[@]}" > "$wd/mut_build.log" 2>&1
+"$wd/mut_obj/Vtb_qfd_ctl_sys" +SCEN="$wd/golden/scen_eos.hex" > "$wd/unused_read_mutant.log" 2>&1 || true
+grep -q 'CTL_RESULT pass=0' "$wd/unused_read_mutant.log"
+grep 'CTL_RESULT' "$wd/unused_read_mutant.log"
+echo CTL_SRAM_POISON_PASS

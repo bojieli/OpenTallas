@@ -19,6 +19,12 @@
 `ifndef PROMPT_SRAM
 `define PROMPT_SRAM 0
 `endif
+`ifndef PB_VALID_ONLY
+`define PB_VALID_ONLY 1
+`endif
+`ifndef PROMPT_POISON
+`define PROMPT_POISON 0
+`endif
 module tb_qfd_ctl_sys;
     localparam integer D = 4, NW = 18, AW = 24, NS = 38, EW = 2 + 6 + 2*24, NL = 6;
     localparam integer CLAT = `CL;
@@ -48,7 +54,20 @@ module tb_qfd_ctl_sys;
     wire [D-1:0] c_done, c_drained, c_fault; wire [D*2-1:0] c_done_gen; wire [D*NW-1:0] c_ntok;
     wire [D*32-1:0] c_nval; wire [D*4-1:0] c_fvec;
     wire [31:0] fault_src;
-    ot_qfd_sysctl #(.PROMPT_SRAM(`PROMPT_SRAM), .D(D), .NW(NW), .AW(AW), .NL(NL), .T_LINK(5000), .T_HBM(5000)) dut (
+    // Model arbitrary unwritten silicon cells with a deterministic UE in every token slot.
+    // Physical mapping: column=data_bit*2+column_select, row=logical_address>>1.
+    generate if (`PROMPT_SRAM != 0 && `PROMPT_POISON != 0) begin:g_poison_prompt
+        integer rr, ll, cc;
+        initial begin
+            #0.001;
+            for(rr=0;rr<514;rr=rr+1) begin
+                dut.g_pb_sram.u_pb.u_sram.arr[rr]=0;
+                for(ll=0;ll<8;ll=ll+1) for(cc=0;cc<4;cc=cc+1)
+                    dut.g_pb_sram.u_pb.u_sram.arr[rr][ll*64+cc]=1'b1;
+            end
+        end
+    end endgenerate
+    ot_qfd_sysctl #(.PROMPT_VALID_ONLY(`PB_VALID_ONLY), .PROMPT_SRAM(`PROMPT_SRAM), .D(D), .NW(NW), .AW(AW), .NL(NL), .T_LINK(5000), .T_HBM(5000)) dut (
         .clk(clk), .por_n(por_n),
         .s_awvalid(s_awvalid), .s_awready(s_awready), .s_awaddr(s_awaddr),
         .s_wvalid(s_wvalid), .s_wready(s_wready), .s_wdata(s_wdata), .s_wstrb(4'hF),
