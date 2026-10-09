@@ -1,0 +1,50 @@
+{
+  "schema": "opentallas.claude.phys_intake.request.v1",
+  "owner": "/root/hbm_system",
+  "review": "REVIEW_20261009 W6: one real D1 leaf and one real D3 leaf",
+  "source_commit": "9802048e0",
+  "source_paths": [
+    "physical/hbm_accel_die_views/vm/face_hierarchy/ot_hbm_vm8_face_relay.sv"
+  ],
+  "model": "tools/hbm_vm8_face_hierarchy_model.py",
+  "exactness": "results/rtl/hbm_vm8_face_hierarchy_20261009/e49_fullhalf/record.json",
+  "elements": [
+    {
+      "module": "ot_hbm_vm8_face_relay_d1",
+      "label": "hbm_vm8_face128_d1_cx",
+      "fixed_data_bits": 128,
+      "data_register_bits": 128,
+      "cycles": 1,
+      "replicas_in_actual_half": 81
+    },
+    {
+      "module": "ot_hbm_vm8_face_relay_d3",
+      "label": "hbm_vm8_face128_d3_cx",
+      "fixed_data_bits": 128,
+      "data_register_bits": 384,
+      "cycles": 3,
+      "replicas_in_actual_half": 103
+    }
+  ],
+  "clock": {
+    "port": "clk",
+    "period_ps": 833.333,
+    "setup_uncertainty_ps": 60,
+    "hold_uncertainty_ps": 25
+  },
+  "leaf_floorplan_candidate_um": [64, 64],
+  "pins": {
+    "d[127:0]": "128 input pins on one side",
+    "q[127:0]": "128 output pins on opposite side",
+    "clk": "clock root pin with actual measured CTS arrival"
+  },
+  "macro_count_per_leaf": 0,
+  "route_admission": "Claude exclusive phys-intake; no owner route launched",
+  "boundary_budget": "Pending actual selected parent clock/pin plan. Interim route is pathfinding only; no relaxed or fabricated production IO budget.",
+  "parent_assembly": {
+    "candidate_outline_um": [1600, 1000],
+    "leaf_count": 184,
+    "existing_sram_count": 6,
+    "status": "UNQUALIFIED: actual fullface pin legality and clock distribution required before assembly"
+  }
+}
