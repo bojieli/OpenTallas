@@ -58,13 +58,23 @@ def emit(out):
     code_words = max(r['end'] for r in rows)
     scale_words = sum(r['rounds'] * (6144 // r['split']) * I.INTERLEAVE for r in rows)
     print('Measured compact image words:',code_words,scale_words,flush=True)
-    # Match ctl_golden stage strides: padded stage slots may exceed payload, never overlap it.
     # The default physical program uses its original ROM allocation. It is deliberately
     # distinct from compact_rows; adopting compact packing requires a native image manifest.
-    assert code_words <= 1056
+    code_capacity,scale_capacity=5*4096,48*4096
+    head_code_words=hr['words']
+    head_scale_words=hr['rounds']*(6144//hr['split'])*I.INTERLEAVE
+    assert 36*code_words+head_code_words <= code_capacity
+    assert 36*scale_words+head_scale_words <= scale_capacity
+    print('Physical image totals:',36*code_words+head_code_words,36*scale_words+head_scale_words,flush=True)
     words = list(ew) + lw + hw
     offsets = [0, len(ew), len(ew) + len(lw)]
     stages = stage_table()
+    # This new opt-in physical vehicle uses the actual TP4 image geometry. The historical
+    # controller golden retains its old padded strides and committed evidence unchanged.
+    for i,e in enumerate(stages):
+        layer_index=0 if i==0 else 36 if i==37 else i-1
+        e['code']=layer_index*code_words
+        e['scale']=layer_index*scale_words
     rom = ['// Generated immutable TP4/G6144 templates; local descriptor program bases are preserved.',
            f"localparam [2127:0] SYS_STAB = 2128'h{stab_bits(stages):0532x};",
            'function automatic [1023:0] sys_program(input [1:0] bank, input [11:0] addr);',
@@ -88,7 +98,7 @@ def emit(out):
     src = ROOT / 'rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv'
     s = src.read_text()
     s = s[s.index('module ot_qfd_sp_constants_sequencer'):]
-    s = s.replace('module ot_qfd_sp_constants_sequencer #(', 'module ot_qfd_sp_constants_sequencer_sys #(\n    parameter integer SYS_ENABLE = 0, parameter integer DIE_RANK = 0, parameter integer WDOG = 1 << 20,')
+    s = s.replace('module ot_qfd_sp_constants_sequencer #(', 'module ot_qfd_sp_constants_sequencer_sys #(\n    parameter integer SYS_ENABLE = 0, parameter integer SYS_BASE_MUT = 0, parameter integer DIE_RANK = 0, parameter integer WDOG = 1 << 20,')
     s = s.replace('parameter integer FQ_HEAD = 0', 'parameter integer FQ_HEAD = 1').replace('parameter integer MSTN = 0', 'parameter integer MSTN = 1')
     oldports = ['h_start', 'tp_token', 'tp_pos', 'pw_v', 'pw_addr', 'pw_data', 'dw_v', 'dw_addr', 'dw_data']
     for n in oldports:
@@ -138,8 +148,8 @@ def emit(out):
         .s_done(s_done),.seq_ntok(seq_ntok),.seq_nval(seq_nval),.s_fault(s_fault),
         .core_fault(core_fault),.coll_fault(r_err),.kv_write_drained(kv_write_drained));
     // Bases are folded before the existing station. KV descriptors retain their own addressing.
-    wire [AW-1:0] sys_wbase = b_po_me_i_wbase + (b_po_me_i_wsrc ? {AW{1'b0}} : q_st_code);
-    wire [AW-1:0] sys_wcs = b_po_me_i_wcs + (b_po_me_i_wsrc ? {AW{1'b0}} : q_st_scale);
+    wire [AW-1:0] sys_wbase = b_po_me_i_wbase + (b_po_me_i_wsrc || SYS_BASE_MUT ? {AW{1'b0}} : q_st_code);
+    wire [AW-1:0] sys_wcs = b_po_me_i_wcs + (b_po_me_i_wsrc || SYS_BASE_MUT ? {AW{1'b0}} : q_st_scale);
 '''
     s = s.replace('    wire rs;', insert + '    wire rs;', 1)
     s = s.replace('.d(b_po_me_i_wbase),', '.d(sys_wbase),').replace('.d(b_po_me_i_wcs),', '.d(sys_wcs),')
@@ -149,7 +159,9 @@ def emit(out):
     record = dict(schema='opentallas.qwen_sequencer_sys_templates.v1', shape=dict(TP=4,G=6144,SW=64,AR_WORDS=256),
                   template_lengths=[len(ew),len(lw),len(hw)], descriptor_lengths=[len(ed),len(ld),len(hd[0])],
                   stage_table=stages, historical_master_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),
-                  code_words=code_words,scale_words=scale_words,code_slot_words=1056,scale_slot_words=50112,
+                  code_words=code_words,scale_words=scale_words,code_slot_words=code_words,scale_slot_words=scale_words,
+                  head_code_words=head_code_words,head_scale_words=head_scale_words,
+                  code_capacity_words=code_capacity,scale_capacity_words=scale_capacity,
                   programs=dict(E=[f'{w:0256x}' for w in ew],L=layer['program_hex'],H=heads[0]['program_hex']),
                   descriptors=dict(E=[f'{w:016x}' for w in ed],L=layer['descriptor_hex'],H=[h['descriptor_hex'] for h in heads]))
     (out / 'templates.json').write_text(json.dumps(record,indent=2)+'\n')

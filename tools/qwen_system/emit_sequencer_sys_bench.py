@@ -29,16 +29,17 @@ def emit(out):
     dut=['.clk(clk)', '.rst_n(rst_n)', '.d_start(d_start)', '.d_token(d_token)', '.d_pos(d_pos)', '.d_gen(d_gen)']
     dut += [f'.{n}({n})' for dr,w,n in ports if n not in removed|{'clk','rst_n'}]
     dut += [f'.{n}({n})' for n in ['d_done','d_drained','d_fault','d_done_gen','d_next_token','d_next_val','d_cycles','d_fault_code','stage','st_layer','st_next_layer','st_crom']]
-    s.append('ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.MUT(`SYS_MUT),.WDOG(200000)) dut ('+','.join(dut)+');')
+    s.append('ot_qfd_sp_constants_sequencer_sys #(.SYS_ENABLE(1),.SYS_BASE_MUT(`SYS_MUT),.WDOG(200000)) dut ('+','.join(dut)+');')
     ref=[f'.{n}({"r_" if dr=="output" else ""}{n})' for dr,w,n in ports]
     s.append('ot_qfd_sp_constants_sequencer #(.FQ_HEAD(1),.MSTN(1)) reference_master ('+','.join(ref)+');')
     s += ['integer errors=0, cycles=0, starts=0, me_ops=0,su_ops=0,coll_ops=0,i,bank,j,rx_left=0,rx_rank=0,case_no=0;',
-          'reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;',
-          'always @(posedge clk) begin expected_code<=dut.q_st_code; expected_scale<=dut.q_st_scale; end',
+          'reg previous_done=0; reg [23:0] expected_code,expected_scale; reg [1:0] expected_prog;',
+          'always @(posedge clk) begin expected_code<=(stage==0?0:stage==37?36:stage-1)*512; expected_scale<=(stage==0?0:stage==37?36:stage-1)*1056; end',
           'task bad(input [255:0] what); begin errors=errors+1; if(errors<20)$display("SYS_BAD cycle=%0d stage=%0d what=%0s",cycles,stage,what); end endtask',
           'always @(negedge clk) if(rst_n) begin',
           ' cycles=cycles+1;',
           ' if(h_start)begin',
+          '  $display("SYS_START stage=%0d cycle=%0d",stage,cycles);',
           '  if(stage!==starts || st_layer!==(starts==0 || starts==37 ? 63 : starts-1)) bad("stage traversal");',
           '  if(st_crom!==(starts==0 ? 63 : starts==37 ? 36 : starts-1))bad("constant stage");',
           '  if(st_next_layer!==(starts<36 ? starts : 63))bad("next layer");',
@@ -60,6 +61,7 @@ def emit(out):
             s.append(f' if({n} !== r_{n})bad("{n}");')
     s += [' end',
           ' if(s_done!==r_s_done || s_fault!==r_s_fault || core_fault!==r_core_fault)bad("sequencer status");',
+          ' if(s_done && !previous_done)$display("SYS_STAGE_DONE stage=%0d cycle=%0d",stage,cycles); previous_done=s_done;',
           ' if(c_valid)begin',
           '  if(c_tag!=={d_gen,stage,d_pos[12:0],d_token[7:0],reference_master.b_c_tag[2:0]})bad("fullshape tag");',
           '  if(c_data!==r_c_data || c_last!==r_c_last || c_mode!==r_c_mode)bad("collective packet");',
