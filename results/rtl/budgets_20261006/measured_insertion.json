@@ -1165,20 +1165,46 @@
    "host": "ot-epyc3",
    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_hc_quarter_01353018a-tt",
    "clock": "core_clk",
-   "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T08:50:41-07:00",
+   "parasitics": "routed (6_final.spef)",
+   "measured_at": "2026-10-08T18:42:48-07:00",
    "ss": {
     "mean": 4606,
     "min": 4449,
     "max": 5592
    },
    "ff": {
-    "mean": 3077,
-    "min": 2954,
-    "max": 3791
+    "mean": 2607,
+    "min": 2555,
+    "max": 2867,
+    "n": 2049,
+    "kind": "boundary",
+    "clock": "core_clk"
    },
    "boundary_n": 2049,
-   "budget": null
+   "budget": null,
+   "grade": "routed",
+   "calibrate": {
+    "ss": {
+     "mean": 4606,
+     "min": 4449,
+     "max": 5592
+    },
+    "ff": {
+     "mean": 3077,
+     "min": 2954,
+     "max": 3791
+    },
+    "parasitics": "placement-estimated",
+    "job": "hbm_hc_quarter_01353018a-tt"
+   },
+   "tt": {
+    "mean": 3178,
+    "min": 3117,
+    "max": 3502,
+    "n": 2049,
+    "kind": "boundary",
+    "clock": "core_clk"
+   }
   },
   "hfd_index_q_b1": {
    "job": "hbm_idxq_b1_tc_4aadc92bc",
@@ -2416,22 +2442,22 @@
    }
   },
   "ot_s81_bf_native": {
-   "job": "bfh2_recutcgl35_hm0_8db5411e3",
-   "source_commit": "8db5411e3c3630da5fd722fbac2bbb6be5d1593d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/bfh2_recutcgl35_hm0_8db5411e3",
+   "job": "bfh2_recut_lvt_hm0_a12f3c7e7",
+   "source_commit": "a12f3c7e7f066ccc0ebcf8f8a042dae66458ca2b",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/bfh2_recut_lvt_hm0_a12f3c7e7",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T18:26:43-07:00",
+   "measured_at": "2026-10-08T18:40:45-07:00",
    "ss": {
-    "mean": 1155,
-    "min": 1133,
-    "max": 1210
+    "mean": 951,
+    "min": 918,
+    "max": 1054
    },
    "ff": {
-    "mean": 702,
-    "min": 681,
-    "max": 745
+    "mean": 556,
+    "min": 526,
+    "max": 658
    },
    "boundary_n": 1780,
    "budget": null
@@ -5186,5 +5212,5 @@
    }
   }
  },
- "updated": "2026-10-08T18:26:43-07:00"
+ "updated": "2026-10-08T18:42:48-07:00"
 }
