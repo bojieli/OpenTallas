@@ -8,6 +8,12 @@
 // the SECDED encoder (sector -> qid -> 4:1 response mux -> encoder was one path), one more SETTLE edge covers it;
 // (b) the replay stores use MUXREG (bank mux registered before the syndrome; indexed read 4 -> 5 edges);
 // (c) the 176-bit header-stability compare is registered (fault one edge later).  0 cycles on the sector stream.
+// PUBFIX=2 (sys-takeover 2026-10-09, on top of 1; collvmpub_fix2_lvt TT -8.05 / FF -0.39): (d) the header-stability check
+// registers six per-field mismatch bits, then ORs them (+1 edge to the fault, 2 edges after a header change); (e) the write
+// stage's data register loads every edge from an AND-OR of the four response lanes selected by a registered one-hot copy
+// of qid (qid only changes >= 2 edges before the next accepted response), only valid / sector are gated by write_sector;
+// (f) the replay stores drop the stored session / sequence check (NOEPOCH, review S4: payload SECDED only).  0 cycles on
+// the sector stream; the header-change fault is reported one edge later.
 module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0)(
  input wire clk,rst_n,warm_abort,service_fault,service_quiet,
  input wire start_valid,output wire start_ready,
@@ -57,7 +63,22 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  reg wq_v;reg[255:0] wq_d;reg[8:0] wq_s;reg hdr_bad_q;
  always@(posedge clk or negedge rst_n)if(!rst_n)begin wq_v<=0;hdr_bad_q<=0;end else begin
   wq_v<=write_sector;hdr_bad_q<=state!=IDLE && state!=ABORT && !header_same && !warm_abort;end
- always@(posedge clk)if(write_sector)begin wq_d<=response[255:0];wq_s<=sector;end
+ reg[3:0] qoh_q;reg[5:0] hf_q;
+ wire hdr_act=state!=IDLE && state!=ABORT && !warm_abort;
+ always@(posedge clk or negedge rst_n)if(!rst_n)begin qoh_q<=0;hf_q<=0;end else begin
+`ifdef OT_HBM_PUBLICATION_MUT_QOH
+  qoh_q<=4'b0001;                                     // mutant: the write stage always takes response lane 0
+`else
+  qoh_q<=4'b1<<qid;
+`endif
+  hf_q<={owner!=bound_owner,operation!=bound_op,pc!=bound_pc,query_slot!=bound_query,base_word!=bound_base,session!=bound_session}&{6{hdr_act}};
+ end
+ wire[255:0] rsp_sel=({256{qoh_q[0]}}&rsp[0*273+:256])|({256{qoh_q[1]}}&rsp[1*273+:256])|
+                     ({256{qoh_q[2]}}&rsp[2*273+:256])|({256{qoh_q[3]}}&rsp[3*273+:256]);
+ always@(posedge clk)begin
+  if(PUBFIX>=2)wq_d<=rsp_sel;else if(write_sector)wq_d<=response[255:0];
+  if(write_sector)wq_s<=sector;
+ end
  wire st_wv=PUBFIX?wq_v:write_sector;wire[255:0] st_wd=PUBFIX?wq_d:response[255:0];wire[8:0] st_ws=PUBFIX?wq_s:sector;
  wire read_busy=(PUBFIX ? |read_pipe : |read_pipe[4:0]) || (published && |inj_rd);
  for(genvar i=0;i<2;i=i+1)begin:g_injector
@@ -65,7 +86,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  wire[1:0] valid,ce,ue;wire[511:0] data;
  for(genvar h=0;h<2;h=h+1)begin:g_sector
  localparam HALF=h;
- ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX)) u_store(
+ ot_hbm_replay_sram #(.W(256),.SW(12),.EW(24),.DEPTH(256),.MUXREG(PUBFIX!=0),.NOEPOCH(PUBFIX>=2)) u_store(
  .clk(clk),.rst_n(rst_n),.w_valid(st_wv && st_ws[0]==HALF),.w_data(st_wd),
  .w_seq({4'b0,st_ws[8:1]}),.w_session(bound_session),
  .r_valid(fetch),.r_seq(idx[11:0]),.r_session(bound_session),
@@ -83,7 +104,7 @@ module ot_hbm_collective_vm_publication #(parameter ENABLE=0,OWNER_W=73,PUBFIX=0
  end else begin
  read_pipe<={read_pipe[4:0],published && |inj_rd};
  if(service_fault || |read_bad)bad<=1;
- if(PUBFIX ? hdr_bad_q : (state!=IDLE && state!=ABORT && !header_same && !warm_abort))bad<=1;
+ if(PUBFIX>=2 ? (|hf_q) : PUBFIX ? hdr_bad_q : (state!=IDLE && state!=ABORT && !header_same && !warm_abort))bad<=1;
  for(integer q=0;q<4;q=q+1)
  if(rsp_valid[q] && (!pending || qid!=q))bad<=1;
  if(start_valid && !start_ready)bad<=1;

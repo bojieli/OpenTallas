@@ -182,6 +182,13 @@ def cvp_fix_tb():
         t = t.replace(a, b)
     return t
 CASES["coll_vm_pub_fix"] = dict(CASES["coll_vm_pub"], tb=cvp_fix_tb)
+def cvp_fix2_tb():
+    """sys-takeover PUBFIX=2: same latency as PUBFIX=1 (7 edges indexed read); the header-change fault is +1 edge"""
+    t = cvp_fix_tb(); a = "ot_hbm_collective_vm_publication #(.PUBFIX(1),"; assert t.count(a) == 1
+    return t.replace(a, "ot_hbm_collective_vm_publication #(.PUBFIX(2),")
+CASES["coll_vm_pub_fix2"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb)
+CASES["coll_vm_pub_fix2_qoh"] = dict(CASES["coll_vm_pub"], tb=cvp_fix2_tb, neg_defines=["OT_HBM_PUBLICATION_MUT_QOH"],
+     neg_ok="published FP32 order")
 def artok(mode, w):
     """tools/hbm_native_ar_token_join_gate.py (4 positive vectors, MUT and owner-17 truncation mutants) on the wrapper"""
     import os, json as _j
