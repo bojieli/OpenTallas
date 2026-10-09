@@ -7,13 +7,13 @@
       "owner": "candidate_store",
       "description": "Actual SECDED native candidate payload bank",
       "source": {
-        "commit": "2347c7f3e",
+        "commit": "a54dd9b39",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
         ]
       },
       "implementation": {
-        "status": "implemented optin defaultoff; remote elaboration pending",
+        "status": "S2/S4 reviewed payload SECDED; plain finite control, no mirrors/TMR/lease framework",
         "evidence": [
           "rtl/hbm_accel/index/ot_hbm_candidate_sram_bank.sv"
         ]
@@ -26,23 +26,25 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending actual full8832flit/132480literal reads",
+          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
           "evidence": []
         },
         "negative": {
-          "status": "pending CE/UE/order/retirement/reset gates",
+          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
           "evidence": []
         }
       },
       "physical": {
-        "status": "pending remote elaboration then admitted standalone bank PATHFINDING",
+        "status": "Claude phys-intake exclusive; standalone full-depth bank recipe prepared, no route submitted",
         "corners": {},
-        "evidence": []
+        "evidence": [
+          "physical/hbm_candidate_store_pathfinding/recipe.json"
+        ]
       },
       "dependencies": [
         "actual native TU formatter/parser",
-        "die owner slot and relay allocation",
-        "mapped independent metadata protection audit"
+        "die owner bank/mux slot and relay allocation",
+        "latest source exact+mutant gate"
       ],
       "integration": {
         "status": "provider ABI implemented; real global-order join pending",
@@ -57,13 +59,13 @@
       "owner": "candidate_store",
       "description": "Full TP96 literal-slot publication and finite provider lease",
       "source": {
-        "commit": "2347c7f3e",
+        "commit": "a54dd9b39",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
         ]
       },
       "implementation": {
-        "status": "implemented optin defaultoff; remote elaboration pending",
+        "status": "S2/S4 reviewed payload SECDED; plain finite control, no mirrors/TMR/lease framework",
         "evidence": [
           "rtl/hbm_accel/index/ot_hbm_candidate_publication_store.sv"
         ]
@@ -76,23 +78,25 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending actual full8832flit/132480literal reads",
+          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
           "evidence": []
         },
         "negative": {
-          "status": "pending CE/UE/order/retirement/reset gates",
+          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
           "evidence": []
         }
       },
       "physical": {
-        "status": "pending remote elaboration then admitted standalone bank PATHFINDING",
+        "status": "Claude phys-intake exclusive; standalone full-depth bank recipe prepared, no route submitted",
         "corners": {},
-        "evidence": []
+        "evidence": [
+          "physical/hbm_candidate_store_pathfinding/recipe.json"
+        ]
       },
       "dependencies": [
         "actual native TU formatter/parser",
-        "die owner slot and relay allocation",
-        "mapped independent metadata protection audit"
+        "die owner bank/mux slot and relay allocation",
+        "latest source exact+mutant gate"
       ],
       "integration": {
         "status": "provider ABI implemented; real global-order join pending",
@@ -107,13 +111,13 @@
       "owner": "candidate_store",
       "description": "Real native73-bit global-order consumer bound to actual checked SRAM reads",
       "source": {
-        "commit": "2347c7f3e",
+        "commit": "a54dd9b39",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_candidate_global_publication_join.sv"
         ]
       },
       "implementation": {
-        "status": "implemented defaultoff; remote elaboration and real joined gate pending",
+        "status": "S2/S4 reviewed payload SECDED; plain finite control, no mirrors/TMR/lease framework",
         "evidence": [
           "rtl/hbm_accel/index/ot_hbm_candidate_global_publication_join.sv"
         ]
@@ -126,23 +130,25 @@
       },
       "exactness": {
         "positive": {
-          "status": "pending actual full8832flit/132480literal reads",
+          "status": "AGIdock730113028 admitted, compileEXIT0, full8832flit/132480read gate running; noPASS yet",
           "evidence": []
         },
         "negative": {
-          "status": "pending CE/UE/order/retirement/reset gates",
+          "status": "same source wrong-slot RTL mutant and CE/UE/order/reset gate executing; noPASS yet",
           "evidence": []
         }
       },
       "physical": {
-        "status": "pending remote elaboration then admitted standalone bank PATHFINDING",
+        "status": "Claude phys-intake exclusive; standalone full-depth bank recipe prepared, no route submitted",
         "corners": {},
-        "evidence": []
+        "evidence": [
+          "physical/hbm_candidate_store_pathfinding/recipe.json"
+        ]
       },
       "dependencies": [
         "actual native TU formatter/parser",
-        "die owner slot and relay allocation",
-        "mapped independent metadata protection audit"
+        "die owner bank/mux slot and relay allocation",
+        "latest source exact+mutant gate"
       ],
       "integration": {
         "status": "provider ABI implemented; real global-order join pending",
