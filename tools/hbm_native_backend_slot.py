@@ -8,10 +8,10 @@ def model(context):
         if min(s['x']+s['w'],i['x']+i['w'])>max(s['x'],i['x']) and min(s['y']+s['h'],i['y']+i['h'])>max(s['y'],i['y']):collisions.append(i['name'])
     return dict(schema='opentallas.native_backend_slot.v1',adopted=False,candidate=s,
       context_source=context['source_commit'],variant=context['variant'],collisions=collisions,
-      historical_protected_storage_bits=2355,current_MX1_storage_bits=None,historical_FF_area_floor_um2=2355*.2916,
+      historical_protected_storage_bits=2355,current_MX1_storage_bits=2134,MX1_FF_area_floor_um2=2134*.2916,inventory_source="bf972bc00/f7498a6b1",
       core_density=.55,slot_cell_capacity_um2=s['w']*s['h']*.55,
       replicas=dict(backend=1,real_CP16SM=2,SM_response_fanout=32),MACs_per_cycle=0,
-      memory='Historical inventory2355 included twoCP NCMD2 mutable SECDED command memories; current epoch-free MX1 inventory pending source audit; SM arithmetic excluded',
+      memory='Historical inventory2355 included twoCP NCMD2 mutable SECDED command memories; current MX1 own1168bits+two actualCP483bits each=2134bits; SM arithmetic excluded',
       boundary_bits=dict(launch_valid=32,launch_PC=64,launch_token=34,launch_position=40,launch_owner=146,SM_status=96,SM_results=1024,descriptor_PC=64,descriptor_kind=4,descriptor_noise=17,native_command=269,completion=69,AM=18),
       routing='Every functional pin requires fresh literal collar; long32SM fanout transport and output result mux must be priced against actual station geometry',
       latency='Actual11kernel typed operation order and CP launch/result latency priced by operation backend source model; placement adds no assumed zero-latency die wires',

@@ -14108,3 +14108,8 @@ def hbm_loader_external_core_clock_model(nd=2, aw=3):
     """Finite full-shape loader CDC alternative with an actual core clock pin."""
     from hbm_loader_cx_model import model
     return model(nd=nd, aw=aw)
+
+
+def hbm_native_operation_backend_slot_model(context):
+    from hbm_native_backend_slot import model
+    return model(context)
