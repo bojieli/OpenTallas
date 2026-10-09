@@ -1,0 +1,76 @@
+{
+  "schema": "opentallas.qwen_native_scale_binding_audit.v1",
+  "method": "Read-only current source inspection; no synthesis/simulation or new local compute.",
+  "source_sha256": {
+    "rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv": "3d5cb792affee962d4f7cd07fc4aaae38cc1d5710d1e39d09201c1ff4790fe81",
+    "rtl/hdc/ot_qwen_rt_rom_bank.sv": "16471ef538de4a01492f5dbeac8782cc0f177d6a3bd222797dc2eaa71a0c8aec",
+    "rtl/hdc/ot_hdc_matvec.sv": "4b5a5e5b59d49b665f35c2c614033898b1278ef09320adf0be984a962fc40454",
+    "rtl/physical/ot_qwen_slab_port_group_capture.sv": "d45f780a7b0fe6478c78f6aa3d903dcf4bb60c95fefa6ea5a6daa5c85301ef6d",
+    "tools/qwen_rom_fulldie_b3r2.py": "bcb6558f467a74b2638938873e27221c94be70b441c205550bca52641ffaa74a",
+    "tools/qwen_rom_scale_local.py": "d18cee0fcf45c8aad971b119ad26d981dc9a8b5d403281318aeb565e4cbe0076"
+  },
+  "runtime": {
+    "top": "rtl/qwen_sys/baseline_ar_stream4/ot_qwen_rom_rt_die_w12_stream4_tagged_ar.sv",
+    "groups": 6144,
+    "smin": 7,
+    "result_ports": 48,
+    "SCALE_LOCAL": 0,
+    "banks_each_port": 13,
+    "macro": "ot_rom_4096x266_m8",
+    "rows_each_macro": 4096,
+    "bank_select": "addr[AW-1:12], registered with read enable",
+    "row_select": "addr[11:0]",
+    "bounds": "sticky addr_fault if bank_select>=NB",
+    "ROM_ECC": false
+  },
+  "resident_global": {
+    "released_padded_scale_bases": [
+      0,
+      96,
+      384,
+      768
+    ],
+    "layer_span": 1056,
+    "layers": 36,
+    "head_span": 2376,
+    "required_rows_each_port": 40392,
+    "minimum_banks_each_port": 10,
+    "minimum_macros_48ports": 480,
+    "physical_binding": "NOT PROVEN: r21b synthetic scale area is not concrete per-port macro/address inventory"
+  },
+  "capture_measurement": {
+    "top": "ot_qwen_slab_port_group_capture",
+    "banks_each_group": 16,
+    "address": "q_active ? d_sb : d_sbase; global d_sb=t_sbase+(t_nb>>4)+GID*8",
+    "native_parent_instantiates_slab": false,
+    "local_round_mapper": false
+  },
+  "candidate_local": {
+    "adopted": false,
+    "layer_bases": [
+      0,
+      8,
+      32,
+      40
+    ],
+    "layer_stride": 64,
+    "head_base": 2304,
+    "head_chunk_bases": [
+      0,
+      256,
+      512,
+      768
+    ],
+    "head_span": 792,
+    "rows_each_port": 3096,
+    "banks_each_port": 1,
+    "macros_48ports": 48,
+    "gather": "released_global_wcs + round*(6144/split)*8 + GID*8+j",
+    "native_address": "local_sbase + round*8+j",
+    "missing_gates": [
+      "released148stage per-port payload gather/permutation",
+      "actual capture round/tag mapper",
+      "selected physical master binding and SS/FF sensitivity/TT closure"
+    ]
+  }
+}

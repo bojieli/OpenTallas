@@ -68,11 +68,12 @@ def emit(out):
     print('Measured compact image words:',code_words,scale_words,flush=True)
     # The default physical program uses its original ROM allocation. It is deliberately
     # distinct from compact_rows; adopting compact packing requires a native image manifest.
-    code_capacity,scale_capacity=5*4096,48*4096
+    code_capacity=5*4096
+    # The native scale service is replicated per result port. A total macro count
+    # is not an address capacity; physical scale inventory remains a separate gate.
     head_code_words=hr['words']
     head_scale_words=hr['rounds']*(6144//hr['split'])*I.INTERLEAVE
     assert 36*code_words+head_code_words <= code_capacity
-    assert 36*scale_words+head_scale_words <= scale_capacity
     print('Physical image totals:',36*code_words+head_code_words,36*scale_words+head_scale_words,flush=True)
     words = list(ew) + lw + hw
     offsets = [0, len(ew), len(ew) + len(lw)]
@@ -184,7 +185,9 @@ def emit(out):
                   stage_table=stages, historical_master_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),
                   code_words=code_words,scale_words=scale_words,code_slot_words=code_words,scale_slot_words=scale_words,
                   head_code_words=head_code_words,head_scale_words=head_scale_words,
-                  code_capacity_words=code_capacity,scale_capacity_words=scale_capacity,
+                  code_capacity_words=code_capacity,scale_capacity_words=None,
+                  scale_capacity_status="pending concrete per-port physical inventory",
+                  scale_required_global_words=36*scale_words+head_scale_words,
                   programs=dict(E=[f'{w:0256x}' for w in ew],L=layer['program_hex'],H=heads[0]['program_hex']),
                   descriptors=dict(E=[f'{w:016x}' for w in ed],L=layer['descriptor_hex'],H=[h['descriptor_hex'] for h in heads]))
     (out / 'templates.json').write_text(json.dumps(record,indent=2)+'\n')

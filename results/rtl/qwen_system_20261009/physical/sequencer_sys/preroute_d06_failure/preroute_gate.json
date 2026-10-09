@@ -1,0 +1,95 @@
+{
+ "verdict": "FAIL",
+ "reasons": [
+  "reg2reg WNS -872.7 ps at 833.333 (route-period -936.0), 336 endpoints below -750 (> 50); worst u_ctrl.me_ts[0]$_DFFE_PP_/QN -> u_ctrl.fault$_DFFE_PN0P_/D"
+ ],
+ "thresholds": {
+  "ws_ps": -750.0,
+  "count": 50,
+  "design_margin_ps": 250.0
+ },
+ "classes": {
+  "reg2reg": {
+   "ws_ps": -872.7,
+   "raw_ws_ps": -936.0,
+   "endpoints_le_cap": 5073,
+   "below_gate": 336,
+   "below_0": 867,
+   "below_design_margin": 4123,
+   "worst": [
+    {
+     "slack_ps": -936.0,
+     "start": "u_ctrl.me_ts[0]$_DFFE_PP_/QN",
+     "end": "u_ctrl.fault$_DFFE_PN0P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -934.2,
+     "start": "u_ctrl.me_ts[0]$_DFFE_PP_/QN",
+     "end": "u_ctrl.d_base[1]$_SDFFCE_PN0P_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -928.8,
+     "start": "u_ctrl.me_ts[0]$_DFFE_PP_/QN",
+     "end": "u_ctrl.r_so[0]$_DFFE_PP_/D",
+     "start_kind": "reg",
+     "end_kind": "reg",
+     "clock": "core_clk"
+    }
+   ]
+  },
+  "macro": {
+   "ws_ps": null,
+   "raw_ws_ps": null,
+   "endpoints_le_cap": 0,
+   "below_gate": 0,
+   "below_0": 0,
+   "below_design_margin": 0,
+   "worst": []
+  },
+  "io": {
+   "ws_ps": -75.7,
+   "raw_ws_ps": -139.0,
+   "endpoints_le_cap": 2148,
+   "below_gate": 0,
+   "below_0": 80,
+   "below_design_margin": 1773,
+   "worst": [
+    {
+     "slack_ps": -139.0,
+     "start": "c_ready[0]",
+     "end": "u_i_c_ready.genblk1.g_one.line$_DFF_PN0_/D",
+     "start_kind": "port",
+     "end_kind": "reg",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -89.2,
+     "start": "u_o_c_data.genblk1.g_one.line[110]$_DFF_P_/QN",
+     "end": "c_data[110]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    },
+    {
+     "slack_ps": -88.2,
+     "start": "u_o_c_data.genblk1.g_one.line[95]$_DFF_P_/QN",
+     "end": "c_data[95]",
+     "start_kind": "reg",
+     "end_kind": "port",
+     "clock": "core_clk"
+    }
+   ]
+  }
+ },
+ "period_ps": 769.9999969232318,
+ "truncated": false,
+ "dump_ms": 934.0,
+ "find_ms": 548,
+ "classify_ms": 366
+}

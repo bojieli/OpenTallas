@@ -79,12 +79,12 @@
     "code_bank_capacity_words": 20480,
     "code_required_words": 20016,
     "scale_required_words_assumed_upper": 40392,
-    "scale_bank_capacity_words": 196608,
+    "scale_bank_capacity_words": null,
     "historical_ctl_golden_strides": [
       1056,
       50112
     ],
-    "adoption": "actual_sys generated packing only; historical ctl and original FQS untouched; generator asserts per-stage and totalcapacity",
+    "adoption": "Actual_sys corrected address/template exact gate passed; selected resident scale physical inventory and native local mapper remain pending. Historical ctl and original FQS untouched.",
     "scale_bases": [
       0,
       96,
@@ -97,7 +97,13 @@
       112,
       368
     ],
-    "scale_contract": "Opt-in corrected template uses released padded scale addresses; same1056 padded physical rowstride. Parent native148stage payload/permutation gate pending. Historical50112 stageimage rows are padded beyond active1056 after q_active masks; no numerical adoption before measured gate."
+    "scale_contract": "Corrected opt-in template retains released padded scale bases0/96/384/768 and1056row stage stride. Parent constructive148stage payload gate09432714d PASS; current global physical scale binding remains unproven. GROUP_SCALE_LOCAL would require a separate gather/permutation gate and complete native mapper binding.",
+    "scale_capacity_status": "UNBOUND: native result-port service replicated48times; aggregate48-ROM capacity is not per-port capacity",
+    "scale_required_global_words": 40392,
+    "global_banks_required_each_port": 10,
+    "global_macros_required_48ports": 480,
+    "group_local_candidate_rows_each_port": 3096,
+    "group_local_candidate_macros_48ports": 48
   },
   "validation": {
     "scope": "actual controlcommands against hostswapped oldFQS currentcompilerISA, stubengines; notnumericalpayloadgate",
