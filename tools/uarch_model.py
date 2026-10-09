@@ -477,9 +477,9 @@ def hgi_generic_topk_model(n=49152, k=2048, rows=1):
                 output_bytes_per_cycle=8, boundary_bits_per_cycle=128,
                 replicas=1, max_k=2048, key_bits=53, storage_bits=2048*85,
                 compare_cells=2048, local_mux_bits=2048*85,
-                control_fanout=2048, estimated_slot_um=[1200,1000],
-                boundary_tracks=128, boundary_capacity_tracks=1200,
-                area_mm2_upper_bound=1.2, cycles_per_row=n+k+3,
+                control_fanout=2048, estimated_slot_um=[640,640], alternate_slot_um=[600,600],
+                boundary_tracks=128, boundary_capacity_tracks=600,
+                area_mm2_upper_bound=0.4096, measured_stdcell_area_um2=175534.483, measured_cells=1227516, measured_source="e442d85c4", cycles_per_row=n+k+3,
                 token_latency_cycles=rows*(n+k+3),
                 ds_legacy_latency_change_cycles=0,
                 adoption='required generic op only; unchanged DS SELECT/router retained')
