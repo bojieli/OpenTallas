@@ -45,7 +45,8 @@
   "sha256": {
     "before_state.json": "388c7ae3a44d29d59a30995048be01f13f3d5a7ee6cf58db5230c472097dcc4a",
     "before_spec.json": "00f9870a7368e7378d32df992ce6d9d035426894abd2f138920f0871ae63fad5",
-    "corrected_spec.json": "f3dd247c4d8743ba6aa6a81619b04e2b1550f4c5a733fd4c511e1e988bdee524"
+    "corrected_spec.json": "49d211952a14f1ad467b28d650a18adf3498d2dcef6585754f037e5c9ce95a0f",
+    "initial_eco_corner_sta.json": "19bb208b040870a476df1eb8f99622e82aba4503b90d3310cee349195af5fe2d"
   },
   "correction_scope": "ECO eligibility split; existing helper had no SS setup term. Retain FF mandatory final closure across same four modes. Original833/60/25 and region/die150 delays remain byte-identical or exact union. Original RTL and physical assets unchanged.",
   "overlay_sha256": {
@@ -55,6 +56,15 @@
     "tools/dsrom_wfc_tokpipe_eco_observer.sh": "4fe5aa0d0badf0b247a55588583d46eea9db5722ed6d5c80e4efe5606ce22463"
   },
   "final_gate": "After ECO installation, reexport original WFC STA all4 modes on final objects; custom helper requires SHA match for ODB/SPEF/SDC and full original all4 TT/FF/DRC acceptance. Generic FF alone cannot authorize closure.",
-  "observer": "E1 guard4GiB justified measured same-block6_report peak3952832KB; launch3793538, parent3793558; serial original-corner STA on private assets, original scope minTT127.4/minFF-8.2; equivalence pending at commit.",
-  "eco_paths": "Opt-in emits ORFS root case path and actual5_2_route.json drc_metrics so generic eco_paths locates original result base; separate orfs_base retains final hash checking."
+  "observer": "E1 admitted4GiB based actualsame-block3.77GiB reportpeak; serialprivatecopiedobject unionobserver COMPLETE, allcorner errors[], 3:30.26. time-vPythonRSS272536KiB excludesDocker, not a futureSTAreservation basis.",
+  "eco_paths": "Opt-in emits ORFS root case path and actual5_2_route.json drc_metrics so generic eco_paths locates original result base; separate orfs_base retains final hash checking.",
+  "observer_result": {
+    "original_tt": 127.4,
+    "original_ff": -8.2,
+    "union_tt": 127.38,
+    "union_ff": -8.17,
+    "rounding_tolerance_ps": 0.1,
+    "equivalent": true
+  },
+  "parser_contract": "NORMAL corner_sta+drc_metrics parser; metrics_cmd removed because currentloop strips custom ECO metadata. Must verify actualparser post_sdc and sdc_name before lockedreentry."
 }

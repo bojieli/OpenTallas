@@ -96,14 +96,17 @@
   }
  },
  "verdict": {
-  "metrics_cmd": "python3 tools/dsrom_wfc_tokpipe_eco_metrics.py --case {RUN}/route --eco-scope",
   "checks": [
    {
     "name": "TT_FF0_DRC0_region_die150",
     "cmd": "python3 tools/dsrom_wfc_tokpipe_eco_metrics.py --case {RUN}/route --eco-eligibility-check"
    }
   ],
-  "corner_sta": "{RUN}/route/wfc_eco_corner_sta.json"
+  "corner_sta": "{RUN}/route/wfc_eco_corner_sta.json",
+  "drc_metrics": "{RUN}/route/logs/asap7/wfc_stg_route/base/5_2_route.json",
+  "post_sdc": [
+   "physical/dsrom_wfc_tokpipe/eco_scope/region_die150_union.sdc"
+  ]
  },
  "record": [
   {
