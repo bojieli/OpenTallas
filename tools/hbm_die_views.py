@@ -120,6 +120,9 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    loader_native = ROOT / f'physical/hbm_accel_die_views/loader/native/{name}/ports.json'
+    if loader_native.exists():
+        return json.loads(loader_native.read_text())
     native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
     if native.exists():
         return json.loads(native.read_text())
