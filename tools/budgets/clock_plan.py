@@ -553,7 +553,13 @@ def main():
     ap.add_argument('--group', default='trunk', choices=['trunk', 'region', 'htop', 'hreg'])
     ap.add_argument('--buffer-um', type=float, default=150.0)
     ap.add_argument('--case', action='append', default=[])
+    ap.add_argument('--max-merge-um', type=float, default=None,
+                    help='merged-region sink-bbox side limit (default MAX_MERGE_UM 5250); die-gaps 2026-10-08: S81 r3 '
+                         'serial spine merged to 5.23 mm gave a 65.2 ps intra bound (+25 margin > 90)')
     a = ap.parse_args()
+    global MAX_MERGE_UM
+    if a.max_merge_um:
+        MAX_MERGE_UM = a.max_merge_um
     emit(a) if a.mode == 'emit' else record(a)
 
 

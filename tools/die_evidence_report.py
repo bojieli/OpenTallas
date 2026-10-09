@@ -434,7 +434,9 @@ def probe_s81():
                      all=dict(wns_ps=float(w.group(1)), tns_ps=float(w.group(2))) if w else None)
     out['sta'] = sta
     # die-gaps 2026-10-08: clock_v2 = r3 options re-validated after the ctrl 'cks' entry moved under svc 'ck'
-    cps = [f'{run}/clock_v2/plan.json', f'{run}/clock/plan.json', f'{B}/m221pq_r3/clock_v2/plan.json',
+    # clock_v3_4500: + merged-region side 4500 um (the 5250 merge left a 5.23 mm serial spine region at 65.2 ps intra)
+    cps = [f'{run}/clock_v3_4500/plan.json', f'{run}/clock_v2/plan.json', f'{run}/clock/plan.json',
+           f'{B}/m221pq_r3/clock_v3_4500/plan.json', f'{B}/m221pq_r3/clock_v2/plan.json',
            f'{B}/m221pq_r3/clock/plan.json']
     out['clock_plan'] = clock_summary(next((p for p in cps if _exists(p)), cps[-1]))
     irr = f'{B}/m221pq/ir/ir_record.json'
