@@ -44,7 +44,7 @@ def model(am=False,mx1=False):
     if mx1:
         result['master']='hfd_cmdproc_s_mtp_native_mx1'
         result['boundary_bits_per_cycle'].update(f_host=216,f_backend=73,t_backend=271,t_emit_host=100,t_drained=1)
-        result['routing'].update(extra_transaction_endpoint_tracks=947,total_new_interface_span_um=1661*.192)
+        result['routing'].update(interface_span_um=714*.192,extra_transaction_endpoint_tracks=947,total_new_interface_span_um=1661*.192)
         result['area'].update(checked_join_source='f7498a6b1',emit_queue_source='f7498a6b1',emit_queue_storage_bits=584,emit_queue_other_state_bits_upper=152,emit_queue_cell_area_bound_um2=736*.2916+800)
         result['AM_identity']='actual captured job/generation/sequence remains stable through winners and completion; no reset epoch'
         result['reset']='MX1 drained only; no persistent epoch; original job/generation/sequence stale-completion checks retained'
