@@ -14076,3 +14076,8 @@ def ha2_truecredit_protection_model():
     return model()
 
 
+
+def s81_control_transport_model(**kwargs):
+    """Real native queue/CDC, control lane and HC/seed adapters before build."""
+    from tools.s81_ctrl.control_transport_model import model
+    return model(**kwargs)
