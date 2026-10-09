@@ -1,0 +1,41 @@
+{
+  "source_commit_literal": "f6d441b6a",
+  "source_commit_full": "f6d441b6ae5ec8f6e79cfd46290a086103fed4b8",
+  "remote_host": "ot-epyc4",
+  "remote_root": "/srv/opentallas-scratch2/scratch/codex/hgi-argmax18-f6d441b6a/src",
+  "files_sha256": {
+    "rtl/hdc/ot_hdc_fastfp.sv": "446f5d582511eb0e3afd806123e4e2238265a7bda87d487b8cc703f0f048f611",
+    "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+    "rtl/hdc/ot_hdc_fp32_add_lat.sv": "1acf46102702bdf1de37de89a100e4ae17bc9f7a48ad2a0766b68e20ff5fc37d",
+    "rtl/gpu/ot_gpu_fadd.sv": "8a68c6fe6f30e4c3e5a1f5910b33ae6a1eaaca32490cffec0c22a66f1d1a7e97",
+    "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv": "9deb1f20846b0e96a7e753166c1d7992d1967d901240074171ff33ba28813741",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv": "11c083427355ef0b56a95e1eb6d299e6d67975cda7750e856b5a9b4841de0020",
+    "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv": "046576b1a4108910a7fea70d3744afe3f737c03b24345333dce1147e96f15b2d",
+    "physical/qwen_die_masters/cfg/hgi_argmax18.env": "05c06692385787b77c078f2c0c61dff09217fb8996a6c4bdc5d575d72f7f59a5",
+    "tools/closure_loop/rtl_boundary.py": "e0e0549d08c891242a83325577c08271d593bcb4d95daada31cacfd23b468a7c"
+  },
+  "matched_git_pinned_source": true,
+  "raw_cache_key": "e8df6787972b2114908376ac",
+  "recipe": {
+    "top": "ot_hgi_argmax18_m",
+    "sources": [
+      "rtl/hdc/ot_hdc_fastfp.sv",
+      "rtl/hdc/ot_hdc_prefix.sv",
+      "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "rtl/gpu/ot_gpu_fadd.sv",
+      "physical/hbm_mtp/rtl/ot_dshbm_argmax_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_value_m.sv",
+      "physical/hbm_generic/argmax18/rtl/ot_hgi_argmax18_m.sv"
+    ],
+    "params": {
+      "LP": "8",
+      "FLAT": "7",
+      "FAST": "1",
+      "GENERIC18": "1"
+    },
+    "incdirs": [
+      "rtl/common"
+    ]
+  },
+  "levels": 16
+}
