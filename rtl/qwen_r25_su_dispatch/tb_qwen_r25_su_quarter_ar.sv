@@ -10,7 +10,7 @@ module tb_qwen_r25_su_quarter_ar #(parameter OWNER_W=74);
  wire req_v;wire req_rdy;wire [336:0] req;
  reg rsp_v=0;wire rsp_rdy;reg [272:0] rsp=0;
  wire fault;wire [31:0] virtual_edges,reads,writes,visibility_reads;
- ot_qwen_r25_su_quarter #(.ENABLE(1),.N(256),.M(64),.QID(0),.OWNER_W(OWNER_W)) dut(.*);
+ ot_qwen_r25_su_quarter_ar #(.ENABLE(1),.N(256),.M(64),.QID(0),.OWNER_W(OWNER_W)) dut(.*);
  reg [31:0] vm[0:262143];reg [689:0] program_words[0:4095];
  reg [41:0] metadata[0:4095];reg [63:0] expected[0:262143];
  string program_file,meta_file,vm_file,expected_prefix,expected_file;
