@@ -49,6 +49,11 @@ class RegistryTest(unittest.TestCase):
             self.assertEqual(routed['failed'], 1)
             (registry / 'bad.json').write_text('{')
             self.assertEqual(len(model.compute()['sources']['registry_errors']), 1)
+            (registry / 'invalid.json').write_text(json.dumps(dict(schema_version=1,
+                records=[row, dict(row, dependencies=None)])))
+            invalid = model.compute()
+            self.assertEqual(len(invalid['sources']['registry_errors']), 2)
+            self.assertEqual(len(invalid['rows'][0]['evidence_history']), 2)
             model.md_period = 600; model.md_path = model.repo / 'ELEMENTS.md'; model.log = print
             model.write_md(model.compute())
             self.assertIn('exact +PASS / -PASS', model.md_path.read_text())
