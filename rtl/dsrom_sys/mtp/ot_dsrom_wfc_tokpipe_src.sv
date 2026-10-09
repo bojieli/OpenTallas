@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 // Separate hardened successor of closed src controller; no extra boundary registers.
 module ot_dsrom_wfc_tokpipe_src #(
+    parameter integer ENGRAM_REWIND = 0,
     parameter integer PROMPT_EXTRA = 0, // token HARD +2edges, off by default
     parameter integer DECODED_READ = 0,
     parameter integer HEADER_LOCAL = 0, // local RX release +1 reset admission edge
@@ -136,6 +137,12 @@ module ot_dsrom_wfc_tokpipe_src #(
     input  wire [NW-1:0]      pr_q,
     output wire  [3:0]         pr_blk,         // WAVE: draft block of the read
     input  wire               pr_qk,          // WAVE: the read position's token is known
+    // Actual SOURCE issue/rewind face; token request36/response22/config52 unchanged.
+    input wire eng_window_ready,eng_rb_ready,
+    output wire eng_issue_v,eng_rb_v,
+    output wire [USER_W-1:0] eng_issue_user,eng_rb_user,
+    output wire [NW-1:0] eng_issue_pos,eng_issue_tok,
+    output wire [2:0] eng_rb_n,
     // observation
     output wire               core_busy,
     output wire                tok_valid,      // SOURCE: a step's reduced token
@@ -150,6 +157,7 @@ module ot_dsrom_wfc_tokpipe_src #(
 );
 
     ot_rom_pkg_ctrl_wfc_tokpipe #(
+        .ENGRAM_REWIND(ENGRAM_REWIND),
         .PROMPT_EXTRA(PROMPT_EXTRA),
         .DECODED_READ(DECODED_READ),
         .HEADER_LOCAL(HEADER_LOCAL),
