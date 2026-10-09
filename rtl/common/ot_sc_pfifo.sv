@@ -78,8 +78,13 @@ module ot_sc_pfifo #(
         wire [GW-1:0] sel [0:S];
         assign sel[0] = {GW{1'b0}};
         for (i = 0; i < S; i = i + 1) begin : g_s
-            ot_sc_rep_ff #(.RV(i == 0)) u_we (.clk(clk), .rst_n(rst_n), .d(we_t[{push, pop}][i]), .q(we[i]));
-            ot_sc_rep_ff #(.RV(i == 0)) u_rs (.clk(clk), .rst_n(rst_n), .d(rs_t[{push, pop}][i]), .q(rs[i]));
+            // struct-close r3 (fence_p2r2 TT -58.8 at sign-off, host_wr_ready -> AND / XOR / NOR / OR3 / AND3 -> copies):
+            // the PIN bits select LAST: the four (in_valid, out_ready) cases are formed from flops (in_ready, out_valid)
+            // first, so a pin reaches each copy through one 4:1 mux only.
+            wire [3:0] we_p = {we_t[{in_ready, out_valid}][i], we_t[{in_ready, 1'b0}][i], we_t[{1'b0, out_valid}][i], we_t[0][i]};
+            wire [3:0] rs_p = {rs_t[{in_ready, out_valid}][i], rs_t[{in_ready, 1'b0}][i], rs_t[{1'b0, out_valid}][i], rs_t[0][i]};
+            ot_sc_rep_ff #(.RV(i == 0)) u_we (.clk(clk), .rst_n(rst_n), .d(we_p[{in_valid, out_ready}]), .q(we[i]));
+            ot_sc_rep_ff #(.RV(i == 0)) u_rs (.clk(clk), .rst_n(rst_n), .d(rs_p[{in_valid, out_ready}]), .q(rs[i]));
             always @(posedge clk) if (we[i]) m[i] <= in_data[LO +: GW];
             assign sel[i+1] = sel[i] | ({GW{rs[i]}} & m[i]);
         end
