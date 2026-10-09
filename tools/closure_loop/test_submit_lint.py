@@ -92,6 +92,13 @@ class Expr(unittest.TestCase):
 
 
 class Density(unittest.TestCase):
+    def setUp(self):
+        # These tests isolate pin estimates. Real boundary/cache composition is
+        # covered by test_rtl_boundary.py on an admitted remote host.
+        boundary = patch("rtl_boundary.check", return_value={"verdict": "SKIP"})
+        boundary.start()
+        self.addCleanup(boundary.stop)
+
     def test_big_group_balanced(self):
         # 2048 even data bits as ONE ordered group: 20.5 b/um on M4 and M6 alike (more layers cannot dilute one group);
         # the first approved fix, pin_balance, spreads them uniformly over 518 um on M4+M6: ~2 b/um

@@ -15,10 +15,12 @@ break paths like flops.  Gate levels count every 2-input-equivalent gate ($_NOT_
 adders as ripple chains, so arithmetic at a boundary reads deep, by design.
 Verdict: findings are WARNINGS by default; a spec with "registered_io": true -- and (review-0443 X4) every spec whose name
 ends in -cl / -cx unless it sets "registered_io": false or "rtl_boundary": {"waive": "<reason>"} -- is REFUSED on any in->out path or a depth
-> N (spec "rtl_boundary": {"levels": N}, default 16).  SKIP when the recipe's sources / top are not readable, the
-sources exceed the size cap, or yosys fails / times out (never blocks intake on its own failure).
+> N (spec "rtl_boundary": {"levels": N}, default 16). Metadata intake consumes cached proof only and REFUSES a
+missing, malformed, or unreadable proof. Explicit remote probe mode retains SKIP on oversized sources or Yosys failure;
+that result is not cached as proof and does not satisfy subsequent cache-only intake.
 
-    rtl_boundary.py check JOB.json [--repo R]     # print the result (exit 3 on REFUSE)
+    rtl_boundary.py check JOB.json [--repo R]     # cache-only (exit 3 on REFUSE)
+    rtl_boundary.py check JOB.json --boundary-mode probe # admitted remote host only
 """
 from __future__ import annotations
 

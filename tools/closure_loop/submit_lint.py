@@ -608,7 +608,8 @@ def _choose_fix(plan, limit, window, res, force=False):
 def check(spec: dict, git: Git, util_db: dict | None = None, force: bool = False,
           *, boundary_mode: str = "cache-only") -> dict:
     """pin-density / utilisation estimate (_pin_check) + the RTL registered-boundary check (rtl_boundary.py, struct-close
-    2026-10-09): boundary findings WARN (message + res["rtl_boundary"]) and REFUSE only when spec.registered_io is true"""
+    2026-10-09). Cache-only is the metadata default: missing proof REFUSES, independent of registered_io.
+    Explicit probe mode is reserved for admitted remote execution."""
     res = _pin_check(spec, git, util_db, force)
     if spec.get("fp_lint", True) is False or spec.get("submit_lint", True) is False:
         return res
