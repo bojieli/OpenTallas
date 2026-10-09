@@ -10,8 +10,10 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  input wire provider_fault
 );
  localparam PW=$clog2(DEPTH),CW=$clog2(DEPTH+1);
- wire [127:0] ch=cmd[1+:128];
- wire [255:0] a=cmd[385+:256],o=cmd[1153+:256];
+ wire [127:0] incoming_header=cmd[1+:128];
+ wire [255:0] ca=cmd[385+:256],co=cmd[1153+:256];
+ reg [255:0] a,o;reg validating;
+ wire [127:0] ch=header;
  reg busy,bad,pending,pending_write;
  reg seat_v;reg [336:0] seat;
  reg [127:0] header;
@@ -45,7 +47,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  (ch[123:118]==6 ? a[51:48]==0 : a[52:48]==0) &&
  ({24'd0,a[47:8]}+aspan<64'd262144) && ({24'd0,o[47:8]}+ospan<64'd262144) &&
  // In-place identical geometry is safe only when rows do not alias each other.
- (o[87:68]==1 || o[119:88]>(o[67:48]-20'd1)*{16'd0,oir}) &&
+ (!same_geometry || o[87:68]==1 || o[119:88]>(o[67:48]-20'd1)*{16'd0,oir}) &&
  (same_geometry || ({24'd0,a[47:8]}+aspan<o[47:8]) ||
  ({24'd0,o[47:8]}+ospan<a[47:8]));
  assign ready=ENABLE&&rst_n&&!busy;
@@ -78,7 +80,7 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
  wire [PW-1:0] tail_next=tail==DEPTH-1?0:tail+1;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;header<=0;n<=0;m<=0;
+   a<=0;o<=0;validating<=0;busy<=0;bad<=0;pending<=0;pending_write<=0;seat_v<=0;seat<=0;header<=0;n<=0;m<=0;
    abase<=0;obase<=0;read_row<=0;read_col<=0;write_row<=0;write_col<=0;
    read_addr<=0;write_addr<=0;read_rowbase<=0;write_rowbase<=0;rs<=0;ws<=0;ri<=0;wi<=0;
    seat_step<=0;pending_step<=0;seat_lane<=0;pending_lane<=0;launched<=0;returned<=0;finished<=0;
@@ -87,15 +89,20 @@ module ot_hgi_quant_vm_transport #(parameter ENABLE=0, DEPTH=32, MUTANT=0)(
   end else begin
    done<=0;launch<=0;
    if(ready&&cmd[0])begin
-    fault<=0;bad<=!shape_ok;
-    if(!shape_ok)begin done<=1;fault<=1;end
-    else begin busy<=1;header<=ch;n<=a[67:48];m<=a[87:68];abase<=a[39:8];obase<=o[39:8];
-     read_addr<=a[39:8];write_addr<=o[39:8];read_rowbase<=a[39:8];write_rowbase<=o[39:8];
-     read_row<=0;read_col<=0;write_row<=0;write_col<=0;rs<=a[119:88];ws<=o[119:88];ri<=air;wi<=oir;
-     launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
-     reserved<=0;queued<=0;head<=0;tail<=0;x<=0;end
+    a<=ca;o<=co;header<=incoming_header;validating<=1;busy<=1;bad<=0;fault<=0;
+    n<=ca[67:48];m<=ca[87:68];abase<=ca[39:8];obase<=co[39:8];
+    read_addr<=ca[39:8];write_addr<=co[39:8];read_rowbase<=ca[39:8];write_rowbase<=co[39:8];
+    read_row<=0;read_col<=0;write_row<=0;write_col<=0;rs<=ca[119:88];ws<=co[119:88];
+    ri<=ca[5]?16'd0:(ca[135:120]==0?16'd1:ca[135:120]);
+    wi<=co[135:120]==0?16'd1:co[135:120];
+    launched<=0;returned<=0;finished<=0;read_part<=0;write_part<=0;
+    reserved<=0;queued<=0;head<=0;tail<=0;x<=0;
    end
-   if(busy)begin
+   if(busy&&validating)begin
+    validating<=0;
+    if(!shape_ok)begin bad<=1;fault<=1;busy<=0;done<=1;end
+   end
+   if(busy&&!validating)begin
     if(!bad&&!pending&&!seat_v&&!launch&&(write_offer||read_offer))begin
      seat_v<=1;seat<={write_offer,{word_addr[29:3],5'd0},write_offer?wd:256'd0,write_offer?write_mask:32'hffffffff,next_tag};
      seat_step<=offer_step;seat_lane<=word_addr[2:0];

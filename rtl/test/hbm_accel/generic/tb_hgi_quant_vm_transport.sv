@@ -121,7 +121,7 @@ module tb_hgi_quant_vm_transport;
    h=0;a=0;h[127:124]=4;h[123:118]=4;h[99:93]=17;
    a[1:0]=1;a[67:48]=16;a[87:68]=1;o=a;o[47:8]=dest_base;
    @(negedge clk);cmd={o,512'd0,a,256'd0,h,1'b1};
-   @(negedge clk);cmd=0;if(!done||!fault||req_v)$fatal(1,"invalid shape accepted");
+   @(negedge clk);cmd=0;while(!done)@(negedge clk);if(!fault||req_v)$fatal(1,"invalid shape accepted");
   end
   error_record(0);error_record(1);error_record(2);
   @(negedge clk);rst_n=0;repeat(3)@(negedge clk);rst_n=1;#0.01;

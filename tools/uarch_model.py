@@ -15042,6 +15042,8 @@ def hgi_quant_vm_transport_model(depth=32, vm_rtt=4):
     if depth < 24 or vm_rtt < 1:
         raise ValueError("result reservation must cover nonelastic 23-edge pipe")
     return dict(candidate="HGI_QUANT_VM_TRANSPORT", default_enabled=False,
+        clock_domain="opt-in stream1p2 pending TT/FF physical qualification; legacy serial0p9 unchanged",
+        CDC_qualified=False, command_capture_validate_edges=2,
         replicas=1, MACs_per_cycle=0, compute="existing 32-lane QDQ core,23 edges,II1",
         input_words_per_beat=32, read_sector_bytes=32, write_sector_bytes=32,
         max_VM_bytes_per_cycle=32, request_bits=337, response_bits=273,
