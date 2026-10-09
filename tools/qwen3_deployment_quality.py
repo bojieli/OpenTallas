@@ -404,6 +404,61 @@ def silu_g(g):
                                    1.0)))
 
 
+# -- qwen_r25: the Qwen3-8B golden in the r25 HBM die's summation order (results/arch/qwen_on_r25_20261008) --------
+# Differences from the contract above, each the r25 element's own arithmetic (every other op is unchanged):
+#   matvec   per die: csum chunk8 over the die's K slice (the r25 SM BF16-lane order, hdc_golden_v41.csum: chunks of 8
+#            contiguous products sequential from +0, chunk sums a pairwise tree padded with +0), INT8 codes exact in
+#            BF16; row-split matrices (o_proj, down; TP4) add the 4 die partials by the TU owner tree
+#            ((p0+p1)+(p2+p3)) in rank order (rtl/hbm_accel/tu/ot_hbm_accel_tu_endpoint.sv); then the row scale
+#   q.k      csum chunk8 over head_dim (attention tile: chunk8 chain, pairwise tree over 64-dim slices)
+#   p.v      csum chunk8 over positions (tile p mode + binary-counter merge of aligned row blocks)
+#   softmax  out = pv / Z (IEEE divide, RNE: the SU divider), not pv * reciprocal(Z)
+#   silu     g / (1 + exp(-g)) (IEEE divide: hdc_golden_v41.silu), not g * reciprocal(1 + exp(-g))
+def div_g(a, b):
+    """IEEE binary32 division, RNE, canonical +0 (hdc_golden_v41.div)."""
+    return (a / b) + 0.0
+
+
+def silu_r25(g):
+    return div_g(g, add(exp_g(mul(g, -1.0)), 1.0))
+
+
+def _p2ceil(n):
+    n = max(1, int(n))
+    return 1 << (n - 1).bit_length()
+
+
+def _ctd(xT, wT, S):
+    """chunk_tree_dot_t, or its slow reference off the GPU: xT [B, K, T], wT [B, K, N] -> [B, T, N]."""
+    if HAVE_TRITON and xT.is_cuda:
+        return chunk_tree_dot_t(xT, wT, S)
+    return torch.stack([_chunk_tree_dot_ref(xT[b].t(), wT[b].t(), S) for b in range(xT.shape[0])])
+
+
+def csum_dot_t(xT, wT, tp=1):
+    """y[t, n] = r25 order of sum_k xT[k, t] * wT[k, n]: K cut into tp contiguous die slices, each a csum chunk8
+    (padded with +0 products to a power-of-two chunk count), the slices a pairwise tree in rank order.
+    xT [K, T] FP32 (BF16-exact values), wT [K, N] BF16 / INT8 codes / FP32; returns FP32 [T, N]."""
+    K, T = xT.shape
+    N = wT.shape[1]
+    assert K % tp == 0 and tp & (tp - 1) == 0
+    Kd = K // tp
+    S = _p2ceil(-(-Kd // CHUNK))
+    Kp = S * CHUNK
+    xs = xT.reshape(tp, Kd, T)
+    ws = wT.reshape(tp, Kd, N)
+    if Kp != Kd:
+        xs = torch.cat([xs, torch.zeros((tp, Kp - Kd, T), device=xs.device, dtype=xs.dtype)], 1)
+        ws = torch.cat([ws, torch.zeros((tp, Kp - Kd, N), device=ws.device, dtype=ws.dtype)], 1)
+    if HAVE_TRITON and xT.is_cuda:
+        o = chunk_tree_dot_t(xs.contiguous(), ws.contiguous(), S)
+    else:
+        o = torch.stack([_chunk_tree_dot_ref(xs[d].t(), ws[d].t(), S) for d in range(tp)])
+    while o.shape[0] > 1:
+        o = add(o[0::2], o[1::2])
+    return o[0]
+
+
 # -- weight quantisation ---------------------------------------------------------
 QFORMATS = {
     # name: (low bits, high bits, fraction of groups at high bits, group)
@@ -543,7 +598,10 @@ MODES = {
     "b_w8": ("gpu", "w8", "bf16"),
     "g_contract_w8": ("contract", "w8", "bf16"),
     "e_full_w8": ("contract", "w8", "fp8"),
+    # qwen_r25: the O4 INT8 contract + FP8 KV in the r25 HBM die's summation order (Qwen3(order="r25"))
+    "r25_full_w8": ("contract", "w8", "fp8"),
 }
+R25_MODES = ("r25_full_w8",)
 
 
 def find_snapshot(name="Qwen--Qwen3-8B"):
@@ -567,7 +625,7 @@ def load_state(path, device):
 
 
 class Qwen3:
-    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None):
+    def __init__(self, path, arith, weights, kv, groups=SPEC_GROUPS, device="cuda", wfile=None, order="contract", tp=4):
         self.cfg = json.loads((Path(path) / "config.json").read_text())
         c = self.cfg
         self.L, self.H = c["num_hidden_layers"], c["hidden_size"]
@@ -576,6 +634,8 @@ class Qwen3:
         self.eps, self.theta = c["rms_norm_eps"], c["rope_theta"]
         self.arith, self.wfmt, self.kvfmt = arith, weights, kv
         self.groups = groups
+        assert order in ("contract", "r25") and (order == "contract" or arith == "contract"), order
+        self.order, self.tp = order, tp          # order r25: the qwen_r25 golden (TP4 row-split partials)
         self.prefill_chunk = 512
         self.device = torch.device(device)
         self.bits = {}
@@ -696,10 +756,14 @@ class Qwen3:
         return hadamard_blocks(m.to(F32) * self.down_had, self.down_had_block).to(m.dtype)
 
     # -- matrix products --------------------------------------------------------
-    def mv(self, x, W):
+    def mv(self, x, W, tp=1):
         """Contract matvec: x [T, K] FP32 -> [T, N] FP32 (golden mv: BF16 input, split_for order)."""
         wT = W.get("w", W.get("q"))
         K, N = wT.shape
+        if self.order == "r25":
+            assert "s" not in W or W.get("post"), "r25 order: BF16 weights or the per-row INT8 contract only"
+            t = csum_dot_t(to_bf16(x).t().contiguous(), wT, tp)
+            return mul(t, W["s"].to(F32).reshape(1, -1)) if W.get("post") else t
         S = split_for(N, K, self.groups)
         if W.get("post"):
             return int8_mv_t(x, wT, W["s"], S)
@@ -875,11 +939,12 @@ class Qwen3:
             attn = self._attend(qb, Kc.reshape(B * self.KV, -1, self.HD), Vc.reshape(B * self.KV, -1, self.HD),
                                 P, T, qpos.repeat_interleave(self.KV, 0), s_sc, s_pv, scale)   # [B*KV, grp, T, HD]
             attn = attn.reshape(B, self.NH, T, self.HD).transpose(1, 2).reshape(B * T, -1)
-            x = add(x, self.mv(attn, lay["o"]))
+            x = add(x, self.mv(attn, lay["o"], self.tp))
             r = rstd_g(x, self.eps)[:, None]
             gu = mul(self.mv(mul(x, lay["pre_gu"]) if "pre_gu" in lay else x, lay["gu"]), r)
             gt, up = gu.split([self.FF, self.FF], -1)
-            x = add(x, self.mv(self.had_down(mul(silu_g(gt), up)), lay["down"]))
+            act = silu_r25(gt) if self.order == "r25" else silu_g(gt)
+            x = add(x, self.mv(self.had_down(mul(act, up)), lay["down"], self.tp))
             if i in getattr(self, "_capture_layer_ids", ()):
                 self._captured_layer_outputs[i].append(x.view(B, T, self.H).to(BF16))
         cache["lens"] = [l + T for l in cache["lens"]]
@@ -892,6 +957,8 @@ class Qwen3:
         (8a91421a:140-172, 323-331); one-pass softmax normalised after P.V.  Zero
         probabilities past a sequence's end only append +0 terms, so padding is exact.
         Query rows are processed in blocks (rows are independent, so blocking is exact)."""
+        if self.order == "r25":
+            return self._attend_r25(q, K, V, P, T, qpos, scale, budget)
         dev = q.device
         Bt, G = q.shape[0], q.shape[1]
         idx_d, Md = interleave_perm(self.HD, s_sc, dev)
@@ -916,6 +983,37 @@ class Qwen3:
             del e
             pv = chunk_tree_dot_t(epT, Vp, s_pv).view(Bt, G, tt, self.HD)
             out[:, :, t0:t1] = mul(pv, reciprocal_g(Z)[..., None])
+            del epT, pv, valid
+        return out
+
+    def _attend_r25(self, q, K, V, P, T, qpos, scale, budget=1 << 25):
+        """qwen_r25 attention: q.k csum chunk8 over head_dim, softmax (scale, max, golden exp, csum Z), p = bf16(e),
+        p.v csum chunk8 over positions (zero-padded to a power-of-two chunk count), out = pv / Z (IEEE)."""
+        dev = q.device
+        Bt, G = q.shape[0], q.shape[1]
+        KT = K.transpose(1, 2).contiguous().to(F32)                         # [Bt, HD, P]
+        Pp = _p2ceil(-(-P // CHUNK)) * CHUNK
+        Vp = torch.zeros((Bt, Pp, self.HD), device=dev, dtype=F32)
+        Vp[:, :P] = V.to(F32)
+        out = torch.empty((Bt, G, T, self.HD), device=dev, dtype=F32)
+        rows = max(1, budget // max(Pp, 1) // (G * Bt))
+        ar = torch.arange(P, device=dev)
+        for t0 in range(0, T, rows):
+            t1 = min(T, t0 + rows)
+            tt = t1 - t0
+            qq = q[:, :, t0:t1].reshape(Bt, G * tt, self.HD).to(F32)
+            sc = mul(_ctd(qq.transpose(1, 2).contiguous(), KT, self.HD // CHUNK), scale).view(Bt, G, tt, P)
+            valid = (ar[None, None, :] <= qpos[:, t0:t1, None])[:, None]
+            mx = torch.where(valid, sc, -float("inf")).amax(-1, keepdim=True)
+            e = exp_g(add(sc, -mx))
+            del sc
+            e = torch.where(valid, e, 0.0)
+            Z = reduce_chunked(e)
+            epT = torch.zeros((Bt, Pp, G * tt), device=dev, dtype=F32)
+            epT[:, :P] = to_bf16(e).reshape(Bt, G * tt, P).transpose(1, 2)
+            del e
+            pv = _ctd(epT, Vp, Pp // CHUNK).view(Bt, G, tt, self.HD)
+            out[:, :, t0:t1] = div_g(pv, Z[..., None])
             del epT, pv, valid
         return out
 
@@ -1373,11 +1471,12 @@ def main():
         wsrc["build_s"] = time.time() - tg
         torch.cuda.empty_cache()
     gptq_meta = {k: v for k, v in wsrc.items() if k != "w"} if isinstance(wsrc, dict) else None
-    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=wsrc)
+    model = Qwen3(snap, arith, wf, kv, groups=args.groups, wfile=wsrc,
+                  order="r25" if args.mode in R25_MODES else "contract")
     del wsrc
     if args.wfile or args.gptq_inline:
         wf = model.wfmt + "_gptq"
-    out = {"mode": args.mode, "arith": arith, "weights": wf, "kv": kv, "groups": args.groups, "wfile": args.wfile, "gptq": gptq_meta,
+    out = {"mode": args.mode, "arith": arith, "order": model.order, "weights": wf, "kv": kv, "groups": args.groups, "wfile": args.wfile, "gptq": gptq_meta,
            "snapshot": str(snap), "load_s": time.time() - t0,
            "weight_bits": {k: float(np.mean(v)) for k, v in model.bits.items()}}
     print(f"[{args.mode}] loaded in {out['load_s']:.0f}s bits={out['weight_bits']} "
