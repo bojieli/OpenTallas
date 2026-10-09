@@ -1,0 +1,23 @@
+{
+  "released_W1_gate": {
+    "source": "ed7eb1197",
+    "host": "ot-epyc1tb",
+    "launcher": 2993725,
+    "run": "/srv/opentallas-scratch/codex/qwen-w1-released-ed7eb1197",
+    "status": "submitted_to_guard",
+    "scope": "actualreleasedW1 candidateW8 image through realbank0+tail37+nativeexactconverter; NOT originalBF16deploymentquality"
+  },
+  "transient_protected_gate": {
+    "source": "d2d34e799",
+    "host": "ot-agidock128",
+    "status": "PASS",
+    "record": "results/rtl/qwen_dspark_native_20261009/transient_protected_exact"
+  },
+  "remaining_production_joins": [
+    "nativeS7 numericalbackend+CROM/featureexports",
+    "shared38bankW1mux/broadcast",
+    "transient512wordquartermerge+attention scan and extendedRoPE",
+    "allcopyreset/drainfence"
+  ],
+  "localhost_compute": "none"
+}
