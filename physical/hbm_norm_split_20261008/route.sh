@@ -28,9 +28,10 @@ else
   [ -s $GV/ot_hbm_norm_grp${G}_tt.lib ] || { echo "group view missing: $GV" > $W/run.log; echo "rc=2" > $W/exit; exit 2; }
   read GW GH < <(awk '/^ *SIZE/{print $2, $4; exit}' $GV/ot_hbm_norm_grp$G.lef)
   NG=$((64 / G)); COLS=$((NG / 2)); [ $COLS -lt 1 ] && COLS=1; ROWS=$(( (NG + COLS - 1) / COLS ))
-  # groups in ROWS x COLS with 24 um channels, plus a 180 um band for the top logic (vector tree, rsqrt, act-quant,
+  CH=${CHANNEL_UM:-24}
+  # groups in ROWS x COLS with configurable channels, plus a 180 um band for the top logic (vector tree, rsqrt, act-quant,
   # capture / output flops) and a 30 um ring
-  read DW DH < <(python3 -c "print(round($COLS*($GW+24)+60,3), round($ROWS*($GH+24)+180+60,3))")
+  read DW DH < <(python3 -c "print(round($COLS*($GW+$CH)+60,3), round($ROWS*($GH+$CH)+180+60,3))")
   DW=${DIEW:-$DW}; DH=${DIEH:-$DH}
   MV="ot_hbm_norm_grp$G=$GV"; MACD=$GV; HALO="10 10"
 fi
