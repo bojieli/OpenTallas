@@ -21,7 +21,11 @@ module ot_hgi_coll_row_formatter #(
  output reg [7:0] out_destinations,
  output wire done_v,input wire done_r,output reg fault
 );
- localparam IDLE=0,IDS=1,MAP=2,DIVB=3,DIVG=4,REQUEST=5,RESPONSE=6,OUTPUT=7,DONE=8,CHECK=9;
+ localparam IDLE=0,IDS=1,MAP=2,DIVB=3,DIVG=4,REQUEST=5,RESPONSE=6,OUTPUT=7,DONE=8,CHECK=9,PRE=10,MUL=11;
+ // drive-0849 (c130 / c180 TT -83 / -115): the id bound compare and the /3, %3 of the G = 96 map are registered in
+ // PRE (one edge after IDS) and the generic local-row multiply q*B + r gets its own MUL edge: +1 cycle per id
+ // (+2 on the generic iterative path); same owner / local row / output order.
+ reg oob_q;reg [11:0] r96q_q;reg [1:0] r96r_q;reg [19:0] qg_q;
  reg [3:0] state;
  reg [7:0] G,B;reg [20:0] K;reg [19:0] index_;reg [31:0] saved_raw,context_q;
  wire [19:0] saved_id=saved_raw[19:0];
@@ -83,10 +87,13 @@ module ot_hgi_coll_row_formatter #(
      if(!good_g || B==0 || out_destinations==0 || out_destinations>G || K==0 || K>21'd1048576 || context_q==0 || context_q>32'd1048576 || words==0)begin fault<=1;state<=DONE;end
      else state<=IDS;
     end
-    IDS:if(id_v)begin saved_raw<=id;read_word<=0;state<=MAP;end
+    IDS:if(id_v)begin saved_raw<=id;read_word<=0;state<=PRE;end
+    PRE:begin
+     oob_q<=(saved_raw>=context_q || |saved_raw[31:20]);r96q_q<=row96_quot;r96r_q<=row96_rem;state<=MAP;
+    end
     MAP:begin
      index_next<=inc_index(index_);index_last<=({1'b0,index_}==index_limit);
-     if(!MUT_ID_BOUND && (saved_raw>=context_q || |saved_raw[31:20]))begin fault<=1;state<=DONE;end
+     if(!MUT_ID_BOUND && oob_q)begin fault<=1;state<=DONE;end
      else begin
      // DS block8: compile-time constant divides for all admitted groups.
      // Generic non-eight blocks use exact iterative division below.
@@ -97,8 +104,8 @@ module ot_hgi_coll_row_formatter #(
        4:begin read_owner<=saved_id[4:3];read_local_row<={saved_id[19:5],saved_id[2:0]};end
        8:begin read_owner<=saved_id[5:3];read_local_row<={saved_id[19:6],saved_id[2:0]};end
        96:begin
-        read_owner<=MUT_OWNER?0:{1'b0,row96_rem,saved_id[7:3]};
-        read_local_row<={5'b0,row96_quot,saved_id[2:0]};
+        read_owner<=MUT_OWNER?0:{1'b0,r96r_q,saved_id[7:3]};
+        read_local_row<={5'b0,r96q_q,saved_id[2:0]};
        end
        default:begin fault<=1;state<=DONE;end
       endcase
@@ -117,9 +124,10 @@ module ot_hgi_coll_row_formatter #(
      dividend<={dividend[18:0],1'b0};quotient<=nextquot;rem_<=nextrem;
      if(step==0)begin
       read_owner<=MUT_OWNER?0:nextrem[7:0];
-      read_local_row<=nextquot*B+remainder_b;state<=REQUEST;
+      qg_q<=nextquot;state<=MUL;
      end else step<=step-1;
     end
+    MUL:begin read_local_row<=qg_q*B+remainder_b;state<=REQUEST;end
     REQUEST:begin
      word_next<=inc_word(read_word);word_last<=MUT_PROGRESS?1'b1:(read_word==word_limit);
      if(read_r)state<=RESPONSE;

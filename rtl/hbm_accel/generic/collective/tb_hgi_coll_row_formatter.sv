@@ -77,7 +77,7 @@ module tb_hgi_coll_row_formatter;
  begin
   @(negedge clk);g=96;b=8;k=1;words=32;dest=8;sv=1;
   @(negedge clk);sv=0;@(negedge clk);id=value;iv=1;
-  @(negedge clk);iv=0;@(negedge clk);
+  @(negedge clk);iv=0;@(negedge clk);if(req || ov)$fatal(1,"U32 rowid/context bound leaked reader request");@(negedge clk);   // PRE edge: the bound fault lands one edge later
   if(!done || !fault || req || ov)$fatal(1,"U32 rowid/context bound leaked reader request");
   dr=1;@(negedge clk);dr=0;
  end
