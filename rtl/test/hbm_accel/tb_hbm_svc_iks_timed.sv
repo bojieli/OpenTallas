@@ -1,15 +1,15 @@
 `timescale 1ps/1ps
 // Timed full-shape actual IKS service with REFpb; pattern exactness and final-credit drain.
-module tb_hbm_svc_iks_timed;
+module tb_hbm_svc_iks_timed #(parameter integer SRAM=0,ROTATE=0);
 reg clk=0,efck=0,rst_n=0;always #512 clk=~clk;always #416 efck=~efck;
 reg[127:0] ed=0;wire[31:0]kv,krdy,kwe,rv,rrdy;wire[959:0]addr;wire[127:0]len,beat;wire[543:0]tag,rtag;
 wire[8191:0]data_;wire[8791:0]lines;wire done,fault;reg[7:0]credit=0;
 wire phy_clk,phy_rst_n;wire[8191:0]rawdata;wire[8191:0]wdata;wire[1023:0]wstrb;wire[31:0]wdone;
 assign data_=rawdata ^ ((mut==1 && rv[5]) ? (8192'd1 << (5*256)) : 8192'd0);
-ot_hbm_svc_core #(.IKS(1),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
+ot_hbm_svc_core #(.IKS(1),.IK_SRAM(SRAM),.IK_SRAM_ROTATE(ROTATE),.E_ST(11),.XST(2))dut(.ck(clk),.rst(rst_n),.q_d(336'd0),.q_v(8'd0),.q_fclk(8'd0),.q_rdy(),.line(),.fclk(),
 .e_d(ed),.e_fclk(efck),.kv(),.ik(),.phy_clk(phy_clk),.phy_rst_n(phy_rst_n),.k_v(kv),.k_rdy(krdy),.k_addr(addr),.k_len(len),.k_tag(tag),.k_we(kwe),.k_wdata(wdata),.k_wstrb(wstrb),
 .kr_v(rv),.kr_rdy(rrdy),.kr_tag(rtag),.kr_beat(beat),.kr_data(data_),.w_v(),.w_rdy(1'b0),.w_addr(),.w_len(),.w_tag(),.w_room(8'd0),.wr_v(8'd0),.wr_rdy(),.wr_tag(80'd0),.wr_beat(40'd0),.wr_data(2048'd0),
-.wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault));
+.wq_d(292'd0),.wq_fclk(1'b0),.wq_g(),.k_wr_done(wdone),.kvs(),.kvs_done(),.ik_credit(credit),.ik_lines(lines),.ik_done(done),.ik_fault(fault),.ip_v(1'b0),.ip_d(99'd0),.ip_fault(1'b0),.ip_take(),.wq_source(2'd0),.wq_source_g(),.wq_source_fault(),.wq_source_busy(),.wq_pending());
 ot_hdc_v41x_idx_hbm #(.NPC(32),.AW(30),.DW(256),.MEM_WORDS(1024),.TAGW(17),.LENW(4),.BEATW(4),.QD(64),.REFPB(3),.MEM_MODE(1),.CLK_PS(1024)) mem(
 .clk(phy_clk),.rst_n(phy_rst_n),.req_v(kv),.req_rdy(krdy),.req_addr(addr),.req_len(len),.req_tag(tag),.req_we(kwe),.req_wdata(wdata),.req_wstrb(wstrb),.wr_done(wdone),.rsp_v(rv),.rsp_rdy(rrdy),.rsp_tag(rtag),.rsp_beat(beat),.rsp_data(rawdata));
 integer row0=4006;
