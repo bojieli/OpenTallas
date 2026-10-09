@@ -6,7 +6,6 @@
 #   neg_slot                mutant: the sector slot ignores the row's bank XOR (beat order) -> must FAIL
 #   neg_done                mutant: a PC reports done without its sectors -> must FAIL
 #   neg_pc                  mutant: PC collapse (only PC 0 streams; I2 lane-drop) -> must FAIL
-#   neg_iorder / neg_islot  mutants: an indexed PC breaks list order / indexed rows unpermuted -> must FAIL
 #   neg_conc                mutant: a second stream launched while one runs (KV no-credit / IK credited overlap) -> must FAIL
 # (run from the source snapshot root)
 set -u
@@ -34,7 +33,7 @@ sim() {   # sim <label> <st> <fam> <ps lib file> <defines...>
   vvp -n $O/$L.vvp > $O/$L.log 2>&1
 }
 # every simulation in parallel (single-threaded each), then the verdicts
-sed 's/  wire \[1:0\] slot = bb_r\[1:0\] ^ (ixm ? t_r\[3:2\] : rr\[1:0\]);/  wire [1:0] slot = bb_r[1:0] ^ (ixm ? t_r[3:2] : 2'"'"'b00);/' $PSLIB > $O/ps_mut_slot.sv
+sed 's/wire \[1:0\] slot = bb_r\[1:0\] ^ rr\[1:0\];/wire [1:0] slot = bb_r[1:0];/' $PSLIB > $O/ps_mut_slot.sv
 sed 's/&& pdone && !di_v;/\&\& !di_v;/' $PSLIB > $O/ps_mut_done.sv
 sed 's/mine <= di_d\[PCID\]; act <= di_d\[PCID\];/mine <= di_d[PCID] \&\& PCID == 0; act <= di_d[PCID] \&\& PCID == 0;/' $PSLIB > $O/ps_mut_pc.sv
 for m in slot done pc; do cmp -s $O/ps_mut_$m.sv $PSLIB && { echo "$m mutant not applied" >> $O/summary.txt; rc=1; }; done
@@ -43,13 +42,12 @@ sim ls_SW SW SW $PSLIB -DLOCKSTEP & sim ls_NE NE SE $PSLIB -DLOCKSTEP &
 sim neg_slot SW SW $O/ps_mut_slot.sv -DPS_STREAMS & sim neg_done SW SW $O/ps_mut_done.sv -DPS_STREAMS &
 sim neg_pc SW SW $O/ps_mut_pc.sv -DPS_STREAMS &
 sim neg_conc SW SW $PSLIB -DPS_STREAMS -DOT_PS_MUT_CONC &
-sim neg_iorder SW SW $PSLIB -DPS_STREAMS -DOT_PS_MUT_IORDER & sim neg_islot NE SE $PSLIB -DPS_STREAMS -DOT_PS_MUT_ISLOT &
 wait
 for L in sim_ps_SW sim_ps_NE ls_SW ls_NE; do
   grep -q "^SVC_BENCH PASS" $O/$L.log; r=$?
   echo "$L rc=$r $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -ne 0 ] && rc=1
 done
-for L in neg_slot neg_done neg_pc neg_conc neg_iorder neg_islot; do
+for L in neg_slot neg_done neg_pc neg_conc; do
   grep -q "^SVC_BENCH PASS" $O/$L.log && r=0 || r=1
   echo "$L rc=$r (must be nonzero) $(grep SVC_BENCH $O/$L.log | head -1)" >> $O/summary.txt; [ $r -eq 0 ] && rc=1
 done

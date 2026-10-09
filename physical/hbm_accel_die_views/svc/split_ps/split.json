@@ -250,7 +250,7 @@
       "parent_port": "kd",
       "parent_bits": [
        0,
-       2
+       1
       ]
      },
      "phy": {
@@ -700,7 +700,7 @@
       "parent_port": "kd",
       "parent_bits": [
        0,
-       2
+       1
       ]
      },
      "phy": {
@@ -1151,7 +1151,7 @@
       "parent_port": "kd",
       "parent_bits": [
        0,
-       2
+       1
       ]
      },
      "phy": {
@@ -1625,7 +1625,7 @@
       "parent_port": "kd",
       "parent_bits": [
        0,
-       2
+       1
       ]
      },
      "phy": {
@@ -1914,12 +1914,12 @@
      "face": "N"
     },
     "eo": {
-     "bits": 640,
+     "bits": 607,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1328,
+     "bits": 1266,
      "direction": "input",
      "face": "E"
     }
@@ -1976,22 +1976,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 640,
+     "bits": 607,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1328,
+     "bits": 1266,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1458,
+     "bits": 1425,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1147,
+     "bits": 1085,
      "direction": "input",
      "face": "E"
     }
@@ -2038,22 +2038,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1458,
+     "bits": 1425,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1147,
+     "bits": 1085,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1186,
+     "bits": 1153,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1200,
+     "bits": 1138,
      "direction": "input",
      "face": "E"
     }
@@ -2090,7 +2090,7 @@
      "face": "N"
     },
     "kd": {
-     "bits": 3,
+     "bits": 2,
      "direction": "output",
      "face": "N"
     },
@@ -2110,22 +2110,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1186,
+     "bits": 1153,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1200,
+     "bits": 1138,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1040,
+     "bits": 978,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 929,
+     "bits": 896,
      "direction": "input",
      "face": "E"
     }
@@ -2152,22 +2152,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1040,
+     "bits": 978,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 929,
+     "bits": 896,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 983,
+     "bits": 921,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 41,
+     "bits": 8,
      "direction": "input",
      "face": "E"
     }
@@ -2214,22 +2214,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 983,
+     "bits": 921,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 41,
+     "bits": 8,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 697,
+     "bits": 635,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 39,
+     "bits": 6,
      "direction": "input",
      "face": "E"
     }
@@ -2276,22 +2276,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 697,
+     "bits": 635,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 39,
+     "bits": 6,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 411,
+     "bits": 349,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 37,
+     "bits": 4,
      "direction": "input",
      "face": "E"
     }
@@ -2338,12 +2338,12 @@
      "face": "xy"
     },
     "wi": {
-     "bits": 411,
+     "bits": 349,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 37,
+     "bits": 4,
      "direction": "output",
      "face": "W"
     }
@@ -2410,12 +2410,12 @@
      "face": "xy"
     },
     "eo": {
-     "bits": 640,
+     "bits": 607,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1328,
+     "bits": 1266,
      "direction": "input",
      "face": "E"
     }
@@ -2462,22 +2462,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 640,
+     "bits": 607,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1328,
+     "bits": 1266,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1454,
+     "bits": 1421,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1106,
+     "bits": 1044,
      "direction": "input",
      "face": "E"
     }
@@ -2524,22 +2524,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1454,
+     "bits": 1421,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1106,
+     "bits": 1044,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1182,
+     "bits": 1149,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 1118,
+     "bits": 1056,
      "direction": "input",
      "face": "E"
     }
@@ -2586,7 +2586,7 @@
      "face": "N"
     },
     "kd": {
-     "bits": 3,
+     "bits": 2,
      "direction": "output",
      "face": "N"
     },
@@ -2606,22 +2606,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1182,
+     "bits": 1149,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 1118,
+     "bits": 1056,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 1091,
+     "bits": 1029,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 597,
+     "bits": 564,
      "direction": "input",
      "face": "E"
     }
@@ -2668,22 +2668,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 1091,
+     "bits": 1029,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 597,
+     "bits": 564,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 805,
+     "bits": 743,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 595,
+     "bits": 562,
      "direction": "input",
      "face": "E"
     }
@@ -2730,22 +2730,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 805,
+     "bits": 743,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 595,
+     "bits": 562,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 519,
+     "bits": 457,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 593,
+     "bits": 560,
      "direction": "input",
      "face": "E"
     }
@@ -2772,22 +2772,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 519,
+     "bits": 457,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 593,
+     "bits": 560,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 689,
+     "bits": 627,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 91,
+     "bits": 58,
      "direction": "input",
      "face": "E"
     }
@@ -2834,22 +2834,22 @@
      "face": "N"
     },
     "wi": {
-     "bits": 689,
+     "bits": 627,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 91,
+     "bits": 58,
      "direction": "output",
      "face": "W"
     },
     "eo": {
-     "bits": 179,
+     "bits": 117,
      "direction": "output",
      "face": "E"
     },
     "ei": {
-     "bits": 313,
+     "bits": 280,
      "direction": "input",
      "face": "E"
     }
@@ -2876,12 +2876,12 @@
      "face": "N"
     },
     "wi": {
-     "bits": 179,
+     "bits": 117,
      "direction": "input",
      "face": "W"
     },
     "wo": {
-     "bits": 313,
+     "bits": 280,
      "direction": "output",
      "face": "W"
     }
@@ -2893,10 +2893,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s0.eo",
    "to": "hfd_svc_SW_s1.wi",
-   "bits": 640,
+   "bits": 607,
    "chains": [
     "c_dd3",
-    "c_ic3",
     "c_cr4",
     "c_cr5",
     "c_cr6",
@@ -2915,7 +2914,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s1.wo",
    "to": "hfd_svc_SW_s0.ei",
-   "bits": 1328,
+   "bits": 1266,
    "chains": [
     "c_sd3",
     "c_wr4",
@@ -2942,10 +2941,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s1.eo",
    "to": "hfd_svc_SW_s2.wi",
-   "bits": 1458,
+   "bits": 1425,
    "chains": [
     "c_dd8",
-    "c_ic8",
     "c_cr10",
     "c_cr11",
     "c_cr9",
@@ -2968,7 +2966,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s2.wo",
    "to": "hfd_svc_SW_s1.ei",
-   "bits": 1147,
+   "bits": 1085,
    "chains": [
     "c_sd8",
     "c_is8",
@@ -2992,10 +2990,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s2.eo",
    "to": "hfd_svc_SW_s3.wi",
-   "bits": 1186,
+   "bits": 1153,
    "chains": [
     "c_dd12",
-    "c_ic12",
     "c_cr13",
     "c_cr14",
     "c_cr15",
@@ -3017,7 +3014,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s3.wo",
    "to": "hfd_svc_SW_s2.ei",
-   "bits": 1200,
+   "bits": 1138,
    "chains": [
     "c_sd12",
     "c_is12",
@@ -3042,7 +3039,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s3.eo",
    "to": "hfd_svc_SW_s4.wi",
-   "bits": 1040,
+   "bits": 978,
    "chains": [
     "c_cr17",
     "c_cr18",
@@ -3065,11 +3062,10 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s4.wo",
    "to": "hfd_svc_SW_s3.ei",
-   "bits": 929,
+   "bits": 896,
    "chains": [
     "c_is16",
     "c_dd17",
-    "c_ic17",
     "c_rs17",
     "c_rs18",
     "c_rs19",
@@ -3083,7 +3079,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s4.eo",
    "to": "hfd_svc_SW_s5.wi",
-   "bits": 983,
+   "bits": 921,
    "chains": [
     "c_sd20",
     "c_wl5",
@@ -3098,10 +3094,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s5.wo",
    "to": "hfd_svc_SW_s4.ei",
-   "bits": 41,
+   "bits": 8,
    "chains": [
     "c_dd20",
-    "c_ic20",
     "c_wd5",
     "c_wd6",
     "c_wd7"
@@ -3111,7 +3106,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s5.eo",
    "to": "hfd_svc_SW_s6.wi",
-   "bits": 697,
+   "bits": 635,
    "chains": [
     "c_sd24",
     "c_wl6",
@@ -3124,10 +3119,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s6.wo",
    "to": "hfd_svc_SW_s5.ei",
-   "bits": 39,
+   "bits": 6,
    "chains": [
     "c_dd24",
-    "c_ic24",
     "c_wd6",
     "c_wd7"
    ]
@@ -3136,7 +3130,7 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s6.eo",
    "to": "hfd_svc_SW_s7.wi",
-   "bits": 411,
+   "bits": 349,
    "chains": [
     "c_sd28",
     "c_wl7",
@@ -3147,10 +3141,9 @@
    "family": "SW",
    "frm": "hfd_svc_SW_s7.wo",
    "to": "hfd_svc_SW_s6.ei",
-   "bits": 37,
+   "bits": 4,
    "chains": [
     "c_dd28",
-    "c_ic28",
     "c_wd7"
    ]
   },
@@ -3158,10 +3151,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s0.eo",
    "to": "hfd_svc_SE_s1.wi",
-   "bits": 640,
+   "bits": 607,
    "chains": [
     "c_dd3",
-    "c_ic3",
     "c_cr4",
     "c_cr5",
     "c_cr6",
@@ -3180,7 +3172,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s1.wo",
    "to": "hfd_svc_SE_s0.ei",
-   "bits": 1328,
+   "bits": 1266,
    "chains": [
     "c_sd3",
     "c_wr4",
@@ -3207,10 +3199,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s1.eo",
    "to": "hfd_svc_SE_s2.wi",
-   "bits": 1454,
+   "bits": 1421,
    "chains": [
     "c_dd8",
-    "c_ic8",
     "c_cr10",
     "c_cr11",
     "c_cr9",
@@ -3231,7 +3222,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s2.wo",
    "to": "hfd_svc_SE_s1.ei",
-   "bits": 1106,
+   "bits": 1044,
    "chains": [
     "c_sd8",
     "c_is8",
@@ -3254,10 +3245,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s2.eo",
    "to": "hfd_svc_SE_s3.wi",
-   "bits": 1182,
+   "bits": 1149,
    "chains": [
     "c_dd12",
-    "c_ic12",
     "c_cr13",
     "c_cr14",
     "c_cr15",
@@ -3277,7 +3267,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s3.wo",
    "to": "hfd_svc_SE_s2.ei",
-   "bits": 1118,
+   "bits": 1056,
    "chains": [
     "c_sd12",
     "c_is12",
@@ -3300,7 +3290,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s3.eo",
    "to": "hfd_svc_SE_s4.wi",
-   "bits": 1091,
+   "bits": 1029,
    "chains": [
     "c_is18",
     "c_is19",
@@ -3319,10 +3309,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s4.wo",
    "to": "hfd_svc_SE_s3.ei",
-   "bits": 597,
+   "bits": 564,
    "chains": [
     "c_dd18",
-    "c_ic18",
     "c_rs18",
     "c_rs19",
     "c_wd5",
@@ -3334,7 +3323,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s4.eo",
    "to": "hfd_svc_SE_s5.wi",
-   "bits": 805,
+   "bits": 743,
    "chains": [
     "c_sd22",
     "c_is22",
@@ -3351,10 +3340,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s5.wo",
    "to": "hfd_svc_SE_s4.ei",
-   "bits": 595,
+   "bits": 562,
    "chains": [
     "c_dd22",
-    "c_ic22",
     "c_rs22",
     "c_rs23",
     "c_wd6",
@@ -3365,7 +3353,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s5.eo",
    "to": "hfd_svc_SE_s6.wi",
-   "bits": 519,
+   "bits": 457,
    "chains": [
     "c_sd26",
     "c_is26",
@@ -3380,10 +3368,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s6.wo",
    "to": "hfd_svc_SE_s5.ei",
-   "bits": 593,
+   "bits": 560,
    "chains": [
     "c_dd26",
-    "c_ic26",
     "c_rs26",
     "c_rs27",
     "c_wd7"
@@ -3393,7 +3380,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s6.eo",
    "to": "hfd_svc_SE_s7.wi",
-   "bits": 689,
+   "bits": 627,
    "chains": [
     "c_sd29",
     "c_rs28",
@@ -3405,10 +3392,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s7.wo",
    "to": "hfd_svc_SE_s6.ei",
-   "bits": 91,
+   "bits": 58,
    "chains": [
     "c_dd29",
-    "c_ic29",
     "c_is28",
     "c_cr28",
     "c_wd7"
@@ -3418,7 +3404,7 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s7.eo",
    "to": "hfd_svc_SE_s8.wi",
-   "bits": 179,
+   "bits": 117,
    "chains": [
     "c_sd31",
     "c_is31",
@@ -3429,10 +3415,9 @@
    "family": "SE",
    "frm": "hfd_svc_SE_s8.wo",
    "to": "hfd_svc_SE_s7.ei",
-   "bits": 313,
+   "bits": 280,
    "chains": [
     "c_dd31",
-    "c_ic31",
     "c_rs31"
    ]
   }
