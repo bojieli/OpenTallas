@@ -334,8 +334,8 @@ module ot_s81_bf_input_holdseat #(
     end
 `ifdef BF_INPUT_SEAT_MUTANT
     if (SEATS > 0 && W > 16) begin : g_mutant
-        // Flip the first BF16 lane sign, proving the enabled data mechanism is observed.
-        assign y = seat[SEATS] ^ ({{(W-16){1'b0}}, 16'h8000});
+        // Stuck-low first BF16 lane sign: the enabled seat path must be observed.
+        assign y = seat[SEATS] & ~({{(W-16){1'b0}}, 16'h8000});
     end else begin : g_mutant_bypass
         assign y = seat[SEATS];
     end
