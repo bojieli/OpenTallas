@@ -1,0 +1,207 @@
+{
+  "schema": "opentallas.qwen-system.q7-port-guard.v1",
+  "recipe": "r18 regression vehicle; r21c_sys not integrated",
+  "legacy_ledger": [
+    {
+      "master": "qfd_io_collective",
+      "port": "ck",
+      "bits": 3,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw10",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw11",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw12",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw13",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw14",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw15",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw8",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_2_f2",
+      "port": "bw9",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw10",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw11",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw12",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw13",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw14",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw15",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw8",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f2",
+      "port": "bw9",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw10",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw11",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw12",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw13",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw14",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw8",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    },
+    {
+      "master": "qfd_port_tiles_3_f3",
+      "port": "bw9",
+      "bits": 512,
+      "rtl_bound": false,
+      "disposition": "unclassified",
+      "reason": "no die bus reaches this abstract port"
+    }
+  ],
+  "strict_negative": "strict_ports: functional ports have no die net: qfd_io_collective.ck, qfd_port_tiles_2_f2.bw10, qfd_port_tiles_2_f2.bw11, qfd_port_tiles_2_f2.bw12, qfd_port_tiles_2_f2.bw13, qfd_port_tiles_2_f2.bw14, qfd_port_tiles_2_f2.bw15, qfd_port_tiles_2_f2.bw8, qfd_port_tiles_2_f2.bw9, qfd_port_tiles_3_f2.bw10, qfd_port_tiles_3_f2.bw11, qfd_port_tiles_3_f2.bw12, qfd_port_tiles_3_f2.bw13, qfd_port_tiles_3_f2.bw14, qfd_port_tiles_3_f2.bw15, qfd_port_tiles_3_f2.bw8, qfd_port_tiles_3_f2.bw9, qfd_port_tiles_3_f3.bw10, qfd_port_tiles_3_f3.bw11, qfd_port_tiles_3_f3.bw12, qfd_port_tiles_3_f3.bw13, qfd_port_tiles_3_f3.bw14, qfd_port_tiles_3_f3.bw8, qfd_port_tiles_3_f3.bw9",
+  "failure_ledger_retained": false,
+  "unit_gate": "5/5 PASS",
+  "scope": "Q14 abstract-port omissions only; RTL pins not represented by any abstract port remain the tieoff audit obligation",
+  "sources": {
+    "tools/qwen_rom_fulldie_b3r2.py": "7b5380280645ee343ab7d8cafb22f36e10be9b7fb187ba27b6fe868414c90e7d",
+    "tools/qwen_system/port_guard.py": "8c31b07f4dfb86c5d7d365d70dc8585f0c14d4a21e9d7eb404c52224c82e79c6",
+    "tools/qwen_system/test_port_guard.py": "e7bb46f966c8f31ae385414f0dd45f16b33f21c4424aed7571b3952244e47867"
+  }
+}
