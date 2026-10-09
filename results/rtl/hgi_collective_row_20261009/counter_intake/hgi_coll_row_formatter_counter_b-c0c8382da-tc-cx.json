@@ -1,8 +1,8 @@
 {
-  "name": "hgi_coll_row_formatter_counter_b-fa51484d8-tc-cx",
+  "name": "hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx",
   "block": "ot_hgi_coll_row_formatter",
   "owner": "Codex:generic_collective approvedHGI-1",
-  "purpose": "Counter-feedback structural correction of actual7c38 EARLY_FAIL_SETUP: internal read_word0->15 cell934.8/wire243.4ps, TT -430. Precomputed progress75flops within existing states, zero addedcycles. Exact32calls/477132words and allfiveconsumingmutants plus public-port cycle lockstep passed remotely on identical61a source; currentfa514 adds immutable baseline only. FourGiB physical reservation inventory estimate, no SRAM, final measuredpeak pending. CurrentflowTT/FF>=0 DRC0 plus electricalzero; no clock/IOrelaxation. Installedreader/simulator vector/die bindings still pending.",
+  "purpose": "Counter-feedback structural correction of actual7c38 EARLY_FAIL_SETUP: internal read_word0->15 cell934.8/wire243.4ps, TT -430. Precomputed progress75flops within existing states, zero addedcycles. Exact32calls/477132words and fourconsumingmutants; progress mutant gained direct premature-row consuming invariant at c0c plus public-port cycle lockstep passed remotely on identical61a source; current c0c adds pinnedbaseline and stronger progress assertion only. FourGiB physical reservation inventory estimate, no SRAM, final measuredpeak pending. CurrentflowTT/FF>=0 DRC0 plus electricalzero; no clock/IOrelaxation. Installedreader/simulator vector/die bindings still pending.",
   "hosts": [
     "ot-epyc3",
     "ot-epyc4",
@@ -13,7 +13,7 @@
   "peak_ram_gb": 4,
   "source": {
     "branch": "codex/hgi-collective-20261009",
-    "commit": "fa51484d8",
+    "commit": "c0c8382da",
     "paths": [
       "rtl/hbm_accel/generic/collective",
       "tools",
@@ -177,7 +177,7 @@
   "record": [
     {
       "from": "{RUN}/record",
-      "to": "results/rtl/hgi_collective_decode_20261009/routes/hgi_coll_row_formatter_counter_b-fa51484d8-tc-cx"
+      "to": "results/rtl/hgi_collective_decode_20261009/routes/hgi_coll_row_formatter_counter_b-c0c8382da-tc-cx"
     }
   ],
   "route_hold_corners": "mm",
