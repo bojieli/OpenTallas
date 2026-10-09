@@ -1,0 +1,194 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:292:24: Operator VAR 'B' expects 32 bits on the Initial value, but Initial value's SEL generates 5 bits.
+                                                                                                                                                         : ... note: In instance 'ot_hbm_svc_core'
+  292 |     localparam integer B = SM_PC0[i*5 +: 5];
+      |                        ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:310:104: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                                                                          : ... note: In instance 'ot_hbm_svc_core'
+  310 |     begin own = 0; for (s = 0; s < NSM; s = s + 1) if (pc >= SM_PC0[s*5 +: 5] && pc < SM_PC0[s*5 +: 5] + 4) own = s; end
+      |                                                                                                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:367:24: Operator VAR 'B' expects 32 bits on the Initial value, but Initial value's SEL generates 5 bits.
+                                                                                                                                                         : ... note: In instance 'ot_hbm_svc_core'
+  367 |     localparam integer B = SM_PC0[i*5 +: 5];
+      |                        ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:45:66: Operator VAR 'N' expects 32 bits on the Initial value, but Initial value's CONST '4'h0' generates 4 bits.
+   45 | module ot_svc_vpipe #(parameter integer W = 1, parameter integer N = 0, parameter integer X = 0) (    
+      |                                                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:102:39: Bit extraction of array[3:0] requires 2 bit index, not 5 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gik.u_a'
+  102 |   always @(posedge ck) if (bv) begin b[bbeat] <= bdata; t <= btag; end
+      |                                       ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:106:59: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'bbeat' generates 5 bits.
+                                                                                                                                                         : ... note: In instance 'ot_hbm_svc_core.gik.u_a'
+  106 |     else if (bv) for (k = 0; k < NB; k = k + 1) if (bbeat == k) have[k] <= 1'b1;
+      |                                                           ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:102:39: Bit extraction of array[4:0] requires 3 bit index, not 5 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gl[7].u_wa'
+  102 |   always @(posedge ck) if (bv) begin b[bbeat] <= bdata; t <= btag; end
+      |                                       ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:56:15: Operator ASSIGNDLY expects 2 bits on the Assign RHS, but Assign RHS's REPLICATE generates 3 bits.
+                                                                                                                                                       : ... note: In instance 'ot_hbm_svc_core.gl[7].u_wp'
+   56 |       else rv <= {rv, v};
+      |               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:21:46: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_hbm_svc_core.u_e'
+   21 |   wire [AW:0] wbin_n = wbin + ((we && !full) ? 1'b1 : 1'b0);
+      |                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:21:46: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_hbm_svc_core.u_e'
+   21 |   wire [AW:0] wbin_n = wbin + ((we && !full) ? 1'b1 : 1'b0);
+      |                                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:22:47: Operator COND expects 3 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_hbm_svc_core.u_e'
+   22 |   wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv:22:47: Operator COND expects 3 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                               : ... note: In instance 'ot_hbm_svc_core.u_e'
+   22 |   wire [AW:0] rbin_n = rbin + ((re && !empty) ? 1'b1 : 1'b0);
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:81:22: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   81 |       wp <= wp + (we ? 1'b1 : 1'b0);
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:81:22: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   81 |       wp <= wp + (we ? 1'b1 : 1'b0);
+      |                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:82:30: Operator COND expects 4 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   82 |       rp <= rp + ((re && ne) ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:82:30: Operator COND expects 4 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   82 |       rp <= rp + ((re && ne) ? 1'b1 : 1'b0);
+      |                              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:19: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 4 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                   ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:25: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:25: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                         ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:47: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 4 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:61: Operator COND expects 32 bits on the Conditional True, but Conditional True's CONST '1'h1' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                                                             ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:83:61: Operator COND expects 32 bits on the Conditional False, but Conditional False's CONST '1'h0' generates 1 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core.gq[7].loc.u_f'
+   83 |       rdy <= ((wp + (we ? 1'b1 : 1'b0)) - (rp + ((re && ne) ? 1'b1 : 1'b0))) <= (D - AF);
+      |                                                             ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:299:20: Operator ASSIGNW expects 4 bits on the Assign RHS, but Assign RHS's SHIFTR generates 8 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core'
+  299 |     wire [3:0] rot = f2 >> rr;
+      |                    ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:389:20: Operator ASSIGNW expects 5 bits on the Assign RHS, but Assign RHS's SHIFTR generates 10 bits.
+                                                                                                                                                        : ... note: In instance 'ot_hbm_svc_core'
+  389 |     wire [4:0] rot = fx >> lr;
+      |                    ^
+%Warning-WIDTHCONCAT: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:596:26: Replication of more that --replication-limit 8192 is suspect: 8608
+                                                                                                                                                         : ... note: In instance 'ot_hbm_svc_core'
+  596 |     assign kvs = {NPC*269{1'b0}}; assign kvs_done = 1'b0;
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:62: Bit [0] of signal 'ot_hbm_svc_core.k_take[0]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:42: Bit [0] of signal 'ot_hbm_svc_core.pc_done_sm[0]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:63:15: ... Location of offending driver
+   63 |     assign qv = rv[NT-1]; assign q = st[NT-1].r;
+      |               ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:63:15: ... Location of offending driver
+   63 |     assign qv = rv[NT-1]; assign q = st[NT-1].r;
+      |               ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:54: Bit [0] of signal 'ot_hbm_svc_core.sm_iss[0]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:54: Bit [0] of signal 'ot_hbm_svc_core.sm_iss[1]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:54: Bit [0] of signal 'ot_hbm_svc_core.sm_iss[2]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:54: Bit [0] of signal 'ot_hbm_svc_core.sm_iss[3]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:304:26: ... Location of offending driver
+  304 |       assign sm_iss[B+p] = rq_take[i] && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:42: Bit [0] of signal 'ot_hbm_svc_core.pc_done_sm[1]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:42: Bit [0] of signal 'ot_hbm_svc_core.pc_done_sm[2]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:42: Bit [0] of signal 'ot_hbm_svc_core.pc_done_sm[3]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:378:10: ... Location of offending driver
+  378 |         .qv(pc_done_sm[B+p]), .q());
+      |          ^~
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:62: Bit [0] of signal 'ot_hbm_svc_core.k_take[1]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:62: Bit [0] of signal 'ot_hbm_svc_core.k_take[2]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+%Warning-MULTIDRIVEN: /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:207:62: Bit [0] of signal 'ot_hbm_svc_core.k_take[3]' have multiple combinational drivers. This can cause performance degradation.
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+                      /srv/opentallas-scratch/codex/hbm-index-sram-20261008/partial-r1/src/physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv:395:26: ... Location of offending driver
+  395 |       assign k_take[B+p] = any && (sel == p);
+      |                          ^
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 0.103 MB sources in 12 modules, into 0.750 MB in 3 C++ files needing 0.000 MB
+- Verilator: Walltime 0.337 s (elab=0.045, cvt=0.264, bld=0.000); cpu 0.337 s on 1 threads; allocated 53.379 MB

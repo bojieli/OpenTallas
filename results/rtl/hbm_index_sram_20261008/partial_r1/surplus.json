@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hbm_iks_native_sram_partial.v1",
+  "source_commit": "9c4cd032a",
+  "input_sha256": {
+    "rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv": "6b92d2ef1e24a526bd8f674d9aa696f61d4430b802155f35575d68efa439502b",
+    "rtl/hbm_accel/service/ot_hbm_kport_map.sv": "93e6f1e03c7c9ce4780da18b3c453381878107d5db68cda8312d2fb9a61ab84f",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines_sram.sv": "ac4c909301dd8a5608a93c2cf671bef538c4f01f16ebb19909bfe2542dc1ca66",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_index_lines.sv": "c5087709e681bd4a89a16e5dab19ecdc3e2e91069ef7e1063816ac51b1d856ca",
+    "rtl/common/ot_secded.sv": "88357d42361be377a9051e804f136c56b5359c3de77006325d196cb36d549d18",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e",
+    "physical/hbm_accel_die_views/svc/rtl/ot_hbm_svc_core.sv": "b2819110dd3dc01d22c65eba96f03eb84c2913946a5c085547d221da82cdf749",
+    "rtl/hdc/v41x/ot_hdc_v41x_idx_hbm.sv": "c757ae39d767291db3fd37565ce6c5ff6eec9ed119cc97ee06432f301d87ecf4",
+    "rtl/test/hbm_accel/tb_hbm_svc_iks_timed.sv": "2f2df39fe0ee3718ddc0fda2559c15cb68f9e365e1095eb099318676715546ce",
+    "tools/hbm_svc_iks_sram_partial_gate.py": "9c266b73f234a0437a3d9c1e10bf93b50950e717146235b24be6d841259567ea",
+    "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0",
+    "results/uarch/hbm_index_sram_20261008/partial_prebuild.json": "9993d26a4df7bf3e25eb25b5e612cc480f9ebf6ad1687924aecc648cfc3b8191"
+  },
+  "scope": "timed request-level controller; actual IK_SRAM1 IK_SRAM_ROTATE1 selector with final-credit frame retention and SECDED, no physical signoff or performance adoption",
+  "controller": "ot_hdc_v41x_idx_hbm NPC32 REFPB3 MEM_MODE1 QD64 TCK1024ps",
+  "blocks": 1,
+  "surplus_unused": true,
+  "cases": [
+    {
+      "phase_ns": 0,
+      "credit_delay": 23,
+      "mut": 0,
+      "returncode": 1,
+      "raw_log": "phase0_delay23_mut0.log",
+      "raw_sha256": "abe4e7709cdd8b63d692f6944ec6d3ebf165c9e4fe033589d6a5201f3dd47793",
+      "rows": [],
+      "gate_passed": true
+    }
+  ],
+  "verdict": "PASS",
+  "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+  "default_without_sram_dependency_returncode": 0,
+  "build_returncode": 0
+}

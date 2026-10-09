@@ -1,0 +1,76 @@
+{
+  "source_commit": "9c4cd032a",
+  "verdict": "PASS",
+  "positive_descriptors": 6,
+  "cases": [
+    {
+      "case": "b1",
+      "blocks": 1,
+      "surplus_unused": false,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 88.064,
+          "drain_ns": 101.888,
+          "logical_tbs": 0.006177
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 104.256,
+          "drain_ns": 118.08,
+          "logical_tbs": 0.005218
+        }
+      ]
+    },
+    {
+      "case": "b2",
+      "blocks": 2,
+      "surplus_unused": false,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 90.112,
+          "drain_ns": 103.936,
+          "logical_tbs": 0.012074
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 105.856,
+          "drain_ns": 119.68,
+          "logical_tbs": 0.010278
+        }
+      ]
+    },
+    {
+      "case": "b3",
+      "blocks": 3,
+      "surplus_unused": false,
+      "verdict": "PASS",
+      "rows": [
+        {
+          "rep": 0,
+          "last_line_ns": 91.136,
+          "drain_ns": 105.984,
+          "logical_tbs": 0.017907
+        },
+        {
+          "rep": 1,
+          "last_line_ns": 107.072,
+          "drain_ns": 121.92,
+          "logical_tbs": 0.015242
+        }
+      ]
+    },
+    {
+      "case": "surplus",
+      "blocks": 1,
+      "surplus_unused": true,
+      "verdict": "PASS",
+      "rows": []
+    }
+  ],
+  "scope": "Native actual core selector,32PCs,8ports; blocks1/2/3 produce exactly4/8/12lines with independent bytes/tags/count; final credits held12cycles and retained until returned. Surplus lane7 credit injected at native read issue for blocks1 is rejected. Existing full342 source gates preserved; all342group bounds remain true, no new FF/pipeline cycles.",
+  "physical_adoption": false
+}
