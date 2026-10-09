@@ -1348,7 +1348,9 @@ SS_REACH_UM = 504.0
 
 def margin_lint(m):
     import fp_margin_lint as FPL
-    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM)
+    # s81-gen: per-segment walk (the per-chain walk ran > 5 h on the S81 layer1 die; same tests, same verdict)
+    return FPL.die_margin(m['insts'], m['buses'], MARGIN_RELAY_KINDS, reach_um=SS_REACH_UM,
+                          edges=os.environ.get('OT_S81_MARGIN_CHAINS', '0') != '1')
 
 
 def write_def_floorplan(m, path):
