@@ -74,7 +74,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--out', type=Path, default=ROOT / 'physical/hbm_accel_die_views/index/native')
     args = ap.parse_args()
-    from uarch_model import hbm_indexer_r25i_physical_model
+    from hbm_indexer_r25i_model import hbm_indexer_r25i_physical_model
     model = hbm_indexer_r25i_physical_model()
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / 'model.json').write_text(json.dumps(model, indent=1) + '\n')
