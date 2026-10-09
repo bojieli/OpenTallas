@@ -10,8 +10,8 @@ A stage run compiles the real program (tools/hgi_sim/qwen_compiler.py), encodes 
 Qwen model descriptor through the config path (CFG commit, every check), builds the four dies' HBM images (the
 deployed INT8 image, the KV cache of a synthetic format-valid state at the position), drives the stage input into
 the VM (the stage bench's input), rings the doorbell, and compares every family's result buffer on every die with the
-golden's value of that family.  Negative mutants (rope_half = 0; KV heads swapped between the two planes; a QK-norm
-published BF16) must fail.  Qwen's dense layers are all one type, so the layer stage is the per-layer-type run.
+golden's value of that family.  Negative mutants (W_q / W_k rows and QK-norm gains NOT permuted for adjacent RoPE
+pairs, CF-ROPE; KV heads swapped between the two planes; a QK-norm published BF16) must fail.  Qwen's dense layers are all one type, so the layer stage is the per-layer-type run.
 """
 from __future__ import annotations
 
@@ -39,20 +39,18 @@ from hgi_sim.machine import UNITS, Die, Fault, Machine  # noqa: E402
 from hgi_sim.records import decode_program, encode_program  # noqa: E402
 
 F = np.float32
-MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/legacy_v0_9/md_qwen3_8b.hex"
+MD_HEX = ROOT / "results/arch/hbm_generic_iface_20261009/md_qwen3_8b.hex"
 
 
 def md_words(cfg):
-    """The committed Qwen3-8B descriptor when the config is the released one; else one encoded the same way."""
-    if cfg.get("hidden_size") == 4096 and cfg.get("vocab_size") == 151936 and MD_HEX.exists():
-        return [int(x, 16) for x in MD_HEX.read_text().split()]
-    import tempfile
-    p = Path(tempfile.mkdtemp()) / "config.json"
-    p.write_text(json.dumps(cfg))
-    HGI.MODELS["_test"] = dict(cfg=str(p), model_class=2, tp=4, head_rows=cfg["vocab_size"] // 4)
-    md, _ = HGI.from_config("_test")
-    md["norm_d_units"] = 32           # test shapes only: the norm engine's legal widths are 4,096 / 5,120
-    return HGI.pack(md)
+    """The committed Qwen3-8B descriptor (HGI-1) when the config is the released one; else one built the same way
+    (the three static fields; the manifest hash is not checked by hardware)."""
+    if cfg.get("hidden_size") == 4096 and cfg.get("vocab_size") == 151936:
+        words = [int(x, 16) for x in MD_HEX.read_text().split()]
+        assert words == HGI.d_build("qwen3_8b")[3], "committed Qwen descriptor drifted from the encoder"
+        return words
+    return HGI.d_pack(dict(magic=HGI.MAGIC, ver_minor=HGI.D_VERSION[1], ver_major=HGI.D_VERSION[0], n_words=HGI.NWORDS,
+                           cp_vocab=cfg["vocab_size"], cp_ctx_max=40960, coll_group_size=QC.TP, entry_ar=1))
 
 
 def bits(a):
@@ -80,7 +78,7 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
     ctx = 8192 if cfg["hidden_size"] == 4096 else max(64, pos + 1)
     g = QC.Geometry(cfg, ctx)
     words = md_words(cfg)
-    md = HGI.unpack(words)
+    md = QC.qwen_params(cfg)
     tr = {}
     if stage == "layer":
         Kc, Vc = R.synthetic_kv(model, layer, pos)
@@ -108,7 +106,16 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
         parts = ("embed", "layers", "head")
     else:
         raise ValueError(stage)
-    hbms, _ = QC.build_images(model, g, layers, kv_state=kvs.get)
+    if mutant == "rope_unpermuted":
+        # CF-ROPE negative: the image keeps the checkpoint's split-half row order (no offline permutation)
+        post, perm = model.img.post, model.perm
+        model.img.post, model.perm = None, False
+        try:
+            hbms, _ = QC.build_images(model, g, layers, kv_state=kvs.get)
+        finally:
+            model.img.post, model.perm = post, perm
+    else:
+        hbms, _ = QC.build_images(model, g, layers, kv_state=kvs.get)
     if mutant == "kv_swap":
         # the die's two KV heads' planes exchanged (one KV head a die: its K and V planes exchanged)
         span = 2 * g.kv_plane if g.nk >= 2 else g.kv_plane
@@ -126,11 +133,7 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
     assert encode_program(decode_program(image)) == image, "record encode / decode round trip"
     dies = [Die(d, hbms[d]) for d in range(QC.TP)]
     M = Machine(dies, UNITS)
-    w2 = list(words)
-    if mutant == "rope_adjacent":
-        md2 = dict(md, rope_half=0)
-        w2 = HGI.pack(md2)
-    err = M.cfg_commit(w2)
+    err = M.cfg_commit(list(words))
     if err:
         raise SystemExit(f"CFG commit refused: {HGI.ERR[err]}")
     if x is not None:
@@ -146,15 +149,11 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
                 snaps[r.tag] = [d.vm.copy() for d in dies]
             return
         snaps[r.tag] = [d.vm.copy() for d in dies]
-    orig = Machine.run
-
     def run_with_hook(self, image, token, pos):
-        from hgi_sim.records import decode_program as dp
-        recs_ = dp(image)
-        tags = [r.tag for r in recs]
-        for r, t in zip(recs_, tags):
-            r.tag = t
-        return _run(self, recs_, token, pos, hook)
+        recs_ = decode_program(image)
+        for r, r0 in zip(recs_, recs):
+            r.tag, r.family = r0.tag, r0.family
+        return self.run(image, token, pos, hash_bufs=False, hook=hook, recs=recs_)
     t0 = time.time()
     try:
         tok, trace = run_with_hook(M, image, tok_in if stage == "token" else 0, pos)
@@ -231,38 +230,6 @@ def run_stage(model, cfg, stage, layer, pos, mutant=None, log=print):
                 record_families=sorted({r.family for r in recs}), token=tok)
 
 
-def _run(M, recs, token, pos, hook):
-    """Machine.run over decoded records with a per-record hook (the stage bench's buffer capture)."""
-    M.doorbell(token, pos)
-    trace = []
-    pc, loop, L = 0, None, 0
-    while pc < len(recs):
-        r = recs[pc]
-        for die in M.dies:
-            die.dyn[4] = L
-        if r.unit == "CTL":
-            if r.op == "LOOP":
-                loop, L, pc = dict(start=pc + 1, count=r.param), 0, pc + 1
-                continue
-            if r.op == "ENDLOOP":
-                L += 1
-                if L < loop["count"]:
-                    pc = loop["start"]
-                    continue
-                loop, L, pc = None, 0, pc + 1
-                continue
-            if r.op == "END":
-                tok = int(M.dies[0].vm[r.desc["A"].base])
-                return tok, trace
-            pc += 1
-            continue
-        UNITS[(r.unit, r.op)](M, r, L)
-        trace.append((pc, L, r.tag))
-        hook(M, r, L)
-        pc += 1
-    raise Fault(2, "no END")
-
-
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--snapshot", required=True, type=Path)
@@ -278,7 +245,7 @@ def main():
     res = [run_stage(model, cfg, a.stage, a.layer, a.position)]
     print(json.dumps({k: v for k, v in res[0].items() if k != "failures"}, indent=1), flush=True)
     if a.mutants and a.stage == "layer":
-        for mu in ("rope_adjacent", "kv_swap", "qknorm_bf16"):
+        for mu in ("rope_unpermuted", "kv_swap", "qknorm_bf16"):
             r = run_stage(model, cfg, a.stage, a.layer, a.position, mutant=mu)
             res.append(r)
             print(mu, "pass" if r["pass_"] else "FAILS (expected)", flush=True)
@@ -286,7 +253,8 @@ def main():
     rec = dict(schema="opentallas.hgi_sim.qwen_proof.v1", status="pass" if ok else "fail",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                host=os.uname().nodename, snapshot=a.snapshot.name, stage=a.stage, layer=a.layer, position=a.position,
-               runs=res, spec="HGI-1 v0.9 (024fa2af1)",
+               runs=res, spec=f"HGI-1 {HGI.D_VERSION[0]}.{HGI.D_VERSION[1]} (owner-approved encoding)",
+               golden="qwen_r25, permuted RoPE order (spec 7.2)",
                source_sha256={p: hashlib.sha256((TOOLS / p).read_bytes()).hexdigest() for p in (
                    "hgi_sim/records.py", "hgi_sim/lib.py", "hgi_sim/machine.py", "hgi_sim/qwen_compiler.py",
                    "hgi_sim/qwen_proof.py", "qwen_r25_golden.py", "hbm_generic_iface.py")})

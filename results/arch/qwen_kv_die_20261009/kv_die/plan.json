@@ -1,20 +1,20 @@
 {
  "schema": "opentallas.qwen-kv-die.plan.v1",
  "generator": "tools/qwen_kv_die/kv_die.py",
- "generator_sha256": "8c9115aca21b3f8a75240eca85a9355a5a13352932b75f4650380d859114b0fc",
+ "generator_sha256": "cff37f27730ac78e7baae81960cb6ce3754af375838d39da5799ba0bbaf2ff9f",
  "template": {
   "path": "tools/qwen_kv_die/r21c_band.json",
   "sha256": "3525a39792b7313b1f5cfaa01cae69a88dce7f1ef3febbda43e192650fcf2135"
  },
  "die_um": [
-  7082.208,
+  7894.368,
   24328.08
  ],
- "die_mm2": 172.297,
- "instances": 892,
- "buses": 1423,
- "instance_mm2": 117.984,
- "fill": 0.6848,
+ "die_mm2": 192.055,
+ "instances": 988,
+ "buses": 1524,
+ "instance_mm2": 131.141,
+ "fill": 0.6828,
  "masters": {
   "ot_hbm3e_phy": {
    "n": 4,
@@ -39,6 +39,10 @@
   "qkd_cdc": {
    "n": 128,
    "mm2": 4.2888
+  },
+  "qkd_ckbump": {
+   "n": 1,
+   "mm2": 0.0019
   },
   "qkd_ctrl": {
    "n": 4,
@@ -66,43 +70,51 @@
   },
   "qkd_reng": {
    "n": 32,
-   "mm2": 20.9897
+   "mm2": 33.9711
   },
   "qkd_rly_1": {
-   "n": 153,
-   "mm2": 0.2434
+   "n": 156,
+   "mm2": 0.2482
+  },
+  "qkd_rly_10": {
+   "n": 43,
+   "mm2": 0.0684
   },
   "qkd_rly_1025": {
-   "n": 73,
-   "mm2": 0.2075
+   "n": 88,
+   "mm2": 0.2501
   },
   "qkd_rly_1048": {
-   "n": 51,
-   "mm2": 0.1508
+   "n": 54,
+   "mm2": 0.1596
   },
   "qkd_rly_16": {
-   "n": 72,
-   "mm2": 0.1146
+   "n": 85,
+   "mm2": 0.1352
+  },
+  "qkd_rly_21": {
+   "n": 4,
+   "mm2": 0.0064
   },
   "qkd_rly_36": {
-   "n": 16,
-   "mm2": 0.0255
+   "n": 18,
+   "mm2": 0.0286
   },
   "qkd_rly_520": {
    "n": 21,
    "mm2": 0.0334
   },
   "qkd_rly_530": {
-   "n": 251,
-   "mm2": 0.3994
+   "n": 260,
+   "mm2": 0.4137
   },
-  "qkd_rly_534": {
-   "n": 55,
-   "mm2": 0.0875
+  "qkd_rly_540": {
+   "n": 56,
+   "mm2": 0.0891
   },
   "qkd_rly_563": {
-   "n": 16,
-   "mm2": 0.0273
+   "n": 18,
+   "mm2": 0.0307
   },
   "qkd_seq": {
    "n": 1,
@@ -120,73 +132,78 @@
   "af_ES": 27,
   "af_WN": 1,
   "af_WS": 27,
-  "am_EN": 4,
-  "am_ES": 4,
+  "am_EN": 5,
+  "am_ES": 5,
   "am_WN": 4,
   "am_WS": 4,
   "ap_EN": 4,
   "ap_ES": 4,
-  "ap_WN": 4,
-  "ap_WS": 4,
-  "aq_EN": 1,
+  "ap_WN": 5,
+  "ap_WS": 5,
+  "aq_EN": 2,
   "aq_ES": 27,
   "aq_WN": 1,
   "aq_WS": 26,
   "ares": 21,
   "emf_EN": 4,
-  "emf_ES": 24,
-  "emf_WN": 3,
-  "emf_WS": 24,
+  "emf_ES": 25,
+  "emf_WN": 4,
+  "emf_WS": 25,
   "emr_EN": 4,
-  "emr_ES": 24,
+  "emr_ES": 25,
   "emr_WN": 4,
-  "emr_WS": 24,
+  "emr_WS": 25,
   "hc": 43,
   "hf": 21,
   "hs": 21,
-  "ing_EN": 24,
-  "ing_ES": 3,
-  "ing_WN": 24,
-  "ing_WS": 3,
+  "ing_EN": 25,
+  "ing_ES": 4,
+  "ing_WN": 25,
+  "ing_WS": 4,
   "krq_EN_0": 2,
-  "krq_EN_1": 7,
-  "krq_EN_2": 7,
-  "krq_EN_3": 2,
+  "krq_EN_1": 8,
+  "krq_EN_2": 8,
+  "krq_EN_3": 3,
   "krq_ES_0": 2,
-  "krq_ES_1": 7,
-  "krq_ES_2": 7,
-  "krq_ES_3": 2,
-  "krq_WN_4": 2,
-  "krq_WN_5": 7,
-  "krq_WN_6": 7,
-  "krq_WN_7": 2,
+  "krq_ES_1": 8,
+  "krq_ES_2": 8,
+  "krq_ES_3": 3,
+  "krq_WN_4": 3,
+  "krq_WN_5": 8,
+  "krq_WN_6": 8,
+  "krq_WN_7": 3,
   "krq_WS_4": 2,
-  "krq_WS_5": 7,
-  "krq_WS_6": 7,
-  "krq_WS_7": 2,
-  "krs_EN_0": 2,
-  "krs_EN_1": 7,
-  "krs_EN_2": 7,
-  "krs_EN_3": 2,
-  "krs_ES_0": 2,
-  "krs_ES_1": 7,
-  "krs_ES_2": 7,
-  "krs_ES_3": 2,
-  "krs_WN_4": 2,
+  "krq_WS_5": 8,
+  "krq_WS_6": 8,
+  "krq_WS_7": 3,
+  "krs_EN_0": 3,
+  "krs_EN_1": 8,
+  "krs_EN_2": 8,
+  "krs_EN_3": 3,
+  "krs_ES_0": 3,
+  "krs_ES_1": 8,
+  "krs_ES_2": 8,
+  "krs_ES_3": 3,
+  "krs_WN_4": 3,
   "krs_WN_5": 8,
-  "krs_WN_6": 7,
-  "krs_WN_7": 2,
-  "krs_WS_4": 2,
-  "krs_WS_5": 7,
-  "krs_WS_6": 7,
-  "krs_WS_7": 2,
-  "kvn_EN": 3,
+  "krs_WN_6": 8,
+  "krs_WN_7": 3,
+  "krs_WS_4": 3,
+  "krs_WS_5": 8,
+  "krs_WS_6": 8,
+  "krs_WS_7": 3,
+  "kst": 43,
+  "kvn_EN": 4,
   "kvn_ES": 23,
-  "kvn_WN": 3,
-  "kvn_WS": 22,
-  "mf_EN": 3,
-  "mf_ES": 24,
-  "mf_WN": 3,
+  "kvn_WN": 4,
+  "kvn_WS": 23,
+  "lt_EN": 1,
+  "lt_ES": 1,
+  "lt_WN": 1,
+  "lt_WS": 1,
+  "mf_EN": 4,
+  "mf_ES": 25,
+  "mf_WN": 4,
   "mf_WS": 25,
   "tk": 43
  },
@@ -196,48 +213,52 @@
    "WS": 26,
    "WN": 1,
    "ES": 27,
-   "EN": 1
+   "EN": 2
   },
   "astk_to_hub": {
-   "WS": 4,
-   "WN": 4,
+   "WS": 5,
+   "WN": 5,
    "ES": 4,
    "EN": 4
   },
   "hub_to_astk": {
    "WS": 4,
    "WN": 4,
-   "ES": 4,
-   "EN": 4
+   "ES": 5,
+   "EN": 5
   },
   "hub_to_seq": 21,
   "seq_to_d2d": 0,
   "seq_to_land": {
-   "WS": 22,
-   "WN": 3,
+   "WS": 23,
+   "WN": 4,
    "ES": 23,
-   "EN": 3
+   "EN": 4
   },
   "gw_to_land": {
-   "WS": 24,
-   "WN": 3,
-   "ES": 24,
+   "WS": 25,
+   "WN": 4,
+   "ES": 25,
    "EN": 4
   },
   "land_to_gw": {
-   "WS": 24,
+   "WS": 25,
    "WN": 4,
-   "ES": 24,
+   "ES": 25,
    "EN": 4
   },
   "seq_to_gw": 0,
   "gw_to_seq": 0
  },
  "assumed": {
-  "row_engine_frame": "r17b qfd_reng 328.32 x 1,998 (310 k um2 synthesised, ~0.47)",
+  "row_engine_frame": "re-cut D qkd_reng 531.36 x 1,998 (~529 k um2 cells composed from synthesis, 0.50)",
   "astk_w": 777.6,
   "land_w": 172.8,
   "frames": {
+   "qkd_ckbump": [
+    43.2,
+    43.2
+   ],
    "qkd_d2d": [
     777.6,
     518.4
@@ -285,15 +306,15 @@
   "qkd_land": {
    "w": 172.776,
    "h": 12141.312,
-   "ports": 90
+   "ports": 91
   },
   "qkd_astk": {
    "w": 777.576,
    "h": 7998.456,
-   "ports": 22
+   "ports": 23
   },
   "qkd_reng": {
-   "w": 328.296,
+   "w": 531.336,
    "h": 1997.976,
    "ports": 6
   },
@@ -305,17 +326,22 @@
   "qkd_d2d": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 7
+   "ports": 6
   },
   "qkd_seq": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 27
+   "ports": 29
   },
   "qkd_embgw": {
    "w": 388.776,
    "h": 388.776,
    "ports": 12
+  },
+  "qkd_ckbump": {
+   "w": 43.176,
+   "h": 43.176,
+   "ports": 2
   },
   "qkd_pll": {
    "w": 323.976,
@@ -335,9 +361,14 @@
   "qkd_host": {
    "w": 777.576,
    "h": 518.376,
-   "ports": 9
+   "ports": 10
   },
-  "qkd_rly_534": {
+  "qkd_rly_540": {
+   "w": 52.656,
+   "h": 30.216,
+   "ports": 2
+  },
+  "qkd_rly_21": {
    "w": 52.656,
    "h": 30.216,
    "ports": 2
@@ -381,6 +412,11 @@
    "w": 52.656,
    "h": 30.216,
    "ports": 2
+  },
+  "qkd_rly_10": {
+   "w": 52.656,
+   "h": 30.216,
+   "ports": 2
   }
  },
  "strict_ports": {
@@ -389,8 +425,8 @@
   "rows": [
    {
     "master": "qkd_reng",
-    "module": "ot_qwen_nearhbm_row_engine_p",
-    "rtl_ports": 33,
+    "module": "ot_qwen_nearhbm_row_engine_d",
+    "rtl_ports": 34,
     "die_ports": 6,
     "classed": {
      "ev_k_first": "debug",
@@ -409,33 +445,26 @@
    {
     "master": "qkd_seq",
     "module": "ot_qkvd_kv_seq",
-    "rtl_ports": 40,
-    "die_ports": 27,
-    "classed": {
-     "fault": "by_design: sticky status, carried to the host on HCTL op 8 (internal path)",
-     "fault_cause": "by_design: as fault"
-    }
+    "rtl_ports": 43,
+    "die_ports": 29,
+    "classed": {}
    },
    {
     "master": "qkd_d2d",
     "module": "ot_qkvd_kv_end",
-    "rtl_ports": 19,
-    "die_ports": 7,
-    "classed": {
-     "pll_fwd_pad": "by_design: package bump (forwarded clock to the ROM die)",
-     "rst_fwd_pad": "by_design: package bump (reset to the ROM die)",
-     "fault": "by_design: sticky status to qkd_seq (HCTL op 8) through the status word",
-     "fault_cause": "by_design: as fault"
-    }
+    "rtl_ports": 15,
+    "die_ports": 6,
+    "classed": {}
    }
   ],
   "frame_only": {
-   "qkd_astk": "ot_qwen_nearhbm_attn_stack_p minus its engines (re-cut owed: q registers into the engines or abutted 16 k-bit faces, see review_queue/kv-die.md)",
+   "qkd_astk": "ot_qwen_nearhbm_attn_stack_d minus its engines (re-cut D: q beat broadcast, node staging, P.V levels 4-7; recut.json)",
    "qkd_land": "qfd_kvc crossbar successor + ot_qkvd_kv_merge (rtl/qwen_sys/kv_die_20261009) + ot_qfd_emb_strip",
    "qkd_embgw": "ot_qfd_emb_gw + the gateway link side (r21c hub link FIFOs)",
    "qkd_host": "qfd_io_host successor (hing_qfd ingest) + ot_qfd_link_adapter",
    "qkd_pll": "vendor PLL + ot_qwen_sys_rst_seq",
-   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)"
+   "qkd_ctrl": "qfd_ctrl (r21c element, unchanged)",
+   "qkd_ckbump": "clock / reset bump pair to the ROM die (pad cell, no logic: by design)"
   }
  }
 }

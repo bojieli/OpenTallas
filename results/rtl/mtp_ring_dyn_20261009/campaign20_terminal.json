@@ -1,0 +1,633 @@
+{
+  "schema": "opentallas.mtp_ring_dyn_terminal.v1",
+  "campaign": 20,
+  "role": "negative_protocol_control",
+  "gate_passed": true,
+  "run": {
+    "rc": 0,
+    "build_seconds": 285.3,
+    "sim_seconds": 1245.4,
+    "ctrl": "wf",
+    "wave": 0,
+    "defines": [],
+    "tb_sha256": "6fbac0c13ef72531de4f03fb35325de6243d4c211c5c7ef350c1c9a82f67f8cc",
+    "ctrl_sha256": "12843b3de997ca12acc76a36b7b11a29f174575b8d9bc6edc780effa4f108cbe",
+    "core_sha256": "8422e52a3f112298a7b954204e8bbf6aa1ea625f8c34d8a4039ca84690b7bd1c",
+    "rollback_ring_dyn": true
+  },
+  "metrics": {
+    "passed": false,
+    "jobs": [
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 0,
+        "hdr": 50,
+        "pay": 50,
+        "cstart": 50,
+        "start": 50,
+        "done": 9005
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 1,
+        "hdr": 9082,
+        "pay": 9082,
+        "cstart": 9082,
+        "start": 9082,
+        "done": 19004
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 0,
+        "hdr": 9072,
+        "pay": 9147,
+        "cstart": 9147,
+        "start": 9147,
+        "done": 21211
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 2,
+        "hdr": 21221,
+        "pay": 21221,
+        "cstart": 21221,
+        "start": 21221,
+        "done": 31293
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 1,
+        "hdr": 19071,
+        "pay": 21286,
+        "cstart": 21286,
+        "start": 21286,
+        "done": 33633
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 3,
+        "hdr": 33643,
+        "pay": 33643,
+        "cstart": 33643,
+        "start": 33643,
+        "done": 44166
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 2,
+        "hdr": 31360,
+        "pay": 33708,
+        "cstart": 33708,
+        "start": 33708,
+        "done": 46418
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 4,
+        "hdr": 46428,
+        "pay": 46428,
+        "cstart": 46428,
+        "start": 46428,
+        "done": 56767
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 3,
+        "hdr": 44233,
+        "pay": 46493,
+        "cstart": 46493,
+        "start": 46493,
+        "done": 58612
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 5,
+        "hdr": 58622,
+        "pay": 58622,
+        "cstart": 58622,
+        "start": 58622,
+        "done": 69195
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 4,
+        "hdr": 56834,
+        "pay": 58687,
+        "cstart": 58687,
+        "start": 58687,
+        "done": 71283
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 6,
+        "hdr": 71293,
+        "pay": 71293,
+        "cstart": 71293,
+        "start": 71293,
+        "done": 81898
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 5,
+        "hdr": 69262,
+        "pay": 71358,
+        "cstart": 71358,
+        "start": 71358,
+        "done": 83843
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 7,
+        "hdr": 83853,
+        "pay": 83853,
+        "cstart": 83853,
+        "start": 83853,
+        "done": 94578
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 6,
+        "hdr": 81965,
+        "pay": 83918,
+        "cstart": 83918,
+        "start": 83918,
+        "done": 97013
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 8,
+        "hdr": 97023,
+        "pay": 97023,
+        "cstart": 97023,
+        "start": 97023,
+        "done": 107838
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 7,
+        "hdr": 94645,
+        "pay": 97088,
+        "cstart": 97088,
+        "start": 97088,
+        "done": 109704
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 3,
+        "hdr": 109714,
+        "pay": 109714,
+        "cstart": 109714,
+        "start": 109714,
+        "done": 120501
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 8,
+        "hdr": 107905,
+        "pay": 109779,
+        "cstart": 109779,
+        "start": 109779,
+        "done": 122664
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 4,
+        "hdr": 122674,
+        "pay": 122674,
+        "cstart": 122674,
+        "start": 122674,
+        "done": 132804
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 3,
+        "hdr": 120568,
+        "pay": 122739,
+        "cstart": 122739,
+        "start": 122739,
+        "done": 135050
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 5,
+        "hdr": 135060,
+        "pay": 135060,
+        "cstart": 135060,
+        "start": 135060,
+        "done": 145745
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 4,
+        "hdr": 132871,
+        "pay": 135125,
+        "cstart": 135125,
+        "start": 135125,
+        "done": 147722
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 6,
+        "hdr": 147732,
+        "pay": 147732,
+        "cstart": 147732,
+        "start": 147732,
+        "done": 158246
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 5,
+        "hdr": 145812,
+        "pay": 147797,
+        "cstart": 147797,
+        "start": 147797,
+        "done": 160621
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 7,
+        "hdr": 160631,
+        "pay": 160631,
+        "cstart": 160631,
+        "start": 160631,
+        "done": 171113
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 6,
+        "hdr": 158313,
+        "pay": 160696,
+        "cstart": 160696,
+        "start": 160696,
+        "done": 173072
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 8,
+        "hdr": 173082,
+        "pay": 173082,
+        "cstart": 173082,
+        "start": 173082,
+        "done": 183893
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 7,
+        "hdr": 171180,
+        "pay": 173147,
+        "cstart": 173147,
+        "start": 173147,
+        "done": 185760
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 9,
+        "hdr": 185770,
+        "pay": 185770,
+        "cstart": 185770,
+        "start": 185770,
+        "done": 196460
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 8,
+        "hdr": 183960,
+        "pay": 185835,
+        "cstart": 185835,
+        "start": 185835,
+        "done": 198546
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 10,
+        "hdr": 198556,
+        "pay": 198556,
+        "cstart": 198556,
+        "start": 198556,
+        "done": 209133
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 9,
+        "hdr": 196527,
+        "pay": 198621,
+        "cstart": 198621,
+        "start": 198621,
+        "done": 211223
+      },
+      {
+        "node": 0,
+        "user": 0,
+        "pos": 11,
+        "hdr": 211233,
+        "pay": 211233,
+        "cstart": 211233,
+        "start": 211233,
+        "done": 221921
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 10,
+        "hdr": 209200,
+        "pay": 211298,
+        "cstart": 211298,
+        "start": 211298,
+        "done": 224245
+      },
+      {
+        "node": 1,
+        "user": 0,
+        "pos": 11,
+        "hdr": 221988,
+        "pay": 224320,
+        "cstart": 224320,
+        "start": 224320,
+        "done": 237429
+      }
+    ],
+    "out_cycles": [
+      21258,
+      33680,
+      46465,
+      58659,
+      71330,
+      83890,
+      97060,
+      109751,
+      122711,
+      135097,
+      147769,
+      160668,
+      173119,
+      185807,
+      198593,
+      211270,
+      224292,
+      237476
+    ],
+    "out_msgs": 18,
+    "out_mismatch": 0,
+    "mismatches": 1,
+    "state_mismatch": 0,
+    "total_cycles": 237477,
+    "proto_fault": true,
+    "per_stage": {
+      "0": {
+        "busy": [
+          8955,
+          9922,
+          10072,
+          10523,
+          10339,
+          10573,
+          10605,
+          10725,
+          10815,
+          10787,
+          10130,
+          10685,
+          10514,
+          10482,
+          10811,
+          10690,
+          10577,
+          10688
+        ],
+        "handoff_after_prev_done": [
+          77,
+          2217,
+          2350,
+          2262,
+          1855,
+          2098,
+          1955,
+          2445,
+          1876,
+          2173,
+          2256,
+          1987,
+          2385,
+          1969,
+          1877,
+          2096,
+          2100
+        ],
+        "starts": [
+          50,
+          9082,
+          21221,
+          33643,
+          46428,
+          58622,
+          71293,
+          83853,
+          97023,
+          109714,
+          122674,
+          135060,
+          147732,
+          160631,
+          173082,
+          185770,
+          198556,
+          211233
+        ]
+      },
+      "1": {
+        "busy": [
+          12064,
+          12347,
+          12710,
+          12119,
+          12596,
+          12485,
+          13095,
+          12616,
+          12885,
+          12311,
+          12597,
+          12824,
+          12376,
+          12613,
+          12711,
+          12602,
+          12947,
+          13109
+        ],
+        "handoff_after_prev_done": [
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75,
+          75
+        ],
+        "starts": [
+          9147,
+          21286,
+          33708,
+          46493,
+          58687,
+          71358,
+          83918,
+          97088,
+          109779,
+          122739,
+          135125,
+          147797,
+          160696,
+          173147,
+          185835,
+          198621,
+          211298,
+          224320
+        ]
+      }
+    },
+    "overlapping_job_pairs": 17,
+    "stage_hop_cycles": [
+      142,
+      2282,
+      2415,
+      2327,
+      1920,
+      2163,
+      2020,
+      2510,
+      1941,
+      2238,
+      2321,
+      2052,
+      2450,
+      2034,
+      1942,
+      2161,
+      2165,
+      2399
+    ]
+  },
+  "source": {
+    "core_sha256": "8422e52a3f112298a7b954204e8bbf6aa1ea625f8c34d8a4039ca84690b7bd1c",
+    "tool_sha256": "1c85e16d5a13bf6835294268d8403ac50f88d0ad2350a19e195063412972957a"
+  },
+  "collector_sha256": "10a1589387ca7dc4bbbb069e69c70479e9a53d2f92d7f9e44e05dc5dc8542f37",
+  "artifacts": [
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/run_stage2_wf_w0_deep_ringdyn.json",
+      "sha256": "fddf158b42370e26e03eb1b8f1522e5a7c58a20ca41ce441dd4135807dc89fd8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/out_stage2_wf_w0_deep_ringdyn.txt",
+      "sha256": "8dada3dec796605aad9286b706a0c4a3a232e086d7baff0ed5842a1106776968"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/prepare_stage2_deep.json",
+      "sha256": "e99d9b5699dda2883d54f95e5efca95ec688b989f8b31932c5067ce398318aeb"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/admitted_negative.log",
+      "sha256": "42e9be55f095fdab0070ad8a134e5ef0af42246ee1e0c59e737b87ed59e3245e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_kv00_0.hex",
+      "sha256": "4fdd39f124573026f52f93759931aa3138085fc2dd9acdc24ddf4736b92622b1"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_kv01_0.hex",
+      "sha256": "f1ecb275c7adb43217c37fbf9289b8a3ee6b2d787eabffa404b47c710fd8144c"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_logits.hex",
+      "sha256": "e9e7a5310419e1dc9d4075696b91c7262f6267a3cffc4665c190c34ba4a7bd25"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_out.hex",
+      "sha256": "855f59d6f5baf04b34e71b8a2e4170e1925fc58f0d10272a290d4f5d13a9544e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_tokens.hex",
+      "sha256": "b7f2f6ead657337489f326c256a2cf9393ffd80ec4b349f177315e587a002a72"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_vm00_0.hex",
+      "sha256": "8b10a4793acbf054bccbaf679df907b255e2aac01d292badf929cde92a90bb72"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/expect_vm01_0.hex",
+      "sha256": "8d8d2f2c2173f3feaef65320dda69edc30dccf40d118c7e8c8b40471a071925e"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/inject.hex",
+      "sha256": "4232a79ced834416fb489a3b70493c9e96eb38c5e66f1cbeadeca9d9fca76101"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/known.hex",
+      "sha256": "cd78a52c4dc0d2702c3c9862870f48d8c3ee42ad3cad80ccf333b7c3d03b723c"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/prog_stage00.hex",
+      "sha256": "9427eec15ba8343656c8040c24cd8a6544ec0cf501228c131765f0ec89258b86"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/prog_stage01.hex",
+      "sha256": "8629e489d73cf3754bd431fbed7cf99c8418e59e09c88d629a0f2234258b25d8"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/qlist_stage00.hex",
+      "sha256": "c44b778c6a06973c37c57b380c1342e1dfc9c7056dbe022c8d5c2ccbc03ba6ea"
+    },
+    {
+      "path": "/srv/opentallas-scratch/codex/mtp-ring-dyn-same-source19-aff63db74/wf2/cfg_stage2_deep/qlist_stage01.hex",
+      "sha256": "689db783469a8c45a487893bd649baf998ab77f08344b7299190f849cdf2ea2e"
+    }
+  ],
+  "scope": "Original two-stage 18-job ring8 fixture; native production shape and full-die closure are not qualified",
+  "physical": "Repair rides consuming sequencer contextual qualification; no standalone route",
+  "source_receipt_matches": true,
+  "campaign_vehicle_matches": true
+}

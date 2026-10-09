@@ -16,8 +16,12 @@ torch_recurrent_gated_delta_rule + Qwen3NextRMSNormGated + out_proj), per die d 
            as an exact 17-record SU template (no softplus SFU code exists)
   delta rule, per value head h (key head h // 2), state ST[j][i] = S[i][j] (FP32, HBM, 64 KiB a head):
            ST = alpha * ST;  kv[j] = csum_i(ST[j,i] * k[i]);  delta = (v - kv) * beta;
-           ST[j,i] = ST[j,i] + k[i] * delta[j];  o[j] = csum_i(ST[j,i] * q[i])          SU (8 records a step)
+           ST[j,i] = ST[j,i] + k[i] * delta[j];  o[j] = csum_i(ST[j,i] * q[i])
+           SU records in two CTL.LOOP level-1 bodies over the 8 local value heads (l1stride steps state, k, q,
+           delta); k and q are first expanded to one row per value head (2 SU copies each: the GQA map)
            DMA.LOAD / DMA.STORE of the 8 heads' state (512 KiB a die a layer)
+  STATE region (spec 3.7 / 6.10, approved): per layer (base = STATE + layer * layer bytes): the heads' FP32 state
+           transposed [head][dv][dk], then the FP32 conv ring [conv_k - 1][channels] (tap-major)
   gated norm  o = RMSNorm_128(o) * w;  o = o * silu(z)                FUSED.ROW_NORM seg 128 + SU (silu * c)
   out      partial = W_out[:, die's 1,024 value columns] bf16(o); x = x + pairwise(partials)   SM, COLL, SU
 
@@ -50,10 +54,11 @@ from hgi_sim import lib as A  # noqa: E402
 from hgi_sim import timing as T  # noqa: E402
 from hgi_sim.machine import UNITS, Die, Fault, Hbm, Machine  # noqa: E402
 from hgi_sim.qwen_compiler import Builder, assign_waits, sut  # noqa: E402
-from hgi_sim.records import ISTRIDE_BCAST, MDesc, Rec, decode_program, encode_program  # noqa: E402
+from hgi_sim.records import MDesc, Rec, decode_program, encode_program  # noqa: E402
 
 F = np.float32
 TP = 4
+VM_CHECK = True            # hgi_sim.perf (timing only) lowers wider layers whose state exceeds one VM: it clears this
 CFG = dict(hidden=2048, nk=16, nv=32, dk=128, dv=128, conv=4, eps=1e-6)        # Qwen3-Next-80B-A3B
 
 
@@ -93,6 +98,8 @@ class Geo:
         self.cq, self.cv = self.kd * self.dk, self.vd * self.dv
         self.C = 2 * self.cq + self.cv                       # conv channels a die
         self.conv_dim = 2 * self.nk * self.dk + self.nv * self.dv
+        # one STATE block a layer: the state [vd][dv][dk] FP32, then the conv ring [conv_k - 1][C] FP32
+        self.state_layer_bytes = -(-(self.vd * self.dv * self.dk + (c["conv"] - 1) * self.C) * 4 // 4096) * 4096
 
     def die_channels(self, d):
         """global conv channel ids of die d, in its local order [q | k | v]."""
@@ -222,11 +229,12 @@ def layout(g):
     put("SSQ", 2 * g.kd); put("INV", 2 * g.kd); put("QN", g.kd * g.dk); put("KN", g.kd * g.dk)  # noqa: E702
     for nm in ("SA", "NSA", "AX", "T", "TP2", "U", "U2", "P", "R", "SP", "ALPHA", "BETA", "NEGA", "DT"):
         put(nm, g.vd, 8)
+    put("KX", g.vd * g.dk); put("QX", g.vd * g.dk)                                             # noqa: E702
     put("ST", g.vd * g.dv * g.dk); put("KV", g.vd * g.dv); put("DELTA", g.vd * g.dv)       # noqa: E702
     put("O", g.vd * g.dv); put("ON", g.vd * g.dv); put("OG", g.vd * g.dv); put("PART", g.H); put("SUM", g.H)  # noqa
     put("TOK", 1)
-    assert cur[0] <= 1 << 18, cur[0]
-    hb = dict(W=1 << 32, CONVW=2 << 32, TAB=3 << 32, STATE=4 << 32, RING=5 << 32)
+    assert cur[0] <= 1 << 18 or not VM_CHECK, cur[0]
+    hb = dict(W=1 << 32, CONVW=2 << 32, TAB=3 << 32, STATE=4 << 32)
     return vm, cur[0], hb
 
 
@@ -251,8 +259,11 @@ def build_images(g, w, st):
         tab = np.concatenate([A.neg(A.exp(w["A_log"][hv])), w["dt_bias"][hv], w["norm_w"]]).astype(F)
         hb.add(B["TAB"], tab, "TAB")
         STd = np.ascontiguousarray(np.transpose(st["S"][hv], (0, 2, 1))).astype(F)      # [head][j][i]
-        hb.add(B["STATE"], STd.reshape(-1).copy(), "STATE")
-        hb.add(B["RING"], st["ring"][ch].astype(F).reshape(-1).copy(), "RING")
+        ring = np.ascontiguousarray(st["ring"][ch].T).astype(F)                          # [tap][channel]
+        blob = np.zeros(g.state_layer_bytes // 4, dtype=F)
+        blob[:STd.size] = STd.reshape(-1)
+        blob[STd.size:STd.size + ring.size] = ring.reshape(-1)
+        hb.add(B["STATE"], blob, "STATE")
         dies.append(hb)
     return dies
 
@@ -262,11 +273,16 @@ def program(g, eps):
     b = Builder(None)
     ep = int(np.asarray(F(eps)).view(np.uint32))
 
-    def V(name, n, m=1, stride=0, istride=0, off=0):
-        return MDesc(space="VM", fmt="FP32", base=vm[name] + off, n=n, m=m, stride=stride, istride=istride)
+    def V(name, n, m=1, stride=0, istride=0, off=0, ibcast=0, l1stride=0):
+        return MDesc(space="VM", fmt="FP32", base=vm[name] + off, n=n, m=m, stride=stride, istride=istride,
+                     ibcast=ibcast, l1stride=l1stride)
 
-    def HB(region, off, fmt, n, m=1, stride=0, istride=0):
-        return MDesc(space="HBM", fmt=fmt, base=B[region] + off, n=n, m=m, stride=stride, istride=istride)
+    def HB(region, off, fmt, n, m=1, stride=0, istride=0, lstride=0):
+        return MDesc(space="HBM", fmt=fmt, base=B[region] + off, n=n, m=m, stride=stride, istride=istride,
+                     lstride=lstride)
+
+    LB = g.state_layer_bytes            # STATE: one block a layer (this program is one layer: L = 0)
+    RING = g.vd * g.dv * g.dk * 4       # the conv ring follows the state in the layer's block
 
     def su(tag, fam, desc, rd, wr, **t):
         b.add(Rec("SU", "VOP", sut=sut(**t), desc=desc, tag=tag, family=fam), rd, wr)
@@ -274,14 +290,15 @@ def program(g, eps):
     woff_o = woff_b + g.rows_ba * g.H * 2
     woff_ln = woff_o + g.H * g.vd * g.dv * 2
     C, kd, vd, dk, dv, r = g.C, g.kd, g.vd, g.dk, g.dv, g.r
-    b.add(Rec("FUSED", "ROW_NORM", param=0, imm_a=ep, desc=dict(A=V("X", g.H), B=HB("W", woff_ln, "BF16", g.H),
+    b.add(Rec("FUSED", "ROW_NORM", param=g.H // 128, imm_a=ep, desc=dict(A=V("X", g.H), B=HB("W", woff_ln, "BF16", g.H),
           O=MDesc(space="VM", fmt="BF16", base=vm["H"], n=g.H)), tag="prenorm", family="prenorm"), ["X"], ["H"])
     b.add(Rec("SM", "MATVEC", param=0, desc=dict(A=V("H", g.H), B=HB("W", 0, "BF16", g.H, g.rows_qkvz, g.H * 2),
           O=V("QKVZ", g.rows_qkvz)), tag="in_proj_qkvz", family="in_proj"), ["H"], ["QKVZ"])
     b.add(Rec("SM", "MATVEC", param=0, desc=dict(A=V("H", g.H), B=HB("W", woff_b, "BF16", g.H, g.rows_ba, g.H * 2),
           O=V("BA", g.rows_ba)), tag="in_proj_ba", family="in_proj"), ["H"], ["BA"])
     # conv: ring -> X4[:, 0:3]; new inputs -> X4[:, 3]; taps reduction; silu; ring <- X4[:, 1:4]
-    b.add(Rec("DMA", "LOAD", desc=dict(A=HB("RING", 0, "FP32", 3 * C), O=V("X4", 3, m=C, stride=4)),
+    b.add(Rec("DMA", "LOAD", desc=dict(A=HB("STATE", RING, "FP32", C, m=3, stride=C * 4, lstride=LB),
+                                       O=V("X4", C, m=3, stride=1, istride=4)),
               tag="conv.ring_load", family="conv"), [], ["X4"])
     for part, (src_off, n, dst_ch) in dict(q=(0, dk, 0), k=(dk, dk, kd * dk), v=(2 * dk, r * dv, 2 * kd * dk)).items():
         su(f"conv.new_{part}", "conv", dict(A=V("QKVZ", n, m=kd, stride=g.grp, off=src_off),
@@ -291,7 +308,8 @@ def program(g, eps):
                                                                        m=C, stride=16),
                                  R=V("CPRE", 1, m=C, stride=1)), ["X4"], ["CPRE"], m1=I.M1_AB, red=I.RED_SUM)
     su("conv.silu", "conv", dict(A=V("CPRE", C), O=V("CONV", C)), ["CPRE"], ["CONV"], sfu=I.SFU_SILU, dst=I.DST_VM)
-    b.add(Rec("DMA", "STORE", desc=dict(A=V("X4", 3, m=C, stride=4, off=1), O=HB("RING", 0, "FP32", 3, m=C, stride=12)),
+    b.add(Rec("DMA", "STORE", desc=dict(A=V("X4", C, m=3, stride=1, istride=4, off=1),
+                                        O=HB("STATE", RING, "FP32", C, m=3, stride=C * 4, lstride=LB)),
               tag="conv.ring_store", family="conv"), ["X4"], ["RINGS"])
     # l2norm (q scaled by dk^-0.5), k
     su("l2norm.ss", "l2norm", dict(A=V("CONV", dk, m=2 * kd, stride=dk), R=V("SSQ", 1, m=2 * kd, stride=1)),
@@ -299,12 +317,11 @@ def program(g, eps):
     su("l2norm.rsqrt", "l2norm", dict(A=V("SSQ", 2 * kd), O=V("INV", 2 * kd)), ["SSQ"], ["INV"], ad=I.AD_IMM,
        imm2=int(np.asarray(eps_l2()).view(np.uint32)), sfu=I.SFU_RSQRT, dst=I.DST_VM)
     sc = int(np.asarray(F(1.0 / np.sqrt(dk))).view(np.uint32))
-    su("l2norm.q", "l2norm", dict(A=V("CONV", dk, m=kd, stride=dk), B=V("INV", dk, m=kd, stride=1,
-                                                                       istride=ISTRIDE_BCAST),
+    su("l2norm.q", "l2norm", dict(A=V("CONV", dk, m=kd, stride=dk), B=V("INV", dk, m=kd, stride=1, ibcast=1),
                                   O=V("QN", dk, m=kd, stride=dk)), ["CONV", "INV"], ["QN"],
        m1=I.M1_AB, m2=I.M2_IMM, imm1=sc, dst=I.DST_VM)
     su("l2norm.k", "l2norm", dict(A=V("CONV", dk, m=kd, stride=dk, off=kd * dk),
-                                  B=V("INV", dk, m=kd, stride=1, istride=ISTRIDE_BCAST, off=kd),
+                                  B=V("INV", dk, m=kd, stride=1, ibcast=1, off=kd),
                                   O=V("KN", dk, m=kd, stride=dk)), ["CONV", "INV"], ["KN"], m1=I.M1_AB, dst=I.DST_VM)
     # gates: b, a are [kd][r] in BA; beta = sigmoid(b); alpha = exp(-exp(A_log) * softplus(a + dt_bias))
     b.add(Rec("DMA", "LOAD", desc=dict(A=HB("TAB", 0, "FP32", 2 * vd), O=V("NEGA", 2 * vd)),
@@ -339,34 +356,40 @@ def program(g, eps):
        ad=I.AD_C, dst=I.DST_VM)
     su("gates.alpha", "gates", dict(A=g8("SP"), B=g8("NEGA"), O=g8("ALPHA")), ["SP", "NEGA"], ["ALPHA"],
        m1=I.M1_AB, sfu=I.SFU_EXP, dst=I.DST_VM)
-    # delta rule
+    # delta rule (spec 3.7): GQA expansion of k and q to one row per value head, then two level-1 loops
     nS = dv * dk
-    b.add(Rec("DMA", "LOAD", desc=dict(A=HB("STATE", 0, "FP32", vd * nS), O=V("ST", vd * nS)),
+    for nm, src in (("KX", "KN"), ("QX", "QN")):
+        for t in range(r):                       # value head j = key head * r + t reads key head j div r
+            su(f"delta.expand_{nm.lower()}{t}", "delta_rule", dict(A=V(src, dk, m=kd, stride=dk),
+                                                                     O=V(nm, dk, m=kd, stride=r * dk, off=t * dk)),
+               [src], [nm], dst=I.DST_VM)
+    b.add(Rec("DMA", "LOAD", desc=dict(A=HB("STATE", 0, "FP32", vd * nS, lstride=LB), O=V("ST", vd * nS)),
               tag="state.load", family="state_io"), [], ["ST"])
-    for j in range(vd):
-        STj = V("ST", dk, m=dv, stride=dk, off=j * nS)
-        kj = V("KN", dk, m=dv, stride=0, off=(j // r) * dk)
-        su(f"delta.decay{j}", "delta_rule", dict(A=STj, B=V("ALPHA", dk, m=dv, stride=0, istride=ISTRIDE_BCAST, off=j),
-                                                  O=STj), ["ST", "ALPHA"], ["ST"], m1=I.M1_AB, dst=I.DST_VM)
-        su(f"delta.kv{j}", "delta_rule", dict(A=STj, B=kj, R=V("KV", 1, m=dv, stride=1, off=j * dv)), ["ST", "KN"],
-           ["KV"], m1=I.M1_AB, red=I.RED_SUM)
+    STj = V("ST", dk, m=dv, stride=dk, l1stride=nS)
+    b.add(Rec("CTL", "LOOP", param=vd | (1 << 16), tag="delta.heads1"), [], [])
+    su("delta.decay", "delta_rule", dict(A=STj, B=V("ALPHA", dk, m=dv, stride=0, ibcast=1, l1stride=1), O=STj),
+       ["ST", "ALPHA"], ["ST"], m1=I.M1_AB, dst=I.DST_VM)
+    su("delta.kv", "delta_rule", dict(A=STj, B=V("KX", dk, m=dv, stride=0, l1stride=dk),
+                                      R=V("KV", 1, m=dv, stride=1, l1stride=dv)), ["ST", "KX"], ["KV"],
+       m1=I.M1_AB, red=I.RED_SUM)
+    b.add(Rec("CTL", "ENDLOOP", tag="delta.heads1"), [], [])
     su("delta.delta", "delta_rule", dict(A=V("CONV", dv, m=vd, stride=dv, off=2 * kd * dk), B=V("KV", dv, m=vd, stride=dv),
-                                         C=V("BETA", dv, m=vd, stride=1, istride=ISTRIDE_BCAST),
+                                         C=V("BETA", dv, m=vd, stride=1, ibcast=1),
                                          O=V("DELTA", dv, m=vd, stride=dv)), ["CONV", "KV", "BETA"], ["DELTA"],
        ad=I.AD_NEGB, e1=I.E1_MULC, dst=I.DST_VM)
-    for j in range(vd):
-        STj = V("ST", dk, m=dv, stride=dk, off=j * nS)
-        su(f"delta.update{j}", "delta_rule", dict(A=V("KN", dk, m=dv, stride=0, off=(j // r) * dk),
-                                                   B=V("DELTA", dk, m=dv, stride=1, istride=ISTRIDE_BCAST, off=j * dv),
-                                                   C=STj, O=STj), ["KN", "DELTA", "ST"], ["ST"], m1=I.M1_AB, ad=I.AD_C,
-           dst=I.DST_VM)
-        su(f"delta.out{j}", "delta_rule", dict(A=STj, B=V("QN", dk, m=dv, stride=0, off=(j // r) * dk),
-                                                R=V("O", 1, m=dv, stride=1, off=j * dv)), ["ST", "QN"], ["O"],
-           m1=I.M1_AB, red=I.RED_SUM)
-    b.add(Rec("DMA", "STORE", desc=dict(A=V("ST", vd * nS), O=HB("STATE", 0, "FP32", vd * nS)),
+    b.add(Rec("CTL", "LOOP", param=vd | (1 << 16), tag="delta.heads2"), [], [])
+    su("delta.update", "delta_rule", dict(A=V("KX", dk, m=dv, stride=0, l1stride=dk),
+                                          B=V("DELTA", dk, m=dv, stride=1, ibcast=1, l1stride=dv),
+                                          C=STj, O=STj), ["KX", "DELTA", "ST"], ["ST"], m1=I.M1_AB, ad=I.AD_C,
+       dst=I.DST_VM)
+    su("delta.out", "delta_rule", dict(A=STj, B=V("QX", dk, m=dv, stride=0, l1stride=dk),
+                                       R=V("O", 1, m=dv, stride=1, l1stride=dv)), ["ST", "QX"], ["O"],
+       m1=I.M1_AB, red=I.RED_SUM)
+    b.add(Rec("CTL", "ENDLOOP", tag="delta.heads2"), [], [])
+    b.add(Rec("DMA", "STORE", desc=dict(A=V("ST", vd * nS), O=HB("STATE", 0, "FP32", vd * nS, lstride=LB)),
               tag="state.store", family="state_io"), ["ST"], ["STATES"])
     # gated RMSNorm, out_proj, all-reduce, residual
-    b.add(Rec("FUSED", "ROW_NORM", param=dv, imm_a=ep, desc=dict(A=V("O", vd * dv), B=HB("TAB", 8 * vd, "FP32", dv),
+    b.add(Rec("FUSED", "ROW_NORM", param=(vd * dv // 128) | (dv << 6), imm_a=ep, desc=dict(A=V("O", vd * dv), B=HB("TAB", 8 * vd, "FP32", dv),
           O=V("ON", vd * dv)), tag="gated_norm.norm", family="gated_norm"), ["O"], ["ON"])
     su("gated_norm.gate", "gated_norm", dict(A=V("QKVZ", r * dv, m=kd, stride=g.grp, off=2 * dk + r * dv),
                                              C=V("ON", r * dv, m=kd, stride=r * dv), O=V("OG", r * dv, m=kd,
@@ -390,16 +413,13 @@ def run_sim(c, w, st, x, mutant=None):
     recs = program(g, c["eps"])
     if mutant == "gqa_map":
         for r in recs:
-            if r.tag.startswith("delta.kv") or r.tag.startswith("delta.update"):
-                j = int(r.tag[len(r.tag.rstrip("0123456789")):])
-                key = "A" if r.tag.startswith("delta.update") else "B"
-                r.desc[key].base = vm["KN"] + (j % g.kd) * g.dk           # wrong key head for value head j
+            if r.tag == "delta.expand_kx1":                       # odd value heads read key head 0 (not j div 2)
+                r.desc["A"].stride = 0
     image = encode_program(recs)
     assert encode_program(decode_program(image)) == image
     dies = [Die(d, hb) for d, hb in enumerate(build_images(g, w, st))]
     M = Machine(dies, UNITS)
-    words = HGI.pack(HGI.from_config("qwen3_8b")[0])
-    assert M.cfg_commit(words) == 0
+    assert M.cfg_commit(HGI.d_build("qwen3_8b")[3]) == 0          # TP4 group (the Qwen descriptor's static fields)
     for d in dies:
         d.vm[vm["X"]:vm["X"] + g.H] = np.asarray(x, dtype=F).view(np.uint32)
     tok, trace = M.run(image, 0, 5)
@@ -431,8 +451,10 @@ def compare(c, tr, dies, vm):
         STd = buf[off:off + g.vd * g.dv * g.dk * 4].view(F).reshape(g.vd, g.dv, g.dk)
         eq("state_io", "state_new", d, np.transpose(STd, (0, 2, 1)), tr["S_new"][hv])
         ch = g.die_channels(d)
-        buf, off, _ = die.hbm.find(5 << 32, g.C * 12)
-        eq("conv", "ring_new", d, buf[off:off + g.C * 12].view(F).reshape(g.C, 3), tr["ring_new"][ch])
+        ro = 4 << 32
+        buf, off, _ = die.hbm.find(ro, g.state_layer_bytes)
+        rg = buf[off + g.vd * g.dv * g.dk * 4:off + g.vd * g.dv * g.dk * 4 + g.C * 12].view(F).reshape(3, g.C)
+        eq("conv", "ring_new", d, rg.T, tr["ring_new"][ch])
         eq("out_proj+all_reduce+residual", "x_out", d, rd("X", g.H), tr["x_out"])
     return rows
 

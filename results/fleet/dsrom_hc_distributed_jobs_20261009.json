@@ -9,16 +9,24 @@
     "pid": 429671,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "source-route-r3",
-    "phase": "global routing",
-    "peak_ram_gb": 40
+    "phase": "terminal global-routing FAIL",
+    "peak_ram_gb": 40,
+    "return_code": 1,
+    "evidence": "results/physical/dsrom_hc_mean_capture_20261009/original_r3/physical.json"
   },
   "join_physical": {
     "host": "ot-epyc1tb",
     "pid": 2473750,
     "root": "/srv/opentallas-scratch/codex-dsrom-hc-distributed-1a56ad7b9",
     "stage": "join-route-r1",
-    "phase": "detailed routing",
-    "peak_ram_gb": 32
+    "phase": "terminal not_met; flow exit0",
+    "peak_ram_gb": 32,
+    "setup_wns_ns": -0.630496,
+    "hold_wns_ns": 0.0204222,
+    "drc_errors": 0,
+    "max_slew_violations": 7,
+    "max_cap_violations": 5,
+    "evidence": "results/physical/dsrom_hc_mean_capture_20261009/original_join_r1/physical.json"
   },
   "historical_reader_physical": {
     "host": "ot-agidock128",
@@ -65,7 +73,28 @@
       "host": "ot-agidock128",
       "pid": 2831553,
       "root": "/srv/opentallas-scratch/codex-dsrom-hc-eccpipe-c5dfa5e7f",
-      "phase": "component positive passed16931cycles; CE/UE/protocol/fullreleased/distributed/join gates progressing"
+      "phase": "terminal PASS all capture/distributed/join gates",
+      "component_evidence": "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_capture_r6/terminal.json",
+      "distributed_evidence": "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_distributed_r6/terminal.json",
+      "join_evidence": "results/rtl/dsrom_hc_mean_capture_20261009/eccpipe_join_r2/terminal.json"
+    },
+    "reader_exactness": {
+      "source_commit": "42e7e301d",
+      "host": "ot-agidock128",
+      "pid": 2842057,
+      "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-42e7e301d",
+      "stage": "distributed-gate-r8",
+      "phase": "terminal PASS full four released ranks and native BF16/bounds/position negatives",
+      "evidence": "results/rtl/dsrom_hc_mean_capture_20261009/reader_eccpipe_r8/terminal.json"
+    },
+    "reader_physical": {
+      "host": "ot-epyc1tb",
+      "pid": 2941982,
+      "root": "/srv/opentallas-scratch/codex-dsrom-hc-reader-42e7e301d",
+      "stage": "route-r3",
+      "source_commit": "42e7e301d",
+      "peak_ram_gb": 24,
+      "phase": "submitted through measured guard after positive fullshape19653cycle gate"
     }
   }
 }

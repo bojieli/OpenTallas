@@ -11,6 +11,7 @@ r22k = r21c (tools/die_top_lint.py QWEN_R21C) with every KV-die block moved off,
             no KV slice and no landing hop (li / lo); the r19 slot width is kept (a tighter re-slot is a later option).
   added     ucie_kv  ot_qkvd_ucie_x64_phy (777.6 x 777.6 um, bump field on the S die edge) at the bottom of spine
                      column M (free from y 21.6 to 6,287.8 um in r21c) -- the KV die abuts the S edge below the spine;
+            ckb_rom  qfd_ckbump: the forwarded clock / reset bump pair from the KV die (pad cell) beside the macro;
             d2d_rom  qfd_d2d_rom: the ROM end of the link (rtl/qwen_sys/kv_die_20261009/ot_qkvd_rom_end.sv: the
                      hub's SU / VM face x3 / ar / ea / eq / ecr unchanged, plus the sequencer's CTL / HCTL words),
                      directly above the PHY (FDI pins abut);
@@ -19,7 +20,7 @@ r22k = r21c (tools/die_top_lint.py QWEN_R21C) with every KV-die block moved off,
   rebound   x3 / attn_ret / emb / emb_a / emb_cr end at d2d_rom instead of the hub; clk_root (formerly
             io_collective.pll_stream -> hub) is driven by clk_rx (the PLL leaves the ROM die); new words seq_d2d
             (sequencer -> d2d_rom, CTL class) and d2d_seq (d2d_rom -> sequencer, HCTL class), the forwarded clock
-            pll_fwd and reset rst_fwd (d2d_rom bumps -> clk_rx), the clock / reset of d2d_rom + PHY, and clk_rx's
+            pll_fwd and reset rst_fwd (ckb_rom bump cell -> clk_rx), the clock / reset of d2d_rom + PHY, and clk_rx's
             synchronised reset to the sequencer (rsi), which distributes it in its words as today.
 Contract: results/arch/qwen_kv_die_20261009/CONTRACT.md.
 """
@@ -34,6 +35,8 @@ FDI_BITS = 1 + 1 + 548 + 1 + 548          # tx_up, tx_v, tx_flit, rx_v, rx_flit
 CTL_BITS = 528 + 1 + 1                    # word + valid down, credit back
 D2D_H = 518.4                             # qfd_d2d_rom frame height (cw x 518.4 = 0.403 mm2), see CONTRACT.md
 MARGIN = 21.6
+SPINE_RELAY_CH = 259.2                      # KV2: set by tools/die_top_lint.py QWEN_R22K (KV2 spine M | E relay channel; 0 = r22k as first built)
+SPINE_RELAY_CH_WM = 129.6                   # KV2: extra relay channel width between spine columns W and M
 
 
 def surgery(v, m):
@@ -96,18 +99,21 @@ def surgery(v, m):
               v.up(D2D_H, v.GY) - v.SHAVE, 'R0', kind='d2d', region='io', domain='stream_1p2')
     ck = Inst('clk_rx', 'qfd_clkrx', round(hub.x - dx, 4), hub.y, hub.w, hub.h, 'R0', kind='clock_root',
               region=hub.region, domain='stream_1p2')
-    insts += [ph, ad, ck]
-    rec['added_instances'] = [i.d() for i in (ph, ad, ck)]
+    cb = Inst('ckb_rom', 'qfd_ckbump', round(xc - 43.2 - 4.32, 4), y0, 43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump',
+              region='io', domain='stream_1p2')
+    insts += [ph, ad, ck, cb]
+    rec['added_instances'] = [i.d() for i in (ph, ad, ck, cb)]
     top_free = 6287.76     # r21c spine column M is free up to the sequencer
     assert ad.y + ad.h < top_free, 'd2d_rom does not fit under the sequencer'
     add = [('d2d_fdi', 'd2d_fdi', FDI_BITS, [('d2d_rom', 'fdi'), ('ucie_kv', 'fdi')]),
            ('seq_d2d', 'sequencer', CTL_BITS, [('sp_constants_sequencer', 'dc'), ('d2d_rom', 'dc')]),
            ('d2d_seq', 'sequencer', CTL_BITS, [('d2d_rom', 'dh'), ('sp_constants_sequencer', 'dh')]),
-           ('pll_fwd', 'clock_trunk', 1, [('d2d_rom', 'pll_fwd_o'), ('clk_rx', 'pll_fwd')]),
-           ('rst_fwd', 'spine_local', 1, [('d2d_rom', 'rst_fwd_o'), ('clk_rx', 'rst_fwd')]),
+           ('pll_fwd', 'clock_trunk', 1, [('ckb_rom', 'pll_ck'), ('clk_rx', 'pll_fwd')]),
+           ('rst_fwd', 'reset', 1, [('ckb_rom', 'rs'), ('clk_rx', 'rst_fwd')]),
            ('clk_d2d', 'clock_trunk', 1, [('clk_rx', 'pll_d2d'), ('d2d_rom', 'ck'), ('ucie_kv', 'clk')]),
            ('rst_d2d', 'spine_local', 1, [('clk_rx', 'rso_d2d'), ('d2d_rom', 'rst_n'), ('ucie_kv', 'rst_n')]),
-           ('rst_seq', 'spine_local', 1, [('clk_rx', 'rso_seq'), ('sp_constants_sequencer', 'rsi')])]
+           ('rst_seq', 'spine_local', 1, [('clk_rx', 'rso_seq'), ('sp_constants_sequencer', 'rsi')]),
+           ('d2d_flt', 'spine_local', 9, [('d2d_rom', 'flt'), ('sp_constants_sequencer', 'dflt')])]   # link-end fault + cause
     nb += add
     rec['added_buses'] = [(b[0], b[1], b[2], b[3]) for b in add]
     # regions: drop the HBM bands, shift the rest
@@ -131,10 +137,49 @@ def surgery(v, m):
     g['r22k_dx_um'] = dx
     m['insts'] = insts
     m['buses'] = nb
+    if SPINE_RELAY_CH:
+        W = _spine_relay_channel(v, m, g, round(xc + g['cw'], 4), SPINE_RELAY_CH, W)
+        rec['spine_relay_channel_um'] = SPINE_RELAY_CH
+    if SPINE_RELAY_CH_WM:
+        W = _spine_relay_channel(v, m, g, round(xc, 4), SPINE_RELAY_CH_WM, W)
+        rec['spine_relay_channel_wm_um'] = SPINE_RELAY_CH_WM
+    if SPINE_RELAY_CH or SPINE_RELAY_CH_WM:
+        # the spine relay channels (centres) for the generator's vertical spine paths (b3r2 poly_of, opt-in here)
+        sp = [i for i in insts if i.kind == 'spine_block']
+        xs = sorted({round(i.x, 1) for i in sp})
+        cols = [x for x in xs if sum(1 for i in sp if abs(i.x - x) < 1.0) >= 2]
+        v.SPINE_CHANNEL_X = [round((a_ + g['cw'] + b_) / 2, 3) for a_, b_ in zip(cols, cols[1:])]
+        rec['spine_channel_x'] = v.SPINE_CHANNEL_X
     H = m['die']['h']
     m['die'] = dict(m['die'], w=W, mm2=round(W * H / 1e6, 3), margin_mm2=round(858 - W * H / 1e6, 3))
     m['r22k'] = rec
     _wrap_masters(v, m)
+
+
+def _spine_relay_channel(v, m, g, xs, ch, W):
+    """review-0528 KV2: a vertical relay channel between spine columns M and E (the r21c columns abut there, so a
+    vertical word passing an E-column block -- the port-tile slabs, 1.8 mm tall -- had no relay site and took a
+    1.7-2.1 mm hop or a detour).  Everything at or right of x = xs moves right by ch; the die widens by ch."""
+    for i in m['insts']:
+        if i.x >= xs - 1e-3:
+            i.x = round(i.x + ch, 4)
+    for key in ('regions', 'clock_regions'):
+        out = []
+        for r in m.get(key, []):
+            x0, y0r, x1, y1 = r['rect']
+            if x0 >= xs - 1e-3:
+                x0, x1 = x0 + ch, x1 + ch
+            elif x1 > xs + 1e-3:
+                x1 = x1 + ch
+            out.append(dict(r, rect=[round(x0, 4), y0r, round(x1, 4), y1]))
+        m[key] = out
+    for k in list(g):
+        if k.startswith('x_') and isinstance(g[k], (int, float)) and g[k] >= xs - 1e-3:
+            g[k] = round(g[k] + ch, 4)
+    old = m['col_x']
+    m['col_x'] = lambda c, f=old: f(c) + (ch if f(c) >= xs - 1e-3 else 0.0)
+    g.setdefault('r22k_spine_relay_channels', []).append(dict(x_um=xs, w_um=ch))
+    return round(W + ch, 4)
 
 
 def _wrap_masters(v, m):
@@ -180,9 +225,8 @@ def _wrap_masters(v, m):
         ad.face('fdi', FDI_BITS, 'S', 'M5', ad.w / 2, 1)
         ad.face('ck', 1, 'S', 'M5', ad.w / 2 - FDI_BITS * 0.096 - 4.0, 1)
         ad.face('rst_n', 1, 'S', 'M5', ad.w / 2 - FDI_BITS * 0.096 - 6.0, 1)
-        ad.face('pll_fwd_o', 1, 'S', 'M5', 20.0, 1)
-        ad.face('rst_fwd_o', 1, 'S', 'M5', 24.0, 1)
-        n_side = [('x3', 512), ('ea', 26), ('ecr', 1), ('eq', 513), ('ar', 519), ('dc', CTL_BITS), ('dh', CTL_BITS)]
+        n_side = [('x3', 512), ('ea', 26), ('ecr', 1), ('eq', 513), ('ar', 519), ('dc', CTL_BITS), ('dh', CTL_BITS),
+                  ('flt', 9)]
         span = ad.w - 40.0
         tot = sum(b for _, b in n_side)
         x = 20.0
@@ -199,10 +243,15 @@ def _wrap_masters(v, m):
                     min(cm.h - 1.0, max(1.0, cm.h / 2 + (j // 12 - 5) * 1.6)), 1)
             j += 1
         M['qfd_clkrx'] = cm
+        cbm = Master('qfd_ckbump', 43.2 - v.SHAVE, 43.2 - v.SHAVE, 7, 'forwarded clock / reset bump pair from the KV die (pad cell)')
+        cbm.area('pll_ck', 1, 21.0, 21.0, 1)
+        cbm.area('rs', 1, 21.0, 18.0, 1)
+        M['qfd_ckbump'] = cbm
         sq = M['qfd_sp_constants_sequencer']
         sq.face('dc', CTL_BITS, 'S', 'M5', sq.w * 0.3, 1)
         sq.face('dh', CTL_BITS, 'S', 'M5', sq.w * 0.7, 1)
         sq.area('rsi', 1, sq.w / 2, sq.h / 2 + 12.0, 1)
+        sq.face('dflt', 9, 'S', 'M5', sq.w * 0.5, 1)
         # collective: its clock pin (was the PLL output pll_stream) stays at the same place, now an input
         return M
     v.masters = masters

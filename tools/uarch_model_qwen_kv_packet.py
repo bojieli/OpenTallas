@@ -1,7 +1,9 @@
 """Q3 lane-local exact FP8 KV packet: full64 lanes, two address bases."""
-def model(dff_um2=.2916):
+def model(dff_um2=.2916,pipe=0):
+    # pipe=1 (sys-takeover 2026-10-09): routed PIPE=0 failed TT -425.55 (in_addr -> bad_q); P1 lane-local
+    # candidates (2x25b) + flags + code, P2 group base + 64 bad bits: +4,720 flops, +1 write edge.
     bits=64+2*24+64*8
-    state=3648+2*bits+64*9+64
+    state=3648+2*bits+64*9+64+(64*(25+25+5)+512+64+64+512+48 if pipe else 0)
     slot=[384.,64.]
     area=state*dff_um2+2200
     return dict(schema='opentallas.qwen-kv624.v1',default_off=True,adopted=False,
@@ -19,5 +21,5 @@ def model(dff_um2=.2916):
         area_reservation_mm2=.024576,
         arithmetic='same f32_e4m3 as pinned KV service; packing already-rounded on-grid values only',
         address_contract='K addresses have stride16; V addresses stride1; two32lane bases; all active lanes checked',
-        latency=dict(added_write_edges=3,gross_exposed_token_cycles_upper=36*8*3,
+        latency=dict(added_write_edges=3+(1 if pipe else 0),gross_exposed_token_cycles_upper=36*8*(3+(1 if pipe else 0)),
             transport='actual die relays still separately priced; no overlap credit'))

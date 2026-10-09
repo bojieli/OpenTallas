@@ -1,0 +1,912 @@
+{
+ "schema": "opentallas.hgi_sim.qwen_timing.v0",
+ "spec": "HGI-1 1.0",
+ "position": 8191,
+ "generated_utc": "2026-10-09T13:58:37Z",
+ "grade": "pathfinding: unit entries are mostly estimates (calibration.json); not a published rate",
+ "calibration": {
+  "schema": "opentallas.hgi_sim.calibration.v0",
+  "clock_hz": 1200000000.0,
+  "note": "Every entry: value (1.2 GHz cycles unless stated), grade (measured | measured_budget | model | estimate), source. Published numbers may use measured entries only (spec section 4); the rest is pathfinding.",
+  "cp": {
+   "fetch_req_bytes": {
+    "value": 64,
+    "grade": "estimate",
+    "source": "HGI-1 sequencer C2 not built; two 32 B sectors per prefetch request"
+   },
+   "fetch_issue_cycles": {
+    "value": 2,
+    "grade": "estimate",
+    "source": "one 64 B request every 2 cycles (32 B/cycle CP port)"
+   },
+   "fetch_latency": {
+    "value": 160,
+    "grade": "estimate",
+    "source": "HBM first access ~133 ns (W19 fetch model 133.2 ns, modelled) on the svc read path"
+   },
+   "ring_bytes": {
+    "value": 8192,
+    "grade": "estimate",
+    "source": "prefetch ring; LOOP bodies replay from it when they fit"
+   },
+   "decode_header": {
+    "value": 1,
+    "grade": "estimate",
+    "source": "ot_qwen_r25_cmdproc18 S_FETCH/S_EXEC: 1 cycle a stage from local command SRAM"
+   },
+   "decode_per_chunk": {
+    "value": 1,
+    "grade": "estimate",
+    "source": "one 32 B ring read a cycle for each SUT / MDESC"
+   },
+   "addr_latency": {
+    "value": 2,
+    "grade": "estimate",
+    "source": "base + L*lstride + DYN*dyn_mul: one pipelined 40-bit MAC"
+   },
+   "dispatch_cycles": {
+    "value": 1,
+    "grade": "estimate",
+    "source": "one record a cycle into a unit queue"
+   },
+   "dispatch_wire": {
+    "value": 12,
+    "grade": "estimate",
+    "source": "cmdproc -> unit station hops (r25 hub span; 100 um relay segments)"
+   },
+   "retire_wire": {
+    "value": 12,
+    "grade": "estimate",
+    "source": "unit retire -> outstanding counter at the cmdproc"
+   },
+   "queue_depth": {
+    "value": 4,
+    "grade": "estimate",
+    "source": "per-unit record queue"
+   },
+   "indexed_read": {
+    "value": 28,
+    "grade": "estimate",
+    "source": "C3b: dispatcher reads the U32 index word from the VM (cmdproc -> hub 12 + VM read 4 + back 12) before the address arithmetic"
+   }
+  },
+  "hbm": {
+   "bytes_per_cycle": {
+    "value": 3166.7,
+    "grade": "measured",
+    "source": "3.80 TB/s sustained per die: vehicle A measured 95 % of 4.0 TB/s (results/rtl/qwen_hbmacc_p8191_20261004); r25 svc striping (H8) not yet qualified"
+   },
+   "fmt3_transport": {
+    "value": 1.25,
+    "grade": "design",
+    "source": "fmt3 installed stride 160 B per 128 INT8 codes (results/arch/qwen_on_r25_20261008/program_lowering README, producer f638941f6)"
+   },
+   "first_access": {
+    "value": 160,
+    "grade": "estimate",
+    "source": "W19 fetch model 133.2 ns; the DS composition's measured notice/first-access rows are 74-133 ns"
+   }
+  },
+  "units": {
+   "SM.first_access": {
+    "value": 425,
+    "grade": "estimate",
+    "source": "qwen_on_r25 PLAN section 4: 1,700 cycles a layer of first access for 4 matvecs + attention tail"
+   },
+   "SM.drain": {
+    "value": 12,
+    "grade": "measured",
+    "source": "ot_hbm_accel_sm_v +12 drain (dshbm_matched_reference C1-C3)"
+   },
+   "FUSED.ROW_NORM.d4096": {
+    "value": 175,
+    "grade": "estimate",
+    "source": "hbm-generic PLAN: RMSNorm 150-200 cycles on the D4096 norm engine"
+   },
+   "FUSED.ROW_NORM.seg128": {
+    "value": 125,
+    "grade": "estimate",
+    "source": "hbm-generic PLAN: QK-norm 100-150 cycles"
+   },
+   "SU.model": {
+    "value": "vec-campaign layout() at c12 depths, N1024 M256, BCAST 7 RET 8",
+    "grade": "model",
+    "source": "tools/rtl_hdc_v41x_vec_campaign.layout + tools/hbm_su_c12.set_c12 (the depth model the RTL benches are checked against)"
+   },
+   "SU.issue_overhead": {
+    "value": 4,
+    "grade": "estimate",
+    "source": "op setup between dependent SU ops"
+   },
+   "SFU.GLU": {
+    "value": 60,
+    "grade": "estimate",
+    "source": "hbm-generic PLAN SwiGLU fast path 40-80 cycles a layer (3,072 a die)"
+   },
+   "ATT.fixed": {
+    "value": 225,
+    "grade": "measured",
+    "source": "attention tile job T128: 225 cycles (results/rtl/v41_full_attention_numeric via dshbm_baseline_measure ATT_TILE)"
+   },
+   "DMA.load_issue": {
+    "value": 4,
+    "grade": "estimate",
+    "source": "svc row-load issue interval"
+   },
+   "DMA.store_latency": {
+    "value": 30,
+    "grade": "estimate",
+    "source": "hbm-generic PLAN posted KV append 30-60 a layer"
+   },
+   "DMA.fence": {
+    "value": 60,
+    "grade": "estimate",
+    "source": "posted-write visibility (kvwb ACK) after the last store"
+   },
+   "COLL.ALL_REDUCE_SUM": {
+    "value": 1350,
+    "grade": "measured_budget",
+    "source": "TP4 256-word AR: endpoint RTL 928 ns (dshbm_1m_allmeasured_20261004/collectives.json ar_matched_p1) + ~0.2 us FEC budget"
+   },
+   "COLL.ARGMAX_MERGE": {
+    "value": 586,
+    "grade": "measured",
+    "source": "ga_ha2hub gather 488 ns (qwen_on_r25 PLAN G2) ~ 586 cycles"
+   },
+   "ARGMAX.LOCAL.per_elem": {
+    "value": 0.0625,
+    "grade": "estimate",
+    "source": "16 compares a cycle on the streamed logits"
+   }
+  }
+ },
+ "result": {
+  "program": {
+   "records_in_image": 46,
+   "image_bytes": 4768,
+   "image_sha256": "d86cc9217af9a7828e4846cf3f438e52ad4a17b79dbed758343721a2ea84387f",
+   "families": [
+    "",
+    "all_reduce_down",
+    "all_reduce_o",
+    "argmax_local",
+    "argmax_merge",
+    "attention_pv",
+    "attention_qk",
+    "down",
+    "embedding",
+    "end",
+    "gu",
+    "head",
+    "head_scale",
+    "kv_append",
+    "kv_fence",
+    "o",
+    "prenorm",
+    "pv_normalize",
+    "qknorm",
+    "qkv",
+    "rope",
+    "round_q",
+    "row_scale_down",
+    "row_scale_gu",
+    "row_scale_o",
+    "row_scale_qkv",
+    "softmax",
+    "swiglu"
+   ]
+  },
+  "S0": {
+   "total_cycles": 1241693.1,
+   "tok_s": 966.4,
+   "records_executed": 1164,
+   "cp_busy_cycles": 0.0,
+   "dispatch_held_by_wait_mask": 0.0,
+   "dispatch_held_by_hol_or_queue": 0.0,
+   "races": [],
+   "n_races": 0,
+   "per_unit": {
+    "DMA": {
+     "busy": 20202.3,
+     "idle_true_dep": 1138482.8,
+     "idle_issue": 0.0,
+     "records": 257
+    },
+    "SU": {
+     "busy": 48256.0,
+     "idle_true_dep": 1190456.1,
+     "idle_issue": 0.0,
+     "records": 362
+    },
+    "FUSED": {
+     "busy": 21775.0,
+     "idle_true_dep": 1140525.1,
+     "idle_issue": 0.0,
+     "records": 145
+    },
+    "SM": {
+     "busy": 974155.0,
+     "idle_true_dep": 264460.1,
+     "idle_issue": 0.0,
+     "records": 145
+    },
+    "ATT": {
+     "busy": 95058.1,
+     "idle_true_dep": 1042342.0,
+     "idle_issue": 0.0,
+     "records": 144
+    },
+    "COLL": {
+     "busy": 97786.0,
+     "idle_true_dep": 1143906.1,
+     "idle_issue": 0.0,
+     "records": 73
+    },
+    "SFU": {
+     "busy": 2160.0,
+     "idle_true_dep": 1152061.1,
+     "idle_issue": 0.0,
+     "records": 36
+    },
+    "ARGMAX": {
+     "busy": 2394.0,
+     "idle_true_dep": 1238712.1,
+     "idle_issue": 0.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 1241692.1,
+     "idle_issue": 0.0,
+     "records": 1
+    }
+   },
+   "family_unit_cycles": {
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
+    "all_reduce_o": 48600.0,
+    "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
+    "softmax": 31860.0,
+    "prenorm": 12775.0,
+    "qknorm": 9000.0,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
+    "pv_normalize": 2808.0,
+    "argmax_local": 2394.0,
+    "rope": 2300.2,
+    "swiglu": 2264.0,
+    "round_q": 2160.0,
+    "kv_append": 2160.0,
+    "kv_fence": 2160.0,
+    "argmax_merge": 586.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
+    "end": 1.0
+   }
+  },
+  "S1": {
+   "total_cycles": 1241693.1,
+   "tok_s": 966.4,
+   "records_executed": 1164,
+   "cp_busy_cycles": 0.0,
+   "dispatch_held_by_wait_mask": 0.0,
+   "dispatch_held_by_hol_or_queue": 0.0,
+   "races": [],
+   "n_races": 0,
+   "per_unit": {
+    "DMA": {
+     "busy": 20202.3,
+     "idle_true_dep": 1007028.7,
+     "idle_issue": 137295.5,
+     "records": 257
+    },
+    "SU": {
+     "busy": 48256.0,
+     "idle_true_dep": 1190456.1,
+     "idle_issue": 0.0,
+     "records": 362
+    },
+    "FUSED": {
+     "busy": 21775.0,
+     "idle_true_dep": 1140525.1,
+     "idle_issue": 0.0,
+     "records": 145
+    },
+    "SM": {
+     "busy": 974155.0,
+     "idle_true_dep": 264460.1,
+     "idle_issue": 0.0,
+     "records": 145
+    },
+    "ATT": {
+     "busy": 95058.1,
+     "idle_true_dep": 1042342.0,
+     "idle_issue": 0.0,
+     "records": 144
+    },
+    "COLL": {
+     "busy": 97786.0,
+     "idle_true_dep": 1143906.1,
+     "idle_issue": 0.0,
+     "records": 73
+    },
+    "SFU": {
+     "busy": 2160.0,
+     "idle_true_dep": 1152061.1,
+     "idle_issue": 0.0,
+     "records": 36
+    },
+    "ARGMAX": {
+     "busy": 2394.0,
+     "idle_true_dep": 1238712.1,
+     "idle_issue": 0.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 1241692.1,
+     "idle_issue": 0.0,
+     "records": 1
+    }
+   },
+   "family_unit_cycles": {
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
+    "all_reduce_o": 48600.0,
+    "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
+    "softmax": 31860.0,
+    "prenorm": 12775.0,
+    "qknorm": 9000.0,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
+    "pv_normalize": 2808.0,
+    "argmax_local": 2394.0,
+    "rope": 2300.2,
+    "swiglu": 2264.0,
+    "round_q": 2160.0,
+    "kv_append": 2160.0,
+    "kv_fence": 2160.0,
+    "argmax_merge": 586.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
+    "end": 1.0
+   }
+  },
+  "S2": {
+   "total_cycles": 1261770.1,
+   "tok_s": 951.0,
+   "records_executed": 1164,
+   "cp_busy_cycles": 5849.0,
+   "dispatch_held_by_wait_mask": 1260419.1,
+   "dispatch_held_by_hol_or_queue": 7709101.8,
+   "races": [],
+   "n_races": 0,
+   "per_unit": {
+    "DMA": {
+     "busy": 20202.3,
+     "idle_true_dep": 683785.7,
+     "idle_issue": 480495.5,
+     "records": 257
+    },
+    "SU": {
+     "busy": 48256.0,
+     "idle_true_dep": 1204365.1,
+     "idle_issue": 6096.0,
+     "records": 362
+    },
+    "FUSED": {
+     "busy": 21775.0,
+     "idle_true_dep": 1157866.1,
+     "idle_issue": 2616.0,
+     "records": 145
+    },
+    "SM": {
+     "busy": 974155.0,
+     "idle_true_dep": 280961.1,
+     "idle_issue": 3480.0,
+     "records": 145
+    },
+    "ATT": {
+     "busy": 95058.1,
+     "idle_true_dep": 1056971.0,
+     "idle_issue": 5040.0,
+     "records": 144
+    },
+    "COLL": {
+     "busy": 97786.0,
+     "idle_true_dep": 1162207.1,
+     "idle_issue": 1752.0,
+     "records": 73
+    },
+    "SFU": {
+     "busy": 2160.0,
+     "idle_true_dep": 1171058.1,
+     "idle_issue": 864.0,
+     "records": 36
+    },
+    "ARGMAX": {
+     "busy": 2394.0,
+     "idle_true_dep": 1258717.1,
+     "idle_issue": 24.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 1261745.1,
+     "idle_issue": 24.0,
+     "records": 1
+    }
+   },
+   "family_unit_cycles": {
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
+    "all_reduce_o": 48600.0,
+    "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
+    "softmax": 31860.0,
+    "prenorm": 12775.0,
+    "qknorm": 9000.0,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
+    "pv_normalize": 2808.0,
+    "argmax_local": 2394.0,
+    "rope": 2300.2,
+    "swiglu": 2264.0,
+    "round_q": 2160.0,
+    "kv_append": 2160.0,
+    "kv_fence": 2160.0,
+    "argmax_merge": 586.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
+    "end": 1.0
+   }
+  },
+  "S3": {
+   "total_cycles": 1261606.1,
+   "tok_s": 951.2,
+   "records_executed": 1164,
+   "cp_busy_cycles": 5849.0,
+   "dispatch_held_by_wait_mask": 1260419.1,
+   "dispatch_held_by_hol_or_queue": 7709101.8,
+   "races": [],
+   "n_races": 0,
+   "per_unit": {
+    "DMA": {
+     "busy": 20202.3,
+     "idle_true_dep": 683785.7,
+     "idle_issue": 480331.5,
+     "records": 257
+    },
+    "SU": {
+     "busy": 48256.0,
+     "idle_true_dep": 1204201.1,
+     "idle_issue": 6096.0,
+     "records": 362
+    },
+    "FUSED": {
+     "busy": 21775.0,
+     "idle_true_dep": 1157702.1,
+     "idle_issue": 2616.0,
+     "records": 145
+    },
+    "SM": {
+     "busy": 974155.0,
+     "idle_true_dep": 280797.1,
+     "idle_issue": 3480.0,
+     "records": 145
+    },
+    "ATT": {
+     "busy": 95058.1,
+     "idle_true_dep": 1056807.0,
+     "idle_issue": 5040.0,
+     "records": 144
+    },
+    "COLL": {
+     "busy": 97786.0,
+     "idle_true_dep": 1162043.1,
+     "idle_issue": 1752.0,
+     "records": 73
+    },
+    "SFU": {
+     "busy": 2160.0,
+     "idle_true_dep": 1170894.1,
+     "idle_issue": 864.0,
+     "records": 36
+    },
+    "ARGMAX": {
+     "busy": 2394.0,
+     "idle_true_dep": 1258553.1,
+     "idle_issue": 24.0,
+     "records": 1
+    },
+    "CTL": {
+     "busy": 1.0,
+     "idle_true_dep": 1261581.1,
+     "idle_issue": 24.0,
+     "records": 1
+    }
+   },
+   "family_unit_cycles": {
+    "gu": 454860.0,
+    "down": 233676.0,
+    "qkv": 123084.0,
+    "o": 86220.0,
+    "head": 76315.0,
+    "all_reduce_o": 48600.0,
+    "all_reduce_down": 48600.0,
+    "attention_qk": 47529.1,
+    "attention_pv": 47529.1,
+    "softmax": 31860.0,
+    "prenorm": 12775.0,
+    "qknorm": 9000.0,
+    "row_scale_gu": 6223.7,
+    "row_scale_down": 6105.1,
+    "row_scale_o": 6105.1,
+    "row_scale_qkv": 5974.9,
+    "pv_normalize": 2808.0,
+    "argmax_local": 2394.0,
+    "rope": 2300.2,
+    "swiglu": 2264.0,
+    "round_q": 2160.0,
+    "kv_append": 2160.0,
+    "kv_fence": 2160.0,
+    "argmax_merge": 586.0,
+    "embedding": 272.3,
+    "head_scale": 225.0,
+    "end": 1.0
+   }
+  },
+  "cp_fix_variants": {
+   "S2_no_wires": 1244310.1,
+   "SX_skip_ahead": 1261770.1,
+   "S2_compiler_reordered": 1263635.2,
+   "S2_compiler_reordered_races": 0,
+   "SX_compiler_reordered": 1263599.2
+  },
+  "overheads": {
+   "drain_wait_vs_dataflow_cycles": 0.0,
+   "drain_wait_pct": 0.0,
+   "cp_issue_hol_cycles": 20077.0,
+   "cp_issue_hol_pct": 1.59,
+   "cp_fetch_decode_cycles": 164.0,
+   "cp_fetch_decode_pct": 0.01,
+   "hol_and_drain_vs_dataflow_pct": 1.59
+  },
+  "critical_path_S2_tail": [
+   {
+    "tag": "all_reduce_o",
+    "L": 34,
+    "unit": "COLL",
+    "start": 1126789.6,
+    "end": 1128139.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_o+residual",
+    "L": 34,
+    "unit": "SU",
+    "start": 1128163.6,
+    "end": 1128226.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "prenorm.ffn",
+    "L": 34,
+    "unit": "FUSED",
+    "start": 1128250.6,
+    "end": 1128425.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "gu",
+    "L": 34,
+    "unit": "SM",
+    "start": 1128449.6,
+    "end": 1141084.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_gu",
+    "L": 34,
+    "unit": "SU",
+    "start": 1141108.6,
+    "end": 1141173.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "swiglu",
+    "L": 34,
+    "unit": "SFU",
+    "start": 1141197.6,
+    "end": 1141257.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "down",
+    "L": 34,
+    "unit": "SM",
+    "start": 1141281.6,
+    "end": 1147772.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "all_reduce_down",
+    "L": 34,
+    "unit": "COLL",
+    "start": 1147796.6,
+    "end": 1149146.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_down+residual",
+    "L": 34,
+    "unit": "SU",
+    "start": 1149170.6,
+    "end": 1149233.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "prenorm.attn",
+    "L": 35,
+    "unit": "FUSED",
+    "start": 1149257.6,
+    "end": 1149432.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "qkv",
+    "L": 35,
+    "unit": "SM",
+    "start": 1149456.6,
+    "end": 1152875.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_qkv",
+    "L": 35,
+    "unit": "SU",
+    "start": 1152899.6,
+    "end": 1152960.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "qknorm.q",
+    "L": 35,
+    "unit": "FUSED",
+    "start": 1152984.6,
+    "end": 1153109.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "qknorm.k",
+    "L": 35,
+    "unit": "FUSED",
+    "start": 1153109.6,
+    "end": 1153234.6
+   },
+   {
+    "tag": "rope",
+    "L": 35,
+    "unit": "SU",
+    "start": 1153258.6,
+    "end": 1153319.6,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "round_q",
+    "L": 35,
+    "unit": "SU",
+    "start": 1153319.6,
+    "end": 1153379.6
+   },
+   {
+    "tag": "attention_qk.kv0",
+    "L": 35,
+    "unit": "ATT",
+    "start": 1153495.6,
+    "end": 1154155.7,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "attention_qk.kv1",
+    "L": 35,
+    "unit": "ATT",
+    "start": 1154155.7,
+    "end": 1154815.9
+   },
+   {
+    "tag": "softmax.max",
+    "L": 35,
+    "unit": "SU",
+    "start": 1154839.9,
+    "end": 1155077.9,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "softmax.exp_sum",
+    "L": 35,
+    "unit": "SU",
+    "start": 1155077.9,
+    "end": 1155601.9
+   },
+   {
+    "tag": "softmax.bf16_p",
+    "L": 35,
+    "unit": "SU",
+    "start": 1155601.9,
+    "end": 1155724.9
+   },
+   {
+    "tag": "attention_pv.kv0",
+    "L": 35,
+    "unit": "ATT",
+    "start": 1155748.9,
+    "end": 1156409.0,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "attention_pv.kv1",
+    "L": 35,
+    "unit": "ATT",
+    "start": 1156409.0,
+    "end": 1157069.1
+   },
+   {
+    "tag": "pv_normalize",
+    "L": 35,
+    "unit": "SU",
+    "start": 1157093.1,
+    "end": 1157171.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "o",
+    "L": 35,
+    "unit": "SM",
+    "start": 1157195.1,
+    "end": 1159590.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "all_reduce_o",
+    "L": 35,
+    "unit": "COLL",
+    "start": 1159614.1,
+    "end": 1160964.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_o+residual",
+    "L": 35,
+    "unit": "SU",
+    "start": 1160988.1,
+    "end": 1161051.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "prenorm.ffn",
+    "L": 35,
+    "unit": "FUSED",
+    "start": 1161075.1,
+    "end": 1161250.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "gu",
+    "L": 35,
+    "unit": "SM",
+    "start": 1161274.1,
+    "end": 1173909.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_gu",
+    "L": 35,
+    "unit": "SU",
+    "start": 1173933.1,
+    "end": 1173998.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "swiglu",
+    "L": 35,
+    "unit": "SFU",
+    "start": 1174022.1,
+    "end": 1174082.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "down",
+    "L": 35,
+    "unit": "SM",
+    "start": 1174106.1,
+    "end": 1180597.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "all_reduce_down",
+    "L": 35,
+    "unit": "COLL",
+    "start": 1180621.1,
+    "end": 1181971.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "row_scale_down+residual",
+    "L": 35,
+    "unit": "SU",
+    "start": 1181995.1,
+    "end": 1182058.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "prenorm.final",
+    "L": 0,
+    "unit": "FUSED",
+    "start": 1182082.1,
+    "end": 1182257.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "head",
+    "L": 0,
+    "unit": "SM",
+    "start": 1182281.1,
+    "end": 1258596.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "head_scale",
+    "L": 0,
+    "unit": "SU",
+    "start": 1258620.1,
+    "end": 1258717.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "argmax_local",
+    "L": 0,
+    "unit": "ARGMAX",
+    "start": 1258741.1,
+    "end": 1261135.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "argmax_merge",
+    "L": 0,
+    "unit": "COLL",
+    "start": 1261159.1,
+    "end": 1261745.1,
+    "bound_by": "dispatch"
+   },
+   {
+    "tag": "end",
+    "L": 0,
+    "unit": "CTL",
+    "start": 1261769.1,
+    "end": 1261770.1,
+    "bound_by": "dispatch"
+   }
+  ]
+ }
+}

@@ -143,6 +143,14 @@ def worst_paths(rpt):
         ek = re.search(r"Endpoint: \S+\s*\n?\s*\((.*?)\)", blk); ek = ek.group(1) if ek else ""
         grp = re.search(r"Path Group: (\S+)", blk); sl = re.search(r"([-\d.]+)\s+slack", blk)
         arr = blk.split("data arrival time")[0]
+        req = blk.split("data arrival time", 1)[1] if "data arrival time" in blk else ""
+        # the PORT side's clock latency: a virtual clock's ideal latency, or a real clock's propagated 0 at the port
+        # (retry545_cl2: IO on core_clk itself, "clock network delay (propagated) 0.00")
+        vl = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", arr) if "input port" in blk.split("\n", 2)[0] + blk.split("\n", 2)[1] else None
+        vc = re.search(r"([-\d.]+)\s+[-\d.]+\s+clock network delay \((?:ideal|propagated)\)", req) if re.search(r"Endpoint: \S+\s*\n?\s*\(output port", blk) else None
+        side = req if vl else arr      # the register end of an IO path: capture side of in->reg, launch side of reg->out
+        ce = re.search(r"[-\d.]+\s+([-\d.]+)\s+clock \S+ \((?:rise|fall) edge\)", side)
+        ck = re.search(r"\s([-\d.]+)\s+[\^v]\s+\S+/(?:CLK|CK|CLKN|GCLK)\s", side)
         wire = cell = 0.0; fo = 0; after_net = started = False; scell = ecell = ""
         for ln in arr.split("\n"):
             if ln.rstrip().endswith("(net)"):
@@ -166,7 +174,9 @@ def worst_paths(rpt):
             ecell = c; after_net = False
         out.append(dict(group=grp.group(1) if grp else "?", start=sp, start_kind=sk, start_cell=scell.strip("()"),
                         end=ep, end_kind=ek, end_cell=ecell.strip("()"), slack_ps=float(sl.group(1)) if sl else None,
-                        wire_ps=round(wire, 1), cell_ps=round(cell, 1), max_fanout=fo))
+                        wire_ps=round(wire, 1), cell_ps=round(cell, 1), max_fanout=fo,
+                        vlat_launch=float(vl.group(1)) if vl else None, vlat_capture=float(vc.group(1)) if vc else None,
+                        flop_ck_ps=round(float(ck.group(1)) - float(ce.group(1)), 1) if (ck and ce) else None))
     return out
 def probe_base(b, live):
     root = b.rsplit("/logs/asap7/", 1)[0]; d = b.split("/logs/asap7/", 1)[1].split("/")[0]
@@ -475,6 +485,11 @@ def hopeless(b, j, now):
             g = dict(g, ws=w, raw_ws=min(p["slack_ps"] for p in r2r) if r2r else None, io_excluded=unt)
             if w is None:
                 g = None
+    if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")) and not g.get("io_excluded") and \
+            g["ws"] < GATES[f"setup_{st}_ws_ps"]:
+        adj = ioref_rejudge(b, j)
+        if adj is not None:
+            g = dict(g, ws=adj["ws"], ioref=adj)
     if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")):
         if g["ws"] < GATES[f"setup_{st}_ws_ps"] and (cnt > GATES[f"setup_{st}_count"] or
                                                      (g.get("tns") or 0) < GATES["setup_tns_ps"]):
@@ -483,7 +498,10 @@ def hopeless(b, j, now):
                                             f"{g.get('tns')}; gate WNS < {GATES[f'setup_{st}_ws_ps']:g} with > "
                                             f"{GATES[f'setup_{st}_count']} endpoints"
                                             + (f"; IO excluded, reg->reg/macro only ({g['io_excluded']})"
-                                               if g.get("io_excluded") else "")))
+                                               if g.get("io_excluded") else "")
+                                            + (f"; IO paths re-judged at the IO-reference insertion "
+                                               f"({g['ioref']['source']}{'' if g['ioref']['ref_ps'] != g['ioref']['ref_ps'] else ' %.0f ps' % g['ioref']['ref_ps']})"
+                                               if g.get("ioref") else "")))
     elapsed = now - step_start(b)
     hd = b.get("hold") or {}
     if cur.startswith(("4_1_cts", "5_1_grt")) and (hd.get("found") or hd.get("series")):
@@ -517,6 +535,44 @@ def hopeless(b, j, now):
             out.append(("EARLY_FAIL_DRC", f"DRT iteration {dr[-1][0]}: {last[-1]} violations, no decrease over the "
                                           f"last {k} iterations (best before {min(before)}, since {min(last)})"))
     return out
+
+
+def ioref_insertion(j):
+    """(ps, source) of the IO-reference insertion: the measured route-corner boundary mean (calibrate CK_SS_MEAN, the
+    io_ref_routed.sdc definition), else None"""
+    env = ((j or {}).get("calibration") or {}).get("env") or {}
+    v = env.get("CK_SS_MEAN")
+    return (float(v), "calibrate CK_SS_MEAN") if isinstance(v, (int, float)) else None
+
+
+def ioref_rejudge(b, j):
+    """DRV6 (review-0725, coordinator APPROVED 2026-10-09): the post-CTS setup gate judged IO paths against the virtual
+    clock's IDEAL latency (an assumed insertion), not the IO reference: hbm_coll_port2_rows hm0-bal was early-failed at
+    -491.6 (reg->out with ot_lb_v_core_clk at 1039.8 ps vs the measured 1221 ps tree).  Re-judge every reported path the
+    way io_ref_routed.sdc times it: the virtual clock moves to the IO-reference insertion M (measured boundary mean,
+    else the path's own register clock arrival), so reg->out slack += M - L_capture and in->reg slack -= M - L_launch
+    (in->out unchanged).  Returns {"ws" (normalised, worst over all reported paths), ref_ps, source, paths} or None when
+    no reported path carries an ideal virtual-clock latency."""
+    paths = [p for p in (b.get("worst") or {}).get("paths") or [] if p.get("slack_ps") is not None]
+    if not any(p.get("vlat_launch") is not None or p.get("vlat_capture") is not None for p in paths):
+        return None
+    ref = ioref_insertion(j)
+    out, refs = [], set()
+    for p in paths:
+        s = p["slack_ps"]
+        m, src = ref if ref else ((p.get("flop_ck_ps"), "path register clock arrival") if p.get("flop_ck_ps") is not None
+                                  else (None, None))
+        inp, outp = "input port" in (p.get("start_kind") or ""), "output port" in (p.get("end_kind") or "")
+        if m is not None and inp != outp:
+            if outp and p.get("vlat_capture") is not None:
+                s = s + (m - p["vlat_capture"]); refs.add(src)
+            elif inp and p.get("vlat_launch") is not None:
+                s = s - (m - p["vlat_launch"]); refs.add(src)
+        out.append(dict(start=p.get("start"), end=p.get("end"), group=p.get("group"), raw_ps=p["slack_ps"],
+                        ioref_ps=round(s, 1)))
+    w = min(x["ioref_ps"] for x in out)
+    return dict(ws=norm_ws(w, b.get("period")), ref_ps=ref[0] if ref else float("nan"),
+                source=", ".join(sorted(refs)) or "no IO path moved", paths=out)
 
 
 def hold_gain(series, window):

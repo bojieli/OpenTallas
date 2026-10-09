@@ -1,0 +1,180 @@
+{
+ "schema": "opentallas.mtp_step_charges.v1",
+ "design": "hbm_ds",
+ "tool": "tools/mtp_step_charges.py",
+ "published": true,
+ "clock_hz": 1200000000.0,
+ "rule": "MTP step = the composed step (token_path_export) + every critical charge; overlapped charges carry their proof",
+ "charges": [
+  {
+   "id": "hfd_mtp.round_trips",
+   "element": "hfd_mtp die master pin flops (command -> engine done round trips)",
+   "cycles": 14.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "7 dependent round trips a step (5 draft-head commands, verify, accept/emit) x 2 (+1 per pin crossing)",
+   "source": [
+    "results/rtl/hbm_mtp_20261008/bench/round1.json cycle_note (+1 per pin crossing, +2 per round trip)"
+   ],
+   "grade": "measured",
+   "variant": "x-stop (die-router selections) live; hfd_mtp_x_lvt would be +4 a round trip (PRL 2)"
+  },
+  {
+   "id": "hfd_mtp.logit_pins",
+   "element": "hfd_mtp logit-row input pin flop + am output (6 argmax streams)",
+   "cycles": 12.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "(5 draft heads + 1 verify) x (lg_* in +1, am_* out +1)",
+   "source": [
+    "results/rtl/hbm_mtp_20261008/bench/round1.json cycle_note"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "argmax_f1",
+   "element": "ot_dshbm_argmax FAST (argmax_f1)",
+   "cycles": 6.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "+1 per argmax stream x 6 (rows stream; the register adds latency once a stream)",
+   "source": [
+    "~/claude-takeover-20261007/mtp-hbm.log (argmax FAST is +1 cyc/row)",
+    "results/rtl/hbm_mtp_20261008/routes/mtp_argmax_f1-d30fa5f39-tc"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "topk_f384",
+   "element": "router topK (topk_f384) on every MoE layer of the verify walk",
+   "cycles": 40.0,
+   "critical": true,
+   "phase": "verify",
+   "anchor": "verify.last",
+   "formula": "40 MoE layers (du:router_top6 on the verify path) x +1 a select",
+   "source": [
+    "~/claude-takeover-20261007/mtp-hbm.log (+1 cyc/select vs topk original)",
+    "results/rtl/hbm_mtp_20261008/routes/mtp_topk_f384-d30fa5f39-tc"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "union_f3",
+   "element": "ot_dshbm_expert_union FAST (union_f3) per MoE layer",
+   "cycles": 40.0,
+   "critical": true,
+   "phase": "verify",
+   "anchor": "verify.last",
+   "formula": "40 MoE layers x +1",
+   "source": [
+    "results/arch/mtp_status_20261009/STATUS.md (union_f3 +1)",
+    "results/rtl/hbm_mtp_20261008/routes/mtp_union_f3-d30fa5f39-tc"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "spec_state.gathers",
+   "element": "spec-state window gathers through hfd_mtp (sr/sa valid-ready streams)",
+   "cycles": 9.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "3 DSpark stages' window-row gather streams x +3 (once a stream: valid/ready ports behind skid slices accept one request a cycle)",
+   "source": [
+    "results/rtl/hbm_mtp_20261008/bench/round1.json cycle_note (+3 per spec-state gather)"
+   ],
+   "grade": "measured",
+   "note": "the bench issues gathers serially (+3 each, upper bound); on the die each stream pays the latency once"
+  },
+  {
+   "id": "spec_state.answer",
+   "element": "spec_state_f answer latency on the accept path",
+   "cycles": 5.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "LAT 5 (token-ring write through 5 registered stages)",
+   "source": [
+    "results/rtl/mtp_exact_20261008/spec_state/sweep.json bench (a_* LAT=5)"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "scratch_c2",
+   "element": "draft scratch (scratch_c2)",
+   "cycles": 1.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "+1 a step",
+   "source": [
+    "results/arch/mtp_status_20261009/STATUS.md (scratch_c2 +1)"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "fence",
+   "element": "RF visibility fence",
+   "cycles": 2.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "+2 capture -> write (fence_p), once a step before the next step's reads",
+   "source": [
+    "~/claude-takeover-20261007/mtp-hbm.log (fence_p +2 cyc capture->write)"
+   ],
+   "grade": "measured",
+   "variant": "fence_p charged (+2); the banked -cx (mtp_fence_b64-*-75cb677e4, 0 cycles) is routing: 0 if it closes"
+  },
+  {
+   "id": "mtp_commit",
+   "element": "ot_mtp_commit (n = q + 2 + a, registered)",
+   "cycles": 1.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "commit outputs registered 1 cycle after acc_done",
+   "source": [
+    "rtl/mtp/rollback/ot_mtp_commit.sv header (Latency)"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "dskv_wb_spec.rows",
+   "element": "ot_hbm_accel_dskv_wb_spec registered-boundary variant (+1 a row)",
+   "cycles": 240.0,
+   "critical": false,
+   "phase": "draft",
+   "anchor": "step.start",
+   "formula": "40 layers x up to 6 accepted positions = 240 KV rows x +1",
+   "source": [
+    "results/rtl/mtp_lead_20261009/dskv_wb_spec_rb/README.md (PIPE=1 S_OWN +1 cycle/row)"
+   ],
+   "grade": "measured",
+   "variant": "rb variant (mtprb-dskvwb_spec_rb-2426c04bd-tc); the a/b variants add 0",
+   "overlap_proof": "the accepted rows of step s are written while step s+1 drafts: the draft phase (54,336 cycles) runs on the DSpark stages' own state (main_x + their wkv window rows), and the first read of a main-model KV row is verify layer 0 after the draft; the +1/row adds <= 240 cycles to a write stream that must fit in 54,336 cycles"
+  }
+ ],
+ "totals": {
+  "critical_cycles": 130.0,
+  "critical_cycles_lower": 130.0,
+  "overlapped_cycles": 240.0,
+  "composed_step_cycles": 1348519.6,
+  "charged_step_cycles": 1348649.6,
+  "tau": 4.159,
+  "MTP_tok_s_composed": 3700.9,
+  "MTP_tok_s_charged": 3700.6,
+  "MTP_tok_s_charged_lower_charges": 3700.6
+ },
+ "inputs": {
+  "results/rtl/hbm_mtp_20261008/bench/round1.json": "c83f06eaf58d52d7",
+  "results/rtl/mtp_exact_20261008/spec_state/sweep.json": "f9bdcb1950a767e5",
+  "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8"
+ },
+ "basis_note": {
+  "note": "hbm-sim: the DS spec-conformant rate is the native record stream (results/arch/hgi_sim_20261009/ds_native_timing_1M.json result.S2 = 1,658.1 tok/s AR, not the 1,716.3 walk); these charges are per MTP step and carry over to that basis unchanged"
+ }
+}

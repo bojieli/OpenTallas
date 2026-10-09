@@ -1,0 +1,30 @@
+{
+  "cfg": "hgi_coll_decode_a",
+  "pins": 250,
+  "die_um": [
+    300.0,
+    160.0
+  ],
+  "layers": {
+    "PIN_H": "M4 M6",
+    "PIN_V": "M5 M7"
+  },
+  "tracks": 1.0,
+  "limit": 12.0,
+  "est": {
+    "W": 1.67,
+    "E": 0.81,
+    "S": 0.02
+  },
+  "verdict": "PASS",
+  "message": "pin density within limits (estimate)",
+  "rtl_boundary": {
+    "verdict": "PASS",
+    "message": "rtl_boundary ot_hgi_coll_decode: registered boundary (in->reg 4, reg->out 2 levels)",
+    "in_to_out_bits": 0,
+    "in_to_reg_max": 4,
+    "reg_to_out_max": 2,
+    "levels": 16,
+    "strict": true
+  }
+}

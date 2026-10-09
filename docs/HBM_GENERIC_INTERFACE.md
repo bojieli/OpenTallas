@@ -157,7 +157,7 @@ A model runs on a **group** of dies that split each layer's matrices between the
 
 Qwen3-8B uses one image for all four dies. DS uses 96 images of identical structure. Per-die images need no hardware: the CP of each die already fetches from its own HBM.
 
-Groups are **aligned** blocks of die ids. A die's rank is `die_id mod group_size`, its group is `die_id div group_size`, and reductions combine contributions in rank order. Legal group sizes are 1, 2, 4 and 8 (on the collective engine's 8-input reduction tree, with inactive inputs presented as +0) and 96 (the DS configuration and the reset value).
+Groups are **aligned** blocks of die ids. A die's rank is `die_id mod group_size`, its group is `die_id div group_size`, and reductions combine contributions in rank order. Legal group sizes are 1, 2, 4 and 8 (on the collective engine's 8-input reduction tree, with inactive inputs presented as +0) and 96 (the DS configuration and the reset value). At 96, reductions run as 12 aligned sub-groups of 8 ranks (`COLL.GROUP_REDUCE_MCAST` with s = 8, the shipped DS order); a 96-way `ALL_REDUCE_SUM` is rejected (§6.7).
 
 ---
 
@@ -206,7 +206,7 @@ This is the only address arithmetic the hardware performs on the program's behal
 
 - **`L` and `L1`**, the counters of the inner and outer loops (`CTL.LOOP`, §3.4). With `lstride` set to the per-layer size of a weight block, one record addresses every layer's weights. With `l1stride` set to the per-head size of a state block, one record serves every local head.
 - **DYN values**, small per-token integers the CP computes when the doorbell arrives. `POS` (the token's position) addresses the RoPE row and the KV append slot; `TOKEN` addresses the embedding row; `RANK` addresses a die's shard; `POS1 = pos + 1` is the number of valid KV rows. Each verify column (*slot*) has its own DYN bank. §6.8 lists every code.
-- **Indexed ids.** When the descriptor's `indexed` bit is set, the id comes from row 0 of the record's I table in VM, entry L. The I table is typically written by `IDX.TOPK` (the selected experts or KV positions) and ordered before its readers by a wait bit.
+- **Indexed ids.** When the descriptor's `indexed` bit is set, the id comes from row 0 of the record's I table in VM, entry L. The I table is typically written by `IDX.TOPK` (the selected experts or KV positions) and ordered before its readers by a wait bit. Id bounds are software-owned: the compiler guarantees that every indexed id lands in a placed region; the hardware checks only that the effective address fits the 40-bit HBM space (or the VM); the simulator faults any out-of-region access as a compiler-bug detector.
 
 **Dynamic counts.** When `n_sel` is non-zero, `n = DYN[n_sel]`. Attention uses `n_sel = POS1` to read exactly the `pos + 1` valid KV rows, and that count is also the causal mask. The special code `n_sel = 63` (N_FROM_VM) takes `n` from row 1 of the I table: U32(VM[I + I.stride + L]).
 
@@ -279,8 +279,8 @@ This section traces the program for one Qwen3-8B token on one die of a 4-die gro
 | 6 | `SM.MATVEC` | A: VM 4,096; B: HBM `Wb`, m = 1,536 rows of n = 4,096, INT8, `lstride` = layer; O: VM 8,192 | fmt = 3 (INT8) | FUSED | qkv |
 | 7 | `DMA.LOAD` | A: HBM qkv scales, BF16, n = 1,536; O: VM 156,672 | — | — | row_scale_qkv |
 | 8 | `SU.VOP` | A: VM 8,192; B: VM 156,672; O: VM 9,728 | M1 = A·B | SM, DMA | row_scale_qkv |
-| 9 | `FUSED.ROW_NORM` | A: VM 9,728, 8 heads × 128; B: q-norm gain; O: VM 11,264, **FP32** | seg = 128 | SU | QK-norm |
-| 10 | `FUSED.ROW_NORM` | A: VM 10,752, 2 heads × 128; B: k-norm gain; O: VM 12,288, FP32 | seg = 128 | — | QK-norm |
+| 9 | `FUSED.ROW_NORM` | A: VM 9,728, 8 heads × 128; B: q-norm gain; O: VM 11,264, **FP32** | d_units = 8, seg = 128 | SU | QK-norm |
+| 10 | `FUSED.ROW_NORM` | A: VM 10,752, 2 heads × 128; B: k-norm gain; O: VM 12,288, FP32 | d_units = 2, seg = 128 | — | QK-norm |
 | 11 | `SU.VOP` | A: VM 11,264, m = 10 heads of n = 128; B: cos row (stride 0); D: sin row (stride 0); O: VM 12,800 | `c_pair`, QM alternating sign, AD = +Q, M1 = A·B | FUSED | RoPE |
 | 12 | `SU.VOP` | A: VM 12,800, n = 1,024; O: VM 14,080 | `rnd` (BF16 queries) | — | roundQ |
 | 13 | `DMA.STORE` | A: rotated K rows, m = 2 of n = 128; O: HBM `KVb` K planes, FP8, `stride` = 2 MiB, `lstride` = 4 MiB, `dyn_sel` = POS, `dyn_mul` = 128 | — | SU | kv_append |
@@ -436,7 +436,7 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 |---|---:|---|---:|---:|---|
 | `cp_vocab` (40.0) | 18 | 1 … 2¹⁸ − 1 | 129,280 | 151,936 | Range check for doorbell and completion tokens. A token id is 18 bits everywhere (doorbell, completion, argmax). The limit is a safety check on the host interface, so it is per model, not per operation. |
 | `cp_ctx_max` (41.0) | 21 | 1 … 2²⁰ | 2²⁰ | 40,960 | Range check for the doorbell position. Positions are 20 bits. |
-| `coll_group_size` (46.0) | 8 | 1, 2, 4, 8, 96 | 96 | 4 | Which dies form a group. Membership is genuinely static configuration: every collective on a die uses the same group. The values 16, 32 and 64 are defined encodings that the range check rejects until a collective engine that builds them exists. |
+| `coll_group_size` (46.0) | 8 | 1, 2, 4, 8, 96 | 96 | 4 | Which dies form a group. Membership is genuinely static configuration: every collective on a die uses the same group. At 96, reductions run as 12 sub-groups of 8 (`GROUP_REDUCE_MCAST` s = 8); `ALL_REDUCE_SUM` at 96 is rejected. The values 16, 32 and 64 are defined encodings that the range check rejects until a collective engine that builds them exists. |
 
 Each static field resets to the DS value. DS programs also carry DS's own per-operation settings in their records, so loading the DS descriptor changes nothing, and a DS test bench that never loads a descriptor still runs. The static fields change only when a model is loaded while the die is idle; they never change while it is decoding.
 
@@ -448,7 +448,7 @@ Every other model-dependent setting is carried by the operation that needs it, n
 
 | Setting | Where it lives | DS value | Qwen3-8B value |
 |---|---|---|---|
-| Norm width | `FUSED.ROW_NORM` `param[5:0]` d_units (32 or 40; width / 128). The 4,096 tree is the 5,120 tree with a +0-padded tail, which is exact. | 40 | 32 |
+| Norm width | `FUSED.ROW_NORM` `param[5:0]` d_units (width / 128: 32 or 40 for the prenorms; 8 and 2 for the Qwen3-8B TP4 QK-norms, 8 query and 2 key heads of 128). The 4,096 tree is the 5,120 tree with a +0-padded tail, which is exact. | 40 | 32 (prenorm), 8 / 2 (QK-norm) |
 | Norm segment | `FUSED.ROW_NORM` `param[13:6]` (0 or 128) | 0 | 0 (prenorm), 128 (QK-norm) |
 | Norm, GLU and softmax output format | The O descriptor's `fmt` (FP8, BF16 or FP32 for norms; FP8 or BF16 for GLU) | FP8 | BF16 (prenorm, GLU), FP32 (QK-norm) |
 | Hyper-connection pre-mix | The opcode: `FUSED.HC_PRE_NORM` versus `FUSED.ROW_NORM` | HC_PRE_NORM | ROW_NORM |
@@ -458,7 +458,7 @@ Every other model-dependent setting is carried by the operation that needs it, n
 | Route weight | `SFU.GLU` C operand; a constant 1.0 with `ibcast` disables it exactly | the routing weights | 1.0 |
 | RoPE pairing and span | The weights (rows permuted offline so pairs are adjacent) and the RoPE record's descriptor range | adjacent, last 64 dims | adjacent after permutation, all 128 dims |
 | KV layout | The opcode: `DMA.STORE` (linear append) versus `DMA.KVWB_DS` (DS window ring); the mask is the ATT B descriptor's `n_sel` | `DMA.KVWB_DS` | `DMA.STORE` |
-| Argmax id offset | `ARGMAX.LOCAL` `imm_a` (global id = local id + RANK · `imm_a`) | 0 (ids already global) | 37,984 |
+| Argmax id offset | `ARGMAX.LOCAL` `imm_a` (global id = local id + RANK · `imm_a`) | 1,347 (uniform 1,347-row head shards; the last rank holds 1,315 rows; rows are independent dot products, so the logits are unchanged) | 37,984 |
 | Embedding row | The `DMA.LOAD` descriptor (TOKEN · row bytes, `fmt`) plus an SU dequantisation | BF16 rows of 10,240 B | INT8 rows of 4,128 B (codes + BF16 scale + padding) |
 
 ### 5.5 The configuration path
@@ -608,16 +608,16 @@ Operation codes are the index of each operation in its unit's list in `spec.json
 
 | Unit | Operations (code order) | `param` and immediates | Semantics (bit-exact reference) |
 |---|---|---|---|
-| Control (CTL) | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX, AMAX, ACCEPT: MTP control steps, reserved until the Qwen MTP decision. |
-| Matrix engine (SM) | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
+| Control (CTL) | NOP, LOOP, ENDLOOP, END, FENCE, TOKX, AMAX, ACCEPT | LOOP: `[15:0]` count, `[16]` level (0 → L, 1 → L1) | LOOP/ENDLOOP as §3.4. END: completion token = A[0], range-checked against `cp_vocab`. FENCE: wait for all units and all posted HBM writes. TOKX (**proposed**, §7.4, SPEC_GAP Q-MTP-1): A = U32 [1 + ncol], A[0] = k (1 ≤ k ≤ ncol), A[1..k] = the committed tokens; the CP emits k completion beats {token A[i], pos + i − 1, status 0} before `END`. AMAX, ACCEPT: reserved (DFlash needs neither, §7.4). |
+| Matrix engine (SM) | MATVEC | `[1:0]` format (0 BF16, 1 FP8 block-dot, 2 FP4 block-dot, 3 INT8); `[4:2]` positions − 1 (one weight read shared by up to 8 slots) | smh arithmetic (tc16 ring, column tree, stack pairing). With P > 1 slots, A and O carry one row per slot (m = P) and each slot's result is the single-slot arithmetic, bit for bit. Rows are split over the die's 32 SMs by the SM layout rule. With an indexed B, the expert is chosen by id. |
 | Stream unit (SU) | VOP | — (the template carries the configuration) | `Machine.su1` (R-ARITH chunk8) |
 | Special-function unit (SFU) | GLU | `imm_a` = clamp limit (FLT_MAX disables) | The fused SwiGLU chain; output format = O `fmt` |
-| Fused paths (FUSED) | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX, QDQ_FP8, QDQ_FP4_E8M0, QDQ_FP4_E4M3 | ROW_NORM: `[5:0]` d_units, `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. QDQ: quantise each 32-element block and dequantise it again, exactly as the DS activation quantiser does: QDQ_FP8 to FP8E4M3 with a UE8M0 (power-of-two) block scale; QDQ_FP4_E8M0 to FP4E2M1 with a UE8M0 block scale; QDQ_FP4_E4M3 to FP4E2M1 with an FP8E4M3 scale per block of `param[7:0]` elements (DS 16). The SU cannot form the exact power-of-two scale (⌈log2⌉ of the block maximum), so these are engine operations. |
-| Attention tiles (ATT) | QK, PV | `[3:0]` head lanes used; `[7:4]` 64-element slices per head − 1; `[8]` ring | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order. Rows are B's n rows, then C's rows when C is present (scores and PV run over the concatenation, B first). With `ring` = 1, B is a ring of `B.m` slots (a power of two): the first row read is slot (POS1 − n) mod `B.m` and reading wraps at `B.m`, so the rows arrive oldest first. |
-| Collective engine (COLL) | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE, GROUP_REDUCE_MCAST, ROW_GATHER | GROUP_REDUCE_MCAST: `[7:0]` sub-group size s. ROW_GATHER: `[7:0]` owner block B; `imm_a` = row count when I has no count row; `imm_b` = destination ranks | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. ALL_GATHER: rank r contributes elements ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1 of A (n = A.n, G = group size) and every rank receives all n. GROUP_REDUCE_MCAST: each aligned sub-group of s ranks (s = 2, 4 or 8) reduces A in the rank-order pairwise tree, and each sub-group's result is multicast to every rank of the group; O holds the sub-groups' results in sub-group order, in format O `fmt`. ROW_GATHER: row i of the selection is owned by rank (i div B) mod G, which stores it at local row (i div (B·G))·B + i mod B of A; every destination rank 0 … `imm_b` − 1 receives the selected rows in list order in O. |
+| Fused paths (FUSED) | HC_PRE_NORM, ROW_NORM, HC_POST, SOFTMAX, QDQ_FP8, QDQ_FP4_E8M0, QDQ_FP4_E4M3 | ROW_NORM: `[5:0]` d_units (with seg 128 and an A of m > 1 rows, the width of one row), `[13:6]` seg; `imm_a` = epsilon. SOFTMAX: `[0]` multipass; `imm_a` = scale | Norms: the norm engine. SOFTMAX: A = scores, B = sink row (−2¹⁰⁰ for none), O = probabilities. The global maximum is merged across all tile pairs before the exponential. Multipass (rows > 640): pass 1 the global maximum; pass 2 exponentials and their sum over fixed 640-row chunks in chunk order, carrying the streaming csum8 binary-counter state so that the sum equals the golden's csum8 tree exactly; pass 3 the normalisation. QDQ: quantise each 32-element block and dequantise it again, exactly as the DS activation quantiser does: QDQ_FP8 to FP8E4M3 with a UE8M0 (power-of-two) block scale; QDQ_FP4_E8M0 to FP4E2M1 with a UE8M0 block scale; QDQ_FP4_E4M3 to FP4E2M1 with an FP8E4M3 scale per block of `param[7:0]` elements (DS 16). The SU cannot form the exact power-of-two scale (⌈log2⌉ of the block maximum), so these are engine operations. |
+| Attention tiles (ATT) | QK, PV | `[3:0]` head lanes used (0 encodes 16); `[7:4]` 64-element slices per head − 1; `[8]` ring | Tile chunk8 plus pairwise per 64-element slice, then the slices in slice order. Rows are B's n rows, then C's rows when C is present (scores and PV run over the concatenation, B first). With `ring` = 1, B is a ring of `B.m` slots (a power of two): the first row read is slot (POS1 − n) mod `B.m` and reading wraps at `B.m`, so the rows arrive oldest first. |
+| Collective engine (COLL) | ALL_REDUCE_SUM, ALL_GATHER, TOPK_MERGE, ARGMAX_MERGE, GROUP_REDUCE_MCAST, ROW_GATHER | GROUP_REDUCE_MCAST: `[7:0]` sub-group size s. ROW_GATHER: `[7:0]` owner block B; `imm_a` = row count when I has no count row; `imm_b` = destination ranks | Fixed-order reduction in rank order. ARGMAX_MERGE: lowest global id wins ties. ALL_GATHER: rank r contributes elements ⌊r·n/G⌋ to ⌊(r+1)·n/G⌋ − 1 of A (n = A.n, G = group size) and every rank receives all n. GROUP_REDUCE_MCAST: each aligned sub-group of s ranks (s = 2, 4 or 8) reduces A in the rank-order pairwise tree, and each sub-group's result is multicast to every rank of the group; O holds the sub-groups' results in sub-group order, in format O `fmt`. ROW_GATHER: row i of the selection is owned by rank (i div B) mod G, which stores it at local row (i div (B·G))·B + i mod B of A; every destination rank 0 … `imm_b` − 1 receives the selected rows in list order in O. Group size 96: reductions run as 12 aligned sub-groups of 8 ranks in the rank-order pairwise tree, which is `GROUP_REDUCE_MCAST` with s = 8 (the shipped DS order); `ALL_REDUCE_SUM` with G = 96 is rejected with E_RANGE, because no target model sums 96 contributors and a 96-input tree would need new reduction hardware. |
 | Argmax unit (ARGMAX) | LOCAL | `imm_a` = id offset multiplier | numpy argmax: lowest index on ties; NaN flag reported; global id = local id + RANK · `imm_a` |
 | DMA engine (DMA) | LOAD, STORE, FENCE, KVWB_DS | — | LOAD/STORE: HBM ↔ VM row moves, including the linear KV append, recurrent state and the indexed row stream (§3.3). FENCE: makes the DMA unit's writes visible. KVWB_DS: the DS window-ring KV write-back. |
-| Indexer / top-k (IDX) | INDEX_Q, INDEX_SCORES, TOPK, SELECT, EHASH | TOPK: `[11:0]` k (1 … 2,048). EHASH: `[2:0]` Engram layer index | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index; R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. INDEX_Q, INDEX_SCORES and SELECT are the DS indexer engines. |
+| Indexer / top-k (IDX) | INDEX_Q, INDEX_SCORES, TOPK, SELECT, EHASH | TOPK: `[11:0]` k (1 … 2,048); `[12]` order (0 = descending score, 1 = ascending id; order 1 is legal for k ≤ 8 only, otherwise E_RANGE). EHASH: `[2:0]` Engram layer index. INDEX_Q, INDEX_SCORES, SELECT: `param[5:0]` source (compressed-KV) layer, `imm_a` candidate count, `imm_b` layer | TOPK: for each of the m rows of A (n scores each), O = the k ids (U32) sorted by descending score, ties to the lowest index (with `order` = 1, the same selected set in ascending id order: the DS router top-6); R (optional) = the k values; NaN fails closed. EHASH: the Engram row ids of the slot's token for one Engram layer, one per head and n-gram order, written as a U32 I table for indexed `DMA.LOAD`s. The engine keeps the n-gram token history: the first EHASH of a token pushes the slot's token, and `CTL.ACCEPT` restores the history to the last accepted slot. B holds the layer's hash constants. INDEX_Q, INDEX_SCORES and SELECT are the DS indexer engines: they keep their working buffers inside the indexer engine, so their A, B and C descriptors may be NONE; SELECT (the DS index top-512) writes O = the selected ids (U32, ascending id order) and optionally R = their values, and that I table feeds `COLL.TOPK_MERGE`, `COLL.ROW_GATHER` and indexed `DMA.LOAD`s. These are engine-internal DS operations; a generic model uses `IDX.TOPK`. |
 | Hyper-connections (HC) | HC_MIX | — | The DS hyper-connection mix |
 | SIMT engine (SIMT) | RUN | `[13:0]` entry PC; `imm_a` = SM mask | Optional unit, absent on r25 (§2.3) |
 
@@ -712,8 +712,8 @@ DS runs on r25 as a record stream of native unit operations only, one image per 
 | SwiGLU | `SFU.GLU` (FP8 out, clamp 10.0, route weights as C) |
 | RoPE, attend, router activation, route, MoE sum | SU templates |
 | Attention tiles | `ATT.QK`, `ATT.PV` over the window ring (B, `ring` = 1) followed by the selected compressed rows (C); SU templates for the max, exp-sum, sink term and normalisation |
-| Indexer query, scores and select | `IDX.INDEX_Q`, `IDX.INDEX_SCORES`, `IDX.SELECT` |
-| Index top-k (512 of the candidates) and router top-6 | `IDX.TOPK` |
+| Indexer query, scores and select | `IDX.INDEX_Q`, `IDX.INDEX_SCORES`, `IDX.SELECT` (the index top-512, ids in ascending id order) |
+| Router top-6 | `IDX.TOPK` k = 6, `order` = 1 (ascending id order, the golden's expert-slot order) |
 | Selected compressed KV rows | `COLL.TOPK_MERGE` of the dies' local selections, then `COLL.ROW_GATHER` from the owner dies (compressed rows and index keys are sharded by position in blocks of 8: block j lives on rank j mod 96) into each head die's HBM; the indexed stream `DMA.LOAD` (§3.3) serves rows held locally |
 | Engram rows | `IDX.EHASH` per Engram layer, then indexed `DMA.LOAD`s of the codes and scales and an SU decode |
 | Window and compressed rows, KV write-back | `DMA.LOAD`, `DMA.KVWB_DS` |
@@ -768,6 +768,35 @@ A *family* is a class of graph operations that share one implementation. Qwen3-8
 ### 7.3 Linear attention
 
 Gated DeltaNet layers (Qwen3-Next style) run as programs on SM, SU, FUSED, DMA and COLL, with no new engine. §3.7 shows a layer. The manifest's mixer kind `gated_deltanet` carries the key and value heads, head dimensions, convolution kernel, gate and state formats, and the layer order. The simulator's pathfinding estimate is about 15,000 cycles per layer per die with BF16 projections; the recurrent core is cheaper than full attention beyond about 14K positions.
+
+### 7.4 Speculative decoding: DFlash on Qwen3-8B
+
+Qwen3-8B's drafter is DFlash (`z-lab/Qwen3-8B-DFlash-b16`, used unchanged: BF16 weights, block 16, mask token 151,669). It has five Qwen3-shaped layers and an `fc` projection. It reads the target's hidden states after layers 1, 9, 17, 25 and 33, and it shares the target's embedding and LM head. Its attention is **bidirectional within the block**: every block position sees the drafter's context rows and all B block rows. The verify pass is causal per position. The whole step is one doorbell at `entry_verify`, with `token` = the last committed token (the anchor) and `pos` = its position. `tools/hgi_sim/dflash.py` compiles it. `tools/hgi_sim/dflash_proof.py` runs it bit-exact against its golden, and its committed tokens equal plain greedy decoding. `tools/hgi_sim/dflash_timing.py` times it.
+
+**Programming rules.** These rules use only the operations above. No slot DYN bank and no new DYN code is needed.
+
+| DFlash need | How the program expresses it |
+|---|---|
+| Per-slot position (RoPE row, KV append at pos + s) | `dyn_sel` = POS plus a static offset of s rows in the descriptor base |
+| Per-slot causal count pos + s + 1 (s up to 15, beyond the 3-bit `slot` field) | One `DMA.LOAD` per step from an HBM table T[q] = q (U32) at POS + 1 + s, with `ibcast`, gives one I table per slot. The records use `n_sel` = 63 (N_FROM_VM) with that I table. |
+| Verify attention for a group of slots (16 lanes = 4 query heads × 4 slots) | ATT B = rows [0, pos) (`n_sel` = POS); C = the block rows [pos, pos + s_last + 1) of the same plane (`dyn_sel` = POS, static n). Each slot's SU softmax reads its own count. An `SU.VOP` (×0) writes +0 over the slot's masked tail, so the group's PV equals the slot's own causal PV bit for bit: zeros only extend the chunk8 tree. |
+| Drafter attention (context + whole block, bidirectional) | ATT B = the drafter's context KV rows [0, pos) (`n_sel` = POS); C = the block's own K/V rows in an HBM scratch (static n = B). Every lane uses count pos + B, with no mask. |
+| Target features of layers 1, 9, 17, 25, 33 | The verify loop is split at those layers. After each split, a `DMA.STORE` writes all slots' residuals (BF16) to region CTXF at POS. |
+| `fc` projection, drafter context K/V | Each step recomputes the drafter K/V rows for the B most recent committed positions [pos − B, pos) from CTXF, which also covers the rows the previous step accepted. The chain is `fc` (one SM record per captured layer, K = 4,096, the die's 1/TP output rows), SU pairwise adds, `COLL.ALL_GATHER`, `hidden_norm`, then per layer the K/V projection, `k_norm`, RoPE and a `DMA.STORE` (BF16). Rewriting committed rows writes identical values. |
+| Mask-token embedding | A static descriptor base: EMBED + 151,669 × row bytes, m = B − 1 rows with stride 0 |
+| Draft ids into the verify pass | ARGMAX.LOCAL plus COLL.ARGMAX_MERGE per slot into a U32 VM table D. The verify embeddings are indexed `DMA.LOAD`s on D. |
+| LM head over several slots | At most 4 slots per head pass, because VM holds 4 × 37,984 FP32 logits. The row scales are read in place from HBM by the SU. |
+| Accept (18-bit tokens) | D[1..] and the posterior ids are stored as U32 and reloaded as INT8 bytes. An SU computes the sum of squared byte differences per id, then min(·, 1). A leading 0 and a trailing 1 are added. `ARGMAX.LOCAL` (`imm_a` = 0, lowest index on ties) then gives k = accepted + 1. The committed tokens are posterior[0..k − 1]. |
+| KV commit / rollback | None needed. Rejected rows at ≥ pos + k are never read, because every count is derived from POS, and the next step overwrites them. The host rings the next step with {posterior[k − 1], pos + k}. |
+| Returning k tokens to the host | `CTL.TOKX` (proposed, Q-MTP-1, the one hardware item). |
+
+**Block size.** Block 16 is 2 weight passes of 8 slots for every target and drafter matrix, plus 4 LM-head passes per pass type. Block 8 is 1 weight pass and 2 head passes.
+
+**Open items** (`tools/hgi_sim/records.py` SPEC_GAPS):
+
+- **G18 (verify, hbm-forks).** The SM element (`ot_hbm_accel_smh`: ports op_rows/op_c/op_g/op_gs/op_fmt/op_xb) has no slot count. Whether one issued line serves P x-fragments in the same issue beat is not benched. If it does not, every slot replays the line, and verify cost grows with P (see the timing record).
+- **G19.** The ATT lane field encodes 16 as 0.
+- **Q-MTP-1 (cmdproc).** `CTL.TOKX`.
 
 ---
 
@@ -832,7 +861,7 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | CF-NORM | Norm engine | D5120, HC and FP8 vectors | D4096 BF16; seg 128 QK-norm (32 + 8 heads); FP32, BF16 and FP8 outputs in one program; mutant: an unpadded tail |
 | CF-SFX | Softmax | Sink vectors | 8 heads × 8,192 rows multipass against the golden's chunk order; T = 1, 640, 641, 1,280, 8,192; csum8 carry equality; global maximum across all tile pairs; sink −2¹⁰⁰ equals no sink |
 | CF-GLU | SwiGLU | FP8, clamp and route-weight vectors | BF16 out, clamp FLT_MAX, route 1.0 by broadcast, 3,072 per die |
-| CF-COLL | Collective | TP-96 vectors; ALL_GATHER with G not dividing n; GROUP_REDUCE_MCAST s = 8, BF16 out; ROW_GATHER k = 7, 512, 2,048 across owner dies, list order, an unwritten row faults | Groups 1, 2, 4, 8 at every rank (all-reduce of 256 words and ARGMAX_MERGE ties); a −0 contributor; pad mutant; group isolation; 16, 32, 64 rejected |
+| CF-COLL | Collective | TP-96 vectors; ALL_GATHER with G not dividing n; GROUP_REDUCE_MCAST s = 8, BF16 out; ROW_GATHER k = 7, 512, 2,048 across owner dies, list order, an unwritten row faults | Groups 1, 2, 4, 8 at every rank (all-reduce of 256 words and ARGMAX_MERGE ties); a −0 contributor; pad mutant; group isolation; 16, 32, 64 rejected; `ALL_REDUCE_SUM` at G = 96 rejected (E_RANGE) |
 | CF-ARG | Argmax | 17-bit ids | Id 151,935; lowest-index tie; NaN flag; `imm_a` id offset |
 | CF-ATT | Attention row sources | Window ring with wrap at every phase (first row = slot (POS1 − n) mod m) followed by k selected rows; mutant: ring read from slot 0 | Single B source, `n_sel` = POS1 |
 | CF-EHASH | Engram hash | Ids of every Engram layer against the golden's hashes over a token sequence; history restored by ACCEPT after a rejected draft | — |
@@ -841,7 +870,7 @@ A **golden** is the bit-exact software reference that hardware and simulator mus
 | CF-SVC | KV striping | DS index-key sweep | Qwen 8K dense sweep at ≥ 90 % of die bandwidth |
 | CF-BCAST | Broadcast | — | `ibcast` per-row scalar; mutant reading inner stride 1 |
 | CF-IDXD | Indexed descriptors | Contiguous row layouts only: a selected-row stream (k = 7, 513, 2,048 sorted positions over 1M): every row exactly once, in list order; mutant: list order broken in one PC. DS compressed KV rows (9-channel layout, §6.10) are excluded: the existing DS gather readers and their vectors cover them | Expert fetch by id; `n` from VM; stale-table mutant (missing wait) must fail; out-of-range id faults |
-| CF-TOPK | Top-k | Router top-6, index top-512 | k ∈ {1, 2, 6, 8, 512}; m > 1 rows; lowest-index ties; NaN fail-closed |
+| CF-TOPK | Top-k | Router top-6 (`order` = 1, ascending id order); index top-512 through `IDX.SELECT` | k ∈ {1, 2, 6, 8, 512}; m > 1 rows; lowest-index ties; NaN fail-closed; `order` = 1 with k > 8 rejected |
 | CF-LOOP2 | Sequencer loops | — | Two-level loop with `l1stride` and L1 |
 | CF-GDN | Linear attention | — | State round trip in the transposed layout; convolution-ring wrap; per-head loop; GQA-map mutant |
 | CF-PROG | Sequencer | DS program: 96 per-die images of identical structure (a structure-mismatch negative must fail), same tokens and buffers as today | Qwen layer and head records against the simulator, with `wait`, STREAM, LOOP and FENCE negatives |
@@ -889,11 +918,11 @@ HGI-1 is generic because model variation lives in programs and per-operation ope
 | Token width | 18 bits: vocabulary ≤ 262,143 | Gemma-3 not expressible |
 | Position width | 20 bits: 1,048,576 positions | 10M-context models capped |
 | HBM per die | 144 GB (4 stacks × 36 GB) | Kimi-K2 FP8 needs TP ≥ 8 |
-| Collective group | 1, 2, 4, 8, 96 | Larger tensor-parallel groups need a collective-engine variant |
+| Collective group | 1, 2, 4, 8, 96 (96 = 12 groups of 8; no 96-way ALL_REDUCE_SUM) | Larger tensor-parallel groups need a collective-engine variant |
 | VM | 262,144 FP32 words (1 MiB) | Single-pass softmax for heads × rows up to about 200K words |
 | Softmax chunk | 640 rows per pass | Longer rows use multipass (rate only) |
 | ATT tile | ≤ 16 head lanes; head_dim ≤ 1,024 in multiples of 64; FP8/BF16 rows | head_dim 96 pads to 128; FP32 operands go through the SU |
-| Norm engine | d_units 32 or 40; seg 0 or 128 | Other widths run as templates |
+| Norm engine | d_units 32, 40, 8 or 2; seg 0 or 128 | Other widths run as templates |
 | SFU codes | 8 of 8 used | No tanh, erf, log or softplus code: templates instead |
 | Units | 12 defined, codes 12–15 reserved | Up to four new engines without a format change |
 | Top-k | k ≤ 2,048 | — |
@@ -929,7 +958,7 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 
 ### 10.3 Other items to pin
 
-- **Qwen MTP.** Its parameters get descriptor words 49 and 53–55, and `CTL.TOKX`, `AMAX` and `ACCEPT` are reserved for it, after the τ measurement.
+- **Qwen MTP.** DFlash runs as one program per step (§7.4). It needs no descriptor word; words 49 and 53–55 stay reserved. Its one hardware item is `CTL.TOKX` (Q-MTP-1).
 - **SM layout rule.** The row split over 32 SMs and the per-SM weight layout must be pinned from the DS image builder before the Qwen compiler writes weights.
 - **DS embedding row stride.** The checkpoint row is 10,240 bytes (BF16 × 5,120). If the DS image keeps the stripe-padded layout of the measured HBM stream bench, the row stride in the embedding descriptor is 12,288 bytes.
 
@@ -1037,8 +1066,9 @@ DYN codes 9–14 (`WIN_N0/1`, `WIN_START0/1`, `CHUNK_START`, `CHUNK_N`) and desc
 | Engram ids on the die | The DS Engram hash engine already keeps the token history and restores it on MTP accept. Host-written ids would add a host step to every token. |
 | Two loop levels and 6-bit DYN codes | Per-head replay for linear attention without unrolling; room for window, chunk and verify-slot codes next to the DS selectors. |
 | Per-layer manifest instead of geometry in the descriptor | Software needs per-layer detail; hardware needs none of it. A manifest can describe heterogeneous layers and grows without touching hardware. |
-| Collective groups 1, 2, 4, 8 and 96 | Groups up to 8 are free on the existing 8-input reduction tree; 96 is DS. Sizes 16–64 cost about nine times the reduction datapath, so they are defined but rejected until a model needs them. |
+| Collective groups 1, 2, 4, 8 and 96 | Groups up to 8 are free on the existing 8-input reduction tree; 96 is DS, whose reductions are 12 groups of 8 (`GROUP_REDUCE_MCAST` s = 8), so 96 needs no new hardware and a 96-way `ALL_REDUCE_SUM` is rejected. Sizes 16–64 cost about nine times the reduction datapath, so they are defined but rejected until a model needs them. |
 | Linear attention in software | GDN runs exactly on the existing engines; a dedicated unit would add hardware for a rate gain only. |
+| Top-k order bit for k ≤ 8 only | The DS router top-6 emits ids in ascending id order; a small id sort after the top-k costs a few cycles at k ≤ 8. The DS index top-512 is `IDX.SELECT`, which is ascending by construction. A large-k ascending order would need a second pass over A, so it is rejected until a model needs it. |
 | Reset equals DS | Every existing DS closure, vector and bench stays valid without loading a descriptor. |
 
 ## Appendix B. Sources
