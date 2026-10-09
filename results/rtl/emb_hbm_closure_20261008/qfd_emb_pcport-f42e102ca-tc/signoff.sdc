@@ -1,4 +1,4 @@
-# qfd_emb_pcport sign-off at 1024.0 ps (jobs/mk_mc_kit.py)
+# Qwen die master qfd_emb_pcport_kvw2 (KVW=2; same boundary as qfd_emb_pcport_kvw)
 create_clock -name clk -period 1024.0 [get_ports {clk}]
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]

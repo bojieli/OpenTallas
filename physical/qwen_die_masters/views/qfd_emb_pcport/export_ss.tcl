@@ -6,9 +6,9 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz
 
-read_db /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_emb_pcport_f42e102ca_tc/base/6_final.odb
-read_sdc /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_emb_pcport_f42e102ca_tc/base/6_final.sdc
-read_spef /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_emb_pcport_f42e102ca_tc/base/6_final.spef
+read_db /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_pcport_kvw2_b_b1916d941_tc/base/6_final.odb
+read_sdc /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_pcport_kvw2_b_b1916d941_tc/base/6_final.sdc
+read_spef /in/results/asap7/opentallas_ot_qfd_emb_pcport_asap7_qdm_qfd_pcport_kvw2_b_b1916d941_tc/base/6_final.spef
 set_propagated_clock [all_clocks]
 puts "OT_WS [sta::worst_slack_cmd max]"
 write_timing_model -library_name qfd_emb_pcport_ss /out/qfd_emb_pcport_ss.lib
