@@ -1,0 +1,162 @@
+{
+ "schema": "opentallas.mtp_step_charges.v1",
+ "design": "ds_rom",
+ "tool": "tools/mtp_step_charges.py",
+ "published": true,
+ "clock_hz": 1200000000.0,
+ "rule": "MTP step = the composed step (token_path_export) + every critical charge; overlapped charges carry their proof",
+ "charges": [
+  {
+   "id": "wfc_kit.ar_pass",
+   "element": "WFC kit (ot_rom_pkg_ctrl_wfc SOURCE/STG + dsfd_wfc_lnk + dsfd_wfc_vmx) on every stage hop",
+   "cycles": 13560.0,
+   "critical": true,
+   "phase": "verify",
+   "anchor": "wave.last",
+   "formula": "120 stage hops (AR view critical path: substage/head hops + the unplaced stage hops) x 113 (WFC done->out + entry delta 13 + lnk 6 + vmx start 15 + vmx done/prefetch 79)",
+   "source": [
+    "results/rtl/dsrom_wfc_split_20261006/closure.json charge.hop_delta_cycles",
+    "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json stg_vmnat MTP_STG_CYC",
+    "~/claude-takeover-20261007/mtp-rom.log (lnk +3/+3 a hop)"
+   ],
+   "grade": "measured",
+   "variant": "WFC HARD kit (STG CLOSED, HARD wfc_tok CLOSED, SOURCE partner routing); --wfc-hard is default-off on the die",
+   "note": "the composition charges the reference ot_rom_pkg_ctrl_wf (46/11,271 handoff, no shims) whose route was rejected; the real controller kit adds these on the verify AR pass. Same cycles on every AR token once the kit is default-on (ar_effect)."
+  },
+  {
+   "id": "wfc_kit.intervals",
+   "element": "WFC kit on the 5 wavefront intervals (positions 2-6)",
+   "cycles": 1077.8,
+   "critical": true,
+   "phase": "verify",
+   "anchor": "wave.last",
+   "formula": "5 x (hop 113 + handoff 49 vs 46 on the busiest stage 8.6 + stage occupancy 94)",
+   "source": [
+    "results/rtl/dsrom_wfc_split_20261006/closure.json charge.measured_interval_overhead",
+    "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json stg_vmnat"
+   ],
+   "grade": "measured",
+   "cycles_lower": 607.8,
+   "note": "upper bound charged: the vmx start/done cycles are counted both in the hop latency and as stage occupancy (no bench measures the handoff with vmx in place, so the overlap of the outbound prefetch with the next position's start is NOT proven); cycles_lower counts them once (608)"
+  },
+  {
+   "id": "mtp_seq.draft_chain",
+   "element": "dsfd_mtp_seq draft chain (seed rows -> first draft head, head result -> next head)",
+   "cycles": 48.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "rows_to_dh1 8 + 5 x dh_result_to_next 8",
+   "source": [
+    "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json s0_tr_forced MTP_S0_CYC"
+   ],
+   "grade": "measured",
+   "note": "bench means include the bench adapters (+2 in / +1 out): upper bound; each draft head step waits for the previous head's argmax (serial chain)"
+  },
+  {
+   "id": "mtp_seq.seed_release",
+   "element": "dsfd_mtp_seq seed after the closing result + DRAFT flit / release",
+   "cycles": 22.4,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "seed_after_close 8 + last_dh_to_draft_flit 14.4 (s0_hash_u1_fast: no squashed results to wait for)",
+   "source": [
+    "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json s0_tr_forced / s0_hash_u1_fast MTP_S0_CYC"
+   ],
+   "grade": "measured",
+   "note": "the other traces' release (51.6-231 cycles) includes waiting for squashed verify results the bench models serially; those positions are already charged as verify intervals"
+  },
+  {
+   "id": "wfc_tok.edges",
+   "element": "dsfd_wfc_tok HARD (S0 token/draft store, one-edge read)",
+   "cycles": 3.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "+3 edges (draft store write -> verify-start read)",
+   "source": [
+    "results/arch/mtp_status_20261009/STATUS.md (dsfd_wfc_tok HARD row: +3 edges recorded)",
+    "results/rtl/dsrom_wfc_token_hard_20261009"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "mtp_commit",
+   "element": "ot_mtp_commit (n = q + 2 + a, registered)",
+   "cycles": 1.0,
+   "critical": true,
+   "phase": "accept",
+   "anchor": "accept.commit",
+   "formula": "commit outputs registered 1 cycle after acc_done",
+   "source": [
+    "rtl/mtp/rollback/ot_mtp_commit.sv header (Latency)"
+   ],
+   "grade": "measured"
+  },
+  {
+   "id": "p2.selected_path",
+   "element": "MD-2 P2 selected path (PRIMARY_SHARED1 9-SRAM transport + 3-SRAM A-prefix + publisher)",
+   "cycles": 15357.0,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.blocks",
+   "formula": "(5467 - mtp.0 ret_hop 348) + (5467 - mtp.1 ret_hop 348) + (5467 - mtp.2 ret_hop 348)",
+   "source": [
+    "physical/mtp_p2_transport/route.sh header (codex/mtp-die-continuation 0091c7ad5 gate PASS 5,467 cycles; reproduced by mtp-lead for mtp-p2-path-{a,b}-91473d972-tc)",
+    "~/claude-takeover-20261007/REVIEW_20261009.md V22 (5,467 cycles per rank prefix, <= 6,240 model)",
+    "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json stages[*].critical_path ffn.ret_hop.r0"
+   ],
+   "grade": "measured (bench log)",
+   "variant": "selected P2 path (routes queued, not closed); the composition's draft is the DP1-EP5 recovery placement",
+   "note": "per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays (no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."
+  },
+  {
+   "id": "markov.floor",
+   "element": "Markov head PINREG1 (ot_dsrom_markov_row, K 256)",
+   "cycles": 562.5,
+   "critical": true,
+   "phase": "draft",
+   "anchor": "draft.last",
+   "formula": "5 draft steps x (first result 178 cycles - modelled 65.5)",
+   "source": [
+    "results/rtl/dsrom_markov_pinreg_20261008/qualification.json first_result_cycles_no_bubbles",
+    "results/arch/token_path_20261009/ds_rom_mtp.json draft.markov*"
+   ],
+   "grade": "measured",
+   "note": "lower bound: the measured single-row pipeline latency is a floor the transfer-ratio model is under; the whole-vocab sweep throughput needs the head full340_A production wrapper (not built)"
+  }
+ ],
+ "totals": {
+  "critical_cycles": 30631.7,
+  "critical_cycles_lower": 30161.7,
+  "overlapped_cycles": 0,
+  "composed_step_cycles": 1146896.4,
+  "charged_step_cycles": 1177528.1,
+  "tau": 4.159,
+  "MTP_tok_s_composed": 4351.6,
+  "MTP_tok_s_charged": 4238.4,
+  "MTP_tok_s_charged_lower_charges": 4240.1
+ },
+ "inputs": {
+  "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json": "3a7db4e5be43cd22",
+  "results/rtl/dsrom_wfc_split_20261006/closure.json": "be01b4a2e8de0045",
+  "results/rtl/dsrom_recovery_20261004/draft/draft_blocks_recovery.json": "41db75f37da04e24",
+  "results/rtl/dsrom_markov_pinreg_20261008/qualification.json": "29bfec70d415eb2d",
+  "physical/mtp_p2_transport/route.sh": "73ddb88791967365",
+  "physical/mtp_p2_transport/model.json": "aa2e67ca6da05e0b",
+  "rtl/mtp/rollback/ot_mtp_commit.sv": "e2a525e643954df8",
+  "results/uarch/dsrom_mtp_rom_step_20261008/step.json": "8980bce0e6478734"
+ },
+ "sensitivity_not_credited": {
+  "rtl_sequenced_over_model": 1.0433,
+  "source": "results/uarch/dsrom_mtp_rom_step_20261008/step.json step_model.blend_harmonic",
+  "why_not_credited": "dsfd_mtp_seq starts the draft at the closing result while positions a+1..5 are still in verify; the draft head steps then share the head die's lm_head bundle with the verify positions' head passes. The bench proves the sequencing, not a conflict-free head schedule: overlap NOT proven, so not credited"
+ },
+ "ar_effect": {
+  "cycles": 13560.0,
+  "rule": "the WFC kit's per-hop cycles on the AR pass; apply to the AR views when --wfc-hard is default-on",
+  "AR_tok_s_before": 1447.7,
+  "AR_tok_s_after": 1424.4
+ }
+}

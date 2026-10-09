@@ -156,7 +156,7 @@ module tb_hc_mean_capture;
                 in_valid=1;
                 @(negedge clk);in_valid=0;
                 if((bad==2 && beat==1)||(bad==5 && beat==0)) begin
-                    repeat(20) @(negedge clk);
+                    repeat(IS?400:20) @(negedge clk);  // IN_SKID: the bad beat waits behind the skidded one
                     if(!fault||out_valid||!busy) $fatal(1,"bad beat escaped");
                     $display("PASS negative beat %0d retained ownership",bad);$finish;
                 end

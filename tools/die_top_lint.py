@@ -630,7 +630,12 @@ def build(die, top_fix=False):
     else:
         # --top-fix: the 2026-10-06 lint tops of r14b (generator untouched then); default: the generator's variant
         # (r15 fixes every TF in the generator itself)
-        m = H.build(dict(H.R14B, row1_flip=False) if top_fix else H.variant_arg(VARIANT))
+        v_ = dict(H.R14B, row1_flip=False) if top_fix else H.variant_arg(VARIANT)
+        # die-evidence-2 (2026-10-09): a retiled-SM variant (R25G: the fmt3 3x3 SM grid) only builds as a NETWORK
+        # PROBE -- its SM network paths / latency are not qualified by the generator.  The die model is then labelled
+        # (m['network_probe']) and every record built on it carries that label; geometry and nets are the generator's.
+        probe = bool(v_ and v_.get('sm_physical_grid'))
+        m = H.build(v_, network_probe=probe) if probe else H.build(v_)
         if top_fix:
             fix_clock_nets(m, die)
             fix_hbm_links(m)
@@ -768,6 +773,13 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return [(0, bits, 'out' if port.startswith('pll') else 'in')]
     if cls == 'reset_tree':
         return [(0, bits, 'out' if port.startswith('por') else 'in')]
+    if cls in ('loader_mem', 'loader_rsp'):
+        # die-evidence-2 2026-10-09 (r25m RQ-ING-4, in R25G): the loader <-> stream-service memory chains.  A real
+        # (split-view) endpoint gives its RTL directions and the peer takes the complement; with no real endpoint the
+        # bus is classed by its source (endpoint 0 drives the request / response word)
+        if any(CUR_M['_by'][i].master in CUR_M['_real'] for i, _ in eps):
+            return 'complement'
+        return [(0, bits, 'out' if j == 0 else 'in')]
     raise KeyError(f'no direction rule for HBM class {cls} ({bid})')
 
 
