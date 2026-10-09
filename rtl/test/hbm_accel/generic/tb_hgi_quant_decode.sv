@@ -9,6 +9,8 @@ module tb_hgi_quant_decode;
  ot_hgi_quant_decode #(.MUTANT(`MUTANT)) dut(clk,rst_n,v,gen,fp4,hdr,x,vo,y,fault,df);
  wire av,af,bv,bf;wire [511:0] ay,by;wire [255:0] q;wire signed [9:0] e;
  wire legal=hdr[127:124]==4 && (hdr[123:118]==4||hdr[123:118]==5||(hdr[123:118]==6&&hdr[71:64]==16));
+ reg expected_df=0;
+ always @(posedge clk or negedge rst_n)if(!rst_n)expected_df<=0;else expected_df<=v&&gen&&!legal;
  wire take=v&&(!gen||legal);wire e4=gen&&hdr[123:118]==6;
  ot_hfd_actquant_m #(.MR(1),.MLAT(6)) refa(clk,rst_n,take&&!e4,gen ? hdr[123:118]==5 : fp4,x,av,q,e,ay,af);
  ot_hgi_fp4qdq refb(clk,rst_n,take&&e4,x,bv,by,bf);
@@ -24,7 +26,7 @@ module tb_hgi_quant_decode;
    n=n+1; if(av&&rv[14])$fatal(1,"OUTPUT COLLISION n=%0d",n);
    if(y !== (rv[14]?ry[14]:ay) || fault !== (rv[14]?rf[14]:af))$fatal(1,"ARITHMETIC mismatch output %0d",n);
   end
-  if(df !== (v&&gen&&!legal))$fatal(1,"DECODE mismatch");
+  if(df !== expected_df)$fatal(1,"DECODE mismatch");
   if(df)decodes=decodes+1;
  end
  initial begin
