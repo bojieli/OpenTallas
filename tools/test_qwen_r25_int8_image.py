@@ -11,7 +11,7 @@ import qwen_r25_int8_image as P
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
-    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);a=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--pipe',action='store_true');a=ap.parse_args()
     a.out.mkdir(parents=True,exist_ok=False)
     rng=np.random.default_rng(20261008)
     results=[]
@@ -43,7 +43,7 @@ def main():
             (codes[3:].astype(np.float32).view(np.uint32)>>16).reshape(-1)))
         src=['rtl/hbm_accel/sm/ot_hbm_accel_int8_line.sv','rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv',
              'rtl/test/tb_qwen_r25_int8_image.sv']
-        subprocess.run(['iverilog','-g2012','-s','tb_qwen_r25_int8_image','-o',str(td/'run')]+[str(ROOT/s) for s in src],check=True,capture_output=True)
+        subprocess.run(['iverilog','-g2012',*(['-Ptb_qwen_r25_int8_image.PIPE=1'] if a.pipe else []),'-s','tb_qwen_r25_int8_image','-o',str(td/'run')]+[str(ROOT/s) for s in src],check=True,capture_output=True)
         rtl=[]
         for variant in ('correct','negative_row_major'):
             actual=lines if variant=='correct' else [codes[3:].tobytes()[i:i+128]+bytes(8)

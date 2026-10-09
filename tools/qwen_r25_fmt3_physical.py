@@ -24,10 +24,10 @@ def cmd(args,log,env=None):
         raise RuntimeError(f'{log}: exit {result.returncode}')
 
 
-def model(wide=False):
+def model(wide=False,pipe=False):
     tree=ast.parse((ROOT/'tools/uarch_model.py').read_text())
-    node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name==('qwen_r25_fmt3_wide_model' if wide else 'qwen_r25_int8_unpack_model'))
-    nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('qwen_r25_int8_unpack_model','qwen_r25_fmt3_wide_model')]
+    node=next(n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name==('qwen_r25_int8_pipeline_model' if pipe else 'qwen_r25_fmt3_wide_model' if wide else 'qwen_r25_int8_unpack_model'))
+    nodes=[n for n in tree.body if isinstance(n,ast.FunctionDef) and n.name in ('qwen_r25_int8_unpack_model','qwen_r25_fmt3_wide_model','qwen_r25_int8_pipeline_model')]
     scope={};exec(compile(ast.Module(body=nodes,type_ignores=[]),'model','exec'),scope)
     return scope[node.name]()
 
@@ -36,7 +36,10 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--source-commit',required=True)
     p.add_argument('--generate-only',action='store_true',help='emit candidate and inspect source hooks without compute')
     p.add_argument('--wide',action='store_true',help='570.24um strip and 240um central corridor; separate candidate')
-    a=p.parse_args();out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
+    p.add_argument("--pipe",action="store_true",help="second elastic conversion stage; requires --wide")
+    a=p.parse_args()
+    if a.pipe and not a.wide: p.error("--pipe requires --wide")
+    out=a.out.resolve();out.mkdir(parents=True,exist_ok=False)
     state={'source_commit':a.source_commit,'phase':'model','policy':'SS>=15ps FF>=15ps DRC0;833ps60/25uncertainty'}
     def save(): (out/'state.json').write_text(json.dumps(state,indent=2)+'\n')
     save()
@@ -44,12 +47,13 @@ def main():
         gen=ROOT/'tools/hbm_accel_smh_physical.py'
         # Empty explicit environment overrides prevent accidental TC setup reuse.
         env=dict(os.environ,OT_SMH_CORNER='WC');env.pop('OT_ORFS_CORNER_OVERRIDE',None);env.pop('OT_SMH_POST_SDC',None)
-        m=model(a.wide);(out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
+        m=model(a.wide,a.pipe);(out/'model.json').write_text(json.dumps(m,indent=2)+'\n')
         pins={}  # measured literal generator pin ABI is captured below
         common=[sys.executable,gen,'block','--piece','front_c','--variant','one','--src',ROOT,
             '--period','833','--skew','90','--die-skew','150','--pd','0.55','--cores','16',
             '--need','64','--no-admit','--top-param','ENABLE_INT8=1','--hold-mm','--hold-margin','40',
             '--hold-buffer-pct','60','--make-var','GPL_ROUTABILITY_DRIVEN=0']
+        if a.pipe: common += ['--top-param','PIPE_INT8=1']
         if a.wide:
             common += ['--geom',ROOT/'results/arch/qwen_on_r25_20261008/fmt3_physical_candidate/wide_geometry.json']
         def bind_endpoints(work):
@@ -80,7 +84,7 @@ def main():
                     source_commit=a.source_commit,preCTS_core_source_ps=float(refs[0]),
                     preCTS_neighbour_source_ps=float(refs[0]),postCTS_core_source_ps=0,
                     unchanged='period, uncertainty, input/output delay and neighbour reference'),indent=2)+'\n')
-        label='qwen_fmt3_wide' if a.wide else 'qwen_fmt3'
+        label='qwen_fmt3_pipe' if a.pipe else 'qwen_fmt3_wide' if a.wide else 'qwen_fmt3'
         cal=out/'cal';route=out/'route'
         cmd(common+['--label',label+'_cal','--out',cal,'--stop-after','cts',
             '--make-var','SKIP_CTS_REPAIR_TIMING=1'],out/'generate_cal.log',env)
@@ -91,8 +95,8 @@ def main():
         state.update(phase='exact_gates',geometry=geometry);save()
         if a.generate_only:
             state.update(phase='generated');save();return
-        cmd([sys.executable,ROOT/'tools/qwen_r25_int8_gate.py','--out',out/'adapter_gate'],out/'adapter_gate.log',env)
-        cmd([sys.executable,ROOT/'tools/test_qwen_r25_int8_image.py','--out',out/'image_gate'],out/'image_gate.log',env)
+        cmd([sys.executable,ROOT/'tools/qwen_r25_int8_gate.py','--out',out/'adapter_gate',*(['--pipe'] if a.pipe else [])],out/'adapter_gate.log',env)
+        cmd([sys.executable,ROOT/'tools/test_qwen_r25_int8_image.py','--out',out/'image_gate',*(['--pipe'] if a.pipe else [])],out/'image_gate.log',env)
         state['phase']='calibration';save()
         cmd(['bash',cal/'run.sh'],out/'cal_driver.log',env)
         base=next((cal/'results/asap7').glob('*/base'))
