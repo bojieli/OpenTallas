@@ -1,0 +1,91 @@
+{
+ "name": "engram-lead-765470589-tt",
+ "block": "ot_dsrom_engram_lead_producer",
+ "owner": "Codex:engram",
+ "purpose": "First full64user8history released-token lead producer with8actual4096x72ROMs, bounded rollback/context/output stall; standalonePATHFINDING pending extracted die IO and mutable-state protection. Four added cycles priced before RTL; no integration/adoption credit.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-epyc4",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/engram-resume-20261009",
+  "commit": "765470589",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "Makefile"
+  ],
+  "extra_paths": [
+   "results/arch/engram_20261008/route_specs/pins_engram_lead.json",
+   "results/rtl/engram_lead_gate_20261009.json"
+  ]
+ },
+ "no_bench_reason": "Actual remote fullshape lead gate PASS source3ad95de86 inherited765470589; prior NEEDTIMING harness failures preserved. RTL64users8history8actualROMmacro interfaces, released map/context exactness and bounded flow. Model commits70ac23fb5/2df913d17 precede RTL; no redundant gate rerun.",
+ "resource_evidence": {
+  "reservation_note": "24GiB full route inventory reservation, not process cap: eight38.016x62.910umROMmacros plus actual64user count/history/output logic on324x216um leaf; routepeak not measured yet, retain stage evidence."
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; python3 -c \"import json; d=json.load(open('results/arch/engram_20261008/route_specs/pins_engram_lead.json')); d['scalar_ports']=[p[0] for p in d['ports'] if p[1]==1]; json.dump(d,open('{CL}/lead_pins.json','w'))\" && python3 tools/s81_ph/s81_ph_pinplan.py {CL}/lead_pins.json && HM=0.035 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv' MACROS='ot_rom_4096x72_m8=physical/asap7_memory_macros/ot_rom_4096x72_m8' CLK=clk bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract ot_dsrom_engram_lead_producer rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_MM_FF_SDC='physical/s81_ph_views/common/signoff_unc60.sdc'; python3 -c \"import json; d=json.load(open('results/arch/engram_20261008/route_specs/pins_engram_lead.json')); d['scalar_ports']=[p[0] for p in d['ports'] if p[1]==1]; json.dump(d,open('{CL}/lead_pins.json','w'))\" && python3 tools/s81_ph/s81_ph_pinplan.py {CL}/lead_pins.json && SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc HM=0.035 PD=0.45 SRC={SRC} OUT={RUN}/routes CORES=8 NEED=24 SRCS='rtl/dsrom_sys/engram/ot_dsrom_engram_token_map.sv rtl/dsrom_sys/engram/ot_dsrom_engram_idwin.sv' MACROS='ot_rom_4096x72_m8=physical/asap7_memory_macros/ot_rom_4096x72_m8' CLK=clk bash physical/s81_ph_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} contract ot_dsrom_engram_lead_producer rtl/dsrom_sys/engram/ot_dsrom_engram_lead_producer.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/check.json {RUN}/routes/{LABEL}/args {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x72_m8"
+  ],
+  "checks": [
+   {
+    "name": "actual_literal_pin_abstract_match",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{LABEL}/check.json'))['verdict'] != 'MATCH')\""
+   }
+  ]
+ },
+ "record": [
+  {
+   "to": "results/rtl/engram_lead_physical_20261009/engram-lead-765470589-tt",
+   "from": "{RUN}/record"
+  }
+ ],
+ "cycles_added": 4,
+ "cycles_note": "Four stream edges before downstreamEngramlookup, model-priced; whole transport/integration additionalcosts remain open.",
+ "merge_target": null,
+ "route_corner": "TC",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.035
+}
