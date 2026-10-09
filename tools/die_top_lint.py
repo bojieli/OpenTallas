@@ -435,7 +435,11 @@ def real_blocks_kv():
     import qwen_rom_fulldie as QF
     out['ot_hbm3e_phy'] = dict(module='ot_hbm3e_phy', file=QPHY_BB, kind='hard macro black box (v2 E/W PHY)', params={},
                                ports=parse_module(QPHY_BB, 'ot_hbm3e_phy')['ports'],
-                               binding=dict(dfi=[pn for pn, _ in QF.phy_pins()], clk=['clk'], rst_n=['rst_n']))
+                               # the die's dfi bus carries the 9,207 signal pins; clk / rst_n are their own die ports
+                               # (die-evidence-2: with them inside dfi the bus was 2 pins short and 8 rsp_data bits had
+                               # no die net)
+                               binding=dict(dfi=[pn for pn, _ in QF.phy_pins() if pn not in ('clk', 'rst_n')],
+                                            clk=['clk'], rst_n=['rst_n']))
     h, c = CDC_LAYOUT['h'], CDC_LAYOUT['c']
     ho = [p for p in h if p.split('[')[0] in ('h_cred', 'h_wv', 'h_wsec', 'h_cv', 'h_csec', 'h_cdata', 'h_ctag', 'h_fault')]
     co = [p for p in c if p.startswith('l_')]
