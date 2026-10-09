@@ -103,6 +103,15 @@ MM_SINCE = "2026-10-07T21:00"
 # here routes with CORNER=TC (setup repair at TT; with mm, hold at FF) unless spec "route_corner" names another corner;
 # hold ECOs time the setup scene at TT.  SS setup is recorded as a sensitivity (ss_sensitivity_ps).
 OPTB_SINCE = "2026-10-07T20:20"
+# CALIB-CORNER (2026-10-08, orphans-2 finding): jobs created from here calibrate at the ROUTE corner and reference the
+# route-time IO SDC to the route-corner insertion.  Every recipe builds its route IO SDC from CK_SS_* (io_vclk_m_$CK_SS_MEAN,
+# make_sdc.py --l-ss-*, budget SDCs); a TC route signs off at the routed TT reference, so with CK_SS_* at the SS insertion
+# the router saw ~190 ps of output setup credit that sign-off removed (hfd_router h1c: route TT -71.83, routed reference
+# -152.67).  For a TC/TT route: calibrate runs with OT_ORFS_CORNER=<corner> (CTS at TT), ck_insertion.py --route-corner
+# puts the TT insertion in CK_SS_* (SS values in CK_SSLIB_*), the parallel-calibrate assumption is the block's TT
+# (routed grade, else calibrate TT) from measured_insertion.json, and a TC job with no TT value calibrates sequentially
+# (CTS-only, minutes).  SS-corner routes keep the SS reference.  Earlier jobs keep their behaviour.
+ROUTE_REF_SINCE = "2026-10-08T19:05"
 SETUP_LIB = "TT"
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
@@ -342,6 +351,7 @@ def stage_list(spec):
                 f"bash {{CL}}/cal_classify.sh '{base}'; exit 3; }}"
                 f"\n[ -f \"$B/4_1_cts.odb\" ] || {{ echo \"calibrate: no 4_1_cts.odb under $B\"; bash {{CL}}/cal_classify.sh '{base}'; exit 4; }}"
                 f"\npython3 {{CL}}/ck_insertion.py --base \"$B\" --clock {cal.get('clock', 'ck')} --output {{CL}}/calib.json"
+                f" --route-corner \"${{OT_CAL_ROUTE_CORNER:-}}\""
                 f" > {{CL}}/calib.env || exit 4\ncat {{CL}}/calib.env\nset -a; . {{CL}}/calib.env; set +a")
         if cal.get("sdc_cmd"):
             tail += "\n" + cal["sdc_cmd"]
@@ -937,6 +947,8 @@ def record_measured(j):
     c = j.get("calibration") or {}
     if not c.get("env"):
         return
+    e = c["env"]
+    p_ss = "CK_SSLIB_" if "CK_SSLIB_MEAN" in e else "CK_SS_"     # CK_SS_* is the route-corner value under CALIB-CORNER
     p = STATE / "measured_insertion.json"
     with open(STATE / "measured.lock", "w") as lk:
         fcntl.flock(lk, fcntl.LOCK_EX)
@@ -945,8 +957,10 @@ def record_measured(j):
         d["blocks"][j["spec"]["block"]] = dict(
             job=j["name"], source_commit=j.get("commit_full"), host=j["host"], run=j["run"], clock=c.get("clock"),
             parasitics=c.get("parasitics"), measured_at=now_iso(),
-            ss=dict(mean=c["env"]["CK_SS_MEAN"], min=c["env"]["CK_SS_MIN"], max=c["env"]["CK_SS_MAX"]),
-            ff=dict(mean=c["env"]["CK_FF_MEAN"], min=c["env"]["CK_FF_MIN"], max=c["env"]["CK_FF_MAX"]),
+            ss=dict(mean=e[p_ss + "MEAN"], min=e[p_ss + "MIN"], max=e[p_ss + "MAX"]),
+            ff=dict(mean=e["CK_FF_MEAN"], min=e["CK_FF_MIN"], max=e["CK_FF_MAX"]),
+            **({"tt": dict(mean=e["CK_TT_MEAN"], min=e["CK_TT_MIN"], max=e["CK_TT_MAX"])} if "CK_TT_MEAN" in e else {}),
+            route_ref=e.get("CK_ROUTE_REF", "SS"),
             boundary_n=(c.get("ss") or {}).get("boundary", {}) and c["ss"]["boundary"].get("n"),
             budget=(j.get("budget") or {}).get("check"))
         d["updated"] = now_iso()
@@ -1197,6 +1211,25 @@ def docker_lec_off(cl):
             f"chmod +x {cl}/bin/docker\nexport PATH={cl}/bin:$PATH\n")
 
 
+def route_corner(j):
+    """the corner a job's route stage repairs setup at: spec route_corner (default TC after option B), or for a "keep"
+    recipe its own OT_ORFS_CORNER(_OVERRIDE)=... in the route command, else WC (SS)"""
+    rc = j["spec"].get("route_corner", "TC") if (j.get("created") or now_iso()) >= OPTB_SINCE else "keep"
+    if rc != "keep":
+        return str(rc).upper()
+    stages = j["spec"].get("stages")
+    cmd = str(((stages or {}).get("route") or {}).get("cmd", "")) if isinstance(stages, dict) else ""
+    m = re.search(r"OT_ORFS_CORNER(?:_OVERRIDE)?=['\"]?(\w+)", cmd)
+    return m.group(1).upper() if m else "WC"
+
+
+def route_ref(j):
+    """'TT' when the job's route-time IO SDC references the TT (route-corner) insertion (CALIB-CORNER), else None"""
+    if (j.get("created") or "") < ROUTE_REF_SINCE or j["spec"].get("route_ref") == "SS":
+        return None
+    return "TT" if route_corner(j) in ("TC", "TT") else None
+
+
 def launch_stage(j, st, cmd):
     t = tag(st, j)
     if st["kind"] == "bench":
@@ -1219,6 +1252,9 @@ def launch_stage(j, st, cmd):
         # repair (mm, HM 50) measuring nothing.  Applied to every calibrate, whatever its route_hold_corners.
         ship_helpers(j["host"], j["run"])
         env += f"export OT_CAL_CTS_ONLY=1\npython3 {j['run']}/cl/hold_corners_patch.py {j['run']}/src\n"
+        if route_ref(j):
+            # CALIB-CORNER: CTS at the route corner, insertion referenced to it (ck_insertion.py --route-corner)
+            env += f"export OT_ORFS_CORNER={shlex.quote(route_corner(j))}\nexport OT_CAL_ROUTE_CORNER={shlex.quote(route_corner(j))}\n"
     if st["kind"] in ("calibrate", "route") and j.get("created", "") >= HM_DEFAULT_SINCE:
         # default route hold margin (coordinator 2026-10-06: hold-only misses dominate; ctrl_ctr closed at HM 35 ps);
         # route_view.sh reads HM in ns; an inline HM=... in the command, or spec route_hold_margin_ns, overrides it
@@ -1234,6 +1270,11 @@ def launch_stage(j, st, cmd):
     # bench-track views carry a string attempt ("1b2"): their outputs are not the stage dir, never move them aside
     if isinstance(j["attempt"], int) and j["attempt"] > 1 and not j.get("resume"):
         env += retry_aside(j, st)
+    if st["kind"] == "route" and route_ref(j):
+        fixed = sorted(set(re.findall(r"io_vclk_m_\d+\.sdc", cmd)))
+        if fixed:
+            log(f"{j['name']}: CALIB-CORNER WARNING route cmd names fixed IO SDC(s) {', '.join(fixed)}: not referenced to "
+                f"the TT insertion (generate them from $CK_SS_MEAN in sdc_cmd)")
     if st["kind"] == "route" and now_iso() >= OPTB_SINCE and j["spec"].get("route_corner", "TC") != "keep":
         env += f"export OT_ORFS_CORNER={shlex.quote(str(j['spec'].get('route_corner', 'TC')))}\n"
     if st["kind"] in ("calibrate", "route"):
@@ -2413,6 +2454,21 @@ def assumed_insertion(j):
         m = json.loads((STATE / "measured_insertion.json").read_text())["blocks"].get(blk)
     except (OSError, ValueError, KeyError):
         m = None
+    if route_ref(j):
+        # CALIB-CORNER: a TC/TT route references its IO to the TT insertion: the block's routed TT (grade routed), else
+        # a calibrate's TT; none -> no assumption (sequential CTS-only calibrate, minutes)
+        if not (m and m.get("tt") and m.get("ff")):
+            return None, None
+        t = m["tt"]
+        env = {}
+        for k, key in (("MEAN", "mean"), ("MIN", "min"), ("MAX", "max")):
+            env[f"CK_SS_{k}"] = env[f"CK_SS_ALL_{k}"] = env[f"CK_TT_{k}"] = env[f"CK_TT_ALL_{k}"] = round(float(t[key]))
+            env[f"CK_FF_{k}"] = env[f"CK_FF_ALL_{k}"] = round(float(m["ff"][key]))
+            if m.get("ss"):
+                env[f"CK_SSLIB_{k}"] = round(float(m["ss"][key]))
+        env["CK_ROUTE_REF"] = "TT"
+        return env, (f"measured_insertion.json TT ({m.get('grade') or 'calibrate'}, {m.get('job')}, "
+                     f"{m.get('measured_at')})")
     if m and m.get("ss") and m.get("ff"):
         v = dict(ss=m["ss"]["mean"], ss_min=m["ss"]["min"], ss_max=m["ss"]["max"],
                  ff=m["ff"]["mean"], ff_min=m["ff"]["min"], ff_max=m["ff"]["max"])
@@ -2454,6 +2510,18 @@ def start_parallel_calibrate(j, stl, st):
                        f"{j['run']}/cl/calib.assumed.env", input=text, timeout=60)
     if r.returncode:
         return False
+    bud = active_budget(j["spec"])
+    if route_ref(j) and bud and j.get("budget") and not bud.get("preserve_full_sheet"):
+        # CALIB-CORNER: budget route/sign-off SDCs on the assumed route-corner (TT) insertion, not the sheet's SS one
+        try:
+            ov = dict(ss=env["CK_SS_MEAN"], ss_min=env["CK_SS_MIN"], ss_max=env["CK_SS_MAX"], ff=env["CK_FF_MEAN"],
+                      ff_min=env["CK_FF_MIN"], ff_max=env["CK_FF_MAX"], grade="assumed-tt", source=src, over_target=False)
+            for fn, text in budget_files(bud, insertion_override=ov).items():
+                if not fn.startswith("_"):
+                    ssh(j["host"], f"cat > {j['run']}/cl/{fn}", input=text, timeout=60, check=True)
+        except Exception as ex:  # noqa: BLE001
+            event(j, f"CALIB-CORNER: budget SDCs at the TT assumption failed ({ex}): sequential calibrate")
+            return False
     if c0 and c0.get("state") == "done":
         j["stage_idx"] += 1
         event(j, f"calibrate already measured in parallel: route on {src}")
