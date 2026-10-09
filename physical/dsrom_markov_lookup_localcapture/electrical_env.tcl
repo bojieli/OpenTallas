@@ -9,7 +9,13 @@ foreach macro [[ord::get_db_block] getInsts] {
         set_dont_touch [get_nets [$net getName]]
         foreach t [$net getITerms] {
             if {$t ne $q && [$t getIoType] eq "INPUT"} {
-                set_dont_touch [get_cells [[$t getInst] getName]]
+                set capture_cells [get_cells [[$t getInst] getName]]
+                if {[info exists ::ot_capture_allow_clock_reconnect] && $::ot_capture_allow_clock_reconnect} {
+                    # CTS must reconnect CLK; D/q net protection and FIRM stay.
+                    unset_dont_touch $capture_cells
+                } else {
+                    set_dont_touch $capture_cells
+                }
             }
         }
         incr protected

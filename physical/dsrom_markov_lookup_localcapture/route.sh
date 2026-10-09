@@ -68,7 +68,8 @@ python3 tools/run_abi3_physical.py --source-root "$S" --view asap7 --top $TOP "$
  --orfs-var ADDER_MAP_FILE= --place-density 0.55 --orfs-var PLACE_DENSITY_LB_ADDON= --max-transition-ns 0.25 --slew-margin-percent 50 \
  --hold-margin-ns $HMS --step-tcl POST_PDN=physical/dsrom_markov_lookup_localcapture/sliver_block.tcl \
  --step-tcl PRE_GLOBAL_PLACE=physical/dsrom_markov_lookup_localcapture/pre_global_place.tcl \
- --step-tcl PRE_CTS=physical/dsrom_markov_lookup_localcapture/pre_repair.tcl \
+ --step-tcl PRE_CTS=physical/dsrom_markov_lookup_localcapture/pre_cts.tcl \
+ --step-tcl POST_CTS=physical/dsrom_markov_lookup_localcapture/post_cts.tcl \
  --step-tcl PRE_GLOBAL_ROUTE=physical/dsrom_markov_lookup_localcapture/pre_repair.tcl \
  --sdc-append physical/dsrom_markov_lookup_localcapture/macro_capture.sdc --keep-workdir "$O/work" --nickname-tag $LBL --keep-heavy-artifacts --output "$O/physical.json" "$@" > $O/run.log 2>&1
 rc=$?; result_rc=$rc; echo "rc=$rc" > $O/exit
