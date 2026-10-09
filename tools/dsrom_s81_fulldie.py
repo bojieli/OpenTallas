@@ -3566,12 +3566,16 @@ NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a rel
 WFC_BUSES = (('wfc', 'vm', 544, 't_vm', 'f_wfc'), ('vm', 'wfc', 512, 't_wfc', 'f_vm'),
              ('collective', 'wfc', 514, 't_wfc', 'f_collective'), ('wfc', 'collective', 514, 't_collective', 'f_wfc'),
              ('wfc', 'capture', 64, 't_capture', 'f_wfc'), ('capture', 'wfc', 64, 't_wfc', 'f_capture'))
-# sequencer: argmax token words in from the capture (verify targets t_0..t_5 + draft d_i, 17 b + valid + index), out
-# to the collective: acc_n / bonus / squash / epoch word on the token return + seed dispatch to the draft primary
-# (128 b); in from the collective: draft-chain completions and the 12-die argmax merge (128 b); to the VM: the Markov
-# embed row (32 x BF16 = 512 b) and the draft seed x control (64 b).
-MTP_SEQ_BUSES = (('capture', 'mtp', 64, 't_mtp', 'f_capture'), ('mtp', 'collective', 128, 't_collective', 'f_mtp'),
-                 ('collective', 'mtp', 128, 't_mtp', 'f_collective'), ('mtp', 'vm', 576, 't_vm', 'f_mtp'))
+# sequencer (mtp-lead 2026-10-09, native binding): widths from the ACTUAL dsfd_mtp_seq wrapper ports
+# (rtl/dsrom_sys/mtp/dsfd_mtp_tops.sv, NW 21 / USER_W 10 / FLIT 512; each grant port = data + valid + grant):
+#   capture -> mtp   RESULT flit f_rv/f_rd/t_rg                                  512 + 2 = 514
+#   mtp -> collective token return t_tv/t_td/f_tg 514 + seed to the draft primary t_sv/t_sd/f_sg (SW = 10+3*21+4 = 77)
+#                    79 + accept word t_acc (2*21+10+5 = 57, from flops)          514 + 79 + 57 = 650
+#   vm -> mtp        rows-ready f_wv/f_wd/t_wg 12 + draft-head result f_qv/f_qd/t_qg (DW = 10+3+21 = 34) 36 = 48
+#   mtp -> vm        draft-head step t_hv/t_hd/f_hg                                34 + 2 = 36
+# (replaces the 64/128/128/576 aggregates of 2026-10-08, which did not describe the wrapper).
+MTP_SEQ_BUSES = (('capture', 'mtp', 514, 't_mtp', 'f_capture'), ('mtp', 'collective', 650, 't_collective', 'f_mtp'),
+                 ('vm', 'mtp', 48, 't_mtp', 'f_vm'), ('mtp', 'vm', 36, 't_vm', 'f_mtp'))
 # MTP-DIE (2026-10-08, results/arch/mtp_die_20261008): die-level homes of the DSpark MTP functions (default off: the
 # r3 / r4 dies stay reproducible).
 CTRL_SLAB = False
