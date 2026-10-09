@@ -7,7 +7,7 @@
       "owner": "hbm_continuation",
       "description": "Full FP32 query readyvalid to cold four-credit native selector ABI",
       "source": {
-        "commit": "a9abd575e",
+        "commit": "57ef00fce",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_native_index_query_credit.sv"
         ]
@@ -29,18 +29,18 @@
         "positive": {
           "status": "PASS component transport exactness",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/credit/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
           ]
         },
         "negative": {
-          "status": "PASS deliberate payload/identity/reserved-bit mutant rejected",
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/credit/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
           ]
         }
       },
       "physical": {
-        "status": "pending actual die slots, channel allocation, mutable FIFO/control protection and TT/FF route",
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
         "corners": {},
         "evidence": []
       },
@@ -62,7 +62,7 @@
       "owner": "hbm_continuation",
       "description": "Literal fifteen34-bit tuple formatter preserving realTU33-bit header and actualquartercompletion",
       "source": {
-        "commit": "a9abd575e",
+        "commit": "57ef00fce",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_native_candidate_format.sv",
           "physical/hbm_accel_die_views/index/rtl/hfd_idx_sel.sv"
@@ -86,18 +86,18 @@
         "positive": {
           "status": "PASS component transport exactness",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/formatter/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/format/record.json"
           ]
         },
         "negative": {
-          "status": "PASS deliberate payload/identity/reserved-bit mutant rejected",
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/formatter/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/format/record.json"
           ]
         }
       },
       "physical": {
-        "status": "pending actual die slots, channel allocation, mutable FIFO/control protection and TT/FF route",
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
         "corners": {},
         "evidence": []
       },
@@ -120,7 +120,7 @@
       "owner": "hbm_continuation",
       "description": "Finite readyvalid decoder preserving all fifteen slots, fullowner73 and TU metadata",
       "source": {
-        "commit": "a9abd575e",
+        "commit": "57ef00fce",
         "paths": [
           "rtl/hbm_accel/index/ot_hbm_native_candidate_parse.sv"
         ]
@@ -142,18 +142,18 @@
         "positive": {
           "status": "PASS component transport exactness",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/credit/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
           ]
         },
         "negative": {
-          "status": "PASS deliberate payload/identity/reserved-bit mutant rejected",
+          "status": "PASS payload/identity/quarter-completion/reserved-bit fault injections rejected with no publication after detected fault",
           "evidence": [
-            "results/rtl/hbm_native_index_format_20261009/credit/record.json"
+            "results/rtl/hbm_native_index_format_20261009/protected/credit_record.json"
           ]
         }
       },
       "physical": {
-        "status": "pending actual die slots, channel allocation, mutable FIFO/control protection and TT/FF route",
+        "status": "pending actual die slots/channel allocation and TT/FF route; local dualrail payload/control exact failstop gates PASS, no correction",
         "corners": {},
         "evidence": []
       },

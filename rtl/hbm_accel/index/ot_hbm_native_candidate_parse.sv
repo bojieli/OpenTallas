@@ -13,7 +13,13 @@ module ot_hbm_native_candidate_parse #(parameter integer ENABLE=0)(
  output wire [72:0] tuple_owner,output wire drained,output wire fault
 );
  reg busy,sticky_fault;reg[544:0]held;reg[72:0]held_owner;reg[3:0]slot;
- wire allowed=ENABLE&&owner_valid&&!owner_fault&&!sticky_fault;
+  reg [0:0] busy_n;
+ reg [0:0] sticky_fault_n;
+ reg [544:0] held_n;
+ reg [72:0] held_owner_n;
+ reg [3:0] slot_n;
+ wire coded_ok=(busy_n==~busy)&&(sticky_fault_n==~sticky_fault)&&(held_n==~held)&&(held_owner_n==~held_owner)&&(slot_n==~slot);
+ wire allowed=ENABLE&&owner_valid&&!owner_fault&&!sticky_fault&&coded_ok;
  wire valid_header=flit_owner==owner_frame&&flit[544]==expected_kind&&
    flit[543:536]==expected_dst&&flit[535:528]<96&&!flit[510];
  assign flit_r=allowed&&!busy;
@@ -21,17 +27,17 @@ module ot_hbm_native_candidate_parse #(parameter integer ENABLE=0)(
  assign tuple=held[34*slot+:34];assign tuple_src=held[535:528];
  assign tuple_index=held[527:512];assign tuple_slot=slot;
  assign quarter_last=held[511]&&slot==14;
- assign tuple_owner=held_owner;assign drained=ENABLE&&!busy;
- assign fault=ENABLE&&(sticky_fault||owner_fault);
+ assign tuple_owner=held_owner;assign drained=ENABLE&&!fault&&!busy;
+ assign fault=ENABLE&&(sticky_fault||owner_fault||!coded_ok);
  always @(posedge clk or negedge por_n)begin
-  if(!por_n)begin busy<=0;sticky_fault<=0;held<=0;held_owner<=0;slot<=0;end
+  if(!por_n)begin begin busy<=0;busy_n<=~(0); end begin sticky_fault<=0;sticky_fault_n<=~(0); end begin held<=0;held_n<=~(0); end begin held_owner<=0;held_owner_n<=~(0); end begin slot<=0;slot_n<=~(0); end end
   else if(ENABLE)begin
-   if(owner_fault||(busy&&(!owner_valid||held_owner!=owner_frame)))sticky_fault<=1;
+   if(!coded_ok||owner_fault||(busy&&(!owner_valid||held_owner!=owner_frame)))begin sticky_fault<=1;sticky_fault_n<=~(1); end 
    if(flit_v&&flit_r)begin
-    if(!valid_header)sticky_fault<=1;
-    else begin held<=flit;held_owner<=flit_owner;slot<=0;busy<=1;end
+    if(!valid_header)begin sticky_fault<=1;sticky_fault_n<=~(1); end 
+    else begin begin held<=flit;held_n<=~(flit); end begin held_owner<=flit_owner;held_owner_n<=~(flit_owner); end begin slot<=0;slot_n<=~(0); end begin busy<=1;busy_n<=~(1); end end
    end
-   if(tuple_v&&tuple_r)begin if(slot==14)busy<=0;else slot<=slot+1'b1;end
+   if(tuple_v&&tuple_r)begin if(slot==14)begin busy<=0;busy_n<=~(0); end else begin slot<=slot+1'b1;slot_n<=~(slot+1'b1); end end
   end
  end
 endmodule
