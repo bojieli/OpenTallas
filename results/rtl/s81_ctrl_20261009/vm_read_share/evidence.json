@@ -1,0 +1,15 @@
+{
+ "schema":"opentallas.s81-vm-read-share.component.v1",
+ "status":"PASS_COMPONENT_OWNERSHIP_BINDING_PENDING", "enabled_default":false,
+ "host":"ot-agidock128","admitted_ram_gb":2,
+ "remote_run":"/srv/opentallas-scratch/codex/ds-control/vm-read-share-v2",
+ "source_pins":"source.sha256",
+ "prebuild_model":"results/rtl/s81_ctrl_20261009/vm_read_share_prebuild.json",
+ "native_memory":{"module":"ot_s81ph_vm_mem","NP":8,"NB":32,"QD":4,"RQ":8,"MACRO":1,"macros":128,"ports_used":[0,1],"fixture_idle_ports":[2,3,4,5,6,7]},
+ "positive":{"hop_rows":640,"hc_rows":1280,"real_rvalid":true,"protected_owner_order_exact":true,"total_cycles_including1280row_init_and_reset":19258,"hc_read_window_cycles":17917,"hop_read_window_cycles":812,"common_reset_flush":true},
+ "negative":{"bad1.log":"orphan native response","bad2.log":"33rd hop request without returned ownership","bad3.log":"protected queued row corruption","bad4.log":"protected response-owner corruption"},
+ "native_slots":"Existing write0/read1 only. Other slots idle in fixture are not declared free in production.",
+ "storage":"Duplicated complements protect every request row, response owner, queue count/pointer and scheduling flag; payload returned by native protected storage remains native data.",
+ "remaining":["Authoritative selected scheduler reservation of write0/read1","All other NP8 producer schedule/bank-load composition","Actual Hrestore and pre-hc_pre read lease","Common reset/quiescence binding in assembled die","Synthesis and contextual SS/FF timing/area/corridor fit"],
+ "scope":"Finite two-client routing mechanism, not whole-token execution or claimed physical closure. HC client owns one request until response; hop reserves32. VMfault aborts rather than inventing ready or response latency."
+}

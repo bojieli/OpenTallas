@@ -14081,3 +14081,9 @@ def s81_control_transport_model(**kwargs):
     """Real native queue/CDC, control lane and HC/seed adapters before build."""
     from tools.s81_ctrl.control_transport_model import model
     return model(**kwargs)
+
+
+def s81_vm_read_share_model(**kwargs):
+    """Size finite sharing of existing native NP8 slot1; no invented slots."""
+    from tools.s81_ctrl.control_transport_model import vm_read_share_model
+    return vm_read_share_model(**kwargs)
