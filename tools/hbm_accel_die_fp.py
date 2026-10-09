@@ -469,6 +469,10 @@ ADOPTED = R25
 
 def build(variant=None, *, geometry_only=False, network_probe=False):
     variant = dict(variant if variant is not None else ADOPTED)
+    if variant.get('hgi_dispatch') and not variant.get('hgi_dispatch_pins_done'):
+        # hgi-takeover 2026-10-09: the normative dispatch's ECO pins on the cmdproc split view (tools/hgi_die_dispatch.py)
+        from hgi_die_dispatch import variant as hgi_dispatch_variant
+        variant = dict(hgi_dispatch_variant(variant, variant['hgi_dispatch']), hgi_dispatch_pins_done=True)
     Q.CORNER_RULE.clear()
     Q.CORNER_RULE.update(variant.get('corner_rule', {}))
     Q.PIN_CENTRE.clear()
@@ -2526,6 +2530,10 @@ def buses(m):
     for a_, b_, bits in hl_:
         B.append((f'hb_{a_}_{b_}', 'hub', bits, [(hub[a_].name, f't_{role(a_, b_)}'), (hub[b_].name, f'f_{role(b_, a_)}')]))
         P[f'hub_{a_}_{b_}'] = [f'hb_{a_}_{b_}']
+    if V.get('hgi_dispatch'):
+        # hgi-takeover 2026-10-09: normative ot_hgi_seq v1.0 record dispatch to the generic units (opt-in, buses only)
+        from hgi_die_dispatch import install as install_hgi_dispatch
+        install_hgi_dispatch(m, B, P, V['hgi_dispatch'])
     # ---- collective -> SerDes: 8 TU ports x 546 b each direction striped over the 9 macros (S centre 5, N centre 4):
     #      spine-side channel -> hub edge channel -> the channel east of the macro -> its E-face pins
     coll = hub['coll']
@@ -2939,6 +2947,16 @@ def write_lefs(m, k, path):
         if k == 1 and name in REAL:
             continue
         wmap = {p: pw.get((name, p), 0) for p in mst.order}
+        if m.get('network_probe') and k == 1:
+            # die-evidence-2 2026-10-09: a network probe (R25G) carries exact-rectangle masters whose ports the probe
+            # does not wire (the native indexer's st / fs / co / kin / qb / to): write those pins UNCONNECTED at full
+            # width so the physical case exists.  They are build-every-path GAPS, listed in m['unwired_rect_ports']
+            # and in die_top_lint's unbound_real_pins; never a die net.
+            for p_ in mst.order:
+                sp_ = mst.ports.get(p_)
+                if wmap[p_] == 0 and sp_ and sp_[0] == 'rects':
+                    wmap[p_] = len(sp_[1])
+                    m.setdefault('unwired_rect_ports', []).append(f'{name}/{p_}')
         t, n = S.lef_text(mst, k, wmap)
         txt.append(t.replace('tools/dsrom_s81_fulldie.py', 'tools/hbm_accel_die_fp.py'))
         npins += n
@@ -4313,7 +4331,9 @@ def main(argv=None):
         var = {k_: float(v_) for k_, v_ in (kv.split('=') for kv in filter(None, a.var.split(',')))}
         m = build_qwen(var)
     else:
-        m = build(variant_arg(a.ds_var))
+        v_ = variant_arg(a.ds_var)
+        # die-evidence-2 (2026-10-09): a retiled-SM variant (R25G) builds only as a labelled network probe
+        m = build(v_, network_probe=bool(v_ and v_.get('sm_physical_grid')))
     cov = dict(Q_COV if a.die == 'qwen' else COV)
     for kv in filter(None, a.cov.split(',')):
         k_, v = kv.split('=')

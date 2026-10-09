@@ -1,0 +1,488 @@
+ATTEMPT md6_lookup_localcapture_f59bf7441_tc_cx.attempt1
+rc=1
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T10:51:26.877351+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_markov_embed_localcapture_pair",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.466,
+    "core_input_delay_min_ns": 0.183,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+          "sha256": "83b62ede4f44259742c2682fd79a02c48d0ad78ec186dfff39351bf53c75f009"
+        }
+      ],
+      "lines": [
+        "set_multicycle_path -setup 2 -from [get_cells -hierarchical m?]",
+        "set_multicycle_path -hold 1 -from [get_cells -hierarchical m?]"
+      ]
+    },
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.034,
+    "output_delay_min_ns": -0.233,
+    "parameters": {
+      "BANK": 0,
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+        "sha256": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+        "size_bytes": 5982
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_dsrom_markov_embed_localcapture_pair"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n_/VDD at location (149.742um, 84.780um).\n[WARNING PSM-0039] Unconnected instance cap1\\[141\\]$_DFF_P_/VDD at location (149.742um, 85.320um).\n[WARNING PSM-0039] Unconnected instance cap1\\[145\\]$_DFF_P_/VDD at location (149.742um, 85.860um).\n[WARNING PSM-0039] Unconnected instance cap1\\[149\\]$_DFF_P_/VDD at location (149.742um, 86.400um).\n[WARNING PSM-0039] Unconnected instance cap1\\[153\\]$_DFF_P_/VDD at location (149.742um, 86.940um).\n[WARNING PSM-0039] Unconnected instance cap1\\[157\\]$_DFF_P_/VDD at location (149.742um, 87.480um).\n[WARNING PSM-0039] Unconnected instance cap1\\[161\\]$_DFF_P_/VDD at location (149.742um, 88.020um).\n[WARNING PSM-0039] Unconnected instance cap1\\[165\\]$_DFF_P_/VDD at location (149.742um, 88.560um).\n[WARNING PSM-0039] Unconnected instance cap1\\[169\\]$_DFF_P_/VDD at location (149.742um, 89.100um).\n[WARNING PSM-0039] Unconnected instance cap1\\[173\\]$_DFF_P_/VDD at location (149.742um, 89.640um).\n[WARNING PSM-0039] Unconnected instance cap1\\[177\\]$_DFF_P_/VDD at location (149.742um, 90.180um).\n[WARNING PSM-0039] Unconnected instance cap1\\[181\\]$_DFF_P_/VDD at location (149.742um, 90.720um).\n[WARNING PSM-0039] Unconnected instance cap1\\[185\\]$_DFF_P_/VDD at location (149.742um, 91.260um).\n[WARNING PSM-0039] Unconnected instance cap1\\[189\\]$_DFF_P_/VDD at location (149.742um, 91.800um).\n[WARNING PSM-0039] Unconnected instance cap1\\[193\\]$_DFF_P_/VDD at location (149.742um, 92.340um).\n[WARNING PSM-0039] Unconnected instance cap1\\[197\\]$_DFF_P_/VDD at location (149.742um, 92.880um).\n[WARNING PSM-0039] Unconnected instance cap1\\[201\\]$_DFF_P_/VDD at location (149.742um, 93.420um).\n[WARNING PSM-0039] Unconnected instance cap1\\[205\\]$_DFF_P_/VDD at location (149.742um, 93.960um).\n[WARNING PSM-0039] Unconnected instance cap1\\[209\\]$_DFF_P_/VDD at location (149.742um, 94.500um).\n[WARNING PSM-0039] Unconnected instance cap1\\[213\\]$_DFF_P_/VDD at location (149.742um, 95.040um).\n[WARNING PSM-0039] Unconnected instance cap1\\[217\\]$_DFF_P_/VDD at location (149.742um, 95.580um).\n[WARNING PSM-0039] Unconnected instance cap1\\[221\\]$_DFF_P_/VDD at location (149.742um, 96.120um).\n[WARNING PSM-0039] Unconnected instance cap1\\[225\\]$_DFF_P_/VDD at location (149.742um, 96.660um).\n[WARNING PSM-0039] Unconnected instance cap1\\[229\\]$_DFF_P_/VDD at location (149.742um, 97.200um).\n[WARNING PSM-0039] Unconnected instance cap1\\[233\\]$_DFF_P_/VDD at location (149.742um, 97.740um).\n[WARNING PSM-0039] Unconnected instance cap1\\[237\\]$_DFF_P_/VDD at location (149.742um, 98.280um).\n[WARNING PSM-0039] Unconnected instance cap1\\[241\\]$_DFF_P_/VDD at location (149.742um, 98.820um).\n[WARNING PSM-0039] Unconnected instance cap1\\[245\\]$_DFF_P_/VDD at location (149.742um, 99.360um).\n[WARNING PSM-0039] Unconnected instance cap1\\[249\\]$_DFF_P_/VDD at location (149.742um, 99.900um).\n[WARNING PSM-0039] Unconnected instance cap1\\[253\\]$_DFF_P_/VDD at location (149.742um, 100.440um).\n[ERROR PSM-0069] Check connectivity failed on VDD.\nError: final_report.tcl, 7 PSM-0069\n\nElapsed time: 0:01.91[h:]min:sec. CPU time: user 1.81 sys 0.10 (99%). Peak memory: 311552KB.\nElapsed time: 0:02.12[h:]min:sec. CPU time: user 2.03 sys 0.14 (102%). Peak memory: 330988KB.\nElapsed time: 0:01.93[h:]min:sec. CPU time: user 1.83 sys 0.09 (99%). Peak memory: 308872KB.\nElapsed time: 0:01.91[h:]min:sec. CPU time: user 1.81 sys 0.10 (99%). Peak memory: 307808KB.\nElapsed time: 0:02.12[h:]min:sec. CPU time: user 2.02 sys 0.10 (100%). Peak memory: 321788KB.\nElapsed time: 0:04.62[h:]min:sec. CPU time: user 24.12 sys 0.09 (524%). Peak memory: 330972KB.\nElapsed time: 0:01.94[h:]min:sec. CPU time: user 1.85 sys 0.09 (100%). Peak memory: 313644KB.\nElapsed time: 0:20.35[h:]min:sec. CPU time: user 116.29 sys 0.62 (574%). Peak memory: 601124KB.\nElapsed time: 0:03.33[h:]min:sec. CPU time: user 3.40 sys 0.20 (107%). Peak memory: 338748KB.\nElapsed time: 0:03.78[h:]min:sec. CPU time: user 3.86 sys 0.28 (109%). Peak memory: 416896KB.\nElapsed time: 0:06.78[h:]min:sec. CPU time: user 7.24 sys 0.50 (114%). Peak memory: 447480KB.\nElapsed time: 0:16.82[h:]min:sec. CPU time: user 28.46 sys 0.67 (173%). Peak memory: 712452KB.\nElapsed time: 0:50.33[h:]min:sec. CPU time: user 280.06 sys 2.21 (560%). Peak memory: 2797556KB.\nElapsed time: 0:02.90[h:]min:sec. CPU time: user 2.75 sys 0.15 (99%). Peak memory: 436656KB.\nElapsed time: 0:02.42[h:]min:sec. CPU time: user 2.29 sys 0.13 (99%). Peak memory: 331840KB.\nElapsed time: 0:07.81[h:]min:sec. CPU time: user 7.60 sys 0.21 (99%). Peak memory: 693560KB.\nmake[1]: *** [Makefile:654: do-6_report] Error 1\nmake: *** [Makefile:654: /work/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_report.log] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T10:49:05.817894+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_markov_embed_localcapture_pair",
+      "--source",
+      "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "BANK=0",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/dsrom_markov_lookup_localcapture/macro_place.tcl",
+      "--orfs-var",
+      "CTS_CLUSTER_SIZE=12",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--orfs-var",
+      "SYNTH_SLANG_ARGS=--unroll-limit 8192",
+      "--die-area",
+      "0",
+      "0",
+      "190",
+      "155",
+      "--core-area",
+      "2",
+      "2",
+      "188",
+      "153",
+      "--core-utilization",
+      "55",
+      "--max-fanout",
+      "16",
+      "--routing-layers",
+      "M2",
+      "M6",
+      "--pin-region",
+      "^(re|addr.*)$=left:30-125",
+      "--pin-region",
+      "^(clk|rst_n)$=bottom:30-160",
+      "--pin-region",
+      "^captured_data.*=right:30-125",
+      "--pin-region",
+      "^(captured_valid|fault)$=top:30-160",
+      "--pin-regions-exhaustive",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--false-path-from",
+      "rst_n",
+      "--core-input-delay-min-ns",
+      ".18300000000000000000",
+      "--core-input-delay-max-ns",
+      ".46600000000000000000",
+      "--output-delay-min-ns",
+      "-.23300000000000000000",
+      "--output-delay-max-ns",
+      ".03400000000000000000",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--place-density",
+      "0.55",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--max-transition-ns",
+      "0.25",
+      "--hold-margin-ns",
+      "0.035",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_markov_lookup_localcapture/sliver_block.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_PLACE=physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--sdc-append",
+      "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+      "--keep-workdir",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/work",
+      "--nickname-tag",
+      "md6_lookup_localcapture_f59bf7441_tc_cx",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "bb298f5dc56bb1e81c3a6e48a11069713d6573cdf009cecd7ee1e4f054ee160a",
+      "tree": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src"
+    },
+    "orfs_num_cores": 8,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
+47b6471f370ac2b143f415cb51934055714240e991b777665f88f163e2a7e64a  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx.attempt1/work/orfs/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_final.odb
+1fc406165f6bbfcd9e0470ac6b01572341883de63c29cc54d19fd4d4a20512fe  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx.attempt1/work/orfs/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_final.spef
+eef27beec2d0dfff380702dab9eada10957565fc7e4e56fd03f203ea6d44986c  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx.attempt1/work/orfs/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_report.log
+ATTEMPT md6_lookup_localcapture_f59bf7441_tc_cx
+rc=1
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-10-09T10:55:11.404909+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "ot_dsrom_markov_embed_localcapture_pair",
+    "clock_port": "clk",
+    "clock_uncertainty_hold_ns": 0.025,
+    "clock_uncertainty_ns": 0.06,
+    "closed": false,
+    "closed_basis": "true only when place-and-route ran, the routed netlist carries zero max-slew, max-cap and max-fanout violations, and the engineering verdict is pass: setup and hold met with zero violating paths, zero DRC, zero antenna violations at the target period",
+    "core_input_delay_max_ns": 0.466,
+    "core_input_delay_min_ns": 0.183,
+    "description": "ad-hoc block supplied on the command line",
+    "extra_sdc": {
+      "files": [
+        {
+          "path": "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+          "sha256": "83b62ede4f44259742c2682fd79a02c48d0ad78ec186dfff39351bf53c75f009"
+        }
+      ],
+      "lines": [
+        "set_multicycle_path -setup 2 -from [get_cells -hierarchical m?]",
+        "set_multicycle_path -hold 1 -from [get_cells -hierarchical m?]"
+      ]
+    },
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "false_path_io": false,
+    "io_delay_fraction": 0.2,
+    "output_delay_max_ns": 0.034,
+    "output_delay_min_ns": -0.233,
+    "parameters": {
+      "BANK": 0,
+      "ENABLE": 1
+    },
+    "sources": [
+      {
+        "path": "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+        "sha256": "086a450a07eaad25b20477b43ab8fee3c1b983e0c6eca80024b8e0d3ed55560d",
+        "size_bytes": 5982
+      },
+      {
+        "path": "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+        "sha256": "c9b0e7dadbb0b5245a7925f71754296c504147bd97b3da770729b7f12660f74c",
+        "size_bytes": 409
+      }
+    ],
+    "top": "ot_dsrom_markov_embed_localcapture_pair"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n_/VDD at location (149.742um, 84.780um).\n[WARNING PSM-0039] Unconnected instance cap1\\[141\\]$_DFF_P_/VDD at location (149.742um, 85.320um).\n[WARNING PSM-0039] Unconnected instance cap1\\[145\\]$_DFF_P_/VDD at location (149.742um, 85.860um).\n[WARNING PSM-0039] Unconnected instance cap1\\[149\\]$_DFF_P_/VDD at location (149.742um, 86.400um).\n[WARNING PSM-0039] Unconnected instance cap1\\[153\\]$_DFF_P_/VDD at location (149.742um, 86.940um).\n[WARNING PSM-0039] Unconnected instance cap1\\[157\\]$_DFF_P_/VDD at location (149.742um, 87.480um).\n[WARNING PSM-0039] Unconnected instance cap1\\[161\\]$_DFF_P_/VDD at location (149.742um, 88.020um).\n[WARNING PSM-0039] Unconnected instance cap1\\[165\\]$_DFF_P_/VDD at location (149.742um, 88.560um).\n[WARNING PSM-0039] Unconnected instance cap1\\[169\\]$_DFF_P_/VDD at location (149.742um, 89.100um).\n[WARNING PSM-0039] Unconnected instance cap1\\[173\\]$_DFF_P_/VDD at location (149.742um, 89.640um).\n[WARNING PSM-0039] Unconnected instance cap1\\[177\\]$_DFF_P_/VDD at location (149.742um, 90.180um).\n[WARNING PSM-0039] Unconnected instance cap1\\[181\\]$_DFF_P_/VDD at location (149.742um, 90.720um).\n[WARNING PSM-0039] Unconnected instance cap1\\[185\\]$_DFF_P_/VDD at location (149.742um, 91.260um).\n[WARNING PSM-0039] Unconnected instance cap1\\[189\\]$_DFF_P_/VDD at location (149.742um, 91.800um).\n[WARNING PSM-0039] Unconnected instance cap1\\[193\\]$_DFF_P_/VDD at location (149.742um, 92.340um).\n[WARNING PSM-0039] Unconnected instance cap1\\[197\\]$_DFF_P_/VDD at location (149.742um, 92.880um).\n[WARNING PSM-0039] Unconnected instance cap1\\[201\\]$_DFF_P_/VDD at location (149.742um, 93.420um).\n[WARNING PSM-0039] Unconnected instance cap1\\[205\\]$_DFF_P_/VDD at location (149.742um, 93.960um).\n[WARNING PSM-0039] Unconnected instance cap1\\[209\\]$_DFF_P_/VDD at location (149.742um, 94.500um).\n[WARNING PSM-0039] Unconnected instance cap1\\[213\\]$_DFF_P_/VDD at location (149.742um, 95.040um).\n[WARNING PSM-0039] Unconnected instance cap1\\[217\\]$_DFF_P_/VDD at location (149.742um, 95.580um).\n[WARNING PSM-0039] Unconnected instance cap1\\[221\\]$_DFF_P_/VDD at location (149.742um, 96.120um).\n[WARNING PSM-0039] Unconnected instance cap1\\[225\\]$_DFF_P_/VDD at location (149.742um, 96.660um).\n[WARNING PSM-0039] Unconnected instance cap1\\[229\\]$_DFF_P_/VDD at location (149.742um, 97.200um).\n[WARNING PSM-0039] Unconnected instance cap1\\[233\\]$_DFF_P_/VDD at location (149.742um, 97.740um).\n[WARNING PSM-0039] Unconnected instance cap1\\[237\\]$_DFF_P_/VDD at location (149.742um, 98.280um).\n[WARNING PSM-0039] Unconnected instance cap1\\[241\\]$_DFF_P_/VDD at location (149.742um, 98.820um).\n[WARNING PSM-0039] Unconnected instance cap1\\[245\\]$_DFF_P_/VDD at location (149.742um, 99.360um).\n[WARNING PSM-0039] Unconnected instance cap1\\[249\\]$_DFF_P_/VDD at location (149.742um, 99.900um).\n[WARNING PSM-0039] Unconnected instance cap1\\[253\\]$_DFF_P_/VDD at location (149.742um, 100.440um).\n[ERROR PSM-0069] Check connectivity failed on VDD.\nError: final_report.tcl, 7 PSM-0069\n\nElapsed time: 0:02.26[h:]min:sec. CPU time: user 2.15 sys 0.11 (99%). Peak memory: 311460KB.\nElapsed time: 0:02.25[h:]min:sec. CPU time: user 2.17 sys 0.17 (103%). Peak memory: 330544KB.\nElapsed time: 0:02.33[h:]min:sec. CPU time: user 2.21 sys 0.11 (99%). Peak memory: 306840KB.\nElapsed time: 0:02.05[h:]min:sec. CPU time: user 1.95 sys 0.10 (99%). Peak memory: 307300KB.\nElapsed time: 0:02.22[h:]min:sec. CPU time: user 2.11 sys 0.11 (99%). Peak memory: 322708KB.\nElapsed time: 0:05.10[h:]min:sec. CPU time: user 26.04 sys 0.10 (512%). Peak memory: 331144KB.\nElapsed time: 0:01.99[h:]min:sec. CPU time: user 1.88 sys 0.11 (99%). Peak memory: 313992KB.\nElapsed time: 0:21.47[h:]min:sec. CPU time: user 118.96 sys 0.65 (557%). Peak memory: 597272KB.\nElapsed time: 0:02.75[h:]min:sec. CPU time: user 2.84 sys 0.17 (109%). Peak memory: 341108KB.\nElapsed time: 0:02.90[h:]min:sec. CPU time: user 2.99 sys 0.27 (112%). Peak memory: 419424KB.\nElapsed time: 0:05.05[h:]min:sec. CPU time: user 5.62 sys 0.59 (123%). Peak memory: 448928KB.\nElapsed time: 0:12.05[h:]min:sec. CPU time: user 22.80 sys 0.54 (193%). Peak memory: 715648KB.\nElapsed time: 0:42.69[h:]min:sec. CPU time: user 240.40 sys 2.35 (568%). Peak memory: 2741576KB.\nElapsed time: 0:02.27[h:]min:sec. CPU time: user 2.13 sys 0.14 (99%). Peak memory: 435940KB.\nElapsed time: 0:02.08[h:]min:sec. CPU time: user 1.95 sys 0.13 (99%). Peak memory: 334800KB.\nElapsed time: 0:07.65[h:]min:sec. CPU time: user 7.40 sys 0.25 (99%). Peak memory: 696920KB.\nmake[1]: *** [Makefile:654: do-6_report] Error 1\nmake: *** [Makefile:654: /work/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_report.log] Error 2\n",
+  "expected_not_met": false,
+  "flow_completed": false,
+  "generated_at": "2026-10-09T10:53:04.809322+00:00",
+  "git": {
+    "commit": null,
+    "dirty_basis": "a tracked file modified or an untracked file outside results/; untracked files under results/ (records the flow itself writes) are listed in untracked_results and do not count",
+    "untracked_results": [],
+    "worktree_dirty": false,
+    "worktree_status": []
+  },
+  "purpose": "characterization",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--source-root",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src",
+      "--view",
+      "asap7",
+      "--top",
+      "ot_dsrom_markov_embed_localcapture_pair",
+      "--source",
+      "rtl/experimental/dsrom_markov_20261008/ot_dsrom_markov_embed_localcapture.sv",
+      "--source",
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8/ot_rom_4096x274_m8_bb.v",
+      "--macro-view",
+      "ot_rom_4096x274_m8=physical/asap7_memory_macros/ot_rom_4096x274_m8",
+      "--macro-place-halo",
+      "3",
+      "3",
+      "--param",
+      "ENABLE=1",
+      "--param",
+      "BANK=0",
+      "--orfs-var",
+      "MACRO_PLACEMENT_TCL=/src/physical/dsrom_markov_lookup_localcapture/macro_place.tcl",
+      "--orfs-var",
+      "CTS_CLUSTER_SIZE=12",
+      "--orfs-var",
+      "SYNTH_HDL_FRONTEND=slang",
+      "--orfs-var",
+      "SYNTH_SLANG_ARGS=--unroll-limit 8192",
+      "--die-area",
+      "0",
+      "0",
+      "190",
+      "155",
+      "--core-area",
+      "2",
+      "2",
+      "188",
+      "153",
+      "--core-utilization",
+      "55",
+      "--max-fanout",
+      "16",
+      "--routing-layers",
+      "M2",
+      "M6",
+      "--pin-region",
+      "^(re|addr.*)$=left:30-125",
+      "--pin-region",
+      "^(clk|rst_n)$=bottom:30-160",
+      "--pin-region",
+      "^captured_data.*=right:30-125",
+      "--pin-region",
+      "^(captured_valid|fault)$=top:30-160",
+      "--pin-regions-exhaustive",
+      "--clock-period-ns",
+      "0.770",
+      "--clock-uncertainty-ns",
+      "0.060",
+      "--clock-uncertainty-hold-ns",
+      "0.025",
+      "--orfs-corner",
+      "WC",
+      "--hold-corners",
+      "WC,BC",
+      "--stages",
+      "pnr",
+      "--false-path-from",
+      "rst_n",
+      "--core-input-delay-min-ns",
+      ".18300000000000000000",
+      "--core-input-delay-max-ns",
+      ".46600000000000000000",
+      "--output-delay-min-ns",
+      "-.23300000000000000000",
+      "--output-delay-max-ns",
+      ".03400000000000000000",
+      "--orfs-var",
+      "ADDER_MAP_FILE=",
+      "--place-density",
+      "0.55",
+      "--orfs-var",
+      "PLACE_DENSITY_LB_ADDON=",
+      "--max-transition-ns",
+      "0.25",
+      "--hold-margin-ns",
+      "0.035",
+      "--step-tcl",
+      "POST_PDN=physical/dsrom_markov_lookup_localcapture/sliver_block.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_PLACE=physical/dsrom_markov_lookup_localcapture/capture_anchor.tcl",
+      "--step-tcl",
+      "PRE_CTS=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--step-tcl",
+      "PRE_GLOBAL_ROUTE=physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+      "--sdc-append",
+      "physical/dsrom_markov_lookup_localcapture/macro_capture.sdc",
+      "--keep-workdir",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/work",
+      "--nickname-tag",
+      "md6_lookup_localcapture_f59bf7441_tc_cx",
+      "--keep-heavy-artifacts",
+      "--output",
+      "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/physical.json"
+    ],
+    "driver": {
+      "commit": null,
+      "file_modified_since_commit": false,
+      "note": "the driver and the sources come from the same tree; git.commit describes both",
+      "path": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src/tools/run_abi3_physical.py",
+      "same_tree_as_sources": true,
+      "sha256": "bb298f5dc56bb1e81c3a6e48a11069713d6573cdf009cecd7ee1e4f054ee160a",
+      "tree": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src"
+    },
+    "orfs_num_cores": 8,
+    "platform": "Linux-7.0.0-34-generic-x86_64-with-glibc2.43",
+    "python": "3.14.4",
+    "source_root": "/srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/src"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "error",
+  "target_clock_period_ns": 0.77,
+  "target_semantics": "the target clock period is a characterisation probe, not an operating-point requirement",
+  "tools": {},
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
+47b6471f370ac2b143f415cb51934055714240e991b777665f88f163e2a7e64a  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/work/orfs/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_final.odb
+b5a2949406109a33e6a95db4208007285600a56622abf3f5c185fb26448f5539  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/work/orfs/results/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_final.spef
+671656ce9ba0a68a885cc3de1700b32be210103c11eff1252e74d370365dd2b0  /srv/opentallas-data/claude/closure-loop/md6_lookup_localcapture-f59bf7441-tc-cx/routes/md6_lookup_localcapture_f59bf7441_tc_cx/work/orfs/logs/asap7/opentallas_ot_dsrom_markov_embed_localcapture_pair_asap7_md6_lookup_localcapture_f59bf7441_tc_cx/base/6_report.log
