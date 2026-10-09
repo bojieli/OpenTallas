@@ -38,6 +38,8 @@ module tb_qwen_dspark_w1_lookup;
    while(!ov&&t<12)begin @(negedge clk);t=t+1;end
    if(!ov||ready||fault)$fatal(1,"macro response/finite credit invalid");
    for(q=0;q<4;q=q+1)begin
+    t=0;while(!ov&&t<12)begin @(negedge clk);t=t+1;end
+    if(!ov)$fatal(1,"converted quarter unavailable");
     repeat(3)begin
      @(negedge clk);
      if(!ov||quarter!==2'(q)||oid!==id||osequence!==8'd209||last!==(q==3))$fatal(1,"row/scale/identity/hold invalid %0d %0d",a,q);
