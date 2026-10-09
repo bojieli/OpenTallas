@@ -1,0 +1,36 @@
+{
+  "schema": "opentallas.routine.admission.v1",
+  "h11": {
+    "host": "ot-epyc2",
+    "source": "f5c3602829a31131453b348687665db9fa3f576d",
+    "job": "qfd_io_collective_pr-f5c360282",
+    "phase": "5_2_route",
+    "peak_kib": 39666220,
+    "peak_gib": 37.82865524291992,
+    "claim_gib": 38,
+    "log": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr-f5c360282/routes/qfd_io_collective_pr_f5c360282/work/orfs/logs/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_pr_f5c360282/base/5_2_route.log",
+    "qualification": "same760.32square/N4/LANES16/DEPTH32/ADD_LAT7/16threads; PR1 versus PR2cx delta explicitly recorded, not measuredcx"
+  },
+  "h11_pr2_live_inventory": {
+    "source": "4d8c7f487",
+    "host": "ot-epyc4",
+    "cells": 516546,
+    "area_um2": 73662.3,
+    "io": 3818,
+    "frame_um": [
+      760.32,
+      760.32
+    ]
+  },
+  "j6": {
+    "status": "RESOURCE_PHASE_PROOF_PENDING",
+    "source": "463a4e86b",
+    "canonical_job": "qfd_io_xfifo_p2-463a4e86b-tc-gray-j6",
+    "inherited_claim_gib": 32,
+    "claim_qualified": false,
+    "missing_completed_route": "ot-epyc2:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_xfifo-load80-e721e27b5",
+    "surviving_older_cts_peak_kib": 5860460,
+    "surviving_older_cts_phase_only": true,
+    "no_route_process_started": true
+  }
+}

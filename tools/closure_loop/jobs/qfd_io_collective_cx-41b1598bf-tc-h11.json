@@ -1,0 +1,121 @@
+{
+  "name": "qfd_io_collective_cx-41b1598bf-tc-h11",
+  "block": "qfd_io_collective",
+  "owner": "Codex:qwen_system routine H11; Claude phys-intake",
+  "purpose": "Approved H11 distinct -cx hard dual variant: kept32-bit capture/control leaves, unchanged native rank-order FP32 PR2 arithmetic and credits. Full N4/LANES16/DEPTH32 exact10cases PASS and foldmutant arithmetic FAIL5 pinned41b1598bf/b673. Same760.32frame; two-layer64pin balanced density config. Preserve both advancing old PR2 balanced jobs. TT pathfinding, FF hold and DRC; SS sensitivity recorded separately.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc2",
+    "ot-epyc3",
+    "ot-pve1",
+    "ot-agidock128"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 38,
+  "source": {
+    "branch": "codex/qwen-system-resume-20261009",
+    "commit": "41b1598bf",
+    "required_files": [
+      "rtl/rom/ot_rom_oneshot_die_cx.sv",
+      "rtl/rom/ot_rom_oneshot_allreduce_cx.sv",
+      "tools/qwen_coll_cx_bench.py",
+      "tools/uarch_model_qwen_collective_cx.py",
+      "physical/qwen_die_masters/cfg/qfd_io_collective_cx.env",
+      "physical/qwen_die_masters/signoff/qfd_io_collective_cx.sdc"
+    ]
+  },
+  "stages": {
+    "bench": [
+      {
+        "name": "coll_cx3_exact",
+        "cmd": "python3 tools/qwen_coll_cx_bench.py --out {RUN}/bench/m3 --margin 3",
+        "expect": "pass",
+        "pass_regex": "^COLL_MARGIN PASS",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      },
+      {
+        "name": "coll_cx3_mutant",
+        "cmd": "python3 tools/qwen_coll_cx_bench.py --out {RUN}/bench/m3mut --margin 3 --mutant",
+        "expect": "fail",
+        "fail_regex": "^COLL_MARGIN FAIL",
+        "threads": 8,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ]
+      }
+    ],
+    "calibrate": {
+      "enabled": false,
+      "reason": "Qwen die masters reference IO in-run to the block's own propagated clock (io_ref_skew.sdc), i.e. this variant's own insertion; no budget sheet"
+    },
+    "route": {
+      "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_io_collective_cx.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_collective_cx {LABEL} {RUN}/routes",
+      "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+      "logs": [
+        "{RUN}/routes/{LABEL}/flow.log"
+      ],
+      "threads": 16,
+      "peak_ram_gb": 38
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_collective --out {RUN}/record/views/qfd_io_collective --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/qwen_die_masters/signoff/qfd_io_collective_cx.sdc"
+    ],
+    "macros": []
+  },
+  "hold_eco": {
+    "enabled": true,
+    "reason": "post-route mm hold ECO (REDESIGN_RULES: keep it on)",
+    "session": "mm"
+  },
+  "budget": {
+    "enabled": false,
+    "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record/views",
+      "to": "physical/qwen_die_masters/views"
+    },
+    {
+      "from": "{RUN}/record/route",
+      "to": "results/rtl/qwen_system_20261009/routes/qfd_io_collective_cx-41b1598bf-tc-h11"
+    }
+  ],
+  "cycles_added": "0 added edges versus PR2; existing PR2 +1 per-word fill versus PR1 retained; no rate credit claimed.",
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.01,
+  "route_corner": "TC",
+  "notes": "H11 approval; family dedupe required at intake. RAM claim38GiB is rounded measured same-frame sibling DRT37.83GiB, NOT a measured cx peak. Same N4/L16/DEPTH32/frame; cx modeled added2960FF/863.136um2, actual PR2 floorplan516546cells/73662.3um2 vs oldPR1 520851cells/74181.7um2. Admission reserve is separate; monitor actual stage HWM. New structural design is not authorized.",
+  "bench_first": true,
+  "routed_ioref": true,
+  "resource_provenance": {
+    "host": "ot-epyc2",
+    "source": "f5c3602829a31131453b348687665db9fa3f576d",
+    "job": "qfd_io_collective_pr-f5c360282",
+    "phase": "5_2_route",
+    "peak_kib": 39666220,
+    "peak_gib": 37.82865524291992,
+    "claim_gib": 38,
+    "log": "/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_io_collective_pr-f5c360282/routes/qfd_io_collective_pr_f5c360282/work/orfs/logs/asap7/opentallas_ot_rom_oneshot_die_m_asap7_qdm_qfd_io_collective_pr_f5c360282/base/5_2_route.log",
+    "qualification": "same760.32square/N4/LANES16/DEPTH32/ADD_LAT7/16threads; PR1 versus PR2cx delta explicitly recorded, not measuredcx"
+  }
+}
