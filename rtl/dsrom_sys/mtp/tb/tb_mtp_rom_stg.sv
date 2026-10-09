@@ -98,7 +98,7 @@ module tb_mtp_rom_stg;
     reg [FLIT-1:0] vmem [0:63];
     integer sr_q [0:15], sr_qt [0:15], srn = 0, srw = 0, srr_i = 0;
     integer wq_w = 0, wq_r = 0; integer wq_a [0:15], wq_t [0:15]; reg [FLIT-1:0] wq_d [0:15];
-    integer core_t = -1, cu, cp, ct, k, starts = 0, ji = 0;
+    integer core_t = -1, cu, cp, ct, k, starts = 0, ji = 0, user_mis = 0;
     always @(posedge sclk) begin
         scyc <= scyc + 1;
         swa <= 1'b0; srq[FLIT] <= 1'b0; kd[NW+32] <= 1'b0;
@@ -128,6 +128,8 @@ module tb_mtp_rom_stg;
                     $finish;
                 end
             core_t = scyc + T_CORE;
+            // the WFC's core_user at the start pulse (observation: stage mode should carry the job's user)
+            for (k = 0; k < jobs_in; k = k + 1) if (job_p[k] == cp && job_t[k] == ct && job_u[k] != cu) user_mis = user_mis + 1;
         end else if (core_t >= 0 && scyc >= core_t) begin
             for (k = 0; k < TXW; k = k + 1) vmem[k] = word(2, 0, cp, ct, k);
             kd <= {1'b1, NW'(ct ^ 21'h33), 32'h40400000 ^ cp};
@@ -179,7 +181,7 @@ module tb_mtp_rom_stg;
         while (outs < NJOB && cyc < MAXC) @(posedge fclk);
         if (outs < NJOB) begin $display("MTP_STG FAIL: timeout, %0d of %0d out", outs, NJOB); $finish; end
         repeat (100) @(posedge fclk);
-        $display("MTP_STG PASS jobs=%0d starts=%0d out=%0d cycles=%0d vmslow=%0d", jobs_in, starts, outs, cyc, VMSLOW);
+        $display("MTP_STG PASS jobs=%0d starts=%0d out=%0d cycles=%0d vmslow=%0d core_user_mismatch_at_start=%0d", jobs_in, starts, outs, cyc, VMSLOW, user_mis);
         $display("MTP_STG_CYC start_mean=%0.2f start_max=%0d done_mean=%0.2f done_max=%0d link_in_mean=%0.2f link_in_max=%0d txw=%0d (fast cycles; done = k_done -> WFC core_done incl. the %0d-word prefetch)",
                  1.0 * sum_s / n_s, max_s, 1.0 * sum_d / n_d, max_d, 1.0 * sum_li / wi_n, max_li, TXW, TXW);
         $finish;

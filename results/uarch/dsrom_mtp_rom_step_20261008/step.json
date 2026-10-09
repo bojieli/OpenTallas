@@ -1,0 +1,183 @@
+{
+ "schema": "opentallas.dsrom.mtp_rom_step.v1",
+ "tool": "tools/dsrom_mtp_rom_step.py",
+ "published": false,
+ "note": "NOT PUBLISHED: the MTP-step cycles as computed from the mtp-rom RTL, for the next reprice; the WFC credit is applied in memory only (closure.json integration_qualified stays false until the shim routes close and the die-level link STA binds them)",
+ "bench": {
+  "summary": "results/rtl/dsrom_mtp_rom_20261008/bench_summary.json (from /tmp/mtp_bench_final)",
+  "all_ok": true,
+  "stg_vmnat": {
+   "start_mean": 15.0,
+   "start_max": 15.0,
+   "done_mean": 79.0,
+   "done_max": 79.0,
+   "link_in_mean": 12.38,
+   "link_in_max": 208.0,
+   "txw": 46.0
+  },
+  "s0_tr_forced": {
+   "seq_forward_min": 8.0,
+   "seed_after_close": 8.0,
+   "rows_to_dh1": 8.0,
+   "dh_result_to_next": 8.0,
+   "last_dh_to_draft_flit": 51.64
+  }
+ },
+ "cycles": {
+  "lnk_per_hop": 6,
+  "vmx_start": 15.0,
+  "vmx_done_prefetch": 79.0,
+  "hop_total": 100.0,
+  "stage_occupancy_add": 94.0,
+  "seq_ctl_per_step": 108.6,
+  "seq_ctl_us": 0.0905
+ },
+ "compositions": {
+  "published_ledger": {
+   "AR_us": 627.486,
+   "AR_tok_s": 1593.7,
+   "II_us": 26.479,
+   "verify_us": 759.881,
+   "draft_us": 122.788,
+   "seed_us": 3.217,
+   "step_us": 885.886,
+   "MTP_tok_s": 4694.7,
+   "tau": 4.159,
+   "worst_stage": "L20.substage_hop0",
+   "worst_busy_us": 25.5324,
+   "wfc": null
+  },
+  "wfc_credit_on": {
+   "AR_us": 628.407,
+   "AR_tok_s": 1591.3,
+   "II_us": 26.497,
+   "verify_us": 760.89,
+   "draft_us": 122.788,
+   "seed_us": 3.217,
+   "step_us": 886.896,
+   "MTP_tok_s": 4689.4,
+   "tau": 4.159,
+   "worst_stage": "L20.substage_hop0",
+   "worst_busy_us": 25.5324,
+   "wfc": {
+    "record": "results/rtl/dsrom_wfc_split_20261006/closure.json",
+    "sha256": "be01b4a2e8de00458348af6af110f16cbedcd0b270829ddc53da3628f82396c5",
+    "hop_delta_cycles": 13,
+    "graph_hops_charged": 58,
+    "handoff_cycles": 49,
+    "measured_interval_overhead": 0.004347
+   }
+  },
+  "wfc_on_plus_shims": {
+   "AR_us": 635.49,
+   "AR_tok_s": 1573.6,
+   "II_us": 26.6583,
+   "verify_us": 768.39,
+   "draft_us": 122.788,
+   "seed_us": 3.217,
+   "step_us": 894.787,
+   "MTP_tok_s": 4648.0,
+   "tau": 4.159,
+   "worst_stage": "L20.substage_hop0",
+   "worst_busy_us": 25.5324,
+   "wfc": {
+    "record": "results/rtl/dsrom_wfc_split_20261006/closure.json",
+    "sha256": "be01b4a2e8de00458348af6af110f16cbedcd0b270829ddc53da3628f82396c5",
+    "hop_delta_cycles": 113.0,
+    "graph_hops_charged": 58,
+    "handoff_cycles": 49,
+    "measured_interval_overhead": 0.004347
+   }
+  }
+ },
+ "step_model": {
+  "rule_model": "step = AR + 5 II + D + seed (the composition)",
+  "rule_rtl": "step(a) = AR + max(a II + D + seed + ctl, 5 II) (dsfd_mtp_seq: draft from the closing result; release after the draft chain and the g - a squashed results)",
+  "model_step_us": 894.787,
+  "per_class": {
+   "c_coding": {
+    "tau5": 4.71,
+    "p_a": [
+     0.056,
+     0.078,
+     0.111,
+     0.129,
+     0.107,
+     0.519
+    ],
+    "model_step_us": 894.787,
+    "rtl_step_us": 860.891,
+    "model_tok_s": 5263.8,
+    "rtl_tok_s": 5471.1
+   },
+   "f_agentic": {
+    "tau5": 4.001,
+    "p_a": [
+     0.1,
+     0.152,
+     0.147,
+     0.166,
+     0.118,
+     0.317
+    ],
+    "model_step_us": 894.787,
+    "rtl_step_us": 842.307,
+    "model_tok_s": 4471.5,
+    "rtl_tok_s": 4750.1
+   },
+   "g_assistant_fc": {
+    "tau5": 5.21,
+    "p_a": [
+     0.034,
+     0.044,
+     0.064,
+     0.075,
+     0.102,
+     0.681
+    ],
+    "model_step_us": 894.787,
+    "rtl_step_us": 874.062,
+    "model_tok_s": 5822.6,
+    "rtl_tok_s": 5960.7
+   }
+  },
+  "blend_harmonic": {
+   "model_tok_s": 5125.1,
+   "rtl_tok_s": 5347.0,
+   "rtl_over_model": 1.0433
+  },
+  "tau_basis": "results/speculative/v41_mtp_acceptance_qualified_20261003/blend_owner6.json"
+ },
+ "rows_1792": {
+  "half_phl": {
+   "before": {
+    "AR_tok_s": 1447.7,
+    "MTP_tok_s": 4351.6
+   },
+   "AR_tok_s": 1424.4,
+   "MTP_tok_s_model_step": 4295.1,
+   "MTP_tok_s_rtl_sequenced": 4481.1,
+   "stage_scale": 1.4118
+  },
+  "full_rate_shared98": {
+   "before": {
+    "AR_tok_s": 1638.1,
+    "MTP_tok_s": 4792.2
+   },
+   "AR_tok_s": 1613.7,
+   "MTP_tok_s_model_step": 4736.2,
+   "MTP_tok_s_rtl_sequenced": 4941.3,
+   "stage_scale": 1.1529
+  },
+  "full_rate_dedicated120": {
+   "before": {
+    "AR_tok_s": 1554.2,
+    "MTP_tok_s": 4616.3
+   },
+   "AR_tok_s": 1527.4,
+   "MTP_tok_s_model_step": 4552.8,
+   "MTP_tok_s_rtl_sequenced": 4749.9,
+   "stage_scale": 1.4118
+  }
+ }
+}
