@@ -1,7 +1,7 @@
-`timescale 1ns/1ps
+`timescale 1ns/1fs
 module tb_qwen_rom_raw_group;
  parameter integer MUT=0;
- reg clk=0;always #5 clk=~clk;
+ reg clk=0;always #(0.833333/2) clk=~clk;
  reg [2559:0] cap=0;reg [4:0] sel=0;
  wire [1023:0] q;
  ot_qwen_rom_raw_group #(.MUT(MUT)) a(.clk(clk),.cap(cap[1279:0]),.sel(sel),.q(q[511:0]));
@@ -31,13 +31,13 @@ module tb_qwen_rom_raw_group;
      end
    @(posedge clk);
    ex[2]=ex[1];ex[1]=ex[0];ex[0]=now;
-   #1;
+   #0.001;
    if(cycle>=2) begin
     checks=checks+64;
     if(q!==ex[2]) begin $display("FAIL raw_group cycle=%0d expected=%h actual=%h",cycle,ex[2],q);$finish;end
    end
   end
-  $display("PASS raw_group full_shape columns=2 banks=5 codes_per_bank=32 all256_int8 bank_changes_and_bubbles cycles=4096 checks=%0d latency_edges=3",checks);
+  $display("PASS raw_group full_shape columns=2 banks=5 codes_per_bank=32 all256_int8 bank_changes_and_bubbles cycles=4096 checks=%0d latency_edges=3 period_ns=0.833333 functional_no_SDF",checks);
   $finish;
  end
 endmodule
