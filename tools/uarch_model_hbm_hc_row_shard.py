@@ -17,3 +17,17 @@ def model():
       "hbm_token_stream_cycles_at_3p85TBps":510.67,
       "exactness":"whole row, chunk8; no inter-die split accumulation",
       "physical_status":"not qualified"}
+
+def sram_model():
+    row=model()
+    row.update({"data_macro":"ot_sram_1r1w_128x256_m1_r2c2",
+      "data_macro_count":32,"check_macro_count":8,
+      "reserved_operand_bytes_with_checks":163840,
+      "live_row_check_bytes":3200,"read_latency_cycles":3,
+      "secded_read_cycles":2,"secded_write_cycles":1,
+      "extra_memory_pipeline_cycles_vs_window":1,
+      "check_write":"10 active-high mask bits per returned sector, no RMW",
+      "prefetch_done":"2560 unique sectors committed to macros",
+      "physical_status":"macro instances present; views and SS/FF qualification pending",
+      "added_latency_measurement":"pending full-shape successor gate"})
+    return row
