@@ -1,0 +1,106 @@
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:51:15: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'ENABLE' generates 32 bits.
+                                                                                        : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+   51 |  generate if (!ENABLE) begin:disabled
+      |               ^
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.032
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:121:42: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  121 |          in_row0[4:0]==0&&({1'b0,in_row0}+21'd32<=CAPACITY);
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:121:42: Operator ADD expects 32 bits on the RHS, but RHS's CONST '21'h20' generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  121 |          in_row0[4:0]==0&&({1'b0,in_row0}+21'd32<=CAPACITY);
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:125:38: Operator GT expects 32 bits on the LHS, but LHS's VARREF 'limit' generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  125 |     if(q<in_queries&&(limit==0||limit>CAPACITY))shape=0;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:127:43: Operator NEQ expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  127 |        {1'b0,in_query_positions[q*20+:20]}!=
+      |                                           ^~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:128:40: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  128 |        ({1'b0,in_query_positions[19:0]}+q))shape=0;
+      |                                        ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:130:24: Operator ADD expects 32 bits on the LHS, but LHS's REPLICATE generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  130 |      row={1'b0,in_row0}+r;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:130:9: Operator ASSIGN expects 21 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                        : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  130 |      row={1'b0,in_row0}+r;
+      |         ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:131:52: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'row' generates 21 bits.
+                                                                                          : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  131 |      live[q*32+r]=(q<in_queries)&&(row<limit)&&(row<CAPACITY);
+      |                                                    ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:142:50: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  142 |     if(out_v&&out_rdy)seat[3]<=CONTEXT_CODE_COPY ? (seat[3]^encode64(64'd1<<OCC)) : encode64(d[3]&~(64'd1<<OCC));
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:147:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  147 |      seat[2]<=CONTEXT_CODE_COPY ? pctx[0] : encode64(pd[0][63:0]);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:148:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  148 |      seat[3]<=CONTEXT_CODE_COPY ? pctx[1] : encode64(pd[1][63:0]);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:149:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  149 |      seat[4]<=CONTEXT_CODE_COPY ? pctx[2] : encode64(pd[2][63:0]);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:150:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  150 |      seat[5]<=CONTEXT_CODE_COPY ? pctx[3] : encode64(pd[3][63:0]);
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/ot_qwen_r25_causal_mask_pipe_flat.sv:151:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CONTEXT_CODE_COPY' generates 32 bits.
+                                                                                         : ... note: In instance 'tb_qwen_r25_causal_mask_pipe.dut'
+  151 |      pctx[1]<=CONTEXT_CODE_COPY ? (pctx[1]^encode64(64'd1<<OCC)) : encode64(pd[1][63:0]&~(64'd1<<OCC));
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:19:50: Operator ASSIGN expects 20 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                   : ... note: In instance 'tb_qwen_r25_causal_mask_pipe'
+   19 |    for(q=0;q<4;q=q+1)in_query_positions[q*20+:20]=8191+q;
+      |                                                  ^
+%Warning-WIDTHTRUNC: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:26:26: Operator ASSIGN expects 20 bits on the Assign RHS, but Assign RHS's VARREF 'row0' generates 32 bits.
+                                                                                   : ... note: In instance 'tb_qwen_r25_causal_mask_pipe'
+   26 |    @(negedge clk);in_row0=row0;in_owner={{(OWNER_W-64){1'b1}},64'h123456789abc0000}+owner_id;in_v=1;
+      |                          ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:26:84: Operator ADD expects 74 bits on the RHS, but RHS's VARREF 'owner_id' generates 32 bits.
+                                                                                    : ... note: In instance 'tb_qwen_r25_causal_mask_pipe'
+   26 |    @(negedge clk);in_row0=row0;in_owner={{(OWNER_W-64){1'b1}},64'h123456789abc0000}+owner_id;in_v=1;
+      |                                                                                    ^
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:66:35: Operator NEQCASE expects 32 bits on the LHS, but LHS's SEL generates 21 bits.
+                                                                                    : ... note: In instance 'tb_qwen_r25_causal_mask_pipe'
+   66 |     if(out_valid_lengths[q*21+:21]!==8192+q)$fatal(1,"query length truncated");
+      |                                   ^~~
+%Warning-WIDTHEXPAND: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:73:51: Operator NEQCASE expects 32 bits on the LHS, but LHS's VARREF 'out_row0' generates 20 bits.
+                                                                                    : ... note: In instance 'tb_qwen_r25_causal_mask_pipe'
+   73 |    if(fault||!out_v||out_live!==expected||out_row0!==block_id*32||out_owner!==in_owner)
+      |                                                   ^~~
+make: Entering directory '/srv/opentallas-scratch/codex/qwen-r25-mask/context-copy-protocol/obj'
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated.o /usr/share/verilator/include/verilated.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_timing.o /usr/share/verilator/include/verilated_timing.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -c -o verilated_threads.o /usr/share/verilator/include/verilated_threads.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qwen_r25_causal_mask_pipe__pch.h -o Vtb_qwen_r25_causal_mask_pipe__pch.h.fast.gch
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -x c++-header Vtb_qwen_r25_causal_mask_pipe__pch.h -o Vtb_qwen_r25_causal_mask_pipe__pch.h.slow.gch
+echo "" > Vtb_qwen_r25_causal_mask_pipe__ALL.verilator_deplist.tmp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe.o Vtb_qwen_r25_causal_mask_pipe.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_h2f3b4924__0.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_h2f3b4924__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__0.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__0.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__1.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__1.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__2.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__2.cpp
+g++ -Os  -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.fast -c -o Vtb_qwen_r25_causal_mask_pipe__main.o Vtb_qwen_r25_causal_mask_pipe__main.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.slow -c -o Vtb_qwen_r25_causal_mask_pipe___024root__Slow.o Vtb_qwen_r25_causal_mask_pipe___024root__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.slow -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_h2f3b4924__0__Slow.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_h2f3b4924__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.slow -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__0__Slow.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__0__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.slow -c -o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__1__Slow.o Vtb_qwen_r25_causal_mask_pipe___024root__DepSet_hc5ef12bb__1__Slow.cpp
+g++   -I.  -MMD -I/usr/share/verilator/include -I/usr/share/verilator/include/vltstd -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=1 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-shadow -Wno-sign-compare -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -DVL_TIME_CONTEXT   -fcoroutines -include Vtb_qwen_r25_causal_mask_pipe__pch.h.slow -c -o Vtb_qwen_r25_causal_mask_pipe__Syms.o Vtb_qwen_r25_causal_mask_pipe__Syms.cpp
+g++    verilated.o verilated_timing.o verilated_threads.o Vtb_qwen_r25_causal_mask_pipe__ALL.a    -pthread -lpthread -latomic   -o Vtb_qwen_r25_causal_mask_pipe
+rm Vtb_qwen_r25_causal_mask_pipe__ALL.verilator_deplist.tmp
+make: Leaving directory '/srv/opentallas-scratch/codex/qwen-r25-mask/context-copy-protocol/obj'
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 0.047 MB sources in 3 modules, into 2.584 MB in 11 C++ files needing 0.006 MB
+- Verilator: Walltime 10.344 s (elab=0.005, cvt=0.384, bld=9.879); cpu 0.555 s on 2 threads; alloced 56.688 MB

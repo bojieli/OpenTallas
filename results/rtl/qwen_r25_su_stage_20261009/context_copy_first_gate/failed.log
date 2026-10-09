@@ -1,0 +1,4 @@
+PASS_SECDED8_EXHAUSTIVE checks23552
+[7000] %Fatal: tb_qwen_r25_causal_mask_pipe.sv:74: Assertion failed in tb_qwen_r25_causal_mask_pipe: full p4 mask/owner mismatch group0
+%Error: rtl/qwen_r25_su_dispatch/tb_qwen_r25_causal_mask_pipe.sv:74: Verilog $stop
+Aborting...
