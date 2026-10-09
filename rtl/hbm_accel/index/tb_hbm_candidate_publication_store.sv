@@ -2,7 +2,7 @@
 module tb_hbm_candidate_publication_store;
  reg clk=0;always #416.5 clk=~clk;
  reg por_n=0,start=0,owner_valid=1,retire=0,consumer_retained=0;
- reg[73:0] frame=74'h2f123456789abcde;
+ reg[73:0] frame={1'b1,73'h2f123456789abcde};
  wire start_r,flit_r,empty_r,pub,retained,fault,read_r,rsp_v;
  reg flit_v=0,empty_v=0,read_v=0,rsp_r=0;
  reg[544:0] flit=0;reg[6:0] empty_rank=0,read_rank=0;reg[16:0] read_ordinal=0;
