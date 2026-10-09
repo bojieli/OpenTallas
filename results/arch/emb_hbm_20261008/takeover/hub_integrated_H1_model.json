@@ -1,0 +1,70 @@
+{
+  "schema": "opentallas.embedding_hub_integrated_H1_amendment.v1",
+  "model_before_RTL": true,
+  "prerequisites": [
+    "9df7f9cde",
+    "84ea6d0ff"
+  ],
+  "approval": "CONFIRMED REVIEW_20261009.md review0258 H1, Claude04:30PT; narrow routine exception to exploratory stop",
+  "approved_scope": "Local TX integratedSU8/HOST8 only; originalbyteidentical/defaultoff; no package or receive interface change",
+  "class_selection": "SU queue is KV: destination nativeSUdata511:510, wirepayload={SUdata509:0,2zero}, all11outertagbits preserved. HOST queue is EMB: full512boot payload, nativeBOOTtags500/600. Physical selected queue determines class ANDsourcecredit; never tag10.",
+  "latency": "Retain originalSUinputcapture->XSqueue->nativeoutput stage schedule: minimum2coreedges from inputaccept tosend; directregisteredsourcecredit sameoutputedge. Saves2forward/1credit edges vsseparatemerger analytically, actualgate required.",
+  "state_inventory": {
+    "excludes_common_receive_gateway_link_counters_and_link_output_flops": true,
+    "baseline_native_XS": {
+      "pin_packet_valid": 524,
+      "queue_data_tag_dst_broadcast": 4208,
+      "read_write_pointers": 8,
+      "source_credit_overflow_link_overflow": 3,
+      "total_bits": 4743
+    },
+    "existing_separate_merger_actual_declared_bits": 8946,
+    "existing_combined_bits": 13689,
+    "integrated_plan": {
+      "two_pin_packet_valid": 1048,
+      "two_queue_data_tag_dst_broadcast": 8416,
+      "four_queue_pointers": 16,
+      "two_source_credit_pulses": 2,
+      "two_queue_faults": 2,
+      "retained_link_overflow": 1,
+      "total_bits": 9485
+    },
+    "increment_over_native_bits": 4742,
+    "saving_over_existing_combination_bits": 4204,
+    "qualification": "Native and merger figures are source-declared counts. Integrated count is proposed exact inventory, not measured synthesized or mapped area. No host compaction assumed."
+  },
+  "area_proxy": {
+    "flop_proxy_um2_per_bit": 0.32,
+    "existing_merger_increment_flop_proxy_um2": 2862.72,
+    "integrated_increment_flop_proxy_um2": 1517.44,
+    "saving_flop_proxy_um2": 1345.28,
+    "existing_merger_mux_guard_proxy_um2": 800,
+    "integrated_extra_mux_guard_planning_um2": 800,
+    "integrated_increment_proxy_total_um2": 2317.44,
+    "SRAM_hub_codec_control_buffer_allowance_um2": 6745.005856,
+    "remaining_with_separate_merger_proxy_um2": 3082.285856,
+    "remaining_with_integrated_proxy_um2": 4427.565856,
+    "fit": "KV-die component only. No assumed KV-die outline/frame; source/physical inventory belongs to shared contract. Historical r21c SRAM codec allowance comparison is context, not a current fit requirement or outline-growth argument.",
+    "historical_budget_context_only": true
+  },
+  "finite_flow": {
+    "SU_capacity_including_input_pending": 8,
+    "HOST_BOOT_capacity_including_input_pending": 8,
+    "link_prepaid_credit_per_link": 128,
+    "SU_transport_bridge_actual_prepaid_credits": 2,
+    "credit_policy": "Each actual native link send pops exactly one selected producer queue and registers that producer credit on the same edge as native link output. Input capture/enqueue is not retirement. Broadcast consumes one credit on every link but returns one producer credit. No owner FIFO, extra forwarding slot, debt mirror or new credit pool.",
+    "guards": "Per-producer queue pointer difference plus valid pin-pending capture cannot exceed 8. Validate accepted input/pending/send next occupancy, queue full/empty, duplicate/excess returned link credit and invalid host address. Simultaneous accept/send must be accounted once. Sticky functional faults; no SEU correction claim.",
+    "reset": "Cold reset clears pending valid, pointers and credit pulses, initializes existing link credits to128; outstanding transaction discard is not a runtime reset contract."
+  },
+  "no_adoption_claim": "Receive remains originaltag10 classification; highseqnativeKV receive/far/package interoperability remainsOPEN/H3WAIT. Nativehistorical2048identitygate is prerequisite, integratedgate exercises only localTXmechanism and all4STATUS boot visibility.",
+  "required_gates": [
+    "2048fullseq/fullpacketSU exact withmixedHOST/actualCR128backpressure",
+    "Eight outstanding bothsources, pendingcaptureincluded, directcorrectsourcecreditonlyactualsend",
+    "Defaultoffnativeequivalence",
+    "Highseqclassnegative and payload/credit mutation fail",
+    "BOOT_ENDtruevisibilityandall4STATUS"
+  ],
+  "clock_ps": 833.333334,
+  "adopted": false,
+  "physical_closed": false
+}
