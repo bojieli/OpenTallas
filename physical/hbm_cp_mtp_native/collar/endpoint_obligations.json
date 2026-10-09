@@ -1,0 +1,58 @@
+{
+  "master": "hfd_cmdproc_s_mtp_native",
+  "required_endpoints": {
+    "f_host": {
+      "bits": 224,
+      "direction": "input"
+    },
+    "t_host": {
+      "bits": 5,
+      "direction": "output"
+    },
+    "f_provider": {
+      "bits": 179,
+      "direction": "input"
+    },
+    "f_backend": {
+      "bits": 81,
+      "direction": "input"
+    },
+    "t_backend": {
+      "bits": 279,
+      "direction": "output"
+    },
+    "t_mtp": {
+      "bits": 179,
+      "direction": "output"
+    },
+    "f_mtp": {
+      "bits": 517,
+      "direction": "input"
+    },
+    "t_emit": {
+      "bits": 38,
+      "direction": "output"
+    },
+    "t_provider": {
+      "bits": 43,
+      "direction": "output"
+    },
+    "f_emit_host": {
+      "bits": 2,
+      "direction": "input"
+    },
+    "t_emit_host": {
+      "bits": 108,
+      "direction": "output"
+    },
+    "t_abort": {
+      "bits": 1,
+      "direction": "output"
+    }
+  },
+  "source_sha256": "b2f47667dfdb2364ff57741db8dc860a1d86441d9a69e86e6755f289e7a59a15",
+  "old_closed_LEF_unchanged": true,
+  "north_unchanged": true,
+  "backend_translation_resolved": false,
+  "physical_qualified": false
+}
