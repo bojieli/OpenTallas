@@ -19,7 +19,12 @@ module ot_hcoll_port #(
     parameter integer BITS_X100 = 72000,
     parameter integer PWB = 545,
     parameter integer SWCRED = 256,
-    parameter integer K = 8
+    parameter integer K = 8,
+    // struct-close 2026-10-09 (DRV6 re-judge: coll_port2_rows -403.8 at the IO reference; ph_rx_flit -> rxf_p I2R 181 ps
+    // worse): RXPIN = 1 adds a PIN register stage on ph_rx_v / ph_rx_flit (keep_hierarchy, placed at the PHY pins) before
+    // the input flops, so the 545-bit input wire is split across two stages.  +1 edge on the receive path; the RX credit
+    // pool (2^RXAW = 256 switch-egress credits) absorbs it.  0 = unchanged.
+    parameter integer RXPIN = `ifdef OT_HCOLL_RXPIN 1 `else 0 `endif
 ) (
     input  wire           clk,
     input  wire           rst_n,
@@ -38,13 +43,21 @@ module ot_hcoll_port #(
     output reg            stall,
     output reg            fault
 );
+    // ---- RXPIN: pin stage on the receive inputs ----
+    wire rxv_in; wire [PWT-1:0] rxf_in;
+    generate if (RXPIN != 0) begin : g_rxpin
+        (* keep_hierarchy *) ot_hcoll_rxpin #(.W(PWT)) u_rxpin (.clk(clk), .rst_n(rst_n), .v_i(ph_rx_v), .d_i(ph_rx_flit),
+            .v_o(rxv_in), .d_o(rxf_in));
+    end else begin : g_rxdir
+        assign rxv_in = ph_rx_v; assign rxf_in = ph_rx_flit;
+    end endgenerate
     // ---- input flops ----
     reg cr_p, rxv_p, rbcr_p;
     reg [PWT-1:0] rxf_p;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin cr_p <= 1'b0; rxv_p <= 1'b0; rbcr_p <= 1'b0; end
-        else begin cr_p <= sw_cr_ret; rxv_p <= ph_rx_v; rbcr_p <= rb_cr; end
-    always @(posedge clk) rxf_p <= ph_rx_flit;
+        else begin cr_p <= sw_cr_ret; rxv_p <= rxv_in; rbcr_p <= rb_cr; end
+    always @(posedge clk) rxf_p <= rxf_in;
     // ---- transmit queues + arbiter + switch-ingress credit ----
     wire qp_empty, qr_empty, qp_ovf, qr_ovf;
     wire [PWT-1:0] qp_head, qr_head;
@@ -99,4 +112,16 @@ module ot_hcoll_port #(
             fault <= fault | qp_ovf | qr_ovf | tx_ovf | rb_ovf;
         end
     always @(posedge clk) ph_tx_flit <= tx_head;
+endmodule
+
+// RXPIN pin stage (struct-close 2026-10-09): one register on the receive valid / flit, no logic
+module ot_hcoll_rxpin #(parameter integer W = 545) (input wire clk, input wire rst_n, input wire v_i, input wire [W-1:0] d_i,
+                                                     output reg v_o, output reg [W-1:0] d_o);
+    always @(posedge clk or negedge rst_n) if (!rst_n) v_o <= 1'b0; else v_o <= v_i;
+`ifndef OT_HCOLL_MUT_RXPIN
+    always @(posedge clk) d_o <= d_i;
+`else
+    reg [W-1:0] d_q;   // mutant: the flit is staged twice, the valid once (flit one beat late)
+    always @(posedge clk) begin d_q <= d_i; d_o <= d_q; end
+`endif
 endmodule
