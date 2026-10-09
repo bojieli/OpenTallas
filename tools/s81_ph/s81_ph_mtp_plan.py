@@ -10,7 +10,7 @@ sized by the pin perimeter (the logic is small: yosys census below) at <= ~25 % 
   dsfd_mtp_seq   head die (one, beside the head controller)   151.2 x 151.2      ~4,900 (11.9k flops)
   dsfd_wfc_tok   S0 layer die (abutting the SOURCE WFC)        108.0 x 108.0      ~2,400 (4.7k flops)
   dsfd_wfc_lnk   every WFC (layer dies)                        216.0 x 151.2      ~2,100 (5.7k flops)
-  dsfd_wfc_vmx   every WFC (between WFC and sp_vm)             216.0 x 216.0      ~20,900 (51k flops)
+  dsfd_wfc_vmx   every WFC (between WFC and sp_vm)             248.4 x 241.92     ~20,900 (51k flops; routed std 32.7k um2 -> ~54 % util, reviewer DR6)
   dsfd_drf_fan   draft dies (primary rank + replica 0)         302.4 x 410.4      ~4,700 (12.4k flops)
 
     python3 tools/s81_ph/s81_ph_mtp_plan.py   -> physical/s81_ph_views/ports/contract/<master>/{ports.json,io_place.tcl,
@@ -67,7 +67,7 @@ SPECS = [
                 ['t_dw', FLIT + 1, 'output', 'S', 'M5', 4, 0.5], ['f_vc', 1, 'input', 'S', 'M5', 1, 0.96],
                 ['t_ft', 1, 'output', 'S', 'M5', 1, 0.985],
                 ['ck', 1, 'input', 'S', 'M5', 1, 0.015], ['rst', 1, 'input', 'S', 'M5', 1, 0.03]]),
-    dict(master='dsfd_wfc_vmx', w_um=216.0, h_um=216.0, domain='stream_1p2+serial_0p9',
+    dict(master='dsfd_wfc_vmx', w_um=248.4, h_um=241.92, domain='stream_1p2+serial_0p9',
          note='WFC VM / core transport: W = the WFC (VM write, VM read, read data; abutting, fixed one-edge read), '
               'E = sp_vm (0.9 GHz write / read), N = the WFC core start / done + VM credit, S = stage core (0.9 GHz) '
               '+ clocks',
