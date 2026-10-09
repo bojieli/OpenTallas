@@ -268,22 +268,22 @@
    }
   },
   "hfd_svc_SE_s5": {
-   "job": "hbm_svc_SE_s5_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tc_4aadc92bc",
+   "job": "hbm_svc_SE_s5_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "ot-epyc3",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_svc_SE_s5_tt_c10b5fc9a",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T15:34:26-07:00",
+   "measured_at": "2026-10-08T19:29:28-07:00",
    "ss": {
     "mean": 785,
     "min": 724,
     "max": 935
    },
    "ff": {
-    "mean": 440,
-    "min": 403,
-    "max": 541,
+    "mean": 435,
+    "min": 399,
+    "max": 537,
     "n": 3204,
     "kind": "boundary",
     "clock": "core_clk"
@@ -306,9 +306,9 @@
     "job": "hbm_svc_SE_s5_tt_c10b5fc9a"
    },
    "tt": {
-    "mean": 548,
-    "min": 506,
-    "max": 667,
+    "mean": 542,
+    "min": 501,
+    "max": 660,
     "n": 3204,
     "kind": "boundary",
     "clock": "core_clk"
@@ -575,22 +575,22 @@
    }
   },
   "hfd_svc_SW_s6": {
-   "job": "hbm_svc_SW_s6_tc_4aadc92bc",
-   "source_commit": "4aadc92bccd49c62b56ac7a9abe096b38b21d13d",
-   "host": "ot-epyc1tb",
-   "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_svc_SW_s6_tc_4aadc92bc",
+   "job": "hbm_svc_SW_s6_tt_c10b5fc9a",
+   "source_commit": "c10b5fc9a40e4bb60cf47a0fd8d9735d98740e65",
+   "host": "localhost",
+   "run": "/home/ubuntu/closure-loop-local/hbm_svc_SW_s6_tt_c10b5fc9a",
    "clock": "core_clk",
    "parasitics": "routed (6_final.spef)",
-   "measured_at": "2026-10-08T14:27:16-07:00",
+   "measured_at": "2026-10-08T19:29:32-07:00",
    "ss": {
     "mean": 770,
     "min": 734,
     "max": 967
    },
    "ff": {
-    "mean": 422,
-    "min": 402,
-    "max": 518,
+    "mean": 423,
+    "min": 403,
+    "max": 520,
     "n": 1920,
     "kind": "boundary",
     "clock": "core_clk"
@@ -614,8 +614,8 @@
    },
    "tt": {
     "mean": 524,
-    "min": 501,
-    "max": 636,
+    "min": 503,
+    "max": 638,
     "n": 1920,
     "kind": "boundary",
     "clock": "core_clk"
@@ -1370,17 +1370,17 @@
    }
   },
   "dsfd_colt_lane": {
-   "job": "s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10",
+   "job": "s81ph-dsfd_colt_lane-calcorner2-b06ecb986-lvt-tc-hm25",
    "source_commit": "b06ecb986615b4506ddc35693b519ee5e095d91a",
    "host": "ot-epyc4",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-calcorner2-b06ecb986-tc-hm10",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-dsfd_colt_lane-calcorner2-b06ecb986-lvt-tc-hm25",
    "clock": "core_clk",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-08T19:20:37-07:00",
+   "measured_at": "2026-10-08T19:23:39-07:00",
    "ss": {
     "mean": 508,
     "min": 500,
-    "max": 522
+    "max": 523
    },
    "ff": {
     "mean": 325,
@@ -1390,7 +1390,7 @@
    "tt": {
     "mean": 395,
     "min": 387,
-    "max": 407
+    "max": 408
    },
    "route_ref": "TT",
    "boundary_n": 1035,
@@ -2299,23 +2299,29 @@
    "budget": null
   },
   "hfd_mcast_r7": {
-   "job": "hbm_stn_mcast_r7_336e4655e",
-   "source_commit": "336e4655eedd62111302f7e32aff1c32f7464e1e",
-   "host": "ot-epyc3",
-   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r7_336e4655e",
+   "job": "hbm_stn_mcast_r7_orph2_a75cb556b-tc-pk25",
+   "source_commit": "a75cb556b8ed177f55a23a6bd34272e268da74e7",
+   "host": "ot-epyc4",
+   "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_mcast_r7_orph2_a75cb556b-tc-pk25",
    "clock": "ck",
    "parasitics": "placement-estimated",
-   "measured_at": "2026-10-06T23:41:55-07:00",
+   "measured_at": "2026-10-08T19:27:15-07:00",
    "ss": {
-    "mean": 559,
-    "min": 548,
-    "max": 576
+    "mean": 512,
+    "min": 490,
+    "max": 539
    },
    "ff": {
-    "mean": 375,
-    "min": 365,
-    "max": 391
+    "mean": 334,
+    "min": 316,
+    "max": 359
    },
+   "tt": {
+    "mean": 402,
+    "min": 383,
+    "max": 428
+   },
+   "route_ref": "SS",
    "boundary_n": 2063,
    "budget": null
   },
@@ -5343,5 +5349,5 @@
    }
   }
  },
- "updated": "2026-10-08T19:20:37-07:00"
+ "updated": "2026-10-08T19:29:32-07:00"
 }
