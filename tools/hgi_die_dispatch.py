@@ -18,7 +18,7 @@ UNITS = {
     'quant':  (4, 'quant', 'AO', ()),                 # FUSED.QDQ_* (A in, O out; scale in-band)
     'coll':   (6, 'coll', 'AOI', (('die_id', 8),)),  # COLL.*: A local, O result, I selected row ids; die id strap (seq rank)
     'argmax': (7, 'mtp', 'AO', ()),                   # ARGMAX.LOCAL (imm_a in the header); ot_hgi_argmax18_m in hfd_mtp
-    'idx':    (9, 'index_SW', 'ABOR', ()),            # IDX.TOPK A/O/R, EHASH B/O, SELECT O/R (one dispatch point)
+    'idx':    (9, 'hgi_idx', 'ABOR', ()),             # IDX unit body ot_hgi_idx_unit (TOPK v1) in its own low spine slot
 }
 RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 # units that decode a static MD field (coll: word 46 coll_group_size) get the 40-bit config station bus
@@ -26,9 +26,10 @@ RETURN_FIELDS = [('ready', 1), ('done', 1), ('fault', 1)]
 CFG_UNITS = {'coll'}
 CFG_BITS = 40
 # units that are VM packet clients of ot_hgi_vm_unit (hfd_vm): {v, req 337} up, {v, rsp 273} down; one outstanding
-VM_CLIENTS = ['cp', 'quant']      # 'cp' = the command processor's VM reads (ot_hgi_cp_die vr_*)
+VM_CLIENTS = ['cp', 'quant', 'idx']      # 'cp' = the command processor's VM reads (ot_hgi_cp_die vr_*)
 VMQ_BITS, VMR_BITS, VMSTAT_BITS = 338, 274, 19
-HGI_VM_SLOT = (1399.656, 950.4)
+HGI_VM_SLOT = (1399.656, 712.8)        # 64 x 174.7 x 70.5 um macros: 8 x 8 = 1,398 x 564 um + logic
+HGI_IDX_SLOT = (640.008, 600.48)        # Codex TOPK K2048 slot (175,534 um2 core) + VM stream engines
 LD_MEM_HGI = (346, 293)                # ot_hfd_loader_kport lq / lr per stack
 LCP_BITS, CPL_BITS = 415, 514           # ot_hgi_loader_cp link        # 64 x 174.7 x 70.5 um macros (0.79 mm2) + logic at ~60 %
 
@@ -112,6 +113,10 @@ def variant(base, units):
         v['spine_slots_low'] = dict(base.get('spine_slots_low') or {}, hgi_vm=HGI_VM_SLOT)
         v['spine_slot_masters'] = dict(base.get('spine_slot_masters') or {}, hgi_vm='hfd_hgi_vm')
         v['spine_slot_domains'] = dict(base.get('spine_slot_domains') or {}, hgi_vm='stream_1p2')
+    if 'idx' in units:
+        v['spine_slots_low'] = dict(v.get('spine_slots_low') or base.get('spine_slots_low') or {}, hgi_idx=HGI_IDX_SLOT)
+        v['spine_slot_masters'] = dict(v.get('spine_slot_masters') or base.get('spine_slot_masters') or {}, hgi_idx='hfd_hgi_idx')
+        v['spine_slot_domains'] = dict(v.get('spine_slot_domains') or base.get('spine_slot_domains') or {}, hgi_idx='stream_1p2')
     return v
 
 
