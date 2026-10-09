@@ -6,6 +6,7 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
  reg producer_published=0,producer_drained=0,selector_idle=1;
  reg command_v=0,command_cand=0,command_keep=0,keep_v=0;
  reg [5:0] command_layer=2;reg [14:0] command_key_row0=4000;
+ reg [8:0] command_stack_blocks=342;wire [8:0] held_stack_blocks;
  reg key_visible=0;reg [72:0] key_visibility_frame=0,prefetch_accepted_frame=0;
  reg prefetch_accepted=0;wire prefetch_v;
  wire [5:0] held_layer;wire [14:0] held_key_row0;wire [13:0] held_ndie;
@@ -48,6 +49,7 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
    allocation_frame=owner_frame;command_frame=owner_frame;keep_frame=owner_frame;
    command_rank=(fr==23)?95:7'(fr);command_ndie=14'(400+fr);
    command_k=512;command_cand=fr[1];command_keep=fr[0];
+   command_stack_blocks=(fr==23)?342:9'(1+fr);
    expected_fs={command_keep,command_cand,command_k,command_ndie,command_rank,
                 owner_frame[72:53],owner_frame[35:32],owner_frame[31:0],1'b1};
    producer_published=0;producer_drained=0;source_start_r=0;key_visible=0;
@@ -58,7 +60,7 @@ module tb_hbm_native_index_control #(parameter integer PREFETCH_CASE=0);
    if(PREFETCH_CASE)begin
     key_visibility_frame=owner_frame;key_visible=1;
     while(!prefetch_v)tick();
-    if(held_frame!==owner_frame||held_layer!=command_layer||held_key_row0!=command_key_row0||held_ndie!=command_ndie)
+    if(held_frame!==owner_frame||held_layer!=command_layer||held_key_row0!=command_key_row0||held_ndie!=command_ndie||held_stack_blocks!=command_stack_blocks)
      $fatal(1,"prefetch dynamic descriptor mismatch");
     repeat(3)begin if(!prefetch_v||fs[0])$fatal(1,"lost prefetch debt");tick();end
     prefetch_accepted_frame=bad_prefetch?(owner_frame^73'd1):owner_frame;

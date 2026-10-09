@@ -1,14 +1,14 @@
 """Size the missing dynamic HBM index frame controller before RTL build."""
 
 def model():
-    descriptor = 73 + 7 + 14 + 10 + 2 + 6 + 15
+    descriptor = 73 + 7 + 14 + 10 + 2 + 6 + 15 + 9
     state = 4 + 4 + 2 + 1 + 1 + 1
     return dict(schema='opentallas.hbm.native_index_control.v1', default_enabled=False,
         replicas=1, MACs_per_cycle=0, compute_intensity=0,
         memory_bytes_per_cycle=0, communication_intensity='frame metadata and actual keep-mask delivery',
         register_bits=2*descriptor+2*state+2*344,
         boundary_bits_per_cycle=dict(frame=90, keep=345, retained_owner=73,
-            prefetch_descriptor=73+6+15+14+7, prefetch_accept_receipt=73+1,
+            prefetch_descriptor=73+6+15+14+7+9, prefetch_accept_receipt=73+1,
             query_block_existing=1048, query_credit_existing=1,
             topk_existing=612, candidate_existing=72),
         routing_tracks_required=90+345+73,
@@ -27,7 +27,10 @@ def model():
         source='existing ot_hbm_integrated_native_index_sram_join checked publication and query source',
         dependencies=['actual CP retained73 descriptor', 'actual producer publication ACK and drain',
             'PREFETCH opt-in: actual paired key/CKV append WB fence visibility full73 receipt; '
-            'actual allocated key row0/layer; descriptor accepted full73 receipt crossing HBM domain',
+            'actual allocated key row0/layer/stack_blocks9 (1..342); each block is '
+            'eight68-byte keys=544bytes, final partial block validity supplied by allocation; '
+            'zero allocation requires separate explicit empty completion; '
+            'descriptor accepted full73 receipt crossing HBM domain',
             'actual four342-bit keep masks with held frame', 'native credit adapter',
             'actual VM/router commit and drain receipts'],
         functional_qualified=False, physical_qualified=False, headline_credit=False)
