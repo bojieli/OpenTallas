@@ -14612,3 +14612,13 @@ def qwen_kv_row_model():
     """Full32-PC option-M row mechanism and merged-word prepaid credits."""
     from uarch_model_qwen_kv_row import model
     return model(DFF_UM2)
+
+
+def dsrom_mtp_p2_primary_shared_model():
+    from dsrom_mtp_p2_transport_model import primary_shared_model
+    return primary_shared_model()
+
+
+def dsrom_hc_seed_homes_model(owner_root):
+    from dsrom_hc_seed_homes import model
+    return model(owner_root)

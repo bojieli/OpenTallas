@@ -7,7 +7,7 @@
 module ot_mtp_p2_ordered_rows #(parameter integer ENABLE=0, parameter integer MUT_ORDER=0) (
   input wire clk, rst_n,
   input wire start_v, output wire start_r,
-  input wire [73:0] start_identity, // {user6,pos32,epoch32,stage2,rank2}
+  input wire [73:0] start_identity, // {frame3,rank2,stage2,epoch4,position21,user10,transaction32}
   input wire [26:0] start_ids,      // three ascending distinct 9-bit IDs, low ID first
   input wire [1:0] in_v, output reg [1:0] in_r,
   input wire [147:0] in_identity,

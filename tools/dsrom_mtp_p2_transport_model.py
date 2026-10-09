@@ -9,19 +9,23 @@ def model():
     return dict(
         schema='opentallas.dsrom.mtp-p2-transport.v1', adopted=False,
         source='tools/hdc_golden_v41.py dspark expert sum; released width5120 TP4',
-        arithmetic='FP32 zero then each expert FP32 output in sorted expert-id order, then shared FP32, then BF16',
+        arithmetic='FP32 +0 then sorted expert BF16-rounded W2 values widened FP32; shared BF16-rounded widened FP32 last; final BF16',
         shape=dict(rows_parallel=5, ranks=4, packages=20, stages=3,
                    selected_experts_per_row=3, rank_output_values=rank_width),
         MACs_per_cycle_unchanged=True, compute_intensity_unchanged=True,
         ports=dict(UCIe_bits_per_cycle=512, UCIe_bytes_per_cycle=64,
                    primary_request_BF16_vector_bytes=5120*2,
                    GU_local_BF16_values=576, GU_full_BF16_values=2304,
-                   GU_local_BF16_bytes=1152, GU_full_BF16_bytes=4608,
-                   GU_TP4_allgather_received_bytes_per_rank=3456,
+                   GU_local_mathematical_BF16_bytes=1152, GU_full_mathematical_BF16_bytes=4608,
+                   GU_native_value_bits=32, GU_local_native_bytes=2304,
+                   GU_full_native_bytes=9216, GU_full_native_flits=144,
+                   GU_TP4_allgather_received_bytes_per_rank=6912,
+                   GU_TP4_allgather_received_flits_per_rank=108,
                    per_expert_return_FP32_bytes=expert_bytes,
                    per_expert_return_flits=flits),
         boundaries=dict(individual_expert_payload_bits_per_cycle=512,
-                        identity_bits=74, selected_expert_bits=27, word_index_bits=7,
+                        identity_bits=74, identity_fields_lsb_first=dict(transaction=32,user=10,position=21,epoch=4,stage=2,rank=2,frame=3),
+                        selected_expert_bits=27, word_index_bits=7,
                         A_B_input_lanes=2, merger_input_bits_per_lane=606,
                         protected_output_bits=671,
                         identity_header_bits='74 transaction bits plus9 expert/7 word/shared/last; exact link framing required'),
@@ -58,7 +62,7 @@ def model():
         ordered_consumer=dict(initial_accumulator='FP32 +0',
             receipt_order=['expert0', 'expert1', 'expert2', 'shared'],
             selected_experts='strict ascending IDs, three distinct receipts',
-            shared_source='among97 excluded primary headers; actual packed producer still absent',
+            shared_source='among97 excluded primary headers; native widened32 VM publisher owned separately; readiness not yet integrated',
             output_distribution='disjoint1280 FP32 rows/rank; output gather, no output allreduce',
             GU_distribution='TP4 allgather2304 weighted BF16 terms on chosen A/B side before W2',
             rejects=['duplicate', 'wrong expert', 'wrong transaction identity', 'wrong word or last', 'missing shared'],
@@ -81,3 +85,30 @@ def model():
                      headers_endpoint_credit_and_ordering_stalls_unmeasured=True,
                      historical_P2_point2us_budget_qualified=False),
         qualification='model-before-build; full-shape output ordering and finite transport gates required')
+
+
+def primary_shared_model():
+    """Selected three-expert prefix home; general four-bank route stays historical."""
+    result = model()
+    result['schema'] = 'opentallas.dsrom.mtp-p2-primary-shared.v1'
+    result['selected_composition'] = dict(
+        A='FP32 +0 then E0,E1,E2 in ascending expert ID; each input BF16-rounded widenedFP32',
+        primary='add local shared BF16-rounded widenedFP32 last; BF16 round once',
+        prefix_flits_per_rank=80, shared_local_flits_per_rank=80,
+        final_BF16_values_per_rank=1280, final_mathematical_BF16_flits=40,
+        final_native_packing_qualified=False,
+        transaction_source='must bind existing native A/Markov dispatch namespace; caller not yet pinned')
+    st=result['storage']; st.update(A_shared_last_row_bytes=0,A_total_buffered_rows=3,
+        A_protected_row_payload_bytes=15360,pair_row_buffer_bytes_upper=30720,
+        array_row_buffer_bytes_upper=614400)
+    st['protection']['A_SRAM_macros']=9
+    result['area'].update(A_buffer_macro_inventory=9,A_raw_SRAM_area_um2=9*94.824*41.04,
+        finite_prefix_arithmetic_area=None,primary_final_add_area=None)
+    result['ordered_consumer'].update(receipt_order=['expert0','expert1','expert2'],
+        primary_shared_last=True, arithmetic_RTL_binding_qualified=False)
+    result['latency'].pop('ordered_expert_plus_shared_flits', None)
+    result['latency'].update(ordered_expert_prefix_flits=240,
+        per_complete_row_drain_lower_bound_cycles=243,
+        prefix_arithmetic_cycles=None,primary_shared_last_cycles=None,
+        qualification='no composed token-rate credit until actual prefix arithmetic and primary consumer are bound')
+    return result

@@ -1,0 +1,726 @@
+{
+  "schema": "opentallas.dsrom.hc-seed-homes.v1",
+  "adopted": false,
+  "canonical_provider_sha256": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
+  "physical_home_basis": "canonical HE/CROM anchors; input-VM service home remains an explicit proposed binding",
+  "sources": [
+    {
+      "layer": 37,
+      "stage": 74,
+      "rank": 0,
+      "die_id": 296,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 0,
+      "join_rank": 0,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 0,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 37,
+      "stage": 74,
+      "rank": 1,
+      "die_id": 297,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 0,
+      "join_rank": 1,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 80,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 37,
+      "stage": 74,
+      "rank": 2,
+      "die_id": 298,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 0,
+      "join_rank": 2,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 160,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 37,
+      "stage": 74,
+      "rank": 3,
+      "die_id": 299,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 0,
+      "join_rank": 3,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 240,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 38,
+      "stage": 76,
+      "rank": 0,
+      "die_id": 304,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 1,
+      "join_rank": 0,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 0,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 38,
+      "stage": 76,
+      "rank": 1,
+      "die_id": 305,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 1,
+      "join_rank": 1,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 80,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 38,
+      "stage": 76,
+      "rank": 2,
+      "die_id": 306,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 1,
+      "join_rank": 2,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 160,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 38,
+      "stage": 76,
+      "rank": 3,
+      "die_id": 307,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 1,
+      "join_rank": 3,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 240,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 39,
+      "stage": 78,
+      "rank": 0,
+      "die_id": 312,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 2,
+      "join_rank": 0,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 0,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 39,
+      "stage": 78,
+      "rank": 1,
+      "die_id": 313,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 2,
+      "join_rank": 1,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 80,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 39,
+      "stage": 78,
+      "rank": 2,
+      "die_id": 314,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 2,
+      "join_rank": 2,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 160,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    },
+    {
+      "layer": 39,
+      "stage": 78,
+      "rank": 3,
+      "die_id": 315,
+      "canonical_anchors": [
+        {
+          "kind": "HE",
+          "pairs": [
+            19,
+            38,
+            56,
+            75,
+            94,
+            113,
+            132,
+            169
+          ]
+        },
+        {
+          "kind": "CROM",
+          "pairs": [
+            188
+          ]
+        }
+      ],
+      "reader": "ot_dsrom_hc_input_reader",
+      "capture": "ot_dsrom_hc_mean_capture",
+      "SINGLE_CAPTURE": 1,
+      "capture_index": 2,
+      "join_rank": 3,
+      "H_layout": {
+        "source": "tools/hdc_replay_v41.py ShapeLayout(tp_exact=True)",
+        "logical_H_element_base": 0,
+        "VM_row_base": 0,
+        "runtime_binding": "require selected stage input-context restore and protected H lease; allocator address alone is not ownership",
+        "copy_row_stride": 320,
+        "rank_row_offset": 240,
+        "rows_per_copy": 80,
+        "copies": 4,
+        "expanded_F32_reads": 320,
+        "input_bytes": 20480
+      },
+      "output": {
+        "payload_flits": 40,
+        "payload_bytes": 2560,
+        "header_bytes": 64,
+        "identity": "user10/position21/epoch4/capture2/frame6"
+      },
+      "trigger": "after layer input H restore/fence, before hc_pre; release H lease only after capture reads complete"
+    }
+  ],
+  "joins": [
+    {
+      "rank": 0,
+      "proposed_primary_head": "h0",
+      "master": "ot_dsrom_hc_seed_join",
+      "captures": [
+        37,
+        38,
+        39
+      ],
+      "payload_flits": 120,
+      "output": "MT_SEED native engine5; semantic rank1280 of three5120-wide means",
+      "seed_engine_binding_qualified": false
+    },
+    {
+      "rank": 1,
+      "proposed_primary_head": "h1",
+      "master": "ot_dsrom_hc_seed_join",
+      "captures": [
+        37,
+        38,
+        39
+      ],
+      "payload_flits": 120,
+      "output": "MT_SEED native engine5; semantic rank1280 of three5120-wide means",
+      "seed_engine_binding_qualified": false
+    },
+    {
+      "rank": 2,
+      "proposed_primary_head": "h2",
+      "master": "ot_dsrom_hc_seed_join",
+      "captures": [
+        37,
+        38,
+        39
+      ],
+      "payload_flits": 120,
+      "output": "MT_SEED native engine5; semantic rank1280 of three5120-wide means",
+      "seed_engine_binding_qualified": false
+    },
+    {
+      "rank": 3,
+      "proposed_primary_head": "h3",
+      "master": "ot_dsrom_hc_seed_join",
+      "captures": [
+        37,
+        38,
+        39
+      ],
+      "payload_flits": 120,
+      "output": "MT_SEED native engine5; semantic rank1280 of three5120-wide means",
+      "seed_engine_binding_qualified": false
+    }
+  ],
+  "replicas": {
+    "readers": 12,
+    "captures": 12,
+    "joins": 4
+  },
+  "area": {
+    "reader_slot_um": [
+      500,
+      400
+    ],
+    "capture_slot_um": [
+      1000,
+      1000
+    ],
+    "join_slot_um": [
+      500,
+      500
+    ],
+    "total_slot_mm2": 15.4,
+    "capture_and_join_SRAM256x256_macros": 48
+  },
+  "ports": {
+    "reader_bits_per_cycle": 512,
+    "capture_link_bits_per_cycle": 512,
+    "payload_bytes_per_cycle": 64,
+    "protected_buffer_bits": 576,
+    "link_tracks": 512,
+    "channel_capacity": null
+  },
+  "transport": {
+    "proposal": "three independently framed 40-flit SIDE messages per rank; never a120-flit message through46-word VMX staging",
+    "messages": 12,
+    "global_payload_bytes": 30720,
+    "global_header_bytes": 768,
+    "each_message_staging_words": 41,
+    "VMX_existing_words": 46,
+    "source_and_forwarding_native_endpoints_qualified": false,
+    "stage_hops": null,
+    "route_coordinates": null,
+    "serialization_cycles_per_message_lower_bound": 41,
+    "link_hop_cycles": null,
+    "added_single_user_cycles": null
+  },
+  "pending": [
+    "selected source-plan H restore and pre-hc_pre dispatch fence",
+    "real VM arbiter request/rvalid/fault binding and slot lease",
+    "physical local placement at each canonical stage/rank die",
+    "source and forwarding SIDE endpoint identity/credits/CRC contract",
+    "actual primary head join landing and MT_SEED5 feed",
+    "measured full-rank seed phases and composed token latency"
+  ],
+  "qualification": "planning composition; no physical or exposed-latency credit"
+}
