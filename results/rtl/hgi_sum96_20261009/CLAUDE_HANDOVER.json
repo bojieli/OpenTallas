@@ -1,0 +1,52 @@
+{
+  "stream": "generic_collective/collective_endpoint/sum96",
+  "owner": "Claude takeover",
+  "worktree": "/home/ubuntu/wt/codex-hgi-sum96",
+  "branch": "codex/hgi-sum96-20261009",
+  "design_source": "a659c685f86f08eaea8e7e4a3ce10a458cf8596c",
+  "gate_source": "579dbfc88",
+  "state": "STOPPED_NEW_DESIGN; live admitted gate preserved",
+  "implementation": {
+    "final_tree": "rtl/hbm_accel/generic_sum96_20261009/ot_hgi_sum96_final_tree.sv",
+    "protected_partial_bank": "rtl/hbm_accel/generic_sum96_20261009/ot_hgi_sum96_partial_bank.sv",
+    "contract": "rtl/hbm_accel/generic_sum96_20261009/INTEGRATION.md",
+    "new_adders": 176,
+    "adder_latency": 7,
+    "final_tree_cycles": 28,
+    "end_to_end_arithmetic_cycles": 49,
+    "topology": "96->48->24->12->6->3->2->1; carry odd third subtree unchanged",
+    "storage_dependency": "527106174 ot_hcoll_payload_codec + ot_hcoll_sram128 (not installed in this branch)",
+    "production_binding": "NOT BUILT"
+  },
+  "model": {
+    "serial96": "MODEL_REJECTED history; no route/adoption",
+    "parallel": "results/uarch/hgi_sum96_20261009/parallel_model_before_rtl.json",
+    "macro_count": 36,
+    "raw_macro_area_mm2": 0.140094,
+    "": null
+  },
+  "gate": {
+    "host": "ot-epyc3",
+    "path": "/srv/opentallas-scratch/codex/hgi-sum96-a2",
+    "driver_pid": 1176215,
+    "compiler_pid": 1176224,
+    "process_group": 1176212,
+    "verified_live": "2026-10-09 gate compile elapsed2m16s RSS331972KiB",
+    "reservation_gib": 6,
+    "reservation_basis": "nearest112adderPSG bench PG~2.8GB scaled176/112 plus bank/source allowance; conservative sibling-derived, not actual peak",
+    "campaign": "4 cases*96 ranks*256 words;64 tiles; candidate repositorygolden + consuming wrongtree/drop mutants",
+    "current_verdict": "PENDING",
+    "clock": "833.333ps bench period, functional noSDF",
+    "first_failure": "attempt1 missingot_hdc_lzc32 preserved; actualdependencyadded in579dbfc88"
+  },
+  "remaining": [
+    "collect actual gate positive/mutant terminal receipts + measured peak",
+    "obtain normative hbm-sim vectors and confirm oddcarry/zero policy",
+    "bind PSG rawFP32 tree tap beforeBF16round and correct subgroup/tile header traffic",
+    "bind twelve actual protected banks and finite credits/unique masks/writeACK/drain adapter",
+    "prove bank ECC CE/UE and macro actual timing",
+    "fullshape LAT7 synthesis inventory + model area/track capacity + grownslot fit",
+    "rtl_boundary + submit pinlint + two currentflow-cx routes; NONE SUBMITTED"
+  ],
+  "adoption": false
+}
