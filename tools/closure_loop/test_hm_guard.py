@@ -121,6 +121,28 @@ class MetFirstTests(unittest.TestCase):
         self.assertIn("-hold_margin 26.3", calls[1])
 
 
+class ShipFhTests(unittest.TestCase):
+    def test_ship_refreshes_flowhold_snapshot(self):
+        # drive-2155: hold_corners_patch.py re-copies {FH}/tools/orfs_hold_mm.* over the shipped helpers; the launch
+        # env must bring the FH snapshot up to the loop's helper first
+        import tempfile
+        from pathlib import Path
+        with tempfile.TemporaryDirectory() as t:
+            run, fh = Path(t) / "run", Path(t) / "fh"
+            for d in (run / "cl", run / "src/tools", fh / "tools"):
+                d.mkdir(parents=True)
+            (run / "cl/orfs_hold_mm.py").write_text("new py")
+            (run / "cl/orfs_hold_mm.tcl").write_text("new tcl")
+            (fh / "tools/orfs_hold_mm.py").write_text("stale py")
+            with patch.object(cl, "FH_DIRS", (str(fh), str(Path(t) / "absent"))):
+                env = cl.fp_lint_env(dict(run=str(run), spec={}), "x", lint=False)
+            subprocess.run(["bash", "-c", env], check=True)
+            self.assertEqual((fh / "tools/orfs_hold_mm.py").read_text(), "new py")
+            self.assertEqual((fh / "tools/orfs_hold_mm.tcl").read_text(), "new tcl")
+            self.assertEqual((run / "src/tools/orfs_hold_mm.tcl").read_text(), "new tcl")
+            self.assertEqual(sorted(x.name for x in (fh / "tools").iterdir()), ["orfs_hold_mm.py", "orfs_hold_mm.tcl"])
+
+
 class HmEventTests(unittest.TestCase):
     def test_lines_and_dedup(self):
         rpt = "OT_HM_AUTO stage=cts HM auto-reduced 50->10: 72493 endpoints in margin (worst FF hold 2.85)\n"
