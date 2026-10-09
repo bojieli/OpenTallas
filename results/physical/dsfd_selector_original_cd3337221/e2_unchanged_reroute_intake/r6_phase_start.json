@@ -1,0 +1,61 @@
+{
+  "utc": "2026-10-09T11:18:17.480200+00:00",
+  "job": "s81ph-dsfd_selt_q-cd3337221-r6-ttref-rb2-cx",
+  "source": "cd33372216bcd972bb9a2667d7cd69d36c0690ac",
+  "phase": "calibrate synthesis",
+  "container_roots": [
+    2904952
+  ],
+  "subtree_current_rss_kib": 1822668,
+  "processes": [
+    {
+      "pid": 2904952,
+      "ppid": 2904927,
+      "rss_kib": 3256,
+      "hwm_kib": 3256,
+      "cmd": "bash -lc trap 'chmod -R a+rwX /work >/dev/null 2>&1 || true' EXIT; source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts && python3 /src/tools/orfs_allcorner_spef.py /OpenROAD-flow-scripts/flow/scripts/final_outputs.tcl && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/1_2_yosys.v && chmod a+w /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/1_2_yosys.v "
+    },
+    {
+      "pid": 2905086,
+      "ppid": 2904952,
+      "rss_kib": 2660,
+      "hwm_kib": 2660,
+      "cmd": "make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base NUM_CORES=16 /work/results/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/1_2_yosys.v "
+    },
+    {
+      "pid": 2905522,
+      "ppid": 2905086,
+      "rss_kib": 2556,
+      "hwm_kib": 2556,
+      "cmd": "make WORK_HOME=/work DESIGN_CONFIG=/work/config.mk NUM_CORES=16 FLOW_VARIANT=base --no-print-directory --file=Makefile DESIGN_CONFIG=/work/config.mk do-yosys "
+    },
+    {
+      "pid": 2905538,
+      "ppid": 2905522,
+      "rss_kib": 3480,
+      "hwm_kib": 3480,
+      "cmd": "bash /OpenROAD-flow-scripts/flow/scripts/synth.sh /OpenROAD-flow-scripts/flow/scripts/synth.tcl /work/logs/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/1_2_yosys.log "
+    },
+    {
+      "pid": 2905544,
+      "ppid": 2905538,
+      "rss_kib": 11536,
+      "hwm_kib": 11536,
+      "cmd": "/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_dsfd_selt_q_asap7_s81ph_s81ph_dsfd_selt_q_cd3337221_r6_ttref_rb2_cx_cal/base/1_2_yosys.log --append --tee -- /OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+    },
+    {
+      "pid": 2905545,
+      "ppid": 2905544,
+      "rss_kib": 1495648,
+      "hwm_kib": 1521240,
+      "cmd": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys -v 3 -c /OpenROAD-flow-scripts/flow/scripts/synth.tcl "
+    },
+    {
+      "pid": 2913488,
+      "ppid": 2905545,
+      "rss_kib": 303532,
+      "hwm_kib": 303532,
+      "cmd": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc -s "
+    }
+  ]
+}
