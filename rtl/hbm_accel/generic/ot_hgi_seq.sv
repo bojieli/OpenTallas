@@ -475,6 +475,9 @@ module ot_hgi_seq #(
     task advance(input [RB:0] n);
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
     endtask
+    task cpa_put(input [1:0] c, input [15:0] v);
+        case (c) 2'd0: acc[15:0] <= v; 2'd1: acc[31:16] <= v; 2'd2: acc[47:32] <= v; default: acc[63:48] <= v; endcase
+    endtask
     task fault3;
         begin st <= S_CPL; cpl_status <= 4'd3; cpl_token <= 18'd0; fetching <= 1'b0; u_vr <= 16'd0;
               vr_v <= 1'b0; end
@@ -661,7 +664,7 @@ module ot_hgi_seq #(
                     end
                     A_PRE: begin dc_q <= dr[aj]; as <= A_LOAD; end    // the descriptor registered (aj -> dr mux)
                     A_C1: begin                                    // resolve {acs, acx}: 16 bits a cycle
-                        {cpa_c, acc[ci*16 +: 16]} <= cpa16;
+                        cpa_c <= cpa16[16]; cpa_put(ci, cpa16[15:0]);
                         ci <= ci + 2'd1; if (ci == 2'd3) as <= A_C2;
                     end
                     A_C2: as <= A_FIN;                             // the range flags (bad_q) settle on the resolved sum
@@ -698,7 +701,7 @@ module ot_hgi_seq #(
                     end
                     3'd2: if (!mdone) begin acs <= s2; acx <= k2; mplier <= mplier >> 2; mcand <= mcand << 2; end
                           else begin ix <= 3'd6; ci <= 2'd0; cpa_c <= 1'b0; end
-                    3'd6: begin {cpa_c, acc[ci*16 +: 16]} <= cpa16; ci <= ci + 2'd1; if (ci == 2'd3) ix <= 3'd7; end
+                    3'd6: begin cpa_c <= cpa16[16]; cpa_put(ci, cpa16[15:0]); ci <= ci + 2'd1; if (ci == 2'd3) ix <= 3'd7; end
                     3'd7: ix <= 3'd3;
                     3'd3: if (pend_n[aj]) begin
                             if (ian_bad) fault3;
