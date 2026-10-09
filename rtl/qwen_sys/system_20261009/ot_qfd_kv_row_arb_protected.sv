@@ -99,7 +99,7 @@ module ot_qfd_kv_row_arb_protected #(
  assign h_grant=safe?grants:64'd0;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin rv0<=0;rv1<=0;rv2<=0;rd0<=0;rd1<=0;rd2<=0;f0<=0;f1<=0;f2<=0;
-   for(c=0;c<32;c=c+1)begin credits[c]<=DEPTH;credits1[c]<=DEPTH;credits2[c]<=DEPTH;endend
+   for(c=0;c<32;c=c+1)begin credits[c]<=DEPTH;credits1[c]<=DEPTH;credits2[c]<=DEPTH;end end
   else begin
    rv0<=safe?launch_v:3'd0;rv1<=safe?launch_v:3'd0;rv2<=safe?launch_v:3'd0;
    rd0<=launch_data;rd1<=launch_data;rd2<=launch_data;
