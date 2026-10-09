@@ -175,6 +175,27 @@ def dsrom_engram_rowstripe_model(context=1048576, users=64):
 
 
 
+
+def dsrom_engram_source_rewind_binding_model():
+    """Real SOURCE issued-window rejection, not HEAD prefix-accept inference."""
+    return dict(schema='opentallas.engram-source-rewind-binding-model.v1',
+        opt_in_default=False,users=64,history_entries_per_user=8,max_issued_positions=6,
+        actual_source='rtl/rom/wavefront/ot_rom_pkg_ctrl_wfc_tokpipe.sv SOURCE event engine',
+        issue='actual engine go/tok/pos/user; each admitted issue forms exactly one released-map lead',
+        reject='S_EX K_RES x_rew: rejected issued-window count r_wnf-1, user ou; x_rejb has zero issued future and requires no rewind',
+        handshake='hold existing EX context, event/writeback and new SOURCE issue until actual lead rb_ready; rewind exactly once then consume RESULT',
+        descriptor_bits=12+3+1,extra_descriptor_flops=0,
+        storage='existing EX event registers hold user/count context; existing64x8 unprotected flop history, no duplicate control ledger',
+        macs_per_cycle=0,memory_port_bytes_per_cycle_added=0,
+        new_boundary_bits=16+1,tracks_added=17,replicas=4,
+        fanout='four independent S0 TP SOURCE instances consume the same actual accepted/rejected issue order',
+        mux='existing event-kind/EX state selects one held rewind; no HEAD event matching or epoch',
+        latency='no new fixed stage; event wait equals current held/inflight lead drain, bounded by actual downstream backpressure; released lead4capture cycles priced separately',
+        floorplan='existing SOURCE control slot; combinational admission/status handshake requires actual port/cell inventory before route',
+        missing_binding='nativeSOURCE program uses AR feedback currently; actual WFC-to-native issue scheduler and typed PROMPT metadata seam must be selected before RTL integration',
+        qualification='model only; requires minimum actual SOURCE+released64user lead rejection/drain/squash/bonus-fence gate and rewind-bypass mutant')
+
+
 def dsrom_engram_flop_read_buffer_model():
     """Owner V37/X2: returned row staging uses flop arrays, not SRAM."""
     return dict(schema='opentallas.engram-flop-read-buffer-model.v1',
