@@ -1,0 +1,58 @@
+{
+  "schema": "opentallas.hgi_token18.ports.v1",
+  "source": "11f1f5722",
+  "model_commit": "416766277",
+  "model": "tools/uarch_model.py:hgi_token18_contract_model",
+  "legacy_default": "GENERIC18=0,TW17",
+  "approved_mode": "GENERIC18=1,TW18",
+  "cmdproc_owned_by": "Claude",
+  "endpoints": {
+    "ot_hgi_mtp_accept18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_accept18.sv",
+      "params": {
+        "GENERIC18": 1
+      },
+      "base": "rtl/hdc/ot_hdc_accept.sv NSLOT8 NW18",
+      "tokens": [
+        "start_tok18",
+        "tokx_tok18",
+        "amax_tok18",
+        "bonus18",
+        "stok144",
+        "ttok144"
+      ],
+      "new_cycles": 0,
+      "bench": "rtl/test/hbm_generic/tb_hgi_accept18.sv",
+      "gate": "108PASS+truncationmutantFAIL+bonusmutantFAIL",
+      "remote": "ot-pve1:/srv/opentallas-scratch/codex/hgi-token18-6a63",
+      "simulator_vectors": "pendingprovider"
+    },
+    "ot_hgi_mtp_ctl18": {
+      "source": "rtl/hbm_accel/generic/ot_hgi_mtp_ctl18.sv",
+      "params": {
+        "GENERIC18": 1,
+        "TW": 18,
+        "B": 5,
+        "PMAX": 8,
+        "NL": 40,
+        "MAXPOS": 1048576
+      },
+      "base": "physical/hbm_mtp/rtl/ot_dshbm_dspark_ctl_m.sv FAST1 PRL2 ACCEPT_LEAF0",
+      "tokens": [
+        "p_tok18",
+        "f_tok18",
+        "e_tok18",
+        "cmd_tok1_18",
+        "cmd_toks144",
+        "am_idx18",
+        "tw_tok18"
+      ],
+      "new_cycles": 0,
+      "bench": "rtl/test/hbm_generic/tb_hgi_ctl18_lockstep.sv",
+      "gate": "pending (Icaruszero-time suspected; Verilatorrunactive)",
+      "simulator_vectors": "pendingprovider"
+    }
+  },
+  "route_jobs": [],
+  "routes": "notqueued,noP&Rclosureclaim"
+}
