@@ -36,6 +36,34 @@ HIST = cl.STATE / "stuckscan_hist.json"
 LIVE = ("RUNNING", "ECO", "ECO_INSTALL")
 SIGNOFF_PS = 833.333
 HUNG_QUIET_S = 45 * 60
+# coordinator 2026-10-08: CRITICAL_PATH item 1 (S81 BF and its half-rate fallbacks) is never auto-stopped: report only
+PROTECTED_NAME = re.compile(r"^(bfh|bfi|bf_)|halfphl")
+PROTECTED_BLOCKS = {"ot_s81_bf_native"}
+ASSUME_DELTA_PS = 100.0
+
+
+def protected(j):
+    return bool(PROTECTED_NAME.search(j["name"])) or j["spec"].get("block") in PROTECTED_BLOCKS
+
+
+def insertion_untrusted(j):
+    """why the route's IO model may be off (coordinator 2026-10-08, bfh_halfphl: route started on another variant's
+    insertion, SS 1169 vs measured 1546): the parallel calibrate measured > 100 ps off the assumption, or has not
+    measured yet and the assumption came from another job's variant.  None = trusted (no assumption, or confirmed)."""
+    ct = j.get("ctrack") or {}
+    a = ct.get("assumed")
+    if not a:
+        return None
+    m = ct.get("measured")
+    if m:
+        d = max(abs(float(m.get(k, a.get(k, 0))) - float(a.get(k, 0))) for k in ("CK_SS_MEAN", "CK_FF_MEAN") if k in a)
+        return f"measured insertion {d:.0f} ps off the assumption ({ct.get('source')})" if d > ASSUME_DELTA_PS else None
+    src = re.search(r"\(([A-Za-z0-9._-]+)[,)]", ct.get("source") or "")
+    c = j.get("commit_full") or ""
+    if src and variant(src.group(1), "") != variant(j["name"], "") and \
+            re.sub(r"[-_]?[0-9a-f]{9}.*$", "", src.group(1)) != re.sub(r"[-_]?[0-9a-f]{9}.*$", "", j["name"]):
+        return f"assumed insertion from another variant ({ct.get('source')}), not yet measured"
+    return None
 HUNG_CPU = 0.2
 
 # ---- early-fail thresholds (calibrated 2026-10-08 on the loop's finished TT-corner routes, see --calibrate and the
@@ -403,12 +431,24 @@ def hopeless(b, j, now):
     if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")):
         st = g["stage"]
         cnt = g.get("count") or 0
+        unt = insertion_untrusted(j) if j else None
+        if unt:
+            # IO slack is fake on a wrong insertion: judge reg->reg/macro paths only (worst per path group of the report)
+            r2r = [p for p in path_classes(b) if p["cls"].split("->")[0] in ("reg", "macro")
+                   and p["cls"].split("->")[1] in ("reg", "macro") and p["slack_ps"] is not None]
+            w = min([norm_ws(p["slack_ps"], b.get("period")) for p in r2r], default=None)
+            g = dict(g, ws=w, raw_ws=min(p["slack_ps"] for p in r2r) if r2r else None, io_excluded=unt)
+            if w is None:
+                g = None
+    if g and tt and g["ws"] is not None and not cur.startswith(("5_3", "6_")):
         if g["ws"] < GATES[f"setup_{st}_ws_ps"] and (cnt > GATES[f"setup_{st}_count"] or
                                                      (g.get("tns") or 0) < GATES["setup_tns_ps"]):
             out.append(("EARLY_FAIL_SETUP", f"post-{st} TT setup WNS {g['ws']:+.1f} ps at 833.333 (route-period "
                                             f"{g['raw_ws']:+.1f} at {g['period']:g}), {cnt} failing endpoints, TNS "
                                             f"{g.get('tns')}; gate WNS < {GATES[f'setup_{st}_ws_ps']:g} with > "
-                                            f"{GATES[f'setup_{st}_count']} endpoints"))
+                                            f"{GATES[f'setup_{st}_count']} endpoints"
+                                            + (f"; IO excluded, reg->reg/macro only ({g['io_excluded']})"
+                                               if g.get("io_excluded") else "")))
     elapsed = now - step_start(b)
     hd = b.get("hold") or {}
     if hd.get("found") and cur.startswith(("4_1_cts", "5_1_grt")):
@@ -420,7 +460,8 @@ def hopeless(b, j, now):
                                            f"{GATES['hold_flood_ep']}), hold WNS now {last[2] if last else '?'} ps "
                                            f"(start {sync[1]}), {elapsed / 3600:.1f} h in step, "
                                            f"{'HM guard present' if hd.get('guard') else 'old flow without the HM/stall guard'}"))
-        elif last and last[2] < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"]:
+        elif last and last[2] < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"] and \
+                not (j and insertion_untrusted(j)):     # IO hold on a wrong insertion may be fake: let it run
             out.append(("EARLY_FAIL_HOLD", f"{cur[:-8]} real FF hold WNS {last[2]:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) "
                                            f"after {elapsed / 3600:.1f} h of repair, {n} endpoints"))
     cg = [c for c in b.get("congestion") or [] if c[1] is not None]
@@ -535,6 +576,12 @@ def diagnose(j, o, hist, jobs, closed, now):
             d["drt_last"] = b["drt"][-3:]
         exp = expected_step(hist, d["step"], b.get("odb_mb")) if d["step"] else None
         d["expected_h"] = round(exp / 3600, 2) if exp else None
+    if protected(j):
+        hp = hopeless(b, j, now) if b and j.get("stage_key") == "route" and j["status"] == "RUNNING" else []
+        d["kind"] = "critical"
+        d["why"].append("CRITICAL_PATH 1 (BF): never auto-stopped, report only" +
+                        (": WOULD early-fail: " + "; ".join(w for _, w in hp) if hp else ""))
+        return d
     # 1) redundant
     r, sure = redundant(j, jobs, closed)
     if r and sure and j["status"] != "ECO_INSTALL":

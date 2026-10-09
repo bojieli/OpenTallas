@@ -77,6 +77,12 @@ with a live sibling; an old-flow hold flood is a `flow` item: re-route under the
   -329.3 (656 endpoints), post-placement -736.6; the gates would have stopped 12 (CTS) / 5 (placement) routes whose best
   final TT was -117 / -162 ps and NO eventual closure. The verdict carries the worst max path of every path group
   from the post-CTS (else placement) report: class input/reg/macro -> reg/macro/out, wire- vs logic-dominated, max fanout.
+- Coordinator rules (2026-10-08): CRITICAL_PATH item 1 (S81 BF: names bfh*/bfi*/bf_*/*halfphl*, block
+  ot_s81_bf_native) is NEVER auto-stopped (daemon gate skips it; stuckscan reports `critical` with what it would have
+  done). A route on an untrusted clock insertion (`insertion_untrusted`: its parallel calibrate measured > 100 ps off
+  the assumption, or the assumption came from another variant and is not measured yet) has its setup gate judged on
+  reg->reg/macro paths only (IO slack is fake on a wrong insertion; bfh_halfphl started on the full-rate SS 1169 / FF 714
+  vs its real 1546 / 875), and the real-hold-WNS gate does not apply to it.
 - `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, > 20,000 endpoints in margin (RSZ-0046) unless the HM guard
   already auto-reduced the margin, or real hold WNS < -150 ps after 1 h of repair.
 - `EARLY_FAIL_CONGESTION`: GRT past extra iteration 20 with > 1,000 markers in the latest congestion-N.rpt and no new

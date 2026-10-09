@@ -197,6 +197,35 @@ class ProbeAndGates(unittest.TestCase):
         self.assertFalse(sure)
 
 
+class CoordinatorRules(ProbeAndGates):
+    def test_bf_is_never_auto_stopped(self):
+        with tempfile.TemporaryDirectory() as t:
+            run = make_run(t, cts_ws=-900, count=9000)
+            j = job("bfh_halfphl_a730_tt_hm10_639afaedc", run=str(run))
+            d = self.diag(run, j)
+            self.assertEqual((d["action"], d["kind"]), ("let_run", "critical"))
+            self.assertIn("WOULD early-fail", d["why"][0])
+            with patch.object(ss, "probe") as p:
+                cl.early_fail_gate(j, dict(kind="route"))
+                p.assert_not_called()
+
+    def test_wrong_assumption_judges_reg2reg_only(self):
+        ct = dict(assumed={"CK_SS_MEAN": 1169, "CK_FF_MEAN": 714}, measured={"CK_SS_MEAN": 1546, "CK_FF_MEAN": 875},
+                  source="measured_insertion.json (other_variant, x)")
+        with tempfile.TemporaryDirectory() as t:     # reg->reg -500 at 770 -> -436.7 normalised: still hopeless
+            run = make_run(t, cts_ws=-900, count=9000)
+            d = self.diag(run, job(run=str(run), ctrack=ct))
+            self.assertEqual(d["verdict"], "EARLY_FAIL_SETUP")
+            self.assertIn("IO excluded", d["why"][0])
+            self.assertAlmostEqual(d["setup"]["ws"], -900 + 63.3, places=1)   # report keeps the raw metric
+        with tempfile.TemporaryDirectory() as t:     # same run, but the reg->reg path only -300: IO miss -> keep
+            run = make_run(t, cts_ws=-900, count=9000)
+            rpt = next(Path(t).rglob("4_cts_final.rpt"))
+            rpt.write_text(rpt.read_text().replace("-500.00   slack (VIOLATED)", "-300.00   slack (VIOLATED)"))
+            self.assertEqual(self.diag(run, job(run=str(run), ctrack=ct))["action"], "let_run")
+        self.assertIsNone(ss.insertion_untrusted(job(ctrack=dict(ct, measured={"CK_SS_MEAN": 1200, "CK_FF_MEAN": 700}))))
+
+
 class DaemonGate(unittest.TestCase):
     def test_gate_finishes_early_fail(self):
         with tempfile.TemporaryDirectory() as t:

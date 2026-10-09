@@ -2325,6 +2325,9 @@ def early_fail_gate(j, st):
     now = time.time()
     if j["spec"].get("early_fail") is False or now - j.get("ef_checked", 0) < EARLY_CHECK_S:
         return
+    import stuckscan
+    if stuckscan.protected(j):     # CRITICAL_PATH 1 (BF): stuckscan reports it, never auto-stopped
+        return
     j["ef_checked"] = now
     try:
         import stuckscan
@@ -3828,8 +3831,8 @@ def cmd_validate(a):
 @locked_job_command
 def cmd_retry(a):
     j = load_job(a.name)
-    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET"):
-        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET jobs can be retried")
+    if j["status"] not in ("NEEDS_HUMAN", "NEEDS_BUDGET", *EARLY_FAIL):
+        sys.exit(f"{a.name} is {j['status']}; only NEEDS_HUMAN / NEEDS_BUDGET / EARLY_FAIL_* jobs can be retried")
     if j["status"] == "NEEDS_BUDGET" and j.get("budget"):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
