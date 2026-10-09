@@ -74,6 +74,13 @@ def cases():
     c["fan_neg_interleave"] = dict(tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_INTERLEAVE"],
                                    expect="fail")
     c["fan_neg_dest"] = dict(tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_DEST"], expect="fail")
+    # struct-close 2026-10-09: pin-safe drf_fan ("-cl" line): same bench, ot_dsrom_drf_fan_p.sv + ot_sc_pfifo.sv
+    fanp = dict(swap={f"{M}/ot_dsrom_drf_fan.sv": f"{M}/ot_dsrom_drf_fan_p.sv"}, extra=["rtl/common/ot_sc_pfifo.sv"])
+    for sd in (1, 2, 3):
+        c[f"fanp_r{sd}"] = dict(fanp, tb="tb_mtp_rom_fan", params=dict(SEED=sd))
+    c["fanp_neg_interleave"] = dict(fanp, tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_INTERLEAVE"],
+                                    expect="fail")
+    c["fanp_neg_dest"] = dict(fanp, tb="tb_mtp_rom_fan", params=dict(SEED=1), defines=["OT_DRFFAN_MUT_DEST"], expect="fail")
     for k in c:
         c[k].setdefault("expect", "pass")
     return c
@@ -85,7 +92,9 @@ def run_case(name, spec, out: Path):
     rec = dict(case=name, expect=spec["expect"], params=spec.get("params", {}), defines=spec.get("defines", []))
     if "trace" in spec:
         rec["trace"] = trace_hex(ROOT / TRACES / f"{spec['trace']}.cfg.json", d / "trace.hex")
-    srcs = [str(ROOT / s) for s in COMMON] + [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
+    sw = spec.get("swap", {})
+    srcs = [str(ROOT / sw.get(s, s)) for s in COMMON] + [str(ROOT / s) for s in spec.get("extra", [])]
+    srcs += [str(ROOT / M / "tb" / f"{spec['tb']}.sv")]
     cmd = ["iverilog", "-g2012", "-s", spec["tb"], "-o", str(d / "sim.vvp")]
     cmd += [f"-D{x}" for x in spec.get("defines", [])]
     cmd += [f"-P{spec['tb']}.{k}={v}" for k, v in spec.get("params", {}).items()]
