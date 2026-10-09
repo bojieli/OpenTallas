@@ -18,6 +18,9 @@ foreach k {ucie serdes} { create_clock -name $k -period 833.333 [get_pins -quiet
 set_clock_groups -asynchronous -group stream -group serial -group ucie -group serdes"""
 mm, unc = ('max', 'set_clock_uncertainty -setup 60 [all_clocks]') if c == 'tt' else ('min', 'set_clock_uncertainty -hold 25 [all_clocks]')
 rd = '\n'.join(f'read_liberty {x}' for x in libs)
+# die-evidence-2 2026-10-09: ETM-bound element views (tools/qwen_die_etm_map.py: routed sign-off ETMs of slab_m8 /
+# cst / chead) are read FIRST when the run's libs carry them; qfd_elements_<c>.lib then holds only the ASSUMED rest
+rd = f'if {{[file exists /work/libs/qfd_etm_{c}.lib]}} {{ read_liberty /work/libs/qfd_etm_{c}.lib }}\n' + rd
 tcl = f"""proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f
   regexp {{VmRSS:\\s+(\\d+)}} $s -> r; puts "OTMEM $tag rss_mb=[expr {{$r/1024}}] t=[clock seconds]"; flush stdout }}
 proc step {{name body}} {{ set t0 [clock milliseconds]
@@ -28,8 +31,10 @@ step libs {{
 }}
 step load {{ read_db /work/ckpt_grt.odb }}
 source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+# die-evidence-2 2026-10-09: GRT parasitics from the SPEF the GRT session wrote (grt.tcl step spef).  The old
+# read_guides + estimate_parasitics -global_routing path gave no wire RC (GRT-0008): the run now fails without the SPEF.
+if {{![file exists /work/die_grt.spef]}} {{ puts "OT_STEP_FAIL spef missing: /work/die_grt.spef (GRT-0008: guides carry no RC)"; exit 1 }}
 step spef {{ read_spef /work/die_grt.spef }}
-if {{![file exists /work/die_grt.spef]}} {{ puts "OT_STA_NO_SPEF"; exit 1 }}
 {clocks}
 {unc}
 step sta {{
