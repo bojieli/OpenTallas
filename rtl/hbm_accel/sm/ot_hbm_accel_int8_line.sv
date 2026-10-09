@@ -89,13 +89,13 @@ module ot_hbm_accel_int8_line #(parameter integer PIPE = 0) (
     endfunction
     wire [1023:0] widened;
     genvar lane;
-    generate for (lane = 0; lane < 64; lane = lane + 1) begin : g_lane
+    for (lane = 0; lane < 64; lane = lane + 1) begin : g_lane
 `ifdef OT_INT8_MUT_SIGN
         assign widened[16*lane +: 16] = to_bf16(codes[8*lane +: 8] & 8'h7f);
 `else
         assign widened[16*lane +: 16] = to_bf16(codes[8*lane +: 8]);
 `endif
-    end endgenerate
+    end
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin m_valid <= 1'b0; pending <= 1'b0; end
         else if (capacity) begin
