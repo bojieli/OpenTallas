@@ -4,7 +4,7 @@ module tb_hgi_idx_topk;
  reg clk=0;always #0.4166665 clk=~clk;
  reg rst_n=0,cv=0,iv=0,ready=1;
  reg [3:0] unit_id=9;reg [5:0] op=2;
- reg [15:0] param_k;reg [31:0] n,m,score;
+ reg [24:0] param_k;reg [31:0] n,m,score;
  wire cr,ir,ov,last,vv,done;wire[3:0]error;
  wire[31:0]id,value,row;
  ot_hgi_idx_topk #(.ENABLE(1),.MUTANT_TIE(MUTANT)) dut(

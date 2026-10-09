@@ -10,7 +10,7 @@ module ot_hgi_idx_topk #(
  input wire clk,rst_n,
  input wire cmd_valid, output wire cmd_ready,
  input wire [3:0] cmd_unit, input wire [5:0] cmd_op,
- input wire [15:0] cmd_param, input wire [31:0] cmd_n,cmd_m,
+ input wire [24:0] cmd_param, input wire [31:0] cmd_n,cmd_m,
  input wire cmd_values,
  input wire in_valid, output wire in_ready, input wire [31:0] in_score,
  output wire out_valid, input wire out_ready,
@@ -55,7 +55,7 @@ module ot_hgi_idx_topk #(
     IDLE: if(cmd_valid) begin
      error<=0;
      if(!ENABLE||cmd_unit!=9||cmd_op!=2) begin error<=1;done<=1;end
-     else if(cmd_param[15:12]!=0||cmd_param[11:0]==0||cmd_param[11:0]>MAX_K||
+     else if(cmd_param[24:12]!=0||cmd_param[11:0]==0||cmd_param[11:0]>MAX_K||
        cmd_param[11:0]>cmd_n||cmd_n==0||cmd_n>1048576||cmd_m==0) begin error<=2;done<=1;end
      else begin
       values_enabled<=cmd_values;n<=cmd_n;m<=cmd_m;k<=cmd_param[11:0];row<=0;cursor<=0;state<=FILL;
