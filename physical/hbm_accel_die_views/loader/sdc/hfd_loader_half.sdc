@@ -12,3 +12,12 @@ if {[llength $ot_core] > 0} {
 } else {
   puts "OT_LOADER_HALF WARNING no core cells matched u_ld.u_core.* (expected only before synthesis)"
 }
+# CFGREP (drive-2125 2026-10-08, REVIEW_20261008 DQ1; 0 cycles): registered copies of the cfg-chain valids, one per skid
+# storage group (RG 8), kept ot_hfd_oreg1 flops on the core clock.  Source of each copy (a copy registered from cfg[k-1]
+# equals cfg[k] every cycle; cfg is the die view's quasi-static stand-in for memory-side inputs with no die net):
+#   u_cfgrep_rsp[0..7].u   = cfg[140]  (rsp_v[0] -> u_ld.u_sk_rsp[0].g_rep.u, storage group 0..7)
+#   u_cfgrep_rsp[8..15].u  = cfg[141]  (rsp_v[1] -> u_ld.u_sk_rsp[1].g_rep.u, storage group 0..7)
+#   u_cfgrep_mr[0..7].u    = cfg[65]   (m_rvalid -> u_ld.u_sk_m_r[0].g_rep.u, storage group 0..7)
+# Copy -> slice paths stay single-cycle face <-> slice paths (no exception); the copies only split the enable fanout.
+set ot_cfgrep [get_cells -quiet {u_cfgrep_rsp* u_cfgrep_mr*}]
+puts "OT_LOADER_CFGREP copies matched: [llength $ot_cfgrep] (sources cfg\[140\] x8, cfg\[141\] x8, cfg\[65\] x8)"
