@@ -19,6 +19,7 @@ def model():
             physical_relay_cycles=None,
             composition='pairedappend physical WB fence precedes descriptor admission; query may start only after matching actual acceptance receipt; 8 index layers, no overlap credited before producer window is measured'),
         portal='dedicated decoded kind2 arbitration into existing stream engine; legacy E portal unchanged',
+        frame_fence='next descriptor waits for all prior line credits to return; eight credit-vs-CRED comparators, zero new FF/cycles; frame73 receipt then identifies an empty prior line path',
         routing='109 forward,84 reverse,2 release tracks plus clock/reset before relay shielding; capacity and loadedclock unqualified',
         exact_gate_required=['held source valid enqueues once', 'actual acceptance delayed by service busy',
             'full73 frame match', 'single data/check correction', 'double error poison',

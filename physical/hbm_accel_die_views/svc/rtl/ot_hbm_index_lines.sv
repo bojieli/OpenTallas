@@ -10,11 +10,15 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
  input wire[7:0] credit,
  output reg[8791:0] lines,output reg[63:0] pop,
  output reg done,output reg fault,output wire retained);
- assign retained=active;
  localparam AW=$clog2(DEPTH);
  localparam CW=$clog2(CRED+1);
  reg[255:0] mem[0:31][0:DEPTH-1];reg[DEPTH-1:0] valid[0:31];
  reg[CW-1:0] credits[0:7];reg active;reg[10:0] line0,nlines;
+ wire[7:0]credit_debt;
+ for(genvar cp=0;cp<8;cp=cp+1)assign credit_debt[cp]=credits[cp]!=CW'(CRED);
+ // A full-frame receipt must never identify a new frame while any line from
+ // the previous one remains in a CDC, station relay or consumer landing FIFO.
+ assign retained=active||(|credit_debt);
  integer p,l,b,g,pc,j,slot,n,need;reg can;reg[31:0] used[0:31];
  reg[1087:0] assembled[0:7];
  always @*begin
@@ -43,7 +47,7 @@ module ot_hbm_index_lines #(parameter ENABLE=0,DEPTH=64,CRED=16)(
     credits[l]<=credits[l]+CW'(credit[l])-CW'(can);
    end
    if(start)begin
-    if(active||blocks>342)fault<=1;
+    if(retained||blocks>342)fault<=1;
     else begin active<=blocks!=0;line0<=0;nlines<=11'(blocks)*4;done<=blocks==0;
      for(p=0;p<32;p=p+1)valid[p]<=0;
     end
