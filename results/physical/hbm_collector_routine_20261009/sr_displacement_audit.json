@@ -30,5 +30,12 @@
     "adoption": "NONE, diagnostic sensitivity; runtime units corrected and disclosed; preserve current job",
     "next": "actual displacement and pin anchor verification; sequential bounded follow-up only after terminal",
     "output": "/srv/opentallas-scratch2/scratch/codex/hbm-collector-sr-dpl-inspect-20261009/sr-displacement-30x23.odb"
+  },
+  "read_only_anchor_audit": {
+    "anchor_count": 12161,
+    "overlapping_same_row_anchor_intervals": 4560,
+    "peak_KiB": 2280776,
+    "elapsed_seconds": 10.27,
+    "finding": "Literal failed-ODB anchors already overlap. Freezing these seats makes legalization infeasible independent of movement/density. Actual pin/anchor contract must distinguish illegal saved seats from required geometric constraints. No canonical SR requeue."
   }
 }

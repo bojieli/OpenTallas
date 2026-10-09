@@ -1,0 +1,42 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+SR_PROBE_PIN_ANCHORS 12161
+SR_REQUIRED_ANCHOR_OVERLAP row=2700 left=i0_f_cmdproc\[10\]$_DFF_P_ right=i0_f_cmdproc\[11\]$_DFF_P_ x=464616 prior_end=465588
+SR_REQUIRED_ANCHOR_OVERLAP row=1080 left=i0_f_cmdproc\[5\]$_DFF_P_ right=i0_f_cmdproc\[9\]$_DFF_P_ x=464562 prior_end=464670
+SR_REQUIRED_ANCHOR_OVERLAP row=1080 left=i0_f_cmdproc\[9\]$_DFF_P_ right=i0_f_cmdproc\[13\]$_DFF_P_ x=464778 prior_end=465750
+SR_REQUIRED_ANCHOR_OVERLAP row=1080 left=i0_f_cmdproc\[13\]$_DFF_P_ right=i0_f_cmdproc\[17\]$_DFF_P_ x=465750 prior_end=465966
+SR_REQUIRED_ANCHOR_OVERLAP row=1080 left=i0_f_cmdproc\[17\]$_DFF_P_ right=i0_f_cmdproc\[18\]$_DFF_P_ x=465966 prior_end=466938
+SR_REQUIRED_ANCHOR_OVERLAP row=2160 left=i0_f_cmdproc\[2\]$_DFF_P_ right=i0_f_cmdproc\[4\]$_DFF_P_ x=463266 prior_end=464022
+SR_REQUIRED_ANCHOR_OVERLAP row=2160 left=i0_f_cmdproc\[4\]$_DFF_P_ right=i0_f_cmdproc\[8\]$_DFF_P_ x=464022 prior_end=464454
+SR_REQUIRED_ANCHOR_OVERLAP row=2160 left=i0_f_cmdproc\[14\]$_DFF_P_ right=i0_f_cmdproc\[19\]$_DFF_P_ x=466128 prior_end=466398
+SR_REQUIRED_ANCHOR_OVERLAP row=2160 left=i0_f_cmdproc\[19\]$_DFF_P_ right=i0_f_cmdproc\[23\]$_DFF_P_ x=466884 prior_end=467316
+SR_REQUIRED_ANCHOR_OVERLAP row=1620 left=i0_f_cmdproc\[1\]$_DFF_P_ right=i0_f_cmdproc\[6\]$_DFF_P_ x=463644 prior_end=463860
+SR_REQUIRED_ANCHOR_OVERLAP row=1620 left=i0_f_cmdproc\[6\]$_DFF_P_ right=i0_f_cmdproc\[7\]$_DFF_P_ x=463860 prior_end=464832
+SR_REQUIRED_ANCHOR_OVERLAP row=1620 left=i0_f_cmdproc\[15\]$_DFF_P_ right=i0_f_cmdproc\[16\]$_DFF_P_ x=465588 prior_end=466560
+SR_REQUIRED_ANCHOR_OVERLAPS 4560
+SR_ANCHOR_READ_ONLY_COMPLETE
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit /inspect/audit_sr_pin_anchors.tcl"
+	User time (seconds): 9.48
+	System time (seconds): 0.78
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:10.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2280776
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 560146
+	Voluntary context switches: 1
+	Involuntary context switches: 38
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
