@@ -19,8 +19,18 @@
 // receiver_ready stays a same-cycle input (contract unchanged); it reaches ~100 control
 // flops only (pop -> send_v/return_v/return_tag/rd ring/expect_retire/bad), not the data.
 // MUTANT 2 corrupts the returned tag (as the original); MUTANT 4 misaligns the read ring.
+//
+// CREDIT (credit-ready, 2026-10-08; OWNER: credit-based ready accepted; default 0 = the same-cycle contract above).
+// CREDIT=1 changes the meaning of receiver_ready[i]: it carries a one-cycle CREDIT-RETURN PULSE from the consumer
+// (one pulse per item the consumer has freed from its buffer), not a level ready. The pulse lands in a pin flop
+// (+1 cycle on the credit loop only); a per-lane counter starts at CRD (= the consumer's buffer depth, which must
+// cover the credit round trip for full rate) and pop = !empty && cr_ok && !bad uses only registers (cr_ok is
+// computed from the next counter value). A credit that would raise the counter above CRD (credit overflow) sets the
+// sticky fault. idle additionally needs every credit home (counter == CRD, no pulse in the pin flop).
+// MUTANT 5 starts the counter one above CRD (over-issue: the consumer buffer overflows).
 module ot_ha2_truecredit_receiver_p #(
- parameter integer W=544, INJ=2, AW=6, TAGW=16, MUTANT=0
+ parameter integer W=544, INJ=2, AW=6, TAGW=16, MUTANT=0,
+ parameter integer CREDIT=0, CRD=8
 )(input wire clk,rst_n,
  input wire[INJ-1:0] arrival_v,receiver_ready,
  input wire[INJ*W-1:0] arrival_data,
@@ -52,7 +62,26 @@ module ot_ha2_truecredit_receiver_p #(
   wire empty=wp==rp;
   wire full=(wp[AW]!=rp[AW])&&(wp[AW-1:0]==rp[AW-1:0]);
   wire valid_arrival=av_q&&tag_q==expect_arrival&&!bad;
-  wire pop=!empty&&receiver_ready[i]&&!bad;
+  // credit ready (CREDIT=1) or the same-cycle ready (CREDIT=0)
+  localparam integer CRW=$clog2(CRD+2)+1;
+  localparam integer CR0=CRD+((MUTANT==5)?1:0);
+  wire cr_ok,cr_home,cr_ovf;
+  wire pop=!empty&&cr_ok&&!bad;
+  if(CREDIT!=0)begin:g_credit
+   initial if(CRD<1)$fatal(1,"HA2 truecredit receiver CRD must be >= 1");
+   reg cr_q,cr_ok_r,home_r,ovf_r;
+   reg[CRW-1:0] cred;
+   wire[CRW-1:0] cred_n=cred+CRW'(cr_q)-CRW'(pop);
+   always @(posedge clk or negedge rst_l)
+    if(!rst_l)begin cr_q<=1'b0;cred<=CRW'(CR0);cr_ok_r<=1'b1;home_r<=1'b1;ovf_r<=1'b0;end
+    else begin
+     cr_q<=receiver_ready[i];cred<=cred_n;cr_ok_r<=cred_n!=0;home_r<=cred_n==CRW'(CR0);
+     if(cr_q&&!pop&&cred==CRW'(CR0))ovf_r<=1'b1;
+    end
+   assign cr_ok=cr_ok_r;assign cr_home=home_r&&!cr_q;assign cr_ovf=ovf_r;
+  end else begin:g_ready
+   assign cr_ok=receiver_ready[i];assign cr_home=1'b1;assign cr_ovf=1'b0;
+  end
   // 3. AND-OR read mux over the registered one-hot read ring
   wire[D-1:0] rd_sel=(MUTANT==4)?{rd_oh[D-2:0],rd_oh[D-1]}:rd_oh;
   reg[FW-1:0] head;
@@ -66,8 +95,8 @@ module ot_ha2_truecredit_receiver_p #(
   for(genvar r=0;r<D;r=r+1)begin:g_slot
    always @(posedge clk)if(wr&&wr_oh[r])mem[r]<={tag_q,data_q};
   end
-  assign bads[i]=bad||ovf;
-  assign idle[i]=empty&&!av_q&&!send_v[i]&&!return_v[i];
+  assign bads[i]=bad||ovf||cr_ovf;
+  assign idle[i]=empty&&!av_q&&!send_v[i]&&!return_v[i]&&cr_home;
   always @(posedge clk or negedge rst_l)
    if(!rst_l)begin
     expect_arrival<=0;expect_retire<=0;bad<=0;ovf<=0;wp<=0;rp<=0;
