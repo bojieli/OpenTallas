@@ -21,10 +21,27 @@
   "files": {
     "initial_coverage_failure.log": "3aeeb255642898437a55d23047c0afc706bf6cf22a193dbfe98899bef891e033",
     "original_e4m3_saturation_failure.log": "28a3e58fad0cd90825e2c248a6d20156072f5b6077417ed2e7f5e34ea5ebd9fd",
+    "lockstep_process_samples.log": "ea50c5571917b3f51534a1e0e561ba6545fbbcfff50e94bc746ea51e9d111e36",
+    "registered_nonfinite_lockstep.log": "ec7e9f1726cb1a8b6cf9173ef25f59a1e3b9ad8ec3ef07935ce328d97ca0b035",
+    "boundary_scale_mutant.log": "066e4fdcfbafe18a8203f0ef51f9cce3d822812f02930998fd4dbef0134be5ce",
+    "lockstep_resource.time": "4c465781899072531a3dfbc62b4e481be68caac619517b17a33685beda9aaa73",
     "format_mutant.log": "095cd2504092635676fb5e48fd0bc55b314a9671ae39790d7d448a22cccff348",
     "one_power_scale_mutant.log": "ca20643c9b9153325a5bade1ce3ee7ccbd293e80301f0e73a468571ad99696a6",
+    "boundary_vectors.log": "3dd6498b5c378b4500b5823a46943fa3df9b074c27c9ba3f7ab30198aaab3218",
+    "registered_format_mutant.log": "743da9e4936edb8d31ce3043033bf2b0f28ea8e65099262c6304918547d8ef0c",
     "aligned_lockstep.log": "604eb8e15e9942dc5dc22948b38824aa48f644b8b4e46b45bacf34f5dcc7a53d",
     "mixedmode_collision_failure.log": "40c15551ed34a9fbe9c1441439586990b77a132e8d13cfd651d17d40e67f9f5a",
     "satfinite_vectors.log": "3007ac825af0150e4d62ffecd5250338bb951d5039f9d1099f026fd8fd087a51"
-  }
+  },
+  "final_rtl_source": "b827340df",
+  "final_lockstep_bench_source": "4819023e0",
+  "final_vector_bench_source": "a1e6e53a7",
+  "extended_vectors_source": "c852a6d6e",
+  "extended_vectors": 184,
+  "registered_nonfinite_lockstep_outputs": 5409,
+  "registered_format_mutant_rc": 134,
+  "one_power_mutant_rc": 134,
+  "model": "tools/uarch_model.py:hgi_quant_decode_model",
+  "native_ue8m0_latency_edges": 23,
+  "e4m3_alignment_edges": 15
 }
