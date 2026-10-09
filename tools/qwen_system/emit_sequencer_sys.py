@@ -43,7 +43,15 @@ def emit(out):
     with FP.program_geometry(FP.vm_map()[0]):
         eprog = P.build_program(lay, layers=[], embed=True, head=False, scale_bases=True)
     ew, ed = QI.encode_segments(eprog)
-    layer = FP.profile(0, post_scale_bases=POST_SCALE_BASES)
+    # Code rows are compacted only by dropping unread physical padding. Scale
+    # rows preserve the released physical per-round allocation, including partial
+    # final rounds: logical ceil(n/16) bases do not describe this native bank image.
+    scale_cursor=0
+    for row in rows:
+        row['scale_base']=scale_cursor
+        scale_cursor += row['rounds']*(6144//row['split'])*I.INTERLEAVE
+    assert [row['scale_base'] for row in rows]==[0,96,384,768]
+    layer = FP.profile(0, matrix_rows=rows, post_scale_bases=POST_SCALE_BASES)
     hr = matrix(0, 'lm_head', HEAD_ROWS, 4096)
     hr['scale_base'] = 0
     heads = [FP.profile_lm_head(d, hr, 0) for d in range(4)]
