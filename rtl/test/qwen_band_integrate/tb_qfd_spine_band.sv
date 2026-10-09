@@ -16,7 +16,7 @@
 module tb_qfd_spine_band;
     parameter integer W = 16, IL = 8, AW = 24, NW = 18;
     parameter integer TCUT = 3, GT = 48 << TCUT, TG = 4, SMIN = TCUT, SMAX = TCUT + 6, NS = 8;
-    parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0;
+    parameter integer LNK = 0, CLNK = 0, BMUT = 0, UMUT = 0, PBANDF = 1, DMUT = 0, AMR = 0;
     parameter integer QB = 8;              // quiet windows: 2^QB of every 2^(QB+2) engine edges without issue
     parameter integer BD = 4, XVM = 1, NWS = 1, TWS = 2, ORD = 1, MEM_EXTRA = 0, SCALE_LOCAL = 0;
     parameter integer ACC_LAT = 7, TREE_LAT = 7, MUL_LAT = 6, FAST_ISSUE = 1, KV_PREP = 3;
@@ -104,7 +104,7 @@ module tb_qfd_spine_band;
     ot_qfd_spine_band #(.W(W), .IL(IL), .AW(AW), .NW(NW), .GT(GT), .TG(TG), .SMIN(SMIN), .SMAX(SMAX), .TCUT(TCUT),
         .BD(BD), .XVM(XVM), .NWS(NWS), .TWS(TWS), .ORD(ORD), .MEM_EXTRA(MEM_EXTRA), .SCALE_LOCAL(SCALE_LOCAL),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .MUL_LAT(MUL_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP),
-        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT))
+        .LANDED(1), .LNK(LNK), .CLNK(CLNK), .BMUT(BMUT), .UMUT(UMUT), .PBANDF(PBANDF), .DMUT(DMUT), .AMR(AMR))
         u_b (.land_cnt(land_cnt), `SPINE_PORTS(b_));
     integer g, l;
     always @(posedge gclk) begin
@@ -173,6 +173,12 @@ module tb_qfd_spine_band;
     wire [RSW-1:0] rnow = {a_ov, a_scale_re, a_am_any, a_am_idx, a_am_val, a_mx_we, a_mx_addr, a_mx_mask, a_mx_data,
                            a_o_we, a_o_addr, a_o_mask, a_o_data};
     always @(posedge gclk) rline <= {rline[RSW*RD-1:0], rnow};
+    // AMR (safe-qwen S-D1): the DUT's argmax result settles AMR edges after the other result outputs
+    localparam integer AMW = 1 + NW + 32;
+    reg [AMW*(RD+AMR+1)-1:0] amline;
+    always @(posedge gclk) amline <= {amline[AMW*(RD+AMR)-1:0], a_am_any, a_am_idx, a_am_val};
+    wire e_am_any; wire [NW-1:0] e_am_idx; wire [31:0] e_am_val;
+    assign {e_am_any, e_am_idx, e_am_val} = amline[AMW*(RD+AMR-1) +: AMW];
     wire d_ov, d_scale_re, d_am_any, d_mx_we;
     wire [NW-1:0] d_am_idx; wire [31:0] d_am_val; wire [AW-1:0] d_mx_addr; wire [W-1:0] d_mx_mask; wire [W*32-1:0] d_mx_data;
     wire [NPG-1:0] d_o_we; wire [NPG*AW-1:0] d_o_addr; wire [NPG*W-1:0] d_o_mask; wire [NPG*W*32-1:0] d_o_data;
@@ -201,8 +207,8 @@ module tb_qfd_spine_band;
                 for (c = 0; c < NXC; c = c + 1)
                     if (a_x_re[c] && a_x_addr[c*AW +: AW] !== b_x_addr[c*AW +: AW]) bad = bad | 2;
                 // result side: RD edges later
-                if (d_ov !== b_ov || d_scale_re !== b_scale_re || d_am_any !== b_am_any || d_am_idx !== b_am_idx ||
-                    d_am_val !== b_am_val || d_mx_we !== b_mx_we) bad = bad | 4;
+                if (d_ov !== b_ov || d_scale_re !== b_scale_re || e_am_any !== b_am_any || e_am_idx !== b_am_idx ||
+                    e_am_val !== b_am_val || d_mx_we !== b_mx_we) bad = bad | 4;
                 if (d_mx_we && (d_mx_addr !== b_mx_addr || d_mx_mask !== b_mx_mask || d_mx_data !== b_mx_data)) bad = bad | 8;
                 // the burst's rows: reference groups ascending vs DUT positions ascending
                 if (d_ov) begin
