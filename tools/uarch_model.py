@@ -14196,10 +14196,12 @@ def hbm_dskv_shadow_sram_hub_model(*, RI_AW=5, utilisation=.55):
     ff_payload=(1<<RI_AW)*257+4352+4352+259+4*292+3*256
     return dict(storage=storage, replicas_per_die=1,
         payload_FF_inventory=ff_payload,
-        control_and_sidecar_FF_upper_estimate=3000,
-        FF_total_upper_estimate=ff_payload+3000,
+        control_and_sidecar_FF_upper_estimate=5000,
+        FF_total_upper_estimate=ff_payload+5000,
+        inventory_note="upper allocation includes SECDED pipeline data/check registers, 1360 check FFs, 272 valid FFs, CDC counts, controller rails and address/control registers",
         boundary_bits=dict(ri=258,ri_credit=1,sector_links=4*292,
             service_count_returns=4*16,die_identity=7,visibility_counts=33),
         floorplan_status='two real macros plus measured full hub logic required; no fit/closure claim',
         latency=storage['latency'],
+        measured_component=dict(source='results/rtl/dskv_wb_sram_gate_20261008/dskv-wb-sram-gate-20261008-r4.json', clock_ps=833, key_updates=64, sectors_per_key=3, posted_sectors=218, max_row_cycles_with_bench_stalls=41, max_preload_cycles=69, stall_cycles=340, physical_credit=False),
         adoption='full hub SS/FF timing/DRC and golden row/shadow/credit/fence gate pending')

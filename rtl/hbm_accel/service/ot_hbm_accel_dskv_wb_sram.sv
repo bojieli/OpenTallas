@@ -17,7 +17,7 @@
 //   kind 2 INDEX KEY of slot `slot`, owner die only: 68 B (64 B E2M1 + 4 UE8M0) packed back to back: key k at
 //     die-local bytes 68k .. 68k+67; a KEY_BLOCK of 8 keys is 544 B = 17 whole sectors, so the block is sector
 //     aligned.  HBM3 has no write data mask, so the unit keeps the owner's OPEN key block (<= 544 B a slot) in a
-//     shadow and writes the whole sectors covering the new key (2-3 sectors), the bytes of the block's earlier
+//     shadow and writes the whole sectors covering the new key (3 sectors for each 68-byte key), the bytes of the block's earlier
 //     keys taken from the shadow.  The shadow is loaded (sh_v) when a block opens or at bring-up from HBM.
 // PC-local sector j -> stream-PC address: bank {j[9:7], j[1:0]}, column j[6:2], row ROW0(kind) + slot *
 // SLOT_ROWS + (j >> 10); the read stream (ot_hbm_accel_expert_stream_pc / ot_hbm_r14_stream_pc) reads the same
