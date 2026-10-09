@@ -1,0 +1,86 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+CORE _6040038cf8620000_p_odb__Rect DBU 1000
+ROW ROW_1_1 ORIGIN 0 810 SITE asap7sc7p5t SIZE 54 270 SPACING 54 COUNT 2629
+ROW ROW_2_1 ORIGIN 0 1080 SITE asap7sc7p5t SIZE 54 270 SPACING 54 COUNT 2629
+ROW ROW_3_1 ORIGIN 0 1350 SITE asap7sc7p5t SIZE 54 270 SPACING 54 COUNT 2629
+ROWS 12717
+VIOLATION u_ep.g_on.g_rx\[6\].u_rb/wire862394 MASTER BUFx12f_ASAP7_75t_R SIZE 972 270 ORIGIN 1089288 1373760 ORIENT MX STATUS PLACED
+VIOLATION u_ep.g_on.g_rx\[6\].u_rb/wire862281 MASTER BUFx12f_ASAP7_75t_R SIZE 972 270 ORIGIN 1091232 1373760 ORIENT MX STATUS PLACED
+VIOLATION u_ep.g_on.g_rx\[6\].u_rb/wire805066 MASTER BUFx12f_ASAP7_75t_R SIZE 972 270 ORIGIN 1090260 1373760 ORIENT MX STATUS PLACED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1087154 140880 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1189978 140880 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1292802 222984 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1189978 222984 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1087154 222984 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[0\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1292802 140880 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 82728 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 82752 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 205992 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 41640 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 164904 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[1\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 247080 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 246818 329256 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 246818 247104 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 444466 247104 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 444466 329256 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 329256 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[2\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 247104 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 310772 1224864 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 207948 1306968 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 310772 1348056 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 207948 1348056 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 207948 1224864 ORIENT MY STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[3\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 310772 1306968 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1095154 1362120 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1292802 1362120 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 889506 1362120 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 1362120 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 992330 1362120 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[4\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 786682 1362120 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 247080 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 123840 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 41664 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 82752 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 205992 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[5\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 143994 576 ORIENT R0 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 881506 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1087154 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1292802 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1189978 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 984330 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[6\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 1395626 1403208 ORIENT R180 STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 468898 1403208 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 674546 1403208 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[0\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 263250 1403208 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[0\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 571722 1403208 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[1\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 366074 1403208 ORIENT MX STATUS LOCKED
+RXMACRO u_ep.g_on.g_rx\[7\].u_rb/g_bk\[1\].u_m.g_m\[2\].u_sram MASTER ot_sram_1r1w_128x256_m1_r2c2 SIZE 94824 41040 ORIGIN 160426 1403208 ORIENT MX STATUS LOCKED
+MACROS 48
+RXMACRO_PIN_SHAPES_BY_LAYER M4 925
+READ_ONLY_PLACEMENT_INSPECTION_COMPLETE
+	Command being timed: "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -exit /inspect/inspect.tcl"
+	User time (seconds): 13.25
+	System time (seconds): 1.36
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:14.68
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3405936
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 841125
+	Voluntary context switches: 1
+	Involuntary context switches: 776
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

@@ -1,0 +1,263 @@
+{
+  "scope": "routinephysical4x6um RXSRAMhardhalo; noRTL/architecture/clock/pin changes; existingmacropositions preserved",
+  "originals": [
+    {
+      "name": "hbm_coll_hy-6f2cc51ae-tc",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_coll_hy-6f2cc51ae-tc",
+      "status": "NEEDS_HUMAN",
+      "commit_full": "6f2cc51ae9b764704a6f36863fb817f83861b3eb",
+      "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+      "benches": {
+        "bench_hcoll_hy_exact": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "HCOLL_SR PASS runs=35 mutant=none dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m1": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=0 of 95 ndep=1 narr=1\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m1 dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m2": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=36472 of 36480 ndep=384 narr=36480\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=0 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=47 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nHCOLL_SR MISMATCH bad=9 of 35 mutant=m2 dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m3": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "gi=0\nTUMISMATCH gi=1\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUMISMATCH gi=248\nTUMISMATCH gi=249\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUMISMATCH gi=52\nTUMISMATCH gi=53\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUMISMATCH gi=72\nTUMISMATCH gi=73\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUMISMATCH gi=1488\nTUMISMATCH gi=1489\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m3 dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m4": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ver_tail_ns=73.392 ndep=60 narr=308 nres=4 got=256 own_exact=3 mismatches=1 faults=0 credit_stall=0\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m4 dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m5": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=87 of 95 ndep=1 narr=95\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m5 dut=hy\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m6": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "mutant m6 applied to hfd_coll_hy.sv\nHCOLL_SR MISMATCH wrapper\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_hy_neg_m7": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nHCOLL_SR MISMATCH bad=7 of 35 mutant=m7 dut=hy\n",
+          "track": "parallel"
+        }
+      },
+      "bench_location": {
+        "host": "ot-epyc1tb",
+        "run": "/srv/opentallas-scratch/claude/closure-loop/hbm_coll_hy-6f2cc51ae-tc",
+        "attempt": 1
+      }
+    },
+    {
+      "name": "hbm_coll_sr3-acdfa3ab1-tc",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_sr3-acdfa3ab1-tc",
+      "status": "NEEDS_HUMAN",
+      "commit_full": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+      "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+      "benches": {
+        "bench_hcoll_sr_exact": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "HCOLL_SR PASS runs=35 mutant=none dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m1": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=0 of 95 ndep=1 narr=1\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m1 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m2": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=36472 of 36480 ndep=384 narr=36480\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=0 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=47 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nHCOLL_SR MISMATCH bad=9 of 35 mutant=m2 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m3": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "gi=0\nTUMISMATCH gi=1\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUMISMATCH gi=248\nTUMISMATCH gi=249\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUMISMATCH gi=52\nTUMISMATCH gi=53\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUMISMATCH gi=72\nTUMISMATCH gi=73\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUMISMATCH gi=1488\nTUMISMATCH gi=1489\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m3 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m4": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ver_tail_ns=73.392 ndep=60 narr=308 nres=4 got=256 own_exact=3 mismatches=1 faults=0 credit_stall=0\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m4 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m5": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=87 of 95 ndep=1 narr=95\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m5 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m6": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "mutant m6 applied to hfd_coll.sv\nHCOLL_SR MISMATCH wrapper\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m7": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nHCOLL_SR MISMATCH bad=7 of 35 mutant=m7 dut=sr\n",
+          "track": "parallel"
+        }
+      },
+      "bench_location": {
+        "host": "ot-epyc4",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_sr3-acdfa3ab1-tc",
+        "attempt": 1
+      }
+    },
+    {
+      "name": "hbm_coll_srpd453-acdfa3ab1-tc",
+      "host": "ot-epyc4",
+      "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_srpd453-acdfa3ab1-tc",
+      "status": "NEEDS_HUMAN",
+      "commit_full": "acdfa3ab115ccd17d7e922f512a6b15025720833",
+      "reason": "calibrate synth_or_place: the CTS-only run failed before placement finished (synth/floorplan/place error): see the cal run.log, fix, re-drop",
+      "benches": {
+        "bench_hcoll_sr_exact": {
+          "expect": "pass",
+          "rc": 0,
+          "ok": true,
+          "tail": "HCOLL_SR PASS runs=35 mutant=none dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m1": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=0 of 95 ndep=1 narr=1\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m1 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m2": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=36472 of 36480 ndep=384 narr=36480\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=0 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: gablk_s +VEC=fx/gather_pf64 +PF=64 +RANK=47 +SEED=1: TUTIMEOUT got=6072 of 6080 ndep=64 narr=6080\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nHCOLL_SR MISMATCH bad=9 of 35 mutant=m2 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m3": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "gi=0\nTUMISMATCH gi=1\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUMISMATCH gi=248\nTUMISMATCH gi=249\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUMISMATCH gi=52\nTUMISMATCH gi=53\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUMISMATCH gi=252\nTUMISMATCH gi=253\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUMISMATCH gi=72\nTUMISMATCH gi=73\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUMISMATCH gi=1488\nTUMISMATCH gi=1489\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m3 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m4": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ver_tail_ns=73.392 ndep=60 narr=308 nres=4 got=256 own_exact=3 mismatches=1 faults=0 credit_stall=0\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=0 of 256 ndep=57 narr=57\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nHCOLL_SR MISMATCH bad=21 of 35 mutant=m4 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m5": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "ar +VEC=fx/ar_p1 +PF=64 +RANK=13 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=1: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p1 +PF=64 +RANK=63 +SEED=2: TUTIMEOUT got=248 of 256 ndep=60 narr=308\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=62 +SEED=1: TUTIMEOUT got=1528 of 1536 ndep=360 narr=1848\nFAILED: ga +VEC=fx/gather_pf1 +PF=1 +RANK=0 +SEED=1: TUTIMEOUT got=87 of 95 ndep=1 narr=95\nHCOLL_SR MISMATCH bad=35 of 35 mutant=m5 dut=sr\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m6": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "mutant m6 applied to hfd_coll.sv\nHCOLL_SR MISMATCH wrapper\n",
+          "track": "parallel"
+        },
+        "bench_hcoll_sr_neg_m7": {
+          "expect": "fail",
+          "rc": 1,
+          "ok": true,
+          "tail": "UT got=0 of 256 ndep=56 narr=56\nFAILED: ar +VEC=fx/ar_p6 +PF=384 +RANK=3 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 1536 ndep=336 narr=336\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_a +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=0 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nFAILED: arblk_s +VEC=fx/ar_p1 +PF=64 +RANK=62 +SEED=2 +SAMECOL=1: TUTIMEOUT got=0 of 256 ndep=56 narr=56\nHCOLL_SR MISMATCH bad=7 of 35 mutant=m7 dut=sr\n",
+          "track": "parallel"
+        }
+      },
+      "bench_location": {
+        "host": "ot-epyc4",
+        "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_srpd453-acdfa3ab1-tc",
+        "attempt": 1
+      }
+    }
+  ],
+  "flow_source": "aba41e7b4fb3ac7c9a68f90d32b1203ac42c4bae",
+  "flow_helper_sha256": {
+    "physical/common_flow/cg_pushdown.tcl": "75fba5d49d06dd72cd91cbbc995c7139d00ca3d208e0acb8328256052f9e16fe",
+    "physical/common_flow/io_ref_routed.sdc": "8fe09b5f519a8a386633fb0143007ca2b16fc34e957c077cff0eaa3e047d9508",
+    "physical/common_flow/link_budget_consistent.sdc": "b5772ac6fb2611197015b337037f8035ec36c7c205b8903c86d21f95e6f94be9",
+    "physical/common_flow/ot_keep_regs.tcl": "957f17a5abcdddc81250c52770e3eee0c89b775238f1f45aed1ec4804ae05423",
+    "physical/common_flow/rebudget_measure.sdc": "30f2a875907c853e40fac6fc77075fbb1e7a8471ebd19fc4928b26155668bede",
+    "physical/hbm_accel_die_views/common/face_chain_place.tcl": "0058072af83163762690354d9e7e89c1261c249846433b718032d22926ee0b8b",
+    "physical/hbm_accel_die_views/common/route_view.sh": "730ec031cfc98e227ab4025796150467fdbf8389783294230f5309317f214362",
+    "tools/hbm_die_views.py": "ead2be663466154e82f7032dcfb3a81c4ec40caa58417fc9ada9914dd98ae549",
+    "tools/hbm_fmax_attn_abstract.py": "e4f43434734b64b8d3a99770dbf0c673f4985d39c9ab8a70987d6b21abf3eee4",
+    "tools/run_abi3_physical.py": "2d41c60b910d73e1e1ccc35cf7ce119e1ebfe260423192d6660d49dbef71fe45",
+    "tools/w18/corner_sta.py": "c86f71b82feeda9c7086cf1038f4bae623f328fe3cabe1275827a1a45073577f"
+  },
+  "evidence_sha256": {
+    "halo-wrongmaster.log": "7c157e620284982e43f074a4384d31a8725c9a44052138d282e1a5354b81ad97",
+    "halo-gate.log": "37472e9c886572dc413367360fe4bcaa66384d47863ca4541b747a65383a65d6",
+    "query-r2.log": "8a545d35ada01c4e47e0c43da2a94816b2dcbd6d44b7747992736f8b47693f3f",
+    "query.log": "431656d6bb8096f16cda63e658f7fc66fa99ecc688bfb859df8fa34ca6524f08",
+    "halo-positive.log": "db1aa88af810dd7c3c24fa33559763324fb6f023bdb6021f088aeb7062e7a4bf",
+    "original_sr3/3_3_place_gp.log": "322756b5a72aa5fd03829db5e3ba8561b3348d09d09c37b408be908ad4e2890b",
+    "original_sr3/3_5_place_dp.log": "e32cd8fcd1767e35481241723154c5e44dc5d98c710ee3c199f6c04a58096f94",
+    "original_hy/config.mk": "98279097d7662049b166ef19905c4f2006cfc9e811f6f82486a7446c51ccd0ec",
+    "original_hy/run.log": "7a9df62261debdcaf63b4edcb7ff497db80e6c064c09bd6217a947b756f8f7ef",
+    "original_srpd45/3_3_place_gp.log": "d4d48e854b627f5f3efb36828c8c8701ef4f665a875a5261cd3c5f216cbff874",
+    "original_srpd45/config.mk": "3fb15e2670d9b203a802b59f43e96632e7588e5169e4a579cee24dcca8beb940",
+    "original_srpd45/run.log": "d53c678a977c364ed16bb6948447a946de34244267585331f863331811e31401",
+    "original_srpd45/3_5_place_dp.log": "6dd016363b0776008bf4070cc2a13276307fb7adc5ef6da6ec55e397deb56c5a"
+  },
+  "findings": [
+    "SR55/SR45 identical effectiveGPLdensity0.2025 then0.233346 becausePLACE_DENSITY_LB_ADDON0.05 overridesPD; PDalone not a newexperiment",
+    "HY18edgespacing/1padding RX6 adjacentBUFF12 alignedto54x270DBUsite within8um intermacrochannel",
+    "actual48 RXSRAMs each94824x41040DBU; one macro has925M4pinshapes; no relabeling historicalmasterdimensions",
+    "read-onlyqueryr1 failed absentPATHbinary, preserved; r2PASS3405936KBpeak",
+    "actualfull48blockagehookpositivePASS andwrongmasternegativeFAIL; no originalODBwrite"
+  ],
+  "measured_prior_stage_peak_KB": {
+    "HY": 25528524,
+    "SR": 23695444
+  },
+  "initial_admission_GiB": 32,
+  "admission_basis": "conservative phase-derived above completed24.35/22.6GiB; not measured futureCTS/DRT claim",
+  "remaining_phase_peak": "UNKNOWN, fleet monitor and claims required",
+  "route_status": "NOT_SUBMITTED rootconfigreviewbeforeonewatchedcorrectedjob",
+  "physical_qualified": false
+}

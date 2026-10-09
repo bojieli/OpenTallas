@@ -1,0 +1,76 @@
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/hbm_accel_die_views/common/signoff_unc60.sdc /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc /src/physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc /src/.ot_mm/io_ref_routed.sdc]
+FAILED: FlowError: ORFS place-and-route through cts failed with exit 2:
+16 |        84
+      630 |        154 |        18 |       136
+      640 |        117 |        15 |       102
+      650 |         68 |        14 |        54
+      660 |         86 |        12 |        74
+      663 |         86 |        12 |        74
+[WARNING DPL-0702] Negotiation phase 2: violations stuck at 86 for 3 consecutive iterations. Using diamond search for 12 remaining illegal cells.
+diamond recovery: recovered 0/12 stuck cells.
+[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 12
+[INFO DPL-0500] Runtime: 4801.52s
+Placement Analysis
+---------------------------------
+total displacement     837876.0 u
+average displacement        0.4 u
+max displacement          101.5 u
+original HPWL        26874453.5 u
+legalized HPWL       27136266.9 u
+delta HPWL                    1 %
+
+Took 4803 seconds: detailed_placement
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 177788 fixed cells.
+[INFO DPL-0318] Collected 1805548 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (0, 540) - (1399626, 1403190)
+[INFO DPL-0310] Assigned 1805548 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[WARNING DPL-0200] Unexpected displacement during legalization.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 23 site alignment problems.
+[INFO DPL-0311] Found 12 overlaps between adjacent cells.
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862394
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire805066
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862281
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire803765
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire804860
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire803792
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire803705
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire861626
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire806019
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire803709
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire804998
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862405
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862272
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862329
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire861599
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire805916
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862130
+Violation in u_ep.g_on.g_rx\[6\].u_rb/wire862135
+[INFO DPL-0312] Found 18 edge spacing violations and 1 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 2.636670e+10.
+write_db /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_6f2cc51ae_tc_cal/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 bad optional access
+
+Elapsed time: 0:41.06[h:]min:sec. CPU time: user 39.31 sys 1.75 (99%). Peak memory: 4764376KB.
+Elapsed time: 1:02:27.59[h:]min:sec. CPU time: user 3895.27 sys 189.98 (109%). Peak memory: 7139336KB.
+Elapsed time: 1:20.67[h:]min:sec. CPU time: user 377.95 sys 3.37 (472%). Peak memory: 8321428KB.
+Elapsed time: 0:06.92[h:]min:sec. CPU time: user 6.03 sys 0.89 (99%). Peak memory: 2063560KB.
+Elapsed time: 0:42.50[h:]min:sec. CPU time: user 40.80 sys 1.70 (99%). Peak memory: 4309560KB.
+Elapsed time: 4:43.33[h:]min:sec. CPU time: user 939.04 sys 4.10 (332%). Peak memory: 7754136KB.
+Elapsed time: 0:09.07[h:]min:sec. CPU time: user 7.79 sys 1.28 (99%). Peak memory: 3472236KB.
+Elapsed time: 1:55:57.57[h:]min:sec. CPU time: user 14029.04 sys 3311.56 (249%). Peak memory: 25528524KB.
+Elapsed time: 5:41:02.62[h:]min:sec. CPU time: user 24792.71 sys 1172.63 (126%). Peak memory: 10790120KB.
+Elapsed time: 1:20:59.68[h:]min:sec. CPU time: user 4847.52 sys 4.15 (99%). Peak memory: 11451780KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_hy_6f2cc51ae_tc_cal/base/3_5_place_dp.odb] Error 2
+
+partial record written to /srv/opentallas-scratch/claude/closure-loop/hbm_coll_hy-6f2cc51ae-tc/routes/hbm_coll_hy_6f2cc51ae_tc_cal/physical.json

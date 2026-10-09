@@ -1,0 +1,81 @@
+OT_ROUTE_HOLD_CORNERS=mm: repair scenes WC,BC (SS setup + FF hold), FF SDCs [/src/physical/hbm_accel_die_views/common/signoff_unc60.sdc /src/physical/hbm_accel_die_views/common/vclk_corner_true.sdc /src/physical/hbm_accel_die_views/common/io_min/io_min_hfd_coll.sdc]
+FAILED: FlowError: ORFS place-and-route through cts failed with exit 2:
+n.g_rx\[6\].u_wrx/wire1309032
+Violation in wire1505892
+Violation in i1_llk_S3\[489\]$_DFF_P_
+Violation in wire1499322
+Violation in wire1499321
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/_1524_
+Violation in g_o_t_su_SE\[415\].u/_7_
+Violation in g_o_t_su_SE\[366\].u/_7_
+Violation in g_o_t_su_SE\[467\].u/s1$_DFF_P_
+Violation in i1_llk_S3\[497\]$_DFF_P_
+Violation in g_o_t_su_SE\[313\].u/s1$_DFF_P_
+Violation in wire1480466
+Violation in g_o_t_su_SE\[191\].u/_7_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_8590
+Violation in i0_llk_S3\[535\]$_DFF_P_
+Violation in i1_llk_S3\[606\]$_DFF_P_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_86731
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_86691
+Violation in wire1499422
+Violation in g_o_t_su_SE\[366\].u/wire1355499
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_8594
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[0\].u_sram_86450
+Violation in g_o_t_su_SE\[276\].u/wire1355799
+Violation in g_o_t_su_SE\[226\].u/_7_
+Violation in wire1499465
+Violation in g_o_t_su_SE\[293\].u/wire1355742
+Violation in i1_llk_S3\[935\]$_DFF_P_
+Violation in i1_llk_S3\[644\]$_DFF_P_
+Violation in g_o_t_su_SE\[458\].u/wire1355193
+Violation in g_o_t_su_SE\[459\].u/s1$_DFF_P_
+Violation in i0_llk_S3\[576\]$_DFF_P_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/wire1309012
+Violation in u_ep.g_on.g_rx\[2\].u_wrx/wire1436528
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[0\].u_sram_8566
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/_1282_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_8572
+Violation in i0_llk_S3\[971\]$_DFF_P_
+Violation in u_ep.g_on.g_rx\[2\].u_wrx/wire1324031
+Violation in g_o_t_su_SE\[483\].u/wire1355109
+Violation in g_o_t_su_SE\[506\].u/wire1355031
+Violation in wire1499505
+Violation in i0_llk_S3\[829\]$_DFF_P_
+Violation in g_o_t_su_SE\[457\].u/wire1355196
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/wire1308989
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[0\].u_sram_8548
+Violation in _378424_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[1\].u_sram_86750
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/_1271_
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/wire1308988
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/wire1308997
+Violation in u_ep.g_on.g_rx\[6\].u_wrx/u_m.g_m\[0\].u_sram_8545
+Violation in g_o_t_su_SE\[436\].u/_7_
+Violation in g_o_t_su_SE\[152\].u/_7_
+Violation in g_o_t_su_SE\[365\].u/_7_
+Violation in u_ep.g_on.g_del\[2\].u_d/wire1466005
+Violation in u_ep.g_on.g_del\[2\].u_d/wire1466062
+Violation in wire1490317
+[INFO DPL-0312] Found 5006 edge spacing violations and 425 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 4.239208e+10.
+write_db /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_srpd453_acdfa3ab1_tc_cal/base/3_5_place_dp-failed.odb
+Error: detail_place.tcl, 39 bad optional access
+
+Elapsed time: 0:50.63[h:]min:sec. CPU time: user 43.82 sys 1.58 (89%). Peak memory: 3878212KB.
+Elapsed time: 55:44.16[h:]min:sec. CPU time: user 3338.25 sys 20.05 (100%). Peak memory: 5897096KB.
+Elapsed time: 16:10.63[h:]min:sec. CPU time: user 2306.48 sys 190.65 (257%). Peak memory: 6381960KB.
+Elapsed time: 0:10.23[h:]min:sec. CPU time: user 9.32 sys 0.89 (99%). Peak memory: 1758428KB.
+Elapsed time: 1:07.32[h:]min:sec. CPU time: user 65.42 sys 1.73 (99%). Peak memory: 3746152KB.
+Elapsed time: 6:45.81[h:]min:sec. CPU time: user 1070.49 sys 4.07 (264%). Peak memory: 6446176KB.
+Elapsed time: 0:13.43[h:]min:sec. CPU time: user 12.06 sys 1.35 (99%). Peak memory: 2911440KB.
+Elapsed time: 2:03:17.04[h:]min:sec. CPU time: user 11505.39 sys 318.45 (159%). Peak memory: 23695444KB.
+Elapsed time: 3:38:32.25[h:]min:sec. CPU time: user 13780.00 sys 85.04 (105%). Peak memory: 9580384KB.
+Elapsed time: 3:20:21.75[h:]min:sec. CPU time: user 12012.84 sys 4.49 (99%). Peak memory: 11045924KB.
+make[1]: *** [Makefile:511: do-3_5_place_dp] Error 1
+make: *** [Makefile:511: /work/results/asap7/opentallas_hfd_coll_asap7_hv_hbm_coll_srpd453_acdfa3ab1_tc_cal/base/3_5_place_dp.odb] Error 2
+
+partial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_coll_srpd453-acdfa3ab1-tc/routes/hbm_coll_srpd453_acdfa3ab1_tc_cal/physical.json

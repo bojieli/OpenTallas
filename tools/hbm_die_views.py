@@ -39,7 +39,7 @@ S = L.S
 Q = L.Q
 VIEWS = 'physical/hbm_accel_die_views'
 KIND_OF = {      # master prefix -> view kind directory
-    'hfd_attn_tile': 'attn_tile', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
+    'hfd_attn_tile': 'attn_tile', 'hfd_attn_half_': 'attn_half', 'hfd_su': 'su', 'hfd_sfu': 'sfu', 'hfd_hc': 'hc', 'hfd_index_q': 'index_q', 'hfd_index_q_': 'index_q',
     'hfd_svc_': 'svc', 'hfd_coll': 'coll', 'hfd_cmdproc': 'cmdproc', 'hfd_vm': 'vm', 'hfd_vm_': 'vm', 'hfd_barrier': 'barrier',
     'hfd_loader': 'loader', 'hfd_router': 'router', 'hfd_quant': 'quant', 'hfd_sm': 'sm', 'hfd_stn_': 'stations',
     'hfd_mcast_': 'stations', 'hfd_gath_': 'stations', 'hfd_cdist_': 'stations', 'hfd_meso_': 'stations',
@@ -120,6 +120,9 @@ def segs(arr):
 def derived_record(name):
     """a derived master (a generator master split into separately hardened views, tools/hbm_die_split.py): its
     committed ports.json under physical/hbm_accel_die_views/*/split/<name>/, else None."""
+    native = ROOT / f'physical/hbm_accel_die_views/index/native/{name}/ports.json'
+    if native.exists():
+        return json.loads(native.read_text())
     for f in sorted((ROOT / 'physical/hbm_accel_die_views').glob(f'*/split/{name}/ports.json')):
         return json.loads(f.read_text())
     return None
@@ -127,6 +130,10 @@ def derived_record(name):
 
 def master_record(name):
     d = derived_record(name)
+    if d is not None and d.get('schema') == 'opentallas.hbm_native_indexer_ports.v1':
+        # The same source-pinned native contract drives the first full-shape
+        # hardening and the opt-in R25I placement; never synthesize fake peers.
+        return d
     m, pw, M, real = model()
     if d is not None and name not in M:     # a split the generator does not place yet
         return d
@@ -178,7 +185,12 @@ def svh(rec):
 
 
 def cmd_ports(a):
-    m, pw, M, real = model()
+    native_only = a.master and all((derived_record(n) or {}).get('schema') ==
+                                  'opentallas.hbm_native_indexer_ports.v1' for n in a.master)
+    if native_only:
+        M = {}
+    else:
+        m, pw, M, real = model()
     names = a.master or sorted(n for n in M if n.startswith('hfd_') and n != 'hfd_sm' or n == 'hfd_sm')
     out = Path(a.out)
     summary = {}
@@ -347,7 +359,11 @@ def receipt_views():
         n, met = v['block'], v['metrics']
         if latest[n] != path:
             continue                   # superseded receipt: its export was overwritten by the later closure
-        if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
+        # the receipt's own acceptance (OWNER 2026-10-07 20:30: SS >= 0 / FF >= 0; older jobs +15); below +15 the
+        #   index labels it closed-below-margin (+15 is the design target) instead of dropping the installed view
+        acc = v.get('acceptance', {})
+        if (met.get('ss_ps', -1) < acc.get('ss_min_ps', 15) or met.get('ff_ps', -1) < acc.get('ff_min_ps', 15)
+                or met.get('drc') != 0
                 or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
                 or not all(b.get('ok') for b in v.get('benches', {}).values())):
             continue
@@ -357,13 +373,18 @@ def receipt_views():
             if not all((base / f).is_file() for f in files):
                 continue
             corner = json.loads((base / 'corner_sta.json').read_text())
+            # OWNER OPTION B (2026-10-07): a TT-setup closure exports setup_tt (setup_ss = sensitivity) and the
+            #   verdict's ss_ps is that TT figure; an SS-setup closure has no setup_tt.  Compare like with like.
+            setup = corner.get('setup_tt') or corner['setup_ss']
             if (not corner.get('closes_signoff')
-                    or corner['setup_ss']['worst_slack_ps'] != met['ss_ps']
+                    or setup['worst_slack_ps'] != met['ss_ps']
                     or corner['hold_ff']['worst_slack_ps'] != met['ff_ps']):
                 # the loop verdict re-times the route with its post_sdc set (e.g. the link-budget / option-B SDCs);
                 #   then the verdict's metrics are the closure figure and the exported corner_sta is the route's own
                 if not met.get('post_sdc'):
-                    raise ValueError(f'closure receipt/export disagreement: {path}')
+                    raise ValueError(f'closure receipt/export disagreement: {path} (receipt SS/FF {met["ss_ps"]}/'
+                                     f'{met["ff_ps"]}, export {base} {setup["worst_slack_ps"]}/'
+                                     f'{corner["hold_ff"]["worst_slack_ps"]}: re-export the receipt\'s route)')
             rows[n] = dict(master=n, kind=kind_of(n), status='closed', dir=dest['to'],
                            lef=files[0], lib=dict(ss=files[1], ff=files[2]),
                            files_sha256={f: sha(base / f) for f in files},
@@ -372,7 +393,8 @@ def receipt_views():
                            source=dict(SOURCE_COMMIT=v['source_commit'], host=v['host'],
                                        route=v['run_dir'], ss_setup_ps=met['ss_ps'],
                                        ff_hold_ps=met['ff_ps'], drc=met['drc'],
-                                       closes_signoff_SS60_FF25=True, closed_at=v['closed_at']))
+                                       closes_signoff_SS60_FF25=True, setup_corner=setup.get('corner', 'ss'),
+                                       closed_at=v['closed_at']))
     return rows
 
 
@@ -424,12 +446,86 @@ def cmd_index(a):
 
 
 # ------------------------------------------------------------------------------------------------ die with real views
-def real_views(index_path):
+def real_views(index_path, active_masters=None):
     idx = json.loads(Path(index_path).read_text())
     out = {}
     for n, v in idx['masters'].items():
+        # Candidate dies can replace a master by hardened halves while retaining
+        # the adopted view index.  Only installed candidate masters have a LEF
+        # to replace; an absent parent view must never stand in for its halves.
+        if active_masters is not None and n not in active_masters:
+            continue
         if v['status'] in ('closed', 'closed-below-margin', 'interim-not-closed', 'reservation') and v.get('lef'):
             out[n] = ROOT / v['dir'] / v['lef']
+    return out
+
+
+PLACEHOLDER_LIB_MASTERS = ('hfd_hc', 'hfd_sfu', 'hfd_su')
+# PLACEHOLDER interface timing (die-gaps 2026-10-08): the hub quarters have no view yet, so the r25 die STA left every
+# path into / out of them untimed (22 'view clocks missing' incl. their ck0..ck7).  Each gets a boundary-registered
+# interface Liberty with the die-relay recipe constants (tools/hbm_die_relays.relay_libs: flop at the face, insertion
+# + clk->Q on outputs, setup / hold on inputs) so its die wires are timed; the report classes them placeholder.
+PH_C = dict(ss=dict(ins_min=70.0, ins_max=90.0, ckq=60.0, r=0.30, setup=30.0, hold=15.0, tr=12.0, v=0.63, t=100.0),
+            ff=dict(ins_min=40.0, ins_max=55.0, ckq=30.0, r=0.15, setup=15.0, hold=10.0, tr=6.0, v=0.77, t=0.0),
+            tt=dict(ins_min=55.0, ins_max=72.0, ckq=45.0, r=0.22, setup=22.0, hold=12.0, tr=9.0, v=0.70, t=25.0))
+
+
+def placeholder_libs(m, work, libs):
+    """write <master>_{ss,ff,tt}.lib for the PLACEHOLDER_LIB_MASTERS present without a lib; returns their names"""
+    want = sorted({it.master for it in m['insts'] if it.master in PLACEHOLDER_LIB_MASTERS and it.master not in libs})
+    if not want:
+        return []
+    lef = '\n'.join(p.read_text() for p in sorted(work.glob('*.lef')))
+    insts = {it.name: it.master for it in m['insts']}
+    drv = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        if eps and eps[0][0] in insts:
+            drv[insts[eps[0][0]]].add(eps[0][1].split('@', 1)[0])
+    caps = [1.44, 5.76, 23.04, 92.16, 368.64]
+    out = []
+    for n in want:
+        mm = re.search(rf'^MACRO {n}\n(.*?)^END {n}$', lef, re.S | re.M)
+        if not mm:
+            continue
+        width = defaultdict(int)
+        for pn in re.findall(r'^  PIN (\S+)$', mm.group(1), re.M):
+            b, _, i = pn.partition('[')
+            width[b] = max(width[b], int(i.rstrip(']')) + 1 if i else 1)
+        clocks = sorted(b for b in width if re.fullmatch(r'ck\d*|clk', b))
+        if not clocks:
+            continue
+        ref = clocks[0]
+        for corner, c in PH_C.items():
+            dl = ', '.join(f'{c["ins_max"] + c["ckq"] + c["r"] * x:.2f}' for x in caps)
+            tr = ', '.join(f'{c["tr"] + 0.5 * c["r"] * x:.2f}' for x in caps)
+            L_ = [f'library ({n}_ph_{corner}) {{', '  delay_model : table_lookup;', '  time_unit : "1ps";',
+                  '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+                  '  leakage_power_unit : "1pW";', '  capacitive_load_unit (1,fF);',
+                  f'  nom_process : 1.0; nom_temperature : {c["t"]}; nom_voltage : {c["v"]};',
+                  '  input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;',
+                  '  output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;',
+                  '  slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;',
+                  '  slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;',
+                  '  lu_table_template (ld) { variable_1 : total_output_net_capacitance; index_1 ("'
+                  + ', '.join(f'{x:.2f}' for x in caps) + '"); }']
+            for w in sorted(set(width.values())):
+                L_.append(f'  type (pb{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; }}')
+            L_ += [f'  cell ({n}) {{', '    area : 1.0;', '    is_macro_cell : true;']
+            for b, w in sorted(width.items()):
+                if b in clocks:
+                    L_.append(f'    bus ({b}) {{ bus_type : pb{w}; direction : input; clock : true; capacitance : 5.0; }}')
+                elif b in drv[n]:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : output;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : rising_edge; cell_rise (ld) {{ values ("{dl}"); }} cell_fall (ld) {{ values ("{dl}"); }} rise_transition (ld) {{ values ("{tr}"); }} fall_transition (ld) {{ values ("{tr}"); }} }}',
+                           '    }']
+                else:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : input; capacitance : 0.6;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : setup_rising; rise_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} }}',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : hold_rising; rise_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} }}',
+                           '    }']
+            L_ += ['  }', '}']
+            (work / f'{n}_{corner}.lib').write_text('\n'.join(L_) + '\n')
+        out.append(n)
     return out
 
 
@@ -442,7 +538,8 @@ def sta_tcl(m, work, index):
     tile <-> stations) and the unconstrained pins of timed views (forwarded-clock station links are source-synchronous
     and checked inside the station views)."""
     idx = json.loads(Path(index).read_text())['masters']
-    libs = {n: v for n, v in idx.items() if v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
+    active_masters = {it.master for it in m['insts']}
+    libs = {n: v for n, v in idx.items() if n in active_masters and v.get('lib') and v['status'] in ('closed', 'closed-below-margin',
                                                                             'interim-not-closed')}
     run = (work / 'run.tcl').read_text()
     head = run.split('set t0 [clock seconds]\nsource /work/place.tcl')[0]
@@ -469,6 +566,9 @@ def sta_tcl(m, work, index):
                     continue
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
+    for n in placeholder_libs(m, work, libs):
+        lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+        libs[n] = dict(placeholder=True)
     if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
         lib_lines += ['read_liberty -corner ss /work/hfd_rly_ss.lib', 'read_liberty -corner ff /work/hfd_rly_ff.lib']
         for n in m['relay_masters']:
@@ -646,7 +746,8 @@ def bundle_real_pins(macro_text, view, k):
 
 def cmd_die(a):
     m, pw, M, real = model()
-    views = real_views(a.index)
+    active_masters = {it.master for it in m['insts']}
+    views = real_views(a.index, active_masters)
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     gen_text = {}
@@ -753,6 +854,9 @@ def cmd_die(a):
             (work / 'run.tcl').write_text(t_)
     man = json.loads((work / 'manifest.json').read_text())
     man['real_views'] = {n: dict(lef=str(p.relative_to(ROOT)), sha256=sha(p)) for n, p in views.items()}
+    man['indexed_views_not_instantiated'] = sorted(set(real_views(a.index)) - active_masters)
+    man['generated_masters_without_real_view'] = sorted(n for n in active_masters
+                                                       if n.startswith('hfd_') and n not in views)
     if a.case in ('real', 'sta') and pads:
         man['mirror_pads'] = pads
     if a.case == 'grt':
