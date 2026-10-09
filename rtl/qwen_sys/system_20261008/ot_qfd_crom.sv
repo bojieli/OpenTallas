@@ -50,6 +50,16 @@
 //              The 64-lane fault reduction is two registered levels: per 16-lane macro column (beside its band
 //              segment), then the root (+1 on the fault path; crom48cl f_dis -614 was one flop ORing 64 lanes over
 //              777.6 um).  Out-of-range addresses are compiler bugs: the fault stays sticky / fail-closed.
+// struct-close cl-a3 (drive-0212 0512; default 0 = unchanged):
+//   DSPLIT = 1: the e2 region decode (line -> g_dec.tr -961 ps: ~1.3 ns of compare + 24-bit subtract + row add in one
+//              stage) is split over two registered stages: e2a = the region compares (flags), the five constant
+//              subtracts (a - base) >> 6 in parallel and the stage's row bases (lbase, + QKR, + QKR + 64); e2b = the kind
+//              from the flags and one 13-bit row add + a 5:1 select.  +1 edge on the data path (q answers one edge
+//              later: CRX + 1, the same +1 / SU op as cl-b).  The check path keeps its order: chk_rng / chk_al get one
+//              more register, so faults stay aligned with the data and first-cause order is unchanged.
+//              Also (with CHK): the macro-column row-disagree terms are REGISTERED per macro (w_dis / n_dis -> *_q)
+//              before the 16-lane column OR (g_dec.tv -> g_fcol -790 ps: the priority select + 13-bit compares + the
+//              4/2-macro OR + the column OR in one stage); that register replaces the cdq realign stage, 0 cycles.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_qfd_crom #(
     parameter integer SW = 64,
@@ -72,7 +82,8 @@ module ot_qfd_crom #(
     parameter integer OREG = 0,
     parameter integer IREL = 0,
     parameter integer RSYNC = 0,
-    parameter integer CHK = 0
+    parameter integer CHK = 0,
+    parameter integer DSPLIT = 0
 ) (
     input  wire              clk,
     input  wire              rst_n,
@@ -219,11 +230,53 @@ module ot_qfd_crom #(
             end else begin : g_nochk
                 assign chk_rng = trng; assign chk_al = tal;
             end
-            always @(posedge clk) begin
-                tk <= k;
-                tr <= r;
+            if (DSPLIT == 0) begin : g_d1
+                always @(posedge clk) begin
+                    tk <= k;
+                    tr <= r;
+                end
+                assign t_v[gl] = tv; assign t_rng[gl] = chk_rng; assign t_al[gl] = chk_al;
+            end else begin : g_d2
+                // e2a: flags, the five region offsets (row part), the stage row bases
+                wire [AW-1:0] da = a1[gl*AW +: AW];
+                wire [AW-1:0] o_qk = da - A_QK0, o_ro = da - A_ROPE0, o_os = da - A_OSC0, o_ds = da - A_DSC0;
+                reg dv, d_head, d_hbad;
+                reg [7:0] df;
+                reg [RW-1:0] r_hn, r_qk, r_ro, r_os, r_ds, b0, b1, b2;
+                always @(posedge clk or negedge rst_l[gl]) if (!rst_l[gl]) dv <= 1'b0; else dv <= re1[gl];
+                always @(posedge clk) begin
+                    d_head <= st1 == S_HEAD; d_hbad <= st1 > S_HEAD;
+                    df <= {da < A_HN, da < A_QK0, da < A_POST0, da < A_QSC, da == A_QSC, da < A_OSC0, da < A_DSC0, da < A_END};
+                    r_hn <= da[6 +: RW]; r_qk <= o_qk[6 +: RW]; r_ro <= o_ro[6 +: RW]; r_os <= o_os[6 +: RW]; r_ds <= o_ds[6 +: RW];
+`ifndef OT_CROM_MUT_DROW
+                    b0 <= lbase; b1 <= lbase + R_QKR; b2 <= lbase + R_QKR64;
+`else
+                    b0 <= lbase; b1 <= lbase + R_QKR64; b2 <= lbase + R_QKR;   // mutant: the e2a row bases swapped
+`endif
+                end
+                // e2b: kind (same priority as the one-stage decode) + one row add
+                reg [2:0] k2; reg [RW-1:0] r2;
+                always @(*) begin
+                    r2 = 0;
+                    if (d_head) begin if (df[7]) begin k2 = K_NARROW; r2 = R_FN0 + r_hn; end else k2 = K_BAD; end
+                    else if (d_hbad) k2 = K_BAD;
+                    else if (df[6] || (!df[5] && df[4])) k2 = K_ZERO;
+                    else if (df[5]) begin k2 = K_NARROW; r2 = b0 + r_qk; end
+                    else if (df[3]) k2 = K_QSC;
+                    else if (df[2]) begin k2 = K_WIDE; r2 = r_ro; end
+                    else if (df[1]) begin k2 = K_NARROW; r2 = b1 + r_os; end
+                    else if (df[0]) begin k2 = K_NARROW; r2 = b2 + r_ds; end
+                    else k2 = K_BAD;
+                end
+                reg tv2;
+                always @(posedge clk or negedge rst_l[gl]) if (!rst_l[gl]) tv2 <= 1'b0; else tv2 <= dv;
+                always @(posedge clk) begin tk <= k2; tr <= r2; end
+                // the check stays one edge behind the data (as with DSPLIT = 0): one more register on it
+                reg cr2, ca2;
+                always @(posedge clk or negedge rst_l[gl]) if (!rst_l[gl]) begin cr2 <= 1'b0; ca2 <= 1'b0; end
+                    else begin cr2 <= chk_rng; ca2 <= chk_al; end
+                assign t_v[gl] = tv2; assign t_rng[gl] = cr2; assign t_al[gl] = ca2;
             end
-            assign t_v[gl] = tv; assign t_rng[gl] = chk_rng; assign t_al[gl] = chk_al;
             assign t_kind[gl*3 +: 3] = tk; assign t_row[gl*RW +: RW] = tr;
         end
     endgenerate
@@ -345,6 +398,18 @@ module ot_qfd_crom #(
     // ---- faults (sticky, first cause) ----
     // CHK: first OR level registered per 16-lane macro column (wide groups 4c..4c+3, narrow 2c, 2c+1), then the root
     wire [NCOL-1:0] fr_rng, fr_al, fr_dis;
+    // DSPLIT: the disagree term of every macro registered beside the macro (before any OR)
+    wire [WC-1:0] w_dis_f; wire [NC-1:0] n_dis_f;
+    generate
+        if (DSPLIT != 0) begin : g_disq
+            reg [WC-1:0] w_dis_q; reg [NC-1:0] n_dis_q;
+            always @(posedge clk or negedge rst_root)
+                if (!rst_root) begin w_dis_q <= 0; n_dis_q <= 0; end else begin w_dis_q <= w_dis; n_dis_q <= n_dis; end
+            assign w_dis_f = w_dis_q; assign n_dis_f = n_dis_q;
+        end else begin : g_disc
+            assign w_dis_f = w_dis; assign n_dis_f = n_dis;
+        end
+    endgenerate
     generate
         if (CHK != 0) begin : g_fcol
             for (gc = 0; gc < NCOL; gc = gc + 1) begin : g_c
@@ -353,12 +418,17 @@ module ot_qfd_crom #(
                     if (!rst_root) begin cr <= 1'b0; ca_ <= 1'b0; cd <= 1'b0; end
                     else begin
                         cr <= |t_rng[gc*LPC +: LPC]; ca_ <= |t_al[gc*LPC +: LPC];
-                        cd <= (|w_dis[gc*(WC/NCOL) +: WC/NCOL]) || (|n_dis[gc*(NC/NCOL) +: NC/NCOL]);
+                        cd <= (|w_dis_f[gc*(WC/NCOL) +: WC/NCOL]) || (|n_dis_f[gc*(NC/NCOL) +: NC/NCOL]);
                     end
                 end
-                reg cdq;    // the row-disagree term is one stage earlier than the check terms: realign (first-cause order)
-                always @(posedge clk or negedge rst_root) if (!rst_root) cdq <= 1'b0; else cdq <= cd;
-                assign fr_rng[gc] = cr; assign fr_al[gc] = ca_; assign fr_dis[gc] = cdq;
+                if (DSPLIT == 0) begin : g_cdq
+                    reg cdq;    // the row-disagree term is one stage earlier than the check terms: realign (first-cause order)
+                    always @(posedge clk or negedge rst_root) if (!rst_root) cdq <= 1'b0; else cdq <= cd;
+                    assign fr_rng[gc] = cr; assign fr_al[gc] = ca_; assign fr_dis[gc] = cdq;
+                end else begin : g_cdr
+                    // DSPLIT: cd ORs the per-macro registered disagree terms (w_dis_q / n_dis_q): already aligned
+                    assign fr_rng[gc] = cr; assign fr_al[gc] = ca_; assign fr_dis[gc] = cd;
+                end
             end
         end else begin : g_fflat
             assign fr_rng = {NCOL{|t_rng}}; assign fr_al = {NCOL{|t_al}}; assign fr_dis = {NCOL{(|w_dis) || (|n_dis)}};

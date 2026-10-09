@@ -19,10 +19,13 @@
 `ifndef CROM_CHK
 `define CROM_CHK 0
 `endif
+`ifndef CROM_DSPLIT
+`define CROM_DSPLIT 0
+`endif
 // drive-0158: the -cl options (OREG / IREL / RSYNC) shift the answer by OREG + IREL edges and the reset release by
 // 4 edges (RSYNC); the bench follows the DUT's documented latency, it does not search for it.
 module tb_qfd_crom;
-    localparam integer SW = 64, AW = 24, LW = 6, LAT = 5 + `CROM_OREG + `CROM_IREL, RWAIT = (`CROM_RSYNC != 0) ? 4 : 0;
+    localparam integer SW = 64, AW = 24, LW = 6, LAT = 5 + `CROM_OREG + `CROM_IREL + `CROM_DSPLIT, RWAIT = (`CROM_RSYNC != 0) ? 4 : 0;
     reg clk = 0, rst_n = 0;
     always #0.4166 clk = ~clk;
     reg  [SW-1:0]    re = 0;
@@ -31,7 +34,7 @@ module tb_qfd_crom;
     wire [SW*64-1:0] q;
     wire             fault;
     wire [1:0]       fcode;
-    ot_qfd_crom #(.MUT(`MUT), .OREG(`CROM_OREG), .IREL(`CROM_IREL), .RSYNC(`CROM_RSYNC), .CHK(`CROM_CHK)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(stage),
+    ot_qfd_crom #(.MUT(`MUT), .OREG(`CROM_OREG), .IREL(`CROM_IREL), .RSYNC(`CROM_RSYNC), .CHK(`CROM_CHK), .DSPLIT(`CROM_DSPLIT)) dut (.clk(clk), .rst_n(rst_n), .crom_re(re), .crom_addr(addr), .crom_stage(stage),
                                    .crom_q(q), .fault(fault), .fault_code(fcode));
 
     // expectation pipeline
