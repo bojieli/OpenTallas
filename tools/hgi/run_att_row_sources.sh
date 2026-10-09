@@ -18,7 +18,7 @@ for mode in golden ring-zero drop-c c-order; do
   rc=$?
   set -e
   echo "$rc" >"$out/$mode.rc"
-  if [[ "$mode" == golden ]]; then test "$rc" -eq 0; rg 'PASS CF-ATT' "$out/$mode.log";
-  else test "$rc" -ne 0; rg 'FATAL' "$out/$mode.log"; fi
+  if [[ "$mode" == golden ]]; then test "$rc" -eq 0; grep 'PASS CF-ATT' "$out/$mode.log";
+  else test "$rc" -ne 0; grep 'FATAL' "$out/$mode.log"; fi
 done
 sha256sum "$rtl" "$tb" >"$out/source.sha256"
