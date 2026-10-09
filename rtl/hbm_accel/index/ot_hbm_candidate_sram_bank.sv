@@ -13,7 +13,16 @@ module ot_hbm_candidate_sram_bank #(parameter integer ENABLE=0)(
  reg[3:0] st,st_n;reg failed,writing;reg[6:0] address;
  reg[511:0] wd,answer;reg[575:0] encoded,captured;
  reg[63:0] syndromes;reg ce,poison;reg[127:0] valid,valid_n;
- wire codes_ok=st_n==~st&&valid_n==~valid;
+reg[0:0] failed_n;
+reg[0:0] writing_n;
+reg[6:0] address_n;
+reg[511:0] wd_n;
+reg[511:0] answer_n;
+reg[575:0] captured_n;
+reg[63:0] syndromes_n;
+reg[0:0] ce_n;
+reg[0:0] poison_n;
+ wire codes_ok=failed_n==~failed&&writing_n==~writing&&address_n==~address&&wd_n==~wd&&answer_n==~answer&&captured_n==~captured&&syndromes_n==~syndromes&&ce_n==~ce&&poison_n==~poison&&st_n==~st&&valid_n==~valid;
  wire[767:0] rd;
  wire[767:0] packed_word={192'b0,encoded};
  for(genvar m=0;m<3;m=m+1)begin:g_macro
@@ -35,25 +44,25 @@ module ot_hbm_candidate_sram_bank #(parameter integer ENABLE=0)(
  end
  end
  always @(posedge clk or negedge por_n)begin
- if(!por_n)begin st<=0;st_n<=15;failed<=0;writing<=0;address<=0;wd<=0;answer<=0;
- encoded<=0;captured<=0;syndromes<=0;ce<=0;poison<=0;valid<=0;valid_n<=~128'b0;end
+ if(!por_n)begin st<=0;st_n<=15;failed<=0;failed_n<=~(0);writing<=0;writing_n<=~(0);address<=0;address_n<=~(0);wd<=0;wd_n<=~(0);answer<=0;answer_n<=~(0);
+ encoded<=0;captured<=0;captured_n<=~(0);syndromes<=0;syndromes_n<=~(0);ce<=0;ce_n<=~(0);poison<=0;poison_n<=~(0);valid<=0;valid_n<=~128'b0;end
  else if(ENABLE)begin
- if(!codes_ok)failed<=1;
+ if(!codes_ok)failed<=1;failed_n<=~(1);
  else case(st)
- 0:if(req_v&&req_r)begin writing<=req_write;address<=req_address;wd<=req_data;ce<=0;poison<=0;st<=1;st_n<=~4'd1;end
+ 0:if(req_v&&req_r)begin writing<=req_write;writing_n<=~(req_write);address<=req_address;address_n<=~(req_address);wd<=req_data;wd_n<=~(req_data);ce<=0;ce_n<=~(0);poison<=0;poison_n<=~(0);st<=1;st_n<=~4'd1;end
  1:begin
  if(writing)for(integer k=0;k<8;k=k+1)encoded[72*k+:72]<=encode64(wd[64*k+:64]);
  st<=2;st_n<=~4'd2;
  end
  2:begin
- if(writing)begin valid[address]<=1;valid_n[address]<=0;answer<=wd;st<=5;st_n<=~4'd5;end
- else begin captured<=rd[575:0];poison<=!valid[address];st<=3;st_n<=~4'd3;end
+ if(writing)begin valid[address]<=1;valid_n[address]<=0;answer<=wd;answer_n<=~(wd);st<=5;st_n<=~4'd5;end
+ else begin captured<=rd[575:0];captured_n<=~(rd[575:0]);poison<=!valid[address];poison_n<=~(!valid[address]);st<=3;st_n<=~4'd3;end
  end
- 3:begin for(integer k=0;k<8;k=k+1)syndromes[8*k+:8]<=syndrome64(captured[72*k+:72]);st<=4;st_n<=~4'd4;end
- 4:begin ce<=any_ce;poison<=poison||any_ue;answer<=(poison||any_ue)?512'd0:corrected;
- if(poison||any_ue)failed<=1;st<=5;st_n<=~4'd5;end
+ 3:begin for(integer k=0;k<8;k=k+1)syndromes[8*k+:8]<=syndrome64(captured[72*k+:72]);syndromes_n[8*k+:8]<=~(syndrome64(captured[72*k+:72]));st<=4;st_n<=~4'd4;end
+ 4:begin ce<=any_ce;ce_n<=~(any_ce);poison<=poison||any_ue;poison_n<=~(poison||any_ue);answer<=(poison||any_ue)?512'd0:corrected;answer_n<=~((poison||any_ue)?512'd0:corrected);
+ if(poison||any_ue)failed<=1;failed_n<=~(1);st<=5;st_n<=~4'd5;end
  5:if(rsp_r)begin st<=0;st_n<=15;end
- default:failed<=1;
+ default:failed<=1;failed_n<=~(1);
  endcase
  end
  end
