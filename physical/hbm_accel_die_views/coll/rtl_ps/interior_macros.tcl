@@ -12,7 +12,7 @@ set die [$block getDieArea]
 set dw [expr {double([$die dx])/$units}]
 set dh [expr {double([$die dy])/$units}]
 set mw 94.824
-set mh 41.064
+set mh 41.040
 set gap 24.0
 set array_w [expr {3*$mw+2*$gap}]
 set array_h [expr {6*$mh+5*$gap}]

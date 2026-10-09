@@ -1,6 +1,6 @@
 """Pre-build sizing of the full PWT545, QAW7, RXAW8 SRAM collective port."""
 def model():
-    mw,mh,gap,dw,dh=94.824,41.064,24,480,540
+    mw,mh,gap,dw,dh=94.824,41.040,24,480,540
     aw,ah=3*mw+2*gap,6*mh+5*gap
     return dict(schema='opentallas.uarch.hcoll_port_interior.v1',
         adopted=False,enabled_default=False,physical_closed=False,headline_rate_credit=0,
