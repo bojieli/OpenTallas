@@ -1,0 +1,88 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13156, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13189, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13222, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13255, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13288, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13321, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 13354, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14748, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14781, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz line 14814, timing group from output port.
+[WARNING ORD-2056] The following 9 liberty cell(s) do not have LEF masters and will be marked as dont-use:
+  DFFHQNH2V2Xx1_ASAP7_75t_R
+  DFFHQNH2V2Xx2_ASAP7_75t_R
+  DFFHQNH2V2Xx3_ASAP7_75t_R
+  DFFHQNV2Xx1_ASAP7_75t_R
+  DFFHQNV2Xx2_ASAP7_75t_R
+  DFFHQNV2Xx3_ASAP7_75t_R
+  DFFHQNV4Xx1_ASAP7_75t_R
+  DFFHQNV4Xx2_ASAP7_75t_R
+  DFFHQNV4Xx3_ASAP7_75t_R
+[WARNING STA-0450] virtual clock io_clk can not be propagated.
+OT_DRV pre
+worst slack max 9.71
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |    205305
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[250\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[1\]\[248\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[255\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[254\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[253\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[252\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[251\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[250\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[249\] only has one pin. Check if it is intended to be dangling.
+[WARNING RSZ-0104] Net g_wf.eng.g_rec_sram.rd_row\[0\]\[248\] only has one pin. Check if it is intended to be dangling.
+    final |     +0.0% |       0 |       4 |             3 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 3 slew violations.
+[INFO RSZ-0038] Inserted 4 buffers in 3 nets.
+[INFO RSZ-0504] Runtime: 11.13s
+[INFO DPL-0006] Core area: 75889.77 um^2
+[INFO DPL-0007] Movable instances area: 25218.78 um^2
+[INFO DPL-0008] Fixed instances area within core: 20907.80 um^2
+[INFO DPL-0009] Utilization: 60.8%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (2 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 210405 cells
+[INFO DPL-0393]   height 111 row(s): 4 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |         30 |         2 |        28
+        1 |          6 |         2 |         4
+        2 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 2.
+[INFO DPL-0500] Runtime: 2.05s
+Placement Analysis
+---------------------------------
+total displacement          3.9 u
+average displacement        0.0 u
+max displacement            1.3 u
+original HPWL          712918.6 u
+legalized HPWL         712917.2 u
+delta HPWL                    0 %
+
+OT_DRV post
+worst slack max 9.71
+OT_DRV done

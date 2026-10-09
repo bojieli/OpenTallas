@@ -1,0 +1,119 @@
+{
+ "name": "pq_r128_expanded_b1528203c-e3-tt",
+ "block": "ot_v41_pqc_spine_screen",
+ "owner": "Claude:s81-fieldphase (from Codex:s81/bf_pq)",
+ "purpose": "TT-BATCH (owner option B, one large batch): pq_r128_expanded_b1528203c-e3 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Source-identical d017 R128 PQ screen expanded550.368um; no cycle delta; no production parent claim | RE-HOSTED 2026-10-07 to EPYC3 (EPYC1/EPYC2 run roots below the 200 GB disk floor); spec otherwise identical to pq_r128_expanded_b1528203c",
+ "hosts": [
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 56,
+ "source": {
+  "commit": "b1528203c7361ed316718b826dbd9c592acc63ad",
+  "branch": "main",
+  "extra_paths": [],
+  "required_files": [
+   "physical/s81_pq_r128_expanded/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_delay.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/v41rom/ot_v41_kreg.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/common/ot_prefix.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_sfu.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+   "physical/s81_pq_r128_expanded/pinned/rtl/hdc/ot_hdc_prefix.sv",
+   "physical/s81_pq_r128_expanded/io_budget_r128.sdc",
+   "physical/s81_pq_r128_expanded/io_ref_pre.tcl",
+   "physical/s81_pq_r128_expanded/io_ref_post.tcl",
+   "physical/s81_pq_r128_expanded/signoff_r128.sdc",
+   "tools/s81/run_pq_r128_expanded.py",
+   "tools/uarch_model.py",
+   "physical/s81_pq_r128_expanded/source_binding.json",
+   "physical/s81_pq_r128_expanded/model.json",
+   "physical/s81_pq_r128_expanded/terminal.py",
+   "physical/s81_pq_r128_expanded/route.sh",
+   "physical/s81_pq_r128_expanded/baseline_6_report.json"
+  ],
+  "paths": [
+   "tools",
+   "physical/s81_pq_r128_expanded"
+  ]
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes SRC={SRC} bash physical/s81_pq_r128_expanded/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work_c1r128_expanded/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 56
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OUT={RUN}/routes SRC={SRC} bash physical/s81_pq_r128_expanded/route.sh {LABEL}",
+   "ok": "grep -q '\"verdict\": \"PASS\"' {RUN}/routes/{LABEL}/c1r128_expanded_terminal.json",
+   "threads": 16,
+   "peak_ram_gb": 56
+  },
+  "bench": [
+   {
+    "name": "pinned_source_identity",
+    "cmd": "python3 tools/s81/run_pq_r128_expanded.py --work {RUN}/identity_placeholder --output {RUN}/identity_placeholder.json --prepare-only",
+    "expect": "pass",
+    "pass_regex": "PREPARED_NOT_RUN",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/c1r128_expanded.json {RUN}/routes/{LABEL}/c1r128_expanded_corner_sta.json {RUN}/routes/{LABEL}/c1r128_expanded_terminal.json {RUN}/routes/{LABEL}/terminal.log {RUN}/record/ && cp {SRC}/physical/s81_pq_r128_expanded/model.json {SRC}/physical/s81_pq_r128_expanded/source_binding.json {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "no_bench_reason": "Pure geometry reroute: all13 RTL hashes identical to actual d0178820d screen and all4 constraint/hooks unchanged, enforced by runner source_binding.json. Source-identical behavioral reuse declared; historical exact positive/negative record link remains an adoption hold, not claimed PASS. This job can only establish standalone physical screening.",
+ "adoption_hold_reason": "PHW6/SAW8/KMAX256 ROM-register screen; no production parent binding or full production phase/count exactness. Historical exact gate evidence identity must be linked before adoption.",
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/c1r128_expanded_corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work_c1r128_expanded/orfs/logs/asap7/*/base/5_2_route.json",
+  "post_sdc": [
+   "physical/s81_pq_r128_expanded/signoff_r128.sdc"
+  ],
+  "checks": [
+   {
+    "name": "measured_boundary_clock",
+    "cmd": "for c in ss ff; do grep -q '^FS boundary clock arrival: in ' {RUN}/routes/{LABEL}/work_c1r128_expanded/orfs/w18_sta_$c.log || exit 1; done"
+   },
+   {
+    "name": "SS_FF_15_DRC_SI_replica_terminal",
+    "cmd": "grep -q '\"verdict\": \"PASS\"' {RUN}/routes/{LABEL}/c1r128_expanded_terminal.json"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "Preserve first measured expanded result; explicit endpoint-specific repair separately modeled; no blind repeated ECO."
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "Actual standalone d017 IO contract preserved: per-corner q_go/o_ready clock anchors,250/-50ps; production parent ownership still open."
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_pq_r128_expanded_b1528203c"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "host_require": [
+  "ot-epyc3"
+ ],
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

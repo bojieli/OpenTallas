@@ -92,6 +92,15 @@ RTL = [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_ret", "ot_v41_rom_elem_w10"
                                              "ot_v41_bterm2_w10", "ot_v41_chain2", "ot_v41_segtree2",
                                              "ot_v41_bf16_lanes2")]
 RTL += [ROOT / "rtl/common/ot_prefix.sv"]
+# s81-fieldphase 2026-10-07: since 260869fd0 / 9cf64047e the q element (ot_v41_rom_elem_qx_w10) instantiates
+# ot_v41_bf16_lanes2 with GRADUAL_RNE / RC (its QBF branch, default off), which only the _rne_prepare file of the same
+# module declares (defaults GRADUAL_RNE 0 / RC 0 = the original lanes, documented bit-identical, same latency), so the
+# --qelem build on main failed (PINNOTFOUND).  Build that file (and its RC-branch companions) in place of the original.
+_QX = ROOT / "rtl/v41rom/ot_v41_rom_elem_qx_w10.sv"
+if _QX.exists() and "GRADUAL_RNE(GRADUAL_RNE)" in _QX.read_text():
+    RTL = [ROOT / "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv" if p.name == "ot_v41_bf16_lanes2.sv" else p for p in RTL]
+    RTL += [ROOT / f"rtl/v41rom/{n}.sv" for n in ("ot_v41_bmul2_rne_prepare", "ot_v41_chain2u2")
+            if (ROOT / f"rtl/v41rom/{n}.sv").exists()]
 RTL += [ROOT / f"rtl/hdc/{n}.sv" for n in ("ot_hdc_fpu", "ot_hdc_fp32_mul_pipe", "ot_hdc_delay", "ot_hdc_cg")]
 RTL += [ROOT / "rtl/proto/ot_fp32_add_rne_pipe.sv", ROOT / "rtl/hdc/v41/ot_hdc_actquant.sv"]
 DIE = [ROOT / f"rtl/v41die/{n}.sv" for n in ("ot_v41_pair_w17w10", "ot_v41_retn_w17w10", "ot_v41_field_w17w10",
@@ -123,7 +132,7 @@ def group_of(alias: str, expert):
         return "attn.a_proj", "a_proj.fp8", "attn_norm"
     if alias.startswith("compressor.") or alias == "indexer.weights_proj":
         return "attn.a_proj", "a_proj.bf16", "attn_norm"
-    if alias.startswith("wq_b") or alias == "indexer.wq_b":
+    if alias.startswith("wq_b") or alias == "indexer.wq_b" or alias.startswith("indexer.wq_b.rows"):
         return "attn.wq_b", "wq_b", "internal"
     if alias == "indexer.wk":
         return "attn.cmp.wk", "cmp.wk", "internal"
@@ -155,7 +164,7 @@ L20_PCS = {"a_proj.fp8": [7, 8], "a_proj.bf16": [24, 42], "wq_b": [14, 39], "cmp
                                                          266: (123, 124, 131)}.items()},
            **{f"exp{e}.w2": [c] for e, c in {41: 110, 65: 115, 158: 120, 164: 125, 259: 128, 266: 131}.items()}}
 LAYERS = (0, 1, 2, 3, 20, 21, 24)       # one per layer type (tools/dsrom_1m_measure.TYPES reps)
-REF = Path("/home/ubuntu/w17work/ref/ctx1048576_seed20260930")
+REF = Path(os.environ.get("OT_DSROM_FIELD_REF", "/home/ubuntu/w17work/ref/ctx1048576_seed20260930"))
 SEED = 20260930
 
 
@@ -218,11 +227,30 @@ def rand_x(name: str, K: int, bf: bool) -> np.ndarray:
     return G.bits(np.asarray(v, dtype=G.F)).astype(np.uint32)
 
 
+def stage_bounds(sm):
+    """stage -> (region_bounds, BF site set).  Bindings with per-stage die flavours (the actual 1,792-pair mixed
+    mappings, results/uarch/dsrom_s81_mixed1792_mapping_20261007: BF stages and q-only stages) carry
+    region_bounds_by_stage / BF_site_IDs_by_stage; older bindings one die-wide pair."""
+    if "region_bounds_by_stage" in sm:
+        rbs, bfs = sm["region_bounds_by_stage"], sm["BF_site_IDs_by_stage"]
+        return lambda st: (rbs[st], set(bfs[st]))
+    rb, bf = sm["region_bounds"], set(sm["BF_site_IDs"])
+    return lambda st: (rb, bf)
+
+
+BY_STAGE = False      # set by cmd_plan when the binding has per-stage maps: groups split per stage (node = max over stages)
+
+
 def layer_groups(L, ents, rb, bfs):
-    """S81 entries of layer L (non-expert + the golden experts) -> {group: (node, xsrc, [mat dicts])}."""
+    """S81 entries of layer L (non-expert + the golden experts) -> {group: (node, xsrc, [mat dicts])}.
+    rb / bfs: a stage -> bounds function (stage_bounds) or the die-wide lists."""
     groups = {}
+    sb = rb if callable(rb) else (lambda st, _r=rb, _b=bfs: (_r, _b))
     for e in ents:
         node, grp, xsrc = group_of(e["alias"], e["expert"])
+        rb, bfs = sb(e["stage"])
+        if BY_STAGE:
+            grp = f"{grp}@s{e['stage']}"
         sl = e["rank_slices"][RANK]
         regions = {}
         for seg, pair, s0, cnt, stride, base, words in e["plans"]:
@@ -239,7 +267,8 @@ def layer_groups(L, ents, rb, bfs):
             t_read_words_max=e["t_read_words_max"], issue_cycles_LAT8_condition=e["issue_cycles_LAT8_condition"],
             conversion=e["conversion"], isa=None, regions={str(k): sorted(v) for k, v in sorted(regions.items())}))
     order = {g: i for i, g in enumerate(GROUP_ORDER)}
-    return dict(sorted(groups.items(), key=lambda kv: (order.get(kv[0], 50 + ("w2" in kv[0]) + 2 * (kv[0] == "shared.w2")),
+    base = lambda g: g.split("@")[0]
+    return dict(sorted(groups.items(), key=lambda kv: (order.get(base(kv[0]), 50 + ("w2" in kv[0]) + 2 * (base(kv[0]) == "shared.w2")),
                                                        kv[0])))
 
 
@@ -405,6 +434,9 @@ def cmd_plan(a):
     work.mkdir(parents=True, exist_ok=True)
     sm = json.loads((S81 / "stage_map.json").read_text())
     rb, bfs = sm["region_bounds"], set(sm["BF_site_IDs"])
+    global BY_STAGE
+    BY_STAGE = "region_bounds_by_stage" in sm
+    sbf = stage_bounds(sm)
     layers = [int(x) for x in a.layers.split(",")]
     experts, ref_sha = {}, {}
     for L in layers:
@@ -432,7 +464,8 @@ def cmd_plan(a):
     phases, xs, xsrc_rec, notes = [], {}, {}, []
     for L in layers:
         z = np.load(REF / f"ctx1048576_L{L:02d}.npz")
-        for grp, (node, xsrc, mats) in layer_groups(L, ents[L], rb, bfs).items():
+        for grp, (node, xsrc, mats) in layer_groups(L, ents[L], sbf, None).items():
+            grp_s, grp = grp, grp.split("@")[0]
             K = mats[0]["K"]
             bf = mats[0]["fmt"] == "bf16"
             assert all(m["K"] == K for m in mats) and all((m["fmt"] == "bf16") == bf for m in mats), (L, grp)
@@ -472,8 +505,10 @@ def cmd_plan(a):
             for g in groups:
                 bad_g = [r for r in range(128) if illegal(g, r)]
                 assert not bad_g, (L, grp, g[0]["alias"], bad_g[:4], illegal(g, bad_g[0]))
-                name = f"L{L}.{grp}" + ("" if len(groups) == 1 else "." + "+".join(x["alias"] for x in g))
+                name = f"L{L}.{grp_s}" + ("" if len(groups) == 1 else "." + "+".join(x["alias"] for x in g))
+                srb, sbs = sbf(stage)
                 phases.append(dict(layer=L, node=node, phase=name, group=grp, stage=stage, x_source=src, out=out,
+                                   **(dict(region_bounds=srb, bf_sites=sorted(sbs)) if BY_STAGE else {}),
                                    K=K, fmts=sorted({m["fmt"] for m in g}), mats=g,
                                    split_reason=(f"fused phase exceeds the element in regions {bad[:8]}: "
                                                  f"{illegal(mats, bad[0])}") if bad else None,
@@ -707,7 +742,10 @@ def run_one(args):
                go_to_last_w=(op["last_w"] - op["go"]) if op.get("last_w", -1) >= 0 else None,
                go_to_idle=(op["idle"] - op["go"]) if op else None,
                image_s=round(t1 - t0, 2), sim_s=round(t2 - t1, 2), tail=lines[-1:] if lines else p.stderr[-300:])
-    (rd / "result.json").write_text(json.dumps(dict(res, xcheck=xcheck)) + "\n")
+    # gaps-design 2026-10-08: the RTL's own row words (aligned with xcheck; None = not written) for the chained token
+    # bench tools/s81/token_bench_l20.py, which feeds them forward through the layer's VM instead of the golden rows
+    rtl_words = [(writes[ad][-1] if writes.get(ad) else None) for ad in expect]
+    (rd / "result.json").write_text(json.dumps(dict(res, xcheck=xcheck, rtl=rtl_words)) + "\n")
     if not keep:
         shutil.rmtree(img)
         (rd / "sim.log").write_text("\n".join(ln for ln in lines if not ln.startswith("W ")) + "\n")
@@ -731,7 +769,8 @@ def cmd_run(a):
         for reg in regs:
             if not a.force and (work / "runs" / ph["phase"] / f"r{reg:03d}" / "result.json").exists():
                 continue
-            tasks.append((str(work), ph, reg, rb, bfs, a.keep))
+            prb, pbf = (ph["region_bounds"], set(ph["bf_sites"])) if "bf_sites" in ph else (rb, bfs)
+            tasks.append((str(work), ph, reg, prb, pbf, a.keep))
     # group by phase so a worker reuses the phase's checkpoint slices
     tasks.sort(key=lambda t: (t[1]["phase"], t[2]))
     print(f"{len(tasks)} region runs", flush=True)

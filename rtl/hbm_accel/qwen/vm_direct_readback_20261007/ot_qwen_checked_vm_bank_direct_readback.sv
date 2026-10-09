@@ -19,7 +19,7 @@ module ot_qwen_checked_vm_bank_direct_readback #(parameter integer DIRECT_READBA
     output reg [59:0] wr_ack_word_addr,output reg [63:0] wr_ack_lane_mask,
     output wire wr_fault,rw_collision_fault
 );
-    import ot_gpu_w6_secded_pkg::*;
+    // package functions are called fully qualified: ORFS yosys rejects a module-body import
     localparam IDLE=0,OLD=1,DEC1=2,DEC2=3,DEC3=4,MERGE=5,
         ENC1=6,ENC2=7,COMMIT=8,ACK=9,POST=10,VERIFY=11,RELEASE=12;
     reg [3:0] state;
@@ -124,7 +124,7 @@ module ot_qwen_checked_vm_bank_direct_readback #(parameter integer DIRECT_READBA
     function automatic [7:0] parity64(input [63:0] d);
         reg [71:0] code;integer k;
         begin
-            code=encode64(d);
+            code=ot_gpu_w6_secded_pkg::encode64(d);
             for(k=0;k<7;k=k+1)parity64[k]=code[(1<<k)-1];
             parity64[7]=code[71];
         end
@@ -158,7 +158,7 @@ module ot_qwen_checked_vm_bank_direct_readback #(parameter integer DIRECT_READBA
                 DEC1:begin
                     decode_ue<=0;
                     for(integer i=0;i<32;i=i+1)begin
-                        d=decode64(join_code(sampled[i*64+:64],sampled_checks[i*8+:8]));
+                        d=ot_gpu_w6_secded_pkg::decode64(join_code(sampled[i*64+:64],sampled_checks[i*8+:8]));
                         decoded[i*64+:64]<=d[63:0];
                         // A full initialization write replaces its entire word;
                         // no uninitialized old data participates in arithmetic.

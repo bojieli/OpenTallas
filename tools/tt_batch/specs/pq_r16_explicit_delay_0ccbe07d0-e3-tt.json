@@ -1,0 +1,155 @@
+{
+ "name": "pq_r16_explicit_delay_0ccbe07d0-e3-tt",
+ "block": "ot_v41_pqc_spine_screen",
+ "owner": "Claude:s81-fieldphase (from Codex:s81/bf_pq)",
+ "purpose": "TT-BATCH (owner option B, one large batch): pq_r16_explicit_delay_0ccbe07d0-e3 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: One-shot explicit noninverting3HB4 return capture stations, matchedoriginal R16 timing/topology, +0cycles, not productionparent | RE-HOSTED 2026-10-07 to EPYC3 (EPYC1/EPYC2 run roots below the 200 GB disk floor); spec otherwise identical to pq_r16_explicit_delay_0ccbe07d0",
+ "hosts": [
+  "ot-epyc3"
+ ],
+ "host_require": [
+  "ot-epyc3"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 44,
+ "resource_basis": "Sameoriginal R16 detailedroutepeak36761244KB (~35.06GiB); inherited44GiB guard ~25% headroom, +3312cells (<0.5%). OriginalODB/SPEF1.92GB required; no synthesis.",
+ "source": {
+  "commit": "0ccbe07d0eccf4df0424a08c587562a5d5428118",
+  "branch": "main",
+  "extra_paths": [],
+  "required_files": [
+   "physical/s81_pq_return_delay/r16_ss.tcl",
+   "physical/s81_pq_return_delay/library_binding.json",
+   "physical/s81_pq_return_delay/r128_ff.tcl",
+   "physical/s81_pq_return_delay/gate.sh",
+   "physical/s81_pq_return_delay/runtime_inputs.json",
+   "physical/s81_pq_return_delay/source.json",
+   "physical/s81_pq_return_delay/r16_ff.tcl",
+   "physical/s81_pq_return_delay/route.sh",
+   "physical/s81_pq_return_delay/insert.tcl",
+   "physical/s81_pq_return_delay/r128_ss.tcl",
+   "physical/s81_pq_return_delay/signoff.sdc",
+   "physical/s81_pq_return_delay/r16/r16_selected_caps.json",
+   "physical/s81_pq_return_delay/r16/plan.json",
+   "physical/s81_pq_return_delay/r16/timing.json",
+   "physical/s81_pq_return_delay/r16/topology.json",
+   "physical/s81_pq_return_delay/r16/plan_retained_wire.json",
+   "physical/s81_pq_return_delay/r16/r16_original_route_metrics.json",
+   "physical/s81_pq_return_delay/r16/r16_geometry.json",
+   "physical/s81_pq_return_delay/frozen/hold_eco.tcl",
+   "physical/s81_pq_return_delay/frozen/hold_eco_window.tcl",
+   "physical/s81_pq_return_delay/frozen/hold_eco_corner.tcl",
+   "physical/s81_pq_return_delay/fixture/check.tcl",
+   "physical/s81_pq_return_delay/fixture/top.v",
+   "tools/s81/prepare_pq_return_delay_eco.py",
+   "tools/s81/check_pq_return_delay_result.py",
+   "tools/w18/corner_sta.py"
+  ],
+  "runtime_files": [
+   {
+    "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base/6_final.odb",
+    "sha256": "25fb47d4001340cffb6cfc48ba2e80bc877906734c7277bc08f844ce38514223"
+   },
+   {
+    "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base/6_final.sdc",
+    "sha256": "c8874a83c55fc84d95aa008144e320ee554aa49119bf81fd6759f8a6ff070e45"
+   },
+   {
+    "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/out/work_c1r16_ek/orfs/results/asap7/opentallas_ot_v41_pqc_spine_screen_asap7_dsfs13_c1r16_ek/base/6_final.spef",
+    "sha256": "c916a4542ca633c64c1baab40684a412431260bf6224163408d57c5d7293080b"
+   },
+   {
+    "path": "/srv/opentallas-scratch/claude/dsrom-field-spine/v13b/src/physical/dsrom_field_spine/signoff_r16.sdc",
+    "sha256": "b05c69429e58984b00767d523f71574b6776ca923e00219d896650d9a09df9b8"
+   }
+  ],
+  "paths": [
+   "physical/s81_pq_return_delay/r16_ss.tcl",
+   "physical/s81_pq_return_delay/library_binding.json",
+   "physical/s81_pq_return_delay/r128_ff.tcl",
+   "physical/s81_pq_return_delay/gate.sh",
+   "physical/s81_pq_return_delay/runtime_inputs.json",
+   "physical/s81_pq_return_delay/source.json",
+   "physical/s81_pq_return_delay/r16_ff.tcl",
+   "physical/s81_pq_return_delay/route.sh",
+   "physical/s81_pq_return_delay/insert.tcl",
+   "physical/s81_pq_return_delay/r128_ss.tcl",
+   "physical/s81_pq_return_delay/signoff.sdc",
+   "physical/s81_pq_return_delay/r16/r16_selected_caps.json",
+   "physical/s81_pq_return_delay/r16/plan.json",
+   "physical/s81_pq_return_delay/r16/timing.json",
+   "physical/s81_pq_return_delay/r16/topology.json",
+   "physical/s81_pq_return_delay/r16/plan_retained_wire.json",
+   "physical/s81_pq_return_delay/r16/r16_original_route_metrics.json",
+   "physical/s81_pq_return_delay/r16/r16_geometry.json",
+   "physical/s81_pq_return_delay/frozen/hold_eco.tcl",
+   "physical/s81_pq_return_delay/frozen/hold_eco_window.tcl",
+   "physical/s81_pq_return_delay/frozen/hold_eco_corner.tcl",
+   "physical/s81_pq_return_delay/fixture/check.tcl",
+   "physical/s81_pq_return_delay/fixture/top.v",
+   "tools/s81/prepare_pq_return_delay_eco.py",
+   "tools/s81/check_pq_return_delay_result.py",
+   "tools/w18/corner_sta.py"
+  ]
+ },
+ "no_bench_reason": "Combined minimum physical mechanism gate below proves originaldriver\u2192identitychain\u2192samecapture, and includes swappedcapture/deletedcell negative controls. No sequential RTL or arithmetic changes. Fullproductionparent exactness/adoption remains held.",
+ "stages": {
+  "bench": [
+   {
+    "name": "identity_topology_and_mutants",
+    "cmd": "bash physical/s81_pq_return_delay/gate.sh {RUN}/gate",
+    "expect": "pass",
+    "pass_regex": "PQ_DELAY_MECHANISM_GATE_PASS endpoints=2 cells=6 negative_controls=2",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "No CTS/newclock cells: originalroutedclock topology retained, preFFeffectiveconstraints rebuilt from originalODB; freshpostSS/FF measures eachboundaryclockanchor afterroute."
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} bash physical/s81_pq_return_delay/route.sh 16 {RUN}/explicit",
+   "ok": "test -s {RUN}/explicit/result.json",
+   "logs": [
+    "{RUN}/explicit/eco.log",
+    "{RUN}/explicit/corner_pre_ff.log",
+    "{RUN}/explicit/signoff.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/explicit/preparation.json {RUN}/explicit/result.json {RUN}/explicit/corner_sta.json {RUN}/explicit/eco.log {RUN}/explicit/library_sha256.txt {RUN}/record/ && cp {RUN}/gate/gate.log {RUN}/record/gate.log"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 -c 'import json;print(json.dumps(json.load(open(\"{RUN}/explicit/result.json\"))))'",
+  "post_sdc": [
+   "physical/s81_pq_return_delay/signoff.sdc"
+  ],
+  "checks": [
+   {
+    "name": "topology_placement_and_actual_net_cap",
+    "cmd": "grep -q '\"verdict\": \"PASS_STANDALONE_MECHANISM\"' {RUN}/explicit/result.json"
+   }
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "This is one explicit source-pinned structural insertion. No repeated blind repair; residual R2R failure remains separate."
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "Originald017 actual per-corner250/-50ps IO and833.333/60/25 preserved; fullproductionparent ABI differs andis held."
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_pq_r16_explicit_delay_0ccbe07d0"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "adoption_hold_reason": "Standalone R16 PHW6/SAW8/KMAX256; no productionparent or newreleasedmapping claim",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

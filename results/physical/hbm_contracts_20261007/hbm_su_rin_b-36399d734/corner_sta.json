@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_rin_b-36399d734/route/work/orfs",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "source": "tt_resta.sh (job's w18_sta_ss.tcl with TT libraries) on the same 6_final odb/sdc/spef (closure-loop TT re-STA 2026-10-08 13:11 UTC, ot-epyc3 run dir corner_sta.json.tt.json)",
+  "worst_slack_ps": 29.93,
+  "tns_ps": 0.0,
+  "worst_reg_to_reg_slack_ps": 104.970367,
+  "worst_input_to_reg_slack_ps": 29.927227,
+  "worst_output_port_slack_ps": 369.741241,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tcl_sha256": "4ac0b8872813d8b3306744071ea026361f3cc3460b4bb32095a44f7682d8e363"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -240.83,
+  "tns_ps": -19911.2,
+  "worst_register_d_slack_ps": -240.831131,
+  "worst_reg_to_reg_slack_ps": -240.83,
+  "worst_input_to_reg_slack_ps": -153.95,
+  "worst_output_port_slack_ps": 168.512482,
+  "violating_d_pins": 187,
+  "errors": [],
+  "odb_sha256": "c3b28d69aecf373580c9e44a750dc0169f95b9936d858ca0d664a348cc34acbf",
+  "spef_sha256": "e0953c36a5b93e85d8364c65288cf423043da55f080d7c0c34725d4b02b735ca",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "6875950e03980196e95388412663fa53690b024d259f150b6d02bf84e7398158"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 25.27,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 41.270489,
+  "worst_reg_to_reg_slack_ps": 30.83,
+  "worst_input_to_reg_slack_ps": 59.47,
+  "worst_output_port_slack_ps": 25.265554,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "c3b28d69aecf373580c9e44a750dc0169f95b9936d858ca0d664a348cc34acbf",
+  "spef_sha256": "e0953c36a5b93e85d8364c65288cf423043da55f080d7c0c34725d4b02b735ca",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "6875950e03980196e95388412663fa53690b024d259f150b6d02bf84e7398158"
+ },
+ "post_sdc_ff": "physical/hbm_accel_die_views/common/io_vclk_ff_150_162.sdc",
+ "closes_signoff": true,
+ "ss_sensitivity": -240.83
+}

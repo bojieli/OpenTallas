@@ -1,0 +1,100 @@
+{
+ "schema": "opentallas.s81.field_phases_1792.provenance.v1",
+ "host": "ot-epyc1tb",
+ "remote_root": "/srv/opentallas-scratch/claude/s81-fieldphase",
+ "source": {
+  "tree": "git archive of origin/main 4e88418db (tools rtl + the two mapping record dirs + ROM .v models) with tools/dsrom_1m_field.py of claude/s81-fieldphase-20261007 3f8ec327e (sha256 2def0d67..., identical here)",
+  "dsrom_1m_field_sha256": "2def0d67e95e34b8b1012df56db70fdd4e731bd9bce805b7df05089fb7db5562"
+ },
+ "bindings": {
+  "half_dedicated": {
+   "matrix_map_sha256": "8dfa6daea1d7fd6c1a40af76d143968880c6d3d5e48265004d254ad103b94aa0",
+   "stage_map_sha256": "85fba9b16e50167a10b160c7dfeb88c50789d40fecca5bdaea71ca1aa095d02f",
+   "source": "/srv/opentallas-scratch/codex/s81-mixed1792-9a31097cd/half_dedicated",
+   "matches": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/remote_hashes.json"
+  },
+  "full_shared": {
+   "matrix_map_sha256": "bf7863a4d1307bf2dd66b976ef40a63cbec39565743c2c25df660160aedd2fed",
+   "stage_map_sha256": "8999df02399ef16c3e7ce3a264a0d4b1b0d6a90d3ce1ce5b2145175d925af852",
+   "source": "/srv/opentallas-scratch/codex/s81-mixed1792-9a31097cd/full_shared",
+   "matches": "results/uarch/dsrom_s81_mixed1792_mapping_20261007/remote_hashes.json"
+  }
+ },
+ "plans": {
+  "half_dedicated": "5f5a2c935414d70354cd00f0eaf83a5e00d8ac41d113d569548659be14092be6",
+  "full_shared": "4ea5591b3456fec18afa7c028a6f1475296001bcae469ca0b6aa4058b1bf9f8a"
+ },
+ "vehicle": {
+  "build_params": [
+   "-GFAST=1",
+   "-GPP=1",
+   "-GBP=0",
+   "-GNP=32",
+   "-GR=1",
+   "-GNBF=5",
+   "-GPHW=2",
+   "-GVAW=16",
+   "-GQELEM=1",
+   "-GQXV=10"
+  ],
+  "simulator": "Verilator 5.050",
+  "tb_sha256": "e80c2e5b2ff2542bf817caebedfbb02efd616e4223d8ae226dcf1843fefd6461",
+  "note": "ot_v41_bf16_lanes2 built from ot_v41_bf16_lanes2_rne_prepare.sv (GRADUAL_RNE 0 / RC 0 defaults) because main's q element instantiates it with those parameters (PINNOTFOUND otherwise); every row still checked bit-exact"
+ },
+ "commands": [
+  "OT_DSROM_FIELD_BINDING=<bind>/<v> python3 tools/dsrom_1m_field.py plan --work f_<v> --gold-vm gold/ctx1048576_s20260930_L20_r0 --qelem 10",
+  "python3 tools/dsrom_1m_field.py extract --work f_<v>   (localhost: the released checkpoint dba1be0a is only there)",
+  "python3 tools/dsrom_1m_field.py build --work f_half_dedicated --qelem 10   (shared by both)",
+  "OT_DSROM_FIELD_BINDING=<bind>/<v> python3 tools/dsrom_1m_field.py run --work f_<v> --jobs 40",
+  "python3 tools/s81/field_phases_1792.py regions --work f_<v> --out regions/<v>.json.gz",
+  "python3 tools/dsrom_field_reprice_r8.py geometry --die {layer,layer1} --geom {m221bf,m221q}   (localhost, 0.2 GB)",
+  "python3 tools/s81/field_phases_1792.py compose"
+ ],
+ "runs": {
+  "half_dedicated": {
+   "region_runs": 19312,
+   "failed": 0,
+   "start": "2026-10-07T19:15:34-07:00",
+   "end": "2026-10-07T19:32:35-07:00"
+  },
+  "full_shared": {
+   "region_runs": 18416,
+   "failed": 0,
+   "start": "2026-10-07T19:15:34-07:00",
+   "end": "2026-10-07T19:32:01-07:00"
+  }
+ },
+ "files": {
+  "binding/half_dedicated_ksplit/inventory.json": "37e1429b3213f458dd8b2863ec6b2ff3629b069e7239e083237ae2f9e67b0a56",
+  "binding/half_dedicated_ksplit/mapping_verdict.json": "b38bec569b2f0c34d29b4ed379f3cb1c26c83a695146b8a689f6393e162e4b8b",
+  "binding/half_dedicated_ksplit/providers.json": "8536c9d911de79e160d1f635b4b335375685236cca8b7cd1c7d877c05e3f8035",
+  "binding/half_dedicated_ksplit/remote_sha256.txt": "bfb06ece535cea28425282e6326e95be4dccdfa55b5e4cfa4cd4e8590dd16a79",
+  "binding/half_dedicated_ksplit/resources.txt": "215bcb11c30d8b6cb71e76663ced1f0cc247a6a6b3e9224c2537648747887c01",
+  "binding/half_dedicated_ksplit/stage_map.json": "85fba9b16e50167a10b160c7dfeb88c50789d40fecca5bdaea71ca1aa095d02f",
+  "binding/half_dedicated_ksplit.resources.txt": "215bcb11c30d8b6cb71e76663ced1f0cc247a6a6b3e9224c2537648747887c01",
+  "binding/half_dedicated_ksplit.sha256": "bfb06ece535cea28425282e6326e95be4dccdfa55b5e4cfa4cd4e8590dd16a79",
+  "composition.json": "2a1724ef0fb2c197b3fdedbba7b94995be51f42ac3c27232e7aa03b3bd4f9cf5",
+  "composition_basis_39e424990.json": "c0dd5c1d0c00f45373669a4196ad101c719b5d31be4e39b16782a1ead5ad40f9",
+  "geometry/layer1_m221bf.json": "ee3034b7b89abad0840e034638f45d9d9a0fc877cee97d8312e3c39b4bd4cf8c",
+  "geometry/layer1_m221bf.log": "f8fafb64fe5a4d2861e228191bc5d99a4677c433bb938253eb5dfc361333f787",
+  "geometry/layer1_m221q.json": "41bdaab6f93205edf2ef086305da300123012fdea88fd28f4d360f23026ec4a0",
+  "geometry/layer1_m221q.log": "6ea6dd4a035dd125b09d7c272f62b232a02fad89505f6e36487bc3b7788b123f",
+  "geometry/layer_m221bf.json": "f8004fa882aa6ca618d1315ce117618703c424ca00b1f5e797e42c326da9469d",
+  "geometry/layer_m221bf.log": "82377c55ba01e4dd6776d8363e362ec344a1dc57ce70e8bfaea096568499ad26",
+  "geometry/layer_m221q.json": "dcc2ea49c9c0e366eb71a63894c5314c79a88a3ce095e6531525c7b463f304b6",
+  "geometry/layer_m221q.log": "4b2bb4cf59b3717332ec9f56d1e92a0a86afb4e178e78fcc2a34ffc824d9bd71",
+  "regions/full_shared.json.gz": "17636e6cbd327c7c53d13c479d61f121f2c492651b54be352098605551e7d4a5",
+  "regions/half_dedicated.json.gz": "ba0c67c2db23947a4f2e85ff0543206aad22c37eb61afcb3906cc5decb49be96",
+  "regions/half_dedicated_ksplit.json.gz": "a43bc233518ba1229e19c02ef39057737c63f89223a51b4f6055a6b779a21ef0"
+ },
+ "ksplit": {
+  "command": "python3 tools/dsrom_bf_geometry_alloc.py --out half_dedicated_ksplit --pbf 1792 --pq 1792 --nbf-reg 4 --ksplit gate (allocator sha eee31ef9, = 9a31097cd = main; EPYC1, 5:01, 1.6 GB)",
+  "capacity_PASS": true,
+  "stages": 120,
+  "layer_dies": 480,
+  "region_runs": 19312,
+  "failed": 0,
+  "note": "BF16 merges (wo_a 4->2, L2 a_proj BF16 3->2, L20 2->1) are already produced by the allocator in dedicated mode (x-group pair avoidance + 1,024-row BF16 split); --ksplit gate adds the router K split (mode-independent FlavourPool.matrix). No new RTL: the K split is placement over the existing element segment tree, exact in the vehicle.",
+  "basis_39e424990": "composition_basis_39e424990.json: run in a detached worktree of 39e424990 (claude/s81-die / s81-bf-ledger-prod: s81_die +28, composed 1,593.7 / 4,694.7) with --extra-wire 2 (its m221pq PQ root-row stations)"
+ }
+}

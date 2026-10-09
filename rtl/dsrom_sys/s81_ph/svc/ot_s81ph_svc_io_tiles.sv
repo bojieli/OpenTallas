@@ -32,14 +32,28 @@ module ot_s81ph_inq #(parameter integer W = 512) (
         .room(room), .room2(i_r), .fault(flt));
 endmodule
 
-module dsfd_svcio_q (input wire [0:0] ck, input wire [0:0] rst, input wire [514:0] q, output reg [2059:0] q_q);
+// gaps-design 2026-10-08 (svcio_q lbc-tt TT -11.3 / FF +14.1: the q_q register -> q_q pin paths carry the FF hold
+// padding of the die-link hold budget, and the q_q flop sits at the end of a 3-stage chain pulled toward the q input pins):
+// OSTG = 1 adds an output pin register stage (q_rep -> q_o -> q_q, all kept) so the q_q flop is free to sit at its own
+// output pin and the pin path is clk->q + padding only.  Cost: +1 cycle on the svc q path (OSTG = 0 is the adopted r3).
+module dsfd_svcio_q #(parameter integer OSTG = 0) (input wire [0:0] ck, input wire [0:0] rst, input wire [514:0] q, output reg [2059:0] q_q);
     reg [514:0] q_p;
     (* keep *) reg [514:0] q_rep [0:3];
+    wire [2059:0] q_src;
     integer g;
     always @(posedge ck[0]) begin
         q_p <= q;
-        for (g = 0; g < 4; g = g + 1) begin q_rep[g] <= q_p; q_q[515*g +: 515] <= q_rep[g]; end
+        for (g = 0; g < 4; g = g + 1) q_rep[g] <= q_p;
+        q_q <= q_src;
     end
+    generate if (OSTG != 0) begin : g_ostg
+        (* keep *) reg [2059:0] q_o;
+        integer h;
+        always @(posedge ck[0]) for (h = 0; h < 4; h = h + 1) q_o[515*h +: 515] <= q_rep[h];
+        assign q_src = q_o;
+    end else begin : g_direct
+        assign q_src = {q_rep[3], q_rep[2], q_rep[1], q_rep[0]};
+    end endgenerate
     wire unused_rst = rst[0];
 endmodule
 
@@ -49,7 +63,20 @@ module dsfd_svcio_od (
     output reg [513:0] od, output wire [0:0] of, output reg [0:0] bad);
     wire rn; ot_s81ph_rsync u_rs (.ck(ck[0]), .rst(rst[0]), .rn(rn));
     wire m_v, m_bad; wire [511:0] m_d;
+`ifdef SVCIO_OD_NOINQ
     ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(od_v), .s_d(od_d), .s_r(od_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+`else
+    // REDESIGN-S81 2026-10-08 (TT + consistent link budget -22.5 / TT re-STA -27.4: od_v pin -> 3 logic -> u_k.d1):
+    // every quadrant input through a pin-registered queue (ot_s81ph_inq, as dsfd_svcio_ad r3b), then the merge.
+    // +2 cycles on the od path; od_r = the queue's registered room2 (producer valid/ready contract unchanged).
+    wire [3:0] q0_v, q0_r; wire [2047:0] q0_d;
+    genvar gq;
+    generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_iq
+        ot_s81ph_inq u_iq (.clk(ck[0]), .rst_n(rn), .i_v(od_v[gq]), .i_d(od_d[512*gq +: 512]), .i_r(od_r[gq]),
+            .o_v(q0_v[gq]), .o_d(q0_d[512*gq +: 512]), .o_r(q0_r[gq]));
+    end endgenerate
+    ot_s81ph_fmerge #(.N(4)) u_m (.clk(ck[0]), .rst_n(rn), .s_v(q0_v), .s_d(q0_d), .s_r(q0_r), .o_v(m_v), .o_d(m_d), .bad(m_bad));
+`endif
     always @(posedge ck[0]) od <= {m_d, m_v & rn, rn};
     always @(posedge ck[0] or negedge rn) if (!rn) bad <= 1'b0; else bad <= m_bad;
     ot_fwd_clk_inv u_of (.a(ck[0]), .y(of[0]));

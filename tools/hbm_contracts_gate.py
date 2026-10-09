@@ -34,16 +34,23 @@ CT = 'rtl/hbm_accel/contracts_20261007/'
 
 PKT_SRC = [PKG, M256, CF + 'ot_hbm_collective_packet_fifo.sv', CF + 'ot_hbm_collective_packet_fifo_refill.sv']
 PKT_REFILL = CF + 'ot_hbm_collective_packet_fifo_refill.sv'
+# pin-registered II=1 queue (drive-0532 2026-10-08): ready = registered level with a 2-slot reserve, credit-flow output
+PKTR = CF + 'ot_hbm_collective_packet_fifo_ii1r.sv'
+PKTR_SRC = [PKG, M256, PKTR]
+PKTR_TB = CF + 'tb_packet_fifo_ii1r.sv'
 CREDIT_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv',
               'rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv',
               'rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv',
               CT + 'ot_hbm_coll_credit_producer.sv']
 SMSU_SRC = ['rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv', M64,
-            CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_sm_su_result_edge.sv']
+            CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv', CT + 'ot_hbm_sm_su_result_edge.sv']
+SMSU_PIN_SRC = ['rtl/hbm_accel/result_relay_stage_20261007/ot_hbm_result_relay_slice.sv', M64,
+                CT + 'ot_hbm_su_result_ingress.sv', CT + 'ot_hbm_su_result_pinshell.sv', CT + 'ot_hbm_sm_su_result_edge.sv']
 IDLE_SRC = [PKG, 'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv',
             'rtl/hbm_accel/collective_clock_entry_20261007/ot_hbm_collective_reset_entry.sv',
             'rtl/hbm_accel/collective_cdc_20261007/ot_hbm_collective_protected_cdc_refill.sv',
             CT + 'ot_hbm_coll_idle_insert.sv']
+IDLE_PIN_SRC = [CT + 'ot_hbm_coll_idle_insert.sv', CT + 'hfd_coll_idle_tx_pin.sv']
 
 
 def case(name, top, src, tb, marker, expect='pass', params=None, defines=None, mutate=None, fail_regex=None):
@@ -62,9 +69,34 @@ SUITES = dict(
         case('NEG_pkt_xfer_overwrites_head', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
              expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch|COUNT mismatch',
              mutate=(PKT_REFILL, 'wire xfer=c_pending&&(!c_held||take)&&!fault;', 'wire xfer=c_pending&&!fault;')),
+        case('NEG_pkt_no_correction', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'single correction failed',
+             mutate=(PKT_REFILL, 'correct64[j]=code[p-1]^(ovr&&syn==p[6:0]);', 'correct64[j]=code[p-1];')),
         case('NEG_pkt_fetch_overwrites_latch', 'tb_packet_fifo_refill', PKT_SRC, CF + 'tb_packet_fifo_refill.sv', r'PASS_II1 ',
              expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch|COUNT mismatch',
              mutate=(PKT_REFILL, 'wire fetch=c_unread!=0&&(!c_pending||xfer)&&!fault;', 'wire fetch=c_unread!=0&&!fault;')),
+    ],
+    pktr=[
+        case('pktr_depth256', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R '),
+        case('pktr_depth256_wreg', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ', params=dict(WREG=1)),
+        case('pktr_depth64', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ', params=dict(DEPTH=64)),
+        case('NEG_pktr_no_correction', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'DATA order mismatch',
+             mutate=(PKTR, 'correct64[j]=code[p-1]^(ovr&&syn==p[6:0]);', 'correct64[j]=code[p-1];')),
+        case('NEG_pktr_ready_reserve_1', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'unexpected fault|CAPACITY|COUNT mismatch',
+             mutate=(PKTR, 'RSV=DEPTH-2;', 'RSV=DEPTH-1;')),
+        case('NEG_pktr_fetch_ignores_credit', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'CONSUMER_OVERFLOW|PKT_CREDIT',
+             mutate=(PKTR, 'wire fetch=readable&&ocr_nz&&!fault_q;', 'wire fetch=readable&&!fault_q;')),
+        case('NEG_pktr_wreg_reads_unwritten', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64, WREG=1), fail_regex=r'DATA order mismatch|unexpected fault',
+             mutate=(PKTR, "wire readable=WREG?(c_unread>{8'b0,w_ce_q}):(c_unread!=9'd0);", "wire readable=c_unread!=9'd0;")),
+        case('NEG_pktr_ocr4_rate', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64, OCR=4, CB=4), fail_regex=r'II1 drain|STREAM'),
+        case('NEG_pktr_no_raw2_parity', 'tb_packet_fifo_ii1r', PKTR_SRC, PKTR_TB, r'PASS_II1R ',
+             expect='fail', params=dict(DEPTH=64), fail_regex=r'raw2 upset',
+             mutate=(PKTR, 'wire f3=v3&&(ue_q||(par2!=ovr_q)||(|corr[575:545]));', 'wire f3=v3&&(ue_q||(|corr[575:545]));')),
     ],
     credit=[
         case('credit_positive', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT '),
@@ -93,6 +125,19 @@ SUITES = dict(
              mutate=(CT + 'ot_hbm_coll_credit_producer.sv', 'localparam integer BOUND=WSTG+2*SYNC+H+7;', 'localparam integer BOUND=0;')),
         case('NEG_credit_dtx_below_bound', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
              expect='fail', params=dict(DTX_MIN=26), fail_regex=r'D_tx|DTX'),
+        # PIN=1 (redesign-hbm 2026-10-08): every data input lands in a pin flop (hfd_coll_credit_pin.sv)
+        case('credit_pin_positive', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             params=dict(PIN=1, DTX_MIN=29)),
+        case('credit_pin_positive_ratio', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             params=dict(PIN=1, DTX_MIN=29, TPH_PS=731, TCORE_PS=833)),
+        case('NEG_credit_pin_dtx_below_bound', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             expect='fail', params=dict(PIN=1, DTX_MIN=28), fail_regex=r'D_tx|DTX'),
+        case('NEG_credit_pin_no_send_reserve', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             expect='fail', params=dict(PIN=1, DTX_MIN=29), fail_regex=r'CREDIT_OVERSEND|CREDIT_OVERGRANT|CREDIT_OVERFLOW',
+             mutate=(CT + 'ot_hbm_coll_credit_producer.sv', "can_q<=PIN?(avail_n>{{(CW-1){1'b0}},1'b1}):(avail_n!=0);", "can_q<=avail_n!=0;")),
+        case('NEG_credit_pin_no_issue_reserve', 'tb_coll_credit_producer', CREDIT_SRC, CT + 'tb_coll_credit_producer.sv', r'PASS_CREDIT ',
+             expect='fail', params=dict(PIN=1, DTX_MIN=29), fail_regex=r'TX_FLIGHT',
+             mutate=(CT + 'ot_hbm_coll_credit_producer.sv', "allow_q<=inflight_n<(DTX-PIN);end", "allow_q<=inflight_n<DTX;end")),
     ],
     smsu=[
         case('smsu_edge_positive', 'tb_sm_su_result_edge', SMSU_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU '),
@@ -106,10 +151,22 @@ SUITES = dict(
              expect='fail', defines=['NEG_SM_FAULT'], fail_regex=r'SMSU_FAULT'),
         case('NEG_smsu_release_before_count', 'tb_sm_su_result_edge', SMSU_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
              expect='fail', fail_regex=r'SMSU_EARLY_RELEASE|SMSU_DATA',
-             mutate=(CT + 'ot_hbm_su_result_ingress.sv', "releasable<=releasable+(last?hq_rows:7'd0)-{6'b0,take};", "releasable<=releasable+{6'b0,put}-{6'b0,take};")),
+             mutate=[(CT + 'ot_hbm_su_result_ingress.sv', "releasable<=releasable+(last_q?last_rows_q:7'd0)-{6'b0,take};", "releasable<=releasable+{6'b0,put_q}-{6'b0,take};"),
+                     (CT + 'ot_hbm_su_result_ingress.sv', "rel_nz_q<=(releasable+(last_q?last_rows_q:7'd0)-{6'b0,take})!=7'd0;", "rel_nz_q<=(releasable+{6'b0,put_q}-{6'b0,take})!=7'd0;")]),
         case('NEG_smsu_credit_not_returned_on_pop', 'tb_sm_su_result_edge', SMSU_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
              expect='fail', fail_regex=r'SMSU_TIMEOUT|SMSU_CREDIT',
-             mutate=(CT + 'ot_hbm_su_result_ingress.sv', 'if(take)free_n=free_n+1\'b1;', '')),
+             mutate=(CT + 'ot_hbm_su_result_ingress.sv', "free_q<=free_q-(req_ok?req_rows_q:7'd0)+{6'b0,take};", "free_q<=free_q-(req_ok?req_rows_q:7'd0);")),
+        # PIN=1 (redesign-hbm 2026-10-08): pin shell (op pin flops + ack mask, credit-flow consumer side, OCR=4)
+        case('smsu_pin_positive', 'tb_sm_su_result_edge', SMSU_PIN_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
+             params=dict(PIN=1)),
+        case('smsu_pin_positive_long', 'tb_sm_su_result_edge', SMSU_PIN_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
+             params=dict(PIN=1, NST=49, OPS=400)),
+        case('NEG_smsu_pin_no_ack_mask', 'tb_sm_su_result_edge', SMSU_PIN_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
+             expect='fail', params=dict(PIN=1), fail_regex=r'SMSU_',
+             mutate=(CT + 'ot_hbm_su_result_pinshell.sv', 'assign c_op_v=op_v_p&&!ack_d;', 'assign c_op_v=op_v_p;')),
+        case('NEG_smsu_pin_extra_credit', 'tb_sm_su_result_edge', SMSU_PIN_SRC, CT + 'tb_sm_su_result_edge.sv', r'PASS_SMSU ',
+             expect='fail', params=dict(PIN=1), fail_regex=r'SMSU_OUT_(OVERFLOW|CREDIT)',
+             mutate=(CT + 'ot_hbm_su_result_pinshell.sv', 'ocr<=OCRV;', "ocr<=OCRV+1'b1;")),
     ],
     idle=[
         case('idle_200ppm_M1024', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE '),
@@ -128,6 +185,16 @@ SUITES = dict(
         case('NEG_idle_rule_removed', 'tb_coll_idle_insert', IDLE_SRC, CT + 'tb_coll_idle_insert.sv', r'PASS_IDLE ',
              expect='fail', fail_regex=r'IDLE_SPACING|IDLE_RX_OVERFLOW',
              mutate=(CT + 'ot_hbm_coll_idle_insert.sv', 'wire due=run_q>=M_EFF;', "wire due=1'b0;")),
+        # pin-registered wrapper (redesign-hbm 2026-10-08): slot equal every cycle, send one cycle late
+        case('idle_pin_wrapper_M1024', 'tb_coll_idle_tx_pin', IDLE_PIN_SRC, CT + 'tb_coll_idle_tx_pin.sv', r'PASS_IDLE_PIN '),
+        case('idle_pin_wrapper_M50', 'tb_coll_idle_tx_pin', IDLE_PIN_SRC, CT + 'tb_coll_idle_tx_pin.sv', r'PASS_IDLE_PIN ',
+             params=dict(M=50)),
+        case('NEG_idle_pin_late_slot', 'tb_coll_idle_tx_pin', IDLE_PIN_SRC, CT + 'tb_coll_idle_tx_pin.sv', r'PASS_IDLE_PIN ',
+             expect='fail', params=dict(M=50), fail_regex=r'IDLE_PIN_MISMATCH',
+             mutate=(CT + 'hfd_coll_idle_tx_pin.sv', '(run_t>=MM1)', '(run_t>=MM1+1)')),
+        case('NEG_idle_pin_send_uses_old_slot', 'tb_coll_idle_tx_pin', IDLE_PIN_SRC, CT + 'tb_coll_idle_tx_pin.sv', r'PASS_IDLE_PIN ',
+             expect='fail', params=dict(M=50), fail_regex=r'IDLE_PIN_MISMATCH',
+             mutate=(CT + 'hfd_coll_idle_tx_pin.sv', 'send_q<=in_v&&slot_q;', 'send_q<=in_v&&slot_d;')),
     ],
 )
 

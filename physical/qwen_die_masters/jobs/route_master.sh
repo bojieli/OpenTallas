@@ -11,6 +11,9 @@ CFG=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 D=/src/physical/qwen_die_masters
 source physical/qwen_die_masters/cfg/$CFG.env
+# drive-1143: a macro view lives only inside the ORFS image, so run_abi3_physical refuses host synth with
+# --macro-view / --memory-macro ("run --stages pnr"); any cfg naming one routes with STAGES=pnr.
+case " ${EXTRA[*]:-} " in *" --macro-view "*|*" --memory-macro "*) STAGES=pnr;; esac
 S=(); for f in $SRCS; do S+=(--source $f); done
 M=(); for m in "${MACROS[@]}"; do M+=(--macro $m); done
 SO=()
@@ -21,9 +24,9 @@ export OT_MM_FF_SDC=${OT_MM_FF_SDC:-physical/qwen_die_masters/io_ref_skew.sdc}
 echo "$(date -Is) start $NAME cfg=$CFG src=$(cat SOURCE_COMMIT 2>/dev/null) stop=$STOP" >> $W/STATUS
 python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@]}" \
   --die-area 0 0 $FW $FH --core-area 2.16 2.16 $(python3 -c "print(round($FW-2.16,3), round($FH-2.16,3))") \
-  "${PINS[@]}" "${EXTRA[@]}" \
-  --routing-layers M2 M7 --clock-port ${CLKPORT:-clk} --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
-  --clock-uncertainty-hold-ns 0.025 --orfs-corner WC --hold-corners WC,BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \
+  "${PINS[@]}" ${PINS:+--pin-regions-exhaustive} "${EXTRA[@]}" \
+  --routing-layers ${RLAYERS:-M2 M7} --clock-port ${CLKPORT:-clk} --clock-period-ns 0.770 --clock-uncertainty-ns 0.06 \
+  --clock-uncertainty-hold-ns 0.025 --orfs-corner ${CORNER:-WC} --hold-corners ${CORNER:-WC},BC --io-delay-fraction 0.2 --stages ${STAGES:-synth,pnr} \
   --place-density ${PD:-0.55} --hold-margin-ns ${HM:-0.010} --synth-timeout-seconds unlimited --flow-timeout-seconds unlimited \
   --orfs-var ADDER_MAP_FILE= --orfs-var NUM_CORES=${NC:-16} --orfs-var SDC_FILE=${QDMD:-$D}/${SDCF:-die_p770.sdc} --orfs-var QDM_SDC_DIR=${QDMD:-$D} \
   --orfs-var 'PLACE_PINS_ARGS=-min_distance 1 -min_distance_in_tracks' \
@@ -31,7 +34,7 @@ python3 tools/run_abi3_physical.py --view asap7 --top $TOP "${S[@]}" "${PARAMS[@
   --step-tcl PRE_GLOBAL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_GLOBAL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
   --step-tcl PRE_DETAIL_ROUTE=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_DETAIL_ROUTE=physical/qwen_die_masters/post_plain.tcl \
   --step-tcl PRE_FILLCELL=physical/qwen_die_masters/pre_ref_skew.tcl --step-tcl POST_FILLCELL=physical/qwen_die_masters/post_plain.tcl \
-  --orfs-var 'CTS_ARGS=-sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75' \
+  --orfs-var "CTS_ARGS=${CTSA:--sink_clustering_enable -repair_clock_nets -delay_buffer_derate 0.75}" \
   --orfs-var OT_IO_SKEW=90 --orfs-var OT_IO_HOLD_SKEW=50 --orfs-var "OT_REF_GLOB=$REFGLOB" \
   --orfs-var "OT_IO_INTER=$INTER" --orfs-var OT_IO_SKEW_INTER=150 "${SO[@]}" \
   --slew-margin-percent 30 --purpose signoff_target --nickname-tag qdm_$NAME \

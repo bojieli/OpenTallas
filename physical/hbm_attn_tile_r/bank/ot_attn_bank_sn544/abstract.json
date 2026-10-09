@@ -1,0 +1,66 @@
+{
+  "name": "ot_attn_bank_sn544",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_bk/sn1/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_bk/sn1/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_bank/ot_attn_bank_sn544:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_bk/physical/hbm_attn_tile_r/bank/bank_interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/routes_bk/sn1/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_bank/ot_attn_bank_sn544:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_bk/physical/hbm_attn_tile_r/bank/bank_interface.sdc:/interface.sdc:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/scratch/claude/hbm-attn/src_bk/physical/hbm_attn_tile_r/bank/bank_interface.sdc",
+    "sha256": "d23a245f295953e91f4b39765946e9263becccbf02c99f3d854d10259c5da609",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict"
+  },
+  "macro_views": [],
+  "files": {
+    "ot_attn_bank_sn544.lef": "a117818eb0933ea70858f715aa5c1540fe082a00fa9edd4971e7ef0b267c2b16",
+    "ot_attn_bank_sn544_ff.lib": "63f9823401a54101e048f37430e80b5dba89c6ad565997b37b48295a3e620966",
+    "ot_attn_bank_sn544_ss.lib": "e7d24223365ca7ae06e012f5f18df134e690a0c56740852b34b19ae1df3e2adc"
+  },
+  "ok": true
+}

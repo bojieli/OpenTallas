@@ -1,0 +1,128 @@
+{
+ "name": "code_pair_m2qd_e4ca6da7ac-tt",
+ "block": "ot_qwen_hbm_code_pair_margin",
+ "owner": "Claude:tk-ds-misc (code-pair)",
+ "purpose": "TT-BATCH (owner option B, one large batch): code_pair_m2qd_e4ca6da7ac re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: DS code-pair MARGIN2=2 DUAL-COPY receipt metadata (adoption job): closure-loop route, IO from measured insertion",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 80,
+ "source": {
+  "branch": "claude/takeover-code-pair-20261006",
+  "commit": "e4ca6da7af7b759a8df7c6ff6b29f5839f48a9c8"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_s1",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/exact_s1  -- +seed=1; rc=$?; cat {RUN}/exact_s1/compile.log {RUN}/exact_s1/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS_CODE_PAIR_MARGIN_EXACT"
+   },
+   {
+    "name": "exact_s2",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/exact_s2  -- +seed=2; rc=$?; cat {RUN}/exact_s2/compile.log {RUN}/exact_s2/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS_CODE_PAIR_MARGIN_EXACT"
+   },
+   {
+    "name": "neg_ue",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/neg_ue  -- +NEG_UE +seed=1; rc=$?; cat {RUN}/neg_ue/compile.log {RUN}/neg_ue/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS_CODE_PAIR_MARGIN_EXACT"
+   },
+   {
+    "name": "neg_dmr",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/neg_dmr  -- +NEG_DMR +seed=1; rc=$?; cat {RUN}/neg_dmr/compile.log {RUN}/neg_dmr/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "pass_regex": "PASS_CODE_PAIR_MARGIN_EXACT"
+   },
+   {
+    "name": "mut_tag_skew",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/mut_tag_skew -DCODE_PAIR_MARGIN_MUTANT_TAG_SKEW -- +seed=1; rc=$?; cat {RUN}/mut_tag_skew/compile.log {RUN}/mut_tag_skew/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "(Fatal|Assertion)"
+   },
+   {
+    "name": "mut_no_ue_gate",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/mut_no_ue_gate -DCODE_PAIR_MARGIN_MUTANT_NO_UE_GATE -- +NEG_UE +seed=1; rc=$?; cat {RUN}/mut_no_ue_gate/compile.log {RUN}/mut_no_ue_gate/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "fail_regex": "(Fatal|Assertion)"
+   },
+   {
+    "name": "neg_meta",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/neg_meta -- +NEG_META +seed=1; rc=$?; cat {RUN}/neg_meta/compile.log {RUN}/neg_meta/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "pass",
+    "pass_regex": "PASS_CODE_PAIR_MARGIN_NEGATIVE kind=META",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "mut_no_meta_cmp",
+    "cmd": "M2=2 bash tools/hbm_payload/run_code_pair_margin.sh {RUN}/mut_no_meta_cmp -DCODE_PAIR_MARGIN_MUTANT_NO_META_CMP -- +NEG_META +seed=1; rc=$?; cat {RUN}/mut_no_meta_cmp/compile.log {RUN}/mut_no_meta_cmp/run.log 2>/dev/null | tail -60; exit $rc",
+    "expect": "fail",
+    "fail_regex": "(Fatal|Assertion)",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes SRC={SRC} bash physical/qwen_code_pair_margin/route_cl.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk",
+   "threads": 16,
+   "peak_ram_gb": 80
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OUT={RUN}/routes SRC={SRC} bash physical/qwen_code_pair_margin/route_cl.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/exit {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/qwen_code_pair_margin2/closure"
+  }
+ ],
+ "cycles_added": 11,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

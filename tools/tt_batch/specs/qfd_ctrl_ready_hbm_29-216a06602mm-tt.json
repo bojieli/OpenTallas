@@ -1,0 +1,95 @@
+{
+ "name": "qfd_ctrl_ready_hbm_29-216a06602mm-tt",
+ "block": "qfd_ctrl_pc_29",
+ "owner": "Claude:qwen-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_ctrl_ready_hbm_29-216a06602mm re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Qwen JEDEC scheduler PC29: ready-cut RTL (8be556c2e) in its die domain hbm_976p6, sign-off 1.024 ns (PC0 re-STA of the existing route: SS +79.73) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/qwen-blocks-20261007",
+  "commit": "216a066028c0e048be9e4667641d5f254348d0dc"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "ctrl_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=29 -P tb_qwen_ctrl_pc.NEG=0 -o {RUN}/bench/ctrl0 rtl/test/tb_qwen_ctrl_pc_head.sv rtl/physical/ot_qwen_ctrl_pc_head.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/physical/ot_hbm_r14_stream_pc_ready.sv && vvp -n {RUN}/bench/ctrl0",
+    "expect": "pass",
+    "pass_regex": "^PASS ctrl_pc PC=29 reads=2048 writes=16",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ctrl_mutant",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -s tb_qwen_ctrl_pc -P tb_qwen_ctrl_pc.PC=29 -P tb_qwen_ctrl_pc.NEG=1 -o {RUN}/bench/ctrl1 rtl/test/tb_qwen_ctrl_pc_head.sv rtl/physical/ot_qwen_ctrl_pc_head.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv rtl/physical/ot_hbm_r14_stream_pc_ready.sv && vvp -n {RUN}/bench/ctrl1",
+    "expect": "fail",
+    "fail_regex": "^FAIL ctrl_pc",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_ctrl_ready_hbm_29.sdc SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_ctrl_ready_hbm_29 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_ctrl_pc_29 --out {RUN}/record/views/qfd_ctrl_pc_29 --image openroad/orfs:asap7lock  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_ctrl_ready_hbm_29.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_masters_final_20261007/qfd_ctrl_ready_hbm_29-216a06602mm"
+  }
+ ],
+ "cycles_added": "ready-cut controller (Codex 8be556c2e price); 1.024 ns hbm_976p6 domain as in the die clock plan (no new crossing)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

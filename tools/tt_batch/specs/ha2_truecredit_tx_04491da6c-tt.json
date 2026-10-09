@@ -1,0 +1,104 @@
+{
+ "name": "ha2_truecredit_tx_04491da6c-tt",
+ "block": "ot_ha2_truecredit_tx_phys",
+ "owner": "Codex:hbm/w2",
+ "purpose": "TT-BATCH (owner option B, one large batch): ha2_truecredit_tx_04491da6c re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Separate actual INJ2 truecredit tx screening/calibration. Actual collective parent IO unbound; external adoption hold required. Does not qualify by h2 view.",
+ "hosts": [
+  "ot-epyc2"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 96,
+ "source": {
+  "branch": "main",
+  "commit": "04491da6ced8430c9976dc56cf828dbe4d73633d",
+  "paths": [
+   "physical/ha2_truecredit_20261007",
+   "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+   "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv",
+   "tools/ha2_truecredit_physical.py",
+   "tools/ha2_truecredit_physical_model.py",
+   "tools/run_abi3_physical.py",
+   "tools/orfs_allcorner_spef.py",
+   "tools/w18/corner_sta.py",
+   "configs/pdk/asap7_local_liberty_lock.json"
+  ],
+  "required_files": [
+   "rtl/hbm_accel/ha2_ar/ot_ha2_prims.sv",
+   "rtl/hbm_accel/ha2_ar/ot_ha2_truecredit.sv",
+   "tools/ha2_truecredit_physical.py",
+   "tools/ha2_truecredit_physical_model.py",
+   "tools/run_abi3_physical.py",
+   "tools/orfs_allcorner_spef.py",
+   "tools/w18/corner_sta.py",
+   "configs/pdk/asap7_local_liberty_lock.json"
+  ]
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OT_SYNTH_MEMORY_MAX_BITS=71680 python3 tools/ha2_truecredit_physical.py --part tx --threads 8 --run {RUN}/routes/{NAME}_cal --cts-only",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 8,
+   "peak_ram_gb": 96
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_SYNTH_MEMORY_MAX_BITS=71680 python3 tools/ha2_truecredit_physical.py --part tx --threads 8 --run {RUN}/routes/{NAME}",
+   "ok": "test -s {RUN}/routes/{NAME}/corner_sta.json && test \"$(cat {RUN}/routes/{NAME}/build.exit)\" = 0 && test \"$(cat {RUN}/routes/{NAME}/corner.exit)\" = 0",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log",
+    "{RUN}/routes/{NAME}/corner.log"
+   ],
+   "peak_ram_gb": 96
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/physical.json {RUN}/routes/{NAME}/launch.json {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+   "physical/ha2_truecredit_20261007/tx_check_pins.tcl"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/physical/ha2_truecredit_20261007/tx_04491da6c"
+  }
+ ],
+ "no_bench_reason": "Source-matched generic20/reset4/endpoint3 already PASS; fixed-shape wrappers add no state or logic. Separate immutable wrapper lint/source/pin preflight accompanies candidate.",
+ "cycles_added": 0,
+ "merge_target": null,
+ "dispatch_prerequisites": [
+  "Fill measured memory reservation from host capacity; null is deliberate, no guessed cap",
+  "Replace 04491da6c name/source/record with clean committed pin",
+  "Install permanent external adoption hold until actual collective parent clock/IO join qualifies",
+  "Preserve all source-pinned prior gates and in-flight h2 route"
+ ],
+ "host_require": [
+  "ot-epyc2"
+ ],
+ "resource_basis": {
+  "available_mib": 390389,
+  "host_floor_gib": 100,
+  "reservation_gib": 96,
+  "basis": "Capacity reservation from current measured host headroom, not estimated peak or address-space limit.",
+  "snapshot": "2026-10-07T18:03Z"
+ },
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

@@ -1,0 +1,97 @@
+{
+ "name": "qfd_cst-orph2-a75cb556b-lvt-tc-hm25",
+ "block": "qfd_cst",
+ "owner": "Claude:orphans-2",
+ "purpose": "orphans-2 2026-10-08: qfd_cst (1,536 copies (every tile corridor)) revoked by the option-B link budget (closed SS-era r17 re-STA qfd_cst_signoff833_host-f1c7e6550: TT link budget -34.42, SETUP_FAIL_TT_IO_BUDGET_ONLY; never routed at TT). Class: constraint/flow (IO budget at TT, RTL register-to-register on every boundary). Fix: first TC route on main's master flow (route_master.sh cfg/qfd_cst.env: TC setup repair, link_budget_hook + link_budget_consistent sign-off, mm FF hold HM 0.025, LVT <=2%). 0 cycles.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/orphans2-20261008",
+  "commit": "a75cb556b8ed177f55a23a6bd34272e268da74e7"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "station_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/b0 -P tb_qwen_die_station.N=20000 -P tb_qwen_die_station.NEG=0 -P tb_qwen_die_station.SPLIT=0 rtl/test/tb_qwen_die_station.sv rtl/physical/ot_qwen_die_station.sv && vvp {RUN}/bench/b0 | tee {RUN}/bench/b0.log && grep -q \"^PASS\" {RUN}/bench/b0.log",
+    "expect": "pass",
+    "pass_regex": "^PASS station",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "station_negative",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/b1 -P tb_qwen_die_station.N=20000 -P tb_qwen_die_station.NEG=1 -P tb_qwen_die_station.SPLIT=0 rtl/test/tb_qwen_die_station.sv rtl/physical/ot_qwen_die_station.sv && vvp {RUN}/bench/b1 | tee {RUN}/bench/b1.log && grep -q \"^PASS\" {RUN}/bench/b1.log",
+    "expect": "fail",
+    "fail_regex": "^FAIL station",
+    "threads": 1,
+    "peak_ram_gb": 1,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MULTI_VT=lvt; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_cst.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_cst {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_cst --post-sdc physical/qwen_die_masters/signoff/qfd_cst.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_cst > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_cst.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/orphans2_20261008/routes/qfd_cst-orph2-a75cb556b-lvt-tc-hm25"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.025,
+ "route_corner": "TC",
+ "notes": "cycles added: 0 (Vt only; report the LVT cell mix)",
+ "merge_target": null
+}

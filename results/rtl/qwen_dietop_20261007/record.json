@@ -1,0 +1,35 @@
+{
+ "schema": "opentallas.qwen_dietop_record.v1",
+ "date": "2026-10-08",
+ "basis": "owner steer 2026-10-07 (academic validation: full-die GRT overflow 0, die STA on GRT parasitics, CTS-validated clock plan, IR, representative-region DRT) + owner decision option B (setup at TT 833.333 ps >= 0, hold at FF >= 0, SS sensitivity only)",
+ "host": "ot-epyc3 /srv/opentallas-scratch/claude/qwen-die-r20 (dietop_r21/, ir21/, ir22/, etm_tt/, regions21g/)",
+ "floorplan": {
+  "r21": {"die_um": [25037.856, 32801.76], "mm2": 821.286, "case": "cases/r21_pdn (12,299 macros incl. 8,965 relays; generated from an uncommitted state of tools/qwen_rom_fulldie_b3r2.py -- the committed generator gives 12,201 / 8,867 relays)"},
+  "r22": {"die_um": [25037.856, 32931.36], "mm2": 824.531, "delta_mm2": 3.245, "reticle_mm2": 858, "change": "129.6 um IO routing channel between the top tile row and the IO band (--io-chan, recipe r22, commit bfc2ac6c5)", "legal": "12,192 instances, 0 overlap, 0 outside, on-track PASS, pin access done", "token_path_stages": "unchanged (15,977 cycles per AR token, committed generator)", "unrepaired_relay_wires": "1 -> 0", "status": "PDN running; full-die GRT queued"},
+  "r22b": {"mm2": 825.612, "change": "172.8 um channel", "status": "PDN running"}
+ },
+ "grt": {
+  "pdn_t4p8": {"overflow": 71398, "by_layer": {"M6": 45028, "M8": 26221, "M5": 64, "M9": 70, "M7": 15}, "cause": "grt.tcl kept the r20c PG-proxy adjustments (M6-M9 0.146 = 0.05 via + 2 x 0.0439 PG; strip 0.53; hub/IO 0.1033) on an odb that holds the physical r5 PDN: PDN counted twice. The 48 remaining 2D overflow edges all sit at the io_serdes S face (2,048 M5 pins over tile t_54_23, OBS M1-M7) -> r22 channel", "drt": "detail route had been launched on it (ungated chain); killed at iter-0 10% after 3h45, 603,851 violations"},
+  "adjfix_t4p8": {"overflow": 0, "gcell_um": 4.8, "layers": "M4-M9", "adjustment": "M4/M5 0.30, M6-M9 0.05 (via reserve only), no PG-proxy region adjustments", "converged_at_extra_iteration": 5, "nets": 8057897, "wirelength_m": 2163.7, "wall": "0:54:23", "peak_rss_gb": 146, "usage_pct": {"M5": 31.57, "M7": 11.95, "M8": 7.10, "M9": 2.58}},
+  "lay_m6m9_t9p6": {"overflow": 0, "gcell_um": 9.6, "layers": "M6-M9", "wirelength_m": 2235.9, "note": "layer-assignment variant; worse at TT (see sta)"},
+  "gate": "chain_gated.sh: detail route only when the final GRT congestion Total == 0; flat full-die DRT dropped by owner steer"
+ },
+ "sta": {
+  "parasitics": "estimate_parasitics -global_routing on the adjfix_t4p8 guides (overflow 0); die clocks ideal at the region roots, setup uncertainty 60 ps, hold 25 ps",
+  "views": "ETMs from routed ODB+SPEF (write_timing_model): qfd_cst/qfd_chead <- ot_qwen_die_station signoff833 (f1c7e6550) also bound by direction to all r21 relays; qfd_port_tiles_* <- slab_m8; qfd_cdc <- ot_qwen_stream4_cdc_pc r11a (TT = its SS ETM: the routed ODB was deleted from EPYC3 on 2026-10-08 02:12 UTC); 27 masters ASSUMED single-flop constants (TT = SS constants)",
+  "tt_setup": {"wns_ps": 50.84, "violators": 0, "endpoints": 3088411, "worst_by_class": {"qfd_cdc|etm(SS)": 50.84, "qfd_rly|etm": 103.33, "qfd_chead|etm": 162.78, "qfd_cst|etm": 172.47}},
+  "ff_hold": {"wns_ps": -5.64, "violators": 412709, "all_on": "qfd_tile ASSUMED constant view (same-tile t_out->n_a; no tile ETM exists)", "characterised_worst": {"qfd_kvc|assumed": 54.8, "qfd_cdc|etm": 116.41, "qfd_cst|etm": 119.68, "qfd_rly|etm": 126.56}},
+  "ss_sensitivity": {"wns_ps": -90.23, "violators": 1124207, "by_class": {"qfd_rly|etm": -90.23, "qfd_chead|etm": -37.95, "qfd_cst|etm": -20.02, "qfd_cdc|etm": 50.84}},
+  "layer_variant_m6m9": {"tt_wns_ps": -137.66, "tt_violators": 74, "ss_wns_ps": -342.38, "ff_hold_ps": -5.84, "verdict": "rejected; keep M4-M9"},
+  "history": {"placement_parasitics_3p9fF_views_ss": -286.74, "grt_nopdn_signoff833_views_ss": -132.16}
+ },
+ "etm_tt_internal_ws_ps": {"cst": {"setup": 118.1, "hold": 52.5}, "chead": {"setup": 162.9, "hold": 41.6}, "slab_m8": {"setup": 143.2, "hold": 23.7}},
+ "ir": {
+  "method": "windowed PSM on the r5 PDN, block power densities, 200 um guard band of continuing grid/bumps; judged = worst rail-to-rail (VDD drop + VSS rise at one node) inside the guard band",
+  "judged_mv": {"r22 io_edge": 29.43, "r22 tile_field": 16.09, "r21 shoreline_w": 16.44, "r21 spine_hub": 20.72, "r21 spine_slab": 16.08},
+  "budget_mv": 35.0, "verdict": "PASS all windows",
+  "raw_window_max_mv": "41.8-46.4 rail-to-rail, at the window boundary (cut artefact); per-rail raw 35-38 mV is what the 18:17 audit quoted"
+ },
+ "clock_plan": "UNVALIDATED at die scale: region CTS on macro-filled windows produced 100-130 ns latencies (buffers legalised at 82.6% fixed-macro utilisation, no reserved clock sites) -> invalid vehicle; committed region_cts vehicle: pair skew 61.6 ps (1 tile row) to 209 ps (4x4 tiles, 5.26 mm) at SS",
+ "regions": "guided windows (tools/qwen_die_region_guided.py: cut from the adjfix_t4p8 checkpoint, pins where each net's full-die guide crosses the edge): gw_cong DRT running (iter 0 10%: 0 violations; GRT-parasitic STA SS +220.26 / FF -5.84 assumed-tile); gw_io / gw_spine / gw_col cutting"
+}

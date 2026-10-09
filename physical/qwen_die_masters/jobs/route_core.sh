@@ -7,6 +7,9 @@ set -uo pipefail
 NAME=$1; FB=$2; UTIL=$3; DENS=$4; OUT=$5; STOP=${6:-}
 S=${SRC:?}; R=$OUT/$NAME
 Y=/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys
+# CRASH-TRIAGE 2026-10-08: yosys 0.68 (assert-enabled build) runs Module::check on a thread pool; under load the
+# prep failed nondeterministically (core_pu-30619b552-tt-kh: MEMID assert on attempt 1, port_input assert on attempt 2,
+# both right after hierarchy; two reruns passed).  One worker thread for the prep / write yosys runs only.
 mkdir -p $R; cd $S
 # the loop source snapshot carries no results/: restore the retained screen parameter set the prep reads
 RS=results/rtl/qwen_rom_core_takeover_20261005/retained_screen/synth.ys
@@ -15,10 +18,10 @@ echo "$(date -Is) start $NAME fb=$FB util=$UTIL dens=$DENS src=$(cat $S/SOURCE_C
 BOPT=; CUTOPT=; case $FB in *p) BOPT="$BOPT --pinreg"; CUTOPT=--drop-feedthrough; FB=${FB%p};; esac; case $FB in *u) BOPT="$BOPT --su-in"; FB=${FB%u};; esac; case $FB in *s) BOPT="$BOPT --suif"; FB=${FB%s};; esac; case $FB in *m) BOPT="$BOPT --meif"; FB=${FB%m};; esac; case $FB in *n) BOPT="$BOPT --nxreg"; FB=${FB%n};; esac; case $FB in *a) BOPT="$BOPT --amq"; FB=${FB%a};; esac; case $FB in *b) BOPT="$BOPT --bound"; FB=${FB%b};; esac
 rm -rf $R/prep $R/context_src
 python3 tools/qwen_rom_core_ctx_claude.py --out $R/prep --fallback $FB $BOPT || exit 2
-$Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1 || exit 3
+YOSYS_MAX_THREADS=1 $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1 || exit 3
 python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json $CUTOPT || exit 4
 mkdir -p $R/context_src/rtl $R/context_src/physical
-$Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1 || exit 5
+YOSYS_MAX_THREADS=1 $Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1 || exit 5
 cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/; mkdir -p $R/context_src/tools; cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/
 if [ "${CORE_DIE_IO:-0}" = 1 ]; then
   # Apply the selected die load in both the measured boundary and the plain

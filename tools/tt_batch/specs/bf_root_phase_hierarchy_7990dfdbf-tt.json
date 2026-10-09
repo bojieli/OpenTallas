@@ -1,0 +1,150 @@
+{
+ "name": "bf_root_phase_hierarchy_7990dfdbf-tt",
+ "block": "ot_s81_bf_native_root_phase",
+ "owner": "Codex:s81/bf_pq",
+ "purpose": "TT-BATCH (owner option B, one large batch): bf_root_phase_hierarchy_7990dfdbf re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: BF local phase root physical successor: semantic kept-hierarchy pin lookup; identical b73 RTL/exact vehicle, no latency/area delta.",
+ "hosts": [
+  "ot-epyc2",
+  "ot-epyc1tb",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 60,
+ "source": {
+  "commit": "7990dfdbfd8e005baf326b193683dd3f60600549",
+  "branch": "main",
+  "extra_paths": [
+   "results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact"
+  ],
+  "required_files": [
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/common/ot_prefix.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_cg.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_delay.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/hdc/ot_hdc_fpu.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/proto/ot_fp32_add_rne_pipe.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/test/v41_runtime/ot_rom_4096x274_m8_rt.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/test/v41_runtime/ot_rom_8192x274_m8_rt.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41die/ot_v41_pair_w17w10.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bf16_lanes2.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bmul2.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_chain2.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_fadd.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_rom_elem_w10.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/rtl/v41rom/ot_v41_segtree2.sv",
+   "physical/s81_bf_root_phase/oracle_pinned/source_binding.json",
+   "physical/s81_bf_root_phase/pinned/rtl/common/ot_prefix.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_bterm2_w10.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_chain2.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_fadd.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+   "physical/s81_bf_root_phase/pinned/rtl/v41rom/ot_v41_segtree2.sv",
+   "results/rtl/dsrom_actual_element_rne_wake_prepare_20261002/sourceplan.json",
+   "rtl/s81/ot_s81_bf_native.sv",
+   "rtl/s81/root_phase/ot_s81_bf_native_root_phase.sv",
+   "rtl/test/dsrom_actual_element_numerical_expected.svh",
+   "rtl/test/dsrom_actual_element_numerical_rom.cpp",
+   "rtl/test/dsrom_actual_element_numerical_stimulus.svh",
+   "rtl/test/tb_dsrom_actual_element_rne_wake.sv",
+   "rtl/v41die/ot_v41_pair_w17w10_rne_wake_prepare.sv",
+   "rtl/v41rom/ot_v41_bf16_lanes2_rne_prepare.sv",
+   "rtl/v41rom/ot_v41_bmul2_rne_prepare.sv",
+   "rtl/v41rom/ot_v41_bmul_subnormal_rne_prepare.sv",
+   "rtl/v41rom/ot_v41_rom_elem_w10_rne_wake_prepare.sv",
+   "tools/dsrom_actual_element_numerical_oracle.py",
+   "tools/prepare_dsrom_actual_element_gate.py",
+   "tools/prepare_dsrom_actual_element_numerical.py",
+   "tools/prepare_dsrom_actual_element_rne_wake.py",
+   "tools/s81/run_bf_root_phase_exact.py",
+   "tools/s81/bf_root_phase_exact_reuse.py",
+   "physical/s81_bf_root_phase/exact_reuse_binding.json",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact/record.json",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact/bench/terminal.json",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact/bench/positive/run.log",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact/bench/mutant_front_pair/run.log",
+   "results/rtl/s81_bf_root_phase_b73d54a9c_exact/bench/mutant_half_pv/run.log"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "source_identical_exact",
+    "cmd": "python3 tools/s81/bf_root_phase_exact_reuse.py --work {RUN}/bench_reuse",
+    "expect": "pass",
+    "pass_regex": "BF_ROOT_PHASE_EXACT_REUSE_PASS generated_sources=49",
+    "min_count_regex": "generated_sources=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; OUT={RUN}/routes SRC={SRC} bash physical/s81_bf_root_phase/route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 16,
+   "peak_ram_gb": 60
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OUT={RUN}/routes SRC={SRC} bash physical/s81_bf_root_phase/route.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/exit {RUN}/routes/{LABEL}/MANIFEST {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "half_multicycle_applied",
+    "cmd": "for c in ss ff; do grep -q 'OT_BF_HALF multicycle on [1-9]' {RUN}/routes/{LABEL}/work/orfs/w18_sta_$c.log || exit 1; done"
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_bf_root_phase/clock.sdc",
+   "physical/s81_bf_root_phase/signoff_ref.sdc",
+   "physical/s81_bf_root_phase/half_mc.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_rom_4096x274_m8"
+  ]
+ },
+ "hold_eco": {
+  "enabled": false,
+  "reason": "Establish fresh SS/FF/root gating result before ECO."
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "no budget sheet for ot_s81_bf_native (dsfd_bf is a different master/pin contract); IO from the measured insertion"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/s81_bf_root_phase_hierarchy_7990dfdbf"
+  }
+ ],
+ "cycles_added": "0 relative to half-rate baseline; existing HALF cost is retained",
+ "merge_target": null,
+ "no_bench_reason": "Reuses committed full-pair positive and both actual negative controls via source-identical 49 generated source hashes; fresh exact_reuse gate checks those hashes and all immutable evidence.",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

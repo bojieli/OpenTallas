@@ -1,0 +1,27 @@
+{
+ "schema": "opentallas.w18.export_view.v1",
+ "name": "qfd_io_emb_tap",
+ "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/qfd_io_emb_tap-c1e4eba84tt/routes/qfd_io_emb_tap_c1e4eba84tt/work/orfs",
+ "post_sdc": "physical/qwen_die_masters/signoff/qfd_io_emb_tap.sdc",
+ "ss": {
+  "done": true,
+  "ws_max": "-2.679290123097644e-11",
+  "ws_min": "1.0734303723669569e-10"
+ },
+ "tt": {
+  "done": true,
+  "ws_max": "1.2810924543416036e-10",
+  "ws_min": "6.923034368000458e-11"
+ },
+ "ff": {
+  "done": true,
+  "ws_max": "2.1712232012305321e-10",
+  "ws_min": "3.8535633017922066e-11"
+ },
+ "files": {
+  "qfd_io_emb_tap.lef": "68e653d6c2c85b62a850fc7096da34fd576adc6859304b57a348d5da1f290123",
+  "qfd_io_emb_tap_ff.lib": "5bb30f1fff74a76e2de5c5e8bfde03b6c2df0f8581288028af611a0b74b29a15",
+  "qfd_io_emb_tap_ss.lib": "ff0f62fcec33f15b27f207458dc6f13d30f0aea50c5e6f80a5095d3536a8ac8a",
+  "qfd_io_emb_tap_tt.lib": "4325128ca956f735c6b509149fca534b05c97794b46817253fe6f338e00d6d42"
+ }
+}

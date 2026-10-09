@@ -69,6 +69,9 @@ CTRL_W, STRIP_W = 247.536, 328.32
 RE_H = 1998.0
 FIFO = (96.768, 136.08)
 IO_DEPTH = 1563.84
+# r22 (2026-10-07): horizontal routing channel between the top tile row and the IO band (0 = r21: the IO macros sit
+# directly on the top tile row, so IO words leaving an S face land on a tile body (OBS M1-M7) and escape on M8/M9 only)
+IO_CHAN = 0.0
 STATION = (CORR, 69.12)        # corridor station / column-head frame
 LST_V = (VCH, 34.56)
 LST_H = (34.56, HCH)
@@ -78,6 +81,7 @@ HUB_EL = 412.56
 # pseudo-channel in a column between the controller and the strip; the controller -> row-engine read bus is carried
 # through them (controller -> CDC HCLK side, CDC core side -> the row engine serving that PC).
 CDC = None
+XCOL = 0.0          # qwen-vm-me r21m: width (um) of a third spine column C east of the E column (0: two columns)
 STRIP_SPAN = False             # r17d: strip/CDC/controller PG regions per stack span instead of the full column
 # r18 (die-top lint Q1-Q15, main 694e21a6e): near-HBM attention DROPPED (no row engines, no hub combine); the strip
 # column keeps one KV landing concentrator per stack (qfd_kvc, stack span tall, KVC_W wide: the strip-end link
@@ -215,7 +219,7 @@ def _build(spine_w, tree_mode):
     x_wband = up(EDGE, GX)
     x_arr_w = up(x_wband + band, GX)
     x_spine = x_arr_w + 32 * TILE_SLOT[0]
-    x_arr_e = up(x_spine + 2 * cw + VCH, GX)
+    x_arr_e = up(x_spine + 2 * cw + VCH + XCOL, GX)
     x_eband = x_arr_e + 32 * TILE_SLOT[0]
     W = up(x_eband + band + EDGE, GX)
     # y layout: 7 rows, channel S, 10 rows, channel N, 7 rows, IO band
@@ -231,7 +235,7 @@ def _build(spine_w, tree_mode):
         y += TILE_SLOT[1]
     y_top = y
     mid = row_y[12]
-    y_io = y_top
+    y_io = y_top + IO_CHAN
     H = up(y_io + IO_DEPTH + EDGE, GY)
     insts = []
     regions = []
@@ -453,6 +457,8 @@ def _build(spine_w, tree_mode):
                            IO_DEPTH - SHAVE, kind='xfifo', region='io', domain='cdc')
         insts.append(io['xfifo'])
     regions.append(dict(name='io_band', kind='io', rect=[x_arr_w, y_io, x_eband, y_io + IO_DEPTH]))
+    if IO_CHAN > 0:
+        regions.append(dict(name='io_chan', kind='channel', rect=[x_arr_w, y_top, x_eband, y_io]))
     # ---- link waypoints: vertical legs in the spine channel, corner at the channel heights, horizontal
     lst = []
     legs = {}
@@ -1427,6 +1433,9 @@ WINDOWS = {
     # r17: a full band-slab stack (bands 1 W/E: 8 routed port groups each) at its measured density
     'spine_slab': lambda g: (g['x_spine'] - 2 * TILE_SLOT[0], g['row_y'][6] - 1300, g['x_arr_e'] + 2 * TILE_SLOT[0],
                              g['row_y'][6] + 1300),
+    # r22: the IO edge -- top tile rows, the IO routing channel and the SerDes / UCIe end of the IO band
+    'io_edge': lambda g: (g['x_arr_e'] + 20 * TILE_SLOT[0], g['y_top'] - 1300, g['x_arr_e'] + 28 * TILE_SLOT[0],
+                          g['y_io'] + IO_DEPTH),
 }
 # r17: measured per-instance power density (W/mm2) by master prefix, overriding the region density under the
 # instance (empty = the b3r16 region densities everywhere)

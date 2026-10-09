@@ -8,13 +8,13 @@
 // Negatives (defines): NEG_NO_RESERVATION (an op started without a grant), NEG_EXTRA_ROW (a repeated row),
 // NEG_SM_FAULT (SM fault pin) -> the ingress must raise fault.
 module tb_sm_su_result_edge;
- parameter integer NST=4, OPS=200, SEED=11;
+ parameter integer NST=4, OPS=200, SEED=11, PIN=0, OCR=4;
  reg clk=0;always #0.5 clk=~clk;
  reg rst_n=0;
  reg rv=0;reg [11:0] rrow=0;reg [255:0] rdata=0;reg sm_fault=0;
- reg op_v=0;reg [6:0] op_rows=0;wire op_r;
+ reg op_v=0;reg [6:0] op_rows=0;wire op_ack;
  wire out_v;reg out_r=0;wire [11:0] out_row;wire [255:0] out_data;wire op_done;wire [6:0] op_done_rows;wire fault;wire [6:0] free_o;
- ot_hbm_sm_su_result_edge #(.NST(NST)) dut(.*);
+ ot_hbm_sm_su_result_edge #(.NST(NST),.PIN(PIN),.OCR(OCR)) dut(.*);
  function automatic [255:0] golden(input integer op,input integer row);
   for(integer i=0;i<8;i=i+1)golden[i*32+:32]=(op*32'h9e3779b1)^(row*32'h85ebca6b)^(i*32'hc2b2ae35)^32'h27d4eb2f;
  endfunction
@@ -29,10 +29,12 @@ module tb_sm_su_result_edge;
 `ifdef NEG_NO_RESERVATION
    if(n_res==5)skip_now=1; else
 `endif
-   if($urandom%4!=0)begin op_v=1;op_rows=rows[n_res];end
+   // present the next op (held until op_ack; may also be withdrawn and re-presented before it is taken)
+   // PIN=1: a registered SU drops op_v one cycle after it sees op_ack (the shell's ack mask must absorb it)
+   if(op_ack)begin if(PIN!=0)begin op_v=1;op_rows=rows[n_res];end end else if($urandom%4!=0)begin op_v=1;op_rows=rows[n_res];end
   end
  end
- always @(posedge clk)if(rst_n&&((op_v&&op_r)||skip_now))n_res<=n_res+1;
+ always @(posedge clk)if(rst_n&&(op_ack||skip_now))n_res<=n_res+1;
  // ---------------- SM: executes reserved ops in order, rows in a random permutation, one-way face
  integer perm[0:63];integer emitted=0,cur=-1,tmp,a,b;
  initial begin
@@ -83,7 +85,14 @@ module tb_sm_su_result_edge;
  end
  // ---------------- consumer
  integer dop=0,dcnt=0,ndone=0,lat_done_max=0,lat_done_sum=0;reg [63:0] dseen=0;
- always @(negedge clk)out_r=($urandom%7)!=0&&!((cyc/300)%5==4);
+ // PIN=0: same-cycle ready (take = out_v && out_r).  PIN=1: credit flow: every out_v is a delivered row into
+ // the consumer's OCR-row buffer; out_r is a credit-return pulse per freed slot (same random drain pattern).
+ integer bcnt=0;wire take_tb=(PIN!=0)?out_v:(out_v&&out_r);
+ always @(negedge clk)out_r=($urandom%7)!=0&&!((cyc/300)%5==4)&&((PIN==0)||bcnt>0);
+ always @(posedge clk)if(rst_n&&PIN!=0)begin
+  bcnt=bcnt+(out_v?1:0)-(out_r?1:0);
+  if(bcnt>OCR)$fatal(1,"SMSU_OUT_OVERFLOW consumer buffer %0d > OCR=%0d",bcnt,OCR);
+ end
  always @(posedge clk)if(rst_n)begin
   if(fault)$fatal(1,"SMSU_FAULT ingress fault raised (free=%0d op=%0d)",free_o,dop);
   if(op_done)begin
@@ -92,7 +101,7 @@ module tb_sm_su_result_edge;
    lat_done_sum=lat_done_sum+(cyc-last_in_cyc[ndone]);if(cyc-last_in_cyc[ndone]>lat_done_max)lat_done_max=cyc-last_in_cyc[ndone];
    ndone=ndone+1;
   end
-  if(out_v&&out_r)begin
+  if(take_tb)begin
    if(last_in_cyc[dop]<0)$fatal(1,"SMSU_EARLY_RELEASE row of op %0d released before its last row arrived",dop);
    if(out_row>=rows[dop]||dseen[out_row[5:0]])$fatal(1,"SMSU_DATA op %0d bad/repeated row %0d",dop,out_row);
    if(out_data!==golden(dop,out_row))$fatal(1,"SMSU_DATA op %0d row %0d payload mismatch",dop,out_row);

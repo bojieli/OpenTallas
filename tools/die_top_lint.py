@@ -101,7 +101,20 @@ QWEN_R20C = dict(QWEN_R19, tree_interleave=True)          # r19 + interleaved tr
 QWEN_R20F1 = dict(QWEN_R20C, bw_wp=1)                     # r20c + a block-word waypoint in every corridor crossed
 QWEN_R20G = dict(QWEN_R20C, su_core_clock=True)          # r20c + SU64/SFU and VM on the 1.2 GHz core clock
 QWEN_R21 = dict(QWEN_R20C, slab_bw_m8=True, relay_pitch=430.56)  # r20c + slab words on M8 + relays at the measured 430.56 um reach
-QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21}
+QWEN_R21V = dict(QWEN_R21, su_vm_abut=True)  # r21 + the SU64 <-> VM bus as abutted pins (qwen-split-exact)
+QWEN_R21F = dict(QWEN_R21V, rtl_finish=True)  # r21v + the finished tree-top / VM / embedding-root abstracts (qwen-rtl-finish)
+QWEN_R22 = dict(QWEN_R21, io_chan=129.6)  # r21 + 129.6 um IO-band routing channel above the top tile row (SerDes pin escape)
+# r21f + the banked VM with SU replicas and the ME result path, column C, tree lanes, band serializers (qwen-vm-me);
+# the SU and the VM on the core clock (r20g: the RTL runs them on the 1.2 GHz engine clock)
+QWEN_R21M = dict(QWEN_R21F, su_core_clock=True, vm_me=True)
+# r21m + the band-integrated tree top (qwen-band-integrate: ot_qfd_sp_tree_top BAND 1 with ot_qfd_band_upper,
+# cfg qfd_sp_tree_top_b 777.6 x 3,732.48 PD 0.55); r21bt: the _t variants (tree top 4,354.56 PD 0.45, band lanes
+# qfd_sp_band_lanes_t 1,555.2 PD 0.40)
+QWEN_R21B = dict(QWEN_R21M, tt_h=3732.48)
+QWEN_R21BT = dict(QWEN_R21M, tt_h=4354.56, bl_h=1555.2)
+QWEN_RECIPES = {'r18': QWEN_R18, 'r19': QWEN_R19, 'r20c': QWEN_R20C, 'r20f1': QWEN_R20F1, 'r20g': QWEN_R20G, 'r21': QWEN_R21,
+                'r22': QWEN_R22, 'r21v': QWEN_R21V, 'r21f': QWEN_R21F, 'r21m': QWEN_R21M,
+                'r21b': QWEN_R21B, 'r21bt': QWEN_R21BT}
 QWEN_RECIPE = 'r17b'     # --qwen-recipe
 QWEN_REF = None          # --qwen-ref
 QSRC = None              # dict(root, ref, commit, overlay)
@@ -2025,6 +2038,19 @@ def rom_readme(recs, out):
 
 
 # ------------------------------------------------------------------------------------------------ main
+def margin(die, m):
+    """FP-LINT (owner 2026-10-08): the generators' die relay margin (SS reach 504 um, no relay on the far side of its
+    driver) on the model this lint built; the qwen ROM die has no relay chains in this model."""
+    try:
+        if die.startswith('s81'):
+            return S.margin_lint(m)
+        if die == 'hbm':
+            return H.margin_lint(m)
+    except Exception as ex:  # noqa: BLE001 - a lint add-on must not hide the connectivity findings
+        return dict(verdict='ERROR', error=f'{type(ex).__name__}: {ex}')
+    return dict(verdict='N/A')
+
+
 def run_lint(die, out, top_fix=False, tag=''):
     m, pw, M, tool = build(die, top_fix)
     R8_ACTIVE[0] = die.startswith('s81r8')
@@ -2083,6 +2109,7 @@ def run_lint(die, out, top_fix=False, tag=''):
                       abut_without_channel=[dict(compute=k[0], hub_kind=k[1], hub=k[2], **v) for k, v in sorted(ab.items())]),
         meso_forwarded_gap=dict(gp, clock_region_crossings=xr, clock_domain_crossings=domain_crossings(mp)),
         block_shape=block_shape(die, mp, real), counterparts=counterparts(die, m, pw),
+        margin_lint=margin(die, m),
         abstract_ports_without_net=ports_without_net(m, M, pw),
         top_fixes=TOP_FIXES if top_fix else {},
         verilog=dict(em, filelist=f'{top}.f', rtl_files=len(files), unresolved_modules=unresolved))
@@ -2095,7 +2122,7 @@ def main(argv=None):
     ap.add_argument('mode', choices=['lint', 'abstracts', 'vlsum'])
     ap.add_argument('--top')
     ap.add_argument('--die', choices=['s81_layer', 's81_head', 'hbm', 'qwen_rom', 'rom', 's81r8_layer', 's81r8_layer1', 's81r8_head'])
-    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21'])
+    ap.add_argument('--qwen-recipe', default='r17b', choices=['r17b', 'r18', 'r19', 'r20c', 'r20f1', 'r20g', 'r21', 'r22', 'r21v', 'r21f', 'r21m', 'r21b', 'r21bt'])
     ap.add_argument('--qwen-ref', help='git ref of the Qwen die generator when it is not on this tree (e.g. f76c3603b)')
     ap.add_argument('--top-fix', action='store_true')
     ap.add_argument('--s81-opts', default='', help='s81r8 dies: generator die options of the case, e.g. '

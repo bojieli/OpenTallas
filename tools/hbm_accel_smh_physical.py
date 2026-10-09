@@ -24,6 +24,8 @@ in / leaves a flop with its wire inside the block; the element top carries the W
 """
 from __future__ import annotations
 
+import os
+
 import argparse
 import json
 import math
@@ -323,7 +325,7 @@ def sdc_strip(strip, lat, lat_ff=None, period=833, skew=0, die_skew=150, hold_io
                f"set elem_in [get_ports {{{elem[0]}}}]",
                f"set elem_out [get_ports {{{elem[1]}}}]",
                "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
-               "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+               "set_input_delay -min [expr 833 * 0.2] -clock nbr_clk $elem_in   ;# RULE H1: hold_io on the sender output min only",
                "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
                "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out"]
         base = base.replace(f"set nbr_in [get_ports {{{nbr[0]}}}]", "\n".join(add) + f"\nset nbr_in [get_ports {{{nbr[0]}}}]")
@@ -380,10 +382,14 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
          "# At SS the output hold holds by construction (same insertion both sides); input hold at FF is checked by",
          "# the parent on the real pair.",
          f"set_clock_latency -source {lat} [get_clocks nbr_clk]",
+         "# setup-triage 2026-10-07: the latency above is a PLANNING insertion; sign-off must re-reference nbr_clk to the routed",
+         "# block's measured insertion with physical/common_flow/nbr_clk_measured.sdc as a post-SDC (front_n: planning",
+         "# 688 vs measured 506..600 cost the element inputs 135 ps: SS in2reg -53.6 -> +81.4 on re-STA).",
          f"set dlo {float(lat) - float(lat_ff):g}",
          "# (margin rule, clarified 2026-10-06) setup: abutting ports between pieces of one element (one clock region)",
          "# budget the region pair skew + 25 (skew); the element pins cross a die wire to another region (die_skew).",
-         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io), closed by hold repair.",
+         "# Hold: FF-corner insertion (dlo) and a 50 ps IO uncertainty (hold_io) on the SENDER output min only (rule H1,",
+         "# h1-verify 2026-10-08: the receiver input min carried it too), closed by hold repair.",
          f"set skew {skew}",
          f"set die_skew {die_skew}",
          f"set hold_io {hold_io}",
@@ -399,7 +405,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "set elem_in [get_ports {start op_* d_valid d_base* d_lines* req_ready rsp_* xw_* release_in}]",
               "set elem_out [get_ports {start_ready busy d_ready req_v req_addr* req_tag* rv rrow* rdata* fault arrive released}]",
               "set_input_delay -max [expr 473 + $die_skew] -clock nbr_clk $elem_in",
-              "set_input_delay -min [expr 833 * 0.2 - $hold_io] -clock nbr_clk $elem_in",
+              "set_input_delay -min [expr 833 * 0.2] -clock nbr_clk $elem_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 323 + $die_skew] -clock nbr_clk $elem_out",
               "set_output_delay -min [expr 833 * 0.2 + $dlo - $hold_io] -clock nbr_clk $elem_out",
               "set nbr_in [get_ports {qin_*}]",
@@ -415,7 +421,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
               "# SS input hold pessimistic, which over-filled CTS hold repair (RSZ-0060 max buffer count at hold margin 25).",
               "set refpin [lindex [all_registers -clock_pins -edge_triggered] 0]",
               "set_input_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_in",
-              "set_input_delay -min [expr 30 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_in",
+              "set_input_delay -min 30 -clock core_clk -reference_pin $refpin $nbr_in   ;# RULE H1: hold_io on the sender output min only",
               "set_output_delay -max [expr 300 + $skew] -clock core_clk -reference_pin $refpin $nbr_out",
               "set_output_delay -min [expr 50 - $hold_io] -clock core_clk -reference_pin $refpin $nbr_out   ;# the neighbour lands it >= 50 ps inside",
               "set_load 2.0 [all_outputs]",
@@ -423,7 +429,7 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
     else:
         s += ["# abutting ports: 300 ps of the neighbour's flop / wire outside, its clock insertion carried by nbr_clk",
           "set_input_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_in",
-          "set_input_delay -min [expr 30 - $hold_io] -clock nbr_clk $nbr_in",
+          "set_input_delay -min 30 -clock nbr_clk $nbr_in   ;# RULE H1: hold_io on the sender output min only",
           "set_output_delay -max [expr 300 + $skew] -clock nbr_clk $nbr_out",
           "set_output_delay -min [expr 50 + $dlo - $hold_io] -clock nbr_clk $nbr_out   ;# the neighbour lands it >= 50 ps inside (top STA checks the real pair)",
           "set_load 2.0 [all_outputs]",
@@ -438,6 +444,9 @@ def sdc_block(lat, element_io=False, ring=False, static_inputs=(), nbr_in="rin* 
 def config_mk(name, nick, die, macros, extra):
     lib_ss = " ".join(f"/src/{m}/{Path(m).name}_ss.lib" for m in macros)
     lib_ff = " ".join(f"/src/{m}/{Path(m).name}_ff.lib" for m in macros)
+    # OPTION B (2026-10-07): OT_SMH_CORNER=TC routes with setup repair at TT (macro _tt.lib), hold corner BC unchanged
+    _SC = os.environ.get("OT_SMH_CORNER", "WC").strip().upper() or "WC"
+    lib_su = lib_ss if _SC == "WC" else " ".join(f"/src/{m}/{Path(m).name}_tt.lib" for m in macros)
     lefs = " ".join(f"/src/{m}/{Path(m).name}.lef" for m in macros)
     lines = [f"export DESIGN_NICKNAME = {nick}", f"export DESIGN_NAME = {name}", "export PLATFORM = asap7",
              "export VERILOG_FILES = " + " ".join(f"/src/{s}" for s in RTL),
@@ -446,12 +455,12 @@ def config_mk(name, nick, die, macros, extra):
              "export SYNTH_REPEATABLE_BUILD = 1", "export SYNTH_HIERARCHICAL = 0", "export SYNTH_MEMORY_MAX_BITS = 65536",
              "export LEC_CHECK = 0", "export TNS_END_PERCENT = 100", "export SETUP_SLACK_MARGIN = 0",
              "export SKIP_REPORT_METRICS = 0", "export REPORT_CLOCK_SKEW = 1",
-             "export CORNER = WC", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
-             "export CORNERS = WC BC", f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}",
+             f"export CORNER = {_SC}", "export ADDER_MAP_FILE = ", "export ASAP7_USE_VT = RVT", "export SLEW_MARGIN = 30",
+             f"export CORNERS = {_SC} BC", f"export {_SC}_LIB_FILES = $({_SC}_NLDM_LIB_FILES) {lib_su}",
              f"export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) {lib_ff}",
              "export IO_CONSTRAINTS = /work/pins.tcl", "export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)"]
     if macros:
-        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_ss}",
+        lines += [f"export ADDITIONAL_LEFS = {lefs}", f"export ADDITIONAL_LIBS = {lib_su}",
                   "export SYNTH_BLACKBOXES = " + " ".join(Path(m).name for m in macros),
                   "export MACRO_PLACEMENT_TCL = /work/macros.tcl"]
     lines += [f"export {k} = {v}" for k, v in extra.items()]
@@ -1027,6 +1036,24 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
     txt = RUN.format(label=label, work=work, src=src, need=need, cores=cores, cname=f"claude-smh-{label}",
                      macro_args=margs, target=target, make_extra=make_extra,
                      admit="/srv/opentallas-scratch/admit.sh $NEED -- " if admit else "")
+    # setup-triage IO fix (OPTION B, 2026-10-07): OT_SMH_POST_SDC (space-separated repo paths, normally
+    # physical/common_flow/nbr_clk_measured.sdc) re-times the SETUP corners (TT sign-off, SS sensitivity) with the
+    # neighbour clock at this route's measured insertion.  The FF hold check keeps the generator SDC (its dlo term
+    # models the FF neighbour against the SS planning latency; re-referencing nbr_clk there would double-count it).
+    _post = os.environ.get("OT_SMH_POST_SDC", "").split()
+    if _post:
+        pa = " ".join(f"--post-sdc {q}" for q in _post)
+        merge = ("import json,sys; b=json.load(open(sys.argv[1])); p=json.load(open(sys.argv[2])); "
+                 "b['setup_tt']=p['setup_tt']; b['setup_ss']=p['setup_ss']; b['setup_post_sdc']=p['post_sdc']; "
+                 "json.dump(b,open(sys.argv[1],'w'),indent=1)")
+        step = (f'  echo "corner_rc=$?" >> $W/status\n'
+                f'  (cd $S && python3 tools/w18/corner_sta.py --orfs-dir $W {margs} {pa} --sdc-name 6_signoff.sdc '
+                f'--output $W/corner_sta_setup_post.json) > $W/corner_setup_post.log 2>&1 && '
+                f'cp $W/corner_sta.json $W/corner_sta_hold_model.json && '
+                f'python3 -c "{merge}" $W/corner_sta.json $W/corner_sta_setup_post.json\n'
+                f'  echo "setup_post_rc=$?" >> $W/status\n')
+        assert txt.count('  echo "corner_rc=$?" >> $W/status\n') == 1
+        txt = txt.replace('  echo "corner_rc=$?" >> $W/status\n', step)
     # two abstract sessions (SS and FF)
     txt = txt.replace('"/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/abstract.tcl"',
                       '"mkdir -p /work/views; for c in ss ff; do /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/'
@@ -1035,7 +1062,27 @@ def run_sh(work: Path, label, src, need, cores, macros, target="finish", admit=T
     (work / "run.sh").chmod(0o755)
 
 
+SIGNOFF_HOLD_UNC_PS = 25.0   # set_clock_uncertainty -hold of the generated SDC (sign-off at FF)
+
+
+def loop_hold_margin(arg_ps, env=None):
+    """ORFS HOLD_SLACK_MARGIN (ps) for this piece.  The closure loop exports HM (ns: spec route_hold_margin_ns, default
+    HM_MM 0.050) to every calibrate / route stage; a piece routed with its own --hold-margin 25 ignored it (redesign-0315,
+    hbm_smh_front_s m3f/m3g: FF -18..-28).  When HM is set the repair aims HM + the sign-off hold uncertainty (50 + 25 =
+    75 ps), never below an explicit larger --hold-margin."""
+    hm = (os.environ if env is None else env).get("HM", "").strip()
+    if not hm:
+        return arg_ps
+    try:
+        want = float(hm) * 1000.0 + SIGNOFF_HOLD_UNC_PS
+    except ValueError:
+        return arg_ps
+    return f"{max(float(arg_ps), want):g}"
+
+
 def cmd_block(a):
+    a.hold_margin = loop_hold_margin(a.hold_margin)
+    print(f"HOLD_SLACK_MARGIN {a.hold_margin} ps (loop HM={os.environ.get('HM', '')} ns)")
     work = Path(a.out)
     work.mkdir(parents=True, exist_ok=True)
     g = json.loads(Path(a.geom).read_text()) if a.geom else GEOM

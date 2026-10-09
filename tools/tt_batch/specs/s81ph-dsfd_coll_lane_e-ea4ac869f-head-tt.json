@@ -1,0 +1,138 @@
+{
+ "name": "s81ph-dsfd_coll_lane_e-ea4ac869f-head-tt",
+ "block": "dsfd_coll_lane_e",
+ "owner": "Codex:s81_tiles",
+ "purpose": "TT-BATCH (owner option B, one large batch): s81ph-dsfd_coll_lane_e-ea4ac869f-head re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Full-width registered FIFO head, zero added cycles; +595 FF/lane. Retain 345.6 x 340.2 outline, actual calibrated IO, 60/25 uncertainty.",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "main",
+  "commit": "ea4ac869fb13453622649f6b906c65a0cbf1616d",
+  "paths": [
+   "tools",
+   "configs",
+   "physical/abi3",
+   "physical/common",
+   "physical/s81_ph_views/common",
+   "physical/s81_ph_views/tiles",
+   "physical/s81_ph_views/collective",
+   "physical/s81_ph_views/ports/contract_wide_lanes/dsfd_coll_lane_e",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+   "results/rtl/s81_ph_20261006/collective/gearbox_head_20261007",
+   "Makefile",
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_head.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+   "rtl/link/ot_link_crc32.sv",
+   "rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_head.sv"
+  ],
+  "required_files": [
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv",
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv",
+   "rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_head.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv",
+   "rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv",
+   "rtl/link/ot_link_crc32.sv",
+   "rtl/dsrom_sys/s81_ph/test/tb_s81ph_gbx_head.sv",
+   "tools/run_abi3_physical.py",
+   "tools/dft/liberty.py",
+   "tools/dft/netlist.py",
+   "tools/dft/scan_insert.py",
+   "tools/dft/macro_bound.py",
+   "tools/w18/corner_sta.py",
+   "tools/hbm_fmax_attn_abstract.py",
+   "tools/s81_ph/s81_ph_views.py",
+   "tools/s81_collective_gearbox_gate.py",
+   "configs/pdk/asap7_local_liberty_lock.json",
+   "physical/s81_ph_views/common/route_view.sh",
+   "physical/s81_ph_views/common/post_cts_vclk.tcl",
+   "physical/s81_ph_views/common/signoff_unc60.sdc",
+   "physical/s81_ph_views/common/make_io_vclk_margin.sh",
+   "physical/s81_ph_views/collective/lane_tile.sdc",
+   "physical/s81_ph_views/collective/pdn_coll.tcl",
+   "physical/abi3/v41x_karb_repair_buffer_cap.tcl",
+   "physical/s81_ph_views/ports/contract_wide_lanes/dsfd_coll_lane_e/ports.json",
+   "physical/s81_ph_views/ports/contract_wide_lanes/dsfd_coll_lane_e/io_place.tcl",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.lef",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ss.lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_ff.lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_tt.lib",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2_bb.v",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2/ot_sram_1r1w_512x128_m4_r2c2.json"
+  ]
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; HM=0.010 SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_head.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{NAME}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "sdc_cmd": "physical/s81_ph_views/common/make_io_vclk_margin.sh $CK_SS_MEAN && ls physical/s81_ph_views/common/io_vclk_m_$CK_SS_MEAN.sdc",
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 SDCM=physical/s81_ph_views/common/io_vclk_m_${CK_SS_MEAN}.sdc SRC={SRC} OUT={RUN}/routes CORES=16 NEED=48 SRCS='rtl/dsrom_sys/s81_ph/coll/ot_s81ph_skid2.sv rtl/dsrom_sys/s81_ph/coll/ot_s81ph_ckbuf.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_ep.sv rtl/dsrom_sys/s81_ph/ot_s81ph_link_gbx_head.sv rtl/dsrom_sys/s81_ph/ot_s81ph_mem1r1w.sv rtl/dsrom_sys/s81_ph/ot_s81ph_rfifo.sv rtl/link/ot_link_crc32.sv' CLK=ck MACROS=ot_sram_1r1w_512x128_m4_r2c2=physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2 PDN=physical/s81_ph_views/collective/pdn_coll.tcl SDCX=physical/s81_ph_views/collective/lane_tile.sdc bash physical/s81_ph_views/common/route_view.sh {NAME}${CL_LABEL_SUFFIX} contract_wide_lanes dsfd_coll_lane_e rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{NAME}/view/* {RUN}/routes/{NAME}/corner_sta.json {RUN}/routes/{NAME}/check.json {RUN}/routes/{NAME}/args {RUN}/record/ && (cp {CL}/calib.json {RUN}/record/calib.json || true)"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "lef_check_MATCH",
+    "cmd": "python3 -c \"import json,sys; sys.exit(json.load(open('{RUN}/routes/{NAME}/check.json'))['verdict'] != 'MATCH')\""
+   },
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/s81_ph_views/common/signoff_unc60.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "physical/s81_ph_views/closed_candidates/dsfd_coll_lane_e_head"
+  }
+ ],
+ "cycles_added": 2,
+ "merge_target": null,
+ "no_bench_reason": "Minimum-component full-width cycle-equivalence and wrong-head negative gates recorded in source evidence; candidate route runs alongside gate, adoption requires PASS.",
+ "budget": {
+  "enabled": false,
+  "reason": "S81-PH tile sheet is grade 'target' (no calibration: 467-900 ps); the tiles' measured insertion is far lower (svc_pc 145 ps, ctrl_ctr 61 ps at calibrate), so the sheet SDC would put vclk ~300+ ps late (output hold model -> mass hold buffering). Routed on the calibrated MEASURED insertion (STANDARD FLOW); calib.json is in the record for the sheet re-plan."
+ },
+ "route_hold_margin_ns": 0.05,
+ "candidate_cycles_added": 0,
+ "inherited_cycles_note": "Existing lane skid accounting remains 2; gearbox head adds 0.",
+ "host_require": [
+  "ot-epyc1tb",
+  "ot-epyc2"
+ ],
+ "route_hold_corners": "mm",
+ "route_corner": "TC"
+}

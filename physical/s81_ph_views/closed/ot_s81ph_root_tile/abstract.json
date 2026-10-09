@@ -1,0 +1,57 @@
+{
+  "name": "ot_s81ph_root_tile",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81ph-root_tile-77bcb3f3c/routes/s81ph_root_tile_77bcb3f3c/abs_eco:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_s81ph_root_tile.lef": "12c825ee6a9a30372b804f17695a2e578700d35c1a9a3bc227546174fc00fc4a",
+    "ot_s81ph_root_tile_ff.lib": "a58d119dc38cf13182e2a4fb5ebdeb881fe9e4eabd8586578a9ff3c253c9b61c",
+    "ot_s81ph_root_tile_ss.lib": "0da2d7f85ee7b4b59bd518cfd4f5181d9a92450115ea50e3a395311c80422aa7"
+  },
+  "ok": true
+}

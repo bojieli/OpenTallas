@@ -18,6 +18,6 @@ set_clock_uncertainty -hold 25.0 [get_clocks {io_in io_out}]
 set ins [get_ports {v g[*] u[*] w[*] lim[*]}]
 set outs [all_outputs]
 set_input_delay -max 200.0 -clock io_in $ins
-set_input_delay -min -50.0 -clock io_in $ins
+set_input_delay -min 0.0 -clock io_in $ins
 set_output_delay -max 200.0 -clock io_out $outs
 set_output_delay -min -50.0 -clock io_out $outs

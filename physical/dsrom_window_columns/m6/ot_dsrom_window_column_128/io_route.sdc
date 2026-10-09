@@ -1,0 +1,12 @@
+# IO against vclk at the measured SS insertion 195 ps, 0.2 T + 90 ps (intra-region), FF-true hold mins
+create_clock -name vclk -period [get_property [get_clocks core_clk] period]
+set_clock_uncertainty -setup 60 [get_clocks vclk]
+set_clock_uncertainty -hold 25 [get_clocks vclk]
+set_clock_latency 195 [get_clocks {core_clk vclk}]
+set ot_in [all_inputs -no_clocks]
+unset_input_delay -clock core_clk $ot_in
+unset_output_delay -clock core_clk [all_outputs]
+set_input_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 90}] -clock vclk $ot_in
+set_output_delay [expr {[get_property [get_clocks core_clk] period] * 0.2 + 90}] -clock vclk [all_outputs]
+set_input_delay -min [expr {125 - 195 - 25}] -clock vclk $ot_in
+set_output_delay -min [expr {110 - 195 + 25}] -clock vclk [all_outputs]

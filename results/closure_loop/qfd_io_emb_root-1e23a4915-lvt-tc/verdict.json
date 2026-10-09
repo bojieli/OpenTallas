@@ -1,0 +1,173 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "qfd_io_emb_root-1e23a4915-lvt-tc",
+ "block": "qfd_io_emb_root",
+ "owner": "Claude:drive-0928",
+ "source_branch": "claude/drive-0928-20261008",
+ "source_commit": "1e23a4915b965f94b805d846ac9bb11fc52b4dd3",
+ "host": "localhost",
+ "run_dir": "/home/ubuntu/closure-loop-local/qfd_io_emb_root-1e23a4915-lvt-tc",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 5.21,
+  "ff_ps": 29.25,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/home/ubuntu/closure-loop-local/qfd_io_emb_root-1e23a4915-lvt-tc/routes/qfd_io_emb_root_1e23a4915_lvt_tc/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/home/ubuntu/closure-loop-local/qfd_io_emb_root-1e23a4915-lvt-tc/routes/qfd_io_emb_root_1e23a4915_lvt_tc/work/orfs/logs/asap7/opentallas_ot_qfd_emb_root_asap7_qdm_qfd_io_emb_root_1e23a4915_lvt_tc/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_emb_exact": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.068 MB sources in 6 modules, into 1.099 MB in 7 C++ files needing 0.001 MB\n- Verilator: Walltime 4.087 s (elab=0.009, cvt=0.103, bld=3.954); cpu 0.148 s on 4 threads; allocated 51.438 MB\nPASS qfd_embedding_rom NCOL=3 NTAP=4 PINREG=0 requests=6000 responses=6000 cycles=19370\n- rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv:73: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 22us; walltime 0.020 s; speed 1.110 ms/s\n- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB\n",
+   "track": "parallel"
+  },
+  "bench_emb_big": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "lator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.068 MB sources in 6 modules, into 8.437 MB in 12 C++ files needing 0.003 MB\n- Verilator: Walltime 12.645 s (elab=0.051, cvt=1.395, bld=11.054); cpu 1.737 s on 4 threads; allocated 102.438 MB\nPASS qfd_embedding_rom NCOL=8 NTAP=12 PINREG=0 requests=20000 responses=20000 cycles=112235\n- rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv:73: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 115us; walltime 0.519 s; speed 222.206 us/s\n- Verilator: cpu 0.519 s on 1 threads; allocated 7 MB\n",
+   "track": "parallel"
+  },
+  "bench_emb_mutant": {
+   "expect": "fail",
+   "rc": 0,
+   "ok": true,
+   "tail": "i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.068 MB sources in 6 modules, into 1.099 MB in 7 C++ files needing 0.001 MB\n- Verilator: Walltime 3.980 s (elab=0.008, cvt=0.093, bld=3.858); cpu 0.138 s on 4 threads; allocated 51.430 MB\nFAIL qfd_embedding_rom mismatches=6000 sent=6000 got=6000 fault=0\n- rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv:73: Verilog $finish\n- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01\n- Verilator: $finish at 23us; walltime 0.020 s; speed 1.174 ms/s\n- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": null,
+ "cycles_added": 0,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T09:55:50-07:00",
+ "job_spec": {
+  "name": "qfd_io_emb_root-1e23a4915-lvt-tc",
+  "block": "qfd_io_emb_root",
+  "owner": "Claude:drive-0928",
+  "purpose": "DRIVE-0928 2026-10-08: qfd_io_emb_root-c1e4eba84tt failed TT -5.34 / FF +27.74 / DRC 0 (2 endpoints, TNS -5.84): input-to-register r_v[2] -> 7-buffer 512-load fanout -> AO22/OR4 response merge -> eq_data[305] (r2r +96.5, outputs +122.5). Variant lvt: small miss -> LVT swap (OT_MULTI_VT=lvt, <=~2% cells) on the unchanged r21 root (PINREG=0), main 261cde643 + drive-0928 commit. TC + MM FF hold HM 50, rule H1, CTS fix hooks + consistent link budget (tt_overlay).",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "source": {
+   "branch": "claude/drive-0928-20261008",
+   "commit": "1e23a4915b965f94b805d846ac9bb11fc52b4dd3"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "emb_exact",
+     "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_embedding_rom  --Mdir {RUN}/bench/emb_exact rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv && {RUN}/bench/emb_exact/Vtb_qfd_embedding_rom",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^PASS qfd_embedding_rom"
+    },
+    {
+     "name": "emb_big",
+     "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_embedding_rom -GNCOL=8 -GNTAP=12 -GNCODE=90 -GNSCALE=3 -GLWB=12 -GLSB=16 -GNREQ=20000 -GSEED=4 --Mdir {RUN}/bench/emb_big rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv && {RUN}/bench/emb_big/Vtb_qfd_embedding_rom",
+     "expect": "pass",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "pass_regex": "^PASS qfd_embedding_rom"
+    },
+    {
+     "name": "emb_mutant",
+     "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -O1 -Wno-fatal -Wno-WIDTH -Wno-UNUSED -Wno-PINMISSING -Wno-TIMESCALEMOD -Wno-LATCH -Wno-MULTIDRIVEN -Wno-BLKSEQ -Wno-UNOPTFLAT -j 4 --top-module tb_qfd_embedding_rom -GMUT=1 --Mdir {RUN}/bench/emb_mutant rtl/test/qwen_rtl_finish/tb_qfd_embedding_rom.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv && {RUN}/bench/emb_mutant/Vtb_qfd_embedding_rom",
+     "expect": "fail",
+     "threads": 4,
+     "peak_ram_gb": 8,
+     "needs": [
+      "verilator"
+     ],
+     "fail_regex": "^FAIL qfd_embedding_rom"
+    }
+   ],
+   "calibrate": {
+    "enabled": false,
+    "reason": "die-context IO referenced in-run (io_ref_skew.sdc) as every Qwen die master"
+   },
+   "route": {
+    "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; export OT_MULTI_VT=lvt; OT_MM_FF_SDC='physical/qwen_die_masters/signoff/qfd_io_emb_root.sdc' SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_io_emb_root {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 32
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/w18/export_view.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_io_emb_root --post-sdc physical/qwen_die_masters/signoff/qfd_io_emb_root.sdc --corners ss,tt,ff --out {RUN}/record/views/qfd_io_emb_root > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_io_emb_root.sdc"
+   ],
+   "macros": []
+  },
+  "hold_eco": {},
+  "budget": {
+   "enabled": false,
+   "reason": "no Qwen r21 budget sheet; die-master kit budgets applied in-run"
+  },
+  "record": [
+   {
+    "to": "physical/qwen_die_masters/views",
+    "from": "{RUN}/record/views"
+   },
+   {
+    "to": "results/rtl/qwen_rtl_finish_20261007/routes/qfd_io_emb_root-1e23a4915-lvt-tc",
+    "from": "{RUN}/record/route"
+   }
+  ],
+  "cycles_added": 0,
+  "merge_target": null,
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC",
+  "notes": "cycles added: 0 (Vt only; report the LVT cell mix from the route)."
+ }
+}

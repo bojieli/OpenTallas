@@ -1,0 +1,29 @@
+{
+ "schema": "opentallas.s81.bf_root_phase_diagnosis.v1",
+ "stream": "s81-bf (Claude, 2026-10-07)",
+ "half_baseline": {
+  "job": "bf_half_61c1cf230",
+  "ss_ps": -474.68,
+  "ff_ps": -63.08,
+  "limiter": "ONE setup path g_half.ph$_DFF_PN0_/QN -> g_half.u_hcg.u_icg/ENA (clock gating check). Launch clock 1110.75 ps (27 CTS delaybuf_*_core_clk + clk_regs tree: CTS balanced the 129 ungated leaves against the 93,415-sink gated subtree), ICG CLK 986.64-833.33 = 153.3 ps (root branch). Every other class >= +95.95 ps (element r2r +117.34 under half_mc.sdc MC 2/1, applied to 93,415 registers + 20 ICG/ROM cells: the multicycle WAS applied).",
+  "ff_limiter": "IO hold only: xb_d / cfg_d / xs_* input pins -> gated pin registers (input min = L_ff - 50 ps); the route repaired hold at WC only and the hold ECO never ran because setup failed"
+ },
+ "root_phase_bench_8be556c2e": {
+  "verdict": "packaging failure, not exactness",
+  "cause": "closure-loop bench sources are a git archive of tools rtl physical Makefile: results/rtl/dsrom_actual_element_prepare_20261001/model.json is absent, and the prepare step (tools/prepare_dsrom_actual_element_rne_wake.py) also calls git show, which an archive cannot serve",
+  "fix": "run the bench in a git checkout beside the route (as done for HALF_PHL: prepare locally with run_bf_native_exact.py --prepare-only, run bf_txn_bench.py --prep on a fleet host); the root_phase exactness itself passed at b73d54a9c (results/rtl/s81_bf_root_phase_b73d54a9c_exact)"
+ },
+ "root_phase_cts_7990dfdbf": "ODB-0370: dont_touch on the kept inverters blocks CTS pin rewiring (fixed by Codex in 7ab4873f4)",
+ "root_phase_cts_7ab4873f4": {
+  "verdict": "flow error in the candidate's own check, after CTS",
+  "evidence": "4_1_cts.log: CTS-0041 Net net54043 (bf_phase_inv) has 1 sinks. Skipping; CTS-0040 Net was not found in the design for bf_phase_local; post_cts_check_placement.tcl: BF_ROOT_PHASE topology missing after route",
+  "cause": "(inferred from the log, not traced instance by instance) ORFS cts.tcl runs repair_clock_inverters AFTER the PRE_CTS hook: it clones a clock inverter next to its register loads and removes the original, so g_half.g_root.u_inv1 (and the generated-clock net bf_phase_local) no longer exist under the expected names; the 1 ICG + 3 branch census fails",
+  "second_problem": "even with the topology kept, ph launched at the root clock also feeds hph, the o_pv qualifier and the o_* capture enables, leaves at ~1110 ps: ~900 ps same-edge hold violations on those paths"
+ },
+ "successor": {
+  "candidate": "HALF_PHL (claude/s81-bf-20261007 0e90389e9 / 4000b1ea7)",
+  "mechanism": "no kept cells, no generated clock: ph drives only the ICG enable; PRE_CTS hook ph_local.tcl (wrapping repair_timing_helper, i.e. after clock_tree_synthesis and repair_clock_inverters, before post-CTS repair) reconnects the phase FF CLK to the net driving the ICG CLK pin and places it beside the ICG; POST_CTS ph_local_post.tcl fails closed unless both share one net within 30 um. clk-domain consumers use ph_d = t XNOR t_d (balanced leaves), asserted == ph every cycle.",
+  "exact": "results/rtl/s81_bf_native_20261007/halfphl_exact/terminal.json PASS",
+  "root_phase_status": "superseded; not re-routed"
+ }
+}

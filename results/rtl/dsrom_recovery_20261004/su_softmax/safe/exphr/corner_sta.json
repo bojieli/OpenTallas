@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/home/ubuntu/closure-loop-local/dsrom_softmax_safe_exphrf_bd30aca4a/cl/eco/pass2/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design ot_dsrom_su_softmax_exp_hr\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 730.0000 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_c",
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": 96.45,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 208.831848,
+  "worst_reg_to_reg_slack_ps": 208.83,
+  "worst_input_to_reg_slack_ps": Infinity,
+  "worst_output_port_slack_ps": 1000000000.0,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "5b129d865cc36918d4bf0bd1beb4d833848a20f1167d953cae33ecdcaf199b17",
+  "spef_sha256": "abb8ce6cc28216bfe129ad26bc58f535f939c20c98a76b32e6c8698d231bd580",
+  "sdc_sha256": "dc37fefa91c44f6b145a5307125894fa774b5640f81deb616081e6b7352ce681"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 14.79,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 14.789531,
+  "worst_reg_to_reg_slack_ps": 14.79,
+  "worst_input_to_reg_slack_ps": Infinity,
+  "worst_output_port_slack_ps": 1000000000.0,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "5b129d865cc36918d4bf0bd1beb4d833848a20f1167d953cae33ecdcaf199b17",
+  "spef_sha256": "abb8ce6cc28216bfe129ad26bc58f535f939c20c98a76b32e6c8698d231bd580",
+  "sdc_sha256": "dc37fefa91c44f6b145a5307125894fa774b5640f81deb616081e6b7352ce681"
+ },
+ "post_sdc": {
+  "physical/dsrom_su_softmax_safe/signoff_833.sdc": "b362fc355993abdb03de4901879e840909251b1ffa8c203ef79c5c4305d04b70",
+  "physical/dsrom_su_softmax_safe/mc2.sdc": "3793abc07a4e7515b1b1de28f255d4a0fc691545c7ad387854b3a26c64a0250b"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "2a0dd06fb6c0ccb8abf0e9cab2e17111d6e1aaed83ea0cbe57c3f78b9e893350",
+ "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "closes_signoff": true
+}

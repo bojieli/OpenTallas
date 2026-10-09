@@ -340,9 +340,18 @@ def receipt_views():
         v = json.loads(path.read_text())
         if v.get('status') == 'CLOSED' and v.get('block', '').startswith('hfd_'):
             receipts.append((v.get('closed_at', ''), path, v))
+    latest = {}
+    for _, path, v in sorted(receipts):
+        latest[v['block']] = path      # a later closure of one block re-exports into the same record dir
     for _, path, v in sorted(receipts):
         n, met = v['block'], v['metrics']
-        if (met.get('ss_ps', -1) < 15 or met.get('ff_ps', -1) < 15 or met.get('drc') != 0
+        if latest[n] != path:
+            continue                   # superseded receipt: its export was overwritten by the later closure
+        # the receipt's own acceptance (OWNER 2026-10-07 20:30: SS >= 0 / FF >= 0; older jobs +15); below +15 the
+        #   index labels it closed-below-margin (+15 is the design target) instead of dropping the installed view
+        acc = v.get('acceptance', {})
+        if (met.get('ss_ps', -1) < acc.get('ss_min_ps', 15) or met.get('ff_ps', -1) < acc.get('ff_min_ps', 15)
+                or met.get('drc') != 0
                 or not v.get('checks') or not all(c.get('ok') for c in v['checks'].values())
                 or not all(b.get('ok') for b in v.get('benches', {}).values())):
             continue
@@ -352,10 +361,18 @@ def receipt_views():
             if not all((base / f).is_file() for f in files):
                 continue
             corner = json.loads((base / 'corner_sta.json').read_text())
+            # OWNER OPTION B (2026-10-07): a TT-setup closure exports setup_tt (setup_ss = sensitivity) and the
+            #   verdict's ss_ps is that TT figure; an SS-setup closure has no setup_tt.  Compare like with like.
+            setup = corner.get('setup_tt') or corner['setup_ss']
             if (not corner.get('closes_signoff')
-                    or corner['setup_ss']['worst_slack_ps'] != met['ss_ps']
+                    or setup['worst_slack_ps'] != met['ss_ps']
                     or corner['hold_ff']['worst_slack_ps'] != met['ff_ps']):
-                raise ValueError(f'closure receipt/export disagreement: {path}')
+                # the loop verdict re-times the route with its post_sdc set (e.g. the link-budget / option-B SDCs);
+                #   then the verdict's metrics are the closure figure and the exported corner_sta is the route's own
+                if not met.get('post_sdc'):
+                    raise ValueError(f'closure receipt/export disagreement: {path} (receipt SS/FF {met["ss_ps"]}/'
+                                     f'{met["ff_ps"]}, export {base} {setup["worst_slack_ps"]}/'
+                                     f'{corner["hold_ff"]["worst_slack_ps"]}: re-export the receipt\'s route)')
             rows[n] = dict(master=n, kind=kind_of(n), status='closed', dir=dest['to'],
                            lef=files[0], lib=dict(ss=files[1], ff=files[2]),
                            files_sha256={f: sha(base / f) for f in files},
@@ -364,7 +381,8 @@ def receipt_views():
                            source=dict(SOURCE_COMMIT=v['source_commit'], host=v['host'],
                                        route=v['run_dir'], ss_setup_ps=met['ss_ps'],
                                        ff_hold_ps=met['ff_ps'], drc=met['drc'],
-                                       closes_signoff_SS60_FF25=True, closed_at=v['closed_at']))
+                                       closes_signoff_SS60_FF25=True, setup_corner=setup.get('corner', 'ss'),
+                                       closed_at=v['closed_at']))
     return rows
 
 
@@ -397,6 +415,10 @@ def cmd_index(a):
                                  **({k: v[k] for k in ('dir', 'lef', 'lib', 'check', 'source', 'files_sha256', 'receipt', 'receipt_sha256', 'functional_closure', 'die_context_closed') if k in v} if v else {}))
         if margin:
             idx['masters'][n]['margin'] = margin
+        r_ = idx['masters'][n]
+        if r_.get('lib') and (ROOT / r_['dir'] / f'{n}_tt.lib').is_file():      # OPTION B: TT model (tools/hbm_view_tt.py)
+            r_['lib'] = dict(r_['lib'], tt=f'{n}_tt.lib')
+            r_.setdefault('files_sha256', {})[f'{n}_tt.lib'] = sha(ROOT / r_['dir'] / f'{n}_tt.lib')
         if v and v.get('lef'):     # re-check against the CURRENT generator round (a view routed on an older outline)
             c_ = check_lef(n, ROOT / v['dir'] / v['lef'], allow_extra=v.get('die_top_io', ()))
             idx['masters'][n]['check'] = {k: c_[k] for k in ('verdict', 'problems', 'positions', 'size_view',
@@ -421,6 +443,75 @@ def real_views(index_path):
     return out
 
 
+PLACEHOLDER_LIB_MASTERS = ('hfd_hc', 'hfd_sfu', 'hfd_su')
+# PLACEHOLDER interface timing (die-gaps 2026-10-08): the hub quarters have no view yet, so the r25 die STA left every
+# path into / out of them untimed (22 'view clocks missing' incl. their ck0..ck7).  Each gets a boundary-registered
+# interface Liberty with the die-relay recipe constants (tools/hbm_die_relays.relay_libs: flop at the face, insertion
+# + clk->Q on outputs, setup / hold on inputs) so its die wires are timed; the report classes them placeholder.
+PH_C = dict(ss=dict(ins_min=70.0, ins_max=90.0, ckq=60.0, r=0.30, setup=30.0, hold=15.0, tr=12.0, v=0.63, t=100.0),
+            ff=dict(ins_min=40.0, ins_max=55.0, ckq=30.0, r=0.15, setup=15.0, hold=10.0, tr=6.0, v=0.77, t=0.0),
+            tt=dict(ins_min=55.0, ins_max=72.0, ckq=45.0, r=0.22, setup=22.0, hold=12.0, tr=9.0, v=0.70, t=25.0))
+
+
+def placeholder_libs(m, work, libs):
+    """write <master>_{ss,ff,tt}.lib for the PLACEHOLDER_LIB_MASTERS present without a lib; returns their names"""
+    want = sorted({it.master for it in m['insts'] if it.master in PLACEHOLDER_LIB_MASTERS and it.master not in libs})
+    if not want:
+        return []
+    lef = '\n'.join(p.read_text() for p in sorted(work.glob('*.lef')))
+    insts = {it.name: it.master for it in m['insts']}
+    drv = defaultdict(set)
+    for bid, cls, bits, eps in m['buses']:
+        if eps and eps[0][0] in insts:
+            drv[insts[eps[0][0]]].add(eps[0][1].split('@', 1)[0])
+    caps = [1.44, 5.76, 23.04, 92.16, 368.64]
+    out = []
+    for n in want:
+        mm = re.search(rf'^MACRO {n}\n(.*?)^END {n}$', lef, re.S | re.M)
+        if not mm:
+            continue
+        width = defaultdict(int)
+        for pn in re.findall(r'^  PIN (\S+)$', mm.group(1), re.M):
+            b, _, i = pn.partition('[')
+            width[b] = max(width[b], int(i.rstrip(']')) + 1 if i else 1)
+        clocks = sorted(b for b in width if re.fullmatch(r'ck\d*|clk', b))
+        if not clocks:
+            continue
+        ref = clocks[0]
+        for corner, c in PH_C.items():
+            dl = ', '.join(f'{c["ins_max"] + c["ckq"] + c["r"] * x:.2f}' for x in caps)
+            tr = ', '.join(f'{c["tr"] + 0.5 * c["r"] * x:.2f}' for x in caps)
+            L_ = [f'library ({n}_ph_{corner}) {{', '  delay_model : table_lookup;', '  time_unit : "1ps";',
+                  '  voltage_unit : "1V";', '  current_unit : "1mA";', '  pulling_resistance_unit : "1kohm";',
+                  '  leakage_power_unit : "1pW";', '  capacitive_load_unit (1,fF);',
+                  f'  nom_process : 1.0; nom_temperature : {c["t"]}; nom_voltage : {c["v"]};',
+                  '  input_threshold_pct_rise : 50; input_threshold_pct_fall : 50;',
+                  '  output_threshold_pct_rise : 50; output_threshold_pct_fall : 50;',
+                  '  slew_lower_threshold_pct_rise : 10; slew_lower_threshold_pct_fall : 10;',
+                  '  slew_upper_threshold_pct_rise : 90; slew_upper_threshold_pct_fall : 90;',
+                  '  lu_table_template (ld) { variable_1 : total_output_net_capacitance; index_1 ("'
+                  + ', '.join(f'{x:.2f}' for x in caps) + '"); }']
+            for w in sorted(set(width.values())):
+                L_.append(f'  type (pb{w}) {{ base_type : array; data_type : bit; bit_width : {w}; bit_from : {w - 1}; bit_to : 0; }}')
+            L_ += [f'  cell ({n}) {{', '    area : 1.0;', '    is_macro_cell : true;']
+            for b, w in sorted(width.items()):
+                if b in clocks:
+                    L_.append(f'    bus ({b}) {{ bus_type : pb{w}; direction : input; clock : true; capacitance : 5.0; }}')
+                elif b in drv[n]:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : output;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : rising_edge; cell_rise (ld) {{ values ("{dl}"); }} cell_fall (ld) {{ values ("{dl}"); }} rise_transition (ld) {{ values ("{tr}"); }} fall_transition (ld) {{ values ("{tr}"); }} }}',
+                           '    }']
+                else:
+                    L_ += [f'    bus ({b}) {{ bus_type : pb{w}; direction : input; capacitance : 0.6;',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : setup_rising; rise_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["setup"] - c["ins_min"]:.2f}"); }} }}',
+                           f'      timing () {{ related_pin : "{ref}"; timing_type : hold_rising; rise_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} fall_constraint (scalar) {{ values ("{c["hold"] + c["ins_max"]:.2f}"); }} }}',
+                           '    }']
+            L_ += ['  }', '}']
+            (work / f'{n}_{corner}.lib').write_text('\n'.join(L_) + '\n')
+        out.append(n)
+    return out
+
+
 def sta_tcl(m, work, index):
     """die-context STA (owner addendum 2026-10-06: a block counts as closed only after die-context STA with the real
     abstract): the real-abstract die placement (case real, k = 1) with every indexed view that has SS / FF Liberty,
@@ -439,6 +530,8 @@ def sta_tcl(m, work, index):
         d = ROOT / v['dir']
         (work / f'{n}_ss.lib').write_bytes((d / v['lib']['ss']).read_bytes())
         (work / f'{n}_ff.lib').write_bytes((d / v['lib']['ff']).read_bytes())
+        if v['lib'].get('tt'):       # OPTION B: the TT model for die setup (tools/hbm_die_relay_sta.py --setup-corner tt)
+            (work / f'{n}_tt.lib').write_bytes((d / v['lib']['tt']).read_bytes())
         lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
     # OWNER 2026-10-06 ~19:20: the PHY black boxes are timed too (their interface Liberty: PHY-side pins launched /
     # captured by PHY flops on the PHY clock pin)
@@ -447,10 +540,17 @@ def sta_tcl(m, work, index):
                 'ot_hbm3e_phy_v41x_aw30_e8p5': 'physical/asap7_memory_macros_v2/ot_hbm3e_phy_v41x_aw30_e8p5/ot_hbm3e_phy_v41x_aw30_e8p5_{c}.lib'}
     for n, pat in phy_libs.items():
         if any(it.master == n for it in m['insts']):
-            for c in ('ss', 'ff'):
+            for c in ('ss', 'ff', 'tt'):
+                if c == 'tt' and not (ROOT / pat.format(c=c)).is_file():
+                    continue
                 (work / f'{n}_{c}.lib').write_bytes((ROOT / pat.format(c=c)).read_bytes())
+                if c == 'tt':
+                    continue
                 lib_lines.append(f'read_liberty -corner {c} /work/{n}_{c}.lib')
             libs[n] = dict(phy_bb=True)
+    for n in placeholder_libs(m, work, libs):
+        lib_lines += [f'read_liberty -corner ss /work/{n}_ss.lib', f'read_liberty -corner ff /work/{n}_ff.lib']
+        libs[n] = dict(placeholder=True)
     if m.get('relay_masters'):      # the instanced die relays / wire stages (tools/hbm_die_relays.py)
         lib_lines += ['read_liberty -corner ss /work/hfd_rly_ss.lib', 'read_liberty -corner ff /work/hfd_rly_ff.lib']
         for n in m['relay_masters']:
@@ -638,13 +738,18 @@ def cmd_die(a):
         # positions from a provisional case (generated masters) and the real views' LEFs
         import hbm_die_relays as RL
         H.case_real(m, work)
-        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for p_ in views.values())
+        # relay positions follow the planned pins: a MISMATCH view (interim, pins off the generator plan) keeps its
+        #   generator master's pins here, so its relays sit where the re-hardened view's pins will be
+        vchk = json.loads(Path(a.index).read_text())['masters']
+        lt = (work / 'elements.lef').read_text() + '\n'.join(Path(p_).read_text() for n_, p_ in views.items()
+                                                             if vchk[n_].get('check', {}).get('verdict') != 'MISMATCH')
         for nm_ in ('phy.lef', 'serdes.lef', 'ucie.lef'):
             lt += '\n' + (work / nm_).read_text()
-        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False))
-        RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib')
+        relay_rec = RL.instance_relays(m, real, lt, H, L, wire_stages=not getattr(a, 'no_wire_stages', False),
+                                       relay_all=getattr(a, 'relay_all_pins', False))
+        RL.relay_libs(m, work / 'hfd_rly_ss.lib', work / 'hfd_rly_ff.lib', work / 'hfd_rly_tt.lib')
         (work / 'relays.json').write_text(json.dumps(relay_rec, indent=0))
-        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced')}))
+        print(json.dumps({k: v for k, v in relay_rec.items() if k not in ('chains', 'unplaced', 'unplaced_detail', 'instance_metadata')}))
     if a.case in ('real', 'sta'):
         H.case_real(m, work)
         # replace the generated macros that have a real view by the view's LEF
@@ -1206,6 +1311,8 @@ def main(argv=None):
     p.add_argument('--case', choices=['real', 'grt', 'sta'], required=True)
     p.add_argument('--relays', action='store_true', help='instance the r22 pin relays + budget wire stages')
     p.add_argument('--no-wire-stages', action='store_true', help='with --relays: pin relays only')
+    p.add_argument('--relay-all-pins', action='store_true', help='with --relays: a relay at every die pin whose segment '
+                   'is > 100 um (BRIEF 2026-10-07), not only the r22 relay_ends list')
     p.add_argument('--index', default=str(ROOT / VIEWS / 'index.json'))
     p.add_argument('--k', type=int, default=16)
     p.add_argument('--iters', type=int, default=50)

@@ -1,0 +1,471 @@
+{
+ "schema": "opentallas.qwen_repack.v1",
+ "stream": "qwen-repack",
+ "date": "2026-10-08",
+ "what": "r21m die re-packed for the band-integrated tree top (qwen-band-integrate: ot_qfd_sp_tree_top BAND 1 + ot_qfd_band_upper, cfg qfd_sp_tree_top_b 777.6 x 3,732.48, _b_t 777.6 x 4,354.56), with the per-band band-lane blocks and result serializers (qwen-vm-me / qwen-lane-band)",
+ "recipes": {
+  "r21b": "die_top_lint --qwen-recipe r21b = r21m + tt_h 3732.48 (tree top qfd_sp_tree_top_b; band lanes qfd_sp_band_lanes 1,131.84)",
+  "r21bt": "r21m + tt_h 4354.56 + bl_h 1555.2 (the _t variants: qfd_sp_tree_top_b_t PD 0.45, qfd_sp_band_lanes_t PD 0.40)"
+ },
+ "adopted": "r21b (r21bt is the drop-in if only the _t routes close; both legal at the same die)",
+ "floorplan": "The taller tree top no longer fits column W above the hub without pushing band 3's serializer / slab / band-lane stack out of its column (first attempt: sp_port_tiles_3 displaced to another column, generator KeyError).  The tree top moves to the middle column M on top of the VM: SU + VM + tree top one abutted stack (its x_ / mx_ / land_cnt pins face the VM below), the VM shifts 386.64 um (r21b) / 1,008.72 um (r21bt) down from its r21m slot (centred on the hub), the sequencer stays below the SU.  Its band-word / lane control / return pins move to the W face (toward the band-lane blocks).  Band 3 keeps all 8 W groups at home (r21m: 6 + an _f2 overflow fragment in E).",
+ "area": {
+  "r21b": {
+   "die_um": [
+    25815.456,
+    32801.76
+   ],
+   "die_mm2": 846.792,
+   "reticle_mm2": 858.0,
+   "margin_mm2": 11.208,
+   "instances": 13220,
+   "instance_mm2": 683.51,
+   "die_utilisation": 0.8072,
+   "spine_columns": 3,
+   "spine_block_mm2": 36.37,
+   "spine_column_mm2": 76.52,
+   "spine_utilisation": 0.4753,
+   "relays": 9878,
+   "buses": 18525,
+   "legality": {
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+   },
+   "tree_top": [
+    12648.96,
+    18344.88,
+    777.576,
+    3732.456
+   ],
+   "vm": [
+    12648.96,
+    12124.08,
+    777.576,
+    6220.776
+   ],
+   "su": [
+    12648.96,
+    10065.6,
+    777.576,
+    2058.456
+   ],
+   "su_vm_gap_um": 0.024,
+   "slots_um": {
+    "tree_top": 3732.48,
+    "band_lanes": 1131.84,
+    "res_ser": 518.4
+   },
+   "ok": true
+  },
+  "r21bt": {
+   "die_um": [
+    25815.456,
+    32801.76
+   ],
+   "die_mm2": 846.792,
+   "reticle_mm2": 858.0,
+   "margin_mm2": 11.208,
+   "instances": 13218,
+   "instance_mm2": 685.92,
+   "die_utilisation": 0.81,
+   "spine_columns": 3,
+   "spine_block_mm2": 38.83,
+   "spine_column_mm2": 76.52,
+   "spine_utilisation": 0.5074,
+   "relays": 9876,
+   "buses": 18523,
+   "legality": {
+    "overlaps": 0,
+    "overlap_examples": [],
+    "outside": 0,
+    "outside_examples": []
+   },
+   "tree_top": [
+    12648.96,
+    17722.8,
+    777.576,
+    4354.536
+   ],
+   "vm": [
+    12648.96,
+    11502.0,
+    777.576,
+    6220.776
+   ],
+   "su": [
+    12648.96,
+    9443.52,
+    777.576,
+    2058.456
+   ],
+   "su_vm_gap_um": 0.024,
+   "slots_um": {
+    "tree_top": 4354.56,
+    "band_lanes": 1555.2,
+    "res_ser": 518.4
+   },
+   "ok": true
+  }
+ },
+ "area_note": "die unchanged at 25,815.456 x 32,801.76 = 846.792 mm2 (858 reticle, margin 11.2 mm2): no area added, none squeezed. Spine utilisation here = spine block area / (3 columns x 777.6 um x die height); block place densities 0.40-0.55 (cfg PD).",
+ "stacks": {
+  "r21b": [
+   {
+    "band": 0,
+    "ser": [
+     11611.296,
+     859.68,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     1378.08,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     3218.4,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 1,
+    "ser": [
+     11611.296,
+     5572.8,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     6091.2,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     7931.52,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 2,
+    "ser": [
+     11611.296,
+     11290.32,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     11808.72,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     13649.04,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 3,
+    "ser": [
+     11611.296,
+     16457.04,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     16975.44,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     18815.76,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 4,
+    "ser": [
+     11611.296,
+     22174.56,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     22692.96,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     24533.28,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 5,
+    "ser": [
+     11611.296,
+     26887.68,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     27406.08,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     29246.4,
+     777.576,
+     1131.816
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   }
+  ],
+  "r21bt": [
+   {
+    "band": 0,
+    "ser": [
+     11611.296,
+     648.0,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     1166.4,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     3006.72,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 1,
+    "ser": [
+     11611.296,
+     5149.44,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     5667.84,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     7508.16,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 2,
+    "ser": [
+     11611.296,
+     11078.64,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     11597.04,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     13437.36,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 3,
+    "ser": [
+     11611.296,
+     16245.36,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     16763.76,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     18604.08,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 4,
+    "ser": [
+     11611.296,
+     22174.56,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     22692.96,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     24533.28,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   },
+   {
+    "band": 5,
+    "ser": [
+     11611.296,
+     26676.0,
+     777.576,
+     518.376
+    ],
+    "slab": [
+     11611.296,
+     27194.4,
+     777.576,
+     1840.296
+    ],
+    "lanes": [
+     11611.296,
+     29034.72,
+     777.576,
+     1555.176
+    ],
+    "same_x": true,
+    "ser_gap_um": 0.024,
+    "lanes_gap_um": 0.024
+   }
+  ]
+ },
+ "lint": {
+  "r21m_postmerge": {
+   "census": {
+    "instances": 13510,
+    "buses": 18815,
+    "net_bits": 8344593,
+    "masters": 172,
+    "real_instances": 132,
+    "placeholder_instances": 13378
+   },
+   "pin_fit_errors": 0,
+   "connectivity": 0,
+   "unbound_real_pins": 0,
+   "abstract_ports_without_net": 0,
+   "missing_pins": 0,
+   "face_away": [],
+   "abut_without_channel": 29
+  },
+  "r21b": {
+   "census": {
+    "instances": 13220,
+    "buses": 18525,
+    "net_bits": 8277351,
+    "masters": 176,
+    "real_instances": 132,
+    "placeholder_instances": 13088
+   },
+   "pin_fit_errors": 0,
+   "connectivity": 0,
+   "unbound_real_pins": 0,
+   "abstract_ports_without_net": 0,
+   "missing_pins": 0,
+   "face_away": [
+    "h_31.e face E peer 320 um behind (head_31__r5)"
+   ],
+   "abut_without_channel": 27
+  },
+  "r21bt": {
+   "census": {
+    "instances": 13218,
+    "buses": 18523,
+    "net_bits": 8275995,
+    "masters": 172,
+    "real_instances": 132,
+    "placeholder_instances": 13086
+   },
+   "pin_fit_errors": 0,
+   "connectivity": 0,
+   "unbound_real_pins": 0,
+   "abstract_ports_without_net": 0,
+   "missing_pins": 0,
+   "face_away": [
+    "rly_tt_lf3_12.b face S peer 1775 um behind (tt_lf3__r13)",
+    "rly_tt_mx_14.b face N peer 57 um behind (tt_mx__r15)"
+   ],
+   "abut_without_channel": 27
+  }
+ },
+ "lint_note": "face_away: r21b 1 (column head h_31.e: its relay chain starts 320 um W of the E face -- a generic relay-orientation finding of the tile array, same class as the r21m record's pfrag relay), r21bt 2 (generic relays of tt_lf3 / tt_mx).  No spine-block pin faces away.",
+ "tool": "tools/qwen_r21b_check.py <recipe> --out ...; tools/die_top_lint.py lint --die qwen_rom --qwen-recipe <recipe>",
+ "open": [
+  "die LNK / CLNK values of the band-word and control links (relay counts are in the generator; the RTL params are die parameters)",
+  "adoption gated on qfd_sp_tree_top_b(_t)-60ebc5345tt and qfd_sp_band_lanes(_t)-4c4406252tt CLOSED + benches"
+ ]
+}

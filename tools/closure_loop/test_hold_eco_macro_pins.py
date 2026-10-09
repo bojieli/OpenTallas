@@ -18,7 +18,7 @@ HERE = pathlib.Path(__file__).resolve().parent
 class FFOnlySelection(unittest.TestCase):
     def test_fresh_route_provenance_does_not_change_timing_acceptance(self):
         source = (HERE / "hold_eco.sh").read_text()
-        record = source[source.index("import json, re, sys"):].split("\nPY", 1)[0]
+        record = source[source.index("import json, os, re, sys"):].split("\nPY", 1)[0]
         with tempfile.TemporaryDirectory() as tmp:
             p = pathlib.Path(tmp)
             (p / "eco_ff.log").write_text(
@@ -26,6 +26,7 @@ class FFOnlySelection(unittest.TestCase):
                 "OT_ECO route_strategy fresh_global reason rejected_guides explicit_opt_in 1\n"
                 "Number of violations = 0\nOT_ECO cells_added 81\n")
             (p / "corner_sta.json").write_text(json.dumps({
+                "setup_tt": {"corner": "tt", "worst_slack_ps": 180.2, "errors": []},
                 "setup_ss": {"worst_slack_ps": 136.79, "errors": []},
                 "hold_ff": {"worst_slack_ps": 23.52, "errors": []}}))
             result = subprocess.run([sys.executable, "-c", record, tmp, "2", "ff", "15", "15"],

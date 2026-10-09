@@ -1,0 +1,84 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas-data/claude/closure-loop/s81-hend-m221pq-hcol-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hcol_pinreg_f1b64667d_tt/work/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design dsfd_r2l_vr_512x1__hcol\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name w_fi0 -period 833.3310 [get_ports {fi0[0]}]\nset_clock_uncertainty -setup 123.0000 w_fi0\nset_clock_uncertainty -hold 25.0000 w_fi0\nset_propagated_clock [get_clocks {w_fi0}]\ncreate",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 63.93,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 63.930862,
+  "worst_reg_to_reg_slack_ps": 63.93,
+  "worst_input_to_reg_slack_ps": 255.36,
+  "worst_output_port_slack_ps": 511.562622,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "90bcaa8d26f3db597c38e2ac18d95f2dc68af774f76c4bb3e3678f509412fbb3",
+  "spef_sha256": "7464b1add351dc9f92cff291a1c12cacc5e2a260da2af58f8be0345fcf253dd2",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "b605e1d06a5605fd696d0668cc6bbc523925d057d6f91f4bc3fb9e9798c31c77"
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -15.77,
+  "tns_ps": -831.6,
+  "worst_register_d_slack_ps": -15.771274,
+  "worst_reg_to_reg_slack_ps": -15.77,
+  "worst_input_to_reg_slack_ps": 142.4,
+  "worst_output_port_slack_ps": 375.159363,
+  "violating_d_pins": 109,
+  "errors": [],
+  "odb_sha256": "90bcaa8d26f3db597c38e2ac18d95f2dc68af774f76c4bb3e3678f509412fbb3",
+  "spef_sha256": "7464b1add351dc9f92cff291a1c12cacc5e2a260da2af58f8be0345fcf253dd2",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "b605e1d06a5605fd696d0668cc6bbc523925d057d6f91f4bc3fb9e9798c31c77"
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 23.77,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 26.219999,
+  "worst_reg_to_reg_slack_ps": 26.22,
+  "worst_input_to_reg_slack_ps": 27.15,
+  "worst_output_port_slack_ps": 23.769945,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "90bcaa8d26f3db597c38e2ac18d95f2dc68af774f76c4bb3e3678f509412fbb3",
+  "spef_sha256": "7464b1add351dc9f92cff291a1c12cacc5e2a260da2af58f8be0345fcf253dd2",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "b605e1d06a5605fd696d0668cc6bbc523925d057d6f91f4bc3fb9e9798c31c77"
+ },
+ "post_sdc": {
+  "physical/s81_die_views/common/signoff_unc60.sdc": "084839634254b31fa134cf109a587ffbd01bde5058eeb467d72166ac7d04bf97"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": -15.77,
+ "closes_signoff": true
+}

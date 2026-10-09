@@ -1,0 +1,41 @@
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal          0             0          0.00%
+M3         Vertical            0             0          0.00%
+M4         Horizontal   690047789      489328824          29.09%
+M5         Vertical     739563648      523373025          29.23%
+M6         Horizontal   638797268      544847783          14.71%
+M7         Vertical     628371642      535795187          14.73%
+M8         Horizontal   1910737505      1562974099          18.20%
+M9         Vertical     1908949616      1558809183          18.34%
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0197] Via related to pin nodes: 18488834
+[INFO GRT-0198] Via related Steiner nodes: 0
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 31818838
+[INFO GRT-0112] Final usage 3D: 534065669
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2                   0             0            0.00%             0 /  0 /  0
+M3                   0             0            0.00%             0 /  0 /  0
+M4           489328824       17568559            3.59%             0 /  0 /  0
+M5           523373025       165899641           31.70%             0 /  5 / 64
+M6           544847783       7709266            1.41%            64 /  0 / 45028
+M7           535795187       67507209           12.60%             0 /  2 / 15
+M8           1562974099       128624761            8.23%            51 /  0 / 26221
+M9           1558809183       51299719            3.29%             0 /  5 / 70
+---------------------------------------------------------------------------------------
+Total        920160805       438609155           47.67%            115 / 12 / 71398
+
+[INFO GRT-0018] Total wirelength: 2176273675 um
+[INFO GRT-0014] Routed nets: 8057897
+[WARNING GRT-0704] Try reduce the layer adjustment from 14.599999% to 5%
+[WARNING GRT-0115] Global routing finished with congestion. Check the congestion regions in the DRC Viewer.
+[INFO GRT-0303] Global routing runtime = 04:51:20

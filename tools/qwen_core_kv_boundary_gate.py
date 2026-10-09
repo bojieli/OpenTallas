@@ -8,7 +8,7 @@ import qwen_core_opaque_interfaces as O
 import qwen_core_kv_boundary as K
 from qwen_core_kv_bridge_tb import bridge_lines
 R=C.ROOT
-ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--yosys',default='/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys');args=ap.parse_args();P=args.out.resolve();P.mkdir(parents=True,exist_ok=False)
+ap=argparse.ArgumentParser();ap.add_argument('--out',type=Path,required=True);ap.add_argument('--yosys',default='/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys');ap.add_argument('--out-latch',choices=['none','latch','mutant'],default='none');args=ap.parse_args();P=args.out.resolve();P.mkdir(parents=True,exist_ok=False)
 C.RETAINED=R/'physical/qwen_core_ctx/retained_screen_synth.ys'
 for cand in [0,1]:
  dest=P/f'full{cand}';original=C.core_text
@@ -21,6 +21,13 @@ for cand in [0,1]:
  O.rewrite(prep)
  with (dest/'yosys.log').open('w') as log:subprocess.run([args.yosys,'-Q','-T','-s',str(prep)],stdout=log,stderr=subprocess.STDOUT,check=True)
  (dest/'opaque_width_gate.json').write_text(json.dumps(O.validate(dest/'specialized_before_blackbox.json'),indent=2)+'\n')
+ if cand and args.out_latch!='none':
+  # drive-0602: candidate core gets the output lockup-latch stage (tools/qwen_core_out_latch.py) on exactly the output
+  # ports the route's controller cut keeps; 'mutant' = rising-edge flop (+1 cycle, must FAIL)
+  import qwen_core_out_latch as OL, qwen_rom_core_controller_cut as CC
+  dj=json.loads((dest/'original.json').read_text());kept=set(CC.cut(dj,'ot_qwen_rom_core',True)[0]['modules']['ot_qwen_rom_core']['ports'])
+  txt,nl=OL.wrap_verilog((dest/'control.v').read_text(),dj['modules']['ot_qwen_rom_core']['ports'],only=kept,mutant_dff=args.out_latch=='mutant')
+  (dest/'control.v').write_text(txt);(dest/'out_latch.json').write_text(json.dumps(dict(mode=args.out_latch,latched_bits=nl))+'\n')
 ports=json.loads((P/'full0/original.json').read_text())['modules']['ot_qwen_rom_core']['ports']
 lines=['`timescale 1ns/1ps','module tb #(parameter NEG=0, STALL=0);','reg clk=0; always #5 clk=~clk; reg rst_n=0,start=0; integer cycle=0,i,j; reg [1023:0] mem[0:64];','`include "ot_hdc_isa.svh"','always @(posedge clk) cycle<=cycle+1;']
 outs={};widths={}
@@ -72,6 +79,8 @@ lines += ['initial begin','for(i=0;i<65;i=i+1) mem[i]=0;','for(i=0;i<64;i=i+1) b
  '$display("PASS full controller FB3 BOUND AMQ NXREG MEIF SUIF PINREG: ME32 SU32 fields exact; no duplicate acceptance; reset abort; END");$finish;end',
  'initial begin repeat(10000) @(posedge clk);$display("DBG nm %d/%d ns %d/%d st %d/%d nx %b/%b fault %b/%b kv %b/%b",nm0,nm1,ns0,ns1,d0.st,d1.st,d0.nx_v,d1.nx_v,d0.fault,d1.fault,d0.kv_ok_i,d1.kv_ok_i);$fatal(1,"liveness");end','endmodule']
 lines += ['module ICGx1_ASAP7_75t_R(input CLK,ENA,SE, output GCLK);reg en;always @(*) if(!CLK) en=ENA|SE;assign GCLK=CLK&en;endmodule']
+import re
+if args.out_latch!='none':lines=[re.sub(r'\bd1\.(?!u_ol\.)','d1.u_ol.',x) for x in lines]
 (P/'full_tb.sv').write_text('\n'.join(lines)+'\n')
 rows=[]
 for stall,neg in [(0,0),(1,0),(0,1),(0,2)]:
@@ -80,7 +89,7 @@ for stall,neg in [(0,0),(1,0),(0,1),(0,2)]:
  if r.returncode:raise RuntimeError(r.stderr[-3500:])
  r=subprocess.run(['vvp',str(P/name)],text=True,capture_output=True);(P/(name+'.log')).write_text(r.stdout+r.stderr);print(name,r.returncode,r.stdout,r.stderr);rows.append(dict(name=name,returncode=r.returncode,negative=bool(neg),passed=(r.returncode!=0 and ('ME event mismatch 7' if neg==1 else 'liveness') in r.stdout) if neg else (r.returncode==0 and 'PASS full controller' in r.stdout)))
 
-record=dict(schema="qwen.kv_banked_boundary.full_interface_gate.v1",status="pass" if all(r["passed"] for r in rows) else "fail",positive_engine_events=128,positive_KV_RMW_bytes=64,measured_cycle_cost=dict(no_stall=30,periodic_backpressure=28),rows=rows,source_sha256={(str(f.relative_to(R)) if f.is_relative_to(R) else "tools/"+f.name):hashlib.sha256(f.read_bytes()).hexdigest() for f in [Path(C.__file__),Path(S.__file__),Path(O.__file__),Path(K.__file__),Path(__file__),Path(__file__).with_name("qwen_core_kv_bridge_tb.py"),R/"rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv",R/"rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv",R/"rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"]},lowered_source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in [P/"full0/core.sv",P/"full1/core.sv",P/"core0.v",P/"core1.v"]},scope="Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation")
+record=dict(schema="qwen.kv_banked_boundary.full_interface_gate.v1",out_latch=args.out_latch,status="pass" if all(r["passed"] for r in rows) else "fail",positive_engine_events=128,positive_KV_RMW_bytes=64,measured_cycle_cost=dict(no_stall=30,periodic_backpressure=28),rows=rows,source_sha256={(str(f.relative_to(R)) if f.is_relative_to(R) else "tools/"+f.name):hashlib.sha256(f.read_bytes()).hexdigest() for f in [Path(C.__file__),Path(S.__file__),Path(O.__file__),Path(K.__file__),Path(__file__),Path(__file__).with_name("qwen_core_kv_bridge_tb.py"),R/"rtl/hdc/kv/ot_hdc_qwen_kv_vector_bridge.sv",R/"rtl/hdc/kv/ot_hdc_qwen_kv_write_adapter.sv",R/"rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv"]},lowered_source_sha256={str(f.relative_to(P)):hashlib.sha256(f.read_bytes()).hexdigest() for f in [P/"full0/core.sv",P/"full1/core.sv",P/"core0.v",P/"core1.v"]},scope="Actual full controller, FB3 BOUND AMQ NXREG MEIF SUIF PINREG, retained shape G6144 SW64 NW18; minimum engine boundaries, no arithmetic or whole-system simulation")
 (P/"result.json").write_text(json.dumps(record,indent=2)+"\n")
 print(json.dumps(record,indent=2))
 if record["status"]!="pass":raise SystemExit(1)

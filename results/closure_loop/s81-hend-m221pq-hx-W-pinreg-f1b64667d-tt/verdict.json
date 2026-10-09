@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt",
+ "block": "dsfd_l2r_vr_564x1__hx_W",
+ "owner": "Claude:redesign-s81",
+ "source_branch": "claude/redesign-s81-20261008",
+ "source_commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0",
+ "host": "localhost",
+ "run_dir": "/home/ubuntu/closure-loop-local/s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 64.93,
+  "ff_ps": 23.78,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [
+   "physical/s81_die_views/common/signoff_unc60.sdc"
+  ],
+  "corner_sta": [
+   "/home/ubuntu/closure-loop-local/s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hx_W_pinreg_f1b64667d_tt/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/home/ubuntu/closure-loop-local/s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt/routes/s81_hend_m221pq_hx_W_pinreg_f1b64667d_tt/work/orfs/logs/asap7/opentallas_dsfd_l2r_vr_564x1__hx_W_asap7_s81g_s81_hend_m221pq_hx_W_pinreg_f1b64667d_tt/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_exact_pinreg": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "build g rc=0\nbuild m rc=0\nrun_g_1.log: SUMMARY r2l 400/400 l2r 400/400 words, errors 0 RESULT PASS\nrun_g_2.log: SUMMARY r2l 400/400 l2r 400/400 words, errors 0 RESULT PASS\nrun_g_3.log: SUMMARY r2l 400/400 l2r 400/400 words, errors 0 RESULT PASS\nrun_m1.log: SUMMARY r2l 400/400 l2r 400/400 words, errors 1 RESULT FAIL\n",
+   "track": "parallel"
+  },
+  "bench_neg_mut": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "HEND_NEG FAIL\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 567,
+    "mean": 169.8,
+    "min": 166.4,
+    "max": 172.9
+   },
+   "all": {
+    "n": 2838,
+    "mean": 169.5,
+    "min": 166.2,
+    "max": 173.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 567,
+    "mean": 97.1,
+    "min": 94.4,
+    "max": 100.7
+   },
+   "all": {
+    "n": 2838,
+    "mean": 97.0,
+    "min": 94.3,
+    "max": 100.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 170,
+   "CK_SS_ALL_MEAN": 170,
+   "CK_SS_MIN": 166,
+   "CK_SS_ALL_MIN": 166,
+   "CK_SS_MAX": 173,
+   "CK_SS_ALL_MAX": 173,
+   "CK_FF_MEAN": 97,
+   "CK_FF_ALL_MEAN": 97,
+   "CK_FF_MIN": 94,
+   "CK_FF_ALL_MIN": 94,
+   "CK_FF_MAX": 101,
+   "CK_FF_ALL_MAX": 101
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "l2r hub end: +1 serial (ck) cycle at the input pin flop, +1 stream (cks) cycle on od; st +1 ck (status)",
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T03:52:25-07:00",
+ "job_spec": {
+  "name": "s81-hend-m221pq-hx-W-pinreg-f1b64667d-tt",
+  "block": "dsfd_l2r_vr_564x1__hx_W",
+  "owner": "Claude:redesign-s81",
+  "purpose": "REDESIGN-S81 (TT closure, structural): hx_W TT -130.1 (u_c.rp -> sh[rp] read mux -> od pin; -32 r_st_w -> st; -21 i -> mem enables): flop at every pin (i on ck, od on cks, st on ck) | base: s81-hend-m221pq-hx-W-c206a1ac1-mm-tt (TC route, mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget kept)",
+  "hosts": [
+   "ot-agidock128",
+   "ot-pve1",
+   "ot-epyc1tb",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/redesign-s81-20261008",
+   "commit": "f1b64667d7674a4453f935bd1ae20a4c06ef3db0"
+  },
+  "stages": {
+   "bench": [
+    {
+     "name": "exact_pinreg",
+     "cmd": "bash physical/s81_die_views/hend/m221pq/bench_pinreg/run.sh {RUN}/bench && test $(grep -c 'run_g_.*RESULT PASS' {RUN}/bench/summary.txt) -eq 3",
+     "expect": "pass",
+     "threads": 1,
+     "peak_ram_gb": 2
+    },
+    {
+     "name": "neg_mut",
+     "cmd": "bash physical/s81_die_views/hend/m221pq/bench_pinreg/run.sh {RUN}/bench_neg >/dev/null 2>&1; grep -q 'run_m1.log.*RESULT FAIL' {RUN}/bench_neg/summary.txt && { echo 'HEND_NEG FAIL'; exit 1; }; exit 0",
+     "expect": "fail",
+     "fail_regex": "HEND_NEG FAIL",
+     "threads": 1,
+     "peak_ram_gb": 2
+    }
+   ],
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; SRC={SRC} OUT={RUN}/routes CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv SDCGEN=make_sdc_hend.sh HEND_KIND=l2r POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl CLK=ck PD=0.45 OT_MM_FF_SDC='physical/s81_die_views/common/signoff_unc60.sdc' SRCS=\"rtl/common/ot_ratio_cdc_fifo.sv\" physical/s81_die_views/glue/route.sh {LABEL}${CL_LABEL_SUFFIX} dsfd_l2r_vr_564x1__hx_W $CL_STOP_AFTER",
+    "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "echo \"route SDC regenerated by the route script from CK_SS_MEAN=$CK_SS_MEAN\"",
+    "threads": 8,
+    "peak_ram_gb": 12
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SRC={SRC} OUT={RUN}/routes CORES=8 DIE=m221pq GLUE=physical/s81_die_views/hend/m221pq/dsfd_glue.sv SDCGEN=make_sdc_hend.sh HEND_KIND=l2r POSTCTS=physical/s81_die_views/glue/post_cts_hend.tcl CLK=ck PD=0.45 OT_MM_FF_SDC='physical/s81_die_views/common/signoff_unc60.sdc' SRCS=\"rtl/common/ot_ratio_cdc_fifo.sv\" physical/s81_die_views/glue/route.sh {LABEL} dsfd_l2r_vr_564x1__hx_W",
+    "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/exit",
+    "logs": [
+     "{RUN}/routes/{LABEL}/run.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cd {SRC} && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name dsfd_l2r_vr_564x1__hx_W --out {RUN}/record --tmp-dir {RUN}/abs_tmp > {RUN}/record/export.log 2>&1; python3 tools/s81_die_view_ports.py check --die m221pq --master dsfd_l2r_vr_564x1__hx_W --lef {RUN}/record/dsfd_l2r_vr_564x1__hx_W.lef > {RUN}/record/check.json; cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ],
+   "post_sdc": [
+    "physical/s81_die_views/common/signoff_unc60.sdc"
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "physical/s81_die_views/views/m221pq/dsfd_l2r_vr_564x1__hx_W"
+   }
+  ],
+  "cycles_added": "l2r hub end: +1 serial (ck) cycle at the input pin flop, +1 stream (cks) cycle on od; st +1 ck (status)",
+  "merge_target": null,
+  "budget": {
+   "enabled": false,
+   "reason": "registered-at-pin FIFO crossing view: IO at 0.2 T (+150 ps die term on the local side) against the measured insertion, as the cfifo / station views"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "route_corner": "TC"
+ }
+}

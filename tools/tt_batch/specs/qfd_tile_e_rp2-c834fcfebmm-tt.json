@@ -1,0 +1,121 @@
+{
+ "name": "qfd_tile_e_rp2-c834fcfebmm-tt",
+ "block": "qfd_tile_e",
+ "owner": "Claude:qwen-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): qfd_tile_e_rp2-c834fcfebmm re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: qfd_tile_e ROM read pipeline ROM_PIPE=1 ROM_ARELAY=2 LRST=1, ROM clock landed early by CTS (250 ps liberty insertion target, macro clustering 2/150); fixes ROM clk->q 789 ps + 396 ps late macro clock (SS -787.7) | flow-hold MM route hold (FF scene, HM 50) + rule H1 sign-off",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-epyc3",
+  "ot-pve1",
+  "ot-agidock128"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 64,
+ "source": {
+  "branch": "claude/qwen-blocks-20261007",
+  "commit": "c834fcfeb27c5bbcc5b9e78c9b5a9cb791612a2b"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "tile_die_glue_exact",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td0 -P tb_qwen_rom_tile_die.NEG=0 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td0 | tee {RUN}/bench/td0.log && grep -q '^PASS' {RUN}/bench/td0.log",
+    "expect": "pass",
+    "pass_regex": "^PASS tile_die",
+    "min_count_regex": "writes=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "tile_die_glue_neg",
+    "cmd": "mkdir -p {RUN}/bench && iverilog -g2012 -o {RUN}/bench/td1 -P tb_qwen_rom_tile_die.NEG=1 rtl/test/tb_qwen_rom_tile_die.sv rtl/physical/ot_qwen_rom_tile_die.sv rtl/hdc/kv/ot_qwen_kv_land_merge.sv && vvp -n {RUN}/bench/td1 | tee {RUN}/bench/td1.log && grep -q '^PASS' {RUN}/bench/td1.log",
+    "expect": "fail",
+    "fail_regex": "^FAIL tile_die",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "rom_pipe_exact",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=1 --param ROM_ARELAY=2 --param SEED=1 --workdir {RUN}/bench/pg_exact --result {RUN}/bench/pg_exact.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/pg_exact.json'));print(('PASS' if d['status']=='pass' else 'FAIL')+' rom_pipe '+d['verdict']+' | neg '+d['negative_control'])\"",
+    "expect": "pass",
+    "pass_regex": "^PASS rom_pipe",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "rom_pipe_mut",
+    "cmd": "mkdir -p {RUN}/bench && python3 tools/rtl_qwen_me_partition_gate_w12.py --ref-file tools/qwen_blocks/ot_hdc_matvec_0e8df511.sv --jobs 8 --param GT=16 --param W=4 --param SMIN=3 --param SMAX=4 --param TCUT=3 --param BD=2 --param NWS=1 --param ORD=1 --param TWS=2 --param MEM_EXTRA=1 --param ACC_LAT=7 --param TREE_LAT=7 --param MUL_LAT=8 --param FAST_ISSUE=1 --param KV_PREP=4 --param ROM_PIPE=1 --param LRST=1 --param ROM_ARELAY=2 --param SEED=2 --param ROM_MUT=1 --param BAW=11 --workdir {RUN}/bench/pg_mut --result {RUN}/bench/pg_mut.json; python3 -c \"import json;d=json.load(open('{RUN}/bench/pg_mut.json'));print('MUTVERDICT '+d['verdict']); import sys; sys.exit(0 if d['verdict'].startswith('PASS') else 1)\"",
+    "expect": "fail",
+    "fail_regex": "MUTVERDICT FAIL",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "die-context IO is referenced IN-RUN to this block's own propagated clock (io_ref_skew.sdc measures the boundary-register arrival after CTS and re-applies at GRT/DRT/FILL), so no calibrated insertion feeds the SDC; no Qwen budget sheet exists (asked the die-top agent)"
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_tile_e_rp2.sdc SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_tile_e_rp2 {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 64
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_tile_e --out {RUN}/record/views/qfd_tile_e --image openroad/orfs:asap7lock --macro-view physical/asap7_memory_macros/ot_rom_4096x266_m8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/qwen_die_masters/signoff/qfd_tile_e_rp2.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_rom_4096x266_m8",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {},
+ "budget": {
+  "enabled": false,
+  "reason": "no Qwen r21 budget sheet; masters kit budgets (0.2 T outside + 90 ps intra / 150 ps inter-region, hold 50) applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/qwen_die_masters/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/qwen_masters_final_20261007/qfd_tile_e_rp2-c834fcfebmm"
+  }
+ ],
+ "cycles_added": "ROM/KV/x memory return +4 cycles per matvec op fill (ROM_ARELAY 2 request relays + group stage + relay); KV write port +2 (order kept); lane reset release +1 edge (no op-visible cost)",
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC"
+}

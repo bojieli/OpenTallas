@@ -1,0 +1,182 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_su_rin_b-36399d734",
+ "block": "hfd_su_result_ingress",
+ "owner": "Claude:hbm-contracts",
+ "source_branch": "claude/hbm-contracts-20261007",
+ "source_commit": "36399d734d19832e1a45132d22167f1be6feac3a",
+ "host": "ot-epyc3",
+ "run_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_rin_b-36399d734",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 29.93,
+  "ff_ps": 25.27,
+  "drc": 0,
+  "ss_tns_ps": 0.0,
+  "post_sdc": [],
+  "corner_sta": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_rin_b-36399d734/route/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_su_rin_b-36399d734/route/work/orfs/logs/asap7/opentallas_hfd_su_result_ingress_asap7_hc_su_rin_b/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_smsu_gate": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "OK    pass smsu_edge_positive                       rc=0 marker=True \nOK    pass smsu_edge_positive_long                  rc=0 marker=True \nOK    fail NEG_smsu_no_reservation                  rc=-6 marker=False \nOK    fail NEG_smsu_extra_row                       rc=-6 marker=False \nOK    fail NEG_smsu_sm_fault                        rc=-6 marker=False \nOK    fail NEG_smsu_release_before_count            rc=-6 marker=False \nOK    fail NEG_smsu_credit_not_returned_on_pop      rc=-6 marker=False \nGATE smsu PASS\n",
+   "track": "parallel"
+  },
+  "bench_smsu_negatives_detected": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "NEGATIVES_DETECTED 5\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {},
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 586,
+    "mean": 254.0,
+    "min": 248.6,
+    "max": 260.0
+   },
+   "all": {
+    "n": 985,
+    "mean": 253.9,
+    "min": 248.6,
+    "max": 260.0
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 586,
+    "mean": 156.0,
+    "min": 150.5,
+    "max": 161.8
+   },
+   "all": {
+    "n": 985,
+    "mean": 156.0,
+    "min": 150.4,
+    "max": 161.8
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 254,
+   "CK_SS_ALL_MEAN": 254,
+   "CK_SS_MIN": 249,
+   "CK_SS_ALL_MIN": 249,
+   "CK_SS_MAX": 260,
+   "CK_SS_ALL_MAX": 260,
+   "CK_FF_MEAN": 156,
+   "CK_FF_ALL_MEAN": 156,
+   "CK_FF_MIN": 150,
+   "CK_FF_ALL_MIN": 150,
+   "CK_FF_MAX": 162,
+   "CK_FF_ALL_MAX": 162
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": 1029,
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T06:17:35-07:00",
+ "job_spec": {
+  "name": "hbm_su_rin_b-36399d734",
+  "block": "hfd_su_result_ingress",
+  "owner": "Claude:hbm-contracts",
+  "purpose": "HBM contract block su_rin_b (structural fixes 456fcf4a6, calibrated die-clock IO, flow-hold mm hold repair)",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc1tb",
+   "ot-pve1",
+   "ot-agidock128"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "source": {
+   "branch": "claude/hbm-contracts-20261007",
+   "commit": "36399d734d19832e1a45132d22167f1be6feac3a"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "stages": {
+   "bench": [
+    {
+     "name": "smsu_gate",
+     "cmd": "python3 tools/hbm_contracts_gate.py --suite smsu --out {RUN}/gate_smsu --par 4",
+     "expect": "pass",
+     "pass_regex": "GATE smsu PASS",
+     "needs": [
+      "verilator"
+     ],
+     "threads": 4,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "smsu_negatives_detected",
+     "cmd": "python3 -c \"import json; p=json.load(open('{RUN}/gate_smsu/record.json')); n=[c for c in p['cases'] if c['expect']=='fail']; assert p['status']=='PASS' and n and all(c['verdict']=='OK' and c['returncode'] not in (0,'timeout') for c in n); print('NEGATIVES_DETECTED', len(n)); raise SystemExit(1)\"",
+     "expect": "fail",
+     "fail_regex": "NEGATIVES_DETECTED",
+     "needs": [],
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && python3 tools/hbm_contracts_physical.py --block su_rin_b --out {RUN}/cal --stop-after cts",
+    "base": "{RUN}/cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk.sh $CK_SS_MEAN && bash physical/hbm_accel_die_views/common/make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "route": {
+    "cmd": "FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc && HM=0.050 IO_ROUTE_SDC=physical/hbm_accel_die_views/common/io_vclk_${CK_SS_MEAN}.sdc IO_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc python3 tools/hbm_contracts_physical.py --block su_rin_b --out {RUN}/route",
+    "ok": "test \"$(cat {RUN}/route/route.exit)\" = 0 && test \"$(cat {RUN}/route/corner.exit)\" = 0",
+    "logs": [
+     "{RUN}/route/route.log",
+     "{RUN}/route/corner.log"
+    ],
+    "needs": [
+     "orfs"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/physical.json {RUN}/route/corner_sta.json {RUN}/route/screening_contract.json {CL}/calib.json {RUN}/record/ && cp {RUN}/gate_smsu/record.json {RUN}/record/gate_record.json",
+    "needs": []
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/route/corner_sta.json",
+   "drc_metrics": "{RUN}/route/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": []
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/hbm_contracts_20261007/hbm_su_rin_b-36399d734"
+   }
+  ],
+  "cycles_added": 1029,
+  "merge_target": null
+ }
+}

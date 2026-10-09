@@ -1,0 +1,57 @@
+{
+  "name": "ot_meso_fifo",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/routes/s81_meso_d4_96885ea7e_mmq/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/routes/s81_meso_d4_96885ea7e_mmq/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/routes/s81_meso_d4_96885ea7e_mmq/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/record/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/s81-meso-d4-96885ea7e-mmq/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_meso_fifo.lef": "ebeb95507a5c9b291961d90148c308153f3a9622aaef57012cfe4c70fdd1ac47",
+    "ot_meso_fifo_ff.lib": "d6c52535bfbae4e5de913f0dd6ce7ce395e67a51b3ffb0a4f431fde142cff8fe",
+    "ot_meso_fifo_ss.lib": "5ce5fe62c8a3badc08349466233e1ed368ea83955b9ea3f0a204b9ac86382549"
+  },
+  "ok": true
+}

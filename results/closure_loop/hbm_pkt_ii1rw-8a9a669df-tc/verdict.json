@@ -1,0 +1,200 @@
+{
+ "schema": "opentallas.closure_loop.verdict.v1",
+ "job": "hbm_pkt_ii1rw-8a9a669df-tc",
+ "block": "hfd_coll_pkt_fifo_ii1",
+ "owner": "Claude:drive-0532 (for hbm-contracts)",
+ "source_branch": "claude/drive-0532-20261008",
+ "source_commit": "8a9a669df0241701d5e48f719d6cf169a81af58c",
+ "host": "ot-agidock128",
+ "run_dir": "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc",
+ "acceptance": {
+  "ss_min_ps": 0.0,
+  "ff_min_ps": 0.0,
+  "drc": 0,
+  "rule": "OWNER 2026-10-07: closed at SS >= 0 / FF >= 0 at 833.333 (60/25 corners; +15 is the design target), agreed die-clock IO budgets, DRC 0"
+ },
+ "metrics": {
+  "ss_ps": 12.05,
+  "ff_ps": 17.31,
+  "drc": 0,
+  "ss_tns_ps": -1126.8,
+  "post_sdc": [
+   "physical/common_flow/io_ref_routed.sdc"
+  ],
+  "corner_sta": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/route/corner_sta.json"
+  ],
+  "drc_metrics": [
+   "/srv/opentallas-scratch/claude/closure-loop/hbm_pkt_ii1rw-8a9a669df-tc/route/work/orfs/logs/asap7/opentallas_hfd_coll_pkt_fifo_ii1_asap7_hc_pkt_ii1rw/base/5_2_route.json"
+  ],
+  "drc_skipped": null
+ },
+ "benches": {
+  "bench_pktr_gate": {
+   "expect": "pass",
+   "rc": 0,
+   "ok": true,
+   "tail": "marker=True \nOK    pass pktr_depth256_wreg                       rc=0 marker=True \nOK    pass pktr_depth64                             rc=0 marker=True \nOK    fail NEG_pktr_no_correction                   rc=-6 marker=False \nOK    fail NEG_pktr_ready_reserve_1                 rc=-6 marker=False \nOK    fail NEG_pktr_fetch_ignores_credit            rc=-6 marker=False \nOK    fail NEG_pktr_wreg_reads_unwritten            rc=-6 marker=False \nOK    fail NEG_pktr_ocr4_rate                       rc=-6 marker=False \nOK    fail NEG_pktr_no_raw2_parity                  rc=-6 marker=False \nGATE pktr PASS\n",
+   "track": "parallel"
+  },
+  "bench_pkt_negatives_detected": {
+   "expect": "fail",
+   "rc": 1,
+   "ok": true,
+   "tail": "NEGATIVES_DETECTED 6\n",
+   "track": "parallel"
+  }
+ },
+ "no_bench_reason": null,
+ "checks": {
+  "ttb_routed_at_TC": {
+   "ok": true,
+   "out": ""
+  }
+ },
+ "calibration": {
+  "ss": {
+   "boundary": {
+    "n": 1104,
+    "mean": 545.6,
+    "min": 529.2,
+    "max": 564.0
+   },
+   "all": {
+    "n": 3143,
+    "mean": 542.9,
+    "min": 528.0,
+    "max": 568.3
+   },
+   "errors": []
+  },
+  "ff": {
+   "boundary": {
+    "n": 1104,
+    "mean": 365.7,
+    "min": 350.9,
+    "max": 383.3
+   },
+   "all": {
+    "n": 3143,
+    "mean": 363.8,
+    "min": 350.4,
+    "max": 385.2
+   },
+   "errors": []
+  },
+  "env": {
+   "CK_SS_MEAN": 546,
+   "CK_SS_ALL_MEAN": 543,
+   "CK_SS_MIN": 529,
+   "CK_SS_ALL_MIN": 528,
+   "CK_SS_MAX": 564,
+   "CK_SS_ALL_MAX": 568,
+   "CK_FF_MEAN": 366,
+   "CK_FF_ALL_MEAN": 364,
+   "CK_FF_MIN": 351,
+   "CK_FF_ALL_MIN": 350,
+   "CK_FF_MAX": 383,
+   "CK_FF_ALL_MAX": 385
+  },
+  "db": "4_1_cts.odb",
+  "clock": "core_clk",
+  "parasitics": "placement-estimated"
+ },
+ "cycles_added": "first-flit latency 2 -> 5 edges (pin flop + capture + syndrome + correct + out flop), write +1 edge (pin flop; WREG +1 more), ready reserve 2 slots; consumer needs OCR=8 x 545 b credit slots",
+ "status": "CLOSED",
+ "closed_at": "2026-10-08T08:21:16-07:00",
+ "job_spec": {
+  "name": "hbm_pkt_ii1rw-8a9a669df-tc",
+  "block": "hfd_coll_pkt_fifo_ii1",
+  "owner": "Claude:drive-0532 (for hbm-contracts)",
+  "purpose": "HBM packet SRAM II=1 queue STRUCTURAL redesign ii1r, b geometry + WREG=1 (flop at the macro inputs): TT failures of hbm_pkt_ii1/ii1b-36399d734-tt (-360/-403 din->encode->SRAM under the 518.67 ps die-link input budget; -198 syn_q->ready; -116 SRAM->syndrome->ue_q) fixed by pin flops on every port, registered ready with 2-slot reserve, credit-flow output (pop = credit return, OCR=8), SRAM output capture flop, syndrome/correct split. ORFS corner TC, mm FF hold HM 50, H1, link_budget_hook. Supersedes hbm_pkt_ii1-8bd16b9e0.",
+  "hosts": [
+   "ot-epyc4",
+   "ot-epyc1tb",
+   "ot-pve1",
+   "ot-agidock128",
+   "ot-epyc2"
+  ],
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "source": {
+   "branch": "claude/drive-0532-20261008",
+   "commit": "8a9a669df0241701d5e48f719d6cf169a81af58c"
+  },
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05,
+  "stages": {
+   "bench": [
+    {
+     "name": "pktr_gate",
+     "cmd": "python3 tools/hbm_contracts_gate.py --suite pktr --out {RUN}/gate_pkt --par 9 --jobs 4",
+     "expect": "pass",
+     "pass_regex": "GATE pktr PASS",
+     "needs": [
+      "verilator"
+     ],
+     "threads": 8,
+     "peak_ram_gb": 8
+    },
+    {
+     "name": "pkt_negatives_detected",
+     "cmd": "python3 -c \"import json; p=json.load(open('{RUN}/gate_pkt/record.json')); n=[c for c in p['cases'] if c['expect']=='fail']; assert p['status']=='PASS' and n and all(c['verdict']=='OK' and c['returncode'] not in (0,'timeout') for c in n); print('NEGATIVES_DETECTED', len(n)); raise SystemExit(1)\"",
+     "expect": "fail",
+     "fail_regex": "NEGATIVES_DETECTED",
+     "needs": [],
+     "threads": 1,
+     "peak_ram_gb": 1
+    }
+   ],
+   "calibrate": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && python3 tools/hbm_contracts_physical.py --block pkt_ii1rw --out {RUN}/cal --stop-after cts",
+    "base": "{RUN}/cal/work/orfs/results/asap7/*/base",
+    "clock": "core_clk",
+    "sdc_cmd": "bash physical/hbm_accel_die_views/common/make_io_vclk.sh $CK_SS_MEAN && bash physical/hbm_accel_die_views/common/make_io_vclk_ff.sh $CK_FF_MIN $CK_FF_MAX",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "route": {
+    "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; FH=$(ls -d /srv/opentallas-scratch/claude/flowhold/src /home/ubuntu/closure-loop-local/flowhold/src 2>/dev/null | head -1) && python3 $FH/tools/closure_loop/hold_corners_patch.py {SRC} && python3 $FH/tools/closure_loop/h1_patch.py {SRC} && export OT_MM_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc && HM=0.050 IO_ROUTE_SDC=physical/hbm_accel_die_views/common/io_vclk_${CK_SS_MEAN}.sdc IO_FF_SDC=physical/hbm_accel_die_views/common/io_vclk_ff_${CK_FF_MIN}_${CK_FF_MAX}.sdc python3 tools/hbm_contracts_physical.py --block pkt_ii1rw --out {RUN}/route",
+    "ok": "test \"$(cat {RUN}/route/route.exit)\" = 0 && test \"$(cat {RUN}/route/corner.exit)\" = 0",
+    "logs": [
+     "{RUN}/route/route.log",
+     "{RUN}/route/corner.log"
+    ],
+    "needs": [
+     "orfs"
+    ],
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record && cp {RUN}/route/physical.json {RUN}/route/corner_sta.json {RUN}/route/screening_contract.json {CL}/calib.json {RUN}/record/ && cp {RUN}/gate_pkt/record.json {RUN}/record/gate_record.json",
+    "needs": []
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/route/corner_sta.json",
+   "drc_metrics": "{RUN}/route/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "checks": [
+    {
+     "name": "ttb_routed_at_TC",
+     "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+    }
+   ]
+  },
+  "record": [
+   {
+    "from": "{RUN}/record",
+    "to": "results/physical/hbm_contracts_20261007/hbm_pkt_ii1rw-8a9a669df-tc"
+   }
+  ],
+  "cycles_added": "first-flit latency 2 -> 5 edges (pin flop + capture + syndrome + correct + out flop), write +1 edge (pin flop; WREG +1 more), ready reserve 2 slots; consumer needs OCR=8 x 545 b credit slots",
+  "merge_target": null,
+  "route_corner": "TC",
+  "budget": {
+   "enabled": false,
+   "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+  }
+ }
+}

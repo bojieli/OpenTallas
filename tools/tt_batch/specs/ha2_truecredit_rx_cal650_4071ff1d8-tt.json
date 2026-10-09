@@ -1,0 +1,77 @@
+{
+ "name": "ha2_truecredit_rx_cal650_4071ff1d8-tt",
+ "block": "ot_ha2_truecredit_rx_phys",
+ "owner": "Claude:hbm-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): ha2_truecredit_rx_cal650_4071ff1d8 re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Signal-identity pin hook successor to04491da6c; excludes only classified PG boxes. Separate actual INJ2 truecredit rx screening/calibration. Actual collective parent IO unbound; external adoption hold required. Does not qualify by h2 view. | hbm-blocks: calibrate at nominal 650 ps vclk insertion (d7a64a321 calibration died on a -583 ps input hold band from vclk latency 0)",
+ "hosts": [
+  "ot-epyc3",
+  "ot-epyc1tb",
+  "ot-epyc2",
+  "ot-pve1"
+ ],
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-blocks-mm-20261007",
+  "commit": "4071ff1d89817c9655bf31aa30ee1a8bf40a3749",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical/ha2_truecredit_20261007",
+   "physical/abi3",
+   "tests/test_ha2_truecredit_signal_pins.py"
+  ]
+ },
+ "stages": {
+  "bench": [],
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; python3 tools/ha2_truecredit_physical_signalpins.py --part rx --threads 8 --run {RUN}/routes/{LABEL}_cal --cts-only",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "core_clk",
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; python3 tools/ha2_truecredit_physical_signalpins.py --part rx --threads 8 --run {RUN}/routes/{LABEL}",
+   "ok": "test -s {RUN}/routes/{LABEL}/corner_sta.json && test \"$(cat {RUN}/routes/{LABEL}/build.exit)\" = 0 && test \"$(cat {RUN}/routes/{LABEL}/corner.exit)\" = 0",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log",
+    "{RUN}/routes/{LABEL}/corner.log"
+   ],
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/physical.json {RUN}/routes/{LABEL}/launch.json {CL}/calib.json {RUN}/record/"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ha2_truecredit_20261007/screening_signoff.sdc",
+   "physical/ha2_truecredit_20261007/rx_check_pins_signal_only.tcl"
+  ]
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/physical/ha2_truecredit_20261007/rx_signalpins_4071ff1d8"
+  }
+ ],
+ "no_bench_reason": "Source-matched generic20/reset4/endpoint3 already PASS; fixed-shape wrappers add no state or logic. Separate immutable wrapper lint/source/pin preflight accompanies candidate.",
+ "cycles_added": 0,
+ "merge_target": null,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

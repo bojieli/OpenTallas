@@ -25,11 +25,11 @@ module tb_hbm_sm_su_composed;
     reg rsp_v = 0; reg [9:0] rsp_tag; reg [1087:0] rsp_data;
     reg xw_en = 0; reg [$clog2(XDEPTH)-1:0] xw_addr; reg [6:0] xw_grp; reg [8*256-1:0] xw_data; integer gg;
     wire sm_rv; wire [RW-1:0] sm_rrow; wire [NC*32-1:0] sm_rdata; wire sm_fault; wire arrive; wire released;
-    wire ed_op_r, ed_out_v, ed_op_done, ed_fault; wire [RW-1:0] ed_row; wire [NC*32-1:0] ed_data; wire [6:0] ed_done_rows, ed_free;
+    wire ed_op_ack, ed_out_v, ed_op_done, ed_fault; wire [RW-1:0] ed_row; wire [NC*32-1:0] ed_data; wire [6:0] ed_done_rows, ed_free;
     reg ed_op_v = 0; reg ed_out_r = 0; wire fault = sm_fault | ed_fault; wire rv = ed_out_v && ed_out_r;
     wire [RW-1:0] rrow = ed_row; wire [NC*32-1:0] rdata = ed_data;
     ot_hbm_sm_su_result_edge #(.NST(NST), .RW(RW), .DW(NC*32)) edge_u (.clk(clk), .rst_n(rst_n), .rv(sm_rv), .rrow(sm_rrow),
-        .rdata(sm_rdata), .sm_fault(sm_fault), .op_v(ed_op_v), .op_rows(op_rows[6:0]), .op_r(ed_op_r), .out_v(ed_out_v),
+        .rdata(sm_rdata), .sm_fault(sm_fault), .op_v(ed_op_v), .op_rows(op_rows[6:0]), .op_ack(ed_op_ack), .out_v(ed_out_v),
         .out_r(ed_out_r), .out_row(ed_row), .out_data(ed_data), .op_done(ed_op_done), .op_done_rows(ed_done_rows),
         .fault(ed_fault), .free_o(ed_free));
     integer ed_seed = 5; always @(negedge clk) ed_out_r = ($urandom % 5) != 0;
@@ -94,8 +94,8 @@ module tb_hbm_sm_su_composed;
         @(negedge clk); xw_en = 0; d_valid = 1; d_lines = nlines;
         // reserve the op's rows at the SU ingress before the SM may start (credit reservation)
         @(negedge clk); d_valid = 0; ed_op_v = 1;
-        while (!ed_op_r) @(negedge clk);
-        @(negedge clk); ed_op_v = 0; start = 1;
+        while (!ed_op_ack) @(negedge clk);
+        ed_op_v = 0; start = 1;
         t0 = $time;
         @(negedge clk); start = 0;
     end

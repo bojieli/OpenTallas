@@ -23,6 +23,8 @@ proc ot_clk_ins {scene {clk core_clk}} {
 proc ot_vclk_from_insertion {{force 0}} {
   if {(!$force && [info exists ::ot_vclk_L_done]) || [llength [get_clocks -quiet vclk]] == 0} { return }
   set wc [ot_clk_ins WC]; set bc [ot_clk_ins BC]
+  # OPTION B routes (OT_ORFS_CORNER_OVERRIDE=TC): the primary scene is TC
+  if {[llength $wc] == 0} { set wc [ot_clk_ins TC] }
   if {[llength $wc] == 0} { set wc [ot_clk_ins {}] }
   if {[llength $wc] == 0} { puts "ot_vclk_from_insertion: no core_clk latency report; vclk unchanged"; return }
   lassign $wc lo hi
@@ -44,7 +46,7 @@ proc ot_vclk_from_insertion {{force 0}} {
     if {[llength $ot_oc]} { set_output_delay -min $omin -clock vclk $ot_oc }
     if {[llength $ot_oh]} {
       unset_output_delay -clock vclk $ot_oh
-      set hw [ot_clk_ins WC hbm_clk]; set hb [ot_clk_ins BC hbm_clk]
+      set hw [ot_clk_ins WC hbm_clk]; if {[llength $hw] == 0} { set hw [ot_clk_ins TC hbm_clk] }; set hb [ot_clk_ins BC hbm_clk]
       if {[llength $hw] && [llength $hb]} {
         set Lh [expr {round(([lindex $hw 0] + [lindex $hw 1]) / 2.0)}]
         set_clock_latency $Lh [get_clocks vclk_h]

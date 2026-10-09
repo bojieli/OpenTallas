@@ -9,6 +9,6 @@ create_generated_clock -name io_clk -source [get_ports clk] -divide_by 1 $rp
 set ins {}
 foreach p [all_inputs -no_clocks] { if {[get_name $p] ne "rst_n"} { lappend ins $p } }
 set_input_delay -max 300 -clock io_clk $ins
-set_input_delay -min -30 -clock io_clk $ins
+set_input_delay -min 20 -clock io_clk $ins   ;# RULE H1: the 50 ps hold IO term only on the output min
 set_output_delay -max 280 -clock io_clk [all_outputs]
 set_output_delay -min -60 -clock io_clk [all_outputs]

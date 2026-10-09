@@ -4,7 +4,10 @@
 // Physical CA encoding, pending-write drain and refresh handoff are parent
 // obligations. A single sequential-state upset is covered, not common-mode
 // faults in both copies, clock/reset, input wires or combinational cells.
-module ot_qwen_ctrl_pc_protected #(parameter integer ENABLE=0,PC=0,PHASE=0)(
+module ot_qwen_ctrl_pc_protected #(parameter integer ENABLE=0,PC=0,PHASE=0,
+  // OREG=1 (qwen-blocks 2026-10-07; 0 = original): the gated command/credit/busy/fault outputs leave from registers (+1
+  // cycle on every output, so JEDEC spacing is unchanged); rst_n and the replica compare no longer reach the pins
+  parameter integer OREG=0)(
  input wire clk,rst_n,cmd_v,input wire [31:0] cmd,
  input wire [2:0] read_credit,
  output wire cmd_credit,row_v,output wire [2:0] row_op,
@@ -38,18 +41,28 @@ module ot_qwen_ctrl_pc_protected #(parameter integer ENABLE=0,PC=0,PHASE=0)(
  always @(posedge clk or negedge rst_n)
   if(!rst_n) begin trip_seen<=0;permit_state<=1;end
   else if(halt) begin trip_seen<=1;permit_state<=0;end
- assign cmd_credit=allow && cr[0];
- assign row_v=allow && rv[0];
- assign row_op=row_v?ro[0]:3'b0;
- assign row_bank=row_v?rb[0]:5'b0;
- assign row_row=row_v?rr[0]:19'b0;
- assign col_v=allow && cv[0];
- assign col_bank=col_v?cb[0]:5'b0;
- assign col_col=col_v?cc[0]:5'b0;
- assign col_we=col_v && cwe[0];
- assign busy=allow && bs[0];
+ wire        w_cr=allow && cr[0];
+ wire        w_rv=allow && rv[0];
+ wire [2:0]  w_ro=w_rv?ro[0]:3'b0;
+ wire [4:0]  w_rb=w_rv?rb[0]:5'b0;
+ wire [18:0] w_rr=w_rv?rr[0]:19'b0;
+ wire        w_cv=allow && cv[0];
+ wire [4:0]  w_cb=w_cv?cb[0]:5'b0;
+ wire [4:0]  w_cc=w_cv?cc[0]:5'b0;
+ wire        w_we=w_cv && cwe[0];
+ wire        w_bs=allow && bs[0];
  // Expose registered sticky state, not clock-edge comparator settling.
  // Commands are inhibited immediately by halt; the fault notification follows
  // at the next sample edge. Both downstream interfaces are synchronous.
- assign fault=(ENABLE!=0) && rst_n && (trip_seen || !permit_state);
+ wire        w_ft=(ENABLE!=0) && rst_n && (trip_seen || !permit_state);
+ generate if (OREG!=0) begin : g_oreg
+  (* keep=1 *) reg [44:0] oq;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n) oq<=45'b0;
+   else oq<={w_cr,w_rv,w_ro,w_rb,w_rr,w_cv,w_cb,w_cc,w_we,w_bs,(ENABLE!=0) && (halt || trip_seen || !permit_state)};
+  assign {cmd_credit,row_v,row_op,row_bank,row_row,col_v,col_bank,col_col,col_we,busy,fault}=oq;
+ end else begin : g_comb
+  assign {cmd_credit,row_v,row_op,row_bank,row_row,col_v,col_bank,col_col,col_we,busy,fault}=
+         {w_cr,w_rv,w_ro,w_rb,w_rr,w_cv,w_cb,w_cc,w_we,w_bs,w_ft};
+ end endgenerate
 endmodule

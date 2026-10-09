@@ -1,0 +1,66 @@
+{
+ "name": "hbm-norm-mem1-hier200-68b82e1fd-tt",
+ "block": "ot_hbm_norm_engine_view",
+ "owner": "Claude:hbm-blocks",
+ "purpose": "TT-BATCH (owner option B, one large batch): hbm-norm-mem1-hier200-68b82e1fd re-routed at ORFS CORNER=TC (setup repair at TT), flow-hold mm FF hold HM 50, rule H1, CTS fix hooks + consistent die-link budget; original source commit kept; verdict TT setup >= 0 / FF hold >= 0 / DRC 0, SS = sensitivity. | was: Norm engine MEM1 with ORFS hierarchical synthesis (SYNTH_HIERARCHICAL=1, min keep 200 nand2-eq): flat MEM1 synth stuck 10.5 h in opt_dff re-run passes; RTL identical to cc383b8fc",
+ "hosts": [
+  "ot-epyc3",
+  "ot-pve1"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 80,
+ "source": {
+  "branch": "claude/hbm-blocks-norm-20261007",
+  "commit": "68b82e1fd931da1228f8ef6520ee5d767944149c",
+  "paths": [
+   "tools",
+   "rtl",
+   "physical",
+   "results/rtl/hbm_norm_engine_view_20261006"
+  ]
+ },
+ "stages": {
+  "calibrate": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; SYNTH_HIER=1 KEEP=200 OUT={RUN}/routes SRC={SRC} CORES=16 NEED=80 bash physical/hbm_norm_engine_view_mem1_20261007/run_route.sh {LABEL}${CL_LABEL_SUFFIX} $CL_STOP_AFTER",
+   "base": "{RUN}/routes/{LABEL}_cal/work/orfs/results/asap7/*/base",
+   "clock": "clk",
+   "sdc_cmd": "python3 physical/hbm_norm_engine_view_mem1_20261007/make_sdc.py --l-ss-max $CK_SS_MAX --l-ss-min $CK_SS_MIN --l-ff-min $CK_FF_MIN --l-ff-max $CK_FF_MAX --out {RUN}/routes/io.sdc",
+   "threads": 16,
+   "peak_ram_gb": 80
+  },
+  "route": {
+   "cmd": "TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; SYNTH_HIER=1 KEEP=200 OUT={RUN}/routes SRC={SRC} CORES=16 NEED=80 bash physical/hbm_norm_engine_view_mem1_20261007/run_route.sh {LABEL}",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{LABEL}/exit",
+   "logs": [
+    "{RUN}/routes/{LABEL}/run.log"
+   ]
+  },
+  "signoff": {
+   "cmd": "python3 physical/hbm_norm_engine_view_mem1_20261007/signoff.py --run {RUN}/routes/{LABEL}",
+   "ok": "test -s {RUN}/routes/{LABEL}/signoff.json"
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record && cp {RUN}/routes/{LABEL}/signoff.json {RUN}/routes/{LABEL}/args {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json"
+  }
+ },
+ "verdict": {
+  "metrics_cmd": "python3 -c \"import json;print(json.dumps(json.load(open('{RUN}/routes/{LABEL}/signoff.json'))['metrics']))\"",
+  "checks": []
+ },
+ "record": [
+  {
+   "from": "{RUN}/record",
+   "to": "results/rtl/hbm_norm_engine_view_mem1_20261007/closure_hier200"
+  }
+ ],
+ "cycles_added": 0,
+ "merge_target": null,
+ "no_bench_reason": "RTL byte-identical to MEM1 d59dc31a8/cc383b8fc; lockstep PASS + addr/late negatives FAIL recorded in results/rtl/hbm_norm_engine_view_mem1_20261007/recovery_20261007/record.json (synthesis-script-only change)",
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.05,
+ "route_corner": "TC",
+ "budget": {
+  "enabled": false,
+  "reason": "TT-BATCH: re-route of a job created before its budget sheet, kept on its original IO SDCs; route-time consistent die-link budget via link_budget_hook (setup-triage)"
+ }
+}

@@ -1,0 +1,131 @@
+{
+  "assumed": {
+    "boundary_timing": "registered FDI pins: ASAP7 flop clk->q / setup + 3 FO4",
+    "fdi_clock": "1.0 GHz FDI clock (the link_serdes domain)",
+    "footprint": "2,400 x 1,512 um (3.63 mm2) for 12 lanes = 0.30 mm2 a lane incl. PCS/FEC, inside the r21 4.0 mm2 qfd_io_serdes reservation (no published per-lane area in the registry)"
+  },
+  "claim_boundary": "a placement / connection / timing abstract of licensed IP: no PHY design, no GDS, no SI or bump-map analysis; footprint and boundary timing ASSUMED as stated",
+  "derived": {
+    "energy_pj_per_bit": 5.6,
+    "lanes": "12 x 112G PAM4 = 1,265 Gb/s net >= the adapter's 1,024 b per 1.0 GHz FDI cycle (81 % load)",
+    "latency_cycles": "198 ns KP4 + 25 ns PHY/PCS = 223 ns = 223 FDI cycles at 1.0 GHz (one way)",
+    "rx_buffer": "RXD = 128 flits (one 4,096-element FP32 all-reduce message, 128 x 1,024 b) so a message streams without a credit stall; full line rate needs RXD >= RTT ~ 460 flits (SRAM; not taken: the per-token exchanges are message-latency bound)"
+  },
+  "fdi": {
+    "clock_ghz": 1.0,
+    "flit_bits": 1041,
+    "latency_fdi_cycles_one_way": 223,
+    "payload_bits": 1024,
+    "rx_buffer_flits": 128
+  },
+  "footprint": {
+    "area_mm2": 3.6291,
+    "height_um": 1512.0,
+    "width_um": 2400.192
+  },
+  "generator": "tools/qwen_missing/link_phy_gen.py",
+  "name": "ot_qfd_serdes_112g_x12_phy",
+  "pins": {
+    "pin_block_x_um": [
+      999.744,
+      1400.448
+    ],
+    "pin_edge": "top (core-facing)",
+    "pin_layer": "M5",
+    "pin_pitch_um": 0.192,
+    "signal_pins": 2087
+  },
+  "published": [
+    {
+      "figure": "RS(544,514) KP4 FEC ~198 ns; RS(272,257) ~99 ns",
+      "source": "Credo, IEEE 802.3cd contribution (registry rack:physical_constants.kp4_fec_latency_ns / sct:r-sun3cd)"
+    },
+    {
+      "figure": "SERDES pin to application layer and back 21 ns (common refclk) / 25 ns (independent refclk)",
+      "source": "D. Das Sharma et al., CXL, arXiv:2306.11227 (registry sct:r-cxl-survey)"
+    },
+    {
+      "figure": "602 mW per channel excluding DSP",
+      "source": "7 nm 112 Gb/s PAM4 LR transceiver, IEEE JSSC Jan 2021 (registry sct:r-serdes-jssc21)"
+    },
+    {
+      "figure": "5.6 pJ/b per lane incl. analog and DSP",
+      "source": "112 Gb/s PAM4 transceiver with DSP, 5 nm, VLSI 2022 (registry sct:r-serdes-vlsi22)"
+    },
+    {
+      "figure": "112 Gb/s PAM4 lanes, net of RS(544,514) and 256b/257b = 105.4 Gb/s a lane",
+      "source": "configs/hardware/technology.json links.rom_board_serdes"
+    }
+  ],
+  "schema": "opentallas.qwen-missing.link-phy-abstract.v1",
+  "timing": {
+    "ff": {
+      "breakdown": {
+        "fo4_ps": 14.777241075555557
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 90.45355717444444,
+      "corner": "ff",
+      "hold_ps": 27.060841075555558,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.31724855211381614,
+      "out_slew_intrinsic_ps": 22.165861613333334,
+      "pin_cap_ff": 1.367432,
+      "read_energy_fj": 5734400.0,
+      "setup_ps": 54.24925322666667,
+      "temperature": 0.0,
+      "voltage": 0.77,
+      "write_energy_fj": 0.0
+    },
+    "ss": {
+      "breakdown": {
+        "fo4_ps": 23.593241169166667
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 160.39564736249997,
+      "corner": "ss",
+      "hold_ps": 41.87064116916667,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.7083491406580278,
+      "out_slew_intrinsic_ps": 35.38986175375,
+      "pin_cap_ff": 1.157532,
+      "read_energy_fj": 5734400.0,
+      "setup_ps": 86.9870235075,
+      "temperature": 100.0,
+      "voltage": 0.63,
+      "write_energy_fj": 0.0
+    },
+    "tt": {
+      "breakdown": {
+        "fo4_ps": 18.264918771111113
+      },
+      "clk_cap_ff": 50.0,
+      "clk_to_q_ps": 117.27499109555556,
+      "corner": "tt",
+      "hold_ps": 30.732718771111113,
+      "leakage_nw": 0.0,
+      "min_period_ps": 800.0,
+      "min_pulse_ps": 300.0,
+      "out_r_kohm": 0.4562575976456151,
+      "out_slew_intrinsic_ps": 27.39737815666667,
+      "pin_cap_ff": 1.239856,
+      "read_energy_fj": 5734400.0,
+      "setup_ps": 64.78601631333333,
+      "temperature": 25.0,
+      "voltage": 0.7,
+      "write_energy_fj": 0.0
+    }
+  },
+  "views": {
+    "ot_qfd_serdes_112g_x12_phy.lef": "595c6d2010c23cd9e56642651d988326dd17b798e10b59b67288662cbd684a87",
+    "ot_qfd_serdes_112g_x12_phy_bb.v": "7af10ec365e94778ed96c6cc0258f32dd2d5be1eabb796de2f8b5449782f9952",
+    "ot_qfd_serdes_112g_x12_phy_ff.lib": "1536d30022ae0320e30738ddd8a9105b047aeacf197173ba9f33e360829380dc",
+    "ot_qfd_serdes_112g_x12_phy_model.sv": "9f94c1f86b52ab0d5b04314583df097d34b039a284b9c2183de1b304e7458b22",
+    "ot_qfd_serdes_112g_x12_phy_ss.lib": "ba0643b85723ec0cf8c28551d02f42dc58a77ee8a282eab3360fabe07034683c",
+    "ot_qfd_serdes_112g_x12_phy_tt.lib": "eb773396d14d10738fb54a9e1c34f639af8a06acfa60c832e48b4515192c797e"
+  }
+}

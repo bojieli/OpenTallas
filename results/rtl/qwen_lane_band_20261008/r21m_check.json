@@ -1,0 +1,706 @@
+{
+ "schema": "opentallas.qwen_r21m_check.v1",
+ "recipe": "r21m",
+ "r21f": {
+  "die_um": [
+   25037.856,
+   32801.76
+  ],
+  "die_mm2": 821.286,
+  "margin_mm2": 36.714,
+  "instance_mm2": 686.59,
+  "die_utilisation": 0.836,
+  "spine_columns": 2,
+  "spine_block_mm2": 41.06,
+  "spine_column_mm2": 48.21,
+  "spine_utilisation": 0.8518,
+  "relays": 9283,
+  "instances": 12617,
+  "buses": 17878
+ },
+ "r21m_summary": {
+  "die_um": [
+   25815.456,
+   32801.76
+  ],
+  "die_mm2": 846.792,
+  "margin_mm2": 11.208,
+  "instance_mm2": 683.54,
+  "die_utilisation": 0.8072,
+  "spine_columns": 3,
+  "spine_block_mm2": 35.86,
+  "spine_column_mm2": 72.32,
+  "spine_utilisation": 0.4959,
+  "relays": 10167,
+  "instances": 13510,
+  "buses": 18815
+ },
+ "legality_r21m": {
+  "instances": 13510,
+  "outside": 0,
+  "overlaps": 0,
+  "overlap_examples": [],
+  "die_um": [
+   25815.456,
+   32801.76
+  ]
+ },
+ "su": [
+  12648.960000000001,
+  10452.24,
+  777.576,
+  2058.456
+ ],
+ "vm": [
+  12648.960000000001,
+  12510.72,
+  777.576,
+  6220.776
+ ],
+ "su_vm_gap_um": 0.024,
+ "su_vm_ports": {
+  "su_vm_a": {
+   "bits": 2367,
+   "su_pins": 2367,
+   "vm_pins": 2367,
+   "x_mismatch": 0,
+   "not_facing": 0,
+   "shared_tracks": 0
+  },
+  "su_vm_q": {
+   "bits": 6144,
+   "su_pins": 6144,
+   "vm_pins": 6144,
+   "x_mismatch": 0,
+   "not_facing": 0,
+   "shared_tracks": 0
+  }
+ },
+ "band_lane_stacks": [
+  {
+   "band": 0,
+   "primary": "sp_port_tiles_0",
+   "lanes_y": 3218.4,
+   "slab_top": 3218.376,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  },
+  {
+   "band": 1,
+   "primary": "sp_port_tiles_1",
+   "lanes_y": 7931.52,
+   "slab_top": 7931.496,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  },
+  {
+   "band": 2,
+   "primary": "sp_port_tiles_2",
+   "lanes_y": 13649.04,
+   "slab_top": 13649.016,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  },
+  {
+   "band": 3,
+   "primary": "sp_port_tiles_3",
+   "lanes_y": 20809.44,
+   "slab_top": 20809.416,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  },
+  {
+   "band": 4,
+   "primary": "sp_port_tiles_4",
+   "lanes_y": 24533.28,
+   "slab_top": 24533.256,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  },
+  {
+   "band": 5,
+   "primary": "sp_port_tiles_5",
+   "lanes_y": 29246.4,
+   "slab_top": 29246.376,
+   "gap_um": 0.024,
+   "ser_gap_um": 0.024,
+   "same_x": true
+  }
+ ],
+ "serializers": [
+  {
+   "name": "sp_res_ser_2",
+   "x": 11611.296,
+   "y": 11290.32,
+   "h": 518.376
+  },
+  {
+   "name": "sp_res_ser_3",
+   "x": 11611.296,
+   "y": 18910.8,
+   "h": 518.376
+  },
+  {
+   "name": "sp_res_ser_4",
+   "x": 11611.296,
+   "y": 22174.56,
+   "h": 518.376
+  },
+  {
+   "name": "sp_res_ser_1",
+   "x": 11611.296,
+   "y": 5572.8,
+   "h": 518.376
+  },
+  {
+   "name": "sp_res_ser_0",
+   "x": 11611.296,
+   "y": 859.68,
+   "h": 518.376
+  },
+  {
+   "name": "sp_res_ser_5",
+   "x": 11611.296,
+   "y": 26887.68,
+   "h": 518.376
+  }
+ ],
+ "r21m_record": {
+  "rtl": {
+   "qfd_sp_vector_memory": "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv ot_qfd_sp_vector_memory_bv",
+   "qfd_sp_su64_sfu": "rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv ot_qfd_sp_su64_sfu_bv",
+   "qfd_sp_res_ser": "rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv ot_qfd_res_ser",
+   "qfd_sp_tree_top": "rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top (LANDED = 1)",
+   "qfd_sp_band_lanes": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv ot_qfd_band_lanes (NL 16; tree top part: ot_qfd_band_upper)"
+  },
+  "column_m_um": 777.6,
+  "vm_slot_um": [
+   777.6,
+   6220.8
+  ],
+  "su_slot_um": [
+   777.6,
+   2058.48
+  ],
+  "band_lanes_slot_um": [
+   777.6,
+   1131.84
+  ],
+  "ser_slot_um": [
+   777.6,
+   518.4
+  ],
+  "port_elements": {
+   "0": [
+    "sp_port_tiles_0"
+   ],
+   "1": [
+    "sp_port_tiles_1"
+   ],
+   "2": [
+    "sp_port_tiles_2"
+   ],
+   "3": [
+    "sp_port_tiles_3"
+   ],
+   "4": [
+    "sp_port_tiles_4"
+   ],
+   "5": [
+    "sp_port_tiles_5"
+   ]
+  },
+  "band_lanes": {
+   "rtl": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+   "bench": "rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv",
+   "frame": "band-local result slots: split s <= 10 band b slot k = group b * 2^(10-s) + k; s 11 / 12 band 0 slot k = group k (tree top words)",
+   "cycles": "+5 + 2 LNK edges per ME op result"
+  },
+  "open": [
+   "slab result-port groups must index rows / addresses by the band-local group (band_lanes.frame); the tree top hosts ot_qfd_band_upper (pw / lc / lf / tt_ty ports) beside its control: integration into ot_qfd_sp_tree_top pending",
+   "band lane <-> slab words connect each band at its W primary slab (a band's fragments reach it by pfrag)"
+  ],
+  "slab_port_groups": "RTL_PORT_GROUPS 48 (8 a band, 4 a half; 12 port elements x PQ 4), block-word FIFOs stay 96"
+ },
+ "spine_parts": [
+  {
+   "name": "vector_memory",
+   "col": "M",
+   "y": 12510.72,
+   "h": 6220.8
+  },
+  {
+   "name": "su64_sfu",
+   "col": "M",
+   "y": 10452.24,
+   "h": 2058.48
+  },
+  {
+   "name": "tree_top",
+   "col": "W",
+   "y": 15826.32,
+   "h": 3084.48
+  },
+  {
+   "name": "constants_sequencer",
+   "col": "M",
+   "y": 6287.76,
+   "h": 2775.6
+  },
+  {
+   "name": "res_ser_2",
+   "kind": "res_ser",
+   "band": 2,
+   "col": "W",
+   "y": 11290.32,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_2",
+   "kind": "band_lanes",
+   "band": 2,
+   "col": "W",
+   "y": 13649.04,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_2",
+   "kind": "port+scale",
+   "band": 2,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39
+   ],
+   "y": 11808.72,
+   "h": 1840.32,
+   "target_y": 13035.6,
+   "offset_um": -306.7
+  },
+  {
+   "name": "port_tiles_2_f1",
+   "kind": "port+scale",
+   "band": 2,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    47
+   ],
+   "y": 12115.44,
+   "h": 1840.32,
+   "target_y": 13035.6,
+   "offset_um": -0.0
+  },
+  {
+   "name": "res_ser_3",
+   "kind": "res_ser",
+   "band": 3,
+   "col": "W",
+   "y": 18910.8,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_3",
+   "kind": "band_lanes",
+   "band": 3,
+   "col": "W",
+   "y": 20809.44,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_3",
+   "kind": "port+scale",
+   "band": 3,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    48,
+    49,
+    50,
+    51,
+    52,
+    53
+   ],
+   "y": 19429.2,
+   "h": 1380.24,
+   "target_y": 18202.3,
+   "offset_um": 1917.0
+  },
+  {
+   "name": "port_tiles_3_f2",
+   "kind": "port+scale",
+   "band": 3,
+   "side": "W",
+   "col": "E",
+   "groups": [
+    54,
+    55
+   ],
+   "y": 17973.36,
+   "h": 460.08,
+   "target_y": 18202.3,
+   "offset_um": 1.1
+  },
+  {
+   "name": "port_tiles_3_f1",
+   "kind": "port+scale",
+   "band": 3,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63
+   ],
+   "y": 16133.04,
+   "h": 1840.32,
+   "target_y": 18202.3,
+   "offset_um": -1149.1
+  },
+  {
+   "name": "res_ser_4",
+   "kind": "res_ser",
+   "band": 4,
+   "col": "W",
+   "y": 22174.56,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_4",
+   "kind": "band_lanes",
+   "band": 4,
+   "col": "W",
+   "y": 24533.28,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_4",
+   "kind": "port+scale",
+   "band": 4,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    64,
+    65,
+    66,
+    67,
+    68,
+    69,
+    70,
+    71
+   ],
+   "y": 22692.96,
+   "h": 1840.32,
+   "target_y": 23417.6,
+   "offset_um": 195.5
+  },
+  {
+   "name": "port_tiles_4_f1",
+   "kind": "port+scale",
+   "band": 4,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79
+   ],
+   "y": 22498.56,
+   "h": 1840.32,
+   "target_y": 23417.6,
+   "offset_um": 1.1
+  },
+  {
+   "name": "res_ser_1",
+   "kind": "res_ser",
+   "band": 1,
+   "col": "W",
+   "y": 5572.8,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_1",
+   "kind": "band_lanes",
+   "band": 1,
+   "col": "W",
+   "y": 7931.52,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_1",
+   "kind": "port+scale",
+   "band": 1,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23
+   ],
+   "y": 6091.2,
+   "h": 1840.32,
+   "target_y": 7820.3,
+   "offset_um": -808.9
+  },
+  {
+   "name": "port_tiles_1_f1",
+   "kind": "port+scale",
+   "band": 1,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31
+   ],
+   "y": 6901.2,
+   "h": 1840.32,
+   "target_y": 7820.3,
+   "offset_um": 1.1
+  },
+  {
+   "name": "res_ser_0",
+   "kind": "res_ser",
+   "band": 0,
+   "col": "W",
+   "y": 859.68,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_0",
+   "kind": "band_lanes",
+   "band": 0,
+   "col": "W",
+   "y": 3218.4,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_0",
+   "kind": "port+scale",
+   "band": 0,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+   ],
+   "y": 1378.08,
+   "h": 1840.32,
+   "target_y": 2605.0,
+   "offset_um": -306.7
+  },
+  {
+   "name": "port_tiles_0_f1",
+   "kind": "port+scale",
+   "band": 0,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+   ],
+   "y": 1684.8,
+   "h": 1840.32,
+   "target_y": 2605.0,
+   "offset_um": 0.0
+  },
+  {
+   "name": "res_ser_5",
+   "kind": "res_ser",
+   "band": 5,
+   "col": "W",
+   "y": 26887.68,
+   "h": 518.4
+  },
+  {
+   "name": "band_lanes_5",
+   "kind": "band_lanes",
+   "band": 5,
+   "col": "W",
+   "y": 29246.4,
+   "h": 1131.84
+  },
+  {
+   "name": "port_tiles_5",
+   "kind": "port+scale",
+   "band": 5,
+   "side": "W",
+   "col": "W",
+   "groups": [
+    80,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87
+   ],
+   "y": 27406.08,
+   "h": 1840.32,
+   "target_y": 28633.0,
+   "offset_um": -306.7
+  },
+  {
+   "name": "port_tiles_5_f1",
+   "kind": "port+scale",
+   "band": 5,
+   "side": "E",
+   "col": "E",
+   "groups": [
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95
+   ],
+   "y": 27712.8,
+   "h": 1840.32,
+   "target_y": 28633.0,
+   "offset_um": -0.0
+  }
+ ],
+ "spine_free_after_um": {
+  "W": [
+   [
+    21.6,
+    859.7
+   ],
+   [
+    4350.2,
+    5572.8
+   ],
+   [
+    9160.6,
+    11290.3
+   ],
+   [
+    14780.9,
+    15413.8
+   ],
+   [
+    21941.3,
+    22077.4
+   ],
+   [
+    25665.1,
+    26887.7
+   ],
+   [
+    30378.2,
+    31216.3
+   ]
+  ],
+  "M": [
+   [
+    21.6,
+    6287.8
+   ],
+   [
+    9160.6,
+    10452.2
+   ],
+   [
+    18731.5,
+    22077.4
+   ],
+   [
+    22174.6,
+    31216.3
+   ]
+  ],
+  "E": [
+   [
+    21.6,
+    1684.8
+   ],
+   [
+    3525.1,
+    6901.2
+   ],
+   [
+    8741.5,
+    9063.4
+   ],
+   [
+    9160.6,
+    12115.4
+   ],
+   [
+    13955.8,
+    16133.0
+   ],
+   [
+    18433.4,
+    22077.4
+   ],
+   [
+    22174.6,
+    22498.6
+   ],
+   [
+    24338.9,
+    27712.8
+   ],
+   [
+    29553.1,
+    31216.3
+   ]
+  ]
+ },
+ "ok": true
+}

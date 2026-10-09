@@ -1,0 +1,259 @@
+#!/usr/bin/env python3
+"""TT-BATCH overlay (2026-10-07, owner option B): make a job's ORIGINAL-commit source snapshot route under the current
+closure flow without moving the job to a newer commit (its RTL and benches stay exactly as they were).
+
+   tt_overlay.py <snapshot root> [--no-link-budget]        (idempotent; run in the calibrate and route commands)
+
+1. CORNER (option B), v2: with OT_ORFS_CORNER=TC (loop route env) or OT_ORFS_CORNER_OVERRIDE=TC, corner WC reads the
+   TT liberties (std cells + macro _tt.lib) and keeps its NAME (hbm-blocks 4aadc92bc; a TC rename dies at floorplan with
+   STA-0102 under the loop's WC-scene mm session).  Any older rename block (main 852d9b461, c10b5fc9a, v1) is replaced.  Each application of a corner appends
+   '<corner> <pid>' to $OT_TTB_CORNER_MARK so a verdict check can prove the route ran at TC.
+2. CTS FIX HOOKS (setup-triage df37bfa4e / 387a4d2ac): run_abi3_physical honours OT_CTS_FIX_HOOKS (PRE_CTS chain), and
+   physical/common_flow/{cg_pushdown,clk_net_protect,link_budget_hook}.tcl + link_budget_consistent.sdc are refreshed
+   from this overlay's copy (the consistent die-link budget, applied at route time after CTS and carried into
+   6_final.sdc, hence into the TT / SS / FF sign-off STA).
+3. RULE H1 (flow-hold): tools/closure_loop/h1_patch.py of this overlay.
+The loop's own hold_corners_patch.py (mm hold repair, RSZ-0060 tolerance, helpers) runs before this, from the job env.
+Fails (exit 2) when the corner support cannot be installed: the job must not route at SS under a TT name."""
+import hashlib
+import os
+import re
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent            # <overlay>/tools/closure_loop
+OVL = HERE.parent.parent                          # <overlay> root (holds physical/common_flow)
+
+RHC_ANCHOR = '    _ot_rhc = os.environ.get("OT_ROUTE_HOLD_CORNERS", "").strip()\n'
+PARSE_ANCHOR = "    args = build_parser().parse_args(argv)\n"
+CORNER_CODE = r'''    # TTB-CORNER-BEGIN (tt_overlay v2 = hbm-blocks 4aadc92bc semantics): OWNER OPTION B, setup repair at TT.  Keep the
+    # WC/BC corner NAMES (the loop's mm hold session builds scene WC; renaming the corner to TC died in floorplan
+    # report_metrics, STA-0102) and make corner WC READ the TT liberties: WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES), every
+    # macro's WC view = its _tt.lib.  Hold stays at BC (FF).
+    _ot_tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper()
+    if _ot_tc == "TC":
+        ORFS_CORNER_MACRO_TAG["WC"] = "tt"
+        args.orfs_var = list(args.orfs_var or []) + ["WC_NLDM_LIB_FILES=$(TC_NLDM_LIB_FILES)"]
+        print(f"OT_ORFS_CORNER=TC (tt_overlay v2): corner WC reads the TT liberties (std cells + macro _tt.lib); "
+              f"orfs corner {args.orfs_corner}, hold corners {args.hold_corners}", file=sys.stderr)
+        if os.environ.get("OT_TTB_CORNER_MARK"):
+            with open(os.environ["OT_TTB_CORNER_MARK"], "a") as _ot_mf:
+                _ot_mf.write(f"TC {os.getpid()} wc_reads_tt orfs_corner={args.orfs_corner} hold={args.hold_corners}\n")
+    # TTB-CORNER-END
+'''
+MAIN_CORNER_TAIL = "        args.orfs_corner = _ot_oc\n"
+MM_OLD = 'args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1"]'
+MM_NEW = 'args.orfs_var = list(args.orfs_var or []) + ["OT_HOLD_MM=1", f"OT_MM_SETUP_CORNER={_ot_p}"]'
+
+HOOKS_FN = r'''
+
+def apply_cts_fix_hooks(config, case):
+    """Opt-in flow fixes chained after the block's own PRE_CTS hook (setup-triage 2026-10-07; tt_overlay.py backport).
+    OT_CTS_FIX_HOOKS = space-separated Tcl files (repo-relative or absolute).  Unset: config unchanged."""
+    import hashlib as _h
+    fixes = os.environ.get("OT_CTS_FIX_HOOKS", "").split()
+    if not fixes:
+        return config
+    hooks_dir = case / "hooks"
+    hooks_dir.mkdir(exist_ok=True)
+    orig, kept = None, []
+    for line in config:
+        m = re.match(r"\s*export\s+PRE_CTS_TCL\s*=\s*(.*)$", line)
+        if m:
+            orig = m.group(1).strip()
+            continue
+        kept.append(line)
+    body = ["# Written by tools/run_abi3_physical.py (OT_CTS_FIX_HOOKS, tt_overlay backport)."]
+    if orig:
+        body.append(f"source {orig}")
+    record = []
+    for i, fix in enumerate(fixes):
+        source = Path(fix)
+        if not source.is_absolute():
+            # tt_overlay: recipes that run from a reduced context copy (route_core.sh context_src) lack common_flow:
+            # fall back to the job snapshot this function was patched into
+            source = next((r / fix for r in (ROOT, Path("@TTB_SRC@")) if (r / fix).is_file()), ROOT / fix)
+        if not source.is_file():
+            raise ValueError(f"OT_CTS_FIX_HOOKS: no such file {source}")
+        name = f"ot_cts_fix_{i}_{source.name}"
+        shutil.copy2(source, hooks_dir / name)
+        for sib in ("link_budget_consistent.sdc",):   # sourced by link_budget_hook.tcl from its own directory
+            if source.name == "link_budget_hook.tcl" and (source.parent / sib).is_file():
+                shutil.copy2(source.parent / sib, hooks_dir / sib)
+        body.append(f"source /work/hooks/{name}")
+        record.append({"path": fix, "name": name, "sha256": _h.sha256(source.read_bytes()).hexdigest()})
+    (hooks_dir / "pre_cts_ot_cts_fix.tcl").write_text("\n".join(body) + "\n", encoding="utf-8")
+    (hooks_dir / "ot_cts_fix.json").write_text(json.dumps({"pre_cts_orig": orig, "fixes": record}, indent=1) + "\n",
+                                               encoding="utf-8")
+    kept.append("export PRE_CTS_TCL = /work/hooks/pre_cts_ot_cts_fix.tcl")
+    return kept
+'''
+CFG_ANCHOR = '    (case / "config.mk").write_text("\\n".join(config) + "\\n", encoding="utf-8")\n'
+FN_ANCHOR = "\ndef io_constraints_tcl("
+COMMON = ["cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl", "link_budget_consistent.sdc",
+          "nbr_clk_measured_ttb.sdc"]
+
+
+def ensure_corner(s):
+    """(text, messages, ok): replace whatever corner code sits between parse_args and the hold-corner block (main
+    852d9b461 rename, hbm-blocks c10b5fc9a v1 rename / 4aadc92bc v2, tt_overlay v1) with the v2 WC-reads-TT block."""
+    msg = []
+    if "ORFS_CORNER_MACRO_TAG = " not in s or "ORFS_LIB_CORNERS = " not in s:
+        return s, ["snapshot predates per-corner macro views (ORFS_CORNER_MACRO_TAG)"], False
+    if s.count(PARSE_ANCHOR) != 1:
+        return s, ["NO parse_args anchor"], False
+    a = s.index(PARSE_ANCHOR) + len(PARSE_ANCHOR)
+    b = s.index(RHC_ANCHOR, a) if RHC_ANCHOR in s[a:] else a
+    seg = s[a:b]
+    if seg == CORNER_CODE:
+        return s, msg, True
+    if seg.strip() and "CORNER" not in seg:
+        return s, [f"unexpected code between parse_args and the hold-corner block ({len(seg)} chars)"], False
+    s = s[:a] + CORNER_CODE + s[b:]
+    msg.append("corner block v2 (WC reads TT)" + (" replaced a rename block" if seg.strip() else " added"))
+    return s, msg, True
+
+
+def ensure_hooks(s, src):
+    fn = HOOKS_FN.replace("@TTB_SRC@", str(src.resolve()))
+    if fn in s:
+        return s, [], True
+    if "def apply_cts_fix_hooks" in s:
+        # replace main's / an older overlay's version (no context-copy fallback, no sibling SDC copy)
+        a = s.index("\n\ndef apply_cts_fix_hooks")
+        b = s.index("\ndef ", a + 5)
+        s = s[:a] + fn.rstrip("\n") + "\n\n" + s[b:]
+        return s, ["OT_CTS_FIX_HOOKS function replaced (context fallback)"], True
+    if s.count(CFG_ANCHOR) != 1 or s.count(FN_ANCHOR) != 1:
+        return s, ["NO anchor for OT_CTS_FIX_HOOKS"], False
+    s = s.replace(CFG_ANCHOR, "    config = apply_cts_fix_hooks(config, case)\n" + CFG_ANCHOR)
+    s = s.replace(FN_ANCHOR, fn + FN_ANCHOR)
+    return s, ["OT_CTS_FIX_HOOKS added"], True
+
+
+SMH_OLD = 'f"export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) {lib_ss}"'
+SMH_NEW = 'f"export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) {lib_ss.replace(\'_ss.lib\', \'_tt.lib\')}"'
+# v2 first deploy appended an inline comment that swallowed the list comma (strings concatenated -> "export" read as a lib)
+SMH_BAD = SMH_NEW + '  # tt_overlay v2: corner WC reads the TT liberties (option B)'
+
+
+SMH_CORNER_LINE = '  echo "corner_rc=$?" >> $W/status\n'
+SMH_NBR = (SMH_CORNER_LINE +
+           "  # tt_overlay: setup corners re-timed with nbr_clk at the measured insertion (hbm-blocks 9e81f6c70 semantics);\n"
+           "  # the loop's tt_resta.sh re-times this tcl at TT; FF hold (w18_sta_ff.tcl) keeps the generator model\n"
+           "  if [ -f $W/w18_sta_ss.tcl ] && ! grep -q OT_NBR_MEASURED_TTB $W/w18_sta_ss.tcl; then "
+           "cp $W/w18_sta_ss.tcl $W/w18_sta_ss.planning.tcl && cp $S/physical/common_flow/nbr_clk_measured_ttb.sdc $W/ && "
+           "sed -i 's#^set_propagated_clock \\[all_clocks\\]$#&\\nsource /work/nbr_clk_measured_ttb.sdc ;\\# OT_NBR_MEASURED_TTB#' "
+           "$W/w18_sta_ss.tcl; echo \"nbr_measured_rc=$?\" >> $W/status; fi\n")
+
+
+def ensure_smh(src):
+    """SM piece flow (tools/hbm_accel_smh_physical.py writes its own config.mk, not through run_abi3_physical): in a
+    TC route stage, corner WC reads the TT std-cell + macro liberties; the mark is written here."""
+    f = src / "tools/hbm_accel_smh_physical.py"
+    tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper() == "TC"
+    if not f.is_file() or not tc:
+        return []
+    s = f.read_text()
+    if "WC_LIB_FILES" not in s:
+        # 2026-10-08 drive-0502: commits predating the SM generator's corner-lib line (e.g. 4b111850a) have nothing to
+        # patch; a non-SM route (Qwen die masters) on such a snapshot must not fail the overlay on it
+        return ["SMH: generator has no WC_LIB_FILES line (predates corner libs; not patched)"]
+    s = s.replace(SMH_BAD, SMH_NEW)
+    if SMH_NEW not in s:
+        if s.count(SMH_OLD) != 1:
+            return ["SMH: WC_LIB_FILES anchor missing"]
+        s = s.replace(SMH_OLD, SMH_NEW)
+    if "OT_NBR_MEASURED_TTB" not in s and "OT_SMH_POST_SDC" not in s:
+        if s.count(SMH_CORNER_LINE) != 1:
+            return ["SMH: corner_rc anchor missing"]
+        s = s.replace(SMH_CORNER_LINE, SMH_NBR)
+    f.write_text(s)
+    if os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} smh_config wc_reads_tt\n")
+    return ["SMH flow: WC reads TT"]
+
+
+def ensure_direct_configs(src):
+    """Recipes that drive ORFS directly with a checked-in config.mk (ha2 relay / h2 fixedpins style): in a TC route stage
+    the WC_LIB_FILES line reads the TT std-cell libraries and macro _tt.lib (corner names kept)."""
+    tc = (os.environ.get("OT_ORFS_CORNER", "") or os.environ.get("OT_ORFS_CORNER_OVERRIDE", "")).strip().upper() == "TC"
+    if not tc:
+        return []
+    n = 0
+    for f in (src / "physical").rglob("config.mk"):
+        t = f.read_text(errors="replace")
+        u = "\n".join((l.replace("$(WC_NLDM_LIB_FILES)", "$(TC_NLDM_LIB_FILES)").replace("_ss.lib", "_tt.lib")
+                       if re.match(r"\s*export\s+WC_LIB_FILES\s*=", l) else l) for l in t.split("\n"))
+        if u != t:
+            f.write_text(u)
+            n += 1
+    if n and os.environ.get("OT_TTB_CORNER_MARK"):
+        with open(os.environ["OT_TTB_CORNER_MARK"], "a") as m:
+            m.write(f"TC {os.getpid()} direct_config_mk x{n} wc_reads_tt\n")
+    return [f"direct config.mk WC->TT x{n}"] if n else []
+
+
+CTX_CP = "cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/"
+CTX_CP_NEW = (CTX_CP + "; cp $S/tools/orfs_hold_mm.py $S/tools/orfs_hold_mm.tcl $R/context_src/tools/ 2>/dev/null; "
+              "mkdir -p $R/context_src/physical/common_flow; cp $S/physical/common_flow/* $R/context_src/physical/common_flow/"
+              "  # tt_overlay: mm hold helpers + CTS hooks in the context copy")
+CTX_ADD = "add rtl/control_context.v physical/qwen_core_ctx tools/orfs_allcorner_spef.py"
+CTX_ADD_NEW = "add rtl/control_context.v physical/qwen_core_ctx tools physical/common_flow"
+
+
+def ensure_context_copies(src):
+    """Qwen route_core*.sh run ORFS from a reduced context copy: ship the mm hold helpers and common_flow into it."""
+    n = 0
+    for f in (src / "physical/qwen_die_masters/jobs").glob("route_core*.sh"):
+        t = f.read_text()
+        u = t.replace(CTX_CP + "\n", CTX_CP_NEW + "\n") if CTX_CP_NEW not in t else t
+        u = u.replace(CTX_ADD, CTX_ADD_NEW)
+        if u != t:
+            f.write_text(u)
+            n += 1
+    return [f"context copy helpers x{n}"] if n else []
+
+
+def main():
+    src = Path(sys.argv[1])
+    f = src / "tools/run_abi3_physical.py"
+    out, ok = [], True
+    if f.is_file():
+        s0 = s = f.read_text()
+        s, m1, ok1 = ensure_corner(s)
+        s, m2, ok2 = ensure_hooks(s, src)
+        out += m1 + m2
+        ok = ok1 and ok2
+        if s != s0:
+            if not f.with_suffix(".py.pre_ttb").exists():
+                shutil.copy2(f, f.with_suffix(".py.pre_ttb"))
+            f.write_text(s)
+    else:
+        out.append("no tools/run_abi3_physical.py")
+        ok = (src / "tools/hbm_accel_smh_physical.py").is_file() or any((src / "physical").rglob("config.mk"))
+    out += ensure_direct_configs(src)
+    out += ensure_context_copies(src)
+    sm = ensure_smh(src)
+    out += sm
+    ok = ok and not any("missing" in x for x in sm)
+    d = src / "physical/common_flow"
+    d.mkdir(parents=True, exist_ok=True)
+    for n in COMMON:
+        a = OVL / "physical/common_flow" / n
+        b = d / n
+        if not b.is_file() or b.read_bytes() != a.read_bytes():
+            shutil.copy2(a, b)
+            out.append(f"shipped common_flow/{n}")
+    h1 = subprocess.run([sys.executable, str(HERE / "h1_patch.py"), str(src)], capture_output=True, text=True)
+    out.append(h1.stdout.strip() or h1.stderr.strip()[-200:])
+    digest = hashlib.sha256(f.read_bytes()).hexdigest()[:12] if f.is_file() else "-"
+    print(f"tt_overlay: {'OK' if ok else 'FAIL'} run_abi3_physical {digest}: " + "; ".join(x for x in out if x))
+    sys.exit(0 if ok else 2)
+
+
+if __name__ == "__main__":
+    main()

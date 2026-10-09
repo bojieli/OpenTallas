@@ -1,36 +1,55 @@
 {
  "schema": "opentallas.w18.corner_sta.v1",
- "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r35_30f87bcc4/cl/eco/orfs",
- "sdc": "# hfd_meso_r35: forwarded clocks (one per 512 b slice and direction), the local clock ck, the meso\n# crossings (max 356.667 / min 0 ps ignoring latency, the closed ot_meso_fifo W512 D4 contract), io budget 0.2 T.\nset_max_fanout 32 [current_design]\ncreate_clock -name ck -period 833.333 [get_ports {ck[0]}]\ncreate_clock -name vclk -period 833.333\nset_clock_latency 297 [get_clocks vclk]\ncreate_clock -name f_a512 -period 833.333 [get_ports {a[512]}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_input_delay 166.666 -clock f_a512 [get_ports {a[0] a[100] ",
+ "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hbm_stn_meso_r35_30f87bcc4-sttt/routes/hbm_stn_meso_r35_30f87bcc4_sttt/signoff",
+ "sdc": "# hfd_meso_r35: forwarded clocks (one per 512 b slice and direction), the local clock ck, the meso\n# crossings (max 356.667 / min 0 ps ignoring latency, the closed ot_meso_fifo W512 D4 contract), io budget 0.2 T.\nset_max_fanout 32 [current_design]\ncreate_clock -name ck -period 833.333 [get_ports {ck[0]}]\ncreate_clock -name vclk -period 833.333\nset_clock_latency 300 [get_clocks vclk]\ncreate_clock -name f_a512 -period 833.333 [get_ports {a[512]}]\nset_clock_uncertainty -setup 60 [all_clocks]\nset_clock_uncertainty -hold 25 [all_clocks]\nset_input_delay 166.666 -clock f_a512 [get_ports {a[0] a[100] ",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 123.97,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 123.969116,
+  "worst_reg_to_reg_slack_ps": 123.97,
+  "worst_input_to_reg_slack_ps": 352.4,
+  "worst_output_port_slack_ps": 302.0466,
+  "violating_d_pins": 0,
+  "errors": [],
+  "odb_sha256": "8c1ed34e21b5a960caca0a287ce8c2016ac9169611d473c5c645f98c9ae3b009",
+  "spef_sha256": "5da09b089fdc398f049a171c4447746bfa81d5f740690e7550d138e017306492",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "4d0be83141538f05ba2fc45ba37cf52ff0f8fdc88e0b3ae69f0abf58e674b424"
+ },
  "setup_ss": {
   "corner": "ss",
   "check": "setup",
-  "worst_slack_ps": 86.92,
+  "worst_slack_ps": 15.75,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 86.919586,
-  "worst_reg_to_reg_slack_ps": 86.92,
-  "worst_input_to_reg_slack_ps": 447.16,
-  "worst_output_port_slack_ps": 94.991623,
+  "worst_register_d_slack_ps": 15.750734,
+  "worst_reg_to_reg_slack_ps": 15.75,
+  "worst_input_to_reg_slack_ps": 398.57,
+  "worst_output_port_slack_ps": 137.270966,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "11f079b2e6eb83f95a53b2c080fa43e2bad00fd1a13484cb79c2bf757d01d596",
-  "spef_sha256": "e03aa99e678623969ed664070f025de8f5be4b60a4b9afa61a29181da36b9c80",
-  "sdc_sha256": "c1288940463f8b238acf154362ab3482bee50c2daad7a63a569984f6f7ed514a"
+  "odb_sha256": "8c1ed34e21b5a960caca0a287ce8c2016ac9169611d473c5c645f98c9ae3b009",
+  "spef_sha256": "5da09b089fdc398f049a171c4447746bfa81d5f740690e7550d138e017306492",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "4d0be83141538f05ba2fc45ba37cf52ff0f8fdc88e0b3ae69f0abf58e674b424"
  },
  "hold_ff": {
   "corner": "ff",
   "check": "hold",
-  "worst_slack_ps": 20.57,
+  "worst_slack_ps": 19.72,
   "tns_ps": 0.0,
-  "worst_register_d_slack_ps": 21.617195,
-  "worst_reg_to_reg_slack_ps": 56.95,
-  "worst_input_to_reg_slack_ps": 331.33,
-  "worst_output_port_slack_ps": 20.570324,
+  "worst_register_d_slack_ps": 28.055475,
+  "worst_reg_to_reg_slack_ps": 28.06,
+  "worst_input_to_reg_slack_ps": 358.53,
+  "worst_output_port_slack_ps": 19.717007,
   "violating_d_pins": 0,
   "errors": [],
-  "odb_sha256": "11f079b2e6eb83f95a53b2c080fa43e2bad00fd1a13484cb79c2bf757d01d596",
-  "spef_sha256": "e03aa99e678623969ed664070f025de8f5be4b60a4b9afa61a29181da36b9c80",
-  "sdc_sha256": "c1288940463f8b238acf154362ab3482bee50c2daad7a63a569984f6f7ed514a"
+  "odb_sha256": "8c1ed34e21b5a960caca0a287ce8c2016ac9169611d473c5c645f98c9ae3b009",
+  "spef_sha256": "5da09b089fdc398f049a171c4447746bfa81d5f740690e7550d138e017306492",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "4d0be83141538f05ba2fc45ba37cf52ff0f8fdc88e0b3ae69f0abf58e674b424"
  },
  "post_sdc": {},
  "libraries": {
@@ -47,9 +66,17 @@
    "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
    "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
    "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
   ]
  },
- "tool_sha256": "2a0dd06fb6c0ccb8abf0e9cab2e17111d6e1aaed83ea0cbe57c3f78b9e893350",
- "policy": "AGENTS.md sign-off corners (2026-09-30): setup at SS, hold at FF, 60/25 ps",
+ "tool_sha256": "cce5fa5df28b6359c02cf34273ecb5c20c6ca218d9d92a73112604978442a232",
+ "policy": "OWNER OPTION B 2026-10-07: setup at TT (833.333, >= 0), hold at FF (>= 0), DRC 0; setup at SS is reported as a sensitivity (ss_sensitivity); 60/25 ps uncertainty",
+ "ss_sensitivity": 15.75,
  "closes_signoff": true
 }

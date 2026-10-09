@@ -4,8 +4,9 @@
 # and the LEF check compares the exported LEF pins with that io_place.tcl.  Same env as route_view.sh.
 set -u
 S=physical/hbm_accel_die_views/vm/split8; R=physical/hbm_accel_die_views/common/route_view.sh
-sed -e "s#python3 tools/hbm_die_views.py ports --master \$master --out \$W/ports > \$W/ports.log 2>&1#mkdir -p \$W/ports \&\& cp -r $S/ports/\$master \$W/ports/#" \
-    -e '/hbm_die_views.py check/d' -e '/^echo "check_rc/d' $R > $S/.route_view_sub.sh
+# the ports line is matched whole (route_view.sh 1ad3621a6 added ${VARIANT:+--variant $VARIANT} and an rc=ports guard)
+sed -e "s#^python3 tools/hbm_die_views.py .*ports --master \$master --out \$W/ports .*#mkdir -p \$W/ports \&\& cp -r $S/ports/\$master \$W/ports/#" \
+    -e '/hbm_die_views.py .*check --master/d' -e '/^echo "check_rc/d' $R > $S/.route_view_sub.sh
 grep -q "cp -r $S/ports" $S/.route_view_sub.sh || { echo "route_sub.sh: route_view.sh ports line not found" >&2; exit 3; }
 bash $S/.route_view_sub.sh "$@"
 lab=$1; master=$2; W=$OUT/$lab

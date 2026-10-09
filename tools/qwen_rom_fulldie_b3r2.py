@@ -49,6 +49,11 @@ STRIP_FIFO_BITS = 544 * 4          # one per strip return (4)
 # F2 station storage: 388 corridor flops + 379 assembly + one extra 190-bit beat entry, against 637 before
 F2_STATION_EXTRA_BITS = 388 + 379 + 190 - 637
 PORT_GROUPS, GROUPS_PER_BAND, BANDS = 96, 16, 6
+# qwen-lane-band 2026-10-08: the W12 RTL's result-port groups (GT >> SMIN = 6,144 >> 7 = 48: 12 port elements x PQ 4),
+# 8 per band (the band's 8 level-TCUT positions), 4 per band half.  PORT_GROUPS (96) counts the block words (16 block
+# columns x 6 bands, level TCUT-1: two per result group) and keeps sizing their meso FIFOs; from r21m the slab's
+# routed port-group elements are reserved per RESULT group (r17..r21f reserved one per block word: 96 against 48).
+RTL_PORT_GROUPS = 48
 SC_IN = 1 + 24                      # scale_gre + scale_addr, per group
 SC_OUT = 16 * 16                    # scale_q W*16, per group
 SW, AW = 64, 24
@@ -66,12 +71,15 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
              tree_cols=0, bw_align=False, east_mirror=False, bw_edge=False, io_faces=False,
              bw_edge_inner=False, bw_sp=100.0, bw_x=20.0, edge_gap=0.0, slab_obs_top=7, m6_strip=0.0,
              slab_group_h=0.0, cdc=None, slab_pg=None, slab_w_per_mm2=0.646, strip_span=False, r18=False, r19=False,
-             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0):
+             tree_interleave=False, corr_m9_adj=None, corr_um=None, bw_wp=0, su_core_clock=False, slab_bw_m8=False, relay_pitch=0.0, io_chan=0.0,
+             su_vm_abut=False, rtl_finish=False, vm_me=False, tt_h=0.0, bl_h=0.0):
     if not enabled:
         raise ValueError('b3r2 selection is default off')
     spec = importlib.util.spec_from_file_location('qfd_b3r2_private', F.__file__)
     v = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(v)
+    if io_chan:
+        v.IO_CHAN = v.up(io_chan, v.GY)   # r22: IO-band routing channel above the top tile row
     # ---- Codex b3 selection (tools/qwen_rom_fulldie_b3.py selected()), unchanged
     old_vch = v.VCH
     v.VCH = v.up(260, v.GX)
@@ -116,6 +124,12 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         if not (cdc and slab_group_h):
             raise ValueError('r18 builds on the r17 die (--slab-group-h and --cdc)')
         v.STRIP_W = v.KVC_W
+    if vm_me:
+        if not (b3r3 and rtl_finish and su_vm_abut and slab_group_h):
+            raise ValueError('r21m (vm_me) builds on r21f: b3r3, slab_group_h, su_vm_abut and rtl_finish')
+        v.XCOL = VM_ME_XCOL          # a third spine column M (the base generator's x layout)
+        v.R21M_TT_H, v.R21M_BL_H = tt_h, bl_h   # r21b: routed slot heights of the band tree top / band lanes (0: r21m)
+        v.RELAY_RINGS = 400          # an off-corridor relay may sit up to ~3.5 mm from its path point (was 1.4)
     m = v.build(tree_mode='banded')
     _split_south(v, m)
     if b3r3:
@@ -128,7 +142,10 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         m['geo']['b3r3_spine_w'] = w
         m['geo']['b3r3_widen_um'] = round(w - w0, 3)
         _split_south(v, m)
-        _repack_b3r3(v, m)
+        if vm_me:
+            _repack_r21m(v, m)
+        else:
+            _repack_b3r3(v, m)
     elif band:
         # the band repack loses the sub-group slivers of each interval: widen the spine on the 0.432 um lattice
         # until every slab packs (the step count is recorded with the die)
@@ -212,11 +229,396 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         _r18_post(v, m)
     if slab_bw_m8:
         _slab_bw_m8(v)            # outermost: after every other slab-pin rule (io_faces, r18)
+    if rtl_finish:
+        _rtl_finish(v, m)     # before the relays: the new / moved words get their relay chains
+    m['b3r2']['r21f_rtl_finish'] = rtl_finish
+    if vm_me:
+        _vm_me(v, m)          # before the relays (the result / lane words get their relay chains)
+    m['b3r2']['r21m_vm_me'] = vm_me
     if relay_pitch:
         _io_south(v)
         _relays(v, m, relay_pitch)
     m['b3r2']['r21_relay_pitch_um'] = relay_pitch
+    if su_vm_abut:
+        # outermost: after the relays (an abutted bus takes no relay); r21m: the banked memory's descriptor ports
+        _su_vm_bus(v, m, *((SU_VM_A_BITS_BV, SU_VM_Q_BITS) if vm_me else (SU_VM_A_BITS, SU_VM_Q_BITS)))
+    m['b3r2']['r21v_su_vm_abut'] = su_vm_abut
     return v, m
+
+
+# r21v (qwen-split-exact 2026-10-07): the stream unit <-> vector memory bus.  ot_qwen_rom_core's u_su reads three
+# operands (va / vb / vc: per lane re + AW-bit address out, FP32 back) and writes one (vm_we / vm_waddr / vm_wdata)
+# per lane, SW = 64, AW = 24: 3 x (64 + 1,536) + (64 + 1,536 + 2,048) = 8,448 bits SU -> VM and 3 x 2,048 = 6,144
+# bits VM -> SU (14,592).  The reads are FIXED-LATENCY (the lane captures va/vb/vc_q one edge after re: the vector
+# memory's registered output), so the bus takes NO pin station: the two masters abut face to face (SU64 N face on
+# the VM S face, b3r3 _repack_b3r3 stacks them in the W spine column) and every bit is an abutted M5 pin pair at
+# the same x (one M5 track each, both masters 777.576 um wide, R0).  The VM's read data leaves its output register
+# (owner rule: capture flop at the macro); the SU's write / address bits leave the lane's registers.
+SU_VM_A_BITS = 3 * (64 + 64 * 24) + (64 + 64 * 24 + 64 * 32)      # 8,448 SU -> VM
+SU_VM_Q_BITS = 3 * 64 * 32                                        # 6,144 VM -> SU
+SU_VM_ABUT_TOL_UM = 0.05                                          # the generator's SHAVE gap (0.024 um) + rounding
+
+
+def _su_vm_bus(v, m, a_bits=None, q_bits=None):
+    SU_VM_A_BITS = a_bits if a_bits is not None else globals()['SU_VM_A_BITS']   # noqa: N806
+    SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
+    by = {i.name: i for i in m['insts']}
+    su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
+    gap = vm.y - (su.y + su.h)
+    if abs(su.x - vm.x) > 1e-6 or abs(su.w - vm.w) > 1e-6 or not (0.0 <= gap <= SU_VM_ABUT_TOL_UM) \
+            or su.orient != 'R0' or vm.orient != 'R0':
+        raise ValueError(f'su_vm_abut: SU64 {su.x:.3f},{su.y:.3f} {su.w:.3f}x{su.h:.3f} {su.orient} and VM '
+                         f'{vm.x:.3f},{vm.y:.3f} {vm.w:.3f}x{vm.h:.3f} {vm.orient} do not abut (gap {gap:.3f} um): '
+                         'route the bus with relay stations and matching RTL latency instead')
+    if su.domain != vm.domain:
+        raise ValueError(f'su_vm_abut: SU64 ({su.domain}) and VM ({vm.domain}) in different clock domains')
+    m['buses'] += [('su_vm_a', 'spine_local', SU_VM_A_BITS, [('sp_su64_sfu', 'va'), ('sp_vector_memory', 'sa')]),
+                   ('su_vm_q', 'spine_local', SU_VM_Q_BITS, [('sp_vector_memory', 'sq'), ('sp_su64_sfu', 'vq')])]
+    w = su.w
+    p = 0.048                                       # M5 track (qwen_rom_fulldie TRK)
+    a_span, q_span = SU_VM_A_BITS * p, SU_VM_Q_BITS * p
+    lo = 2.0                                        # um clear of the face corners and between the two groups
+    a_c = lo + a_span / 2
+    q_c = lo + a_span + lo + q_span / 2
+    if lo + a_span + lo + q_span > w - lo:
+        raise ValueError(f'su_vm_abut: {SU_VM_A_BITS + SU_VM_Q_BITS} M5 pins do not fit the {w:.3f} um face')
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        s, q = out['qfd_sp_su64_sfu'], out['qfd_sp_vector_memory']
+        for M_, f, mine in ((s, 'N', ('va', 'vq')), (q, 'S', ('sa', 'sq'))):
+            for pn in mine:                 # the base wrapper's default pin group for the new bus: replaced here
+                if pn in M_.ports:
+                    M_.ports.pop(pn)
+                    M_.order.remove(pn)
+            taken = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f]
+            if taken:
+                raise ValueError(f'su_vm_abut: {M_.name} {f} face already holds {taken}')
+        s.face('va', SU_VM_A_BITS, 'N', 'M5', a_c, 1)
+        s.face('vq', SU_VM_Q_BITS, 'N', 'M5', q_c, 1)
+        q.face('sa', SU_VM_A_BITS, 'S', 'M5', a_c, 1)
+        q.face('sq', SU_VM_Q_BITS, 'S', 'M5', q_c, 1)
+        return out
+    v.masters = masters
+    m['r21v_su_vm'] = dict(bits_su_to_vm=SU_VM_A_BITS, bits_vm_to_su=SU_VM_Q_BITS, gap_um=round(gap, 4),
+                           face_um=round(w, 3), layer='M5', pitch_tracks=1,
+                           a_span_um=[round(a_c - a_span / 2, 3), round(a_c + a_span / 2, 3)],
+                           q_span_um=[round(q_c - q_span / 2, 3), round(q_c + q_span / 2, 3)],
+                           stations=0, rtl_latency_added=0)
+
+
+# r21f (qwen-rtl-finish 2026-10-07): the abstracts of the three masters whose RTL was finished
+# (rtl/qwen_sys/rtl_finish_20261007) and of the re-cut sequencer / SU (split-exact), from the RTL port lists:
+#   qfd_sp_tree_top  ot_qfd_sp_tree_top: the spine CONTROL element.  Issue in from the sequencer (si: go + the 379 ME
+#                    fields + x_rdy's peer is the VM), status out (so: ready, idle, progress, ov, argmax, wrom / kv
+#                    strobes, fault), the x descriptor (xd: 53 b) and the per-slot maxima write (mx: 553 b) to the VM,
+#                    x_rdy (xr) from the VM, and per band slab the lane / port-element control (c<b>: the per-level tree
+#                    selects / valids and the port-element tags, broadcast, + the band's share of the scale requests)
+#                    and its returns (f<b>: the band's port-element argmax nodes and faults + lane faults).
+#                    The tree words (pword_*) and the result word (tt_res) keep their r21 path as the RESULT path:
+#                    the band result serializer and the 6:1 result-row merge onto the VM row write port are NOT yet RTL
+#                    (m['r21f']['open']).
+#   qfd_sp_vector_memory  ot_qfd_sp_vector_memory: + xd / xr / mx; the embedding word moves to the SU (em dropped).
+#   qfd_io_embedding_rom  ot_qfd_io_embedding_rom root: request {v, kind, 24-b address} + credit return; response
+#                    {v, 512 b}; its requester is the SU (row buffer), not the sequencer.
+#   qfd_sp_constants_sequencer / qfd_sp_su64_sfu  the embedding request leaves from the SU (ea / ecr / eq), the
+#                    sequencer's ea / md ports go; seq <-> tree top issue / status (ti / ts).
+TT_ISSUE_BITS = 1 + 3 * 18 + 13 * 24 + 13          # go + ot_qwen_me_spine fields (NW = 18): 380
+TT_STATUS_BITS = 1 + 1 + 16 + 1 + 18 + 32 + 1 + 1 + 1 + 24 + 1     # ready idle progress ov am_idx am_val am_any wrom_re kv_re wrom_addr fault
+TT_XD_BITS = 1 + 24 + 24 + 4
+TT_MX_BITS = 1 + 24 + 16 + 512
+TT_BAND_C_BITS = 2 * 14 + 1 + 113 + (1 + 8 + 8 * 24)   # selects + valids, tag valid + fields, the band's 8 scale requests
+TT_BAND_F_BITS = 2 * 51 + 2 + 3                         # 2 port elements' argmax nodes + faults, lane faults
+EMB_REQ_BITS, EMB_RSP_BITS = 1 + 1 + 24, 1 + 512
+
+
+def _rtl_finish(v, m):
+    B = []
+    for bid, cl, bits, eps in m['buses']:
+        if bid == 'seq_done':
+            continue                                   # replaced by the tree top's status word
+        if bid == 'emb_a':
+            eps = [('sp_su64_sfu', 'ea') if e == ('sp_constants_sequencer', 'ea') else e for e in eps]
+            bits = EMB_REQ_BITS
+        if bid == 'emb':
+            eps = [('sp_su64_sfu', 'eq') if e == ('sp_vector_memory', 'em') else e for e in eps]
+            bits = EMB_RSP_BITS
+        B.append((bid, cl, bits, eps))
+    B += [('tt_si', 'sequencer', TT_ISSUE_BITS, [('sp_constants_sequencer', 'ti'), ('sp_tree_top', 'si')]),
+          ('tt_so', 'sequencer', TT_STATUS_BITS, [('sp_tree_top', 'so'), ('sp_constants_sequencer', 'ts')]),
+          ('tt_xd', 'tree_spine', TT_XD_BITS, [('sp_tree_top', 'xd'), ('sp_vector_memory', 'xd')]),
+          ('tt_xr', 'tree_spine', 1, [('sp_vector_memory', 'xr'), ('sp_tree_top', 'xr')]),
+          ('tt_mx', 'tree_spine', TT_MX_BITS, [('sp_tree_top', 'mx'), ('sp_vector_memory', 'mx')]),
+          ('emb_cr', 'io', 1, [('io_embedding_rom', 'acr'), ('sp_su64_sfu', 'ecr')])]
+    for b in range(6):
+        B += [(f'tt_c{b}', 'tree_spine', TT_BAND_C_BITS, [('sp_tree_top', f'c{b}'), (f'sp_port_tiles_{b}', 'tc')]),
+              (f'tt_f{b}', 'tree_spine', TT_BAND_F_BITS, [(f'sp_port_tiles_{b}', 'tf'), ('sp_tree_top', f'f{b}')])]
+    m['buses'] = B
+    m['r21f'] = dict(
+        rtl={'qfd_sp_tree_top': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top',
+             'qfd_sp_vector_memory': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv ot_qfd_sp_vector_memory',
+             'qfd_io_embedding_rom': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_io_embedding_rom.sv ot_qfd_emb_root (+ taps)',
+             'qfd_sp_su64_sfu': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_su_master.sv ot_qfd_sp_su64_sfu_ab',
+             'qfd_sp_constants_sequencer': 'rtl/qwen_sys/missing_masters_20261007/gen/ot_qfd_sp_constants_sequencer.sv'},
+        open=['ME result path: band result serializer + tree-top 6:1 result-row merge onto the VM row write port (the '
+              'pword_* / tt_res words keep their r21 path)',
+              'tree lanes (qfd_sp_tree_lane x16) and port elements: placed in the band slabs (c<b> / f<b> carry their '
+              'control); their t_lvl / y words inside the slab region are not die buses here',
+              'VM area: the banked master needs ~2.4 mm2 (777.6 x 3110.4 or 1555.2 square route variants) against the '
+              'r21 0.725 mm2 slab; the spine column is not re-packed in this recipe',
+              'SU <-> VM 3 x 64 scalar fixed-latency lane ports (r21v abutted bus): not served by the banked VM'])
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        tt, vm, sq, su, em = (o['qfd_sp_tree_top'], o['qfd_sp_vector_memory'], o['qfd_sp_constants_sequencer'],
+                              o['qfd_sp_su64_sfu'], o['qfd_io_embedding_rom'])
+        for M_, gone in ((tt, ('md',)), (vm, ('em',)), (sq, ('ea', 'md'))):
+            for pn in gone:
+                if pn in M_.ports:
+                    M_.ports.pop(pn)
+                    M_.order.remove(pn)
+        # tree top: issue / status on the E face (the sequencer column), band control on the W face (the slabs),
+        # VM words on the S face (the VM is below in the W spine column)
+        tt.face('si', TT_ISSUE_BITS, 'E', 'M4', tt.h - 150.0, 2)
+        tt.face('so', TT_STATUS_BITS, 'E', 'M4', tt.h - 60.0, 2)
+        tt.face('xd', TT_XD_BITS, 'S', 'M5', 100.0, 2)
+        tt.face('xr', 1, 'S', 'M5', 140.0, 2)
+        tt.face('mx', TT_MX_BITS, 'S', 'M5', 400.0, 1)
+        for b in range(6):
+            tt.face(f'c{b}', TT_BAND_C_BITS, 'W', 'M4', 150.0 + b * 480.0, 1)
+            tt.face(f'f{b}', TT_BAND_F_BITS, 'W', 'M4', 150.0 + b * 480.0 + 220.0, 1)
+        vm.face('xd', TT_XD_BITS, 'N', 'M5', 640.0, 1)
+        vm.face('xr', 1, 'N', 'M5', 670.0, 1)
+        vm.face('mx', TT_MX_BITS, 'E', 'M4', vm.h * 0.75, 1)
+        sq.face('ti', TT_ISSUE_BITS, 'W', 'M4', 2600.0, 2)
+        sq.face('ts', TT_STATUS_BITS, 'W', 'M4', 2700.0, 2)
+        su.face('ea', EMB_REQ_BITS, 'W', 'M4', 1500.0, 2)
+        su.face('ecr', 1, 'W', 'M4', 1520.0, 2)
+        su.face('eq', EMB_RSP_BITS, 'W', 'M4', 1300.0, 1)
+        if 'a' in em.ports:
+            em.ports['a'] = em.ports['a'][:1] + (EMB_REQ_BITS,) + em.ports['a'][2:]
+        if 'o' in em.ports:
+            em.ports['o'] = em.ports['o'][:1] + (EMB_RSP_BITS,) + em.ports['o'][2:]
+        em.face('acr', 1, 'S', 'M5', em.w - 200.0, 1)
+        for b in range(6):
+            mn = f'qfd_port_tiles_{b}'
+            if mn in o:
+                P = o[mn]
+                P.face('tc', TT_BAND_C_BITS, 'E', 'M4', 400.0, 1)
+                P.face('tf', TT_BAND_F_BITS, 'E', 'M4', 400.0 + TT_BAND_C_BITS * 0.048 / 2 + TT_BAND_F_BITS * 0.048 / 2 + 10.0, 1)
+        return o
+    v.masters = masters
+
+
+# r21m (qwen-vm-me 2026-10-08): the spine re-packed for the RTL of rtl/qwen_sys/vm_me_20261008.
+#   column M        a third spine column (VM_ME_XCOL wide): the die grows by VM_ME_XCOL (on the reticle budget: r21f
+#                   821.3 mm2 + 0.78 x 32.8 = ~846.8 <= 858) instead of squeezing the two columns.  The columns are
+#                   W | VCH | M | E: the outer two keep the band-half slabs beside their tile arrays (no block word
+#                   crosses the spine), the middle one holds the vector memory, the stream unit and the sequencer.
+#   vector memory   qfd_sp_vector_memory_bv (copy 0 = 64 banks x 2 ot_sram_1r1w_256x256 for the x beats, 3 SU replica
+#                   copies of 16 banks x 2 ot_sram_1r1w_1024x256, the bank-write arbiter, skid queues, the 6:1 result
+#                   merge): 2.09 mm2 of macros, slot 777.6 x VM_BV_H in column M with the stream unit
+#                   qfd_sp_su64_sfu_bv abutted below it (descriptor SU <-> VM bus, no stations), centred on the hub.
+#   tree lanes      per band, qfd_sp_band_lanes (the 16 lanes' tree levels TCUT+1..TCUT+3 over the band's 8 level-
+#                   TCUT positions, 7 FP32 adders a lane), stacked on the band's W primary slab (the band's level-TCUT
+#                   words in, tw, and its result-position words out, ty, 4,096 b each, abutted); the band word (one
+#                   position, 512 b: pword) goes to the tree top, which holds levels TCUT+4.. across the 6 bands and
+#                   returns the 3 positions of splits SMAX-1 / SMAX to band 0 (tt_ty, 1,536 b).  The 16 monolithic
+#                   lanes of the qwen-rtl-finish partition (ot_qwen_spine_lane over all 48 positions, no wire stage to
+#                   the port elements) do not fit the die: 16 x 6 x 2 x 256 b of unstaged words across 31 mm.  OPEN:
+#                   the per-band lane RTL (ot_qwen_spine_lane cut by position range; the tree top's levels above).
+#   port elements   the band slabs: each half (qfd_port_tiles_<b> / _f1, 8 slab port-group elements) hosts one W12 port
+#                   element pair's result groups with their scale banks (r17); the slab primary is the band's port
+#                   element host for the lane and result words.
+#   band serializer qfd_sp_res_ser x 6 (ot_qfd_res_ser: 8 x ot_sram_1r1w_64x512 + flops), one per band abutted
+#                   below its W primary slab: the band's result slots in (rq, 4,425 b, abutted), credit / valid beats
+#                   to the memory's merge (rs, 551 b), credit back (rc), rok (rk) to the memory's me_ok AND.
+#   words           pword_* (slab -> tree top result word) and tt_res (tree top -> VM) are gone: results go slab ->
+#                   serializer -> VM; tt_land (VM -> tree top landed-burst count, 16 b) and vm_meok (VM -> sequencer
+#                   me_mem_ok term) are new.
+VM_ME_XCOL = 777.6
+VM_BV_H = 6220.8          # 777.6 x 6,220.8 = 4.84 mm2: 2.09 mm2 macros (43 %) + the x path / SU replica / write logic
+SU_BV_H = 2058.48         # ot_qfd_sp_su64_sfu_bv: ot_qfd_sp_su64_sfu_ab's slot (the lanes / embedding buffer unchanged)
+LANE_WH = 600.048         # qfd_sp_tree_lane (physical/qwen_die_masters/cfg/qfd_sp_tree_lane.env): 46 adders in 0.36 mm2
+BL_H = 1131.84            # qfd_sp_band_lanes: 16 lanes x 7 adders = 112 / 46 x 0.36 mm2 = 0.88 mm2 in a 777.6 column
+SER_H = 518.4             # qfd_sp_res_ser: 8 x 171.288 x 77.784 macros + ~30 k flops in 777.6 x 518.4 (0.40 mm2)
+NLANES = 16
+LANE_C_BITS = 2 * 14      # t_sel_e / t_tv_e ([$clog2(GT):0] each, GT = 6,144)
+LANE_W_BITS = 8 * 16 * 32  # a band's 8 level-TCUT positions x 16 lanes (tw in / ty out of the band lanes)
+TT_TY_BITS = 3 * 16 * 32 + 2   # the tree top's top-level positions (splits SMAX-1 / SMAX) back to band 0 + use / valid
+SER_I_BITS = 8 * (24 + 16 + 512) + 8 + 1   # 8 slots {addr, mask, data} + we + ov
+SER_O_BITS = 1 + 1 + 1 + 20 + 16 + 512     # v, end, nul, row, mask, data
+SU_VM_A_BITS_BV = 3 * (1 + 1 + 24 + 24) + (64 + 24 + 24 + 64 * 32) + (1 + 24 + 32)   # descriptors + lane writes + reducer
+LAND_BITS = 16
+
+
+def _repack_r21m(v, m):
+    """r21m spine: tree top above the hub (W) as b3r3; in the middle column M the banked VM centred on the hub, the
+    stream unit abutted below it and the sequencer below that; the band slabs (r17: W / E halves in the outer columns,
+    M as overflow); each band's W primary is a stack: result serializer, slab, band-lane block (all abutted)."""
+    g = m['geo']
+    cw = g['cw']
+    hub = m['hub']
+    m['insts'] = [i for i in m['insts'] if i.kind != 'spine_block']
+    cols, free = _spine_free(v, m, [])
+    spans = {c: [list(iv) for iv in ivs] for c, ivs in free.items()}
+    area = {n: a for n, a, *_ in v.SPINE_BLOCKS}
+    dom = {n: d for n, a, d, *_ in v.SPINE_BLOCKS}
+    hh = lambda mm2: v.up(mm2 * 1e6 / cw, v.GY)   # noqa: E731
+    parts = []
+
+    def put(name, master, col, y, h, domain='stream_1p2', w=None):
+        it = v.Inst(name, master, cols[col], y, (cw if w is None else w) - v.SHAVE, h - v.SHAVE, kind='spine_block',
+                    region='hub', domain=domain)
+        m['insts'].append(it)
+        return it
+    hub_lo, hub_hi = hub.y, hub.y + hub.h + v.SHAVE
+    hub_c = (hub_lo + hub_hi) / 2
+    tt_h = getattr(v, 'R21M_TT_H', 0.0)
+    h_tt = v.up(tt_h, v.GY) if tt_h else hh(area['tree_top'])
+    h_cs = hh(area['constants_sequencer'])
+    h_vm, h_su = v.up(VM_BV_H, v.GY), v.up(SU_BV_H, v.GY)
+    if tt_h:
+        # r21b: the band tree top (777.6 x 3,732.48 / 4,354.56) no longer fits W above the hub without pushing band 3's
+        # serializer / slab / band-lane stack out of its column; it moves to M on top of the VM (its x_ / mx_ /
+        # land_cnt face is the bottom one, toward the VM).  SU + VM + tree top are one stack in M, VM centred on the
+        # hub where the interval allows (else the least shift down), the sequencer below as before.
+        y_st = _place_near(v, free, 'M', h_su + h_vm + h_tt, hub_c - h_su / 2 + h_tt / 2)
+        y_su, y_vm = y_st, y_st + h_su
+        y_tt, tt_col = y_vm + h_vm, 'M'
+        m['geo']['r21b_vm_shift_um'] = round((y_vm + h_vm / 2) - hub_c, 3)
+    else:
+        y_tt, tt_col = _place_near(v, free, 'W', h_tt, hub_hi + h_tt / 2), 'W'
+        y_st = _place_near(v, free, 'M', h_vm + h_su, hub_c - h_su / 2)       # SU + VM stack: VM centred on the hub
+        y_su, y_vm = y_st, y_st + h_su
+    y_cs = _place_near(v, free, 'M', h_cs, y_su - h_cs / 2)              # the sequencer below the SU (constant ROM)
+    put('sp_vector_memory', 'qfd_sp_vector_memory', 'M', y_vm, h_vm, dom['vector_memory'])
+    put('sp_su64_sfu', 'qfd_sp_su64_sfu', 'M', y_su, h_su, dom['su64_sfu'])
+    put('sp_tree_top', 'qfd_sp_tree_top', tt_col, y_tt, h_tt, dom['tree_top'])
+    put('sp_constants_sequencer', 'qfd_sp_constants_sequencer', 'M', y_cs, h_cs, dom['constants_sequencer'])
+    for n, y, h, c in (('vector_memory', y_vm, h_vm, 'M'), ('su64_sfu', y_su, h_su, 'M'), ('tree_top', y_tt, h_tt, tt_col),
+                       ('constants_sequencer', y_cs, h_cs, 'M')):
+        parts.append(dict(name=n, col=c, y=round(y, 3), h=h))
+    # band slabs (r17 over W / E / M, held to their band's column segment); the W primary carries the serializer
+    # below it and the band-lane block above it
+    rows = g['row_y']
+    tgt = [(rows[4 * b] + rows[4 * b + 3] + v.TILE_SLOT[1]) / 2 for b in range(BANDS)]
+    order = sorted(range(BANDS), key=lambda b: abs(tgt[b] - g['mid']))
+    m['band_slabs'] = {}
+    per = PORT_GROUPS // (2 * BANDS)
+    m['geo']['slab_group_h_um'] = v.SLAB_GROUP_H
+    rpg = RTL_PORT_GROUPS // (2 * BANDS)                       # result-port groups per half (4) for per (8) block words
+    m['geo']['slab_h_um'] = v.up(rpg * v.SLAB_GROUP_H + per * BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw, v.GY)
+    m['geo']['slab_port_groups'] = dict(result_groups=RTL_PORT_GROUPS, per_half=rpg, block_words=PORT_GROUPS, bw_per_half=per)
+    bl_h = getattr(v, 'R21M_BL_H', 0.0) or BL_H
+    m['geo']['r21m_slots_um'] = dict(tree_top=h_tt, band_lanes=v.up(bl_h, v.GY), res_ser=v.up(SER_H, v.GY))
+    _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=v.up(bl_h, v.GY), ser_h=v.up(SER_H, v.GY),
+                rtl_groups=True)
+    m['geo']['spine_parts_r21m'] = parts
+    m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
+    m['geo']['x_col_m'] = cols['M']
+
+
+def _vm_me(v, m):
+    """r21m buses and abstracts (see the r21m comment above)."""
+    gm = m['b3r2']['groups']
+    prim = gm['primary']
+    B = []
+    for bid, cl, bits, eps in m['buses']:
+        if bid == 'tt_res':
+            continue
+        if bid.startswith('pword_'):           # the band word now leaves the band-lane block (+ its valid)
+            b = int(bid.split('_')[1])
+            eps = [(f'sp_band_lanes_{b}', 'pw')] + list(eps[1:])
+            bits = bits + 1
+        B.append((bid, cl, bits, eps))
+    for b in range(BANDS):
+        bl = f'sp_band_lanes_{b}'
+        B += [(f'tw_{b}', 'tree_spine', LANE_W_BITS, [(prim[b], 'tw'), (bl, 'tw')]),
+              (f'ty_{b}', 'tree_spine', LANE_W_BITS, [(bl, 'ty'), (prim[b], 'ty')]),
+              (f'tt_lc{b}', 'tree_spine', LANE_C_BITS, [('sp_tree_top', f'lc{b}'), (bl, 'c')]),
+              (f'tt_lf{b}', 'tree_spine', 1, [(bl, 'f'), ('sp_tree_top', f'lf{b}')])]
+    B.append(('tt_ty', 'tree_spine', TT_TY_BITS, [('sp_tree_top', 'ty'), ('sp_band_lanes_0', 'tt')]))
+    for b in range(BANDS):
+        sr = f'sp_res_ser_{b}'
+        B += [(f'rq_{b}', 'tree_spine', SER_I_BITS, [(prim[b], 'rq'), (sr, 'i')]),
+              (f'rs_{b}', 'tree_spine', SER_O_BITS, [(sr, 'o'), ('sp_vector_memory', f'rb{b}')]),
+              (f'rc_{b}', 'tree_spine', 1, [('sp_vector_memory', f'rc{b}'), (sr, 'cr')]),
+              (f'rk_{b}', 'tree_spine', 1, [(sr, 'ok'), ('sp_vector_memory', f'rk{b}')])]
+    B += [('tt_land', 'spine_local', LAND_BITS, [('sp_vector_memory', 'ld'), ('sp_tree_top', 'ld')]),
+          ('vm_meok', 'spine_local', 1, [('sp_vector_memory', 'mo'), ('sp_constants_sequencer', 'mo')])]
+    m['buses'] = B
+    m['r21m'] = dict(
+        rtl={'qfd_sp_vector_memory': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv ot_qfd_sp_vector_memory_bv',
+             'qfd_sp_su64_sfu': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_su_master_bv.sv ot_qfd_sp_su64_sfu_bv',
+             'qfd_sp_res_ser': 'rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv ot_qfd_res_ser',
+             'qfd_sp_tree_top': 'rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv ot_qfd_sp_tree_top (LANDED = 1, '
+                                'BAND = 1: ot_qfd_band_upper inside, cfg qfd_sp_tree_top_b)',
+             'qfd_sp_band_lanes': 'rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv ot_qfd_band_lanes (NL 16; '
+                                  'tree top part: ot_qfd_band_upper)'},
+        column_m_um=VM_ME_XCOL, vm_slot_um=[round(m['geo']['cw'], 3), VM_BV_H], su_slot_um=[round(m['geo']['cw'], 3), SU_BV_H],
+        band_lanes_slot_um=[round(m['geo']['cw'], 3), BL_H], ser_slot_um=[round(m['geo']['cw'], 3), SER_H],
+        port_elements={b: [prim[b]] for b in range(BANDS)},
+        band_lanes=dict(rtl='rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv',
+                        bench='rtl/test/qwen_lane_band/tb_qfd_band_lanes.sv',
+                        frame='band-local result slots: split s <= 10 band b slot k = group b * 2^(10-s) + k; s 11 / 12 '
+                              'band 0 slot k = group k (tree top words)', cycles='+5 + 2 LNK edges per ME op result'),
+        band_integrate=dict(slab_port_group='ot_qwen_slab_port_group BANDF 1 (GID = slot 8b + k; group g(split, slot))',
+                            spine='rtl/qwen_sys/band_integrate_20261008/ot_qfd_spine_band.sv',
+                            bench='rtl/test/qwen_band_integrate/tb_qfd_spine_band.sv'),
+        tree_top_slot_um=[round(m['geo']['cw'], 3), m['geo'].get('r21m_slots_um', {}).get('tree_top')],
+        tree_top_col='M (r21b: on the VM, SU + VM + tree top one stack)' if getattr(v, 'R21M_TT_H', 0.0) else 'W',
+        open=([] if getattr(v, 'R21M_TT_H', 0.0) else
+              ['tree top slot: qfd_sp_tree_top_b is 777.6 x 3732.48 (the upper levels; r21m slot is the r21f tree top\'s); '
+               'recipe r21b / r21bt']) + [
+              'band lane <-> slab words connect each band at its W primary slab (a band\'s fragments reach it by pfrag)'],
+        slab_port_groups='RTL_PORT_GROUPS 48 (8 a band, 4 a half; 12 port elements x PQ 4), block-word FIFOs stay 96')
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        o = base(model, k, port_bits)
+        # the SU <-> VM abutted bus owns the VM S face and the SU N face (_su_vm_bus): every other default pin group
+        # the wrappers put there moves to the side faces (VM: E, toward the band column; SU: W)
+        moves = [('qfd_sp_vector_memory', 'S', ('sa', 'sq'), 'W', None), ('qfd_sp_su64_sfu', 'N', ('va', 'vq'), 'W', None),
+                 ('qfd_sp_vector_memory', 'E', (), 'W', None)]
+        if getattr(v, 'R21M_TT_H', 0.0):
+            # r21b: the tree top sits in M; its band-lane words (bw*: band word + valid, lc* / lf*: lane control /
+            # fault, ty: the split-11/12 return to band 0) face the band-lane blocks in W
+            moves.append(('qfd_sp_tree_top', 'E', (), 'W', re.compile(r'^(bw|lc|lf)\d+$|^ty$')))
+        for mn, f, keep, to, only in moves:
+            M_ = o[mn]
+            mv = [pn for pn, sp in M_.ports.items() if sp[0] == 'face' and sp[2] == f and pn not in keep
+                  and (only is None or only.match(pn))]
+            for pn in mv:
+                _, w_, _, _, _, pitch = M_.ports[pn]
+                M_.ports.pop(pn)
+                span = w_ * F.TRK['M4'][1] * k * max(1, pitch)
+                used = sorted(_face_used(M_, to, k))
+                y, ok = 6.0, False
+                for lo, hi in used + [(M_.h - 4.0, M_.h)]:
+                    if y + span + 2.0 <= lo:
+                        ok = True
+                        break
+                    y = max(y, hi + 2.0)
+                if not ok:
+                    raise ValueError(f'r21m: {mn}.{pn} ({w_} b) does not fit the {to} face')
+                M_.ports[pn] = ('face', w_, to, 'M4', y + span / 2, pitch)
+        # the band-lane block and the serializer: their abutted words (tw / ty, rq) on the stack faces, every other
+        # word as M8 area pins (their peers -- tree top, vector memory -- are reached through relays in any direction)
+        for mn, ports in (('qfd_sp_band_lanes', ('c', 'f', 'pw', 'tt')), ('qfd_sp_res_ser', ('o', 'ok', 'cr'))):
+            if mn not in o:
+                continue
+            M_ = o[mn]
+            xq = 40.0
+            for pn in ports:
+                if pn in M_.ports:
+                    w_ = M_.ports[pn][1]
+                    M_.ports[pn] = ('area', w_, xq, M_.h / 2, 1)
+                    xq += 120.0
+        return o
+    v.masters = masters
 
 
 BWP_H = 60.48       # r20f block-word waypoint frame height: 512 M4 face pins at 2 tracks (49.2 um) + margins, on GY
@@ -297,7 +699,9 @@ def _io_south(v):
         # spine blocks whose words sat as area pins inside the body (a relay can only be beside a macro): the tree
         # top's port-slab words, its result word and done to its E face (the vertical channel), the sequencer's
         # collective / embedding-address / done words to its W face (the channel), the VM's tree-result word to E
-        moves = (('qfd_sp_tree_top', ['bw0', 'bw1', 'bw2', 'bw3', 'bw4', 'bw5', 'r', 'md'], 'E'),
+        # (r21b: the tree top sits in column M, its band words come from the band-lane blocks in W: W face)
+        moves = (('qfd_sp_tree_top', ['bw0', 'bw1', 'bw2', 'bw3', 'bw4', 'bw5', 'r', 'md'],
+                  'W' if getattr(v, 'R21M_TT_H', 0.0) else 'E'),
                  ('qfd_sp_constants_sequencer', ['cd', 'ea', 'md'], 'W'),
                  ('qfd_sp_vector_memory', ['tr'], 'E'))
         for mn, ports, face in moves:
@@ -395,7 +799,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                         if y0 >= g['y0'] and y0 + h <= die_top and free(r):
                             return x0, y0
             return None
-        for ring in range(0, 160 if tol is None else int(tol / (4 * v.GY)) + 1):
+        for ring in range(0, getattr(v, 'RELAY_RINGS', 160) if tol is None else int(tol / (4 * v.GY)) + 1):
             st = ring * 4 * v.GY
             cands = [(0, 0)] if ring == 0 else \
                 [(dx, dy) for dx in (-st, st) for dy in [i * 4 * v.GY for i in range(-ring, ring + 1)]] + \
@@ -1137,6 +1541,10 @@ def _spine_free(v, m, keep):
     """free [lo, hi) intervals per spine column after the kept instances, channel crossings and the hub."""
     g = m['geo']
     cols = {'W': g['x_spine'], 'E': g['x_vch'] + v.VCH}
+    if getattr(v, 'XCOL', 0.0):
+        # r21m: three columns; the outer two (W, E) keep the band-half slabs beside their tile arrays (a block word
+        # never crosses the spine), the middle one M (east of the vertical channel) holds the VM / SU / sequencer
+        cols = {'W': g['x_spine'], 'M': g['x_vch'] + v.VCH, 'E': g['x_vch'] + v.VCH + g['cw']}
     ch = g['ch_y']
     segs = [(g['y0'], ch[0]), (ch[0] + v.HCH, ch[1]), (ch[1] + v.HCH, g['y_top'])]
     hub = m['hub']
@@ -1309,7 +1717,7 @@ def _repack_b3r3(v, m):
     m['geo']['spine_free_after_um'] = {c: [[round(a, 1), round(b_, 1)] for a, b_ in iv] for c, iv in free.items()}
 
 
-def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans):
+def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans, lanes_h=0.0, ser_h=0.0, rtl_groups=False):
     """r17 band slabs of routed port-group elements: each band half is 8 groups of SLAB_GROUP_H (+ its 8 block-word
     FIFOs) in the column of its half, nearest the band centre.  Where the column's free interval is shorter (the
     hub column between the horizontal link channels holds SU64, the vector memory, the hub and the tree top), the
@@ -1318,7 +1726,9 @@ def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans):
     the hub are packed first."""
     per = PORT_GROUPS // (2 * BANDS)
     fifo_um = BW_FIFO_BITS * FIFO_MM2_PER_BIT * 1e6 / cw
-    hgt = lambda n: v.up(n * v.SLAB_GROUP_H + n * fifo_um, v.GY)   # noqa: E731
+    # rtl_groups (r21m, qwen-lane-band): a fragment of n block words holds ceil(n / 2) result-port group elements
+    gpw = RTL_PORT_GROUPS / PORT_GROUPS if rtl_groups else 1.0
+    hgt = lambda n: v.up(math.ceil(n * gpw - 1e-9) * v.SLAB_GROUP_H + n * fifo_um, v.GY)   # noqa: E731
 
     def span(c, t):
         return next((sp for sp in spans[c] if sp[0] - 1e-6 <= t <= sp[1] + 1e-6),
@@ -1339,9 +1749,9 @@ def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans):
             raise SystemExit(f'spine r17: {h:.1f} um does not fit column {c} in the span of y {t:.0f}')
         _take(free[c], best[1], best[2], best[2] + h)
         return best[2]
-    def cap(iv):
+    def cap(iv, x=0.0):
         n = 0
-        while hgt(n + 1) <= iv[1] - iv[0] + 1e-6:
+        while hgt(n + 1) + x <= iv[1] - iv[0] + 1e-6:
             n += 1
         return n
 
@@ -1354,19 +1764,29 @@ def _repack_r17(v, m, free, put, parts, tgt, order, cw, spans):
             first = True
             while left:
                 # nearest interval of the span with room for at least one group: own column, then the other one
+                # (r21m: the band's primary also carries the band-lane block stacked on it, lanes_h)
+                xh = (lanes_h + ser_h) if (first and side == 'W') else 0.0
                 col, iv = None, None
-                for c in ((side, 'E' if side == 'W' else 'W')):
-                    ivs = [iv_ for iv_ in cands(c, tgt[b], hgt(1))]
+                for c in ((side, 'E' if side == 'W' else 'W') + (('M',) if 'M' in free else ())):
+                    ivs = [iv_ for iv_ in cands(c, tgt[b], hgt(1) + xh)]
                     if ivs:
                         col, iv = c, min(ivs, key=lambda iv_: dist(iv_, tgt[b]))
                         break
                 if col is None:
                     raise SystemExit(f'spine r17: band {b} {side} groups {left} do not fit the span of y {tgt[b]:.0f}')
-                n = min(len(left), cap(iv))
+                n = min(len(left), cap(iv, xh))
                 h = hgt(n)
-                y = min(max(tgt[b] - h / 2, iv[0]), iv[1] - h)
-                y = v.up(y, v.GY) if v.up(y, v.GY) + h <= iv[1] + 1e-6 else v.dn(y, v.GY)
-                _take(free[col], iv, y, y + h)
+                y = min(max(tgt[b] - (h + xh) / 2, iv[0]), iv[1] - h - xh)
+                y = v.up(y, v.GY) if v.up(y, v.GY) + h + xh <= iv[1] + 1e-6 else v.dn(y, v.GY)
+                _take(free[col], iv, y, y + h + xh)
+                if xh:
+                    # r21m stack, bottom up: the band's result serializer, the primary slab, the band-lane block
+                    if ser_h:
+                        put(f'sp_res_ser_{b}', 'qfd_sp_res_ser', col, y, ser_h)
+                        parts.append(dict(name=f'res_ser_{b}', kind='res_ser', band=b, col=col, y=round(y, 3), h=ser_h))
+                        y += ser_h
+                    put(f'sp_band_lanes_{b}', 'qfd_sp_band_lanes', col, y + h, lanes_h)
+                    parts.append(dict(name=f'band_lanes_{b}', kind='band_lanes', band=b, col=col, y=round(y + h, 3), h=lanes_h))
                 if first and col == side:
                     name = f'sp_port_tiles_{b}' if side == 'W' else f'sp_port_tiles_{b}_f1'
                 else:
@@ -2587,6 +3007,12 @@ def main(argv=None):
                     'at this pitch (um; 0: off)')
     ap.add_argument('--slab-bw-m8', action='store_true', help='r21: band-slab block-word pins on M8 at the array face, '
                     'one word per port-group slot (seam fix)')
+    ap.add_argument('--io-chan', type=float, default=0.0, help='r22: routing channel (um, on 2.16) between the top tile '
+                    'row and the IO band; the die grows by it')
+    ap.add_argument('--rtl-finish', action='store_true', help='r21f: tree-top / VM / embedding-root / re-cut '
+                    'sequencer + SU abstracts from the finished RTL (qwen-rtl-finish)')
+    ap.add_argument('--su-vm-abut', action='store_true', help='r21v: SU64 <-> VM bus (14,592 b) as abutted M5 pins '
+                    '(SU64 N face on the VM S face), no stations')
     ap.add_argument('--corr-um', type=float, default=None, help='r20e: corridor width (um, on 0.432)')
     ap.add_argument('--corr-m9-adj', type=float, default=None, help='r20d: GRT M9 adjustment over the corridors')
     ap.add_argument('--tree-interleave', action='store_true', help='r20: tree-word pin sub-columns interleaved across '
@@ -2607,6 +3033,8 @@ def main(argv=None):
     ap.add_argument('--k', type=int, default=16)
     ap.add_argument('--iters', type=int, default=5)
     ap.add_argument('--tag', default='b3r2')
+    ap.add_argument('--recipe', default=None, help='die_top_lint Qwen recipe (e.g. r21b): selects the die from the '
+                    'recipe dict (incl. vm_me / tt_h / bl_h, which have no flag) instead of the per-feature flags')
     a = ap.parse_args(argv)
     if a.mode == 'summary':
         print(json.dumps(summarize(a.work), indent=1))
@@ -2614,14 +3042,20 @@ def main(argv=None):
     if a.mode == 'latency':
         print(json.dumps(latency(), indent=1))
         return 0
-    v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
-                    b3r6=a.b3r6, tree_cols=a.tree_cols,
-                    bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
-                    io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
-                    edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
-                    slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
-                    slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
-                    r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch)
+    if a.recipe:
+        import die_top_lint as DTL
+        r = dict(DTL.QWEN_RECIPES[a.recipe])
+        cdc = r.pop('cdc')
+        v, m = selected(True, cdc=_cdc_arg(cdc), **r)
+    else:
+        v, m = selected(a.enable_b3r2, band=a.band, area_pins=a.area_pins, b3r3=a.b3r3, widen_um=a.widen_um, spread=a.spread,
+                        b3r6=a.b3r6, tree_cols=a.tree_cols,
+                        bw_align=a.bw_align, east_mirror=a.east_mirror, bw_edge=a.bw_edge,
+                        io_faces=a.io_faces, bw_edge_inner=a.bw_edge_inner, bw_sp=a.bw_sp, bw_x=a.bw_x,
+                        edge_gap=a.edge_gap, slab_obs_top=a.slab_obs_top, m6_strip=a.m6_strip,
+                        slab_group_h=a.slab_group_h, cdc=_cdc_arg(a.cdc),
+                        slab_pg=a.slab_pg, slab_w_per_mm2=a.slab_w_per_mm2, strip_span=a.strip_span, r18=a.r18,
+                        r19=a.r19, tree_interleave=a.tree_interleave, corr_m9_adj=a.corr_m9_adj, corr_um=a.corr_um, bw_wp=a.bw_wp, su_core_clock=a.su_core_clock, slab_bw_m8=a.slab_bw_m8, relay_pitch=a.relay_pitch, io_chan=a.io_chan, su_vm_abut=a.su_vm_abut, rtl_finish=a.rtl_finish)
     if a.mode == 'relaycost':
         rec = dict(relay_token_cost(v, m), relays=m.get('r21_relays'))
         if a.out:

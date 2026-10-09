@@ -1,0 +1,221 @@
+{
+ "schema": "opentallas.exactness.benches.v1",
+ "note": "End-to-end / system-level exactness benches the published numbers rest on. last_pass = the last commit whose source passed: before the harness, the commit that added the evidence (its source was often a scratch snapshot, named in last_pass.source); afterwards, the harness updates exactness.log rows, which are the record.",
+ "benches": [
+  {
+   "bench": "qwen_rom_L0",
+   "target": "qwen_rom",
+   "tier": "fast",
+   "host": "ot-epyc1tb",
+   "group": "qwen_rom",
+   "peak_gb": 25,
+   "label": "Qwen ROM plain-AR STREAM4 tagged die, P8191, layer 0 only (4 ranks)",
+   "expect": {
+    "exact": true,
+    "cycles": 6044
+   },
+   "last_pass": {
+    "commit": "0d1e2ef2b",
+    "source": "1d44fd09d top + a60af57e4 tagged backend + fullbw-hbm/src4",
+    "evidence": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json (L0_cycles)"
+   }
+  },
+  {
+   "bench": "qwen_rom_full",
+   "target": "qwen_rom",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "qwen_rom",
+   "peak_gb": 25,
+   "label": "Qwen ROM AR token at P8191: 36 layers + RTL head, argmax on all 4 ranks, 144 layer X + 144 current-KV checks",
+   "expect": {
+    "exact": true,
+    "cycles": 193955,
+    "token": 18,
+    "winning_logit_bits": "42282b99"
+   },
+   "last_pass": {
+    "commit": "0d1e2ef2b",
+    "source": "1d44fd09d top + a60af57e4 tagged backend + fullbw-hbm/src4",
+    "evidence": "results/rtl/qwen_plain_ar_stream4_P8191_20261005/measured_composition.json"
+   }
+  },
+  {
+   "bench": "hbm_qwen_L0",
+   "target": "hbm_qwen",
+   "tier": "fast",
+   "host": "ot-epyc1tb",
+   "group": "hbm_qwen",
+   "peak_gb": 12,
+   "label": "HBM accelerator Qwen3-8B TP2 (w160) at P8191, layer 0, 2 ranks",
+   "expect": {
+    "exact": true,
+    "cycles": 6399
+   },
+   "last_pass": {
+    "commit": "6a51c2cad",
+    "source": "qwen-hbmacc-8k/src snapshot",
+    "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191/L0/token_result.json"
+   },
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
+  },
+  {
+   "bench": "hbm_qwen_head",
+   "target": "hbm_qwen",
+   "tier": "fast",
+   "host": "ot-epyc1tb",
+   "group": "hbm_qwen",
+   "peak_gb": 20,
+   "label": "HBM accelerator Qwen3-8B TP2 (w224) at P8191, LM head: next token on both ranks",
+   "expect": {
+    "exact": true,
+    "cycles": 4641,
+    "token": 18,
+    "logit_bits": "42297c63"
+   },
+   "last_pass": {
+    "commit": "6a51c2cad",
+    "source": "qwen-hbmacc-8k/src snapshot",
+    "evidence": "results/rtl/qwen_hbmacc_p8191_20261004/a_p8191_w224_head/head/token_result.json"
+   },
+   "fixtures": "TP2 P8191 gold regenerated 2026-10-08 (regen_fixtures.sh) under /srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191; usable once its verify.json says PASS"
+  },
+  {
+   "bench": "hbm_ds_joint_p1",
+   "target": "hbm_ds",
+   "tier": "fast",
+   "host": "ot-epyc2",
+   "group": "hbm_ds",
+   "peak_gb": 16,
+   "label": "HBM accelerator DeepSeek SM PQ/XMAP production gate: 4 P1 + 4 P6 retained fixtures exact + FP4 negative refused (P6 recovered 10-08 from euclid-hbm-opt1-production-r1, sha-equal to the committed layouts)",
+   "expect": {
+    "exact": true,
+    "cycles": 4048,
+    "runs_cycles": {
+     "stress": 2514,
+     "ar_l20": 4048,
+     "wg": 934,
+     "other": 4716,
+     "p6_stress": 2986,
+     "p6_l20": 5400,
+     "p6_wg": 1230,
+     "p6_other": 5220
+    }
+   },
+   "last_pass": {
+    "commit": "95eae97d3",
+    "source": "main 010293091 (snapshot ca3164e9e)",
+    "evidence": "results/rtl/hbm_opt_integrated_20261005/joint_p1_r2/terminal.json"
+   }
+  },
+  {
+   "bench": "v41_reduced_hdc",
+   "target": "ds_v41",
+   "tier": "fast",
+   "host": "ot-epyc2",
+   "group": "hdc",
+   "peak_gb": 16,
+   "label": "DeepSeek-V4.1 reduced v2 token on ot_hdc_core_v41: step at P7 -> 3118, e2e from empty state -> [3118, 2400, 64]",
+   "expect": {
+    "exact": true,
+    "cycles": 344109,
+    "token": 3118,
+    "e2e_cycles": 3361931,
+    "generated": [
+     3118,
+     2400,
+     64
+    ]
+   },
+   "last_pass": {
+    "commit": "f062e72a9",
+    "source": "main",
+    "evidence": "results/rtl/hdc_v41_decode_campaign.json"
+   }
+  },
+  {
+   "bench": "qwen_reduced_hdc",
+   "target": "qwen_rom",
+   "tier": "fast",
+   "host": "ot-epyc2",
+   "group": "hdc",
+   "peak_gb": 12,
+   "label": "Qwen3 reduced v1 token on ot_hdc_core: step at P15 -> 1073, e2e -> [1073, 382, 93]",
+   "expect": {
+    "exact": true,
+    "cycles": 24440,
+    "token": 1073,
+    "e2e_cycles": 439984,
+    "generated": [
+     1073,
+     382,
+     93
+    ]
+   },
+   "last_pass": {
+    "commit": "779ad4b31",
+    "source": "main",
+    "evidence": "results/rtl/hdc_decode_campaign.json"
+   }
+  },
+  {
+   "bench": "v41_mtp_isa",
+   "target": "ds_v41",
+   "tier": "fast",
+   "host": "ot-epyc2",
+   "group": "hdc",
+   "peak_gb": 8,
+   "label": "DeepSeek-V4.1 DSpark MTP golden (spec == greedy) and ISA mtp_run gamma 3/5, DSpark + forced drafters, poison + slot-ring mutation",
+   "expect": {
+    "exact": true
+   },
+   "last_pass": {
+    "commit": "328b5fff2",
+    "source": "main",
+    "evidence": "results/rtl/hdc_v41_mtp_isa_evidence.json"
+   }
+  },
+  {
+   "bench": "s81_token_l20",
+   "target": "ds_s81",
+   "tier": "nightly",
+   "host": "ot-epyc1tb",
+   "group": "ds_s81",
+   "peak_gb": 60,
+   "label": "DS ROM S81 one-layer token bench at the 1M token: L20 rank 0 on the 1,792 HALF-dedicated + router K-split mapping; every field phase x every region in RTL (field vehicle, q element QX 10), RTL rows chained through the layer VM to the golden layer output; S81 selector (ot_hdc_v41x_sel Q4/W16/K512) on the 1,048,576 golden index scores; mutant = one flipped RTL row bit must FAIL",
+   "expect": {
+    "exact": true,
+    "cycles": null
+   },
+   "last_pass": null,
+   "note": "gaps-design 2026-10-08 (tools/s81/token_bench_l20.py). Units without a stage in this bench (HC, norms, RoPE, compressor, indexer scoring, sparse attention + softmax, SwiGLU, combine; PQ root CAM and the BF HALF_PHL element, which are not field-vehicle slots) are golden-composed: their inputs are proven bit-identical to the golden at every op boundary, their outputs are the golden executor's. Fixture /srv/opentallas-scratch/claude/exactness/fixtures/s81_token_l20 (prep on the checkpoint host)."
+  }
+ ],
+ "not_covered": [
+  "DS ROM S81: one-layer token bench s81_token_l20 (L20, field phases + selector in RTL, the rest golden-composed); no full-model S81 token bench (open gate native_token); its rate composes per-component runs (results/rtl/dsrom_1m_allmeasured_20261004).",
+  "The closure-block RTL (Qwen die masters r21/r22 stations, controller TMR/cancel, native links; S81 BF/selector/PQ/softmax/gearbox; HBM die views, SU/SFU/packet SRAM) is NOT instantiated by any bench above: those are physical-closure variants verified by their own component benches."
+ ],
+ "fixtures": {
+  "root": "/srv/opentallas-scratch/claude/exactness/fixtures",
+  "note": "Durable reference fixtures; STATUS.md (KEEP) in every dir; regenerate with tools/exactness/regen_fixtures.sh (GPU gold on the control host, verified against the committed oracle digests by tools/exactness/fixtures.py verify), copied to ot-epyc1tb and ot-epyc2.",
+  "qwen_gold_tp4": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp4/P8191",
+  "qwen_gold_tp2": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2/P8191",
+  "qwen_gold_tp2_l3": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold/tp2_l3/P8191",
+  "qwen_kv_history": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/history",
+  "hbm_qwen_runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs",
+  "hbm_ds_joint": "/srv/opentallas-scratch/claude/exactness/fixtures/hbm_ds_joint",
+  "qwen_rom_images": "/srv/opentallas-scratch/claude/qwen-dspark-system/img_p1",
+  "compat_links": {
+   "/srv/opentallas-scratch/codex/qwen-P8191-full36-history-r1": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191",
+   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/gold": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/gold",
+   "/srv/opentallas-scratch/claude/qwen-hbmacc-8k/runs": "/srv/opentallas-scratch/claude/exactness/fixtures/qwen_p8191/hbmq_runs"
+  },
+  "digests": {
+   "qwen_gold_tp4": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp4/oracle.json",
+   "qwen_gold_tp2": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle.json",
+   "qwen_gold_tp2_l3": "results/rtl/qwen_hbmacc_p8191_20261004/gold_tp2/oracle_l3.json",
+   "qwen_kv_history": "results/rtl/qwen_rom_combined_p0_20261005/linked_expected/expected.json (history_source_sha256, L0 die0)",
+   "hbm_ds_joint": "results/rtl/dshbm_hbm_opt_20261005/joint_r2/retained_layouts.json (source_sha256)"
+  }
+ }
+}

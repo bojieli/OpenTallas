@@ -1,0 +1,86 @@
+{
+  "name": "ot_s81_head_delay8x32",
+  "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 8.563894038360331e-11 min 6.8193645175185225e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.1059165522530066e-10 min 1.4277329318801435e-12",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.704650032241517e-10 min 1.4711454277005487e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/view:/out",
+        "-v",
+        "/srv/opentallas-scratch/claude/closure-loop/s81-head-delay8x32-tc-6ce4b64fd/routes/s81_head_delay8x32_tc_6ce4b64fd/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_s81_head_delay8x32.lef": "dcc27997fe7d68ee19699bc4de633c6ead8bd0b2f879d8c6107f5c1fe142889a",
+    "ot_s81_head_delay8x32_ff.lib": "dd570cc368d36feb1e3b6028ad7c312ac44f7c8a015d17801bdd265875879719",
+    "ot_s81_head_delay8x32_ss.lib": "a099bf0e785dae0b249fdf6e36e6c0e71cdbdd7d5d9a3c37d70fbdf4526e6cda",
+    "ot_s81_head_delay8x32_tt.lib": "36fa41919009e51b3d7b5c912508ef247f1b488f520f1d2bc1ce56c34782be8d"
+  },
+  "ok": true
+}

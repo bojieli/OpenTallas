@@ -1,0 +1,8 @@
+golden PASS
+neg_wrong_clock FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:32: clock ownership/polarity mismatc
+mut_vote_and FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:59: hop2 exact mismatch stream=0 edg
+mut_vote_or FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:85: TMR vote leaked control under re
+mut_fwd_noninverted FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:32: clock ownership/polarity mismatc
+mut_capture_rising FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg
+mut_control_rising FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg
+mut_single_chain FAIL: FATAL: /home/ubuntu/wt-claude-redesign-2/physical/qwen_link_fwd_cx_station/tb_cx.sv:49: hop1 exact mismatch stream=0 edg

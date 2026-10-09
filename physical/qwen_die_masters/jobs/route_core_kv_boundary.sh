@@ -18,6 +18,11 @@ python3 tools/qwen_core_kv_boundary_prepare.py --separate-load --out $R/prep --f
 $Y -q -s $R/prep/prepare.ys > $R/prep/yosys.log 2>&1 || exit 3
 python3 tools/qwen_core_opaque_interfaces.py --validate $R/prep/specialized_before_blackbox.json > $R/prep/opaque_width_gate.json || exit 31
 python3 tools/qwen_rom_core_controller_cut.py --input $R/prep/original.json --output $R/prep/controller.json --report $R/prep/cut_report.json $CUTOPT || exit 4
+# drive-0602: OUTLATCH=1 adds the output lockup-latch stage (negative-level latch on every data output bit, enable = clk;
+# 0 cycles; tools/qwen_core_out_latch.py) so the rule-H1 output hold term (50 + 25 ps) is met structurally, not by padding.
+if [ "${OUTLATCH:-0}" = 1 ]; then
+  python3 tools/qwen_core_out_latch.py --input $R/prep/controller.json --output $R/prep/controller.json > $R/prep/out_latch.json || exit 41
+fi
 mkdir -p $R/context_src/rtl $R/context_src/physical
 $Y -Q -T -p "read_json $R/prep/controller.json; write_verilog $R/context_src/rtl/control_context.v" > $R/prep/write.log 2>&1 || exit 5
 cp -r $S/configs $R/context_src/; cp -r $S/physical/qwen_core_ctx $R/context_src/physical/; mkdir -p $R/context_src/tools; cp $S/tools/orfs_allcorner_spef.py $R/context_src/tools/

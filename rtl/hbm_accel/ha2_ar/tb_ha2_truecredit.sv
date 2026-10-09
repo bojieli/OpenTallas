@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_ha2_truecredit #(
- parameter integer FWD=7, RET=7, MUTANT=0, ROWS=192, TAGW=16
+ parameter integer FWD=7, RET=7, MUTANT=0, ROWS=192, TAGW=16, REG=0
 );
  localparam integer W=544,INJ=2;
  reg clk=0;always #5 clk=~clk;
@@ -36,7 +36,7 @@ module tb_ha2_truecredit #(
      .v_out(backv[i]),.d_out(backtag[i*TAGW+:TAGW]),.quiet());
   end
  end
- ot_ha2_truecredit_sender #(.W(W),.INJ(INJ),.TAGW(TAGW),.MUTANT(MUTANT)) tx
+ ot_ha2_truecredit_sender #(.W(W),.INJ(INJ),.TAGW(TAGW),.MUTANT(MUTANT),.REG(REG)) tx
   (.clk(clk),.rst_n(rst_n),.issue_v(issue_v),.arrival_v(hub_v),.arrival_data(hub_data),
    .return_v(backv),.return_tag(backtag),.issue_ready(issue_ready),
    .send_v(txv),.send_data(txdata),.send_tag(txtag),.quiet(txquiet),.fault(txfault));

@@ -1,0 +1,57 @@
+{
+  "name": "ot_dsrom_window_column_128",
+  "orfs_dir": "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/view:/out",
+        "-v",
+        "/srv/opentallas-scratch2/scratch/claude/closure-loop/wcol128-pinreg-f1b64667d-tt/routes/wcol128_pinreg_f1b64667d_tt/abs_tmp:/tmp",
+        "-e",
+        "TMPDIR=/tmp",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    }
+  },
+  "macro_views": [],
+  "files": {
+    "ot_dsrom_window_column_128.lef": "de32c682c9aa81795a11230f0bdccde1ad8a716a22c75bc65cd3132e6e4325cf",
+    "ot_dsrom_window_column_128_ff.lib": "69afe9a851c5dfc7480efba29767cf85caf846e0b97bed9be9f566b2dd530f50",
+    "ot_dsrom_window_column_128_ss.lib": "d5419834788d2a495750b7934a69e22de77e70fa2f4533f6718e8b23e4858e71"
+  },
+  "ok": true
+}
