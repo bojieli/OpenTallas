@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud-lbc-tt-f5-h1-hm25/routes/hbm_svc_SE_s6_41d574827_bud_lbc_tt_f5_h1_hm25_cal/work/orfs/results/asap7/opentallas_hfd_svc_SE_s6_asap7_hv_hbm_svc_SE_s6_41d574827_bud_lbc_tt_f5_h1_hm25_cal/base",
+ "db": "4_1_cts.odb",
+ "sdc": "4_cts.sdc",
+ "clock": "core_clk",
+ "parasitics": "placement-estimated",
+ "ss": {
+  "boundary": {
+   "n": 1695,
+   "mean": 572.2,
+   "min": 549.1,
+   "max": 591.2
+  },
+  "all": {
+   "n": 4201,
+   "mean": 567.9,
+   "min": 543.9,
+   "max": 653.4
+  },
+  "errors": []
+ },
+ "tt": {
+  "boundary": {
+   "n": 1695,
+   "mean": 443.1,
+   "min": 421.0,
+   "max": 461.1
+  },
+  "all": {
+   "n": 4201,
+   "mean": 438.8,
+   "min": 416.9,
+   "max": 510.7
+  },
+  "errors": []
+ },
+ "ff": {
+  "boundary": {
+   "n": 1695,
+   "mean": 364.3,
+   "min": 342.8,
+   "max": 381.4
+  },
+  "all": {
+   "n": 4201,
+   "mean": 360.0,
+   "min": 339.4,
+   "max": 422.9
+  },
+  "errors": []
+ },
+ "route_corner": "TC",
+ "env": {
+  "CK_SS_MEAN": 443,
+  "CK_SS_ALL_MEAN": 439,
+  "CK_SS_MIN": 421,
+  "CK_SS_ALL_MIN": 417,
+  "CK_SS_MAX": 461,
+  "CK_SS_ALL_MAX": 511,
+  "CK_TT_MEAN": 443,
+  "CK_TT_ALL_MEAN": 439,
+  "CK_TT_MIN": 421,
+  "CK_TT_ALL_MIN": 417,
+  "CK_TT_MAX": 461,
+  "CK_TT_ALL_MAX": 511,
+  "CK_FF_MEAN": 364,
+  "CK_FF_ALL_MEAN": 360,
+  "CK_FF_MIN": 343,
+  "CK_FF_ALL_MIN": 339,
+  "CK_FF_MAX": 381,
+  "CK_FF_ALL_MAX": 423,
+  "CK_SSLIB_MEAN": 572,
+  "CK_SSLIB_MIN": 549,
+  "CK_SSLIB_MAX": 591,
+  "CK_SSLIB_ALL_MEAN": 568,
+  "CK_SSLIB_ALL_MIN": 544,
+  "CK_SSLIB_ALL_MAX": 653,
+  "CK_ROUTE_REF": "TT"
+ },
+ "budget_accepted": {
+  "accepted": "measured insertion <= sheet target: budget SDCs regenerated from it",
+  "sheet_ss": 562,
+  "sheet_grade": "measured",
+  "target_ss": 814.9,
+  "measured": {
+   "ss": 443,
+   "ff": 364,
+   "ss_min": 421,
+   "ss_max": 461,
+   "ff_min": 343,
+   "ff_max": 381,
+   "grade": "measured",
+   "source": "closure-loop calibrate hbm_svc_SE_s6_41d574827_bud-lbc-tt-f5-h1-hm25 (ot-epyc2:/srv/opentallas-data/claude/closure-loop/hbm_svc_SE_s6_41d574827_bud-lbc-tt-f5-h1-hm25)",
+   "over_target": false
+  },
+  "sheets_ref": "80b68011eb7bad5d1dc1c6cbe6b383c28b5d12f0"
+ }
+}
