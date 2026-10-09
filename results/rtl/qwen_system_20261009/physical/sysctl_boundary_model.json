@@ -1,0 +1,55 @@
+{
+  "schema": "opentallas.qwen_sysctl_boundary.v1",
+  "reason": "5601e8881 actual CTS failure -720.6ps atTT833.333; unstationed input->counter and AXIinput->output paths",
+  "target": "ot_qfd_sysctl_stn",
+  "replicas": 1,
+  "macs_cycle": 0,
+  "mutable_prompt": "same1024x256protectedSRAM 8192x18 validtokens",
+  "boundaries_bits_cycle": {
+    "completion_packet": 236,
+    "AXIL_AW": 13,
+    "AXIL_W": 36,
+    "AXIL_B": 2,
+    "AXIL_AR": 13,
+    "AXIL_R": 34,
+    "DMA_AR": 75,
+    "DMA_R": 67,
+    "DMA_AW": 75,
+    "DMA_W": 73,
+    "DMA_B": 2
+  },
+  "memory_ports_bytes_cycle": {
+    "prompt_read": 32,
+    "prompt_write": 32
+  },
+  "routing_tracks": {
+    "new_external_pins": 0,
+    "internal_packet_station_bits": 950,
+    "outline_um": [
+      500,
+      300
+    ],
+    "capacity_tracks": 5000
+  },
+  "fanout_cost": "completion fields align in one inputstation; eachvalid/ready lane has a finite one-entry queue with ready=!full; no combinready propagation",
+  "multiplexers": "none added; FIFOdata register enable only",
+  "area": {
+    "outline_um2": 150000,
+    "added_flop_bits_upper": 950,
+    "added_area_um2_upper": 20000,
+    "replicas": 1,
+    "fits_slot_assumed": true
+  },
+  "latency": {
+    "completion_added_edges": 1,
+    "AXIL_eachchannel_added_edges": 1,
+    "DMA_eachchannel_added_edges": 1,
+    "minimum_channel_accept_interval_edges": 2,
+    "token_path_DMA_CQ_extra_edges": 3,
+    "prompt_DMA_request_and_return_extra_edges": 2,
+    "prompt_read_extra_edges": 0,
+    "composed_token_upper_extra_edges": 4,
+    "note": "Full control fixture measures actualcyclechange; AXI queues preserve transactions under independentbackpressure. No hardware timing/adoption claim untilremoteexact+route."
+  },
+  "exact_contract": "new default-off BOUNDARY_STATIONS wrapper; preserve5601 coreRTL byte-identical; allAXIvalid/data packets stored; complete die report aligned; reset clearsFIFOvalids"
+}

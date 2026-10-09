@@ -11,13 +11,13 @@
   },
   "template_inventory": {
     "embedding_words": 2,
-    "layer_words": 31,
+    "layer_words": 29,
     "head_words": 8,
-    "total_words": 41,
+    "total_words": 39,
     "physical_capacity_words": 64,
     "descriptor_capacity": 8,
-    "active_descriptors": 7,
-    "template_bits": 42432,
+    "active_descriptors": 5,
+    "template_bits": 40256,
     "mutable_boot_bits_removed": 66048
   },
   "boundaries_bits_cycle": {
@@ -69,5 +69,12 @@
     "MSTN": 1,
     "A6_baseline_added_cycles_layer": 2
   },
-  "exact_contract": "Golden38entry stage traversal; immutableISAtemplates byte-identical to releasedstagegeneratorAR256; relocateddescriptorprogrambases; wbase/wcsaddstagebaseonlyforROMme_wsrc0; fullMEpacket/go alignment; fullstg/gen tag; argmaxranktie unchanged. PinnedFQS source unchanged. Opt-in SYS_ENABLE default0 until exact+physicalgates."
+  "exact_contract": "Golden38entry stage traversal; immutableISAtemplates byte-identical to releasedstagegeneratorAR256; relocateddescriptorprogrambases; wbase/wcsaddstagebaseonlyforROMme_wsrc0; fullMEpacket/go alignment; fullstg/gen tag; argmaxranktie unchanged. PinnedFQS source unchanged. Opt-in SYS_ENABLE default0 until exact+physicalgates.",
+  "packing": {
+    "stage_strides_code": 1056,
+    "stage_strides_scale": 50112,
+    "measured_default_profile_code_words": 512,
+    "measured_default_profile_scale_words": 1056,
+    "adoption": "golden padded strides retained; native ROM bank image packing proof pending"
+  }
 }
