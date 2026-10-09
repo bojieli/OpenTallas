@@ -1,0 +1,22 @@
+{
+  "schema": "opentallas.embedding_PC_composite_gate.v1",
+  "source_commit": "4d171cef0",
+  "verdict": "PASS",
+  "shape": "one actualPC controller+PCport+threeCDCFIFOs+independentJEDECchecker",
+  "core_period_ps": 833.333334,
+  "HBM_period_ps": 1024,
+  "writes": 64,
+  "reads": 64,
+  "CE_corrected": 1,
+  "UE_preserved": 1,
+  "JEDEC_violations": 0,
+  "faults": 0,
+  "scope": "Exact protected embedding read/write transport; KV nativecmd provider and physicalECC32 storage/provider pending; no whole-die test or rate/adoption claim",
+  "source_manifest": "pc_source.sha256",
+  "logs_sha256": {
+    "pc_positive.log": "47c551d85d9df13a2cd91e4541803333a9c11a6c649fc611eb98fedb08cf4cf4",
+    "pc_compile.log": "78f897576c8665ebe1e57b6d62a0838283fe5b6ea99a8132e7164f1cdde9e29e",
+    "pc_run.sh": "f68e580c07dce1d2e346772c9641a5b009f3c14a284e7d23ded5066b82871d37",
+    "pc_source.sha256": "a5ea4412a2a07b08d118dc18c8939caeca62dd7aada9d4aab42443446c1fcb63"
+  }
+}
