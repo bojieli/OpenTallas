@@ -14078,7 +14078,9 @@ def ha2_truecredit_protection_model():
 
 
 
-def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilisation=0.55):
+def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilisation=0.55,
+                                  key_relay_stages=0, line_fifo_aw=4, score_fifo_aw=6,
+                                  scorer_height_um=2800):
     """Prebuild sizing of eb67c5c57 score/selector wrapper; estimates, no closure credit.
 
     Arithmetic sizing comes from DEDICATED[indexer]. The link latency is a lower
@@ -14111,17 +14113,26 @@ def hbm_indexer_die_interface_model(*, taps=1, relay_stages=24, stacks=4, utilis
             slices_NK4_per_die=16, selector_instances=1,
             query_fanout_per_slice=32, score_quarter_mux_inputs=4,
             selector_lane_join=taps),
-        storage=dict(line_landing_bits_per_stack=8*16*1098,
-            score_landing_bits_per_die=stacks*taps*64*(38*lanes+1)),
+        storage=dict(line_landing_bits_per_stack=8*(2**line_fifo_aw)*1098,
+            score_landing_bits_per_die=stacks*taps*(2**score_fifo_aw)*(38*lanes+1),
+            added_line_landing_bits_per_stack=8*((2**line_fifo_aw)-16)*1098,
+            added_score_landing_bits_per_die=stacks*taps*((2**score_fifo_aw)-64)*(38*lanes+1)),
+        flow_control=dict(line_credits=2**line_fifo_aw, score_credits=2**score_fifo_aw,
+            key_credit_roundtrip_lower_bound=2*key_relay_stages+2,
+            score_credit_roundtrip_lower_bound=2*relay_stages+2,
+            sustained_key_lines_per_port_cycle_bound=min(1, (2**line_fifo_aw)/(2*key_relay_stages+2)),
+            sustained_score_beats_per_stack_cycle_bound=min(1, (2**score_fifo_aw)/(2*relay_stages+2))),
         floorplan=dict(scorer_cells_um2_estimate_per_stack=3050000,
-            scorer_slot_um2_per_stack=2000*2800,
-            scorer_slot_capacity_um2=2000*2800*utilisation,
+            scorer_slot_um2_per_stack=2000*scorer_height_um,
+            scorer_slot_capacity_um2=2000*scorer_height_um*utilisation,
+            extra_FIFO_cell_area_status="unqualified until mapped and routed; original 3.05mm2 estimate excludes added landing storage",
             selector_cells_and_macros_um2_estimate=400000,
             selector_slot_um2_estimate=400000/utilisation,
             utilisation=utilisation,
             routing_track_demand_per_stack=key_input+571+score_bits+8+taps,
             routing_capacity_status="unqualified: requires R25I real pins and global route corridors"),
         latency=dict(relay_stages_one_way=relay_stages,
+            key_relay_stages_one_way=key_relay_stages,
             interface_lower_bound_cycles_per_layer=lower_link_cycles,
             interface_lower_bound_cycles_per_token_8_index_layers=8*lower_link_cycles,
             tap_query_extra_hops=3*(taps-1),

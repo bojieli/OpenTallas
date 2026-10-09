@@ -11,6 +11,9 @@
 module tb_hfd_idx_die;
   parameter integer LEG = 24;          // relay stages per die net (each direction)
   parameter integer FA = 4;
+  parameter integer KEYLEG = 0;       // service key data and credit return stages
+  parameter integer LA = 6;
+  parameter integer CRED = 64;
   parameter integer T = 1;             // scorer blocks a stack (1: one L16 block; 4: four L4 column taps)
   localparam integer L = 16 / T, NP = L / 2, SW = 38 * L + 2, NB_ = 4 * T;
   reg ck = 1'b0;
@@ -39,9 +42,20 @@ module tb_hfd_idx_die;
   generate for (g = 0; g < NB_; g = g + 1) begin : gs
     localparam integer QQ = g / T, TT = g % T;
     wire [NP-1:0] ikc_;
-    hfd_idx_score #(.FA(FA), .L(L), .LANE0(TT * L)) u_s (.ck(ck), .rst(rst), .ik(ik[QQ][TT*NP*1099 +: NP*1099]),
+    wire [NP*1099-1:0] ik_delayed;
+    for (genvar kp = 0; kp < NP; kp = kp + 1) begin : key_leg
+      wire [1097:0] kd;
+      wire kv, kc;
+      wire [0:0] unused_credit_data;
+      hfd_idx_pipe #(.W(1098), .N(KEYLEG)) u_key (.ck(ck), .rst_n(rst),
+        .v(ik[QQ][(TT*NP+kp)*1099]), .d(ik[QQ][(TT*NP+kp)*1099+1 +: 1098]), .qv(kv), .q(kd));
+      assign ik_delayed[kp*1099 +: 1099] = {kd, kv};
+      hfd_idx_pipe #(.W(1), .N(KEYLEG)) u_credit (.ck(ck), .rst_n(rst),
+        .v(ikc_[kp]), .d(1'b0), .qv(kc), .q(unused_credit_data));
+      assign ikc[QQ][TT*NP+kp] = kc;
+    end
+    hfd_idx_score #(.FA(FA), .CRED(CRED), .L(L), .LANE0(TT * L)) u_s (.ck(ck), .rst(rst), .ik(ik_delayed),
       .ikf({NP{1'b0}}), .ikc(ikc_), .q(qi[g]), .qx(qx[g]), .s(so[g]), .sc(sco[g]), .st(stq[g]));
-    assign ikc[QQ][TT*NP +: NP] = ikc_;
     // die nets: q bus out, score beats back, credits back (LEG relay stages each)
     wire qv_, sv_, cv_; wire [569:0] qd_; wire [SW-2:0] sd_;
     // q bus: the stack's first block over the LEG-stage die net, each further column tap from the previous tap's qx
@@ -59,7 +73,7 @@ module tb_hfd_idx_die;
     hfd_idx_pipe #(.W(1), .N(LEG)) u_pc (.ck(ck), .rst_n(rst), .v(sc[g]), .d(1'b0), .qv(cv_), .q(cd_unused));
     assign sco[g] = cv_;
   end endgenerate
-  hfd_idx_sel #(.T(T)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
+  hfd_idx_sel #(.T(T), .LA(LA)) u_x (.ck(ck), .rst(rst), .fs(fs), .qb(qb), .qbr(qbr), .kin(kin), .qo(qo), .si(si), .sc(sc),
     .to(to), .toc(toc), .co(co), .coc(coc), .ev(ev));
   // ------------------------------------------------------------------ stimulus memories
   localparam integer MAXL = 40000, MAXQ = 1024;
