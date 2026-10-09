@@ -38,6 +38,12 @@ foreach name $names {
   set c [expr {$i % $ncol}]
   set x [snap [expr {$x0 + $c * ($mw + $gapx)}]]
   set y [snap [expr {$my + $r * $pitch}]]
-  place_macro -macro_name $name -location [list $x $y] -orientation R0 -exact
+  # place_macro matches the name as a pattern: escape the generate-index brackets (as die_tile macro_placement_b.tcl)
+  place_macro -macro_name [string map {[ \\[ ] \\]} $name] -location [list $x $y] -orientation R0 -exact
   incr i
 }
+# FIRM: rtl_macro_placer (run after this file by macro_place_util.tcl) keeps them
+foreach inst [$block getInsts] {
+  if {[[$inst getMaster] isBlock]} { $inst setPlacementStatus FIRM }
+}
+puts "OT_MACRO_ROWS_PLACED macros=$n"
