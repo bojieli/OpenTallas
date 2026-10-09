@@ -442,14 +442,16 @@
       },
       "exactness": {
         "positive": {
-          "status": "running",
+          "status": "pass",
           "evidence": [
-            "EPYC2:/srv/opentallas-scratch2/codex/qwen-native-amax-20261009/campaign_r2.log"
+            "results/rtl/qwen_dspark_native_20261009/amax_exact/run_r2.log"
           ]
         },
         "negative": {
-          "status": "pending",
-          "evidence": []
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/amax_exact/mut_run.log"
+          ]
         }
       },
       "physical": {
