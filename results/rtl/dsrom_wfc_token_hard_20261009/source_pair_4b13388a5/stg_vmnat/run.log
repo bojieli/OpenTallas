@@ -1,0 +1,2 @@
+MTP_STG PASS jobs=40 starts=40 out=40 cycles=10887 vmslow=0 core_user_mismatch_at_start=0
+MTP_STG_CYC start_mean=15.00 start_max=15 done_mean=79.00 done_max=79 link_in_mean=12.38 link_in_max=208 txw=46 (fast cycles; done = k_done -> WFC core_done incl. the 46-word prefetch)

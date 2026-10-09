@@ -1,0 +1,3 @@
+WARNING: /srv/opentallas-scratch/codex/mtp-wfc-hard-f8f493123/source_gate_4b13388a5/s0_tr_forced/tb.sv:426: $readmemh(trace.hex): Not enough words in the file for the requested range [0:65535].
+MTP_S0 PASS mode=0 users=2 (ar 0) plen=8 ngen=24 steps_closed=18 accepted=30 seeds=14 dh=62 draft_flits=14 issues=92 rejects=12 squashed=32 hidden=94 s0_starts=94 cycles=41423
+MTP_S0_CYC seq_forward_min=8 seed_after_close=8.00 rows_to_dh1=8.00 dh_result_to_next=8.00 last_dh_to_draft_flit=51.64 (fast cycles, bench adapters included: +2 in, +1 out)
