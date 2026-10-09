@@ -1,0 +1,95 @@
+`timescale 1ns/1ps
+// HGI-1 owner-approved opt-in width adaptation of the existing DS MTP controller.
+// Plain accept leaf only. No new state protection, leases, or command processor.
+module ot_hgi_mtp_ctl18 #(
+    parameter integer GENERIC18 = 0,
+    parameter integer TW = GENERIC18 ? 18 : 17,
+    parameter integer B = 5, PMAX = 8, NL = 40, NST = 3, MAXPOS = 1048576,
+    parameter integer MUT = 0
+) (
+    input  wire               clk,
+    input  wire               rst_n,
+    // host
+    input  wire               start,
+    input  wire [3:0]         cfg_gamma,
+    input  wire               cfg_force,
+    input  wire [15:0]        cfg_ngen,
+    input  wire [15:0]        cfg_plen,
+    output wire [15:0]        p_addr,
+    input  wire [TW-1:0]      p_tok,
+    output wire [15:0]        f_addr,
+    input  wire [TW-1:0]      f_tok,
+    output wire                e_v,
+    output wire  [TW-1:0]      e_tok,
+    output wire  [15:0]        e_idx,
+    output wire                done,
+    // engine (the SM cluster's pass sequencer)
+    output wire                cmd_v,
+    input  wire               cmd_ready,
+    output wire  [3:0]         cmd_op,
+    output wire  [7:0]         cmd_idx,
+    output wire  [3:0]         cmd_ncol,
+    output wire  [31:0]        cmd_pos,
+    output wire  [TW-1:0]      cmd_tok1,
+    output wire [PMAX*TW-1:0] cmd_toks,
+    input  wire               eng_done,
+    // argmax epilogue results (row order)
+    input  wire               am_v,
+    input  wire [TW-1:0]      am_idx,
+    // spec state
+    input  wire [31:0]        n,
+    output wire                n_set,
+    output wire  [31:0]        n_val,
+    output wire                tw_v,
+    output wire  [31:0]        tw_pos,
+    output wire  [TW-1:0]      tw_tok,
+    // observation
+    output wire                step_v,         // a step committed (acc_a / g valid)
+    output wire [2:0]         step_a,
+    output wire  [3:0]         step_g,
+    output wire  [15:0]        steps,
+    output wire  [31:0]        cyc_total,
+    output wire  [31:0]        cyc_engine,     // cycles a command was outstanding at the engine
+    output wire  [31:0]        cyc_markov      // cycles inside MARKOV commands (serial draft tail)
+);
+    ot_dshbm_dspark_ctl_m #(.B(B),.PMAX(PMAX),.TW(TW),.NL(NL),.NST(NST),
+        .MAXPOS(MAXPOS),.MUT(MUT),.ACCEPT_LEAF(0),.FAST(1),.PRL(2)) u_ctl (
+        .clk(clk),
+        .rst_n(rst_n),
+        .start(start),
+        .cfg_gamma(cfg_gamma),
+        .cfg_force(cfg_force),
+        .cfg_ngen(cfg_ngen),
+        .cfg_plen(cfg_plen),
+        .p_addr(p_addr),
+        .p_tok(p_tok),
+        .f_addr(f_addr),
+        .f_tok(f_tok),
+        .e_v(e_v),
+        .e_tok(e_tok),
+        .e_idx(e_idx),
+        .done(done),
+        .cmd_v(cmd_v),
+        .cmd_ready(cmd_ready),
+        .cmd_op(cmd_op),
+        .cmd_idx(cmd_idx),
+        .cmd_ncol(cmd_ncol),
+        .cmd_pos(cmd_pos),
+        .cmd_tok1(cmd_tok1),
+        .cmd_toks(cmd_toks),
+        .eng_done(eng_done),
+        .am_v(am_v),
+        .am_idx(am_idx),
+        .n(n),
+        .n_set(n_set),
+        .n_val(n_val),
+        .tw_v(tw_v),
+        .tw_pos(tw_pos),
+        .tw_tok(tw_tok),
+        .step_v(step_v),
+        .step_a(step_a),
+        .step_g(step_g),
+        .steps(steps),
+        .cyc_total(cyc_total),
+        .cyc_engine(cyc_engine));
+endmodule
