@@ -1,0 +1,10 @@
+BOOT sent 20633 sectors at ck 41317
+BOOT ready=1 fault=0 code=00 at ck 41540
+GWFAULT code=10 st=3 w=18 ct=71998 seq=0 lk=1 slot_tag=480 sv=1110
+UE token 71998: detected, fail closed (gw code 10)
+STATS ntok=159 lat_min=434 lat_mean=459 lat_max=864 (core cycles go->fill, excl. first) static_wait_max=480 hclk wait_mean_x100=3192 boot_ready_ck=41540 early_rsp=0 dram_viol=0 ce=2 ue_seen=1 hub_fault=0 far=0000 strip=0010 fc=00/20/00/00 gwfc=10 su_fault=0
+PASS emb_hbm_e2e TWIN=0 KVMODE=0 tokens=160
+- rtl/test/emb_hbm/tb_emb_hbm_e2e.sv:322: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 127us; walltime 186.842 s; speed 689.527 ns/s
+- Verilator: cpu 184.309 s on 1 threads; alloced 1054 MB

@@ -334,6 +334,11 @@ def qwen():
     d.add("embed", "Embedding ROM row read + broadcast", "embed", "embed", t["stages"][0]["start_cycle"],
           src("measured", T, "stages[0].start_cycle (7 initial edges)"), elements=QCLS["embed"]["elements"],
           instances=QCLS["embed"]["instances"])
+    # emb-hbm 2026-10-08: the measured HBM embedding path replaces this behavioural-ROM node at the next reprice run;
+    # recorded here as a pending annotation only (the node's cycles are unchanged until then)
+    emb = ROOT / "results/arch/emb_hbm_20261008/token_path_inputs.json"
+    if emb.exists():
+        d.nodes["embed"]["pending_next_reprice"] = J("results/arch/emb_hbm_20261008/token_path_inputs.json")["embed_node"]
     prev_group_last = "embed"
     for L in range(36):
         g = f"L{L}"
