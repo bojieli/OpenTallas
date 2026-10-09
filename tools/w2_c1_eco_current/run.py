@@ -39,5 +39,11 @@ os.link(base / '6_final.spef', seed / '6_final.spef')
 env = os.environ.copy(); env.update(SPEC['env'])
 cmd = ['bash', str(HERE / 'flow/tools/closure_loop/hold_eco.sh'), str(base), str(seed), str(run / 'eco'), 'ot_hbm_native_frame_station_rb']
 rc = subprocess.call(cmd, cwd=HERE / 'flow', env=env)
+result_path = run / 'eco/result.json'
+if result_path.exists():
+    result = json.loads(result_path.read_text())
+    # The canonical ECO helper records final routed DRC count in result.json.
+    metrics = {'detailedroute__route__drc_errors': result.get('drc'), 'provenance': {'path': str(result_path), 'sha256': sha(result_path), 'producer': 'current canonical hold_eco.sh; final Number of violations'}}
+    (run / 'eco_drc_metrics.json').write_text(json.dumps(metrics, indent=2) + '\n')
 (run / 'eco_exit.json').write_text(json.dumps({'returncode': rc, 'command': cmd, 'env': SPEC['env']}, indent=2) + '\n')
 raise SystemExit(rc)
