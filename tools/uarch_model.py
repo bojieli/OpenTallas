@@ -479,7 +479,7 @@ def hgi_generic_topk_model(n=49152, k=2048, rows=1):
                 compare_cells=2048, local_mux_bits=2048*85,
                 control_fanout=2048, estimated_slot_um=[640,640], alternate_slot_um=[600,600],
                 boundary_tracks=128, boundary_capacity_tracks=600,
-                area_mm2_upper_bound=0.4096, measured_stdcell_area_um2=175534.483, measured_cells=1227516, measured_source="e442d85c4", cycles_per_row=n+k+3,
+                area_mm2_upper_bound=0.4096, measured_stdcell_area_um2=175534.483, measured_cells=1227516, measured_source="e442d85c4", core_cycles_per_row=n+k+3, cycles_per_row=n+k+6,
                 token_latency_cycles=rows*(n+k+6), boundary_capture_edges=3,
                 boundary_register_bits_upper_bound=256,
                 boundary_stdcell_area_um2_upper_bound=300,

@@ -10,5 +10,5 @@ module ot_hgi_idx_topk_full(
  output wire [31:0] out_id,out_score,out_row,
  output wire out_last, output wire out_values_valid, output reg done, output reg [3:0] error
 );
- ot_hgi_idx_topk #(.ENABLE(1),.MAX_K(2048)) u(.*);
+ ot_hgi_idx_topk_registered #(.ENABLE(1),.MAX_K(2048)) u(.*);
 endmodule
