@@ -120,6 +120,14 @@ OPTB_SINCE = "2026-10-07T20:20"
 # (CTS-only, minutes).  SS-corner routes keep the SS reference.  Earlier jobs keep their behaviour.
 ROUTE_REF_SINCE = "2026-10-08T19:05"
 SETUP_LIB = "TT"
+# VT-SWAP ECO (merge-eco 2026-10-09, from eco-sweep e494ff8ac): a route whose only miss is a THIN TT setup miss
+# (TT in [VTSWAP_TT_FLOOR, 0), FF >= 0, DRC 0, checks/benches clean) runs vtswap_eco.sh (RVT->LVT master swaps on the
+# TT paths, prospective <= VTSWAP_CAP_PCT % LVT, FF hold guard, no re-route) as its ECO stage before it is judged
+# NEEDS_RTL.  Targets are tried in order (a miss at 10 ps re-runs once at 5 ps: fewer swaps, under the cap -- eco-sweep
+# wfc_lnk / topk closed on the 5 ps rerun).  spec hold_eco.vtswap: false turns it off; vtswap_targets / vtswap_cap_pct override.
+VTSWAP_TT_FLOOR = -45.0
+VTSWAP_TARGETS = (10.0, 5.0)
+VTSWAP_CAP_PCT = 2.0
 HM_MM = 0.050
 DEFAULT_NEEDS = {"bench": ["verilator", "iverilog", "yosys"], "calibrate": ["orfs"], "route": ["orfs"],
                  "signoff": ["orfs"], "collect": [], "export": [], "summary": ["orfs"]}
@@ -1444,7 +1452,7 @@ HELPERS = ("eco_recovery.py", "path_summary.py", "ck_insertion.py", "hold_eco.sh
            "hold_eco_sdc.py", "hold_eco_window.tcl", "hold_corners_patch.py", "h1_patch.py", "cal_classify.sh", "resume_patch.py", "resume_check.sh",
            "../orfs_hold_mm.py", "../orfs_hold_mm.tcl", "tt_resta.sh", "meas_resta.py", "lane_kh_overlay.py",
            "../../physical/common_flow/io_ref_routed.sdc", "../fp_margin_lint.py", "../fp_margin_lint.tcl",
-           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py",
+           "../preroute_gate.py", "../preroute_gate.tcl", "tt_overlay.py", "vtswap_eco.sh", "vtswap_eco.tcl",
            *(f"../../physical/common_flow/{n}" for n in ("cg_pushdown.tcl", "clk_net_protect.tcl", "link_budget_hook.tcl",
                                                           "link_budget_consistent.sdc", "nbr_clk_measured_ttb.sdc")))
 
@@ -3453,11 +3461,17 @@ def step(j, fleet):
                 res = None
             j["eco"]["result"] = res
             ok = eco_passes(res, rc)
-            event(j, f"hold ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
+            vt = j["eco"].get("kind") == "vtswap"
+            event(j, f"{'VT-swap' if vt else 'hold'} ECO {'PASS' if ok else 'MISS'}: {res if res else 'no result (rc=' + str(rc) + ')'}")
             if not ok:
-                ledger(j, f"HOLD-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
+                ledger(j, f"{'VT-SWAP' if vt else 'HOLD'}-ECO missed: before SS {j['eco']['pre']['ss_ps']:+.2f} / FF {j['eco']['pre']['ff_ps']:+.2f}, "
                           f"after {res}")
                 m = j.get("metrics", {})
+                prev = j["eco"]
+                if vt and vtswap_eligible(j, m, j.get("failed_checks") or []) and start_vtswap_eco(j, fleet, m):
+                    if j["eco"] is prev:   # no capacity yet: re-judged at the verdict stage next tick, which relaunches
+                        j["status"] = "READY"
+                    return             # next VT-swap target launched
                 if not summarize_failure(j, fleet, m):
                     text = failure_text(j)
                     finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
@@ -3629,6 +3643,8 @@ def do_verdict(j, fleet, stl):
             return
     if hold_only(j, m, failed, benches_ok) and start_hold_eco(j, fleet, m):
         return
+    if vtswap_eligible(j, m, failed, benches_ok) and start_vtswap_eco(j, fleet, m):
+        return
     if not summarize_failure(j, fleet, m):
         text = failure_text(j)
         finish(j, "NEEDS_RTL", text.split("\n")[0][11:], text)
@@ -3649,6 +3665,74 @@ def hold_only(j, m, failed=(), benches_ok=True):
     return (m.get("ss_ps") is not None and m["ss_ps"] >= SS_MIN and m.get("drc") == 0 and m.get("ff_ps") is not None
             and m["ff_ps"] < FF_MIN and not failed and benches_ok and not (j.get("eco") or {}).get("tried")
             and (j["spec"].get("hold_eco") or {}).get("enabled", True) is not False)
+
+
+def vtswap_targets(j):
+    he = j["spec"].get("hold_eco") or {}
+    return [float(t) for t in he.get("vtswap_targets", VTSWAP_TARGETS)]
+
+
+def vtswap_eligible(j, m, failed=(), benches_ok=True):
+    """a thin TT setup miss the VT-swap ECO may close: TT in [VTSWAP_TT_FLOOR, 0), FF >= 0, DRC 0, no failed check /
+    bench / metric error, no installed ECO, VT-swap targets left, not turned off by the spec"""
+    he = j["spec"].get("hold_eco") or {}
+    e = j.get("eco") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if he.get("enabled", True) is False or he.get("vtswap", True) is False:
+        return False
+    if tt is None or ff is None or isinstance(tt, bool) or isinstance(ff, bool):
+        return False
+    if not (VTSWAP_TT_FLOOR <= tt < SS_MIN and ff >= FF_MIN and m.get("drc") == 0):
+        return False
+    if failed or not benches_ok or m.get("errors") or e.get("installed") or j.get("eco_stack"):
+        return False
+    if e.get("tried") and e.get("kind") != "vtswap":
+        return False
+    done = sum(1 for x in [*(j.get("eco_history") or []), e] if (x or {}).get("kind") == "vtswap")
+    return done < len(vtswap_targets(j))
+
+
+def start_vtswap_eco(j, fleet, m):
+    """launch vtswap_eco.sh as the job's ECO stage (tag hold_eco.aN, status ECO): the hold-ECO completion path installs /
+    re-verdicts / records it unchanged (result.json -> eco_passes -> eco_install_cmd -> verdict)"""
+    rb, ob = eco_paths(j, m)
+    if not rb:
+        return False
+    ok, why = fleet.fits(j["host"], 8, 16)
+    if not ok:
+        event(j, f"VT-swap ECO waiting for capacity: {why}")
+        return True            # stays at the verdict stage; the next tick retries
+    he, v = j["spec"].get("hold_eco") or {}, j["spec"].get("verdict", {})
+    e = j.get("eco") or {}
+    hist = [x for x in (j.get("eco_history") or []) if x.get("kind") == "vtswap"]
+    n = len(hist) + (1 if e.get("kind") == "vtswap" else 0)
+    target = vtswap_targets(j)[n]
+    cap = float(he.get("vtswap_cap_pct", VTSWAP_CAP_PCT))
+    if e:
+        j.setdefault("eco_history", []).append(e)
+        j["attempt"] += 1          # a fresh stage tag: hold_eco.a<attempt>.rc of the previous ECO stays as evidence
+    post_sdcs = list(m["post_sdc"] if "post_sdc" in m else v.get("post_sdc", []))
+    tt = m["ss_ps"]
+    out = f"{j['run']}/cl/eco-vtswap-t{target:g}" + (f"-r{len(j.get('eco_history') or []) + 1}" if j.get("eco_history") else "")
+    env = (f"TARGET={target:g} CAP_PCT={cap:g} DRC0={int(m['drc'])} ACC_SS={SS_MIN:g} ACC_FF={FF_MIN:g} SETUP_LIB={SETUP_LIB} "
+           f"SDC_NAME={shlex.quote(m.get('sdc_name') or '6_final.sdc')} THREADS=8 "
+           f"MACROS={shlex.quote(' '.join(v.get('macros', [])))} ORFS_W18={shlex.quote(m.get('orfs_dir') or '')}")
+    if m.get("setup_post_sdc"):
+        env += f" SETUP_POST_SDC={shlex.quote(' '.join(m['setup_post_sdc']))}"
+    cmd = f"{env} bash {{CL}}/vtswap_eco.sh {rb} {ob} {out} {j['spec']['block']} " + " ".join(shlex.quote(p) for p in post_sdcs)
+    ship_helpers(j["host"], j["run"])
+    j["eco"] = dict(tried=True, kind="vtswap", rb=rb, ob=ob, out=out, post_sdc=post_sdcs, sdc_name=m.get("sdc_name") or "6_final.sdc",
+                    setup_post_sdc=list(m.get("setup_post_sdc") or []), pre=dict(ss_ps=tt, ff_ps=m["ff_ps"]),
+                    started=now_iso(), target_ps=target, lvt_cap_pct=cap, auto=True)
+    st = dict(key="hold_eco", kind="hold_eco", threads=8, ram=16)
+    launch_stage(j, st, cmd)
+    fleet.launched(j["host"], 8, 16)
+    j["status"], j["stage_key"] = "ECO", "hold_eco"
+    event(j, f"thin TT setup miss ({setup_corner_label(m)} {tt:+.2f} / FF {m['ff_ps']:+.2f} / DRC 0): post-route VT-swap setup ECO "
+             f"(RVT->LVT on TT paths, target {target:g} ps, cap {cap:g} % LVT, FF hold guard, no re-route) on {rb}/6_final.odb")
+    ledger(j, f"VT-SWAP ECO launched (loop): TT {tt:+.2f} / FF {m['ff_ps']:+.2f}, target {target:g}, LVT cap {cap:g} %")
+    experiment(j, "running: post-route VT-swap setup ECO")
+    return True
 
 
 def eco_output(j):
@@ -4127,10 +4211,41 @@ def advance_job(name, fleet):
 
 
 BULK_RELEASE_PER_TICK = 4
+# NEAR-MISS RETENTION (merge-eco 2026-10-09): eco-sweep found the routed databases of near-miss elements gone
+# (smh_tile_w, su12_full, qfd_hub, frame_station, router: review_queue/eco-sweep.md ES-1..8), so nothing was left to
+# ECO or re-STA.  A non-closed route with TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS keeps its whole route tree
+# (6_final odb/spef/sdc/v, ORFS objects the re-STA reads, src snapshot) until its element (spec block) has a CLOSED job.
+# Enforced in three places: release_bulk() skips it, BULK_RELEASE_SH itself refuses a run whose corner_sta*.json is a
+# near miss unless the caller sets NEAR_MISS_RELEASE=1 (manual reuse of the script keeps them), and the hourly fleet
+# sweeper keeps any unit holding a near-miss route (tools/fleet/sweep.py) and every run dir in near_miss_retain.json.
+NEAR_MISS_PS = -100.0
+NEAR_MISS_JSON = STATE / "near_miss_retain.json"
 # Route bulk released on terminal jobs (fleet disk guard 2026-10-07): intermediate ODB/DEF/SPEF/guides/netlists and
 # ORFS objects under the job's ORFS work trees.  Kept: 6_final.*, 5_2_route.odb, every log / report / json (metrics).
 BULK_RELEASE_SH = r"""set -u
 R=%(run)s
+if [ "${NEAR_MISS_RELEASE:-0}" != 1 ] && python3 - "$R" <<'NMPY'
+import json, os, sys
+r = sys.argv[1].rstrip("/")
+for dp, dn, fn in os.walk(r):
+    rel = dp[len(r):]
+    dn[:] = [] if rel.count("/") >= 8 else [d for d in dn if not (rel == "" and d == "src") and d not in ("objects", ".git")]
+    for f in fn:
+        if not (f.startswith("corner_sta") and f.endswith(".json")):
+            continue
+        try:
+            d = json.load(open(os.path.join(dp, f)))
+            su = d.get("setup_tt") or d.get("setup_ss") or {}
+            tt, ff = su.get("worst_slack_ps"), (d.get("hold_ff") or {}).get("worst_slack_ps")
+        except Exception:
+            continue
+        num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)
+        if num(tt) and num(ff) and tt >= -100 and ff >= -100 and not (tt >= 0 and ff >= 0):
+            print("NEAR_MISS", os.path.join(dp, f), tt, ff)
+            sys.exit(0)
+sys.exit(1)
+NMPY
+then echo "RETAIN near-miss route (TT/FF >= -100 ps, not closed); set NEAR_MISS_RELEASE=1 once the element closes"; exit 4; fi
 for p in "$R"/cl/*.pid; do [ -f "$p" ] && [ ! -f "${p%%.pid}.rc" ] && kill -0 "$(cat "$p")" 2>/dev/null && { echo LIVE "$p"; exit 3; }; done
 for c in $(docker ps -q 2>/dev/null); do docker inspect --format '{{range .Mounts}}{{.Source}} {{end}}' $c | grep -q "$R/" && { echo LIVE docker; exit 3; }; done
 before=$(du -sm "$R" 2>/dev/null | cut -f1)
@@ -4188,9 +4303,47 @@ def closed_blocks(jobs):
     return {x["spec"].get("block") for x in jobs if closure_counts(x, rv)}
 
 
+def near_miss(j, closed=None):
+    """a non-CLOSED job whose route verdict is TT >= NEAR_MISS_PS and FF >= NEAR_MISS_PS (and not both >= the line),
+    while its element (spec block) has no counting CLOSED job: its route tree is retained"""
+    if j.get("status") == "CLOSED":
+        return False
+    m = j.get("metrics") or {}
+    tt, ff = m.get("ss_ps"), m.get("ff_ps")
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) for v in (tt, ff)):
+        return False
+    if not (tt >= NEAR_MISS_PS and ff >= NEAR_MISS_PS) or (tt >= SS_MIN and ff >= FF_MIN):
+        return False
+    return closed is None or j["spec"].get("block") not in closed
+
+
+def write_near_miss_retain(jobs, closed=None):
+    """STATE/near_miss_retain.json: run dirs (+ ORFS dir) of retained near-miss routes, read by tools/fleet/fleet_sweep.py"""
+    closed = closed_blocks(jobs) if closed is None else closed
+    rows = []
+    for x in jobs:
+        if x.get("run") and x.get("host") and near_miss(x, closed):
+            m = x.get("metrics") or {}
+            rows.append(dict(job=x["name"], block=x["spec"].get("block"), host=x["host"], run=x["run"],
+                             orfs_dir=m.get("orfs_dir"), tt_ps=m.get("ss_ps"), ff_ps=m.get("ff_ps"), drc=m.get("drc"),
+                             status=x["status"]))
+    body = dict(schema="opentallas.closure_loop.near_miss_retain.v1", generated=now_iso(), threshold_ps=NEAR_MISS_PS,
+                rule="non-closed route with TT >= threshold and FF >= threshold keeps its route tree until its block closes",
+                jobs=sorted(rows, key=lambda r: r["job"]))
+    try:
+        tmp = NEAR_MISS_JSON.with_suffix(".tmp")
+        tmp.write_text(json.dumps(body, indent=1) + "\n")
+        tmp.replace(NEAR_MISS_JSON)
+    except OSError as ex:
+        log(f"near_miss_retain.json not written: {ex}")
+    return rows
+
+
 def release_bulk(jobs):
-    """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk."""
+    """CANCELLED jobs, and terminal jobs superseded by a CLOSED job of the same block, give back their route bulk --
+    except a near miss (near_miss()) whose block has not closed: it keeps its route tree (NEAR-MISS RETENTION)."""
     closed = closed_blocks(jobs)
+    write_near_miss_retain(jobs, closed)
     n = 0
     for x in jobs:
         if n >= BULK_RELEASE_PER_TICK:
@@ -4199,14 +4352,24 @@ def release_bulk(jobs):
             continue
         if x["status"] == "CLOSED" or not (x["status"] == "CANCELLED" or x["spec"].get("block") in closed):
             continue
+        if near_miss(x, closed) or (x.get("near_miss_retained") and x["spec"].get("block") not in closed):
+            continue
         if x["host"] not in {h["name"] for h in hosts_table()}:
             continue
         with job_lock(x["name"]):
             j = load_job(x["name"])
             if j.get("bulk_released") or j["status"] not in TERMINAL or j["status"] == "CLOSED":
                 continue
-            r = ssh(j["host"], BULK_RELEASE_SH % dict(run=shlex.quote(j["run"])), timeout=900)
+            # the block is closed (or the job has no near-miss verdict): a near-miss corner_sta may be released
+            rel = "NEAR_MISS_RELEASE=1\n" if j["spec"].get("block") in closed else ""
+            r = ssh(j["host"], rel + BULK_RELEASE_SH % dict(run=shlex.quote(j["run"])), timeout=900)
             n += 1
+            if r.returncode == 4:
+                if not j.get("near_miss_retained"):
+                    j["near_miss_retained"] = now_iso()
+                    event(j, f"bulk release refused: near-miss route retained ({r.stdout.strip()[-200:]})")
+                    save_job(j)
+                continue
             if r.returncode == 3:
                 event(j, f"bulk release skipped: live process ({r.stdout.strip()[:120]})")
                 continue

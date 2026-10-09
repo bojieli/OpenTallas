@@ -192,6 +192,16 @@ bfh2_recut_lvt, SS 951 / FF 556) starts on its own value instead of calibrating 
   - tune with `hold_eco: {hold_margin_ps, setup_margin_ps, keep_clock, max_buffer_percent, reexport, enabled}`
 - Earlier hold-only NEEDS_RTL jobs are re-opened once, unless the block already has a live or closed sibling job.
 
+### Automatic VT-swap setup ECO (2026-10-09, merge-eco)
+- A route whose only miss is a THIN TT setup miss -- TT in [-45, 0), FF >= 0, DRC 0, no failed check / bench / metric
+  error -- runs `vtswap_eco.sh` / `vtswap_eco.tcl` (eco-sweep e494ff8ac) as its ECO stage before NEEDS_RTL: RVT->LVT
+  master swaps on the worst TT paths, band-limited, prospective <= 2 % LVT cap, FF hold guard, no re-route (ASAP7 R/L
+  footprints are identical, so the route DRC stands). Same stage tag / output layout as the hold ECO: the ECO completion
+  installs, re-verdicts at the routed insertion and records it unchanged.
+- Targets 10 ps, then (on a miss) once more at 5 ps (fewer swaps under the cap); then NEEDS_RTL. Each run keeps its own
+  output (`cl/eco-vtswap-t<target>[-r<n>]`) and stage tag. Spec `hold_eco: {vtswap: false}` turns it off;
+  `vtswap_targets`, `vtswap_cap_pct` override. `vtswap_launch.py` remains the manual launcher for an already NEEDS_RTL job.
+
 ### Hold ECO rev 2 (2026-10-07): the "ECO buffers destroy setup" class
 Nine hold-only misses went NEEDS_RTL because the ECO took setup below +15. Causes found, and what rev 2 does:
 - constraints differed from sign-off: corner-conditional post-SDCs (`vclk_corner_true.sdc`, budget FF files) were read
