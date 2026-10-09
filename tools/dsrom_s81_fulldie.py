@@ -3398,6 +3398,8 @@ PIN_RELAY = False               # --pin-relay (OWNER rule 1, 2026-10-07): a rela
 PIN_SEG = 100.0                 #   on die interfaces (last segment <= 100 um)
 NXT_REACH = False               # --nxt-reach (s81-die-timing 2026-10-08): a relay must also lie within reach of the
                                 #   NEXT point of its chain (the load for the last relay), not only of the previous one
+FRAME_OUT_RELAY = False         # --frame-out-relay (s81-dies 2026-10-08): the PQ die's frame_out relay fallback on any die
+                                #   whose q element fills its frame (head die at the qs5f 221.4 um frame, no PQ); default off
 PQ_PLACE = False                # --pq-place (S81-DIE 2026-10-07): production PQ roots / core on the mixed221 layer die
 PQ_ROOT_ROW = 241.92            #   root row added to each tier channel 0..TIERS-1 (4.32 + 8.64 + 211.68 + 8.64 + 8.64)
 PQ_ROOT_WH = (132.192, 211.68)  #   ret_root_r128 reserved outline.  CLAUDE pq-rootcam 2026-10-08: grown from 133.92 (placed at
@@ -3619,7 +3621,7 @@ def _hop_fix(m, P):
                         if PAD < 2.16:
                             rec['pad_fallback'][f'{PAD:g}'] = rec['pad_fallback'].get(f'{PAD:g}', 0) + 1
                         break
-                if pl is None and reg is not None and not fwd and PQ_PLACE:
+                if pl is None and reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY):
                     # S81-DIE (qs5f q abstract fills its 221.4 um frame): a frame relay with no spot inside its frame
                     # takes the nearest legal spot within reach (the strip / channel next to the frame)
                     for span, rows in ((300.0, 30), (1200.0, 120)):
@@ -3658,7 +3660,7 @@ def _hop_fix(m, P):
                             break
                     # s81-die-2 2026-10-08: the legacy chain also has the whole-die fallbacks (PQ frame_out, pin relay);
                     # without them a packed frame failed under --nxt-reach where legacy passed (es_12_y0, adopted PQ row)
-                    if pl is None and ((reg is not None and not fwd and PQ_PLACE) or (PIN_RELAY and reg is None)):
+                    if pl is None and ((reg is not None and not fwd and (PQ_PLACE or FRAME_OUT_RELAY)) or (PIN_RELAY and reg is None)):
                         for span, rows in ((300.0, 30), (1200.0, 120)):
                             pl = P.near(cx, cy, w_ + 2.16, h_ + 2.16, [(0.0, 0.0, W, H)], prev=cur, horiz=horiz,
                                         reach=R - 10.0, span=span, rows=rows)
@@ -5053,6 +5055,8 @@ def die_options(ap):
     ap.add_argument('--face-pin-inset', action='store_true', help='die-gaps 2026-10-08: generated face pins start '
                     '0.048 um inside the outline (abutted node stacks put different-net M5 pins tip to tip under the '
                     'EOL keepout); default off for reproducing r3/r4')
+    ap.add_argument('--frame-out-relay', action='store_true', help='s81-dies: a frame relay with no spot in its full '
+                    'frame takes the nearest legal spot within reach outside it, as --pq-place does (head die); default off')
     ap.add_argument('--pq-place', action='store_true', help='S81-DIE (2026-10-07): production PQ placement on the '
                     'mixed layer die: a 241.92 um root row in the first TIERS tier channels (one ret_root_r128 a '
                     'region, 132.192 x 211.68, between two 8.64 um return stations in the 142.56 um return strip) and '
@@ -5083,6 +5087,8 @@ def apply_options(a):
     CHS = [float(v) for v in a.ch_heights.split(',')] if getattr(a, 'ch_heights', None) else None
     global PQ_PLACE, FIELD_MARGIN
     PQ_PLACE = bool(getattr(a, 'pq_place', False))
+    global FRAME_OUT_RELAY
+    FRAME_OUT_RELAY = bool(getattr(a, 'frame_out_relay', False))
     if getattr(a, 'field_margin', None) is not None:
         FIELD_MARGIN = float(a.field_margin)     # explicit, every gen (a leftover --pq-place margin must not leak)
     else:
