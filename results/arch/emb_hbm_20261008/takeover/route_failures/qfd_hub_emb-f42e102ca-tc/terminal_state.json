@@ -1,0 +1,137 @@
+{
+ "name": "qfd_hub_emb-f42e102ca-tc",
+ "spec": {
+  "name": "qfd_hub_emb-f42e102ca-tc",
+  "block": "qfd_hub_emb",
+  "owner": "Codex:embedding-hbm",
+  "purpose": "Review-approved HBM embedding standalone closure vehicle; model and all9 exactness/negative variants committed. Actual clock: 1.2GHz stream. TT>=0/FF>=0/DRC0; SS sensitivity; no die slot/closure claim. Corrected packagefrontend plus MM WCscene readingTTlibs; prior failures preserved.",
+  "hosts": [
+   "ot-epyc2",
+   "ot-epyc3",
+   "ot-epyc1tb",
+   "ot-epyc4"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "source": {
+   "branch": "codex/emb-hbm-takeover-20261008",
+   "commit": "f42e102cadfbebc8251c874e167b2783227377ec"
+  },
+  "no_bench_reason": "Unchanged RTL from e48258ccd: 5positive and4negative full-shape variants harvested and hash-pinned in results/arch/emb_hbm_20261008/takeover/summary.json. Only physical frames and actual implemented clock binding change. No proof reruns. Package expansion separately proven in committedtakeover/package_inline_gate.json; nativeYosysparseall4modulesPASS.",
+  "stages": {
+   "bench": [],
+   "calibrate": {
+    "enabled": false,
+    "reason": "Multi-domain IO kit derives boundary budgets from per-domain propagated CTS arrivals in-run; actual domain periods and60/25 uncertainties bound in committed kit."
+   },
+   "route": {
+    "cmd": "export CORNER=WC OT_ORFS_CORNER_OVERRIDE=TC OT_ROUTE_HOLD_CORNERS=mm OT_MM_FF_SDC=physical/qwen_die_masters/signoff/qfd_hub_emb.sdc; SRC={SRC} bash physical/qwen_die_masters/jobs/route_master.sh qfd_hub_emb {LABEL} {RUN}/routes",
+    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "logs": [
+     "{RUN}/routes/{LABEL}/flow.log"
+    ]
+   },
+   "collect": {
+    "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/hbm_fmax_attn_abstract.py --orfs-dir {RUN}/routes/{LABEL}/work/orfs --name qfd_hub_emb --out {RUN}/record/views/qfd_hub_emb --image openroad/orfs:asap7lock > {RUN}/record/route/export.log 2>&1"
+   }
+  },
+  "verdict": {
+   "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+   "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+   "post_sdc": [
+    "physical/qwen_die_masters/signoff/qfd_hub_emb.sdc"
+   ],
+   "checks": [
+    {
+     "name": "owner_TT_FF_nonnegative",
+     "cmd": "python3 -c 'import json; r=json.load(open(\"{RUN}/routes/{LABEL}/corner_sta.json\")); assert r[\"setup_tt\"][\"worst_slack_ps\"] >= 0 and r[\"hold_ff\"][\"worst_slack_ps\"] >= 0' "
+    },
+    {
+     "name": "route_WC_scene_reads_TT",
+     "cmd": "grep -q 'corner WC reads the TT' {RUN}/routes/{LABEL}/flow.log"
+    }
+   ],
+   "macros": []
+  },
+  "budget": {
+   "enabled": false,
+   "reason": "Actual implemented domains explicitly bound in committed MC kit, die boundary0.2T+150ps referenced to local propagated clock. Final100um relay obligation and slot integration remain OPEN."
+  },
+  "record": [
+   {
+    "from": "{RUN}/record/views",
+    "to": "physical/qwen_die_masters/views"
+   },
+   {
+    "from": "{RUN}/record/route",
+    "to": "results/rtl/emb_hbm_closure_20261008/qfd_hub_emb-f42e102ca-tc"
+   }
+  ],
+  "cycles_added": "Measured baseKV1 473mean/789max, full128PC shape; frame-only change adds0cycles. Qualified headline credit0 until die integration/reprice.",
+  "merge_target": null,
+  "route_corner": "TC",
+  "route_hold_corners": "mm",
+  "route_hold_margin_ns": 0.05
+ },
+ "origin": "/tmp/claude-review-20261003/closure_jobs/qfd_hub_emb-f42e102ca-tc.json",
+ "created": "2026-10-08T23:42:07-07:00",
+ "status": "NEEDS_HUMAN",
+ "stage_idx": 0,
+ "attempt": 2,
+ "retries_used": 1,
+ "benches": {},
+ "hosts_tried": [
+  "ot-epyc4",
+  "ot-agidock128"
+ ],
+ "events": [
+  "2026-10-08T23:42:07-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_hub_emb-f42e102ca-tc.json",
+  "2026-10-08T23:42:38-07:00 source f42e102cadfb synced to ot-epyc4:/srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-f42e102ca-tc/src",
+  "2026-10-08T23:43:20-07:00 launched route (attempt 1) on ot-epyc4",
+  "2026-10-08T23:50:34-07:00 route crashed (rc=1 ok-check failed;; first error: qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]) -> retry once on the same host",
+  "2026-10-08T23:51:33-07:00 route waiting for capacity: EPYC4 MemAvailable 395-16 GB - reserve 376.86388778686523 < 48+57",
+  "2026-10-08T23:52:37-07:00 route waiting for capacity: EPYC4 MemAvailable 392-0 GB - reserve 376.8620414733887 < 48+57",
+  "2026-10-08T23:53:31-07:00 route waiting for capacity: EPYC4 MemAvailable 393-0 GB - reserve 376.6207084655762 < 48+57",
+  "2026-10-08T23:54:33-07:00 route cannot start on EPYC4 (EPYC4 MemAvailable 387-0 GB - reserve 376.8583450317383 < 48+57); moving to AGIdock",
+  "2026-10-08T23:55:37-07:00 source f42e102cadfb synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-f42e102ca-tc/src",
+  "2026-10-08T23:56:35-07:00 launched route (attempt 2) on ot-agidock128",
+  "2026-10-09T00:03:46-07:00 NEEDS_HUMAN: route crashed twice (rc=1 ok-check failed;; first error: qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]; resource=False)"
+ ],
+ "updated": "2026-10-09T00:03:46-07:00",
+ "bench_par": false,
+ "wait": null,
+ "host": "ot-agidock128",
+ "run": "/srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-f42e102ca-tc",
+ "source_synced": true,
+ "commit_full": "f42e102cadfbebc8251c874e167b2783227377ec",
+ "reason": "route crashed twice (rc=1 ok-check failed;; first error: qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]; resource=False)",
+ "stage_key": "route",
+ "stage_tag": "route.a2",
+ "stage_started": "2026-10-08T23:56:35-07:00",
+ "wd_checked": 1791528252.0713155,
+ "ef_checked": 1791529171.0430667,
+ "unreachable": 0,
+ "hm_auto_seen": [],
+ "crashes": [
+  {
+   "stage": "route",
+   "host": "ot-epyc4",
+   "attempt": 1,
+   "why": "rc=1 ok-check failed;; first error: qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]",
+   "resource": false,
+   "tail": "                                    \n    8 |     1 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |   512 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |     2 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |    11 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n   32 |    25 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n\nSummary:\n- Total inferred memories: 10\n- Largest single memory instance: 66944 bits (module ot_qwen_die_hub_emb_top)\n- Total inferred memory bits (all instances): 0\n- SYNTH_MEMORY_MAX_BITS: 65536\n- Status: FAIL\nError: Synthesized memory size 65536 exceeds SYNTH_MEMORY_MAX_BITS\n\nElapsed time: 0:00.91[h:]min:sec. CPU time: user 0.86 sys 0.04 (98%). Peak memory: 84432KB.\nElapsed time: 0:04.92[h:]min:sec. CPU time: user 4.71 sys 0.19 (99%). Peak memory: 152768KB.\nmake[1]: *** [Makefile:297: do-yosys] Error 1\nmake: *** [Makefile:311: /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_f42e102ca_tc/base/1_2_yosys.v] Error 2\n\npartial record written to /srv/opentallas-scratch2/scratch/claude/closure-loop/qfd_hub_emb-f42e102ca-tc/routes/qfd_hub_emb_f42e102ca_tc/physical.json\n",
+   "first_error": "qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]"
+  },
+  {
+   "stage": "route",
+   "host": "ot-agidock128",
+   "attempt": 2,
+   "why": "rc=1 ok-check failed;; first error: qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]",
+   "resource": false,
+   "tail": "                                             \n    8 |     1 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |   512 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |     2 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n    8 |    11 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n   32 |    25 |      0 | ot_qwen_die_hub_emb_top |                                                                                 \n\nSummary:\n- Total inferred memories: 10\n- Largest single memory instance: 66944 bits (module ot_qwen_die_hub_emb_top)\n- Total inferred memory bits (all instances): 0\n- SYNTH_MEMORY_MAX_BITS: 65536\n- Status: FAIL\nError: Synthesized memory size 65536 exceeds SYNTH_MEMORY_MAX_BITS\n\nElapsed time: 0:01.11[h:]min:sec. CPU time: user 1.02 sys 0.09 (99%). Peak memory: 85640KB.\nElapsed time: 0:05.05[h:]min:sec. CPU time: user 4.65 sys 0.40 (99%). Peak memory: 155420KB.\nmake[1]: *** [Makefile:297: do-yosys] Error 1\nmake: *** [Makefile:311: /work/results/asap7/opentallas_ot_qwen_die_hub_emb_top_asap7_qdm_qfd_hub_emb_f42e102ca_tc/base/1_2_yosys.v] Error 2\n\npartial record written to /srv/opentallas-scratch/claude/closure-loop/qfd_hub_emb-f42e102ca-tc/routes/qfd_hub_emb_f42e102ca_tc/physical.json\n",
+   "first_error": "qfd_hub_emb_f42e102ca_tc/flow.log: ERROR: TCL interpreter returned an error: Source files actually used in the design: [step do-yosys]"
+  }
+ ]
+}
