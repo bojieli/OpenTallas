@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "element": "ot_s81_native_pc_mux_plain",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Minimal reviewed native credits/source-owned physical fence, ordinaryflops without ECC/parity/mirrors",
+      "source": {
+        "commit": "47dbc4636",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; admitted remote gates running",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_native_pc_mux_plain.sv"
+        ]
+      },
+      "model": {
+        "status": "unified native model composed; floorplan slot not adopted",
+        "evidence": [
+          "tools/s81_native_ingest_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending source-matched admitted component",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending source-matched admitted mutant",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "Claude phys-intake owns; no new structural launch from this agent",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual controller request/response and credits",
+        "accepted-order source ACK prefix",
+        "static generator map and TA09 k_oor/w_oor status"
+      ],
+      "integration": {
+        "status": "pending actual producer/router binding",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_s81_ingest_visibility_fence_plain",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Minimal reviewed native credits/source-owned physical fence, ordinaryflops without ECC/parity/mirrors",
+      "source": {
+        "commit": "47dbc4636",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; admitted remote gates running",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence_plain.sv"
+        ]
+      },
+      "model": {
+        "status": "unified native model composed; floorplan slot not adopted",
+        "evidence": [
+          "tools/s81_native_ingest_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending source-matched admitted component",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending source-matched admitted mutant",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "Claude phys-intake owns; no new structural launch from this agent",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual controller request/response and credits",
+        "accepted-order source ACK prefix",
+        "static generator map and TA09 k_oor/w_oor status"
+      ],
+      "integration": {
+        "status": "pending actual producer/router binding",
+        "evidence": []
+      }
+    },
+    {
+      "element": "ot_s81_host_native_plain",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Minimal reviewed native credits/source-owned physical fence, ordinaryflops without ECC/parity/mirrors",
+      "source": {
+        "commit": "47dbc4636",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_host_native_plain.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; admitted remote gates running",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/ot_s81_host_native_plain.sv"
+        ]
+      },
+      "model": {
+        "status": "unified native model composed; floorplan slot not adopted",
+        "evidence": [
+          "tools/s81_native_ingest_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending source-matched admitted component",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending source-matched admitted mutant",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "Claude phys-intake owns; no new structural launch from this agent",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual controller request/response and credits",
+        "accepted-order source ACK prefix",
+        "static generator map and TA09 k_oor/w_oor status"
+      ],
+      "integration": {
+        "status": "pending actual producer/router binding",
+        "evidence": []
+      }
+    },
+    {
+      "element": "dsfd_host_native_plain",
+      "target": "DeepSeek ROM",
+      "owner": "ingest",
+      "description": "Minimal reviewed native credits/source-owned physical fence, ordinaryflops without ECC/parity/mirrors",
+      "source": {
+        "commit": "47dbc4636",
+        "paths": [
+          "rtl/dsrom_sys/s81_ingest/dsfd_host_native_plain.sv"
+        ]
+      },
+      "implementation": {
+        "status": "implemented defaultoff; admitted remote gates running",
+        "evidence": [
+          "rtl/dsrom_sys/s81_ingest/dsfd_host_native_plain.sv"
+        ]
+      },
+      "model": {
+        "status": "unified native model composed; floorplan slot not adopted",
+        "evidence": [
+          "tools/s81_native_ingest_model.py"
+        ]
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending source-matched admitted component",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending source-matched admitted mutant",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "Claude phys-intake owns; no new structural launch from this agent",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "actual controller request/response and credits",
+        "accepted-order source ACK prefix",
+        "static generator map and TA09 k_oor/w_oor status"
+      ],
+      "integration": {
+        "status": "pending actual producer/router binding",
+        "evidence": []
+      }
+    }
+  ]
+}
