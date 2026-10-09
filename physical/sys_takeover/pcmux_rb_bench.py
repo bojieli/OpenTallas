@@ -21,12 +21,16 @@ for a, b in R:
 (w / "tb.sv").write_text(t)
 rb = pathlib.Path("physical/sys_takeover/ot_s81_native_pc_mux_plain_rb.sv").read_text()
 PICK = os.environ.get("PCMUX_PICK") == "1"     # sys-takeover: the PICK=1 pipelined arbitration
-if mode == "neg":
+PRE = os.environ.get("PCMUX_PRE") == "1"       # sys-takeover: PRE=1 head pre-read (with PICK)
+if mode == "negpre":                          # PRE mutant: the head register misses the pop's advance (stale head)
+    pass
+elif mode == "neg":
     a = "if(PICK)next_owner=sel;" if PICK else "next_owner=chosen[1:0]"
     assert rb.count(a) == 1, a
     rb = rb.replace(a, "if(PICK)next_owner=0;" if PICK else "next_owner=0")
 (w / "dut.sv").write_text(rb)
-b = subprocess.run(["iverilog", "-g2012", *(["-DPCMUX_PICK"] if PICK else []), "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
+b = subprocess.run(["iverilog", "-g2012", *(["-DPCMUX_PICK"] if PICK else []), *(["-DPCMUX_PRE"] if PRE else []),
+                    *(["-DPCMUX_MUT_STALEHEAD"] if mode == "negpre" else []), "-s", "tb_s81_native_pc_mux", "-o", str(w / "sim"), str(w / "dut.sv"), str(w / "tb.sv")],
                    capture_output=True, text=True)
 if b.returncode: print(b.stdout + b.stderr); print("PCMUX_RB_BENCH_ERROR build"); sys.exit(2)
 r = subprocess.run(["vvp", "-n", str(w / "sim")], capture_output=True, text=True)

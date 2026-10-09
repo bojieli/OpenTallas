@@ -8,7 +8,12 @@
 // -> rq / queue write enable, 23-29 levels): the arbitration result is registered (stage A), the chosen head is
 // fetched into a pick register (stage B, may run while the previous transaction is busy), and the launch uses the
 // pick register.  +2 edges on an idle-port request, hidden behind a busy transaction otherwise.
-module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0] QUEUE_INJECT=0, parameter integer PICK=0)(
+module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0] QUEUE_INJECT=0, parameter integer PICK=0,
+ // PRE=1 (sys-takeover 2026-10-09, with PICK; pcmux_pick3_b TT -56.7: cho_q -> 4 x 8:1 x 340-b queue mux -> phd 24 lv,
+ // ctrl_live -> queue write enable 15 lv): per-source head registers hd_src[i] == queue[i][rp[i]] (re-read every edge,
+ // following the pop) so the pick is a 4:1 mux of flops; the queue payload is
+ // written on every push from a reset-less block (a push is credit-legal; an illegal one faults anyway).  0 cycles.
+ parameter integer PRE=0)(
  input wire ck,rst_n,ctrl_live,
  input wire[4*341-1:0] src_rq,output reg[3:0] src_rk,
  output reg[340:0] rq,input wire rk,wd,
@@ -51,7 +56,32 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
   // phd is a pure data register outside the reset block: inside it, synthesis folds rst_n into the 340-bit enable
   // (pcmux_pick_b: rst_n pin -> phd enable, -316 ps)
   // phd / pok track the candidate head every edge until a pick sets pv (enable = !pv only, not the pick logic)
-  always @(posedge ck) if(!pv) begin phd<=queue[cho_q][rp[cho_q]]^QUEUE_INJECT;pok<=(queue[cho_q][rp[cho_q]][34:31]^QUEUE_INJECT[34:31])!=0;end
+  reg[339:0] hd_src[0:3];
+  wire[339:0] cand=PRE?hd_src[cho_q]:queue[cho_q][rp[cho_q]];
+  always @(posedge ck) if(!pv) begin phd<=cand^QUEUE_INJECT;pok<=(cand[34:31]^QUEUE_INJECT[34:31])!=0;end
+  // PRE: head pre-read and reset-less queue payload writes
+  integer pi,pj;
+  reg[2:0] pnr;
+  always @(posedge ck) begin
+   for(pi=0;pi<4;pi=pi+1)begin
+    // queue payload (single writer): PRE writes on every push; otherwise only a legal push (the original condition)
+    if(PRE!=0 ? src_rq[pi*341] : (ready&&src_rq[pi*341]&&!(count[pi]==8&&(PICK!=0||!(pop&&sel==pi)))))
+     queue[pi][wp[pi]]<=src_rq[pi*341+1+:340];
+   end
+  end
+  // hd_src re-reads queue[i][rp after this edge's pop] every edge.  No push bypass is needed: a source is picked at the
+  // earliest two edges after the push that made its count non-zero (registered arbitration), by which time hd_src holds
+  // the written word (a no-bypass equivalence, checked: the bypass mutant was indistinguishable).
+  always @(posedge ck) if(PRE!=0) begin
+   for(pj=0;pj<4;pj=pj+1)begin
+`ifdef PCMUX_MUT_STALEHEAD
+    pnr=rp[pj];                                                  // mutant: the pop's advance is not applied (stale head)
+`else
+    pnr=rp[pj]+((pop&&sel==pj)?3'd1:3'd0);
+`endif
+    hd_src[pj]<=queue[pj][pnr];
+   end
+  end
   // PICK: the read-return data registers load on every rv (their contents are only observed with src_rv); the
   // tag / beat / seen checks gate src_rv alone (pcmux_pick2_b q_r_tag -> check -> 1,024-bit src_rdata enable, 17 lv)
   reg[4*256-1:0] p_rdata;reg[4*17-1:0] p_rtag;reg[4*4-1:0] p_rbeat;
@@ -86,7 +116,7 @@ module ot_s81_native_pc_mux_plain #(parameter integer ENABLE=0, parameter [339:0
       push=src_rq[i*341];nw=wp[i];nr=rp[i];nc=count[i];
       if(push)begin
        if(count[i]==8&&(PICK!=0||!(pop&&sel==i)))fault<=1;   // PICK: credits make a full-queue push illegal
-       else begin queue[i][wp[i]]<=src_rq[i*341+1+:340];nw=wp[i]+1'b1;nc=nc+1'b1;end
+       else begin nw=wp[i]+1'b1;nc=nc+1'b1;end
       end
       if(pop&&sel==i)begin nr=rp[i]+1'b1;nc=nc-1'b1;src_rk[i]<=1;end
       wp[i]<=nw;rp[i]<=nr;count[i]<=nc;
