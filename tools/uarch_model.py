@@ -15035,3 +15035,25 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hgi_attention_row_sources_model():
+    """HGI-1 G12 ordered-row frontend; arithmetic and gather engines unchanged."""
+    return dict(schema='hgi.att-row-sources.v1', enable_default=False,
+        model_before_build=True, MACs_per_cycle=0, arithmetic_order='B then C; existing tile chunk8/tree unchanged',
+        full_shape=dict(Qwen_rows=8192, DS_window_rows=128, DS_selected_rows=2048, row_index_bits=20),
+        replicas=4, placement='one frontend per HBM stack, upstream of existing gather reader',
+        ports=dict(command_bits=81, selected_id_bits_per_cycle=32, request_bits_per_cycle=43,
+                   selected_ID_bytes_per_cycle=4, HBM_payload_bytes_per_cycle=0),
+        boundary_bits_per_cycle=43, mux_cost='one B/C row-index mux; no payload mux',
+        fanout='local command registers only, 4 independent replicas',
+        latency_cycles=dict(command_to_first_request=2, initiation_interval=1,
+                            added_row_payload_cycles=0, post_command_tail=0),
+        token_latency='Two frontend command edges per attention invocation; existing gather/tile/formatter separately priced; no ideal throughput credit',
+        slot_um=[120,120], initial_state_bit_upper_bound=256, area_measured_um2=None,
+        floorplan_utilisation_target=0.55, fit='pending synthesis and route, no physical claim',
+        routing=dict(signal_bits_estimate=220, pin_layers=2, pitch_um=0.48,
+                     perimeter_tracks_capacity=1000, capacity_fraction=0.22,
+                     actual_pin_lint='required before route'),
+        source_binding='B ring physical index; C existing selected-ID stream, does not replace DS nine-sector gather reader',
+        clock_ns=0.833333, setup_uncertainty_ps=60, hold_uncertainty_ps=25)
