@@ -86,7 +86,7 @@ with a live sibling; an old-flow hold flood is a `flow` item: re-route under the
 - `EARLY_FAIL_HOLD`: during CTS / GRT hold repair, only when the repair is NOT converging (drive-2140; the endpoint
   count in margin is not a verdict -- 30k-70k endpoints at HM 10-25 with WNS -20..-40 converge): hold buffers inserted
   in the step > 100k (or > 0.30 x placed instances, floor 20k; 0.60 x / floor 60k while real WNS gains >= 5 ps over
-  2,000 iterations); real WNS < 0 gaining < 1 ps over the last 2,000 cumulative iterations (guard chunks summed); or
+  2,000 iterations); real WNS < 0 gaining < 1 ps AND hold TNS improving < 2 % over the last 2,000 cumulative iterations (guard chunks summed; a flat WNS with falling TNS is one stubborn endpoint, drive-2155); or
   real WNS < -150 ps after 1 h gaining < 5 ps over 2,000 iterations.  NEVER once real hold WNS >= 0 (drive-2155: the
   margin is a design target, HM 0 allowed); the flow's MET-FIRST guard (orfs_hold_mm.tcl) repairs a margin flood at
   HM 0 and stops once met (OT_HOLD_FLOOD_MET_FIRST=0 disables it).

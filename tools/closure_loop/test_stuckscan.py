@@ -203,6 +203,20 @@ class ProbeAndGates(unittest.TestCase):
         with patch.object(ss, "place_instances", return_value=192064):
             self.assertIsNone(ss.hold_verdict(hd, {}, 9000))
 
+    def test_flat_wns_with_falling_tns_is_not_a_stall(self):
+        # drive-2155: hbm_su_full d2056 (WNS -18.6 flat, TNS -30.8k -> -2.9k) and selt_c vf-lvt (TNS -12.7k -> -18) were
+        # killed as "not converging": one stubborn worst endpoint, the rest still repairing
+        rows = "\n".join(f"{100 * k:9d} |       0 | {200 * k:7d} |            0 |    +6.1% | {-18.6:7.3f} | "
+                         f"{-30000 + 700 * k:10.3f} | u.x$_DFF_P_/D" for k in range(40))
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["action"], "let_run")
+        # WNS and TNS both flat: stall
+        rows = "\n".join(f"{100 * k:9d} |       0 | {200 * k:7d} |            0 |    +6.1% | {-18.6:7.3f} | "
+                         f"{-3000 + k * 0.1:10.3f} | u.x$_DFF_P_/D" for k in range(40))
+        d = self.hold_diag("OT_HOLD_GUARD start: x\n[INFO RSZ-0046] Found 49272 endpoints with hold violations.\n" + rows)
+        self.assertEqual(d["verdict"], "EARLY_FAIL_HOLD")
+        self.assertIn("TNS", d["why"][0])
+
     def test_hold_buffer_cap_rises_while_improving(self):
         # 192k instances: plain cap 57.6k; real WNS < 0 but gaining >= 5 ps / 2000 it -> cap 100k (0.6 x 192k > 100k)
         self.assertAlmostEqual(ss.hold_buf_cap(192064, None), 0.30 * 192064)

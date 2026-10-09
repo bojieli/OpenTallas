@@ -84,6 +84,9 @@ GATES = dict(
     hold_buf_improve_min=60000,  # ... floor are raised to these (drive-2155: never kill a converging repair on buffers)
     hold_stall_it=2000,          # real WNS < 0 gaining < hold_stall_dwns ps over this many iterations: stalled
     hold_stall_dwns=1.0,
+    hold_stall_tns_pct=2.0,      # ... AND hold TNS improving < this % over the same window (the flow guard's rule): a
+                                 # flat WNS with TNS falling is one stubborn endpoint, not a stall (drive-2155: su_full
+                                 # TNS -30.8k -> -2.9k, selt_c -12.7k -> -18 were killed on a flat WNS)
     hold_real_ws_ps=-150.0,      # real hold WNS still below this ...
     hold_real_after_s=3600,      # ... after this long in repair ...
     hold_deep_it=2000,           # ... gaining < hold_deep_dwns ps over this many iterations
@@ -213,7 +216,7 @@ def probe_base(b, live):
                 if it_ < pit or (it_ == pit == 0):
                     off += max(pit, 0); boff += max(pb, 0)
                 pit, pb = it_, b_
-                ser.append([off + it_, boff + b_, float(r[5])])
+                ser.append([off + it_, boff + b_, float(r[5]), float(r[6])])
             if len(ser) > 400:
                 ser = [ser[int(i * (len(ser) - 1) / 399)] for i in range(400)]
             hold["series"] = ser
@@ -513,6 +516,19 @@ def hold_gain(series, window):
     return round(last[2] - back[-1][2], 3) if back else None
 
 
+def hold_tns_gain_pct(series, window):
+    """hold TNS improvement (% of |TNS| at the window start) over the last `window` cumulative iterations; None when the
+    series carries no TNS (older probe) or spans fewer iterations than the window."""
+    if not series or len(series[-1]) < 4:
+        return None
+    last = series[-1]
+    back = [p for p in series if p[0] <= last[0] - window]
+    if not back or len(back[-1]) < 4:
+        return None
+    t0 = back[-1][3]
+    return round(100.0 * (last[3] - t0) / abs(t0), 3) if t0 < 0 else 0.0
+
+
 def place_instances(b):
     for k in ("3_5_place_dp", "3_4_place_resized", "3_3_place_gp"):
         for kk, v in ((b.get("metrics") or {}).get(k) or {}).items():
@@ -552,12 +568,16 @@ def hold_verdict(hd, b, elapsed, untrusted=False):
                f"{place_instances(b)} instances, WNS gain {g} ps / {GATES['hold_stall_it']} it); {ctx}"
     if untrusted:
         return None
-    if g is not None and g < GATES["hold_stall_dwns"]:
-        return f"hold repair not converging: WNS gained {g:+.2f} ps over the last {GATES['hold_stall_it']} iterations " \
-               f"(< {GATES['hold_stall_dwns']:g}); {ctx}"
+    tg = hold_tns_gain_pct(ser, GATES["hold_stall_it"])
+    if g is not None and g < GATES["hold_stall_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]):
+        return f"hold repair not converging: WNS gained {g:+.2f} ps" \
+               + (f" and TNS {tg:+.1f}%" if tg is not None else "") + \
+               f" over the last {GATES['hold_stall_it']} iterations (< {GATES['hold_stall_dwns']:g} ps / " \
+               f"{GATES['hold_stall_tns_pct']:g}%); {ctx}"
     if ws < GATES["hold_real_ws_ps"] and elapsed > GATES["hold_real_after_s"]:
         g = hold_gain(ser, GATES["hold_deep_it"])
-        if g is not None and g < GATES["hold_deep_dwns"]:
+        tg = hold_tns_gain_pct(ser, GATES["hold_deep_it"])
+        if g is not None and g < GATES["hold_deep_dwns"] and (tg is None or tg < GATES["hold_stall_tns_pct"]):
             return f"real FF hold WNS {ws:+.1f} ps (< {GATES['hold_real_ws_ps']:g}) with no progress: {g:+.2f} ps over " \
                    f"the last {GATES['hold_deep_it']} iterations (< {GATES['hold_deep_dwns']:g}); {ctx}"
     return None
