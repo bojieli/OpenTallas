@@ -1,0 +1,95 @@
+{
+  "name": "dsrom-qelem-qs5f-h1min-2c681ce7f-tc",
+  "block": "ot_v41_rom_elem_q_qxpq_w10",
+  "owner": "Codex:s81_continuation",
+  "purpose": "Native full-shape QS5f reference correction: old input min360 on source-zero realclock conflicts with current measured sender insertion; opt-in H1 min50 on measured virtualclock. Read-only calibration FF input -84.10 to +25.36, internal +9.33, reset +17.84 unchanged. Existing golden gate bound to actual37RTL hashes, five positives/three negatives/12775002cycles. No RTL, area, latency, max-delay, clock-period or uncertainty change; full routed TT/FF/DRC qualification remains mandatory.",
+  "hosts": [
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc4",
+    "ot-pve1"
+  ],
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "route_hold_margin_ns": 0.01,
+  "source": {
+    "branch": "codex/s81-native-q-hold-20261009",
+    "commit": "2c681ce7f",
+    "extra_paths": [
+      "results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json"
+    ]
+  },
+  "stages": {
+    "bench": {
+      "cmd": "python3 tools/dsrom_qelem_cl/verify_recovered_qs5_gate.py --source . --receipt results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json",
+      "threads": 1,
+      "peak_ram_gb": 1
+    },
+    "calibrate": {
+      "cmd": "export OT_NATIVE_Q_H1_INPUT=1; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1_input.sdc'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL}${CL_LABEL_SUFFIX} {RUN}/routes $CL_STOP_AFTER",
+      "base": "{RUN}/routes/jobs/{LABEL}_cal/work/orfs/results/asap7/*/base",
+      "clock": "core_clk",
+      "sdc_cmd": "bash tools/dsrom_qelem_cl/cl_signoff_sdc.sh",
+      "threads": 16,
+      "peak_ram_gb": 40
+    },
+    "route": {
+      "cmd": "export OT_NATIVE_Q_H1_INPUT=1; TTB=$(ls -d /srv/opentallas-scratch/claude/ttbatch/26f14af32 /home/ubuntu/closure-loop-local/ttbatch/26f14af32 2>/dev/null | head -1) && export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 $TTB/tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl tools/dsrom_qelem_cl/native_q_h1_input.sdc'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.010 QS=5 FH=221.4 RLA=0.12 bash tools/dsrom_qelem_cl/cl_route_qs.sh {LABEL} {RUN}/routes",
+      "ok": "grep -q '^rc=0' {RUN}/routes/jobs/{LABEL}/exit && grep -q '^corner_rc=0' {RUN}/routes/jobs/{LABEL}/exit",
+      "logs": [
+        "{RUN}/routes/jobs/{LABEL}/launch.log"
+      ]
+    },
+    "collect": {
+      "cmd": "mkdir -p {RUN}/record && bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/record/view; cp {RUN}/routes/jobs/{LABEL}/corner_sta.json {RUN}/routes/jobs/{LABEL}/exit {RUN}/routes/jobs/{LABEL}/receipt.json physical/abi3/gen/dsrom_q_cl_signoff.sdc {RUN}/record/ && cp {CL}/calib.json {RUN}/record/calib.json && cp $(ls {RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json) {RUN}/record/ && rm -f {RUN}/record/view/pa/pa.v"
+    }
+  },
+  "verdict": {
+    "corner_sta": "{RUN}/routes/jobs/{LABEL}/corner_sta.json",
+    "drc_metrics": "{RUN}/routes/jobs/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+    "checks": [
+      {
+        "name": "pin_access",
+        "cmd": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+      },
+      {
+        "name": "qs5_exact_gate_source_bound",
+        "cmd": "python3 - <<'QS5_GATE_PY'\nimport hashlib,json,pathlib\np=pathlib.Path('results/rtl/dsrom_qelem_pq_20261006/qx10qs5_recovery_gate.json');raw=p.read_bytes()\nassert hashlib.sha256(raw).hexdigest()=='44f6c76d27d95b83e0e4bdb57241121c91672d4eb816de27f21038b3cbd4f33b'\ng=json.loads(raw);assert g['verdict']=='PASS' and g['total_compared_cycles']==12775002\npos=[x for x in g['runs'] if x['name'].startswith('pos')]\nneg=[x for x in g['runs'] if x['name'].startswith('neg')]\nassert len(pos)==5 and len(neg)==3\nassert all(x['returncode']==0 and x['coverage']['compared_cycles']>0 for x in pos)\nassert all(x['returncode']!=0 and x['caught'] for x in neg)\nfor f,h in g['source_sha256'].items():\n assert hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()==h, f\nprint('QS5_GATE_BOUND_PASS sources=%d positives=5 negatives=3 cycles=12775002'%len(g['source_sha256']))\nQS5_GATE_PY"
+      },
+      {
+        "name": "ttb_routed_at_TC",
+        "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+      }
+    ],
+    "post_sdc": [
+      "physical/abi3/gen/dsrom_q_cl_signoff.sdc",
+      "tools/dsrom_qelem_cl/native_q_h1_input.sdc"
+    ],
+    "macros": [
+      "physical/asap7_memory_macros/ot_rom_4096x274_m8"
+    ]
+  },
+  "hold_eco": {
+    "reexport": "bash tools/dsrom_qelem_cl/cl_export_qs.sh {RUN}/routes/jobs/{LABEL} {RUN}/routes/jobs/{LABEL}/view"
+  },
+  "record": [
+    {
+      "from": "{RUN}/record",
+      "to": "results/rtl/dsrom_qelem_pq_20261006/closed_qs5f"
+    }
+  ],
+  "cycles_added": "QS=5 = QS=3 (+3 lane cycles over QM=5, PQ1 L20 +0.513%) + WRD 0 + ungated loop clock 0 cycles; area: clock-enable muxes on the walker/tree registers; footprint 510.84 x 221.4 um (+15.2% vs the 192.24 frame) -> S81 die sizing",
+  "merge_target": null,
+  "budget": {
+    "enabled": false,
+    "reason": "sheet ot_v41_rom_elem_q_qx_w10 names the die abstract's ports (cfg, go, r0 ...), not the element RTL's (cfg_v, xs_q0 ...): make_block_sdc.py would leave the RTL ports unconstrained; IO = the q-element's agreed derivation (launcher delays, physical/abi3/dsrom_qy_elem_io.sdc, outputs at the calibrated insertion via cl_signoff_sdc.sh); successor preserves all existing max windows and corrects only data-input minimum reference to actual measured H1 sender+50; reset excluded"
+  },
+  "route_hold_corners": "mm",
+  "route_corner": "TC",
+  "host_require": [
+    "ot-epyc1tb",
+    "ot-epyc3",
+    "ot-epyc4",
+    "ot-pve1"
+  ]
+}
