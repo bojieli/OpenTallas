@@ -15035,3 +15035,9 @@ def hbm_native_mtp_emit_model(depth=8):
     """Finite native emitted-token sink model."""
     from hbm_native_mtp_emit_model import model
     return model(depth)
+
+
+def hbm_native_candidate_publication_store_model():
+    """Actual SECDED macro inventory, no raw-payload-only area fiction."""
+    from hbm_candidate_store_model import model
+    return model()
