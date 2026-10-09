@@ -1,8 +1,8 @@
-`timescale 1ns/1ps
+`timescale 1ps/1fs
 import ot_hdc_engram_tables_shipped_pkg::*;
 module tb_hbm_idx_ehash_ds;
  parameter integer MUTANT=0, GENERIC=1;
- reg clk=0;always #416.6665 clk=~clk;
+ reg clk=0;always begin #416.666 clk=~clk; #416.667 clk=~clk;end
  reg rst_n=0,token_begin=0,accept_valid=0,cmd_valid=0,cmd_first=0,row_ready=1;
  reg [2:0] accept_slot=0,cmd_op=4,cmd_layer=0,cmd_slot=0;
  reg [16:0] cmd_cid=0;
