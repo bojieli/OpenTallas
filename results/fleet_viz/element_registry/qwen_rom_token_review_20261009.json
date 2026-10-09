@@ -607,14 +607,17 @@
       },
       "exactness": {
         "positive": {
-          "status": "running",
+          "status": "pass",
           "evidence": [
-            "EPYC1:/srv/opentallas-scratch/codex/qwen-w1-dequant-20261009/run_0.log"
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/run_0.log",
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/golden_receipt.json"
           ]
         },
         "negative": {
-          "status": "pending",
-          "evidence": []
+          "status": "pass",
+          "evidence": [
+            "results/rtl/qwen_dspark_native_20261009/dequant_exact/run_1.log"
+          ]
         }
       },
       "physical": {
@@ -628,6 +631,51 @@
         "qfd_dspark_w1_bank",
         "qfd_dspark_w1_38bank_mux",
         "qfd_dspark_s7_control"
+      ],
+      "integration": {
+        "status": "pending",
+        "evidence": []
+      }
+    },
+    {
+      "element": "qfd_dspark_tail_window_positions",
+      "target": "Qwen ROM",
+      "owner": "/root/review_qwen_token_path",
+      "description": "ReleasedS7 computes7futurepositions eventruncate3; current emitter start+7<=8192 and13bitnativeKVdecoder cannot certify same8Kendpoint or >8191continuation. Needexplicitresident8192+tail7 or slidingwindowglobal/localpositions and finitefencedrollback. No silentTMAXwidening or alias.",
+      "source": {
+        "commit": "b4c0c8050",
+        "paths": [
+          "tools/qwen_rom_dspark_images.py",
+          "rtl/physical/ot_qwen_kvc_decode_map_pc.sv",
+          "rtl/qwen_sys/combined/ot_qwen_rom_combined_dspark_die.sv"
+        ]
+      },
+      "implementation": {
+        "status": "missing",
+        "evidence": []
+      },
+      "model": {
+        "status": "pending",
+        "evidence": []
+      },
+      "exactness": {
+        "positive": {
+          "status": "pending",
+          "evidence": []
+        },
+        "negative": {
+          "status": "pending",
+          "evidence": []
+        }
+      },
+      "physical": {
+        "status": "pending",
+        "corners": {},
+        "evidence": []
+      },
+      "dependencies": [
+        "qfd_dspark_s7_control",
+        "qfd_row_merge_native_fence"
       ],
       "integration": {
         "status": "pending",
