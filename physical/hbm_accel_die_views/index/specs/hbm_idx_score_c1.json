@@ -1,0 +1,40 @@
+{
+ "name": "hbm_idx_score_c1_PENDING_REVIEW",
+ "block": "hfd_idx_score",
+ "owner": "Claude:hbm-indexer",
+ "status": "PENDING REVIEW -- not queued (review_queue/hbm-indexer.md). Blocked also on mtp-die die variant R25I: tools/hbm_die_views.py ports --master hfd_idx_score has no outline/pins until the variant exists.",
+ "purpose": "plan C v1 (recommended): one L16 scorer a stack in the side-band centre region; common-clock line ports, pin flops on every face; 4 NK4 slices (FPL7/FML5/QL5); route at 770 ps, sign off TT 833 / FF hold",
+ "hosts": [
+  "ot-epyc1tb",
+  "ot-epyc3",
+  "ot-epyc2"
+ ],
+ "threads": 16,
+ "peak_ram_gb": 120,
+ "source": {
+  "branch": "claude/hbm-indexer-20261008",
+  "commit": "<pin at queue time>"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "exact_die_bench",
+    "cmd": "python3 tools/hbm_idx_die_bench.py prepare --work {RUN}/vec && bash physical/hbm_accel_die_views/index/run_bench.sh {SRC} {RUN}/vec {RUN}/bench 24 1 && for c in base MUT_LANE MUT_GID MUT_KEEP MUT_SVAL MUT_QORD; do python3 tools/hbm_idx_die_bench.py compare --work {RUN}/vec --run {RUN}/bench/$c > {RUN}/bench/$c/cmp.txt; echo $c $?; done | tee {RUN}/bench/summary.txt; awk '$1==\"base\"&&$2!=0{f=1} $1!=\"base\"&&$2==0{f=1} END{exit f}' {RUN}/bench/summary.txt",
+    "expect": "pass",
+    "threads": 32,
+    "peak_ram_gb": 60
+   }
+  ],
+  "route": {
+   "cmd": "export OT_ORFS_CORNER_OVERRIDE=TC; export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; cp $BUDGET_SDC physical/hbm_accel_die_views/common/budget_route.sdc && cp $BUDGET_SDC_SIGNOFF physical/hbm_accel_die_views/common/budget_signoff.sdc && { echo 'if {[llength [get_libs -quiet *_FF_*]]} {'; cat $BUDGET_SDC_FF; echo '}'; } > physical/hbm_accel_die_views/common/budget_ff_guarded.sdc && VARIANT=R25I SRC=\"{SRC}\" OUT=\"{RUN}/routes\" PD=\"0.55\" CORES=\"16\" NEED=\"120\" PER=\"0.770\" IOF=\"0.2\" MAXL=\"M7\" HM=\"0.025\" SDCA=\"physical/hbm_accel_die_views/common/budget_route.sdc\" POSTSDC=\"physical/hbm_accel_die_views/common/budget_signoff.sdc physical/hbm_accel_die_views/common/budget_ff_guarded.sdc\"  SRCS=\"physical/hbm_accel_die_views/index/rtl/hfd_idx_lib.sv rtl/hdc/v41x/ot_hdc_v41x_idx_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith_lat.sv rtl/hdc/v41x/ot_hdc_v41x_idx_arith.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hbm_accel/service/ot_hbm_accel_cdc_fifo.sv\" physical/hbm_accel_die_views/common/route_view.sh {LABEL}${CL_LABEL_SUFFIX} hfd_idx_score physical/hbm_accel_die_views/index/rtl/hfd_idx_score.sv  $CL_STOP_AFTER",
+   "ok": "grep -q '^rc=0' {RUN}/routes/{NAME}/exit && grep -q '^corner_rc=0' {RUN}/routes/{NAME}/exit",
+   "logs": [
+    "{RUN}/routes/{NAME}/run.log"
+   ]
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{NAME}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{NAME}/work/orfs/logs/asap7/*/base/5_2_route.json"
+ }
+}

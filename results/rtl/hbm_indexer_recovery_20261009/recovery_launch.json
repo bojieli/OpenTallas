@@ -1,0 +1,32 @@
+{
+  "scope": "Elaboration failures and recovery launch; no exactness or physical closure verdict",
+  "failed_source_commit": "eb67c5c57",
+  "failure": "Verilator could not resolve KB, mut_lane, mut_gid, mut_keep after header rewrite",
+  "failure_logs": {
+    "claude_t1_build_failure.txt": "4039182eb819565ab92377f61cb699e6440c3f1e3ba2f50e5311666b3e744a31",
+    "claude_t4_build_failure.txt": "1c75beee0c02c6cb16e0c250d73550f84699cd04ccd364a2a4575fedb4a734cf"
+  },
+  "recovery_source_commit": "3a6f720d4",
+  "recovery_host": "ot-epyc4",
+  "recovery_directory": "/srv/opentallas-scratch/codex/hbm-indexer-3a6f720d4",
+  "confirmed_live_process": {
+    "pid": 952687,
+    "kind": "verilator_bin --binary tb_hfd_idx_die T1",
+    "RSS_bytes": 8764796928
+  },
+  "admission": {
+    "guard": "/srv/opentallas-scratch/admit.sh",
+    "reservation_GiB": 250,
+    "reason": "Full T4 lint already observed at 124721580 KiB RSS; reservation includes generated C++/parallel compiler headroom, no process memory cap",
+    "MemAvailable_bytes_after_admission": 662598320128,
+    "scratch_free_bytes_after_admission": 3116031320064
+  },
+  "preserved_live_previous_work": {
+    "host": "ot-epyc1tb",
+    "pid": 3918649,
+    "kind": "T4 lint",
+    "RSS_KiB": 124721580,
+    "inherited_timeout_seconds": 1800
+  },
+  "gate": "T1 base compare PASS, all five mutants FAIL; T4 alternative still requires bench"
+}
