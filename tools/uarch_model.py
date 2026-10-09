@@ -109,7 +109,7 @@ def qwen_r25_fmt3_wide_model():
 def qwen_r25_int8_pipeline_model():
     """Two elastic conversion stages; nested intake counter prevents lookahead across ops."""
     m=qwen_r25_fmt3_wide_model()
-    extra_ff=1088+2+2*(9+8+16)+1
+    extra_ff=1088+2+2*(13+8+16)+1
     m.update(candidate="wide fmt3 optional PIPE_INT8=1",conversion_stages=2,
         first_stage="signed magnitude plus leading-zero position",
         second_stage="BF16 exponent/mantissa encode and output register",
@@ -119,7 +119,7 @@ def qwen_r25_int8_pipeline_model():
         area_estimate_basis="existing0.1mm2 + ~0.02mm2 registered stage + ~0.02mm2 control/logic allowance; route measures it",
         finite_buffers="two1088-bit elastic beats plus512 held high codes; no unbounded queue",
         intake_count="nested C/G/row ordinal counter;1realbeat per legacy line,2perINT8 line; stops at exact rows*G*C without multiplication",
-        counter_cost="two33-bit dimension/index sets plus exhaustion bit; two nested increments at INT8 intake",
+        counter_cost="two37-bit dimension/index sets (production RMAX4096) plus exhaustion bit; two nested increments at INT8 intake",
         added_latency_cycles_per_dependent_sm_op=2,additional_cycles_vs_one_stage=1,
         added_token_cycles=506,added_token_ns_at_1p2ghz=506/1.2,
         incremental_token_ns_vs_one_stage=253/1.2,
