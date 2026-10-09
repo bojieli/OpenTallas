@@ -51,7 +51,7 @@ for {set ot_it 0} {$ot_it < 6} {incr ot_it} {
   foreach ot_p [find_timing_paths -path_delay max -slack_max $MARGIN -group_path_count 2000 -endpoint_path_count 1] {
     foreach ot_pt [get_property $ot_p points] {
       set ot_pin [get_property $ot_pt pin]
-      if {[catch {get_full_name [get_property $ot_pin instance]} ot_nm] || $ot_nm eq ""} continue
+      set ot_pn [get_full_name $ot_pin]; set ot_k [string last / $ot_pn]; if {$ot_k < 1} continue; set ot_nm [string range $ot_pn 0 [expr {$ot_k - 1}]]
       set ot_in [$ot_block findInst $ot_nm]
       if {$ot_in eq "NULL"} continue
       set ot_m [[$ot_in getMaster] getName]

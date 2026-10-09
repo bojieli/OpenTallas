@@ -6,6 +6,10 @@
 module ot_dsrom_hc_seed_join #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,MAX_CONTEXT=1048576,
     parameter integer ECC_PIPE=0,
+    // MACRO_CAP (cont-takeover 2026-10-09, default off, needs ECC_PIPE): the SECDED pipe decodes the REGISTERED macro
+    // capture (held_code, taken at RCAP) instead of the raw SRAM rd_out: no logic between a macro output and its
+    // first flop (owner rule; eccpipe join r2 TT -42.7 ps = rd_out -> overall-parity XOR tree).  +1 cycle per frame read.
+    parameter integer MACRO_CAP=0,
     parameter [71:0] READ_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -31,6 +35,7 @@ module ot_dsrom_hc_seed_join #(
     reg [575:0] wd_q,held_code;
     reg [1:0] rcapture;
     reg [5:0] rframe;
+    reg mc_go;
     wire bad=in_capture>2 || in_frame>=40 || in_position>=MAX_CONTEXT ||
         (in_last!=(in_frame==39)) ||
         (owned && (in_user!=user_q || in_position!=position_q || in_epoch!=epoch_q)) ||
@@ -45,8 +50,8 @@ module ot_dsrom_hc_seed_join #(
         ot_s81_secded_enc72 e(.d(in_data[64*l+:64]),.c(encoded[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
-                .valid_in(state==RCAP&&!fault),
-                .c(memory_q[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .valid_in(MACRO_CAP?mc_go:(state==RCAP&&!fault)),
+                .c((MACRO_CAP?held_code[72*l+:72]:memory_q[72*l+:72])^(l==0?READ_INJECT:72'd0)),
                 .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),.ce(ce[l]),.ue(ue[l]));
         end else begin:g_comb
             assign decode_valid[l]=1'b0;
@@ -69,6 +74,8 @@ module ot_dsrom_hc_seed_join #(
     assign out_last=rcapture==2&&rframe==39;assign out_corrected=out_valid&&(|ce);
     assign busy=owned;
     integer k;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RCAP && !fault;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=ARRIVE;owned<=0;fault<=0;complete<=0;

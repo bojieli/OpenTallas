@@ -11,6 +11,11 @@ module ot_dsrom_hc_mean_capture #(
     parameter integer ADD_LAT=7, MUL_LAT=7,
     parameter integer MAX_CONTEXT=1048576,
     parameter integer ECC_PIPE=0, // opt-in registered syndrome and correction
+    // MACRO_CAP (cont-takeover 2026-10-09, default off, needs ECC_PIPE): registered SRAM boundaries.  Read: the SECDED
+    // pipe decodes held_code (the flop capture of rd_out at RDECODE), never the raw macro output (eccpipe r4 TT -235 ps
+    // = rd_out -> overall-parity tree); +1 cycle per frame read.  Write: the encoded word is registered at STORE and the
+    // macro writes it at WCOMMIT (same address registers, which only change after WCOMMIT): 0 cycles.
+    parameter integer MACRO_CAP=0,
     parameter integer SINGLE_CAPTURE=0, // production proximal source=1; combined minimum vehicle=0
     parameter integer MUT_TREE=0, MUT_LAYER_ALIAS=0,
     parameter [71:0] READ_INJECT=72'd0
@@ -50,6 +55,8 @@ module ot_dsrom_hc_mean_capture #(
     reg [255:0] acc;
     reg [511:0] pack_q;
     reg [575:0] held_code;
+    reg [575:0] wcode_q;
+    reg mc_go;
     wire [7:0] av,mv;
     wire [255:0] ay,my;
     wire [15:0] ae,me;
@@ -85,8 +92,8 @@ module ot_dsrom_hc_mean_capture #(
         ot_s81_secded_enc72 u_enc(.d(pack_q[64*l+:64]),.c(write_code[72*l+:72]));
         if(ECC_PIPE) begin:g_pipe
             ot_dsrom_hc_secded_pipe u_dec(.clk(clk),.rst_n(rst_n),
-                .valid_in(state==RDECODE&&!fault),
-                .c(read_code[72*l+:72]^(l==0?READ_INJECT:72'd0)),
+                .valid_in(MACRO_CAP?mc_go:(state==RDECODE&&!fault)),
+                .c((MACRO_CAP?held_code[72*l+:72]:read_code[72*l+:72])^(l==0?READ_INJECT:72'd0)),
                 .valid_out(decode_valid[l]),.d(out_data[64*l+:64]),
                 .ce(enc_ce[l]),.ue(dec_ue[l]));
         end else begin:g_comb
@@ -97,12 +104,13 @@ module ot_dsrom_hc_mean_capture #(
     end endgenerate
     wire [7:0] write_addr=(MUT_LAYER_ALIAS?8'd0:{6'd0,capture_q})*8'd40+{2'd0,frame_q};
     wire [7:0] read_addr={6'd0,read_capture}*8'd40+{2'd0,read_frame};
-    wire [767:0] write_banks={192'd0,write_code};
+    wire [767:0] write_banks={192'd0,(MACRO_CAP?wcode_q:write_code)};
+    wire write_ce=MACRO_CAP?(state==WCOMMIT&&!fault):(state==STORE&&!fault);
     generate for(b=0;b<3;b=b+1) begin:g_sram
         ot_sram_1r1w_256x256_m2_r2c2 u_mem(
             .clk(clk),.r_ce_in(state==RREQ&&!fault),.r_addr_in(read_addr),
             .rd_out(bank_data[256*b+:256]),
-            .w_ce_in(state==STORE&&!fault),.w_addr_in(write_addr),
+            .w_ce_in(write_ce),.w_addr_in(write_addr),
             .wd_in(write_banks[256*b+:256]),.w_mask_in({256{1'b1}}),
             .rr_en(2'd0),.rr_addr(14'd0),.cr_en(2'd0),.cr_sel(16'd0));
     end endgenerate
@@ -120,6 +128,9 @@ module ot_dsrom_hc_mean_capture #(
     assign out_last=(SINGLE_CAPTURE || read_capture==2)&&read_frame==39;
     assign out_corrected=out_valid&&(|enc_ce);
     integer lane;
+    always @(posedge clk or negedge rst_n)
+        if(!rst_n) mc_go<=1'b0; else mc_go<=MACRO_CAP!=0 && state==RDECODE && !fault;
+    always @(posedge clk) if(state==STORE) wcode_q<=write_code;
     always @(posedge clk or negedge rst_n) begin
         if(!rst_n) begin
             state<=CMD;owned<=0;fault<=0;captured<=0;capture_done<=0;

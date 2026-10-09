@@ -9,6 +9,11 @@
 module ot_dsrom_hc_input_reader #(
     parameter integer USER_W=10,POS_W=21,EPOCH_W=4,
     parameter integer MAX_CONTEXT=1048576, ECC_PIPE=0,
+    // PLAIN_ROWS (cont-takeover 2026-10-09, default off): the four row registers hold the VM response as plain flops,
+    // with no SECDED re-encode / decode.  They are ordinary pipeline flops, not SRAM: REVIEW_20261009 S4 (binding) keeps
+    // SECDED on SRAM/HBM payloads only, and the encode->flop->decode loop was the reader's TT -554 ps path
+    // (rows -> overall-parity tree -> mean_residuals).  Values, order and protocol unchanged; fewer cycles (no DECODE).
+    parameter integer PLAIN_ROWS=0,
     parameter [71:0] HOLD_INJECT=72'd0
 )(
     input wire clk,rst_n,
@@ -48,12 +53,17 @@ module ot_dsrom_hc_input_reader #(
     wire [31:0] ue,decode_valid;
     wire [31:0] ce_unused;
     reg bad_bf16;
+    wire [575:0] row_in=PLAIN_ROWS?{64'd0,rsp_data}:rsp_encoded;
+    localparam integer EP=(ECC_PIPE!=0)&&(PLAIN_ROWS==0);
     genvar c,l;
     generate for(l=0;l<8;l=l+1) begin:g_encode
-        if(ECC_PIPE) begin:g_pipe
+        if(EP) begin:g_pipe
             ot_dsrom_hc_secded_encode_pipe e(.clk(clk),.rst_n(rst_n),
                 .valid_in(state==WAIT&&rsp_valid&&!rsp_fault&&!bad_bf16&&!fault),
                 .d(rsp_data[64*l+:64]),.c(rsp_encoded[72*l+:72]),.valid_out(encode_valid[l]));
+        end else if(PLAIN_ROWS) begin:g_plain
+            assign encode_valid[l]=1'b0;
+            assign rsp_encoded[72*l+:72]=72'd0;
         end else begin:g_comb
             assign encode_valid[l]=1'b0;
             ot_s81_secded_enc72 e(.d(rsp_data[64*l+:64]),.c(rsp_encoded[72*l+:72]));
@@ -61,7 +71,12 @@ module ot_dsrom_hc_input_reader #(
     end
     for(c=0;c<4;c=c+1) begin:g_copy
         for(l=0;l<8;l=l+1) begin:g_decode
-            if(ECC_PIPE) begin:g_pipe
+            if(PLAIN_ROWS) begin:g_plain
+                assign decode_valid[8*c+l]=1'b1;
+                assign decoded[c][64*l+:64]=rows[c][64*l+:64];
+                assign ce_unused[8*c+l]=1'b0;
+                assign ue[8*c+l]=1'b0;
+            end else if(EP) begin:g_pipe
                 ot_dsrom_hc_secded_pipe d(.clk(clk),.rst_n(rst_n),
                     .valid_in(state==DECODE&&!fault),
                     .c(rows[c][72*l+:72]^(c==0&&l==0?HOLD_INJECT:72'd0)),
@@ -113,10 +128,10 @@ module ot_dsrom_hc_input_reader #(
                 REQ: if(req_ready) state<=WAIT;
                 WAIT: if(rsp_valid) begin
                     if(bad_bf16) fault<=1;
-                    else if(ECC_PIPE) state<=EWAIT;
+                    else if(EP) state<=EWAIT;
                     else begin
-                        rows[copy_q]<=rsp_encoded;
-                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=ECC_PIPE?DECODE:SEND;end
+                        rows[copy_q]<=row_in;
+                        if(copy_q==3) begin copy_q<=0;half_q<=0;state<=EP?DECODE:SEND;end
                         else begin copy_q<=copy_q+1'b1;state<=REQ;end
                     end
                 end
