@@ -12,6 +12,10 @@ RR=8; RST=24
 if [ "${STACK:-p}" = c ]; then
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_c.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_c.sv"
   DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_LBD=${LBD:-2}"
+elif [ "${STACK:-p}" = e ]; then
+  # STACK=e: re-cut E (D with levels 1-3 on the lane loop adders; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv)
+  STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_e.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_e.sv"
+  DEFS="+define+KVD_LFB=${LFB:-4} +define+KVD_ND=${ND:-1}"
 elif [ "${STACK:-p}" = d ]; then
   # STACK=d: re-cut D (P.V levels 1-3 in the engine; rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv, LFB / ND via KVD_LFB / KVD_ND)
   STK="$W/test/nearhbm/ot_qwen_nearhbm_attn_stack_shim_d.sv $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_d.sv"
