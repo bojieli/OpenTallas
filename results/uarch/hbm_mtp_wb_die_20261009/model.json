@@ -1,0 +1,472 @@
+{
+  "schema": "opentallas.hbm-mtp-wb-die.v1",
+  "adopted": false,
+  "default_enabled": false,
+  "base_variant": "r25i",
+  "replicas": {
+    "MTP": 1,
+    "WB": 1,
+    "physical_stacks": 4
+  },
+  "slots": {
+    "mtp_um": [
+      466.56,
+      200.88
+    ],
+    "kvwb_um": [
+      300.24,
+      241.92
+    ]
+  },
+  "clock_domains": {
+    "mtp": "stream_1p2",
+    "kvwb": "stream_1p2",
+    "service": "HBM native clock"
+  },
+  "MTP": {
+    "schema": "opentallas.hbm-mtp-native-contract.v1",
+    "adopted": false,
+    "default_enabled": false,
+    "controller_master": "hfd_mtp_x",
+    "controller_source": "1c33f2dc9",
+    "controller_inventory": "results/rtl/hbm_mtp_20261009_inventory/inventory.json",
+    "groups": {
+      "f_cmdproc": {
+        "direction": "input",
+        "bits": 129,
+        "fields": [
+          {
+            "port": "start",
+            "lsb": 0,
+            "width": 1
+          },
+          {
+            "port": "cfg_gamma",
+            "lsb": 1,
+            "width": 4
+          },
+          {
+            "port": "cfg_force",
+            "lsb": 5,
+            "width": 1
+          },
+          {
+            "port": "cfg_ngen",
+            "lsb": 6,
+            "width": 16
+          },
+          {
+            "port": "cfg_plen",
+            "lsb": 22,
+            "width": 16
+          },
+          {
+            "port": "p_tok",
+            "lsb": 38,
+            "width": 17
+          },
+          {
+            "port": "f_tok",
+            "lsb": 55,
+            "width": 17
+          },
+          {
+            "port": "cmd_ready",
+            "lsb": 72,
+            "width": 1
+          },
+          {
+            "port": "eng_done",
+            "lsb": 73,
+            "width": 1
+          },
+          {
+            "port": "sr_v",
+            "lsb": 74,
+            "width": 1
+          },
+          {
+            "port": "sr_kind",
+            "lsb": 75,
+            "width": 4
+          },
+          {
+            "port": "sr_idx",
+            "lsb": 79,
+            "width": 16
+          },
+          {
+            "port": "sr_pos",
+            "lsb": 95,
+            "width": 32
+          },
+          {
+            "port": "u_clr",
+            "lsb": 127,
+            "width": 1
+          },
+          {
+            "port": "u_flush",
+            "lsb": 128,
+            "width": 1
+          }
+        ]
+      },
+      "t_cmdproc": {
+        "direction": "output",
+        "bits": 494,
+        "fields": [
+          {
+            "port": "p_addr",
+            "lsb": 0,
+            "width": 16
+          },
+          {
+            "port": "f_addr",
+            "lsb": 16,
+            "width": 16
+          },
+          {
+            "port": "e_v",
+            "lsb": 32,
+            "width": 1
+          },
+          {
+            "port": "e_tok",
+            "lsb": 33,
+            "width": 17
+          },
+          {
+            "port": "e_idx",
+            "lsb": 50,
+            "width": 16
+          },
+          {
+            "port": "done",
+            "lsb": 66,
+            "width": 1
+          },
+          {
+            "port": "cmd_v",
+            "lsb": 67,
+            "width": 1
+          },
+          {
+            "port": "cmd_op",
+            "lsb": 68,
+            "width": 4
+          },
+          {
+            "port": "cmd_idx",
+            "lsb": 72,
+            "width": 8
+          },
+          {
+            "port": "cmd_ncol",
+            "lsb": 80,
+            "width": 4
+          },
+          {
+            "port": "cmd_pos",
+            "lsb": 84,
+            "width": 32
+          },
+          {
+            "port": "cmd_tok1",
+            "lsb": 116,
+            "width": 17
+          },
+          {
+            "port": "cmd_toks",
+            "lsb": 133,
+            "width": 136
+          },
+          {
+            "port": "am_v",
+            "lsb": 269,
+            "width": 1
+          },
+          {
+            "port": "am_idx",
+            "lsb": 270,
+            "width": 17
+          },
+          {
+            "port": "am_fault",
+            "lsb": 287,
+            "width": 1
+          },
+          {
+            "port": "sr_ready",
+            "lsb": 288,
+            "width": 1
+          },
+          {
+            "port": "sa_v",
+            "lsb": 289,
+            "width": 1
+          },
+          {
+            "port": "sa_addr",
+            "lsb": 290,
+            "width": 32
+          },
+          {
+            "port": "sa_tok",
+            "lsb": 322,
+            "width": 17
+          },
+          {
+            "port": "sa_pad",
+            "lsb": 339,
+            "width": 1
+          },
+          {
+            "port": "sa_last",
+            "lsb": 340,
+            "width": 1
+          },
+          {
+            "port": "sa_err",
+            "lsb": 341,
+            "width": 1
+          },
+          {
+            "port": "n_committed",
+            "lsb": 342,
+            "width": 32
+          },
+          {
+            "port": "step_v",
+            "lsb": 374,
+            "width": 1
+          },
+          {
+            "port": "step_a",
+            "lsb": 375,
+            "width": 3
+          },
+          {
+            "port": "step_g",
+            "lsb": 378,
+            "width": 4
+          },
+          {
+            "port": "steps",
+            "lsb": 382,
+            "width": 16
+          },
+          {
+            "port": "cyc_total",
+            "lsb": 398,
+            "width": 32
+          },
+          {
+            "port": "cyc_engine",
+            "lsb": 430,
+            "width": 32
+          },
+          {
+            "port": "cyc_markov",
+            "lsb": 462,
+            "width": 32
+          }
+        ]
+      },
+      "f_su_red": {
+        "direction": "input",
+        "bits": 523,
+        "fields": [
+          {
+            "port": "lg_v",
+            "lsb": 0,
+            "width": 1
+          },
+          {
+            "port": "lg_last",
+            "lsb": 1,
+            "width": 1
+          },
+          {
+            "port": "lg_bias_en",
+            "lsb": 2,
+            "width": 1
+          },
+          {
+            "port": "lg_mask",
+            "lsb": 3,
+            "width": 8
+          },
+          {
+            "port": "lg_vals",
+            "lsb": 11,
+            "width": 256
+          },
+          {
+            "port": "lg_bias",
+            "lsb": 267,
+            "width": 256
+          }
+        ]
+      },
+      "f_router": {
+        "direction": "input",
+        "bits": 59,
+        "fields": [
+          {
+            "port": "x_v",
+            "lsb": 0,
+            "width": 1
+          },
+          {
+            "port": "x_draft",
+            "lsb": 1,
+            "width": 1
+          },
+          {
+            "port": "x_ids",
+            "lsb": 2,
+            "width": 54
+          },
+          {
+            "port": "x_col",
+            "lsb": 56,
+            "width": 3
+          }
+        ]
+      },
+      "t_router": {
+        "direction": "output",
+        "bits": 58,
+        "fields": [
+          {
+            "port": "t_v",
+            "lsb": 0,
+            "width": 1
+          },
+          {
+            "port": "t_ids",
+            "lsb": 1,
+            "width": 54
+          },
+          {
+            "port": "t_col",
+            "lsb": 55,
+            "width": 3
+          }
+        ]
+      },
+      "t_coll": {
+        "direction": "output",
+        "bits": 19,
+        "fields": [
+          {
+            "port": "u_v",
+            "lsb": 0,
+            "width": 1
+          },
+          {
+            "port": "u_id",
+            "lsb": 1,
+            "width": 9
+          },
+          {
+            "port": "u_mask",
+            "lsb": 10,
+            "width": 8
+          },
+          {
+            "port": "u_last",
+            "lsb": 18,
+            "width": 1
+          }
+        ]
+      },
+      "f_coll": {
+        "direction": "input",
+        "bits": 1,
+        "fields": [
+          {
+            "port": "u_ready",
+            "lsb": 0,
+            "width": 1
+          }
+        ]
+      }
+    },
+    "arithmetic": "unchanged existing full-shape registered controller",
+    "emitted_tokens": "e_v/e_tok/e_idx to command/token-loop path; not collective",
+    "expert_union": "u_v/u_id/u_mask/u_last to collective, u_ready returns from collective",
+    "compute": {
+      "MACs_per_cycle": 0,
+      "intensity": "control only"
+    },
+    "memory": {
+      "bytes_per_cycle": 0,
+      "macros": 0
+    },
+    "replicas": 1,
+    "mux_demux_fanout": "direct wires; no extra mux or fanout",
+    "routing": {
+      "signal_tracks": 1283,
+      "channel_capacity_qualified": false
+    },
+    "area": {
+      "mapped_controller_um2": 11611.86192,
+      "reserved_slot_um": [
+        466.56,
+        200.88
+      ],
+      "facade_extra_cells": 0,
+      "controller_fits_reserved_area": true,
+      "native_pin_context_qualified": false
+    },
+    "latency": {
+      "facade_added_cycles": 0,
+      "controller_registered_pin_and_skid_cycles": "existing ot_hfd_mtp_core contract"
+    },
+    "qualification": "port coverage exact; endpoint producers and real pin views still require integration"
+  },
+  "WB": {
+    "source": "eb4c566ed ot_hbm_kvwb_hub_sram full-shape successor",
+    "MACs_per_cycle": 0,
+    "bytes_per_cycle_row_input": 32,
+    "producer_bits": 258,
+    "credit_return_bits": 1,
+    "service_bits_per_stack": 292,
+    "service_return_bits_per_stack": 16,
+    "control_output_bits": 34,
+    "die_identity_bits": 7,
+    "SRAM_master": "ot_sram_1r1w_128x256_m1_r2c2",
+    "SRAM_macros": 2,
+    "raw_macro_area_um2": 7783.15392,
+    "mutable_control_FF_upper": 24000,
+    "FF_cell_floor_um2": 6998.400000000001,
+    "slot_capacity_um2_at_55pct": 39948.733439999996,
+    "route_fit_qualified": false,
+    "producer_identity": "actual quantized row serializer required; no unpriced four-quarter fan-in",
+    "service_identity": "four independent native stack sector endpoints and Gray completion counts",
+    "shadow_handshake": "hold sh_v/slot/data until sh_r; no single-cycle preload pulse"
+  },
+  "native_loader": {
+    "ND": 1,
+    "ADDR_W": 37,
+    "request_bits": 344,
+    "response_bits": 275,
+    "formatter_location": "service landing",
+    "endpoint_ownership": "single per-die transaction owner",
+    "not_yet_installed": true
+  },
+  "routing": {
+    "MTP_signal_tracks": 1283,
+    "WB_signal_tracks": 1532,
+    "channel_capacity_qualified": false
+  },
+  "latency": {
+    "MTP_facade_extra_cycles": 0,
+    "WB_preload_sectors": 17,
+    "WB_shadow_extra_cycles": "actual ready/sector credit and fence measurement required",
+    "native_loader": "boot/readback only, no claimed per-token gain"
+  },
+  "qualification": "native slot and pin reservations only; producer joins, real views and die routing required"
+}
