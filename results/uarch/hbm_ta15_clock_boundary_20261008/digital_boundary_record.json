@@ -15,6 +15,18 @@
     "production_elaboration": "real analog blackbox plus digital collars, no behavioral clock implementation"
   },
   "physical_body_top": "ot_hbm_clock_reset_collars",
+  "remote_validation": {
+    "source_commit": "29caa40b2",
+    "host": "ot-epyc2",
+    "root": "/srv/opentallas-data/codex/hbm-clock-boundary-29caa40b2",
+    "admission": "/srv/opentallas-scratch/admit.sh 1 -- bash",
+    "expected_peak_GiB": 1,
+    "observed_MemAvailable_kB": 431436328,
+    "observed_scratch_available_GB": 2014,
+    "tests_passed": 3,
+    "receipt": "remote_validation.log",
+    "receipt_contains": "timestamp, measured headroom, terminal test verdict, source SHA256"
+  },
   "physical_body_clock_period_ns": {
     "clk_stream": 0.8333333333333334,
     "clk_serial": 1.1111111111111112,
