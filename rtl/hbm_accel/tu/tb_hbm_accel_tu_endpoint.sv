@@ -85,7 +85,11 @@ module tb_hbm_accel_tu_endpoint #(
         $readmemh({vecdir, "/part.hex"}, part);
         if (IS_REDUCE) $readmemh({vecdir, "/expected.hex"}, expw);
         OF = pf / NC; ROF = BF16 ? OF / 2 : OF; OG = rank / NC; J = rank % NC;
+        `ifdef TU_GSZ
+        TOT = NC * ROF;
+`else
         TOT = (IS_REDUCE) ? NR * ROF : (NR - 1) * pf;
+`endif
         $display("TUCFG seed=%0d rank=%0d NC=%0d NOG=%0d PF=%0d INJ=%0d DEL=%0d NPT=%0d RXAW=%0d BUDGET=%0.2f CRED=%0.2f T_CORE=%f T_PHY=%f TOT=%0d",
                  seed0, rank, NC, NOG, pf, INJ, DEL, NPT, RXAW, budget, cred, T_CORE, T_PHY, TOT);
         go_clk = 1;
@@ -224,6 +228,10 @@ module tb_hbm_accel_tu_endpoint #(
             integer gi;
             reg [FW-1:0] want;
             gi = integer'(dfl[i*PWT + FW +: 16]);
+`ifdef TU_GSZ
+            if (gi < OG * NC * ROF || gi >= (OG + 1) * NC * ROF)
+                $fatal(1,"GROUP_ISOLATION rank=%0d gi=%0d OG=%0d",rank,gi,OG);
+`endif
             want = (IS_REDUCE) ? expw[gi] : part[gi];
             if (gi >= MAXL || seen[gi] || dfl[i*PWT +: FW] !== want) begin
                 mism = mism + 1;

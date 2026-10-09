@@ -47,6 +47,7 @@ done
 for n in 2 4; do l=$(python3 -c "print({2:1,4:2}[$n])")
   build m$n +define+TU_NC=$n +define+TU_NOG=$((8 / n)) +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=$l +define+TU_PFMAX=64 $CK +define+OT_COLL_MUT_GSZ_PAD;
 done
+build leak +define+TU_NC=2 +define+TU_NOG=4 +define+TU_BF16=1 +define+TU_GSZ +define+TU_REDUCE +define+TU_GSZPORT=1 +define+TU_PFMAX=64 $CK +define+OT_COLL_MUT_GROUP_ISOLATION
 wait
 J=$T/jobs.txt; : > $J
 for r in 0 13 63; do echo "ar pos +VEC=fx/ar_p1 +PF=64 +RANK=$r +SEED=1" >> $J; done
@@ -55,6 +56,7 @@ for pf in 1 64; do for r in 0 95; do echo "ga pos +VEC=fx/gather_pf$pf +PF=$pf +
 for r in 0 62; do echo "arblk pos +VEC=fx/ar_p1 +PF=64 +RANK=$r +SEED=1" >> $J; done
 for n in 1 2 4 8; do for r in $(seq 0 7); do for s in 1 2; do echo "g$n pos +VEC=fx/g$n +PF=16 +RANK=$r +SEED=$s" >> $J; done; done; done
 for n in 2 4; do for r in 0 1; do echo "m$n neg +VEC=fx/g$n +PF=16 +RANK=$r +SEED=1" >> $J; done; done
+for r in 0 3 7;do echo "leak neg +VEC=fx/g2 +PF=16 +RANK=$r +SEED=1" >> $J;done
 i=0; while read b kind args; do i=$((i+1)); echo "cd $T && b/$b/Vtb_hbm_accel_tu_endpoint $args > run_$i.log 2>&1; echo \"$b $kind $args\" >> run_$i.log"; done < $J > $T/cmds.txt
 xargs -P ${PAR:-16} -I{} bash -c '{}' < $T/cmds.txt
 bad=0; negok=0; neg=0

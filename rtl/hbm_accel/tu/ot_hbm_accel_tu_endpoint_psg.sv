@@ -351,10 +351,19 @@ module ot_hbm_accel_tu_endpoint_psg #(
                     if (c >= NA) rb_pop[p] = 1'b1;                                 // malformed: popped, flagged
                     else if (!ctk[c]) begin rb_pop[p] = 1'b1; ctk[c] = 1'b1; end   // else waits a cycle in rb
                 end
+            // Small static groups must not consume another group's multicast result.
+            // Consume/drop its receive-buffer entry so credits keep moving; LEG preserves DS global assembly.
+            for (integer p = 0; p < NPT; p = p + 1)
+                if (!LEG && !rb_empty[p] && rb_head[p][PWT-1] && rb_head[p][FW+16 +: 8] != 8'(OG)) rb_pop[p] = 1'b1;
             // delivery: the first DEL ready sources in the rotated order (drot, drot+1, ...) take lanes 0, 1, ...;
             // written as constant-index one-hot selects (lane of source s = ready sources ahead of it)
             for (integer s = 0; s <= NPT; s = s + 1) begin
-                rdy[s] = (s == NPT) ? !dq_own_empty : (!rb_empty[s % NPT] && rb_head[s % NPT][PWT-1]);
+                rdy[s] = (s == NPT) ? !dq_own_empty : (!rb_empty[s % NPT] && rb_head[s % NPT][PWT-1] &&
+`ifdef OT_COLL_MUT_GROUP_ISOLATION
+                    1'b1);
+`else
+                    (LEG || rb_head[s % NPT][FW+16 +: 8] == 8'(OG)));
+`endif
                 pos[s] = 4'((s + (NPT + 1) - drot) % (NPT + 1));
             end
             for (integer s = 0; s <= NPT; s = s + 1) begin
