@@ -215,7 +215,16 @@ module ot_hcoll_sfifo #(
     wire ce, ue;
     wire [CW-1:0] sampled=rawb[(NBK > 1) ? bs2 : 1'b0];
     ot_hcoll_payload_codec #(.W(W),.ECC(PAYLOAD_ECC)) codec (.payload(din),.code(encoded),.sampled(sampled),.decoded(decoded),.ce(ce),.ue(ue));
-    assign ecc_ce=v2 && ce; assign ecc_ue=v2 && ue; assign ecc_drop=ecc_ue;
+    // hgi-takeover (drive-0849 -616 ps rawb -> SECDED decode -> head FIFO write): with PAYLOAD_ECC the decoded word and
+    // its ce / ue are registered (v3) before the head FIFO; the credit loop grows to 5 edges, so the head holds 8 and
+    // KC = 5 credits keep full rate.  PAYLOAD_ECC = 0 is unchanged (no stage, K = 4, head 4).
+    localparam integer ES = PAYLOAD_ECC ? 1 : 0;
+    localparam integer KC = K + ES;
+    reg v3; reg [W-1:0] dec_q; reg ce_q, ue_q;
+    wire hv  = ES ? v3 : v2;
+    wire hue = ES ? ue_q : ue;
+    wire hce = ES ? ce_q : ce;
+    assign ecc_ce=hv && hce; assign ecc_ue=hv && hue; assign ecc_drop=ecc_ue;
     reg          bs1, bs2;
     reg [AW:0]   scnt;
     reg [AW-1:0] wp, rp;
@@ -225,31 +234,32 @@ module ot_hcoll_sfifo #(
     wire put   = push_p && !full;
     wire fetch = (scnt != '0) && (ocr != 3'd0);
     wire hovf;
-    wire [2:0] hc;
+    wire [2+ES:0] hc;
     wire do_pop = pop && !empty;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin
-            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(K); v1 <= 1'b0; v2 <= 1'b0; ovf <= 1'b0;
+            push_p <= 1'b0; scnt <= '0; wp <= '0; rp <= '0; ocr <= 3'(KC); v1 <= 1'b0; v2 <= 1'b0; v3 <= 1'b0; ovf <= 1'b0;
         end else begin
             push_p <= push;
             scnt <= scnt + (AW+1)'(put) - (AW+1)'(fetch);
             if (put) wp <= wp + 1'b1;
             if (fetch) rp <= rp + 1'b1;
             ocr <= ocr - 3'(fetch) + 3'(do_pop) + 3'(ecc_drop);
-            v1 <= fetch; v2 <= v1;
+            v1 <= fetch; v2 <= v1; v3 <= v2;
             if ((push_p && full) || hovf) ovf <= 1'b1;
         end
     always @(posedge clk) begin
         din_p <= encoded;
         for (integer b = 0; b < NBK; b = b + 1) rawb[b] <= rdb[b];
         bs1 <= (NBK > 1) ? rp[AW-1] : 1'b0; bs2 <= bs1;
+        dec_q <= decoded; ce_q <= ce; ue_q <= ue;
     end
     for (genvar b = 0; b < NBK; b = b + 1) begin : g_bk
         ot_hcoll_sram128 #(.W(CW)) u_m (.clk(clk), .r_ce(fetch && (NBK == 1 || rp[AW-1] == 1'(b))), .r_addr(7'(rp)),
             .rd(rdb[b]), .w_ce(put && (NBK == 1 || wp[AW-1] == 1'(b))), .w_addr(7'(wp)), .wd(din_p));
     end
-    wire [W-1:0] raw_q = decoded;
-    ot_ha2_fifo #(.W(W), .AW(2)) u_head (.clk(clk), .rst_n(rst_n), .push(v2 && !ue), .din(raw_q), .pop(pop),
+    wire [W-1:0] raw_q = ES ? dec_q : decoded;
+    ot_ha2_fifo #(.W(W), .AW(2 + ES)) u_head (.clk(clk), .rst_n(rst_n), .push(hv && !hue), .din(raw_q), .pop(pop),
         .empty(empty), .dout(dout), .ovf(hovf), .count(hc));
     assign count = scnt;
 endmodule
