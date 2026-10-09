@@ -1,0 +1,14 @@
+{
+  "source_commit": "c21bda4cc18709f03030d1b94d674d4fa0ce11fa",
+  "host": "ot-epyc3",
+  "remote_root": "/srv/opentallas-scratch/claude/s81-codex-recovery",
+  "admission_peak_gb": 40,
+  "candidate": "OT_S81_RETURN_RELAY_FIRST=1",
+  "verdict": "FAIL_NOT_SELECTED",
+  "original_blocker": "rt_0_8a_y1",
+  "new_blocker": "xa_0_5_y0",
+  "reason": "Return-first placement progresses beyond the original trapped return path but traps an x-lane relay. Placement ordering alone does not establish a legal complete composition.",
+  "constraints_relaxed": false,
+  "master_sizes_changed": false,
+  "hardware_adopted": false
+}

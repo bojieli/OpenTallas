@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 5365, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 5235, in main
+    m = build()
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 399, in build
+    return build_r8(variant)
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 3032, in build_r8
+    buses_r8(m)
+    ~~~~~~~~^^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 3398, in buses_r8
+    _hop_fix(m, P)
+    ~~~~~~~~^^^^^^
+  File "/srv/opentallas-scratch/claude/s81-codex-recovery/src_5efa1f528/tools/dsrom_s81_return_first_candidate.py", line 3750, in _hop_fix
+    assert pl, (bid, e, k, n, round(L, 1), a, b, (round(cx, 1), round(cy, 1)), cur, reg, R, w_, h_, dict(NR))
+           ^^
+AssertionError: ('xa_0_5_y0', ('y_xa_0_5_0', 'i'), 0, 1, 480.1, (12674.316000000003, 4963.656), (12877.908000000001, 5240.16), (12877.9, 5000.1), (12674.316000000003, 4963.656), 'frame_0', 410.0, 18.552, 18.552, {'nxt': (12877.908000000001, 5240.16), 'nreach': 280.0479999999993})
