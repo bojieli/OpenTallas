@@ -120,7 +120,7 @@ module ot_hgi_seq #(
     // ------------------------------------------------------------------ states
     localparam [4:0] S_IDLE = 5'd0, S_DEC = 5'd1, S_H1 = 5'd2, S_H2 = 5'd3, S_RDW = 5'd4, S_ADDR = 5'd5,
                      S_WAIT = 5'd6, S_IDX = 5'd7, S_DISP = 5'd8, S_DRAIN = 5'd9, S_ENDRD = 5'd10, S_CPL = 5'd11, S_DB = 5'd12, S_ADV = 5'd13, S_TOKX = 5'd14, S_TKB = 5'd15,
-                     S_HQ = 5'd16, S_DB2 = 5'd17;     // header pre-evaluation (registered decision flags)
+                     S_HQ = 5'd16, S_DB2 = 5'd17, S_DB3 = 5'd18;     // header pre-evaluation (registered decision flags)
     reg [4:0]  st;
     reg [17:0] token; reg [19:0] pos; reg [1:0] db_entry_q; reg [20:0] pos1_q;
     // ------------------------------------------------------------------ ring + fetch (word pointers, RB+1 bits)
@@ -132,6 +132,10 @@ module ot_hgi_seq #(
     wire [RB+1:0] used = {1'b0, wp - frp_al} + {inflight, 1'b0};
     reg         wv;                      // a sector has landed since the doorbell (before it, rp may lead wp by 1)
     wire [RB:0] avail = wv ? wp - rp : {(RB+1){1'b0}};
+    // timing pass 5: S_RDW reads the words-available compare registered (wp -> avail -> header evaluation -> u_vr /
+    // cpl_* was -147 ps); avail only grows while a header waits, rp last moved >= 4 edges earlier
+    reg avail_ok;                        // rlen comes from h (loaded at S_H2): valid from the S_HQ edge on
+    always @(posedge clk) avail_ok <= (avail >= {{(RB-4){1'b0}}, rlen});
     reg [RB:0]  rd_ptr;                  // the ring read address (registered); the sector lands one edge later
     reg [255:0] rd_sec; reg rd_hi;
     wire        ring_we = f_rsp_v_r && (drop == 5'd0);
@@ -216,19 +220,33 @@ module ot_hgi_seq #(
         cdv = (a + ((21'd1 << sh) - 21'd1)) >> sh;
     endfunction
     reg [20:0] ps, p1, q_p1, q_n2, q_ns1, q_ns2, q_win, q_sc1, q_sc2, q_scr, q_ps;
-    reg [28:0] q_rsc;
     reg [20:0] q_sc1b, q_psb;
     reg [31:0] dsq [16:40];
-    reg [2:0]  dv_cnt;
-    wire       dv_ok = (dv_cnt == 3'd6);
-    reg [28:0] r_end, r_diff; reg r_ge; reg [20:0] q_psc, q_sc1c;
+    reg [3:0]  dv_cnt;
+    wire       dv_ok = (dv_cnt == 4'd8);
+    // timing pass 5: rank x sc1 as a carry-save tree (8 partial products -> 2, no carry chain; the 8 x 21 product was
+    // -91 ps), resolved in two chunks (15 / 14 b), then the slot-range test at 21 b (rank x sc1 >= 2^21 means the
+    // position precedes the rank's slice)
+    wire [28:0] rp0 = rank_r[0] ? {8'd0, q_sc1}       : 29'd0, rp1 = rank_r[1] ? {7'd0, q_sc1, 1'b0} : 29'd0,
+                rp2 = rank_r[2] ? {6'd0, q_sc1, 2'b0} : 29'd0, rp3 = rank_r[3] ? {5'd0, q_sc1, 3'b0} : 29'd0,
+                rp4 = rank_r[4] ? {4'd0, q_sc1, 4'b0} : 29'd0, rp5 = rank_r[5] ? {3'd0, q_sc1, 5'b0} : 29'd0,
+                rp6 = rank_r[6] ? {2'd0, q_sc1, 6'b0} : 29'd0, rp7 = rank_r[7] ? {1'd0, q_sc1, 7'b0} : 29'd0;
+    function automatic [57:0] fa3(input [28:0] a, input [28:0] b, input [28:0] c);   // {carry << 1, sum}
+        fa3 = {((a & b) | (a & c) | (b & c)) << 1, a ^ b ^ c};
+    endfunction
+    wire [57:0] ra = fa3(rp0, rp1, rp2), rb = fa3(rp3, rp4, rp5);
+    wire [57:0] rc = fa3(ra[28:0], ra[57:29], rb[28:0]), rd = fa3(rb[57:29], rp6, rp7);
+    wire [57:0] re = fa3(rc[28:0], rc[57:29], rd[28:0]);
+    wire [57:0] rf = fa3(re[28:0], re[57:29], rd[57:29]);
+    reg [28:0] rs_s, rs_c; reg [15:0] rs_l; reg [13:0] rs_hs, rs_hc; reg [28:0] q_rsc_r;
+    reg [20:0] q_psc, q_psd, q_pse, q_sc1c, q_sc1d, q_sc1e, q_sc1f, q_psf; reg [20:0] r_diff; reg r_ge;
     always @(posedge clk) begin
         ps <= {1'b0, pos} + {18'd0, h_slot};                                   // stage 1
         p1 <= {1'b0, pos} + {18'd0, h_slot} + 21'd1;
         q_ps <= ps; q_p1 <= p1; q_n2 <= {1'b0, p1[20:1]};                       // stage 2
         q_ns1 <= mn(p1, DS_TOPK); q_ns2 <= mn({1'b0, p1[20:1]}, DS_TOPK); q_win <= mn(p1, DS_WIN);
         q_sc1 <= cdv(p1, DS_TPL); q_sc2 <= cdv({1'b0, p1[20:1]}, DS_TPL); q_scr <= cdv(mn(p1, DS_SCAN), DS_TPL);
-        q_rsc <= {21'd0, rank_r} * {8'd0, q_sc1};                              // stage 3 (rank x sc1, registered sc1)
+        rs_s <= rf[28:0]; rs_c <= rf[57:29];                                     // stage 3 (carry-save rank x sc1)
         q_sc1b <= q_sc1; q_psb <= q_ps;
         dsq[16] <= q_win;            dsq[17] <= q_p1;             dsq[18] <= q_n2;             dsq[19] <= q_ns1;  // stage 3
         dsq[20] <= q_ns2;            dsq[21] <= q_win;            dsq[22] <= q_win + q_ns1;    dsq[23] <= q_win + q_ns2;
@@ -237,9 +255,13 @@ module ot_hgi_seq #(
         dsq[30] <= cdv(q_sc1, 4);    dsq[31] <= cdv(q_sc1, 3);    dsq[32] <= cdv(q_sc2, 4);    dsq[33] <= cdv(q_scr, 4);
         dsq[34] <= cdv(q_win, 5);    dsq[35] <= cdv(dsq[22], 5);  dsq[36] <= cdv(dsq[23], 5);  // stage 4 (sum registered)
         dsq[37] <= q_win - 21'd1;    dsq[38] <= {11'd0, q_win} << DS_HDL; dsq[39] <= {11'd0, q_win - 21'd1} << DS_HDL;
-        r_end <= q_rsc + {8'd0, q_sc1b}; r_diff <= {8'd0, q_psb} - q_rsc; r_ge <= ({8'd0, q_psb} >= q_rsc);  // stage 4
+        rs_l <= {1'b0, rs_s[14:0]} + {1'b0, rs_c[14:0]}; rs_hs <= rs_s[28:15]; rs_hc <= rs_c[28:15];   // stage 4
         q_psc <= q_psb; q_sc1c <= q_sc1b;
-        dsq[40] <= (r_ge && ({8'd0, q_psc} < r_end)) ? {3'd0, r_diff >> 3} : {11'd0, cdv(q_sc1c, 3)};     // stage 5
+        q_rsc_r <= {rs_hs + rs_hc + {13'd0, rs_l[15]}, rs_l[14:0]};                                     // stage 5
+        q_psd <= q_psc; q_sc1d <= q_sc1c;
+        r_ge <= (q_rsc_r[28:21] == 8'd0) && (q_psd >= q_rsc_r[20:0]); r_diff <= q_psd - q_rsc_r[20:0];   // stage 6
+        q_sc1e <= q_sc1d;
+        dsq[40] <= (r_ge && (r_diff < q_sc1e)) ? {11'd0, r_diff >> 3} : {11'd0, cdv(q_sc1e, 3)};      // stage 7
     end
     function automatic [31:0] dsv(input [5:0] c);
         dsv = (c >= 6'd16 && c <= 6'd40) ? dsq[c] : 32'd0;
@@ -313,19 +335,23 @@ module ot_hgi_seq #(
     reg db_pend; reg [17:0] dbq_token; reg [19:0] dbq_pos; reg [31:0] dbq_job; reg [3:0] dbq_gen, dbq_ncol; reg [1:0] dbq_entry;
     always @(posedge clk or negedge rn)
         if (!rn) db_pend <= 1'b0;
-        else if (db_v && db_rdy_q) begin
-            db_pend <= 1'b1; dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen;
-            dbq_ncol <= db_ncol; dbq_entry <= db_entry;
-        end else if (st == S_IDLE) db_pend <= 1'b0;
+        else if (db_v && db_rdy_q) db_pend <= 1'b1;
+        else if (st == S_IDLE) db_pend <= 1'b0;
+    // the fields follow the port while ready is high (enable = the ready flop alone; db_v -> 70 enables was -65 ps)
+    always @(posedge clk) if (db_rdy_q) begin
+        dbq_token <= db_token; dbq_pos <= db_pos; dbq_job <= db_job; dbq_gen <= db_gen; dbq_ncol <= db_ncol; dbq_entry <= db_entry;
+    end
     // completion outputs leave flops (route: st -> cpl_tokx decode, fanout 20, -88 ps); valid rises one edge after the
     // state is entered and drops on the handshake edge, so back-to-back TOKX beats are separated by one bubble
     reg cpl_v_q, cpl_tokx_q;
     wire cpl_hs = cpl_v_q & cpl_rdy;
+    reg  cpl_hs_q;                       // the handshake registered once (cpl_rdy -> FSM was -163 ps); valid stays low meanwhile
+    always @(posedge clk or negedge rn) if (!rn) cpl_hs_q <= 1'b0; else cpl_hs_q <= cpl_hs;
     always @(posedge clk or negedge rn)
         if (!rn) begin cpl_v_q <= 1'b0; cpl_tokx_q <= 1'b0; end
         else begin
-            cpl_v_q <= ((st == S_CPL) || (st == S_TKB)) && !cpl_hs;
-            cpl_tokx_q <= (st == S_TKB) && !cpl_hs;
+            cpl_v_q <= ((st == S_CPL) || (st == S_TKB)) && !cpl_hs && !cpl_hs_q;
+            cpl_tokx_q <= (st == S_TKB) && !cpl_hs && !cpl_hs_q;
         end
     assign cpl_v = cpl_v_q;
     assign cpl_tokx = cpl_tokx_q;
@@ -350,14 +376,21 @@ module ot_hgi_seq #(
         else u_tk <= (u_vr == 16'd0) ? 16'd0 : (u_tk | (u_v & u_rdy));
     assign u_v = u_vr & ~u_tk;
     wire [39:0] entry_off = {4'd0, (db_entry_q == 2'd0) ? md_d_r[31:0] : (db_entry_q == 2'd1) ? md_d_r[63:32] : md_d_r[95:64], 4'd0};
-    wire [39:0] img = {md_d_r[123:96], 12'd0} + entry_off;          // image_base pages (word 60)
+    wire [39:0] img_a = {md_d_r[123:96], 12'd0};                       // image_base pages (word 60)
+    reg [20:0] img_l; reg [19:0] img_ha, img_hb;
     wire [4:0] infl_p1 = inflight + 5'd1, infl_m1 = inflight - 5'd1;   // from flops: the ready only selects
     // fetch requests leave through a 2-entry FIFO (registered boundary: f_req_rdy only pops it); inflight counts
     // requests PUSHED and not yet answered (every pushed request is sent and answered; a new doorbell drops them)
     reg [39:0] rqf [0:1]; reg rqh; reg [1:0] rqn;
     assign f_req_v = (rqn != 2'd0);
     assign f_req_addr = rqf[rqh];
-    wire       rq_push = fetching && (rqn != 2'd2) && (inflight < NOS) && (used + 2 <= RW);
+    // timing pass 5: the ring-room compare registered (frp -> used -> push -> faddr_n was -208 ps): room_q is the room
+    // after this cycle's push (used grows only by a push; a landed sector moves 2 words from inflight to wp - frp; frp
+    // only moves forward), so the ring fills to the same RW - 2 words as the combinational form (the ring-overflow fault
+    // threshold depends on it: a 2-word margin deadlocked the ring_overflow case instead of faulting)
+    reg room_q;
+    wire       rq_push = fetching && (rqn != 2'd2) && (inflight < NOS) && room_q;
+    always @(posedge clk or negedge rn) if (!rn) room_q <= 1'b0; else room_q <= (used + (rq_push ? 2 : 0) + 2 <= RW);
     wire       rq_pop = f_req_v && f_req_rdy;
     always @(posedge clk or negedge rn)
         if (!rn) begin rqh <= 1'b0; rqn <= 2'd0; end
@@ -397,18 +430,28 @@ module ot_hgi_seq #(
     // st / cpl_* / u_vr / vr_* was -351 ps): ieff, dr[6] and Lc are stable >= 3 edges before S_IDX reads them (iq_cnt)
     // stage 1: ieff + L; stage 2: its range flag, the low 32 bits + the stride; stage 3: the stride sum's flag
     // (bits 63:32 of ieff + L + sx(stride) are zero iff ieff+L[40:32] + carry == the stride's sign)
-    reg [40:0] iax_q, iax_m; reg [17:0] iax_a; reg [32:0] ian_lo; reg [8:0] ian_hi; reg ian_sg, iax_bad, ian_bad; reg [17:0] ian_a; reg [1:0] iq_cnt;
+    // timing pass 5: no add wider than 17 bits a stage (a 33-bit add was -148 ps, 41-bit -144 ps):
+    //   1: ieff[15:0] + L (17 b)          2: high 24 b + carry -> ieff + L (iax_q); X range flag
+    //   3: low 16 b + stride low (17 b)   4: next 16 b + stride + carry   5: the N range flag (high bits vs stride sign)
+    reg [16:0] ia_l, iam_l; reg [23:0] ia_h; reg [40:0] iax_q, iax_m; reg [17:0] iax_a; reg iax_bad;
+    reg [16:0] in_l; reg [16:0] in_m, ian_t; reg [8:0] in_h, in_h2; reg in_sg, in_sg2; reg [15:0] in_l2; reg ian_bad; reg [17:0] ian_a;
+    reg [2:0] iq_cnt;
     always @(posedge clk) begin
-        iax_q <= {1'b0, ieff} + {25'd0, Lc};
+        ia_l <= {1'b0, ieff[15:0]} + {1'b0, Lc}; ia_h <= ieff[39:16];
 `ifdef OT_HGI_SEQ_MUT_IDXL
-        iax_m <= {1'b0, ieff};                              // NEGATIVE CONTROL: the indexed read ignores L
+        iam_l <= {1'b0, ieff[15:0]};                        // NEGATIVE CONTROL: the indexed read ignores L
 `else
-        iax_m <= {1'b0, ieff} + {25'd0, Lc};
+        iam_l <= {1'b0, ieff[15:0]} + {1'b0, Lc};
 `endif
+        iax_q <= {{1'b0, ia_h} + {24'd0, ia_l[16]}, ia_l[15:0]};
+        iax_m <= {{1'b0, ia_h} + {24'd0, iam_l[16]}, iam_l[15:0]};
         iax_bad <= (iax_m[40:18] != 23'd0); iax_a <= iax_m[17:0];
-        ian_lo <= {1'b0, iax_q[31:0]} + {1'b0, dr[6][M_STRIDE +: 32]}; ian_hi <= iax_q[40:32]; ian_sg <= dr[6][M_STRIDE + 31];
-        ian_bad <= ({1'b0, ian_hi} + {9'd0, ian_lo[32]} != {9'd0, ian_sg}) || (ian_lo[31:18] != 14'd0);
-        ian_a <= ian_lo[17:0];
+        in_l <= {1'b0, iax_q[15:0]} + {1'b0, dr[6][M_STRIDE +: 16]}; in_h <= iax_q[40:32]; in_sg <= dr[6][M_STRIDE + 31];
+        in_m <= {1'b0, iax_q[31:16]};                        // stage 3 copy of the next chunk
+        in_l2 <= in_l[15:0]; in_h2 <= in_h; in_sg2 <= in_sg;
+        ian_t <= in_m + {1'b0, dr[6][M_STRIDE + 16 +: 16]} + {16'd0, in_l[16]};
+        ian_bad <= ({1'b0, in_h2} + {9'd0, ian_t[16]} != {9'd0, in_sg2}) || ({ian_t[15:0], in_l2[15:0]} >> 18 != 0);
+        ian_a <= {ian_t[1:0], in_l2[15:0]};
     end
     // one radix-16 step of the address unit; returns 1 when the multiplier is exhausted
     // radix-4 multiply step: acc += {0, m, 2m, 3m}[digit]; m and 3m shift left by 2 (3m registered one cycle after a
@@ -422,8 +465,12 @@ module ot_hgi_seq #(
     wire [63:0] k1 = {((acs[62:0] & acx[62:0]) | (acs[62:0] & x1[62:0]) | (acx[62:0] & x1[62:0])), 1'b0};
     wire [63:0] s2 = s1 ^ k1 ^ x2;
     wire [63:0] k2 = {((s1[62:0] & k1[62:0]) | (s1[62:0] & x2[62:0]) | (k1[62:0] & x2[62:0])), 1'b0};
-    wire [32:0] cpa_l = {1'b0, acs[31:0]} + {1'b0, acx[31:0]};
-    wire [31:0] cpa_h = acs[63:32] + acx[63:32] + {31'd0, cpa_c};
+    // timing pass 5: 16 bits a cycle (a 32-bit add was -82 ps)
+    reg [1:0] ci;
+    wire [16:0] cpa16 = {1'b0, acs[ci*16 +: 16]} + {1'b0, acx[ci*16 +: 16]} + {16'd0, cpa_c};
+    // the effective-base range flags registered (acc -> base_bad -> the d_desc write enable was -75 ps)
+    reg bad_q, bad_vm_q;
+    always @(posedge clk) begin bad_q <= base_bad(dc_q[M_SPACE +: 2], acc); bad_vm_q <= base_bad(2'd1, acc); end
     function automatic [2:0] first0(input [6:0] o); first0 = o[0] ? 3'd0 : nxt(o, 4'd0); endfunction
     task advance(input [RB:0] n);
         begin rp <= rp + n; if (depth == 2'd0) frp <= rp + n; end
@@ -435,8 +482,8 @@ module ot_hgi_seq #(
     always @(posedge clk or negedge rn) begin
         if (!rn) begin
             st <= S_IDLE; clr_q <= 1'b0; wp <= 0; wv <= 1'b0; rp <= 0; frp <= 0; inflight <= 0; drop <= 0; fetching <= 1'b0;
-            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 3'd0; m3v <= 1'b0;
-            cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 2'd3; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
+            depth <= 0; Lc <= 0; L1c <= 0; u_vr <= 16'd0; vr_v <= 1'b0; rpipe_v <= 2'b00; dv_cnt <= 4'd0; m3v <= 1'b0;
+            cpl_status <= 0; cpl_token <= 0; cc_lo <= 0; cc_hi <= 0; cc_c <= 0; iq_cnt <= 3'd6; faddr <= 0; faddr_n <= 40'd32; rd_ptr <= 0; wk <= 0; ix <= 0;
             for (k = 0; k < 16; k = k + 1) outst[k] <= 8'd0;
         end else begin
             for (k = 0; k < 16; k = k + 1)                     // +1 / -1 precomputed from flops: u_rdy only selects
@@ -451,8 +498,8 @@ module ot_hgi_seq #(
                 clr_q <= 1'b0; d_sut <= 256'd0; d_desc <= 1792'd0; d_n <= 147'd0;
                 for (k = 0; k < 7; k = k + 1) dr[k] <= 256'd0;
             end
-            if (dv_cnt != 3'd6) dv_cnt <= dv_cnt + 3'd1;
-            if (iq_cnt != 2'd3) iq_cnt <= iq_cnt + 2'd1;   // the indexed-read address pipe settles 3 edges after ieff
+            if (dv_cnt != 4'd8) dv_cnt <= dv_cnt + 4'd1;
+            if (iq_cnt != 3'd6) iq_cnt <= iq_cnt + 3'd1;   // the indexed-read address pipe settles 6 edges after ieff
             // ---- fetch requests (valid held until ready)
             if (rq_push) begin faddr <= faddr_n; faddr_n <= faddr_n + 40'd32; end
             // ---- fetch responses -> ring (one sector a response)
@@ -479,10 +526,12 @@ module ot_hgi_seq #(
                 S_DB: begin                                         // the doorbell checks registered (cfg -> ring resets)
                     pos1_q <= {1'b0, pos} + 21'd1;
                     db_bad <= (token >= cfg_vocab_r || {1'b0, pos} >= cfg_ctx_max_r);
-                    img_q <= img;                                  // image base + entry offset (40-bit add) registered
+                    img_l <= {1'b0, img_a[19:0]} + {1'b0, entry_off[19:0]};   // image base + entry offset, 20 b a cycle
+                    img_ha <= img_a[39:20]; img_hb <= entry_off[39:20];
                     st <= S_DB2;
                 end
-                S_DB2: begin
+                S_DB2: begin img_q <= {img_ha + img_hb + {19'd0, img_l[20]}, img_l[19:0]}; st <= S_DB3; end
+                S_DB3: begin
                     if (db_bad) begin
                         st <= S_CPL; cpl_status <= 4'd3;
                     end else begin
@@ -493,7 +542,7 @@ module ot_hgi_seq #(
                 end
                 S_DEC: if (avail != 0) begin rd_ptr <= rp; st <= S_H1; end
                 S_H1: st <= S_H2;                                      // the sector read (registered address)
-                S_H2: begin h <= rd_word; st <= S_HQ; wk <= 5'd0; dv_cnt <= 3'd0;
+                S_H2: begin h <= rd_word; st <= S_HQ; wk <= 5'd0; dv_cnt <= 4'd0;
 `ifdef SEQ_DEBUG
                     $display("SEQDBG t=%0t rp=%0d wp=%0d frp=%0d hdr=%h", $time, rp, wp, frp, rd_word);
 `endif
@@ -515,7 +564,7 @@ module ot_hgi_seq #(
                 end
                 S_RDW: if (wk == 5'd0) begin                           // ---- evaluate the header
                     if (hq_recbad) fault3;
-                    else if (avail < {{(RB-4){1'b0}}, hq_rlen}) ;       // wait for the record's words
+                    else if (!avail_ok) ;                              // wait for the record's words (registered)
                     else if (hq_bad) fault3;
                     else if (hq_skip) begin advance(hq_rlen); st <= S_DEC; end
                     else if (hq_ctl) begin
@@ -586,14 +635,14 @@ module ot_hgi_seq #(
                             if (as == A_ML) begin mcand <= sx32(dc[M_L1STR +: 32]); mplier <= {16'd0, L1c}; as <= A_ML1; end
                             else if (as == A_ML1 && !dc_idx) begin
                                 mcand <= {37'd0, dc[M_DMUL +: 27]}; mplier <= dyn_d; as <= A_MD;
-                            end else as <= A_C1;
+                            end else begin as <= A_C1; ci <= 2'd0; cpa_c <= 1'b0; end
                         end
                     A_FIN: begin
                         pn[aj] <= n_eff;
                         if (aj == 3'd6) begin
-                            if (base_bad(2'd1, acc)) fault3;
+                            if (bad_vm_q) fault3;
                             else begin
-                                ieff <= acc[39:0]; iq_cnt <= 2'd0;
+                                ieff <= acc[39:0]; iq_cnt <= 3'd0;
                                 d_desc[6*256 +: 256] <= eff_desc(dc, acc, n_eff);
                                 d_n[6*21 +: 21] <= n_eff;
                                 aj <= first0(h_opnd); as <= A_PRE;
@@ -602,7 +651,7 @@ module ot_hgi_seq #(
                             if (dc_idx || dc_nsel == 6'd63) begin
                                 pacc[aj] <= acc; pend_x[aj] <= dc_idx; pend_n[aj] <= (dc_nsel == 6'd63);
                                 aj <= nxt(h_opnd, {1'b0, aj}); as <= A_PRE;
-                            end else if (base_bad(dc_sp, acc)) fault3;
+                            end else if (bad_q) fault3;
                             else begin
                                 d_desc[aj*256 +: 256] <= eff_desc(dc, acc, n_eff);
                                 d_n[aj*21 +: 21] <= n_eff;
@@ -611,10 +660,13 @@ module ot_hgi_seq #(
                         end
                     end
                     A_PRE: begin dc_q <= dr[aj]; as <= A_LOAD; end    // the descriptor registered (aj -> dr mux)
-                    A_C1: begin cpa_lo <= cpa_l[31:0]; cpa_c <= cpa_l[32]; as <= A_C2; end   // resolve {acs, acx}
-                    A_C2: begin acc <= {cpa_h, cpa_lo}; as <= A_FIN; end
+                    A_C1: begin                                    // resolve {acs, acx}: 16 bits a cycle
+                        {cpa_c, acc[ci*16 +: 16]} <= cpa16;
+                        ci <= ci + 2'd1; if (ci == 2'd3) as <= A_C2;
+                    end
+                    A_C2: as <= A_FIN;                             // the range flags (bad_q) settle on the resolved sum
                     endcase
-                S_WAIT: if (waitok(h_wait, busy_u) && iq_cnt == 2'd3) begin
+                S_WAIT: if (waitok(h_wait, busy_u) && iq_cnt == 3'd6) begin
                     aj <= (pend_x[0] | pend_n[0]) ? 3'd0 : nxtp(pend_x | pend_n, 4'd0); ix <= 3'd0; st <= S_IDX;
                 end
                 S_IDX: if (aj == 3'd7) begin
@@ -645,9 +697,9 @@ module ot_hgi_seq #(
                         end
                     end
                     3'd2: if (!mdone) begin acs <= s2; acx <= k2; mplier <= mplier >> 2; mcand <= mcand << 2; end
-                          else ix <= 3'd6;
-                    3'd6: begin cpa_lo <= cpa_l[31:0]; cpa_c <= cpa_l[32]; ix <= 3'd7; end
-                    3'd7: begin acc <= {cpa_h, cpa_lo}; ix <= 3'd3; end
+                          else begin ix <= 3'd6; ci <= 2'd0; cpa_c <= 1'b0; end
+                    3'd6: begin {cpa_c, acc[ci*16 +: 16]} <= cpa16; ci <= ci + 2'd1; if (ci == 2'd3) ix <= 3'd7; end
+                    3'd7: ix <= 3'd3;
                     3'd3: if (pend_n[aj]) begin
                             if (ian_bad) fault3;
                             else begin vr_v <= 1'b1; vr_addr <= ian_a; ix <= 3'd4; end
@@ -660,7 +712,7 @@ module ot_hgi_seq #(
                         end
                     end
                     default: begin                                     // finalize
-                        if (base_bad(dc_q[M_SPACE +: 2], acc)) fault3;
+                        if (bad_q) fault3;
                         else begin
                             d_desc[aj*256 +: 256] <= eff_desc(dc_q, acc, pn[aj]);
                             d_n[aj*21 +: 21] <= pn[aj];
@@ -696,7 +748,7 @@ module ot_hgi_seq #(
                         end
                     end
                 end
-                S_TKB: if (cpl_hs) begin
+                S_TKB: if (cpl_hs_q) begin
                     tk_pos <= tk_pos + 20'd1;
                     if (tk_i == tk_n) begin advance(hq_rlen); st <= S_DEC; end
                     else begin
@@ -708,7 +760,7 @@ module ot_hgi_seq #(
 `endif
                     end
                 end
-                S_CPL: if (cpl_hs) st <= S_IDLE;
+                S_CPL: if (cpl_hs_q) st <= S_IDLE;
                 default: st <= S_IDLE;
             endcase
         end
