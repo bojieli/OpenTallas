@@ -1,0 +1,30 @@
+b8dcaf180abfff78845e8fe574aed510b58f2e50d8f7ca9a0e1b1e288d62d9c0  /srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/die.v
+cb3b7bf0499bd701b88f23e2be26481611f0b9ea4033d17774f16b5fb28b9ba2  /srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/manifest.json
+6bae290477ec063e4322ee4c7e8da7ecf094cc9a3dca10a330f6565da2bbe1cd  /srv/opentallas-scratch/claude/die-evidence/hbm_r25/grt3/relay_clock_context.json
+source /work/snap.tcl
+source /work/place.tcl
+
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+set_wire_rc -signal -layer M7
+set_wire_rc -clock -layer M7
+set_routing_layers -signal M4-M9 -clock M4-M9
+set_global_routing_layer_adjustment M4-M5 0.30
+set_global_routing_layer_adjustment M6-M9 0.146
+set t0 [clock seconds]
+global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /rb/grt_congestion.rpt
+puts "OT_GRT_S [expr {[clock seconds]-$t0}]"
+
+
+
+estimate_parasitics -global_routing
+set_cmd_units -time ns -capacitance fF
+set ot_clock_missing {}
+    PID ELAPSED   RSS COMMAND
+3719939    1475  3816 /bin/bash /srv/opentallas-scratch/codex/hbm-router-dr3-02b165495/run.sh
+3720051    1474 41452456 openroad -threads 16 -no_init -exit /rb/run_rb.tcl
+---------------------------------------------------------------
+
+[INFO GRT-0101] Running extra iterations to remove congestion.
+[INFO GRT-0102] Start extra iteration 1/30
+[INFO GRT-0102] Start extra iteration 2/30
+[INFO GRT-0102] Start extra iteration 3/30
