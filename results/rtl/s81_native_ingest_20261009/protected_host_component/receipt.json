@@ -1,0 +1,14 @@
+{
+  "commit": "238c238fb",
+  "remote": "ot-agidock128:/srv/opentallas-scratch/codex/s81-protected-fixed",
+  "positive": "PASS all5 golden cases, total7156 sectors, zero mismatches",
+  "negative": "PASS payloadflip/tagflip mutants and QKV/RMW disabled failclosed",
+  "peak_rss_KiB": 60328,
+  "limitations": "Mutable payload protection only; original descriptor/pointer protection and P&R not qualified",
+  "sha256": {
+    "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_afifo.sv": "5a9642a12351d85d31c44fcc25012ff0baa1f53736c0a16fe7f937c754748c15",
+    "rtl/dsrom_sys/s81_ingest/ot_rom_host_ingest_protected.sv": "07481bc9a82d1faf5ca505f032b8432ca52b0cf2e15f32c582c648d7d84a7655",
+    "tools/rtl_s81_protected_host_bench.py": "4521099ef5e61248fee45da93f0555e40f1e8ae72032457a9a42700db0e43452",
+    "rtl/test/s81_native_ingest/tb_s81_protected_host.sv": "567f1d4fde437ed5264d141633b114fa83bc7696e1f7fe698b05ffd2f334fc8d"
+  }
+}

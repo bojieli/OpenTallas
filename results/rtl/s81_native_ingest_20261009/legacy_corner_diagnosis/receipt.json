@@ -1,0 +1,17 @@
+{
+  "A": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/scratch/claude/closure-loop/hing_dsfd_A_div2",
+    "route": "TT NOT_MET; DRC0, area24209.439um2",
+    "corner": "FAILED Tcl undefined clk_period at hing_clocks_div2.sdc5; misleading corner_rc0 and null timing metrics"
+  },
+  "B": {
+    "host": "ot-epyc2",
+    "run": "/srv/opentallas-data/claude/closure-loop/hing_dsfd_B_div3",
+    "source_commit": "9ebeb97c95f1ae889750422d76571101cf047c83",
+    "route": "NOT_MET; DRC0, area24209.439um2",
+    "corner": "FAILED Tcl undefined clk_period at hing_clocks_div3.sdc5; misleading corner_rc0"
+  },
+  "next_action": "Recover corner-only STA against existing immutable ODB/SPEF and same clocks using defined period; no costly reroute to recover missing timing. Fleet/tooling owns recovery. Preserve original failures.",
+  "successor": "Payload-protected host sourcee098a3ac1 fixes postSDC replay; not superseding prior failures or claiming full mutable descriptor protection."
+}

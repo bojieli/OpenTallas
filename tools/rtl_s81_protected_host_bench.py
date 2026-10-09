@@ -99,7 +99,9 @@ def build(work: Path, tag, memw, nd, np_, hd, kvh, qkv, mut=0, rmw=1):
            *(f"-Ptb_rom_host_ingest.{k}={v}" for k, v in dict(MEMW=memw, ND=nd, NP=np_, HDMAX=hd, KVHMAX=kvh,
                                                                   QKV_EN=qkv, MUT=mut, RMW_EN=rmw).items()),
            *map(str, RTL), str(TB)]
-    subprocess.run(cmd, check=True, capture_output=True, text=True)
+    p = subprocess.run(cmd, capture_output=True, text=True)
+    (work / f"build_{tag}.log").write_text(p.stdout + p.stderr)
+    p.check_returncode()
     return exe
 
 
