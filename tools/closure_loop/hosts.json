@@ -215,7 +215,17 @@
    "ram_gb": 125,
    "min_free_ram_gb": 2,
    "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB.",
-   "reserve_ram_gb": 0
+   "reserve_ram_gb": 0,
+   "external_jobs": [
+    {
+     "name": "hbm-native-full-publication-lint",
+     "pid": 2811687,
+     "command_match": "--top-module ot_hbm_collective_native_publication_candidate",
+     "peak_ram_gb": 24,
+     "owner": "Codex:hbm_system/link_retry",
+     "reason": "Owner fullshape inventory envelope24GiB: protected545 queues/landing/CDC/flight plus256 native lanes; actual frontend exceeded4GiB, peak unmeasured"
+    }
+   ]
   },
   {
    "name": "localhost",
