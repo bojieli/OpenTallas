@@ -45,7 +45,7 @@ endmodule
 // therefore a finite2-seat logit queue detects overflow rather than dropping rows.
 module ot_dsrom_markov_head_driver #(
  parameter bit ENABLE=0,parameter[8:0] CUT=511,parameter integer SPLIT9=1,
- parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter INSTANCE="mk"
+ parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter INSTANCE="mk"
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] row0,input wire[31:0] transaction,
  input wire embed_valid,output wire embed_ready,input wire[255:0] embed_data,
@@ -64,7 +64,23 @@ module ot_dsrom_markov_head_driver #(
  assign start_ready=ENABLE&&!busy&&!fault;
  assign best_valid=have&&!fault;
  wire push_head=head_valid&&busy&&vector_ready&&emitted<valid_count&&!fault;
- assign embed_ready=busy&&!vector_ready&&!fault;
+ assign embed_ready=busy&&!vector_ready&&!fault&&embed_next<16;
+ wire embed_take=embed_valid&&embed_ready;
+ wire embed_good=embed_take&&embed_id==identity&&embed_beat==embed_next&&embed_last==(embed_next==15);
+ reg[255:0] embed_q,embed_d;reg[3:0] embed_beat_q;reg embed_last_q,embed_last_d,cache_v;
+ (* keep *) reg[16*16-1:0] bank_enable;
+ integer ce_bank,ce_rep;
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin cache_v<=0;bank_enable<=0;embed_last_q<=0;embed_last_d<=0;embed_beat_q<=0;end
+  else begin
+   cache_v<=embed_good;embed_beat_q<=embed_beat;embed_last_q<=embed_last;embed_last_d<=embed_last_q;
+   for(ce_bank=0;ce_bank<16;ce_bank=ce_bank+1)for(ce_rep=0;ce_rep<16;ce_rep=ce_rep+1)
+    bank_enable[ce_bank*16+ce_rep]<=CACHE_PINREG&&cache_v&&embed_beat_q==ce_bank;
+  end
+ end
+ always @(posedge clk)begin embed_q<=embed_data;embed_d<=embed_q;end
+ wire cache_commit=CACHE_PINREG&&(|bank_enable);
+ integer cache_bank,cache_bit;
  ot_dsrom_markov_weight32 #(.INSTANCE(INSTANCE)) weights(.clk(clk),.rst_n(rst_n),
   .req_valid(launch),.req_ready(wr_ready),.row(rq[hr]),.out_valid(wv),.out_ready(mk_in_ready),.out_data(wd),.out_beat(wb),.out_last(wl));
  ot_dsrom_markov_row #(.K(256),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD)) dot(
@@ -87,9 +103,16 @@ module ot_dsrom_markov_head_driver #(
    end
    if(embed_valid&&embed_ready)begin
     if(embed_id!=identity || embed_beat!=embed_next || embed_last!=(embed_next==15))fault<=1;
-    else begin vector[embed_next]<=embed_data;embed_next<=embed_next+1;
-     if(embed_last)begin vector_ready<=1;head_go<=1;end
+    else begin embed_next<=embed_next+1;
+     if(!CACHE_PINREG)begin vector[embed_next]<=embed_data;
+      if(embed_last)begin vector_ready<=1;head_go<=1;end
+     end
     end
+   end
+   if(CACHE_PINREG)begin
+    for(cache_bank=0;cache_bank<16;cache_bank=cache_bank+1)for(cache_bit=0;cache_bit<256;cache_bit=cache_bit+1)
+     if(bank_enable[cache_bank*16+cache_bit/16])vector[cache_bank][cache_bit]<=embed_d[cache_bit];
+    if(cache_commit&&embed_last_d&&!fault)begin vector_ready<=1;head_go<=1;end
    end
    if(head_valid)begin
     if(!busy||!vector_ready||emitted>=32 || (push_head&&hn==2&&!launch))fault<=1;
@@ -119,7 +142,7 @@ endmodule
 // its original local argmax is superseded by the post-Markov argmax above.
 module ot_dsrom_markov_head_A #(
  parameter bit ENABLE=0,parameter[8:0] CUT=511,parameter integer SPLIT9=1,
- parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter HEAD_INSTANCE="ha",MARKOV_INSTANCE="mk"
+ parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0,parameter HEAD_INSTANCE="ha",MARKOV_INSTANCE="mk"
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] row0,input wire[31:0] transaction,
  input wire embed_valid,output wire embed_ready,input wire[255:0] embed_data,
@@ -133,7 +156,7 @@ module ot_dsrom_markov_head_A #(
  ot_dsrom_head_elem #(.LV(8),.PAD(0),.JOIN(1),.ROWS(32),.CUT(CUT),.SPLIT9(SPLIT9),.INSTANCE(HEAD_INSTANCE),.SAFE(1)) head(
  .clk(clk),.rst_n(rst_n),.go(head_go),.row0(row0_q),.x(x),.b_v(b_v),.b_d(b_d),
  .o_v(root_valid),.o_d(root_bits),.l_v(hv),.l_d(hb),.done(),.best_row(),.best_bits(),.best_key(),.fault(hf));
- ot_dsrom_markov_head_driver #(.ENABLE(ENABLE),.VALID_ROWS(VALID_ROWS),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD),.INSTANCE(MARKOV_INSTANCE)) driver(
+ ot_dsrom_markov_head_driver #(.ENABLE(ENABLE),.CACHE_PINREG(CACHE_PINREG),.VALID_ROWS(VALID_ROWS),.PINREG(PINREG),.CUT(CUT),.SPLIT9(SPLIT9),.MUTANT_FOLD(MUTANT_FOLD),.INSTANCE(MARKOV_INSTANCE)) driver(
  .clk(clk),.rst_n(rst_n),.start(start),.start_ready(start_ready),.row0(row0),.transaction(transaction),
  .embed_valid(embed_valid),.embed_ready(embed_ready),.embed_data(embed_data),.embed_beat(embed_beat),.embed_id(embed_id),.embed_last(embed_last),
  .head_go(head_go),.head_valid(hv),.head_bits(hb),.head_fault(hf),
@@ -144,7 +167,7 @@ endmodule
 // For a full shard the embedding response is broadcast to its337successors;
 // duplicating this506macro lookup per A is NOT the selected die architecture.
 module ot_dsrom_markov_head_lookup_A #(
- parameter bit ENABLE=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0
+ parameter bit ENABLE=0,parameter integer CACHE_PINREG=0,parameter integer VALID_ROWS=32,parameter integer PINREG=0,parameter integer MUTANT_FOLD=0
 )(input wire clk,rst_n,input wire start,output wire start_ready,
  input wire[16:0] d_i,row0,input wire[31:0] transaction,
  input wire[255:0] x,input wire b_v,input wire[31:0] b_d,
@@ -160,7 +183,7 @@ module ot_dsrom_markov_head_lookup_A #(
  ot_dsrom_markov_embed_rom #(.ENABLE(ENABLE)) lookup(.clk(clk),.rst_n(rst_n),
  .req_valid(fire),.req_ready(er),.req_token(d_i),.req_id(transaction),.fault_valid(ef),.fault_id(efid),
  .out_valid(ev),.out_ready(econsume),.out_data(ed),.out_id(ei),.out_beat(eb),.out_last(el));
- ot_dsrom_markov_head_A #(.ENABLE(ENABLE),.VALID_ROWS(VALID_ROWS),.PINREG(PINREG),.MUTANT_FOLD(MUTANT_FOLD)) successor(
+ ot_dsrom_markov_head_A #(.ENABLE(ENABLE),.CACHE_PINREG(CACHE_PINREG),.VALID_ROWS(VALID_ROWS),.PINREG(PINREG),.MUTANT_FOLD(MUTANT_FOLD)) successor(
  .clk(clk),.rst_n(rst_n),.start(fire&&d_i<129280),.start_ready(dr),.row0(row0),.transaction(transaction),
  .embed_valid(ev),.embed_ready(econsume),.embed_data(ed),.embed_beat(eb),.embed_id(ei),.embed_last(el),
  .x(x),.b_v(b_v),.b_d(b_d),.head_go(head_go),.root_valid(root_valid),.root_bits(root_bits),
