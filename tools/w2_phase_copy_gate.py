@@ -30,7 +30,7 @@ def main():
     results=[]
     for name,text,expected in [('positive',bank.read_text(),0),('missing_phase_identity',bank.read_text().replace('(local_phase!={sel_bit,phase})',"1'b0"),1),('odd_delay_chain',bank.read_text().replace('n<8;n=n+1','n<7;n=n+1').replace('assign y=stage[8]','assign y=stage[7]'),1)]:
         rtl=out/(name+'.sv');rtl.write_text(text);sim=out/(name+'.vvp')
-        p=subprocess.run(['iverilog','-g2012','-s','tb','-o',str(sim),str(ROOT/'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv'),str(rtl),str(tb)],capture_output=True,text=True)
+        p=subprocess.run(['iverilog','-g2012','-s','tb','-o',str(sim),str(ROOT/'rtl/gpu/w6/ot_gpu_w6_secded_pkg.sv'),str(ROOT/'rtl/hbm_accel/integrated_20261005/w2_parent/ot_hbm_w2_protected_bank.sv'),str(rtl),str(tb)],capture_output=True,text=True)
         (out/(name+'.compile.log')).write_text(p.stdout+p.stderr)
         if p.returncode:raise RuntimeError(p.stderr)
         p=subprocess.run(['vvp',str(sim)],capture_output=True,text=True);(out/(name+'.run.log')).write_text(p.stdout+p.stderr)
