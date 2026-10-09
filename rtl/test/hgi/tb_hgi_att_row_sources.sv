@@ -28,7 +28,7 @@ module tb_hgi_att_row_sources;
         begin
             @(negedge clk); if(!cmd_r) $fatal(1,"not ready before case");
             ring=rb;pos1=p;b_n=nb;b_m=mb;c_n=nc;cmd_v=1;row_r=0;
-            @(negedge clk);cmd_v=0;got=0;sent=0;t=0;seen_done=0;had_hold=0;
+            @(negedge clk);cmd_v=0;got=0;sent=0;t=0;seen_done=done;had_hold=0;
             first=rb?((p-nb)&(mb-1)):0;
             while(!seen_done) begin
                 row_r=(t%7!=0 && t%7!=1 && t%7!=2);
@@ -46,7 +46,7 @@ module tb_hgi_att_row_sources;
                 @(negedge clk);seen_done=done;
                 if(fault) $fatal(1,"valid command fault");
                 t=t+1;cycle=cycle+1;
-                if(t>(nb+nc)*10+64) $fatal(1,"bounded deterministic handshake failed");
+                if(t>(nb+nc)*10+64) $fatal(1,"bounded deterministic handshake failed case%0d got%0d sent%0d",tests,got,sent);
             end
             if(got!=nb+nc || sent!=nc) $fatal(1,"early completion got%0d expected%0d sent%0d",got,nb+nc,sent);
             c_id_v=0;tests=tests+1;
