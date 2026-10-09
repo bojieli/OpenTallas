@@ -31,7 +31,7 @@ module tb_hgi_quant_vm_transport;
      if(req[335:304]/4+k>=4096+current_n)$fatal(1,"tail neighbor overwrite");
      if(req[303:48]>>k*32!==expected[req[335:304]/4+k])begin
       // Compare32bits only, preserve true lane extraction.
-      if(req[48+k*32+:32]!==expected[req[335:304]/4+k])$fatal(1,"WRITE mismatch");
+      if(req[48+k*32+:32]!==expected[req[335:304]/4+k])$fatal(1,"WRITE mismatch cases=%0d vector=%0d n=%0d addr=%0d lane=%0d actual=%h expected=%h head=%0d tail=%0d queued=%0d reserved=%0d",cases,use_vector,current_n,req[335:304]/4,k,req[48+k*32+:32],expected[req[335:304]/4+k],dut.head,dut.tail,dut.queued,dut.reserved);
      end
      vm[req[335:304]/4+k]=req[48+k*32+:32];
     end
