@@ -38,10 +38,11 @@
     "total_encoded_FIFO_bits": 23040,
     "upstream_transit_FIFO_depth": 8,
     "upstream_encoded_FIFO_bits": 2880,
-    "control": "triplicated actualoccupancy/pointers with majorityrepair and failclosed doublecontrolerrors; no epoch/auth extras",
+    "control": "Single functional FIFO pointers/counts/credit/RR; range/overflow and transaction guards. No SEU control correction claim.",
     "encoder_pipeline": "actualencoderpending slots includedinfinite8entryreservation; acceptance cannot overbook uncommittedencoderdata",
-    "decoder_pipeline": "capturecorrectedprotectedhead; actualCE/UEgate beforepacket/credit release; UEwithholdscreditandpublishesfault",
-    "data_protection": "SECDEDmutableSRAM mandatory; originalHBMCE/UE flags unchanged; storageCE/fault independent"
+    "decoder_pipeline": "Correct SRAM head before publication/credit retirement. Output transient registers are plain. HBM CE/UE flags remain unchanged; storage CE/fault separate.",
+    "data_protection": "SECDEDmutableSRAM mandatory; originalHBMCE/UE flags unchanged; storageCE/fault independent",
+    "superseded_control_proposal": "triplicated actualoccupancy/pointers with majorityrepair and failclosed doublecontrolerrors; no epoch/auth extras"
   },
   "flow": {
     "original_PC_command_credits": 4,
@@ -64,7 +65,9 @@
     "frame_area_um2": 92023.36128000001,
     "planning_utilization": 0.1777635566932423,
     "sixteen_frames_mm2": 1.4723737804800001,
-    "physical_cell_and_buffer_cost": "actualmeasurementrequired"
+    "physical_cell_and_buffer_cost": "actualmeasurementrequired",
+    "geometry_status": "Planning frame only, not approved new geometry; E3 only grid92/bus92. Actual selected area sheet prerequisite.",
+    "transient_protection": "No SECDED command/output registers or control mirrors."
   },
   "latency": {
     "service_capacity_events_per_core_edge": 1,
@@ -76,5 +79,6 @@
   },
   "physical_closed": false,
   "full_die_bound": false,
-  "adopted": false
+  "adopted": false,
+  "owner_policy_override": "Latest confirmed: SRAM/HBM payload SECDED only; no control mirrors/TMR or transient-flop SECDED. E3 grid92/bus92 geometry only; Claude exclusively submits routes."
 }
