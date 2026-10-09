@@ -96,7 +96,10 @@ def qwen_r25_fmt3_wide_model():
         additional_wire_cycles=0,
         wire_cycle_status="no new relay credit; same RTL must meet833ps; added relay needs priced RTL candidate",
         neighbouring_masters="new front_n/front_s pin views required; preserve previous views",
-        die_admission="BLOCKED until owner checks adopted R25 plus real SM3 baseline and wide retile, grid3x3,207.36um padding, actual anchors/network hops and legal reticle",
+        die_admission="component geometry PASS at 3467f362e on source0cb3d9624; whole-die adoption pending widened actual pin anchors/network hops",
+        die_outline_um=[31734.288,24051.6], die_area_mm2=763.260401,
+        die_area_growth_mm2_vs_adopted_r25=10.069649,
+        die_area_growth_mm2_vs_unadopted_sm3=19.949359,
         provisional_die_width_growth_um=829.44,
         provisional_die_area_growth_mm2=829.44*24622/1e6,
         full_die_cost_status="provisional wide-minus-SM3 baseline; not wide-minus-adoptedR25, not a measured or adopted headline")
