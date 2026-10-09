@@ -14,16 +14,14 @@
   },
   "sysctl": {
     "job": "qfd_sysctl_sram-c56a82177-tc-hm10",
-    "status": "validated queued; remote bench-first builds gate route",
+    "status": "All remote exact gates passed; physical route waiting measured resource admission",
     "physical_claim": "pending",
-    "exact_claim": "Minimum component PASS:20480 reads,2400ECC cases;mutant144 mismatches; fullcontrol pending",
+    "exact_claim": "20480 full-buffer reads+2400ECC function cases; nine full-control scenarios incl8192steps/1245184stage-events; SRAM-output corruption2592checks/2400fault resets,288mutant failures",
     "mutable_storage": "SECDED24 per18b token in32b slot, eight slots per1024x256 SRAM row",
     "fault_source": 22,
     "UE_contract": "qzero, sticky pb_fault gates package readiness"
   },
   "remaining": [
-    "remote prompt exact/negative",
-    "remote fullcontext control exact/faults",
     "route verdict",
     "die integration",
     "SS sensitivity and TC/FF timing composed"
