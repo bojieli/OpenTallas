@@ -28,6 +28,15 @@ def main():
             t += ('report_checks -path_delay '+delay+
                   ' -from [all_registers -clock_pins] -to [all_registers -data_pins]'
                   ' -group_path_count 1 -format full_clock_expanded -digits 3\n')
+        if corner == 'tt':
+            # Preserve the actual original route target (730 ps); only the
+            # boundary reference changes from borrowed SS to measured TT.
+            t += ('create_clock -name core_clk -period 730 [get_ports clk]\n'
+                  'set_propagated_clock [all_clocks]\n'
+                  'puts "BF_TT_ROUTE_REFERENCE period_ps=730 uncertainty_ps=60/25 measured_TT_IO=1"\n'
+                  'report_checks -path_delay max -from [all_inputs]'
+                  ' -to [all_registers -data_pins] -group_path_count 1'
+                  ' -format full_clock_expanded -digits 3\n')
         t += 'exit\n'
         (a.bundle/f'{corner}_reference_probe.tcl').write_text(t)
 
