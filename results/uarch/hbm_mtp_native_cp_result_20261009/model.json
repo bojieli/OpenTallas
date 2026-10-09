@@ -1,0 +1,452 @@
+{
+  "schema": "opentallas.hbm-mtp-native-cp-result-contract.v1",
+  "adopted": false,
+  "default_enabled": false,
+  "controller_master": "hfd_mtp_x_cp_stop",
+  "controller_source": "a9f866a26",
+  "controller_inventory": "results/rtl/hbm_mtp_20261009_inventory/inventory.json",
+  "groups": {
+    "f_cmdproc": {
+      "direction": "input",
+      "bits": 197,
+      "fields": [
+        {
+          "port": "start",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "port": "cfg_gamma",
+          "lsb": 1,
+          "width": 4
+        },
+        {
+          "port": "cfg_force",
+          "lsb": 5,
+          "width": 1
+        },
+        {
+          "port": "cfg_ngen",
+          "lsb": 6,
+          "width": 21
+        },
+        {
+          "port": "cfg_plen",
+          "lsb": 27,
+          "width": 21
+        },
+        {
+          "port": "p_tok",
+          "lsb": 48,
+          "width": 17
+        },
+        {
+          "port": "f_tok",
+          "lsb": 65,
+          "width": 17
+        },
+        {
+          "port": "cmd_ready",
+          "lsb": 82,
+          "width": 1
+        },
+        {
+          "port": "eng_done",
+          "lsb": 83,
+          "width": 1
+        },
+        {
+          "port": "sr_v",
+          "lsb": 84,
+          "width": 1
+        },
+        {
+          "port": "sr_kind",
+          "lsb": 85,
+          "width": 4
+        },
+        {
+          "port": "sr_idx",
+          "lsb": 89,
+          "width": 16
+        },
+        {
+          "port": "sr_pos",
+          "lsb": 105,
+          "width": 32
+        },
+        {
+          "port": "u_clr",
+          "lsb": 137,
+          "width": 1
+        },
+        {
+          "port": "u_flush",
+          "lsb": 138,
+          "width": 1
+        },
+        {
+          "port": "e_ready",
+          "lsb": 139,
+          "width": 1
+        },
+        {
+          "port": "cfg_eos_en",
+          "lsb": 140,
+          "width": 1
+        },
+        {
+          "port": "cfg_eos",
+          "lsb": 141,
+          "width": 17
+        },
+        {
+          "port": "cfg_maxpos",
+          "lsb": 158,
+          "width": 21
+        },
+        {
+          "port": "cp_am_v",
+          "lsb": 179,
+          "width": 1
+        },
+        {
+          "port": "cp_am_idx",
+          "lsb": 180,
+          "width": 17
+        }
+      ]
+    },
+    "t_cmdproc": {
+      "direction": "output",
+      "bits": 517,
+      "fields": [
+        {
+          "port": "p_addr",
+          "lsb": 0,
+          "width": 20
+        },
+        {
+          "port": "f_addr",
+          "lsb": 20,
+          "width": 23
+        },
+        {
+          "port": "e_v",
+          "lsb": 43,
+          "width": 1
+        },
+        {
+          "port": "e_tok",
+          "lsb": 44,
+          "width": 17
+        },
+        {
+          "port": "e_idx",
+          "lsb": 61,
+          "width": 20
+        },
+        {
+          "port": "done",
+          "lsb": 81,
+          "width": 1
+        },
+        {
+          "port": "cmd_v",
+          "lsb": 82,
+          "width": 1
+        },
+        {
+          "port": "cmd_op",
+          "lsb": 83,
+          "width": 4
+        },
+        {
+          "port": "cmd_idx",
+          "lsb": 87,
+          "width": 8
+        },
+        {
+          "port": "cmd_ncol",
+          "lsb": 95,
+          "width": 4
+        },
+        {
+          "port": "cmd_pos",
+          "lsb": 99,
+          "width": 32
+        },
+        {
+          "port": "cmd_tok1",
+          "lsb": 131,
+          "width": 17
+        },
+        {
+          "port": "cmd_toks",
+          "lsb": 148,
+          "width": 136
+        },
+        {
+          "port": "am_v",
+          "lsb": 284,
+          "width": 1
+        },
+        {
+          "port": "am_idx",
+          "lsb": 285,
+          "width": 17
+        },
+        {
+          "port": "am_fault",
+          "lsb": 302,
+          "width": 1
+        },
+        {
+          "port": "sr_ready",
+          "lsb": 303,
+          "width": 1
+        },
+        {
+          "port": "sa_v",
+          "lsb": 304,
+          "width": 1
+        },
+        {
+          "port": "sa_addr",
+          "lsb": 305,
+          "width": 32
+        },
+        {
+          "port": "sa_tok",
+          "lsb": 337,
+          "width": 17
+        },
+        {
+          "port": "sa_pad",
+          "lsb": 354,
+          "width": 1
+        },
+        {
+          "port": "sa_last",
+          "lsb": 355,
+          "width": 1
+        },
+        {
+          "port": "sa_err",
+          "lsb": 356,
+          "width": 1
+        },
+        {
+          "port": "n_committed",
+          "lsb": 357,
+          "width": 32
+        },
+        {
+          "port": "step_v",
+          "lsb": 389,
+          "width": 1
+        },
+        {
+          "port": "step_a",
+          "lsb": 390,
+          "width": 3
+        },
+        {
+          "port": "step_g",
+          "lsb": 393,
+          "width": 4
+        },
+        {
+          "port": "steps",
+          "lsb": 397,
+          "width": 21
+        },
+        {
+          "port": "cyc_total",
+          "lsb": 418,
+          "width": 32
+        },
+        {
+          "port": "cyc_engine",
+          "lsb": 450,
+          "width": 32
+        },
+        {
+          "port": "cyc_markov",
+          "lsb": 482,
+          "width": 32
+        },
+        {
+          "port": "stop_status",
+          "lsb": 514,
+          "width": 3
+        }
+      ]
+    },
+    "f_su_red": {
+      "direction": "input",
+      "bits": 523,
+      "fields": [
+        {
+          "port": "lg_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "port": "lg_last",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "port": "lg_bias_en",
+          "lsb": 2,
+          "width": 1
+        },
+        {
+          "port": "lg_mask",
+          "lsb": 3,
+          "width": 8
+        },
+        {
+          "port": "lg_vals",
+          "lsb": 11,
+          "width": 256
+        },
+        {
+          "port": "lg_bias",
+          "lsb": 267,
+          "width": 256
+        }
+      ]
+    },
+    "f_router": {
+      "direction": "input",
+      "bits": 59,
+      "fields": [
+        {
+          "port": "x_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "port": "x_draft",
+          "lsb": 1,
+          "width": 1
+        },
+        {
+          "port": "x_ids",
+          "lsb": 2,
+          "width": 54
+        },
+        {
+          "port": "x_col",
+          "lsb": 56,
+          "width": 3
+        }
+      ]
+    },
+    "t_router": {
+      "direction": "output",
+      "bits": 58,
+      "fields": [
+        {
+          "port": "t_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "port": "t_ids",
+          "lsb": 1,
+          "width": 54
+        },
+        {
+          "port": "t_col",
+          "lsb": 55,
+          "width": 3
+        }
+      ]
+    },
+    "t_coll": {
+      "direction": "output",
+      "bits": 19,
+      "fields": [
+        {
+          "port": "u_v",
+          "lsb": 0,
+          "width": 1
+        },
+        {
+          "port": "u_id",
+          "lsb": 1,
+          "width": 9
+        },
+        {
+          "port": "u_mask",
+          "lsb": 10,
+          "width": 8
+        },
+        {
+          "port": "u_last",
+          "lsb": 18,
+          "width": 1
+        }
+      ]
+    },
+    "f_coll": {
+      "direction": "input",
+      "bits": 1,
+      "fields": [
+        {
+          "port": "u_ready",
+          "lsb": 0,
+          "width": 1
+        }
+      ]
+    }
+  },
+  "arithmetic": "unchanged existing full-shape registered controller",
+  "emitted_tokens": "38-bit emitted record plus e_ready; effective accepted prefix and EOS/length/context cap",
+  "expert_union": "u_v/u_id/u_mask/u_last to collective, u_ready returns from collective",
+  "compute": {
+    "MACs_per_cycle": 0,
+    "intensity": "control only"
+  },
+  "memory": {
+    "bytes_per_cycle": 0,
+    "macros": 0
+  },
+  "replicas": 1,
+  "mux_demux_fanout": "direct wires; no extra mux or fanout",
+  "routing": {
+    "signal_tracks": 1374,
+    "channel_capacity_qualified": false
+  },
+  "area": {
+    "mapped_controller_um2": null,
+    "reserved_slot_um": [
+      466.56,
+      200.88
+    ],
+    "facade_extra_cells": 0,
+    "controller_fits_reserved_area": false,
+    "native_pin_context_qualified": false,
+    "historical_x_mapped_controller_um2": 11611.86192
+  },
+  "latency": {
+    "facade_added_cycles": 0,
+    "controller_registered_pin_and_skid_cycles": "existing ot_hfd_mtp_core contract",
+    "actual_stop_egress": "registered valid/ready skid; measurement owned native stop controller gate",
+    "checked_CPRESULT_pin_capture_cycles": 1
+  },
+  "qualification": "actual additive checked CP-result input; old rawlogit and historical pin views unchanged; fresh context mapping required",
+  "actual_source_inventory": "results/rtl/hbm_token_fifo_reservation_20261009/native_mtp_sources.json",
+  "actual_core_source": "08e4b1bf7",
+  "full_context": {
+    "position_bits": 20,
+    "generation_count_bits": 21,
+    "prompt_count_bits": 21,
+    "forced_address_bits": 23,
+    "maximum_context": 1048576
+  },
+  "EXTERNAL_AM": 1
+}
