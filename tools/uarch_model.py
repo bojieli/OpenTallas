@@ -14261,6 +14261,7 @@ def hbm_collective_vm_publication_model(words=4096,lanes=16,quarters=4):
         quarter_words=1024,rank_order=[0,1,2,3],VM_base_word=233472,
         VM_read_requests=sectors,VM_request_bits=337,VM_response_bits=273,
         max_outstanding_requests=1,request_tag='QID2 + sequence14',
+        actual_Qwen_owner_bits=74,legacy_owner_default_bits=73,
         response_fault_field=False,external_fault_requires_abort=True,
         requested_bytes_per_sector=32,total_load_bytes=words*4,
         publication_overlap_credit=0,minimum_load_cycles=2*sectors+2,

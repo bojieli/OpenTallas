@@ -1,0 +1,31 @@
+{
+  "exactness_gate": "PASS",
+  "negative_control": "PASS_EXPECTED_WRONG_QID_FAILURE",
+  "host": "ot-agidock128",
+  "admission_GiB": 1,
+  "full_words_FP32": 4096,
+  "quarters": 4,
+  "VM_sectors": 512,
+  "flits": 256,
+  "FW": 512,
+  "injector_lanes": 2,
+  "read_latency_edges": 4,
+  "SRAM_macros": 24,
+  "actual_Qwen_owner_bits": 74,
+  "legacy_default_owner_bits": 73,
+  "qualification": "MINIMUM_FULL_VECTOR_PUBLICATION",
+  "physical_qualified": false,
+  "native_endpoint_bound": false,
+  "source_sha256": {
+    "ot_hbm_collective_vm_publication.sv": "c18c71cb07f6a2695b67283da6e524c222bde4f7cff6c50e8991edd48cfbda8a",
+    "tb_hbm_collective_vm_publication.sv": "c28e6de27855ebd84fb5c74ef6cf53844b76c66d55fc2f0d72f8db77f90b171a",
+    "ot_hbm_replay_sram.sv": "48a747bb1638556222f2299914f88e49d39c0a9a1bda771a23d56d0ddcbac397"
+  },
+  "integration_open": [
+    "TU descriptor opcode and producer lease grant",
+    "actual VM arbitration and separate provider fault",
+    "native indexed-return successor",
+    "mutable descriptor/control protection",
+    "SS/FF and actual pin budgets"
+  ]
+}
