@@ -52,6 +52,7 @@ RACK = "results/arch/v41_rack.json"
 REG = "results/external/registry.json"
 HQT = "results/arch/hgi_sim_20261009/qwen_timing_P8191.json"
 HQP = "results/arch/hgi_sim_20261009/qwen_int8_packing.json"
+HQD = "results/arch/hgi_sim_20261009/dflash/dflash_timing.json"
 HDT = "results/arch/hgi_sim_20261009/ds_timing_1M.json"
 MAP = "results/uarch/dsrom_s81_mixed1792_mapping_20261007"
 HBM_GENERIC = ("claude/hbm-generic-20261009 01f643326 results/arch/hbm_generic_20261009/plan.json (die_fit R25G "
@@ -348,6 +349,7 @@ def hbm(E, wall):
     dt = J(HDT)["result"]
     qt = J(HQT)["result"]
     qp = J(HQP)
+    qd = J(HQD)
     tp8 = J(TP8)
     ar, mtp = g["totals"]["tok_s_published"], gm["totals"]["tok_s_published"]
     cyc = g["totals"]["cycles"]
@@ -364,6 +366,12 @@ def hbm(E, wall):
     # Qwen3-8B on the generic die (r25, TP4, INT8 fmt3): pathfinding simulator
     q2 = qt["S2"]
     q_ar = q2["tok_s"]
+    # DFlash (z-lab/Qwen3-8B-DFlash-b16) step on the generic die: hgi_sim compiled step, S2 timing; headline = block 16,
+    # the spec's shared-weight-read SM ('spec'), two-beat INT8 (the adopted front), the largest published tau (8.01)
+    dft = [r for r in qd["table"] if r["sm_mode"] == "spec"]
+    pick = lambda B, ob, tk: next(r for r in qd["table"] if r["B"] == B and r["sm_mode"] == "spec" and r["one_beat_int8"] == ob
+                                  and r["tau_kind"] == tk)
+    q_mtp = pick(16, False, "published")["tok_s"]
     q_dies, q_stacks = 4, 16
     q_static = static / dies * q_dies
     q_dyn = J(ES)["qwen_8k"]["hbm_accel"]["tp4_iso_silicon"]["terms"]["dyn"]["value"]
@@ -411,17 +419,26 @@ def hbm(E, wall):
         cost=cost_block(lo, hi, 0, dies // 2, p_mtp * wall, None, mtp, E, note="switch chips not priced"),
     )
     qwen_block = dict(
-        id="hbm_qwen", model="Qwen3-8B", context="8K (position 8,191)", modes=["AR"], graph=None,
+        id="hbm_qwen", model="Qwen3-8B", context="8K (position 8,191)", modes=["AR", "MTP"], graph=None,
         graph_note="no token-path graph yet (export target qwen_hbm not defined); the rate is the HGI-1 simulator's",
         per_user=dict(
             AR=f(q_ar, "tok/s", "modelled", f"{HQT} result.S2.tok_s",
                  note=f"pathfinding simulator on 4 r25 dies, TP4, INT8 fmt3 at the MEASURED SM issue (64 codes/cycle/SM, 2 beats a "
                       f"128-code line: SM-issue bound); {q2['total_cycles']:,.0f} cycles; CP entries estimates; dense 1,024-bit lines adopted "
-                      "(0 % alone); one-beat INT8 (RQ-HF-7, owner decision pending on the SM re-layout fit) gives "
+                      "(0 % alone); one-beat INT8 (RQ-HF-7, REJECTED: NO_FIT, results/rtl/hbm_forks_20261009/int8_relayout_study.json) would give "
                       f"{qp['dense 1.0, fmt3 one-beat issue (128 codes/cyc/SM)']['tok_s']} ({HQP})",
                  one_beat_int8=qp["dense 1.0, fmt3 one-beat issue (128 codes/cyc/SM)"]["tok_s"]),
-            MTP=f(None, "tok/s", "modelled", "memory qwen-on-r25-unified",
-                  note="DSpark p=4 on the generic die; Qwen tau on the owner 6-class blend is still being measured (qwen-hbm-unify)")),
+            MTP=f(q_mtp, "tok/s", "modelled", f"{HQD} table[B=16, sm_mode=spec, one_beat_int8=False, tau_kind=published]",
+                  note=f"DFlash b16 step (draft + 2-pass verify + accept) compiled to HGI-1 and run bit-exact in hgi_sim "
+                       f"(results/arch/hgi_sim_20261009/dflash/dflash_proof.json); step {pick(16, False, 'published')['step_cycles']:,.0f} "
+                       f"cycles at 8K; tau 8.01 = DFlash arXiv:2602.06036v2 Table 3 (B200, MATH-500; largest published Qwen3-8B tau); "
+                       f"sensitivity: our measured tau 3.656 -> {pick(16, False, 'measured')['tok_s']}; block 8 "
+                       f"(1 weight pass) {pick(8, False, 'published')['tok_s']} at tau {pick(8, False, 'published')['tau']} "
+                       f"(published-anchored) / {pick(8, False, 'measured')['tok_s']} at measured 3.2956; one-beat INT8 (NO_FIT) "
+                       f"{pick(16, True, 'published')['tok_s']}; assumes the SM shares one issued line over <= 8 slots (SPEC_GAP G18: "
+                       f"if every slot re-issues, block 16 falls to {next(r for r in qd['table'] if r['B'] == 16 and r['sm_mode'] == 'reissue' and not r['one_beat_int8'] and r['tau_kind'] == 'published')['tok_s']})",
+                  table=[{k: r[k] for k in ("B", "sm_mode", "one_beat_int8", "tau_kind", "tau", "step_cycles", "tok_s", "vs_ar")}
+                         for r in qd["table"]])),
         aggregate=f(pl_agg, "tok/s [low, high]", "modelled", f"{HBM_GENERIC} qwen.aggregate_tp4.aggregate_estimate_tok_s",
                     note="KV-stream and SU-occupancy ceilings; SM compute at batch not checked"),
         dies=dict(total=f(q_dies, "dies", "derived", "TP4 (owner 10-09 qwen-on-r25-unified)"),
@@ -454,9 +471,13 @@ def gpu():
     return dict(
         qwen=dict(best_batch1=ext("new:dflash_table3_table4", ["qwen3_8b_b200_c1_math500", "dflash_tok_s"],
                                   "1 x B200, SGLang + DFlash, concurrency 1, MATH-500 (tau 8.01, GPU-favourable)"),
+                  ar_batch1=ext("new:dflash_table3_table4", ["qwen3_8b_b200_c1_math500", "ar_tok_s"],
+                                "1 x B200, SGLang, AR baseline of the same table (like-for-like AR row)"),
                   served_median=ext("new:openrouter_qwen3_8b_20261009", ["median_tok_s"], "OpenRouter P50, one provider")),
         ds=dict(best_batch1=ext("new:sglang_v41flash_gb300_bs1", ["dspark_tok_s"],
                                 "4 x GB300, SGLang + DSpark, batch 1, simulated accept length 5.5 (GPU-favourable vs our tau 4.159)"),
+                ar_batch1=ext("new:sglang_v41flash_gb300_bs1", ["plain_tok_s"],
+                              "4 x GB300, SGLang, no speculation, batch 1 (like-for-like AR row)"),
                 b200_c1_p90=ext("new:infx_v41flash_b200_agentx", ["tp4_ep4", "1", 1], "B200 TP4, SGLang + DSpark, concurrency 1, p90 (AgentX)"),
                 served_median=ext("new:openrouter_v41flash_20261009", ["median_tok_s"], "OpenRouter median of 30 providers, P50 1 week"),
                 served_best=ext("new:openrouter_v41flash_20261009", ["best_standard_routed_tok_s"], "OpenRouter best standard-routed (Together)")))
@@ -492,9 +513,18 @@ def headline_rows(S, G):
              tok_s_per_kw_b1=g(hq["efficiency"]["per_user_tok_s_per_kw"]), capex=g(hq["cost"]["capex_usd"]),
              gpu=g(G["qwen"]["best_batch1"]), served=g(G["qwen"]["served_median"])),
     ]
+    q_mtp = g(hq["per_user"]["MTP"])
+    q_pm = g(hq["power"]["static_w"]) + g(hq["power"]["dynamic_j_per_token"]) * q_mtp
+    rows.append(dict(target="HBM accelerator (generic die)", model="Qwen3-8B 8K", mode="MTP", per_user=q_mtp,
+                     aggregate=None, dies=g(hq["dies"]["total"]), stacks=g(hq["dies"]["stacks"]), power_w=round(q_pm, 1),
+                     tok_s_per_kw_b1=round(q_mtp / q_pm * 1e3, 2), capex=g(hq["cost"]["capex_usd"]),
+                     gpu=g(G["qwen"]["best_batch1"]), served=g(G["qwen"]["served_median"])))
     for r in rows:
         r["vs_gpu_batch1"] = round(r["per_user"] / r["gpu"], 2)
         r["vs_served_median"] = round(r["per_user"] / r["served"], 1)
+        fam = "qwen" if "Qwen" in r["model"] else "ds"
+        r["gpu_same_mode"] = g(G[fam]["ar_batch1"] if r["mode"] == "AR" else G[fam]["best_batch1"])
+        r["vs_gpu_same_mode"] = round(r["per_user"] / r["gpu_same_mode"], 2)
     return rows
 
 
@@ -515,16 +545,17 @@ def readme(S):
          "counts and rack power. Every number there carries a grade (measured / derived / modelled / assumed / third-party) and its source. "
          "None of these rows is a closed physical rate.", "",
          "## Headline", "",
-         "| Target | Model | Mode | Per user (tok/s) | Aggregate (tok/s) | Dies | Stacks | Power (W) | tok/s per kW at batch 1 | Capex (USD, low–high) | × best GPU batch 1 | × served median |",
-         "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+         "| Target | Model | Mode | Per user (tok/s) | Aggregate (tok/s) | Dies | Stacks | Power (W) | tok/s per kW at batch 1 | Capex (USD, low–high) | × best GPU batch 1 | × GPU same mode | × served median |",
+         "|---|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
     for r in S["headline"]:
         L.append(f"| {r['target']} | {r['model']} | {r['mode']} | {fmt(r['per_user'])} | {fmt(r['aggregate'], 0)} | {r['dies']:,} | "
                  f"{r['stacks']:,} | {fmt(r['power_w'], 0)} | {fmt(r['tok_s_per_kw_b1'])} | {fmt(r['capex'], 0)} | "
-                 f"{r['vs_gpu_batch1']:.2f} | {r['vs_served_median']:.1f} |")
+                 f"{r['vs_gpu_batch1']:.2f} | {r['vs_gpu_same_mode']:.2f} | {r['vs_served_median']:.1f} |")
     L += ["", "n/c: not composed. Power: Qwen rows are the modelled instance power (saturated for the ROM, batch 1 for the HBM die); "
           "the DS ROM row is the rack's chip power with every die at the busiest die's saturated power (an upper bound); the HBM DS rows "
           "are batch-1 power including 8 switches. GPU batch 1: Qwen 1 × B200 + DFlash (1,175); DeepSeek 4 × GB300 + DSpark (873.6, "
-          "simulated acceptance 5.5). Served median: OpenRouter, 2026-10-09 (Qwen 55, DeepSeek 88.5).", "",
+          "simulated acceptance 5.5). Same mode: AR rows against the GPU without speculation (Qwen 1 × B200 230, DFlash Table 3; "
+          "DeepSeek 4 × GB300 203), MTP rows against the GPU with speculation. Served median: OpenRouter, 2026-10-09 (Qwen 55, DeepSeek 88.5).", "",
           "## What changed since 2026-10-08", ""]
     for c in S["changes"]:
         L.append(f"- **{c['item']}**: {c['effect']} ({c['grade']}; {c['source']})")
@@ -569,6 +600,8 @@ def doc_section(S):
          hq["dies"]["total"]["value"], "hbm.targets[id=hbm_qwen].dies.total.value", hq["dies"]["stacks"]["value"],
          "hbm.targets[id=hbm_qwen].dies.stacks.value", hq["power"]["batch1_w"]["value"], "hbm.targets[id=hbm_qwen].power.batch1_w.value",
          "modelled batch 1"),
+        ("", "", "MTP (DFlash b16, τ 8.01)", hq["per_user"]["MTP"]["value"], "hbm.targets[id=hbm_qwen].per_user.MTP.value", None,
+         None, None, None, None, None, None, None, ""),
     ]
     L = [DOC_BEGIN, "", "## Current design points (token path of 2026-10-09)", "",
          "This section is generated by `python3 tools/token_path_systems.py` from `results/arch/token_path_20261009/`. "
@@ -578,7 +611,7 @@ def doc_section(S):
          "measurements and priced adders on the actual design points. None of them is a closed physical rate.", "",
          "| Design | Model, context | Mode | Per user (tok/s) | Aggregate (tok/s) | Dies | HBM stacks | Power (W) | Power basis |",
          "|---|---|---|---:|---:|---:|---:|---:|---|"]
-    tags = ["Qwen ROM", "DS ROM", "DS ROM", "HBM DS", "HBM DS", "HBM Qwen"]
+    tags = ["Qwen ROM", "DS ROM", "DS ROM", "HBM DS", "HBM DS", "HBM Qwen", "HBM Qwen"]
     for tag, (name, model, mode, pu, pup, ag, agp, di, dip, st, stp, pw, pwp, basis) in zip(tags, rows):
         if isinstance(ag, list):
             agt = f"{n(ag[0], 0)}–{n(ag[1], 0)} (modelled range)"
@@ -608,7 +641,11 @@ def doc_section(S):
           f"Best published GPU at batch 1: Qwen3-8B on one B200 with DFlash, **{n(gq['best_batch1']['value'], 0)}** tok/s "
           f"{ann(gq['best_batch1']['value'], 'gpu.qwen.best_batch1.value', 'GPU Qwen best batch 1')}; DeepSeek-V4.1-Flash on 4 × GB300 "
           f"with DSpark, **{n(gd['best_batch1']['value'])}** tok/s at a simulated acceptance of 5.5, which favours the GPU against "
-          f"our τ of 4.159 {ann(gd['best_batch1']['value'], 'gpu.ds.best_batch1.value', 'GPU DS best batch 1')}. Served today "
+          f"our τ of 4.159 {ann(gd['best_batch1']['value'], 'gpu.ds.best_batch1.value', 'GPU DS best batch 1')}. Compared like for "
+          f"like (AR against AR), the same sources give Qwen3-8B on one B200 without speculation **{n(gq['ar_batch1']['value'], 0)}** "
+          f"tok/s {ann(gq['ar_batch1']['value'], 'gpu.qwen.ar_batch1.value', 'GPU Qwen AR batch 1')} and DeepSeek-V4.1-Flash on "
+          f"4 × GB300 without speculation **{n(gd['ar_batch1']['value'], 0)}** tok/s "
+          f"{ann(gd['ar_batch1']['value'], 'gpu.ds.ar_batch1.value', 'GPU DS AR batch 1')}. Served today "
           f"(OpenRouter P50, 2026-10-09): Qwen3-8B **{n(gq['served_median']['value'], 0)}** tok/s "
           f"{ann(gq['served_median']['value'], 'gpu.qwen.served_median.value', 'served Qwen median')}, DeepSeek-V4.1-Flash median "
           f"**{n(gd['served_median']['value'])}** tok/s {ann(gd['served_median']['value'], 'gpu.ds.served_median.value', 'served DS median')}.",
@@ -659,8 +696,11 @@ def build_systems():
              f"{d['dies']['stacks']['value']} stacks / {d['power']['chips_w']['value'] / 1e3:,.2f} kW chips (85-stage rack: 440 / 484 / 38.75)",
              grade="derived", source="tools/dsrom_array_v2.py"),
         dict(item="HBM generic die", effect=f"Qwen3-8B on r25 TP4 INT8: {h['targets'][1]['per_user']['AR']['value']} tok/s (pathfinding "
-             f"simulator, SM-issue bound; one-beat INT8 {h['targets'][1]['per_user']['AR']['one_beat_int8']}); DS unchanged (default mode, fork "
+             f"simulator, SM-issue bound; one-beat INT8 {h['targets'][1]['per_user']['AR']['one_beat_int8']} rejected NO_FIT); DS unchanged (default mode, fork "
              "cost 0 measured so far); DS sequencer re-timing kept as a sensitivity", grade="modelled", source=f"{HQT}; {HDT}"),
+        dict(item="Qwen3-8B DFlash on the generic die", effect=f"block 16 {h['targets'][1]['per_user']['MTP']['value']} tok/s at the "
+             "published tau 8.01 (one compiled step: draft + 2-pass verify + accept, bit-exact in hgi_sim; no hardware added; "
+             "open: SM multi-slot issue G18, CTL.TOKX)", grade="modelled", source=HQD),
         dict(item="BF decision", effect="pending 21:30 PT; HALF_PHL stays the headline, full-rate rows in ds_rom.bf_variants", grade="derived", source=REPRICE),
         dict(item="replica-fold / keep fixes", effect="0 cycles (synthesis attribute only: (* keep *) copies survive opt_merge)",
              grade="measured", source="main 0d3958d56, 816a3bec0, 54e3f8f9c"),
@@ -670,12 +710,12 @@ def build_systems():
     S["pending"] = [
         "BF decision (21:30 PT): switch the DS ROM headline to the chosen BF row and re-run this tool",
         "KV-die stream: GRT / STA of the ROM r22k and KV die (chain on EPYC1); the near-HBM attention elements are not closed",
-        "HBM forks: fmt3 adapter bypass match, one-beat INT8 owner decision (RQ-HF-7), sequencer C2 measured costs",
-        "Qwen-HBM DSpark tau on the 6-class blend (qwen-hbm-unify) and a qwen_hbm token-path graph",
+        "HBM forks: fmt3 adapter bypass match, sequencer C2 measured costs; one-beat INT8 closed (NO_FIT)",
+        "Qwen-HBM DFlash: SM multi-slot issue (G18, hbm-forks) and CTL.TOKX (cmdproc); a qwen_hbm token-path graph",
         "DS ROM 1,792 power pass (per-die W is the busiest saturated die for every die)",
         "HBM accelerator batch / union / credit calendar (no aggregate is composed)",
     ]
-    ins = sorted({KVD, KVROM, KVPLAN, TP8, ENGRAM, REPRICE, ES, ECON, ARCH, RACK, REG, HQT, HQP, HDT,
+    ins = sorted({KVD, KVROM, KVPLAN, TP8, ENGRAM, REPRICE, ES, ECON, ARCH, RACK, REG, HQT, HQP, HQD, HDT,
                   "results/arch/token_path_20261008/qwen_rom.json"})
     S["inputs"] = {p: sha(p) for p in ins}
     (OUT / "systems.json").write_text(json.dumps(S, indent=1) + "\n")

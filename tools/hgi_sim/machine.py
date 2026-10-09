@@ -297,6 +297,25 @@ class Machine:
                     self.trace.append(dict(pc=pc, L=L, unit="CTL", op="END", tag=r.tag))
                     self.result = toks[0]
                     return toks[0], self.trace
+                if r.op == "TOKX":
+                    # PROPOSED (SPEC_GAP Q-MTP-1): A[0] = k (U32, 1 <= k <= ncol), A[1..k] = the committed tokens;
+                    # the CP emits k completion beats {token A[i], pos + i - 1} before END.
+                    self.cur = r
+                    outs = []
+                    for die in self.dies:
+                        a0 = self.vm_addrs(r.desc["A"], die, L, 1, 1)[0]
+                        k = int(die.vm[a0])
+                        if not 1 <= k <= r.desc["A"].n - 1:
+                            raise Fault(3, f"TOKX count {k} outside 1..{r.desc['A'].n - 1}")
+                        outs.append([int(t) for t in die.vm[a0 + 1:a0 + 1 + k]])
+                    if any(o != outs[0] for o in outs):
+                        raise Fault(1, "dies disagree on the committed tokens")
+                    if any(t >= self.cfg["cp_vocab"] for t in outs[0]):
+                        raise Fault(3, "TOKX token >= cp_vocab")
+                    self.tokx = outs[0]
+                    self.trace.append(dict(pc=pc, L=L, unit="CTL", op="TOKX", tag=r.tag, k=len(outs[0])))
+                    pc += 1
+                    continue
                 pc += 1            # NOP / FENCE: ordering only (timing model)
                 continue
             fn = self.units.get((r.unit, r.op))
@@ -353,7 +372,7 @@ def decode_fmt(raw, fmt):
 
 def encode_fmt(v, fmt):
     v = np.asarray(v, dtype=F)
-    if fmt == "FP32":
+    if fmt in ("FP32", "U32"):                  # U32: the word moves unchanged (ids, counts)
         return v.view(np.uint8)
     if fmt == "BF16":
         return (A.to_bf16(v).view(np.uint32) >> 16).astype(np.uint16).view(np.uint8)
@@ -392,13 +411,23 @@ def u_sm_matvec(M: Machine, r: Rec, L):
         raise Fault(3, f"SM fmt {fmt} with a {b.fmt} weight descriptor")
     if fmt not in (0, 3):
         raise Fault(3, "block-dot SM formats run through the DS path")
+    P = ((r.param >> 2) & 7) + 1                  # [4:2] positions - 1: one weight read serves P slots (spec 6.7)
     for die in M.dies:
-        x = M.read(a, die, L)
         raw = M.hbm_rows_raw(b, die, L)
         w = raw.view(np.int8) if fmt == 3 else (np.ascontiguousarray(raw).view(np.uint16).astype(np.uint32) << 16).view(F)
-        if w.shape[1] != x.size:
-            raise Fault(3, f"SM K {w.shape[1]} != activation length {x.size}")
-        M.vm_write(o, die, L, A.sm_int8(w, x))
+        if P == 1:
+            x = M.read(a, die, L)
+            if w.shape[1] != x.size:
+                raise Fault(3, f"SM K {w.shape[1]} != activation length {x.size}")
+            M.vm_write(o, die, L, A.sm_int8(w, x))
+            continue
+        # P slots: A and O carry one row per slot (m = P); each slot's result is the single-slot arithmetic
+        _, an, am, _, _ = M.eff(a, die, L)
+        _, on, om, _, _ = M.eff(o, die, L)
+        if am != P or om != P or an != w.shape[1]:
+            raise Fault(3, f"SM P={P}: A/O rows ({am}, {om}) or K {an} != weights K {w.shape[1]}")
+        xs = M.read(a, die, L).reshape(P, an)
+        M.vm_write(o, die, L, np.stack([A.sm_int8(w, xs[k]) for k in range(P)]))
 
 
 def u_coll_all_reduce(M: Machine, r: Rec, L):
@@ -463,7 +492,7 @@ def u_glu(M: Machine, r: Rec, L):
 
 
 def u_att_qk(M: Machine, r: Rec, L):
-    lanes = r.param & 0xF
+    lanes = (r.param & 0xF) or 16                  # [3:0] head lanes; 0 encodes 16 (HGI-1.1 clarification)
     for die in M.dies:
         a, o = r.desc["A"], r.desc["O"]
         _, hd, _, _, _ = M.eff(a, die, L)
@@ -474,7 +503,7 @@ def u_att_qk(M: Machine, r: Rec, L):
 
 
 def u_att_pv(M: Machine, r: Rec, L):
-    lanes = r.param & 0xF
+    lanes = (r.param & 0xF) or 16                  # [3:0] head lanes; 0 encodes 16 (HGI-1.1 clarification)
     for die in M.dies:
         a, o = r.desc["A"], r.desc["O"]
         _, hd, _, _, _ = M.eff(o, die, L)
