@@ -1,0 +1,23 @@
+{
+ "verdict":"PASS_MINIMUM_ENDPOINT",
+ "source_commit":"906347f3a",
+ "selected_params":{"ECC_PIPE":1,"MAXU":866,"MAX_CONTEXT":1048576},
+ "golden_contract":"Each W2 contribution rounds BF16 then widens to32bit before FP32 expert+shared addition; selectednativefield fmtFalse publishes widened32bits",
+ "native_source_proof":["tools/hdc_golden_v41.py:395,977,990","rtl/v41die/ot_v41_spine_pq_w17w10.sv:396-399","rtl/v41die/ot_v41_spine_pqc_w17w10.sv:607"],
+ "rows_per_rank":1280,"contexts":6,"output_flits_per_context":80,"total_flits":480,
+ "payload_bytes_per_context":5120,"mathematical_BF16_bytes":2560,
+ "metadata_bits":74,"metadata_layout":"transaction32/user10/position21/epoch4/stage2/rank2/draftframe3, LSbfirst",
+ "word_bits":7,"word_range":[0,79],
+ "positive":"syntheticfullshape1280rows acrosssixcontexts,variableoutputstalls",
+ "measured_elapsed_cycles":4092,"nominal_stream_GHz":1.2,
+ "negative_cases":["context","wordorder","last","rawFP32format","nonfinite","upstreamerror","mutablecontextguard","nonzeroFP32low16"],
+ "SRAM_CE":"correctedandreported","SRAM_UE":"blocksdeliveryandfaults",
+ "actual_macros":3,"macro":"ot_sram_1r1w_256x256_m2_r2c2 alignedv2",
+ "macro_size_um":[172.824,41.064],"macro_area_um2_total":21290.534208,
+ "ECC_source_lineage":"c5dfa5e7f HC registered syndrome/correction copied under newsharedmodulename; oldsourceunchanged",
+ "remote_host":"ot-epyc1tb","remote_run":"/srv/opentallas-scratch/claude/mtp-shared-906347f3a",
+ "maximum_process_RSS_KiB":31956,"admission_GB":2,
+ "native_shared_arithmetic_qualified":false,"releasedGUfixture_qualified":false,
+ "actual_VM_readslot_and_outputbase_bound":false,"physical_qualified":false,
+ "scope":"finite sharedpublication endpoint; no creditforwholeexpertarithmetic orimaginedfreeVMport"
+}
