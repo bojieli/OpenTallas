@@ -187,7 +187,7 @@ module tb_hgi_seq;
             end
             ei = ei + 11;
             outst[cu] = outst[cu] + 1;
-            pend[cu][pn[cu]] = (cu == 9 || cu == 7) ? 40 + $urandom % 21 : $urandom % 21; pdi[cu][pn[cu]] = nd;
+            pend[cu][pn[cu]] = (cu == 9 || cu == 7) ? 200 + $urandom % 41 : $urandom % 21; pdi[cu][pn[cu]] = nd;   // IDX / ARGMAX retire late: a missing wait reads a stale table
             pn[cu] = pn[cu] + 1;
             if (nd == fault_at) u_fault[cu] <= 1'b1;
             nd = nd + 1;

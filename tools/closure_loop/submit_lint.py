@@ -463,6 +463,9 @@ def density(plan: dict, layers: dict, tracks: float, group_max: int = 0, balance
     return out
 
 
+PPL_SECTION = 200  # OpenROAD place_pins slots per section (PPL-0005)
+
+
 def _fails(d: dict, limit: float) -> list[str]:
     return [f"{EDGES[e]}/{'+'.join(v['layers'])} {v['est']} b/um ({v['why']})" for e, v in d.items() if v["est"] > limit]
 
@@ -650,6 +653,16 @@ def _pin_check(spec: dict, git: Git, util_db: dict | None = None, force: bool = 
     res["est"] = {EDGES[e]: v["est"] for e, v in est.items()}
     msgs, verdict = [], "PASS"
     fails = _fails(est, limit)
+    # drive-0849 (2026-10-09): an ordered --pin-region group larger than an IO-placer section (PPL "Slots per section 200")
+    # is placed in FALLBACK mode and then fails PPL-0107 "Invalid pin placement" at 3_2_place_iop although its density
+    # passes (hgi_coll_row_formatter c130/c180 1024/512 pins, hgi_ehash_ds a/b 768/768/256, qfd_coll_xfifo a/b, 4 routes x 2
+    # crashes on 10-09).  Such a plan takes the approved pin_balance fix (32-pin chunks) at submit, as a measured failure.
+    gmax = int(th.get("ppl_group_max", PPL_SECTION))  # fp_lint {"set": {"ppl_group_max": 0}} switches the rule off
+    big = [r for r in plan["regions"] if r.get("n", 0) > gmax] if gmax and not (plan["group_max"] or plan["balance"]) else []
+    if big and not fails and not force:
+        force = True
+        names = ", ".join(f"{r['regex']} {r['n']}" for r in big[:3])
+        msgs.append(f"ordered pin group(s) > {gmax} pins ({names}) fall back in the IO placer (PPL-0107)")
     if fails or force:
         verdict, fix_msg, why_not = _choose_fix(plan, limit, window, res, force=force and not fails)
         if verdict == "FIX":
