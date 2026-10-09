@@ -9,7 +9,7 @@ module hgi_mtp_accept18_route (
     output wire [3:0] n_emit,
     output wire [18-1:0] bonus
 );
-ot_hgi_mtp_accept18 #(.GENERIC18(1)) u (
+ot_hgi_mtp_accept18 #(.GENERIC18(1),.PINREG(1)) u (
 .clk(clk),
 .rst_n(rst_n),
 .start_v(start_v),
