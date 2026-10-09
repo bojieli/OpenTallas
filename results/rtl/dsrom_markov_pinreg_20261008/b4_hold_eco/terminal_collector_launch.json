@@ -1,0 +1,17 @@
+{
+ "timestamp_utc": "2026-10-09T10:55:39.690922+00:00",
+ "host": "ot-pve1",
+ "collector_pid": 359237,
+ "worker_runner_pid": 323629,
+ "worker_engine_pid": 326485,
+ "collector_source": "0f2acc492",
+ "audit_source": "51b846604",
+ "rtl_source": "38f22c6d8",
+ "review": "confirmed review-0342 P2",
+ "root": "/srv/opentallas-scratch/codex/markov-p1-b4-rejudge-20261009",
+ "output": "evidence/terminal_a1",
+ "audit_admission_gib": 17,
+ "audit_admission_basis": "Same-source measured STA16.16GiB and route16.28GiB; guard refreshed at actual audit start; no process cap",
+ "measured_memavailable_kib": 113707120,
+ "scope": "Read-only observer waits worker exit, copies terminal evidence, then admitted read-only finalODB layer audit. No worker restart/cancellation, RTL/timing change or adoption."
+}
