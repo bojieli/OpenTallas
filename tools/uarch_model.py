@@ -14530,3 +14530,9 @@ def hbm_link_replay_sram_model(payload_bits=551, seq_bits=12, session_bits=16,
         replay_steady_records_per_cycle=1/7,
         token_fault_free_added_cycles=0,
         adoption="OPEN: replay scheduler, credits, SS/FF and die integration")
+
+
+def qwen_kv_row_model():
+    """Full32-PC option-M row mechanism and merged-word prepaid credits."""
+    from uarch_model_qwen_kv_row import model
+    return model(DFF_UM2)
