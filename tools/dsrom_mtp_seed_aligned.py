@@ -35,7 +35,7 @@ def bench(wrong_three=False):
  s=s.replace('$display("MTP_SEED PASS K=15360 rows=2 quant_cycles=%0d first_cycles=%0d last_cycles=%0d",quant_end-quant_start+1,first-go_cycle,last-go_cycle);', '$display("MTP_SEED_ALIGNED PASS K=15360 rows=2 phases=4 adds=6 joinLAT=8 quant_cycles=%0d first_cycles=%0d last_cycles=%0d join_cycles=%0d complete_column_cycles=%0d",quant_end-quant_start+1,first-go_cycle,last-go_cycle,join_end-join_start,join_end-quant_start+1);')
  if wrong_three:
   s=s.replace('partgold[0:7]','partgold[0:5]').replace('roots[0:7]','roots[0:5]').replace('cfg[0:99]','cfg[0:74]').replace('phase<4','phase<3')
-  s=s.replace('k=(phase<3 ? phase*128:384);k<(phase<3 ? (phase+1)*128:480)', 'k=phase*168;k<(phase+1)*168').replace('phase*128+xs_p','phase*160+xs_p')
+  s=s.replace('k=(phase<3 ? phase*128:384);k<(phase<3 ? (phase+1)*128:480)', 'k=phase*192;k<(phase+1)*192').replace('phase*128+xs_p','phase*160+xs_p')
   s=s.replace('add_join(roots[j],roots[2+j],jl[j]);add_join(roots[4+j],roots[6+j],jr[j]);add_join(jl[j],jr[j],jout);','add_join(roots[j],roots[2+j],jl[j]);add_join(jl[j],roots[4+j],jout);').replace('if(ny!=8)','if(ny!=6)')
  return s
 
@@ -47,7 +47,7 @@ def main():
  m=A.Mat(ck,'mtp.0.main_proj','fp8',2,15360);acc,_,xq,xe=A.golden_rows(m,x);fld=I.Field(1,1,0,pp=True,fast=True);partials=[];phases=[]
  for offset,k in ([(0,5120),(5120,5120),(10240,5120)] if a.wrong_three else [(0,4096),(4096,4096),(8192,4096),(12288,3072)]):
   part=A.Mat(ck,'mtp.0.main_proj','fp8',2,k,k0=offset);part.s81_segments=[[0,k]];part.s81_place=[(0,0,0)];phases.append(I.add_phase(fld,[part],(True,False),0));partials.extend(A.golden_rows(part,x[offset:offset+k])[0])
- assert [p['nbeat'] for p in phases]==([168,168,168] if a.wrong_three else [128,128,128,96])
+ assert [p['nbeat'] for p in phases]==([192,192,192] if a.wrong_three else [128,128,128,96])
  for mb in range(2):
   for parity in (0,1):
    f=a.work/f'seed{"b" if mb else ""}_{parity}.viamap.hex';A.viamap({k//2:v for k,v in fld.words[mb].items() if k%2==parity},f);f.write_text(''.join(f.read_text().splitlines(keepends=True)[:512]))
