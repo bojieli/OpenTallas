@@ -25,3 +25,10 @@ run tc16 ot_hbm_accel_smh_tc_col "-chparam L 16" &
 run tc32 ot_hbm_accel_smh_tc_col "-chparam L 32" &
 run line ot_hbm_accel_int8_line "" &
 wait; cat $O/summary.txt
+# calibration: the whole m3f tile (ot_hbm_accel_smh_tile_w, x-store SRAM as a black box) mapped the same way, to compare
+# with its measured CTS instance area 108,103 um2 (results/uarch/hbm_smh_tile_headroom_20261007/measurement.json)
+if [ "${TILE:-1}" = 1 ]; then
+SRC="$SRC rtl/hbm_accel/sm/ot_hbm_accel_smh.sv rtl/v41rom/ot_v41_bterm2.sv rtl/hdc/v41/ot_hdc_blockdot.sv rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+run tile ot_hbm_accel_smh_tile_w ""
+grep -i "ot_sram\|chip area" $O/tile.stat | tail -4
+fi
