@@ -1,0 +1,22 @@
+{
+  "source_commit": "fe12bf480",
+  "model_before_RTL": "4798992b7",
+  "remote_host": "ot-agidock128",
+  "remote_root": "/srv/opentallas-scratch/mtp-die-p2prefixfe12bf480",
+  "verdict": "PASS",
+  "flits": 240,
+  "cycles": 617,
+  "PRIMARY_SHARED": 1,
+  "SRAM_macros": 9,
+  "scope": "generic opaque512 payload transport; exact SECDED and ID/order/finite stalls; no FP32 arithmetic or released numerical integration",
+  "negative_cases": [
+    "wrong identity",
+    "wrong expert",
+    "wrong word",
+    "wrong last",
+    "duplicate",
+    "sink_abort"
+  ],
+  "latest_extra_shared_negative_source": "5412320bd",
+  "latest_extra_shared_negative_verdict": "QUEUED"
+}
