@@ -1,0 +1,19 @@
+{
+ "ss_ps": 141.65,
+ "tt_ps": 141.65,
+ "ff_ps": 22.8,
+ "drc": 0,
+ "sdc_name": "6_final.sdc",
+ "setup_post_sdc": [],
+ "setup_corner": "tt",
+ "ss_sensitivity_ps": -165.8,
+ "cells_added": 8153,
+ "errors": [],
+ "pass": 1,
+ "session": "mm",
+ "window": "endpoints_below_hm 8482 fixable 8482 tight 0 infeasible 0 nodata 0 (hm 30.0 filt 40 accept_ss 0.0 accept_ff 0.0 r 2.4)",
+ "route_strategy": [
+  "incremental_original_guides"
+ ],
+ "score": 22.8
+}

@@ -1,0 +1,58 @@
+{
+  "job": "mtp-wfc-stg-tokpipe-9f7a7f35e-tc",
+  "scope": "Installed post-ECO objects; no original report overwrite or timing relaxation",
+  "fresh_artifacts_sha256": {
+    "6_final.odb": "e9eccb1741d14300b3b11f11271061dc45c0c9790f1cddcd8461cd3bc940e9c7",
+    "6_final.sdc": "1f41593bfb20935a43acd8a7b2525f69787c4263a3348c214f1931853f8f0e26",
+    "6_final.spef": "c08bf419ed82f14211960871d961ee51bbe9ea4e6407a99422a3a279f4b0b4cb"
+  },
+  "tt_setup_all4_ps": 141.7,
+  "ff_hold_all4_ps": 22.8,
+  "ff_block_preserved_ps": 19.2,
+  "ss_setup_sensitivity_ps": -165.8,
+  "drc": 0,
+  "electrical": {
+    "TT": {
+      "exit": 0,
+      "done": true,
+      "slew": 0,
+      "capacitance": 0,
+      "fanout": 0,
+      "raw_report_sha256": "b39d024464d3ba91733898a9520519e097daf7083928f59dbea373cca9505f5b",
+      "library": "actual RVT TT via WF_LIB=TT",
+      "image": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "original_DRV_Tcl_sha256": "a9002a14924406bc4ef665654365f04f70f1926d4b4b9abb46cbb1d816e0539a",
+      "copied_inputs_match_installed": true
+    },
+    "FF": {
+      "done": true,
+      "violators": {
+        "slew": 0,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    },
+    "SS_sensitivity_preserved": {
+      "done": true,
+      "violators": {
+        "slew": 859,
+        "capacitance": 0,
+        "fanout": 0
+      }
+    }
+  },
+  "full4_eligibility_exit": 0,
+  "full4_eligibility_accepted": true,
+  "oracle_hashes_match_installed": true,
+  "oracle_all4_equivalence_tolerance_ps": 0.1,
+  "admission": {
+    "host": "ot-epyc3",
+    "guard_GiB": 6,
+    "basis": "Conservative same-provider sibling SOURCE report5.213GiB and priorSTG3.77GiB;8153addedcells noted, not a measured post-ECO peak",
+    "sampled_max_container_process_RSS_KiB": 1682164,
+    "measurement_limit": "Sampled process RSS lower bound; time-v Docker client excludes container, not a future full-STA reservation basis"
+  },
+  "source_commit": "9f7a7f35e",
+  "overlay_commit": "f9a53cc88",
+  "reexport": "Existing all4 WFSTA on installed ODB/SPEF/SDC; normal corner parser and retained833 union"
+}
