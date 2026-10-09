@@ -1,0 +1,14 @@
+{
+  "source_commit": "8ed8e9762d1e6b62972efb5116190b72aa5b6b07",
+  "job": "mtp-p2-transport-8ed8e9762-tt-remote",
+  "host": "ot-epyc1tb",
+  "observed_utc": "2026-10-09T08:39:55.649476+00:00",
+  "measured_boundary_insertion_ps": {
+    "TT": 384,
+    "FF": 317,
+    "SS": 493
+  },
+  "database": "4_1_cts.odb",
+  "parasitics": "placement-estimated",
+  "scope": "Completed own-clock calibration of general4bank P2 component; route admission follows, no timing/DRC closure or selected topology claim."
+}
