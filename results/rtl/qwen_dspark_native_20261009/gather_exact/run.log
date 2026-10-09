@@ -1,0 +1,2 @@
+QWEN_ARGMAX_GATHER_PASS cases=40 all4ranks=1 arrivalorders=2 full64bitID_sequence8=1 lowestID_zero_ties=1 stalledcredit=1 stale_cohort_rank_negative=1
+rtl/test/qwen_system/tb_qwen_dspark_argmax_gather.sv:43: $finish called at 1023040 (1ps)
